@@ -6,9 +6,10 @@
     "start": "ng serve",
     "build": "ng build",
     "delete-blade": "rimraf ../resources/views/diceway.blade.php",
+    "link-blade": "node ./build.js",
     "rename-blade": "node -e \"require('fs').rename('../resources/views/index.html', '../resources/views/diceway.blade.php', function(err) { if (err) console.log(err); console.log('File successfully renamed!') })\"",
     "create-blade": "copyfiles -f ../public/frontend/index.html ../resources/views",
-    "build:prod": "ng build --configuration production && npm run delete-blade && npm run create-blade && npm run rename-blade",
+    "build:prod": "ng build --configuration production && npm run delete-blade && npm run create-blade && npm run rename-blade && npm run link-blade",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
