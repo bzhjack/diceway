@@ -6,7 +6,7 @@ import { UserService } from './auth/services/user.service';
 import { LoggedInGuardService } from './auth/guards/logged-in-guard.service';
 import { JwtInterceptorService } from './auth/interceptors/jwt-interceptor.service';
 import { UnauthorizedInterceptorService } from './auth/interceptors/unauthorized-interceptor.service';
-import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
