@@ -9,5 +9,5 @@
 <link rel="stylesheet" href="styles-5INURTSO.css"></head>
 <body>
   <app-root></app-root>
-<script src="/frontend/polyfills-RX4V3J3S.js" type="module"></script><script src="/frontend/main-MBNKRU4H.js" type="module"></script></body>
+<script src="/frontend/polyfills-RX4V3J3S.js" type="module"></script><script src="/frontend/main-C7W2V4WA.js" type="module"></script></body>
 </html>

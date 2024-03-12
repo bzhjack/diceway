@@ -7,7 +7,7 @@ import {tap} from 'rxjs/operators';
 
 
 @Injectable()
-export class UnauthorizedInterceptor implements HttpInterceptor {
+export class UnauthorizedInterceptorService implements HttpInterceptor {
 
   constructor(private userService: UserService, private router: Router) {
   }

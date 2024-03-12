@@ -18,6 +18,7 @@ export class UserService {
     private http: HttpClient,
     private router: Router,
   ) { 
+    console.log('UserService');
     this.retrieveUser();
   }
 
