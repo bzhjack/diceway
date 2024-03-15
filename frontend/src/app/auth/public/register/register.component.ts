@@ -4,8 +4,10 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { RouterModule } from '@angular/router';
-
+import { Router, RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -16,11 +18,54 @@ import { RouterModule } from '@angular/router';
     InputGroupAddonModule,
     InputTextModule,
     ButtonModule,
-    RouterModule
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
+  pending = false;
+  errorMsg: string | undefined;
+  sub?: Subscription;
+  
+  registerForm = this.fb.group({
+    name: ['', [Validators.required, Validators.minLength(3)]],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(8)]],
+    password_confirmation: ['', [Validators.required, Validators.minLength(8)]]
+  });
 
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) { }
+
+
+  register() {
+    if (this.registerForm.valid) {
+      const credentials = this.registerForm.getRawValue();
+      this.sub?.unsubscribe();
+      this.pending =true;
+      this.sub = this.http.post('/api/auth/register', {
+        name: credentials.name,
+        email: credentials.email,
+        password: credentials.password,
+        password_confirmation: credentials.password_confirmation
+      }).subscribe(
+        (result: any) => {
+          this.pending =false;
+          this.router.navigate(['notice']);
+        },
+        err => {
+          this.pending =false;
+          this.errorMsg = JSON.stringify(err.error?.message);
+          if (err?.error?.errors?.email) {
+            this.errorMsg = err.error?.errors?.email[0];
+          }
+        }
+      );
+    }
+  }
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
+  }
 }

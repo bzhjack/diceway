@@ -1,26 +1,14 @@
 <div class="flex h-full items-center w-full justify-center">
-    <p-card header="S'identifier">
-        <div class="flex flex-col gap-4">
-            <p-inputGroup>
-                <p-inputGroupAddon>
-                    <i class="pi pi-user"></i>
-                </p-inputGroupAddon>
-                <input pInputText placeholder="Adresse mail" />
-            </p-inputGroup>
+    <p-card header="Nouveau compte">
+        <div [formGroup]="registerForm" class="flex flex-col gap-4">
+            <input  formControlName="name" pInputText placeholder="Pseudonyme*" />
+            <input  formControlName="email" pInputText placeholder="Adresse mail*" />
+            <input  formControlName="password" pInputText placeholder="Mot de passe*" />
+            <input  formControlName="password_confirmation" pInputText placeholder="Confirmer le mot de passe*" />
     
-            <p-inputGroup>
-                <p-inputGroupAddon>
-                    <i class="pi pi-lock"></i>
-                </p-inputGroupAddon>
-                <input pInputText placeholder="Mot de passe" />
-            </p-inputGroup>
             <div class="flex justify-between">
-                <p-button [routerLink]="'/forgotten'" label="Mot de passe oublié" size="small" [text]="true" severity="secondary"></p-button>
-                <p-button label="Connexion" size="small"></p-button>
-            </div>
-            <div class="flex flex-col items-center pt-4 text-s">
-                <div>Vous n'avez pas de compte ?</div>
-                <p-button [routerLink]="'/register'" label="Créér votre compte" size="small" [text]="true" severity="secondary"></p-button>
+                <p-button  [routerLink]="'/'" label="retour" size="small" [outlined]="true" severity="secondary"></p-button>
+                <p-button label="Créér le compte" size="small" [disabled]="registerForm.invalid"></p-button>
             </div>
         </div>
     </p-card>
