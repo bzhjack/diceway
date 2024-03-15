@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { CardModule} from 'primeng/card';
+import { RouterModule } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
-import { ButtonModule } from 'primeng/button';
-import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-forgotten',
   standalone: true,
   imports: [
     CardModule,
@@ -17,9 +17,9 @@ import { RouterModule } from '@angular/router';
     ButtonModule,
     RouterModule
   ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  templateUrl: './forgotten.component.html',
+  styleUrl: './forgotten.component.scss'
 })
-export class LoginComponent {
+export class ForgottenComponent {
 
 }
