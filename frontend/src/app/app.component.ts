@@ -12,7 +12,6 @@ import { UserService } from './auth/services/user.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  constructor(private readonly userService: UserService) {
-    this.userService.getHello().subscribe((data: any) =>console.log(data));
+  constructor() {
   }
 }

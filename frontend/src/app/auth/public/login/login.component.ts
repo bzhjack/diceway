@@ -5,6 +5,7 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
+import { InlineSVGModule } from 'ng-inline-svg-2';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,8 @@ import { RouterModule } from '@angular/router';
     InputGroupAddonModule,
     InputTextModule,
     ButtonModule,
-    RouterModule
+    RouterModule,
+    InlineSVGModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
