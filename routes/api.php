@@ -1,8 +1,8 @@
 <?php
-use App\Http\Controllers\Auth\RegisterController;
-use \App\Http\Controllers\Auth\HelloController;
 
-use Illuminate\Http\Request;
+use App\Http\Middleware\RequestAcceptJson;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\VerifyController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 /**
  * Api publiques
  */
-Route::middleware([\App\Http\Middleware\RequestAcceptJson::class])->group(function () {
-    Route::get('hello', [HelloController::class, 'hello']);
+Route::middleware([RequestAcceptJson::class])->group(function () {
     Route::post('auth/register', [RegisterController::class, 'register']);
+    Route::get('auth/email/verify/{id}/{hash}', [VerifyController::class, 'verify'])->name('verification.verify');
 });

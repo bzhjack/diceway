@@ -12,6 +12,9 @@ composer create-project laravel/laravel diceway
 php artisan serve
 php artisan migrate
 
+php artisan make:controller Auth/VerifyController
+
+
 sudo apt remove '^php8.x.*$'
 ```
 
