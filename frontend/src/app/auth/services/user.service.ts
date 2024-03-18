@@ -117,5 +117,7 @@ export class UserService {
       headers: new HttpHeaders().set('Authorization', `Bearer ${token}`)
     });
   }
-
+  public getHello() {
+    return this.http.get('api/hello');
+  }
 }

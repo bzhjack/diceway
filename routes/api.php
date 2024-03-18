@@ -1,7 +1,10 @@
 <?php
+use App\Http\Controllers\Auth\RegisterController;
+use \App\Http\Controllers\Auth\HelloController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +17,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+/**
+ * Api publiques
+ */
+Route::middleware([\App\Http\Middleware\RequestAcceptJson::class])->group(function () {
+    Route::get('hello', [HelloController::class, 'hello']);
+    Route::post('auth/register', [RegisterController::class, 'register']);
 });

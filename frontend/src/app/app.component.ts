@@ -2,6 +2,7 @@ import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { UserService } from './auth/services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -11,5 +12,7 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-
+  constructor(private readonly userService: UserService) {
+    this.userService.getHello().subscribe((data: any) =>console.log(data));
+  }
 }
