@@ -10,7 +10,7 @@ composer create-project laravel/laravel diceway
 
 ```
 php artisan serve
-
+php artisan migrate
 
 sudo apt remove '^php8.x.*$'
 ```
@@ -18,3 +18,7 @@ sudo apt remove '^php8.x.*$'
 ## Gestion de l'aplication angular dans le projet
 
 https://medium.com/swlh/how-to-setup-laravel-with-angular-d3de171afa03
+
+## Commandes mysql
+
+GRANT ALL PRIVILEGES ON diceway.* TO 'diceway'@'localhost';
