@@ -8,6 +8,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
 import { Subscription } from 'rxjs';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -37,7 +38,10 @@ export class RegisterComponent {
     password_confirmation: ['', [Validators.required, Validators.minLength(8)]]
   });
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) { }
+  constructor(
+    private us: UserService,
+    private fb: FormBuilder, 
+    private router: Router) { }
 
 
   register() {
@@ -45,21 +49,18 @@ export class RegisterComponent {
       const credentials = this.registerForm.getRawValue();
       this.sub?.unsubscribe();
       this.pending =true;
-      this.sub = this.http.post('/api/auth/register', {
-        name: credentials.name,
-        email: credentials.email,
-        password: credentials.password,
-        password_confirmation: credentials.password_confirmation
-      }).subscribe(
-        (result: any) => {
-          this.pending =false;
-          this.router.navigate(['notice']);
-        },
-        err => {
-          this.pending =false;
-          this.errorMsg = JSON.stringify(err.error?.message);
-          if (err?.error?.errors?.email) {
-            this.errorMsg = err.error?.errors?.email[0];
+      this.sub = this.us.register(credentials).subscribe(
+        {
+          next: () => {
+            this.pending =false;
+            this.router.navigate(['notice']);
+          },
+          error: (err: any) => {
+            this.pending =false;
+            this.errorMsg = JSON.stringify(err.error?.message);
+            if (err?.error?.errors?.email) {
+              this.errorMsg = err.error?.errors?.email[0];
+            }
           }
         }
       );
@@ -69,3 +70,5 @@ export class RegisterComponent {
     this.sub?.unsubscribe();
   }
 }
+
+

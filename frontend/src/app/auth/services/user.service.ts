@@ -112,12 +112,24 @@ export class UserService {
    * @param token 
    * @returns 
    */
-  public getProfile(token: string): Observable<any> {
+  public profile(token: string): Observable<any> {
     return this.http.get('api/auth/profile', {
       headers: new HttpHeaders().set('Authorization', `Bearer ${token}`)
     });
   }
   public getHello() {
     return this.http.get('api/hello');
+  }
+  /**
+   * Création d'un compte
+   * @param credentials 
+   */
+  public register(credentials: any) {
+    return this.http.post('/api/auth/register', {
+      name: credentials.name,
+      email: credentials.email,
+      password: credentials.password,
+      password_confirmation: credentials.password_confirmation
+    });
   }
 }

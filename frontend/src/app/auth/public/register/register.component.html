@@ -8,7 +8,7 @@
     
             <div class="flex justify-between">
                 <p-button  [routerLink]="'/'" label="retour" size="small" [outlined]="true" severity="secondary"></p-button>
-                <p-button label="Créér le compte" size="small" [disabled]="registerForm.invalid"></p-button>
+                <p-button label="Créér le compte" size="small" [disabled]="registerForm.invalid" (click)="register()"></p-button>
             </div>
         </div>
     </p-card>
