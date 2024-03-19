@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -9,11 +9,15 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
 import { Subscription } from 'rxjs';
 import { UserService } from '../../services/user.service';
+import { InlineSVGModule } from 'ng-inline-svg-2';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
+    CommonModule,
     CardModule,
     InputGroupModule,
     InputGroupAddonModule,
@@ -21,7 +25,9 @@ import { UserService } from '../../services/user.service';
     ButtonModule,
     RouterModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    InlineSVGModule,
+    ProgressBarModule
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
@@ -30,17 +36,27 @@ export class RegisterComponent {
   pending = false;
   errorMsg: string | undefined;
   sub?: Subscription;
-  
+
+  static passwordMatch(group: AbstractControl): ValidationErrors | null {
+    const password = group.value.password;
+    const confirm = group.value.password_confirmation;
+    if (password !== confirm) {
+      group.get('password_confirmation')?.setErrors({notMatch: true});
+    }
+    
+    return password === confirm ? null : { matchingError: true };
+  }
+
   registerForm = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(3)]],
+    name: ['', [Validators.required, Validators.minLength(5)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     password_confirmation: ['', [Validators.required, Validators.minLength(8)]]
-  });
+  }, {validators: RegisterComponent.passwordMatch});
 
   constructor(
     private us: UserService,
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private router: Router) { }
 
 
@@ -48,15 +64,15 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       const credentials = this.registerForm.getRawValue();
       this.sub?.unsubscribe();
-      this.pending =true;
+      this.pending = true;
       this.sub = this.us.register(credentials).subscribe(
         {
           next: () => {
-            this.pending =false;
+            this.pending = false;
             this.router.navigate(['notice']);
           },
           error: (err: any) => {
-            this.pending =false;
+            this.pending = false;
             this.errorMsg = JSON.stringify(err.error?.message);
             if (err?.error?.errors?.email) {
               this.errorMsg = err.error?.errors?.email[0];
@@ -68,6 +84,10 @@ export class RegisterComponent {
   }
   ngOnDestroy() {
     this.sub?.unsubscribe();
+  }
+  onError(controlName: string) {
+    const control = this.registerForm.get(controlName);
+    return control?.dirty && control.invalid;
   }
 }
 

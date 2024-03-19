@@ -1,15 +1,30 @@
-<div class="flex h-full items-center w-full justify-center">
-    <p-card header="Nouveau compte">
-        <div [formGroup]="registerForm" class="flex flex-col gap-4">
-            <input  formControlName="name" pInputText placeholder="Pseudonyme*" />
-            <input  formControlName="email" pInputText placeholder="Adresse mail*" />
-            <input  formControlName="password" pInputText placeholder="Mot de passe*" />
-            <input  formControlName="password_confirmation" pInputText placeholder="Confirmer le mot de passe*" />
-    
-            <div class="flex justify-between">
-                <p-button  [routerLink]="'/'" label="retour" size="small" [outlined]="true" severity="secondary"></p-button>
-                <p-button label="Créér le compte" size="small" [disabled]="registerForm.invalid" (click)="register()"></p-button>
+<div class="flex flex-col h-full items-center w-full justify-center gap-5">
+    <div class="dw_banner" [inlineSVG]="'/frontend/assets/banner.svg'"></div>
+    <p-card header="Nouveau compte" class="relative">
+        <form [formGroup]="registerForm" class="flex flex-col gap-4">
+            <div class="relative flex flex-col">
+                <input class="p-inputtext-sm" formControlName="name" pInputText placeholder="Pseudonyme*" />
+                <small *ngIf="onError('name')" class="dw_error">Minimum 5 caractères</small>
             </div>
-        </div>
+            <div class="relative flex flex-col">
+                <input  formControlName="email" pInputText placeholder="Adresse mail*" autocomplete="username"/>
+                <small *ngIf="onError('email')" class="dw_error">Adresse mail non valide</small>
+            </div>
+            <div class="relative flex flex-col">
+                <input type="password" formControlName="password" pInputText placeholder="Mot de passe*" autocomplete="new-password"/>
+                <small *ngIf="onError('password')" class="dw_error">Minimum 8 caractères</small>
+            </div>
+            <div class="relative flex flex-col">
+                <input  type="password" formControlName="password_confirmation" pInputText placeholder="Confirmer le mot de passe*" autocomplete="new-password"/>
+                <small *ngIf="onError('password_confirmation') || registerForm.hasError('matchingError')" class="dw_error">Ne corresponds pas</small>
+            </div>
+           
+           
+            <div class="flex justify-between">
+                <p-button  [routerLink]="'/'" label="retour" size="small" [outlined]="true" severity="secondary" [disabled]="pending"></p-button>
+                <p-button label="Créér le compte" size="small" [disabled]="registerForm.invalid || pending" (click)="register()"></p-button>
+            </div>
+        </form>
+        <p-progressBar *ngIf="pending" class="dw_progress" mode="indeterminate" [style]="{ height: '6px' }"></p-progressBar>
     </p-card>
 </div>

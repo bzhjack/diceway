@@ -30,3 +30,23 @@ body {
 *:after {
     box-sizing: inherit;
 }
+
+.dw_banner {
+    color: #E2E3E5;
+}
+
+.dw_progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.dw_error {
+    position: absolute;
+    font-size: 12px;
+    left: 2px;
+    right: 0;
+    bottom: -15px;
+    white-space: nowrap;
+    color: #ef4444;
+}
