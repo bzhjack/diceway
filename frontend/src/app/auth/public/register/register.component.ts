@@ -80,8 +80,6 @@ export class RegisterComponent implements OnDestroy {
             this.pending = false;
             if (err?.error?.errors) {
               for (const key in err.error.errors) {
-                console.log(`Clé : ${key}`);
-                console.log(`Contenu : ${err.error.errors[key]}`);
                 this.messages.push({ severity: 'error', summary: key, detail: err.error.errors[key][0]});
               }
             }

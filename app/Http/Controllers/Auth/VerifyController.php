@@ -15,9 +15,9 @@ class VerifyController extends Controller
         $user = User::where('email',$data['email']) -> first();
         if ($user) {
             $user->sendEmailVerificationNotification();
-            return response(['message' => 'Verification link sent!']);
+            return response(['message' => __('passwords.sent')]);
         } else {
-            return response(['error' => 'We can\'t find a user with that email address.'], 404);
+            return response(['message' => __('passwords.user')], 404);
         }
 
     }

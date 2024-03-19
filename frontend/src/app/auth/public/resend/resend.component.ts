@@ -57,6 +57,7 @@ export class ResendComponent implements OnDestroy {
 
   send() {
     const credentials = this.resendForm.getRawValue();
+    this.messages = [];
     if (this.resendForm.valid && credentials.email) {
       this.sub?.unsubscribe();
       this.pending = true;
@@ -69,7 +70,7 @@ export class ResendComponent implements OnDestroy {
           error: err => {
             this.pending = false;
             console.log(err);
-            //this.errorMsg = err.error.message;
+            this.messages.push({ severity: 'error', summary: 'Email', detail: err.error.message});
           }
         }
       );
