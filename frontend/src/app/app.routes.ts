@@ -5,12 +5,16 @@ import { ForgottenComponent } from './auth/public/forgotten/forgotten.component'
 import { LoginComponent } from './auth/public/login/login.component';
 import { RegisterComponent } from './auth/public/register/register.component';
 import { NoticeComponent } from './auth/public/notice/notice.component';
+import { ResendComponent } from './auth/public/resend/resend.component';
 
 export const routes: Routes = [
-    { path: 'login', component: LoginComponent },
-    { path: 'forgotten', component: ForgottenComponent },
-    { path: 'register', component: RegisterComponent },
-    { path: 'notice', component: NoticeComponent },
+    // Accès public
+    { path: 'login', component: LoginComponent }, // Connexion à l'application
+    { path: 'forgotten', component: ForgottenComponent }, // Mot de passe oublié
+    { path: 'register', component: RegisterComponent }, // Création d'un compte
+    { path: 'resend', component: ResendComponent }, // Renvoi d'un mail de confirmation
+    { path: 'notice', component: NoticeComponent }, // Notification de création de compte
+
     { path: '', component: HomeComponent, canActivate: [LoggedInGuardService] },
     { path: '**', redirectTo: '/' },
 ];

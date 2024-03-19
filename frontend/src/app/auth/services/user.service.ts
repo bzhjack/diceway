@@ -132,4 +132,16 @@ export class UserService {
       password_confirmation: credentials.password_confirmation
     });
   }
+
+  /**
+   * Envoi de l'émail de verification du compte
+   * @param email
+   * @returns 
+   */
+  public sendMail(email: string) {
+      return this.http.post('/api/auth/email/send', {
+        email: email
+      });
+  }
+
 }

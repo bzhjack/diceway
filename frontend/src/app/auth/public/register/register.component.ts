@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { InlineSVGModule } from 'ng-inline-svg-2';
@@ -35,7 +35,7 @@ import { UserService } from '../../services/user.service';
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnDestroy {
   pending = false;
   errorMsg: string | undefined;
   sub?: Subscription;
@@ -61,7 +61,6 @@ export class RegisterComponent {
     private us: UserService,
     private fb: FormBuilder,
     private router: Router) {
-    // this.messages = [{ severity: 'error', summary: '', detail: 'Message Content' }];
   }
 
 

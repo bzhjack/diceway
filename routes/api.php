@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
  * Api publiques
  */
 Route::middleware([RequestAcceptJson::class])->group(function () {
-    Route::post('auth/register', [RegisterController::class, 'register']);
-    Route::get('auth/email/verify/{id}/{hash}', [VerifyController::class, 'verify'])->name('verification.verify');
+    Route::post('auth/register', [RegisterController::class, 'register']); // Création de compte
+    Route::post('auth/email/send', [VerifyController::class, 'send']); // Envoi de l'email de vérification
+    Route::get('auth/email/verify/{id}/{hash}', [VerifyController::class, 'verify'])->name('verification.verify'); // Lien de retour de verification du mail
 });
