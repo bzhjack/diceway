@@ -51,6 +51,18 @@ body {
     color: #ef4444;
 }
 
+.dw_container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #cbd5e1e1;
+    padding: 5px;
+    //background-color: rgb(203 213 225 / 29%);
+    border-radius: 5px;
+    a {
+        color: inherit;
+    }
+}
+
 /**
 * Gestion des messages
 */
