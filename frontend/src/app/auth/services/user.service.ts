@@ -144,4 +144,11 @@ export class UserService {
       });
   }
 
+  public login(credentials: any) {
+    return this.http.post('/api/auth/login', {
+      email: credentials.email,
+      password: credentials.password
+    })
+  }
+
 }
