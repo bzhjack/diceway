@@ -22,7 +22,7 @@
             </div>
             <div class="flex justify-between">
                 <p-button [routerLink]="'/forgotten'" label="Mot de passe oublié" size="small" [text]="true" severity="secondary" [disabled]="pending"></p-button>
-                <p-button label="Connexion" size="small" (click)="login()" [disabled]="pending"></p-button>
+                <p-button label="Connexion" size="small" (click)="login()" [disabled]="pending" type="submit"></p-button>
             </div>
             <div *ngIf="!pending" class="flex flex-col items-center pt-4 text-s">
                 <div>Vous n'avez pas de compte ?</div>

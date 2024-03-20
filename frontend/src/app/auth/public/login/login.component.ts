@@ -76,9 +76,9 @@ export class LoginComponent implements OnDestroy {
           if (err.status === 401) {
             this.messages.push({ severity: 'error', summary: '', detail: 'Identifiants non valides'});
           }
-          /*if (err.status === 403) {
+          if (err.status === 403) {
             this.router.navigate(['resend', 'forbidden']);
-          }*/
+          }
         }
       }
       );

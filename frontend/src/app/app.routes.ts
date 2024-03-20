@@ -6,13 +6,16 @@ import { LoginComponent } from './auth/public/login/login.component';
 import { RegisterComponent } from './auth/public/register/register.component';
 import { NoticeComponent } from './auth/public/notice/notice.component';
 import { ResendComponent } from './auth/public/resend/resend.component';
+import { WelcomeComponent } from './auth/public/welcome/welcome.component';
 
 export const routes: Routes = [
     // Accès public
     { path: 'login', component: LoginComponent }, // Connexion à l'application
     { path: 'forgotten', component: ForgottenComponent }, // Mot de passe oublié
     { path: 'register', component: RegisterComponent }, // Création d'un compte
+    { path: 'welcome', component: WelcomeComponent }, // Création d'un compte
     { path: 'resend', component: ResendComponent }, // Renvoi d'un mail de confirmation
+    { path: 'resend/:forbidden', component: ResendComponent }, // Renvoi d'un email de confirmation suite à login
     { path: 'notice', component: NoticeComponent }, // Notification de création de compte
 
     { path: '', component: HomeComponent, canActivate: [LoggedInGuardService] },
