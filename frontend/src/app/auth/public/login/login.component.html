@@ -1,6 +1,6 @@
 <div class="flex flex-col h-full items-center w-full justify-center gap-5">
     <div class="dw_banner" [inlineSVG]="'/frontend/assets/banner.svg'"></div>
-    <p-card header="S'identifier">
+    <p-card class="relative" header="S'identifier">
         <form [formGroup]="loginForm" class="flex flex-col gap-4">
             <p-inputGroup class="relative">
                 <p-inputGroupAddon>
@@ -17,15 +17,18 @@
                 <input formControlName="password" type="password" pInputText placeholder="Mot de passe" autocomplete="current-password"/>
                 <small *ngIf="onError('password')" class="dw_error">Minimum 8 caractères</small>
             </p-inputGroup>
-            
-            <div class="flex justify-between">
-                <p-button [routerLink]="'/forgotten'" label="Mot de passe oublié" size="small" [text]="true" severity="secondary"></p-button>
-                <p-button label="Connexion" size="small" (click)="login()"></p-button>
+            <div *ngIf="messages.length > 0">
+                <p-messages [(value)]="messages" [enableService]="false" [closable]="false"></p-messages>
             </div>
-            <div class="flex flex-col items-center pt-4 text-s">
+            <div class="flex justify-between">
+                <p-button [routerLink]="'/forgotten'" label="Mot de passe oublié" size="small" [text]="true" severity="secondary" [disabled]="pending"></p-button>
+                <p-button label="Connexion" size="small" (click)="login()" [disabled]="pending"></p-button>
+            </div>
+            <div *ngIf="!pending" class="flex flex-col items-center pt-4 text-s">
                 <div>Vous n'avez pas de compte ?</div>
                 <p-button [routerLink]="'/register'" label="Créér votre compte" size="small" [text]="true" severity="secondary"></p-button>
             </div>
         </form>
+        <p-progressBar *ngIf="pending" class="dw_progress" mode="indeterminate" [style]="{ height: '6px' }"></p-progressBar>
     </p-card>
 </div>

@@ -10,6 +10,9 @@ import { Subscription } from 'rxjs';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { CommonModule } from '@angular/common';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { MessagesModule } from 'primeng/messages';
+import { Message } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
@@ -25,12 +28,15 @@ import { CommonModule } from '@angular/common';
     ButtonModule,
     RouterModule,
     InlineSVGModule,
+    ProgressBarModule,
+    MessagesModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnDestroy {
   pending = false;
+  messages: Message[] = [];
   error: string | undefined;
   sub?: Subscription;
   loginForm = this.fb.group({
@@ -42,8 +48,11 @@ export class LoginComponent implements OnDestroy {
   }
 
   login() {
-    console.log('ici');
+    Object.keys(this.loginForm.controls).forEach(key => {
+      this.loginForm.get(key)?.markAsDirty();
+    });
     if (this.loginForm.valid) {
+      this.messages= [];
       const credentials = this.loginForm.getRawValue();
       this.sub?.unsubscribe();
       this.pending = true;
@@ -64,10 +73,10 @@ export class LoginComponent implements OnDestroy {
         error: err => {
           this.pending = false;
           console.log(err);
-          /*if (err.status === 401) {
-            this.error = 'Identifiants non valides';
+          if (err.status === 401) {
+            this.messages.push({ severity: 'error', summary: '', detail: 'Identifiants non valides'});
           }
-          if (err.status === 403) {
+          /*if (err.status === 403) {
             this.router.navigate(['resend', 'forbidden']);
           }*/
         }
