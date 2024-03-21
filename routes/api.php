@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerifyController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotController;
+use App\Http\Controllers\Auth\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 /**
- * Api publiques
+ * Api publics
  */
 Route::middleware([RequestAcceptJson::class])->group(function () {
     Route::post('auth/login', [LoginController::class, 'login']); // Authentification 
@@ -30,4 +31,11 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
     Route::post('auth/password/forgotten', [ForgotController::class, 'forgot'])->middleware('guest')->name('password.email');
     Route::get('auth/password/forgotten/{token}',[ForgotController::class, 'reset'])->middleware('guest')->name('password.reset');
     Route::post('auth/password/reset',[ForgotController::class, 'reset_password'])->middleware('guest')->name('password.update');
+});
+
+/**
+ * Api protégée
+ */
+Route::middleware(['auth:api', 'json.response'])->group(function () {
+    Route::get('auth/profile', [ProfileController::class, 'profile']);
 });

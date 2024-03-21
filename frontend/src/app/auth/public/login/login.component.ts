@@ -64,11 +64,11 @@ export class LoginComponent implements OnDestroy {
         next: (result: any) => {
           this.pending = false;
           console.log(result);
-          /*if (result && result.token) {
+          if (result && result.token) {
             this.router.navigate(['callback', result.token]);
           } else {
             this.router.navigate(['callback', 'error']);
-          }*/
+          }
         },
         error: err => {
           this.pending = false;
