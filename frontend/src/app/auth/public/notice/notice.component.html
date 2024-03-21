@@ -1,6 +1,6 @@
 <div class="flex flex-col h-full items-center w-full justify-center gap-5">
     <div class="dw_banner" [inlineSVG]="'/frontend/assets/banner.svg'"></div>
-        <p-card header="Finaliser votre inscription">
+        <p-card *ngIf="!reset" header="Finaliser votre inscription">
             <div class="flex flex-col">
                 <h3 class="m-0">Un mail vient de vous être envoyé</h3>
                 <div class="mb-1 text-sm">
@@ -15,4 +15,16 @@
                 <p-button [routerLink]="'/'" label="Continuer" size="small"></p-button>
               </div>
         </p-card>
+
+        <p-card *ngIf="reset" header="Mot de passe oublié">
+          <div class="flex flex-col">
+              <h3 class="m-0">Un mail vient de vous être envoyé</h3>
+              <div class="mb-4 text-sm">
+                Pour accéder à la modification de votre mot de passe, rendez vous dans votre messagerie et cliquez sur le lien.
+              </div>
+            </div>
+            <div class="flex justify-end gap-4">
+              <p-button [routerLink]="'/'" label="Continuer" size="small"></p-button>
+            </div>
+      </p-card>
 </div>

@@ -37,7 +37,6 @@ import { UserService } from '../../services/user.service';
 })
 export class RegisterComponent implements OnDestroy {
   pending = false;
-  errorMsg: string | undefined;
   sub?: Subscription;
   messages: Message[] = [];
   static passwordMatch(group: AbstractControl): ValidationErrors | null {

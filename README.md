@@ -14,6 +14,7 @@ php artisan migrate
 
 php artisan make:controller Auth/VerifyController
 
+ php artisan vendor:publish --tag=laravel-notifications // récupération du template email
 
 sudo apt remove '^php8.x.*$'
 ```

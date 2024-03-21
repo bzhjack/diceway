@@ -17,7 +17,7 @@ export class UserService {
     private jwtInterceptorService: JwtInterceptorService,
     private http: HttpClient,
     private router: Router,
-  ) { 
+  ) {
     console.log('UserService');
     this.retrieveUser();
   }
@@ -32,7 +32,7 @@ export class UserService {
       const accessToken = userStorage.token;
       const jwtDecoded = this.parseJwt(accessToken);
 
-       if (this.isExpired(jwtDecoded.exp)) {
+      if (this.isExpired(jwtDecoded.exp)) {
         this.logout();
       } else {
         this.setUserToken(userStorage);
@@ -84,7 +84,7 @@ export class UserService {
   public parseJwt(token: string) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
       return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
     return JSON.parse(jsonPayload);
@@ -139,9 +139,9 @@ export class UserService {
    * @returns 
    */
   public sendMail(email: string) {
-      return this.http.post('/api/auth/email/send', {
-        email: email
-      });
+    return this.http.post('/api/auth/email/send', {
+      email: email
+    });
   }
 
   /**
@@ -165,5 +165,19 @@ export class UserService {
     return this.http.post('/api/auth/password/forgotten', {
       email: email
     })
+  }
+
+  /**
+   * Nouveau mot de passe
+   * @param credentials 
+   * @returns 
+   */
+  public resetPassord(credentials: any) {
+    return this.http.post('/api/auth/password/reset', {
+      token: credentials.token,
+      email: credentials.email,
+      password: credentials.password,
+      password_confirmation: credentials.password_confirmation
+    });
   }
 }
