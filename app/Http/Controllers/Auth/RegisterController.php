@@ -18,8 +18,7 @@ class RegisterController extends Controller
         ]);
         $data['password'] = bcrypt($request->password);
         $user = User::create($data);
-        $token = $user->createToken('diceway')->accessToken;
         event(new Registered($user));
-        return response([ 'user' => $user, 'token' => $token]);
+        return response([ 'user' => $user]);
     }
 }

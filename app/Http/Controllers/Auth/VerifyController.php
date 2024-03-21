@@ -8,6 +8,9 @@ use Illuminate\Auth\Events\Verified;
 
 class VerifyController extends Controller
 {
+    /**
+     * Envoi de l'email de vérification du compte
+     */
     public function send(Request $request) {
         $data = $request->validate([
             'email' => 'required|email'
@@ -21,6 +24,10 @@ class VerifyController extends Controller
         }
 
     }
+
+    /**
+     * Aquittement du mail
+     */
     public function verify(Request $request)
     {
         $user = User::find($request->id);
