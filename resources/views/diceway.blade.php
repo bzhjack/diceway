@@ -10,5 +10,5 @@
 </style><link rel="stylesheet" href="/frontend/styles-AWDHLFIU.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="/frontend/styles-AWDHLFIU.css"></noscript><link rel="modulepreload" href="chunk-EAJGITEE.js"></head>
 <body>
   <app-root></app-root>
-<script src="/frontend/polyfills-RX4V3J3S.js" type="module"></script><script src="/frontend/main-52BXZ4W6.js" type="module"></script></body>
+<script src="/frontend/polyfills-RX4V3J3S.js" type="module"></script><script src="/frontend/main-XJBSOAYI.js" type="module"></script></body>
 </html>

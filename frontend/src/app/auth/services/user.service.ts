@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class UserService {
 
-  private localStorageKeyName = 'diceway-session';
+  private sessionStorageKeyName = 'diceway-session';
   private userEvents = new BehaviorSubject<UserModel | undefined>(undefined);
   private userToken: string | null = null;
 
@@ -25,17 +25,11 @@ export class UserService {
    * Fonction de vérification de la validité de l'authentification 
    */
   retrieveUser() {
-    const value = window.sessionStorage.getItem(this.localStorageKeyName);
+    const value = window.sessionStorage.getItem(this.sessionStorageKeyName);
     if (value) {
       const userStorage = JSON.parse(value) as UserStorageModel;
       const accessToken = userStorage.token;
-      const jwtDecoded = this.parseJwt(accessToken);
-
-      if (this.isExpired(jwtDecoded.exp)) {
-        this.logout();
-      } else {
-        this.setUserToken(userStorage);
-      }
+      this.setUserToken(userStorage);
     }
   }
 
@@ -44,7 +38,7 @@ export class UserService {
    * @param user 
    */
   storeLoggedInUser(userStorage: UserStorageModel) {
-    window.localStorage.setItem(this.localStorageKeyName, JSON.stringify(userStorage));
+    window.sessionStorage.setItem(this.sessionStorageKeyName, JSON.stringify(userStorage));
     this.setUserToken(userStorage);
   }
 
@@ -78,7 +72,7 @@ export class UserService {
   clearToken() {
     this.userToken = null;
     this.userEvents.next(undefined);
-    window.sessionStorage.removeItem(this.localStorageKeyName);
+    window.sessionStorage.removeItem(this.sessionStorageKeyName);
   }
 
   /**
@@ -109,7 +103,7 @@ export class UserService {
    * @returns 
    */
   isLoggedIn(): boolean {
-    return !!window.localStorage.getItem(this.localStorageKeyName);
+    return !!window.sessionStorage.getItem(this.sessionStorageKeyName);
   }
 
   /**
@@ -122,9 +116,11 @@ export class UserService {
       headers: new HttpHeaders().set('Authorization', `Bearer ${token}`)
     });
   }
+  
   public getHello() {
     return this.http.get('api/hello');
   }
+
   /**
    * Création d'un compte
    * @param credentials 
