@@ -19,7 +19,7 @@
             </div>
             <div class="flex justify-between">
                 <p-button  [routerLink]="'/'" label="retour" size="small" [outlined]="true" severity="secondary" [disabled]="pending"></p-button>
-                <p-button label="Envoyer" size="small" [disabled]="forgotForm.invalid || pending" (click)="send()"></p-button>
+                <p-button label="Envoyer" size="small" [disabled]="forgotForm.invalid || pending" (click)="send()" type="submit"></p-button>
             </div>
         </form>
         <p-progressBar *ngIf="pending" class="dw_progress" mode="indeterminate" [style]="{ height: '6px' }"></p-progressBar>
