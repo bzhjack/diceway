@@ -32,7 +32,7 @@ class VerifyController extends Controller
     {
         $user = User::find($request->id);
         if (!$user || $request->route('id') != $user->getKey()) {
-            return redirect('/callback/error');
+            return redirect('/notfound');
         }
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));

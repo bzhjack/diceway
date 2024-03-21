@@ -144,6 +144,11 @@ export class UserService {
       });
   }
 
+  /**
+   * Authentification
+   * @param credentials 
+   * @returns 
+   */
   public login(credentials: any) {
     return this.http.post('/api/auth/login', {
       email: credentials.email,
@@ -151,4 +156,14 @@ export class UserService {
     })
   }
 
+  /**
+   * Mot de passe oublié
+   * @param credentials 
+   * @returns 
+   */
+  public forgottenPassword(email: string) {
+    return this.http.post('/api/auth/password/forgotten', {
+      email: email
+    })
+  }
 }

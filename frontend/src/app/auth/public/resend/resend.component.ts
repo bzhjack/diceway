@@ -70,7 +70,7 @@ export class ResendComponent implements OnDestroy {
           error: err => {
             this.pending = false;
             console.log(err);
-            this.messages.push({ severity: 'error', summary: 'Email', detail: err.error.message});
+            this.messages.push({ severity: 'error', summary: '', detail: err.error.message});
           }
         }
       );
