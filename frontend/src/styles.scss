@@ -71,3 +71,12 @@ body {
 .p-message-icon {
     display: flex;
 }
+
+/**
+* Titre de la carte en cas de soucis
+*/
+.forbidden {
+   .p-card-title {
+        color: var(--red-500);
+    }
+}
