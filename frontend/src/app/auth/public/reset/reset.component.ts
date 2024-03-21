@@ -73,9 +73,7 @@ export class ResetComponent implements OnDestroy {
         },
         error: err => {
           this.pending = false;
-          for (const key in err.error.errors) {
-            this.messages.push({ severity: 'error', summary: key, detail: err.error.errors[key][0]});
-          }
+          this.messages.push({ severity: 'error', summary: '', detail: err.error.message});
         }
       }
       );

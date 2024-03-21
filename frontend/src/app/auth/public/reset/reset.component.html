@@ -15,7 +15,7 @@
             </div>
             <div class="flex justify-between">
                 <p-button  [routerLink]="'/'" label="retour" size="small" [outlined]="true" severity="secondary" [disabled]="pending"></p-button>
-                <p-button label="Créér le compte" size="small" [disabled]="resetForm.invalid || pending" (click)="reset()"></p-button>
+                <p-button label="Valider" size="small" [disabled]="resetForm.invalid || pending" (click)="reset()"></p-button>
             </div>
         </form>
         <p-progressBar *ngIf="pending" class="dw_progress" mode="indeterminate" [style]="{ height: '6px' }"></p-progressBar>
