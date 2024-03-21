@@ -6,6 +6,8 @@ use App\Http\Controllers\Auth\VerifyController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotController;
 use App\Http\Controllers\Auth\ProfileController;
+use \App\Http\Controllers\HelloController;
+
 use Illuminate\Support\Facades\Route;
 
 
@@ -38,4 +40,5 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
  */
 Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function () {
     Route::get('auth/profile', [ProfileController::class, 'profile']);
+    Route::get('hello', [HelloController::class, 'hello']);
 });

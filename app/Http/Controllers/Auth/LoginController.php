@@ -20,9 +20,9 @@ class LoginController extends Controller
             if ($user->hasVerifiedEmail() != 1 ) {
                 return response()->json(['error'=> 'email not verified'], 403);
             }
-            $tokenobj =  $user->createToken('diceway')->accessToken;
+            $token =  $user->createToken('diceway');
             //now return this token on success login attempt
-            return response()->json(['user'=> $user, 'token' => $tokenobj->token], 200);
+            return response()->json(['user'=> $user, 'token' => $token->plainTextToken], 200);
         }
         else{
             //wrong login credentials, return, user not authorised to our system, return error code 401
