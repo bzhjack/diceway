@@ -12,6 +12,8 @@ composer create-project laravel/laravel diceway
 php artisan serve
 php artisan migrate
 
+php artisan auth:clear-resets // suppression des tokens périmés
+
 php artisan make:controller Auth/VerifyController
 
  php artisan vendor:publish --tag=laravel-notifications // récupération du template email
