@@ -18,6 +18,7 @@ export class CallbackComponent implements OnInit {
     }
   }
   authenticate(token: string) {
+    console.log(token);
     this.userService.profile(token)
       .subscribe(
         {

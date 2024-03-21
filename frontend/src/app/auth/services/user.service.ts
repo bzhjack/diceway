@@ -3,7 +3,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { UserModel, UserStorageModel } from './user.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { JwtInterceptorService } from '../interceptors/jwt-interceptor.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +11,9 @@ export class UserService {
 
   private localStorageKeyName = 'diceway-session';
   private userEvents = new BehaviorSubject<UserModel | undefined>(undefined);
+  private userToken: string | null = null;
 
   constructor(
-    private jwtInterceptorService: JwtInterceptorService,
     private http: HttpClient,
     private router: Router,
   ) {
@@ -55,10 +54,16 @@ export class UserService {
    */
   private setUserToken(userStorage: UserStorageModel) {
     const token = userStorage.token;
-    this.jwtInterceptorService.setJwtToken(token);
+    this.userToken = token;
     this.userEvents.next(userStorage.profile);
   }
-
+  /**
+   * 
+   * @returns Récupération du token utilisateur
+   */
+  public getUserToken() {
+    return this.userToken;
+  }
   /**
    * Suppression du token et "logout" de l'application.
    */
@@ -71,9 +76,9 @@ export class UserService {
    * Suppression du profile utilisateur par broadcast. 
    */
   clearToken() {
+    this.userToken = null;
     this.userEvents.next(undefined);
     window.sessionStorage.removeItem(this.localStorageKeyName);
-    this.jwtInterceptorService.removeJwtToken();
   }
 
   /**

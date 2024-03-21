@@ -36,6 +36,6 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
 /**
  * Api protégée
  */
-Route::middleware(['auth:api', 'json.response'])->group(function () {
+Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function () {
     Route::get('auth/profile', [ProfileController::class, 'profile']);
 });
