@@ -1,0 +1,82 @@
+@import "primeng/resources/themes/lara-dark-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+
+//@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    line-height: normal;
+    height: 100%;
+    font-size: 100%;
+}
+
+/* IE fix */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+.dw_banner {
+    color: #E2E3E5;
+}
+
+.dw_progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+.dw_error {
+    position: absolute;
+    font-size: 12px;
+    left: 2px;
+    right: 0;
+    bottom: -15px;
+    white-space: nowrap;
+    color: #ef4444;
+}
+
+.dw_container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #cbd5e1e1;
+    padding: 10px;
+    border-radius: 5px;
+    a {
+        color: inherit;
+    }
+}
+
+/**
+* Gestion des messages
+*/
+.p-message .p-message-wrapper {
+    padding: 0.5rem 1rem;
+}
+.p-message-icon {
+    display: flex;
+}
+
+/**
+* Titre de la carte en cas de soucis
+*/
+.forbidden {
+   .p-card-title {
+        color: var(--red-500);
+    }
+}

@@ -1,7 +1,13 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Middleware\RequestAcceptJson;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\VerifyController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\ForgotController;
+use App\Http\Controllers\Auth\ProfileController;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +20,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+/**
+ * Api publics
+ */
+Route::middleware([RequestAcceptJson::class])->group(function () {
+    Route::post('auth/login', [LoginController::class, 'login']); // Authentification 
+    Route::post('auth/register', [RegisterController::class, 'register']); // Création de compte
+    Route::post('auth/email/send', [VerifyController::class, 'send']); // Envoi de l'email de vérification
+    Route::get('auth/email/verify/{id}/{hash}', [VerifyController::class, 'verify'])->name('verification.verify'); // Lien de retour de verification du mail
+    Route::post('auth/password/forgotten', [ForgotController::class, 'forgot'])->middleware('guest')->name('password.email');
+    Route::get('auth/password/forgotten/{token}',[ForgotController::class, 'reset'])->middleware('guest')->name('password.reset');
+    Route::post('auth/password/reset',[ForgotController::class, 'reset_password'])->middleware('guest')->name('password.update');
+});
+
+/**
+ * Api protégée
+ */
+Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function () {
+    Route::get('auth/profile', [ProfileController::class, 'profile']);
 });

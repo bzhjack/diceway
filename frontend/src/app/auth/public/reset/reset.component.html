@@ -1,0 +1,23 @@
+<div class="flex flex-col h-full items-center w-full justify-center gap-5">
+    <div class="dw_banner" [inlineSVG]="'/frontend/assets/banner.svg'"></div>
+    <p-card header="Nouveau mot de passe" class="relative w-full md:w-1/2 lg:w-1/3">
+        <form [formGroup]="resetForm" class="flex flex-col gap-4">
+            <div class="relative flex flex-col">
+                <input class="p-inputtext-sm" type="password" formControlName="password" pInputText placeholder="Mot de passe*" autocomplete="new-password"/>
+                <small *ngIf="onError('password')" class="dw_error">Minimum 8 caractères</small>
+            </div>
+            <div class="relative flex flex-col">
+                <input  class="p-inputtext-sm" type="password" formControlName="password_confirmation" pInputText placeholder="Confirmer le mot de passe*" autocomplete="new-password"/>
+                <small *ngIf="onError('password_confirmation') || resetForm.hasError('matchingError')" class="dw_error">Ne corresponds pas</small>
+            </div>
+            <div *ngIf="messages.length > 0">
+                <p-messages [(value)]="messages" [enableService]="false" [closable]="false"></p-messages>
+            </div>
+            <div class="flex justify-between">
+                <p-button  [routerLink]="'/'" label="retour" size="small" [outlined]="true" severity="secondary" [disabled]="pending"></p-button>
+                <p-button label="Valider" size="small" [disabled]="resetForm.invalid || pending" (click)="reset()"></p-button>
+            </div>
+        </form>
+        <p-progressBar *ngIf="pending" class="dw_progress" mode="indeterminate" [style]="{ height: '6px' }"></p-progressBar>
+    </p-card>
+</div>

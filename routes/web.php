@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\DicewayController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
-});
+});*/
+
+Route::any('/{any}', [DicewayController::class, 'index'])->where('any', '^(?!api).*$');
