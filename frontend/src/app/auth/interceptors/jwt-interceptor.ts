@@ -14,7 +14,6 @@ export const JwtInterceptor: HttpInterceptorFn = (
   next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
   const authToken = inject(UserService).getUserToken();
-  console.log('ici', req);
   if (authToken !== null) {
     const clone = req.clone({setHeaders: {Authorization: `Bearer ${authToken}`}});
     return next(clone);
