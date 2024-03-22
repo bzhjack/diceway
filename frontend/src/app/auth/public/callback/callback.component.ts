@@ -29,12 +29,9 @@ export class CallbackComponent implements OnInit {
                 this.router.navigate(['/'])
               }
             },
-          error: (err) => this.authenticationFailed(err)
+          error: (err) => this.router.navigate(['/notfound'])
         }
       );
   }
 
-  authenticationFailed(error: unknown) {
-    console.error('Authentication failed: ' + error);
-  }
 }
