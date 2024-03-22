@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
+import { InlineSVGModule } from 'ng-inline-svg-2';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 @Component({
   selector: 'app-callback',
   standalone: true,
-  imports: [],
+  imports: [
+    InlineSVGModule,
+    ProgressBarModule
+  ],
   templateUrl: './callback.component.html',
   styleUrl: './callback.component.scss'
 })
@@ -18,7 +23,6 @@ export class CallbackComponent implements OnInit {
     }
   }
   authenticate(token: string) {
-    console.log(token);
     this.userService.profile(token)
       .subscribe(
         {
