@@ -11,6 +11,7 @@ export class UserService {
 
   private sessionStorageKeyName = 'diceway-session';
   private userEvents = new BehaviorSubject<UserModel | undefined>(undefined);
+  public user$ = this.userEvents.asObservable();
   private userToken: string | null = null;
 
   constructor(
