@@ -33,7 +33,7 @@
                     severity="secondary"></p-button>
             </div>
         </form>
-        <div class="flex justify-center">
+        <div *ngIf="!pending" class="flex justify-center">
             <a class="p-button p-button-secondary" size="small" href="/api/auth/google" style="text-decoration: none;">
                 <div class="flex login__google items-center">
                     <img src="/frontend/assets/socialite/google.svg">
