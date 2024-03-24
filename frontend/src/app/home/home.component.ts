@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
 import { UserService } from '../auth/services/user.service';
+import { TopbarComponent } from '../layout/topbar/topbar.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [],
+  imports: [
+    TopbarComponent
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
