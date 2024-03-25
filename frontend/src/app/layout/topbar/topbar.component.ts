@@ -31,8 +31,7 @@ export class TopbarComponent implements OnDestroy {
     });
   }
   logout() {
-    this.us.clearTokens(this.currentUser.id).subscribe((result) => {
-    });
+    this.us.clearTokens(this.currentUser.id).subscribe((result) => {});
     this.us.logout();
   }
 
