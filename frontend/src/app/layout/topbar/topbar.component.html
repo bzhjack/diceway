@@ -16,5 +16,8 @@
 </div>
 
 <p-overlayPanel #op>
-  <a (click)="logout()" class="underline cursor-pointer">Se déconnecter</a>
+  <div class="flex gap-2">
+    <div [setSVGAttributes]="{width: 20, height: 20}" [inlineSVG]="'/frontend/assets/logout.svg'"></div>
+    <a (click)="logout()" class="underline cursor-pointer">Se déconnecter</a>
+  </div>
 </p-overlayPanel>

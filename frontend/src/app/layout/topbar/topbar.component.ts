@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import { InlineSVGModule } from 'ng-inline-svg-2';
 import { UserService } from '../../auth/services/user.service';
 import {AvatarModule} from "primeng/avatar";
 import {AsyncPipe, CommonModule} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {DropdownModule} from "primeng/dropdown";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-topbar',
@@ -19,14 +20,23 @@ import {DropdownModule} from "primeng/dropdown";
   templateUrl: './topbar.component.html',
   styleUrl: './topbar.component.scss'
 })
-export class TopbarComponent {
+export class TopbarComponent implements OnDestroy {
   userObs = this.us.user$;
+  currentUser: any;
+  sub?: Subscription;
   constructor(private us: UserService) {
     this.us.user$.subscribe((user) => {
       console.log(user);
+      this.currentUser = user;
     });
   }
   logout() {
-    this.us.logout();
+    this.us.clearTokens(this.currentUser.id).subscribe((result) => {
+      this.us.logout();
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
   }
 }

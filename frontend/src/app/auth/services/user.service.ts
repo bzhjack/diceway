@@ -149,11 +149,8 @@ export class UserService {
     })
   }
 
-  public logoutApi(credentials: any) {
-    return this.http.post('/api/auth/login', {
-      email: credentials.email,
-      password: credentials.password
-    })
+  public clearTokens(id: string) {
+    return this.http.post('/api/auth/logout', {id});
   }
 
   /**
