@@ -26,4 +26,7 @@ export class TopbarComponent {
       console.log(user);
     });
   }
+  logout() {
+    this.us.logout();
+  }
 }

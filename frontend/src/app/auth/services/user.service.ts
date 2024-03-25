@@ -23,7 +23,7 @@ export class UserService {
   }
 
   /**
-   * Fonction de vérification de la validité de l'authentification 
+   * Fonction de vérification de la validité de l'authentification
    */
   retrieveUser() {
     const value = window.sessionStorage.getItem(this.sessionStorageKeyName);
@@ -36,7 +36,7 @@ export class UserService {
 
   /**
    * Mise à jour du localStorage avec les infos sur l'utilisateur connecté
-   * @param user 
+   * @param user
    */
   storeLoggedInUser(userStorage: UserStorageModel) {
     window.sessionStorage.setItem(this.sessionStorageKeyName, JSON.stringify(userStorage));
@@ -45,7 +45,7 @@ export class UserService {
 
   /**
    * Mise à jour du token dans l'interceptor et broadcast du profile utilisateur
-   * @param userStorage 
+   * @param userStorage
    */
   private setUserToken(userStorage: UserStorageModel) {
     const token = userStorage.token;
@@ -53,7 +53,7 @@ export class UserService {
     this.userEvents.next(userStorage.profile);
   }
   /**
-   * 
+   *
    * @returns Récupération du token utilisateur
    */
   public getUserToken() {
@@ -68,7 +68,7 @@ export class UserService {
   }
   /**
    * Suppression du localStorage et du token dans l'interceptor
-   * Suppression du profile utilisateur par broadcast. 
+   * Suppression du profile utilisateur par broadcast.
    */
   clearToken() {
     this.userToken = null;
@@ -79,7 +79,7 @@ export class UserService {
   /**
    * Décodage des informations sur le token
    * @param token
-   * @returns 
+   * @returns
    */
   public parseJwt(token: string) {
     var base64Url = token.split('.')[1];
@@ -91,40 +91,31 @@ export class UserService {
   }
 
   /**
-   * Test si le token est expiré
-   * @param exp 
-   * @returns 
-   */
-  public isExpired(exp: number = 0): boolean {
-    return (Date.now() >= exp * 1000);
-  }
-
-  /**
-   * Test si l'état de la connexion 
-   * @returns 
+   * Test si l'état de la connexion
+   * @returns
    */
   isLoggedIn(): boolean {
     return !!window.sessionStorage.getItem(this.sessionStorageKeyName);
   }
 
   /**
-   * Récupère le profile utilisteur. 
-   * @param token 
-   * @returns 
+   * Récupère le profile utilisteur.
+   * @param token
+   * @returns
    */
   public profile(token: string): Observable<any> {
     return this.http.get('api/auth/profile', {
       headers: new HttpHeaders().set('Authorization', `Bearer ${token}`)
     });
   }
-  
+
   public getHello() {
     return this.http.get('api/hello');
   }
 
   /**
    * Création d'un compte
-   * @param credentials 
+   * @param credentials
    */
   public register(credentials: any) {
     return this.http.post('/api/auth/register', {
@@ -138,7 +129,7 @@ export class UserService {
   /**
    * Envoi de l'émail de verification du compte
    * @param email
-   * @returns 
+   * @returns
    */
   public sendMail(email: string) {
     return this.http.post('/api/auth/email/send', {
@@ -148,8 +139,8 @@ export class UserService {
 
   /**
    * Authentification
-   * @param credentials 
-   * @returns 
+   * @param credentials
+   * @returns
    */
   public login(credentials: any) {
     return this.http.post('/api/auth/login', {
@@ -158,10 +149,17 @@ export class UserService {
     })
   }
 
+  public logoutApi(credentials: any) {
+    return this.http.post('/api/auth/login', {
+      email: credentials.email,
+      password: credentials.password
+    })
+  }
+
   /**
    * Mot de passe oublié
-   * @param credentials 
-   * @returns 
+   * @param credentials
+   * @returns
    */
   public forgottenPassword(email: string) {
     return this.http.post('/api/auth/password/forgotten', {
@@ -171,8 +169,8 @@ export class UserService {
 
   /**
    * Nouveau mot de passe
-   * @param credentials 
-   * @returns 
+   * @param credentials
+   * @returns
    */
   public resetPassord(credentials: any) {
     return this.http.post('/api/auth/password/reset', {
