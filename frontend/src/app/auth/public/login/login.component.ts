@@ -63,7 +63,6 @@ export class LoginComponent implements OnDestroy {
         {
         next: (result: any) => {
           this.pending = false;
-          console.log(result);
           if (result && result.token) {
             this.router.navigate(['callback', result.token]);
           } else {
@@ -72,7 +71,6 @@ export class LoginComponent implements OnDestroy {
         },
         error: err => {
           this.pending = false;
-          console.log(err);
           if (err.status === 401) {
             this.messages.push({ severity: 'error', summary: '', detail: 'Identifiants non valides'});
           } else if (err.status === 403) {

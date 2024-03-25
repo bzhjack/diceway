@@ -17,6 +17,7 @@ export const routes: Routes = [
     { path: 'forgotten', component: ForgottenComponent }, // Mot de passe oublié
     { path: 'register', component: RegisterComponent }, // Création d'un compte
     { path: 'welcome', component: WelcomeComponent }, // Création d'un compte
+    { path: 'welcome/:success', component: WelcomeComponent }, // Création d'un compte
     { path: 'resend', component: ResendComponent }, // Renvoi d'un mail de confirmation
     { path: 'resend/:forbidden', component: ResendComponent }, // Renvoi d'un email de confirmation suite à login
     { path: 'notice', component: NoticeComponent }, // Confirmation de création de compte
