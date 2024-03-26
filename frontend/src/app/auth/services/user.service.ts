@@ -63,6 +63,7 @@ export class UserService {
    * Suppression du token et "logout" de l'application.
    */
   logout() {
+    this.clearTokens();
     this.clearToken();
     this.router.navigate(['/login']);
   }
@@ -138,7 +139,7 @@ export class UserService {
 
   public clearTokens() {
     if (this.currentUser !== null) {
-      this.http.post('/api/auth/logout', {id: this.currentUser}).pipe(takeUntilDestroyed()).subscribe(() => {
+      this.http.post('/api/auth/logout', {id: this.currentUser.id}).subscribe(() => {
         console.log('Tokens cleared :-)');
       });
     }

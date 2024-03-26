@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +21,7 @@ class SocialController extends Controller
         $this->registerOrLoginUser($user);
         $id = Auth::id();
         $user = User::find($id);
-        $token = $user->createToken('diceway')->plainTextToken;
+        $token = $user->createToken('diceway', ['*'], now()->addWeek())->plainTextToken;
         $host = "";
         if (env('APP_MODE') == "dev") {
             $host = "http://localhost:4200";
