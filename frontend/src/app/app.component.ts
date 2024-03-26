@@ -1,8 +1,9 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Component } from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { UserService } from './auth/services/user.service';
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,10 @@ import { UserService } from './auth/services/user.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
-  constructor() {
+export class AppComponent implements OnDestroy {
+  constructor(private us: UserService) {
+  }
+  ngOnDestroy() {
+    this.us.clearTokens();
   }
 }

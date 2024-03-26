@@ -1,14 +1,15 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { UserModel, UserStorageModel } from './user.model';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {UserModel, UserStorageModel} from './user.model';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Router} from '@angular/router';
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-
+  private currentUser: any = null;
   private sessionStorageKeyName = 'diceway-session';
   private userEvents = new BehaviorSubject<UserModel | undefined>(undefined);
   public user$ = this.userEvents.asObservable();
@@ -29,14 +30,13 @@ export class UserService {
     const value = window.sessionStorage.getItem(this.sessionStorageKeyName);
     if (value) {
       const userStorage = JSON.parse(value) as UserStorageModel;
-      const accessToken = userStorage.token;
       this.setUserToken(userStorage);
     }
   }
 
   /**
    * Mise à jour du localStorage avec les infos sur l'utilisateur connecté
-   * @param user
+   * @param userStorage
    */
   storeLoggedInUser(userStorage: UserStorageModel) {
     window.sessionStorage.setItem(this.sessionStorageKeyName, JSON.stringify(userStorage));
@@ -48,8 +48,8 @@ export class UserService {
    * @param userStorage
    */
   private setUserToken(userStorage: UserStorageModel) {
-    const token = userStorage.token;
-    this.userToken = token;
+    this.userToken = userStorage.token;
+    this.currentUser = userStorage.profile;
     this.userEvents.next(userStorage.profile);
   }
   /**
@@ -72,22 +72,9 @@ export class UserService {
    */
   clearToken() {
     this.userToken = null;
+    this.currentUser = null;
     this.userEvents.next(undefined);
     window.sessionStorage.removeItem(this.sessionStorageKeyName);
-  }
-
-  /**
-   * Décodage des informations sur le token
-   * @param token
-   * @returns
-   */
-  public parseJwt(token: string) {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-    return JSON.parse(jsonPayload);
   }
 
   /**
@@ -149,14 +136,18 @@ export class UserService {
     })
   }
 
-  public clearTokens(id: string) {
-    return this.http.post('/api/auth/logout', {id});
+  public clearTokens() {
+    if (this.currentUser !== null) {
+      this.http.post('/api/auth/logout', {id: this.currentUser}).pipe(takeUntilDestroyed()).subscribe(() => {
+        console.log('Tokens cleared :-)');
+      });
+    }
   }
 
   /**
    * Mot de passe oublié
-   * @param credentials
    * @returns
+   * @param email
    */
   public forgottenPassword(email: string) {
     return this.http.post('/api/auth/password/forgotten', {
