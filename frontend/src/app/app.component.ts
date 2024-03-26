@@ -1,8 +1,5 @@
-import { APP_BASE_HREF } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { UserService } from './auth/services/user.service';
+import {Component} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +9,5 @@ import { UserService } from './auth/services/user.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  constructor() {
-  }
+
 }

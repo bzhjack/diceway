@@ -59,7 +59,7 @@ export class ResetComponent implements OnDestroy {
         email
       });
   }
-  
+
   reset() {
     if (this.resetForm.valid) {
       const credentials = this.resetForm.getRawValue();
@@ -69,7 +69,7 @@ export class ResetComponent implements OnDestroy {
         {
         next: (result: any) => {
           this.pending = false;
-          this.router.navigate(['/login']);
+          this.router.navigate(['/welcome/success']);
         },
         error: err => {
           this.pending = false;
