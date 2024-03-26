@@ -80,3 +80,10 @@ body {
         color: var(--red-500);
     }
 }
+
+.home-card {
+    .p-card-header {
+        height: 184px;
+        overflow: hidden;
+      }
+}
