@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { UserService } from '../auth/services/user.service';
 import { TopbarComponent } from '../layout/topbar/topbar.component';
+import {CardModule} from "primeng/card";
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
-    TopbarComponent
+    TopbarComponent,
+    CardModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
