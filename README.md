@@ -12,11 +12,21 @@ composer create-project laravel/laravel diceway
 php artisan serve
 php artisan migrate
 
-php artisan auth:clear-resets // suppression des tokens périmés
+// Gestion database
 
+php artisan make:migration create_bol_regions_table
+php artisan make:model BolRegion
+php artisan make:seeder BolRegionSeeder
+php artisan db:seed --class=BolRegionSeeder
+
+// suppression des tokens périmés
+php artisan auth:clear-resets 
+
+// Création d'un controller
 php artisan make:controller Auth/VerifyController
 
- php artisan vendor:publish --tag=laravel-notifications // récupération du template email
+// récupération du template email
+php artisan vendor:publish --tag=laravel-notifications 
 
 sudo apt remove '^php8.x.*$'
 ```
