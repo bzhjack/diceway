@@ -1,5 +1,5 @@
 <div class="dw-topbar items-center justify-between">
-    <div class="dw-topbar__logo">
+    <div class="dw-topbar__logo" [routerLink]="'/'">
         <div class="dw_banner" [inlineSVG]="'/frontend/assets/banner.svg'"></div>
     </div>
   <div *ngIf="userObs | async as user" class="flex gap-4 cursor-pointer" (click)="op.toggle($event)">

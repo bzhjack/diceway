@@ -4,6 +4,7 @@ import {UserService} from '../../auth/services/user.service';
 import {AvatarModule} from "primeng/avatar";
 import {AsyncPipe, CommonModule} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-topbar',
@@ -13,7 +14,8 @@ import {OverlayPanelModule} from "primeng/overlaypanel";
     CommonModule,
     AvatarModule,
     InlineSVGModule,
-    AsyncPipe
+    AsyncPipe,
+    RouterLink
   ],
   templateUrl: './topbar.component.html',
   styleUrl: './topbar.component.scss'
