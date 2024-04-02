@@ -10,6 +10,7 @@ import { ResendComponent } from './auth/public/resend/resend.component';
 import { ResetComponent } from './auth/public/reset/reset.component';
 import { WelcomeComponent } from './auth/public/welcome/welcome.component';
 import { HomeComponent } from './home/home.component';
+import {BolHomeComponent} from "./bol/home/home.component";
 
 export const routes: Routes = [
     // Accès public
@@ -27,5 +28,9 @@ export const routes: Routes = [
     { path: 'notfound', component: NotfoundComponent }, // Echec à la verification du mail ou 404 standard
 
     { path: '', component: HomeComponent, canActivate: [loggedInGuard] },
+    { path: 'bol', component: BolHomeComponent, canActivate: [loggedInGuard] },
+
+
+
     { path: '**', redirectTo: '/' },
 ];
