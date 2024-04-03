@@ -24,14 +24,14 @@ class BolAvantageSeeder extends Seeder
                 'id'=> 2 ,
                 'avantage' => 'Ami des bêtes',
                 'de_bonus' => true,
-                'domaine_de_bonus' => 'Intéraction avec les animaux',
+                'de_bonus_domaine' => 'Intéraction avec les animaux',
                 'description' => 'Dresseur: deux ou trois compagnons animaux de taille petite, ou un seul de taille moyenne ou grande.'
             ],
             [
                 'id'=> 3 ,
                 'avantage' => 'Ami des céruléens',
                 'de_bonus' => true,
-                'domaine_de_bonus' => 'Intéraction avec les nomades bleus.',
+                'de_bonus_domaine' => 'Intéraction avec les nomades bleus.',
             ],
             [
                 'id'=> 4 ,
@@ -47,31 +47,31 @@ class BolAvantageSeeder extends Seeder
                 'id'=> 6 ,
                 'avantage' => 'Arme favorite',
                 'de_bonus' => true,
-                'domaine_de_bonus' => 'Utilisation de votre arme favorite.',
+                'de_bonus_domaine' => 'Utilisation de votre arme favorite.',
             ],
             [
                 'id'=> 7 ,
                 'avantage' => 'Artiste',
                 'de_bonus' => true,
-                'domaine_de_bonus' => 'Domaine de l\'art',
+                'de_bonus_domaine' => 'Domaine de l\'art',
             ],
             [
                 'id'=> 8 ,
                 'avantage' => 'Athlète',
                 'de_bonus' => true,
-                'domaine_de_bonus' => 'activités athlétiques (autres que le combat) comme courir, nager, grimper ou sauter.',
+                'de_bonus_domaine' => 'activités athlétiques (autres que le combat) comme courir, nager, grimper ou sauter.',
             ],
             [
                 'id'=> 9 ,
                 'avantage' => 'Attirant',
                 'de_bonus' => true,
-                'domaine_de_bonus' => 'les situations où l’apparence peut jouer un rôle.',
+                'de_bonus_domaine' => 'les situations où l’apparence peut jouer un rôle.',
             ],
             [
                 'id'=> 10 ,
                 'avantage' => 'Bagarreur',
                 'de_bonus' => true,
-                'domaine_de_bonus' => 'À l’attaque quand vous combattez à mains nues.',
+                'de_bonus_domaine' => 'À l’attaque quand vous combattez à mains nues.',
             ],
             [
                 'id'=> 11 ,
@@ -82,25 +82,25 @@ class BolAvantageSeeder extends Seeder
                 'id'=> 12 ,
                 'avantage' => 'Beau parleur',
                 'de_bonus' => true,
-                'domaine_de_bonus' => 'Mentir, escroquer, baratiner ou tromper quelqu’un.'
+                'de_bonus_domaine' => 'Mentir, escroquer, baratiner ou tromper quelqu’un.'
             ],
             [
                 'id'=> 13 ,
                 'avantage' => 'Bibliothèque savante',
                 'de_bonus' => true,
-                'domaine_de_bonus' => 'Recueillir des informations lorsque vous vous trouvez dans votre bibliothèque.'
+                'de_bonus_domaine' => 'Recueillir des informations lorsque vous vous trouvez dans votre bibliothèque.'
             ],
             [
                 'id'=> 14 ,
                 'avantage' => 'Bien né',
                 'de_bonus' => true,
-                'domaine_de_bonus' => 'Agir selon les règles de l’étiquette et de la courtoisie.'
+                'de_bonus_domaine' => 'Agir selon les règles de l’étiquette et de la courtoisie.'
             ],
             [
                 'id'=> 15 ,
                 'avantage' => 'Colosse',
                 'de_bonus' => true,
-                'domaine_de_bonus' => 'Briser, lever, tirer ou pousser des objets.'
+                'de_bonus_domaine' => 'Briser, lever, tirer ou pousser des objets.'
             ],
             [
                 'id'=> 16 ,
@@ -116,13 +116,13 @@ class BolAvantageSeeder extends Seeder
                 'id'=> 18 ,
                 'avantage' => 'Discret',
                 'de_bonus' => true,
-                'domaine_de_bonus' => 'Faire preuve de discrétion.'
+                'de_bonus_domaine' => 'Faire preuve de discrétion.'
             ],
             [
                 'id'=> 19 ,
                 'avantage' => 'Doigts de fée',
                 'de_bonus' => true,
-                'domaine_de_bonus' => 'Le vol à la tire, la fabrication d’objets,le jonglage ou la triche aux cartes et aux dés'
+                'de_bonus_domaine' => 'Le vol à la tire, la fabrication d’objets,le jonglage ou la triche aux cartes et aux dés'
             ],
             [
                 'id'=> 20 ,
@@ -134,25 +134,25 @@ class BolAvantageSeeder extends Seeder
                 'id'=> 21 ,
                 'avantage' => 'Érudit',
                 'de_bonus' => true,
-                'domaine_de_bonus' => 'Se souvenir d’un fait relevant de votre domaine de compétence'
+                'de_bonus_domaine' => 'Se souvenir d’un fait relevant de votre domaine de compétence'
             ],
             [
                 'id'=> 22 ,
                 'avantage' => 'Fêtard',
                 'de_bonus' => true,
-                'domaine_de_bonus' => 'dans les tavernes pour recueillir des informations, des contacts ou des biens et des services. Resister aux effets de la boisson'
+                'de_bonus_domaine' => 'dans les tavernes pour recueillir des informations, des contacts ou des biens et des services. Resister aux effets de la boisson'
             ],
             [
                 'id'=> 23 ,
                 'avantage' => 'Fils des plaines',
                 'de_bonus' => true,
-                'domaine_de_bonus' => 'Pister, piéger ou chasser, ainsi que pour d’autres activités similaires de survie'
+                'de_bonus_domaine' => 'Pister, piéger ou chasser, ainsi que pour d’autres activités similaires de survie'
             ],
             [
                 'id'=> 24 ,
                 'avantage' => 'Fortuné',
                 'de_bonus' => true,
-                'domaine_de_bonus' => 'Acquérir des biens ou des services dans votre cité d’origine.'
+                'de_bonus_domaine' => 'Acquérir des biens ou des services dans votre cité d’origine.'
             ],
             // Ajoutez d'autres régions selon vos besoins
             /*
@@ -162,7 +162,7 @@ class BolAvantageSeeder extends Seeder
                 'attribut' => null,
                 'attribut_bonus' => null,
                 'de_bonus' => false,
-                'domaine_de_bonus' => null,
+                'de_bonus_domaine' => null,
                 'description' => null
             ],
              */
