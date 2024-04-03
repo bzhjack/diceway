@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('bol_avantages', function (Blueprint $table) {
             $table->id();
+            $table->string('avantage')->unique();
+            $table->string('attribut')->nullable()->default(null);
+            $table->tinyInteger('attribut_bonus')->nullable()->default(null);
+            $table->boolean('de_bonus')->default(false);
+            $table->text('de_bonus_domaine')->nullable()->default(null);
+            $table->text('description')->nullable()->default(null);
             $table->timestamps();
         });
     }
