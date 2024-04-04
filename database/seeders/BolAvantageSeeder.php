@@ -252,96 +252,90 @@ class BolAvantageSeeder extends Seeder
                 'de_bonus_domaine' => 'Remarquer une entourloupe ou un mensonge.',
             ],
             [
-                'id'=> 40 ,
+                'id'=> 41 ,
                 'avantage' => 'Pied marin',
                 'de_bonus' => true,
                 'de_bonus_domaine' => 'Manœuvrer une embarcation ou entreprendre des activités physiques à bord d’un navire.',
             ],
             [
-                'id'=> 41 ,
+                'id'=> 42 ,
                 'avantage' => 'Pisteur des marais',
                 'de_bonus' => true,
                 'de_bonus_domaine' => 'Pister, piéger ou chasser, ainsi que pour d’autres activités similaires de survie.',
             ],
             [
-                'id'=> 42 ,
+                'id'=> 43 ,
                 'avantage' => 'Poings d’acier',
                 'description' => 'Ajoutez votre vigueur aux dégâts quand vous combattez à mains nues.'
             ],
             [
-                'id'=> 43 ,
+                'id'=> 44 ,
                 'avantage' => 'Pouvoir du Néant',
                 'attribut' => 'pouvoir',
                 'attribut_bonus' => "2",
                 'description' => 'Vous devez aussi prendre un désavantage supplémentaire.'
             ],
             [
-                'id'=> 44 ,
+                'id'=> 45 ,
                 'avantage' => 'Récupération rapide',
                 'description' => 'Après un combat, vous regagnez 1 point de vitalité supplémentaire, En cas de blessure recupération de 1 point de vitalité par jour.'
             ],
             [
-                'id'=> 45 ,
+                'id'=> 46 ,
                 'avantage' => 'Renard du désert',
                 'de_bonus' => true,
                 'de_bonus_domaine' => 'Pister, piéger ou chasser, ainsi que pour d’autres activités similaires de survie.',
             ],
             [
-                'id'=> 46 ,
+                'id'=> 47 ,
                 'avantage' => 'Résistant à la magie',
                 'description' => 'Lancez un d6. Sur un 6, le sortilège n’a aucun effet sur vous.'
             ],
             [
-                'id'=> 47 ,
+                'id'=> 48 ,
                 'avantage' => 'Résistant aux poisons',
                 'de_bonus' => true,
                 'de_bonus_domaine' => 'Résister aux effets des drogues, des venins, des toxines, ainsi que de l’alcool.',
             ],
             [
-                'id'=> 48 ,
+                'id'=> 49 ,
                 'avantage' => 'Roi de la jungle',
                 'de_bonus' => true,
                 'de_bonus_domaine' => 'Pister, piéger ou chasser, ainsi que pour d’autres activités similaires de survie.',
             ],
             [
-                'id'=> 49 ,
+                'id'=> 50 ,
                 'avantage' => 'Roi de l’évasion',
                 'de_bonus' => true,
                 'de_bonus_domaine' => 'Vous évader ou de vous libérer de vos liens.',
             ],
             [
-                'id'=> 50 ,
+                'id'=> 51 ,
                 'avantage' => 'Santé de fer',
                 'description' => 'Vous êtes immunisé à toutes les maladies, y compris celles d’origine magique.'
             ],
             [
-                'id'=> 51 ,
+                'id'=> 52 ,
                 'avantage' => 'Savant',
                 'attribut' => 'esprit',
                 'attribut_bonus' => "1"
             ],
             [
-                'id'=> 52 ,
+                'id'=> 53 ,
                 'avantage' => 'Sentir la magie',
                 'de_bonus' => true,
                 'de_bonus_domaine' => 'Reconnaître (ou de traquer) un sorcier, un effet ou un artefact magique.',
             ],
             [
-                'id'=> 53 ,
+                'id'=> 54 ,
                 'avantage' => 'Tigre des neiges',
                 'de_bonus' => true,
                 'de_bonus_domaine' => 'Pister, piéger ou chasser, ainsi que pour d’autres activités similaires de survie.',
             ],
             [
-                'id'=> 54 ,
+                'id'=> 55 ,
                 'avantage' => 'Tireur puissant',
                 'description' => 'vous ajoutez votre vigueur aux dégâts (arc, javelot, fronde)'
-            ],
-            [
-                'id'=> 55 ,
-                'avantage' => 'Vigilant',
-                'de_bonus' => true,
-                'de_bonus_domaine' => 'Jets de réaction.',
             ],
             [
                 'id'=> 56 ,
@@ -357,18 +351,12 @@ class BolAvantageSeeder extends Seeder
             ],
             [
                 'id'=> 58 ,
-                'avantage' => 'Vigilant',
-                'de_bonus' => true,
-                'de_bonus_domaine' => 'Jets de réaction.',
-            ],
-            [
-                'id'=> 59 ,
                 'avantage' => 'Vision nocturne',
                 'de_bonus' => true,
                 'de_bonus_domaine' => 'Quand l’obscurité impose un malus à la vision.',
             ],
             [
-                'id'=> 60 ,
+                'id'=> 59 ,
                 'avantage' => 'Vue perçante',
                 'de_bonus' => true,
                 'de_bonus_domaine' => 'Jet d’action sous esprit pour percevoir quelque chose grâce à votre vue',
