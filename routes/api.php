@@ -7,7 +7,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SocialController;
 use App\Http\Controllers\Auth\ForgotController;
 use App\Http\Controllers\Auth\ProfileController;
-use \App\Http\Controllers\HelloController;
+use App\Http\Controllers\HelloController;
+use App\Http\Controllers\Bol\BolRegionController;
+
 
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +41,10 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
     // Réseaux sociaux
     Route::get('/auth/google', [SocialController::class, 'redirectToGoogle']);
     Route::get('/auth/google/callback', [SocialController::class, 'callbackFromGoogle']);
+
+    // Bol
+    Route::get('/bol/region', [BolRegionController::class, 'getAll']);
+
 
 });
 
