@@ -4,8 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class BolDesavantage extends Model
 {
     use HasFactory;
+
+    public function regions(): BelongsToMany
+    {
+        return $this->belongsToMany(BolRegion::class);
+    }
 }
