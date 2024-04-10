@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('region_id');
             $table->unsignedBigInteger('avantage_id');
+            $table->string('detail')->nullable()->default(null);
             $table->timestamps();
 
             // Déclaration des clés étrangères
