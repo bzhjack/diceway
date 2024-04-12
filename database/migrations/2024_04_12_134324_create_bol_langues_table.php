@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bol_regions', function (Blueprint $table) {
+        Schema::create('bol_langues', function (Blueprint $table) {
             $table->id();
-            $table->string('region');
+            $table->string('langue');
             $table->text('description')->nullable()->default(null);
             $table->timestamps();
         });
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bol_regions');
+        Schema::dropIfExists('bol_langues');
     }
 };
