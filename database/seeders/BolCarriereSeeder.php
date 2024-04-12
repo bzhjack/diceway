@@ -42,7 +42,7 @@ class BolCarriereSeeder extends Seeder
 
             // Ajoutez d'autres régions selon vos besoins
         ];
-
+        BolCarriere::truncate();
         // Insérer les données dans la table des régions
         foreach ($carrieres as $carriere) {
             BolCarriere::create($carriere);

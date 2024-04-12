@@ -14,19 +14,6 @@ class BolRegionAvantageSeeder extends Seeder
     {
         $regions_avantages = [
             // Côte de Feu (kalukan)
-            ["region_id" => 1, "avantage_id" => 6, "detail" => 'Tulwar'], // Arme favorite (Tulwar)
-            ["region_id" => 1, "avantage_id" => 15], // Colosse
-            ["region_id" => 1, "avantage_id" => 20], // Dur à cuire
-            ["region_id" => 1, "avantage_id" => 27], // Intimidant
-            ["region_id" => 1, "avantage_id" => 39], // Peau dure
-            ["region_id" => 1, "avantage_id" => 45], // Récupération rapide
-            ["region_id" => 1, "avantage_id" => 47], // Résistant à la magie
-            ["region_id" => 1, "avantage_id" => 48], // Résistant aux poisons
-            ["region_id" => 1, "avantage_id" => 51], // Santé de fer
-            ["region_id" => 1, "avantage_id" => 53], // Sentir la magie
-            ["region_id" => 1, "avantage_id" => 56], // Vigilant
-            ["region_id" => 1, "avantage_id" => 57], // Vigueur céruléenne
-            ["region_id" => 1, "avantage_id" => 58], // Vision nocturne
             // Désert de Beshaar
             ["region_id" => 2, "avantage_id" => 2], // Ami des bêtes
             ["region_id" => 2, "avantage_id" => 6 ,'detail' => 'Javelot'], // Arme favorite (Javelot)
@@ -57,8 +44,8 @@ class BolRegionAvantageSeeder extends Seeder
             ["region_id" => 4, "avantage_id" => 50], // Roi de l’évasion
             ["region_id" => 4, "avantage_id" => 56], // Vigilant
             ["region_id" => 4, "avantage_id" => 59], // Vue perçante
-            
-            // Jungle de Qo et jungle 
+
+            // Jungle de Qo et jungle
             ["region_id" => 5, "avantage_id" => 2], // Ami des bêtes
             ["region_id" => 5, "avantage_id" => 8], // Athlète
             ["region_id" => 5, "avantage_id" => 36], // Odorat développé
@@ -81,7 +68,7 @@ class BolRegionAvantageSeeder extends Seeder
             ["region_id" => 6, "avantage_id" => 48], // Résistant aux poisons
             ["region_id" => 6, "avantage_id" => 51], // Santé de fer
             ["region_id" => 6, "avantage_id" => 52], // Savant
-            
+
             // Malakut
             ["region_id" => 7, "avantage_id" => 4], // Amis dans la pègre
             ["region_id" => 7, "avantage_id" => 6, 'detail' => 'Khastok'], // Arme favorite (Khastok)
@@ -128,7 +115,7 @@ class BolRegionAvantageSeeder extends Seeder
             ["region_id" => 10, "avantage_id" => 45], // Récupération rapide
             ["region_id" => 10, "avantage_id" => 51], // Santé de fer
             ["region_id" => 10, "avantage_id" => 56], // Vigilant
-            
+
             // Oomis
             ["region_id" => 11, "avantage_id" => 3], // Ami des céruléens
             ["region_id" => 11, "avantage_id" => 20], // Dur à cuire
@@ -140,16 +127,6 @@ class BolRegionAvantageSeeder extends Seeder
             ["region_id" => 12, "avantage_id" => 22], // Fêtard
             ["region_id" => 12, "avantage_id" => 41], // Pied marin
             // Plaines de Klaar (céruléen)
-            ["region_id" => 13, "avantage_id" => 2], // Ami des bêtes
-            ["region_id" => 13, "avantage_id" => 3], // Ami des céruléens
-            ["region_id" => 13, "avantage_id" => 10], // Bagarreur
-            ["region_id" => 13, "avantage_id" => 15], // Colosse
-            ["region_id" => 13, "avantage_id" => 20], // Dur à cuire
-            ["region_id" => 13, "avantage_id" => 23], // Fils des plaines
-            ["region_id" => 13, "avantage_id" => 27], // Intimidant
-            ["region_id" => 13, "avantage_id" => 39], // Peau dure
-            ["region_id" => 13, "avantage_id" => 45], // Récupération rapide
-            ["region_id" => 13, "avantage_id" => 57], // Vigueur céruléenne
             // Satarla
             ["region_id" => 14, "avantage_id" => 5], // Amis haut placés
             ["region_id" => 14, "avantage_id" => 7], // Artiste
@@ -205,7 +182,7 @@ class BolRegionAvantageSeeder extends Seeder
             ["region_id" => 20, "avantage_id" => 58] // Vision nocturne
 
         ];
-
+        BolRegionAvantage::truncate();
         // Insérer les données dans la table des régions
         foreach ($regions_avantages as $region_avantage) {
             BolRegionAvantage::create($region_avantage);

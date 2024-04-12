@@ -281,7 +281,7 @@ class BolDesavantageSeeder extends Seeder
             ],
              */
         ];
-
+        BolDesavantage::truncate();
         // Insérer les données dans la table des régions
         foreach ($desavantages as $desavantage) {
             BolDesavantage::create($desavantage);

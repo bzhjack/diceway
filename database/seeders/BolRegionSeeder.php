@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Support\Facades\Schema;
 use App\Models\BolRegion;
 use Illuminate\Database\Seeder;
 
@@ -35,7 +36,9 @@ class BolRegionSeeder extends Seeder
             ['id'=> 20 , 'name'=> 'Zalut'],
             // Ajoutez d'autres régions selon vos besoins
         ];
-
+        Schema::disableForeignKeyConstraints();
+        BolRegion::truncate();
+        Schema::enableForeignKeyConstraints();
         // Insérer les données dans la table des régions
         foreach ($regions as $region) {
             BolRegion::create($region);
