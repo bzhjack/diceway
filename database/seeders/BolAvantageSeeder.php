@@ -374,7 +374,8 @@ class BolAvantageSeeder extends Seeder
             ],
              */
         ];
-
+        // Remise à 0
+        BolAvantage::truncate();
         // Insérer les données dans la table des régions
         foreach ($avantages as $avantage) {
             BolAvantage::create($avantage);

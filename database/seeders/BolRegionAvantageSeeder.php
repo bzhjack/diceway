@@ -182,7 +182,7 @@ class BolRegionAvantageSeeder extends Seeder
             ["region_id" => 20, "avantage_id" => 58] // Vision nocturne
 
         ];
-
+        BolRegionAvantage::truncate();
         // Insérer les données dans la table des régions
         foreach ($regions_avantages as $region_avantage) {
             BolRegionAvantage::create($region_avantage);

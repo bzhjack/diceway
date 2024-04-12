@@ -690,7 +690,7 @@ class BolRegionNomSeeder extends Seeder
             ['nom' => 'Zemibi', 'gender' => 'F', 'region_id' => 20],
             ['nom' => 'Zorkara', 'gender' => 'F', 'region_id' => 20],
         ];
-
+        BolRegionNom::truncate();
         // Insérez les données dans la table des noms
         foreach ($region_noms as $nom) {
             BolRegionNom::create($nom);

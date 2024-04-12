@@ -137,7 +137,7 @@ class BolRegionDesavantageSeeder extends Seeder
             ["region_id" => 20, "desavantage_id" => 39], // Signe distinctif
             ["region_id" => 20, "desavantage_id" => 41] // Souffreteux
         ];
-
+        BolRegionDesavantage::truncate();
         // Insérer les données dans la table des régions
         foreach ($regions_desavantages as $region_desavantage) {
             BolRegionDesavantage::create($region_desavantage);
