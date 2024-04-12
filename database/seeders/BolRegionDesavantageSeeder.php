@@ -15,12 +15,6 @@ class BolRegionDesavantageSeeder extends Seeder
     {
         $regions_desavantages = [
             // Côte de Feu (kalukan)
-            ["region_id" => 1, "desavantage_id" => 10], // Deux mains gauches
-            ["region_id" => 1, "desavantage_id" => 17], // Illettré
-            ["region_id" => 1, "desavantage_id" => 23], // Inquiétant
-            ["region_id" => 1, "desavantage_id" => 29], // Maudit
-            ["region_id" => 1, "desavantage_id" => 35], // Pataud
-            ["region_id" => 1, "desavantage_id" => 39], // Signe distinctif
             // Désert de Beshaar
             ["region_id" => 2, "desavantage_id" => 6], // Bouseux
             ["region_id" => 2, "desavantage_id" => 7], // Chétif
@@ -100,12 +94,6 @@ class BolRegionDesavantageSeeder extends Seeder
             ["region_id" => 12, "desavantage_id" => 27], // Manchot/unijambiste
             ["region_id" => 12, "desavantage_id" => 40], // Soiffard
             // Plaines de Klaar (céruléen)
-            ["region_id" => 13, "desavantage_id" => 6], // Bouseux
-            ["region_id" => 13, "desavantage_id" => 10], // Deux mains gauches
-            ["region_id" => 13, "desavantage_id" => 28], // Marin d’eau douce
-            ["region_id" => 13, "desavantage_id" => 31], // Méfiance envers la sorcellerie
-            ["region_id" => 13, "desavantage_id" => 35], // Pataud
-            ["region_id" => 13, "desavantage_id" => 39], // Signe distinctif
             // Satarla
             ["region_id" => 14, "desavantage_id" => 3], // Arrogant
             ["region_id" => 14, "desavantage_id" => 9], // Cupide

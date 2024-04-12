@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('bol_region_noms', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('nom');
             $table->unsignedBigInteger('region_id');
             $table->enum('gender', ['M', 'F'])->nullable();
             $table->timestamps();
