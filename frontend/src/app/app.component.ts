@@ -1,17 +1,17 @@
-import { APP_BASE_HREF } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { UserService } from './auth/services/user.service';
+import {Component, inject} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
+import {TopbarComponent} from "./layout/topbar/topbar.component";
+import {UserService} from "./auth/services/user.service";
+import {AsyncPipe, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, TopbarComponent, AsyncPipe, NgIf],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  constructor() {
-  }
+  us = inject(UserService);
+  userObs = this.us.user$;
 }

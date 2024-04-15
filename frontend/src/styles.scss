@@ -32,7 +32,7 @@ body {
 }
 
 .dw_banner {
-    color: #E2E3E5;
+    color: #83a1a6;
 }
 
 .dw_progress {
@@ -79,4 +79,11 @@ body {
    .p-card-title {
         color: var(--red-500);
     }
+}
+
+.home-card {
+    .p-card-header {
+        height: 184px;
+        overflow: hidden;
+      }
 }

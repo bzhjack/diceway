@@ -1,16 +1,18 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { UserModel, UserStorageModel } from './user.model';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {UserModel, UserStorageModel} from './user.model';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Router} from '@angular/router';
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-
-  private localStorageKeyName = 'diceway-session';
+  private currentUser: any = null;
+  private sessionStorageKeyName = 'diceway-session';
   private userEvents = new BehaviorSubject<UserModel | undefined>(undefined);
+  public user$ = this.userEvents.asObservable();
   private userToken: string | null = null;
 
   constructor(
@@ -22,43 +24,36 @@ export class UserService {
   }
 
   /**
-   * Fonction de vérification de la validité de l'authentification 
+   * Fonction de vérification de la validité de l'authentification
    */
   retrieveUser() {
-    const value = window.sessionStorage.getItem(this.localStorageKeyName);
+    const value = window.sessionStorage.getItem(this.sessionStorageKeyName);
     if (value) {
       const userStorage = JSON.parse(value) as UserStorageModel;
-      const accessToken = userStorage.token;
-      const jwtDecoded = this.parseJwt(accessToken);
-
-      if (this.isExpired(jwtDecoded.exp)) {
-        this.logout();
-      } else {
-        this.setUserToken(userStorage);
-      }
+      this.setUserToken(userStorage);
     }
   }
 
   /**
    * Mise à jour du localStorage avec les infos sur l'utilisateur connecté
-   * @param user 
+   * @param userStorage
    */
   storeLoggedInUser(userStorage: UserStorageModel) {
-    window.localStorage.setItem(this.localStorageKeyName, JSON.stringify(userStorage));
+    window.sessionStorage.setItem(this.sessionStorageKeyName, JSON.stringify(userStorage));
     this.setUserToken(userStorage);
   }
 
   /**
    * Mise à jour du token dans l'interceptor et broadcast du profile utilisateur
-   * @param userStorage 
+   * @param userStorage
    */
   private setUserToken(userStorage: UserStorageModel) {
-    const token = userStorage.token;
-    this.userToken = token;
+    this.userToken = userStorage.token;
+    this.currentUser = userStorage.profile;
     this.userEvents.next(userStorage.profile);
   }
   /**
-   * 
+   *
    * @returns Récupération du token utilisateur
    */
   public getUserToken() {
@@ -68,66 +63,47 @@ export class UserService {
    * Suppression du token et "logout" de l'application.
    */
   logout() {
+    this.clearTokens();
     this.clearToken();
     this.router.navigate(['/login']);
   }
   /**
    * Suppression du localStorage et du token dans l'interceptor
-   * Suppression du profile utilisateur par broadcast. 
+   * Suppression du profile utilisateur par broadcast.
    */
   clearToken() {
     this.userToken = null;
+    this.currentUser = null;
     this.userEvents.next(undefined);
-    window.sessionStorage.removeItem(this.localStorageKeyName);
+    window.sessionStorage.removeItem(this.sessionStorageKeyName);
   }
 
   /**
-   * Décodage des informations sur le token
-   * @param token
-   * @returns 
-   */
-  public parseJwt(token: string) {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-    return JSON.parse(jsonPayload);
-  }
-
-  /**
-   * Test si le token est expiré
-   * @param exp 
-   * @returns 
-   */
-  public isExpired(exp: number = 0): boolean {
-    return (Date.now() >= exp * 1000);
-  }
-
-  /**
-   * Test si l'état de la connexion 
-   * @returns 
+   * Test si l'état de la connexion
+   * @returns
    */
   isLoggedIn(): boolean {
-    return !!window.localStorage.getItem(this.localStorageKeyName);
+    return !!window.sessionStorage.getItem(this.sessionStorageKeyName);
   }
 
   /**
-   * Récupère le profile utilisteur. 
-   * @param token 
-   * @returns 
+   * Récupère le profile utilisteur.
+   * @param token
+   * @returns
    */
   public profile(token: string): Observable<any> {
     return this.http.get('api/auth/profile', {
       headers: new HttpHeaders().set('Authorization', `Bearer ${token}`)
     });
   }
+
   public getHello() {
     return this.http.get('api/hello');
   }
+
   /**
    * Création d'un compte
-   * @param credentials 
+   * @param credentials
    */
   public register(credentials: any) {
     return this.http.post('/api/auth/register', {
@@ -141,7 +117,7 @@ export class UserService {
   /**
    * Envoi de l'émail de verification du compte
    * @param email
-   * @returns 
+   * @returns
    */
   public sendMail(email: string) {
     return this.http.post('/api/auth/email/send', {
@@ -151,8 +127,8 @@ export class UserService {
 
   /**
    * Authentification
-   * @param credentials 
-   * @returns 
+   * @param credentials
+   * @returns
    */
   public login(credentials: any) {
     return this.http.post('/api/auth/login', {
@@ -161,10 +137,18 @@ export class UserService {
     })
   }
 
+  public clearTokens() {
+    if (this.currentUser !== null) {
+      this.http.post('/api/auth/logout', {id: this.currentUser.id}).subscribe(() => {
+        console.log('Tokens cleared :-)');
+      });
+    }
+  }
+
   /**
    * Mot de passe oublié
-   * @param credentials 
-   * @returns 
+   * @returns
+   * @param email
    */
   public forgottenPassword(email: string) {
     return this.http.post('/api/auth/password/forgotten', {
@@ -174,8 +158,8 @@ export class UserService {
 
   /**
    * Nouveau mot de passe
-   * @param credentials 
-   * @returns 
+   * @param credentials
+   * @returns
    */
   public resetPassord(credentials: any) {
     return this.http.post('/api/auth/password/reset', {
