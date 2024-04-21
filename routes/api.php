@@ -7,9 +7,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SocialController;
 use App\Http\Controllers\Auth\ForgotController;
 use App\Http\Controllers\Auth\ProfileController;
-use App\Http\Controllers\HelloController;
 use App\Http\Controllers\Bol\BolRegionController;
-
+use App\Http\Controllers\BolHeroController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -26,7 +25,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 /**
- * Api publics
+ * Api publiques
  */
 Route::middleware([RequestAcceptJson::class])->group(function () {
     Route::post('auth/login', [LoginController::class, 'login']); // Authentification
@@ -42,10 +41,6 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
     Route::get('/auth/google', [SocialController::class, 'redirectToGoogle']);
     Route::get('/auth/google/callback', [SocialController::class, 'callbackFromGoogle']);
 
-    // Bol
-    Route::get('/bol/region', [BolRegionController::class, 'getAll']);
-
-
 });
 
 /**
@@ -53,5 +48,7 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
  */
 Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function () {
     Route::get('auth/profile', [ProfileController::class, 'profile']);
-    Route::get('hello', [HelloController::class, 'hello']);
+     // Bol
+     Route::get('/bol/region', [BolRegionController::class, 'getAll']);
+     Route::get('/bol/hero', [BolHeroController::class, 'getAll']);
 });

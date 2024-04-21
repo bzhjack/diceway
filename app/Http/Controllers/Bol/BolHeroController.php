@@ -1,20 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Bol;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\BolRegion;
+use App\Models\BolHero;
 use Illuminate\Http\Request;
 
-class BolRegionController extends Controller
+class BolHeroController extends Controller
 {
     /**
-     * Récupère toutes les régions
+     * Récupère tout les héros
      */
     public function getAll()
     {
         // Récupérer toutes les lignes de votre modèle
-        $donnees = BolRegion::with('avantages', 'desavantages')->get();
+        $donnees = BolHero::all();
 
        // Retourner les données en tant que réponse JSON
         return response()->json($donnees);
