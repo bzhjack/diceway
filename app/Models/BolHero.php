@@ -11,6 +11,8 @@ class BolHero extends Model
     use HasFactory, Uuids;
     public $incrementing = false;
     protected $keyType = 'uuid';
+    protected $hidden = ['user_id'];
+
     protected $fillable = [
         'user_id',
         'joueur',
