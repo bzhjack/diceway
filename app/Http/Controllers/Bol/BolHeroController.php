@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Bol;
 
 use App\Models\BolHero;
 use Illuminate\Http\Request;

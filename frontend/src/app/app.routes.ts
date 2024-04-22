@@ -11,7 +11,7 @@ import { ResetComponent } from './auth/public/reset/reset.component';
 import { WelcomeComponent } from './auth/public/welcome/welcome.component';
 import { HomeComponent } from './home/home.component';
 import {BolHomeComponent} from "./bol/home/home.component";
-import { BolPjCreateComponent } from './bol/pj/create/create.component';
+import { BolHeroCreateComponent } from './bol/hero/create/create.component';
 
 export const routes: Routes = [
     // Accès public
@@ -30,7 +30,7 @@ export const routes: Routes = [
 
     { path: '', component: HomeComponent, canActivate: [loggedInGuard] },
     { path: 'bol', component: BolHomeComponent, canActivate: [loggedInGuard] },
-    { path: 'bol/pj/create', component: BolPjCreateComponent, canActivate: [loggedInGuard] },
+    { path: 'bol/hero/create', component: BolHeroCreateComponent, canActivate: [loggedInGuard] },
 
 
 

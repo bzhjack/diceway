@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import {CardModule} from "primeng/card";
 import {InputTextModule} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
+import {ToolbarModule} from "primeng/toolbar";
+import {ButtonModule} from "primeng/button";
+import {SplitButtonModule} from "primeng/splitbutton";
 
 @Component({
   selector: 'app-create',
@@ -9,11 +12,14 @@ import {FormsModule} from "@angular/forms";
   imports: [
     CardModule,
     InputTextModule,
-    FormsModule
+    FormsModule,
+    ToolbarModule,
+    ButtonModule,
+    SplitButtonModule
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
 })
-export class BolPjCreateComponent {
+export class BolHeroCreateComponent {
 
 }
