@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Bol;
 use App\Http\Controllers\Controller;
 use App\Models\BolHero;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BolHeroController extends Controller
 {
@@ -26,7 +27,7 @@ class BolHeroController extends Controller
             'joueur' => 'required|max:255'
         ]);
         $input = $request->all();
-        //$input['user_id'] = Auth::user()->id;
+        $input['user_id'] = Auth::id();
         $hero = BolHero::create($input);
         return response([ 'hero' => $hero]);
     }

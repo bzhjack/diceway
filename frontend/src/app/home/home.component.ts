@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { UserService } from '../auth/services/user.service';
 import { TopbarComponent } from '../layout/topbar/topbar.component';
 import {CardModule} from "primeng/card";
 import {RouterLink} from "@angular/router";
@@ -16,21 +15,8 @@ import {RouterLink} from "@angular/router";
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
-  constructor(private userService: UserService) { }
+  constructor() { }
   ngOnInit(): void {
-    this.hello();
-  }
-  hello() {
-    this.userService.getHello()
-      .subscribe(
-        {
-          next:
-            (result: any) => {
-              console.log(result);
-            },
-          error: (err) => this.authenticationFailed(err)
-        }
-      );
   }
 
   authenticationFailed(error: unknown) {
