@@ -1,22 +1,23 @@
 <div class="flex p-4 gap-4 flex-wrap">
-  <p-card header="Création d'un héros">
+  <p-card header="Création d'un héros"  (ngSubmit)="submit()" [formGroup]="heroForm">
     <div class="flex gap-4">
       <div class="flex flex-col">
         <div class="flex flex-col gap-1">
-          <label for="playername">Nom du joueur</label>
-          <input pInputText id="playername" class="p-inputtext-sm" autocomplete="new"/>
+          <label for="playerName">Nom du joueur</label>
+          <input formControlName="joueur" pInputText id="playerName" class="p-inputtext-sm" autocomplete="new"/>
         </div>
         <h3>Origines</h3>
         <div class="flex flex-col gap-1">
           <div class="flex flex-col gap-1">
-            <label for="heroname">Nom du héro</label>
-            <input pInputText id="heroname" class="p-inputtext-sm" autocomplete="new"/>
+            <label for="heroName">Nom du héro</label>
+            <input formControlName="nom" pInputText id="heroName" class="p-inputtext-sm" autocomplete="new"/>
           </div>
           <div class="flex flex-col gap-1">
             <label for="region">Région</label>
             <input pInputText id="region" class="p-inputtext-sm"/>
           </div>
         </div>
+
         <h3>Attributs</h3>
         <div class="flex gap-2">
           <div class="flex flex-col gap-1">
@@ -45,8 +46,7 @@
     <ng-template pTemplate="footer">
       <div class="flex justify-end gap-2">
         <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-secondary" size="small"></p-button>
-        <p-button label="Save" icon="pi pi-check" size="small"></p-button>
-
+        <p-button (click)="submit()" [disabled]="heroForm.invalid" label="Save" icon="pi pi-check" size="small"></p-button>
       </div>
     </ng-template>
   </p-card>

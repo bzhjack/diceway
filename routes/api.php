@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Bol\BolHeroController;
 use App\Http\Middleware\RequestAcceptJson;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerifyController;
@@ -8,7 +9,6 @@ use App\Http\Controllers\Auth\SocialController;
 use App\Http\Controllers\Auth\ForgotController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Bol\BolRegionController;
-use App\Http\Controllers\BolHeroController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -35,8 +35,8 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
     Route::get('auth/email/verify/{id}/{hash}', [VerifyController::class, 'verify'])->name('verification.verify'); // Lien de retour de verification du mail
     // Gestion du mot de passe
     Route::post('auth/password/forgotten', [ForgotController::class, 'forgot'])->middleware('guest')->name('password.email'); // Envoi d'un mail de reset du mdp
-    Route::get('auth/password/forgotten/{token}',[ForgotController::class, 'reset'])->middleware('guest')->name('password.reset'); // Lien dans le mail de reset
-    Route::post('auth/password/reset',[ForgotController::class, 'reset_password'])->middleware('guest')->name('password.update'); // Validation du chnagement
+    Route::get('auth/password/forgotten/{token}', [ForgotController::class, 'reset'])->middleware('guest')->name('password.reset'); // Lien dans le mail de reset
+    Route::post('auth/password/reset', [ForgotController::class, 'reset_password'])->middleware('guest')->name('password.update'); // Validation du changement
     // Réseaux sociaux
     Route::get('/auth/google', [SocialController::class, 'redirectToGoogle']);
     Route::get('/auth/google/callback', [SocialController::class, 'callbackFromGoogle']);
@@ -48,7 +48,8 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
  */
 Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function () {
     Route::get('auth/profile', [ProfileController::class, 'profile']);
-     // Bol
-     Route::get('/bol/region', [BolRegionController::class, 'getAll']);
-     Route::get('/bol/hero', [BolHeroController::class, 'getAll']);
+    // Bol
+    Route::get('/bol/region', [BolRegionController::class, 'getAll']);
+    Route::get('/bol/hero', [BolHeroController::class, 'getAll']);
+    Route::post('/bol/hero/create', [BolHeroController::class, 'create']);
 });

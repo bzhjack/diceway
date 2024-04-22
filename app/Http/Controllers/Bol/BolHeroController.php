@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Bol;
 
+use App\Http\Controllers\Controller;
 use App\Models\BolHero;
 use Illuminate\Http\Request;
 
@@ -14,8 +15,19 @@ class BolHeroController extends Controller
     {
         // Récupérer toutes les lignes de votre modèle
         $donnees = BolHero::all();
-
        // Retourner les données en tant que réponse JSON
         return response()->json($donnees);
+    }
+
+    public function create(Request $request)
+    {
+        $data = $request->validate([
+            'nom' => 'required|max:255',
+            'joueur' => 'required|max:255'
+        ]);
+        $input = $request->all();
+        //$input['user_id'] = Auth::user()->id;
+        $hero = BolHero::create($input);
+        return response([ 'hero' => $hero]);
     }
 }
