@@ -1,10 +1,10 @@
 <?php
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Http\Request;
 
 class VerifyController extends Controller
 {

@@ -97,10 +97,6 @@ export class UserService {
     });
   }
 
-  public getHello() {
-    return this.http.get('api/hello');
-  }
-
   /**
    * Création d'un compte
    * @param credentials

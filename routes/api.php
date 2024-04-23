@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Bol\BolHeroController;
 use App\Http\Middleware\RequestAcceptJson;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerifyController;
@@ -7,9 +8,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SocialController;
 use App\Http\Controllers\Auth\ForgotController;
 use App\Http\Controllers\Auth\ProfileController;
-use App\Http\Controllers\HelloController;
 use App\Http\Controllers\Bol\BolRegionController;
-
 
 use Illuminate\Support\Facades\Route;
 
@@ -26,7 +25,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 /**
- * Api publics
+ * Api publiques
  */
 Route::middleware([RequestAcceptJson::class])->group(function () {
     Route::post('auth/login', [LoginController::class, 'login']); // Authentification
@@ -36,15 +35,11 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
     Route::get('auth/email/verify/{id}/{hash}', [VerifyController::class, 'verify'])->name('verification.verify'); // Lien de retour de verification du mail
     // Gestion du mot de passe
     Route::post('auth/password/forgotten', [ForgotController::class, 'forgot'])->middleware('guest')->name('password.email'); // Envoi d'un mail de reset du mdp
-    Route::get('auth/password/forgotten/{token}',[ForgotController::class, 'reset'])->middleware('guest')->name('password.reset'); // Lien dans le mail de reset
-    Route::post('auth/password/reset',[ForgotController::class, 'reset_password'])->middleware('guest')->name('password.update'); // Validation du chnagement
+    Route::get('auth/password/forgotten/{token}', [ForgotController::class, 'reset'])->middleware('guest')->name('password.reset'); // Lien dans le mail de reset
+    Route::post('auth/password/reset', [ForgotController::class, 'reset_password'])->middleware('guest')->name('password.update'); // Validation du changement
     // Réseaux sociaux
     Route::get('/auth/google', [SocialController::class, 'redirectToGoogle']);
     Route::get('/auth/google/callback', [SocialController::class, 'callbackFromGoogle']);
-
-    // Bol
-    Route::get('/bol/region', [BolRegionController::class, 'getAll']);
-
 
 });
 
@@ -53,5 +48,10 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
  */
 Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function () {
     Route::get('auth/profile', [ProfileController::class, 'profile']);
-    Route::get('hello', [HelloController::class, 'hello']);
+    // Bol
+    Route::get('/bol/region', [BolRegionController::class, 'getAll']);
+    Route::get('/bol/hero', [BolHeroController::class, 'getAll']);
+    Route::get('/bol/hero/{id}', [BolHeroController::class, 'getOne']);
+    Route::post('/bol/hero/create', [BolHeroController::class, 'create']);
+    Route::post('/bol/hero/update', [BolHeroController::class, 'update']);
 });

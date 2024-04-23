@@ -1,0 +1,105 @@
+<div class="flex p-4 gap-4 flex-wrap">
+  <p-card header="Création d'un héros">
+    <form (ngSubmit)="submit()" [formGroup]="heroForm" autocomplete="off">
+    <div class="flex gap-4">
+      <div class="flex flex-col">
+        <div class="flex flex-col gap-1">
+          <label for="joueur">Nom du joueur</label>
+          <input formControlName="joueur" pInputText id="joueur" class="p-inputtext-sm"/>
+        </div>
+        <h3>Origines</h3>
+        <div class="flex flex-col gap-1">
+          <div class="flex flex-col gap-1">
+            <label for="nom">Nom du héro</label>
+            <input formControlName="nom" pInputText id="nom" class="p-inputtext-sm"/>
+          </div>
+          <div class="flex flex-col gap-1">
+            <label for="region">Région</label>
+            <input pInputText id="region" class="p-inputtext-sm"/>
+          </div>
+        </div>
+
+        <h3>Attributs</h3>
+        <div class="flex gap-2">
+          <div class="flex flex-col gap-1">
+            <div class="flex flex-col gap-1">
+              <label for="vigueur">Vigueur</label>
+              <input formControlName="vigueur" pInputText id="vigueur" class="p-inputtext-sm"/>
+            </div>
+            <div class="flex flex-col gap-1">
+              <label for="agilite">Agilité</label>
+              <input formControlName="agilite" id="agilite" pInputText class="p-inputtext-sm"/>
+            </div>
+          </div>
+          <div class="flex flex-col gap-1">
+            <div class="flex flex-col gap-1">
+              <label for="esprit">Esprit</label>
+              <input formControlName="esprit" pInputText id="esprit" class="p-inputtext-sm"/>
+            </div>
+            <div class="flex flex-col gap-1">
+              <label for="aura">Aura</label>
+              <p-inputNumber formControlName="aura" id="aura"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2">
+      <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-secondary" size="small" routerLink="/bol"></p-button>
+      <p-button (click)="submit()" [disabled]="heroForm.invalid" label="Save" icon="pi pi-check"
+                size="small"></p-button>
+    </div>
+  </ng-template>
+  </p-card>
+
+  <p-card header="Combats">
+    <div class="flex gap-2">
+      <div class="flex flex-col gap-1">
+        <div class="flex flex-col gap-1">
+          <label for="initiative">Initiative</label>
+          <input pInputText id="initiative" class="p-inputtext-sm"/>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="melee">Mêlée</label>
+          <input pInputText id="melee" class="p-inputtext-sm"/>
+        </div>
+      </div>
+      <div class="flex flex-col gap-1">
+        <div class="flex flex-col gap-1">
+          <label for="tir">Tir</label>
+          <input pInputText id="tir" class="p-inputtext-sm"/>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="defence">Défense</label>
+          <input pInputText id="defence" class="p-inputtext-sm"/>
+        </div>
+      </div>
+    </div>
+  </p-card>
+  <p-card header="Carrières">
+    <p class="m-0">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam
+      deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate
+      neque
+      quas!
+    </p>
+  </p-card>
+  <p-card header="Armes">
+    <p class="m-0">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam
+      deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate
+      neque
+      quas!
+    </p>
+  </p-card>
+  <p-card header="Armures">
+    <p class="m-0">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam
+      deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate
+      neque
+      quas!
+    </p>
+  </p-card>
+</div>
