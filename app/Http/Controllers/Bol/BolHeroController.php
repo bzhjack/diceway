@@ -31,4 +31,17 @@ class BolHeroController extends Controller
         $hero = BolHero::create($input);
         return response([ 'hero' => $hero]);
     }
+    public function update(Request $request)
+    {
+        $input = $request->all();
+        $id = $input['id'];
+        $hero = BolHero::where('user_id', Auth::id())->where('id', $id)->get()->first();
+        if ($hero === null) {
+            return response()->json(['error'=> 'Hero not found'], 404);
+        } else {
+            BolHero::where('id', $id)
+                ->update($input);
+            return response(['character' => $input]);
+        }
+    }
 }

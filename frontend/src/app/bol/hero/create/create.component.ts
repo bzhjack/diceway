@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {InputTextModule} from "primeng/inputtext";
 import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
@@ -24,21 +24,32 @@ import {BolHeroModel} from "../../models/bol-hero.model";
   styleUrl: './create.component.scss'
 })
 export class BolHeroCreateComponent {
+  public idCtrl: FormControl<string | null> = new FormControl(null);
   public playerNameCtrl = new FormControl('', Validators.required);
   public heroNameCtrl = new FormControl('', Validators.required);
   heroForm = this.fb.group(
     {
-     nom: this.playerNameCtrl,
-     joueur: this.heroNameCtrl,
+      id: this.idCtrl,
+      nom: this.playerNameCtrl,
+      joueur: this.heroNameCtrl,
     }
   );
-  constructor( private fb: FormBuilder, private hs: BolHeroService ) {
+
+  constructor(private fb: FormBuilder, private hs: BolHeroService) {
 
   }
+
   submit() {
-    console.log('ici', this.heroForm.value);
-    this.hs.create(this.heroForm.value as BolHeroModel).subscribe((data) => {
-      console.log(data);
-    })
+    const hero = this.heroForm.value;
+    if (hero.id !== null) {
+      this.hs.update(this.heroForm.value as BolHeroModel).subscribe((data: {hero: BolHeroModel}) => {
+
+      })
+    } else {
+      this.hs.create(this.heroForm.value as BolHeroModel).subscribe((data: {hero: BolHeroModel}) => {
+        this.idCtrl.setValue(data.hero.id)
+      })
+    }
+
   }
 }

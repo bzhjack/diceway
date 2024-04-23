@@ -10,7 +10,10 @@ export class BolHeroService {
 
   constructor(private http: HttpClient) {
   }
-  create(hero: BolHeroModel): Observable<BolHeroModel> {
+  create(hero: BolHeroModel): Observable<any> {
     return this.http.post<BolHeroModel>('/api/bol/hero/create', <BolHeroModel>hero);
+  }
+  update(hero: BolHeroModel): Observable<any> {
+    return this.http.post<BolHeroModel>('/api/bol/hero/update', <BolHeroModel>hero);
   }
 }
