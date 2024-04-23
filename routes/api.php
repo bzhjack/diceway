@@ -51,6 +51,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     // Bol
     Route::get('/bol/region', [BolRegionController::class, 'getAll']);
     Route::get('/bol/hero', [BolHeroController::class, 'getAll']);
+    Route::get('/bol/hero/{id}', [BolHeroController::class, 'getOne']);
     Route::post('/bol/hero/create', [BolHeroController::class, 'create']);
     Route::post('/bol/hero/update', [BolHeroController::class, 'update']);
 });

@@ -14,12 +14,25 @@ class BolHeroController extends Controller
      */
     public function getAll()
     {
-        // Récupérer toutes les lignes de votre modèle
-        $donnees = BolHero::all();
-       // Retourner les données en tant que réponse JSON
-        return response()->json($donnees);
+        $heroes = BolHero::where('user_id', Auth::id())->get();
+        return response(['heroes' => $heroes]);
     }
 
+    /**
+     * Récupère un héro par son id
+     */
+    public function getOne(Request $request) {
+        $id = $request->route('id');
+        $hero = BolHero::where('user_id', Auth::id())->where('id', $id)->get()->first();
+        if ($hero === null) {
+            return response()->json(['error'=> 'Hero not found'], 404);
+        } else {
+            return response(['hero' => $hero]);
+        }
+    }
+    /**
+     * Création d'un hero
+     */
     public function create(Request $request)
     {
         $data = $request->validate([
@@ -31,6 +44,9 @@ class BolHeroController extends Controller
         $hero = BolHero::create($input);
         return response([ 'hero' => $hero]);
     }
+    /**
+     * Mise à jour d'un hero
+     */
     public function update(Request $request)
     {
         $input = $request->all();

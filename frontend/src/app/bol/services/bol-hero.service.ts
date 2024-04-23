@@ -9,11 +9,18 @@ import {BolHeroModel} from "../models/bol-hero.model";
 export class BolHeroService {
 
   constructor(private http: HttpClient) {
+
   }
   create(hero: BolHeroModel): Observable<any> {
     return this.http.post<BolHeroModel>('/api/bol/hero/create', <BolHeroModel>hero);
   }
   update(hero: BolHeroModel): Observable<any> {
     return this.http.post<BolHeroModel>('/api/bol/hero/update', <BolHeroModel>hero);
+  }
+  all() {
+    return this.http.get<BolHeroModel>('/api/bol/hero',);
+  }
+  one(id: string) {
+    return this.http.get<BolHeroModel>('/api/bol/hero/'+id,);
   }
 }

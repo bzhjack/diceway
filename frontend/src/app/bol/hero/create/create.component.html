@@ -1,5 +1,5 @@
 <div class="flex p-4 gap-4 flex-wrap">
-  <p-card header="Création d'un héros"  (ngSubmit)="submit()" [formGroup]="heroForm">
+  <p-card header="Création d'un héros" (ngSubmit)="submit()" [formGroup]="heroForm">
     <div class="flex gap-4">
       <div class="flex flex-col">
         <div class="flex flex-col gap-1">
@@ -45,8 +45,9 @@
     </div>
     <ng-template pTemplate="footer">
       <div class="flex justify-end gap-2">
-        <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-secondary" size="small"></p-button>
-        <p-button (click)="submit()" [disabled]="heroForm.invalid" label="Save" icon="pi pi-check" size="small"></p-button>
+        <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-secondary" size="small" routerLink="/bol"></p-button>
+        <p-button (click)="submit()" [disabled]="heroForm.invalid" label="Save" icon="pi pi-check"
+                  size="small"></p-button>
       </div>
     </ng-template>
   </p-card>
