@@ -9,6 +9,7 @@ import {BolHeroService} from "../../services/bol-hero.service";
 import {BolHeroModel} from "../../models/bol-hero.model";
 import {Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'app-create',
@@ -39,35 +40,62 @@ export class BolHeroCreateComponent implements OnDestroy {
     }
   );
 
-  constructor(private fb: FormBuilder, private hs: BolHeroService, private readonly route: ActivatedRoute) {
+  constructor(
+    private spinner: NgxSpinnerService,
+    private fb: FormBuilder,
+    private hs: BolHeroService,
+    private readonly route: ActivatedRoute) {
     const id = this.route.snapshot.paramMap.get('id');
     if (id !== null) {
       this.getHero(id);
     }
   }
+
   ngOnDestroy() {
     this.subs?.unsubscribe();
   }
 
   getHero(id: string) {
-    this.subs = this.hs.one(id).subscribe((hero) => {
-      this.heroForm.patchValue({
-        id: hero.id,
-        nom: hero.nom,
-        joueur: hero.joueur,
-      });
-    });
+    this.spinner.show();
+    this.subs = this.hs.one(id).subscribe({
+        next: (hero: BolHeroModel) => {
+          this.heroForm.patchValue({
+            id: hero.id,
+            nom: hero.nom,
+            joueur: hero.joueur,
+          });
+          this.spinner.hide();
+        },
+        error: (error) => {
+          this.spinner.hide();
+        }
+      }
+    );
   }
+
   submit() {
     const hero = this.heroForm.value;
+    this.spinner.show();
     this.subs?.unsubscribe();
     if (hero.id !== null) {
-      this.subs = this.hs.update(this.heroForm.value as BolHeroModel).subscribe((hero: BolHeroModel) => {
-        console.log(hero);
+      this.subs = this.hs.update(this.heroForm.value as BolHeroModel).subscribe({
+        next: (hero: BolHeroModel) => {
+          this.spinner.hide();
+          console.log(hero);
+        },
+        error: (error) => {
+          this.spinner.hide();
+        }
       });
     } else {
-      this.subs = this.hs.create(this.heroForm.value as BolHeroModel).subscribe((hero: BolHeroModel) => {
-        this.idCtrl.setValue(hero.id)
+      this.subs = this.hs.create(this.heroForm.value as BolHeroModel).subscribe({
+        next: (hero: BolHeroModel) => {
+          this.spinner.hide();
+          this.idCtrl.setValue(hero.id);
+        },
+        error: (error) => {
+          this.spinner.hide();
+        }
       });
     }
 

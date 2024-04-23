@@ -5,6 +5,7 @@ import {BolHeroService} from "../services/bol-hero.service";
 import {BolHeroModel} from "../models/bol-hero.model";
 import {JsonPipe, NgForOf} from "@angular/common";
 import {RouterLink} from "@angular/router";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'bol-home',
@@ -21,9 +22,16 @@ export class BolHomeComponent implements OnDestroy {
   private subs?: Subscription;
   public heroes: Array<BolHeroModel> = [];
 
-  constructor(private hs: BolHeroService) {
-    this.subs = this.hs.all().subscribe((heroes) => {
-      this.heroes = heroes;
+  constructor(private hs: BolHeroService,  private spinner: NgxSpinnerService) {
+    this.spinner.show();
+    this.subs = this.hs.all().subscribe({
+      next: (heroes) => {
+        this.heroes = heroes;
+        this.spinner.hide();
+      },
+      error: (error) => {
+        this.spinner.hide();
+      }
     });
   }
 
