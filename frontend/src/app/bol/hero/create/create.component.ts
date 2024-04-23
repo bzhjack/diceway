@@ -8,6 +8,7 @@ import {SplitButtonModule} from "primeng/splitbutton";
 import {BolHeroService} from "../../services/bol-hero.service";
 import {BolHeroModel} from "../../models/bol-hero.model";
 import {Subscription} from "rxjs";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-create',
@@ -38,8 +39,9 @@ export class BolHeroCreateComponent implements OnDestroy {
     }
   );
 
-  constructor(private fb: FormBuilder, private hs: BolHeroService) {
-
+  constructor(private fb: FormBuilder, private hs: BolHeroService, private readonly route: ActivatedRoute) {
+    const id = this.route.snapshot.paramMap.get('id');
+    console.log(id);
   }
   ngOnDestroy() {
     this.subs?.unsubscribe();
@@ -49,12 +51,12 @@ export class BolHeroCreateComponent implements OnDestroy {
     const hero = this.heroForm.value;
     this.subs?.unsubscribe();
     if (hero.id !== null) {
-      this.subs = this.hs.update(this.heroForm.value as BolHeroModel).subscribe((data: { hero: BolHeroModel }) => {
-        console.log(data);
+      this.subs = this.hs.update(this.heroForm.value as BolHeroModel).subscribe((hero: BolHeroModel) => {
+        console.log(hero);
       });
     } else {
-      this.subs = this.hs.create(this.heroForm.value as BolHeroModel).subscribe((data: { hero: BolHeroModel }) => {
-        this.idCtrl.setValue(data.hero.id)
+      this.subs = this.hs.create(this.heroForm.value as BolHeroModel).subscribe((hero: BolHeroModel) => {
+        this.idCtrl.setValue(hero.id)
       });
     }
 

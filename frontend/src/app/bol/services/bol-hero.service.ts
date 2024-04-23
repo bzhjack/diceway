@@ -18,7 +18,7 @@ export class BolHeroService {
     return this.http.post<BolHeroModel>('/api/bol/hero/update', <BolHeroModel>hero);
   }
   all() {
-    return this.http.get<BolHeroModel>('/api/bol/hero',);
+    return this.http.get<Array<BolHeroModel>>('/api/bol/hero',);
   }
   one(id: string) {
     return this.http.get<BolHeroModel>('/api/bol/hero/'+id,);

@@ -31,6 +31,7 @@ export const routes: Routes = [
     { path: '', component: HomeComponent, canActivate: [loggedInGuard] },
     { path: 'bol', component: BolHomeComponent, canActivate: [loggedInGuard] },
     { path: 'bol/hero/create', component: BolHeroCreateComponent, canActivate: [loggedInGuard] },
+    { path: 'bol/hero/create/:id', component: BolHeroCreateComponent, canActivate: [loggedInGuard] },
 
 
 

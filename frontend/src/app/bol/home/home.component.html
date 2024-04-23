@@ -1,3 +1,5 @@
 <div class="bol-container flex flex-wrap">
-  plop
+<div class="flex flex-col">
+    <a *ngFor="let hero of heroes" [routerLink]="['hero', 'create', hero.id]">{{hero.nom}}</a>
+</div>
 </div>

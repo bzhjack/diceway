@@ -1,5 +1,5 @@
 export interface BolHeroModel {
   id: string | null;
-  playerName: string;
-  heroName: string;
+  joueur: string;
+  nom: string;
 }
