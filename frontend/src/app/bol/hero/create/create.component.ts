@@ -1,6 +1,7 @@
 import {Component, OnDestroy} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {InputTextModule} from "primeng/inputtext";
+import {InputNumberModule} from 'primeng/inputnumber';
 import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ToolbarModule} from "primeng/toolbar";
 import {ButtonModule} from "primeng/button";
@@ -21,7 +22,8 @@ import {NgxSpinnerService} from "ngx-spinner";
     ToolbarModule,
     ButtonModule,
     SplitButtonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    InputNumberModule 
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
@@ -32,11 +34,22 @@ export class BolHeroCreateComponent implements OnDestroy {
   public idCtrl: FormControl<string | null> = new FormControl(null);
   public playerNameCtrl = new FormControl('', Validators.required);
   public heroNameCtrl = new FormControl('', Validators.required);
+
+  public vigueurCtrl = new FormControl<number | null>(null, Validators.required);
+  public agiliteCtrl = new FormControl<number | null>(null, Validators.required);
+  public espritCtrl = new FormControl<number | null>(null, Validators.required);
+  public auraCtrl = new FormControl<number | null>(null, Validators.required);
+
+
   heroForm = this.fb.group(
     {
       id: this.idCtrl,
       nom: this.playerNameCtrl,
       joueur: this.heroNameCtrl,
+      vigueur: this.vigueurCtrl,
+      agilite: this.agiliteCtrl,
+      esprit: this.espritCtrl,
+      aura: this.auraCtrl
     }
   );
 
@@ -63,6 +76,10 @@ export class BolHeroCreateComponent implements OnDestroy {
             id: hero.id,
             nom: hero.nom,
             joueur: hero.joueur,
+            vigueur: hero.vigueur,
+            aura: hero.aura,
+            esprit: hero.esprit,
+            agilite: hero.agilite
           });
           this.spinner.hide();
         },

@@ -17,5 +17,9 @@ class BolHero extends Model
         'user_id',
         'joueur',
         'nom',
+        'vigueur',
+        'agilite',
+        'esprit',
+        'aura'
     ];
 }

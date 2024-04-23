@@ -1,16 +1,17 @@
 <div class="flex p-4 gap-4 flex-wrap">
-  <p-card header="Création d'un héros" (ngSubmit)="submit()" [formGroup]="heroForm">
+  <p-card header="Création d'un héros">
+    <form (ngSubmit)="submit()" [formGroup]="heroForm" autocomplete="off">
     <div class="flex gap-4">
       <div class="flex flex-col">
         <div class="flex flex-col gap-1">
-          <label for="playerName">Nom du joueur</label>
-          <input formControlName="joueur" pInputText id="playerName" class="p-inputtext-sm" autocomplete="new"/>
+          <label for="joueur">Nom du joueur</label>
+          <input formControlName="joueur" pInputText id="joueur" class="p-inputtext-sm"/>
         </div>
         <h3>Origines</h3>
         <div class="flex flex-col gap-1">
           <div class="flex flex-col gap-1">
-            <label for="heroName">Nom du héro</label>
-            <input formControlName="nom" pInputText id="heroName" class="p-inputtext-sm" autocomplete="new"/>
+            <label for="nom">Nom du héro</label>
+            <input formControlName="nom" pInputText id="nom" class="p-inputtext-sm"/>
           </div>
           <div class="flex flex-col gap-1">
             <label for="region">Région</label>
@@ -23,33 +24,34 @@
           <div class="flex flex-col gap-1">
             <div class="flex flex-col gap-1">
               <label for="vigueur">Vigueur</label>
-              <input pInputText id="vigueur" class="p-inputtext-sm"/>
+              <input formControlName="vigueur" pInputText id="vigueur" class="p-inputtext-sm"/>
             </div>
             <div class="flex flex-col gap-1">
               <label for="agilite">Agilité</label>
-              <input pInputText id="agilite" class="p-inputtext-sm"/>
+              <input formControlName="agilite" id="agilite" pInputText class="p-inputtext-sm"/>
             </div>
           </div>
           <div class="flex flex-col gap-1">
             <div class="flex flex-col gap-1">
               <label for="esprit">Esprit</label>
-              <input pInputText id="esprit" class="p-inputtext-sm"/>
+              <input formControlName="esprit" pInputText id="esprit" class="p-inputtext-sm"/>
             </div>
             <div class="flex flex-col gap-1">
               <label for="aura">Aura</label>
-              <input pInputText id="aura" class="p-inputtext-sm"/>
+              <p-inputNumber formControlName="aura" id="aura"/>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <ng-template pTemplate="footer">
-      <div class="flex justify-end gap-2">
-        <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-secondary" size="small" routerLink="/bol"></p-button>
-        <p-button (click)="submit()" [disabled]="heroForm.invalid" label="Save" icon="pi pi-check"
-                  size="small"></p-button>
-      </div>
-    </ng-template>
+  </form>
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2">
+      <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-secondary" size="small" routerLink="/bol"></p-button>
+      <p-button (click)="submit()" [disabled]="heroForm.invalid" label="Save" icon="pi pi-check"
+                size="small"></p-button>
+    </div>
+  </ng-template>
   </p-card>
 
   <p-card header="Combats">
