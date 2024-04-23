@@ -41,12 +41,23 @@ export class BolHeroCreateComponent implements OnDestroy {
 
   constructor(private fb: FormBuilder, private hs: BolHeroService, private readonly route: ActivatedRoute) {
     const id = this.route.snapshot.paramMap.get('id');
-    console.log(id);
+    if (id !== null) {
+      this.getHero(id);
+    }
   }
   ngOnDestroy() {
     this.subs?.unsubscribe();
   }
 
+  getHero(id: string) {
+    this.subs = this.hs.one(id).subscribe((hero) => {
+      this.heroForm.patchValue({
+        id: hero.id,
+        nom: hero.nom,
+        joueur: hero.joueur,
+      });
+    });
+  }
   submit() {
     const hero = this.heroForm.value;
     this.subs?.unsubscribe();
