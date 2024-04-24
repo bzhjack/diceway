@@ -27,7 +27,7 @@ return new class extends Migration
             $table->tinyInteger('initiative')->default(0);
             $table->tinyInteger('melee')->default(0);
             $table->tinyInteger('tir')->default(0);
-            $table->tinyInteger('defence')->default(0);
+            $table->tinyInteger('defense')->default(0);
 
             // Points
             $table->tinyInteger('vitalite')->default(0);

@@ -20,6 +20,10 @@ class BolHero extends Model
         'vigueur',
         'agilite',
         'esprit',
-        'aura'
+        'aura',
+        'initiative',
+        'melee',
+        'tir',
+        'defense'
     ];
 }

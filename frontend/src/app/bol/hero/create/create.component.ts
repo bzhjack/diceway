@@ -36,12 +36,16 @@ export class BolHeroCreateComponent implements OnDestroy {
   public idCtrl: FormControl<string | null> = new FormControl(null);
   public playerNameCtrl = new FormControl('', Validators.required);
   public heroNameCtrl = new FormControl('', Validators.required);
-
+  // Attribut
   public vigueurCtrl = new FormControl<number | null>(null, Validators.required);
   public agiliteCtrl = new FormControl<number | null>(null, Validators.required);
   public espritCtrl = new FormControl<number | null>(null, Validators.required);
   public auraCtrl = new FormControl<number | null>(null, Validators.required);
-
+  // Combat
+  public initiativeCtrl = new FormControl<number | null>(null, Validators.required);
+  public meleeCtrl = new FormControl<number | null>(null, Validators.required);
+  public tirCtrl = new FormControl<number | null>(null, Validators.required);
+  public defenseCtrl = new FormControl<number | null>(null, Validators.required);
 
   heroForm = this.fb.group(
     {
@@ -51,7 +55,11 @@ export class BolHeroCreateComponent implements OnDestroy {
       vigueur: this.vigueurCtrl,
       agilite: this.agiliteCtrl,
       esprit: this.espritCtrl,
-      aura: this.auraCtrl
+      aura: this.auraCtrl,
+      initiative: this.initiativeCtrl,
+      melee: this.meleeCtrl,
+      tir: this.tirCtrl,
+      defense: this.defenseCtrl
     }
   );
 
@@ -74,6 +82,7 @@ export class BolHeroCreateComponent implements OnDestroy {
     this.spinner.show();
     this.subs = this.hs.one(id).subscribe({
         next: (hero: BolHeroModel) => {
+          console.log(hero);
           this.heroForm.patchValue({
             id: hero.id,
             nom: hero.nom,
@@ -81,7 +90,11 @@ export class BolHeroCreateComponent implements OnDestroy {
             vigueur: hero.vigueur,
             aura: hero.aura,
             esprit: hero.esprit,
-            agilite: hero.agilite
+            agilite: hero.agilite,
+            initiative: hero.initiative,
+            melee: hero.melee,
+            tir: hero.tir,
+            defense: hero.defense
           });
           this.spinner.hide();
         },

@@ -5,5 +5,9 @@ export interface BolHeroModel {
   vigueur: number,
   aura: number,
   esprit: number,
-  agilite: number
+  agilite: number,
+  initiative: number,
+  melee: number,
+  tir: number,
+  defense: number
 }
