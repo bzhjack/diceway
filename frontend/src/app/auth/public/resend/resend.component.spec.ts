@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ResendComponent } from './resend.component';
+import {ResendComponent} from './resend.component';
 
 describe('ResendComponent', () => {
   let component: ResendComponent;
@@ -11,7 +11,7 @@ describe('ResendComponent', () => {
       imports: [ResendComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(ResendComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

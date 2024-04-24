@@ -1,18 +1,18 @@
-import { Component, OnDestroy } from '@angular/core';
-import { CardModule} from 'primeng/card';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { InputTextModule } from 'primeng/inputtext';
-import { ButtonModule } from 'primeng/button';
-import { Router, RouterModule } from '@angular/router';
-import { InlineSVGModule } from 'ng-inline-svg-2';
-import { Subscription } from 'rxjs';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UserService } from '../../services/user.service';
-import { CommonModule } from '@angular/common';
-import { ProgressBarModule } from 'primeng/progressbar';
-import { MessagesModule } from 'primeng/messages';
-import { Message } from 'primeng/api';
+import {Component, OnDestroy} from '@angular/core';
+import {CardModule} from 'primeng/card';
+import {InputGroupModule} from 'primeng/inputgroup';
+import {InputGroupAddonModule} from 'primeng/inputgroupaddon';
+import {InputTextModule} from 'primeng/inputtext';
+import {ButtonModule} from 'primeng/button';
+import {Router, RouterModule} from '@angular/router';
+import {InlineSVGModule} from 'ng-inline-svg-2';
+import {Subscription} from 'rxjs';
+import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {UserService} from '../../services/user.service';
+import {CommonModule} from '@angular/common';
+import {ProgressBarModule} from 'primeng/progressbar';
+import {MessagesModule} from 'primeng/messages';
+import {Message} from 'primeng/api';
 
 @Component({
   selector: 'app-login',

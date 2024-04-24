@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ForgottenComponent } from './forgotten.component';
+import {ForgottenComponent} from './forgotten.component';
 
 describe('ForgottenComponent', () => {
   let component: ForgottenComponent;
@@ -11,7 +11,7 @@ describe('ForgottenComponent', () => {
       imports: [ForgottenComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(ForgottenComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

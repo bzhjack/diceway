@@ -1,14 +1,14 @@
-import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { UserService } from '../services/user.service';
+import {HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest} from '@angular/common/http';
+import {inject} from '@angular/core';
+import {Observable, throwError} from 'rxjs';
+import {tap} from 'rxjs/operators';
+import {UserService} from '../services/user.service';
 
 /**
  * Redirection vers le login en cas de 401
- * @param req  
- * @param next 
- * @returns 
+ * @param req
+ * @param next
+ * @returns
  */
 export const UnauthorizedInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,

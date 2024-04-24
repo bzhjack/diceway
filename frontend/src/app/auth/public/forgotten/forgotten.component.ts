@@ -1,18 +1,18 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { InlineSVGModule } from 'ng-inline-svg-2';
-import { Message } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { InputTextModule } from 'primeng/inputtext';
-import { Subscription } from 'rxjs';
-import { UserService } from '../../services/user.service';
-import { ProgressBarModule } from 'primeng/progressbar';
-import { MessagesModule } from 'primeng/messages';
+import {CommonModule} from '@angular/common';
+import {Component} from '@angular/core';
+import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Router, RouterModule} from '@angular/router';
+import {InlineSVGModule} from 'ng-inline-svg-2';
+import {Message} from 'primeng/api';
+import {ButtonModule} from 'primeng/button';
+import {CardModule} from 'primeng/card';
+import {InputGroupModule} from 'primeng/inputgroup';
+import {InputGroupAddonModule} from 'primeng/inputgroupaddon';
+import {InputTextModule} from 'primeng/inputtext';
+import {Subscription} from 'rxjs';
+import {UserService} from '../../services/user.service';
+import {ProgressBarModule} from 'primeng/progressbar';
+import {MessagesModule} from 'primeng/messages';
 
 @Component({
   selector: 'app-forgotten',

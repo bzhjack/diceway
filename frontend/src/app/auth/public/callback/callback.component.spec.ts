@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { CallbackComponent } from './callback.component';
+import {CallbackComponent} from './callback.component';
 
 describe('CallbackComponent', () => {
   let component: CallbackComponent;
@@ -11,7 +11,7 @@ describe('CallbackComponent', () => {
       imports: [CallbackComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(CallbackComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

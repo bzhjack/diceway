@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { TopbarComponent } from '../layout/topbar/topbar.component';
+import {Component} from '@angular/core';
+import {TopbarComponent} from '../layout/topbar/topbar.component';
 import {CardModule} from "primeng/card";
 import {RouterLink} from "@angular/router";
 

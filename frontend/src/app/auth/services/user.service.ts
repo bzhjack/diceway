@@ -3,7 +3,6 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {UserModel, UserStorageModel} from './user.model';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Router} from '@angular/router';
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +18,6 @@ export class UserService {
     private http: HttpClient,
     private router: Router,
   ) {
-    console.log('UserService');
     this.retrieveUser();
   }
 
