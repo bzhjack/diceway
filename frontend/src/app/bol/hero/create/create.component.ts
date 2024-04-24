@@ -11,6 +11,7 @@ import {BolHeroModel} from "../../models/bol-hero.model";
 import {Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
+import {FieldsetModule} from "primeng/fieldset";
 
 @Component({
   selector: 'app-create',
@@ -23,7 +24,8 @@ import {NgxSpinnerService} from "ngx-spinner";
     ButtonModule,
     SplitButtonModule,
     ReactiveFormsModule,
-    InputNumberModule 
+    InputNumberModule,
+    FieldsetModule
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
@@ -83,7 +85,7 @@ export class BolHeroCreateComponent implements OnDestroy {
           });
           this.spinner.hide();
         },
-        error: (error) => {
+        error: () => {
           this.spinner.hide();
         }
       }
@@ -100,7 +102,7 @@ export class BolHeroCreateComponent implements OnDestroy {
           this.spinner.hide();
           console.log(hero);
         },
-        error: (error) => {
+        error: () => {
           this.spinner.hide();
         }
       });
@@ -110,7 +112,7 @@ export class BolHeroCreateComponent implements OnDestroy {
           this.spinner.hide();
           this.idCtrl.setValue(hero.id);
         },
-        error: (error) => {
+        error: () => {
           this.spinner.hide();
         }
       });

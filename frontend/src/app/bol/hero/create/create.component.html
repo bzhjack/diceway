@@ -7,41 +7,46 @@
           <label for="joueur">Nom du joueur</label>
           <input formControlName="joueur" pInputText id="joueur" class="p-inputtext-sm"/>
         </div>
-        <h3>Origines</h3>
-        <div class="flex flex-col gap-1">
-          <div class="flex flex-col gap-1">
-            <label for="nom">Nom du héro</label>
-            <input formControlName="nom" pInputText id="nom" class="p-inputtext-sm"/>
-          </div>
-          <div class="flex flex-col gap-1">
-            <label for="region">Région</label>
-            <input pInputText id="region" class="p-inputtext-sm"/>
-          </div>
-        </div>
 
-        <h3>Attributs</h3>
-        <div class="flex gap-2">
+        <p-fieldset legend="Origines">
           <div class="flex flex-col gap-1">
             <div class="flex flex-col gap-1">
-              <label for="vigueur">Vigueur</label>
-              <input formControlName="vigueur" pInputText id="vigueur" class="p-inputtext-sm"/>
+              <label for="nom">Nom du héro</label>
+              <input formControlName="nom" pInputText id="nom" class="p-inputtext-sm"/>
             </div>
             <div class="flex flex-col gap-1">
-              <label for="agilite">Agilité</label>
-              <input formControlName="agilite" id="agilite" pInputText class="p-inputtext-sm"/>
+              <label for="region">Région</label>
+              <input pInputText id="region" class="p-inputtext-sm"/>
             </div>
           </div>
-          <div class="flex flex-col gap-1">
+        </p-fieldset>
+
+
+        <p-fieldset legend="Attributs">
+
+          <div class="flex gap-2">
             <div class="flex flex-col gap-1">
-              <label for="esprit">Esprit</label>
-              <input formControlName="esprit" pInputText id="esprit" class="p-inputtext-sm"/>
+              <div class="flex flex-col gap-1">
+                <label for="vigueur">Vigueur</label>
+                <p-inputNumber formControlName="vigueur" id="vigueur"/>
+              </div>
+              <div class="flex flex-col gap-1">
+                <label for="agilite">Agilité</label>
+                <p-inputNumber formControlName="agilite" id="agilite"/>
+              </div>
             </div>
             <div class="flex flex-col gap-1">
-              <label for="aura">Aura</label>
-              <p-inputNumber formControlName="aura" id="aura"/>
+              <div class="flex flex-col gap-1">
+                <label for="esprit">Esprit</label>
+                <p-inputNumber formControlName="esprit" id="esprit"/>
+              </div>
+              <div class="flex flex-col gap-1">
+                <label for="aura">Aura</label>
+                <p-inputNumber formControlName="aura" id="aura"/>
+              </div>
             </div>
           </div>
-        </div>
+        </p-fieldset>
       </div>
     </div>
   </form>
