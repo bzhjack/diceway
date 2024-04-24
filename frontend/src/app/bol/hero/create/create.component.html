@@ -28,21 +28,21 @@
             <div class="flex flex-col gap-1">
               <div class="flex flex-col gap-1">
                 <label for="vigueur">Vigueur</label>
-                <p-inputNumber formControlName="vigueur" id="vigueur"/>
+                <p-inputNumber formControlName="vigueur" id="vigueur" inputId="vigueur"/>
               </div>
               <div class="flex flex-col gap-1">
                 <label for="agilite">Agilité</label>
-                <p-inputNumber formControlName="agilite" id="agilite"/>
+                <p-inputNumber formControlName="agilite" id="agilite" inputId="agilite"/>
               </div>
             </div>
             <div class="flex flex-col gap-1">
               <div class="flex flex-col gap-1">
                 <label for="esprit">Esprit</label>
-                <p-inputNumber formControlName="esprit" id="esprit"/>
+                <p-inputNumber formControlName="esprit" id="esprit" inputId="esprit"/>
               </div>
               <div class="flex flex-col gap-1">
                 <label for="aura">Aura</label>
-                <p-inputNumber formControlName="aura" id="aura"/>
+                <p-inputNumber formControlName="aura" id="aura" inputId="aura" maxFractionDigits="0"/>
               </div>
             </div>
           </div>
@@ -52,8 +52,8 @@
   </form>
   <ng-template pTemplate="footer">
     <div class="flex justify-end gap-2">
-      <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-secondary" size="small" routerLink="/bol"></p-button>
-      <p-button (click)="submit()" [disabled]="heroForm.invalid" label="Save" icon="pi pi-check"
+      <p-button label="Retour" icon="pi pi-times" styleClass="p-button-secondary" size="small" routerLink="/bol"></p-button>
+      <p-button (click)="submit()" [disabled]="heroForm.invalid" label="Enregistrer" icon="pi pi-check"
                 size="small"></p-button>
     </div>
   </ng-template>
