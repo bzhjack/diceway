@@ -1,110 +1,100 @@
 <div class="flex p-4 gap-4 flex-wrap">
   <p-card header="Création d'un héros">
     <form (ngSubmit)="submit()" [formGroup]="heroForm" autocomplete="off">
-    <div class="flex gap-4">
-      <div class="flex flex-col">
-        <div class="flex flex-col gap-1">
-          <label for="joueur">Nom du joueur</label>
-          <input formControlName="joueur" pInputText id="joueur" class="p-inputtext-sm"/>
-        </div>
+      <div class="flex gap-4">
 
-        <p-fieldset legend="Origines">
+        <div class="flex flex-col gap-4">
           <div class="flex flex-col gap-1">
-            <div class="flex flex-col gap-1">
-              <label for="nom">Nom du héro</label>
-              <input formControlName="nom" pInputText id="nom" class="p-inputtext-sm"/>
-            </div>
-            <div class="flex flex-col gap-1">
-              <label for="region">Région</label>
-              <input pInputText id="region" class="p-inputtext-sm"/>
-            </div>
+            <label for="joueur">Nom du joueur</label>
+            <input formControlName="joueur" pInputText id="joueur" class="p-inputtext-sm"/>
           </div>
-        </p-fieldset>
 
-
-        <p-fieldset legend="Attributs">
 
           <div class="flex gap-2">
-            <div class="flex flex-col gap-1">
-              <div class="flex flex-col gap-1">
-                <label for="vigueur">Vigueur</label>
-                <p-inputNumber formControlName="vigueur" id="vigueur" inputId="vigueur"/>
-              </div>
-              <div class="flex flex-col gap-1">
-                <label for="agilite">Agilité</label>
-                <p-inputNumber formControlName="agilite" id="agilite" inputId="agilite"/>
-              </div>
+            <!-- Partie Gauche -->
+            <div class="flex flex-col gap-1" >
+              <p-fieldset legend="Origines">
+                <div class="flex flex-col gap-1">
+                  <div class="flex flex-col gap-1">
+                    <label for="nom">Nom du héro</label>
+                    <input formControlName="nom" pInputText id="nom" class="p-inputtext-sm"/>
+                  </div>
+                  <div class="flex flex-col gap-1">
+                    <label for="region">Région</label>
+                    <input pInputText id="region" class="p-inputtext-sm"/>
+                  </div>
+                </div>
+              </p-fieldset>
+              <p-fieldset legend="Attributs">
+                <div class="flex gap-2">
+                  <div class="flex flex-col gap-1">
+                    <div class="flex flex-col gap-1">
+                      <label for="vigueur">Vigueur</label>
+                      <p-inputNumber formControlName="vigueur" id="vigueur" inputId="vigueur"/>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <label for="agilite">Agilité</label>
+                      <p-inputNumber formControlName="agilite" id="agilite" inputId="agilite"/>
+                    </div>
+                  </div>
+                  <div class="flex flex-col gap-1">
+                    <div class="flex flex-col gap-1">
+                      <label for="esprit">Esprit</label>
+                      <p-inputNumber formControlName="esprit" id="esprit" inputId="esprit"/>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <label for="aura">Aura</label>
+                      <p-inputNumber formControlName="aura" id="aura" inputId="aura" maxFractionDigits="0"/>
+                    </div>
+                  </div>
+                </div>
+              </p-fieldset>
             </div>
-            <div class="flex flex-col gap-1">
-              <div class="flex flex-col gap-1">
-                <label for="esprit">Esprit</label>
-                <p-inputNumber formControlName="esprit" id="esprit" inputId="esprit"/>
-              </div>
-              <div class="flex flex-col gap-1">
-                <label for="aura">Aura</label>
-                <p-inputNumber formControlName="aura" id="aura" inputId="aura" maxFractionDigits="0"/>
-              </div>
+            <!-- Fin partie gauche -->
+            <!-- Debut partie droite -->
+            <div class="flex flex-col gap-2">
+              <p-fieldset legend="Combat">
+                <div class="flex gap-2">
+                  <div class="flex flex-col gap-1">
+                    <div class="flex flex-col gap-1">
+                      <label for="initiative">Initiative</label>
+                      <p-inputNumber formControlName="initiative" id="initiative" inputId="initiative"/>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <label for="tir">Tir</label>
+                      <p-inputNumber formControlName="tir" id="tir" inputId="tir"/>
+                    </div>
+                  </div>
+                  <div class="flex flex-col gap-1">
+                    <div class="flex flex-col gap-1">
+                      <label for="esprit">Melée</label>
+                      <p-inputNumber formControlName="melee" id="melee" inputId="melee"/>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <label for="aura">Défense</label>
+                      <p-inputNumber formControlName="defense" id="defense" inputId="defense" maxFractionDigits="0"/>
+                    </div>
+                  </div>
+                </div>
+              </p-fieldset>
             </div>
           </div>
-        </p-fieldset>
+        </div>
+
+        <!-- Fin partie droite -->
       </div>
-    </div>
-  </form>
-  <ng-template pTemplate="footer">
-    <div class="flex justify-end gap-2">
-      <p-button label="Retour" icon="pi pi-times" styleClass="p-button-secondary" size="small" routerLink="/bol"></p-button>
-      <p-button (click)="submit()" [disabled]="heroForm.invalid" label="Enregistrer" icon="pi pi-check"
-                size="small"></p-button>
-    </div>
-  </ng-template>
+    </form>
+    <ng-template pTemplate="footer">
+      <div class="flex justify-end gap-2">
+        <p-button label="Retour" icon="pi pi-times" styleClass="p-button-secondary" size="small"
+                  routerLink="/bol"></p-button>
+        <p-button (click)="submit()" [disabled]="heroForm.invalid" label="Enregistrer" icon="pi pi-check"
+                  size="small"></p-button>
+      </div>
+    </ng-template>
   </p-card>
 
-  <p-card header="Combats">
-    <div class="flex gap-2">
-      <div class="flex flex-col gap-1">
-        <div class="flex flex-col gap-1">
-          <label for="initiative">Initiative</label>
-          <input pInputText id="initiative" class="p-inputtext-sm"/>
-        </div>
-        <div class="flex flex-col gap-1">
-          <label for="melee">Mêlée</label>
-          <input pInputText id="melee" class="p-inputtext-sm"/>
-        </div>
-      </div>
-      <div class="flex flex-col gap-1">
-        <div class="flex flex-col gap-1">
-          <label for="tir">Tir</label>
-          <input pInputText id="tir" class="p-inputtext-sm"/>
-        </div>
-        <div class="flex flex-col gap-1">
-          <label for="defence">Défense</label>
-          <input pInputText id="defence" class="p-inputtext-sm"/>
-        </div>
-      </div>
-    </div>
-  </p-card>
-  <p-card header="Carrières">
-    <p class="m-0">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam
-      deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate
-      neque
-      quas!
-    </p>
-  </p-card>
-  <p-card header="Armes">
-    <p class="m-0">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam
-      deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate
-      neque
-      quas!
-    </p>
-  </p-card>
-  <p-card header="Armures">
-    <p class="m-0">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam
-      deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate
-      neque
-      quas!
-    </p>
-  </p-card>
+  <p-card header="Carrières"></p-card>
+  <p-card header="Armes"></p-card>
+  <p-card header="Armures"></p-card>
 </div>
