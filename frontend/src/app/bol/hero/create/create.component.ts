@@ -142,7 +142,9 @@ export class BolHeroCreateComponent implements OnDestroy {
     this.ref = this.ds.open(PictureComponent, { header: 'Photo du héro'});
     this.subs?.unsubscribe();
     this.subs = this.ref.onClose.subscribe((avatar: any) => {
-      this.avatarCtrl.setValue(avatar);
+      if (avatar !== null) {
+        this.avatarCtrl.setValue(avatar);
+      }
     });
   }
 }
