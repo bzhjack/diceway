@@ -1,0 +1,22 @@
+.hero-picture {
+
+}
+image-cropper {
+  max-height: 50vh;
+}
+
+.header-file {
+  width: 100%;
+  display: flex;
+  margin-bottom: 5px;
+  > button {
+    margin-right: 10px;
+  }
+}
+
+.body-file {
+  display: flex;
+}
+.picture-no-image {
+  background-color: rgba(255,255,255,0.1);
+}

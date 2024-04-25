@@ -12,6 +12,8 @@ import {Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {FieldsetModule} from "primeng/fieldset";
+import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
+import {PictureComponent} from "../../../shared/picture/picture.component";
 
 @Component({
   selector: 'app-create',
@@ -32,6 +34,8 @@ import {FieldsetModule} from "primeng/fieldset";
 })
 export class BolHeroCreateComponent implements OnDestroy {
   private subs?: Subscription;
+  private ref: DynamicDialogRef | undefined;
+
 
   public idCtrl: FormControl<string | null> = new FormControl(null);
   public playerNameCtrl = new FormControl('', Validators.required);
@@ -64,6 +68,7 @@ export class BolHeroCreateComponent implements OnDestroy {
   );
 
   constructor(
+    public ds: DialogService,
     private spinner: NgxSpinnerService,
     private fb: FormBuilder,
     private hs: BolHeroService,
@@ -82,7 +87,6 @@ export class BolHeroCreateComponent implements OnDestroy {
     this.spinner.show();
     this.subs = this.hs.one(id).subscribe({
         next: (hero: BolHeroModel) => {
-          console.log(hero);
           this.heroForm.patchValue({
             id: hero.id,
             nom: hero.nom,
@@ -113,7 +117,6 @@ export class BolHeroCreateComponent implements OnDestroy {
       this.subs = this.hs.update(this.heroForm.value as BolHeroModel).subscribe({
         next: (hero: BolHeroModel) => {
           this.spinner.hide();
-          console.log(hero);
         },
         error: () => {
           this.spinner.hide();
@@ -130,6 +133,13 @@ export class BolHeroCreateComponent implements OnDestroy {
         }
       });
     }
+  }
 
+  picture() {
+    this.ref = this.ds.open(PictureComponent, { header: 'Photo du héro'});
+    this.subs?.unsubscribe();
+    this.subs = this.ref.onClose.subscribe((product: any) => {
+      console.log(product);
+    });
   }
 }

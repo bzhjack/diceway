@@ -8,6 +8,7 @@ import {JwtInterceptor} from './auth/interceptors/jwt-interceptor';
 import {UnauthorizedInterceptor} from './auth/interceptors/unauthorized-interceptor';
 import {UserService} from './auth/services/user.service';
 import {MessageService} from "primeng/api";
+import {DialogService} from "primeng/dynamicdialog";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,7 +18,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimationsAsync(),
     UserService,
-    MessageService
+    MessageService,
+    DialogService
   ]
 };
 

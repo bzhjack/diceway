@@ -2,14 +2,12 @@
   <p-card header="Création d'un héros">
     <form (ngSubmit)="submit()" [formGroup]="heroForm" autocomplete="off">
       <div class="flex gap-4">
-
         <div class="flex flex-col gap-4">
           <div class="flex flex-col gap-1">
             <label for="joueur">Nom du joueur</label>
             <input formControlName="joueur" pInputText id="joueur" class="p-inputtext-sm"/>
           </div>
-
-
+          <p-button (click)="picture()" label="ShowPicture" icon="pi pi-check" size="small"></p-button>
           <div class="flex gap-2">
             <!-- Partie Gauche -->
             <div class="flex flex-col gap-1" >
@@ -86,10 +84,9 @@
     </form>
     <ng-template pTemplate="footer">
       <div class="flex justify-end gap-2">
-        <p-button label="Retour" icon="pi pi-times" styleClass="p-button-secondary" size="small"
+        <p-button label="Retour" icon="pi pi-times" severity="secondary" size="small"
                   routerLink="/bol"></p-button>
-        <p-button (click)="submit()" [disabled]="heroForm.invalid" label="Enregistrer" icon="pi pi-check"
-                  size="small"></p-button>
+        <p-button (click)="submit()" [disabled]="heroForm.invalid" label="Enregistrer" icon="pi pi-check" size="small" severity="success"></p-button>
       </div>
     </ng-template>
   </p-card>

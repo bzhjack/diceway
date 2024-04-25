@@ -106,7 +106,9 @@ body {
   padding-right: 12.25px;
   padding-top: 6.125px;
 }
-
+.p-button.p-button-icon-only {
+  width: 2rem;
+}
 .p-fieldset {
   .p-fieldset-legend {
     padding: 5px;
@@ -116,5 +118,31 @@ body {
     padding: 5px;
   }
 }
+.p-dialog-header,
+.p-toolbar {
+  padding: 0.8rem;
+}
 
+.p-dialog .p-dialog-content {
+  padding: 0 0.8rem 0.8rem 0.8rem;
+}
+
+.picture-panel {
+  width: 790px;
+  height: calc(50vh + 15px);
+  .p-panel-header {
+    padding: 4px 0 0 0;
+    border-bottom: none;
+  }
+  .p-panel-content {
+    padding: 5px;
+    height: 100%;
+  }
+  .p-toggleable-content {
+    height: 100%;
+  }
+}
+html {
+  --cropper-outline-color: rgba(255,255,255,0.5);
+}
 
