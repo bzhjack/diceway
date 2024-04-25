@@ -1,6 +1,7 @@
 export interface BolHeroModel {
   id: string | null;
   joueur: string;
+  avatar: string | null;
   nom: string;
   vigueur: number,
   aura: number,

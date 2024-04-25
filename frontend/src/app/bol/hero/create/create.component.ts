@@ -40,6 +40,7 @@ export class BolHeroCreateComponent implements OnDestroy {
   public idCtrl: FormControl<string | null> = new FormControl(null);
   public playerNameCtrl = new FormControl('', Validators.required);
   public heroNameCtrl = new FormControl('', Validators.required);
+  public avatarCtrl: FormControl<string | null> = new FormControl(null);
   // Attribut
   public vigueurCtrl = new FormControl<number | null>(null, Validators.required);
   public agiliteCtrl = new FormControl<number | null>(null, Validators.required);
@@ -54,8 +55,9 @@ export class BolHeroCreateComponent implements OnDestroy {
   heroForm = this.fb.group(
     {
       id: this.idCtrl,
-      nom: this.playerNameCtrl,
       joueur: this.heroNameCtrl,
+      nom: this.playerNameCtrl,
+      avatar: this.avatarCtrl,
       vigueur: this.vigueurCtrl,
       agilite: this.agiliteCtrl,
       esprit: this.espritCtrl,
@@ -89,8 +91,9 @@ export class BolHeroCreateComponent implements OnDestroy {
         next: (hero: BolHeroModel) => {
           this.heroForm.patchValue({
             id: hero.id,
-            nom: hero.nom,
             joueur: hero.joueur,
+            nom: hero.nom,
+            avatar: hero.avatar,
             vigueur: hero.vigueur,
             aura: hero.aura,
             esprit: hero.esprit,
@@ -138,8 +141,8 @@ export class BolHeroCreateComponent implements OnDestroy {
   picture() {
     this.ref = this.ds.open(PictureComponent, { header: 'Photo du héro'});
     this.subs?.unsubscribe();
-    this.subs = this.ref.onClose.subscribe((product: any) => {
-      console.log(product);
+    this.subs = this.ref.onClose.subscribe((avatar: any) => {
+      this.avatarCtrl.setValue(avatar);
     });
   }
 }
