@@ -71,7 +71,7 @@ export class PictureComponent {
     this.transform = {};
   }
   quit() {
-    this.ref.close();
+    this.ref.close(null);
   }
   validate() {
     this.ref.close(this.croppedImage);

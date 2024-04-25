@@ -14,7 +14,7 @@
               <p-fieldset legend="Origines">
                 <div class="flex gap-2">
                   <div class="hero-avatar cursor-pointer" (click)="picture()">
-                    <img style="width:100%" [src]="avatarCtrl.value" alt="avatar">
+                    <img style="width:100%" [src]="avatarCtrl.value !== null ? avatarCtrl.value : '/frontend/assets/bol/empty-avatar.jpg'" alt="avatar">
                   </div>
 
                   <div class="flex flex-col gap-1 flex-auto">

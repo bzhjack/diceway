@@ -113,6 +113,9 @@ export class BolHeroCreateComponent implements OnDestroy {
   }
 
   submit() {
+    if (this.heroForm.invalid) {
+      return;
+    }
     const hero = this.heroForm.value;
     this.spinner.show();
     this.subs?.unsubscribe();
@@ -142,8 +145,10 @@ export class BolHeroCreateComponent implements OnDestroy {
     this.ref = this.ds.open(PictureComponent, { header: 'Photo du héro'});
     this.subs?.unsubscribe();
     this.subs = this.ref.onClose.subscribe((avatar: any) => {
-      if (avatar !== null) {
+      console.log(avatar);
+      if (avatar !== null && avatar !== undefined) {
         this.avatarCtrl.setValue(avatar);
+        this.submit();
       }
     });
   }
