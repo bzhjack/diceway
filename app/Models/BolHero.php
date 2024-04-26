@@ -24,6 +24,7 @@ class BolHero extends Model
         'initiative',
         'melee',
         'tir',
-        'defense'
+        'defense',
+        'avatar'
     ];
 }

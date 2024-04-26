@@ -1,29 +1,35 @@
-<div class="flex p-4 gap-4 flex-wrap">
+<div class="flex p-4 gap-4 justify-center">
   <p-card header="Création d'un héros">
     <form (ngSubmit)="submit()" [formGroup]="heroForm" autocomplete="off">
       <div class="flex gap-4">
-
         <div class="flex flex-col gap-4">
-          <div class="flex flex-col gap-1">
+          <div class="flex flex-col gap-1 w-fit">
             <label for="joueur">Nom du joueur</label>
             <input formControlName="joueur" pInputText id="joueur" class="p-inputtext-sm"/>
           </div>
-
 
           <div class="flex gap-2">
             <!-- Partie Gauche -->
             <div class="flex flex-col gap-1" >
               <p-fieldset legend="Origines">
-                <div class="flex flex-col gap-1">
-                  <div class="flex flex-col gap-1">
-                    <label for="nom">Nom du héro</label>
-                    <input formControlName="nom" pInputText id="nom" class="p-inputtext-sm"/>
+                <div class="flex gap-2">
+                  <div class="hero-avatar cursor-pointer" (click)="picture()">
+                    <img style="width:100%" [src]="avatarCtrl.value !== null ? avatarCtrl.value : '/frontend/assets/bol/empty-avatar.jpg'" alt="avatar">
+                    <p class="hero-avatar__description">Modifier</p>
                   </div>
-                  <div class="flex flex-col gap-1">
-                    <label for="region">Région</label>
-                    <input pInputText id="region" class="p-inputtext-sm"/>
+
+                  <div class="flex flex-col gap-1 flex-auto">
+                    <div class="flex flex-col gap-1">
+                      <label for="nom">Nom du héro</label>
+                      <input formControlName="nom" pInputText id="nom" class="p-inputtext-sm"/>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <label for="region">Région</label>
+                      <input pInputText id="region" class="p-inputtext-sm" autocomplete="new"/>
+                    </div>
                   </div>
                 </div>
+
               </p-fieldset>
               <p-fieldset legend="Attributs">
                 <div class="flex gap-2">
@@ -86,15 +92,10 @@
     </form>
     <ng-template pTemplate="footer">
       <div class="flex justify-end gap-2">
-        <p-button label="Retour" icon="pi pi-times" styleClass="p-button-secondary" size="small"
+        <p-button label="Retour" icon="pi pi-times" severity="secondary" size="small"
                   routerLink="/bol"></p-button>
-        <p-button (click)="submit()" [disabled]="heroForm.invalid" label="Enregistrer" icon="pi pi-check"
-                  size="small"></p-button>
+        <p-button (click)="submit()" [disabled]="heroForm.invalid" label="Enregistrer" icon="pi pi-check" size="small" severity="success"></p-button>
       </div>
     </ng-template>
   </p-card>
-
-  <p-card header="Carrières"></p-card>
-  <p-card header="Armes"></p-card>
-  <p-card header="Armures"></p-card>
 </div>
