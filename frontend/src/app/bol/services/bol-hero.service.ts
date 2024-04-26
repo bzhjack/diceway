@@ -11,6 +11,9 @@ export class BolHeroService {
   constructor(private http: HttpClient) {
 
   }
+  allRegions(): Observable<any> {
+    return this.http.get<any>('/api/bol/region');
+  }
   create(hero: BolHeroModel): Observable<any> {
     return this.http.post<BolHeroModel>('/api/bol/hero/create', <BolHeroModel>hero);
   }

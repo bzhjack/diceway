@@ -26,6 +26,6 @@ class BolRegion extends Model
     // Noms liés à la région
     public function noms(): HasMany
     {
-        return $this->hasMany(BolRegionNom::class);
+        return $this->hasMany(BolRegionNom::class, 'region_id', 'id');
     }
 }

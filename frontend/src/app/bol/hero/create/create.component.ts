@@ -14,6 +14,7 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {FieldsetModule} from "primeng/fieldset";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {PictureComponent} from "../../../shared/picture/picture.component";
+import {BolRegionComponent} from "./region/region.component";
 
 @Component({
   selector: 'app-create',
@@ -145,11 +146,17 @@ export class BolHeroCreateComponent implements OnDestroy {
     this.ref = this.ds.open(PictureComponent, { header: 'Photo du héro'});
     this.subs?.unsubscribe();
     this.subs = this.ref.onClose.subscribe((avatar: any) => {
-      console.log(avatar);
       if (avatar !== null && avatar !== undefined) {
         this.avatarCtrl.setValue(avatar);
         this.submit();
       }
+    });
+  }
+  region() {
+    this.ref = this.ds.open(BolRegionComponent, { header: 'Choix de la région'});
+    this.subs?.unsubscribe();
+    this.subs = this.ref.onClose.subscribe((region: any) => {
+      console.log(region);
     });
   }
 }
