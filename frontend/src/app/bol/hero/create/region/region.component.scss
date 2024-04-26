@@ -1,5 +1,5 @@
 .region-container {
-  //height: 90vh;
+  height: calc(100% - 50px);
 }
 .region-carte {
   height: 100%;
@@ -8,8 +8,30 @@
 }
 
 .img-carte {
-  height: 75vh;
+  height: calc(100% - 3px);
   width: 100%;
   object-fit: contain;
 }
 
+.region-list {
+  height: calc(100%);
+  overflow: auto;
+}
+
+.region-item {
+  padding: 0.75rem 1.25rem;
+  margin: 0;
+  border: 0 none;
+  color: rgba(255, 255, 255, 0.87);
+  background: transparent;
+  transition: box-shadow 0.2s;
+  cursor: pointer;
+}
+.region-item:not(.p-highlight):hover {
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.87);
+}
+.region-item.p-highlight {
+  color: rgba(255, 255, 255, 0.87);
+  background: rgba(96, 165, 250, 0.16);
+}

@@ -1,19 +1,19 @@
-<div class="region-container flex gap-2 ">
+<div class="region-container flex gap-2" style="overflow: auto">
   <div class="flex-auto">
-    <p-panel styleClass="noheader-panel">
+    <p-panel styleClass="region-panel">
+      <p-scrollPanel [style]="{height: '100%'}">
       <p-dataView #dv [value]="regions">
         <ng-template pTemplate="list" let-regions>
-          <div class="grid grid-nogutter">
-            <div class="col-12" *ngFor="let region of regions; let first = first">
+            <div class="region-item" [class.p-highlight]="region.id === currentRegionId" *ngFor="let region of regions; let first = first" (click)="currentRegionId = region.id">
               {{ region.region }}
             </div>
-          </div>
         </ng-template>
       </p-dataView>
+      </p-scrollPanel>
     </p-panel>
   </div>
   <div class="flex">
-    <p-panel styleClass="noheader-panel">
+    <p-panel styleClass="region-panel">
       <div class="region-carte">
         <img class="img-carte" src="/frontend/assets/bol/carte.jpg" alt="carte"/>
       </div>

@@ -7,6 +7,7 @@ import {NgForOf} from "@angular/common";
 import {PanelModule} from "primeng/panel";
 import {ButtonModule} from "primeng/button";
 import {DynamicDialogRef} from "primeng/dynamicdialog";
+import {ScrollPanelModule} from "primeng/scrollpanel";
 
 @Component({
   selector: 'app-region',
@@ -15,7 +16,8 @@ import {DynamicDialogRef} from "primeng/dynamicdialog";
     DataViewModule,
     NgForOf,
     PanelModule,
-    ButtonModule
+    ButtonModule,
+    ScrollPanelModule
   ],
   templateUrl: './region.component.html',
   styleUrl: './region.component.scss'
@@ -23,6 +25,7 @@ import {DynamicDialogRef} from "primeng/dynamicdialog";
 export class BolRegionComponent implements OnDestroy {
   private subs?: Subscription;
   public regions: any[] = [];
+  public currentRegionId = -1;
   constructor(
     private hs: BolHeroService,
     public ref: DynamicDialogRef,
