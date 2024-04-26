@@ -1,0 +1,15 @@
+.region-container {
+  //height: 90vh;
+}
+.region-carte {
+  height: 100%;
+  overflow: auto;
+  width: auto;
+}
+
+.img-carte {
+  height: 75vh;
+  width: 100%;
+  object-fit: contain;
+}
+

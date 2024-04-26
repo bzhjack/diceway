@@ -1,1 +1,26 @@
-<p>region works!</p>
+<div class="region-container flex gap-2 ">
+  <div class="flex-auto">
+    <p-panel styleClass="noheader-panel">
+      <p-dataView #dv [value]="regions">
+        <ng-template pTemplate="list" let-regions>
+          <div class="grid grid-nogutter">
+            <div class="col-12" *ngFor="let region of regions; let first = first">
+              {{ region.region }}
+            </div>
+          </div>
+        </ng-template>
+      </p-dataView>
+    </p-panel>
+  </div>
+  <div class="flex">
+    <p-panel styleClass="noheader-panel">
+      <div class="region-carte">
+        <img class="img-carte" src="/frontend/assets/bol/carte.jpg" alt="carte"/>
+      </div>
+    </p-panel>
+  </div>
+</div>
+<div class="flex justify-end gap-2 pt-3">
+  <p-button icon="pi pi-times" size="small" label="Quitter" severity="secondary" (click)="quit()"></p-button>
+  <p-button icon="pi pi-check" size="small" label="Valider" severity="success"></p-button>
+</div>

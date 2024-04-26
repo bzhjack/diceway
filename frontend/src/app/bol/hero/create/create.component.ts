@@ -153,7 +153,11 @@ export class BolHeroCreateComponent implements OnDestroy {
     });
   }
   region() {
-    this.ref = this.ds.open(BolRegionComponent, { header: 'Choix de la région'});
+    this.ref = this.ds.open(BolRegionComponent, {
+      header: 'Choix de la région',
+      width: '80vw',
+      height: '90vh'
+    });
     this.subs?.unsubscribe();
     this.subs = this.ref.onClose.subscribe((region: any) => {
       console.log(region);
