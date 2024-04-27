@@ -2,7 +2,7 @@
   <div class="flex-auto">
     <p-panel styleClass="region-panel">
       <p-scrollPanel [style]="{height: '100%'}">
-      <p-dataView #dv [value]="regions">
+      <p-dataView #dv [value]="regions" emptyMessage=" ">
         <ng-template pTemplate="list" let-regions>
             <div class="region-item" [class.p-highlight]="region.id === currentRegionId" *ngFor="let region of regions; let first = first" (click)="currentRegionId = region.id">
               {{ region.region }}
@@ -12,12 +12,22 @@
       </p-scrollPanel>
     </p-panel>
   </div>
+
+  <div>
+  <p-panel styleClass="region-panel">
+    plop
+  </p-panel>
+  </div>
+
+
   <div class="flex">
     <p-panel styleClass="region-panel">
-      <div class="region-carte">
+    <p-scrollPanel [style]="{height: '100%'}">
+      <div class="region-cartes">
         <img class="img-carte" src="/frontend/assets/bol/carte.jpg" alt="carte"/>
       </div>
-    </p-panel>
+    </p-scrollPanel>
+  </p-panel>
   </div>
 </div>
 <div class="flex justify-end gap-2 pt-3">
