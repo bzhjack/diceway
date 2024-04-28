@@ -4,7 +4,7 @@
       <p-scrollPanel [style]="{height: '100%'}">
       <p-dataView #dv [value]="regions" emptyMessage=" ">
         <ng-template pTemplate="list" let-regions>
-            <div class="region-item" [class.p-highlight]="region.id === currentRegionId" *ngFor="let region of regions; let first = first" (click)="currentRegionId = region.id">
+            <div class="region-item" [class.p-highlight]="region.id === currentRegion?.id" *ngFor="let region of regions; let first = first" (click)="currentRegion = region">
               {{ region.region }}
             </div>
         </ng-template>
@@ -14,8 +14,13 @@
   </div>
 
   <div>
-  <p-panel styleClass="region-panel">
-    plop
+  <p-panel styleClass="region-panel" *ngIf="currentRegion">
+    <div class="flex flex-col">
+      Noms Féminins
+      <div class="flex gap-2 flex-wrap">
+        <p-tag [value]="nom.nom" *ngFor="let nom of currentRegion.noms"></p-tag>
+      </div>
+    </div>
   </p-panel>
   </div>
 
