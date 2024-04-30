@@ -29,7 +29,7 @@ export class BolRegionComponent implements OnDestroy {
   private subs?: Subscription;
   public regions: any[] = [];
   public currentRegion?: any;
-
+  public selectedName?: string;
   constructor(
     private hs: BolHeroService,
     public ref: DynamicDialogRef,
@@ -53,5 +53,12 @@ export class BolRegionComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.subs?.unsubscribe();
+  }
+  setCurrentRegion(region: any) {
+    this.selectedName = undefined;
+    region.nomsFeminins = region.noms.filter((nom: any) => nom.gender === 'F');
+    region.nomsMasculins = region.noms.filter((nom: any) => nom.gender === 'M');
+    this.currentRegion = region;
+    console.log(region);
   }
 }

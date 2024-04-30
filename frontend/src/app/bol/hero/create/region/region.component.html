@@ -1,5 +1,64 @@
-<div class="region-container flex gap-2" style="overflow: auto">
-  <div class="flex-auto">
+<div class="region-container flex flex-col gap-2" style="overflow: auto">
+  <div class="top-region flex gap-2">
+    <div style="width: 250px">
+      <p-panel styleClass="region-panel">
+        <p-scrollPanel [style]="{height: '100%'}">
+          <p-dataView #dv [value]="regions" emptyMessage=" ">
+            <ng-template pTemplate="list" let-regions>
+              <div class="region-item" [class.p-highlight]="region.id === currentRegion?.id"
+                   *ngFor="let region of regions; let first = first" (click)="setCurrentRegion(region)">
+                {{ region.region }}
+              </div>
+            </ng-template>
+          </p-dataView>
+        </p-scrollPanel>
+      </p-panel>
+    </div>
+    <div class="flex-auto">
+      <p-panel styleClass="region-panel">
+        <p-scrollPanel [style]="{height: '100%'}">
+          <div class="region-cartes">
+            <img class="img-carte" src="/frontend/assets/bol/carte.jpg" alt="carte"/>
+          </div>
+        </p-scrollPanel>
+      </p-panel>
+    </div>
+
+  </div>
+  <div class="flex gap-2" style="height: 165px">
+    <p-panel styleClass="region-panel" *ngIf="currentRegion">
+      <p-scrollPanel [style]="{height: '100%'}">
+        <div class="flex flex-col">
+          <div class="text-xl">Liste des noms <small>(Sélection possible)</small></div>
+          Noms Féminins
+          <div class="flex gap-2 flex-wrap">
+            <p-tag (click)="selectedName = nom.nom" [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom" *ngFor="let nom of currentRegion.nomsFeminins"></p-tag>
+          </div>
+          Noms Masculins
+          <div class="flex gap-2 flex-wrap">
+            <p-tag (click)="selectedName = nom.nom" [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom" *ngFor="let nom of currentRegion.nomsMasculins"></p-tag>
+          </div>
+        </div>
+      </p-scrollPanel>
+    </p-panel>
+
+    <p-panel styleClass="region-panel" *ngIf="currentRegion">
+      <p-scrollPanel [style]="{height: '100%'}">
+        <div class="flex flex-col">
+          Avantages
+          <div class="flex gap-2 flex-wrap">
+            <p-tag [value]="avantage.avantage" *ngFor="let avantage of currentRegion.avantages" severity="success"></p-tag>
+          </div>
+          Désavantages
+          <div class="flex gap-2 flex-wrap">
+            <p-tag [value]="desavantage.desavantage" *ngFor="let desavantage of currentRegion.desavantages" severity="danger"></p-tag>
+          </div>
+        </div>
+      </p-scrollPanel>
+    </p-panel>
+
+  </div>
+  <!--div class="flex-auto">
     <p-panel styleClass="region-panel">
       <p-scrollPanel [style]="{height: '100%'}">
       <p-dataView #dv [value]="regions" emptyMessage=" ">
@@ -33,7 +92,7 @@
       </div>
     </p-scrollPanel>
   </p-panel>
-  </div>
+  </div-->
 </div>
 <div class="flex justify-end gap-2 pt-3">
   <p-button icon="pi pi-times" size="small" label="Quitter" severity="secondary" (click)="quit()"></p-button>

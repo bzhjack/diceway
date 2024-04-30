@@ -159,7 +159,7 @@ export class BolHeroCreateComponent implements OnDestroy {
       height: '90vh'
     });
     this.subs?.unsubscribe();
-    this.subs = this.ref.onClose.subscribe((region: any) => {
+    this.subs = this.ref?.onClose.subscribe((region: any) => {
       console.log(region);
     });
   }

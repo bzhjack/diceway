@@ -160,3 +160,23 @@ html {
     height: 100%;
   }
 }
+
+.p-card .p-card-content {
+  padding: 0;
+}
+.unselected-name {
+  background: #707F80;
+  cursor: pointer;
+  &:hover {
+    background: #92a194;
+  }
+}
+
+.selected-name {
+  background: #86EFAC;
+  cursor: pointer;
+}
+
+.p-tag-value {
+  line-height: normal;
+}
