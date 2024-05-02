@@ -26,9 +26,9 @@
 
   </div>
   <div class="flex gap-2" style="height: 165px">
-    <p-panel styleClass="region-panel" *ngIf="currentRegion">
+    <p-panel styleClass="region-panel" *ngIf="currentRegion && currentRegion.noms.length > 0">
       <p-scrollPanel [style]="{height: '100%'}">
-        <div class="flex flex-col">
+        <div class="flex flex-col gap-2">
           <div class="text-xl">Liste des noms <small>(Sélection possible)</small></div>
           Noms Féminins
           <div class="flex gap-2 flex-wrap">
@@ -46,9 +46,9 @@
       </p-scrollPanel>
     </p-panel>
 
-    <p-panel styleClass="region-panel" *ngIf="currentRegion">
+    <p-panel styleClass="region-panel" *ngIf="currentRegion && currentRegion.avantages.length > 0">
       <p-scrollPanel [style]="{height: '100%'}">
-        <div class="flex flex-col">
+        <div class="flex flex-col gap-2">
           Avantages
           <div class="flex gap-2 flex-wrap">
             <ng-container *ngFor="let avantage of currentRegion.avantages">
