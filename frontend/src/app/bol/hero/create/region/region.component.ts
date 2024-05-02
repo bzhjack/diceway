@@ -9,6 +9,7 @@ import {ButtonModule} from "primeng/button";
 import {DynamicDialogRef} from "primeng/dynamicdialog";
 import {ScrollPanelModule} from "primeng/scrollpanel";
 import { TagModule } from 'primeng/tag';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-region',
@@ -18,6 +19,7 @@ import { TagModule } from 'primeng/tag';
     NgForOf,
     PanelModule,
     ButtonModule,
+    TooltipModule,
     ScrollPanelModule,
     TagModule,
     NgIf
