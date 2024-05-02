@@ -8,8 +8,8 @@ import {PanelModule} from "primeng/panel";
 import {ButtonModule} from "primeng/button";
 import {DynamicDialogRef} from "primeng/dynamicdialog";
 import {ScrollPanelModule} from "primeng/scrollpanel";
-import { TagModule } from 'primeng/tag';
-import { TooltipModule } from 'primeng/tooltip';
+import {TagModule} from 'primeng/tag';
+import {TooltipModule} from 'primeng/tooltip';
 
 @Component({
   selector: 'app-region',
@@ -51,6 +51,9 @@ export class BolRegionComponent implements OnDestroy {
 
   quit() {
     this.ref.close(null);
+  }
+  validate() {
+    this.ref.close({region: this.currentRegion, nom: this.selectedName});
   }
 
   ngOnDestroy() {

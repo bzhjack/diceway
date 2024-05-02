@@ -32,11 +32,15 @@
           <div class="text-xl">Liste des noms <small>(Sélection possible)</small></div>
           Noms Féminins
           <div class="flex gap-2 flex-wrap">
-            <p-tag (click)="selectedName = nom.nom" [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom" *ngFor="let nom of currentRegion.nomsFeminins"></p-tag>
+            <p-tag (click)="selectedName = nom.nom"
+                   [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom"
+                   *ngFor="let nom of currentRegion.nomsFeminins"></p-tag>
           </div>
           Noms Masculins
           <div class="flex gap-2 flex-wrap">
-            <p-tag (click)="selectedName = nom.nom" [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom" *ngFor="let nom of currentRegion.nomsMasculins"></p-tag>
+            <p-tag (click)="selectedName = nom.nom"
+                   [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom"
+                   *ngFor="let nom of currentRegion.nomsMasculins"></p-tag>
           </div>
         </div>
       </p-scrollPanel>
@@ -47,12 +51,17 @@
         <div class="flex flex-col">
           Avantages
           <div class="flex gap-2 flex-wrap">
-            <p-tag [value]="avantage.avantage" *ngFor="let avantage of currentRegion.avantages" severity="success" 
-            pTooltip="{{avantage.de_bonus_domaine || avantage.description}}"></p-tag>
+            <p-tag [value]="avantage.avantage"
+                   *ngFor="let avantage of currentRegion.avantages"
+                   severity="success"
+                   pTooltip="{{avantage.de_bonus_domaine || avantage.description}}"></p-tag>
           </div>
           Désavantages
           <div class="flex gap-2 flex-wrap">
-            <p-tag [value]="desavantage.desavantage" *ngFor="let desavantage of currentRegion.desavantages" severity="danger" pTooltip="{{desavantage.de_bonus_domaine || desavantage.description}}"></p-tag>
+            <p-tag [value]="desavantage.desavantage"
+                   *ngFor="let desavantage of currentRegion.desavantages"
+                   severity="danger"
+                   pTooltip="{{desavantage.de_malus_domaine || desavantage.description}}"></p-tag>
           </div>
         </div>
       </p-scrollPanel>

@@ -5,7 +5,6 @@ import {BolHeroModel} from "../models/bol-hero.model";
 import {JsonPipe, NgForOf} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
-import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'bol-home',
