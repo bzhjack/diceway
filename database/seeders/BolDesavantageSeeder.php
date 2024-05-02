@@ -166,7 +166,7 @@ class BolDesavantageSeeder extends Seeder
             [
                 'id' => 26,
                 'desavantage' => 'Malédiction de Morgazzon',
-                'description' => ': vous êtes atteint de démence.',
+                'description' => 'Vous êtes atteint de démence.',
             ],
             [
                 'id' => 27,
@@ -185,7 +185,7 @@ class BolDesavantageSeeder extends Seeder
                 'desavantage' => 'Maudit',
                 'attribut' => 'heroisme',
                 'attribut_malus' => -1,
-                'description' => 'les dieux se sont détournés de vous. (malchance)'
+                'description' => 'Les dieux se sont détournés de vous. (malchance)'
             ],
             [
                 'id' => 30,

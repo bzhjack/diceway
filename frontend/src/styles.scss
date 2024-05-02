@@ -6,6 +6,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "styles/tag";
+@import "styles/tooltip";
+
 html {
   display: flex;
   flex-direction: column;
@@ -175,8 +178,4 @@ html {
 .selected-name {
   background: #86EFAC;
   cursor: pointer;
-}
-
-.p-tag-value {
-  line-height: normal;
 }

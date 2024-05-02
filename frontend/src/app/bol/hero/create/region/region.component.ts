@@ -10,6 +10,9 @@ import {DynamicDialogRef} from "primeng/dynamicdialog";
 import {ScrollPanelModule} from "primeng/scrollpanel";
 import {TagModule} from 'primeng/tag';
 import {TooltipModule} from 'primeng/tooltip';
+import {InlineSVGModule} from "ng-inline-svg-2";
+import {BolAvantageModel} from "../../../models/bol-avantage.model";
+import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
 
 @Component({
   selector: 'app-region',
@@ -22,7 +25,8 @@ import {TooltipModule} from 'primeng/tooltip';
     TooltipModule,
     ScrollPanelModule,
     TagModule,
-    NgIf
+    NgIf,
+    InlineSVGModule
   ],
   templateUrl: './region.component.html',
   styleUrl: './region.component.scss'
@@ -49,6 +53,33 @@ export class BolRegionComponent implements OnDestroy {
     });
   }
 
+  avantageDescription(avantage: BolAvantageModel) {
+    let toolTip: {title: string, description: string | null}[] = [];
+    if (avantage.de_bonus) {
+      toolTip.push({title: 'Dé bonus', description: avantage.de_bonus_domaine});
+    }
+    if (avantage.attribut) {
+      toolTip.push({title: 'Attribut', description: `${avantage.attribut}(${avantage.attribut_bonus})`});
+    }
+    if (avantage.description) {
+      toolTip.push({title: 'Détails', description: avantage.description});
+    }
+    return toolTip;
+  }
+  desavantageDescription(avantage: BolDesavantageModel) {
+    let toolTip: {title: string, description: string | null}[] = [];
+    if (avantage.de_malus) {
+      toolTip.push({title: 'Dé bonus', description: avantage.de_malus_domaine});
+    }
+    if (avantage.attribut) {
+      toolTip.push({title: 'Attribut', description: `${avantage.attribut}(${avantage.attribut_malus})`});
+    }
+    if (avantage.description) {
+      toolTip.push({title: 'Détails', description: avantage.description});
+    }
+    return toolTip;
+  }
+
   quit() {
     this.ref.close(null);
   }
@@ -64,6 +95,6 @@ export class BolRegionComponent implements OnDestroy {
     region.nomsFeminins = region.noms.filter((nom: any) => nom.gender === 'F');
     region.nomsMasculins = region.noms.filter((nom: any) => nom.gender === 'M');
     this.currentRegion = region;
-    console.log(region);
   }
+
 }

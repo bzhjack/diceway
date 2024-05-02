@@ -51,60 +51,47 @@
         <div class="flex flex-col">
           Avantages
           <div class="flex gap-2 flex-wrap">
-            <p-tag [value]="avantage.avantage"
-                   *ngFor="let avantage of currentRegion.avantages"
-                   severity="success"
-                   pTooltip="{{avantage.de_bonus_domaine || avantage.description}}"></p-tag>
+            <ng-container *ngFor="let avantage of currentRegion.avantages">
+              <p-tag [value]="avantage.avantage"
+                     severity="success"
+                     [pTooltip]="tooltipAvantage">
+                <div *ngIf="avantage.de_bonus" class="tag_icon" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
+              </p-tag>
+              <ng-template #tooltipAvantage>
+                <div class="flex flex-col gap-2">
+                  <div *ngFor="let desc of avantageDescription(avantage)" class="flex flex-col">
+                    <div style="white-space: nowrap; font-weight: bolder">{{desc.title}}</div><div style="width: 250px">{{desc.description}}</div>
+                  </div>
+                </div>
+              </ng-template>
+            </ng-container>
+
           </div>
           Désavantages
           <div class="flex gap-2 flex-wrap">
-            <p-tag [value]="desavantage.desavantage"
-                   *ngFor="let desavantage of currentRegion.desavantages"
-                   severity="danger"
-                   pTooltip="{{desavantage.de_malus_domaine || desavantage.description}}"></p-tag>
+            <ng-container  *ngFor="let desavantage of currentRegion.desavantages">
+              <p-tag [value]="desavantage.desavantage"
+                     severity="danger"
+                     [pTooltip]="tooltipDesavantage">
+                <div *ngIf="desavantage.de_malus" class="tag_icon" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
+              </p-tag>
+              <ng-template #tooltipDesavantage>
+                <div class="flex flex-col gap-2">
+                  <div *ngFor="let desc of desavantageDescription(desavantage)" class="flex flex-col">
+                    <div style="white-space: nowrap; font-weight: bolder">{{desc.title}}</div><div style="width: 250px">{{desc.description}}</div>
+                  </div>
+                </div>
+              </ng-template>
+            </ng-container>
+
           </div>
         </div>
       </p-scrollPanel>
     </p-panel>
 
   </div>
-  <!--div class="flex-auto">
-    <p-panel styleClass="region-panel">
-      <p-scrollPanel [style]="{height: '100%'}">
-      <p-dataView #dv [value]="regions" emptyMessage=" ">
-        <ng-template pTemplate="list" let-regions>
-            <div class="region-item" [class.p-highlight]="region.id === currentRegion?.id" *ngFor="let region of regions; let first = first" (click)="currentRegion = region">
-              {{ region.region }}
-            </div>
-        </ng-template>
-      </p-dataView>
-      </p-scrollPanel>
-    </p-panel>
-  </div>
-
-  <div>
-  <p-panel styleClass="region-panel" *ngIf="currentRegion">
-    <div class="flex flex-col">
-      Noms Féminins
-      <div class="flex gap-2 flex-wrap">
-        <p-tag [value]="nom.nom" *ngFor="let nom of currentRegion.noms"></p-tag>
-      </div>
-    </div>
-  </p-panel>
-  </div>
-
-
-  <div class="flex">
-    <p-panel styleClass="region-panel">
-    <p-scrollPanel [style]="{height: '100%'}">
-      <div class="region-cartes">
-        <img class="img-carte" src="/frontend/assets/bol/carte.jpg" alt="carte"/>
-      </div>
-    </p-scrollPanel>
-  </p-panel>
-  </div-->
 </div>
 <div class="flex justify-end gap-2 pt-3">
   <p-button icon="pi pi-times" size="small" label="Quitter" severity="secondary" (click)="quit()"></p-button>
-  <p-button icon="pi pi-check" size="small" label="Valider" severity="success"></p-button>
+  <p-button icon="pi pi-check" size="small" label="Valider" severity="success" [disabled]="!currentRegion" (click)="validate()"></p-button>
 </div>
