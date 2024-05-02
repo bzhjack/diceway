@@ -55,7 +55,7 @@
               <p-tag [value]="avantage.avantage"
                      severity="success"
                      [pTooltip]="tooltipAvantage">
-                <div *ngIf="avantage.de_bonus" class="tag_icon" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
+                <div *ngIf="avantage.de_bonus || avantage.attribut" class="tag_icon" [inlineSVG]="avantage.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
               </p-tag>
               <ng-template #tooltipAvantage>
                 <div class="flex flex-col gap-2">
@@ -73,7 +73,7 @@
               <p-tag [value]="desavantage.desavantage"
                      severity="danger"
                      [pTooltip]="tooltipDesavantage">
-                <div *ngIf="desavantage.de_malus" class="tag_icon" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
+                <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon" [inlineSVG]="desavantage.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
               </p-tag>
               <ng-template #tooltipDesavantage>
                 <div class="flex flex-col gap-2">
