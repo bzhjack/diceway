@@ -39,8 +39,8 @@ export class BolHeroCreateComponent implements OnDestroy {
 
 
   public idCtrl: FormControl<string | null> = new FormControl(null);
-  public playerNameCtrl = new FormControl('', Validators.required);
-  public heroNameCtrl = new FormControl('', Validators.required);
+  public joueurCtrl = new FormControl('', Validators.required);
+  public nomCtrl = new FormControl('', Validators.required);
   public avatarCtrl: FormControl<string | null> = new FormControl(null);
   // Attribut
   public vigueurCtrl = new FormControl<number | null>(null, Validators.required);
@@ -56,8 +56,8 @@ export class BolHeroCreateComponent implements OnDestroy {
   heroForm = this.fb.group(
     {
       id: this.idCtrl,
-      joueur: this.heroNameCtrl,
-      nom: this.playerNameCtrl,
+      joueur: this.joueurCtrl,
+      nom: this.nomCtrl,
       avatar: this.avatarCtrl,
       vigueur: this.vigueurCtrl,
       agilite: this.agiliteCtrl,
@@ -161,7 +161,9 @@ export class BolHeroCreateComponent implements OnDestroy {
     this.subs?.unsubscribe();
     this.subs = this.ref?.onClose.subscribe((region: any) => {
       if (region) {
-
+        if (region.nom) {
+          this.nomCtrl.setValue(region.nom);
+        }
       }
       console.log(region);
     });
