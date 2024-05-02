@@ -1,8 +1,8 @@
-<div class="region-container flex flex-col gap-2" style="overflow: auto">
+<div class="region-container flex flex-col gap-2" style="overflow: hidden">
   <div class="top-region flex gap-2">
-    <div style="width: 250px">
+    <div>
       <p-panel styleClass="region-panel">
-        <p-scrollPanel [style]="{height: '100%'}">
+        <p-scrollPanel [style]="{height: '100%', width: '270px'}">
           <p-dataView #dv [value]="regions" emptyMessage=" ">
             <ng-template pTemplate="list" let-regions>
               <div class="region-item" [class.p-highlight]="region.id === currentRegion?.id"

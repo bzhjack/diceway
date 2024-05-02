@@ -160,6 +160,9 @@ export class BolHeroCreateComponent implements OnDestroy {
     });
     this.subs?.unsubscribe();
     this.subs = this.ref?.onClose.subscribe((region: any) => {
+      if (region) {
+
+      }
       console.log(region);
     });
   }
