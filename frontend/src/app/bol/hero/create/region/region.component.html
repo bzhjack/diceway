@@ -30,17 +30,17 @@
       <p-scrollPanel [style]="{height: '100%'}">
         <div class="flex flex-col gap-2">
           <div class="text-xl">Liste des noms <small>(Sélection possible)</small></div>
-          Noms Féminins
-          <div class="flex gap-2 flex-wrap">
-            <p-tag (click)="selectedName = nom.nom"
-                   [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom"
-                   *ngFor="let nom of currentRegion.nomsFeminins"></p-tag>
-          </div>
           Noms Masculins
           <div class="flex gap-2 flex-wrap">
             <p-tag (click)="selectedName = nom.nom"
                    [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom"
                    *ngFor="let nom of currentRegion.nomsMasculins"></p-tag>
+          </div>
+          Noms Féminins
+          <div class="flex gap-2 flex-wrap">
+            <p-tag (click)="selectedName = nom.nom"
+                   [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom"
+                   *ngFor="let nom of currentRegion.nomsFeminins"></p-tag>
           </div>
         </div>
       </p-scrollPanel>

@@ -176,8 +176,8 @@ export class BolHeroCreateComponent implements OnDestroy {
         if (data.nom) {
           this.nomCtrl.setValue(data.nom);
         }
+        this.submit();
       }
-      console.log(data);
     });
   }
 }
