@@ -13,7 +13,7 @@ class BolRegionController extends Controller
     public function getAll()
     {
         // Récupérer toutes les lignes de votre modèle
-        $donnees = BolRegion::with('avantages', 'desavantages')->get();
+        $donnees = BolRegion::with('avantages', 'desavantages', 'noms')->get();
 
        // Retourner les données en tant que réponse JSON
         return response()->json($donnees);

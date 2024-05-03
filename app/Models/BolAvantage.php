@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class BolAvantage extends Model
 {
     use HasFactory;
-
+    protected $casts = [
+        'de_bonus' => 'boolean'
+    ];
     public function regions(): BelongsToMany
     {
         return $this->belongsToMany(BolRegion::class);

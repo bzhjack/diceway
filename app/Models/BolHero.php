@@ -25,6 +25,8 @@ class BolHero extends Model
         'melee',
         'tir',
         'defense',
-        'avatar'
+        'avatar',
+        'region_id',
+        'region'
     ];
 }

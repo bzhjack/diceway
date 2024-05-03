@@ -1,12 +1,11 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component} from '@angular/core';
 import {ButtonModule} from "primeng/button";
 import {AutoFocusModule} from "primeng/autofocus";
 import {ImageCroppedEvent, ImageCropperModule, ImageTransform} from "ngx-image-cropper";
 import {NgIf} from "@angular/common";
-import {DomSanitizer} from "@angular/platform-browser";
 import {ToolbarModule} from "primeng/toolbar";
 import {PanelModule} from "primeng/panel";
-import { TooltipModule } from 'primeng/tooltip';
+import {TooltipModule} from 'primeng/tooltip';
 import {DynamicDialogRef} from "primeng/dynamicdialog";
 
 @Component({
@@ -33,7 +32,6 @@ export class PictureComponent {
 
   constructor(
     public ref: DynamicDialogRef,
-    private sanitizer: DomSanitizer
   ) {
   }
 
