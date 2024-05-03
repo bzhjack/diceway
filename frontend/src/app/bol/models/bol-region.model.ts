@@ -6,7 +6,7 @@ export interface BolRegionModel {
   region: string;
   noms: string[];
   nomsFeminins: string[];
-  nomMasculins: string[];
+  nomsMasculins: string[];
   avantages: BolAvantageModel[],
   desavantages: BolDesavantageModel[],
 }

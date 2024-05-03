@@ -166,7 +166,10 @@ export class BolHeroCreateComponent implements OnDestroy {
     this.ref = this.ds.open(BolRegionComponent, {
       header: 'Choix de la région',
       width: '80vw',
-      height: '90vh'
+      height: '90vh',
+      data: {
+        id_region: this.regionIdCtrl.value
+      },
     });
     this.subs?.unsubscribe();
     this.subs = this.ref?.onClose.subscribe((data: any) => {
@@ -179,5 +182,10 @@ export class BolHeroCreateComponent implements OnDestroy {
         this.submit();
       }
     });
+  }
+  clearRegion(ev: MouseEvent) {
+    ev.stopPropagation();
+    this.regionIdCtrl.setValue(null);
+    this.regionCtrl.setValue(null);
   }
 }
