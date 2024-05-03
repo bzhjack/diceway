@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('bol_heroes', function (Blueprint $table) {
-            $table->bigInteger('id_region')->nullable();
+            $table->bigInteger('region_id')->nullable();
             $table->string('region')->nullable();
         });
     }

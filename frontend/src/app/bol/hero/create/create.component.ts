@@ -42,16 +42,22 @@ export class BolHeroCreateComponent implements OnDestroy {
   public joueurCtrl = new FormControl('', Validators.required);
   public nomCtrl = new FormControl('', Validators.required);
   public avatarCtrl: FormControl<string | null> = new FormControl(null);
+
+  // Region
+  public regionIdCtrl = new FormControl<number | null>(null);
+  public regionCtrl = new FormControl<string | null>(null);
+
   // Attribut
-  public vigueurCtrl = new FormControl<number | null>(null, Validators.required);
-  public agiliteCtrl = new FormControl<number | null>(null, Validators.required);
-  public espritCtrl = new FormControl<number | null>(null, Validators.required);
-  public auraCtrl = new FormControl<number | null>(null, Validators.required);
+  public vigueurCtrl = new FormControl<number | null>(0);
+  public agiliteCtrl = new FormControl<number | null>(0);
+  public espritCtrl = new FormControl<number | null>(0);
+  public auraCtrl = new FormControl<number | null>(0);
+
   // Combat
-  public initiativeCtrl = new FormControl<number | null>(null, Validators.required);
-  public meleeCtrl = new FormControl<number | null>(null, Validators.required);
-  public tirCtrl = new FormControl<number | null>(null, Validators.required);
-  public defenseCtrl = new FormControl<number | null>(null, Validators.required);
+  public initiativeCtrl = new FormControl<number | null>(0);
+  public meleeCtrl = new FormControl<number | null>(0);
+  public tirCtrl = new FormControl<number | null>(0);
+  public defenseCtrl = new FormControl<number | null>(0);
 
   heroForm = this.fb.group(
     {
@@ -66,7 +72,9 @@ export class BolHeroCreateComponent implements OnDestroy {
       initiative: this.initiativeCtrl,
       melee: this.meleeCtrl,
       tir: this.tirCtrl,
-      defense: this.defenseCtrl
+      defense: this.defenseCtrl,
+      region_id: this.regionIdCtrl,
+      region: this.regionCtrl
     }
   );
 
@@ -102,7 +110,9 @@ export class BolHeroCreateComponent implements OnDestroy {
             initiative: hero.initiative,
             melee: hero.melee,
             tir: hero.tir,
-            defense: hero.defense
+            defense: hero.defense,
+            region_id: hero.region_id,
+            region: hero.region
           });
           this.spinner.hide();
         },
@@ -159,13 +169,15 @@ export class BolHeroCreateComponent implements OnDestroy {
       height: '90vh'
     });
     this.subs?.unsubscribe();
-    this.subs = this.ref?.onClose.subscribe((region: any) => {
-      if (region) {
-        if (region.nom) {
-          this.nomCtrl.setValue(region.nom);
+    this.subs = this.ref?.onClose.subscribe((data: any) => {
+      if (data) {
+        this.regionIdCtrl.setValue(data.region.id);
+        this.regionCtrl.setValue(data.region.region);
+        if (data.nom) {
+          this.nomCtrl.setValue(data.nom);
         }
       }
-      console.log(region);
+      console.log(data);
     });
   }
 }

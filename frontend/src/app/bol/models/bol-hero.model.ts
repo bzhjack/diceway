@@ -10,5 +10,7 @@ export interface BolHeroModel {
   initiative: number,
   melee: number,
   tir: number,
-  defense: number
+  defense: number,
+  region_id: number | null,
+  region: string | null
 }
