@@ -30,11 +30,10 @@
 .input-overlay {
   position: absolute;
   inset:0;
-  background: rgba(143, 158, 168, 0.5);
   display: flex;
   flex-direction: column-reverse;
   text-align: right;
-  padding-bottom: 2px;
+  padding-bottom: 3px;
   padding-right: 5px;
   cursor: pointer;
 }
