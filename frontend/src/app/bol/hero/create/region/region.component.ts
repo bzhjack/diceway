@@ -69,7 +69,7 @@ export class BolRegionComponent implements OnDestroy {
   desavantageDescription(avantage: BolDesavantageModel) {
     let toolTip: {title: string, description: string | null}[] = [];
     if (avantage.de_malus) {
-      toolTip.push({title: 'Dé bonus', description: avantage.de_malus_domaine});
+      toolTip.push({title: 'Dé malus', description: avantage.de_malus_domaine});
     }
     if (avantage.attribut) {
       toolTip.push({title: 'Attribut', description: `${avantage.attribut}(${avantage.attribut_malus})`});
