@@ -37,4 +37,7 @@
   padding-right: 5px;
   cursor: pointer;
 }
-
+.input-overlay:hover .hide-region {
+  display: inline-block;
+}
+.hide-region { display: none; }
