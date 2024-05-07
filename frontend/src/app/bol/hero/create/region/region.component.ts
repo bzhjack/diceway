@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, ViewChild} from '@angular/core';
 import {BolHeroService} from "../../../services/bol-hero.service";
 import {Subscription} from "rxjs";
 import {NgxSpinnerService} from "ngx-spinner";
@@ -7,7 +7,7 @@ import {NgForOf, NgIf} from "@angular/common";
 import {PanelModule} from "primeng/panel";
 import {ButtonModule} from "primeng/button";
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
-import {ScrollPanelModule} from "primeng/scrollpanel";
+import {ScrollPanel, ScrollPanelModule} from "primeng/scrollpanel";
 import {TagModule} from 'primeng/tag';
 import {TooltipModule} from 'primeng/tooltip';
 import {InlineSVGModule} from "ng-inline-svg-2";
@@ -39,6 +39,7 @@ export class BolRegionComponent implements OnDestroy, AfterViewInit {
   public regions: any[] = [];
   public currentRegion?: any;
   public selectedName?: string;
+  @ViewChild('dtViewRegion') scrollRegion!: ScrollPanel;
 
   constructor(
     private hs: BolHeroService,
@@ -101,13 +102,8 @@ export class BolRegionComponent implements OnDestroy, AfterViewInit {
     this.subs?.unsubscribe();
   }
   ngAfterViewInit() {
-    $('#squidheadlink').mouseover(function() {
-      $('#squidhead').mouseover();
-    }).mouseout(function() {
-      $('#squidhead').mouseout();
-    }).click(function(e: MouseEvent) { e.preventDefault(); });
     $('map').imageMapResize();
-    $('#bol-carte').maphilight();
+    $('#bol-carte').maphilight({"strokeColor":"6aa84f", "strokeWidth": 2 });
   }
 
   setCurrentRegion(region: BolRegionModel | null) {
@@ -118,5 +114,8 @@ export class BolRegionComponent implements OnDestroy, AfterViewInit {
       this.currentRegion = region;
     }
   }
-
+  setCurrentRegionFromMap(regionId: number) {
+    this.scrollRegion.scrollTop(38* (regionId -1));
+    this.setCurrentRegion(this.regions.find((region) => region.id === regionId));
+  }
 }
