@@ -1,4 +1,4 @@
-import {Component, OnDestroy} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy} from '@angular/core';
 import {BolHeroService} from "../../../services/bol-hero.service";
 import {Subscription} from "rxjs";
 import {NgxSpinnerService} from "ngx-spinner";
@@ -14,7 +14,8 @@ import {InlineSVGModule} from "ng-inline-svg-2";
 import {BolAvantageModel} from "../../../models/bol-avantage.model";
 import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
 import {BolRegionModel} from "../../../models/bol-region.model";
-
+import {FieldsetModule} from "primeng/fieldset";
+declare var $: any;
 @Component({
   selector: 'app-region',
   standalone: true,
@@ -27,12 +28,13 @@ import {BolRegionModel} from "../../../models/bol-region.model";
     ScrollPanelModule,
     TagModule,
     NgIf,
-    InlineSVGModule
+    InlineSVGModule,
+    FieldsetModule
   ],
   templateUrl: './region.component.html',
   styleUrl: './region.component.scss'
 })
-export class BolRegionComponent implements OnDestroy {
+export class BolRegionComponent implements OnDestroy, AfterViewInit {
   private subs?: Subscription;
   public regions: any[] = [];
   public currentRegion?: any;
@@ -97,6 +99,15 @@ export class BolRegionComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.subs?.unsubscribe();
+  }
+  ngAfterViewInit() {
+    $('#squidheadlink').mouseover(function() {
+      $('#squidhead').mouseover();
+    }).mouseout(function() {
+      $('#squidhead').mouseout();
+    }).click(function(e: MouseEvent) { e.preventDefault(); });
+    $('map').imageMapResize();
+    $('#bol-carte').maphilight();
   }
 
   setCurrentRegion(region: BolRegionModel | null) {
