@@ -102,8 +102,8 @@ export class BolRegionComponent implements OnDestroy, AfterViewInit {
     this.subs?.unsubscribe();
   }
   ngAfterViewInit() {
-    $('map').imageMapResize();
-    $('#bol-carte').maphilight({"strokeColor":"6aa84f", "strokeWidth": 2 });
+    //$('map').imageMapResize();
+    //$('#bol-carte').maphilight({"strokeColor":"6aa84f", "strokeWidth": 2 });
   }
 
   setCurrentRegion(region: BolRegionModel | null) {
