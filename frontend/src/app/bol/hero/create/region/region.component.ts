@@ -15,6 +15,7 @@ import {BolAvantageModel} from "../../../models/bol-avantage.model";
 import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
 import {BolRegionModel} from "../../../models/bol-region.model";
 import {FieldsetModule} from "primeng/fieldset";
+import {MessagesModule} from "primeng/messages";
 declare var $: any;
 @Component({
   selector: 'app-region',
@@ -29,7 +30,8 @@ declare var $: any;
     TagModule,
     NgIf,
     InlineSVGModule,
-    FieldsetModule
+    FieldsetModule,
+    MessagesModule
   ],
   templateUrl: './region.component.html',
   styleUrl: './region.component.scss'

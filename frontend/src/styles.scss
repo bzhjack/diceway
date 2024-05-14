@@ -13,7 +13,7 @@
 @import "styles/form";
 @import "styles/bol";
 @import "styles/bol_regions";
-
+@import "styles/messages";
 
 html {
   display: flex;
@@ -22,6 +22,7 @@ html {
   line-height: normal;
   height: 100%;
   font-size: 14px;
+  --cropper-outline-color: rgba(255,255,255,0.5);
 }
 
 /* IE fix */
@@ -73,16 +74,7 @@ body {
   }
 }
 
-/**
-* Gestion des messages
-*/
-.p-message .p-message-wrapper {
-  padding: 0.5rem 1rem;
-}
 
-.p-message-icon {
-  display: flex;
-}
 
 /**
 * Titre de la carte en cas de soucis
@@ -141,11 +133,6 @@ body {
     height: 100%;
   }
 }
-html {
-  --cropper-outline-color: rgba(255,255,255,0.5);
-}
-
-
 
 .p-card .p-card-content {
   padding: 0;

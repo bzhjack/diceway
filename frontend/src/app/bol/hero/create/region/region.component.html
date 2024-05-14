@@ -3,10 +3,20 @@
     <img class="region-carte" id="bol-carte" src="/frontend/assets/bol/carte.jpg" alt="carte"/>
   </div>
   <div class="flex flex-col gap-1 w-full">
+    <p-messages severity="info">
+      <ng-template pTemplate>
+        <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
+        <div class="ml-4">
+          Sélectionnez la région de votre personnage.<br>
+          Vous pourrez choisir si vous le voulez dans la liste des noms.<br>
+          La sélection des avantages et des désavantages se fera dans un second temps.</div>
+      </ng-template>
+    </p-messages>
     <p-fieldset legend="Régions">
-      <p-scrollPanel [style]="{height: '55px'}">
+      <p-scrollPanel [style]="{height: '60px'}">
         <div class="flex flex-wrap gap-2">
           <p-tag *ngFor="let region of regions;"
+                 class="region-tag"
                  (click)="setCurrentRegion(region)"
                  [styleClass]="region.id === currentRegion?.id ? 'selected-region' : 'unselected-region'"
                  [value]="region.region"
@@ -14,28 +24,76 @@
         </div>
       </p-scrollPanel>
     </p-fieldset>
-    <div style="background: #9d4623" class="flex-auto flex flex-col gap-2">
+    <div class="flex-auto flex flex-col gap-2">
       <div class="flex gap-2">
-        <p-fieldset legend="Noms Masculins" class="flex-auto">
-          <p-scrollPanel [style]="{height: '50px'}">
+        <p-fieldset legend="Noms Masculins" class="w-1/2">
+          <p-scrollPanel [style]="{height: '55px'}">
             <div class="flex gap-2 flex-wrap">
               <p-tag (click)="selectedName = nom.nom"
                      [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom"
-                     *ngFor="let nom of currentRegion.nomsMasculins"></p-tag>
+                     *ngFor="let nom of currentRegion?.nomsMasculins"></p-tag>
             </div>
           </p-scrollPanel>
         </p-fieldset>
-        <p-fieldset legend="Noms Féminins" class="flex-auto">
-          <p-scrollPanel [style]="{height: '50px'}">
+        <p-fieldset legend="Noms Féminins" class="w-1/2">
+          <p-scrollPanel [style]="{height: '55px'}">
             <div class="flex gap-2 flex-wrap">
               <p-tag (click)="selectedName = nom.nom"
                      [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom"
-                     *ngFor="let nom of currentRegion.nomsFeminins"></p-tag>
+                     *ngFor="let nom of currentRegion?.nomsFeminins"></p-tag>
             </div>
           </p-scrollPanel>
         </p-fieldset>
       </div>
-      <div class="flex flex-auto">Avantages</div>
+      <div class="flex flex-auto pb-2 gap-2">
+        <p-fieldset legend="Avantages" class="w-1/2 h-full" styleClass="h-full relative">
+          <div style="position: absolute; inset:15px;">
+            <p-scrollPanel [style]="{display: 'block', height: '100%'}">
+              <ng-container *ngFor="let avantage of currentRegion?.avantages">
+                <div class="flex pb-2 w-fit" [pTooltip]="tooltipAvantage" hideDelay="100">
+                  <div *ngIf="!avantage.de_bonus && !avantage.attribut" class="tag_icon"
+                       inlineSVG="/frontend/assets/info.svg"></div>
+                  <div *ngIf="avantage.de_bonus || avantage.attribut" class="tag_icon"
+                       [inlineSVG]="avantage.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
+                  <div>{{ avantage.avantage }}</div>
+                </div>
+                <ng-template #tooltipAvantage>
+                  <div class="flex flex-col gap-2">
+                    <div *ngFor="let desc of avantageDescription(avantage)" class="flex flex-col">
+                      <div style="white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
+                      <div style="width: 250px">{{ desc.description }}</div>
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-container>
+            </p-scrollPanel>
+          </div>
+        </p-fieldset>
+
+        <p-fieldset legend="Désavantages" class="w-1/2 h-full" styleClass="h-full relative">
+          <div style="position: absolute; inset:15px;">
+            <p-scrollPanel [style]="{display: 'block', height: '100%'}">
+              <ng-container *ngFor="let desavantage of currentRegion?.desavantages">
+                <div class="flex pb-2 w-fit" [pTooltip]="tooltipDesavantage" hideDelay="100">
+                  <div *ngIf="!desavantage.de_malus && !desavantage.attribut" class="tag_icon"
+                       inlineSVG="/frontend/assets/info.svg"></div>
+                  <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon"
+                       [inlineSVG]="desavantage.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
+                  <div>{{ desavantage.desavantage }}</div>
+                </div>
+                <ng-template #tooltipDesavantage>
+                  <div class="flex flex-col gap-2">
+                    <div *ngFor="let desc of desavantageDescription(desavantage)" class="flex flex-col">
+                      <div style="white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
+                      <div style="width: 250px">{{ desc.description }}</div>
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-container>
+            </p-scrollPanel>
+          </div>
+        </p-fieldset>
+      </div>
     </div>
     <div class="flex justify-end gap-2">
       <p-button icon="pi pi-times" size="small" label="Quitter" severity="secondary" (click)="quit()"></p-button>
@@ -43,100 +101,4 @@
                 (click)="validate()"></p-button>
     </div>
   </div>
-  <!--div class="top-region flex gap-2">
-    <p-panel styleClass="region-panel">
-      <p-scrollPanel #dtViewRegion [style]="{height: '100%', width: '270px'}">
-        <p-dataView [value]="regions" emptyMessage=" ">
-          <ng-template pTemplate="list" let-regions>
-            <div class="region-item" [class.p-highlight]="region.id === currentRegion?.id"
-                 *ngFor="let region of regions; let first = first" (click)="setCurrentRegion(region)">
-              {{ region.region }}
-            </div>
-          </ng-template>
-        </p-dataView>
-      </p-scrollPanel>
-    </p-panel>
-    <p-panel styleClass="region-panel" class="flex-auto relative">
-      <div style="position: absolute; inset: 5px 5px 15px 5px; overflow: hidden">
-        <p-scrollPanel [style]="{height: '100%'}">
-          <img id="bol-carte" style="width: 100%" src="/frontend/assets/bol/carte.jpg" alt="carte"
-/>
-        </p-scrollPanel>
-      </div>
-    </p-panel>
-  </div>
-  <div class="flex gap-2" style="height: 165px">
-    <p-panel styleClass="region-panel" *ngIf="currentRegion && currentRegion.noms.length > 0">
-      <p-scrollPanel [style]="{height: '100%'}">
-        <div class="flex flex-col gap-2">
-          <div class="text-xl">Liste des noms <small>(Sélection possible)</small></div>
-          Noms Masculins
-          <div class="flex gap-2 flex-wrap">
-            <p-tag (click)="selectedName = nom.nom"
-                   [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom"
-                   *ngFor="let nom of currentRegion.nomsMasculins"></p-tag>
-          </div>
-          Noms Féminins
-          <div class="flex gap-2 flex-wrap">
-            <p-tag (click)="selectedName = nom.nom"
-                   [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom"
-                   *ngFor="let nom of currentRegion.nomsFeminins"></p-tag>
-          </div>
-        </div>
-      </p-scrollPanel>
-    </p-panel>
-
-    <p-panel styleClass="region-panel" *ngIf="currentRegion && currentRegion.avantages.length > 0">
-      <p-scrollPanel [style]="{height: '100%'}">
-        <div class="flex flex-col gap-2">
-          Avantages
-          <div class="flex gap-2 flex-wrap">
-            <ng-container *ngFor="let avantage of currentRegion.avantages">
-              <p-tag [value]="avantage.avantage"
-                     severity="success"
-                     [pTooltip]="tooltipAvantage">
-                <div *ngIf="avantage.de_bonus || avantage.attribut" class="tag_icon"
-                     [inlineSVG]="avantage.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
-              </p-tag>
-              <ng-template #tooltipAvantage>
-                <div class="flex flex-col gap-2">
-                  <div *ngFor="let desc of avantageDescription(avantage)" class="flex flex-col">
-                    <div style="white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
-                    <div style="width: 250px">{{ desc.description }}</div>
-                  </div>
-                </div>
-              </ng-template>
-            </ng-container>
-
-          </div>
-          Désavantages
-          <div class="flex gap-2 flex-wrap">
-            <ng-container *ngFor="let desavantage of currentRegion.desavantages">
-              <p-tag [value]="desavantage.desavantage"
-                     severity="danger"
-                     [pTooltip]="tooltipDesavantage">
-                <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon"
-                     [inlineSVG]="desavantage.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
-              </p-tag>
-              <ng-template #tooltipDesavantage>
-                <div class="flex flex-col gap-2">
-                  <div *ngFor="let desc of desavantageDescription(desavantage)" class="flex flex-col">
-                    <div style="white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
-                    <div style="width: 250px">{{ desc.description }}</div>
-                  </div>
-                </div>
-              </ng-template>
-            </ng-container>
-
-          </div>
-        </div>
-      </p-scrollPanel>
-    </p-panel>
-
-  </div-->
 </div>
-<!--div class="flex justify-end gap-2">
-  <p-button icon="pi pi-times" size="small" label="Quitter" severity="secondary" (click)="quit()"></p-button>
-  <p-button icon="pi pi-check" size="small" label="Valider" severity="success" [disabled]="!currentRegion"
-            (click)="validate()"></p-button>
-</div-->
