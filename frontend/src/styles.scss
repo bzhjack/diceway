@@ -6,12 +6,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "styles/diceway";
 @import "styles/tag";
 @import "styles/tooltip";
 @import "styles/icon";
 @import "styles/form";
 @import "styles/bol";
-@import "styles/diceway";
+@import "styles/bol_regions";
 
 
 html {
@@ -144,33 +145,9 @@ html {
   --cropper-outline-color: rgba(255,255,255,0.5);
 }
 
-.region-panel {
-  height: calc(100% - 15px);
-  .p-panel-header {
-    padding: 4px 0 0 0;
-    border-bottom: none;
-  }
-  .p-panel-content {
-    padding: 5px;
-    height: 100%;
-  }
-  .p-toggleable-content {
-    height: 100%;
-  }
-}
+
 
 .p-card .p-card-content {
   padding: 0;
 }
-.unselected-name {
-  background: #707F80;
-  cursor: pointer;
-  &:hover {
-    background: #92a194;
-  }
-}
 
-.selected-name {
-  background: #86EFAC;
-  cursor: pointer;
-}
