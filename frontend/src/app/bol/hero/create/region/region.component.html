@@ -1,226 +1,104 @@
-<div class="flex flex-col gap-2">
-  <div class="top-region flex gap-2">
-    <p-panel styleClass="region-panel">
-      <p-scrollPanel #dtViewRegion [style]="{height: '100%', width: '270px'}">
-        <p-dataView [value]="regions" emptyMessage=" ">
-          <ng-template pTemplate="list" let-regions>
-            <div class="region-item" [class.p-highlight]="region.id === currentRegion?.id"
-                 *ngFor="let region of regions; let first = first" (click)="setCurrentRegion(region)">
-              {{ region.region }}
+<div class="region-container flex gap-2">
+  <div class="dw-panel h-full">
+    <img class="region-carte" id="bol-carte" src="/frontend/assets/bol/carte.jpg" alt="carte"/>
+  </div>
+  <div class="flex flex-col gap-1 w-full">
+    <p-messages severity="info">
+      <ng-template pTemplate>
+        <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
+        <div class="ml-4">
+          Sélectionnez la région de votre personnage.<br>
+          Vous pourrez choisir si vous le voulez dans la liste des noms.<br>
+          La sélection des avantages et des désavantages se fera dans un second temps.</div>
+      </ng-template>
+    </p-messages>
+    <p-fieldset legend="Régions">
+      <p-scrollPanel [style]="{height: '60px'}">
+        <div class="flex flex-wrap gap-2">
+          <p-tag *ngFor="let region of regions;"
+                 class="region-tag"
+                 (click)="setCurrentRegion(region)"
+                 [styleClass]="region.id === currentRegion?.id ? 'selected-region' : 'unselected-region'"
+                 [value]="region.region"
+          ></p-tag>
+        </div>
+      </p-scrollPanel>
+    </p-fieldset>
+    <div class="flex-auto flex flex-col gap-2">
+      <div class="flex gap-2">
+        <p-fieldset legend="Noms Masculins" class="w-1/2">
+          <p-scrollPanel [style]="{height: '55px'}">
+            <div class="flex gap-2 flex-wrap">
+              <p-tag (click)="selectedName = nom.nom"
+                     [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom"
+                     *ngFor="let nom of currentRegion?.nomsMasculins"></p-tag>
             </div>
-          </ng-template>
-        </p-dataView>
-      </p-scrollPanel>
-    </p-panel>
-    <p-panel styleClass="region-panel" class="flex-auto relative">
-      <div style="position: absolute; inset: 5px 5px 15px 5px; overflow: hidden">
-        <p-scrollPanel [style]="{height: '100%'}">
-          <img id="bol-carte" style="width: 100%" src="/frontend/assets/bol/carte.jpg" alt="carte"
-               usemap="#image-map"/>
-          <map name="image-map">
-            <area
-              id="region-area-1"
-              class="cursor-pointer"
-              (click)="setCurrentRegionFromMap(1)"
-              alt="côte de feu"
-              title="côte de feu"
-              coords="425,1349,503,1355,568,1350,646,1382,643,1491,426,1491,388,1426" shape="poly">
-            <area
-              id="region-area-2"
-              class="cursor-pointer"
-              (click)="setCurrentRegionFromMap(2)"
-              alt="desert de beshaar"
-              title="desert de beshaar"
-              coords="72,1254,194,1247,301,1263,360,1349,391,1459,78,1458,44,1383" shape="poly">
-            <area class="cursor-pointer"
-                  id="region-area-3"
-                  (click)="setCurrentRegionFromMap(3)"
-                  alt="Halack"
-                  title="Halack"
-                  coords="338,1203,449,1313"
-                  shape="rect">
-            <area class="cursor-pointer"
-                  id="region-area-4"
-                  (click)="setCurrentRegionFromMap(4)"
-                  alt="ile du crane"
-                  title="ile du crane"
-                  coords="668,1233,863,1453"
-                  shape="rect">
-            <area class="cursor-pointer"
-                  id="region-area-6"
-                  (click)="setCurrentRegionFromMap(6)"
-                  alt="lysor"
-                  title="lysor"
-                  coords="652,971,769,1102"
-                  shape="rect">
-            <area class="cursor-pointer"
-                  id="region-area-7"
-                  (click)="setCurrentRegionFromMap(7)"
-                  alt="malakut"
-                  title="malakut"
-                  coords="268,1091,416,1193" shape="rect">
-            <area class="cursor-pointer"
-                  id="region-area-8"
-                  (click)="setCurrentRegionFromMap(8)"
-                  alt="marais de festrel"
-                  title="marais de festrel"
-                  coords="595,907,684,1010"
-                  shape="rect">
-            <area class="cursor-pointer"
-                  id="region-area-9"
-                  (click)="setCurrentRegionFromMap(9)"
-                  alt="marais de kasht"
-                  title="marais de kasht"
-                  coords="491,1244,613,1344"
-                  shape="rect">
-            <area class="cursor-pointer"
-                  id="region-area-10"
-                  (click)="setCurrentRegionFromMap(10)"
-                  alt="montagne laxos"
-                  title="montagne laxos"
-                  coords="154,800,77,780,51,712,58,627,74,563,138,530,265,504,323,493,419,499,489,501,564,489,631,513,704,512,767,489,841,474,903,451,940,481,947,521,924,562,851,587,769,591,702,580,630,601,558,625,532,611,489,580,430,593,372,612,319,636,266,658,257,671,206,634,178,664,164,735"
-                  shape="poly">
-            <area class="cursor-pointer"
-                  id="region-area-11"
-                  (click)="setCurrentRegionFromMap(11)"
-                  alt="oomis"
-                  title="oomis"
-                  coords="566,819,657,932" shape="rect">
-            <area class="cursor-pointer"
-                  id="region-area-12"
-                  (click)="setCurrentRegionFromMap(12)" alt="parsool" title="parsool"
-                  coords="511,1093,643,1198" shape="rect">
-            <area class="cursor-pointer"
-                  id="region-area-13"
-                  (click)="setCurrentRegionFromMap(13)" alt="plaine de Klaar" title="plaine de Klaar"
-                  coords="635,793,648,729,717,670,762,625,808,593,889,591,960,612,930,673,930,729,891,801,878,872,793,906,746,950,691,915"
-                  shape="poly">
-            <area class="cursor-pointer"
-                  id="region-area-14"
-                  (click)="setCurrentRegionFromMap(14)" alt="satarla" title="satarla"
-                  coords="363,882,480,999" shape="rect">
-            <area class="cursor-pointer"
-                  id="region-area-15"
-                  (click)="setCurrentRegionFromMap(15)" alt="Shambala" title="Shambala"
-                  coords="91,762,225,889" shape="rect">
-            <area
-              id="region-area-16"
-              class="cursor-pointer"
-              (click)="setCurrentRegionFromMap(16)"
-              alt="terres desolées"
-              title="terres desolées"
-              coords="4,762,44,678,93,790,94,843,141,888,162,923,88,978,47,993,12,1001" shape="poly">
-            <area class="cursor-pointer"
-                  id="region-area-17"
-                  (click)="setCurrentRegionFromMap(17)"
-                  alt="Tyrus"
-                  title="Tyrus"
-                  coords="250,856,344,966"
-                  shape="rect">
-            <area class="cursor-pointer"
-                  id="region-area-18"
-                  (click)="setCurrentRegionFromMap(18)"
-                  alt="Urceb"
-                  title="Urceb"
-                  coords="917,959,771,847"
-                  shape="rect">
-            <area class="cursor-pointer"
-                  id="region-area-19"
-                  (click)="setCurrentRegionFromMap(19)"
-                  alt="valgard"
-                  title="valgard"
-                  coords="16,89,536,490"
-                  shape="rect">
-            <area class="cursor-pointer"
-                  id="region-area-20"
-                  (click)="setCurrentRegionFromMap(20)"
-                  alt="zalut"
-                  title="zalut"
-                  coords="776,1045,1027,1205"
-                  shape="rect">
-            <area class="cursor-pointer"
-                  (click)="setCurrentRegionFromMap(5)"
-                  alt="jungles"
-                  title="jungles"
-                  coords="91,998,119,952,158,934,178,930,155,901,163,877,173,861,185,844,205,821,182,782,168,750,182,711,184,661,209,639,243,660,258,684,307,663,353,633,370,618,421,616,450,600,476,589,514,607,554,649,588,686,618,732,621,764,619,795,629,822,627,893,604,931,595,948,512,932,438,880,414,895,386,926,392,950,410,982,405,1019,397,1065,397,1110,381,1149,339,1192,297,1202,252,1189,190,1117,141,1085"
-                  shape="poly">
-          </map>
-        </p-scrollPanel>
+          </p-scrollPanel>
+        </p-fieldset>
+        <p-fieldset legend="Noms Féminins" class="w-1/2">
+          <p-scrollPanel [style]="{height: '55px'}">
+            <div class="flex gap-2 flex-wrap">
+              <p-tag (click)="selectedName = nom.nom"
+                     [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom"
+                     *ngFor="let nom of currentRegion?.nomsFeminins"></p-tag>
+            </div>
+          </p-scrollPanel>
+        </p-fieldset>
       </div>
-    </p-panel>
-  </div>
-  <div class="flex gap-2" style="height: 165px">
-    <p-panel styleClass="region-panel" *ngIf="currentRegion && currentRegion.noms.length > 0">
-      <p-scrollPanel [style]="{height: '100%'}">
-        <div class="flex flex-col gap-2">
-          <div class="text-xl">Liste des noms <small>(Sélection possible)</small></div>
-          Noms Masculins
-          <div class="flex gap-2 flex-wrap">
-            <p-tag (click)="selectedName = nom.nom"
-                   [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom"
-                   *ngFor="let nom of currentRegion.nomsMasculins"></p-tag>
-          </div>
-          Noms Féminins
-          <div class="flex gap-2 flex-wrap">
-            <p-tag (click)="selectedName = nom.nom"
-                   [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom"
-                   *ngFor="let nom of currentRegion.nomsFeminins"></p-tag>
-          </div>
-        </div>
-      </p-scrollPanel>
-    </p-panel>
-
-    <p-panel styleClass="region-panel" *ngIf="currentRegion && currentRegion.avantages.length > 0">
-      <p-scrollPanel [style]="{height: '100%'}">
-        <div class="flex flex-col gap-2">
-          Avantages
-          <div class="flex gap-2 flex-wrap">
-            <ng-container *ngFor="let avantage of currentRegion.avantages">
-              <p-tag [value]="avantage.avantage"
-                     severity="success"
-                     [pTooltip]="tooltipAvantage">
-                <div *ngIf="avantage.de_bonus || avantage.attribut" class="tag_icon"
-                     [inlineSVG]="avantage.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
-              </p-tag>
-              <ng-template #tooltipAvantage>
-                <div class="flex flex-col gap-2">
-                  <div *ngFor="let desc of avantageDescription(avantage)" class="flex flex-col">
-                    <div style="white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
-                    <div style="width: 250px">{{ desc.description }}</div>
-                  </div>
+      <div class="flex flex-auto pb-2 gap-2">
+        <p-fieldset legend="Avantages" class="w-1/2 h-full" styleClass="h-full relative">
+          <div style="position: absolute; inset:15px;">
+            <p-scrollPanel [style]="{display: 'block', height: '100%'}">
+              <ng-container *ngFor="let avantage of currentRegion?.avantages">
+                <div class="flex pb-2 w-fit" [pTooltip]="tooltipAvantage" hideDelay="100">
+                  <div *ngIf="!avantage.de_bonus && !avantage.attribut" class="tag_icon bonus"
+                       inlineSVG="/frontend/assets/info.svg"></div>
+                  <div *ngIf="avantage.de_bonus || avantage.attribut" class="tag_icon bonus"
+                       [inlineSVG]="avantage.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
+                  <div>{{ avantage.avantage }}</div>
                 </div>
-              </ng-template>
-            </ng-container>
-
-          </div>
-          Désavantages
-          <div class="flex gap-2 flex-wrap">
-            <ng-container *ngFor="let desavantage of currentRegion.desavantages">
-              <p-tag [value]="desavantage.desavantage"
-                     severity="danger"
-                     [pTooltip]="tooltipDesavantage">
-                <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon"
-                     [inlineSVG]="desavantage.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
-              </p-tag>
-              <ng-template #tooltipDesavantage>
-                <div class="flex flex-col gap-2">
-                  <div *ngFor="let desc of desavantageDescription(desavantage)" class="flex flex-col">
-                    <div style="white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
-                    <div style="width: 250px">{{ desc.description }}</div>
+                <ng-template #tooltipAvantage>
+                  <div class="flex flex-col gap-2">
+                    <div *ngFor="let desc of avantageDescription(avantage)" class="flex flex-col">
+                      <div style="white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
+                      <div style="width: 250px">{{ desc.description }}</div>
+                    </div>
                   </div>
-                </div>
-              </ng-template>
-            </ng-container>
-
+                </ng-template>
+              </ng-container>
+            </p-scrollPanel>
           </div>
-        </div>
-      </p-scrollPanel>
-    </p-panel>
+        </p-fieldset>
 
+        <p-fieldset legend="Désavantages" class="w-1/2 h-full" styleClass="h-full relative">
+          <div style="position: absolute; inset:15px;">
+            <p-scrollPanel [style]="{display: 'block', height: '100%'}">
+              <ng-container *ngFor="let desavantage of currentRegion?.desavantages">
+                <div class="flex pb-2 w-fit" [pTooltip]="tooltipDesavantage" hideDelay="100">
+                  <div *ngIf="!desavantage.de_malus && !desavantage.attribut" class="tag_icon malus"
+                       inlineSVG="/frontend/assets/info.svg"></div>
+                  <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon malus"
+                       [inlineSVG]="desavantage.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
+                  <div>{{ desavantage.desavantage }}</div>
+                </div>
+                <ng-template #tooltipDesavantage>
+                  <div class="flex flex-col gap-2">
+                    <div *ngFor="let desc of desavantageDescription(desavantage)" class="flex flex-col">
+                      <div style="white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
+                      <div style="width: 250px">{{ desc.description }}</div>
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-container>
+            </p-scrollPanel>
+          </div>
+        </p-fieldset>
+      </div>
+    </div>
+    <div class="flex justify-end gap-2">
+      <p-button icon="pi pi-times" size="small" label="Quitter" severity="secondary" (click)="quit()"></p-button>
+      <p-button icon="pi pi-check" size="small" label="Valider" severity="success" [disabled]="!currentRegion"
+                (click)="validate()"></p-button>
+    </div>
   </div>
-</div>
-<div class="flex justify-end gap-2">
-  <p-button icon="pi pi-times" size="small" label="Quitter" severity="secondary" (click)="quit()"></p-button>
-  <p-button icon="pi pi-check" size="small" label="Valider" severity="success" [disabled]="!currentRegion"
-            (click)="validate()"></p-button>
 </div>

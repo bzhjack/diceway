@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, ViewChild} from '@angular/core';
+import {Component, OnDestroy, ViewChild} from '@angular/core';
 import {BolHeroService} from "../../../services/bol-hero.service";
 import {Subscription} from "rxjs";
 import {NgxSpinnerService} from "ngx-spinner";
@@ -15,7 +15,8 @@ import {BolAvantageModel} from "../../../models/bol-avantage.model";
 import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
 import {BolRegionModel} from "../../../models/bol-region.model";
 import {FieldsetModule} from "primeng/fieldset";
-declare var $: any;
+import {MessagesModule} from "primeng/messages";
+
 @Component({
   selector: 'app-region',
   standalone: true,
@@ -29,12 +30,13 @@ declare var $: any;
     TagModule,
     NgIf,
     InlineSVGModule,
-    FieldsetModule
+    FieldsetModule,
+    MessagesModule
   ],
   templateUrl: './region.component.html',
   styleUrl: './region.component.scss'
 })
-export class BolRegionComponent implements OnDestroy, AfterViewInit {
+export class BolRegionComponent implements OnDestroy {
   private subs?: Subscription;
   public regions: any[] = [];
   public currentRegion?: any;
@@ -101,10 +103,6 @@ export class BolRegionComponent implements OnDestroy, AfterViewInit {
   ngOnDestroy() {
     this.subs?.unsubscribe();
   }
-  ngAfterViewInit() {
-    $('map').imageMapResize();
-    $('#bol-carte').maphilight({"strokeColor":"6aa84f", "strokeWidth": 2 });
-  }
 
   setCurrentRegion(region: BolRegionModel | null) {
     if (region) {
@@ -113,9 +111,5 @@ export class BolRegionComponent implements OnDestroy, AfterViewInit {
       region.nomsMasculins = region.noms.filter((nom: any) => nom.gender === 'M');
       this.currentRegion = region;
     }
-  }
-  setCurrentRegionFromMap(regionId: number) {
-    this.scrollRegion.scrollTop(38* (regionId -1));
-    this.setCurrentRegion(this.regions.find((region) => region.id === regionId));
   }
 }
