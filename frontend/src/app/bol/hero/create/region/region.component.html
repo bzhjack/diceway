@@ -13,9 +13,10 @@
       </ng-template>
     </p-messages>
     <p-fieldset legend="Régions">
-      <p-scrollPanel [style]="{height: '60px'}">
+      <p-scrollPanel #regionPanel [style]="{height: '60px'}">
         <div class="flex flex-wrap gap-2">
           <p-tag *ngFor="let region of regions;"
+                 id="region-{{region.id}}"
                  class="region-tag"
                  (click)="setCurrentRegion(region)"
                  [styleClass]="region.id === currentRegion?.id ? 'selected-region' : 'unselected-region'"

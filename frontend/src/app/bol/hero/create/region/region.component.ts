@@ -41,7 +41,7 @@ export class BolRegionComponent implements OnDestroy {
   public regions: any[] = [];
   public currentRegion?: any;
   public selectedName?: string;
-  @ViewChild('dtViewRegion') scrollRegion!: ScrollPanel;
+  @ViewChild('regionPanel') scrollRegion!: ScrollPanel;
 
   constructor(
     private hs: BolHeroService,
@@ -110,6 +110,13 @@ export class BolRegionComponent implements OnDestroy {
       region.nomsFeminins = region.noms.filter((nom: any) => nom.gender === 'F');
       region.nomsMasculins = region.noms.filter((nom: any) => nom.gender === 'M');
       this.currentRegion = region;
+      setTimeout(() => {
+        let regionElement = document.getElementById('region-' + region.id);
+        if (regionElement) {
+          this.scrollRegion?.scrollTop(regionElement?.offsetTop);
+        }
+
+      });
     }
   }
 }
