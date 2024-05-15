@@ -7,11 +7,13 @@ import {ToolbarModule} from "primeng/toolbar";
 import {PanelModule} from "primeng/panel";
 import {TooltipModule} from 'primeng/tooltip';
 import {DynamicDialogRef} from "primeng/dynamicdialog";
+import {DragDropFileDirective} from "./drag-drop-file.directive";
 
 @Component({
   selector: 'app-picture',
   standalone: true,
   imports: [
+    DragDropFileDirective,
     ButtonModule,
     AutoFocusModule,
     ImageCropperModule,
@@ -39,13 +41,22 @@ export class PictureComponent {
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.base64 || '';
   }
+
   fileChangeEvent(event: any): void {
     if (event.target.files && event.target.files.length) {
       this.imageChangedEvent = event;
+      console.log(this.imageChangedEvent)
     }
   }
+
+  dropFileEvent(files: any[]): void {
+    if (files && files.length > 0) {
+      this.imageChangedEvent = {target: {files: files}};
+    }
+  }
+
   loadImageFailed() {
-   console.log('error');
+    console.log('error');
   }
 
   zoomOut() {
@@ -63,14 +74,17 @@ export class PictureComponent {
       scale: this.scale
     };
   }
+
   resetImage() {
     this.scale = 1;
     this.rotation = 0;
     this.transform = {};
   }
+
   quit() {
     this.ref.close(null);
   }
+
   validate() {
     this.ref.close(this.croppedImage);
   }

@@ -1,6 +1,6 @@
 <div class="hero-picture flex flex-col gap-2 p-2">
   <div class="header-file w-full">
-    <p-toolbar class="w-full">
+    <p-toolbar class="w-full" *ngIf="imageChangedEvent">
       <div class="p-toolbar-group-start gap-2">
         <p-button (click)="file.click()" icon="pi pi-upload" size="small" label="Importer une image"></p-button>
       </div>
@@ -32,13 +32,20 @@
         <img [src]="croppedImage" [style.border]="croppedImage ? '1px solid white' : 'none'"/>
       </div>
     </div>
-    <div class="picture-no-image text-3xl flex h-full items-center justify-center" *ngIf="!imageChangedEvent">
-      Importer une image en cliquant sur le bouton ci-dessus
+    <div class="picture-no-image flex flex-col h-full items-center justify-center"
+         *ngIf="!imageChangedEvent"
+         dwDragDropFile
+         (filesDropped)="dropFileEvent($event)">
+      <i class="pi pi-upload" style="font-size: 3rem"></i>
+      <div class="flex items-center pt-4">
+        Déposer l'image ici, ou <p-button [style]="{padding: '5px'}" label="sélectionner le fichier" [link]="true" (click)="file.click()"/>
+      </div>
     </div>
   </p-panel>
 
   <div class="flex justify-end gap-2 pt-3">
     <p-button icon="pi pi-times" size="small" label="Quitter" severity="secondary" (click)="quit()"></p-button>
-    <p-button [disabled]="!imageChangedEvent" icon="pi pi-check" size="small" label="Valider" severity="success" (click)="validate()"></p-button>
+    <p-button [disabled]="!imageChangedEvent" icon="pi pi-check" size="small" label="Valider" severity="success"
+              (click)="validate()"></p-button>
   </div>
 </div>
