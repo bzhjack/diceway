@@ -25,13 +25,14 @@
         </div>
       </p-scrollPanel>
     </p-fieldset>
+    <!-- Si pas de région sélectionnée -->
     <div *ngIf="!currentRegion" class="flex-auto flex flex-col gap-2 items-center">
       <div class="relative" style="height: 70px;">
         <div class="arrow">&#8674;</div>
       </div>
       <div style="color: darkgrey; font-size: 3vw; font-weight: lighter;white-space: nowrap">Sélectionnez une région d'origine.</div>
     </div>
-
+    <!-- Si cote de feu -->
     <div *ngIf="currentRegion && currentRegion.id === 1" class="flex-auto flex flex-col gap-2">
       <p-messages severity="warn">
         <ng-template pTemplate>
@@ -44,10 +45,40 @@
         </ng-template>
       </p-messages>
     </div>
+    <div *ngIf="currentRegion && currentRegion.id === 13" class="flex-auto flex flex-col gap-2">
+      <p-messages severity="warn">
+        <ng-template pTemplate>
+          <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
+          <div class="ml-4">
+            Les plaines de Klaar sont la demeure des
+            <strong>céruléens</strong>, une race de géants à la peau grisbleu qu’on surnomme aussi les nomades bleus.
+          </div>
+        </ng-template>
+      </p-messages>
+    </div>
+    <div *ngIf="currentRegion && currentRegion.id === 16" class="flex-auto flex flex-col gap-2">
+      <p-messages severity="warn">
+        <ng-template pTemplate>
+          <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
+          <div class="ml-4">
+            Personne ne sait grand-chose au sujet des Terres Désolées, et moins encore sur les contrées qui s’étendraient au-delà.
+          </div>
+        </ng-template>
+      </p-messages>
+    </div>
 
-
-    <div *ngIf="currentRegion && ![1].includes(currentRegion.id)" class="flex-auto flex flex-col gap-2">
-      <div class="flex gap-2">
+    <div *ngIf="currentRegion && ![1,13,16].includes(currentRegion.id)" class="flex-auto flex flex-col gap-2">
+      <div *ngIf="currentRegion.noms.length == 0" class="flex-autos flex flex-col gap-2">
+        <p-messages severity="warn">
+          <ng-template pTemplate>
+            <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
+            <div class="ml-4">
+              Comme des gens de tous horizons se retrouvent ici, on y rencontre des noms provenant de toutes les contrées de Lémurie.
+            </div>
+          </ng-template>
+        </p-messages>
+      </div>
+      <div *ngIf="currentRegion.noms.length > 0" class="flex gap-2">
         <p-fieldset legend="Noms Masculins" class="w-1/2">
           <p-scrollPanel [style]="{height: '55px'}">
             <div class="flex gap-2 flex-wrap">
