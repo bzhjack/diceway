@@ -1,6 +1,4 @@
-.hero-picture {
 
-}
 image-cropper {
   max-height: 50vh;
 }
@@ -18,5 +16,7 @@ image-cropper {
   display: flex;
 }
 .picture-no-image {
+  border-radius: 6px;
   background-color: rgba(255,255,255,0.1);
+  border: 1px dashed #9CB0CE;
 }
