@@ -25,7 +25,13 @@
         </div>
       </p-scrollPanel>
     </p-fieldset>
-    <div class="flex-auto flex flex-col gap-2">
+    <div *ngIf="!currentRegion" class="flex-auto flex flex-col gap-2 items-center">
+      <div class="relative" style="height: 70px;">
+        <div class="arrow">&#8674;</div>
+      </div>
+      <div style="color: darkgrey; font-size: 3vw; font-weight: lighter;white-space: nowrap">Sélectionnez une région d'origine.</div>
+    </div>
+    <div *ngIf="currentRegion" class="flex-auto flex flex-col gap-2">
       <div class="flex gap-2">
         <p-fieldset legend="Noms Masculins" class="w-1/2">
           <p-scrollPanel [style]="{height: '55px'}">
@@ -46,6 +52,7 @@
           </p-scrollPanel>
         </p-fieldset>
       </div>
+
       <div class="flex flex-auto pb-2 gap-2">
         <p-fieldset legend="Avantages" class="w-1/2 h-full" styleClass="h-full relative">
           <div style="position: absolute; inset:15px;">

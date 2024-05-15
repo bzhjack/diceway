@@ -10,3 +10,24 @@
   overflow: hidden;
   width: auto;
 }
+.arrow{
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 54px;
+  text-align: center;
+  transform: rotate(-90deg);
+  animation: bouncearrow 1s infinite;
+}
+
+@-webkit-keyframes bouncearrow{
+  0%{top: 0;}
+  50%{top: 20px; color: #8e8e8e;}
+  100%{top: 0;}
+}
+
+@keyframes bouncearrow{
+  0%{top: 0;}
+  50%{top: 20px; color: #8e8e8e;}
+  100%{top: 0;}
+}
