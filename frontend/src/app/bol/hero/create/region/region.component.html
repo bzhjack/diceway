@@ -5,7 +5,7 @@
   <div class="flex flex-col gap-1 w-full">
     <p-messages severity="info">
       <ng-template pTemplate>
-        <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
+        <div class="info_icon" inlineSVG="/frontend/assets/rolling-dices.svg"></div>
         <div class="ml-4">
           Sélectionnez la région de votre personnage.<br>
           Vous pourrez choisir si vous le voulez dans la liste des noms.<br>
@@ -31,7 +31,22 @@
       </div>
       <div style="color: darkgrey; font-size: 3vw; font-weight: lighter;white-space: nowrap">Sélectionnez une région d'origine.</div>
     </div>
-    <div *ngIf="currentRegion" class="flex-auto flex flex-col gap-2">
+
+    <div *ngIf="currentRegion && currentRegion.id === 1" class="flex-auto flex flex-col gap-2">
+      <p-messages severity="warn">
+        <ng-template pTemplate>
+          <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
+          <div class="ml-4">
+            Dans "La Côte de Feu", la Reine Sorcière règne avec ses gardes kalukans.<br>
+            Si votre héros vient de là, vous pouvez en faire être un <strong>kalukan</strong> avec l'accord du MJ.<br>
+            Sinon, vous pouvez choisir d'être un humain et utiliser les listes d'avantages/désavantages proposées pour <strong>Halakh</strong> ou <strong>les marais de Kasht</strong>.
+          </div>
+        </ng-template>
+      </p-messages>
+    </div>
+
+
+    <div *ngIf="currentRegion && ![1].includes(currentRegion.id)" class="flex-auto flex flex-col gap-2">
       <div class="flex gap-2">
         <p-fieldset legend="Noms Masculins" class="w-1/2">
           <p-scrollPanel [style]="{height: '55px'}">
