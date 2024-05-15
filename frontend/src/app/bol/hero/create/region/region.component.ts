@@ -41,6 +41,7 @@ export class BolRegionComponent implements OnDestroy {
   public regions: any[] = [];
   public currentRegion?: any;
   public selectedName?: string;
+  public ready = false;
   @ViewChild('regionPanel') scrollRegion!: ScrollPanel;
 
   constructor(
@@ -50,12 +51,14 @@ export class BolRegionComponent implements OnDestroy {
     private spinner: NgxSpinnerService) {
     const regionId= this.config.data.id_region;
     this.spinner.show();
+    this.ready = false;
     this.subs = this.hs.allRegions().subscribe({
       next: (regions: Array<any>) => {
         this.regions = regions;
         if (regionId) {
          this.setCurrentRegion(this.regions.find((region) => region.id === regionId));
         }
+        this.ready = true;
         this.spinner.hide();
       },
       error: () => {
