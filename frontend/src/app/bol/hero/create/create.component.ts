@@ -2,7 +2,15 @@ import {Component, OnDestroy} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {InputTextModule} from "primeng/inputtext";
 import {InputNumberModule} from 'primeng/inputnumber';
-import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators
+} from "@angular/forms";
 import {ToolbarModule} from "primeng/toolbar";
 import {ButtonModule} from "primeng/button";
 import {SplitButtonModule} from "primeng/splitbutton";
@@ -15,6 +23,9 @@ import {FieldsetModule} from "primeng/fieldset";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {PictureComponent} from "../../../shared/picture/picture.component";
 import {BolRegionComponent} from "./region/region.component";
+import {OverlayPanelModule} from "primeng/overlaypanel";
+import {InlineSVGModule} from "ng-inline-svg-2";
+import {MessagesModule} from "primeng/messages";
 
 @Component({
   selector: 'app-create',
@@ -28,7 +39,10 @@ import {BolRegionComponent} from "./region/region.component";
     SplitButtonModule,
     ReactiveFormsModule,
     InputNumberModule,
-    FieldsetModule
+    FieldsetModule,
+    OverlayPanelModule,
+    InlineSVGModule,
+    MessagesModule
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
@@ -65,17 +79,19 @@ export class BolHeroCreateComponent implements OnDestroy {
       joueur: this.joueurCtrl,
       nom: this.nomCtrl,
       avatar: this.avatarCtrl,
+
       vigueur: this.vigueurCtrl,
       agilite: this.agiliteCtrl,
       esprit: this.espritCtrl,
       aura: this.auraCtrl,
+
       initiative: this.initiativeCtrl,
       melee: this.meleeCtrl,
       tir: this.tirCtrl,
       defense: this.defenseCtrl,
       region_id: this.regionIdCtrl,
       region: this.regionCtrl
-    }
+    }, {validators: BolHeroCreateComponent.attributValidator}
   );
 
   constructor(
@@ -93,6 +109,25 @@ export class BolHeroCreateComponent implements OnDestroy {
   ngOnDestroy() {
     this.subs?.unsubscribe();
   }
+
+  static attributValidator(control: AbstractControl): ValidationErrors | null {
+    const controlsIds = ['vigueur', 'agilite', 'aura', 'esprit'];
+    const controlsArray = controlsIds.map(id => control.get(id));
+    const values = controlsArray.map(ctrl => ctrl?.value);
+    console.log("values", values);
+    const countNegativeOnes = values.filter(value => value === -1).length;
+    if (countNegativeOnes > 1) {
+      console.log('tooManyNegativeOnes');
+      return { 'tooManyNegativeOnes': true };
+    }
+    /*const sum = values.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
+    if (sum > 4) {
+      return { 'sumExceeded': true };
+    }*/
+    return null;
+
+  }
+
 
   getHero(id: string) {
     this.spinner.show();
