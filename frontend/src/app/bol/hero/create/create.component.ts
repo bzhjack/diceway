@@ -16,7 +16,7 @@ import {ButtonModule} from "primeng/button";
 import {SplitButtonModule} from "primeng/splitbutton";
 import {BolHeroService} from "../../services/bol-hero.service";
 import {BolHeroModel} from "../../models/bol-hero.model";
-import {Subscription} from "rxjs";
+import {debounceTime, Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {FieldsetModule} from "primeng/fieldset";
@@ -26,6 +26,7 @@ import {BolRegionComponent} from "./region/region.component";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {MessagesModule} from "primeng/messages";
+import {JsonPipe, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-create',
@@ -42,7 +43,9 @@ import {MessagesModule} from "primeng/messages";
     FieldsetModule,
     OverlayPanelModule,
     InlineSVGModule,
-    MessagesModule
+    MessagesModule,
+    JsonPipe,
+    NgIf
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
@@ -62,16 +65,17 @@ export class BolHeroCreateComponent implements OnDestroy {
   public regionCtrl = new FormControl<string | null>(null);
 
   // Attribut
-  public vigueurCtrl = new FormControl<number | null>(0);
-  public agiliteCtrl = new FormControl<number | null>(0);
-  public espritCtrl = new FormControl<number | null>(0);
-  public auraCtrl = new FormControl<number | null>(0);
+  public vigueurCtrl = new FormControl<number | null>(0, BolHeroCreateComponent.numericValidator);
+  public agiliteCtrl = new FormControl<number | null>(0, BolHeroCreateComponent.numericValidator);
+  public espritCtrl = new FormControl<number | null>(0, BolHeroCreateComponent.numericValidator);
+  public auraCtrl = new FormControl<number | null>(0, BolHeroCreateComponent.numericValidator);
+  attributErrors: {control: string, error: string}[] = [];
 
   // Combat
-  public initiativeCtrl = new FormControl<number | null>(0);
-  public meleeCtrl = new FormControl<number | null>(0);
-  public tirCtrl = new FormControl<number | null>(0);
-  public defenseCtrl = new FormControl<number | null>(0);
+  public initiativeCtrl = new FormControl<number | null>(0, BolHeroCreateComponent.numericValidator);
+  public meleeCtrl = new FormControl<number | null>(0, BolHeroCreateComponent.numericValidator);
+  public tirCtrl = new FormControl<number | null>(0, BolHeroCreateComponent.numericValidator);
+  public defenseCtrl = new FormControl<number | null>(0, BolHeroCreateComponent.numericValidator);
 
   heroForm = this.fb.group(
     {
@@ -104,21 +108,43 @@ export class BolHeroCreateComponent implements OnDestroy {
     if (id !== null) {
       this.getHero(id);
     }
+    this.heroForm.valueChanges.pipe(debounceTime(200)).subscribe(() => {
+      this.logFormErrors();
+    });
   }
 
   ngOnDestroy() {
     this.subs?.unsubscribe();
   }
 
+  /**
+   * Gestion de l'affichage des erreurs
+   */
+
+  logFormErrors(): void {
+    this.attributErrors = [];
+    Object.keys(this.heroForm.controls).forEach(key => {
+      const controlErrors = this.heroForm.get(key)?.errors;
+      if (controlErrors != null) {
+        Object.keys(controlErrors).forEach(keyError => {
+          if (['vigueur', 'agilite', 'aura', 'esprit'].includes(key)) {
+            this.attributErrors.push({control: key, error: keyError});
+          }
+          console.log(`Key control: ${key}, keyError: ${keyError}, error value: `, controlErrors[keyError]);
+        });
+      }
+    });
+  }
+
   static attributValidator(control: AbstractControl): ValidationErrors | null {
     const controlsIds = ['vigueur', 'agilite', 'aura', 'esprit'];
     const controlsArray = controlsIds.map(id => control.get(id));
     const values = controlsArray.map(ctrl => ctrl?.value);
-    console.log("values", values);
+    //console.log("values", values);
     const countNegativeOnes = values.filter(value => value === -1).length;
     if (countNegativeOnes > 1) {
-      console.log('tooManyNegativeOnes');
-      return { 'tooManyNegativeOnes': true };
+      //console.log('tooManyNegativeOnes');
+      return {'tooManyNegativeOnes': true};
     }
     /*const sum = values.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
     if (sum > 4) {
@@ -128,6 +154,26 @@ export class BolHeroCreateComponent implements OnDestroy {
 
   }
 
+  static numericValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    // Vérifie si la valeur est "falsy" sauf 0 qui est valide
+    if (value === null || value === undefined || value === '') {
+      return {required: {value: control.value, key: control}};
+    }
+    // Vérifie si la valeur est un nombre
+    const isNumber = !isNaN(Number(value));
+    if (!isNumber) {
+      return {numeric: {value: control.value}};
+    }
+    // Vérifie si la valeur est un nombre valide
+    if (value < -1) {
+      return {tooSmall: {value: control.value}};
+    }
+    if (value > 3) {
+      return {tooBig: {value: control.value}};
+    }
+    return null;
+  }
 
   getHero(id: string) {
     this.spinner.show();
@@ -188,7 +234,7 @@ export class BolHeroCreateComponent implements OnDestroy {
   }
 
   picture() {
-    this.ref = this.ds.open(PictureComponent, { header: 'Photo du héro'});
+    this.ref = this.ds.open(PictureComponent, {header: 'Photo du héro'});
     this.subs?.unsubscribe();
     this.subs = this.ref.onClose.subscribe((avatar: any) => {
       if (avatar !== null && avatar !== undefined) {
@@ -197,6 +243,7 @@ export class BolHeroCreateComponent implements OnDestroy {
       }
     });
   }
+
   region() {
     this.ref = this.ds.open(BolRegionComponent, {
       header: 'Choix de la région',
@@ -218,6 +265,7 @@ export class BolHeroCreateComponent implements OnDestroy {
       }
     });
   }
+
   clearRegion(ev: MouseEvent) {
     ev.stopPropagation();
     this.regionIdCtrl.setValue(null);
