@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Bol;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class BolAvantage extends Model
+class BolDesavantage extends Model
 {
     use HasFactory;
     protected $casts = [
-        'de_bonus' => 'boolean'
+        'de_malus' => 'boolean'
     ];
     public function regions(): BelongsToMany
     {

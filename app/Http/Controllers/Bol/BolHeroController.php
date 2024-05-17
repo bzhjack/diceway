@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
-use App\Models\BolHero;
+use App\Models\Bol\BolHero;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
