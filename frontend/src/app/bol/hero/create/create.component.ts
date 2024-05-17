@@ -2,21 +2,13 @@ import {Component, OnDestroy} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {InputTextModule} from "primeng/inputtext";
 import {InputNumberModule} from 'primeng/inputnumber';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormControl, FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  ValidationErrors, ValidatorFn,
-  Validators
-} from "@angular/forms";
+import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule, ValidationErrors, Validators} from "@angular/forms";
 import {ToolbarModule} from "primeng/toolbar";
 import {ButtonModule} from "primeng/button";
 import {SplitButtonModule} from "primeng/splitbutton";
 import {BolHeroService} from "../../services/bol-hero.service";
 import {BolHeroModel} from "../../models/bol-hero.model";
-import {debounceTime, distinctUntilChanged, Subscription} from "rxjs";
+import {debounceTime, Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {FieldsetModule} from "primeng/fieldset";
@@ -27,22 +19,7 @@ import {OverlayPanelModule} from "primeng/overlaypanel";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {MessagesModule} from "primeng/messages";
 import {JsonPipe, NgForOf, NgIf} from "@angular/common";
-
-export const globalFormValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-  const controlsIds = ['vigueur', 'agilite', 'aura', 'esprit'];
-  const controlsArray = controlsIds.map(id => control.get(id));
-  const values = controlsArray.map(ctrl => ctrl?.value);
-  //console.log("values", values);
-  const countNegativeOnes = values.filter(value => value === -1).length;
-  if (countNegativeOnes > 1) {
-    return {'tooManyNegativeOnes': true};
-  }
-  /*const sum = values.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
-  if (sum > 4) {
-    return { 'sumExceeded': true };
-  }*/
-  return null;
-};
+import {attributValidator, globalFormValidator} from "./create.validators";
 
 
 @Component({
@@ -83,17 +60,17 @@ export class BolHeroCreateComponent implements OnDestroy {
   public regionCtrl = new FormControl<string | null>(null);
 
   // Attribut
-  public vigueurCtrl = new FormControl<number | null>(0, this.numericValidator);
-  public agiliteCtrl = new FormControl<number | null>(0, this.numericValidator);
-  public espritCtrl = new FormControl<number | null>(0, this.numericValidator);
-  public auraCtrl = new FormControl<number | null>(0, this.numericValidator);
+  public vigueurCtrl = new FormControl<number | null>(0,attributValidator);
+  public agiliteCtrl = new FormControl<number | null>(0,attributValidator);
+  public espritCtrl = new FormControl<number | null>(0,attributValidator);
+  public auraCtrl = new FormControl<number | null>(0,attributValidator);
   attributErrors: {control: string, error: string}[] = [];
 
   // Combat
-  public initiativeCtrl = new FormControl<number | null>(0, this.numericValidator);
-  public meleeCtrl = new FormControl<number | null>(0, this.numericValidator);
-  public tirCtrl = new FormControl<number | null>(0, this.numericValidator);
-  public defenseCtrl = new FormControl<number | null>(0, this.numericValidator);
+  public initiativeCtrl = new FormControl<number | null>(0);
+  public meleeCtrl = new FormControl<number | null>(0);
+  public tirCtrl = new FormControl<number | null>(0);
+  public defenseCtrl = new FormControl<number | null>(0);
 
   heroForm = this.fb.group(
     {
@@ -126,7 +103,7 @@ export class BolHeroCreateComponent implements OnDestroy {
     if (id !== null) {
       this.getHero(id);
     }
-    this.heroForm.valueChanges.subscribe((data) => {
+    this.heroForm.valueChanges.pipe(debounceTime(200)).subscribe((data) => {
       this.logFormErrors();
     });
   }
@@ -161,49 +138,14 @@ export class BolHeroCreateComponent implements OnDestroy {
       Object.keys(formErrors).forEach(keyError => {
         // Afficher dans la console le type d'erreur globale et la valeur de l'erreur
         if (keyError === 'tooManyNegativeOnes') {
-          this.attributErrors.push({control: '', error: keyError});
+          this.attributErrors.push({control: 'Tu as le droit de diminuer une seule fois un attribut à -1', error: ''});
+        }
+        if (keyError === 'sumExceeded') {
+          this.attributErrors.push({control: 'La somme des attributs ne doit pas dépasser 4', error: ''});
         }
         console.log(`Global error: ${keyError}, err value: `, formErrors[keyError]);
       });
     }
-  }
-
-  attributValidator(control: AbstractControl): ValidationErrors | null {
-    const controlsIds = ['vigueur', 'agilite', 'aura', 'esprit'];
-    const controlsArray = controlsIds.map(id => control.get(id));
-    const values = controlsArray.map(ctrl => ctrl?.value);
-    //console.log("values", values);
-    const countNegativeOnes = values.filter(value => value === -1).length;
-    if (countNegativeOnes > 1) {
-      return {'tooManyNegativeOnes': true};
-    }
-    /*const sum = values.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
-    if (sum > 4) {
-      return { 'sumExceeded': true };
-    }*/
-    return null;
-
-  }
-
-  numericValidator(control: AbstractControl): ValidationErrors | null {
-    const value = control.value;
-    // Vérifie si la valeur est "falsy" sauf 0 qui est valide
-    if (value === null || value === undefined || value === '') {
-      return {required: {value: control.value, key: control}};
-    }
-    // Vérifie si la valeur est un nombre
-    const isNumber = !isNaN(Number(value));
-    if (!isNumber) {
-      return {numeric: {value: control.value}};
-    }
-    // Vérifie si la valeur est un nombre valide
-    if (value < -1) {
-      return {tooSmall: {value: control.value}};
-    }
-    if (value > 3) {
-      return {tooBig: {value: control.value}};
-    }
-    return null;
   }
 
   getHero(id: string) {
