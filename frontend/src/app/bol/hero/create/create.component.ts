@@ -65,12 +65,13 @@ export class BolHeroCreateComponent implements OnDestroy {
   public espritCtrl = new FormControl<number | null>(0,attributValidator);
   public auraCtrl = new FormControl<number | null>(0,attributValidator);
   attributErrors: {control: string, error: string}[] = [];
+  aptitudeErrors: {control: string, error: string}[] = [];
 
   // Combat
-  public initiativeCtrl = new FormControl<number | null>(0);
-  public meleeCtrl = new FormControl<number | null>(0);
-  public tirCtrl = new FormControl<number | null>(0);
-  public defenseCtrl = new FormControl<number | null>(0);
+  public initiativeCtrl = new FormControl<number | null>(0,attributValidator);
+  public meleeCtrl = new FormControl<number | null>(0,attributValidator);
+  public tirCtrl = new FormControl<number | null>(0,attributValidator);
+  public defenseCtrl = new FormControl<number | null>(0,attributValidator);
 
   heroForm = this.fb.group(
     {
@@ -118,12 +119,17 @@ export class BolHeroCreateComponent implements OnDestroy {
 
   logFormErrors(): void {
     this.attributErrors = [];
+    this.aptitudeErrors = [];
+
     Object.keys(this.heroForm.controls).forEach(key => {
       const controlErrors = this.heroForm.get(key)?.errors;
       if (controlErrors != null) {
         Object.keys(controlErrors).forEach(keyError => {
           if (['vigueur', 'agilite', 'aura', 'esprit'].includes(key)) {
             this.attributErrors.push({control: BolHeroCreateTools.translate(key), error: BolHeroCreateTools.translate(keyError)});
+          }
+          if (['melee', 'tir', 'defense', 'initiative'].includes(key)) {
+            this.aptitudeErrors.push({control: BolHeroCreateTools.translate(key), error: BolHeroCreateTools.translate(keyError)});
           }
           console.log(`Key control: ${key}, keyError: ${keyError}, error value: `, controlErrors[keyError]);
         });
@@ -137,11 +143,17 @@ export class BolHeroCreateComponent implements OnDestroy {
       // Itérer sur chaque erreur globale
       Object.keys(formErrors).forEach(keyError => {
         // Afficher dans la console le type d'erreur globale et la valeur de l'erreur
-        if (keyError === 'tooManyNegativeOnes') {
+        if (keyError === 'attrTooManyNegative') {
           this.attributErrors.push({control: 'Tu as le droit de diminuer une seule fois un attribut à -1', error: ''});
         }
-        if (keyError === 'sumExceeded') {
+        if (keyError === 'attrSumExceeded') {
           this.attributErrors.push({control: 'La somme des attributs ne doit pas dépasser 4', error: ''});
+        }
+        if (keyError === 'aptTooManyNegative') {
+          this.aptitudeErrors.push({control: 'Tu as le droit de diminuer une seule fois une aptitude à -1', error: ''});
+        }
+        if (keyError === 'aptSumExceeded') {
+          this.aptitudeErrors.push({control: 'La somme des aptitudes ne doit pas dépasser 4', error: ''});
         }
         console.log(`Global error: ${keyError}, err value: `, formErrors[keyError]);
       });

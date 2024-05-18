@@ -7,6 +7,10 @@ export const translations: Translations = {
     vigueur: "Vigueur",
     agilite: "Agilité",
     aura: "Aura",
+    initiative:"Initiative",
+    melee: "Mélée",
+    tir: "Tir",
+    defense: "Défense",
     tooSmallAttr: "ne doit pas être inferieur à -1",
     tooBigAttr: "ne doit pas être supérieur à 3",
 };

@@ -129,6 +129,18 @@
                     </div>
                   </div>
                 </div>
+                <p-messages *ngIf="aptitudeErrors.length > 0" severity="error" styleClass="pt-4">
+                  <ng-template pTemplate>
+                    <div class="info_icon" inlineSVG="/frontend/assets/flame.svg"></div>
+                    <div class="ml-4">
+                      <div class="text-xl pb-1">Atptitudes invalides</div>
+                      <div *ngFor="let error of aptitudeErrors" class="flex gap-1">
+                        <div>{{error.control}} {{error.error}}</div>
+                        <div></div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </p-messages>
               </p-fieldset>
             </div>
           </div>
