@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Bol;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BolRegionAvantage extends Model
+class BolArmure extends Model
 {
     use HasFactory;
 }

@@ -46,16 +46,21 @@
               <p-fieldset>
                 <ng-template pTemplate="header">
                   <div class="flex items-center gap-2">
-                    <div class="cursor-pointer" (click)="attributInfos.toggle($event)"><i class="pi pi-info-circle"></i></div>
+                    <div class="cursor-pointer" (click)="attributInfos.toggle($event)">
+                      <i *ngIf="attributErrors.length === 0" class="pi pi-info-circle"></i>
+                      <i *ngIf="attributErrors.length > 0" class="pi pi-exclamation-triangle" style="color: var(--error-color)"></i>
+                    </div>
                     <div>Attributs</div>
                   </div>
                   <p-overlayPanel #attributInfos>
+
                     <p-messages severity="info">
                       <ng-template pTemplate>
                         <div class="info_icon" inlineSVG="/frontend/assets/rolling-dices.svg"></div>
                         <div class="ml-4">
                           Tu as <strong>4 points à répartir</strong> entre différents attributs pour créer ton personnage.<br>
-                          Tu as le droit à une seule fois de diminuer un attribut à -1 pour obtenir 1 point supplémentaire à placer ailleurs.
+                          Tu as le droit de diminuer une seule fois un attribut à -1 pour obtenir 1 point supplémentaire à placer ailleurs.<br>
+                          Tu ne peux pas dépasser un maximum de <strong>3 points</strong> dans un même attribut.
                         </div>
                       </ng-template>
                     </p-messages>
@@ -84,6 +89,18 @@
                     </div>
                   </div>
                 </div>
+                <p-messages *ngIf="attributErrors.length > 0" severity="error" styleClass="pt-4">
+                  <ng-template pTemplate>
+                    <div class="info_icon" inlineSVG="/frontend/assets/flame.svg"></div>
+                    <div class="ml-4">
+                      <div class="text-xl pb-1">Attributs invalides</div>
+                      <div *ngFor="let error of attributErrors" class="flex gap-2">
+                        <div>{{error.control}}</div>
+                        <div>{{error.error}}</div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </p-messages>
               </p-fieldset>
             </div>
             <!-- Fin partie gauche -->

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Bol;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BolArme extends Model
+class BolLangue extends Model
 {
     use HasFactory;
 }

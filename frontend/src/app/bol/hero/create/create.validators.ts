@@ -1,0 +1,37 @@
+import {AbstractControl, ValidationErrors, ValidatorFn} from "@angular/forms";
+
+export const globalFormValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const controlsIds = ['vigueur', 'agilite', 'aura', 'esprit'];
+  const controlsArray = controlsIds.map(id => control.get(id));
+  const values = controlsArray.map(ctrl => ctrl?.value);
+  //console.log("values", values);
+  const countNegativeOnes = values.filter(value => value === -1).length;
+  if (countNegativeOnes > 1) {
+    return {'tooManyNegativeOnes': true};
+  }
+  const sum = values.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
+  if (sum > 4) {
+    return { 'sumExceeded': true };
+  }
+  return null;
+};
+export const attributValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const value = control.value;
+  // Vérifie si la valeur est "falsy" sauf 0 qui est valide
+  if (value === null || value === undefined || value === '') {
+    return {required: {value: control.value, key: control}};
+  }
+  // Vérifie si la valeur est un nombre
+  const isNumber = !isNaN(Number(value));
+  if (!isNumber) {
+    return {numeric: {value: control.value}};
+  }
+  // Vérifie si la valeur est un nombre valide
+  if (value < -1) {
+    return {tooSmall: {value: control.value}};
+  }
+  if (value > 3) {
+    return {tooBig: {value: control.value}};
+  }
+  return null;
+};

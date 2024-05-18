@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Support\Facades\Schema;
-use App\Models\BolLangue;
+use App\Models\Bol\BolLangue;
 use Illuminate\Database\Seeder;
 
 class BolLangueSeeder extends Seeder

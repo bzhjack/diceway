@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\BolAvantage;
+use App\Models\Bol\BolAvantage;
 use Illuminate\Database\Seeder;
 
 class BolAvantageSeeder extends Seeder

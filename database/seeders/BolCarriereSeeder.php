@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\BolCarriere;
+use App\Models\Bol\BolCarriere;
 use Illuminate\Database\Seeder;
 
 class BolCarriereSeeder extends Seeder
