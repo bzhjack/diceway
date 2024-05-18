@@ -23,6 +23,7 @@ html {
   height: 100%;
   font-size: 14px;
   --cropper-outline-color: rgba(255,255,255,0.5);
+  --error-color: #f87171;
 }
 
 /* IE fix */
@@ -137,4 +138,6 @@ body {
 .p-card .p-card-content {
   padding: 0;
 }
-
+.p-overlaypanel .p-overlaypanel-content {
+  padding: 0.5rem;
+}

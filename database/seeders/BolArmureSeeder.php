@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\BolArmure;
+use App\Models\Bol\BolArmure;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 

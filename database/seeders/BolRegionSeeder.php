@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Support\Facades\Schema;
-use App\Models\BolRegion;
+use App\Models\Bol\BolRegion;
 use Illuminate\Database\Seeder;
 
 class BolRegionSeeder extends Seeder

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
-use App\Models\BolRegion;
+use App\Models\Bol\BolRegion;
 
 class BolRegionController extends Controller
 {

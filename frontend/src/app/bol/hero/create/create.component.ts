@@ -2,19 +2,25 @@ import {Component, OnDestroy} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {InputTextModule} from "primeng/inputtext";
 import {InputNumberModule} from 'primeng/inputnumber';
-import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule, ValidationErrors, Validators} from "@angular/forms";
 import {ToolbarModule} from "primeng/toolbar";
 import {ButtonModule} from "primeng/button";
 import {SplitButtonModule} from "primeng/splitbutton";
 import {BolHeroService} from "../../services/bol-hero.service";
 import {BolHeroModel} from "../../models/bol-hero.model";
-import {Subscription} from "rxjs";
+import {debounceTime, Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {FieldsetModule} from "primeng/fieldset";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {PictureComponent} from "../../../shared/picture/picture.component";
 import {BolRegionComponent} from "./region/region.component";
+import {OverlayPanelModule} from "primeng/overlaypanel";
+import {InlineSVGModule} from "ng-inline-svg-2";
+import {MessagesModule} from "primeng/messages";
+import {JsonPipe, NgForOf, NgIf} from "@angular/common";
+import {attributValidator, globalFormValidator} from "./create.validators";
+import {BolHeroCreateTools} from './create.tools';
 
 @Component({
   selector: 'app-create',
@@ -28,7 +34,13 @@ import {BolRegionComponent} from "./region/region.component";
     SplitButtonModule,
     ReactiveFormsModule,
     InputNumberModule,
-    FieldsetModule
+    FieldsetModule,
+    OverlayPanelModule,
+    InlineSVGModule,
+    MessagesModule,
+    JsonPipe,
+    NgIf,
+    NgForOf
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
@@ -48,16 +60,18 @@ export class BolHeroCreateComponent implements OnDestroy {
   public regionCtrl = new FormControl<string | null>(null);
 
   // Attribut
-  public vigueurCtrl = new FormControl<number | null>(0);
-  public agiliteCtrl = new FormControl<number | null>(0);
-  public espritCtrl = new FormControl<number | null>(0);
-  public auraCtrl = new FormControl<number | null>(0);
+  public vigueurCtrl = new FormControl<number | null>(0,attributValidator);
+  public agiliteCtrl = new FormControl<number | null>(0,attributValidator);
+  public espritCtrl = new FormControl<number | null>(0,attributValidator);
+  public auraCtrl = new FormControl<number | null>(0,attributValidator);
+  attributErrors: {control: string, error: string}[] = [];
+  aptitudeErrors: {control: string, error: string}[] = [];
 
   // Combat
-  public initiativeCtrl = new FormControl<number | null>(0);
-  public meleeCtrl = new FormControl<number | null>(0);
-  public tirCtrl = new FormControl<number | null>(0);
-  public defenseCtrl = new FormControl<number | null>(0);
+  public initiativeCtrl = new FormControl<number | null>(0,attributValidator);
+  public meleeCtrl = new FormControl<number | null>(0,attributValidator);
+  public tirCtrl = new FormControl<number | null>(0,attributValidator);
+  public defenseCtrl = new FormControl<number | null>(0,attributValidator);
 
   heroForm = this.fb.group(
     {
@@ -65,17 +79,19 @@ export class BolHeroCreateComponent implements OnDestroy {
       joueur: this.joueurCtrl,
       nom: this.nomCtrl,
       avatar: this.avatarCtrl,
+
       vigueur: this.vigueurCtrl,
       agilite: this.agiliteCtrl,
       esprit: this.espritCtrl,
       aura: this.auraCtrl,
+
       initiative: this.initiativeCtrl,
       melee: this.meleeCtrl,
       tir: this.tirCtrl,
       defense: this.defenseCtrl,
       region_id: this.regionIdCtrl,
       region: this.regionCtrl
-    }
+    }, {validators: globalFormValidator}
   );
 
   constructor(
@@ -88,10 +104,60 @@ export class BolHeroCreateComponent implements OnDestroy {
     if (id !== null) {
       this.getHero(id);
     }
+    this.heroForm.valueChanges.pipe(debounceTime(200)).subscribe((data) => {
+      this.logFormErrors();
+    });
   }
 
   ngOnDestroy() {
     this.subs?.unsubscribe();
+  }
+
+  /**
+   * Gestion de l'affichage des erreurs
+   */
+
+  logFormErrors(): void {
+    this.attributErrors = [];
+    this.aptitudeErrors = [];
+
+    Object.keys(this.heroForm.controls).forEach(key => {
+      const controlErrors = this.heroForm.get(key)?.errors;
+      if (controlErrors != null) {
+        Object.keys(controlErrors).forEach(keyError => {
+          if (['vigueur', 'agilite', 'aura', 'esprit'].includes(key)) {
+            this.attributErrors.push({control: BolHeroCreateTools.translate(key), error: BolHeroCreateTools.translate(keyError)});
+          }
+          if (['melee', 'tir', 'defense', 'initiative'].includes(key)) {
+            this.aptitudeErrors.push({control: BolHeroCreateTools.translate(key), error: BolHeroCreateTools.translate(keyError)});
+          }
+          console.log(`Key control: ${key}, keyError: ${keyError}, error value: `, controlErrors[keyError]);
+        });
+      }
+    });
+    // Obtenir les erreurs globales du formulaire
+    const formErrors: ValidationErrors | null = this.heroForm.errors;
+    // Si des erreurs globales sont présentes, les traiter
+    if (formErrors != null) {
+      console.log(formErrors);
+      // Itérer sur chaque erreur globale
+      Object.keys(formErrors).forEach(keyError => {
+        // Afficher dans la console le type d'erreur globale et la valeur de l'erreur
+        if (keyError === 'attrTooManyNegative') {
+          this.attributErrors.push({control: 'Tu as le droit de diminuer une seule fois un attribut à -1', error: ''});
+        }
+        if (keyError === 'attrSumExceeded') {
+          this.attributErrors.push({control: 'La somme des attributs ne doit pas dépasser 4', error: ''});
+        }
+        if (keyError === 'aptTooManyNegative') {
+          this.aptitudeErrors.push({control: 'Tu as le droit de diminuer une seule fois une aptitude à -1', error: ''});
+        }
+        if (keyError === 'aptSumExceeded') {
+          this.aptitudeErrors.push({control: 'La somme des aptitudes ne doit pas dépasser 4', error: ''});
+        }
+        console.log(`Global error: ${keyError}, err value: `, formErrors[keyError]);
+      });
+    }
   }
 
   getHero(id: string) {
@@ -153,7 +219,7 @@ export class BolHeroCreateComponent implements OnDestroy {
   }
 
   picture() {
-    this.ref = this.ds.open(PictureComponent, { header: 'Photo du héro'});
+    this.ref = this.ds.open(PictureComponent, {header: 'Photo du héro'});
     this.subs?.unsubscribe();
     this.subs = this.ref.onClose.subscribe((avatar: any) => {
       if (avatar !== null && avatar !== undefined) {
@@ -162,6 +228,7 @@ export class BolHeroCreateComponent implements OnDestroy {
       }
     });
   }
+
   region() {
     this.ref = this.ds.open(BolRegionComponent, {
       header: 'Choix de la région',
@@ -183,6 +250,7 @@ export class BolHeroCreateComponent implements OnDestroy {
       }
     });
   }
+
   clearRegion(ev: MouseEvent) {
     ev.stopPropagation();
     this.regionIdCtrl.setValue(null);
