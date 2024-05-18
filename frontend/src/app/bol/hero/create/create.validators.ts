@@ -28,10 +28,10 @@ export const attributValidator: ValidatorFn = (control: AbstractControl): Valida
   }
   // Vérifie si la valeur est un nombre valide
   if (value < -1) {
-    return {tooSmall: {value: control.value}};
+    return {tooSmallAttr: {value: control.value}};
   }
   if (value > 3) {
-    return {tooBig: {value: control.value}};
+    return {tooBigAttr: {value: control.value}};
   }
   return null;
 };

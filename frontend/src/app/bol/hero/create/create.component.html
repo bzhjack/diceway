@@ -94,9 +94,9 @@
                     <div class="info_icon" inlineSVG="/frontend/assets/flame.svg"></div>
                     <div class="ml-4">
                       <div class="text-xl pb-1">Attributs invalides</div>
-                      <div *ngFor="let error of attributErrors" class="flex gap-2">
-                        <div>{{error.control}}</div>
-                        <div>{{error.error}}</div>
+                      <div *ngFor="let error of attributErrors" class="flex gap-1">
+                        <div>{{error.control}} {{error.error}}</div>
+                        <div></div>
                       </div>
                     </div>
                   </ng-template>

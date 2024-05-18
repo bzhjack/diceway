@@ -20,7 +20,7 @@ import {InlineSVGModule} from "ng-inline-svg-2";
 import {MessagesModule} from "primeng/messages";
 import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {attributValidator, globalFormValidator} from "./create.validators";
-
+import {BolHeroCreateTools} from './create.tools';
 
 @Component({
   selector: 'app-create',
@@ -123,7 +123,7 @@ export class BolHeroCreateComponent implements OnDestroy {
       if (controlErrors != null) {
         Object.keys(controlErrors).forEach(keyError => {
           if (['vigueur', 'agilite', 'aura', 'esprit'].includes(key)) {
-            this.attributErrors.push({control: key, error: keyError});
+            this.attributErrors.push({control: BolHeroCreateTools.translate(key), error: BolHeroCreateTools.translate(keyError)});
           }
           console.log(`Key control: ${key}, keyError: ${keyError}, error value: `, controlErrors[keyError]);
         });
