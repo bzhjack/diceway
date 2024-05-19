@@ -15,7 +15,10 @@
 
           <div class="flex gap-2">
             <!-- Partie Gauche -->
-            <div class="flex flex-col gap-1" >
+            <div class="flex flex gap-1" >
+              <!-------------->
+              <!-- Origines -->
+              <!-------------->
               <p-fieldset legend="Origines">
                 <div class="flex gap-2">
                   <div class="hero-avatar cursor-pointer" (click)="picture()">
@@ -39,10 +42,10 @@
                 </div>
 
               </p-fieldset>
+
               <!--------------->
               <!-- Attributs -->
               <!--------------->
-
               <p-fieldset>
                 <ng-template pTemplate="header">
                   <div class="flex items-center gap-2">
@@ -53,7 +56,6 @@
                     <div>Attributs</div>
                   </div>
                   <p-overlayPanel #attributInfos>
-
                     <p-messages severity="info">
                       <ng-template pTemplate>
                         <div class="info_icon" inlineSVG="/frontend/assets/rolling-dices.svg"></div>
@@ -102,11 +104,31 @@
                   </ng-template>
                 </p-messages>
               </p-fieldset>
-            </div>
-            <!-- Fin partie gauche -->
-            <!-- Debut partie droite -->
-            <div class="flex flex-col gap-2">
-              <p-fieldset legend="Combat">
+              <!--------------->
+              <!-- Aptitudes -->
+              <!--------------->
+              <p-fieldset>
+                <ng-template pTemplate="header">
+                  <div class="flex items-center gap-2">
+                    <div class="cursor-pointer" (click)="aptitudesInfos.toggle($event)">
+                      <i *ngIf="aptitudeErrors.length === 0" class="pi pi-info-circle"></i>
+                      <i *ngIf="aptitudeErrors.length > 0" class="pi pi-exclamation-triangle" style="color: var(--error-color)"></i>
+                    </div>
+                    <div>Combat</div>
+                  </div>
+                  <p-overlayPanel #aptitudesInfos>
+                    <p-messages severity="info">
+                      <ng-template pTemplate>
+                        <div class="info_icon" inlineSVG="/frontend/assets/rolling-dices.svg"></div>
+                        <div class="ml-4">
+                          Tu as <strong>4 points à répartir</strong> entre différentes aptitudes de combat.<br>
+                          Tu as le droit de diminuer une seule fois une aptitude à -1 <br>pour obtenir 1 point supplémentaire à placer ailleurs.<br>
+                          Tu ne peux pas dépasser un maximum de <strong>3 points</strong> dans une même aptitude.
+                        </div>
+                      </ng-template>
+                    </p-messages>
+                  </p-overlayPanel>
+                </ng-template>
                 <div class="flex gap-2">
                   <div class="flex flex-col gap-1">
                     <div class="flex flex-col gap-1">
@@ -133,7 +155,7 @@
                   <ng-template pTemplate>
                     <div class="info_icon" inlineSVG="/frontend/assets/flame.svg"></div>
                     <div class="ml-4">
-                      <div class="text-xl pb-1">Atptitudes invalides</div>
+                      <div class="text-xl pb-1">Aptitudes invalides</div>
                       <div *ngFor="let error of aptitudeErrors" class="flex gap-1">
                         <div>{{error.control}} {{error.error}}</div>
                         <div></div>
