@@ -106,7 +106,7 @@ export class BolHeroCreateComponent implements OnDestroy {
     if (id !== null) {
       this.getHero(id);
     }
-    this.heroForm.valueChanges.pipe(debounceTime(200)).subscribe((data) => {
+    this.heroForm.valueChanges.pipe(debounceTime(200)).subscribe(() => {
       this.logFormErrors();
     });
   }
@@ -200,7 +200,7 @@ export class BolHeroCreateComponent implements OnDestroy {
     this.subs?.unsubscribe();
     if (hero.id !== null) {
       this.subs = this.hs.update(this.heroForm.value as BolHeroModel).subscribe({
-        next: (hero: BolHeroModel) => {
+        next: () => {
           this.spinner.hide();
         },
         error: () => {
