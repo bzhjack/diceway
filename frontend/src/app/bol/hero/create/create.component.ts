@@ -50,7 +50,10 @@ import {BolMessageComponent} from "../../message/message.component";
 export class BolHeroCreateComponent implements OnDestroy {
   private subs?: Subscription;
   private ref: DynamicDialogRef | undefined;
+  attributErrors: {control: string, error: string}[] = [];
+  aptitudeErrors: {control: string, error: string}[] = [];
 
+  creationWarns: {step: string, warn: string}[] = [];
 
   public idCtrl: FormControl<string | null> = new FormControl(null);
   public joueurCtrl = new FormControl('', Validators.required);
@@ -66,8 +69,7 @@ export class BolHeroCreateComponent implements OnDestroy {
   public agiliteCtrl = new FormControl<number | null>(0,attributValidator);
   public espritCtrl = new FormControl<number | null>(0,attributValidator);
   public auraCtrl = new FormControl<number | null>(0,attributValidator);
-  attributErrors: {control: string, error: string}[] = [];
-  aptitudeErrors: {control: string, error: string}[] = [];
+
 
   // Combat
   public initiativeCtrl = new FormControl<number | null>(0,attributValidator);
@@ -108,6 +110,7 @@ export class BolHeroCreateComponent implements OnDestroy {
     }
     this.heroForm.valueChanges.pipe(debounceTime(200)).subscribe(() => {
       this.logFormErrors();
+      this.logFormWarns();
     });
   }
 
@@ -116,10 +119,36 @@ export class BolHeroCreateComponent implements OnDestroy {
   }
 
   /**
+   * Gestion de l'afficahe des alertes
+   */
+ logFormWarns() {
+   this.creationWarns = [];
+   // Controle somme des attributs
+    const controlsAttrIds = ['vigueur', 'agilite', 'aura', 'esprit'];
+    const controlsAttrArray = controlsAttrIds.map(id => this.heroForm.get(id));
+    const attrs = controlsAttrArray.map(ctrl => ctrl?.value);
+    const sumAttr = attrs.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
+    if (sumAttr < 4) {
+      this.creationWarns.push({step: 'Attributs', warn: 'il manque ' + (4 - sumAttr) + ' pts dans les attributs' });
+    }
+
+    const controlsAptIds = ['tir', 'melee', 'defense', 'initiative'];
+    const controlsAptArray = controlsAptIds.map(id => this.heroForm.get(id));
+    const apts = controlsAptArray.map(ctrl => ctrl?.value);
+    const sumApt = apts.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
+    if (sumApt < 4) {
+      this.creationWarns.push({step: 'Aptitudes', warn: 'il manque ' + (4 - sumAttr) + ' pts dans les aptitudes de combat' });
+    }
+
+
+  }
+
+  /**
    * Gestion de l'affichage des erreurs
    */
 
   logFormErrors(): void {
+    console.log('logFormErrors');
     this.attributErrors = [];
     this.aptitudeErrors = [];
 
@@ -146,16 +175,16 @@ export class BolHeroCreateComponent implements OnDestroy {
       Object.keys(formErrors).forEach(keyError => {
         // Afficher dans la console le type d'erreur globale et la valeur de l'erreur
         if (keyError === 'attrTooManyNegative') {
-          this.attributErrors.push({control: 'Tu as le droit de diminuer une seule fois un attribut à -1', error: ''});
+          this.attributErrors.push({error: 'Tu as le droit de diminuer une seule fois un attribut à -1', control: ''});
         }
         if (keyError === 'attrSumExceeded') {
-          this.attributErrors.push({control: 'La somme des attributs ne doit pas dépasser 4', error: ''});
+          this.attributErrors.push({error: 'La somme des attributs ne doit pas dépasser 4', control: ''});
         }
         if (keyError === 'aptTooManyNegative') {
-          this.aptitudeErrors.push({control: 'Tu as le droit de diminuer une seule fois une aptitude à -1', error: ''});
+          this.aptitudeErrors.push({error: 'Tu as le droit de diminuer une seule fois une aptitude à -1', control: ''});
         }
         if (keyError === 'aptSumExceeded') {
-          this.aptitudeErrors.push({control: 'La somme des aptitudes ne doit pas dépasser 4', error: ''});
+          this.aptitudeErrors.push({error: 'La somme des aptitudes ne doit pas dépasser 4', control: ''});
         }
         console.log(`Global error: ${keyError}, err value: `, formErrors[keyError]);
       });

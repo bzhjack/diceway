@@ -7,11 +7,29 @@
     </ng-template>
     <form (ngSubmit)="submit()" [formGroup]="heroForm" autocomplete="off">
       <div class="flex gap-4">
-        <div class="flex flex-col gap-4">
-          <div class="flex flex-col gap-1 w-fit">
-            <label for="joueur">Nom du joueur</label>
-            <input formControlName="joueur" pInputText id="joueur" class="p-inputtext-sm"/>
+        <div class="flex flex-col gap-2">
+          <div class="flex gap-2">
+            <div class="flex flex-col gap-1 w-fit">
+              <label for="joueur">Nom du joueur</label>
+              <input formControlName="joueur" pInputText id="joueur" class="p-inputtext-sm"/>
+            </div>
+
+            <div class="pt-6">
+              <p-messages severity="warn" *ngIf="creationWarns.length > 0">
+                <ng-template pTemplate>
+                  <div class="info_icon_small" inlineSVG="/frontend/assets/sword.svg"></div>
+                  <div class="ml-4">
+                    <ul style="margin: 0; padding-inline-start: 20px">
+                      <li *ngFor="let warn of creationWarns">
+                        {{warn.warn}}
+                      </li>
+                    </ul>
+                  </div>
+                </ng-template>
+              </p-messages>
+            </div>
           </div>
+
           <div class="flex gap-1 flex-wrap">
             <!-------------->
             <!-- Origines -->
@@ -86,10 +104,11 @@
                   <div class="info_icon" inlineSVG="/frontend/assets/flame.svg"></div>
                   <div class="ml-4">
                     <div class="text-xl pb-1">Attributs invalides</div>
-                    <div *ngFor="let error of attributErrors" class="flex gap-1">
-                      <div>{{ error.control }} {{ error.error }}</div>
-                      <div></div>
-                    </div>
+                    <ul style="margin: 0; padding-inline-start: 20px">
+                      <li *ngFor="let error of attributErrors">
+                        <strong>{{ error.control }}</strong> {{ error.error }}
+                      </li>
+                    </ul>
                   </div>
                 </ng-template>
               </p-messages>
@@ -138,10 +157,12 @@
                   <div class="info_icon" inlineSVG="/frontend/assets/flame.svg"></div>
                   <div class="ml-4">
                     <div class="text-xl pb-1">Aptitudes invalides</div>
-                    <div *ngFor="let error of aptitudeErrors" class="flex gap-1">
-                      <div>{{ error.control }} {{ error.error }}</div>
-                      <div></div>
-                    </div>
+                    <ul style="margin: 0; padding-inline-start: 20px">
+                      <li *ngFor="let error of aptitudeErrors">
+                        <strong>{{ error.control }}</strong> {{ error.error }}
+                      </li>
+                    </ul>
+
                   </div>
                 </ng-template>
               </p-messages>

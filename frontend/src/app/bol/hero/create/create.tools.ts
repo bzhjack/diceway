@@ -11,9 +11,10 @@ export const translations: Translations = {
     melee: "Mélée",
     tir: "Tir",
     defense: "Défense",
-    tooSmallAttr: "ne doit pas être inférieur à -1",
-    tooBigAttr: "ne doit pas être supérieur à 3",
-    required: "ne doit pas être vide."
+    tooSmallAttr: "ne doit pas être inférieur à -1.",
+    tooBigAttr: "ne doit pas être supérieur à 3.",
+    required: "ne doit pas être vide.",
+    numeric: "n'a pas une valeur correcte."
 };
 export class BolHeroCreateTools {
 
