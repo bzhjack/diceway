@@ -12,152 +12,150 @@
             <label for="joueur">Nom du joueur</label>
             <input formControlName="joueur" pInputText id="joueur" class="p-inputtext-sm"/>
           </div>
+          <div class="flex gap-1 flex-wrap">
+            <!-------------->
+            <!-- Origines -->
+            <!-------------->
+            <p-fieldset legend="Origines">
+              <div class="flex gap-2">
+                <div class="hero-avatar cursor-pointer" (click)="picture()">
+                  <img style="width:100%"
+                       [src]="avatarCtrl.value !== null ? avatarCtrl.value : '/frontend/assets/bol/empty-avatar.jpg'"
+                       alt="avatar">
+                  <p class="hero-avatar__description">Modifier</p>
+                </div>
 
-          <div class="flex gap-2">
-            <!-- Partie Gauche -->
-            <div class="flex flex gap-1" >
-              <!-------------->
-              <!-- Origines -->
-              <!-------------->
-              <p-fieldset legend="Origines">
-                <div class="flex gap-2">
-                  <div class="hero-avatar cursor-pointer" (click)="picture()">
-                    <img style="width:100%" [src]="avatarCtrl.value !== null ? avatarCtrl.value : '/frontend/assets/bol/empty-avatar.jpg'" alt="avatar">
-                    <p class="hero-avatar__description">Modifier</p>
+                <div class="flex flex-col gap-1 flex-auto">
+                  <div class="flex flex-col gap-1">
+                    <label for="nom">Nom du héro</label>
+                    <input formControlName="nom" pInputText id="nom" class="p-inputtext-sm"/>
                   </div>
-
-                  <div class="flex flex-col gap-1 flex-auto">
-                    <div class="flex flex-col gap-1">
-                      <label for="nom">Nom du héro</label>
-                      <input formControlName="nom" pInputText id="nom" class="p-inputtext-sm"/>
-                    </div>
-                    <div class="flex flex-col gap-1 relative">
-                      <label>Région</label>
-                      <input formControlName="region" pInputText class="p-inputtext-sm" autocomplete="new" tabindex="-1"/>
-                      <div class="input-overlay" style="" (click)="region()">
-                        <div><i class="hide-region icon-button pi pi-times" (click)="clearRegion($event)"></i></div>
-                      </div>
+                  <div class="flex flex-col gap-1 relative">
+                    <label>Région</label>
+                    <input formControlName="region" pInputText class="p-inputtext-sm" autocomplete="new" tabindex="-1"/>
+                    <div class="input-overlay" style="" (click)="region()">
+                      <div><i class="hide-region icon-button pi pi-times" (click)="clearRegion($event)"></i></div>
                     </div>
                   </div>
                 </div>
+              </div>
 
-              </p-fieldset>
-
-              <!--------------->
-              <!-- Attributs -->
-              <!--------------->
-              <p-fieldset>
-                <ng-template pTemplate="header">
-                  <div class="flex items-center gap-2">
-                    <div class="cursor-pointer" (click)="attributInfos.toggle($event)">
-                      <i *ngIf="attributErrors.length === 0" class="pi pi-info-circle"></i>
-                      <i *ngIf="attributErrors.length > 0" class="pi pi-exclamation-triangle" style="color: var(--error-color)"></i>
-                    </div>
-                    <div>Attributs</div>
+            </p-fieldset>
+            <!--------------->
+            <!-- Attributs -->
+            <!--------------->
+            <p-fieldset>
+              <ng-template pTemplate="header">
+                <div class="flex items-center gap-2">
+                  <div class="cursor-pointer" (click)="attributInfos.toggle($event)">
+                    <i *ngIf="attributErrors.length === 0" class="pi pi-info-circle"></i>
+                    <i *ngIf="attributErrors.length > 0" class="pi pi-exclamation-triangle"
+                       style="color: var(--error-color)"></i>
                   </div>
-                  <p-overlayPanel #attributInfos>
-                    <bol-message type="attr"></bol-message>
-                  </p-overlayPanel>
+                  <div>Attributs</div>
+                </div>
+                <p-overlayPanel #attributInfos>
+                  <bol-message type="attr"></bol-message>
+                </p-overlayPanel>
+              </ng-template>
+
+              <div class="flex gap-2">
+                <div class="flex flex-col gap-1">
+                  <div class="flex flex-col gap-1">
+                    <label for="vigueur">Vigueur</label>
+                    <p-inputNumber formControlName="vigueur" inputId="vigueur"/>
+                  </div>
+                  <div class="flex flex-col gap-1">
+                    <label for="agilite">Agilité</label>
+                    <p-inputNumber formControlName="agilite" inputId="agilite"/>
+                  </div>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <div class="flex flex-col gap-1">
+                    <label for="esprit">Esprit</label>
+                    <p-inputNumber formControlName="esprit" inputId="esprit"/>
+                  </div>
+                  <div class="flex flex-col gap-1">
+                    <label for="aura">Aura</label>
+                    <p-inputNumber formControlName="aura" inputId="aura" maxFractionDigits="0"/>
+                  </div>
+                </div>
+              </div>
+              <p-messages *ngIf="attributErrors.length > 0" severity="error" styleClass="pt-4">
+                <ng-template pTemplate>
+                  <div class="info_icon" inlineSVG="/frontend/assets/flame.svg"></div>
+                  <div class="ml-4">
+                    <div class="text-xl pb-1">Attributs invalides</div>
+                    <div *ngFor="let error of attributErrors" class="flex gap-1">
+                      <div>{{ error.control }} {{ error.error }}</div>
+                      <div></div>
+                    </div>
+                  </div>
                 </ng-template>
-
-                <div class="flex gap-2">
+              </p-messages>
+            </p-fieldset>
+            <!--------------->
+            <!-- Aptitudes -->
+            <!--------------->
+            <p-fieldset>
+              <ng-template pTemplate="header">
+                <div class="flex items-center gap-2">
+                  <div class="cursor-pointer" (click)="aptitudesInfos.toggle($event)">
+                    <i *ngIf="aptitudeErrors.length === 0" class="pi pi-info-circle"></i>
+                    <i *ngIf="aptitudeErrors.length > 0" class="pi pi-exclamation-triangle"
+                       style="color: var(--error-color)"></i>
+                  </div>
+                  <div>Combat</div>
+                </div>
+                <p-overlayPanel #aptitudesInfos>
+                  <bol-message type="apt"></bol-message>
+                </p-overlayPanel>
+              </ng-template>
+              <div class="flex gap-2">
+                <div class="flex flex-col gap-1">
                   <div class="flex flex-col gap-1">
-                    <div class="flex flex-col gap-1">
-                      <label for="vigueur">Vigueur</label>
-                      <p-inputNumber formControlName="vigueur" inputId="vigueur"/>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                      <label for="agilite">Agilité</label>
-                      <p-inputNumber formControlName="agilite" inputId="agilite"/>
-                    </div>
+                    <label for="initiative">Initiative</label>
+                    <p-inputNumber formControlName="initiative" inputId="initiative"/>
                   </div>
                   <div class="flex flex-col gap-1">
-                    <div class="flex flex-col gap-1">
-                      <label for="esprit">Esprit</label>
-                      <p-inputNumber formControlName="esprit" inputId="esprit"/>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                      <label for="aura">Aura</label>
-                      <p-inputNumber formControlName="aura" inputId="aura" maxFractionDigits="0"/>
-                    </div>
+                    <label for="tir">Tir</label>
+                    <p-inputNumber formControlName="tir" inputId="tir"/>
                   </div>
                 </div>
-                <p-messages *ngIf="attributErrors.length > 0" severity="error" styleClass="pt-4">
-                  <ng-template pTemplate>
-                    <div class="info_icon" inlineSVG="/frontend/assets/flame.svg"></div>
-                    <div class="ml-4">
-                      <div class="text-xl pb-1">Attributs invalides</div>
-                      <div *ngFor="let error of attributErrors" class="flex gap-1">
-                        <div>{{error.control}} {{error.error}}</div>
-                        <div></div>
-                      </div>
-                    </div>
-                  </ng-template>
-                </p-messages>
-              </p-fieldset>
-              <!--------------->
-              <!-- Aptitudes -->
-              <!--------------->
-              <p-fieldset>
-                <ng-template pTemplate="header">
-                  <div class="flex items-center gap-2">
-                    <div class="cursor-pointer" (click)="aptitudesInfos.toggle($event)">
-                      <i *ngIf="aptitudeErrors.length === 0" class="pi pi-info-circle"></i>
-                      <i *ngIf="aptitudeErrors.length > 0" class="pi pi-exclamation-triangle" style="color: var(--error-color)"></i>
-                    </div>
-                    <div>Combat</div>
+                <div class="flex flex-col gap-1">
+                  <div class="flex flex-col gap-1">
+                    <label for="melee">Melée</label>
+                    <p-inputNumber formControlName="melee" inputId="melee"/>
                   </div>
-                  <p-overlayPanel #aptitudesInfos>
-                    <bol-message type="apt"></bol-message>
-                  </p-overlayPanel>
+                  <div class="flex flex-col gap-1">
+                    <label for="defense">Défense</label>
+                    <p-inputNumber formControlName="defense" inputId="defense" maxFractionDigits="0"/>
+                  </div>
+                </div>
+              </div>
+              <p-messages *ngIf="aptitudeErrors.length > 0" severity="error" styleClass="pt-4">
+                <ng-template pTemplate>
+                  <div class="info_icon" inlineSVG="/frontend/assets/flame.svg"></div>
+                  <div class="ml-4">
+                    <div class="text-xl pb-1">Aptitudes invalides</div>
+                    <div *ngFor="let error of aptitudeErrors" class="flex gap-1">
+                      <div>{{ error.control }} {{ error.error }}</div>
+                      <div></div>
+                    </div>
+                  </div>
                 </ng-template>
-                <div class="flex gap-2">
-                  <div class="flex flex-col gap-1">
-                    <div class="flex flex-col gap-1">
-                      <label for="initiative">Initiative</label>
-                      <p-inputNumber formControlName="initiative" inputId="initiative"/>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                      <label for="tir">Tir</label>
-                      <p-inputNumber formControlName="tir" inputId="tir"/>
-                    </div>
-                  </div>
-                  <div class="flex flex-col gap-1">
-                    <div class="flex flex-col gap-1">
-                      <label for="melee">Melée</label>
-                      <p-inputNumber formControlName="melee" inputId="melee"/>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                      <label for="defense">Défense</label>
-                      <p-inputNumber formControlName="defense" inputId="defense" maxFractionDigits="0"/>
-                    </div>
-                  </div>
-                </div>
-                <p-messages *ngIf="aptitudeErrors.length > 0" severity="error" styleClass="pt-4">
-                  <ng-template pTemplate>
-                    <div class="info_icon" inlineSVG="/frontend/assets/flame.svg"></div>
-                    <div class="ml-4">
-                      <div class="text-xl pb-1">Aptitudes invalides</div>
-                      <div *ngFor="let error of aptitudeErrors" class="flex gap-1">
-                        <div>{{error.control}} {{error.error}}</div>
-                        <div></div>
-                      </div>
-                    </div>
-                  </ng-template>
-                </p-messages>
-              </p-fieldset>
-            </div>
+              </p-messages>
+            </p-fieldset>
           </div>
         </div>
-
-        <!-- Fin partie droite -->
       </div>
     </form>
     <ng-template pTemplate="footer">
       <div class="flex justify-end gap-2">
         <p-button label="Retour" icon="pi pi-times" severity="secondary" size="small"
                   routerLink="/bol"></p-button>
-        <p-button (click)="submit()" [disabled]="heroForm.invalid" label="Enregistrer" icon="pi pi-check" size="small" severity="success"></p-button>
+        <p-button (click)="submit()" [disabled]="heroForm.invalid" label="Enregistrer" icon="pi pi-check" size="small"
+                  severity="success"></p-button>
       </div>
     </ng-template>
   </p-card>

@@ -4,7 +4,6 @@ export const globalFormValidator: ValidatorFn = (control: AbstractControl): Vali
   const controlsAttrIds = ['vigueur', 'agilite', 'aura', 'esprit'];
   const controlsAttrArray = controlsAttrIds.map(id => control.get(id));
   const attrs = controlsAttrArray.map(ctrl => ctrl?.value);
-  //console.log("values", values);
   const countNegativeAttr = attrs.filter(value => value === -1).length;
   if (countNegativeAttr > 1) {
     return {'attrTooManyNegative': true};
@@ -17,7 +16,6 @@ export const globalFormValidator: ValidatorFn = (control: AbstractControl): Vali
   const controlsAptIds = ['tir', 'melee', 'defense', 'initiative'];
   const controlsAptArray = controlsAptIds.map(id => control.get(id));
   const apts = controlsAptArray.map(ctrl => ctrl?.value);
-  console.log("values", apts);
   const countNegativeApt = apts.filter(value => value === -1).length;
   if (countNegativeApt > 1) {
     return {'aptTooManyNegative': true};
@@ -29,6 +27,7 @@ export const globalFormValidator: ValidatorFn = (control: AbstractControl): Vali
 
   return null;
 };
+
 export const attributValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const value = control.value;
   // Vérifie si la valeur est "falsy" sauf 0 qui est valide
