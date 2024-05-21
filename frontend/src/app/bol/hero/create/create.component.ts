@@ -21,6 +21,7 @@ import {MessagesModule} from "primeng/messages";
 import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {attributValidator, globalFormValidator} from "./create.validators";
 import {BolHeroCreateTools} from './create.tools';
+import {BolMessageComponent} from "../../message/message.component";
 
 @Component({
   selector: 'app-create',
@@ -40,7 +41,8 @@ import {BolHeroCreateTools} from './create.tools';
     MessagesModule,
     JsonPipe,
     NgIf,
-    NgForOf
+    NgForOf,
+    BolMessageComponent
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'

@@ -56,16 +56,7 @@
                     <div>Attributs</div>
                   </div>
                   <p-overlayPanel #attributInfos>
-                    <p-messages severity="info">
-                      <ng-template pTemplate>
-                        <div class="info_icon" inlineSVG="/frontend/assets/rolling-dices.svg"></div>
-                        <div class="ml-4">
-                          Tu as <strong>4 points à répartir</strong> entre différents attributs pour créer ton personnage.<br>
-                          Tu as le droit de diminuer une seule fois un attribut à -1 pour obtenir 1 point supplémentaire à placer ailleurs.<br>
-                          Tu ne peux pas dépasser un maximum de <strong>3 points</strong> dans un même attribut.
-                        </div>
-                      </ng-template>
-                    </p-messages>
+                    <bol-message type="attr"></bol-message>
                   </p-overlayPanel>
                 </ng-template>
 
@@ -117,16 +108,7 @@
                     <div>Combat</div>
                   </div>
                   <p-overlayPanel #aptitudesInfos>
-                    <p-messages severity="info">
-                      <ng-template pTemplate>
-                        <div class="info_icon" inlineSVG="/frontend/assets/rolling-dices.svg"></div>
-                        <div class="ml-4">
-                          Tu as <strong>4 points à répartir</strong> entre différentes aptitudes de combat.<br>
-                          Tu as le droit de diminuer une seule fois une aptitude à -1 <br>pour obtenir 1 point supplémentaire à placer ailleurs.<br>
-                          Tu ne peux pas dépasser un maximum de <strong>3 points</strong> dans une même aptitude.
-                        </div>
-                      </ng-template>
-                    </p-messages>
+                    <bol-message type="apt"></bol-message>
                   </p-overlayPanel>
                 </ng-template>
                 <div class="flex gap-2">
