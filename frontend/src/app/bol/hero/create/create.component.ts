@@ -50,10 +50,10 @@ import {BolMessageComponent} from "../../message/message.component";
 export class BolHeroCreateComponent implements OnDestroy {
   private subs?: Subscription;
   private ref: DynamicDialogRef | undefined;
-  attributErrors: {control: string, error: string}[] = [];
-  aptitudeErrors: {control: string, error: string}[] = [];
+  attributErrors: { control: string, error: string }[] = [];
+  aptitudeErrors: { control: string, error: string }[] = [];
 
-  creationWarns: {step: string, warn: string}[] = [];
+  creationWarns: { step: string, warn: string }[] = [];
 
   public idCtrl: FormControl<string | null> = new FormControl(null);
   public joueurCtrl = new FormControl('', Validators.required);
@@ -65,17 +65,21 @@ export class BolHeroCreateComponent implements OnDestroy {
   public regionCtrl = new FormControl<string | null>(null);
 
   // Attribut
-  public vigueurCtrl = new FormControl<number | null>(0,attributValidator);
-  public agiliteCtrl = new FormControl<number | null>(0,attributValidator);
-  public espritCtrl = new FormControl<number | null>(0,attributValidator);
-  public auraCtrl = new FormControl<number | null>(0,attributValidator);
+  public vigueurCtrl = new FormControl<number | null>(0, attributValidator);
+  public agiliteCtrl = new FormControl<number | null>(0, attributValidator);
+  public espritCtrl = new FormControl<number | null>(0, attributValidator);
+  public auraCtrl = new FormControl<number | null>(0, attributValidator);
 
 
   // Combat
-  public initiativeCtrl = new FormControl<number | null>(0,attributValidator);
-  public meleeCtrl = new FormControl<number | null>(0,attributValidator);
-  public tirCtrl = new FormControl<number | null>(0,attributValidator);
-  public defenseCtrl = new FormControl<number | null>(0,attributValidator);
+  public initiativeCtrl = new FormControl<number | null>(0, attributValidator);
+  public meleeCtrl = new FormControl<number | null>(0, attributValidator);
+  public tirCtrl = new FormControl<number | null>(0, attributValidator);
+  public defenseCtrl = new FormControl<number | null>(0, attributValidator);
+
+  // Champs calculés
+  public vitaliteCtrl = new FormControl<number | null>(0);
+  public heroismeCtrl = new FormControl<number | null>(5);
 
   heroForm = this.fb.group(
     {
@@ -83,6 +87,9 @@ export class BolHeroCreateComponent implements OnDestroy {
       joueur: this.joueurCtrl,
       nom: this.nomCtrl,
       avatar: this.avatarCtrl,
+
+      heroisme: this.heroismeCtrl,
+      vitalite: this.vitaliteCtrl,
 
       vigueur: this.vigueurCtrl,
       agilite: this.agiliteCtrl,
@@ -93,8 +100,12 @@ export class BolHeroCreateComponent implements OnDestroy {
       melee: this.meleeCtrl,
       tir: this.tirCtrl,
       defense: this.defenseCtrl,
+
+
       region_id: this.regionIdCtrl,
-      region: this.regionCtrl
+      region: this.regionCtrl,
+
+
     }, {validators: globalFormValidator}
   );
 
@@ -121,26 +132,36 @@ export class BolHeroCreateComponent implements OnDestroy {
   /**
    * Gestion de l'afficahe des alertes
    */
- logFormWarns() {
-   this.creationWarns = [];
-   // Controle somme des attributs
-    const controlsAttrIds = ['vigueur', 'agilite', 'aura', 'esprit'];
-    const controlsAttrArray = controlsAttrIds.map(id => this.heroForm.get(id));
-    const attrs = controlsAttrArray.map(ctrl => ctrl?.value);
-    const sumAttr = attrs.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
-    if (sumAttr < 4) {
-      this.creationWarns.push({step: 'Attributs', warn: 'il manque ' + (4 - sumAttr) + ' pts dans les attributs' });
+  logFormWarns() {
+    this.creationWarns = [];
+    // Controle somme des attributs
+    if (this.attributErrors.length === 0) {
+      const controlsAttrIds = ['vigueur', 'agilite', 'aura', 'esprit'];
+      const controlsAttrArray = controlsAttrIds.map(id => this.heroForm.get(id));
+      const attrs = controlsAttrArray.map(ctrl => ctrl?.value);
+      const sumAttr = attrs.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
+      if (sumAttr < 4) {
+        this.creationWarns.push({step: 'Attributs', warn: 'il manque ' + (4 - sumAttr) + ' pts dans les attributs'});
+      }
     }
-
-    const controlsAptIds = ['tir', 'melee', 'defense', 'initiative'];
-    const controlsAptArray = controlsAptIds.map(id => this.heroForm.get(id));
-    const apts = controlsAptArray.map(ctrl => ctrl?.value);
-    const sumApt = apts.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
-    if (sumApt < 4) {
-      this.creationWarns.push({step: 'Aptitudes', warn: 'il manque ' + (4 - sumAttr) + ' pts dans les aptitudes de combat' });
+    if (this.aptitudeErrors.length === 0) {
+      const controlsAptIds = ['tir', 'melee', 'defense', 'initiative'];
+      const controlsAptArray = controlsAptIds.map(id => this.heroForm.get(id));
+      const apts = controlsAptArray.map(ctrl => ctrl?.value);
+      const sumApt = apts.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
+      if (sumApt < 4) {
+        this.creationWarns.push({
+          step: 'Aptitudes',
+          warn: 'il manque ' + (4 - sumApt) + ' pts dans les aptitudes de combat'
+        });
+      }
     }
-
-
+    if (!this.regionIdCtrl.value) {
+      this.creationWarns.push({
+        step: 'Région',
+        warn: 'Vous devez choisir une région.'
+      });
+    }
   }
 
   /**
@@ -157,10 +178,16 @@ export class BolHeroCreateComponent implements OnDestroy {
       if (controlErrors != null) {
         Object.keys(controlErrors).forEach(keyError => {
           if (['vigueur', 'agilite', 'aura', 'esprit'].includes(key)) {
-            this.attributErrors.push({control: BolHeroCreateTools.translate(key), error: BolHeroCreateTools.translate(keyError)});
+            this.attributErrors.push({
+              control: BolHeroCreateTools.translate(key),
+              error: BolHeroCreateTools.translate(keyError)
+            });
           }
           if (['melee', 'tir', 'defense', 'initiative'].includes(key)) {
-            this.aptitudeErrors.push({control: BolHeroCreateTools.translate(key), error: BolHeroCreateTools.translate(keyError)});
+            this.aptitudeErrors.push({
+              control: BolHeroCreateTools.translate(key),
+              error: BolHeroCreateTools.translate(keyError)
+            });
           }
           console.log(`Key control: ${key}, keyError: ${keyError}, error value: `, controlErrors[keyError]);
         });
@@ -200,16 +227,23 @@ export class BolHeroCreateComponent implements OnDestroy {
             joueur: hero.joueur,
             nom: hero.nom,
             avatar: hero.avatar,
+
+            vitalite: hero.vitalite,
+            heroisme: hero.heroisme,
+
             vigueur: hero.vigueur,
             aura: hero.aura,
             esprit: hero.esprit,
             agilite: hero.agilite,
+
             initiative: hero.initiative,
             melee: hero.melee,
             tir: hero.tir,
             defense: hero.defense,
+
             region_id: hero.region_id,
-            region: hero.region
+            region: hero.region,
+
           });
           this.spinner.hide();
         },

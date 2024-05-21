@@ -8,20 +8,22 @@
     <form (ngSubmit)="submit()" [formGroup]="heroForm" autocomplete="off">
       <div class="flex gap-4">
         <div class="flex flex-col gap-2">
-          <div class="flex gap-2">
-            <div class="flex flex-col gap-1 w-fit">
+          <!-------------->
+          <!--- player --->
+          <!-------------->
+          <div class="flex gap-2 justify-between">
+            <div class="flex flex-col gap-1 w-fit justify-end">
               <label for="joueur">Nom du joueur</label>
               <input formControlName="joueur" pInputText id="joueur" class="p-inputtext-sm"/>
             </div>
-
-            <div class="pt-6">
+            <div>
               <p-messages severity="warn" *ngIf="creationWarns.length > 0">
                 <ng-template pTemplate>
                   <div class="info_icon_small" inlineSVG="/frontend/assets/sword.svg"></div>
                   <div class="ml-4">
                     <ul style="margin: 0; padding-inline-start: 20px">
                       <li *ngFor="let warn of creationWarns">
-                        {{warn.warn}}
+                        {{ warn.warn }}
                       </li>
                     </ul>
                   </div>
@@ -29,8 +31,10 @@
               </p-messages>
             </div>
           </div>
-
-          <div class="flex gap-1 flex-wrap">
+          <!----------------->
+          <!--- Hero attr --->
+          <!----------------->
+          <div class="flex gap-2 flex-wrap">
             <!-------------->
             <!-- Origines -->
             <!-------------->
@@ -167,6 +171,31 @@
                 </ng-template>
               </p-messages>
             </p-fieldset>
+
+            <!-------------->
+            <!--- Header --->
+            <!-------------->
+            <div class="dw-panel" style="margin-top: 13px;margin-bottom: 2px;padding-top: 12px;">
+              <div class="flex gap-2 relative p-3">
+                <div class="flex flex-col gap-1">
+                  <label>Vitalité</label>
+                  <input style="width: 50px; text-align: center" formControlName="vitalite" pInputText
+                         class="p-inputtext-sm" variant="filled" tabindex="-1"/>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <label>Heroisme</label>
+                  <input style="width: 50px; text-align: center" formControlName="heroisme" pInputText
+                         class="p-inputtext-sm" variant="filled" tabindex="-1"/>
+                </div>
+                <div style="position: absolute; inset: 0;"></div>
+              </div>
+            </div>
+          </div>
+          <!----------->
+          <!--- Top --->
+          <!----------->
+          <div class="flex gap-2">
+          plop
           </div>
         </div>
       </div>
