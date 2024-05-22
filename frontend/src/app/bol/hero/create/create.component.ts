@@ -123,6 +123,11 @@ export class BolHeroCreateComponent implements OnDestroy {
       this.logFormErrors();
       this.logFormWarns();
     });
+    this.vigueurCtrl.valueChanges.subscribe((vigueur) => {
+      if (this.vigueurCtrl.valid && vigueur !== null) {
+        this.vitaliteCtrl.setValue(10 + vigueur, {emitEvent: false});
+      }
+    })
   }
 
   ngOnDestroy() {
@@ -169,7 +174,6 @@ export class BolHeroCreateComponent implements OnDestroy {
    */
 
   logFormErrors(): void {
-    console.log('logFormErrors');
     this.attributErrors = [];
     this.aptitudeErrors = [];
 
@@ -229,7 +233,7 @@ export class BolHeroCreateComponent implements OnDestroy {
             avatar: hero.avatar,
 
             vitalite: hero.vitalite,
-            heroisme: hero.heroisme,
+            heroisme: 5,
 
             vigueur: hero.vigueur,
             aura: hero.aura,

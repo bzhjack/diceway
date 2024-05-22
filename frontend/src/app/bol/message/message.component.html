@@ -28,3 +28,19 @@
     </div>
   </ng-template>
 </p-messages>
+<!--------------------------------------->
+<!-- Gestion des erreurs de formulaire -->
+<!--------------------------------------->
+<p-messages severity="error" *ngIf="type() === 'form-errors'">
+  <ng-template pTemplate>
+    <div class="info_icon" inlineSVG="/frontend/assets/flame.svg"></div>
+    <div class="ml-4">
+      <div class="text-xl pb-1">{{ legend() }}</div>
+      <ul style="margin: 0; padding-inline-start: 20px">
+        <li *ngFor="let error of data()">
+          <strong>{{ error.control }}</strong> {{ error.error }}
+        </li>
+      </ul>
+    </div>
+  </ng-template>
+</p-messages>
