@@ -1,34 +1,34 @@
 import {AbstractControl, ValidationErrors, ValidatorFn} from "@angular/forms";
 
 export const globalFormValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  let errors = {};
   const controlsAttrIds = ['vigueur', 'agilite', 'aura', 'esprit'];
   const controlsAttrArray = controlsAttrIds.map(id => control.get(id));
   const attrs = controlsAttrArray.map(ctrl => ctrl?.value);
-  //console.log("values", values);
   const countNegativeAttr = attrs.filter(value => value === -1).length;
   if (countNegativeAttr > 1) {
-    return {'attrTooManyNegative': true};
+    errors = Object.assign(errors, {'attrTooManyNegative': true});
   }
   const sumAttr = attrs.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
   if (sumAttr > 4) {
-    return { 'attrSumExceeded': true };
+    errors = Object.assign(errors, { 'attrSumExceeded': true });
   }
 
   const controlsAptIds = ['tir', 'melee', 'defense', 'initiative'];
   const controlsAptArray = controlsAptIds.map(id => control.get(id));
   const apts = controlsAptArray.map(ctrl => ctrl?.value);
-  console.log("values", apts);
   const countNegativeApt = apts.filter(value => value === -1).length;
   if (countNegativeApt > 1) {
-    return {'aptTooManyNegative': true};
+    errors = Object.assign(errors, {'aptTooManyNegative': true});
   }
   const sumApt = apts.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
   if (sumApt > 4) {
-    return { 'aptSumExceeded': true };
+    errors = Object.assign(errors, { 'aptSumExceeded': true });
   }
 
-  return null;
+  return errors;
 };
+
 export const attributValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const value = control.value;
   // Vérifie si la valeur est "falsy" sauf 0 qui est valide
