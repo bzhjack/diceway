@@ -15,13 +15,13 @@ class BolRegion extends Model
     // Avantages liés à la région
     public function avantages(): BelongsToMany
     {
-        return $this->belongsToMany(BolAvantage::class, 'bol_region_avantages', 'region_id', 'avantage_id');
+        return $this->belongsToMany(BolAvantage::class, 'bol_region_avantage', 'region_id', 'avantage_id');
     }
 
     // Désavantages liés à la région
     public function desavantages(): BelongsToMany
     {
-        return $this->belongsToMany(BolDesavantage::class, 'bol_region_desavantages', 'region_id', 'desavantage_id');
+        return $this->belongsToMany(BolDesavantage::class, 'bol_region_desavantage', 'region_id', 'desavantage_id');
     }
 
     // Noms liés à la région
