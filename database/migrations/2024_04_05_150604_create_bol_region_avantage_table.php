@@ -11,14 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bol_region_noms', function (Blueprint $table) {
+        Schema::create('bol_region_avantage', function (Blueprint $table) {
             $table->id();
-            $table->string('nom');
             $table->unsignedBigInteger('region_id');
-            $table->enum('gender', ['M', 'F'])->nullable();
+            $table->unsignedBigInteger('avantage_id');
+            $table->string('detail')->nullable()->default(null);
             $table->timestamps();
+
             // Déclaration des clés étrangères
-            $table->foreign('region_id')->references('id')->on('bol_regions')->onDelete('cascade');
+            $table->foreign('region_id')->references('id')->on('bol_region')->onDelete('cascade');
+
+            // On s'assure qu'une combinaison de region_id et avantage_id soit unique
+            $table->unique(['region_id', 'avantage_id']);
         });
     }
 
@@ -27,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bol_region_names');
+        Schema::dropIfExists('bol_region_avantage');
     }
 };

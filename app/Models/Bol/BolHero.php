@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class BolHero extends Model
 {
     use HasFactory, Uuids;
+    protected $table = 'bol_hero';
     public $incrementing = false;
     protected $keyType = 'uuid';
     protected $hidden = ['user_id'];

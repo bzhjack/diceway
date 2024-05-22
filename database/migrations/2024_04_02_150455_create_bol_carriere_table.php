@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('bol_heroes', function (Blueprint $table) {
-            $table->bigInteger('region_id')->nullable();
-            $table->string('region')->nullable();
+        Schema::create('bol_carriere', function (Blueprint $table) {
+            $table->id();
+            $table->string('carriere');
+            $table->string('detail')->nullable()->default(null);
+            $table->text('description')->nullable()->default(null);
+            $table->timestamps();
         });
     }
 
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bol_heroes');
+        Schema::dropIfExists('bol_carriere');
     }
 };

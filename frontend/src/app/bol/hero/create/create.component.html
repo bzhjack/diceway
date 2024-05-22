@@ -164,11 +164,31 @@
               </div>
             </div>
           </div>
-          <!----------->
-          <!--- Top --->
-          <!----------->
+          <!----------------->
+          <!--- avantages --->
+          <!----------------->
           <div class="flex gap-2">
+            <p-fieldset class="flex-auto">
+              <ng-template pTemplate="header">
+                <div class="flex items-center gap-2">
+                  <div class="cursor-pointer">
+                    <i *ngIf="aptitudeErrors.length === 0" class="pi pi-info-circle"></i>
+                  </div>
+                  <div>Avantages & Désavantages</div>
+                </div>
+              </ng-template>
+            </p-fieldset>
 
+            <p-fieldset class="flex-auto">
+              <ng-template pTemplate="header">
+                <div class="flex items-center gap-2">
+                  <div class="cursor-pointer">
+                    <i *ngIf="aptitudeErrors.length === 0" class="pi pi-info-circle"></i>
+                  </div>
+                  <div>Carrières</div>
+                </div>
+              </ng-template>
+            </p-fieldset>
           </div>
         </div>
       </div>

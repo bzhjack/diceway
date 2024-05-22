@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bol_avantages', function (Blueprint $table) {
+        Schema::create('bol_langue', function (Blueprint $table) {
             $table->id();
-            $table->string('avantage')->unique();
-            $table->string('attribut')->nullable()->default(null);
-            $table->tinyInteger('attribut_bonus')->nullable()->default(null);
-            $table->boolean('de_bonus')->default(false);
-            $table->text('de_bonus_domaine')->nullable()->default(null);
+            $table->string('langue');
             $table->text('description')->nullable()->default(null);
             $table->timestamps();
         });
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bol_avantages');
+        Schema::dropIfExists('bol_langue');
     }
 };

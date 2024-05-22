@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class BolAvantage extends Model
 {
     use HasFactory;
+    protected $table = 'bol_avantage';
     protected $casts = [
         'de_bonus' => 'boolean'
     ];

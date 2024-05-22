@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class BolRegion extends Model
 {
     use HasFactory;
+    protected $table = 'bol_region';
     protected $fillable = ['name']; // Spécifiez les colonnes que vous voulez rendre accessibles en écriture
 
     // Avantages liés à la région
