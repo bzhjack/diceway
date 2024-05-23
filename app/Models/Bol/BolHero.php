@@ -5,6 +5,7 @@ namespace App\Models\Bol;
 use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BolHero extends Model
 {
@@ -30,4 +31,8 @@ class BolHero extends Model
         'region_id',
         'region'
     ];
+        public function traits(): HasMany
+        {
+            return $this->HasMany(BolHeroTrait::class, 'hero_id', 'id');
+        }
 }

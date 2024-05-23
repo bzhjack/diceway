@@ -68,7 +68,7 @@
     </div>
 
     <div *ngIf="currentRegion && ![1,13,16].includes(currentRegion.id)" class="flex-auto flex flex-col gap-2">
-      <div *ngIf="currentRegion.noms.length == 0" class="flex-autos flex flex-col gap-2">
+      <div *ngIf="currentRegion.noms.length == 0" class="flex flex-col gap-2 pt-2">
         <p-messages severity="warn">
           <ng-template pTemplate>
             <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
