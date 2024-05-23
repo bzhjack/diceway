@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class BolHero extends Model
+class BolHeros extends Model
 {
     use HasFactory, Uuids;
-    protected $table = 'bol_hero';
+    protected $table = 'bol_heros';
     public $incrementing = false;
     protected $keyType = 'uuid';
     protected $hidden = ['user_id'];
@@ -33,6 +33,6 @@ class BolHero extends Model
     ];
         public function traits(): HasMany
         {
-            return $this->HasMany(BolHeroTrait::class, 'hero_id', 'id');
+            return $this->HasMany(BolHerosTrait::class, 'heros_id', 'id');
         }
 }

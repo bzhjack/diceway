@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('bol_hero', function (Blueprint $table) {
+        Schema::table('bol_heros', function (Blueprint $table) {
             $table->bigInteger('region_id')->nullable();
             $table->string('region')->nullable();
         });
@@ -22,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bol_hero');
+        Schema::dropIfExists('bol_heros');
     }
 };

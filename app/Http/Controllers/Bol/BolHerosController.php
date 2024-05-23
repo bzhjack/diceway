@@ -3,18 +3,18 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
-use App\Models\Bol\BolHero;
+use App\Models\Bol\BolHeros;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class BolHeroController extends Controller
+class BolHerosController extends Controller
 {
     /**
      * Récupère tout les héros
      */
     public function getAll()
     {
-        $heroes = BolHero::with('traits')->where('user_id', Auth::id())->get();
+        $heroes = BolHeros::with('traits')->where('user_id', Auth::id())->get();
         return response($heroes);
     }
 
@@ -23,7 +23,7 @@ class BolHeroController extends Controller
      */
     public function getOne(Request $request) {
         $id = $request->route('id');
-        $hero = BolHero::with('traits')->where('user_id', Auth::id())->where('id', $id)->get()->first();
+        $hero = BolHeros::with('traits')->where('user_id', Auth::id())->where('id', $id)->get()->first();
         if ($hero === null) {
             return response()->json(['error'=> 'Hero not found'], 404);
         } else {
@@ -41,7 +41,7 @@ class BolHeroController extends Controller
         ]);
         $input = $request->all();
         $input['user_id'] = Auth::id();
-        $hero = BolHero::create($input);
+        $hero = BolHeros::create($input);
         return response($hero);
     }
     /**
@@ -51,11 +51,11 @@ class BolHeroController extends Controller
     {
         $input = $request->all();
         $id = $input['id'];
-        $hero = BolHero::where('user_id', Auth::id())->where('id', $id)->get()->first();
+        $hero = BolHeros::where('user_id', Auth::id())->where('id', $id)->get()->first();
         if ($hero === null) {
             return response()->json(['error'=> 'Hero not found'], 404);
         } else {
-            BolHero::where('id', $id)->update($input);
+            BolHeros::where('id', $id)->update($input);
             return response($input);
         }
     }

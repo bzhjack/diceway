@@ -11,18 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bol_hero_trait', function (Blueprint $table) {
+        Schema::create('bol_heros_trait', function (Blueprint $table) {
            $table->id();
-           $table->uuid('hero_id');
+           $table->uuid('heros_id');
            $table->unsignedBigInteger('trait_id');
            $table->enum('type', ['A', 'D']);
            $table->timestamps();
 
            // Déclaration des clés étrangères
-           $table->foreign('hero_id')->references('id')->on('bol_hero')->onDelete('cascade');
+           $table->foreign('heros_id')->references('id')->on('bol_heros')->onDelete('cascade');
 
            // On s'assure qu'une combinaison de region_id et avantage_id soit unique
-           $table->unique(['hero_id', 'trait_id']);
+           $table->unique(['heros_id', 'trait_id']);
         });
     }
 
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bol_hero_trait');
+        Schema::dropIfExists('bol_heros_trait');
     }
 };

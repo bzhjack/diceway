@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bol_hero', function (Blueprint $table) {
+        Schema::create('bol_heros', function (Blueprint $table) {
             $table->uuid('id')->primary(); // id du héro
             $table->uuid('user_id')->index(); // id de l'utilisateur
             $table->string('joueur'); // Nom du joueur
@@ -45,6 +45,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('bol_heros');
     }
 };

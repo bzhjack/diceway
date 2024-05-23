@@ -1,7 +1,7 @@
 import {Component, OnDestroy} from '@angular/core';
 import {Subscription} from "rxjs";
-import {BolHeroService} from "../services/bol-hero.service";
-import {BolHeroModel} from "../models/bol-hero.model";
+import {BolHerosService} from "../services/bol-heros.service";
+import {BolHerosModel} from "../models/bol-heros.model";
 import {JsonPipe, NgForOf} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
@@ -19,9 +19,9 @@ import {NgxSpinnerService} from "ngx-spinner";
 })
 export class BolHomeComponent implements OnDestroy {
   private subs?: Subscription;
-  public heroes: Array<BolHeroModel> = [];
+  public heroes: Array<BolHerosModel> = [];
 
-  constructor(private hs: BolHeroService,  private spinner: NgxSpinnerService) {
+  constructor(private hs: BolHerosService,  private spinner: NgxSpinnerService) {
     this.spinner.show();
     this.subs = this.hs.all().subscribe({
       next: (heroes) => {
@@ -38,3 +38,12 @@ export class BolHomeComponent implements OnDestroy {
     this.subs?.unsubscribe();
   }
 }
+
+
+
+
+
+
+
+
+

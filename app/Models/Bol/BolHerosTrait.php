@@ -5,8 +5,8 @@ namespace App\Models\Bol;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BolHeroTrait extends Model
+class BolHerosTrait extends Model
 {
     use HasFactory;
-    protected $table = 'bol_hero_trait';
+    protected $table = 'bol_heros_trait';
 }

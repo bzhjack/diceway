@@ -1,5 +1,5 @@
 import {Component, OnDestroy, ViewChild} from '@angular/core';
-import {BolHeroService} from "../../../services/bol-hero.service";
+import {BolHerosService} from "../../../services/bol-heros.service";
 import {Subscription} from "rxjs";
 import {NgxSpinnerService} from "ngx-spinner";
 import {DataViewModule} from "primeng/dataview";
@@ -45,7 +45,7 @@ export class BolRegionComponent implements OnDestroy {
   @ViewChild('regionPanel') scrollRegion!: ScrollPanel;
 
   constructor(
-    private hs: BolHeroService,
+    private hs: BolHerosService,
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
     private spinner: NgxSpinnerService) {

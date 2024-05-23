@@ -6,8 +6,8 @@ import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule, ValidationEr
 import {ToolbarModule} from "primeng/toolbar";
 import {ButtonModule} from "primeng/button";
 import {SplitButtonModule} from "primeng/splitbutton";
-import {BolHeroService} from "../../services/bol-hero.service";
-import {BolHeroModel} from "../../models/bol-hero.model";
+import {BolHerosService} from "../../services/bol-heros.service";
+import {BolHerosModel} from "../../models/bol-heros.model";
 import {debounceTime, Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
@@ -47,7 +47,7 @@ import {BolMessageComponent} from "../../message/message.component";
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
 })
-export class BolHeroCreateComponent implements OnDestroy {
+export class BolHerosCreateComponent implements OnDestroy {
   private subs?: Subscription;
   private ref: DynamicDialogRef | undefined;
   attributErrors: { control: string, error: string }[] = [];
@@ -113,7 +113,7 @@ export class BolHeroCreateComponent implements OnDestroy {
     public ds: DialogService,
     private spinner: NgxSpinnerService,
     private fb: FormBuilder,
-    private hs: BolHeroService,
+    private hs: BolHerosService,
     private readonly route: ActivatedRoute) {
     const id = this.route.snapshot.paramMap.get('id');
     if (id !== null) {
@@ -225,7 +225,7 @@ export class BolHeroCreateComponent implements OnDestroy {
   getHero(id: string) {
     this.spinner.show();
     this.subs = this.hs.one(id).subscribe({
-        next: (hero: BolHeroModel) => {
+        next: (hero: BolHerosModel) => {
           this.heroForm.patchValue({
             id: hero.id,
             joueur: hero.joueur,
@@ -266,7 +266,7 @@ export class BolHeroCreateComponent implements OnDestroy {
     this.spinner.show();
     this.subs?.unsubscribe();
     if (hero.id !== null) {
-      this.subs = this.hs.update(this.heroForm.value as BolHeroModel).subscribe({
+      this.subs = this.hs.update(this.heroForm.value as BolHerosModel).subscribe({
         next: () => {
           this.spinner.hide();
         },
@@ -275,8 +275,8 @@ export class BolHeroCreateComponent implements OnDestroy {
         }
       });
     } else {
-      this.subs = this.hs.create(this.heroForm.value as BolHeroModel).subscribe({
-        next: (hero: BolHeroModel) => {
+      this.subs = this.hs.create(this.heroForm.value as BolHerosModel).subscribe({
+        next: (hero: BolHerosModel) => {
           this.spinner.hide();
           this.idCtrl.setValue(hero.id);
         },
