@@ -109,7 +109,7 @@
                        inlineSVG="/frontend/assets/info.svg"></div>
                   <div *ngIf="avantage.de_bonus || avantage.attribut" class="tag_icon bonus"
                        [inlineSVG]="avantage.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
-                  <div>{{ avantage.avantage }}</div>
+                  <div>{{ avantage.avantage }} <ng-container *ngIf="avantage.pivot.detail">({{avantage.pivot.detail}})</ng-container></div>
                 </div>
 
                 <div class="dw-panel mb-2" style="background: #424B57">
@@ -133,7 +133,7 @@
                        inlineSVG="/frontend/assets/info.svg"></div>
                   <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon malus"
                        [inlineSVG]="desavantage.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
-                  <div>{{ desavantage.desavantage }}</div>
+                  <div>{{ desavantage.desavantage }} <ng-container *ngIf="desavantage.pivot.detail">({{desavantage.pivot.detail}})</ng-container></div>
                 </div>
 
                 <div class="dw-panel mb-2" style="background: #424B57">
