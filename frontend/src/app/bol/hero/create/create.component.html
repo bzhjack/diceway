@@ -177,6 +177,9 @@
                   <div>Avantages & Désavantages</div>
                 </div>
               </ng-template>
+              <div>
+                <p-button label="Primary" [outlined]="true" size="small"/>
+              </div>
             </p-fieldset>
 
             <p-fieldset class="flex-auto">
@@ -197,7 +200,9 @@
       <div class="flex justify-between">
         <div>
           <p-button *ngIf="creationWarns.length > 0" (click)="incompleteProfile.toggle($event)" severity="warning"
-                    size="small" [label]="'Profil imcomplet (' + creationWarns.length + ')'"
+                    [badge]="'' + creationWarns.length"
+                    badgeClass="p-badge-contrast"
+                    size="small" label="Profil imcomplet"
                     icon="pi pi-exclamation-triangle"></p-button>
           <p-overlayPanel #incompleteProfile>
             <p-messages severity="warn" *ngIf="creationWarns.length > 0">
