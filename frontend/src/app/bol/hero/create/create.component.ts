@@ -119,7 +119,7 @@ export class BolHeroCreateComponent implements OnDestroy {
     if (id !== null) {
       this.getHero(id);
     }
-    this.heroForm.valueChanges.pipe(debounceTime(200)).subscribe(() => {
+    this.heroForm.events.pipe(debounceTime(200)).subscribe(() => {
       this.logFormErrors();
       this.logFormWarns();
     });
