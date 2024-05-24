@@ -1,4 +1,91 @@
-<div class="flex" *ngIf="ready">
-  hello
+<div class="flex flex-col gap-2" *ngIf="ready">
+<div>
+  <p-fieldset legend="Traits régionaux">
+    <ul class="flex flex-col gap-2">
+      <li><strong>Premier Avantage (terre natale):</strong> <br>Choisissez un avantage parmi ceux proposés.</li>
+      <li><strong>Deuxième Avantage (général ou terre natale) :</strong> <br>Prenez un désavantage (terre natale) ou renoncez à 1 point d’héroïsme.</li>
+      <li><strong>Troisième Avantage (général ou terre natale) :</strong> <br>Prenez un autre désavantage (général ou terre natale) ou renoncez à un autre point d’héroïsme.</li>
+    </ul>
+  </p-fieldset>
+  <div class="flex gap-2">
+    <p-fieldset legend="Liste régionale" class="flex-auto">
+      <div class="flex gap-2">
+        <p-table [value]="generalAvantages">
+          <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+              Avantages
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Avantage</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-avantage>
+            <tr>
+              <td>{{ avantage.avantage }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <p-table [value]="generalAvantages">
+          <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+              Désavantages
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Avantage</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-avantage>
+            <tr>
+              <td>{{ avantage.avantage }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </p-fieldset>
+    <p-fieldset legend="Liste générale" class="flex-auto">
+      <div class="flex gap-2">
+        <p-table [value]="generalAvantages">
+          <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+              Avantages
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Avantage</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-avantage>
+            <tr>
+              <td>{{ avantage.avantage }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <p-table [value]="generalAvantages">
+          <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+              Désavantages
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Avantage</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-avantage>
+            <tr>
+              <td>{{ avantage.avantage }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </p-fieldset>
+
+  </div>
+</div>
 </div>
 

@@ -223,6 +223,10 @@ export class BolHerosCreateComponent implements OnDestroy {
     }
   }
 
+  /**
+   * Récupération du Héros (pour modification)
+   * @param id
+   */
   getHero(id: string) {
     this.spinner.show();
     this.subs = this.hs.heros(id).subscribe({
@@ -259,6 +263,9 @@ export class BolHerosCreateComponent implements OnDestroy {
     );
   }
 
+  /**
+   * Sauvegarde du héros
+   */
   submit() {
     if (this.heroForm.invalid) {
       return;
@@ -288,8 +295,11 @@ export class BolHerosCreateComponent implements OnDestroy {
     }
   }
 
+  /**
+   * Gestion de l'avatar
+   */
   picture() {
-    this.ref = this.ds.open(PictureComponent, {header: 'Photo du héro'});
+    this.ref = this.ds.open(PictureComponent, {header: 'Photo du héros'});
     this.subs?.unsubscribe();
     this.subs = this.ref.onClose.subscribe((avatar: any) => {
       if (avatar !== null && avatar !== undefined) {
@@ -299,6 +309,9 @@ export class BolHerosCreateComponent implements OnDestroy {
     });
   }
 
+  /**
+   * Sélection de la région
+   */
   region() {
     this.ref = this.ds.open(BolRegionComponent, {
       header: 'Choix de la région',
@@ -326,8 +339,15 @@ export class BolHerosCreateComponent implements OnDestroy {
     this.regionIdCtrl.setValue(null);
     this.regionCtrl.setValue(null);
   }
+
+  /**
+   * Gestion des avantages et des désavantages
+   */
   traits() {
     this.ref = this.ds.open(BolTraitComponent, {
+      header: 'Choix des avantages pour la région ' + this.regionCtrl.value,
+      width: '95vw',
+      height: '90vh',
       data: {
         id_region: this.regionIdCtrl.value
       },

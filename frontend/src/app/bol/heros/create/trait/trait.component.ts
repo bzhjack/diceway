@@ -1,12 +1,16 @@
-import { Component } from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {SharedModule} from "primeng/api";
 import {DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef} from "primeng/dynamicdialog";
 import {DialogModule} from "primeng/dialog";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {NgxSpinnerService} from "ngx-spinner";
-import {forkJoin, Subscription} from "rxjs";
+import {forkJoin, map, Subscription} from "rxjs";
 import {NgIf} from "@angular/common";
+import {FieldsetModule} from "primeng/fieldset";
+import {TableModule} from "primeng/table";
+import {BolAvantageModel} from "../../../models/bol-avantage.model";
+import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
 
 @Component({
   selector: 'app-trait',
@@ -16,32 +20,46 @@ import {NgIf} from "@angular/common";
     SharedModule,
     DynamicDialogModule,
     DialogModule,
-    NgIf
+    NgIf,
+    FieldsetModule,
+    TableModule
   ],
   templateUrl: './trait.component.html',
   styleUrl: './trait.component.scss'
 })
-export class BolTraitComponent {
+export class BolTraitComponent implements OnDestroy {
   private subs?: Subscription;
-  public regions: any[] = [];
-  public currentRegion?: any;
-  public selectedName?: string;
   public ready = false;
+
+  public generalAvantages: BolAvantageModel[] = [];
+  public generalDesavantages: BolDesavantageModel[] = [];
+
+  public avantages: BolAvantageModel[] = [];
+  public desavantages: BolDesavantageModel[] = [];
 
   constructor(
     private hs: BolHerosService,
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
     private spinner: NgxSpinnerService) {
+
     const regionId= this.config.data.id_region;
     this.spinner.show();
     this.ready = false;
-    this.subs = forkJoin({
-      region: this.hs.region(regionId),
-      avantage: this.hs.avantages(),
-      desavantage: this.hs.desavantages()
-    }).subscribe({
-      next: (trait: any) => {
+    this.subs = forkJoin([
+      this.hs.region(regionId),
+      this.hs.avantages(),
+      this.hs.desavantages()
+    ]).subscribe({
+      next: (traits: any) => {
+        console.log(traits);
+
+        this.avantages = traits[0].avantages;
+        this.desavantages = traits[0].desavantages;
+
+        this.generalAvantages = traits[1];
+        this.generalDesavantages = traits[2];
+
         this.ready = true;
         this.spinner.hide();
       },
@@ -49,5 +67,18 @@ export class BolTraitComponent {
         this.spinner.hide();
       }
     });
+  }
+
+
+  quit() {
+    this.ref.close(null);
+  }
+
+  validate() {
+    this.ref.close({region: null});
+  }
+
+  ngOnDestroy() {
+    this.subs?.unsubscribe();
   }
 }
