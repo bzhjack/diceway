@@ -24,4 +24,5 @@ export class BolHeroCreateTools {
         }
         return `Translation not found for key: "${key}"`;
     }
+
 }

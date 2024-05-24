@@ -22,6 +22,7 @@ import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {attributValidator, globalFormValidator} from "./create.validators";
 import {BolHeroCreateTools} from './create.tools';
 import {BolMessageComponent} from "../../message/message.component";
+import {BolTraitComponent} from "./trait/trait.component";
 
 @Component({
   selector: 'app-create',
@@ -224,7 +225,7 @@ export class BolHerosCreateComponent implements OnDestroy {
 
   getHero(id: string) {
     this.spinner.show();
-    this.subs = this.hs.one(id).subscribe({
+    this.subs = this.hs.heros(id).subscribe({
         next: (hero: BolHerosModel) => {
           this.heroForm.patchValue({
             id: hero.id,
@@ -324,5 +325,17 @@ export class BolHerosCreateComponent implements OnDestroy {
     ev.stopPropagation();
     this.regionIdCtrl.setValue(null);
     this.regionCtrl.setValue(null);
+  }
+  traits() {
+    this.ref = this.ds.open(BolTraitComponent, {
+      data: {
+        id_region: this.regionIdCtrl.value
+      },
+    });
+    this.subs?.unsubscribe();
+    this.subs = this.ref?.onClose.subscribe((data: any) => {
+      if (data) {
+      }
+    });
   }
 }

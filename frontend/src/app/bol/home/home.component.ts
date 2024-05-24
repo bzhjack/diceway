@@ -23,7 +23,7 @@ export class BolHomeComponent implements OnDestroy {
 
   constructor(private hs: BolHerosService,  private spinner: NgxSpinnerService) {
     this.spinner.show();
-    this.subs = this.hs.all().subscribe({
+    this.subs = this.hs.heroes().subscribe({
       next: (heroes) => {
         this.heroes = heroes;
         this.spinner.hide();

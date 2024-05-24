@@ -21,10 +21,10 @@ export class BolHerosService {
   update(hero: BolHerosModel): Observable<any> {
     return this.http.post<BolHerosModel>('/api/bol/heros/update', <BolHerosModel>hero);
   }
-  all(): Observable<BolHerosModel[]> {
+  heroes(): Observable<BolHerosModel[]> {
     return this.http.get<BolHerosModel[]>('/api/bol/heros',);
   }
-  one(id: string): Observable<BolHerosModel>  {
+  heros(id: string): Observable<BolHerosModel>  {
     return this.http.get<BolHerosModel>('/api/bol/heros/'+id,);
   }
 }
