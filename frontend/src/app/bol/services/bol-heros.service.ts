@@ -12,9 +12,13 @@ export class BolHerosService {
   constructor(private http: HttpClient) {
 
   }
-  allRegions(): Observable<BolRegionModel[]> {
+  regions(): Observable<BolRegionModel[]> {
     return this.http.get<BolRegionModel[]>('/api/bol/region');
   }
+  region(id: number): Observable<BolRegionModel> {
+    return this.http.get<BolRegionModel>('/api/bol/region/'+id,);
+  }
+
   create(hero: BolHerosModel): Observable<any> {
     return this.http.post<BolHerosModel>('/api/bol/heros/create', <BolHerosModel>hero);
   }

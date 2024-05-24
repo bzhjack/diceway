@@ -44,3 +44,18 @@
     </div>
   </ng-template>
 </p-messages>
+<!------------------------------------------->
+<!-- Gestion des avantages et désavantages -->
+<!------------------------------------------->
+<p-messages severity="info" *ngIf="type() === 'traits'">
+  <ng-template pTemplate>
+    <div class="info_icon" inlineSVG="/frontend/assets/rolling-dices.svg"></div>
+    <div class="ml-4">
+      <ul style="margin: 0; padding-inline-start: 20px">
+        <li><strong>1 avantage:</strong> Obligatoire.</li>
+        <li><strong>2eme avantage:</strong> + 1 désavantage ou -1 point d'héroïsme</li>
+        <li><strong>3eme avantage:</strong>  + 1 désavantage ou -1 point d'héroïsme</li>
+      </ul>
+    </div>
+  </ng-template>
+</p-messages>

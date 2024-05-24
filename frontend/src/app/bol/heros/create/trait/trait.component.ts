@@ -36,8 +36,8 @@ export class BolTraitComponent {
     const regionId= this.config.data.id_region;
     this.spinner.show();
     this.ready = false;
-    this.subs = this.hs.allRegions().subscribe({
-      next: (regions: Array<any>) => {
+    this.subs = this.hs.region(regionId).subscribe({
+      next: (region: any) => {
         this.ready = true;
         this.spinner.hide();
       },

@@ -52,7 +52,7 @@ export class BolRegionComponent implements OnDestroy {
     const regionId= this.config.data.id_region;
     this.spinner.show();
     this.ready = false;
-    this.subs = this.hs.allRegions().subscribe({
+    this.subs = this.hs.regions().subscribe({
       next: (regions: Array<any>) => {
         this.regions = regions;
         if (regionId) {
