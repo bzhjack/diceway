@@ -5,7 +5,7 @@ import {DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef} from "primen
 import {DialogModule} from "primeng/dialog";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {NgxSpinnerService} from "ngx-spinner";
-import {Subscription} from "rxjs";
+import {forkJoin, Subscription} from "rxjs";
 import {NgIf} from "@angular/common";
 
 @Component({
@@ -36,8 +36,12 @@ export class BolTraitComponent {
     const regionId= this.config.data.id_region;
     this.spinner.show();
     this.ready = false;
-    this.subs = this.hs.region(regionId).subscribe({
-      next: (region: any) => {
+    this.subs = forkJoin({
+      region: this.hs.region(regionId),
+      avantage: this.hs.avantages(),
+      desavantage: this.hs.desavantages()
+    }).subscribe({
+      next: (trait: any) => {
         this.ready = true;
         this.spinner.hide();
       },

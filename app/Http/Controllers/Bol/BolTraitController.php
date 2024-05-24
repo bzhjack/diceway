@@ -12,7 +12,7 @@ class BolTraitController extends Controller
    public function getAllAvantages()
         {
             // Récupérer toutes les lignes de votre modèle
-            $donnees = BolAvantage->get();
+            $donnees = BolAvantage::all();
 
            // Retourner les données en tant que réponse JSON
             return response()->json($donnees);
@@ -20,7 +20,7 @@ class BolTraitController extends Controller
    public function getAllDesavantages()
         {
             // Récupérer toutes les lignes de votre modèle
-            $donnees = BolDesavantage->get();
+            $donnees = BolDesavantage::all();
 
            // Retourner les données en tant que réponse JSON
             return response()->json($donnees);

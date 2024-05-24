@@ -267,7 +267,7 @@ export class BolHerosCreateComponent implements OnDestroy {
     this.spinner.show();
     this.subs?.unsubscribe();
     if (hero.id !== null) {
-      this.subs = this.hs.update(this.heroForm.value as BolHerosModel).subscribe({
+      this.subs = this.hs.updateHeros(this.heroForm.value as BolHerosModel).subscribe({
         next: () => {
           this.spinner.hide();
         },
@@ -276,7 +276,7 @@ export class BolHerosCreateComponent implements OnDestroy {
         }
       });
     } else {
-      this.subs = this.hs.create(this.heroForm.value as BolHerosModel).subscribe({
+      this.subs = this.hs.createHeros(this.heroForm.value as BolHerosModel).subscribe({
         next: (hero: BolHerosModel) => {
           this.spinner.hide();
           this.idCtrl.setValue(hero.id);
