@@ -15,16 +15,15 @@
   <div class="flex flex-auto pb-2 gap-2">
     <p-fieldset legend="Liste régionale" class="w-1/2 h-full" styleClass="h-full relative">
       <div class="flex gap-2" style="position: absolute; inset:15px;">
-        <p-scrollPanel [style]="{display: 'block', height: '100%'}">
+        <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
           <ng-container *ngFor="let avantage of avantages">
-            <div class="flex items-center gap-2 w-fit pb-2">
-              <div class="flex items-center">
+            <div class="flex items-center gap-2 w-fit pb-2 cursor-pointer">
+              <div class="flex items-center" (click)="avPanel.toggle($event)">
                 <div *ngIf="!avantage.de_bonus && !avantage.attribut" class="tag_icon bonus"
                      inlineSVG="/frontend/assets/info.svg"></div>
                 <div *ngIf="avantage.de_bonus || avantage.attribut" class="tag_icon bonus"
                      [inlineSVG]="avantage.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
                 <div>
-
                 </div>
               </div>
               <p-checkbox name="av"
@@ -33,19 +32,20 @@
                           [value]="avantage"
                           (ngModelChange)="checkSelection()"></p-checkbox>
             </div>
-            <div class="dw-panel mb-2" style="background: #424B57">
-              <div *ngFor="let desc of avantageDescription(avantage)" class="flex flex-col">
-                <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
-                <div style="font-size: 12px">{{ desc.description }}</div>
+            <p-overlayPanel #avPanel>
+              <div class="dw-panel" style="background: #424B57">
+                <div *ngFor="let desc of avantageDescription(avantage)" class="flex flex-col">
+                  <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
+                  <div style="font-size: 12px">{{ desc.description }}</div>
+                </div>
               </div>
-            </div>
+            </p-overlayPanel>
           </ng-container>
         </p-scrollPanel>
-
-        <p-scrollPanel [style]="{display: 'block', height: '100%'}">
+        <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
           <ng-container *ngFor="let desavantage of desavantages">
             <div class="flex items-center gap-2 w-fit pb-2">
-              <div class="flex items-center">
+              <div class="flex items-center cursor-pointer" (click)="desPanel.toggle($event)">
                 <div *ngIf="!desavantage.de_malus && !desavantage.attribut" class="tag_icon malus"
                      inlineSVG="/frontend/assets/info.svg"></div>
                 <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon malus"
@@ -57,23 +57,25 @@
                           [value]="desavantage"
                           (ngModelChange)="checkSelection()"></p-checkbox>
             </div>
-            <div class="dw-panel mb-2" style="background: #424B57">
-              <div *ngFor="let desc of desavantageDescription(desavantage)" class="flex flex-col">
-                <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
-                <div style="font-size: 12px">{{ desc.description }}</div>
+
+            <p-overlayPanel #desPanel>
+              <div class="dw-panel" style="background: #424B57">
+                <div *ngFor="let desc of desavantageDescription(desavantage)" class="flex flex-col">
+                  <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
+                  <div style="font-size: 12px">{{ desc.description }}</div>
+                </div>
               </div>
-            </div>
+            </p-overlayPanel>
           </ng-container>
         </p-scrollPanel>
-
       </div>
     </p-fieldset>
     <p-fieldset legend="Liste globale" class="w-1/2 h-full" styleClass="h-full relative">
       <div class="flex gap-2" style="position: absolute; inset:15px;">
-        <p-scrollPanel [style]="{display: 'block', height: '100%'}">
+        <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
           <ng-container *ngFor="let avantage of generalAvantages">
             <div class="flex items-center gap-2 w-fit pb-2">
-              <div class="flex items-center">
+              <div class="flex items-center cursor-pointer" (click)="gavPanel.toggle($event)">
                 <div *ngIf="!avantage.de_bonus && !avantage.attribut" class="tag_icon bonus"
                      inlineSVG="/frontend/assets/info.svg"></div>
                 <div *ngIf="avantage.de_bonus || avantage.attribut" class="tag_icon bonus"
@@ -85,20 +87,21 @@
                           [value]="avantage"
                           (ngModelChange)="checkSelection()"></p-checkbox>
             </div>
-            <div class="dw-panel mb-2" style="background: #424B57">
-              <div *ngFor="let desc of avantageDescription(avantage)" class="flex flex-col">
-                <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
-                <div style="font-size: 12px">{{ desc.description }}</div>
+            <p-overlayPanel #gavPanel>
+              <div class="dw-panel" style="background: #424B57">
+                <div *ngFor="let desc of avantageDescription(avantage)" class="flex flex-col">
+                  <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
+                  <div style="font-size: 12px">{{ desc.description }}</div>
+                </div>
               </div>
-            </div>
+            </p-overlayPanel>
           </ng-container>
         </p-scrollPanel>
 
-        <p-scrollPanel [style]="{display: 'block', height: '100%'}">
+        <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
           <ng-container *ngFor="let desavantage of generalDesavantages">
             <div class="flex items-center gap-2 w-fit pb-2">
-
-              <div class="flex items-center">
+              <div class="flex items-center cursor-pointer" (click)="gdesPanel.toggle($event)">
                 <div *ngIf="!desavantage.de_malus && !desavantage.attribut" class="tag_icon malus"
                      inlineSVG="/frontend/assets/info.svg"></div>
                 <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon malus"
@@ -110,12 +113,15 @@
                           [value]="desavantage"
                           (ngModelChange)="checkSelection()"></p-checkbox>
             </div>
-            <div class="dw-panel mb-2" style="background: #424B57">
-              <div *ngFor="let desc of desavantageDescription(desavantage)" class="flex flex-col">
-                <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
-                <div style="font-size: 12px">{{ desc.description }}</div>
+
+            <p-overlayPanel #gdesPanel>
+              <div class="dw-panel" style="background: #424B57">
+                <div *ngFor="let desc of desavantageDescription(desavantage)" class="flex flex-col">
+                  <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
+                  <div style="font-size: 12px">{{ desc.description }}</div>
+                </div>
               </div>
-            </div>
+            </p-overlayPanel>
           </ng-container>
         </p-scrollPanel>
       </div>

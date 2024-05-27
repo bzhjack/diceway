@@ -17,6 +17,7 @@ import {BolHeroCreateTools} from "../create.tools";
 import {ButtonModule} from "primeng/button";
 import {CheckboxModule} from "primeng/checkbox";
 import {FormsModule} from "@angular/forms";
+import {OverlayPanelModule} from "primeng/overlaypanel";
 
 @Component({
   selector: 'app-trait',
@@ -34,7 +35,8 @@ import {FormsModule} from "@angular/forms";
     InlineSVGModule,
     ButtonModule,
     CheckboxModule,
-    FormsModule
+    FormsModule,
+    OverlayPanelModule
   ],
   templateUrl: './trait.component.html',
   styleUrl: './trait.component.scss'
