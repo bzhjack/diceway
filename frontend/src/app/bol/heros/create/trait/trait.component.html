@@ -12,17 +12,26 @@
       </ul>
     </p-fieldset>
   </div>
-  <div class="flex flex-auto pb-2 gap-2" style="background: red">
+  <div class="flex flex-auto pb-2 gap-2">
     <p-fieldset legend="Liste régionale" class="w-1/2 h-full" styleClass="h-full relative">
       <div class="flex gap-2" style="position: absolute; inset:15px;">
         <p-scrollPanel [style]="{display: 'block', height: '100%'}">
           <ng-container *ngFor="let avantage of avantages">
-            <div class="flex w-fit">
-              <div *ngIf="!avantage.de_bonus && !avantage.attribut" class="tag_icon bonus"
-                   inlineSVG="/frontend/assets/info.svg"></div>
-              <div *ngIf="avantage.de_bonus || avantage.attribut" class="tag_icon bonus"
-                   [inlineSVG]="avantage.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
-              <div>{{ avantage.avantage }} <ng-container *ngIf="avantage.pivot?.detail">({{avantage.pivot.detail}})</ng-container></div>
+            <div class="flex items-center gap-2 w-fit pb-2">
+              <div class="flex items-center">
+                <div *ngIf="!avantage.de_bonus && !avantage.attribut" class="tag_icon bonus"
+                     inlineSVG="/frontend/assets/info.svg"></div>
+                <div *ngIf="avantage.de_bonus || avantage.attribut" class="tag_icon bonus"
+                     [inlineSVG]="avantage.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
+                <div>
+
+                </div>
+              </div>
+              <p-checkbox name="av"
+                          [label]="avantage.avantage + (avantage.pivot.detail === null ? '' : '('+ avantage.pivot.detail +')')"
+                          [(ngModel)]="selectedAvantages"
+                          [value]="avantage"
+                          (ngModelChange)="checkSelection()"></p-checkbox>
             </div>
             <div class="dw-panel mb-2" style="background: #424B57">
               <div *ngFor="let desc of avantageDescription(avantage)" class="flex flex-col">
@@ -35,12 +44,18 @@
 
         <p-scrollPanel [style]="{display: 'block', height: '100%'}">
           <ng-container *ngFor="let desavantage of desavantages">
-            <div class="flex w-fit">
-              <div *ngIf="!desavantage.de_malus && !desavantage.attribut" class="tag_icon malus"
-                   inlineSVG="/frontend/assets/info.svg"></div>
-              <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon malus"
-                   [inlineSVG]="desavantage.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
-              <div>{{ desavantage.desavantage }} <ng-container *ngIf="desavantage.pivot?.detail">({{desavantage.pivot.detail}})</ng-container></div>
+            <div class="flex items-center gap-2 w-fit pb-2">
+              <div class="flex items-center">
+                <div *ngIf="!desavantage.de_malus && !desavantage.attribut" class="tag_icon malus"
+                     inlineSVG="/frontend/assets/info.svg"></div>
+                <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon malus"
+                     [inlineSVG]="desavantage.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
+              </div>
+              <p-checkbox name="des"
+                          [label]="desavantage.desavantage + (desavantage.pivot.detail === null ? '' : '('+ desavantage.pivot.detail +')')"
+                          [(ngModel)]="selectedDesavantages"
+                          [value]="desavantage"
+                          (ngModelChange)="checkSelection()"></p-checkbox>
             </div>
             <div class="dw-panel mb-2" style="background: #424B57">
               <div *ngFor="let desc of desavantageDescription(desavantage)" class="flex flex-col">
@@ -57,12 +72,18 @@
       <div class="flex gap-2" style="position: absolute; inset:15px;">
         <p-scrollPanel [style]="{display: 'block', height: '100%'}">
           <ng-container *ngFor="let avantage of generalAvantages">
-            <div class="flex w-fit">
-              <div *ngIf="!avantage.de_bonus && !avantage.attribut" class="tag_icon bonus"
-                   inlineSVG="/frontend/assets/info.svg"></div>
-              <div *ngIf="avantage.de_bonus || avantage.attribut" class="tag_icon bonus"
-                   [inlineSVG]="avantage.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
-              <div>{{ avantage.avantage }}</div>
+            <div class="flex items-center gap-2 w-fit pb-2">
+              <div class="flex items-center">
+                <div *ngIf="!avantage.de_bonus && !avantage.attribut" class="tag_icon bonus"
+                     inlineSVG="/frontend/assets/info.svg"></div>
+                <div *ngIf="avantage.de_bonus || avantage.attribut" class="tag_icon bonus"
+                     [inlineSVG]="avantage.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
+              </div>
+              <p-checkbox name="gav"
+                          [label]="avantage.avantage"
+                          [(ngModel)]="selectedGeneralAvantages"
+                          [value]="avantage"
+                          (ngModelChange)="checkSelection()"></p-checkbox>
             </div>
             <div class="dw-panel mb-2" style="background: #424B57">
               <div *ngFor="let desc of avantageDescription(avantage)" class="flex flex-col">
@@ -75,12 +96,19 @@
 
         <p-scrollPanel [style]="{display: 'block', height: '100%'}">
           <ng-container *ngFor="let desavantage of generalDesavantages">
-            <div class="flex w-fit">
-              <div *ngIf="!desavantage.de_malus && !desavantage.attribut" class="tag_icon malus"
-                   inlineSVG="/frontend/assets/info.svg"></div>
-              <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon malus"
-                   [inlineSVG]="desavantage.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
-              <div>{{ desavantage.desavantage }}</div>
+            <div class="flex items-center gap-2 w-fit pb-2">
+
+              <div class="flex items-center">
+                <div *ngIf="!desavantage.de_malus && !desavantage.attribut" class="tag_icon malus"
+                     inlineSVG="/frontend/assets/info.svg"></div>
+                <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon malus"
+                     [inlineSVG]="desavantage.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
+              </div>
+              <p-checkbox name="gdes"
+                          [label]="desavantage.desavantage"
+                          [(ngModel)]="selectedGeneralDesavantages"
+                          [value]="desavantage"
+                          (ngModelChange)="checkSelection()"></p-checkbox>
             </div>
             <div class="dw-panel mb-2" style="background: #424B57">
               <div *ngFor="let desc of desavantageDescription(desavantage)" class="flex flex-col">
@@ -93,8 +121,9 @@
       </div>
     </p-fieldset>
   </div>
-  <div>
-    plop
+  <div class="flex justify-end gap-2">
+    <p-button icon="pi pi-times" size="small" label="Quitter" severity="secondary" (click)="quit()"></p-button>
+    <p-button icon="pi pi-check" size="small" label="Valider" severity="success"></p-button>
   </div>
 </div>
 

@@ -14,6 +14,9 @@ import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
 import {ScrollPanelModule} from "primeng/scrollpanel";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {BolHeroCreateTools} from "../create.tools";
+import {ButtonModule} from "primeng/button";
+import {CheckboxModule} from "primeng/checkbox";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-trait',
@@ -28,7 +31,10 @@ import {BolHeroCreateTools} from "../create.tools";
     TableModule,
     NgForOf,
     ScrollPanelModule,
-    InlineSVGModule
+    InlineSVGModule,
+    ButtonModule,
+    CheckboxModule,
+    FormsModule
   ],
   templateUrl: './trait.component.html',
   styleUrl: './trait.component.scss'
@@ -42,6 +48,11 @@ export class BolTraitComponent implements OnDestroy {
 
   public avantages: BolAvantageModel[] = [];
   public desavantages: BolDesavantageModel[] = [];
+
+  selectedAvantages: BolAvantageModel[] = [];
+  selectedDesavantages: BolDesavantageModel[] = [];
+  selectedGeneralAvantages: BolAvantageModel[] = [];
+  selectedGeneralDesavantages: BolDesavantageModel[] = [];
 
   constructor(
     private hs: BolHerosService,
@@ -62,9 +73,10 @@ export class BolTraitComponent implements OnDestroy {
 
         this.avantages = traits[0].avantages;
         this.desavantages = traits[0].desavantages;
-
-        this.generalAvantages = traits[1];
-        this.generalDesavantages = traits[2];
+        const idAvantages = this.avantages.map(avantage => avantage.id);
+        const idDesavantages = this.desavantages.map(desavantage => desavantage.id);
+        this.generalAvantages = traits[1].filter((avantage: BolAvantageModel) => !idAvantages.includes(avantage.id));
+        this.generalDesavantages = traits[2].filter((desavantage: BolDesavantageModel) => !idDesavantages.includes(desavantage.id));
 
         this.ready = true;
         this.spinner.hide();
@@ -93,5 +105,11 @@ export class BolTraitComponent implements OnDestroy {
 
   desavantageDescription(desavantage: BolDesavantageModel) {
     return BolHeroCreateTools.desavantageDescription(desavantage);
+  }
+  checkSelection() {
+    console.log(this.selectedAvantages);
+    console.log(this.selectedDesavantages);
+    console.log(this.selectedGeneralAvantages);
+    console.log(this.selectedGeneralDesavantages);
   }
 }
