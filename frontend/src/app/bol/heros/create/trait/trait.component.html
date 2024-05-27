@@ -12,71 +12,86 @@
       </ul>
     </p-fieldset>
   </div>
-  <div class="flex flex-auto relative" style="background: red">
-    <div class="flex gap-2" style="position: absolute; inset: 0;">
-      <p-fieldset legend="Liste régionale" class="flex-auto" styleClass="h-full relative">
-        <div class="flex gap-2 h-full" style="background: #0e4f26; position: absolute; inset: 0;">
-          <p-table [value]="generalAvantages" [scrollable]="true" [style]="{height: 'calc(100vh - 500px)'}" responsiveLayout="scroll">
-            <ng-template pTemplate="caption">
-              <div class="flex align-items-center justify-content-between">
-                Avantages
+  <div class="flex flex-auto pb-2 gap-2" style="background: red">
+    <p-fieldset legend="Liste régionale" class="w-1/2 h-full" styleClass="h-full relative">
+      <div class="flex gap-2" style="position: absolute; inset:15px;">
+        <p-scrollPanel [style]="{display: 'block', height: '100%'}">
+          <ng-container *ngFor="let avantage of avantages">
+            <div class="flex w-fit">
+              <div *ngIf="!avantage.de_bonus && !avantage.attribut" class="tag_icon bonus"
+                   inlineSVG="/frontend/assets/info.svg"></div>
+              <div *ngIf="avantage.de_bonus || avantage.attribut" class="tag_icon bonus"
+                   [inlineSVG]="avantage.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
+              <div>{{ avantage.avantage }} <ng-container *ngIf="avantage.pivot?.detail">({{avantage.pivot.detail}})</ng-container></div>
+            </div>
+            <div class="dw-panel mb-2" style="background: #424B57">
+              <div *ngFor="let desc of avantageDescription(avantage)" class="flex flex-col">
+                <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
+                <div style="font-size: 12px">{{ desc.description }}</div>
               </div>
-            </ng-template>
-            <ng-template pTemplate="header">
-              <tr>
-                <th>Avantage</th>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-avantage>
-              <tr>
-                <td>{{ avantage.avantage }}</td>
-              </tr>
-            </ng-template>
-          </p-table>
-        </div>
-      </p-fieldset>
-      <p-fieldset legend="Liste générale" class="flex-auto" styleClass="h-full relative">
-        <div class="flex gap-2 h-full" style="background: #0e4f26; position: absolute; inset: 0;">
+            </div>
+          </ng-container>
+        </p-scrollPanel>
 
-        </div>
-        <!--<div class="flex gap-2">
-          <p-table [value]="generalAvantages">
-            <ng-template pTemplate="caption">
-              <div class="flex align-items-center justify-content-between">
-                Avantages
+        <p-scrollPanel [style]="{display: 'block', height: '100%'}">
+          <ng-container *ngFor="let desavantage of desavantages">
+            <div class="flex w-fit">
+              <div *ngIf="!desavantage.de_malus && !desavantage.attribut" class="tag_icon malus"
+                   inlineSVG="/frontend/assets/info.svg"></div>
+              <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon malus"
+                   [inlineSVG]="desavantage.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
+              <div>{{ desavantage.desavantage }} <ng-container *ngIf="desavantage.pivot?.detail">({{desavantage.pivot.detail}})</ng-container></div>
+            </div>
+            <div class="dw-panel mb-2" style="background: #424B57">
+              <div *ngFor="let desc of desavantageDescription(desavantage)" class="flex flex-col">
+                <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
+                <div style="font-size: 12px">{{ desc.description }}</div>
               </div>
-            </ng-template>
-            <ng-template pTemplate="header">
-              <tr>
-                <th>Avantage</th>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-avantage>
-              <tr>
-                <td>{{ avantage.avantage }}</td>
-              </tr>
-            </ng-template>
-          </p-table>
-          <p-table [value]="generalAvantages">
-            <ng-template pTemplate="caption">
-              <div class="flex align-items-center justify-content-between">
-                Désavantages
+            </div>
+          </ng-container>
+        </p-scrollPanel>
+
+      </div>
+    </p-fieldset>
+    <p-fieldset legend="Liste globale" class="w-1/2 h-full" styleClass="h-full relative">
+      <div class="flex gap-2" style="position: absolute; inset:15px;">
+        <p-scrollPanel [style]="{display: 'block', height: '100%'}">
+          <ng-container *ngFor="let avantage of generalAvantages">
+            <div class="flex w-fit">
+              <div *ngIf="!avantage.de_bonus && !avantage.attribut" class="tag_icon bonus"
+                   inlineSVG="/frontend/assets/info.svg"></div>
+              <div *ngIf="avantage.de_bonus || avantage.attribut" class="tag_icon bonus"
+                   [inlineSVG]="avantage.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
+              <div>{{ avantage.avantage }}</div>
+            </div>
+            <div class="dw-panel mb-2" style="background: #424B57">
+              <div *ngFor="let desc of avantageDescription(avantage)" class="flex flex-col">
+                <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
+                <div style="font-size: 12px">{{ desc.description }}</div>
               </div>
-            </ng-template>
-            <ng-template pTemplate="header">
-              <tr>
-                <th>Avantage</th>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-avantage>
-              <tr>
-                <td>{{ avantage.avantage }}</td>
-              </tr>
-            </ng-template>
-          </p-table>
-        </div>-->
-      </p-fieldset>
-    </div>
+            </div>
+          </ng-container>
+        </p-scrollPanel>
+
+        <p-scrollPanel [style]="{display: 'block', height: '100%'}">
+          <ng-container *ngFor="let desavantage of generalDesavantages">
+            <div class="flex w-fit">
+              <div *ngIf="!desavantage.de_malus && !desavantage.attribut" class="tag_icon malus"
+                   inlineSVG="/frontend/assets/info.svg"></div>
+              <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon malus"
+                   [inlineSVG]="desavantage.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
+              <div>{{ desavantage.desavantage }}</div>
+            </div>
+            <div class="dw-panel mb-2" style="background: #424B57">
+              <div *ngFor="let desc of desavantageDescription(desavantage)" class="flex flex-col">
+                <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
+                <div style="font-size: 12px">{{ desc.description }}</div>
+              </div>
+            </div>
+          </ng-container>
+        </p-scrollPanel>
+      </div>
+    </p-fieldset>
   </div>
   <div>
     plop

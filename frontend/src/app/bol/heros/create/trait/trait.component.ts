@@ -6,11 +6,14 @@ import {DialogModule} from "primeng/dialog";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {NgxSpinnerService} from "ngx-spinner";
 import {forkJoin, map, Subscription} from "rxjs";
-import {NgIf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {FieldsetModule} from "primeng/fieldset";
 import {TableModule} from "primeng/table";
 import {BolAvantageModel} from "../../../models/bol-avantage.model";
 import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
+import {ScrollPanelModule} from "primeng/scrollpanel";
+import {InlineSVGModule} from "ng-inline-svg-2";
+import {BolHeroCreateTools} from "../create.tools";
 
 @Component({
   selector: 'app-trait',
@@ -22,7 +25,10 @@ import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
     DialogModule,
     NgIf,
     FieldsetModule,
-    TableModule
+    TableModule,
+    NgForOf,
+    ScrollPanelModule,
+    InlineSVGModule
   ],
   templateUrl: './trait.component.html',
   styleUrl: './trait.component.scss'
@@ -80,5 +86,12 @@ export class BolTraitComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.subs?.unsubscribe();
+  }
+  avantageDescription(avantage: BolAvantageModel) {
+    return BolHeroCreateTools.avantageDescription(avantage);
+  }
+
+  desavantageDescription(desavantage: BolDesavantageModel) {
+    return BolHeroCreateTools.desavantageDescription(desavantage);
   }
 }

@@ -5,5 +5,6 @@ export interface BolAvantageModel {
   attribut_bonus: boolean | null;
   de_bonus: boolean | null,
   de_bonus_domaine: string | null,
-  description: string | null
+  description: string | null,
+  pivot: {detail: string}
 }

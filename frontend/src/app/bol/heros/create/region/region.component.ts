@@ -16,6 +16,7 @@ import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
 import {BolRegionModel} from "../../../models/bol-region.model";
 import {FieldsetModule} from "primeng/fieldset";
 import {MessagesModule} from "primeng/messages";
+import {BolHeroCreateTools} from "../create.tools";
 
 @Component({
   selector: 'app-region',
@@ -68,31 +69,11 @@ export class BolRegionComponent implements OnDestroy {
   }
 
   avantageDescription(avantage: BolAvantageModel) {
-    let toolTip: { title: string, description: string | null }[] = [];
-    if (avantage.de_bonus) {
-      toolTip.push({title: 'Dé bonus', description: avantage.de_bonus_domaine});
-    }
-    if (avantage.attribut) {
-      toolTip.push({title: 'Attribut', description: `${avantage.attribut}(${avantage.attribut_bonus})`});
-    }
-    if (avantage.description) {
-      toolTip.push({title: 'Détails', description: avantage.description});
-    }
-    return toolTip;
+    return BolHeroCreateTools.avantageDescription(avantage);
   }
 
-  desavantageDescription(avantage: BolDesavantageModel) {
-    let toolTip: { title: string, description: string | null }[] = [];
-    if (avantage.de_malus) {
-      toolTip.push({title: 'Dé malus', description: avantage.de_malus_domaine});
-    }
-    if (avantage.attribut) {
-      toolTip.push({title: 'Attribut', description: `${avantage.attribut}(${avantage.attribut_malus})`});
-    }
-    if (avantage.description) {
-      toolTip.push({title: 'Détails', description: avantage.description});
-    }
-    return toolTip;
+  desavantageDescription(desavantage: BolDesavantageModel) {
+    return BolHeroCreateTools.desavantageDescription(desavantage);
   }
 
   quit() {

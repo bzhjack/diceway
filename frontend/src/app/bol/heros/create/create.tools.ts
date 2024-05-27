@@ -1,3 +1,6 @@
+import {BolAvantageModel} from "../../models/bol-avantage.model";
+import {BolDesavantageModel} from "../../models/bol-desavantage.model";
+
 export type Translations = {
     [key: string]: string;
 };
@@ -24,5 +27,31 @@ export class BolHeroCreateTools {
         }
         return `Translation not found for key: "${key}"`;
     }
+  public static avantageDescription(avantage: BolAvantageModel) {
+    let toolTip: { title: string, description: string | null }[] = [];
+    if (avantage.de_bonus) {
+      toolTip.push({title: 'Dé bonus', description: avantage.de_bonus_domaine});
+    }
+    if (avantage.attribut) {
+      toolTip.push({title: 'Attribut', description: `${avantage.attribut}(${avantage.attribut_bonus})`});
+    }
+    if (avantage.description) {
+      toolTip.push({title: 'Détails', description: avantage.description});
+    }
+    return toolTip;
+  }
 
+  public static desavantageDescription(desavantage: BolDesavantageModel) {
+    let toolTip: { title: string, description: string | null }[] = [];
+    if (desavantage.de_malus) {
+      toolTip.push({title: 'Dé malus', description: desavantage.de_malus_domaine});
+    }
+    if (desavantage.attribut) {
+      toolTip.push({title: 'Attribut', description: `${desavantage.attribut}(${desavantage.attribut_malus})`});
+    }
+    if (desavantage.description) {
+      toolTip.push({title: 'Détails', description: desavantage.description});
+    }
+    return toolTip;
+  }
 }
