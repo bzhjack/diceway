@@ -17,6 +17,7 @@ import {BolRegionModel} from "../../../models/bol-region.model";
 import {FieldsetModule} from "primeng/fieldset";
 import {MessagesModule} from "primeng/messages";
 import {BolHeroCreateTools} from "../create.tools";
+import {OverlayPanelModule} from "primeng/overlaypanel";
 
 @Component({
   selector: 'app-region',
@@ -32,7 +33,8 @@ import {BolHeroCreateTools} from "../create.tools";
     NgIf,
     InlineSVGModule,
     FieldsetModule,
-    MessagesModule
+    MessagesModule,
+    OverlayPanelModule
   ],
   templateUrl: './region.component.html',
   styleUrl: './region.component.scss'
@@ -94,7 +96,6 @@ export class BolRegionComponent implements OnDestroy {
       region.nomsFeminins = region.noms.filter((nom: any) => nom.gender === 'F');
       region.nomsMasculins = region.noms.filter((nom: any) => nom.gender === 'M');
       this.currentRegion = region;
-      console.log(region);
       setTimeout(() => {
         let regionElement = document.getElementById('region-' + region.id);
         if (regionElement) {
