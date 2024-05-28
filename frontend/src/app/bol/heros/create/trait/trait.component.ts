@@ -6,7 +6,7 @@ import {DialogModule} from "primeng/dialog";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {NgxSpinnerService} from "ngx-spinner";
 import {forkJoin, map, Subscription} from "rxjs";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgForOf, NgIf, NgStyle} from "@angular/common";
 import {FieldsetModule} from "primeng/fieldset";
 import {TableModule} from "primeng/table";
 import {BolAvantageModel} from "../../../models/bol-avantage.model";
@@ -36,7 +36,8 @@ import {OverlayPanelModule} from "primeng/overlaypanel";
     ButtonModule,
     CheckboxModule,
     FormsModule,
-    OverlayPanelModule
+    OverlayPanelModule,
+    NgStyle
   ],
   templateUrl: './trait.component.html',
   styleUrl: './trait.component.scss'
@@ -55,6 +56,11 @@ export class BolTraitComponent implements OnDestroy {
   selectedDesavantages: BolDesavantageModel[] = [];
   selectedGeneralAvantages: BolAvantageModel[] = [];
   selectedGeneralDesavantages: BolDesavantageModel[] = [];
+
+  avantagesIds: (string | null)[] = [];
+  desavantagesIds: (string | null)[] = [];
+
+  public heroismCost = 0;
 
   constructor(
     private hs: BolHerosService,
@@ -113,5 +119,47 @@ export class BolTraitComponent implements OnDestroy {
     console.log(this.selectedDesavantages);
     console.log(this.selectedGeneralAvantages);
     console.log(this.selectedGeneralDesavantages);
+
+    const totalNatalAvantages = this.selectedAvantages.length;
+    const totalAvantages = this.selectedAvantages.length + this.selectedGeneralAvantages.length;
+
+    const totalNatalDesavantages = this.selectedDesavantages.length;
+    const totalDesavantages = this.selectedDesavantages.length + this.selectedGeneralDesavantages.length;
+
+    let costHeroism = 0;
+
+    // Gestion premier avantage (natal)
+    if (totalNatalAvantages === 0) {  // Si pas de premier alors aucun autre
+      this.selectedGeneralAvantages =[];
+    }
+
+    // Gestion deuxième avantage (natal ou general)
+    if (totalAvantages >= 2) {
+      costHeroism += 1;
+    }
+    // Gestion troisième avantage (natal ou general)
+    if (totalAvantages == 3) {
+      costHeroism += 1;
+    }
+
+    // gestion du premier desavantage (natal)
+    if (totalNatalDesavantages >= 1) {
+      costHeroism -= 1;
+    }
+    // gestion du deuxieme desavantage (natal ou global)
+    if (totalDesavantages >= 2) {
+      costHeroism -= 1;
+    }
+
+    // Met à jour la liste des IDs d'avantages
+    this.avantagesIds = [
+      ...this.selectedAvantages.map((avantage: BolAvantageModel) => avantage.id),
+      ...this.selectedGeneralAvantages.map((avantage: BolAvantageModel) => avantage.id)
+    ];
+
+
+    // Ajuste les points d'héroïsme
+    this.heroismCost = Math.max(costHeroism, 0);
+
   }
 }

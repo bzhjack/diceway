@@ -2,14 +2,20 @@
   <div>
     <p-fieldset legend="Traits régionaux">
       <ul class="flex flex-col gap-2">
-        <li><strong>Premier Avantage (terre natale):</strong> <br>Choisissez un avantage parmi ceux proposés.</li>
-        <li><strong>Deuxième Avantage (général ou terre natale) :</strong> <br>Prenez un désavantage (terre natale) ou
-          renoncez à 1 point d’héroïsme.
+        <li>
+          <div [ngStyle]="selectedAvantages.length >= 1 ? {color: 'var(--success-color)'}: {}"><strong>Premier Avantage (terre natale):</strong></div>
+          <div>Choisissez un avantage parmi ceux proposés.</div>
         </li>
-        <li><strong>Troisième Avantage (général ou terre natale) :</strong> <br>Prenez un autre désavantage (général ou
-          terre natale) ou renoncez à un autre point d’héroïsme.
+        <li>
+          <div [ngStyle]="avantagesIds.length >= 2 ? {color: 'var(--success-color)'}: {}"><strong>Deuxième Avantage (général ou terre natale) :</strong></div>
+          <div [ngStyle]="avantagesIds.length >= 2 && heroismCost > 0 ? {color: 'var(--warn-color)'}: {}">Prenez un désavantage (terre natale) ou renoncez à 1 point d’héroïsme.</div>
+        </li>
+        <li>
+          <div [ngStyle]="avantagesIds.length == 3 ? {color: 'var(--success-color)'}: {}"><strong>Troisième Avantage (général ou terre natale) :</strong></div>
+          <div [ngStyle]="avantagesIds.length == 3 && heroismCost > 0 ? {color: 'var(--warn-color)'}: {}">Prenez un autre désavantage (général ou terre natale) ou renoncez à un autre point d’héroïsme.</div>
         </li>
       </ul>
+      <div *ngIf="heroismCost > 0" style="color: var(--warn-color)">Coût en point d'héroïsme: <strong>{{heroismCost}}</strong></div>
     </p-fieldset>
   </div>
   <div class="flex flex-auto pb-2 gap-2">
@@ -27,6 +33,7 @@
                 </div>
               </div>
               <p-checkbox name="av"
+                          [disabled]="selectedGeneralAvantages.length + selectedAvantages.length === 3 && !this.avantagesIds.includes(avantage.id)"
                           [label]="avantage.avantage + (avantage.pivot.detail === null ? '' : '('+ avantage.pivot.detail +')')"
                           [(ngModel)]="selectedAvantages"
                           [value]="avantage"
@@ -82,6 +89,7 @@
                      [inlineSVG]="avantage.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
               </div>
               <p-checkbox name="gav"
+                          [disabled]="selectedAvantages.length === 0 || (avantagesIds.length === 3 && !avantagesIds.includes(avantage.id))"
                           [label]="avantage.avantage"
                           [(ngModel)]="selectedGeneralAvantages"
                           [value]="avantage"
