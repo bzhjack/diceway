@@ -136,19 +136,18 @@ export class BolTraitComponent implements OnDestroy {
     // Gestion deuxième avantage (natal ou general)
     if (totalAvantages >= 2) {
       costHeroism += 1;
+      // gestion du premier desavantage (natal)
+      if (totalNatalDesavantages >= 1) {
+        costHeroism -= 1;
+      }
     }
     // Gestion troisième avantage (natal ou general)
     if (totalAvantages == 3) {
       costHeroism += 1;
-    }
-
-    // gestion du premier desavantage (natal)
-    if (totalNatalDesavantages >= 1) {
-      costHeroism -= 1;
-    }
-    // gestion du deuxieme desavantage (natal ou global)
-    if (totalDesavantages >= 2) {
-      costHeroism -= 1;
+      // gestion du deuxieme desavantage (natal ou global)
+      if (this.selectedGeneralDesavantages.length >= 1 || this.selectedDesavantages.length == 2) {
+        costHeroism -= 1;
+      }
     }
 
     // Met à jour la liste des IDs d'avantages

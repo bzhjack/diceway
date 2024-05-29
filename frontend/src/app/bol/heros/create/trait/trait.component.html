@@ -8,11 +8,11 @@
         </li>
         <li>
           <div [ngStyle]="avantagesIds.length >= 2 ? {color: 'var(--success-color)'}: {}"><strong>Deuxième Avantage (général ou terre natale) :</strong></div>
-          <div [ngStyle]="avantagesIds.length >= 2 && heroismCost > 0 ? {color: 'var(--warn-color)'}: {}">Prenez un désavantage (terre natale) ou renoncez à 1 point d’héroïsme.</div>
+          <div [ngStyle]="avantagesIds.length >= 2 && selectedDesavantages.length === 0 ? {color: 'var(--warn-color)'}: {}">Prenez un désavantage (terre natale) ou renoncez à 1 point d’héroïsme.</div>
         </li>
         <li>
           <div [ngStyle]="avantagesIds.length == 3 ? {color: 'var(--success-color)'}: {}"><strong>Troisième Avantage (général ou terre natale) :</strong></div>
-          <div [ngStyle]="avantagesIds.length == 3 && heroismCost > 0 ? {color: 'var(--warn-color)'}: {}">Prenez un autre désavantage (général ou terre natale) ou renoncez à un autre point d’héroïsme.</div>
+          <div [ngStyle]="avantagesIds.length == 3 && !(this.selectedGeneralDesavantages.length >= 1 || this.selectedDesavantages.length == 2) ? {color: 'var(--warn-color)'}: {}">Prenez un autre désavantage (général ou terre natale) ou renoncez à un autre point d’héroïsme.</div>
         </li>
       </ul>
       <div *ngIf="heroismCost > 0" style="color: var(--warn-color)">Coût en point d'héroïsme: <strong>{{heroismCost}}</strong></div>
