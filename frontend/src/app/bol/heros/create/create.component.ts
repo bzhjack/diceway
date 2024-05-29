@@ -369,11 +369,9 @@ export class BolHerosCreateComponent implements OnDestroy {
     this.subs?.unsubscribe();
     this.subs = this.ref?.onClose.subscribe((data: any) => {
       if (data) {
-        //this.traitsArray.push(new FormControl(null));
-        console.log(data.avantages);
+        this.traits.clear();
         data.avantages.forEach((avantageId: number) => {this.addTrait({type: 'A', id: avantageId})});
         data.desavantages.forEach((desavantageId: number) => {this.addTrait({type: 'D', id: desavantageId})})
-
       }
     });
   }

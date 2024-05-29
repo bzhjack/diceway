@@ -9,4 +9,10 @@ class BolHerosTrait extends Model
 {
     use HasFactory;
     protected $table = 'bol_heros_trait';
+
+    protected $fillable = [
+    "heros_id",
+    "trait_id",
+    "type"
+    ];
 }
