@@ -5,7 +5,7 @@ import {DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef} from "primen
 import {DialogModule} from "primeng/dialog";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {NgxSpinnerService} from "ngx-spinner";
-import {forkJoin, map, Subscription} from "rxjs";
+import {forkJoin, Subscription} from "rxjs";
 import {NgForOf, NgIf, NgStyle} from "@angular/common";
 import {FieldsetModule} from "primeng/fieldset";
 import {TableModule} from "primeng/table";
@@ -77,8 +77,6 @@ export class BolTraitComponent implements OnDestroy {
       this.hs.desavantages()
     ]).subscribe({
       next: (traits: any) => {
-        console.log(traits);
-
         this.avantages = traits[0].avantages;
         this.desavantages = traits[0].desavantages;
         const idAvantages = this.avantages.map(avantage => avantage.id);
@@ -99,9 +97,8 @@ export class BolTraitComponent implements OnDestroy {
   quit() {
     this.ref.close(null);
   }
-
   validate() {
-    this.ref.close({region: null});
+    this.ref.close({avantages: this.avantagesIds, desavantages: this.desavantagesIds});
   }
 
   ngOnDestroy() {
@@ -115,16 +112,10 @@ export class BolTraitComponent implements OnDestroy {
     return BolHeroCreateTools.desavantageDescription(desavantage);
   }
   checkSelection() {
-    console.log(this.selectedAvantages);
-    console.log(this.selectedDesavantages);
-    console.log(this.selectedGeneralAvantages);
-    console.log(this.selectedGeneralDesavantages);
-
     const totalNatalAvantages = this.selectedAvantages.length;
     const totalAvantages = this.selectedAvantages.length + this.selectedGeneralAvantages.length;
 
     const totalNatalDesavantages = this.selectedDesavantages.length;
-    const totalDesavantages = this.selectedDesavantages.length + this.selectedGeneralDesavantages.length;
 
     let costHeroism = 0;
 
@@ -154,6 +145,10 @@ export class BolTraitComponent implements OnDestroy {
     this.avantagesIds = [
       ...this.selectedAvantages.map((avantage: BolAvantageModel) => avantage.id),
       ...this.selectedGeneralAvantages.map((avantage: BolAvantageModel) => avantage.id)
+    ];
+    this.desavantagesIds = [
+      ...this.selectedDesavantages.map((desavantage: BolDesavantageModel) => desavantage.id),
+      ...this.selectedGeneralDesavantages.map((desavantage: BolDesavantageModel) => desavantage.id)
     ];
 
 

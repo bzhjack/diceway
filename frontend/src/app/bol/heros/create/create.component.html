@@ -5,7 +5,7 @@
         <div class="text-3xl">Création d'un héros</div>
       </div>
     </ng-template>
-    <form (ngSubmit)="submit()" [formGroup]="heroForm" autocomplete="off">
+    <form (ngSubmit)="submit()" [formGroup]="herosForm" autocomplete="off">
       <div class="flex gap-4">
         <div class="flex flex-col gap-2">
           <!-------------->
@@ -164,9 +164,9 @@
               </div>
             </div>
           </div>
-          <!----------------->
-          <!--- avantages --->
-          <!----------------->
+          <!--------------------------------->
+          <!--- avantages et désavantages --->
+          <!--------------------------------->
           <div class="flex gap-2">
             <p-fieldset class="flex-auto">
               <ng-template pTemplate="header">
@@ -180,11 +180,20 @@
                     </div>
                   </p-overlayPanel>
                   <div>Avantages & Désavantages</div>
+                  <div formArrayName="traits">
+                    @for (tagControl of traitsArray.controls; track tagControl) {
+                      <div>
+                        plop
+                        <!--input class="tag" [formControlName]="$index" />
+                        <button class="remove-tag" (click)="removeTag($index)">Remove tag</button-->
+                      </div>
+                    }
+                  </div>
                 </div>
               </ng-template>
               <div>
                 <div class="flex justify-end gap-2">
-                  <p-button (click)="traits()" label="Ajouter des avantages" size="small" [link]="true" [disabled]="regionCtrl.value === null"/>
+                  <p-button (click)="openTraits()" label="Ajouter des avantages" size="small" [link]="true" [disabled]="regionCtrl.value === null"/>
                 </div>
 
               </div>
@@ -230,7 +239,7 @@
         <div class="flex gap-2">
           <p-button label="Retour" icon="pi pi-times" severity="secondary" size="small"
                     routerLink="/bol"></p-button>
-          <p-button (click)="submit()" [disabled]="heroForm.invalid" label="Enregistrer" icon="pi pi-check" size="small"
+          <p-button (click)="submit()" [disabled]="herosForm.invalid" label="Enregistrer" icon="pi pi-check" size="small"
                     severity="success"></p-button>
         </div>
       </div>
