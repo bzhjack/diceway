@@ -15,7 +15,7 @@ class BolHerosController extends Controller
      */
     public function getAll()
     {
-        $heroes = BolHeros::with('traits')->where('user_id', Auth::id())->get();
+        $heroes = BolHeros::with('traits.detail')->where('user_id', Auth::id())->get();
         return response($heroes);
     }
 
@@ -24,7 +24,7 @@ class BolHerosController extends Controller
      */
     public function getOne(Request $request) {
         $id = $request->route('id');
-        $hero = BolHeros::with('traits')->where('user_id', Auth::id())->where('id', $id)->get()->first();
+        $hero = BolHeros::with('traits.detail')->where('user_id', Auth::id())->where('id', $id)->get()->first();
         if ($hero === null) {
             return response()->json(['error'=> 'Hero not found'], 404);
         } else {
