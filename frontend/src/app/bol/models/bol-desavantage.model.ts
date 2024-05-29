@@ -1,5 +1,5 @@
 export interface BolDesavantageModel {
-  id: string | null;
+  id: number | null;
   desavantage: string;
   attribut: string | null;
   attribut_malus: boolean | null;

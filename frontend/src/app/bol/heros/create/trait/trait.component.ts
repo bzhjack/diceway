@@ -52,13 +52,17 @@ export class BolTraitComponent implements OnDestroy {
   public avantages: BolAvantageModel[] = [];
   public desavantages: BolDesavantageModel[] = [];
 
+  private allAvg: BolAvantageModel[] = [];
+  private allDesavg: BolDesavantageModel[] = [];
+
+
   selectedAvantages: BolAvantageModel[] = [];
   selectedDesavantages: BolDesavantageModel[] = [];
   selectedGeneralAvantages: BolAvantageModel[] = [];
   selectedGeneralDesavantages: BolDesavantageModel[] = [];
 
-  avantagesIds: (string | null)[] = [];
-  desavantagesIds: (string | null)[] = [];
+  avantagesIds: (number | null)[] = [];
+  desavantagesIds: (number | null)[] = [];
 
   public heroismCost = 0;
 
@@ -68,7 +72,7 @@ export class BolTraitComponent implements OnDestroy {
     public config: DynamicDialogConfig,
     private spinner: NgxSpinnerService) {
 
-    const regionId= this.config.data.id_region;
+    const regionId = this.config.data.id_region;
     this.spinner.show();
     this.ready = false;
     this.subs = forkJoin([
@@ -77,6 +81,8 @@ export class BolTraitComponent implements OnDestroy {
       this.hs.desavantages()
     ]).subscribe({
       next: (traits: any) => {
+        this.allAvg = traits[1];
+        this.allDesavg = traits[2];
         this.avantages = traits[0].avantages;
         this.desavantages = traits[0].desavantages;
         const idAvantages = this.avantages.map(avantage => avantage.id);
@@ -97,13 +103,23 @@ export class BolTraitComponent implements OnDestroy {
   quit() {
     this.ref.close(null);
   }
+
   validate() {
-    this.ref.close({avantages: this.avantagesIds, desavantages: this.desavantagesIds});
+    const avg: (BolAvantageModel | undefined)[] = [];
+    this.avantagesIds.forEach((id, key) => {
+      avg.push(this.allAvg.find((avg) => avg.id === id));
+    })
+    const desa: (BolDesavantageModel | undefined)[] = [];
+    this.avantagesIds.forEach((id, key) => {
+      desa.push(this.allDesavg.find((desavg) => desavg.id === id));
+    })
+    this.ref.close({avantages: avg, desavantages: this.desavantagesIds});
   }
 
   ngOnDestroy() {
     this.subs?.unsubscribe();
   }
+
   avantageDescription(avantage: BolAvantageModel) {
     return BolHeroCreateTools.avantageDescription(avantage);
   }
@@ -111,6 +127,7 @@ export class BolTraitComponent implements OnDestroy {
   desavantageDescription(desavantage: BolDesavantageModel) {
     return BolHeroCreateTools.desavantageDescription(desavantage);
   }
+
   checkSelection() {
     const totalNatalAvantages = this.selectedAvantages.length;
     const totalAvantages = this.selectedAvantages.length + this.selectedGeneralAvantages.length;
@@ -121,7 +138,7 @@ export class BolTraitComponent implements OnDestroy {
 
     // Gestion premier avantage (natal)
     if (totalNatalAvantages === 0) {  // Si pas de premier alors aucun autre
-      this.selectedGeneralAvantages =[];
+      this.selectedGeneralAvantages = [];
     }
 
     // Gestion deuxième avantage (natal ou general)

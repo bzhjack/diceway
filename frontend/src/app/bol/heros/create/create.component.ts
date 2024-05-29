@@ -31,6 +31,7 @@ import {attributValidator, globalFormValidator} from "./create.validators";
 import {BolHeroCreateTools} from './create.tools';
 import {BolMessageComponent} from "../../message/message.component";
 import {BolTraitComponent} from "./trait/trait.component";
+import {BolAvantageModel} from "../../models/bol-avantage.model";
 
 @Component({
   selector: 'app-create',
@@ -370,13 +371,13 @@ export class BolHerosCreateComponent implements OnDestroy {
     this.subs = this.ref?.onClose.subscribe((data: any) => {
       if (data) {
         this.traits.clear();
-        data.avantages.forEach((avantageId: number) => {this.addTrait({type: 'A', id: avantageId})});
+        data.avantages.forEach((avantage: BolAvantageModel) => {this.addTrait({type: 'A', id: avantage.id})});
         data.desavantages.forEach((desavantageId: number) => {this.addTrait({type: 'D', id: desavantageId})})
       }
     });
   }
 
-  addTrait(trait: {type: 'A' | 'D', id: number}) {
+  addTrait(trait: {type: 'A' | 'D', id: number | null}) {
     const traitForm = this.fb.group({
       trait_id: [trait.id],
       type: [trait.type],

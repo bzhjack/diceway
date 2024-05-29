@@ -1,5 +1,5 @@
 export interface BolAvantageModel {
-  id: string | null;
+  id: number | null;
   avantage: string;
   attribut: string | null;
   attribut_bonus: boolean | null;
