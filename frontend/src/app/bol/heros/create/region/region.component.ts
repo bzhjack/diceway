@@ -18,6 +18,7 @@ import {FieldsetModule} from "primeng/fieldset";
 import {MessagesModule} from "primeng/messages";
 import {BolHeroCreateTools} from "../create.tools";
 import {OverlayPanelModule} from "primeng/overlaypanel";
+import {BolTraitRowComponent} from "../trait/trait-row/trait-row.component";
 
 @Component({
   selector: 'app-region',
@@ -34,7 +35,8 @@ import {OverlayPanelModule} from "primeng/overlaypanel";
     InlineSVGModule,
     FieldsetModule,
     MessagesModule,
-    OverlayPanelModule
+    OverlayPanelModule,
+    BolTraitRowComponent
   ],
   templateUrl: './region.component.html',
   styleUrl: './region.component.scss'

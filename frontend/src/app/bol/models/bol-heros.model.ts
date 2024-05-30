@@ -18,5 +18,7 @@ export interface BolHerosModel {
   defense: number,
 
   region_id: number | null,
-  region: string | null
+  region: string | null,
+
+  traits: any[]
 }

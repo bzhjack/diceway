@@ -18,6 +18,7 @@ import {ButtonModule} from "primeng/button";
 import {CheckboxModule} from "primeng/checkbox";
 import {FormsModule} from "@angular/forms";
 import {OverlayPanelModule} from "primeng/overlaypanel";
+import {BolTraitRowComponent} from "./trait-row/trait-row.component";
 
 @Component({
   selector: 'app-trait',
@@ -37,7 +38,8 @@ import {OverlayPanelModule} from "primeng/overlaypanel";
     CheckboxModule,
     FormsModule,
     OverlayPanelModule,
-    NgStyle
+    NgStyle,
+    BolTraitRowComponent
   ],
   templateUrl: './trait.component.html',
   styleUrl: './trait.component.scss'

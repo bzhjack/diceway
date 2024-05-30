@@ -270,7 +270,10 @@ export class BolHerosCreateComponent implements OnDestroy {
             region: hero.region,
 
           });
-
+          this.traits.clear();
+          hero.traits.forEach((trait) => {
+            this.addTrait({type: trait.type, id: trait.id});
+          });
 
           this.spinner.hide();
         },

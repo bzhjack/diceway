@@ -5,21 +5,31 @@
         <div>
           <ul class="flex flex-col gap-2">
             <li>
-              <div [ngStyle]="selectedAvantages.length >= 1 ? {color: 'var(--success-color)'}: {}"><strong>Premier Avantage (terre natale):</strong></div>
+              <div [ngStyle]="selectedAvantages.length >= 1 ? {color: 'var(--success-color)'}: {}"><strong>Premier
+                Avantage (terre natale):</strong></div>
               <div>Choisissez un avantage parmi ceux proposés.</div>
             </li>
             <li>
-              <div [ngStyle]="avantagesIds.length >= 2 ? {color: 'var(--success-color)'}: {}"><strong>Deuxième Avantage (général ou terre natale) :</strong></div>
-              <div [ngStyle]="avantagesIds.length >= 2 && selectedDesavantages.length === 0 ? {color: 'var(--warn-color)'}: {}">Prenez un désavantage (terre natale) ou renoncez à 1 point d’héroïsme.</div>
+              <div [ngStyle]="avantagesIds.length >= 2 ? {color: 'var(--success-color)'}: {}"><strong>Deuxième Avantage
+                (général ou terre natale) :</strong></div>
+              <div
+                [ngStyle]="avantagesIds.length >= 2 && selectedDesavantages.length === 0 ? {color: 'var(--warn-color)'}: {}">
+                Prenez un désavantage (terre natale) ou renoncez à 1 point d’héroïsme.
+              </div>
             </li>
             <li>
-              <div [ngStyle]="avantagesIds.length == 3 ? {color: 'var(--success-color)'}: {}"><strong>Troisième Avantage (général ou terre natale) :</strong></div>
-              <div [ngStyle]="avantagesIds.length == 3 && !(this.selectedGeneralDesavantages.length >= 1 || this.selectedDesavantages.length == 2) ? {color: 'var(--warn-color)'}: {}">Prenez un autre désavantage (général ou terre natale) ou renoncez à un autre point d’héroïsme.</div>
+              <div [ngStyle]="avantagesIds.length == 3 ? {color: 'var(--success-color)'}: {}"><strong>Troisième Avantage
+                (général ou terre natale) :</strong></div>
+              <div
+                [ngStyle]="avantagesIds.length == 3 && !(this.selectedGeneralDesavantages.length >= 1 || this.selectedDesavantages.length == 2) ? {color: 'var(--warn-color)'}: {}">
+                Prenez un autre désavantage (général ou terre natale) ou renoncez à un autre point d’héroïsme.
+              </div>
             </li>
           </ul>
         </div>
         <div class="flex items-center justify-center flex-auto text-4xl">
-          <div *ngIf="heroismCost > 0" style="color: var(--warn-color)">Coût en point d'héroïsme: <strong>{{heroismCost}}</strong></div>
+          <div *ngIf="heroismCost > 0" style="color: var(--warn-color)">Coût en point d'héroïsme:
+            <strong>{{ heroismCost }}</strong></div>
         </div>
       </div>
     </p-fieldset>
@@ -28,122 +38,57 @@
     <p-fieldset legend="Liste régionale" class="w-1/2 h-full" styleClass="h-full relative">
       <div class="flex gap-2" style="position: absolute; inset:15px;">
         <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
-          <ng-container *ngFor="let avantage of avantages">
-            <div class="flex items-center gap-2 w-fit pb-2 cursor-pointer">
-              <div class="flex items-center" (click)="avPanel.toggle($event)">
-                <div *ngIf="!avantage.de_bonus && !avantage.attribut" class="tag_icon bonus"
-                     inlineSVG="/frontend/assets/info.svg"></div>
-                <div *ngIf="avantage.de_bonus || avantage.attribut" class="tag_icon bonus"
-                     [inlineSVG]="avantage.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
-                <div>
-                </div>
-              </div>
-              <p-checkbox name="av"
-                          [disabled]="selectedGeneralAvantages.length + selectedAvantages.length === 3 && !this.avantagesIds.includes(avantage.id)"
-                          [label]="avantage.avantage + (avantage.pivot.detail === null ? '' : '('+ avantage.pivot.detail +')')"
-                          [(ngModel)]="selectedAvantages"
-                          [value]="avantage"
-                          (ngModelChange)="checkSelection()"></p-checkbox>
-            </div>
-            <p-overlayPanel #avPanel>
-              <div class="dw-panel" style="background: #424B57">
-                <div *ngFor="let desc of avantageDescription(avantage)" class="flex flex-col">
-                  <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
-                  <div style="font-size: 12px">{{ desc.description }}</div>
-                </div>
-              </div>
-            </p-overlayPanel>
-          </ng-container>
+          <div class="flex gap-2 pb-2" *ngFor="let avantage of avantages">
+            <p-checkbox name="av"
+                        [disabled]="selectedGeneralAvantages.length + selectedAvantages.length === 3 && !this.avantagesIds.includes(avantage.id)"
+                        [(ngModel)]="selectedAvantages"
+                        [value]="avantage"
+                        (ngModelChange)="checkSelection()"></p-checkbox>
+            <app-trait-row [avantage]="avantage"
+                           [disabled]="selectedGeneralAvantages.length + selectedAvantages.length === 3 && !this.avantagesIds.includes(avantage.id)"></app-trait-row>
+          </div>
         </p-scrollPanel>
         <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
-          <ng-container *ngFor="let desavantage of desavantages">
-            <div class="flex items-center gap-2 w-fit pb-2">
-              <div class="flex items-center cursor-pointer" (click)="desPanel.toggle($event)">
-                <div *ngIf="!desavantage.de_malus && !desavantage.attribut" class="tag_icon malus"
-                     inlineSVG="/frontend/assets/info.svg"></div>
-                <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon malus"
-                     [inlineSVG]="desavantage.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
-              </div>
-              <p-checkbox name="des"
-                          [label]="desavantage.desavantage + (desavantage.pivot.detail === null ? '' : '('+ desavantage.pivot.detail +')')"
-                          [(ngModel)]="selectedDesavantages"
-                          [value]="desavantage"
-                          (ngModelChange)="checkSelection()"></p-checkbox>
-            </div>
-
-            <p-overlayPanel #desPanel>
-              <div class="dw-panel" style="background: #424B57">
-                <div *ngFor="let desc of desavantageDescription(desavantage)" class="flex flex-col">
-                  <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
-                  <div style="font-size: 12px">{{ desc.description }}</div>
-                </div>
-              </div>
-            </p-overlayPanel>
-          </ng-container>
+          <div class="flex gap-2 pb-2" *ngFor="let desavantage of desavantages">
+            <p-checkbox name="des"
+                        [(ngModel)]="selectedDesavantages"
+                        [value]="desavantage"
+                        (ngModelChange)="checkSelection()"></p-checkbox>
+            <app-trait-row [desavantage]="desavantage"></app-trait-row>
+          </div>
         </p-scrollPanel>
       </div>
     </p-fieldset>
     <p-fieldset legend="Liste globale" class="w-1/2 h-full" styleClass="h-full relative">
       <div class="flex gap-2" style="position: absolute; inset:15px;">
         <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
-          <ng-container *ngFor="let avantage of generalAvantages">
-            <div class="flex items-center gap-2 w-fit pb-2">
-              <div class="flex items-center cursor-pointer" (click)="gavPanel.toggle($event)">
-                <div *ngIf="!avantage.de_bonus && !avantage.attribut" class="tag_icon bonus"
-                     inlineSVG="/frontend/assets/info.svg"></div>
-                <div *ngIf="avantage.de_bonus || avantage.attribut" class="tag_icon bonus"
-                     [inlineSVG]="avantage.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
-              </div>
-              <p-checkbox name="gav"
-                          [disabled]="selectedAvantages.length === 0 || (avantagesIds.length === 3 && !avantagesIds.includes(avantage.id))"
-                          [label]="avantage.avantage"
-                          [(ngModel)]="selectedGeneralAvantages"
-                          [value]="avantage"
-                          (ngModelChange)="checkSelection()"></p-checkbox>
-            </div>
-            <p-overlayPanel #gavPanel>
-              <div class="dw-panel" style="background: #424B57">
-                <div *ngFor="let desc of avantageDescription(avantage)" class="flex flex-col">
-                  <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
-                  <div style="font-size: 12px">{{ desc.description }}</div>
-                </div>
-              </div>
-            </p-overlayPanel>
-          </ng-container>
+          <div class="flex gap-2 pb-2" *ngFor="let avantage of generalAvantages">
+            <p-checkbox name="gav"
+                        [disabled]="selectedAvantages.length === 0 || (avantagesIds.length === 3 && !avantagesIds.includes(avantage.id))"
+                        [(ngModel)]="selectedGeneralAvantages"
+                        [value]="avantage"
+                        (ngModelChange)="checkSelection()"></p-checkbox>
+            <app-trait-row [avantage]="avantage"
+                           [disabled]="selectedAvantages.length === 0 || (avantagesIds.length === 3 && !avantagesIds.includes(avantage.id))"></app-trait-row>
+          </div>
         </p-scrollPanel>
 
         <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
-          <ng-container *ngFor="let desavantage of generalDesavantages">
-            <div class="flex items-center gap-2 w-fit pb-2">
-              <div class="flex items-center cursor-pointer" (click)="gdesPanel.toggle($event)">
-                <div *ngIf="!desavantage.de_malus && !desavantage.attribut" class="tag_icon malus"
-                     inlineSVG="/frontend/assets/info.svg"></div>
-                <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon malus"
-                     [inlineSVG]="desavantage.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
-              </div>
-              <p-checkbox name="gdes"
-                          [label]="desavantage.desavantage"
-                          [(ngModel)]="selectedGeneralDesavantages"
-                          [value]="desavantage"
-                          (ngModelChange)="checkSelection()"></p-checkbox>
-            </div>
-
-            <p-overlayPanel #gdesPanel>
-              <div class="dw-panel" style="background: #424B57">
-                <div *ngFor="let desc of desavantageDescription(desavantage)" class="flex flex-col">
-                  <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
-                  <div style="font-size: 12px">{{ desc.description }}</div>
-                </div>
-              </div>
-            </p-overlayPanel>
-          </ng-container>
+          <div class="flex gap-2 pb-2" *ngFor="let desavantage of generalDesavantages">
+            <p-checkbox name="gdes"
+                        [(ngModel)]="selectedGeneralDesavantages"
+                        [value]="desavantage"
+                        (ngModelChange)="checkSelection()"></p-checkbox>
+            <app-trait-row [desavantage]="desavantage"></app-trait-row>
+          </div>
         </p-scrollPanel>
       </div>
     </p-fieldset>
   </div>
   <div class="flex justify-end gap-2">
     <p-button icon="pi pi-times" size="small" label="Quitter" severity="secondary" (click)="quit()"></p-button>
-    <p-button icon="pi pi-check" size="small" label="Valider" severity="success" (click)="validate()" [disabled]="avantagesIds.length === 0"></p-button>
+    <p-button icon="pi pi-check" size="small" label="Valider" severity="success" (click)="validate()"
+              [disabled]="avantagesIds.length === 0"></p-button>
   </div>
 </div>
 
