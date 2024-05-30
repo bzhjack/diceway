@@ -110,10 +110,10 @@ export class BolTraitComponent implements OnDestroy {
       avg.push(this.allAvg.find((avg) => avg.id === id));
     })
     const desa: (BolDesavantageModel | undefined)[] = [];
-    this.avantagesIds.forEach((id, key) => {
+    this.desavantagesIds.forEach((id, key) => {
       desa.push(this.allDesavg.find((desavg) => desavg.id === id));
     })
-    this.ref.close({avantages: avg, desavantages: this.desavantagesIds});
+    this.ref.close({avantages: avg, desavantages: desa});
   }
 
   ngOnDestroy() {

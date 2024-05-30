@@ -32,6 +32,7 @@ import {BolHeroCreateTools} from './create.tools';
 import {BolMessageComponent} from "../../message/message.component";
 import {BolTraitComponent} from "./trait/trait.component";
 import {BolAvantageModel} from "../../models/bol-avantage.model";
+import { BolDesavantageModel } from '../../models/bol-desavantage.model';
 
 @Component({
   selector: 'app-create',
@@ -269,6 +270,8 @@ export class BolHerosCreateComponent implements OnDestroy {
             region: hero.region,
 
           });
+
+
           this.spinner.hide();
         },
         error: () => {
@@ -370,9 +373,10 @@ export class BolHerosCreateComponent implements OnDestroy {
     this.subs?.unsubscribe();
     this.subs = this.ref?.onClose.subscribe((data: any) => {
       if (data) {
+        console.log(data);
         this.traits.clear();
         data.avantages.forEach((avantage: BolAvantageModel) => {this.addTrait({type: 'A', id: avantage.id})});
-        data.desavantages.forEach((desavantageId: number) => {this.addTrait({type: 'D', id: desavantageId})})
+        data.desavantages.forEach((desavantage: BolDesavantageModel) => {this.addTrait({type: 'D', id: desavantage.id})})
       }
     });
   }
