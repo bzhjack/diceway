@@ -61,9 +61,13 @@ import { BolDesavantageModel } from '../../models/bol-desavantage.model';
 export class BolHerosCreateComponent implements OnDestroy {
   private subs?: Subscription;
   private ref: DynamicDialogRef | undefined;
+  
   attributErrors: { control: string, error: string }[] = [];
   aptitudeErrors: { control: string, error: string }[] = [];
   creationWarns: { step: string, warn: string }[] = [];
+
+  avantages: BolAvantageModel[] = [];
+  desavantages: BolDesavantageModel[] = [];
 
   public idCtrl: FormControl<string | null> = new FormControl(null);
   public joueurCtrl = new FormControl('', Validators.required);
@@ -91,7 +95,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   public vitaliteCtrl = new FormControl<number | null>(0);
   public heroismeCtrl = new FormControl<number | null>(5);
 
-  // Avanatges et désavantages
+  // Avantages et désavantages
   traitsArray = this.fb.array([]);
 
   herosForm = this.fb.group(
@@ -271,8 +275,15 @@ export class BolHerosCreateComponent implements OnDestroy {
 
           });
           this.traits.clear();
+          this.avantages = [];
+          this.desavantages=[];
           hero.traits.forEach((trait) => {
             this.addTrait({type: trait.type, id: trait.id});
+            if (trait.type === "A") {
+                this.avantages.push(trait.detail);
+            } else {
+              this.desavantages.push(trait.detail);
+            }
           });
 
           this.spinner.hide();
@@ -378,6 +389,8 @@ export class BolHerosCreateComponent implements OnDestroy {
       if (data) {
         console.log(data);
         this.traits.clear();
+        this.avantages = data.avantages.slice();
+        this.desavantages = data.desavantages.slice();
         data.avantages.forEach((avantage: BolAvantageModel) => {this.addTrait({type: 'A', id: avantage.id})});
         data.desavantages.forEach((desavantage: BolDesavantageModel) => {this.addTrait({type: 'D', id: desavantage.id})})
       }
