@@ -75,6 +75,9 @@ export class BolTraitComponent implements OnDestroy {
     private spinner: NgxSpinnerService) {
 
     const regionId = this.config.data.id_region;
+    const herosAvgId = this.config.data.avantages.map((a: BolAvantageModel) => a.id);
+    const herosDesId = this.config.data.desavantages.map((d: BolDesavantageModel) => d.id);
+
     this.spinner.show();
     this.ready = false;
     this.subs = forkJoin([
@@ -92,6 +95,16 @@ export class BolTraitComponent implements OnDestroy {
         this.generalAvantages = traits[1].filter((avantage: BolAvantageModel) => !idAvantages.includes(avantage.id));
         this.generalDesavantages = traits[2].filter((desavantage: BolDesavantageModel) => !idDesavantages.includes(desavantage.id));
 
+        this.selectedAvantages = this.avantages.filter((avg: BolAvantageModel) => herosAvgId.includes(avg.id));
+        this.selectedGeneralAvantages = this.generalAvantages.filter((avg: BolAvantageModel) => herosAvgId.includes(avg.id));
+        
+        this.selectedDesavantages = this.desavantages.filter((des: BolDesavantageModel) => herosDesId.includes(des.id));
+        this.selectedGeneralDesavantages = this.generalDesavantages.filter((des: BolDesavantageModel) => herosDesId.includes(des.id));
+        
+
+        console.log(this.selectedAvantages);
+
+        this.checkSelection();
         this.ready = true;
         this.spinner.hide();
       },

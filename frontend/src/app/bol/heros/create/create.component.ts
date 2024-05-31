@@ -383,7 +383,9 @@ export class BolHerosCreateComponent implements OnDestroy {
       width: '95vw',
       height: '90vh',
       data: {
-        id_region: this.regionIdCtrl.value
+        id_region: this.regionIdCtrl.value,
+        avantages: this.avantages,
+        desavantages: this.desavantages
       },
     });
     this.subs?.unsubscribe();
