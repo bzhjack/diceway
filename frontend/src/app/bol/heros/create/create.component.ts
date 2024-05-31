@@ -33,6 +33,7 @@ import {BolMessageComponent} from "../../message/message.component";
 import {BolTraitComponent} from "./trait/trait.component";
 import {BolAvantageModel} from "../../models/bol-avantage.model";
 import { BolDesavantageModel } from '../../models/bol-desavantage.model';
+import { BolTraitRowComponent } from './trait/trait-row/trait-row.component';
 
 @Component({
   selector: 'app-create',
@@ -53,7 +54,8 @@ import { BolDesavantageModel } from '../../models/bol-desavantage.model';
     JsonPipe,
     NgIf,
     NgForOf,
-    BolMessageComponent
+    BolMessageComponent,
+    BolTraitRowComponent
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
@@ -399,7 +401,7 @@ export class BolHerosCreateComponent implements OnDestroy {
 
   addTrait(trait: {type: 'A' | 'D', id: number | null}) {
     const traitForm = this.fb.group({
-      trait_id: [trait.id],
+      traitable_id: [trait.id],
       type: [trait.type],
     });
     this.traits.push(traitForm);

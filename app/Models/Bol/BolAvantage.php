@@ -17,4 +17,9 @@ class BolAvantage extends Model
     {
         return $this->belongsToMany(BolRegion::class);
     }
+
+    public function bolHerosTrait()
+    {
+        return $this->morphMany(BolHerosTrait::class, 'traitable');
+    }
 }

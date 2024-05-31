@@ -184,7 +184,7 @@
               </ng-template>
               <div>
                 @for (avg of avantages; track avg) {
-                  <app-trait-row [desavantage]="desavantage"></app-trait-row>
+                  <app-trait-row [avantage]="avg"></app-trait-row>
                 }
                 <div formArrayName="traits">
                   @for (tagControl of traitsArray.controls; track tagControl) {

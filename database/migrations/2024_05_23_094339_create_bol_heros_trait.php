@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('bol_heros_trait', function (Blueprint $table) {
            $table->id();
            $table->uuid('heros_id');
-           $table->unsignedBigInteger('trait_id');
+           $table->unsignedBigInteger('traitable_id');
+           $table->string('traitable_type');
            $table->enum('type', ['A', 'D']);
            $table->timestamps();
 
@@ -22,7 +23,7 @@ return new class extends Migration
            $table->foreign('heros_id')->references('id')->on('bol_heros')->onDelete('cascade');
 
            // On s'assure qu'une combinaison de region_id et avantage_id soit unique
-           $table->unique(['heros_id', 'trait_id', 'type']);
+           $table->unique(['heros_id', 'traitable_id', 'traitable_type', 'type']);
         });
     }
 

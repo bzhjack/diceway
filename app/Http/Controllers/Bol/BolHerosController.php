@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bol\BolAvantage;
+use App\Models\Bol\BolDesavantage;
 use App\Models\Bol\BolHeros;
 use App\Models\Bol\BolHerosTrait;
 use Illuminate\Http\Request;
@@ -15,7 +17,7 @@ class BolHerosController extends Controller
      */
     public function getAll()
     {
-        $heroes = BolHeros::with('traits.detail')->where('user_id', Auth::id())->get();
+        $heroes = BolHeros::with('traits.traitable')->where('user_id', Auth::id())->get();
         return response($heroes);
     }
 
@@ -24,7 +26,7 @@ class BolHerosController extends Controller
      */
     public function getOne(Request $request) {
         $id = $request->route('id');
-        $hero = BolHeros::with('traits.detail')->where('user_id', Auth::id())->where('id', $id)->get()->first();
+        $hero = BolHeros::with('traits.traitable')->where('user_id', Auth::id())->where('id', $id)->get()->first();
         if ($hero === null) {
             return response()->json(['error'=> 'Hero not found'], 404);
         } else {
@@ -74,10 +76,12 @@ class BolHerosController extends Controller
 
         // Insérez les nouveaux traits
         foreach ($traits as $trait) {
+            $traitable_type = $trait['type'] == 'A' ? BolAvantage::class : BolDesavantage::class;
             $heros_traits = [
                 'heros_id' => $id,
-                'trait_id' => $trait['trait_id'],
+                'traitable_id' => $trait['traitable_id'],
                 'type' => $trait['type'],
+                'traitable_type' => $traitable_type,
             ];
             BolHerosTrait::create($heros_traits);
         }

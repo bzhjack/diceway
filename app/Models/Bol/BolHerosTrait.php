@@ -13,15 +13,14 @@ class BolHerosTrait extends Model
 
     protected $fillable = [
     "heros_id",
-    "trait_id",
-    "type"
+    "type",
+    "traitable_id",
+    "traitable_type"
     ];
-    public function detail(): HasOne
+
+    public function traitable()
     {
-        if ($this->type === "A") {
-            return $this->hasOne(BolAvantage::class, 'id', 'trait_id');
-        } else {
-            return $this->hasOne(BolDesavantage::class,'id', 'trait_id');
-        }
+        return $this->morphTo();
     }
+
 }
