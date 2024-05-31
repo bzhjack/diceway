@@ -282,9 +282,9 @@ export class BolHerosCreateComponent implements OnDestroy {
           hero.traits.forEach((trait) => {
             this.addTrait({type: trait.type, id: trait.id});
             if (trait.type === "A") {
-                this.avantages.push(trait.detail);
+                this.avantages.push(trait.traitable);
             } else {
-              this.desavantages.push(trait.detail);
+              this.desavantages.push(trait.traitable);
             }
           });
 

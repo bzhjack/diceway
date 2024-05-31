@@ -183,18 +183,11 @@
                 </p-overlayPanel>
               </ng-template>
               <div>
-                @for (avg of avantages; track avg) {
-                  <app-trait-row [avantage]="avg"></app-trait-row>
-                }
-                <div formArrayName="traits">
-                  @for (tagControl of traitsArray.controls; track tagControl) {
-                    <div>
-                      plop
-                      <!--input class="tag" [formControlName]="$index" />
-                      <button class="remove-tag" (click)="removeTag($index)">Remove tag</button-->
-                    </div>
-                  }
+                <div class="flex flex-col gap-2">
+                  <app-trait-row *ngFor="let lavg of avantages" [avantage]="lavg"></app-trait-row>
+                  <app-trait-row *ngFor="let ldes of desavantages" [desavantage]="ldes"></app-trait-row>
                 </div>
+                
                 <div class="flex justify-end gap-2">
                   <p-button (click)="openTraits()" label="Gérer les avantages" size="small" [link]="true" [disabled]="regionCtrl.value === null"/>
                 </div>
