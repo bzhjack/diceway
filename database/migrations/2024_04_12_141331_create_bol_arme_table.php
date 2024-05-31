@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bol_armes', function (Blueprint $table) {
+        Schema::create('bol_arme', function (Blueprint $table) {
             $table->id();
             $table->string('arme');
             $table->enum('type', ['M', 'T']); // Utilisation de 'M' pour mêlée et 'T' pour tir
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bol_armes');
+        Schema::dropIfExists('bol_arme');
     }
 };

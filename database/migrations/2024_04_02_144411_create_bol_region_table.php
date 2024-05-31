@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bol_carrieres', function (Blueprint $table) {
+        Schema::create('bol_region', function (Blueprint $table) {
             $table->id();
-            $table->string('carriere');
-            $table->string('detail')->nullable()->default(null);
+            $table->string('region');
             $table->text('description')->nullable()->default(null);
             $table->timestamps();
         });
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bol_carrieres');
+        Schema::dropIfExists('bol_region');
     }
 };

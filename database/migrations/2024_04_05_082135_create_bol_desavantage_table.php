@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bol_desavantages', function (Blueprint $table) {
+        Schema::create('bol_desavantage', function (Blueprint $table) {
             $table->id();
             $table->string('desavantage')->unique();
             $table->string('attribut')->nullable()->default(null);
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bol_desavantages');
+        Schema::dropIfExists('bol_desavantage');
     }
 };

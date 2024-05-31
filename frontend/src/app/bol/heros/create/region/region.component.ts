@@ -1,5 +1,5 @@
 import {Component, OnDestroy, ViewChild} from '@angular/core';
-import {BolHeroService} from "../../../services/bol-hero.service";
+import {BolHerosService} from "../../../services/bol-heros.service";
 import {Subscription} from "rxjs";
 import {NgxSpinnerService} from "ngx-spinner";
 import {DataViewModule} from "primeng/dataview";
@@ -16,6 +16,9 @@ import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
 import {BolRegionModel} from "../../../models/bol-region.model";
 import {FieldsetModule} from "primeng/fieldset";
 import {MessagesModule} from "primeng/messages";
+import {BolHeroCreateTools} from "../create.tools";
+import {OverlayPanelModule} from "primeng/overlaypanel";
+import {BolTraitRowComponent} from "../trait/trait-row/trait-row.component";
 
 @Component({
   selector: 'app-region',
@@ -31,7 +34,9 @@ import {MessagesModule} from "primeng/messages";
     NgIf,
     InlineSVGModule,
     FieldsetModule,
-    MessagesModule
+    MessagesModule,
+    OverlayPanelModule,
+    BolTraitRowComponent
   ],
   templateUrl: './region.component.html',
   styleUrl: './region.component.scss'
@@ -45,14 +50,14 @@ export class BolRegionComponent implements OnDestroy {
   @ViewChild('regionPanel') scrollRegion!: ScrollPanel;
 
   constructor(
-    private hs: BolHeroService,
+    private hs: BolHerosService,
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
     private spinner: NgxSpinnerService) {
     const regionId= this.config.data.id_region;
     this.spinner.show();
     this.ready = false;
-    this.subs = this.hs.allRegions().subscribe({
+    this.subs = this.hs.regions().subscribe({
       next: (regions: Array<any>) => {
         this.regions = regions;
         if (regionId) {
@@ -68,31 +73,11 @@ export class BolRegionComponent implements OnDestroy {
   }
 
   avantageDescription(avantage: BolAvantageModel) {
-    let toolTip: { title: string, description: string | null }[] = [];
-    if (avantage.de_bonus) {
-      toolTip.push({title: 'Dé bonus', description: avantage.de_bonus_domaine});
-    }
-    if (avantage.attribut) {
-      toolTip.push({title: 'Attribut', description: `${avantage.attribut}(${avantage.attribut_bonus})`});
-    }
-    if (avantage.description) {
-      toolTip.push({title: 'Détails', description: avantage.description});
-    }
-    return toolTip;
+    return BolHeroCreateTools.avantageDescription(avantage);
   }
 
-  desavantageDescription(avantage: BolDesavantageModel) {
-    let toolTip: { title: string, description: string | null }[] = [];
-    if (avantage.de_malus) {
-      toolTip.push({title: 'Dé malus', description: avantage.de_malus_domaine});
-    }
-    if (avantage.attribut) {
-      toolTip.push({title: 'Attribut', description: `${avantage.attribut}(${avantage.attribut_malus})`});
-    }
-    if (avantage.description) {
-      toolTip.push({title: 'Détails', description: avantage.description});
-    }
-    return toolTip;
+  desavantageDescription(desavantage: BolDesavantageModel) {
+    return BolHeroCreateTools.desavantageDescription(desavantage);
   }
 
   quit() {
@@ -113,7 +98,6 @@ export class BolRegionComponent implements OnDestroy {
       region.nomsFeminins = region.noms.filter((nom: any) => nom.gender === 'F');
       region.nomsMasculins = region.noms.filter((nom: any) => nom.gender === 'M');
       this.currentRegion = region;
-      console.log(region);
       setTimeout(() => {
         let regionElement = document.getElementById('region-' + region.id);
         if (regionElement) {

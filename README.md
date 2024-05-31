@@ -14,7 +14,7 @@ php artisan migrate
 
 // Gestion database
 
-php artisan make:migration create_bol_regions_table
+php artisan make:migration create_bol_region_table
 php artisan make:model BolRegion
 php artisan make:seeder BolRegionSeeder
 php artisan db:seed --class=BolRegionSeeder

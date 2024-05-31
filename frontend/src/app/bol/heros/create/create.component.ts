@@ -2,12 +2,20 @@ import {Component, OnDestroy} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {InputTextModule} from "primeng/inputtext";
 import {InputNumberModule} from 'primeng/inputnumber';
-import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule, ValidationErrors, Validators} from "@angular/forms";
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators
+} from "@angular/forms";
 import {ToolbarModule} from "primeng/toolbar";
 import {ButtonModule} from "primeng/button";
 import {SplitButtonModule} from "primeng/splitbutton";
-import {BolHeroService} from "../../services/bol-hero.service";
-import {BolHeroModel} from "../../models/bol-hero.model";
+import {BolHerosService} from "../../services/bol-heros.service";
+import {BolHerosModel} from "../../models/bol-heros.model";
 import {debounceTime, Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
@@ -22,6 +30,10 @@ import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {attributValidator, globalFormValidator} from "./create.validators";
 import {BolHeroCreateTools} from './create.tools';
 import {BolMessageComponent} from "../../message/message.component";
+import {BolTraitComponent} from "./trait/trait.component";
+import {BolAvantageModel} from "../../models/bol-avantage.model";
+import { BolDesavantageModel } from '../../models/bol-desavantage.model';
+import { BolTraitRowComponent } from './trait/trait-row/trait-row.component';
 
 @Component({
   selector: 'app-create',
@@ -42,18 +54,22 @@ import {BolMessageComponent} from "../../message/message.component";
     JsonPipe,
     NgIf,
     NgForOf,
-    BolMessageComponent
+    BolMessageComponent,
+    BolTraitRowComponent
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
 })
-export class BolHeroCreateComponent implements OnDestroy {
+export class BolHerosCreateComponent implements OnDestroy {
   private subs?: Subscription;
   private ref: DynamicDialogRef | undefined;
+  
   attributErrors: { control: string, error: string }[] = [];
   aptitudeErrors: { control: string, error: string }[] = [];
-
   creationWarns: { step: string, warn: string }[] = [];
+
+  avantages: BolAvantageModel[] = [];
+  desavantages: BolDesavantageModel[] = [];
 
   public idCtrl: FormControl<string | null> = new FormControl(null);
   public joueurCtrl = new FormControl('', Validators.required);
@@ -81,7 +97,10 @@ export class BolHeroCreateComponent implements OnDestroy {
   public vitaliteCtrl = new FormControl<number | null>(0);
   public heroismeCtrl = new FormControl<number | null>(5);
 
-  heroForm = this.fb.group(
+  // Avantages et désavantages
+  traitsArray = this.fb.array([]);
+
+  herosForm = this.fb.group(
     {
       id: this.idCtrl,
       joueur: this.joueurCtrl,
@@ -105,21 +124,26 @@ export class BolHeroCreateComponent implements OnDestroy {
       region_id: this.regionIdCtrl,
       region: this.regionCtrl,
 
+      traits: this.traitsArray
 
     }, {validators: globalFormValidator}
   );
+
+  get traits() {
+    return this.herosForm.controls["traits"] as FormArray;
+  }
 
   constructor(
     public ds: DialogService,
     private spinner: NgxSpinnerService,
     private fb: FormBuilder,
-    private hs: BolHeroService,
+    private hs: BolHerosService,
     private readonly route: ActivatedRoute) {
     const id = this.route.snapshot.paramMap.get('id');
     if (id !== null) {
-      this.getHero(id);
+      this.getHeros(id);
     }
-    this.heroForm.valueChanges.pipe(debounceTime(200)).subscribe(() => {
+    this.herosForm.events.pipe(debounceTime(200)).subscribe(() => {
       this.logFormErrors();
       this.logFormWarns();
     });
@@ -142,7 +166,7 @@ export class BolHeroCreateComponent implements OnDestroy {
     // Controle somme des attributs
     if (this.attributErrors.length === 0) {
       const controlsAttrIds = ['vigueur', 'agilite', 'aura', 'esprit'];
-      const controlsAttrArray = controlsAttrIds.map(id => this.heroForm.get(id));
+      const controlsAttrArray = controlsAttrIds.map(id => this.herosForm.get(id));
       const attrs = controlsAttrArray.map(ctrl => ctrl?.value);
       const sumAttr = attrs.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
       if (sumAttr < 4) {
@@ -151,7 +175,7 @@ export class BolHeroCreateComponent implements OnDestroy {
     }
     if (this.aptitudeErrors.length === 0) {
       const controlsAptIds = ['tir', 'melee', 'defense', 'initiative'];
-      const controlsAptArray = controlsAptIds.map(id => this.heroForm.get(id));
+      const controlsAptArray = controlsAptIds.map(id => this.herosForm.get(id));
       const apts = controlsAptArray.map(ctrl => ctrl?.value);
       const sumApt = apts.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
       if (sumApt < 4) {
@@ -177,8 +201,8 @@ export class BolHeroCreateComponent implements OnDestroy {
     this.attributErrors = [];
     this.aptitudeErrors = [];
 
-    Object.keys(this.heroForm.controls).forEach(key => {
-      const controlErrors = this.heroForm.get(key)?.errors;
+    Object.keys(this.herosForm.controls).forEach(key => {
+      const controlErrors = this.herosForm.get(key)?.errors;
       if (controlErrors != null) {
         Object.keys(controlErrors).forEach(keyError => {
           if (['vigueur', 'agilite', 'aura', 'esprit'].includes(key)) {
@@ -198,10 +222,9 @@ export class BolHeroCreateComponent implements OnDestroy {
       }
     });
     // Obtenir les erreurs globales du formulaire
-    const formErrors: ValidationErrors | null = this.heroForm.errors;
+    const formErrors: ValidationErrors | null = this.herosForm.errors;
     // Si des erreurs globales sont présentes, les traiter
     if (formErrors != null) {
-      console.log(formErrors);
       // Itérer sur chaque erreur globale
       Object.keys(formErrors).forEach(keyError => {
         // Afficher dans la console le type d'erreur globale et la valeur de l'erreur
@@ -222,11 +245,15 @@ export class BolHeroCreateComponent implements OnDestroy {
     }
   }
 
-  getHero(id: string) {
+  /**
+   * Récupération du Héros (pour modification)
+   * @param id
+   */
+  getHeros(id: string) {
     this.spinner.show();
-    this.subs = this.hs.one(id).subscribe({
-        next: (hero: BolHeroModel) => {
-          this.heroForm.patchValue({
+    this.subs = this.hs.heros(id).subscribe({
+        next: (hero: BolHerosModel) => {
+          this.herosForm.patchValue({
             id: hero.id,
             joueur: hero.joueur,
             nom: hero.nom,
@@ -249,6 +276,18 @@ export class BolHeroCreateComponent implements OnDestroy {
             region: hero.region,
 
           });
+          this.traits.clear();
+          this.avantages = [];
+          this.desavantages=[];
+          hero.traits.forEach((trait) => {
+            this.addTrait({type: trait.type, id: trait.id});
+            if (trait.type === "A") {
+                this.avantages.push(trait.traitable);
+            } else {
+              this.desavantages.push(trait.traitable);
+            }
+          });
+
           this.spinner.hide();
         },
         error: () => {
@@ -258,15 +297,18 @@ export class BolHeroCreateComponent implements OnDestroy {
     );
   }
 
+  /**
+   * Sauvegarde du héros
+   */
   submit() {
-    if (this.heroForm.invalid) {
+    if (this.herosForm.invalid) {
       return;
     }
-    const hero = this.heroForm.value;
+    const hero = this.herosForm.value;
     this.spinner.show();
     this.subs?.unsubscribe();
     if (hero.id !== null) {
-      this.subs = this.hs.update(this.heroForm.value as BolHeroModel).subscribe({
+      this.subs = this.hs.updateHeros(this.herosForm.value as BolHerosModel).subscribe({
         next: () => {
           this.spinner.hide();
         },
@@ -275,8 +317,8 @@ export class BolHeroCreateComponent implements OnDestroy {
         }
       });
     } else {
-      this.subs = this.hs.create(this.heroForm.value as BolHeroModel).subscribe({
-        next: (hero: BolHeroModel) => {
+      this.subs = this.hs.createHeros(this.herosForm.value as BolHerosModel).subscribe({
+        next: (hero: BolHerosModel) => {
           this.spinner.hide();
           this.idCtrl.setValue(hero.id);
         },
@@ -287,8 +329,11 @@ export class BolHeroCreateComponent implements OnDestroy {
     }
   }
 
+  /**
+   * Gestion de l'avatar
+   */
   picture() {
-    this.ref = this.ds.open(PictureComponent, {header: 'Photo du héro'});
+    this.ref = this.ds.open(PictureComponent, {header: 'Photo du héros'});
     this.subs?.unsubscribe();
     this.subs = this.ref.onClose.subscribe((avatar: any) => {
       if (avatar !== null && avatar !== undefined) {
@@ -298,6 +343,9 @@ export class BolHeroCreateComponent implements OnDestroy {
     });
   }
 
+  /**
+   * Sélection de la région
+   */
   region() {
     this.ref = this.ds.open(BolRegionComponent, {
       header: 'Choix de la région',
@@ -324,5 +372,38 @@ export class BolHeroCreateComponent implements OnDestroy {
     ev.stopPropagation();
     this.regionIdCtrl.setValue(null);
     this.regionCtrl.setValue(null);
+  }
+
+  /**
+   * Gestion des avantages et des désavantages
+   */
+  openTraits() {
+    this.ref = this.ds.open(BolTraitComponent, {
+      header: 'Choix des avantages pour la région ' + this.regionCtrl.value,
+      width: '95vw',
+      height: '90vh',
+      data: {
+        id_region: this.regionIdCtrl.value
+      },
+    });
+    this.subs?.unsubscribe();
+    this.subs = this.ref?.onClose.subscribe((data: any) => {
+      if (data) {
+        console.log(data);
+        this.traits.clear();
+        this.avantages = data.avantages.slice();
+        this.desavantages = data.desavantages.slice();
+        data.avantages.forEach((avantage: BolAvantageModel) => {this.addTrait({type: 'A', id: avantage.id})});
+        data.desavantages.forEach((desavantage: BolDesavantageModel) => {this.addTrait({type: 'D', id: desavantage.id})})
+      }
+    });
+  }
+
+  addTrait(trait: {type: 'A' | 'D', id: number | null}) {
+    const traitForm = this.fb.group({
+      traitable_id: [trait.id],
+      type: [trait.type],
+    });
+    this.traits.push(traitForm);
   }
 }

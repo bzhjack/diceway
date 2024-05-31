@@ -68,7 +68,7 @@
     </div>
 
     <div *ngIf="currentRegion && ![1,13,16].includes(currentRegion.id)" class="flex-auto flex flex-col gap-2">
-      <div *ngIf="currentRegion.noms.length == 0" class="flex-autos flex flex-col gap-2">
+      <div *ngIf="currentRegion.noms.length == 0" class="flex flex-col gap-2 pt-2">
         <p-messages severity="warn">
           <ng-template pTemplate>
             <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
@@ -103,46 +103,18 @@
         <p-fieldset legend="Avantages" class="w-1/2 h-full" styleClass="h-full relative">
           <div style="position: absolute; inset:15px;">
             <p-scrollPanel [style]="{display: 'block', height: '100%'}">
-              <ng-container *ngFor="let avantage of currentRegion?.avantages">
-                <div class="flex w-fit">
-                  <div *ngIf="!avantage.de_bonus && !avantage.attribut" class="tag_icon bonus"
-                       inlineSVG="/frontend/assets/info.svg"></div>
-                  <div *ngIf="avantage.de_bonus || avantage.attribut" class="tag_icon bonus"
-                       [inlineSVG]="avantage.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
-                  <div>{{ avantage.avantage }}</div>
-                </div>
-
-                <div class="dw-panel mb-2" style="background: #424B57">
-                  <div *ngFor="let desc of avantageDescription(avantage)" class="flex flex-col">
-                    <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
-                    <div style="font-size: 12px">{{ desc.description }}</div>
-                  </div>
-                </div>
-
-              </ng-container>
+              <div class="flex gap-2 mb-2" *ngFor="let avantage of currentRegion?.avantages">
+                <app-trait-row [avantage]="avantage"></app-trait-row>
+              </div>
             </p-scrollPanel>
           </div>
         </p-fieldset>
-
         <p-fieldset legend="Désavantages" class="w-1/2 h-full" styleClass="h-full relative">
           <div style="position: absolute; inset:15px;">
             <p-scrollPanel [style]="{display: 'block', height: '100%'}">
-              <ng-container *ngFor="let desavantage of currentRegion?.desavantages">
-                <div class="flex w-fit">
-                  <div *ngIf="!desavantage.de_malus && !desavantage.attribut" class="tag_icon malus"
-                       inlineSVG="/frontend/assets/info.svg"></div>
-                  <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon malus"
-                       [inlineSVG]="desavantage.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
-                  <div>{{ desavantage.desavantage }}</div>
-                </div>
-
-                <div class="dw-panel mb-2" style="background: #424B57">
-                  <div *ngFor="let desc of desavantageDescription(desavantage)" class="flex flex-col">
-                    <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
-                    <div style="font-size: 12px">{{ desc.description }}</div>
-                  </div>
-                </div>
-              </ng-container>
+              <div class="flex gap-2 mb-2" *ngFor="let desavantage of currentRegion?.desavantages">
+                <app-trait-row [desavantage]="desavantage"></app-trait-row>
+              </div>
             </p-scrollPanel>
           </div>
         </p-fieldset>

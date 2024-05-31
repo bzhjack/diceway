@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Bol\BolHeroController;
+use App\Http\Controllers\Bol\BolHerosController;
 use App\Http\Middleware\RequestAcceptJson;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerifyController;
@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\SocialController;
 use App\Http\Controllers\Auth\ForgotController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Bol\BolRegionController;
+use App\Http\Controllers\Bol\BolTraitController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -50,8 +51,13 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::get('auth/profile', [ProfileController::class, 'profile']);
     // Bol
     Route::get('/bol/region', [BolRegionController::class, 'getAll']);
-    Route::get('/bol/hero', [BolHeroController::class, 'getAll']);
-    Route::get('/bol/hero/{id}', [BolHeroController::class, 'getOne']);
-    Route::post('/bol/hero/create', [BolHeroController::class, 'create']);
-    Route::post('/bol/hero/update', [BolHeroController::class, 'update']);
+    Route::get('/bol/region/{id}', [BolRegionController::class, 'getOne']);
+
+    Route::get('/bol/trait/avantages', [BolTraitController::class, 'getAllAvantages']);
+    Route::get('/bol/trait/desavantages', [BolTraitController::class, 'getAllDesavantages']);
+
+    Route::get('/bol/heros', [BolHerosController::class, 'getAll']);
+    Route::get('/bol/heros/{id}', [BolHerosController::class, 'getOne']);
+    Route::post('/bol/heros/create', [BolHerosController::class, 'create']);
+    Route::post('/bol/heros/update', [BolHerosController::class, 'update']);
 });

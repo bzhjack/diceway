@@ -1,4 +1,4 @@
-export interface BolHeroModel {
+export interface BolHerosModel {
   id: string | null;
   joueur: string;
   avatar: string | null;
@@ -18,5 +18,7 @@ export interface BolHeroModel {
   defense: number,
 
   region_id: number | null,
-  region: string | null
+  region: string | null,
+
+  traits: any[]
 }

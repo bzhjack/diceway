@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class BolRegionNom extends Model
 {
     use HasFactory;
+    protected $table = 'bol_region_nom';
 }

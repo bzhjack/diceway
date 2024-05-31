@@ -5,7 +5,7 @@
         <div class="text-3xl">Création d'un héros</div>
       </div>
     </ng-template>
-    <form (ngSubmit)="submit()" [formGroup]="heroForm" autocomplete="off">
+    <form (ngSubmit)="submit()" [formGroup]="herosForm" autocomplete="off">
       <div class="flex gap-4">
         <div class="flex flex-col gap-2">
           <!-------------->
@@ -35,7 +35,7 @@
 
                 <div class="flex flex-col gap-1 flex-auto">
                   <div class="flex flex-col gap-1">
-                    <label for="nom">Nom du héro</label>
+                    <label for="nom">  <i class="pi pi-info-circle" pTooltip="Vous trouverez des exemples en choissisant votre terre natale."></i> Nom du héro</label>
                     <input formControlName="nom" pInputText id="nom" class="p-inputtext-sm"/>
                   </div>
                   <div class="flex flex-col gap-1 relative">
@@ -164,11 +164,47 @@
               </div>
             </div>
           </div>
-          <!----------->
-          <!--- Top --->
-          <!----------->
+          <!--------------------------------->
+          <!--- avantages et désavantages --->
+          <!--------------------------------->
           <div class="flex gap-2">
+            <p-fieldset class="flex-auto">
+              <ng-template pTemplate="header">
+                <div class="flex items-center gap-2">
+                  <div class="cursor-pointer" (click)="traitInfos.toggle($event)">
+                    <i *ngIf="aptitudeErrors.length === 0" class="pi pi-info-circle"></i>
+                  </div>
+                  <div>Avantages & Désavantages</div>
+                </div>
+                <p-overlayPanel #traitInfos>
+                  <div class="flex flex-col gap-2">
+                    <bol-message type="traits"></bol-message>
+                  </div>
+                </p-overlayPanel>
+              </ng-template>
+              <div>
+                <div class="flex flex-col gap-2">
+                  <app-trait-row *ngFor="let lavg of avantages" [avantage]="lavg"></app-trait-row>
+                  <app-trait-row *ngFor="let ldes of desavantages" [desavantage]="ldes"></app-trait-row>
+                </div>
+                
+                <div class="flex justify-end gap-2">
+                  <p-button (click)="openTraits()" label="Gérer les avantages" size="small" [link]="true" [disabled]="regionCtrl.value === null"/>
+                </div>
 
+              </div>
+            </p-fieldset>
+
+            <p-fieldset class="flex-auto">
+              <ng-template pTemplate="header">
+                <div class="flex items-center gap-2">
+                  <div class="cursor-pointer">
+                    <i *ngIf="aptitudeErrors.length === 0" class="pi pi-info-circle"></i>
+                  </div>
+                  <div>Carrières</div>
+                </div>
+              </ng-template>
+            </p-fieldset>
           </div>
         </div>
       </div>
@@ -177,7 +213,9 @@
       <div class="flex justify-between">
         <div>
           <p-button *ngIf="creationWarns.length > 0" (click)="incompleteProfile.toggle($event)" severity="warning"
-                    size="small" [label]="'Profil imcomplet (' + creationWarns.length + ')'"
+                    [badge]="'' + creationWarns.length"
+                    badgeClass="p-badge-contrast"
+                    size="small" label="Profil imcomplet"
                     icon="pi pi-exclamation-triangle"></p-button>
           <p-overlayPanel #incompleteProfile>
             <p-messages severity="warn" *ngIf="creationWarns.length > 0">
@@ -197,7 +235,7 @@
         <div class="flex gap-2">
           <p-button label="Retour" icon="pi pi-times" severity="secondary" size="small"
                     routerLink="/bol"></p-button>
-          <p-button (click)="submit()" [disabled]="heroForm.invalid" label="Enregistrer" icon="pi pi-check" size="small"
+          <p-button (click)="submit()" [disabled]="herosForm.invalid" label="Enregistrer" icon="pi pi-check" size="small"
                     severity="success"></p-button>
         </div>
       </div>
