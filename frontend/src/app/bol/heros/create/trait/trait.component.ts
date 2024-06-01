@@ -102,8 +102,6 @@ export class BolTraitComponent implements OnDestroy {
         this.selectedGeneralDesavantages = this.generalDesavantages.filter((des: BolDesavantageModel) => herosDesId.includes(des.id));
         
 
-        console.log(this.selectedAvantages);
-
         this.checkSelection();
         this.ready = true;
         this.spinner.hide();
@@ -168,7 +166,7 @@ export class BolTraitComponent implements OnDestroy {
     if (totalAvantages == 3) {
       costHeroism += 1;
       // gestion du deuxieme desavantage (natal ou global)
-      if (this.selectedGeneralDesavantages.length >= 1 || this.selectedDesavantages.length == 2) {
+      if ((this.selectedGeneralDesavantages.length + this.selectedDesavantages.length) <= 1) {
         costHeroism -= 1;
       }
     }
