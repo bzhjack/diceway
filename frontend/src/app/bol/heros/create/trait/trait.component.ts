@@ -144,8 +144,14 @@ export class BolTraitComponent implements OnDestroy {
   checkSelection() {
     const totalNatalAvantages = this.selectedAvantages.length;
     const totalAvantages = this.selectedAvantages.length + this.selectedGeneralAvantages.length;
+    const totalNatalDesavantages = this.selectedDesavantages.length;    
+    const totalDesavantages = this.selectedDesavantages.length + this.selectedGeneralDesavantages.length;
 
-    const totalNatalDesavantages = this.selectedDesavantages.length;
+    console.log('totalAvg:', totalAvantages);
+    console.log('totalDes:', totalDesavantages);
+    console.log('totalNatalAvg:', totalNatalAvantages);
+    console.log('totalNatalDes:', totalNatalDesavantages);
+
 
     let costHeroism = 0;
 
@@ -159,14 +165,16 @@ export class BolTraitComponent implements OnDestroy {
       costHeroism += 1;
       // gestion du premier desavantage (natal)
       if (totalNatalDesavantages >= 1) {
+        console.log('la');
         costHeroism -= 1;
       }
     }
     // Gestion troisième avantage (natal ou general)
-    if (totalAvantages == 3) {
+    if (totalAvantages >= 3) {
       costHeroism += 1;
       // gestion du deuxieme desavantage (natal ou global)
-      if ((this.selectedGeneralDesavantages.length + this.selectedDesavantages.length) <= 1) {
+      if (totalDesavantages >= 2) {
+        console.log('et la');
         costHeroism -= 1;
       }
     }
