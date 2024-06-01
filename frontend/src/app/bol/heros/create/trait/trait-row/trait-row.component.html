@@ -8,8 +8,10 @@
       <div>
       </div>
     </div>
-    <div
-      [class.disabled]="disabled">{{ avantage.avantage + (avantage.pivot?.detail == null ? '' : '(' + avantage.pivot?.detail + ')') }}
+    <div [class.disabled]="disabled">{{ avantage.avantage }}
+    @if (avantage.pivot && avantage.pivot.detail) {
+      ({{avantage.pivot.detail}})
+    }
     </div>
   </div>
   <p-overlayPanel #avPanel>
@@ -30,7 +32,10 @@
            [inlineSVG]="desavantage.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
     </div>
     <div
-      [class.disabled]="disabled">{{ desavantage.desavantage + (desavantage.pivot?.detail === null ? '' : '(' + desavantage.pivot?.detail + ')') }}
+      [class.disabled]="disabled">{{ desavantage.desavantage }}
+      @if (desavantage.pivot && desavantage.pivot.detail) {
+        ({{desavantage.pivot.detail}})
+      }
     </div>
   </div>
 
