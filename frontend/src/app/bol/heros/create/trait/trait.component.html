@@ -21,7 +21,7 @@
               <div [ngStyle]="avantagesIds.length == 3 ? {color: 'var(--success-color)'}: {}"><strong>Troisième Avantage
                 (général ou terre natale) :</strong></div>
               <div
-                [ngStyle]="avantagesIds.length == 3 && this.selectedGeneralDesavantages.length + this.selectedDesavantages.length <= 1 ? {color: 'var(--warn-color)'}: {}">
+                [ngStyle]="avantagesIds.length == 3 && this.selectedGeneralDesavantages.length + this.selectedDesavantages.length < 1 ? {color: 'var(--warn-color)'}: {}">
                 Prenez un autre désavantage (général ou terre natale) ou renoncez à un autre point d’héroïsme.
               </div>
             </li>
