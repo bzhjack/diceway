@@ -15,6 +15,9 @@
 @import "styles/bol_regions";
 @import "styles/messages";
 @import "styles/button";
+@import "styles/card";
+@import "styles/dialog";
+@import "styles/table";
 
 html {
   display: flex;
@@ -138,9 +141,6 @@ body {
   }
 }
 
-.p-card .p-card-content {
-  padding: 0;
-}
 .p-overlaypanel .p-overlaypanel-content {
   padding: 0.5rem;
 }

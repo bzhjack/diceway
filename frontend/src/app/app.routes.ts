@@ -30,10 +30,7 @@ export const routes: Routes = [
 
     { path: '', component: HomeComponent, canActivate: [loggedInGuard] },
     { path: 'bol', component: BolHomeComponent, canActivate: [loggedInGuard] },
-    { path: 'bol/heros/create', component: BolHerosCreateComponent, canActivate: [loggedInGuard] },
     { path: 'bol/heros/create/:id', component: BolHerosCreateComponent, canActivate: [loggedInGuard] },
-
-
 
     { path: '**', redirectTo: '/' },
 ];
