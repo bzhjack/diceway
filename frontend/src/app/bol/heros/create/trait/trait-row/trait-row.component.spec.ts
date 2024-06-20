@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { TraitRowComponent } from './trait-row.component';
+import {TraitRowComponent} from './trait-row.component';
 
 describe('TraitRowComponent', () => {
   let component: TraitRowComponent;
@@ -11,7 +11,7 @@ describe('TraitRowComponent', () => {
       imports: [TraitRowComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(TraitRowComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

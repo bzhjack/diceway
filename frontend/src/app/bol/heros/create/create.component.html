@@ -187,9 +187,9 @@
                   <app-trait-row *ngFor="let lavg of avantages" [avantage]="lavg"></app-trait-row>
                   <app-trait-row *ngFor="let ldes of desavantages" [desavantage]="ldes"></app-trait-row>
                 </div>
-                
-                <div class="flex justify-end gap-2">
-                  <p-button (click)="openTraits()" label="Gérer les avantages" size="small" [link]="true" [disabled]="regionCtrl.value === null"/>
+
+                <div class="flex justify-end gap-2" *ngIf="regionCtrl.value !== null">
+                  <p-button (click)="openTraits()" label="Gérer les avantages" size="small" [link]="true"/>
                 </div>
 
               </div>

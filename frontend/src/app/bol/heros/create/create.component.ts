@@ -32,8 +32,8 @@ import {BolHeroCreateTools} from './create.tools';
 import {BolMessageComponent} from "../../message/message.component";
 import {BolTraitComponent} from "./trait/trait.component";
 import {BolAvantageModel} from "../../models/bol-avantage.model";
-import { BolDesavantageModel } from '../../models/bol-desavantage.model';
-import { BolTraitRowComponent } from './trait/trait-row/trait-row.component';
+import {BolDesavantageModel} from '../../models/bol-desavantage.model';
+import {BolTraitRowComponent} from './trait/trait-row/trait-row.component';
 
 @Component({
   selector: 'app-create',
@@ -63,7 +63,7 @@ import { BolTraitRowComponent } from './trait/trait-row/trait-row.component';
 export class BolHerosCreateComponent implements OnDestroy {
   private subs?: Subscription;
   private ref: DynamicDialogRef | undefined;
-  
+
   attributErrors: { control: string, error: string }[] = [];
   aptitudeErrors: { control: string, error: string }[] = [];
   creationWarns: { step: string, warn: string }[] = [];
@@ -383,7 +383,9 @@ export class BolHerosCreateComponent implements OnDestroy {
       width: '95vw',
       height: '90vh',
       data: {
-        id_region: this.regionIdCtrl.value
+        id_region: this.regionIdCtrl.value,
+        avantages: this.avantages,
+        desavantages: this.desavantages
       },
     });
     this.subs?.unsubscribe();
