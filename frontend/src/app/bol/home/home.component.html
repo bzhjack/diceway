@@ -1,7 +1,36 @@
 <div class="bol-container flex flex-wrap p-2">
   <p-card header="Personnages Joueurs">
     <p class="flex flex-col gap-2">
-      <a *ngFor="let hero of heroes" [routerLink]="['heros', 'create', hero.id]">{{ hero.joueur }}</a>
+      <!--a *ngFor="let hero of heroes" [routerLink]="['heros', 'create', hero.id]">{{ hero.joueur }}</a-->
+      <p-table [value]="heroes" [tableStyle]="{ 'min-width': '50rem' }"
+               [scrollable]="true"
+               scrollHeight="300px" >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Joueur</th>
+            <th>Héros</th>
+            <th style="width: 100px"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-heros>
+          <tr>
+            <td>{{ heros.joueur }}</td>
+            <td>{{ heros.nom }}</td>
+            <td class="flex gap-2 justify-end">
+              <button [routerLink]="['heros', 'create', heros.id]"
+                      severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-pencil"></button>
+              <button
+                severity="danger"
+                type="button"
+                size="small"
+                pButton
+                pRipple
+                icon="pi pi-trash">
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
     </p>
     <ng-template pTemplate="footer">
       <div class="flex justify-end">

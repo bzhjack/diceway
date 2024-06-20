@@ -47,8 +47,9 @@ class BolHerosController extends Controller
         $heros['user_id'] = Auth::id();
         $heros = BolHeros::create($heros);
         $id =  $heros->id;
-
-        BolHerosController::updateTraits($id, $traits);
+        if ($traits != null) {
+            BolHerosController::updateTraits($id, $traits);
+        }
         return response($heros);
     }
     /**

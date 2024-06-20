@@ -3,13 +3,15 @@ import {Subscription} from "rxjs";
 import {BolHerosService} from "../services/bol-heros.service";
 import {BolHerosModel} from "../models/bol-heros.model";
 import {JsonPipe, NgForOf, NgIf} from "@angular/common";
-import {RouterLink} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {CardModule} from "primeng/card";
-import {Button} from "primeng/button";
+import {Button, ButtonDirective} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
 import {InputTextModule} from "primeng/inputtext";
 import {FormBuilder, FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
+import {TableModule} from "primeng/table";
+import {Ripple} from "primeng/ripple";
 
 @Component({
   selector: 'bol-home',
@@ -23,7 +25,10 @@ import {FormBuilder, FormControl, ReactiveFormsModule, Validators} from "@angula
     DialogModule,
     InputTextModule,
     ReactiveFormsModule,
-    NgIf
+    NgIf,
+    TableModule,
+    ButtonDirective,
+    Ripple
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -36,6 +41,7 @@ export class BolHomeComponent implements OnDestroy {
   herosForm = this.fb.group({joueur: this.joueurCtrl});
 
   constructor(
+    private router: Router,
     private fb: FormBuilder,
     private hs: BolHerosService,
     private spinner: NgxSpinnerService) {
@@ -67,8 +73,7 @@ export class BolHomeComponent implements OnDestroy {
         this.subs = this.hs.createHeros(this.herosForm.value as BolHerosModel).subscribe({
           next: (hero: BolHerosModel) => {
             this.spinner.hide();
-            console.log(hero);
-            //this.idCtrl.setValue(hero.id);
+            this.router.navigate(['bol','heros', 'create', hero.id]);
           },
           error: () => {
             this.spinner.hide();
