@@ -39,7 +39,7 @@ class BolHerosController extends Controller
     public function create(Request $request)
     {
         $data = $request->validate([
-            'nom' => 'required|max:255',
+            'nom' => 'max:255',
             'joueur' => 'required|max:255'
         ]);
         $heros = $request->except('traits');

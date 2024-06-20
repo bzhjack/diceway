@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('user_id')->index(); // id de l'utilisateur
             $table->string('joueur'); // Nom du joueur
             $table->boolean('active')->default(false); // 1: Locked 2: Validated
-            $table->string('nom'); // Nom du personnage
+            $table->string('nom')->nullable(); // Nom du personnage
             $table->longText('avatar')->nullable(); // Image du personnage
             // Attributs
             $table->tinyInteger('vigueur')->default(0);
