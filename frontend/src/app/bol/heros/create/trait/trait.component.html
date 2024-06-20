@@ -5,7 +5,7 @@
         <div>
           <ul class="flex flex-col gap-2">
             <li>
-              <div [ngStyle]="selectedAvantages.length >= 1 ? {color: 'var(--success-color)'}: {}"><strong>Premier
+              <div [ngStyle]="selectedNatalAvantages.length >= 1 ? {color: 'var(--success-color)'}: {}"><strong>Premier
                 Avantage (terre natale):</strong></div>
               <div>Choisissez un avantage parmi ceux proposés.</div>
             </li>
@@ -13,7 +13,7 @@
               <div [ngStyle]="avantagesIds.length >= 2 ? {color: 'var(--success-color)'}: {}"><strong>Deuxième Avantage
                 (général ou terre natale) :</strong></div>
               <div
-                [ngStyle]="avantagesIds.length >= 2 && selectedDesavantages.length === 0 ? {color: 'var(--warn-color)'}: {}">
+                [ngStyle]="avantagesIds.length >= 2 && selectedNatalDesavantages.length === 0 ? {color: 'var(--warn-color)'}: {}">
                 Prenez un désavantage (terre natale) ou renoncez à 1 point d’héroïsme.
               </div>
             </li>
@@ -21,7 +21,7 @@
               <div [ngStyle]="avantagesIds.length == 3 ? {color: 'var(--success-color)'}: {}"><strong>Troisième Avantage
                 (général ou terre natale) :</strong></div>
               <div
-                [ngStyle]="avantagesIds.length == 3 && this.selectedGeneralDesavantages.length + this.selectedDesavantages.length < 1 ? {color: 'var(--warn-color)'}: {}">
+                [ngStyle]="avantagesIds.length == 3 && (selectedNatalDesavantages.length < 2 && selectedGeneralDesavantages.length < 1) ? {color: 'var(--warn-color)'}: {}">
                 Prenez un autre désavantage (général ou terre natale) ou renoncez à un autre point d’héroïsme.
               </div>
             </li>
@@ -40,18 +40,18 @@
         <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
           <div class="flex gap-2 pb-2" *ngFor="let avantage of avantages">
             <p-checkbox name="av"
-                        [disabled]="selectedGeneralAvantages.length + selectedAvantages.length === 3 && !this.avantagesIds.includes(avantage.id)"
-                        [(ngModel)]="selectedAvantages"
+                        [disabled]="selectedGeneralAvantages.length + selectedNatalAvantages.length === 3 && !this.avantagesIds.includes(avantage.id)"
+                        [(ngModel)]="selectedNatalAvantages"
                         [value]="avantage"
                         (ngModelChange)="checkSelection()"></p-checkbox>
             <app-trait-row [avantage]="avantage"
-                           [disabled]="selectedGeneralAvantages.length + selectedAvantages.length === 3 && !this.avantagesIds.includes(avantage.id)"></app-trait-row>
+                           [disabled]="selectedGeneralAvantages.length + selectedNatalAvantages.length === 3 && !this.avantagesIds.includes(avantage.id)"></app-trait-row>
           </div>
         </p-scrollPanel>
         <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
           <div class="flex gap-2 pb-2" *ngFor="let desavantage of desavantages">
             <p-checkbox name="des"
-                        [(ngModel)]="selectedDesavantages"
+                        [(ngModel)]="selectedNatalDesavantages"
                         [value]="desavantage"
                         (ngModelChange)="checkSelection()"></p-checkbox>
             <app-trait-row [desavantage]="desavantage"></app-trait-row>
@@ -64,12 +64,12 @@
         <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
           <div class="flex gap-2 pb-2" *ngFor="let avantage of generalAvantages">
             <p-checkbox name="gav"
-                        [disabled]="selectedAvantages.length === 0 || (avantagesIds.length === 3 && !avantagesIds.includes(avantage.id))"
+                        [disabled]="selectedNatalAvantages.length === 0 || (avantagesIds.length === 3 && !avantagesIds.includes(avantage.id))"
                         [(ngModel)]="selectedGeneralAvantages"
                         [value]="avantage"
                         (ngModelChange)="checkSelection()"></p-checkbox>
             <app-trait-row [avantage]="avantage"
-                           [disabled]="selectedAvantages.length === 0 || (avantagesIds.length === 3 && !avantagesIds.includes(avantage.id))"></app-trait-row>
+                           [disabled]="selectedNatalAvantages.length === 0 || (avantagesIds.length === 3 && !avantagesIds.includes(avantage.id))"></app-trait-row>
           </div>
         </p-scrollPanel>
 

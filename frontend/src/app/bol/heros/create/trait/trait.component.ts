@@ -57,8 +57,8 @@ export class BolTraitComponent implements OnDestroy {
   private allDesavg: BolDesavantageModel[] = [];
 
 
-  selectedAvantages: BolAvantageModel[] = [];
-  selectedDesavantages: BolDesavantageModel[] = [];
+  selectedNatalAvantages: BolAvantageModel[] = [];
+  selectedNatalDesavantages: BolDesavantageModel[] = [];
   selectedGeneralAvantages: BolAvantageModel[] = [];
   selectedGeneralDesavantages: BolDesavantageModel[] = [];
 
@@ -72,7 +72,6 @@ export class BolTraitComponent implements OnDestroy {
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
     private spinner: NgxSpinnerService) {
-    console.log(config);
     const regionId = this.config.data.id_region;
     const herosAvgId = this.config.data.avantages.map((a: BolAvantageModel) => a.id);
     const herosDesId = this.config.data.desavantages.map((d: BolDesavantageModel) => d.id);
@@ -87,17 +86,20 @@ export class BolTraitComponent implements OnDestroy {
       next: (traits: any) => {
         this.allAvg = traits[1];
         this.allDesavg = traits[2];
+
         this.avantages = traits[0].avantages;
         this.desavantages = traits[0].desavantages;
+
         const idAvantages = this.avantages.map(avantage => avantage.id);
         const idDesavantages = this.desavantages.map(desavantage => desavantage.id);
+
         this.generalAvantages = traits[1].filter((avantage: BolAvantageModel) => !idAvantages.includes(avantage.id));
         this.generalDesavantages = traits[2].filter((desavantage: BolDesavantageModel) => !idDesavantages.includes(desavantage.id));
 
-        this.selectedAvantages = this.avantages.filter((avg: BolAvantageModel) => herosAvgId.includes(avg.id));
+        this.selectedNatalAvantages = this.avantages.filter((avg: BolAvantageModel) => herosAvgId.includes(avg.id));
         this.selectedGeneralAvantages = this.generalAvantages.filter((avg: BolAvantageModel) => herosAvgId.includes(avg.id));
 
-        this.selectedDesavantages = this.desavantages.filter((des: BolDesavantageModel) => herosDesId.includes(des.id));
+        this.selectedNatalDesavantages = this.desavantages.filter((des: BolDesavantageModel) => herosDesId.includes(des.id));
         this.selectedGeneralDesavantages = this.generalDesavantages.filter((des: BolDesavantageModel) => herosDesId.includes(des.id));
 
 
@@ -133,9 +135,9 @@ export class BolTraitComponent implements OnDestroy {
   }
 
   checkSelection() {
-    const totalNatalAvantages = this.selectedAvantages.length;
+    const totalNatalAvantages = this.selectedNatalAvantages.length;
     const totalAvantages = totalNatalAvantages + this.selectedGeneralAvantages.length;
-    const totalNatalDesavantages = this.selectedDesavantages.length;
+    const totalNatalDesavantages = this.selectedNatalDesavantages.length;
     const totalGeneralDesavantages = this.selectedGeneralDesavantages.length;
     const totalDesavantages = totalNatalDesavantages + totalGeneralDesavantages;
 
@@ -169,7 +171,7 @@ export class BolTraitComponent implements OnDestroy {
     // Gestion du troisième avantage (natal ou général)
     if (totalAvantages >= 3) {
       costHeroism += 1;
-      if (totalDesavantages >= 2) {
+      if (totalDesavantages - totalNatalDesavantages >= 1 || totalNatalDesavantages >=2 ) {
         // Si deux désavantages sont sélectionnés (généraux ou natals), le coût en héroïsme est annulé
         costHeroism -= 1;
       }
@@ -177,13 +179,13 @@ export class BolTraitComponent implements OnDestroy {
 
     // Met à jour la liste des IDs d'avantages
     this.avantagesIds = [
-      ...this.selectedAvantages.map((avantage: BolAvantageModel) => avantage.id),
+      ...this.selectedNatalAvantages.map((avantage: BolAvantageModel) => avantage.id),
       ...this.selectedGeneralAvantages.map((avantage: BolAvantageModel) => avantage.id)
     ];
 
     // Met à jour la liste des IDs de désavantages
     this.desavantagesIds = [
-      ...this.selectedDesavantages.map((desavantage: BolDesavantageModel) => desavantage.id),
+      ...this.selectedNatalDesavantages.map((desavantage: BolDesavantageModel) => desavantage.id),
       ...this.selectedGeneralDesavantages.map((desavantage: BolDesavantageModel) => desavantage.id)
     ];
 
