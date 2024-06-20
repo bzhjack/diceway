@@ -73,7 +73,7 @@ export class BolTraitComponent implements OnDestroy {
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
     private spinner: NgxSpinnerService) {
-
+    console.log(config);
     const regionId = this.config.data.id_region;
     const herosAvgId = this.config.data.avantages.map((a: BolAvantageModel) => a.id);
     const herosDesId = this.config.data.desavantages.map((d: BolDesavantageModel) => d.id);
@@ -97,10 +97,10 @@ export class BolTraitComponent implements OnDestroy {
 
         this.selectedAvantages = this.avantages.filter((avg: BolAvantageModel) => herosAvgId.includes(avg.id));
         this.selectedGeneralAvantages = this.generalAvantages.filter((avg: BolAvantageModel) => herosAvgId.includes(avg.id));
-        
+
         this.selectedDesavantages = this.desavantages.filter((des: BolDesavantageModel) => herosDesId.includes(des.id));
         this.selectedGeneralDesavantages = this.generalDesavantages.filter((des: BolDesavantageModel) => herosDesId.includes(des.id));
-        
+
 
         this.checkSelection();
         this.ready = true;
@@ -203,5 +203,5 @@ export class BolTraitComponent implements OnDestroy {
 
 
 
-  
+
 }
