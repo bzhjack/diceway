@@ -1,4 +1,4 @@
-import { HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
+import {HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {UserService} from '../services/user.service';
 import {inject} from '@angular/core';

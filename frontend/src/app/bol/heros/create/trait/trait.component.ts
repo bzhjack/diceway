@@ -13,7 +13,6 @@ import {BolAvantageModel} from "../../../models/bol-avantage.model";
 import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
 import {ScrollPanelModule} from "primeng/scrollpanel";
 import {InlineSVGModule} from "ng-inline-svg-2";
-import {BolHeroCreateTools} from "../create.tools";
 import {ButtonModule} from "primeng/button";
 import {CheckboxModule} from "primeng/checkbox";
 import {FormsModule} from "@angular/forms";
@@ -133,14 +132,6 @@ export class BolTraitComponent implements OnDestroy {
     this.subs?.unsubscribe();
   }
 
-  avantageDescription(avantage: BolAvantageModel) {
-    return BolHeroCreateTools.avantageDescription(avantage);
-  }
-
-  desavantageDescription(desavantage: BolDesavantageModel) {
-    return BolHeroCreateTools.desavantageDescription(desavantage);
-  }
-
   checkSelection() {
     const totalNatalAvantages = this.selectedAvantages.length;
     const totalAvantages = totalNatalAvantages + this.selectedGeneralAvantages.length;
@@ -158,50 +149,49 @@ export class BolTraitComponent implements OnDestroy {
 
     // Gestion du premier avantage (natal)
     if (totalNatalAvantages === 0 && totalAvantages > 0) {
-        // Si aucun avantage natal n'est sélectionné, on ne peut pas avoir d'autres avantages
-        this.selectedGeneralAvantages = [];
-        console.warn('Aucun avantage natal sélectionné, les avantages généraux ont été réinitialisés.');
-        return; // On arrête ici car la sélection n'est pas valide
+      // Si aucun avantage natal n'est sélectionné, on ne peut pas avoir d'autres avantages
+      this.selectedGeneralAvantages = [];
+      this.avantagesIds = [];
+      this.heroismCost = 0;
+      console.warn('Aucun avantage natal sélectionné, les avantages généraux ont été réinitialisés.');
+      return; // On arrête ici car la sélection n'est pas valide
     }
 
     // Gestion du deuxième avantage (natal ou général)
     if (totalAvantages >= 2) {
-        costHeroism += 1;
-        if (totalNatalDesavantages >= 1) {
-            // Si un désavantage natal est sélectionné, le coût en héroïsme est annulé
-            costHeroism -= 1;
-        }
+      costHeroism += 1;
+      if (totalNatalDesavantages >= 1) {
+        // Si un désavantage natal est sélectionné, le coût en héroïsme est annulé
+        costHeroism -= 1;
+      }
     }
 
     // Gestion du troisième avantage (natal ou général)
     if (totalAvantages >= 3) {
-        costHeroism += 1;
-        if (totalDesavantages >= 2) {
-            // Si deux désavantages sont sélectionnés (généraux ou natals), le coût en héroïsme est annulé
-            costHeroism -= 1;
-        }
+      costHeroism += 1;
+      if (totalDesavantages >= 2) {
+        // Si deux désavantages sont sélectionnés (généraux ou natals), le coût en héroïsme est annulé
+        costHeroism -= 1;
+      }
     }
 
     // Met à jour la liste des IDs d'avantages
     this.avantagesIds = [
-        ...this.selectedAvantages.map((avantage: BolAvantageModel) => avantage.id),
-        ...this.selectedGeneralAvantages.map((avantage: BolAvantageModel) => avantage.id)
+      ...this.selectedAvantages.map((avantage: BolAvantageModel) => avantage.id),
+      ...this.selectedGeneralAvantages.map((avantage: BolAvantageModel) => avantage.id)
     ];
 
     // Met à jour la liste des IDs de désavantages
     this.desavantagesIds = [
-        ...this.selectedDesavantages.map((desavantage: BolDesavantageModel) => desavantage.id),
-        ...this.selectedGeneralDesavantages.map((desavantage: BolDesavantageModel) => desavantage.id)
+      ...this.selectedDesavantages.map((desavantage: BolDesavantageModel) => desavantage.id),
+      ...this.selectedGeneralDesavantages.map((desavantage: BolDesavantageModel) => desavantage.id)
     ];
 
     // Ajuste les points d'héroïsme, s'assure qu'ils ne sont pas négatifs
     this.heroismCost = Math.max(costHeroism, 0);
 
     console.log('Cost in heroism:', this.heroismCost);
-}
-
-
-
+  }
 
 
 }
