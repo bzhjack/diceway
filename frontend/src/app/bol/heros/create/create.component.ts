@@ -396,7 +396,20 @@ export class BolHerosCreateComponent implements OnDestroy {
         this.avantages = data.avantages.slice();
         this.desavantages = data.desavantages.slice();
         data.avantages.forEach((avantage: BolAvantageModel) => {this.addTrait({type: 'A', id: avantage.id})});
-        data.desavantages.forEach((desavantage: BolDesavantageModel) => {this.addTrait({type: 'D', id: desavantage.id})})
+        data.desavantages.forEach((desavantage: BolDesavantageModel) => {this.addTrait({type: 'D', id: desavantage.id})});
+        this.subs?.unsubscribe();
+        this.spinner.show();
+        this.subs = this.hs.updateTraits(this.herosForm.value as BolHerosModel).subscribe(
+          {
+            next: (hero: BolHerosModel) => {
+              this.spinner.hide();
+              console.log(data);
+            },
+            error: () => {
+              this.spinner.hide();
+            }
+          }
+        )
       }
     });
   }

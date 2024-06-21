@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
-use App\Models\Bol\BolAvantage;
-use App\Models\Bol\BolDesavantage;
 use App\Models\Bol\BolHeros;
-use App\Models\Bol\BolHerosTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,9 +47,9 @@ class BolHerosController extends Controller
         $heros['user_id'] = Auth::id();
         $heros = BolHeros::create($heros);
         $id = $heros->id;
-        if ($traits != null) {
-            BolHerosController::updateTraits($id, $traits);
-        }
+        /*if ($traits != null) {
+            BolTraitController::updateTraits($id, $traits);
+        }*/
         return response($heros);
     }
 
@@ -69,28 +66,12 @@ class BolHerosController extends Controller
             return response()->json(['error' => 'Hero not found'], 404);
         } else {
             BolHeros::where('id', $id)->update($heros);
-            BolHerosController::updateTraits($id, $traits);
+            //BolTraitController::updateTraits($id, $traits);
             return response($heros);
         }
     }
 
-    public static function updateTraits($id, $traits)
-    {
-        // Supprimez les traits existants pour le héros donné
-        BolHerosTrait::where('heros_id', $id)->delete();
 
-        // Insérez les nouveaux traits
-        foreach ($traits as $trait) {
-            $traitable_type = $trait['type'] == 'A' ? BolAvantage::class : BolDesavantage::class;
-            $heros_traits = [
-                'heros_id' => $id,
-                'traitable_id' => $trait['traitable_id'],
-                'type' => $trait['type'],
-                'traitable_type' => $traitable_type,
-            ];
-            BolHerosTrait::create($heros_traits);
-        }
-    }
 
     /**
      * Remove the specified resource from storage.

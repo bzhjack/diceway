@@ -30,6 +30,10 @@ export class BolHerosService {
     return this.http.get<BolDesavantageModel[]>('/api/bol/trait/desavantages');
   }
 
+  updateTraits(hero: BolHerosModel): Observable<any> {
+    return  this.http.post<BolHerosModel>('/api/bol/heros/traits/update', <BolHerosModel>hero);
+  }
+
   // Héros
   createHeros(hero: BolHerosModel): Observable<any> {
     return this.http.post<BolHerosModel>('/api/bol/heros/create', <BolHerosModel>hero);
