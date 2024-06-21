@@ -45,7 +45,8 @@ export class BolHomeComponent implements OnDestroy {
   public heroes: Array<BolHerosModel> = [];
   public showCreate = false;
   public joueurCtrl = new FormControl('', [Validators.required,Validators.minLength(3)]);
-  herosForm = this.fb.group({joueur: this.joueurCtrl});
+  public nomCtrl = new FormControl('', [Validators.required,Validators.minLength(3)]);
+  herosForm = this.fb.group({joueur: this.joueurCtrl, nom: this.nomCtrl});
 
   constructor(
     private confirmationService: ConfirmationService,
