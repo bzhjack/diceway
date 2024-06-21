@@ -11,12 +11,9 @@ import {ScrollPanel, ScrollPanelModule} from "primeng/scrollpanel";
 import {TagModule} from 'primeng/tag';
 import {TooltipModule} from 'primeng/tooltip';
 import {InlineSVGModule} from "ng-inline-svg-2";
-import {BolAvantageModel} from "../../../models/bol-avantage.model";
-import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
 import {BolRegionModel} from "../../../models/bol-region.model";
 import {FieldsetModule} from "primeng/fieldset";
 import {MessagesModule} from "primeng/messages";
-import {BolHeroCreateTools} from "../create.tools";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {BolTraitRowComponent} from "../trait/trait-row/trait-row.component";
 
@@ -45,7 +42,7 @@ export class BolRegionComponent implements OnDestroy {
   private subs?: Subscription;
   public regions: any[] = [];
   public currentRegion?: any;
-  public savedRegion?: any;
+  public savedRegionId?: number;
   public selectedName?: string;
   public ready = false;
   @ViewChild('regionPanel') scrollRegion!: ScrollPanel;
@@ -55,14 +52,14 @@ export class BolRegionComponent implements OnDestroy {
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
     private spinner: NgxSpinnerService) {
-    const regionId = this.config.data.id_region;
+    this.savedRegionId = this.config.data.id_region;
     this.spinner.show();
     this.ready = false;
     this.subs = this.hs.regions().subscribe({
       next: (regions: Array<any>) => {
         this.regions = regions;
-        if (regionId) {
-          this.setCurrentRegion(this.regions.find((region) => region.id === regionId));
+        if (this.savedRegionId) {
+          this.setCurrentRegion(this.regions.find((region) => region.id === this.savedRegionId));
         }
         this.ready = true;
         this.spinner.hide();
@@ -71,14 +68,6 @@ export class BolRegionComponent implements OnDestroy {
         this.spinner.hide();
       }
     });
-  }
-
-  avantageDescription(avantage: BolAvantageModel) {
-    return BolHeroCreateTools.avantageDescription(avantage);
-  }
-
-  desavantageDescription(desavantage: BolDesavantageModel) {
-    return BolHeroCreateTools.desavantageDescription(desavantage);
   }
 
   quit() {
