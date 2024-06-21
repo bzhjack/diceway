@@ -31,6 +31,11 @@ php artisan vendor:publish --tag=laravel-notifications
 sudo apt remove '^php8.x.*$'
 ```
 
+## Build pour MEP
+
+npm run build:prod
+
+
 ## Gestion de l'aplication angular dans le projet
 
 https://medium.com/swlh/how-to-setup-laravel-with-angular-d3de171afa03
