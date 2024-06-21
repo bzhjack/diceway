@@ -45,6 +45,7 @@ export class BolRegionComponent implements OnDestroy {
   private subs?: Subscription;
   public regions: any[] = [];
   public currentRegion?: any;
+  public savedRegion?: any;
   public selectedName?: string;
   public ready = false;
   @ViewChild('regionPanel') scrollRegion!: ScrollPanel;
@@ -54,14 +55,14 @@ export class BolRegionComponent implements OnDestroy {
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
     private spinner: NgxSpinnerService) {
-    const regionId= this.config.data.id_region;
+    const regionId = this.config.data.id_region;
     this.spinner.show();
     this.ready = false;
     this.subs = this.hs.regions().subscribe({
       next: (regions: Array<any>) => {
         this.regions = regions;
         if (regionId) {
-         this.setCurrentRegion(this.regions.find((region) => region.id === regionId));
+          this.setCurrentRegion(this.regions.find((region) => region.id === regionId));
         }
         this.ready = true;
         this.spinner.hide();
