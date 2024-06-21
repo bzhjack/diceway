@@ -39,7 +39,7 @@
 
 <!-- Création de personnage -->
 <p-dialog header="Création de personnage" [modal]="true" [(visible)]="showCreate" [style]="{ width: '25rem' }">
-  <form [formGroup]="herosForm" autocomplete="off">
+  <form [formGroup]="herosForm" autocomplete="off" (submit)="createHero()">
     <span class="p-text-secondary block mb-5">Commençez par renseigner le nom du joueur.</span>
     <div class="flex gap-2 justify-between">
       <div class="flex flex-col gap-1 w-full justify-end relative">
