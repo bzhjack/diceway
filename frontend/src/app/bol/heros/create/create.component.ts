@@ -347,12 +347,13 @@ export class BolHerosCreateComponent implements OnDestroy {
    * Sélection de la région
    */
   region() {
+    const currentRegionId = this.regionIdCtrl.value;
     this.ref = this.ds.open(BolRegionComponent, {
       header: 'Choix de la région',
       width: '95vw',
       height: '90vh',
       data: {
-        id_region: this.regionIdCtrl.value
+        id_region: currentRegionId
       },
     });
     this.subs?.unsubscribe();
@@ -363,6 +364,13 @@ export class BolHerosCreateComponent implements OnDestroy {
         if (data.nom) {
           this.nomCtrl.setValue(data.nom);
         }
+        if (data.region.id !== currentRegionId) {
+          this.traits.clear();
+          this.avantages = [];
+          this.desavantages=[];
+        }
+
+
         this.submit();
       }
     });
@@ -372,6 +380,9 @@ export class BolHerosCreateComponent implements OnDestroy {
     ev.stopPropagation();
     this.regionIdCtrl.setValue(null);
     this.regionCtrl.setValue(null);
+    this.traits.clear();
+    this.avantages = [];
+    this.desavantages=[];
   }
 
   /**
@@ -391,7 +402,6 @@ export class BolHerosCreateComponent implements OnDestroy {
     this.subs?.unsubscribe();
     this.subs = this.ref?.onClose.subscribe((data: any) => {
       if (data) {
-        console.log(data);
         this.traits.clear();
         this.avantages = data.avantages.slice();
         this.desavantages = data.desavantages.slice();
@@ -403,7 +413,6 @@ export class BolHerosCreateComponent implements OnDestroy {
           {
             next: (hero: BolHerosModel) => {
               this.spinner.hide();
-              console.log(data);
             },
             error: () => {
               this.spinner.hide();
