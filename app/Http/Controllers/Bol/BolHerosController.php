@@ -55,13 +55,14 @@ class BolHerosController extends Controller
     public function update(Request $request)
     {
         $heros = $request->except('traits');
+        $traits = $request->input('traits');
         $id = $heros['id'];
         $hero = BolHeros::where('user_id', Auth::id())->where('id', $id)->get()->first();
         if ($hero === null) {
             return response()->json(['error' => 'Hero not found'], 404);
         } else {
             BolHeros::where('id', $id)->update($heros);
-            if ($heros["region_id"] === null) {
+            if ($heros["region_id"] === null || count($traits) === 0) {
                 BolHerosTrait::where('heros_id', $id)->delete();
             }
             return response($heros);

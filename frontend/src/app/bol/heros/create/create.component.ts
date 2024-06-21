@@ -347,12 +347,13 @@ export class BolHerosCreateComponent implements OnDestroy {
    * Sélection de la région
    */
   region() {
+    const currentRegionId = this.regionIdCtrl.value;
     this.ref = this.ds.open(BolRegionComponent, {
       header: 'Choix de la région',
       width: '95vw',
       height: '90vh',
       data: {
-        id_region: this.regionIdCtrl.value
+        id_region: currentRegionId
       },
     });
     this.subs?.unsubscribe();
@@ -363,9 +364,13 @@ export class BolHerosCreateComponent implements OnDestroy {
         if (data.nom) {
           this.nomCtrl.setValue(data.nom);
         }
-        this.traits.clear();
-        this.avantages = [];
-        this.desavantages=[];
+        if (data.region.id !== currentRegionId) {
+          this.traits.clear();
+          this.avantages = [];
+          this.desavantages=[];
+        }
+
+
         this.submit();
       }
     });
