@@ -4,7 +4,7 @@
       <!--a *ngFor="let hero of heroes" [routerLink]="['heros', 'create', hero.id]">{{ hero.joueur }}</a-->
       <p-table [value]="heroes" [tableStyle]="{ 'min-width': '50rem' }"
                [scrollable]="true"
-               scrollHeight="300px" >
+               scrollHeight="300px">
         <ng-template pTemplate="header">
           <tr>
             <th>Joueur</th>
@@ -19,13 +19,8 @@
             <td class="flex gap-2 justify-end">
               <button [routerLink]="['heros', 'create', heros.id]"
                       severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-pencil"></button>
-              <button
-                severity="danger"
-                type="button"
-                size="small"
-                pButton
-                pRipple
-                icon="pi pi-trash">
+              <button (click)="deleteHero(heros, $event)"
+                      severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash">
               </button>
             </td>
           </tr>
@@ -61,3 +56,5 @@
     </div>
   </form>
 </p-dialog>
+
+<p-confirmPopup/>

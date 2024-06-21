@@ -43,4 +43,7 @@ export class BolHerosService {
   heros(id: string): Observable<BolHerosModel>  {
     return this.http.get<BolHerosModel>('/api/bol/heros/'+id,);
   }
+  deleteHeros(id: string): Observable<any> {
+    return this.http.delete<BolHerosModel>('/api/bol/heros/delete/' + id);
+  }
 }
