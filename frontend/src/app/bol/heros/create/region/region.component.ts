@@ -52,14 +52,14 @@ export class BolRegionComponent implements OnDestroy {
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
     private spinner: NgxSpinnerService) {
-    this.savedRegionId = this.config.data.id_region;
+    const regionId = this.config.data.id_region;
     this.spinner.show();
     this.ready = false;
     this.subs = this.hs.regions().subscribe({
       next: (regions: Array<any>) => {
         this.regions = regions;
-        if (this.savedRegionId) {
-          this.setCurrentRegion(this.regions.find((region) => region.id === this.savedRegionId));
+        if (regionId) {
+          this.setCurrentRegion(this.regions.find((region) => region.id === regionId));
         }
         this.ready = true;
         this.spinner.hide();
