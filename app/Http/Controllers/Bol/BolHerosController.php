@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bol\BolHeros;
+use App\Models\Bol\BolHerosTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,17 +40,12 @@ class BolHerosController extends Controller
     public function create(Request $request)
     {
         $data = $request->validate([
-            'nom' => 'max:255',
+            'nom' => 'required|max:255',
             'joueur' => 'required|max:255'
         ]);
         $heros = $request->except('traits');
-        $traits = $request->input('traits');
         $heros['user_id'] = Auth::id();
         $heros = BolHeros::create($heros);
-        $id = $heros->id;
-        /*if ($traits != null) {
-            BolTraitController::updateTraits($id, $traits);
-        }*/
         return response($heros);
     }
 
@@ -59,18 +55,18 @@ class BolHerosController extends Controller
     public function update(Request $request)
     {
         $heros = $request->except('traits');
-        $traits = $request->input('traits');
         $id = $heros['id'];
         $hero = BolHeros::where('user_id', Auth::id())->where('id', $id)->get()->first();
         if ($hero === null) {
             return response()->json(['error' => 'Hero not found'], 404);
         } else {
             BolHeros::where('id', $id)->update($heros);
-            //BolTraitController::updateTraits($id, $traits);
+            if ($heros["region_id"] === null) {
+                BolHerosTrait::where('heros_id', $id)->delete();
+            }
             return response($heros);
         }
     }
-
 
 
     /**
