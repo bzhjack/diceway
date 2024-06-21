@@ -9,6 +9,7 @@ use App\Models\Bol\BolHeros;
 use App\Models\Bol\BolHerosTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class BolHerosController extends Controller
 {
@@ -24,15 +25,17 @@ class BolHerosController extends Controller
     /**
      * Récupère un héro par son id
      */
-    public function getOne(Request $request) {
+    public function getOne(Request $request)
+    {
         $id = $request->route('id');
         $hero = BolHeros::with('traits.traitable')->where('user_id', Auth::id())->where('id', $id)->get()->first();
         if ($hero === null) {
-            return response()->json(['error'=> 'Hero not found'], 404);
+            return response()->json(['error' => 'Hero not found'], 404);
         } else {
             return response($hero);
         }
     }
+
     /**
      * Création d'un hero
      */
@@ -46,12 +49,13 @@ class BolHerosController extends Controller
         $traits = $request->input('traits');
         $heros['user_id'] = Auth::id();
         $heros = BolHeros::create($heros);
-        $id =  $heros->id;
+        $id = $heros->id;
         if ($traits != null) {
             BolHerosController::updateTraits($id, $traits);
         }
         return response($heros);
     }
+
     /**
      * Mise à jour d'un hero
      */
@@ -62,7 +66,7 @@ class BolHerosController extends Controller
         $id = $heros['id'];
         $hero = BolHeros::where('user_id', Auth::id())->where('id', $id)->get()->first();
         if ($hero === null) {
-            return response()->json(['error'=> 'Hero not found'], 404);
+            return response()->json(['error' => 'Hero not found'], 404);
         } else {
             BolHeros::where('id', $id)->update($heros);
             BolHerosController::updateTraits($id, $traits);
@@ -86,6 +90,25 @@ class BolHerosController extends Controller
             ];
             BolHerosTrait::create($heros_traits);
         }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy($id): \Illuminate\Http\JsonResponse
+    {
+        $bolHeros = BolHeros::find($id);
+        // Check if the resource exists
+        if (!$bolHeros) {
+            return response()->json(['message' => 'Hero not found'], Response::HTTP_NOT_FOUND);
+        }
+        // Delete the resource
+        $bolHeros->delete();
+        // Return a successful response
+        return response()->json(['message' => 'Hero deleted successfully'], Response::HTTP_OK);
     }
 
 }

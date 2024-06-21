@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Bol\BolAvantage;
 use App\Models\Bol\BolDesavantage;
 
