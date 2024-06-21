@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Bol\BolAvantage;
 use App\Models\Bol\BolDesavantage;
 use App\Models\Bol\BolHerosTrait;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class BolTraitController extends Controller
 {
@@ -46,5 +48,20 @@ class BolTraitController extends Controller
             BolHerosTrait::create($heros_traits);
         }
         return response()->json($heros);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function destroy(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $heros = $request->except('traits');
+        $id = $heros["id"];
+        BolHerosTrait::where('heros_id', $id)->delete();
+        // Return a successful response
+        return response()->json(['message' => 'Traits deleted successfully'], Response::HTTP_OK);
     }
 }
