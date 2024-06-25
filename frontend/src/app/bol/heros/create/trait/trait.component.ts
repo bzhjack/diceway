@@ -18,7 +18,6 @@ import {CheckboxModule} from "primeng/checkbox";
 import {FormsModule} from "@angular/forms";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {BolTraitRowComponent} from "./trait-row/trait-row.component";
-import {BolHerosModel} from "../../../models/bol-heros.model";
 
 @Component({
   selector: 'app-trait',
@@ -57,7 +56,7 @@ export class BolTraitComponent implements OnDestroy {
 
   private allAvg: BolAvantageModel[] = [];
   private allDesavg: BolDesavantageModel[] = [];
-
+  noList = false; // Si la région n'a pas d'avantages ni de désavantages
 
   selectedNatalAvantages: BolAvantageModel[] = [];
   selectedNatalDesavantages: BolDesavantageModel[] = [];
@@ -104,7 +103,7 @@ export class BolTraitComponent implements OnDestroy {
         this.selectedNatalDesavantages = this.desavantages.filter((des: BolDesavantageModel) => herosDesId.includes(des.id));
         this.selectedGeneralDesavantages = this.generalDesavantages.filter((des: BolDesavantageModel) => herosDesId.includes(des.id));
 
-
+        this.noList = (this.avantages.length + this.desavantages.length) === 0;
         this.checkSelection();
         this.ready = true;
         this.spinner.hide();
@@ -150,32 +149,50 @@ export class BolTraitComponent implements OnDestroy {
 
     let costHeroism = 0;
 
-    // Gestion du premier avantage (natal)
-    if (totalNatalAvantages === 0 && totalAvantages > 0) {
-      // Si aucun avantage natal n'est sélectionné, on ne peut pas avoir d'autres avantages
-      this.selectedGeneralAvantages = [];
-      this.avantagesIds = [];
-      this.heroismCost = 0;
-      console.warn('Aucun avantage natal sélectionné, les avantages généraux ont été réinitialisés.');
-      return; // On arrête ici, car la sélection n'est pas valide
-    }
-
-    // Gestion du deuxième avantage (natal ou général)
-    if (totalAvantages >= 2) {
-      costHeroism += 1;
-      if (totalNatalDesavantages >= 1) {
-        // Si un désavantage natal est sélectionné, le coût en héroïsme est annulé
-        costHeroism -= 1;
+    if (this.noList) {
+      if (totalAvantages >= 2) {
+        costHeroism += 1;
+        if (totalDesavantages >= 1) {
+          // Si un désavantage natal est sélectionné, le coût en héroïsme est annulé
+          costHeroism -= 1;
+        }
       }
-    }
-
-    // Gestion du troisième avantage (natal ou général)
-    if (totalAvantages >= 3) {
-      costHeroism += 1;
-      if (totalDesavantages - totalNatalDesavantages >= 1 || totalNatalDesavantages >= 2) {
-        // Si deux désavantages sont sélectionnés (généraux ou natals), le coût en héroïsme est annulé
-        costHeroism -= 1;
+      if (totalAvantages >= 3) {
+        costHeroism += 1;
+        if (totalDesavantages >= 2) {
+          // Si deux désavantages sont sélectionnés (généraux ou natals), le coût en héroïsme est annulé
+          costHeroism -= 1;
+        }
       }
+    } else {
+      // Gestion du premier avantage (natal)
+      if (totalNatalAvantages === 0 && totalAvantages > 0) {
+        // Si aucun avantage natal n'est sélectionné, on ne peut pas avoir d'autres avantages
+        this.selectedGeneralAvantages = [];
+        this.avantagesIds = [];
+        this.heroismCost = 0;
+        console.warn('Aucun avantage natal sélectionné, les avantages généraux ont été réinitialisés.');
+        return; // On arrête ici, car la sélection n'est pas valide
+      }
+
+      // Gestion du deuxième avantage (natal ou général)
+      if (totalAvantages >= 2) {
+        costHeroism += 1;
+        if (totalNatalDesavantages >= 1) {
+          // Si un désavantage natal est sélectionné, le coût en héroïsme est annulé
+          costHeroism -= 1;
+        }
+      }
+
+      // Gestion du troisième avantage (natal ou général)
+      if (totalAvantages >= 3) {
+        costHeroism += 1;
+        if (totalDesavantages - totalNatalDesavantages >= 1 || totalNatalDesavantages >= 2) {
+          // Si deux désavantages sont sélectionnés (généraux ou natals), le coût en héroïsme est annulé
+          costHeroism -= 1;
+        }
+      }
+
     }
 
     // Met à jour la liste des IDs d'avantages

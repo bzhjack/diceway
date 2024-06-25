@@ -4,27 +4,48 @@
       <div class="flex gap-2">
         <div>
           <ul class="flex flex-col gap-2">
-            <li>
-              <div [ngStyle]="selectedNatalAvantages.length >= 1 ? {color: 'var(--success-color)'}: {}"><strong>Premier
-                Avantage (terre natale):</strong></div>
-              <div>Choisissez un avantage parmi ceux proposés.</div>
-            </li>
-            <li>
-              <div [ngStyle]="avantagesIds.length >= 2 ? {color: 'var(--success-color)'}: {}"><strong>Deuxième Avantage
-                (général ou terre natale) :</strong></div>
-              <div
-                [ngStyle]="avantagesIds.length >= 2 && selectedNatalDesavantages.length === 0 ? {color: 'var(--warn-color)'}: {}">
-                Prenez un désavantage (terre natale) ou renoncez à 1 point d’héroïsme.
-              </div>
-            </li>
-            <li>
-              <div [ngStyle]="avantagesIds.length == 3 ? {color: 'var(--success-color)'}: {}"><strong>Troisième Avantage
-                (général ou terre natale) :</strong></div>
-              <div
-                [ngStyle]="avantagesIds.length == 3 && (selectedNatalDesavantages.length < 2 && selectedGeneralDesavantages.length < 1) ? {color: 'var(--warn-color)'}: {}">
-                Prenez un autre désavantage (général ou terre natale) ou renoncez à un autre point d’héroïsme.
-              </div>
-            </li>
+            @if (noList) {
+              <li>
+                <div [ngStyle]="avantagesIds.length >= 1 ? {color: 'var(--success-color)'}: {}"><strong>Premier Avantage:</strong></div>
+                <div>Choisissez un avantage parmi ceux proposés.</div>
+              </li>
+              <li>
+                <div [ngStyle]="avantagesIds.length >= 2 ? {color: 'var(--success-color)'}: {}"><strong>Deuxième Avantage:</strong></div>
+                <div
+                  [ngStyle]="avantagesIds.length >= 2 && desavantagesIds.length === 0 ? {color: 'var(--warn-color)'}: {}">
+                  Prenez un désavantage ou renoncez à 1 point d’héroïsme.
+                </div>
+              </li>
+              <li>
+                <div [ngStyle]="avantagesIds.length == 3 ? {color: 'var(--success-color)'}: {}"><strong>Troisième Avantage:</strong></div>
+                <div
+                  [ngStyle]="avantagesIds.length == 3 && desavantagesIds.length < 2 ? {color: 'var(--warn-color)'}: {}">
+                  Prenez un autre désavantage ou renoncez à un autre point d’héroïsme.
+                </div>
+              </li>
+            } @else {
+              <li>
+                <div [ngStyle]="selectedNatalAvantages.length >= 1 ? {color: 'var(--success-color)'}: {}"><strong>Premier
+                  Avantage (terre natale):</strong></div>
+                <div>Choisissez un avantage parmi ceux proposés.</div>
+              </li>
+              <li>
+                <div [ngStyle]="avantagesIds.length >= 2 ? {color: 'var(--success-color)'}: {}"><strong>Deuxième Avantage
+                  (général ou terre natale) :</strong></div>
+                <div
+                  [ngStyle]="avantagesIds.length >= 2 && selectedNatalDesavantages.length === 0 ? {color: 'var(--warn-color)'}: {}">
+                  Prenez un désavantage (terre natale) ou renoncez à 1 point d’héroïsme.
+                </div>
+              </li>
+              <li>
+                <div [ngStyle]="avantagesIds.length == 3 ? {color: 'var(--success-color)'}: {}"><strong>Troisième Avantage
+                  (général ou terre natale) :</strong></div>
+                <div
+                  [ngStyle]="avantagesIds.length == 3 && (selectedNatalDesavantages.length < 2 && selectedGeneralDesavantages.length < 1) ? {color: 'var(--warn-color)'}: {}">
+                  Prenez un autre désavantage (général ou terre natale) ou renoncez à un autre point d’héroïsme.
+                </div>
+              </li>
+            }
           </ul>
         </div>
         <div class="flex items-center justify-center flex-auto text-4xl">
@@ -34,57 +55,87 @@
       </div>
     </p-fieldset>
   </div>
-  <div class="flex flex-auto pb-2 gap-2">
-    <p-fieldset legend="Liste régionale" class="w-1/2 h-full" styleClass="h-full relative">
-      <div class="flex gap-2" style="position: absolute; inset:15px;">
-        <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
-          <div class="flex gap-2 pb-2" *ngFor="let avantage of avantages">
-            <p-checkbox name="av"
-                        [disabled]="selectedGeneralAvantages.length + selectedNatalAvantages.length === 3 && !this.avantagesIds.includes(avantage.id)"
-                        [(ngModel)]="selectedNatalAvantages"
-                        [value]="avantage"
-                        (ngModelChange)="checkSelection()"></p-checkbox>
-            <app-trait-row [avantage]="avantage"
-                           [disabled]="selectedGeneralAvantages.length + selectedNatalAvantages.length === 3 && !this.avantagesIds.includes(avantage.id)"></app-trait-row>
-          </div>
-        </p-scrollPanel>
-        <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
-          <div class="flex gap-2 pb-2" *ngFor="let desavantage of desavantages">
-            <p-checkbox name="des"
-                        [(ngModel)]="selectedNatalDesavantages"
-                        [value]="desavantage"
-                        (ngModelChange)="checkSelection()"></p-checkbox>
-            <app-trait-row [desavantage]="desavantage"></app-trait-row>
-          </div>
-        </p-scrollPanel>
-      </div>
-    </p-fieldset>
-    <p-fieldset legend="Liste globale" class="w-1/2 h-full" styleClass="h-full relative">
-      <div class="flex gap-2" style="position: absolute; inset:15px;">
-        <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
-          <div class="flex gap-2 pb-2" *ngFor="let avantage of generalAvantages">
-            <p-checkbox name="gav"
-                        [disabled]="selectedNatalAvantages.length === 0 || (avantagesIds.length === 3 && !avantagesIds.includes(avantage.id))"
-                        [(ngModel)]="selectedGeneralAvantages"
-                        [value]="avantage"
-                        (ngModelChange)="checkSelection()"></p-checkbox>
-            <app-trait-row [avantage]="avantage"
-                           [disabled]="selectedNatalAvantages.length === 0 || (avantagesIds.length === 3 && !avantagesIds.includes(avantage.id))"></app-trait-row>
-          </div>
-        </p-scrollPanel>
+  @if (noList) {
+    <div class="flex flex-auto pb-2 gap-2">
+      <p-fieldset legend="Liste globale" class="w-full h-full" styleClass="h-full relative">
+        <div class="flex gap-2" style="position: absolute; inset:15px;">
+          <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
+            <div class="flex gap-2 pb-2" *ngFor="let avantage of generalAvantages">
+              <p-checkbox name="gav"
+                          [disabled]="(avantagesIds.length === 3 && !avantagesIds.includes(avantage.id))"
+                          [(ngModel)]="selectedGeneralAvantages"
+                          [value]="avantage"
+                          (ngModelChange)="checkSelection()"></p-checkbox>
+              <app-trait-row [avantage]="avantage"
+                             [disabled]="(avantagesIds.length === 3 && !avantagesIds.includes(avantage.id))"></app-trait-row>
+            </div>
+          </p-scrollPanel>
 
-        <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
-          <div class="flex gap-2 pb-2" *ngFor="let desavantage of generalDesavantages">
-            <p-checkbox name="gdes"
-                        [(ngModel)]="selectedGeneralDesavantages"
-                        [value]="desavantage"
-                        (ngModelChange)="checkSelection()"></p-checkbox>
-            <app-trait-row [desavantage]="desavantage"></app-trait-row>
-          </div>
-        </p-scrollPanel>
-      </div>
-    </p-fieldset>
-  </div>
+          <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
+            <div class="flex gap-2 pb-2" *ngFor="let desavantage of generalDesavantages">
+              <p-checkbox name="gdes"
+                          [(ngModel)]="selectedGeneralDesavantages"
+                          [value]="desavantage"
+                          (ngModelChange)="checkSelection()"></p-checkbox>
+              <app-trait-row [desavantage]="desavantage"></app-trait-row>
+            </div>
+          </p-scrollPanel>
+        </div>
+      </p-fieldset>
+    </div>
+  } @else {
+    <div class="flex flex-auto pb-2 gap-2">
+      <p-fieldset legend="Liste régionale" class="w-1/2 h-full" styleClass="h-full relative">
+        <div class="flex gap-2" style="position: absolute; inset:15px;">
+          <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
+            <div class="flex gap-2 pb-2" *ngFor="let avantage of avantages">
+              <p-checkbox name="av"
+                          [disabled]="selectedGeneralAvantages.length + selectedNatalAvantages.length === 3 && !this.avantagesIds.includes(avantage.id)"
+                          [(ngModel)]="selectedNatalAvantages"
+                          [value]="avantage"
+                          (ngModelChange)="checkSelection()"></p-checkbox>
+              <app-trait-row [avantage]="avantage"
+                             [disabled]="selectedGeneralAvantages.length + selectedNatalAvantages.length === 3 && !this.avantagesIds.includes(avantage.id)"></app-trait-row>
+            </div>
+          </p-scrollPanel>
+          <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
+            <div class="flex gap-2 pb-2" *ngFor="let desavantage of desavantages">
+              <p-checkbox name="des"
+                          [(ngModel)]="selectedNatalDesavantages"
+                          [value]="desavantage"
+                          (ngModelChange)="checkSelection()"></p-checkbox>
+              <app-trait-row [desavantage]="desavantage"></app-trait-row>
+            </div>
+          </p-scrollPanel>
+        </div>
+      </p-fieldset>
+      <p-fieldset legend="Liste globale" class="w-1/2 h-full" styleClass="h-full relative">
+        <div class="flex gap-2" style="position: absolute; inset:15px;">
+          <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
+            <div class="flex gap-2 pb-2" *ngFor="let avantage of generalAvantages">
+              <p-checkbox name="gav"
+                          [disabled]="selectedNatalAvantages.length === 0 || (avantagesIds.length === 3 && !avantagesIds.includes(avantage.id))"
+                          [(ngModel)]="selectedGeneralAvantages"
+                          [value]="avantage"
+                          (ngModelChange)="checkSelection()"></p-checkbox>
+              <app-trait-row [avantage]="avantage"
+                             [disabled]="selectedNatalAvantages.length === 0 || (avantagesIds.length === 3 && !avantagesIds.includes(avantage.id))"></app-trait-row>
+            </div>
+          </p-scrollPanel>
+
+          <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
+            <div class="flex gap-2 pb-2" *ngFor="let desavantage of generalDesavantages">
+              <p-checkbox name="gdes"
+                          [(ngModel)]="selectedGeneralDesavantages"
+                          [value]="desavantage"
+                          (ngModelChange)="checkSelection()"></p-checkbox>
+              <app-trait-row [desavantage]="desavantage"></app-trait-row>
+            </div>
+          </p-scrollPanel>
+        </div>
+      </p-fieldset>
+    </div>
+  }
   <div class="flex justify-end gap-2">
     <p-button icon="pi pi-times" size="small" label="Quitter" severity="secondary" (click)="quit()"></p-button>
     <p-button icon="pi pi-check" size="small" label="Valider" severity="success" (click)="validate()"
