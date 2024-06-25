@@ -202,11 +202,16 @@
             <p-fieldset class="flex-auto">
               <ng-template pTemplate="header">
                 <div class="flex items-center gap-2">
-                  <div class="cursor-pointer">
+                  <div class="cursor-pointer" (click)="carriereInfos.toggle($event)">
                     <i *ngIf="aptitudeErrors.length === 0" class="pi pi-info-circle"></i>
                   </div>
                   <div>Carrières</div>
                 </div>
+                <p-overlayPanel #carriereInfos>
+                  <div class="flex flex-col gap-2">
+                    <bol-message type="carrieres"></bol-message>
+                  </div>
+                </p-overlayPanel>
               </ng-template>
             </p-fieldset>
           </div>

@@ -59,3 +59,19 @@
     </div>
   </ng-template>
 </p-messages>
+
+<!------------------------------------------->
+<!-- Gestion des carrières -->
+<!------------------------------------------->
+<p-messages severity="info" *ngIf="type() === 'carrieres'">
+  <ng-template pTemplate>
+    <div class="info_icon" inlineSVG="/frontend/assets/rolling-dices.svg"></div>
+    <div class="ml-4">
+      <ul style="margin: 0; padding-inline-start: 20px">
+        <li>Tu disposes de <strong>4 points</strong> à répartir entre <strong>quatre carrières</strong> de votre choix.</li>
+        <li>Le rang minimum d'une carrière est de 0.</li>
+        <li>Le rang maximum d'une carrière est de 3.</li>
+      </ul>
+    </div>
+  </ng-template>
+</p-messages>
