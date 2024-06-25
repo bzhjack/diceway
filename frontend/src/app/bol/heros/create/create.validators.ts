@@ -9,7 +9,7 @@ export const globalFormValidator: ValidatorFn = (control: AbstractControl): Vali
   if (countNegativeAttr > 1) {
     errors = Object.assign(errors, {'attrTooManyNegative': true});
   }
-  const sumAttr = attrs.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
+  const sumAttr = attrs.reduce((acc, val) => acc + val, 0);
   if (sumAttr > 4) {
     errors = Object.assign(errors, { 'attrSumExceeded': true });
   }
@@ -21,7 +21,7 @@ export const globalFormValidator: ValidatorFn = (control: AbstractControl): Vali
   if (countNegativeApt > 1) {
     errors = Object.assign(errors, {'aptTooManyNegative': true});
   }
-  const sumApt = apts.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
+  const sumApt = apts.reduce((acc, val) => acc + val, 0);
   if (sumApt > 4) {
     errors = Object.assign(errors, { 'aptSumExceeded': true });
   }

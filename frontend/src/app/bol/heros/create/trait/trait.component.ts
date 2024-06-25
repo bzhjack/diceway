@@ -127,7 +127,7 @@ export class BolTraitComponent implements OnDestroy {
     this.desavantagesIds.forEach((id, key) => {
       desa.push(this.allDesavg.find((desavg) => desavg.id === id));
     })
-    this.ref.close({avantages: avg, desavantages: desa});
+    this.ref.close({avantages: avg, desavantages: desa, cost: this.heroismCost});
   }
 
   ngOnDestroy() {
@@ -141,12 +141,6 @@ export class BolTraitComponent implements OnDestroy {
     const totalGeneralDesavantages = this.selectedGeneralDesavantages.length;
     const totalDesavantages = totalNatalDesavantages + totalGeneralDesavantages;
 
-    console.log('totalAvg:', totalAvantages);
-    console.log('totalDes:', totalDesavantages);
-    console.log('totalNatalAvg:', totalNatalAvantages);
-    console.log('totalNatalDes:', totalNatalDesavantages);
-    console.log('totalGeneralDes:', totalGeneralDesavantages);
-
     let costHeroism = 0;
 
     // Gestion du premier avantage (natal)
@@ -156,7 +150,7 @@ export class BolTraitComponent implements OnDestroy {
       this.avantagesIds = [];
       this.heroismCost = 0;
       console.warn('Aucun avantage natal sélectionné, les avantages généraux ont été réinitialisés.');
-      return; // On arrête ici car la sélection n'est pas valide
+      return; // On arrête ici, car la sélection n'est pas valide
     }
 
     // Gestion du deuxième avantage (natal ou général)
@@ -171,7 +165,7 @@ export class BolTraitComponent implements OnDestroy {
     // Gestion du troisième avantage (natal ou général)
     if (totalAvantages >= 3) {
       costHeroism += 1;
-      if (totalDesavantages - totalNatalDesavantages >= 1 || totalNatalDesavantages >=2 ) {
+      if (totalDesavantages - totalNatalDesavantages >= 1 || totalNatalDesavantages >= 2) {
         // Si deux désavantages sont sélectionnés (généraux ou natals), le coût en héroïsme est annulé
         costHeroism -= 1;
       }
@@ -191,8 +185,6 @@ export class BolTraitComponent implements OnDestroy {
 
     // Ajuste les points d'héroïsme, s'assure qu'ils ne sont pas négatifs
     this.heroismCost = Math.max(costHeroism, 0);
-
-    console.log('Cost in heroism:', this.heroismCost);
   }
 
 

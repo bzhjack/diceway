@@ -42,7 +42,6 @@ export class BolRegionComponent implements OnDestroy {
   private subs?: Subscription;
   public regions: any[] = [];
   public currentRegion?: any;
-  public savedRegionId?: number;
   public selectedName?: string;
   public ready = false;
   @ViewChild('regionPanel') scrollRegion!: ScrollPanel;
