@@ -280,13 +280,13 @@ export class BolHerosCreateComponent implements OnDestroy {
           });
           this.traits.clear();
           this.avantages = [];
-          this.desavantages=[];
+          this.desavantages = [];
           hero.traits.forEach((trait) => {
-            this.addTrait({type: trait.type, id: trait.id});
+            this.addTrait({type: trait.type, id: trait.id, detail: trait.detail});
             if (trait.type === "A") {
-                this.avantages.push(trait.traitable);
+              this.avantages.push({...trait.traitable, ...{pivot: {detail: trait.detail}}});
             } else {
-              this.desavantages.push(trait.traitable);
+              this.desavantages.push({...trait.traitable, ...{pivot: {detail: trait.detail}}});
             }
           });
 
@@ -369,7 +369,7 @@ export class BolHerosCreateComponent implements OnDestroy {
         if (data.region.id !== currentRegionId) {
           this.traits.clear();
           this.avantages = [];
-          this.desavantages=[];
+          this.desavantages = [];
         }
 
 
@@ -384,7 +384,7 @@ export class BolHerosCreateComponent implements OnDestroy {
     this.regionCtrl.setValue(null);
     this.traits.clear();
     this.avantages = [];
-    this.desavantages=[];
+    this.desavantages = [];
   }
 
   /**
@@ -409,8 +409,12 @@ export class BolHerosCreateComponent implements OnDestroy {
         this.heroismeCtrl.setValue(5 - data.cost);
         this.avantages = data.avantages.slice();
         this.desavantages = data.desavantages.slice();
-        data.avantages.forEach((avantage: BolAvantageModel) => {this.addTrait({type: 'A', id: avantage.id})});
-        data.desavantages.forEach((desavantage: BolDesavantageModel) => {this.addTrait({type: 'D', id: desavantage.id})});
+        data.avantages.forEach((avantage: BolAvantageModel) => {
+          this.addTrait({type: 'A', id: avantage.id, detail: avantage.pivot?.detail})
+        });
+        data.desavantages.forEach((desavantage: BolDesavantageModel) => {
+          this.addTrait({type: 'D', id: desavantage.id, detail: desavantage.pivot?.detail})
+        });
         this.subs?.unsubscribe();
         this.spinner.show();
         this.subs = this.hs.updateTraits(this.herosForm.value as BolHerosModel).subscribe(
@@ -427,10 +431,11 @@ export class BolHerosCreateComponent implements OnDestroy {
     });
   }
 
-  addTrait(trait: {type: 'A' | 'D', id: number | null}) {
+  addTrait(trait: { type: 'A' | 'D', id: number | null, detail: string | null }) {
     const traitForm = this.fb.group({
       traitable_id: [trait.id],
       type: [trait.type],
+      detail: [trait.detail]
     });
     this.traits.push(traitForm);
   }

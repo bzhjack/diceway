@@ -6,7 +6,7 @@ import {DialogModule} from "primeng/dialog";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {NgxSpinnerService} from "ngx-spinner";
 import {forkJoin, Subscription} from "rxjs";
-import {NgForOf, NgIf, NgStyle} from "@angular/common";
+import {JsonPipe, NgForOf, NgIf, NgStyle} from "@angular/common";
 import {FieldsetModule} from "primeng/fieldset";
 import {TableModule} from "primeng/table";
 import {BolAvantageModel} from "../../../models/bol-avantage.model";
@@ -18,6 +18,7 @@ import {CheckboxModule} from "primeng/checkbox";
 import {FormsModule} from "@angular/forms";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {BolTraitRowComponent} from "./trait-row/trait-row.component";
+import {BolHerosModel} from "../../../models/bol-heros.model";
 
 @Component({
   selector: 'app-trait',
@@ -38,7 +39,8 @@ import {BolTraitRowComponent} from "./trait-row/trait-row.component";
     FormsModule,
     OverlayPanelModule,
     NgStyle,
-    BolTraitRowComponent
+    BolTraitRowComponent,
+    JsonPipe
   ],
   templateUrl: './trait.component.html',
   styleUrl: './trait.component.scss'
@@ -121,11 +123,16 @@ export class BolTraitComponent implements OnDestroy {
   validate() {
     const avg: (BolAvantageModel | undefined)[] = [];
     this.avantagesIds.forEach((id, key) => {
-      avg.push(this.allAvg.find((avg) => avg.id === id));
+      const av = this.allAvg.find((avg) => avg.id === id);
+      const avMerge: {} = {...av, ...this.avantages.find((itemAvg) => itemAvg.id === id)};
+      avg.push(avMerge as BolAvantageModel);
     })
+
     const desa: (BolDesavantageModel | undefined)[] = [];
     this.desavantagesIds.forEach((id, key) => {
-      desa.push(this.allDesavg.find((desavg) => desavg.id === id));
+      const des = this.allDesavg.find((des) => des.id === id);
+      const desMerge: {} = {...des, ...this.desavantages.find((itemDes) => itemDes.id === id)};
+      desa.push(desMerge as BolDesavantageModel);
     })
     this.ref.close({avantages: avg, desavantages: desa, cost: this.heroismCost});
   }
