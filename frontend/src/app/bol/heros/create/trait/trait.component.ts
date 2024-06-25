@@ -150,7 +150,7 @@ export class BolTraitComponent implements OnDestroy {
       this.avantagesIds = [];
       this.heroismCost = 0;
       console.warn('Aucun avantage natal sélectionné, les avantages généraux ont été réinitialisés.');
-      return; // On arrête ici car la sélection n'est pas valide
+      return; // On arrête ici, car la sélection n'est pas valide
     }
 
     // Gestion du deuxième avantage (natal ou général)
