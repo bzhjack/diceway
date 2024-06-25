@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Bol;
 use App\Http\Controllers\Controller;
 use App\Models\Bol\BolAvantage;
 use App\Models\Bol\BolDesavantage;
+use App\Models\Bol\BolHeros;
 use App\Models\Bol\BolHerosTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -32,6 +33,8 @@ class BolTraitController extends Controller
     public static function update(Request $request)
     {
         $heros = $request->except('traits');
+        // Maj du cout en heroisme
+        BolHeros::where('id', $heros['id'])->update($heros);
         $traits = $request->input('traits');
         $id = $heros["id"];
         // Supprimez les traits existants pour le héros donné

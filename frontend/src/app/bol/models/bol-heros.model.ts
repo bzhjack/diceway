@@ -20,5 +20,6 @@ export interface BolHerosModel {
   region_id: number | null,
   region: string | null,
 
-  traits: any[]
+  traits: any[],
+  heroism_cost: number
 }

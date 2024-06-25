@@ -99,6 +99,7 @@ export class BolHerosCreateComponent implements OnDestroy {
 
   // Avantages et désavantages
   traitsArray = this.fb.array([]);
+  heroismCostCtrl = new FormControl<number>(0);
 
   herosForm = this.fb.group(
     {
@@ -124,7 +125,8 @@ export class BolHerosCreateComponent implements OnDestroy {
       region_id: this.regionIdCtrl,
       region: this.regionCtrl,
 
-      traits: this.traitsArray
+      traits: this.traitsArray,
+      heroism_cost: this.heroismCostCtrl
 
     }, {validators: globalFormValidator}
   );
@@ -260,7 +262,7 @@ export class BolHerosCreateComponent implements OnDestroy {
             avatar: hero.avatar,
 
             vitalite: hero.vitalite,
-            heroisme: 5,
+            heroisme: hero.heroisme,
 
             vigueur: hero.vigueur,
             aura: hero.aura,
@@ -274,7 +276,7 @@ export class BolHerosCreateComponent implements OnDestroy {
 
             region_id: hero.region_id,
             region: hero.region,
-
+            heroism_cost: hero.heroism_cost
           });
           this.traits.clear();
           this.avantages = [];
@@ -403,6 +405,8 @@ export class BolHerosCreateComponent implements OnDestroy {
     this.subs = this.ref?.onClose.subscribe((data: any) => {
       if (data) {
         this.traits.clear();
+        this.heroismCostCtrl.setValue(data.cost);
+        this.heroismeCtrl.setValue(5 - data.cost);
         this.avantages = data.avantages.slice();
         this.desavantages = data.desavantages.slice();
         data.avantages.forEach((avantage: BolAvantageModel) => {this.addTrait({type: 'A', id: avantage.id})});
