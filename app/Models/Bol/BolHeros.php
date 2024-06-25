@@ -37,4 +37,8 @@ class BolHeros extends Model
     {
         return $this->HasMany(BolHerosTrait::class, 'heros_id', 'id');
     }
+    public function carrieres(): HasMany
+    {
+        return $this->HasMany(BolHerosCarriere::class, 'heros_id', 'id');
+    }
 }
