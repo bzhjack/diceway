@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\ForgotController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Bol\BolRegionController;
 use App\Http\Controllers\Bol\BolTraitController;
+use App\Http\Controllers\Bol\BolCarriereController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -55,6 +56,8 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
 
     Route::get('/bol/trait/avantages', [BolTraitController::class, 'getAllAvantages']);
     Route::get('/bol/trait/desavantages', [BolTraitController::class, 'getAllDesavantages']);
+
+    Route::get('/bol/carrieres', [BolCarriereController::class, 'getAllCarrieres']);
 
     Route::get('/bol/heros', [BolHerosController::class, 'getAll']);
     Route::get('/bol/heros/{id}', [BolHerosController::class, 'getOne']);

@@ -33,9 +33,14 @@ export class BolHerosService {
   updateTraits(hero: BolHerosModel): Observable<any> {
     return  this.http.post<BolHerosModel>('/api/bol/heros/traits/update', <BolHerosModel>hero);
   }
-  deleteTraits(heroId: string): Observable<any> {
-    return  this.http.delete<BolHerosModel>('/api/bol/heros/traits/delete/' + heroId);
+
+
+  // Carriere
+
+  carrieres(): Observable<any> {
+    return this.http.get<BolRegionModel[]>('/api/bol/carrieres');
   }
+
 
   // Héros
   createHeros(hero: BolHerosModel): Observable<any> {

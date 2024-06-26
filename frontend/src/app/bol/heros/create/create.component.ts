@@ -34,6 +34,7 @@ import {BolTraitComponent} from "./trait/trait.component";
 import {BolAvantageModel} from "../../models/bol-avantage.model";
 import {BolDesavantageModel} from '../../models/bol-desavantage.model';
 import {BolTraitRowComponent} from './trait/trait-row/trait-row.component';
+import {BolCarriereComponent} from "./carriere/carriere.component";
 
 @Component({
   selector: 'app-create',
@@ -393,7 +394,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   openTraits() {
     this.ref = this.ds.open(BolTraitComponent, {
       header: 'Choix des avantages pour la région ' + this.regionCtrl.value,
-      width: '95vw',
+      width: '1200px',
       height: '90vh',
       data: {
         id_region: this.regionIdCtrl.value,
@@ -438,5 +439,18 @@ export class BolHerosCreateComponent implements OnDestroy {
       detail: [trait.detail]
     });
     this.traits.push(traitForm);
+  }
+
+  /**
+   * Ouvrir les carrieres
+   */
+  openCarriere() {
+    this.ref = this.ds.open(BolCarriereComponent, {
+      header: 'Choix des carrières',
+      height: '90vh',
+      data: {
+  //      avantages: this.avantages,
+      },
+    });
   }
 }
