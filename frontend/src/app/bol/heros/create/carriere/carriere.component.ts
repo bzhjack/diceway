@@ -10,6 +10,7 @@ import {CheckboxModule} from "primeng/checkbox";
 import {ScrollPanelModule} from "primeng/scrollpanel";
 import {BolCarriereModel} from "../../../models/bol-carriere.model";
 import {FormsModule} from "@angular/forms";
+import {BolAvantageModel} from "../../../models/bol-avantage.model";
 
 @Component({
   selector: 'app-carriere',
@@ -30,6 +31,8 @@ export class BolCarriereComponent {
   private subs?: Subscription;
   public carrieres: BolCarriereModel[] = [];
   public selectedCarrieres: BolCarriereModel[] = [];
+  public carriereIds: (number | null)[] = [];
+
   constructor(
     private hs: BolHerosService,
     public ref: DynamicDialogRef,
@@ -52,5 +55,10 @@ export class BolCarriereComponent {
         this.spinner.hide();
       }
     })
+  }
+  checkSelection() {
+    this.carriereIds = [
+      ...this.selectedCarrieres.map((carriere: BolCarriereModel) => carriere.id),
+    ];
   }
 }

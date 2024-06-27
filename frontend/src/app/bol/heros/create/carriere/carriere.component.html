@@ -4,6 +4,8 @@
       <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
         <div class="flex gap-2 pb-2" *ngFor="let carriere of carrieres">
           <p-checkbox name="car"
+                      (onChange)="checkSelection()"
+                      [disabled]="(carriereIds.length === 3 && !carriereIds.includes(carriere.id))"
                       [(ngModel)]="selectedCarrieres"
                       [value]="carriere"></p-checkbox>
           {{carriere.carriere}}

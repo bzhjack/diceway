@@ -353,7 +353,7 @@ export class BolHerosCreateComponent implements OnDestroy {
     const currentRegionId = this.regionIdCtrl.value;
     this.ref = this.ds.open(BolRegionComponent, {
       header: 'Choix de la région',
-      width: '95vw',
+      width: '1200px',
       height: '90vh',
       data: {
         id_region: currentRegionId
