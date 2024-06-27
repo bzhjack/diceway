@@ -2,15 +2,29 @@
   <p-fieldset legend="Liste des carrières" class="w-full h-full" styleClass="h-full relative">
     <div class="flex gap-2" style="position: absolute; inset:15px;">
       <p-scrollPanel class="flex-auto" [style]="{display: 'block', height: '100%'}">
-        <div class="flex gap-2 pb-2" *ngFor="let carriere of carrieres">
-          <p-checkbox name="car"
-                      (onChange)="checkSelection()"
-                      [disabled]="(carriereIds.length === 3 && !carriereIds.includes(carriere.id))"
-                      [(ngModel)]="selectedCarrieres"
-                      [value]="carriere"></p-checkbox>
-          {{carriere.carriere}}
+        <div class="flex gap-4 flex-wrap">
+          <div class="carriere-item flex gap-2 pb-2" *ngFor="let carriere of carrieres"
+               [class.disabled]="(carriereIds.length === 4 && !carriereIds.includes(carriere.id))">
+            <p-checkbox name="car"
+                        (onChange)="checkSelection()"
+                        [disabled]="(carriereIds.length === 4 && !carriereIds.includes(carriere.id))"
+                        [(ngModel)]="selectedCarrieres"
+                        [value]="carriere"></p-checkbox>
+            <div class="flex flex-col" pTooltip="{{carriere.description}}">
+              {{carriere.carriere}}
+              <div class="carriere-detail" *ngIf="carriere.detail">{{carriere.detail}}</div>
+            </div>
+          </div>
         </div>
+
       </p-scrollPanel>
     </div>
   </p-fieldset>
+  <div class="flex justify-end gap-2">
+    <button pButton icon="pi pi-times" size="small" label="Quitter" severity="secondary"
+            (click)="quit()"></button>
+    <button pButton icon="pi pi-check" size="small" label="Valider" severity="success"
+            (click)="validate()"
+            [disabled]="carriereIds.length === 0"></button>
+  </div>
 </div>

@@ -3,4 +3,5 @@ export interface BolCarriereModel {
   carriere: string;
   description: string;
   detail: string;
+  value: number;
 }

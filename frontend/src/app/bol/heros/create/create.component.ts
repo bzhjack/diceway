@@ -446,8 +446,9 @@ export class BolHerosCreateComponent implements OnDestroy {
    */
   openCarriere() {
     this.ref = this.ds.open(BolCarriereComponent, {
+      width: '900px',
       header: 'Choix des carrières',
-      height: '90vh',
+      height: '70vh',
       data: {
   //      avantages: this.avantages,
       },

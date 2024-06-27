@@ -11,6 +11,8 @@ import {ScrollPanelModule} from "primeng/scrollpanel";
 import {BolCarriereModel} from "../../../models/bol-carriere.model";
 import {FormsModule} from "@angular/forms";
 import {BolAvantageModel} from "../../../models/bol-avantage.model";
+import {Button, ButtonDirective} from "primeng/button";
+import {TooltipModule} from "primeng/tooltip";
 
 @Component({
   selector: 'app-carriere',
@@ -22,7 +24,10 @@ import {BolAvantageModel} from "../../../models/bol-avantage.model";
     CheckboxModule,
     NgForOf,
     ScrollPanelModule,
-    FormsModule
+    FormsModule,
+    Button,
+    ButtonDirective,
+    TooltipModule
   ],
   templateUrl: './carriere.component.html',
   styleUrl: './carriere.component.scss'
@@ -61,4 +66,12 @@ export class BolCarriereComponent {
       ...this.selectedCarrieres.map((carriere: BolCarriereModel) => carriere.id),
     ];
   }
+
+  quit() {
+    this.ref.close(null);
+  }
+  validate() {
+
+  }
+
 }

@@ -13,7 +13,7 @@ class BolCarriereSeeder extends Seeder
     public function run(): void
     {
         $carrieres = [
-            ['id' => 1, 'carriere' => 'Alchimiste', 'detail' => 'artificier/inventeur', 'description' => 'pour chaque rang d’alchimiste au-dessus du rang 2, le personnage doit prendre un désavantage'],
+            ['id' => 1, 'carriere' => 'Alchimiste', 'detail' => 'artificier/inventeur', 'description' => pour chaque rang d’alchimiste au-dessus du rang 2, le personnage doit prendre un désavantage'],
             ['id' => 2, 'carriere' => 'Assassin', 'detail' => 'agent/espion'],
             ['id' => 3, 'carriere' => 'Barbare', 'detail' => 'berserk/primitif'],
             ['id' => 4, 'carriere' => 'Bourreau', 'detail' => 'geôlier/esclavagiste'],
@@ -36,7 +36,7 @@ class BolCarriereSeeder extends Seeder
             ['id' => 21, 'carriere' => 'Prêtre', 'detail' => 'druide/chaman'],
             ['id' => 22, 'carriere' => 'Scribe', 'detail' => 'érudit/copiste'],
             ['id' => 23, 'carriere' => 'Soldat', 'detail' => 'garde/milicien'],
-            ['id' => 24, 'carriere' => 'Sorcier', 'detail' => 'magicien/enchanteur', 'description' => 'la sorcellerie est un moyen rapide d’obtenir du pouvoir, mais elle a un prix. Pour chaque rang de cette carrière au-delà du premier, vous devez choisir un désavantage supplémentaire'],
+            ['id' => 24, 'carriere' => 'Sorcier', 'detail' => 'magicien/enchanteur', 'description' => 'Pour chaque rang de sorcier au-delà du premier, vous devez choisir un désavantage supplémentaire'],
             ['id' => 25, 'carriere' => 'Tentatrice', 'detail' => 'courtisane/serveuse'],
             ['id' => 26, 'carriere' => 'Voleur', 'detail' => 'filou/crapule'],
 
