@@ -13,6 +13,7 @@ import {FormsModule} from "@angular/forms";
 import {BolAvantageModel} from "../../../models/bol-avantage.model";
 import {Button, ButtonDirective} from "primeng/button";
 import {TooltipModule} from "primeng/tooltip";
+import {OverlayPanelModule} from "primeng/overlaypanel";
 
 @Component({
   selector: 'app-carriere',
@@ -27,7 +28,8 @@ import {TooltipModule} from "primeng/tooltip";
     FormsModule,
     Button,
     ButtonDirective,
-    TooltipModule
+    TooltipModule,
+    OverlayPanelModule
   ],
   templateUrl: './carriere.component.html',
   styleUrl: './carriere.component.scss'
