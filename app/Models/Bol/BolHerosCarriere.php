@@ -4,6 +4,7 @@ namespace App\Models\bol;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class BolHerosCarriere extends Model
 {
@@ -14,6 +15,10 @@ class BolHerosCarriere extends Model
     protected $fillable = [
         "heros_id",
         "carriere_id",
-        "detail"
+        "value"
     ];
+     public function carriere(): HasOne
+        {
+            return $this->HasOne(BolCarriere::class, 'id', 'carriere_id');
+        }
 }

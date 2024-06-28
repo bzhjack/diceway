@@ -1,7 +1,13 @@
 export interface BolCarriereModel {
-  id: number | null;
+  id?: number;
   carriere: string;
   description: string;
   detail: string;
-  value: number;
+}
+
+export interface BolHerosCarriereModel {
+  id?: number,
+  carriere_id?: number,
+  value: number,
+  carriere?: BolCarriereModel,
 }

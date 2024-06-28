@@ -38,7 +38,7 @@ export class BolCarriereComponent {
   private subs?: Subscription;
   public carrieres: BolCarriereModel[] = [];
   public selectedCarrieres: BolCarriereModel[] = [];
-  public carriereIds: (number | null)[] = [];
+  public carriereIds: (number | undefined)[] = [];
 
   constructor(
     private hs: BolHerosService,
@@ -73,7 +73,7 @@ export class BolCarriereComponent {
     this.ref.close(null);
   }
   validate() {
-
+    this.ref.close({carrieres: this.selectedCarrieres});
   }
 
 }

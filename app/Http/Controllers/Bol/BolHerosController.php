@@ -16,7 +16,7 @@ class BolHerosController extends Controller
      */
     public function getAll()
     {
-        $heroes = BolHeros::with('traits.traitable', 'carrieres')->where('user_id', Auth::id())->get();
+        $heroes = BolHeros::with('traits.traitable', 'carrieres.carriere')->where('user_id', Auth::id())->get();
         return response($heroes);
     }
 
@@ -26,7 +26,7 @@ class BolHerosController extends Controller
     public function getOne(Request $request)
     {
         $id = $request->route('id');
-        $hero = BolHeros::with('traits.traitable', 'carrieres')->where('user_id', Auth::id())->where('id', $id)->get()->first();
+        $hero = BolHeros::with('traits.traitable', 'carrieres.carriere')->where('user_id', Auth::id())->where('id', $id)->get()->first();
         if ($hero === null) {
             return response()->json(['error' => 'Hero not found'], 404);
         } else {
@@ -43,7 +43,7 @@ class BolHerosController extends Controller
             'nom' => 'required|max:255',
             'joueur' => 'required|max:255'
         ]);
-        $heros = $request->except('traits');
+        $heros = $request->except('traits', 'carrieres');
         $heros['user_id'] = Auth::id();
         $heros = BolHeros::create($heros);
         return response($heros);
@@ -54,7 +54,7 @@ class BolHerosController extends Controller
      */
     public function update(Request $request)
     {
-        $heros = $request->except('traits');
+        $heros = $request->except('traits', 'carrieres');
         $traits = $request->input('traits');
         $id = $heros['id'];
         $hero = BolHeros::where('user_id', Auth::id())->where('id', $id)->get()->first();

@@ -40,7 +40,9 @@ export class BolHerosService {
   carrieres(): Observable<any> {
     return this.http.get<BolRegionModel[]>('/api/bol/carrieres');
   }
-
+  updateCarrieres(hero: BolHerosModel): Observable<any> {
+    return  this.http.post<BolHerosModel>('/api/bol/heros/carrieres/update', <BolHerosModel>hero);
+  }
 
   // Héros
   createHeros(hero: BolHerosModel): Observable<any> {

@@ -35,6 +35,7 @@ import {BolAvantageModel} from "../../models/bol-avantage.model";
 import {BolDesavantageModel} from '../../models/bol-desavantage.model';
 import {BolTraitRowComponent} from './trait/trait-row/trait-row.component';
 import {BolCarriereComponent} from "./carriere/carriere.component";
+import {BolCarriereModel, BolHerosCarriereModel} from "../../models/bol-carriere.model";
 
 @Component({
   selector: 'app-create',
@@ -102,6 +103,8 @@ export class BolHerosCreateComponent implements OnDestroy {
   traitsArray = this.fb.array([]);
   heroismCostCtrl = new FormControl<number>(0);
 
+  carrieresArray = this.fb.array([]);
+
   herosForm = this.fb.group(
     {
       id: this.idCtrl,
@@ -127,13 +130,20 @@ export class BolHerosCreateComponent implements OnDestroy {
       region: this.regionCtrl,
 
       traits: this.traitsArray,
-      heroism_cost: this.heroismCostCtrl
+      heroism_cost: this.heroismCostCtrl,
+
+      carrieres: this.carrieresArray
+
 
     }, {validators: globalFormValidator}
   );
 
   get traits() {
     return this.herosForm.controls["traits"] as FormArray;
+  }
+
+  get carrieres() {
+    return this.herosForm.controls["carrieres"] as FormArray;
   }
 
   constructor(
@@ -290,7 +300,8 @@ export class BolHerosCreateComponent implements OnDestroy {
               this.desavantages.push({...trait.traitable, ...{pivot: {detail: trait.detail}}});
             }
           });
-
+          this.carrieres.clear();
+          hero.carrieres.forEach((carriere) => this.addCarriere(carriere));
           this.spinner.hide();
         },
         error: () => {
@@ -450,8 +461,40 @@ export class BolHerosCreateComponent implements OnDestroy {
       header: 'Choix des carrières',
       height: '70vh',
       data: {
-  //      avantages: this.avantages,
+         carrrieres: this.carrieres,
       },
     });
+    this.subs?.unsubscribe();
+    this.subs = this.ref?.onClose.subscribe((data: any) => {
+      if (data) {
+        this.carrieres.clear();
+        data.carrieres.forEach((carriere: BolCarriereModel) => {
+          this.addCarriere({
+            carriere_id: carriere.id,
+            value: 0
+          })
+        });
+        console.log(this.herosForm.value);
+        this.subs?.unsubscribe();
+        this.spinner.show();
+        this.subs = this.hs.updateCarrieres(this.herosForm.value as BolHerosModel).subscribe(
+          {
+            next: (hero: BolHerosModel) => {
+              this.spinner.hide();
+            },
+            error: () => {
+              this.spinner.hide();
+            }
+          }
+        )
+      }
+    });
+  }
+  addCarriere(carriere: BolHerosCarriereModel) {
+    const carriereForm = this.fb.group({
+      carriere_id: [carriere.carriere_id],
+      value: [carriere.value]
+    });
+    this.carrieres.push(carriereForm);
   }
 }

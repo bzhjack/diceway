@@ -1,3 +1,5 @@
+import {BolHerosCarriereModel} from "./bol-carriere.model";
+
 export interface BolHerosModel {
   id: string | null;
   joueur: string;
@@ -21,5 +23,6 @@ export interface BolHerosModel {
   region: string | null,
 
   traits: any[],
-  heroism_cost: number
+  heroism_cost: number,
+  carrieres: BolHerosCarriereModel[]
 }
