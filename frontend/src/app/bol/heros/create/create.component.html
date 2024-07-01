@@ -214,12 +214,20 @@
                 </p-overlayPanel>
               </ng-template>
               <div>
+                <ng-container formArrayName="carrieres">
+                  <div class="flex flex-col gap-1" *ngFor="let carriere of carrieres.controls; let i = index">
+                    {{carriere.get('value')?.value}}
+                    <div>
+
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+              <div>
                 <div class="flex justify-end gap-2">
                   <p-button (click)="openCarriere()" label="Gérer les carrières" size="small" [link]="true"/>
                 </div>
               </div>
-
-
             </p-fieldset>
           </div>
         </div>
