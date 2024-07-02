@@ -41,6 +41,6 @@
             (click)="quit()"></button>
     <button pButton icon="pi pi-check" size="small" label="Valider" severity="success"
             (click)="validate()"
-            [disabled]="carriereIds.length === 0"></button>
+            [disabled]="carriereIds.length < 4"></button>
   </div>
 </div>

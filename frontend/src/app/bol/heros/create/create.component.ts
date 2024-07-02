@@ -16,7 +16,7 @@ import {ButtonModule} from "primeng/button";
 import {SplitButtonModule} from "primeng/splitbutton";
 import {BolHerosService} from "../../services/bol-heros.service";
 import {BolHerosModel} from "../../models/bol-heros.model";
-import {debounceTime, Subscription} from "rxjs";
+import {debounceTime, forkJoin, Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {FieldsetModule} from "primeng/fieldset";
@@ -72,6 +72,8 @@ export class BolHerosCreateComponent implements OnDestroy {
 
   avantages: BolAvantageModel[] = [];
   desavantages: BolDesavantageModel[] = [];
+
+  public carrieresList: BolCarriereModel[] = [];
 
   public idCtrl: FormControl<string | null> = new FormControl(null);
   public joueurCtrl = new FormControl('', Validators.required);
@@ -264,8 +266,14 @@ export class BolHerosCreateComponent implements OnDestroy {
    */
   getHeros(id: string) {
     this.spinner.show();
-    this.subs = this.hs.heros(id).subscribe({
-        next: (hero: BolHerosModel) => {
+    this.subs = forkJoin([
+      this.hs.heros(id),
+      this.hs.carrieres()
+    ]).subscribe({
+        next: (data) => {
+          console.log(data);
+          this.carrieresList = data[1];
+          let hero: BolHerosModel = data[0];
           this.herosForm.patchValue({
             id: hero.id,
             joueur: hero.joueur,
@@ -461,7 +469,7 @@ export class BolHerosCreateComponent implements OnDestroy {
       header: 'Choix des carrières',
       height: '70vh',
       data: {
-         carrrieres: this.carrieres,
+        carrrieres: this.carrieres,
       },
     });
     this.subs?.unsubscribe();
@@ -490,11 +498,16 @@ export class BolHerosCreateComponent implements OnDestroy {
       }
     });
   }
+
   addCarriere(carriere: BolHerosCarriereModel) {
     const carriereForm = this.fb.group({
       carriere_id: [carriere.carriere_id],
       value: [carriere.value]
     });
     this.carrieres.push(carriereForm);
+  }
+  carriereFromId(id: number) {
+    const carriere = this.carrieresList.find((itemCar) => itemCar.id === id);
+    return carriere ?? {carriere: null};
   }
 }
