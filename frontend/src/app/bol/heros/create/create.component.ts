@@ -36,6 +36,11 @@ import {BolDesavantageModel} from '../../models/bol-desavantage.model';
 import {BolTraitRowComponent} from './trait/trait-row/trait-row.component';
 import {BolCarriereComponent} from "./carriere/carriere.component";
 import {BolCarriereModel, BolHerosCarriereModel} from "../../models/bol-carriere.model";
+import {ConfirmationService} from "primeng/api";
+import {ConfirmPopupModule} from "primeng/confirmpopup";
+import {DropdownModule} from "primeng/dropdown";
+import {Ripple} from "primeng/ripple";
+import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 
 @Component({
   selector: 'app-create',
@@ -57,10 +62,16 @@ import {BolCarriereModel, BolHerosCarriereModel} from "../../models/bol-carriere
     NgIf,
     NgForOf,
     BolMessageComponent,
-    BolTraitRowComponent
+    BolTraitRowComponent,
+    ConfirmPopupModule,
+    DropdownModule,
+    Ripple
   ],
   templateUrl: './create.component.html',
-  styleUrl: './create.component.scss'
+  styleUrl: './create.component.scss',
+  providers: [
+    ConfirmationService
+  ],
 })
 export class BolHerosCreateComponent implements OnDestroy {
   private subs?: Subscription;
@@ -74,6 +85,8 @@ export class BolHerosCreateComponent implements OnDestroy {
   desavantages: BolDesavantageModel[] = [];
 
   public carrieresList: BolCarriereModel[] = [];
+  public selectedCarriere: BolCarriereModel | null = null;
+
 
   public idCtrl: FormControl<string | null> = new FormControl(null);
   public joueurCtrl = new FormControl('', Validators.required);
@@ -149,6 +162,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   }
 
   constructor(
+    private confirmationService: ConfirmationService,
     public ds: DialogService,
     private spinner: NgxSpinnerService,
     private fb: FormBuilder,
@@ -460,9 +474,11 @@ export class BolHerosCreateComponent implements OnDestroy {
     this.traits.push(traitForm);
   }
 
-  /**
-   * Ouvrir les carrieres
-   */
+  /**************************************
+   **************************************
+   ******* Gestion des carrières ********
+   **************************************
+   **************************************/
   openCarriere() {
     this.ref = this.ds.open(BolCarriereComponent, {
       width: '900px',
@@ -506,8 +522,59 @@ export class BolHerosCreateComponent implements OnDestroy {
     });
     this.carrieres.push(carriereForm);
   }
+  removeCarriere(carriereId: number) {
+    const index = this.carrieres.value.findIndex((car: BolHerosCarriereModel) => car.carriere_id === carriereId)
+    if(index !== -1) this.carrieres.removeAt(index)
+  }
   carriereFromId(id: number) {
     const carriere = this.carrieresList.find((itemCar) => itemCar.id === id);
     return carriere ?? {carriere: null};
   }
+  createCarriere(panel: OverlayPanel, event: any) {
+    panel.toggle(event);
+    if (this.selectedCarriere === null) {
+      return;
+    }
+    const heroId= this.herosForm.get('id')!.value || null;
+    const carriere: BolHerosCarriereModel = {
+      carriere_id: this.selectedCarriere?.id,
+      value: 0
+    }
+    this.spinner.show();
+    this.subs?.unsubscribe();
+    this.subs = this.hs.createCarriere(heroId, carriere).subscribe({
+      next: _ => {
+        this.spinner.hide();
+        this.addCarriere(carriere);
+      },
+      error: () => {
+        this.spinner.hide();
+      }
+    });
+  }
+  deleteCarriere(carriereId: number, event: any) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Voulez vous supprimer cette carrière ?',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass: 'p-button-danger p-button-sm',
+      acceptLabel: "Oui",
+      rejectLabel: "Non",
+      accept: () => {
+        const heroId= this.herosForm.get('id')!.value || null;
+        this.spinner.show();
+        this.subs?.unsubscribe();
+        this.subs = this.hs.deleteCarriere(heroId, carriereId).subscribe({
+          next: _ => {
+            this.spinner.hide();
+            this.removeCarriere(carriereId);
+          },
+          error: () => {
+            this.spinner.hide();
+          }
+        });
+      },
+    });
+  }
+
 }

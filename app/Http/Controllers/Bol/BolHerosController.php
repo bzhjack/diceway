@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bol\BolHeros;
+use App\Models\bol\BolHerosCarriere;
 use App\Models\Bol\BolHerosTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,17 +57,22 @@ class BolHerosController extends Controller
     {
         $heros = $request->except('traits', 'carrieres');
         $traits = $request->input('traits');
-        $id = $heros['id'];
-        $hero = BolHeros::where('user_id', Auth::id())->where('id', $id)->get()->first();
+        $carrieres = $request->input('carrieres');
+        $herosId = $heros['id'];
+        $hero = BolHeros::where('user_id', Auth::id())->where('id', $herosId)->get()->first();
         if ($hero === null) {
             return response()->json(['error' => 'Hero not found'], 404);
-        } else {
-            BolHeros::where('id', $id)->update($heros);
-            if ($heros["region_id"] === null || count($traits) === 0) {
-                BolHerosTrait::where('heros_id', $id)->delete();
-            }
-            return response($heros);
         }
+        BolHeros::where('id', $herosId)->update($heros);
+        // Maj des carrières
+        foreach ($carrieres as $carriere) {
+            BolCarriereController::updateCarriere($carriere, $herosId);
+        }
+        if ($heros["region_id"] === null || count($traits) === 0) {
+            BolHerosTrait::where('heros_id', $herosId)->delete();
+        }
+        return response($heros);
+
     }
 
 
