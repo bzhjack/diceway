@@ -31,7 +31,6 @@ class BolCarriereController extends Controller
 
     public static function updateCarriere($carriereToUpdate, $herosId)
     {
-        //$carriereToUpdate = $request->input();
         $carriere = BolHerosCarriere::where('heros_id', $herosId)->where('carriere_id', $carriereToUpdate['carriere_id'])->first();
         if (!$carriere) {
             return response()->json(['message' => 'Carrière non trouvée'], 404);
