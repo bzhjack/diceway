@@ -26,7 +26,7 @@ import {BolRegionComponent} from "./region/region.component";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {MessagesModule} from "primeng/messages";
-import {JsonPipe, NgForOf, NgIf} from "@angular/common";
+import {JsonPipe, NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
 import {attributValidator, globalFormValidator} from "./create.validators";
 import {BolHeroCreateTools} from './create.tools';
 import {BolMessageComponent} from "../../message/message.component";
@@ -34,7 +34,6 @@ import {BolTraitComponent} from "./trait/trait.component";
 import {BolAvantageModel} from "../../models/bol-avantage.model";
 import {BolDesavantageModel} from '../../models/bol-desavantage.model';
 import {BolTraitRowComponent} from './trait/trait-row/trait-row.component';
-import {BolCarriereComponent} from "./carriere/carriere.component";
 import {BolCarriereModel, BolHerosCarriereModel} from "../../models/bol-carriere.model";
 import {ConfirmationService} from "primeng/api";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
@@ -65,7 +64,8 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
     BolTraitRowComponent,
     ConfirmPopupModule,
     DropdownModule,
-    Ripple
+    Ripple,
+    NgTemplateOutlet
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
@@ -479,42 +479,8 @@ export class BolHerosCreateComponent implements OnDestroy {
    ******* Gestion des carrières ********
    **************************************
    **************************************/
-  openCarriere() {
-    this.ref = this.ds.open(BolCarriereComponent, {
-      width: '900px',
-      header: 'Choix des carrières',
-      height: '70vh',
-      data: {
-        carrrieres: this.carrieres,
-      },
-    });
-    this.subs?.unsubscribe();
-    this.subs = this.ref?.onClose.subscribe((data: any) => {
-      if (data) {
-        this.carrieres.clear();
-        data.carrieres.forEach((carriere: BolCarriereModel) => {
-          this.addCarriere({
-            carriere_id: carriere.id,
-            value: 0
-          })
-        });
-        console.log(this.herosForm.value);
-        this.subs?.unsubscribe();
-        this.spinner.show();
-        this.subs = this.hs.updateCarrieres(this.herosForm.value as BolHerosModel).subscribe(
-          {
-            next: (hero: BolHerosModel) => {
-              this.spinner.hide();
-            },
-            error: () => {
-              this.spinner.hide();
-            }
-          }
-        )
-      }
-    });
-  }
 
+  // Ajout d'une carrière
   addCarriere(carriere: BolHerosCarriereModel) {
     const carriereForm = this.fb.group({
       carriere_id: [carriere.carriere_id],
@@ -522,6 +488,7 @@ export class BolHerosCreateComponent implements OnDestroy {
     });
     this.carrieres.push(carriereForm);
   }
+  // Suppression d'une carriere
   removeCarriere(carriereId: number) {
     const index = this.carrieres.value.findIndex((car: BolHerosCarriereModel) => car.carriere_id === carriereId)
     if(index !== -1) this.carrieres.removeAt(index)
@@ -575,6 +542,10 @@ export class BolHerosCreateComponent implements OnDestroy {
         });
       },
     });
+  }
+  getFilteredCarrieres() {
+    const carriereIdsInArray = this.carrieresArray.controls.map(control => control.get('carriere_id')?.value);
+    return this.carrieresList.filter(carriere => !carriereIdsInArray.includes(carriere.id));
   }
 
 }
