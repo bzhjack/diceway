@@ -207,13 +207,20 @@
               <ng-template pTemplate="header">
                 <div class="flex items-center gap-2">
                   <div class="cursor-pointer" (click)="carriereInfos.toggle($event)">
-                    <i *ngIf="aptitudeErrors.length === 0" class="pi pi-info-circle"></i>
+                    <i *ngIf="carriereErrors.length === 0" class="pi pi-info-circle"></i>
+                    <div *ngIf="carriereErrors.length > 0" style="color: var(--error-color)">
+                      <i class="pi pi-exclamation-triangle"></i> ({{ carriereErrors.length }})
+                    </div>
                   </div>
                   <div>Carrières</div>
                 </div>
                 <p-overlayPanel #carriereInfos>
                   <div class="flex flex-col gap-2">
                     <bol-message type="carrieres"></bol-message>
+                    <bol-message type="form-errors"
+                                 *ngIf="carriereErrors.length > 0"
+                                 legend="Aptitudes invalides"
+                                 [data]="carriereErrors"></bol-message>
                   </div>
                 </p-overlayPanel>
               </ng-template>
@@ -223,7 +230,7 @@
                     <div class="flex flex-col mb-2">
                       <div [formGroupName]="i" class="flex gap-2 items-center">
                         <ng-template #templateRef let-carri="carTpl">
-                          <div style="width: 120px" class="flex flex-col">
+                          <div style="width: 125px" class="flex flex-col">
                             <div>{{ carri.carriere }}</div>
                             <div class="text-gray-400" style="font-size: smaller" *ngIf="carri.detail">{{ carri.detail }}</div>
                           </div>

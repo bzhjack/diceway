@@ -79,6 +79,8 @@ export class BolHerosCreateComponent implements OnDestroy {
 
   attributErrors: { control: string, error: string }[] = [];
   aptitudeErrors: { control: string, error: string }[] = [];
+  carriereErrors: { control: string, error: string }[] = [];
+
   creationWarns: { step: string, warn: string }[] = [];
 
   avantages: BolAvantageModel[] = [];
@@ -173,6 +175,7 @@ export class BolHerosCreateComponent implements OnDestroy {
       this.getHeros(id);
     }
     this.herosForm.events.pipe(debounceTime(200)).subscribe(() => {
+      console.log('la');
       this.logFormErrors();
       this.logFormWarns();
     });
@@ -223,12 +226,23 @@ export class BolHerosCreateComponent implements OnDestroy {
       });
     }
     // Controle sur les carrières
-
-    if (this.carrieres.length != 4) {
-      this.creationWarns.push({
-        step: 'Carrières',
-        warn: 'Vous devez choisir 4 carrières.'
-      });
+    if (this.carriereErrors.length === 0) {
+      if (this.carrieres.length != 4) {
+        this.creationWarns.push({
+          step: 'Carrières',
+          warn: 'Vous devez choisir 4 carrières.'
+        });
+      }
+      let sumCarriere = 0;
+      for (const c of this.carrieres.controls) {
+        sumCarriere += c.get('value')?.value;
+      }
+      if (sumCarriere < 4) {
+        this.creationWarns.push({
+          step: 'Aptitudes',
+          warn: 'il manque ' + (4 - sumCarriere) + ' pts dans les carrières.'
+        });
+      }
     }
 
   }
@@ -240,6 +254,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   logFormErrors(): void {
     this.attributErrors = [];
     this.aptitudeErrors = [];
+    this.carriereErrors = [];
 
     Object.keys(this.herosForm.controls).forEach(key => {
       const controlErrors = this.herosForm.get(key)?.errors;
@@ -261,6 +276,23 @@ export class BolHerosCreateComponent implements OnDestroy {
         });
       }
     });
+    // Check des carrières
+    this.carrieres.controls.forEach((control, index) => {
+      const errors = control.get('value')?.errors;
+      if (errors) {
+        const idCarriere = this.carrieres.at(index).get('carriere_id')?.value;
+        const carriere = this.carriereFromId(idCarriere)?.carriere;
+        Object.keys(errors).forEach(keyError => {
+          this.carriereErrors.push({
+            control:  carriere ? carriere : '',
+            error: BolHeroCreateTools.translate(keyError),
+          });
+        });
+
+        console.log(`Erreurs pour carriere_id ${this.carrieres.at(index).get('carriere_id')?.value}:`, errors);
+      }
+    });
+
     // Obtenir les erreurs globales du formulaire
     const formErrors: ValidationErrors | null = this.herosForm.errors;
     // Si des erreurs globales sont présentes, les traiter
@@ -280,6 +312,10 @@ export class BolHerosCreateComponent implements OnDestroy {
         if (keyError === 'aptSumExceeded') {
           this.aptitudeErrors.push({error: 'La somme des aptitudes ne doit pas dépasser 4', control: ''});
         }
+        if (keyError === 'carrSumExceeded') {
+          this.carriereErrors.push({error: 'La somme des carrières ne doit pas dépasser 4', control: ''});
+        }
+
         console.log(`Global error: ${keyError}, err value: `, formErrors[keyError]);
       });
     }
@@ -499,21 +535,24 @@ export class BolHerosCreateComponent implements OnDestroy {
     });
     this.carrieres.push(carriereForm);
   }
+
   // Suppression d'une carriere
   removeCarriere(carriereId: number) {
     const index = this.carrieres.value.findIndex((car: BolHerosCarriereModel) => car.carriere_id === carriereId)
-    if(index !== -1) this.carrieres.removeAt(index)
+    if (index !== -1) this.carrieres.removeAt(index)
   }
+
   carriereFromId(id: number) {
     const carriere = this.carrieresList.find((itemCar) => itemCar.id === id);
     return carriere ?? {carriere: null, description: null};
   }
+
   createCarriere(panel: OverlayPanel, event: any) {
     panel.toggle(event);
     if (this.selectedCarriere === null) {
       return;
     }
-    const heroId= this.herosForm.get('id')!.value || null;
+    const heroId = this.herosForm.get('id')!.value || null;
     const carriere: BolHerosCarriereModel = {
       carriere_id: this.selectedCarriere?.id,
       value: 0
@@ -530,6 +569,7 @@ export class BolHerosCreateComponent implements OnDestroy {
       }
     });
   }
+
   deleteCarriere(carriereId: number, event: any) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
@@ -539,7 +579,7 @@ export class BolHerosCreateComponent implements OnDestroy {
       acceptLabel: "Oui",
       rejectLabel: "Non",
       accept: () => {
-        const heroId= this.herosForm.get('id')!.value || null;
+        const heroId = this.herosForm.get('id')!.value || null;
         this.spinner.show();
         this.subs?.unsubscribe();
         this.subs = this.hs.deleteCarriere(heroId, carriereId).subscribe({
@@ -554,6 +594,7 @@ export class BolHerosCreateComponent implements OnDestroy {
       },
     });
   }
+
   getFilteredCarrieres() {
     const carriereIdsInArray = this.carrieresArray.controls.map(control => control.get('carriere_id')?.value);
     return this.carrieresList.filter(carriere => !carriereIdsInArray.includes(carriere.id));
