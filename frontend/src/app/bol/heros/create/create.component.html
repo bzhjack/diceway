@@ -226,10 +226,12 @@
                           <div>{{ carri.carriere }}</div>
                           <!--div style="font-size: smaller" *ngIf="carri.detail">{{ carri.detail }}</div-->
                         </div>
-                         </ng-template>
-                      <div *ngTemplateOutlet="templateRef; context: { carTpl: carriereFromId(carriere.get('carriere_id')?.value) }"></div>
+                      </ng-template>
+                      <div
+                        *ngTemplateOutlet="templateRef; context: { carTpl: carriereFromId(carriere.get('carriere_id')?.value) }"></div>
                       <p-inputNumber formControlName="value" inputId="defense" maxFractionDigits="0"/>
-                      <p-button icon="pi pi-trash" size="small" (click)="deleteCarriere(carriere.get('carriere_id')?.value, $event)"/>
+                      <p-button icon="pi pi-trash" size="small"
+                                (click)="deleteCarriere(carriere.get('carriere_id')?.value, $event)"/>
                     </div>
                   </div>
                 </ng-container>
@@ -269,8 +271,10 @@
                   </ng-template>
                 </p-dropdown>
                 <div class="flex justify-end gap-2">
-                  <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times" (click)="opCarriere.toggle($event)"></button>
-                  <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check" (click)="createCarriere(opCarriere, $event)"></button>
+                  <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
+                          (click)="opCarriere.toggle($event)"></button>
+                  <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
+                          (click)="createCarriere(opCarriere, $event)"></button>
                 </div>
               </div>
             </p-overlayPanel>
