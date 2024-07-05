@@ -5,6 +5,7 @@ import {BolHerosModel} from "../models/bol-heros.model";
 import {BolRegionModel} from "../models/bol-region.model";
 import {BolAvantageModel} from "../models/bol-avantage.model";
 import {BolDesavantageModel} from "../models/bol-desavantage.model";
+import {BolHerosCarriereModel} from "../models/bol-carriere.model";
 
 @Injectable({
   providedIn: 'root'
@@ -33,8 +34,21 @@ export class BolHerosService {
   updateTraits(hero: BolHerosModel): Observable<any> {
     return  this.http.post<BolHerosModel>('/api/bol/heros/traits/update', <BolHerosModel>hero);
   }
-  deleteTraits(heroId: string): Observable<any> {
-    return  this.http.delete<BolHerosModel>('/api/bol/heros/traits/delete/' + heroId);
+
+
+  // Carrieres
+
+  carrieres(): Observable<any> {
+    return this.http.get<BolRegionModel[]>('/api/bol/carrieres');
+  }
+  updateCarrieres(hero: BolHerosModel): Observable<any> {
+    return  this.http.post<BolHerosModel>('/api/bol/heros/carrieres/update', <BolHerosModel>hero);
+  }
+  deleteCarriere(herosId: string | null, id: number): Observable<any> {
+    return this.http.delete<boolean>(`/api/bol/heros/carrieres/delete/${herosId}/${id}`);
+  }
+  createCarriere(herosId: string | null, carriere: BolHerosCarriereModel): Observable<any> {
+    return  this.http.post<BolHerosModel>(`/api/bol/heros/carrieres/create/${herosId}`, <BolHerosCarriereModel>carriere);
   }
 
   // Héros

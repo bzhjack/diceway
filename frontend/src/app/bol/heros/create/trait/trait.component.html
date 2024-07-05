@@ -48,7 +48,7 @@
             }
           </ul>
         </div>
-        <div class="flex items-center justify-center flex-auto text-4xl">
+        <div class="flex items-center justify-center flex-auto text-3xl">
           <div *ngIf="heroismCost > 0" style="color: var(--warn-color)">Coût en point d'héroïsme:
             <strong>{{ heroismCost }}</strong></div>
         </div>
@@ -65,7 +65,7 @@
                           [disabled]="(avantagesIds.length === 3 && !avantagesIds.includes(avantage.id))"
                           [(ngModel)]="selectedGeneralAvantages"
                           [value]="avantage"
-                          (ngModelChange)="checkSelection()"></p-checkbox>
+                          (onChange)="checkSelection()"></p-checkbox>
               <app-trait-row [avantage]="avantage"
                              [disabled]="(avantagesIds.length === 3 && !avantagesIds.includes(avantage.id))"></app-trait-row>
             </div>
@@ -76,7 +76,7 @@
               <p-checkbox name="gdes"
                           [(ngModel)]="selectedGeneralDesavantages"
                           [value]="desavantage"
-                          (ngModelChange)="checkSelection()"></p-checkbox>
+                          (onChange)="checkSelection()"></p-checkbox>
               <app-trait-row [desavantage]="desavantage"></app-trait-row>
             </div>
           </p-scrollPanel>
@@ -93,7 +93,7 @@
                           [disabled]="selectedGeneralAvantages.length + selectedNatalAvantages.length === 3 && !this.avantagesIds.includes(avantage.id)"
                           [(ngModel)]="selectedNatalAvantages"
                           [value]="avantage"
-                          (ngModelChange)="checkSelection()"></p-checkbox>
+                          (onChange)="checkSelection()"></p-checkbox>
               <app-trait-row [avantage]="avantage"
                              [disabled]="selectedGeneralAvantages.length + selectedNatalAvantages.length === 3 && !this.avantagesIds.includes(avantage.id)"></app-trait-row>
             </div>
@@ -103,7 +103,7 @@
               <p-checkbox name="des"
                           [(ngModel)]="selectedNatalDesavantages"
                           [value]="desavantage"
-                          (ngModelChange)="checkSelection()"></p-checkbox>
+                          (onChange)="checkSelection()"></p-checkbox>
               <app-trait-row [desavantage]="desavantage"></app-trait-row>
             </div>
           </p-scrollPanel>
@@ -117,7 +117,7 @@
                           [disabled]="selectedNatalAvantages.length === 0 || (avantagesIds.length === 3 && !avantagesIds.includes(avantage.id))"
                           [(ngModel)]="selectedGeneralAvantages"
                           [value]="avantage"
-                          (ngModelChange)="checkSelection()"></p-checkbox>
+                          (onChange)="checkSelection()"></p-checkbox>
               <app-trait-row [avantage]="avantage"
                              [disabled]="selectedNatalAvantages.length === 0 || (avantagesIds.length === 3 && !avantagesIds.includes(avantage.id))"></app-trait-row>
             </div>
@@ -128,7 +128,7 @@
               <p-checkbox name="gdes"
                           [(ngModel)]="selectedGeneralDesavantages"
                           [value]="desavantage"
-                          (ngModelChange)="checkSelection()"></p-checkbox>
+                          (onChange)="checkSelection()"></p-checkbox>
               <app-trait-row [desavantage]="desavantage"></app-trait-row>
             </div>
           </p-scrollPanel>

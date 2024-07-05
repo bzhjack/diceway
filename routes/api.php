@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\ForgotController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Bol\BolRegionController;
 use App\Http\Controllers\Bol\BolTraitController;
+use App\Http\Controllers\Bol\BolCarriereController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -49,13 +50,23 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
  */
 Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function () {
     Route::get('auth/profile', [ProfileController::class, 'profile']);
-    // Bol
+    /**
+     * BARBARIAN OF LEMURIA
+     **/
+
+    // Gestion de la région
     Route::get('/bol/region', [BolRegionController::class, 'getAll']);
     Route::get('/bol/region/{id}', [BolRegionController::class, 'getOne']);
 
     Route::get('/bol/trait/avantages', [BolTraitController::class, 'getAllAvantages']);
     Route::get('/bol/trait/desavantages', [BolTraitController::class, 'getAllDesavantages']);
 
+    // Gestion des carrieres
+    Route::get('/bol/carrieres', [BolCarriereController::class, 'getAllCarrieres']);
+    Route::delete('/bol/heros/carrieres/delete/{herosId}/{id}', [BolCarriereController::class, 'deleteCarriere']);
+    Route::post('/bol/heros/carrieres/create/{herosId}', [BolCarriereController::class, 'createCarriere']);
+
+    // Gestion du Héros
     Route::get('/bol/heros', [BolHerosController::class, 'getAll']);
     Route::get('/bol/heros/{id}', [BolHerosController::class, 'getOne']);
     Route::post('/bol/heros/create', [BolHerosController::class, 'create']);

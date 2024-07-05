@@ -10,4 +10,5 @@ php artisan db:seed --class=BolRegionSeeder
 php artisan db:seed --class=BolRegionAvantageSeeder
 php artisan db:seed --class=BolRegionDesavantageSeeder
 php artisan db:seed --class=BolRegionNomSeeder
+php artisan db:seed --class=BolCarriereSeeder
 

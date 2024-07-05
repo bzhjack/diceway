@@ -45,7 +45,6 @@ export class PictureComponent {
   fileChangeEvent(event: any): void {
     if (event.target.files && event.target.files.length) {
       this.imageChangedEvent = event;
-      console.log(this.imageChangedEvent)
     }
   }
 

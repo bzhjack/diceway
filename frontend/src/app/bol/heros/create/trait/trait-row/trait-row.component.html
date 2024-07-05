@@ -8,7 +8,7 @@
       <div>
       </div>
     </div>
-    <div [class.disabled]="disabled">{{ avantage.avantage }}
+    <div [class.disabled]="disabled" style="white-space: nowrap">{{ avantage.avantage }}
     @if (avantage.pivot && avantage.pivot.detail) {
       ({{avantage.pivot.detail}})
     }
@@ -31,8 +31,7 @@
       <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon malus"
            [inlineSVG]="desavantage.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
     </div>
-    <div
-      [class.disabled]="disabled">{{ desavantage.desavantage }}
+    <div [class.disabled]="disabled" style="white-space: nowrap">{{ desavantage.desavantage }}
       @if (desavantage.pivot && desavantage.pivot.detail) {
         ({{desavantage.pivot.detail}})
       }
