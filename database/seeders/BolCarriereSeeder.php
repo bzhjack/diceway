@@ -13,7 +13,7 @@ class BolCarriereSeeder extends Seeder
     public function run(): void
     {
         $carrieres = [
-            ['id' => 1, 'carriere' => 'Alchimiste', 'detail' => 'artificier/inventeur', 'description' => pour chaque rang d’alchimiste au-dessus du rang 2, le personnage doit prendre un désavantage'],
+            ['id' => 1, 'carriere' => 'Alchimiste', 'detail' => 'artificier/inventeur', 'description' => Pour chaque rang d’alchimiste au-dessus du rang 2, le personnage doit prendre un désavantage'],
             ['id' => 2, 'carriere' => 'Assassin', 'detail' => 'agent/espion'],
             ['id' => 3, 'carriere' => 'Barbare', 'detail' => 'berserk/primitif'],
             ['id' => 4, 'carriere' => 'Bourreau', 'detail' => 'geôlier/esclavagiste'],

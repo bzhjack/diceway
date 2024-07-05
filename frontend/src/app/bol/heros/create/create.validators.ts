@@ -49,3 +49,25 @@ export const attributValidator: ValidatorFn = (control: AbstractControl): Valida
   }
   return null;
 };
+
+export const carriereValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  const value = control.value;
+  // Vérifie si la valeur est "falsy" sauf 0 qui est valide
+  if (value === null || value === undefined || value === '') {
+    return {required: {value: control.value, key: control}};
+  }
+  // Vérifie si la valeur est un nombre
+  const isNumber = !isNaN(Number(value));
+  if (!isNumber) {
+    return {numeric: {value: control.value}};
+  }
+  // Vérifie si la valeur est un nombre valide
+  if (value < 0) {
+    return {tooSmallAttr: {value: control.value}};
+  }
+  if (value > 3) {
+    return {tooBigAttr: {value: control.value}};
+  }
+  return null;
+};
+

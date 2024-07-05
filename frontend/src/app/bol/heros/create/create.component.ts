@@ -27,7 +27,7 @@ import {OverlayPanelModule} from "primeng/overlaypanel";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {MessagesModule} from "primeng/messages";
 import {JsonPipe, NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
-import {attributValidator, globalFormValidator} from "./create.validators";
+import {attributValidator, carriereValidator, globalFormValidator} from "./create.validators";
 import {BolHeroCreateTools} from './create.tools';
 import {BolMessageComponent} from "../../message/message.component";
 import {BolTraitComponent} from "./trait/trait.component";
@@ -197,16 +197,17 @@ export class BolHerosCreateComponent implements OnDestroy {
       const controlsAttrIds = ['vigueur', 'agilite', 'aura', 'esprit'];
       const controlsAttrArray = controlsAttrIds.map(id => this.herosForm.get(id));
       const attrs = controlsAttrArray.map(ctrl => ctrl?.value);
-      const sumAttr = attrs.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
+      const sumAttr = attrs.reduce((acc, val) => acc + val, 0);
       if (sumAttr < 4) {
         this.creationWarns.push({step: 'Attributs', warn: 'il manque ' + (4 - sumAttr) + ' pts dans les attributs'});
       }
     }
+    // Controle de la somme des aptitudes de combats
     if (this.aptitudeErrors.length === 0) {
       const controlsAptIds = ['tir', 'melee', 'defense', 'initiative'];
       const controlsAptArray = controlsAptIds.map(id => this.herosForm.get(id));
       const apts = controlsAptArray.map(ctrl => ctrl?.value);
-      const sumApt = apts.reduce((acc, val) => acc + (val === -1 ? 0 : val), 0);
+      const sumApt = apts.reduce((acc, val) => acc + val, 0);
       if (sumApt < 4) {
         this.creationWarns.push({
           step: 'Aptitudes',
@@ -214,12 +215,22 @@ export class BolHerosCreateComponent implements OnDestroy {
         });
       }
     }
+    // Test sur l'existance d'une région
     if (!this.regionIdCtrl.value) {
       this.creationWarns.push({
         step: 'Région',
         warn: 'Vous devez choisir une région.'
       });
     }
+    // Controle sur les carrières
+
+    if (this.carrieres.length != 4) {
+      this.creationWarns.push({
+        step: 'Carrières',
+        warn: 'Vous devez choisir 4 carrières.'
+      });
+    }
+
   }
 
   /**
@@ -484,7 +495,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   addCarriere(carriere: BolHerosCarriereModel) {
     const carriereForm = this.fb.group({
       carriere_id: [carriere.carriere_id],
-      value: [carriere.value]
+      value: [carriere.value, carriereValidator]
     });
     this.carrieres.push(carriereForm);
   }
@@ -495,7 +506,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   }
   carriereFromId(id: number) {
     const carriere = this.carrieresList.find((itemCar) => itemCar.id === id);
-    return carriere ?? {carriere: null};
+    return carriere ?? {carriere: null, description: null};
   }
   createCarriere(panel: OverlayPanel, event: any) {
     panel.toggle(event);
