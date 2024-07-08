@@ -40,6 +40,7 @@ import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {DropdownModule} from "primeng/dropdown";
 import {Ripple} from "primeng/ripple";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
+import { ScrollPanelModule } from 'primeng/scrollpanel';
 
 @Component({
   selector: 'app-create',
@@ -55,6 +56,7 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
     InputNumberModule,
     FieldsetModule,
     OverlayPanelModule,
+    ScrollPanelModule,
     InlineSVGModule,
     MessagesModule,
     JsonPipe,
