@@ -1,4 +1,4 @@
-import {Component, inject, input, OnDestroy, signal} from '@angular/core';
+import {Component, computed, inject, input, OnDestroy, signal} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {FieldsetModule} from "primeng/fieldset";
 import {PrimeTemplate} from "primeng/api";
@@ -59,6 +59,10 @@ export class ArmuresComponent implements ControlValueAccessor, OnDestroy {
 
 
   protected armureList = this.#bhss.armureList;
+  protected filteredArmureList =  computed(() => {
+    const armureIdsInArray = this.armures.controls.map(control => control.get('armure_id')?.value);
+    return this.armureList()?.filter((armure: BolArmureModel) => !armureIdsInArray.includes(armure.id));
+  });
   public heroId = input<string | null | undefined>(null)
 
   addArmure(panel: OverlayPanel, event: any) {

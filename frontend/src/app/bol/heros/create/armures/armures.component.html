@@ -4,7 +4,7 @@
       <div>Armures</div>
     </div>
   </ng-template>
-  <!-- Body Carrières -->
+  <!-- Body Armures -->
   <ng-container [formGroup]="armuresForm">
     <ng-container formArrayName="armures">
       <div class="flex flex-col gap-1" *ngFor="let armure of armures.controls; let i = index">
@@ -24,10 +24,10 @@
 
 <p-overlayPanel #opArmure>
   <div class="flex flex-col gap-4">
-    <div>Ajouter une carrière</div>
-    <p-dropdown [style]="{ width: '250px' }" [options]="armureList()"
+    <div>Ajouter une armure</div>
+    <p-dropdown [style]="{ width: '250px' }" [options]="filteredArmureList()"
                 [(ngModel)]="selectedArmure" [ngModelOptions]="{standalone: true}" [filter]="true"
-                filterBy="carriere" [showClear]="true" placeholder="Selectionner une carriere">
+                filterBy="armure" [showClear]="true" placeholder="Selectionner une armure">
 
       <ng-template pTemplate="selectedItem" let-selectedOption>
         <div class="flex align-items-center gap-2">
