@@ -17,8 +17,9 @@ class BolHerosCarriere extends Model
         "carriere_id",
         "value"
     ];
-     public function carriere(): HasOne
-        {
-            return $this->HasOne(BolCarriere::class, 'id', 'carriere_id');
-        }
+
+    public function carriere(): HasOne
+    {
+        return $this->HasOne(BolCarriere::class, 'id', 'carriere_id');
+    }
 }

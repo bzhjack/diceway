@@ -41,6 +41,7 @@ import {DropdownModule} from "primeng/dropdown";
 import {Ripple} from "primeng/ripple";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import { ScrollPanelModule } from 'primeng/scrollpanel';
+import {ArmuresComponent} from "./armures/armures.component";
 
 @Component({
   selector: 'app-create',
@@ -67,7 +68,8 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
     ConfirmPopupModule,
     DropdownModule,
     Ripple,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    ArmuresComponent
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
@@ -177,7 +179,6 @@ export class BolHerosCreateComponent implements OnDestroy {
       this.getHeros(id);
     }
     this.herosForm.events.pipe(debounceTime(200)).subscribe(() => {
-      console.log('la');
       this.logFormErrors();
       this.logFormWarns();
     });

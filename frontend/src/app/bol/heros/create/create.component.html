@@ -1,4 +1,4 @@
-<div class="flex flex-col h-full p-4" style="background-color: red">
+<div class="flex flex-col h-full p-4">
   <!------------------------->
   <!--- Header de la page --->
   <!------------------------->
@@ -9,7 +9,7 @@
   <!----------------------->
   <!--- Body de la page --->
   <!----------------------->
-  <p-scrollPanel styleClass="flex-auto" [style]="{backgroundColor: 'blue'}">
+  <p-scrollPanel styleClass="flex-auto" [style]="{height: 'calc(100vh - 155px)'}">
     <form (ngSubmit)="submit()" [formGroup]="herosForm" autocomplete="off">
       <div class="flex gap-4">
         <div class="flex flex-col gap-2">
@@ -239,8 +239,7 @@
                         <ng-template #templateRef let-carri="carTpl">
                           <div style="width: 125px" class="flex flex-col">
                             <div>{{ carri.carriere }}</div>
-                            <div class="text-gray-400" style="font-size: smaller" *ngIf="carri.detail">{{ carri.detail
-                              }}
+                            <div class="text-gray-400" style="font-size: smaller" *ngIf="carri.detail">{{ carri.detail }}
                             </div>
                           </div>
                         </ng-template>
@@ -302,17 +301,7 @@
             <!--- Armes et Armures --->
             <!------------------------>
             <div class="flex flex-col flex-auto gap-2 ">
-              <p-fieldset class="w-full">
-                <ng-template pTemplate="header">
-                  <div class="flex items-center gap-2">
-                    <div>Armures</div>
-                  </div>
-                </ng-template>
-                <!-- Footer Armures -->
-                <div class="flex justify-end gap-2">
-                  <p-button label="Ajouter une armure" size="small" [link]="true" class="text-cyan-600" />
-                </div>
-              </p-fieldset>
+              <app-armures [heroId]="herosForm.get('id')?.value"></app-armures>
               <p-fieldset class="w-full">
                 <ng-template pTemplate="header">
                   <div class="flex items-center gap-2">

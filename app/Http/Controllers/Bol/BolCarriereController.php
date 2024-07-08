@@ -10,16 +10,13 @@ use Illuminate\Http\Request;
 
 class BolCarriereController extends Controller
 {
-    public function getAllCarrieres()
+    public function getAll()
     {
-        // Récupérer toutes les lignes de votre modèle
         $donnees = BolCarriere::all();
-
-        // Retourner les données en tant que réponse JSON
         return response()->json($donnees);
     }
 
-    public static function deleteCarriere($herosId, $id)
+    public static function delete($herosId, $id)
     {
         $carriere = BolHerosCarriere::where('heros_id', $herosId)->where('carriere_id', $id)->first();
         if (!$carriere) {
@@ -29,7 +26,7 @@ class BolCarriereController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public static function updateCarriere($carriereToUpdate, $herosId)
+    public static function update($carriereToUpdate, $herosId)
     {
         $carriere = BolHerosCarriere::where('heros_id', $herosId)->where('carriere_id', $carriereToUpdate['carriere_id'])->first();
         if (!$carriere) {
@@ -39,7 +36,7 @@ class BolCarriereController extends Controller
         return response()->json(['success' => $carriereToUpdate]);
     }
 
-    public function createCarriere(Request $request, $herosId)
+    public function create(Request $request, $herosId)
     {
         $newCarriere = $request->input();
         $carriere = BolHerosCarriere::where('heros_id', $herosId)->where('carriere_id', $newCarriere['carriere_id'])->first();

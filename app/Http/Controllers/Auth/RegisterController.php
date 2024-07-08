@@ -19,6 +19,6 @@ class RegisterController extends Controller
         $data['password'] = bcrypt($request->password);
         $user = User::create($data);
         event(new Registered($user));
-        return response([ 'user' => $user]);
+        return response(['user' => $user]);
     }
 }

@@ -20,22 +20,22 @@ class LoginController extends Controller
         return ["user" => $credentials["id"]];
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-        if(auth()->attempt($credentials)){
+        if (auth()->attempt($credentials)) {
             $id = Auth::id();
             $user = User::find($id);
-            if ($user->hasVerifiedEmail() != 1 ) {
-                return response()->json(['error'=> 'email not verified'], 403);
+            if ($user->hasVerifiedEmail() != 1) {
+                return response()->json(['error' => 'email not verified'], 403);
             }
-            $token =  $user->createToken('diceway', ['*'], now()->addWeek())->plainTextToken;
+            $token = $user->createToken('diceway', ['*'], now()->addWeek())->plainTextToken;
             //now return this token on success login attempt
-            return response()->json(['user'=> $user, 'token' => $token], 200);
-        }
-        else{
+            return response()->json(['user' => $user, 'token' => $token], 200);
+        } else {
             //wrong login credentials, return, user not authorised to our system, return error code 401
             return response()->json(['error' => 'UnAuthorised Access'], 401);
         }

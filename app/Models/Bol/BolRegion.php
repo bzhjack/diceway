@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models\Bol;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class BolRegion extends Model
 {
     use HasFactory;
+
     protected $table = 'bol_region';
     protected $fillable = ['name']; // Spécifiez les colonnes que vous voulez rendre accessibles en écriture
 

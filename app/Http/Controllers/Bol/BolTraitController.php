@@ -13,22 +13,23 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BolTraitController extends Controller
 {
-   public function getAllAvantages()
-        {
-            // Récupérer toutes les lignes de votre modèle
-            $donnees = BolAvantage::all();
+    public function getAllAvantages()
+    {
+        // Récupérer toutes les lignes de votre modèle
+        $donnees = BolAvantage::all();
 
-           // Retourner les données en tant que réponse JSON
-            return response()->json($donnees);
-        }
-   public function getAllDesavantages()
-        {
-            // Récupérer toutes les lignes de votre modèle
-            $donnees = BolDesavantage::all();
+        // Retourner les données en tant que réponse JSON
+        return response()->json($donnees);
+    }
 
-           // Retourner les données en tant que réponse JSON
-            return response()->json($donnees);
-        }
+    public function getAllDesavantages()
+    {
+        // Récupérer toutes les lignes de votre modèle
+        $donnees = BolDesavantage::all();
+
+        // Retourner les données en tant que réponse JSON
+        return response()->json($donnees);
+    }
 
     public static function update(Request $request)
     {
