@@ -8,7 +8,7 @@ import {toSignal} from "@angular/core/rxjs-interop";
 export class BolHerosStateService {
   #bhs = inject(BolHerosService)
   armureList = toSignal(this.#bhs.armures());
-
+  armeList = toSignal(this.#bhs.armes());
   constructor() {
   }
 }

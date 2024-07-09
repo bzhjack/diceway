@@ -46,4 +46,9 @@ class BolHeros extends Model
     {
         return $this->HasMany(BolHerosArmure::class, 'heros_id', 'id');
     }
+
+    public function armes(): HasMany
+    {
+        return $this->HasMany(BolHerosArme::class, 'heros_id', 'id');
+    }
 }

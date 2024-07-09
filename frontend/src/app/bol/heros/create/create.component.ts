@@ -41,8 +41,9 @@ import {DropdownModule} from "primeng/dropdown";
 import {Ripple} from "primeng/ripple";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import { ScrollPanelModule } from 'primeng/scrollpanel';
-import {ArmuresComponent} from "./armures/armures.component";
-import {BolHerosArmureModel} from "../../models/bol-armure.model";
+import {BolArmuresComponent} from "./armures/armures.component";
+import {BolArmesComponent} from "./armes/armes.component";
+
 
 @Component({
   selector: 'app-create',
@@ -70,7 +71,8 @@ import {BolHerosArmureModel} from "../../models/bol-armure.model";
     DropdownModule,
     Ripple,
     NgTemplateOutlet,
-    ArmuresComponent
+    BolArmuresComponent,
+    BolArmesComponent
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
@@ -128,6 +130,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   carrieresArray = this.fb.array([]);
 
   public armuresCtrl = new FormControl<number[]>([]);
+  public armesCtrl = new FormControl<number[]>([]);
 
   herosForm = this.fb.group(
     {
@@ -157,7 +160,8 @@ export class BolHerosCreateComponent implements OnDestroy {
       heroism_cost: this.heroismCostCtrl,
 
       carrieres: this.carrieresArray,
-      armures: this.armuresCtrl
+      armures: this.armuresCtrl,
+      armes: this.armesCtrl
 
     }, {validators: globalFormValidator}
   );
@@ -169,9 +173,6 @@ export class BolHerosCreateComponent implements OnDestroy {
   get carrieres() {
     return this.herosForm.controls["carrieres"] as FormArray;
   }
-  /*get armures() {
-    return this.herosForm.controls["armures"] as FormArray;
-  }*/
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -367,7 +368,8 @@ export class BolHerosCreateComponent implements OnDestroy {
             region_id: hero.region_id,
             region: hero.region,
             heroism_cost: hero.heroism_cost,
-            armures: hero.armures.map(item => item.armure_id)
+            armures: hero.armures.map(item => item.armure_id),
+            armes: hero.armes.map(item => item.arme_id),
           });
           this.traits.clear();
           this.avantages = [];
@@ -382,17 +384,8 @@ export class BolHerosCreateComponent implements OnDestroy {
           });
           this.carrieres.clear();
           hero.carrieres.forEach((carriere) => this.addCarriere(carriere));
-          /*this.armures.clear();
-          hero.armures.forEach((armure) => {
-              const armureForm = this.fb.group({
-                armure_id: [armure.armure_id],
-              });
-              this.armures.push(armureForm);
-          });*/
           console.log(this.herosForm.getRawValue());
           this.spinner.hide();
-
-
         },
         error: () => {
           this.spinner.hide();

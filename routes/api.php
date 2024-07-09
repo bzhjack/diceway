@@ -70,7 +70,8 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
 
     // Gestion des armes
     Route::get('/bol/armes', [BolArmeController::class, 'getAll']);
-    Route::post('/bol/heros/armes/create/{herosId}', [BolArmureController::class, 'create']);
+    Route::post('/bol/heros/armes/create/{herosId}', [BolArmeController::class, 'create']);
+    Route::delete('/bol/heros/armes/delete/{herosId}/{id}', [BolArmeController::class, 'delete']);
 
     // Gestion des armures
     Route::get('/bol/armures', [BolArmureController::class, 'getAll']);
@@ -84,6 +85,6 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::post('/bol/heros/update', [BolHerosController::class, 'update']);
 
     Route::post('/bol/heros/traits/update', [BolTraitController::class, 'update']);
-    Route::delete('/bol/heros/traits/delete/{id}', [BolTraitController::class, 'destroy']);
+    Route::delete('/bol/heros/traits/delete/{id}', [BolTraitController::class, 'delete']);
     Route::delete('/bol/heros/delete/{id}', [BolHerosController::class, 'destroy']);
 });

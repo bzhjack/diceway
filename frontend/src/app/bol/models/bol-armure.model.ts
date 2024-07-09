@@ -3,7 +3,7 @@ export interface BolArmureModel {
   armure: string;
   protection: string | null;
   malus: string | null;
-  pts_de_pouvoir: string | null,
+  pts_de_pouvoir: string | null;
 }
 
 export interface BolHerosArmureModel {

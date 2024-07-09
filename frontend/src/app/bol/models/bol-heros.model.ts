@@ -1,5 +1,6 @@
 import {BolHerosCarriereModel} from "./bol-carriere.model";
 import {BolHerosArmureModel} from "./bol-armure.model";
+import {BolHerosArmeModel} from "./bol-arme.model";
 
 export interface BolHerosModel {
   id: string | null;
@@ -26,5 +27,6 @@ export interface BolHerosModel {
   traits: any[],
   heroism_cost: number,
   carrieres: BolHerosCarriereModel[],
-  armures: BolHerosArmureModel[]
+  armures: BolHerosArmureModel[],
+  armes: BolHerosArmeModel[]
 }
