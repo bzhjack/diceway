@@ -11,6 +11,8 @@ use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Bol\BolRegionController;
 use App\Http\Controllers\Bol\BolTraitController;
 use App\Http\Controllers\Bol\BolCarriereController;
+use App\Http\Controllers\Bol\BolArmureController;
+use App\Http\Controllers\Bol\BolArmeController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -57,20 +59,30 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     // Gestion de la région
     Route::get('/bol/region', [BolRegionController::class, 'getAll']);
     Route::get('/bol/region/{id}', [BolRegionController::class, 'getOne']);
-
+    // Gestion des traits régionaux
     Route::get('/bol/trait/avantages', [BolTraitController::class, 'getAllAvantages']);
     Route::get('/bol/trait/desavantages', [BolTraitController::class, 'getAllDesavantages']);
 
     // Gestion des carrieres
-    Route::get('/bol/carrieres', [BolCarriereController::class, 'getAllCarrieres']);
-    Route::delete('/bol/heros/carrieres/delete/{herosId}/{id}', [BolCarriereController::class, 'deleteCarriere']);
-    Route::post('/bol/heros/carrieres/create/{herosId}', [BolCarriereController::class, 'createCarriere']);
+    Route::get('/bol/carrieres', [BolCarriereController::class, 'getAll']);
+    Route::delete('/bol/heros/carrieres/delete/{herosId}/{id}', [BolCarriereController::class, 'delete']);
+    Route::post('/bol/heros/carrieres/create/{herosId}', [BolCarriereController::class, 'create']);
+
+    // Gestion des armes
+    Route::get('/bol/armes', [BolArmeController::class, 'getAll']);
+    Route::post('/bol/heros/armes/create/{herosId}', [BolArmureController::class, 'create']);
+
+    // Gestion des armures
+    Route::get('/bol/armures', [BolArmureController::class, 'getAll']);
+    Route::post('/bol/heros/armures/create/{herosId}', [BolArmureController::class, 'create']);
+    Route::delete('/bol/heros/armures/delete/{herosId}/{id}', [BolArmureController::class, 'delete']);
 
     // Gestion du Héros
     Route::get('/bol/heros', [BolHerosController::class, 'getAll']);
     Route::get('/bol/heros/{id}', [BolHerosController::class, 'getOne']);
     Route::post('/bol/heros/create', [BolHerosController::class, 'create']);
     Route::post('/bol/heros/update', [BolHerosController::class, 'update']);
+
     Route::post('/bol/heros/traits/update', [BolTraitController::class, 'update']);
     Route::delete('/bol/heros/traits/delete/{id}', [BolTraitController::class, 'destroy']);
     Route::delete('/bol/heros/delete/{id}', [BolHerosController::class, 'destroy']);

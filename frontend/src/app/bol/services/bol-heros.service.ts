@@ -6,6 +6,7 @@ import {BolRegionModel} from "../models/bol-region.model";
 import {BolAvantageModel} from "../models/bol-avantage.model";
 import {BolDesavantageModel} from "../models/bol-desavantage.model";
 import {BolHerosCarriereModel} from "../models/bol-carriere.model";
+import {BolHerosArmureModel} from "../models/bol-armure.model";
 
 @Injectable({
   providedIn: 'root'
@@ -41,14 +42,23 @@ export class BolHerosService {
   carrieres(): Observable<any> {
     return this.http.get<BolRegionModel[]>('/api/bol/carrieres');
   }
-  updateCarrieres(hero: BolHerosModel): Observable<any> {
-    return  this.http.post<BolHerosModel>('/api/bol/heros/carrieres/update', <BolHerosModel>hero);
-  }
   deleteCarriere(herosId: string | null, id: number): Observable<any> {
     return this.http.delete<boolean>(`/api/bol/heros/carrieres/delete/${herosId}/${id}`);
   }
   createCarriere(herosId: string | null, carriere: BolHerosCarriereModel): Observable<any> {
     return  this.http.post<BolHerosModel>(`/api/bol/heros/carrieres/create/${herosId}`, <BolHerosCarriereModel>carriere);
+  }
+
+  // Armures
+  armures(): Observable<any> {
+    return this.http.get<BolRegionModel[]>('/api/bol/armures');
+  }
+  createArmure(herosId: string | null | undefined, armure: BolHerosArmureModel): Observable<any> {
+    return  this.http.post<BolHerosModel>(`/api/bol/heros/armures/create/${herosId}`, <BolHerosArmureModel>armure);
+  }
+
+  deleteArmure(herosId: string | null | undefined, id: number): Observable<any> {
+    return this.http.delete<boolean>(`/api/bol/heros/armures/delete/${herosId}/${id}`);
   }
 
   // Héros

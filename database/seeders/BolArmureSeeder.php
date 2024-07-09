@@ -19,12 +19,6 @@ class BolArmureSeeder extends Seeder
         // Nouveaux éléments à insérer avec ID
         $armures = [
             [
-                'id' => 1,
-                'armure' => 'Pas d’armure',
-                'protection' => '0',
-                'malus' => '-',
-            ],
-            [
                 'id' => 2,
                 'armure' => 'Armure légère',
                 'protection' => 'annule d6-3 (1) dégâts subis',
@@ -55,13 +49,12 @@ class BolArmureSeeder extends Seeder
                 'id' => 6,
                 'armure' => 'Petit bouclier',
                 'protection' => 'Impose un malus de -1 à une attaque subie par round',
-                'malus' => '-',
             ],
             [
                 'id' => 7,
                 'armure' => 'Grand bouclier',
-                'protection' => 'Impose un malus de -1 à toutes les attaques subies par round -1 en agilité',
-                'malus' => '-',
+                'protection' => 'Impose un malus de -1 à toutes les attaques subies par round',
+                'malus' => '-1 en agilité',
             ],
         ];
 

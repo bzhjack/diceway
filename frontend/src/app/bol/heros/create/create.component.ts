@@ -40,6 +40,9 @@ import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {DropdownModule} from "primeng/dropdown";
 import {Ripple} from "primeng/ripple";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import {ArmuresComponent} from "./armures/armures.component";
+import {BolHerosArmureModel} from "../../models/bol-armure.model";
 
 @Component({
   selector: 'app-create',
@@ -55,6 +58,7 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
     InputNumberModule,
     FieldsetModule,
     OverlayPanelModule,
+    ScrollPanelModule,
     InlineSVGModule,
     MessagesModule,
     JsonPipe,
@@ -65,7 +69,8 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
     ConfirmPopupModule,
     DropdownModule,
     Ripple,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    ArmuresComponent
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
@@ -122,6 +127,8 @@ export class BolHerosCreateComponent implements OnDestroy {
 
   carrieresArray = this.fb.array([]);
 
+  public armuresCtrl = new FormControl<number[]>([]);
+
   herosForm = this.fb.group(
     {
       id: this.idCtrl,
@@ -149,8 +156,8 @@ export class BolHerosCreateComponent implements OnDestroy {
       traits: this.traitsArray,
       heroism_cost: this.heroismCostCtrl,
 
-      carrieres: this.carrieresArray
-
+      carrieres: this.carrieresArray,
+      armures: this.armuresCtrl
 
     }, {validators: globalFormValidator}
   );
@@ -162,6 +169,9 @@ export class BolHerosCreateComponent implements OnDestroy {
   get carrieres() {
     return this.herosForm.controls["carrieres"] as FormArray;
   }
+  /*get armures() {
+    return this.herosForm.controls["armures"] as FormArray;
+  }*/
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -175,7 +185,6 @@ export class BolHerosCreateComponent implements OnDestroy {
       this.getHeros(id);
     }
     this.herosForm.events.pipe(debounceTime(200)).subscribe(() => {
-      console.log('la');
       this.logFormErrors();
       this.logFormWarns();
     });
@@ -335,6 +344,7 @@ export class BolHerosCreateComponent implements OnDestroy {
           console.log(data);
           this.carrieresList = data[1];
           let hero: BolHerosModel = data[0];
+
           this.herosForm.patchValue({
             id: hero.id,
             joueur: hero.joueur,
@@ -356,7 +366,8 @@ export class BolHerosCreateComponent implements OnDestroy {
 
             region_id: hero.region_id,
             region: hero.region,
-            heroism_cost: hero.heroism_cost
+            heroism_cost: hero.heroism_cost,
+            armures: hero.armures.map(item => item.armure_id)
           });
           this.traits.clear();
           this.avantages = [];
@@ -371,7 +382,17 @@ export class BolHerosCreateComponent implements OnDestroy {
           });
           this.carrieres.clear();
           hero.carrieres.forEach((carriere) => this.addCarriere(carriere));
+          /*this.armures.clear();
+          hero.armures.forEach((armure) => {
+              const armureForm = this.fb.group({
+                armure_id: [armure.armure_id],
+              });
+              this.armures.push(armureForm);
+          });*/
+          console.log(this.herosForm.getRawValue());
           this.spinner.hide();
+
+
         },
         error: () => {
           this.spinner.hide();
@@ -391,7 +412,7 @@ export class BolHerosCreateComponent implements OnDestroy {
     this.spinner.show();
     this.subs?.unsubscribe();
     if (hero.id !== null) {
-      this.subs = this.hs.updateHeros(this.herosForm.value as BolHerosModel).subscribe({
+      this.subs = this.hs.updateHeros(this.herosForm.value as unknown as BolHerosModel).subscribe({
         next: () => {
           this.spinner.hide();
         },
@@ -400,7 +421,7 @@ export class BolHerosCreateComponent implements OnDestroy {
         }
       });
     } else {
-      this.subs = this.hs.createHeros(this.herosForm.value as BolHerosModel).subscribe({
+      this.subs = this.hs.createHeros(this.herosForm.value as unknown as BolHerosModel).subscribe({
         next: (hero: BolHerosModel) => {
           this.spinner.hide();
           this.idCtrl.setValue(hero.id);
@@ -498,7 +519,7 @@ export class BolHerosCreateComponent implements OnDestroy {
         });
         this.subs?.unsubscribe();
         this.spinner.show();
-        this.subs = this.hs.updateTraits(this.herosForm.value as BolHerosModel).subscribe(
+        this.subs = this.hs.updateTraits(this.herosForm.value as unknown as BolHerosModel).subscribe(
           {
             next: (hero: BolHerosModel) => {
               this.spinner.hide();

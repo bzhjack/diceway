@@ -1,0 +1,61 @@
+<p-fieldset class="w-full">
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-2">
+      <div>Armures</div>
+    </div>
+  </ng-template>
+  <!-- Body Armures -->
+      <div class="flex flex-col gap-1" *ngFor="let armure of selectedArmureDetail(); let i = index">
+        <div class="flex gap-2 items-center">
+          {{ armure.armure }}
+          <p-button icon="pi pi-trash" size="small" (click)="deleteArmure(armure.id, $event)" />
+        </div>
+      </div>
+  <!-- Footer Armures -->
+  <div class="flex justify-end gap-2" *ngIf="filteredArmureList()?.length > 0">
+    <p-button label="Ajouter une armure" size="small" [link]="true" class="text-cyan-600" (click)="selectedArmure = null; opArmure.toggle($event)"/>
+  </div>
+</p-fieldset>
+
+<p-overlayPanel #opArmure>
+  <div class="flex flex-col gap-4">
+    <div>Ajouter une armure</div>
+    <p-dropdown [style]="{ width: '250px' }" [options]="filteredArmureList()"
+                [(ngModel)]="selectedArmure" [ngModelOptions]="{standalone: true}" [filter]="true"
+                filterBy="armure" [showClear]="true" placeholder="Selectionner une armure">
+
+      <ng-template pTemplate="selectedItem" let-selectedOption>
+        <div class="flex align-items-center gap-2">
+          <div>{{ selectedOption.armure }}</div>
+        </div>
+      </ng-template>
+
+      <ng-template let-armure pTemplate="item">
+        <div class="flex flex-col gap-2">
+          <div class="text-2xl">{{ armure.armure }}</div>
+          <div class="flex flex-col">
+            <div class="flex gap-2" style="font-size: smaller">
+              <div style="width: 70px"><strong>Protection</strong></div>
+              {{ armure.protection }}
+            </div>
+            <div class="flex gap-2" style="font-size: smaller" *ngIf="armure.malus">
+              <div style="width: 70px"><strong>Malus</strong></div>
+              {{ armure.malus }}
+            </div>
+            <div class="flex gap-2" style="font-size: smaller" *ngIf="armure.pts_de_pouvoir">
+              <div style="width: 70px"><strong>Pts pouvoir</strong></div>
+              {{ armure.pts_de_pouvoir }}
+            </div>
+          </div>
+
+        </div>
+      </ng-template>
+    </p-dropdown>
+    <div class="flex justify-end gap-2">
+      <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
+              (click)="opArmure.toggle($event)"></button>
+      <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
+              (click)="addArmure(opArmure, $event)"></button>
+    </div>
+  </div>
+</p-overlayPanel>
