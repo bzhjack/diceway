@@ -29,4 +29,13 @@ class BolArmureController extends Controller
         BolHerosArmure::create($heros_carrieres);
         return response()->json(['success' => $newArmure]);
     }
+    public static function delete($herosId, $id)
+    {
+        $armure = BolHerosArmure::where('heros_id', $herosId)->where('armure_id', $id)->first();
+        if (!$armure) {
+            return response()->json(['message' => 'Armure non trouvée'], 404);
+        }
+        $armure->delete();
+        return response()->json(['success' => true]);
+    }
 }

@@ -1,7 +1,7 @@
-import {Component, computed, forwardRef, inject, input, OnDestroy, signal} from '@angular/core';
+import {Component, computed, forwardRef, inject, input, OnDestroy} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {FieldsetModule} from "primeng/fieldset";
-import {PrimeTemplate} from "primeng/api";
+import {ConfirmationService, PrimeTemplate} from "primeng/api";
 import {BolHerosStateService} from "../../../services/bol-heros-state.service";
 import {DropdownModule} from "primeng/dropdown";
 import {NgForOf, NgIf} from "@angular/common";
@@ -13,7 +13,8 @@ import {
   FormArray,
   FormBuilder,
   FormControl,
-  FormsModule, NG_VALUE_ACCESSOR,
+  FormsModule,
+  NG_VALUE_ACCESSOR,
   ReactiveFormsModule
 } from "@angular/forms";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
@@ -21,6 +22,7 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from "@angular/core/rxjs-interop";
+import {tap} from "rxjs/operators";
 
 @Component({
   selector: 'app-armures',
@@ -56,6 +58,7 @@ export class ArmuresComponent implements ControlValueAccessor, OnDestroy {
   readonly #bhss = inject(BolHerosStateService);
   readonly #bhs = inject(BolHerosService);
   readonly #spinner = inject(NgxSpinnerService);
+  readonly #ds = inject(ConfirmationService);
 
   armuresForm = this.#fb.group({
     armures: this.#fb.array([])
@@ -67,7 +70,7 @@ export class ArmuresComponent implements ControlValueAccessor, OnDestroy {
 
 
   protected armureList = this.#bhss.armureList;
-  protected selectedArmureIds = toSignal(this.armuresForm.get('armures')!.valueChanges.pipe());
+  protected selectedArmureIds = toSignal(this.armuresForm.get('armures')!.valueChanges);
   protected filteredArmureList = computed(() => {
     return this.armureList()?.filter((armure: BolArmureModel) => !this.selectedArmureIds()?.includes(armure.id));
   });
@@ -97,6 +100,34 @@ export class ArmuresComponent implements ControlValueAccessor, OnDestroy {
     });
   }
 
+  deleteArmure(armureId: number, event: any) {
+    this.#ds.confirm({
+      target: event.target as EventTarget,
+      message: 'Voulez vous supprimer cette armure ?',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass: 'p-button-danger p-button-sm',
+      acceptLabel: "Oui",
+      rejectLabel: "Non",
+      accept: () => {
+        this.#spinner.show();
+        this.subs?.unsubscribe();
+        this.subs = this.#bhs.deleteArmure(this.heroId(), armureId).subscribe({
+          next: _ => {
+            this.#spinner.hide();
+            this.removeArmure(armureId);
+          },
+          error: () => {
+            this.#spinner.hide();
+          }
+        });
+      },
+    });
+  }
+  removeArmure(armureId: number) {
+    const index = this.armures.value.findIndex((car: number) => car === armureId)
+    if (index !== -1) this.armures.removeAt(index)
+  }
+
   private onChange: (rating: number) => void = () => {
     // do nothing by default
   };
@@ -117,7 +148,6 @@ export class ArmuresComponent implements ControlValueAccessor, OnDestroy {
       }
     }
   }
-
 
   ngOnDestroy() {
     this.subs?.unsubscribe();

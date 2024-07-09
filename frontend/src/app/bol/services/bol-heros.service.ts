@@ -57,6 +57,9 @@ export class BolHerosService {
     return  this.http.post<BolHerosModel>(`/api/bol/heros/armures/create/${herosId}`, <BolHerosArmureModel>armure);
   }
 
+  deleteArmure(herosId: string | null | undefined, id: number): Observable<any> {
+    return this.http.delete<boolean>(`/api/bol/heros/armures/delete/${herosId}/${id}`);
+  }
 
   // Héros
   createHeros(hero: BolHerosModel): Observable<any> {
