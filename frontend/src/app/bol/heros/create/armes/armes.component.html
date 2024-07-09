@@ -1,0 +1,61 @@
+<p-fieldset class="w-full">
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-2">
+      <div>Armes</div>
+    </div>
+  </ng-template>
+  <!-- Body Armus -->
+  <div class="flex flex-col gap-1" *ngFor="let arme of selectedArmeDetail(); let i = index">
+    <div class="flex gap-2 items-center">
+      {{ arme.arme }}
+      <p-button icon="pi pi-trash" size="small" (click)="deleteArme(arme.id, $event)" />
+    </div>
+  </div>
+  <!-- Footer Armes -->
+  <div class="flex justify-end gap-2" *ngIf="filteredArmeList()?.length > 0">
+    <p-button label="Ajouter une arme" size="small" [link]="true" class="text-cyan-600" (click)="selectedArme = null; opArme.toggle($event)"/>
+  </div>
+</p-fieldset>
+
+<p-overlayPanel #opArme>
+  <div class="flex flex-col gap-4">
+    <div>Ajouter une arme</div>
+    <p-dropdown [style]="{ width: '250px' }" [options]="filteredArmeList()"
+                [(ngModel)]="selectedArme" [ngModelOptions]="{standalone: true}" [filter]="true"
+                filterBy="arme" [showClear]="true" placeholder="Selectionner une arme">
+
+      <ng-template pTemplate="selectedItem" let-selectedOption>
+        <div class="flex align-items-center gap-2">
+          <div>{{ selectedOption.arme }}</div>
+        </div>
+      </ng-template>
+
+      <ng-template let-arme pTemplate="item">
+        <div class="flex flex-col gap-2">
+          <div class="text-2xl">{{ arme.arme }}</div>
+          <div class="flex flex-col">
+            <div class="flex gap-2" style="font-size: smaller">
+              <div style="width: 70px"><strong>Protection</strong></div>
+              {{ arme.protection }}
+            </div>
+            <div class="flex gap-2" style="font-size: smaller" *ngIf="arme.malus">
+              <div style="width: 70px"><strong>Malus</strong></div>
+              {{ arme.malus }}
+            </div>
+            <div class="flex gap-2" style="font-size: smaller" *ngIf="arme.pts_de_pouvoir">
+              <div style="width: 70px"><strong>Pts pouvoir</strong></div>
+              {{ arme.pts_de_pouvoir }}
+            </div>
+          </div>
+
+        </div>
+      </ng-template>
+    </p-dropdown>
+    <div class="flex justify-end gap-2">
+      <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
+              (click)="opArme.toggle($event)"></button>
+      <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
+              (click)="addArme(opArme, $event)"></button>
+    </div>
+  </div>
+</p-overlayPanel>
