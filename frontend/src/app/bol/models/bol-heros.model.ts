@@ -30,3 +30,10 @@ export interface BolHerosModel {
   armures: BolHerosArmureModel[],
   armes: BolHerosArmeModel[]
 }
+
+export interface BolHerosCombat {
+  initiative: number,
+  melee: number,
+  tir: number,
+  defense: number, 
+}

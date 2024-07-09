@@ -15,7 +15,7 @@ import {ToolbarModule} from "primeng/toolbar";
 import {ButtonModule} from "primeng/button";
 import {SplitButtonModule} from "primeng/splitbutton";
 import {BolHerosService} from "../../services/bol-heros.service";
-import {BolHerosModel} from "../../models/bol-heros.model";
+import {BolHerosCombat, BolHerosModel} from "../../models/bol-heros.model";
 import {debounceTime, forkJoin, Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
@@ -133,6 +133,7 @@ export class BolHerosCreateComponent implements OnDestroy {
 
   public armuresCtrl = new FormControl<number[]>([]);
   public armesCtrl = new FormControl<number[]>([]);
+  public combatCtrl = new FormControl<BolHerosCombat>({defense: 0,initiative: 0,melee: 0,tir: 0});
 
   herosForm = this.fb.group(
     {
@@ -164,13 +165,7 @@ export class BolHerosCreateComponent implements OnDestroy {
       carrieres: this.carrieresArray,
 
 
-      combat: this.fb.group({
-        initiative: this.initiativeCtrl,
-        melee: this.meleeCtrl,
-        tir: this.tirCtrl,
-        defense: this.defenseCtrl,
-      }),
-
+      combat: this.combatCtrl,
       armures: this.armuresCtrl,
       armes: this.armesCtrl
 
@@ -381,7 +376,13 @@ export class BolHerosCreateComponent implements OnDestroy {
             heroism_cost: hero.heroism_cost,
             armures: hero.armures.map(item => item.armure_id),
             armes: hero.armes.map(item => item.arme_id),
-            combat: {}
+            combat: {
+              defense: hero.defense,
+              initiative: hero.initiative,
+              melee: hero.melee,
+              tir: hero.tir
+
+            }
           });
           this.traits.clear();
           this.avantages = [];

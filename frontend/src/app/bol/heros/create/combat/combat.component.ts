@@ -1,11 +1,13 @@
-import {Component, forwardRef, inject} from '@angular/core';
-import {ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule} from "@angular/forms";
-import {InputNumberModule} from "primeng/inputnumber";
-import {OverlayPanelModule} from "primeng/overlaypanel";
-import {BolMessageComponent} from "../../../message/message.component";
-import {FieldsetModule} from "primeng/fieldset";
-import {attributValidator} from "../create.validators";
-import {NgIf} from "@angular/common";
+import { Component, effect, forwardRef, inject } from '@angular/core';
+import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule, ValidationErrors } from "@angular/forms";
+import { InputNumberModule } from "primeng/inputnumber";
+import { OverlayPanelModule } from "primeng/overlaypanel";
+import { BolMessageComponent } from "../../../message/message.component";
+import { FieldsetModule } from "primeng/fieldset";
+import { attributValidator, combatFormValidator } from "../create.validators";
+import { NgIf } from "@angular/common";
+import { toSignal } from '@angular/core/rxjs-interop';
+import { BolHeroCreateTools } from '../create.tools';
 
 @Component({
   selector: 'app-combat',
@@ -31,6 +33,7 @@ import {NgIf} from "@angular/common";
 export class BolCombatComponent implements ControlValueAccessor {
   readonly #fb = inject(FormBuilder);
   aptitudeErrors: { control: string, error: string }[] = [];
+  aptitudeWarns: { step: string, warn: string }[] = [];
 
   public initiativeCtrl = new FormControl<number | null>(0, attributValidator);
   public meleeCtrl = new FormControl<number | null>(0, attributValidator);
@@ -42,7 +45,64 @@ export class BolCombatComponent implements ControlValueAccessor {
     melee: this.meleeCtrl,
     tir: this.tirCtrl,
     defense: this.defenseCtrl,
-  });
+  }, { validators: combatFormValidator });
+
+  protected formChange = toSignal(this.aptitudesForm!.valueChanges);
+
+
+  constructor() {
+    effect(() => {
+      if (this.formChange()) {
+        this.aptitudeErrors = [];
+        // Gestion des erreurs par aptitudes
+        Object.keys(this.aptitudesForm.controls).forEach(key => {
+          const controlErrors = this.aptitudesForm.get(key)?.errors;
+          if (controlErrors != null) {
+            Object.keys(controlErrors).forEach(keyError => {
+
+              if (['melee', 'tir', 'defense', 'initiative'].includes(key)) {
+                this.aptitudeErrors.push({
+                  control: BolHeroCreateTools.translate(key),
+                  error: BolHeroCreateTools.translate(keyError)
+                });
+              }
+              console.log(`Key control: ${key}, keyError: ${keyError}, error value: `, controlErrors[keyError]);
+            });
+          }
+        });
+
+        // Obtenir les erreurs globales du formulaire
+        const formErrors: ValidationErrors | null = this.aptitudesForm.errors;
+        // Si des erreurs globales sont présentes, les traiter
+        if (formErrors != null) {
+          // Itérer sur chaque erreur globale
+          Object.keys(formErrors).forEach(keyError => {
+            // Afficher dans la console le type d'erreur globale et la valeur de l'erreur
+            if (keyError === 'aptTooManyNegative') {
+              this.aptitudeErrors.push({ error: 'Tu as le droit de diminuer une seule fois une aptitude à -1', control: '' });
+            }
+            if (keyError === 'aptSumExceeded') {
+              this.aptitudeErrors.push({ error: 'La somme des aptitudes ne doit pas dépasser 4', control: '' });
+            }
+            console.log(`Global error: ${keyError}, err value: `, formErrors[keyError]);
+          });
+        }
+        this.aptitudeWarns = [];
+        if (this.aptitudeErrors.length === 0) {
+          const controlsAptIds = ['tir', 'melee', 'defense', 'initiative'];
+          const controlsAptArray = controlsAptIds.map(id => this.aptitudesForm.get(id));
+          const apts = controlsAptArray.map(ctrl => ctrl?.value);
+          const sumApt = apts.reduce((acc, val) => acc + val, 0);
+          if (sumApt < 4) {
+            this.aptitudeWarns.push({
+              step: 'Aptitudes',
+              warn: 'il manque ' + (4 - sumApt) + ' pts dans les aptitudes de combat'
+            });
+          }
+        }
+      }
+    });
+  }
   private onChange: (rating: number) => void = () => {
     // do nothing by default
   };
@@ -55,9 +115,10 @@ export class BolCombatComponent implements ControlValueAccessor {
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
-  writeValue(value: number[]): void {
+  writeValue(value: any): void {
     if (value) {
       console.log('combat', value);
+      this.aptitudesForm.patchValue(value);
     }
   }
 }

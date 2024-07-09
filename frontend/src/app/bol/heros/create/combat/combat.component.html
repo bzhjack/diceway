@@ -2,18 +2,23 @@
   <ng-template pTemplate="header">
     <div class="flex items-center gap-2">
       <div class="cursor-pointer" (click)="aptitudesInfos.toggle($event)">
-        <i *ngIf="aptitudeErrors.length === 0" class="pi pi-info-circle"></i>
+        <i *ngIf="aptitudeErrors.length === 0 && aptitudeWarns.length === 0" class="pi pi-info-circle"></i>
         <div *ngIf="aptitudeErrors.length > 0" style="color: var(--error-color)">
           <i class="pi pi-exclamation-triangle"></i> ({{ aptitudeErrors.length }})
         </div>
+        <div *ngIf="aptitudeWarns.length > 0" style="color: var(--warn-color)">
+          <i class="pi pi-exclamation-triangle"></i> ({{ aptitudeWarns.length }})
+        </div>
       </div>
-      <div>Combat</div>
+      <div>Combatx</div>
     </div>
     <p-overlayPanel #aptitudesInfos>
       <div class="flex flex-col gap-2">
         <bol-message type="apt"></bol-message>
         <bol-message type="form-errors" *ngIf="aptitudeErrors.length > 0" legend="Aptitudes invalides"
-                     [data]="aptitudeErrors"></bol-message>
+          [data]="aptitudeErrors"></bol-message>
+        <bol-message type="form-warn" *ngIf="aptitudeWarns.length > 0" legend="Aptitudes invalides"
+          [data]="aptitudeWarns"></bol-message>
       </div>
     </p-overlayPanel>
   </ng-template>
