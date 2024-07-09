@@ -72,7 +72,6 @@ class BolHerosController extends Controller
             BolHerosTrait::where('heros_id', $herosId)->delete();
         }
         return response($heros);
-
     }
 
 
