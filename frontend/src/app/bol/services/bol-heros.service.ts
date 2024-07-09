@@ -6,7 +6,8 @@ import {BolRegionModel} from "../models/bol-region.model";
 import {BolAvantageModel} from "../models/bol-avantage.model";
 import {BolDesavantageModel} from "../models/bol-desavantage.model";
 import {BolHerosCarriereModel} from "../models/bol-carriere.model";
-import {BolHerosArmureModel} from "../models/bol-armure.model";
+import {BolArmureModel, BolHerosArmureModel} from "../models/bol-armure.model";
+import {BolHerosArmeModel} from "../models/bol-arme.model";
 
 @Injectable({
   providedIn: 'root'
@@ -51,15 +52,30 @@ export class BolHerosService {
 
   // Armures
   armures(): Observable<any> {
-    return this.http.get<BolRegionModel[]>('/api/bol/armures');
+    return this.http.get<BolArmureModel[]>('/api/bol/armures');
   }
   createArmure(herosId: string | null | undefined, armure: BolHerosArmureModel): Observable<any> {
-    return  this.http.post<BolHerosModel>(`/api/bol/heros/armures/create/${herosId}`, <BolHerosArmureModel>armure);
+    return  this.http.post<BolHerosArmureModel>(`/api/bol/heros/armures/create/${herosId}`, <BolHerosArmureModel>armure);
   }
 
   deleteArmure(herosId: string | null | undefined, id: number): Observable<any> {
     return this.http.delete<boolean>(`/api/bol/heros/armures/delete/${herosId}/${id}`);
   }
+
+  // Armes
+  armes(): Observable<any> {
+    return this.http.get<BolRegionModel[]>('/api/bol/armes');
+  }
+  createArme(herosId: string | null | undefined, arme: BolHerosArmeModel): Observable<any> {
+    return  this.http.post<BolHerosModel>(`/api/bol/heros/armes/create/${herosId}`, <BolHerosArmeModel>arme);
+  }
+  deleteArme(herosId: string | null | undefined, id: number): Observable<any> {
+    return this.http.delete<boolean>(`/api/bol/heros/armes/delete/${herosId}/${id}`);
+  }
+
+
+
+
 
   // Héros
   createHeros(hero: BolHerosModel): Observable<any> {

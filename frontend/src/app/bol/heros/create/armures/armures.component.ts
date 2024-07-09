@@ -45,12 +45,12 @@ import {tap} from "rxjs/operators";
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ArmuresComponent),
+      useExisting: forwardRef(() => BolArmuresComponent),
       multi: true,
     }
   ]
 })
-export class ArmuresComponent implements ControlValueAccessor, OnDestroy {
+export class BolArmuresComponent implements ControlValueAccessor, OnDestroy {
   private subs?: Subscription;
   public selectedArmure: BolArmureModel | null = null;
 

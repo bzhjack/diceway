@@ -17,7 +17,7 @@ class BolHerosController extends Controller
      */
     public function getAll()
     {
-        $heroes = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure')->where('user_id', Auth::id())->get();
+        $heroes = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme')->where('user_id', Auth::id())->get();
         return response($heroes);
     }
 
@@ -27,7 +27,7 @@ class BolHerosController extends Controller
     public function getOne(Request $request)
     {
         $id = $request->route('id');
-        $hero = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure')->where('user_id', Auth::id())->where('id', $id)->get()->first();
+        $hero = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme')->where('user_id', Auth::id())->where('id', $id)->get()->first();
         if ($hero === null) {
             return response()->json(['error' => 'Hero not found'], 404);
         } else {
@@ -44,7 +44,7 @@ class BolHerosController extends Controller
             'nom' => 'required|max:255',
             'joueur' => 'required|max:255'
         ]);
-        $heros = $request->except('traits', 'carrieres', 'armures');
+        $heros = $request->except('traits', 'carrieres', 'armures', 'armes');
         $heros['user_id'] = Auth::id();
         $heros = BolHeros::create($heros);
         return response($heros);
@@ -55,7 +55,7 @@ class BolHerosController extends Controller
      */
     public function update(Request $request)
     {
-        $heros = $request->except('traits', 'carrieres', 'armures');
+        $heros = $request->except('traits', 'carrieres', 'armures', 'armes');
         $traits = $request->input('traits');
         $carrieres = $request->input('carrieres');
         $herosId = $heros['id'];
@@ -81,7 +81,7 @@ class BolHerosController extends Controller
      * @param string $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id): \Illuminate\Http\JsonResponse
+    public function delete($id): \Illuminate\Http\JsonResponse
     {
         $bolHeros = BolHeros::find($id);
         // Check if the resource exists
