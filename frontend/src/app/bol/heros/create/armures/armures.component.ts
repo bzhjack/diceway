@@ -1,4 +1,4 @@
-import {Component, computed, inject, input, OnDestroy, signal} from '@angular/core';
+import {Component, computed, forwardRef, inject, input, OnDestroy, signal} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {FieldsetModule} from "primeng/fieldset";
 import {PrimeTemplate} from "primeng/api";
@@ -13,13 +13,14 @@ import {
   FormArray,
   FormBuilder,
   FormControl,
-  FormsModule,
+  FormsModule, NG_VALUE_ACCESSOR,
   ReactiveFormsModule
 } from "@angular/forms";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {NgxSpinnerService} from "ngx-spinner";
 import {Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
+import {toSignal} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-armures',
@@ -38,7 +39,14 @@ import {BolHerosService} from "../../../services/bol-heros.service";
     ReactiveFormsModule
   ],
   templateUrl: './armures.component.html',
-  styleUrl: './armures.component.scss'
+  styleUrl: './armures.component.scss',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => ArmuresComponent),
+      multi: true,
+    }
+  ]
 })
 export class ArmuresComponent implements ControlValueAccessor, OnDestroy {
   private subs?: Subscription;
@@ -59,9 +67,12 @@ export class ArmuresComponent implements ControlValueAccessor, OnDestroy {
 
 
   protected armureList = this.#bhss.armureList;
-  protected filteredArmureList =  computed(() => {
-    const armureIdsInArray = this.armures.controls.map(control => control.get('armure_id')?.value);
-    return this.armureList()?.filter((armure: BolArmureModel) => !armureIdsInArray.includes(armure.id));
+  protected selectedArmureIds = toSignal(this.armuresForm.get('armures')!.valueChanges.pipe());
+  protected filteredArmureList = computed(() => {
+    return this.armureList()?.filter((armure: BolArmureModel) => !this.selectedArmureIds()?.includes(armure.id));
+  });
+  protected selectedArmureDetail = computed(() => {
+    return this.armureList()?.filter((armure: BolArmureModel) => this.selectedArmureIds()?.includes(armure.id))
   });
   public heroId = input<string | null | undefined>(null)
 
@@ -86,14 +97,27 @@ export class ArmuresComponent implements ControlValueAccessor, OnDestroy {
     });
   }
 
+  private onChange: (rating: number) => void = () => {
+    // do nothing by default
+  };
+  onTouched: () => void = () => {
+    // do nothing by default
+  };
   registerOnChange(fn: any): void {
+    this.onChange = fn;
   }
-
   registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+  writeValue(value: number[]): void {
+    if (value) {
+      this.armures.clear();
+      for (const val of value) {
+        this.armures.push(new FormControl(val));
+      }
+    }
   }
 
-  writeValue(obj: any): void {
-  }
 
   ngOnDestroy() {
     this.subs?.unsubscribe();

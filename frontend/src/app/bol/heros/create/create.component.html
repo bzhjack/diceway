@@ -301,7 +301,7 @@
             <!--- Armes et Armures --->
             <!------------------------>
             <div class="flex flex-col flex-auto gap-2 ">
-              <app-armures [heroId]="herosForm.get('id')?.value"></app-armures>
+              <app-armures [heroId]="herosForm.get('id')?.value" formControlName="armures"></app-armures>
               <p-fieldset class="w-full">
                 <ng-template pTemplate="header">
                   <div class="flex items-center gap-2">

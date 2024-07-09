@@ -44,7 +44,7 @@ class BolHerosController extends Controller
             'nom' => 'required|max:255',
             'joueur' => 'required|max:255'
         ]);
-        $heros = $request->except('traits', 'carrieres');
+        $heros = $request->except('traits', 'carrieres', 'armures');
         $heros['user_id'] = Auth::id();
         $heros = BolHeros::create($heros);
         return response($heros);
@@ -55,7 +55,7 @@ class BolHerosController extends Controller
      */
     public function update(Request $request)
     {
-        $heros = $request->except('traits', 'carrieres');
+        $heros = $request->except('traits', 'carrieres', 'armures');
         $traits = $request->input('traits');
         $carrieres = $request->input('carrieres');
         $herosId = $heros['id'];
@@ -66,7 +66,7 @@ class BolHerosController extends Controller
         BolHeros::where('id', $herosId)->update($heros);
         // Maj des carrières
         foreach ($carrieres as $carriere) {
-            BolCarriereController::updateCarriere($carriere, $herosId);
+            BolCarriereController::update($carriere, $herosId);
         }
         if ($heros["region_id"] === null || count($traits) === 0) {
             BolHerosTrait::where('heros_id', $herosId)->delete();

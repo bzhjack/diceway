@@ -1,6 +1,4 @@
-import {inject, Injectable, signal} from '@angular/core';
-import {BolCarriereModel} from "../models/bol-carriere.model";
-import {Observable} from "rxjs";
+import {inject, Injectable} from '@angular/core';
 import {BolHerosService} from "./bol-heros.service";
 import {toSignal} from "@angular/core/rxjs-interop";
 
