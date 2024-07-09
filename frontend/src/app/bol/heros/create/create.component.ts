@@ -43,6 +43,7 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import {BolArmuresComponent} from "./armures/armures.component";
 import {BolArmesComponent} from "./armes/armes.component";
+import {BolCombatComponent} from "./combat/combat.component";
 
 
 @Component({
@@ -72,7 +73,8 @@ import {BolArmesComponent} from "./armes/armes.component";
     Ripple,
     NgTemplateOutlet,
     BolArmuresComponent,
-    BolArmesComponent
+    BolArmesComponent,
+    BolCombatComponent
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
@@ -160,6 +162,15 @@ export class BolHerosCreateComponent implements OnDestroy {
       heroism_cost: this.heroismCostCtrl,
 
       carrieres: this.carrieresArray,
+
+
+      combat: this.fb.group({
+        initiative: this.initiativeCtrl,
+        melee: this.meleeCtrl,
+        tir: this.tirCtrl,
+        defense: this.defenseCtrl,
+      }),
+
       armures: this.armuresCtrl,
       armes: this.armesCtrl
 
@@ -370,6 +381,7 @@ export class BolHerosCreateComponent implements OnDestroy {
             heroism_cost: hero.heroism_cost,
             armures: hero.armures.map(item => item.armure_id),
             armes: hero.armes.map(item => item.arme_id),
+            combat: {}
           });
           this.traits.clear();
           this.avantages = [];

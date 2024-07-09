@@ -1,0 +1,42 @@
+<p-fieldset>
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-2">
+      <div class="cursor-pointer" (click)="aptitudesInfos.toggle($event)">
+        <i *ngIf="aptitudeErrors.length === 0" class="pi pi-info-circle"></i>
+        <div *ngIf="aptitudeErrors.length > 0" style="color: var(--error-color)">
+          <i class="pi pi-exclamation-triangle"></i> ({{ aptitudeErrors.length }})
+        </div>
+      </div>
+      <div>Combat</div>
+    </div>
+    <p-overlayPanel #aptitudesInfos>
+      <div class="flex flex-col gap-2">
+        <bol-message type="apt"></bol-message>
+        <bol-message type="form-errors" *ngIf="aptitudeErrors.length > 0" legend="Aptitudes invalides"
+                     [data]="aptitudeErrors"></bol-message>
+      </div>
+    </p-overlayPanel>
+  </ng-template>
+  <div class="flex gap-2" [formGroup]="aptitudesForm">
+    <div class="flex flex-col gap-1">
+      <div class="flex flex-col gap-1">
+        <label for="initiative">Initiative</label>
+        <p-inputNumber formControlName="initiative" inputId="initiative" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <label for="tir">Tir</label>
+        <p-inputNumber formControlName="tir" inputId="tir" />
+      </div>
+    </div>
+    <div class="flex flex-col gap-1">
+      <div class="flex flex-col gap-1">
+        <label for="melee">Melée</label>
+        <p-inputNumber formControlName="melee" inputId="melee" />
+      </div>
+      <div class="flex flex-col gap-1">
+        <label for="defense">Défense</label>
+        <p-inputNumber formControlName="defense" inputId="defense" maxFractionDigits="0" />
+      </div>
+    </div>
+  </div>
+</p-fieldset>
