@@ -44,7 +44,7 @@ class BolHerosController extends Controller
             'nom' => 'required|max:255',
             'joueur' => 'required|max:255'
         ]);
-        $heros = $request->except('traits', 'carrieres', 'armures', 'armes');
+        $heros = $request->input();
         $heros['user_id'] = Auth::id();
         $heros = BolHeros::create($heros);
         return response($heros);

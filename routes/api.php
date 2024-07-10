@@ -86,5 +86,5 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
 
     Route::post('/bol/heros/traits/update', [BolTraitController::class, 'update']);
     Route::delete('/bol/heros/traits/delete/{id}', [BolTraitController::class, 'delete']);
-    Route::delete('/bol/heros/delete/{id}', [BolHerosController::class, 'destroy']);
+    Route::delete('/bol/heros/delete/{id}', [BolHerosController::class, 'delete']);
 });

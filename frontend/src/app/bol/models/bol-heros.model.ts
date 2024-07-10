@@ -15,12 +15,12 @@ export interface BolHerosModel {
   aura: number,
   esprit: number,
   agilite: number,
-
-  initiative: number,
-  melee: number,
-  tir: number,
-  defense: number,
-
+  combat: {
+    initiative: number,
+    melee: number,
+    tir: number,
+    defense: number,
+  },
   region_id: number | null,
   region: string | null,
 
@@ -35,5 +35,5 @@ export interface BolHerosCombat {
   initiative: number,
   melee: number,
   tir: number,
-  defense: number, 
+  defense: number,
 }

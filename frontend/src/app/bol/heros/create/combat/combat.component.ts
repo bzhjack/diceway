@@ -1,5 +1,14 @@
 import { Component, effect, forwardRef, inject } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule, ValidationErrors } from "@angular/forms";
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  FormBuilder,
+  FormControl,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
+  ValidationErrors
+} from "@angular/forms";
 import { InputNumberModule } from "primeng/inputnumber";
 import { OverlayPanelModule } from "primeng/overlaypanel";
 import { BolMessageComponent } from "../../../message/message.component";
@@ -8,6 +17,7 @@ import { attributValidator, combatFormValidator } from "../create.validators";
 import { NgIf } from "@angular/common";
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BolHeroCreateTools } from '../create.tools';
+import {BolHerosCombat} from "../../../models/bol-heros.model";
 
 @Component({
   selector: 'app-combat',
@@ -25,6 +35,11 @@ import { BolHeroCreateTools } from '../create.tools';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => BolCombatComponent),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
       useExisting: forwardRef(() => BolCombatComponent),
       multi: true,
     }
@@ -49,76 +64,93 @@ export class BolCombatComponent implements ControlValueAccessor {
 
   protected formChange = toSignal(this.aptitudesForm!.valueChanges);
 
+  private onChange: (value: any) => void = () => {};
+  private onTouched: () => void = () => {};
 
   constructor() {
     effect(() => {
       if (this.formChange()) {
-        this.aptitudeErrors = [];
-        // Gestion des erreurs par aptitudes
-        Object.keys(this.aptitudesForm.controls).forEach(key => {
-          const controlErrors = this.aptitudesForm.get(key)?.errors;
-          if (controlErrors != null) {
-            Object.keys(controlErrors).forEach(keyError => {
-
-              if (['melee', 'tir', 'defense', 'initiative'].includes(key)) {
-                this.aptitudeErrors.push({
-                  control: BolHeroCreateTools.translate(key),
-                  error: BolHeroCreateTools.translate(keyError)
-                });
-              }
-              console.log(`Key control: ${key}, keyError: ${keyError}, error value: `, controlErrors[keyError]);
-            });
-          }
-        });
-
-        // Obtenir les erreurs globales du formulaire
-        const formErrors: ValidationErrors | null = this.aptitudesForm.errors;
-        // Si des erreurs globales sont présentes, les traiter
-        if (formErrors != null) {
-          // Itérer sur chaque erreur globale
-          Object.keys(formErrors).forEach(keyError => {
-            // Afficher dans la console le type d'erreur globale et la valeur de l'erreur
-            if (keyError === 'aptTooManyNegative') {
-              this.aptitudeErrors.push({ error: 'Tu as le droit de diminuer une seule fois une aptitude à -1', control: '' });
-            }
-            if (keyError === 'aptSumExceeded') {
-              this.aptitudeErrors.push({ error: 'La somme des aptitudes ne doit pas dépasser 4', control: '' });
-            }
-            console.log(`Global error: ${keyError}, err value: `, formErrors[keyError]);
-          });
-        }
-        this.aptitudeWarns = [];
-        if (this.aptitudeErrors.length === 0) {
-          const controlsAptIds = ['tir', 'melee', 'defense', 'initiative'];
-          const controlsAptArray = controlsAptIds.map(id => this.aptitudesForm.get(id));
-          const apts = controlsAptArray.map(ctrl => ctrl?.value);
-          const sumApt = apts.reduce((acc, val) => acc + val, 0);
-          if (sumApt < 4) {
-            this.aptitudeWarns.push({
-              step: 'Aptitudes',
-              warn: 'il manque ' + (4 - sumApt) + ' pts dans les aptitudes de combat'
-            });
-          }
-        }
+        this.updateErrors();
+        this.updateWarnings();
+        this.onChange(this.aptitudesForm.value);
+        this.onTouched();
       }
     });
   }
-  private onChange: (rating: number) => void = () => {
-    // do nothing by default
-  };
-  onTouched: () => void = () => {
-    // do nothing by default
-  };
+
+  private updateErrors() {
+    this.aptitudeErrors = [];
+    // Gestion des erreurs par aptitudes
+    Object.keys(this.aptitudesForm.controls).forEach(key => {
+      const controlErrors = this.aptitudesForm.get(key)?.errors;
+      if (controlErrors != null) {
+        Object.keys(controlErrors).forEach(keyError => {
+          if (['melee', 'tir', 'defense', 'initiative'].includes(key)) {
+            this.aptitudeErrors.push({
+              control: BolHeroCreateTools.translate(key),
+              error: BolHeroCreateTools.translate(keyError)
+            });
+          }
+          console.log(`COMBAT: Key control: ${key}, keyError: ${keyError}, error value: `, controlErrors[keyError]);
+        });
+      }
+    });
+
+    // Obtenir les erreurs globales du formulaire
+    const formErrors: ValidationErrors | null = this.aptitudesForm.errors;
+    // Si des erreurs globales sont présentes, les traiter
+    if (formErrors != null) {
+      Object.keys(formErrors).forEach(keyError => {
+        if (keyError === 'aptTooManyNegative') {
+          this.aptitudeErrors.push({ error: 'Tu as le droit de diminuer une seule fois une aptitude à -1', control: '' });
+        }
+        if (keyError === 'aptSumExceeded') {
+          this.aptitudeErrors.push({ error: 'La somme des aptitudes ne doit pas dépasser 4', control: '' });
+        }
+        console.log(`Global error: ${keyError}, err value: `, formErrors[keyError]);
+      });
+    }
+  }
+
+  private updateWarnings() {
+    this.aptitudeWarns = [];
+    if (this.aptitudeErrors.length === 0) {
+      const controlsAptIds = ['tir', 'melee', 'defense', 'initiative'];
+      const controlsAptArray = controlsAptIds.map(id => this.aptitudesForm.get(id));
+      const apts = controlsAptArray.map(ctrl => ctrl?.value);
+      const sumApt = apts.reduce((acc, val) => acc + val, 0);
+      if (sumApt < 4) {
+        this.aptitudeWarns.push({
+          step: 'Aptitudes',
+          warn: 'il manque ' + (4 - sumApt) + ' pts dans les aptitudes de combat'
+        });
+      }
+    }
+  }
+
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
+
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
+
   writeValue(value: any): void {
     if (value) {
       console.log('combat', value);
-      this.aptitudesForm.patchValue(value);
+      this.aptitudesForm.patchValue(value, { emitEvent: false });
     }
+  }
+
+  setDisabledState?(isDisabled: boolean): void {
+    if (isDisabled) {
+      this.aptitudesForm.disable();
+    } else {
+      this.aptitudesForm.enable();
+    }
+  }
+  validate(control: AbstractControl): ValidationErrors | null {
+    return this.aptitudesForm.valid ? null : { invalidForm: { valid: false, message: "Aptitudes form is invalid" } };
   }
 }

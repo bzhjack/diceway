@@ -87,7 +87,6 @@ export class BolHerosCreateComponent implements OnDestroy {
   private ref: DynamicDialogRef | undefined;
 
   attributErrors: { control: string, error: string }[] = [];
-  aptitudeErrors: { control: string, error: string }[] = [];
   carriereErrors: { control: string, error: string }[] = [];
 
   creationWarns: { step: string, warn: string }[] = [];
@@ -150,12 +149,6 @@ export class BolHerosCreateComponent implements OnDestroy {
       esprit: this.espritCtrl,
       aura: this.auraCtrl,
 
-      initiative: this.initiativeCtrl,
-      melee: this.meleeCtrl,
-      tir: this.tirCtrl,
-      defense: this.defenseCtrl,
-
-
       region_id: this.regionIdCtrl,
       region: this.regionCtrl,
 
@@ -195,6 +188,10 @@ export class BolHerosCreateComponent implements OnDestroy {
       this.logFormErrors();
       this.logFormWarns();
     });
+    this.herosForm.get('combat')?.statusChanges.subscribe(status => {
+      console.log('Combat status changed:', status);
+      // Vous pouvez ajouter une logique supplémentaire ici si nécessaire
+    });
     this.vigueurCtrl.valueChanges.subscribe((vigueur) => {
       if (this.vigueurCtrl.valid && vigueur !== null) {
         this.vitaliteCtrl.setValue(10 + vigueur, {emitEvent: false});
@@ -219,19 +216,6 @@ export class BolHerosCreateComponent implements OnDestroy {
       const sumAttr = attrs.reduce((acc, val) => acc + val, 0);
       if (sumAttr < 4) {
         this.creationWarns.push({step: 'Attributs', warn: 'il manque ' + (4 - sumAttr) + ' pts dans les attributs'});
-      }
-    }
-    // Controle de la somme des aptitudes de combats
-    if (this.aptitudeErrors.length === 0) {
-      const controlsAptIds = ['tir', 'melee', 'defense', 'initiative'];
-      const controlsAptArray = controlsAptIds.map(id => this.herosForm.get(id));
-      const apts = controlsAptArray.map(ctrl => ctrl?.value);
-      const sumApt = apts.reduce((acc, val) => acc + val, 0);
-      if (sumApt < 4) {
-        this.creationWarns.push({
-          step: 'Aptitudes',
-          warn: 'il manque ' + (4 - sumApt) + ' pts dans les aptitudes de combat'
-        });
       }
     }
     // Test sur l'existance d'une région
@@ -269,7 +253,6 @@ export class BolHerosCreateComponent implements OnDestroy {
 
   logFormErrors(): void {
     this.attributErrors = [];
-    this.aptitudeErrors = [];
     this.carriereErrors = [];
 
     Object.keys(this.herosForm.controls).forEach(key => {
@@ -278,12 +261,6 @@ export class BolHerosCreateComponent implements OnDestroy {
         Object.keys(controlErrors).forEach(keyError => {
           if (['vigueur', 'agilite', 'aura', 'esprit'].includes(key)) {
             this.attributErrors.push({
-              control: BolHeroCreateTools.translate(key),
-              error: BolHeroCreateTools.translate(keyError)
-            });
-          }
-          if (['melee', 'tir', 'defense', 'initiative'].includes(key)) {
-            this.aptitudeErrors.push({
               control: BolHeroCreateTools.translate(key),
               error: BolHeroCreateTools.translate(keyError)
             });
@@ -322,12 +299,6 @@ export class BolHerosCreateComponent implements OnDestroy {
         if (keyError === 'attrSumExceeded') {
           this.attributErrors.push({error: 'La somme des attributs ne doit pas dépasser 4', control: ''});
         }
-        if (keyError === 'aptTooManyNegative') {
-          this.aptitudeErrors.push({error: 'Tu as le droit de diminuer une seule fois une aptitude à -1', control: ''});
-        }
-        if (keyError === 'aptSumExceeded') {
-          this.aptitudeErrors.push({error: 'La somme des aptitudes ne doit pas dépasser 4', control: ''});
-        }
         if (keyError === 'carrSumExceeded') {
           this.carriereErrors.push({error: 'La somme des carrières ne doit pas dépasser 4', control: ''});
         }
@@ -365,24 +336,12 @@ export class BolHerosCreateComponent implements OnDestroy {
             aura: hero.aura,
             esprit: hero.esprit,
             agilite: hero.agilite,
-
-            initiative: hero.initiative,
-            melee: hero.melee,
-            tir: hero.tir,
-            defense: hero.defense,
-
             region_id: hero.region_id,
             region: hero.region,
             heroism_cost: hero.heroism_cost,
             armures: hero.armures.map(item => item.armure_id),
             armes: hero.armes.map(item => item.arme_id),
-            combat: {
-              defense: hero.defense,
-              initiative: hero.initiative,
-              melee: hero.melee,
-              tir: hero.tir
-
-            }
+            combat: hero.combat
           });
           this.traits.clear();
           this.avantages = [];

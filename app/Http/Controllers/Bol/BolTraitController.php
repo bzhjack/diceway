@@ -61,7 +61,7 @@ class BolTraitController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function destroy(Request $request): \Illuminate\Http\JsonResponse
+    public function delete(Request $request): \Illuminate\Http\JsonResponse
     {
         $heros = $request->except('traits');
         $id = $heros["id"];
