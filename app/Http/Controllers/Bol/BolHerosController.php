@@ -55,15 +55,23 @@ class BolHerosController extends Controller
      */
     public function update(Request $request)
     {
-        $heros = $request->except('traits', 'carrieres', 'armures', 'armes');
+        $heros = $request->except('traits', 'carrieres', 'armures', 'armes', 'combat');
+        $combat = $request->input('combat');
         $traits = $request->input('traits');
         $carrieres = $request->input('carrieres');
         $herosId = $heros['id'];
+
+        $heros['initiative'] = $combat['initiative'];
+        $heros['melee'] = $combat['melee'];
+        $heros['tir'] = $combat['tir'];
+        $heros['defense'] = $combat['defense'];
+
         $hero = BolHeros::where('user_id', Auth::id())->where('id', $herosId)->get()->first();
         if ($hero === null) {
             return response()->json(['error' => 'Hero not found'], 404);
         }
         BolHeros::where('id', $herosId)->update($heros);
+
         // Maj des carrières
         foreach ($carrieres as $carriere) {
             BolCarriereController::update($carriere, $herosId);
@@ -71,7 +79,8 @@ class BolHerosController extends Controller
         if ($heros["region_id"] === null || count($traits) === 0) {
             BolHerosTrait::where('heros_id', $herosId)->delete();
         }
-        return response($heros);
+        $result = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme')->where('user_id', Auth::id())->where('id', $herosId)->get()->first();
+        return response($result);
     }
 
 
