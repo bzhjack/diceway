@@ -15,7 +15,7 @@ import {ToolbarModule} from "primeng/toolbar";
 import {ButtonModule} from "primeng/button";
 import {SplitButtonModule} from "primeng/splitbutton";
 import {BolHerosService} from "../../services/bol-heros.service";
-import {BolHerosModel} from "../../models/bol-heros.model";
+import {BolHerosCombat, BolHerosModel} from "../../models/bol-heros.model";
 import {debounceTime, forkJoin, Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
@@ -43,6 +43,7 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import {BolArmuresComponent} from "./armures/armures.component";
 import {BolArmesComponent} from "./armes/armes.component";
+import {BolCombatComponent} from "./combat/combat.component";
 
 
 @Component({
@@ -72,7 +73,8 @@ import {BolArmesComponent} from "./armes/armes.component";
     Ripple,
     NgTemplateOutlet,
     BolArmuresComponent,
-    BolArmesComponent
+    BolArmesComponent,
+    BolCombatComponent
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
@@ -85,7 +87,6 @@ export class BolHerosCreateComponent implements OnDestroy {
   private ref: DynamicDialogRef | undefined;
 
   attributErrors: { control: string, error: string }[] = [];
-  aptitudeErrors: { control: string, error: string }[] = [];
   carriereErrors: { control: string, error: string }[] = [];
 
   creationWarns: { step: string, warn: string }[] = [];
@@ -131,6 +132,7 @@ export class BolHerosCreateComponent implements OnDestroy {
 
   public armuresCtrl = new FormControl<number[]>([]);
   public armesCtrl = new FormControl<number[]>([]);
+  public combatCtrl = new FormControl<BolHerosCombat>({defense: 0,initiative: 0,melee: 0,tir: 0});
 
   herosForm = this.fb.group(
     {
@@ -147,12 +149,6 @@ export class BolHerosCreateComponent implements OnDestroy {
       esprit: this.espritCtrl,
       aura: this.auraCtrl,
 
-      initiative: this.initiativeCtrl,
-      melee: this.meleeCtrl,
-      tir: this.tirCtrl,
-      defense: this.defenseCtrl,
-
-
       region_id: this.regionIdCtrl,
       region: this.regionCtrl,
 
@@ -160,6 +156,9 @@ export class BolHerosCreateComponent implements OnDestroy {
       heroism_cost: this.heroismCostCtrl,
 
       carrieres: this.carrieresArray,
+
+
+      combat: this.combatCtrl,
       armures: this.armuresCtrl,
       armes: this.armesCtrl
 
@@ -215,19 +214,6 @@ export class BolHerosCreateComponent implements OnDestroy {
         this.creationWarns.push({step: 'Attributs', warn: 'il manque ' + (4 - sumAttr) + ' pts dans les attributs'});
       }
     }
-    // Controle de la somme des aptitudes de combats
-    if (this.aptitudeErrors.length === 0) {
-      const controlsAptIds = ['tir', 'melee', 'defense', 'initiative'];
-      const controlsAptArray = controlsAptIds.map(id => this.herosForm.get(id));
-      const apts = controlsAptArray.map(ctrl => ctrl?.value);
-      const sumApt = apts.reduce((acc, val) => acc + val, 0);
-      if (sumApt < 4) {
-        this.creationWarns.push({
-          step: 'Aptitudes',
-          warn: 'il manque ' + (4 - sumApt) + ' pts dans les aptitudes de combat'
-        });
-      }
-    }
     // Test sur l'existance d'une région
     if (!this.regionIdCtrl.value) {
       this.creationWarns.push({
@@ -263,7 +249,6 @@ export class BolHerosCreateComponent implements OnDestroy {
 
   logFormErrors(): void {
     this.attributErrors = [];
-    this.aptitudeErrors = [];
     this.carriereErrors = [];
 
     Object.keys(this.herosForm.controls).forEach(key => {
@@ -272,12 +257,6 @@ export class BolHerosCreateComponent implements OnDestroy {
         Object.keys(controlErrors).forEach(keyError => {
           if (['vigueur', 'agilite', 'aura', 'esprit'].includes(key)) {
             this.attributErrors.push({
-              control: BolHeroCreateTools.translate(key),
-              error: BolHeroCreateTools.translate(keyError)
-            });
-          }
-          if (['melee', 'tir', 'defense', 'initiative'].includes(key)) {
-            this.aptitudeErrors.push({
               control: BolHeroCreateTools.translate(key),
               error: BolHeroCreateTools.translate(keyError)
             });
@@ -316,12 +295,6 @@ export class BolHerosCreateComponent implements OnDestroy {
         if (keyError === 'attrSumExceeded') {
           this.attributErrors.push({error: 'La somme des attributs ne doit pas dépasser 4', control: ''});
         }
-        if (keyError === 'aptTooManyNegative') {
-          this.aptitudeErrors.push({error: 'Tu as le droit de diminuer une seule fois une aptitude à -1', control: ''});
-        }
-        if (keyError === 'aptSumExceeded') {
-          this.aptitudeErrors.push({error: 'La somme des aptitudes ne doit pas dépasser 4', control: ''});
-        }
         if (keyError === 'carrSumExceeded') {
           this.carriereErrors.push({error: 'La somme des carrières ne doit pas dépasser 4', control: ''});
         }
@@ -342,7 +315,6 @@ export class BolHerosCreateComponent implements OnDestroy {
       this.hs.carrieres()
     ]).subscribe({
         next: (data) => {
-          console.log(data);
           this.carrieresList = data[1];
           let hero: BolHerosModel = data[0];
 
@@ -359,17 +331,12 @@ export class BolHerosCreateComponent implements OnDestroy {
             aura: hero.aura,
             esprit: hero.esprit,
             agilite: hero.agilite,
-
-            initiative: hero.initiative,
-            melee: hero.melee,
-            tir: hero.tir,
-            defense: hero.defense,
-
             region_id: hero.region_id,
             region: hero.region,
             heroism_cost: hero.heroism_cost,
             armures: hero.armures.map(item => item.armure_id),
             armes: hero.armes.map(item => item.arme_id),
+            combat: hero.combat
           });
           this.traits.clear();
           this.avantages = [];

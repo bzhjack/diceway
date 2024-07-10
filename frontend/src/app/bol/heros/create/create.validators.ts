@@ -87,3 +87,19 @@ export const carriereValidator: ValidatorFn = (control: AbstractControl): Valida
   return null;
 };
 
+export const combatFormValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  let errors = {};
+   // Controle des aptitudes de combat
+   const controlsAptIds = ['tir', 'melee', 'defense', 'initiative'];
+   const controlsAptArray = controlsAptIds.map(id => control.get(id));
+   const apts = controlsAptArray.map(ctrl => ctrl?.value);
+   const countNegativeApt = apts.filter(value => value === -1).length;
+   if (countNegativeApt > 1) {
+     errors = Object.assign(errors, {'aptTooManyNegative': true});
+   }
+   const sumApt = apts.reduce((acc, val) => acc + val, 0);
+   if (sumApt > 4) {
+     errors = Object.assign(errors, { 'aptSumExceeded': true });
+   }
+   return errors;
+}
