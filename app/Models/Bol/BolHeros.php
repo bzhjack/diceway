@@ -15,8 +15,12 @@ class BolHeros extends Model
     protected $table = 'bol_heros';
     public $incrementing = false;
     protected $keyType = 'uuid';
-    protected $hidden = ['user_id', 'initiative','melee','tir','defense'];
-    protected $appends = ['combat'];
+    protected $hidden = [
+    'user_id',
+    'initiative','melee','tir','defense',
+     'vigueur', 'agilite', 'esprit', 'aura'
+    ];
+    protected $appends = ['combat', 'attributs'];
     protected $fillable = [
         'user_id',
         'joueur',
@@ -45,7 +49,6 @@ class BolHeros extends Model
     {
         return $this->HasMany(BolHerosArme::class, 'heros_id', 'id');
     }
- // Accesseur pour l'attribut "combat"
     public function getCombatAttribute()
     {
         return [
@@ -53,6 +56,15 @@ class BolHeros extends Model
             'melee' => $this->melee,
             'tir' => $this->tir,
             'defense' => $this->defense,
+        ];
+    }
+    public function getAttributsAttribute()
+    {
+        return [
+            'vigueur' => $this->vigueur,
+            'agilite' => $this->agilite,
+            'esprit' => $this->esprit,
+            'aura' => $this->aura,
         ];
     }
 }

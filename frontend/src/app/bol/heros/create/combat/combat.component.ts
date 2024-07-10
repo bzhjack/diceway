@@ -90,7 +90,6 @@ export class BolCombatComponent implements ControlValueAccessor {
               error: BolHeroCreateTools.translate(keyError)
             });
           }
-          console.log(`COMBAT: Key control: ${key}, keyError: ${keyError}, error value: `, controlErrors[keyError]);
         });
       }
     });
@@ -106,7 +105,6 @@ export class BolCombatComponent implements ControlValueAccessor {
         if (keyError === 'aptSumExceeded') {
           this.aptitudeErrors.push({ error: 'La somme des aptitudes ne doit pas dépasser 4', control: '' });
         }
-        console.log(`Global error: ${keyError}, err value: `, formErrors[keyError]);
       });
     }
   }

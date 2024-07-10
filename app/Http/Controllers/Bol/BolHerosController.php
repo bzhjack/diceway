@@ -55,12 +55,16 @@ class BolHerosController extends Controller
      */
     public function update(Request $request)
     {
-        $heros = $request->except('traits', 'carrieres', 'armures', 'armes', 'combat');
-        $combat = $request->input('combat');
-        $traits = $request->input('traits');
-        $carrieres = $request->input('carrieres');
+        $heros = $request->except('traits', 'carrieres', 'armures', 'armes', 'combat', 'attributs');
         $herosId = $heros['id'];
 
+        $attributs = $request->input('attributs');
+        $heros['vigueur'] = $attributs['vigueur'];
+        $heros['agilite'] = $attributs['agilite'];
+        $heros['esprit'] = $attributs['esprit'];
+        $heros['aura'] = $attributs['aura'];
+
+        $combat = $request->input('combat');
         $heros['initiative'] = $combat['initiative'];
         $heros['melee'] = $combat['melee'];
         $heros['tir'] = $combat['tir'];
@@ -73,9 +77,11 @@ class BolHerosController extends Controller
         BolHeros::where('id', $herosId)->update($heros);
 
         // Maj des carrières
+        $carrieres = $request->input('carrieres');
         foreach ($carrieres as $carriere) {
             BolCarriereController::update($carriere, $herosId);
         }
+        $traits = $request->input('traits');
         if ($heros["region_id"] === null || count($traits) === 0) {
             BolHerosTrait::where('heros_id', $herosId)->delete();
         }

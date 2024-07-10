@@ -60,49 +60,7 @@
             <!--------------->
             <!-- Attributs -->
             <!--------------->
-            <p-fieldset>
-              <ng-template pTemplate="header">
-                <div class="flex items-center gap-2">
-                  <div class="cursor-pointer" (click)="attributInfos.toggle($event)">
-                    <i *ngIf="attributErrors.length === 0" class="pi pi-info-circle"></i>
-                    <div *ngIf="attributErrors.length > 0" style="color: var(--error-color)">
-                      <i class="pi pi-exclamation-triangle"></i> ({{ attributErrors.length }})
-                    </div>
-                  </div>
-                  <div>Attributs</div>
-                </div>
-                <p-overlayPanel #attributInfos>
-                  <div class="flex flex-col gap-2">
-                    <bol-message type="attr"></bol-message>
-                    <bol-message type="form-errors" *ngIf="attributErrors.length > 0" legend="Attributs invalides"
-                      [data]="attributErrors"></bol-message>
-                  </div>
-                </p-overlayPanel>
-              </ng-template>
-
-              <div class="flex gap-2">
-                <div class="flex flex-col gap-1">
-                  <div class="flex flex-col gap-1">
-                    <label for="vigueur">Vigueur</label>
-                    <p-inputNumber formControlName="vigueur" inputId="vigueur" />
-                  </div>
-                  <div class="flex flex-col gap-1">
-                    <label for="agilite">Agilité</label>
-                    <p-inputNumber formControlName="agilite" inputId="agilite" />
-                  </div>
-                </div>
-                <div class="flex flex-col gap-1">
-                  <div class="flex flex-col gap-1">
-                    <label for="esprit">Esprit</label>
-                    <p-inputNumber formControlName="esprit" inputId="esprit" />
-                  </div>
-                  <div class="flex flex-col gap-1">
-                    <label for="aura">Aura</label>
-                    <p-inputNumber formControlName="aura" inputId="aura" maxFractionDigits="0" />
-                  </div>
-                </div>
-              </div>
-            </p-fieldset>
+            <app-attributs formControlName="attributs"></app-attributs>
             <!--------------->
             <!-- Aptitudes -->
             <!--------------->

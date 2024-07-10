@@ -15,7 +15,7 @@ import {ToolbarModule} from "primeng/toolbar";
 import {ButtonModule} from "primeng/button";
 import {SplitButtonModule} from "primeng/splitbutton";
 import {BolHerosService} from "../../services/bol-heros.service";
-import {BolHerosCombat, BolHerosModel} from "../../models/bol-heros.model";
+import {BolHerosAttributs, BolHerosCombat, BolHerosModel} from "../../models/bol-heros.model";
 import {debounceTime, forkJoin, Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
@@ -44,6 +44,7 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import {BolArmuresComponent} from "./armures/armures.component";
 import {BolArmesComponent} from "./armes/armes.component";
 import {BolCombatComponent} from "./combat/combat.component";
+import {BolAttributsComponent} from "./attributs/attributs.component";
 
 
 @Component({
@@ -74,7 +75,8 @@ import {BolCombatComponent} from "./combat/combat.component";
     NgTemplateOutlet,
     BolArmuresComponent,
     BolArmesComponent,
-    BolCombatComponent
+    BolCombatComponent,
+    BolAttributsComponent
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
@@ -85,8 +87,6 @@ import {BolCombatComponent} from "./combat/combat.component";
 export class BolHerosCreateComponent implements OnDestroy {
   private subs?: Subscription;
   private ref: DynamicDialogRef | undefined;
-
-  attributErrors: { control: string, error: string }[] = [];
   carriereErrors: { control: string, error: string }[] = [];
 
   creationWarns: { step: string, warn: string }[] = [];
@@ -107,19 +107,6 @@ export class BolHerosCreateComponent implements OnDestroy {
   public regionIdCtrl = new FormControl<number | null>(null);
   public regionCtrl = new FormControl<string | null>(null);
 
-  // Attribut
-  public vigueurCtrl = new FormControl<number | null>(0, attributValidator);
-  public agiliteCtrl = new FormControl<number | null>(0, attributValidator);
-  public espritCtrl = new FormControl<number | null>(0, attributValidator);
-  public auraCtrl = new FormControl<number | null>(0, attributValidator);
-
-
-  // Combat
-  public initiativeCtrl = new FormControl<number | null>(0, attributValidator);
-  public meleeCtrl = new FormControl<number | null>(0, attributValidator);
-  public tirCtrl = new FormControl<number | null>(0, attributValidator);
-  public defenseCtrl = new FormControl<number | null>(0, attributValidator);
-
   // Champs calculés
   public vitaliteCtrl = new FormControl<number | null>(0);
   public heroismeCtrl = new FormControl<number | null>(5);
@@ -133,6 +120,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   public armuresCtrl = new FormControl<number[]>([]);
   public armesCtrl = new FormControl<number[]>([]);
   public combatCtrl = new FormControl<BolHerosCombat>({defense: 0,initiative: 0,melee: 0,tir: 0});
+  public attributsCtrl = new FormControl<BolHerosAttributs>({vigueur: 0,agilite: 0,esprit: 0,aura: 0});
 
   herosForm = this.fb.group(
     {
@@ -140,24 +128,16 @@ export class BolHerosCreateComponent implements OnDestroy {
       joueur: this.joueurCtrl,
       nom: this.nomCtrl,
       avatar: this.avatarCtrl,
-
       heroisme: this.heroismeCtrl,
       vitalite: this.vitaliteCtrl,
-
-      vigueur: this.vigueurCtrl,
-      agilite: this.agiliteCtrl,
-      esprit: this.espritCtrl,
-      aura: this.auraCtrl,
-
       region_id: this.regionIdCtrl,
       region: this.regionCtrl,
-
       traits: this.traitsArray,
       heroism_cost: this.heroismCostCtrl,
 
       carrieres: this.carrieresArray,
 
-
+      attributs: this.attributsCtrl,
       combat: this.combatCtrl,
       armures: this.armuresCtrl,
       armes: this.armesCtrl
@@ -188,11 +168,11 @@ export class BolHerosCreateComponent implements OnDestroy {
       this.logFormErrors();
       this.logFormWarns();
     });
-    this.vigueurCtrl.valueChanges.subscribe((vigueur) => {
+    /*this.vigueurCtrl.valueChanges.subscribe((vigueur) => {
       if (this.vigueurCtrl.valid && vigueur !== null) {
         this.vitaliteCtrl.setValue(10 + vigueur, {emitEvent: false});
       }
-    })
+    })*/
   }
 
   ngOnDestroy() {
@@ -204,16 +184,6 @@ export class BolHerosCreateComponent implements OnDestroy {
    */
   logFormWarns() {
     this.creationWarns = [];
-    // Controle somme des attributs
-    if (this.attributErrors.length === 0) {
-      const controlsAttrIds = ['vigueur', 'agilite', 'aura', 'esprit'];
-      const controlsAttrArray = controlsAttrIds.map(id => this.herosForm.get(id));
-      const attrs = controlsAttrArray.map(ctrl => ctrl?.value);
-      const sumAttr = attrs.reduce((acc, val) => acc + val, 0);
-      if (sumAttr < 4) {
-        this.creationWarns.push({step: 'Attributs', warn: 'il manque ' + (4 - sumAttr) + ' pts dans les attributs'});
-      }
-    }
     // Test sur l'existance d'une région
     if (!this.regionIdCtrl.value) {
       this.creationWarns.push({
@@ -248,23 +218,7 @@ export class BolHerosCreateComponent implements OnDestroy {
    */
 
   logFormErrors(): void {
-    this.attributErrors = [];
     this.carriereErrors = [];
-
-    Object.keys(this.herosForm.controls).forEach(key => {
-      const controlErrors = this.herosForm.get(key)?.errors;
-      if (controlErrors != null) {
-        Object.keys(controlErrors).forEach(keyError => {
-          if (['vigueur', 'agilite', 'aura', 'esprit'].includes(key)) {
-            this.attributErrors.push({
-              control: BolHeroCreateTools.translate(key),
-              error: BolHeroCreateTools.translate(keyError)
-            });
-          }
-          console.log(`Key control: ${key}, keyError: ${keyError}, error value: `, controlErrors[keyError]);
-        });
-      }
-    });
     // Check des carrières
     this.carrieres.controls.forEach((control, index) => {
       const errors = control.get('value')?.errors;
@@ -289,12 +243,6 @@ export class BolHerosCreateComponent implements OnDestroy {
       // Itérer sur chaque erreur globale
       Object.keys(formErrors).forEach(keyError => {
         // Afficher dans la console le type d'erreur globale et la valeur de l'erreur
-        if (keyError === 'attrTooManyNegative') {
-          this.attributErrors.push({error: 'Tu as le droit de diminuer une seule fois un attribut à -1', control: ''});
-        }
-        if (keyError === 'attrSumExceeded') {
-          this.attributErrors.push({error: 'La somme des attributs ne doit pas dépasser 4', control: ''});
-        }
         if (keyError === 'carrSumExceeded') {
           this.carriereErrors.push({error: 'La somme des carrières ne doit pas dépasser 4', control: ''});
         }
@@ -327,16 +275,13 @@ export class BolHerosCreateComponent implements OnDestroy {
             vitalite: hero.vitalite,
             heroisme: hero.heroisme,
 
-            vigueur: hero.vigueur,
-            aura: hero.aura,
-            esprit: hero.esprit,
-            agilite: hero.agilite,
             region_id: hero.region_id,
             region: hero.region,
             heroism_cost: hero.heroism_cost,
             armures: hero.armures.map(item => item.armure_id),
             armes: hero.armes.map(item => item.arme_id),
-            combat: hero.combat
+            combat: hero.combat,
+            attributs: hero.attributs
           });
           this.traits.clear();
           this.avantages = [];

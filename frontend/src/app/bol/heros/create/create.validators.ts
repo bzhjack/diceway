@@ -103,3 +103,19 @@ export const combatFormValidator: ValidatorFn = (control: AbstractControl): Vali
    }
    return errors;
 }
+export const attributsFormValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  let errors = {};
+  // Controle des aptitudes de combat
+  const controlsAptIds = ['vigueur', 'agilite', 'aura', 'esprit'];
+  const controlsAptArray = controlsAptIds.map(id => control.get(id));
+  const apts = controlsAptArray.map(ctrl => ctrl?.value);
+  const countNegativeApt = apts.filter(value => value === -1).length;
+  if (countNegativeApt > 1) {
+    errors = Object.assign(errors, {'attrTooManyNegative': true});
+  }
+  const sumApt = apts.reduce((acc, val) => acc + val, 0);
+  if (sumApt > 4) {
+    errors = Object.assign(errors, { 'attrSumExceeded': true });
+  }
+  return errors;
+}
