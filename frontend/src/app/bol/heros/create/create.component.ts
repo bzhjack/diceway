@@ -188,10 +188,6 @@ export class BolHerosCreateComponent implements OnDestroy {
       this.logFormErrors();
       this.logFormWarns();
     });
-    this.herosForm.get('combat')?.statusChanges.subscribe(status => {
-      console.log('Combat status changed:', status);
-      // Vous pouvez ajouter une logique supplémentaire ici si nécessaire
-    });
     this.vigueurCtrl.valueChanges.subscribe((vigueur) => {
       if (this.vigueurCtrl.valid && vigueur !== null) {
         this.vitaliteCtrl.setValue(10 + vigueur, {emitEvent: false});
@@ -319,7 +315,6 @@ export class BolHerosCreateComponent implements OnDestroy {
       this.hs.carrieres()
     ]).subscribe({
         next: (data) => {
-          console.log(data);
           this.carrieresList = data[1];
           let hero: BolHerosModel = data[0];
 

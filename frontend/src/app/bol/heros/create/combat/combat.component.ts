@@ -1,4 +1,4 @@
-import { Component, effect, forwardRef, inject } from '@angular/core';
+import {Component, effect, forwardRef, inject} from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -9,15 +9,14 @@ import {
   ReactiveFormsModule,
   ValidationErrors
 } from "@angular/forms";
-import { InputNumberModule } from "primeng/inputnumber";
-import { OverlayPanelModule } from "primeng/overlaypanel";
-import { BolMessageComponent } from "../../../message/message.component";
-import { FieldsetModule } from "primeng/fieldset";
-import { attributValidator, combatFormValidator } from "../create.validators";
-import { NgIf } from "@angular/common";
-import { toSignal } from '@angular/core/rxjs-interop';
-import { BolHeroCreateTools } from '../create.tools';
-import {BolHerosCombat} from "../../../models/bol-heros.model";
+import {InputNumberModule} from "primeng/inputnumber";
+import {OverlayPanelModule} from "primeng/overlaypanel";
+import {BolMessageComponent} from "../../../message/message.component";
+import {FieldsetModule} from "primeng/fieldset";
+import {attributValidator, combatFormValidator} from "../create.validators";
+import {NgIf} from "@angular/common";
+import {toSignal} from '@angular/core/rxjs-interop';
+import {BolHeroCreateTools} from '../create.tools';
 
 @Component({
   selector: 'app-combat',
@@ -138,8 +137,7 @@ export class BolCombatComponent implements ControlValueAccessor {
 
   writeValue(value: any): void {
     if (value) {
-      console.log('combat', value);
-      this.aptitudesForm.patchValue(value, { emitEvent: false });
+      this.aptitudesForm.patchValue(value);
     }
   }
 
