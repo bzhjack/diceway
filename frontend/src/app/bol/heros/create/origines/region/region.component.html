@@ -1,6 +1,6 @@
-<div *ngIf="ready" class="region-container flex gap-2">
+<div class="region-container flex gap-2">
   <div class="dw-panel h-full">
-    <img class="region-carte" id="bol-carte" src="/frontend/assets/bol/cartes/carte{{currentRegion ? '-'+currentRegion.id : ''}}.jpg" alt="carte"/>
+    <img class="region-carte" id="bol-carte" src="/frontend/assets/bol/cartes/carte{{selectedRegion() ? '-'+ regionId() : ''}}.jpg" alt="carte"/>
   </div>
   <div class="flex flex-col gap-1 w-full">
     <p-messages severity="info">
@@ -15,25 +15,25 @@
     <p-fieldset legend="Régions">
       <p-scrollPanel #regionPanel [style]="{height: '160px'}">
         <div class="flex flex-wrap gap-2">
-          <p-tag *ngFor="let region of regions;"
+          <p-tag *ngFor="let region of regionList();"
                  id="region-{{region.id}}"
                  class="region-tag"
                  (click)="setCurrentRegion(region)"
-                 [styleClass]="region.id === currentRegion?.id ? 'selected-region' : 'unselected-region'"
+                 [styleClass]="region.id === regionId() ? 'selected-region' : 'unselected-region'"
                  [value]="region.region"
           ></p-tag>
         </div>
       </p-scrollPanel>
     </p-fieldset>
     <!-- Si pas de région sélectionnée -->
-    <div *ngIf="!currentRegion" class="flex-auto flex flex-col gap-2 items-center">
+    <div *ngIf="!selectedRegion()" class="flex-auto flex flex-col gap-2 items-center">
       <div class="relative" style="height: 70px;">
         <div class="arrow">&#8674;</div>
       </div>
       <div style="color: darkgrey; font-size: 3vw; font-weight: lighter;white-space: nowrap">Sélectionnez une région d'origine.</div>
     </div>
     <!-- Si cote de feu -->
-    <div *ngIf="currentRegion && currentRegion.id === 1" class="flex-auto flex flex-col gap-2">
+    <div *ngIf="regionId() === 1" class="flex-auto flex flex-col gap-2">
       <p-messages severity="warn">
         <ng-template pTemplate>
           <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
@@ -45,7 +45,7 @@
         </ng-template>
       </p-messages>
     </div>
-    <div *ngIf="currentRegion && currentRegion.id === 13" class="flex-auto flex flex-col gap-2">
+    <div *ngIf="regionId() === 13" class="flex-auto flex flex-col gap-2">
       <p-messages severity="warn">
         <ng-template pTemplate>
           <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
@@ -56,7 +56,7 @@
         </ng-template>
       </p-messages>
     </div>
-    <div *ngIf="currentRegion && currentRegion.id === 16" class="flex-auto flex flex-col gap-2">
+    <div *ngIf="regionId() === 16" class="flex-auto flex flex-col gap-2">
       <p-messages severity="warn">
         <ng-template pTemplate>
           <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
@@ -67,8 +67,8 @@
       </p-messages>
     </div>
 
-    <div *ngIf="currentRegion && ![1,13,16].includes(currentRegion.id)" class="flex-auto flex flex-col gap-2">
-      <div *ngIf="currentRegion.noms.length == 0" class="flex flex-col gap-2 pt-2">
+    <div *ngIf="![1,13,16].includes(regionId())" class="flex-auto flex flex-col gap-2">
+      <div *ngIf="selectedRegion()?.noms?.length == 0" class="flex flex-col gap-2 pt-2">
         <p-messages severity="warn">
           <ng-template pTemplate>
             <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
@@ -78,22 +78,22 @@
           </ng-template>
         </p-messages>
       </div>
-      <div *ngIf="currentRegion.noms.length > 0" class="flex gap-2">
+      <div *ngIf="selectedRegion()?.noms?.length" class="flex gap-2">
         <p-fieldset legend="Noms Masculins" class="w-1/2">
           <p-scrollPanel [style]="{height: '55px'}">
             <div class="flex gap-2 flex-wrap">
-              <p-tag (click)="selectedName = nom.nom"
-                     [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom"
-                     *ngFor="let nom of currentRegion?.nomsMasculins"></p-tag>
+              <p-tag (click)="selectedName.set(nom.nom)"
+                     [styleClass]="selectedName() === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom"
+                     *ngFor="let nom of nomsMasculins()"></p-tag>
             </div>
           </p-scrollPanel>
         </p-fieldset>
         <p-fieldset legend="Noms Féminins" class="w-1/2">
           <p-scrollPanel [style]="{height: '55px'}">
             <div class="flex gap-2 flex-wrap">
-              <p-tag (click)="selectedName = nom.nom"
-                     [styleClass]="selectedName === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom"
-                     *ngFor="let nom of currentRegion?.nomsFeminins"></p-tag>
+              <p-tag (click)="selectedName.set(nom.nom)"
+                     [styleClass]="selectedName() === nom.nom ? 'selected-name' : 'unselected-name'" [value]="nom.nom"
+                     *ngFor="let nom of nomsFeminins()"></p-tag>
             </div>
           </p-scrollPanel>
         </p-fieldset>
@@ -103,7 +103,7 @@
         <p-fieldset legend="Avantages" class="w-1/2 h-full" styleClass="h-full relative">
           <div style="position: absolute; inset:15px;">
             <p-scrollPanel [style]="{display: 'block', height: '100%'}">
-              <div class="flex gap-2 mb-2" *ngFor="let avantage of currentRegion?.avantages">
+              <div class="flex gap-2 mb-2" *ngFor="let avantage of selectedRegion()?.avantages">
                 <app-trait-row [avantage]="avantage"></app-trait-row>
               </div>
             </p-scrollPanel>
@@ -112,7 +112,7 @@
         <p-fieldset legend="Désavantages" class="w-1/2 h-full" styleClass="h-full relative">
           <div style="position: absolute; inset:15px;">
             <p-scrollPanel [style]="{display: 'block', height: '100%'}">
-              <div class="flex gap-2 mb-2" *ngFor="let desavantage of currentRegion?.desavantages">
+              <div class="flex gap-2 mb-2" *ngFor="let desavantage of selectedRegion()?.desavantages">
                 <app-trait-row [desavantage]="desavantage"></app-trait-row>
               </div>
             </p-scrollPanel>
@@ -122,9 +122,7 @@
     </div>
     <div class="flex justify-end gap-2">
       <button pButton icon="pi pi-times" size="small" label="Quitter" severity="secondary" (click)="quit()"></button>
-      <button  pButton icon="pi pi-check" size="small" label="Valider" severity="success"
-                [disabled]="!currentRegion"
-                (click)="validate()"></button>
+      <button  pButton icon="pi pi-check" size="small" label="Valider" severity="success" [disabled]="!selectedRegion()" (click)="validate()"></button>
     </div>
   </div>
 </div>

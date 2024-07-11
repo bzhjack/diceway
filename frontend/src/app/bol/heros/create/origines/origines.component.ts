@@ -173,7 +173,8 @@ export class BolOriginesComponent implements ControlValueAccessor, OnDestroy {
       width: '1200px',
       height: '90vh',
       data: {
-        id_region: currentRegionId
+        id_region: currentRegionId,
+        nom: this.nomCtrl.value
       },
     });
     this.subs?.unsubscribe();
