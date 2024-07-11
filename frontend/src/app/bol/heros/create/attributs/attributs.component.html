@@ -2,21 +2,22 @@
   <ng-template pTemplate="header">
     <div class="flex items-center gap-2">
       <div class="cursor-pointer" (click)="attributInfos.toggle($event)">
-        <i *ngIf="attributErrors.length === 0 && attributWarns.length === 0" class="pi pi-info-circle"></i>
-        <div *ngIf="attributErrors.length > 0" style="color: var(--error-color)">
+        <i *ngIf="!attributErrors.length && !attributWarns.length" class="pi pi-info-circle"></i>
+        <div *ngIf="attributErrors.length" style="color: var(--error-color)">
           <i class="pi pi-exclamation-triangle"></i> ({{ attributErrors.length }})
         </div>
-        <div *ngIf="attributWarns.length > 0" style="color: var(--warn-color)">
+        <div *ngIf="attributWarns.length" style="color: var(--warn-color)">
           <i class="pi pi-exclamation-triangle"></i> ({{ attributWarns.length }})
         </div>
       </div>
+
       <div>Attributs</div>
     </div>
     <p-overlayPanel #attributInfos>
       <div class="flex flex-col gap-2">
         <bol-message type="attr"></bol-message>
-        <bol-message type="form-errors" *ngIf="attributErrors.length > 0" legend="Attributs invalides" [data]="attributErrors"></bol-message>
-        <bol-message type="form-warn" *ngIf="attributWarns.length > 0" legend="Aptitudes invalides" [data]="attributWarns"></bol-message>
+        <bol-message type="form-errors" *ngIf="attributErrors.length" legend="Attributs invalides" [data]="attributErrors"></bol-message>
+        <bol-message type="form-warn" *ngIf="attributWarns.length" legend="Aptitudes invalides" [data]="attributWarns"></bol-message>
       </div>
     </p-overlayPanel>
   </ng-template>

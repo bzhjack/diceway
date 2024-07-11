@@ -68,7 +68,6 @@ export class BolArmuresComponent implements ControlValueAccessor, OnDestroy {
     return this.armuresForm.get('armures') as FormArray;
   }
 
-
   protected armureList = this.#bhss.armureList;
   protected selectedArmureIds = toSignal(this.armuresForm.get('armures')!.valueChanges);
   protected filteredArmureList = computed(() => {

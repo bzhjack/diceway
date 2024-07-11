@@ -1,5 +1,4 @@
 import {Component, OnDestroy, ViewChild} from '@angular/core';
-import {BolHerosService} from "../../../services/bol-heros.service";
 import {Subscription} from "rxjs";
 import {NgxSpinnerService} from "ngx-spinner";
 import {DataViewModule} from "primeng/dataview";
@@ -11,11 +10,12 @@ import {ScrollPanel, ScrollPanelModule} from "primeng/scrollpanel";
 import {TagModule} from 'primeng/tag';
 import {TooltipModule} from 'primeng/tooltip';
 import {InlineSVGModule} from "ng-inline-svg-2";
-import {BolRegionModel} from "../../../models/bol-region.model";
 import {FieldsetModule} from "primeng/fieldset";
 import {MessagesModule} from "primeng/messages";
 import {OverlayPanelModule} from "primeng/overlaypanel";
-import {BolTraitRowComponent} from "../trait/trait-row/trait-row.component";
+import {BolTraitRowComponent} from "../../trait/trait-row/trait-row.component";
+import {BolRegionModel} from "../../../../models/bol-region.model";
+import {BolHerosService} from "../../../../services/bol-heros.service";
 
 @Component({
   selector: 'app-region',

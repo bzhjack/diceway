@@ -30,34 +30,6 @@
             <!-- Origines -->
             <!-------------->
             <app-origines [heroId]="heroId()" formControlName="origines"></app-origines>
-            <p-fieldset legend="Origines">
-              <div class="flex gap-2">
-                <div class="hero-avatar cursor-pointer" (click)="picture()">
-                  <img style="width:100%"
-                    [src]="avatarCtrl.value !== null ? avatarCtrl.value : '/frontend/assets/bol/empty-avatar.jpg'"
-                    alt="avatar">
-                  <p class="hero-avatar__description">Modifier</p>
-                </div>
-
-                <div class="flex flex-col gap-1 flex-auto">
-                  <div class="flex flex-col gap-1">
-                    <label for="nom"> <i class="pi pi-info-circle"
-                        pTooltip="Vous trouverez des exemples en choissisant votre terre natale."></i>
-                      Nom du héro</label>
-                    <input formControlName="nom" pInputText id="nom" class="p-inputtext-sm" />
-                  </div>
-                  <div class="flex flex-col gap-1 relative">
-                    <label>Région</label>
-                    <input formControlName="region" pInputText class="p-inputtext-sm" autocomplete="new"
-                      tabindex="-1" />
-                    <div class="input-overlay" style="" (click)="region()">
-                      <div><i class="hide-region icon-button pi pi-times" (click)="clearRegion($event)"></i></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </p-fieldset>
             <!--------------->
             <!-- Attributs -->
             <!--------------->
@@ -115,7 +87,7 @@
                   </div>
                 </div>
 
-                <div class="flex justify-end gap-2" *ngIf="regionCtrl.value !== null">
+                <div class="flex justify-end gap-2">
                   <p-button (click)="openTraits()" label="Gérer les avantages" size="small" [link]="true" />
                 </div>
 

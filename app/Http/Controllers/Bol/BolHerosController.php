@@ -55,7 +55,7 @@ class BolHerosController extends Controller
      */
     public function update(Request $request)
     {
-        $heros = $request->except('traits', 'carrieres', 'armures', 'armes', 'combat', 'attributs');
+        $heros = $request->except('traits', 'carrieres', 'armures', 'armes', 'combat', 'attributs', 'origines');
         $herosId = $heros['id'];
 
         $attributs = $request->input('attributs');
@@ -69,6 +69,12 @@ class BolHerosController extends Controller
         $heros['melee'] = $combat['melee'];
         $heros['tir'] = $combat['tir'];
         $heros['defense'] = $combat['defense'];
+
+        $origines = $request->input('origines');
+        $heros['nom'] = $origines['nom'];
+        $heros['region_id'] = $origines['region_id'];
+        $heros['avatar'] = $origines['avatar'];
+
 
         $hero = BolHeros::where('user_id', Auth::id())->where('id', $herosId)->get()->first();
         if ($hero === null) {
@@ -107,6 +113,20 @@ class BolHerosController extends Controller
         $bolHeros->delete();
         // Return a successful response
         return response()->json(['message' => 'Hero deleted successfully'], Response::HTTP_OK);
+    }
+
+    public function updateOrigines(Request $request, $herosId)
+    {
+        $bolHeros = BolHeros::find($herosId);
+        // Check if the resource exists
+        if (!$bolHeros) {
+            return response()->json(['message' => 'Hero not found'], Response::HTTP_NOT_FOUND);
+        }
+        $bolHeros['avatar'] = $request->input('avatar');
+        $bolHeros['nom'] = $request->input('nom');
+        $bolHeros['region_id'] = $request->input('region_id');
+        $bolHeros->update();
+        return response($bolHeros);
     }
 
 }

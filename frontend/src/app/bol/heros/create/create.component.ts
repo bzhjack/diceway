@@ -21,13 +21,11 @@ import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {FieldsetModule} from "primeng/fieldset";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
-import {PictureComponent} from "../../../shared/picture/picture.component";
-import {BolRegionComponent} from "./region/region.component";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {MessagesModule} from "primeng/messages";
 import {JsonPipe, NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
-import {attributValidator, carriereValidator, globalFormValidator} from "./create.validators";
+import {carriereValidator, globalFormValidator} from "./create.validators";
 import {BolHeroCreateTools} from './create.tools';
 import {BolMessageComponent} from "../../message/message.component";
 import {BolTraitComponent} from "./trait/trait.component";
@@ -40,7 +38,7 @@ import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {DropdownModule} from "primeng/dropdown";
 import {Ripple} from "primeng/ripple";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
-import { ScrollPanelModule } from 'primeng/scrollpanel';
+import {ScrollPanelModule} from 'primeng/scrollpanel';
 import {BolArmuresComponent} from "./armures/armures.component";
 import {BolArmesComponent} from "./armes/armes.component";
 import {BolCombatComponent} from "./combat/combat.component";
@@ -103,12 +101,6 @@ export class BolHerosCreateComponent implements OnDestroy {
 
   public idCtrl: FormControl<string | null> = new FormControl(null);
   public joueurCtrl = new FormControl('', Validators.required);
-  public nomCtrl = new FormControl('', Validators.required);
-  public avatarCtrl: FormControl<string | null> = new FormControl(null);
-
-  // Region
-  public regionIdCtrl = new FormControl<number | null>(null);
-  public regionCtrl = new FormControl<string | null>(null);
 
   // Champs calculés
   public vitaliteCtrl = new FormControl<number | null>(0);
@@ -124,18 +116,15 @@ export class BolHerosCreateComponent implements OnDestroy {
   public armesCtrl = new FormControl<number[]>([]);
   public combatCtrl = new FormControl<BolHerosCombat>({defense: 0,initiative: 0,melee: 0,tir: 0});
   public attributsCtrl = new FormControl<BolHerosAttributs>({vigueur: 0,agilite: 0,esprit: 0,aura: 0});
-  public originesCtrl = new FormControl<BolHerosOrigines>({nom: null,region: null, avatar: null});
+  public originesCtrl = new FormControl<BolHerosOrigines>({nom: null,region_id: null, avatar: null});
 
   herosForm = this.fb.group(
     {
       id: this.idCtrl,
       joueur: this.joueurCtrl,
-      nom: this.nomCtrl,
-      avatar: this.avatarCtrl,
+
       heroisme: this.heroismeCtrl,
       vitalite: this.vitaliteCtrl,
-      region_id: this.regionIdCtrl,
-      region: this.regionCtrl,
       traits: this.traitsArray,
       heroism_cost: this.heroismCostCtrl,
 
@@ -192,12 +181,12 @@ export class BolHerosCreateComponent implements OnDestroy {
   logFormWarns() {
     this.creationWarns = [];
     // Test sur l'existance d'une région
-    if (!this.regionIdCtrl.value) {
+    /*if (!this.regionIdCtrl.value) {
       this.creationWarns.push({
         step: 'Région',
         warn: 'Vous devez choisir une région.'
       });
-    }
+    }*/
     // Controle sur les carrières
     if (this.carriereErrors.length === 0) {
       if (this.carrieres.length != 4) {
@@ -280,8 +269,6 @@ export class BolHerosCreateComponent implements OnDestroy {
             vitalite: hero.vitalite,
             heroisme: hero.heroisme,
 
-            region_id: hero.region_id,
-
             heroism_cost: hero.heroism_cost,
             armures: hero.armures.map(item => item.armure_id),
             armes: hero.armes.map(item => item.arme_id),
@@ -344,72 +331,18 @@ export class BolHerosCreateComponent implements OnDestroy {
     }
   }
 
-  /**
-   * Gestion de l'avatar
-   */
-  picture() {
-    this.ref = this.ds.open(PictureComponent, {header: 'Photo du héros'});
-    this.subs?.unsubscribe();
-    this.subs = this.ref.onClose.subscribe((avatar: any) => {
-      if (avatar !== null && avatar !== undefined) {
-        this.avatarCtrl.setValue(avatar);
-        this.submit();
-      }
-    });
-  }
 
-  /**
-   * Sélection de la région
-   */
-  region() {
-    const currentRegionId = this.regionIdCtrl.value;
-    this.ref = this.ds.open(BolRegionComponent, {
-      header: 'Choix de la région',
-      width: '1200px',
-      height: '90vh',
-      data: {
-        id_region: currentRegionId
-      },
-    });
-    this.subs?.unsubscribe();
-    this.subs = this.ref?.onClose.subscribe((data: any) => {
-      if (data) {
-        this.regionIdCtrl.setValue(data.region.id);
-        this.regionCtrl.setValue(data.region.region);
-        if (data.nom) {
-          this.nomCtrl.setValue(data.nom);
-        }
-        if (data.region.id !== currentRegionId) {
-          this.traits.clear();
-          this.avantages = [];
-          this.desavantages = [];
-        }
-
-
-        this.submit();
-      }
-    });
-  }
-
-  clearRegion(ev: MouseEvent) {
-    ev.stopPropagation();
-    this.regionIdCtrl.setValue(null);
-    this.regionCtrl.setValue(null);
-    this.traits.clear();
-    this.avantages = [];
-    this.desavantages = [];
-  }
 
   /**
    * Gestion des avantages et des désavantages
    */
   openTraits() {
     this.ref = this.ds.open(BolTraitComponent, {
-      header: 'Choix des avantages pour la région ' + this.regionCtrl.value,
+      header: 'Choix des avantages pour la région ',
       width: '1200px',
       height: '90vh',
       data: {
-        id_region: this.regionIdCtrl.value,
+        //id_region: this.regionIdCtrl.value,
         avantages: this.avantages,
         desavantages: this.desavantages
       },

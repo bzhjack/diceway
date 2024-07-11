@@ -6,6 +6,7 @@ export type Translations = {
 };
 
 export const translations: Translations = {
+    nom: "Nom",
     esprit: "Esprit",
     vigueur: "Vigueur",
     agilite: "Agilité",
