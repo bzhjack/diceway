@@ -5,8 +5,6 @@ import {BolHerosArmeModel} from "./bol-arme.model";
 export interface BolHerosModel {
   id: string | null;
   joueur: string;
-  avatar: string | null;
-  nom: string;
 
   vitalite: number,
   heroisme: number,
@@ -23,8 +21,13 @@ export interface BolHerosModel {
     esprit: number,
     agilite: number
   },
+  origines: {
+    avatar: string | null,
+    nom: string | null,
+    region: number | null,
+  },
   region_id: number | null,
-  region: string | null,
+
 
   traits: any[],
   heroism_cost: number,
@@ -44,4 +47,9 @@ export interface BolHerosAttributs {
   agilite: number;
   esprit: number;
   aura: number;
+}
+export interface BolHerosOrigines {
+  nom: string | null;
+  region: number | null;
+  avatar: string | null;
 }

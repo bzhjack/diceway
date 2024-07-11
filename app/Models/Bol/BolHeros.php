@@ -18,16 +18,16 @@ class BolHeros extends Model
     protected $hidden = [
     'user_id',
     'initiative','melee','tir','defense',
-     'vigueur', 'agilite', 'esprit', 'aura'
+    'vigueur', 'agilite', 'esprit', 'aura',
+    'nom','avatar','region_id', 'region'
     ];
-    protected $appends = ['combat', 'attributs'];
+    protected $appends = ['combat', 'attributs', 'origines'];
     protected $fillable = [
         'user_id',
         'joueur',
-        'nom',
+        'nom','avatar','region_id',
         'vigueur', 'agilite', 'esprit', 'aura',
         'initiative','melee','tir','defense',
-        'avatar',
         'region_id',
         'region'
     ];
@@ -65,6 +65,14 @@ class BolHeros extends Model
             'agilite' => $this->agilite,
             'esprit' => $this->esprit,
             'aura' => $this->aura,
+        ];
+    }
+ public function getOriginesAttribute()
+    {
+        return [
+            'nom' => $this->nom,
+            'region_id' => $this->region_id,
+            'avatar' => $this->avatar
         ];
     }
 }

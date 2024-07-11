@@ -77,7 +77,7 @@ export class BolArmuresComponent implements ControlValueAccessor, OnDestroy {
   protected selectedArmureDetail = computed(() => {
     return this.armureList()?.filter((armure: BolArmureModel) => this.selectedArmureIds()?.includes(armure.id))
   });
-  public heroId = input<string | null | undefined>(null)
+  public heroId = input<string | null | undefined>(null);
 
   addArmure(panel: OverlayPanel, event: any) {
     panel.toggle(event);

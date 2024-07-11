@@ -29,6 +29,7 @@
             <!-------------->
             <!-- Origines -->
             <!-------------->
+            <app-origines [heroId]="heroId()" formControlName="origines"></app-origines>
             <p-fieldset legend="Origines">
               <div class="flex gap-2">
                 <div class="hero-avatar cursor-pointer" (click)="picture()">
@@ -216,8 +217,8 @@
             <!--- Armes et Armures --->
             <!------------------------>
             <div class="flex flex-col flex-auto gap-2 ">
-              <app-armures [heroId]="herosForm.get('id')?.value" formControlName="armures"></app-armures>
-              <app-armes [heroId]="herosForm.get('id')?.value" formControlName="armes"></app-armes>
+              <app-armures [heroId]="heroId()" formControlName="armures"></app-armures>
+              <app-armes [heroId]="heroId()" formControlName="armes"></app-armes>
             </div>
           </div>
         </div>

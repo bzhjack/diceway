@@ -1,6 +1,7 @@
 import {Component, effect, forwardRef, inject} from '@angular/core';
 import {
   AbstractControl,
+  ControlValueAccessor,
   FormBuilder,
   FormControl,
   NG_VALIDATORS,
@@ -12,7 +13,7 @@ import {attributsFormValidator, attributValidator} from "../create.validators";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {BolHeroCreateTools} from "../create.tools";
 import {FieldsetModule} from "primeng/fieldset";
-import {JsonPipe, NgIf} from "@angular/common";
+import {NgIf} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {BolMessageComponent} from "../../../message/message.component";
 import {InputNumberModule} from "primeng/inputnumber";
@@ -43,7 +44,7 @@ import {InputNumberModule} from "primeng/inputnumber";
     }
   ]
 })
-export class BolAttributsComponent {
+export class BolAttributsComponent implements ControlValueAccessor {
   readonly #fb = inject(FormBuilder);
   attributErrors: { control: string, error: string }[] = [];
   attributWarns: { step: string, warn: string }[] = [];

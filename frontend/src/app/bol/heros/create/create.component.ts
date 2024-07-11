@@ -1,4 +1,4 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component, computed, OnDestroy} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {InputTextModule} from "primeng/inputtext";
 import {InputNumberModule} from 'primeng/inputnumber';
@@ -15,7 +15,7 @@ import {ToolbarModule} from "primeng/toolbar";
 import {ButtonModule} from "primeng/button";
 import {SplitButtonModule} from "primeng/splitbutton";
 import {BolHerosService} from "../../services/bol-heros.service";
-import {BolHerosAttributs, BolHerosCombat, BolHerosModel} from "../../models/bol-heros.model";
+import {BolHerosAttributs, BolHerosCombat, BolHerosModel, BolHerosOrigines} from "../../models/bol-heros.model";
 import {debounceTime, forkJoin, Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
@@ -45,6 +45,8 @@ import {BolArmuresComponent} from "./armures/armures.component";
 import {BolArmesComponent} from "./armes/armes.component";
 import {BolCombatComponent} from "./combat/combat.component";
 import {BolAttributsComponent} from "./attributs/attributs.component";
+import {toSignal} from "@angular/core/rxjs-interop";
+import {BolOriginesComponent} from "./origines/origines.component";
 
 
 @Component({
@@ -76,7 +78,8 @@ import {BolAttributsComponent} from "./attributs/attributs.component";
     BolArmuresComponent,
     BolArmesComponent,
     BolCombatComponent,
-    BolAttributsComponent
+    BolAttributsComponent,
+    BolOriginesComponent
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
@@ -87,8 +90,8 @@ import {BolAttributsComponent} from "./attributs/attributs.component";
 export class BolHerosCreateComponent implements OnDestroy {
   private subs?: Subscription;
   private ref: DynamicDialogRef | undefined;
-  carriereErrors: { control: string, error: string }[] = [];
 
+  carriereErrors: { control: string, error: string }[] = [];
   creationWarns: { step: string, warn: string }[] = [];
 
   avantages: BolAvantageModel[] = [];
@@ -121,6 +124,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   public armesCtrl = new FormControl<number[]>([]);
   public combatCtrl = new FormControl<BolHerosCombat>({defense: 0,initiative: 0,melee: 0,tir: 0});
   public attributsCtrl = new FormControl<BolHerosAttributs>({vigueur: 0,agilite: 0,esprit: 0,aura: 0});
+  public originesCtrl = new FormControl<BolHerosOrigines>({nom: null,region: null, avatar: null});
 
   herosForm = this.fb.group(
     {
@@ -140,10 +144,13 @@ export class BolHerosCreateComponent implements OnDestroy {
       attributs: this.attributsCtrl,
       combat: this.combatCtrl,
       armures: this.armuresCtrl,
-      armes: this.armesCtrl
+      armes: this.armesCtrl,
+      origines: this.originesCtrl
 
     }, {validators: globalFormValidator}
   );
+  protected currentHero = toSignal(this.herosForm.valueChanges);
+  protected heroId = computed(() => this.currentHero()?.id);
 
   get traits() {
     return this.herosForm.controls["traits"] as FormArray;
@@ -269,19 +276,18 @@ export class BolHerosCreateComponent implements OnDestroy {
           this.herosForm.patchValue({
             id: hero.id,
             joueur: hero.joueur,
-            nom: hero.nom,
-            avatar: hero.avatar,
 
             vitalite: hero.vitalite,
             heroisme: hero.heroisme,
 
             region_id: hero.region_id,
-            region: hero.region,
+
             heroism_cost: hero.heroism_cost,
             armures: hero.armures.map(item => item.armure_id),
             armes: hero.armes.map(item => item.arme_id),
             combat: hero.combat,
-            attributs: hero.attributs
+            attributs: hero.attributs,
+            origines: hero.origines
           });
           this.traits.clear();
           this.avantages = [];
