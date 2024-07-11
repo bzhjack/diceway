@@ -7,7 +7,7 @@ import {
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
-  ValidationErrors
+  ValidationErrors, Validator
 } from "@angular/forms";
 import {InputNumberModule} from "primeng/inputnumber";
 import {OverlayPanelModule} from "primeng/overlaypanel";
@@ -44,7 +44,7 @@ import {BolHeroCreateTools} from '../create.tools';
     }
   ]
 })
-export class BolCombatComponent implements ControlValueAccessor {
+export class BolCombatComponent implements ControlValueAccessor, Validator {
   readonly #fb = inject(FormBuilder);
   aptitudeErrors: { control: string, error: string }[] = [];
   aptitudeWarns: { step: string, warn: string }[] = [];

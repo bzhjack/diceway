@@ -10,7 +10,7 @@ export class BolHerosStateService {
   armureList = toSignal(this.#bhs.armures());
   armeList = toSignal(this.#bhs.armes());
   regionList = toSignal(this.#bhs.regions());
-
+  carriereList = toSignal(this.#bhs.carrieres());
   constructor() {
   }
 }

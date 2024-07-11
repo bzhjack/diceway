@@ -2,21 +2,13 @@ import {Component, computed, OnDestroy} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {InputTextModule} from "primeng/inputtext";
 import {InputNumberModule} from 'primeng/inputnumber';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormsModule,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators
-} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ToolbarModule} from "primeng/toolbar";
 import {ButtonModule} from "primeng/button";
 import {SplitButtonModule} from "primeng/splitbutton";
 import {BolHerosService} from "../../services/bol-heros.service";
 import {BolHerosAttributs, BolHerosCombat, BolHerosModel, BolHerosOrigines} from "../../models/bol-heros.model";
-import {debounceTime, forkJoin, Subscription} from "rxjs";
+import {forkJoin, Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {FieldsetModule} from "primeng/fieldset";
@@ -25,8 +17,7 @@ import {OverlayPanelModule} from "primeng/overlaypanel";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {MessagesModule} from "primeng/messages";
 import {JsonPipe, NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
-import {carriereValidator, globalFormValidator} from "./create.validators";
-import {BolHeroCreateTools} from './create.tools';
+import {globalFormValidator} from "./create.validators";
 import {BolMessageComponent} from "../../message/message.component";
 import {BolTraitComponent} from "./trait/trait.component";
 import {BolAvantageModel} from "../../models/bol-avantage.model";
@@ -37,7 +28,6 @@ import {ConfirmationService} from "primeng/api";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {DropdownModule} from "primeng/dropdown";
 import {Ripple} from "primeng/ripple";
-import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import {BolArmuresComponent} from "./armures/armures.component";
 import {BolArmesComponent} from "./armes/armes.component";
@@ -91,14 +81,9 @@ export class BolHerosCreateComponent implements OnDestroy {
   private subs?: Subscription;
   private ref: DynamicDialogRef | undefined;
 
-  carriereErrors: { control: string, error: string }[] = [];
-  creationWarns: { step: string, warn: string }[] = [];
-
   avantages: BolAvantageModel[] = [];
   desavantages: BolDesavantageModel[] = [];
 
-  public carrieresList: BolCarriereModel[] = [];
-  public selectedCarriere: BolCarriereModel | null = null;
 
 
   public idCtrl: FormControl<string | null> = new FormControl(null);
@@ -112,10 +97,11 @@ export class BolHerosCreateComponent implements OnDestroy {
   traitsArray = this.fb.array([]);
   heroismCostCtrl = new FormControl<number>(0);
 
-  carrieresArray = this.fb.array([]);
 
   public armuresCtrl = new FormControl<number[]>([]);
   public armesCtrl = new FormControl<number[]>([]);
+  public carrieresCtrl = new FormControl<BolHerosCarriereModel[]>([]);
+
   public combatCtrl = new FormControl<BolHerosCombat>({defense: 0,initiative: 0,melee: 0,tir: 0});
   public attributsCtrl = new FormControl<BolHerosAttributs>({vigueur: 0,agilite: 0,esprit: 0,aura: 0});
   public originesCtrl = new FormControl<BolHerosOrigines>({nom: null,region_id: null, avatar: null});
@@ -129,15 +115,12 @@ export class BolHerosCreateComponent implements OnDestroy {
       vitalite: this.vitaliteCtrl,
       traits: this.traitsArray,
       heroism_cost: this.heroismCostCtrl,
-
-      carrieres: this.carrieresArray,
-
       attributs: this.attributsCtrl,
       combat: this.combatCtrl,
       armures: this.armuresCtrl,
       armes: this.armesCtrl,
-      origines: this.originesCtrl
-
+      origines: this.originesCtrl,
+      carrieres: this.carrieresCtrl
     }, {validators: globalFormValidator}
   );
   protected currentHero = toSignal(this.herosForm.valueChanges);
@@ -145,10 +128,6 @@ export class BolHerosCreateComponent implements OnDestroy {
 
   get traits() {
     return this.herosForm.controls["traits"] as FormArray;
-  }
-
-  get carrieres() {
-    return this.herosForm.controls["carrieres"] as FormArray;
   }
 
   constructor(
@@ -162,10 +141,6 @@ export class BolHerosCreateComponent implements OnDestroy {
     if (id !== null) {
       this.getHeros(id);
     }
-    this.herosForm.events.pipe(debounceTime(200)).subscribe(() => {
-      this.logFormErrors();
-      this.logFormWarns();
-    });
     /*this.vigueurCtrl.valueChanges.subscribe((vigueur) => {
       if (this.vigueurCtrl.valid && vigueur !== null) {
         this.vitaliteCtrl.setValue(10 + vigueur, {emitEvent: false});
@@ -176,80 +151,6 @@ export class BolHerosCreateComponent implements OnDestroy {
   ngOnDestroy() {
     this.subs?.unsubscribe();
   }
-
-  /**
-   * Gestion de l'afficahe des alertes
-   */
-  logFormWarns() {
-    this.creationWarns = [];
-    // Test sur l'existance d'une région
-    /*if (!this.regionIdCtrl.value) {
-      this.creationWarns.push({
-        step: 'Région',
-        warn: 'Vous devez choisir une région.'
-      });
-    }*/
-    // Controle sur les carrières
-    if (this.carriereErrors.length === 0) {
-      if (this.carrieres.length != 4) {
-        this.creationWarns.push({
-          step: 'Carrières',
-          warn: 'Vous devez choisir 4 carrières.'
-        });
-      }
-      let sumCarriere = 0;
-      for (const c of this.carrieres.controls) {
-        sumCarriere += c.get('value')?.value;
-      }
-      if (sumCarriere < 4) {
-        this.creationWarns.push({
-          step: 'Aptitudes',
-          warn: 'il manque ' + (4 - sumCarriere) + ' pts dans les carrières.'
-        });
-      }
-    }
-
-  }
-
-  /**
-   * Gestion de l'affichage des erreurs
-   */
-
-  logFormErrors(): void {
-    this.carriereErrors = [];
-    // Check des carrières
-    this.carrieres.controls.forEach((control, index) => {
-      const errors = control.get('value')?.errors;
-      if (errors) {
-        const idCarriere = this.carrieres.at(index).get('carriere_id')?.value;
-        const carriere = this.carriereFromId(idCarriere)?.carriere;
-        Object.keys(errors).forEach(keyError => {
-          this.carriereErrors.push({
-            control:  carriere ? carriere : '',
-            error: BolHeroCreateTools.translate(keyError),
-          });
-        });
-
-        console.log(`Erreurs pour carriere_id ${this.carrieres.at(index).get('carriere_id')?.value}:`, errors);
-      }
-    });
-
-    // Obtenir les erreurs globales du formulaire
-    const formErrors: ValidationErrors | null = this.herosForm.errors;
-    // Si des erreurs globales sont présentes, les traiter
-    if (formErrors != null) {
-      // Itérer sur chaque erreur globale
-      Object.keys(formErrors).forEach(keyError => {
-        // Afficher dans la console le type d'erreur globale et la valeur de l'erreur
-        if (keyError === 'carrSumExceeded') {
-          this.carriereErrors.push({error: 'La somme des carrières ne doit pas dépasser 4', control: ''});
-        }
-
-        console.log(`Global error: ${keyError}, err value: `, formErrors[keyError]);
-      });
-    }
-  }
-
   /**
    * Récupération du Héros (pour modification)
    * @param id
@@ -258,10 +159,8 @@ export class BolHerosCreateComponent implements OnDestroy {
     this.spinner.show();
     this.subs = forkJoin([
       this.hs.heros(id),
-      this.hs.carrieres()
     ]).subscribe({
         next: (data) => {
-          this.carrieresList = data[1];
           let hero: BolHerosModel = data[0];
 
           this.herosForm.patchValue({
@@ -276,8 +175,12 @@ export class BolHerosCreateComponent implements OnDestroy {
             armes: hero.armes.map(item => item.arme_id),
             combat: hero.combat,
             attributs: hero.attributs,
-            origines: hero.origines
+            origines: hero.origines,
+            carrieres: hero.carrieres.map(item => { return {carriere_id: item.carriere_id, value: item.value}; }),
           });
+
+          console.log("HERO", this.herosForm.value);
+
           this.traits.clear();
           this.avantages = [];
           this.desavantages = [];
@@ -289,9 +192,6 @@ export class BolHerosCreateComponent implements OnDestroy {
               this.desavantages.push({...trait.traitable, ...{pivot: {detail: trait.detail}}});
             }
           });
-          this.carrieres.clear();
-          hero.carrieres.forEach((carriere) => this.addCarriere(carriere));
-          console.log(this.herosForm.getRawValue());
           this.spinner.hide();
         },
         error: () => {
@@ -312,19 +212,10 @@ export class BolHerosCreateComponent implements OnDestroy {
     this.spinner.show();
     this.subs?.unsubscribe();
     if (hero.id !== null) {
+      console.log("SUBMIT", this.herosForm.value);
       this.subs = this.hs.updateHeros(this.herosForm.value as unknown as BolHerosModel).subscribe({
         next: () => {
           this.spinner.hide();
-        },
-        error: () => {
-          this.spinner.hide();
-        }
-      });
-    } else {
-      this.subs = this.hs.createHeros(this.herosForm.value as unknown as BolHerosModel).subscribe({
-        next: (hero: BolHerosModel) => {
-          this.spinner.hide();
-          this.idCtrl.setValue(hero.id);
         },
         error: () => {
           this.spinner.hide();
@@ -386,85 +277,6 @@ export class BolHerosCreateComponent implements OnDestroy {
       detail: [trait.detail]
     });
     this.traits.push(traitForm);
-  }
-
-  /**************************************
-   **************************************
-   ******* Gestion des carrières ********
-   **************************************
-   **************************************/
-
-  // Ajout d'une carrière
-  addCarriere(carriere: BolHerosCarriereModel) {
-    const carriereForm = this.fb.group({
-      carriere_id: [carriere.carriere_id],
-      value: [carriere.value, carriereValidator]
-    });
-    this.carrieres.push(carriereForm);
-  }
-
-  // Suppression d'une carriere
-  removeCarriere(carriereId: number) {
-    const index = this.carrieres.value.findIndex((car: BolHerosCarriereModel) => car.carriere_id === carriereId)
-    if (index !== -1) this.carrieres.removeAt(index)
-  }
-
-  carriereFromId(id: number) {
-    const carriere = this.carrieresList.find((itemCar) => itemCar.id === id);
-    return carriere ?? {carriere: null, description: null};
-  }
-
-  createCarriere(panel: OverlayPanel, event: any) {
-    panel.toggle(event);
-    if (this.selectedCarriere === null) {
-      return;
-    }
-    const heroId = this.herosForm.get('id')!.value || null;
-    const carriere: BolHerosCarriereModel = {
-      carriere_id: this.selectedCarriere?.id,
-      value: 0
-    }
-    this.spinner.show();
-    this.subs?.unsubscribe();
-    this.subs = this.hs.createCarriere(heroId, carriere).subscribe({
-      next: _ => {
-        this.spinner.hide();
-        this.addCarriere(carriere);
-      },
-      error: () => {
-        this.spinner.hide();
-      }
-    });
-  }
-
-  deleteCarriere(carriereId: number, event: any) {
-    this.confirmationService.confirm({
-      target: event.target as EventTarget,
-      message: 'Voulez vous supprimer cette carrière ?',
-      icon: 'pi pi-info-circle',
-      acceptButtonStyleClass: 'p-button-danger p-button-sm',
-      acceptLabel: "Oui",
-      rejectLabel: "Non",
-      accept: () => {
-        const heroId = this.herosForm.get('id')!.value || null;
-        this.spinner.show();
-        this.subs?.unsubscribe();
-        this.subs = this.hs.deleteCarriere(heroId, carriereId).subscribe({
-          next: _ => {
-            this.spinner.hide();
-            this.removeCarriere(carriereId);
-          },
-          error: () => {
-            this.spinner.hide();
-          }
-        });
-      },
-    });
-  }
-
-  getFilteredCarrieres() {
-    const carriereIdsInArray = this.carrieresArray.controls.map(control => control.get('carriere_id')?.value);
-    return this.carrieresList.filter(carriere => !carriereIdsInArray.includes(carriere.id));
   }
 
 }

@@ -41,7 +41,7 @@ export class BolHerosService {
   // Carrieres
 
   carrieres(): Observable<any> {
-    return this.http.get<BolRegionModel[]>('/api/bol/carrieres');
+    return this.http.get<BolHerosCarriereModel[]>('/api/bol/carrieres');
   }
   deleteCarriere(herosId: string | null, id: number): Observable<any> {
     return this.http.delete<boolean>(`/api/bol/heros/carrieres/delete/${herosId}/${id}`);

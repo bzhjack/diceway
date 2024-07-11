@@ -96,94 +96,7 @@
               <!------------------------------------->
               <!--- Fin avantages et désavantages --->
               <!------------------------------------->
-              <bol-carrieres></bol-carrieres>
-              <!----------------------->
-              <!--- Début Carrières --->
-              <!----------------------->
-              <p-fieldset class="w-full">
-                <!-- Header Carrières -->
-                <ng-template pTemplate="header">
-                  <div class="flex items-center gap-2">
-                    <div class="cursor-pointer" (click)="carriereInfos.toggle($event)">
-                      <i *ngIf="carriereErrors.length === 0" class="pi pi-info-circle"></i>
-                      <div *ngIf="carriereErrors.length > 0" style="color: var(--error-color)">
-                        <i class="pi pi-exclamation-triangle"></i> ({{ carriereErrors.length }})
-                      </div>
-                    </div>
-                    <div>Carrières</div>
-                  </div>
-                  <p-overlayPanel #carriereInfos>
-                    <div class="flex flex-col gap-2">
-                      <bol-message type="carrieres"></bol-message>
-                      <bol-message type="form-errors" *ngIf="carriereErrors.length > 0" legend="Aptitudes invalides"
-                        [data]="carriereErrors"></bol-message>
-                    </div>
-                  </p-overlayPanel>
-                </ng-template>
-                <!-- Body Carrières -->
-                <ng-container formArrayName="carrieres">
-                  <div class="flex flex-col gap-1" *ngFor="let carriere of carrieres.controls; let i = index">
-                    <div class="flex flex-col mb-2">
-                      <div [formGroupName]="i" class="flex gap-2 items-center">
-                        <ng-template #templateRef let-carri="carTpl">
-                          <div style="width: 125px" class="flex flex-col">
-                            <div>{{ carri.carriere }}</div>
-                            <div class="text-gray-400" style="font-size: smaller" *ngIf="carri.detail">{{ carri.detail }}
-                            </div>
-                          </div>
-                        </ng-template>
-                        <div
-                          *ngTemplateOutlet="templateRef; context: { carTpl: carriereFromId(carriere.get('carriere_id')?.value) }">
-                        </div>
-                        <p-inputNumber formControlName="value" inputId="defense" maxFractionDigits="0" />
-                        <p-button icon="pi pi-trash" size="small"
-                          (click)="deleteCarriere(carriere.get('carriere_id')?.value, $event)" />
-                      </div>
-                      <div class="carriere-desc text-amber-500"
-                        *ngIf="carriereFromId(carriere.get('carriere_id')?.value)">{{
-                        carriereFromId(carriere.get('carriere_id')?.value).description }}
-                      </div>
-                    </div>
-
-                  </div>
-                </ng-container>
-                <!-- Footer Carrieres -->
-                <div *ngIf="carrieresArray.length < 4" class="flex justify-end gap-2">
-                  <p-button (click)="selectedCarriere = null; opCarriere.toggle($event)" label="Ajouter une carrière"
-                    size="small" [link]="true" class="text-cyan-600" />
-                  <p-overlayPanel #opCarriere>
-                    <div class="flex flex-col gap-4">
-                      <div>Ajouter une carrière</div>
-                      <p-dropdown [style]="{ width: '250px' }" [options]="getFilteredCarrieres()"
-                        [(ngModel)]="selectedCarriere" [ngModelOptions]="{standalone: true}" [filter]="true"
-                        filterBy="carriere" [showClear]="true" placeholder="Selectionner une carriere">
-
-                        <ng-template pTemplate="selectedItem" let-selectedOption>
-                          <div class="flex align-items-center gap-2">
-                            <div>{{ selectedOption.carriere }}</div>
-                          </div>
-                        </ng-template>
-
-                        <ng-template let-carriere pTemplate="item">
-                          <div class="flex flex-col gap-2">
-                            <div>{{ carriere.carriere }}</div>
-                            <div style="font-size: smaller" *ngIf="carriere.detail">{{ carriere.detail }}</div>
-                          </div>
-                        </ng-template>
-                      </p-dropdown>
-                      <div class="flex justify-end gap-2">
-                        <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
-                          (click)="opCarriere.toggle($event)"></button>
-                        <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
-                          (click)="createCarriere(opCarriere, $event)"></button>
-                      </div>
-                    </div>
-                  </p-overlayPanel>
-                </div>
-              </p-fieldset>
-              <!--------------------->
-              <!--- Fin Carrières --->
-              <!--------------------->
+              <bol-carrieres [heroId]="heroId()" formControlName="carrieres"></bol-carrieres>
             </div>
             <!------------------------>
             <!--- Armes et Armures --->
@@ -201,27 +114,7 @@
   <!------------------------->
   <!--- Footer de la page --->
   <!------------------------->
-  <div class="flex pt-4 justify-between">
-    <!--- Notification de profil incomplet --->
-    <div>
-      <p-button *ngIf="creationWarns.length > 0" (click)="incompleteProfile.toggle($event)" severity="warning"
-        [badge]="'' + creationWarns.length" badgeClass="p-badge-contrast" size="small" label="Profil imcomplet"
-        icon="pi pi-exclamation-triangle"></p-button>
-      <p-overlayPanel #incompleteProfile>
-        <p-messages severity="warn" *ngIf="creationWarns.length > 0">
-          <ng-template pTemplate>
-            <div class="info_icon_small" inlineSVG="/frontend/assets/sword.svg"></div>
-            <div class="ml-4">
-              <ul style="margin: 0; padding-inline-start: 20px">
-                <li *ngFor="let warn of creationWarns">
-                  {{ warn.warn }}
-                </li>
-              </ul>
-            </div>
-          </ng-template>
-        </p-messages>
-      </p-overlayPanel>
-    </div>
+  <div class="flex pt-4 justify-end">
     <!--- Bouton Quitter et Sauvegarde --->
     <div class="flex gap-2">
       <button pButton label="Retour" icon="pi pi-times" severity="secondary" size="small" routerLink="/bol"></button>

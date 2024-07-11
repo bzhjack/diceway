@@ -7,7 +7,7 @@ import {
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
-  ValidationErrors
+  ValidationErrors, Validator
 } from "@angular/forms";
 import {attributsFormValidator, attributValidator} from "../create.validators";
 import {toSignal} from "@angular/core/rxjs-interop";
@@ -44,7 +44,7 @@ import {InputNumberModule} from "primeng/inputnumber";
     }
   ]
 })
-export class BolAttributsComponent implements ControlValueAccessor {
+export class BolAttributsComponent implements ControlValueAccessor, Validator {
   readonly #fb = inject(FormBuilder);
   attributErrors: { control: string, error: string }[] = [];
   attributWarns: { step: string, warn: string }[] = [];

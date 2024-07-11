@@ -75,7 +75,6 @@ class BolHerosController extends Controller
         $heros['region_id'] = $origines['region_id'];
         $heros['avatar'] = $origines['avatar'];
 
-
         $hero = BolHeros::where('user_id', Auth::id())->where('id', $herosId)->get()->first();
         if ($hero === null) {
             return response()->json(['error' => 'Hero not found'], 404);

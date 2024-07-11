@@ -8,7 +8,7 @@ import {
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
-  ValidationErrors,
+  ValidationErrors, Validator,
   Validators
 } from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
@@ -56,7 +56,7 @@ import {BolHerosOrigines} from "../../../models/bol-heros.model";
     }
   ]
 })
-export class BolOriginesComponent implements ControlValueAccessor, OnDestroy {
+export class BolOriginesComponent implements ControlValueAccessor, Validator, OnDestroy {
 
   originesErrors: { control: string, error: string }[] = [];
   originesWarns: { step: string, warn: string }[] = [];
