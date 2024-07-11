@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {BolHerosModel} from "../models/bol-heros.model";
+import {BolHerosModel, BolHerosOrigines} from "../models/bol-heros.model";
 import {BolRegionModel} from "../models/bol-region.model";
 import {BolAvantageModel} from "../models/bol-avantage.model";
 import {BolDesavantageModel} from "../models/bol-desavantage.model";
@@ -94,8 +94,8 @@ export class BolHerosService {
     return this.http.delete<BolHerosModel>('/api/bol/heros/delete/' + id);
   }
 
-  // Avatar
-  updateAvatarHeros(herosId: string, avatar: string): Observable<any> {
-    return this.http.post<BolHerosModel>('/api/bol/heros/avatar/update/' + herosId, {avatar});
+  // Origines
+  updateOriginesHeros(herosId: string, origines: BolHerosOrigines): Observable<any> {
+    return this.http.post<BolHerosModel>('/api/bol/heros/origines/update/' + herosId, origines);
   }
 }

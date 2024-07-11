@@ -116,7 +116,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   public armesCtrl = new FormControl<number[]>([]);
   public combatCtrl = new FormControl<BolHerosCombat>({defense: 0,initiative: 0,melee: 0,tir: 0});
   public attributsCtrl = new FormControl<BolHerosAttributs>({vigueur: 0,agilite: 0,esprit: 0,aura: 0});
-  public originesCtrl = new FormControl<BolHerosOrigines>({nom: null,region: null, avatar: null});
+  public originesCtrl = new FormControl<BolHerosOrigines>({nom: null,region_id: null, avatar: null});
 
   herosForm = this.fb.group(
     {

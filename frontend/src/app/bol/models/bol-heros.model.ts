@@ -24,11 +24,8 @@ export interface BolHerosModel {
   origines: {
     avatar: string | null,
     nom: string | null,
-    region: number | null,
+    region_id: number | null,
   },
-  region_id: number | null,
-
-
   traits: any[],
   heroism_cost: number,
   carrieres: BolHerosCarriereModel[],
@@ -50,6 +47,6 @@ export interface BolHerosAttributs {
 }
 export interface BolHerosOrigines {
   nom: string | null;
-  region: number | null;
+  region_id: number | null;
   avatar: string | null;
 }

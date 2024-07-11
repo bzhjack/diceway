@@ -26,6 +26,7 @@ import {BolRegionComponent} from "./region/region.component";
 import {BolMessageComponent} from "../../../message/message.component";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {BolHeroCreateTools} from "../create.tools";
+import {BolHerosOrigines} from "../../../models/bol-heros.model";
 
 @Component({
   selector: 'app-origines',
@@ -67,7 +68,7 @@ export class BolOriginesComponent implements ControlValueAccessor, OnDestroy {
   readonly #spinner = inject(NgxSpinnerService);
 
   private subs?: Subscription;
-  private subsAvatar?: Subscription;
+  private subOrig?: Subscription;
 
   public nomCtrl = new FormControl('', Validators.required);
   public avatarCtrl: FormControl<string | null> = new FormControl(null);
@@ -137,22 +138,29 @@ export class BolOriginesComponent implements ControlValueAccessor, OnDestroy {
     const ref = this.#ds.open(PictureComponent, {header: 'Photo du héros'});
     this.subs?.unsubscribe();
     this.subs = ref.onClose.subscribe((avatar: any) => {
-      this.#spinner.show();
       if (avatar !== null && avatar !== undefined) {
         this.avatarCtrl.setValue(avatar);
-        this.subsAvatar?.unsubscribe();
-        this.subsAvatar = this.#bhs.updateAvatarHeros(this.heroId() as string, avatar).subscribe(
-          {
-            next: _ => {
-              this.#spinner.hide();
-            },
-            error: () => {
-              this.#spinner.hide();
-            }
-          }
-        );
+        this.updateOrigines();
       }
     });
+  }
+
+  /**
+   * Maj des origines
+   */
+  updateOrigines() {
+    this.#spinner.show();
+    this.subOrig?.unsubscribe();
+    this.subOrig = this.#bhs.updateOriginesHeros(this.heroId() as string, this.formChange() as BolHerosOrigines).subscribe(
+      {
+        next: _ => {
+          this.#spinner.hide();
+        },
+        error: () => {
+          this.#spinner.hide();
+        }
+      }
+    );
   }
 
   /**
@@ -175,6 +183,7 @@ export class BolOriginesComponent implements ControlValueAccessor, OnDestroy {
         if (data.nom) {
           this.nomCtrl.setValue(data.nom);
         }
+        this.updateOrigines();
       }
     });
   }
@@ -187,7 +196,7 @@ export class BolOriginesComponent implements ControlValueAccessor, OnDestroy {
 
   ngOnDestroy() {
     this.subs?.unsubscribe();
-    this.subsAvatar?.unsubscribe();
+    this.subOrig?.unsubscribe();
   }
 
   registerOnChange(fn: any): void {

@@ -115,7 +115,7 @@ class BolHerosController extends Controller
         return response()->json(['message' => 'Hero deleted successfully'], Response::HTTP_OK);
     }
 
-    public function updateAvatar(Request $request, $herosId)
+    public function updateOrigines(Request $request, $herosId)
     {
         $bolHeros = BolHeros::find($herosId);
         // Check if the resource exists
@@ -123,6 +123,8 @@ class BolHerosController extends Controller
             return response()->json(['message' => 'Hero not found'], Response::HTTP_NOT_FOUND);
         }
         $bolHeros['avatar'] = $request->input('avatar');
+        $bolHeros['nom'] = $request->input('nom');
+        $bolHeros['region_id'] = $request->input('region_id');
         $bolHeros->update();
         return response($bolHeros);
     }
