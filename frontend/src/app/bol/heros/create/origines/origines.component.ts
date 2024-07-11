@@ -7,7 +7,8 @@ import {
   FormControl,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
-  ReactiveFormsModule, ValidationErrors,
+  ReactiveFormsModule,
+  ValidationErrors,
   Validators
 } from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
@@ -17,7 +18,6 @@ import {DialogService} from "primeng/dynamicdialog";
 import {Subscription} from "rxjs";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {BolHerosStateService} from "../../../services/bol-heros-state.service";
-import {BolArmureModel} from "../../../models/bol-armure.model";
 import {JsonPipe, NgIf} from "@angular/common";
 import {BolRegionModel} from "../../../models/bol-region.model";
 import {BolHerosService} from "../../../services/bol-heros.service";

@@ -22,7 +22,6 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from "@angular/core/rxjs-interop";
-import {tap} from "rxjs/operators";
 
 @Component({
   selector: 'app-armures',
