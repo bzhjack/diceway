@@ -29,7 +29,7 @@ import {BolHeroCreateTools} from "../create.tools";
 import {BolHerosOrigines} from "../../../models/bol-heros.model";
 
 @Component({
-  selector: 'app-origines',
+  selector: 'bol-origines',
   standalone: true,
   imports: [
     FieldsetModule,

@@ -45,10 +45,11 @@ import {BolCombatComponent} from "./combat/combat.component";
 import {BolAttributsComponent} from "./attributs/attributs.component";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {BolOriginesComponent} from "./origines/origines.component";
+import {BolCarrieresComponent} from "./carrieres/carrieres.component";
 
 
 @Component({
-  selector: 'app-create',
+  selector: 'bol-create-heros',
   standalone: true,
   imports: [
     CardModule,
@@ -77,7 +78,8 @@ import {BolOriginesComponent} from "./origines/origines.component";
     BolArmesComponent,
     BolCombatComponent,
     BolAttributsComponent,
-    BolOriginesComponent
+    BolOriginesComponent,
+    BolCarrieresComponent
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',

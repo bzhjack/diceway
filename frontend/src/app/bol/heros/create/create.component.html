@@ -29,15 +29,15 @@
             <!-------------->
             <!-- Origines -->
             <!-------------->
-            <app-origines [heroId]="heroId()" formControlName="origines"></app-origines>
+            <bol-origines [heroId]="heroId()" formControlName="origines"></bol-origines>
             <!--------------->
             <!-- Attributs -->
             <!--------------->
-            <app-attributs formControlName="attributs"></app-attributs>
+            <bol-attributs formControlName="attributs"></bol-attributs>
             <!--------------->
             <!-- Aptitudes -->
             <!--------------->
-            <app-combat formControlName="combat"></app-combat>
+            <bol-combat formControlName="combat"></bol-combat>
             <!----------------------->
             <!--- Champs calculés --->
             <!----------------------->
@@ -96,7 +96,7 @@
               <!------------------------------------->
               <!--- Fin avantages et désavantages --->
               <!------------------------------------->
-
+              <bol-carrieres></bol-carrieres>
               <!----------------------->
               <!--- Début Carrières --->
               <!----------------------->
@@ -189,8 +189,8 @@
             <!--- Armes et Armures --->
             <!------------------------>
             <div class="flex flex-col flex-auto gap-2 ">
-              <app-armures [heroId]="heroId()" formControlName="armures"></app-armures>
-              <app-armes [heroId]="heroId()" formControlName="armes"></app-armes>
+              <bol-armures [heroId]="heroId()" formControlName="armures"></bol-armures>
+              <bol-armes [heroId]="heroId()" formControlName="armes"></bol-armes>
             </div>
           </div>
         </div>

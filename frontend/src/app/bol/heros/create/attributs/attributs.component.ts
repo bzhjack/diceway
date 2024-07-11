@@ -19,7 +19,7 @@ import {BolMessageComponent} from "../../../message/message.component";
 import {InputNumberModule} from "primeng/inputnumber";
 
 @Component({
-  selector: 'app-attributs',
+  selector: 'bol-attributs',
   standalone: true,
   imports: [
     InputNumberModule,

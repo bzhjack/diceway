@@ -24,7 +24,7 @@ import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from "@angular/core/rxjs-interop";
 
 @Component({
-  selector: 'app-armures',
+  selector: 'bol-armures',
   standalone: true,
   imports: [
     Button,

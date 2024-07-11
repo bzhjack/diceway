@@ -19,7 +19,7 @@ import {toSignal} from '@angular/core/rxjs-interop';
 import {BolHeroCreateTools} from '../create.tools';
 
 @Component({
-  selector: 'app-combat',
+  selector: 'bol-combat',
   standalone: true,
   imports: [
     InputNumberModule,
