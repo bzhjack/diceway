@@ -1,6 +1,22 @@
 <!------------------------------->
 <!-- Répartition des attributs -->
 <!------------------------------->
+<p-messages severity="info" *ngIf="type() === 'orig'">
+  <ng-template pTemplate>
+    <div class="info_icon" inlineSVG="/frontend/assets/rolling-dices.svg"></div>
+    <div class="ml-4">
+      <ul style="margin: 0; padding-inline-start: 20px">
+        <li>Le nom du héros est obligatoire.</li>
+        <li>Vous trouverez des exemples de noms en choissisant votre terre natale.</li>
+      </ul>
+    </div>
+  </ng-template>
+</p-messages>
+
+
+<!------------------------------->
+<!-- Répartition des attributs -->
+<!------------------------------->
 <p-messages severity="info" *ngIf="type() === 'attr'">
   <ng-template pTemplate>
     <div class="info_icon" inlineSVG="/frontend/assets/rolling-dices.svg"></div>

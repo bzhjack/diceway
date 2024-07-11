@@ -18,11 +18,14 @@ import {Subscription} from "rxjs";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {BolHerosStateService} from "../../../services/bol-heros-state.service";
 import {BolArmureModel} from "../../../models/bol-armure.model";
-import {JsonPipe} from "@angular/common";
+import {JsonPipe, NgIf} from "@angular/common";
 import {BolRegionModel} from "../../../models/bol-region.model";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {NgxSpinnerService} from "ngx-spinner";
 import {BolRegionComponent} from "./region/region.component";
+import {BolMessageComponent} from "../../../message/message.component";
+import {OverlayPanelModule} from "primeng/overlaypanel";
+import {BolHeroCreateTools} from "../create.tools";
 
 @Component({
   selector: 'app-origines',
@@ -32,7 +35,10 @@ import {BolRegionComponent} from "./region/region.component";
     ReactiveFormsModule,
     InputTextModule,
     TooltipModule,
-    JsonPipe
+    JsonPipe,
+    BolMessageComponent,
+    NgIf,
+    OverlayPanelModule
   ],
   templateUrl: './origines.component.html',
   styleUrl: './origines.component.scss',
@@ -50,6 +56,10 @@ import {BolRegionComponent} from "./region/region.component";
   ]
 })
 export class BolOriginesComponent implements ControlValueAccessor, OnDestroy {
+
+  originesErrors: { control: string, error: string }[] = [];
+  originesWarns: { step: string, warn: string }[] = [];
+
   readonly #fb = inject(FormBuilder);
   readonly #ds = inject(DialogService);
   readonly #bhss = inject(BolHerosStateService);
@@ -73,20 +83,53 @@ export class BolOriginesComponent implements ControlValueAccessor, OnDestroy {
   };
   private onTouched: () => void = () => {
   };
+
+  protected formChange = toSignal(this.originesForm!.valueChanges);
+
   protected regionList = this.#bhss.regionList;
   protected selectedRegion = computed(() => {
     return this.regionList()?.find((region: BolRegionModel) => region.id === this.formChange()?.region_id)
   });
-  protected formChange = toSignal(this.originesForm!.valueChanges);
+
   public heroId = input<string | null | undefined>(null);
 
   constructor() {
     effect(() => {
       if (this.formChange()) {
+        this.updateErrors();
+        this.updateWarnings();
         this.onChange(this.originesForm.value);
         this.onTouched();
       }
     });
+  }
+
+  private updateErrors() {
+    this.originesErrors = [];
+    // Gestion des erreurs par aptitudes
+    Object.keys(this.originesForm.controls).forEach(key => {
+      const controlErrors = this.originesForm.get(key)?.errors;
+      if (controlErrors != null) {
+        Object.keys(controlErrors).forEach(keyError => {
+          this.originesErrors.push({
+            control: BolHeroCreateTools.translate(key),
+            error: BolHeroCreateTools.translate(keyError)
+          });
+        });
+      }
+    });
+  }
+
+  private updateWarnings() {
+    this.originesWarns = [];
+    if (!this.originesErrors.length) {
+      if (!this.regionIdCtrl.value) {
+        this.originesWarns.push({
+          step: 'Région',
+          warn: 'Vous devez choisir une région.'
+        });
+      }
+    }
   }
 
 

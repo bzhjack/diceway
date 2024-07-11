@@ -19,7 +19,7 @@ import {JsonPipe, NgForOf, NgIf} from "@angular/common";
   styleUrl: './message.component.scss'
 })
 export class BolMessageComponent {
-  type= input<'attr' | 'apt' | 'form-errors' | 'traits' | 'carrieres' | 'form-warn'>('attr')
+  type= input<'attr' | 'apt' | 'orig' | 'form-errors' | 'traits' | 'carrieres' | 'form-warn'>('attr')
   legend = input<string>('');
   data = input<any[]>();
 }
