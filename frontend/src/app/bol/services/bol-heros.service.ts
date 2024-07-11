@@ -93,4 +93,9 @@ export class BolHerosService {
   deleteHeros(id: string): Observable<any> {
     return this.http.delete<BolHerosModel>('/api/bol/heros/delete/' + id);
   }
+
+  // Avatar
+  updateAvatarHeros(herosId: string, avatar: string): Observable<any> {
+    return this.http.post<BolHerosModel>('/api/bol/heros/avatar/update/' + herosId, {avatar});
+  }
 }
