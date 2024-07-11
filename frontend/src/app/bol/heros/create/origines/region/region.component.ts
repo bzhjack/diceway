@@ -1,8 +1,6 @@
-import {Component, OnDestroy, ViewChild} from '@angular/core';
-import {Subscription} from "rxjs";
-import {NgxSpinnerService} from "ngx-spinner";
+import {Component, computed, effect, inject, signal, ViewChild} from '@angular/core';
 import {DataViewModule} from "primeng/dataview";
-import {NgForOf, NgIf} from "@angular/common";
+import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {PanelModule} from "primeng/panel";
 import {ButtonModule} from "primeng/button";
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
@@ -14,8 +12,8 @@ import {FieldsetModule} from "primeng/fieldset";
 import {MessagesModule} from "primeng/messages";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {BolTraitRowComponent} from "../../trait/trait-row/trait-row.component";
-import {BolRegionModel} from "../../../../models/bol-region.model";
-import {BolHerosService} from "../../../../services/bol-heros.service";
+import {BolNomModel, BolRegionModel} from "../../../../models/bol-region.model";
+import {BolHerosStateService} from "../../../../services/bol-heros-state.service";
 
 @Component({
   selector: 'app-region',
@@ -33,38 +31,33 @@ import {BolHerosService} from "../../../../services/bol-heros.service";
     FieldsetModule,
     MessagesModule,
     OverlayPanelModule,
-    BolTraitRowComponent
+    BolTraitRowComponent,
+    JsonPipe
   ],
   templateUrl: './region.component.html',
   styleUrl: './region.component.scss'
 })
-export class BolRegionComponent implements OnDestroy {
-  private subs?: Subscription;
-  public regions: any[] = [];
-  public currentRegion?: any;
-  public selectedName?: string;
-  public ready = false;
+export class BolRegionComponent {
+  readonly #bhss = inject(BolHerosStateService);
+  readonly #ddc = inject(DynamicDialogConfig);
+
+
+  protected regionId = signal(this.#ddc.data.id_region || 0);
+  protected selectedName = signal(this.#ddc.data.nom);
+  protected regionList = this.#bhss.regionList;
+  protected selectedRegion = computed(() => {
+    return this.regionList()?.find((region: BolRegionModel) => region.id === this.regionId())
+  });
+  protected nomsFeminins = computed(() =>this.selectedRegion()!.noms.filter((nom: BolNomModel) => nom.gender === 'F'));
+  protected nomsMasculins = computed(() =>this.selectedRegion()!.noms.filter((nom: BolNomModel) => nom.gender === 'M'));
+
   @ViewChild('regionPanel') scrollRegion!: ScrollPanel;
 
-  constructor(
-    private hs: BolHerosService,
-    public ref: DynamicDialogRef,
-    public config: DynamicDialogConfig,
-    private spinner: NgxSpinnerService) {
-    const regionId = this.config.data.id_region;
-    this.spinner.show();
-    this.ready = false;
-    this.subs = this.hs.regions().subscribe({
-      next: (regions: Array<any>) => {
-        this.regions = regions;
-        if (regionId) {
-          this.setCurrentRegion(this.regions.find((region) => region.id === regionId));
-        }
-        this.ready = true;
-        this.spinner.hide();
-      },
-      error: () => {
-        this.spinner.hide();
+  constructor(public ref: DynamicDialogRef) {
+    effect(() => {
+      let regionElement = document.getElementById('region-' + this.regionId());
+      if (regionElement) {
+        this.scrollRegion?.scrollTop(regionElement?.offsetTop);
       }
     });
   }
@@ -74,25 +67,13 @@ export class BolRegionComponent implements OnDestroy {
   }
 
   validate() {
-    this.ref.close({region: this.currentRegion, nom: this.selectedName});
-  }
-
-  ngOnDestroy() {
-    this.subs?.unsubscribe();
+    this.ref.close({region: this.selectedRegion(), nom: this.selectedName()});
   }
 
   setCurrentRegion(region: BolRegionModel | null) {
     if (region) {
-      this.selectedName = undefined;
-      region.nomsFeminins = region.noms.filter((nom: any) => nom.gender === 'F');
-      region.nomsMasculins = region.noms.filter((nom: any) => nom.gender === 'M');
-      this.currentRegion = region;
-      setTimeout(() => {
-        let regionElement = document.getElementById('region-' + region.id);
-        if (regionElement) {
-          this.scrollRegion?.scrollTop(regionElement?.offsetTop);
-        }
-      });
+      this.selectedName.set(undefined);
+      this.regionId.set(region.id);
     }
   }
 }
