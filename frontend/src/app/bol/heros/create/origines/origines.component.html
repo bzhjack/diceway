@@ -9,14 +9,15 @@
 
     <div class="flex flex-col gap-1 flex-auto" [formGroup]="originesForm">
       <div class="flex flex-col gap-1">
-        <label for="nom"> <i class="pi pi-info-circle"
-                             pTooltip="Vous trouverez des exemples en choissisant votre terre natale."></i>
-          Nom du héro</label>
-        <input formControlName="nom" pInputText id="nom" class="p-inputtext-sm" />
+        <label for="nom">
+          <i class="pi pi-info-circle" pTooltip="Vous trouverez des exemples en choissisant votre terre natale."></i>
+          Nom du héro
+        </label>
+        <input formControlName="nom" pInputText id="nom" class="p-inputtext-sm"/>
       </div>
       <div class="flex flex-col gap-1 relative">
         <label>Région</label>
-        <input [value]="selectedRegion()?.region" pInputText class="p-inputtext-sm" autocomplete="new" tabindex="-1" />
+        <input [value]="selectedRegion()?.region" pInputText class="p-inputtext-sm" autocomplete="new" tabindex="-1"/>
         <div class="input-overlay" style="" (click)="region()">
           <div><i class="hide-region icon-button pi pi-times" (click)="clearRegion($event)"></i></div>
         </div>
