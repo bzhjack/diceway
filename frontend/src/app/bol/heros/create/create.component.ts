@@ -1,4 +1,4 @@
-import {Component, computed, effect, inject, OnDestroy, Signal} from '@angular/core';
+import {Component, computed, inject, OnDestroy} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {InputTextModule} from "primeng/inputtext";
 import {InputNumberModule} from 'primeng/inputnumber';
@@ -35,18 +35,19 @@ import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {DropdownModule} from "primeng/dropdown";
 import {Ripple} from "primeng/ripple";
 import {ScrollPanelModule} from 'primeng/scrollpanel';
-import {BolArmuresComponent} from "./armures/armures.component";
-import {BolArmesComponent} from "./armes/armes.component";
-import {BolCombatComponent} from "./combat/combat.component";
-import {BolAttributsComponent} from "./attributs/attributs.component";
 import {toSignal} from "@angular/core/rxjs-interop";
-import {BolOriginesComponent} from "./origines/origines.component";
-import {BolCarrieresComponent} from "./carrieres/carrieres.component";
 import {BolHerosStateService} from "../../services/bol-heros-state.service";
 import {BolHerosArmureModel} from "../../models/bol-armure.model";
 import {BolHerosArmeModel} from "../../models/bol-arme.model";
 import {tap} from "rxjs/operators";
-import {BolRessourcesComponent} from "./ressources/ressources.component";
+import {BolHerosOriginesComponent} from "./origines/origines.component";
+import {BolHerosRessourcesComponent} from "./ressources/ressources.component";
+import {BolHerosAttributsComponent} from "./attributs/attributs.component";
+import {BolHerosCombatComponent} from "./combat/combat.component";
+import {BolHerosCarrieresComponent} from "./carrieres/carrieres.component";
+import {BolHerosArmuresComponent} from "./armures/armures.component";
+import {BolHerosArmesComponent} from "./armes/armes.component";
+
 
 
 @Component({
@@ -75,13 +76,13 @@ import {BolRessourcesComponent} from "./ressources/ressources.component";
     DropdownModule,
     Ripple,
     NgTemplateOutlet,
-    BolArmuresComponent,
-    BolArmesComponent,
-    BolCombatComponent,
-    BolAttributsComponent,
-    BolOriginesComponent,
-    BolCarrieresComponent,
-    BolRessourcesComponent
+    BolHerosOriginesComponent,
+    BolHerosRessourcesComponent,
+    BolHerosAttributsComponent,
+    BolHerosCombatComponent,
+    BolHerosCarrieresComponent,
+    BolHerosArmuresComponent,
+    BolHerosArmesComponent,
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',

@@ -44,12 +44,12 @@ import {toSignal} from "@angular/core/rxjs-interop";
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolArmuresComponent),
+      useExisting: forwardRef(() => BolHerosArmuresComponent),
       multi: true,
     }
   ]
 })
-export class BolArmuresComponent implements ControlValueAccessor, OnDestroy {
+export class BolHerosArmuresComponent implements ControlValueAccessor, OnDestroy {
   private subs?: Subscription;
   public selectedArmure: BolArmureModel | null = null;
 

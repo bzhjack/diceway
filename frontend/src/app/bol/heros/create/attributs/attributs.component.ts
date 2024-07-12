@@ -34,17 +34,17 @@ import {InputNumberModule} from "primeng/inputnumber";
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolAttributsComponent),
+      useExisting: forwardRef(() => BolHerosAttributsComponent),
       multi: true,
     },
     {
       provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => BolAttributsComponent),
+      useExisting: forwardRef(() => BolHerosAttributsComponent),
       multi: true,
     }
   ]
 })
-export class BolAttributsComponent implements ControlValueAccessor, Validator {
+export class BolHerosAttributsComponent implements ControlValueAccessor, Validator {
   readonly #fb = inject(FormBuilder);
   attributErrors: { control: string, error: string }[] = [];
   attributWarns: { step: string, warn: string }[] = [];

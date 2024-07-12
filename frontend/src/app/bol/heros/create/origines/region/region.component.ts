@@ -37,7 +37,7 @@ import {BolHerosStateService} from "../../../../services/bol-heros-state.service
   templateUrl: './region.component.html',
   styleUrl: './region.component.scss'
 })
-export class BolRegionComponent {
+export class BolHerosRegionComponent {
   readonly #bhss = inject(BolHerosStateService);
   readonly #ddc = inject(DynamicDialogConfig);
 

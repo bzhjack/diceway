@@ -44,12 +44,12 @@ import {BolArmeModel, BolHerosArmeModel} from "../../../models/bol-arme.model";
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolArmesComponent),
+      useExisting: forwardRef(() => BolHerosArmesComponent),
       multi: true,
     }
   ]
 })
-export class BolArmesComponent implements ControlValueAccessor {
+export class BolHerosArmesComponent implements ControlValueAccessor {
   private subs?: Subscription;
   public selectedArme: BolArmeModel | null = null;
 

@@ -25,17 +25,12 @@ import {InputTextModule} from "primeng/inputtext";
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolRessourcesComponent),
-      multi: true,
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => BolRessourcesComponent),
+      useExisting: forwardRef(() => BolHerosRessourcesComponent),
       multi: true,
     }
   ]
 })
-export class BolRessourcesComponent implements ControlValueAccessor , Validator{
+export class BolHerosRessourcesComponent implements ControlValueAccessor {
 
   readonly #fb = inject(FormBuilder);
 
@@ -69,8 +64,5 @@ export class BolRessourcesComponent implements ControlValueAccessor , Validator{
     } else {
       this.ressourcesForm.enable();
     }
-  }
-  validate(control: AbstractControl): ValidationErrors | null {
-    return this.ressourcesForm.valid ? null : { invalidForm: { valid: false, message: "Aptitudes form is invalid" } };
   }
 }

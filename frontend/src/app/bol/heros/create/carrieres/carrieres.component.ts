@@ -50,17 +50,17 @@ import {Subscription} from "rxjs";
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolCarrieresComponent),
+      useExisting: forwardRef(() => BolHerosCarrieresComponent),
       multi: true,
     },
     {
       provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => BolCarrieresComponent),
+      useExisting: forwardRef(() => BolHerosCarrieresComponent),
       multi: true,
     }
   ]
 })
-export class BolCarrieresComponent implements ControlValueAccessor, Validator , OnDestroy {
+export class BolHerosCarrieresComponent implements ControlValueAccessor, Validator , OnDestroy {
   private subs?: Subscription;
   readonly #fb = inject(FormBuilder);
   readonly #bhss = inject(BolHerosStateService);
