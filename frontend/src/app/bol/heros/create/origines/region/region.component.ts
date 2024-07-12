@@ -16,7 +16,7 @@ import {BolNomModel, BolRegionModel} from "../../../../models/bol-region.model";
 import {BolHerosStateService} from "../../../../services/bol-heros-state.service";
 
 @Component({
-  selector: 'app-region',
+  selector: 'bol-heros-region',
   standalone: true,
   imports: [
     DataViewModule,

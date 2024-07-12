@@ -8,7 +8,7 @@ import {
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
-  ValidationErrors,
+  ValidationErrors, Validator,
   Validators
 } from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
@@ -29,7 +29,7 @@ import {BolHeroCreateTools} from "../create.tools";
 import {BolHerosOrigines} from "../../../models/bol-heros.model";
 
 @Component({
-  selector: 'bol-origines',
+  selector: 'bol-heros-origines',
   standalone: true,
   imports: [
     FieldsetModule,
@@ -56,7 +56,7 @@ import {BolHerosOrigines} from "../../../models/bol-heros.model";
     }
   ]
 })
-export class BolOriginesComponent implements ControlValueAccessor, OnDestroy {
+export class BolOriginesComponent implements ControlValueAccessor, Validator, OnDestroy {
 
   originesErrors: { control: string, error: string }[] = [];
   originesWarns: { step: string, warn: string }[] = [];
@@ -210,7 +210,6 @@ export class BolOriginesComponent implements ControlValueAccessor, OnDestroy {
 
   writeValue(value: any): void {
     if (value) {
-      console.log(value);
       this.originesForm.patchValue(value);
     }
   }

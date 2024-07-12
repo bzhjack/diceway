@@ -3,34 +3,8 @@ import {AbstractControl, FormArray, ValidationErrors, ValidatorFn} from "@angula
 export const globalFormValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   let errors = {};
 
-  // Controle des attributs
-  const controlsAttrIds = ['vigueur', 'agilite', 'aura', 'esprit'];
-  const controlsAttrArray = controlsAttrIds.map(id => control.get(id));
-  const attrs = controlsAttrArray.map(ctrl => ctrl?.value);
-  const countNegativeAttr = attrs.filter(value => value === -1).length;
-  if (countNegativeAttr > 1) {
-    errors = Object.assign(errors, {'attrTooManyNegative': true});
-  }
-  const sumAttr = attrs.reduce((acc, val) => acc + val, 0);
-  if (sumAttr > 4) {
-    errors = Object.assign(errors, { 'attrSumExceeded': true });
-  }
-
-  // Controle des aptitudes de combat
-  const controlsAptIds = ['tir', 'melee', 'defense', 'initiative'];
-  const controlsAptArray = controlsAptIds.map(id => control.get(id));
-  const apts = controlsAptArray.map(ctrl => ctrl?.value);
-  const countNegativeApt = apts.filter(value => value === -1).length;
-  if (countNegativeApt > 1) {
-    errors = Object.assign(errors, {'aptTooManyNegative': true});
-  }
-  const sumApt = apts.reduce((acc, val) => acc + val, 0);
-  if (sumApt > 4) {
-    errors = Object.assign(errors, { 'aptSumExceeded': true });
-  }
-
   // Controle des carrières
-  const carrieres = control.get('carrieres') as FormArray;
+  /*const carrieres = control.get('carrieres') as FormArray;
   if (carrieres) {
     let sumCarriere = 0;
     for (const c of carrieres.controls) {
@@ -39,7 +13,7 @@ export const globalFormValidator: ValidatorFn = (control: AbstractControl): Vali
     if (sumCarriere > 4) {
       errors = Object.assign(errors, { 'carrSumExceeded': true });
     }
-  }
+  }*/
 
 
   return errors;
@@ -119,3 +93,20 @@ export const attributsFormValidator: ValidatorFn = (control: AbstractControl): V
   }
   return errors;
 }
+
+export const carrieresFormValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  let errors = {};
+
+  // Controle des carrières
+  const carrieres = control.get('carrieres') as FormArray;
+  if (carrieres) {
+    let sumCarriere = 0;
+    for (const c of carrieres.controls) {
+      sumCarriere += c.get('value')?.value;
+    }
+    if (sumCarriere > 4) {
+      errors = Object.assign(errors, { 'carrSumExceeded': true });
+    }
+  }
+  return errors;
+};

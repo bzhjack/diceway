@@ -7,7 +7,7 @@ import {
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
-  ValidationErrors
+  ValidationErrors, Validator
 } from "@angular/forms";
 import {InputNumberModule} from "primeng/inputnumber";
 import {OverlayPanelModule} from "primeng/overlaypanel";
@@ -19,7 +19,7 @@ import {toSignal} from '@angular/core/rxjs-interop';
 import {BolHeroCreateTools} from '../create.tools';
 
 @Component({
-  selector: 'bol-combat',
+  selector: 'bol-heros-combat',
   standalone: true,
   imports: [
     InputNumberModule,
@@ -44,7 +44,7 @@ import {BolHeroCreateTools} from '../create.tools';
     }
   ]
 })
-export class BolCombatComponent implements ControlValueAccessor {
+export class BolCombatComponent implements ControlValueAccessor, Validator {
   readonly #fb = inject(FormBuilder);
   aptitudeErrors: { control: string, error: string }[] = [];
   aptitudeWarns: { step: string, warn: string }[] = [];

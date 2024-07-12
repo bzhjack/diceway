@@ -6,7 +6,15 @@ import {DropdownModule} from "primeng/dropdown";
 import {NgForOf, NgIf} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {Ripple} from "primeng/ripple";
-import {FormArray, FormBuilder, FormControl, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule} from "@angular/forms";
+import {
+  ControlValueAccessor,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  NG_VALUE_ACCESSOR,
+  ReactiveFormsModule
+} from "@angular/forms";
 import {Subscription} from "rxjs";
 import {BolHerosStateService} from "../../../services/bol-heros-state.service";
 import {BolHerosService} from "../../../services/bol-heros.service";
@@ -16,7 +24,7 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {BolArmeModel, BolHerosArmeModel} from "../../../models/bol-arme.model";
 
 @Component({
-  selector: 'bol-armes',
+  selector: 'bol-heros-armes',
   standalone: true,
   imports: [
     Button,
@@ -41,7 +49,7 @@ import {BolArmeModel, BolHerosArmeModel} from "../../../models/bol-arme.model";
     }
   ]
 })
-export class BolArmesComponent {
+export class BolArmesComponent implements ControlValueAccessor {
   private subs?: Subscription;
   public selectedArme: BolArmeModel | null = null;
 

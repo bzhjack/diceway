@@ -6,31 +6,15 @@ export interface BolHerosModel {
   id: string | null;
   joueur: string;
 
-  vitalite: number,
-  heroisme: number,
-
-  combat: {
-    initiative: number,
-    melee: number,
-    tir: number,
-    defense: number,
-  },
-  attributs: {
-    vigueur: number,
-    aura: number,
-    esprit: number,
-    agilite: number
-  },
-  origines: {
-    avatar: string | null,
-    nom: string | null,
-    region_id: number | null,
-  },
+  combat: BolHerosCombat,
+  attributs: BolHerosAttributs,
+  origines: BolHerosOrigines,
+  ressources: BolHerosRessources,
   traits: any[],
-  heroism_cost: number,
   carrieres: BolHerosCarriereModel[],
-  armures: BolHerosArmureModel[],
-  armes: BolHerosArmeModel[]
+  armures: BolHerosArmureModel[] | number[],
+  armes: BolHerosArmeModel[] | number[],
+
 }
 
 export interface BolHerosCombat {
@@ -49,4 +33,8 @@ export interface BolHerosOrigines {
   nom: string | null;
   region_id: number | null;
   avatar: string | null;
+}
+export interface BolHerosRessources {
+  vitalite: number;
+  heroisme: number;
 }
