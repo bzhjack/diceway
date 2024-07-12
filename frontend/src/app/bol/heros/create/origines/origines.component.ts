@@ -86,11 +86,7 @@ export class BolHerosOriginesComponent implements ControlValueAccessor, Validato
   };
 
   protected formChange = toSignal(this.originesForm!.valueChanges);
-
-  protected regionList = this.#bhss.regionList;
-  protected selectedRegion = computed(() => {
-    return this.regionList()?.find((region: BolRegionModel) => region.id === this.formChange()?.region_id)
-  });
+  protected currentRegion = this.#bhss.currentHerosRegion;
 
   public heroId = input<string | null | undefined>(null);
 

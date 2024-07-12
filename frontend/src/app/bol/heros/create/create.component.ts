@@ -14,7 +14,7 @@ import {
   BolHerosOrigines,
   BolHerosRessources
 } from "../../models/bol-heros.model";
-import {forkJoin, map, Observable, Subscription} from "rxjs";
+import {delay, forkJoin, map, Observable, Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {FieldsetModule} from "primeng/fieldset";
@@ -47,6 +47,8 @@ import {BolHerosCombatComponent} from "./combat/combat.component";
 import {BolHerosCarrieresComponent} from "./carrieres/carrieres.component";
 import {BolHerosArmuresComponent} from "./armures/armures.component";
 import {BolHerosArmesComponent} from "./armes/armes.component";
+import {BolHerosTraitsComponent} from "./traits/traits.component";
+import {BolHerosTraitsModel} from "../../models/bol-trait.model";
 
 
 
@@ -83,6 +85,7 @@ import {BolHerosArmesComponent} from "./armes/armes.component";
     BolHerosCarrieresComponent,
     BolHerosArmuresComponent,
     BolHerosArmesComponent,
+    BolHerosTraitsComponent,
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
@@ -104,8 +107,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   public joueurCtrl = new FormControl('', Validators.required);
 
   // Avantages et désavantages
-  traitsArray = this.fb.array([]);
-
+  public traitsCtrl = new FormControl<BolHerosTraitsModel[]>([]);
   public armuresCtrl = new FormControl<number[]>([]);
   public armesCtrl = new FormControl<number[]>([]);
   public carrieresCtrl = new FormControl<BolHerosCarriereModel[]>([]);
@@ -119,7 +121,7 @@ export class BolHerosCreateComponent implements OnDestroy {
     {
       id: this.idCtrl,
       joueur: this.joueurCtrl,
-      traits: this.traitsArray,
+      traits: this.traitsCtrl,
       attributs: this.attributsCtrl,
       combat: this.combatCtrl,
       armures: this.armuresCtrl,
@@ -159,13 +161,14 @@ export class BolHerosCreateComponent implements OnDestroy {
       armures: value.armures ?? [],
       armes: value.armes ?? []
     })),
-    tap(() => this.#herosStateService.herosState.set(this.currentHero() as BolHerosModel))
+    tap((value) => this.#herosStateService.currentHeros.set(value))
   );
   protected currentHero = toSignal<BolHerosModel>(this.valueChanges$);
   protected heroId = computed(() => this.currentHero()?.id);
 
   get traits() {
-    return this.herosForm.controls["traits"] as FormArray;
+    return [] as unknown as FormArray;
+    //return this.herosForm.controls["traits"] as FormArray;
   }
 
   constructor(
@@ -211,18 +214,7 @@ export class BolHerosCreateComponent implements OnDestroy {
             attributs: hero.attributs,
             origines: hero.origines,
             carrieres: hero.carrieres.map(item => { return {carriere_id: item.carriere_id, value: item.value}; }),
-          });
-
-          this.traits.clear();
-          this.avantages = [];
-          this.desavantages = [];
-          hero.traits.forEach((trait) => {
-            this.addTrait({type: trait.type, id: trait.id, detail: trait.detail});
-            if (trait.type === "A") {
-              this.avantages.push({...trait.traitable, ...{pivot: {detail: trait.detail}}});
-            } else {
-              this.desavantages.push({...trait.traitable, ...{pivot: {detail: trait.detail}}});
-            }
+            traits: hero.traits.map(item => { return {trait_id: item.trait_id, type: item.type}; })
           });
           this.spinner.hide();
         },

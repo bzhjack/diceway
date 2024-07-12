@@ -1,4 +1,4 @@
-import {effect, inject, Injectable, signal} from '@angular/core';
+import {computed, effect, inject, Injectable, signal} from '@angular/core';
 import {BolHerosService} from "./bol-heros.service";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {BolHerosModel} from "../models/bol-heros.model";
@@ -12,11 +12,18 @@ export class BolHerosStateService {
   armeList = toSignal(this.#bhs.armes());
   regionList = toSignal(this.#bhs.regions());
   carriereList = toSignal(this.#bhs.carrieres());
-  herosState = signal<BolHerosModel | null>(null)
+  currentHeros = signal<BolHerosModel | null>(null)
+  avantages = toSignal(this.#bhs.avantages());
+  desavantages = toSignal(this.#bhs.desavantages());
+
+  currentHerosRegion = computed(() => this.regionList()?.find((region) => this.currentHeros()?.origines.region_id === region.id));
+  regionalAvantages = computed(() => this.currentHerosRegion()?.avantages);
+  regionalDesavantages = computed(() => this.currentHerosRegion()?.desavantages);
 
   constructor() {
     effect(() => {
-      console.log('herosState changed:' , this.herosState());
+      console.log('currentHero changed:', this.currentHeros());
+      console.log('currentRegion changed:', this.currentHerosRegion());
     });
   }
 }

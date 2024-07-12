@@ -22,29 +22,15 @@
               <input formControlName="joueur" pInputText id="joueur" class="p-inputtext-sm"/>
             </div>
           </div>
-          <!----------------------------->
-          <!--- attributs , aptitudes --->
-          <!----------------------------->
           <div class="flex gap-2">
-            <!-------------->
-            <!-- Origines -->
-            <!-------------->
             <bol-heros-origines [heroId]="heroId()" formControlName="origines"></bol-heros-origines>
-            <!----------------------->
-            <!--- Champs calculés --->
-            <!----------------------->
             <bol-heros-ressources formControlName="ressources"></bol-heros-ressources>
           </div>
 
           <div class="flex gap-2">
-            <!--------------->
-            <!-- Attributs -->
-            <!--------------->
             <bol-heros-attributs formControlName="attributs"></bol-heros-attributs>
-            <!------------------------->
-            <!-- Aptitudes de combat -->
-            <!------------------------->
             <bol-heros-combat formControlName="combat"></bol-heros-combat>
+            <bol-heros-traits></bol-heros-traits>
           </div>
 
           <!------------------------------>
