@@ -27,7 +27,7 @@ import {BolHeroCreateTools} from "../create.tools";
 import {Subscription} from "rxjs";
 
 @Component({
-  selector: 'bol-carrieres',
+  selector: 'bol-heros-carrieres',
   standalone: true,
   imports: [
     BolMessageComponent,

@@ -7,7 +7,13 @@ import {ToolbarModule} from "primeng/toolbar";
 import {ButtonModule} from "primeng/button";
 import {SplitButtonModule} from "primeng/splitbutton";
 import {BolHerosService} from "../../services/bol-heros.service";
-import {BolHerosAttributs, BolHerosCombat, BolHerosModel, BolHerosOrigines} from "../../models/bol-heros.model";
+import {
+  BolHerosAttributs,
+  BolHerosCombat,
+  BolHerosModel,
+  BolHerosOrigines,
+  BolHerosRessources
+} from "../../models/bol-heros.model";
 import {forkJoin, map, Observable, Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
@@ -40,6 +46,7 @@ import {BolHerosStateService} from "../../services/bol-heros-state.service";
 import {BolHerosArmureModel} from "../../models/bol-armure.model";
 import {BolHerosArmeModel} from "../../models/bol-arme.model";
 import {tap} from "rxjs/operators";
+import {BolRessourcesComponent} from "./ressources/ressources.component";
 
 
 @Component({
@@ -73,7 +80,8 @@ import {tap} from "rxjs/operators";
     BolCombatComponent,
     BolAttributsComponent,
     BolOriginesComponent,
-    BolCarrieresComponent
+    BolCarrieresComponent,
+    BolRessourcesComponent
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
@@ -94,14 +102,8 @@ export class BolHerosCreateComponent implements OnDestroy {
   public idCtrl: FormControl<string | null> = new FormControl(null);
   public joueurCtrl = new FormControl('', Validators.required);
 
-  // Champs calculés
-  public vitaliteCtrl = new FormControl<number | null>(0);
-  public heroismeCtrl = new FormControl<number | null>(5);
-
   // Avantages et désavantages
   traitsArray = this.fb.array([]);
-  heroismCostCtrl = new FormControl<number>(0);
-
 
   public armuresCtrl = new FormControl<number[]>([]);
   public armesCtrl = new FormControl<number[]>([]);
@@ -110,32 +112,30 @@ export class BolHerosCreateComponent implements OnDestroy {
   public combatCtrl = new FormControl<BolHerosCombat>({defense: 0,initiative: 0,melee: 0,tir: 0});
   public attributsCtrl = new FormControl<BolHerosAttributs>({vigueur: 0,agilite: 0,esprit: 0,aura: 0});
   public originesCtrl = new FormControl<BolHerosOrigines>({nom: null,region_id: null, avatar: null});
+  public ressourcesCtrl = new FormControl<BolHerosRessources>({vitalite: 0 , heroisme: 0});
 
   herosForm = this.fb.group(
     {
       id: this.idCtrl,
       joueur: this.joueurCtrl,
-
-      heroisme: this.heroismeCtrl,
-      vitalite: this.vitaliteCtrl,
       traits: this.traitsArray,
-      heroism_cost: this.heroismCostCtrl,
       attributs: this.attributsCtrl,
       combat: this.combatCtrl,
       armures: this.armuresCtrl,
       armes: this.armesCtrl,
       origines: this.originesCtrl,
-      carrieres: this.carrieresCtrl
+      carrieres: this.carrieresCtrl,
+      ressources: this.ressourcesCtrl
     }, {validators: globalFormValidator}
   );
   valueChanges$: Observable<BolHerosModel> = this.herosForm.valueChanges.pipe(
     map(value => ({
       id: value.id ?? null,
       joueur: value.joueur ?? '',
-
-      vitalite: value.vitalite ?? 0,
-      heroisme: value.heroisme ?? 0,
-
+      ressources: {
+        vitalite: value.ressources?.vitalite ?? 0,
+        heroisme: value.ressources?.heroisme ?? 0,
+      },
       combat: {
         initiative: value.combat?.initiative ?? 0,
         melee: value.combat?.melee ?? 0,
@@ -154,7 +154,6 @@ export class BolHerosCreateComponent implements OnDestroy {
         region_id: value.origines?.region_id ?? null,
       },
       traits: value.traits ?? [],
-      heroism_cost: value.heroism_cost ?? 0,
       carrieres: value.carrieres ?? [],
       armures: value.armures ?? [],
       armes: value.armes ?? []
@@ -204,11 +203,7 @@ export class BolHerosCreateComponent implements OnDestroy {
           this.herosForm.patchValue({
             id: hero.id,
             joueur: hero.joueur,
-
-            vitalite: hero.vitalite,
-            heroisme: hero.heroisme,
-
-            heroism_cost: hero.heroism_cost,
+            ressources: hero.ressources,
             armures: hero.armures.map((item) => (item as BolHerosArmureModel).armure_id),
             armes: hero.armes.map(item => (item as BolHerosArmeModel).arme_id),
             combat: hero.combat,
@@ -270,7 +265,7 @@ export class BolHerosCreateComponent implements OnDestroy {
       width: '1200px',
       height: '90vh',
       data: {
-        //id_region: this.regionIdCtrl.value,
+        id_region: this.currentHero()?.origines.region_id,
         avantages: this.avantages,
         desavantages: this.desavantages
       },
@@ -279,8 +274,6 @@ export class BolHerosCreateComponent implements OnDestroy {
     this.subs = this.ref?.onClose.subscribe((data: any) => {
       if (data) {
         this.traits.clear();
-        this.heroismCostCtrl.setValue(data.cost);
-        this.heroismeCtrl.setValue(5 - data.cost);
         this.avantages = data.avantages.slice();
         this.desavantages = data.desavantages.slice();
         data.avantages.forEach((avantage: BolAvantageModel) => {

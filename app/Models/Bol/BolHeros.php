@@ -21,7 +21,7 @@ class BolHeros extends Model
     'vigueur', 'agilite', 'esprit', 'aura',
     'nom','avatar','region_id', 'region'
     ];
-    protected $appends = ['combat', 'attributs', 'origines'];
+    protected $appends = ['combat', 'attributs', 'origines', 'ressources'];
     protected $fillable = [
         'user_id',
         'joueur',
@@ -72,5 +72,12 @@ class BolHeros extends Model
             'region_id' => $this->region_id,
             'avatar' => $this->avatar
         ];
+    }
+public function getRessourcesAttribute()
+    {
+        return [
+            'vitalite' => $this->vitalite,
+            'heroisme' => $this->heroisme
+                    ];
     }
 }

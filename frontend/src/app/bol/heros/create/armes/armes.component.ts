@@ -24,7 +24,7 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {BolArmeModel, BolHerosArmeModel} from "../../../models/bol-arme.model";
 
 @Component({
-  selector: 'bol-armes',
+  selector: 'bol-heros-armes',
   standalone: true,
   imports: [
     Button,

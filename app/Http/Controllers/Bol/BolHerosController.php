@@ -55,8 +55,8 @@ class BolHerosController extends Controller
      */
     public function update(Request $request)
     {
-        $heros = $request->except('traits', 'carrieres', 'armures', 'armes', 'combat', 'attributs', 'origines');
-        $herosId = $heros['id'];
+        //$heros = $request->except('traits', 'carrieres', 'armures', 'armes', 'combat', 'attributs', 'origines', 'ressources');
+        $herosId = $request->input('id');
 
         $attributs = $request->input('attributs');
         $heros['vigueur'] = $attributs['vigueur'];
@@ -75,6 +75,10 @@ class BolHerosController extends Controller
         $heros['region_id'] = $origines['region_id'];
         $heros['avatar'] = $origines['avatar'];
 
+        $ressources = $request->input('ressources');
+        $heros['vitalite'] = $ressources['vitalite'];
+        $heros['heroisme'] = $ressources['heroisme'];
+
         $hero = BolHeros::where('user_id', Auth::id())->where('id', $herosId)->get()->first();
         if ($hero === null) {
             return response()->json(['error' => 'Hero not found'], 404);
@@ -86,6 +90,7 @@ class BolHerosController extends Controller
         foreach ($carrieres as $carriere) {
             BolCarriereController::update($carriere, $herosId);
         }
+
         $traits = $request->input('traits');
         if ($heros["region_id"] === null || count($traits) === 0) {
             BolHerosTrait::where('heros_id', $herosId)->delete();
