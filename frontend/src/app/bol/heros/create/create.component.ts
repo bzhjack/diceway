@@ -179,8 +179,6 @@ export class BolHerosCreateComponent implements OnDestroy {
             carrieres: hero.carrieres.map(item => { return {carriere_id: item.carriere_id, value: item.value}; }),
           });
 
-          console.log("HERO", this.herosForm.value);
-
           this.traits.clear();
           this.avantages = [];
           this.desavantages = [];
@@ -212,7 +210,6 @@ export class BolHerosCreateComponent implements OnDestroy {
     this.spinner.show();
     this.subs?.unsubscribe();
     if (hero.id !== null) {
-      console.log("SUBMIT", this.herosForm.value);
       this.subs = this.hs.updateHeros(this.herosForm.value as unknown as BolHerosModel).subscribe({
         next: () => {
           this.spinner.hide();
