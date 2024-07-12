@@ -8,7 +8,7 @@ import {BolHeroCreateTools} from "../../create.tools";
 import {CheckboxModule} from "primeng/checkbox";
 
 @Component({
-  selector: 'app-trait-row',
+  selector: 'bol-heros-trait-row',
   standalone: true,
   imports: [
     OverlayPanelModule,
@@ -20,7 +20,7 @@ import {CheckboxModule} from "primeng/checkbox";
   templateUrl: './trait-row.component.html',
   styleUrl: './trait-row.component.scss'
 })
-export class BolTraitRowComponent {
+export class BolHerosTraitRowComponent {
   @Input() avantage?: BolAvantageModel;
   @Input() desavantage?: BolDesavantageModel;
   @Input() disabled = false;

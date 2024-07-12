@@ -13,8 +13,8 @@ export class BolHerosStateService {
   regionList = toSignal(this.#bhs.regions());
   carriereList = toSignal(this.#bhs.carrieres());
   currentHeros = signal<BolHerosModel | null>(null)
-  avantages = toSignal(this.#bhs.avantages());
-  desavantages = toSignal(this.#bhs.desavantages());
+  avantagesList = toSignal(this.#bhs.avantages());
+  desavantagesList = toSignal(this.#bhs.desavantages());
 
   currentHerosRegion = computed(() => this.regionList()?.find((region) => this.currentHeros()?.origines.region_id === region.id));
   regionalAvantages = computed(() => this.currentHerosRegion()?.avantages);

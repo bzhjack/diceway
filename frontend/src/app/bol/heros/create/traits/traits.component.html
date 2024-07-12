@@ -1,1 +1,46 @@
-<p>traits works!</p>
+<p-fieldset class="w-full">
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-2">
+      <div>Armures</div>
+    </div>
+  </ng-template>
+  <!-- Body Armures -->
+  <div class="flex flex-col gap-1">
+  </div>
+  <!-- Footer Armures -->
+  <div class="flex justify-end gap-2">
+    <p-button label="Ajouter un avantage" size="small" [link]="true" class="text-cyan-600" (click)="selectedAvantage.set(null); opTrait.toggle($event)"/>
+  </div>
+</p-fieldset>
+
+
+<p-overlayPanel #opTrait>
+  <div class="flex flex-col gap-4">
+    <div>Ajouter un avantage</div>
+    <p-dropdown [style]="{ width: '250px' }" [options]="avantagesList()"
+                [(ngModel)]="selectedAvantage" [ngModelOptions]="{standalone: true}" [filter]="true"
+                filterBy="armure" [showClear]="true" placeholder="Selectionner un avantage">
+
+      <ng-template pTemplate="selectedItem" let-selectedOption>
+        <div class="flex align-items-center gap-2">
+          <div>{{ selectedOption.avantage }}</div>
+        </div>
+      </ng-template>
+
+      <ng-template let-avantage pTemplate="item">
+        <div class="flex flex-col gap-2">
+          <div class="text-2xl">{{ avantage.avantage }}</div>
+          @if (avantage.pivot && avantage.pivot.detail) {
+            ({{avantage.pivot.detail}})
+          }
+        </div>
+      </ng-template>
+    </p-dropdown>
+    <div class="flex justify-end gap-2">
+      <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
+              (click)="opTrait.toggle($event)"></button>
+      <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
+              (click)="addTraits(opTrait, $event)"></button>
+    </div>
+  </div>
+</p-overlayPanel>

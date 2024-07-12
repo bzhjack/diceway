@@ -104,7 +104,7 @@
           <div style="position: absolute; inset:15px;">
             <p-scrollPanel [style]="{display: 'block', height: '100%'}">
               <div class="flex gap-2 mb-2" *ngFor="let avantage of selectedRegion()?.avantages">
-                <app-trait-row [avantage]="avantage"></app-trait-row>
+                <bol-heros-trait-row [avantage]="avantage"></bol-heros-trait-row>
               </div>
             </p-scrollPanel>
           </div>
@@ -113,7 +113,7 @@
           <div style="position: absolute; inset:15px;">
             <p-scrollPanel [style]="{display: 'block', height: '100%'}">
               <div class="flex gap-2 mb-2" *ngFor="let desavantage of selectedRegion()?.desavantages">
-                <app-trait-row [desavantage]="desavantage"></app-trait-row>
+                <bol-heros-trait-row  [desavantage]="desavantage"></bol-heros-trait-row >
               </div>
             </p-scrollPanel>
           </div>

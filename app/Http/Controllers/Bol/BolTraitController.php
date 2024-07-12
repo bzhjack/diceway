@@ -69,4 +69,22 @@ class BolTraitController extends Controller
         // Return a successful response
         return response()->json(['message' => 'Traits deleted successfully'], Response::HTTP_OK);
     }
+public function create(Request $request, $herosId)
+    {
+        $newTrait = $request->input();
+        $trait = BolHerosTrait::where('heros_id', $herosId)->where('traitable_id', $newTrait['traitable_id'])->first();
+        if ($trait) {
+            return response()->json(['message' => 'Traits déjà existant'], 403);
+        }
+           $traitable_type = $newTrait['type'] == 'A' ? BolAvantage::class : BolDesavantage::class;
+                    $heros_trait = [
+                        'heros_id' => $herosId,
+                        'traitable_id' => $newTrait['traitable_id'],
+                        'type' => $newTrait['type'],
+                        'detail' => $newTrait['detail'],
+                        'traitable_type' => $traitable_type,
+                    ];
+                    BolHerosTrait::create($heros_trait);
+        return response()->json(['success' => $newTrait]);
+    }
 }

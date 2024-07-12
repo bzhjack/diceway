@@ -1,10 +1,44 @@
-import {Component, forwardRef} from '@angular/core';
-import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from "@angular/forms";
+import {Component, computed, forwardRef, inject, input, OnDestroy, signal} from '@angular/core';
+import {
+  ControlValueAccessor,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  NG_VALUE_ACCESSOR
+} from "@angular/forms";
+import {Button, ButtonDirective} from "primeng/button";
+import {DropdownModule} from "primeng/dropdown";
+import {NgForOf, NgIf} from "@angular/common";
+import {OverlayPanelModule} from "primeng/overlaypanel";
+import {PrimeTemplate} from "primeng/api";
+import {Ripple} from "primeng/ripple";
+import {BolHerosStateService} from "../../../services/bol-heros-state.service";
+import {BolArmureModel, BolHerosArmureModel} from "../../../models/bol-armure.model";
+import {BolAvantageModel} from "../../../models/bol-avantage.model";
+import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
+import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
+import {FieldsetModule} from "primeng/fieldset";
+import {BolHerosTraitsModel} from "../../../models/bol-trait.model";
+import {NgxSpinnerService} from "ngx-spinner";
+import {Subscription} from "rxjs";
+import {BolHerosService} from "../../../services/bol-heros.service";
 
 @Component({
   selector: 'bol-heros-traits',
   standalone: true,
-  imports: [],
+  imports: [
+    ButtonDirective,
+    DropdownModule,
+    NgIf,
+    OverlayPanelModule,
+    PrimeTemplate,
+    Ripple,
+    FormsModule,
+    Button,
+    FieldsetModule,
+    NgForOf
+  ],
   templateUrl: './traits.component.html',
   styleUrl: './traits.component.scss',
   providers: [
@@ -15,7 +49,65 @@ import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from "@angular/for
     }
   ]
 })
-export class BolHerosTraitsComponent implements ControlValueAccessor {
+export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy {
+  readonly #fb = inject(FormBuilder);
+  readonly #bhss = inject(BolHerosStateService);
+  readonly #spinner = inject(NgxSpinnerService);
+  readonly #bhs = inject(BolHerosService);
+  private subs?: Subscription;
+
+  public selectedAvantage = signal<BolAvantageModel | null>(null);
+  public selectedDesavantage = signal<BolDesavantageModel | null>(null);
+
+
+
+  protected avantagesList = this.#bhss.avantagesList;
+  protected desavantageList = this.#bhss.desavantagesList;
+  protected heroId = computed(() => this.#bhss.currentHeros()?.id);
+
+  traitsForm = this.#fb.group({
+    traits: this.#fb.array([])
+  });
+  get traits() {
+    return this.traitsForm.controls["traits"] as FormArray;
+  }
+
+  addTraitToForm(trait: BolHerosTraitsModel) {
+    const traitForm = this.#fb.group({
+      traitable_id: [trait.traitable_id],
+      type: [trait.type],
+      detail: [trait.detail]
+    });
+    this.traits.push(traitForm);
+  }
+  addTraits(panel: OverlayPanel, event: any) {
+    panel.toggle(event);
+    if (this.selectedAvantage()=== null) {
+      return;
+    }
+    const trait: BolHerosTraitsModel = {
+      traitable_id: this.selectedAvantage()?.id as number,
+      type: 'A',
+      detail: this.selectedAvantage()?.pivot?.detail ?? null
+    }
+
+    this.#spinner.show();
+    this.subs?.unsubscribe();
+    this.subs = this.#bhs.createTrait(this.heroId(), trait).subscribe({
+      next: _ => {
+        this.#spinner.hide();
+        this.addTraitToForm(trait);
+
+      },
+      error: () => {
+        this.#spinner.hide();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.subs?.unsubscribe();
+  }
 
   private onChange: (rating: number) => void = () => {
     // do nothing by default
@@ -23,12 +115,15 @@ export class BolHerosTraitsComponent implements ControlValueAccessor {
   onTouched: () => void = () => {
     // do nothing by default
   };
+
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
+
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
+
   writeValue(value: number[]): void {
     if (value) {
       /*this.armures.clear();

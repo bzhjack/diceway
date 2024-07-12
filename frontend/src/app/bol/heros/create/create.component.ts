@@ -14,7 +14,7 @@ import {
   BolHerosOrigines,
   BolHerosRessources
 } from "../../models/bol-heros.model";
-import {delay, forkJoin, map, Observable, Subscription} from "rxjs";
+import {forkJoin, map, Observable, Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {FieldsetModule} from "primeng/fieldset";
@@ -25,10 +25,8 @@ import {MessagesModule} from "primeng/messages";
 import {JsonPipe, NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
 import {globalFormValidator} from "./create.validators";
 import {BolMessageComponent} from "../../message/message.component";
-import {BolTraitComponent} from "./trait/trait.component";
 import {BolAvantageModel} from "../../models/bol-avantage.model";
 import {BolDesavantageModel} from '../../models/bol-desavantage.model';
-import {BolTraitRowComponent} from './trait/trait-row/trait-row.component';
 import {BolHerosCarriereModel} from "../../models/bol-carriere.model";
 import {ConfirmationService} from "primeng/api";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
@@ -49,7 +47,6 @@ import {BolHerosArmuresComponent} from "./armures/armures.component";
 import {BolHerosArmesComponent} from "./armes/armes.component";
 import {BolHerosTraitsComponent} from "./traits/traits.component";
 import {BolHerosTraitsModel} from "../../models/bol-trait.model";
-
 
 
 @Component({
@@ -73,7 +70,6 @@ import {BolHerosTraitsModel} from "../../models/bol-trait.model";
     NgIf,
     NgForOf,
     BolMessageComponent,
-    BolTraitRowComponent,
     ConfirmPopupModule,
     DropdownModule,
     Ripple,
@@ -214,7 +210,7 @@ export class BolHerosCreateComponent implements OnDestroy {
             attributs: hero.attributs,
             origines: hero.origines,
             carrieres: hero.carrieres.map(item => { return {carriere_id: item.carriere_id, value: item.value}; }),
-            traits: hero.traits.map(item => { return {trait_id: item.trait_id, type: item.type}; })
+            traits: hero.traits.map(item => { return {traitable_id: item.traitable_id, type: item.type, detail: item.detail}; })
           });
           this.spinner.hide();
         },
@@ -249,55 +245,5 @@ export class BolHerosCreateComponent implements OnDestroy {
 
 
 
-  /**
-   * Gestion des avantages et des désavantages
-   */
-  openTraits() {
-    this.ref = this.ds.open(BolTraitComponent, {
-      header: 'Choix des avantages pour la région ',
-      width: '1200px',
-      height: '90vh',
-      data: {
-        id_region: this.currentHero()?.origines.region_id,
-        avantages: this.avantages,
-        desavantages: this.desavantages
-      },
-    });
-    this.subs?.unsubscribe();
-    this.subs = this.ref?.onClose.subscribe((data: any) => {
-      if (data) {
-        this.traits.clear();
-        this.avantages = data.avantages.slice();
-        this.desavantages = data.desavantages.slice();
-        data.avantages.forEach((avantage: BolAvantageModel) => {
-          this.addTrait({type: 'A', id: avantage.id, detail: avantage.pivot?.detail})
-        });
-        data.desavantages.forEach((desavantage: BolDesavantageModel) => {
-          this.addTrait({type: 'D', id: desavantage.id, detail: desavantage.pivot?.detail})
-        });
-        this.subs?.unsubscribe();
-        this.spinner.show();
-        this.subs = this.hs.updateTraits(this.herosForm.value as unknown as BolHerosModel).subscribe(
-          {
-            next: (hero: BolHerosModel) => {
-              this.spinner.hide();
-            },
-            error: () => {
-              this.spinner.hide();
-            }
-          }
-        )
-      }
-    });
-  }
-
-  addTrait(trait: { type: 'A' | 'D', id: number | null, detail: string | null }) {
-    const traitForm = this.fb.group({
-      traitable_id: [trait.id],
-      type: [trait.type],
-      detail: [trait.detail]
-    });
-    this.traits.push(traitForm);
-  }
 
 }

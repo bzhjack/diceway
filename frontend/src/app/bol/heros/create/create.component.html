@@ -33,50 +33,10 @@
             <bol-heros-traits></bol-heros-traits>
           </div>
 
-          <!------------------------------>
-          <!--- Carrières et avantages --->
-          <!------------------------------>
           <div class="flex gap-2">
             <div class="flex flex-col flex-auto gap-2">
-              <!--------------------------------->
-              <!--- avantages et désavantages --->
-              <!--------------------------------->
-              <p-fieldset class="w-full">
-                <ng-template pTemplate="header">
-                  <div class="flex items-center gap-2">
-                    <div class="cursor-pointer" (click)="traitInfos.toggle($event)">
-                    </div>
-                    <div>Avantages & Désavantages</div>
-                  </div>
-                  <p-overlayPanel #traitInfos>
-                    <div class="flex flex-col gap-2">
-                      <bol-message type="traits"></bol-message>
-                    </div>
-                  </p-overlayPanel>
-                </ng-template>
-                <div class="flex gap-2">
-                  <div class="flex flex-col gap-2">
-                    <app-trait-row *ngFor="let lavg of avantages" [avantage]="lavg"></app-trait-row>
-                  </div>
-                  <div class="flex flex-col gap-2">
-                    <app-trait-row *ngFor="let ldes of desavantages" [desavantage]="ldes"></app-trait-row>
-                  </div>
-                </div>
-
-                <div class="flex justify-end gap-2">
-                  <p-button (click)="openTraits()" label="Gérer les avantages" size="small" [link]="true"/>
-                </div>
-
-
-              </p-fieldset>
-              <!------------------------------------->
-              <!--- Fin avantages et désavantages --->
-              <!------------------------------------->
               <bol-heros-carrieres [heroId]="heroId()" formControlName="carrieres"></bol-heros-carrieres>
             </div>
-            <!------------------------>
-            <!--- Armes et Armures --->
-            <!------------------------>
             <div class="flex flex-col flex-auto gap-2 ">
               <bol-heros-armures [heroId]="heroId()" formControlName="armures"></bol-heros-armures>
               <bol-heros-armes [heroId]="heroId()" formControlName="armes"></bol-heros-armes>

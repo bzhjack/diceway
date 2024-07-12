@@ -8,6 +8,7 @@ import {BolDesavantageModel} from "../models/bol-desavantage.model";
 import {BolHerosCarriereModel} from "../models/bol-carriere.model";
 import {BolArmureModel, BolHerosArmureModel} from "../models/bol-armure.model";
 import {BolHerosArmeModel} from "../models/bol-arme.model";
+import {BolHerosTraitsModel} from "../models/bol-trait.model";
 
 @Injectable({
   providedIn: 'root'
@@ -32,9 +33,8 @@ export class BolHerosService {
   desavantages(): Observable<BolDesavantageModel[]> {
     return this.http.get<BolDesavantageModel[]>('/api/bol/trait/desavantages');
   }
-
-  updateTraits(hero: BolHerosModel): Observable<any> {
-    return  this.http.post<BolHerosModel>('/api/bol/heros/traits/update', <BolHerosModel>hero);
+  createTrait(herosId: string | null | undefined, trait: BolHerosTraitsModel): Observable<any> {
+    return  this.http.post<BolHerosTraitsModel>(`/api/bol/heros/traits/create/${herosId}`, <BolHerosTraitsModel>trait);
   }
 
 

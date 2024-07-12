@@ -1,5 +1,6 @@
 export interface BolHerosTraitsModel {
   id?: number,
-  trait_id: number,
-  type: 'A' | 'D'
+  traitable_id: number,
+  type: 'A' | 'D',
+  detail: string | null
 }
