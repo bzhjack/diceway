@@ -210,7 +210,6 @@ export class BolOriginesComponent implements ControlValueAccessor, Validator, On
 
   writeValue(value: any): void {
     if (value) {
-      console.log(value);
       this.originesForm.patchValue(value);
     }
   }

@@ -131,7 +131,6 @@ export class BolAttributsComponent implements ControlValueAccessor, Validator {
 
   writeValue(value: any): void {
     if (value) {
-      console.log(value);
       this.attributsForm.patchValue(value);
     }
   }
