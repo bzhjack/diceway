@@ -1,4 +1,4 @@
-import {Component, computed, OnDestroy} from '@angular/core';
+import {Component, computed, effect, inject, OnDestroy, Signal} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {InputTextModule} from "primeng/inputtext";
 import {InputNumberModule} from 'primeng/inputnumber';
@@ -8,7 +8,7 @@ import {ButtonModule} from "primeng/button";
 import {SplitButtonModule} from "primeng/splitbutton";
 import {BolHerosService} from "../../services/bol-heros.service";
 import {BolHerosAttributs, BolHerosCombat, BolHerosModel, BolHerosOrigines} from "../../models/bol-heros.model";
-import {forkJoin, Subscription} from "rxjs";
+import {forkJoin, map, Observable, Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {FieldsetModule} from "primeng/fieldset";
@@ -23,7 +23,7 @@ import {BolTraitComponent} from "./trait/trait.component";
 import {BolAvantageModel} from "../../models/bol-avantage.model";
 import {BolDesavantageModel} from '../../models/bol-desavantage.model';
 import {BolTraitRowComponent} from './trait/trait-row/trait-row.component';
-import {BolCarriereModel, BolHerosCarriereModel} from "../../models/bol-carriere.model";
+import {BolHerosCarriereModel} from "../../models/bol-carriere.model";
 import {ConfirmationService} from "primeng/api";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {DropdownModule} from "primeng/dropdown";
@@ -36,6 +36,10 @@ import {BolAttributsComponent} from "./attributs/attributs.component";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {BolOriginesComponent} from "./origines/origines.component";
 import {BolCarrieresComponent} from "./carrieres/carrieres.component";
+import {BolHerosStateService} from "../../services/bol-heros-state.service";
+import {BolHerosArmureModel} from "../../models/bol-armure.model";
+import {BolHerosArmeModel} from "../../models/bol-arme.model";
+import {tap} from "rxjs/operators";
 
 
 @Component({
@@ -78,6 +82,7 @@ import {BolCarrieresComponent} from "./carrieres/carrieres.component";
   ],
 })
 export class BolHerosCreateComponent implements OnDestroy {
+  readonly #herosStateService = inject(BolHerosStateService);
   private subs?: Subscription;
   private ref: DynamicDialogRef | undefined;
 
@@ -123,7 +128,40 @@ export class BolHerosCreateComponent implements OnDestroy {
       carrieres: this.carrieresCtrl
     }, {validators: globalFormValidator}
   );
-  protected currentHero = toSignal(this.herosForm.valueChanges);
+  valueChanges$: Observable<BolHerosModel> = this.herosForm.valueChanges.pipe(
+    map(value => ({
+      id: value.id ?? null,
+      joueur: value.joueur ?? '',
+
+      vitalite: value.vitalite ?? 0,
+      heroisme: value.heroisme ?? 0,
+
+      combat: {
+        initiative: value.combat?.initiative ?? 0,
+        melee: value.combat?.melee ?? 0,
+        tir: value.combat?.tir ?? 0,
+        defense: value.combat?.defense ?? 0,
+      },
+      attributs: {
+        vigueur: value.attributs?.vigueur ?? 0,
+        aura: value.attributs?.aura ?? 0,
+        esprit: value.attributs?.esprit ?? 0,
+        agilite: value.attributs?.agilite ?? 0
+      },
+      origines: {
+        avatar: value.origines?.avatar ?? null,
+        nom: value.origines?.nom ?? null,
+        region_id: value.origines?.region_id ?? null,
+      },
+      traits: value.traits ?? [],
+      heroism_cost: value.heroism_cost ?? 0,
+      carrieres: value.carrieres ?? [],
+      armures: value.armures ?? [],
+      armes: value.armes ?? []
+    })),
+    tap(() => this.#herosStateService.herosState.set(this.currentHero() as BolHerosModel))
+  );
+  protected currentHero = toSignal<BolHerosModel>(this.valueChanges$);
   protected heroId = computed(() => this.currentHero()?.id);
 
   get traits() {
@@ -171,8 +209,8 @@ export class BolHerosCreateComponent implements OnDestroy {
             heroisme: hero.heroisme,
 
             heroism_cost: hero.heroism_cost,
-            armures: hero.armures.map(item => item.armure_id),
-            armes: hero.armes.map(item => item.arme_id),
+            armures: hero.armures.map((item) => (item as BolHerosArmureModel).armure_id),
+            armes: hero.armes.map(item => (item as BolHerosArmeModel).arme_id),
             combat: hero.combat,
             attributs: hero.attributs,
             origines: hero.origines,

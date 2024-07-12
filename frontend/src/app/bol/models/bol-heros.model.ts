@@ -29,8 +29,8 @@ export interface BolHerosModel {
   traits: any[],
   heroism_cost: number,
   carrieres: BolHerosCarriereModel[],
-  armures: BolHerosArmureModel[],
-  armes: BolHerosArmeModel[]
+  armures: BolHerosArmureModel[] | number[],
+  armes: BolHerosArmeModel[] | number[]
 }
 
 export interface BolHerosCombat {
