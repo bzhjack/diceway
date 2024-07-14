@@ -5,7 +5,8 @@ import {
   FormBuilder,
   FormControl,
   FormsModule,
-  NG_VALUE_ACCESSOR
+  NG_VALUE_ACCESSOR,
+  ReactiveFormsModule
 } from "@angular/forms";
 import {Button, ButtonDirective} from "primeng/button";
 import {DropdownModule} from "primeng/dropdown";
@@ -14,7 +15,6 @@ import {OverlayPanelModule} from "primeng/overlaypanel";
 import {PrimeTemplate} from "primeng/api";
 import {Ripple} from "primeng/ripple";
 import {BolHerosStateService} from "../../../services/bol-heros-state.service";
-import {BolArmureModel, BolHerosArmureModel} from "../../../models/bol-armure.model";
 import {BolAvantageModel} from "../../../models/bol-avantage.model";
 import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
@@ -37,7 +37,8 @@ import {BolHerosService} from "../../../services/bol-heros.service";
     FormsModule,
     Button,
     FieldsetModule,
-    NgForOf
+    NgForOf,
+    ReactiveFormsModule
   ],
   templateUrl: './traits.component.html',
   styleUrl: './traits.component.scss',
@@ -124,12 +125,18 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
     this.onTouched = fn;
   }
 
-  writeValue(value: number[]): void {
-    if (value) {
-      /*this.armures.clear();
-      for (const val of value) {
-        this.armures.push(new FormControl(val));
-      }*/
+  writeValue(traits: BolHerosTraitsModel[]): void {
+    console.log(traits);
+    if (traits) {
+      this.traits.clear();
+      for (const trait of traits) {
+        const traitForm = this.#fb.group({
+          traitable_id: [trait.traitable_id],
+          type: [trait.type],
+          detail: [trait.detail]
+        });
+        this.traits.push(traitForm);
+      }
     }
   }
 }

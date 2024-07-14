@@ -1,4 +1,4 @@
-import {Component, computed, forwardRef, inject, input, OnDestroy} from '@angular/core';
+import {Component, computed, effect, forwardRef, inject, input, OnDestroy} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {FieldsetModule} from "primeng/fieldset";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
@@ -62,7 +62,7 @@ export class BolHerosArmuresComponent implements ControlValueAccessor, OnDestroy
   armuresForm = this.#fb.group({
     armures: this.#fb.array([])
   });
-
+  protected formChange = toSignal(this.armuresForm!.valueChanges);
   get armures() {
     return this.armuresForm.get('armures') as FormArray;
   }
@@ -76,6 +76,16 @@ export class BolHerosArmuresComponent implements ControlValueAccessor, OnDestroy
     return this.armureList()?.filter((armure: BolArmureModel) => this.selectedArmureIds()?.includes(armure.id))
   });
   public heroId = input<string | null | undefined>(null);
+
+  constructor() {
+    effect(() => {
+      if (this.formChange()) {
+        this.onChange(this.armuresForm.get('armures')?.value);
+        this.onTouched();
+      }
+    });
+  }
+
 
   addArmure(panel: OverlayPanel, event: any) {
     panel.toggle(event);
@@ -126,7 +136,7 @@ export class BolHerosArmuresComponent implements ControlValueAccessor, OnDestroy
     if (index !== -1) this.armures.removeAt(index)
   }
 
-  private onChange: (rating: number) => void = () => {
+  private onChange: (armures: any) => void = () => {
     // do nothing by default
   };
   onTouched: () => void = () => {

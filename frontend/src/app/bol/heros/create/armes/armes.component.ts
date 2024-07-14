@@ -62,7 +62,7 @@ export class BolHerosArmesComponent implements ControlValueAccessor {
   armesForm = this.#fb.group({
     armes: this.#fb.array([])
   });
-
+  protected formChange = toSignal(this.armesForm!.valueChanges);
   get armes() {
     return this.armesForm.get('armes') as FormArray;
   }

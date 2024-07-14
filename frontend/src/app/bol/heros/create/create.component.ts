@@ -212,6 +212,7 @@ export class BolHerosCreateComponent implements OnDestroy {
             carrieres: hero.carrieres.map(item => { return {carriere_id: item.carriere_id, value: item.value}; }),
             traits: hero.traits.map(item => { return {traitable_id: item.traitable_id, type: item.type, detail: item.detail}; })
           });
+          console.log("loaded", this.herosForm.value);
           this.spinner.hide();
         },
         error: () => {
@@ -242,8 +243,4 @@ export class BolHerosCreateComponent implements OnDestroy {
       });
     }
   }
-
-
-
-
 }

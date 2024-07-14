@@ -23,7 +23,7 @@ export class BolHerosStateService {
   constructor() {
     effect(() => {
       console.log('currentHero changed:', this.currentHeros());
-      console.log('currentRegion changed:', this.currentHerosRegion());
+      //console.log('currentRegion changed:', this.currentHerosRegion());
     });
   }
 }
