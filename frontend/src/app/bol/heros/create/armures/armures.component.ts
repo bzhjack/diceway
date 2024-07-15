@@ -75,7 +75,7 @@ export class BolHerosArmuresComponent implements ControlValueAccessor, OnDestroy
   protected selectedArmureDetail = computed(() => {
     return this.armureList()?.filter((armure: BolArmureModel) => this.selectedArmureIds()?.includes(armure.id))
   });
-  public heroId = input<string | null | undefined>(null);
+  protected heroId = computed(() => this.#bhss.currentHeros()?.id);
 
   constructor() {
     effect(() => {

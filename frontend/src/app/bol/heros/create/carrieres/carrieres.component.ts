@@ -81,7 +81,7 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
     return this.carrieresForm.controls["carrieres"] as FormArray;
   }
   protected selectedCarriere = signal<BolCarriereModel|null>(null);
-  public heroId = input<string | null | undefined>(null);
+  protected heroId = computed(() => this.#bhss.currentHeros()?.id);
   protected carrieresList = this.#bhss.carriereList;
   protected availableCarrieres = computed(() => {
     const carriereIdsInArray = this.carrieres.controls.map(control => control.get('carriere_id')?.value);

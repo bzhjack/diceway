@@ -1,9 +1,8 @@
-import {Component, computed, forwardRef, inject, input, OnDestroy, signal} from '@angular/core';
+import {Component, computed, effect, forwardRef, inject, input, OnDestroy, signal} from '@angular/core';
 import {
   ControlValueAccessor,
   FormArray,
   FormBuilder,
-  FormControl,
   FormsModule,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule
@@ -23,6 +22,7 @@ import {BolHerosTraitsModel} from "../../../models/bol-trait.model";
 import {NgxSpinnerService} from "ngx-spinner";
 import {Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'bol-heros-traits',
@@ -59,9 +59,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
 
   public selectedAvantage = signal<BolAvantageModel | null>(null);
   public selectedDesavantage = signal<BolDesavantageModel | null>(null);
-
-
-
+  
   protected avantagesList = this.#bhss.avantagesList;
   protected desavantageList = this.#bhss.desavantagesList;
   protected heroId = computed(() => this.#bhss.currentHeros()?.id);
@@ -71,6 +69,16 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   });
   get traits() {
     return this.traitsForm.controls["traits"] as FormArray;
+  }
+  protected formChange = toSignal(this.traitsForm!.valueChanges);
+
+  constructor() {
+    effect(() => {
+      if (this.formChange()) {
+        this.onChange(this.traitsForm.get('traits')?.value);
+        this.onTouched();
+      }
+    });
   }
 
   addTraitToForm(trait: BolHerosTraitsModel) {
@@ -110,7 +118,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
     this.subs?.unsubscribe();
   }
 
-  private onChange: (rating: number) => void = () => {
+  private onChange: (traits: any) => void = () => {
     // do nothing by default
   };
   onTouched: () => void = () => {

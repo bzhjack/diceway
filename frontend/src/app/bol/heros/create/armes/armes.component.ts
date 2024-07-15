@@ -75,7 +75,7 @@ export class BolHerosArmesComponent implements ControlValueAccessor {
   protected selectedArmeDetail = computed(() => {
     return this.armeList()?.filter((arme: BolArmeModel) => this.selectedArmeIds()?.includes(arme.id))
   });
-  public heroId = input<string | null | undefined>(null)
+  protected heroId = computed(() => this.#bhss.currentHeros()?.id);
 
   addArme(panel: OverlayPanel, event: any) {
     panel.toggle(event);

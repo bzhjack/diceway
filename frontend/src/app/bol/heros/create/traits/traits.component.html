@@ -1,4 +1,4 @@
-<p-fieldset class="w-full" [formGroup]="traitsForm">
+<p-fieldset class="w-full">
   <ng-template pTemplate="header">
     <div class="flex items-center gap-2">
       <div>Avantages & Désavantages</div>
@@ -8,9 +8,15 @@
   <div class="flex flex-col gap-1">
     <div class="flex flex-col gap-1" *ngFor="let trait of traits.controls; let i = index">
       <div class="flex flex-col mb-2">
-        <div [formGroupName]="i" class="flex gap-2 items-center">
-          plop
-        </div>
+        <form [formGroup]="traitsForm">
+          <div formArrayName="traits" *ngFor="let trait of traits.controls; let i = index">
+            <div [formGroupName]="i">
+              <input formControlName="traitable_id" placeholder="Trait ID" />
+              <input formControlName="type" placeholder="Type" />
+              <input formControlName="detail" placeholder="Detail" />
+            </div>
+          </div>
+        </form>
       </div>
       </div>
     </div>
