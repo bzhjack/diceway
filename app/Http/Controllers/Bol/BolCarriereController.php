@@ -7,12 +7,17 @@ use App\Models\Bol\BolHerosCarriere;
 use App\Models\Bol\BolHeros;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class BolCarriereController extends Controller
 {
     public function getAll()
     {
-        $donnees = BolCarriere::all();
+        $cacheKey = 'bol_carrieres_all';
+        $cacheDuration = 60; // 60 minutes
+        $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
+            return BolCarriere::all();
+        });
         return response()->json($donnees);
     }
 

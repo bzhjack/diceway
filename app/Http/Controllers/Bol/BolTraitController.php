@@ -9,24 +9,30 @@ use App\Models\Bol\BolHeros;
 use App\Models\Bol\BolHerosTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
 class BolTraitController extends Controller
 {
     public function getAllAvantages()
     {
-        // Récupérer toutes les lignes de votre modèle
-        $donnees = BolAvantage::all();
-
+        $cacheKey = 'bol_avantages_all';
+        $cacheDuration = 60; // 60 minutes
+        $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
+            return BolAvantage::all();
+        });
         // Retourner les données en tant que réponse JSON
         return response()->json($donnees);
     }
 
     public function getAllDesavantages()
     {
-        // Récupérer toutes les lignes de votre modèle
-        $donnees = BolDesavantage::all();
 
+        $cacheKey = 'bol_desavantages_all';
+        $cacheDuration = 60; // 60 minutes
+        $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
+            return BolDesavantage::all();
+        });
         // Retourner les données en tant que réponse JSON
         return response()->json($donnees);
     }

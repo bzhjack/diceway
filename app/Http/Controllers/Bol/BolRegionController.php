@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Bol;
 use App\Http\Controllers\Controller;
 use App\Models\Bol\BolRegion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class BolRegionController extends Controller
 {
@@ -13,9 +14,12 @@ class BolRegionController extends Controller
      */
     public function getAll()
     {
-        // Récupérer toutes les lignes de votre modèle
-        $donnees = BolRegion::with('avantages', 'desavantages', 'noms')->get();
 
+        $cacheKey = 'bol_regions_all';
+        $cacheDuration = 60; // 60 minutes
+        $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
+            return BolRegion::with('avantages', 'desavantages', 'noms')->get();
+        });
         // Retourner les données en tant que réponse JSON
         return response()->json($donnees);
     }
