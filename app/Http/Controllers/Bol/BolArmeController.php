@@ -6,12 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Bol\BolHerosArme;
 use Illuminate\Http\Request;
 use App\Models\Bol\BolArme;
+use Illuminate\Support\Facades\Cache;
 
 class BolArmeController extends Controller
 {
     public function getAll()
     {
-        $donnees = BolArme::all();
+        // Cache::forget('bol_arme_all'); <= pour invalider le cache
+        $cacheKey = 'bol_armes_all';
+        $cacheDuration = 60; // 60 minutes
+        $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
+            return BolArme::all();
+        });
         return response()->json($donnees);
     }
 

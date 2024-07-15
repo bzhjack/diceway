@@ -6,12 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\Bol\BolHerosArmure;
 use Illuminate\Http\Request;
 use App\Models\Bol\BolArmure;
+use Illuminate\Support\Facades\Cache;
 
 class BolArmureController extends Controller
 {
     public function getAll()
     {
-        $donnees = BolArmure::all();
+        $cacheKey = 'bol_armures_all';
+        $cacheDuration = 60; // 60 minutes
+        $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
+            return BolArmure::all();
+        });
         return response()->json($donnees);
     }
 

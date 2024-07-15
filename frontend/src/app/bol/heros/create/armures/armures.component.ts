@@ -24,6 +24,7 @@ import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {TrashComponent} from "../../../../shared/trash/trash.component";
 
+
 @Component({
   selector: 'bol-heros-armures',
   standalone: true,
