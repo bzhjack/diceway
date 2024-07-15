@@ -1,8 +1,18 @@
 <p-fieldset class="w-full">
+
   <ng-template pTemplate="header">
     <div class="flex items-center gap-2">
+      <div class="cursor-pointer" (click)="attributInfos.toggle($event)">
+        <i class="pi pi-info-circle"></i>
+      </div>
+
       <div>Avantages & Désavantages</div>
     </div>
+    <p-overlayPanel #attributInfos>
+      <div class="flex flex-col gap-2">
+        <bol-message type="traits"></bol-message>
+      </div>
+    </p-overlayPanel>
   </ng-template>
   <!-- Body Armures -->
   <div class="flex flex-col gap-1">
@@ -80,7 +90,7 @@
     <div class="flex justify-end gap-2">
       <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
         (click)="opTrait.toggle($event)"></button>
-      <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
+      <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check" [disabled]="!selectedTrait()"
         (click)="addTraits(opTrait, $event)"></button>
     </div>
   </div>

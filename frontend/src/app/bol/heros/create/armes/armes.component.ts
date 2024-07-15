@@ -1,4 +1,4 @@
-import {Component, computed, forwardRef, inject, input} from '@angular/core';
+import {Component, computed, effect, forwardRef, inject, input, signal} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {FieldsetModule} from "primeng/fieldset";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
@@ -53,7 +53,7 @@ import {TrashComponent} from "../../../../shared/trash/trash.component";
 })
 export class BolHerosArmesComponent implements ControlValueAccessor {
   private subs?: Subscription;
-  public selectedArme: BolArmeModel | null = null;
+  public selectedArme= signal< BolArmeModel | null>(null);
 
   readonly #fb = inject(FormBuilder);
   readonly #bhss = inject(BolHerosStateService);
@@ -79,13 +79,22 @@ export class BolHerosArmesComponent implements ControlValueAccessor {
   });
   protected heroId = computed(() => this.#bhss.currentHeros()?.id);
 
+  constructor() {
+    effect(() => {
+      if (this.formChange()) {
+        this.onChange(this.armesForm.get('armes')?.value);
+        this.onTouched();
+      }
+    });
+  }
+
   addArme(panel: OverlayPanel, event: any) {
     panel.toggle(event);
-    if (this.selectedArme === null) {
+    if (this.selectedArme() === null) {
       return;
     }
     const arme: BolHerosArmeModel = {
-      arme_id: this.selectedArme?.id as number
+      arme_id: this.selectedArme()?.id as number
     }
     this.#spinner.show();
     this.subs?.unsubscribe();
@@ -128,7 +137,7 @@ export class BolHerosArmesComponent implements ControlValueAccessor {
     if (index !== -1) this.armes.removeAt(index)
   }
 
-  private onChange: (rating: number) => void = () => {
+  private onChange: (armes: any) => void = () => {
     // do nothing by default
   };
   onTouched: () => void = () => {

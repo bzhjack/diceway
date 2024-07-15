@@ -68,7 +68,7 @@ class BolTraitController extends Controller
             'detail' => $newTrait['detail'],
             'traitable_type' => $traitable_type,
         ];
-        BolHerosTrait::create($heros_trait);
-        return response()->json(['success' => $newTrait]);
+        $created = BolHerosTrait::create($heros_trait);
+        return response()->json($created);
     }
 }

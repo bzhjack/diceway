@@ -13,7 +13,7 @@
       </div>
   <!-- Footer Armures -->
   <div class="flex justify-end gap-2" *ngIf="filteredArmureList()?.length > 0">
-    <p-button label="Ajouter une armure" size="small" [link]="true" class="text-cyan-600" (click)="selectedArmure = null; opArmure.toggle($event)"/>
+    <p-button label="Ajouter une armure" size="small" [link]="true" class="text-cyan-600" (click)="selectedArmure.set(null); opArmure.toggle($event)"/>
   </div>
 </p-fieldset>
 
@@ -55,7 +55,7 @@
       <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
               (click)="opArmure.toggle($event)"></button>
       <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
-              (click)="addArmure(opArmure, $event)"></button>
+              (click)="addArmure(opArmure, $event)" [disabled]="!selectedArmure()"></button>
     </div>
   </div>
 </p-overlayPanel>

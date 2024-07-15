@@ -1,4 +1,4 @@
-import {Component, computed, effect, forwardRef, inject, input, OnDestroy} from '@angular/core';
+import {Component, computed, effect, forwardRef, inject, input, OnDestroy, signal} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {FieldsetModule} from "primeng/fieldset";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
@@ -54,7 +54,8 @@ import {TrashComponent} from "../../../../shared/trash/trash.component";
 })
 export class BolHerosArmuresComponent implements ControlValueAccessor, OnDestroy {
   private subs?: Subscription;
-  public selectedArmure: BolArmureModel | null = null;
+
+  public selectedArmure= signal<BolArmureModel | null >(null);
 
   readonly #fb = inject(FormBuilder);
   readonly #bhss = inject(BolHerosStateService);
@@ -92,11 +93,11 @@ export class BolHerosArmuresComponent implements ControlValueAccessor, OnDestroy
 
   addArmure(panel: OverlayPanel, event: any) {
     panel.toggle(event);
-    if (this.selectedArmure === null) {
+    if (this.selectedArmure() === null) {
       return;
     }
     const armure: BolHerosArmureModel = {
-      armure_id: this.selectedArmure?.id as number
+      armure_id: this.selectedArmure()?.id as number
     }
     this.#spinner.show();
     this.subs?.unsubscribe();

@@ -1,4 +1,4 @@
-import {Component, computed, effect, forwardRef, inject, input, OnDestroy, signal} from '@angular/core';
+import {Component, computed, effect, forwardRef, inject, OnDestroy, signal} from '@angular/core';
 import {
   ControlValueAccessor,
   FormArray,
@@ -20,12 +20,13 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {FieldsetModule} from "primeng/fieldset";
 import {BolHerosTraitsModel} from "../../../models/bol-trait.model";
 import {NgxSpinnerService} from "ngx-spinner";
-import {Observable, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
-import { toSignal } from '@angular/core/rxjs-interop';
+import {toSignal} from '@angular/core/rxjs-interop';
 import {BolHerosTraitRowComponent} from "./trait-row/trait-row.component";
 import {BolHerosTraitComponent} from "./trait/trait.component";
 import {TrashComponent} from "../../../../shared/trash/trash.component";
+import {BolMessageComponent} from "../../../message/message.component";
 
 @Component({
   selector: 'bol-heros-traits',
@@ -45,7 +46,8 @@ import {TrashComponent} from "../../../../shared/trash/trash.component";
     BolHerosTraitRowComponent,
     BolHerosTraitComponent,
     JsonPipe,
-    TrashComponent
+    TrashComponent,
+    BolMessageComponent
   ],
   templateUrl: './traits.component.html',
   styleUrl: './traits.component.scss',
@@ -66,28 +68,36 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
 
   private subs?: Subscription;
 
-  protected contextType = signal<'A' | 'D'>('A')
-
   public selectedTrait = signal<BolAvantageModel | BolDesavantageModel | null>(null);
 
+  protected contextType = signal<'A' | 'D'>('A')
   protected avantagesList = this.#bhss.avantagesList;
   protected desavantageList = this.#bhss.desavantagesList;
+  protected regionalAvantages = this.#bhss.regionalAvantages;
+  protected regionalDesavantages = this.#bhss.regionalDesavantages;
 
-  protected traitList = computed(() =>  {
-    const filteringByType =  this.contextType() === "A" ? this.avantagesList() : this.desavantageList();
-    const filteringSelectedByType = this.formChange()?.traits?.filter((item: any) => item.type === this.contextType());
-    console.log(filteringSelectedByType);
-    return filteringByType;
+  protected traitList = computed(() => {
+    const traitsByType = this.contextType() === "A" ? this.avantagesList() : this.desavantageList();
+    const regionalTraitsByType =this.contextType() === "A" ? this.regionalAvantages() : this.regionalDesavantages();
+
+    console.log(regionalTraitsByType);
+
+    const traits: BolHerosTraitsModel[] = <BolHerosTraitsModel[]>this.formChange()?.traits;
+    const filteringSelectedByType =
+      traits?.filter((item: BolHerosTraitsModel) => item.type === this.contextType())
+        .map((item: BolHerosTraitsModel) => item.traitable_id);
+    return traitsByType?.filter((trait: BolAvantageModel | BolDesavantageModel) => !filteringSelectedByType?.includes(trait.id as number));
   });
-
   protected heroId = computed(() => this.#bhss.currentHeros()?.id);
 
   traitsForm = this.#fb.group({
     traits: this.#fb.array([])
   });
+
   get traits() {
     return this.traitsForm.controls["traits"] as FormArray;
   }
+
   protected formChange = toSignal(this.traitsForm!.valueChanges);
 
   constructor() {
@@ -104,13 +114,15 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
     const traitForm = this.#fb.group({
       traitable_id: [trait.traitable_id],
       type: [trait.type],
-      detail: [trait.detail]
+      detail: [trait.detail],
+      id: [trait.id]
     });
     this.traits.push(traitForm);
   }
+
   addTraits(panel: OverlayPanel, event: any): void {
     panel.toggle(event);
-    if (this.selectedTrait()=== null) {
+    if (this.selectedTrait() === null) {
       return;
     }
     const trait: BolHerosTraitsModel = {
@@ -122,9 +134,10 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
     this.#spinner.show();
     this.subs?.unsubscribe();
     this.subs = this.#bhs.createTrait(this.heroId(), trait).subscribe({
-      next: _ => {
+      next: (newTrait) => {
         this.#spinner.hide();
-        this.addTraitToForm(trait);
+        console.log('ici', newTrait);
+        this.addTraitToForm(newTrait);
 
       },
       error: () => {
@@ -132,6 +145,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
       }
     });
   }
+
   deleteTraits(traitId: number, event: any) {
     this.#ds.confirm({
       target: event.target as EventTarget,
