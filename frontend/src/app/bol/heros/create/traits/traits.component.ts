@@ -20,7 +20,7 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {FieldsetModule} from "primeng/fieldset";
 import {BolHerosTraitsModel} from "../../../models/bol-trait.model";
 import {NgxSpinnerService} from "ngx-spinner";
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import { toSignal } from '@angular/core/rxjs-interop';
 import {BolHerosTraitRowComponent} from "./trait-row/trait-row.component";
@@ -74,7 +74,10 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   protected desavantageList = this.#bhss.desavantagesList;
 
   protected traitList = computed(() =>  {
-    return this.contextType() === "A" ? this.avantagesList() : this.desavantageList()
+    const filteringByType =  this.contextType() === "A" ? this.avantagesList() : this.desavantageList();
+    const filteringSelectedByType = this.formChange()?.traits?.filter((item: any) => item.type === this.contextType());
+    console.log(filteringSelectedByType);
+    return filteringByType;
   });
 
   protected heroId = computed(() => this.#bhss.currentHeros()?.id);
@@ -90,6 +93,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   constructor() {
     effect(() => {
       if (this.formChange()) {
+        console.log('TRAIT:', this.formChange());
         this.onChange(this.traitsForm.get('traits')?.value);
         this.onTouched();
       }
@@ -153,7 +157,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   }
 
   removeTrait(traitId: number) {
-    const index = this.traits.value.findIndex((trt: BolHerosTraitsModel) => trt.traitable_id === traitId)
+    const index = this.traits.value.findIndex((trt: BolHerosTraitsModel) => trt.id === traitId)
     if (index !== -1) this.traits.removeAt(index)
   }
 
@@ -181,6 +185,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
       this.traits.clear();
       for (const trait of traits) {
         const traitForm = this.#fb.group({
+          id: [trait.id],
           traitable_id: [trait.traitable_id],
           type: [trait.type],
           detail: [trait.detail]

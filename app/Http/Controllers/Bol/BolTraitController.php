@@ -45,7 +45,7 @@ class BolTraitController extends Controller
      */
     public function delete($herosId, $id): \Illuminate\Http\JsonResponse
     {
-        $trait = BolHerosTrait::where('heros_id', $herosId)->where('traitable_id', $id)->first();
+        $trait = BolHerosTrait::where('heros_id', $herosId)->where('id', $id)->first();
         if (!$trait) {
             return response()->json(['message' => 'Trait non trouvé'], 404);
         }
@@ -56,7 +56,7 @@ class BolTraitController extends Controller
     public function create(Request $request, $herosId)
     {
         $newTrait = $request->input();
-        $trait = BolHerosTrait::where('heros_id', $herosId)->where('traitable_id', $newTrait['traitable_id'])->first();
+        $trait = BolHerosTrait::where('heros_id', $herosId)->where('traitable_id', $newTrait['traitable_id'])->where('type', $newTrait['type'])->first();
         if ($trait) {
             return response()->json(['message' => 'Traits déjà existant'], 403);
         }

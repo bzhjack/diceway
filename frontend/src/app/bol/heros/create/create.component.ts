@@ -213,7 +213,7 @@ export class BolHerosCreateComponent implements OnDestroy {
             attributs: hero.attributs,
             origines: hero.origines,
             carrieres: hero.carrieres.map(item => { return {carriere_id: item.carriere_id, value: item.value}; }),
-            traits: hero.traits.map(item => { return {traitable_id: item.traitable_id, type: item.type, detail: item.detail}; })
+            traits: hero.traits.map(item => { return {id: item.id,traitable_id: item.traitable_id, type: item.type, detail: item.detail}; })
           });
           this.spinner.hide();
         },

@@ -1,12 +1,16 @@
-import {Component, computed, effect, forwardRef, inject, input, OnDestroy, signal} from '@angular/core';
+import {Component, computed, effect, forwardRef, inject, OnDestroy, signal} from '@angular/core';
 import {BolMessageComponent} from "../../../message/message.component";
 import {Button, ButtonDirective} from "primeng/button";
 import {DropdownModule} from "primeng/dropdown";
 import {FieldsetModule} from "primeng/fieldset";
 import {
   AbstractControl,
-  ControlValueAccessor, FormArray, FormBuilder, FormControl,
-  FormsModule, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+  ControlValueAccessor,
+  FormArray,
+  FormBuilder,
+  FormsModule,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
   ValidationErrors,
   Validator
@@ -22,10 +26,11 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {BolCarriereModel, BolHerosCarriereModel} from "../../../models/bol-carriere.model";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
-import {attributsFormValidator, carrieresFormValidator, carriereValidator} from "../create.validators";
+import {carrieresFormValidator, carriereValidator} from "../create.validators";
 import {BolHeroCreateTools} from "../create.tools";
 import {Subscription} from "rxjs";
 import {TrashComponent} from "../../../../shared/trash/trash.component";
+
 
 @Component({
   selector: 'bol-heros-carrieres',
