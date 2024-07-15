@@ -66,11 +66,17 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
 
   private subs?: Subscription;
 
-  public selectedAvantage = signal<BolAvantageModel | null>(null);
-  public selectedDesavantage = signal<BolDesavantageModel | null>(null);
+  protected contextType = signal<'A' | 'D'>('A')
+
+  public selectedTrait = signal<BolAvantageModel | BolDesavantageModel | null>(null);
 
   protected avantagesList = this.#bhss.avantagesList;
   protected desavantageList = this.#bhss.desavantagesList;
+
+  protected traitList = computed(() =>  {
+    return this.contextType() === "A" ? this.avantagesList() : this.desavantageList()
+  });
+
   protected heroId = computed(() => this.#bhss.currentHeros()?.id);
 
   traitsForm = this.#fb.group({
@@ -98,15 +104,15 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
     });
     this.traits.push(traitForm);
   }
-  addTraits(panel: OverlayPanel, event: any) {
+  addTraits(panel: OverlayPanel, event: any): void {
     panel.toggle(event);
-    if (this.selectedAvantage()=== null) {
+    if (this.selectedTrait()=== null) {
       return;
     }
     const trait: BolHerosTraitsModel = {
-      traitable_id: this.selectedAvantage()?.id as number,
-      type: 'A',
-      detail: this.selectedAvantage()?.pivot?.detail ?? null
+      traitable_id: this.selectedTrait()?.id as number,
+      type: this.contextType(),
+      detail: this.selectedTrait()?.pivot?.detail ?? null
     }
 
     this.#spinner.show();

@@ -25,6 +25,7 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {attributsFormValidator, carrieresFormValidator, carriereValidator} from "../create.validators";
 import {BolHeroCreateTools} from "../create.tools";
 import {Subscription} from "rxjs";
+import {TrashComponent} from "../../../../shared/trash/trash.component";
 
 @Component({
   selector: 'bol-heros-carrieres',
@@ -43,7 +44,8 @@ import {Subscription} from "rxjs";
     OverlayPanelModule,
     PrimeTemplate,
     ReactiveFormsModule,
-    Ripple
+    Ripple,
+    TrashComponent
   ],
   templateUrl: './carrieres.component.html',
   styleUrl: './carrieres.component.scss',

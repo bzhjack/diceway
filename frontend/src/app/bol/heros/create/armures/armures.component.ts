@@ -22,6 +22,7 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from "@angular/core/rxjs-interop";
+import {TrashComponent} from "../../../../shared/trash/trash.component";
 
 @Component({
   selector: 'bol-heros-armures',
@@ -37,7 +38,8 @@ import {toSignal} from "@angular/core/rxjs-interop";
     Ripple,
     FormsModule,
     NgForOf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TrashComponent
   ],
   templateUrl: './armures.component.html',
   styleUrl: './armures.component.scss',
