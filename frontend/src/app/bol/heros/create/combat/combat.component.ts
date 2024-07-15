@@ -34,17 +34,17 @@ import {BolHeroCreateTools} from '../create.tools';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolCombatComponent),
+      useExisting: forwardRef(() => BolHerosCombatComponent),
       multi: true,
     },
     {
       provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => BolCombatComponent),
+      useExisting: forwardRef(() => BolHerosCombatComponent),
       multi: true,
     }
   ]
 })
-export class BolCombatComponent implements ControlValueAccessor, Validator {
+export class BolHerosCombatComponent implements ControlValueAccessor, Validator {
   readonly #fb = inject(FormBuilder);
   aptitudeErrors: { control: string, error: string }[] = [];
   aptitudeWarns: { step: string, warn: string }[] = [];

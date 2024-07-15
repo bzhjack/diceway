@@ -1,6 +1,7 @@
 import {BolHerosCarriereModel} from "./bol-carriere.model";
 import {BolHerosArmureModel} from "./bol-armure.model";
 import {BolHerosArmeModel} from "./bol-arme.model";
+import {BolHerosTraitsModel} from "./bol-trait.model";
 
 export interface BolHerosModel {
   id: string | null;
@@ -10,7 +11,7 @@ export interface BolHerosModel {
   attributs: BolHerosAttributs,
   origines: BolHerosOrigines,
   ressources: BolHerosRessources,
-  traits: any[],
+  traits: BolHerosTraitsModel[],
   carrieres: BolHerosCarriereModel[],
   armures: BolHerosArmureModel[] | number[],
   armes: BolHerosArmeModel[] | number[],
@@ -38,3 +39,4 @@ export interface BolHerosRessources {
   vitalite: number;
   heroisme: number;
 }
+

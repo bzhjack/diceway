@@ -1,4 +1,4 @@
-import {Component, computed, effect, inject, OnDestroy, Signal} from '@angular/core';
+import {Component, computed, inject, OnDestroy} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {InputTextModule} from "primeng/inputtext";
 import {InputNumberModule} from 'primeng/inputnumber';
@@ -25,28 +25,29 @@ import {MessagesModule} from "primeng/messages";
 import {JsonPipe, NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
 import {globalFormValidator} from "./create.validators";
 import {BolMessageComponent} from "../../message/message.component";
-import {BolTraitComponent} from "./trait/trait.component";
 import {BolAvantageModel} from "../../models/bol-avantage.model";
 import {BolDesavantageModel} from '../../models/bol-desavantage.model';
-import {BolTraitRowComponent} from './trait/trait-row/trait-row.component';
 import {BolHerosCarriereModel} from "../../models/bol-carriere.model";
 import {ConfirmationService} from "primeng/api";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {DropdownModule} from "primeng/dropdown";
 import {Ripple} from "primeng/ripple";
 import {ScrollPanelModule} from 'primeng/scrollpanel';
-import {BolArmuresComponent} from "./armures/armures.component";
-import {BolArmesComponent} from "./armes/armes.component";
-import {BolCombatComponent} from "./combat/combat.component";
-import {BolAttributsComponent} from "./attributs/attributs.component";
 import {toSignal} from "@angular/core/rxjs-interop";
-import {BolOriginesComponent} from "./origines/origines.component";
-import {BolCarrieresComponent} from "./carrieres/carrieres.component";
 import {BolHerosStateService} from "../../services/bol-heros-state.service";
 import {BolHerosArmureModel} from "../../models/bol-armure.model";
 import {BolHerosArmeModel} from "../../models/bol-arme.model";
 import {tap} from "rxjs/operators";
-import {BolRessourcesComponent} from "./ressources/ressources.component";
+import {BolHerosOriginesComponent} from "./origines/origines.component";
+import {BolHerosRessourcesComponent} from "./ressources/ressources.component";
+import {BolHerosAttributsComponent} from "./attributs/attributs.component";
+import {BolHerosCombatComponent} from "./combat/combat.component";
+import {BolHerosCarrieresComponent} from "./carrieres/carrieres.component";
+import {BolHerosArmuresComponent} from "./armures/armures.component";
+import {BolHerosArmesComponent} from "./armes/armes.component";
+import {BolHerosTraitsComponent} from "./traits/traits.component";
+import {BolHerosTraitsModel} from "../../models/bol-trait.model";
+import {BolHerosLanguesComponent} from "./langues/langues.component";
 
 
 @Component({
@@ -70,18 +71,19 @@ import {BolRessourcesComponent} from "./ressources/ressources.component";
     NgIf,
     NgForOf,
     BolMessageComponent,
-    BolTraitRowComponent,
     ConfirmPopupModule,
     DropdownModule,
     Ripple,
     NgTemplateOutlet,
-    BolArmuresComponent,
-    BolArmesComponent,
-    BolCombatComponent,
-    BolAttributsComponent,
-    BolOriginesComponent,
-    BolCarrieresComponent,
-    BolRessourcesComponent
+    BolHerosOriginesComponent,
+    BolHerosRessourcesComponent,
+    BolHerosAttributsComponent,
+    BolHerosCombatComponent,
+    BolHerosCarrieresComponent,
+    BolHerosArmuresComponent,
+    BolHerosArmesComponent,
+    BolHerosTraitsComponent,
+    BolHerosLanguesComponent,
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
@@ -91,6 +93,7 @@ import {BolRessourcesComponent} from "./ressources/ressources.component";
 })
 export class BolHerosCreateComponent implements OnDestroy {
   readonly #herosStateService = inject(BolHerosStateService);
+
   private subs?: Subscription;
   private ref: DynamicDialogRef | undefined;
 
@@ -103,8 +106,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   public joueurCtrl = new FormControl('', Validators.required);
 
   // Avantages et désavantages
-  traitsArray = this.fb.array([]);
-
+  public traitsCtrl = new FormControl<BolHerosTraitsModel[]>([]);
   public armuresCtrl = new FormControl<number[]>([]);
   public armesCtrl = new FormControl<number[]>([]);
   public carrieresCtrl = new FormControl<BolHerosCarriereModel[]>([]);
@@ -118,7 +120,7 @@ export class BolHerosCreateComponent implements OnDestroy {
     {
       id: this.idCtrl,
       joueur: this.joueurCtrl,
-      traits: this.traitsArray,
+      traits: this.traitsCtrl,
       attributs: this.attributsCtrl,
       combat: this.combatCtrl,
       armures: this.armuresCtrl,
@@ -158,13 +160,14 @@ export class BolHerosCreateComponent implements OnDestroy {
       armures: value.armures ?? [],
       armes: value.armes ?? []
     })),
-    tap(() => this.#herosStateService.herosState.set(this.currentHero() as BolHerosModel))
+    tap((value) => this.#herosStateService.currentHeros.set(value))
   );
   protected currentHero = toSignal<BolHerosModel>(this.valueChanges$);
   protected heroId = computed(() => this.currentHero()?.id);
 
   get traits() {
-    return this.herosForm.controls["traits"] as FormArray;
+    return [] as unknown as FormArray;
+    //return this.herosForm.controls["traits"] as FormArray;
   }
 
   constructor(
@@ -210,18 +213,7 @@ export class BolHerosCreateComponent implements OnDestroy {
             attributs: hero.attributs,
             origines: hero.origines,
             carrieres: hero.carrieres.map(item => { return {carriere_id: item.carriere_id, value: item.value}; }),
-          });
-
-          this.traits.clear();
-          this.avantages = [];
-          this.desavantages = [];
-          hero.traits.forEach((trait) => {
-            this.addTrait({type: trait.type, id: trait.id, detail: trait.detail});
-            if (trait.type === "A") {
-              this.avantages.push({...trait.traitable, ...{pivot: {detail: trait.detail}}});
-            } else {
-              this.desavantages.push({...trait.traitable, ...{pivot: {detail: trait.detail}}});
-            }
+            traits: hero.traits.map(item => { return {traitable_id: item.traitable_id, type: item.type, detail: item.detail}; })
           });
           this.spinner.hide();
         },
@@ -253,58 +245,4 @@ export class BolHerosCreateComponent implements OnDestroy {
       });
     }
   }
-
-
-
-  /**
-   * Gestion des avantages et des désavantages
-   */
-  openTraits() {
-    this.ref = this.ds.open(BolTraitComponent, {
-      header: 'Choix des avantages pour la région ',
-      width: '1200px',
-      height: '90vh',
-      data: {
-        id_region: this.currentHero()?.origines.region_id,
-        avantages: this.avantages,
-        desavantages: this.desavantages
-      },
-    });
-    this.subs?.unsubscribe();
-    this.subs = this.ref?.onClose.subscribe((data: any) => {
-      if (data) {
-        this.traits.clear();
-        this.avantages = data.avantages.slice();
-        this.desavantages = data.desavantages.slice();
-        data.avantages.forEach((avantage: BolAvantageModel) => {
-          this.addTrait({type: 'A', id: avantage.id, detail: avantage.pivot?.detail})
-        });
-        data.desavantages.forEach((desavantage: BolDesavantageModel) => {
-          this.addTrait({type: 'D', id: desavantage.id, detail: desavantage.pivot?.detail})
-        });
-        this.subs?.unsubscribe();
-        this.spinner.show();
-        this.subs = this.hs.updateTraits(this.herosForm.value as unknown as BolHerosModel).subscribe(
-          {
-            next: (hero: BolHerosModel) => {
-              this.spinner.hide();
-            },
-            error: () => {
-              this.spinner.hide();
-            }
-          }
-        )
-      }
-    });
-  }
-
-  addTrait(trait: { type: 'A' | 'D', id: number | null, detail: string | null }) {
-    const traitForm = this.fb.group({
-      traitable_id: [trait.id],
-      type: [trait.type],
-      detail: [trait.detail]
-    });
-    this.traits.push(traitForm);
-  }
-
 }

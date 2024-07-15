@@ -55,7 +55,6 @@ class BolHerosController extends Controller
      */
     public function update(Request $request)
     {
-        //$heros = $request->except('traits', 'carrieres', 'armures', 'armes', 'combat', 'attributs', 'origines', 'ressources');
         $herosId = $request->input('id');
 
         $attributs = $request->input('attributs');

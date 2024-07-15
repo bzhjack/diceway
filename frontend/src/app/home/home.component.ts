@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {TopbarComponent} from '../layout/topbar/topbar.component';
 import {CardModule} from "primeng/card";
 import {RouterLink} from "@angular/router";
+import {TrashComponent} from "../shared/trash/trash.component";
 
 @Component({
   selector: 'app-home',
@@ -9,7 +10,8 @@ import {RouterLink} from "@angular/router";
   imports: [
     TopbarComponent,
     CardModule,
-    RouterLink
+    RouterLink,
+    TrashComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'

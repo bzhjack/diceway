@@ -22,10 +22,9 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from "@angular/core/rxjs-interop";
-import {TrashComponent} from "../../../../shared/trash/trash.component";
 
 @Component({
-  selector: 'bol-heros-armures',
+  selector: 'bol-heros-langues',
   standalone: true,
   imports: [
     Button,
@@ -38,20 +37,19 @@ import {TrashComponent} from "../../../../shared/trash/trash.component";
     Ripple,
     FormsModule,
     NgForOf,
-    ReactiveFormsModule,
-    TrashComponent
+    ReactiveFormsModule
   ],
-  templateUrl: './armures.component.html',
-  styleUrl: './armures.component.scss',
+  templateUrl: './langues.component.html',
+  styleUrl: './langues.component.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolHerosArmuresComponent),
+      useExisting: forwardRef(() => BolHerosLanguesComponent),
       multi: true,
     }
   ]
 })
-export class BolHerosArmuresComponent implements ControlValueAccessor, OnDestroy {
+export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy {
   private subs?: Subscription;
   public selectedArmure: BolArmureModel | null = null;
 
@@ -150,7 +148,8 @@ export class BolHerosArmuresComponent implements ControlValueAccessor, OnDestroy
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
-  writeValue(value: number[]): void {
+  writeValue(value: any[]): void {
+    console.log('value');
     if (value) {
       this.armures.clear();
       for (const val of value) {

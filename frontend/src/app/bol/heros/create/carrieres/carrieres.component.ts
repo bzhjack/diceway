@@ -25,6 +25,7 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {attributsFormValidator, carrieresFormValidator, carriereValidator} from "../create.validators";
 import {BolHeroCreateTools} from "../create.tools";
 import {Subscription} from "rxjs";
+import {TrashComponent} from "../../../../shared/trash/trash.component";
 
 @Component({
   selector: 'bol-heros-carrieres',
@@ -43,24 +44,25 @@ import {Subscription} from "rxjs";
     OverlayPanelModule,
     PrimeTemplate,
     ReactiveFormsModule,
-    Ripple
+    Ripple,
+    TrashComponent
   ],
   templateUrl: './carrieres.component.html',
   styleUrl: './carrieres.component.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolCarrieresComponent),
+      useExisting: forwardRef(() => BolHerosCarrieresComponent),
       multi: true,
     },
     {
       provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => BolCarrieresComponent),
+      useExisting: forwardRef(() => BolHerosCarrieresComponent),
       multi: true,
     }
   ]
 })
-export class BolCarrieresComponent implements ControlValueAccessor, Validator , OnDestroy {
+export class BolHerosCarrieresComponent implements ControlValueAccessor, Validator , OnDestroy {
   private subs?: Subscription;
   readonly #fb = inject(FormBuilder);
   readonly #bhss = inject(BolHerosStateService);
@@ -81,7 +83,7 @@ export class BolCarrieresComponent implements ControlValueAccessor, Validator , 
     return this.carrieresForm.controls["carrieres"] as FormArray;
   }
   protected selectedCarriere = signal<BolCarriereModel|null>(null);
-  public heroId = input<string | null | undefined>(null);
+  protected heroId = computed(() => this.#bhss.currentHeros()?.id);
   protected carrieresList = this.#bhss.carriereList;
   protected availableCarrieres = computed(() => {
     const carriereIdsInArray = this.carrieres.controls.map(control => control.get('carriere_id')?.value);

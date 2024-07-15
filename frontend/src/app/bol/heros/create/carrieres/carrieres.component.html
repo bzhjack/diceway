@@ -38,8 +38,7 @@
             *ngTemplateOutlet="templateRef; context: { carTpl: carriereFromId(carriere.get('carriere_id')?.value) }">
           </div>
           <p-inputNumber formControlName="value" inputId="defense" maxFractionDigits="0" />
-          <p-button icon="pi pi-trash" size="small"
-                    (click)="deleteCarriere(carriere.get('carriere_id')?.value, $event)" />
+          <app-trash (click)="deleteCarriere(carriere.get('carriere_id')?.value, $event)"></app-trash>
         </div>
         <div class="carriere-desc text-amber-500"
              *ngIf="carriereFromId(carriere.get('carriere_id')?.value)">{{

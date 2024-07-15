@@ -11,9 +11,9 @@ import {InlineSVGModule} from "ng-inline-svg-2";
 import {FieldsetModule} from "primeng/fieldset";
 import {MessagesModule} from "primeng/messages";
 import {OverlayPanelModule} from "primeng/overlaypanel";
-import {BolTraitRowComponent} from "../../trait/trait-row/trait-row.component";
 import {BolNomModel, BolRegionModel} from "../../../../models/bol-region.model";
 import {BolHerosStateService} from "../../../../services/bol-heros-state.service";
+import {BolHerosTraitRowComponent} from "../../traits/trait-row/trait-row.component";
 
 @Component({
   selector: 'bol-heros-region',
@@ -31,13 +31,13 @@ import {BolHerosStateService} from "../../../../services/bol-heros-state.service
     FieldsetModule,
     MessagesModule,
     OverlayPanelModule,
-    BolTraitRowComponent,
-    JsonPipe
+    JsonPipe,
+    BolHerosTraitRowComponent
   ],
   templateUrl: './region.component.html',
   styleUrl: './region.component.scss'
 })
-export class BolRegionComponent {
+export class BolHerosRegionComponent {
   readonly #bhss = inject(BolHerosStateService);
   readonly #ddc = inject(DynamicDialogConfig);
 

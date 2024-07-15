@@ -1,18 +1,18 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {TraitComponent} from './trait.component';
+import {TraitRowComponent} from './trait-row.component';
 
-describe('TraitComponent', () => {
-  let component: TraitComponent;
-  let fixture: ComponentFixture<TraitComponent>;
+describe('TraitRowComponent', () => {
+  let component: TraitRowComponent;
+  let fixture: ComponentFixture<TraitRowComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TraitComponent]
+      imports: [TraitRowComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TraitComponent);
+    fixture = TestBed.createComponent(TraitRowComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

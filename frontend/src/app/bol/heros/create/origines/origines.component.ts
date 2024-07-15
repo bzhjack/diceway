@@ -22,7 +22,7 @@ import {JsonPipe, NgIf} from "@angular/common";
 import {BolRegionModel} from "../../../models/bol-region.model";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {NgxSpinnerService} from "ngx-spinner";
-import {BolRegionComponent} from "./region/region.component";
+import {BolHerosRegionComponent} from "./region/region.component";
 import {BolMessageComponent} from "../../../message/message.component";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {BolHeroCreateTools} from "../create.tools";
@@ -46,17 +46,17 @@ import {BolHerosOrigines} from "../../../models/bol-heros.model";
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolOriginesComponent),
+      useExisting: forwardRef(() => BolHerosOriginesComponent),
       multi: true,
     },
     {
       provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => BolOriginesComponent),
+      useExisting: forwardRef(() => BolHerosOriginesComponent),
       multi: true,
     }
   ]
 })
-export class BolOriginesComponent implements ControlValueAccessor, Validator, OnDestroy {
+export class BolHerosOriginesComponent implements ControlValueAccessor, Validator, OnDestroy {
 
   originesErrors: { control: string, error: string }[] = [];
   originesWarns: { step: string, warn: string }[] = [];
@@ -86,11 +86,7 @@ export class BolOriginesComponent implements ControlValueAccessor, Validator, On
   };
 
   protected formChange = toSignal(this.originesForm!.valueChanges);
-
-  protected regionList = this.#bhss.regionList;
-  protected selectedRegion = computed(() => {
-    return this.regionList()?.find((region: BolRegionModel) => region.id === this.formChange()?.region_id)
-  });
+  protected currentRegion = this.#bhss.currentHerosRegion;
 
   public heroId = input<string | null | undefined>(null);
 
@@ -168,7 +164,7 @@ export class BolOriginesComponent implements ControlValueAccessor, Validator, On
    */
   region() {
     const currentRegionId = this.regionIdCtrl.value;
-    const ref = this.#ds.open(BolRegionComponent, {
+    const ref = this.#ds.open(BolHerosRegionComponent, {
       header: 'Choix de la région',
       width: '1200px',
       height: '90vh',

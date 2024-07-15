@@ -22,34 +22,36 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {BolArmeModel, BolHerosArmeModel} from "../../../models/bol-arme.model";
+import {TrashComponent} from "../../../../shared/trash/trash.component";
 
 @Component({
   selector: 'bol-heros-armes',
   standalone: true,
-  imports: [
-    Button,
-    FieldsetModule,
-    PrimeTemplate,
-    ButtonDirective,
-    DropdownModule,
-    NgIf,
-    OverlayPanelModule,
-    Ripple,
-    FormsModule,
-    NgForOf,
-    ReactiveFormsModule
-  ],
+    imports: [
+        Button,
+        FieldsetModule,
+        PrimeTemplate,
+        ButtonDirective,
+        DropdownModule,
+        NgIf,
+        OverlayPanelModule,
+        Ripple,
+        FormsModule,
+        NgForOf,
+        ReactiveFormsModule,
+        TrashComponent
+    ],
   templateUrl: './armes.component.html',
   styleUrl: './armes.component.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolArmesComponent),
+      useExisting: forwardRef(() => BolHerosArmesComponent),
       multi: true,
     }
   ]
 })
-export class BolArmesComponent implements ControlValueAccessor {
+export class BolHerosArmesComponent implements ControlValueAccessor {
   private subs?: Subscription;
   public selectedArme: BolArmeModel | null = null;
 
@@ -62,7 +64,7 @@ export class BolArmesComponent implements ControlValueAccessor {
   armesForm = this.#fb.group({
     armes: this.#fb.array([])
   });
-
+  protected formChange = toSignal(this.armesForm!.valueChanges);
   get armes() {
     return this.armesForm.get('armes') as FormArray;
   }
@@ -75,7 +77,7 @@ export class BolArmesComponent implements ControlValueAccessor {
   protected selectedArmeDetail = computed(() => {
     return this.armeList()?.filter((arme: BolArmeModel) => this.selectedArmeIds()?.includes(arme.id))
   });
-  public heroId = input<string | null | undefined>(null)
+  protected heroId = computed(() => this.#bhss.currentHeros()?.id);
 
   addArme(panel: OverlayPanel, event: any) {
     panel.toggle(event);
