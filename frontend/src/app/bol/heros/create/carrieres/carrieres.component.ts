@@ -91,7 +91,8 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
   protected heroId = computed(() => this.#bhss.currentHeros()?.id);
   protected carrieresList = this.#bhss.carriereList;
   protected availableCarrieres = computed(() => {
-    const carriereIdsInArray = this.carrieres.controls.map(control => control.get('carriere_id')?.value);
+    const carrieres: BolHerosCarriereModel[] = <BolHerosCarriereModel[]>this.formChange()?.carrieres;
+    const carriereIdsInArray = carrieres.map(carriere => carriere.carriere_id);
     return this.carrieresList()?.filter((carriere: BolCarriereModel) => !carriereIdsInArray.includes(carriere.id));
   });
   protected formChange = toSignal(this.carrieresForm!.valueChanges);
