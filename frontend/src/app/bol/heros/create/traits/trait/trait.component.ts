@@ -36,13 +36,6 @@ export class BolHerosTraitComponent {
     return this.trait()?.type === 'D' ? this.desavantageList()?.find((item) => item.id === this.trait()!.traitable_id) : null;
   });
 
-  constructor() {
-    effect(() => {
-      console.log('Trait', this.trait());
-      console.log('avantage', this.avantage());
-    });
-  }
-
   avantageDescription(avantage: BolAvantageModel | null | undefined) {
     return BolHeroCreateTools.avantageDescription(avantage as BolAvantageModel);
   }
