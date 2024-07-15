@@ -16,47 +16,48 @@
   </ng-template>
   <!-- Body Armures -->
   <div class="flex flex-col gap-1">
-      <div class="flex flex-col mb-2">
-          <div class="flex gap-4">
+    <div class="flex flex-col mb-2">
+      <div class="flex gap-4">
 
-            <div class="flex flex-col gap-2">
-              <ng-container  *ngFor="let trait of traits.controls; let i = index">
-                @if (trait.value.type === 'A') {
-                <div class="flex items-center">
-                  <bol-heros-trait [trait]="trait.value"></bol-heros-trait>
-                  <app-trash (click)="deleteTraits(trait.value.id, $event)"></app-trash>
-                </div>
-                }
-              </ng-container>
-            </div>
+        <div class="flex flex-col gap-2">
+          <ng-container *ngFor="let trait of traits.controls; let i = index">
+            @if (trait.value.type === 'A') {
+              <div class="flex items-center">
+                <bol-heros-trait [trait]="trait.value"></bol-heros-trait>
+                <app-trash (click)="deleteTraits(trait.value.id, $event)"></app-trash>
+              </div>
+            }
+          </ng-container>
+        </div>
 
-            <div class="flex flex-col gap-2">
-              <ng-container  *ngFor="let trait of traits.controls; let i = index">
-                @if (trait.value.type === 'D') {
-                  <div class="flex items-center">
-                    <bol-heros-trait [trait]="trait.value"></bol-heros-trait>
-                    <app-trash (click)="deleteTraits(trait.value.id, $event)"></app-trash>
-                  </div>
-                }
-              </ng-container>
-            </div>
+        <div class="flex flex-col gap-2">
+          <ng-container *ngFor="let trait of traits.controls; let i = index">
+            @if (trait.value.type === 'D') {
+              <div class="flex items-center">
+                <bol-heros-trait [trait]="trait.value"></bol-heros-trait>
+                <app-trash (click)="deleteTraits(trait.value.id, $event)"></app-trash>
+              </div>
+            }
+          </ng-container>
+        </div>
 
-          </div>
       </div>
     </div>
-    <!-- Footer Armures -->
-    <div class="flex justify-end gap-2">
-      <p-button
-        label="Ajouter un avantage"
-        size="small"
-        [link]="true" class="text-cyan-600"
-        (click)="contextType.set('A'); selectedTrait.set(null); opTrait.toggle($event)" />
-      <p-button
-        label="Ajouter un désavantage"
-        size="small"
-        [link]="true" class="text-cyan-600"
-        (click)="contextType.set('D');selectedTrait.set(null); opTrait.toggle($event)" />
-    </div>
+  </div>
+  <!-- Footer Armures -->
+  <div class="flex justify-end gap-2">
+    <p-button
+      *ngIf=""
+      label="Ajouter un avantage"
+      size="small"
+      [link]="true" class="text-cyan-600"
+      (click)="contextType.set('A'); selectedTrait.set(null); opTrait.toggle($event)"/>
+    <p-button
+      label="Ajouter un désavantage"
+      size="small"
+      [link]="true" class="text-cyan-600"
+      (click)="contextType.set('D');selectedTrait.set(null); opTrait.toggle($event)"/>
+  </div>
 </p-fieldset>
 
 
@@ -70,28 +71,29 @@
       (ngModelChange)="selectedTrait.set($event)"
       [ngModelOptions]="{standalone: true}"
       [filter]="true" [filterBy]="contextType() === 'A' ? 'avantage' :'desavantage'" [showClear]="true"
-      placeholder="Sélectionner un {{ contextType() === 'A' ? 'avantage' : 'désavantage' }}" >
+      placeholder="Sélectionner un {{ contextType() === 'A' ? 'avantage' : 'désavantage' }}">
 
       <ng-template pTemplate="selectedItem" let-selectedOption>
         <div class="flex align-items-center gap-2">
-          <div>{{ contextType() === 'A' ? selectedOption.avantage : selectedOption.desavantage}}</div>
+          <div>{{ contextType() === 'A' ? selectedOption.avantage : selectedOption.desavantage }}</div>
         </div>
       </ng-template>
 
       <ng-template let-trait pTemplate="item">
         <div class="flex flex-col gap-2">
-          <div class="text-2xl">{{ contextType() === 'A' ? trait.avantage : trait.desavantage}}</div>
+          <div class="text-2xl">{{ contextType() === 'A' ? trait.avantage : trait.desavantage }}</div>
           @if (trait.pivot && trait.pivot.detail) {
-          ({{trait.pivot.detail}})
+            ({{ trait.pivot.detail }})
           }
         </div>
       </ng-template>
     </p-dropdown>
     <div class="flex justify-end gap-2">
       <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
-        (click)="opTrait.toggle($event)"></button>
-      <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check" [disabled]="!selectedTrait()"
-        (click)="addTraits(opTrait, $event)"></button>
+              (click)="opTrait.toggle($event)"></button>
+      <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
+              [disabled]="!selectedTrait()"
+              (click)="addTraits(opTrait, $event)"></button>
     </div>
   </div>
 </p-overlayPanel>
