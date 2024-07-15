@@ -7,11 +7,22 @@
   <!-- Body Armures -->
   <div class="flex flex-col gap-1">
       <div class="flex flex-col mb-2">
-        <form [formGroup]="traitsForm">
-          <div formArrayName="traits" *ngFor="let toto of traits.controls; let i = index">
-              <bol-heros-trait [trait]="toto.value"></bol-heros-trait>
+          <div class="flex gap-2">
+
+            <div class="flex flex-col gap-2">
+              <div class="flex items-center" *ngFor="let trait of traits.controls; let i = index">
+                <bol-heros-trait [trait]="trait.value"></bol-heros-trait>
+                <app-trash (click)="deleteTraits(trait.value.traitable_id, $event)"></app-trash>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <div *ngFor="let toto of traits.controls; let i = index">
+                <bol-heros-trait [trait]="toto.value"></bol-heros-trait>
+              </div>
+            </div>
+
           </div>
-        </form>
       </div>
     </div>
     <!-- Footer Armures -->

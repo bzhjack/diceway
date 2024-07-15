@@ -36,6 +36,9 @@ export class BolHerosService {
   createTrait(herosId: string | null | undefined, trait: BolHerosTraitsModel): Observable<any> {
     return  this.http.post<BolHerosTraitsModel>(`/api/bol/heros/traits/create/${herosId}`, <BolHerosTraitsModel>trait);
   }
+  deleteTrait(herosId: string | null | undefined,  id: number): Observable<any> {
+    return  this.http.delete<BolHerosTraitsModel>(`/api/bol/heros/traits/delete/${herosId}/${id}`);
+  }
 
 
   // Carrieres

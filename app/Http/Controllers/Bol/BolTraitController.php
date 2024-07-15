@@ -31,60 +31,38 @@ class BolTraitController extends Controller
         return response()->json($donnees);
     }
 
-    public static function update(Request $request)
-    {
-        $heros = $request->except('traits');
-        // Maj du cout en heroisme
-        BolHeros::where('id', $heros['id'])->update($heros);
-        $traits = $request->input('traits');
-        $id = $heros["id"];
-        // Supprimez les traits existants pour le héros donné
-        BolHerosTrait::where('heros_id', $id)->delete();
-        // Insérez les nouveaux traits
-        foreach ($traits as $trait) {
-            $traitable_type = $trait['type'] == 'A' ? BolAvantage::class : BolDesavantage::class;
-            $heros_traits = [
-                'heros_id' => $id,
-                'traitable_id' => $trait['traitable_id'],
-                'type' => $trait['type'],
-                'detail' => $trait['detail'],
-                'traitable_type' => $traitable_type,
-            ];
-            BolHerosTrait::create($heros_traits);
-        }
-        return response()->json($heros);
-    }
-
     /**
      * Remove the specified resource from storage.
      *
      * @param Request $request
      * @return JsonResponse
      */
-    public function delete(Request $request): \Illuminate\Http\JsonResponse
+    public function delete($herosId, $id): \Illuminate\Http\JsonResponse
     {
-        $heros = $request->except('traits');
-        $id = $heros["id"];
-        BolHerosTrait::where('heros_id', $id)->delete();
-        // Return a successful response
-        return response()->json(['message' => 'Traits deleted successfully'], Response::HTTP_OK);
+        $trait = BolHerosTrait::where('heros_id', $herosId)->where('traitable_id', $id)->first();
+        if (!$trait) {
+            return response()->json(['message' => 'Trait non trouvé'], 404);
+        }
+        $trait->delete();
+        return response()->json(['success' => true]);
     }
-public function create(Request $request, $herosId)
+
+    public function create(Request $request, $herosId)
     {
         $newTrait = $request->input();
         $trait = BolHerosTrait::where('heros_id', $herosId)->where('traitable_id', $newTrait['traitable_id'])->first();
         if ($trait) {
             return response()->json(['message' => 'Traits déjà existant'], 403);
         }
-           $traitable_type = $newTrait['type'] == 'A' ? BolAvantage::class : BolDesavantage::class;
-                    $heros_trait = [
-                        'heros_id' => $herosId,
-                        'traitable_id' => $newTrait['traitable_id'],
-                        'type' => $newTrait['type'],
-                        'detail' => $newTrait['detail'],
-                        'traitable_type' => $traitable_type,
-                    ];
-                    BolHerosTrait::create($heros_trait);
+        $traitable_type = $newTrait['type'] == 'A' ? BolAvantage::class : BolDesavantage::class;
+        $heros_trait = [
+            'heros_id' => $herosId,
+            'traitable_id' => $newTrait['traitable_id'],
+            'type' => $newTrait['type'],
+            'detail' => $newTrait['detail'],
+            'traitable_type' => $traitable_type,
+        ];
+        BolHerosTrait::create($heros_trait);
         return response()->json(['success' => $newTrait]);
     }
 }

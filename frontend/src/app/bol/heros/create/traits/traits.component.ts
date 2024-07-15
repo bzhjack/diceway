@@ -11,7 +11,7 @@ import {Button, ButtonDirective} from "primeng/button";
 import {DropdownModule} from "primeng/dropdown";
 import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
-import {PrimeTemplate} from "primeng/api";
+import {ConfirmationService, PrimeTemplate} from "primeng/api";
 import {Ripple} from "primeng/ripple";
 import {BolHerosStateService} from "../../../services/bol-heros-state.service";
 import {BolAvantageModel} from "../../../models/bol-avantage.model";
@@ -25,6 +25,7 @@ import {BolHerosService} from "../../../services/bol-heros.service";
 import { toSignal } from '@angular/core/rxjs-interop';
 import {BolHerosTraitRowComponent} from "./trait-row/trait-row.component";
 import {BolHerosTraitComponent} from "./trait/trait.component";
+import {TrashComponent} from "../../../../shared/trash/trash.component";
 
 @Component({
   selector: 'bol-heros-traits',
@@ -43,7 +44,8 @@ import {BolHerosTraitComponent} from "./trait/trait.component";
     ReactiveFormsModule,
     BolHerosTraitRowComponent,
     BolHerosTraitComponent,
-    JsonPipe
+    JsonPipe,
+    TrashComponent
   ],
   templateUrl: './traits.component.html',
   styleUrl: './traits.component.scss',
@@ -60,6 +62,8 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   readonly #bhss = inject(BolHerosStateService);
   readonly #spinner = inject(NgxSpinnerService);
   readonly #bhs = inject(BolHerosService);
+  readonly #ds = inject(ConfirmationService);
+
   private subs?: Subscription;
 
   public selectedAvantage = signal<BolAvantageModel | null>(null);
@@ -117,6 +121,34 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
         this.#spinner.hide();
       }
     });
+  }
+  deleteTraits(traitId: number, event: any) {
+    this.#ds.confirm({
+      target: event.target as EventTarget,
+      message: 'Voulez vous supprimer ce trait ?',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass: 'p-button-danger p-button-sm',
+      acceptLabel: "Oui",
+      rejectLabel: "Non",
+      accept: () => {
+        this.#spinner.show();
+        this.subs?.unsubscribe();
+        this.subs = this.#bhs.deleteTrait(this.heroId(), traitId).subscribe({
+          next: _ => {
+            this.#spinner.hide();
+            this.removeTrait(traitId);
+          },
+          error: () => {
+            this.#spinner.hide();
+          }
+        });
+      },
+    });
+  }
+
+  removeTrait(traitId: number) {
+    const index = this.traits.value.findIndex((trt: BolHerosTraitsModel) => trt.traitable_id === traitId)
+    if (index !== -1) this.traits.removeAt(index)
   }
 
   ngOnDestroy() {
