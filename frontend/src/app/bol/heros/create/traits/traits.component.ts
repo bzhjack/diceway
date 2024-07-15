@@ -9,7 +9,7 @@ import {
 } from "@angular/forms";
 import {Button, ButtonDirective} from "primeng/button";
 import {DropdownModule} from "primeng/dropdown";
-import {NgForOf, NgIf} from "@angular/common";
+import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {PrimeTemplate} from "primeng/api";
 import {Ripple} from "primeng/ripple";
@@ -23,6 +23,8 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import { toSignal } from '@angular/core/rxjs-interop';
+import {BolHerosTraitRowComponent} from "./trait-row/trait-row.component";
+import {BolHerosTraitComponent} from "./trait/trait.component";
 
 @Component({
   selector: 'bol-heros-traits',
@@ -38,7 +40,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
     Button,
     FieldsetModule,
     NgForOf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BolHerosTraitRowComponent,
+    BolHerosTraitComponent,
+    JsonPipe
   ],
   templateUrl: './traits.component.html',
   styleUrl: './traits.component.scss',
@@ -59,7 +64,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
 
   public selectedAvantage = signal<BolAvantageModel | null>(null);
   public selectedDesavantage = signal<BolDesavantageModel | null>(null);
-  
+
   protected avantagesList = this.#bhss.avantagesList;
   protected desavantageList = this.#bhss.desavantagesList;
   protected heroId = computed(() => this.#bhss.currentHeros()?.id);
@@ -134,7 +139,6 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   }
 
   writeValue(traits: BolHerosTraitsModel[]): void {
-    console.log(traits);
     if (traits) {
       this.traits.clear();
       for (const trait of traits) {

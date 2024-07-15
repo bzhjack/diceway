@@ -47,6 +47,7 @@ import {BolHerosArmuresComponent} from "./armures/armures.component";
 import {BolHerosArmesComponent} from "./armes/armes.component";
 import {BolHerosTraitsComponent} from "./traits/traits.component";
 import {BolHerosTraitsModel} from "../../models/bol-trait.model";
+import {BolHerosLanguesComponent} from "./langues/langues.component";
 
 
 @Component({
@@ -82,6 +83,7 @@ import {BolHerosTraitsModel} from "../../models/bol-trait.model";
     BolHerosArmuresComponent,
     BolHerosArmesComponent,
     BolHerosTraitsComponent,
+    BolHerosLanguesComponent,
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
@@ -91,6 +93,7 @@ import {BolHerosTraitsModel} from "../../models/bol-trait.model";
 })
 export class BolHerosCreateComponent implements OnDestroy {
   readonly #herosStateService = inject(BolHerosStateService);
+
   private subs?: Subscription;
   private ref: DynamicDialogRef | undefined;
 
@@ -212,7 +215,6 @@ export class BolHerosCreateComponent implements OnDestroy {
             carrieres: hero.carrieres.map(item => { return {carriere_id: item.carriere_id, value: item.value}; }),
             traits: hero.traits.map(item => { return {traitable_id: item.traitable_id, type: item.type, detail: item.detail}; })
           });
-          console.log("loaded", this.herosForm.value);
           this.spinner.hide();
         },
         error: () => {
