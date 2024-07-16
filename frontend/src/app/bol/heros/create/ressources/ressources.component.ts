@@ -42,7 +42,7 @@ export class BolHerosRessourcesComponent implements ControlValueAccessor {
   ressourcesForm = this.#fb.group({
     vitalite: this.vitaliteCtrl,
     heroisme: this.heroismeCtrl
-  }, {updateOn: 'submit'});
+  });
 
   protected heroismCost = computed<number>(() => this.#herosStateService.heroismCost());
   protected herosState = computed(() => this.#herosStateService.currentHeros());
@@ -51,12 +51,17 @@ export class BolHerosRessourcesComponent implements ControlValueAccessor {
 
   constructor() {
     effect(() => {
-      const cost = 5 - this.heroismCost() as number;
-      const vitalite = 10 + (this.herosState()?.attributs.vigueur ?? 0);
+     // const cost = 5 - this.heroismCost() as number;
+      /*const vitalite = 10 + (this.herosState()?.attributs.vigueur ?? 0);
       this.ressourcesForm.patchValue({
         vitalite: vitalite,
-        heroisme: cost
-      })
+       // heroisme: cost
+      })*/
+      if (this.formChange()) {
+        console.log('ressources changes');
+        this.onChange(this.ressourcesForm?.value);
+        this.onTouched();
+      }
     });
   }
 
