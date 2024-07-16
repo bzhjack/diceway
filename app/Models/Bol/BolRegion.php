@@ -12,6 +12,7 @@ class BolRegion extends Model
     use HasFactory;
 
     protected $table = 'bol_region';
+    protected $hidden = ['created_at', 'updated_at'];
     protected $fillable = ['name']; // Spécifiez les colonnes que vous voulez rendre accessibles en écriture
 
     // Avantages liés à la région

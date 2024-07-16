@@ -11,7 +11,7 @@ class BolHerosCarriere extends Model
     use HasFactory;
 
     protected $table = 'bol_heros_carriere';
-
+    protected $hidden = ['created_at', 'updated_at'];
     protected $fillable = [
         "heros_id",
         "carriere_id",

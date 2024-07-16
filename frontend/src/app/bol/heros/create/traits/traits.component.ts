@@ -81,7 +81,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
     const regionalTraitsByType =this.contextType() === "A" ? this.regionalAvantages() : this.regionalDesavantages();
 
     console.log(regionalTraitsByType);
-
+    console.log(traitsByType);
     const traits: BolHerosTraitsModel[] = <BolHerosTraitsModel[]>this.formChange()?.traits;
     const filteringSelectedByType =
       traits?.filter((item: BolHerosTraitsModel) => item.type === this.contextType())

@@ -10,4 +10,5 @@ class BolArmure extends Model
     use HasFactory;
 
     protected $table = 'bol_armure';
+    protected $hidden = ['created_at', 'updated_at'];
 }
