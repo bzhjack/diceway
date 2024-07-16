@@ -55,4 +55,10 @@ export class BolHeroCreateTools {
     }
     return toolTip;
   }
+  public static toObject(collection: BolAvantageModel[] | BolDesavantageModel[]): { [key: number]: BolAvantageModel[] | BolDesavantageModel[] } {
+    return collection?.reduce((acc, item) => {
+      acc[item.id as number] = { ...acc[item.id as number], ...item };
+      return acc;
+    }, {} as { [key: number]: BolAvantageModel[] | BolDesavantageModel[] });
+  }
 }

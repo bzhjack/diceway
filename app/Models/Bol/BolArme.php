@@ -10,4 +10,5 @@ class BolArme extends Model
     use HasFactory;
 
     protected $table = 'bol_arme';
+    protected $hidden = ['created_at', 'updated_at'];
 }

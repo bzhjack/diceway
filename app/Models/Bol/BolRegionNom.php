@@ -10,4 +10,5 @@ class BolRegionNom extends Model
     use HasFactory;
 
     protected $table = 'bol_region_nom';
+    protected $hidden = ['created_at', 'updated_at'];
 }

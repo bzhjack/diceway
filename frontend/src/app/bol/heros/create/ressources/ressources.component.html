@@ -1,10 +1,25 @@
 <p-fieldset class="w-full" [formGroup]="ressourcesForm">
   <!-- Header Carrières -->
   <ng-template pTemplate="header">
-    <div>Ressources</div>
-  </ng-template>
+    <div class="flex items-center gap-2">
+      <i class="pi pi-info-circle" *ngIf="!heroismCost()"></i>
+      <div class="cursor-pointer" (click)="ressourcesInfos.toggle($event)">
+        <div *ngIf="heroismCost()" style="color: var(--warn-color)">
+          <i class="pi pi-exclamation-triangle"></i>
+        </div>
+      </div>
 
-  <div class="flex gap-2 relative p-3">
+      <div>Avantages & Désavantages</div>
+    </div>
+    <p-overlayPanel #ressourcesInfos>
+      <div class="flex flex-col gap-2">
+        <div class="text-amber-500">
+          <i class="pi pi-exclamation-triangle pr-4"></i>Vous perdez {{heroismCost()}} points d'héroïsme si vous ne choisissez pas {{heroismCost()}} autre(s) désavantage(s).
+        </div>
+      </div>
+    </p-overlayPanel>
+  </ng-template>
+ <div class="flex gap-2 relative p-3">
     <div class="flex flex-col gap-1">
       <label>Vitalité</label>
       <input style="width: 50px; text-align: center" formControlName="vitalite" pInputText

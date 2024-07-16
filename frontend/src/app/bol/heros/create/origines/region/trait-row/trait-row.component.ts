@@ -1,11 +1,11 @@
 import {Component, Input} from '@angular/core';
 import {OverlayPanelModule} from "primeng/overlaypanel";
-import {BolAvantageModel} from "../../../../models/bol-avantage.model";
-import {BolDesavantageModel} from "../../../../models/bol-desavantage.model";
 import {NgForOf, NgIf} from "@angular/common";
 import {InlineSVGModule} from "ng-inline-svg-2";
-import {BolHeroCreateTools} from "../../create.tools";
 import {CheckboxModule} from "primeng/checkbox";
+import {BolAvantageModel} from "../../../../../models/bol-avantage.model";
+import {BolDesavantageModel} from "../../../../../models/bol-desavantage.model";
+import {BolHeroCreateTools} from "../../../create.tools";
 
 @Component({
   selector: 'bol-heros-trait-row',

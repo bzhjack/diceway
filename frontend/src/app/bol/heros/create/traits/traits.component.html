@@ -1,52 +1,71 @@
 <p-fieldset class="w-full">
+
   <ng-template pTemplate="header">
     <div class="flex items-center gap-2">
+      <div class="cursor-pointer" (click)="attributInfos.toggle($event)">
+        <i class="pi pi-info-circle" *ngIf="!traitsWarns.length"></i>
+        <div *ngIf="traitsWarns.length" style="color: var(--warn-color)">
+          <i class="pi pi-exclamation-triangle"></i> ({{ traitsWarns.length }})
+        </div>
+      </div>
+
       <div>Avantages & Désavantages</div>
     </div>
+    <p-overlayPanel #attributInfos>
+      <div class="flex flex-col gap-2">
+        <bol-message type="traits"></bol-message>
+        <bol-message type="form-warn" *ngIf="traitsWarns.length" legend="Taits regionaux invalides" [data]="traitsWarns"></bol-message>
+      </div>
+    </p-overlayPanel>
   </ng-template>
-  <!-- Body Armures -->
+  <!-- Body Traits -->
   <div class="flex flex-col gap-1">
-      <div class="flex flex-col mb-2">
-          <div class="flex gap-4">
-
-            <div class="flex flex-col gap-2">
-              <ng-container  *ngFor="let trait of traits.controls; let i = index">
-                @if (trait.value.type === 'A') {
-                <div class="flex items-center">
-                  <bol-heros-trait [trait]="trait.value"></bol-heros-trait>
-                  <app-trash (click)="deleteTraits(trait.value.traitable_id, $event)"></app-trash>
-                </div>
-                }
-              </ng-container>
-            </div>
-
-            <div class="flex flex-col gap-2">
-              <ng-container  *ngFor="let trait of traits.controls; let i = index">
-                @if (trait.value.type === 'D') {
-                  <div class="flex items-center">
-                    <bol-heros-trait [trait]="trait.value"></bol-heros-trait>
-                    <app-trash (click)="deleteTraits(trait.value.traitable_id, $event)"></app-trash>
-                  </div>
-                }
-              </ng-container>
-            </div>
-
-          </div>
+    <div class="flex flex-col mb-2">
+      <div class="flex gap-4">
+        <div style="width: 230px" class="flex flex-col gap-2">
+          <!--- Avantages --->
+          <ng-container *ngFor="let trait of traits.controls; let i = index">
+            @if (trait.value.type === 'A') {
+              <div class="flex items-centers">
+                <bol-heros-trait [trait]="trait.value"></bol-heros-trait>
+                <app-trash (click)="deleteTraits(trait.value.id, $event)"></app-trash>
+              </div>
+            }
+          </ng-container>
+        </div>
+        <p-divider layout="vertical" />
+        <!--- Désavantages --->
+        <div style="width: 230px" class="flex flex-col gap-2">
+          <ng-container *ngFor="let trait of traits.controls; let i = index">
+            @if (trait.value.type === 'D') {
+              <div class="flex items-centers">
+                <bol-heros-trait [trait]="trait.value"></bol-heros-trait>
+                <app-trash (click)="deleteTraits(trait.value.id, $event)"></app-trash>
+              </div>
+            }
+          </ng-container>
+        </div>
       </div>
     </div>
-    <!-- Footer Armures -->
-    <div class="flex justify-end gap-2">
+  </div>
+
+  <!-- Footer Traits -->
+  <div class="flex justify-between gap-2">
+    <div>
       <p-button
+        *ngIf="herosAvantages().length < 3"
         label="Ajouter un avantage"
         size="small"
         [link]="true" class="text-cyan-600"
-        (click)="contextType.set('A'); selectedTrait.set(null); opTrait.toggle($event)" />
-      <p-button
-        label="Ajouter un désavantage"
-        size="small"
-        [link]="true" class="text-cyan-600"
-        (click)="contextType.set('D');selectedTrait.set(null); opTrait.toggle($event)" />
+        (click)="contextType.set('A'); selectedTrait.set(null); opTrait.toggle($event)"/>
     </div>
+
+    <p-button
+      label="Ajouter un désavantage"
+      size="small"
+      [link]="true" class="text-cyan-600"
+      (click)="contextType.set('D');selectedTrait.set(null); opTrait.toggle($event)"/>
+  </div>
 </p-fieldset>
 
 
@@ -60,28 +79,27 @@
       (ngModelChange)="selectedTrait.set($event)"
       [ngModelOptions]="{standalone: true}"
       [filter]="true" [filterBy]="contextType() === 'A' ? 'avantage' :'desavantage'" [showClear]="true"
-      placeholder="Sélectionner un {{ contextType() === 'A' ? 'avantage' : 'désavantage' }}" >
+      placeholder="Sélectionner un {{ contextType() === 'A' ? 'avantage' : 'désavantage' }}">
 
       <ng-template pTemplate="selectedItem" let-selectedOption>
         <div class="flex align-items-center gap-2">
-          <div>{{ contextType() === 'A' ? selectedOption.avantage : selectedOption.desavantage}}</div>
+          <div>{{ contextType() === 'A' ? selectedOption.avantage : selectedOption.desavantage }}</div>
         </div>
       </ng-template>
 
       <ng-template let-trait pTemplate="item">
         <div class="flex flex-col gap-2">
-          <div class="text-2xl">{{ contextType() === 'A' ? trait.avantage : trait.desavantage}}</div>
-          @if (trait.pivot && trait.pivot.detail) {
-          ({{trait.pivot.detail}})
-          }
+          <div><i *ngIf="trait.region_id" class="pi pi-map-marker mr-2"></i>{{ contextType() === 'A' ? trait.avantage : trait.desavantage }}</div>
+          <div class="text-gray-400" style="font-size: smaller" *ngIf="trait.detail">{{ trait.detail }}</div>
         </div>
       </ng-template>
     </p-dropdown>
     <div class="flex justify-end gap-2">
       <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
-        (click)="opTrait.toggle($event)"></button>
+              (click)="opTrait.toggle($event)"></button>
       <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
-        (click)="addTraits(opTrait, $event)"></button>
+              [disabled]="!selectedTrait()"
+              (click)="addTraits(opTrait, $event)"></button>
     </div>
   </div>
 </p-overlayPanel>

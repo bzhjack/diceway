@@ -10,4 +10,5 @@ class BolRegionDesavantage extends Model
     use HasFactory;
 
     protected $table = 'bol_region_desavantage';
+    protected $hidden = ['created_at', 'updated_at'];
 }

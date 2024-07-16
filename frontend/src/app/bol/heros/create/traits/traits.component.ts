@@ -1,4 +1,4 @@
-import {Component, computed, effect, forwardRef, inject, input, OnDestroy, signal} from '@angular/core';
+import {Component, computed, effect, forwardRef, inject, OnDestroy, signal} from '@angular/core';
 import {
   ControlValueAccessor,
   FormArray,
@@ -20,12 +20,14 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {FieldsetModule} from "primeng/fieldset";
 import {BolHerosTraitsModel} from "../../../models/bol-trait.model";
 import {NgxSpinnerService} from "ngx-spinner";
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
-import { toSignal } from '@angular/core/rxjs-interop';
-import {BolHerosTraitRowComponent} from "./trait-row/trait-row.component";
+import {toSignal} from '@angular/core/rxjs-interop';
 import {BolHerosTraitComponent} from "./trait/trait.component";
 import {TrashComponent} from "../../../../shared/trash/trash.component";
+import {BolMessageComponent} from "../../../message/message.component";
+import {BolHeroCreateTools} from "../create.tools";
+import {DividerModule} from "primeng/divider";
 
 @Component({
   selector: 'bol-heros-traits',
@@ -42,10 +44,11 @@ import {TrashComponent} from "../../../../shared/trash/trash.component";
     FieldsetModule,
     NgForOf,
     ReactiveFormsModule,
-    BolHerosTraitRowComponent,
     BolHerosTraitComponent,
     JsonPipe,
-    TrashComponent
+    TrashComponent,
+    BolMessageComponent,
+    DividerModule
   ],
   templateUrl: './traits.component.html',
   styleUrl: './traits.component.scss',
@@ -63,71 +66,133 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   readonly #spinner = inject(NgxSpinnerService);
   readonly #bhs = inject(BolHerosService);
   readonly #ds = inject(ConfirmationService);
-
   private subs?: Subscription;
 
-  protected contextType = signal<'A' | 'D'>('A')
-
-  public selectedTrait = signal<BolAvantageModel | BolDesavantageModel | null>(null);
-
-  protected avantagesList = this.#bhss.avantagesList;
-  protected desavantageList = this.#bhss.desavantagesList;
-
-  protected traitList = computed(() =>  {
-    return this.contextType() === "A" ? this.avantagesList() : this.desavantageList()
-  });
-
-  protected heroId = computed(() => this.#bhss.currentHeros()?.id);
+  traitsWarns: { step: string, warn: string }[] = [];
 
   traitsForm = this.#fb.group({
     traits: this.#fb.array([])
   });
+
   get traits() {
     return this.traitsForm.controls["traits"] as FormArray;
   }
+
+  public selectedTrait = signal<BolAvantageModel | BolDesavantageModel | null>(null);
+  protected contextType = signal<'A' | 'D'>('A')
+
+  protected mergedAvantages = computed(() => {
+    const obj1 = BolHeroCreateTools.toObject(this.#bhss.avantagesList() as BolAvantageModel[]);
+    const obj2 = BolHeroCreateTools.toObject(this.#bhss.regionalAvantages() as BolAvantageModel[]);
+    const mergedObj = { ...obj1, ...obj2 };
+    return Object.values(mergedObj);
+  });
+
+  protected mergedDesavantages = computed(() => {
+    const obj1 = BolHeroCreateTools.toObject(this.#bhss.desavantagesList() as BolDesavantageModel[]);
+    const obj2 = BolHeroCreateTools.toObject(this.#bhss.regionalDesavantages() as BolDesavantageModel[]);
+    const mergedObj = { ...obj1, ...obj2 };
+    return Object.values(mergedObj);
+  });
   protected formChange = toSignal(this.traitsForm!.valueChanges);
+  protected herosTraits = computed(() =>  <BolHerosTraitsModel[]>this.formChange()?.traits ?? []);
+  protected herosAvantages = computed(() =>  <BolHerosTraitsModel[]>this.herosTraits()?.filter((item) => item.type === 'A') ?? []);
+  protected herosRegionalAvantages = computed(() =>  <BolHerosTraitsModel[]>this.herosAvantages()?.filter((item) => item.region_id !== null) ?? []);
+
+  protected herosDesavantages = computed(() =>  <BolHerosTraitsModel[]>this.herosTraits()?.filter((item) => item.type === 'D') ?? []);
+  protected herosRegionalDesavantages = computed(() =>  <BolHerosTraitsModel[]>this.herosDesavantages()?.filter((item) => item.region_id !== null) ?? []);
+
+  heroismCost = computed(() => {
+    this.checkWarns();
+    return this.traitsWarns.length > 0 ? 0 : Math.max(this.herosAvantages().length - this.herosDesavantages().length -1, 0);
+  });
+
+  protected traitList = computed(() => {
+    const traitsByType = (this.contextType() === "A" ? this.mergedAvantages() : this.mergedDesavantages()) ?? [];
+    const filteringSelectedByType = this.herosTraits().filter((item: BolHerosTraitsModel) => item.type === this.contextType())
+        .map((item: BolHerosTraitsModel) => item.traitable_id) ;
+    return traitsByType.filter((trait: any) => !filteringSelectedByType.includes(trait.id as number));
+  });
+  protected heroId = computed(() => this.#bhss.currentHeros()?.id);
+
 
   constructor() {
+
+    effect(() => {
+      this.#bhss.heroismCost.set(this.heroismCost());
+    }, {allowSignalWrites: true});
+
     effect(() => {
       if (this.formChange()) {
+        this.checkWarns();
         this.onChange(this.traitsForm.get('traits')?.value);
         this.onTouched();
       }
     });
   }
 
+  checkWarns() {
+    this.traitsWarns = [];
+    // Il faut au moins 1 avantage
+    if (!this.herosAvantages()?.length) {
+      this.traitsWarns.push({
+        step: 'Avantages',
+        warn: 'Vous devez choisir 1 avantage.'
+      });
+    }
+    // il faut au moins un avantage régional si ils existent
+    if (this.#bhss.regionalAvantages()?.length && !this.herosRegionalAvantages().length) {
+      this.traitsWarns.push({
+        step: 'Avantages',
+        warn: 'Vous devez choisir au moins 1 avantage regional.'
+      });
+    }
+    // il faut au moins un désavantage régional si ils existennt et si il y a un avantage regional
+    if (
+      this.#bhss.regionalDesavantages()?.length && this.herosDesavantages().length && !this.herosRegionalDesavantages().length) {
+      this.traitsWarns.push({
+        step: 'Avantages',
+        warn: 'Vous devez choisir au moins 1 désavantage regional.'
+      });
+    }
+  }
+
   addTraitToForm(trait: BolHerosTraitsModel) {
     const traitForm = this.#fb.group({
       traitable_id: [trait.traitable_id],
       type: [trait.type],
-      detail: [trait.detail]
+      detail: [trait.detail],
+      region_id: [trait.region_id],
+      id: [trait.id]
     });
     this.traits.push(traitForm);
   }
+
   addTraits(panel: OverlayPanel, event: any): void {
     panel.toggle(event);
-    if (this.selectedTrait()=== null) {
+    if (this.selectedTrait() === null) {
       return;
     }
     const trait: BolHerosTraitsModel = {
       traitable_id: this.selectedTrait()?.id as number,
       type: this.contextType(),
-      detail: this.selectedTrait()?.pivot?.detail ?? null
+      detail: this.selectedTrait()?.pivot?.detail ?? null,
+      region_id: this.selectedTrait()?.pivot?.region_id ?? null,
     }
 
     this.#spinner.show();
     this.subs?.unsubscribe();
     this.subs = this.#bhs.createTrait(this.heroId(), trait).subscribe({
-      next: _ => {
+      next: (newTrait) => {
         this.#spinner.hide();
-        this.addTraitToForm(trait);
-
+        this.addTraitToForm(newTrait);
       },
       error: () => {
         this.#spinner.hide();
       }
     });
   }
+
   deleteTraits(traitId: number, event: any) {
     this.#ds.confirm({
       target: event.target as EventTarget,
@@ -153,7 +218,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   }
 
   removeTrait(traitId: number) {
-    const index = this.traits.value.findIndex((trt: BolHerosTraitsModel) => trt.traitable_id === traitId)
+    const index = this.traits.value.findIndex((trt: BolHerosTraitsModel) => trt.id === traitId)
     if (index !== -1) this.traits.removeAt(index)
   }
 
@@ -177,16 +242,20 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   }
 
   writeValue(traits: BolHerosTraitsModel[]): void {
-    if (traits) {
+    if (traits && traits.length) {
       this.traits.clear();
       for (const trait of traits) {
         const traitForm = this.#fb.group({
+          id: [trait.id],
           traitable_id: [trait.traitable_id],
           type: [trait.type],
-          detail: [trait.detail]
+          detail: [trait.detail],
+          region_id: [trait.region_id]
         });
         this.traits.push(traitForm);
       }
+    } else {
+      this.checkWarns();
     }
   }
 }

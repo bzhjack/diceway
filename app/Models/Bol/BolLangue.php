@@ -10,4 +10,5 @@ class BolLangue extends Model
     use HasFactory;
 
     protected $table = 'bol_langue';
+    protected $hidden = ['created_at', 'updated_at'];
 }

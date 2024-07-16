@@ -77,7 +77,7 @@
           <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
                   (click)="opCarriere.toggle($event)"></button>
           <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
-                  (click)="createCarriere(opCarriere, $event)"></button>
+                  (click)="createCarriere(opCarriere, $event)" [disabled]="!selectedCarriere()"></button>
         </div>
       </div>
     </p-overlayPanel>

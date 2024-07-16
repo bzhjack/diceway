@@ -10,4 +10,5 @@ class BolCarriere extends Model
     use HasFactory;
 
     protected $table = 'bol_carriere';
+    protected $hidden = ['created_at', 'updated_at'];
 }
