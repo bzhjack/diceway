@@ -102,7 +102,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   protected herosDesavantages = computed(() =>  <BolHerosTraitsModel[]>this.herosTraits()?.filter((item) => item.type === 'D') ?? []);
   protected herosRegionalDesavantages = computed(() =>  <BolHerosTraitsModel[]>this.herosDesavantages()?.filter((item) => item.region_id !== null) ?? []);
 
-  protected lostHeroism = computed(() => {
+  heroismCost = computed(() => {
     this.checkWarns();
     return this.traitsWarns.length > 0 ? 0 : Math.max(this.herosAvantages().length - this.herosDesavantages().length -1, 0);
   });
@@ -117,6 +117,11 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
 
 
   constructor() {
+
+    effect(() => {
+      this.#bhss.heroismCost.set(this.heroismCost());
+    }, {allowSignalWrites: true});
+
     effect(() => {
       if (this.formChange()) {
         this.checkWarns();

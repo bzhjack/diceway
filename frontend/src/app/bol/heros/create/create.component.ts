@@ -95,7 +95,6 @@ export class BolHerosCreateComponent implements OnDestroy {
   readonly #herosStateService = inject(BolHerosStateService);
 
   private subs?: Subscription;
-  private ref: DynamicDialogRef | undefined;
 
   avantages: BolAvantageModel[] = [];
   desavantages: BolDesavantageModel[] = [];
