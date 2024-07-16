@@ -48,8 +48,8 @@
       </div>
     </div>
   </div>
-  <div *ngIf="lostHeroism()">
-
+  <div *ngIf="lostHeroism()" class="text-amber-500">
+    <i class="pi pi-exclamation-triangle pr-4"></i>Vous perdez {{lostHeroism()}} points d'héroïsme si vous ne choisissez pas {{lostHeroism()}} autre(s) désavantage(s).
   </div>
   <!-- Footer Traits -->
   <div class="flex justify-between gap-2">
