@@ -66,7 +66,6 @@ export class BolHerosRessourcesComponent implements ControlValueAccessor {
   }
 
   writeValue(value: any): void {
-    console.log('Ressources', value);
     if (value) {
       this.ressourcesForm.patchValue(value);
     }
