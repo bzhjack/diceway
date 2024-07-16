@@ -66,6 +66,7 @@ class BolTraitController extends Controller
             'traitable_id' => $newTrait['traitable_id'],
             'type' => $newTrait['type'],
             'detail' => $newTrait['detail'],
+            'region_id' => $newTrait['region_id'],
             'traitable_type' => $traitable_type,
         ];
         $created = BolHerosTrait::create($heros_trait);

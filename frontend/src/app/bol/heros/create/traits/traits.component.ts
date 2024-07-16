@@ -26,6 +26,8 @@ import {toSignal} from '@angular/core/rxjs-interop';
 import {BolHerosTraitComponent} from "./trait/trait.component";
 import {TrashComponent} from "../../../../shared/trash/trash.component";
 import {BolMessageComponent} from "../../../message/message.component";
+import {BolHeroCreateTools} from "../create.tools";
+import {DividerModule} from "primeng/divider";
 
 @Component({
   selector: 'bol-heros-traits',
@@ -45,7 +47,8 @@ import {BolMessageComponent} from "../../../message/message.component";
     BolHerosTraitComponent,
     JsonPipe,
     TrashComponent,
-    BolMessageComponent
+    BolMessageComponent,
+    DividerModule
   ],
   templateUrl: './traits.component.html',
   styleUrl: './traits.component.scss',
@@ -69,22 +72,36 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   public selectedTrait = signal<BolAvantageModel | BolDesavantageModel | null>(null);
 
   protected contextType = signal<'A' | 'D'>('A')
-  protected avantagesList = this.#bhss.avantagesList;
-  protected desavantageList = this.#bhss.desavantagesList;
-  protected regionalAvantages = this.#bhss.regionalAvantages;
-  protected regionalDesavantages = this.#bhss.regionalDesavantages;
+  protected regionalAvantages = computed(()=> this.#bhss.regionalAvantages()?.map((item) => {
+    return {...item, ...{id: item.pivot.avantage_id, detail: item.pivot.detail, region_id: item.pivot.region_id}};
+  }));
+
+  protected regionalDesavantages = computed(()=> this.#bhss.regionalDesavantages()?.map((item) => {
+    return {...item, ...{id: item.pivot.desavantage_id, detail: item.pivot.detail, region_id: item.pivot.region_id}};
+  }));
+
+  protected mergedAvantages = computed(() => {
+    const obj1 = BolHeroCreateTools.toObject(this.#bhss.avantagesList() as BolAvantageModel[]);
+    const obj2 = BolHeroCreateTools.toObject(this.regionalAvantages() as BolAvantageModel[]);
+    const mergedObj = { ...obj1, ...obj2 };
+    return Object.values(mergedObj);
+  });
+
+  protected mergedDesavantages = computed(() => {
+    const obj1 = BolHeroCreateTools.toObject(this.#bhss.desavantagesList() as BolDesavantageModel[]);
+    const obj2 = BolHeroCreateTools.toObject(this.regionalDesavantages() as BolDesavantageModel[]);
+    const mergedObj = { ...obj1, ...obj2 };
+    return Object.values(mergedObj);
+  });
+
 
   protected traitList = computed(() => {
-    const traitsByType = this.contextType() === "A" ? this.avantagesList() : this.desavantageList();
-    const regionalTraitsByType =this.contextType() === "A" ? this.regionalAvantages() : this.regionalDesavantages();
-
-    console.log(regionalTraitsByType);
-    console.log(traitsByType);
+    const traitsByType = this.contextType() === "A" ? this.mergedAvantages() : this.mergedDesavantages();
     const traits: BolHerosTraitsModel[] = <BolHerosTraitsModel[]>this.formChange()?.traits;
     const filteringSelectedByType =
       traits?.filter((item: BolHerosTraitsModel) => item.type === this.contextType())
         .map((item: BolHerosTraitsModel) => item.traitable_id);
-    return traitsByType?.filter((trait: BolAvantageModel | BolDesavantageModel) => !filteringSelectedByType?.includes(trait.id as number));
+    return traitsByType?.filter((trait: any) => !filteringSelectedByType?.includes(trait.id as number));
   });
   protected heroId = computed(() => this.#bhss.currentHeros()?.id);
 
@@ -101,7 +118,6 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   constructor() {
     effect(() => {
       if (this.formChange()) {
-        console.log('TRAIT:', this.formChange());
         this.onChange(this.traitsForm.get('traits')?.value);
         this.onTouched();
       }
@@ -126,7 +142,8 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
     const trait: BolHerosTraitsModel = {
       traitable_id: this.selectedTrait()?.id as number,
       type: this.contextType(),
-      detail: this.selectedTrait()?.pivot?.detail ?? null
+      detail: this.selectedTrait()?.pivot?.detail ?? null,
+      region_id: this.selectedTrait()?.pivot?.region_id ?? null,
     }
 
     this.#spinner.show();

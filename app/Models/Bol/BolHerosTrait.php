@@ -16,7 +16,8 @@ class BolHerosTrait extends Model
         "type",
         "traitable_id",
         "traitable_type",
-        "detail"
+        "detail",
+        "region_id"
     ];
 
     public function traitable()
