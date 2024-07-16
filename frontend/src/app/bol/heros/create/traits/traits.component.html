@@ -21,7 +21,7 @@
         <div style="width: 230px" class="flex flex-col gap-2">
           <ng-container *ngFor="let trait of traits.controls; let i = index">
             @if (trait.value.type === 'A') {
-              <div class="flex items-center">
+              <div class="flex items-centers">
                 <bol-heros-trait [trait]="trait.value"></bol-heros-trait>
                 <app-trash (click)="deleteTraits(trait.value.id, $event)"></app-trash>
               </div>
@@ -32,7 +32,7 @@
         <div style="width: 230px" class="flex flex-col gap-2">
           <ng-container *ngFor="let trait of traits.controls; let i = index">
             @if (trait.value.type === 'D') {
-              <div class="flex items-center">
+              <div class="flex items-centers">
                 <bol-heros-trait [trait]="trait.value"></bol-heros-trait>
                 <app-trash (click)="deleteTraits(trait.value.id, $event)"></app-trash>
               </div>

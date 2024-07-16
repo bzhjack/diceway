@@ -129,6 +129,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
       traitable_id: [trait.traitable_id],
       type: [trait.type],
       detail: [trait.detail],
+      region_id: [trait.region_id],
       id: [trait.id]
     });
     this.traits.push(traitForm);
@@ -217,7 +218,8 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
           id: [trait.id],
           traitable_id: [trait.traitable_id],
           type: [trait.type],
-          detail: [trait.detail]
+          detail: [trait.detail],
+          region_id: [trait.region_id]
         });
         this.traits.push(traitForm);
       }

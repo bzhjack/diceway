@@ -1,5 +1,5 @@
 @if (avantage()) {
-  <div class="flex items-center w-fit">
+  <div class="flex items-start w-fit">
     <div class="flex items-center cursor-pointer" (click)="avPanel.toggle($event)">
       <div *ngIf="!avantage()?.de_bonus && !avantage()?.attribut" class="tag_icon bonus"
            inlineSVG="/frontend/assets/info.svg"></div>
@@ -8,10 +8,12 @@
       <div>
       </div>
     </div>
-    <div style="white-space: nowrap">{{ avantage()?.avantage }}
-    @if (trait()?.detail) {
-      ({{trait()?.detail}})
-    }
+    <div style="white-space: nowrap;line-height: 15px" class="relative" [class.ml-4]="trait()?.region_id">
+      <i style="position: absolute;left: -15px" *ngIf="trait()?.region_id" class="pi pi-map-marker mr-2"></i>
+      {{ avantage()?.avantage }}
+      @if (trait()?.detail) {
+        <div class="text-gray-400" style="font-size: smaller">{{ trait()?.detail }}</div>
+      }
     </div>
   </div>
   <p-overlayPanel #avPanel>
@@ -31,7 +33,9 @@
       <div *ngIf="desavantage()?.de_malus || desavantage()?.attribut" class="tag_icon malus"
            [inlineSVG]="desavantage()?.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
     </div>
-    <div style="white-space: nowrap">{{ desavantage()?.desavantage }}
+    <div class="relative" style="white-space: nowrap; line-height: 15px" [class.ml-4]="trait()?.region_id">
+      <i style="position: absolute;left: -15px" *ngIf="trait()?.region_id" class="pi pi-map-marker mr-2"></i>
+      {{ desavantage()?.desavantage }}
     </div>
   </div>
 
