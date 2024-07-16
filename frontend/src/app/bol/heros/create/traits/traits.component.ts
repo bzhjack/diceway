@@ -23,7 +23,6 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from '@angular/core/rxjs-interop';
-import {BolHerosTraitRowComponent} from "./trait-row/trait-row.component";
 import {BolHerosTraitComponent} from "./trait/trait.component";
 import {TrashComponent} from "../../../../shared/trash/trash.component";
 import {BolMessageComponent} from "../../../message/message.component";
@@ -43,7 +42,6 @@ import {BolMessageComponent} from "../../../message/message.component";
     FieldsetModule,
     NgForOf,
     ReactiveFormsModule,
-    BolHerosTraitRowComponent,
     BolHerosTraitComponent,
     JsonPipe,
     TrashComponent,

@@ -13,7 +13,7 @@ import {MessagesModule} from "primeng/messages";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {BolNomModel, BolRegionModel} from "../../../../models/bol-region.model";
 import {BolHerosStateService} from "../../../../services/bol-heros-state.service";
-import {BolHerosTraitRowComponent} from "../../traits/trait-row/trait-row.component";
+import {BolHerosTraitRowComponent} from "./trait-row/trait-row.component";
 
 @Component({
   selector: 'bol-heros-region',
