@@ -17,13 +17,17 @@ export class BolHerosStateService {
   desavantagesList = toSignal(this.#bhs.desavantages());
 
   currentHerosRegion = computed(() => this.regionList()?.find((region) => this.currentHeros()?.origines.region_id === region.id));
-  regionalAvantages = computed(() => this.currentHerosRegion()?.avantages);
-  regionalDesavantages = computed(() => this.currentHerosRegion()?.desavantages);
+  regionalAvantages = computed(() => this.currentHerosRegion()?.avantages?.map((item) => {
+    return {...item, ...{id: item.pivot.avantage_id, detail: item.pivot.detail, region_id: item.pivot.region_id}};
+  }));
+  regionalDesavantages = computed(() => this.currentHerosRegion()?.desavantages?.map(
+    (item) => {
+      return {...item, ...{id: item.pivot.desavantage_id, detail: item.pivot.detail, region_id: item.pivot.region_id}};
+    }));
 
   constructor() {
     effect(() => {
       console.log('currentHero changed:', this.currentHeros());
-      //console.log('currentRegion changed:', this.currentHerosRegion());
     });
   }
 }

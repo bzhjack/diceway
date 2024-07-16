@@ -16,19 +16,20 @@ class BolHeros extends Model
     public $incrementing = false;
     protected $keyType = 'uuid';
     protected $hidden = [
-    'user_id',
-    'initiative','melee','tir','defense',
-    'vigueur', 'agilite', 'esprit', 'aura',
-    'nom','avatar','region_id', 'region'
+        'user_id',
+        'initiative', 'melee', 'tir', 'defense',
+        'vigueur', 'agilite', 'esprit', 'aura',
+        'nom', 'avatar', 'region_id', 'region'
     ];
     protected $appends = ['combat', 'attributs', 'origines', 'ressources'];
     protected $fillable = [
         'user_id',
         'joueur',
-        'nom','avatar','region_id',
+        'nom', 'avatar', 'region_id',
         'vigueur', 'agilite', 'esprit', 'aura',
-        'initiative','melee','tir','defense'
+        'initiative', 'melee', 'tir', 'defense'
     ];
+
     public function traits(): HasMany
     {
         return $this->HasMany(BolHerosTrait::class, 'heros_id', 'id');
@@ -38,6 +39,7 @@ class BolHeros extends Model
     {
         return $this->HasMany(BolHerosCarriere::class, 'heros_id', 'id');
     }
+
     public function armures(): HasMany
     {
         return $this->HasMany(BolHerosArmure::class, 'heros_id', 'id');
@@ -47,6 +49,7 @@ class BolHeros extends Model
     {
         return $this->HasMany(BolHerosArme::class, 'heros_id', 'id');
     }
+
     public function getCombatAttribute()
     {
         return [
@@ -56,6 +59,7 @@ class BolHeros extends Model
             'defense' => $this->defense,
         ];
     }
+
     public function getAttributsAttribute()
     {
         return [
@@ -65,7 +69,8 @@ class BolHeros extends Model
             'aura' => $this->aura,
         ];
     }
- public function getOriginesAttribute()
+
+    public function getOriginesAttribute()
     {
         return [
             'nom' => $this->nom,
@@ -73,11 +78,12 @@ class BolHeros extends Model
             'avatar' => $this->avatar
         ];
     }
-public function getRessourcesAttribute()
+
+    public function getRessourcesAttribute()
     {
         return [
             'vitalite' => $this->vitalite,
             'heroisme' => $this->heroisme
-                    ];
+        ];
     }
 }

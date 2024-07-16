@@ -20,7 +20,7 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {FieldsetModule} from "primeng/fieldset";
 import {BolHerosTraitsModel} from "../../../models/bol-trait.model";
 import {NgxSpinnerService} from "ngx-spinner";
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from '@angular/core/rxjs-interop';
 import {BolHerosTraitComponent} from "./trait/trait.component";
@@ -66,44 +66,9 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   readonly #spinner = inject(NgxSpinnerService);
   readonly #bhs = inject(BolHerosService);
   readonly #ds = inject(ConfirmationService);
-
   private subs?: Subscription;
 
-  public selectedTrait = signal<BolAvantageModel | BolDesavantageModel | null>(null);
-
-  protected contextType = signal<'A' | 'D'>('A')
-  protected regionalAvantages = computed(()=> this.#bhss.regionalAvantages()?.map((item) => {
-    return {...item, ...{id: item.pivot.avantage_id, detail: item.pivot.detail, region_id: item.pivot.region_id}};
-  }));
-
-  protected regionalDesavantages = computed(()=> this.#bhss.regionalDesavantages()?.map((item) => {
-    return {...item, ...{id: item.pivot.desavantage_id, detail: item.pivot.detail, region_id: item.pivot.region_id}};
-  }));
-
-  protected mergedAvantages = computed(() => {
-    const obj1 = BolHeroCreateTools.toObject(this.#bhss.avantagesList() as BolAvantageModel[]);
-    const obj2 = BolHeroCreateTools.toObject(this.regionalAvantages() as BolAvantageModel[]);
-    const mergedObj = { ...obj1, ...obj2 };
-    return Object.values(mergedObj);
-  });
-
-  protected mergedDesavantages = computed(() => {
-    const obj1 = BolHeroCreateTools.toObject(this.#bhss.desavantagesList() as BolDesavantageModel[]);
-    const obj2 = BolHeroCreateTools.toObject(this.regionalDesavantages() as BolDesavantageModel[]);
-    const mergedObj = { ...obj1, ...obj2 };
-    return Object.values(mergedObj);
-  });
-
-
-  protected traitList = computed(() => {
-    const traitsByType = this.contextType() === "A" ? this.mergedAvantages() : this.mergedDesavantages();
-    const traits: BolHerosTraitsModel[] = <BolHerosTraitsModel[]>this.formChange()?.traits;
-    const filteringSelectedByType =
-      traits?.filter((item: BolHerosTraitsModel) => item.type === this.contextType())
-        .map((item: BolHerosTraitsModel) => item.traitable_id);
-    return traitsByType?.filter((trait: any) => !filteringSelectedByType?.includes(trait.id as number));
-  });
-  protected heroId = computed(() => this.#bhss.currentHeros()?.id);
+  traitsWarns: { step: string, warn: string }[] = [];
 
   traitsForm = this.#fb.group({
     traits: this.#fb.array([])
@@ -113,15 +78,78 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
     return this.traitsForm.controls["traits"] as FormArray;
   }
 
+  public selectedTrait = signal<BolAvantageModel | BolDesavantageModel | null>(null);
+  protected contextType = signal<'A' | 'D'>('A')
+
+  protected mergedAvantages = computed(() => {
+    const obj1 = BolHeroCreateTools.toObject(this.#bhss.avantagesList() as BolAvantageModel[]);
+    const obj2 = BolHeroCreateTools.toObject(this.#bhss.regionalAvantages() as BolAvantageModel[]);
+    const mergedObj = { ...obj1, ...obj2 };
+    return Object.values(mergedObj);
+  });
+
+  protected mergedDesavantages = computed(() => {
+    const obj1 = BolHeroCreateTools.toObject(this.#bhss.desavantagesList() as BolDesavantageModel[]);
+    const obj2 = BolHeroCreateTools.toObject(this.#bhss.regionalDesavantages() as BolDesavantageModel[]);
+    const mergedObj = { ...obj1, ...obj2 };
+    return Object.values(mergedObj);
+  });
   protected formChange = toSignal(this.traitsForm!.valueChanges);
+  protected herosTraits = computed(() =>  <BolHerosTraitsModel[]>this.formChange()?.traits ?? []);
+  protected herosAvantages = computed(() =>  <BolHerosTraitsModel[]>this.herosTraits()?.filter((item) => item.type === 'A') ?? []);
+  protected herosRegionalAvantages = computed(() =>  <BolHerosTraitsModel[]>this.herosAvantages()?.filter((item) => item.region_id !== null) ?? []);
+
+  protected herosDesavantages = computed(() =>  <BolHerosTraitsModel[]>this.herosTraits()?.filter((item) => item.type === 'D') ?? []);
+  protected herosRegionalDesavantages = computed(() =>  <BolHerosTraitsModel[]>this.herosDesavantages()?.filter((item) => item.region_id !== null) ?? []);
+
+  protected lostHeroism = computed(() => {
+    this.checkWarns();
+    return this.traitsWarns.length > 0 ? 0 : Math.max(this.herosAvantages().length - this.herosDesavantages().length -1, 0);
+  });
+
+  protected traitList = computed(() => {
+    const traitsByType = (this.contextType() === "A" ? this.mergedAvantages() : this.mergedDesavantages()) ?? [];
+    const filteringSelectedByType = this.herosTraits().filter((item: BolHerosTraitsModel) => item.type === this.contextType())
+        .map((item: BolHerosTraitsModel) => item.traitable_id) ;
+    return traitsByType.filter((trait: any) => !filteringSelectedByType.includes(trait.id as number));
+  });
+  protected heroId = computed(() => this.#bhss.currentHeros()?.id);
+
 
   constructor() {
     effect(() => {
       if (this.formChange()) {
+        this.checkWarns();
         this.onChange(this.traitsForm.get('traits')?.value);
         this.onTouched();
       }
     });
+  }
+
+  checkWarns() {
+    this.traitsWarns = [];
+    // Il faut au moins 1 avantage
+    if (!this.herosAvantages()?.length) {
+      this.traitsWarns.push({
+        step: 'Avantages',
+        warn: 'Vous devez choisir 1 avantage.'
+      });
+    }
+    // il faut au moins un avantage régional si ils existent
+    if (this.#bhss.regionalAvantages()?.length && !this.herosRegionalAvantages().length) {
+      this.traitsWarns.push({
+        step: 'Avantages',
+        warn: 'Vous devez choisir au moins 1 avantage regional.'
+      });
+    }
+    // il faut au moins un désavantage régional si ils existennt et si il y a un avantage regional
+    if (
+      this.#bhss.regionalDesavantages()?.length && this.herosDesavantages().length && !this.herosRegionalDesavantages().length) {
+      this.traitsWarns.push({
+        step: 'Avantages',
+        warn: 'Vous devez choisir au moins 1 désavantage regional.'
+      });
+    }
   }
 
   addTraitToForm(trait: BolHerosTraitsModel) {
@@ -152,9 +180,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
     this.subs = this.#bhs.createTrait(this.heroId(), trait).subscribe({
       next: (newTrait) => {
         this.#spinner.hide();
-        console.log('ici', newTrait);
         this.addTraitToForm(newTrait);
-
       },
       error: () => {
         this.#spinner.hide();
@@ -211,7 +237,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   }
 
   writeValue(traits: BolHerosTraitsModel[]): void {
-    if (traits) {
+    if (traits && traits.length) {
       this.traits.clear();
       for (const trait of traits) {
         const traitForm = this.#fb.group({
@@ -223,6 +249,8 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
         });
         this.traits.push(traitForm);
       }
+    } else {
+      this.checkWarns();
     }
   }
 }

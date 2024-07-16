@@ -26,7 +26,7 @@ class BolArmeSeeder extends Seeder
                 'arme' => 'Bâton',
                 'type' => 'M',
                 'degats' => 'd6',
-                'notes' => 'Armes à demain.'
+                'notes' => 'Armes à deux mains.'
             ],
             [
                 'id' => 3,

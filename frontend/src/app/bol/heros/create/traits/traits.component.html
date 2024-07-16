@@ -3,7 +3,10 @@
   <ng-template pTemplate="header">
     <div class="flex items-center gap-2">
       <div class="cursor-pointer" (click)="attributInfos.toggle($event)">
-        <i class="pi pi-info-circle"></i>
+        <i class="pi pi-info-circle" *ngIf="!traitsWarns.length"></i>
+        <div *ngIf="traitsWarns.length" style="color: var(--warn-color)">
+          <i class="pi pi-exclamation-triangle"></i> ({{ traitsWarns.length }})
+        </div>
       </div>
 
       <div>Avantages & Désavantages</div>
@@ -11,14 +14,16 @@
     <p-overlayPanel #attributInfos>
       <div class="flex flex-col gap-2">
         <bol-message type="traits"></bol-message>
+        <bol-message type="form-warn" *ngIf="traitsWarns.length" legend="Taits regionaux invalides" [data]="traitsWarns"></bol-message>
       </div>
     </p-overlayPanel>
   </ng-template>
-  <!-- Body Armures -->
+  <!-- Body Traits -->
   <div class="flex flex-col gap-1">
     <div class="flex flex-col mb-2">
       <div class="flex gap-4">
         <div style="width: 230px" class="flex flex-col gap-2">
+          <!--- Avantages --->
           <ng-container *ngFor="let trait of traits.controls; let i = index">
             @if (trait.value.type === 'A') {
               <div class="flex items-centers">
@@ -29,6 +34,7 @@
           </ng-container>
         </div>
         <p-divider layout="vertical" />
+        <!--- Désavantages --->
         <div style="width: 230px" class="flex flex-col gap-2">
           <ng-container *ngFor="let trait of traits.controls; let i = index">
             @if (trait.value.type === 'D') {
@@ -42,13 +48,20 @@
       </div>
     </div>
   </div>
+  <div *ngIf="lostHeroism()">
+
+  </div>
   <!-- Footer Traits -->
   <div class="flex justify-between gap-2">
-    <p-button
-      label="Ajouter un avantage"
-      size="small"
-      [link]="true" class="text-cyan-600"
-      (click)="contextType.set('A'); selectedTrait.set(null); opTrait.toggle($event)"/>
+    <div>
+      <p-button
+        *ngIf="herosAvantages().length < 3"
+        label="Ajouter un avantage"
+        size="small"
+        [link]="true" class="text-cyan-600"
+        (click)="contextType.set('A'); selectedTrait.set(null); opTrait.toggle($event)"/>
+    </div>
+
     <p-button
       label="Ajouter un désavantage"
       size="small"
