@@ -29,7 +29,22 @@
         <div [formGroupName]="i" class="flex gap-2 items-center">
           <ng-template #templateRef let-carri="carTpl">
             <div style="width: 125px" class="flex flex-col">
-              <div>{{ carri.carriere }}</div>
+              <div class="flex items-center">
+                <div  *ngIf="carriereFromId(carriere.get('carriere_id')?.value).description" 
+                (click)="carriereInfos.toggle($event)"
+                class="cursor-pointer"
+                style="color: var(--warn-color)">
+                  <i class="pi pi-exclamation-triangle mr-2"></i>
+                </div>
+                {{ carri.carriere }}
+                <p-overlayPanel #carriereInfos>
+                  <div class="flex flex-col gap-2">
+                    <div class="text-amber-500">
+                      {{carriereFromId(carriere.get('carriere_id')?.value).description }}
+                    </div>
+                  </div>
+                </p-overlayPanel>
+              </div>
               <div class="text-gray-400" style="font-size: smaller" *ngIf="carri.detail">{{ carri.detail }}
               </div>
             </div>
@@ -39,10 +54,6 @@
           </div>
           <p-inputNumber formControlName="value" inputId="defense" maxFractionDigits="0" />
           <app-trash (click)="deleteCarriere(carriere.get('carriere_id')?.value, $event)"></app-trash>
-        </div>
-        <div class="carriere-desc text-amber-500"
-             *ngIf="carriereFromId(carriere.get('carriere_id')?.value)">{{
-            carriereFromId(carriere.get('carriere_id')?.value).description }}
         </div>
       </div>
 
