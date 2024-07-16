@@ -6,7 +6,6 @@ use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class BolHeros extends Model
 {
@@ -17,6 +16,7 @@ class BolHeros extends Model
     protected $keyType = 'uuid';
     protected $hidden = [
         'user_id',
+        'vitalite', 'heroisme',
         'initiative', 'melee', 'tir', 'defense',
         'vigueur', 'agilite', 'esprit', 'aura',
         'nom', 'avatar', 'region_id', 'region'

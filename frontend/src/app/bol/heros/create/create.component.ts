@@ -1,4 +1,4 @@
-import {Component, computed, inject, OnDestroy} from '@angular/core';
+import {Component, computed, effect, inject, OnDestroy} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {InputTextModule} from "primeng/inputtext";
 import {InputNumberModule} from 'primeng/inputnumber';
@@ -159,10 +159,13 @@ export class BolHerosCreateComponent implements OnDestroy {
       armures: value.armures ?? [],
       armes: value.armes ?? []
     })),
-    tap((value) => this.#herosStateService.currentHeros.set(value))
+    tap((heros: BolHerosModel) => {
+      this.#herosStateService.currentHeros.set(heros);
+    })
   );
   protected currentHero = toSignal<BolHerosModel>(this.valueChanges$);
   protected heroId = computed(() => this.currentHero()?.id);
+  protected heroismCost = computed<number>(() => this.#herosStateService.heroismCost());
 
   get traits() {
     return [] as unknown as FormArray;
@@ -180,11 +183,11 @@ export class BolHerosCreateComponent implements OnDestroy {
     if (id !== null) {
       this.getHeros(id);
     }
-    /*this.vigueurCtrl.valueChanges.subscribe((vigueur) => {
-      if (this.vigueurCtrl.valid && vigueur !== null) {
-        this.vitaliteCtrl.setValue(10 + vigueur, {emitEvent: false});
-      }
-    })*/
+    effect( () => {
+      const vigueur = this.currentHero()?.attributs.vigueur ?? 0;
+      const heroisme = this.currentHero()?.ressources.heroisme ?? 5;
+      this.ressourcesCtrl.setValue({vitalite: 10 + vigueur, heroisme: 5 - this.heroismCost()}, {emitEvent: false});
+    });
   }
 
   ngOnDestroy() {

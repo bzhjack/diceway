@@ -2,8 +2,8 @@
   <!-- Header Carrières -->
   <ng-template pTemplate="header">
     <div class="flex items-center gap-2">
+      <i class="pi pi-info-circle" *ngIf="!heroismCost()"></i>
       <div class="cursor-pointer" (click)="ressourcesInfos.toggle($event)">
-        <i class="pi pi-info-circle" *ngIf="!heroismCost()"></i>
         <div *ngIf="heroismCost()" style="color: var(--warn-color)">
           <i class="pi pi-exclamation-triangle"></i>
         </div>
@@ -30,7 +30,7 @@
       <input style="width: 50px; text-align: center" formControlName="heroisme" pInputText
              class="p-inputtext-sm" variant="filled" tabindex="-1" />
     </div>
-    <div styles="position: absolute; inset: 0;"></div>
+    <div style="position: absolute; inset: 0;"></div>
   </div>
 
 </p-fieldset>

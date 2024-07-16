@@ -50,19 +50,6 @@ export class BolHerosRessourcesComponent implements ControlValueAccessor {
   protected formChange = toSignal(this.ressourcesForm!.valueChanges);
 
   constructor() {
-    effect(() => {
-     // const cost = 5 - this.heroismCost() as number;
-      /*const vitalite = 10 + (this.herosState()?.attributs.vigueur ?? 0);
-      this.ressourcesForm.patchValue({
-        vitalite: vitalite,
-       // heroisme: cost
-      })*/
-      if (this.formChange()) {
-        console.log('ressources changes');
-        this.onChange(this.ressourcesForm?.value);
-        this.onTouched();
-      }
-    });
   }
 
   private onChange: (value: any) => void = () => {
@@ -79,6 +66,7 @@ export class BolHerosRessourcesComponent implements ControlValueAccessor {
   }
 
   writeValue(value: any): void {
+    console.log('Ressources', value);
     if (value) {
       this.ressourcesForm.patchValue(value);
     }
