@@ -83,7 +83,7 @@
 
       <ng-template pTemplate="selectedItem" let-selectedOption>
         <div class="flex align-items-center gap-2">
-          <div>{{ contextType() === 'A' ? selectedOption.avantage : selectedOption.desavantage }}</div>
+          <div><i *ngIf="selectedOption.region_id" class="pi pi-map-marker mr-2"></i>{{ contextType() === 'A' ? selectedOption.avantage : selectedOption.desavantage }}</div>
         </div>
       </ng-template>
 

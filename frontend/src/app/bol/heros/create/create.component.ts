@@ -2,7 +2,7 @@ import {Component, computed, effect, inject, OnDestroy} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {InputTextModule} from "primeng/inputtext";
 import {InputNumberModule} from 'primeng/inputnumber';
-import {FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ToolbarModule} from "primeng/toolbar";
 import {ButtonModule} from "primeng/button";
 import {SplitButtonModule} from "primeng/splitbutton";
@@ -14,11 +14,10 @@ import {
   BolHerosOrigines,
   BolHerosRessources
 } from "../../models/bol-heros.model";
-import {forkJoin, map, Observable, Subscription} from "rxjs";
+import {filter, forkJoin, map, Observable, Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {FieldsetModule} from "primeng/fieldset";
-import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {MessagesModule} from "primeng/messages";
@@ -165,16 +164,8 @@ export class BolHerosCreateComponent implements OnDestroy {
   );
   protected currentHero = toSignal<BolHerosModel>(this.valueChanges$);
   protected heroId = computed(() => this.currentHero()?.id);
-  protected heroismCost = computed<number>(() => this.#herosStateService.heroismCost());
-
-  get traits() {
-    return [] as unknown as FormArray;
-    //return this.herosForm.controls["traits"] as FormArray;
-  }
 
   constructor(
-    private confirmationService: ConfirmationService,
-    public ds: DialogService,
     private spinner: NgxSpinnerService,
     private fb: FormBuilder,
     private hs: BolHerosService,
@@ -185,8 +176,7 @@ export class BolHerosCreateComponent implements OnDestroy {
     }
     effect( () => {
       const vigueur = this.currentHero()?.attributs.vigueur ?? 0;
-      const heroisme = this.currentHero()?.ressources.heroisme ?? 5;
-      this.ressourcesCtrl.setValue({vitalite: 10 + vigueur, heroisme: 5 - this.heroismCost()}, {emitEvent: false});
+      this.ressourcesCtrl.setValue({vitalite: 10 + vigueur, heroisme: 5 - this.#herosStateService.heroismCost()}, {emitEvent: false});
     });
   }
 

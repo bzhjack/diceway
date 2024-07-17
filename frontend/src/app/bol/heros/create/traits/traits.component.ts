@@ -95,6 +95,12 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
     return Object.values(mergedObj);
   });
   protected formChange = toSignal(this.traitsForm!.valueChanges);
+
+  protected carriereDesavangeCost = computed(() => {
+    this.#bhss.currentHerosCarrieres()?.forEach((carriere) => {
+
+    });
+  });
   protected herosTraits = computed(() =>  <BolHerosTraitsModel[]>this.formChange()?.traits ?? []);
   protected herosAvantages = computed(() =>  <BolHerosTraitsModel[]>this.herosTraits()?.filter((item) => item.type === 'A') ?? []);
   protected herosRegionalAvantages = computed(() =>  <BolHerosTraitsModel[]>this.herosAvantages()?.filter((item) => item.region_id !== null) ?? []);
@@ -117,10 +123,6 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
 
 
   constructor() {
-
-    effect(() => {
-      this.#bhss.heroismCost.set(this.heroismCost());
-    }, {allowSignalWrites: true});
 
     effect(() => {
       if (this.formChange()) {

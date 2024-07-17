@@ -18,9 +18,15 @@ export class BolHerosStateService {
   avantagesList = toSignal(this.#bhs.avantages());
   desavantagesList = toSignal(this.#bhs.desavantages());
 
-  heroismCost = signal<number>(0);
-
+  currentHerosCarrieres = computed(() => this.currentHeros()?.carrieres);
   currentHerosRegion = computed(() => this.regionList()?.find((region) => this.currentHeros()?.origines.region_id === region.id));
+  heroismCost = computed(() => Math.max(this.currentHeroAvantages().length - this.currentHeroDesvantages().length -1, 0) );
+
+  protected currentHeroAvantages = computed(() => this.currentHeros()?.traits?.filter((item) => item.type === 'A') ?? [])
+  protected currentHeroDesvantages = computed(() => this.currentHeros()?.traits?.filter((item) => item.type === 'D') ?? [])
+
+
+
   regionalAvantages = computed(() => this.currentHerosRegion()?.avantages?.map((item) => {
     return {...item, ...{id: item.pivot.avantage_id, detail: item.pivot.detail, region_id: item.pivot.region_id}};
   }));
