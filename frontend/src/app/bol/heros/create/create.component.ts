@@ -14,7 +14,7 @@ import {
   BolHerosOrigines,
   BolHerosRessources
 } from "../../models/bol-heros.model";
-import {filter, forkJoin, map, Observable, Subscription} from "rxjs";
+import {forkJoin, map, Observable, Subscription} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {FieldsetModule} from "primeng/fieldset";
@@ -213,7 +213,8 @@ export class BolHerosCreateComponent implements OnDestroy {
               traitable_id: item.traitable_id,
               type: item.type,
               detail: item.detail,
-              region_id: item.region_id
+              region_id: item.region_id,
+              carriere: item.carriere
             }
             })
           });

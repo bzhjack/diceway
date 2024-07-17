@@ -96,7 +96,7 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
     return this.carrieresList()?.filter((carriere: BolCarriereModel) => !carriereIdsInArray.includes(carriere.id));
   });
   protected formChange = toSignal(this.carrieresForm!.valueChanges);
-
+  protected carriereDesavangeCount = this.#bhss.carriereDesavangeCount;
 
   constructor() {
     effect(() => {
@@ -157,6 +157,13 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
         this.carriereWarns.push({
           step: 'Aptitudes',
           warn: 'il manque ' + (4 - sumCarriere) + ' pts dans les carrières.'
+        });
+      }
+      // Gestion des désavantages pour les carrières
+      if (this.carriereDesavangeCount()) {
+        this.carriereWarns.push({
+          step: 'Traits',
+          warn: `<strong>Carrière dangereuse :</strong> <br> Vous devez choisir ${this.carriereDesavangeCount()} désavantage(s) supplémentaire.`
         });
       }
     }

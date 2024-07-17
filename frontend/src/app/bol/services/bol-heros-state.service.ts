@@ -18,7 +18,24 @@ export class BolHerosStateService {
   avantagesList = toSignal(this.#bhs.avantages());
   desavantagesList = toSignal(this.#bhs.desavantages());
 
-  currentHerosCarrieres = computed(() => this.currentHeros()?.carrieres);
+  currentHerosCarrieres = computed(() => this.currentHeros()?.carrieres ?? []);
+  carriereDesavangeCount = computed(() => {
+    let countDesavantage = 0;
+    this.currentHerosCarrieres().forEach((carriere) => {
+      switch (carriere.carriere_id) {
+        // 1 : Alchimiste ( au dessus rang 2)
+        case 1:
+          countDesavantage += Math.max(carriere.value - 2, 0);
+          break;
+        // 24: Sorcier (au dessus rang 1)
+        case 24:
+          countDesavantage += Math.max(carriere.value - 1, 0);
+          break;
+      }
+    });
+    return countDesavantage;
+  });
+
   currentHerosRegion = computed(() => this.regionList()?.find((region) => this.currentHeros()?.origines.region_id === region.id));
   heroismCost = computed(() => Math.max(this.currentHeroAvantages().length - this.currentHeroDesvantages().length -1, 0) );
 
