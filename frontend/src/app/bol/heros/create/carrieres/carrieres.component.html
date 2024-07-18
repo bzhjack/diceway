@@ -30,7 +30,7 @@
           <ng-template #templateRef let-carri="carTpl">
             <div style="width: 125px" class="flex flex-col">
               <div class="flex items-center">
-                <div  *ngIf="carriereFromId(carriere.get('carriere_id')?.value).description" 
+                <div *ngIf="carri.description"
                 (click)="carriereInfos.toggle($event)"
                 class="cursor-pointer"
                 style="color: var(--warn-color)">
@@ -40,7 +40,7 @@
                 <p-overlayPanel #carriereInfos>
                   <div class="flex flex-col gap-2">
                     <div class="text-amber-500">
-                      {{carriereFromId(carriere.get('carriere_id')?.value).description }}
+                      {{carri.description }}
                     </div>
                   </div>
                 </p-overlayPanel>
@@ -54,6 +54,7 @@
           </div>
           <p-inputNumber formControlName="value" inputId="defense" maxFractionDigits="0" />
           <app-trash (click)="deleteCarriere(carriere.get('carriere_id')?.value, $event)"></app-trash>
+          <app-trash *ngIf="[1,24].includes(carriere.get('carriere_id')?.value)" type="warn" icon="exclamation-triangle" pTooltip="Ajouter un désavantage"></app-trash>
         </div>
       </div>
 

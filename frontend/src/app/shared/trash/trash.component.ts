@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, input} from '@angular/core';
 
 @Component({
   selector: 'app-trash',
@@ -8,5 +8,6 @@ import { Component } from '@angular/core';
   styleUrl: './trash.component.scss'
 })
 export class TrashComponent {
-
+  icon = input<string>('trash');
+  type = input<null | 'warn'>(null);
 }

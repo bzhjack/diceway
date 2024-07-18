@@ -16,7 +16,7 @@ import {
   Validator
 } from "@angular/forms";
 import {InputNumberModule} from "primeng/inputnumber";
-import {NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
+import {JsonPipe, NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
 import {Ripple} from "primeng/ripple";
@@ -30,6 +30,7 @@ import {carrieresFormValidator, carriereValidator} from "../create.validators";
 import {BolHeroCreateTools} from "../create.tools";
 import {Subscription} from "rxjs";
 import {TrashComponent} from "../../../../shared/trash/trash.component";
+import {TooltipModule} from "primeng/tooltip";
 
 
 @Component({
@@ -50,7 +51,9 @@ import {TrashComponent} from "../../../../shared/trash/trash.component";
     PrimeTemplate,
     ReactiveFormsModule,
     Ripple,
-    TrashComponent
+    TrashComponent,
+    JsonPipe,
+    TooltipModule
   ],
   templateUrl: './carrieres.component.html',
   styleUrl: './carrieres.component.scss',
@@ -97,6 +100,7 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
   });
   protected formChange = toSignal(this.carrieresForm!.valueChanges);
   protected carriereDesavangeCount = this.#bhss.carriereDesavangeCount;
+  protected desavantagesList = this.#bhss.desavantagesList;
 
   constructor() {
     effect(() => {
