@@ -45,9 +45,6 @@ export class BolHerosRessourcesComponent implements ControlValueAccessor {
   });
 
   protected heroismCost = computed<number>(() => this.#herosStateService.heroismCost());
-  protected herosState = computed(() => this.#herosStateService.currentHeros());
-
-  protected formChange = toSignal(this.ressourcesForm!.valueChanges);
 
   constructor() {
   }
@@ -66,7 +63,6 @@ export class BolHerosRessourcesComponent implements ControlValueAccessor {
   }
 
   writeValue(value: any): void {
-    console.log('Ressources', value);
     if (value) {
       this.ressourcesForm.patchValue(value);
     }

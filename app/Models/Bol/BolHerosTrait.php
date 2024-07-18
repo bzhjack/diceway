@@ -11,13 +11,18 @@ class BolHerosTrait extends Model
 
     protected $table = 'bol_heros_trait';
     protected $hidden = ['created_at', 'updated_at'];
+    protected $casts = [
+        'carriere' => 'boolean'
+    ];
+
     protected $fillable = [
         "heros_id",
         "type",
         "traitable_id",
         "traitable_type",
         "detail",
-        "region_id"
+        "region_id",
+        "carriere"
     ];
 
     public function traitable()

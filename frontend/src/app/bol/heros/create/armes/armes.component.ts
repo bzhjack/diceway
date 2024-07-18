@@ -22,25 +22,26 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {BolArmeModel, BolHerosArmeModel} from "../../../models/bol-arme.model";
-import {TrashComponent} from "../../../../shared/trash/trash.component";
+import {BtnComponent} from "../../../../shared/trash/trash.component";
 
 @Component({
   selector: 'bol-heros-armes',
   standalone: true,
-    imports: [
-        Button,
-        FieldsetModule,
-        PrimeTemplate,
-        ButtonDirective,
-        DropdownModule,
-        NgIf,
-        OverlayPanelModule,
-        Ripple,
-        FormsModule,
-        NgForOf,
-        ReactiveFormsModule,
-        TrashComponent
-    ],
+  imports: [
+    Button,
+    FieldsetModule,
+    PrimeTemplate,
+    ButtonDirective,
+    DropdownModule,
+    NgIf,
+    OverlayPanelModule,
+    Ripple,
+    FormsModule,
+    NgForOf,
+    ReactiveFormsModule,
+    BtnComponent,
+    BtnComponent
+  ],
   templateUrl: './armes.component.html',
   styleUrl: './armes.component.scss',
   providers: [
