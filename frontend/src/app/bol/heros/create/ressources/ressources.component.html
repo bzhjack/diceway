@@ -1,4 +1,4 @@
-<p-fieldset class="w-full" [formGroup]="ressourcesForm">
+<p-fieldset class="w-full h-full inline-grid" [formGroup]="ressourcesForm">
   <!-- Header Carrières -->
   <ng-template pTemplate="header">
     <div class="flex items-center gap-1">
@@ -18,7 +18,7 @@
       </div>
     </p-overlayPanel>
   </ng-template>
- <div class="flex gap-2 relative p-3">
+ <div class="flex gap-2 relative">
     <div class="flex flex-col gap-1">
       <label>Vitalité</label>
       <input style="width: 50px; text-align: center" formControlName="vitalite" pInputText
