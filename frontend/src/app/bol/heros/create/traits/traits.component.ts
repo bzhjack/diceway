@@ -99,8 +99,8 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   protected herosAvantages = computed(() => <BolHerosTraitsModel[]>this.herosTraits()?.filter((item) => item.type === 'A') ?? []);
   protected herosRegionalAvantages = computed(() => <BolHerosTraitsModel[]>this.herosAvantages()?.filter((item) => item.region_id !== null) ?? []);
 
-  protected herosDesavantages = computed(() => <BolHerosTraitsModel[]>this.herosTraits()?.filter((item) => item.type === 'D') ?? []);
-  protected herosRegionalDesavantages = computed(() => <BolHerosTraitsModel[]>this.herosDesavantages()?.filter((item) => item.region_id !== null) ?? []);
+  protected herosDesavantages = computed(() => <BolHerosTraitsModel[]>this.herosTraits()?.filter((item) => item.type === 'D' && item.carriere === false) ?? []);
+  protected herosRegionalDesavantages = computed(() => <BolHerosTraitsModel[]>this.herosDesavantages()?.filter((item) => item.region_id !== null && item.carriere === false) ?? []);
 
   protected traitList = computed(() => {
     const traitsByType = (this.contextType() === "A" ? this.mergedAvantages() : this.mergedDesavantages()) ?? [];
@@ -130,16 +130,23 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
         warn: 'Vous devez choisir 1 avantage.'
       });
     }
+    const countherosRegionalAvantages = this.herosRegionalAvantages().length ?? 0;
+    const countHerosDesavantages = this.herosDesavantages().length;
+    const countherosRegionalDesavantages = this.herosRegionalDesavantages().length ?? 0;
+    const countRegionalAvantages = this.#bhss.regionalAvantages().length ?? 0;
+    const countRegionalDesavantages = this.#bhss.regionalDesavantages().length ?? 0;
+
+    console.log("check warn", countRegionalDesavantages , countHerosDesavantages , countherosRegionalDesavantages);
+
     // il faut au moins un avantage régional si ils existent
-    if (this.#bhss.regionalAvantages()?.length && !this.herosRegionalAvantages().length) {
+    if (countRegionalAvantages && !countherosRegionalAvantages) {
       this.traitsWarns.push({
         step: 'Traits',
         warn: 'Vous devez choisir au moins 1 avantage <strong>regional</strong>.'
       });
     }
     // il faut au moins un désavantage régional si ils existennt et si il y a un avantage regional
-    if (this.herosAvantages().length > 1 &&
-      this.#bhss.regionalDesavantages()?.length && this.herosDesavantages().length && !this.herosRegionalDesavantages().length) {
+    if ( countRegionalDesavantages && countHerosDesavantages && !countherosRegionalDesavantages) {
       this.traitsWarns.push({
         step: 'Traits',
         warn: 'Vous devez choisir au moins 1 désavantage <strong>regional</strong>.'
@@ -153,7 +160,8 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
       type: [trait.type],
       detail: [trait.detail],
       region_id: [trait.region_id],
-      id: [trait.id]
+      id: [trait.id],
+      carriere: [trait.carriere]
     });
     this.traits.push(traitForm);
   }

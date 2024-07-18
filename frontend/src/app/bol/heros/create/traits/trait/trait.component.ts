@@ -8,6 +8,7 @@ import {BolHeroCreateTools} from "../../create.tools";
 import {CheckboxModule} from "primeng/checkbox";
 import {BolHerosTraitsModel} from "../../../../models/bol-trait.model";
 import {BolHerosStateService} from "../../../../services/bol-heros-state.service";
+import {TooltipModule} from "primeng/tooltip";
 
 @Component({
   selector: 'bol-heros-trait',
@@ -18,7 +19,8 @@ import {BolHerosStateService} from "../../../../services/bol-heros-state.service
     InlineSVGModule,
     NgForOf,
     CheckboxModule,
-    JsonPipe
+    JsonPipe,
+    TooltipModule
   ],
   templateUrl: './trait.component.html',
   styleUrl: './trait.component.scss'

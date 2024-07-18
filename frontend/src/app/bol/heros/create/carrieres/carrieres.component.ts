@@ -31,6 +31,9 @@ import {BolHeroCreateTools} from "../create.tools";
 import {Subscription} from "rxjs";
 import {TrashComponent} from "../../../../shared/trash/trash.component";
 import {TooltipModule} from "primeng/tooltip";
+import {BolAvantageModel} from "../../../models/bol-avantage.model";
+import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
+import {BolHerosTraitsModel} from "../../../models/bol-trait.model";
 
 
 @Component({
@@ -101,7 +104,7 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
   protected formChange = toSignal(this.carrieresForm!.valueChanges);
   protected carriereDesavangeCount = this.#bhss.carriereDesavangeCount;
   protected desavantagesList = this.#bhss.desavantagesList;
-
+  public selectedTrait = signal<BolDesavantageModel | null>(null);
   constructor() {
     effect(() => {
       if (this.formChange()) {
@@ -235,6 +238,34 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
       }
     });
   }
+
+
+  addTraits(panel: OverlayPanel, event: any): void {
+    panel.toggle(event);
+    if (this.selectedTrait() === null) {
+      return;
+    }
+    const trait: BolHerosTraitsModel = {
+      traitable_id: this.selectedTrait()?.id as number,
+      type: 'D',
+      detail: this.selectedTrait()?.pivot?.detail ?? null,
+      region_id: this.selectedTrait()?.pivot?.region_id ?? null,
+      carriere: true
+    }
+
+    this.#spinner.show();
+    this.subs?.unsubscribe();
+    this.subs = this.#bhs.createTrait(this.heroId(), trait).subscribe({
+      next: (newTrait) => {
+        this.#spinner.hide();
+      },
+      error: () => {
+        this.#spinner.hide();
+      }
+    });
+  }
+
+
 
   registerOnChange(fn: any): void {
     this.onChange = fn;

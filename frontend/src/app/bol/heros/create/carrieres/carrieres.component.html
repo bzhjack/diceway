@@ -54,7 +54,7 @@
           </div>
           <p-inputNumber formControlName="value" inputId="defense" maxFractionDigits="0" />
           <app-trash (click)="deleteCarriere(carriere.get('carriere_id')?.value, $event)"></app-trash>
-          <app-trash *ngIf="[1,24].includes(carriere.get('carriere_id')?.value)" type="warn" icon="exclamation-triangle" pTooltip="Ajouter un désavantage"></app-trash>
+          <app-trash *ngIf="[1,24].includes(carriere.get('carriere_id')?.value)" type="warn" icon="exclamation-triangle" pTooltip="Ajouter un désavantage" (click)="selectedTrait.set(null); opTrait.toggle($event)"></app-trash>
         </div>
       </div>
 
@@ -95,3 +95,38 @@
     </p-overlayPanel>
   </div>
 </p-fieldset>
+
+<p-overlayPanel #opTrait>
+  <div class="flex flex-col gap-4">
+    <div>Ajouter un désavantage</div>
+    <p-dropdown
+      [style]="{ width: '250px' }"
+      [options]="desavantagesList()"
+      [ngModel]="selectedTrait()"
+      (ngModelChange)="selectedTrait.set($event)"
+      [ngModelOptions]="{standalone: true}"
+      [filter]="true" filterBy="desavantage" [showClear]="true"
+      placeholder="Sélectionner un désavantage">
+
+      <ng-template pTemplate="selectedItem" let-selectedOption>
+        <div class="flex align-items-center gap-2">
+          <div>{{selectedOption.desavantage }}</div>
+        </div>
+      </ng-template>
+
+      <ng-template let-trait pTemplate="item">
+        <div class="flex flex-col gap-2">
+          <div>{{trait.desavantage}}</div>
+          <div class="text-gray-400" style="font-size: smaller" *ngIf="trait.detail">{{ trait.detail }}</div>
+        </div>
+      </ng-template>
+    </p-dropdown>
+    <div class="flex justify-end gap-2">
+      <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
+              (click)="opTrait.toggle($event)"></button>
+      <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
+              [disabled]="!selectedTrait()"
+              (click)="addTraits(opTrait, $event)"></button>
+    </div>
+  </div>
+</p-overlayPanel>
