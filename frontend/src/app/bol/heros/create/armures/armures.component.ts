@@ -22,7 +22,7 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from "@angular/core/rxjs-interop";
-import {TrashComponent} from "../../../../shared/trash/trash.component";
+import {BtnComponent} from "../../../../shared/trash/trash.component";
 
 
 @Component({
@@ -40,7 +40,7 @@ import {TrashComponent} from "../../../../shared/trash/trash.component";
     FormsModule,
     NgForOf,
     ReactiveFormsModule,
-    TrashComponent
+    BtnComponent
   ],
   templateUrl: './armures.component.html',
   styleUrl: './armures.component.scss',

@@ -53,8 +53,7 @@
             *ngTemplateOutlet="templateRef; context: { carTpl: carriereFromId(carriere.get('carriere_id')?.value) }">
           </div>
           <p-inputNumber formControlName="value" inputId="defense" maxFractionDigits="0" />
-          <app-trash (click)="deleteCarriere(carriere.get('carriere_id')?.value, $event)"></app-trash>
-          <app-trash *ngIf="[1,24].includes(carriere.get('carriere_id')?.value)" type="warn" icon="exclamation-triangle" pTooltip="Ajouter un désavantage" (click)="selectedTrait.set(null); opTrait.toggle($event)"></app-trash>
+          <app-btn (click)="deleteCarriere(carriere.get('carriere_id')?.value, $event)"></app-btn>
         </div>
       </div>
 
@@ -62,46 +61,55 @@
   </ng-container>
   </ng-container>
   <!-- Footer Carrieres -->
-  <div *ngIf="carrieres.length < 4" class="flex justify-end gap-2">
-    <p-button (click)="selectedCarriere.set(null); opCarriere.toggle($event)" label="Ajouter une carrière"
+  <div class="flex justify-between gap-2">
+    <p-button (click)="selectedTrait.set(null); opTrait.toggle($event)"
+              [style]="{color: 'var(--error-color)'}"
+              label="Ajouter une {{carriereDesavangeCount()}} désavantage(s)"
+              *ngIf="carriereDesavangeCount() > 0 && carrieresForm.valid"
+              severity="danger"
+              size="small" [link]="true" />
+    <div></div>
+    <p-button (click)="selectedCarriere.set(null); opCarriere.toggle($event)"
+              label="Ajouter une carrière"
+              *ngIf="carrieres.length < 4"
               size="small" [link]="true" class="text-cyan-600" />
-    <p-overlayPanel #opCarriere>
-      <div class="flex flex-col gap-4">
-        <div>Ajouter une carrière</div>
-        <p-dropdown [style]="{ width: '250px' }" [options]="availableCarrieres()"
-                    [(ngModel)]="selectedCarriere" [ngModelOptions]="{standalone: true}" [filter]="true"
-                    filterBy="carriere" [showClear]="true" placeholder="Selectionner une carriere">
 
-          <ng-template pTemplate="selectedItem" let-selectedOption>
-            <div class="flex align-items-center gap-2">
-              <div>{{ selectedOption.carriere }}</div>
-            </div>
-          </ng-template>
-
-          <ng-template let-carriere pTemplate="item">
-            <div class="flex flex-col gap-2">
-              <div>{{ carriere.carriere }}</div>
-              <div style="font-size: smaller" *ngIf="carriere.detail">{{ carriere.detail }}</div>
-            </div>
-          </ng-template>
-        </p-dropdown>
-        <div class="flex justify-end gap-2">
-          <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
-                  (click)="opCarriere.toggle($event)"></button>
-          <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
-                  (click)="createCarriere(opCarriere, $event)" [disabled]="!selectedCarriere()"></button>
-        </div>
-      </div>
-    </p-overlayPanel>
   </div>
 </p-fieldset>
+<p-overlayPanel #opCarriere>
+  <div class="flex flex-col gap-4">
+    <div>Ajouter une carrière</div>
+    <p-dropdown [style]="{ width: '250px' }" [options]="availableCarrieres()"
+                [(ngModel)]="selectedCarriere" [ngModelOptions]="{standalone: true}" [filter]="true"
+                filterBy="carriere" [showClear]="true" placeholder="Selectionner une carriere">
 
+      <ng-template pTemplate="selectedItem" let-selectedOption>
+        <div class="flex align-items-center gap-2">
+          <div>{{ selectedOption.carriere }}</div>
+        </div>
+      </ng-template>
+
+      <ng-template let-carriere pTemplate="item">
+        <div class="flex flex-col gap-2">
+          <div>{{ carriere.carriere }}</div>
+          <div style="font-size: smaller" *ngIf="carriere.detail">{{ carriere.detail }}</div>
+        </div>
+      </ng-template>
+    </p-dropdown>
+    <div class="flex justify-end gap-2">
+      <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
+              (click)="opCarriere.toggle($event)"></button>
+      <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
+              (click)="createCarriere(opCarriere, $event)" [disabled]="!selectedCarriere()"></button>
+    </div>
+  </div>
+</p-overlayPanel>
 <p-overlayPanel #opTrait>
   <div class="flex flex-col gap-4">
     <div>Ajouter un désavantage</div>
     <p-dropdown
       [style]="{ width: '250px' }"
-      [options]="desavantagesList()"
+      [options]="availableDesavantages()"
       [ngModel]="selectedTrait()"
       (ngModelChange)="selectedTrait.set($event)"
       [ngModelOptions]="{standalone: true}"

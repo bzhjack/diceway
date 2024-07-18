@@ -248,4 +248,11 @@ export class BolHerosCreateComponent implements OnDestroy {
       });
     }
   }
+  addCarriereDesavantage(desavantage: BolHerosTraitsModel | null) {
+    if (desavantage !== null) {
+      const desavantages = this.traitsCtrl.value ?? [];
+      desavantages.push(desavantage);
+      this.traitsCtrl.setValue(desavantages);
+    }
+  }
 }

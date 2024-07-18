@@ -17,8 +17,8 @@ export class BolHerosStateService {
   currentHeros = signal<BolHerosModel | null>(null)
   avantagesList = toSignal(this.#bhs.avantages());
   desavantagesList = toSignal(this.#bhs.desavantages());
-
   currentHerosCarrieres = computed(() => this.currentHeros()?.carrieres ?? []);
+
   carriereDesavangeCount = computed(() => {
     let countDesavantage = 0;
     this.currentHerosCarrieres().forEach((carriere) => {
@@ -33,7 +33,7 @@ export class BolHerosStateService {
           break;
       }
     });
-    return countDesavantage;
+    return countDesavantage - this.currentHeroCarriereDesvantages().length;
   });
 
   currentHerosRegion = computed(() => this.regionList()?.find((region) => this.currentHeros()?.origines.region_id === region.id));
@@ -42,7 +42,7 @@ export class BolHerosStateService {
   protected currentHeroAvantages = computed(() => this.currentHeros()?.traits?.filter((item) => item.type === 'A') ?? [])
   protected currentHeroDesavantages = computed(() => this.currentHeros()?.traits?.filter((item) => item.type === 'D' && item.carriere === false) ?? [])
   protected currentHeroCarriereDesvantages = computed(() => this.currentHeros()?.traits?.filter((item) => item.type === 'D' && item.carriere === true) ?? [])
-
+  allHerosDesavantages = computed(() => this.currentHeros()?.traits?.filter(item => item.type === 'D') ?? []);
 
   regionalAvantages = computed(() => this.currentHerosRegion()?.avantages?.map((item) => {
     return {...item, ...{id: item.pivot.avantage_id, detail: item.pivot.detail, region_id: item.pivot.region_id}};

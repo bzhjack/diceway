@@ -24,7 +24,7 @@ import {Observable, Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from '@angular/core/rxjs-interop';
 import {BolHerosTraitComponent} from "./trait/trait.component";
-import {TrashComponent} from "../../../../shared/trash/trash.component";
+import {BtnComponent} from "../../../../shared/trash/trash.component";
 import {BolMessageComponent} from "../../../message/message.component";
 import {BolHeroCreateTools} from "../create.tools";
 import {DividerModule} from "primeng/divider";
@@ -46,7 +46,7 @@ import {DividerModule} from "primeng/divider";
     ReactiveFormsModule,
     BolHerosTraitComponent,
     JsonPipe,
-    TrashComponent,
+    BtnComponent,
     BolMessageComponent,
     DividerModule
   ],

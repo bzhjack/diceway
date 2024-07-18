@@ -1,4 +1,4 @@
-import {Component, computed, effect, forwardRef, inject, OnDestroy, signal} from '@angular/core';
+import {Component, computed, effect, forwardRef, inject, OnDestroy, output, signal} from '@angular/core';
 import {BolMessageComponent} from "../../../message/message.component";
 import {Button, ButtonDirective} from "primeng/button";
 import {DropdownModule} from "primeng/dropdown";
@@ -29,9 +29,8 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {carrieresFormValidator, carriereValidator} from "../create.validators";
 import {BolHeroCreateTools} from "../create.tools";
 import {Subscription} from "rxjs";
-import {TrashComponent} from "../../../../shared/trash/trash.component";
+import {BtnComponent} from "../../../../shared/trash/trash.component";
 import {TooltipModule} from "primeng/tooltip";
-import {BolAvantageModel} from "../../../models/bol-avantage.model";
 import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
 import {BolHerosTraitsModel} from "../../../models/bol-trait.model";
 
@@ -54,9 +53,9 @@ import {BolHerosTraitsModel} from "../../../models/bol-trait.model";
     PrimeTemplate,
     ReactiveFormsModule,
     Ripple,
-    TrashComponent,
     JsonPipe,
-    TooltipModule
+    TooltipModule,
+    BtnComponent
   ],
   templateUrl: './carrieres.component.html',
   styleUrl: './carrieres.component.scss',
@@ -81,6 +80,8 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
   readonly #spinner = inject(NgxSpinnerService);
   readonly #cs = inject(ConfirmationService);
 
+  desavantageCreated = output<BolHerosTraitsModel | null>();
+
   carriereErrors: { control: string, error: string }[] = [];
   carriereWarns: { step: string, warn: string }[] = [];
 
@@ -101,10 +102,15 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
     const carriereIdsInArray = carrieres.map(carriere => carriere.carriere_id);
     return this.carrieresList()?.filter((carriere: BolCarriereModel) => !carriereIdsInArray.includes(carriere.id));
   });
+  protected availableDesavantages = computed(() => {
+    const takenIds = this.#bhss.allHerosDesavantages().map((avg) => avg.id);
+    return this.desavantagesList()?.filter((desavantage) => !takenIds.includes(desavantage.id as number));
+  });
   protected formChange = toSignal(this.carrieresForm!.valueChanges);
   protected carriereDesavangeCount = this.#bhss.carriereDesavangeCount;
   protected desavantagesList = this.#bhss.desavantagesList;
   public selectedTrait = signal<BolDesavantageModel | null>(null);
+
   constructor() {
     effect(() => {
       if (this.formChange()) {
@@ -258,6 +264,7 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
     this.subs = this.#bhs.createTrait(this.heroId(), trait).subscribe({
       next: (newTrait) => {
         this.#spinner.hide();
+        this.desavantageCreated.emit(trait);
       },
       error: () => {
         this.#spinner.hide();

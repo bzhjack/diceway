@@ -36,7 +36,7 @@
 
           <div class="flex gap-2">
             <div class="flex flex-col flex-auto gap-2">
-              <bol-heros-carrieres formControlName="carrieres"></bol-heros-carrieres>
+              <bol-heros-carrieres formControlName="carrieres" (desavantageCreated)="addCarriereDesavantage($event)"></bol-heros-carrieres>
             </div>
             <div class="flex flex-col flex-auto gap-2 ">
               <bol-heros-armures formControlName="armures"></bol-heros-armures>
