@@ -103,7 +103,7 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
     return this.carrieresList()?.filter((carriere: BolCarriereModel) => !carriereIdsInArray.includes(carriere.id));
   });
   protected availableDesavantages = computed(() => {
-    const takenIds = this.#bhss.allHerosDesavantages().map((avg) => avg.id);
+    const takenIds = this.#bhss.allHerosDesavantages().map((avg) => avg.traitable_id);
     return this.desavantagesList()?.filter((desavantage) => !takenIds.includes(desavantage.id as number));
   });
   protected formChange = toSignal(this.carrieresForm!.valueChanges);

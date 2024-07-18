@@ -136,8 +136,6 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
     const countRegionalAvantages = this.#bhss.regionalAvantages().length ?? 0;
     const countRegionalDesavantages = this.#bhss.regionalDesavantages().length ?? 0;
 
-    console.log("check warn", countRegionalDesavantages , countHerosDesavantages , countherosRegionalDesavantages);
-
     // il faut au moins un avantage régional si ils existent
     if (countRegionalAvantages && !countherosRegionalAvantages) {
       this.traitsWarns.push({
