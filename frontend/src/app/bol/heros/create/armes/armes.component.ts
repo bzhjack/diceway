@@ -1,9 +1,9 @@
-import {Component, computed, effect, forwardRef, inject, input, signal} from '@angular/core';
+import {Component, computed, effect, forwardRef, inject, signal} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {FieldsetModule} from "primeng/fieldset";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
 import {DropdownModule} from "primeng/dropdown";
-import {NgForOf, NgIf} from "@angular/common";
+import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {Ripple} from "primeng/ripple";
 import {
@@ -42,7 +42,8 @@ import {DividerModule} from "primeng/divider";
     ReactiveFormsModule,
     BtnComponent,
     BtnComponent,
-    DividerModule
+    DividerModule,
+    JsonPipe
   ],
   templateUrl: './armes.component.html',
   styleUrl: './armes.component.scss',

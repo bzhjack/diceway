@@ -1,4 +1,4 @@
-<p-fieldset class="w-full">
+<p-fieldset class="w-full traits">
 
   <ng-template pTemplate="header">
     <div class="flex items-center gap-2">
@@ -27,7 +27,7 @@
           <!--- Avantages --->
           <ng-container *ngFor="let trait of traits.controls; let i = index">
             @if (trait.value.type === 'A') {
-              <div class="flex items-centers">
+              <div class="flex items-center">
                 <bol-heros-trait [trait]="trait.value"></bol-heros-trait>
                 <app-btn (click)="deleteTraits(trait.value.id, $event)"></app-btn>
               </div>
@@ -38,10 +38,18 @@
         <!--- Désavantages --->
         <div style="width: 230px" class="flex flex-col gap-2">
           <ng-container *ngFor="let trait of traits.controls; let i = index">
-            @if (trait.value.type === 'D') {
-              <div class="flex items-centers">
+            @if (trait.value.type === 'D' && trait.value.carriere === false) {
+              <div class="flex items-center">
                 <bol-heros-trait [trait]="trait.value"></bol-heros-trait>
                 <app-btn (click)="deleteTraits(trait.value.id, $event)"></app-btn>
+              </div>
+            }
+          </ng-container>
+          <ng-container *ngFor="let desacar of traits.controls; let i = index;">
+            @if (desacar.value.type === 'D' && desacar.value.carriere === true) {
+              <div class="flex items-center">
+                <bol-heros-trait [trait]="desacar.value"></bol-heros-trait>
+                <app-btn (click)="deleteTraits(desacar.value.id, $event)"></app-btn>
               </div>
             }
           </ng-container>

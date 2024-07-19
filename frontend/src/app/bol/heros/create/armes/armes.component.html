@@ -6,6 +6,7 @@
   </ng-template>
   <!-- Body Armus -->
   <div class="flex flex-col gap-1" *ngFor="let arme of selectedArmeDetail(); let i = index">
+    {{arme | json}}
     <div class="flex gap-2 items-center">
       {{ arme.arme }}
       <app-btn (click)="deleteArme(arme.id, $event)" ></app-btn>
