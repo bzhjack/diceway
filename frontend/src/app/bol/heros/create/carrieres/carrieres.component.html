@@ -65,7 +65,7 @@
   </ng-container>
   </ng-container>
   <!-- Footer Carrieres -->
-  <div class="flex justify-between gap-2">
+  <div class="footer-separator flex justify-between gap-2" *ngIf="(carriereDesavangeCount() > 0 && carrieresForm.valid) || carrieres.length < 4" >
     <p-button (click)="selectedTrait.set(null); opTrait.toggle($event)"
               [style]="{color: 'var(--error-color)'}"
               label="Ajouter une {{carriereDesavangeCount()}} désavantage(s)"

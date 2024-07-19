@@ -23,6 +23,7 @@ import {toSignal} from "@angular/core/rxjs-interop";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {BolArmeModel, BolHerosArmeModel} from "../../../models/bol-arme.model";
 import {BtnComponent} from "../../../../shared/trash/trash.component";
+import {DividerModule} from "primeng/divider";
 
 @Component({
   selector: 'bol-heros-armes',
@@ -40,7 +41,8 @@ import {BtnComponent} from "../../../../shared/trash/trash.component";
     NgForOf,
     ReactiveFormsModule,
     BtnComponent,
-    BtnComponent
+    BtnComponent,
+    DividerModule
   ],
   templateUrl: './armes.component.html',
   styleUrl: './armes.component.scss',

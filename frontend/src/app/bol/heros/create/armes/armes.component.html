@@ -12,7 +12,7 @@
     </div>
   </div>
   <!-- Footer Armes -->
-  <div class="flex justify-end gap-2" *ngIf="filteredArmeList()?.length > 0">
+  <div class="footer-separator flex justify-end gap-2" *ngIf="filteredArmeList()?.length > 0">
     <p-button label="Ajouter une arme" size="small" [link]="true" class="text-cyan-600" (click)="selectedArme.set(null); opArme.toggle($event)"/>
   </div>
 </p-fieldset>
