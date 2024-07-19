@@ -4,7 +4,7 @@ import {FieldsetModule} from "primeng/fieldset";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
 import {BolHerosStateService} from "../../../services/bol-heros-state.service";
 import {DropdownModule} from "primeng/dropdown";
-import {NgForOf, NgIf} from "@angular/common";
+import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {Ripple} from "primeng/ripple";
 import {BolArmureModel, BolHerosArmureModel} from "../../../models/bol-armure.model";
@@ -23,6 +23,7 @@ import {Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {BtnComponent} from "../../../../shared/trash/trash.component";
+import {TableModule} from "primeng/table";
 
 
 @Component({
@@ -40,7 +41,9 @@ import {BtnComponent} from "../../../../shared/trash/trash.component";
     FormsModule,
     NgForOf,
     ReactiveFormsModule,
-    BtnComponent
+    BtnComponent,
+    JsonPipe,
+    TableModule
   ],
   templateUrl: './armures.component.html',
   styleUrl: './armures.component.scss',
