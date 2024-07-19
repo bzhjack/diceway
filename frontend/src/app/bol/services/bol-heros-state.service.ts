@@ -2,7 +2,6 @@ import {computed, effect, inject, Injectable, signal} from '@angular/core';
 import {BolHerosService} from "./bol-heros.service";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {BolHerosModel} from "../models/bol-heros.model";
-import {BehaviorSubject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +32,7 @@ export class BolHerosStateService {
           break;
       }
     });
-    return countDesavantage - this.currentHeroCarriereDesvantages().length;
+    return Math.max(countDesavantage - this.currentHeroCarriereDesvantages().length, 0);
   });
 
   currentHerosRegion = computed(() => this.regionList()?.find((region) => this.currentHeros()?.origines.region_id === region.id));

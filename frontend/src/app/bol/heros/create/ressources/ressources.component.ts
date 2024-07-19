@@ -1,10 +1,9 @@
-import {Component, computed, effect, forwardRef, inject} from '@angular/core';
+import {Component, computed, forwardRef, inject} from '@angular/core';
 import {FieldsetModule} from "primeng/fieldset";
 import {PrimeTemplate} from "primeng/api";
 import {ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule} from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
 import {BolHerosStateService} from "../../../services/bol-heros-state.service";
-import {toSignal} from "@angular/core/rxjs-interop";
 import {NgIf} from "@angular/common";
 import {BolMessageComponent} from "../../../message/message.component";
 import {OverlayPanelModule} from "primeng/overlaypanel";

@@ -24,44 +24,48 @@
   <!-- Body Carrières -->
   <ng-container>
   <ng-container formArrayName="carrieres">
-    <div class="flex flex-col gap-1" *ngFor="let carriere of carrieres.controls; let i = index">
-      <div class="flex flex-col mb-2">
-        <div [formGroupName]="i" class="flex gap-2 items-center">
-          <ng-template #templateRef let-carri="carTpl">
-            <div style="width: 125px" class="flex flex-col">
-              <div class="flex items-center">
-                <div *ngIf="carri.description"
-                (click)="carriereInfos.toggle($event)"
-                class="cursor-pointer"
-                style="color: var(--warn-color)">
-                  <i class="pi pi-exclamation-triangle mr-2"></i>
-                </div>
-                {{ carri.carriere }}
-                <p-overlayPanel #carriereInfos>
-                  <div class="flex flex-col gap-2">
-                    <div class="text-amber-500">
-                      {{carri.description }}
-                    </div>
-                  </div>
-                </p-overlayPanel>
-              </div>
-              <div class="text-gray-400" style="font-size: smaller" *ngIf="carri.detail">{{ carri.detail }}
-              </div>
+    <div class="carrieres flex flex-wrap gap-3 mb-4" style="width:500px">
+      <div class="flex flex-col" *ngFor="let carriere of carrieres.controls; let i = index">
+        <div class="flex flex-col">
+          <div [formGroupName]="i" class="flex gap-2 items-center">
+            <div
+              *ngTemplateOutlet="templateRef; context: { carTpl: carriereFromId(carriere.get('carriere_id')?.value) }">
             </div>
-          </ng-template>
-          <div
-            *ngTemplateOutlet="templateRef; context: { carTpl: carriereFromId(carriere.get('carriere_id')?.value) }">
+            <p-inputNumber formControlName="value" inputId="defense" maxFractionDigits="0" />
+            <app-btn (click)="deleteCarriere(carriere.get('carriere_id')?.value, $event)"></app-btn>
+
+            <ng-template #templateRef let-carri="carTpl">
+              <div style="width: 125px" class="flex flex-col">
+                <div class="flex items-center">
+                  <div *ngIf="carri.description"
+                       (click)="carriereInfos.toggle($event)"
+                       class="cursor-pointer"
+                       style="color: var(--warn-color)">
+                    <i class="pi pi-exclamation-triangle mr-2"></i>
+                  </div>
+                  {{ carri.carriere }}
+                  <p-overlayPanel #carriereInfos>
+                    <div class="flex flex-col gap-2">
+                      <div class="text-amber-500">
+                        {{carri.description }}
+                      </div>
+                    </div>
+                  </p-overlayPanel>
+                </div>
+                <div class="text-gray-400 carriere-detail" style="font-size: smaller" *ngIf="carri.detail">{{ carri.detail }}
+                </div>
+              </div>
+            </ng-template>
+
           </div>
-          <p-inputNumber formControlName="value" inputId="defense" maxFractionDigits="0" />
-          <app-btn (click)="deleteCarriere(carriere.get('carriere_id')?.value, $event)"></app-btn>
         </div>
       </div>
-
     </div>
+
   </ng-container>
   </ng-container>
   <!-- Footer Carrieres -->
-  <div class="flex justify-between gap-2">
+  <div class="footer-separator flex justify-between gap-2" *ngIf="(carriereDesavangeCount() > 0 && carrieresForm.valid) || carrieres.length < 4" >
     <p-button (click)="selectedTrait.set(null); opTrait.toggle($event)"
               [style]="{color: 'var(--error-color)'}"
               label="Ajouter une {{carriereDesavangeCount()}} désavantage(s)"

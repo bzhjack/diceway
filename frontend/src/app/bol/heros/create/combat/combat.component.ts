@@ -7,7 +7,8 @@ import {
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
-  ValidationErrors, Validator
+  ValidationErrors,
+  Validator
 } from "@angular/forms";
 import {InputNumberModule} from "primeng/inputnumber";
 import {OverlayPanelModule} from "primeng/overlaypanel";

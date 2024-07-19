@@ -1,4 +1,4 @@
-<p-fieldset class="w-full">
+<p-fieldset class="w-full traits">
 
   <ng-template pTemplate="header">
     <div class="flex items-center gap-2">
@@ -14,43 +14,54 @@
     <p-overlayPanel #attributInfos>
       <div class="flex flex-col gap-2">
         <bol-message type="traits"></bol-message>
-        <bol-message type="form-warn" *ngIf="traitsWarns.length" legend="Taits regionaux invalides" [data]="traitsWarns"></bol-message>
+        <bol-message type="form-warn" *ngIf="traitsWarns.length" legend="Taits regionaux invalides"
+                     [data]="traitsWarns"></bol-message>
       </div>
     </p-overlayPanel>
   </ng-template>
   <!-- Body Traits -->
-  <div class="flex flex-col gap-1">
+  <p-scrollPanel class="flex-auto" [style]="{height: '90px', width: '500px'}">
     <div class="flex flex-col mb-2">
-      <div class="flex gap-4">
+      <div class="flex gap-1">
         <div style="width: 230px" class="flex flex-col gap-2">
           <!--- Avantages --->
           <ng-container *ngFor="let trait of traits.controls; let i = index">
             @if (trait.value.type === 'A') {
-              <div class="flex items-centers">
+              <div class="flex items-center">
                 <bol-heros-trait [trait]="trait.value"></bol-heros-trait>
                 <app-btn (click)="deleteTraits(trait.value.id, $event)"></app-btn>
               </div>
             }
           </ng-container>
         </div>
-        <p-divider layout="vertical" />
+        <p-divider layout="vertical"/>
         <!--- Désavantages --->
         <div style="width: 230px" class="flex flex-col gap-2">
           <ng-container *ngFor="let trait of traits.controls; let i = index">
-            @if (trait.value.type === 'D') {
-              <div class="flex items-centers">
+            @if (trait.value.type === 'D' && trait.value.carriere === false) {
+              <div class="flex items-center">
                 <bol-heros-trait [trait]="trait.value"></bol-heros-trait>
                 <app-btn (click)="deleteTraits(trait.value.id, $event)"></app-btn>
+              </div>
+            }
+          </ng-container>
+          <ng-container *ngFor="let desacar of traits.controls; let i = index;">
+            @if (desacar.value.type === 'D' && desacar.value.carriere === true) {
+              <div class="flex items-center">
+                <bol-heros-trait [trait]="desacar.value"></bol-heros-trait>
+                <app-btn (click)="deleteTraits(desacar.value.id, $event)"></app-btn>
               </div>
             }
           </ng-container>
         </div>
       </div>
     </div>
-  </div>
+  </p-scrollPanel>
+
+
 
   <!-- Footer Traits -->
-  <div class="flex justify-between gap-2">
+  <div class="footer-separator flex justify-between gap-2">
     <div>
       <p-button
         *ngIf="herosAvantages().length < 3"
@@ -83,13 +94,17 @@
 
       <ng-template pTemplate="selectedItem" let-selectedOption>
         <div class="flex align-items-center gap-2">
-          <div><i *ngIf="selectedOption.region_id" class="pi pi-map-marker mr-2"></i>{{ contextType() === 'A' ? selectedOption.avantage : selectedOption.desavantage }}</div>
+          <div><i *ngIf="selectedOption.region_id"
+                  class="pi pi-map-marker mr-2"></i>{{ contextType() === 'A' ? selectedOption.avantage : selectedOption.desavantage }}
+          </div>
         </div>
       </ng-template>
 
       <ng-template let-trait pTemplate="item">
         <div class="flex flex-col gap-2">
-          <div><i *ngIf="trait.region_id" class="pi pi-map-marker mr-2"></i>{{ contextType() === 'A' ? trait.avantage : trait.desavantage }}</div>
+          <div><i *ngIf="trait.region_id"
+                  class="pi pi-map-marker mr-2"></i>{{ contextType() === 'A' ? trait.avantage : trait.desavantage }}
+          </div>
           <div class="text-gray-400" style="font-size: smaller" *ngIf="trait.detail">{{ trait.detail }}</div>
         </div>
       </ng-template>

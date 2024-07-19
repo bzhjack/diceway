@@ -20,7 +20,7 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {FieldsetModule} from "primeng/fieldset";
 import {BolHerosTraitsModel} from "../../../models/bol-trait.model";
 import {NgxSpinnerService} from "ngx-spinner";
-import {Observable, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from '@angular/core/rxjs-interop';
 import {BolHerosTraitComponent} from "./trait/trait.component";
@@ -28,6 +28,7 @@ import {BtnComponent} from "../../../../shared/trash/trash.component";
 import {BolMessageComponent} from "../../../message/message.component";
 import {BolHeroCreateTools} from "../create.tools";
 import {DividerModule} from "primeng/divider";
+import {ScrollPanelModule} from "primeng/scrollpanel";
 
 @Component({
   selector: 'bol-heros-traits',
@@ -48,7 +49,8 @@ import {DividerModule} from "primeng/divider";
     JsonPipe,
     BtnComponent,
     BolMessageComponent,
-    DividerModule
+    DividerModule,
+    ScrollPanelModule
   ],
   templateUrl: './traits.component.html',
   styleUrl: './traits.component.scss',
@@ -67,7 +69,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   readonly #bhs = inject(BolHerosService);
   readonly #ds = inject(ConfirmationService);
   private subs?: Subscription;
-
+  protected hasRenderedDivider = false;
   traitsWarns: { step: string, warn: string }[] = [];
 
   traitsForm = this.#fb.group({
@@ -109,6 +111,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
     return traitsByType.filter((trait: any) => !filteringSelectedByType.includes(trait.id as number));
   });
   protected heroId = computed(() => this.#bhss.currentHeros()?.id);
+
 
   constructor() {
 

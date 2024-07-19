@@ -1,4 +1,4 @@
-import {Component, computed, effect, inject, input} from '@angular/core';
+import {Component, computed, inject, input} from '@angular/core';
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {BolAvantageModel} from "../../../../models/bol-avantage.model";
 import {BolDesavantageModel} from "../../../../models/bol-desavantage.model";

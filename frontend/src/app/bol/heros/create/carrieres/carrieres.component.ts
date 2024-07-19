@@ -264,7 +264,7 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
     this.subs = this.#bhs.createTrait(this.heroId(), trait).subscribe({
       next: (newTrait) => {
         this.#spinner.hide();
-        this.desavantageCreated.emit(trait);
+        this.desavantageCreated.emit(newTrait);
       },
       error: () => {
         this.#spinner.hide();
