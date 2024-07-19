@@ -28,6 +28,7 @@ import {BtnComponent} from "../../../../shared/trash/trash.component";
 import {BolMessageComponent} from "../../../message/message.component";
 import {BolHeroCreateTools} from "../create.tools";
 import {DividerModule} from "primeng/divider";
+import {ScrollPanelModule} from "primeng/scrollpanel";
 
 @Component({
   selector: 'bol-heros-traits',
@@ -48,7 +49,8 @@ import {DividerModule} from "primeng/divider";
     JsonPipe,
     BtnComponent,
     BolMessageComponent,
-    DividerModule
+    DividerModule,
+    ScrollPanelModule
   ],
   templateUrl: './traits.component.html',
   styleUrl: './traits.component.scss',

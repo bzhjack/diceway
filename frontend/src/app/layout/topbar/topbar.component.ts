@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {InlineSVGModule} from 'ng-inline-svg-2';
 import {UserService} from '../../auth/services/user.service';
 import {AvatarModule} from "primeng/avatar";
@@ -22,7 +22,8 @@ import {filter} from "rxjs";
   styleUrl: './topbar.component.scss'
 })
 export class TopbarComponent {
-  nameSpace: string = '';
+  nameSpace = signal<string>('');
+  route = signal<string>('');
   router = inject(Router);
   us = inject(UserService);
   userObs = this.us.user$;
@@ -30,7 +31,11 @@ export class TopbarComponent {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((data) => {
       const url = (data as NavigationEnd).url;
       const sections: string[] = url.split('/');
-      this.nameSpace = sections[1];
+      this.nameSpace.set(sections[1]);
+      console.log(url);
+      if (url.startsWith('/bol/heros/create')) {
+        this.route.set('Création d\'un héros');
+      }
     });
   }
   logout() {

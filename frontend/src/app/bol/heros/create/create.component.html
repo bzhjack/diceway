@@ -1,15 +1,8 @@
 <div class="flex flex-col h-full p-4">
-  <!------------------------->
-  <!--- Header de la page --->
-  <!------------------------->
-  <div class="flex justify-between items-center">
-    <div class="text-3xl">Création d'un héros</div>
-  </div>
-
   <!----------------------->
   <!--- Body de la page --->
   <!----------------------->
-  <p-scrollPanel styleClass="flex-auto" [style]="{height: 'calc(100vh - 155px)'}">
+  <p-scrollPanel styleClass="flex-auto" [style]="{height: 'calc(100vh - 125px)'}">
     <form (ngSubmit)="submit()" [formGroup]="herosForm" autocomplete="off">
       <div class="flex flex-col">
           <!--- Nom du joueur --->
@@ -39,28 +32,6 @@
             </div>
 
           </div>
-      </div>
-
-
-      <div class="flex gap-4">
-        <div>
-
-        </div>
-
-
-
-
-        <div class="flex flex-col gap-2">
-
-          <div class="flex gap-2">
-            <div class="flex flex-col flex-auto gap-2">
-
-            </div>
-            <div class="flex flex-col flex-auto gap-2 ">
-
-            </div>
-          </div>
-        </div>
       </div>
     </form>
   </p-scrollPanel>
