@@ -24,6 +24,7 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {BolArmeModel, BolHerosArmeModel} from "../../../models/bol-arme.model";
 import {BtnComponent} from "../../../../shared/trash/trash.component";
 import {DividerModule} from "primeng/divider";
+import {TableModule} from "primeng/table";
 
 @Component({
   selector: 'bol-heros-armes',
@@ -43,7 +44,8 @@ import {DividerModule} from "primeng/divider";
     BtnComponent,
     BtnComponent,
     DividerModule,
-    JsonPipe
+    JsonPipe,
+    TableModule
   ],
   templateUrl: './armes.component.html',
   styleUrl: './armes.component.scss',

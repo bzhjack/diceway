@@ -1,17 +1,34 @@
-<p-fieldset class="w-full">
+<p-fieldset class="armes w-full">
   <ng-template pTemplate="header">
     <div class="flex items-center gap-2">
       <div>Armes</div>
     </div>
   </ng-template>
   <!-- Body Armus -->
-  <div class="flex flex-col gap-1" *ngFor="let arme of selectedArmeDetail(); let i = index">
-    {{arme | json}}
-    <div class="flex gap-2 items-center">
-      {{ arme.arme }}
-      <app-btn (click)="deleteArme(arme.id, $event)" ></app-btn>
-    </div>
-  </div>
+
+  <p-table [value]="selectedArmeDetail()"
+           [scrollable]="true"
+           scrollHeight="150px"
+           styleClass="p-datatable-striped">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Arme</th>
+        <th>Dégâts</th>
+        <th>Portée</th>
+        <th>Notes</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-arme>
+      <tr>
+        <td>{{ arme.arme }}</td>
+        <td>{{ arme.degats }}</td>
+        <td>{{ arme.portee }}</td>
+        <td>{{ arme.notes }}</td>
+        <td><app-btn (click)="deleteArme(arme.id, $event)" ></app-btn></td>
+      </tr>
+    </ng-template>
+  </p-table>
   <!-- Footer Armes -->
   <div class="footer-separator flex justify-end gap-2" *ngIf="filteredArmeList()?.length > 0">
     <p-button label="Ajouter une arme" size="small" [link]="true" class="text-cyan-600" (click)="selectedArme.set(null); opArme.toggle($event)"/>
