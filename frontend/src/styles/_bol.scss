@@ -25,4 +25,7 @@
   .p-datatable.p-datatable-striped .p-datatable-tbody>tr:nth-child(2n){
     background:darken(#1c2532, 2%);
   }
+  .p-datatable .p-datatable-thead > tr > th {
+    padding: 5px;
+  }
 }

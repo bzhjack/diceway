@@ -1,4 +1,4 @@
-<p-fieldset class="armes w-full">
+<p-fieldset class="armes w-full" [style]="{width: '450px'}">
   <ng-template pTemplate="header">
     <div class="flex items-center gap-2">
       <div>Armes</div>
@@ -15,16 +15,14 @@
         <th>Arme</th>
         <th>Dégâts</th>
         <th>Portée</th>
-        <th>Notes</th>
         <th></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-arme>
       <tr>
-        <td>{{ arme.arme }}</td>
+        <td class="whitespace-nowrap"><strong>{{ arme.arme }}</strong></td>
         <td>{{ arme.degats }}</td>
         <td>{{ arme.portee }}</td>
-        <td>{{ arme.notes }}</td>
         <td><app-btn (click)="deleteArme(arme.id, $event)" ></app-btn></td>
       </tr>
     </ng-template>
@@ -53,16 +51,16 @@
           <div class="text-2xl">{{ arme.arme }}</div>
           <div class="flex flex-col">
             <div class="flex gap-2" style="font-size: smaller">
-              <div style="width: 70px"><strong>Protection</strong></div>
-              {{ arme.protection }}
+              <div style="width: 70px"><strong>Dégats</strong></div>
+              {{ arme.degats }}
             </div>
-            <div class="flex gap-2" style="font-size: smaller" *ngIf="arme.malus">
-              <div style="width: 70px"><strong>Malus</strong></div>
-              {{ arme.malus }}
+            <div class="flex gap-2" style="font-size: smaller">
+              <div style="width: 70px"><strong>Portée</strong></div>
+              {{ arme.portee }}
             </div>
-            <div class="flex gap-2" style="font-size: smaller" *ngIf="arme.pts_de_pouvoir">
-              <div style="width: 70px"><strong>Pts pouvoir</strong></div>
-              {{ arme.pts_de_pouvoir }}
+            <div class="flex gap-2" style="font-size: smaller">
+              <div style="width: 70px"><strong>Notes</strong></div>
+              {{ arme.notes }}
             </div>
           </div>
 
