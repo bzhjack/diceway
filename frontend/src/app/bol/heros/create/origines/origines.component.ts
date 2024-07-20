@@ -1,4 +1,4 @@
-import {Component, computed, effect, forwardRef, inject, input, OnDestroy} from '@angular/core';
+import {Component, effect, forwardRef, inject, input, OnDestroy} from '@angular/core';
 import {FieldsetModule} from "primeng/fieldset";
 import {
   AbstractControl,
@@ -8,7 +8,8 @@ import {
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
-  ValidationErrors, Validator,
+  ValidationErrors,
+  Validator,
   Validators
 } from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
@@ -19,7 +20,6 @@ import {Subscription} from "rxjs";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {BolHerosStateService} from "../../../services/bol-heros-state.service";
 import {JsonPipe, NgIf} from "@angular/common";
-import {BolRegionModel} from "../../../models/bol-region.model";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {NgxSpinnerService} from "ngx-spinner";
 import {BolHerosRegionComponent} from "./region/region.component";

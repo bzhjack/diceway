@@ -1,12 +1,22 @@
 .trash-container {
   padding: 5px 5px 5px 5px;
-  border-radius: 50px;
+  border-radius: 50%;
   background-color: darken(#607d8b, 10%);
   cursor: pointer;
   display: flex;
   align-items: center;
   font-size: 10px;
+  width: fit-content;
   &:hover {
     background-color: #607d8b;
+  }
+  i {
+    font-size: 11px;
+  }
+  &.warn {
+    background-color: darken(#d9534f, 10%);
+    &:hover {
+      background-color: #d9534f;
+    }
   }
 }

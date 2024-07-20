@@ -1,9 +1,9 @@
-import {Component, computed, effect, forwardRef, inject, input, signal} from '@angular/core';
+import {Component, computed, effect, forwardRef, inject, signal} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {FieldsetModule} from "primeng/fieldset";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
 import {DropdownModule} from "primeng/dropdown";
-import {NgForOf, NgIf} from "@angular/common";
+import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {Ripple} from "primeng/ripple";
 import {
@@ -22,25 +22,31 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {BolArmeModel, BolHerosArmeModel} from "../../../models/bol-arme.model";
-import {TrashComponent} from "../../../../shared/trash/trash.component";
+import {BtnComponent} from "../../../../shared/trash/trash.component";
+import {DividerModule} from "primeng/divider";
+import {TableModule} from "primeng/table";
 
 @Component({
   selector: 'bol-heros-armes',
   standalone: true,
-    imports: [
-        Button,
-        FieldsetModule,
-        PrimeTemplate,
-        ButtonDirective,
-        DropdownModule,
-        NgIf,
-        OverlayPanelModule,
-        Ripple,
-        FormsModule,
-        NgForOf,
-        ReactiveFormsModule,
-        TrashComponent
-    ],
+  imports: [
+    Button,
+    FieldsetModule,
+    PrimeTemplate,
+    ButtonDirective,
+    DropdownModule,
+    NgIf,
+    OverlayPanelModule,
+    Ripple,
+    FormsModule,
+    NgForOf,
+    ReactiveFormsModule,
+    BtnComponent,
+    BtnComponent,
+    DividerModule,
+    JsonPipe,
+    TableModule
+  ],
   templateUrl: './armes.component.html',
   styleUrl: './armes.component.scss',
   providers: [

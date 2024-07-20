@@ -1,4 +1,4 @@
-import {Component, computed, effect, forwardRef, inject, OnDestroy, signal} from '@angular/core';
+import {Component, computed, effect, forwardRef, inject, OnDestroy, output, signal} from '@angular/core';
 import {BolMessageComponent} from "../../../message/message.component";
 import {Button, ButtonDirective} from "primeng/button";
 import {DropdownModule} from "primeng/dropdown";
@@ -16,7 +16,7 @@ import {
   Validator
 } from "@angular/forms";
 import {InputNumberModule} from "primeng/inputnumber";
-import {NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
+import {JsonPipe, NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
 import {Ripple} from "primeng/ripple";
@@ -29,7 +29,10 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {carrieresFormValidator, carriereValidator} from "../create.validators";
 import {BolHeroCreateTools} from "../create.tools";
 import {Subscription} from "rxjs";
-import {TrashComponent} from "../../../../shared/trash/trash.component";
+import {BtnComponent} from "../../../../shared/trash/trash.component";
+import {TooltipModule} from "primeng/tooltip";
+import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
+import {BolHerosTraitsModel} from "../../../models/bol-trait.model";
 
 
 @Component({
@@ -50,7 +53,9 @@ import {TrashComponent} from "../../../../shared/trash/trash.component";
     PrimeTemplate,
     ReactiveFormsModule,
     Ripple,
-    TrashComponent
+    JsonPipe,
+    TooltipModule,
+    BtnComponent
   ],
   templateUrl: './carrieres.component.html',
   styleUrl: './carrieres.component.scss',
@@ -75,6 +80,8 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
   readonly #spinner = inject(NgxSpinnerService);
   readonly #cs = inject(ConfirmationService);
 
+  desavantageCreated = output<BolHerosTraitsModel | null>();
+
   carriereErrors: { control: string, error: string }[] = [];
   carriereWarns: { step: string, warn: string }[] = [];
 
@@ -95,8 +102,14 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
     const carriereIdsInArray = carrieres.map(carriere => carriere.carriere_id);
     return this.carrieresList()?.filter((carriere: BolCarriereModel) => !carriereIdsInArray.includes(carriere.id));
   });
+  protected availableDesavantages = computed(() => {
+    const takenIds = this.#bhss.allHerosDesavantages().map((avg) => avg.traitable_id);
+    return this.desavantagesList()?.filter((desavantage) => !takenIds.includes(desavantage.id as number));
+  });
   protected formChange = toSignal(this.carrieresForm!.valueChanges);
-
+  protected carriereDesavangeCount = this.#bhss.carriereDesavangeCount;
+  protected desavantagesList = this.#bhss.desavantagesList;
+  public selectedTrait = signal<BolDesavantageModel | null>(null);
 
   constructor() {
     effect(() => {
@@ -157,6 +170,13 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
         this.carriereWarns.push({
           step: 'Aptitudes',
           warn: 'il manque ' + (4 - sumCarriere) + ' pts dans les carrières.'
+        });
+      }
+      // Gestion des désavantages pour les carrières
+      if (this.carriereDesavangeCount()) {
+        this.carriereWarns.push({
+          step: 'Traits',
+          warn: `<strong>Carrière dangereuse :</strong> <br> Vous devez choisir ${this.carriereDesavangeCount()} désavantage(s) supplémentaire.`
         });
       }
     }
@@ -224,6 +244,35 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
       }
     });
   }
+
+
+  addTraits(panel: OverlayPanel, event: any): void {
+    panel.toggle(event);
+    if (this.selectedTrait() === null) {
+      return;
+    }
+    const trait: BolHerosTraitsModel = {
+      traitable_id: this.selectedTrait()?.id as number,
+      type: 'D',
+      detail: this.selectedTrait()?.pivot?.detail ?? null,
+      region_id: this.selectedTrait()?.pivot?.region_id ?? null,
+      carriere: true
+    }
+
+    this.#spinner.show();
+    this.subs?.unsubscribe();
+    this.subs = this.#bhs.createTrait(this.heroId(), trait).subscribe({
+      next: (newTrait) => {
+        this.#spinner.hide();
+        this.desavantageCreated.emit(newTrait);
+      },
+      error: () => {
+        this.#spinner.hide();
+      }
+    });
+  }
+
+
 
   registerOnChange(fn: any): void {
     this.onChange = fn;

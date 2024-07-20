@@ -7,7 +7,8 @@ import {
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
-  ValidationErrors, Validator
+  ValidationErrors,
+  Validator
 } from "@angular/forms";
 import {attributsFormValidator, attributValidator} from "../create.validators";
 import {toSignal} from "@angular/core/rxjs-interop";

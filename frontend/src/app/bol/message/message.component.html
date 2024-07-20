@@ -97,8 +97,7 @@
     <div class="info_icon_small" inlineSVG="/frontend/assets/sword.svg"></div>
     <div class="ml-4">
       <ul style="margin: 0; padding-inline-start: 20px">
-        <li *ngFor="let warn of data()">
-          {{ warn.warn }}
+        <li *ngFor="let warn of data()" [innerHTML]="warn.warn">
         </li>
       </ul>
     </div>
