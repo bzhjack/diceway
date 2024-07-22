@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bol\BolHeros;
-use App\Models\bol\BolHerosCarriere;
 use App\Models\Bol\BolHerosTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
