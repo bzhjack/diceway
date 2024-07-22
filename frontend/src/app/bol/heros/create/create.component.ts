@@ -175,7 +175,7 @@ export class BolHerosCreateComponent implements OnDestroy {
       this.getHeros(id);
     }
     effect( () => {
-      const vigueur = this.currentHero()?.attributs.vigueur ?? 0;
+      const vigueur = Number(this.currentHero()?.attributs.vigueur ?? 0);
       this.ressourcesCtrl.setValue({vitalite: 10 + vigueur, heroisme: 5 - this.#herosStateService.heroismCost()}, {emitEvent: false});
     });
   }

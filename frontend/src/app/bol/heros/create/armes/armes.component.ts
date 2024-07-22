@@ -159,7 +159,7 @@ export class BolHerosArmesComponent implements ControlValueAccessor {
     if (value) {
       this.armes.clear();
       for (const val of value) {
-        this.armes.push(new FormControl(val));
+        this.armes.push(new FormControl(Number(val)));
       }
     }
   }

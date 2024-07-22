@@ -132,7 +132,14 @@ export class BolHerosAttributsComponent implements ControlValueAccessor, Validat
 
   writeValue(value: any): void {
     if (value) {
-      this.attributsForm.patchValue(value);
+      this.attributsForm.patchValue(
+        {
+          vigueur: Number(value.vigueur),
+          agilite: Number(value.agilite),
+          aura: Number(value.aura),
+          esprit: Number(value.esprit)
+        }
+      );
     }
   }
 

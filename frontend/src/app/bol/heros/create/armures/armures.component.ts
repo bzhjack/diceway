@@ -159,7 +159,7 @@ export class BolHerosArmuresComponent implements ControlValueAccessor, OnDestroy
     if (value) {
       this.armures.clear();
       for (const val of value) {
-        this.armures.push(new FormControl(val));
+        this.armures.push(new FormControl(Number(val)));
       }
     }
   }
