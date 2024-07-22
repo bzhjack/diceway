@@ -45,3 +45,5 @@ CREATE DATABASE diceway;
 create user 'diceway'@'localhost' IDENTIFIED BY 'diceway';
 GRANT ALL PRIVILEGES ON diceway.* TO 'diceway'@'localhost';
 git branch -D -r origin/feature/xxx
+
+export PATH="/opt/alt/alt-nodejs20/root/usr/bin/:$PATH"
