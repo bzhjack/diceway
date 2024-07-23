@@ -99,10 +99,10 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   protected formChange = toSignal(this.traitsForm!.valueChanges);
   protected herosTraits = computed(() => <BolHerosTraitsModel[]>this.formChange()?.traits ?? []);
   protected herosAvantages = computed(() => <BolHerosTraitsModel[]>this.herosTraits()?.filter((item) => item.type === 'A') ?? []);
-  protected herosRegionalAvantages = computed(() => <BolHerosTraitsModel[]>this.herosAvantages()?.filter((item) => item.region_id !== null) ?? []);
+  protected herosRegionalAvantages = computed(() => <BolHerosTraitsModel[]>this.herosAvantages()?.filter((item) => Number(item.region_id) > 0) ?? []);
 
   protected herosDesavantages = computed(() => <BolHerosTraitsModel[]>this.herosTraits()?.filter((item) => item.type === 'D' && item.carriere === false) ?? []);
-  protected herosRegionalDesavantages = computed(() => <BolHerosTraitsModel[]>this.herosDesavantages()?.filter((item) => item.region_id !== null && item.carriere === false) ?? []);
+  protected herosRegionalDesavantages = computed(() => <BolHerosTraitsModel[]>this.herosDesavantages()?.filter((item) => Number(item.region_id) > 0 && item.carriere === false) ?? []);
 
   protected traitList = computed(() => {
     const traitsByType = (this.contextType() === "A" ? this.mergedAvantages() : this.mergedDesavantages()) ?? [];
@@ -138,7 +138,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
     const countherosRegionalDesavantages = this.herosRegionalDesavantages().length ?? 0;
     const countRegionalAvantages = this.#bhss.regionalAvantages().length ?? 0;
     const countRegionalDesavantages = this.#bhss.regionalDesavantages().length ?? 0;
-
+    console.log(countRegionalAvantages, countherosRegionalAvantages);
     // il faut au moins un avantage régional si ils existent
     if (countRegionalAvantages && !countherosRegionalAvantages) {
       this.traitsWarns.push({
