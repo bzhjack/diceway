@@ -107,8 +107,8 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   protected traitList = computed(() => {
     const traitsByType = (this.contextType() === "A" ? this.mergedAvantages() : this.mergedDesavantages()) ?? [];
     const filteringSelectedByType = this.herosTraits().filter((item: BolHerosTraitsModel) => item.type === this.contextType())
-      .map((item: BolHerosTraitsModel) => item.traitable_id);
-    return traitsByType.filter((trait: any) => !filteringSelectedByType.includes(trait.id as number));
+      .map((item: BolHerosTraitsModel) => Number(item.traitable_id));
+    return traitsByType.filter((trait: any) => !filteringSelectedByType.includes(Number(trait.id as number)));
   });
   protected heroId = computed(() => this.#bhss.currentHeros()?.id);
 
