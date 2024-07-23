@@ -136,7 +136,14 @@ export class BolHerosCombatComponent implements ControlValueAccessor, Validator 
 
   writeValue(value: any): void {
     if (value) {
-      this.aptitudesForm.patchValue(value);
+      this.aptitudesForm.patchValue(
+        {
+          defense: Number(value.defense),
+          initiative: Number(value.initiative),
+          melee: Number(value.melee),
+          tir: Number(value.tir)
+        }
+      );
     }
   }
 
