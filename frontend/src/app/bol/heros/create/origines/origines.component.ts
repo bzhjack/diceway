@@ -206,7 +206,11 @@ export class BolHerosOriginesComponent implements ControlValueAccessor, Validato
 
   writeValue(value: any): void {
     if (value) {
-      this.originesForm.patchValue(value);
+      this.originesForm.patchValue({
+        avatar: value.avatar,
+        nom: value.nom,
+        region_id: Number(value.region_id)
+      });
     }
   }
 

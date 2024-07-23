@@ -35,7 +35,7 @@ export class BolHerosStateService {
     return Math.max(countDesavantage - this.currentHeroCarriereDesvantages().length, 0);
   });
 
-  currentHerosRegion = computed(() => this.regionList()?.find((region) => this.currentHeros()?.origines.region_id === region.id));
+  currentHerosRegion = computed(() => this.regionList()?.find((region) => Number(this.currentHeros()?.origines.region_id) === Number(region.id)));
   heroismCost = computed(() => Math.max(this.currentHeroAvantages().length - this.currentHeroDesavantages().length -1, 0) );
 
   protected currentHeroAvantages = computed(() => this.currentHeros()?.traits?.filter((item) => item.type === 'A') ?? [])
@@ -44,11 +44,11 @@ export class BolHerosStateService {
   allHerosDesavantages = computed(() => this.currentHeros()?.traits?.filter(item => item.type === 'D') ?? []);
 
   regionalAvantages = computed(() => this.currentHerosRegion()?.avantages?.map((item) => {
-    return {...item, ...{id: item.pivot.avantage_id, detail: item.pivot.detail, region_id: item.pivot.region_id}};
+    return {...item, ...{id: Number(item.pivot.avantage_id), detail: item.pivot.detail, region_id: Number(item.pivot.region_id)}};
   }) ?? []);
   regionalDesavantages = computed(() => this.currentHerosRegion()?.desavantages?.map(
     (item) => {
-      return {...item, ...{id: item.pivot.desavantage_id, detail: item.pivot.detail, region_id: item.pivot.region_id}};
+      return {...item, ...{id: Number(item.pivot.desavantage_id), detail: item.pivot.detail, region_id: Number(item.pivot.region_id)}};
     }) ?? []);
 
   constructor() {

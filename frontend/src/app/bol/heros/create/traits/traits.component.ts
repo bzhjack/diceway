@@ -157,11 +157,11 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
 
   addTraitToForm(trait: BolHerosTraitsModel) {
     const traitForm = this.#fb.group({
-      traitable_id: [trait.traitable_id],
+      traitable_id: [Number(trait.traitable_id)],
       type: [trait.type],
       detail: [trait.detail],
-      region_id: [trait.region_id],
-      id: [trait.id],
+      region_id: [Number(trait.region_id)],
+      id: [Number(trait.id)],
       carriere: [trait.carriere]
     });
     this.traits.push(traitForm);
@@ -246,11 +246,11 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
       this.traits.clear();
       for (const trait of traits) {
         const traitForm = this.#fb.group({
-          id: [trait.id],
-          traitable_id: [trait.traitable_id],
+          id: [Number(trait.id)],
+          traitable_id: [Number(trait.traitable_id)],
           type: [trait.type],
           detail: [trait.detail],
-          region_id: [trait.region_id],
+          region_id: [Number(trait.region_id)],
           carriere: [trait.carriere]
         });
         this.traits.push(traitForm);

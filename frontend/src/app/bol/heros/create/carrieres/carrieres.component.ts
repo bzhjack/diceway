@@ -287,8 +287,8 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
         this.carrieres.clear();
         for (const carriere of carrieres) {
           const carriereForm = this.#fb.group({
-            carriere_id: [carriere.carriere_id],
-            value: [carriere.value, carriereValidator]
+            carriere_id: [Number(carriere.carriere_id)],
+            value: [Number(carriere.value), carriereValidator]
           });
           this.carrieres.push(carriereForm);
         }

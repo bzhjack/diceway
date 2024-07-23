@@ -63,7 +63,10 @@ export class BolHerosRessourcesComponent implements ControlValueAccessor {
 
   writeValue(value: any): void {
     if (value) {
-      this.ressourcesForm.patchValue(value);
+      this.ressourcesForm.patchValue({
+        heroisme: value.heroisme,
+        vitalite: value.vitalite
+      });
     }
   }
 
