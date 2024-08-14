@@ -1,5 +1,5 @@
 <div class="region-container flex gap-2">
-  <div class="dw-panel h-full">
+  <div class="dw-panel carte-region-container">
     <img class="region-carte" id="bol-carte" src="/frontend/assets/bol/cartes/carte{{selectedRegion() ? '-'+ regionId() : ''}}.jpg" alt="carte"/>
   </div>
   <div class="flex flex-col gap-1">
@@ -12,8 +12,8 @@
           La sélection des avantages et des désavantages se fera dans un second temps.</div>
       </ng-template>
     </p-messages>
-    <p-fieldset legend="Régions">
-      <p-scrollPanel #regionPanel [style]="{height: '160px'}">
+    <p-fieldset legend="Régions" [style]="{height: '150px'}">
+      <p-scrollPanel #regionPanel [style]="{height: '95px'}">
         <div class="flex flex-wrap gap-2">
           <p-tag *ngFor="let region of regionList();"
                  id="region-{{region.id}}"
@@ -51,7 +51,7 @@
           <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
           <div class="ml-4">
             Les plaines de Klaar sont la demeure des
-            <strong>céruléens</strong>, une race de géants à la peau grisbleu qu’on surnomme aussi les nomades bleus.
+            <strong>céruléens</strong>, une race de géants à la peau gris bleu qu’on surnomme aussi les nomades bleus.
           </div>
         </ng-template>
       </p-messages>
@@ -67,7 +67,7 @@
       </p-messages>
     </div>
 
-    <div *ngIf="![1,13,16].includes(regionId())" class="flex-auto flex flex-col gap-2">
+    <div *ngIf="![1,13,16].includes(regionId()) && selectedRegion()" class="flex-auto flex flex-col gap-2">
       <div *ngIf="selectedRegion()?.noms?.length == 0" class="flex flex-col gap-2 pt-2">
         <p-messages severity="warn">
           <ng-template pTemplate>
