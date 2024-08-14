@@ -50,6 +50,14 @@ class BolHeros extends Model
         return $this->HasMany(BolHerosArme::class, 'heros_id', 'id');
     }
 
+    public function langues(): HasMany
+    {
+        return $this->HasMany(BolHerosLangue::class, 'heros_id', 'id');
+    }
+
+
+
+
     public function getCombatAttribute()
     {
         return [

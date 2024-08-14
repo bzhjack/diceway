@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Bol\BolHerosController;
+use App\Http\Controllers\Bol\BolLangueController;
 use App\Http\Middleware\RequestAcceptJson;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerifyController;
@@ -67,6 +68,11 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::get('/bol/carrieres', [BolCarriereController::class, 'getAll']);
     Route::delete('/bol/heros/carrieres/delete/{herosId}/{id}', [BolCarriereController::class, 'delete']);
     Route::post('/bol/heros/carrieres/create/{herosId}', [BolCarriereController::class, 'create']);
+
+    // Gestion des langues
+    Route::get('/bol/langues', [BolLangueController::class, 'getAll']);
+    Route::delete('/bol/heros/langues/delete/{herosId}/{id}', [BolLangueController::class, 'delete']);
+    Route::post('/bol/heros/langues/create/{herosId}', [BolLangueController::class, 'create']);
 
     // Gestion des armes
     Route::get('/bol/armes', [BolArmeController::class, 'getAll']);
