@@ -32,7 +32,6 @@ export class TopbarComponent {
       const url = (data as NavigationEnd).url;
       const sections: string[] = url.split('/');
       this.nameSpace.set(sections[1]);
-      console.log(url);
       if (url.startsWith('/bol/heros/create')) {
         this.route.set('Création d\'un héros');
       }

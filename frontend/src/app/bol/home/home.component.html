@@ -23,7 +23,7 @@
               </div>
             </td>
             <td>{{ heros.joueur }}</td>
-            <td>{{ heros.nom }}</td>
+            <td>{{ heros.origines.nom }}</td>
             <td class="flex gap-2 justify-end">
               <button [routerLink]="['heros', 'create', heros.id]"
                       severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-pencil"></button>
