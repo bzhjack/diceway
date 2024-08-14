@@ -166,7 +166,8 @@ export class BolHerosOriginesComponent implements ControlValueAccessor, Validato
     const currentRegionId = this.regionIdCtrl.value;
     const ref = this.#ds.open(BolHerosRegionComponent, {
       header: 'Choix de la région',
-      width: '1200px',
+      //width: '1200px',
+      width: '80vw',
       height: '90vh',
       data: {
         id_region: currentRegionId,
