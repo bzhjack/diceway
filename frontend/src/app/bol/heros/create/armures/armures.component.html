@@ -13,17 +13,21 @@
       <tr>
         <th>Armure</th>
         <th>Protection</th>
-        <th>Malus</th>
-        <th>Pts de Pouvoir</th>
         <th></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-armure>
       <tr>
-        <td>{{ armure.armure }}</td>
+        <td>
+          <div class="flex flex-col gap-1">
+            <div class="text-gray-300">{{ armure.armure }}</div>
+            <div class="text-gray-400 armure-detail" style="font-size: smaller" *ngIf="armure.malus">{{ armure.malus }}
+            </div>
+          </div>
+
+        </td>
         <td>{{ armure.protection }}</td>
-        <td>{{ armure.malus }}</td>
-        <td>{{ armure.pts_de_pouvoir }}</td>
+
         <td><app-btn (click)="deleteArmure(armure.id, $event)" ></app-btn></td>
       </tr>
     </ng-template>
