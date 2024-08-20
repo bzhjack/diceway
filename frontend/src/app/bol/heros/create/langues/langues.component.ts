@@ -7,7 +7,7 @@ import {DropdownModule} from "primeng/dropdown";
 import {NgForOf, NgIf} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {Ripple} from "primeng/ripple";
-import {BolArmureModel, BolHerosArmureModel} from "../../../models/bol-armure.model";
+
 import {
   ControlValueAccessor,
   FormArray,
@@ -22,6 +22,11 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from "@angular/core/rxjs-interop";
+import {BolMessageComponent} from "../../../message/message.component";
+import {InputNumberModule} from "primeng/inputnumber";
+import {BtnComponent} from "../../../../shared/trash/trash.component";
+import {TableModule} from "primeng/table";
+import {BolLangueModel} from "../../../models/bol-langue.model";
 
 @Component({
   selector: 'bol-heros-langues',
@@ -37,7 +42,11 @@ import {toSignal} from "@angular/core/rxjs-interop";
     Ripple,
     FormsModule,
     NgForOf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BolMessageComponent,
+    InputNumberModule,
+    BtnComponent,
+    TableModule
   ],
   templateUrl: './langues.component.html',
   styleUrl: './langues.component.scss',
@@ -51,109 +60,67 @@ import {toSignal} from "@angular/core/rxjs-interop";
 })
 export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy {
   private subs?: Subscription;
-  public selectedArmure: BolArmureModel | null = null;
+  public selectedLangue: BolLangueModel | null = null;
 
   readonly #fb = inject(FormBuilder);
+  langueErrors: { control: string, error: string }[] = [];
+  langueWarns: { step: string, warn: string }[] = [];
+
+
   readonly #bhss = inject(BolHerosStateService);
   readonly #bhs = inject(BolHerosService);
   readonly #spinner = inject(NgxSpinnerService);
   readonly #ds = inject(ConfirmationService);
 
-  armuresForm = this.#fb.group({
-    armures: this.#fb.array([])
+  languesForm = this.#fb.group({
+    langues: this.#fb.array([])
   });
-  protected formChange = toSignal(this.armuresForm!.valueChanges);
-  get armures() {
-    return this.armuresForm.get('armures') as FormArray;
+  protected formChange = toSignal(this.languesForm!.valueChanges);
+
+  get langues() {
+    return this.languesForm.get('langues') as FormArray;
   }
 
-  protected armureList = this.#bhss.armureList;
-  protected selectedArmureIds = toSignal(this.armuresForm.get('armures')!.valueChanges);
-  protected filteredArmureList = computed(() => {
-    return this.armureList()?.filter((armure: BolArmureModel) => !this.selectedArmureIds()?.includes(armure.id));
+  protected langueList = this.#bhss.langueList;
+  protected selectedLangueIds = toSignal(this.languesForm.get('langues')!.valueChanges);
+  protected filteredLangueList = computed(() => {
+    return this.langueList()?.filter((langue: BolLangueModel) => !this.selectedLangueIds()?.includes(langue.id));
   });
-  protected selectedArmureDetail = computed(() => {
-    return this.armureList()?.filter((armure: BolArmureModel) => this.selectedArmureIds()?.includes(armure.id))
+  protected selectedLangueDetail = computed(() => {
+    return this.langueList()?.filter((langue: BolLangueModel) => this.selectedLangueIds()?.includes(langue.id))
   });
   protected heroId = computed(() => this.#bhss.currentHeros()?.id);
 
   constructor() {
     effect(() => {
       if (this.formChange()) {
-        this.onChange(this.armuresForm.get('armures')?.value);
+        this.onChange(this.languesForm.get('langues')?.value);
         this.onTouched();
       }
     });
   }
 
-
-  addArmure(panel: OverlayPanel, event: any) {
-    panel.toggle(event);
-    if (this.selectedArmure === null) {
-      return;
-    }
-    const armure: BolHerosArmureModel = {
-      armure_id: this.selectedArmure?.id as number
-    }
-    this.#spinner.show();
-    this.subs?.unsubscribe();
-    this.subs = this.#bhs.createArmure(this.heroId(), armure).subscribe({
-      next: _ => {
-        this.#spinner.hide();
-        this.armures.push(new FormControl(armure.armure_id));
-      },
-      error: () => {
-        this.#spinner.hide();
-      }
-    });
-  }
-
-  deleteArmure(armureId: number, event: any) {
-    this.#ds.confirm({
-      target: event.target as EventTarget,
-      message: 'Voulez vous supprimer cette armure ?',
-      icon: 'pi pi-info-circle',
-      acceptButtonStyleClass: 'p-button-danger p-button-sm',
-      acceptLabel: "Oui",
-      rejectLabel: "Non",
-      accept: () => {
-        this.#spinner.show();
-        this.subs?.unsubscribe();
-        this.subs = this.#bhs.deleteArmure(this.heroId(), armureId).subscribe({
-          next: _ => {
-            this.#spinner.hide();
-            this.removeArmure(armureId);
-          },
-          error: () => {
-            this.#spinner.hide();
-          }
-        });
-      },
-    });
-  }
-  removeArmure(armureId: number) {
-    const index = this.armures.value.findIndex((car: number) => car === armureId)
-    if (index !== -1) this.armures.removeAt(index)
-  }
-
-  private onChange: (armures: any) => void = () => {
+  private onChange: (langues: any) => void = () => {
     // do nothing by default
   };
   onTouched: () => void = () => {
     // do nothing by default
   };
+
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
+
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
+
   writeValue(value: any[]): void {
     console.log('value');
     if (value) {
-      this.armures.clear();
+      this.langues.clear();
       for (const val of value) {
-        this.armures.push(new FormControl(val));
+        this.langues.push(new FormControl(val));
       }
     }
   }

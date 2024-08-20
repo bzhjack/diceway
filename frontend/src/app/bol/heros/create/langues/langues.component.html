@@ -1,1 +1,30 @@
-plop
+<p-fieldset class="armes w-full" [style]="{width: '450px'}">
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-2">
+      <div class="cursor-pointer" (click)="languesInfos.toggle($event)">
+        <i *ngIf="!langueWarns.length && !langueWarns.length" class="pi pi-info-circle"></i>
+        <div *ngIf="langueErrors.length" style="color: var(--error-color)">
+          <i class="pi pi-exclamation-triangle"></i> ({{ langueErrors.length }})
+        </div>
+        <div *ngIf="langueWarns.length" style="color: var(--warn-color)">
+          <i class="pi pi-exclamation-triangle"></i> ({{ langueWarns.length }})
+        </div>
+      </div>
+
+      <div>Langues</div>
+    </div>
+    <p-overlayPanel #languesInfos>
+      <div class="flex flex-col gap-2">
+        <bol-message type="lang"></bol-message>
+        <bol-message type="form-errors" *ngIf="langueErrors.length" legend="Langues invalides" [data]="langueErrors"></bol-message>
+        <bol-message type="form-warn" *ngIf="langueWarns.length" legend="Langues invalides" [data]="langueWarns"></bol-message>
+      </div>
+    </p-overlayPanel>
+  </ng-template>
+  <!-- Body Langues -->
+
+  <!-- Footer Langues -->
+  <div class="footer-separator flex justify-end gap-2">
+    <p-button label="Ajouter une langue" size="small" [link]="true" class="text-cyan-600"/>
+  </div>
+</p-fieldset>
