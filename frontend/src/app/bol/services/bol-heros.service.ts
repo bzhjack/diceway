@@ -81,7 +81,12 @@ export class BolHerosService {
   langues(): Observable<any> {
     return this.http.get<BolLangueModel[]>('/api/bol/langues');
   }
-
+  createLangue(herosId: string | null | undefined, arme: BolHerosArmeModel): Observable<any> {
+    return  this.http.post<BolHerosModel>(`/api/bol/heros/langues/create/${herosId}`, <BolHerosArmeModel>arme);
+  }
+  deleteLangue(herosId: string | null | undefined, id: number): Observable<any> {
+    return this.http.delete<boolean>(`/api/bol/heros/langues/delete/${herosId}/${id}`);
+  }
 
   // Héros
   createHeros(hero: BolHerosModel): Observable<any> {

@@ -47,6 +47,7 @@ import {BolHerosArmesComponent} from "./armes/armes.component";
 import {BolHerosTraitsComponent} from "./traits/traits.component";
 import {BolHerosTraitsModel} from "../../models/bol-trait.model";
 import {BolHerosLanguesComponent} from "./langues/langues.component";
+import {BolHerosLangueModel} from "../../models/bol-langue.model";
 
 
 @Component({
@@ -107,6 +108,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   public traitsCtrl = new FormControl<BolHerosTraitsModel[]>([]);
   public armuresCtrl = new FormControl<number[]>([]);
   public armesCtrl = new FormControl<number[]>([]);
+  public languesCtrl = new FormControl<number[]>([]);
   public carrieresCtrl = new FormControl<BolHerosCarriereModel[]>([]);
 
   public combatCtrl = new FormControl<BolHerosCombat>({defense: 0,initiative: 0,melee: 0,tir: 0});
@@ -125,7 +127,8 @@ export class BolHerosCreateComponent implements OnDestroy {
       armes: this.armesCtrl,
       origines: this.originesCtrl,
       carrieres: this.carrieresCtrl,
-      ressources: this.ressourcesCtrl
+      ressources: this.ressourcesCtrl,
+      langues: this.languesCtrl
     }, {validators: globalFormValidator}
   );
   valueChanges$: Observable<BolHerosModel> = this.herosForm.valueChanges.pipe(
@@ -156,7 +159,8 @@ export class BolHerosCreateComponent implements OnDestroy {
       traits: value.traits ?? [],
       carrieres: value.carrieres ?? [],
       armures: value.armures ?? [],
-      armes: value.armes ?? []
+      armes: value.armes ?? [],
+      langues: value.langues ?? []
     })),
     tap((heros: BolHerosModel) => {
       this.#herosStateService.currentHeros.set(heros);
@@ -201,6 +205,7 @@ export class BolHerosCreateComponent implements OnDestroy {
             ressources: hero.ressources,
             armures: hero.armures.map((item) => (item as BolHerosArmureModel).armure_id),
             armes: hero.armes.map(item => (item as BolHerosArmeModel).arme_id),
+            langues: hero.langues.map(item => (item as BolHerosLangueModel).langue_id),
             combat: hero.combat,
             attributs: hero.attributs,
             origines: hero.origines,

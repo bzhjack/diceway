@@ -1,4 +1,4 @@
-import {Component, computed, effect, forwardRef, inject, OnDestroy} from '@angular/core';
+import {Component, computed, effect, forwardRef, inject, OnDestroy, signal} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {FieldsetModule} from "primeng/fieldset";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
@@ -27,6 +27,7 @@ import {InputNumberModule} from "primeng/inputnumber";
 import {BtnComponent} from "../../../../shared/trash/trash.component";
 import {TableModule} from "primeng/table";
 import {BolLangueModel} from "../../../models/bol-langue.model";
+import {BolArmeModel, BolHerosArmeModel} from "../../../models/bol-arme.model";
 
 @Component({
   selector: 'bol-heros-langues',
@@ -60,8 +61,7 @@ import {BolLangueModel} from "../../../models/bol-langue.model";
 })
 export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy {
   private subs?: Subscription;
-  public selectedLangue: BolLangueModel | null = null;
-
+  public selectedLangue= signal< BolLangueModel | null>(null);
   readonly #fb = inject(FormBuilder);
   langueErrors: { control: string, error: string }[] = [];
   langueWarns: { step: string, warn: string }[] = [];
@@ -96,6 +96,27 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
       if (this.formChange()) {
         this.onChange(this.languesForm.get('langues')?.value);
         this.onTouched();
+      }
+    });
+  }
+
+  addLangue(panel: OverlayPanel, event: any) {
+    panel.toggle(event);
+    if (this.selectedLangue() === null) {
+      return;
+    }
+    const arme: BolHerosArmeModel = {
+      arme_id: this.selectedLangue()?.id as number
+    }
+    this.#spinner.show();
+    this.subs?.unsubscribe();
+    this.subs = this.#bhs.createArme(this.heroId(), arme).subscribe({
+      next: _ => {
+        this.#spinner.hide();
+        this.langues.push(new FormControl(arme.arme_id));
+      },
+      error: () => {
+        this.#spinner.hide();
       }
     });
   }

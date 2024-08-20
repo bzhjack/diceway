@@ -28,3 +28,46 @@
     <p-button label="Ajouter une langue" size="small" [link]="true" class="text-cyan-600"/>
   </div>
 </p-fieldset>
+
+<p-overlayPanel #opLangue>
+  <div class="flex flex-col gap-4">
+    <div>Ajouter une arme</div>
+    <p-dropdown [style]="{ width: '250px' }" [options]="filteredLangueList()"
+                [(ngModel)]="selectedLangue" [ngModelOptions]="{standalone: true}" [filter]="true"
+                filterBy="arme" [showClear]="true" placeholder="Selectionner une arme">
+
+      <ng-template pTemplate="selectedItem" let-selectedOption>
+        <div class="flex align-items-center gap-2">
+          <div>{{ selectedOption.arme }}</div>
+        </div>
+      </ng-template>
+
+      <ng-template let-arme pTemplate="item">
+        <div class="flex flex-col gap-2">
+          <div class="text-2xl">{{ arme.arme }}</div>
+          <div class="flex flex-col">
+            <div class="flex gap-2" style="font-size: smaller">
+              <div style="width: 70px"><strong>Dégats</strong></div>
+              {{ arme.degats }}
+            </div>
+            <div class="flex gap-2" style="font-size: smaller">
+              <div style="width: 70px"><strong>Portée</strong></div>
+              {{ arme.portee }}
+            </div>
+            <div class="flex gap-2" style="font-size: smaller">
+              <div style="width: 70px"><strong>Notes</strong></div>
+              {{ arme.notes }}
+            </div>
+          </div>
+
+        </div>
+      </ng-template>
+    </p-dropdown>
+    <div class="flex justify-end gap-2">
+      <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
+              (click)="opLangue.toggle($event)"></button>
+      <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
+              (click)="addLangue(opLangue, $event)" [disabled]="!selectedLangue()"></button>
+    </div>
+  </div>
+</p-overlayPanel>
