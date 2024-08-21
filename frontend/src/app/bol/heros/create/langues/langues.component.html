@@ -22,12 +22,12 @@
     </p-overlayPanel>
   </ng-template>
   <!-- Body Langues -->
-  <div class="flex flex-col gap-2">
-    <div class="flex" *ngFor="let langue of langues.controls; let i = index">
-      <div>{{langueFromId(langue.value)}}</div>
+  <p-scrollPanel [style]="{height: '80px'}">
+    <div class="flex pb-2" *ngFor="let langue of langues.controls; let i = index">
+      <div style="width: 150px">{{langueFromId(langue.value)}}</div>
       <app-btn (click)="deleteLangue(langue.value, $event)"></app-btn>
     </div>
-  </div>
+  </p-scrollPanel>
   <!-- Footer Langues -->
   <div class="footer-separator flex justify-end gap-2">
     <p-button (click)="selectedLangue.set(null); opLangue.toggle($event)" label="Ajouter une langue" size="small" [link]="true" class="text-cyan-600"/>

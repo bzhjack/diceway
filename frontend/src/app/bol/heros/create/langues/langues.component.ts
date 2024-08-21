@@ -28,6 +28,7 @@ import {BtnComponent} from "../../../../shared/trash/trash.component";
 import {TableModule} from "primeng/table";
 import {BolHerosLangueModel, BolLangueModel} from "../../../models/bol-langue.model";
 import {BolCarriereModel, BolHerosCarriereModel} from "../../../models/bol-carriere.model";
+import {ScrollPanelModule} from "primeng/scrollpanel";
 
 @Component({
   selector: 'bol-heros-langues',
@@ -48,7 +49,8 @@ import {BolCarriereModel, BolHerosCarriereModel} from "../../../models/bol-carri
     InputNumberModule,
     BtnComponent,
     TableModule,
-    JsonPipe
+    JsonPipe,
+    ScrollPanelModule
   ],
   templateUrl: './langues.component.html',
   styleUrl: './langues.component.scss',
