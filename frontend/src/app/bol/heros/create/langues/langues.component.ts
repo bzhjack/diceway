@@ -26,8 +26,7 @@ import {BolMessageComponent} from "../../../message/message.component";
 import {InputNumberModule} from "primeng/inputnumber";
 import {BtnComponent} from "../../../../shared/trash/trash.component";
 import {TableModule} from "primeng/table";
-import {BolLangueModel} from "../../../models/bol-langue.model";
-import {BolArmeModel, BolHerosArmeModel} from "../../../models/bol-arme.model";
+import {BolHerosLangueModel, BolLangueModel} from "../../../models/bol-langue.model";
 
 @Component({
   selector: 'bol-heros-langues',
@@ -105,15 +104,15 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
     if (this.selectedLangue() === null) {
       return;
     }
-    const arme: BolHerosArmeModel = {
-      arme_id: this.selectedLangue()?.id as number
+    const langue: BolHerosLangueModel = {
+      langue_id: this.selectedLangue()?.id as number
     }
     this.#spinner.show();
     this.subs?.unsubscribe();
-    this.subs = this.#bhs.createArme(this.heroId(), arme).subscribe({
+    this.subs = this.#bhs.createLangue(this.heroId(), langue).subscribe({
       next: _ => {
         this.#spinner.hide();
-        this.langues.push(new FormControl(arme.arme_id));
+        this.langues.push(new FormControl(langue.langue_id));
       },
       error: () => {
         this.#spinner.hide();
@@ -137,7 +136,6 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
   }
 
   writeValue(value: any[]): void {
-    console.log('value');
     if (value) {
       this.langues.clear();
       for (const val of value) {

@@ -9,7 +9,7 @@ import {BolHerosCarriereModel} from "../models/bol-carriere.model";
 import {BolArmureModel, BolHerosArmureModel} from "../models/bol-armure.model";
 import {BolHerosArmeModel} from "../models/bol-arme.model";
 import {BolHerosTraitsModel} from "../models/bol-trait.model";
-import {BolLangueModel} from "../models/bol-langue.model";
+import {BolHerosLangueModel, BolLangueModel} from "../models/bol-langue.model";
 
 @Injectable({
   providedIn: 'root'
@@ -81,8 +81,8 @@ export class BolHerosService {
   langues(): Observable<any> {
     return this.http.get<BolLangueModel[]>('/api/bol/langues');
   }
-  createLangue(herosId: string | null | undefined, arme: BolHerosArmeModel): Observable<any> {
-    return  this.http.post<BolHerosModel>(`/api/bol/heros/langues/create/${herosId}`, <BolHerosArmeModel>arme);
+  createLangue(herosId: string | null | undefined, langue: BolHerosLangueModel): Observable<any> {
+    return  this.http.post<BolHerosModel>(`/api/bol/heros/langues/create/${herosId}`, <BolHerosLangueModel>langue);
   }
   deleteLangue(herosId: string | null | undefined, id: number): Observable<any> {
     return this.http.delete<boolean>(`/api/bol/heros/langues/delete/${herosId}/${id}`);

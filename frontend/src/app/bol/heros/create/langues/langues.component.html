@@ -25,7 +25,7 @@
 
   <!-- Footer Langues -->
   <div class="footer-separator flex justify-end gap-2">
-    <p-button label="Ajouter une langue" size="small" [link]="true" class="text-cyan-600"/>
+    <p-button (click)="selectedLangue.set(null); opLangue.toggle($event)" label="Ajouter une langue" size="small" [link]="true" class="text-cyan-600"/>
   </div>
 </p-fieldset>
 
@@ -34,32 +34,17 @@
     <div>Ajouter une arme</div>
     <p-dropdown [style]="{ width: '250px' }" [options]="filteredLangueList()"
                 [(ngModel)]="selectedLangue" [ngModelOptions]="{standalone: true}" [filter]="true"
-                filterBy="arme" [showClear]="true" placeholder="Selectionner une arme">
+                filterBy="arme" [showClear]="true" placeholder="Selectionner une langue">
 
       <ng-template pTemplate="selectedItem" let-selectedOption>
         <div class="flex align-items-center gap-2">
-          <div>{{ selectedOption.arme }}</div>
+          <div>{{ selectedOption.langue }}</div>
         </div>
       </ng-template>
 
-      <ng-template let-arme pTemplate="item">
+      <ng-template let-langue pTemplate="item">
         <div class="flex flex-col gap-2">
-          <div class="text-2xl">{{ arme.arme }}</div>
-          <div class="flex flex-col">
-            <div class="flex gap-2" style="font-size: smaller">
-              <div style="width: 70px"><strong>Dégats</strong></div>
-              {{ arme.degats }}
-            </div>
-            <div class="flex gap-2" style="font-size: smaller">
-              <div style="width: 70px"><strong>Portée</strong></div>
-              {{ arme.portee }}
-            </div>
-            <div class="flex gap-2" style="font-size: smaller">
-              <div style="width: 70px"><strong>Notes</strong></div>
-              {{ arme.notes }}
-            </div>
-          </div>
-
+          <div class="text-2xl">{{ langue.langue }}</div>
         </div>
       </ng-template>
     </p-dropdown>
