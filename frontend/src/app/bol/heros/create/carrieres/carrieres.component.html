@@ -1,4 +1,4 @@
-<p-fieldset class="w-full"  [formGroup]="carrieresForm">
+<p-fieldset class="w-full" [formGroup]="carrieresForm">
   <!-- Header Carrières -->
   <ng-template pTemplate="header">
     <div class="flex items-center gap-2">
@@ -16,67 +16,70 @@
     <p-overlayPanel #carriereInfos>
       <div class="flex flex-col gap-2">
         <bol-message type="carrieres"></bol-message>
-        <bol-message type="form-errors" *ngIf="carriereErrors.length" legend="Carrieres invalides" [data]="carriereErrors"></bol-message>
-        <bol-message type="form-warn" *ngIf="carriereWarns.length" legend="Aptitudes invalides" [data]="carriereWarns"></bol-message>
+        <bol-message type="form-errors" *ngIf="carriereErrors.length" legend="Carrieres invalides"
+                     [data]="carriereErrors"></bol-message>
+        <bol-message type="form-warn" *ngIf="carriereWarns.length" legend="Aptitudes invalides"
+                     [data]="carriereWarns"></bol-message>
       </div>
     </p-overlayPanel>
   </ng-template>
   <!-- Body Carrières -->
   <ng-container>
-  <ng-container formArrayName="carrieres">
-    <div class="carrieres flex flex-wrap gap-3 mb-4" style="width:500px">
-      <div class="flex flex-col" *ngFor="let carriere of carrieres.controls; let i = index">
-        <div class="flex flex-col">
-          <div [formGroupName]="i" class="flex gap-2 items-center">
-            <div
-              *ngTemplateOutlet="templateRef; context: { carTpl: carriereFromId(carriere.get('carriere_id')?.value) }">
-            </div>
-            <p-inputNumber formControlName="value" inputId="defense" maxFractionDigits="0" />
-            <app-btn (click)="deleteCarriere(carriere.get('carriere_id')?.value, $event)"></app-btn>
+    <ng-container formArrayName="carrieres">
+      <div class="carrieres flex flex-wrap gap-3 mb-4" style="width:500px">
+        <div class="flex flex-col" *ngFor="let carriere of carrieres.controls; let i = index">
+          <div class="flex flex-col">
+            <div [formGroupName]="i" class="flex gap-2 items-center">
+              <div
+                *ngTemplateOutlet="templateRef; context: { carTpl: carriereFromId(carriere.get('carriere_id')?.value) }"></div>
+              <p-inputNumber formControlName="value" inputId="defense" maxFractionDigits="0"/>
+              <app-btn (click)="deleteCarriere(carriere.get('carriere_id')?.value, $event)"></app-btn>
 
-            <ng-template #templateRef let-carri="carTpl">
-              <div style="width: 125px" class="flex flex-col">
-                <div class="flex items-center">
-                  <div *ngIf="carri.description"
-                       (click)="carriereInfos.toggle($event)"
-                       class="cursor-pointer"
-                       style="color: var(--warn-color)">
-                    <i class="pi pi-exclamation-triangle mr-2"></i>
-                  </div>
-                  <div class="text-gray-300">{{ carri.carriere }}</div>
-                  <p-overlayPanel #carriereInfos>
-                    <div class="flex flex-col gap-2">
-                      <div class="text-amber-500">
-                        {{carri.description }}
-                      </div>
+              <ng-template #templateRef let-carri="carTpl">
+                <div style="width: 125px" class="flex flex-col">
+                  <div class="flex items-center">
+                    <div *ngIf="carri.description"
+                         (click)="carriereInfos.toggle($event)"
+                         class="cursor-pointer"
+                         style="color: var(--warn-color)">
+                      <i class="pi pi-exclamation-triangle mr-2"></i>
                     </div>
-                  </p-overlayPanel>
+                    <div class="text-gray-300">{{ carri.carriere }}</div>
+                    <p-overlayPanel #carriereInfos>
+                      <div class="flex flex-col gap-2">
+                        <div class="text-amber-500">
+                          {{ carri.description }}
+                        </div>
+                      </div>
+                    </p-overlayPanel>
+                  </div>
+                  <div class="text-gray-400 carriere-detail" style="font-size: smaller"
+                       *ngIf="carri.detail">{{ carri.detail }}
+                  </div>
                 </div>
-                <div class="text-gray-400 carriere-detail" style="font-size: smaller" *ngIf="carri.detail">{{ carri.detail }}
-                </div>
-              </div>
-            </ng-template>
+              </ng-template>
 
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-  </ng-container>
+    </ng-container>
   </ng-container>
   <!-- Footer Carrieres -->
-  <div class="footer-separator flex justify-between gap-2" *ngIf="(carriereDesavangeCount() > 0 && carrieresForm.valid) || carrieres.length < 4" >
+  <div class="footer-separator flex justify-between gap-2"
+       *ngIf="(carriereDesavangeCount() > 0 && carrieresForm.valid) || carrieres.length < 4">
     <p-button (click)="selectedTrait.set(null); opTrait.toggle($event)"
               [style]="{color: 'var(--error-color)'}"
               label="Ajouter une {{carriereDesavangeCount()}} désavantage(s)"
               *ngIf="carriereDesavangeCount() > 0 && carrieresForm.valid"
               severity="danger"
-              size="small" [link]="true" />
+              size="small" [link]="true"/>
     <div></div>
     <p-button (click)="selectedCarriere.set(null); opCarriere.toggle($event)"
               label="Ajouter une carrière"
               *ngIf="carrieres.length < 4"
-              size="small" [link]="true" class="text-cyan-600" />
+              size="small" [link]="true" class="text-cyan-600"/>
 
   </div>
 </p-fieldset>
@@ -122,13 +125,13 @@
 
       <ng-template pTemplate="selectedItem" let-selectedOption>
         <div class="flex align-items-center gap-2">
-          <div>{{selectedOption.desavantage }}</div>
+          <div>{{ selectedOption.desavantage }}</div>
         </div>
       </ng-template>
 
       <ng-template let-trait pTemplate="item">
         <div class="flex flex-col gap-2">
-          <div>{{trait.desavantage}}</div>
+          <div>{{ trait.desavantage }}</div>
           <div class="text-gray-400" style="font-size: smaller" *ngIf="trait.detail">{{ trait.detail }}</div>
         </div>
       </ng-template>

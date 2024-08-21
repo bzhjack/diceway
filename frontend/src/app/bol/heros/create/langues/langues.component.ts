@@ -4,7 +4,7 @@ import {FieldsetModule} from "primeng/fieldset";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
 import {BolHerosStateService} from "../../../services/bol-heros-state.service";
 import {DropdownModule} from "primeng/dropdown";
-import {NgForOf, NgIf} from "@angular/common";
+import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {Ripple} from "primeng/ripple";
 
@@ -27,6 +27,7 @@ import {InputNumberModule} from "primeng/inputnumber";
 import {BtnComponent} from "../../../../shared/trash/trash.component";
 import {TableModule} from "primeng/table";
 import {BolHerosLangueModel, BolLangueModel} from "../../../models/bol-langue.model";
+import {BolCarriereModel, BolHerosCarriereModel} from "../../../models/bol-carriere.model";
 
 @Component({
   selector: 'bol-heros-langues',
@@ -46,7 +47,8 @@ import {BolHerosLangueModel, BolLangueModel} from "../../../models/bol-langue.mo
     BolMessageComponent,
     InputNumberModule,
     BtnComponent,
-    TableModule
+    TableModule,
+    JsonPipe
   ],
   templateUrl: './langues.component.html',
   styleUrl: './langues.component.scss',
@@ -69,7 +71,7 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
   readonly #bhss = inject(BolHerosStateService);
   readonly #bhs = inject(BolHerosService);
   readonly #spinner = inject(NgxSpinnerService);
-  readonly #ds = inject(ConfirmationService);
+  readonly #cs = inject(ConfirmationService);
 
   languesForm = this.#fb.group({
     langues: this.#fb.array([])
@@ -99,6 +101,11 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
     });
   }
 
+  langueFromId(id: number) {
+    const langue = this.langueList()?.find((itemLang: BolLangueModel) => itemLang.id === id)?.langue;
+    return langue ?? null;
+  }
+
   addLangue(panel: OverlayPanel, event: any) {
     panel.toggle(event);
     if (this.selectedLangue() === null) {
@@ -118,6 +125,35 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
         this.#spinner.hide();
       }
     });
+  }
+
+  deleteLangue(langueId: number, event: any) {
+    this.#cs.confirm({
+      target: event.target as EventTarget,
+      message: 'Voulez vous supprimer cette langue ?',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass: 'p-button-danger p-button-sm',
+      acceptLabel: "Oui",
+      rejectLabel: "Non",
+      accept: () => {
+        this.#spinner.show();
+        this.subs?.unsubscribe();
+        this.subs = this.#bhs.deleteLangue(this.heroId() as string, langueId).subscribe({
+          next: _ => {
+            this.#spinner.hide();
+            this.removeLangue(langueId);
+          },
+          error: () => {
+            this.#spinner.hide();
+          }
+        });
+      },
+    });
+  }
+
+  removeLangue(langueId: number) {
+    const index = this.langues.value.findIndex((langue_id: number) => langue_id === langueId)
+    if (index !== -1) this.langues.removeAt(index)
   }
 
   private onChange: (langues: any) => void = () => {
