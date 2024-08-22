@@ -27,7 +27,6 @@ import {InputNumberModule} from "primeng/inputnumber";
 import {BtnComponent} from "../../../../shared/trash/trash.component";
 import {TableModule} from "primeng/table";
 import {BolHerosLangueModel, BolLangueModel} from "../../../models/bol-langue.model";
-import {BolCarriereModel, BolHerosCarriereModel} from "../../../models/bol-carriere.model";
 import {ScrollPanelModule} from "primeng/scrollpanel";
 
 @Component({
@@ -89,18 +88,44 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
   protected filteredLangueList = computed(() => {
     return this.langueList()?.filter((langue: BolLangueModel) => !this.selectedLangueIds()?.includes(langue.id));
   });
-  protected selectedLangueDetail = computed(() => {
-    return this.langueList()?.filter((langue: BolLangueModel) => this.selectedLangueIds()?.includes(langue.id))
-  });
-  protected heroId = computed(() => this.#bhss.currentHeros()?.id);
 
+  protected heroId = computed(() => this.#bhss.currentHeros()?.id);
+  protected availableLang = computed(() => {
+    const hero =this.#bhss.currentHeros();
+    const sumCar = hero?.carrieres.filter((car) => [1, 24, 12, 16, 18, 14, 21, 22].includes(car.carriere_id ?? -1) ).reduce((sum, car) => sum + (Number(car.value) || 0), 0) ?? 0;
+    const esprit =  hero?.attributs.esprit ?? 0;
+    return esprit + sumCar - this.langues.length;
+  });
   constructor() {
     effect(() => {
       if (this.formChange()) {
+        this.updateErrors();
+        this.updateWarnings();
         this.onChange(this.languesForm.get('langues')?.value);
         this.onTouched();
       }
     });
+  }
+  private updateWarnings() {
+    this.langueWarns = [];
+    if (this.langueErrors.length > 0) {
+      return;
+    }
+    if (this.availableLang() > 0) {
+      this.langueWarns.push({
+        step: 'Langues',
+        warn: 'Vous pouvez encore choisir ' + this.availableLang() + ' langue(s)'
+      });
+    }
+  }
+  private updateErrors() {
+    this.langueErrors = [];
+    if (this.availableLang() < 0) {
+      this.langueErrors.push({
+        control: 'Langues',
+        error: 'Vous avez ' + this.availableLang() * -1 + ' langue(s) en trop'
+      });
+    }
   }
 
   langueFromId(id: number) {

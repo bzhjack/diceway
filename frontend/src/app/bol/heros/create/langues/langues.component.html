@@ -2,7 +2,7 @@
   <ng-template pTemplate="header">
     <div class="flex items-center gap-2">
       <div class="cursor-pointer" (click)="languesInfos.toggle($event)">
-        <i *ngIf="!langueWarns.length && !langueWarns.length" class="pi pi-info-circle"></i>
+        <i *ngIf="!langueWarns.length && !langueErrors.length" class="pi pi-info-circle"></i>
         <div *ngIf="langueErrors.length" style="color: var(--error-color)">
           <i class="pi pi-exclamation-triangle"></i> ({{ langueErrors.length }})
         </div>
