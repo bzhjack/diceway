@@ -8,7 +8,7 @@ import {BolHerosModel} from "../models/bol-heros.model";
 })
 export class BolHerosStateService {
   #bhs = inject(BolHerosService)
-
+  langueList = toSignal(this.#bhs.langues());
   armureList = toSignal(this.#bhs.armures());
   armeList = toSignal(this.#bhs.armes());
   regionList = toSignal(this.#bhs.regions());

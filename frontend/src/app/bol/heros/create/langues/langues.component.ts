@@ -1,13 +1,13 @@
-import {Component, computed, effect, forwardRef, inject, OnDestroy} from '@angular/core';
+import {Component, computed, effect, forwardRef, inject, OnDestroy, signal} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {FieldsetModule} from "primeng/fieldset";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
 import {BolHerosStateService} from "../../../services/bol-heros-state.service";
 import {DropdownModule} from "primeng/dropdown";
-import {NgForOf, NgIf} from "@angular/common";
+import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {Ripple} from "primeng/ripple";
-import {BolArmureModel, BolHerosArmureModel} from "../../../models/bol-armure.model";
+
 import {
   ControlValueAccessor,
   FormArray,
@@ -22,6 +22,12 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from "@angular/core/rxjs-interop";
+import {BolMessageComponent} from "../../../message/message.component";
+import {InputNumberModule} from "primeng/inputnumber";
+import {BtnComponent} from "../../../../shared/trash/trash.component";
+import {TableModule} from "primeng/table";
+import {BolHerosLangueModel, BolLangueModel} from "../../../models/bol-langue.model";
+import {ScrollPanelModule} from "primeng/scrollpanel";
 
 @Component({
   selector: 'bol-heros-langues',
@@ -37,7 +43,13 @@ import {toSignal} from "@angular/core/rxjs-interop";
     Ripple,
     FormsModule,
     NgForOf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BolMessageComponent,
+    InputNumberModule,
+    BtnComponent,
+    TableModule,
+    JsonPipe,
+    ScrollPanelModule
   ],
   templateUrl: './langues.component.html',
   styleUrl: './langues.component.scss',
@@ -51,56 +63,90 @@ import {toSignal} from "@angular/core/rxjs-interop";
 })
 export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy {
   private subs?: Subscription;
-  public selectedArmure: BolArmureModel | null = null;
-
+  public selectedLangue= signal< BolLangueModel | null>(null);
   readonly #fb = inject(FormBuilder);
+  langueErrors: { control: string, error: string }[] = [];
+  langueWarns: { step: string, warn: string }[] = [];
+
+
   readonly #bhss = inject(BolHerosStateService);
   readonly #bhs = inject(BolHerosService);
   readonly #spinner = inject(NgxSpinnerService);
-  readonly #ds = inject(ConfirmationService);
+  readonly #cs = inject(ConfirmationService);
 
-  armuresForm = this.#fb.group({
-    armures: this.#fb.array([])
+  languesForm = this.#fb.group({
+    langues: this.#fb.array([])
   });
-  protected formChange = toSignal(this.armuresForm!.valueChanges);
-  get armures() {
-    return this.armuresForm.get('armures') as FormArray;
+  protected formChange = toSignal(this.languesForm!.valueChanges);
+
+  get langues() {
+    return this.languesForm.get('langues') as FormArray;
   }
 
-  protected armureList = this.#bhss.armureList;
-  protected selectedArmureIds = toSignal(this.armuresForm.get('armures')!.valueChanges);
-  protected filteredArmureList = computed(() => {
-    return this.armureList()?.filter((armure: BolArmureModel) => !this.selectedArmureIds()?.includes(armure.id));
+  protected langueList = this.#bhss.langueList;
+  protected selectedLangueIds = toSignal(this.languesForm.get('langues')!.valueChanges);
+  protected filteredLangueList = computed(() => {
+    return this.langueList()?.filter((langue: BolLangueModel) => !this.selectedLangueIds()?.includes(langue.id));
   });
-  protected selectedArmureDetail = computed(() => {
-    return this.armureList()?.filter((armure: BolArmureModel) => this.selectedArmureIds()?.includes(armure.id))
-  });
-  protected heroId = computed(() => this.#bhss.currentHeros()?.id);
 
+  protected heroId = computed(() => this.#bhss.currentHeros()?.id);
+  protected availableLang = computed(() => {
+    const hero =this.#bhss.currentHeros();
+    const sumCar = hero?.carrieres.filter((car) => [1, 24, 12, 16, 18, 14, 21, 22].includes(car.carriere_id ?? -1) ).reduce((sum, car) => sum + (Number(car.value) || 0), 0) ?? 0;
+    const esprit =  hero?.attributs.esprit ?? 0;
+    return esprit + sumCar - this.langues.length;
+  });
   constructor() {
     effect(() => {
       if (this.formChange()) {
-        this.onChange(this.armuresForm.get('armures')?.value);
+        this.updateErrors();
+        this.updateWarnings();
+        this.onChange(this.languesForm.get('langues')?.value);
         this.onTouched();
       }
     });
   }
-
-
-  addArmure(panel: OverlayPanel, event: any) {
-    panel.toggle(event);
-    if (this.selectedArmure === null) {
+  private updateWarnings() {
+    this.langueWarns = [];
+    if (this.langueErrors.length > 0) {
       return;
     }
-    const armure: BolHerosArmureModel = {
-      armure_id: this.selectedArmure?.id as number
+    if (this.availableLang() > 0) {
+      this.langueWarns.push({
+        step: 'Langues',
+        warn: 'Vous pouvez encore choisir ' + this.availableLang() + ' langue(s)'
+      });
+    }
+  }
+  private updateErrors() {
+    this.langueErrors = [];
+    if (this.availableLang() < 0) {
+      this.langueErrors.push({
+        control: 'Langues',
+        error: 'Vous avez ' + this.availableLang() * -1 + ' langue(s) en trop'
+      });
+    }
+  }
+
+  langueFromId(id: number) {
+    const langue = this.langueList()?.find((itemLang: BolLangueModel) => itemLang.id === id)?.langue;
+    return langue ?? null;
+  }
+
+  addLangue(panel: OverlayPanel, event: any) {
+    panel.toggle(event);
+    if (this.selectedLangue() === null) {
+      return;
+    }
+    const langue: BolHerosLangueModel = {
+      langue_id: this.selectedLangue()?.id as number
     }
     this.#spinner.show();
     this.subs?.unsubscribe();
-    this.subs = this.#bhs.createArmure(this.heroId(), armure).subscribe({
+    this.subs = this.#bhs.createLangue(this.heroId(), langue).subscribe({
       next: _ => {
         this.#spinner.hide();
-        this.armures.push(new FormControl(armure.armure_id));
+        this.langues.push(new FormControl(langue.langue_id));
       },
       error: () => {
         this.#spinner.hide();
@@ -108,10 +154,10 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
     });
   }
 
-  deleteArmure(armureId: number, event: any) {
-    this.#ds.confirm({
+  deleteLangue(langueId: number, event: any) {
+    this.#cs.confirm({
       target: event.target as EventTarget,
-      message: 'Voulez vous supprimer cette armure ?',
+      message: 'Voulez vous supprimer cette langue ?',
       icon: 'pi pi-info-circle',
       acceptButtonStyleClass: 'p-button-danger p-button-sm',
       acceptLabel: "Oui",
@@ -119,10 +165,10 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
       accept: () => {
         this.#spinner.show();
         this.subs?.unsubscribe();
-        this.subs = this.#bhs.deleteArmure(this.heroId(), armureId).subscribe({
+        this.subs = this.#bhs.deleteLangue(this.heroId() as string, langueId).subscribe({
           next: _ => {
             this.#spinner.hide();
-            this.removeArmure(armureId);
+            this.removeLangue(langueId);
           },
           error: () => {
             this.#spinner.hide();
@@ -131,29 +177,32 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
       },
     });
   }
-  removeArmure(armureId: number) {
-    const index = this.armures.value.findIndex((car: number) => car === armureId)
-    if (index !== -1) this.armures.removeAt(index)
+
+  removeLangue(langueId: number) {
+    const index = this.langues.value.findIndex((langue_id: number) => langue_id === langueId)
+    if (index !== -1) this.langues.removeAt(index)
   }
 
-  private onChange: (armures: any) => void = () => {
+  private onChange: (langues: any) => void = () => {
     // do nothing by default
   };
   onTouched: () => void = () => {
     // do nothing by default
   };
+
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
+
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
+
   writeValue(value: any[]): void {
-    console.log('value');
     if (value) {
-      this.armures.clear();
+      this.langues.clear();
       for (const val of value) {
-        this.armures.push(new FormControl(val));
+        this.langues.push(new FormControl(val));
       }
     }
   }

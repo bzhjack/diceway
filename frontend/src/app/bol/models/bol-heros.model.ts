@@ -2,6 +2,7 @@ import {BolHerosCarriereModel} from "./bol-carriere.model";
 import {BolHerosArmureModel} from "./bol-armure.model";
 import {BolHerosArmeModel} from "./bol-arme.model";
 import {BolHerosTraitsModel} from "./bol-trait.model";
+import {BolHerosLangueModel} from "./bol-langue.model";
 
 export interface BolHerosModel {
   id: string | null;
@@ -15,6 +16,7 @@ export interface BolHerosModel {
   carrieres: BolHerosCarriereModel[],
   armures: BolHerosArmureModel[] | number[],
   armes: BolHerosArmeModel[] | number[],
+  langues: BolHerosLangueModel[] | number[]
 
 }
 

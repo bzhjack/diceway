@@ -4,7 +4,7 @@
       <div>Armes</div>
     </div>
   </ng-template>
-  <!-- Body Armus -->
+  <!-- Body Armes -->
 
   <p-table [value]="selectedArmeDetail()"
            [scrollable]="true"
@@ -20,7 +20,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-arme>
       <tr>
-        <td class="whitespace-nowrap"><strong>{{ arme.arme }}</strong></td>
+        <td class="whitespace-nowrap text-gray-300">{{ arme.arme }}</td>
         <td>{{ arme.degats }}</td>
         <td>{{ arme.portee }}</td>
         <td><app-btn (click)="deleteArme(arme.id, $event)" ></app-btn></td>

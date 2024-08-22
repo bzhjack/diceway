@@ -21,16 +21,16 @@
               <bol-heros-carrieres formControlName="carrieres" (desavantageCreated)="addCarriereDesavantage($event)"></bol-heros-carrieres>
             </div>
             <div>
-              <div class="flex gap-2">
+              <div class="flex flex-col">
                 <bol-heros-attributs formControlName="attributs"></bol-heros-attributs>
                 <bol-heros-combat formControlName="combat"></bol-heros-combat>
-              </div>
-              <div>
-                <bol-heros-armes formControlName="armes"></bol-heros-armes>
-                <bol-heros-armures formControlName="armures"></bol-heros-armures>
+                <bol-heros-langues formControlName="langues"></bol-heros-langues>
               </div>
             </div>
-
+            <div>
+              <bol-heros-armes formControlName="armes"></bol-heros-armes>
+              <bol-heros-armures formControlName="armures"></bol-heros-armures>
+            </div>
           </div>
       </div>
     </form>
