@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('degat')->nullable();
             $table->string('protection')->nullable();
             $table->longText('avatar')->nullable();
+            $table->integer('id_taille')->default(1);
             $table->timestamps();
         });
     }

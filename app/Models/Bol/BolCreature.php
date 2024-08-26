@@ -23,6 +23,6 @@ class BolCreature extends Model
     }
     public function  taille(): HasOne
     {
-        return $this->HasOne(BolTaille::class, 'creature_id', 'id');
+        return $this->HasOne(BolTaille::class, 'id', 'id_taille');
     }
 }
