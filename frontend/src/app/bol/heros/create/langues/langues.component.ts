@@ -204,6 +204,8 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
       for (const val of value) {
         this.langues.push(new FormControl(val));
       }
+    } else {
+      this.updateWarnings();
     }
   }
 
