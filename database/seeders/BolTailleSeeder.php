@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Bol\Boltaille;
+use App\Models\Bol\BolTaille;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
 
@@ -29,11 +29,11 @@ class BolTailleSeeder extends Seeder
             // Ajoutez d'autres régions selon vos besoins
         ];
         Schema::disableForeignKeyConstraints();
-        Boltaille::truncate();
+        BolTaille::truncate();
         Schema::enableForeignKeyConstraints();
         // Insérer les données dans la table des régions
         foreach ($tailles as $taille) {
-            Boltaille::create($taille);
+            BolTaille::create($taille);
         }
     }
 }
