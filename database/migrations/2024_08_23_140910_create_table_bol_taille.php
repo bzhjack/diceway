@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('bol_taille', function (Blueprint $table) {
             $table->id();
             $table->string('taille');
+            $table->enum('type', ['H', 'P', 'C', 'R'])->nullable();
             $table->timestamps();
         });
     }

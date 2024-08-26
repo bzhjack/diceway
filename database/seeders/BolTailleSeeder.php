@@ -14,18 +14,18 @@ class BolTailleSeeder extends Seeder
     public function run(): void
     {
         $tailles = [
-            ['id'=> 1 , 'taille' => 'Minuscule'],
-            ['id'=> 2 , 'taille' => 'Très petite'],
-            ['id'=> 3 , 'taille' => 'Petite'],
-            ['id'=> 4 , 'taille' => 'Moyenne'],
-            ['id'=> 5 , 'taille'=> 'Grande'],
-            ['id'=> 6 , 'taille'=> 'Très grande'],
-            ['id'=> 7 , 'taille'=> 'Enorme'],
-            ['id'=> 8 , 'taille'=> 'Massive'],
-            ['id'=> 9 , 'taille'=> 'Colossale'],
-            ['id'=> 10 , 'taille'=> 'Gigantesque'],
-            ['id'=> 11 , 'taille'=> 'Immense'],
-            ['id'=> 12 , 'taille'=> 'Monstrueuse'],
+            ['id' => 1, 'taille' => 'Minuscule', 'type' => 'P'],
+            ['id' => 2, 'taille' => 'Très petite', 'type' => 'P'],
+            ['id' => 3, 'taille' => 'Petite', 'type' => 'C'],
+            ['id' => 4, 'taille' => 'Moyenne', 'type' => 'C'],
+            ['id' => 5, 'taille' => 'Grande', 'type' => 'R'],
+            ['id' => 6, 'taille' => 'Très grande', 'type' => 'R'],
+            ['id' => 7, 'taille' => 'Enorme', 'type' => 'R'],
+            ['id' => 8, 'taille' => 'Massive', 'type' => 'R'],
+            ['id' => 9, 'taille' => 'Colossale', 'type' => 'R'],
+            ['id' => 10, 'taille' => 'Gigantesque', 'type' => 'R'],
+            ['id' => 11, 'taille' => 'Immense', 'type' => 'R'],
+            ['id' => 12, 'taille' => 'Monstrueuse', 'type' => 'R'],
             // Ajoutez d'autres régions selon vos besoins
         ];
         Schema::disableForeignKeyConstraints();
