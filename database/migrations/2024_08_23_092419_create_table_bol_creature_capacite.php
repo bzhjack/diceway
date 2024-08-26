@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('creature_id');
             $table->unsignedBigInteger('capacite_id');
+            $table->text('detail')->nullable()->default(null);
             $table->timestamps();
 
             // Déclaration des clés étrangères

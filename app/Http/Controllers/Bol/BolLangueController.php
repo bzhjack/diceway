@@ -5,10 +5,8 @@ namespace App\Http\Controllers\Bol;
 use App\Http\Controllers\Controller;
 use App\Models\Bol\BolHerosLangue;
 use App\Models\Bol\BolLangue;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Cache;
 
 class BolLangueController extends Controller
 {

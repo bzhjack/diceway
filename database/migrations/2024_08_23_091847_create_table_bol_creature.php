@@ -16,15 +16,14 @@ return new class extends Migration
     {
         Schema::create('bol_creature', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('user_id')->index();
+            $table->uuid('user_id')->nullable()->index(); // null => public profile
             $table->string('nom');
-            $table->enum('profile', ['public', 'private'])->default('private');
-            $table->tinyInteger('vigueur')->default(0);
-            $table->tinyInteger('agilite')->default(0);
-            $table->tinyInteger('esprit')->default(0);
-            $table->tinyInteger('vitalite')->default(0);
-            $table->tinyInteger('attaque')->default(0);
-            $table->tinyInteger('defense')->default(0);
+            $table->string('vigueur')->default('0');
+            $table->string('agilite')->default('0');
+            $table->string('esprit')->default('0');
+            $table->string('vitalite')->default('0');
+            $table->string('attaque')->default('0');
+            $table->string('defense')->default('0');
             $table->string('degat')->nullable();
             $table->string('protection')->nullable();
             $table->longText('avatar')->nullable();

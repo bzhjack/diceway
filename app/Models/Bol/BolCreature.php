@@ -12,7 +12,7 @@ class BolCreature extends Model
 {
     use HasFactory, Uuids;
 
-    protected $table = 'bol_heros';
+    protected $table = 'bol_creature';
     public $incrementing = false;
     protected $keyType = 'uuid';
     protected $hidden = ['created_at', 'updated_at'];

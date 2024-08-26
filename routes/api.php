@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Bol\BolCreatureController;
 use App\Http\Controllers\Bol\BolHerosController;
 use App\Http\Controllers\Bol\BolLangueController;
 use App\Http\Middleware\RequestAcceptJson;
@@ -83,6 +84,9 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::get('/bol/armures', [BolArmureController::class, 'getAll']);
     Route::post('/bol/heros/armures/create/{herosId}', [BolArmureController::class, 'create']);
     Route::delete('/bol/heros/armures/delete/{herosId}/{id}', [BolArmureController::class, 'delete']);
+
+    // Gestion des créatures
+    Route::get('/bol/creature', [BolCreatureController::class, 'getAll']);
 
     // Gestion du Héros
     Route::get('/bol/heros', [BolHerosController::class, 'getAll']);

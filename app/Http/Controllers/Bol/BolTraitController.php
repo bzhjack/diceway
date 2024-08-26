@@ -5,12 +5,10 @@ namespace App\Http\Controllers\Bol;
 use App\Http\Controllers\Controller;
 use App\Models\Bol\BolAvantage;
 use App\Models\Bol\BolDesavantage;
-use App\Models\Bol\BolHeros;
 use App\Models\Bol\BolHerosTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Symfony\Component\HttpFoundation\Response;
 
 class BolTraitController extends Controller
 {
