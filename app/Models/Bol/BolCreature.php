@@ -6,6 +6,7 @@ use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class BolCreature extends Model
 {
@@ -19,5 +20,9 @@ class BolCreature extends Model
     public function capacites(): HasMany
     {
         return $this->HasMany(BolCreatureCapacite::class, 'creature_id', 'id');
+    }
+    public function  taille(): HasOne
+    {
+        return $this->HasOne(BolTaille::class, 'creature_id', 'id');
     }
 }
