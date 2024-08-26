@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bol\BolArmure;
 use App\Models\Bol\BolHerosArmure;
 use Illuminate\Http\Request;
-use App\Models\Bol\BolArmure;
 use Illuminate\Support\Facades\Cache;
 
 class BolArmureController extends Controller
