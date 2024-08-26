@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Bol;
 use App\Http\Controllers\Controller;
 use App\Models\Bol\BolCreature;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class BolCreatureController extends Controller
 {
@@ -14,7 +15,7 @@ class BolCreatureController extends Controller
      */
     public function getAll()
     {
-        $heroes = BolCreature::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue')->where('user_id', Auth::id())->get();
-        return response($heroes);
+        $creatures = BolCreature::all();
+        return response($creatures);
     }
 }
