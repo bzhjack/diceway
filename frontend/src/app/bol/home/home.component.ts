@@ -1,5 +1,5 @@
-import {Component, OnDestroy} from '@angular/core';
-import {Subscription} from "rxjs";
+import {Component, inject, OnDestroy} from '@angular/core';
+import {forkJoin, Subscription} from "rxjs";
 import {BolHerosService} from "../services/bol-heros.service";
 import {BolHerosModel} from "../models/bol-heros.model";
 import {JsonPipe, NgForOf, NgIf} from "@angular/common";
@@ -14,6 +14,8 @@ import {TableModule} from "primeng/table";
 import {Ripple} from "primeng/ripple";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {ConfirmationService} from "primeng/api";
+import {BolCreatureModel} from "../models/bol-creature.model";
+import {BolCreaturesService} from "../services/bol-creatures.service";
 
 @Component({
   selector: 'bol-home',
@@ -40,28 +42,54 @@ import {ConfirmationService} from "primeng/api";
   styleUrl: './home.component.scss'
 })
 export class BolHomeComponent implements OnDestroy {
+
+  private creatureService = inject(BolCreaturesService);
+  private confirmationService = inject(ConfirmationService);
+  private herosService = inject(BolHerosService);
+  private router = inject(Router);
+  private fb = inject(FormBuilder);
+  private spinner = inject(NgxSpinnerService);
+
+
   private subs?: Subscription;
   private subsHeroes?: Subscription;
   public heroes: Array<BolHerosModel> = [];
+  public creatures: Array<BolCreatureModel> = [];
   public showCreate = false;
-  public joueurCtrl = new FormControl('', [Validators.required,Validators.minLength(3)]);
-  public nomCtrl = new FormControl('', [Validators.required,Validators.minLength(3)]);
+  public joueurCtrl = new FormControl('', [Validators.required, Validators.minLength(3)]);
+  public nomCtrl = new FormControl('', [Validators.required, Validators.minLength(3)]);
   herosForm = this.fb.group({joueur: this.joueurCtrl, nom: this.nomCtrl});
 
-  constructor(
-    private confirmationService: ConfirmationService,
-    private router: Router,
-    private fb: FormBuilder,
-    private hs: BolHerosService,
-    private spinner: NgxSpinnerService) {
-
-
-   this.getHeroes();
+  constructor() {
+    this.getLore();
   }
-  getHeroes() {
+
+  getLore() {
     this.spinner.show();
     this.subsHeroes?.unsubscribe();
-    this.subsHeroes = this.hs.heroes().subscribe({
+
+    // Supposons que `hs.heroes()` et `hs.anotherRequest()` sont les deux requêtes HTTP que vous souhaitez lancer en parallèle
+    const heroesRequest = this.herosService.heroes();
+    const creaturesRequest = this.creatureService.creatures();
+
+    this.subsHeroes = forkJoin([heroesRequest, creaturesRequest]).subscribe({
+      next: ([heroes, creatures]) => {
+        this.heroes = heroes;
+        this.creatures = creatures; // Stockez les données de la deuxième requête
+        this.spinner.hide();
+      },
+      error: (error) => {
+        this.spinner.hide();
+        // Gérer les erreurs ici
+      }
+    });
+  }
+
+
+  getHeroess() {
+    this.spinner.show();
+    this.subsHeroes?.unsubscribe();
+    this.subsHeroes = this.herosService.heroes().subscribe({
       next: (heroes) => {
         this.heroes = heroes;
         this.spinner.hide();
@@ -71,6 +99,8 @@ export class BolHomeComponent implements OnDestroy {
       }
     });
   }
+
+
   openCreateDialog() {
     this.showCreate = true;
     this.herosForm.reset();
@@ -82,18 +112,19 @@ export class BolHomeComponent implements OnDestroy {
       const hero = this.herosForm.value;
       this.spinner.show();
       this.subs?.unsubscribe();
-        this.subs = this.hs.createHeros(this.herosForm.value as BolHerosModel).subscribe({
-          next: (hero: BolHerosModel) => {
-            this.spinner.hide();
-            this.router.navigate(['bol','heros', 'create', hero.id]);
-          },
-          error: () => {
-            this.spinner.hide();
-          }
-        });
+      this.subs = this.herosService.createHeros(this.herosForm.value as BolHerosModel).subscribe({
+        next: (hero: BolHerosModel) => {
+          this.spinner.hide();
+          this.router.navigate(['bol', 'heros', 'create', hero.id]);
+        },
+        error: () => {
+          this.spinner.hide();
+        }
+      });
 
     }
   }
+
   deleteHero(heros: BolHerosModel, event: any) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
@@ -105,10 +136,10 @@ export class BolHomeComponent implements OnDestroy {
       accept: () => {
         this.spinner.show();
         this.subs?.unsubscribe();
-        this.subs = this.hs.deleteHeros(heros.id as string).subscribe({
+        this.subs = this.herosService.deleteHeros(heros.id as string).subscribe({
           next: (hero: BolHerosModel) => {
             this.spinner.hide();
-            this.getHeroes();
+            this.getLore();
           },
           error: () => {
             this.spinner.hide();
@@ -117,10 +148,12 @@ export class BolHomeComponent implements OnDestroy {
       },
     });
   }
+
   onError(controlName: string) {
     const control = this.herosForm.get(controlName);
     return control?.dirty && control.invalid;
   }
+
   ngOnDestroy() {
     this.subs?.unsubscribe();
     this.subsHeroes?.unsubscribe();

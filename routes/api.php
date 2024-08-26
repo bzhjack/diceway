@@ -86,7 +86,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::delete('/bol/heros/armures/delete/{herosId}/{id}', [BolArmureController::class, 'delete']);
 
     // Gestion des créatures
-    Route::get('/bol/creatures', [BolCreatureController::class, 'getAll']);
+    Route::get('/bol/creature', [BolCreatureController::class, 'getAll']);
 
     // Gestion du Héros
     Route::get('/bol/heros', [BolHerosController::class, 'getAll']);

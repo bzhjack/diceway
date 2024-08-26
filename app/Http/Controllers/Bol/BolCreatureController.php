@@ -15,7 +15,7 @@ class BolCreatureController extends Controller
      */
     public function getAll()
     {
-        $creatures = BolCreature::all();
+        $creatures = BolCreature::with('taille', 'capacites')->get();
         return response($creatures);
     }
 }
