@@ -16,9 +16,8 @@ return new class extends Migration
     {
         Schema::create('bol_creature', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('user_id')->index();
+            $table->uuid('user_id')->nullable()->index(); // null => public profile
             $table->string('nom');
-            $table->enum('profile', ['public', 'private'])->default('private');
             $table->tinyInteger('vigueur')->default(0);
             $table->tinyInteger('agilite')->default(0);
             $table->tinyInteger('esprit')->default(0);
