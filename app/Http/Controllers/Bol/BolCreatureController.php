@@ -13,7 +13,7 @@ class BolCreatureController extends Controller
      */
     public function getAll()
     {
-        $creatures = BolCreature::with('taille', 'capacites')->get();
+        $creatures = BolCreature::with('taille', 'capacites.capacite')->get();
         return response($creatures);
     }
 }
