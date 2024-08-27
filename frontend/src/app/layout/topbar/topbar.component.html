@@ -1,8 +1,7 @@
 <div class="dw-topbar items-center justify-between">
   <div class="flex gap-2">
     <div class="dw-topbar__logo relative" [routerLink]="'/'">
-      <div *ngIf="nameSpace() === ''" class="dw_banner" [inlineSVG]="'/frontend/assets/banner.svg'"></div>
-      <img *ngIf="nameSpace() === 'bol'" class="dw_title" src="/frontend/assets/bol/logo.png" alt=""/>
+      <div class="dw_banner" [inlineSVG]="'/frontend/assets/banner.svg'"></div>
     </div>
     <div class="flex items-center text-3xl relative dw_route" style="top: -3px">
       {{ route() }}
