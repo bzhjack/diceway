@@ -635,9 +635,7 @@ class BolCreatureSeeder extends Seeder
             ]
         ];
 
-        //Schema::disableForeignKeyConstraints();
         BolCreature::whereNull('user_id')->delete();
-        //Schema::enableForeignKeyConstraints();
         // Insérer les données dans la table des régions
         foreach ($creatures as $creature) {
             BolCreature::create($creature);
