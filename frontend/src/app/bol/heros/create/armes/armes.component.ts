@@ -1,4 +1,4 @@
-import {Component, computed, effect, forwardRef, inject, signal} from '@angular/core';
+import {Component, computed, effect, forwardRef, inject, OnDestroy, signal} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {FieldsetModule} from "primeng/fieldset";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
@@ -57,7 +57,7 @@ import {TableModule} from "primeng/table";
     }
   ]
 })
-export class BolHerosArmesComponent implements ControlValueAccessor {
+export class BolHerosArmesComponent implements ControlValueAccessor, OnDestroy {
   private subs?: Subscription;
   public selectedArme= signal< BolArmeModel | null>(null);
 

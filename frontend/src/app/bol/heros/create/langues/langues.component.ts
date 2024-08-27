@@ -9,13 +9,14 @@ import {OverlayPanelModule} from "primeng/overlaypanel";
 import {Ripple} from "primeng/ripple";
 
 import {
+  AbstractControl,
   ControlValueAccessor,
   FormArray,
   FormBuilder,
   FormControl,
-  FormsModule,
+  FormsModule, NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
-  ReactiveFormsModule
+  ReactiveFormsModule, ValidationErrors, Validator
 } from "@angular/forms";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {NgxSpinnerService} from "ngx-spinner";
@@ -58,12 +59,17 @@ import {ScrollPanelModule} from "primeng/scrollpanel";
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => BolHerosLanguesComponent),
       multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => BolHerosLanguesComponent),
+      multi: true,
     }
   ]
 })
-export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy {
+export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy, Validator {
   private subs?: Subscription;
-  public selectedLangue= signal< BolLangueModel | null>(null);
+  public selectedLangue = signal<BolLangueModel | null>(null);
   readonly #fb = inject(FormBuilder);
   langueErrors: { control: string, error: string }[] = [];
   langueWarns: { step: string, warn: string }[] = [];
@@ -91,13 +97,17 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
 
   protected heroId = computed(() => this.#bhss.currentHeros()?.id);
   protected availableLang = computed(() => {
-    const hero =this.#bhss.currentHeros();
-    const sumCar = hero?.carrieres.filter((car) => [1, 24, 12, 16, 18, 14, 21, 22].includes(car.carriere_id ?? -1) ).reduce((sum, car) => sum + (Number(car.value) || 0), 0) ?? 0;
-    const esprit =  hero?.attributs.esprit ?? 0;
+    const hero = this.#bhss.currentHeros();
+    const sumCar = hero?.carrieres.filter((car) => [1, 24, 12, 16, 18, 14, 21, 22].includes(car.carriere_id ?? -1)).reduce((sum, car) => sum + (Number(car.value) || 0), 0) ?? 0;
+    const esprit = hero?.attributs.esprit ?? 0;
     return esprit + sumCar - this.langues.length;
   });
+
   constructor() {
     effect(() => {
+      if (this.availableLang() !== null) {
+        this.updateWarnings();
+      }
       if (this.formChange()) {
         this.updateErrors();
         this.updateWarnings();
@@ -106,6 +116,7 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
       }
     });
   }
+
   private updateWarnings() {
     this.langueWarns = [];
     if (this.langueErrors.length > 0) {
@@ -118,6 +129,7 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
       });
     }
   }
+
   private updateErrors() {
     this.langueErrors = [];
     if (this.availableLang() < 0) {
@@ -125,6 +137,11 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
         control: 'Langues',
         error: 'Vous avez ' + this.availableLang() * -1 + ' langue(s) en trop'
       });
+    }
+    if (this.langueErrors.length > 0) {
+      this.languesForm.setErrors({'langCount': this.availableLang()})
+    } else {
+      this.languesForm.setErrors(null);
     }
   }
 
@@ -204,12 +221,13 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
       for (const val of value) {
         this.langues.push(new FormControl(val));
       }
-    } else {
-      this.updateWarnings();
     }
   }
 
   ngOnDestroy() {
     this.subs?.unsubscribe();
+  }
+  validate(control: AbstractControl): ValidationErrors | null {
+    return this.languesForm.valid ? null : { invalidForm: { valid: false, message: "Lang form is invalid" } };
   }
 }
