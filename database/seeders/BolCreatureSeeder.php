@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Bol\BolCreature;
+use App\Models\Bol\BolCreatureCapacite;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
 
@@ -634,12 +635,205 @@ class BolCreatureSeeder extends Seeder
             ]
         ];
 
-        Schema::disableForeignKeyConstraints();
+        //Schema::disableForeignKeyConstraints();
         BolCreature::whereNull('user_id')->delete();
-        Schema::enableForeignKeyConstraints();
+        //Schema::enableForeignKeyConstraints();
         // Insérer les données dans la table des régions
         foreach ($creatures as $creature) {
             BolCreature::create($creature);
+        }
+
+        $capacites = [
+            [
+                'id' => '1',
+                'creature_id' => '1',
+                'capacite_id' => '6',
+                'detail' => null
+            ],
+            [
+                'id' => '2',
+                'creature_id' => '2',
+                'capacite_id' => '6',
+                'detail' => 'Capable de percevoir les mouvements dans l’eau à plus d’un kilomètre de distance'
+            ],
+            [
+                'id' => '3',
+                'creature_id' => '2',
+                'capacite_id' => '3',
+                'detail' => 'Assomme sa proie avec une puissante décharge. Un héros doit réussir un jet de vigueur difficile (-1), sinon il perd connaissance pour 6 moins sa vigueur en rounds.'
+            ],
+            [
+                'id' => '4',
+                'creature_id' => '3',
+                'capacite_id' => '3',
+                'detail' => 'Crachat gluant qui immobilise une créature qui échoue à un jet de vigueur très difficile (-4).'
+            ],
+            [
+                'id' => '5',
+                'creature_id' => '4',
+                'capacite_id' => '7',
+                'detail' => null
+            ],
+            [
+                'id' => '6',
+                'creature_id' => '4',
+                'capacite_id' => '8',
+                'detail' => 'Vision'
+            ],
+            [
+                'id' => '7',
+                'creature_id' => '5',
+                'capacite_id' => '2',
+                'detail' => 'Deux jets d’attaque par round.'
+            ],
+            [
+                'id' => '8',
+                'creature_id' => '8',
+                'capacite_id' => '4',
+                'detail' => 'Injecte un venin paralysant s’il inflige des dégâts. Un jet de vigueur difficile (-2) est nécessaire pour éviter la paralysie et la mort en une heure.Un autre jet de vigueur difficile peut être tenté pour éviter la mort.'
+            ],
+            [
+                'id' => '9',
+                'creature_id' => '11',
+                'capacite_id' => '5',
+                'detail' => 'quand il flotte immobile à fleur d’eau, le crocator est difficile à repérer.'
+            ],
+            [
+                'id' => '10',
+                'creature_id' => '13',
+                'capacite_id' => '1',
+                'detail' => null
+            ],
+            [
+                'id' => '11',
+                'creature_id' => '13',
+                'capacite_id' => '6',
+                'detail' => null
+            ],
+            [
+                'id' => '12',
+                'creature_id' => '12',
+                'capacite_id' => '1',
+                'detail' => null
+            ],
+            [
+                'id' => '13',
+                'creature_id' => '18',
+                'capacite_id' => '2',
+                'detail' => 'Attaque deux fois pour attraper sa proie avec ses tentacules. Si les deux attaques touchent, il peut mordre. La victime peut se libérer avec un jet de vigueur difficile (-2) ou subir une morsure automatique au round suivant.'
+            ],
+            [
+                'id' => '14',
+                'creature_id' => '18',
+                'capacite_id' => '4',
+                'detail' => 'Le venin tue immédiatement une petite proie. Les héros doivent réussir un jet de vigueur très difficile (-4) chaque round pour survivre. En cas d\'échec, ils meurent en 3 rounds.'
+            ],
+            [
+                'id' => '15',
+                'creature_id' => '20',
+                'capacite_id' => '4',
+                'detail' => 'Le venin n\'affecte que les créatures de taille moyenne ou moins. La victime subit un malus de -1 à tous ses jets d\'action pendant une demi-journée, sauf si elle réussit un jet de vigueur moyen (0).'
+            ],
+            [
+                'id' => '16',
+                'creature_id' => '22',
+                'capacite_id' => '3',
+                'detail' => 'Sur un 1 au d6, la jit injecte des œufs. Si un médecin traite la plaie dans l’heure, il peut les retirer. Sinon, ils causent 1d6 dégâts s’ils sont extraits dans les 24 heures, ou 2d6 dégâts après ce délai.'
+            ],
+            [
+                'id' => '17',
+                'creature_id' => '30',
+                'capacite_id' => '3',
+                'detail' => 'Une phong qui mord une victime endormie lui aspire jusqu’à 4 points de vitalité, à raison de 1 point toutes les 5 minutes. Les victimes se rendent compte de l\'attaque seulement au réveil.'
+            ],
+            [
+                'id' => '18',
+                'creature_id' => '31',
+                'capacite_id' => '7',
+                'detail' => null
+            ],
+            [
+                'id' => '19',
+                'creature_id' => '32',
+                'capacite_id' => '1',
+                'detail' => 'Peut saisir une créature de taille moyenne ou moins dans son bec et l’écraser, ajoutant +2 aux dégâts.'
+            ],
+            [
+                'id' => '20',
+                'creature_id' => '35',
+                'capacite_id' => '2',
+                'detail' => 'Peut effectuer deux jets d’attaque contre la même cible ou contre des cibles différentes.'
+            ],
+            [
+                'id' => '21',
+                'creature_id' => '35',
+                'capacite_id' => '4',
+                'detail' => 'Le poison tue immédiatement les créatures de taille petite ou moins. Les autres doivent réussir un jet de vigueur très difficile (-6) ou tomber dans un coma de 1d6 jours mortel sans antidote.'
+            ],
+            [
+                'id' => '22',
+                'creature_id' => '36',
+                'capacite_id' => '4',
+                'detail' => 'Le venin paralyse les créatures de taille grande ou moins. Les héros doivent réussir un jet de vigueur ardu (-1) pour résister. Sinon, ils meurent dans l’heure, sauf s\'ils réussissent un second jet de vigueur ardu.'
+            ],
+            [
+                'id' => '23',
+                'creature_id' => '37',
+                'capacite_id' => '4',
+                'detail' => 'Le venin paralyse les créatures de taille immense ou moins. Les héros doivent réussir un jet de vigueur très difficile (-4) pour résister. Sinon, ils meurent dans l’heure, sauf s\'ils réussissent un second jet de vigueur très difficile.'
+            ],
+            [
+                'id' => '24',
+                'creature_id' => '38',
+                'capacite_id' => '1',
+                'detail' => null
+            ],
+
+            [
+                'id' => '25',
+                'creature_id' => '43',
+                'capacite_id' => '7',
+                'detail' => null
+            ],
+            [
+                'id' => '26',
+                'creature_id' => '43',
+                'capacite_id' => '5',
+                'detail' => null
+            ],
+            [
+                'id' => '27',
+                'creature_id' => '43',
+                'capacite_id' => '3',
+                'detail' => 'Brume somnifère qui affecte les créatures à 3 m devant lui. Les héros touchés subissent un malus de -2 aux jets d’attaque et se déplacent plus lentement. Au troisième round, ils doivent réussir un jet de vigueur ardu (-1) ou s’évanouir. Ils se réveillent en 5 minutes s’ils réussissent un jet de vigueur, sinon après une heure.'
+            ],
+            [
+                'id' => '28',
+                'creature_id' => '44',
+                'capacite_id' => '2',
+                'detail' => 'Effectue deux jets d’attaque.'
+            ],
+            [
+                'id' => '29',
+                'creature_id' => '45',
+                'capacite_id' => '8',
+                'detail' => 'Peur du feu.'
+            ],
+            [
+                'id' => '30',
+                'creature_id' => '45',
+                'capacite_id' => '3',
+                'detail' => 'Enveloppé par le xolth, un héros doit tuer le monstre pour s\'en sortir, subissant 1d6 dégâts par round passé à l\'intérieur.'
+            ],
+            [
+                'id' => '31',
+                'creature_id' => '47',
+                'capacite_id' => '4',
+                'detail' => 'Après une morsure faire un jet de vigueur difficile (-2). En cas d’échec, il subit 2 points de dégâts supplémentaires, puis 2 points de dégâts chaque round. Chaque point de vitalité perdu entraîne un malus de -1 aux jets. Si le héros tombe à 0 point de vitalité, il perd conscience et doit réussir un nouveau jet de vigueur difficile (-2). S\'il réussit, il reste stable mais ne reprend conscience qu’avec un jet de vigueur ardu (-1) chaque matin, ou après un soin médical (jet d\'action difficile -2) ou un antidote.'
+            ],
+        ];
+        foreach ($capacites as $capacite) {
+            BolCreatureCapacite::create($capacite);
         }
     }
 }
