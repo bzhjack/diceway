@@ -13,6 +13,7 @@ import {HomeComponent} from './home/home.component';
 import {BolHomeComponent} from "./bol/home/home.component";
 import {BolHerosCreateComponent} from './bol/heros/create/create.component';
 import {BolHeroHomeComponent} from "./bol/heros/home/home.component";
+import {BolCreatureHomeComponent} from "./bol/creatures/home/home.component";
 
 export const routes: Routes = [
     // Accès public
@@ -33,6 +34,7 @@ export const routes: Routes = [
     { path: 'bol', component: BolHomeComponent, canActivate: [loggedInGuard] },
     { path: 'bol/heros', component: BolHeroHomeComponent, canActivate: [loggedInGuard] },
     { path: 'bol/heros/create/:id', component: BolHerosCreateComponent, canActivate: [loggedInGuard] },
+    { path: 'bol/creature', component: BolCreatureHomeComponent, canActivate: [loggedInGuard] },
 
     { path: '**', redirectTo: '/' },
 ];
