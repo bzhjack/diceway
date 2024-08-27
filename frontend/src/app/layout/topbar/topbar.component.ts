@@ -34,6 +34,8 @@ export class TopbarComponent {
       this.nameSpace.set(sections[1]);
       if (url.startsWith('/bol/heros/create')) {
         this.route.set('Création d\'un héros');
+      } else {
+        this.route.set('');
       }
     });
   }

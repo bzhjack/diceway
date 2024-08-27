@@ -1,7 +1,21 @@
-.bol-container {
+.home-bol-container {
+  display: flex;
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
 }
-.hero-avatar {
-  height: 40px;
-  width: 40px;
-  overflow: hidden;
+.home-bol-img {
+  border-bottom-left-radius: 6px;
+  border-top-left-radius: 6px;
+  width: 33%; /* Ajustez la largeur selon vos besoins */
+
+  background-size: cover; /* Pour que l'image couvre toute la div */
+  background-position: center; /* Pour centrer l'image */
+  background-repeat: no-repeat; /* Pour éviter que l'image se répète */
+  &.heros {
+    background-image: url('/frontend/assets/bol/heros.png');
+  }
+  &.bestiary {
+    background-image: url('/frontend/assets/bol/bestiary.jpg');
+  }
 }

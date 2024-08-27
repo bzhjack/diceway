@@ -51,7 +51,11 @@ body {
 .dw_banner {
   color: lighten(#83a1a6, 20%);
 }
-
+.dw_title {
+  position: absolute;
+  top: -8px;
+  height: 150px
+}
 .dw_route {
   color: #83a1a6;
 }
@@ -100,6 +104,15 @@ body {
   .p-card-header {
     height: 184px;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    img {
+      width: auto;
+    }
+  }
+  .p-card-body {
+    border-top: 1px solid darkgrey;
   }
 }
 .p-button.p-button-sm {
