@@ -1,5 +1,6 @@
 .creature_card {
   &__img {
+    padding-top: 8px;
     min-height: 70px;
     min-width: 70px;
     max-height: 70px;
@@ -15,8 +16,14 @@
     }
   }
   &__title {
+    display: flex;
+    align-items: center;
+    gap: 2px;
     font-size: 24px;
     font-weight: 200;
+    div {
+      font-size: 16px;
+    }
   }
 
 }
