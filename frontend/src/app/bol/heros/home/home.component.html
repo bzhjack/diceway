@@ -1,4 +1,9 @@
-<div class="bol-container flex flex-wrap p-2">
+
+<div class="bol-container flex flex-col p-4">
+  <div class="flex gap-2 items-center">
+    <i class="pi pi-arrow-left cursor-pointer" style="font-size: 1.5rem" [routerLink]="'/bol'"></i>
+    <div class="bol_title">Héros</div>
+  </div>
   <p-card header="Personnages Joueurs">
     <p class="flex flex-col gap-2">
       <!--a *ngFor="let hero of heroes" [routerLink]="['heros', 'create', hero.id]">{{ hero.joueur }}</a-->
