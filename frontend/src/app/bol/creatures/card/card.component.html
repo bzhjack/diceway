@@ -1,8 +1,10 @@
 @if (creature()) {
-  <p-card class="creature_card" [style]="{width: '470px', height: '230px'}">
+  <p-card class="creature_card" [style]="{width: '470px', height: '250px'}">
     <div class="flex flex-col w-full">
       <div class="creature_card__title">
-        {{ creature()?.nom }}
+        <div>
+          {{ creature()?.nom }}
+        </div>
         <div class="text-gray-400 font-light">({{creature()?.taille?.taille}})</div>
       </div>
       <div class="flex gap-2">
