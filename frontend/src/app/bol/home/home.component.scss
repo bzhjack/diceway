@@ -8,7 +8,7 @@
 .home-bol-img {
   border-bottom-left-radius: 6px;
   border-top-left-radius: 6px;
-  width: 33%; /* Ajustez la largeur selon vos besoins */
+  width: 40%; /* Ajustez la largeur selon vos besoins */
 
   background-size: cover; /* Pour que l'image couvre toute la div */
   background-position: center; /* Pour centrer l'image */
@@ -25,4 +25,14 @@
 }
 .home-bol-counter {
   font-size: 30px;
+}
+.home-bol-card-title {
+  font-size: 24px;
+  font-weight: 200;
+}
+.home-bol-logo-container {
+  width: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

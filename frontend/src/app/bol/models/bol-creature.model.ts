@@ -12,4 +12,27 @@ export interface BolCreatureModel {
   protection: string;
   avatar: string | null;
   id_taille: number;
+  capacites: [
+    {
+      capacite: BolCreatureCapaciteModel;
+      capacite_id: number;
+      creature_id: string
+      detail: string;
+      id: number;
+    }
+  ],
+  taille: BolCreatureTailleModel
+}
+
+export interface BolCreatureCapaciteModel {
+  id: number;
+  capacite: string;
+  de_bonus: boolean;
+  de_malus: boolean;
+  description: string
+}
+export interface BolCreatureTailleModel {
+  id: number;
+  taille: string;
+  type: 'R' | 'P' | 'C';
 }

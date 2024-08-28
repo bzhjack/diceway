@@ -1,0 +1,22 @@
+.creature_card {
+  &__img {
+    min-height: 70px;
+    min-width: 70px;
+    max-height: 70px;
+    max-width: 70px;
+    margin: 2px;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #424b57;
+    position: relative;
+    img {
+      width: 100%;
+    }
+  }
+  &__title {
+    font-size: 24px;
+    font-weight: 200;
+  }
+
+}

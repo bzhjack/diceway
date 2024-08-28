@@ -1,0 +1,40 @@
+@if (creature()) {
+  <p-card class="creature_card" [style]="{width: '470px', height: '230px'}">
+    <div class="flex flex-col w-full">
+      <div class="creature_card__title">{{ creature()?.nom }}</div>
+      <div class="flex gap-2">
+        <div>
+          <div class="creature_card__img">
+            <img src="/frontend/assets/bol/empty-avatar.jpg" alt=""/>
+          </div>
+          <p-tag>Public</p-tag>
+        </div>
+        <p-fieldset legend="Attributs">
+          <table>
+            <tr><td class="text-gray-300">Vigueur</td><td class="text-gray-400">{{ creature()?.vigueur }}</td></tr>
+            <tr><td class="text-gray-300">Agilité</td><td class="text-gray-400">{{ creature()?.agilite }}</td></tr>
+            <tr><td class="text-gray-300">Esprit</td><td class="text-gray-400">{{ creature()?.esprit }}</td></tr>
+            <tr><td class="text-gray-300">Vitalité</td><td class="text-gray-400 font-bold">{{ creature()?.vitalite }}</td></tr>
+          </table>
+        </p-fieldset>
+        <p-fieldset legend="Combat">
+          <table>
+            <tr><td class="text-gray-300">Attaque</td><td class="text-gray-400">{{ creature()?.attaque }}</td></tr>
+            <tr><td class="text-gray-300">Dégâts</td><td class="text-gray-400">{{ creature()?.degat }}</td></tr>
+            <tr><td class="text-gray-300">Défense</td><td class="text-gray-400">{{ creature()?.defense }}</td></tr>
+            <tr><td class="text-gray-300">Protection</td><td class="text-gray-400">{{ creature()?.protection }}</td></tr>
+          </table>
+        </p-fieldset>
+      </div>
+      <div>
+        <p-fieldset *ngIf="creature()?.capacites?.length" legend="Capacités spéciales" styleClass="w-full">
+          <div class="flex flex-wrap gap-2 pb-2">
+            <div class="text-gray-300" *ngFor="let capa of creature()?.capacites">
+              <i class="pi pi-info-circle cursor-pointer" [pTooltip]="capa.detail ?? '' + ' ' + capa.capacite?.description"></i> {{capa.capacite.capacite}}
+            </div>
+          </div>
+        </p-fieldset>
+      </div>
+    </div>
+  </p-card>
+}

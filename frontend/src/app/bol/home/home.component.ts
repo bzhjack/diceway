@@ -6,7 +6,6 @@ import {RouterLink} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {forkJoin, Subscription} from "rxjs";
 import {BolCreaturesService} from "../services/bol-creatures.service";
-import {ConfirmationService} from "primeng/api";
 import {BolHerosService} from "../services/bol-heros.service";
 import {BolHerosModel} from "../models/bol-heros.model";
 import {BolCreatureModel} from "../models/bol-creature.model";

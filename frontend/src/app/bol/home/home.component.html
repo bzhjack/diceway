@@ -1,10 +1,13 @@
 <div class="flex flex-wrap p-4 gap-4">
-  <img class="dw_title" src="/frontend/assets/bol/logo.png" alt=""/>
+  <div class="home-bol-logo-container">
+    <img class="dw_title" src="/frontend/assets/bol/logo.png" alt=""/>
+  </div>
+
   <p-card [style]="{ width: '360px', height: '250px' }" styleClass="relative" [routerLink]="['heros']">
     <div class="home-bol-container" style="">
       <div class="home-bol-img heros"></div>
       <div class="p-4">
-        <div class="p-card-title">Héros</div>
+        <div class="home-bol-card-title">Héros</div>
         <div>
           <div class="home-bol-counter">{{heroes.length}}</div>
         </div>
@@ -17,7 +20,7 @@
     <div class="home-bol-container" style="">
       <div class="home-bol-img bestiary"></div>
       <div class="p-4">
-        <div class="p-card-title">Bestiaire de la Lémurie</div>
+        <div class="home-bol-card-title">Bestiaire de la Lémurie</div>
         <div>
           <div class="home-bol-counter">{{creatures.length}}</div>
         </div>
@@ -29,7 +32,7 @@
     <div class="home-bol-container" style="">
       <div class="home-bol-img demon"></div>
       <div class="p-4">
-        <div class="p-card-title">Démons et morts-vivants</div>
+        <div class="home-bol-card-title">Démons et morts-vivants</div>
         <div>
           <div class="home-bol-counter">0</div>
         </div>

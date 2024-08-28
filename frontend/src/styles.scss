@@ -113,6 +113,13 @@ body {
     border-top: 1px solid darkgrey;
   }
 }
+
+.creature_card {
+  .p-card-body {
+    padding: 10px;
+  }
+}
+
 .p-button.p-button-sm {
   padding-bottom: 6.125px;
   padding-left: 12.25px;

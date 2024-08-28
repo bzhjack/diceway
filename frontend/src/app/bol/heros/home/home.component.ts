@@ -1,5 +1,5 @@
 import {Component, inject, OnDestroy} from '@angular/core';
-import {forkJoin, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {Router, RouterLink} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
@@ -12,10 +12,8 @@ import {TableModule} from "primeng/table";
 import {Ripple} from "primeng/ripple";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {ConfirmationService} from "primeng/api";
-import {BolCreaturesService} from "../../services/bol-creatures.service";
 import {BolHerosService} from "../../services/bol-heros.service";
 import {BolHerosModel} from "../../models/bol-heros.model";
-import {BolCreatureModel} from "../../models/bol-creature.model";
 
 
 @Component({
@@ -44,7 +42,6 @@ import {BolCreatureModel} from "../../models/bol-creature.model";
 })
 export class BolHeroHomeComponent implements OnDestroy {
 
-  private creatureService = inject(BolCreaturesService);
   private confirmationService = inject(ConfirmationService);
   private herosService = inject(BolHerosService);
   private router = inject(Router);
@@ -55,42 +52,23 @@ export class BolHeroHomeComponent implements OnDestroy {
   private subs?: Subscription;
   private subsHeroes?: Subscription;
   public heroes: Array<BolHerosModel> = [];
-  public creatures: Array<BolCreatureModel> = [];
   public showCreate = false;
   public joueurCtrl = new FormControl('', [Validators.required, Validators.minLength(3)]);
   public nomCtrl = new FormControl('', [Validators.required, Validators.minLength(3)]);
   herosForm = this.fb.group({joueur: this.joueurCtrl, nom: this.nomCtrl});
 
   constructor() {
-    this.getLore();
+    this.getHeroes();
   }
 
-  getLore() {
+  getHeroes() {
     this.spinner.show();
     this.subsHeroes?.unsubscribe();
 
     // Supposons que `hs.heroes()` et `hs.anotherRequest()` sont les deux requêtes HTTP que vous souhaitez lancer en parallèle
     const heroesRequest = this.herosService.heroes();
-    const creaturesRequest = this.creatureService.creatures();
 
-    this.subsHeroes = forkJoin([heroesRequest, creaturesRequest]).subscribe({
-      next: ([heroes, creatures]) => {
-        this.heroes = heroes;
-        this.creatures = creatures; // Stockez les données de la deuxième requête
-        this.spinner.hide();
-      },
-      error: (error) => {
-        this.spinner.hide();
-        // Gérer les erreurs ici
-      }
-    });
-  }
-
-
-  getHeroess() {
-    this.spinner.show();
-    this.subsHeroes?.unsubscribe();
-    this.subsHeroes = this.herosService.heroes().subscribe({
+    this.subsHeroes = heroesRequest.subscribe({
       next: (heroes) => {
         this.heroes = heroes;
         this.spinner.hide();
@@ -140,7 +118,7 @@ export class BolHeroHomeComponent implements OnDestroy {
         this.subs = this.herosService.deleteHeros(heros.id as string).subscribe({
           next: (hero: BolHerosModel) => {
             this.spinner.hide();
-            this.getLore();
+            this.getHeroes();
           },
           error: () => {
             this.spinner.hide();

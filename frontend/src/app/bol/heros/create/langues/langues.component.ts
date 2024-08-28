@@ -14,9 +14,12 @@ import {
   FormArray,
   FormBuilder,
   FormControl,
-  FormsModule, NG_VALIDATORS,
+  FormsModule,
+  NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
-  ReactiveFormsModule, ValidationErrors, Validator
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validator
 } from "@angular/forms";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {NgxSpinnerService} from "ngx-spinner";
