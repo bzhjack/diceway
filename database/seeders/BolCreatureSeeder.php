@@ -488,10 +488,10 @@ class BolCreatureSeeder extends Seeder
                 'vitalite' => '8',
                 'attaque' => '+2',
                 'defense' => '0',
-                'degat' => 'd6M(pinces), d3(dard)',
+                'degat' => 'd6M',
                 'protection' => 'd6-2 (2)',
                 'id_taille' => '4',  // Moyenne
-                'commentaire' => 'Attaque +2 avec les pinces et 0 avec le dard'
+                'commentaire' => 'Attaque:  +2 (pinces) 0 (dard). Dégâts : d6M(pinces) d3 + poison (dard)'
             ],
             [
                 'id' => '37',
@@ -502,10 +502,10 @@ class BolCreatureSeeder extends Seeder
                 'vitalite' => '60',
                 'attaque' => '+3',
                 'defense' => '0',
-                'degat' => 'd6x2(pinces),d6(dard)',
+                'degat' => 'd6x2',
                 'protection' => 'd6 (4)',
                 'id_taille' => '11',  // Colossale
-                'commentaire' => 'Attaque +3 avec les pinces et 1 avec le dard'
+                'commentaire' => 'Attaque:  +3 (pinces) +1 (dard). Dégâts : d6x2(pinces) d6 + poison (dard)'
             ],
             [
                 'id' => '38',
