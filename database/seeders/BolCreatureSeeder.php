@@ -276,7 +276,7 @@ class BolCreatureSeeder extends Seeder
                 'defense' => '0',
                 'degat' => '1',
                 'protection' => '0',
-                'id_taille' => '0',  // Minuscule
+                'id_taille' => '1',  // Minuscule
 
             ],
             [
@@ -304,7 +304,7 @@ class BolCreatureSeeder extends Seeder
                 'defense' => '5',
                 'degat' => '1',
                 'protection' => '0',
-                'id_taille' => '0',  // Minuscule
+                'id_taille' => '1',  // Minuscule
 
             ],
             [
