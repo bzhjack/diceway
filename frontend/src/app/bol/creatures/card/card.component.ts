@@ -27,4 +27,12 @@ export class BolCreatureCardComponent {
       console.log(this.creature());
     });
   }
+  getSeverity (creature: BolCreatureModel | undefined) {
+    switch (creature?.user_id) {
+      case null:
+        return 'success';
+      default:
+        return 'info';
+    }
+  };
 }
