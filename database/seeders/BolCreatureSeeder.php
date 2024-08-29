@@ -149,7 +149,7 @@ class BolCreatureSeeder extends Seeder
                 'id' => '11',
                 'nom' => 'Crocator',
                 'vigueur' => '4',
-                'agilite' => '1 (-1 au sol)',
+                'agilite' => '1',
                 'esprit' => '-2',
                 'vitalite' => '20',
                 'attaque' => '+2',
@@ -157,6 +157,7 @@ class BolCreatureSeeder extends Seeder
                 'degat' => 'd6B',
                 'protection' => 'd6-2 (2)',
                 'id_taille' => '5',  // Grande
+                'commentaire' => 'Environnement naturel : marais, rivières. Sur la terre ferme: agilité de -1'
             ],
             [
                 'id' => '12',
@@ -242,14 +243,15 @@ class BolCreatureSeeder extends Seeder
                 'id' => '18',
                 'nom' => 'Fangeux',
                 'vigueur' => '2',
-                'agilite' => '1 (-1 au sol)',
+                'agilite' => '1',
                 'esprit' => '-1',
                 'vitalite' => '20',
-                'attaque' => '(x2) +2 (0 au sol)',
-                'defense' => '1 (0 au sol)',
-                'degat' => '*',
+                'attaque' => '+2',
+                'defense' => '1',
+                'degat' => '0',
                 'protection' => '0',
                 'id_taille' => '5',  // Grande
+                'commentaire' => 'Environnement naturel : rivières, Sur la terre ferme : agilité -1 ,défence 0 et attaque 0'
             ],
             [
                 'id' => '19',
@@ -484,11 +486,12 @@ class BolCreatureSeeder extends Seeder
                 'agilite' => '0',
                 'esprit' => '-2',
                 'vitalite' => '8',
-                'attaque' => '+2 (pinces), +0 (dard)',
+                'attaque' => '+2',
                 'defense' => '0',
-                'degat' => 'd6M (pinces), d3 + poison (dard)',
+                'degat' => 'd6M(pinces), d3(dard)',
                 'protection' => 'd6-2 (2)',
                 'id_taille' => '4',  // Moyenne
+                'commentaire' => 'Attaque +2 avec les pinces et 0 avec le dard'
             ],
             [
                 'id' => '37',
@@ -497,11 +500,12 @@ class BolCreatureSeeder extends Seeder
                 'agilite' => '-1',
                 'esprit' => '-1',
                 'vitalite' => '60',
-                'attaque' => '+3(pinces),+1(dard)',
+                'attaque' => '+3',
                 'defense' => '0',
                 'degat' => 'd6x2(pinces),d6(dard)',
                 'protection' => 'd6 (4)',
                 'id_taille' => '11',  // Colossale
+                'commentaire' => 'Attaque +3 avec les pinces et 1 avec le dard'
             ],
             [
                 'id' => '38',
@@ -588,7 +592,7 @@ class BolCreatureSeeder extends Seeder
                 'agilite' => '-1',
                 'esprit' => '-2',
                 'vitalite' => '8',
-                'attaque' => '+1 (x2)',
+                'attaque' => '+1',
                 'defense' => '0',
                 'degat' => 'd6M',
                 'protection' => '0',

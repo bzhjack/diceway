@@ -31,7 +31,7 @@ class BolCapaciteSeeder extends Seeder
             [
                 'id' => 4,
                 'capacite' => 'Attaque venimeuse',
-                'description' => 'La description de la créature indique les effets de son venin'],
+                'description' => ''],
             [
                 'id' => 5,
                 'capacite' => 'Camouflage',

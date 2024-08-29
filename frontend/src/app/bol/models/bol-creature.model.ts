@@ -11,6 +11,7 @@ export interface BolCreatureModel {
   degat: string;
   protection: string;
   avatar: string | null;
+  commentaire: string | null;
   id_taille: number;
   capacites: [
     {
