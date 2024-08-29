@@ -23,15 +23,15 @@ class BolCapaciteSeeder extends Seeder
             [
                 'id' => 2,
                 'capacite' => 'Attaques multiples',
-                'description' => 'Deux types d’attaque différents qui nécessitent deux jets d’attaque séparés.'],
+                'description' => ''],
             [
                 'id' => 3,
                 'capacite' => 'Attaque spéciale',
-                'description' => 'La créature attaque selon une méthode inhabituelle.'],
+                'description' => ''],
             [
                 'id' => 4,
                 'capacite' => 'Attaque venimeuse',
-                'description' => 'La description de la créature indique les effets de son venin'],
+                'description' => ''],
             [
                 'id' => 5,
                 'capacite' => 'Camouflage',
