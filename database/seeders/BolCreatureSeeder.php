@@ -63,7 +63,7 @@ class BolCreatureSeeder extends Seeder
                 'vitalite' => '40',
                 'attaque' => '+0',
                 'defense' => '0',
-                'degat' => '2d6',
+                'degat' => 'd6x2',
                 'protection' => 'd6 (4)',
                 'id_taille' => '7',  // Enorme
             ],
@@ -76,7 +76,7 @@ class BolCreatureSeeder extends Seeder
                 'vitalite' => '100',
                 'attaque' => '+0',
                 'defense' => '0',
-                'degat' => '4d6B',
+                'degat' => 'd6Bx4',
                 'protection' => 'd6 (4)',
                 'id_taille' => '12',  // Monstrueuse
             ],
@@ -128,7 +128,7 @@ class BolCreatureSeeder extends Seeder
                 'vitalite' => '50',
                 'attaque' => '+3',
                 'defense' => '0',
-                'degat' => '2d6B',
+                'degat' => 'd6Bx2',
                 'protection' => 'd6-1 (3)',
                 'id_taille' => '8',  // Massive
             ],
@@ -167,7 +167,7 @@ class BolCreatureSeeder extends Seeder
                 'vitalite' => '40',
                 'attaque' => '+1',
                 'defense' => '0',
-                'degat' => '2d6',
+                'degat' => 'd6x2',
                 'protection' => 'd6-2 (2)',
                 'id_taille' => '7',  // Enorme
             ],
@@ -180,7 +180,7 @@ class BolCreatureSeeder extends Seeder
                 'vitalite' => '55',
                 'attaque' => '+3',
                 'defense' => '4',
-                'degat' => '2d6B',
+                'degat' => 'd6Bx2',
                 'protection' => 'd6 (4)',
                 'id_taille' => '8',  // Massive
             ],
@@ -207,7 +207,7 @@ class BolCreatureSeeder extends Seeder
                 'vitalite' => '45',
                 'attaque' => '+3',
                 'defense' => '3',
-                'degat' => '2d6B',
+                'degat' => 'd6Bx2',
                 'protection' => 'd6-3 (1)',
                 'id_taille' => '8',  // Massive
 
@@ -221,7 +221,7 @@ class BolCreatureSeeder extends Seeder
                 'vitalite' => '45',
                 'attaque' => '+1',
                 'defense' => '0',
-                'degat' => '2d6B',
+                'degat' => 'd6Bx2',
                 'protection' => 'd6-1 (3)',
                 'id_taille' => '8',  // Massive
             ],
@@ -234,7 +234,7 @@ class BolCreatureSeeder extends Seeder
                 'vitalite' => '50',
                 'attaque' => '+0',
                 'defense' => '0',
-                'degat' => '2d6B',
+                'degat' => 'd6Bx2',
                 'protection' => 'd6-2 (2)',
                 'id_taille' => '8',  // Massive
             ],
@@ -288,7 +288,7 @@ class BolCreatureSeeder extends Seeder
                 'vitalite' => '30',
                 'attaque' => '+4',
                 'defense' => '3',
-                'degat' => '2d6B',
+                'degat' => 'd6Bx2',
                 'protection' => 'd6-2 (2)',
                 'id_taille' => '7',  // Très grande
 
@@ -316,7 +316,7 @@ class BolCreatureSeeder extends Seeder
                 'vitalite' => '70',
                 'attaque' => '+1',
                 'defense' => '0',
-                'degat' => '3d6B',
+                'degat' => 'd6Bx3',
                 'protection' => 'd6-1 (3)',
                 'id_taille' => '12',  // Gigantesque
 
@@ -395,7 +395,7 @@ class BolCreatureSeeder extends Seeder
                 'vitalite' => '40',
                 'attaque' => '+2',
                 'defense' => '1',
-                'degat' => '2d6',
+                'degat' => 'd6x2',
                 'protection' => 'd6-2 (2)',
                 'id_taille' => '9',  // Énorme
             ],
@@ -447,7 +447,7 @@ class BolCreatureSeeder extends Seeder
                 'vitalite' => '60',
                 'attaque' => '+2',
                 'defense' => '0',
-                'degat' => '3d6',
+                'degat' => 'd6x3',
                 'protection' => 'd6-2 (2)',
                 'id_taille' => '10',  // Colossale
             ],
@@ -473,7 +473,7 @@ class BolCreatureSeeder extends Seeder
                 'vitalite' => '70',
                 'attaque' => '+0',
                 'defense' => '0',
-                'degat' => '3d6',
+                'degat' => 'd6x3',
                 'protection' => 'd6 (4)',
                 'id_taille' => '10',  // Gigantesque
             ],
@@ -497,9 +497,9 @@ class BolCreatureSeeder extends Seeder
                 'agilite' => '-1',
                 'esprit' => '-1',
                 'vitalite' => '60',
-                'attaque' => '+3(pinces), +1(dard)',
+                'attaque' => '+3(pinces),+1(dard)',
                 'defense' => '0',
-                'degat' => '2d6(pinces), d6(dard)',
+                'degat' => 'd6x2(pinces),d6(dard)',
                 'protection' => 'd6 (4)',
                 'id_taille' => '11',  // Colossale
             ],
@@ -629,7 +629,7 @@ class BolCreatureSeeder extends Seeder
                 'vitalite' => '40',
                 'attaque' => '+2',
                 'defense' => '0',
-                'degat' => '2d6',
+                'degat' => 'd6x2',
                 'protection' => 'd6-2 (2)',
                 'id_taille' => '6',  // Énorme
             ]

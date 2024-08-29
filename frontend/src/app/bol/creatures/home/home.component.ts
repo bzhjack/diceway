@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnDestroy} from '@angular/core';
 import {RouterLink} from "@angular/router";
 import {BolCreaturesService} from "../../services/bol-creatures.service";
 import {NgxSpinnerService} from "ngx-spinner";
@@ -8,7 +8,11 @@ import {CardModule} from "primeng/card";
 import {NgForOf} from "@angular/common";
 import {BolCreatureCardComponent} from "../card/card.component";
 import {HeaderComponent} from "../../../shared/header/header.component";
-import {ButtonDirective} from "primeng/button";
+import {Button, ButtonDirective} from "primeng/button";
+import {DialogModule} from "primeng/dialog";
+import {AvatarModule} from "primeng/avatar";
+import {BolCreatureCreateComponent} from "../create/create.component";
+import {DialogService} from "primeng/dynamicdialog";
 
 @Component({
   selector: 'bol-creature-home',
@@ -19,16 +23,22 @@ import {ButtonDirective} from "primeng/button";
     NgForOf,
     BolCreatureCardComponent,
     HeaderComponent,
-    ButtonDirective
+    ButtonDirective,
+    Button,
+    DialogModule,
+    AvatarModule,
+    BolCreatureCreateComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class BolCreatureHomeComponent {
+export class BolCreatureHomeComponent implements OnDestroy {
   private creatureService = inject(BolCreaturesService);
   private spinner = inject(NgxSpinnerService);
   private subsBestiary?: Subscription;
   public bestiary: Array<BolCreatureModel> = [];
+  readonly #ds = inject(DialogService);
+  private subs: Subscription | undefined;
 
   constructor() {
     this.getBestiary();
@@ -50,5 +60,18 @@ export class BolCreatureHomeComponent {
         this.spinner.hide();
       }
     });
+  }
+  createCreature() {
+    const ref = this.#ds.open(BolCreatureCreateComponent, {
+      header: 'Création d\'une créature'
+    });
+    this.subs?.unsubscribe();
+    this.subs = ref.onClose.subscribe((avatar: any) => {
+    });
+  }
+
+
+  ngOnDestroy() {
+    this.subs?.unsubscribe();
   }
 }

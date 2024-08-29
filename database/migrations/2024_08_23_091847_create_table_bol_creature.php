@@ -18,15 +18,16 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable()->index(); // null => public profile
             $table->string('nom');
-            $table->string('vigueur')->default('0');
-            $table->string('agilite')->default('0');
-            $table->string('esprit')->default('0');
-            $table->string('vitalite')->default('0');
-            $table->string('attaque')->default('0');
-            $table->string('defense')->default('0');
+            $table->tinyInteger('vigueur')->default('0');
+            $table->tinyInteger('agilite')->default('0');
+            $table->tinyInteger('esprit')->default('0');
+            $table->tinyInteger('vitalite')->default('0');
+            $table->tinyInteger('attaque')->default('0');
+            $table->tinyInteger('defense')->default('0');
             $table->string('degat')->nullable();
             $table->string('protection')->nullable();
             $table->longText('avatar')->nullable();
+            $table->longText('commentaire')->nullable();
             $table->integer('id_taille')->default(1);
             $table->timestamps();
         });
