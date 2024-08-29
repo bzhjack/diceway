@@ -7,6 +7,8 @@ import {BolCreatureModel} from "../../models/bol-creature.model";
 import {CardModule} from "primeng/card";
 import {NgForOf} from "@angular/common";
 import {BolCreatureCardComponent} from "../card/card.component";
+import {HeaderComponent} from "../../../shared/header/header.component";
+import {ButtonDirective} from "primeng/button";
 
 @Component({
   selector: 'bol-creature-home',
@@ -15,7 +17,9 @@ import {BolCreatureCardComponent} from "../card/card.component";
     RouterLink,
     CardModule,
     NgForOf,
-    BolCreatureCardComponent
+    BolCreatureCardComponent,
+    HeaderComponent,
+    ButtonDirective
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'

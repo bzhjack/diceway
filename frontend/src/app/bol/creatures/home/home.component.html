@@ -1,9 +1,9 @@
-<div class="p-4">
-  <div class="flex gap-2 items-center">
-    <i class="pi pi-arrow-left cursor-pointer" style="font-size: 1.5rem" [routerLink]="'/bol'"></i>
-    <div class="bol_title">Bestiaire de lémurie</div>
-  </div>
-  <div class="mt-4 flex flex-wrap gap-2 flex-end" style="height: calc(100vh - 150px); overflow:  auto">
+<div>
+  <app-header legend="Bestiaire de Lémurie">
+    <button pButton label="Création" icon="pi pi-pencil" severity="warning" size="small" routerLink="/bol"></button>
+    <button pButton label="Retour" icon="pi pi-arrow-left" severity="secondary" size="small" routerLink="/bol"></button>
+  </app-header>
+  <div class="p-4 flex flex-wrap gap-2 flex-end" style="height: calc(100vh - 120px); overflow:  auto">
    <bol-creature-card *ngFor="let creature of bestiary"  [creature]="creature"></bol-creature-card>
   </div>
 </div>
