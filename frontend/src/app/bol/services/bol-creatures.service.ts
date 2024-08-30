@@ -10,8 +10,10 @@ export class BolCreaturesService {
 
   constructor(private http: HttpClient) {
   }
-  // Régions
   creatures(): Observable<BolCreatureModel[]> {
     return this.http.get<BolCreatureModel[]>('/api/bol/creature');
+  }
+  tailles(): Observable<BolCreatureModel[]> {
+    return this.http.get<BolCreatureModel[]>('/api/bol/creature/tailles');
   }
 }
