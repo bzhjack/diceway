@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, effect, inject, OnDestroy, signal} from '@angular/core';
 import {AvatarModule} from "primeng/avatar";
 import {Button, ButtonDirective} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
@@ -10,11 +10,14 @@ import {BolCreaturesService} from "../../services/bol-creatures.service";
 import {BolCreatureStateService} from "../../services/bol-creature-state.service";
 import {globalFormValidator} from "../../heros/create/create.validators";
 import {BolHerosCarriereModel} from "../../models/bol-carriere.model";
-import {BolCreatureCapaciteModel} from "../../models/bol-creature.model";
+import {BolCreatureCapaciteModel, BolCreatureModel} from "../../models/bol-creature.model";
 import {FieldsetModule} from "primeng/fieldset";
 import {InputNumberModule} from "primeng/inputnumber";
 import {DropdownModule} from "primeng/dropdown";
-import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
+import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
+import {InputTextareaModule} from "primeng/inputtextarea";
+import {PictureComponent} from "../../../shared/picture/picture.component";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'bol-creature-create',
@@ -30,19 +33,24 @@ import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
     FieldsetModule,
     InputNumberModule,
     DropdownModule,
-    ButtonDirective
+    ButtonDirective,
+    InputTextareaModule
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
 })
-export class BolCreatureCreateComponent {
+export class BolCreatureCreateComponent implements OnDestroy {
+  private subs?: Subscription;
   private cs = inject(BolCreatureStateService);
   private spinner = inject(NgxSpinnerService);
   private fb = inject(FormBuilder);
+  readonly ds = inject(DialogService);
   tailles = this.cs.tailleList;
+  currentCreature = signal<BolCreatureModel | null>(null)
 
   public idCtrl: FormControl<string | null> = new FormControl(null);
   public nomCtrl = new FormControl('', Validators.required);
+  public avatarCtrl: FormControl<string | null> = new FormControl(null);
   public vigueurCtrl = new FormControl(0, Validators.required);
   public agiliteCtrl = new FormControl(0, Validators.required);
   public espritCtrl = new FormControl(0, Validators.required);
@@ -70,16 +78,23 @@ export class BolCreatureCreateComponent {
       defense: this.defenseCtrl,
       protection: this.protectionCtrl,
       degat: this.degatsCtrl,
-      idTaille: this.idTailleCtrl,
+      id_taille: this.idTailleCtrl,
       commentaire: this.commentaireCtrl,
-      capacites: this.capacitesCtrl
+      avatar :this.avatarCtrl,
+      capacites: this.capacitesCtrl,
     }
   );
 
   constructor(private ref: DynamicDialogRef, private config: DynamicDialogConfig) {
-
+    if (config.data.creature) {
+      const creature = config.data.creature;
+      console.log(creature);
+      this.currentCreature.set(creature);
+      this.creatureForm.patchValue(creature);
+    }
+    effect(() => {
+    });
   }
-
   submit(event?: Event) {
     event?.preventDefault();
     if (this.creatureForm.invalid) {
@@ -92,4 +107,18 @@ export class BolCreatureCreateComponent {
     event.preventDefault();
     this.ref.close(null);
   }
+
+  picture() {
+    const ref = this.ds.open(PictureComponent, {header: 'Photo de la créature'});
+    this.subs?.unsubscribe();
+    this.subs = ref.onClose.subscribe((avatar: any) => {
+      if (avatar !== null && avatar !== undefined) {
+        this.avatarCtrl.setValue(avatar);
+      }
+    });
+  }
+  ngOnDestroy() {
+    this.subs?.unsubscribe()
+  }
+
 }

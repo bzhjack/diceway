@@ -14,6 +14,8 @@ import {AvatarModule} from "primeng/avatar";
 import {BolCreatureCreateComponent} from "../create/create.component";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {BolHerosModel} from "../../models/bol-heros.model";
+import {ConfirmationService} from "primeng/api";
+import {ConfirmPopupModule} from "primeng/confirmpopup";
 
 @Component({
   selector: 'bol-creature-home',
@@ -28,7 +30,11 @@ import {BolHerosModel} from "../../models/bol-heros.model";
     Button,
     DialogModule,
     AvatarModule,
-    BolCreatureCreateComponent
+    BolCreatureCreateComponent,
+    ConfirmPopupModule
+  ],
+  providers: [
+    ConfirmationService
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -64,19 +70,23 @@ export class BolCreatureHomeComponent implements OnDestroy {
     });
   }
 
-  createCreature() {
+  createCreature(creature?: BolCreatureModel) {
     this.ref = this.#ds.open(BolCreatureCreateComponent, {
-      header: 'Création d\'une créature'
+      header: creature ? 'Modification d\'une créature' : 'Création d\'une créature',
+      data: {
+        creature: creature
+      }
     });
     this.subs?.unsubscribe();
     this.subs = this.ref.onClose.subscribe((creature: BolCreatureModel) => {
-      console.log('ici', creature);
       if (creature) {
         this.spinner.show();
         this.subs?.unsubscribe();
-        this.subs = this.creatureService.createCreature(creature).subscribe({
-          next: (hero: BolHerosModel) => {
+        const actionService = creature.id ? this.creatureService.updateCreature(creature) : this.creatureService.createCreature(creature);
+        this.subs = actionService.subscribe({
+          next: () => {
             this.spinner.hide();
+            this.getBestiary();
           },
           error: () => {
             this.spinner.hide();
@@ -84,6 +94,21 @@ export class BolCreatureHomeComponent implements OnDestroy {
         });
       }
     });
+  }
+
+  deleteCreature(creature: BolCreatureModel, event: any) {
+    this.spinner.show();
+    this.subs?.unsubscribe();
+    this.subs = this.creatureService.deleteCreature(creature.id as string).subscribe({
+      next: () => {
+        this.spinner.hide();
+        this.getBestiary();
+      },
+      error: () => {
+        this.spinner.hide();
+      }
+    });
+
   }
 
   ngOnDestroy() {

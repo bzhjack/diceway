@@ -1,20 +1,40 @@
 <div class="region-container flex gap-2 flex-col">
   <form [formGroup]="creatureForm" autocomplete="off" class="flex flex-col gap-2">
-    <!--- Nom du joueur --->
-    <div class="flex flex-col gap-1 w-fit justify-end">
-      <label for="nom">Nom de la créature</label>
-      <input formControlName="nom" pInputText id="joueur" class="p-inputtext-sm"/>
+    <div class="flex gap-2">
+
+      <div class="hero-avatar cursor-pointer" (click)="picture()">
+        <img style="width:100%"
+             [src]="avatarCtrl.value !== null ? avatarCtrl.value : '/frontend/assets/bol/empty-avatar.jpg'"
+             alt="avatar">
+        <p class="hero-avatar__description">Modifier</p>
+      </div>
+
+
+      <div class="flex flex-col gap-2">
+        <!--- Nom du joueur --->
+        <div class="flex flex-col gap-1 w-fit justify-end">
+          <label for="nom">Nom de la créature</label>
+          <input formControlName="nom" pInputText id="joueur" class="p-inputtext-sm"/>
+        </div>
+        <div class="flex flex-col gap-1 w-fit justify-end">
+          <label for="taille">Taille</label>
+          <p-dropdown [style]="{ width: '250px' }"
+                      class="p-inputtext-sm"
+                      optionLabel="taille"
+                      optionValue="id"
+                      [options]="tailles()"
+                      formControlName="id_taille"
+                      placeholder="Selectionner une taille"></p-dropdown>
+        </div>
+      </div>
+      <div>
+        <div class="flex flex-col gap-1 w-fit justify-end">
+          <label for="commentaire">Commentaire</label>
+          <textarea rows="5" cols="30"  pInputTextarea  formControlName="commentaire"></textarea>
+        </div>
+      </div>
     </div>
 
-    <div class="flex flex-col gap-1 w-fit justify-end">
-      <label for="nom">Taille</label>
-      <p-dropdown [style]="{ width: '250px' }"
-                  class="p-inputtext-sm"
-                  optionLabel="taille"
-                  [options]="tailles()"
-                  formControlName="idTaille"
-                  placeholder="Selectionner une taille"></p-dropdown>
-    </div>
 
     <div class="flex gap-4">
       <p-fieldset legend="Attributs">
@@ -66,6 +86,9 @@
         </div>
       </p-fieldset>
     </div>
+    <p-fieldset legend="Capacités spéciales">
+
+    </p-fieldset>
   </form>
   <div class="flex justify-end gap-2 pt-2">
     <button pButton icon="pi pi-times" size="small" label="Quitter" severity="secondary" (click)="quit($event)"></button>
