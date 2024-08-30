@@ -27,7 +27,7 @@ class BolHeros extends Model
         'joueur',
         'nom', 'avatar', 'region_id',
         'vigueur', 'agilite', 'esprit', 'aura',
-        'initiative', 'melee', 'tir', 'defense'
+        'initiative', 'melee', 'tir', 'defense','commentaire'
     ];
 
     public function traits(): HasMany

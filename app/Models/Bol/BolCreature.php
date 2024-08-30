@@ -16,7 +16,9 @@ class BolCreature extends Model
     public $incrementing = false;
     protected $keyType = 'uuid';
     protected $hidden = ['created_at', 'updated_at'];
-
+    protected $fillable = [
+        'id', 'user_id', 'nom', 'vigueur', 'agilité', 'esprit', 'vitalite', 'attaque', 'defense', 'degat','protection', 'avatar', 'commentaire'
+    ];
     public function capacites(): HasMany
     {
         return $this->HasMany(BolCreatureCapacite::class, 'creature_id', 'id');

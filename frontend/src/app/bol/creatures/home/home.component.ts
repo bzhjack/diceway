@@ -12,7 +12,8 @@ import {Button, ButtonDirective} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
 import {AvatarModule} from "primeng/avatar";
 import {BolCreatureCreateComponent} from "../create/create.component";
-import {DialogService} from "primeng/dynamicdialog";
+import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
+import {BolHerosModel} from "../../models/bol-heros.model";
 
 @Component({
   selector: 'bol-creature-home',
@@ -39,6 +40,7 @@ export class BolCreatureHomeComponent implements OnDestroy {
   public bestiary: Array<BolCreatureModel> = [];
   readonly #ds = inject(DialogService);
   private subs: Subscription | undefined;
+  private ref?: DynamicDialogRef;
 
   constructor() {
     this.getBestiary();
@@ -61,17 +63,33 @@ export class BolCreatureHomeComponent implements OnDestroy {
       }
     });
   }
+
   createCreature() {
-    const ref = this.#ds.open(BolCreatureCreateComponent, {
+    this.ref = this.#ds.open(BolCreatureCreateComponent, {
       header: 'Création d\'une créature'
     });
     this.subs?.unsubscribe();
-    this.subs = ref.onClose.subscribe((avatar: any) => {
+    this.subs = this.ref.onClose.subscribe((creature: BolCreatureModel) => {
+      console.log('ici', creature);
+      if (creature) {
+        this.spinner.show();
+        this.subs?.unsubscribe();
+        this.subs = this.creatureService.createCreature(creature).subscribe({
+          next: (hero: BolHerosModel) => {
+            this.spinner.hide();
+          },
+          error: () => {
+            this.spinner.hide();
+          }
+        });
+      }
     });
   }
 
-
   ngOnDestroy() {
     this.subs?.unsubscribe();
+    if (this.ref) {
+      this.ref.close();
+    }
   }
 }

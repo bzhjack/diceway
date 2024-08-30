@@ -1,6 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {AvatarModule} from "primeng/avatar";
-import {Button} from "primeng/button";
+import {Button, ButtonDirective} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
 import {PrimeTemplate} from "primeng/api";
 import {InputTextModule} from "primeng/inputtext";
@@ -14,6 +14,7 @@ import {BolCreatureCapaciteModel} from "../../models/bol-creature.model";
 import {FieldsetModule} from "primeng/fieldset";
 import {InputNumberModule} from "primeng/inputnumber";
 import {DropdownModule} from "primeng/dropdown";
+import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 
 @Component({
   selector: 'bol-creature-create',
@@ -28,7 +29,8 @@ import {DropdownModule} from "primeng/dropdown";
     ReactiveFormsModule,
     FieldsetModule,
     InputNumberModule,
-    DropdownModule
+    DropdownModule,
+    ButtonDirective
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
@@ -73,9 +75,21 @@ export class BolCreatureCreateComponent {
       capacites: this.capacitesCtrl
     }
   );
-  submit() {
+
+  constructor(private ref: DynamicDialogRef, private config: DynamicDialogConfig) {
+
+  }
+
+  submit(event?: Event) {
+    event?.preventDefault();
     if (this.creatureForm.invalid) {
       return;
     }
+    this.ref.close(this.creatureForm.value);
+  }
+
+  quit(event: Event) {
+    event.preventDefault();
+    this.ref.close(null);
   }
 }

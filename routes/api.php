@@ -87,6 +87,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
 
     // Gestion des créatures
     Route::get('/bol/creature', [BolCreatureController::class, 'getAll']);
+    Route::post('/bol/creature/create', [BolCreatureController::class, 'create']);
     Route::get('/bol/creature/tailles', [BolCreatureController::class, 'getAllTailles']);
 
     // Gestion du Héros

@@ -1,5 +1,5 @@
-<div class="region-container flex gap-2">
-  <form (ngSubmit)="submit()" [formGroup]="creatureForm" autocomplete="off" class="flex flex-col gap-2">
+<div class="region-container flex gap-2 flex-col">
+  <form [formGroup]="creatureForm" autocomplete="off" class="flex flex-col gap-2">
     <!--- Nom du joueur --->
     <div class="flex flex-col gap-1 w-fit justify-end">
       <label for="nom">Nom de la créature</label>
@@ -66,6 +66,9 @@
         </div>
       </p-fieldset>
     </div>
-
   </form>
+  <div class="flex justify-end gap-2 pt-2">
+    <button pButton icon="pi pi-times" size="small" label="Quitter" severity="secondary" (click)="quit($event)"></button>
+    <button  pButton icon="pi pi-check" size="small" label="Valider" severity="success" [disabled]="creatureForm.invalid" (click)="submit($event)"></button>
+  </div>
 </div>
