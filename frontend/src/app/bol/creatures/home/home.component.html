@@ -4,12 +4,14 @@
     <button pButton label="Retour" icon="pi pi-arrow-left" severity="secondary" size="small" routerLink="/bol"></button>
   </app-header>
   <div class="p-4 flex flex-wrap gap-2 flex-end" style="height: calc(100vh - 120px); overflow:  auto">
+    @defer () {
    <bol-creature-card *ngFor="let creature of bestiary"
                       [creature]="creature"
                       (deleteCreature)="deleteCreature(creature, $event)"
                       (editCreature)="createCreature($event)">
 
    </bol-creature-card>
+  }
   </div>
 </div>
 
