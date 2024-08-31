@@ -20,8 +20,8 @@
       <div class="flex gap-2">
         <div style="padding-top: 8px;">
           <div class="creature_card__img">
-            <img *ngIf="profile() === 'public'" src="/frontend/assets/bol/bestiary/{{creature().id}}.png" alt=""/>"
-            <img style="width:100%"
+            <img *ngIf="profile() === 'public'" src="/frontend/assets/bol/bestiary/{{creature().id}}.png" alt=""/>
+            <img *ngIf="profile() === 'private'" style="width:100%"
                  [src]="creature().avatar !== null ? creature().avatar : '/frontend/assets/bol/empty-avatar.jpg'"
                  alt="avatar">
           </div>
