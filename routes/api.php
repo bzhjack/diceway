@@ -91,6 +91,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::post('/bol/creature/update', [BolCreatureController::class, 'update']);
     Route::delete('/bol/creature/delete/{id}', [BolCreatureController::class, 'delete']);
     Route::get('/bol/creature/tailles', [BolCreatureController::class, 'getAllTailles']);
+    Route::get('/bol/creature/capacites', [BolCreatureController::class, 'getAllCapacites']);
 
     // Gestion du Héros
     Route::get('/bol/heros', [BolHerosController::class, 'getAll']);

@@ -10,4 +10,5 @@ import {BolCreaturesService} from "./bol-creatures.service";
 export class BolCreatureStateService {
   #bcs = inject(BolCreaturesService)
   tailleList = toSignal(this.#bcs.tailles());
+  capaciteList = toSignal(this.#bcs.capacites());
 }

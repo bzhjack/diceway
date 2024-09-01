@@ -1,4 +1,4 @@
-import {Component, effect, inject, OnDestroy, signal} from '@angular/core';
+import {Component, computed, effect, inject, OnDestroy, signal} from '@angular/core';
 import {AvatarModule} from "primeng/avatar";
 import {Button, ButtonDirective} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
@@ -10,7 +10,7 @@ import {BolCreaturesService} from "../../services/bol-creatures.service";
 import {BolCreatureStateService} from "../../services/bol-creature-state.service";
 import {globalFormValidator} from "../../heros/create/create.validators";
 import {BolHerosCarriereModel} from "../../models/bol-carriere.model";
-import {BolCreatureCapaciteModel, BolCreatureModel} from "../../models/bol-creature.model";
+import {BolCreatureCapaciteModel, BolCreatureModel, BolCreatureTailleModel} from "../../models/bol-creature.model";
 import {FieldsetModule} from "primeng/fieldset";
 import {InputNumberModule} from "primeng/inputnumber";
 import {DropdownModule} from "primeng/dropdown";
@@ -18,6 +18,9 @@ import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dyna
 import {InputTextareaModule} from "primeng/inputtextarea";
 import {PictureComponent} from "../../../shared/picture/picture.component";
 import {Subscription} from "rxjs";
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NgIf } from '@angular/common';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 
 @Component({
   selector: 'bol-creature-create',
@@ -33,8 +36,10 @@ import {Subscription} from "rxjs";
     FieldsetModule,
     InputNumberModule,
     DropdownModule,
+    OverlayPanelModule,
     ButtonDirective,
-    InputTextareaModule
+    InputTextareaModule,
+    NgIf
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
@@ -45,7 +50,11 @@ export class BolCreatureCreateComponent implements OnDestroy {
   private spinner = inject(NgxSpinnerService);
   private fb = inject(FormBuilder);
   readonly ds = inject(DialogService);
+  public selectedCapacite= signal< BolCreatureCapaciteModel | null>(null);
+
   tailles = this.cs.tailleList;
+  capacites = this.cs.capaciteList;
+
   currentCreature = signal<BolCreatureModel | null>(null)
 
   public idCtrl: FormControl<string | null> = new FormControl(null);
@@ -62,7 +71,7 @@ export class BolCreatureCreateComponent implements OnDestroy {
   public protectionCtrl = new FormControl('0', Validators.required);
   public degatsCtrl = new FormControl('0', Validators.required);
   public idTailleCtrl = new FormControl(null, Validators.required);
-  public capacitesCtrl = new FormControl<BolCreatureCapaciteModel[]>([]);
+  public capacitesCtrl = new FormControl<Number[]>([]);
 
   public commentaireCtrl = new FormControl(null);
 
@@ -85,14 +94,28 @@ export class BolCreatureCreateComponent implements OnDestroy {
     }
   );
 
+  protected selectedCapaciteIds = toSignal(this.creatureForm.get('capacites')!.valueChanges);
+  protected filteredCapaciteList = computed(() => {
+    return this.capacites()?.filter((capacite: BolCreatureCapaciteModel) => !this.selectedCapaciteIds()?.includes(capacite.id));
+  });
+
+  tailleChange = toSignal(this.idTailleCtrl.valueChanges);
   constructor(private ref: DynamicDialogRef, private config: DynamicDialogConfig) {
     if (config.data.creature) {
       const creature = config.data.creature;
       console.log(creature);
       this.currentCreature.set(creature);
-      this.creatureForm.patchValue(creature);
+      this.creatureForm.patchValue(creature, {emitEvent: false});
     }
+    
     effect(() => {
+      if(this.tailleChange()) {
+        const taille = this.tailles()?.find((taille: BolCreatureTailleModel) => Number(taille.id) === Number(this.tailleChange()));
+        this.degatsCtrl.setValue(taille?.degat ?? null);
+        this.vigueurCtrl.setValue(taille?.vigueur ?? 0);
+        this.vitaliteCtrl.setValue(taille?.vitalite ?? 0);
+        console.log(taille);
+      }
     });
   }
   submit(event?: Event) {
@@ -119,6 +142,11 @@ export class BolCreatureCreateComponent implements OnDestroy {
   }
   ngOnDestroy() {
     this.subs?.unsubscribe()
+  }
+
+  addCapacite(panel: OverlayPanel, event: any) {
+    panel.toggle(event);
+  
   }
 
 }

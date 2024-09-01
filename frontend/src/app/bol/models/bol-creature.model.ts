@@ -36,4 +36,8 @@ export interface BolCreatureTailleModel {
   id: number;
   taille: string;
   type: 'R' | 'P' | 'C';
+  vigueur: number;
+  vitalite: number;
+  degat: string;
+  deplacement: string;
 }

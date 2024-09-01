@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {BolCreatureModel} from "../models/bol-creature.model";
+import {BolCreatureCapaciteModel, BolCreatureModel, BolCreatureTailleModel} from "../models/bol-creature.model";
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +13,13 @@ export class BolCreaturesService {
   creatures(): Observable<BolCreatureModel[]> {
     return this.http.get<BolCreatureModel[]>('/api/bol/creature');
   }
-  tailles(): Observable<BolCreatureModel[]> {
-    return this.http.get<BolCreatureModel[]>('/api/bol/creature/tailles');
+  tailles(): Observable<BolCreatureTailleModel[]> {
+    return this.http.get<BolCreatureTailleModel[]>('/api/bol/creature/tailles');
   }
+  capacites(): Observable<BolCreatureCapaciteModel[]> {
+    return this.http.get<BolCreatureCapaciteModel[]>('/api/bol/creature/capacites');
+  }
+
   createCreature(creature: BolCreatureModel): Observable<any> {
     return this.http.post<BolCreatureModel>('/api/bol/creature/create', <BolCreatureModel>creature);
   }

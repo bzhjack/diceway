@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bol\BolCapacite;
 use App\Models\Bol\BolCreature;
 use App\Models\Bol\BolTaille;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +22,12 @@ class BolCreatureController extends Controller
     {
         $tailles = BolTaille::orderBy('id', 'asc')->get();
         return response($tailles);
+    }
+    
+    public function getAllCapacites()
+    {
+        $capacites = BolCapacite::orderBy('id', 'asc')->get();
+        return response($capacites);
     }
 
     public function create(Request $request)
