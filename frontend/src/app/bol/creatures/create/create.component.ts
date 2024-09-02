@@ -14,7 +14,7 @@ import {DropdownModule} from "primeng/dropdown";
 import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {InputTextareaModule} from "primeng/inputtextarea";
 import {PictureComponent} from "../../../shared/picture/picture.component";
-import {Subscription} from "rxjs";
+import {map, Subscription} from "rxjs";
 import {toSignal} from '@angular/core/rxjs-interop';
 import {JsonPipe, NgForOf, NgIf} from '@angular/common';
 import {OverlayPanel, OverlayPanelModule} from 'primeng/overlaypanel';
@@ -94,7 +94,7 @@ export class BolCreatureCreateComponent implements OnDestroy {
     }
   );
 
-  protected selectedCapaciteIds = toSignal(this.creatureForm.get('capacites')!.valueChanges);
+  protected selectedCapaciteIds = toSignal(this.creatureForm.get('capacites')!.valueChanges.pipe(map((item: any) => item.id)));
   protected filteredCapaciteList = computed(() => {
     return this.capacitesList()?.filter((capacite: BolCreatureCapaciteModel) => !this.selectedCapaciteIds()?.includes(capacite.id));
   });
@@ -113,6 +113,7 @@ export class BolCreatureCreateComponent implements OnDestroy {
     }
 
     effect(() => {
+      console.log(this.selectedCapaciteIds());
       if(this.tailleChange()) {
         const taille = this.tailles()?.find((taille: BolCreatureTailleModel) => Number(taille.id) === Number(this.tailleChange()));
         this.degatsCtrl.setValue(taille?.degat ?? null);
