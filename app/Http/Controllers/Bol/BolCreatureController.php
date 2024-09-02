@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Bol;
 use App\Http\Controllers\Controller;
 use App\Models\Bol\BolCapacite;
 use App\Models\Bol\BolCreature;
+use App\Models\Bol\BolCreatureCapacite;
 use App\Models\Bol\BolTaille;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class BolCreatureController extends Controller
         $tailles = BolTaille::orderBy('id', 'asc')->get();
         return response($tailles);
     }
-    
+
     public function getAllCapacites()
     {
         $capacites = BolCapacite::orderBy('id', 'asc')->get();
@@ -35,6 +36,13 @@ class BolCreatureController extends Controller
         $creature = $request->input();
         $creature['user_id'] = Auth::id();
         $creature = BolCreature::create($creature);
+        $capacites = $request->input('capacites');
+        foreach ($capacites as $capacite) {
+            $newcapa['creature_id'] = $creature['id'];
+            $newcapa['capacite_id'] = $capacite['id'];
+            $newcapa['detail'] = $capacite['detail'];
+            self::createCapacite($newcapa);
+        }
         return response($creature);
     }
 
@@ -42,7 +50,6 @@ class BolCreatureController extends Controller
     {
         $creatureId = $request->input('id');
         $updatedCreature = $request->except(['capacites']);
-
         $creature = BolCreature::where('user_id', Auth::id())->where('id', $creatureId)->get()->first();
         if ($creature === null) {
             return response()->json(['error' => 'Creature not found'], 404);
@@ -64,4 +71,16 @@ class BolCreatureController extends Controller
         // Return a successful response
         return response()->json(['message' => 'Creature deleted successfully'], Response::HTTP_OK);
     }
+
+
+    public static function createCapacite($capaciteToCreate)
+    {
+        $capacite = BolCreatureCapacite::where('creature_id', $capaciteToCreate['creature_id'])->where('capacite_id', $capaciteToCreate['capacite_id'])->first();
+        if ($capacite) {
+            return response()->json(['message' => 'capacite déjà existante'], 404);
+        }
+        BolCreatureCapacite::create($capaciteToCreate);
+        return response()->json(['success' => $capaciteToCreate]);
+    }
+
 }

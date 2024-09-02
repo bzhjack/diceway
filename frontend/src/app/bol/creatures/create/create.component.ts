@@ -6,11 +6,8 @@ import {PrimeTemplate} from "primeng/api";
 import {InputTextModule} from "primeng/inputtext";
 import {FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgxSpinnerService} from "ngx-spinner";
-import {BolCreaturesService} from "../../services/bol-creatures.service";
 import {BolCreatureStateService} from "../../services/bol-creature-state.service";
-import {globalFormValidator} from "../../heros/create/create.validators";
-import {BolHerosCarriereModel} from "../../models/bol-carriere.model";
-import {BolCreatureCapaciteModel, BolCreatureModel, BolCreatureTailleModel} from "../../models/bol-creature.model";
+import {BolCreatureCapaciteModel, BolCreatureTailleModel} from "../../models/bol-creature.model";
 import {FieldsetModule} from "primeng/fieldset";
 import {InputNumberModule} from "primeng/inputnumber";
 import {DropdownModule} from "primeng/dropdown";
@@ -18,11 +15,11 @@ import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dyna
 import {InputTextareaModule} from "primeng/inputtextarea";
 import {PictureComponent} from "../../../shared/picture/picture.component";
 import {Subscription} from "rxjs";
-import { toSignal } from '@angular/core/rxjs-interop';
+import {toSignal} from '@angular/core/rxjs-interop';
 import {JsonPipe, NgForOf, NgIf} from '@angular/common';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import {OverlayPanel, OverlayPanelModule} from 'primeng/overlaypanel';
 import {Ripple} from "primeng/ripple";
-import {BolArmeModel} from "../../models/bol-arme.model";
+import {carriereValidator} from "../../heros/create/create.validators";
 
 @Component({
   selector: 'bol-creature-create',
@@ -152,6 +149,10 @@ export class BolCreatureCreateComponent implements OnDestroy {
 
   addCapacite(panel: OverlayPanel, event: any) {
     panel.toggle(event);
-    this.capacites.push(new FormControl(this.selectedCapacite()?.id));
+    const capacite = this.fb.group({
+      id: [this.selectedCapacite()?.id],
+      detail: [this.selectedCapacite()?.detail]
+    });
+    this.capacites.push(capacite);
   }
 }
