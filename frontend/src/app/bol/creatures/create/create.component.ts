@@ -94,7 +94,7 @@ export class BolCreatureCreateComponent implements OnDestroy {
     }
   );
 
-  protected selectedCapaciteIds = toSignal(this.creatureForm.get('capacites')!.valueChanges.pipe(map((item: any) => item.id)));
+  protected selectedCapaciteIds = toSignal(this.creatureForm.get('capacites')!.valueChanges.pipe(map((items: any[]) => items.map(item => item.id))));
   protected filteredCapaciteList = computed(() => {
     return this.capacitesList()?.filter((capacite: BolCreatureCapaciteModel) => !this.selectedCapaciteIds()?.includes(capacite.id));
   });
