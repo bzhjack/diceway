@@ -30,7 +30,7 @@
       <div>
         <div class="flex flex-col gap-1 w-fit justify-end">
           <label for="commentaire">Commentaire</label>
-          <textarea rows="5" cols="30"  pInputTextarea  formControlName="commentaire"></textarea>
+          <textarea rows="5" cols="30" pInputTextarea formControlName="commentaire"></textarea>
         </div>
       </div>
     </div>
@@ -56,7 +56,7 @@
             </div>
             <div class="flex flex-col gap-1">
               <label for="vitalite">Vitalité</label>
-              <p-inputNumber formControlName="vitalite" inputId="vitalite" maxFractionDigits="0" />
+              <p-inputNumber formControlName="vitalite" inputId="vitalite" maxFractionDigits="0"/>
             </div>
           </div>
         </div>
@@ -66,11 +66,11 @@
           <div class="flex flex-col gap-1">
             <div class="flex flex-col gap-1">
               <label for="attaque">Attaque</label>
-              <p-inputNumber formControlName="attaque" inputId="attaque" />
+              <p-inputNumber formControlName="attaque" inputId="attaque"/>
             </div>
             <div class="flex flex-col gap-1">
               <label for="defense">Défense</label>
-              <p-inputNumber formControlName="defense" inputId="defense" />
+              <p-inputNumber formControlName="defense" inputId="defense"/>
             </div>
           </div>
           <div class="flex flex-col gap-1">
@@ -87,49 +87,43 @@
       </p-fieldset>
     </div>
     <p-fieldset legend="Capacités spéciales">
-      <div *ngIf="capacitesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des capacités spéciales</div>
+      <div *ngIf="capacitesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des capacités
+        spéciales
+      </div>
+      <div *ngFor="let capacite of selectedCapaciteDetail()">
+        {{capacite | json}}
+      </div>
       <div class="footer-separator flex justify-end gap-2">
-        <p-button label="Ajouter une capacité" size="small" [link]="true" class="text-cyan-600" (click)="selectedCapacite.set(null); opCapacite.toggle($event)"/>
+        <p-button label="Ajouter une capacité" size="small" [link]="true" class="text-cyan-600"
+                  (click)="selectedCapacite.set(null); opCapacite.toggle($event)"/>
       </div>
     </p-fieldset>
   </form>
   <div class="flex justify-end gap-2 pt-2">
-    <button pButton icon="pi pi-times" size="small" label="Quitter" severity="secondary" (click)="quit($event)"></button>
-    <button  pButton icon="pi pi-check" size="small" label="Valider" severity="success" [disabled]="creatureForm.invalid" (click)="submit($event)"></button>
+    <button pButton icon="pi pi-times" size="small" label="Quitter" severity="secondary"
+            (click)="quit($event)"></button>
+    <button pButton icon="pi pi-check" size="small" label="Valider" severity="success" [disabled]="creatureForm.invalid"
+            (click)="submit($event)"></button>
   </div>
 </div>
 
 <p-overlayPanel #opCapacite>
   <div class="flex flex-col gap-4">
-    <div>Ajouter une arme</div>
+    <div>Ajouter une capacité</div>
     <p-dropdown [style]="{ width: '250px' }" [options]="filteredCapaciteList()"
                 [(ngModel)]="selectedCapacite" [ngModelOptions]="{standalone: true}" [filter]="true"
-                filterBy="arme" [showClear]="true" placeholder="Selectionner une arme">
+                filterBy="arme" [showClear]="true" placeholder="Selectionner une capacité">
 
       <ng-template pTemplate="selectedItem" let-selectedOption>
         <div class="flex align-items-center gap-2">
-          <div>{{ selectedOption.arme }}</div>
+          <div>{{ selectedOption.capacite }}</div>
         </div>
       </ng-template>
 
-      <ng-template let-arme pTemplate="item">
+      <ng-template let-capacite pTemplate="item">
         <div class="flex flex-col gap-2">
-          <div class="text-2xl">{{ arme.arme }}</div>
-          <div class="flex flex-col">
-            <div class="flex gap-2" style="font-size: smaller">
-              <div style="width: 70px"><strong>Dégats</strong></div>
-              {{ arme.degats }}
-            </div>
-            <div class="flex gap-2" style="font-size: smaller">
-              <div style="width: 70px"><strong>Portée</strong></div>
-              {{ arme.portee }}
-            </div>
-            <div class="flex gap-2" style="font-size: smaller">
-              <div style="width: 70px"><strong>Notes</strong></div>
-              {{ arme.notes }}
-            </div>
-          </div>
-
+          <div class="text-xl">{{ capacite.capacite }}</div>
+          <div class="text-gray-400" style="font-size: smaller;">{{ capacite.description }}</div>
         </div>
       </ng-template>
     </p-dropdown>

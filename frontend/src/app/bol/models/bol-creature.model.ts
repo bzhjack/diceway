@@ -30,7 +30,8 @@ export interface BolCreatureCapaciteModel {
   capacite: string;
   de_bonus: boolean;
   de_malus: boolean;
-  description: string
+  description: string;
+  detail?: string;
 }
 export interface BolCreatureTailleModel {
   id: number;

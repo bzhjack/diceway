@@ -4,7 +4,7 @@ import {Button, ButtonDirective} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
 import {PrimeTemplate} from "primeng/api";
 import {InputTextModule} from "primeng/inputtext";
-import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgxSpinnerService} from "ngx-spinner";
 import {BolCreaturesService} from "../../services/bol-creatures.service";
 import {BolCreatureStateService} from "../../services/bol-creature-state.service";
@@ -19,8 +19,10 @@ import {InputTextareaModule} from "primeng/inputtextarea";
 import {PictureComponent} from "../../../shared/picture/picture.component";
 import {Subscription} from "rxjs";
 import { toSignal } from '@angular/core/rxjs-interop';
-import { NgIf } from '@angular/common';
+import {JsonPipe, NgForOf, NgIf} from '@angular/common';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import {Ripple} from "primeng/ripple";
+import {BolArmeModel} from "../../models/bol-arme.model";
 
 @Component({
   selector: 'bol-creature-create',
@@ -39,7 +41,10 @@ import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
     OverlayPanelModule,
     ButtonDirective,
     InputTextareaModule,
-    NgIf
+    NgIf,
+    Ripple,
+    NgForOf,
+    JsonPipe
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
@@ -53,9 +58,7 @@ export class BolCreatureCreateComponent implements OnDestroy {
   public selectedCapacite= signal< BolCreatureCapaciteModel | null>(null);
 
   tailles = this.cs.tailleList;
-  capacites = this.cs.capaciteList;
-
-  currentCreature = signal<BolCreatureModel | null>(null)
+  capacitesList = this.cs.capaciteList;
 
   public idCtrl: FormControl<string | null> = new FormControl(null);
   public nomCtrl = new FormControl('', Validators.required);
@@ -71,7 +74,7 @@ export class BolCreatureCreateComponent implements OnDestroy {
   public protectionCtrl = new FormControl('0', Validators.required);
   public degatsCtrl = new FormControl('0', Validators.required);
   public idTailleCtrl = new FormControl(null, Validators.required);
-  public capacitesCtrl = new FormControl<Number[]>([]);
+  public capacitesCtrl = this.fb.array([]);
 
   public commentaireCtrl = new FormControl(null);
 
@@ -96,25 +99,28 @@ export class BolCreatureCreateComponent implements OnDestroy {
 
   protected selectedCapaciteIds = toSignal(this.creatureForm.get('capacites')!.valueChanges);
   protected filteredCapaciteList = computed(() => {
-    return this.capacites()?.filter((capacite: BolCreatureCapaciteModel) => !this.selectedCapaciteIds()?.includes(capacite.id));
+    return this.capacitesList()?.filter((capacite: BolCreatureCapaciteModel) => !this.selectedCapaciteIds()?.includes(capacite.id));
   });
-
+  protected selectedCapaciteDetail = computed(() => {
+    return this.capacitesList()?.filter((capa: BolCreatureCapaciteModel) => this.selectedCapaciteIds()?.includes(capa.id));
+  });
   tailleChange = toSignal(this.idTailleCtrl.valueChanges);
+  get capacites() {
+    return this.creatureForm.get('capacites') as FormArray;
+  }
+
   constructor(private ref: DynamicDialogRef, private config: DynamicDialogConfig) {
     if (config.data.creature) {
       const creature = config.data.creature;
-      console.log(creature);
-      this.currentCreature.set(creature);
       this.creatureForm.patchValue(creature, {emitEvent: false});
     }
-    
+
     effect(() => {
       if(this.tailleChange()) {
         const taille = this.tailles()?.find((taille: BolCreatureTailleModel) => Number(taille.id) === Number(this.tailleChange()));
         this.degatsCtrl.setValue(taille?.degat ?? null);
         this.vigueurCtrl.setValue(taille?.vigueur ?? 0);
         this.vitaliteCtrl.setValue(taille?.vitalite ?? 0);
-        console.log(taille);
       }
     });
   }
@@ -146,7 +152,6 @@ export class BolCreatureCreateComponent implements OnDestroy {
 
   addCapacite(panel: OverlayPanel, event: any) {
     panel.toggle(event);
-  
+    this.capacites.push(new FormControl(this.selectedCapacite()?.id));
   }
-
 }
