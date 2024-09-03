@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-create',
+  selector: 'bol-pnj-create',
   standalone: true,
   imports: [],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
 })
-export class CreateComponent {
+export class BolPnjCreateComponent {
 
 }
