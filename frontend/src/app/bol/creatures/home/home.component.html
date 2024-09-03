@@ -2,12 +2,10 @@
   <app-header legend="Bestiaire de Lémurie">
     <!-- Champ de recherche -->
     <div class="flex items-center gap-2">
-
       <!-- Contrôle de type -->
       <p-dropdown [options]="typeOptions" [(ngModel)]="type" placeholder="Sélectionner un type" (ngModelChange)="filterCreatures()"></p-dropdown>
-      <input type="text" style="height: 29px" class="p-inputtext-sm" pInputText placeholder="Rechercher par nom" [(ngModel)]="searchTerm" (input)="filterCreatures()" />
+      <input type="text" style="height: 30px" class="p-inputtext-sm" pInputText placeholder="Rechercher par nom" [(ngModel)]="searchTerm" (input)="filterCreatures()" />
     </div>
-
     <button pButton label="Création" icon="pi pi-pencil" severity="warning" size="small" (click)="createCreature()"></button>
     <button pButton label="Retour" icon="pi pi-arrow-left" severity="secondary" size="small" routerLink="/bol"></button>
 
