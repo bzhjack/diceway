@@ -14,26 +14,28 @@ import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {ConfirmationService} from "primeng/api";
 import {BolHerosService} from "../../services/bol-heros.service";
 import {BolHerosModel} from "../../models/bol-heros.model";
+import {HeaderComponent} from "../../../shared/header/header.component";
 
 
 @Component({
   selector: 'bol-hero-home',
   standalone: true,
-  imports: [
-    NgForOf,
-    JsonPipe,
-    RouterLink,
-    CardModule,
-    Button,
-    DialogModule,
-    InputTextModule,
-    ReactiveFormsModule,
-    NgIf,
-    TableModule,
-    ButtonDirective,
-    Ripple,
-    ConfirmPopupModule
-  ],
+    imports: [
+        NgForOf,
+        JsonPipe,
+        RouterLink,
+        CardModule,
+        Button,
+        DialogModule,
+        InputTextModule,
+        ReactiveFormsModule,
+        NgIf,
+        TableModule,
+        ButtonDirective,
+        Ripple,
+        ConfirmPopupModule,
+        HeaderComponent
+    ],
   providers: [
     ConfirmationService
   ],
