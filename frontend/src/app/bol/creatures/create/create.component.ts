@@ -113,7 +113,6 @@ export class BolCreatureCreateComponent implements OnDestroy {
     }
 
     effect(() => {
-      console.log(this.selectedCapaciteIds());
       if(this.tailleChange()) {
         const taille = this.tailles()?.find((taille: BolCreatureTailleModel) => Number(taille.id) === Number(this.tailleChange()));
         this.degatsCtrl.setValue(taille?.degat ?? null);

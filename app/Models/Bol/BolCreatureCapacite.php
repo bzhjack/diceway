@@ -15,6 +15,7 @@ class BolCreatureCapacite extends Model
     protected $fillable = [
         "creature_id",
         "capacite_id",
+        "detail"
     ];
 
     public function capacite(): HasOne
