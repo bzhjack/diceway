@@ -43,7 +43,8 @@ class BolCreatureController extends Controller
             $newcapa['detail'] = $capacite['detail'];
             self::createCapacite($newcapa);
         }
-        return response($creature);
+        $createdCreature = BolCreature::with('taille', 'capacites.capacite')->where('user_id', Auth::id())->where('id', $creature['id'])->get()->first();
+        return response($createdCreature);
     }
 
     public function update(Request $request)
