@@ -1,11 +1,20 @@
 <div>
   <app-header legend="Bestiaire de Lémurie">
+    <!-- Champ de recherche -->
+    <div class="flex items-center gap-2">
+
+      <!-- Contrôle de type -->
+      <p-dropdown [options]="typeOptions" [(ngModel)]="type" placeholder="Sélectionner un type" (ngModelChange)="filterCreatures()"></p-dropdown>
+      <input type="text" style="height: 29px" class="p-inputtext-sm" pInputText placeholder="Rechercher par nom" [(ngModel)]="searchTerm" (input)="filterCreatures()" />
+    </div>
+
     <button pButton label="Création" icon="pi pi-pencil" severity="warning" size="small" (click)="createCreature()"></button>
     <button pButton label="Retour" icon="pi pi-arrow-left" severity="secondary" size="small" routerLink="/bol"></button>
+
   </app-header>
   <div class="p-4 flex flex-wrap gap-2 flex-end" style="height: calc(100vh - 120px); overflow:  auto">
     @defer () {
-   <bol-creature-card *ngFor="let creature of bestiary"
+   <bol-creature-card *ngFor="let creature of filteredBestiary"
                       [creature]="creature"
                       (deleteCreature)="deleteCreature(creature, $event)"
                       (editCreature)="createCreature($event)">

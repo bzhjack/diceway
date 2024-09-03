@@ -16,6 +16,10 @@ import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {ConfirmationService} from "primeng/api";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
+import {InputTextModule} from "primeng/inputtext";
+import {FormsModule} from "@angular/forms";
+import {RadioButtonModule} from "primeng/radiobutton";
+import {DropdownModule} from "primeng/dropdown";
 
 @Component({
   selector: 'bol-creature-home',
@@ -31,7 +35,11 @@ import {ConfirmPopupModule} from "primeng/confirmpopup";
     DialogModule,
     AvatarModule,
     BolCreatureCreateComponent,
-    ConfirmPopupModule
+    ConfirmPopupModule,
+    InputTextModule,
+    FormsModule,
+    RadioButtonModule,
+    DropdownModule
   ],
   providers: [
     ConfirmationService
@@ -44,9 +52,17 @@ export class BolCreatureHomeComponent implements OnDestroy {
   private spinner = inject(NgxSpinnerService);
   private subsBestiary?: Subscription;
   public bestiary: Array<BolCreatureModel> = [];
+  public filteredBestiary: BolCreatureModel[] = [];
   readonly #ds = inject(DialogService);
   private subs: Subscription | undefined;
   private ref?: DynamicDialogRef;
+  searchTerm: string = '';
+  type: 'ALL' | 'PRIVATE' | 'PUBLIC' = 'ALL'
+  typeOptions: any[] = [
+    { label: 'Tous', value: 'ALL' },
+    { label: 'Public', value: 'PUBLIC' },
+    { label: 'Privé', value: 'PRIVATE' }
+  ];
 
   constructor() {
     this.getBestiary();
@@ -62,12 +78,38 @@ export class BolCreatureHomeComponent implements OnDestroy {
     this.subsBestiary = creaturesRequest.subscribe({
       next: (bestiary) => {
         this.bestiary = bestiary;
+        this.filteredBestiary = bestiary;
         this.spinner.hide();
       },
       error: () => {
         this.spinner.hide();
       }
     });
+  }
+
+  filterCreatures() {
+    const term = this.searchTerm.toLowerCase();
+    const type = this.type;
+
+    this.filteredBestiary = this.bestiary.filter(creature => {
+      const matchesName = creature.nom.toLowerCase().includes(term); // Remplace `nom` par la propriété appropriée
+      const matchesType = this.getTypeFilter(creature, type);
+
+      return matchesName && matchesType;
+    });
+  }
+
+  getTypeFilter(creature: any, type: 'ALL' | 'PRIVATE' | 'PUBLIC'): boolean {
+    switch (type) {
+      case 'PUBLIC':
+        return creature.user_id === null;
+      case 'PRIVATE':
+        return creature.user_id !== null;
+      case 'ALL':
+        return true;
+      default:
+        return true;
+    }
   }
 
   createCreature(creature?: BolCreatureModel) {
