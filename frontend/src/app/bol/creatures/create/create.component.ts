@@ -20,6 +20,8 @@ import {JsonPipe, NgForOf, NgIf} from '@angular/common';
 import {OverlayPanel, OverlayPanelModule} from 'primeng/overlaypanel';
 import {Ripple} from "primeng/ripple";
 import {TooltipModule} from "primeng/tooltip";
+import {BtnComponent} from "../../../shared/trash/trash.component";
+import {BolHerosCarriereModel} from "../../models/bol-carriere.model";
 
 @Component({
   selector: 'bol-creature-create',
@@ -42,7 +44,8 @@ import {TooltipModule} from "primeng/tooltip";
     Ripple,
     NgForOf,
     JsonPipe,
-    TooltipModule
+    TooltipModule,
+    BtnComponent
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
@@ -97,8 +100,20 @@ export class BolCreatureCreateComponent implements OnDestroy {
 
   protected selectedCapaciteIds = toSignal(this.creatureForm.get('capacites')!.valueChanges.pipe(map((items: any[]) => items.map(item => item.id))));
   protected filteredCapaciteList = computed(() => {
-    return this.capacitesList()?.filter((capacite: BolCreatureCapaciteModel) => !this.selectedCapaciteIds()?.includes(capacite.id));
+    const selectedIds = this.selectedCapaciteIds();
+    const capaciteDetails = this.capacites.value;
+    // Filtrer les capacités qui ne sont pas encore sélectionnées
+    return this.capacitesList()?.filter((capacite: BolCreatureCapaciteModel) => {
+      const selectedCapacite = capaciteDetails.find((c: any) => c.id === capacite.id);
+      // Ajouter le detail de la capacité sélectionnée, s'il existe
+      if (selectedCapacite) {
+        capacite.detail = selectedCapacite.detail;
+      }
+      // Retourner les capacités qui ne sont pas dans la liste des IDs sélectionnés
+      return !selectedIds?.includes(capacite.id);
+    });
   });
+
   protected selectedCapaciteDetail = computed(() => {
     return this.capacitesList()?.filter((capa: BolCreatureCapaciteModel) => this.selectedCapaciteIds()?.includes(capa.id));
   });
@@ -163,5 +178,9 @@ export class BolCreatureCreateComponent implements OnDestroy {
       detail: [this.selectedCapacite()?.detail]
     });
     this.capacites.push(capacite);
+  }
+  removeCapacite(capaciteId: number) {
+    const index = this.capacites.value.findIndex((capa: BolCreatureCapaciteModel) => capa.id === capaciteId)
+    if (index !== -1) this.capacites.removeAt(index)
   }
 }

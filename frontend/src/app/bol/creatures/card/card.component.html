@@ -45,7 +45,7 @@
       </div>
       <div>
         <p-fieldset *ngIf="creature()?.capacites?.length" legend="Capacités spéciales" styleClass="w-full">
-          <div class="flex flex-wrap gap-2 pb-2">
+          <div class="flex flex-wrap gap-2 pb-2" style="max-height: 24px; overflow: auto;">
             <div class="text-gray-300" *ngFor="let capa of creature()?.capacites">
               <i *ngIf="capa.detail || capa.capacite.description" class="pi pi-info-circle cursor-pointer text-cyan-600" [pTooltip]="(capa.detail ?  capa.detail + '\n\r' : '') + capa.capacite.description"></i> {{capa.capacite.capacite}}
             </div>

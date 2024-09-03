@@ -51,13 +51,38 @@ class BolCreatureController extends Controller
     {
         $creatureId = $request->input('id');
         $updatedCreature = $request->except(['capacites']);
-        $creature = BolCreature::where('user_id', Auth::id())->where('id', $creatureId)->get()->first();
-        if ($creature === null) {
-            return response()->json(['error' => 'Creature not found'], 404);
+        $creature = BolCreature::with('taille', 'capacites')->where('user_id', Auth::id())->where('id', $creatureId)->get()->first();
+        $capacites = $creature["capacites"];
+        $tableau1 = [];
+        foreach ($capacites as $capacite) {
+            $tableau1[] = [ "id" => $capacite["capacite_id"], "detail" => $capacite["detail"] ];
         }
-        BolCreature::where('id', $creatureId)->update($updatedCreature);
-        $result = BolCreature::with('taille', 'capacites.capacite')->where('user_id', Auth::id())->where('id', $creatureId)->get()->first();
-        return response($result);
+        // Le nouveau tableau de capacités venant de la requête
+           $tableau2 = $request->input('capacites');
+           $ids_tableau2 = array_column($tableau2, 'id');
+
+           // Supprimer les capacités qui ne sont plus associées à la créature
+           BolCreatureCapacite::whereNotIn('capacite_id', $ids_tableau2)
+               ->where('creature_id', $creatureId)
+               ->delete();
+
+           // Mettre à jour ou insérer les nouvelles capacités
+           foreach ($tableau2 as $item) {
+               BolCreatureCapacite::updateOrCreate(
+                   [
+                       'creature_id' => $creatureId,
+                       'capacite_id' => $item['id']
+                   ],
+                   [
+                       'detail' => $item['detail']
+                   ]
+               );
+           }
+
+           // Mettre à jour les autres champs de la créature
+           $creature->update($updatedCreature);
+
+           return response()->json(['message' => 'Creature updated successfully']);
     }
 
     public function delete($id): \Illuminate\Http\JsonResponse
