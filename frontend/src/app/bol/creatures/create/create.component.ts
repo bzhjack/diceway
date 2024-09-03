@@ -19,7 +19,7 @@ import {toSignal} from '@angular/core/rxjs-interop';
 import {JsonPipe, NgForOf, NgIf} from '@angular/common';
 import {OverlayPanel, OverlayPanelModule} from 'primeng/overlaypanel';
 import {Ripple} from "primeng/ripple";
-import {carriereValidator} from "../../heros/create/create.validators";
+import {TooltipModule} from "primeng/tooltip";
 
 @Component({
   selector: 'bol-creature-create',
@@ -41,7 +41,8 @@ import {carriereValidator} from "../../heros/create/create.validators";
     NgIf,
     Ripple,
     NgForOf,
-    JsonPipe
+    JsonPipe,
+    TooltipModule
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
@@ -110,6 +111,14 @@ export class BolCreatureCreateComponent implements OnDestroy {
     if (config.data.creature) {
       const creature = config.data.creature;
       this.creatureForm.patchValue(creature, {emitEvent: false});
+      this.capacites.clear();
+      creature.capacites.forEach( (capa: any) => {
+        const capacite = this.fb.group({
+          id: [capa.capacite_id],
+          detail: [capa.detail]
+        });
+        this.capacites.push(capacite);
+      });
     }
 
     effect(() => {
