@@ -119,27 +119,32 @@
 <p-overlayPanel #opCapacite>
   <div class="flex flex-col gap-4">
     <div>Ajouter une capacité</div>
-    <p-dropdown [style]="{ width: '250px' }" [options]="filteredCapaciteList()"
-                [(ngModel)]="selectedCapacite" [ngModelOptions]="{standalone: true}" [showClear]="true"
-                placeholder="Selectionner une capacité">
 
-      <ng-template pTemplate="selectedItem" let-selectedOption>
-        <div class="flex align-items-center gap-2">
-          <div>{{ selectedOption.capacite }}</div>
-        </div>
-      </ng-template>
+    <div class="flex flex-col gap-2">
+      <p-dropdown [style]="{ width: '250px' }" [options]="filteredCapaciteList()"
+                  [(ngModel)]="selectedCapacite" [ngModelOptions]="{standalone: true}" [showClear]="true"
+                  placeholder="Selectionner une capacité">
 
-      <ng-template let-capacite pTemplate="item">
-        <div class="flex flex-col gap-2">
-          <div class="text-xl">{{ capacite.capacite }}</div>
-          <div class="text-gray-400" style="font-size: smaller;">{{ capacite.description }}</div>
-        </div>
-      </ng-template>
-    </p-dropdown>
-    <div class="flex flex-col gap-1 w-fit justify-end" *ngIf="selectedCapacite()">
-      <label for="detail">Description</label>
-      <textarea id="detail" rows="5" cols="30" pInputTextarea [(ngModel)]="selectedCapacite()!.detail"></textarea>
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+          <div class="flex align-items-center gap-2">
+            <div>{{ selectedOption.capacite }}</div>
+          </div>
+        </ng-template>
+
+        <ng-template let-capacite pTemplate="item">
+          <div class="flex flex-col gap-2">
+            <div class="text-xl">{{ capacite.capacite }}</div>
+            <div class="text-gray-400" style="font-size: smaller;">{{ capacite.description }}</div>
+          </div>
+        </ng-template>
+      </p-dropdown>
+      <div class="flex flex-col gap-1 w-fit justify-end" *ngIf="selectedCapacite()">
+        <label for="detail">Description</label>
+        <textarea id="detail" rows="2" cols="30" pInputTextarea [(ngModel)]="selectedCapacite()!.detail"></textarea>
+      </div>
     </div>
+
+
     <div class="flex justify-end gap-2">
       <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
               (click)="opCapacite.toggle($event)"></button>
