@@ -41,7 +41,7 @@ class BolCreatureController extends Controller
             $newcapa['creature_id'] = $creature['id'];
             $newcapa['capacite_id'] = $capacite['id'];
             $newcapa['detail'] = $capacite['detail'];
-            self::createCapacite($newcapa);
+            BolCreatureCapacite::create($newcapa);
         }
         $createdCreature = BolCreature::with('taille', 'capacites.capacite')->where('user_id', Auth::id())->where('id', $creature['id'])->get()->first();
         return response($createdCreature);
@@ -97,16 +97,4 @@ class BolCreatureController extends Controller
         // Return a successful response
         return response()->json(['message' => 'Creature deleted successfully'], Response::HTTP_OK);
     }
-
-
-    public static function createCapacite($capaciteToCreate)
-    {
-        $capacite = BolCreatureCapacite::where('creature_id', $capaciteToCreate['creature_id'])->where('capacite_id', $capaciteToCreate['capacite_id'])->first();
-        if ($capacite) {
-            return response()->json(['message' => 'capacite déjà existante'], 404);
-        }
-        BolCreatureCapacite::create($capaciteToCreate);
-        return response()->json(['success' => $capaciteToCreate]);
-    }
-
 }

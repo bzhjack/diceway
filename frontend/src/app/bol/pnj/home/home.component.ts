@@ -12,6 +12,8 @@ import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {Subscription} from "rxjs";
 import {NgxSpinnerService} from "ngx-spinner";
 import {BolHerosModel} from "../../models/bol-heros.model";
+import {BolCreaturesService} from "../../services/bol-creatures.service";
+import {BolHerosService} from "../../services/bol-heros.service";
 
 @Component({
   selector: 'bol-pnj-home',
@@ -29,35 +31,57 @@ import {BolHerosModel} from "../../models/bol-heros.model";
   styleUrl: './home.component.scss'
 })
 export class BolPnjHomeComponent {
-
+  private pnjService = inject(BolHerosService);
   private spinner = inject(NgxSpinnerService);
   readonly #ds = inject(DialogService);
   private subs: Subscription | undefined;
+  private subsPnj: Subscription | undefined;
   private ref?: DynamicDialogRef;
+  public pnj: Array<BolHerosModel> = [];
 
-  createPnj(creature?: BolCreatureModel) {
+  constructor() {
+    this.getPnj();
+  }
+
+  getPnj() {
+    this.spinner.show();
+    this.subsPnj?.unsubscribe();
+
+    this.subsPnj = this.pnjService.pnj().subscribe({
+      next: (pnj: BolHerosModel[]) => {
+        this.pnj = pnj;
+        this.spinner.hide();
+      },
+      error: () => {
+        this.spinner.hide();
+      }
+    });
+  }
+
+  createPnj(pnj?: BolHerosModel) {
     this.ref = this.#ds.open(BolPnjCreateComponent, {
-      header: creature ? 'Modification d\'une créature' : 'Création d\'une créature',
+      header: pnj ? 'Modification d\'un PNJ' : 'Création d\'un PNJ',
       data: {
-        creature: creature
+        creature: pnj
       }
     });
     this.subs?.unsubscribe();
     this.subs = this.ref.onClose.subscribe((pnj: BolHerosModel) => {
-      /*if (creature) {
+      if (pnj) {
         this.spinner.show();
         this.subs?.unsubscribe();
-        const actionService = creature.id ? this.creatureService.updateCreature(creature) : this.creatureService.createCreature(creature);
+        pnj.joueur = 'master';
+        const actionService = pnj.id ? this.pnjService.updatePnj(pnj) : this.pnjService.createPnj(pnj);
         this.subs = actionService.subscribe({
           next: () => {
             this.spinner.hide();
-            this.getBestiary();
+            this.getPnj();
           },
           error: () => {
             this.spinner.hide();
           }
         });
-      }*/
+      }
     });
   }
 }

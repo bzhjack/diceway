@@ -7,9 +7,10 @@ import {BolAvantageModel} from "../models/bol-avantage.model";
 import {BolDesavantageModel} from "../models/bol-desavantage.model";
 import {BolHerosCarriereModel} from "../models/bol-carriere.model";
 import {BolArmureModel, BolHerosArmureModel} from "../models/bol-armure.model";
-import {BolHerosArmeModel} from "../models/bol-arme.model";
+import {BolArmeModel, BolHerosArmeModel} from "../models/bol-arme.model";
 import {BolHerosTraitsModel} from "../models/bol-trait.model";
 import {BolHerosLangueModel, BolLangueModel} from "../models/bol-langue.model";
+import {BolCreatureModel} from "../models/bol-creature.model";
 
 @Injectable({
   providedIn: 'root'
@@ -68,7 +69,7 @@ export class BolHerosService {
 
   // Armes
   armes(): Observable<any> {
-    return this.http.get<BolRegionModel[]>('/api/bol/armes');
+    return this.http.get<BolArmeModel[]>('/api/bol/armes');
   }
   createArme(herosId: string | null | undefined, arme: BolHerosArmeModel): Observable<any> {
     return  this.http.post<BolHerosModel>(`/api/bol/heros/armes/create/${herosId}`, <BolHerosArmeModel>arme);
@@ -108,5 +109,21 @@ export class BolHerosService {
   // Origines
   updateOriginesHeros(herosId: string, origines: BolHerosOrigines): Observable<any> {
     return this.http.post<BolHerosModel>('/api/bol/heros/origines/update/' + herosId, origines);
+  }
+
+  // Pnj
+
+  pnj(): Observable<any> {
+    return this.http.get<BolHerosModel[]>('/api/bol/pnj');
+  }
+
+  createPnj(pnj: BolHerosModel): Observable<any> {
+    return this.http.post<BolHerosModel>('/api/bol/pnj/create', <BolHerosModel>pnj);
+  }
+  updatePnj(pnj: BolHerosModel): Observable<any> {
+    return this.http.post<BolHerosModel>('/api/bol/pnj/update', <BolHerosModel>pnj);
+  }
+  deletePnj(id: string): Observable<any> {
+    return this.http.delete<BolHerosModel>('/api/bol/pnj/delete/' + id);
   }
 }

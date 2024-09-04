@@ -25,6 +25,7 @@ class BolHeros extends Model
     protected $fillable = [
         'user_id',
         'joueur',
+        'type',
         'nom', 'avatar', 'region_id',
         'vigueur', 'agilite', 'esprit', 'aura',
         'initiative', 'melee', 'tir', 'defense','commentaire'

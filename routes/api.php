@@ -15,6 +15,7 @@ use App\Http\Controllers\Bol\BolTraitController;
 use App\Http\Controllers\Bol\BolCarriereController;
 use App\Http\Controllers\Bol\BolArmureController;
 use App\Http\Controllers\Bol\BolArmeController;
+use App\Http\Controllers\Bol\BolPnjController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -100,8 +101,13 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::post('/bol/heros/update', [BolHerosController::class, 'update']);
     Route::delete('/bol/heros/delete/{id}', [BolHerosController::class, 'delete']);
 
+    // Gestion de Pnj
+    Route::get('/bol/pnj', [BolPnjController::class, 'getAll']);
+    Route::post('/bol/pnj/create', [BolPnjController::class, 'create']);
+
     // Maj des origines
     Route::post('/bol/heros/origines/update/{herosId}', [BolHerosController::class, 'updateOrigines']);
+
     // Traits régionaux
     Route::delete('/bol/heros/traits/delete/{id}', [BolTraitController::class, 'delete']);
     Route::post('/bol/heros/traits/create/{herosId}', [BolTraitController::class, 'create']);
