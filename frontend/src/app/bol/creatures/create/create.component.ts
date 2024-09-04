@@ -53,7 +53,6 @@ import {BolHerosCarriereModel} from "../../models/bol-carriere.model";
 export class BolCreatureCreateComponent implements OnDestroy {
   private subs?: Subscription;
   private cs = inject(BolCreatureStateService);
-  private spinner = inject(NgxSpinnerService);
   private fb = inject(FormBuilder);
   readonly ds = inject(DialogService);
   public selectedCapacite= signal< BolCreatureCapaciteModel | null>(null);
@@ -118,6 +117,7 @@ export class BolCreatureCreateComponent implements OnDestroy {
     return this.capacitesList()?.filter((capa: BolCreatureCapaciteModel) => this.selectedCapaciteIds()?.includes(capa.id));
   });
   tailleChange = toSignal(this.idTailleCtrl.valueChanges);
+
   get capacites() {
     return this.creatureForm.get('capacites') as FormArray;
   }

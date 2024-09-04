@@ -27,41 +27,46 @@
   <ng-container>
     <ng-container formArrayName="carrieres">
       <div class="carrieres flex flex-wrap gap-3 mb-4" style="width:500px">
-        <div class="flex flex-col" *ngFor="let carriere of carrieres.controls; let i = index">
-          <div class="flex flex-col">
-            <div [formGroupName]="i" class="flex gap-2 items-center">
-              <div
-                *ngTemplateOutlet="templateRef; context: { carTpl: carriereFromId(carriere.get('carriere_id')?.value) }"></div>
-              <p-inputNumber formControlName="value" inputId="defense" maxFractionDigits="0"/>
-              <app-btn (click)="deleteCarriere(carriere.get('carriere_id')?.value, $event)"></app-btn>
+        @if (carrieres.controls.length === 0) {
+          <div class="text-xl text-gray-500">Choisissez des carrières</div>
+        } @else {
+          <div class="flex flex-col" *ngFor="let carriere of carrieres.controls; let i = index">
+            <div class="flex flex-col">
+              <div [formGroupName]="i" class="flex gap-2 items-center">
+                <div
+                  *ngTemplateOutlet="templateRef; context: { carTpl: carriereFromId(carriere.get('carriere_id')?.value) }"></div>
+                <p-inputNumber formControlName="value" inputId="defense" maxFractionDigits="0"/>
+                <app-btn (click)="deleteCarriere(carriere.get('carriere_id')?.value, $event)"></app-btn>
 
-              <ng-template #templateRef let-carri="carTpl">
-                <div style="width: 125px" class="flex flex-col">
-                  <div class="flex items-center">
-                    <div *ngIf="carri.description"
-                         (click)="carriereInfos.toggle($event)"
-                         class="cursor-pointer"
-                         style="color: var(--warn-color)">
-                      <i class="pi pi-exclamation-triangle mr-2"></i>
-                    </div>
-                    <div class="text-gray-300">{{ carri.carriere }}</div>
-                    <p-overlayPanel #carriereInfos>
-                      <div class="flex flex-col gap-2">
-                        <div class="text-amber-500">
-                          {{ carri.description }}
-                        </div>
+                <ng-template #templateRef let-carri="carTpl">
+                  <div style="width: 125px" class="flex flex-col">
+                    <div class="flex items-center">
+                      <div *ngIf="carri.description"
+                           (click)="carriereInfos.toggle($event)"
+                           class="cursor-pointer"
+                           style="color: var(--warn-color)">
+                        <i class="pi pi-exclamation-triangle mr-2"></i>
                       </div>
-                    </p-overlayPanel>
+                      <div class="text-gray-300">{{ carri.carriere }}</div>
+                      <p-overlayPanel #carriereInfos>
+                        <div class="flex flex-col gap-2">
+                          <div class="text-amber-500">
+                            {{ carri.description }}
+                          </div>
+                        </div>
+                      </p-overlayPanel>
+                    </div>
+                    <div class="text-gray-400 carriere-detail" style="font-size: smaller"
+                         *ngIf="carri.detail">{{ carri.detail }}
+                    </div>
                   </div>
-                  <div class="text-gray-400 carriere-detail" style="font-size: smaller"
-                       *ngIf="carri.detail">{{ carri.detail }}
-                  </div>
-                </div>
-              </ng-template>
+                </ng-template>
 
+              </div>
             </div>
           </div>
-        </div>
+        }
+
       </div>
 
     </ng-container>

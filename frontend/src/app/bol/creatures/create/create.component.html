@@ -1,14 +1,12 @@
 <div class="region-container flex gap-2 flex-col">
   <form [formGroup]="creatureForm" autocomplete="off" class="flex flex-col gap-2">
     <div class="flex gap-2">
-
       <div class="hero-avatar cursor-pointer" (click)="picture()">
         <img style="width:100%"
              [src]="avatarCtrl.value !== null ? avatarCtrl.value : '/frontend/assets/bol/empty-avatar.jpg'"
              alt="avatar">
         <p class="hero-avatar__description">Modifier</p>
       </div>
-
 
       <div class="flex flex-col gap-2">
         <!--- Nom du joueur --->
@@ -87,9 +85,7 @@
       </p-fieldset>
     </div>
     <p-fieldset legend="Capacités spéciales">
-      <div *ngIf="capacitesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des capacités
-        spéciales
-      </div>
+      <div *ngIf="capacitesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des capacités spéciales </div>
 
       <div>
         <div *ngFor="let capacite of selectedCapaciteDetail();" class="flex gap-2 items-center pb-1">

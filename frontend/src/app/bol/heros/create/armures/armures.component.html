@@ -5,7 +5,9 @@
     </div>
   </ng-template>
   <!-- Body Armures -->
-  <p-table [value]="selectedArmureDetail()"
+  <div *ngIf="selectedArmureDetail()?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des armures</div>
+  <p-table *ngIf="selectedArmureDetail()?.length > 0"
+           [value]="selectedArmureDetail()"
            [scrollable]="true"
            scrollHeight="150px"
            styleClass="p-datatable-striped">

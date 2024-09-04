@@ -1,1 +1,160 @@
-<p>create works!</p>
+<div class="region-container flex gap-2 flex-col">
+  <form [formGroup]="pnjForm" autocomplete="off" class="flex flex-col gap-2">
+    <div class="flex gap-2">
+      <div class="hero-avatar cursor-pointer" (click)="picture()">
+        <img style="width:100%"
+             [src]="avatarCtrl.value !== null ? avatarCtrl.value : '/frontend/assets/bol/empty-avatar.jpg'"
+             alt="avatar">
+        <p class="hero-avatar__description">Modifier</p>
+      </div>
+
+
+      <div class="flex flex-col gap-1">
+        <!--- Nom du joueur --->
+        <div class="flex flex-col gap-1 w-fit justify-end">
+          <label for="nom">Nom du PNJ</label>
+          <input formControlName="nom" pInputText id="joueur" class="p-inputtext-sm"/>
+        </div>
+        <div class="flex flex-col gap-1 w-fit justify-end">
+          <label for="type">Type</label>
+          <p-dropdown [style]="{ width: '190px' }"
+                      class="p-inputtext-sm"
+                      optionLabel="type"
+                      optionValue="value"
+                      [options]="type"
+                      formControlName="type"
+                      placeholder="Selectionner un type"></p-dropdown>
+        </div>
+      </div>
+      <div>
+        <div class="flex flex-col gap-1 w-fit justify-end">
+          <label for="commentaire">Commentaire</label>
+          <textarea rows="4" cols="30" pInputTextarea formControlName="commentaire"></textarea>
+        </div>
+      </div>
+
+    </div>
+    <div class="flex gap-4">
+      <p-fieldset legend="Attributs">
+        <div class="flex gap-2">
+          <div class="flex flex-col gap-1">
+            <div class="flex flex-col gap-1">
+              <label for="vigueur">Vigueur</label>
+              <p-inputNumber formControlName="vigueur" inputId="vigueur" maxFractionDigits="0"/>
+            </div>
+            <div class="flex flex-col gap-1">
+              <label for="agilite">Agilité</label>
+              <p-inputNumber formControlName="agilite" inputId="agilite" maxFractionDigits="0"/>
+            </div>
+          </div>
+          <div class="flex flex-col gap-1">
+            <div class="flex flex-col gap-1">
+              <label for="esprit">Esprit</label>
+              <p-inputNumber formControlName="esprit" inputId="esprit" maxFractionDigits="0"/>
+            </div>
+            <div class="flex flex-col gap-1">
+              <label for="aura">Aura</label>
+              <p-inputNumber formControlName="aura" inputId="aura" maxFractionDigits="0"/>
+            </div>
+          </div>
+        </div>
+      </p-fieldset>
+      <p-fieldset legend="Combat">
+        <div class="flex gap-2">
+          <div class="flex flex-col gap-1">
+            <div class="flex flex-col gap-1">
+              <label for="initiative">Initiative</label>
+              <p-inputNumber formControlName="initiative" inputId="initiative"/>
+            </div>
+            <div class="flex flex-col gap-1">
+              <label for="melee">Mêlée</label>
+              <p-inputNumber formControlName="melee" inputId="melee"/>
+            </div>
+          </div>
+          <div class="flex flex-col gap-1">
+            <div class="flex flex-col gap-1">
+              <label for="tir">Tir</label>
+              <p-inputNumber formControlName="tir" inputId="tir"/>
+            </div>
+            <div class="flex flex-col gap-1">
+              <label for="defense">Défense</label>
+              <p-inputNumber formControlName="defense" inputId="defense"/>
+            </div>
+          </div>
+        </div>
+      </p-fieldset>
+    </div>
+    <p-fieldset legend="Armes">
+      <div *ngIf="armesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des armes</div>
+
+      <div>
+        <div *ngFor="let arme of selectedItemDetail()" class="flex gap-2 items-center pb-1">
+          <div class="flex gap-2 items-center" style="width: 150px">
+            <i *ngIf="arme.detail" class="pi pi-info-circle cursor-pointer text-cyan-600"
+               [pTooltip]="arme.detail"></i>
+            {{ arme.capacite }}
+          </div>
+          <app-btn (click)="removeItem(arme.id, armes)"></app-btn>
+        </div>
+      </div>
+
+      <div class="footer-separator flex justify-end gap-2">
+        <p-button label="Ajouter une arme" size="small" [link]="true" class="text-cyan-600"
+                  (click)="addItem('A', $event)"/>
+      </div>
+    </p-fieldset>
+
+  </form>
+</div>
+
+<p-overlayPanel #opPnj>
+  <div class="flex flex-col gap-4">
+    <div>{{ itemTitle() }}</div>
+
+    <div class="flex flex-col gap-2">
+      <p-dropdown [style]="{ width: '250px' }" [options]="filteredItemList()"
+                  [(ngModel)]="selectedItem" [ngModelOptions]="{standalone: true}" [showClear]="true"
+                  placeholder="Faites votre sélection">
+
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+
+          <div class="flex align-items-center gap-2">
+            <div *ngIf="currentField() === 'armes'">{{ selectedOption.arme }}</div>
+          </div>
+        </ng-template>
+
+        <ng-template let-item pTemplate="item">
+          <div class="flex flex-col gap-2">
+            @if (currentField() === 'armes') {
+              <div class="flex flex-col gap-2">
+                <div class="text-xl">{{ item.arme }}</div>
+                <div class="flex flex-col">
+                  <div class="flex gap-2" style="font-size: smaller">
+                    <div style="width: 70px"><strong>Dégats</strong></div>
+                    {{ item.degats }}
+                  </div>
+                  <div class="flex gap-2" style="font-size: smaller">
+                    <div style="width: 70px"><strong>Portée</strong></div>
+                    {{ item.portee }}
+                  </div>
+                  <div class="flex gap-2" style="font-size: smaller">
+                    <div style="width: 70px"><strong>Notes</strong></div>
+                    {{ item.notes }}
+                  </div>
+                </div>
+
+              </div>
+            }
+          </div>
+        </ng-template>
+      </p-dropdown>
+    </div>
+
+
+    <div class="flex justify-end gap-2">
+      <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
+              (click)="opPnj.toggle($event)"></button>
+      <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check" [disabled]="!selectedItem()"></button>
+    </div>
+  </div>
+</p-overlayPanel>
