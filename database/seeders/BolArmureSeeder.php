@@ -29,32 +29,32 @@ class BolArmureSeeder extends Seeder
                 'id' => 3,
                 'armure' => 'Armure moyenne',
                 'protection' => 'd6-2(2)',
-                'malus' => 'Social / -1 en agilité',
+                'malus' => 'Social / Agilité -1',
                 'pts_de_pouvoir' => '+2',
             ],
             [
                 'id' => 4,
                 'armure' => 'Armure lourde',
                 'protection' => 'd6-1(3)',
-                'malus' => 'Social / -2 en agilité',
+                'malus' => 'Social / Agilité -2',
                 'pts_de_pouvoir' => '+3',
             ],
             [
                 'id' => 5,
                 'armure' => 'Casque',
                 'protection' => '+1 à l\'armure',
-                'malus' => 'Social / -1 en initiative',
+                'malus' => 'Social / Initiative -1',
             ],
             [
                 'id' => 6,
                 'armure' => 'Petit bouclier',
-                'protection' => 'Malus -1 à un jet d\'attaque',
+                'protection' => 'Défense +1 contre une attaque par round',
             ],
             [
                 'id' => 7,
                 'armure' => 'Grand bouclier',
-                'protection' => 'Malus -1 à tout les jets d\'attaques',
-                'malus' => '-1 en agilité',
+                'protection' => 'Défense +1 contre toutes les attaques',
+                'malus' => 'Agilité -1',
             ],
         ];
 

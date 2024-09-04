@@ -83,29 +83,71 @@
           </div>
         </div>
       </p-fieldset>
-    </div>
-    <p-fieldset legend="Armes">
-      <div *ngIf="armesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des armes</div>
-
-      <div>
-        <div *ngFor="let item of selectedItemDetail()" class="flex gap-2 items-center pb-1">
-          <div class="flex gap-2 items-center" style="width: 250px">
-            @if (currentField() === 'armes') {
-              {{ item.arme }} {{item.degats}}
-            }
-
+      <p-fieldset legend="Carrières">
+        <div style="min-height: 72px;">
+        <div *ngIf="armuresCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des carrières</div>
+        <div formArrayName="carrieres">
+          <div class="flex flex-col" *ngFor="let carriere of carrieres.controls; let i = index">
+            <div class="flex flex-col">
+              <div [formGroupName]="i" class="flex gap-2 items-center">
+                <div style="width: 100px">{{carriereFromId(carriere.value.id)}}</div>
+                <p-inputNumber formControlName="value" inputId="defense" maxFractionDigits="0"/>
+                <app-btn (click)="removeItem(carriere.value.id, carrieres)"></app-btn>
+              </div>
+            </div>
           </div>
-          <app-btn (click)="removeItem(item.id, armes)"></app-btn>
         </div>
-      </div>
+        </div>
+        <div class="footer-separator flex justify-end gap-2">
+          <p-button label="Ajouter une carrière"
+                    size="small" [link]="true"
+                    class="text-cyan-600"
+                    (click)="addItem('C', $event)"/>
+        </div>
+      </p-fieldset>
+    </div>
+    <div class="flex gap-2">
+      <p-fieldset class="flex-auto" legend="Armes">
+        <div *ngIf="armesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des armes</div>
+        <div>
+          <div *ngFor="let item of selectedArmes()" class="flex gap-2 items-center pb-1">
+            <div class="flex gap-2 items-center" style="width: 250px">
+              {{ item.arme }} {{item.degats}}
+            </div>
+            <app-btn (click)="removeItem(item.id, armes)"></app-btn>
+          </div>
+        </div>
 
-      <div class="footer-separator flex justify-end gap-2">
-        <p-button label="Ajouter une arme" size="small" [link]="true" class="text-cyan-600"
-                  (click)="addItem('A', $event)"/>
-      </div>
-    </p-fieldset>
+        <div class="footer-separator flex justify-end gap-2">
+          <p-button label="Ajouter une arme" size="small" [link]="true" class="text-cyan-600"
+                    (click)="addItem('A', $event)"/>
+        </div>
+      </p-fieldset>
+      <p-fieldset class="flex-auto" legend="Armures">
+        <div *ngIf="armuresCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des armures</div>
 
+        <div>
+          <div *ngFor="let item of selectedArmures()" class="flex gap-2 items-center pb-1">
+            <div class="flex gap-2 items-center" style="width: 250px">
+              {{ item.armure }} {{item.protection}}
+            </div>
+            <app-btn (click)="removeItem(item.id, armures)"></app-btn>
+          </div>
+        </div>
+
+        <div class="footer-separator flex justify-end gap-2">
+          <p-button label="Ajouter une armure" size="small" [link]="true" class="text-cyan-600"
+                    (click)="addItem('D', $event)"/>
+        </div>
+      </p-fieldset>
+    </div>
   </form>
+  <div class="flex justify-end gap-2 pt-2">
+    <button pButton icon="pi pi-times" size="small" label="Quitter" severity="secondary"
+            (click)="quit($event)"></button>
+    <button pButton icon="pi pi-check" size="small" label="Valider" severity="success" [disabled]="pnjForm.invalid"
+            (click)="submit($event)"></button>
+  </div>
 </div>
 
 <p-overlayPanel #opPnj>
@@ -113,7 +155,7 @@
     <div>{{ itemTitle() }}</div>
 
     <div class="flex flex-col gap-2">
-      <p-dropdown [style]="{ width: '250px' }" [options]="filteredItemList()"
+      <p-dropdown [style]="{ width: '250px' }" [options]="unselectedItems()"
                   [(ngModel)]="selectedItem" [ngModelOptions]="{standalone: true}" [showClear]="true"
                   placeholder="Faites votre sélection">
 
@@ -121,29 +163,24 @@
 
           <div class="flex align-items-center gap-2">
             <div *ngIf="currentField() === 'armes'">{{ selectedOption.arme }}</div>
+            <div *ngIf="currentField() === 'armures'">{{ selectedOption.armure }}</div>
+            <div *ngIf="currentField() === 'carrieres'">{{ selectedOption.carriere }}</div>
           </div>
         </ng-template>
 
         <ng-template let-item pTemplate="item">
           <div class="flex flex-col gap-2">
             @if (currentField() === 'armes') {
-              <div class="flex flex-col gap-1">
-                <div class="text-xl">{{ item.arme }}</div>
-                <div class="flex flex-col">
-                  <div class="flex gap-2" style="font-size: smaller">
-                    <div style="width: 70px"><strong>Dégats</strong></div>
-                    {{ item.degats }}
-                  </div>
-                  <div class="flex gap-2" style="font-size: smaller">
-                    <div style="width: 70px"><strong>Portée</strong></div>
-                    {{ item.portee }}
-                  </div>
-                  <div class="flex gap-2" style="font-size: smaller">
-                    <div style="width: 70px"><strong>Notes</strong></div>
-                    {{ item.notes }}
-                  </div>
-                </div>
-              </div>
+              <div>{{item.arme}}</div>
+              <div class="text-gray-400">{{item.degats}}</div>
+            }
+            @if (currentField() === 'armures') {
+              <div>{{ item.armure }}</div>
+              <div class="text-gray-400"> {{item.protection}}</div>
+            }
+            @if (currentField() === 'carrieres') {
+              <div>{{ item.carriere }}</div>
+              <div class="text-gray-400"> {{item.detail}}</div>
             }
           </div>
         </ng-template>

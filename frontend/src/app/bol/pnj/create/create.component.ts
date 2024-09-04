@@ -2,8 +2,8 @@ import {Component, computed, inject, signal, ViewChild, viewChild} from '@angula
 import {FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {map, Subscription} from "rxjs";
 import {BolCreatureStateService} from "../../services/bol-creature-state.service";
-import {DialogService} from "primeng/dynamicdialog";
-import {BolHerosCarriereModel} from "../../models/bol-carriere.model";
+import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
+import {BolCarriereModel, BolHerosCarriereModel} from "../../models/bol-carriere.model";
 import {PictureComponent} from "../../../shared/picture/picture.component";
 import {DropdownModule} from "primeng/dropdown";
 import {InputTextModule} from "primeng/inputtext";
@@ -14,7 +14,7 @@ import {BolHerosCarrieresComponent} from "../../heros/create/carrieres/carrieres
 import {ConfirmationService} from "primeng/api";
 import {BtnComponent} from "../../../shared/trash/trash.component";
 import {Button, ButtonDirective} from "primeng/button";
-import {NgForOf, NgIf} from "@angular/common";
+import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {TooltipModule} from "primeng/tooltip";
 import {BolHerosStateService} from "../../services/bol-heros-state.service";
 import {toSignal} from "@angular/core/rxjs-interop";
@@ -43,7 +43,8 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
     TooltipModule,
     ButtonDirective,
     OverlayPanelModule,
-    Ripple
+    Ripple,
+    JsonPipe
   ],
   providers: [
     ConfirmationService
@@ -106,18 +107,40 @@ export class BolPnjCreateComponent {
 
   /*** Gestion des armes ***/
   protected armeList = this.hs.armeList;
+  protected armureList = this.hs.armureList;
+  protected carriereList = this.hs.carriereList;
 
   public selectedItem= signal< any | null>(null);
   public itemTitle = signal('Armes');
-  public currentItems = signal<any[]>([]);
   public currentField = signal<string>('armes');
-  protected selectedItemIds = toSignal(this.pnjForm.get(this.currentField())!.valueChanges.pipe(map((items: any[]) => items.map(item => item.id))));
-  protected filteredItemList = computed(() => {
-    return this.currentItems()?.filter((item: any) => !this.selectedItemIds()?.includes(item.id));
+
+  protected unselectedItems = signal<any[]>([])
+
+  protected selectedArmesIds = toSignal(this.pnjForm.get('armes')!.valueChanges.pipe(map((items: any[]) => items.map(item => item.id))));
+  protected selectedArmes = computed(() => {
+    return this.armeList()?.filter((item: any) => this.selectedArmesIds()?.includes(item.id))
   });
-  protected selectedItemDetail = computed(() => {
-    return this.currentItems()?.filter((item: any) => this.selectedItemIds()?.includes(item.id))
+  protected unselectedArmes = computed(() => {
+    return this.armeList()?.filter((item: any) => !this.selectedArmesIds()?.includes(item.id))
   });
+  protected selectedArmuresIds = toSignal(this.pnjForm.get('armures')!.valueChanges.pipe(map((items: any[]) => items.map(item => item.id))));
+  protected selectedArmures = computed(() => {
+    return this.armureList()?.filter((item: any) => this.selectedArmuresIds()?.includes(item.id))
+  });
+  protected unselectedArmures = computed(() => {
+    return this.armureList()?.filter((item: any) => !this.selectedArmuresIds()?.includes(item.id))
+  });
+
+  protected selectedCarrieresIds = toSignal(this.pnjForm.get('carrieres')!.valueChanges.pipe(map((items: any[]) => items.map(item => item.id))));
+  protected unselectedCarrieres = computed(() => {
+    return this.carriereList()?.filter((item: any) => !this.selectedCarrieresIds()?.includes(item.id))
+  });
+
+
+
+  constructor(private ref: DynamicDialogRef) {
+
+  }
   removeItem(itemId: number, items: FormArray) {
     const index = items.value.findIndex((item: any) => item.id === itemId)
     if (index !== -1) items.removeAt(index)
@@ -126,10 +149,21 @@ export class BolPnjCreateComponent {
   addItem(type: 'A' | 'D' | 'C', ev: Event) { // Attaque Défense Carriere
     this.selectedItem.set(null);
     switch (type) {
-      case "A":
-        this.currentItems.set(this.armeList());
+      case 'A':
         this.currentField.set('armes');
+        this.unselectedItems.set(this.unselectedArmes());
         this.itemTitle.set('Armes');
+        break;
+      case 'D':
+        this.currentField.set('armures');
+        this.unselectedItems.set(this.unselectedArmures());
+        this.itemTitle.set('Armures');
+        break;
+      case 'C':
+        this.currentField.set('carrieres');
+        this.unselectedItems.set(this.unselectedCarrieres());
+        this.itemTitle.set('Carrières');
+        break;
     }
     this.panelPnj?.toggle(ev);
   }
@@ -137,21 +171,48 @@ export class BolPnjCreateComponent {
 
   createItem(panel: OverlayPanel, event: any) {
     panel.toggle(event);
-    const item = this.fb.group({
-      id: [this.selectedItem()?.id],
-    });
+
     switch (this.currentField()) {
       case 'armes':
-        this.armes.push(item);
+        const arme = this.fb.group({
+          id: [this.selectedItem()?.id],
+        });
+        this.armes.push(arme);
+        break;
+      case 'armures':
+        const armure = this.fb.group({
+          id: [this.selectedItem()?.id],
+        });
+        this.armures.push(armure);
+        break;
+      case 'carrieres':
+        const carriere = this.fb.group({
+          id: [this.selectedItem()?.id],
+          value: 0
+        });
+        this.carrieres.push(carriere);
+        break;
     }
 
   }
 
+  carriereFromId(id: number) {
+    const carriere = this.carriereList()?.find((itemCar: BolCarriereModel) => itemCar.id === id);
+    return carriere.carriere ?? {carriere: null, description: null};
+  }
 
+  quit(event: Event) {
+    event.preventDefault();
+    this.ref.close(null);
+  }
 
-
-
-
+  submit(event?: Event) {
+    event?.preventDefault();
+    if (this.pnjForm.invalid) {
+      return;
+    }
+    this.ref.close(this.pnjForm.value);
+  }
 
   picture() {
     const ref = this.ds.open(PictureComponent, {header: 'Photo du pnj'});

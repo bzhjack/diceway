@@ -1,9 +1,8 @@
 <div>
   <app-header legend="Personnages non joueurs">
-    <button pButton label="Création" icon="pi pi-pencil" severity="warning" size="small"></button>
+    <button pButton label="Création" icon="pi pi-pencil" severity="warning" size="small" (click)="createPnj()"></button>
     <button pButton label="Retour" icon="pi pi-arrow-left" severity="secondary" size="small" routerLink="/bol"></button>
   </app-header>
 </div>
 <div class="p-4 flex flex-wrap gap-2 flex-end" style="height: calc(100vh - 120px); overflow:  auto; background: #0e8174">
-<bol-pnj-create></bol-pnj-create>
 </div>
