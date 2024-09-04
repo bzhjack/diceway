@@ -135,7 +135,17 @@ export class BolPnjCreateComponent {
   }
 
 
+  createItem(panel: OverlayPanel, event: any) {
+    panel.toggle(event);
+    const item = this.fb.group({
+      id: [this.selectedItem()?.id],
+    });
+    switch (this.currentField()) {
+      case 'armes':
+        this.armes.push(item);
+    }
 
+  }
 
 
 

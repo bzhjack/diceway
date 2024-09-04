@@ -88,13 +88,14 @@
       <div *ngIf="armesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des armes</div>
 
       <div>
-        <div *ngFor="let arme of selectedItemDetail()" class="flex gap-2 items-center pb-1">
-          <div class="flex gap-2 items-center" style="width: 150px">
-            <i *ngIf="arme.detail" class="pi pi-info-circle cursor-pointer text-cyan-600"
-               [pTooltip]="arme.detail"></i>
-            {{ arme.capacite }}
+        <div *ngFor="let item of selectedItemDetail()" class="flex gap-2 items-center pb-1">
+          <div class="flex gap-2 items-center" style="width: 250px">
+            @if (currentField() === 'armes') {
+              {{ item.arme }} {{item.degats}}
+            }
+
           </div>
-          <app-btn (click)="removeItem(arme.id, armes)"></app-btn>
+          <app-btn (click)="removeItem(item.id, armes)"></app-btn>
         </div>
       </div>
 
@@ -126,7 +127,7 @@
         <ng-template let-item pTemplate="item">
           <div class="flex flex-col gap-2">
             @if (currentField() === 'armes') {
-              <div class="flex flex-col gap-2">
+              <div class="flex flex-col gap-1">
                 <div class="text-xl">{{ item.arme }}</div>
                 <div class="flex flex-col">
                   <div class="flex gap-2" style="font-size: smaller">
@@ -142,7 +143,6 @@
                     {{ item.notes }}
                   </div>
                 </div>
-
               </div>
             }
           </div>
@@ -154,7 +154,9 @@
     <div class="flex justify-end gap-2">
       <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
               (click)="opPnj.toggle($event)"></button>
-      <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check" [disabled]="!selectedItem()"></button>
+      <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
+              (click)="createItem(opPnj, $event)"
+              [disabled]="!selectedItem()"></button>
     </div>
   </div>
 </p-overlayPanel>
