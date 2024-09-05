@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {ButtonDirective} from "primeng/button";
+import {Button, ButtonDirective} from "primeng/button";
 import {DropdownModule} from "primeng/dropdown";
 import {FormsModule} from "@angular/forms";
 import {HeaderComponent} from "../../../shared/header/header.component";
@@ -14,6 +14,7 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {BolCreaturesService} from "../../services/bol-creatures.service";
 import {BolHerosService} from "../../services/bol-heros.service";
+import {NgForOf} from "@angular/common";
 
 @Component({
   selector: 'bol-pnj-home',
@@ -25,7 +26,9 @@ import {BolHerosService} from "../../services/bol-heros.service";
     HeaderComponent,
     InputTextModule,
     RouterLink,
-    BolPnjCreateComponent
+    BolPnjCreateComponent,
+    NgForOf,
+    Button
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -37,7 +40,7 @@ export class BolPnjHomeComponent {
   private subs: Subscription | undefined;
   private subsPnj: Subscription | undefined;
   private ref?: DynamicDialogRef;
-  public pnj: Array<BolHerosModel> = [];
+  public pnjList: Array<BolHerosModel> = [];
 
   constructor() {
     this.getPnj();
@@ -46,10 +49,10 @@ export class BolPnjHomeComponent {
   getPnj() {
     this.spinner.show();
     this.subsPnj?.unsubscribe();
-
+    this.pnjList = [];
     this.subsPnj = this.pnjService.pnj().subscribe({
       next: (pnj: BolHerosModel[]) => {
-        this.pnj = pnj;
+        this.pnjList = pnj;
         this.spinner.hide();
       },
       error: () => {
@@ -62,7 +65,7 @@ export class BolPnjHomeComponent {
     this.ref = this.#ds.open(BolPnjCreateComponent, {
       header: pnj ? 'Modification d\'un PNJ' : 'Création d\'un PNJ',
       data: {
-        creature: pnj
+        pnj: pnj
       }
     });
     this.subs?.unsubscribe();

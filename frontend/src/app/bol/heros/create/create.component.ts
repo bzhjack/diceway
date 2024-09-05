@@ -115,7 +115,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   public attributsCtrl = new FormControl<BolHerosAttributs>({vigueur: 0,agilite: 0,esprit: 0,aura: 0});
   public originesCtrl = new FormControl<BolHerosOrigines>({nom: null,region_id: null, avatar: null});
   public ressourcesCtrl = new FormControl<BolHerosRessources>({vitalite: 0 , heroisme: 0});
-
+  public commentaireCtrl = new FormControl<string | null>(null);
   herosForm = this.fb.group(
     {
       id: this.idCtrl,
@@ -128,7 +128,8 @@ export class BolHerosCreateComponent implements OnDestroy {
       origines: this.originesCtrl,
       carrieres: this.carrieresCtrl,
       ressources: this.ressourcesCtrl,
-      langues: this.languesCtrl
+      langues: this.languesCtrl,
+      commentaire: this.commentaireCtrl
     }, {validators: globalFormValidator}
   );
   valueChanges$: Observable<BolHerosModel> = this.herosForm.valueChanges.pipe(
@@ -160,7 +161,8 @@ export class BolHerosCreateComponent implements OnDestroy {
       carrieres: value.carrieres ?? [],
       armures: value.armures ?? [],
       armes: value.armes ?? [],
-      langues: value.langues ?? []
+      langues: value.langues ?? [],
+      commentaire: value.commentaire ?? null
     })),
     tap((heros: BolHerosModel) => {
       this.#herosStateService.currentHeros.set(heros);

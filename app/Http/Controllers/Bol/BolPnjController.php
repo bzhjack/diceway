@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bol\BolHeros;
+use App\Models\Bol\BolHerosArme;
+use App\Models\Bol\BolHerosArmure;
+use App\Models\Bol\BolHerosCarriere;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -28,13 +31,25 @@ class BolPnjController extends Controller
         $pnj = $request->input();
         $pnj['user_id'] = Auth::id();
         $pnj = BolHeros::create($pnj);
-        /*$armes = $request->input('capacites');
-        foreach ($capacites as $capacite) {
-            $newcapa['creature_id'] = $creature['id'];
-            $newcapa['capacite_id'] = $capacite['id'];
-            $newcapa['detail'] = $capacite['detail'];
-            BolCreatureCapacite::create($newcapa);
-        }*/
+        $armes = $request->input('armes');
+        foreach ($armes as $arme) {
+            $newarme['heros_id'] = $pnj['id'];
+            $newarme['arme_id'] = $arme['id'];
+            BolHerosArme::create($newarme);
+        }
+        $armures = $request->input('armures');
+        foreach ($armures as $armure) {
+            $newarmure['heros_id'] = $pnj['id'];
+            $newarmure['armure_id'] = $armure['id'];
+            BolHerosArmure::create($newarmure);
+        }
+        $carrieres = $request->input('carrieres');
+        foreach ($carrieres as $carriere) {
+            $newcarriere['heros_id'] = $pnj['id'];
+            $newcarriere['carriere_id'] = $carriere['id'];
+            $newcarriere['value'] = $carriere['value'];
+            BolHerosCarriere::create($newcarriere);
+        }
         $createdCreature = BolHeros::with('carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue')
             ->where('user_id', Auth::id())
             ->where('id', $pnj['id'])->get()->first();

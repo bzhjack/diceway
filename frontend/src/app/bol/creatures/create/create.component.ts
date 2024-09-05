@@ -123,8 +123,8 @@ export class BolCreatureCreateComponent implements OnDestroy {
   }
 
   constructor(private ref: DynamicDialogRef, private config: DynamicDialogConfig) {
-    if (config.data.creature) {
-      const creature = config.data.creature;
+    if (this.config.data.creature) {
+      const creature = this.config.data.creature;
       this.creatureForm.patchValue(creature, {emitEvent: false});
       this.capacites.clear();
       creature.capacites.forEach( (capa: any) => {

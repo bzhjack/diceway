@@ -7,6 +7,7 @@ import {BolHerosLangueModel} from "./bol-langue.model";
 export interface BolHerosModel {
   id: string | null;
   joueur: string;
+  commentaire: string | null;
   combat: BolHerosCombat,
   attributs: BolHerosAttributs,
   origines: BolHerosOrigines,

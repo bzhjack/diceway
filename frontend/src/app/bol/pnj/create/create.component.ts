@@ -2,7 +2,7 @@ import {Component, computed, inject, signal, ViewChild, viewChild} from '@angula
 import {FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {map, Subscription} from "rxjs";
 import {BolCreatureStateService} from "../../services/bol-creature-state.service";
-import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
+import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {BolCarriereModel, BolHerosCarriereModel} from "../../models/bol-carriere.model";
 import {PictureComponent} from "../../../shared/picture/picture.component";
 import {DropdownModule} from "primeng/dropdown";
@@ -23,6 +23,8 @@ import {BolCreatureCapaciteModel} from "../../models/bol-creature.model";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {Ripple} from "primeng/ripple";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
+import {BolHerosArmureModel} from "../../models/bol-armure.model";
+import {BolHerosModel} from "../../models/bol-heros.model";
 
 @Component({
   selector: 'bol-pnj-create',
@@ -54,7 +56,7 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 })
 export class BolPnjCreateComponent {
   @ViewChild('opPnj') panelPnj?: OverlayPanel;
-  public type= [{type: 'Piétaille', value: 'P'}, {type: 'Coriaces', value: 'C'}, {type: 'Rivaux', value: 'R'}];
+  public type = [{type: 'Piétaille', value: 'P'}, {type: 'Coriaces', value: 'C'}, {type: 'Rivaux', value: 'R'}];
 
   private subs?: Subscription;
   private hs = inject(BolHerosStateService);
@@ -75,10 +77,10 @@ export class BolPnjCreateComponent {
   public tirCtrl = new FormControl(0, Validators.required);
   public defenseCtrl = new FormControl(0, Validators.required);
 
-  public armuresCtrl =  this.fb.array([]);
-  public armesCtrl =  this.fb.array([]);
-  public carrieresCtrl =  this.fb.array([]);
-  public commentaireCtrl = new FormControl(null);
+  public armuresCtrl = this.fb.array([]);
+  public armesCtrl = this.fb.array([]);
+  public carrieresCtrl = this.fb.array([]);
+  public commentaireCtrl = new FormControl<string | null>(null);
   public vitaliteCtrl = new FormControl(0, Validators.required);
 
   pnjForm = this.fb.group(
@@ -101,16 +103,25 @@ export class BolPnjCreateComponent {
       carrieres: this.carrieresCtrl,
       commentaire: this.commentaireCtrl
     });
-  get armes() { return this.pnjForm.get('armes') as FormArray;  }
-  get armures() { return this.pnjForm.get('armures') as FormArray;  }
-  get carrieres() { return this.pnjForm.get('carrieres') as FormArray;  }
+
+  get armes() {
+    return this.pnjForm.get('armes') as FormArray;
+  }
+
+  get armures() {
+    return this.pnjForm.get('armures') as FormArray;
+  }
+
+  get carrieres() {
+    return this.pnjForm.get('carrieres') as FormArray;
+  }
 
   /*** Gestion des armes ***/
   protected armeList = this.hs.armeList;
   protected armureList = this.hs.armureList;
   protected carriereList = this.hs.carriereList;
 
-  public selectedItem= signal< any | null>(null);
+  public selectedItem = signal<any | null>(null);
   public itemTitle = signal('Armes');
   public currentField = signal<string>('armes');
 
@@ -137,10 +148,52 @@ export class BolPnjCreateComponent {
   });
 
 
+  constructor(private ref: DynamicDialogRef, private config: DynamicDialogConfig) {
+    if (this.config.data.pnj) {
+      const pnj = this.config.data.pnj as BolHerosModel;
+      console.log(pnj);
+      this.pnjForm.patchValue({
+        id: pnj.id,
+        nom: pnj.origines.nom,
+        avatar: pnj.origines.avatar,
+        vigueur: pnj.attributs.vigueur,
+        agilite: pnj.attributs.agilite,
+        esprit: pnj.attributs.esprit,
+        aura: pnj.attributs.aura,
+        initiative: pnj.combat.initiative,
+        tir: pnj.combat.tir,
+        melee: pnj.combat.melee,
+        defense: pnj.combat.defense,
+        commentaire: pnj.commentaire
+      }, {emitEvent: false});
+      this.armes.clear();
+      pnj.armes.forEach( (arme: any) => {
+        const heroArme = this.fb.group({
+          id: [arme.arme_id]
+        });
+        this.armes.push(heroArme);
+      });
 
-  constructor(private ref: DynamicDialogRef) {
+      this.armures.clear();
+      pnj.armures.forEach( (armure: any) => {
+        const heroArmure = this.fb.group({
+          id: [armure.armure_id]
+        });
+        this.armures.push(heroArmure);
+      });
 
+      this.carrieres.clear();
+      pnj.carrieres.forEach( (carriere: BolHerosCarriereModel) => {
+        const heroCarriere = this.fb.group({
+          id: [carriere.carriere_id],
+          value: [carriere.value],
+        });
+        this.carrieres.push(heroCarriere);
+      });
+
+    }
   }
+
   removeItem(itemId: number, items: FormArray) {
     const index = items.value.findIndex((item: any) => item.id === itemId)
     if (index !== -1) items.removeAt(index)
@@ -198,7 +251,7 @@ export class BolPnjCreateComponent {
 
   carriereFromId(id: number) {
     const carriere = this.carriereList()?.find((itemCar: BolCarriereModel) => itemCar.id === id);
-    return carriere.carriere ?? {carriere: null, description: null};
+    return carriere?.carriere ?? '';
   }
 
   quit(event: Event) {

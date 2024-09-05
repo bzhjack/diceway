@@ -16,7 +16,7 @@ class BolHeros extends Model
     protected $keyType = 'uuid';
     protected $hidden = [
         'user_id',
-        'vitalite', 'heroisme',
+        'experience', 'foi', 'vitalite', 'heroisme',
         'initiative', 'melee', 'tir', 'defense',
         'vigueur', 'agilite', 'esprit', 'aura',
         'nom', 'avatar', 'region_id', 'region'
@@ -28,7 +28,8 @@ class BolHeros extends Model
         'type',
         'nom', 'avatar', 'region_id',
         'vigueur', 'agilite', 'esprit', 'aura',
-        'initiative', 'melee', 'tir', 'defense','commentaire'
+        'initiative', 'melee', 'tir', 'defense','commentaire',
+        'experience', 'foi', 'vitalite', 'heroisme'
     ];
 
     public function traits(): HasMany
@@ -92,7 +93,9 @@ class BolHeros extends Model
     {
         return [
             'vitalite' => $this->vitalite,
-            'heroisme' => $this->heroisme
+            'heroisme' => $this->heroisme,
+            'experience' => $this->experience,
+            'foi' => $this->foi
         ];
     }
 }
