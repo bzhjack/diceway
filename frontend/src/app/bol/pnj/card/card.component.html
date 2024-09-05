@@ -1,6 +1,6 @@
-<p-card class="creature_card" [style]="{width: '410px', height: '260px'}">
+<p-card class="pnj_card" [style]="{width: '410px', height: '260px'}">
   <div class="flex flex-col w-full">
-    <div class="creature_card__title">
+    <div class="pnj_card__title">
       <div class="flex justify-between">
         <div class="flex gap-2 items-center ">
           <i *ngIf="pnj().commentaire" class="pi pi-info-circle cursor-pointer warn-color" [pTooltip]="pnj().commentaire ?? ''"></i>
@@ -13,12 +13,21 @@
           </button>
         </div>
       </div>
-      <div class="text-gray-400 font-light flex gap-2 items-center">
-        <p-tag [severity]="getSeverity(pnj())">{{profile() === 'private' ? 'Privé' : 'Public'}}</p-tag></div>
+
+      <div class="flex justify-between pnj_card__subtitle">
+        <div class="flex gap-2 items-center font-light text-gray-400">
+          ({{ getType(pnj()) }})
+          <p-tag [severity]="getSeverity(pnj())">{{ profile() === 'private' ? 'Privé' : 'Public' }}</p-tag>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="text-gray-300">Vitalité</div>
+          <div class="text-gray-400 font-bold">{{ pnj().ressources.vitalite }}</div>
+        </div>
+      </div>
     </div>
     <div class="flex gap-2">
       <div style="padding-top: 8px;">
-        <div class="creature_card__img">
+        <div class="pnj_card__img">
           <img *ngIf="profile() === 'public'" src="/frontend/assets/bol/bestiary/{{pnj().id}}.png" alt=""/>
           <img *ngIf="profile() === 'private'" style="width:100%"
                [src]="pnj().origines.avatar !== null ? pnj().origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
@@ -31,7 +40,6 @@
           <tr><td class="text-gray-300">Agilité</td><td class="text-gray-400">{{ pnj().attributs.agilite }}</td></tr>
           <tr><td class="text-gray-300">Esprit</td><td class="text-gray-400">{{ pnj().attributs.esprit }}</td></tr>
           <tr><td class="text-gray-300">Aura</td><td class="text-gray-400">{{ pnj().attributs.aura }}</td></tr>
-          <tr><td class="text-gray-300">Vitalité</td><td class="text-gray-400 font-bold">{{ pnj().ressources.vitalite }}</td></tr>
         </table>
       </p-fieldset>
       <p-fieldset legend="Combat"  class="flex-auto">

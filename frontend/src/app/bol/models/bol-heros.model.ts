@@ -8,6 +8,7 @@ export interface BolHerosModel {
   id: string | null;
   user_id: string | null;
   joueur: string;
+  type: string;
   commentaire: string | null;
   combat: BolHerosCombat,
   attributs: BolHerosAttributs,
@@ -18,7 +19,6 @@ export interface BolHerosModel {
   armures: BolHerosArmureModel[] | number[],
   armes: BolHerosArmeModel[] | number[],
   langues: BolHerosLangueModel[] | number[]
-
 }
 
 export interface BolHerosCombat {

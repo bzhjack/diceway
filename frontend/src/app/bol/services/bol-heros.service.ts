@@ -113,7 +113,7 @@ export class BolHerosService {
 
   // Pnj
 
-  pnj(): Observable<any> {
+  pnj(): Observable<BolHerosModel[]> {
     return this.http.get<BolHerosModel[]>('/api/bol/pnj');
   }
 

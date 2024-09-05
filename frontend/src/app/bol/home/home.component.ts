@@ -26,8 +26,11 @@ export class BolHomeComponent implements OnDestroy {
   private spinner = inject(NgxSpinnerService);
   private creatureService = inject(BolCreaturesService);
   private herosService = inject(BolHerosService);
+
+  public pnj: Array<BolHerosModel> = [];
   public heroes: Array<BolHerosModel> = [];
   public creatures: Array<BolCreatureModel> = [];
+
   private subs?: Subscription;
   constructor() {
     this.getLore();
@@ -40,11 +43,13 @@ export class BolHomeComponent implements OnDestroy {
     // Supposons que `hs.heroes()` et `hs.anotherRequest()` sont les deux requêtes HTTP que vous souhaitez lancer en parallèle
     const heroesRequest = this.herosService.heroes();
     const creaturesRequest = this.creatureService.creatures();
+    const pnjRequest = this.herosService.pnj();
 
-    this.subs = forkJoin([heroesRequest, creaturesRequest]).subscribe({
-      next: ([heroes, creatures]) => {
+    this.subs = forkJoin([heroesRequest, creaturesRequest, pnjRequest]).subscribe({
+      next: ([heroes, creatures, pnj]) => {
         this.heroes = heroes;
-        this.creatures = creatures; // Stockez les données de la deuxième requête
+        this.creatures = creatures;
+        this.pnj = pnj;
         this.spinner.hide();
       },
       error: (error) => {

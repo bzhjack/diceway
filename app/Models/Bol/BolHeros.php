@@ -15,7 +15,6 @@ class BolHeros extends Model
     public $incrementing = false;
     protected $keyType = 'uuid';
     protected $hidden = [
-        'user_id',
         'experience', 'foi', 'vitalite', 'heroisme',
         'initiative', 'melee', 'tir', 'defense',
         'vigueur', 'agilite', 'esprit', 'aura',

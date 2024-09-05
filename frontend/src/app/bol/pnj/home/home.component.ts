@@ -18,6 +18,7 @@ import {NgForOf} from "@angular/common";
 import {BolCreatureCardComponent} from "../../creatures/card/card.component";
 import {BolPnjCardComponent} from "../card/card.component";
 import {ConfirmationService} from "primeng/api";
+import {ConfirmPopupModule} from "primeng/confirmpopup";
 
 @Component({
   selector: 'bol-pnj-home',
@@ -33,7 +34,8 @@ import {ConfirmationService} from "primeng/api";
     NgForOf,
     Button,
     BolCreatureCardComponent,
-    BolPnjCardComponent
+    BolPnjCardComponent,
+    ConfirmPopupModule
   ],
   providers: [
     ConfirmationService

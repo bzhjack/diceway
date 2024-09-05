@@ -33,14 +33,25 @@ export class BolPnjCardComponent {
   editPnj = output<BolHerosModel>()
   deletePnj = output<BolHerosModel>()
 
-  getSeverity (creature: BolHerosModel) {
-    switch (creature?.user_id) {
+  getSeverity (pnj: BolHerosModel) {
+    switch (pnj?.user_id) {
       case null:
         return 'success';
       default:
         return 'info';
     }
-  };
+  }
+  getType(pnj: BolHerosModel) {
+    switch (pnj?.type) {
+      case 'C':
+        return 'Coriaces';
+      case 'R':
+        return 'Rivaux';
+      case 'P':
+        return 'Piétaille';
+    }
+    return '';
+  }
   onCreate(pnj: BolHerosModel) {
     this.editPnj.emit(<BolHerosModel>pnj);
   }
