@@ -104,6 +104,8 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     // Gestion de Pnj
     Route::get('/bol/pnj', [BolPnjController::class, 'getAll']);
     Route::post('/bol/pnj/create', [BolPnjController::class, 'create']);
+    Route::post('/bol/pnj/update', [BolPnjController::class, 'update']);
+    Route::delete('/bol/pnj/delete/{id}', [BolPnjController::class, 'delete']);
 
     // Maj des origines
     Route::post('/bol/heros/origines/update/{herosId}', [BolHerosController::class, 'updateOrigines']);
