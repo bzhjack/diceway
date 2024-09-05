@@ -10,16 +10,36 @@
     <button pButton label="Retour" icon="pi pi-arrow-left" severity="secondary" size="small" routerLink="/bol"></button>
 
   </app-header>
-  <div class="p-4 flex flex-wrap gap-2 flex-end" style="height: calc(100vh - 120px); overflow:  auto">
-    @defer () {
-   <bol-creature-card *ngFor="let creature of filteredBestiary"
-                      [creature]="creature"
-                      (deleteCreature)="deleteCreature(creature, $event)"
-                      (editCreature)="createCreature($event)">
 
-   </bol-creature-card>
-  }
-  </div>
+  <p-table
+    [value]="bestiary"
+    [scrollable]="true"
+    scrollHeight="calc(100vh - 120px)">
+    <ng-template pTemplate="header">
+      <tr>
+        <th></th>
+        <th>Nom</th>
+        <th>Taille</th>
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-beast>
+      <tr>
+        <td style="width: 110px">
+          <div class="beast_row__img">
+            <img *ngIf="!beast.user_id" src="/frontend/assets/bol/bestiary/{{beast.id}}.png" alt=""/>
+            <img *ngIf="beast.user_id"
+                 style="width:100%"
+                 [src]="beast.avatar !== null ? beast.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+                 alt="avatar">
+          </div>
+        </td>
+        <td>{{ beast.nom }}</td>
+        <td>{{ beast.taille.taille }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+   <!--bol-creature-card              [creature]="bestiary[0]"></bol-creature-card-->
 </div>
 
 

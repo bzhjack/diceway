@@ -5,7 +5,7 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {Subscription} from "rxjs";
 import {BolCreatureModel} from "../../models/bol-creature.model";
 import {CardModule} from "primeng/card";
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {BolCreatureCardComponent} from "../card/card.component";
 import {HeaderComponent} from "../../../shared/header/header.component";
 import {Button, ButtonDirective} from "primeng/button";
@@ -20,6 +20,7 @@ import {InputTextModule} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
 import {RadioButtonModule} from "primeng/radiobutton";
 import {DropdownModule} from "primeng/dropdown";
+import {TableModule} from "primeng/table";
 
 @Component({
   selector: 'bol-creature-home',
@@ -39,7 +40,9 @@ import {DropdownModule} from "primeng/dropdown";
     InputTextModule,
     FormsModule,
     RadioButtonModule,
-    DropdownModule
+    DropdownModule,
+    TableModule,
+    NgIf
   ],
   providers: [
     ConfirmationService
