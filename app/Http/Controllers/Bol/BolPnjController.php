@@ -21,6 +21,7 @@ class BolPnjController extends Controller
     {
         $heroes = BolHeros::with('carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue')
             ->where('user_id', Auth::id())
+            ->orWhereNull('user_id')
             ->where('type', '!=', 'H')
             ->get();
         return response($heroes);

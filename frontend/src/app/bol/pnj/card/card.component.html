@@ -28,7 +28,7 @@
     <div class="flex gap-2">
       <div style="padding-top: 8px;">
         <div class="pnj_card__img">
-          <img *ngIf="profile() === 'public'" src="/frontend/assets/bol/bestiary/{{pnj().id}}.png" alt=""/>
+          <img *ngIf="profile() === 'public'" src="/frontend/assets/bol/pnj/{{pnj().id}}.png" alt=""/>
           <img *ngIf="profile() === 'private'" style="width:100%"
                [src]="pnj().origines.avatar !== null ? pnj().origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
                alt="avatar">

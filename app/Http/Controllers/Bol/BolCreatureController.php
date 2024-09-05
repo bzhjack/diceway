@@ -15,7 +15,10 @@ class BolCreatureController extends Controller
 {
     public function getAll()
     {
-        $creatures = BolCreature::with('taille', 'capacites.capacite')->where('user_id', Auth::id())->orWhereNull('user_id')->orderBy('nom', 'asc')->get();
+        $creatures = BolCreature::with('taille', 'capacites.capacite')
+            ->where('user_id', Auth::id())
+            ->orWhereNull('user_id')
+            ->orderBy('nom', 'asc')->get();
         return response($creatures);
     }
 
@@ -43,7 +46,9 @@ class BolCreatureController extends Controller
             $newcapa['detail'] = $capacite['detail'];
             BolCreatureCapacite::create($newcapa);
         }
-        $createdCreature = BolCreature::with('taille', 'capacites.capacite')->where('user_id', Auth::id())->where('id', $creature['id'])->get()->first();
+        $createdCreature = BolCreature::with('taille', 'capacites.capacite')
+            ->where('user_id', Auth::id())
+            ->where('id', $creature['id'])->get()->first();
         return response($createdCreature);
     }
 
@@ -51,7 +56,9 @@ class BolCreatureController extends Controller
     {
         $creatureId = $request->input('id');
         $updatedCreature = $request->except(['capacites']);
-        $creature = BolCreature::with('taille', 'capacites')->where('user_id', Auth::id())->where('id', $creatureId)->get()->first();
+        $creature = BolCreature::with('taille', 'capacites')
+            ->where('user_id', Auth::id())
+            ->where('id', $creatureId)->get()->first();
 
         // Le nouveau tableau de capacités venant de la requête
         $tableau2 = $request->input('capacites');
