@@ -5,7 +5,12 @@
   </app-header>
 </div>
 <div class="p-4 flex flex-wrap gap-2 flex-end" style="height: calc(100vh - 120px); overflow:  auto;">
-  <div *ngFor="let pnj of pnjList">
-    <p-button (click)="createPnj(pnj)" >{{pnj.origines.nom}}</p-button>
-  </div>
+  @defer () {
+    <bol-pnj-card *ngFor="let pnj of pnjList"
+                       [pnj]="pnj"
+                       (deletePnj)="deletePnj(pnj, $event)"
+                       (editPnj)="createPnj($event)">
+
+    </bol-pnj-card>
+  }
 </div>

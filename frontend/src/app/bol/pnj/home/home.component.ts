@@ -15,6 +15,9 @@ import {BolHerosModel} from "../../models/bol-heros.model";
 import {BolCreaturesService} from "../../services/bol-creatures.service";
 import {BolHerosService} from "../../services/bol-heros.service";
 import {NgForOf} from "@angular/common";
+import {BolCreatureCardComponent} from "../../creatures/card/card.component";
+import {BolPnjCardComponent} from "../card/card.component";
+import {ConfirmationService} from "primeng/api";
 
 @Component({
   selector: 'bol-pnj-home',
@@ -28,7 +31,12 @@ import {NgForOf} from "@angular/common";
     RouterLink,
     BolPnjCreateComponent,
     NgForOf,
-    Button
+    Button,
+    BolCreatureCardComponent,
+    BolPnjCardComponent
+  ],
+  providers: [
+    ConfirmationService
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -86,5 +94,19 @@ export class BolPnjHomeComponent {
         });
       }
     });
+  }
+  deletePnj(pnj: BolHerosModel, event: any) {
+    this.spinner.show();
+    this.subs?.unsubscribe();
+    this.subs = this.pnjService.deletePnj(pnj.id as string).subscribe({
+      next: () => {
+        this.spinner.hide();
+        this.getPnj();
+      },
+      error: () => {
+        this.spinner.hide();
+      }
+    });
+
   }
 }

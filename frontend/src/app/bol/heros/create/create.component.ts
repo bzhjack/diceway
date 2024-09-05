@@ -102,6 +102,7 @@ export class BolHerosCreateComponent implements OnDestroy {
 
 
   public idCtrl: FormControl<string | null> = new FormControl(null);
+  public userIdCtrl: FormControl<string | null> = new FormControl(null);
   public joueurCtrl = new FormControl('', Validators.required);
 
   // Avantages et désavantages
@@ -119,6 +120,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   herosForm = this.fb.group(
     {
       id: this.idCtrl,
+      user_id: this.userIdCtrl,
       joueur: this.joueurCtrl,
       traits: this.traitsCtrl,
       attributs: this.attributsCtrl,
@@ -135,6 +137,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   valueChanges$: Observable<BolHerosModel> = this.herosForm.valueChanges.pipe(
     map(value => ({
       id: value.id ?? null,
+      user_id: value.user_id ?? null,
       joueur: value.joueur ?? '',
       ressources: {
         vitalite: value.ressources?.vitalite ?? 0,
