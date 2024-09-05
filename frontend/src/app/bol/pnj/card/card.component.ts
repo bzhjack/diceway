@@ -28,7 +28,7 @@ import {TooltipModule} from "primeng/tooltip";
 })
 export class BolPnjCardComponent {
   private confirmationService = inject(ConfirmationService);
-  pnj = input.required<BolHerosModel>()
+  pnj = input.required<BolHerosModel | any>()
   profile = computed(() => this.pnj()?.user_id ? 'private' : 'public')
   editPnj = output<BolHerosModel>()
   deletePnj = output<BolHerosModel>()
