@@ -17,26 +17,44 @@ import {BolCreatureHomeComponent} from "./bol/creatures/home/home.component";
 import {BolPnjHomeComponent} from "./bol/pnj/home/home.component";
 
 export const routes: Routes = [
-    // Accès public
-    { path: 'login', component: LoginComponent }, // Connexion à l'application
-    { path: 'forgotten', component: ForgottenComponent }, // Mot de passe oublié
-    { path: 'register', component: RegisterComponent }, // Création d'un compte
-    { path: 'welcome', component: WelcomeComponent }, // Création d'un compte
-    { path: 'welcome/:success', component: WelcomeComponent }, // Création d'un compte
-    { path: 'resend', component: ResendComponent }, // Renvoi d'un mail de confirmation
-    { path: 'resend/:forbidden', component: ResendComponent }, // Renvoi d'un email de confirmation suite à login
-    { path: 'notice', component: NoticeComponent }, // Confirmation de création de compte
-    { path: 'notice/:reset', component: NoticeComponent }, // Confirmation de reset du mot de passe
-    { path: 'reset/:token/:email', component: ResetComponent }, // Lien sur le mail de reset
-    { path: 'callback/:token', component: CallbackComponent }, // Url de callback après authentification
-    { path: 'notfound', component: NotfoundComponent }, // Echec à la verification du mail ou 404 standard
+  // Accès public
+  {path: 'login', component: LoginComponent}, // Connexion à l'application
+  {path: 'forgotten', component: ForgottenComponent}, // Mot de passe oublié
+  {path: 'register', component: RegisterComponent}, // Création d'un compte
+  {path: 'welcome', component: WelcomeComponent}, // Création d'un compte
+  {path: 'welcome/:success', component: WelcomeComponent}, // Création d'un compte
+  {path: 'resend', component: ResendComponent}, // Renvoi d'un mail de confirmation
+  {path: 'resend/:forbidden', component: ResendComponent}, // Renvoi d'un email de confirmation suite à login
+  {path: 'notice', component: NoticeComponent}, // Confirmation de création de compte
+  {path: 'notice/:reset', component: NoticeComponent}, // Confirmation de reset du mot de passe
+  {path: 'reset/:token/:email', component: ResetComponent}, // Lien sur le mail de reset
+  {path: 'callback/:token', component: CallbackComponent}, // Url de callback après authentification
+  {path: 'notfound', component: NotfoundComponent}, // Echec à la verification du mail ou 404 standard
 
-    { path: '', component: HomeComponent, canActivate: [loggedInGuard] },
-    { path: 'bol', component: BolHomeComponent, canActivate: [loggedInGuard] },
-    { path: 'bol/heros', component: BolHeroHomeComponent, canActivate: [loggedInGuard] },
-    { path: 'bol/heros/create/:id', component: BolHerosCreateComponent, canActivate: [loggedInGuard] },
-    { path: 'bol/creature', component: BolCreatureHomeComponent, canActivate: [loggedInGuard] },
-    { path: 'bol/pnj', component: BolPnjHomeComponent, canActivate: [loggedInGuard] },
+  {path: '', component: HomeComponent, canActivate: [loggedInGuard]},
+  {
+    path: 'bol',
+    loadComponent: () => import('./bol/home/home.component').then(m => m.BolHomeComponent),
+    canActivate: [loggedInGuard]
+  },
+  {
+    path: 'bol/heros',
+    loadComponent: () => import('./bol/heros/home/home.component').then(m => m.BolHeroHomeComponent),
+    canActivate: [loggedInGuard]
+  },
+  {
+    path: 'bol/heros/create/:id',
+    loadComponent: () => import('./bol/heros/create/create.component').then(m => m.BolHerosCreateComponent),
+    canActivate: [loggedInGuard]
+  },
+  {
+    path: 'bol/creature',
+    loadComponent: () => import('./bol/creatures/home/home.component').then(m => m.BolCreatureHomeComponent),
+    canActivate: [loggedInGuard]
+  },
+  {path: 'bol/pnj',
+    loadComponent: () => import('./bol/pnj/home/home.component').then(m => m.BolPnjHomeComponent),
+    canActivate: [loggedInGuard]},
 
-    { path: '**', redirectTo: '/' },
+  {path: '**', redirectTo: '/'},
 ];

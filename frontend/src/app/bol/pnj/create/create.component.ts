@@ -127,24 +127,24 @@ export class BolPnjCreateComponent {
 
   protected unselectedItems = signal<any[]>([])
 
-  protected selectedArmesIds = toSignal(this.pnjForm.get('armes')!.valueChanges.pipe(map((items: any[]) => items.map(item => item.id))));
+  protected selectedArmesIds = toSignal(this.pnjForm.get('armes')!.valueChanges.pipe(map((items: any[]) => items.map(item => Number(item.id)))));
   protected selectedArmes = computed(() => {
-    return this.armeList()?.filter((item: any) => this.selectedArmesIds()?.includes(item.id))
+    return this.armeList()?.filter((item: any) => this.selectedArmesIds()?.includes(Number(item.id)))
   });
   protected unselectedArmes = computed(() => {
-    return this.armeList()?.filter((item: any) => !this.selectedArmesIds()?.includes(item.id))
+    return this.armeList()?.filter((item: any) => !this.selectedArmesIds()?.includes(Number(item.id)))
   });
-  protected selectedArmuresIds = toSignal(this.pnjForm.get('armures')!.valueChanges.pipe(map((items: any[]) => items.map(item => item.id))));
+  protected selectedArmuresIds = toSignal(this.pnjForm.get('armures')!.valueChanges.pipe(map((items: any[]) => items.map(item => Number(item.id)))));
   protected selectedArmures = computed(() => {
-    return this.armureList()?.filter((item: any) => this.selectedArmuresIds()?.includes(item.id))
+    return this.armureList()?.filter((item: any) => this.selectedArmuresIds()?.includes(Number(item.id)))
   });
   protected unselectedArmures = computed(() => {
-    return this.armureList()?.filter((item: any) => !this.selectedArmuresIds()?.includes(item.id))
+    return this.armureList()?.filter((item: any) => !this.selectedArmuresIds()?.includes(Number(item.id)))
   });
 
-  protected selectedCarrieresIds = toSignal(this.pnjForm.get('carrieres')!.valueChanges.pipe(map((items: any[]) => items.map(item => item.id))));
+  protected selectedCarrieresIds = toSignal(this.pnjForm.get('carrieres')!.valueChanges.pipe(map((items: any[]) => items.map(item => Number(item.id)))));
   protected unselectedCarrieres = computed(() => {
-    return this.carriereList()?.filter((item: any) => !this.selectedCarrieresIds()?.includes(item.id))
+    return this.carriereList()?.filter((item: any) => !this.selectedCarrieresIds()?.includes(Number(item.id)))
   });
 
 
@@ -250,7 +250,7 @@ export class BolPnjCreateComponent {
   }
 
   carriereFromId(id: number) {
-    const carriere = this.carriereList()?.find((itemCar: BolCarriereModel) => itemCar.id === id);
+    const carriere = this.carriereList()?.find((itemCar: BolCarriereModel) => Number(itemCar.id) === Number(id));
     return carriere?.carriere ?? '';
   }
 
