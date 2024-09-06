@@ -17,8 +17,8 @@ class BolHerosController extends Controller
     public function getAll()
     {
         $heroes = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue')
-        ->where('user_id', Auth::id())
         ->where('type', 'H')
+        ->where('user_id', Auth::id())
         ->get();
         return response($heroes);
     }
