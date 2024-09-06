@@ -4,15 +4,126 @@
     <button pButton label="Retour" icon="pi pi-arrow-left" severity="secondary" size="small" routerLink="/bol"></button>
   </app-header>
 </div>
-<div class="p-4 flex flex-wrap gap-2 flex-end" style="height: calc(100vh - 120px); overflow:  auto;">
-  @defer () {
-    <bol-pnj-card *ngFor="let pnj of pnjList"
-                       [pnj]="pnj"
-                       (deletePnj)="deletePnj(pnj, $event)"
-                       (editPnj)="createPnj($event)">
+
+<div class="flex gap-2 p-4">
+  <div class="flex">
+    <p-card header="Pnj">
+      <p-table
+        [value]="pnjList"
+        [scrollable]="true"
+        scrollHeight="calc(100vh - 200px)">
+        <ng-template pTemplate="header">
+          <tr>
+            <th></th>
+            <th></th>
+            <th>Attributs</th>
+            <th>Combat</th>
+            <th>Capacités</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-pnj>
+          <tr>
+            <td style="width: 110px">
+              <div class="pnj_row__img">
+                <img *ngIf="!pnj.user_id" src="/frontend/assets/bol/pnj/{{pnj.id}}.png" alt=""/>
+                <img *ngIf="pnj.user_id"
+                     style="width:100%"
+                     [src]="pnj.avatar !== null ? pnj.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+                     alt="avatar">
+              </div>
+            </td>
+            <td class="relative">
+              <div class="flex flex-col gap-2" style="height: 100px">
+                <div class="flex gap-2 items-center text-xl">
+                  <i *ngIf="pnj.commentaire" class="pi pi-info-circle cursor-pointer warn-color" [pTooltip]="pnj.commentaire ?? ''"></i>
+                  {{ pnj.origines.nom }}
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="text-gray-300">Taille</div>
+                  <div class="text-gray-400 font-bold">{{ pnj.taille.taille }}</div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="text-gray-300">Vitalité</div>
+                  <div class="text-gray-400 font-bold">{{ pnj.ressources.vitalite }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr>
+                    <td class="text-gray-300">Vigueur</td>
+                    <td class="text-gray-400">{{ pnj.vigueur }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Agilité</td>
+                    <td class="text-gray-400">{{ pnj.agilite }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Esprit</td>
+                    <td class="text-gray-400">{{ pnj.esprit }}</td>
+                  </tr>
+                </table>
+              </div>
+
+            </td>
+
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr>
+                    <td class="text-gray-300">Attaque</td>
+                    <td class="text-gray-400">{{ pnj.attaque }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Dégâts</td>
+                    <td class="text-gray-400 whitespace-nowrap">{{ pnj.degat }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Défense</td>
+                    <td class="text-gray-400 whitespace-nowrap">{{ pnj.defense }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Protection</td>
+                    <td class="text-gray-400 whitespace-nowrap">{{ pnj.protection }}</td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr *ngFor="let capa of pnj.capacites">
+                    <td><i *ngIf="capa.detail || capa.capacite.description"
+                           class="pi pi-info-circle cursor-pointer text-cyan-600"
+                           [pTooltip]="(capa.detail ?  capa.detail + '\n\r' : '') + capa.capacite.description"></i>
+                    </td>
+                    <td class="text-gray-400 whitespace-nowrap">{{ capa.capacite.capacite }}</td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+
+
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+  <div class="flex">
+    <p-card header="Mes Pnj">
+    </p-card>
+  </div>
+</div>
+
+  @if (pnjList.length > 0) {
+    <bol-pnj-card
+                       [pnj]="pnjList[0]"
+
+                       >
 
     </bol-pnj-card>
   }
-</div>
 
 <p-confirmPopup/>

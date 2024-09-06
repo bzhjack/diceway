@@ -14,11 +14,14 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {BolCreaturesService} from "../../services/bol-creatures.service";
 import {BolHerosService} from "../../services/bol-heros.service";
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {BolCreatureCardComponent} from "../../creatures/card/card.component";
 import {BolPnjCardComponent} from "../card/card.component";
 import {ConfirmationService} from "primeng/api";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
+import {CardModule} from "primeng/card";
+import {TableModule} from "primeng/table";
+import {TooltipModule} from "primeng/tooltip";
 
 @Component({
   selector: 'bol-pnj-home',
@@ -35,7 +38,11 @@ import {ConfirmPopupModule} from "primeng/confirmpopup";
     Button,
     BolCreatureCardComponent,
     BolPnjCardComponent,
-    ConfirmPopupModule
+    ConfirmPopupModule,
+    CardModule,
+    NgIf,
+    TableModule,
+    TooltipModule
   ],
   providers: [
     ConfirmationService
@@ -51,6 +58,7 @@ export class BolPnjHomeComponent {
   private subsPnj: Subscription | undefined;
   private ref?: DynamicDialogRef;
   public pnjList: Array<BolHerosModel> = [];
+  public myPnjList: Array<BolHerosModel> = [];
 
   constructor() {
     this.getPnj();
@@ -62,7 +70,8 @@ export class BolPnjHomeComponent {
     this.pnjList = [];
     this.subsPnj = this.pnjService.pnj().subscribe({
       next: (pnj: BolHerosModel[]) => {
-        this.pnjList = pnj;
+        this.pnjList = pnj.filter((pnj: BolHerosModel) => pnj.user_id === null);
+        this.myPnjList = pnj.filter((pnj: BolHerosModel) => pnj.user_id !== null);
         this.spinner.hide();
       },
       error: () => {

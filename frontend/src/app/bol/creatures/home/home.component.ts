@@ -21,6 +21,8 @@ import {FormsModule} from "@angular/forms";
 import {RadioButtonModule} from "primeng/radiobutton";
 import {DropdownModule} from "primeng/dropdown";
 import {TableModule} from "primeng/table";
+import {TooltipModule} from "primeng/tooltip";
+import {Ripple} from "primeng/ripple";
 
 @Component({
   selector: 'bol-creature-home',
@@ -42,7 +44,9 @@ import {TableModule} from "primeng/table";
     RadioButtonModule,
     DropdownModule,
     TableModule,
-    NgIf
+    NgIf,
+    TooltipModule,
+    Ripple
   ],
   providers: [
     ConfirmationService
@@ -51,21 +55,16 @@ import {TableModule} from "primeng/table";
   styleUrl: './home.component.scss'
 })
 export class BolCreatureHomeComponent implements OnDestroy {
+  private confirmationService = inject(ConfirmationService);
   private creatureService = inject(BolCreaturesService);
   private spinner = inject(NgxSpinnerService);
   private subsBestiary?: Subscription;
-  public bestiary: Array<BolCreatureModel> = [];
+  public creatures: Array<BolCreatureModel> = [];
+  public myCreatures: Array<BolCreatureModel> = [];
   public filteredBestiary: BolCreatureModel[] = [];
   readonly #ds = inject(DialogService);
   private subs: Subscription | undefined;
   private ref?: DynamicDialogRef;
-  searchTerm: string = '';
-  type: 'ALL' | 'PRIVATE' | 'PUBLIC' = 'ALL'
-  typeOptions: any[] = [
-    { label: 'Tous', value: 'ALL' },
-    { label: 'Public', value: 'PUBLIC' },
-    { label: 'Privé', value: 'PRIVATE' }
-  ];
 
   constructor() {
     this.getBestiary();
@@ -80,7 +79,8 @@ export class BolCreatureHomeComponent implements OnDestroy {
 
     this.subsBestiary = creaturesRequest.subscribe({
       next: (bestiary) => {
-        this.bestiary = bestiary;
+        this.creatures = bestiary.filter((creature: BolCreatureModel) => creature.user_id === null);
+        this.myCreatures = bestiary.filter((creature: BolCreatureModel) => creature.user_id !== null);
         this.filteredBestiary = bestiary;
         this.spinner.hide();
       },
@@ -88,31 +88,6 @@ export class BolCreatureHomeComponent implements OnDestroy {
         this.spinner.hide();
       }
     });
-  }
-
-  filterCreatures() {
-    const term = this.searchTerm.toLowerCase();
-    const type = this.type;
-
-    this.filteredBestiary = this.bestiary.filter(creature => {
-      const matchesName = creature.nom.toLowerCase().includes(term); // Remplace `nom` par la propriété appropriée
-      const matchesType = this.getTypeFilter(creature, type);
-
-      return matchesName && matchesType;
-    });
-  }
-
-  getTypeFilter(creature: any, type: 'ALL' | 'PRIVATE' | 'PUBLIC'): boolean {
-    switch (type) {
-      case 'PUBLIC':
-        return creature.user_id === null;
-      case 'PRIVATE':
-        return creature.user_id !== null;
-      case 'ALL':
-        return true;
-      default:
-        return true;
-    }
   }
 
   createCreature(creature?: BolCreatureModel) {
@@ -140,8 +115,20 @@ export class BolCreatureHomeComponent implements OnDestroy {
       }
     });
   }
-
-  deleteCreature(creature: BolCreatureModel, event: any) {
+  askDelete(creature: BolCreatureModel, event: any) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Voulez vous supprimer cette créature ?',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass: 'p-button-danger p-button-sm',
+      acceptLabel: "Oui",
+      rejectLabel: "Non",
+      accept: () => {
+        this.deleteCreature(creature);
+      },
+    });
+  }
+  deleteCreature(creature: BolCreatureModel) {
     this.spinner.show();
     this.subs?.unsubscribe();
     this.subs = this.creatureService.deleteCreature(creature.id as string).subscribe({
