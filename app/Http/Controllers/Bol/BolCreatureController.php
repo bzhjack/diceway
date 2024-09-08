@@ -18,6 +18,7 @@ class BolCreatureController extends Controller
         $creatures = BolCreature::with('taille', 'capacites.capacite')
             ->where('user_id', Auth::id())
             ->orWhereNull('user_id')
+            ->orderBy('user_id', 'desc')
             ->orderBy('nom', 'asc')->get();
         return response($creatures);
     }

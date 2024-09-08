@@ -72,7 +72,8 @@ export class BolCreatureHomeComponent implements OnDestroy {
   private subs: Subscription | undefined;
   private ref?: DynamicDialogRef;
   public creation: boolean = false;
-
+  public showBeast: boolean = false;
+  public currentBeast: BolCreatureModel | null = null;
   @ViewChild('beastTable') beastTable?: Table;
 
   constructor() {
@@ -172,5 +173,9 @@ export class BolCreatureHomeComponent implements OnDestroy {
   };
   filterCreation(creation: boolean) {
     this.filteredBeast = creation ? this.beast.filter((beast) => beast.user_id !== null) : this.beast;
+  }
+  showBeastPicture(beast: BolCreatureModel) {
+    this.showBeast = true;
+    this.currentBeast = beast;
   }
 }
