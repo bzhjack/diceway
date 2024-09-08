@@ -13,7 +13,6 @@ import {DialogModule} from "primeng/dialog";
 import {AvatarModule} from "primeng/avatar";
 import {BolCreatureCreateComponent} from "../create/create.component";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
-import {BolHerosModel} from "../../models/bol-heros.model";
 import {ConfirmationService} from "primeng/api";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {InputTextModule} from "primeng/inputtext";
@@ -26,6 +25,7 @@ import {Ripple} from "primeng/ripple";
 import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'bol-creature-home',
@@ -33,6 +33,7 @@ import { InputIconModule } from 'primeng/inputicon';
   imports: [
     RouterLink,
     CardModule,
+    CheckboxModule,
     NgForOf,
     BolCreatureCardComponent,
     HeaderComponent,
@@ -63,13 +64,14 @@ import { InputIconModule } from 'primeng/inputicon';
 export class BolCreatureHomeComponent implements OnDestroy {
   private confirmationService = inject(ConfirmationService);
   private creatureService = inject(BolCreaturesService);
+  readonly #ds = inject(DialogService);
   private spinner = inject(NgxSpinnerService);
   private subsBestiary?: Subscription;
-  public creatures: Array<BolCreatureModel> = [];
-  public myCreatures: Array<BolCreatureModel> = [];
-  readonly #ds = inject(DialogService);
+  public beast: Array<BolCreatureModel> = [];
+  public filteredBeast: Array<BolCreatureModel> = [];
   private subs: Subscription | undefined;
   private ref?: DynamicDialogRef;
+  public creation: boolean = false;
 
   @ViewChild('beastTable') beastTable?: Table;
 
@@ -86,7 +88,8 @@ export class BolCreatureHomeComponent implements OnDestroy {
 
     this.subsBestiary = creaturesRequest.subscribe({
       next: (bestiary) => {
-        this.creatures = bestiary;
+        this.beast = bestiary;
+        this.filteredBeast = bestiary;
         this.spinner.hide();
       },
       error: () => {
@@ -167,4 +170,7 @@ export class BolCreatureHomeComponent implements OnDestroy {
         return 'info';
     }
   };
+  filterCreation(creation: boolean) {
+    this.filteredBeast = creation ? this.beast.filter((beast) => beast.user_id !== null) : this.beast;
+  }
 }

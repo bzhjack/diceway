@@ -11,14 +11,14 @@
         <p-table
         #beastTable
         class="w-full"
-        [value]="creatures"
+        [value]="filteredBeast"
         [scrollable]="true"
         dataKey="id"
         [globalFilterFields]="['nom', 'taille.taille']"
         scrollHeight="calc(100vh - 170px)">
         <ng-template pTemplate="caption">
-          <div class="flex">
-              <p-iconField iconPosition="left" class="ml-auto">
+          <div class="flex justify-between">
+              <p-iconField iconPosition="left">
                   <p-inputIcon>
                       <i class="pi pi-search"></i>
                   </p-inputIcon>
@@ -26,8 +26,13 @@
                       pInputText
                       type="text"
                       (input)="filtering($event)"
-                      placeholder="Search keyword" />
+                      placeholder="Votre recherche" />
               </p-iconField>
+              <p-checkbox
+              class="pr-2 cursor-pointer"
+              [(ngModel)]="creation"
+              [binary]="true" label="Mes créations" (ngModelChange)="filterCreation($event)"/>
+
           </div>
       </ng-template>
           <ng-template pTemplate="header">
