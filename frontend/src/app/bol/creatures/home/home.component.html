@@ -1,18 +1,35 @@
 <div>
   <app-header legend="Bestiaire de Lémurie">
     <button pButton label="Création" icon="pi pi-pencil" severity="warning" size="small"
-            (click)="createCreature()"></button>
+      (click)="createCreature()"></button>
     <button pButton label="Retour" icon="pi pi-arrow-left" severity="secondary" size="small" routerLink="/bol"></button>
 
   </app-header>
 
-  <div class="flex gap-2 p-4">
-    <div class="flex">
-      <p-card header="Bestiaire">
+  <div class="flex">
+    <div class="flex flex-auto">
         <p-table
-          [value]="creatures"
-          [scrollable]="true"
-          scrollHeight="calc(100vh - 200px)">
+        #beastTable
+        class="w-full"
+        [value]="creatures"
+        [scrollable]="true"
+        dataKey="id"
+        [globalFilterFields]="['nom', 'taille.taille']"
+        scrollHeight="calc(100vh - 170px)">
+        <ng-template pTemplate="caption">
+          <div class="flex">
+              <p-iconField iconPosition="left" class="ml-auto">
+                  <p-inputIcon>
+                      <i class="pi pi-search"></i>
+                  </p-inputIcon>
+                  <input
+                      pInputText
+                      type="text"
+                      (input)="filtering($event)"
+                      placeholder="Search keyword" />
+              </p-iconField>
+          </div>
+      </ng-template>
           <ng-template pTemplate="header">
             <tr>
               <th></th>
@@ -20,17 +37,16 @@
               <th>Attributs</th>
               <th>Combat</th>
               <th>Capacités</th>
+              <th></th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-beast>
             <tr>
               <td style="width: 110px">
                 <div class="beast_row__img">
-                  <img *ngIf="!beast.user_id" src="/frontend/assets/bol/bestiary/{{beast.id}}.png" alt=""/>
-                  <img *ngIf="beast.user_id"
-                       style="width:100%"
-                       [src]="beast.avatar !== null ? beast.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
-                       alt="avatar">
+                  <img *ngIf="!beast.user_id" src="/frontend/assets/bol/bestiary/{{beast.id}}.png" alt="" />
+                  <img *ngIf="beast.user_id" style="width:100%"
+                    [src]="beast.avatar !== null ? beast.avatar : '/frontend/assets/bol/empty-avatar.jpg'" alt="avatar">
                 </div>
               </td>
               <td class="relative">
@@ -46,7 +62,9 @@
                     <div class="text-gray-300">Vitalité</div>
                     <div class="text-gray-400 font-bold">{{ beast.vitalite }}</div>
                   </div>
+                  <p-tag *ngIf="beast.user_id">Création</p-tag>
                 </div>
+
               </td>
               <td>
                 <div style="height: 100px">
@@ -96,114 +114,8 @@
                   <table>
                     <tr *ngFor="let capa of beast.capacites">
                       <td><i *ngIf="capa.detail || capa.capacite.description"
-                             class="pi pi-info-circle cursor-pointer text-cyan-600"
-                             [pTooltip]="(capa.detail ?  capa.detail + '\n\r' : '') + capa.capacite.description"></i>
-                      </td>
-                      <td class="text-gray-400 whitespace-nowrap">{{ capa.capacite.capacite }}</td>
-                    </tr>
-                  </table>
-                </div>
-              </td>
-
-
-            </tr>
-          </ng-template>
-        </p-table>
-      </p-card>
-    </div>
-    <div class="flex">
-      <p-card header="Mes créatures">
-        <p-table
-          [value]="myCreatures"
-          [scrollable]="true"
-          scrollHeight="calc(100vh - 170px)">
-          <ng-template pTemplate="header">
-            <tr>
-              <th></th>
-              <th></th>
-              <th>Attributs</th>
-              <th>Combat</th>
-              <th>Capacités</th>
-              <th></th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-beast>
-            <tr>
-              <td style="width: 110px">
-                <div class="beast_row__img">
-                  <img *ngIf="!beast.user_id" src="/frontend/assets/bol/bestiary/{{beast.id}}.png" alt=""/>
-                  <img *ngIf="beast.user_id"
-                       style="width:100%"
-                       [src]="beast.avatar !== null ? beast.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
-                       alt="avatar">
-                </div>
-              </td>
-              <td class="relative">
-                <div class="flex flex-col gap-2" style="height: 100px">
-                  <div class="flex gap-2 items-center text-xl">
-                    <i *ngIf="beast.commentaire" class="pi pi-info-circle cursor-pointer warn-color" [pTooltip]="beast.commentaire ?? ''"></i>
-                    {{ beast.nom }}
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <div class="text-gray-300">Taille</div>
-                    <div class="text-gray-400 font-bold">{{ beast.taille.taille }}</div>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <div class="text-gray-300">Vitalité</div>
-                    <div class="text-gray-400 font-bold">{{ beast.vitalite }}</div>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div style="height: 100px">
-                  <table>
-                    <tr>
-                      <td class="text-gray-300">Vigueur</td>
-                      <td class="text-gray-400">{{ beast.vigueur }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-gray-300">Agilité</td>
-                      <td class="text-gray-400">{{ beast.agilite }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-gray-300">Esprit</td>
-                      <td class="text-gray-400">{{ beast.esprit }}</td>
-                    </tr>
-                  </table>
-                </div>
-
-              </td>
-
-              <td>
-                <div style="height: 100px">
-                  <table>
-                    <tr>
-                      <td class="text-gray-300">Attaque</td>
-                      <td class="text-gray-400">{{ beast.attaque }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-gray-300">Dégâts</td>
-                      <td class="text-gray-400 whitespace-nowrap">{{ beast.degat }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-gray-300">Défense</td>
-                      <td class="text-gray-400 whitespace-nowrap">{{ beast.defense }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-gray-300">Protection</td>
-                      <td class="text-gray-400 whitespace-nowrap">{{ beast.protection }}</td>
-                    </tr>
-                  </table>
-                </div>
-              </td>
-
-              <td>
-                <div style="height: 100px">
-                  <table>
-                    <tr *ngFor="let capa of beast.capacites">
-                      <td><i *ngIf="capa.detail || capa.capacite.description"
-                             class="pi pi-info-circle cursor-pointer text-cyan-600"
-                             [pTooltip]="(capa.detail ?  capa.detail + '\n\r' : '') + capa.capacite.description"></i>
+                          class="pi pi-info-circle cursor-pointer text-cyan-600"
+                          [pTooltip]="(capa.detail ?  capa.detail + '\n\r' : '') + capa.capacite.description"></i>
                       </td>
                       <td class="text-gray-400 whitespace-nowrap">{{ capa.capacite.capacite }}</td>
                     </tr>
@@ -211,11 +123,11 @@
                 </div>
               </td>
               <td>
-                <div style="height: 100px" class="flex gap-2">
+                <div *ngIf="beast.user_id" class="flex gap-2" style="height: 100px;">
                   <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-pencil"
-                          (click)="createCreature(beast)"></button>
+                    (click)="createCreature(beast)"></button>
                   <button severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash"
-                          (click)="askDelete(beast, $event)">
+                    (click)="askDelete(beast, $event)">
                   </button>
                 </div>
               </td>
@@ -223,10 +135,10 @@
             </tr>
           </ng-template>
         </p-table>
-      </p-card>
+
     </div>
   </div>
 </div>
 
 
-<p-confirmPopup/>
+<p-confirmPopup />
