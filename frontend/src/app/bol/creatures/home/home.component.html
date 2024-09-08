@@ -57,6 +57,7 @@
               <td class="relative">
                 <div class="flex flex-col gap-2" style="height: 100px">
                   <div class="flex gap-2 items-center text-xl">
+                    <i *ngIf="beast.commentaire" class="pi pi-info-circle cursor-pointer warn-color" [pTooltip]="beast.commentaire ?? ''"></i>
                     {{ beast.nom }}
                   </div>
                   <div class="flex items-center gap-2">
