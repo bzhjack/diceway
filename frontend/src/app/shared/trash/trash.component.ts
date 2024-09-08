@@ -9,5 +9,5 @@ import {Component, input} from '@angular/core';
 })
 export class BtnComponent {
   icon = input<string>('trash');
-  type = input<null | 'warn'>(null);
+  type = input<null | 'warn' | 'info'>(null);
 }
