@@ -1,40 +1,61 @@
 <div class="region-container flex gap-2 flex-col">
-  <form [formGroup]="creatureForm" autocomplete="off" class="flex flex-col gap-2">
-    <div class="flex gap-2">
-      <div class="hero-avatar cursor-pointer" (click)="picture()">
-        <img style="width:100%"
-             [src]="avatarCtrl.value !== null ? avatarCtrl.value : '/frontend/assets/bol/empty-avatar.jpg'"
-             alt="avatar">
-        <p class="hero-avatar__description">Modifier</p>
-      </div>
+  <form [formGroup]="creatureForm" autocomplete="off" class="flex gap-2">
 
-      <div class="flex flex-col gap-2">
-        <!--- Nom du joueur --->
-        <div class="flex flex-col gap-1 w-fit justify-end">
-          <label for="nom">Nom de la créature</label>
-          <input formControlName="nom" pInputText id="joueur" class="p-inputtext-sm"/>
+    <div>
+      <div class="flex gap-2">
+        <div class="hero-avatar cursor-pointer" (click)="picture()">
+          <img style="width:100%"
+               [src]="avatarCtrl.value !== null ? avatarCtrl.value : '/frontend/assets/bol/empty-avatar.jpg'"
+               alt="avatar">
+          <p class="hero-avatar__description">Modifier</p>
         </div>
-        <div class="flex flex-col gap-1 w-fit justify-end">
-          <label for="taille">Taille</label>
-          <p-dropdown [style]="{ width: '190px' }"
-                      class="p-inputtext-sm"
-                      optionLabel="taille"
-                      optionValue="id"
-                      [options]="tailles()"
-                      formControlName="id_taille"
-                      placeholder="Selectionner une taille"></p-dropdown>
+        <div class="flex flex-col gap-2">
+          <!--- Nom du joueur --->
+          <div class="flex flex-col gap-1 w-fit justify-end">
+            <label for="nom">Nom de la créature</label>
+            <input formControlName="nom" pInputText id="joueur" class="p-inputtext-sm"/>
+          </div>
+          <div class="flex flex-col gap-1 w-fit justify-end">
+            <label for="taille">Taille</label>
+            <p-dropdown [style]="{ width: '190px' }"
+                        class="p-inputtext-sm"
+                        optionLabel="taille"
+                        optionValue="id"
+                        [options]="tailles()"
+                        formControlName="id_taille"
+                        placeholder="Selectionner une taille"></p-dropdown>
+          </div>
         </div>
       </div>
-      <div>
-        <div class="flex flex-col gap-1 w-fit justify-end">
-          <label for="commentaire">Commentaire</label>
-          <textarea rows="5" cols="30" pInputTextarea formControlName="commentaire"></textarea>
+      <p-fieldset [style]="{height: '120px'}">
+        <ng-template pTemplate="header">
+          <div class="flex items-center gap-2">
+            <div> Capacités spéciales</div>
+            <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une capacité" (click)="selectedCapacite.set(null); opCapacite.toggle($event)"></app-btn>
+          </div>
+
+        </ng-template>
+        <div *ngIf="capacitesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des capacités spéciales </div>
+
+        <div>
+          <div *ngFor="let capacite of selectedCapaciteDetail();" class="flex gap-2 items-center pb-1">
+            <div class="flex gap-2 items-center" style="width: 150px">
+              <i *ngIf="capacite.detail"
+                 class="pi pi-info-circle cursor-pointer text-cyan-600"
+                 [pTooltip]="capacite.detail"></i>
+              {{ capacite.capacite }}
+            </div>
+            <app-btn (click)="removeCapacite(capacite.id)"></app-btn>
+          </div>
         </div>
+      </p-fieldset>
+      <div class="flex flex-col gap-1 w-fit justify-end">
+        <label for="commentaire">Commentaire</label>
+        <textarea rows="5" cols="30" pInputTextarea formControlName="commentaire"></textarea>
       </div>
     </div>
 
-
-    <div class="flex gap-4">
+    <div>
       <p-fieldset legend="Attributs">
         <div class="flex gap-2">
           <div class="flex flex-col gap-1">
@@ -84,27 +105,6 @@
         </div>
       </p-fieldset>
     </div>
-    <p-fieldset>
-      <ng-template pTemplate="header">
-        <div class="flex items-center gap-2">
-          <div> Capacités spéciales</div>
-          <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une capacité" (click)="selectedCapacite.set(null); opCapacite.toggle($event)"></app-btn>
-        </div>
-
-      </ng-template>
-      <div *ngIf="capacitesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des capacités spéciales </div>
-
-      <div>
-        <div *ngFor="let capacite of selectedCapaciteDetail();" class="flex gap-2 items-center pb-1">
-          <div class="flex gap-2 items-center" style="width: 150px">
-            <i *ngIf="capacite.detail" class="pi pi-info-circle cursor-pointer text-cyan-600"
-               [pTooltip]="capacite.detail"></i>
-            {{ capacite.capacite }}
-          </div>
-          <app-btn (click)="removeCapacite(capacite.id)"></app-btn>
-        </div>
-      </div>
-    </p-fieldset>
   </form>
   <div class="flex justify-end gap-2 pt-2">
     <button pButton icon="pi pi-times" size="small" label="Quitter" severity="secondary"
