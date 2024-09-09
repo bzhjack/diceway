@@ -19,34 +19,39 @@
         scrollHeight="calc(100vh - 170px)">
 
         <ng-template pTemplate="caption">
-          <div class="flex gap-2">
-            <p-iconField iconPosition="left">
-              <p-inputIcon>
-                <i class="pi pi-search"></i>
-              </p-inputIcon>
-              <input
-                pInputText
-                style="padding-left: 2.5rem"
-                class="p-inputtext-sm"
-                type="text"
-                (input)="filtering($event)"
-                placeholder="Votre recherche"/>
-            </p-iconField>
-            <div class="flex items-center gap-2">
-              <p-dropdown
-                [options]="typeList"
-                optionLabel="type"
-                [(ngModel)] = "searchType"
-                (ngModelChange)="filterExtended()"
-                placeholder="Sélectionner un type" />
-              <p-checkbox
-                class="pr-2 cursor-pointer"
-                [(ngModel)] = "searchCreation"
-                [binary]="true" label="Mes créations" (ngModelChange)="filterExtended()"/>
+          <div class="flex justify-between">
+            <div class="flex gap-2 items-center">
+              <p-iconField iconPosition="left">
+                <p-inputIcon>
+                  <i class="pi pi-search"></i>
+                </p-inputIcon>
+                <input
+                  pInputText
+                  style="padding-left: 2.5rem"
+                  class="p-inputtext-sm"
+                  type="text"
+                  [(ngModel)] = "searchTerm"
+                  (input)="filtering($event)"
+                  placeholder="Votre recherche"/>
+              </p-iconField>
+              <div class="flex items-center gap-2">
+                <p-dropdown
+                  [options]="typeList"
+                  optionLabel="type"
+                  optionValue="value"
+                  [(ngModel)] = "searchType"
+                  (ngModelChange)="filterExtended()"
+                />
+                <p-checkbox
+                  class="pr-2 cursor-pointer"
+                  [(ngModel)] = "searchCreation"
+                  [binary]="true" label="Mes créations" (ngModelChange)="filterExtended()"/>
+              </div>
+
+              <button pTooltip="Supprimer les filtres" pButton icon="pi pi-filter-slash" severity="info" size="small" (click)="clear(pnjTable)"></button>
             </div>
-
-
           </div>
+
         </ng-template>
 
 

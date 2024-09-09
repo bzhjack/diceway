@@ -71,10 +71,12 @@ export class BolPnjHomeComponent {
   public filteredPnjList: Array<BolHerosModel> = [];
   public searchCreation: boolean = false;
   public searchType: 'P' | 'C' | 'R' | null = null;
+  public searchTerm: string | null = null;
   public showPnj: boolean = false;
   public currentPnj: BolHerosModel | null = null;
   @ViewChild('pnjTable') pnjTable?: Table;
   public typeList = [
+    {type: 'Tous', value: null},
     {type: 'Coriaces', value: 'C'},
     {type: 'Rivaux', value: 'R'},
     {type: 'Piétaille', value: 'P'},
@@ -160,6 +162,9 @@ export class BolPnjHomeComponent {
   }
   filterExtended() {
     this.filteredPnjList = this.searchCreation ? this.pnjList.filter((pnj) => pnj.user_id !== null) : this.pnjList;
+    if (this.searchType !== null) {
+      this.filteredPnjList = this.filteredPnjList.filter((pnj) => pnj.type === this.searchType);
+    }
   }
   showPnjPicture(beast: BolHerosModel) {
     this.showPnj = true;
@@ -175,5 +180,12 @@ export class BolPnjHomeComponent {
         return 'Piétaille';
     }
     return '';
+  }
+  clear(table: Table) {
+    table.clear();
+    this.searchTerm = '';
+    this.searchType = null;
+    this.searchCreation = false;
+    this.filterExtended();
   }
 }
