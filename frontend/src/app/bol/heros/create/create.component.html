@@ -1,9 +1,15 @@
 <div class="page-container">
-  <div class="flex flex-col h-full p-4">
+  <app-header legend="Création d'un héros">
+    <button pButton label="Retour" icon="pi pi-times" severity="secondary" size="small" routerLink="/bol/heros"></button>
+    <button pButton (click)="submit()" [disabled]="herosForm.invalid" label="Enregistrer" icon="pi pi-check"
+            size="small" severity="success"></button>
+
+  </app-header>
+  <div class="flex flex-col p-4">
     <!----------------------->
     <!--- Body de la page --->
     <!----------------------->
-    <p-scrollPanel styleClass="flex-auto" [style]="{height: 'calc(100vh - 125px)'}">
+    <p-scrollPanel styleClass="flex-auto" [style]="{height: 'calc(100vh - 135px)'}">
       <form (ngSubmit)="submit()" [formGroup]="herosForm" autocomplete="off">
         <div class="flex flex-col">
           <!--- Nom du joueur --->
@@ -36,18 +42,6 @@
         </div>
       </form>
     </p-scrollPanel>
-
-    <!------------------------->
-    <!--- Footer de la page --->
-    <!------------------------->
-    <div class="flex pt-4 justify-end">
-      <!--- Bouton Quitter et Sauvegarde --->
-      <div class="flex gap-2">
-        <button pButton label="Retour" icon="pi pi-times" severity="secondary" size="small" routerLink="/bol/heros"></button>
-        <button pButton (click)="submit()" [disabled]="herosForm.invalid" label="Enregistrer" icon="pi pi-check"
-                size="small" severity="success"></button>
-      </div>
-    </div>
   </div>
 </div>
 
