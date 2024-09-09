@@ -33,7 +33,6 @@
             <div> Capacités spéciales</div>
             <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une capacité" (click)="selectedCapacite.set(null); opCapacite.toggle($event)"></app-btn>
           </div>
-
         </ng-template>
         <div *ngIf="capacitesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des capacités spéciales </div>
 
