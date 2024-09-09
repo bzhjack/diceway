@@ -7,9 +7,7 @@ import {Observable} from "rxjs";
 import {BolCreatureModel} from "../models/bol-creature.model";
 import {HttpClient} from "@angular/common/http";
 import {BolDashboardModel} from "../models/bol-dashboard.model";
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class BolDashboardService {
   constructor(private http: HttpClient) {
   }
