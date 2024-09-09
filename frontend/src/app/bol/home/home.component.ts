@@ -6,6 +6,7 @@ import {RouterLink} from "@angular/router";
 import {Subscription} from "rxjs";
 import {BolHerosModel} from "../models/bol-heros.model";
 import {BolDashboardService} from "../services/bol-dashboard.service";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'bol-home',
@@ -30,7 +31,7 @@ export class BolHomeComponent implements OnDestroy {
   constructor() {
     effect(() => {
       if (this.dashboardService.dashboardCounts()) {
-        console.log('ici');
+
       }
     });
   }
