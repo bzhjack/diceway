@@ -39,15 +39,14 @@
                   [options]="typeList"
                   optionLabel="type"
                   optionValue="value"
+                  [showClear]="true"
                   [(ngModel)] = "searchType"
-                  (ngModelChange)="filterExtended()"
-                />
+                  (ngModelChange)="filterExtended()"/>
                 <p-checkbox
                   class="pr-2 cursor-pointer"
                   [(ngModel)] = "searchCreation"
                   [binary]="true" label="Mes créations" (ngModelChange)="filterExtended()"/>
               </div>
-
               <button pTooltip="Supprimer les filtres" pButton icon="pi pi-filter-slash" severity="info" size="small" (click)="clear(pnjTable)"></button>
             </div>
           </div>

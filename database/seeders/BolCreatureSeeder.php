@@ -264,7 +264,7 @@ class BolCreatureSeeder extends Seeder
                 'defense' => '0',
                 'degat' => 'd6M',
                 'protection' => '0',
-                'id_taille' => '2',  // Petite
+                'id_taille' => '3',  // Petite
 
             ],
             [
@@ -412,7 +412,7 @@ class BolCreatureSeeder extends Seeder
                 'defense' => '3',
                 'degat' => 'd6M',
                 'protection' => '0',
-                'id_taille' => '2',  // Petite
+                'id_taille' => '3',  // Petite
             ],
             [
                 'id' => '31',
@@ -464,7 +464,7 @@ class BolCreatureSeeder extends Seeder
                 'defense' => '1',
                 'degat' => 'd6M',
                 'protection' => '0',
-                'id_taille' => '2',  // Petite
+                'id_taille' => '3',  // Petite
             ],
             [
                 'id' => '35',
@@ -557,7 +557,7 @@ class BolCreatureSeeder extends Seeder
                 'defense' => '3',
                 'degat' => 'd6M',
                 'protection' => '0',
-                'id_taille' => '2',  // Petite
+                'id_taille' => '3',  // Petite
             ],
             [
                 'id' => '42',

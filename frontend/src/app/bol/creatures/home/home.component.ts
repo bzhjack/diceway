@@ -26,6 +26,8 @@ import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { CheckboxModule } from 'primeng/checkbox';
+import {BolHerosModel} from "../../models/bol-heros.model";
+import {toSignal} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'bol-creature-home',
@@ -71,9 +73,14 @@ export class BolCreatureHomeComponent implements OnDestroy {
   public filteredBeast: Array<BolCreatureModel> = [];
   private subs: Subscription | undefined;
   private ref?: DynamicDialogRef;
-  public creation: boolean = false;
   public showBeast: boolean = false;
   public currentBeast: BolCreatureModel | null = null;
+
+  public searchCreation: boolean = false;
+  public searchTaille: number | null  = null;
+  public searchTerm: string | null = null;
+  public tailleList = toSignal(this.creatureService.tailles());
+
   @ViewChild('beastTable') beastTable?: Table;
 
   constructor() {
@@ -162,11 +169,23 @@ export class BolCreatureHomeComponent implements OnDestroy {
   filtering(ev: any) {
     this.beastTable?.filterGlobal(ev.target?.value, 'contains')
   }
-  filterCreation(creation: boolean) {
-    this.filteredBeast = creation ? this.beast.filter((beast) => beast.user_id !== null) : this.beast;
+  filterExtended() {
+    this.filteredBeast = this.searchCreation ? this.beast.filter((beast) => beast.user_id !== null) : this.beast;
+    if (this.searchTaille !== null) {
+      console.log(this.searchTaille);
+      this.filteredBeast = this.filteredBeast.filter((beast) => beast.taille.id === this.searchTaille);
+    }
   }
   showBeastPicture(beast: BolCreatureModel) {
     this.showBeast = true;
     this.currentBeast = beast;
+  }
+
+  clear(table: Table) {
+    table.clear();
+    this.searchTerm = '';
+    this.searchTaille = null;
+    this.searchCreation = false;
+    this.filterExtended();
   }
 }

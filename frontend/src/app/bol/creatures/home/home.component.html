@@ -27,14 +27,23 @@
                       class="p-inputtext-sm"
                       style="padding-left: 2.5rem"
                       type="text"
+                      [(ngModel)]="searchTerm"
                       (input)="filtering($event)"
                       placeholder="Votre recherche" />
               </p-iconField>
+            <p-dropdown
+              [options]="tailleList()"
+              optionLabel="taille"
+              optionValue="id"
+              [showClear]="true"
+              [(ngModel)] = "searchTaille"
+              (ngModelChange)="filterExtended()"/>
+
               <p-checkbox
               class="pr-2 cursor-pointer"
-              [(ngModel)]="creation"
-              [binary]="true" label="Mes créations" (ngModelChange)="filterCreation($event)"/>
-
+              [(ngModel)]="searchCreation"
+              [binary]="true" label="Mes créations" (ngModelChange)="filterExtended()"/>
+            <button pTooltip="Supprimer les filtres" pButton icon="pi pi-filter-slash" severity="info" size="small" (click)="clear(beastTable)"></button>
           </div>
       </ng-template>
           <ng-template pTemplate="header">
