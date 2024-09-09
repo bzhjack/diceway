@@ -11,7 +11,8 @@
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.12",
-        "laravel/tinker": "2.9.0"
+        "laravel/tinker": "2.9.0",
+        "ext-zlib": "*"
     },
     "require-dev": {
         "fakerphp/faker": "1.23.1",

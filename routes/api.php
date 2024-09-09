@@ -3,6 +3,7 @@
 use App\Http\Controllers\Bol\BolCreatureController;
 use App\Http\Controllers\Bol\BolHerosController;
 use App\Http\Controllers\Bol\BolLangueController;
+use App\Http\Middleware\GZipMiddleware;
 use App\Http\Middleware\RequestAcceptJson;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerifyController;
@@ -53,7 +54,7 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
 /**
  * Api protégée
  */
-Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function () {
+Route::middleware(['auth:sanctum', RequestAcceptJson::class, GzipMiddleware::class])->group(function () {
     Route::get('auth/profile', [ProfileController::class, 'profile']);
     /**
      * BARBARIAN OF LEMURIA
