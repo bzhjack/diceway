@@ -1,60 +1,227 @@
-<div>
-  <app-header legend="Héros">
-    <button pButton label="Création" icon="pi pi-pencil" severity="warning" size="small" (click)="openCreateDialog()"></button>
-    <button pButton label="Retour" icon="pi pi-arrow-left" severity="secondary" size="small" routerLink="/bol"></button>
-  </app-header>
-</div>
-<div class="bol-container flex flex-col p-4">
-  <p-card header="Personnages Joueurs">
-    <p class="flex flex-col gap-2">
-      <p-table [value]="heroes"
-               [tableStyle]="{ 'min-width': '50rem' }"
-               [scrollable]="true"
-               scrollHeight="300px">
+<div class="page-container">
+  <div>
+    <app-header legend="Héros de la Lémurie">
+      <button pButton label="Création" icon="pi pi-pencil" severity="warning" size="small"
+              (click)="openCreateDialog()"></button>
+      <button pButton label="Retour" icon="pi pi-arrow-left" severity="secondary" size="small"
+              routerLink="/bol"></button>
+    </app-header>
+  </div>
+  <div class="flex">
+    <div class="flex flex-auto">
+      <p-table
+        #herosTable
+        class="w-full"
+        [value]="filteredHeroesList"
+        [scrollable]="true"
+        dataKey="id"
+        [globalFilterFields]="['origines.nom']"
+        scrollHeight="calc(100vh - 170px)">
+
+        <ng-template pTemplate="caption">
+          <div class="flex justify-between">
+            <div class="flex gap-2 items-center">
+              <p-iconField iconPosition="left">
+                <p-inputIcon>
+                  <i class="pi pi-search"></i>
+                </p-inputIcon>
+                <input
+                  pInputText
+                  style="padding-left: 2.5rem"
+                  class="p-inputtext-sm"
+                  type="text"
+                  [(ngModel)] = "searchTerm"
+                  (input)="filtering($event)"
+                  placeholder="Votre recherche"/>
+              </p-iconField>
+              <div class="flex items-center gap-2">
+
+              </div>
+              <button pTooltip="Supprimer les filtres" pButton icon="pi pi-filter-slash" severity="info" size="small" (click)="clear(herosTable)"></button>
+            </div>
+          </div>
+
+        </ng-template>
+
+
         <ng-template pTemplate="header">
           <tr>
             <th></th>
-            <th>Joueur</th>
-            <th>Héros</th>
-            <th style="width: 100px"></th>
+            <th></th>
+            <th>Attributs</th>
+            <th>Combat</th>
+            <th>Carrières</th>
+            <th>Armures</th>
+            <th>Armes</th>
+            <th>Traits</th>
+            <th></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-heros>
           <tr>
-            <td style="padding: 0!important;">
-              <div class="hero-avatar"><img style="width:100%"
-                                            [src]="heros.origines.avatar !== null ? heros.origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
-                                            alt="avatar">
+            <td style="width: 110px">
+              <div class="heros_row__img cursor-pointer" (click)="showHerosPicture(heros)">
+                <img *ngIf="!heros.user_id" src="/frontend/assets/bol/heros/{{heros.id}}.png" alt=""/>
+                <img *ngIf="heros.user_id" style="width:100%"
+                     [src]="heros.origines.avatar !== null ? heros.origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+                     alt="avatar">
               </div>
             </td>
-            <td>{{ heros.joueur }}</td>
-            <td>{{ heros.origines.nom }}</td>
-            <td class="flex gap-2 justify-end">
-              <button [routerLink]="['create', heros.id]"
-                      severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-pencil"></button>
-              <button (click)="deleteHero(heros, $event)"
-                      severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash">
-              </button>
+
+
+            <td class="relative">
+              <div class="flex flex-col gap-2" style="height: 100px">
+                <div class="flex gap-2 items-center text-xl">
+                  <i *ngIf="heros.commentaire" class="pi pi-info-circle cursor-pointer warn-color"
+                     [pTooltip]="heros.commentaire ?? ''"></i>
+                  <div style="text-transform: capitalize">{{ heros.origines.nom }}</div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <!--div class="text-gray-300">Type</div>
+                  <div class="text-gray-400 font-bold">{{ getType(heros) }}</div-->
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="text-gray-300">Vitalité</div>
+                  <div class="text-gray-400 font-bold">{{ heros.ressources.vitalite }}</div>
+                </div>
+                <p-tag *ngIf="heros.user_id">Création</p-tag>
+              </div>
+
             </td>
+
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr>
+                    <td class="text-gray-300">Vigueur</td>
+                    <td class="text-gray-400">{{ heros.attributs.vigueur }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Agilité</td>
+                    <td class="text-gray-400">{{ heros.attributs.agilite }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Esprit</td>
+                    <td class="text-gray-400">{{ heros.attributs.esprit }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Aura</td>
+                    <td class="text-gray-400">{{ heros.attributs.aura }}</td>
+                  </tr>
+                </table>
+              </div>
+
+            </td>
+
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr>
+                    <td class="text-gray-300">Initiative</td>
+                    <td class="text-gray-400">{{ heros.combat.initiative }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Tir</td>
+                    <td class="text-gray-400">{{ heros.combat.tir }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Défense</td>
+                    <td class="text-gray-400">{{ heros.combat.defense }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Mêlée</td>
+                    <td class="text-gray-400">{{ heros.combat.melee }}</td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr *ngFor="let cari of heros.carrieres">
+                    <td>{{ cari.carriere.carriere }}</td>
+                    <td class="text-gray-400 whitespace-nowrap">{{ cari.value }}</td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr *ngFor="let armure of heros.armures">
+                    <td class="whitespace-nowrap">{{ armure.armure.armure }}</td>
+                    <td class="whitespace-nowrap text-gray-400 bol-ellipsis-80"
+                        [pTooltip]="armure.armure.protection">{{ armure.armure.protection }}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr *ngFor="let arme of heros.armes">
+                    <td class="whitespace-nowrap">{{ arme.arme.arme }}</td>
+                    <td class="whitespace-nowrap text-gray-400 bol-ellipsis-80"
+                        [pTooltip]="arme.arme.degats">{{ arme.arme.degats }}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr *ngFor="let trait of heros.traits">
+                    <td class="whitespace-nowrap">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}</td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+
+            <td>
+              <div *ngIf="heros.user_id" class="flex gap-2" style="height: 100px;">
+                <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-pencil"
+                        [routerLink]="['create', heros.id]"></button>
+                <button severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash"
+                        (click)="deleteHero(heros, $event)">
+                </button>
+              </div>
+            </td>
+
           </tr>
         </ng-template>
       </p-table>
-    </p>
-    <ng-template pTemplate="footer">
-      <div class="flex justify-end">
-        <p-button label="Créer" icon="pi pi-plus" size="small" severity="primary"
-                  (click)="openCreateDialog()"></p-button>
-      </div>
-    </ng-template>
-  </p-card>
+    </div>
+  </div>
 </div>
+<p-confirmPopup/>
 
+<p-dialog *ngIf="currentHeros"
+          [(visible)]="showHeros"
+          [header]="currentHeros.origines.nom ?? ''"
+          [modal]="true">
+  <div *ngIf="currentHeros" class="heros-preview">
+    <img *ngIf="!currentHeros.user_id" src="/frontend/assets/bol/heros/{{currentHeros.id}}.png" alt=""/>
+    <img *ngIf="currentHeros.user_id" style="width:100%"
+         [src]="currentHeros.origines.avatar !== null ? currentHeros.origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+         alt="avatar">
+  </div>
+  <ng-template pTemplate="footer">
+    <button pButton icon="pi pi-times" size="small" label="Quitter" severity="secondary"
+            (click)="showHeros = false"></button>
+  </ng-template>
+</p-dialog>
 
 <!-- Création de personnage -->
 <p-dialog header="Création de personnage" [modal]="true" [(visible)]="showCreate" [style]="{ width: '25rem' }">
   <form [formGroup]="herosForm" autocomplete="off" (submit)="createHero()">
     <span class="p-text-secondary block mb-5">Commençez par renseigner le nom du joueur.</span>
-    <div class="flex gap-2 flex-col">
+    <div class="flex gap-4 flex-col">
       <div class="flex flex-col gap-1 w-full justify-end relative">
         <label for="joueur">Nom du joueur</label>
         <input formControlName="joueur" pInputText id="joueur" class="p-inputtext-sm"/>

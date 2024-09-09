@@ -166,9 +166,9 @@ export class BolPnjHomeComponent {
       this.filteredPnjList = this.filteredPnjList.filter((pnj) => pnj.type === this.searchType);
     }
   }
-  showPnjPicture(beast: BolHerosModel) {
+  showPnjPicture(pnj: BolHerosModel) {
     this.showPnj = true;
-    this.currentPnj = beast;
+    this.currentPnj = pnj;
   }
   getType(pnj: BolHerosModel) {
     switch (pnj?.type) {

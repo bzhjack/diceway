@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy} from '@angular/core';
+import {Component, inject, OnDestroy, ViewChild} from '@angular/core';
 import {Subscription} from "rxjs";
 import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {Router, RouterLink} from "@angular/router";
@@ -7,35 +7,48 @@ import {CardModule} from "primeng/card";
 import {Button, ButtonDirective} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
 import {InputTextModule} from "primeng/inputtext";
-import {FormBuilder, FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
-import {TableModule} from "primeng/table";
+import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {Table, TableModule} from "primeng/table";
 import {Ripple} from "primeng/ripple";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {ConfirmationService} from "primeng/api";
 import {BolHerosService} from "../../services/bol-heros.service";
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {HeaderComponent} from "../../../shared/header/header.component";
+import {CheckboxModule} from "primeng/checkbox";
+import {DropdownModule} from "primeng/dropdown";
+import {IconFieldModule} from "primeng/iconfield";
+import {InputIconModule} from "primeng/inputicon";
+import {TagModule} from "primeng/tag";
+import {TooltipModule} from "primeng/tooltip";
 
 
 @Component({
   selector: 'bol-hero-home',
   standalone: true,
-    imports: [
-        NgForOf,
-        JsonPipe,
-        RouterLink,
-        CardModule,
-        Button,
-        DialogModule,
-        InputTextModule,
-        ReactiveFormsModule,
-        NgIf,
-        TableModule,
-        ButtonDirective,
-        Ripple,
-        ConfirmPopupModule,
-        HeaderComponent
-    ],
+  imports: [
+    NgForOf,
+    JsonPipe,
+    RouterLink,
+    CardModule,
+    Button,
+    DialogModule,
+    InputTextModule,
+    ReactiveFormsModule,
+    NgIf,
+    TableModule,
+    ButtonDirective,
+    Ripple,
+    ConfirmPopupModule,
+    HeaderComponent,
+    CheckboxModule,
+    DropdownModule,
+    IconFieldModule,
+    InputIconModule,
+    TagModule,
+    TooltipModule,
+    FormsModule
+  ],
   providers: [
     ConfirmationService
   ],
@@ -43,7 +56,7 @@ import {HeaderComponent} from "../../../shared/header/header.component";
   styleUrl: './home.component.scss'
 })
 export class BolHeroHomeComponent implements OnDestroy {
-
+  @ViewChild('herosTable') herosTable?: Table;
   private confirmationService = inject(ConfirmationService);
   private herosService = inject(BolHerosService);
   private router = inject(Router);
@@ -53,7 +66,14 @@ export class BolHeroHomeComponent implements OnDestroy {
 
   private subs?: Subscription;
   private subsHeroes?: Subscription;
-  public heroes: Array<BolHerosModel> = [];
+  public heroesList: Array<BolHerosModel> = [];
+  public filteredHeroesList: Array<BolHerosModel> = [];
+  public searchTerm: string | null = null;
+  public showHeros: boolean = false;
+  public currentHeros: BolHerosModel | null = null;
+
+
+
   public showCreate = false;
   public joueurCtrl = new FormControl('', [Validators.required, Validators.minLength(3)]);
   public nomCtrl = new FormControl('', [Validators.required, Validators.minLength(3)]);
@@ -72,7 +92,8 @@ export class BolHeroHomeComponent implements OnDestroy {
 
     this.subsHeroes = heroesRequest.subscribe({
       next: (heroes) => {
-        this.heroes = heroes;
+        this.heroesList = heroes;
+        this.filteredHeroesList = heroes;
         this.spinner.hide();
       },
       error: (error) => {
@@ -138,6 +159,26 @@ export class BolHeroHomeComponent implements OnDestroy {
   ngOnDestroy() {
     this.subs?.unsubscribe();
     this.subsHeroes?.unsubscribe();
+  }
+
+  filtering(ev: any) {
+    this.herosTable?.filterGlobal(ev.target?.value, 'contains')
+  }
+  filterExtended() {
+    /*this.filteredHeroesList = this.searchCreation ? this.pnjList.filter((pnj) => pnj.user_id !== null) : this.pnjList;
+    if (this.searchType !== null) {
+      this.filteredPnjList = this.filteredPnjList.filter((pnj) => pnj.type === this.searchType);
+    }*/
+  }
+  showHerosPicture(heros: BolHerosModel) {
+    this.showHeros = true;
+    this.currentHeros = heros;
+  }
+
+  clear(table: Table) {
+    table.clear();
+    this.searchTerm = '';
+    this.filterExtended();
   }
 }
 
