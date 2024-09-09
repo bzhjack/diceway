@@ -19,21 +19,32 @@
         scrollHeight="calc(100vh - 170px)">
 
         <ng-template pTemplate="caption">
-          <div class="flex justify-between">
+          <div class="flex gap-2">
             <p-iconField iconPosition="left">
               <p-inputIcon>
                 <i class="pi pi-search"></i>
               </p-inputIcon>
               <input
                 pInputText
+                style="padding-left: 2.5rem"
+                class="p-inputtext-sm"
                 type="text"
                 (input)="filtering($event)"
                 placeholder="Votre recherche"/>
             </p-iconField>
-            <p-checkbox
-              class="pr-2 cursor-pointer"
-              [(ngModel)]="creation"
-              [binary]="true" label="Mes créations" (ngModelChange)="filterCreation($event)"/>
+            <div class="flex items-center gap-2">
+              <p-dropdown
+                [options]="typeList"
+                optionLabel="type"
+                [(ngModel)] = "searchType"
+                (ngModelChange)="filterExtended()"
+                placeholder="Sélectionner un type" />
+              <p-checkbox
+                class="pr-2 cursor-pointer"
+                [(ngModel)] = "searchCreation"
+                [binary]="true" label="Mes créations" (ngModelChange)="filterExtended()"/>
+            </div>
+
 
           </div>
         </ng-template>
@@ -43,12 +54,12 @@
           <tr>
             <th></th>
             <th></th>
-            <th>Traits</th>
             <th>Attributs</th>
             <th>Combat</th>
             <th>Carrières</th>
             <th>Armures</th>
             <th>Armes</th>
+            <th>Traits</th>
             <th></th>
           </tr>
         </ng-template>
@@ -69,7 +80,7 @@
                 <div class="flex gap-2 items-center text-xl">
                   <i *ngIf="pnj.commentaire" class="pi pi-info-circle cursor-pointer warn-color"
                      [pTooltip]="pnj.commentaire ?? ''"></i>
-                  {{ pnj.origines.nom }}
+                  <div style="text-transform: capitalize">{{ pnj.origines.nom }}</div>
                 </div>
                 <div class="flex items-center gap-2">
                   <div class="text-gray-300">Type</div>
@@ -82,16 +93,6 @@
                 <p-tag *ngIf="pnj.user_id">Création</p-tag>
               </div>
 
-            </td>
-
-            <td>
-              <div style="height: 100px">
-                <table>
-                  <tr *ngFor="let trait of pnj.traits">
-                    <td class="whitespace-nowrap">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}</td>
-                  </tr>
-                </table>
-              </div>
             </td>
 
             <td>
@@ -178,6 +179,15 @@
               </div>
             </td>
 
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr *ngFor="let trait of pnj.traits">
+                    <td class="whitespace-nowrap">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}</td>
+                  </tr>
+                </table>
+              </div>
+            </td>
 
             <td>
               <div *ngIf="pnj.user_id" class="flex gap-2" style="height: 100px;">

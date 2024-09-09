@@ -69,11 +69,16 @@ export class BolPnjHomeComponent {
   private ref?: DynamicDialogRef;
   public pnjList: Array<BolHerosModel> = [];
   public filteredPnjList: Array<BolHerosModel> = [];
-  public creation: boolean = false;
+  public searchCreation: boolean = false;
+  public searchType: 'P' | 'C' | 'R' | null = null;
   public showPnj: boolean = false;
   public currentPnj: BolHerosModel | null = null;
   @ViewChild('pnjTable') pnjTable?: Table;
-
+  public typeList = [
+    {type: 'Coriaces', value: 'C'},
+    {type: 'Rivaux', value: 'R'},
+    {type: 'Piétaille', value: 'P'},
+  ];
 
   constructor() {
     this.getPnj();
@@ -153,8 +158,8 @@ export class BolPnjHomeComponent {
   filtering(ev: any) {
     this.pnjTable?.filterGlobal(ev.target?.value, 'contains')
   }
-  filterCreation(creation: boolean) {
-    this.filteredPnjList = creation ? this.pnjList.filter((pnj) => pnj.user_id !== null) : this.pnjList;
+  filterExtended() {
+    this.filteredPnjList = this.searchCreation ? this.pnjList.filter((pnj) => pnj.user_id !== null) : this.pnjList;
   }
   showPnjPicture(beast: BolHerosModel) {
     this.showPnj = true;

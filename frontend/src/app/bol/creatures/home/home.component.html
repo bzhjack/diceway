@@ -17,13 +17,15 @@
         [globalFilterFields]="['nom', 'taille.taille']"
         scrollHeight="calc(100vh - 170px)">
         <ng-template pTemplate="caption">
-          <div class="flex justify-between">
+          <div class="flex gap-2">
               <p-iconField iconPosition="left">
                   <p-inputIcon>
                       <i class="pi pi-search"></i>
                   </p-inputIcon>
                   <input
                       pInputText
+                      class="p-inputtext-sm"
+                      style="padding-left: 2.5rem"
                       type="text"
                       (input)="filtering($event)"
                       placeholder="Votre recherche" />
@@ -58,7 +60,7 @@
                 <div class="flex flex-col gap-2" style="height: 100px">
                   <div class="flex gap-2 items-center text-xl">
                     <i *ngIf="beast.commentaire" class="pi pi-info-circle cursor-pointer warn-color" [pTooltip]="beast.commentaire ?? ''"></i>
-                    {{ beast.nom }}
+                    <div style="text-transform: capitalize">{{ beast.nom }}</div>
                   </div>
                   <div class="flex items-center gap-2">
                     <div class="text-gray-300">Taille</div>
