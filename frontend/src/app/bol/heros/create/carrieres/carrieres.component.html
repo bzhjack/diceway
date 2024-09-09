@@ -12,6 +12,8 @@
         </div>
       </div>
       <div>Carrières</div>
+      <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une arme" *ngIf="carrieres.length < 4" (click)="selectedCarriere.set(null); opCarriere.toggle($event)"></app-btn>
+      <app-btn type="warn" icon="plus-circle" pTooltip="Ajouter une {{carriereDesavangeCount()}} désavantage(s)"   *ngIf="carriereDesavangeCount() > 0 && carrieresForm.valid" (click)="selectedTrait.set(null); opTrait.toggle($event)"></app-btn>
     </div>
     <p-overlayPanel #carriereInfos>
       <div class="flex flex-col gap-2">
@@ -71,22 +73,6 @@
 
     </ng-container>
   </ng-container>
-  <!-- Footer Carrieres -->
-  <div class="footer-separator flex justify-between gap-2"
-       *ngIf="(carriereDesavangeCount() > 0 && carrieresForm.valid) || carrieres.length < 4">
-    <p-button (click)="selectedTrait.set(null); opTrait.toggle($event)"
-              [style]="{color: 'var(--error-color)'}"
-              label="Ajouter une {{carriereDesavangeCount()}} désavantage(s)"
-              *ngIf="carriereDesavangeCount() > 0 && carrieresForm.valid"
-              severity="danger"
-              size="small" [link]="true"/>
-    <div></div>
-    <p-button (click)="selectedCarriere.set(null); opCarriere.toggle($event)"
-              label="Ajouter une carrière"
-              *ngIf="carrieres.length < 4"
-              size="small" [link]="true" class="text-cyan-600"/>
-
-  </div>
 </p-fieldset>
 <p-overlayPanel #opCarriere>
   <div class="flex flex-col gap-4">

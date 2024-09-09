@@ -25,28 +25,30 @@ import {BolArmeModel, BolHerosArmeModel} from "../../../models/bol-arme.model";
 import {BtnComponent} from "../../../../shared/trash/trash.component";
 import {DividerModule} from "primeng/divider";
 import {TableModule} from "primeng/table";
+import {TooltipModule} from "primeng/tooltip";
 
 @Component({
   selector: 'bol-heros-armes',
   standalone: true,
-  imports: [
-    Button,
-    FieldsetModule,
-    PrimeTemplate,
-    ButtonDirective,
-    DropdownModule,
-    NgIf,
-    OverlayPanelModule,
-    Ripple,
-    FormsModule,
-    NgForOf,
-    ReactiveFormsModule,
-    BtnComponent,
-    BtnComponent,
-    DividerModule,
-    JsonPipe,
-    TableModule
-  ],
+    imports: [
+        Button,
+        FieldsetModule,
+        PrimeTemplate,
+        ButtonDirective,
+        DropdownModule,
+        NgIf,
+        OverlayPanelModule,
+        Ripple,
+        FormsModule,
+        NgForOf,
+        ReactiveFormsModule,
+        BtnComponent,
+        BtnComponent,
+        DividerModule,
+        JsonPipe,
+        TableModule,
+        TooltipModule
+    ],
   templateUrl: './armes.component.html',
   styleUrl: './armes.component.scss',
   providers: [

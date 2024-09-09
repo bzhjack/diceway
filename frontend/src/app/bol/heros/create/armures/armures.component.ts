@@ -24,27 +24,29 @@ import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {BtnComponent} from "../../../../shared/trash/trash.component";
 import {TableModule} from "primeng/table";
+import {TooltipModule} from "primeng/tooltip";
 
 
 @Component({
   selector: 'bol-heros-armures',
   standalone: true,
-  imports: [
-    Button,
-    FieldsetModule,
-    PrimeTemplate,
-    ButtonDirective,
-    DropdownModule,
-    NgIf,
-    OverlayPanelModule,
-    Ripple,
-    FormsModule,
-    NgForOf,
-    ReactiveFormsModule,
-    BtnComponent,
-    JsonPipe,
-    TableModule
-  ],
+    imports: [
+        Button,
+        FieldsetModule,
+        PrimeTemplate,
+        ButtonDirective,
+        DropdownModule,
+        NgIf,
+        OverlayPanelModule,
+        Ripple,
+        FormsModule,
+        NgForOf,
+        ReactiveFormsModule,
+        BtnComponent,
+        JsonPipe,
+        TableModule,
+        TooltipModule
+    ],
   templateUrl: './armures.component.html',
   styleUrl: './armures.component.scss',
   providers: [

@@ -2,6 +2,7 @@
   <ng-template pTemplate="header">
     <div class="flex items-center gap-2">
       <div>Armes</div>
+      <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une arme" *ngIf="filteredArmeList()?.length > 0" (click)="selectedArme.set(null); opArme.toggle($event)"></app-btn>
     </div>
   </ng-template>
   <!-- Body Armes -->
@@ -29,10 +30,6 @@
       </tr>
     </ng-template>
   </p-table>
-  <!-- Footer Armes -->
-  <div class="footer-separator flex justify-end gap-2" *ngIf="filteredArmeList()?.length > 0">
-    <p-button label="Ajouter une arme" size="small" [link]="true" class="text-cyan-600" (click)="selectedArme.set(null); opArme.toggle($event)"/>
-  </div>
 </p-fieldset>
 
 <p-overlayPanel #opArme>
