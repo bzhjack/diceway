@@ -1,7 +1,6 @@
-import {Component, computed, inject, signal, ViewChild, viewChild} from '@angular/core';
+import {Component, computed, inject, signal, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {map, Subscription} from "rxjs";
-import {BolCreatureStateService} from "../../services/bol-creature-state.service";
 import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {BolCarriereModel, BolHerosCarriereModel} from "../../models/bol-carriere.model";
 import {PictureComponent} from "../../../shared/picture/picture.component";
@@ -18,12 +17,9 @@ import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {TooltipModule} from "primeng/tooltip";
 import {BolHerosStateService} from "../../services/bol-heros-state.service";
 import {toSignal} from "@angular/core/rxjs-interop";
-import {BolArmeModel, BolHerosArmeModel} from "../../models/bol-arme.model";
-import {BolCreatureCapaciteModel} from "../../models/bol-creature.model";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {Ripple} from "primeng/ripple";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
-import {BolHerosArmureModel} from "../../models/bol-armure.model";
 import {BolHerosModel} from "../../models/bol-heros.model";
 
 @Component({

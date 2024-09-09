@@ -17,7 +17,7 @@ use App\Http\Controllers\Bol\BolCarriereController;
 use App\Http\Controllers\Bol\BolArmureController;
 use App\Http\Controllers\Bol\BolArmeController;
 use App\Http\Controllers\Bol\BolPnjController;
-
+use App\Http\Controllers\Bol\BolDashboardController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -59,7 +59,8 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class, GzipMiddleware::cla
     /**
      * BARBARIAN OF LEMURIA
      **/
-
+    // Gestion du dashboard
+    Route::get('/bol/dashboard/count', [BolDashboardController::class, 'getCounts']);
     // Gestion de la région
     Route::get('/bol/region', [BolRegionController::class, 'getAll']);
     Route::get('/bol/region/{id}', [BolRegionController::class, 'getOne']);
