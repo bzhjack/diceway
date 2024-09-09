@@ -9,16 +9,18 @@ import {HttpClient} from "@angular/common/http";
 import {BolDashboardModel} from "../models/bol-dashboard.model";
 import {NgxSpinnerService} from "ngx-spinner";
 import {tap} from "rxjs/operators";
+
 @Injectable()
 export class BolDashboardService {
   private spinner = inject(NgxSpinnerService);
 
   constructor(private http: HttpClient) {
   }
-  getCounts(): Observable<BolDashboardModel> {
-    this.spinner.show();
-    return this.http.get<BolDashboardModel>('/api/bol/dashboard/count').pipe(tap(() => this.spinner.hide()));
-  }
-  dashboardCounts = toSignal(this.getCounts());
 
+  getCounts(): Observable<BolDashboardModel> {
+    this.spinner.show('bol-dashboard');
+    return this.http.get<BolDashboardModel>('/api/bol/dashboard/count').pipe(tap(() => this.spinner.hide('bol-dashboard')));
   }
+
+  dashboardCounts = toSignal(this.getCounts());
+}

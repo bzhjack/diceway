@@ -12,22 +12,33 @@ class BolDashboardController extends Controller
     {
 
         // Récupérer le nombre de lignes des tables bol_heros et bol_creatures
+        $countHerosPending = DB::table('bol_heros')
+            ->where('type', 'H')
+            ->where('active', false)
+            ->where('user_id', Auth::id())->count();
         $countHeros = DB::table('bol_heros')
             ->where('type', 'H')
+            ->where('active', true)
             ->where('user_id', Auth::id())->count();
 
         $countPnjs = DB::table('bol_heros')
             ->where('type', '!=', 'H')
-            ->where('user_id', Auth::id())
-            ->orWhereNull('user_id')->count();
+            ->where('user_id', null)->count();
+        $countCreatedPnjs = DB::table('bol_heros')
+            ->where('type', '!=', 'H')
+            ->where('user_id', Auth::id())->count();
 
-        $countCreatures = DB::table('bol_creature')->count();
+        $countCreatures = DB::table('bol_creature')->where('user_id', null)->count();
+        $countCreatedCreatures = DB::table('bol_creature')->where('user_id', Auth::id())->count();
 
         // Retourner les résultats en format JSON
         return response()->json([
             'countHeros' => $countHeros,
+            'countHerosPending' => $countHerosPending,
             'countCreatures' => $countCreatures,
-            'countPnjs' => $countPnjs
+            'countCreatedCreatures' => $countCreatedCreatures,
+            'countPnjs' => $countPnjs,
+            'countCreatedPnjs' => $countCreatedPnjs
         ]);
     }
 
