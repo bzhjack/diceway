@@ -71,7 +71,7 @@
           <tr>
             <td style="width: 110px">
               <div class="pnj_row__img cursor-pointer" (click)="showPnjPicture(pnj)">
-                <img *ngIf="!pnj.user_id" src="/frontend/assets/bol/pnj/{{pnj.id}}.png" alt=""/>
+                <img *ngIf="!pnj.user_id" src="/frontend/assets/bol/pnj/{{pnj.id}}.jpg" alt=""/>
                 <img *ngIf="pnj.user_id" style="width:100%"
                      [src]="pnj.origines.avatar !== null ? pnj.origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
                      alt="avatar">
@@ -216,7 +216,7 @@
           [header]="currentPnj.origines.nom ?? ''"
           [modal]="true">
   <div *ngIf="currentPnj" class="pnj-preview">
-    <img *ngIf="!currentPnj.user_id" src="/frontend/assets/bol/pnj/{{currentPnj.id}}.png" alt=""/>
+    <img *ngIf="!currentPnj.user_id" src="/frontend/assets/bol/pnj/{{currentPnj.id}}.jpg" alt=""/>
     <img *ngIf="currentPnj.user_id" style="width:100%"
          [src]="currentPnj.origines.avatar !== null ? currentPnj.origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
          alt="avatar">

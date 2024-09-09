@@ -60,7 +60,7 @@
             <tr>
               <td style="width: 110px">
                 <div class="beast_row__img cursor-pointer" (click)="showBeastPicture(beast)">
-                  <img *ngIf="!beast.user_id" src="/frontend/assets/bol/bestiary/{{beast.id}}.png" alt="" />
+                  <img *ngIf="!beast.user_id" src="/frontend/assets/bol/bestiary/{{beast.id}}.jpg" alt="" />
                   <img *ngIf="beast.user_id" style="width:100%"
                     [src]="beast.avatar !== null ? beast.avatar : '/frontend/assets/bol/empty-avatar.jpg'" alt="avatar">
                 </div>
@@ -162,7 +162,7 @@
     [header]="currentBeast?.nom"
     [modal]="true">
     <div *ngIf="currentBeast" class="beast-preview">
-      <img *ngIf="!currentBeast.user_id" src="/frontend/assets/bol/bestiary/{{currentBeast.id}}.png" alt="" />
+      <img *ngIf="!currentBeast.user_id" src="/frontend/assets/bol/bestiary/{{currentBeast.id}}.jpg" alt="" />
       <img *ngIf="currentBeast.user_id" style="width:100%"
         [src]="currentBeast.avatar !== null ? currentBeast.avatar : '/frontend/assets/bol/empty-avatar.jpg'" alt="avatar">
     </div>

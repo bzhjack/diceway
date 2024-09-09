@@ -61,7 +61,7 @@
           <tr>
             <td style="width: 110px">
               <div class="heros_row__img cursor-pointer" (click)="showHerosPicture(heros)">
-                <img *ngIf="!heros.user_id" src="/frontend/assets/bol/heros/{{heros.id}}.png" alt=""/>
+                <img *ngIf="!heros.user_id" src="/frontend/assets/bol/heros/{{heros.id}}.jpg" alt=""/>
                 <img *ngIf="heros.user_id" style="width:100%"
                      [src]="heros.origines.avatar !== null ? heros.origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
                      alt="avatar">
@@ -206,7 +206,7 @@
           [header]="currentHeros.origines.nom ?? ''"
           [modal]="true">
   <div *ngIf="currentHeros" class="heros-preview">
-    <img *ngIf="!currentHeros.user_id" src="/frontend/assets/bol/heros/{{currentHeros.id}}.png" alt=""/>
+    <img *ngIf="!currentHeros.user_id" src="/frontend/assets/bol/heros/{{currentHeros.id}}.jpg" alt=""/>
     <img *ngIf="currentHeros.user_id" style="width:100%"
          [src]="currentHeros.origines.avatar !== null ? currentHeros.origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
          alt="avatar">
