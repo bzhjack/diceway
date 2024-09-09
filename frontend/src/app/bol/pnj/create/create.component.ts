@@ -147,7 +147,6 @@ export class BolPnjCreateComponent {
   constructor(private ref: DynamicDialogRef, private config: DynamicDialogConfig) {
     if (this.config.data.pnj) {
       const pnj = this.config.data.pnj as BolHerosModel;
-      console.log(pnj);
       this.pnjForm.patchValue({
         id: pnj.id,
         nom: pnj.origines.nom,
