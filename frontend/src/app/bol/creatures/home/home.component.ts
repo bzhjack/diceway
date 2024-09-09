@@ -172,7 +172,6 @@ export class BolCreatureHomeComponent implements OnDestroy {
   filterExtended() {
     this.filteredBeast = this.searchCreation ? this.beast.filter((beast) => beast.user_id !== null) : this.beast;
     if (this.searchTaille !== null) {
-      console.log(this.searchTaille);
       this.filteredBeast = this.filteredBeast.filter((beast) => beast.taille.id === this.searchTaille);
     }
   }
