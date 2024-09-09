@@ -97,24 +97,24 @@ export class BolCreatureCreateComponent implements OnDestroy {
     }
   );
 
-  protected selectedCapaciteIds = toSignal(this.creatureForm.get('capacites')!.valueChanges.pipe(map((items: any[]) => items.map(item => item.id))));
+  protected selectedCapaciteIds = toSignal(this.creatureForm.get('capacites')!.valueChanges.pipe(map((items: any[]) => items.map(item => Number(item.id)))));
   protected filteredCapaciteList = computed(() => {
     const selectedIds = this.selectedCapaciteIds();
     const capaciteDetails = this.capacites.value;
     // Filtrer les capacités qui ne sont pas encore sélectionnées
     return this.capacitesList()?.filter((capacite: BolCreatureCapaciteModel) => {
-      const selectedCapacite = capaciteDetails.find((c: any) => c.id === capacite.id);
+      const selectedCapacite = capaciteDetails.find((c: any) => Number(c.id) === Number(capacite.id));
       // Ajouter le detail de la capacité sélectionnée, s'il existe
       if (selectedCapacite) {
         capacite.detail = selectedCapacite.detail;
       }
       // Retourner les capacités qui ne sont pas dans la liste des IDs sélectionnés
-      return !selectedIds?.includes(capacite.id);
+      return !selectedIds?.includes(Number(capacite.id));
     });
   });
 
   protected selectedCapaciteDetail = computed(() => {
-    return this.capacitesList()?.filter((capa: BolCreatureCapaciteModel) => this.selectedCapaciteIds()?.includes(capa.id));
+    return this.capacitesList()?.filter((capa: BolCreatureCapaciteModel) => this.selectedCapaciteIds()?.includes(Number(capa.id)));
   });
   tailleChange = toSignal(this.idTailleCtrl.valueChanges);
 
