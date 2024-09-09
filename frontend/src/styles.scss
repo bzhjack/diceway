@@ -170,3 +170,8 @@ body {
 .warn-color {
   color: var(--warn-color);
 }
+
+.page-container {
+  margin-top: 4rem;
+  height: calc(100vh - 4rem);
+}
