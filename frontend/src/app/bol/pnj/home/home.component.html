@@ -1,124 +1,214 @@
 <div class="page-container">
   <div>
     <app-header legend="Personnages non joueurs">
-      <button pButton label="Création" icon="pi pi-pencil" severity="warning" size="small" (click)="createPnj()"></button>
-      <button pButton label="Retour" icon="pi pi-arrow-left" severity="secondary" size="small" routerLink="/bol"></button>
+      <button pButton label="Création" icon="pi pi-pencil" severity="warning" size="small"
+              (click)="createPnj()"></button>
+      <button pButton label="Retour" icon="pi pi-arrow-left" severity="secondary" size="small"
+              routerLink="/bol"></button>
     </app-header>
   </div>
+  <div class="flex">
+    <div class="flex flex-auto">
+      <p-table
+        #pnjTable
+        class="w-full"
+        [value]="filteredPnjList"
+        [scrollable]="true"
+        dataKey="id"
+        [globalFilterFields]="['origines.nom']"
+        scrollHeight="calc(100vh - 170px)">
 
-  <div class="flex gap-2 p-4">
-    <div class="flex">
-      <p-card header="Pnj">
-        <p-table
-          [value]="pnjList"
-          [scrollable]="true"
-          scrollHeight="calc(100vh - 200px)">
-          <ng-template pTemplate="header">
-            <tr>
-              <th></th>
-              <th></th>
-              <th>Attributs</th>
-              <th>Combat</th>
-              <th>Capacités</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-pnj>
-            <tr>
-              <td style="width: 110px">
-                <div class="pnj_row__img">
-                  <img *ngIf="!pnj.user_id" src="/frontend/assets/bol/pnj/{{pnj.id}}.png" alt=""/>
-                  <img *ngIf="pnj.user_id"
-                       style="width:100%"
-                       [src]="pnj.avatar !== null ? pnj.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
-                       alt="avatar">
+        <ng-template pTemplate="caption">
+          <div class="flex justify-between">
+            <p-iconField iconPosition="left">
+              <p-inputIcon>
+                <i class="pi pi-search"></i>
+              </p-inputIcon>
+              <input
+                pInputText
+                type="text"
+                (input)="filtering($event)"
+                placeholder="Votre recherche"/>
+            </p-iconField>
+            <p-checkbox
+              class="pr-2 cursor-pointer"
+              [(ngModel)]="creation"
+              [binary]="true" label="Mes créations" (ngModelChange)="filterCreation($event)"/>
+
+          </div>
+        </ng-template>
+
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th></th>
+            <th></th>
+            <th>Traits</th>
+            <th>Attributs</th>
+            <th>Combat</th>
+            <th>Carrières</th>
+            <th>Armures</th>
+            <th>Armes</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-pnj>
+          <tr>
+            <td style="width: 110px">
+              <div class="pnj_row__img cursor-pointer" (click)="showPnjPicture(pnj)">
+                <img *ngIf="!pnj.user_id" src="/frontend/assets/bol/pnj/{{pnj.id}}.png" alt=""/>
+                <img *ngIf="pnj.user_id" style="width:100%"
+                     [src]="pnj.origines.avatar !== null ? pnj.origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+                     alt="avatar">
+              </div>
+            </td>
+
+
+            <td class="relative">
+              <div class="flex flex-col gap-2" style="height: 100px">
+                <div class="flex gap-2 items-center text-xl">
+                  <i *ngIf="pnj.commentaire" class="pi pi-info-circle cursor-pointer warn-color"
+                     [pTooltip]="pnj.commentaire ?? ''"></i>
+                  {{ pnj.origines.nom }}
                 </div>
-              </td>
-              <td class="relative">
-                <div class="flex flex-col gap-2" style="height: 100px">
-                  <div class="flex gap-2 items-center text-xl">
-                    <i *ngIf="pnj.commentaire" class="pi pi-info-circle cursor-pointer warn-color" [pTooltip]="pnj.commentaire ?? ''"></i>
-                    {{ pnj.origines.nom }}
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <div class="text-gray-300">Taille</div>
-                    <div class="text-gray-400 font-bold">{{ pnj.taille.taille }}</div>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <div class="text-gray-300">Vitalité</div>
-                    <div class="text-gray-400 font-bold">{{ pnj.ressources.vitalite }}</div>
-                  </div>
+                <div class="flex items-center gap-2">
+                  <div class="text-gray-300">Type</div>
+                  <div class="text-gray-400 font-bold">{{ getType(pnj) }}</div>
                 </div>
-              </td>
-              <td>
-                <div style="height: 100px">
-                  <table>
-                    <tr>
-                      <td class="text-gray-300">Vigueur</td>
-                      <td class="text-gray-400">{{ pnj.vigueur }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-gray-300">Agilité</td>
-                      <td class="text-gray-400">{{ pnj.agilite }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-gray-300">Esprit</td>
-                      <td class="text-gray-400">{{ pnj.esprit }}</td>
-                    </tr>
-                  </table>
+                <div class="flex items-center gap-2">
+                  <div class="text-gray-300">Vitalité</div>
+                  <div class="text-gray-400 font-bold">{{ pnj.ressources.vitalite }}</div>
                 </div>
+                <p-tag *ngIf="pnj.user_id">Création</p-tag>
+              </div>
 
-              </td>
+            </td>
 
-              <td>
-                <div style="height: 100px">
-                  <table>
-                    <tr>
-                      <td class="text-gray-300">Attaque</td>
-                      <td class="text-gray-400">{{ pnj.attaque }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-gray-300">Dégâts</td>
-                      <td class="text-gray-400 whitespace-nowrap">{{ pnj.degat }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-gray-300">Défense</td>
-                      <td class="text-gray-400 whitespace-nowrap">{{ pnj.defense }}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-gray-300">Protection</td>
-                      <td class="text-gray-400 whitespace-nowrap">{{ pnj.protection }}</td>
-                    </tr>
-                  </table>
-                </div>
-              </td>
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr *ngFor="let trait of pnj.traits">
+                    <td class="whitespace-nowrap">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}</td>
+                  </tr>
+                </table>
+              </div>
+            </td>
 
-              <td>
-                <div style="height: 100px">
-                  <table>
-                    <tr *ngFor="let capa of pnj.capacites">
-                      <td><i *ngIf="capa.detail || capa.capacite.description"
-                             class="pi pi-info-circle cursor-pointer text-cyan-600"
-                             [pTooltip]="(capa.detail ?  capa.detail + '\n\r' : '') + capa.capacite.description"></i>
-                      </td>
-                      <td class="text-gray-400 whitespace-nowrap">{{ capa.capacite.capacite }}</td>
-                    </tr>
-                  </table>
-                </div>
-              </td>
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr>
+                    <td class="text-gray-300">Vigueur</td>
+                    <td class="text-gray-400">{{ pnj.attributs.vigueur }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Agilité</td>
+                    <td class="text-gray-400">{{ pnj.attributs.agilite }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Esprit</td>
+                    <td class="text-gray-400">{{ pnj.attributs.esprit }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Aura</td>
+                    <td class="text-gray-400">{{ pnj.attributs.aura }}</td>
+                  </tr>
+                </table>
+              </div>
+
+            </td>
+
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr>
+                    <td class="text-gray-300">Initiative</td>
+                    <td class="text-gray-400">{{ pnj.combat.initiative }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Tir</td>
+                    <td class="text-gray-400">{{ pnj.combat.tir }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Défense</td>
+                    <td class="text-gray-400">{{ pnj.combat.defense }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Mêlée</td>
+                    <td class="text-gray-400">{{ pnj.combat.melee }}</td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr *ngFor="let cari of pnj.carrieres">
+                    <td>{{ cari.carriere.carriere }}</td>
+                    <td class="text-gray-400 whitespace-nowrap">{{ cari.value }}</td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr *ngFor="let armure of pnj.armures">
+                    <td class="whitespace-nowrap">{{ armure.armure.armure }}</td>
+                    <td class="whitespace-nowrap text-gray-400 bol-ellipsis-80"
+                        [pTooltip]="armure.armure.protection">{{ armure.armure.protection }}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr *ngFor="let arme of pnj.armes">
+                    <td class="whitespace-nowrap">{{ arme.arme.arme }}</td>
+                    <td class="whitespace-nowrap text-gray-400 bol-ellipsis-80"
+                        [pTooltip]="arme.arme.degats">{{ arme.arme.degats }}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </td>
 
 
-            </tr>
-          </ng-template>
-        </p-table>
-      </p-card>
-    </div>
-    <div class="flex">
-      <p-card header="Mes Pnj">
-      </p-card>
+            <td>
+              <div *ngIf="pnj.user_id" class="flex gap-2" style="height: 100px;">
+                <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-pencil"
+                        (click)="createPnj(pnj)"></button>
+                <button severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash"
+                        (click)="askDelete(pnj, $event)">
+                </button>
+              </div>
+            </td>
+
+          </tr>
+        </ng-template>
+      </p-table>
     </div>
   </div>
 </div>
-  @if (pnjList.length > 0) {
-    <bol-pnj-card [pnj]="pnjList[0]"></bol-pnj-card>
-  }
 <p-confirmPopup/>
+
+<p-dialog *ngIf="currentPnj"
+          [(visible)]="showPnj"
+          [header]="currentPnj.origines.nom ?? ''"
+          [modal]="true">
+  <div *ngIf="currentPnj" class="pnj-preview">
+    <img *ngIf="!currentPnj.user_id" src="/frontend/assets/bol/pnj/{{currentPnj.id}}.png" alt=""/>
+    <img *ngIf="currentPnj.user_id" style="width:100%"
+         [src]="currentPnj.origines.avatar !== null ? currentPnj.origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+         alt="avatar">
+  </div>
+  <ng-template pTemplate="footer">
+    <button pButton icon="pi pi-times" size="small" label="Quitter" severity="secondary"
+            (click)="showPnj = false"></button>
+  </ng-template>
+</p-dialog>

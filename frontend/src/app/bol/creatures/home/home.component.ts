@@ -162,15 +162,6 @@ export class BolCreatureHomeComponent implements OnDestroy {
   filtering(ev: any) {
     this.beastTable?.filterGlobal(ev.target?.value, 'contains')
   }
-
-  getSeverity (creature: BolCreatureModel) {
-    switch (creature?.user_id) {
-      case null:
-        return 'success';
-      default:
-        return 'info';
-    }
-  };
   filterCreation(creation: boolean) {
     this.filteredBeast = creation ? this.beast.filter((beast) => beast.user_id !== null) : this.beast;
   }

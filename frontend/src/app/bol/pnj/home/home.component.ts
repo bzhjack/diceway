@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, ViewChild} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {DropdownModule} from "primeng/dropdown";
 import {FormsModule} from "@angular/forms";
@@ -6,13 +6,10 @@ import {HeaderComponent} from "../../../shared/header/header.component";
 import {InputTextModule} from "primeng/inputtext";
 import {RouterLink} from "@angular/router";
 import {BolPnjCreateComponent} from "../create/create.component";
-import {BolCreatureModel} from "../../models/bol-creature.model";
-import {BolCreatureCreateComponent} from "../../creatures/create/create.component";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {Subscription} from "rxjs";
 import {NgxSpinnerService} from "ngx-spinner";
 import {BolHerosModel} from "../../models/bol-heros.model";
-import {BolCreaturesService} from "../../services/bol-creatures.service";
 import {BolHerosService} from "../../services/bol-heros.service";
 import {NgForOf, NgIf} from "@angular/common";
 import {BolCreatureCardComponent} from "../../creatures/card/card.component";
@@ -20,8 +17,14 @@ import {BolPnjCardComponent} from "../card/card.component";
 import {ConfirmationService} from "primeng/api";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {CardModule} from "primeng/card";
-import {TableModule} from "primeng/table";
+import {Table, TableModule} from "primeng/table";
 import {TooltipModule} from "primeng/tooltip";
+import {CheckboxModule} from "primeng/checkbox";
+import {IconFieldModule} from "primeng/iconfield";
+import {InputIconModule} from "primeng/inputicon";
+import {DialogModule} from "primeng/dialog";
+import {Ripple} from "primeng/ripple";
+import {TagModule} from "primeng/tag";
 
 @Component({
   selector: 'bol-pnj-home',
@@ -42,7 +45,13 @@ import {TooltipModule} from "primeng/tooltip";
     CardModule,
     NgIf,
     TableModule,
-    TooltipModule
+    TooltipModule,
+    CheckboxModule,
+    IconFieldModule,
+    InputIconModule,
+    DialogModule,
+    Ripple,
+    TagModule
   ],
   providers: [
     ConfirmationService
@@ -51,6 +60,7 @@ import {TooltipModule} from "primeng/tooltip";
   styleUrl: './home.component.scss'
 })
 export class BolPnjHomeComponent {
+  private confirmationService = inject(ConfirmationService);
   private pnjService = inject(BolHerosService);
   private spinner = inject(NgxSpinnerService);
   readonly #ds = inject(DialogService);
@@ -58,7 +68,12 @@ export class BolPnjHomeComponent {
   private subsPnj: Subscription | undefined;
   private ref?: DynamicDialogRef;
   public pnjList: Array<BolHerosModel> = [];
-  public myPnjList: Array<BolHerosModel> = [];
+  public filteredPnjList: Array<BolHerosModel> = [];
+  public creation: boolean = false;
+  public showPnj: boolean = false;
+  public currentPnj: BolHerosModel | null = null;
+  @ViewChild('pnjTable') pnjTable?: Table;
+
 
   constructor() {
     this.getPnj();
@@ -70,8 +85,8 @@ export class BolPnjHomeComponent {
     this.pnjList = [];
     this.subsPnj = this.pnjService.pnj().subscribe({
       next: (pnj: BolHerosModel[]) => {
-        this.pnjList = pnj.filter((pnj: BolHerosModel) => pnj.user_id === null);
-        this.myPnjList = pnj.filter((pnj: BolHerosModel) => pnj.user_id !== null);
+        this.pnjList = pnj;
+        this.filteredPnjList = pnj;
         this.spinner.hide();
       },
       error: () => {
@@ -106,7 +121,22 @@ export class BolPnjHomeComponent {
       }
     });
   }
-  deletePnj(pnj: BolHerosModel, event: any) {
+
+  askDelete(pnj: BolHerosModel, event: any) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Voulez vous supprimer cette créature ?',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass: 'p-button-danger p-button-sm',
+      acceptLabel: "Oui",
+      rejectLabel: "Non",
+      accept: () => {
+        this.deletePnj(pnj);
+      },
+    });
+  }
+
+  deletePnj(pnj: BolHerosModel) {
     this.spinner.show();
     this.subs?.unsubscribe();
     this.subs = this.pnjService.deletePnj(pnj.id as string).subscribe({
@@ -118,6 +148,27 @@ export class BolPnjHomeComponent {
         this.spinner.hide();
       }
     });
+  }
 
+  filtering(ev: any) {
+    this.pnjTable?.filterGlobal(ev.target?.value, 'contains')
+  }
+  filterCreation(creation: boolean) {
+    this.filteredPnjList = creation ? this.pnjList.filter((pnj) => pnj.user_id !== null) : this.pnjList;
+  }
+  showPnjPicture(beast: BolHerosModel) {
+    this.showPnj = true;
+    this.currentPnj = beast;
+  }
+  getType(pnj: BolHerosModel) {
+    switch (pnj?.type) {
+      case 'C':
+        return 'Coriaces';
+      case 'R':
+        return 'Rivaux';
+      case 'P':
+        return 'Piétaille';
+    }
+    return '';
   }
 }
