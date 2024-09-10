@@ -34,8 +34,8 @@ export class TopbarComponent {
       const url = (data as NavigationEnd).url;
       const sections: string[] = url.split('/');
       this.nameSpace.set(sections[1]);
-      if (url.startsWith('/bol/heros/create')) {
-        this.route.set('Barbarian of Lémuria: Création d\'un héros');
+      if (url.startsWith('/bol')) {
+        this.route.set('Barbarian of Lémuria');
       } else {
         this.route.set('');
       }

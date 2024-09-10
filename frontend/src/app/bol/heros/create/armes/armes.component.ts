@@ -22,10 +22,10 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {BolArmeModel, BolHerosArmeModel} from "../../../models/bol-arme.model";
-import {BtnComponent} from "../../../../shared/trash/trash.component";
 import {DividerModule} from "primeng/divider";
 import {TableModule} from "primeng/table";
 import {TooltipModule} from "primeng/tooltip";
+import {BtnComponent} from "../../../../shared/btn/btn.component";
 
 @Component({
   selector: 'bol-heros-armes',
@@ -42,7 +42,6 @@ import {TooltipModule} from "primeng/tooltip";
         FormsModule,
         NgForOf,
         ReactiveFormsModule,
-        BtnComponent,
         BtnComponent,
         DividerModule,
         JsonPipe,

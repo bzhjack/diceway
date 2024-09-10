@@ -5,7 +5,6 @@ import {DialogModule} from "primeng/dialog";
 import {PrimeTemplate} from "primeng/api";
 import {InputTextModule} from "primeng/inputtext";
 import {FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {NgxSpinnerService} from "ngx-spinner";
 import {BolCreatureStateService} from "../../services/bol-creature-state.service";
 import {BolCreatureCapaciteModel, BolCreatureTailleModel} from "../../models/bol-creature.model";
 import {FieldsetModule} from "primeng/fieldset";
@@ -20,8 +19,8 @@ import {JsonPipe, NgForOf, NgIf} from '@angular/common';
 import {OverlayPanel, OverlayPanelModule} from 'primeng/overlaypanel';
 import {Ripple} from "primeng/ripple";
 import {TooltipModule} from "primeng/tooltip";
-import {BtnComponent} from "../../../shared/trash/trash.component";
-import {BolHerosCarriereModel} from "../../models/bol-carriere.model";
+import {BtnComponent} from "../../../shared/btn/btn.component";
+
 
 @Component({
   selector: 'bol-creature-create',

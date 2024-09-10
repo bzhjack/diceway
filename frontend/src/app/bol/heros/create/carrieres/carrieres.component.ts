@@ -29,10 +29,10 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {carrieresFormValidator, carriereValidator} from "../create.validators";
 import {BolHeroCreateTools} from "../create.tools";
 import {Subscription} from "rxjs";
-import {BtnComponent} from "../../../../shared/trash/trash.component";
 import {TooltipModule} from "primeng/tooltip";
 import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
 import {BolHerosTraitsModel} from "../../../models/bol-trait.model";
+import {BtnComponent} from "../../../../shared/btn/btn.component";
 
 
 @Component({

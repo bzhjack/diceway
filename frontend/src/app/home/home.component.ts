@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {TopbarComponent} from '../layout/topbar/topbar.component';
 import {CardModule} from "primeng/card";
 import {RouterLink} from "@angular/router";
-import {BtnComponent} from "../shared/trash/trash.component";
+import {BtnComponent} from "../shared/btn/btn.component";
 
 @Component({
   selector: 'app-home',

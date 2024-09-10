@@ -24,34 +24,36 @@ import {Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from '@angular/core/rxjs-interop';
 import {BolHerosTraitComponent} from "./trait/trait.component";
-import {BtnComponent} from "../../../../shared/trash/trash.component";
 import {BolMessageComponent} from "../../../message/message.component";
 import {BolHeroCreateTools} from "../create.tools";
 import {DividerModule} from "primeng/divider";
 import {ScrollPanelModule} from "primeng/scrollpanel";
+import {TooltipModule} from "primeng/tooltip";
+import {BtnComponent} from "../../../../shared/btn/btn.component";
 
 @Component({
   selector: 'bol-heros-traits',
   standalone: true,
-  imports: [
-    ButtonDirective,
-    DropdownModule,
-    NgIf,
-    OverlayPanelModule,
-    PrimeTemplate,
-    Ripple,
-    FormsModule,
-    Button,
-    FieldsetModule,
-    NgForOf,
-    ReactiveFormsModule,
-    BolHerosTraitComponent,
-    JsonPipe,
-    BtnComponent,
-    BolMessageComponent,
-    DividerModule,
-    ScrollPanelModule
-  ],
+    imports: [
+        ButtonDirective,
+        DropdownModule,
+        NgIf,
+        OverlayPanelModule,
+        PrimeTemplate,
+        Ripple,
+        FormsModule,
+        Button,
+        FieldsetModule,
+        NgForOf,
+        ReactiveFormsModule,
+        BolHerosTraitComponent,
+        JsonPipe,
+        BtnComponent,
+        BolMessageComponent,
+        DividerModule,
+        ScrollPanelModule,
+        TooltipModule
+    ],
   templateUrl: './traits.component.html',
   styleUrl: './traits.component.scss',
   providers: [

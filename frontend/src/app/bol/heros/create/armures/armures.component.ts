@@ -22,9 +22,9 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from "@angular/core/rxjs-interop";
-import {BtnComponent} from "../../../../shared/trash/trash.component";
 import {TableModule} from "primeng/table";
 import {TooltipModule} from "primeng/tooltip";
+import {BtnComponent} from "../../../../shared/btn/btn.component";
 
 
 @Component({

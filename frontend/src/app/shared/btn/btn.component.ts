@@ -4,8 +4,8 @@ import {Component, input} from '@angular/core';
   selector: 'app-btn',
   standalone: true,
   imports: [],
-  templateUrl: './trash.component.html',
-  styleUrl: './trash.component.scss'
+  templateUrl: './btn.component.html',
+  styleUrl: './btn.component.scss'
 })
 export class BtnComponent {
   icon = input<string>('trash');

@@ -11,7 +11,6 @@ import {FieldsetModule} from "primeng/fieldset";
 import {InputNumberModule} from "primeng/inputnumber";
 import {BolHerosCarrieresComponent} from "../../heros/create/carrieres/carrieres.component";
 import {ConfirmationService} from "primeng/api";
-import {BtnComponent} from "../../../shared/trash/trash.component";
 import {Button, ButtonDirective} from "primeng/button";
 import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {TooltipModule} from "primeng/tooltip";
@@ -21,6 +20,7 @@ import {OverlayPanelModule} from "primeng/overlaypanel";
 import {Ripple} from "primeng/ripple";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {BolHerosModel} from "../../models/bol-heros.model";
+import {BtnComponent} from "../../../shared/btn/btn.component";
 
 @Component({
   selector: 'bol-pnj-create',

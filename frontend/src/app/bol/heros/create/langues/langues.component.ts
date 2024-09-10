@@ -28,11 +28,11 @@ import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {BolMessageComponent} from "../../../message/message.component";
 import {InputNumberModule} from "primeng/inputnumber";
-import {BtnComponent} from "../../../../shared/trash/trash.component";
 import {TableModule} from "primeng/table";
 import {BolHerosLangueModel, BolLangueModel} from "../../../models/bol-langue.model";
 import {ScrollPanelModule} from "primeng/scrollpanel";
 import {TooltipModule} from "primeng/tooltip";
+import {BtnComponent} from "../../../../shared/btn/btn.component";
 
 @Component({
   selector: 'bol-heros-langues',

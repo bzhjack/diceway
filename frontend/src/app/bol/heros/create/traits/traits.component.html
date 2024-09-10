@@ -10,6 +10,8 @@
       </div>
 
       <div>Avantages & Désavantages</div>
+      <app-btn *ngIf="herosAvantages().length < 3" type="info" icon="plus-circle" pTooltip="Ajouter une avantage" (click)="contextType.set('A'); selectedTrait.set(null); opTrait.toggle($event)"></app-btn>
+      <app-btn *ngIf="herosTraits().length > 0" type="warn" icon="plus-circle" pTooltip="Ajouter une désavantage" (click)="contextType.set('D');selectedTrait.set(null); opTrait.toggle($event)"></app-btn>
     </div>
     <p-overlayPanel #attributInfos>
       <div class="flex flex-col gap-2">
@@ -61,27 +63,6 @@
       </div>
     }
   </p-scrollPanel>
-
-
-
-  <!-- Footer Traits -->
-  <div class="footer-separator flex justify-between gap-2">
-    <div>
-      <p-button
-        *ngIf="herosAvantages().length < 3"
-        label="Ajouter un avantage"
-        size="small"
-        [link]="true" class="text-cyan-600"
-        (click)="contextType.set('A'); selectedTrait.set(null); opTrait.toggle($event)"/>
-    </div>
-
-    <p-button
-      *ngIf="herosTraits().length > 0"
-      label="Ajouter un désavantage"
-      size="small"
-      [link]="true" class="text-cyan-600"
-      (click)="contextType.set('D');selectedTrait.set(null); opTrait.toggle($event)"/>
-  </div>
 </p-fieldset>
 
 
