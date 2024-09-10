@@ -10,11 +10,6 @@ import {ResendComponent} from './auth/public/resend/resend.component';
 import {ResetComponent} from './auth/public/reset/reset.component';
 import {WelcomeComponent} from './auth/public/welcome/welcome.component';
 import {HomeComponent} from './home/home.component';
-import {BolHomeComponent} from "./bol/home/home.component";
-import {BolHerosCreateComponent} from './bol/heros/create/create.component';
-import {BolHeroHomeComponent} from "./bol/heros/home/home.component";
-import {BolCreatureHomeComponent} from "./bol/creatures/home/home.component";
-import {BolPnjHomeComponent} from "./bol/pnj/home/home.component";
 
 export const routes: Routes = [
   // Accès public

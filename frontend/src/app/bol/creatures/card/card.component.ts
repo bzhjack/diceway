@@ -1,4 +1,4 @@
-import {Component, computed, effect, inject, input, output} from '@angular/core';
+import {Component, computed, inject, input, output} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {BolCreatureModel} from "../../models/bol-creature.model";
 import {TagModule} from "primeng/tag";

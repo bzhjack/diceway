@@ -1,6 +1,5 @@
 import {Component, computed, inject, input, output} from '@angular/core';
 import {ConfirmationService} from "primeng/api";
-import {BolCreatureModel} from "../../models/bol-creature.model";
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {ButtonDirective} from "primeng/button";
 import {CardModule} from "primeng/card";

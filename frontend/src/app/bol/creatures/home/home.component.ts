@@ -22,11 +22,10 @@ import {DropdownModule} from "primeng/dropdown";
 import {Table, TableModule} from "primeng/table";
 import {TooltipModule} from "primeng/tooltip";
 import {Ripple} from "primeng/ripple";
-import { TagModule } from 'primeng/tag';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
-import { CheckboxModule } from 'primeng/checkbox';
-import {BolHerosModel} from "../../models/bol-heros.model";
+import {TagModule} from 'primeng/tag';
+import {IconFieldModule} from 'primeng/iconfield';
+import {InputIconModule} from 'primeng/inputicon';
+import {CheckboxModule} from 'primeng/checkbox';
 import {toSignal} from "@angular/core/rxjs-interop";
 
 @Component({

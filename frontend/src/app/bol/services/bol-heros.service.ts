@@ -10,7 +10,6 @@ import {BolArmureModel, BolHerosArmureModel} from "../models/bol-armure.model";
 import {BolArmeModel, BolHerosArmeModel} from "../models/bol-arme.model";
 import {BolHerosTraitsModel} from "../models/bol-trait.model";
 import {BolHerosLangueModel, BolLangueModel} from "../models/bol-langue.model";
-import {BolCreatureModel} from "../models/bol-creature.model";
 
 @Injectable({
   providedIn: 'root'
