@@ -219,7 +219,7 @@ export class BolPnjCreateComponent {
       this.traits.clear();
       pnj.traits.forEach( (trait: any) => {
         const heroTrait = this.fb.group({
-          id: [trait.id],
+          id: [trait.traitable_id],
           type: [trait.type]
         });
         this.traits.push(heroTrait);
@@ -295,7 +295,6 @@ export class BolPnjCreateComponent {
         break;
       case 'desavantages':
       case 'avantages':
-        console.log(this.selectedItem());
         const trait = this.fb.group({
           id: [this.selectedItem()?.id],
           type: this.currentField() === 'avantages' ? 'A' : 'D'

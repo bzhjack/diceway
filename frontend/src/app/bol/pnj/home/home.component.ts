@@ -11,7 +11,7 @@ import {Subscription} from "rxjs";
 import {NgxSpinnerService} from "ngx-spinner";
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {BolHerosService} from "../../services/bol-heros.service";
-import {NgForOf, NgIf} from "@angular/common";
+import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {BolCreatureCardComponent} from "../../creatures/card/card.component";
 import {BolPnjCardComponent} from "../card/card.component";
 import {ConfirmationService} from "primeng/api";
@@ -51,7 +51,8 @@ import {TagModule} from "primeng/tag";
     InputIconModule,
     DialogModule,
     Ripple,
-    TagModule
+    TagModule,
+    JsonPipe
   ],
   providers: [
     ConfirmationService
