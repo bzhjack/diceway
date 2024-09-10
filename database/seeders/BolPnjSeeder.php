@@ -3,6 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\Bol\BolHeros;
+use App\Models\Bol\BolHerosArme;
+use App\Models\Bol\BolHerosArmure;
+use App\Models\Bol\BolHerosCarriere;
+use App\Models\Bol\BolHerosTrait;
 use Illuminate\Database\Seeder;
 
 class BolPnjSeeder extends Seeder
@@ -17,21 +21,28 @@ class BolPnjSeeder extends Seeder
             [
                 'id' => '1',
                 'nom' => 'Archer de Tyrus',
-                'user_id' =>  null,
+                'user_id' => null,
                 'joueur' => 'master',
                 'type' => 'C',
-
                 'vigueur' => '1',
                 'agilite' => '1',
                 'esprit' => '0',
                 'aura' => '0',
-
                 'initiative' => '0',
                 'melee' => '0',
                 'tir' => '2',
                 'defense' => '0',
-
                 'vitalite' => '7',
+                'carrieres' => [
+                    ['heros_id' => '1', 'carriere_id' => '23', 'value' => '2']
+                ],
+                'armures' => [
+                    ['heros_id' => '1', 'armure_id' => '2']
+                ],
+                'armes' => [
+                    ['heros_id' => '1', 'arme_id' => '15'],
+                    ['heros_id' => '1', 'arme_id' => '18']
+                ]
             ],
             [
                 'id' => '2',
@@ -247,7 +258,34 @@ class BolPnjSeeder extends Seeder
         BolHeros::whereNull('user_id')->delete();
         // Insérer les données dans la table des régions
         foreach ($pnjs as $pnj) {
-            BolHeros::create($pnj);
+            $carrieres = $pnj['carrieres'] ?? [];
+            $armures = $pnj['armures'] ?? [];
+            $armes = $pnj['armes'] ?? [];
+            $traits = $pnj['traits'] ?? [];
+
+            unset($pnj['carrieres']);
+            unset($pnj['armures']);
+            unset($pnj['armes']);
+            unset($pnj['traits']);
+
+            $hero = BolHeros::create($pnj);
+
+            foreach ($carrieres as $carriere) {
+                $carriere['heros_id'] = $hero->id;
+                BolHerosCarriere::create($carriere);
+            }
+            foreach ($armures as $armure) {
+                $armure['heros_id'] = $hero->id;
+                BolHerosArmure::create($armure);
+            }
+            foreach ($armes as $arme) {
+                $arme['heros_id'] = $hero->id;
+                BolHerosArme::create($arme);
+            }
+            foreach ($traits as $trait) {
+                $trait['heros_id'] = $hero->id;
+                BolHerosTrait::create($trait);
+            }
         }
     }
 }

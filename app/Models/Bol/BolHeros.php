@@ -97,4 +97,17 @@ class BolHeros extends Model
             'foi' => $this->foi
         ];
     }
+
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::deleting(function ($hero) {
+            $hero->carrieres()->delete();
+            $hero->armes()->delete();
+            $hero->armures()->delete();
+            $hero->langues()->delete();
+            $hero->traits()->delete();
+        });
+    }
 }

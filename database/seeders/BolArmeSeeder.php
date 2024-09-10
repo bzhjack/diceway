@@ -143,6 +143,14 @@ class BolArmeSeeder extends Seeder
                 'portee' => '6m',
                 'notes' => 'Arme de jet'
             ],
+            [
+                'id' => 18,
+                'arme' => 'Coutelas',
+                'type' => 'M',
+                'degats' => 'd6M+1',
+                'portee' => '3m',
+                'notes' => 'Peut être lancée.'
+            ]
             // Ajoutez d'autres armes si nécessaire
         ];
         BolArme::truncate();
