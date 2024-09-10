@@ -23,7 +23,7 @@ import {
 } from "@angular/forms";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {NgxSpinnerService} from "ngx-spinner";
-import {Subscription} from "rxjs";
+import {map, Subscription} from "rxjs";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {BolMessageComponent} from "../../../message/message.component";
@@ -95,9 +95,13 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
   }
 
   protected langueList = this.#bhss.langueList;
-  protected selectedLangueIds = toSignal(this.languesForm.get('langues')!.valueChanges);
+  protected selectedLangueIds = toSignal(
+    this.languesForm.get('langues')!.valueChanges.pipe(
+      map((langues: any[]) => langues.map(langue => Number(langue)))
+    )
+  );
   protected filteredLangueList = computed(() => {
-    return this.langueList()?.filter((langue: BolLangueModel) => !this.selectedLangueIds()?.includes(langue.id));
+    return this.langueList()?.filter((langue: BolLangueModel) => !this.selectedLangueIds()?.includes(Number(langue.id)));
   });
 
   protected heroId = computed(() => this.#bhss.currentHeros()?.id);
