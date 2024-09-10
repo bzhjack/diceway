@@ -21,6 +21,8 @@ import {Ripple} from "primeng/ripple";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {BtnComponent} from "../../../shared/btn/btn.component";
+import {BolAvantageModel} from "../../models/bol-avantage.model";
+import {BolDesavantageModel} from "../../models/bol-desavantage.model";
 
 @Component({
   selector: 'bol-pnj-create',
@@ -76,6 +78,7 @@ export class BolPnjCreateComponent {
   public armuresCtrl = this.fb.array([]);
   public armesCtrl = this.fb.array([]);
   public carrieresCtrl = this.fb.array([]);
+  public traitsCtrl = this.fb.array([]);
   public commentaireCtrl = new FormControl<string | null>(null);
   public vitaliteCtrl = new FormControl(0, Validators.required);
 
@@ -97,6 +100,7 @@ export class BolPnjCreateComponent {
       armes: this.armesCtrl,
       armures: this.armuresCtrl,
       carrieres: this.carrieresCtrl,
+      traits: this.traitsCtrl,
       commentaire: this.commentaireCtrl
     });
 
@@ -112,10 +116,16 @@ export class BolPnjCreateComponent {
     return this.pnjForm.get('carrieres') as FormArray;
   }
 
+  get traits() {
+    return this.pnjForm.get('traits') as FormArray;
+  }
+
   /*** Gestion des armes ***/
   protected armeList = this.hs.armeList;
   protected armureList = this.hs.armureList;
   protected carriereList = this.hs.carriereList;
+  protected avantageList = this.hs.avantagesList;
+  protected desavantageList = this.hs.desavantagesList;
 
   public selectedItem = signal<any | null>(null);
   public itemTitle = signal('Armes');
@@ -141,6 +151,26 @@ export class BolPnjCreateComponent {
   protected selectedCarrieresIds = toSignal(this.pnjForm.get('carrieres')!.valueChanges.pipe(map((items: any[]) => items.map(item => Number(item.id)))));
   protected unselectedCarrieres = computed(() => {
     return this.carriereList()?.filter((item: any) => !this.selectedCarrieresIds()?.includes(Number(item.id)))
+  });
+
+  protected selectedTraitsIds = toSignal(this.pnjForm.get('traits')!.valueChanges.pipe(
+    map((items: any[]) => items.map(item => ({ id: Number(item.id), type: item.type })))
+  ));
+  protected unselectedAvantages = computed(() => {
+    const selectedAIds = this.selectedTraitsIds()
+      ?.filter(item => item.type === 'A') // Ne garder que les éléments dont le type est 'A'
+      .map(item => item.id); // Extraire les IDs
+    return this.avantageList()?.filter((item: any) =>
+      !selectedAIds?.includes(Number(item.id)) // Comparer uniquement les IDs filtrés
+    );
+  });
+  protected unselectedDesavantages = computed(() => {
+    const selectedDIds = this.selectedTraitsIds()
+      ?.filter(item => item.type === 'D') // Ne garder que les éléments dont le type est 'A'
+      .map(item => item.id); // Extraire les IDs
+    return this.desavantageList()?.filter((item: any) =>
+      !selectedDIds?.includes(Number(item.id)) // Comparer uniquement les IDs filtrés
+    );
   });
 
 
@@ -186,6 +216,15 @@ export class BolPnjCreateComponent {
         this.carrieres.push(heroCarriere);
       });
 
+      this.traits.clear();
+      pnj.traits.forEach( (trait: any) => {
+        const heroTrait = this.fb.group({
+          id: [trait.id],
+          type: [trait.type]
+        });
+        this.traits.push(heroTrait);
+      });
+
     }
   }
 
@@ -193,8 +232,12 @@ export class BolPnjCreateComponent {
     const index = items.value.findIndex((item: any) => item.id === itemId)
     if (index !== -1) items.removeAt(index)
   }
+  removeTrait(trait: { id: number, type: 'A' | 'D' }, items: FormArray) {
+    const index = items.value.findIndex((item: any) => Number(item.id) === Number(trait.id) && item.type === trait.type);
+    if (index !== -1) items.removeAt(index)
+  }
 
-  addItem(type: 'A' | 'D' | 'C', ev: Event) { // Attaque Défense Carriere
+  addItem(type: 'A' | 'D' | 'C' | 'TA' | 'TD', ev: Event) { // Attaque Défense Carriere Avantage Désavantage
     this.selectedItem.set(null);
     switch (type) {
       case 'A':
@@ -211,6 +254,16 @@ export class BolPnjCreateComponent {
         this.currentField.set('carrieres');
         this.unselectedItems.set(this.unselectedCarrieres());
         this.itemTitle.set('Carrières');
+        break;
+      case 'TA':
+        this.currentField.set('avantages');
+        this.unselectedItems.set(this.unselectedAvantages() as any);
+        this.itemTitle.set('Avantages');
+        break;
+      case 'TD':
+        this.currentField.set('desavantages');
+        this.unselectedItems.set(this.unselectedDesavantages() as any);
+        this.itemTitle.set('Désavantages');
         break;
     }
     this.panelPnj?.toggle(ev);
@@ -240,6 +293,15 @@ export class BolPnjCreateComponent {
         });
         this.carrieres.push(carriere);
         break;
+      case 'desavantages':
+      case 'avantages':
+        console.log(this.selectedItem());
+        const trait = this.fb.group({
+          id: [this.selectedItem()?.id],
+          type: this.currentField() === 'avantages' ? 'A' : 'D'
+        });
+        this.traits.push(trait);
+        break;
     }
 
   }
@@ -247,6 +309,10 @@ export class BolPnjCreateComponent {
   carriereFromId(id: number) {
     const carriere = this.carriereList()?.find((itemCar: BolCarriereModel) => Number(itemCar.id) === Number(id));
     return carriere?.carriere ?? '';
+  }
+  traitFromIdType(trait: {id: number, type: 'A' | 'D'}) {
+    const result = (trait.type === 'A' ? this.avantageList() : this.desavantageList())?.find((item: BolAvantageModel | BolDesavantageModel) => Number(item.id) === Number(trait.id));
+    return (result as BolDesavantageModel)?.desavantage ?? (result as BolAvantageModel)?.avantage;
   }
 
   quit(event: Event) {
