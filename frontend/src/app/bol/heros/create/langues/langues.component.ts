@@ -151,7 +151,7 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
   }
 
   langueFromId(id: number) {
-    const langue = this.langueList()?.find((itemLang: BolLangueModel) => itemLang.id === id)?.langue;
+    const langue = this.langueList()?.find((itemLang: BolLangueModel) => Number(itemLang.id) === Number(id))?.langue;
     return langue ?? null;
   }
 
@@ -201,7 +201,7 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
   }
 
   removeLangue(langueId: number) {
-    const index = this.langues.value.findIndex((langue_id: number) => langue_id === langueId)
+    const index = this.langues.value.findIndex((langue_id: number) => Number(langue_id) === Number(langueId))
     if (index !== -1) this.langues.removeAt(index)
   }
 
