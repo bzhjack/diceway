@@ -161,7 +161,7 @@
           <div class="flex flex-col gap-2" formArrayName="traits">
             <ng-container *ngFor="let trait of traits.controls; let i = index">
                 <div [formGroupName]="i" class="flex gap-2 items-center">
-                  <div style="width: 100px" [class.error-color]="trait.value.type ==='D'" [class.success-color]="trait.value.type ==='A'">{{traitFromIdType(trait.value)}}</div>
+                  <div style="width: 100px" [class.error-color]="trait.value.type ==='D'" [class.success-color]="trait.value.type ==='A'" class="whitespace-nowrap">{{traitFromIdType(trait.value)}}</div>
                   <app-btn (click)="removeTrait(trait.value, traits)"></app-btn>
                 </div>
             </ng-container>

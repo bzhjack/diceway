@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bol\BolAvantage;
+use App\Models\Bol\BolDesavantage;
 use App\Models\Bol\BolHeros;
 use App\Models\Bol\BolHerosArme;
 use App\Models\Bol\BolHerosArmure;
 use App\Models\Bol\BolHerosCarriere;
+use App\Models\Bol\BolHerosTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -51,6 +54,16 @@ class BolPnjController extends Controller
             $newcarriere['value'] = $carriere['value'];
             BolHerosCarriere::create($newcarriere);
         }
+
+        $traits = $request->input('traits');
+        foreach ($traits as $trait) {
+            $newTrait['heros_id'] = $pnj['id'];
+            $newTrait['traitable_id'] = $trait['id'];
+            $newTrait['type'] = $trait['type'];
+            $newTrait['traitable_type'] = $trait['type'] == 'A' ? BolAvantage::class : BolDesavantage::class;
+            BolHerosTrait::create($newTrait);
+        }
+
         $createdCreature = BolHeros::with('carrieres.carriere', 'armures.armure', 'armes.arme')
             ->where('user_id', Auth::id())
             ->where('id', $pnj['id'])->get()->first();
@@ -83,6 +96,27 @@ class BolPnjController extends Controller
         BolHerosArmure::whereNotIn('armure_id', $ids_armures)->where('heros_id', $pnjId)->delete();
         foreach ($armures as $item) {
             BolHerosArmure::updateOrCreate(['heros_id' => $pnjId, 'armure_id' => $item['id']],[]);
+        }
+
+
+        $traits = $request->input('traits');
+
+        $traits_type_a = array_filter($traits, function($trait) { return $trait['type'] === 'A'; });
+        $ids_avantages = array_column($traits_type_a, 'id');
+        BolHerosTrait::whereNotIn('traitable_id', $ids_avantages)->where('type', 'A')->where('heros_id', $pnjId)->delete();
+
+        $traits_type_d = array_filter($traits, function($trait) { return $trait['type'] === 'D'; });
+        $ids_desavantages = array_column($traits_type_d, 'id');
+        BolHerosTrait::whereNotIn('traitable_id', $ids_desavantages)->where('type', 'D')->where('heros_id', $pnjId)->delete();
+
+        foreach ($traits as $item) {
+            BolHerosTrait::updateOrCreate(
+                [
+                    'heros_id' => $pnjId,
+                    'traitable_id' => $item['id'],
+                    'type' => $item['type'],
+                    'traitable_type' =>  $item['type'] == 'A' ? BolAvantage::class : BolDesavantage::class
+                ],[]);
         }
 
         $pnj->update($updatedPnj);
