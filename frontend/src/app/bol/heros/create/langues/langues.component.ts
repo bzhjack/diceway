@@ -32,29 +32,31 @@ import {BtnComponent} from "../../../../shared/trash/trash.component";
 import {TableModule} from "primeng/table";
 import {BolHerosLangueModel, BolLangueModel} from "../../../models/bol-langue.model";
 import {ScrollPanelModule} from "primeng/scrollpanel";
+import {TooltipModule} from "primeng/tooltip";
 
 @Component({
   selector: 'bol-heros-langues',
   standalone: true,
-  imports: [
-    Button,
-    FieldsetModule,
-    PrimeTemplate,
-    ButtonDirective,
-    DropdownModule,
-    NgIf,
-    OverlayPanelModule,
-    Ripple,
-    FormsModule,
-    NgForOf,
-    ReactiveFormsModule,
-    BolMessageComponent,
-    InputNumberModule,
-    BtnComponent,
-    TableModule,
-    JsonPipe,
-    ScrollPanelModule
-  ],
+    imports: [
+        Button,
+        FieldsetModule,
+        PrimeTemplate,
+        ButtonDirective,
+        DropdownModule,
+        NgIf,
+        OverlayPanelModule,
+        Ripple,
+        FormsModule,
+        NgForOf,
+        ReactiveFormsModule,
+        BolMessageComponent,
+        InputNumberModule,
+        BtnComponent,
+        TableModule,
+        JsonPipe,
+        ScrollPanelModule,
+        TooltipModule
+    ],
   templateUrl: './langues.component.html',
   styleUrl: './langues.component.scss',
   providers: [

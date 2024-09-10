@@ -12,6 +12,7 @@
       </div>
 
       <div>Langues</div>
+      <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une langue" (click)="selectedLangue.set(null); opLangue.toggle($event)"></app-btn>
     </div>
     <p-overlayPanel #languesInfos>
       <div class="flex flex-col gap-2">
@@ -27,25 +28,18 @@
   @if (langues.controls.length === 0) {
     <div class="text-gray-500" style="font-size: 16px">Choisissez des langues</div>
   } @else {
-    <p-scrollPanel [style]="{height: '80px'}">
+    <p-scrollPanel [style]="{maxHeight: '80px'}">
       <div class="flex pb-2" *ngFor="let langue of langues.controls; let i = index">
         <div style="width: 150px">{{ langueFromId(langue.value) }}</div>
         <app-btn (click)="deleteLangue(langue.value, $event)"></app-btn>
       </div>
     </p-scrollPanel>
   }
-
-
-  <!-- Footer Langues -->
-  <div class="footer-separator flex justify-end gap-2">
-    <p-button (click)="selectedLangue.set(null); opLangue.toggle($event)" label="Ajouter une langue" size="small"
-              [link]="true" class="text-cyan-600"/>
-  </div>
 </p-fieldset>
 
 <p-overlayPanel #opLangue>
   <div class="flex flex-col gap-4">
-    <div>Ajouter une arme</div>
+    <div>Ajouter une langue</div>
     <p-dropdown [style]="{ width: '250px' }" [options]="filteredLangueList()"
                 [(ngModel)]="selectedLangue" [ngModelOptions]="{standalone: true}" [filter]="true"
                 filterBy="arme" [showClear]="true" placeholder="Selectionner une langue">
@@ -58,7 +52,7 @@
 
       <ng-template let-langue pTemplate="item">
         <div class="flex flex-col gap-2">
-          <div class="text-2xl">{{ langue.langue }}</div>
+          <div class="text-xl">{{ langue.langue }}</div>
         </div>
       </ng-template>
     </p-dropdown>
