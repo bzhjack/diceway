@@ -1,6 +1,6 @@
 import {Component, inject, OnDestroy, ViewChild} from '@angular/core';
 import {Subscription} from "rxjs";
-import {JsonPipe, NgForOf, NgIf} from "@angular/common";
+import {JsonPipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {Router, RouterLink} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {CardModule} from "primeng/card";
@@ -47,7 +47,8 @@ import {TooltipModule} from "primeng/tooltip";
     InputIconModule,
     TagModule,
     TooltipModule,
-    FormsModule
+    FormsModule,
+    NgOptimizedImage
   ],
   providers: [
     ConfirmationService

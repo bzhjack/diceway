@@ -60,9 +60,9 @@
             <tr>
               <td style="width: 110px">
                 <div class="beast_row__img cursor-pointer" (click)="showBeastPicture(beast)">
-                  <img *ngIf="!beast.user_id" src="/frontend/assets/bol/bestiary/{{beast.id}}.jpg" alt="" />
+                  <img *ngIf="!beast.user_id" ngSrc="/frontend/assets/bol/bestiary/{{beast.id}}.jpg" alt="" fill/>
                   <img *ngIf="beast.user_id" style="width:100%"
-                    [src]="beast.avatar !== null ? beast.avatar : '/frontend/assets/bol/empty-avatar.jpg'" alt="avatar">
+                    [src]="beast.avatar !== null ? beast.avatar : '/frontend/assets/bol/empty-avatar.jpg'" alt="avatar"/>
                 </div>
               </td>
               <td class="relative">

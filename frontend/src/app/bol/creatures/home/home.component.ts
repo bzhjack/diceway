@@ -5,7 +5,7 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {Subscription} from "rxjs";
 import {BolCreatureModel} from "../../models/bol-creature.model";
 import {CardModule} from "primeng/card";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {BolCreatureCardComponent} from "../card/card.component";
 import {HeaderComponent} from "../../../shared/header/header.component";
 import {Button, ButtonDirective} from "primeng/button";
@@ -54,7 +54,8 @@ import {toSignal} from "@angular/core/rxjs-interop";
     TooltipModule,
     Ripple,
     InputIconModule,
-    IconFieldModule
+    IconFieldModule,
+    NgOptimizedImage
   ],
   providers: [
     ConfirmationService

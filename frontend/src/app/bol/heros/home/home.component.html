@@ -61,7 +61,7 @@
           <tr>
             <td style="width: 110px">
               <div class="heros_row__img cursor-pointer" (click)="showHerosPicture(heros)">
-                <img *ngIf="!heros.user_id" src="/frontend/assets/bol/heros/{{heros.id}}.jpg" alt=""/>
+                <img *ngIf="!heros.user_id" ngSrc="/frontend/assets/bol/heros/{{heros.id}}.jpg" alt="" fill/>
                 <img *ngIf="heros.user_id" style="width:100%"
                      [src]="heros.origines.avatar !== null ? heros.origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
                      alt="avatar">
