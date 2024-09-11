@@ -15,7 +15,7 @@ class BolHeros extends Model
     public $incrementing = false;
     protected $keyType = 'uuid';
     protected $hidden = [
-        'experience', 'foi', 'vitalite', 'heroisme',
+        'experience', 'foi', 'vitalite', 'heroisme', 'vilenie',
         'initiative', 'melee', 'tir', 'defense',
         'vigueur', 'agilite', 'esprit', 'aura',
         'nom', 'avatar', 'region_id', 'region'
@@ -28,7 +28,7 @@ class BolHeros extends Model
         'nom', 'avatar', 'region_id',
         'vigueur', 'agilite', 'esprit', 'aura',
         'initiative', 'melee', 'tir', 'defense','commentaire',
-        'experience', 'foi', 'vitalite', 'heroisme'
+        'experience', 'foi', 'vitalite', 'heroisme', 'vilenie'
     ];
 
     public function traits(): HasMany
@@ -94,20 +94,8 @@ class BolHeros extends Model
             'vitalite' => $this->vitalite,
             'heroisme' => $this->heroisme,
             'experience' => $this->experience,
-            'foi' => $this->foi
+            'foi' => $this->foi,
+            'vilenie' => $this->foi
         ];
-    }
-
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::deleting(function ($hero) {
-            $hero->carrieres()->delete();
-            $hero->armes()->delete();
-            $hero->armures()->delete();
-            $hero->langues()->delete();
-            $hero->traits()->delete();
-        });
     }
 }
