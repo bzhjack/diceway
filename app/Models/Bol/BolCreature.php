@@ -27,12 +27,4 @@ class BolCreature extends Model
     {
         return $this->HasOne(BolTaille::class, 'id', 'id_taille');
     }
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::deleting(function ($creature) {
-            $creature->capacites()->delete();
-        });
-    }
 }
