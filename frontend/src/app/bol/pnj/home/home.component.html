@@ -58,6 +58,7 @@
           <tr>
             <th></th>
             <th>Description</th>
+            <th>Ressources</th>
             <th>Attributs</th>
             <th>Combat</th>
             <th>Carrières</th>
@@ -90,13 +91,31 @@
                   <div class="text-gray-300">Type</div>
                   <div class="text-gray-400 font-bold">{{ getType(pnj) }}</div>
                 </div>
-                <div class="flex items-center gap-2">
-                  <div class="text-gray-300">Vitalité</div>
-                  <div class="text-gray-400 font-bold">{{ pnj.ressources.vitalite }}</div>
-                </div>
                 <p-tag *ngIf="pnj.user_id">Création</p-tag>
               </div>
+            </td>
 
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr>
+                    <td class="text-gray-300">Vitalité</td>
+                    <td class="text-gray-400">{{ pnj.ressources.vitalite }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Pouvoir</td>
+                    <td class="text-gray-400">{{ pnj.ressources.pouvoir }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Foi</td>
+                    <td class="text-gray-400">{{ pnj.ressources.foi }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Heroisme</td>
+                    <td class="text-gray-400">{{ pnj.ressources.heroisme }}</td>
+                  </tr>
+                </table>
+              </div>
             </td>
 
             <td>
