@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Bol\BolAvantage;
+use App\Models\Bol\BolDesavantage;
 use App\Models\Bol\BolHeros;
 use App\Models\Bol\BolHerosArme;
 use App\Models\Bol\BolHerosArmure;
@@ -359,6 +361,52 @@ class BolPnjSeeder extends Seeder
                 'armes' => [
                     ['heros_id' => '12', 'arme_id' => '25'],
                     ['heros_id' => '12', 'arme_id' => '8']
+                ]
+            ],
+            [
+                'id' => '13',
+                'nom' => 'Methyn Sarr, la Reine Sorcière',
+                'user_id' => null,
+                'joueur' => 'master',
+                'type' => 'R',
+
+                'vigueur' => '0',
+                'agilite' => '1',
+                'esprit' => '4',
+                'aura' => '3',
+
+                'initiative' => '1',
+                'melee' => '1',
+                'tir' => '0',
+                'defense' => '3',
+
+                'vitalite' => '12',
+                'vilenie' => '6',
+                'foi' => '2',
+                'pouvoir' => '16',
+                'commentaire' => "Dague sanglante de Zaggath, d6 (arme mythique – dé de bonus aux jets d’attaque et de dégâts)",
+                 'carrieres' => [
+                    ['carriere_id' => '24', 'value' => '4'],
+                    ['carriere_id' => '18', 'value' => '1'],
+                    ['carriere_id' => '4', 'value' => '1'],
+                ],
+                'armures' => [
+                    ['armure_id' => '8'],
+                ],
+                'armes' => [
+                    ['arme_id' => '3']
+                ],
+                'traits' => [
+                    ['traitable_id' => '9' , 'type' => 'A', 'traitable_type' => BolAvantage::class ],
+                    ['traitable_id' => '11' , 'type' => 'A', 'traitable_type' => BolAvantage::class ],
+                    ['traitable_id' => '30' , 'type' => 'A', 'traitable_type' => BolAvantage::class ],
+                    ['traitable_id' => '44' , 'type' => 'A', 'traitable_type' => BolAvantage::class ],
+
+                    ['traitable_id' => '1' , 'type' => 'D', 'traitable_type' => BolDesavantage::class , 'detail' => 'Sadisme'],
+                    ['traitable_id' => '3' , 'type' => 'D', 'traitable_type' => BolDesavantage::class ],
+                    ['traitable_id' => '18' , 'type' => 'D', 'traitable_type' => BolDesavantage::class ],
+                    ['traitable_id' => '23' , 'type' => 'D', 'traitable_type' => BolDesavantage::class ],
+                    ['traitable_id' => '30' , 'type' => 'D', 'traitable_type' => BolDesavantage::class ],
                 ]
             ]
         ];
