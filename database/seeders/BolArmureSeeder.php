@@ -56,8 +56,12 @@ class BolArmureSeeder extends Seeder
                 'protection' => 'Défense +1 contre toutes les attaques',
                 'malus' => 'Agilité -1',
             ],
+            [
+                'id' => 8,
+                'armure' => 'Baudrier de guerre',
+                'protection' => 'd6-2 (2)'
+            ],
         ];
-
         // Insère les nouveaux éléments
         foreach ($armures as $armure) {
             BolArmure::create($armure);
