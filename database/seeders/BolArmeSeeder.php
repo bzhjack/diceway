@@ -206,6 +206,14 @@ class BolArmeSeeder extends Seeder
                 'type' => 'M',
                 'degats' => 'd6M'
             ],
+            [
+                'id' => 27,
+                'arme' => 'Khastok (lance lourde)',
+                'type' => 'M',
+                'degats' => 'd6B',
+                'portee' => '6m',
+                'notes' => 'Peut être lancée.'
+            ],
             // Ajoutez d'autres armes si nécessaire
         ];
         BolArme::truncate();

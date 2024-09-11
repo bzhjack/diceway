@@ -62,6 +62,15 @@ class BolPnjSeeder extends Seeder
                 'defense' => '0',
 
                 'vitalite' => '8',
+                'carrieres' => [
+                    ['heros_id' => '2', 'carriere_id' => '3', 'value' => '2']
+                ],
+                'armures' => [
+                    ['heros_id' => '2', 'armure_id' => '2']
+                ],
+                'armes' => [
+                    ['heros_id' => '2', 'arme_id' => '4']
+                ]
             ],
             [
                 'id' => '3',
@@ -81,6 +90,13 @@ class BolPnjSeeder extends Seeder
                 'defense' => '1',
 
                 'vitalite' => '6',
+                'carrieres' => [
+                    ['heros_id' => '3', 'carriere_id' => '2', 'value' => '2']
+                ],
+                'armes' => [
+                    ['heros_id' => '3', 'arme_id' => '26'],
+                    ['heros_id' => '3', 'arme_id' => '19']
+                ]
             ],
             [
                 'id' => '4',
@@ -100,6 +116,16 @@ class BolPnjSeeder extends Seeder
                 'defense' => '1',
 
                 'vitalite' => '8',
+                'carrieres' => [
+                    ['heros_id' => '4', 'carriere_id' => '11', 'value' => '2']
+                ],
+                'armures' => [
+                    ['heros_id' => '4', 'armure_id' => '3'],
+                    ['heros_id' => '4', 'armure_id' => '6']
+                ],
+                'armes' => [
+                    ['heros_id' => '4', 'arme_id' => '21']
+                ]
             ],
             [
                 'id' => '5',
@@ -119,6 +145,16 @@ class BolPnjSeeder extends Seeder
                 'defense' => '0',
 
                 'vitalite' => '7',
+                'carrieres' => [
+                    ['heros_id' => '5', 'carriere_id' => '26', 'value' => '1'],
+                    ['heros_id' => '5', 'carriere_id' => '17', 'value' => '1']
+                ],
+                'armures' => [
+                ],
+                'armes' => [
+                    ['heros_id' => '5', 'arme_id' => '6'],
+                    ['heros_id' => '5', 'arme_id' => '3']
+                ]
             ],
             [
                 'id' => '6',
@@ -138,6 +174,14 @@ class BolPnjSeeder extends Seeder
                 'defense' => '1',
 
                 'vitalite' => '6',
+                'carrieres' => [
+                    ['heros_id' => '6', 'carriere_id' => '21', 'value' => '2'],
+                ],
+                'armures' => [
+                ],
+                'armes' => [
+                    ['heros_id' => '6', 'arme_id' => '18'],
+                ]
             ],
             [
                 'id' => '7',
@@ -157,6 +201,17 @@ class BolPnjSeeder extends Seeder
                 'defense' => '1',
 
                 'vitalite' => '6',
+                'carrieres' => [
+                    ['heros_id' => '7', 'carriere_id' => '23', 'value' => '1'],
+                    ['heros_id' => '7', 'carriere_id' => '6', 'value' => '1']
+                ],
+                'armures' => [
+                    ['heros_id' => '7', 'armure_id' => '2'],
+                ],
+                'armes' => [
+                    ['heros_id' => '7', 'arme_id' => '27'],
+                    ['heros_id' => '7', 'arme_id' => '19']
+                ]
             ],
             [
                 'id' => '8',
@@ -176,6 +231,16 @@ class BolPnjSeeder extends Seeder
                 'defense' => '1',
 
                 'vitalite' => '5',
+                'carrieres' => [
+                    ['heros_id' => '8', 'carriere_id' => '5', 'value' => '2']
+                ],
+                'armures' => [
+
+                ],
+                'armes' => [
+                    ['heros_id' => '8', 'arme_id' => '24'],
+                    ['heros_id' => '8', 'arme_id' => '16']
+                ]
             ],
             [
                 'id' => '9',
@@ -195,6 +260,16 @@ class BolPnjSeeder extends Seeder
                 'defense' => '0',
 
                 'vitalite' => '7',
+                'carrieres' => [
+                    ['heros_id' => '9', 'carriere_id' => '13', 'value' => '2'],
+                ],
+                'armures' => [
+
+                ],
+                'armes' => [
+                    ['heros_id' => '9', 'arme_id' => '22'],
+                    ['heros_id' => '9', 'arme_id' => '3']
+                ]
             ],
             [
                 'id' => '10',
@@ -214,6 +289,17 @@ class BolPnjSeeder extends Seeder
                 'defense' => '0',
 
                 'vitalite' => '6',
+                'carrieres' => [
+                    ['heros_id' => '10', 'carriere_id' => '18', 'value' => '1'],
+                    ['heros_id' => '10', 'carriere_id' => '20', 'value' => '1'],
+                ],
+                'armures' => [
+                    ['heros_id' => '10', 'armure_id' => '2'],
+                ],
+                'armes' => [
+                    ['heros_id' => '10', 'arme_id' => '21'],
+                    ['heros_id' => '10', 'arme_id' => '13']
+                ]
             ],
             [
                 'id' => '11',
@@ -233,6 +319,17 @@ class BolPnjSeeder extends Seeder
                 'defense' => '1',
 
                 'vitalite' => '8',
+                'carrieres' => [
+                    ['heros_id' => '11', 'carriere_id' => '23', 'value' => '2'],
+                ],
+                'armures' => [
+                    ['heros_id' => '11', 'armure_id' => '3'],
+                    ['heros_id' => '11', 'armure_id' => '6'],
+                ],
+                'armes' => [
+                    ['heros_id' => '11', 'arme_id' => '21'],
+                    ['heros_id' => '11', 'arme_id' => '6']
+                ]
             ],
             [
                 'id' => '12',
@@ -252,6 +349,17 @@ class BolPnjSeeder extends Seeder
                 'defense' => '1',
 
                 'vitalite' => '9',
+                'carrieres' => [
+                    ['heros_id' => '12', 'carriere_id' => '23', 'value' => '1'],
+                    ['heros_id' => '12', 'carriere_id' => '8', 'value' => '1'],
+                ],
+                'armures' => [
+                    ['heros_id' => '12', 'armure_id' => '6'],
+                ],
+                'armes' => [
+                    ['heros_id' => '12', 'arme_id' => '25'],
+                    ['heros_id' => '12', 'arme_id' => '8']
+                ]
             ]
         ];
 
