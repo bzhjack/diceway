@@ -133,7 +133,7 @@ export class BolPnjHomeComponent {
   askDelete(pnj: BolHerosModel, event: any) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
-      message: 'Voulez vous supprimer cette créature ?',
+      message: 'Voulez vous supprimer ce pnj ?',
       icon: 'pi pi-info-circle',
       acceptButtonStyleClass: 'p-button-danger p-button-sm',
       acceptLabel: "Oui",

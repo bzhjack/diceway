@@ -81,6 +81,9 @@ export class BolPnjCreateComponent {
   public traitsCtrl = this.fb.array([]);
   public commentaireCtrl = new FormControl<string | null>(null);
   public vitaliteCtrl = new FormControl(0, Validators.required);
+  public pouvoirCtrl = new FormControl(0, Validators.required);
+  public foiCtrl = new FormControl(0, Validators.required);
+  public vilenieCtrl = new FormControl(0, Validators.required);
 
   pnjForm = this.fb.group(
     {
@@ -97,6 +100,9 @@ export class BolPnjCreateComponent {
       tir: this.tirCtrl,
       defense: this.defenseCtrl,
       vitalite: this.vitaliteCtrl,
+      pouvoir: this.pouvoirCtrl,
+      foi: this.foiCtrl,
+      vilenie: this.vilenieCtrl,
       armes: this.armesCtrl,
       armures: this.armuresCtrl,
       carrieres: this.carrieresCtrl,
@@ -189,7 +195,12 @@ export class BolPnjCreateComponent {
         tir: pnj.combat.tir,
         melee: pnj.combat.melee,
         defense: pnj.combat.defense,
-        commentaire: pnj.commentaire
+        commentaire: pnj.commentaire,
+        vitalite: pnj.ressources.vitalite,
+        pouvoir: pnj.ressources.pouvoir,
+        foi: pnj.ressources.foi,
+        vilenie: pnj.ressources.vilenie
+
       }, {emitEvent: false});
       this.armes.clear();
       pnj.armes.forEach( (arme: any) => {
