@@ -25,6 +25,7 @@ import {InputIconModule} from "primeng/inputicon";
 import {DialogModule} from "primeng/dialog";
 import {Ripple} from "primeng/ripple";
 import {TagModule} from "primeng/tag";
+import {ScrollPanelModule} from "primeng/scrollpanel";
 
 @Component({
   selector: 'bol-pnj-home',
@@ -52,7 +53,8 @@ import {TagModule} from "primeng/tag";
     DialogModule,
     Ripple,
     TagModule,
-    JsonPipe
+    JsonPipe,
+    ScrollPanelModule
   ],
   providers: [
     ConfirmationService

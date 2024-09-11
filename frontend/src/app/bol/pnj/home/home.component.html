@@ -203,14 +203,14 @@
             </td>
 
             <td>
-              <div style="height: 100px">
+              <p-scrollPanel [style]="{maxHeight: '100px'}">
                 <table>
                   <tr *ngFor="let trait of pnj.traits">
                     <td class="whitespace-nowrap"  [class.error-color]="trait.type ==='D'"
                         [class.success-color]="trait.type ==='A'">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}</td>
                   </tr>
                 </table>
-              </div>
+              </p-scrollPanel>
             </td>
 
             <td>
