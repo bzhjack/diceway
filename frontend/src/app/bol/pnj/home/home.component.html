@@ -102,17 +102,21 @@
                     <td class="text-gray-300">Vitalité</td>
                     <td class="text-gray-400">{{ pnj.ressources.vitalite }}</td>
                   </tr>
-                  <tr>
+                  <tr *ngIf="pnj.ressources.pouvoir">
                     <td class="text-gray-300">Pouvoir</td>
                     <td class="text-gray-400">{{ pnj.ressources.pouvoir }}</td>
                   </tr>
-                  <tr>
+                  <tr *ngIf="pnj.ressources.foi">
                     <td class="text-gray-300">Foi</td>
                     <td class="text-gray-400">{{ pnj.ressources.foi }}</td>
                   </tr>
-                  <tr>
+                  <tr *ngIf="pnj.ressources.vilenie">
                     <td class="text-gray-300">Vilénie</td>
                     <td class="text-gray-400">{{ pnj.ressources.vilenie }}</td>
+                  </tr>
+                  <tr *ngIf="pnj.ressources.heroisme">
+                    <td class="text-gray-300">Héroisme</td>
+                    <td class="text-gray-400">{{ pnj.ressources.heroisme }}</td>
                   </tr>
                 </table>
               </div>
