@@ -59,6 +59,9 @@ class BolHerosController extends Controller
     {
         $herosId = $request->input('id');
 
+        $data = $request->input();
+        $heros['commentaire'] = $data['commentaire'];
+
         $attributs = $request->input('attributs');
         $heros['vigueur'] = $attributs['vigueur'];
         $heros['agilite'] = $attributs['agilite'];
@@ -79,6 +82,8 @@ class BolHerosController extends Controller
         $ressources = $request->input('ressources');
         $heros['vitalite'] = $ressources['vitalite'];
         $heros['heroisme'] = $ressources['heroisme'];
+        $heros['foi'] = $ressources['foi'];
+        $heros['pouvoir'] = $ressources['pouvoir'];
 
         $hero = BolHeros::where('user_id', Auth::id())->where('id', $herosId)->get()->first();
         if ($hero === null) {

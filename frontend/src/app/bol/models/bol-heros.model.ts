@@ -41,5 +41,8 @@ export interface BolHerosOrigines {
 export interface BolHerosRessources {
   vitalite: number;
   heroisme: number;
+  foi: number;
+  pouvoir: number;
+  vilenie: number;
 }
 

@@ -49,44 +49,46 @@ import {BolHerosTraitsModel} from "../../models/bol-trait.model";
 import {BolHerosLanguesComponent} from "./langues/langues.component";
 import {BolHerosLangueModel} from "../../models/bol-langue.model";
 import {HeaderComponent} from "../../../shared/header/header.component";
+import {InputTextareaModule} from "primeng/inputtextarea";
 
 
 @Component({
   selector: 'bol-create-heros',
   standalone: true,
-    imports: [
-        CardModule,
-        InputTextModule,
-        FormsModule,
-        ToolbarModule,
-        ButtonModule,
-        SplitButtonModule,
-        ReactiveFormsModule,
-        InputNumberModule,
-        FieldsetModule,
-        OverlayPanelModule,
-        ScrollPanelModule,
-        InlineSVGModule,
-        MessagesModule,
-        JsonPipe,
-        NgIf,
-        NgForOf,
-        BolMessageComponent,
-        ConfirmPopupModule,
-        DropdownModule,
-        Ripple,
-        NgTemplateOutlet,
-        BolHerosOriginesComponent,
-        BolHerosRessourcesComponent,
-        BolHerosAttributsComponent,
-        BolHerosCombatComponent,
-        BolHerosCarrieresComponent,
-        BolHerosArmuresComponent,
-        BolHerosArmesComponent,
-        BolHerosTraitsComponent,
-        BolHerosLanguesComponent,
-        HeaderComponent,
-    ],
+  imports: [
+    CardModule,
+    InputTextModule,
+    FormsModule,
+    ToolbarModule,
+    ButtonModule,
+    SplitButtonModule,
+    ReactiveFormsModule,
+    InputNumberModule,
+    FieldsetModule,
+    OverlayPanelModule,
+    ScrollPanelModule,
+    InlineSVGModule,
+    MessagesModule,
+    JsonPipe,
+    NgIf,
+    NgForOf,
+    BolMessageComponent,
+    ConfirmPopupModule,
+    DropdownModule,
+    Ripple,
+    NgTemplateOutlet,
+    BolHerosOriginesComponent,
+    BolHerosRessourcesComponent,
+    BolHerosAttributsComponent,
+    BolHerosCombatComponent,
+    BolHerosCarrieresComponent,
+    BolHerosArmuresComponent,
+    BolHerosArmesComponent,
+    BolHerosTraitsComponent,
+    BolHerosLanguesComponent,
+    HeaderComponent,
+    InputTextareaModule,
+  ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
   providers: [
@@ -117,7 +119,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   public combatCtrl = new FormControl<BolHerosCombat>({defense: 0,initiative: 0,melee: 0,tir: 0});
   public attributsCtrl = new FormControl<BolHerosAttributs>({vigueur: 0,agilite: 0,esprit: 0,aura: 0});
   public originesCtrl = new FormControl<BolHerosOrigines>({nom: null,region_id: null, avatar: null});
-  public ressourcesCtrl = new FormControl<BolHerosRessources>({vitalite: 0 , heroisme: 0});
+  public ressourcesCtrl = new FormControl<BolHerosRessources>({vitalite: 0 , heroisme: 0, foi: 0, pouvoir: 0, vilenie: 0});
   public commentaireCtrl = new FormControl<string | null>(null);
   public typeCtrl = new FormControl<string>('H');
   herosForm = this.fb.group(
@@ -146,6 +148,9 @@ export class BolHerosCreateComponent implements OnDestroy {
       ressources: {
         vitalite: value.ressources?.vitalite ?? 0,
         heroisme: value.ressources?.heroisme ?? 0,
+        foi: value.ressources?.foi ?? 0,
+        pouvoir: value.ressources?.pouvoir ?? 0,
+        vilenie: 0,
       },
       combat: {
         initiative: value.combat?.initiative ?? 0,
@@ -190,7 +195,13 @@ export class BolHerosCreateComponent implements OnDestroy {
     }
     effect( () => {
       const vigueur = Number(this.currentHero()?.attributs.vigueur ?? 0);
-      this.ressourcesCtrl.setValue({vitalite: 10 + vigueur, heroisme: 5 - this.#herosStateService.heroismCost()}, {emitEvent: false});
+      this.ressourcesCtrl.setValue({
+        vitalite: 10 + vigueur,
+        heroisme: 5 - this.#herosStateService.heroismCost(),
+        pouvoir: 0,
+        vilenie: 0,
+        foi: 0
+      }, {emitEvent: false});
     });
   }
 
@@ -219,6 +230,7 @@ export class BolHerosCreateComponent implements OnDestroy {
             combat: hero.combat,
             attributs: hero.attributs,
             origines: hero.origines,
+            commentaire: hero.commentaire,
             carrieres: hero.carrieres.map(item => { return {
               carriere_id: item.carriere_id,
               value: item.value
