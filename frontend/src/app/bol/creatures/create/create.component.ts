@@ -72,10 +72,9 @@ export class BolCreatureCreateComponent implements OnDestroy {
 
   public protectionCtrl = new FormControl('0', Validators.required);
   public degatsCtrl = new FormControl('0', Validators.required);
-  public idTailleCtrl = new FormControl(null, Validators.required);
+  public idTailleCtrl = new FormControl<number | null>(null, Validators.required);
   public capacitesCtrl = this.fb.array([]);
-
-  public commentaireCtrl = new FormControl(null);
+  public commentaireCtrl = new FormControl<string | null>(null);
 
   creatureForm = this.fb.group(
     {
@@ -124,6 +123,7 @@ export class BolCreatureCreateComponent implements OnDestroy {
   constructor(private ref: DynamicDialogRef, private config: DynamicDialogConfig) {
     if (this.config.data.creature) {
       const creature = this.config.data.creature;
+      creature.id_taille = Number(creature.id_taille);
       this.creatureForm.patchValue(creature, {emitEvent: false});
       this.capacites.clear();
       creature.capacites.forEach( (capa: any) => {
