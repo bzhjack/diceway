@@ -150,7 +150,7 @@
         <div>
           <div *ngFor="let item of selectedArmes()" class="flex gap-2 items-center pb-1">
             <div class="flex gap-2 items-center" style="width: 250px">
-              {{ item.arme }} {{item.degats}}
+              <div class="whitespace-nowrap">{{ item.arme }}</div> <div class="text-gray-400 font-bold">{{item.degats}}</div>
             </div>
             <app-btn (click)="removeItem(item.id, armes)"></app-btn>
           </div>
@@ -168,7 +168,8 @@
         <div>
           <div *ngFor="let item of selectedArmures()" class="flex gap-2 items-center pb-1">
             <div class="flex gap-2 items-center" style="width: 250px">
-              {{ item.armure }} {{item.protection}}
+              <div class="whitespace-nowrap">{{ item.armure }}</div>
+              <div class="text-gray-400 font-bold bol-ellipsis-80"  [pTooltip]="item.protection">{{item.protection}}</div>
             </div>
             <app-btn (click)="removeItem(item.id, armures)"></app-btn>
           </div>
