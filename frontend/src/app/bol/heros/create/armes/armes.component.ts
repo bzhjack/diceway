@@ -140,7 +140,7 @@ export class BolHerosArmesComponent implements ControlValueAccessor, OnDestroy {
     });
   }
   removeArme(armeId: number) {
-    const index = this.armes.value.findIndex((car: number) => car === armeId)
+    const index = this.armes.value.findIndex((car: number) => Number(car) === Number(armeId))
     if (index !== -1) this.armes.removeAt(index)
   }
 

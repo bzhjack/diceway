@@ -33,10 +33,10 @@ export class BolHerosTraitComponent {
 
   trait = input<BolHerosTraitsModel | null>(null);
   protected avantage = computed(() => {
-    return this.trait()?.type === 'A' ? this.avantagesList()?.find((item) => item.id === this.trait()!.traitable_id) : null;
+    return this.trait()?.type === 'A' ? this.avantagesList()?.find((item) => Number(item.id) === Number(this.trait()!.traitable_id)) : null;
   });
   desavantage = computed(() => {
-    return this.trait()?.type === 'D' ? this.desavantageList()?.find((item) => item.id === this.trait()!.traitable_id) : null;
+    return this.trait()?.type === 'D' ? this.desavantageList()?.find((item) => Number(item.id) === Number(this.trait()!.traitable_id)) : null;
   });
 
   avantageDescription(avantage: BolAvantageModel | null | undefined) {

@@ -219,7 +219,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
   }
 
   removeTrait(traitId: number) {
-    const index = this.traits.value.findIndex((trt: BolHerosTraitsModel) => trt.id === traitId)
+    const index = this.traits.value.findIndex((trt: BolHerosTraitsModel) => Number(trt.id) === Number(traitId))
     if (index !== -1) this.traits.removeAt(index)
   }
 

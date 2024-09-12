@@ -183,11 +183,11 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
   }
 
   carriereFromId(id: number) {
-    const carriere = this.carrieresList()?.find((itemCar: BolCarriereModel) => itemCar.id === id);
+    const carriere = this.carrieresList()?.find((itemCar: BolCarriereModel) => Number(itemCar.id) === Number(id));
     return carriere ?? {carriere: null, description: null};
   }
   removeCarriere(carriereId: number) {
-    const index = this.carrieres.value.findIndex((car: BolHerosCarriereModel) => car.carriere_id === carriereId)
+    const index = this.carrieres.value.findIndex((car: BolHerosCarriereModel) => Number(car.carriere_id) === Number(carriereId))
     if (index !== -1) this.carrieres.removeAt(index)
   }
   addCarriere(carriere: BolHerosCarriereModel) {

@@ -240,7 +240,7 @@ export class BolPnjCreateComponent {
   }
 
   removeItem(itemId: number, items: FormArray) {
-    const index = items.value.findIndex((item: any) => item.id === itemId)
+    const index = items.value.findIndex((item: any) => Number(item.id) === Number(itemId))
     if (index !== -1) items.removeAt(index)
   }
   removeTrait(trait: { id: number, type: 'A' | 'D' }, items: FormArray) {

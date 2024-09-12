@@ -42,11 +42,11 @@ export class BolHerosRegionComponent {
   readonly #ddc = inject(DynamicDialogConfig);
 
 
-  protected regionId = signal(this.#ddc.data.id_region || 0);
+  protected regionId = signal<number>(this.#ddc.data.id_region || 0);
   protected selectedName = signal(this.#ddc.data.nom);
   protected regionList = this.#bhss.regionList;
   protected selectedRegion = computed(() => {
-    return this.regionList()?.find((region: BolRegionModel) => region.id === this.regionId())
+    return this.regionList()?.find((region: BolRegionModel) => Number(region.id) === Number(this.regionId()))
   });
   protected nomsFeminins = computed(() =>this.selectedRegion()!.noms.filter((nom: BolNomModel) => nom.gender === 'F'));
   protected nomsMasculins = computed(() =>this.selectedRegion()!.noms.filter((nom: BolNomModel) => nom.gender === 'M'));
