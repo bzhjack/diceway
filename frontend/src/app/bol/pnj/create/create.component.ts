@@ -185,6 +185,7 @@ export class BolPnjCreateComponent {
       const pnj = this.config.data.pnj as BolHerosModel;
       this.pnjForm.patchValue({
         id: pnj.id,
+        type: pnj.type,
         nom: pnj.origines.nom,
         avatar: pnj.origines.avatar,
         vigueur: pnj.attributs.vigueur,
