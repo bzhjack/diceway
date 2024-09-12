@@ -147,8 +147,8 @@
         </ng-template>
 
         <div *ngIf="armesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des armes</div>
-        <div>
-          <div *ngFor="let item of selectedArmes()" class="flex gap-2 items-center pb-1">
+        <div class="flex flex-col gap-2">
+          <div *ngFor="let item of selectedArmes()" class="flex gap-2 items-center justify-between">
             <div class="flex gap-2 items-center" style="width: 250px">
               <div class="whitespace-nowrap">{{ item.arme }}</div> <div class="text-gray-400 font-bold">{{item.degats}}</div>
             </div>
@@ -165,9 +165,9 @@
           </div>
         </ng-template>
         <div *ngIf="armuresCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des armures</div>
-        <div>
-          <div *ngFor="let item of selectedArmures()" class="flex gap-2 items-center pb-1">
-            <div class="flex gap-2 items-center" style="width: 250px">
+        <div class="flex flex-col gap-2">
+          <div *ngFor="let item of selectedArmures()" class="flex gap-2 items-center justify-between">
+            <div class="flex gap-2 items-center">
               <div class="whitespace-nowrap">{{ item.armure }}</div>
               <div class="text-gray-400 font-bold bol-ellipsis-80"  [pTooltip]="item.protection">{{item.protection}}</div>
             </div>
@@ -187,7 +187,7 @@
           <div *ngIf="traitsCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des traits</div>
           <div class="flex flex-col gap-2" formArrayName="traits">
             <ng-container *ngFor="let trait of traits.controls; let i = index">
-                <div [formGroupName]="i" class="flex gap-2 items-center">
+                <div [formGroupName]="i" class="flex gap-2 items-center justify-between">
                   <div
                        [class.error-color]="trait.value.type ==='D'"
                        [class.success-color]="trait.value.type ==='A'" class="whitespace-nowrap">
