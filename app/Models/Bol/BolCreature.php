@@ -17,7 +17,20 @@ class BolCreature extends Model
     protected $keyType = 'uuid';
     protected $hidden = ['created_at', 'updated_at'];
     protected $fillable = [
-        'id', 'user_id', 'nom', 'vigueur', 'agilité', 'esprit', 'vitalite', 'attaque', 'defense', 'degat','protection', 'avatar', 'commentaire'
+        'id',
+        'user_id',
+        'nom',
+        'vigueur',
+        'agilité',
+        'esprit',
+        'vitalite',
+        'attaque',
+        'defense',
+        'degat',
+        'protection',
+        'avatar',
+        'commentaire',
+        'id_taille'
     ];
     public function capacites(): HasMany
     {
