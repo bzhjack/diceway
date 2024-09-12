@@ -179,7 +179,7 @@ export class BolCreatureCreateComponent implements OnDestroy {
     this.capacites.push(capacite);
   }
   removeCapacite(capaciteId: number) {
-    const index = this.capacites.value.findIndex((capa: BolCreatureCapaciteModel) => capa.id === capaciteId)
+    const index = this.capacites.value.findIndex((capa: BolCreatureCapaciteModel) => Number(capa.id) === Number(capaciteId))
     if (index !== -1) this.capacites.removeAt(index)
   }
 }
