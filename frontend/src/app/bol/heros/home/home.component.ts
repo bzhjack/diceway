@@ -181,6 +181,7 @@ export class BolHeroHomeComponent implements OnDestroy {
   clear(table: Table) {
     table.clear();
     this.searchTerm = '';
+    this.searchPending = false;
     this.filterExtended();
   }
   quickCreateHeros(heros?: BolHerosModel) {

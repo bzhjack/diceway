@@ -40,7 +40,7 @@
                 <p-checkbox
                   class="pr-2 cursor-pointer"
                   [(ngModel)]="searchPending"
-                  [binary]="true" label="Mes créations" (ngModelChange)="filterExtended()"/>
+                  [binary]="true" label="En cours de création" (ngModelChange)="filterExtended()"/>
               </div>
               <button pTooltip="Supprimer les filtres" pButton icon="pi pi-filter-slash" severity="info" size="small"
                       (click)="clear(herosTable)"></button>
@@ -73,7 +73,6 @@
               </div>
             </td>
 
-
             <td class="relative">
               <div class="flex flex-col gap-2" style="height: 100px">
                 <div class="flex gap-2 items-center text-xl">
@@ -86,13 +85,13 @@
                 <div class="flex items-center gap-2">
                   <button *ngIf="!heros.active"
                           pTooltip="Finaliser la création"
-                          severity="primary"
+                          severity="secondary"
                           type="button"
                           size="small" pButton pRipple icon="pi pi-palette"
                           [routerLink]="['create', heros.id]"></button>
                   <button
                           pTooltip="Modifications rapides"
-                          severity="primary"
+                          severity="secondary"
                           type="button"
                           size="small" pButton pRipple icon="pi pi-bolt"
                          (click)="quickCreateHeros(heros)"></button>
