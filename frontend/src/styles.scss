@@ -178,3 +178,9 @@ body {
   margin-top: 4rem;
   height: calc(100vh - 4rem);
 }
+.bol-ellipsis-80 {
+  max-width: 80px; /* Ajuste la largeur selon tes besoins */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
