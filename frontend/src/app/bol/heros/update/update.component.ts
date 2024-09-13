@@ -63,6 +63,7 @@ export class BolHerosUpdateComponent {
   public nomCtrl = new FormControl('', Validators.required);
   public joueurCtrl = new FormControl('', Validators.required);
   public typeCtrl = new FormControl('H', Validators.required);
+  public regionCtrl = new FormControl<number | null>(null, Validators.required);
   public avatarCtrl: FormControl<string | null> = new FormControl(null);
   public vigueurCtrl = new FormControl(0, Validators.required);
   public agiliteCtrl = new FormControl(0, Validators.required);
@@ -79,10 +80,10 @@ export class BolHerosUpdateComponent {
   public carrieresCtrl = this.fb.array([]);
   public traitsCtrl = this.fb.array([]);
   public commentaireCtrl = new FormControl<string | null>(null);
-  public vitaliteCtrl = new FormControl(0, Validators.required);
+  public vitaliteCtrl = new FormControl(10, Validators.required);
   public pouvoirCtrl = new FormControl(0, Validators.required);
   public foiCtrl = new FormControl(0, Validators.required);
-  public vilenieCtrl = new FormControl(0, Validators.required);
+  public heroismeCtrl = new FormControl(5, Validators.required);
 
   herosForm = this.fb.group(
     {
@@ -91,6 +92,7 @@ export class BolHerosUpdateComponent {
       nom: this.nomCtrl,
       joueur: this.joueurCtrl,
       avatar: this.avatarCtrl,
+      region_id: this.regionCtrl,
       vigueur: this.vigueurCtrl,
       initiative: this.initiativeCtrl,
       agilite: this.agiliteCtrl,
@@ -102,7 +104,7 @@ export class BolHerosUpdateComponent {
       vitalite: this.vitaliteCtrl,
       pouvoir: this.pouvoirCtrl,
       foi: this.foiCtrl,
-      vilenie: this.vilenieCtrl,
+      heroisme: this.heroismeCtrl,
       armes: this.armesCtrl,
       armures: this.armuresCtrl,
       carrieres: this.carrieresCtrl,
@@ -132,6 +134,7 @@ export class BolHerosUpdateComponent {
   protected carriereList = this.hs.carriereList;
   protected avantageList = this.hs.avantagesList;
   protected desavantageList = this.hs.desavantagesList;
+  protected regionList = this.hs.regionList;
 
   public selectedItem = signal<any | null>(null);
   public itemTitle = signal('Armes');
@@ -187,6 +190,7 @@ export class BolHerosUpdateComponent {
         id: heros.id,
         joueur: heros.joueur,
         nom: heros.origines.nom,
+        region_id: Number(heros.origines.region_id),
         avatar: heros.origines.avatar,
         vigueur: heros.attributs.vigueur,
         agilite: heros.attributs.agilite,
@@ -200,7 +204,7 @@ export class BolHerosUpdateComponent {
         vitalite: heros.ressources.vitalite,
         pouvoir: heros.ressources.pouvoir,
         foi: heros.ressources.foi,
-        vilenie: heros.ressources.vilenie
+        heroisme: heros.ressources.heroisme
 
       }, {emitEvent: false});
       this.armes.clear();
