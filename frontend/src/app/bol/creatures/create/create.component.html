@@ -92,7 +92,7 @@
           <ng-template pTemplate="header">
             <div class="flex items-center gap-2">
               <div> Capacités spéciales</div>
-              <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une capacité" (click)="selectedCapacite.set(null); opCapacite.toggle($event)"></app-btn>
+              <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une capacité" (click)="clearSelectedCapacite(); opCapacite.toggle($event)"></app-btn>
             </div>
           </ng-template>
           <div *ngIf="capacitesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des capacités spéciales </div>
@@ -100,9 +100,7 @@
           <div>
             <div *ngFor="let capacite of selectedCapaciteDetail();" class="flex gap-2 items-center pb-1">
               <div class="flex gap-2 items-center" style="width: 150px">
-                <i *ngIf="capacite.detail"
-                   class="pi pi-info-circle cursor-pointer text-cyan-600"
-                   [pTooltip]="capacite.detail"></i>
+                <i *ngIf="capacite.detail"  class="pi pi-info-circle cursor-pointer text-cyan-600" [pTooltip]="capacite.detail"></i>
                 {{ capacite.capacite }}
               </div>
               <app-btn (click)="removeCapacite(capacite.id)"></app-btn>
