@@ -22,6 +22,8 @@ import {InputIconModule} from "primeng/inputicon";
 import {TagModule} from "primeng/tag";
 import {TooltipModule} from "primeng/tooltip";
 import {ScrollPanelModule} from "primeng/scrollpanel";
+import {BolHerosUpdateComponent} from "../update/update.component";
+import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 
 
 @Component({
@@ -61,11 +63,12 @@ import {ScrollPanelModule} from "primeng/scrollpanel";
 export class BolHeroHomeComponent implements OnDestroy {
   @ViewChild('herosTable') herosTable?: Table;
   private confirmationService = inject(ConfirmationService);
+  readonly dialogueService = inject(DialogService);
   private herosService = inject(BolHerosService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private spinner = inject(NgxSpinnerService);
-
+  private ref?: DynamicDialogRef;
 
   private subs?: Subscription;
   private subsHeroes?: Subscription;
@@ -179,6 +182,32 @@ export class BolHeroHomeComponent implements OnDestroy {
     table.clear();
     this.searchTerm = '';
     this.filterExtended();
+  }
+  quickCreateHeros(heros?: BolHerosModel) {
+    this.ref = this.dialogueService.open(BolHerosUpdateComponent, {
+      header: heros ? 'Modification d\'un Héros' : 'Création d\'un Héros',
+      data: {
+        heros: heros
+      }
+    });
+    this.subs?.unsubscribe();
+    this.subs = this.ref.onClose.subscribe((heros: BolHerosModel) => {
+      if (heros) {
+        this.spinner.show();
+        this.subs?.unsubscribe();
+        heros.joueur = 'master';
+        const actionService = heros.id ? this.herosService.quickUpdate(heros) : this.herosService.quickCreate(heros);
+        this.subs = actionService.subscribe({
+          next: () => {
+            this.spinner.hide();
+            this.getHeroes();
+          },
+          error: () => {
+            this.spinner.hide();
+          }
+        });
+      }
+    });
   }
 }
 
