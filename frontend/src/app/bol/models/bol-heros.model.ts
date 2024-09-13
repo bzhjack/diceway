@@ -7,6 +7,7 @@ import {BolHerosLangueModel} from "./bol-langue.model";
 export interface BolHerosModel {
   id: string | null;
   user_id: string | null;
+  active: boolean;
   joueur: string;
   type: string;
   commentaire: string | null;

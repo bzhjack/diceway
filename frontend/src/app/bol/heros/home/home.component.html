@@ -10,7 +10,7 @@
   <div class="flex">
     <div class="flex flex-auto">
       <p-table
-        #herosTable
+        #pnjTable
         class="w-full"
         [value]="filteredHeroesList"
         [scrollable]="true"
@@ -35,9 +35,12 @@
                   placeholder="Votre recherche"/>
               </p-iconField>
               <div class="flex items-center gap-2">
-
+                <p-checkbox
+                  class="pr-2 cursor-pointer"
+                  [(ngModel)] = "searchPending"
+                  [binary]="true" label="Mes créations" (ngModelChange)="filterExtended()"/>
               </div>
-              <button pTooltip="Supprimer les filtres" pButton icon="pi pi-filter-slash" severity="info" size="small" (click)="clear(herosTable)"></button>
+              <button pTooltip="Supprimer les filtres" pButton icon="pi pi-filter-slash" severity="info" size="small" (click)="clear(pnjTable)"></button>
             </div>
           </div>
 
@@ -48,6 +51,7 @@
           <tr>
             <th></th>
             <th>Description</th>
+            <th>Ressources</th>
             <th>Attributs</th>
             <th>Combat</th>
             <th>Carrières</th>
@@ -60,8 +64,8 @@
         <ng-template pTemplate="body" let-heros>
           <tr>
             <td style="width: 110px">
-              <div class="heros_row__img cursor-pointer" (click)="showHerosPicture(heros)">
-                <img *ngIf="!heros.user_id" ngSrc="/frontend/assets/bol/heros/{{heros.id}}.jpg" alt="" fill/>
+              <div class="pnj_row__img cursor-pointer" (click)="showHerosPicture(heros)">
+                <img *ngIf="!heros.user_id" src="/frontend/assets/bol/pnj/{{heros.id}}.jpg" alt=""/>
                 <img *ngIf="heros.user_id" style="width:100%"
                      [src]="heros.origines.avatar !== null ? heros.origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
                      alt="avatar">
@@ -76,17 +80,36 @@
                      [pTooltip]="heros.commentaire ?? ''"></i>
                   <div style="text-transform: capitalize">{{ heros.origines.nom }}</div>
                 </div>
-                <div class="flex items-center gap-2">
-                  <!--div class="text-gray-300">Type</div>
-                  <div class="text-gray-400 font-bold">{{ getType(heros) }}</div-->
-                </div>
-                <div class="flex items-center gap-2">
-                  <div class="text-gray-300">Vitalité</div>
-                  <div class="text-gray-400 font-bold">{{ heros.ressources.vitalite }}</div>
-                </div>
-                <p-tag *ngIf="heros.user_id">Création</p-tag>
+                <p-tag *ngIf="heros.active" severity="success">Actif</p-tag>
+                <p-tag *ngIf="!heros.active" severity="warning">En cours de création</p-tag>
               </div>
+            </td>
 
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr>
+                    <td class="text-gray-300">Vitalité</td>
+                    <td class="text-gray-400">{{ heros.ressources.vitalite }}</td>
+                  </tr>
+                  <tr *ngIf="heros.ressources.pouvoir">
+                    <td class="text-gray-300">Pouvoir</td>
+                    <td class="text-gray-400">{{ heros.ressources.pouvoir }}</td>
+                  </tr>
+                  <tr *ngIf="heros.ressources.foi">
+                    <td class="text-gray-300">Foi</td>
+                    <td class="text-gray-400">{{ heros.ressources.foi }}</td>
+                  </tr>
+                  <tr *ngIf="heros.ressources.vilenie">
+                    <td class="text-gray-300">Vilénie</td>
+                    <td class="text-gray-400">{{ heros.ressources.vilenie }}</td>
+                  </tr>
+                  <tr *ngIf="heros.ressources.heroisme">
+                    <td class="text-gray-300">Héroisme</td>
+                    <td class="text-gray-400">{{ heros.ressources.heroisme }}</td>
+                  </tr>
+                </table>
+              </div>
             </td>
 
             <td>
@@ -174,18 +197,19 @@
             </td>
 
             <td>
-              <div style="height: 100px">
+              <p-scrollPanel [style]="{height: '100px'}">
                 <table>
                   <tr *ngFor="let trait of heros.traits">
-                    <td class="whitespace-nowrap">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}</td>
+                    <td class="whitespace-nowrap"  [class.error-color]="trait.type ==='D'"
+                        [class.success-color]="trait.type ==='A'">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}</td>
                   </tr>
                 </table>
-              </div>
+              </p-scrollPanel>
             </td>
 
             <td>
-              <div *ngIf="heros.user_id" class="flex gap-2" style="height: 100px;">
-                <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-pencil"
+              <div class="flex gap-2" style="height: 100px;">
+                <button *ngIf="!heros.active" severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-pencil"
                         [routerLink]="['create', heros.id]"></button>
                 <button severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash"
                         (click)="deleteHero(heros, $event)">

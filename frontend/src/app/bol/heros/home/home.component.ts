@@ -21,35 +21,37 @@ import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
 import {TagModule} from "primeng/tag";
 import {TooltipModule} from "primeng/tooltip";
+import {ScrollPanelModule} from "primeng/scrollpanel";
 
 
 @Component({
   selector: 'bol-hero-home',
   standalone: true,
-  imports: [
-    NgForOf,
-    JsonPipe,
-    RouterLink,
-    CardModule,
-    Button,
-    DialogModule,
-    InputTextModule,
-    ReactiveFormsModule,
-    NgIf,
-    TableModule,
-    ButtonDirective,
-    Ripple,
-    ConfirmPopupModule,
-    HeaderComponent,
-    CheckboxModule,
-    DropdownModule,
-    IconFieldModule,
-    InputIconModule,
-    TagModule,
-    TooltipModule,
-    FormsModule,
-    NgOptimizedImage
-  ],
+    imports: [
+        NgForOf,
+        JsonPipe,
+        RouterLink,
+        CardModule,
+        Button,
+        DialogModule,
+        InputTextModule,
+        ReactiveFormsModule,
+        NgIf,
+        TableModule,
+        ButtonDirective,
+        Ripple,
+        ConfirmPopupModule,
+        HeaderComponent,
+        CheckboxModule,
+        DropdownModule,
+        IconFieldModule,
+        InputIconModule,
+        TagModule,
+        TooltipModule,
+        FormsModule,
+        NgOptimizedImage,
+        ScrollPanelModule
+    ],
   providers: [
     ConfirmationService
   ],
@@ -72,7 +74,7 @@ export class BolHeroHomeComponent implements OnDestroy {
   public searchTerm: string | null = null;
   public showHeros: boolean = false;
   public currentHeros: BolHerosModel | null = null;
-
+  public searchPending: boolean = false;
 
 
   public showCreate = false;
@@ -166,10 +168,7 @@ export class BolHeroHomeComponent implements OnDestroy {
     this.herosTable?.filterGlobal(ev.target?.value, 'contains')
   }
   filterExtended() {
-    /*this.filteredHeroesList = this.searchCreation ? this.pnjList.filter((pnj) => pnj.user_id !== null) : this.pnjList;
-    if (this.searchType !== null) {
-      this.filteredPnjList = this.filteredPnjList.filter((pnj) => pnj.type === this.searchType);
-    }*/
+    this.filteredHeroesList = this.searchPending ? this.heroesList.filter((heros) => !heros.active) : this.heroesList;
   }
   showHerosPicture(heros: BolHerosModel) {
     this.showHeros = true;

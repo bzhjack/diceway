@@ -122,6 +122,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   public ressourcesCtrl = new FormControl<BolHerosRessources>({vitalite: 0 , heroisme: 0, foi: 0, pouvoir: 0, vilenie: 0});
   public commentaireCtrl = new FormControl<string | null>(null);
   public typeCtrl = new FormControl<string>('H');
+  public activeCtrl = new FormControl<boolean>(false);
   herosForm = this.fb.group(
     {
       id: this.idCtrl,
@@ -137,7 +138,8 @@ export class BolHerosCreateComponent implements OnDestroy {
       ressources: this.ressourcesCtrl,
       langues: this.languesCtrl,
       commentaire: this.commentaireCtrl,
-      type: this.typeCtrl
+      type: this.typeCtrl,
+      active: this.activeCtrl
     }, {validators: globalFormValidator}
   );
   valueChanges$: Observable<BolHerosModel> = this.herosForm.valueChanges.pipe(
@@ -145,6 +147,7 @@ export class BolHerosCreateComponent implements OnDestroy {
       id: value.id ?? null,
       user_id: value.user_id ?? null,
       joueur: value.joueur ?? '',
+      active: value.active ?? false,
       ressources: {
         vitalite: value.ressources?.vitalite ?? 0,
         heroisme: value.ressources?.heroisme ?? 0,
