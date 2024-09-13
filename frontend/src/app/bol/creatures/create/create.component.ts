@@ -169,7 +169,9 @@ export class BolCreatureCreateComponent implements OnDestroy {
   ngOnDestroy() {
     this.subs?.unsubscribe()
   }
-
+  clearSelectedCapacite() {
+     this.selectedCapacite.set(null);
+  }
   addCapacite(panel: OverlayPanel, event: any) {
     panel.toggle(event);
     const capacite = this.fb.group({

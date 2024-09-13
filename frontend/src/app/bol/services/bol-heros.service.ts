@@ -116,13 +116,13 @@ export class BolHerosService {
     return this.http.get<BolHerosModel[]>('/api/bol/pnj');
   }
 
-  createPnj(pnj: BolHerosModel): Observable<any> {
+  quickCreate(pnj: BolHerosModel): Observable<any> {
     return this.http.post<BolHerosModel>('/api/bol/pnj/create', <BolHerosModel>pnj);
   }
-  updatePnj(pnj: BolHerosModel): Observable<any> {
+  quickUpdate(pnj: BolHerosModel): Observable<any> {
     return this.http.post<BolHerosModel>('/api/bol/pnj/update', <BolHerosModel>pnj);
   }
-  deletePnj(id: string): Observable<any> {
+  quickDelete(id: string): Observable<any> {
     return this.http.delete<BolHerosModel>('/api/bol/pnj/delete/' + id);
   }
 }

@@ -3,6 +3,8 @@
     <app-header legend="Héros de la Lémurie">
       <button pButton label="Création" icon="pi pi-pencil" severity="warning" size="small"
               (click)="openCreateDialog()"></button>
+      <button pButton label="Création rapide" icon="pi pi-pencil" severity="success" size="small"
+              (click)="quickCreateHeros()"></button>
       <button pButton label="Retour" icon="pi pi-arrow-left" severity="secondary" size="small"
               routerLink="/bol"></button>
     </app-header>
@@ -30,14 +32,18 @@
                   style="padding-left: 2.5rem"
                   class="p-inputtext-sm"
                   type="text"
-                  [(ngModel)] = "searchTerm"
+                  [(ngModel)]="searchTerm"
                   (input)="filtering($event)"
                   placeholder="Votre recherche"/>
               </p-iconField>
               <div class="flex items-center gap-2">
-
+                <p-checkbox
+                  class="pr-2 cursor-pointer"
+                  [(ngModel)]="searchPending"
+                  [binary]="true" label="En cours de création" (ngModelChange)="filterExtended()"/>
               </div>
-              <button pTooltip="Supprimer les filtres" pButton icon="pi pi-filter-slash" severity="info" size="small" (click)="clear(herosTable)"></button>
+              <button pTooltip="Supprimer les filtres" pButton icon="pi pi-filter-slash" severity="info" size="small"
+                      (click)="clear(herosTable)"></button>
             </div>
           </div>
 
@@ -48,26 +54,24 @@
           <tr>
             <th></th>
             <th>Description</th>
+            <th>Ressources</th>
             <th>Attributs</th>
             <th>Combat</th>
             <th>Carrières</th>
             <th>Armures</th>
             <th>Armes</th>
             <th>Traits</th>
-            <th></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-heros>
           <tr>
             <td style="width: 110px">
               <div class="heros_row__img cursor-pointer" (click)="showHerosPicture(heros)">
-                <img *ngIf="!heros.user_id" ngSrc="/frontend/assets/bol/heros/{{heros.id}}.jpg" alt="" fill/>
                 <img *ngIf="heros.user_id" style="width:100%"
                      [src]="heros.origines.avatar !== null ? heros.origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
                      alt="avatar">
               </div>
             </td>
-
 
             <td class="relative">
               <div class="flex flex-col gap-2" style="height: 100px">
@@ -76,17 +80,53 @@
                      [pTooltip]="heros.commentaire ?? ''"></i>
                   <div style="text-transform: capitalize">{{ heros.origines.nom }}</div>
                 </div>
+                <p-tag *ngIf="heros.active" severity="success">Actif</p-tag>
+                <p-tag *ngIf="!heros.active" severity="warning">En cours de création</p-tag>
                 <div class="flex items-center gap-2">
-                  <!--div class="text-gray-300">Type</div>
-                  <div class="text-gray-400 font-bold">{{ getType(heros) }}</div-->
+                  <button *ngIf="!heros.active"
+                          pTooltip="Finaliser la création"
+                          severity="secondary"
+                          type="button"
+                          size="small" pButton pRipple icon="pi pi-palette"
+                          [routerLink]="['create', heros.id]"></button>
+                  <button
+                          pTooltip="Modifications rapides"
+                          severity="secondary"
+                          type="button"
+                          size="small" pButton pRipple icon="pi pi-bolt"
+                         (click)="quickCreateHeros(heros)"></button>
+                  <button severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash"
+                          (click)="deleteHero(heros, $event)">
+                  </button>
                 </div>
-                <div class="flex items-center gap-2">
-                  <div class="text-gray-300">Vitalité</div>
-                  <div class="text-gray-400 font-bold">{{ heros.ressources.vitalite }}</div>
-                </div>
-                <p-tag *ngIf="heros.user_id">Création</p-tag>
               </div>
+            </td>
 
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr>
+                    <td class="text-gray-300">Vitalité</td>
+                    <td class="text-gray-400">{{ heros.ressources.vitalite }}</td>
+                  </tr>
+                  <tr *ngIf="heros.ressources.pouvoir">
+                    <td class="text-gray-300">Pouvoir</td>
+                    <td class="text-gray-400">{{ heros.ressources.pouvoir }}</td>
+                  </tr>
+                  <tr *ngIf="heros.ressources.foi">
+                    <td class="text-gray-300">Foi</td>
+                    <td class="text-gray-400">{{ heros.ressources.foi }}</td>
+                  </tr>
+                  <tr *ngIf="heros.ressources.vilenie">
+                    <td class="text-gray-300">Vilénie</td>
+                    <td class="text-gray-400">{{ heros.ressources.vilenie }}</td>
+                  </tr>
+                  <tr *ngIf="heros.ressources.heroisme">
+                    <td class="text-gray-300">Héroisme</td>
+                    <td class="text-gray-400">{{ heros.ressources.heroisme }}</td>
+                  </tr>
+                </table>
+              </div>
             </td>
 
             <td>
@@ -174,25 +214,16 @@
             </td>
 
             <td>
-              <div style="height: 100px">
+              <p-scrollPanel [style]="{height: '100px'}">
                 <table>
                   <tr *ngFor="let trait of heros.traits">
-                    <td class="whitespace-nowrap">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}</td>
+                    <td class="whitespace-nowrap" [class.error-color]="trait.type ==='D'"
+                        [class.success-color]="trait.type ==='A'">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}
+                    </td>
                   </tr>
                 </table>
-              </div>
+              </p-scrollPanel>
             </td>
-
-            <td>
-              <div *ngIf="heros.user_id" class="flex gap-2" style="height: 100px;">
-                <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-pencil"
-                        [routerLink]="['create', heros.id]"></button>
-                <button severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash"
-                        (click)="deleteHero(heros, $event)">
-                </button>
-              </div>
-            </td>
-
           </tr>
         </ng-template>
       </p-table>

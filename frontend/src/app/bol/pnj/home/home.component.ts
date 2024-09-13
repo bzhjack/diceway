@@ -118,7 +118,7 @@ export class BolPnjHomeComponent {
         this.spinner.show();
         this.subs?.unsubscribe();
         pnj.joueur = 'master';
-        const actionService = pnj.id ? this.pnjService.updatePnj(pnj) : this.pnjService.createPnj(pnj);
+        const actionService = pnj.id ? this.pnjService.quickUpdate(pnj) : this.pnjService.quickCreate(pnj);
         this.subs = actionService.subscribe({
           next: () => {
             this.spinner.hide();
@@ -149,7 +149,7 @@ export class BolPnjHomeComponent {
   deletePnj(pnj: BolHerosModel) {
     this.spinner.show();
     this.subs?.unsubscribe();
-    this.subs = this.pnjService.deletePnj(pnj.id as string).subscribe({
+    this.subs = this.pnjService.quickDelete(pnj.id as string).subscribe({
       next: () => {
         this.spinner.hide();
         this.getPnj();

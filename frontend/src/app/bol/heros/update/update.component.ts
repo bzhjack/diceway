@@ -24,7 +24,7 @@ import {BolAvantageModel} from "../../models/bol-avantage.model";
 import {BolDesavantageModel} from "../../models/bol-desavantage.model";
 
 @Component({
-  selector: 'bol-pnj-create',
+  selector: 'bol-heros-update',
   standalone: true,
   imports: [
     FormsModule,
@@ -47,11 +47,11 @@ import {BolDesavantageModel} from "../../models/bol-desavantage.model";
   providers: [
     ConfirmationService
   ],
-  templateUrl: './create.component.html',
-  styleUrl: './create.component.scss'
+  templateUrl: './update.component.html',
+  styleUrl: './update.component.scss'
 })
-export class BolPnjCreateComponent {
-  @ViewChild('opPnj') panelPnj?: OverlayPanel;
+export class BolHerosUpdateComponent {
+  @ViewChild('opHeros') panelHeros?: OverlayPanel;
   public type = [{type: 'Piétaille', value: 'P'}, {type: 'Coriaces', value: 'C'}, {type: 'Rivaux', value: 'R'}];
 
   private subs?: Subscription;
@@ -61,7 +61,9 @@ export class BolPnjCreateComponent {
 
   public idCtrl: FormControl<string | null> = new FormControl(null);
   public nomCtrl = new FormControl('', Validators.required);
-  public typeCtrl = new FormControl('P', Validators.required);
+  public joueurCtrl = new FormControl('', Validators.required);
+  public typeCtrl = new FormControl('H', Validators.required);
+  public regionCtrl = new FormControl<number | null>(null, Validators.required);
   public avatarCtrl: FormControl<string | null> = new FormControl(null);
   public vigueurCtrl = new FormControl(0, Validators.required);
   public agiliteCtrl = new FormControl(0, Validators.required);
@@ -78,17 +80,19 @@ export class BolPnjCreateComponent {
   public carrieresCtrl = this.fb.array([]);
   public traitsCtrl = this.fb.array([]);
   public commentaireCtrl = new FormControl<string | null>(null);
-  public vitaliteCtrl = new FormControl(0, Validators.required);
+  public vitaliteCtrl = new FormControl(10, Validators.required);
   public pouvoirCtrl = new FormControl(0, Validators.required);
   public foiCtrl = new FormControl(0, Validators.required);
-  public vilenieCtrl = new FormControl(0, Validators.required);
+  public heroismeCtrl = new FormControl(5, Validators.required);
 
-  pnjForm = this.fb.group(
+  herosForm = this.fb.group(
     {
       id: this.idCtrl,
-      nom: this.nomCtrl,
       type: this.typeCtrl,
+      nom: this.nomCtrl,
+      joueur: this.joueurCtrl,
       avatar: this.avatarCtrl,
+      region_id: this.regionCtrl,
       vigueur: this.vigueurCtrl,
       initiative: this.initiativeCtrl,
       agilite: this.agiliteCtrl,
@@ -100,7 +104,7 @@ export class BolPnjCreateComponent {
       vitalite: this.vitaliteCtrl,
       pouvoir: this.pouvoirCtrl,
       foi: this.foiCtrl,
-      vilenie: this.vilenieCtrl,
+      heroisme: this.heroismeCtrl,
       armes: this.armesCtrl,
       armures: this.armuresCtrl,
       carrieres: this.carrieresCtrl,
@@ -109,19 +113,19 @@ export class BolPnjCreateComponent {
     });
 
   get armes() {
-    return this.pnjForm.get('armes') as FormArray;
+    return this.herosForm.get('armes') as FormArray;
   }
 
   get armures() {
-    return this.pnjForm.get('armures') as FormArray;
+    return this.herosForm.get('armures') as FormArray;
   }
 
   get carrieres() {
-    return this.pnjForm.get('carrieres') as FormArray;
+    return this.herosForm.get('carrieres') as FormArray;
   }
 
   get traits() {
-    return this.pnjForm.get('traits') as FormArray;
+    return this.herosForm.get('traits') as FormArray;
   }
 
   /*** Gestion des armes ***/
@@ -130,6 +134,7 @@ export class BolPnjCreateComponent {
   protected carriereList = this.hs.carriereList;
   protected avantageList = this.hs.avantagesList;
   protected desavantageList = this.hs.desavantagesList;
+  protected regionList = this.hs.regionList;
 
   public selectedItem = signal<any | null>(null);
   public itemTitle = signal('Armes');
@@ -137,14 +142,14 @@ export class BolPnjCreateComponent {
 
   protected unselectedItems = signal<any[]>([])
 
-  protected selectedArmesIds = toSignal(this.pnjForm.get('armes')!.valueChanges.pipe(map((items: any[]) => items.map(item => Number(item.id)))));
+  protected selectedArmesIds = toSignal(this.herosForm.get('armes')!.valueChanges.pipe(map((items: any[]) => items.map(item => Number(item.id)))));
   protected selectedArmes = computed(() => {
     return this.armeList()?.filter((item: any) => this.selectedArmesIds()?.includes(Number(item.id)))
   });
   protected unselectedArmes = computed(() => {
     return this.armeList()?.filter((item: any) => !this.selectedArmesIds()?.includes(Number(item.id)))
   });
-  protected selectedArmuresIds = toSignal(this.pnjForm.get('armures')!.valueChanges.pipe(map((items: any[]) => items.map(item => Number(item.id)))));
+  protected selectedArmuresIds = toSignal(this.herosForm.get('armures')!.valueChanges.pipe(map((items: any[]) => items.map(item => Number(item.id)))));
   protected selectedArmures = computed(() => {
     return this.armureList()?.filter((item: any) => this.selectedArmuresIds()?.includes(Number(item.id)))
   });
@@ -152,12 +157,12 @@ export class BolPnjCreateComponent {
     return this.armureList()?.filter((item: any) => !this.selectedArmuresIds()?.includes(Number(item.id)))
   });
 
-  protected selectedCarrieresIds = toSignal(this.pnjForm.get('carrieres')!.valueChanges.pipe(map((items: any[]) => items.map(item => Number(item.id)))));
+  protected selectedCarrieresIds = toSignal(this.herosForm.get('carrieres')!.valueChanges.pipe(map((items: any[]) => items.map(item => Number(item.id)))));
   protected unselectedCarrieres = computed(() => {
     return this.carriereList()?.filter((item: any) => !this.selectedCarrieresIds()?.includes(Number(item.id)))
   });
 
-  protected selectedTraitsIds = toSignal(this.pnjForm.get('traits')!.valueChanges.pipe(
+  protected selectedTraitsIds = toSignal(this.herosForm.get('traits')!.valueChanges.pipe(
     map((items: any[]) => items.map(item => ({ id: Number(item.id), type: item.type })))
   ));
   protected unselectedAvantages = computed(() => {
@@ -179,30 +184,31 @@ export class BolPnjCreateComponent {
 
 
   constructor(private ref: DynamicDialogRef, private config: DynamicDialogConfig) {
-    if (this.config.data.pnj) {
-      const pnj = this.config.data.pnj as BolHerosModel;
-      this.pnjForm.patchValue({
-        id: pnj.id,
-        type: pnj.type,
-        nom: pnj.origines.nom,
-        avatar: pnj.origines.avatar,
-        vigueur: pnj.attributs.vigueur,
-        agilite: pnj.attributs.agilite,
-        esprit: pnj.attributs.esprit,
-        aura: pnj.attributs.aura,
-        initiative: pnj.combat.initiative,
-        tir: pnj.combat.tir,
-        melee: pnj.combat.melee,
-        defense: pnj.combat.defense,
-        commentaire: pnj.commentaire,
-        vitalite: pnj.ressources.vitalite,
-        pouvoir: pnj.ressources.pouvoir,
-        foi: pnj.ressources.foi,
-        vilenie: pnj.ressources.vilenie
+    if (this.config.data.heros) {
+      const heros = this.config.data.heros as BolHerosModel;
+      this.herosForm.patchValue({
+        id: heros.id,
+        joueur: heros.joueur,
+        nom: heros.origines.nom,
+        region_id: Number(heros.origines.region_id),
+        avatar: heros.origines.avatar,
+        vigueur: heros.attributs.vigueur,
+        agilite: heros.attributs.agilite,
+        esprit: heros.attributs.esprit,
+        aura: heros.attributs.aura,
+        initiative: heros.combat.initiative,
+        tir: heros.combat.tir,
+        melee: heros.combat.melee,
+        defense: heros.combat.defense,
+        commentaire: heros.commentaire,
+        vitalite: heros.ressources.vitalite,
+        pouvoir: heros.ressources.pouvoir,
+        foi: heros.ressources.foi,
+        heroisme: heros.ressources.heroisme
 
       }, {emitEvent: false});
       this.armes.clear();
-      pnj.armes.forEach( (arme: any) => {
+      heros.armes.forEach( (arme: any) => {
         const heroArme = this.fb.group({
           id: [arme.arme_id]
         });
@@ -210,7 +216,7 @@ export class BolPnjCreateComponent {
       });
 
       this.armures.clear();
-      pnj.armures.forEach( (armure: any) => {
+      heros.armures.forEach( (armure: any) => {
         const heroArmure = this.fb.group({
           id: [armure.armure_id]
         });
@@ -218,7 +224,7 @@ export class BolPnjCreateComponent {
       });
 
       this.carrieres.clear();
-      pnj.carrieres.forEach( (carriere: BolHerosCarriereModel) => {
+      heros.carrieres.forEach( (carriere: BolHerosCarriereModel) => {
         const heroCarriere = this.fb.group({
           id: [carriere.carriere_id],
           value: [carriere.value],
@@ -227,7 +233,7 @@ export class BolPnjCreateComponent {
       });
 
       this.traits.clear();
-      pnj.traits.forEach( (trait: any) => {
+      heros.traits.forEach( (trait: any) => {
         const heroTrait = this.fb.group({
           id: [trait.traitable_id],
           type: [trait.type]
@@ -276,7 +282,7 @@ export class BolPnjCreateComponent {
         this.itemTitle.set('Désavantages');
         break;
     }
-    this.panelPnj?.toggle(ev);
+    this.panelHeros?.toggle(ev);
   }
 
 
@@ -331,14 +337,14 @@ export class BolPnjCreateComponent {
 
   submit(event?: Event) {
     event?.preventDefault();
-    if (this.pnjForm.invalid) {
+    if (this.herosForm.invalid) {
       return;
     }
-    this.ref.close(this.pnjForm.value);
+    this.ref.close(this.herosForm.value);
   }
 
   picture() {
-    const ref = this.ds.open(PictureComponent, {header: 'Photo du pnj'});
+    const ref = this.ds.open(PictureComponent, {header: 'Photo du Heros'});
     this.subs?.unsubscribe();
     this.subs = ref.onClose.subscribe((avatar: any) => {
       if (avatar !== null && avatar !== undefined) {
