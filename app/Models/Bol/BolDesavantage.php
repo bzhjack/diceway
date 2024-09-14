@@ -13,7 +13,8 @@ class BolDesavantage extends Model
     protected $table = 'bol_desavantage';
     protected $hidden = ['created_at', 'updated_at'];
     protected $casts = [
-        'de_malus' => 'boolean'
+        'de_malus' => 'boolean',
+        'id' => 'integer'
     ];
 
     public function regions(): BelongsToMany

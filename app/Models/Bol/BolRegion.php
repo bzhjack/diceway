@@ -14,7 +14,9 @@ class BolRegion extends Model
     protected $table = 'bol_region';
     protected $hidden = ['created_at', 'updated_at'];
     protected $fillable = ['name']; // Spécifiez les colonnes que vous voulez rendre accessibles en écriture
-
+    protected $casts = [
+        'id' => 'integer',
+    ];
     // Avantages liés à la région
     public function avantages(): BelongsToMany
     {

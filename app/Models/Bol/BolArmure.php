@@ -11,4 +11,7 @@ class BolArmure extends Model
 
     protected $table = 'bol_armure';
     protected $hidden = ['created_at', 'updated_at'];
+    protected $casts = [
+        'id' => 'integer',
+    ];
 }

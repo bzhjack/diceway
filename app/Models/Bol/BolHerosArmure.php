@@ -16,7 +16,6 @@ class BolHerosArmure extends Model
         "heros_id",
         "armure_id",
     ];
-
     public function armure(): HasOne
     {
         return $this->HasOne(BolArmure::class, 'id', 'armure_id');

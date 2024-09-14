@@ -11,4 +11,7 @@ class BolCarriere extends Model
 
     protected $table = 'bol_carriere';
     protected $hidden = ['created_at', 'updated_at'];
+    protected $casts = [
+        'id' => 'integer',
+    ];
 }

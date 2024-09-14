@@ -25,10 +25,15 @@ class BolHeros extends Model
         'user_id',
         'joueur',
         'type',
+        'active',
         'nom', 'avatar', 'region_id',
         'vigueur', 'agilite', 'esprit', 'aura',
         'initiative', 'melee', 'tir', 'defense','commentaire',
         'experience', 'foi', 'vitalite', 'heroisme', 'vilenie', 'pouvoir'
+    ];
+
+    protected $casts = [
+        'active' => 'boolean',
     ];
 
     public function traits(): HasMany
