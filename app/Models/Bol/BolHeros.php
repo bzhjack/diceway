@@ -32,8 +32,28 @@ class BolHeros extends Model
         'experience', 'foi', 'vitalite', 'heroisme', 'vilenie', 'pouvoir'
     ];
 
+
     protected $casts = [
         'active' => 'boolean',
+
+        'pouvoir' => 'integer',
+        'vilenie' => 'integer',
+        'heroisme' => 'integer',
+        'vitalite' => 'integer',
+        'foi' => 'integer',
+        'experience' => 'integer',
+
+        'initiative' => 'integer',
+        'melee' => 'integer',
+        'tir' => 'integer',
+        'defense' => 'integer',
+
+
+        'vigueur' => 'integer',
+        'agilite' => 'integer',
+        'esprit' => 'integer',
+        'aura' => 'integer',
+
     ];
 
     public function traits(): HasMany
