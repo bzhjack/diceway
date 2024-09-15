@@ -1,41 +1,46 @@
 <div class="region-container flex gap-2 flex-col">
   <form [formGroup]="pnjForm" autocomplete="off" class="flex flex-col gap-2">
-    <p-fieldset legend="Général" class="w-fit">
-      <div class="flex gap-2">
-        <div class="hero-avatar cursor-pointer" (click)="picture()">
-          <img style="width:100%"
-               [src]="avatarCtrl.value !== null ? avatarCtrl.value : '/frontend/assets/bol/empty-avatar.jpg'"
-               alt="avatar">
-          <p class="hero-avatar__description">Modifier</p>
-        </div>
+    <div class="flex gap-2">
+      <p-fieldset legend="Général" class="w-fit">
+        <div class="flex gap-2">
+          <div class="hero-avatar cursor-pointer" (click)="picture()">
+            <img style="width:100%"
+                 [src]="avatarCtrl.value !== null ? avatarCtrl.value : '/frontend/assets/bol/empty-avatar.jpg'"
+                 alt="avatar">
+            <p class="hero-avatar__description">Modifier</p>
+          </div>
 
 
-        <div class="flex flex-col gap-1">
-          <!--- Nom du joueur --->
-          <div class="flex flex-col gap-1 w-fit justify-end">
-            <label for="nom">Nom du personnage</label>
-            <input formControlName="nom" pInputText id="joueur" class="p-inputtext-sm"/>
+          <div class="flex flex-col gap-1">
+            <!--- Nom du joueur --->
+            <div class="flex flex-col gap-1 w-fit justify-end">
+              <label for="nom">Nom du personnage</label>
+              <input formControlName="nom" pInputText id="joueur" class="p-inputtext-sm"/>
+            </div>
+            <div class="flex flex-col gap-1 w-fit justify-end">
+              <label for="type">Type</label>
+              <p-dropdown [style]="{ width: '190px' }"
+                          class="p-inputtext-sm"
+                          optionLabel="type"
+                          optionValue="value"
+                          [options]="type"
+                          formControlName="type"
+                          placeholder="Selectionner un type"></p-dropdown>
+            </div>
           </div>
-          <div class="flex flex-col gap-1 w-fit justify-end">
-            <label for="type">Type</label>
-            <p-dropdown [style]="{ width: '190px' }"
-                        class="p-inputtext-sm"
-                        optionLabel="type"
-                        optionValue="value"
-                        [options]="type"
-                        formControlName="type"
-                        placeholder="Selectionner un type"></p-dropdown>
-          </div>
-        </div>
-        <div>
-          <div class="flex flex-col gap-1 w-fit justify-end">
-            <label for="commentaire">Commentaire</label>
-            <textarea rows="4" cols="30" pInputTextarea formControlName="commentaire"></textarea>
-          </div>
-        </div>
+          <div>
 
-      </div>
-    </p-fieldset>
+          </div>
+
+        </div>
+      </p-fieldset>
+      <p-fieldset legend="Commentaire">
+        <textarea rows="4" cols="30" pInputTextarea formControlName="commentaire"></textarea>
+      </p-fieldset>
+    </div>
+
+
+
 
     <div class="flex gap-4">
 
