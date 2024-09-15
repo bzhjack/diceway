@@ -44,6 +44,15 @@
                     <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une langue" (click)="addItem('L', $event)"></app-btn>
                   </div>
                 </ng-template>
+                <div *ngIf="languesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des langues</div>
+                <div class="flex flex-col gap-2">
+                  <div *ngFor="let item of selectedLangues()" class="flex gap-2 items-center justify-between">
+                    <div class="flex gap-2 items-center" style="width: 250px">
+                      <div class="whitespace-nowrap">{{ item.langue }}</div>
+                    </div>
+                    <app-btn (click)="removeItem(item.id, langues)"></app-btn>
+                  </div>
+                </div>
               </p-fieldset>
             </div>
           </div>

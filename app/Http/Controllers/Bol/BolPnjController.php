@@ -9,6 +9,7 @@ use App\Models\Bol\BolHeros;
 use App\Models\Bol\BolHerosArme;
 use App\Models\Bol\BolHerosArmure;
 use App\Models\Bol\BolHerosCarriere;
+use App\Models\Bol\BolHerosLangue;
 use App\Models\Bol\BolHerosTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -76,8 +77,8 @@ class BolPnjController extends Controller
     public function update(Request $request)
     {
         $pnjId = $request->input('id');
-        $updatedPnj = $request->except(['armes', 'armures', 'carrieres']);
-        $pnj = BolHeros::with('carrieres.carriere', 'armures.armure', 'armes.arme')->where('user_id', Auth::id())->where('id', $pnjId)->get()->first();
+        $updatedPnj = $request->except(['armes', 'armures', 'carrieres', 'langues']);
+        $pnj = BolHeros::with('carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue')->where('user_id', Auth::id())->where('id', $pnjId)->get()->first();
 
         $carrieres = $request->input('carrieres');
         $ids_carrieres = array_column($carrieres, 'id');
@@ -91,6 +92,13 @@ class BolPnjController extends Controller
         BolHerosArme::whereNotIn('arme_id', $ids_armes)->where('heros_id', $pnjId)->delete();
         foreach ($armes as $item) {
             BolHerosArme::updateOrCreate(['heros_id' => $pnjId, 'arme_id' => $item['id']],[]);
+        }
+
+        $langues = $request->input('langues');
+        $ids_langues = array_column($langues, 'id');
+        BolHerosLangue::whereNotIn('langue_id', $ids_langues)->where('heros_id', $pnjId)->delete();
+        foreach ($langues as $item) {
+            BolHerosLangue::updateOrCreate(['heros_id' => $pnjId, 'langue_id' => $item['id']],[]);
         }
 
         $armures = $request->input('armures');
