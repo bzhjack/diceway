@@ -16,6 +16,10 @@ class BolHerosArme extends Model
         "heros_id",
         "arme_id",
     ];
+    protected $casts = [
+        'id' => 'integer',
+        'arme_id' => 'integer'
+    ];
     public function arme(): HasOne
     {
         return $this->HasOne(BolArme::class, 'id', 'arme_id');

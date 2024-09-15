@@ -14,7 +14,8 @@ class BolAvantage extends Model
     protected $hidden = ['created_at', 'updated_at'];
     protected $casts = [
         'de_bonus' => 'boolean',
-        'id' => 'integer'
+        'id' => 'integer',
+        'attribut_bonus' => 'integer'
     ];
 
     public function regions(): BelongsToMany

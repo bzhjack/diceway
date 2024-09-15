@@ -19,6 +19,7 @@ class BolCreatureCapacite extends Model
     ];
 
     protected $casts = [
+        'id' => 'integer',
         'capacite_id' => 'integer'
     ];
 

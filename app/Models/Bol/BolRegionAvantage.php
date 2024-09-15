@@ -11,4 +11,9 @@ class BolRegionAvantage extends Model
 
     protected $table = 'bol_region_avantage';
     protected $hidden = ['created_at', 'updated_at'];
+    protected $casts = [
+        'id' => 'integer',
+        'region_id' => 'integer',
+        'avantage_id' => 'integer'
+    ];
 }

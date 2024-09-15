@@ -14,7 +14,8 @@ class BolDesavantage extends Model
     protected $hidden = ['created_at', 'updated_at'];
     protected $casts = [
         'de_malus' => 'boolean',
-        'id' => 'integer'
+        'id' => 'integer',
+        'attribut_malus' => 'integer'
     ];
 
     public function regions(): BelongsToMany

@@ -16,7 +16,10 @@ class BolHerosLangue extends Model
         "heros_id",
         "langue_id"
     ];
-
+    protected $casts = [
+        'id' => 'integer',
+        'langue_id' => 'integer'
+    ];
     public function langue(): HasOne
     {
         return $this->HasOne(BolLangue::class, 'id', 'langue_id');
