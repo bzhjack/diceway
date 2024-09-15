@@ -50,10 +50,10 @@
             <tr>
               <th></th>
               <th>Description</th>
+              <th>Ressources</th>
               <th>Attributs</th>
               <th>Combat</th>
               <th>Capacités</th>
-              <th></th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-beast>
@@ -69,20 +69,30 @@
                 <div class="flex flex-col gap-2" style="height: 100px">
                   <div class="flex gap-2 items-center text-xl">
                     <i *ngIf="beast.commentaire" class="pi pi-info-circle cursor-pointer warn-color" [pTooltip]="beast.commentaire ?? ''"></i>
-                    <div style="text-transform: capitalize">{{ beast.nom }}</div>
+                    <div style="text-transform: capitalize">{{ beast.nom }} <small class="text-gray-400">({{ beast.taille.taille }})</small></div>
                   </div>
-                  <div class="flex items-center gap-2">
-                    <div class="text-gray-300">Taille</div>
-                    <div class="text-gray-400 font-bold">{{ beast.taille.taille }}</div>
+                  <p-tag *ngIf="beast.user_id">Création</p-tag>
+
+                  <div *ngIf="beast.user_id" class="flex items-center gap-2">
+                    <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-pencil"
+                    (click)="createCreature(beast)"></button>
+                  <button severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash"
+                    (click)="askDelete(beast, $event)">
+                  </button>
                   </div>
+
+                </div>
+              </td>
+
+              <td>
+                <div style="height: 100px;">
                   <div class="flex items-center gap-2">
                     <div class="text-gray-300">Vitalité</div>
                     <div class="text-gray-400 font-bold">{{ beast.vitalite }}</div>
                   </div>
-                  <p-tag *ngIf="beast.user_id">Création</p-tag>
                 </div>
-
               </td>
+
               <td>
                 <div style="height: 100px">
                   <table>
@@ -139,16 +149,6 @@
                   </table>
                 </div>
               </td>
-              <td>
-                <div *ngIf="beast.user_id" class="flex gap-2" style="height: 100px;">
-                  <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-pencil"
-                    (click)="createCreature(beast)"></button>
-                  <button severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash"
-                    (click)="askDelete(beast, $event)">
-                  </button>
-                </div>
-              </td>
-
             </tr>
           </ng-template>
         </p-table>
