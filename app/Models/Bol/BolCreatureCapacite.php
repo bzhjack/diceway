@@ -18,6 +18,11 @@ class BolCreatureCapacite extends Model
         "detail"
     ];
 
+    protected $casts = [
+        'creature_id' => 'integer',
+        'capacite_id' => 'integer'
+    ];
+
     public function capacite(): HasOne
     {
         return $this->HasOne(BolCapacite::class, 'id', 'capacite_id');

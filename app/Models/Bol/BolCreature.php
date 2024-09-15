@@ -21,7 +21,7 @@ class BolCreature extends Model
         'user_id',
         'nom',
         'vigueur',
-        'agilité',
+        'agilite',
         'esprit',
         'vitalite',
         'attaque',
@@ -31,6 +31,15 @@ class BolCreature extends Model
         'avatar',
         'commentaire',
         'id_taille'
+    ];
+    protected $casts = [
+        'vigueur' => 'integer',
+        'agilite' => 'integer',
+        'esprit' => 'integer',
+        'vitalite' => 'integer',
+        'attaque' => 'integer',
+        'defense' => 'integer',
+        'id_taille' => 'integer'
     ];
     public function capacites(): HasMany
     {

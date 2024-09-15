@@ -123,8 +123,13 @@
     <div>Ajouter une capacité</div>
 
     <div class="flex flex-col gap-2">
-      <p-dropdown [style]="{ width: '250px' }" [options]="filteredCapaciteList()"
-                  [(ngModel)]="selectedCapacite" [ngModelOptions]="{standalone: true}" [showClear]="true"
+      <p-dropdown [style]="{ width: '250px' }"
+                  [options]="filteredCapaciteList()"
+                  [(ngModel)]="selectedCapacite"
+                  [ngModelOptions]="{standalone: true}"
+                  [showClear]="true"
+                  [filter]="true"
+                  filterBy="capacite"
                   placeholder="Selectionner une capacité">
 
         <ng-template pTemplate="selectedItem" let-selectedOption>
