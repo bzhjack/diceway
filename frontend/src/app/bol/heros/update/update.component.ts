@@ -79,6 +79,9 @@ export class BolHerosUpdateComponent {
   public armesCtrl = this.fb.array([]);
   public carrieresCtrl = this.fb.array([]);
   public traitsCtrl = this.fb.array([]);
+  public languesCtrl = this.fb.array([]);
+
+
   public commentaireCtrl = new FormControl<string | null>(null);
   public vitaliteCtrl = new FormControl(10, Validators.required);
   public pouvoirCtrl = new FormControl(0, Validators.required);
@@ -90,6 +93,7 @@ export class BolHerosUpdateComponent {
       id: this.idCtrl,
       type: this.typeCtrl,
       nom: this.nomCtrl,
+      commentaire: this.commentaireCtrl,
       joueur: this.joueurCtrl,
       avatar: this.avatarCtrl,
       region_id: this.regionCtrl,
@@ -109,7 +113,7 @@ export class BolHerosUpdateComponent {
       armures: this.armuresCtrl,
       carrieres: this.carrieresCtrl,
       traits: this.traitsCtrl,
-      commentaire: this.commentaireCtrl
+      langues: this.languesCtrl,
     });
 
   get armes() {
@@ -128,6 +132,9 @@ export class BolHerosUpdateComponent {
     return this.herosForm.get('traits') as FormArray;
   }
 
+  get langues() {
+    return this.herosForm.get('langues') as FormArray;
+  }
   /*** Gestion des armes ***/
   protected armeList = this.hs.armeList;
   protected armureList = this.hs.armureList;
@@ -135,6 +142,7 @@ export class BolHerosUpdateComponent {
   protected avantageList = this.hs.avantagesList;
   protected desavantageList = this.hs.desavantagesList;
   protected regionList = this.hs.regionList;
+  protected langueList = this.hs.langueList;
 
   public selectedItem = signal<any | null>(null);
   public itemTitle = signal('Armes');
@@ -161,6 +169,12 @@ export class BolHerosUpdateComponent {
   protected unselectedCarrieres = computed(() => {
     return this.carriereList()?.filter((item: any) => !this.selectedCarrieresIds()?.includes(Number(item.id)))
   });
+
+  protected selectedLanguesIds = toSignal(this.herosForm.get('langues')!.valueChanges.pipe(map((items: any[]) => items.map(item => Number(item.id)))));
+  protected unselectedLangues = computed(() => {
+    return this.langueList()?.filter((item: any) => !this.selectedLanguesIds()?.includes(Number(item.id)))
+  });
+
 
   protected selectedTraitsIds = toSignal(this.herosForm.get('traits')!.valueChanges.pipe(
     map((items: any[]) => items.map(item => ({ id: Number(item.id), type: item.type })))
@@ -241,6 +255,14 @@ export class BolHerosUpdateComponent {
         this.traits.push(heroTrait);
       });
 
+      this.langues.clear();
+      heros.langues.forEach( (langue: any) => {
+        const heroLangue = this.fb.group({
+          id: [langue.langue_id]
+        });
+        this.traits.push(heroLangue);
+      });
+
     }
   }
 
@@ -253,7 +275,7 @@ export class BolHerosUpdateComponent {
     if (index !== -1) items.removeAt(index)
   }
 
-  addItem(type: 'A' | 'D' | 'C' | 'TA' | 'TD', ev: Event) { // Attaque Défense Carriere Avantage Désavantage
+  addItem(type: 'A' | 'D' | 'C' | 'TA' | 'TD' | 'L', ev: Event) { // Attaque Défense Carriere Avantage Désavantage
     this.selectedItem.set(null);
     switch (type) {
       case 'A':
@@ -280,6 +302,11 @@ export class BolHerosUpdateComponent {
         this.currentField.set('desavantages');
         this.unselectedItems.set(this.unselectedDesavantages() as any);
         this.itemTitle.set('Désavantages');
+        break;
+      case 'L':
+        this.currentField.set('langues');
+        this.unselectedItems.set(this.unselectedLangues() as any);
+        this.itemTitle.set('Langues');
         break;
     }
     this.panelHeros?.toggle(ev);

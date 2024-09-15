@@ -36,8 +36,17 @@
                           formControlName="region_id"
                           placeholder="Selectionner une region"></p-dropdown>
             </div>
+            <div>
+              <p-fieldset>
+                <ng-template pTemplate="header">
+                  <div class="flex items-center gap-2">
+                    <div>Langues</div>
+                    <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une langue" (click)="addItem('L', $event)"></app-btn>
+                  </div>
+                </ng-template>
+              </p-fieldset>
+            </div>
           </div>
-
         </div>
       </p-fieldset>
       <p-fieldset legend="Commentaire">
@@ -239,6 +248,7 @@
             <div *ngIf="currentField() === 'carrieres'">{{ selectedOption.carriere }}</div>
             <div *ngIf="currentField() === 'avantages'">{{ selectedOption.avantage }}</div>
             <div *ngIf="currentField() === 'desavantages'">{{ selectedOption.desavantage }}</div>
+            <div *ngIf="currentField() === 'langues'">{{ selectedOption.langue }}</div>
           </div>
         </ng-template>
 
@@ -261,6 +271,9 @@
             }
             @if (currentField() === 'desavantages') {
               <div>{{ item.desavantage }}</div>
+            }
+            @if (currentField() === 'langues') {
+              <div>{{ item.langue }}</div>
             }
           </div>
         </ng-template>
