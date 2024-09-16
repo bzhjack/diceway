@@ -1,19 +1,19 @@
-import {computed, effect, inject, Injectable, signal} from '@angular/core';
-import {BolHerosService} from "./bol-heros.service";
-import {toSignal} from "@angular/core/rxjs-interop";
-import {BolHerosModel} from "../models/bol-heros.model";
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { BolHerosService } from './bol-heros.service';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { BolHerosModel } from '../models/bol-heros.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BolHerosStateService {
-  #bhs = inject(BolHerosService)
+  #bhs = inject(BolHerosService);
   langueList = toSignal(this.#bhs.langues());
   armureList = toSignal(this.#bhs.armures());
   armeList = toSignal(this.#bhs.armes());
   regionList = toSignal(this.#bhs.regions());
   carriereList = toSignal(this.#bhs.carrieres());
-  currentHeros = signal<BolHerosModel | null>(null)
+  currentHeros = signal<BolHerosModel | null>(null);
   avantagesList = toSignal(this.#bhs.avantages());
   desavantagesList = toSignal(this.#bhs.desavantages());
   currentHerosCarrieres = computed(() => this.currentHeros()?.carrieres ?? []);
@@ -35,21 +35,65 @@ export class BolHerosStateService {
     return Math.max(countDesavantage - this.currentHeroCarriereDesvantages().length, 0);
   });
 
-  currentHerosRegion = computed(() => this.regionList()?.find((region) => Number(this.currentHeros()?.origines.region_id) === Number(region.id)));
-  heroismCost = computed(() => Math.max(this.currentHeroAvantages().length - this.currentHeroDesavantages().length -1, 0) );
+  currentHerosRegion = computed(() =>
+    this.regionList()?.find(
+      (region) =>
+        Number(this.currentHeros()?.origines.region_id) === Number(region.id)
+    )
+  );
+  heroismCost = computed(() => Math.max(this.currentHeroAvantages().length - this.currentHeroDesavantages().length - 1, 0));
 
-  protected currentHeroAvantages = computed(() => this.currentHeros()?.traits?.filter((item) => item.type === 'A') ?? [])
-  protected currentHeroDesavantages = computed(() => this.currentHeros()?.traits?.filter((item) => item.type === 'D' && item.carriere === false) ?? [])
-  protected currentHeroCarriereDesvantages = computed(() => this.currentHeros()?.traits?.filter((item) => item.type === 'D' && item.carriere === true) ?? [])
-  allHerosDesavantages = computed(() => this.currentHeros()?.traits?.filter(item => item.type === 'D') ?? []);
+  protected currentHeroAvantages = computed(
+    () => this.currentHeros()?.traits?.filter((item) => item.type === 'A') ?? []
+  );
+  protected currentHeroDesavantages = computed(
+    () =>
+      this.currentHeros()?.traits?.filter(
+        (item) => item.type === 'D' && item.carriere === false
+      ) ?? []
+  );
+  protected currentHeroCarriereDesvantages = computed(
+    () =>
+      this.currentHeros()?.traits?.filter(
+        (item) => item.type === 'D' && item.carriere === true
+      ) ?? []
+  );
+  allHerosDesavantages = computed(
+    () => this.currentHeros()?.traits?.filter((item) => item.type === 'D') ?? []
+  );
 
-  regionalAvantages = computed(() => this.currentHerosRegion()?.avantages?.map((item) => {
-    return {...item, ...{id: Number(item.pivot.avantage_id), detail: item.pivot.detail, region_id: Number(item.pivot.region_id)}};
-  }) ?? []);
-  regionalDesavantages = computed(() => this.currentHerosRegion()?.desavantages?.map(
-    (item) => {
-      return {...item, ...{id: Number(item.pivot.desavantage_id), detail: item.pivot.detail, region_id: Number(item.pivot.region_id)}};
-    }) ?? []);
+  regionalAvantages = computed(
+    () =>
+      this.currentHerosRegion()?.avantages?.map((item) => {
+        return {
+          ...item,
+          ...{
+            id: Number(item.pivot.avantage_id),
+            detail: item.pivot.detail,
+            region_id: Number(item.pivot.region_id),
+          },
+        };
+      }) ?? []
+  );
+  regionalDesavantages = computed(
+    () =>
+      this.currentHerosRegion()?.desavantages?.map((item) => {
+        return {
+          ...item,
+          ...{
+            id: Number(item.pivot.desavantage_id),
+            detail: item.pivot.detail,
+            region_id: Number(item.pivot.region_id),
+          },
+        };
+      }) ?? []
+  );
+
+  traitsModifiers = computed(() => {
+    return this.currentHeroAvantages().map((item) => {
+        return {id: item.traitable_id, type: item.type};
+    });
+  });
 
   constructor() {
     effect(() => {

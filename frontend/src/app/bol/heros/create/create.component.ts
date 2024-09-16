@@ -205,6 +205,7 @@ export class BolHerosCreateComponent implements OnDestroy {
         vilenie: 0,
         foi: 0
       }, {emitEvent: false});
+      console.log(this.#herosStateService.traitsModifiers());
     });
   }
 
