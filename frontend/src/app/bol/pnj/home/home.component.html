@@ -69,24 +69,27 @@
         </ng-template>
         <ng-template pTemplate="body" let-pnj>
           <tr>
-            <td style="width: 110px">
+            <td style="width: 110px" class="relative">
               <div class="pnj_row__img cursor-pointer" (click)="showPnjPicture(pnj)">
                 <img *ngIf="!pnj.user_id" src="/frontend/assets/bol/pnj/{{pnj.id}}.jpg" alt=""/>
                 <img *ngIf="pnj.user_id" style="width:100%"
                      [src]="pnj.origines.avatar !== null ? pnj.origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
                      alt="avatar">
               </div>
-            </td>
-
-
-            <td class="relative">
-              <div class="flex flex-col gap-2" style="height: 100px">
-                <div class="flex gap-2 items-center text-xl">
-                  <i *ngIf="pnj.commentaire" class="pi pi-info-circle cursor-pointer warn-color"
-                     [pTooltip]="pnj.commentaire ?? ''"></i>
-                  <div style="text-transform: capitalize">{{ pnj.origines.nom }} <small class="text-gray-400">({{ getType(pnj) }})</small></div>
-                </div>
+              <div style="position: absolute; bottom: 12px; left: 12px;">
                 <p-tag *ngIf="pnj.user_id">Création</p-tag>
+              </div>
+            </td>
+            <td class="relative">
+              <div class="flex flex-col justify-between" style="height: 100px">
+                <div>
+                  <div class="flex gap-2 items-center text-xl">
+                    <i *ngIf="pnj.commentaire" class="pi pi-info-circle cursor-pointer warn-color"
+                       [pTooltip]="pnj.commentaire ?? ''"></i>
+                    <div style="text-transform: capitalize">{{ pnj.origines.nom }}</div>
+                  </div>
+                  <div class="text-gray-400" style="text-transform: capitalize" >{{getType(pnj) }}</div>
+                </div>
                 <div *ngIf="pnj.user_id" class="flex items-center gap-2">
                   <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-pencil"
                           (click)="createPnj(pnj)"></button>

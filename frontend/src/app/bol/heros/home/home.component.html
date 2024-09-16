@@ -65,23 +65,25 @@
         </ng-template>
         <ng-template pTemplate="body" let-heros>
           <tr>
-            <td style="width: 110px">
+            <td style="width: 110px" class="relative">
               <div class="heros_row__img cursor-pointer" (click)="showHerosPicture(heros)">
                 <img *ngIf="heros.user_id" style="width:100%"
                      [src]="heros.origines.avatar !== null ? heros.origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
                      alt="avatar">
               </div>
+              <div style="position: absolute; bottom: 12px; left: 12px;">
+                <p-tag *ngIf="!heros.active" severity="warning">En cours</p-tag>
+              </div>
             </td>
 
             <td class="relative">
-              <div class="flex flex-col gap-2" style="height: 100px">
+              <div class="flex flex-col justify-between" style="height: 100px">
                 <div class="flex gap-2 items-center text-xl">
                   <i *ngIf="heros.commentaire" class="pi pi-info-circle cursor-pointer warn-color"
                      [pTooltip]="heros.commentaire ?? ''"></i>
                   <div style="text-transform: capitalize">{{ heros.origines.nom }}</div>
                 </div>
-                <p-tag *ngIf="heros.active" severity="success">Actif</p-tag>
-                <p-tag *ngIf="!heros.active" severity="warning">En cours de création</p-tag>
+
                 <div class="flex items-center gap-2">
                   <button *ngIf="!heros.active"
                           pTooltip="Finaliser la création"
