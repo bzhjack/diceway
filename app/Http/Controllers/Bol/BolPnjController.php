@@ -91,31 +91,37 @@ class BolPnjController extends Controller
         $ids_armes = array_column($armes, 'id');
         BolHerosArme::whereNotIn('arme_id', $ids_armes)->where('heros_id', $pnjId)->delete();
         foreach ($armes as $item) {
-            BolHerosArme::updateOrCreate(['heros_id' => $pnjId, 'arme_id' => $item['id']],[]);
+            BolHerosArme::updateOrCreate(['heros_id' => $pnjId, 'arme_id' => $item['id']], []);
         }
 
         $langues = $request->input('langues');
-        $ids_langues = array_column($langues, 'id');
-        BolHerosLangue::whereNotIn('langue_id', $ids_langues)->where('heros_id', $pnjId)->delete();
-        foreach ($langues as $item) {
-            BolHerosLangue::updateOrCreate(['heros_id' => $pnjId, 'langue_id' => $item['id']],[]);
+        if ($langues && is_array($langues)) {
+            $ids_langues = array_column($langues, 'id');
+            BolHerosLangue::whereNotIn('langue_id', $ids_langues)->where('heros_id', $pnjId)->delete();
+            foreach ($langues as $item) {
+                BolHerosLangue::updateOrCreate(['heros_id' => $pnjId, 'langue_id' => $item['id']], []);
+            }
         }
 
         $armures = $request->input('armures');
         $ids_armures = array_column($armures, 'id');
         BolHerosArmure::whereNotIn('armure_id', $ids_armures)->where('heros_id', $pnjId)->delete();
         foreach ($armures as $item) {
-            BolHerosArmure::updateOrCreate(['heros_id' => $pnjId, 'armure_id' => $item['id']],[]);
+            BolHerosArmure::updateOrCreate(['heros_id' => $pnjId, 'armure_id' => $item['id']], []);
         }
 
 
         $traits = $request->input('traits');
 
-        $traits_type_a = array_filter($traits, function($trait) { return $trait['type'] === 'A'; });
+        $traits_type_a = array_filter($traits, function ($trait) {
+            return $trait['type'] === 'A';
+        });
         $ids_avantages = array_column($traits_type_a, 'id');
         BolHerosTrait::whereNotIn('traitable_id', $ids_avantages)->where('type', 'A')->where('heros_id', $pnjId)->delete();
 
-        $traits_type_d = array_filter($traits, function($trait) { return $trait['type'] === 'D'; });
+        $traits_type_d = array_filter($traits, function ($trait) {
+            return $trait['type'] === 'D';
+        });
         $ids_desavantages = array_column($traits_type_d, 'id');
         BolHerosTrait::whereNotIn('traitable_id', $ids_desavantages)->where('type', 'D')->where('heros_id', $pnjId)->delete();
 
@@ -125,8 +131,8 @@ class BolPnjController extends Controller
                     'heros_id' => $pnjId,
                     'traitable_id' => $item['id'],
                     'type' => $item['type'],
-                    'traitable_type' =>  $item['type'] == 'A' ? BolAvantage::class : BolDesavantage::class
-                ],[]);
+                    'traitable_type' => $item['type'] == 'A' ? BolAvantage::class : BolDesavantage::class
+                ], []);
         }
 
         $pnj->update($updatedPnj);
