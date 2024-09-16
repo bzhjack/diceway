@@ -1,4 +1,5 @@
 <div class="region-container flex gap-2 flex-col">
+
   <form [formGroup]="herosForm" autocomplete="off" class="flex flex-col gap-2">
     <div class="flex gap-2">
       <!--- Left part --->
@@ -22,7 +23,7 @@
                 <input formControlName="nom" pInputText id="nom" class="p-inputtext-sm"/>
               </div>
               <div class="flex flex-col gap-1 w-fit justify-end">
-                <label for="nom">Commentaire</label>
+                <label for="commentaire">Commentaire</label>
                 <textarea rows="2" cols="30" pInputTextarea formControlName="commentaire"></textarea>
               </div>
             </div>
@@ -184,7 +185,6 @@
         </p-fieldset>
       </div>
     </div>
-
     <div class="flex gap-2">
       <p-fieldset class="flex-auto">
         <ng-template pTemplate="header">
@@ -224,6 +224,7 @@
       </p-fieldset>
     </div>
   </form>
+
   <div class="flex justify-end gap-2 pt-2">
     <button pButton icon="pi pi-times" size="small" label="Quitter" severity="secondary"
             (click)="quit($event)"></button>

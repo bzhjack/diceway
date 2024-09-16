@@ -77,6 +77,8 @@ export class BolPnjCreateComponent {
   public armesCtrl = this.fb.array([]);
   public carrieresCtrl = this.fb.array([]);
   public traitsCtrl = this.fb.array([]);
+  public languesCtrl = this.fb.array([]);
+
   public commentaireCtrl = new FormControl<string | null>(null);
   public vitaliteCtrl = new FormControl(0, Validators.required);
   public pouvoirCtrl = new FormControl(0, Validators.required);
@@ -105,6 +107,7 @@ export class BolPnjCreateComponent {
       armures: this.armuresCtrl,
       carrieres: this.carrieresCtrl,
       traits: this.traitsCtrl,
+      langues: this.languesCtrl,
       commentaire: this.commentaireCtrl
     });
 
@@ -124,7 +127,12 @@ export class BolPnjCreateComponent {
     return this.pnjForm.get('traits') as FormArray;
   }
 
+  get langues() {
+    return this.pnjForm.get('langues') as FormArray;
+  }
+
   /*** Gestion des armes ***/
+  protected langueList = this.hs.langueList;
   protected armeList = this.hs.armeList;
   protected armureList = this.hs.armureList;
   protected carriereList = this.hs.carriereList;
@@ -158,7 +166,7 @@ export class BolPnjCreateComponent {
   });
 
   protected selectedTraitsIds = toSignal(this.pnjForm.get('traits')!.valueChanges.pipe(
-    map((items: any[]) => items.map(item => ({ id: Number(item.id), type: item.type })))
+    map((items: any[]) => items.map(item => ({id: Number(item.id), type: item.type})))
   ));
   protected unselectedAvantages = computed(() => {
     const selectedAIds = this.selectedTraitsIds()
@@ -174,6 +182,24 @@ export class BolPnjCreateComponent {
       .map(item => item.id); // Extraire les IDs
     return this.desavantageList()?.filter((item: any) =>
       !selectedDIds?.includes(Number(item.id)) // Comparer uniquement les IDs filtrés
+    );
+  });
+
+  protected selectedLanguesIds = toSignal(
+    this.pnjForm
+      .get('langues')!
+      .valueChanges.pipe(
+      map((items: any[]) => items.map((item) => Number(item.id)))
+    )
+  );
+  protected unselectedLangues = computed(() => {
+    return this.langueList()?.filter(
+      (item: any) => !this.selectedLanguesIds()?.includes(Number(item.id))
+    );
+  });
+  protected selectedLangues = computed(() => {
+    return this.langueList()?.filter((item: any) =>
+      this.selectedLanguesIds()?.includes(Number(item.id))
     );
   });
 
@@ -202,7 +228,7 @@ export class BolPnjCreateComponent {
 
       }, {emitEvent: false});
       this.armes.clear();
-      pnj.armes.forEach( (arme: any) => {
+      pnj.armes.forEach((arme: any) => {
         const heroArme = this.fb.group({
           id: [arme.arme_id]
         });
@@ -210,7 +236,7 @@ export class BolPnjCreateComponent {
       });
 
       this.armures.clear();
-      pnj.armures.forEach( (armure: any) => {
+      pnj.armures.forEach((armure: any) => {
         const heroArmure = this.fb.group({
           id: [armure.armure_id]
         });
@@ -218,7 +244,7 @@ export class BolPnjCreateComponent {
       });
 
       this.carrieres.clear();
-      pnj.carrieres.forEach( (carriere: BolHerosCarriereModel) => {
+      pnj.carrieres.forEach((carriere: BolHerosCarriereModel) => {
         const heroCarriere = this.fb.group({
           id: [carriere.carriere_id],
           value: [carriere.value],
@@ -227,7 +253,7 @@ export class BolPnjCreateComponent {
       });
 
       this.traits.clear();
-      pnj.traits.forEach( (trait: any) => {
+      pnj.traits.forEach((trait: any) => {
         const heroTrait = this.fb.group({
           id: [trait.traitable_id],
           type: [trait.type]
@@ -235,6 +261,13 @@ export class BolPnjCreateComponent {
         this.traits.push(heroTrait);
       });
 
+      this.langues.clear();
+      pnj.langues.forEach((langue: any) => {
+        const heroLangue = this.fb.group({
+          id: [langue.langue_id],
+        });
+        this.langues.push(heroLangue);
+      });
     }
   }
 
@@ -242,12 +275,13 @@ export class BolPnjCreateComponent {
     const index = items.value.findIndex((item: any) => Number(item.id) === Number(itemId))
     if (index !== -1) items.removeAt(index)
   }
+
   removeTrait(trait: { id: number, type: 'A' | 'D' }, items: FormArray) {
     const index = items.value.findIndex((item: any) => Number(item.id) === Number(trait.id) && item.type === trait.type);
     if (index !== -1) items.removeAt(index)
   }
 
-  addItem(type: 'A' | 'D' | 'C' | 'TA' | 'TD', ev: Event) { // Attaque Défense Carriere Avantage Désavantage
+  addItem(type: 'A' | 'D' | 'C' | 'TA' | 'TD' | 'L', ev: Event) { // Attaque Défense Carriere Avantage Désavantage
     this.selectedItem.set(null);
     switch (type) {
       case 'A':
@@ -274,6 +308,11 @@ export class BolPnjCreateComponent {
         this.currentField.set('desavantages');
         this.unselectedItems.set(this.unselectedDesavantages() as any);
         this.itemTitle.set('Désavantages');
+        break;
+      case 'L':
+        this.currentField.set('langues');
+        this.unselectedItems.set(this.unselectedLangues() as any);
+        this.itemTitle.set('Langues');
         break;
     }
     this.panelPnj?.toggle(ev);
@@ -303,6 +342,12 @@ export class BolPnjCreateComponent {
         });
         this.carrieres.push(carriere);
         break;
+      case 'langues':
+        const langue = this.fb.group({
+          id: [this.selectedItem()?.id],
+        });
+        this.langues.push(langue);
+        break;
       case 'desavantages':
       case 'avantages':
         const trait = this.fb.group({
@@ -319,7 +364,8 @@ export class BolPnjCreateComponent {
     const carriere = this.carriereList()?.find((itemCar: BolCarriereModel) => Number(itemCar.id) === Number(id));
     return carriere?.carriere ?? '';
   }
-  traitFromIdType(trait: {id: number, type: 'A' | 'D'}) {
+
+  traitFromIdType(trait: { id: number, type: 'A' | 'D' }) {
     const result = (trait.type === 'A' ? this.avantageList() : this.desavantageList())?.find((item: BolAvantageModel | BolDesavantageModel) => Number(item.id) === Number(trait.id));
     return (result as BolDesavantageModel)?.desavantage ?? (result as BolAvantageModel)?.avantage;
   }
