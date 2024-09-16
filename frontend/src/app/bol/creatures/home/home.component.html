@@ -1,9 +1,6 @@
 <div class="page-container">
   <app-header legend="Bestiaire de Lémurie">
-    <button pButton label="Création" icon="pi pi-pencil" severity="warning" size="small"
-      (click)="createCreature()"></button>
     <button pButton label="Retour" icon="pi pi-arrow-left" severity="secondary" size="small" routerLink="/bol"></button>
-
   </app-header>
 
   <div class="flex">
@@ -17,35 +14,40 @@
         [globalFilterFields]="['nom', 'taille.taille']"
         scrollHeight="calc(100vh - 170px)">
         <ng-template pTemplate="caption">
-          <div class="flex gap-2">
+          <div class="flex justify-between">
+            <div class="flex gap-2">
               <p-iconField iconPosition="left">
-                  <p-inputIcon>
-                      <i class="pi pi-search"></i>
-                  </p-inputIcon>
-                  <input
-                      pInputText
-                      class="p-inputtext-sm"
-                      style="padding-left: 2.5rem"
-                      type="text"
-                      [(ngModel)]="searchTerm"
-                      (input)="filtering($event)"
-                      placeholder="Votre recherche" />
+                <p-inputIcon>
+                  <i class="pi pi-search"></i>
+                </p-inputIcon>
+                <input
+                  pInputText
+                  class="p-inputtext-sm"
+                  style="padding-left: 2.5rem"
+                  type="text"
+                  [(ngModel)]="searchTerm"
+                  (input)="filtering($event)"
+                  placeholder="Votre recherche" />
               </p-iconField>
-            <p-dropdown
-              [options]="tailleList()"
-              optionLabel="taille"
-              optionValue="id"
-              placeholder="Sélectionner une taille"
-              [showClear]="true"
-              [(ngModel)] = "searchTaille"
-              (ngModelChange)="filterExtended()"/>
+              <p-dropdown
+                [options]="tailleList()"
+                optionLabel="taille"
+                optionValue="id"
+                placeholder="Sélectionner une taille"
+                [showClear]="true"
+                [(ngModel)] = "searchTaille"
+                (ngModelChange)="filterExtended()"/>
 
               <p-checkbox
-              class="pr-2 cursor-pointer"
-              [(ngModel)]="searchCreation"
-              [binary]="true" label="Mes créations" (ngModelChange)="filterExtended()"/>
-            <button pTooltip="Supprimer les filtres" pButton icon="pi pi-filter-slash" severity="info" size="small" (click)="clear(beastTable)"></button>
+                class="pr-2 cursor-pointer"
+                [(ngModel)]="searchCreation"
+                [binary]="true" label="Mes créations" (ngModelChange)="filterExtended()"/>
+              <button pTooltip="Supprimer les filtres" pButton icon="pi pi-filter-slash" severity="info" size="small" (click)="clear(beastTable)"></button>
+            </div>
+            <button pButton label="Création" icon="pi pi-palette" severity="warning" size="small"
+                    (click)="createCreature()"></button>
           </div>
+
       </ng-template>
           <ng-template pTemplate="header">
             <tr>
@@ -81,7 +83,7 @@
                   </div>
 
                   <div *ngIf="beast.user_id" class="flex items-center gap-2">
-                    <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-pencil"
+                    <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-bolt"
                     (click)="createCreature(beast)"></button>
                   <button severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash"
                     (click)="askDelete(beast, $event)">

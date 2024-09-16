@@ -1,10 +1,6 @@
 <div class="page-container">
   <div>
     <app-header legend="Héros de la Lémurie">
-      <button pButton label="Création" icon="pi pi-pencil" severity="warning" size="small"
-              (click)="openCreateDialog()"></button>
-      <button pButton label="Création rapide" icon="pi pi-pencil" severity="success" size="small"
-              (click)="quickCreateHeros()"></button>
       <button pButton label="Retour" icon="pi pi-arrow-left" severity="secondary" size="small"
               routerLink="/bol"></button>
     </app-header>
@@ -24,9 +20,7 @@
           <div class="flex justify-between">
             <div class="flex gap-2 items-center">
               <p-iconField iconPosition="left">
-                <p-inputIcon>
-                  <i class="pi pi-search"></i>
-                </p-inputIcon>
+                <p-inputIcon><i class="pi pi-search"></i></p-inputIcon>
                 <input
                   pInputText
                   style="padding-left: 2.5rem"
@@ -44,6 +38,12 @@
               </div>
               <button pTooltip="Supprimer les filtres" pButton icon="pi pi-filter-slash" severity="info" size="small"
                       (click)="clear(herosTable)"></button>
+            </div>
+            <div class="flex gap-2 items-center">
+              <button pButton label="Création" icon="pi pi-palette" severity="warning" size="small"
+                      (click)="openCreateDialog()"></button>
+              <button pButton label="Création rapide" icon="pi pi-bolt" severity="success" size="small"
+                      (click)="quickCreateHeros()"></button>
             </div>
           </div>
 
@@ -219,8 +219,9 @@
               <p-scrollPanel [style]="{height: '100px'}">
                 <table>
                   <tr *ngFor="let trait of heros.traits">
-                    <td class="whitespace-nowrap" [class.error-color]="trait.type ==='D'"
-                        [class.success-color]="trait.type ==='A'">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}
+                    <td [class.error-color]="trait.type ==='D'"
+                        [class.success-color]="trait.type ==='A'">
+                      <div class="bol-ellipsis-120"  tooltipPosition="left"  pTooltip="{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}</div>
                     </td>
                   </tr>
                 </table>
