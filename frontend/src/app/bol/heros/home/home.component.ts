@@ -24,6 +24,7 @@ import {TooltipModule} from "primeng/tooltip";
 import {ScrollPanelModule} from "primeng/scrollpanel";
 import {BolHerosUpdateComponent} from "../update/update.component";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
+import {BolHerosLangueModel} from "../../models/bol-langue.model";
 
 
 @Component({
@@ -209,6 +210,9 @@ export class BolHeroHomeComponent implements OnDestroy {
         });
       }
     });
+  }
+  languesToStr(heros: BolHerosModel) {
+    return (heros.langues as BolHerosLangueModel[]).map(item => item.langue?.langue).join(', ');
   }
 }
 

@@ -191,3 +191,9 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.bol-ellipsis-150 {
+  max-width: 150px; /* Ajuste la largeur selon tes besoins */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

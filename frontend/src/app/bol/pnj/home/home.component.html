@@ -90,7 +90,8 @@
                        [pTooltip]="pnj.commentaire ?? ''"></i>
                     <div style="text-transform: capitalize">{{ pnj.origines.nom }}</div>
                   </div>
-                  <div class="text-gray-400" style="text-transform: capitalize" >{{getType(pnj) }}</div>
+                  <div class="text-gray-300" style="text-transform: capitalize" >{{getType(pnj) }}</div>
+                  <div class="text-gray-400 bol-ellipsis-150" style="font-size: 12px">{{languesToStr(pnj)}}</div>
                 </div>
                 <div *ngIf="pnj.user_id" class="flex items-center gap-2">
                   <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-pencil"

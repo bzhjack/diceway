@@ -3,6 +3,7 @@ import {BolHerosArmureModel} from "./bol-armure.model";
 import {BolHerosArmeModel} from "./bol-arme.model";
 import {BolHerosTraitsModel} from "./bol-trait.model";
 import {BolHerosLangueModel} from "./bol-langue.model";
+import {BolRegionModel} from "./bol-region.model";
 
 export interface BolHerosModel {
   id: string | null;
@@ -37,6 +38,7 @@ export interface BolHerosAttributs {
 export interface BolHerosOrigines {
   nom: string | null;
   region_id: number | null;
+  region?: BolRegionModel | null;
   avatar: string | null;
 }
 export interface BolHerosRessources {

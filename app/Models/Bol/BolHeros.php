@@ -6,6 +6,7 @@ use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class BolHeros extends Model
 {
@@ -81,7 +82,10 @@ class BolHeros extends Model
         return $this->HasMany(BolHerosLangue::class, 'heros_id', 'id');
     }
 
-
+    public function region(): HasOne
+    {
+        return $this->HasOne(BolRegion::class, 'id', 'region_id');
+    }
 
 
     public function getCombatAttribute()
@@ -109,6 +113,7 @@ class BolHeros extends Model
         return [
             'nom' => $this->nom,
             'region_id' => $this->region_id,
+            'region' => $this->region,
             'avatar' => $this->avatar
         ];
     }

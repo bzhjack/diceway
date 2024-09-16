@@ -40,7 +40,7 @@
                       (click)="clear(herosTable)"></button>
             </div>
             <div class="flex gap-2 items-center">
-              <button pButton label="Création" icon="pi pi-palette" severity="warning" size="small"
+              <button pButton label="Création guidée" icon="pi pi-palette" severity="warning" size="small"
                       (click)="openCreateDialog()"></button>
               <button pButton label="Création rapide" icon="pi pi-bolt" severity="success" size="small"
                       (click)="quickCreateHeros()"></button>
@@ -77,10 +77,14 @@
 
             <td class="relative">
               <div class="flex flex-col justify-between" style="height: 100px">
-                <div class="flex gap-2 items-center text-xl">
-                  <i *ngIf="heros.commentaire" class="pi pi-info-circle cursor-pointer warn-color"
-                     [pTooltip]="heros.commentaire ?? ''"></i>
-                  <div style="text-transform: capitalize">{{ heros.origines.nom }}</div>
+                <div>
+                  <div class="flex gap-2 items-center text-xl">
+                    <i *ngIf="heros.commentaire" class="pi pi-info-circle cursor-pointer warn-color"
+                       [pTooltip]="heros.commentaire ?? ''"></i>
+                    <div style="text-transform: capitalize">{{ heros.origines.nom }}</div>
+                  </div>
+                  <div class="text-gray-400 bol-ellipsis-150">{{ heros.origines.region.region }}</div>
+                  <div class="text-gray-400 bol-ellipsis-150" style="font-size: 12px">{{ languesToStr(heros) }}</div>
                 </div>
 
                 <div class="flex items-center gap-2">
@@ -91,11 +95,11 @@
                           size="small" pButton pRipple icon="pi pi-palette"
                           [routerLink]="['create', heros.id]"></button>
                   <button
-                          pTooltip="Modifications rapides"
-                          severity="secondary"
-                          type="button"
-                          size="small" pButton pRipple icon="pi pi-bolt"
-                         (click)="quickCreateHeros(heros)"></button>
+                    pTooltip="Modifications rapides"
+                    severity="secondary"
+                    type="button"
+                    size="small" pButton pRipple icon="pi pi-bolt"
+                    (click)="quickCreateHeros(heros)"></button>
                   <button severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash"
                           (click)="deleteHero(heros, $event)">
                   </button>
@@ -220,7 +224,9 @@
                   <tr *ngFor="let trait of heros.traits">
                     <td [class.error-color]="trait.type ==='D'"
                         [class.success-color]="trait.type ==='A'">
-                      <div class="bol-ellipsis-120"  tooltipPosition="left"  pTooltip="{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}</div>
+                      <div class="bol-ellipsis-120" tooltipPosition="left"
+                           pTooltip="{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}
+                      </div>
                     </td>
                   </tr>
                 </table>

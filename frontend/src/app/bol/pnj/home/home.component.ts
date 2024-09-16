@@ -26,6 +26,7 @@ import {DialogModule} from "primeng/dialog";
 import {Ripple} from "primeng/ripple";
 import {TagModule} from "primeng/tag";
 import {ScrollPanelModule} from "primeng/scrollpanel";
+import {BolHerosLangueModel} from "../../models/bol-langue.model";
 
 @Component({
   selector: 'bol-pnj-home',
@@ -190,5 +191,8 @@ export class BolPnjHomeComponent {
     this.searchType = null;
     this.searchCreation = false;
     this.filterExtended();
+  }
+  languesToStr(pnj: BolHerosModel) {
+    return (pnj.langues as BolHerosLangueModel[]).map(item => item.langue?.langue).join(', ');
   }
 }

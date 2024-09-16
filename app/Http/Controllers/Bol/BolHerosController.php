@@ -16,7 +16,7 @@ class BolHerosController extends Controller
      */
     public function getAll()
     {
-        $heroes = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue')
+        $heroes = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue','region')
         ->where('type', 'H')
         ->where('user_id', Auth::id())
         ->get();
@@ -29,7 +29,7 @@ class BolHerosController extends Controller
     public function getOne(Request $request)
     {
         $id = $request->route('id');
-        $hero = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue')->where('user_id', Auth::id())->where('id', $id)->get()->first();
+        $hero = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue', 'region')->where('user_id', Auth::id())->where('id', $id)->get()->first();
         if ($hero === null) {
             return response()->json(['error' => 'Hero not found'], 404);
         } else {
@@ -101,7 +101,7 @@ class BolHerosController extends Controller
         if ($heros["region_id"] === null || count($traits) === 0) {
             BolHerosTrait::where('heros_id', $herosId)->delete();
         }
-        $result = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue')->where('user_id', Auth::id())->where('id', $herosId)->get()->first();
+        $result = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue', 'region')->where('user_id', Auth::id())->where('id', $herosId)->get()->first();
         return response($result);
     }
 
