@@ -40,6 +40,7 @@ class BolPnjController extends Controller
     {
         $pnj = $request->input();
         $pnj['user_id'] = Auth::id();
+        $pnj['active'] = true;
         $pnj = BolHeros::create($pnj);
         $armes = $request->input('armes');
         foreach ($armes as $arme) {
@@ -68,6 +69,13 @@ class BolPnjController extends Controller
             $newTrait['type'] = $trait['type'];
             $newTrait['traitable_type'] = $trait['type'] == 'A' ? BolAvantage::class : BolDesavantage::class;
             BolHerosTrait::create($newTrait);
+        }
+
+        $langues = $request->input('langues');
+        if ($langues && is_array($langues)) {
+            foreach ($langues as $item) {
+                BolHerosLangue::updateOrCreate(['heros_id' => $pnj['id'], 'langue_id' => $item['id']], []);
+            }
         }
 
         $createdCreature = BolHeros::with('carrieres.carriere', 'armures.armure', 'armes.arme')

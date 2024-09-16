@@ -95,6 +95,7 @@
                           size="small" pButton pRipple icon="pi pi-palette"
                           [routerLink]="['create', heros.id]"></button>
                   <button
+                    *ngIf="heros.active"
                     pTooltip="Modifications rapides"
                     severity="secondary"
                     type="button"
