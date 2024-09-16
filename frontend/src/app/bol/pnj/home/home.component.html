@@ -1,8 +1,6 @@
 <div class="page-container">
   <div>
     <app-header legend="Personnages non joueurs">
-      <button pButton label="Création" icon="pi pi-pencil" severity="warning" size="small"
-              (click)="createPnj()"></button>
       <button pButton label="Retour" icon="pi pi-arrow-left" severity="secondary" size="small"
               routerLink="/bol"></button>
     </app-header>
@@ -48,6 +46,10 @@
                   [binary]="true" label="Mes créations" (ngModelChange)="filterExtended()"/>
               </div>
               <button pTooltip="Supprimer les filtres" pButton icon="pi pi-filter-slash" severity="info" size="small" (click)="clear(pnjTable)"></button>
+            </div>
+            <div>
+              <button pButton label="Création" icon="pi pi-palette" severity="warning" size="small"
+                      (click)="createPnj()"></button>
             </div>
           </div>
 
@@ -215,8 +217,10 @@
               <p-scrollPanel [style]="{height: '100px'}">
                 <table>
                   <tr *ngFor="let trait of pnj.traits">
-                    <td class="whitespace-nowrap"  [class.error-color]="trait.type ==='D'"
-                        [class.success-color]="trait.type ==='A'">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}</td>
+                    <td [class.error-color]="trait.type ==='D'"
+                        [class.success-color]="trait.type ==='A'">
+                      <div class="bol-ellipsis-120"  tooltipPosition="left"  pTooltip="{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}</div>
+                    </td>
                   </tr>
                 </table>
               </p-scrollPanel>
