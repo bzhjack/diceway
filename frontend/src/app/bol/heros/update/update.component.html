@@ -243,6 +243,8 @@
                   [(ngModel)]="selectedItem"
                   [ngModelOptions]="{standalone: true}"
                   [showClear]="true"
+                  [filter]="true"
+                  [filterBy]="searchFilter()"
                   placeholder="Faites votre sélection">
 
         <ng-template pTemplate="selectedItem" let-selectedOption>

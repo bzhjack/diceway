@@ -158,6 +158,7 @@ export class BolHerosUpdateComponent {
   protected regionList = this.hs.regionList;
   protected langueList = this.hs.langueList;
 
+  public searchFilter = signal('');
   public selectedItem = signal<any | null>(null);
   public itemTitle = signal('Armes');
   public currentField = signal<string>('armes');
@@ -349,31 +350,37 @@ export class BolHerosUpdateComponent {
     switch (type) {
       case 'A':
         this.currentField.set('armes');
+        this.searchFilter.set('arme');
         this.unselectedItems.set(this.unselectedArmes());
         this.itemTitle.set('Armes');
         break;
       case 'D':
         this.currentField.set('armures');
+        this.searchFilter.set('armure');
         this.unselectedItems.set(this.unselectedArmures());
         this.itemTitle.set('Armures');
         break;
       case 'C':
         this.currentField.set('carrieres');
+        this.searchFilter.set('carriere');
         this.unselectedItems.set(this.unselectedCarrieres());
         this.itemTitle.set('Carrières');
         break;
       case 'TA':
         this.currentField.set('avantages');
+        this.searchFilter.set('avantage');
         this.unselectedItems.set(this.unselectedAvantages() as any);
         this.itemTitle.set('Avantages');
         break;
       case 'TD':
         this.currentField.set('desavantages');
+        this.searchFilter.set('desavantage');
         this.unselectedItems.set(this.unselectedDesavantages() as any);
         this.itemTitle.set('Désavantages');
         break;
       case 'L':
         this.currentField.set('langues');
+        this.searchFilter.set('langue');
         this.unselectedItems.set(this.unselectedLangues() as any);
         this.itemTitle.set('Langues');
         break;
