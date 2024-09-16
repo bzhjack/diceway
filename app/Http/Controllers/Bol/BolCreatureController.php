@@ -17,13 +17,14 @@ class BolCreatureController extends Controller
     public function getAll()
     {
         $cacheKey = 'bol_creatures';
-        $cacheDuration = 60; // 60 minutes
+        $cacheDuration = 60 * 24; // 60 minutes
         $creatures = Cache::remember($cacheKey, $cacheDuration, function () {
             return BolCreature::with('taille', 'capacites.capacite')
                 ->where('user_id', Auth::id())
                 ->orWhereNull('user_id')
                 ->orderBy('user_id', 'desc')
-                ->orderBy('nom', 'asc')->get();
+                ->orderBy('id_taille')
+                ->orderBy('nom')->get();
         });
         return response($creatures);
     }
@@ -31,7 +32,7 @@ class BolCreatureController extends Controller
     public function getAllTailles()
     {
         $cacheKey = 'bol_creatures_tailles';
-        $cacheDuration = 60; // 60 minutes
+        $cacheDuration = 60 * 24; // 60 minutes
         $tailles = Cache::remember($cacheKey, $cacheDuration, function () {
             return BolTaille::orderBy('id', 'asc')->get();
         });
@@ -41,7 +42,7 @@ class BolCreatureController extends Controller
     public function getAllCapacites()
     {
         $cacheKey = 'bol_creatures_capacites';
-        $cacheDuration = 60; // 60 minutes
+        $cacheDuration = 60 * 24; // 60 minutes
         $capacites = Cache::remember($cacheKey, $cacheDuration, function () {
             return BolCapacite::orderBy('id', 'asc')->get();
         });

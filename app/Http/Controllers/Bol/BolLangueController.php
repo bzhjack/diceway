@@ -16,7 +16,7 @@ class BolLangueController extends Controller
     public function getAll()
     {
         $cacheKey = 'bol_langues_all';
-        $cacheDuration = 60; // 60 minutes
+        $cacheDuration = 60 * 24; // 60 minutes
         $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
             return BolLangue::all();
         });

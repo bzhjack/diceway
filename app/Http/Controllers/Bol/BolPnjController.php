@@ -28,6 +28,7 @@ class BolPnjController extends Controller
             ->where('user_id', Auth::id())
             ->orWhereNull('user_id')
             ->orderBy('user_id', 'desc')
+            ->orderBy('type')
             ->orderBy('nom')
             ->get();
         return response($heroes);

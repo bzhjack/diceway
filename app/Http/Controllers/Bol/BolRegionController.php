@@ -16,7 +16,7 @@ class BolRegionController extends Controller
     {
 
         $cacheKey = 'bol_regions_all';
-        $cacheDuration = 60; // 60 minutes
+        $cacheDuration = 60 * 24; // 60 minutes
         $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
             return BolRegion::with('avantages', 'desavantages', 'noms')->get();
         });

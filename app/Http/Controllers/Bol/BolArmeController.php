@@ -14,7 +14,7 @@ class BolArmeController extends Controller
     {
         // Cache::forget('bol_arme_all'); <= pour invalider le cache
         $cacheKey = 'bol_armes_all';
-        $cacheDuration = 60; // 60 minutes
+        $cacheDuration = 60 * 24; // 60 minutes
         $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
             return BolArme::all();
         });

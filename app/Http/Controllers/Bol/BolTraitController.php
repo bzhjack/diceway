@@ -15,7 +15,7 @@ class BolTraitController extends Controller
     public function getAllAvantages()
     {
         $cacheKey = 'bol_avantages_all';
-        $cacheDuration = 60; // 60 minutes
+        $cacheDuration = 60 * 24; // 60 minutes
         $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
             return BolAvantage::all();
         });
@@ -27,7 +27,7 @@ class BolTraitController extends Controller
     {
 
         $cacheKey = 'bol_desavantages_all';
-        $cacheDuration = 60; // 60 minutes
+        $cacheDuration = 60 * 24; // 60 minutes
         $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
             return BolDesavantage::all();
         });
