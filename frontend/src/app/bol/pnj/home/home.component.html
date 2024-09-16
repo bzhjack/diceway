@@ -12,6 +12,8 @@
         class="w-full"
         [value]="filteredPnjList"
         [scrollable]="true"
+        rowGroupMode="subheader"
+        groupRowsBy="type"
         dataKey="id"
         [globalFilterFields]="['origines.nom']"
         scrollHeight="calc(100vh - 170px)">
@@ -69,6 +71,16 @@
             <th>Traits</th>
           </tr>
         </ng-template>
+
+        <ng-template pTemplate="groupheader" let-pnj>
+          <tr pRowGroupHeader>
+            <td colspan="9" style="background: #183641">
+              <div class="text-2xl">{{getType(pnj)}}</div>
+            </td>
+          </tr>
+        </ng-template>
+
+
         <ng-template pTemplate="body" let-pnj>
           <tr>
             <td style="width: 110px" class="relative">

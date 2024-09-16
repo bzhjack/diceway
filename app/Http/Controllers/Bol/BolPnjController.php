@@ -25,10 +25,12 @@ class BolPnjController extends Controller
     {
         $heroes = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue')
             ->where('type', '!=', 'H')
-            ->where('user_id', Auth::id())
-            ->orWhereNull('user_id')
+            ->where(function($query) {
+                $query->where('user_id', Auth::id())
+                    ->orWhereNull('user_id');
+            })
+            ->orderByRaw("FIELD(type, 'H', 'P', 'C', 'R')")
             ->orderBy('user_id', 'desc')
-            ->orderBy('type')
             ->orderBy('nom')
             ->get();
         return response($heroes);

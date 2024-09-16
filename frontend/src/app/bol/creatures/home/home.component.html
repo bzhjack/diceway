@@ -8,6 +8,8 @@
         <p-table
         #beastTable
         class="w-full"
+        rowGroupMode="subheader"
+        groupRowsBy="id_taille"
         [value]="filteredBeast"
         [scrollable]="true"
         dataKey="id"
@@ -59,6 +61,16 @@
               <th>Capacités</th>
             </tr>
           </ng-template>
+
+
+          <ng-template pTemplate="groupheader" let-beast>
+            <tr pRowGroupHeader>
+              <td colspan="9" style="background: #183641">
+                <div class="text-2xl">{{ beast.taille.taille }}</div>
+              </td>
+            </tr>
+          </ng-template>
+
           <ng-template pTemplate="body" let-beast>
             <tr>
               <td style="width: 110px" class="relative">
