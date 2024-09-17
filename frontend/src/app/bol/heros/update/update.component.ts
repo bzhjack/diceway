@@ -86,8 +86,10 @@ export class BolHerosUpdateComponent {
   public commentaireCtrl = new FormControl<string | null>(null);
   public vitaliteCtrl = new FormControl(10, Validators.required);
   public pouvoirCtrl = new FormControl(0, Validators.required);
+  public creationCtrl = new FormControl(0, Validators.required);
   public foiCtrl = new FormControl(0, Validators.required);
   public heroismeCtrl = new FormControl(5, Validators.required);
+  public experienceCtrl = new FormControl(0, Validators.required);
 
   herosForm = this.fb.group({
     id: this.idCtrl,
@@ -107,8 +109,10 @@ export class BolHerosUpdateComponent {
     defense: this.defenseCtrl,
     vitalite: this.vitaliteCtrl,
     pouvoir: this.pouvoirCtrl,
+    creation: this.creationCtrl,
     foi: this.foiCtrl,
     heroisme: this.heroismeCtrl,
+    experience: this.experienceCtrl,
     armes: this.armesCtrl,
     armures: this.armuresCtrl,
     carrieres: this.carrieresCtrl,
@@ -268,8 +272,10 @@ export class BolHerosUpdateComponent {
           commentaire: heros.commentaire,
           vitalite: heros.ressources.vitalite,
           pouvoir: heros.ressources.pouvoir,
+          creation: heros.ressources.creation,
           foi: heros.ressources.foi,
           heroisme: heros.ressources.heroisme,
+          experience: heros.ressources.experience
         },
         {emitEvent: false}
       );
