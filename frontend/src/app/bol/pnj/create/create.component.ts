@@ -84,6 +84,7 @@ export class BolPnjCreateComponent {
   public pouvoirCtrl = new FormControl(0, Validators.required);
   public foiCtrl = new FormControl(0, Validators.required);
   public vilenieCtrl = new FormControl(0, Validators.required);
+  public creationCtrl = new FormControl(0, Validators.required);
 
   pnjForm = this.fb.group(
     {
@@ -102,6 +103,7 @@ export class BolPnjCreateComponent {
       vitalite: this.vitaliteCtrl,
       pouvoir: this.pouvoirCtrl,
       foi: this.foiCtrl,
+      creation: this.creationCtrl,
       vilenie: this.vilenieCtrl,
       armes: this.armesCtrl,
       armures: this.armuresCtrl,
@@ -224,7 +226,8 @@ export class BolPnjCreateComponent {
         vitalite: pnj.ressources.vitalite,
         pouvoir: pnj.ressources.pouvoir,
         foi: pnj.ressources.foi,
-        vilenie: pnj.ressources.vilenie
+        vilenie: pnj.ressources.vilenie,
+        creation: pnj.ressources.creation
 
       }, {emitEvent: false});
       this.armes.clear();
