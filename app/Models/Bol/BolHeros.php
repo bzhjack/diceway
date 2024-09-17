@@ -19,16 +19,16 @@ class BolHeros extends Model
         'experience', 'foi', 'vitalite', 'heroisme', 'vilenie', 'pouvoir', 'creation',
         'initiative', 'melee', 'tir', 'defense',
         'vigueur', 'agilite', 'esprit', 'aura',
-        'nom', 'avatar', 'region_id', 'region', 'joueur', 'langues'
+        'nom', 'avatar', 'region_id', 'region', 'joueur', 'langues', 'commentaire'
     ];
     protected $appends = ['combat', 'attributs', 'origines', 'ressources', 'type_order'];
     protected $fillable = [
         'user_id',
         'type',
         'active',
-        'nom', 'avatar', 'region_id', 'joueur',
+        'nom', 'avatar', 'region_id', 'joueur', 'commentaire',
         'vigueur', 'agilite', 'esprit', 'aura',
-        'initiative', 'melee', 'tir', 'defense','commentaire',
+        'initiative', 'melee', 'tir', 'defense',
         'experience', 'foi', 'vitalite', 'heroisme', 'vilenie', 'pouvoir', 'creation'
     ];
 
@@ -115,6 +115,7 @@ class BolHeros extends Model
         return [
             'joueur' => $this->joueur,
             'nom' => $this->nom,
+            'commentaire' => $this->commentaire,
             'region_id' => $this->region_id,
             'region' => $this->region,
             'avatar' => $this->avatar,
@@ -146,7 +147,7 @@ class BolHeros extends Model
             case 'P':
                 return 4;
             default:
-                return null; // ou une valeur par défaut si le type n'est pas reconnu
+                return null;
         }
     }
 }

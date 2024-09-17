@@ -99,8 +99,8 @@
               <div class="flex flex-col justify-between" style="height: 100px">
                 <div>
                   <div class="flex gap-2 items-center text-xl">
-                    <i *ngIf="pnj.commentaire" class="pi pi-info-circle cursor-pointer warn-color"
-                       [pTooltip]="pnj.commentaire ?? ''"></i>
+                    <i *ngIf="pnj.origines.commentaire" class="pi pi-info-circle cursor-pointer warn-color"
+                       [pTooltip]="pnj.origines.commentaire ?? ''"></i>
                     <div style="text-transform: capitalize">{{ pnj.origines.nom }}</div>
                   </div>
                   <div class="text-gray-300" style="text-transform: capitalize">{{ getType(pnj) }}</div>

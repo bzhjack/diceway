@@ -81,10 +81,11 @@
                   <div class="flex gap-2 items-center text-xl">
                     <i *ngIf="heros.commentaire" class="pi pi-info-circle cursor-pointer warn-color"
                        [pTooltip]="heros.commentaire ?? ''"></i>
-                    <div style="text-transform: capitalize">{{ heros.origines.nom }}</div>
+                    <div style="text-transform: capitalize" class="bol-ellipsis-150">{{ heros.origines.nom }}</div>
                   </div>
-                  <div class="text-gray-400 bol-ellipsis-150">{{ heros.origines.region?.region }}</div>
-                  <div class="text-gray-400 bol-ellipsis-150" style="font-size: 12px">{{ languesToStr(heros) }}</div>
+                  <div class="text-gray-300 bol-ellipsis-150">{{ heros.origines.joueur }}</div>
+                  <div class="text-gray-400 bol-ellipsis-150" style="font-size: 12px">{{ heros.origines.region?.region }}</div>
+                  <div class="text-gray-400 bol-ellipsis-150" style="font-size: 10px">{{ languesToStr(heros) }}</div>
                 </div>
 
                 <div class="flex items-center gap-2">

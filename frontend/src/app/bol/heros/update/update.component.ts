@@ -269,7 +269,7 @@ export class BolHerosUpdateComponent {
           tir: heros.combat.tir,
           melee: heros.combat.melee,
           defense: heros.combat.defense,
-          commentaire: heros.commentaire,
+          commentaire: heros.origines.commentaire,
           vitalite: heros.ressources.vitalite,
           pouvoir: heros.ressources.pouvoir,
           creation: heros.ressources.creation,

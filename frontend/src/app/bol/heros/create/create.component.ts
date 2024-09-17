@@ -120,7 +120,8 @@ export class BolHerosCreateComponent implements OnDestroy {
     region_id: null,
     avatar: null,
     joueur: null,
-    langues: []
+    langues: [],
+    commentaire: null
   });
   public ressourcesCtrl = new FormControl<BolHerosRessources>({
     vitalite: 0,
@@ -162,7 +163,8 @@ export class BolHerosCreateComponent implements OnDestroy {
         nom: value.origines?.nom ?? null,
         region_id: value.origines?.region_id ?? null,
         joueur: value.origines?.joueur ?? '',
-        langues: value.langues ?? [],
+        langues: value.origines?.langues ?? [],
+        commentaire: value.origines?.commentaire
       },
       ressources: {
         vitalite: value.ressources?.vitalite ?? 10,
@@ -189,7 +191,6 @@ export class BolHerosCreateComponent implements OnDestroy {
       carrieres: value.carrieres ?? [],
       armures: value.armures ?? [],
       armes: value.armes ?? [],
-      commentaire: value.commentaire ?? null,
       type: 'H'
     })),
     tap((heros: BolHerosModel) => {
@@ -235,11 +236,9 @@ export class BolHerosCreateComponent implements OnDestroy {
             ressources: hero.ressources,
             armures: hero.armures.map((item) => (item as BolHerosArmureModel).armure_id),
             armes: hero.armes.map(item => (item as BolHerosArmeModel).arme_id),
-            //langues: hero.langues.map(item => (item as BolHerosLangueModel).langue_id),
             combat: hero.combat,
             attributs: hero.attributs,
             origines: hero.origines,
-            commentaire: hero.commentaire,
             carrieres: hero.carrieres.map(item => {
               return {
                 carriere_id: item.carriere_id,

@@ -60,7 +60,6 @@ class BolHerosController extends Controller
         $herosId = $request->input('id');
 
         $data = $request->input();
-        $heros['commentaire'] = $data['commentaire'];
 
         $attributs = $request->input('attributs');
         $heros['vigueur'] = $attributs['vigueur'];
@@ -79,6 +78,7 @@ class BolHerosController extends Controller
         $heros['nom'] = $origines['nom'];
         $heros['region_id'] = $origines['region_id'];
         $heros['avatar'] = $origines['avatar'];
+        $heros['commentaire'] = $origines['commentaire'];
 
         $ressources = $request->input('ressources');
         $heros['vitalite'] = $ressources['vitalite'];
