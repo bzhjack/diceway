@@ -1,4 +1,4 @@
-<p-fieldset class="flex-auto">
+<p-fieldset class="armes flex-auto">
   <ng-template pTemplate="header">
     <div class="flex items-center gap-2">
       <div>Armes</div>
@@ -11,8 +11,6 @@
 
   <p-table *ngIf="selectedArmeDetail()?.length > 0"
            [value]="selectedArmeDetail()"
-           [scrollable]="true"
-           scrollHeight="150px"
            styleClass="p-datatable-striped">
     <ng-template pTemplate="header">
       <tr>
