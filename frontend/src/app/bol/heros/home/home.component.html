@@ -79,8 +79,8 @@
               <div class="flex flex-col justify-between" style="height: 100px">
                 <div>
                   <div class="flex gap-2 items-center text-xl">
-                    <i *ngIf="heros.commentaire" class="pi pi-info-circle cursor-pointer warn-color"
-                       [pTooltip]="heros.commentaire ?? ''"></i>
+                    <i *ngIf="heros.origines.commentaire" class="pi pi-info-circle cursor-pointer warn-color"
+                       [pTooltip]="heros.origines.commentaire ?? ''"></i>
                     <div style="text-transform: capitalize" class="bol-ellipsis-150">{{ heros.origines.nom }}</div>
                   </div>
                   <div class="text-gray-300 bol-ellipsis-150">{{ heros.origines.joueur }}</div>

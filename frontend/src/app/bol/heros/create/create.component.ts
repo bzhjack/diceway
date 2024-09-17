@@ -132,7 +132,6 @@ export class BolHerosCreateComponent implements OnDestroy {
     creation: 0,
     experience: 0
   });
-  public commentaireCtrl = new FormControl<string | null>(null);
   public typeCtrl = new FormControl<string>('H');
   public activeCtrl = new FormControl<boolean>(false);
   herosForm = this.fb.group(
@@ -148,7 +147,6 @@ export class BolHerosCreateComponent implements OnDestroy {
       carrieres: this.carrieresCtrl,
       ressources: this.ressourcesCtrl,
       langues: this.languesCtrl,
-      commentaire: this.commentaireCtrl,
       type: this.typeCtrl,
       active: this.activeCtrl
     }, {validators: globalFormValidator}
