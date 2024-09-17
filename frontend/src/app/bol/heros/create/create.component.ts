@@ -123,7 +123,9 @@ export class BolHerosCreateComponent implements OnDestroy {
     heroisme: 0,
     foi: 0,
     pouvoir: 0,
-    vilenie: 0
+    vilenie: 0,
+    creation: 0,
+    experience: 0
   });
   public commentaireCtrl = new FormControl<string | null>(null);
   public typeCtrl = new FormControl<string>('H');
@@ -154,10 +156,12 @@ export class BolHerosCreateComponent implements OnDestroy {
       joueur: value.joueur ?? '',
       active: value.active ?? false,
       ressources: {
-        vitalite: value.ressources?.vitalite ?? 0,
-        heroisme: value.ressources?.heroisme ?? 0,
+        vitalite: value.ressources?.vitalite ?? 10,
+        heroisme: value.ressources?.heroisme ?? 5,
         foi: value.ressources?.foi ?? 0,
         pouvoir: value.ressources?.pouvoir ?? 0,
+        creation: value.ressources?.creation ?? 0,
+        experience: value.ressources?.experience ?? 0,
         vilenie: 0,
       },
       combat: {
@@ -202,14 +206,6 @@ export class BolHerosCreateComponent implements OnDestroy {
       this.getHeros(id);
     }
     effect(() => {
-      const vigueur = Number(this.currentHero()?.attributs.vigueur ?? 0);
-      this.ressourcesCtrl.setValue({
-        vitalite: 10 + vigueur,
-        heroisme: 5 - this.#herosStateService.heroismCost(),
-        pouvoir: 0,
-        vilenie: 0,
-        foi: 0
-      }, {emitEvent: false});
       console.log(this.#herosStateService.traitsModifiers());
     });
   }
@@ -229,7 +225,8 @@ export class BolHerosCreateComponent implements OnDestroy {
     ]).subscribe({
         next: (data) => {
           let hero: BolHerosModel = data[0];
-
+          hero.ressources.vitalite = 10;
+          hero.ressources.heroisme = 5;
           this.herosForm.patchValue({
             id: hero.id,
             joueur: hero.joueur,

@@ -16,7 +16,7 @@ class BolHeros extends Model
     public $incrementing = false;
     protected $keyType = 'uuid';
     protected $hidden = [
-        'experience', 'foi', 'vitalite', 'heroisme', 'vilenie', 'pouvoir',
+        'experience', 'foi', 'vitalite', 'heroisme', 'vilenie', 'pouvoir', 'creation',
         'initiative', 'melee', 'tir', 'defense',
         'vigueur', 'agilite', 'esprit', 'aura',
         'nom', 'avatar', 'region_id', 'region'
@@ -30,7 +30,7 @@ class BolHeros extends Model
         'nom', 'avatar', 'region_id',
         'vigueur', 'agilite', 'esprit', 'aura',
         'initiative', 'melee', 'tir', 'defense','commentaire',
-        'experience', 'foi', 'vitalite', 'heroisme', 'vilenie', 'pouvoir'
+        'experience', 'foi', 'vitalite', 'heroisme', 'vilenie', 'pouvoir', 'creation'
     ];
 
 
@@ -43,6 +43,7 @@ class BolHeros extends Model
         'vitalite' => 'integer',
         'foi' => 'integer',
         'experience' => 'integer',
+        'creation' => 'integer',
 
         'initiative' => 'integer',
         'melee' => 'integer',
@@ -128,7 +129,8 @@ class BolHeros extends Model
             'experience' => $this->experience,
             'foi' => $this->foi,
             'vilenie' => $this->vilenie,
-            'pouvoir' => $this->pouvoir
+            'pouvoir' => $this->pouvoir,
+            'creation' => $this->creation,
         ];
     }
     public function getTypeOrderAttribute()

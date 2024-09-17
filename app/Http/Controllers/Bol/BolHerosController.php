@@ -84,6 +84,7 @@ class BolHerosController extends Controller
         $heros['heroisme'] = $ressources['heroisme'];
         $heros['foi'] = $ressources['foi'];
         $heros['pouvoir'] = $ressources['pouvoir'];
+        $heros['creation'] = $ressources['creation'];
 
         $hero = BolHeros::where('user_id', Auth::id())->where('id', $herosId)->get()->first();
         if ($hero === null) {

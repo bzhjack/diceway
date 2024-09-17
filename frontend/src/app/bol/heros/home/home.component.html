@@ -83,7 +83,7 @@
                        [pTooltip]="heros.commentaire ?? ''"></i>
                     <div style="text-transform: capitalize">{{ heros.origines.nom }}</div>
                   </div>
-                  <div class="text-gray-400 bol-ellipsis-150">{{ heros.origines.region.region }}</div>
+                  <div class="text-gray-400 bol-ellipsis-150">{{ heros.origines.region?.region }}</div>
                   <div class="text-gray-400 bol-ellipsis-150" style="font-size: 12px">{{ languesToStr(heros) }}</div>
                 </div>
 

@@ -90,9 +90,31 @@ export class BolHerosStateService {
   );
 
   traitsModifiers = computed(() => {
-    return this.currentHeroAvantages().map((item) => {
-      return {id: item.traitable_id, type: item.type};
+    const modifiers: any[] = [];
+    this.currentHeroAvantages().map((trait) => {
+        const trt = this.avantagesList()?.filter((item) => item.attribut !== null)?.find((item) => Number(item.id) === Number(trait.traitable_id));
+        if (trt) {
+          modifiers.push({attr:trt.attribut, value: Number(trt.attribut_bonus)});
+        }
     });
+    this.currentHeroDesavantages().map((trait) => {
+      const trt = this.desavantagesList()?.filter((item) => item.attribut !== null)?.find((item) => Number(item.id) === Number(trait.traitable_id));
+      if (trt) {
+        modifiers.push({attr:trt.attribut, value: Number(trt.attribut_malus)});
+      }
+    });
+    if (this.heroismCost() > 0) {
+      modifiers.push({attr: 'heroisme', value: Number(this.heroismCost())});
+    }
+    const vigueur = Number(this.currentHeros()?.attributs.vigueur ?? 0);
+    if (vigueur !== 0) {
+      modifiers.push({attr: 'vigueur', value: vigueur});
+    }
+
+    // points de créations = rang d'alchimiste
+    // points de pouvoir = 10 + rang de sorcier
+    // point de foi = rang pretre.
+    return modifiers;
   });
 
   constructor() {

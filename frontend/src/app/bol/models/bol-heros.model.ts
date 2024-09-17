@@ -51,5 +51,7 @@ export interface BolHerosRessources {
   foi: number;
   pouvoir: number;
   vilenie: number;
+  creation: number;
+  experience: number;
 }
 
