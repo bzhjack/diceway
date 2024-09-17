@@ -42,7 +42,7 @@
             <div class="flex gap-2 items-center">
               <button pButton label="Création guidée" icon="pi pi-palette" severity="warning" size="small"
                       (click)="openCreateDialog()"></button>
-              <button pButton label="Création rapide" icon="pi pi-bolt" severity="success" size="small"
+              <button pButton label="Création libre" icon="pi pi-bolt" severity="success" size="small"
                       (click)="quickCreateHeros()"></button>
             </div>
           </div>
@@ -96,7 +96,7 @@
                           [routerLink]="['create', heros.id]"></button>
                   <button
                     *ngIf="heros.active"
-                    pTooltip="Modifications rapides"
+                    pTooltip="Modification libre"
                     severity="secondary"
                     type="button"
                     size="small" pButton pRipple icon="pi pi-bolt"
