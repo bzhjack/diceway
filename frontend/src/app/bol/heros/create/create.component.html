@@ -31,6 +31,9 @@
           <div class="flex flex-col">
             <bol-heros-traits formControlName="traits"></bol-heros-traits>
             <bol-heros-carrieres formControlName="carrieres" (desavantageCreated)="addCarriereDesavantage($event)"></bol-heros-carrieres>
+            <p-fieldset legend="Modificateurs après activation">
+                {{modifiers()| json}}
+            </p-fieldset>
           </div>
         </div>
 

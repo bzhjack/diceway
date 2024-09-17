@@ -47,7 +47,6 @@ import {BolHerosArmesComponent} from "./armes/armes.component";
 import {BolHerosTraitsComponent} from "./traits/traits.component";
 import {BolHerosTraitsModel} from "../../models/bol-trait.model";
 import {BolHerosLanguesComponent} from "./langues/langues.component";
-import {BolHerosLangueModel} from "../../models/bol-langue.model";
 import {HeaderComponent} from "../../../shared/header/header.component";
 import {InputTextareaModule} from "primeng/inputtextarea";
 
@@ -197,6 +196,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   );
   protected currentHero = toSignal<BolHerosModel>(this.valueChanges$);
   protected heroId = computed(() => this.currentHero()?.id);
+  protected modifiers = this.#herosStateService.traitsModifiers;
 
   constructor(
     private spinner: NgxSpinnerService,
