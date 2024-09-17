@@ -122,6 +122,7 @@ export class BolCreatureHomeComponent implements OnDestroy {
         this.subs = actionService.subscribe({
           next: () => {
             this.spinner.hide();
+            this.clear();
             this.getBestiary();
           },
           error: () => {
@@ -150,6 +151,7 @@ export class BolCreatureHomeComponent implements OnDestroy {
     this.subs = this.creatureService.deleteCreature(creature.id as string).subscribe({
       next: () => {
         this.spinner.hide();
+        this.clear();
         this.getBestiary();
       },
       error: () => {
@@ -180,8 +182,8 @@ export class BolCreatureHomeComponent implements OnDestroy {
     this.currentBeast = beast;
   }
 
-  clear(table: Table) {
-    table.clear();
+  clear(table?: Table) {
+    table?.clear();
     this.searchTerm = '';
     this.searchTaille = null;
     this.searchCreation = false;

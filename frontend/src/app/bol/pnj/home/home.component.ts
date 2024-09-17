@@ -123,6 +123,7 @@ export class BolPnjHomeComponent {
         this.subs = actionService.subscribe({
           next: () => {
             this.spinner.hide();
+            this.clear();
             this.getPnj();
           },
           error: () => {
@@ -153,6 +154,7 @@ export class BolPnjHomeComponent {
     this.subs = this.pnjService.quickDelete(pnj.id as string).subscribe({
       next: () => {
         this.spinner.hide();
+        this.clear();
         this.getPnj();
       },
       error: () => {
@@ -185,8 +187,8 @@ export class BolPnjHomeComponent {
     }
     return '';
   }
-  clear(table: Table) {
-    table.clear();
+  clear(table?: Table) {
+    table?.clear();
     this.searchTerm = '';
     this.searchType = null;
     this.searchCreation = false;

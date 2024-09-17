@@ -148,6 +148,7 @@ export class BolHeroHomeComponent implements OnDestroy {
         this.subs = this.herosService.deleteHeros(heros.id as string).subscribe({
           next: (hero: BolHerosModel) => {
             this.spinner.hide();
+            this.clear();
             this.getHeroes();
           },
           error: () => {
@@ -179,8 +180,8 @@ export class BolHeroHomeComponent implements OnDestroy {
     this.currentHeros = heros;
   }
 
-  clear(table: Table) {
-    table.clear();
+  clear(table?: Table) {
+    table?.clear();
     this.searchTerm = '';
     this.searchPending = false;
     this.filterExtended();
@@ -202,6 +203,7 @@ export class BolHeroHomeComponent implements OnDestroy {
         this.subs = actionService.subscribe({
           next: () => {
             this.spinner.hide();
+            this.clear();
             this.getHeroes();
           },
           error: () => {
