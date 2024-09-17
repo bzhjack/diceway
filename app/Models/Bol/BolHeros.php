@@ -19,15 +19,14 @@ class BolHeros extends Model
         'experience', 'foi', 'vitalite', 'heroisme', 'vilenie', 'pouvoir', 'creation',
         'initiative', 'melee', 'tir', 'defense',
         'vigueur', 'agilite', 'esprit', 'aura',
-        'nom', 'avatar', 'region_id', 'region'
+        'nom', 'avatar', 'region_id', 'region', 'joueur'
     ];
     protected $appends = ['combat', 'attributs', 'origines', 'ressources', 'type_order'];
     protected $fillable = [
         'user_id',
-        'joueur',
         'type',
         'active',
-        'nom', 'avatar', 'region_id',
+        'nom', 'avatar', 'region_id', 'joueur',
         'vigueur', 'agilite', 'esprit', 'aura',
         'initiative', 'melee', 'tir', 'defense','commentaire',
         'experience', 'foi', 'vitalite', 'heroisme', 'vilenie', 'pouvoir', 'creation'
@@ -114,6 +113,7 @@ class BolHeros extends Model
     public function getOriginesAttribute()
     {
         return [
+            'joueur' => $this->joueur,
             'nom' => $this->nom,
             'region_id' => $this->region_id,
             'region' => $this->region,

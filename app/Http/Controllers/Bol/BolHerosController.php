@@ -75,6 +75,7 @@ class BolHerosController extends Controller
         $heros['defense'] = $combat['defense'];
 
         $origines = $request->input('origines');
+        $heros['joueur'] = $origines['joueur'];
         $heros['nom'] = $origines['nom'];
         $heros['region_id'] = $origines['region_id'];
         $heros['avatar'] = $origines['avatar'];
@@ -134,6 +135,7 @@ class BolHerosController extends Controller
             return response()->json(['message' => 'Hero not found'], Response::HTTP_NOT_FOUND);
         }
         $bolHeros['avatar'] = $request->input('avatar');
+        $bolHeros['joueur'] = $request->input('joueur');
         $bolHeros['nom'] = $request->input('nom');
         $bolHeros['region_id'] = $request->input('region_id');
         $bolHeros->update();

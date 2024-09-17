@@ -257,7 +257,7 @@ export class BolHerosUpdateComponent {
       this.herosForm.patchValue(
         {
           id: heros.id,
-          joueur: heros.joueur,
+          joueur: heros.origines.joueur,
           nom: heros.origines.nom,
           region_id: Number(heros.origines.region_id),
           avatar: heros.origines.avatar,

@@ -15,12 +15,6 @@
     <p-scrollPanel styleClass="flex-auto" [style]="{height: 'calc(100vh - 135px)'}">
       <form (ngSubmit)="submit()" [formGroup]="herosForm" autocomplete="off">
         <div class="flex flex-col">
-          <!--- Nom du joueur --->
-          <div class="flex flex-col gap-1 w-fit justify-end">
-            <label for="joueur">Nom du joueur</label>
-            <input formControlName="joueur" pInputText id="joueur" class="p-inputtext-sm"/>
-          </div>
-
           <div class="flex gap-2">
             <div>
               <div class="flex gap-2">

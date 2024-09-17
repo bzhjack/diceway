@@ -118,7 +118,6 @@ export class BolPnjHomeComponent {
       if (pnj) {
         this.spinner.show();
         this.subs?.unsubscribe();
-        pnj.joueur = 'master';
         const actionService = pnj.id ? this.pnjService.quickUpdate(pnj) : this.pnjService.quickCreate(pnj);
         this.subs = actionService.subscribe({
           next: () => {

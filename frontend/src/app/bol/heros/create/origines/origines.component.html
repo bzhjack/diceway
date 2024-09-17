@@ -1,4 +1,4 @@
-<p-fieldset [style]="{height: '155px'}">
+<p-fieldset>
   <ng-template pTemplate="header">
     <div class="flex items-center gap-2">
       <div class="cursor-pointer" (click)="aptitudesInfos.toggle($event)">
@@ -34,9 +34,16 @@
 
     <div class="flex flex-col gap-1 flex-auto" [formGroup]="originesForm">
       <div class="flex flex-col gap-1">
+        <label for="nom">Joueur</label>
+        <input formControlName="joueur" pInputText id="joueur" class="p-inputtext-sm"/>
+      </div>
+      <div class="flex flex-col gap-1">
         <label for="nom">Nom</label>
         <input formControlName="nom" pInputText id="nom" class="p-inputtext-sm"/>
       </div>
+    </div>
+
+    <div>
       <div class="flex flex-col gap-1 relative">
         <label>Région</label>
         <input [value]="currentRegion()?.region" pInputText class="p-inputtext-sm" autocomplete="new" tabindex="-1"/>
@@ -44,5 +51,7 @@
           <div><i class="hide-region icon-button pi pi-times" (click)="clearRegion($event)"></i></div>
         </div>
       </div>
+      <bol-heros-langues formControlName="langues"></bol-heros-langues>
     </div>
+
   </div>

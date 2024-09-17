@@ -201,7 +201,6 @@ export class BolHeroHomeComponent implements OnDestroy {
       if (heros) {
         this.spinner.show();
         this.subs?.unsubscribe();
-        heros.joueur = 'master';
         const actionService = heros.id ? this.herosService.quickUpdate(heros) : this.herosService.quickCreate(heros);
         this.subs = actionService.subscribe({
           next: () => {

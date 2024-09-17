@@ -61,6 +61,7 @@ export class BolPnjCreateComponent {
 
   public idCtrl: FormControl<string | null> = new FormControl(null);
   public nomCtrl = new FormControl('', Validators.required);
+  public joueurCtrl = new FormControl('master', Validators.required);
   public typeCtrl = new FormControl('P', Validators.required);
   public avatarCtrl: FormControl<string | null> = new FormControl(null);
   public vigueurCtrl = new FormControl(0, Validators.required);
@@ -89,6 +90,7 @@ export class BolPnjCreateComponent {
   pnjForm = this.fb.group(
     {
       id: this.idCtrl,
+      joueur: this.joueurCtrl,
       nom: this.nomCtrl,
       type: this.typeCtrl,
       avatar: this.avatarCtrl,

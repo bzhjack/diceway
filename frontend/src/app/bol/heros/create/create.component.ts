@@ -106,8 +106,6 @@ export class BolHerosCreateComponent implements OnDestroy {
 
   public idCtrl: FormControl<string | null> = new FormControl(null);
   public userIdCtrl: FormControl<string | null> = new FormControl(null);
-  public joueurCtrl = new FormControl('', Validators.required);
-
   // Avantages et désavantages
   public traitsCtrl = new FormControl<BolHerosTraitsModel[]>([]);
   public armuresCtrl = new FormControl<number[]>([]);
@@ -117,7 +115,7 @@ export class BolHerosCreateComponent implements OnDestroy {
 
   public combatCtrl = new FormControl<BolHerosCombat>({defense: 0, initiative: 0, melee: 0, tir: 0});
   public attributsCtrl = new FormControl<BolHerosAttributs>({vigueur: 0, agilite: 0, esprit: 0, aura: 0});
-  public originesCtrl = new FormControl<BolHerosOrigines>({nom: null, region_id: null, avatar: null});
+  public originesCtrl = new FormControl<BolHerosOrigines>({nom: null, region_id: null, avatar: null, joueur: null});
   public ressourcesCtrl = new FormControl<BolHerosRessources>({
     vitalite: 0,
     heroisme: 0,
@@ -134,7 +132,6 @@ export class BolHerosCreateComponent implements OnDestroy {
     {
       id: this.idCtrl,
       user_id: this.userIdCtrl,
-      joueur: this.joueurCtrl,
       traits: this.traitsCtrl,
       attributs: this.attributsCtrl,
       combat: this.combatCtrl,
@@ -153,8 +150,13 @@ export class BolHerosCreateComponent implements OnDestroy {
     map(value => ({
       id: value.id ?? null,
       user_id: value.user_id ?? null,
-      joueur: value.joueur ?? '',
       active: value.active ?? false,
+      origines: {
+        avatar: value.origines?.avatar ?? null,
+        nom: value.origines?.nom ?? null,
+        region_id: value.origines?.region_id ?? null,
+        joueur: value.origines?.joueur ?? '',
+      },
       ressources: {
         vitalite: value.ressources?.vitalite ?? 10,
         heroisme: value.ressources?.heroisme ?? 5,
@@ -175,11 +177,6 @@ export class BolHerosCreateComponent implements OnDestroy {
         aura: value.attributs?.aura ?? 0,
         esprit: value.attributs?.esprit ?? 0,
         agilite: value.attributs?.agilite ?? 0
-      },
-      origines: {
-        avatar: value.origines?.avatar ?? null,
-        nom: value.origines?.nom ?? null,
-        region_id: value.origines?.region_id ?? null,
       },
       traits: value.traits ?? [],
       carrieres: value.carrieres ?? [],
@@ -229,7 +226,6 @@ export class BolHerosCreateComponent implements OnDestroy {
           hero.ressources.heroisme = 5;
           this.herosForm.patchValue({
             id: hero.id,
-            joueur: hero.joueur,
             ressources: hero.ressources,
             armures: hero.armures.map((item) => (item as BolHerosArmureModel).armure_id),
             armes: hero.armes.map(item => (item as BolHerosArmeModel).arme_id),

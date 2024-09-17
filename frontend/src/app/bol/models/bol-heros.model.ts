@@ -9,7 +9,6 @@ export interface BolHerosModel {
   id: string | null;
   user_id: string | null;
   active: boolean;
-  joueur: string;
   type: string;
   type_order?: number;
   commentaire: string | null;
@@ -40,6 +39,7 @@ export interface BolHerosAttributs {
 
 export interface BolHerosOrigines {
   nom: string | null;
+  joueur: string | null,
   region_id: number | null;
   region?: BolRegionModel | null;
   avatar: string | null;

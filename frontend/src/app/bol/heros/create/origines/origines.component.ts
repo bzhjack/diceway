@@ -27,6 +27,7 @@ import {BolMessageComponent} from "../../../message/message.component";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {BolHeroCreateTools} from "../create.tools";
 import {BolHerosOrigines} from "../../../models/bol-heros.model";
+import {BolHerosLanguesComponent} from "../langues/langues.component";
 
 @Component({
   selector: 'bol-heros-origines',
@@ -39,7 +40,8 @@ import {BolHerosOrigines} from "../../../models/bol-heros.model";
     JsonPipe,
     BolMessageComponent,
     NgIf,
-    OverlayPanelModule
+    OverlayPanelModule,
+    BolHerosLanguesComponent
   ],
   templateUrl: './origines.component.html',
   styleUrl: './origines.component.scss',
@@ -70,11 +72,13 @@ export class BolHerosOriginesComponent implements ControlValueAccessor, Validato
   private subs?: Subscription;
   private subOrig?: Subscription;
 
+  public joueurCtrl = new FormControl('', Validators.required);
   public nomCtrl = new FormControl('', Validators.required);
   public avatarCtrl: FormControl<string | null> = new FormControl(null);
   public regionIdCtrl = new FormControl<number | null>(null);
 
   originesForm = this.#fb.group({
+    joueur: this.joueurCtrl,
     nom: this.nomCtrl,
     avatar: this.avatarCtrl,
     region_id: this.regionIdCtrl
@@ -210,6 +214,7 @@ export class BolHerosOriginesComponent implements ControlValueAccessor, Validato
       this.originesForm.patchValue({
         avatar: value.avatar,
         nom: value.nom,
+        joueur: value.joueur,
         region_id: Number(value.region_id)
       });
     }
