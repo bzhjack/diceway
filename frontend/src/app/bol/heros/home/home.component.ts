@@ -217,7 +217,7 @@ export class BolHeroHomeComponent implements OnDestroy {
   }
 
   languesToStr(heros: BolHerosModel) {
-    return (heros.langues as BolHerosLangueModel[]).map(item => item.langue?.langue).join(', ');
+    return (heros.origines.langues as BolHerosLangueModel[]).map(item => item.langue?.langue).join(', ');
   }
 }
 

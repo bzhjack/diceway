@@ -29,12 +29,10 @@
   @if (langues.controls.length === 0) {
     <div class="text-gray-500" style="font-size: 16px">Choisissez des langues</div>
   } @else {
-    <p-scrollPanel [style]="{maxHeight: '80px'}">
-      <div class="flex pb-2" *ngFor="let langue of langues.controls; let i = index">
-        <div style="width: 150px">{{ langueFromId(langue.value) }}</div>
-        <app-btn (click)="deleteLangue(langue.value, $event)"></app-btn>
-      </div>
-    </p-scrollPanel>
+    <div class="flex pb-2" *ngFor="let langue of langues.controls; let i = index">
+      <div style="width: 150px">{{ langueFromId(langue.value) }}</div>
+      <app-btn (click)="deleteLangue(langue.value, $event)"></app-btn>
+    </div>
   }
 </p-fieldset>
 

@@ -19,7 +19,7 @@ class BolHeros extends Model
         'experience', 'foi', 'vitalite', 'heroisme', 'vilenie', 'pouvoir', 'creation',
         'initiative', 'melee', 'tir', 'defense',
         'vigueur', 'agilite', 'esprit', 'aura',
-        'nom', 'avatar', 'region_id', 'region', 'joueur'
+        'nom', 'avatar', 'region_id', 'region', 'joueur', 'langues'
     ];
     protected $appends = ['combat', 'attributs', 'origines', 'ressources', 'type_order'];
     protected $fillable = [
@@ -117,7 +117,8 @@ class BolHeros extends Model
             'nom' => $this->nom,
             'region_id' => $this->region_id,
             'region' => $this->region,
-            'avatar' => $this->avatar
+            'avatar' => $this->avatar,
+            'langues' => $this->langues
         ];
     }
 

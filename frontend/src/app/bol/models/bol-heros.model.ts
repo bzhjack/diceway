@@ -19,8 +19,7 @@ export interface BolHerosModel {
   traits: BolHerosTraitsModel[],
   carrieres: BolHerosCarriereModel[],
   armures: BolHerosArmureModel[] | number[],
-  armes: BolHerosArmeModel[] | number[],
-  langues: BolHerosLangueModel[] | number[]
+  armes: BolHerosArmeModel[] | number[]
 }
 
 export interface BolHerosCombat {
@@ -43,6 +42,7 @@ export interface BolHerosOrigines {
   region_id: number | null;
   region?: BolRegionModel | null;
   avatar: string | null;
+  langues: BolHerosLangueModel[] | number[];
 }
 
 export interface BolHerosRessources {

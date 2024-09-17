@@ -4,7 +4,7 @@ import {
   AbstractControl,
   ControlValueAccessor,
   FormBuilder,
-  FormControl,
+  FormControl, FormGroup,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
@@ -28,6 +28,7 @@ import {OverlayPanelModule} from "primeng/overlaypanel";
 import {BolHeroCreateTools} from "../create.tools";
 import {BolHerosOrigines} from "../../../models/bol-heros.model";
 import {BolHerosLanguesComponent} from "../langues/langues.component";
+import {BolHerosLangueModel} from "../../../models/bol-langue.model";
 
 @Component({
   selector: 'bol-heros-origines',
@@ -76,12 +77,14 @@ export class BolHerosOriginesComponent implements ControlValueAccessor, Validato
   public nomCtrl = new FormControl('', Validators.required);
   public avatarCtrl: FormControl<string | null> = new FormControl(null);
   public regionIdCtrl = new FormControl<number | null>(null);
+  public languesCtrl = new FormControl<number[]>([]);
 
   originesForm = this.#fb.group({
     joueur: this.joueurCtrl,
     nom: this.nomCtrl,
     avatar: this.avatarCtrl,
-    region_id: this.regionIdCtrl
+    region_id: this.regionIdCtrl,
+    langues: this.languesCtrl
   });
 
   private onChange: (value: any) => void = () => {
@@ -215,7 +218,8 @@ export class BolHerosOriginesComponent implements ControlValueAccessor, Validato
         avatar: value.avatar,
         nom: value.nom,
         joueur: value.joueur,
-        region_id: Number(value.region_id)
+        region_id: Number(value.region_id),
+        langues: value.langues.map((item: BolHerosLangueModel) => (item as BolHerosLangueModel).langue_id)
       });
     }
   }

@@ -199,6 +199,6 @@ export class BolPnjHomeComponent {
   }
 
   languesToStr(pnj: BolHerosModel) {
-    return (pnj.langues as BolHerosLangueModel[]).map(item => item.langue?.langue).join(', ');
+    return (pnj.origines.langues as BolHerosLangueModel[]).map(item => item.langue?.langue).join(', ');
   }
 }

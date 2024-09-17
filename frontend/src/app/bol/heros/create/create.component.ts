@@ -115,7 +115,13 @@ export class BolHerosCreateComponent implements OnDestroy {
 
   public combatCtrl = new FormControl<BolHerosCombat>({defense: 0, initiative: 0, melee: 0, tir: 0});
   public attributsCtrl = new FormControl<BolHerosAttributs>({vigueur: 0, agilite: 0, esprit: 0, aura: 0});
-  public originesCtrl = new FormControl<BolHerosOrigines>({nom: null, region_id: null, avatar: null, joueur: null});
+  public originesCtrl = new FormControl<BolHerosOrigines>({
+    nom: null,
+    region_id: null,
+    avatar: null,
+    joueur: null,
+    langues: []
+  });
   public ressourcesCtrl = new FormControl<BolHerosRessources>({
     vitalite: 0,
     heroisme: 0,
@@ -156,6 +162,7 @@ export class BolHerosCreateComponent implements OnDestroy {
         nom: value.origines?.nom ?? null,
         region_id: value.origines?.region_id ?? null,
         joueur: value.origines?.joueur ?? '',
+        langues: value.langues ?? [],
       },
       ressources: {
         vitalite: value.ressources?.vitalite ?? 10,
@@ -182,7 +189,6 @@ export class BolHerosCreateComponent implements OnDestroy {
       carrieres: value.carrieres ?? [],
       armures: value.armures ?? [],
       armes: value.armes ?? [],
-      langues: value.langues ?? [],
       commentaire: value.commentaire ?? null,
       type: 'H'
     })),
@@ -229,7 +235,7 @@ export class BolHerosCreateComponent implements OnDestroy {
             ressources: hero.ressources,
             armures: hero.armures.map((item) => (item as BolHerosArmureModel).armure_id),
             armes: hero.armes.map(item => (item as BolHerosArmeModel).arme_id),
-            langues: hero.langues.map(item => (item as BolHerosLangueModel).langue_id),
+            //langues: hero.langues.map(item => (item as BolHerosLangueModel).langue_id),
             combat: hero.combat,
             attributs: hero.attributs,
             origines: hero.origines,

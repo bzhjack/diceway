@@ -267,7 +267,7 @@ export class BolPnjCreateComponent {
       });
 
       this.langues.clear();
-      pnj.langues.forEach((langue: any) => {
+      pnj.origines.langues.forEach((langue: any) => {
         const heroLangue = this.fb.group({
           id: [langue.langue_id],
         });

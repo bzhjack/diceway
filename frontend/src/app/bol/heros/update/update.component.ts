@@ -314,7 +314,7 @@ export class BolHerosUpdateComponent {
       });
 
       this.langues.clear();
-      heros.langues.forEach((langue: any) => {
+      heros.origines.langues.forEach((langue: any) => {
         const heroLangue = this.fb.group({
           id: [langue.langue_id],
         });
