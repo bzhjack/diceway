@@ -24,9 +24,11 @@ export class BolHerosTraitRowComponent {
   @Input() avantage?: BolAvantageModel;
   @Input() desavantage?: BolDesavantageModel;
   @Input() disabled = false;
+
   avantageDescription(avantage: BolAvantageModel) {
     return BolHeroCreateTools.avantageDescription(avantage);
   }
+
   desavantageDescription(desavantage: BolDesavantageModel) {
     return BolHeroCreateTools.desavantageDescription(desavantage);
   }

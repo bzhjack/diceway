@@ -30,23 +30,23 @@ import {BtnComponent} from "../../../../shared/btn/btn.component";
 @Component({
   selector: 'bol-heros-armures',
   standalone: true,
-    imports: [
-        Button,
-        FieldsetModule,
-        PrimeTemplate,
-        ButtonDirective,
-        DropdownModule,
-        NgIf,
-        OverlayPanelModule,
-        Ripple,
-        FormsModule,
-        NgForOf,
-        ReactiveFormsModule,
-        BtnComponent,
-        JsonPipe,
-        TableModule,
-        TooltipModule
-    ],
+  imports: [
+    Button,
+    FieldsetModule,
+    PrimeTemplate,
+    ButtonDirective,
+    DropdownModule,
+    NgIf,
+    OverlayPanelModule,
+    Ripple,
+    FormsModule,
+    NgForOf,
+    ReactiveFormsModule,
+    BtnComponent,
+    JsonPipe,
+    TableModule,
+    TooltipModule
+  ],
   templateUrl: './armures.component.html',
   styleUrl: './armures.component.scss',
   providers: [
@@ -60,7 +60,7 @@ import {BtnComponent} from "../../../../shared/btn/btn.component";
 export class BolHerosArmuresComponent implements ControlValueAccessor, OnDestroy {
   private subs?: Subscription;
 
-  public selectedArmure= signal<BolArmureModel | null >(null);
+  public selectedArmure = signal<BolArmureModel | null>(null);
 
   readonly #fb = inject(FormBuilder);
   readonly #bhss = inject(BolHerosStateService);
@@ -72,6 +72,7 @@ export class BolHerosArmuresComponent implements ControlValueAccessor, OnDestroy
     armures: this.#fb.array([])
   });
   protected formChange = toSignal(this.armuresForm!.valueChanges);
+
   get armures() {
     return this.armuresForm.get('armures') as FormArray;
   }
@@ -140,6 +141,7 @@ export class BolHerosArmuresComponent implements ControlValueAccessor, OnDestroy
       },
     });
   }
+
   removeArmure(armureId: number) {
     const index = this.armures.value.findIndex((car: number) => Number(car) === Number(armureId))
     if (index !== -1) this.armures.removeAt(index)
@@ -151,12 +153,15 @@ export class BolHerosArmuresComponent implements ControlValueAccessor, OnDestroy
   onTouched: () => void = () => {
     // do nothing by default
   };
+
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
+
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
+
   writeValue(value: number[]): void {
     if (value) {
       this.armures.clear();

@@ -8,10 +8,10 @@ const bladeFileContents = fs.readFileSync(bladeFilePath, 'utf8');
 
 // Update function using regular expressions
 const updateContents = (contents) => {
-    return contents
-        .replace(/<script\s+src="/g, '<script src="/frontend/')
-        .replace(/href="styles-/g, 'href="/frontend/styles-')
-        .replace(/rel="modulepreload"\s+href="/g, 'rel="modulepreload" href="/frontend/');
+  return contents
+    .replace(/<script\s+src="/g, '<script src="/frontend/')
+    .replace(/href="styles-/g, 'href="/frontend/styles-')
+    .replace(/rel="modulepreload"\s+href="/g, 'rel="modulepreload" href="/frontend/');
 };
 
 // Update the file contents

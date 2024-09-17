@@ -5,6 +5,7 @@
   border-radius: 6px;
   cursor: pointer;
 }
+
 .home-bol-img {
   border-bottom-left-radius: 6px;
   border-top-left-radius: 6px;
@@ -16,30 +17,37 @@
   &.heros {
     background-image: url('/frontend/assets/bol/heros.jpg');
   }
+
   &.bestiary {
     background-image: url('/frontend/assets/bol/bestiary.jpg');
   }
+
   &.demon {
     background-image: url('/frontend/assets/bol/demon.jpg');
   }
+
   &.pnj {
     background-image: url('/frontend/assets/bol/pnj.jpg');
   }
 }
+
 .home-bol-counter {
   font-size: 24px;
   display: flex;
   align-items: center;
   gap: 5px;
+
   &__description {
     font-weight: 200;
     font-size: 16px;
   }
 }
+
 .home-bol-card-title {
   font-size: 24px;
   font-weight: 200;
 }
+
 .home-bol-logo-container {
   width: 360px;
   display: flex;

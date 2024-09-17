@@ -16,8 +16,10 @@
     <p-overlayPanel #attributInfos>
       <div class="flex flex-col gap-2">
         <bol-message type="attr"></bol-message>
-        <bol-message type="form-errors" *ngIf="attributErrors.length" legend="Attributs invalides" [data]="attributErrors"></bol-message>
-        <bol-message type="form-warn" *ngIf="attributWarns.length" legend="Aptitudes invalides" [data]="attributWarns"></bol-message>
+        <bol-message type="form-errors" *ngIf="attributErrors.length" legend="Attributs invalides"
+                     [data]="attributErrors"></bol-message>
+        <bol-message type="form-warn" *ngIf="attributWarns.length" legend="Aptitudes invalides"
+                     [data]="attributWarns"></bol-message>
       </div>
     </p-overlayPanel>
   </ng-template>
@@ -25,21 +27,21 @@
     <div class="flex flex-col gap-1">
       <div class="flex flex-col gap-1">
         <label for="vigueur">Vigueur</label>
-        <p-inputNumber formControlName="vigueur" inputId="vigueur" />
+        <p-inputNumber formControlName="vigueur" inputId="vigueur"/>
       </div>
       <div class="flex flex-col gap-1">
         <label for="agilite">Agilité</label>
-        <p-inputNumber formControlName="agilite" inputId="agilite" />
+        <p-inputNumber formControlName="agilite" inputId="agilite"/>
       </div>
     </div>
     <div class="flex flex-col gap-1">
       <div class="flex flex-col gap-1">
         <label for="esprit">Esprit</label>
-        <p-inputNumber formControlName="esprit" inputId="esprit" />
+        <p-inputNumber formControlName="esprit" inputId="esprit"/>
       </div>
       <div class="flex flex-col gap-1">
         <label for="aura">Aura</label>
-        <p-inputNumber formControlName="aura" inputId="aura" maxFractionDigits="0" />
+        <p-inputNumber formControlName="aura" inputId="aura" maxFractionDigits="0"/>
       </div>
     </div>
   </div>

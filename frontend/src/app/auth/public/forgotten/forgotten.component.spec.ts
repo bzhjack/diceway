@@ -10,7 +10,7 @@ describe('ForgottenComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ForgottenComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ForgottenComponent);
     component = fixture.componentInstance;

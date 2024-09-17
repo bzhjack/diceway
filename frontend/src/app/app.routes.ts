@@ -47,9 +47,11 @@ export const routes: Routes = [
     loadComponent: () => import('./bol/creatures/home/home.component').then(m => m.BolCreatureHomeComponent),
     canActivate: [loggedInGuard]
   },
-  {path: 'bol/pnj',
+  {
+    path: 'bol/pnj',
     loadComponent: () => import('./bol/pnj/home/home.component').then(m => m.BolPnjHomeComponent),
-    canActivate: [loggedInGuard]},
+    canActivate: [loggedInGuard]
+  },
 
   {path: '**', redirectTo: '/'},
 ];

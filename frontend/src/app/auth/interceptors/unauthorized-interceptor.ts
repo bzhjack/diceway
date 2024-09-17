@@ -25,9 +25,10 @@ export const UnauthorizedInterceptor: HttpInterceptorFn = (
           us.logout();
           throwError(() => err);
         } else if (err instanceof HttpErrorResponse && err.status !== 401) {
-          ms.add({ severity: 'error', summary: 'Error', detail: err.statusText});
+          ms.add({severity: 'error', summary: 'Error', detail: err.statusText});
         }
       }
     }
-  ));;
+  ));
+  ;
 };

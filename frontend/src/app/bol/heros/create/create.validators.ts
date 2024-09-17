@@ -63,19 +63,19 @@ export const carriereValidator: ValidatorFn = (control: AbstractControl): Valida
 
 export const combatFormValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   let errors = {};
-   // Controle des aptitudes de combat
-   const controlsAptIds = ['tir', 'melee', 'defense', 'initiative'];
-   const controlsAptArray = controlsAptIds.map(id => control.get(id));
-   const apts = controlsAptArray.map(ctrl => ctrl?.value);
-   const countNegativeApt = apts.filter(value => value === -1).length;
-   if (countNegativeApt > 1) {
-     errors = Object.assign(errors, {'aptTooManyNegative': true});
-   }
-   const sumApt = apts.reduce((acc, val) => acc + val, 0);
-   if (sumApt > 4) {
-     errors = Object.assign(errors, { 'aptSumExceeded': true });
-   }
-   return errors;
+  // Controle des aptitudes de combat
+  const controlsAptIds = ['tir', 'melee', 'defense', 'initiative'];
+  const controlsAptArray = controlsAptIds.map(id => control.get(id));
+  const apts = controlsAptArray.map(ctrl => ctrl?.value);
+  const countNegativeApt = apts.filter(value => value === -1).length;
+  if (countNegativeApt > 1) {
+    errors = Object.assign(errors, {'aptTooManyNegative': true});
+  }
+  const sumApt = apts.reduce((acc, val) => acc + val, 0);
+  if (sumApt > 4) {
+    errors = Object.assign(errors, {'aptSumExceeded': true});
+  }
+  return errors;
 }
 export const attributsFormValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   let errors = {};
@@ -89,7 +89,7 @@ export const attributsFormValidator: ValidatorFn = (control: AbstractControl): V
   }
   const sumApt = apts.reduce((acc, val) => acc + val, 0);
   if (sumApt > 4) {
-    errors = Object.assign(errors, { 'attrSumExceeded': true });
+    errors = Object.assign(errors, {'attrSumExceeded': true});
   }
   return errors;
 }
@@ -105,7 +105,7 @@ export const carrieresFormValidator: ValidatorFn = (control: AbstractControl): V
       sumCarriere += c.get('value')?.value;
     }
     if (sumCarriere > 4) {
-      errors = Object.assign(errors, { 'carrSumExceeded': true });
+      errors = Object.assign(errors, {'carrSumExceeded': true});
     }
   }
   return errors;

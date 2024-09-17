@@ -33,8 +33,10 @@
       <div *ngIf="desavantage()?.de_malus || desavantage()?.attribut" class="tag_icon malus"
            [inlineSVG]="desavantage()?.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
     </div>
-    <div class="relative text-gray-300" style="white-space: nowrap; line-height: 15px" [class.ml-5]="trait()?.region_id || trait()?.carriere">
-      <i pTooltip="Désavantage de carrière" style="position: absolute;left: -17px" *ngIf="trait()?.carriere" class="pi pi-hammer mr-2"></i>
+    <div class="relative text-gray-300" style="white-space: nowrap; line-height: 15px"
+         [class.ml-5]="trait()?.region_id || trait()?.carriere">
+      <i pTooltip="Désavantage de carrière" style="position: absolute;left: -17px" *ngIf="trait()?.carriere"
+         class="pi pi-hammer mr-2"></i>
       <i style="position: absolute;left: -17px" *ngIf="trait()?.region_id" class="pi pi-map-marker mr-2"></i>
       {{ desavantage()?.desavantage }}
     </div>

@@ -43,6 +43,7 @@ export class ForgottenComponent {
   forgotForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]]
   });
+
   constructor(private fb: FormBuilder, private us: UserService, private router: Router) {
 
   }
@@ -66,12 +67,13 @@ export class ForgottenComponent {
           error: err => {
             this.pending = false;
             console.log(err);
-            this.messages.push({ severity: 'error', summary: '', detail: err.error.message});
+            this.messages.push({severity: 'error', summary: '', detail: err.error.message});
           }
         }
       );
     }
   }
+
   onError(controlName: string) {
     const control = this.forgotForm.get(controlName);
     return control?.dirty && control.invalid;

@@ -42,6 +42,7 @@ export class BolHerosTraitComponent {
   avantageDescription(avantage: BolAvantageModel | null | undefined) {
     return BolHeroCreateTools.avantageDescription(avantage as BolAvantageModel);
   }
+
   desavantageDescription(desavantage: BolDesavantageModel | null | undefined) {
     return BolHeroCreateTools.desavantageDescription(desavantage as BolDesavantageModel);
   }

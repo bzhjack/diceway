@@ -30,31 +30,31 @@ import {BolHerosLangueModel} from "../../models/bol-langue.model";
 @Component({
   selector: 'bol-hero-home',
   standalone: true,
-    imports: [
-        NgForOf,
-        JsonPipe,
-        RouterLink,
-        CardModule,
-        Button,
-        DialogModule,
-        InputTextModule,
-        ReactiveFormsModule,
-        NgIf,
-        TableModule,
-        ButtonDirective,
-        Ripple,
-        ConfirmPopupModule,
-        HeaderComponent,
-        CheckboxModule,
-        DropdownModule,
-        IconFieldModule,
-        InputIconModule,
-        TagModule,
-        TooltipModule,
-        FormsModule,
-        NgOptimizedImage,
-        ScrollPanelModule
-    ],
+  imports: [
+    NgForOf,
+    JsonPipe,
+    RouterLink,
+    CardModule,
+    Button,
+    DialogModule,
+    InputTextModule,
+    ReactiveFormsModule,
+    NgIf,
+    TableModule,
+    ButtonDirective,
+    Ripple,
+    ConfirmPopupModule,
+    HeaderComponent,
+    CheckboxModule,
+    DropdownModule,
+    IconFieldModule,
+    InputIconModule,
+    TagModule,
+    TooltipModule,
+    FormsModule,
+    NgOptimizedImage,
+    ScrollPanelModule
+  ],
   providers: [
     ConfirmationService
   ],
@@ -172,9 +172,11 @@ export class BolHeroHomeComponent implements OnDestroy {
   filtering(ev: any) {
     this.herosTable?.filterGlobal(ev.target?.value, 'contains')
   }
+
   filterExtended() {
     this.filteredHeroesList = this.searchPending ? this.heroesList.filter((heros) => !heros.active) : this.heroesList;
   }
+
   showHerosPicture(heros: BolHerosModel) {
     this.showHeros = true;
     this.currentHeros = heros;
@@ -186,6 +188,7 @@ export class BolHeroHomeComponent implements OnDestroy {
     this.searchPending = false;
     this.filterExtended();
   }
+
   quickCreateHeros(heros?: BolHerosModel) {
     this.ref = this.dialogueService.open(BolHerosUpdateComponent, {
       header: heros ? 'Modification d\'un Héros' : 'Création d\'un Héros',
@@ -213,6 +216,7 @@ export class BolHeroHomeComponent implements OnDestroy {
       }
     });
   }
+
   languesToStr(heros: BolHerosModel) {
     return (heros.langues as BolHerosLangueModel[]).map(item => item.langue?.langue).join(', ');
   }

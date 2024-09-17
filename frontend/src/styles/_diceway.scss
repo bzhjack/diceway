@@ -5,6 +5,7 @@
   background: #1f2937;
   color: rgba(255, 255, 255, 0.87);
 }
+
 /* Customize website's scrollbar like Mac OS
 Not supports in Firefox and IE */
 
@@ -28,5 +29,5 @@ Not supports in Firefox and IE */
 
 /* set button(top and bottom of the scrollbar) */
 ::-webkit-scrollbar-button {
-  display:none;
+  display: none;
 }

@@ -77,7 +77,7 @@ export class BolCreatureHomeComponent implements OnDestroy {
   public currentBeast: BolCreatureModel | null = null;
 
   public searchCreation: boolean = false;
-  public searchTaille: number | null  = null;
+  public searchTaille: number | null = null;
   public searchTerm: string | null = null;
   public tailleList = toSignal(this.creatureService.tailles());
 
@@ -132,6 +132,7 @@ export class BolCreatureHomeComponent implements OnDestroy {
       }
     });
   }
+
   askDelete(creature: BolCreatureModel, event: any) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
@@ -145,6 +146,7 @@ export class BolCreatureHomeComponent implements OnDestroy {
       },
     });
   }
+
   deleteCreature(creature: BolCreatureModel) {
     this.spinner.show();
     this.subs?.unsubscribe();
@@ -171,12 +173,14 @@ export class BolCreatureHomeComponent implements OnDestroy {
   filtering(ev: any) {
     this.beastTable?.filterGlobal(ev.target?.value, 'contains')
   }
+
   filterExtended() {
     this.filteredBeast = this.searchCreation ? this.beast.filter((beast) => beast.user_id !== null) : this.beast;
     if (this.searchTaille !== null) {
       this.filteredBeast = this.filteredBeast.filter((beast) => beast.taille.id === this.searchTaille);
     }
   }
+
   showBeastPicture(beast: BolCreatureModel) {
     this.showBeast = true;
     this.currentBeast = beast;

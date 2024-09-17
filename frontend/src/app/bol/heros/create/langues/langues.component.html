@@ -12,7 +12,8 @@
       </div>
 
       <div>Langues</div>
-      <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une langue" (click)="selectedLangue.set(null); opLangue.toggle($event)"></app-btn>
+      <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une langue"
+               (click)="selectedLangue.set(null); opLangue.toggle($event)"></app-btn>
     </div>
     <p-overlayPanel #languesInfos>
       <div class="flex flex-col gap-2">

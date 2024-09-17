@@ -166,16 +166,19 @@ export class BolPnjHomeComponent {
   filtering(ev: any) {
     this.pnjTable?.filterGlobal(ev.target?.value, 'contains')
   }
+
   filterExtended() {
     this.filteredPnjList = this.searchCreation ? this.pnjList.filter((pnj) => pnj.user_id !== null) : this.pnjList;
     if (this.searchType !== null) {
       this.filteredPnjList = this.filteredPnjList.filter((pnj) => pnj.type === this.searchType);
     }
   }
+
   showPnjPicture(pnj: BolHerosModel) {
     this.showPnj = true;
     this.currentPnj = pnj;
   }
+
   getType(pnj: BolHerosModel) {
     switch (pnj?.type) {
       case 'C':
@@ -187,6 +190,7 @@ export class BolPnjHomeComponent {
     }
     return '';
   }
+
   clear(table?: Table) {
     table?.clear();
     this.searchTerm = '';
@@ -194,6 +198,7 @@ export class BolPnjHomeComponent {
     this.searchCreation = false;
     this.filterExtended();
   }
+
   languesToStr(pnj: BolHerosModel) {
     return (pnj.langues as BolHerosLangueModel[]).map(item => item.langue?.langue).join(', ');
   }

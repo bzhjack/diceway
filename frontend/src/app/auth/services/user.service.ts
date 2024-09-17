@@ -50,6 +50,7 @@ export class UserService {
     this.currentUser = userStorage.profile;
     this.userEvents.next(userStorage.profile);
   }
+
   /**
    *
    * @returns Récupération du token utilisateur
@@ -57,6 +58,7 @@ export class UserService {
   public getUserToken() {
     return this.userToken;
   }
+
   /**
    * Suppression du token et "logout" de l'application.
    */
@@ -65,6 +67,7 @@ export class UserService {
     this.clearToken();
     this.router.navigate(['/login']);
   }
+
   /**
    * Suppression du localStorage et du token dans l'interceptor
    * Suppression du profile utilisateur par broadcast.

@@ -1,6 +1,7 @@
 <div class="page-container">
   <app-header legend="Création d'un héros">
-    <button pButton label="Retour" icon="pi pi-times" severity="secondary" size="small" routerLink="/bol/heros"></button>
+    <button pButton label="Retour" icon="pi pi-times" severity="secondary" size="small"
+            routerLink="/bol/heros"></button>
     <button pButton (click)="submit()" [disabled]="herosForm.invalid" label="Enregistrer" icon="pi pi-save"
             size="small" severity="warning"></button>
     <button pButton [disabled]="herosForm.invalid" label="Activer le personnage" icon="pi pi-check"
@@ -27,7 +28,8 @@
                 <bol-heros-ressources formControlName="ressources"></bol-heros-ressources>
               </div>
               <bol-heros-traits formControlName="traits"></bol-heros-traits>
-              <bol-heros-carrieres formControlName="carrieres" (desavantageCreated)="addCarriereDesavantage($event)"></bol-heros-carrieres>
+              <bol-heros-carrieres formControlName="carrieres"
+                                   (desavantageCreated)="addCarriereDesavantage($event)"></bol-heros-carrieres>
             </div>
             <div>
               <div class="flex flex-col">
@@ -40,7 +42,7 @@
               <bol-heros-armes formControlName="armes"></bol-heros-armes>
               <bol-heros-armures formControlName="armures"></bol-heros-armures>
               <p-fieldset legend="Commentaire">
-                <textarea rows="4"  style="width: 100%" pInputTextarea formControlName="commentaire"></textarea>
+                <textarea rows="4" style="width: 100%" pInputTextarea formControlName="commentaire"></textarea>
               </p-fieldset>
             </div>
           </div>

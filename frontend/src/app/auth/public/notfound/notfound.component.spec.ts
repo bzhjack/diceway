@@ -10,7 +10,7 @@ describe('NotfoundComponent', () => {
     await TestBed.configureTestingModule({
       imports: [NotfoundComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(NotfoundComponent);
     component = fixture.componentInstance;

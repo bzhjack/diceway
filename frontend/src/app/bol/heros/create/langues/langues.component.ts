@@ -37,26 +37,26 @@ import {BtnComponent} from "../../../../shared/btn/btn.component";
 @Component({
   selector: 'bol-heros-langues',
   standalone: true,
-    imports: [
-        Button,
-        FieldsetModule,
-        PrimeTemplate,
-        ButtonDirective,
-        DropdownModule,
-        NgIf,
-        OverlayPanelModule,
-        Ripple,
-        FormsModule,
-        NgForOf,
-        ReactiveFormsModule,
-        BolMessageComponent,
-        InputNumberModule,
-        BtnComponent,
-        TableModule,
-        JsonPipe,
-        ScrollPanelModule,
-        TooltipModule
-    ],
+  imports: [
+    Button,
+    FieldsetModule,
+    PrimeTemplate,
+    ButtonDirective,
+    DropdownModule,
+    NgIf,
+    OverlayPanelModule,
+    Ripple,
+    FormsModule,
+    NgForOf,
+    ReactiveFormsModule,
+    BolMessageComponent,
+    InputNumberModule,
+    BtnComponent,
+    TableModule,
+    JsonPipe,
+    ScrollPanelModule,
+    TooltipModule
+  ],
   templateUrl: './langues.component.html',
   styleUrl: './langues.component.scss',
   providers: [
@@ -236,7 +236,8 @@ export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy
   ngOnDestroy() {
     this.subs?.unsubscribe();
   }
+
   validate(control: AbstractControl): ValidationErrors | null {
-    return this.languesForm.valid ? null : { invalidForm: { valid: false, message: "Lang form is invalid" } };
+    return this.languesForm.valid ? null : {invalidForm: {valid: false, message: "Lang form is invalid"}};
   }
 }

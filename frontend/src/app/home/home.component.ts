@@ -17,7 +17,9 @@ import {BtnComponent} from "../shared/btn/btn.component";
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
-  constructor() { }
+  constructor() {
+  }
+
   ngOnInit(): void {
   }
 

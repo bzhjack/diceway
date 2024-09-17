@@ -52,7 +52,7 @@ export class LoginComponent implements OnDestroy {
       this.loginForm.get(key)?.markAsDirty();
     });
     if (this.loginForm.valid) {
-      this.messages= [];
+      this.messages = [];
       const credentials = this.loginForm.getRawValue();
       this.sub?.unsubscribe();
       this.pending = true;
@@ -61,32 +61,38 @@ export class LoginComponent implements OnDestroy {
         password: credentials.password
       }).subscribe(
         {
-        next: (result: any) => {
-          this.pending = false;
-          if (result && result.token) {
-            this.router.navigate(['callback', result.token]);
-          } else {
-            this.router.navigate(['callback', 'error']);
-          }
-        },
-        error: err => {
-          this.pending = false;
-          if (err.status === 401) {
-            this.messages.push({ severity: 'error', summary: '', detail: 'Identifiants non valides'});
-          } else if (err.status === 403) {
-            this.router.navigate(['resend', 'forbidden']);
-          } else {
-            this.messages.push({ severity: 'error', summary: '', detail: err.error?.message ? err.error.message : err.message});
+          next: (result: any) => {
+            this.pending = false;
+            if (result && result.token) {
+              this.router.navigate(['callback', result.token]);
+            } else {
+              this.router.navigate(['callback', 'error']);
+            }
+          },
+          error: err => {
+            this.pending = false;
+            if (err.status === 401) {
+              this.messages.push({severity: 'error', summary: '', detail: 'Identifiants non valides'});
+            } else if (err.status === 403) {
+              this.router.navigate(['resend', 'forbidden']);
+            } else {
+              this.messages.push({
+                severity: 'error',
+                summary: '',
+                detail: err.error?.message ? err.error.message : err.message
+              });
+            }
           }
         }
-      }
       );
     }
   }
+
   onError(controlName: string) {
     const control = this.loginForm.get(controlName);
     return control?.dirty && control.invalid;
   }
+
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
   }

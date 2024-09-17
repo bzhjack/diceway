@@ -30,7 +30,7 @@
                   style="padding-left: 2.5rem"
                   class="p-inputtext-sm"
                   type="text"
-                  [(ngModel)] = "searchTerm"
+                  [(ngModel)]="searchTerm"
                   (input)="filtering($event)"
                   placeholder="Votre recherche"/>
               </p-iconField>
@@ -40,14 +40,15 @@
                   optionLabel="type"
                   optionValue="value"
                   [showClear]="true"
-                  [(ngModel)] = "searchType"
+                  [(ngModel)]="searchType"
                   (ngModelChange)="filterExtended()"/>
                 <p-checkbox
                   class="pr-2 cursor-pointer"
-                  [(ngModel)] = "searchCreation"
+                  [(ngModel)]="searchCreation"
                   [binary]="true" label="Mes créations" (ngModelChange)="filterExtended()"/>
               </div>
-              <button pTooltip="Supprimer les filtres" pButton icon="pi pi-filter-slash" severity="info" size="small" (click)="clear(pnjTable)"></button>
+              <button pTooltip="Supprimer les filtres" pButton icon="pi pi-filter-slash" severity="info" size="small"
+                      (click)="clear(pnjTable)"></button>
             </div>
             <div>
               <button pButton label="Création" icon="pi pi-palette" severity="warning" size="small"
@@ -75,7 +76,7 @@
         <ng-template pTemplate="groupheader" let-pnj>
           <tr pRowGroupHeader>
             <td colspan="9" style="background: #183641">
-              <div class="text-2xl">{{getType(pnj)}}</div>
+              <div class="text-2xl">{{ getType(pnj) }}</div>
             </td>
           </tr>
         </ng-template>
@@ -102,8 +103,8 @@
                        [pTooltip]="pnj.commentaire ?? ''"></i>
                     <div style="text-transform: capitalize">{{ pnj.origines.nom }}</div>
                   </div>
-                  <div class="text-gray-300" style="text-transform: capitalize" >{{getType(pnj) }}</div>
-                  <div class="text-gray-400 bol-ellipsis-150" style="font-size: 12px">{{languesToStr(pnj)}}</div>
+                  <div class="text-gray-300" style="text-transform: capitalize">{{ getType(pnj) }}</div>
+                  <div class="text-gray-400 bol-ellipsis-150" style="font-size: 12px">{{ languesToStr(pnj) }}</div>
                 </div>
                 <div *ngIf="pnj.user_id" class="flex items-center gap-2">
                   <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-pencil"
@@ -232,7 +233,9 @@
                   <tr *ngFor="let trait of pnj.traits">
                     <td [class.error-color]="trait.type ==='D'"
                         [class.success-color]="trait.type ==='A'">
-                      <div class="bol-ellipsis-120"  tooltipPosition="left"  pTooltip="{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}</div>
+                      <div class="bol-ellipsis-120" tooltipPosition="left"
+                           pTooltip="{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}
+                      </div>
                     </td>
                   </tr>
                 </table>

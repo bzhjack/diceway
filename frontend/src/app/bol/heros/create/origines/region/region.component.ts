@@ -48,8 +48,8 @@ export class BolHerosRegionComponent {
   protected selectedRegion = computed(() => {
     return this.regionList()?.find((region: BolRegionModel) => Number(region.id) === Number(this.regionId()))
   });
-  protected nomsFeminins = computed(() =>this.selectedRegion()!.noms.filter((nom: BolNomModel) => nom.gender === 'F'));
-  protected nomsMasculins = computed(() =>this.selectedRegion()!.noms.filter((nom: BolNomModel) => nom.gender === 'M'));
+  protected nomsFeminins = computed(() => this.selectedRegion()!.noms.filter((nom: BolNomModel) => nom.gender === 'F'));
+  protected nomsMasculins = computed(() => this.selectedRegion()!.noms.filter((nom: BolNomModel) => nom.gender === 'M'));
 
   @ViewChild('regionPanel') scrollRegion!: ScrollPanel;
 

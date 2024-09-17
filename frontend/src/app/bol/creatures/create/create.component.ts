@@ -54,7 +54,7 @@ export class BolCreatureCreateComponent implements OnDestroy {
   private cs = inject(BolCreatureStateService);
   private fb = inject(FormBuilder);
   readonly ds = inject(DialogService);
-  public selectedCapacite= signal< BolCreatureCapaciteModel | null>(null);
+  public selectedCapacite = signal<BolCreatureCapaciteModel | null>(null);
 
   tailles = this.cs.tailleList;
   capacitesList = this.cs.capaciteList;
@@ -90,7 +90,7 @@ export class BolCreatureCreateComponent implements OnDestroy {
       degat: this.degatsCtrl,
       id_taille: this.idTailleCtrl,
       commentaire: this.commentaireCtrl,
-      avatar :this.avatarCtrl,
+      avatar: this.avatarCtrl,
       capacites: this.capacitesCtrl,
     }
   );
@@ -126,7 +126,7 @@ export class BolCreatureCreateComponent implements OnDestroy {
       creature.id_taille = Number(creature.id_taille);
       this.creatureForm.patchValue(creature, {emitEvent: false});
       this.capacites.clear();
-      creature.capacites.forEach( (capa: any) => {
+      creature.capacites.forEach((capa: any) => {
         const capacite = this.fb.group({
           id: [capa.capacite_id],
           detail: [capa.detail]
@@ -136,7 +136,7 @@ export class BolCreatureCreateComponent implements OnDestroy {
     }
 
     effect(() => {
-      if(this.tailleChange()) {
+      if (this.tailleChange()) {
         const taille = this.tailles()?.find((taille: BolCreatureTailleModel) => Number(taille.id) === Number(this.tailleChange()));
         this.degatsCtrl.setValue(taille?.degat ?? null);
         this.vigueurCtrl.setValue(taille?.vigueur ?? 0);
@@ -144,6 +144,7 @@ export class BolCreatureCreateComponent implements OnDestroy {
       }
     });
   }
+
   submit(event?: Event) {
     event?.preventDefault();
     if (this.creatureForm.invalid) {
@@ -166,12 +167,15 @@ export class BolCreatureCreateComponent implements OnDestroy {
       }
     });
   }
+
   ngOnDestroy() {
     this.subs?.unsubscribe()
   }
+
   clearSelectedCapacite() {
-     this.selectedCapacite.set(null);
+    this.selectedCapacite.set(null);
   }
+
   addCapacite(panel: OverlayPanel, event: any) {
     panel.toggle(event);
     const capacite = this.fb.group({
@@ -180,6 +184,7 @@ export class BolCreatureCreateComponent implements OnDestroy {
     });
     this.capacites.push(capacite);
   }
+
   removeCapacite(capaciteId: number) {
     const index = this.capacites.value.findIndex((capa: BolCreatureCapaciteModel) => Number(capa.id) === Number(capaciteId))
     if (index !== -1) this.capacites.removeAt(index)

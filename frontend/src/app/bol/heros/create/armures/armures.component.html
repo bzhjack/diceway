@@ -2,7 +2,8 @@
   <ng-template pTemplate="header">
     <div class="flex items-center gap-2">
       <div>Armures</div>
-      <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une arme" *ngIf="filteredArmureList()?.length > 0" (click)="selectedArmure.set(null); opArmure.toggle($event)"></app-btn>
+      <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une arme" *ngIf="filteredArmureList()?.length > 0"
+               (click)="selectedArmure.set(null); opArmure.toggle($event)"></app-btn>
     </div>
   </ng-template>
   <!-- Body Armures -->
@@ -31,7 +32,9 @@
         </td>
         <td>{{ armure.protection }}</td>
 
-        <td><app-btn (click)="deleteArmure(armure.id, $event)" ></app-btn></td>
+        <td>
+          <app-btn (click)="deleteArmure(armure.id, $event)"></app-btn>
+        </td>
       </tr>
     </ng-template>
   </p-table>

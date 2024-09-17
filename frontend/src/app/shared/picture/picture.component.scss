@@ -7,6 +7,7 @@ image-cropper {
   width: 100%;
   display: flex;
   margin-bottom: 5px;
+
   > button {
     margin-right: 10px;
   }
@@ -15,8 +16,9 @@ image-cropper {
 .body-file {
   display: flex;
 }
+
 .picture-no-image {
   border-radius: 6px;
-  background-color: rgba(255,255,255,0.1);
+  background-color: rgba(255, 255, 255, 0.1);
   border: 1px dashed #9CB0CE;
 }

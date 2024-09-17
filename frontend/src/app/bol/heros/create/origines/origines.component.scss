@@ -1,6 +1,7 @@
 :host {
   flex: auto;
 }
+
 .hero-avatar {
   height: 98px;
   width: 98px;
@@ -11,9 +12,10 @@
   border: 1px solid #424b57;
   position: relative;
 }
+
 .hero-avatar__description {
   position: absolute;
-  inset:0;
+  inset: 0;
   background: rgba(143, 158, 168, 0.5);
   color: #fff;
   //visibility: hidden;
@@ -26,6 +28,7 @@
   /* transition effect. not necessary */
   transition: opacity .2s, visibility .2s;
 }
+
 .hero-avatar:hover .hero-avatar__description {
   visibility: visible;
   opacity: 1;
@@ -33,7 +36,7 @@
 
 .input-overlay {
   position: absolute;
-  inset:0;
+  inset: 0;
   display: flex;
   flex-direction: column-reverse;
   text-align: right;
@@ -41,10 +44,15 @@
   padding-right: 5px;
   cursor: pointer;
 }
+
 .input-overlay:hover .hide-region {
   display: inline-block;
 }
-.hide-region { display: none; }
+
+.hide-region {
+  display: none;
+}
+
 .carriere-desc {
   font-size: 12px;
 }

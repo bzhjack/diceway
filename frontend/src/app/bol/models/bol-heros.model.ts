@@ -30,18 +30,21 @@ export interface BolHerosCombat {
   tir: number,
   defense: number,
 }
+
 export interface BolHerosAttributs {
   vigueur: number;
   agilite: number;
   esprit: number;
   aura: number;
 }
+
 export interface BolHerosOrigines {
   nom: string | null;
   region_id: number | null;
   region?: BolRegionModel | null;
   avatar: string | null;
 }
+
 export interface BolHerosRessources {
   vitalite: number;
   heroisme: number;

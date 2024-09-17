@@ -29,6 +29,7 @@ export class TopbarComponent {
   router = inject(Router);
   us = inject(UserService);
   userObs = this.us.user$;
+
   constructor() {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((data) => {
       const url = (data as NavigationEnd).url;
@@ -41,6 +42,7 @@ export class TopbarComponent {
       }
     });
   }
+
   logout() {
     this.us.logout();
   }

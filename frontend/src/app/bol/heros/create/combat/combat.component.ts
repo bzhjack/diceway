@@ -60,12 +60,14 @@ export class BolHerosCombatComponent implements ControlValueAccessor, Validator 
     melee: this.meleeCtrl,
     tir: this.tirCtrl,
     defense: this.defenseCtrl,
-  }, { validators: combatFormValidator });
+  }, {validators: combatFormValidator});
 
   protected formChange = toSignal(this.aptitudesForm!.valueChanges);
 
-  private onChange: (value: any) => void = () => {};
-  private onTouched: () => void = () => {};
+  private onChange: (value: any) => void = () => {
+  };
+  private onTouched: () => void = () => {
+  };
 
   constructor() {
     effect(() => {
@@ -101,10 +103,10 @@ export class BolHerosCombatComponent implements ControlValueAccessor, Validator 
     if (formErrors != null) {
       Object.keys(formErrors).forEach(keyError => {
         if (keyError === 'aptTooManyNegative') {
-          this.aptitudeErrors.push({ error: 'Tu as le droit de diminuer une seule fois une aptitude à -1', control: '' });
+          this.aptitudeErrors.push({error: 'Tu as le droit de diminuer une seule fois une aptitude à -1', control: ''});
         }
         if (keyError === 'aptSumExceeded') {
-          this.aptitudeErrors.push({ error: 'La somme des aptitudes ne doit pas dépasser 4', control: '' });
+          this.aptitudeErrors.push({error: 'La somme des aptitudes ne doit pas dépasser 4', control: ''});
         }
       });
     }
@@ -154,7 +156,8 @@ export class BolHerosCombatComponent implements ControlValueAccessor, Validator 
       this.aptitudesForm.enable();
     }
   }
+
   validate(control: AbstractControl): ValidationErrors | null {
-    return this.aptitudesForm.valid ? null : { invalidForm: { valid: false, message: "Aptitudes form is invalid" } };
+    return this.aptitudesForm.valid ? null : {invalidForm: {valid: false, message: "Aptitudes form is invalid"}};
   }
 }

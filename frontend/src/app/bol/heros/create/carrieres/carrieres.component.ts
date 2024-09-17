@@ -72,7 +72,7 @@ import {BtnComponent} from "../../../../shared/btn/btn.component";
     }
   ]
 })
-export class BolHerosCarrieresComponent implements ControlValueAccessor, Validator , OnDestroy {
+export class BolHerosCarrieresComponent implements ControlValueAccessor, Validator, OnDestroy {
   private subs?: Subscription;
   readonly #fb = inject(FormBuilder);
   readonly #bhss = inject(BolHerosStateService);
@@ -85,16 +85,20 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
   carriereErrors: { control: string, error: string }[] = [];
   carriereWarns: { step: string, warn: string }[] = [];
 
-  private onChange: (value: any) => void = () => {};
-  private onTouched: () => void = () => {};
+  private onChange: (value: any) => void = () => {
+  };
+  private onTouched: () => void = () => {
+  };
 
   carrieresForm = this.#fb.group({
     carrieres: this.#fb.array([])
-  }, { validators: carrieresFormValidator });
+  }, {validators: carrieresFormValidator});
+
   get carrieres() {
     return this.carrieresForm.controls["carrieres"] as FormArray;
   }
-  protected selectedCarriere = signal<BolCarriereModel|null>(null);
+
+  protected selectedCarriere = signal<BolCarriereModel | null>(null);
   protected heroId = computed(() => this.#bhss.currentHeros()?.id);
   protected carrieresList = this.#bhss.carriereList;
   protected availableCarrieres = computed(() => {
@@ -121,6 +125,7 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
       }
     });
   }
+
   private updateErrors() {
     this.carriereErrors = [];
     // Check des carrières
@@ -131,7 +136,7 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
         const carriere = this.carriereFromId(idCarriere)?.carriere;
         Object.keys(errors).forEach(keyError => {
           this.carriereErrors.push({
-            control:  carriere ? carriere : '',
+            control: carriere ? carriere : '',
             error: BolHeroCreateTools.translate(keyError),
           });
         });
@@ -186,10 +191,12 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
     const carriere = this.carrieresList()?.find((itemCar: BolCarriereModel) => Number(itemCar.id) === Number(id));
     return carriere ?? {carriere: null, description: null};
   }
+
   removeCarriere(carriereId: number) {
     const index = this.carrieres.value.findIndex((car: BolHerosCarriereModel) => Number(car.carriere_id) === Number(carriereId))
     if (index !== -1) this.carrieres.removeAt(index)
   }
+
   addCarriere(carriere: BolHerosCarriereModel) {
     const carriereForm = this.#fb.group({
       carriere_id: [carriere.carriere_id],
@@ -273,7 +280,6 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
   }
 
 
-
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
@@ -283,16 +289,16 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
   }
 
   writeValue(carrieres: BolHerosCarriereModel[]): void {
-      if (carrieres) {
-        this.carrieres.clear();
-        for (const carriere of carrieres) {
-          const carriereForm = this.#fb.group({
-            carriere_id: [Number(carriere.carriere_id)],
-            value: [Number(carriere.value), carriereValidator]
-          });
-          this.carrieres.push(carriereForm);
-        }
+    if (carrieres) {
+      this.carrieres.clear();
+      for (const carriere of carrieres) {
+        const carriereForm = this.#fb.group({
+          carriere_id: [Number(carriere.carriere_id)],
+          value: [Number(carriere.value), carriereValidator]
+        });
+        this.carrieres.push(carriereForm);
       }
+    }
   }
 
   setDisabledState?(isDisabled: boolean): void {
@@ -302,9 +308,11 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
       this.carrieresForm.enable();
     }
   }
+
   validate(control: AbstractControl): ValidationErrors | null {
-    return this.carrieresForm.valid ? null : { invalidForm: { valid: false, message: "Carrieres form is invalid" } };
+    return this.carrieresForm.valid ? null : {invalidForm: {valid: false, message: "Carrieres form is invalid"}};
   }
+
   ngOnDestroy() {
     this.subs?.unsubscribe();
   }

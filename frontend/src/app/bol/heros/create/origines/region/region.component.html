@@ -1,6 +1,7 @@
 <div class="region-container flex gap-2">
   <div class="dw-panel carte-region-container">
-    <img class="region-carte" id="bol-carte" src="/frontend/assets/bol/cartes/carte{{selectedRegion() ? '-'+ regionId() : ''}}.jpg" alt="carte"/>
+    <img class="region-carte" id="bol-carte"
+         src="/frontend/assets/bol/cartes/carte{{selectedRegion() ? '-'+ regionId() : ''}}.jpg" alt="carte"/>
   </div>
   <div class="flex flex-col gap-1">
     <p-messages severity="info">
@@ -9,7 +10,8 @@
         <div class="ml-4">
           Sélectionnez la région de votre personnage.<br>
           Vous pourrez choisir si vous le voulez dans la liste des noms.<br>
-          La sélection des avantages et des désavantages se fera dans un second temps.</div>
+          La sélection des avantages et des désavantages se fera dans un second temps.
+        </div>
       </ng-template>
     </p-messages>
     <p-fieldset legend="Régions" [style]="{height: '150px'}">
@@ -30,7 +32,9 @@
       <div class="relative" style="height: 70px;">
         <div class="arrow">&#8674;</div>
       </div>
-      <div style="color: darkgrey; font-size: 3vw; font-weight: lighter;white-space: nowrap">Sélectionnez une région d'origine.</div>
+      <div style="color: darkgrey; font-size: 3vw; font-weight: lighter;white-space: nowrap">Sélectionnez une région
+        d'origine.
+      </div>
     </div>
     <!-- Si cote de feu -->
     <div *ngIf="regionId() === 1" class="flex-auto flex flex-col gap-2">
@@ -40,7 +44,8 @@
           <div class="ml-4">
             Dans "La Côte de Feu", la Reine Sorcière règne avec ses gardes kalukans.<br>
             Si votre héros vient de là, vous pouvez en faire être un <strong>kalukan</strong> avec l'accord du MJ.<br>
-            Sinon, vous pouvez choisir d'être un humain et utiliser les listes d'avantages/désavantages proposées pour <strong>Halakh</strong> ou <strong>les marais de Kasht</strong>.
+            Sinon, vous pouvez choisir d'être un humain et utiliser les listes d'avantages/désavantages proposées pour
+            <strong>Halakh</strong> ou <strong>les marais de Kasht</strong>.
           </div>
         </ng-template>
       </p-messages>
@@ -61,7 +66,8 @@
         <ng-template pTemplate>
           <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
           <div class="ml-4">
-            Personne ne sait grand-chose au sujet des Terres Désolées, et moins encore sur les contrées qui s’étendraient au-delà.
+            Personne ne sait grand-chose au sujet des Terres Désolées, et moins encore sur les contrées qui
+            s’étendraient au-delà.
           </div>
         </ng-template>
       </p-messages>
@@ -73,7 +79,8 @@
           <ng-template pTemplate>
             <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
             <div class="ml-4">
-              Comme des gens de tous horizons se retrouvent ici, on y rencontre des noms provenant de toutes les contrées de Lémurie.
+              Comme des gens de tous horizons se retrouvent ici, on y rencontre des noms provenant de toutes les
+              contrées de Lémurie.
             </div>
           </ng-template>
         </p-messages>
@@ -113,7 +120,7 @@
           <div style="position: absolute; inset:15px;">
             <p-scrollPanel [style]="{display: 'block', height: '100%'}">
               <div class="flex gap-2 mb-2" *ngFor="let desavantage of selectedRegion()?.desavantages">
-                <bol-heros-trait-row  [desavantage]="desavantage"></bol-heros-trait-row >
+                <bol-heros-trait-row [desavantage]="desavantage"></bol-heros-trait-row>
               </div>
             </p-scrollPanel>
           </div>
@@ -122,7 +129,8 @@
     </div>
     <div class="flex justify-end gap-2">
       <button pButton icon="pi pi-times" size="small" label="Quitter" severity="secondary" (click)="quit()"></button>
-      <button  pButton icon="pi pi-check" size="small" label="Valider" severity="success" [disabled]="!selectedRegion()" (click)="validate()"></button>
+      <button pButton icon="pi pi-check" size="small" label="Valider" severity="success" [disabled]="!selectedRegion()"
+              (click)="validate()"></button>
     </div>
   </div>
 </div>

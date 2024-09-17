@@ -10,7 +10,7 @@ describe('TraitRowComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TraitRowComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(TraitRowComponent);
     component = fixture.componentInstance;

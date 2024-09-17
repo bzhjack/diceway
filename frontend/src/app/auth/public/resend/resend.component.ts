@@ -43,6 +43,7 @@ export class ResendComponent implements OnDestroy {
   resendForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]]
   });
+
   constructor(private route: ActivatedRoute, private fb: FormBuilder, private us: UserService, private router: Router) {
     this.forbidden = !!this.route.snapshot.paramMap.get('forbidden');
     this.title = 'Renvoyer l\'email de confirmation';
@@ -69,12 +70,13 @@ export class ResendComponent implements OnDestroy {
           },
           error: err => {
             this.pending = false;
-            this.messages.push({ severity: 'error', summary: '', detail: err.error.message});
+            this.messages.push({severity: 'error', summary: '', detail: err.error.message});
           }
         }
       );
     }
   }
+
   onError(controlName: string) {
     const control = this.resendForm.get(controlName);
     return control?.dirty && control.invalid;

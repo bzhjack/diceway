@@ -104,7 +104,6 @@ export class BolHerosCreateComponent implements OnDestroy {
   desavantages: BolDesavantageModel[] = [];
 
 
-
   public idCtrl: FormControl<string | null> = new FormControl(null);
   public userIdCtrl: FormControl<string | null> = new FormControl(null);
   public joueurCtrl = new FormControl('', Validators.required);
@@ -116,10 +115,16 @@ export class BolHerosCreateComponent implements OnDestroy {
   public languesCtrl = new FormControl<number[]>([]);
   public carrieresCtrl = new FormControl<BolHerosCarriereModel[]>([]);
 
-  public combatCtrl = new FormControl<BolHerosCombat>({defense: 0,initiative: 0,melee: 0,tir: 0});
-  public attributsCtrl = new FormControl<BolHerosAttributs>({vigueur: 0,agilite: 0,esprit: 0,aura: 0});
-  public originesCtrl = new FormControl<BolHerosOrigines>({nom: null,region_id: null, avatar: null});
-  public ressourcesCtrl = new FormControl<BolHerosRessources>({vitalite: 0 , heroisme: 0, foi: 0, pouvoir: 0, vilenie: 0});
+  public combatCtrl = new FormControl<BolHerosCombat>({defense: 0, initiative: 0, melee: 0, tir: 0});
+  public attributsCtrl = new FormControl<BolHerosAttributs>({vigueur: 0, agilite: 0, esprit: 0, aura: 0});
+  public originesCtrl = new FormControl<BolHerosOrigines>({nom: null, region_id: null, avatar: null});
+  public ressourcesCtrl = new FormControl<BolHerosRessources>({
+    vitalite: 0,
+    heroisme: 0,
+    foi: 0,
+    pouvoir: 0,
+    vilenie: 0
+  });
   public commentaireCtrl = new FormControl<string | null>(null);
   public typeCtrl = new FormControl<string>('H');
   public activeCtrl = new FormControl<boolean>(false);
@@ -196,7 +201,7 @@ export class BolHerosCreateComponent implements OnDestroy {
     if (id !== null) {
       this.getHeros(id);
     }
-    effect( () => {
+    effect(() => {
       const vigueur = Number(this.currentHero()?.attributs.vigueur ?? 0);
       this.ressourcesCtrl.setValue({
         vitalite: 10 + vigueur,
@@ -212,6 +217,7 @@ export class BolHerosCreateComponent implements OnDestroy {
   ngOnDestroy() {
     this.subs?.unsubscribe();
   }
+
   /**
    * Récupération du Héros (pour modification)
    * @param id
@@ -235,18 +241,21 @@ export class BolHerosCreateComponent implements OnDestroy {
             attributs: hero.attributs,
             origines: hero.origines,
             commentaire: hero.commentaire,
-            carrieres: hero.carrieres.map(item => { return {
-              carriere_id: item.carriere_id,
-              value: item.value
-            }; }),
-            traits: hero.traits.map(item => { return {
-              id: item.id,
-              traitable_id: item.traitable_id,
-              type: item.type,
-              detail: item.detail,
-              region_id: item.region_id,
-              carriere: item.carriere
-            }
+            carrieres: hero.carrieres.map(item => {
+              return {
+                carriere_id: item.carriere_id,
+                value: item.value
+              };
+            }),
+            traits: hero.traits.map(item => {
+              return {
+                id: item.id,
+                traitable_id: item.traitable_id,
+                type: item.type,
+                detail: item.detail,
+                region_id: item.region_id,
+                carriere: item.carriere
+              }
             })
           });
           this.spinner.hide();
@@ -279,6 +288,7 @@ export class BolHerosCreateComponent implements OnDestroy {
       });
     }
   }
+
   addCarriereDesavantage(desavantage: BolHerosTraitsModel | null) {
     if (desavantage !== null) {
       const desavantages = this.traitsCtrl.value ?? [];

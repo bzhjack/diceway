@@ -123,8 +123,10 @@
           <ng-template pTemplate="header">
             <div class="flex items-center gap-2">
               <div>Avantages & Désavantages</div>
-              <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une avantage" (click)="addItem('TA', $event)"></app-btn>
-              <app-btn type="warn" icon="plus-circle" pTooltip="Ajouter une désavantage" (click)="addItem('TD', $event)"></app-btn>
+              <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une avantage"
+                       (click)="addItem('TA', $event)"></app-btn>
+              <app-btn type="warn" icon="plus-circle" pTooltip="Ajouter une désavantage"
+                       (click)="addItem('TD', $event)"></app-btn>
             </div>
           </ng-template>
           <div *ngIf="traitsCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des traits</div>
@@ -134,7 +136,7 @@
                 <div
                   [class.error-color]="trait.value.type ==='D'"
                   [class.success-color]="trait.value.type ==='A'" class="whitespace-nowrap">
-                  {{traitFromIdType(trait.value)}}
+                  {{ traitFromIdType(trait.value) }}
                 </div>
                 <app-btn (click)="removeTrait(trait.value, traits)"></app-btn>
               </div>
@@ -145,17 +147,20 @@
           <ng-template pTemplate="header">
             <div class="flex items-center gap-2">
               <div>Carrières</div>
-              <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une capacité" (click)="addItem('C', $event)"></app-btn>
+              <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une capacité"
+                       (click)="addItem('C', $event)"></app-btn>
             </div>
           </ng-template>
 
           <div>
-            <div *ngIf="carrieresCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des carrières</div>
+            <div *ngIf="carrieresCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des
+              carrières
+            </div>
             <div formArrayName="carrieres">
               <div class="flex flex-col" *ngFor="let carriere of carrieres.controls; let i = index">
                 <div class="flex flex-col">
                   <div [formGroupName]="i" class="flex gap-2 items-center">
-                    <div style="width: 100px">{{carriereFromId(carriere.value.id)}}</div>
+                    <div style="width: 100px">{{ carriereFromId(carriere.value.id) }}</div>
                     <p-inputNumber formControlName="value" inputId="defense" maxFractionDigits="0"/>
                     <app-btn (click)="removeItem(carriere.value.id, carrieres)"></app-btn>
                   </div>
@@ -168,10 +173,12 @@
           <ng-template pTemplate="header">
             <div class="flex items-center gap-2">
               <div>Langues</div>
-              <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une langue" (click)="addItem('L', $event)"></app-btn>
+              <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une langue"
+                       (click)="addItem('L', $event)"></app-btn>
             </div>
           </ng-template>
-          <div *ngIf="languesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des langues</div>
+          <div *ngIf="languesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des langues
+          </div>
           <div class="flex flex-col gap-2">
             <div *ngFor="let item of selectedLangues()" class="flex gap-2 items-center justify-between">
               <div class="flex gap-2 items-center" style="width: 250px">
@@ -188,7 +195,8 @@
         <ng-template pTemplate="header">
           <div class="flex items-center gap-2">
             <div>Armes</div>
-            <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une arme" (click)="addItem('A', $event)"></app-btn>
+            <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une arme"
+                     (click)="addItem('A', $event)"></app-btn>
           </div>
         </ng-template>
 
@@ -196,7 +204,8 @@
         <div class="flex flex-col gap-2">
           <div *ngFor="let item of selectedArmes()" class="flex gap-2 items-center justify-between">
             <div class="flex gap-2 items-center" style="width: 250px">
-              <div class="whitespace-nowrap">{{ item.arme }}</div> <div class="text-gray-400 font-bold">{{item.degats}}</div>
+              <div class="whitespace-nowrap">{{ item.arme }}</div>
+              <div class="text-gray-400 font-bold">{{ item.degats }}</div>
             </div>
             <app-btn (click)="removeItem(item.id, armes)"></app-btn>
           </div>
@@ -206,7 +215,8 @@
         <ng-template pTemplate="header">
           <div class="flex items-center gap-2">
             <div>Armures</div>
-            <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une armure" (click)="addItem('D', $event)"></app-btn>
+            <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une armure"
+                     (click)="addItem('D', $event)"></app-btn>
           </div>
         </ng-template>
         <div *ngIf="armuresCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des armures</div>
@@ -214,7 +224,8 @@
           <div *ngFor="let item of selectedArmures()" class="flex gap-2 items-center justify-between">
             <div class="flex gap-2 items-center">
               <div class="whitespace-nowrap">{{ item.armure }}</div>
-              <div class="text-gray-400 font-bold bol-ellipsis-80"  [pTooltip]="item.protection">{{item.protection}}</div>
+              <div class="text-gray-400 font-bold bol-ellipsis-80" [pTooltip]="item.protection">{{ item.protection }}
+              </div>
             </div>
             <app-btn (click)="removeItem(item.id, armures)"></app-btn>
           </div>
@@ -254,16 +265,16 @@
         <ng-template let-item pTemplate="item">
           <div class="flex flex-col gap-2">
             @if (currentField() === 'armes') {
-              <div>{{item.arme}}</div>
-              <div class="text-gray-400">{{item.degats}}</div>
+              <div>{{ item.arme }}</div>
+              <div class="text-gray-400">{{ item.degats }}</div>
             }
             @if (currentField() === 'armures') {
               <div>{{ item.armure }}</div>
-              <div class="text-gray-400"> {{item.protection}}</div>
+              <div class="text-gray-400"> {{ item.protection }}</div>
             }
             @if (currentField() === 'carrieres') {
               <div>{{ item.carriere }}</div>
-              <div class="text-gray-400"> {{item.detail}}</div>
+              <div class="text-gray-400"> {{ item.detail }}</div>
             }
             @if (currentField() === 'avantages') {
               <div>{{ item.avantage }}</div>

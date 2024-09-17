@@ -1,7 +1,7 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
-import { BolHerosService } from './bol-heros.service';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { BolHerosModel } from '../models/bol-heros.model';
+import {computed, effect, inject, Injectable, signal} from '@angular/core';
+import {BolHerosService} from './bol-heros.service';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {BolHerosModel} from '../models/bol-heros.model';
 
 @Injectable({
   providedIn: 'root',
@@ -91,7 +91,7 @@ export class BolHerosStateService {
 
   traitsModifiers = computed(() => {
     return this.currentHeroAvantages().map((item) => {
-        return {id: item.traitable_id, type: item.type};
+      return {id: item.traitable_id, type: item.type};
     });
   });
 

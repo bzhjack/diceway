@@ -19,7 +19,8 @@ import {CardModule} from 'primeng/card';
   styleUrl: './notice.component.scss'
 })
 export class NoticeComponent {
-  reset =false;
+  reset = false;
+
   constructor(private route: ActivatedRoute) {
     this.reset = !!this.route.snapshot.paramMap.get('reset');
   }

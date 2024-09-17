@@ -34,7 +34,7 @@ export class BolCreatureCardComponent {
   editCreature = output<BolCreatureModel>()
   deleteCreature = output<BolCreatureModel>()
 
-  getSeverity (creature: BolCreatureModel) {
+  getSeverity(creature: BolCreatureModel) {
     switch (creature?.user_id) {
       case null:
         return 'success';
@@ -42,9 +42,11 @@ export class BolCreatureCardComponent {
         return 'info';
     }
   };
+
   onCreate(creature: BolCreatureModel) {
     this.editCreature.emit(<BolCreatureModel>creature);
   }
+
   onDelete(creature: BolCreatureModel, event: any) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,

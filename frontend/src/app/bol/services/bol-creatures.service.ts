@@ -10,12 +10,15 @@ export class BolCreaturesService {
 
   constructor(private http: HttpClient) {
   }
+
   creatures(): Observable<BolCreatureModel[]> {
     return this.http.get<BolCreatureModel[]>('/api/bol/creature');
   }
+
   tailles(): Observable<BolCreatureTailleModel[]> {
     return this.http.get<BolCreatureTailleModel[]>('/api/bol/creature/tailles');
   }
+
   capacites(): Observable<BolCreatureCapaciteModel[]> {
     return this.http.get<BolCreatureCapaciteModel[]>('/api/bol/creature/capacites');
   }
@@ -23,9 +26,11 @@ export class BolCreaturesService {
   createCreature(creature: BolCreatureModel): Observable<any> {
     return this.http.post<BolCreatureModel>('/api/bol/creature/create', <BolCreatureModel>creature);
   }
+
   updateCreature(creature: BolCreatureModel): Observable<any> {
     return this.http.post<BolCreatureModel>('/api/bol/creature/update', <BolCreatureModel>creature);
   }
+
   deleteCreature(id: string): Observable<any> {
     return this.http.delete<BolCreatureModel>('/api/bol/creature/delete/' + id);
   }

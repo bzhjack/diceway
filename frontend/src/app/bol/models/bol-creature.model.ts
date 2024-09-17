@@ -33,6 +33,7 @@ export interface BolCreatureCapaciteModel {
   description: string;
   detail?: string;
 }
+
 export interface BolCreatureTailleModel {
   id: number;
   taille: string;

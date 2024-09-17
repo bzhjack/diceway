@@ -32,7 +32,7 @@ export class BolPnjCardComponent {
   editPnj = output<BolHerosModel>()
   deletePnj = output<BolHerosModel>()
 
-  getSeverity (pnj: BolHerosModel) {
+  getSeverity(pnj: BolHerosModel) {
     switch (pnj?.user_id) {
       case null:
         return 'success';
@@ -40,6 +40,7 @@ export class BolPnjCardComponent {
         return 'info';
     }
   }
+
   getType(pnj: BolHerosModel) {
     switch (pnj?.type) {
       case 'C':
@@ -51,9 +52,11 @@ export class BolPnjCardComponent {
     }
     return '';
   }
+
   onCreate(pnj: BolHerosModel) {
     this.editPnj.emit(<BolHerosModel>pnj);
   }
+
   onDelete(pnj: BolHerosModel, event: any) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,

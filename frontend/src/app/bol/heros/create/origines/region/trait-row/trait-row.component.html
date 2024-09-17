@@ -9,9 +9,9 @@
       </div>
     </div>
     <div [class.disabled]="disabled" style="white-space: nowrap">{{ avantage.avantage }}
-    @if (avantage.pivot && avantage.pivot.detail) {
-      ({{avantage.pivot.detail}})
-    }
+      @if (avantage.pivot && avantage.pivot.detail) {
+        ({{ avantage.pivot.detail }})
+      }
     </div>
   </div>
   <p-overlayPanel #avPanel>
@@ -33,7 +33,7 @@
     </div>
     <div [class.disabled]="disabled" style="white-space: nowrap">{{ desavantage.desavantage }}
       @if (desavantage.pivot && desavantage.pivot.detail) {
-        ({{desavantage.pivot.detail}})
+        ({{ desavantage.pivot.detail }})
       }
     </div>
   </div>

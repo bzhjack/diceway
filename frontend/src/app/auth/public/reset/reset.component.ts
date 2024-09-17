@@ -52,12 +52,12 @@ export class ResetComponent implements OnDestroy {
     private us: UserService,
     private fb: FormBuilder,
     private router: Router) {
-      const token = this.route.snapshot.paramMap.get('token');
-      const email = this.route.snapshot.paramMap.get('email');
-      this.resetForm.patchValue({
-        token,
-        email
-      });
+    const token = this.route.snapshot.paramMap.get('token');
+    const email = this.route.snapshot.paramMap.get('email');
+    this.resetForm.patchValue({
+      token,
+      email
+    });
   }
 
   reset() {
@@ -67,15 +67,15 @@ export class ResetComponent implements OnDestroy {
       this.pending = true;
       this.sub = this.us.resetPassord(credentials).subscribe(
         {
-        next: (result: any) => {
-          this.pending = false;
-          this.router.navigate(['/welcome/success']);
-        },
-        error: err => {
-          this.pending = false;
-          this.messages.push({ severity: 'error', summary: '', detail: err.error.message});
+          next: (result: any) => {
+            this.pending = false;
+            this.router.navigate(['/welcome/success']);
+          },
+          error: err => {
+            this.pending = false;
+            this.messages.push({severity: 'error', summary: '', detail: err.error.message});
+          }
         }
-      }
       );
     }
   }

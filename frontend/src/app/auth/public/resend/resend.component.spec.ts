@@ -10,7 +10,7 @@ describe('ResendComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ResendComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ResendComponent);
     component = fixture.componentInstance;

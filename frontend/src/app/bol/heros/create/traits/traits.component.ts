@@ -34,26 +34,26 @@ import {BtnComponent} from "../../../../shared/btn/btn.component";
 @Component({
   selector: 'bol-heros-traits',
   standalone: true,
-    imports: [
-        ButtonDirective,
-        DropdownModule,
-        NgIf,
-        OverlayPanelModule,
-        PrimeTemplate,
-        Ripple,
-        FormsModule,
-        Button,
-        FieldsetModule,
-        NgForOf,
-        ReactiveFormsModule,
-        BolHerosTraitComponent,
-        JsonPipe,
-        BtnComponent,
-        BolMessageComponent,
-        DividerModule,
-        ScrollPanelModule,
-        TooltipModule
-    ],
+  imports: [
+    ButtonDirective,
+    DropdownModule,
+    NgIf,
+    OverlayPanelModule,
+    PrimeTemplate,
+    Ripple,
+    FormsModule,
+    Button,
+    FieldsetModule,
+    NgForOf,
+    ReactiveFormsModule,
+    BolHerosTraitComponent,
+    JsonPipe,
+    BtnComponent,
+    BolMessageComponent,
+    DividerModule,
+    ScrollPanelModule,
+    TooltipModule
+  ],
   templateUrl: './traits.component.html',
   styleUrl: './traits.component.scss',
   providers: [
@@ -148,7 +148,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
       });
     }
     // il faut au moins un désavantage régional si ils existennt et si il y a un avantage regional
-    if ( countRegionalDesavantages && countHerosDesavantages && !countherosRegionalDesavantages) {
+    if (countRegionalDesavantages && countHerosDesavantages && !countherosRegionalDesavantages) {
       this.traitsWarns.push({
         step: 'Traits',
         warn: 'Vous devez choisir au moins 1 désavantage <strong>regional</strong>.'

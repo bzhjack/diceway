@@ -60,12 +60,14 @@ export class BolHerosAttributsComponent implements ControlValueAccessor, Validat
     agilite: this.agiliteCtrl,
     esprit: this.espritCtrl,
     aura: this.auraCtrl,
-  }, { validators: attributsFormValidator });
+  }, {validators: attributsFormValidator});
 
   protected formChange = toSignal(this.attributsForm!.valueChanges);
 
-  private onChange: (value: any) => void = () => {};
-  private onTouched: () => void = () => {};
+  private onChange: (value: any) => void = () => {
+  };
+  private onTouched: () => void = () => {
+  };
 
   constructor() {
     effect(() => {
@@ -150,7 +152,8 @@ export class BolHerosAttributsComponent implements ControlValueAccessor, Validat
       this.attributsForm.enable();
     }
   }
+
   validate(control: AbstractControl): ValidationErrors | null {
-    return this.attributsForm.valid ? null : { invalidForm: { valid: false, message: "Attributs form is invalid" } };
+    return this.attributsForm.valid ? null : {invalidForm: {valid: false, message: "Attributs form is invalid"}};
   }
 }

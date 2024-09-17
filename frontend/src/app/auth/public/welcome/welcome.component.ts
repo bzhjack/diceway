@@ -19,7 +19,8 @@ import {CardModule} from 'primeng/card';
   styleUrl: './welcome.component.scss'
 })
 export class WelcomeComponent {
-  success =false;
+  success = false;
+
   constructor(private route: ActivatedRoute) {
     this.success = !!this.route.snapshot.paramMap.get('success');
   }

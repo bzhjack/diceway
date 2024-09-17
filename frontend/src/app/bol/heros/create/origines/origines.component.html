@@ -15,12 +15,13 @@
     <p-overlayPanel #aptitudesInfos>
       <div class="flex flex-col gap-2">
         <bol-message type="orig"></bol-message>
-        <bol-message type="form-errors" *ngIf="originesErrors.length" legend="Aptitudes invalides" [data]="originesErrors"></bol-message>
-        <bol-message type="form-warn" *ngIf="originesWarns.length" legend="Aptitudes invalides" [data]="originesWarns"></bol-message>
+        <bol-message type="form-errors" *ngIf="originesErrors.length" legend="Aptitudes invalides"
+                     [data]="originesErrors"></bol-message>
+        <bol-message type="form-warn" *ngIf="originesWarns.length" legend="Aptitudes invalides"
+                     [data]="originesWarns"></bol-message>
       </div>
     </p-overlayPanel>
   </ng-template>
-
 
 
   <div class="flex gap-2">

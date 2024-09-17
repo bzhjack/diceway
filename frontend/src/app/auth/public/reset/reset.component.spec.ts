@@ -10,7 +10,7 @@ describe('ResetComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ResetComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ResetComponent);
     component = fixture.componentInstance;

@@ -1,41 +1,27 @@
-import { Component, computed, inject, signal, ViewChild } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { map, Subscription } from 'rxjs';
-import {
-  DialogService,
-  DynamicDialogConfig,
-  DynamicDialogRef,
-} from 'primeng/dynamicdialog';
-import {
-  BolCarriereModel,
-  BolHerosCarriereModel,
-} from '../../models/bol-carriere.model';
-import { PictureComponent } from '../../../shared/picture/picture.component';
-import { DropdownModule } from 'primeng/dropdown';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
-import { FieldsetModule } from 'primeng/fieldset';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { ConfirmationService } from 'primeng/api';
-import { Button, ButtonDirective } from 'primeng/button';
-import { JsonPipe, NgForOf, NgIf } from '@angular/common';
-import { TooltipModule } from 'primeng/tooltip';
-import { BolHerosStateService } from '../../services/bol-heros-state.service';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { Ripple } from 'primeng/ripple';
-import { OverlayPanel } from 'primeng/overlaypanel/overlaypanel';
-import { BolHerosModel } from '../../models/bol-heros.model';
-import { BtnComponent } from '../../../shared/btn/btn.component';
-import { BolAvantageModel } from '../../models/bol-avantage.model';
-import { BolDesavantageModel } from '../../models/bol-desavantage.model';
+import {Component, computed, inject, signal, ViewChild} from '@angular/core';
+import {FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {map, Subscription} from 'rxjs';
+import {DialogService, DynamicDialogConfig, DynamicDialogRef,} from 'primeng/dynamicdialog';
+import {BolCarriereModel, BolHerosCarriereModel,} from '../../models/bol-carriere.model';
+import {PictureComponent} from '../../../shared/picture/picture.component';
+import {DropdownModule} from 'primeng/dropdown';
+import {InputTextModule} from 'primeng/inputtext';
+import {InputTextareaModule} from 'primeng/inputtextarea';
+import {FieldsetModule} from 'primeng/fieldset';
+import {InputNumberModule} from 'primeng/inputnumber';
+import {ConfirmationService} from 'primeng/api';
+import {Button, ButtonDirective} from 'primeng/button';
+import {JsonPipe, NgForOf, NgIf} from '@angular/common';
+import {TooltipModule} from 'primeng/tooltip';
+import {BolHerosStateService} from '../../services/bol-heros-state.service';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {OverlayPanelModule} from 'primeng/overlaypanel';
+import {Ripple} from 'primeng/ripple';
+import {OverlayPanel} from 'primeng/overlaypanel/overlaypanel';
+import {BolHerosModel} from '../../models/bol-heros.model';
+import {BtnComponent} from '../../../shared/btn/btn.component';
+import {BolAvantageModel} from '../../models/bol-avantage.model';
+import {BolDesavantageModel} from '../../models/bol-desavantage.model';
 
 @Component({
   selector: 'bol-heros-update',
@@ -65,9 +51,9 @@ import { BolDesavantageModel } from '../../models/bol-desavantage.model';
 export class BolHerosUpdateComponent {
   @ViewChild('opHeros') panelHeros?: OverlayPanel;
   public type = [
-    { type: 'Piétaille', value: 'P' },
-    { type: 'Coriaces', value: 'C' },
-    { type: 'Rivaux', value: 'R' },
+    {type: 'Piétaille', value: 'P'},
+    {type: 'Coriaces', value: 'C'},
+    {type: 'Rivaux', value: 'R'},
   ];
 
   private subs?: Subscription;
@@ -149,6 +135,7 @@ export class BolHerosUpdateComponent {
   get langues() {
     return this.herosForm.get('langues') as FormArray;
   }
+
   /*** Gestion des armes ***/
   protected armeList = this.hs.armeList;
   protected armureList = this.hs.armureList;
@@ -169,8 +156,8 @@ export class BolHerosUpdateComponent {
     this.herosForm
       .get('armes')!
       .valueChanges.pipe(
-        map((items: any[]) => items.map((item) => Number(item.id)))
-      )
+      map((items: any[]) => items.map((item) => Number(item.id)))
+    )
   );
   protected selectedArmes = computed(() => {
     return this.armeList()?.filter((item: any) =>
@@ -186,8 +173,8 @@ export class BolHerosUpdateComponent {
     this.herosForm
       .get('armures')!
       .valueChanges.pipe(
-        map((items: any[]) => items.map((item) => Number(item.id)))
-      )
+      map((items: any[]) => items.map((item) => Number(item.id)))
+    )
   );
   protected selectedArmures = computed(() => {
     return this.armureList()?.filter((item: any) =>
@@ -204,8 +191,8 @@ export class BolHerosUpdateComponent {
     this.herosForm
       .get('carrieres')!
       .valueChanges.pipe(
-        map((items: any[]) => items.map((item) => Number(item.id)))
-      )
+      map((items: any[]) => items.map((item) => Number(item.id)))
+    )
   );
   protected unselectedCarrieres = computed(() => {
     return this.carriereList()?.filter(
@@ -217,8 +204,8 @@ export class BolHerosUpdateComponent {
     this.herosForm
       .get('langues')!
       .valueChanges.pipe(
-        map((items: any[]) => items.map((item) => Number(item.id)))
-      )
+      map((items: any[]) => items.map((item) => Number(item.id)))
+    )
   );
   protected unselectedLangues = computed(() => {
     return this.langueList()?.filter(
@@ -235,10 +222,10 @@ export class BolHerosUpdateComponent {
     this.herosForm
       .get('traits')!
       .valueChanges.pipe(
-        map((items: any[]) =>
-          items.map((item) => ({ id: Number(item.id), type: item.type }))
-        )
+      map((items: any[]) =>
+        items.map((item) => ({id: Number(item.id), type: item.type}))
       )
+    )
   );
   protected unselectedAvantages = computed(() => {
     const selectedAIds = this.selectedTraitsIds()
@@ -284,7 +271,7 @@ export class BolHerosUpdateComponent {
           foi: heros.ressources.foi,
           heroisme: heros.ressources.heroisme,
         },
-        { emitEvent: false }
+        {emitEvent: false}
       );
       this.armes.clear();
       heros.armes.forEach((arme: any) => {
@@ -336,6 +323,7 @@ export class BolHerosUpdateComponent {
     );
     if (index !== -1) items.removeAt(index);
   }
+
   removeTrait(trait: { id: number; type: 'A' | 'D' }, items: FormArray) {
     const index = items.value.findIndex(
       (item: any) =>
@@ -434,6 +422,7 @@ export class BolHerosUpdateComponent {
     );
     return carriere?.carriere ?? '';
   }
+
   traitFromIdType(trait: { id: number; type: 'A' | 'D' }) {
     const result = (
       trait.type === 'A' ? this.avantageList() : this.desavantageList()
@@ -461,7 +450,7 @@ export class BolHerosUpdateComponent {
   }
 
   picture() {
-    const ref = this.ds.open(PictureComponent, { header: 'Photo du Heros' });
+    const ref = this.ds.open(PictureComponent, {header: 'Photo du Heros'});
     this.subs?.unsubscribe();
     this.subs = ref.onClose.subscribe((avatar: any) => {
       if (avatar !== null && avatar !== undefined) {

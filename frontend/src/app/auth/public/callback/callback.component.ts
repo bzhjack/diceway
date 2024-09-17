@@ -15,13 +15,16 @@ import {ProgressBarModule} from 'primeng/progressbar';
   styleUrl: './callback.component.scss'
 })
 export class CallbackComponent implements OnInit {
-  constructor(private route: ActivatedRoute, private userService: UserService, private router: Router) { }
+  constructor(private route: ActivatedRoute, private userService: UserService, private router: Router) {
+  }
+
   ngOnInit(): void {
     const token = this.route.snapshot.paramMap.get('token');
     if (token) {
       this.authenticate(token);
     }
   }
+
   authenticate(token: string) {
     this.userService.profile(token)
       .subscribe(
@@ -29,7 +32,7 @@ export class CallbackComponent implements OnInit {
           next:
             (result: any) => {
               if (result) {
-                this.userService.storeLoggedInUser({ profile: result, token })
+                this.userService.storeLoggedInUser({profile: result, token})
                 this.router.navigate(['/'])
               }
             },

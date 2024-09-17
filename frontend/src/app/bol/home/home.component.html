@@ -10,8 +10,12 @@
         <div class="p-4">
           <div class="home-bol-card-title">Héros de la Lémurie</div>
           <div>
-            <div class="home-bol-counter">{{counts()?.countHeros}}<div class="home-bol-counter__description">Héros créé(s)</div></div>
-            <div class="home-bol-counter">{{counts()?.countHerosPending}}<div class="home-bol-counter__description">En cours de création</div></div>
+            <div class="home-bol-counter">{{ counts()?.countHeros }}
+              <div class="home-bol-counter__description">Héros créé(s)</div>
+            </div>
+            <div class="home-bol-counter">{{ counts()?.countHerosPending }}
+              <div class="home-bol-counter__description">En cours de création</div>
+            </div>
           </div>
         </div>
       </div>
@@ -24,8 +28,12 @@
           <div class="home-bol-card-title">Personnages non joueurs</div>
           <div>
             <div>
-              <div class="home-bol-counter">{{counts()?.countPnjs}}<div class="home-bol-counter__description">Archétypes</div></div>
-              <div class="home-bol-counter">{{counts()?.countCreatedPnjs}}<div class="home-bol-counter__description">Création(s) personnelle(s)</div></div>
+              <div class="home-bol-counter">{{ counts()?.countPnjs }}
+                <div class="home-bol-counter__description">Archétypes</div>
+              </div>
+              <div class="home-bol-counter">{{ counts()?.countCreatedPnjs }}
+                <div class="home-bol-counter__description">Création(s) personnelle(s)</div>
+              </div>
             </div>
           </div>
         </div>
@@ -39,8 +47,12 @@
         <div class="p-4">
           <div class="home-bol-card-title">Bestiaire de la Lémurie</div>
           <div>
-            <div class="home-bol-counter">{{counts()?.countCreatures}}<div class="home-bol-counter__description">Créatures de la bestiaire</div></div>
-            <div class="home-bol-counter">{{counts()?.countCreatedCreatures}}<div class="home-bol-counter__description">Création(s) personnelle(s)</div></div>
+            <div class="home-bol-counter">{{ counts()?.countCreatures }}
+              <div class="home-bol-counter__description">Créatures de la bestiaire</div>
+            </div>
+            <div class="home-bol-counter">{{ counts()?.countCreatedCreatures }}
+              <div class="home-bol-counter__description">Création(s) personnelle(s)</div>
+            </div>
           </div>
         </div>
       </div>
