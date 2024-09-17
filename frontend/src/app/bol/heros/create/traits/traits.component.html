@@ -24,13 +24,12 @@
     </p-overlayPanel>
   </ng-template>
   <!-- Body Traits -->
-  <p-scrollPanel class="flex-auto" [style]="{height: '90px', width: '500px'}">
     @if (traits.controls.length === 0) {
       <div class="text-xl text-gray-500">Choisissez un avantage</div>
     } @else {
       <div class="flex flex-col mb-2">
         <div class="flex gap-1">
-          <div style="width: 230px" class="flex flex-col gap-2">
+          <div class="flex flex-col gap-2">
             <!--- Avantages --->
             <ng-container *ngFor="let trait of traits.controls; let i = index">
               @if (trait.value.type === 'A') {
@@ -43,7 +42,7 @@
           </div>
           <p-divider layout="vertical"/>
           <!--- Désavantages --->
-          <div style="width: 230px" class="flex flex-col gap-2">
+          <div class="flex flex-col gap-2">
             <ng-container *ngFor="let trait of traits.controls; let i = index">
               @if (trait.value.type === 'D' && trait.value.carriere === false) {
                 <div class="flex items-center">
@@ -64,7 +63,6 @@
         </div>
       </div>
     }
-  </p-scrollPanel>
 </p-fieldset>
 
 

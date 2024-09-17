@@ -14,30 +14,26 @@
     <!----------------------->
     <p-scrollPanel styleClass="flex-auto" [style]="{height: 'calc(100vh - 135px)'}">
       <form (ngSubmit)="submit()" [formGroup]="herosForm" autocomplete="off">
-        <div class="flex flex-col">
-          <div class="flex gap-2">
-            <div>
-              <div class="flex gap-2">
-                <bol-heros-origines [heroId]="heroId()" formControlName="origines"></bol-heros-origines>
-                <bol-heros-ressources formControlName="ressources"></bol-heros-ressources>
-              </div>
-              <bol-heros-traits formControlName="traits"></bol-heros-traits>
-              <bol-heros-carrieres formControlName="carrieres"
-                                   (desavantageCreated)="addCarriereDesavantage($event)"></bol-heros-carrieres>
+        <div class="flex gap-1">
+          <div>
+            <bol-heros-origines [heroId]="heroId()" formControlName="origines"></bol-heros-origines>
+            <div class="flex gap-1">
+              <bol-heros-ressources formControlName="ressources"></bol-heros-ressources>
+              <bol-heros-attributs formControlName="attributs"></bol-heros-attributs>
+              <bol-heros-combat formControlName="combat"></bol-heros-combat>
             </div>
-            <div>
-              <div class="flex flex-col">
-                <bol-heros-attributs formControlName="attributs"></bol-heros-attributs>
-                <bol-heros-combat formControlName="combat"></bol-heros-combat>
-                <bol-heros-langues formControlName="langues"></bol-heros-langues>
-              </div>
-            </div>
-            <div>
+            <div class="flex gap-2" style="background-color: aqua;">
               <bol-heros-armes formControlName="armes"></bol-heros-armes>
               <bol-heros-armures formControlName="armures"></bol-heros-armures>
             </div>
           </div>
+
+          <div class="flex flex-col">
+            <bol-heros-traits formControlName="traits"></bol-heros-traits>
+            <bol-heros-carrieres formControlName="carrieres" (desavantageCreated)="addCarriereDesavantage($event)"></bol-heros-carrieres>
+          </div>
         </div>
+
       </form>
     </p-scrollPanel>
   </div>
