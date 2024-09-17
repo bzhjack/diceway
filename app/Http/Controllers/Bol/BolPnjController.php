@@ -29,7 +29,6 @@ class BolPnjController extends Controller
                 $query->where('user_id', Auth::id())
                     ->orWhereNull('user_id');
             })
-            ->orderByRaw("FIELD(type, 'H', 'P', 'C', 'R')")
             ->orderBy('user_id', 'desc')
             ->orderBy('nom')
             ->get();

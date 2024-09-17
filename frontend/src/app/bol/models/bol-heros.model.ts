@@ -11,6 +11,7 @@ export interface BolHerosModel {
   active: boolean;
   joueur: string;
   type: string;
+  type_order?: number;
   commentaire: string | null;
   combat: BolHerosCombat,
   attributs: BolHerosAttributs,
