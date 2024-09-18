@@ -100,6 +100,7 @@ import {TableModule} from "primeng/table";
 })
 export class BolHerosCreateComponent implements OnDestroy {
   readonly #herosStateService = inject(BolHerosStateService);
+  readonly #cs = inject(ConfirmationService);
   public warnCount = this.#herosStateService.warnCount;
   private subs?: Subscription;
 
@@ -308,24 +309,34 @@ export class BolHerosCreateComponent implements OnDestroy {
       this.traitsCtrl.setValue(desavantages);
     }
   }
-  herosActivation() {
-    this.modifiers().forEach((modifier) => {
-      let control = null;
-      if (['vitalite','heroisme','foi','pouvoir','vilenie','creation','experience'].includes(modifier.attr)) {
-        control = this.ressourcesCtrl;
-      }
-      if (['initiative','melee','tir','defense'].includes(modifier.attr)) {
-        control = this.combatCtrl;
-      }
-      if (['vigueur','aura','esprit','agilite'].includes(modifier.attr)) {
-        control = this.attributsCtrl;
-      }
-      if (control) {
-        let data: any = control.value;
-        data[modifier.attr] = Number(data[modifier.attr]) +  Number(modifier.value);
-        control.patchValue(data);
-      }
-    });
-    this.submit(true);
+  herosActivation(event: any) {
+      this.#cs.confirm({
+        target: event.target as EventTarget,
+        message: 'Voulez vous valider la création de ce personnage ?',
+        icon: 'pi pi-info-circle',
+        acceptButtonStyleClass: 'p-button-success p-button-sm',
+        acceptLabel: "Oui",
+        rejectLabel: "Non",
+        accept: () => {
+          this.modifiers().forEach((modifier) => {
+            let control = null;
+            if (['vitalite','heroisme','foi','pouvoir','vilenie','creation','experience'].includes(modifier.attr)) {
+              control = this.ressourcesCtrl;
+            }
+            if (['initiative','melee','tir','defense'].includes(modifier.attr)) {
+              control = this.combatCtrl;
+            }
+            if (['vigueur','aura','esprit','agilite'].includes(modifier.attr)) {
+              control = this.attributsCtrl;
+            }
+            if (control) {
+              let data: any = control.value;
+              data[modifier.attr] = Number(data[modifier.attr]) +  Number(modifier.value);
+              control.patchValue(data);
+            }
+          });
+          this.submit(true);
+        }
+      });
   }
 }
