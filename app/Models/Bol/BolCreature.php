@@ -16,6 +16,7 @@ class BolCreature extends Model
     public $incrementing = false;
     protected $keyType = 'uuid';
     protected $hidden = ['created_at', 'updated_at'];
+    protected $appends = ['type'];
     protected $fillable = [
         'id',
         'user_id',
@@ -39,7 +40,8 @@ class BolCreature extends Model
         'vitalite' => 'integer',
         'attaque' => 'integer',
         'defense' => 'integer',
-        'id_taille' => 'integer'
+        'id_taille' => 'integer',
+        'type_order' => 'string'
     ];
     public function capacites(): HasMany
     {
@@ -48,5 +50,8 @@ class BolCreature extends Model
     public function  taille(): HasOne
     {
         return $this->HasOne(BolTaille::class, 'id', 'id_taille');
+    }
+    public function getTypeAttribute() {
+        return $this->taille->type;
     }
 }
