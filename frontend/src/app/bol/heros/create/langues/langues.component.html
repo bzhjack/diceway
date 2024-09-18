@@ -6,8 +6,8 @@
         <div *ngIf="langueErrors.length" style="color: var(--error-color)">
           <i class="pi pi-exclamation-triangle"></i> ({{ langueErrors.length }})
         </div>
-        <div *ngIf="langueWarns.length" style="color: var(--warn-color)">
-          <i class="pi pi-exclamation-triangle"></i> ({{ langueWarns.length }})
+        <div *ngIf="langueWarns.length" style="color: var(--success-color)">
+          <i class="pi pi-bell"></i>
         </div>
       </div>
 
@@ -20,7 +20,7 @@
         <bol-message type="lang"></bol-message>
         <bol-message type="form-errors" *ngIf="langueErrors.length" legend="Langues invalides"
                      [data]="langueErrors"></bol-message>
-        <bol-message type="form-warn" *ngIf="langueWarns.length" legend="Langues invalides"
+        <bol-message type="form-info" *ngIf="langueWarns.length" legend="Langues invalides"
                      [data]="langueWarns"></bol-message>
       </div>
     </p-overlayPanel>
@@ -51,7 +51,7 @@
 
       <ng-template let-langue pTemplate="item">
         <div class="flex flex-col gap-2">
-          <div class="text-xl">{{ langue.langue }}</div>
+          <div>{{ langue.langue }}</div>
         </div>
       </ng-template>
     </p-dropdown>

@@ -4,16 +4,16 @@
     <div class="flex items-center gap-1">
       <i class="pi pi-info-circle" *ngIf="!heroismCost()"></i>
       <div class="cursor-pointer" (click)="ressourcesInfos.toggle($event)">
-        <div *ngIf="heroismCost()" style="color: var(--warn-color)">
-          <i class="pi pi-exclamation-triangle"></i>
+        <div *ngIf="heroismCost()" style="color: var(--success-color)">
+          <i class="pi pi-bell"></i>
         </div>
       </div>
       <div>Ressources</div>
     </div>
     <p-overlayPanel #ressourcesInfos>
       <div class="flex flex-col gap-2">
-        <div class="text-amber-500">
-          <i class="pi pi-exclamation-triangle pr-4"></i>Vous perdez {{ heroismCost() }} points d'héroïsme si vous ne
+        <div class="text-green-500">
+          <i class="pi pi-bell pr-4"></i>Vous perdrez {{ heroismCost() }} points d'héroïsme si vous ne
           choisissez pas {{ heroismCost() }} autre(s) désavantage(s).
         </div>
       </div>

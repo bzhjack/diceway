@@ -104,16 +104,27 @@ export class BolHerosStateService {
       }
     });
     if (this.heroismCost() > 0) {
-      modifiers.push({attr: 'heroisme', value: Number(this.heroismCost())});
+      modifiers.push({attr: 'heroisme', value: Number(this.heroismCost()) * -1});
     }
     const vigueur = Number(this.currentHeros()?.attributs.vigueur ?? 0);
     if (vigueur !== 0) {
       modifiers.push({attr: 'vigueur', value: vigueur});
     }
-
-    // points de créations = rang d'alchimiste
-    // points de pouvoir = 10 + rang de sorcier
-    // point de foi = rang pretre.
+    this.currentHerosCarrieres().forEach((carriere) => {
+      // 24: sorcier, 1: alchimiste, 21: pretre/druide
+      // points de créations = rang d'alchimiste
+      // points de pouvoir = 10 + rang de sorcier
+      // point de foi = rang pretre.
+      if (carriere.carriere_id === 24) {
+        modifiers.push({attr: 'pouvoir', value: 10 + Number(carriere.value) });
+      }
+      if (carriere.carriere_id === 1 && Number(carriere.value) !== 0) {
+        modifiers.push({attr: 'creation', value: Number(carriere.value) });
+      }
+      if (carriere.carriere_id === 21 && Number(carriere.value) !== 0) {
+        modifiers.push({attr: 'foi', value: Number(carriere.value) });
+      }
+    });
     return modifiers;
   });
 

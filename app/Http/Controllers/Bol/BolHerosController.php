@@ -60,6 +60,7 @@ class BolHerosController extends Controller
         $herosId = $request->input('id');
 
         $data = $request->input();
+        $heros['active'] = $data['active'];
 
         $attributs = $request->input('attributs');
         $heros['vigueur'] = $attributs['vigueur'];

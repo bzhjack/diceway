@@ -73,7 +73,7 @@ export class BolHerosRessourcesComponent implements ControlValueAccessor {
         heroisme: value.heroisme,
         vitalite: value.vitalite,
         creation: value.creation,
-        pouvoir: value.creation,
+        pouvoir: value.pouvoir,
         foi: value.foi,
       });
     }

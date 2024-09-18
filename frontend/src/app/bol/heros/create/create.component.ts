@@ -2,7 +2,7 @@ import {Component, computed, effect, inject, OnDestroy} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {InputTextModule} from "primeng/inputtext";
 import {InputNumberModule} from 'primeng/inputnumber';
-import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ToolbarModule} from "primeng/toolbar";
 import {ButtonModule} from "primeng/button";
 import {SplitButtonModule} from "primeng/splitbutton";
@@ -15,7 +15,7 @@ import {
   BolHerosRessources
 } from "../../models/bol-heros.model";
 import {forkJoin, map, Observable, Subscription} from "rxjs";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {FieldsetModule} from "primeng/fieldset";
 import {OverlayPanelModule} from "primeng/overlaypanel";
@@ -49,6 +49,8 @@ import {BolHerosTraitsModel} from "../../models/bol-trait.model";
 import {BolHerosLanguesComponent} from "./langues/langues.component";
 import {HeaderComponent} from "../../../shared/header/header.component";
 import {InputTextareaModule} from "primeng/inputtextarea";
+import {BtnComponent} from "../../../shared/btn/btn.component";
+import {TableModule} from "primeng/table";
 
 
 @Component({
@@ -87,6 +89,8 @@ import {InputTextareaModule} from "primeng/inputtextarea";
     BolHerosLanguesComponent,
     HeaderComponent,
     InputTextareaModule,
+    BtnComponent,
+    TableModule,
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
@@ -112,8 +116,18 @@ export class BolHerosCreateComponent implements OnDestroy {
   public languesCtrl = new FormControl<number[]>([]);
   public carrieresCtrl = new FormControl<BolHerosCarriereModel[]>([]);
 
-  public combatCtrl = new FormControl<BolHerosCombat>({defense: 0, initiative: 0, melee: 0, tir: 0});
-  public attributsCtrl = new FormControl<BolHerosAttributs>({vigueur: 0, agilite: 0, esprit: 0, aura: 0});
+  public combatCtrl = new FormControl<BolHerosCombat>({
+    defense: 0,
+    initiative: 0,
+    melee: 0,
+    tir: 0
+  });
+  public attributsCtrl = new FormControl<BolHerosAttributs>({
+    vigueur: 0,
+    agilite: 0,
+    esprit: 0,
+    aura: 0
+  });
   public originesCtrl = new FormControl<BolHerosOrigines>({
     nom: null,
     region_id: null,
@@ -202,6 +216,7 @@ export class BolHerosCreateComponent implements OnDestroy {
     private spinner: NgxSpinnerService,
     private fb: FormBuilder,
     private hs: BolHerosService,
+    private router: Router,
     private readonly route: ActivatedRoute) {
     const id = this.route.snapshot.paramMap.get('id');
     if (id !== null) {
@@ -266,17 +281,21 @@ export class BolHerosCreateComponent implements OnDestroy {
   /**
    * Sauvegarde du héros
    */
-  submit() {
-    if (this.herosForm.invalid) {
+  submit(activate = false) {
+    if (this.herosForm.invalid && !activate) {
       return;
     }
     const hero = this.herosForm.value;
     this.spinner.show();
     this.subs?.unsubscribe();
     if (hero.id !== null) {
-      this.subs = this.hs.updateHeros(this.herosForm.value as unknown as BolHerosModel).subscribe({
+      hero.active = activate;
+      this.subs = this.hs.updateHeros(hero as unknown as BolHerosModel).subscribe({
         next: () => {
           this.spinner.hide();
+          if (activate) {
+            this.router.navigate(['bol','heros']);
+          }
         },
         error: () => {
           this.spinner.hide();
@@ -291,5 +310,25 @@ export class BolHerosCreateComponent implements OnDestroy {
       desavantages.push(desavantage);
       this.traitsCtrl.setValue(desavantages);
     }
+  }
+  herosActivation() {
+    this.modifiers().forEach((modifier) => {
+      let control = null;
+      if (['vitalite','heroisme','foi','pouvoir','vilenie','creation','experience'].includes(modifier.attr)) {
+        control = this.ressourcesCtrl;
+      }
+      if (['initiative','melee','tir','defense'].includes(modifier.attr)) {
+        control = this.combatCtrl;
+      }
+      if (['vigueur','aura','esprit','agilite'].includes(modifier.attr)) {
+        control = this.attributsCtrl;
+      }
+      if (control) {
+        let data: any = control.value;
+        data[modifier.attr] = Number(data[modifier.attr]) +  Number(modifier.value);
+        control.patchValue(data);
+      }
+    });
+    this.submit(true);
   }
 }
