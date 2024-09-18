@@ -29,7 +29,7 @@ class BolLangueSeeder extends Seeder
             ["id" => 13, "langue" => "Valgardien", "description" => "Langue parlée et écrite par les habitants du Valgard, étonnamment élaborée."],
             ["id" => 14, "langue" => "Ygddari", "description" => "Ancienne langue des hommes (aussi appelée langue des Anciens). Peu d'individus la parlent aujourd'hui, et encore moins peuvent la lire. Des textes antiques sont parfois retrouvés dans les ruines, nécessitant les services d'un scribe particulièrement compétent pour leur traduction."],
         ];
-        Bollangue::truncate();
+        BolLangue::truncate();
         // Insérer les données dans la table des régions
         foreach ($langues as $langue) {
             BolLangue::create($langue);
