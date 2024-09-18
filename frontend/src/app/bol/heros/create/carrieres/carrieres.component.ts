@@ -123,7 +123,7 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
         this.onChange(this.carrieresForm.get('carrieres')?.value);
         this.onTouched();
       }
-    });
+    },{allowSignalWrites: true});
   }
 
   private updateErrors() {
@@ -185,6 +185,7 @@ export class BolHerosCarrieresComponent implements ControlValueAccessor, Validat
         });
       }
     }
+    this.#bhss.setwarnCarrieres(this.carriereWarns);
   }
 
   carriereFromId(id: number) {

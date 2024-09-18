@@ -18,6 +18,7 @@ import {NgIf} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {BolMessageComponent} from "../../../message/message.component";
 import {InputNumberModule} from "primeng/inputnumber";
+import {BolHerosStateService} from "../../../services/bol-heros-state.service";
 
 @Component({
   selector: 'bol-heros-attributs',
@@ -47,6 +48,7 @@ import {InputNumberModule} from "primeng/inputnumber";
 })
 export class BolHerosAttributsComponent implements ControlValueAccessor, Validator {
   readonly #fb = inject(FormBuilder);
+  readonly #bhss = inject(BolHerosStateService);
   attributErrors: { control: string, error: string }[] = [];
   attributWarns: { step: string, warn: string }[] = [];
 
@@ -77,7 +79,7 @@ export class BolHerosAttributsComponent implements ControlValueAccessor, Validat
         this.onChange(this.attributsForm.value);
         this.onTouched();
       }
-    });
+    }, {allowSignalWrites: true});
   }
 
   private updateErrors() {
@@ -122,6 +124,7 @@ export class BolHerosAttributsComponent implements ControlValueAccessor, Validat
         this.attributWarns.push({step: 'Attributs', warn: 'il manque ' + (4 - sumAttr) + ' pts dans les attributs'});
       }
     }
+    this.#bhss.setWarnAttrs(this.attributWarns);
   }
 
   registerOnChange(fn: any): void {

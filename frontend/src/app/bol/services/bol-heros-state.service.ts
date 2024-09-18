@@ -128,9 +128,36 @@ export class BolHerosStateService {
     return modifiers;
   });
 
+  warnTraits = signal([]);
+  warnAttrs = signal([]);
+  warnCombat = signal([]);
+  warnCarrieres = signal([]);
+  warnOrigines = signal([]);
+  warnCount= computed(() =>
+    this.warnTraits().length +
+    this.warnAttrs().length +
+    this.warnCombat().length +
+    this.warnCarrieres().length +
+    this.warnOrigines().length);
   constructor() {
     effect(() => {
       console.log('currentHero changed:', this.currentHeros());
     });
+  }
+
+  setWarnTraits(traits: any) {
+    this.warnTraits.set(traits);
+  }
+  setWarnAttrs(attr: any) {
+    this.warnAttrs.set(attr);
+  }
+  setWarnCombat(combat: any) {
+    this.warnCombat.set(combat);
+  }
+  setWarnOrigines(origines: any) {
+    this.warnOrigines.set(origines);
+  }
+  setwarnCarrieres(carrieres: any) {
+    this.warnCarrieres.set(carrieres);
   }
 }

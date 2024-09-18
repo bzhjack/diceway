@@ -109,7 +109,7 @@ export class BolHerosOriginesComponent implements ControlValueAccessor, Validato
         this.onChange(this.originesForm.value);
         this.onTouched();
       }
-    });
+    }, {allowSignalWrites: true});
   }
 
   private updateErrors() {
@@ -138,6 +138,7 @@ export class BolHerosOriginesComponent implements ControlValueAccessor, Validato
         });
       }
     }
+    this.#bhss.setWarnOrigines(this.originesWarns);
   }
 
 

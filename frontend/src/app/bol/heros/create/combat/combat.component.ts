@@ -18,6 +18,7 @@ import {attributValidator, combatFormValidator} from "../create.validators";
 import {NgIf} from "@angular/common";
 import {toSignal} from '@angular/core/rxjs-interop';
 import {BolHeroCreateTools} from '../create.tools';
+import {BolHerosStateService} from "../../../services/bol-heros-state.service";
 
 @Component({
   selector: 'bol-heros-combat',
@@ -47,6 +48,7 @@ import {BolHeroCreateTools} from '../create.tools';
 })
 export class BolHerosCombatComponent implements ControlValueAccessor, Validator {
   readonly #fb = inject(FormBuilder);
+  readonly #hss = inject(BolHerosStateService);
   aptitudeErrors: { control: string, error: string }[] = [];
   aptitudeWarns: { step: string, warn: string }[] = [];
 
@@ -77,7 +79,7 @@ export class BolHerosCombatComponent implements ControlValueAccessor, Validator 
         this.onChange(this.aptitudesForm.value);
         this.onTouched();
       }
-    });
+    },{allowSignalWrites: true});
   }
 
   private updateErrors() {
@@ -126,6 +128,7 @@ export class BolHerosCombatComponent implements ControlValueAccessor, Validator 
         });
       }
     }
+    this.#hss.setWarnCombat(this.aptitudeWarns);
   }
 
   registerOnChange(fn: any): void {

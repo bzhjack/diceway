@@ -7,7 +7,7 @@
             routerLink="/bol/heros"></button>
     <button pButton (click)="submit()" [disabled]="herosForm.invalid" label="Enregistrer" icon="pi pi-save"
             size="small" severity="warning"></button>
-    <button pButton [disabled]="herosForm.invalid" label="Activer le personnage" (click)="herosActivation()" icon="pi pi-check"
+    <button pButton [disabled]="herosForm.invalid || warnCount() > 0" label="Activer le personnage" (click)="herosActivation()" icon="pi pi-check"
             size="small" severity="success"></button>
 
   </app-header>

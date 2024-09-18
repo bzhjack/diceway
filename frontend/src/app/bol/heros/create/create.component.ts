@@ -100,7 +100,7 @@ import {TableModule} from "primeng/table";
 })
 export class BolHerosCreateComponent implements OnDestroy {
   readonly #herosStateService = inject(BolHerosStateService);
-
+  public warnCount = this.#herosStateService.warnCount;
   private subs?: Subscription;
 
   avantages: BolAvantageModel[] = [];
@@ -222,9 +222,6 @@ export class BolHerosCreateComponent implements OnDestroy {
     if (id !== null) {
       this.getHeros(id);
     }
-    effect(() => {
-      console.log(this.#herosStateService.traitsModifiers());
-    });
   }
 
   ngOnDestroy() {

@@ -123,7 +123,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
         this.onChange(this.traitsForm.get('traits')?.value);
         this.onTouched();
       }
-    });
+    },{allowSignalWrites: true});
   }
 
   checkWarns() {
@@ -154,6 +154,7 @@ export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy 
         warn: 'Vous devez choisir au moins 1 désavantage <strong>regional</strong>.'
       });
     }
+    this.#bhss.setWarnTraits(this.traitsWarns);
   }
 
   addTraitToForm(trait: BolHerosTraitsModel) {
