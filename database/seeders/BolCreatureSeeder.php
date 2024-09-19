@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Bol\BolCreature;
 use App\Models\Bol\BolCreatureCapacite;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Schema;
 
 class BolCreatureSeeder extends Seeder
 {
