@@ -16,6 +16,7 @@ use App\Http\Controllers\Bol\BolCarriereController;
 use App\Http\Controllers\Bol\BolArmureController;
 use App\Http\Controllers\Bol\BolArmeController;
 use App\Http\Controllers\Bol\BolPnjController;
+use App\Http\Controllers\Bol\BolDemonController;
 use App\Http\Controllers\Bol\BolDashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -94,6 +95,14 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::delete('/bol/creature/delete/{id}', [BolCreatureController::class, 'delete']);
     Route::get('/bol/creature/tailles', [BolCreatureController::class, 'getAllTailles']);
     Route::get('/bol/creature/capacites', [BolCreatureController::class, 'getAllCapacites']);
+
+    // Gestion des démons
+    Route::get('/bol/demon', [BolDemonController::class, 'getAll']);
+    Route::post('/bol/demon/create', [BolDemonController::class, 'create']);
+    Route::post('/bol/demon/update', [BolDemonController::class, 'update']);
+    Route::delete('/bol/demon/delete/{id}', [BolDemonController::class, 'delete']);
+    Route::get('/bol/demon/categories', [BolDemonController::class, 'getAllCategories']);
+    Route::get('/bol/demon/pouvoirs', [BolDemonController::class, 'getAllPouvoirs']);
 
     // Gestion du Héros
     Route::get('/bol/heros', [BolHerosController::class, 'getAll']);

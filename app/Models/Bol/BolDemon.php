@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models\Bol;
-
+use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,7 +11,7 @@ class BolDemon extends Model
 {
     use HasFactory, Uuids;
 
-    protected $table = 'bol_creature';
+    protected $table = 'bol_demon';
     public $incrementing = false;
     protected $keyType = 'uuid';
     protected $hidden = ['created_at', 'updated_at'];

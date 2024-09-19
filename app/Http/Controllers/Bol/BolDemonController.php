@@ -3,14 +3,10 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
-use App\Models\Bol\BolCapacite;
 use App\Models\Bol\BolCategorie;
-use App\Models\Bol\BolCreature;
-use App\Models\Bol\BolCreatureCapacite;
 use App\Models\Bol\BolDemon;
 use App\Models\Bol\BolDemonPouvoir;
 use App\Models\Bol\BolPouvoir;
-use App\Models\Bol\BolTaille;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
