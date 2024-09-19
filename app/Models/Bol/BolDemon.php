@@ -49,10 +49,11 @@ class BolDemon extends Model
         'id_categorie' => 'integer'
     ];
 
-    /*public function pouvoirs(): HasMany
+    public function pouvoirs(): HasMany
     {
-        return $this->HasMany(BolPouvoir::class, 'creature_id', 'id');
-    }*/
+        return $this->HasMany(BolPouvoir::class, 'demon_id', 'id');
+    }
+
     public function categorie(): HasOne
     {
         return $this->HasOne(BolCategorie::class, 'id', 'id_categorie');
