@@ -147,7 +147,7 @@ class BolArmeSeeder extends Seeder
                 'id' => 18,
                 'arme' => 'Coutelas',
                 'type' => 'M',
-                'degats' => 'd6M+1',
+                'degats' => 'd6M',
                 'portee' => '3m',
                 'notes' => 'Peut être lancée.'
             ],
@@ -170,13 +170,13 @@ class BolArmeSeeder extends Seeder
                 'id' => 21,
                 'arme' => 'Épée',
                 'type' => 'M',
-                'degats' => 'd6+2'
+                'degats' => 'd6'
             ],
             [
                 'id' => 22,
                 'arme' => 'Sabre',
                 'type' => 'M',
-                'degats' => 'd6+1'
+                'degats' => 'd6'
             ],
             [
                 'id' => 23,
@@ -198,7 +198,7 @@ class BolArmeSeeder extends Seeder
                 'id' => 25,
                 'arme' => 'Tulwar',
                 'type' => 'M',
-                'degats' => 'd6+3'
+                'degats' => 'd6'
             ],
             [
                 'id' => 26,
