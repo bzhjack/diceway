@@ -106,10 +106,6 @@ export class BolHerosStateService {
     if (this.heroismCost() > 0) {
       modifiers.push({attr: 'heroisme', value: Number(this.heroismCost()) * -1});
     }
-    const vigueur = Number(this.currentHeros()?.attributs.vigueur ?? 0);
-    if (vigueur !== 0) {
-      modifiers.push({attr: 'vigueur', value: vigueur});
-    }
     this.currentHerosCarrieres().forEach((carriere) => {
       // 24: sorcier, 1: alchimiste, 21: pretre/druide
       // points de créations = rang d'alchimiste
