@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
+import { BolDemonCategorieModel, BolDemonModel, BolDemonPouvoirModel } from '../models/bol-demon.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,27 +11,27 @@ export class BolDemonsService {
   constructor(private http: HttpClient) {
   }
 
-  demons(): Observable<any[]> {
-    return this.http.get<any[]>('/api/bol/demon');
+  demons(): Observable<BolDemonModel[]> {
+    return this.http.get<BolDemonModel[]>('/api/bol/demon');
   }
 
-  categories(): Observable<any[]> {
-    return this.http.get<any[]>('/api/bol/demon/categories');
+  categories(): Observable<BolDemonCategorieModel[]> {
+    return this.http.get<BolDemonCategorieModel[]>('/api/bol/demon/categories');
   }
 
-  pouvoirs(): Observable<any[]> {
-    return this.http.get<any[]>('/api/bol/demon/pouvoirs');
+  pouvoirs(): Observable<BolDemonPouvoirModel[]> {
+    return this.http.get<BolDemonPouvoirModel[]>('/api/bol/demon/pouvoirs');
   }
 
-  createDemon(demon: any): Observable<any> {
-    return this.http.post<any>('/api/bol/demon/create', <any>demon);
+  createDemon(demon: BolDemonModel): Observable<BolDemonModel> {
+    return this.http.post<BolDemonModel>('/api/bol/demon/create', <BolDemonModel>demon);
   }
 
-  updateDemon(demon: any): Observable<any> {
-    return this.http.post<any>('/api/bol/demon/update', <any>demon);
+  updateDemon(demon: BolDemonModel): Observable<BolDemonModel> {
+    return this.http.post<BolDemonModel>('/api/bol/demon/update', <BolDemonModel>demon);
   }
 
-  deleteDelete(id: string): Observable<any> {
-    return this.http.delete<any>('/api/bol/demon/delete/' + id);
+  deleteDelete(id: string): Observable<BolDemonModel> {
+    return this.http.delete<BolDemonModel>('/api/bol/demon/delete/' + id);
   }
 }
