@@ -27,7 +27,7 @@ class BolCreature extends Model
         'vitalite',
         'attaque',
         'defense',
-        'degat',
+        'degats',
         'protection',
         'avatar',
         'commentaire',

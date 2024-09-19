@@ -16,4 +16,7 @@ php artisan db:seed --class=BolCapaciteSeeder
 php artisan db:seed --class=BolCreatureSeeder
 php artisan db:seed --class=BolPnjSeeder
 php artisan db:seed --class=BolRaceSeeder
+#php artisan db:seed --class=BolDemonSeeder
+#php artisan db:seed --class=BolPouvoirSeeder
+php artisan db:seed --class=BolCategorieSeeder
 

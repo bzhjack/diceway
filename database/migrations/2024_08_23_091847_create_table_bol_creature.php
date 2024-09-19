@@ -24,7 +24,7 @@ return new class extends Migration
             $table->tinyInteger('vitalite')->default(0);
             $table->tinyInteger('attaque')->default(0);
             $table->tinyInteger('defense')->default(0);
-            $table->string('degat')->nullable();
+            $table->string('degats')->nullable();
             $table->string('protection')->nullable();
             $table->longText('avatar')->nullable();
             $table->longText('commentaire')->nullable();

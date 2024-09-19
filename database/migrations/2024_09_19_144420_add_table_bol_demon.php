@@ -27,7 +27,7 @@ return new class extends Migration
             $table->tinyInteger('defense')->default(0);
 
             $table->tinyInteger('vitalite')->default(0);
-            $table->string('degat')->nullable();
+            $table->string('degats')->nullable();
             $table->integer('id_categorie')->default(1);
             $table->timestamps();
         });

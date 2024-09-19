@@ -8,7 +8,7 @@ export interface BolCreatureModel {
   vitalite: number;
   attaque: number;
   defense: number;
-  degat: string;
+  degats: string;
   protection: string;
   avatar: string | null;
   commentaire: string | null;
@@ -40,6 +40,6 @@ export interface BolCreatureTailleModel {
   type: 'R' | 'P' | 'C';
   vigueur: number;
   vitalite: number;
-  degat: string;
+  degats: string;
   deplacement: string;
 }

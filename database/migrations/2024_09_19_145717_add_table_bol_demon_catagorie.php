@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('categorie');
             $table->enum('type', ['P', 'C', 'R'])->nullable();
-            $table->tinyInteger('pouvoir')->default(0);
+            $table->tinyInteger('pouvoirs')->default(0);
             $table->tinyInteger('vitalite')->default(0);
-            $table->string('degat')->nullable();
+            $table->string('degats')->nullable();
             $table->timestamps();
         });
     }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('bol_taille', function (Blueprint $table) {
             $table->tinyInteger('vigueur')->default(0);
             $table->tinyInteger('vitalite')->default(0);
-            $table->string('degat')->nullable();
+            $table->string('degats')->nullable();
             $table->string('deplacement')->nullable();
         });
     }

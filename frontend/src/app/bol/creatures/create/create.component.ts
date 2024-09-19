@@ -87,7 +87,7 @@ export class BolCreatureCreateComponent implements OnDestroy {
       attaque: this.attaqueCtrl,
       defense: this.defenseCtrl,
       protection: this.protectionCtrl,
-      degat: this.degatsCtrl,
+      degats: this.degatsCtrl,
       id_taille: this.idTailleCtrl,
       commentaire: this.commentaireCtrl,
       avatar: this.avatarCtrl,
@@ -138,7 +138,7 @@ export class BolCreatureCreateComponent implements OnDestroy {
     effect(() => {
       if (this.tailleChange()) {
         const taille = this.tailles()?.find((taille: BolCreatureTailleModel) => Number(taille.id) === Number(this.tailleChange()));
-        this.degatsCtrl.setValue(taille?.degat ?? null);
+        this.degatsCtrl.setValue(taille?.degats ?? null);
         this.vigueurCtrl.setValue(taille?.vigueur ?? 0);
         this.vitaliteCtrl.setValue(taille?.vitalite ?? 0);
       }

@@ -33,7 +33,7 @@ class BolDemon extends Model
         'defense',
 
         'vitalite',
-        'degat',
+        'degats',
 
         'id_taille'
     ];
