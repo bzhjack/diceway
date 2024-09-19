@@ -13,9 +13,7 @@ return new class extends Migration
     {
         Schema::create('bol_pouvoir', function (Blueprint $table) {
             $table->id();
-            $table->string('capacite')->unique();
-            $table->boolean('de_bonus')->default(false);
-            $table->boolean('de_malus')->default(false);
+            $table->string('pouvoir')->unique();
             $table->text('description')->nullable()->default(null);
             $table->timestamps();
         });

@@ -51,7 +51,7 @@ class BolDemon extends Model
 
     public function pouvoirs(): HasMany
     {
-        return $this->HasMany(BolPouvoir::class, 'demon_id', 'id');
+        return $this->HasMany(BolDemonPouvoir::class, 'demon_id', 'id');
     }
 
     public function categorie(): HasOne
