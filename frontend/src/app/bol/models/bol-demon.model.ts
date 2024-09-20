@@ -35,6 +35,7 @@ export interface BolDemonPouvoirModel {
   id: number;
   pouvoir: string;
   description: string;
+  detail?: string;
 }
 
 export interface BolDemonCategorieModel {
