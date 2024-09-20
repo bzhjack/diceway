@@ -64,7 +64,12 @@
         <div class="p-4">
           <div class="home-bol-card-title">Les Démons</div>
           <div>
-            <div class="home-bol-counter">0</div>
+            <div class="home-bol-counter">{{ counts()?.countDemons }}
+              <div class="home-bol-counter__description">Créatures de la bestiaire</div>
+            </div>
+            <div class="home-bol-counter">{{ counts()?.countCreatedDemons }}
+              <div class="home-bol-counter__description">Création(s) personnelle(s)</div>
+            </div>
           </div>
         </div>
       </div>
