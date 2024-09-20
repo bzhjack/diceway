@@ -23,6 +23,7 @@ import {TooltipModule} from "primeng/tooltip";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {BolDemonModel} from "../../models/bol-demon.model";
 import {BolCreatureModel} from "../../models/bol-creature.model";
+import {BolDemonCreateComponent} from "../create/create.component";
 
 @Component({
   selector: 'bol-demon-home',
@@ -120,4 +121,32 @@ export class BolDemonHomeComponent {
     this.searchCreation = false;
     this.filterExtended();
   }
+
+  createDemon(demon?: BolDemonModel) {
+    this.ref = this.#ds.open(BolDemonCreateComponent, {
+      header: demon ? 'Modification d\'un démon' : 'Création d\'un démon',
+      data: {
+        demon: demon
+      }
+    });
+    this.subs?.unsubscribe();
+    this.subs = this.ref.onClose.subscribe((demon: BolDemonModel) => {
+      if (demon) {
+        this.spinner.show();
+        this.subs?.unsubscribe();
+        const actionService = demon.id ? this.demonService.updateDemon(demon) : this.demonService.createDemon(demon);
+        this.subs = actionService.subscribe({
+          next: () => {
+            this.spinner.hide();
+            this.clear();
+            this.getDemons();
+          },
+          error: () => {
+            this.spinner.hide();
+          }
+        });
+      }
+    });
+  }
+
 }

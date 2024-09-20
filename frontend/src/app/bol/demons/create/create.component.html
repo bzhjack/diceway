@@ -66,22 +66,22 @@
           <div class="flex gap-2">
             <div class="flex flex-col gap-1">
               <div class="flex flex-col gap-1">
-                <label for="attaque">Attaque</label>
-                <p-inputNumber formControlName="attaque" inputId="attaque"/>
+                <label for="melee">Mêlée</label>
+                <p-inputNumber formControlName="melee" inputId="melee"/>
               </div>
               <div class="flex flex-col gap-1">
-                <label for="defense">Défense</label>
-                <p-inputNumber formControlName="defense" inputId="defense"/>
+                <label for="tir">Tir</label>
+                <p-inputNumber formControlName="tir" inputId="tir"/>
               </div>
             </div>
             <div class="flex flex-col gap-1">
               <div class="flex flex-col gap-1">
-                <label for="degats">Dégâts</label>
-                <input formControlName="degats" pInputText id="degats" class="p-inputtext-sm"/>
+                <label for="defense">Défense</label>
+                <p-inputNumber formControlName="defense" inputId="defense"/>
               </div>
               <div class="flex flex-col gap-1">
-                <label for="protection">Protection</label>
-                <input formControlName="protection" pInputText id="protection" class="p-inputtext-sm"/>
+                <label for="degats">Dégâts</label>
+                <input formControlName="degats" pInputText id="degats" class="p-inputtext-sm"/>
               </div>
             </div>
           </div>
@@ -129,7 +129,7 @@
     <div class="flex flex-col gap-2">
       <p-dropdown [style]="{ width: '250px' }"
                   [options]="filteredPouvoirList()"
-                  [(ngModel)]="selectedPouvoir()"
+                  [(ngModel)]="selectedPouvoir"
                   [ngModelOptions]="{standalone: true}"
                   [showClear]="true"
                   [filter]="true"

@@ -47,7 +47,7 @@
               <button pTooltip="Supprimer les filtres" pButton icon="pi pi-filter-slash" severity="info" size="small"
                       (click)="clear(demonTable)"></button>
             </div>
-            <button pButton label="Création" icon="pi pi-palette" severity="warning" size="small"></button>
+            <button pButton label="Création" icon="pi pi-palette" severity="warning" size="small" (click)="createDemon()"></button>
           </div>
 
         </ng-template>
@@ -176,7 +176,6 @@
           </tr>
         </ng-template>
       </p-table>
-
     </div>
   </div>
 </div>
