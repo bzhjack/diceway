@@ -31,14 +31,18 @@ class BolDashboardController extends Controller
         $countCreatures = DB::table('bol_creature')->where('user_id', null)->count();
         $countCreatedCreatures = DB::table('bol_creature')->where('user_id', Auth::id())->count();
 
+        $countDemons = DB::table('bol_demon')->where('user_id', null)->count();
+        $countCreatedDemons = DB::table('bol_demon')->where('user_id', Auth::id())->count();
         // Retourner les résultats en format JSON
         return response()->json([
             'countHeros' => $countHeros,
             'countHerosPending' => $countHerosPending,
+            'countPnjs' => $countPnjs,
+            'countCreatedPnjs' => $countCreatedPnjs,
             'countCreatures' => $countCreatures,
             'countCreatedCreatures' => $countCreatedCreatures,
-            'countPnjs' => $countPnjs,
-            'countCreatedPnjs' => $countCreatedPnjs
+            'countDemons' => $countDemons,
+            'countCreatedDemons' => $countCreatedDemons,
         ]);
     }
 

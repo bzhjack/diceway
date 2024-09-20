@@ -33,9 +33,9 @@
               </p-iconField>
               <p-dropdown
                 [options]="categorieList()"
-                optionLabel="taille"
+                optionLabel="categorie"
                 optionValue="id"
-                placeholder="Sélectionner une taille"
+                placeholder="Sélectionner une categorie"
                 [showClear]="true"
                 [(ngModel)]="searchCategorie"
                 (ngModelChange)="filterExtended()"/>
