@@ -31,7 +31,7 @@ export class BolDemonsService {
     return this.http.post<BolDemonModel>('/api/bol/demon/update', <BolDemonModel>demon);
   }
 
-  deleteDelete(id: string): Observable<BolDemonModel> {
+  deleteDemon(id: string): Observable<BolDemonModel> {
     return this.http.delete<BolDemonModel>('/api/bol/demon/delete/' + id);
   }
 }

@@ -55,7 +55,7 @@ class BolDemonController extends Controller
         $demon= $request->input();
         $demon['user_id'] = Auth::id();
         $demon = BolDemon::create($demon);
-        $pouvoirs = $request->input('pouvoir');
+        $pouvoirs = $request->input('pouvoirs');
         foreach ($pouvoirs as $pouvoir) {
             $newPower['demon_id'] = $demon['id'];
             $newPower['pouvoir_id'] = $pouvoir['id'];
@@ -83,7 +83,7 @@ class BolDemonController extends Controller
 
         // Supprimer les capacités qui ne sont plus associées à la créature
         BolDemonPouvoir::whereNotIn('pouvoir_id', $ids_tableau2)
-            ->where('creature_id', $demonId)
+            ->where('demon_id', $demonId)
             ->delete();
 
         // Mettre à jour ou insérer les nouvelles capacités

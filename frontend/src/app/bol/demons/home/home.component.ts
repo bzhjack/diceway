@@ -1,4 +1,4 @@
-import {Component, inject, ViewChild} from '@angular/core';
+import {Component, inject, OnDestroy, ViewChild} from '@angular/core';
 import {ConfirmationService, PrimeTemplate} from 'primeng/api';
 import {BolDemonsService} from '../../services/bol-demons.service';
 import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
@@ -57,7 +57,7 @@ import {BolDemonCreateComponent} from "../create/create.component";
     ConfirmationService
   ],
 })
-export class BolDemonHomeComponent {
+export class BolDemonHomeComponent implements OnDestroy {
   private confirmationService = inject(ConfirmationService);
   private demonService = inject(BolDemonsService);
   readonly #ds = inject(DialogService);
@@ -147,6 +147,43 @@ export class BolDemonHomeComponent {
         });
       }
     });
+  }
+
+  askDelete(demon: BolDemonModel, event: any) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Voulez vous supprimer ce démon ?',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass: 'p-button-danger p-button-sm',
+      acceptLabel: "Oui",
+      rejectLabel: "Non",
+      accept: () => {
+        this.deleteDemon(demon);
+      },
+    });
+  }
+
+  deleteDemon(demon: BolDemonModel) {
+    this.spinner.show();
+    this.subs?.unsubscribe();
+    this.subs = this.demonService.deleteDemon(demon.id as string).subscribe({
+      next: () => {
+        this.spinner.hide();
+        this.clear();
+        this.getDemons();
+      },
+      error: () => {
+        this.spinner.hide();
+      }
+    });
+
+  }
+
+  ngOnDestroy() {
+    this.subs?.unsubscribe();
+    if (this.ref) {
+      this.ref.close();
+    }
   }
 
 }

@@ -97,8 +97,8 @@
                 </div>
 
                 <div *ngIf="demon.user_id" class="flex items-center gap-2">
-                  <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-bolt"></button>
-                  <button severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash"></button>
+                  <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-bolt" (click)="createDemon(demon)"></button>
+                  <button severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash" (click)="askDelete(demon, $event)"></button>
                 </div>
 
               </div>
