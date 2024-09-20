@@ -1,18 +1,18 @@
-import { Component, OnDestroy } from '@angular/core';
-import { CardModule} from 'primeng/card';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { InputTextModule } from 'primeng/inputtext';
-import { ButtonModule } from 'primeng/button';
-import { Router, RouterModule } from '@angular/router';
-import { InlineSVGModule } from 'ng-inline-svg-2';
-import { Subscription } from 'rxjs';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UserService } from '../../services/user.service';
-import { CommonModule } from '@angular/common';
-import { ProgressBarModule } from 'primeng/progressbar';
-import { MessagesModule } from 'primeng/messages';
-import { Message } from 'primeng/api';
+import {Component, OnDestroy} from '@angular/core';
+import {CardModule} from 'primeng/card';
+import {InputGroupModule} from 'primeng/inputgroup';
+import {InputGroupAddonModule} from 'primeng/inputgroupaddon';
+import {InputTextModule} from 'primeng/inputtext';
+import {ButtonModule} from 'primeng/button';
+import {Router, RouterModule} from '@angular/router';
+import {InlineSVGModule} from 'ng-inline-svg-2';
+import {Subscription} from 'rxjs';
+import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {UserService} from '../../services/user.service';
+import {CommonModule} from '@angular/common';
+import {ProgressBarModule} from 'primeng/progressbar';
+import {MessagesModule} from 'primeng/messages';
+import {Message} from 'primeng/api';
 
 @Component({
   selector: 'app-login',
@@ -52,7 +52,7 @@ export class LoginComponent implements OnDestroy {
       this.loginForm.get(key)?.markAsDirty();
     });
     if (this.loginForm.valid) {
-      this.messages= [];
+      this.messages = [];
       const credentials = this.loginForm.getRawValue();
       this.sub?.unsubscribe();
       this.pending = true;
@@ -61,32 +61,38 @@ export class LoginComponent implements OnDestroy {
         password: credentials.password
       }).subscribe(
         {
-        next: (result: any) => {
-          this.pending = false;
-          if (result && result.token) {
-            this.router.navigate(['callback', result.token]);
-          } else {
-            this.router.navigate(['callback', 'error']);
-          }
-        },
-        error: err => {
-          this.pending = false;
-          if (err.status === 401) {
-            this.messages.push({ severity: 'error', summary: '', detail: 'Identifiants non valides'});
-          } else if (err.status === 403) {
-            this.router.navigate(['resend', 'forbidden']);
-          } else {
-            this.messages.push({ severity: 'error', summary: '', detail: err.error?.message ? err.error.message : err.message});
+          next: (result: any) => {
+            this.pending = false;
+            if (result && result.token) {
+              this.router.navigate(['callback', result.token]);
+            } else {
+              this.router.navigate(['callback', 'error']);
+            }
+          },
+          error: err => {
+            this.pending = false;
+            if (err.status === 401) {
+              this.messages.push({severity: 'error', summary: '', detail: 'Identifiants non valides'});
+            } else if (err.status === 403) {
+              this.router.navigate(['resend', 'forbidden']);
+            } else {
+              this.messages.push({
+                severity: 'error',
+                summary: '',
+                detail: err.error?.message ? err.error.message : err.message
+              });
+            }
           }
         }
-      }
       );
     }
   }
+
   onError(controlName: string) {
     const control = this.loginForm.get(controlName);
     return control?.dirty && control.invalid;
   }
+
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
   }

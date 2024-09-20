@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\BolRegionAvantage;
+use App\Models\Bol\BolRegionAvantage;
 
 class BolRegionAvantageSeeder extends Seeder
 {

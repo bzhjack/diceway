@@ -10,4 +10,13 @@ php artisan db:seed --class=BolRegionSeeder
 php artisan db:seed --class=BolRegionAvantageSeeder
 php artisan db:seed --class=BolRegionDesavantageSeeder
 php artisan db:seed --class=BolRegionNomSeeder
+php artisan db:seed --class=BolCarriereSeeder
+php artisan db:seed --class=BolTailleSeeder
+php artisan db:seed --class=BolCapaciteSeeder
+php artisan db:seed --class=BolCreatureSeeder
+php artisan db:seed --class=BolPnjSeeder
+php artisan db:seed --class=BolRaceSeeder
+php artisan db:seed --class=BolDemonSeeder
+php artisan db:seed --class=BolPouvoirSeeder
+php artisan db:seed --class=BolCategorieSeeder
 

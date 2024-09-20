@@ -1,0 +1,28 @@
+/**
+* Gestion des messages
+*/
+.p-message .p-message-wrapper {
+  padding: 0.5rem 1rem;
+}
+
+.p-message-icon {
+  display: flex;
+}
+
+.p-message .info_icon {
+  svg {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+.p-message .info_icon_small {
+  svg {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+.p-message {
+  margin: 0;
+}

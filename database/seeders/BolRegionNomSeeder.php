@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\BolRegionNom;
+use App\Models\Bol\BolRegionNom;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 

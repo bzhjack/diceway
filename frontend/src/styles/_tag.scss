@@ -1,0 +1,22 @@
+.tag_icon {
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+
+  svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  &.malus {
+    color: #f87171;
+  }
+
+  &.bonus {
+    color: #4ade80;
+  }
+}
+
+.p-tag-value {
+  line-height: 15px;
+}

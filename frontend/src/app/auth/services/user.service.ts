@@ -3,7 +3,6 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {UserModel, UserStorageModel} from './user.model';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Router} from '@angular/router';
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +18,6 @@ export class UserService {
     private http: HttpClient,
     private router: Router,
   ) {
-    console.log('UserService');
     this.retrieveUser();
   }
 
@@ -52,6 +50,7 @@ export class UserService {
     this.currentUser = userStorage.profile;
     this.userEvents.next(userStorage.profile);
   }
+
   /**
    *
    * @returns Récupération du token utilisateur
@@ -59,6 +58,7 @@ export class UserService {
   public getUserToken() {
     return this.userToken;
   }
+
   /**
    * Suppression du token et "logout" de l'application.
    */
@@ -67,6 +67,7 @@ export class UserService {
     this.clearToken();
     this.router.navigate(['/login']);
   }
+
   /**
    * Suppression du localStorage et du token dans l'interceptor
    * Suppression du profile utilisateur par broadcast.
@@ -95,10 +96,6 @@ export class UserService {
     return this.http.get('api/auth/profile', {
       headers: new HttpHeaders().set('Authorization', `Bearer ${token}`)
     });
-  }
-
-  public getHello() {
-    return this.http.get('api/hello');
   }
 
   /**

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\BolAvantage;
+use App\Models\Bol\BolAvantage;
 use Illuminate\Database\Seeder;
 
 class BolAvantageSeeder extends Seeder
@@ -40,7 +40,7 @@ class BolAvantageSeeder extends Seeder
             [
                 'id'=> 5 ,
                 'avantage' => 'Amis haut placés',
-                'description' => ' vous jouissez de contacts au sein des plus hauts échelons de la société.'
+                'description' => 'Vous jouissez de contacts au sein des plus hauts échelons de la société.'
             ],
             [
                 'id'=> 6 ,
@@ -58,13 +58,13 @@ class BolAvantageSeeder extends Seeder
                 'id'=> 8 ,
                 'avantage' => 'Athlète',
                 'de_bonus' => true,
-                'de_bonus_domaine' => 'activités athlétiques (autres que le combat) comme courir, nager, grimper ou sauter.',
+                'de_bonus_domaine' => 'Activités athlétiques (autres que le combat) comme courir, nager, grimper ou sauter.',
             ],
             [
                 'id'=> 9 ,
                 'avantage' => 'Attirant',
                 'de_bonus' => true,
-                'de_bonus_domaine' => 'les situations où l’apparence peut jouer un rôle.',
+                'de_bonus_domaine' => 'Les situations où l’apparence peut jouer un rôle.',
             ],
             [
                 'id'=> 10 ,
@@ -186,7 +186,7 @@ class BolAvantageSeeder extends Seeder
                 'avantage' => 'Magie des Rois-Sorciers',
                 'de_bonus' => true,
                 'de_bonus_domaine' => 'Lancer des sortilèges.',
-                'description' => 'vous devez prendre un désavantage supplémentaire.'
+                'description' => 'Vous devez prendre un désavantage supplémentaire.'
             ],
             [
                 'id'=> 31 ,
@@ -200,7 +200,7 @@ class BolAvantageSeeder extends Seeder
                 'avantage' => 'Maître du déguisement',
                 'de_bonus' => true,
                 'de_bonus_domaine' => 'Dissimuler votre identité.',
-                'description' => 'vous pouvez dépenser 1 point d’héroïsme pour faire partie du décor.'
+                'description' => 'Vous pouvez dépenser 1 point d’héroïsme pour faire partie du décor.'
             ],
             [
                 'id'=> 33 ,
@@ -335,7 +335,7 @@ class BolAvantageSeeder extends Seeder
             [
                 'id'=> 55 ,
                 'avantage' => 'Tireur puissant',
-                'description' => 'vous ajoutez votre vigueur aux dégâts (arc, javelot, fronde)'
+                'description' => 'Vous ajoutez votre vigueur aux dégâts (arc, javelot, fronde)'
             ],
             [
                 'id'=> 56 ,

@@ -1,0 +1,53 @@
+@if (avantage()) {
+  <div class="flex items-start w-fit">
+    <div class="flex items-center cursor-pointer" (click)="avPanel.toggle($event)">
+      <div *ngIf="!avantage()?.de_bonus && !avantage()?.attribut" class="tag_icon bonus"
+           inlineSVG="/frontend/assets/info.svg"></div>
+      <div *ngIf="avantage()?.de_bonus || avantage()?.attribut" class="tag_icon bonus"
+           [inlineSVG]="avantage()?.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
+      <div>
+      </div>
+    </div>
+    <div style="white-space: nowrap;line-height: 15px" class="relative text-gray-300" [class.ml-5]="trait()?.region_id">
+      <i style="position: absolute;left: -17px" *ngIf="trait()?.region_id" class="pi pi-map-marker mr-2"></i>
+      {{ avantage()?.avantage }}
+      @if (trait()?.detail) {
+        <div class="text-gray-400" style="font-size: smaller">{{ trait()?.detail }}</div>
+      }
+    </div>
+  </div>
+  <p-overlayPanel #avPanel>
+    <div class="dw-panel" style="background: #424B57">
+      <div *ngFor="let desc of avantageDescription(avantage())" class="flex flex-col">
+        <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
+        <div style="font-size: 12px">{{ desc.description }}</div>
+      </div>
+    </div>
+  </p-overlayPanel>
+}
+@if (desavantage()) {
+  <div class="flex items-center w-fit">
+    <div class="flex items-center  cursor-pointer " (click)="desPanel.toggle($event)">
+      <div *ngIf="!desavantage()?.de_malus && !desavantage()?.attribut" class="tag_icon malus"
+           inlineSVG="/frontend/assets/info.svg"></div>
+      <div *ngIf="desavantage()?.de_malus || desavantage()?.attribut" class="tag_icon malus"
+           [inlineSVG]="desavantage()?.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
+    </div>
+    <div class="relative text-gray-300" style="white-space: nowrap; line-height: 15px"
+         [class.ml-5]="trait()?.region_id || trait()?.carriere">
+      <i pTooltip="Désavantage de carrière" style="position: absolute;left: -17px" *ngIf="trait()?.carriere"
+         class="pi pi-hammer mr-2"></i>
+      <i style="position: absolute;left: -17px" *ngIf="trait()?.region_id" class="pi pi-map-marker mr-2"></i>
+      {{ desavantage()?.desavantage }}
+    </div>
+  </div>
+
+  <p-overlayPanel #desPanel>
+    <div class="dw-panel" style="background: #424B57">
+      <div *ngFor="let desc of desavantageDescription(desavantage())" class="flex flex-col">
+        <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
+        <div style="font-size: 12px">{{ desc.description }}</div>
+      </div>
+    </div>
+  </p-overlayPanel>
+}

@@ -1,21 +1,23 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Http\Request;
 
 class VerifyController extends Controller
 {
     /**
      * Envoi de l'email de vérification du compte
      */
-    public function send(Request $request) {
+    public function send(Request $request)
+    {
         $data = $request->validate([
             'email' => 'required|email'
         ]);
-        $user = User::where('email',$data['email']) -> first();
+        $user = User::where('email', $data['email'])->first();
         if ($user) {
             $user->sendEmailVerificationNotification();
             return response(['message' => __('passwords.sent')]);

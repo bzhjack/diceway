@@ -1,0 +1,166 @@
+<div class="region-container flex gap-2 flex-col">
+  <form [formGroup]="creatureForm" autocomplete="off">
+    <div class="flex flex-col">
+      <div class="w-fit">
+        <p-fieldset legend="Général">
+          <div class="flex gap-2">
+            <div class="hero-avatar cursor-pointer" (click)="picture()">
+              <img style="width:100%"
+                   [src]="avatarCtrl.value !== null ? avatarCtrl.value : '/frontend/assets/bol/empty-avatar.jpg'"
+                   alt="avatar">
+              <p class="hero-avatar__description">Modifier</p>
+            </div>
+            <div class="flex flex-col gap-2">
+              <!--- Nom du joueur --->
+              <div class="flex flex-col gap-1 w-fit justify-end">
+                <label for="nom">Nom de la créature *</label>
+                <input formControlName="nom" pInputText id="joueur" class="p-inputtext-sm"/>
+              </div>
+              <div class="flex flex-col gap-1 w-fit justify-end">
+                <label for="taille">Taille *</label>
+                <p-dropdown [style]="{ width: '190px' }"
+                            class="p-inputtext-sm"
+                            optionLabel="taille"
+                            optionValue="id"
+                            [options]="tailles()"
+                            formControlName="id_taille"
+                            placeholder="Selectionner une taille"></p-dropdown>
+              </div>
+            </div>
+            <div>
+              <div class="flex flex-col gap-1 w-fit justify-end">
+                <label for="commentaire">Commentaire</label>
+                <textarea rows="5" cols="30" pInputTextarea formControlName="commentaire"></textarea>
+              </div>
+            </div>
+
+          </div>
+        </p-fieldset>
+      </div>
+      <div class="flex gap-2">
+        <p-fieldset legend="Attributs">
+          <div class="flex gap-2">
+            <div class="flex flex-col gap-1">
+              <div class="flex flex-col gap-1">
+                <label for="vigueur">Vigueur</label>
+                <p-inputNumber formControlName="vigueur" inputId="vigueur" maxFractionDigits="0"/>
+              </div>
+              <div class="flex flex-col gap-1">
+                <label for="agilite">Agilité</label>
+                <p-inputNumber formControlName="agilite" inputId="agilite" maxFractionDigits="0"/>
+              </div>
+            </div>
+            <div class="flex flex-col gap-1">
+              <div class="flex flex-col gap-1">
+                <label for="esprit">Esprit</label>
+                <p-inputNumber formControlName="esprit" inputId="esprit" maxFractionDigits="0"/>
+              </div>
+              <div class="flex flex-col gap-1">
+                <label for="vitalite">Vitalité</label>
+                <p-inputNumber formControlName="vitalite" inputId="vitalite" maxFractionDigits="0"/>
+              </div>
+            </div>
+          </div>
+        </p-fieldset>
+        <p-fieldset legend="Combat">
+          <div class="flex gap-2">
+            <div class="flex flex-col gap-1">
+              <div class="flex flex-col gap-1">
+                <label for="attaque">Attaque</label>
+                <p-inputNumber formControlName="attaque" inputId="attaque"/>
+              </div>
+              <div class="flex flex-col gap-1">
+                <label for="defense">Défense</label>
+                <p-inputNumber formControlName="defense" inputId="defense"/>
+              </div>
+            </div>
+            <div class="flex flex-col gap-1">
+              <div class="flex flex-col gap-1">
+                <label for="degats">Dégâts</label>
+                <input formControlName="degats" pInputText id="degats" class="p-inputtext-sm"/>
+              </div>
+              <div class="flex flex-col gap-1">
+                <label for="protection">Protection</label>
+                <input formControlName="protection" pInputText id="protection" class="p-inputtext-sm"/>
+              </div>
+            </div>
+          </div>
+        </p-fieldset>
+
+        <p-fieldset [style]="{height: '145px'}">
+          <ng-template pTemplate="header">
+            <div class="flex items-center gap-2">
+              <div> Capacités spéciales</div>
+              <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une capacité"
+                       (click)="clearSelectedCapacite(); opCapacite.toggle($event)"></app-btn>
+            </div>
+          </ng-template>
+          <div *ngIf="capacitesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des capacités
+            spéciales
+          </div>
+
+          <div>
+            <div *ngFor="let capacite of selectedCapaciteDetail();" class="flex gap-2 items-center pb-1">
+              <div class="flex gap-2 items-center" style="width: 150px">
+                <i *ngIf="capacite.detail" class="pi pi-info-circle cursor-pointer text-cyan-600"
+                   [pTooltip]="capacite.detail"></i>
+                {{ capacite.capacite }}
+              </div>
+              <app-btn (click)="removeCapacite(capacite.id)"></app-btn>
+            </div>
+          </div>
+        </p-fieldset>
+      </div>
+    </div>
+  </form>
+  <div class="flex justify-end gap-2 pt-2">
+    <button pButton icon="pi pi-times" size="small" label="Quitter" severity="secondary"
+            (click)="quit($event)"></button>
+    <button pButton icon="pi pi-save" size="small" label="Enregistrer" severity="success"
+            [disabled]="creatureForm.invalid"
+            (click)="submit($event)"></button>
+  </div>
+</div>
+
+<p-overlayPanel #opCapacite>
+  <div class="flex flex-col gap-4">
+    <div>Ajouter une capacité</div>
+
+    <div class="flex flex-col gap-2">
+      <p-dropdown [style]="{ width: '250px' }"
+                  [options]="filteredCapaciteList()"
+                  [(ngModel)]="selectedCapacite"
+                  [ngModelOptions]="{standalone: true}"
+                  [showClear]="true"
+                  [filter]="true"
+                  filterBy="capacite"
+                  placeholder="Selectionner une capacité">
+
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+          <div class="flex align-items-center gap-2">
+            <div>{{ selectedOption.capacite }}</div>
+          </div>
+        </ng-template>
+
+        <ng-template let-capacite pTemplate="item">
+          <div class="flex flex-col gap-2">
+            <div class="text-xls">{{ capacite.capacite }}</div>
+            <div class="text-gray-400" style="font-size: smaller;">{{ capacite.description }}</div>
+          </div>
+        </ng-template>
+      </p-dropdown>
+      <div class="flex flex-col gap-1 w-fit justify-end" *ngIf="selectedCapacite()">
+        <label for="detail">Description</label>
+        <textarea id="detail" rows="2" cols="30" pInputTextarea [(ngModel)]="selectedCapacite()!.detail"></textarea>
+      </div>
+    </div>
+
+
+    <div class="flex justify-end gap-2">
+      <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
+              (click)="opCapacite.toggle($event)"></button>
+      <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
+              (click)="addCapacite(opCapacite, $event)" [disabled]="!selectedCapacite()"></button>
+    </div>
+  </div>
+</p-overlayPanel>

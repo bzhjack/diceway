@@ -15,7 +15,8 @@ class ForgotController extends Controller
     /**
      * Envoi d'un mail de mot de passe oublié
      */
-    public function forgot(Request $request) {
+    public function forgot(Request $request)
+    {
         $request->validate(['email' => 'required|email']);
 
         $status = Password::sendResetLink(
@@ -23,8 +24,8 @@ class ForgotController extends Controller
         );
 
         return $status === Password::RESET_LINK_SENT
-            ? response(['message' =>  __($status)])
-            : response(['message' =>  __($status)], 404);
+            ? response(['message' => __($status)])
+            : response(['message' => __($status)], 404);
     }
 
     /**
@@ -32,11 +33,12 @@ class ForgotController extends Controller
      */
     public function reset(Request $request, $token)
     {
-        $email =  $request->input('email');
-        return redirect('/reset/'.$token.'/'.urlencode($email));
+        $email = $request->input('email');
+        return redirect('/reset/' . $token . '/' . urlencode($email));
     }
 
-    public function reset_password(Request $request) {
+    public function reset_password(Request $request)
+    {
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
@@ -54,7 +56,7 @@ class ForgotController extends Controller
             }
         );
         return $status === Password::PASSWORD_RESET
-            ? response(['message' =>  __($status)])
-            : response(['message' =>  __($status)], 500);
+            ? response(['message' => __($status)])
+            : response(['message' => __($status)], 500);
     }
 }

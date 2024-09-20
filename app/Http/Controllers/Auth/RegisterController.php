@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -19,6 +19,6 @@ class RegisterController extends Controller
         $data['password'] = bcrypt($request->password);
         $user = User::create($data);
         event(new Registered($user));
-        return response([ 'user' => $user]);
+        return response(['user' => $user]);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\BolArme;
+use App\Models\Bol\BolArme;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -26,19 +26,19 @@ class BolArmeSeeder extends Seeder
                 'arme' => 'Bâton',
                 'type' => 'M',
                 'degats' => 'd6',
-                'notes' => 'Armes à demain.'
+                'notes' => 'Armes à deux mains.'
             ],
             [
                 'id' => 3,
                 'arme' => 'Dague',
                 'type' => 'M',
-                'degats' => 'd6',
+                'degats' => 'd6M',
                 'portee' => '3m',
                 'notes' => 'Dissimulable; inclut kriss, poignard, coutelas...'
             ],
             [
                 'id' => 4,
-                'arme' => 'Épée/hache à deux mains',
+                'arme' => 'Épée à deux mains',
                 'type' => 'M',
                 'degats' => 'd6B',
                 'notes' => 'Armes à deux mains'
@@ -54,7 +54,7 @@ class BolArmeSeeder extends Seeder
                 'id' => 6,
                 'arme' => 'Gourdin',
                 'type' => 'M',
-                'degats' => 'd6',
+                'degats' => 'd6M',
                 'notes' => 'Option : dégâts non létaux.'
             ],
             [
@@ -100,7 +100,7 @@ class BolArmeSeeder extends Seeder
                 'id' => 12,
                 'arme' => 'Rapière',
                 'type' => 'M',
-                'degats' => 'd6',
+                'degats' => 'd6M',
                 'notes' => 'Très chic !'
             ],
             [
@@ -129,19 +129,90 @@ class BolArmeSeeder extends Seeder
             ],
             [
                 'id' => 16,
-                'arme' => 'Fronde/bâton-fronde',
+                'arme' => 'Fronde',
                 'type' => 'T',
                 'degats' => 'd6M',
-                'portee' => '9m/18m',
-                'notes' => 'Arme à une main/arme à deux mains'
+                'portee' => '9m',
+                'notes' => 'Arme à une main'
             ],
             [
                 'id' => 17,
-                'arme' => 'Javelot/fléchette',
+                'arme' => 'Javelot',
                 'type' => 'T',
                 'degats' => 'd6M',
                 'portee' => '6m',
                 'notes' => 'Arme de jet'
+            ],
+            [
+                'id' => 18,
+                'arme' => 'Coutelas',
+                'type' => 'M',
+                'degats' => 'd6M',
+                'portee' => '3m',
+                'notes' => 'Peut être lancée.'
+            ],
+            [
+                'id' => 19,
+                'arme' => 'Couteau',
+                'type' => 'M',
+                'degats' => 'd6M',
+                'portee' => '3m',
+                'notes' => 'Peut être lancée.'
+            ],
+            [
+                'id' => 20,
+                'arme' => 'Hache à deux mains',
+                'type' => 'M',
+                'degats' => 'd6B',
+                'notes' => 'Armes à deux mains'
+            ],
+            [
+                'id' => 21,
+                'arme' => 'Épée',
+                'type' => 'M',
+                'degats' => 'd6'
+            ],
+            [
+                'id' => 22,
+                'arme' => 'Sabre',
+                'type' => 'M',
+                'degats' => 'd6'
+            ],
+            [
+                'id' => 23,
+                'arme' => 'bâton-fronde',
+                'type' => 'T',
+                'degats' => 'd6M',
+                'portee' => '18m',
+                'notes' => 'arme à deux mains'
+            ],
+            [
+                'id' => 24,
+                'arme' => 'Fléchette',
+                'type' => 'T',
+                'degats' => 'd6M',
+                'portee' => '6m',
+                'notes' => 'Arme de jet'
+            ],
+            [
+                'id' => 25,
+                'arme' => 'Tulwar',
+                'type' => 'M',
+                'degats' => 'd6'
+            ],
+            [
+                'id' => 26,
+                'arme' => 'Kriss',
+                'type' => 'M',
+                'degats' => 'd6M'
+            ],
+            [
+                'id' => 27,
+                'arme' => 'Khastok (lance lourde)',
+                'type' => 'M',
+                'degats' => 'd6B',
+                'portee' => '6m',
+                'notes' => 'Peut être lancée.'
             ],
             // Ajoutez d'autres armes si nécessaire
         ];

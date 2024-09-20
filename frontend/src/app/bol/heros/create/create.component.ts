@@ -1,0 +1,342 @@
+import {Component, computed, effect, inject, OnDestroy} from '@angular/core';
+import {CardModule} from "primeng/card";
+import {InputTextModule} from "primeng/inputtext";
+import {InputNumberModule} from 'primeng/inputnumber';
+import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {ToolbarModule} from "primeng/toolbar";
+import {ButtonModule} from "primeng/button";
+import {SplitButtonModule} from "primeng/splitbutton";
+import {BolHerosService} from "../../services/bol-heros.service";
+import {
+  BolHerosAttributs,
+  BolHerosCombat,
+  BolHerosModel,
+  BolHerosOrigines,
+  BolHerosRessources
+} from "../../models/bol-heros.model";
+import {forkJoin, map, Observable, Subscription} from "rxjs";
+import {ActivatedRoute, Router} from "@angular/router";
+import {NgxSpinnerService} from "ngx-spinner";
+import {FieldsetModule} from "primeng/fieldset";
+import {OverlayPanelModule} from "primeng/overlaypanel";
+import {InlineSVGModule} from "ng-inline-svg-2";
+import {MessagesModule} from "primeng/messages";
+import {JsonPipe, NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
+import {globalFormValidator} from "./create.validators";
+import {BolMessageComponent} from "../../message/message.component";
+import {BolAvantageModel} from "../../models/bol-avantage.model";
+import {BolDesavantageModel} from '../../models/bol-desavantage.model';
+import {BolHerosCarriereModel} from "../../models/bol-carriere.model";
+import {ConfirmationService} from "primeng/api";
+import {ConfirmPopupModule} from "primeng/confirmpopup";
+import {DropdownModule} from "primeng/dropdown";
+import {Ripple} from "primeng/ripple";
+import {ScrollPanelModule} from 'primeng/scrollpanel';
+import {toSignal} from "@angular/core/rxjs-interop";
+import {BolHerosStateService} from "../../services/bol-heros-state.service";
+import {BolHerosArmureModel} from "../../models/bol-armure.model";
+import {BolHerosArmeModel} from "../../models/bol-arme.model";
+import {tap} from "rxjs/operators";
+import {BolHerosOriginesComponent} from "./origines/origines.component";
+import {BolHerosRessourcesComponent} from "./ressources/ressources.component";
+import {BolHerosAttributsComponent} from "./attributs/attributs.component";
+import {BolHerosCombatComponent} from "./combat/combat.component";
+import {BolHerosCarrieresComponent} from "./carrieres/carrieres.component";
+import {BolHerosArmuresComponent} from "./armures/armures.component";
+import {BolHerosArmesComponent} from "./armes/armes.component";
+import {BolHerosTraitsComponent} from "./traits/traits.component";
+import {BolHerosTraitsModel} from "../../models/bol-trait.model";
+import {BolHerosLanguesComponent} from "./langues/langues.component";
+import {HeaderComponent} from "../../../shared/header/header.component";
+import {InputTextareaModule} from "primeng/inputtextarea";
+import {BtnComponent} from "../../../shared/btn/btn.component";
+import {TableModule} from "primeng/table";
+
+
+@Component({
+  selector: 'bol-create-heros',
+  standalone: true,
+  imports: [
+    CardModule,
+    InputTextModule,
+    FormsModule,
+    ToolbarModule,
+    ButtonModule,
+    SplitButtonModule,
+    ReactiveFormsModule,
+    InputNumberModule,
+    FieldsetModule,
+    OverlayPanelModule,
+    ScrollPanelModule,
+    InlineSVGModule,
+    MessagesModule,
+    JsonPipe,
+    NgIf,
+    NgForOf,
+    BolMessageComponent,
+    ConfirmPopupModule,
+    DropdownModule,
+    Ripple,
+    NgTemplateOutlet,
+    BolHerosOriginesComponent,
+    BolHerosRessourcesComponent,
+    BolHerosAttributsComponent,
+    BolHerosCombatComponent,
+    BolHerosCarrieresComponent,
+    BolHerosArmuresComponent,
+    BolHerosArmesComponent,
+    BolHerosTraitsComponent,
+    BolHerosLanguesComponent,
+    HeaderComponent,
+    InputTextareaModule,
+    BtnComponent,
+    TableModule,
+  ],
+  templateUrl: './create.component.html',
+  styleUrl: './create.component.scss',
+  providers: [
+    ConfirmationService
+  ],
+})
+export class BolHerosCreateComponent implements OnDestroy {
+  readonly #herosStateService = inject(BolHerosStateService);
+  readonly #cs = inject(ConfirmationService);
+  public warnCount = this.#herosStateService.warnCount;
+  private subs?: Subscription;
+
+  avantages: BolAvantageModel[] = [];
+  desavantages: BolDesavantageModel[] = [];
+
+
+  public idCtrl: FormControl<string | null> = new FormControl(null);
+  public userIdCtrl: FormControl<string | null> = new FormControl(null);
+  // Avantages et désavantages
+  public traitsCtrl = new FormControl<BolHerosTraitsModel[]>([]);
+  public armuresCtrl = new FormControl<number[]>([]);
+  public armesCtrl = new FormControl<number[]>([]);
+  public languesCtrl = new FormControl<number[]>([]);
+  public carrieresCtrl = new FormControl<BolHerosCarriereModel[]>([]);
+
+  public combatCtrl = new FormControl<BolHerosCombat>({
+    defense: 0,
+    initiative: 0,
+    melee: 0,
+    tir: 0
+  });
+  public attributsCtrl = new FormControl<BolHerosAttributs>({
+    vigueur: 0,
+    agilite: 0,
+    esprit: 0,
+    aura: 0
+  });
+  public originesCtrl = new FormControl<BolHerosOrigines>({
+    nom: null,
+    region_id: null,
+    avatar: null,
+    joueur: null,
+    langues: [],
+    commentaire: null
+  });
+  public ressourcesCtrl = new FormControl<BolHerosRessources>({
+    vitalite: 0,
+    heroisme: 0,
+    foi: 0,
+    pouvoir: 0,
+    vilenie: 0,
+    creation: 0,
+    experience: 0
+  });
+  public typeCtrl = new FormControl<string>('H');
+  public activeCtrl = new FormControl<boolean>(false);
+  herosForm = this.fb.group(
+    {
+      id: this.idCtrl,
+      user_id: this.userIdCtrl,
+      traits: this.traitsCtrl,
+      attributs: this.attributsCtrl,
+      combat: this.combatCtrl,
+      armures: this.armuresCtrl,
+      armes: this.armesCtrl,
+      origines: this.originesCtrl,
+      carrieres: this.carrieresCtrl,
+      ressources: this.ressourcesCtrl,
+      langues: this.languesCtrl,
+      type: this.typeCtrl,
+      active: this.activeCtrl
+    }, {validators: globalFormValidator}
+  );
+  valueChanges$: Observable<BolHerosModel> = this.herosForm.valueChanges.pipe(
+    map(value => ({
+      id: value.id ?? null,
+      user_id: value.user_id ?? null,
+      active: value.active ?? false,
+      origines: {
+        avatar: value.origines?.avatar ?? null,
+        nom: value.origines?.nom ?? null,
+        region_id: value.origines?.region_id ?? null,
+        joueur: value.origines?.joueur ?? '',
+        langues: value.origines?.langues ?? [],
+        commentaire: value.origines?.commentaire
+      },
+      ressources: {
+        vitalite: value.ressources?.vitalite ?? 10,
+        heroisme: value.ressources?.heroisme ?? 5,
+        foi: value.ressources?.foi ?? 0,
+        pouvoir: value.ressources?.pouvoir ?? 0,
+        creation: value.ressources?.creation ?? 0,
+        experience: value.ressources?.experience ?? 0,
+        vilenie: 0,
+      },
+      combat: {
+        initiative: value.combat?.initiative ?? 0,
+        melee: value.combat?.melee ?? 0,
+        tir: value.combat?.tir ?? 0,
+        defense: value.combat?.defense ?? 0,
+      },
+      attributs: {
+        vigueur: value.attributs?.vigueur ?? 0,
+        aura: value.attributs?.aura ?? 0,
+        esprit: value.attributs?.esprit ?? 0,
+        agilite: value.attributs?.agilite ?? 0
+      },
+      traits: value.traits ?? [],
+      carrieres: value.carrieres ?? [],
+      armures: value.armures ?? [],
+      armes: value.armes ?? [],
+      type: 'H'
+    })),
+    tap((heros: BolHerosModel) => {
+      this.#herosStateService.currentHeros.set(heros);
+    })
+  );
+  protected currentHero = toSignal<BolHerosModel>(this.valueChanges$);
+  protected heroId = computed(() => this.currentHero()?.id);
+  protected modifiers = this.#herosStateService.traitsModifiers;
+
+  constructor(
+    private spinner: NgxSpinnerService,
+    private fb: FormBuilder,
+    private hs: BolHerosService,
+    private router: Router,
+    private readonly route: ActivatedRoute) {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id !== null) {
+      this.getHeros(id);
+    }
+  }
+
+  ngOnDestroy() {
+    this.subs?.unsubscribe();
+  }
+
+  /**
+   * Récupération du Héros (pour modification)
+   * @param id
+   */
+  getHeros(id: string) {
+    this.spinner.show();
+    this.subs = forkJoin([
+      this.hs.heros(id),
+    ]).subscribe({
+        next: (data) => {
+          let hero: BolHerosModel = data[0];
+          hero.ressources.vitalite = 10;
+          hero.ressources.heroisme = 5;
+          this.herosForm.patchValue({
+            id: hero.id,
+            ressources: hero.ressources,
+            armures: hero.armures.map((item) => (item as BolHerosArmureModel).armure_id),
+            armes: hero.armes.map(item => (item as BolHerosArmeModel).arme_id),
+            combat: hero.combat,
+            attributs: hero.attributs,
+            origines: hero.origines,
+            carrieres: hero.carrieres.map(item => {
+              return {
+                carriere_id: item.carriere_id,
+                value: item.value
+              };
+            }),
+            traits: hero.traits.map(item => {
+              return {
+                id: item.id,
+                traitable_id: item.traitable_id,
+                type: item.type,
+                detail: item.detail,
+                region_id: item.region_id,
+                carriere: item.carriere
+              }
+            })
+          });
+          this.spinner.hide();
+        },
+        error: () => {
+          this.spinner.hide();
+        }
+      }
+    );
+  }
+
+  /**
+   * Sauvegarde du héros
+   */
+  submit(activate = false) {
+    if (this.herosForm.invalid && !activate) {
+      return;
+    }
+    const hero = this.herosForm.value;
+    this.spinner.show();
+    this.subs?.unsubscribe();
+    if (hero.id !== null) {
+      hero.active = activate;
+      this.subs = this.hs.updateHeros(hero as unknown as BolHerosModel).subscribe({
+        next: () => {
+          this.spinner.hide();
+          if (activate) {
+            this.router.navigate(['bol','heros']);
+          }
+        },
+        error: () => {
+          this.spinner.hide();
+        }
+      });
+    }
+  }
+
+  addCarriereDesavantage(desavantage: BolHerosTraitsModel | null) {
+    if (desavantage !== null) {
+      const desavantages = this.traitsCtrl.value ?? [];
+      desavantages.push(desavantage);
+      this.traitsCtrl.setValue(desavantages);
+    }
+  }
+  herosActivation(event: any) {
+      this.#cs.confirm({
+        target: event.target as EventTarget,
+        message: 'Voulez vous valider la création de ce personnage ?',
+        icon: 'pi pi-info-circle',
+        acceptButtonStyleClass: 'p-button-success p-button-sm',
+        acceptLabel: "Oui",
+        rejectLabel: "Non",
+        accept: () => {
+          this.modifiers().forEach((modifier) => {
+            let control = null;
+            if (['vitalite','heroisme','foi','pouvoir','vilenie','creation','experience'].includes(modifier.attr)) {
+              control = this.ressourcesCtrl;
+            }
+            if (['initiative','melee','tir','defense'].includes(modifier.attr)) {
+              control = this.combatCtrl;
+            }
+            if (['vigueur','aura','esprit','agilite'].includes(modifier.attr)) {
+              control = this.attributsCtrl;
+            }
+            if (control) {
+              let data: any = control.value;
+              data[modifier.attr] = Number(data[modifier.attr]) +  Number(modifier.value);
+              control.patchValue(data);
+            }
+          });
+          this.submit(true);
+        }
+      });
+  }
+}

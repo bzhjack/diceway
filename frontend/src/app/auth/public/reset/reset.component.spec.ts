@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ResetComponent } from './reset.component';
+import {ResetComponent} from './reset.component';
 
 describe('ResetComponent', () => {
   let component: ResetComponent;
@@ -10,8 +10,8 @@ describe('ResetComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ResetComponent]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(ResetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Auth\Events\Verified;
 
 class SocialController extends Controller
 {
@@ -35,11 +35,12 @@ class SocialController extends Controller
         $user = User::where('email', '=', $data->email)->first();
         if (!$user) {
             $newUser = true;
-            $user = new \App\Models\User();
+            $user = new User();
             $user->name = $data->name;
             $user->email = $data->email;
             $user->provider_id = $data->id;
             $user->avatar = $data->avatar;
+            $user->password = $data->id;
         } else {
             $user->provider_id = $data->id;
             $user->avatar = $data->avatar;

@@ -1,4 +1,56 @@
-.bol-container {
-  margin-top: 4rem;
-  padding: 10px;
+.home-bol-container {
+  display: flex;
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.home-bol-img {
+  border-bottom-left-radius: 6px;
+  border-top-left-radius: 6px;
+  width: 40%; /* Ajustez la largeur selon vos besoins */
+
+  background-size: cover; /* Pour que l'image couvre toute la div */
+  background-position: center; /* Pour centrer l'image */
+  background-repeat: no-repeat; /* Pour éviter que l'image se répète */
+  &.heros {
+    background-image: url('/frontend/assets/bol/heros.jpg');
+  }
+
+  &.bestiary {
+    background-image: url('/frontend/assets/bol/bestiary.jpg');
+  }
+
+  &.demon {
+    background-image: url('/frontend/assets/bol/demon.jpg');
+  }
+
+  &.pnj {
+    background-image: url('/frontend/assets/bol/pnj.jpg');
+  }
+}
+
+.home-bol-counter {
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  &__description {
+    font-weight: 200;
+    font-size: 16px;
+  }
+}
+
+.home-bol-card-title {
+  font-size: 24px;
+  font-weight: 200;
+}
+
+.home-bol-logo-container {
+  width: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

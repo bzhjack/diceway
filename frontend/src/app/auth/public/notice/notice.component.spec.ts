@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { NoticeComponent } from './notice.component';
+import {NoticeComponent} from './notice.component';
 
 describe('NoticeComponent', () => {
   let component: NoticeComponent;
@@ -10,8 +10,8 @@ describe('NoticeComponent', () => {
     await TestBed.configureTestingModule({
       imports: [NoticeComponent]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(NoticeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

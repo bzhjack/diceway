@@ -1,0 +1,32 @@
+.bol-container {
+}
+
+.hero-avatar {
+  height: 40px;
+  width: 40px;
+  overflow: hidden;
+}
+
+.heros_row {
+  &__img {
+    height: 100px;
+    width: 100px;
+    margin: 2px;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #424b57;
+    position: relative;
+
+    img {
+      width: 100%;
+    }
+  }
+}
+
+.heros-preview {
+  img {
+    width: 400px;
+    height: 400px;
+  }
+}

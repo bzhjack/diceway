@@ -1,19 +1,31 @@
 <div class="dw-topbar items-center justify-between">
-    <div class="dw-topbar__logo" [routerLink]="'/'">
-        <div *ngIf="nameSpace === ''" class="dw_banner" [inlineSVG]="'/frontend/assets/banner.svg'"></div>
-        <div *ngIf="nameSpace === 'bol'" class="dw_banner" [inlineSVG]="'/frontend/assets/bol/title.svg'"></div>
+  <div class="flex gap-2">
+    <div class="dw-topbar__logo relative" [routerLink]="'/'">
+      <div class="dw_banner" [inlineSVG]="'/frontend/assets/banner.svg'"></div>
     </div>
-  <div *ngIf="userObs | async as user" class="flex gap-4 cursor-pointer" (click)="op.toggle($event)">
-    <div class="flex flex-col">
-      <div>{{user.name}}</div>
-      <div><small>{{user.email}}</small></div>
+    <div class="flex items-center text-3xl relative dw_route" style="top: -3px">
+      {{ route() }}
     </div>
-    @if (user.avatar) {
-      <p-avatar [image]="user.avatar" styleClass="mr-2" size="large" shape="circle"></p-avatar>
-    } @else {
-      <p-avatar icon="pi pi-user" styleClass="mr-2" size="large" shape="circle"></p-avatar>
-    }
   </div>
+  <div class="flex gap-4">
+
+    <div class="flex gap-2 items-center">
+
+    </div>
+
+    <div *ngIf="userObs | async as user" class="flex gap-4 cursor-pointer" (click)="op.toggle($event)">
+      <div class="flex flex-col">
+        <div>{{ user.name }}</div>
+        <div><small>{{ user.email }}</small></div>
+      </div>
+      @if (user.avatar) {
+        <p-avatar [image]="user.avatar" styleClass="mr-2" size="large" shape="circle"></p-avatar>
+      } @else {
+        <p-avatar icon="pi pi-user" styleClass="mr-2" size="large" shape="circle"></p-avatar>
+      }
+    </div>
+  </div>
+
 </div>
 
 <p-overlayPanel #op>
