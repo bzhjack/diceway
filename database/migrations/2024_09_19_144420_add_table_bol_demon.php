@@ -12,7 +12,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('user_id')->nullable()->index(); // null => public profile
             $table->string('nom');
-            $table->binary('avatar')->nullable();
+            $table->longText('avatar')->nullable();
             $table->longText('commentaire')->nullable();
 
             $table->tinyInteger('vigueur')->default(0);
