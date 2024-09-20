@@ -1,14 +1,54 @@
-import { Component, inject } from '@angular/core';
-import { ConfirmationService } from 'primeng/api';
-import { BolDemonsService } from '../../services/bol-demons.service';
-import { DialogService } from 'primeng/dynamicdialog';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { Subscription } from 'rxjs';
+import {Component, inject, ViewChild} from '@angular/core';
+import {ConfirmationService, PrimeTemplate} from 'primeng/api';
+import {BolDemonsService} from '../../services/bol-demons.service';
+import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
+import {NgxSpinnerService} from 'ngx-spinner';
+import {Subscription} from 'rxjs';
+import {ButtonDirective} from "primeng/button";
+import {CheckboxModule} from "primeng/checkbox";
+import {ConfirmPopupModule} from "primeng/confirmpopup";
+import {DialogModule} from "primeng/dialog";
+import {DropdownModule} from "primeng/dropdown";
+import {HeaderComponent} from "../../../shared/header/header.component";
+import {IconFieldModule} from "primeng/iconfield";
+import {InputIconModule} from "primeng/inputicon";
+import {InputTextModule} from "primeng/inputtext";
+import {NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {Ripple} from "primeng/ripple";
+import {RouterLink} from "@angular/router";
+import {Table, TableModule} from "primeng/table";
+import {TagModule} from "primeng/tag";
+import {TooltipModule} from "primeng/tooltip";
+import {toSignal} from "@angular/core/rxjs-interop";
+import {BolDemonModel} from "../../models/bol-demon.model";
+import {BolCreatureModel} from "../../models/bol-creature.model";
 
 @Component({
   selector: 'bol-demon-home',
   standalone: true,
-  imports: [],
+  imports: [
+    ButtonDirective,
+    CheckboxModule,
+    ConfirmPopupModule,
+    DialogModule,
+    DropdownModule,
+    HeaderComponent,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule,
+    NgForOf,
+    NgIf,
+    NgOptimizedImage,
+    PrimeTemplate,
+    ReactiveFormsModule,
+    Ripple,
+    RouterLink,
+    TableModule,
+    TagModule,
+    TooltipModule,
+    FormsModule
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   providers: [
@@ -23,6 +63,16 @@ export class BolDemonHomeComponent {
   private subsDemon?: Subscription;
   public demons: Array<any> = [];
   public filteredDemons: Array<any> = [];
+  public searchCreation: boolean = false;
+  public searchCategorie: number | null = null;
+  public searchTerm: string | null = null;
+  private subs: Subscription | undefined;
+  private ref?: DynamicDialogRef;
+  public showDemon: boolean = false;
+  public currentDemon: BolDemonModel | null = null;
+
+  public categorieList = toSignal(this.demonService.categories());
+  @ViewChild('demonTable') demonTable?: Table;
 
   constructor() {
     this.getDemons();
@@ -46,5 +96,27 @@ export class BolDemonHomeComponent {
       }
     });
   }
+  filtering(ev: any) {
+    this.demonTable?.filterGlobal(ev.target?.value, 'contains')
+  }
+  filterExtended() {
+    this.filteredDemons = this.searchCreation ? this.demons.filter((demon) => demon.user_id !== null) : this.demons;
+    if (this.searchCategorie !== null) {
+      this.filteredDemons = this.demons.filter((demon: BolDemonModel) => demon.id_categorie === this.searchCategorie);
+    }
+  }
 
+
+  showDemonPicture(demon: BolDemonModel) {
+    this.showDemon = true;
+    this.currentDemon = demon;
+  }
+
+  clear(table?: Table) {
+    table?.clear();
+    this.searchTerm = '';
+    this.searchCategorie = null;
+    this.searchCreation = false;
+    this.filterExtended();
+  }
 }
