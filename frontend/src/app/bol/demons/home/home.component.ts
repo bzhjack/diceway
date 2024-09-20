@@ -13,7 +13,7 @@ import {HeaderComponent} from "../../../shared/header/header.component";
 import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
 import {InputTextModule} from "primeng/inputtext";
-import {NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
+import {JsonPipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Ripple} from "primeng/ripple";
 import {RouterLink} from "@angular/router";
@@ -47,7 +47,8 @@ import {BolCreatureModel} from "../../models/bol-creature.model";
     TableModule,
     TagModule,
     TooltipModule,
-    FormsModule
+    FormsModule,
+    JsonPipe
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
