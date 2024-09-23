@@ -5,6 +5,7 @@ import {UserService} from "./auth/services/user.service";
 import {AsyncPipe, NgIf} from "@angular/common";
 import {NgxSpinnerModule} from "ngx-spinner";
 import {ToastModule} from "primeng/toast";
+import {DiceComponent} from "./dice/dice.component";
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,8 @@ import {ToastModule} from "primeng/toast";
     TopbarComponent,
     AsyncPipe,
     NgIf,
-    ToastModule
+    ToastModule,
+    DiceComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

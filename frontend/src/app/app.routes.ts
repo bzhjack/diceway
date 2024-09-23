@@ -28,11 +28,6 @@ export const routes: Routes = [
 
   {path: '', component: HomeComponent, canActivate: [loggedInGuard]},
   {
-    path: 'dice',
-    loadComponent: () => import('./dice/dice.component').then(m => m.DiceComponent),
-    canActivate: [loggedInGuard]
-  },
-  {
     path: 'bol',
     loadComponent: () => import('./bol/home/home.component').then(m => m.BolHomeComponent),
     canActivate: [loggedInGuard]

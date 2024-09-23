@@ -1,8 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {TopbarComponent} from '../layout/topbar/topbar.component';
 import {CardModule} from "primeng/card";
 import {RouterLink} from "@angular/router";
 import {BtnComponent} from "../shared/btn/btn.component";
+import {DiceService} from "../dice/dice.service";
 
 @Component({
   selector: 'app-home',
@@ -17,13 +18,12 @@ import {BtnComponent} from "../shared/btn/btn.component";
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
+  ds = inject(DiceService);
   constructor() {
   }
 
-  ngOnInit(): void {
-  }
-
-  authenticationFailed(error: unknown) {
-    console.error('Authentication failed: ' + error);
+  rollDice(ev: any) {
+    ev.stopImmediatePropagation();
+    this.ds.rollDice('10d10>7');
   }
 }
