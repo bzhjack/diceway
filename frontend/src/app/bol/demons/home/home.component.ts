@@ -22,7 +22,6 @@ import {TagModule} from "primeng/tag";
 import {TooltipModule} from "primeng/tooltip";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {BolDemonModel} from "../../models/bol-demon.model";
-import {BolCreatureModel} from "../../models/bol-creature.model";
 import {BolDemonCreateComponent} from "../create/create.component";
 
 @Component({

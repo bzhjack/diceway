@@ -4,7 +4,7 @@ import {
   AbstractControl,
   ControlValueAccessor,
   FormBuilder,
-  FormControl, FormGroup,
+  FormControl,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,

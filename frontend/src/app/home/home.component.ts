@@ -4,7 +4,7 @@ import {CardModule} from "primeng/card";
 import {RouterLink} from "@angular/router";
 import {BtnComponent} from "../shared/btn/btn.component";
 import {DiceService} from "../dice/dice.service";
-import { AdvancedRoller } from '@3d-dice/dice-ui';
+
 
 @Component({
   selector: 'app-home',
@@ -22,7 +22,7 @@ export class HomeComponent implements  AfterViewInit {
   ds = inject(DiceService);
   constructor() {
     effect(() => {
-      console.log(this.ds.diceResult());
+      console.log("RESULTAT:",this.ds.diceResult());
     });
   }
   ngAfterViewInit() {

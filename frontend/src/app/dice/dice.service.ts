@@ -16,6 +16,17 @@ export class DiceService {
     effect(() => {
       if (this.dice()) {
         console.log('dicebox ready');
+        const displayResultsElem = document.querySelector('#dice-box .displayResults'); // Sélectionner .displayResults dans #dice-box
+        if (displayResultsElem) {
+          displayResultsElem.addEventListener('click', () => {
+            console.log("L'élément displayResults dans #dice-box a été cliqué !");
+            this.dice().clear();
+            setTimeout(() => {
+              this.showDiceBox.set(false);
+            }, 500);
+          });
+        }
+
         this.dice().onRollComplete = (rollResult: any) => {
           const reRolls = this.DRP.handleRerolls(rollResult);
           if (reRolls.length) {
@@ -29,16 +40,19 @@ export class DiceService {
       }
     });
   }
-  // Lancement du jet
-  rollDice(roll?: string, sender: string = 'master') {
-    if (roll) {
+  clear() {
     this.DRP.clear();
     this.dice().clear();
     this.diceResult.set(null);
-    this.sender = sender;
-    const parsedInput = this.DRP.parseNotation(roll);
-    this.showDiceBox.set(true);
-    this.dice().roll(parsedInput);
+  }
+  // Lancement du jet
+  rollDice(roll?: string, sender: string = 'master') {
+    if (roll) {
+      this.clear();
+      this.sender = sender;
+      const parsedInput = this.DRP.parseNotation(roll);
+      this.showDiceBox.set(true);
+      this.dice().roll(parsedInput);
     }
   }
 }
