@@ -10,11 +10,12 @@ export class DiceService {
   public showDiceBox = signal(true);
   public dice = signal<any>(null);
   public displayResult = signal<any>(null);
-  public diceResult = signal<any>(null);
+  public diceResult = signal<{ sender: string, result: any } | null>(null);
 
   constructor() {
     effect(() => {
       if (this.dice()) {
+        console.log('dicebox ready');
         this.dice().onRollComplete = (rollResult: any) => {
           const reRolls = this.DRP.handleRerolls(rollResult);
           if (reRolls.length) {
@@ -23,7 +24,7 @@ export class DiceService {
           }
           const finalResults = this.DRP.parsedNotation ? this.DRP.parseFinalResults(rollResult) : rollResult
           this.displayResult().showResults(finalResults);
-          this.diceResult.set(finalResults);
+          this.diceResult.set({sender: this.sender, result: finalResults.value});
         }
       }
     });
@@ -33,13 +34,11 @@ export class DiceService {
     if (roll) {
     this.DRP.clear();
     this.dice().clear();
+    this.diceResult.set(null);
     this.sender = sender;
     const parsedInput = this.DRP.parseNotation(roll);
     this.showDiceBox.set(true);
     this.dice().roll(parsedInput);
     }
-  }
-  getDiceResult() {
-    this.dice().getRollResults()
   }
 }

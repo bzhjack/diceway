@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, inject} from '@angular/core';
+import {AfterViewInit, Component, effect, inject} from '@angular/core';
 import {TopbarComponent} from '../layout/topbar/topbar.component';
 import {CardModule} from "primeng/card";
 import {RouterLink} from "@angular/router";
@@ -21,6 +21,9 @@ import { AdvancedRoller } from '@3d-dice/dice-ui';
 export class HomeComponent implements  AfterViewInit {
   ds = inject(DiceService);
   constructor() {
+    effect(() => {
+      console.log(this.ds.diceResult());
+    });
   }
   ngAfterViewInit() {
   }
