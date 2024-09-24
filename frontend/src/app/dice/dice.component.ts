@@ -1,7 +1,6 @@
 import {AfterViewInit, Component, inject} from '@angular/core';
 import DiceBox from "@3d-dice/dice-box";
 import {DisplayResults} from '@3d-dice/dice-ui';
-import DiceParser from '@3d-dice/dice-parser-interface';
 import {NgIf, NgStyle} from "@angular/common";
 import {DiceService} from "./dice.service";
 
