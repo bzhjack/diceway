@@ -33,6 +33,11 @@ export const routes: Routes = [
     canActivate: [loggedInGuard]
   },
   {
+    path: 'play',
+    loadComponent: () => import('./playground/playground.component').then(m => m.PlaygroundComponent),
+    canActivate: [loggedInGuard]
+  },
+  {
     path: 'bol/heros',
     loadComponent: () => import('./bol/heros/home/home.component').then(m => m.BolHeroHomeComponent),
     canActivate: [loggedInGuard]

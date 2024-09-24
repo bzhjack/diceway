@@ -1,9 +1,10 @@
-import {Component, inject} from '@angular/core';
+import {AfterViewInit, Component, inject} from '@angular/core';
 import {TopbarComponent} from '../layout/topbar/topbar.component';
 import {CardModule} from "primeng/card";
 import {RouterLink} from "@angular/router";
 import {BtnComponent} from "../shared/btn/btn.component";
 import {DiceService} from "../dice/dice.service";
+import { AdvancedRoller } from '@3d-dice/dice-ui';
 
 @Component({
   selector: 'app-home',
@@ -17,13 +18,15 @@ import {DiceService} from "../dice/dice.service";
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
+export class HomeComponent implements  AfterViewInit {
   ds = inject(DiceService);
   constructor() {
+  }
+  ngAfterViewInit() {
   }
 
   rollDice(ev: any) {
     ev.stopImmediatePropagation();
-    this.ds.rollDice('10d10>7');
+    this.ds.rollDice('2d10ro<2');
   }
 }
