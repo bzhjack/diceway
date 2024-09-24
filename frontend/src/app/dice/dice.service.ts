@@ -19,7 +19,6 @@ export class DiceService {
         const displayResultsElem = document.querySelector('#dice-box .displayResults'); // Sélectionner .displayResults dans #dice-box
         if (displayResultsElem) {
           displayResultsElem.addEventListener('click', () => {
-            console.log("L'élément displayResults dans #dice-box a été cliqué !");
             this.dice().clear();
             setTimeout(() => {
               this.showDiceBox.set(false);
