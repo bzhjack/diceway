@@ -6,3 +6,7 @@ declare module '@3d-dice/dice-roller-parser';
 declare module '@3d-dice/dice-ui/src/displayResults';
 declare module "@3d-dice/dice-ui/src/advancedRoller";
 declare module "@3d-dice/dice-ui/src/boxControls";
+declare module '*.svg' {
+  const content: any;
+  export default content;
+}

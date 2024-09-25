@@ -1,31 +1,26 @@
-import {effect, Injectable, signal} from '@angular/core';
+import {effect, inject, Injectable, signal} from '@angular/core';
 import DiceParser from '@3d-dice/dice-parser-interface'
+import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
+import {DiceResultsComponent} from "./dice-result/dice-result.component";
+import {Subscription} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class DiceService {
+  dialogService = inject(DialogService);
+  subsClose: Subscription = new Subscription();
+  ref: DynamicDialogRef | undefined;
   private sender = '';
   public DRP = new DiceParser();
   public showDiceBox = signal(true);
   public dice = signal<any>(null);
-  public displayResult = signal<any>(null);
   public diceResult = signal<{ sender: string, result: any } | null>(null);
 
   constructor() {
     effect(() => {
       if (this.dice()) {
         console.log('dicebox ready');
-        const displayResultsElem = document.querySelector('#dice-box .displayResults'); // Sélectionner .displayResults dans #dice-box
-        if (displayResultsElem) {
-          displayResultsElem.addEventListener('click', () => {
-            this.dice().clear();
-            setTimeout(() => {
-              this.showDiceBox.set(false);
-            }, 500);
-          });
-        }
-
         this.dice().onRollComplete = (rollResult: any) => {
           const reRolls = this.DRP.handleRerolls(rollResult);
           if (reRolls.length) {
@@ -33,17 +28,19 @@ export class DiceService {
             return;
           }
           const finalResults = this.DRP.parsedNotation ? this.DRP.parseFinalResults(rollResult) : rollResult
-          this.displayResult().showResults(finalResults);
-          this.diceResult.set({sender: this.sender, result: finalResults.value});
+          this.showDiceResult(finalResults);
+          this.diceResult.set({sender: this.sender, result: finalResults});
         }
       }
     });
   }
+
   clear() {
     this.DRP.clear();
     this.dice().clear();
     this.diceResult.set(null);
   }
+
   // Lancement du jet
   rollDice(roll?: string, sender: string = 'master') {
     if (roll) {
@@ -53,5 +50,21 @@ export class DiceService {
       this.showDiceBox.set(true);
       this.dice().roll(parsedInput);
     }
+  }
+
+  showDiceResult(result: any) {
+    this.ref = this.dialogService.open(DiceResultsComponent, {
+      header: "Résultat",
+      data: {
+        result
+      },
+    });
+    this.subsClose.unsubscribe();
+    this.subsClose = this.ref.onClose.subscribe(() => {
+      this.dice().clear();
+      setTimeout(() => {
+        this.showDiceBox.set(false);
+      }, 500);
+    });
   }
 }

@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, inject} from '@angular/core';
 import DiceBox from "@3d-dice/dice-box";
-import {DisplayResults} from '@3d-dice/dice-ui';
 import {NgIf, NgStyle} from "@angular/common";
 import {DiceService} from "./dice.service";
 
@@ -19,7 +18,6 @@ export class DiceComponent implements AfterViewInit {
   showDiceBox = this.diceService.showDiceBox;
 
   ngAfterViewInit() {
-    const displayResults = new DisplayResults("#dice-box");
     const dice = new DiceBox("#dice-box", {
       assetPath: "/frontend/assets/dice/",
       theme: "default",
@@ -30,7 +28,6 @@ export class DiceComponent implements AfterViewInit {
     dice.init().then((diceInstance: any) => {
       this.showDiceBox.set(false);
       this.diceService.dice.set(diceInstance);
-      this.diceService.displayResult.set(displayResults);
     });
 
   }

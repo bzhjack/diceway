@@ -30,6 +30,6 @@ export class HomeComponent implements  AfterViewInit {
 
   rollDice(ev: any) {
     ev.stopImmediatePropagation();
-    this.ds.rollDice('2d10ro<2');
+    this.ds.rollDice('2d6>3');
   }
 }
