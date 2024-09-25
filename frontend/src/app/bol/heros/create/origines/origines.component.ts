@@ -78,7 +78,7 @@ export class BolHerosOriginesComponent implements ControlValueAccessor, Validato
   public joueurCtrl = new FormControl('', Validators.required);
   public nomCtrl = new FormControl('', Validators.required);
   public avatarCtrl: FormControl<string | null> = new FormControl(null);
-  public regionIdCtrl = new FormControl<number | null>(null);
+  public regionIdCtrl = new FormControl<number | null>(null, [Validators.required, Validators.min(1)]);
   public languesCtrl = new FormControl<number[]>([]);
   public commentaireCtrl = new FormControl<string | null>(null);
 
@@ -201,6 +201,7 @@ export class BolHerosOriginesComponent implements ControlValueAccessor, Validato
   clearRegion(ev: MouseEvent) {
     ev.stopPropagation();
     this.regionIdCtrl.setValue(null);
+    this.regionIdCtrl.markAsDirty();
   }
 
 
