@@ -21,7 +21,8 @@ export class DiceComponent implements AfterViewInit {
       assetPath: "/frontend/assets/dice/",
       theme: "default",
       offscreen: true,
-      scale: 6
+      scale: 6,
+      themeColor: '#83271B'
     });
 
     dice.init().then((diceInstance: any) => {

@@ -71,6 +71,7 @@ export class DiceResultsComponent implements AfterViewInit {
   }
 
   showResults(data: any){
+    console.log(data);
     let rolls
     if(data.rolls && !Array.isArray(data.rolls)){
       rolls = Object.values(data.rolls).map(roll => roll)
@@ -198,7 +199,15 @@ export class DiceResultsComponent implements AfterViewInit {
       }
 
       resultString += val
-    })
+    });
+    // Gestion des opérateurs
+    data.ops?.forEach((op: string, index: number) => {
+      const currentDice = data.dice[index + 1]; // Récupérer l'élément suivant dans dice
+      if (currentDice && currentDice.type === 'number') {
+        resultString += ` ${op} ${currentDice.value}`;
+      }
+    });
+
     resultString += ` = <strong>${total}</strong>`
 
     const currentElem = this[`resultsElem${this.even ? 2 : 1}`]
