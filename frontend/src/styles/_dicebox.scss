@@ -1,12 +1,5 @@
 #dice-box {
   position: relative;
-  /*width: 100vw;
-  height: calc(100vh - 75px);
-  box-sizing: border-box;
-  &.hide {
-    width: 0;
-    height: 0;
-  }*/
 }
 
 #dice-box canvas {
@@ -14,24 +7,14 @@
   margin-top: 55px;
   width: 100%;
   height: calc(100% - 55px);
-  z-index: 1;
+  z-index: 1000;
   opacity: 1;
-  background: #0b655b;
   &.hide {
     opacity: 0;
-    z-index: -10000;
+    z-index: -1000;
   }
 }
 
-
-
-
-/*.diceResults {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-}*/
 .diceResults .results {
   display: flex;
   align-items: center;
