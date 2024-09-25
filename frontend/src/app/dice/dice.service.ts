@@ -11,9 +11,9 @@ export class DiceService {
   dialogService = inject(DialogService);
   subsClose: Subscription = new Subscription();
   ref: DynamicDialogRef | undefined;
+  canvas: HTMLCanvasElement | null = null;
   private sender = '';
   public DRP = new DiceParser();
-  public showDiceBox = signal(true);
   public dice = signal<any>(null);
   public diceResult = signal<{ sender: string, result: any } | null>(null);
 
@@ -21,7 +21,8 @@ export class DiceService {
     effect(() => {
       if (this.dice()) {
         console.log('dicebox ready');
-        this.dice().hide();
+        this.canvas = document.querySelector('.dice-box-canvas') as HTMLCanvasElement;
+        this.toggleCanvas();
         this.dice().onRollComplete = (rollResult: any) => {
           const reRolls = this.DRP.handleRerolls(rollResult);
           if (reRolls.length) {
@@ -45,11 +46,10 @@ export class DiceService {
   // Lancement du jet
   rollDice(roll?: string, sender: string = 'master') {
     if (roll) {
-      this.dice().show();
+      this.toggleCanvas();
       this.clear();
       this.sender = sender;
       const parsedInput = this.DRP.parseNotation(roll);
-      this.showDiceBox.set(true);
       this.dice().roll(parsedInput);
     }
   }
@@ -63,11 +63,13 @@ export class DiceService {
     });
     this.subsClose.unsubscribe();
     this.subsClose = this.ref.onClose.subscribe(() => {
-      this.dice().clear();
-      this.dice().hide();
-      setTimeout(() => {
-        this.showDiceBox.set(false);
-      }, 500);
+      this.toggleCanvas();
     });
+  }
+  toggleCanvas() {
+    if (this.canvas) {
+      // Bascule l'ajout/suppression de la classe 'hide'
+      this.canvas.classList.toggle('hide');
+    }
   }
 }

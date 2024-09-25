@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, inject, Renderer2, ViewChild} from '@angular/core';
-import {DynamicDialogConfig} from "primeng/dynamicdialog";
+import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 
 @Component({
   selector: 'app-dice-result',
@@ -20,7 +20,7 @@ export class DiceResultsComponent implements AfterViewInit {
   readonly config = inject(DynamicDialogConfig);
   readonly renderer = inject(Renderer2)
 
-  constructor() {
+  constructor(public ref: DynamicDialogRef) {
     this.result = this.config.data.result;
   }
 
@@ -207,7 +207,9 @@ export class DiceResultsComponent implements AfterViewInit {
     currentElem.classList.remove('hidden')
     currentElem.classList.remove('hideEffect')
     this.even = !this.even
-
+  }
+  quit() {
+    this.ref.close(null);
   }
 
 }

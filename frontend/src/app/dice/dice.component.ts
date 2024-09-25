@@ -15,7 +15,6 @@ import {DiceService} from "./dice.service";
 })
 export class DiceComponent implements AfterViewInit {
   protected diceService = inject(DiceService);
-  showDiceBox = this.diceService.showDiceBox;
 
   ngAfterViewInit() {
     const dice = new DiceBox("#dice-box", {
@@ -26,7 +25,6 @@ export class DiceComponent implements AfterViewInit {
     });
 
     dice.init().then((diceInstance: any) => {
-      this.showDiceBox.set(false);
       this.diceService.dice.set(diceInstance);
     });
 
