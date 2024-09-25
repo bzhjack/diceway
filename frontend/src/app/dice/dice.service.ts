@@ -21,6 +21,7 @@ export class DiceService {
     effect(() => {
       if (this.dice()) {
         console.log('dicebox ready');
+        this.dice().hide();
         this.dice().onRollComplete = (rollResult: any) => {
           const reRolls = this.DRP.handleRerolls(rollResult);
           if (reRolls.length) {
@@ -44,6 +45,7 @@ export class DiceService {
   // Lancement du jet
   rollDice(roll?: string, sender: string = 'master') {
     if (roll) {
+      this.dice().show();
       this.clear();
       this.sender = sender;
       const parsedInput = this.DRP.parseNotation(roll);
@@ -62,6 +64,7 @@ export class DiceService {
     this.subsClose.unsubscribe();
     this.subsClose = this.ref.onClose.subscribe(() => {
       this.dice().clear();
+      this.dice().hide();
       setTimeout(() => {
         this.showDiceBox.set(false);
       }, 500);
