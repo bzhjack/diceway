@@ -8,6 +8,7 @@ import {AsyncPipe, JsonPipe, NgIf} from "@angular/common";
 import {CardModule} from "primeng/card";
 import {SkeletonModule} from "primeng/skeleton";
 import {TooltipModule} from "primeng/tooltip";
+import {Button} from "primeng/button";
 
 @Component({
   selector: 'bol-heros-card',
@@ -18,7 +19,8 @@ import {TooltipModule} from "primeng/tooltip";
     CardModule,
     SkeletonModule,
     NgIf,
-    TooltipModule
+    TooltipModule,
+    Button
   ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'

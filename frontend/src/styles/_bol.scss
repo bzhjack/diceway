@@ -1,3 +1,15 @@
+@font-face {
+  font-family: 'BolFont';
+  src: url('/assets/bol/font/BolFont.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.bol-font {
+  font-family: "BolFont", sans-serif;
+  //font-family: "Conan", sans-serif;
+}
+
 .carte-container {
   width: calc(100vw - 420px);
 }
