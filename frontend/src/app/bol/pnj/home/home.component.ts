@@ -27,6 +27,7 @@ import {Ripple} from "primeng/ripple";
 import {TagModule} from "primeng/tag";
 import {ScrollPanelModule} from "primeng/scrollpanel";
 import {BolHerosLangueModel} from "../../models/bol-langue.model";
+import {BolHerosTraitRowComponent} from "../../heros/create/origines/region/trait-row/trait-row.component";
 
 @Component({
   selector: 'bol-pnj-home',
@@ -55,7 +56,8 @@ import {BolHerosLangueModel} from "../../models/bol-langue.model";
     Ripple,
     TagModule,
     JsonPipe,
-    ScrollPanelModule
+    ScrollPanelModule,
+    BolHerosTraitRowComponent
   ],
   providers: [
     ConfirmationService

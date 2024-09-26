@@ -25,6 +25,7 @@ import {ScrollPanelModule} from "primeng/scrollpanel";
 import {BolHerosUpdateComponent} from "../update/update.component";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {BolHerosLangueModel} from "../../models/bol-langue.model";
+import {BolHerosTraitRowComponent} from "../create/origines/region/trait-row/trait-row.component";
 
 
 @Component({
@@ -53,7 +54,8 @@ import {BolHerosLangueModel} from "../../models/bol-langue.model";
     TooltipModule,
     FormsModule,
     NgOptimizedImage,
-    ScrollPanelModule
+    ScrollPanelModule,
+    BolHerosTraitRowComponent
   ],
   providers: [
     ConfirmationService

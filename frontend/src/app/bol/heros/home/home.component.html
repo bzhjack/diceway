@@ -84,7 +84,9 @@
                     <div style="text-transform: capitalize" class="bol-ellipsis-150">{{ heros.origines.nom }}</div>
                   </div>
                   <div class="text-gray-300 bol-ellipsis-150">{{ heros.origines.joueur }}</div>
-                  <div class="text-gray-400 bol-ellipsis-150" style="font-size: 12px">{{ heros.origines.region?.region }}</div>
+                  <div class="text-gray-400 bol-ellipsis-150"
+                       style="font-size: 12px">{{ heros.origines.region?.region }}
+                  </div>
                   <div class="text-gray-400 bol-ellipsis-150" style="font-size: 10px">{{ languesToStr(heros) }}</div>
                 </div>
 
@@ -224,11 +226,12 @@
               <p-scrollPanel [style]="{height: '100px'}">
                 <table>
                   <tr *ngFor="let trait of heros.traits">
-                    <td [class.error-color]="trait.type ==='D'"
-                        [class.success-color]="trait.type ==='A'">
-                      <div class="bol-ellipsis-120" tooltipPosition="left"
-                           pTooltip="{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}
-                      </div>
+                    <td>
+                      @if (trait.type === 'D') {
+                        <bol-heros-trait-row [desavantage]="trait.traitable"></bol-heros-trait-row>
+                      } @else {
+                        <bol-heros-trait-row [avantage]="trait.traitable"></bol-heros-trait-row>
+                      }
                     </td>
                   </tr>
                 </table>

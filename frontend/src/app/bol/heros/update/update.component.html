@@ -166,10 +166,12 @@
           <div class="flex flex-col gap-2" formArrayName="traits">
             <ng-container *ngFor="let trait of traits.controls; let i = index">
               <div [formGroupName]="i" class="flex gap-2 items-center justify-between">
-                <div
-                  [class.error-color]="trait.value.type ==='D'"
-                  [class.success-color]="trait.value.type ==='A'" class="whitespace-nowrap">
-                  {{ traitFromIdType(trait.value) }}
+                <div>
+                  @if (trait.value.type === 'D') {
+                    <bol-heros-trait-row [desavantage]="desavantageFromId(trait.value.id)"></bol-heros-trait-row>
+                  } @else {
+                    <bol-heros-trait-row [avantage]="avantageFromId(trait.value.id)"></bol-heros-trait-row>
+                  }
                 </div>
                 <app-btn (click)="removeTrait(trait.value, traits)"></app-btn>
               </div>

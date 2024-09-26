@@ -231,11 +231,12 @@
               <p-scrollPanel [style]="{height: '100px'}">
                 <table>
                   <tr *ngFor="let trait of pnj.traits">
-                    <td [class.error-color]="trait.type ==='D'"
-                        [class.success-color]="trait.type ==='A'">
-                      <div class="bol-ellipsis-120" tooltipPosition="left"
-                           pTooltip="{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}">{{ trait.traitable.avantage }} {{ trait.traitable.desavantage }}
-                      </div>
+                    <td>
+                      @if (trait.type === 'D') {
+                        <bol-heros-trait-row [desavantage]="trait.traitable"></bol-heros-trait-row>
+                      } @else {
+                        <bol-heros-trait-row [avantage]="trait.traitable"></bol-heros-trait-row>
+                      }
                     </td>
                   </tr>
                 </table>

@@ -22,6 +22,7 @@ import {BolHerosModel} from '../../models/bol-heros.model';
 import {BtnComponent} from '../../../shared/btn/btn.component';
 import {BolAvantageModel} from '../../models/bol-avantage.model';
 import {BolDesavantageModel} from '../../models/bol-desavantage.model';
+import {BolHerosTraitRowComponent} from "../create/origines/region/trait-row/trait-row.component";
 
 @Component({
   selector: 'bol-heros-update',
@@ -43,6 +44,7 @@ import {BolDesavantageModel} from '../../models/bol-desavantage.model';
     OverlayPanelModule,
     Ripple,
     JsonPipe,
+    BolHerosTraitRowComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './update.component.html',
@@ -429,17 +431,11 @@ export class BolHerosUpdateComponent {
     return carriere?.carriere ?? '';
   }
 
-  traitFromIdType(trait: { id: number; type: 'A' | 'D' }) {
-    const result = (
-      trait.type === 'A' ? this.avantageList() : this.desavantageList()
-    )?.find(
-      (item: BolAvantageModel | BolDesavantageModel) =>
-        Number(item.id) === Number(trait.id)
-    );
-    return (
-      (result as BolDesavantageModel)?.desavantage ??
-      (result as BolAvantageModel)?.avantage
-    );
+  avantageFromId(id: number) {
+    return this.avantageList()?.find((item: BolAvantageModel) => Number(item.id) === Number(id));
+  }
+  desavantageFromId(id: number) {
+    return this.desavantageList()?.find((item: BolDesavantageModel) => Number(item.id) === Number(id));
   }
 
   quit(event: Event) {
