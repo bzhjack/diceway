@@ -1,7 +1,7 @@
-import {Component, computed, effect, inject, input, Signal, signal} from '@angular/core';
+import {Component, inject, input, signal} from '@angular/core';
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {BolHerosService} from "../../services/bol-heros.service";
-import {toObservable, toSignal} from "@angular/core/rxjs-interop";
+import {toObservable} from "@angular/core/rxjs-interop";
 import {exhaustMap, filter} from "rxjs";
 import {tap} from "rxjs/operators";
 import {AsyncPipe, JsonPipe, NgIf} from "@angular/common";
