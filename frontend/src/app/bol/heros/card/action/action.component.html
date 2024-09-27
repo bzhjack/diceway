@@ -1,0 +1,43 @@
+<div>
+  <div class="flex items-center gap-2 pb-2 text-xl">
+    <i class="pi pi-wrench"></i>
+    Effectuer une action
+  </div>
+  <div class="flex flex-col gap-1 w-fit justify-end">
+    <label>Niveau de difficulté</label>
+    <p-dropdown [style]="{ width: '250px' }" [(ngModel)]="difficulty" [options]="difficulties" optionValue="modifier">
+      <ng-template pTemplate="selectedItem" let-selectedOption>
+        <div class="flex align-items-center gap-2">
+          <div>{{ selectedOption.difficulty }} ({{ selectedOption.modifier }})</div>
+        </div>
+      </ng-template>
+      <ng-template let-difficulty pTemplate="item">
+        <div class="flex flex-col gap-2">
+          <div>{{ difficulty.difficulty }} ({{ difficulty.modifier }})</div>
+        </div>
+      </ng-template>
+    </p-dropdown>
+    <div class="flex gap-2">
+      <p-fieldset legend="Utilisation d'une carrière">
+        <div *ngFor="let career of carrieres()" class="field-checkbox">
+          <p-checkbox
+             label="{{ career.carriere }} (value: {{ career.value }})"
+            name="group"
+             (change)="onCheckboxChange($event, career.value)"
+            [value]="career.carriere" />
+        </div>
+      </p-fieldset>
+      <p-fieldset legend="Application d'un avantage/désavantage">
+
+      </p-fieldset>
+    </div>
+
+
+
+
+    <p-button label="dice" (click)="rollDice()"></p-button>
+    <div class="flex gap-1 items-center diceResults results text-xl" [innerHTML]="parsedResult()"></div>
+    <div>la: {{rollResult()}}</div>
+  </div>
+</div>
+
