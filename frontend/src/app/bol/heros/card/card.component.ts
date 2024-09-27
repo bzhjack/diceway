@@ -9,6 +9,8 @@ import {CardModule} from "primeng/card";
 import {SkeletonModule} from "primeng/skeleton";
 import {TooltipModule} from "primeng/tooltip";
 import {Button} from "primeng/button";
+import {OverlayPanelModule} from "primeng/overlaypanel";
+import {BolActionComponent} from "./action/action.component";
 
 @Component({
   selector: 'bol-heros-card',
@@ -20,7 +22,9 @@ import {Button} from "primeng/button";
     SkeletonModule,
     NgIf,
     TooltipModule,
-    Button
+    Button,
+    OverlayPanelModule,
+    BolActionComponent
   ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'

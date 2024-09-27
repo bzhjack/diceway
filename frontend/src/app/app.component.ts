@@ -5,7 +5,7 @@ import {UserService} from "./auth/services/user.service";
 import {AsyncPipe, NgIf} from "@angular/common";
 import {NgxSpinnerModule} from "ngx-spinner";
 import {ToastModule} from "primeng/toast";
-import {DiceComponent} from "./dice/dice.component";
+import {DiceComponent} from "./shared/dice/dice.component";
 
 @Component({
   selector: 'app-root',

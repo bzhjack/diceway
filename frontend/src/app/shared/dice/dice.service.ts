@@ -1,55 +1,89 @@
-import {AfterViewInit, Component, ElementRef, inject, Renderer2, ViewChild} from '@angular/core';
-import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
+import {effect, inject, Injectable, signal} from '@angular/core';
+import DiceParser from '@3d-dice/dice-parser-interface'
+import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
+import {DiceResultsComponent} from "./dice-result/dice-result.component";
+import {Subscription} from "rxjs";
 
-@Component({
-  selector: 'app-dice-result',
-  standalone: true,
-  imports: [],
-  templateUrl: './dice-result.component.html',
-  styleUrl: './dice-result.component.scss'
+@Injectable({
+  providedIn: 'root'
 })
-export class DiceResultsComponent implements AfterViewInit {
+export class DiceService {
+  dialogService = inject(DialogService);
+  subsClose: Subscription = new Subscription();
+  ref: DynamicDialogRef | undefined;
+  canvas: HTMLCanvasElement | null = null;
+  private sender = '';
+  private showResult = false;
+  public DRP = new DiceParser();
+  public dice = signal<any>(null);
+  public diceResult = signal<{ sender: string, result: any, parsedResult: string } | null>(null);
 
-  @ViewChild('resultContainer') displayContainer!: ElementRef;
-  private timeout: number = 500;
-  private even: boolean = false;
-  private resultsElem1!: HTMLElement;
-  private resultsElem2!: HTMLElement;
-  private result: any = null;
+  constructor() {
+    effect(() => {
+      if (this.dice()) {
+        console.log('dicebox ready');
+        this.canvas = document.querySelector('.dice-box-canvas') as HTMLCanvasElement;
+        if (this.canvas) {
+          this.canvas.addEventListener('click', (event: MouseEvent) => {
+            if (!this.showResult) {
+              event.stopPropagation();
+              this.toggleCanvas();
+            }
+          });
+        }
 
-  readonly config = inject(DynamicDialogConfig);
-  readonly renderer = inject(Renderer2)
-
-  constructor(public ref: DynamicDialogRef) {
-    this.result = this.config.data.result;
+        this.toggleCanvas();
+        this.dice().onRollComplete = (rollResult: any) => {
+          const reRolls = this.DRP.handleRerolls(rollResult);
+          if (reRolls.length) {
+            reRolls.forEach((roll: any) => this.dice().add(roll, roll.groupId));
+            return;
+          }
+          const finalResults = this.DRP.parsedNotation ? this.DRP.parseFinalResults(rollResult) : rollResult
+          if (this.showResult) {
+            this.showDiceResult(finalResults);
+          }
+          this.diceResult.set({sender: this.sender, result: finalResults.value, parsedResult: this.formatDiceResult(finalResults)});
+        }
+      }
+    });
   }
 
-  ngAfterViewInit() {
-    this.createDomElements();
-    this.showResults(this.result);
+  clear() {
+    this.DRP.clear();
+    this.dice().clear();
+    this.diceResult.set(null);
   }
-  createDomElements() {
-    // Create parent element
-    const elem = this.renderer.createElement('div');
-    this.renderer.addClass(elem, 'diceResults');
 
-    // Create resultsElem1
-    this.resultsElem1 = this.renderer.createElement('div');
-    this.renderer.addClass(this.resultsElem1, 'results');
-    this.renderer.addClass(this.resultsElem1, 'hidden');
-    this.renderer.setStyle(this.resultsElem1, 'transition', `all ${this.timeout}ms`);
+  // Lancement du jet
+  rollDice(roll?: string, sender: string = 'master', showResult = false) {
+    if (roll) {
+      this.toggleCanvas();
+      this.clear();
+      this.sender = sender;
+      this.showResult = showResult;
+      const parsedInput = this.DRP.parseNotation(roll);
+      this.dice().roll(parsedInput);
+    }
+  }
 
-    // Create resultsElem2
-    this.resultsElem2 = this.renderer.createElement('div');
-    this.renderer.addClass(this.resultsElem2, 'results');
-    this.renderer.addClass(this.resultsElem2, 'hidden');
-    this.renderer.setStyle(this.resultsElem2, 'transition', `all ${this.timeout}ms`);
-
-    // Append both results elements to the parent element
-    this.renderer.appendChild(elem, this.resultsElem1);
-    this.renderer.appendChild(elem, this.resultsElem2);
-    // Append the parent element to the target container (displayContainer)
-    this.renderer.appendChild(this.displayContainer.nativeElement, elem);
+  showDiceResult(result: any) {
+    this.ref = this.dialogService.open(DiceResultsComponent, {
+      header: "Résultat",
+      data: {
+        result
+      },
+    });
+    this.subsClose.unsubscribe();
+    this.subsClose = this.ref.onClose.subscribe(() => {
+      this.toggleCanvas();
+    });
+  }
+  toggleCanvas() {
+    if (this.canvas) {
+      // Bascule l'ajout/suppression de la classe 'hide'
+      this.canvas.classList.toggle('hide');
+    }
   }
 
   // make this static for use by other systems?
@@ -70,8 +104,8 @@ export class DiceResultsComponent implements AfterViewInit {
     return r;
   }
 
-  showResults(data: any){
-    console.log(data);
+
+  formatDiceResult(data: any) {
     let rolls
     if(data.rolls && !Array.isArray(data.rolls)){
       rolls = Object.values(data.rolls).map(roll => roll)
@@ -153,7 +187,7 @@ export class DiceResultsComponent implements AfterViewInit {
       }
 
       if(roll.success !== undefined && roll.success !== null){
-       // val = roll.success ? `<svg class="success"><use href="${this.checkIcon}#checkmark"></use></svg>` : roll.failures > 0 ? `<svg class="failure"><use href="${this.cancelIcon}#cancel"></use></svg>` : `<svg class="null"><use href="${this.minusIcon}#minus"></use></svg>`
+        // val = roll.success ? `<svg class="success"><use href="${this.checkIcon}#checkmark"></use></svg>` : roll.failures > 0 ? `<svg class="failure"><use href="${this.cancelIcon}#cancel"></use></svg>` : `<svg class="null"><use href="${this.minusIcon}#minus"></use></svg>`
         val = roll.success ?
           `<img class="success" src="/assets/dice/icons/checkmark.svg" alt="Checkmark"/>` :
           roll.failures > 0 ?
@@ -207,18 +241,8 @@ export class DiceResultsComponent implements AfterViewInit {
         resultString += ` ${op} ${currentDice.value}`;
       }
     });
-
     resultString += ` = <strong>${total}</strong>`
-
-    const currentElem = this[`resultsElem${this.even ? 2 : 1}`]
-    currentElem.innerHTML = resultString
-    currentElem.classList.add('showEffect')
-    currentElem.classList.remove('hidden')
-    currentElem.classList.remove('hideEffect')
-    this.even = !this.even
-  }
-  quit() {
-    this.ref.close(null);
+    return resultString;
   }
 
 }
