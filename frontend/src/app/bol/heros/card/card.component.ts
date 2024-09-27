@@ -11,6 +11,7 @@ import {TooltipModule} from "primeng/tooltip";
 import {Button} from "primeng/button";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {BolActionComponent} from "./action/action.component";
+import {DialogService} from "primeng/dynamicdialog";
 
 @Component({
   selector: 'bol-heros-card',
@@ -31,6 +32,7 @@ import {BolActionComponent} from "./action/action.component";
 })
 export class BolHerosCardComponent {
   heroService = inject(BolHerosService);
+  dialogService = inject(DialogService);
   heroId = input<string | null>(null);
   hero = signal<BolHerosModel | null>(null);
 
@@ -39,10 +41,19 @@ export class BolHerosCardComponent {
     tap((id) => console.log('user id', id)),    // Just some debugging
     exhaustMap((id) =>                          // Don't execute the http request if one is already in progress
       this.heroService.heros(id as string).pipe()
-       // Make the http request
+        // Make the http request
         .pipe(tap((hero) => this.hero.set(hero)))   // Update the response
     )
   );
+
   constructor() {
+  }
+
+  openAction() {
+    this.dialogService.open(BolActionComponent, {
+      data: {
+        hero: this.hero()
+      }
+    });
   }
 }

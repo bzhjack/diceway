@@ -51,7 +51,7 @@
       <div class="flex gap-3 mt-1">
         <p-button label="Modifier la fiche" size="small" severity="secondary" class="w-full" styleClass="w-full"/>
         <p-button label="Faire une action" size="small" class="w-full" styleClass="w-full"
-                  (onClick)="opAction.toggle($event)"/>
+                  (onClick)="openAction()"/>
       </div>
     } @else {
       <div class="flex gap-3 mt-1">
@@ -61,7 +61,3 @@
     }
   </ng-template>
 </p-card>
-
-<p-overlayPanel #opAction [autoZIndex]="false" baseZIndex="900">
-  <bol-action [hero]="hero()"></bol-action>
-</p-overlayPanel>

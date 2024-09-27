@@ -16,6 +16,7 @@ import {MenuModule} from "primeng/menu";
 import {InputTextModule} from "primeng/inputtext";
 import {Ripple} from "primeng/ripple";
 import {InputNumberModule} from "primeng/inputnumber";
+import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 
 @Component({
   selector: 'bol-action',
@@ -43,7 +44,7 @@ import {InputNumberModule} from "primeng/inputnumber";
 })
 export class BolActionComponent {
   initCarriere = {carriere: 'Aucune', value: 0};
-  hero = input<BolHerosModel | null>(null);
+  hero = signal<BolHerosModel | null>(null);
   diceService = inject(DiceService);
   difficulties = BOL_DIFFICULTIES;
   difficulty = signal(0);
@@ -92,7 +93,8 @@ export class BolActionComponent {
   selectedAttribut = signal<{ attr: string, value: number }>({attr: '', value: 0});
   selectedCarriere = signal<{ carriere: string, value: number }>(this.initCarriere);
 
-  constructor() {
+  constructor(private ref: DynamicDialogRef, private config: DynamicDialogConfig) {
+    this.hero.set(config.data.hero);
     effect(() => {
       console.log(this.hero());
       console.log(this.modifier());
