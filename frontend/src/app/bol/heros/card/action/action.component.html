@@ -78,33 +78,70 @@
 
   <div class="flex flex-col gap-2">
     <div class="flex w-full justify-between items-start">
-      <div class="flex flex-col gap-1 w-fit justify-end">
-        <label>Niveau de difficulté</label>
-        <p-dropdown [(ngModel)]="difficulty" [options]="difficulties" optionValue="modifier">
-          <ng-template pTemplate="selectedItem" let-selectedOption>
-            <div class="flex align-items-center gap-2">
-              <div>{{ selectedOption.difficulty }} ({{ selectedOption.modifier }})</div>
-            </div>
-          </ng-template>
-          <ng-template let-difficulty pTemplate="item">
-            <div class="flex flex-col gap-2">
-              <div>{{ difficulty.difficulty }} ({{ difficulty.modifier }})</div>
-            </div>
-          </ng-template>
-        </p-dropdown>
+      <div>
+        <div class="flex flex-col gap-1 w-fit justify-end">
+          <label>Niveau de difficulté</label>
+          <p-dropdown [(ngModel)]="difficulty" [options]="difficulties" optionValue="modifier">
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+              <div class="flex align-items-center gap-2">
+                <div>{{ selectedOption.difficulty }} ({{ selectedOption.modifier }})</div>
+              </div>
+            </ng-template>
+            <ng-template let-difficulty pTemplate="item">
+              <div class="flex flex-col gap-2">
+                <div>{{ difficulty.difficulty }} ({{ difficulty.modifier }})</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+        <div class="flex gap-2 items-end pt-2">
+          <div class="flex flex-col gap-1">
+            <label for="roll">Résultat de votre jet</label>
+            <p-inputNumber [style]="{width: '100%'}" inputId="roll" maxFractionDigits="0" (onInput)="checkRoll($event)"/>
+          </div>
+          <div style="line-height: 26px">Ou</div>
+          <button
+            class="dice-button"
+            pTooltip="Jetez les dés"
+            type="button"
+            size="small" pButton pRipple
+            (click)="rollDice()">
+            <div class="dice_icon_15"  [inlineSVG]="'/frontend/assets/d6.svg'"></div>
+          </button>
+        </div>
       </div>
-      <p-fieldset legend="Modificateur">
-        {{ modifier() }}
+
+
+      <p-fieldset legend="Jet attendu">
+        <div class="modifier text-4xl flex justify-center items-center gap-3" style="height: 50px">
+          <div class="flex items-center gap-2">
+          <div class="dice_icon_40"  [inlineSVG]="'/frontend/assets/d6.svg'"></div>
+          <div>+</div>
+          <div class="dice_icon_40"  [inlineSVG]="'/frontend/assets/d6.svg'"></div>
+          </div>
+
+          <div class="flex items-center gap-2" *ngIf="selectedTrait()">
+            <div *ngIf="selectedTrait()">+</div>
+            <div class="dice_icon_40"  [class.bonus]="selectedTrait()?.type === 'A'"
+                 [class.malus]="selectedTrait()?.type === 'D'" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
+          </div>
+
+          <div class="flex items-center gap-2" *ngIf="modifier() > 0">
+            <div>+</div>
+            <div>{{ modifier() }}</div>
+          </div>
+          <div class="flex items-center gap-2" *ngIf="modifier() < 0">
+            <div>-</div>
+            <div>{{ modifier() * -1}}</div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <div>&ge;</div>
+            <div>9</div>
+          </div>
+        </div>
       </p-fieldset>
     </div>
-
-
-    <div class="flex gap-2">
-
-    </div>
-
-
-    <p-button label="dice" (click)="rollDice()"></p-button>
     <div class="flex gap-1 items-center diceResults results text-xl" [innerHTML]="parsedResult()"></div>
   </div>
 </div>

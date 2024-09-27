@@ -1,8 +1,8 @@
 import {Component, computed, effect, inject, input, signal} from '@angular/core';
 import {DropdownModule} from "primeng/dropdown";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {BOL_DIFFICULTIES} from "../../../../shared/constantes/difficulties";
-import {Button} from "primeng/button";
+import {Button, ButtonDirective} from "primeng/button";
 import {DiceService} from "../../../../shared/dice/dice.service";
 import {BolHerosModel} from "../../../models/bol-heros.model";
 import {FieldsetModule} from "primeng/fieldset";
@@ -13,6 +13,9 @@ import {BolAvantageModel} from "../../../models/bol-avantage.model";
 import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {MenuModule} from "primeng/menu";
+import {InputTextModule} from "primeng/inputtext";
+import {Ripple} from "primeng/ripple";
+import {InputNumberModule} from "primeng/inputnumber";
 
 @Component({
   selector: 'bol-action',
@@ -28,7 +31,12 @@ import {MenuModule} from "primeng/menu";
     JsonPipe,
     NgIf,
     InlineSVGModule,
-    MenuModule
+    MenuModule,
+    InputTextModule,
+    ReactiveFormsModule,
+    ButtonDirective,
+    Ripple,
+    InputNumberModule
   ],
   templateUrl: './action.component.html',
   styleUrl: './action.component.scss'
@@ -87,15 +95,33 @@ export class BolActionComponent {
   constructor() {
     effect(() => {
       console.log(this.hero());
+      console.log(this.modifier());
+      if (this.diceResult()) {
+        console.log(this.diceResult());
+      }
     });
   }
 
 
   rollDice() {
     let notation = '2d6';
-    if (this.modifier() !== 0) {
-      notation += this.difficulty;
+    switch (this.selectedTrait()?.type) {
+      case 'A':
+        notation = '3d6kh2';
+        break;
+
+      case 'D':
+        notation = '3d6kl2';
+        break;
     }
+    if (this.modifier() !== 0) {
+      notation += this.modifier() > 0 ? `+${this.modifier()}`: `${this.modifier()}` ;
+    }
+    console.log('la', notation);
     this.diceService.rollDice(notation, 'action');
+  }
+
+  checkRoll(ev: any) {
+    console.log(ev);
   }
 }

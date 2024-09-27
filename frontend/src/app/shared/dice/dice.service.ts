@@ -238,7 +238,7 @@ export class DiceService {
     data.ops?.forEach((op: string, index: number) => {
       const currentDice = data.dice[index + 1]; // Récupérer l'élément suivant dans dice
       if (currentDice && currentDice.type === 'number') {
-        resultString += ` ${op} ${currentDice.value}`;
+        resultString = `(${resultString}) ${op} ${currentDice.value}`;
       }
     });
     resultString += ` = <strong>${total}</strong>`

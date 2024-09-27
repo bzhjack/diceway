@@ -79,3 +79,32 @@
   border-radius: 50%;
   top: 6px;
 }
+
+.dice_icon_40 {
+  width: 40px;
+  height: 40px;
+  svg {
+    width: 40px!important;
+    height: 40px;
+  }
+  &.malus {
+    color: #f87171;
+  }
+
+  &.bonus {
+    color: #4ade80;
+  }
+}
+.p-button.dice-button {
+  padding: 5px!important;
+}
+
+.dice_icon_15 {
+  width: 15px;
+  height: 15px;
+
+  svg {
+    width: 15px !important;
+    height: 15px;
+  }
+}
