@@ -208,26 +208,3 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-
-#dici-box {
-  position: relative;
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-}
-
-#dici-box canvas {
-  width: 100%;
-  height: 100%;
-}
-
-#roll {
-  position: absolute;
-  top: 5px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-  cursor: pointer;
-}

@@ -10,8 +10,7 @@ import {DiceService} from "./dice.service";
     NgStyle,
     NgIf
   ],
-  templateUrl: './dice.component.html',
-  styleUrl: './dice.component.scss'
+  template: ''
 })
 export class DiceComponent implements AfterViewInit {
   protected diceService = inject(DiceService);

@@ -12,15 +12,52 @@
              [pTooltip]="hero()?.origines?.commentaire ?? ''"></i>
           <div style="text-transform: capitalize" class="bol-ellipsis-150">{{ hero()?.origines?.nom }}</div>
         </div>
+        <div class="text-gray-300 bol-ellipsis-150" style="font-size: 12px">{{ hero()?.origines?.joueur }}</div>
+        <div class="text-gray-400 bol-ellipsis-150" style="font-size: 12px">{{ hero()?.origines?.region?.region }}
+        </div>
+        <div>
+          <table style="border-spacing: 0; width:100%">
+            <tr>
+              <td class="text-gray-300">Héroisme</td>
+              <td class="text-gray-400">{{ hero()?.ressources?.heroisme }}</td>
+            </tr>
+            <tr>
+              <td class="text-gray-300">Vitalité</td>
+              <td class="text-gray-400 text-xl info-color">{{ hero()?.ressources?.vitalite }}</td>
+            </tr>
+          </table>
+        </div>
       </div>
     </div>
+
   } @else {
     <div class="flex gap-2">
       <p-skeleton size="100px"/>
-      <div class="flex flex-col">
-        <p-skeleton width="10rem" height="25px" />
+      <div class="flex flex-col gap-1" style="height: 105px">
+        <p-skeleton width="10rem" height="25px"/>
+        <div class="flex flex-col gap-1">
+          <p-skeleton width="5rem" height="12px"/>
+          <p-skeleton width="5rem" height="12px"/>
+        </div>
+        <div class="flex flex-col gap-1">
+          <p-skeleton width="5rem" height="16px"/>
+          <p-skeleton width="5rem" height="16px"/>
+        </div>
       </div>
     </div>
   }
+  <ng-template pTemplate="footer">
+    @if (hero()) {
+      <div class="flex gap-3 mt-1">
+        <p-button label="Modifier la fiche" size="small" severity="secondary" class="w-full" styleClass="w-full"/>
+        <p-button label="Faire une action" size="small" class="w-full" styleClass="w-full"
+                  (onClick)="openAction()"/>
+      </div>
+    } @else {
+      <div class="flex gap-3 mt-1">
+        <p-skeleton width="135px" height="30px"/>
+        <p-skeleton width="135px" height="30px"/>
+      </div>
+    }
+  </ng-template>
 </p-card>
-

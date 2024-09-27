@@ -27,10 +27,10 @@
   pointer-events: none;
 }
 .diceResults .crit-success {
-  color: green;
+  color: var(--success-color);
 }
 .diceResults .crit-failure {
-  color: firebrick;
+  color: var(--error-color)
 }
 .diceResults .die-dropped {
   text-decoration: line-through;
@@ -41,12 +41,12 @@
   opacity: .4;
 }
 .diceResults .die-exploded {
-  color: green;
+  color: var(--success-color);
 }
 .diceResults .die-exploded::after {
   content: '!';
   display: block;
-  color: green;
+  color: var(--success-color);
 }
 .diceResults .success,
 .diceResults .failure,
@@ -58,24 +58,53 @@
   height: 32px;
 }
 .diceResults .success {
-  fill: #4B8968;
+  fill:var(--success-color);
   filter: invert(45%) sepia(42%) saturate(365%) hue-rotate(95deg) brightness(97%) contrast(95%);
 }
 .diceResults .failure {
-  fill: #A82E2D;
+  fill:var(--error-color);
   filter: invert(18%) sepia(78%) saturate(2230%) hue-rotate(343deg) brightness(101%) contrast(86%);
 }
 .diceResults .null {
-  fill: #3E577D;
+  fill: var(--info-color);
   filter: invert(32%) sepia(75%) saturate(299%) hue-rotate(175deg) brightness(86%) contrast(92%);
 }
 .diceResults .crit-success .success{
-  border: 3px solid green;
+  border: 3px solid var(--success-color);
   border-radius: 50%;
   top: 6px;
 }
 .diceResults .crit-failure .failure{
-  border: 3px solid #A82E2D;
+  border: 3px solid var(--error-color);
   border-radius: 50%;
   top: 6px;
+}
+
+.dice_icon_40 {
+  width: 40px;
+  height: 40px;
+  svg {
+    width: 40px!important;
+    height: 40px;
+  }
+  &.malus {
+    color: #f87171;
+  }
+
+  &.bonus {
+    color: #4ade80;
+  }
+}
+.p-button.dice-button {
+  padding: 5px!important;
+}
+
+.dice_icon_15 {
+  width: 15px;
+  height: 15px;
+
+  svg {
+    width: 15px !important;
+    height: 15px;
+  }
 }
