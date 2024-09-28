@@ -7,11 +7,11 @@
   margin-top: 55px;
   width: 100%;
   height: calc(100% - 55px);
-  z-index: 1000;
+  z-index: 10000;
   opacity: 1;
   &.hide {
     opacity: 0;
-    z-index: -1000;
+    z-index: -10000;
   }
 }
 

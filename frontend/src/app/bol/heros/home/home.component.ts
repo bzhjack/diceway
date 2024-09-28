@@ -26,6 +26,7 @@ import {BolHerosUpdateComponent} from "../update/update.component";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {BolHerosLangueModel} from "../../models/bol-langue.model";
 import {BolHerosTraitRowComponent} from "../create/origines/region/trait-row/trait-row.component";
+import { BolHerosCardComponent } from "../card/card.component";
 
 
 @Component({
@@ -55,8 +56,9 @@ import {BolHerosTraitRowComponent} from "../create/origines/region/trait-row/tra
     FormsModule,
     NgOptimizedImage,
     ScrollPanelModule,
-    BolHerosTraitRowComponent
-  ],
+    BolHerosTraitRowComponent,
+    BolHerosCardComponent
+],
   providers: [
     ConfirmationService
   ],
@@ -82,7 +84,7 @@ export class BolHeroHomeComponent implements OnDestroy {
   public currentHeros: BolHerosModel | null = null;
   public searchPending: boolean = false;
 
-
+  public showCard = false;
   public showCreate = false;
   public joueurCtrl = new FormControl('', [Validators.required, Validators.minLength(3)]);
   public nomCtrl = new FormControl('', [Validators.required, Validators.minLength(3)]);
@@ -183,6 +185,10 @@ export class BolHeroHomeComponent implements OnDestroy {
     this.showHeros = true;
     this.currentHeros = heros;
   }
+  showHerosCard(heros: BolHerosModel) {
+    this.showCard = true;
+    this.currentHeros = heros;
+  }
 
   clear(table?: Table) {
     table?.clear();
@@ -217,7 +223,6 @@ export class BolHeroHomeComponent implements OnDestroy {
       }
     });
   }
-
   languesToStr(heros: BolHerosModel) {
     return (heros.origines.langues as BolHerosLangueModel[]).map(item => item.langue?.langue).join(', ');
   }

@@ -38,7 +38,7 @@ export class BolHerosCardComponent {
 
   hero$ = toObservable<string | null>(this.heroId).pipe( // Watch for user changes
     filter((id) => id !== null),                     // Only make http request for users larger than 0
-    tap((id) => console.log('user id', id)),    // Just some debugging
+    tap((id) => this.hero.set(null)),    // Just some debugging
     exhaustMap((id) =>                          // Don't execute the http request if one is already in progress
       this.heroService.heros(id as string).pipe()
         // Make the http request
@@ -51,6 +51,7 @@ export class BolHerosCardComponent {
 
   openAction() {
     this.dialogService.open(BolActionComponent, {
+      header: 'Effectuer une action',
       data: {
         hero: this.hero()
       }

@@ -1,5 +1,5 @@
 <p-card class="creature_card" [style]="{width: '300px'}">
-  @if (hero$ | async) {
+  @if ((hero$ | async) && hero()) {
     <div class="flex gap-2">
       <div class="heros_card__img">
         <img style="width:100%"

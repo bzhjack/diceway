@@ -92,6 +92,12 @@
 
                 <div class="flex items-center gap-2">
                   <button *ngIf="!heros.active"
+                  pTooltip="Carte du héros"
+                  (click)="showHerosCard(heros)"
+                  type="button"
+                  size="small" pButton pRipple icon="pi pi-user"></button>
+
+                  <button *ngIf="!heros.active"
                           pTooltip="Finaliser la création"
                           severity="secondary"
                           type="button"
@@ -284,6 +290,10 @@
                 [disabled]="herosForm.invalid"></p-button>
     </div>
   </form>
+</p-dialog>
+
+<p-dialog  [(visible)]="showCard" [modal]="true">
+    <bol-heros-card *ngIf="currentHeros" [heroId]="currentHeros.id"></bol-heros-card>
 </p-dialog>
 
 <p-confirmPopup/>
