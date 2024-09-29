@@ -1,4 +1,5 @@
 import {effect, inject, Injectable, signal} from '@angular/core';
+import DiceBox from "@3d-dice/dice-box";
 import DiceParser from '@3d-dice/dice-parser-interface'
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {DiceResultsComponent} from "./dice-result/dice-result.component";
@@ -22,7 +23,7 @@ export class DiceService {
     effect(() => {
       if (this.dice()) {
         console.log('dicebox ready');
-        this.canvas = document.querySelector('.dice-box-canvas') as HTMLCanvasElement;
+        /*this.canvas = document.querySelector('.dice-box-canvas') as HTMLCanvasElement;
         if (this.canvas) {
           this.canvas.addEventListener('click', (event: MouseEvent) => {
             if (!this.showResult) {
@@ -30,9 +31,9 @@ export class DiceService {
               this.toggleCanvas();
             }
           });
-        }
+        }*/
 
-        this.toggleCanvas();
+        //this.toggleCanvas();
         this.dice().onRollComplete = (rollResult: any) => {
           const reRolls = this.DRP.handleRerolls(rollResult);
           if (reRolls.length) {
@@ -46,6 +47,20 @@ export class DiceService {
           this.diceResult.set({sender: this.sender, result: finalResults.value, parsedResult: this.formatDiceResult(finalResults)});
         }
       }
+    });
+  }
+
+  initDice(selector: string) {
+    const dice = new DiceBox("#dice-box", {
+      assetPath: "/frontend/assets/dice/",
+      theme: "default",
+      offscreen: true,
+      scale: 6,
+      themeColor: '#83271B'
+    });
+
+    dice.init().then((diceInstance: any) => {
+      this.dice.set(diceInstance);
     });
   }
 

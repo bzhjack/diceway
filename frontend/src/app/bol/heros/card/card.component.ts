@@ -52,6 +52,7 @@ export class BolHerosCardComponent {
   openAction() {
     this.dialogService.open(BolActionComponent, {
       header: 'Effectuer une action',
+      maximizable: true,
       data: {
         hero: this.hero()
       }
