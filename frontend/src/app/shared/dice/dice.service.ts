@@ -51,7 +51,7 @@ export class DiceService {
   }
 
   initDice(selector: string) {
-    const dice = new DiceBox("#dice-box", {
+    const dice = new DiceBox(selector, {
       assetPath: "/frontend/assets/dice/",
       theme: "default",
       offscreen: true,

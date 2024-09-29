@@ -1,4 +1,4 @@
-import {Component, computed, effect, inject, input, signal} from '@angular/core';
+import {AfterViewInit, Component, computed, effect, inject, input, signal} from '@angular/core';
 import {DropdownModule} from "primeng/dropdown";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {BOL_DIFFICULTIES} from "../../../../shared/constantes/difficulties";
@@ -42,7 +42,7 @@ import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
   templateUrl: './action.component.html',
   styleUrl: './action.component.scss'
 })
-export class BolActionComponent {
+export class BolActionComponent implements AfterViewInit {
   initCarriere = {carriere: 'Aucune', value: 0};
   hero = signal<BolHerosModel | null>(null);
   diceService = inject(DiceService);
@@ -104,6 +104,9 @@ export class BolActionComponent {
     });
   }
 
+  ngAfterViewInit(): void {
+    this.diceService.initDice('#action-dice-box');
+  }
 
   rollDice() {
     let notation = '2d6';

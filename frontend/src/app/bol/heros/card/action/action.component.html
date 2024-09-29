@@ -17,7 +17,7 @@
       </p-fieldset>
 
       <p-fieldset legend="Attributs">
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-wrap gap-2">
           <div *ngFor="let attr of attributs()" class="flex items-center gap-2">
             <p-radioButton [disabled]="attr.value === 0" [inputId]="attr.attr" name="attribut" [value]="attr"
               [(ngModel)]="selectedAttribut" />
@@ -29,7 +29,7 @@
       </p-fieldset>
 
       <p-fieldset legend="Utilisation d'une carrière">
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-wrap gap-2">
           <div class="flex items-center gap-2">
             <p-radioButton inputId="aucune" name="carriere" [value]="initCarriere" [(ngModel)]="selectedCarriere" />
             <label for="aucune" class="cursor-pointer">
@@ -48,21 +48,22 @@
 
 
       <p-fieldset legend="Application d'un avantage/désavantage">
-        <div class="flex gap-2 items-center pt-2">
-          <p-radioButton inputId="aucun" name="carriere" [value]="null" [(ngModel)]="selectedTrait" />
-          <label for="aucun" class="flex gap-1 items-center cursor-pointer">
-            <div class="tag_icon opacity-35" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
-            <div>Aucun</div>
-          </label>
-        </div>
-
-        <div *ngFor="let trait of traits()" class="flex gap-2 items-center pt-2">
-          <p-radioButton [inputId]="trait.trait" name="traits" [value]="trait" [(ngModel)]="selectedTrait" />
-          <label [for]="trait.trait" class="flex gap-1 items-center cursor-pointer">
-            <div class="tag_icon" [pTooltip]="trait.domaine ?? ''" [class.bonus]="trait.type === 'A'"
-              [class.malus]="trait.type === 'D'" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
-            <div>{{trait.trait}}</div>
-          </label>
+        <div class="flex flex-wrap gap-2">
+          <div class="flex gap-2 items-center pt-2">
+            <p-radioButton inputId="aucun" name="carriere" [value]="null" [(ngModel)]="selectedTrait" />
+            <label for="aucun" class="flex gap-1 items-center cursor-pointer">
+              <div class="tag_icon opacity-35" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
+              <div>Aucun</div>
+            </label>
+          </div>
+          <div *ngFor="let trait of traits()" class="flex gap-2 items-center pt-2">
+            <p-radioButton [inputId]="trait.trait" name="traits" [value]="trait" [(ngModel)]="selectedTrait" />
+            <label [for]="trait.trait" class="flex gap-1 items-center cursor-pointer">
+              <div class="tag_icon" [pTooltip]="trait.domaine ?? ''" [class.bonus]="trait.type === 'A'"
+                [class.malus]="trait.type === 'D'" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
+              <div>{{trait.trait}}</div>
+            </label>
+          </div>
         </div>
       </p-fieldset>
     </div>
@@ -118,7 +119,8 @@
       <div class="flex gap-1 items-center diceResults results text-xl" [innerHTML]="parsedResult()"></div>
     </p-fieldset>
   </div>
-  <div>
-    
-  </div>
+  
+<p-fieldset legend="Piste">
+
+</p-fieldset>
 </div>

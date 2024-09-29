@@ -1,0 +1,16 @@
+#action-dice-box-container {
+  position: relative;
+  width: 100%; /* ou la largeur souhaitée */
+  padding-top: 100%; /* Assure un ratio 1:1 pour un carré */
+  position: relative; /* Nécessaire pour placer correctement les éléments internes */
+  box-sizing: border-box;
+  background-image: url("/assets/bol/wood.jpeg");
+  background-size: contain;
+}
+#action-dice-box > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
