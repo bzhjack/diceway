@@ -116,10 +116,24 @@
         </button>
       </div>
     </p-fieldset>
-    <p-fieldset legend="Résultat">
-      <div class="flex gap-1 items-center diceResults results text-xl" [innerHTML]="parsedResult"></div>
-      <div>Résultat: {{result}}</div>
-      <div>Critique: {{critical}}</div>
+    <p-fieldset>
+      <ng-template pTemplate="header">
+        <div class="flex gap-2 items-center" style="height: 25px">
+          <div>Résultat</div>
+          <div class="flex gap-1 items-center diceResults results text-xl" [innerHTML]="parsedResult"></div>
+        </div>
+      </ng-template>
+      @if(result === true) {
+        <div class="flex flex-col gap-2">
+          <div>Réussite</div>
+          <div *ngIf="critical === 'success'">Héroïque</div>
+        </div>
+      } @else if (result === false) {
+        <div class="flex flex-col gap-2">
+          <div>Échec</div>
+          <div *ngIf="critical === 'failure'">Automatique</div>
+        </div>
+      }
     </p-fieldset>
   </div>
 

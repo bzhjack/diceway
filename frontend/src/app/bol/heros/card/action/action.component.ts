@@ -169,7 +169,13 @@ export class BolActionComponent implements AfterViewInit {
         this.critical = criticalCount.failure === 2 ? "failure" : (criticalCount.success === 2 ? "success" : null);
       }
       this.parsedResult = this.diceResult()?.parsedResult ?? null;
-      this.result = this.diceResult()?.result.value >= 9;
+      if (this.critical === 'failure') {
+        this.result = false;
+      } else if (this.critical === 'success') {
+        this.result = true;
+      } else {
+        this.result = this.diceResult()?.result.value >= 9;
+      }
     }
   }
 }
