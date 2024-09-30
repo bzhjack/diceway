@@ -43,7 +43,7 @@ export class DiceService {
       assetPath: "/frontend/assets/dice/",
       theme: "default",
       offscreen: true,
-      scale: 6,
+      scale: 5,
       themeColor: '#83271B'
     });
 

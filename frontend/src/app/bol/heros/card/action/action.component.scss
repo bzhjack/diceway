@@ -4,8 +4,14 @@
   padding-top: 100%; /* Assure un ratio 1:1 pour créer un carré */
   background-image: url("/assets/bol/wood.jpeg");
   background-size: contain;
+  border-radius: 8px;
+  border: 1px solid #666d77;
 }
 #action-dice-box {
   position: absolute;
   inset:0;
+}
+
+.dice-result {
+  height: 80px;
 }

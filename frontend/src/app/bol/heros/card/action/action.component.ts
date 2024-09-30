@@ -17,6 +17,7 @@ import {InputTextModule} from "primeng/inputtext";
 import {Ripple} from "primeng/ripple";
 import {InputNumberModule} from "primeng/inputnumber";
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
+import { TagModule } from 'primeng/tag';
 
 @Component({
   selector: 'bol-action',
@@ -37,7 +38,8 @@ import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
     ReactiveFormsModule,
     ButtonDirective,
     Ripple,
-    InputNumberModule
+    InputNumberModule,
+    TagModule
   ],
   templateUrl: './action.component.html',
   styleUrl: './action.component.scss'

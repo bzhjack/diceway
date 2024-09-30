@@ -123,23 +123,25 @@
           <div class="flex gap-1 items-center diceResults results text-xl" [innerHTML]="parsedResult"></div>
         </div>
       </ng-template>
+      <div class="dice-result text-4xl">
       @if(result === true) {
-        <div class="flex flex-col gap-2">
+        <div class="h-full flex flex-col justify-center items-center gap-2 success-color">
           <div>Réussite</div>
-          <div *ngIf="critical === 'success'">Héroïque</div>
+          <p-tag *ngIf="critical === 'success'" severity="success" value="Héroïque"/>
         </div>
       } @else if (result === false) {
-        <div class="flex flex-col gap-2">
+        <div class="h-full flex flex-col justify-center items-center gap-2 error-color">
           <div>Échec</div>
-          <div *ngIf="critical === 'failure'">Automatique</div>
+          <p-tag *ngIf="critical === 'failure'" severity="danger" value="Automatique"/>
         </div>
       }
+      </div>
     </p-fieldset>
   </div>
 
-  <p-fieldset legend="Piste" [style]="{width: '30vw'}">
+  <div [style]="{width: '30vw'}">
     <div class="action-dice-box-container">
       <div id="action-dice-box"></div>
     </div>
-  </p-fieldset>
+  </div>
 </div>
