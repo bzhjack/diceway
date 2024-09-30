@@ -1,8 +1,8 @@
 <div class="flex gap-2">
-  <p-fieldset legend="Choissisez les modificateurs appropriés">
+  <p-fieldset legend="Choissisez les modificateurs appropriés" [style]="{maxWidth: '500px'}">
     <div class="flex flex-col gap-2">
       <p-fieldset legend="Niveau de difficulté">
-        <p-dropdown [(ngModel)]="difficulty" [options]="difficulties" optionValue="modifier" [style]="{width: '100%'}">
+        <p-dropdown [(ngModel)]="difficulty" [options]="difficulties" optionValue="modifier">
           <ng-template pTemplate="selectedItem" let-selectedOption>
             <div class="flex align-items-center gap-2">
               <div>{{ selectedOption.difficulty }} ({{ selectedOption.modifier }})</div>
@@ -20,9 +20,9 @@
         <div class="flex flex-wrap gap-2">
           <div *ngFor="let attr of attributs()" class="flex items-center gap-2">
             <p-radioButton [disabled]="attr.value === 0" [inputId]="attr.attr" name="attribut" [value]="attr"
-              [(ngModel)]="selectedAttribut" />
+                           [(ngModel)]="selectedAttribut"/>
             <label [for]="attr.attr" class="cursor-pointer" [class.opacity-35]="attr.value === 0">
-              {{ attr.attr }} ({{attr.value}})
+              {{ attr.attr }} ({{ attr.value }})
             </label>
           </div>
         </div>
@@ -31,16 +31,16 @@
       <p-fieldset legend="Utilisation d'une carrière">
         <div class="flex flex-wrap gap-2">
           <div class="flex items-center gap-2">
-            <p-radioButton inputId="aucune" name="carriere" [value]="initCarriere" [(ngModel)]="selectedCarriere" />
+            <p-radioButton inputId="aucune" name="carriere" [value]="initCarriere" [(ngModel)]="selectedCarriere"/>
             <label for="aucune" class="cursor-pointer">
               Aucune
             </label>
           </div>
           <div *ngFor="let career of carrieres()" class="flex items-center gap-2">
             <p-radioButton [disabled]="career.value === 0" [inputId]="career.carriere" name="carriere" [value]="career"
-              [(ngModel)]="selectedCarriere" />
+                           [(ngModel)]="selectedCarriere"/>
             <label [for]="career.carriere" class="cursor-pointer" [class.opacity-35]="career.value === 0">
-              {{ career.carriere }} ({{career.value}})
+              {{ career.carriere }} ({{ career.value }})
             </label>
           </div>
         </div>
@@ -50,25 +50,25 @@
       <p-fieldset legend="Application d'un avantage/désavantage">
         <div class="flex flex-wrap gap-2">
           <div class="flex gap-2 items-center pt-2">
-            <p-radioButton inputId="aucun" name="carriere" [value]="null" [(ngModel)]="selectedTrait" />
+            <p-radioButton inputId="aucun" name="carriere" [value]="null" [(ngModel)]="selectedTrait"/>
             <label for="aucun" class="flex gap-1 items-center cursor-pointer">
               <div class="tag_icon opacity-35" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
               <div>Aucun</div>
             </label>
           </div>
           <div *ngFor="let trait of traits()" class="flex gap-2 items-center pt-2">
-            <p-radioButton [inputId]="trait.trait" name="traits" [value]="trait" [(ngModel)]="selectedTrait" />
+            <p-radioButton [inputId]="trait.trait" name="traits" [value]="trait" [(ngModel)]="selectedTrait"/>
             <label [for]="trait.trait" class="flex gap-1 items-center cursor-pointer">
               <div class="tag_icon" [pTooltip]="trait.domaine ?? ''" [class.bonus]="trait.type === 'A'"
-                [class.malus]="trait.type === 'D'" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
-              <div>{{trait.trait}}</div>
+                   [class.malus]="trait.type === 'D'" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
+              <div>{{ trait.trait }}</div>
             </label>
           </div>
         </div>
       </p-fieldset>
     </div>
   </p-fieldset>
-  <div class="flex flex-col gap-2">
+  <div class="flex flex-col gap-2" style="width: 350px">
 
     <p-fieldset legend="Jet attendu">
       <div class="modifier text-4xl flex justify-center items-center gap-3" style="height: 50px">
@@ -81,7 +81,7 @@
         <div class="flex items-center gap-2" *ngIf="selectedTrait()">
           <div *ngIf="selectedTrait()">+</div>
           <div class="dice_icon_40" [class.bonus]="selectedTrait()?.type === 'A'"
-            [class.malus]="selectedTrait()?.type === 'D'" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
+               [class.malus]="selectedTrait()?.type === 'D'" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
         </div>
 
         <div class="flex items-center gap-2" *ngIf="modifier() > 0">
@@ -90,7 +90,7 @@
         </div>
         <div class="flex items-center gap-2" *ngIf="modifier() < 0">
           <div>-</div>
-          <div>{{ modifier() * -1}}</div>
+          <div>{{ modifier() * -1 }}</div>
         </div>
 
         <div class="flex items-center gap-2">
@@ -101,10 +101,11 @@
     </p-fieldset>
 
     <p-fieldset legend="Jet de dés">
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-2 items-center">
         <div class="flex flex-col gap-1">
-          <label for="roll">Résultat de votre jet</label>
-          <p-inputNumber [style]="{width: '100%'}" inputId="roll" maxFractionDigits="0" (onInput)="checkRoll($event)" />
+          <label for="roll">Résultat du jet</label>
+          <p-inputNumber inputId="roll" maxFractionDigits="0" (keydown.enter)="checkRoll($event)"
+                         (onBlur)="checkRoll($event)"/>
         </div>
         <div class="flex justify-center">Ou</div>
         <button class="dice-button" type="button" size="small" pButton pRipple (click)="rollDice()">
@@ -116,13 +117,15 @@
       </div>
     </p-fieldset>
     <p-fieldset legend="Résultat">
-      <div class="flex gap-1 items-center diceResults results text-xl" [innerHTML]="parsedResult()"></div>
+      <div class="flex gap-1 items-center diceResults results text-xl" [innerHTML]="parsedResult"></div>
+      <div>Résultat: {{result}}</div>
+      <div>Critique: {{critical}}</div>
     </p-fieldset>
   </div>
 
-<p-fieldset legend="Piste">
-  <div id="action-dice-box">
-
-  </div>
-</p-fieldset>
+  <p-fieldset legend="Piste" [style]="{width: '30vw'}">
+    <div class="action-dice-box-container">
+      <div id="action-dice-box"></div>
+    </div>
+  </p-fieldset>
 </div>

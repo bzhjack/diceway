@@ -1,8 +1,11 @@
-#action-dice-box {
+.action-dice-box-container {
   position: relative;
   width: 100%; /* Ou une largeur spécifique si nécessaire */
   padding-top: 100%; /* Assure un ratio 1:1 pour créer un carré */
-  background-color: #f0f0f0; /* Optionnel : ajoute une couleur de fond */
   background-image: url("/assets/bol/wood.jpeg");
   background-size: contain;
+}
+#action-dice-box {
+  position: absolute;
+  inset:0;
 }

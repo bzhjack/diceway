@@ -4,6 +4,7 @@ import DiceParser from '@3d-dice/dice-parser-interface'
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {DiceResultsComponent} from "./dice-result/dice-result.component";
 import {Subscription} from "rxjs";
+import {DiceRoll} from "./dice.model";
 
 @Injectable({
   providedIn: 'root'
@@ -23,35 +24,22 @@ export class DiceService {
     effect(() => {
       if (this.dice()) {
         console.log('dicebox ready');
-        /*this.canvas = document.querySelector('.dice-box-canvas') as HTMLCanvasElement;
-        if (this.canvas) {
-          this.canvas.addEventListener('click', (event: MouseEvent) => {
-            if (!this.showResult) {
-              event.stopPropagation();
-              this.toggleCanvas();
-            }
-          });
-        }*/
-
-        //this.toggleCanvas();
         this.dice().onRollComplete = (rollResult: any) => {
           const reRolls = this.DRP.handleRerolls(rollResult);
           if (reRolls.length) {
             reRolls.forEach((roll: any) => this.dice().add(roll, roll.groupId));
             return;
           }
-          const finalResults = this.DRP.parsedNotation ? this.DRP.parseFinalResults(rollResult) : rollResult
-          if (this.showResult) {
-            this.showDiceResult(finalResults);
-          }
-          this.diceResult.set({sender: this.sender, result: finalResults.value, parsedResult: this.formatDiceResult(finalResults)});
+          const finalResults: DiceRoll = this.DRP.parsedNotation ? this.DRP.parseFinalResults(rollResult) : rollResult
+          this.diceResult.set({sender: this.sender, result: finalResults, parsedResult: this.formatDiceResult(finalResults)});
         }
       }
     });
   }
 
   initDice(selector: string) {
-    const dice = new DiceBox(selector, {
+    const dice = new DiceBox({
+      container: selector,
       assetPath: "/frontend/assets/dice/",
       theme: "default",
       offscreen: true,
@@ -73,31 +61,11 @@ export class DiceService {
   // Lancement du jet
   rollDice(roll?: string, sender: string = 'master', showResult = false) {
     if (roll) {
-      this.toggleCanvas();
       this.clear();
       this.sender = sender;
       this.showResult = showResult;
       const parsedInput = this.DRP.parseNotation(roll);
       this.dice().roll(parsedInput);
-    }
-  }
-
-  showDiceResult(result: any) {
-    this.ref = this.dialogService.open(DiceResultsComponent, {
-      header: "Résultat",
-      data: {
-        result
-      },
-    });
-    this.subsClose.unsubscribe();
-    this.subsClose = this.ref.onClose.subscribe(() => {
-      this.toggleCanvas();
-    });
-  }
-  toggleCanvas() {
-    if (this.canvas) {
-      // Bascule l'ajout/suppression de la classe 'hide'
-      this.canvas.classList.toggle('hide');
     }
   }
 

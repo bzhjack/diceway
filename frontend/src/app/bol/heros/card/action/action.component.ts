@@ -55,7 +55,6 @@ export class BolActionComponent implements AfterViewInit {
   });
 
   diceResult = this.diceService.diceResult;
-  parsedResult = computed(() => this.diceResult()?.parsedResult);
   carrieres = computed(() => {
     return this.hero()?.carrieres.map(item => ({
       carriere: item.carriere?.carriere,
@@ -93,13 +92,16 @@ export class BolActionComponent implements AfterViewInit {
   selectedAttribut = signal<{ attr: string, value: number }>({attr: '', value: 0});
   selectedCarriere = signal<{ carriere: string, value: number }>(this.initCarriere);
 
+  public critical: 'success' | 'failure' | null = null;
+  public result: boolean | null = null;
+  public parsedResult: string | null = null;
+
   constructor(private ref: DynamicDialogRef, private config: DynamicDialogConfig) {
     this.hero.set(config.data.hero);
+    this.diceResult.set(null);
     effect(() => {
-      console.log(this.hero());
-      console.log(this.modifier());
       if (this.diceResult()) {
-        console.log(this.diceResult());
+        this.checkRoll();
       }
     });
   }
@@ -109,24 +111,65 @@ export class BolActionComponent implements AfterViewInit {
   }
 
   rollDice() {
-    let notation = '2d6';
+    this.result = null;
+    this.critical = null;
+    this.parsedResult = null;
+    let notation = '2d6cs>6cf<1';
     switch (this.selectedTrait()?.type) {
       case 'A':
-        notation = '3d6kh2';
+        notation = '3d6kh2cs>6cf<1';
         break;
-
       case 'D':
-        notation = '3d6kl2';
+        notation = '3d6kl2cs>6cf<1';
         break;
     }
     if (this.modifier() !== 0) {
-      notation += this.modifier() > 0 ? `+${this.modifier()}`: `${this.modifier()}` ;
+      notation += this.modifier() > 0 ? `+${this.modifier()}` : `${this.modifier()}`;
     }
-    console.log('la', notation);
     this.diceService.rollDice(notation, 'action');
   }
 
-  checkRoll(ev: any) {
-    console.log(ev);
+  checkRoll(ev?: Event) {
+    this.result = null;
+    this.critical = null;
+    this.parsedResult = null;
+    // Gestion du lancé manuelle
+    const target = ev?.target as HTMLInputElement;
+    if (target && target.value !== undefined) {
+      const dice = Number(target.value);
+      switch (dice) {
+        case 12:
+          this.result = true;
+          this.critical = 'success';
+          break;
+        case 2:
+          this.result = false;
+          this.critical = 'failure';
+          break;
+        default:
+          this.critical = null;
+          this.result = (dice + this.modifier()) >= 9;
+      }
+      if (this.modifier() === 0) {
+        this.parsedResult = `<div class="d6">${dice}</div> = <strong>${dice}</strong>`;
+      } else {
+        const mod = this.modifier() > 0 ? `+${this.modifier()}` : `${this.modifier()}`
+        this.parsedResult = `<div class="d6">(${dice})</div> ${mod} = <strong>${dice + this.modifier()}</strong>`;
+      }
+    } else {
+      // récupération du des rolls
+      if (this.diceResult() && this.diceResult()?.result && this.diceResult()?.result.rolls) {
+        const criticalCount = this.diceResult()?.result.rolls.reduce((acc: any, roll: any) => {
+          if (roll.critical !== null && !roll.drop) {
+            // Incrémentez les valeurs de failure ou success en fonction de la valeur du critical
+            acc[roll.critical] = (acc[roll.critical] || 0) + 1;
+          }
+          return acc;
+        }, {failure: 0, success: 0});
+        this.critical = criticalCount.failure === 2 ? "failure" : (criticalCount.success === 2 ? "success" : null);
+      }
+      this.parsedResult = this.diceResult()?.parsedResult ?? null;
+      this.result = this.diceResult()?.result.value >= 9;
+    }
   }
 }
