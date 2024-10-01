@@ -128,7 +128,7 @@
           <div class="h-full flex flex-col justify-center items-center gap-2 success-color">
             <div>Réussite</div>
             <ng-container *ngIf="critical === 'success'">
-              <p-tag pTooltip="Succès légendaire pour 1 point d'héroisme." [style]="{ fontSize: '15px', padding: '5px' ,lineHeight: '15px' }" severity="success">
+              <p-tag pTooltip="Vous pouvez convertir en Succès légendaire pour 1 point d'héroisme." [style]="{ fontSize: '15px', padding: '5px' ,lineHeight: '15px' }" severity="success">
                 <div class="flex align-items-center gap-2 px-1 cursor-pointer">
                   <div class="tag_icon" [inlineSVG]="'/frontend/assets/skull.svg'"></div>
                   <div>Héroïque</div>
@@ -141,7 +141,7 @@
             <div>Échec</div>
             <ng-container *ngIf="critical === 'failure'">
 
-              <p-tag pTooltip="Echec critique pour une contrepartie." [style]="{ fontSize: '15px', padding: '5px' ,lineHeight: '15px' }" severity="danger">
+              <p-tag pTooltip="Vous pouvez convertir en Echec critique pour une contrepartie." [style]="{ fontSize: '15px', padding: '5px' ,lineHeight: '15px' }" severity="danger">
                 <div class="flex align-items-center gap-2 px-1 cursor-pointer">
                   <div class="tag_icon" [inlineSVG]="'/frontend/assets/skull.svg'"></div>
                   <div>Automatique</div>
