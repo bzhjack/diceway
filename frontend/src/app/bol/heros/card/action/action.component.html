@@ -127,12 +127,45 @@
       @if(result === true) {
         <div class="h-full flex flex-col justify-center items-center gap-2 success-color">
           <div>Réussite</div>
-          <p-tag *ngIf="critical === 'success'" severity="success" value="Héroïque"/>
+          <ng-container *ngIf="critical === 'success'">
+            <div class="flex gap-2 items-center">
+              <div>
+                <p-tag [style]="{ fontSize: '20px', padding: '6px' }" severity="success" value="Héroïque"/>
+              </div>
+              <div>
+                <button
+                  [style]="{padding: '5px'}"
+                  severity="warning"
+                  pTooltip="Succès légendaire"
+                  type="button"
+                  size="small" pButton >
+                  <div class="svg_icon_15" [inlineSVG]="'/frontend/assets/sword.svg'"></div>
+                </button>
+              </div>
+            </div>
+          </ng-container>
+
         </div>
       } @else if (result === false) {
         <div class="h-full flex flex-col justify-center items-center gap-2 error-color">
           <div>Échec</div>
-          <p-tag *ngIf="critical === 'failure'" severity="danger" value="Automatique"/>
+          <ng-container *ngIf="critical === 'failure'">
+            <div class="flex gap-2 items-center">
+              <div>
+                <p-tag [style]="{ fontSize: '20px', padding: '6px' }" severity="danger" value="Automatique"/>
+              </div>
+              <div>
+                <button
+                  [style]="{padding: '5px'}"
+                  severity="contrast"
+                  pTooltip="Succès légendaire"
+                  type="button"
+                  size="small" pButton >
+                  <div class="svg_icon_15" [inlineSVG]="'/frontend/assets/skull.svg'"></div>
+                </button>
+              </div>
+            </div>
+          </ng-container>
         </div>
       }
       </div>
