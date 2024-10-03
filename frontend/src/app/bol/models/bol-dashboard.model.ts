@@ -7,6 +7,7 @@ export interface BolDashboardModel {
   countCreatedPnjs: number;
   countDemons: number;
   countCreatedDemons: number;
+  countQuest: number;
 }
 
 

@@ -124,4 +124,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::delete('/bol/heros/traits/delete/{id}', [BolTraitController::class, 'delete']);
     Route::post('/bol/heros/traits/create/{herosId}', [BolTraitController::class, 'create']);
     Route::delete('/bol/heros/traits/delete/{herosId}/{id}', [BolTraitController::class, 'delete']);
+
+    // Gestion des aventures
+    Route::get('/bol/pnj', [BolPnjController::class, 'getAll']);
 });
