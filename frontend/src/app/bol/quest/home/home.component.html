@@ -43,7 +43,7 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-quest>
-          <tr>
+          <tr [routerLink]="['/bol', 'quest', quest.id]">
             <td>
               {{quest.titre}}
             </td>

@@ -129,4 +129,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     // Gestion des aventures
     Route::get('/bol/quest', [BolQuestController::class, 'getAll']);
     Route::post('/bol/quest/create', [BolQuestController::class, 'create']);
+    Route::post('/bol/quest/update', [BolQuestController::class, 'update']);
+    Route::get('/bol/quest/{id}', [BolQuestController::class, 'getOne']);
+
 });

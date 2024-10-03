@@ -31,6 +31,7 @@ import {DialogService} from "primeng/dynamicdialog";
   styleUrl: './card.component.scss'
 })
 export class BolHerosCardComponent {
+
   heroService = inject(BolHerosService);
   dialogService = inject(DialogService);
   heroId = input<string | null>(null);
@@ -40,9 +41,7 @@ export class BolHerosCardComponent {
     filter((id) => id !== null),                     // Only make http request for users larger than 0
     tap((id) => this.hero.set(null)),    // Just some debugging
     exhaustMap((id) =>                          // Don't execute the http request if one is already in progress
-      this.heroService.heros(id as string).pipe()
-        // Make the http request
-        .pipe(tap((hero) => this.hero.set(hero)))   // Update the response
+      this.heroService.heros(id as string).pipe(tap((hero) => this.hero.set(hero)))   // Update the response
     )
   );
 

@@ -10,7 +10,7 @@ class BolQuest extends Model
 {
     use HasFactory, Uuids;
     protected $table = 'bol_quest';
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['created_at', 'updated_at','user_id' ];
     protected $fillable = [
     'user_id',
     'titre',

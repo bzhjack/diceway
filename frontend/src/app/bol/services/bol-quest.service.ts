@@ -12,8 +12,14 @@ export class BolQuestService {
   quests(): Observable<BolQuestModel[]> {
     return this.http.get<BolQuestModel[]>('/api/bol/quest');
   }
+
+  quest(idQuest: string): Observable<BolQuestModel> {
+    return this.http.get<BolQuestModel>('/api/bol/quest/' + idQuest);
+  }
   createQuest(quest: BolQuestModel): Observable<any> {
     return this.http.post<BolQuestModel>('/api/bol/quest/create', <BolQuestModel>quest);
   }
-
+  updateQuest(quest: BolQuestModel): Observable<any> {
+    return this.http.post<BolQuestModel>('/api/bol/quest/update', <BolQuestModel>quest);
+  }
 }

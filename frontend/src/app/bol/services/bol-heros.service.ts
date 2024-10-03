@@ -110,11 +110,11 @@ export class BolHerosService {
   }
 
   heroes(): Observable<BolHerosModel[]> {
-    return this.http.get<BolHerosModel[]>('/api/bol/heros',);
+    return this.http.get<BolHerosModel[]>('/api/bol/heros');
   }
 
   heros(id: string): Observable<BolHerosModel> {
-    return this.http.get<BolHerosModel>('/api/bol/heros/' + id,);
+    return this.http.get<BolHerosModel>('/api/bol/heros/' + id);
   }
 
   deleteHeros(id: string): Observable<any> {
