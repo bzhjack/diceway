@@ -62,6 +62,15 @@ export const routes: Routes = [
     loadComponent: () => import('./bol/demons/home/home.component').then(m => m.BolDemonHomeComponent),
     canActivate: [loggedInGuard]
   },
-
+  {
+    path: 'bol/quest',
+    loadComponent: () => import('./bol/quest/home/home.component').then(m => m.BolQuestHomeComponent),
+    canActivate: [loggedInGuard]
+  },
+  {
+    path: 'bol/quest/:id',
+    loadComponent: () => import('./bol/quest/quest/quest.component').then(m => m.BolQuestComponent),
+    canActivate: [loggedInGuard]
+  },
   {path: '**', redirectTo: '/'},
 ];

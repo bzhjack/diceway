@@ -14,4 +14,15 @@ class BolQuestController extends Controller
             $heroes = BolQuest::where('user_id', Auth::id())->get();
             return response($heroes);
         }
+
+        public function create(Request $request)
+        {
+            $data = $request->validate([
+                'titre' => 'required|max:255'
+            ]);
+            $quest = $request->input();
+            $quest['user_id'] = Auth::id();
+            $quest = BolQuest::create($quest);
+            return response($quest);
+        }
 }

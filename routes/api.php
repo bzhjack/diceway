@@ -18,6 +18,7 @@ use App\Http\Controllers\Bol\BolArmeController;
 use App\Http\Controllers\Bol\BolPnjController;
 use App\Http\Controllers\Bol\BolDemonController;
 use App\Http\Controllers\Bol\BolDashboardController;
+use App\Http\Controllers\Bol\BolQuestController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -126,5 +127,6 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::delete('/bol/heros/traits/delete/{herosId}/{id}', [BolTraitController::class, 'delete']);
 
     // Gestion des aventures
-    Route::get('/bol/pnj', [BolPnjController::class, 'getAll']);
+    Route::get('/bol/quest', [BolQuestController::class, 'getAll']);
+    Route::post('/bol/quest/create', [BolQuestController::class, 'create']);
 });
