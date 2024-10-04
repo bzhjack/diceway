@@ -1,4 +1,4 @@
-import {Component, inject, input, Signal, signal} from '@angular/core';
+import {Component, inject, input, Signal, signal, ViewChild} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {HeaderComponent} from "../../../shared/header/header.component";
 import {ActivatedRoute, RouterLink} from "@angular/router";
@@ -17,6 +17,7 @@ import {InputTextareaModule} from "primeng/inputtextarea";
 import {PaginatorModule} from "primeng/paginator";
 import {FormBuilder, FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgxSpinnerService} from "ngx-spinner";
+import {Table} from "primeng/table";
 
 @Component({
   selector: 'bol-quest',
@@ -42,6 +43,8 @@ export class BolQuestComponent {
   route = inject(ActivatedRoute);
   fb = inject(FormBuilder);
 
+  @ViewChild('questTable') questTable?: Table;
+
   private spinner = inject(NgxSpinnerService);
   private subs?: Subscription;
   public idCtrl: FormControl<string | null> = new FormControl(null);
@@ -61,8 +64,7 @@ export class BolQuestComponent {
     exhaustMap((id) =>
       this.questService.quest(id).pipe(
         tap((quest: BolQuestModel) => {
-          this.quest.set(quest);
-          this.questForm.setValue(quest);
+          this.majForm(quest);
         })  // Met à jour la quête avec la réponse HTTP
       )
     )
@@ -73,16 +75,23 @@ export class BolQuestComponent {
   }
   updateQuest() {
     if (this.questForm.valid) {
+      this.spinner.show();
       const quest = this.questForm.value;
       this.subs?.unsubscribe();
       this.subs = this.questService.updateQuest(this.questForm.value as BolQuestModel).subscribe({
         next: (quest: BolQuestModel) => {
           this.spinner.hide();
+          this.majForm(quest);
+
         },
         error: () => {
           this.spinner.hide();
         }
       });
     }
+  }
+  majForm(quest: BolQuestModel) {
+    this.questForm.setValue(quest);
+    this.quest.set(quest);
   }
 }

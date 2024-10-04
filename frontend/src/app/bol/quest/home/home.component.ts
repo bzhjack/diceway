@@ -63,8 +63,6 @@ import {InputTextareaModule} from "primeng/inputtextarea";
 })
 export class BolQuestHomeComponent implements OnDestroy {
   @ViewChild('questTable') questTable?: Table;
-  private confirmationService = inject(ConfirmationService);
-  readonly dialogueService = inject(DialogService);
   private questService = inject(BolQuestService);
   private router = inject(Router);
   private fb = inject(FormBuilder);

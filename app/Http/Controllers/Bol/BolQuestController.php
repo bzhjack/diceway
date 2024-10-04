@@ -44,6 +44,6 @@ class BolQuestController extends Controller
                 return response()->json(['message' => 'Aventure non trouvée'], 404);
             }
             BolQuest::where('id', $questId)->update($updatedQuest);
-            return response()->json(['success' => $updatedQuest]);
+            return response( $updatedQuest);
         }
 }
