@@ -10,19 +10,19 @@
   </div>
 </div>
 }
-<p-overlayPanel #titrePanel [dismissable]="false">
+<p-overlayPanel #titrePanel (onShow)="titreCtrl.setValue(quest()?.titre ?? null)" (onHide)="titreCtrl.setValue(quest()?.titre ?? null)">
     <div class="flex gap-4 flex-col">
       <div class="flex flex-col gap-1 w-full justify-end relative">
-        <label for="titre">Titre</label>
-        <input formControlName="titre" pInputText id="titre" class="p-inputtext-sm"/>
+        <label for="bol-titre">Titre</label>
+        <input formControlName="titre" pInputText id="bol-titre" name="bol-titre" class="p-inputtext-sm" autocomplete="off"/>
         <small *ngIf="onError('titre')" class="dw_error">Minimum 3 caractères</small>
       </div>
     </div>
     <div class="flex pt-4 justify-end gap-2">
-      <p-button label="Retour" icon="pi pi-times"
+      <p-button label="Quitter" icon="pi pi-times"
                 severity="secondary" size="small"
                 (click)="titrePanel.toggle(false)"></p-button>
-      <p-button label="Modifier" icon="pi pi-check" size="small" severity="success" (click)="titrePanel.toggle($event);updateQuest()"
+      <p-button label="Modifier" icon="pi pi-check" size="small" severity="success" (click)="updateQuest()"
                 [disabled]="questForm.invalid"></p-button>
     </div>
 </p-overlayPanel>

@@ -1,4 +1,4 @@
-import {Component, inject, input, Signal, signal, ViewChild} from '@angular/core';
+import {Component, computed, inject, input, Signal, signal, ViewChild} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {HeaderComponent} from "../../../shared/header/header.component";
 import {ActivatedRoute, RouterLink} from "@angular/router";
@@ -18,6 +18,8 @@ import {PaginatorModule} from "primeng/paginator";
 import {FormBuilder, FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgxSpinnerService} from "ngx-spinner";
 import {Table} from "primeng/table";
+import { BolQuestStateService } from '../../services/bol-quest-state.service';
+import { Overlay } from 'primeng/overlay';
 
 @Component({
   selector: 'bol-quest',
@@ -40,10 +42,13 @@ import {Table} from "primeng/table";
 })
 export class BolQuestComponent {
   questService = inject(BolQuestService);
+  questStateService = inject(BolQuestStateService);
+
   route = inject(ActivatedRoute);
   fb = inject(FormBuilder);
 
   @ViewChild('questTable') questTable?: Table;
+  @ViewChild('titrePanel') titrePanel?: Overlay;
 
   private spinner = inject(NgxSpinnerService);
   private subs?: Subscription;
@@ -51,21 +56,31 @@ export class BolQuestComponent {
   public titreCtrl = new FormControl('', [Validators.required, Validators.minLength(3)]);
   public commentaireCtrl = new FormControl('', [Validators.minLength(3)]);
   public questForm = this.fb.group({id: this.idCtrl, titre: this.titreCtrl, commentaire: this.commentaireCtrl});
+
   // Garantir que 'undefined' est converti en 'null'
   questId: Signal<string | null | undefined> = toSignal(this.route.paramMap.pipe(
     map(params => params.get('id'))
   ));
 
-  quest = signal<BolQuestModel | null>(null);
+  quest = computed(() => this.questStateService.questState());
 
   quest$ = toObservable<string | null | undefined>(this.questId).pipe(
     filter((id): id is string => id !== null),  // Type guard pour éliminer 'null'
-    tap(() => this.quest.set(null)),  // Réinitialise la quête lors de chaque changement d'ID
+    tap(() => {
+      this.spinner.show();
+      this.questStateService.questState.set(null);
+    }),  // Réinitialise la quête lors de chaque changement d'ID
     exhaustMap((id) =>
       this.questService.quest(id).pipe(
         tap((quest: BolQuestModel) => {
+          this.spinner.hide();
           this.majForm(quest);
-        })  // Met à jour la quête avec la réponse HTTP
+        }),
+        tap({
+          error: () => {
+            this.spinner.hide();
+          }
+        })
       )
     )
   );
@@ -82,9 +97,10 @@ export class BolQuestComponent {
         next: (quest: BolQuestModel) => {
           this.spinner.hide();
           this.majForm(quest);
-
+          this.titrePanel?.hide();
         },
         error: () => {
+          this.titrePanel?.hide();
           this.spinner.hide();
         }
       });
@@ -92,6 +108,6 @@ export class BolQuestComponent {
   }
   majForm(quest: BolQuestModel) {
     this.questForm.setValue(quest);
-    this.quest.set(quest);
+    this.questStateService.questState.set(quest);
   }
 }

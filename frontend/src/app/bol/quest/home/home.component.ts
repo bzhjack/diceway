@@ -126,7 +126,7 @@ export class BolQuestHomeComponent implements OnDestroy {
       this.subs = this.questService.createQuest(this.questForm.value as BolQuestModel).subscribe({
         next: (quest: BolQuestModel) => {
           this.spinner.hide();
-          this.router.navigate(['bol', 'quest', 'create', quest.id]);
+          this.router.navigate(['bol', 'quest', quest.id]);
         },
         error: () => {
           this.spinner.hide();
