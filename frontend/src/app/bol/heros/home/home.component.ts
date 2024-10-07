@@ -1,6 +1,6 @@
-import {Component, inject, OnDestroy, ViewChild} from '@angular/core';
-import {Subscription} from "rxjs";
-import {JsonPipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
+import {Component, inject, OnDestroy, signal, ViewChild} from '@angular/core';
+import {exhaustMap, filter, of, Subscription} from "rxjs";
+import {AsyncPipe, JsonPipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {Router, RouterLink} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {CardModule} from "primeng/card";
@@ -27,6 +27,11 @@ import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {BolHerosLangueModel} from "../../models/bol-langue.model";
 import {BolHerosTraitRowComponent} from "../create/origines/region/trait-row/trait-row.component";
 import {BolHerosCardComponent} from "../card/card.component";
+import {toObservable} from "@angular/core/rxjs-interop";
+import {tap} from "rxjs/operators";
+import {BolQuestModel} from "../../models/bol-quest.model";
+import {BolQuestService} from "../../services/bol-quest.service";
+import {InlineSVGModule} from "ng-inline-svg-2";
 
 
 @Component({
@@ -57,8 +62,10 @@ import {BolHerosCardComponent} from "../card/card.component";
     NgOptimizedImage,
     ScrollPanelModule,
     BolHerosTraitRowComponent,
-    BolHerosCardComponent
-],
+    BolHerosCardComponent,
+    AsyncPipe,
+    InlineSVGModule
+  ],
   providers: [
     ConfirmationService
   ],
@@ -70,6 +77,7 @@ export class BolHeroHomeComponent implements OnDestroy {
   private confirmationService = inject(ConfirmationService);
   readonly dialogueService = inject(DialogService);
   private herosService = inject(BolHerosService);
+  private questService = inject(BolQuestService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private spinner = inject(NgxSpinnerService);
@@ -84,11 +92,20 @@ export class BolHeroHomeComponent implements OnDestroy {
   public currentHeros: BolHerosModel | null = null;
   public searchPending: boolean = false;
 
-  public showCard = false;
+  public selectedQuest = signal<BolQuestModel | null>(null)
+  public showCard = signal<boolean>(false);
   public showCreate = false;
   public joueurCtrl = new FormControl('', [Validators.required, Validators.minLength(3)]);
   public nomCtrl = new FormControl('', [Validators.required, Validators.minLength(3)]);
   herosForm = this.fb.group({joueur: this.joueurCtrl, nom: this.nomCtrl});
+  quests = signal<BolQuestModel[]>([]);
+  quests$ = toObservable<boolean>(this.showCard).pipe( // Watch for user changes
+    filter((show) => show),                     // Only make http request for users larger than 0
+    tap((id) => this.quests.set([])),    // Just some debugging
+    exhaustMap((id) =>                          // Don't execute the http request if one is already in progress
+      this.questService.quests().pipe(tap((quests) => this.quests.set(quests)))   // Update the response
+    )
+  );
 
   constructor() {
     this.getHeroes();
@@ -185,8 +202,8 @@ export class BolHeroHomeComponent implements OnDestroy {
     this.showHeros = true;
     this.currentHeros = heros;
   }
-  showHerosCard(heros: BolHerosModel) {
-    this.showCard = true;
+  addAdventure(heros: BolHerosModel) {
+    this.showCard.set(true);
     this.currentHeros = heros;
   }
 
@@ -226,6 +243,7 @@ export class BolHeroHomeComponent implements OnDestroy {
   languesToStr(heros: BolHerosModel) {
     return (heros.origines.langues as BolHerosLangueModel[]).map(item => item.langue?.langue).join(', ');
   }
+
 }
 
 

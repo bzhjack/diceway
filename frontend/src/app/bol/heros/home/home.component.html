@@ -92,10 +92,13 @@
 
                 <div class="flex items-center gap-2">
                   <button
-                  pTooltip="Carte du héros"
-                  (click)="showHerosCard(heros)"
+                  class="p-button-icon-only"
+                  pTooltip="En route pour l'aventure"
+                  (click)="addAdventure(heros)"
                   type="button"
-                  size="small" pButton pRipple icon="pi pi-user"></button>
+                  size="small" pButton pRipple>
+                    <div class="svg_icon_15" inlineSVG="/frontend/assets/sword.svg"></div>
+                  </button>
 
                   <button *ngIf="!heros.active"
                           pTooltip="Finaliser la création"
@@ -292,8 +295,31 @@
   </form>
 </p-dialog>
 
-<p-dialog  [(visible)]="showCard" [modal]="true">
-    <bol-heros-card *ngIf="currentHeros" [heroId]="currentHeros.id"></bol-heros-card>
+<p-dialog  [(visible)]="showCard" [modal]="true" header="En route pour l'aventure">
+  @if (quests$ | async) {
+    <div class="flex flex-col gap-2">
+      <p-dropdown [style]="{ width: '250px' }"
+                  [options]="quests()"
+                  [appendTo]="'body'"
+                  [(ngModel)]="selectedQuest"
+                  [ngModelOptions]="{standalone: true}"
+                  [showClear]="true"
+                  placeholder="Faites votre sélection">
+
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+          <div class="flex align-items-center gap-2">
+            {{selectedOption.titre}}
+          </div>
+        </ng-template>
+
+        <ng-template let-item pTemplate="item">
+          <div class="flex flex-col gap-2">
+            {{ item.titre }}
+          </div>
+        </ng-template>
+      </p-dropdown>
+    </div>
+  }
 </p-dialog>
 
 <p-confirmPopup/>
