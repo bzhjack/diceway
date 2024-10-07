@@ -26,7 +26,7 @@ import {BolHerosUpdateComponent} from "../update/update.component";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {BolHerosLangueModel} from "../../models/bol-langue.model";
 import {BolHerosTraitRowComponent} from "../create/origines/region/trait-row/trait-row.component";
-import { BolHerosCardComponent } from "../card/card.component";
+import {BolHerosCardComponent} from "../card/card.component";
 
 
 @Component({

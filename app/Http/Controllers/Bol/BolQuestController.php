@@ -11,13 +11,13 @@ class BolQuestController extends Controller
 {
         public function getAll()
         {
-            $heroes = BolQuest::where('user_id', Auth::id())->get();
+            $heroes = BolQuest::with('protagonists.protagonist')->where('user_id', Auth::id())->get();
             return response($heroes);
         }
         public function getOne(Request $request)
         {
             $id = $request->route('id');
-            $quest = BolQuest::where('user_id', Auth::id())->where('id', $id)->get()->first();
+            $quest = BolQuest::with('protagonists.protagonist')->where('user_id', Auth::id())->where('id', $id)->get()->first();
             if ($quest === null) {
                 return response()->json(['error' => 'Quest not found'], 404);
             } else {

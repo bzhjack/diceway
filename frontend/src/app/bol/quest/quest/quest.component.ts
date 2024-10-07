@@ -1,10 +1,7 @@
-import {Component, computed, inject, input, Signal, signal, ViewChild} from '@angular/core';
+import {Component, computed, inject, Signal, ViewChild} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {HeaderComponent} from "../../../shared/header/header.component";
 import {ActivatedRoute, RouterLink} from "@angular/router";
-import {BolHerosService} from "../../services/bol-heros.service";
-import {DialogService} from "primeng/dynamicdialog";
-import {BolHerosModel} from "../../models/bol-heros.model";
 import {toObservable, toSignal} from "@angular/core/rxjs-interop";
 import {exhaustMap, filter, map, Subscription} from "rxjs";
 import {tap} from "rxjs/operators";
@@ -18,8 +15,8 @@ import {PaginatorModule} from "primeng/paginator";
 import {FormBuilder, FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgxSpinnerService} from "ngx-spinner";
 import {Table} from "primeng/table";
-import { BolQuestStateService } from '../../services/bol-quest-state.service';
-import { Overlay } from 'primeng/overlay';
+import {BolQuestStateService} from '../../services/bol-quest-state.service';
+import {Overlay} from 'primeng/overlay';
 
 @Component({
   selector: 'bol-quest',
@@ -107,7 +104,7 @@ export class BolQuestComponent {
     }
   }
   majForm(quest: BolQuestModel) {
-    this.questForm.setValue(quest);
+    this.questForm.patchValue(quest);
     this.questStateService.questState.set(quest);
   }
 }

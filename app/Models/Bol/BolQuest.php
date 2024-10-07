@@ -5,6 +5,7 @@ namespace App\Models\Bol;
 use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BolQuest extends Model
 {
@@ -16,4 +17,9 @@ class BolQuest extends Model
     'titre',
     'commentaire'
     ];
+
+    public function protagonists(): HasMany
+    {
+        return $this->HasMany(BolQuestProtagonist::class, 'quest_id', 'id');
+    }
 }

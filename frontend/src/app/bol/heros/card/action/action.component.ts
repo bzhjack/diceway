@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, computed, effect, inject, input, signal} from '@angular/core';
+import {AfterViewInit, Component, computed, effect, inject, signal} from '@angular/core';
 import {DropdownModule} from "primeng/dropdown";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {BOL_DIFFICULTIES} from "../../../../shared/constantes/difficulties";
@@ -17,7 +17,7 @@ import {InputTextModule} from "primeng/inputtext";
 import {Ripple} from "primeng/ripple";
 import {InputNumberModule} from "primeng/inputnumber";
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
-import { TagModule } from 'primeng/tag';
+import {TagModule} from 'primeng/tag';
 
 @Component({
   selector: 'bol-action',

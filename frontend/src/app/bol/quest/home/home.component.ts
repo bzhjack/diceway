@@ -16,7 +16,6 @@ import {Router, RouterLink} from "@angular/router";
 import {Table, TableModule} from "primeng/table";
 import {TagModule} from "primeng/tag";
 import {TooltipModule} from "primeng/tooltip";
-import {DialogService} from "primeng/dynamicdialog";
 import {FormBuilder, FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgxSpinnerService} from "ngx-spinner";
 import {Subscription} from "rxjs";

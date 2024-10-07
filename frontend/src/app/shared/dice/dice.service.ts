@@ -2,7 +2,6 @@ import {effect, inject, Injectable, signal} from '@angular/core';
 import DiceBox from "@3d-dice/dice-box";
 import DiceParser from '@3d-dice/dice-parser-interface'
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
-import {DiceResultsComponent} from "./dice-result/dice-result.component";
 import {Subscription} from "rxjs";
 import {DiceRoll} from "./dice.model";
 

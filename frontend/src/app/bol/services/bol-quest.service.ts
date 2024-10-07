@@ -1,6 +1,5 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
-import {BolHerosModel} from "../models/bol-heros.model";
 import {HttpClient} from "@angular/common/http";
 import {BolQuestModel} from "../models/bol-quest.model";
 
