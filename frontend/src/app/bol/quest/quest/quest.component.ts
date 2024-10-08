@@ -66,6 +66,10 @@ export class BolQuestComponent {
 
   quest = computed(() => this.questStateService.questState());
   heros = computed(() =>  this.quest()?.protagonists.filter((protagonist) => protagonist.type === 'H'));
+  demons = computed(() =>  this.quest()?.protagonists.filter((protagonist) => protagonist.type === 'D'));
+  pnjs = computed(() =>  this.quest()?.protagonists.filter((protagonist) => protagonist.type === 'P'));
+  creatures = computed(() =>  this.quest()?.protagonists.filter((protagonist) => protagonist.type === 'C'));
+
   quest$ = toObservable<string | null | undefined>(this.questId).pipe(
     filter((id): id is string => id !== null),  // Type guard pour éliminer 'null'
     tap(() => {
