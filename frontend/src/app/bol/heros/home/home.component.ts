@@ -116,7 +116,7 @@ export class BolHeroHomeComponent implements OnDestroy {
           return quest;
         }),
         tap((quests) => this.quests.set(quests))
-      )   // Update the response
+      )
     )
   );
 
