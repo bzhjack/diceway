@@ -15,7 +15,7 @@ class BolQuestController extends Controller
 {
     public function getAll()
     {
-        $heroes = BolQuest::with('protagonists.protagonist')->where('user_id', Auth::id())->get();
+        $heroes = BolQuest::with('protagonists')->where('user_id', Auth::id())->get();
         return response($heroes);
     }
 

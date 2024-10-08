@@ -296,10 +296,11 @@
 </p-dialog>
 
 <p-dialog [(visible)]="showCard" [modal]="true" header="En route pour l'aventure">
-  @if ((quests$ | async) && quests().length) {
+  @if ((quests$ | async) && quests() !== null) {
+    @if (quests()?.length) {
     <div class="flex flex-col gap-2">
       <p-dropdown [style]="{ width: '250px' }"
-                  [options]="quests()"
+                  [options]="quests() ?? []"
                   [appendTo]="'body'"
                   [(ngModel)]="selectedQuest"
                   [ngModelOptions]="{standalone: true}"
@@ -319,10 +320,13 @@
         </ng-template>
       </p-dropdown>
     </div>
+    } @else {
+      <div>Ce héros est déjà dans toutes les aventures ;)</div>
+    }
     <div class="flex pt-4 justify-end gap-2">
       <p-button label="Retour" icon="pi pi-times" severity="secondary" size="small"
                 (click)="showCard.set(false)"></p-button>
-      <p-button label="Ajouter" icon="pi pi-check" size="small" severity="success" (click)="addToAdventure()"
+      <p-button *ngIf="quests()?.length" label="Ajouter" icon="pi pi-check" size="small" severity="success" (click)="addToAdventure()"
                 [disabled]="!selectedQuest()"></p-button>
     </div>
   } @else {

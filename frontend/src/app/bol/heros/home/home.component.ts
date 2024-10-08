@@ -1,5 +1,5 @@
 import {Component, inject, OnDestroy, signal, ViewChild} from '@angular/core';
-import {exhaustMap, filter, of, Subscription} from "rxjs";
+import {exhaustMap, filter, map, of, Subscription} from "rxjs";
 import {AsyncPipe, JsonPipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {Router, RouterLink} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
@@ -100,12 +100,24 @@ export class BolHeroHomeComponent implements OnDestroy {
   public joueurCtrl = new FormControl('', [Validators.required, Validators.minLength(3)]);
   public nomCtrl = new FormControl('', [Validators.required, Validators.minLength(3)]);
   herosForm = this.fb.group({joueur: this.joueurCtrl, nom: this.nomCtrl});
-  quests = signal<BolQuestModel[]>([]);
+  quests = signal<BolQuestModel[] | null>(null);
   quests$ = toObservable<boolean>(this.showCard).pipe( // Watch for user changes
     filter((show) => show),                     // Only make http request for users larger than 0
-    tap((id) => this.quests.set([])),    // Just some debugging
+    tap((id) => this.quests.set(null)),    // Just some debugging
     exhaustMap((id) =>                          // Don't execute the http request if one is already in progress
-      this.questService.quests().pipe(tap((quests) => this.quests.set(quests)))   // Update the response
+      this.questService.quests().pipe(
+        map((quests) => {
+
+            const result = quests.filter(quest =>
+              quest.protagonists.length === 0 || quest.protagonists.some(protagonist =>
+                protagonist.protagonist_id !== this.currentHeros?.id && protagonist.type === 'H'
+              ));
+            console.log(result);
+            return result;
+          }
+        ),
+        tap((quests) => this.quests.set(quests))
+      )   // Update the response
     )
   );
 
@@ -204,11 +216,13 @@ export class BolHeroHomeComponent implements OnDestroy {
     this.showHeros = true;
     this.currentHeros = heros;
   }
+
   addAdventure(heros: BolHerosModel) {
+    this.currentHeros = heros;
     this.showCard.set(true);
     this.selectedQuest.set(null);
-    this.currentHeros = heros;
   }
+
   addToAdventure() {
     this.showCard.set(false);
     if (this.selectedQuest()) {
@@ -227,6 +241,7 @@ export class BolHeroHomeComponent implements OnDestroy {
 
     }
   }
+
   clear(table?: Table) {
     table?.clear();
     this.searchTerm = '';
@@ -260,6 +275,7 @@ export class BolHeroHomeComponent implements OnDestroy {
       }
     });
   }
+
   languesToStr(heros: BolHerosModel) {
     return (heros.origines.langues as BolHerosLangueModel[]).map(item => item.langue?.langue).join(', ');
   }
