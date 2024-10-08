@@ -101,19 +101,18 @@ export class BolHeroHomeComponent implements OnDestroy {
   public nomCtrl = new FormControl('', [Validators.required, Validators.minLength(3)]);
   herosForm = this.fb.group({joueur: this.joueurCtrl, nom: this.nomCtrl});
   quests = signal<BolQuestModel[] | null>(null);
-  quests$ = toObservable<boolean>(this.showCard).pipe( // Watch for user changes
-    filter((show) => show),                     // Only make http request for users larger than 0
-    tap((id) => this.quests.set(null)),    // Just some debugging
-    exhaustMap((id) =>                          // Don't execute the http request if one is already in progress
+  quests$ = toObservable<boolean>(this.showCard).pipe(
+    filter((show) => show),
+    tap((id) => this.quests.set(null)),
+    exhaustMap((id) =>
       this.questService.quests().pipe(
         map((quests) => {
-          const quest = quests.filter(quest =>
+          return  quests.filter(quest =>
             quest.protagonists.length === 0 ||  // Inclut les quêtes sans protagonistes
             !quest.protagonists.some(protagonist =>
               protagonist.protagonist_id === this.currentHeros?.id && protagonist.type === 'H'
             )
           );
-          return quest;
         }),
         tap((quests) => this.quests.set(quests))
       )
