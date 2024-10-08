@@ -32,6 +32,7 @@ import {tap} from "rxjs/operators";
 import {BolQuestModel} from "../../models/bol-quest.model";
 import {BolQuestService} from "../../services/bol-quest.service";
 import {InlineSVGModule} from "ng-inline-svg-2";
+import {SkeletonModule} from "primeng/skeleton";
 
 
 @Component({
@@ -64,7 +65,8 @@ import {InlineSVGModule} from "ng-inline-svg-2";
     BolHerosTraitRowComponent,
     BolHerosCardComponent,
     AsyncPipe,
-    InlineSVGModule
+    InlineSVGModule,
+    SkeletonModule
   ],
   providers: [
     ConfirmationService
@@ -204,9 +206,12 @@ export class BolHeroHomeComponent implements OnDestroy {
   }
   addAdventure(heros: BolHerosModel) {
     this.showCard.set(true);
+    this.selectedQuest.set(null);
     this.currentHeros = heros;
   }
+  addToAdventure() {
 
+  }
   clear(table?: Table) {
     table?.clear();
     this.searchTerm = '';
