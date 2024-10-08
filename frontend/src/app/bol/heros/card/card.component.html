@@ -1,4 +1,4 @@
-<p-card class="creature_card" [style]="{width: '300px'}">
+<p-card class="creature_card">
   @if ((hero$ | async) && hero()) {
     <div class="flex gap-2">
       <div class="heros_card__img">
@@ -6,7 +6,7 @@
              [src]="hero()?.origines?.avatar !== null ? hero()?.origines?.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
              alt="avatar">
       </div>
-      <div class="flex flex-col pt-1">
+      <div class="flex flex-col pt-1" style="width:170px">
         <div class="flex gap-2 items-center text-xl">
           <i *ngIf="hero()?.origines?.commentaire" class="pi pi-info-circle cursor-pointer warn-color"
              [pTooltip]="hero()?.origines?.commentaire ?? ''"></i>
@@ -28,6 +28,16 @@
           </table>
         </div>
       </div>
+      <div>
+        <button
+          class="p-button-icon-only"
+          pTooltip="Effectuer une action"
+          (click)="openAction()"
+          type="button"
+          size="small" pButton pRipple>
+          <div class="svg_icon_15" inlineSVG="/frontend/assets/action.svg"></div>
+        </button>
+      </div>
     </div>
 
   } @else {
@@ -46,18 +56,4 @@
       </div>
     </div>
   }
-  <ng-template pTemplate="footer">
-    @if (hero()) {
-      <div class="flex gap-3 mt-1">
-        <p-button label="Modifier la fiche" size="small" severity="secondary" class="w-full" styleClass="w-full"/>
-        <p-button label="Faire une action" size="small" class="w-full" styleClass="w-full"
-                  (onClick)="openAction()"/>
-      </div>
-    } @else {
-      <div class="flex gap-3 mt-1">
-        <p-skeleton width="135px" height="30px"/>
-        <p-skeleton width="135px" height="30px"/>
-      </div>
-    }
-  </ng-template>
 </p-card>

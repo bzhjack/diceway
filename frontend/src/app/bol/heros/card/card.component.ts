@@ -8,10 +8,12 @@ import {AsyncPipe, JsonPipe, NgIf} from "@angular/common";
 import {CardModule} from "primeng/card";
 import {SkeletonModule} from "primeng/skeleton";
 import {TooltipModule} from "primeng/tooltip";
-import {Button} from "primeng/button";
+import {Button, ButtonDirective} from "primeng/button";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {BolActionComponent} from "./action/action.component";
 import {DialogService} from "primeng/dynamicdialog";
+import {InlineSVGModule} from "ng-inline-svg-2";
+import {Ripple} from "primeng/ripple";
 
 @Component({
   selector: 'bol-heros-card',
@@ -25,7 +27,10 @@ import {DialogService} from "primeng/dynamicdialog";
     TooltipModule,
     Button,
     OverlayPanelModule,
-    BolActionComponent
+    BolActionComponent,
+    ButtonDirective,
+    InlineSVGModule,
+    Ripple
   ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'

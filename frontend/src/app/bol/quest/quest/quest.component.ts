@@ -7,7 +7,7 @@ import {exhaustMap, filter, map, Subscription} from "rxjs";
 import {tap} from "rxjs/operators";
 import {BolQuestService} from "../../services/bol-quest.service";
 import {BolQuestModel} from "../../models/bol-quest.model";
-import {AsyncPipe, NgIf} from "@angular/common";
+import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {InputTextModule} from "primeng/inputtext";
 import {InputTextareaModule} from "primeng/inputtextarea";
@@ -17,6 +17,8 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {Table} from "primeng/table";
 import {BolQuestStateService} from '../../services/bol-quest-state.service';
 import {Overlay} from 'primeng/overlay';
+import {FieldsetModule} from "primeng/fieldset";
+import {BolHerosCardComponent} from "../../heros/card/card.component";
 
 @Component({
   selector: 'bol-quest',
@@ -32,7 +34,10 @@ import {Overlay} from 'primeng/overlay';
     InputTextareaModule,
     NgIf,
     PaginatorModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FieldsetModule,
+    BolHerosCardComponent,
+    NgForOf
   ],
   templateUrl: './quest.component.html',
   styleUrl: './quest.component.scss'
@@ -60,7 +65,7 @@ export class BolQuestComponent {
   ));
 
   quest = computed(() => this.questStateService.questState());
-
+  heros = computed(() =>  this.quest()?.protagonists.filter((protagonist) => protagonist.type === 'H'));
   quest$ = toObservable<string | null | undefined>(this.questId).pipe(
     filter((id): id is string => id !== null),  // Type guard pour éliminer 'null'
     tap(() => {
