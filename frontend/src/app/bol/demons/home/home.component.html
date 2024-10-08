@@ -96,11 +96,20 @@
                   <div class="text-gray-400">{{ demon.categorie.categorie }}</div>
                 </div>
 
-                <div *ngIf="demon.user_id" class="flex items-center gap-2">
-                  <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-bolt" (click)="createDemon(demon)"></button>
-                  <button severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash" (click)="askDelete(demon, $event)"></button>
+                <div class="flex items-center gap-2">
+                  <button
+                    class="p-button-icon-only"
+                    pTooltip="En route pour l'aventure"
+                    (click)="addAdventure(demon)"
+                    type="button"
+                    size="small" pButton pRipple>
+                    <div class="svg_icon_15" inlineSVG="/frontend/assets/sword.svg"></div>
+                  </button>
+                  <ng-container *ngIf="demon.user_id">
+                    <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-bolt" (click)="createDemon(demon)"></button>
+                    <button severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash" (click)="askDelete(demon, $event)"></button>
+                  </ng-container>
                 </div>
-
               </div>
             </td>
 
@@ -194,4 +203,48 @@
     <button pButton icon="pi pi-times" size="small" label="Quitter" severity="secondary"
             (click)="showDemon = false"></button>
   </ng-template>
+</p-dialog>
+<p-dialog [(visible)]="showCard" [modal]="true" header="En route pour l'aventure">
+  @if ((quests$ | async) && quests() !== null) {
+    @if (quests()?.length) {
+      <div class="flex flex-col gap-2">
+        <p-dropdown [style]="{ width: '250px' }"
+                    [options]="quests() ?? []"
+                    [appendTo]="'body'"
+                    [(ngModel)]="selectedQuest"
+                    [ngModelOptions]="{standalone: true}"
+                    [showClear]="true"
+                    placeholder="Faites votre sélection">
+
+          <ng-template pTemplate="selectedItem" let-selectedOption>
+            <div class="flex align-items-center gap-2">
+              {{ selectedOption.titre }}
+            </div>
+          </ng-template>
+
+          <ng-template let-item pTemplate="item">
+            <div class="flex flex-col gap-2">
+              {{ item.titre }}
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+    } @else {
+      <div>Ce démon est déjà dans toutes les aventures ;)</div>
+    }
+    <div class="flex pt-4 justify-end gap-2">
+      <p-button label="Retour" icon="pi pi-times" severity="secondary" size="small"
+                (click)="showCard.set(false)"></p-button>
+      <p-button *ngIf="quests()?.length" label="Ajouter" icon="pi pi-check" size="small" severity="success" (click)="addToAdventure()"
+                [disabled]="!selectedQuest()"></p-button>
+    </div>
+  } @else {
+    <div class="flex flex-col gap-2">
+      <p-skeleton width="250px" height="25px"/>
+      <div class="flex pt-4 justify-end gap-2">
+        <p-skeleton width="85px" height="30px"/>
+        <p-skeleton width="90px" height="30px"/>
+      </div>
+    </div>
+  }
 </p-dialog>

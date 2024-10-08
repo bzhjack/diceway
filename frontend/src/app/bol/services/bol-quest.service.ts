@@ -21,11 +21,11 @@ export class BolQuestService {
   updateQuest(quest: BolQuestModel): Observable<any> {
     return this.http.post<BolQuestModel>('/api/bol/quest/update', <BolQuestModel>quest);
   }
-  addHerosToQuest(heroId: string, questId: string): Observable<any> {
+  addProtagonistToQuest(heroId: string, questId: string, type: 'H' | 'P' | 'C' | 'D'): Observable<any> {
     const protagonist = {
       protagonist_id : heroId,
       quest_id: questId,
-      type: 'H'
+      type: type
     }
     return this.http.post('/api/bol/quest/add/protagonist', protagonist);
   }

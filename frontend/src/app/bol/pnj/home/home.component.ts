@@ -1,4 +1,4 @@
-import {Component, inject, ViewChild} from '@angular/core';
+import {Component, inject, signal, ViewChild} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {DropdownModule} from "primeng/dropdown";
 import {FormsModule} from "@angular/forms";
@@ -7,11 +7,11 @@ import {InputTextModule} from "primeng/inputtext";
 import {RouterLink} from "@angular/router";
 import {BolPnjCreateComponent} from "../create/create.component";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
-import {Subscription} from "rxjs";
+import {exhaustMap, filter, map, Subscription} from "rxjs";
 import {NgxSpinnerService} from "ngx-spinner";
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {BolHerosService} from "../../services/bol-heros.service";
-import {JsonPipe, NgForOf, NgIf} from "@angular/common";
+import {AsyncPipe, JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {BolCreatureCardComponent} from "../../creatures/card/card.component";
 import {BolPnjCardComponent} from "../card/card.component";
 import {ConfirmationService} from "primeng/api";
@@ -28,6 +28,12 @@ import {TagModule} from "primeng/tag";
 import {ScrollPanelModule} from "primeng/scrollpanel";
 import {BolHerosLangueModel} from "../../models/bol-langue.model";
 import {BolHerosTraitRowComponent} from "../../heros/create/origines/region/trait-row/trait-row.component";
+import {InlineSVGModule} from "ng-inline-svg-2";
+import {BolQuestModel} from "../../models/bol-quest.model";
+import {BolQuestService} from "../../services/bol-quest.service";
+import {SkeletonModule} from "primeng/skeleton";
+import {toObservable} from "@angular/core/rxjs-interop";
+import {tap} from "rxjs/operators";
 
 @Component({
   selector: 'bol-pnj-home',
@@ -57,7 +63,10 @@ import {BolHerosTraitRowComponent} from "../../heros/create/origines/region/trai
     TagModule,
     JsonPipe,
     ScrollPanelModule,
-    BolHerosTraitRowComponent
+    BolHerosTraitRowComponent,
+    InlineSVGModule,
+    AsyncPipe,
+    SkeletonModule
   ],
   providers: [
     ConfirmationService
@@ -70,6 +79,23 @@ export class BolPnjHomeComponent {
   private pnjService = inject(BolHerosService);
   private spinner = inject(NgxSpinnerService);
   readonly #ds = inject(DialogService);
+  private questService = inject(BolQuestService);
+
+  public selectedQuest = signal<BolQuestModel | null>(null)
+  public showCard = signal<boolean>(false);
+
+  quests = signal<BolQuestModel[] | null>(null);
+  quests$ = toObservable<boolean>(this.showCard).pipe(
+    filter((show) => show),
+    tap((id) => this.quests.set(null)),
+    exhaustMap((id) =>
+      this.questService.quests().pipe(
+        tap((quests) => this.quests.set(quests))
+      )
+    )
+  );
+
+
   private subs: Subscription | undefined;
   private subsPnj: Subscription | undefined;
   private ref?: DynamicDialogRef;
@@ -203,4 +229,29 @@ export class BolPnjHomeComponent {
   languesToStr(pnj: BolHerosModel) {
     return (pnj.origines.langues as BolHerosLangueModel[]).map(item => item.langue?.langue).join(', ');
   }
+
+  addAdventure(pnj: BolHerosModel) {
+    this.currentPnj = pnj;
+    this.showCard.set(true);
+    this.selectedQuest.set(null);
+  }
+
+  addToAdventure() {
+    this.showCard.set(false);
+    if (this.selectedQuest()) {
+      const id = this.currentPnj?.id ?? '';
+      const questId = this.selectedQuest()?.id ?? '';
+      this.spinner.show();
+      this.subs?.unsubscribe();
+      this.subs = this.questService.addProtagonistToQuest(id, questId, 'P').subscribe({
+        next: () => {
+          this.spinner.hide();
+        },
+        error: () => {
+          this.spinner.hide();
+        }
+      });
+    }
+  }
+
 }

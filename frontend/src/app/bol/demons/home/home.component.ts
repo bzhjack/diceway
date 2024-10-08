@@ -1,10 +1,10 @@
-import {Component, inject, OnDestroy, ViewChild} from '@angular/core';
+import {Component, inject, OnDestroy, signal, ViewChild} from '@angular/core';
 import {ConfirmationService, PrimeTemplate} from 'primeng/api';
 import {BolDemonsService} from '../../services/bol-demons.service';
 import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
 import {NgxSpinnerService} from 'ngx-spinner';
-import {Subscription} from 'rxjs';
-import {ButtonDirective} from "primeng/button";
+import {exhaustMap, filter, Subscription} from 'rxjs';
+import {Button, ButtonDirective} from "primeng/button";
 import {CheckboxModule} from "primeng/checkbox";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {DialogModule} from "primeng/dialog";
@@ -13,16 +13,22 @@ import {HeaderComponent} from "../../../shared/header/header.component";
 import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
 import {InputTextModule} from "primeng/inputtext";
-import {JsonPipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
+import {AsyncPipe, JsonPipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Ripple} from "primeng/ripple";
 import {RouterLink} from "@angular/router";
 import {Table, TableModule} from "primeng/table";
 import {TagModule} from "primeng/tag";
 import {TooltipModule} from "primeng/tooltip";
-import {toSignal} from "@angular/core/rxjs-interop";
+import {toObservable, toSignal} from "@angular/core/rxjs-interop";
 import {BolDemonModel} from "../../models/bol-demon.model";
 import {BolDemonCreateComponent} from "../create/create.component";
+import {BolQuestModel} from "../../models/bol-quest.model";
+import {tap} from "rxjs/operators";
+import {BolQuestService} from "../../services/bol-quest.service";
+import {BolCreatureModel} from "../../models/bol-creature.model";
+import {SkeletonModule} from "primeng/skeleton";
+import {InlineSVGModule} from "ng-inline-svg-2";
 
 @Component({
   selector: 'bol-demon-home',
@@ -48,7 +54,11 @@ import {BolDemonCreateComponent} from "../create/create.component";
     TagModule,
     TooltipModule,
     FormsModule,
-    JsonPipe
+    JsonPipe,
+    AsyncPipe,
+    Button,
+    SkeletonModule,
+    InlineSVGModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -61,6 +71,22 @@ export class BolDemonHomeComponent implements OnDestroy {
   private demonService = inject(BolDemonsService);
   readonly #ds = inject(DialogService);
   private spinner = inject(NgxSpinnerService);
+  private questService = inject(BolQuestService);
+
+  public selectedQuest = signal<BolQuestModel | null>(null)
+  public showCard = signal<boolean>(false);
+
+  quests = signal<BolQuestModel[] | null>(null);
+  quests$ = toObservable<boolean>(this.showCard).pipe(
+    filter((show) => show),
+    tap((id) => this.quests.set(null)),
+    exhaustMap((id) =>
+      this.questService.quests().pipe(
+        tap((quests) => this.quests.set(quests))
+      )
+    )
+  );
+
   private subsDemon?: Subscription;
   public demons: Array<any> = [];
   public filteredDemons: Array<any> = [];
@@ -182,6 +208,29 @@ export class BolDemonHomeComponent implements OnDestroy {
     this.subs?.unsubscribe();
     if (this.ref) {
       this.ref.close();
+    }
+  }
+  addAdventure(demon: BolDemonModel) {
+    this.currentDemon = demon;
+    this.showCard.set(true);
+    this.selectedQuest.set(null);
+  }
+
+  addToAdventure() {
+    this.showCard.set(false);
+    if (this.selectedQuest()) {
+      const id = this.currentDemon?.id ?? '';
+      const questId = this.selectedQuest()?.id ?? '';
+      this.spinner.show();
+      this.subs?.unsubscribe();
+      this.subs = this.questService.addProtagonistToQuest(id, questId, 'D').subscribe({
+        next: () => {
+          this.spinner.hide();
+        },
+        error: () => {
+          this.spinner.hide();
+        }
+      });
     }
   }
 
