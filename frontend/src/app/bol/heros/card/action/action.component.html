@@ -15,43 +15,42 @@
           </ng-template>
         </p-dropdown>
       </p-fieldset>
-
-      <p-fieldset legend="Attributs">
-        <div class="flex flex-wrap gap-2">
-          <div *ngFor="let attr of attributs()" class="flex items-center gap-2">
-            <p-radioButton [disabled]="attr.value === 0" [inputId]="attr.attr" name="attribut" [value]="attr"
-                           [(ngModel)]="selectedAttribut"/>
-            <label [for]="attr.attr" class="cursor-pointer capitalize" [class.opacity-35]="attr.value === 0">
-              {{ attr.attr }} ({{ attr.value }})
-            </label>
+      <div class="flex gap-2">
+        <p-fieldset legend="Attributs">
+          <div class="flex flex-col gap-1">
+            <div *ngFor="let attr of attributs()" class="flex items-center gap-2">
+              <p-radioButton [inputId]="attr.attr" name="attribut" [value]="attr"
+                             [(ngModel)]="selectedAttribut"/>
+              <label [for]="attr.attr" class="cursor-pointer capitalize whitespace-nowrap">
+                {{ attr.attr }} ({{ attr.value }})
+              </label>
+            </div>
           </div>
-        </div>
-      </p-fieldset>
-
-      <p-fieldset legend="Utilisation d'une carrière">
-        <div class="flex flex-wrap gap-2">
-          <div class="flex items-center gap-2">
-            <p-radioButton inputId="aucune" name="carriere" [value]="initCarriere" [(ngModel)]="selectedCarriere"/>
-            <label for="aucune" class="cursor-pointer">
-              Aucune
-            </label>
+        </p-fieldset>
+        <p-fieldset legend="Utilisation d'une carrière">
+          <div class="flex flex-col gap-1">
+            <div class="flex items-center gap-2">
+              <p-radioButton inputId="aucune" name="carriere" [value]="initCarriere" [(ngModel)]="selectedCarriere"/>
+              <label for="aucune" class="cursor-pointer opacity-60">
+                Aucune
+              </label>
+            </div>
+            <div *ngFor="let career of carrieres()" class="flex items-center gap-2">
+              <p-radioButton [inputId]="career.carriere" name="carriere" [value]="career"
+                             [(ngModel)]="selectedCarriere"/>
+              <label [for]="career.carriere" class="cursor-pointer whitespace-nowrap flex justify-between w-full">
+                <span>{{ career.carriere }}</span>
+                <span>({{ career.value }})</span>
+              </label>
+            </div>
           </div>
-          <div *ngFor="let career of carrieres()" class="flex items-center gap-2">
-            <p-radioButton [disabled]="career.value === 0" [inputId]="career.carriere" name="carriere" [value]="career"
-                           [(ngModel)]="selectedCarriere"/>
-            <label [for]="career.carriere" class="cursor-pointer" [class.opacity-35]="career.value === 0">
-              {{ career.carriere }} ({{ career.value }})
-            </label>
-          </div>
-        </div>
-      </p-fieldset>
-
-
+        </p-fieldset>
+      </div>
       <p-fieldset legend="Application d'un avantage/désavantage">
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-col gap-1">
           <div class="flex gap-2 items-center pt-2">
             <p-radioButton inputId="aucun" name="carriere" [value]="null" [(ngModel)]="selectedTrait"/>
-            <label for="aucun" class="flex gap-1 items-center cursor-pointer">
+            <label for="aucun" class="flex gap-1 items-center cursor-pointer opacity-60">
               <div class="tag_icon opacity-35" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
               <div>Aucun</div>
             </label>
