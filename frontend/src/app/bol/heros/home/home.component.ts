@@ -107,15 +107,14 @@ export class BolHeroHomeComponent implements OnDestroy {
     exhaustMap((id) =>                          // Don't execute the http request if one is already in progress
       this.questService.quests().pipe(
         map((quests) => {
-
-            const result = quests.filter(quest =>
-              quest.protagonists.length === 0 || quest.protagonists.some(protagonist =>
-                protagonist.protagonist_id !== this.currentHeros?.id && protagonist.type === 'H'
-              ));
-            console.log(result);
-            return result;
-          }
-        ),
+          const quest = quests.filter(quest =>
+            quest.protagonists.length === 0 ||  // Inclut les quêtes sans protagonistes
+            !quest.protagonists.some(protagonist =>
+              protagonist.protagonist_id === this.currentHeros?.id && protagonist.type === 'H'
+            )
+          );
+          return quest;
+        }),
         tap((quests) => this.quests.set(quests))
       )   // Update the response
     )
