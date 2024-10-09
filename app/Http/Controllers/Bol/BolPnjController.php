@@ -25,7 +25,7 @@ class BolPnjController extends Controller
     {
         $heroes = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue')
             ->where('type', '!=', 'H')
-            ->where(function($query) {
+            ->where(function ($query) {
                 $query->where('user_id', Auth::id())
                     ->orWhereNull('user_id');
             })
@@ -144,9 +144,9 @@ class BolPnjController extends Controller
                     'traitable_type' => $item['type'] == 'A' ? BolAvantage::class : BolDesavantage::class
                 ], []);
         }
-
         $pnj->update($updatedPnj);
-        return response()->json(['message' => 'Pnj updated successfully']);
+        $updatedPnj = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue','region')->where('user_id', Auth::id())->where('id', $pnjId)->get()->first();
+        return response($updatedPnj);
     }
 
 
@@ -157,6 +157,6 @@ class BolPnjController extends Controller
             return response()->json(['message' => 'Pnj not found'], Response::HTTP_NOT_FOUND);
         }
         $bolPnj->delete();
-        return response()->json(['message' => 'Pnj deleted successfully'], Response::HTTP_OK);
+        return response()->json(['message' => 'Character deleted successfully'], Response::HTTP_OK);
     }
 }

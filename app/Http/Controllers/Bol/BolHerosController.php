@@ -130,7 +130,7 @@ class BolHerosController extends Controller
         DB::table('bol_quest_protagonist')->where('protagonist_id', $id)->where('type', 'H')->delete();
 
         // Return a successful response
-        return response()->json(['message' => 'Hero deleted successfully'], Response::HTTP_OK);
+        return response()->json(['message' => 'Character deleted successfully'], Response::HTTP_OK);
     }
 
     public function updateOrigines(Request $request, $herosId)

@@ -2,7 +2,7 @@ import {Component, inject, input, signal} from '@angular/core';
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {BolHerosService} from "../../services/bol-heros.service";
 import {toObservable} from "@angular/core/rxjs-interop";
-import {exhaustMap, filter} from "rxjs";
+import {exhaustMap, filter, Subscription} from "rxjs";
 import {tap} from "rxjs/operators";
 import {AsyncPipe, JsonPipe, NgIf} from "@angular/common";
 import {CardModule} from "primeng/card";
@@ -11,9 +11,11 @@ import {TooltipModule} from "primeng/tooltip";
 import {Button, ButtonDirective} from "primeng/button";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {BolActionComponent} from "./action/action.component";
-import {DialogService} from "primeng/dynamicdialog";
+import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {Ripple} from "primeng/ripple";
+import {BolHerosUpdateComponent} from "../update/update.component";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'bol-heros-card',
@@ -37,8 +39,15 @@ import {Ripple} from "primeng/ripple";
 })
 export class BolHerosCardComponent {
 
-  heroService = inject(BolHerosService);
-  dialogService = inject(DialogService);
+  private heroService = inject(BolHerosService);
+  private dialogService = inject(DialogService);
+  private dialogueService = inject(DialogService);
+  private herosService = inject(BolHerosService);
+  private spinner = inject(NgxSpinnerService);
+
+  private ref?: DynamicDialogRef;
+  private subs?: Subscription;
+
   heroId = input<string | null>(null);
   hero = signal<BolHerosModel | null>(null);
 
@@ -62,4 +71,31 @@ export class BolHerosCardComponent {
       }
     });
   }
+
+  fichePerso() {
+    this.ref = this.dialogueService.open(BolHerosUpdateComponent, {
+      header: 'Fiche de personnage',
+      data: {
+        heros: this.hero()
+      }
+    });
+    this.subs?.unsubscribe();
+    this.subs = this.ref.onClose.subscribe((heros: BolHerosModel) => {
+      if (heros) {
+        this.spinner.show();
+        this.subs?.unsubscribe();
+        const actionService = this.herosService.quickUpdate(heros);
+        this.subs = actionService.subscribe({
+          next: (character: BolHerosModel) => {
+            this.hero.set(character);
+            this.spinner.hide();
+          },
+          error: () => {
+            this.spinner.hide();
+          }
+        });
+      }
+    });
+  }
+
 }
