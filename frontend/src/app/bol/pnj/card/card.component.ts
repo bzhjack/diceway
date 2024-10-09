@@ -1,13 +1,18 @@
-import {Component, computed, inject, input, output} from '@angular/core';
-import {ConfirmationService} from "primeng/api";
+import {Component, inject, input, signal} from '@angular/core';
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {ButtonDirective} from "primeng/button";
 import {CardModule} from "primeng/card";
 import {FieldsetModule} from "primeng/fieldset";
-import {NgForOf, NgIf} from "@angular/common";
+import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {Ripple} from "primeng/ripple";
 import {TagModule} from "primeng/tag";
 import {TooltipModule} from "primeng/tooltip";
+import {BolHerosService} from "../../services/bol-heros.service";
+import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
+import {NgxSpinnerService} from "ngx-spinner";
+import {exhaustMap, filter, Subscription} from "rxjs";
+import {toObservable} from "@angular/core/rxjs-interop";
+import {tap} from "rxjs/operators";
 
 @Component({
   selector: 'bol-pnj-card',
@@ -20,26 +25,30 @@ import {TooltipModule} from "primeng/tooltip";
     NgIf,
     Ripple,
     TagModule,
-    TooltipModule
+    TooltipModule,
+    AsyncPipe
   ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
 export class BolPnjCardComponent {
-  private confirmationService = inject(ConfirmationService);
-  pnj = input.required<BolHerosModel | any>()
-  profile = computed(() => this.pnj()?.user_id ? 'private' : 'public')
-  editPnj = output<BolHerosModel>()
-  deletePnj = output<BolHerosModel>()
+  private heroService = inject(BolHerosService);
+  private dialogService = inject(DialogService);
+  private spinner = inject(NgxSpinnerService);
 
-  getSeverity(pnj: BolHerosModel) {
-    switch (pnj?.user_id) {
-      case null:
-        return 'success';
-      default:
-        return 'info';
-    }
-  }
+  private ref?: DynamicDialogRef;
+  private subs?: Subscription;
+
+  pnjId = input<string | null>(null);
+  pnj = signal<BolHerosModel | null>(null);
+
+  pnj$ = toObservable<string | null>(this.pnjId).pipe( // Watch for user changes
+    filter((id) => id !== null),                     // Only make http request for users larger than 0
+    tap((id) => this.pnj.set(null)),    // Just some debugging
+    exhaustMap((id) =>                          // Don't execute the http request if one is already in progress
+      this.heroService.pnj(id as string).pipe(tap((pnj) => this.pnj.set(pnj)))   // Update the response
+    )
+  );
 
   getType(pnj: BolHerosModel) {
     switch (pnj?.type) {
@@ -53,21 +62,5 @@ export class BolPnjCardComponent {
     return '';
   }
 
-  onCreate(pnj: BolHerosModel) {
-    this.editPnj.emit(<BolHerosModel>pnj);
-  }
 
-  onDelete(pnj: BolHerosModel, event: any) {
-    this.confirmationService.confirm({
-      target: event.target as EventTarget,
-      message: 'Voulez vous supprimer cet personnage ?',
-      icon: 'pi pi-info-circle',
-      acceptButtonStyleClass: 'p-button-danger p-button-sm',
-      acceptLabel: "Oui",
-      rejectLabel: "Non",
-      accept: () => {
-        this.deletePnj.emit(<BolHerosModel>pnj);
-      },
-    });
-  }
 }

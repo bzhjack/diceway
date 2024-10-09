@@ -34,7 +34,21 @@ class BolPnjController extends Controller
             ->get();
         return response($heroes);
     }
-
+    public function getOne(Request $request)
+    {   $id = $request->route('id');
+        $hero = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue', 'region')
+            ->where('type', '!=', 'H')
+            ->where(function ($query) {
+                $query->where('user_id', Auth::id())
+                    ->orWhereNull('user_id');
+            })
+            ->where('id', $id)->get()->first();
+        if ($hero === null) {
+            return response()->json(['error' => 'Pnj not found'], 404);
+        } else {
+            return response($hero);
+        }
+    }
     public function create(Request $request)
     {
         $pnj = $request->input();

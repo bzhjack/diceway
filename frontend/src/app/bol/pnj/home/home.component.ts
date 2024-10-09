@@ -122,7 +122,7 @@ export class BolPnjHomeComponent {
     this.spinner.show();
     this.subsPnj?.unsubscribe();
     this.pnjList = [];
-    this.subsPnj = this.pnjService.pnj().subscribe({
+    this.subsPnj = this.pnjService.pnjs().subscribe({
       next: (pnj: BolHerosModel[]) => {
         this.pnjList = pnj;
         this.filteredPnjList = pnj;

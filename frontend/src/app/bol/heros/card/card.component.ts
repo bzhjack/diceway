@@ -41,8 +41,6 @@ export class BolHerosCardComponent {
 
   private heroService = inject(BolHerosService);
   private dialogService = inject(DialogService);
-  private dialogueService = inject(DialogService);
-  private herosService = inject(BolHerosService);
   private spinner = inject(NgxSpinnerService);
 
   private ref?: DynamicDialogRef;
@@ -73,7 +71,7 @@ export class BolHerosCardComponent {
   }
 
   fichePerso() {
-    this.ref = this.dialogueService.open(BolHerosUpdateComponent, {
+    this.ref = this.dialogService.open(BolHerosUpdateComponent, {
       header: 'Fiche de personnage',
       data: {
         heros: this.hero()
@@ -84,7 +82,7 @@ export class BolHerosCardComponent {
       if (heros) {
         this.spinner.show();
         this.subs?.unsubscribe();
-        const actionService = this.herosService.quickUpdate(heros);
+        const actionService = this.heroService.quickUpdate(heros);
         this.subs = actionService.subscribe({
           next: (character: BolHerosModel) => {
             this.hero.set(character);

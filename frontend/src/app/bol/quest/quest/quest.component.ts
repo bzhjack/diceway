@@ -19,6 +19,8 @@ import {BolQuestStateService} from '../../services/bol-quest-state.service';
 import {Overlay} from 'primeng/overlay';
 import {FieldsetModule} from "primeng/fieldset";
 import {BolHerosCardComponent} from "../../heros/card/card.component";
+import {BolPnjCardComponent} from "../../pnj/card/card.component";
+import {ConfirmationService} from "primeng/api";
 
 @Component({
   selector: 'bol-quest',
@@ -37,10 +39,12 @@ import {BolHerosCardComponent} from "../../heros/card/card.component";
     ReactiveFormsModule,
     FieldsetModule,
     BolHerosCardComponent,
-    NgForOf
+    NgForOf,
+    BolPnjCardComponent
   ],
   templateUrl: './quest.component.html',
-  styleUrl: './quest.component.scss'
+  styleUrl: './quest.component.scss',
+  providers: [ConfirmationService]
 })
 export class BolQuestComponent {
   questService = inject(BolQuestService);

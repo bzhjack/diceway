@@ -1,110 +1,12 @@
-<p-card class="pnj_card" [style]="{width: '410px', heights: '260px'}">
-  <div class="flex flex-col w-full">
-    <div class="pnj_card__title">
-      <div class="flex justify-between">
-        <div class="flex gap-2 items-center ">
-          <i *ngIf="pnj().origines.commentaire" class="pi pi-info-circle cursor-pointer warn-color"
-             [pTooltip]="pnj().origines.commentaire ?? ''"></i>
-          {{ pnj().origines.nom }}
-        </div>
-
-        <div *ngIf="profile() === 'private'" class="flex gap-2 justify-end">
-          <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-pencil"
-                  (click)="onCreate(pnj())"></button>
-          <button severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash"
-                  (click)="onDelete(pnj(), $event)">
-          </button>
-        </div>
-      </div>
-
-      <div class="flex justify-between pnj_card__subtitle">
-        <div class="flex gap-2 items-center font-light text-gray-400">
-          ({{ getType(pnj()) }})
-          <p-tag [severity]="getSeverity(pnj())">{{ profile() === 'private' ? 'Privé' : 'Public' }}</p-tag>
-        </div>
-        <div class="flex items-center gap-2">
-          <div class="text-gray-300">Vitalité</div>
-          <div class="text-gray-400 font-bold">{{ pnj().ressources.vitalite }}</div>
-        </div>
-      </div>
-    </div>
+<p-card class="creature_card">
+  @if ((pnj$ | async) && pnj()) {
     <div class="flex gap-2">
-      <div style="padding-top: 8px;">
-        <div class="pnj_card__img">
-          <img *ngIf="profile() === 'public'" src="/frontend/assets/bol/pnj/{{pnj().id}}.jpg" alt=""/>
-          <img *ngIf="profile() === 'private'" style="width:100%"
-               [src]="pnj().origines.avatar !== null ? pnj().origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
-               alt="avatar">
-        </div>
+      <div class="pnj_card__img">
+        <img *ngIf="!pnj()?.user_id" src="/frontend/assets/bol/pnj/{{pnj()?.id}}.jpg" alt=""/>
+        <img *ngIf="pnj()?.user_id" style="width:100%"
+             [src]="pnj()?.origines?.avatar !== null ? pnj()?.origines?.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+             alt="avatar">
       </div>
-      <p-fieldset legend="Attributs" class="flex-auto">
-        <table>
-          <tr>
-            <td class="text-gray-300">Vigueur</td>
-            <td class="text-gray-400">{{ pnj().attributs.vigueur }}</td>
-          </tr>
-          <tr>
-            <td class="text-gray-300">Agilité</td>
-            <td class="text-gray-400">{{ pnj().attributs.agilite }}</td>
-          </tr>
-          <tr>
-            <td class="text-gray-300">Esprit</td>
-            <td class="text-gray-400">{{ pnj().attributs.esprit }}</td>
-          </tr>
-          <tr>
-            <td class="text-gray-300">Aura</td>
-            <td class="text-gray-400">{{ pnj().attributs.aura }}</td>
-          </tr>
-        </table>
-      </p-fieldset>
-      <p-fieldset legend="Combat" class="flex-auto">
-        <table>
-          <tr>
-            <td class="text-gray-300">Initiative</td>
-            <td class="text-gray-400">{{ pnj().combat.initiative }}</td>
-          </tr>
-          <tr>
-            <td class="text-gray-300">Tir</td>
-            <td class="text-gray-400">{{ pnj().combat.tir }}</td>
-          </tr>
-          <tr>
-            <td class="text-gray-300">Défense</td>
-            <td class="text-gray-400">{{ pnj().combat.defense }}</td>
-          </tr>
-          <tr>
-            <td class="text-gray-300">Mêlée</td>
-            <td class="text-gray-400">{{ pnj().combat.melee }}</td>
-          </tr>
-        </table>
-      </p-fieldset>
     </div>
-    <div>
-      <p-fieldset legend="Carrieres">
-        <div class="flex flex-wrap gap-2">
-          <div *ngFor="let car of pnj().carrieres" class="flex items-center gap-2">
-            <div class="text-gray-300">{{ car.carriere?.carriere }}</div>
-            <div class="text-gray-400">{{ car.value }}</div>
-          </div>
-        </div>
-      </p-fieldset>
-      <p-fieldset legend="Protection">
-        <div class="flex flex-wrap gap-2">
-          <div *ngFor="let armure of pnj().armures" class="flex items-center gap-2">
-            <div class="text-gray-300">{{ armure.armure.armure }}</div>
-            <div class="text-gray-400">{{ armure.armure.protection }}</div>
-          </div>
-        </div>
-      </p-fieldset>
-      <p-fieldset legend="Armes">
-        <div class="flex flex-wrap gap-2">
-          <div *ngFor="let arme of pnj().armes" class="flex items-center gap-2">
-            <div class="text-gray-300">{{ arme.arme.arme }}</div>
-            <div class="text-gray-400">{{ arme.arme.degats }}</div>
-          </div>
-        </div>
-      </p-fieldset>
-
-
-    </div>
-  </div>
+  }
 </p-card>

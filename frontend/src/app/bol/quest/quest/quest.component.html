@@ -11,6 +11,16 @@
           <bol-heros-card *ngFor="let hero of heros()"  [heroId]="hero.protagonist_id"></bol-heros-card>
         </div>
     </div>
+    <div class="flex flex-auto">
+      plop
+    </div>
+    <div>
+      <div class="text-4xl">Pnj</div>
+      <div class="flex flex-col gap-2">
+        <bol-pnj-card *ngFor="let pnj of pnjs()"  [pnjId]="pnj.protagonist_id"></bol-pnj-card>
+      </div>
+
+    </div>
   </div>
 </div>
 }
