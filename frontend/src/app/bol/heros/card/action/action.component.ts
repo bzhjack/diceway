@@ -160,8 +160,9 @@ export class BolActionComponent implements AfterViewInit {
       }
     } else {
       // récupération du des rolls
-      if (this.diceResult() && this.diceResult()?.result && this.diceResult()?.result.rolls) {
-        const criticalCount = this.diceResult()?.result.rolls.reduce((acc: any, roll: any) => {
+      if (this.diceResult() && this.diceResult()?.result && (this.diceResult()?.result.rolls || this.diceResult()?.result.dice[0].rolls)) {
+        const rolls = this.diceResult()?.result.rolls ?? this.diceResult()?.result.dice[0].rolls;
+        const criticalCount = rolls.reduce((acc: any, roll: any) => {
           if (roll.critical !== null && !roll.drop) {
             // Incrémentez les valeurs de failure ou success en fonction de la valeur du critical
             acc[roll.critical] = (acc[roll.critical] || 0) + 1;
