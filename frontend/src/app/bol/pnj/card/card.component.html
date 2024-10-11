@@ -7,6 +7,14 @@
              [src]="pnj()?.origines?.avatar !== null ? pnj()?.origines?.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
              alt="avatar">
       </div>
+      <div class="flex flex-col gap-2 flex-auto">
+        <div>{{pnj()?.origines?.nom}}</div>
+        <div><p-tag>{{ getType(pnj()) }}</p-tag>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <app-btn pRipple icon="d6" (click)="openAction()"></app-btn>
+      </div>
     </div>
   }
 </p-card>

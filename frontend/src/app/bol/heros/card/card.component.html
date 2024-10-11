@@ -29,21 +29,8 @@
         </div>
       </div>
       <div class="flex flex-col gap-2">
-        <button
-          (click)="openAction()"
-          class="p-button-icon-only"
-          pTooltip="Effectuer une action"
-          type="button"
-          size="small" pButton pRipple>
-          <div class="svg_icon_15" inlineSVG="/frontend/assets/d6.svg"></div>
-        </button>
-        <button
-          (click)="fichePerso()"
-          pButton
-          icon="pi pi-user-edit"
-          severity="secondary"
-          size="small"
-          pTooltip="Fiche de personnage"></button>
+        <app-btn (click)="openAction()" pTooltip="Effectuer une action" icon="d6" type="info"></app-btn>
+        <app-btn (click)="fichePerso()" pTooltip="Fiche de personnage" icon="user-edit"></app-btn>
       </div>
     </div>
 

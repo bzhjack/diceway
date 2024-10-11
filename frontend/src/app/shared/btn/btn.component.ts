@@ -1,9 +1,12 @@
 import {Component, input} from '@angular/core';
+import {InlineSVGModule} from "ng-inline-svg-2";
 
 @Component({
   selector: 'app-btn',
   standalone: true,
-  imports: [],
+  imports: [
+    InlineSVGModule
+  ],
   templateUrl: './btn.component.html',
   styleUrl: './btn.component.scss'
 })

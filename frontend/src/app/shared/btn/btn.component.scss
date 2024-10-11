@@ -1,9 +1,12 @@
+@use "../../../styles/colors" as colors;
 .trash-container {
-  border-radius: 50%;
+  border-radius: 25%;
+  padding: 3px;
   background-color: darken(#607d8b, 10%);
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   font-size: 14px;
   width: fit-content;
 
@@ -16,18 +19,25 @@
   }
 
   &.warn {
-    background-color: darken(#d9534f, 10%);
+    background-color: darken(colors.$warn-color, 15%);
 
     &:hover {
-      background-color: #d9534f;
+      background-color: colors.$warn-color;
     }
   }
 
   &.info {
-    background-color: darken(#164580, 10%);
+    background-color: darken(colors.$info-color, 15%);
 
     &:hover {
-      background-color: #164580;
+      background-color: colors.$info-color;
+    }
+  }
+  &.error {
+    background-color: darken(colors.$error-color, 15%);
+
+    &:hover {
+      background-color: colors.$error-color;
     }
   }
 }

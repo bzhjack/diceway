@@ -16,6 +16,7 @@ import {InlineSVGModule} from "ng-inline-svg-2";
 import {Ripple} from "primeng/ripple";
 import {BolHerosUpdateComponent} from "../update/update.component";
 import {NgxSpinnerService} from "ngx-spinner";
+import {BtnComponent} from "../../../shared/btn/btn.component";
 
 @Component({
   selector: 'bol-heros-card',
@@ -32,7 +33,8 @@ import {NgxSpinnerService} from "ngx-spinner";
     BolActionComponent,
     ButtonDirective,
     InlineSVGModule,
-    Ripple
+    Ripple,
+    BtnComponent
   ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'

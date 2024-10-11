@@ -13,6 +13,9 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {exhaustMap, filter, Subscription} from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
 import {tap} from "rxjs/operators";
+import {BtnComponent} from "../../../shared/btn/btn.component";
+import {BolActionComponent} from "../../heros/card/action/action.component";
+import {KnobModule} from "primeng/knob";
 
 @Component({
   selector: 'bol-pnj-card',
@@ -26,7 +29,9 @@ import {tap} from "rxjs/operators";
     Ripple,
     TagModule,
     TooltipModule,
-    AsyncPipe
+    AsyncPipe,
+    BtnComponent,
+    KnobModule
   ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
@@ -50,7 +55,7 @@ export class BolPnjCardComponent {
     )
   );
 
-  getType(pnj: BolHerosModel) {
+  getType(pnj: BolHerosModel | null) {
     switch (pnj?.type) {
       case 'C':
         return 'Coriaces';
@@ -61,6 +66,14 @@ export class BolPnjCardComponent {
     }
     return '';
   }
-
+  openAction() {
+    this.dialogService.open(BolActionComponent, {
+      header: 'Effectuer une action',
+      maximizable: true,
+      data: {
+        hero: this.pnj()
+      }
+    });
+  }
 
 }
