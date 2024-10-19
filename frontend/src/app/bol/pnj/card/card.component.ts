@@ -58,14 +58,27 @@ export class BolPnjCardComponent {
   getType(pnj: BolHerosModel | null) {
     switch (pnj?.type) {
       case 'C':
-        return 'Coriaces';
+        return 'Coriace';
       case 'R':
-        return 'Rivaux';
+        return 'Rival';
       case 'P':
         return 'Piétaille';
     }
     return '';
   }
+
+  getSeverity(pnj: BolHerosModel | null): "success" | "secondary" | "info" | "warning" | "danger" | "contrast" | undefined {
+    switch (pnj?.type) {
+      case 'C':
+        return 'warning';
+      case 'R':
+        return 'danger';
+      case 'P':
+        return 'secondary';
+    }
+    return undefined;
+  }
+
   openAction() {
     this.dialogService.open(BolActionComponent, {
       header: 'Effectuer une action',

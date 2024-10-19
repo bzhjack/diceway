@@ -6,31 +6,13 @@
              [src]="hero()?.origines?.avatar !== null ? hero()?.origines?.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
              alt="avatar">
       </div>
-      <div class="flex flex-col pt-1" style="width:170px">
-        <div class="flex gap-2 items-center text-xl">
-          <i *ngIf="hero()?.origines?.commentaire" class="pi pi-info-circle cursor-pointer warn-color"
-             [pTooltip]="hero()?.origines?.commentaire ?? ''"></i>
-          <div style="text-transform: capitalize" class="bol-ellipsis-150">{{ hero()?.origines?.nom }}</div>
-        </div>
-        <div class="text-gray-300 bol-ellipsis-150" style="font-size: 12px">{{ hero()?.origines?.joueur }}</div>
-        <div class="text-gray-400 bol-ellipsis-150" style="font-size: 12px">{{ hero()?.origines?.region?.region }}
-        </div>
-        <div>
-          <table style="border-spacing: 0; width:100%">
-            <tr>
-              <td class="text-gray-300">Héroisme</td>
-              <td class="text-gray-400">{{ hero()?.ressources?.heroisme }}</td>
-            </tr>
-            <tr>
-              <td class="text-gray-300">Vitalité</td>
-              <td class="text-gray-400 text-xl info-color">{{ hero()?.ressources?.vitalite }}</td>
-            </tr>
-          </table>
-        </div>
+      <div class="flex flex-col gap-2 flex-auto">
+        <div>{{hero()?.origines?.nom}}</div>
+        <div></div>
       </div>
       <div class="flex flex-col gap-2">
-        <app-btn (click)="openAction()" pTooltip="Effectuer une action" icon="d6" type="info"></app-btn>
-        <app-btn (click)="fichePerso()" pTooltip="Fiche de personnage" icon="user-edit"></app-btn>
+        <app-btn pRipple icon="d6" (click)="openAction()"></app-btn>
+        <app-btn pRipple icon="user-edit" (click)="fichePerso()"></app-btn>
       </div>
     </div>
 
