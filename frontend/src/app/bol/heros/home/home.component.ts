@@ -224,11 +224,10 @@ export class BolHeroHomeComponent implements OnDestroy {
   addToAdventure() {
     this.showCard.set(false);
     if (this.selectedQuest()) {
-      const id = this.currentHeros?.id ?? '';
       const questId = this.selectedQuest()?.id ?? '';
       this.spinner.show();
       this.subs?.unsubscribe();
-      this.subs = this.questService.addProtagonistToQuest(id, questId, 'H').subscribe({
+      this.subs = this.questService.addProtagonistToQuest(this.currentHeros!, questId, 'H').subscribe({
         next: (hero: BolHerosModel) => {
           this.spinner.hide();
         },

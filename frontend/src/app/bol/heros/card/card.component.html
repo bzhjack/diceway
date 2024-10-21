@@ -1,4 +1,4 @@
-<p-card class="creature_card">
+<p-card class="creature_card" [style]="{border: '1px solid #424b57'}">
   @if ((hero$ | async) && hero()) {
     <div class="flex gap-2">
       <div class="heros_card__img">
@@ -6,9 +6,18 @@
              [src]="hero()?.origines?.avatar !== null ? hero()?.origines?.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
              alt="avatar">
       </div>
-      <div class="flex flex-col gap-2 flex-auto">
-        <div>{{hero()?.origines?.nom}}</div>
-        <div></div>
+      <div class="flex flex-col gap-2" style="width: 150px">
+        <div class="heros_card__name">{{ hero()?.origines?.nom }}</div>
+        <div class="flex gap-2">
+          <p-tag severity="secondary">{{ hero()?.origines?.joueur }}</p-tag>
+          <div style="width: 100px;">
+            <p-progressBar [value]="10" [style]="{height: '15px'}">
+              <ng-template pTemplate="content" let-value>
+                <span>7</span>
+              </ng-template>
+            </p-progressBar>
+          </div>
+        </div>
       </div>
       <div class="flex flex-col gap-2">
         <app-btn pRipple icon="d6" (click)="openAction()"></app-btn>
@@ -17,18 +26,15 @@
     </div>
 
   } @else {
-    <div class="flex gap-2">
-      <p-skeleton size="100px"/>
-      <div class="flex flex-col gap-1" style="height: 105px">
-        <p-skeleton width="10rem" height="25px"/>
-        <div class="flex flex-col gap-1">
-          <p-skeleton width="5rem" height="12px"/>
-          <p-skeleton width="5rem" height="12px"/>
-        </div>
-        <div class="flex flex-col gap-1">
-          <p-skeleton width="5rem" height="16px"/>
-          <p-skeleton width="5rem" height="16px"/>
-        </div>
+    <div class="flex gap-2" style="height:54px">
+      <p-skeleton size="50px"/>
+      <div class="flex flex-col gap-1">
+        <p-skeleton width="150px" height="17px"/>
+        <p-skeleton width="50px" height="20px"/>
+      </div>
+      <div class="flex flex-col gap-2">
+        <p-skeleton size="21px"/>
+        <p-skeleton size="21px"/>
       </div>
     </div>
   }

@@ -18,6 +18,7 @@ import {BolHerosUpdateComponent} from "../update/update.component";
 import {NgxSpinnerService} from "ngx-spinner";
 import {BtnComponent} from "../../../shared/btn/btn.component";
 import {TagModule} from "primeng/tag";
+import {ProgressBarModule} from "primeng/progressbar";
 
 @Component({
   selector: 'bol-heros-card',
@@ -36,7 +37,8 @@ import {TagModule} from "primeng/tag";
     InlineSVGModule,
     Ripple,
     BtnComponent,
-    TagModule
+    TagModule,
+    ProgressBarModule
   ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'

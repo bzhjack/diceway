@@ -60,6 +60,12 @@ class BolQuestController extends Controller
         $type = $newProtagonist['type'];
         $questId = $newProtagonist['quest_id'];
         $protagonistId = $newProtagonist['protagonist_id'];
+        $vitalite =  $newProtagonist['vitalite'];
+        $heroisme =  $newProtagonist['heroisme'];
+        $vilenie =  $newProtagonist['vilenie'];
+        $foi =  $newProtagonist['foi'];
+        $creation =  $newProtagonist['creation'];
+
         switch ($type) {
             case 'H':
             case 'P':
@@ -79,6 +85,11 @@ class BolQuestController extends Controller
             'quest_id' => $questId,
             'protagonist_id' => $protagonistId,
             'type' => $type,
+            'vitalite' => $vitalite,
+            'heroisme' => $heroisme,
+            'foi' => $foi,
+            'creation' => $creation,
+            'vilenie' => $vilenie,
             'protagonist_type' => $protagonistType
         ];
         $created = BolQuestProtagonist::create($quest_protagonist);

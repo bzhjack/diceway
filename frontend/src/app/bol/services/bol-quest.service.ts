@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {BolQuestModel} from "../models/bol-quest.model";
+import {BolHerosModel} from "../models/bol-heros.model";
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +22,16 @@ export class BolQuestService {
   updateQuest(quest: BolQuestModel): Observable<any> {
     return this.http.post<BolQuestModel>('/api/bol/quest/update', <BolQuestModel>quest);
   }
-  addProtagonistToQuest(heroId: string, questId: string, type: 'H' | 'P' | 'C' | 'D'): Observable<any> {
+  addProtagonistToQuest(hero: BolHerosModel, questId: string, type: 'H' | 'P' | 'C' | 'D'): Observable<any> {
     const protagonist = {
-      protagonist_id : heroId,
+      protagonist_id : hero.id,
       quest_id: questId,
-      type: type
+      type: type,
+      vitalite: hero.ressources.vitalite,
+      heroisme: hero.ressources.heroisme,
+      creation: hero.ressources.creation,
+      vilenie: hero.ressources.vilenie,
+      foi: hero.ressources.foi
     }
     return this.http.post('/api/bol/quest/add/protagonist', protagonist);
   }
