@@ -113,8 +113,8 @@ export class BolHerosService {
     return this.http.get<BolHerosModel[]>('/api/bol/heros');
   }
 
-  heros(id: string): Observable<BolHerosModel> {
-    return this.http.get<BolHerosModel>('/api/bol/heros/' + id);
+  heros(id: string, questId?: string): Observable<BolHerosModel> {
+    return this.http.get<BolHerosModel>('/api/bol/heros/' + id + (questId ? '?questId=' + questId : ''));
   }
 
   deleteHeros(id: string): Observable<any> {

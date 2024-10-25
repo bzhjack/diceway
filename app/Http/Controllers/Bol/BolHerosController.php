@@ -30,10 +30,15 @@ class BolHerosController extends Controller
     public function getOne(Request $request)
     {
         $id = $request->route('id');
+        $questId = $request->query('questId'); // Récupération de questId si présent
         $hero = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue', 'region')->where('user_id', Auth::id())->where('id', $id)->get()->first();
         if ($hero === null) {
             return response()->json(['error' => 'Hero not found'], 404);
         } else {
+        if ($questId) {
+            $currentQuest =$hero->currentQuest($questId)->first();
+            $hero['currentQuest'] = $currentQuest;
+        }
             return response($hero);
         }
     }

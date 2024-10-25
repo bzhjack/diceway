@@ -8,7 +8,7 @@
     <div>
         <div class="text-4xl">Héros</div>
         <div class="flex flex-col gap-2">
-          <bol-heros-card *ngFor="let hero of heros()"  [heroId]="hero.protagonist_id"></bol-heros-card>
+          <bol-heros-card *ngFor="let hero of heros()"  [heroId]="hero.protagonist_id" [questId]="questId()"></bol-heros-card>
         </div>
     </div>
     <div class="flex flex-auto">

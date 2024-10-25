@@ -64,8 +64,8 @@ export class BolQuestComponent {
   public questForm = this.fb.group({id: this.idCtrl, titre: this.titreCtrl, commentaire: this.commentaireCtrl});
 
   // Garantir que 'undefined' est converti en 'null'
-  questId: Signal<string | null | undefined> = toSignal(this.route.paramMap.pipe(
-    map(params => params.get('id'))
+  questId: Signal<string | undefined> = toSignal(this.route.paramMap.pipe(
+    map(params => params.get('id') || undefined)
   ));
 
   quest = computed(() => this.questStateService.questState());

@@ -16,7 +16,12 @@ class BolQuestProtagonist extends Model
         "quest_id",
         "type",
         "protagonist_id",
-        "protagonist_type"
+        "protagonist_type",
+        "vitalite",
+        "heroisme",
+        "vilenie",
+        "foi",
+        "creation"
     ];
 
 
