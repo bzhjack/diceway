@@ -12,4 +12,9 @@ export interface BolProtagonistModel {
   protagonist_id: string;            // L'ID unique du protagoniste (héros, ennemi, etc.)
   protagonist_type: string;          // Le type du protagoniste (relié à un modèle spécifique)
   type: string;                      // Type du protagoniste (par ex., 'H' pour héros)
+  vitalite: string;
+  heroisme: string;
+  foi: string;
+  creation: string;
+  vilenie: string;
 }

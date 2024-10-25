@@ -13,7 +13,7 @@
           <div style="width: 100px;">
             <p-progressBar [value]="10" [style]="{height: '15px'}">
               <ng-template pTemplate="content" let-value>
-                <span>7</span>
+                <span>{{hero()?.currentQuest?.vitalite ?? hero()?.ressources?.vitalite }}</span>
               </ng-template>
             </p-progressBar>
           </div>
