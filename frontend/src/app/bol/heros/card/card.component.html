@@ -7,16 +7,20 @@
              alt="avatar">
       </div>
       <div class="flex flex-col gap-2" style="width: 150px">
-        <div class="heros_card__name">{{ hero()?.origines?.nom }}</div>
-        <div class="flex gap-2">
-          <p-tag severity="secondary">{{ hero()?.origines?.joueur }}</p-tag>
-          <div style="width: 100px;">
-            <p-progressBar [value]="10" [style]="{height: '15px'}">
-              <ng-template pTemplate="content" let-value>
-                <span>{{hero()?.currentQuest?.vitalite ?? hero()?.ressources?.vitalite }}</span>
-              </ng-template>
-            </p-progressBar>
+        <div class="heros_card__name" pTooltip="{{ hero()?.origines?.joueur }}">{{ hero()?.origines?.nom }}</div>
+        <div class="flex gap-2 items-center">
+          <p-tag severity="danger" pTooltip="Vitalité">
+          <div class="flex items-center gap-2 px-1">
+            <i class="pi pi-heart-fill" style="color: red"></i>
+            <span style="color: white">{{hero()?.currentQuest?.vitalite ?? hero()?.ressources?.vitalite }}</span>
           </div>
+        </p-tag>
+          <p-tag severity="warning" pTooltip="Heroisme">
+            <div class="flex items-center gap-2 px-1">
+              <div class="tag_icon warn" inlineSVG="/frontend/assets/sword.svg"></div>
+              <span style="color: white">{{hero()?.currentQuest?.heroisme ?? hero()?.ressources?.heroisme }}</span>
+            </div>
+          </p-tag>
         </div>
       </div>
       <div class="flex flex-col gap-2">
