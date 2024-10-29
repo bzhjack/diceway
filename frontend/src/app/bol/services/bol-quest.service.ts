@@ -33,6 +33,19 @@ export class BolQuestService {
       vilenie: hero.ressources.vilenie,
       foi: hero.ressources.foi
     }
-    return this.http.post('/api/bol/quest/add/protagonist', protagonist);
+    return this.http.post('/api/bol/quest/protagonist/add', protagonist);
+  }
+  updateProtagonistToQuest(protagonistId: string, questId: string, type: 'H' | 'P' | 'C' | 'D' ,ressources: any,  ): Observable<any> {
+    const protagonist = {
+      protagonist_id :protagonistId,
+      quest_id: questId,
+      type: type,
+      vitalite: ressources.vitalite ?? 0,
+      heroisme: ressources.heroisme ?? 0,
+      vilenie: ressources.vilenie ?? 0,
+      foi: ressources.foi ?? 0,
+      creation: ressources.creation ?? 0,
+    }
+    return this.http.post('/api/bol/quest/protagonist/update', protagonist);
   }
 }

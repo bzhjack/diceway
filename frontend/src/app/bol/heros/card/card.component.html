@@ -8,7 +8,7 @@
       </div>
       <div class="flex flex-col gap-2" style="width: 150px">
         <div class="heros_card__name" pTooltip="{{ hero()?.origines?.joueur }}">{{ hero()?.origines?.nom }}</div>
-        <div class="flex gap-2 items-center">
+        <div class="flex gap-2 items-center" (click)="openResources(heroPanel, $event)">
           <p-tag severity="danger" pTooltip="Vitalité">
           <div class="flex items-center gap-2 px-1">
             <div style="width: 15px; height:15px;"><i class="pi pi-heart-fill" style="color: red; padding-top: 2px"></i></div>
@@ -43,3 +43,21 @@
     </div>
   }
 </p-card>
+<p-overlayPanel #heroPanel>
+  <div class="flex gap-2 pb-2">
+    <div class="flex flex-col gap-1">
+      <label>Vitalité</label>
+      <p-inputNumber [(ngModel)]="ressources.vitalite" inputId="vitalite"/>
+    </div>
+    <div class="flex flex-col gap-1">
+      <label>Heroisme</label>
+      <p-inputNumber [(ngModel)]="ressources.heroisme" inputId="heroisme"/>
+    </div>
+  </div>
+  <div class="flex justify-end gap-2">
+    <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
+            (click)="heroPanel.toggle($event)"></button>
+    <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
+            (click)="modifResources(heroPanel, $event)"></button>
+  </div>
+</p-overlayPanel>

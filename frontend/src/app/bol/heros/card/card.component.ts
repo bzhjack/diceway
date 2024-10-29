@@ -18,6 +18,12 @@ import {BolHerosUpdateComponent} from "../update/update.component";
 import {NgxSpinnerService} from "ngx-spinner";
 import {BtnComponent} from "../../../shared/btn/btn.component";
 import {TagModule} from "primeng/tag";
+import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {InputTextModule} from "primeng/inputtext";
+import {InputNumberModule} from "primeng/inputnumber";
+import {BolQuestService} from "../../services/bol-quest.service";
+import {BolProtagonistModel} from "../../models/bol-quest.model";
 
 @Component({
   selector: 'bol-heros-card',
@@ -36,7 +42,11 @@ import {TagModule} from "primeng/tag";
     InlineSVGModule,
     Ripple,
     BtnComponent,
-    TagModule
+    TagModule,
+    FormsModule,
+    InputTextModule,
+    ReactiveFormsModule,
+    InputNumberModule
   ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
@@ -44,6 +54,7 @@ import {TagModule} from "primeng/tag";
 export class BolHerosCardComponent {
 
   private heroService = inject(BolHerosService);
+  private questService = inject(BolQuestService);
   private dialogService = inject(DialogService);
   private spinner = inject(NgxSpinnerService);
 
@@ -52,7 +63,10 @@ export class BolHerosCardComponent {
   questId = input<string | undefined>(undefined);
   heroId = input<string | null>(null);
   hero = signal<BolHerosModel | null>(null);
-
+  ressources = {
+    vitalite: 0,
+    heroisme: 0
+  }
   hero$ = toObservable<string | null>(this.heroId).pipe( // Watch for user changes
     filter((id) => id !== null),                     // Only make http request for users larger than 0
     tap((id) => this.hero.set(null)),    // Just some debugging
@@ -99,5 +113,25 @@ export class BolHerosCardComponent {
       }
     });
   }
-
+  openResources(panel: OverlayPanel, event: any) {
+    panel.toggle(event);
+    this.ressources.heroisme = Number(this.hero()?.currentQuest?.heroisme ?? 0);
+    this.ressources.vitalite = Number(this.hero()?.currentQuest?.vitalite ?? 0);
+  }
+  modifResources(panel: OverlayPanel, event: any) {
+    panel.toggle(event);
+    this.subs?.unsubscribe();
+    this.spinner.show();
+    this.subs?.unsubscribe();
+    const actionService = this.questService.updateProtagonistToQuest(this.heroId() ?? '', this.questId() ?? '', 'H', this.ressources);
+    this.subs = actionService.subscribe({
+      next: (result: BolProtagonistModel) => {
+        this.hero()!.currentQuest = result;
+        this.spinner.hide();
+      },
+      error: () => {
+        this.spinner.hide();
+      }
+    });
+  }
 }
