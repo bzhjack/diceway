@@ -36,6 +36,7 @@ class BolPnjController extends Controller
     }
     public function getOne(Request $request)
     {   $id = $request->route('id');
+        $questId = $request->query('questId'); // Récupération de questId si présent
         $hero = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue', 'region')
             ->where('type', '!=', 'H')
             ->where(function ($query) {
@@ -46,6 +47,10 @@ class BolPnjController extends Controller
         if ($hero === null) {
             return response()->json(['error' => 'Pnj not found'], 404);
         } else {
+            if ($questId) {
+                $currentQuest =$hero->currentQuest($questId, 'P')->first();
+                $hero['currentQuest'] = $currentQuest;
+            }
             return response($hero);
         }
     }

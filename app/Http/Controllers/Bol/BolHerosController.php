@@ -36,7 +36,7 @@ class BolHerosController extends Controller
             return response()->json(['error' => 'Hero not found'], 404);
         } else {
         if ($questId) {
-            $currentQuest =$hero->currentQuest($questId)->first();
+            $currentQuest =$hero->currentQuest($questId, 'H')->first();
             $hero['currentQuest'] = $currentQuest;
         }
             return response($hero);

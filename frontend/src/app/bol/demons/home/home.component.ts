@@ -26,7 +26,6 @@ import {BolDemonCreateComponent} from "../create/create.component";
 import {BolQuestModel} from "../../models/bol-quest.model";
 import {tap} from "rxjs/operators";
 import {BolQuestService} from "../../services/bol-quest.service";
-import {BolCreatureModel} from "../../models/bol-creature.model";
 import {SkeletonModule} from "primeng/skeleton";
 import {InlineSVGModule} from "ng-inline-svg-2";
 

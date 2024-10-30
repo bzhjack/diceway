@@ -88,9 +88,9 @@ class BolHeros extends Model
     {
         return $this->HasOne(BolRegion::class, 'id', 'region_id');
     }
-    public function currentQuest($idQuest): HasOne
+    public function currentQuest($idQuest, $type): HasOne
     {
-        return $this->HasOne(BolQuestProtagonist::class, 'protagonist_id', 'id')->where('type', 'H')->where('quest_id',$idQuest);
+        return $this->HasOne(BolQuestProtagonist::class, 'protagonist_id', 'id')->where('type', $type)->where('quest_id',$idQuest);
     }
 
     public function getCombatAttribute()

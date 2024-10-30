@@ -10,15 +10,16 @@
         <div class="heros_card__name" pTooltip="{{ hero()?.origines?.joueur }}">{{ hero()?.origines?.nom }}</div>
         <div class="flex gap-2 items-center" (click)="openResources(heroPanel, $event)">
           <p-tag severity="danger" pTooltip="Vitalité">
-          <div class="flex items-center gap-2 px-1">
-            <div style="width: 15px; height:15px;"><i class="pi pi-heart-fill" style="color: red; padding-top: 2px"></i></div>
-            <span style="color: white">{{hero()?.currentQuest?.vitalite ?? hero()?.ressources?.vitalite }}</span>
-          </div>
-        </p-tag>
+            <div class="flex items-center gap-1 px-0.5">
+              <div style="width: 15px; height:15px;"><i class="pi pi-heart-fill"
+                                                        style="color: red; padding-top: 2px"></i></div>
+              <span style="color: white">{{ hero()?.currentQuest?.vitalite }}</span>
+            </div>
+          </p-tag>
           <p-tag severity="warning" pTooltip="Heroisme">
-            <div class="flex items-center gap-2 px-1">
+            <div class="flex items-center gap-1 px-0.5">
               <div class="tag_icon warn" inlineSVG="/frontend/assets/flame.svg"></div>
-              <span style="color: white">{{hero()?.currentQuest?.heroisme ?? hero()?.ressources?.heroisme }}</span>
+              <span style="color: white">{{ hero()?.currentQuest?.heroisme }}</span>
             </div>
           </p-tag>
         </div>

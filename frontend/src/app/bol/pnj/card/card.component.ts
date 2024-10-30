@@ -70,7 +70,7 @@ export class BolPnjCardComponent {
     filter((id) => id !== null),                     // Only make http request for users larger than 0
     tap((id) => this.pnj.set(null)),    // Just some debugging
     exhaustMap((id) =>                          // Don't execute the http request if one is already in progress
-      this.heroService.pnj(id as string).pipe(tap((pnj) => this.pnj.set(pnj)))   // Update the response
+      this.heroService.pnj(id as string, this.questId()).pipe(tap((pnj) => this.pnj.set(pnj)))   // Update the response
     )
   );
 
@@ -111,13 +111,14 @@ export class BolPnjCardComponent {
     panel.toggle(event);
     this.ressources.heroisme = Number(this.pnj()?.currentQuest?.heroisme ?? 0);
     this.ressources.vitalite = Number(this.pnj()?.currentQuest?.vitalite ?? 0);
+    this.ressources.vilenie = Number(this.pnj()?.currentQuest?.vilenie ?? 0);
   }
   modifResources(panel: OverlayPanel, event: any) {
     panel.toggle(event);
     this.subs?.unsubscribe();
     this.spinner.show();
     this.subs?.unsubscribe();
-    const actionService = this.questService.updateProtagonistToQuest(this.pnjId() ?? '', this.questId() ?? '', 'H', this.ressources);
+    const actionService = this.questService.updateProtagonistToQuest(this.pnjId() ?? '', this.questId() ?? '', 'P', this.ressources);
     this.subs = actionService.subscribe({
       next: (result: BolProtagonistModel) => {
         this.pnj()!.currentQuest = result;

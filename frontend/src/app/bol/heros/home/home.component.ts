@@ -1,5 +1,5 @@
 import {Component, inject, OnDestroy, signal, ViewChild} from '@angular/core';
-import {exhaustMap, filter, map, of, Subscription} from "rxjs";
+import {exhaustMap, filter, map, Subscription} from "rxjs";
 import {AsyncPipe, JsonPipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {Router, RouterLink} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";

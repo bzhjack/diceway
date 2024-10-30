@@ -176,6 +176,7 @@ class BolPnjSeeder extends Seeder
                 'defense' => '1',
 
                 'vitalite' => '6',
+                'foi' => '2',
                 'carrieres' => [
                     ['carriere_id' => '21', 'value' => '2'],
                 ],

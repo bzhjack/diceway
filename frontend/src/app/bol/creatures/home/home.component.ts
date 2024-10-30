@@ -27,7 +27,6 @@ import {IconFieldModule} from 'primeng/iconfield';
 import {InputIconModule} from 'primeng/inputicon';
 import {CheckboxModule} from 'primeng/checkbox';
 import {toObservable, toSignal} from "@angular/core/rxjs-interop";
-import {BolHerosModel} from "../../models/bol-heros.model";
 import {BolQuestService} from "../../services/bol-quest.service";
 import {BolQuestModel} from "../../models/bol-quest.model";
 import {tap} from "rxjs/operators";

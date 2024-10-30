@@ -7,7 +7,7 @@ import {InputTextModule} from "primeng/inputtext";
 import {RouterLink} from "@angular/router";
 import {BolPnjCreateComponent} from "../create/create.component";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
-import {exhaustMap, filter, map, Subscription} from "rxjs";
+import {exhaustMap, filter, Subscription} from "rxjs";
 import {NgxSpinnerService} from "ngx-spinner";
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {BolHerosService} from "../../services/bol-heros.service";
