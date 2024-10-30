@@ -103,7 +103,7 @@ export class BolHerosCardComponent {
         const actionService = this.heroService.quickUpdate(heros);
         this.subs = actionService.subscribe({
           next: (character: BolHerosModel) => {
-            this.hero.set(character);
+            this.hero.set(Object.assign({}, this.hero(), character));
             this.spinner.hide();
           },
           error: () => {
