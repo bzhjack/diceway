@@ -1,4 +1,4 @@
-<p-card class="creature_card">
+<p-card class="creature_card" [style]="{border: '1px solid #424b57'}">
   @if ((pnj$ | async) && pnj()) {
     <div class="flex gap-2">
       <div class="pnj_card__img">
@@ -7,15 +7,58 @@
              [src]="pnj()?.origines?.avatar !== null ? pnj()?.origines?.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
              alt="avatar">
       </div>
-      <div class="flex flex-col gap-2 flex-auto">
-        <div>{{pnj()?.origines?.nom}}</div>
-        <div><p-tag [style]="{width:'50px'}" [severity]="getSeverity(pnj())">{{ getType(pnj()) }}</p-tag>
+      <div class="flex flex-col gap-2" style="width: 150px">
+        <div class="heros_card__name" pTooltip="{{ pnj()?.origines?.joueur }}">{{ pnj()?.origines?.nom }}</div>
+        <div class="flex gap-2 items-center" (click)="openResources(heroPanel, $event)">
+          <p-tag severity="danger" pTooltip="Vitalité">
+            <div class="flex items-center gap-2 px-1">
+              <div style="width: 15px; height:15px;"><i class="pi pi-heart-fill" style="color: red; padding-top: 2px"></i></div>
+              <span style="color: white">{{pnj()?.currentQuest?.vitalite ?? pnj()?.ressources?.vitalite }}</span>
+            </div>
+          </p-tag>
+          <p-tag severity="warning" pTooltip="Heroisme">
+            <div class="flex items-center gap-2 px-1">
+              <div class="tag_icon warn" inlineSVG="/frontend/assets/flame.svg"></div>
+              <span style="color: white">{{pnj()?.currentQuest?.heroisme ?? pnj()?.ressources?.heroisme }}</span>
+            </div>
+          </p-tag>
         </div>
       </div>
       <div class="flex flex-col gap-2">
         <app-btn pRipple icon="d6" (click)="openAction()"></app-btn>
-        <app-btn pRipple icon="user-edit" (click)="openAction()"></app-btn>
+        <!--app-btn pRipple icon="user-edit" (click)="fichePerso()"></app-btn-->
+      </div>
+    </div>
+
+  } @else {
+    <div class="flex gap-2" style="height:54px">
+      <p-skeleton size="50px"/>
+      <div class="flex flex-col gap-1">
+        <p-skeleton width="150px" height="17px"/>
+        <p-skeleton width="50px" height="20px"/>
+      </div>
+      <div class="flex flex-col gap-2">
+        <p-skeleton size="21px"/>
+        <p-skeleton size="21px"/>
       </div>
     </div>
   }
 </p-card>
+<p-overlayPanel #heroPanel>
+  <div class="flex gap-2 pb-2">
+    <div class="flex flex-col gap-1">
+      <label>Vitalité</label>
+      <p-inputNumber [(ngModel)]="ressources.vitalite" inputId="vitalite"/>
+    </div>
+    <div class="flex flex-col gap-1">
+      <label>Heroisme</label>
+      <p-inputNumber [(ngModel)]="ressources.heroisme" inputId="heroisme"/>
+    </div>
+  </div>
+  <div class="flex justify-end gap-2">
+    <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
+            (click)="heroPanel.toggle($event)"></button>
+    <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
+            (click)="modifResources(heroPanel, $event)"></button>
+  </div>
+</p-overlayPanel>

@@ -16,16 +16,10 @@
     }
   }
 
-  &__title {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    font-size: 24px;
-    font-weight: 200;
-    text-transform: capitalize;
-  }
-
-  &__subtitle {
-    font-size: 16px;
+  &__name {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 17px;
   }
 }

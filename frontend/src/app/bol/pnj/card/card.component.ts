@@ -16,6 +16,14 @@ import {tap} from "rxjs/operators";
 import {BtnComponent} from "../../../shared/btn/btn.component";
 import {BolActionComponent} from "../../heros/card/action/action.component";
 import {KnobModule} from "primeng/knob";
+import {InlineSVGModule} from "ng-inline-svg-2";
+import {InputNumberModule} from "primeng/inputnumber";
+import {OverlayPanelModule} from "primeng/overlaypanel";
+import {SkeletonModule} from "primeng/skeleton";
+import {FormsModule} from "@angular/forms";
+import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
+import {BolProtagonistModel} from "../../models/bol-quest.model";
+import {BolQuestService} from "../../services/bol-quest.service";
 
 @Component({
   selector: 'bol-pnj-card',
@@ -31,7 +39,12 @@ import {KnobModule} from "primeng/knob";
     TooltipModule,
     AsyncPipe,
     BtnComponent,
-    KnobModule
+    KnobModule,
+    InlineSVGModule,
+    InputNumberModule,
+    OverlayPanelModule,
+    SkeletonModule,
+    FormsModule
   ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
@@ -40,10 +53,16 @@ export class BolPnjCardComponent {
   private heroService = inject(BolHerosService);
   private dialogService = inject(DialogService);
   private spinner = inject(NgxSpinnerService);
+  private questService = inject(BolQuestService);
 
   private ref?: DynamicDialogRef;
   private subs?: Subscription;
-
+  ressources = {
+    vitalite: 0,
+    heroisme: 0,
+    vilenie: 0
+  }
+  questId = input<string | undefined>(undefined);
   pnjId = input<string | null>(null);
   pnj = signal<BolHerosModel | null>(null);
 
@@ -88,5 +107,27 @@ export class BolPnjCardComponent {
       }
     });
   }
+  openResources(panel: OverlayPanel, event: any) {
+    panel.toggle(event);
+    this.ressources.heroisme = Number(this.pnj()?.currentQuest?.heroisme ?? 0);
+    this.ressources.vitalite = Number(this.pnj()?.currentQuest?.vitalite ?? 0);
+  }
+  modifResources(panel: OverlayPanel, event: any) {
+    panel.toggle(event);
+    this.subs?.unsubscribe();
+    this.spinner.show();
+    this.subs?.unsubscribe();
+    const actionService = this.questService.updateProtagonistToQuest(this.pnjId() ?? '', this.questId() ?? '', 'H', this.ressources);
+    this.subs = actionService.subscribe({
+      next: (result: BolProtagonistModel) => {
+        this.pnj()!.currentQuest = result;
+        this.spinner.hide();
+      },
+      error: () => {
+        this.spinner.hide();
+      }
+    });
+  }
+
 
 }

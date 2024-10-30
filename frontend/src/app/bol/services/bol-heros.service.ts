@@ -131,8 +131,8 @@ export class BolHerosService {
   pnjs(): Observable<BolHerosModel[]> {
     return this.http.get<BolHerosModel[]>('/api/bol/pnj');
   }
-  pnj(id: string): Observable<BolHerosModel> {
-    return this.http.get<BolHerosModel>('/api/bol/pnj/' + id);
+  pnj(id: string, questId?: string): Observable<BolHerosModel> {
+    return this.http.get<BolHerosModel>('/api/bol/pnj/' + id + (questId ? '?questId=' + questId : ''));
   }
 
   quickCreate(pnj: BolHerosModel): Observable<any> {
