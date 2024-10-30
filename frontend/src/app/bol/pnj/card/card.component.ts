@@ -24,6 +24,8 @@ import {FormsModule} from "@angular/forms";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {BolProtagonistModel} from "../../models/bol-quest.model";
 import {BolQuestService} from "../../services/bol-quest.service";
+import {BolHerosUpdateComponent} from "../../heros/update/update.component";
+import {BolPnjCreateComponent} from "../create/create.component";
 
 @Component({
   selector: 'bol-pnj-card',
@@ -50,7 +52,7 @@ import {BolQuestService} from "../../services/bol-quest.service";
   styleUrl: './card.component.scss'
 })
 export class BolPnjCardComponent {
-  private heroService = inject(BolHerosService);
+  private pnjService = inject(BolHerosService);
   private dialogService = inject(DialogService);
   private spinner = inject(NgxSpinnerService);
   private questService = inject(BolQuestService);
@@ -70,7 +72,7 @@ export class BolPnjCardComponent {
     filter((id) => id !== null),                     // Only make http request for users larger than 0
     tap((id) => this.pnj.set(null)),    // Just some debugging
     exhaustMap((id) =>                          // Don't execute the http request if one is already in progress
-      this.heroService.pnj(id as string, this.questId()).pipe(tap((pnj) => this.pnj.set(pnj)))   // Update the response
+      this.pnjService.pnj(id as string, this.questId()).pipe(tap((pnj) => this.pnj.set(pnj)))   // Update the response
     )
   );
 
@@ -107,12 +109,14 @@ export class BolPnjCardComponent {
       }
     });
   }
+
   openResources(panel: OverlayPanel, event: any) {
     panel.toggle(event);
     this.ressources.heroisme = Number(this.pnj()?.currentQuest?.heroisme ?? 0);
     this.ressources.vitalite = Number(this.pnj()?.currentQuest?.vitalite ?? 0);
     this.ressources.vilenie = Number(this.pnj()?.currentQuest?.vilenie ?? 0);
   }
+
   modifResources(panel: OverlayPanel, event: any) {
     panel.toggle(event);
     this.subs?.unsubscribe();
@@ -130,5 +134,30 @@ export class BolPnjCardComponent {
     });
   }
 
+  fichePerso() {
+    this.ref = this.dialogService.open(BolPnjCreateComponent, {
+      header: 'Fiche de personnage non joueur',
+      data: {
+        pnj: this.pnj()
+      }
+    });
+    this.subs?.unsubscribe();
+    this.subs = this.ref.onClose.subscribe((pnj: BolHerosModel) => {
+      if (pnj) {
+        this.spinner.show();
+        this.subs?.unsubscribe();
+        const actionService = this.pnjService.quickUpdate(pnj);
+        this.subs = actionService.subscribe({
+          next: (character: BolHerosModel) => {
+            this.pnj.set(Object.assign({}, this.pnj(), character));
+            this.spinner.hide();
+          },
+          error: () => {
+            this.spinner.hide();
+          }
+        });
+      }
+    });
+  }
 
 }
