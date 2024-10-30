@@ -23,7 +23,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
 import {InputNumberModule} from "primeng/inputnumber";
 import {BolQuestService} from "../../services/bol-quest.service";
-import {BolProtagonistModel} from "../../models/bol-quest.model";
+import {BolQuestProtagonistModel} from "../../models/bol-quest.model";
 
 @Component({
   selector: 'bol-heros-card',
@@ -123,9 +123,9 @@ export class BolQuestHerosCardComponent {
     this.subs?.unsubscribe();
     this.spinner.show();
     this.subs?.unsubscribe();
-    const actionService = this.questService.updateProtagonistToQuest(this.heroId() ?? '', this.questId() ?? '', 'H', this.ressources);
+    const actionService = this.questService.updateProtagonistToQuest(0, this.ressources);
     this.subs = actionService.subscribe({
-      next: (result: BolProtagonistModel) => {
+      next: (result: BolQuestProtagonistModel) => {
         this.hero()!.currentQuest = result;
         this.spinner.hide();
       },

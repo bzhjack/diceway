@@ -17,7 +17,7 @@
     <div>
       <div class="text-4xl">Pnj</div>
       <div class="flex flex-col gap-2">
-        <bol-pnj-card *ngFor="let pnj of pnjs()"  [pnjId]="pnj.protagonist_id" [questId]="questId()"></bol-pnj-card>
+        <bol-pnj-card *ngFor="let pnj of pnjs()"  [questProtagonistId]="pnj.id"></bol-pnj-card>
       </div>
 
     </div>

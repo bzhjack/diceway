@@ -53,18 +53,24 @@ class BolQuestController extends Controller
         BolQuest::where('id', $questId)->update($updatedQuest);
         return response($updatedQuest);
     }
+
+    public static function getOneProtagonist(Request $request) {
+            $id = $request->route('id');
+            $protagonist = BolQuestProtagonist::with('protagonist')->where('id', $id)->get()->first();
+            if ($protagonist === null) {
+                return response()->json(['error' => 'Protagonist not found'], 404);
+            } else {
+                return response($protagonist);
+            }
+    }
+
 public static function updateProtagonist(Request $request)
 {
     $updatedData = $request->input();
-    $questId = $updatedData['quest_id'];
-    $protagonistId = $updatedData['protagonist_id'];
-    $type = $updatedData['type'];
+    $id = $updatedData['id'];
 
     // Recherche de l'enregistrement existant dans `BolQuestProtagonist`
-    $questProtagonist = BolQuestProtagonist::where('quest_id', $questId)
-                                            ->where('protagonist_id', $protagonistId)
-                                            ->where('type', $type)
-                                            ->first();
+    $questProtagonist = BolQuestProtagonist::where('id', $id)->first();
 
     if (!$questProtagonist) {
         return response()->json(['message' => 'Protagonist not found'], 404);

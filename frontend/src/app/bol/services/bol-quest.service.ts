@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
-import {BolQuestModel} from "../models/bol-quest.model";
+import {BolQuestProtagonistModel, BolQuestModel} from "../models/bol-quest.model";
 import {BolHerosModel} from "../models/bol-heros.model";
 
 @Injectable({
@@ -22,6 +22,9 @@ export class BolQuestService {
   updateQuest(quest: BolQuestModel): Observable<any> {
     return this.http.post<BolQuestModel>('/api/bol/quest/update', <BolQuestModel>quest);
   }
+  questProtagonist(idProtagonist: number): Observable<BolQuestProtagonistModel> {
+    return this.http.get<BolQuestProtagonistModel>('/api/bol/quest/protagonist/' + idProtagonist);
+  }
   addProtagonistToQuest(hero: BolHerosModel, questId: string, type: 'H' | 'P' | 'C' | 'D'): Observable<any> {
     const protagonist = {
       protagonist_id : hero.id,
@@ -33,13 +36,11 @@ export class BolQuestService {
       vilenie: hero.ressources.vilenie,
       foi: hero.ressources.foi
     }
-    return this.http.post('/api/bol/quest/protagonist/add', protagonist);
+    return this.http.post('/api/bol/quest/protagonist/create', protagonist);
   }
-  updateProtagonistToQuest(protagonistId: string, questId: string, type: 'H' | 'P' | 'C' | 'D' ,ressources: any,  ): Observable<any> {
+  updateProtagonistToQuest(id: number, ressources: any,  ): Observable<any> {
     const protagonist = {
-      protagonist_id :protagonistId,
-      quest_id: questId,
-      type: type,
+      id :id,
       vitalite: ressources.vitalite ?? 0,
       heroisme: ressources.heroisme ?? 0,
       vilenie: ressources.vilenie ?? 0,
