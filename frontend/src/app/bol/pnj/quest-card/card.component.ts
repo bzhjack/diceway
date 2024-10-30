@@ -14,7 +14,7 @@ import {exhaustMap, filter, Subscription} from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
 import {tap} from "rxjs/operators";
 import {BtnComponent} from "../../../shared/btn/btn.component";
-import {BolActionComponent} from "../../heros/card/action/action.component";
+import {BolActionComponent} from "../../quest/action/action.component";
 import {KnobModule} from "primeng/knob";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {InputNumberModule} from "primeng/inputnumber";
@@ -51,7 +51,7 @@ import {BolPnjCreateComponent} from "../create/create.component";
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
-export class BolPnjCardComponent {
+export class BolQuestPnjCardComponent {
   private pnjService = inject(BolHerosService);
   private dialogService = inject(DialogService);
   private spinner = inject(NgxSpinnerService);

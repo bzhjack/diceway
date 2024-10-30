@@ -10,7 +10,7 @@ import {SkeletonModule} from "primeng/skeleton";
 import {TooltipModule} from "primeng/tooltip";
 import {Button, ButtonDirective} from "primeng/button";
 import {OverlayPanelModule} from "primeng/overlaypanel";
-import {BolActionComponent} from "./action/action.component";
+import {BolActionComponent} from "../../quest/action/action.component";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {Ripple} from "primeng/ripple";
@@ -51,7 +51,7 @@ import {BolProtagonistModel} from "../../models/bol-quest.model";
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
-export class BolHerosCardComponent {
+export class BolQuestHerosCardComponent {
 
   private heroService = inject(BolHerosService);
   private questService = inject(BolQuestService);

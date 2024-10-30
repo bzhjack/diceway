@@ -26,7 +26,6 @@ import {BolHerosUpdateComponent} from "../update/update.component";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {BolHerosLangueModel} from "../../models/bol-langue.model";
 import {BolHerosTraitRowComponent} from "../create/origines/region/trait-row/trait-row.component";
-import {BolHerosCardComponent} from "../card/card.component";
 import {toObservable} from "@angular/core/rxjs-interop";
 import {tap} from "rxjs/operators";
 import {BolQuestModel} from "../../models/bol-quest.model";
@@ -63,7 +62,6 @@ import {SkeletonModule} from "primeng/skeleton";
     NgOptimizedImage,
     ScrollPanelModule,
     BolHerosTraitRowComponent,
-    BolHerosCardComponent,
     AsyncPipe,
     InlineSVGModule,
     SkeletonModule

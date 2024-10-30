@@ -27,7 +27,7 @@ import {ConfirmationService} from "primeng/api";
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
-export class BolCreatureCardComponent {
+export class BolQuestCreatureCardComponent {
   private confirmationService = inject(ConfirmationService);
   creature = input.required<BolCreatureModel>()
   profile = computed(() => this.creature()?.user_id ? 'private' : 'public')
