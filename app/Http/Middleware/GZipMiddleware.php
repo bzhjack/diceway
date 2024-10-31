@@ -10,8 +10,8 @@ class GZipMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -22,9 +22,9 @@ class GZipMiddleware
 
         return response($data)->withHeaders([
             'Access-Control-Allow-Origin' => '*',
-            'Access-Control-Allow-Methods'=> 'GET',
+            'Access-Control-Allow-Methods' => 'GET',
             'Content-type' => 'application/json; charset=utf-8',
-            'Content-Length'=> strlen($data),
+            'Content-Length' => strlen($data),
             'Content-Encoding' => 'gzip'
         ]);
     }

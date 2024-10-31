@@ -1,12 +1,15 @@
+import {BolHerosModel} from "./bol-heros.model";
+import {BolCreatureModel} from "./bol-creature.model";
+
 export interface BolQuestModel {
   id: string | null;
   user_id: string;
   titre: string;
   commentaire: string | null;
-  protagonists: BolProtagonistModel[]
+  protagonists: BolQuestProtagonistModel[]
 }
 
-export interface BolProtagonistModel {
+export interface BolQuestProtagonistModel {
   id: number;                        // L'identifiant unique du protagoniste
   quest_id: string;                  // L'ID de la quête à laquelle appartient ce protagoniste
   protagonist_id: string;            // L'ID unique du protagoniste (héros, ennemi, etc.)
@@ -17,4 +20,5 @@ export interface BolProtagonistModel {
   foi: string;
   creation: string;
   vilenie: string;
+  protagonist?: BolHerosModel | BolCreatureModel
 }

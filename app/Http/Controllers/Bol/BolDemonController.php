@@ -52,7 +52,7 @@ class BolDemonController extends Controller
     public function create(Request $request)
     {
         Cache::forget('bol_demons');
-        $demon= $request->input();
+        $demon = $request->input();
         $demon['user_id'] = Auth::id();
         $demon = BolDemon::create($demon);
         $pouvoirs = $request->input('pouvoirs');

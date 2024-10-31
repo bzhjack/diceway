@@ -6,7 +6,6 @@ import {RouterLink} from "@angular/router";
 import {Subscription} from "rxjs";
 import {BolHerosModel} from "../models/bol-heros.model";
 import {BolDashboardService} from "../services/bol-dashboard.service";
-import {BolHerosCardComponent} from "../heros/card/card.component";
 import {BolHomeCardComponent} from "./home-card/home-card.component";
 
 @Component({
@@ -17,7 +16,6 @@ import {BolHomeCardComponent} from "./home-card/home-card.component";
     Button,
     NgIf,
     RouterLink,
-    BolHerosCardComponent,
     BolHomeCardComponent
   ],
   providers: [BolDashboardService],

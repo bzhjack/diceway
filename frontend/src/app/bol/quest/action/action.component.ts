@@ -1,16 +1,11 @@
 import {AfterViewInit, Component, computed, effect, inject, signal} from '@angular/core';
 import {DropdownModule} from "primeng/dropdown";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {BOL_DIFFICULTIES} from "../../../../shared/constantes/difficulties";
 import {Button, ButtonDirective} from "primeng/button";
-import {DiceService} from "../../../../shared/dice/dice.service";
-import {BolHerosModel} from "../../../models/bol-heros.model";
 import {FieldsetModule} from "primeng/fieldset";
 import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {CheckboxModule} from "primeng/checkbox";
 import {RadioButtonModule} from "primeng/radiobutton";
-import {BolAvantageModel} from "../../../models/bol-avantage.model";
-import {BolDesavantageModel} from "../../../models/bol-desavantage.model";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {MenuModule} from "primeng/menu";
 import {InputTextModule} from "primeng/inputtext";
@@ -18,6 +13,11 @@ import {Ripple} from "primeng/ripple";
 import {InputNumberModule} from "primeng/inputnumber";
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {TagModule} from 'primeng/tag';
+import {BolHerosModel} from "../../models/bol-heros.model";
+import {DiceService} from "../../../shared/dice/dice.service";
+import {BOL_DIFFICULTIES} from "../../../shared/constantes/difficulties";
+import {BolAvantageModel} from "../../models/bol-avantage.model";
+import {BolDesavantageModel} from "../../models/bol-desavantage.model";
 
 @Component({
   selector: 'bol-action',

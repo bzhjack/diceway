@@ -14,7 +14,7 @@ import {exhaustMap, filter, Subscription} from "rxjs";
 import {toObservable} from "@angular/core/rxjs-interop";
 import {tap} from "rxjs/operators";
 import {BtnComponent} from "../../../shared/btn/btn.component";
-import {BolActionComponent} from "../../heros/card/action/action.component";
+import {BolActionComponent} from "../../quest/action/action.component";
 import {KnobModule} from "primeng/knob";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {InputNumberModule} from "primeng/inputnumber";
@@ -22,10 +22,11 @@ import {OverlayPanelModule} from "primeng/overlaypanel";
 import {SkeletonModule} from "primeng/skeleton";
 import {FormsModule} from "@angular/forms";
 import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
-import {BolProtagonistModel} from "../../models/bol-quest.model";
+import {BolQuestProtagonistModel} from "../../models/bol-quest.model";
 import {BolQuestService} from "../../services/bol-quest.service";
-import {BolHerosUpdateComponent} from "../../heros/update/update.component";
 import {BolPnjCreateComponent} from "../create/create.component";
+import {ConfirmationService} from "primeng/api";
+import {ConfirmPopupModule} from "primeng/confirmpopup";
 
 @Component({
   selector: 'bol-pnj-card',
@@ -46,16 +47,21 @@ import {BolPnjCreateComponent} from "../create/create.component";
     InputNumberModule,
     OverlayPanelModule,
     SkeletonModule,
-    FormsModule
+    FormsModule,
+    ConfirmPopupModule
+  ],
+  providers: [
+    ConfirmationService
   ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
-export class BolPnjCardComponent {
+export class BolQuestPnjCardComponent {
   private pnjService = inject(BolHerosService);
   private dialogService = inject(DialogService);
   private spinner = inject(NgxSpinnerService);
   private questService = inject(BolQuestService);
+  private confirmationService = inject(ConfirmationService);
 
   private ref?: DynamicDialogRef;
   private subs?: Subscription;
@@ -64,15 +70,18 @@ export class BolPnjCardComponent {
     heroisme: 0,
     vilenie: 0
   }
-  questId = input<string | undefined>(undefined);
-  pnjId = input<string | null>(null);
-  pnj = signal<BolHerosModel | null>(null);
+  questProtagonistId = input<number>(0);
+  questProtagonist = signal<BolQuestProtagonistModel | null>(null);
+  pnj= signal<BolHerosModel | null>(null);
 
-  pnj$ = toObservable<string | null>(this.pnjId).pipe( // Watch for user changes
-    filter((id) => id !== null),                     // Only make http request for users larger than 0
-    tap((id) => this.pnj.set(null)),    // Just some debugging
+  questProtagonist$ = toObservable<number>(this.questProtagonistId).pipe( // Watch for user changes
+    filter((id) => id > 0),                     // Only make http request for users larger than 0
+    tap((id) => this.questProtagonist.set(null)),    // Just some debugging
     exhaustMap((id) =>                          // Don't execute the http request if one is already in progress
-      this.pnjService.pnj(id as string, this.questId()).pipe(tap((pnj) => this.pnj.set(pnj)))   // Update the response
+      this.questService.questProtagonist(id).pipe(tap((questProtagonist) => {
+        this.questProtagonist.set(questProtagonist);
+        this.pnj.set(questProtagonist.protagonist as BolHerosModel);
+      }))   // Update the response
     )
   );
 
@@ -105,16 +114,16 @@ export class BolPnjCardComponent {
       header: 'Effectuer une action',
       maximizable: true,
       data: {
-        hero: this.pnj()
+        hero: this.questProtagonist()?.protagonist
       }
     });
   }
 
   openResources(panel: OverlayPanel, event: any) {
     panel.toggle(event);
-    this.ressources.heroisme = Number(this.pnj()?.currentQuest?.heroisme ?? 0);
-    this.ressources.vitalite = Number(this.pnj()?.currentQuest?.vitalite ?? 0);
-    this.ressources.vilenie = Number(this.pnj()?.currentQuest?.vilenie ?? 0);
+    this.ressources.heroisme = Number(this.questProtagonist()?.heroisme ?? 0);
+    this.ressources.vitalite = Number(this.questProtagonist()?.vitalite ?? 0);
+    this.ressources.vilenie = Number(this.questProtagonist()?.vilenie ?? 0);
   }
 
   modifResources(panel: OverlayPanel, event: any) {
@@ -122,10 +131,10 @@ export class BolPnjCardComponent {
     this.subs?.unsubscribe();
     this.spinner.show();
     this.subs?.unsubscribe();
-    const actionService = this.questService.updateProtagonistToQuest(this.pnjId() ?? '', this.questId() ?? '', 'P', this.ressources);
+    const actionService = this.questService.updateProtagonistToQuest(this.questProtagonistId(), this.ressources);
     this.subs = actionService.subscribe({
-      next: (result: BolProtagonistModel) => {
-        this.pnj()!.currentQuest = result;
+      next: (result: BolQuestProtagonistModel) => {
+        this.questProtagonist.set(Object.assign({}, this.questProtagonist(), result));
         this.spinner.hide();
       },
       error: () => {
@@ -138,7 +147,7 @@ export class BolPnjCardComponent {
     this.ref = this.dialogService.open(BolPnjCreateComponent, {
       header: 'Fiche de personnage non joueur',
       data: {
-        pnj: this.pnj()
+        pnj: this.questProtagonist()?.protagonist
       }
     });
     this.subs?.unsubscribe();
@@ -159,5 +168,26 @@ export class BolPnjCardComponent {
       }
     });
   }
-
+  deleteProtagonist(id: number, event: any) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Voulez vous supprimer ce hero de l`aventure ?',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass: 'p-button-danger p-button-sm',
+      acceptLabel: "Oui",
+      rejectLabel: "Non",
+      accept: () => {
+        this.subs?.unsubscribe();
+        const actionService = this.questService.deleteProtagonistToQuest(id);
+        this.subs = actionService.subscribe({
+          next: (result: BolQuestProtagonistModel) => {
+            this.spinner.hide();
+          },
+          error: () => {
+            this.spinner.hide();
+          }
+        });
+      },
+    });
+  }
 }

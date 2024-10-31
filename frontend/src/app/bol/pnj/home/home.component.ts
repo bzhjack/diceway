@@ -12,8 +12,6 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {BolHerosService} from "../../services/bol-heros.service";
 import {AsyncPipe, JsonPipe, NgForOf, NgIf} from "@angular/common";
-import {BolCreatureCardComponent} from "../../creatures/card/card.component";
-import {BolPnjCardComponent} from "../card/card.component";
 import {ConfirmationService} from "primeng/api";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {CardModule} from "primeng/card";
@@ -48,8 +46,6 @@ import {tap} from "rxjs/operators";
     BolPnjCreateComponent,
     NgForOf,
     Button,
-    BolCreatureCardComponent,
-    BolPnjCardComponent,
     ConfirmPopupModule,
     CardModule,
     NgIf,

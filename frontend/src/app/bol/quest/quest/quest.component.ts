@@ -18,9 +18,9 @@ import {Table} from "primeng/table";
 import {BolQuestStateService} from '../../services/bol-quest-state.service';
 import {Overlay} from 'primeng/overlay';
 import {FieldsetModule} from "primeng/fieldset";
-import {BolHerosCardComponent} from "../../heros/card/card.component";
-import {BolPnjCardComponent} from "../../pnj/card/card.component";
 import {ConfirmationService} from "primeng/api";
+import {BolQuestHerosCardComponent} from "../../heros/quest-card/card.component";
+import {BolQuestPnjCardComponent} from "../../pnj/quest-card/card.component";
 
 @Component({
   selector: 'bol-quest',
@@ -38,9 +38,9 @@ import {ConfirmationService} from "primeng/api";
     PaginatorModule,
     ReactiveFormsModule,
     FieldsetModule,
-    BolHerosCardComponent,
+    BolQuestHerosCardComponent,
     NgForOf,
-    BolPnjCardComponent
+    BolQuestPnjCardComponent
   ],
   templateUrl: './quest.component.html',
   styleUrl: './quest.component.scss',

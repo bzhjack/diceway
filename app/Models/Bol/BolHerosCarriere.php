@@ -21,6 +21,7 @@ class BolHerosCarriere extends Model
         'id' => 'integer',
         'carriere_id' => 'integer'
     ];
+
     public function carriere(): HasOne
     {
         return $this->HasOne(BolCarriere::class, 'id', 'carriere_id');

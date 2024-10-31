@@ -34,8 +34,10 @@ class BolPnjController extends Controller
             ->get();
         return response($heroes);
     }
+
     public function getOne(Request $request)
-    {   $id = $request->route('id');
+    {
+        $id = $request->route('id');
         $questId = $request->query('questId'); // Récupération de questId si présent
         $hero = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue', 'region')
             ->where('type', '!=', 'H')
@@ -48,12 +50,13 @@ class BolPnjController extends Controller
             return response()->json(['error' => 'Pnj not found'], 404);
         } else {
             if ($questId) {
-                $currentQuest =$hero->currentQuest($questId, 'P')->first();
+                $currentQuest = $hero->currentQuest($questId, 'P')->first();
                 $hero['currentQuest'] = $currentQuest;
             }
             return response($hero);
         }
     }
+
     public function create(Request $request)
     {
         $pnj = $request->input();
@@ -96,10 +99,10 @@ class BolPnjController extends Controller
             }
         }
 
-        $createdCreature = BolHeros::with('carrieres.carriere', 'armures.armure', 'armes.arme')
+        $createdHeros = BolHeros::with('carrieres.carriere', 'armures.armure', 'armes.arme')
             ->where('user_id', Auth::id())
             ->where('id', $pnj['id'])->get()->first();
-        return response($createdCreature);
+        return response($createdHeros);
     }
 
 
@@ -164,7 +167,7 @@ class BolPnjController extends Controller
                 ], []);
         }
         $pnj->update($updatedPnj);
-        $updatedPnj = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue','region')->where('user_id', Auth::id())->where('id', $pnjId)->get()->first();
+        $updatedPnj = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue', 'region')->where('user_id', Auth::id())->where('id', $pnjId)->get()->first();
         return response($updatedPnj);
     }
 

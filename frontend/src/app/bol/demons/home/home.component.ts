@@ -13,7 +13,7 @@ import {HeaderComponent} from "../../../shared/header/header.component";
 import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
 import {InputTextModule} from "primeng/inputtext";
-import {AsyncPipe, JsonPipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
+import {AsyncPipe, JsonPipe, NgForOf, NgIf} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Ripple} from "primeng/ripple";
 import {RouterLink} from "@angular/router";
@@ -44,7 +44,6 @@ import {InlineSVGModule} from "ng-inline-svg-2";
     InputTextModule,
     NgForOf,
     NgIf,
-    NgOptimizedImage,
     PrimeTemplate,
     ReactiveFormsModule,
     Ripple,

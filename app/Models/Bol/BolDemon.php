@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models\Bol;
+
 use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -58,7 +59,9 @@ class BolDemon extends Model
     {
         return $this->HasOne(BolCategorie::class, 'id', 'id_categorie');
     }
-    public function getTypeAttribute() {
-         return $this->categorie->type;
+
+    public function getTypeAttribute()
+    {
+        return $this->categorie->type;
     }
 }

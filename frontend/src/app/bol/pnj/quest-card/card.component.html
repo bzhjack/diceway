@@ -1,5 +1,5 @@
 <p-card class="creature_card" [style]="{border: '1px solid #424b57'}">
-  @if ((pnj$ | async) && pnj()) {
+  @if ((questProtagonist$ | async) && questProtagonist()) {
     <div class="flex gap-2">
       <div class="pnj_card__img">
         <img *ngIf="!pnj()?.user_id" src="/frontend/assets/bol/pnj/{{pnj()?.id}}.jpg" alt=""/>
@@ -14,19 +14,19 @@
             <div class="flex items-center gap-1 px-0.5">
               <div style="width: 15px; height:15px;"><i class="pi pi-heart-fill"
                                                         style="color: red; padding-top: 2px"></i></div>
-              <span style="color: white">{{ pnj()?.currentQuest?.vitalite ?? pnj()?.ressources?.vitalite }}</span>
+              <span style="color: white">{{questProtagonist()?.vitalite }}</span>
             </div>
           </p-tag>
           <p-tag severity="warning">
-            @if (pnj()?.currentQuest?.heroisme ?? 0 > 0) {
+            @if (questProtagonist()?.heroisme ?? 0 > 0) {
               <div class="flex items-center gap-1 px-0.5" pTooltip="Heroisme">
                 <div class="tag_icon warn" inlineSVG="/frontend/assets/flame.svg"></div>
-                <span style="color: white">{{ pnj()?.currentQuest?.heroisme }}</span>
+                <span style="color: white">{{ questProtagonist()?.heroisme }}</span>
               </div>
             } @else {
               <div class="flex items-center gap-1 px-0.5" pTooltip="Vilénie">
                 <div class="tag_icon warn" inlineSVG="/frontend/assets/skull.svg"></div>
-                <span style="color: white">{{ pnj()?.currentQuest?.vilenie }}</span>
+                <span style="color: white">{{ questProtagonist()?.vilenie }}</span>
               </div>
             }
           </p-tag>
@@ -35,6 +35,7 @@
       <div class="flex flex-col gap-2">
         <app-btn pRipple icon="d6" (click)="openAction()"></app-btn>
         <app-btn *ngIf="pnj()?.user_id" pRipple icon="user-edit" (click)="fichePerso()"></app-btn>
+        <app-btn pRipple icon="trash" (click)="deleteProtagonist(questProtagonist()!.id, $event)"></app-btn>
       </div>
     </div>
 
@@ -77,3 +78,4 @@
             (click)="modifResources(heroPanel, $event)"></button>
   </div>
 </p-overlayPanel>
+<p-confirmPopup />

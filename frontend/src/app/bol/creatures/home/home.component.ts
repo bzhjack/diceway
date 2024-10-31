@@ -5,8 +5,7 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {exhaustMap, filter, Subscription} from "rxjs";
 import {BolCreatureModel} from "../../models/bol-creature.model";
 import {CardModule} from "primeng/card";
-import {AsyncPipe, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
-import {BolCreatureCardComponent} from "../card/card.component";
+import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {HeaderComponent} from "../../../shared/header/header.component";
 import {Button, ButtonDirective} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
@@ -41,7 +40,6 @@ import {InlineSVGModule} from "ng-inline-svg-2";
     CardModule,
     CheckboxModule,
     NgForOf,
-    BolCreatureCardComponent,
     HeaderComponent,
     ButtonDirective,
     Button,
@@ -60,7 +58,6 @@ import {InlineSVGModule} from "ng-inline-svg-2";
     Ripple,
     InputIconModule,
     IconFieldModule,
-    NgOptimizedImage,
     AsyncPipe,
     SkeletonModule,
     InlineSVGModule
