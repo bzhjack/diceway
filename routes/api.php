@@ -132,6 +132,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::post('/bol/quest/create', [BolQuestController::class, 'create']);
     Route::post('/bol/quest/update', [BolQuestController::class, 'update']);
     Route::get('/bol/quest/{id}', [BolQuestController::class, 'getOne']);
+    Route::delete('/bol/quest/protagonist/{id}', [BolQuestController::class, 'deleteProtagonist']);
     Route::get('/bol/quest/protagonist/{id}', [BolQuestController::class, 'getOneProtagonist']);
     Route::post('/bol/quest/protagonist/create', [BolQuestController::class, 'addProtagonist']);
     Route::post('/bol/quest/protagonist/update', [BolQuestController::class, 'updateProtagonist']);

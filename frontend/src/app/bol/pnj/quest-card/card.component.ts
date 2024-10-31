@@ -25,6 +25,8 @@ import {OverlayPanel} from "primeng/overlaypanel/overlaypanel";
 import {BolQuestProtagonistModel} from "../../models/bol-quest.model";
 import {BolQuestService} from "../../services/bol-quest.service";
 import {BolPnjCreateComponent} from "../create/create.component";
+import {ConfirmationService} from "primeng/api";
+import {ConfirmPopupModule} from "primeng/confirmpopup";
 
 @Component({
   selector: 'bol-pnj-card',
@@ -45,7 +47,11 @@ import {BolPnjCreateComponent} from "../create/create.component";
     InputNumberModule,
     OverlayPanelModule,
     SkeletonModule,
-    FormsModule
+    FormsModule,
+    ConfirmPopupModule
+  ],
+  providers: [
+    ConfirmationService
   ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
@@ -55,6 +61,7 @@ export class BolQuestPnjCardComponent {
   private dialogService = inject(DialogService);
   private spinner = inject(NgxSpinnerService);
   private questService = inject(BolQuestService);
+  private confirmationService = inject(ConfirmationService);
 
   private ref?: DynamicDialogRef;
   private subs?: Subscription;
@@ -161,5 +168,26 @@ export class BolQuestPnjCardComponent {
       }
     });
   }
-
+  deleteProtagonist(id: number, event: any) {
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Voulez vous supprimer ce hero de l`aventure ?',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass: 'p-button-danger p-button-sm',
+      acceptLabel: "Oui",
+      rejectLabel: "Non",
+      accept: () => {
+        this.subs?.unsubscribe();
+        const actionService = this.questService.deleteProtagonistToQuest(id);
+        this.subs = actionService.subscribe({
+          next: (result: BolQuestProtagonistModel) => {
+            this.spinner.hide();
+          },
+          error: () => {
+            this.spinner.hide();
+          }
+        });
+      },
+    });
+  }
 }

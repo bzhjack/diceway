@@ -49,4 +49,8 @@ export class BolQuestService {
     }
     return this.http.post('/api/bol/quest/protagonist/update', protagonist);
   }
+
+  deleteProtagonistToQuest(id: number): Observable<any> {
+    return this.http.delete('/api/bol/quest/protagonist/' + id);
+  }
 }
