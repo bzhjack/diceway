@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Bol;
 use App\Http\Controllers\Controller;
 use App\Models\Bol\BolHeros;
 use App\Models\Bol\BolHerosTrait;
+use App\Http\Services\Bol\BolHerosService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -12,15 +13,20 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BolHerosController extends Controller
 {
+
+    protected $bolHerosService;
+
+    public function __construct(BolHerosService $bolHerosService)
+    {
+        $this->bolHerosService = $bolHerosService;
+    }
+
     /**
      * Récupère tout les héros
      */
     public function getAll()
     {
-        $heroes = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue', 'region')
-            ->where('type', 'H')
-            ->where('user_id', Auth::id())
-            ->get();
+        $heroes = $this->bolHerosService->getHeroesWithRelations();
         return response($heroes);
     }
 
@@ -31,7 +37,7 @@ class BolHerosController extends Controller
     {
         $id = $request->route('id');
         $questId = $request->query('questId'); // Récupération de questId si présent
-        $hero = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue', 'region')->where('user_id', Auth::id())->where('id', $id)->get()->first();
+        $hero = $this->bolHerosService->getHeroWithRelations($id);
         if ($hero === null) {
             return response()->json(['error' => 'Hero not found'], 404);
         } else {
@@ -110,7 +116,7 @@ class BolHerosController extends Controller
         if ($heros["region_id"] === null || count($traits) === 0) {
             BolHerosTrait::where('heros_id', $herosId)->delete();
         }
-        $result = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue', 'region')->where('user_id', Auth::id())->where('id', $herosId)->get()->first();
+        $result = $this->bolHerosService->getHeroWithRelations($herosId);;
         return response($result);
     }
 

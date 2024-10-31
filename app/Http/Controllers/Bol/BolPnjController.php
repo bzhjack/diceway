@@ -99,10 +99,10 @@ class BolPnjController extends Controller
             }
         }
 
-        $createdCreature = BolHeros::with('carrieres.carriere', 'armures.armure', 'armes.arme')
+        $createdHeros = BolHeros::with('carrieres.carriere', 'armures.armure', 'armes.arme')
             ->where('user_id', Auth::id())
             ->where('id', $pnj['id'])->get()->first();
-        return response($createdCreature);
+        return response($createdHeros);
     }
 
 

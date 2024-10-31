@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\Bol\BolHerosService;
 use App\Models\Bol\BolCreature;
 use App\Models\Bol\BolDemon;
 use App\Models\Bol\BolHeros;
@@ -13,6 +14,13 @@ use Illuminate\Support\Facades\Auth;
 
 class BolQuestController extends Controller
 {
+
+    protected $bolHerosService;
+
+    public function __construct(BolHerosService $bolHerosService)
+    {
+        $this->bolHerosService = $bolHerosService;
+    }
     public function getAll()
     {
         $heroes = BolQuest::with('protagonists')->where('user_id', Auth::id())->get();
@@ -22,7 +30,7 @@ class BolQuestController extends Controller
     public function getOne(Request $request)
     {
         $id = $request->route('id');
-        $quest = BolQuest::with('protagonists.protagonist')->where('user_id', Auth::id())->where('id', $id)->get()->first();
+        $quest = BolQuest::with('protagonists')->where('user_id', Auth::id())->where('id', $id)->first();
         if ($quest === null) {
             return response()->json(['error' => 'Quest not found'], 404);
         } else {
@@ -41,7 +49,7 @@ class BolQuestController extends Controller
         return response($quest);
     }
 
-    public static function update(Request $request)
+    public function update(Request $request)
     {
         $questId = $request->input('id');
         $updatedQuest = $request->input();
@@ -54,18 +62,22 @@ class BolQuestController extends Controller
         return response($updatedQuest);
     }
 
-    public static function getOneProtagonist(Request $request)
+    public function getOneProtagonist(Request $request)
     {
         $id = $request->route('id');
-        $protagonist = BolQuestProtagonist::with('protagonist')->where('id', $id)->get()->first();
+        $protagonist = BolQuestProtagonist::where('id', $id)->first();
         if ($protagonist === null) {
             return response()->json(['error' => 'Protagonist not found'], 404);
         } else {
+            if ($protagonist->type === 'H' || $protagonist->type === 'P') {
+                $hero = $this->bolHerosService->getHeroWithRelations($protagonist->protagonist_id);
+                $protagonist->protagonist = $hero;
+            }
             return response($protagonist);
         }
     }
 
-    public static function updateProtagonist(Request $request)
+    public function updateProtagonist(Request $request)
     {
         $updatedData = $request->input();
         $id = $updatedData['id'];
@@ -90,7 +102,7 @@ class BolQuestController extends Controller
         return response()->json($questProtagonist);
     }
 
-    public static function addProtagonist(Request $request)
+    public function addProtagonist(Request $request)
     {
         $newProtagonist = $request->input();
         $type = $newProtagonist['type'];
