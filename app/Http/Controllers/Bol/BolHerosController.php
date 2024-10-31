@@ -17,10 +17,10 @@ class BolHerosController extends Controller
      */
     public function getAll()
     {
-        $heroes = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue','region')
-        ->where('type', 'H')
-        ->where('user_id', Auth::id())
-        ->get();
+        $heroes = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue', 'region')
+            ->where('type', 'H')
+            ->where('user_id', Auth::id())
+            ->get();
         return response($heroes);
     }
 
@@ -35,10 +35,10 @@ class BolHerosController extends Controller
         if ($hero === null) {
             return response()->json(['error' => 'Hero not found'], 404);
         } else {
-        if ($questId) {
-            $currentQuest =$hero->currentQuest($questId, 'H')->first();
-            $hero['currentQuest'] = $currentQuest;
-        }
+            if ($questId) {
+                $currentQuest = $hero->currentQuest($questId, 'H')->first();
+                $hero['currentQuest'] = $currentQuest;
+            }
             return response($hero);
         }
     }

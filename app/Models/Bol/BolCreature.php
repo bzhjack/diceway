@@ -43,15 +43,19 @@ class BolCreature extends Model
         'id_taille' => 'integer',
         'type_order' => 'string'
     ];
+
     public function capacites(): HasMany
     {
         return $this->HasMany(BolCreatureCapacite::class, 'creature_id', 'id');
     }
-    public function  taille(): HasOne
+
+    public function taille(): HasOne
     {
         return $this->HasOne(BolTaille::class, 'id', 'id_taille');
     }
-    public function getTypeAttribute() {
+
+    public function getTypeAttribute()
+    {
         return $this->taille->type;
     }
 }

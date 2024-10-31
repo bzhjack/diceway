@@ -17,6 +17,7 @@ class BolRegion extends Model
     protected $casts = [
         'id' => 'integer',
     ];
+
     // Avantages liés à la région
     public function avantages(): BelongsToMany
     {

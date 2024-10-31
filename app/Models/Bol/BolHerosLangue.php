@@ -20,6 +20,7 @@ class BolHerosLangue extends Model
         'id' => 'integer',
         'langue_id' => 'integer'
     ];
+
     public function langue(): HasOne
     {
         return $this->HasOne(BolLangue::class, 'id', 'langue_id');

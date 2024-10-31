@@ -54,40 +54,41 @@ class BolQuestController extends Controller
         return response($updatedQuest);
     }
 
-    public static function getOneProtagonist(Request $request) {
-            $id = $request->route('id');
-            $protagonist = BolQuestProtagonist::with('protagonist')->where('id', $id)->get()->first();
-            if ($protagonist === null) {
-                return response()->json(['error' => 'Protagonist not found'], 404);
-            } else {
-                return response($protagonist);
-            }
+    public static function getOneProtagonist(Request $request)
+    {
+        $id = $request->route('id');
+        $protagonist = BolQuestProtagonist::with('protagonist')->where('id', $id)->get()->first();
+        if ($protagonist === null) {
+            return response()->json(['error' => 'Protagonist not found'], 404);
+        } else {
+            return response($protagonist);
+        }
     }
 
-public static function updateProtagonist(Request $request)
-{
-    $updatedData = $request->input();
-    $id = $updatedData['id'];
+    public static function updateProtagonist(Request $request)
+    {
+        $updatedData = $request->input();
+        $id = $updatedData['id'];
 
-    // Recherche de l'enregistrement existant dans `BolQuestProtagonist`
-    $questProtagonist = BolQuestProtagonist::where('id', $id)->first();
+        // Recherche de l'enregistrement existant dans `BolQuestProtagonist`
+        $questProtagonist = BolQuestProtagonist::where('id', $id)->first();
 
-    if (!$questProtagonist) {
-        return response()->json(['message' => 'Protagonist not found'], 404);
+        if (!$questProtagonist) {
+            return response()->json(['message' => 'Protagonist not found'], 404);
+        }
+
+        // Mise à jour des champs autorisés
+        $questProtagonist->vitalite = $updatedData['vitalite'];
+        $questProtagonist->heroisme = $updatedData['heroisme'];
+        $questProtagonist->vilenie = $updatedData['vilenie'];
+        $questProtagonist->foi = $updatedData['foi'];
+        $questProtagonist->creation = $updatedData['creation'];
+
+        // Sauvegarde des modifications
+        $questProtagonist->save();
+
+        return response()->json($questProtagonist);
     }
-
-    // Mise à jour des champs autorisés
-    $questProtagonist->vitalite = $updatedData['vitalite'];
-    $questProtagonist->heroisme = $updatedData['heroisme'];
-    $questProtagonist->vilenie = $updatedData['vilenie'];
-    $questProtagonist->foi = $updatedData['foi'];
-    $questProtagonist->creation = $updatedData['creation'];
-
-    // Sauvegarde des modifications
-    $questProtagonist->save();
-
-    return response()->json($questProtagonist);
-}
 
     public static function addProtagonist(Request $request)
     {
@@ -95,11 +96,11 @@ public static function updateProtagonist(Request $request)
         $type = $newProtagonist['type'];
         $questId = $newProtagonist['quest_id'];
         $protagonistId = $newProtagonist['protagonist_id'];
-        $vitalite =  $newProtagonist['vitalite'];
-        $heroisme =  $newProtagonist['heroisme'];
-        $vilenie =  $newProtagonist['vilenie'];
-        $foi =  $newProtagonist['foi'];
-        $creation =  $newProtagonist['creation'];
+        $vitalite = $newProtagonist['vitalite'];
+        $heroisme = $newProtagonist['heroisme'];
+        $vilenie = $newProtagonist['vilenie'];
+        $foi = $newProtagonist['foi'];
+        $creation = $newProtagonist['creation'];
 
         switch ($type) {
             case 'H':
