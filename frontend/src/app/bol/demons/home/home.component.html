@@ -75,7 +75,7 @@
           <tr>
             <td style="width: 110px" class="relative">
               <div class="demon_row__img cursor-pointer" (click)="showDemonPicture(demon)">
-                <img *ngIf="!demon.user_id" ngSrc="/frontend/assets/bol/demon/{{demon.id}}.jpg" alt="" fill/>
+                <img *ngIf="!demon.user_id" src="/frontend/assets/bol/demon/{{demon.id}}.jpg" alt="" fill/>
                 <img *ngIf="demon.user_id" style="width:100%"
                      [src]="demon.avatar !== null ? demon.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
                      alt="avatar"/>

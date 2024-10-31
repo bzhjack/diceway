@@ -8,7 +8,7 @@ import {HeaderComponent} from "../../../shared/header/header.component";
 import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
 import {InputTextModule} from "primeng/inputtext";
-import {NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {PaginatorModule} from "primeng/paginator";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
 import {Ripple} from "primeng/ripple";
@@ -40,7 +40,6 @@ import {InputTextareaModule} from "primeng/inputtextarea";
     InputTextModule,
     NgForOf,
     NgIf,
-    NgOptimizedImage,
     PaginatorModule,
     PrimeTemplate,
     Ripple,

@@ -60,18 +60,24 @@ export class BolQuestHerosCardComponent {
 
   private ref?: DynamicDialogRef;
   private subs?: Subscription;
-  questId = input<string | undefined>(undefined);
-  heroId = input<string | null>(null);
-  hero = signal<BolHerosModel | null>(null);
+
   ressources = {
     vitalite: 0,
-    heroisme: 0
+    heroisme: 0,
+    vilenie: 0
   }
-  hero$ = toObservable<string | null>(this.heroId).pipe( // Watch for user changes
-    filter((id) => id !== null),                     // Only make http request for users larger than 0
-    tap((id) => this.hero.set(null)),    // Just some debugging
+  questProtagonistId = input<number>(0);
+  questProtagonist = signal<BolQuestProtagonistModel | null>(null);
+  hero = signal<BolHerosModel | null>(null);
+
+  questProtagonist$ = toObservable<number>(this.questProtagonistId).pipe( // Watch for user changes
+    filter((id) => id > 0),                     // Only make http request for users larger than 0
+    tap((id) => this.questProtagonist.set(null)),    // Just some debugging
     exhaustMap((id) =>                          // Don't execute the http request if one is already in progress
-      this.heroService.heros(id as string, this.questId()).pipe(tap((hero) => this.hero.set(hero)))   // Update the response
+      this.questService.questProtagonist(id).pipe(tap((questProtagonist) => {
+        this.questProtagonist.set(questProtagonist);
+        this.hero.set(questProtagonist.protagonist as BolHerosModel);
+      }))   // Update the response
     )
   );
 
@@ -113,20 +119,22 @@ export class BolQuestHerosCardComponent {
       }
     });
   }
+
   openResources(panel: OverlayPanel, event: any) {
     panel.toggle(event);
-    this.ressources.heroisme = Number(this.hero()?.currentQuest?.heroisme ?? 0);
-    this.ressources.vitalite = Number(this.hero()?.currentQuest?.vitalite ?? 0);
+    this.ressources.heroisme = Number(this.questProtagonist()?.heroisme ?? 0);
+    this.ressources.vitalite = Number(this.questProtagonist()?.vitalite ?? 0);
   }
+
   modifResources(panel: OverlayPanel, event: any) {
     panel.toggle(event);
     this.subs?.unsubscribe();
     this.spinner.show();
     this.subs?.unsubscribe();
-    const actionService = this.questService.updateProtagonistToQuest(0, this.ressources);
+    const actionService = this.questService.updateProtagonistToQuest(this.questProtagonistId(), this.ressources);
     this.subs = actionService.subscribe({
       next: (result: BolQuestProtagonistModel) => {
-        this.hero()!.currentQuest = result;
+        this.questProtagonist.set(Object.assign({}, this.questProtagonist(), result));
         this.spinner.hide();
       },
       error: () => {
