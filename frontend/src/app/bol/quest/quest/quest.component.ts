@@ -1,9 +1,9 @@
-import {Component, computed, inject, Signal, ViewChild} from '@angular/core';
+import {Component, computed, inject, output, Signal, ViewChild} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {HeaderComponent} from "../../../shared/header/header.component";
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {toObservable, toSignal} from "@angular/core/rxjs-interop";
-import {exhaustMap, filter, map, Subscription} from "rxjs";
+import {BehaviorSubject, exhaustMap, filter, map, Subscription} from "rxjs";
 import {tap} from "rxjs/operators";
 import {BolQuestService} from "../../services/bol-quest.service";
 import {BolQuestModel} from "../../models/bol-quest.model";
@@ -74,12 +74,14 @@ export class BolQuestComponent {
   pnjs = computed(() =>  this.quest()?.protagonists.filter((protagonist) => protagonist.type === 'P'));
   creatures = computed(() =>  this.quest()?.protagonists.filter((protagonist) => protagonist.type === 'C'));
 
-  quest$ = toObservable<string | null | undefined>(this.questId).pipe(
-    filter((id): id is string => id !== null),  // Type guard pour éliminer 'null'
+
+  questId$ = new BehaviorSubject<string | null | undefined>(this.questId());
+  quest$ = this.questId$.pipe(
+    filter((id): id is string => id !== null),
     tap(() => {
       this.spinner.show();
-      this.questStateService.questState.set(null);
-    }),  // Réinitialise la quête lors de chaque changement d'ID
+      //this.questStateService.questState.set(null);
+    }),
     exhaustMap((id) =>
       this.questService.quest(id).pipe(
         tap((quest: BolQuestModel) => {
@@ -94,6 +96,7 @@ export class BolQuestComponent {
       )
     )
   );
+
   onError(controlName: string) {
     const control = this.questForm.get(controlName);
     return control?.dirty && control.invalid;
@@ -119,5 +122,8 @@ export class BolQuestComponent {
   majForm(quest: BolQuestModel) {
     this.questForm.patchValue(quest);
     this.questStateService.questState.set(quest);
+  }
+  refreshQuest() {
+    this.questId$.next(this.questId$.value);
   }
 }

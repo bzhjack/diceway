@@ -1,4 +1,4 @@
-import {Component, inject, input, signal} from '@angular/core';
+import {Component, inject, input, output, signal} from '@angular/core';
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {ButtonDirective} from "primeng/button";
 import {CardModule} from "primeng/card";
@@ -70,6 +70,7 @@ export class BolQuestPnjCardComponent {
     heroisme: 0,
     vilenie: 0
   }
+  deleted = output();
   questProtagonistId = input<number>(0);
   questProtagonist = signal<BolQuestProtagonistModel | null>(null);
   pnj= signal<BolHerosModel | null>(null);
@@ -182,6 +183,7 @@ export class BolQuestPnjCardComponent {
         this.subs = actionService.subscribe({
           next: (result: BolQuestProtagonistModel) => {
             this.spinner.hide();
+            this.deleted.emit();
           },
           error: () => {
             this.spinner.hide();
