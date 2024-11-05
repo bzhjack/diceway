@@ -2,18 +2,19 @@
   @if ((questProtagonist$ | async) && questProtagonist()) {
     <div class="flex gap-2">
       <div class="pnj_card__img">
-        <img *ngIf="!pnj()?.user_id" src="/frontend/assets/bol/pnj/{{pnj()?.id}}.jpg" alt=""/>
+        <img *ngIf="!pnj()?.user_id" src="/frontend/assets/bol/pnj/{{pnj().id}}.jpg" alt=""/>
         <img *ngIf="pnj()?.user_id" style="width:100%"
-             [src]="pnj()?.origines?.avatar !== null ? pnj()?.origines?.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+             [src]="pnj().origines.avatar !== null ? pnj().origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
              alt="avatar">
       </div>
       <div class="flex flex-col gap-2" style="width: 150px">
-        <div class="pnj_card__name">{{ pnj()?.origines?.nom }}</div>
+        <div class="pnj_card__name">{{ pnj().origines.nom }}</div>
         <div class="flex gap-2 items-center" (click)="openResources(heroPanel, $event)">
           <p-tag severity="danger" pTooltip="Vitalité">
             <div class="flex items-center gap-1 px-0.5">
-              <div style="width: 15px; height:15px;"><i class="pi pi-heart-fill"
-                                                        style="color: red; padding-top: 2px"></i></div>
+              <div style="width: 15px; height:15px;">
+                <i class="pi pi-heart-fill" style="color: red; padding-top: 2px"></i>
+              </div>
               <span style="color: white">{{questProtagonist()?.vitalite }}</span>
             </div>
           </p-tag>
