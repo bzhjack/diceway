@@ -3,16 +3,18 @@
     <div class="dw-topbar__logo relative" [routerLink]="'/'">
       <div class="dw_banner" [inlineSVG]="'/frontend/assets/banner.svg'"></div>
     </div>
-    <div class="flex items-center text-3xl relative dw_route" style="top: -3px">
+    <div class="flex items-center text-3xl relative dw_route cursor-pointer" routerLink="/bol">
       {{ route() }}
+    </div>
+    <div class="flex gap-2 items-center">
+      <p-button label="Aventures" [link]="true" routerLink="/bol/quest" size="small" />
+      <p-button label="Héros" [link]="true" routerLink="/bol/heros" size="small" />
+      <p-button label="Pnj" [link]="true" routerLink="/bol/pnj" size="small" />
+      <p-button label="Créatures" [link]="true" routerLink="/bol/creature" size="small" />
+      <p-button label="Démons" [link]="true" routerLink="/bol/demon" size="small" />
     </div>
   </div>
   <div class="flex gap-4">
-
-    <div class="flex gap-2 items-center">
-
-    </div>
-
     <div *ngIf="userObs | async as user" class="flex gap-4 cursor-pointer" (click)="op.toggle($event)">
       <div class="flex flex-col">
         <div>{{ user.name }}</div>
