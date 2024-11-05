@@ -54,7 +54,7 @@ import {BolHerosTraitRowComponent} from "../../heros/create/origines/region/trai
 })
 export class BolPnjCreateComponent {
   @ViewChild('opPnj') panelPnj?: OverlayPanel;
-  public type = [{type: 'Piétaille', value: 'P'}, {type: 'Coriaces', value: 'C'}, {type: 'Rivaux', value: 'R'}];
+  public type = [{type: 'Piétaille', value: 'P'}, {type: 'Coriace', value: 'C'}, {type: 'Rival', value: 'R'}];
 
   private subs?: Subscription;
   private hs = inject(BolHerosStateService);

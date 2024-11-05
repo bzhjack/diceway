@@ -111,8 +111,9 @@ export class BolQuestPnjCardComponent {
   }
 
   openAction() {
+    const pnj: BolHerosModel = this.questProtagonist()?.protagonist as BolHerosModel;
     this.dialogService.open(BolActionComponent, {
-      header: 'Effectuer une action',
+      header: pnj.origines.nom + 'va effectuer une action.',
       maximizable: true,
       data: {
         hero: this.questProtagonist()?.protagonist
