@@ -1,64 +1,155 @@
-import {Component, computed, inject, input, output} from '@angular/core';
+import {Component, computed, inject, input, output, signal} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {BolCreatureModel} from "../../models/bol-creature.model";
 import {TagModule} from "primeng/tag";
-import {FieldsetModule} from "primeng/fieldset";
-import {NgForOf, NgIf} from "@angular/common";
+import {AsyncPipe, JsonPipe, NgIf} from "@angular/common";
 import {TooltipModule} from "primeng/tooltip";
-import {ButtonDirective} from "primeng/button";
+import {Button, ButtonDirective} from "primeng/button";
 import {Ripple} from "primeng/ripple";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {ConfirmationService} from "primeng/api";
+import {BolQuestProtagonistModel} from "../../models/bol-quest.model";
+import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
+import {NgxSpinnerService} from "ngx-spinner";
+import {BolQuestService} from "../../services/bol-quest.service";
+import {exhaustMap, filter, Subscription} from "rxjs";
+import {BolCreaturesService} from "../../services/bol-creatures.service";
+import {toObservable} from "@angular/core/rxjs-interop";
+import {tap} from "rxjs/operators";
+import {OverlayPanel, OverlayPanelModule} from "primeng/overlaypanel";
+import {BolCreatureCreateComponent} from "../create/create.component";
+import {BtnComponent} from "../../../shared/btn/btn.component";
+import {InlineSVGModule} from "ng-inline-svg-2";
+import {InputNumberModule} from "primeng/inputnumber";
+import {SkeletonModule} from "primeng/skeleton";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {BolActionComponent} from "../../quest/action/action.component";
+import {InputTextModule} from "primeng/inputtext";
 
 @Component({
   selector: 'bol-creature-card',
   standalone: true,
   imports: [
+    AsyncPipe,
+    JsonPipe,
     CardModule,
-    TagModule,
-    FieldsetModule,
-    NgForOf,
+    SkeletonModule,
     NgIf,
     TooltipModule,
+    Button,
+    OverlayPanelModule,
+    BolActionComponent,
     ButtonDirective,
+    InlineSVGModule,
     Ripple,
+    BtnComponent,
+    TagModule,
+    FormsModule,
+    InputTextModule,
+    ReactiveFormsModule,
+    InputNumberModule,
     ConfirmPopupModule
   ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
 export class BolQuestCreatureCardComponent {
+
+  private creatureService = inject(BolCreaturesService);
+  private dialogService = inject(DialogService);
+  private spinner = inject(NgxSpinnerService);
+  private questService = inject(BolQuestService);
   private confirmationService = inject(ConfirmationService);
-  creature = input.required<BolCreatureModel>()
-  profile = computed(() => this.creature()?.user_id ? 'private' : 'public')
-  editCreature = output<BolCreatureModel>()
-  deleteCreature = output<BolCreatureModel>()
 
-  getSeverity(creature: BolCreatureModel) {
-    switch (creature?.user_id) {
-      case null:
-        return 'success';
-      default:
-        return 'info';
-    }
-  };
+  private ref?: DynamicDialogRef;
+  private subs?: Subscription;
 
-  onCreate(creature: BolCreatureModel) {
-    this.editCreature.emit(<BolCreatureModel>creature);
+  ressources = {
+    vitalite: 0,
+  }
+  deleted = output();
+  questProtagonistId = input<number>(0);
+  questProtagonist = signal<BolQuestProtagonistModel | null>(null);
+  creature= computed(() => this.questProtagonist()?.protagonist as BolCreatureModel);
+
+  questProtagonist$ = toObservable<number>(this.questProtagonistId).pipe( // Watch for user changes
+    filter((id) => id > 0),                     // Only make http request for users larger than 0
+    tap((id) => this.questProtagonist.set(null)),    // Just some debugging
+    exhaustMap((id) =>                          // Don't execute the http request if one is already in progress
+      this.questService.questProtagonist(id).pipe(tap((questProtagonist) => {
+        this.questProtagonist.set(questProtagonist);
+
+      }))
+    )
+  );
+  openResources(panel: OverlayPanel, event: any) {
+    panel.toggle(event);
+    this.ressources.vitalite = Number(this.questProtagonist()?.vitalite ?? 0);
   }
 
-  onDelete(creature: BolCreatureModel, event: any) {
+  modifResources(panel: OverlayPanel, event: any) {
+    panel.toggle(event);
+    this.subs?.unsubscribe();
+    this.spinner.show();
+    this.subs?.unsubscribe();
+    const actionService = this.questService.updateProtagonistToQuest(this.questProtagonistId(), this.ressources);
+    this.subs = actionService.subscribe({
+      next: (result: BolQuestProtagonistModel) => {
+        this.questProtagonist.set(Object.assign({}, this.questProtagonist(), result));
+        this.spinner.hide();
+      },
+      error: () => {
+        this.spinner.hide();
+      }
+    });
+  }
+
+  fichePerso() {
+    this.ref = this.dialogService.open(BolCreatureCreateComponent, {
+      header: 'Fiche de personnage',
+      data: {
+        heros: this.questProtagonist()?.protagonist
+      }
+    });
+    this.subs?.unsubscribe();
+    this.subs = this.ref.onClose.subscribe((creature: BolCreatureModel) => {
+      if (creature) {
+        this.spinner.show();
+        this.subs?.unsubscribe();
+        const actionService = this.creatureService.updateCreature(creature);
+        this.subs = actionService.subscribe({
+          next: (creature: BolCreatureModel) => {
+            this.questProtagonist()!.protagonist = Object.assign({}, this.questProtagonist()!.protagonist, creature);
+            this.spinner.hide();
+          },
+          error: () => {
+            this.spinner.hide();
+          }
+        });
+      }
+    });
+  }
+  deleteProtagonist(id: number, event: any) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
-      message: 'Voulez vous supprimer cette créature ?',
+      message: 'Voulez vous supprimer ce hero de l`aventure ?',
       icon: 'pi pi-info-circle',
       acceptButtonStyleClass: 'p-button-danger p-button-sm',
       acceptLabel: "Oui",
       rejectLabel: "Non",
       accept: () => {
-        this.deleteCreature.emit(<BolCreatureModel>creature);
+        this.subs?.unsubscribe();
+        const actionService = this.questService.deleteProtagonistToQuest(id);
+        this.subs = actionService.subscribe({
+          next: (result: BolQuestProtagonistModel) => {
+            this.spinner.hide();
+            this.deleted.emit();
+          },
+          error: () => {
+            this.spinner.hide();
+          }
+        });
       },
     });
   }
-
 }

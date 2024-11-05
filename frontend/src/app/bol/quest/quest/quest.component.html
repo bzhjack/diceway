@@ -8,7 +8,9 @@
     <div>
         <div class="text-4xl">Héros</div>
         <div class="flex flex-col gap-2">
-          <bol-heros-card *ngFor="let hero of heros()"   [questProtagonistId]="hero.id"></bol-heros-card>
+          <bol-heros-card *ngFor="let hero of heros()"
+                          (deleted)="refreshQuest()"
+                          [questProtagonistId]="hero.id"></bol-heros-card>
         </div>
     </div>
     <div class="flex flex-auto">
@@ -20,6 +22,10 @@
         <bol-pnj-card *ngFor="let pnj of pnjs()"
                       (deleted)="refreshQuest()"
                       [questProtagonistId]="pnj.id"></bol-pnj-card>
+        <bol-creature-card *ngFor="let creature of creatures()"
+                           (deleted)="refreshQuest()"
+                           [questProtagonistId]="creature.id"
+                      ></bol-creature-card>
       </div>
 
     </div>

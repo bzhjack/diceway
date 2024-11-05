@@ -21,6 +21,7 @@ import {FieldsetModule} from "primeng/fieldset";
 import {ConfirmationService} from "primeng/api";
 import {BolQuestHerosCardComponent} from "../../heros/quest-card/card.component";
 import {BolQuestPnjCardComponent} from "../../pnj/quest-card/card.component";
+import {BolQuestCreatureCardComponent} from "../../creatures/quest-card/card.component";
 
 @Component({
   selector: 'bol-quest',
@@ -40,7 +41,8 @@ import {BolQuestPnjCardComponent} from "../../pnj/quest-card/card.component";
     FieldsetModule,
     BolQuestHerosCardComponent,
     NgForOf,
-    BolQuestPnjCardComponent
+    BolQuestPnjCardComponent,
+    BolQuestCreatureCardComponent
   ],
   templateUrl: './quest.component.html',
   styleUrl: './quest.component.scss',

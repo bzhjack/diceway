@@ -1,91 +1,56 @@
-@if (creature()) {
-  <p-card class="creature_card" [style]="{width: '410px', height: '260px'}">
-    <div class="flex flex-col w-full">
-      <div class="creature_card__title">
-        <div class="flex justify-between">
-          <div class="flex gap-2 items-center">
-            <i *ngIf="creature().commentaire" class="pi pi-info-circle cursor-pointer warn-color"
-               [pTooltip]="creature().commentaire ?? ''"></i> {{ creature().nom }}
-          </div>
-
-          <div *ngIf="profile() === 'private'" class="flex gap-2 justify-end">
-            <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-pencil"
-                    (click)="onCreate(creature())"></button>
-            <button severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash"
-                    (click)="onDelete(creature(), $event)">
-            </button>
-          </div>
-        </div>
-
-        <div class="flex justify-between creature_card__subtitle">
-          <div class="flex gap-2 items-center font-light text-gray-400">
-            ({{ creature().taille.taille }})
-            <p-tag [severity]="getSeverity(creature())">{{ profile() === 'private' ? 'Privé' : 'Public' }}</p-tag>
-          </div>
-          <div class="flex items-center gap-2">
-            <div class="text-gray-300">Vitalité</div>
-            <div class="text-gray-400 font-bold">{{ creature().vitalite }}</div>
-          </div>
-        </div>
+<p-card class="creature_card" [style]="{border: '1px solid #424b57'}">
+  @if ((questProtagonist$ | async) && questProtagonist()) {
+    <div class="flex gap-2">
+      <div class="creature_card__img">
+        <img style="width:100%"
+             [src]="creature().avatar !== null ? creature().avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+             alt="avatar">
       </div>
-      <div class="flex gap-2">
-        <div style="padding-top: 8px;">
-          <div class="creature_card__img">
-            <img *ngIf="profile() === 'public'" src="/frontend/assets/bol/bestiary/{{creature().id}}.jpg" alt=""/>
-            <img *ngIf="profile() === 'private'" style="width:100%"
-                 [src]="creature().avatar !== null ? creature().avatar : '/frontend/assets/bol/empty-avatar.jpg'"
-                 alt="avatar">
-          </div>
-        </div>
-        <p-fieldset legend="Attributs" class="flex-auto">
-          <div style="height: 85px">
-            <table>
-              <tr>
-                <td class="text-gray-300">Vigueur</td>
-                <td class="text-gray-400">{{ creature().vigueur }}</td>
-              </tr>
-              <tr>
-                <td class="text-gray-300">Agilité</td>
-                <td class="text-gray-400">{{ creature().agilite }}</td>
-              </tr>
-              <tr>
-                <td class="text-gray-300">Esprit</td>
-                <td class="text-gray-400">{{ creature().esprit }}</td>
-              </tr>
-            </table>
-          </div>
-        </p-fieldset>
-        <p-fieldset legend="Combat" class="flex-auto">
-          <table>
-            <tr>
-              <td class="text-gray-300">Attaque</td>
-              <td class="text-gray-400">{{ creature().attaque }}</td>
-            </tr>
-            <tr>
-              <td class="text-gray-300">Dégâts</td>
-              <td class="text-gray-400">{{ creature().degats }}</td>
-            </tr>
-            <tr>
-              <td class="text-gray-300">Défense</td>
-              <td class="text-gray-400">{{ creature().defense }}</td>
-            </tr>
-            <tr>
-              <td class="text-gray-300">Protection</td>
-              <td class="text-gray-400">{{ creature().protection }}</td>
-            </tr>
-          </table>
-        </p-fieldset>
-      </div>
-      <div>
-        <p-fieldset *ngIf="creature()?.capacites?.length" legend="Capacités spéciales" styleClass="w-full">
-          <div class="flex flex-wrap gap-2 pb-2" style="max-height: 24px; overflow: auto;">
-            <div class="text-gray-300" *ngFor="let capa of creature()?.capacites">
-              <i *ngIf="capa.detail || capa.capacite.description" class="pi pi-info-circle cursor-pointer text-cyan-600"
-                 [pTooltip]="(capa.detail ?  capa.detail + '\n\r' : '') + capa.capacite.description"></i> {{ capa.capacite.capacite }}
+      <div class="flex flex-col gap-2" style="width: 150px">
+        <div class="heros_card__name">{{ creature().nom }}</div>
+        <div class="flex gap-2 items-center" (click)="openResources(heroPanel, $event)">
+          <p-tag severity="danger" pTooltip="Vitalité">
+            <div class="flex items-center gap-1 px-0.5">
+              <div style="width: 15px; height:15px;">
+                <i class="pi pi-heart-fill" style="color: red; padding-top: 2px"></i>
+              </div>
+              <span style="color: white">{{questProtagonist()?.vitalite}}</span>
             </div>
-          </div>
-        </p-fieldset>
+          </p-tag>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <app-btn *ngIf="creature()?.user_id" pRipple icon="user-edit" (click)="fichePerso()"></app-btn>
+        <app-btn pRipple icon="trash" (click)="deleteProtagonist(questProtagonist()!.id, $event)"></app-btn>
       </div>
     </div>
-  </p-card>
-}
+
+  } @else {
+    <div class="flex gap-2" style="height:54px">
+      <p-skeleton size="50px"/>
+      <div class="flex flex-col gap-1">
+        <p-skeleton width="150px" height="17px"/>
+        <p-skeleton width="50px" height="20px"/>
+      </div>
+      <div class="flex flex-col gap-2">
+        <p-skeleton size="21px"/>
+        <p-skeleton size="21px"/>
+      </div>
+    </div>
+  }
+</p-card>
+<p-overlayPanel #heroPanel>
+  <div class="flex flex-col gap-2 pb-2">
+    <div class="flex flex-col gap-1">
+      <label>Vitalité</label>
+      <p-inputNumber [(ngModel)]="ressources.vitalite" inputId="vitalite" variant="filled"/>
+    </div>
+  </div>
+  <div class="flex justify-end gap-2">
+    <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
+            (click)="heroPanel.toggle($event)"></button>
+    <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
+            (click)="modifResources(heroPanel, $event)"></button>
+  </div>
+</p-overlayPanel>
+<p-confirmPopup />
