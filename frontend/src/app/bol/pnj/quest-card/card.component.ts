@@ -159,7 +159,9 @@ export class BolQuestPnjCardComponent {
         const actionService = this.pnjService.quickUpdate(pnj);
         this.subs = actionService.subscribe({
           next: (character: BolHerosModel) => {
-            this.pnj.set(Object.assign({}, this.pnj(), character));
+            const modifiedPnj = Object.assign({}, this.pnj(), character);
+            this.pnj.set(modifiedPnj);
+            this.questProtagonist()!.protagonist = modifiedPnj;
             this.spinner.hide();
           },
           error: () => {
