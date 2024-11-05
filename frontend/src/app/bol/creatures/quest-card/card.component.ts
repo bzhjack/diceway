@@ -78,7 +78,6 @@ export class BolQuestCreatureCardComponent {
     exhaustMap((id) =>                          // Don't execute the http request if one is already in progress
       this.questService.questProtagonist(id).pipe(tap((questProtagonist) => {
         this.questProtagonist.set(questProtagonist);
-
       }))
     )
   );

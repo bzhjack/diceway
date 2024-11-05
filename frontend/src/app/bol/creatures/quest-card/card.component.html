@@ -1,13 +1,15 @@
 <p-card class="creature_card" [style]="{border: '1px solid #424b57'}">
   @if ((questProtagonist$ | async) && questProtagonist()) {
+    {{creature() | json}}
     <div class="flex gap-2">
       <div class="creature_card__img">
-        <img style="width:100%"
+        <img *ngIf="!creature()?.user_id" src="/frontend/assets/bol/creatures/{{creature()?.id}}.jpg" alt=""/>
+        <img *ngIf="creature()?.user_id" style="width:100%"
              [src]="creature().avatar !== null ? creature().avatar : '/frontend/assets/bol/empty-avatar.jpg'"
              alt="avatar">
       </div>
       <div class="flex flex-col gap-2" style="width: 150px">
-        <div class="heros_card__name">{{ creature().nom }}</div>
+        <div class="heros_card__name">{{ creature()?.nom }}</div>
         <div class="flex gap-2 items-center" (click)="openResources(heroPanel, $event)">
           <p-tag severity="danger" pTooltip="Vitalité">
             <div class="flex items-center gap-1 px-0.5">
