@@ -3,12 +3,15 @@ import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {BolQuestProtagonistModel, BolQuestModel} from "../models/bol-quest.model";
 import {BolHerosModel} from "../models/bol-heros.model";
+import {BolCreatureModel} from "../models/bol-creature.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class BolQuestService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
+
   quests(): Observable<BolQuestModel[]> {
     return this.http.get<BolQuestModel[]>('/api/bol/quest');
   }
@@ -16,31 +19,53 @@ export class BolQuestService {
   quest(idQuest: string): Observable<BolQuestModel> {
     return this.http.get<BolQuestModel>('/api/bol/quest/' + idQuest);
   }
+
   createQuest(quest: BolQuestModel): Observable<any> {
     return this.http.post<BolQuestModel>('/api/bol/quest/create', <BolQuestModel>quest);
   }
+
   updateQuest(quest: BolQuestModel): Observable<any> {
     return this.http.post<BolQuestModel>('/api/bol/quest/update', <BolQuestModel>quest);
   }
+
   questProtagonist(idProtagonist: number): Observable<BolQuestProtagonistModel> {
     return this.http.get<BolQuestProtagonistModel>('/api/bol/quest/protagonist/' + idProtagonist);
   }
-  addProtagonistToQuest(hero: BolHerosModel, questId: string, type: 'H' | 'P' | 'C' | 'D'): Observable<any> {
-    const protagonist = {
-      protagonist_id : hero.id,
-      quest_id: questId,
-      type: type,
-      vitalite: hero.ressources.vitalite,
-      heroisme: hero.ressources.heroisme,
-      creation: hero.ressources.creation,
-      vilenie: hero.ressources.vilenie,
-      foi: hero.ressources.foi
+
+  addProtagonistToQuest(character: BolHerosModel | BolCreatureModel, questId: string, type: 'H' | 'P' | 'C' | 'D'): Observable<any> {
+    let protagonist: Partial<BolQuestProtagonistModel> = {};
+    if (type === 'H' || type === 'P') {
+      character = character as BolHerosModel;
+      protagonist = {
+        protagonist_id: character.id ?? '',
+        quest_id: questId,
+        type: type,
+        vitalite: character.ressources.vitalite,
+        heroisme: character.ressources.heroisme,
+        creation: character.ressources.creation,
+        vilenie: character.ressources.vilenie,
+        foi: character.ressources.foi
+      }
+    }
+    if (type === 'C') {
+      const creature = character as BolCreatureModel;
+      protagonist = {
+        protagonist_id: creature.id ?? '',
+        quest_id: questId,
+        type: type,
+        vitalite: creature.vitalite,
+        heroisme: 0,
+        creation: 0,
+        vilenie: 0,
+        foi: 0
+      }
     }
     return this.http.post('/api/bol/quest/protagonist/create', protagonist);
   }
-  updateProtagonistToQuest(id: number, ressources: any,  ): Observable<any> {
+
+  updateProtagonistToQuest(id: number, ressources: any): Observable<any> {
     const protagonist = {
-      id :id,
+      id: id,
       vitalite: ressources.vitalite ?? 0,
       heroisme: ressources.heroisme ?? 0,
       vilenie: ressources.vilenie ?? 0,

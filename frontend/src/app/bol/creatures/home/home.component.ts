@@ -223,18 +223,17 @@ export class BolCreatureHomeComponent implements OnDestroy {
   addToAdventure() {
     this.showCard.set(false);
     if (this.selectedQuest()) {
-      const id = this.currentBeast?.id ?? '';
       const questId = this.selectedQuest()?.id ?? '';
       this.spinner.show();
       this.subs?.unsubscribe();
-      /*this.subs = this.questService.addProtagonistToQuest(id, questId, 'C').subscribe({
+      this.subs = this.questService.addProtagonistToQuest(this.currentBeast!, questId, 'C').subscribe({
         next: () => {
           this.spinner.hide();
         },
         error: () => {
           this.spinner.hide();
         }
-      });*/
+      });
     }
   }
 }
