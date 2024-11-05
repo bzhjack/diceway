@@ -217,18 +217,17 @@ export class BolDemonHomeComponent implements OnDestroy {
   addToAdventure() {
     this.showCard.set(false);
     if (this.selectedQuest()) {
-      const id = this.currentDemon?.id ?? '';
       const questId = this.selectedQuest()?.id ?? '';
       this.spinner.show();
       this.subs?.unsubscribe();
-      /*this.subs = this.questService.addProtagonistToQuest(id, questId, 'D').subscribe({
+      this.subs = this.questService.addProtagonistToQuest(this.currentDemon!, questId, 'D').subscribe({
         next: () => {
           this.spinner.hide();
         },
         error: () => {
           this.spinner.hide();
         }
-      });*/
+      });
     }
   }
 

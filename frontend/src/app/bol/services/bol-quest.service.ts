@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {BolQuestProtagonistModel, BolQuestModel} from "../models/bol-quest.model";
 import {BolHerosModel} from "../models/bol-heros.model";
 import {BolCreatureModel} from "../models/bol-creature.model";
+import {BolDemonModel} from "../models/bol-demon.model";
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,7 @@ export class BolQuestService {
     return this.http.get<BolQuestProtagonistModel>('/api/bol/quest/protagonist/' + idProtagonist);
   }
 
-  addProtagonistToQuest(character: BolHerosModel | BolCreatureModel, questId: string, type: 'H' | 'P' | 'C' | 'D'): Observable<any> {
+  addProtagonistToQuest(character: BolHerosModel | BolCreatureModel | BolDemonModel, questId: string, type: 'H' | 'P' | 'C' | 'D'): Observable<any> {
     let protagonist: Partial<BolQuestProtagonistModel> = {};
     if (type === 'H' || type === 'P') {
       character = character as BolHerosModel;
@@ -54,6 +55,19 @@ export class BolQuestService {
         quest_id: questId,
         type: type,
         vitalite: creature.vitalite,
+        heroisme: 0,
+        creation: 0,
+        vilenie: 0,
+        foi: 0
+      }
+    }
+    if (type === 'D') {
+      const demon = character as BolDemonModel;
+      protagonist = {
+        protagonist_id: demon.id ?? '',
+        quest_id: questId,
+        type: type,
+        vitalite: demon.vitalite,
         heroisme: 0,
         creation: 0,
         vilenie: 0,
