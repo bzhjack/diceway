@@ -1,4 +1,4 @@
-import {Component, inject, input, signal} from '@angular/core';
+import {Component, computed, inject, input, output, signal} from '@angular/core';
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {BolHerosService} from "../../services/bol-heros.service";
 import {toObservable} from "@angular/core/rxjs-interop";
@@ -60,22 +60,22 @@ import {ConfirmPopupModule} from "primeng/confirmpopup";
 export class BolQuestHerosCardComponent {
 
   private heroService = inject(BolHerosService);
-  private questService = inject(BolQuestService);
   private dialogService = inject(DialogService);
   private spinner = inject(NgxSpinnerService);
+  private questService = inject(BolQuestService);
   private confirmationService = inject(ConfirmationService);
 
   private ref?: DynamicDialogRef;
   private subs?: Subscription;
-
   ressources = {
     vitalite: 0,
     heroisme: 0,
     vilenie: 0
   }
+  deleted = output();
   questProtagonistId = input<number>(0);
   questProtagonist = signal<BolQuestProtagonistModel | null>(null);
-  hero = signal<BolHerosModel | null>(null);
+  hero= computed(() => this.questProtagonist()?.protagonist as BolHerosModel);
 
   questProtagonist$ = toObservable<number>(this.questProtagonistId).pipe( // Watch for user changes
     filter((id) => id > 0),                     // Only make http request for users larger than 0
@@ -83,46 +83,18 @@ export class BolQuestHerosCardComponent {
     exhaustMap((id) =>                          // Don't execute the http request if one is already in progress
       this.questService.questProtagonist(id).pipe(tap((questProtagonist) => {
         this.questProtagonist.set(questProtagonist);
-        this.hero.set(questProtagonist.protagonist as BolHerosModel);
-      }))   // Update the response
+
+      }))
     )
   );
 
-  constructor() {
-  }
-
   openAction() {
+    const hero: BolHerosModel = this.questProtagonist()?.protagonist as BolHerosModel;
     this.dialogService.open(BolActionComponent, {
-      header: 'Effectuer une action',
+      header: hero.origines.nom + 'va effectuer une action.',
       maximizable: true,
       data: {
-        hero: this.hero()
-      }
-    });
-  }
-
-  fichePerso() {
-    this.ref = this.dialogService.open(BolHerosUpdateComponent, {
-      header: 'Fiche de personnage',
-      data: {
-        heros: this.hero()
-      }
-    });
-    this.subs?.unsubscribe();
-    this.subs = this.ref.onClose.subscribe((heros: BolHerosModel) => {
-      if (heros) {
-        this.spinner.show();
-        this.subs?.unsubscribe();
-        const actionService = this.heroService.quickUpdate(heros);
-        this.subs = actionService.subscribe({
-          next: (character: BolHerosModel) => {
-            this.hero.set(Object.assign({}, this.hero(), character));
-            this.spinner.hide();
-          },
-          error: () => {
-            this.spinner.hide();
-          }
-        });
+        hero: this.questProtagonist()?.protagonist
       }
     });
   }
@@ -150,6 +122,32 @@ export class BolQuestHerosCardComponent {
     });
   }
 
+  fichePerso() {
+    this.ref = this.dialogService.open(BolHerosUpdateComponent, {
+      header: 'Fiche de personnage',
+      data: {
+        heros: this.questProtagonist()?.protagonist
+      }
+    });
+    this.subs?.unsubscribe();
+    this.subs = this.ref.onClose.subscribe((hero: BolHerosModel) => {
+      if (hero) {
+        this.spinner.show();
+        this.subs?.unsubscribe();
+        const actionService = this.heroService.quickUpdate(hero);
+        this.subs = actionService.subscribe({
+          next: (character: BolHerosModel) => {
+            const modifiedHero = Object.assign({}, this.questProtagonist()!.protagonist, character);
+            this.questProtagonist()!.protagonist = modifiedHero;
+            this.spinner.hide();
+          },
+          error: () => {
+            this.spinner.hide();
+          }
+        });
+      }
+    });
+  }
   deleteProtagonist(id: number, event: any) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
@@ -164,6 +162,7 @@ export class BolQuestHerosCardComponent {
         this.subs = actionService.subscribe({
           next: (result: BolQuestProtagonistModel) => {
             this.spinner.hide();
+            this.deleted.emit();
           },
           error: () => {
             this.spinner.hide();
