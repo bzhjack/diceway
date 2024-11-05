@@ -1,4 +1,4 @@
-import {Component, inject, input, output, signal} from '@angular/core';
+import {Component, computed, inject, input, output, signal} from '@angular/core';
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {ButtonDirective} from "primeng/button";
 import {CardModule} from "primeng/card";
@@ -73,7 +73,7 @@ export class BolQuestPnjCardComponent {
   deleted = output();
   questProtagonistId = input<number>(0);
   questProtagonist = signal<BolQuestProtagonistModel | null>(null);
-  pnj= signal<BolHerosModel | null>(null);
+  pnj= computed(() => this.questProtagonist()?.protagonist as BolHerosModel);
 
   questProtagonist$ = toObservable<number>(this.questProtagonistId).pipe( // Watch for user changes
     filter((id) => id > 0),                     // Only make http request for users larger than 0
@@ -81,7 +81,7 @@ export class BolQuestPnjCardComponent {
     exhaustMap((id) =>                          // Don't execute the http request if one is already in progress
       this.questService.questProtagonist(id).pipe(tap((questProtagonist) => {
         this.questProtagonist.set(questProtagonist);
-        this.pnj.set(questProtagonist.protagonist as BolHerosModel);
+        //this.pnj.set(questProtagonist.protagonist as BolHerosModel);
       }))   // Update the response
     )
   );
@@ -159,8 +159,8 @@ export class BolQuestPnjCardComponent {
         const actionService = this.pnjService.quickUpdate(pnj);
         this.subs = actionService.subscribe({
           next: (character: BolHerosModel) => {
-            const modifiedPnj = Object.assign({}, this.pnj(), character);
-            this.pnj.set(modifiedPnj);
+            const modifiedPnj = Object.assign({}, this.questProtagonist()!.protagonist, character);
+            //this.pnj.set(modifiedPnj);
             this.questProtagonist()!.protagonist = modifiedPnj;
             this.spinner.hide();
           },
