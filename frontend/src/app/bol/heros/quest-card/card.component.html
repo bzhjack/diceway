@@ -57,17 +57,17 @@
   <div class="flex flex-col gap-2 pb-2">
     <div class="flex flex-col gap-1">
       <label>Vitalité</label>
-      <p-inputNumber [(ngModel)]="ressources.vitalite" inputId="vitalite"/>
+      <p-inputNumber [(ngModel)]="ressources.vitalite" inputId="vitalite" variant="filled"/>
     </div>
     @if(ressources.heroisme > 0) {
       <div class="flex flex-col gap-1">
         <label>Heroisme</label>
-        <p-inputNumber [(ngModel)]="ressources.heroisme" inputId="heroisme"/>
+        <p-inputNumber [(ngModel)]="ressources.heroisme" inputId="heroisme" variant="filled"/>
       </div>
     } @else {
       <div class="flex flex-col gap-1">
         <label>Vilénie</label>
-        <p-inputNumber [(ngModel)]="ressources.vilenie" inputId="vilénie"/>
+        <p-inputNumber [(ngModel)]="ressources.vilenie" inputId="vilénie" variant="filled"/>
       </div>
     }
   </div>
