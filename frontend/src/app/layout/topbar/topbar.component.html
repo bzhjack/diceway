@@ -6,7 +6,7 @@
     <div class="flex items-center text-3xl relative dw_route cursor-pointer" routerLink="/bol">
       {{ route() }}
     </div>
-    <div class="flex gap-2 items-center">
+    <div class="flex gap-2 items-center" *ngIf="nameSpace() === 'bol'">
       <p-button label="Aventures" [link]="true" routerLink="/bol/quest" size="small" />
       <p-button label="Héros" [link]="true" routerLink="/bol/heros" size="small" />
       <p-button label="Pnj" [link]="true" routerLink="/bol/pnj" size="small" />
