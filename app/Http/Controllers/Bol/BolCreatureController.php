@@ -9,6 +9,7 @@ use App\Models\Bol\BolCapacite;
 use App\Models\Bol\BolCreature;
 use App\Models\Bol\BolCreatureCapacite;
 use App\Models\Bol\BolTaille;
+use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -125,11 +126,10 @@ class BolCreatureController extends Controller
 
         // Mettre à jour les autres champs de la créature
         $creature->update($updatedCreature);
-
-        return response()->json(['message' => 'Creature updated successfully']);
+        return response($this->bolCreatureService->getCreatureWithRelations($creatureId));
     }
 
-    public function delete($id): \Illuminate\Http\JsonResponse
+    public function delete($id): JsonResponse
     {
         Cache::forget('bol_creatures');
         $bolCreature = BolCreature::find($id);

@@ -124,8 +124,7 @@ class BolDemonController extends Controller
 
         // Mettre à jour les autres champs de la créature
         $demon->update($updatedDemon);
-
-        return response()->json(['message' => 'Demon updated successfully']);
+        return response($this->bolDemonService->getDemonWithRelations($demonId));
     }
 
     public function delete($id): \Illuminate\Http\JsonResponse

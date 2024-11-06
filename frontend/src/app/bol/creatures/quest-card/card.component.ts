@@ -107,7 +107,7 @@ export class BolQuestCreatureCardComponent {
     this.ref = this.dialogService.open(BolCreatureCreateComponent, {
       header: 'Fiche de personnage',
       data: {
-        heros: this.questProtagonist()?.protagonist
+        creature: this.questProtagonist()?.protagonist
       }
     });
     this.subs?.unsubscribe();

@@ -116,7 +116,7 @@ class BolHerosController extends Controller
         if ($heros["region_id"] === null || count($traits) === 0) {
             BolHerosTrait::where('heros_id', $herosId)->delete();
         }
-        $result = $this->bolHerosService->getHeroWithRelations($herosId);;
+        $result = $this->bolHerosService->getHeroWithRelations($herosId);
         return response($result);
     }
 

@@ -99,12 +99,14 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::delete('/bol/creature/delete/{id}', [BolCreatureController::class, 'delete']);
 
     // Gestion des démons
+    Route::get('/bol/demon/categories', [BolDemonController::class, 'getAllCategories']);
+    Route::get('/bol/demon/pouvoirs', [BolDemonController::class, 'getAllPouvoirs']);
     Route::get('/bol/demon', [BolDemonController::class, 'getAll']);
+    Route::get('/bol/demon/{id}', [BolDemonController::class, 'getOne']);
     Route::post('/bol/demon/create', [BolDemonController::class, 'create']);
     Route::post('/bol/demon/update', [BolDemonController::class, 'update']);
     Route::delete('/bol/demon/delete/{id}', [BolDemonController::class, 'delete']);
-    Route::get('/bol/demon/categories', [BolDemonController::class, 'getAllCategories']);
-    Route::get('/bol/demon/pouvoirs', [BolDemonController::class, 'getAllPouvoirs']);
+
 
     // Gestion du Héros
     Route::get('/bol/heros', [BolHerosController::class, 'getAll']);
