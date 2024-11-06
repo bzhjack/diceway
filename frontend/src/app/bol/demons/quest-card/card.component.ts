@@ -1,6 +1,5 @@
 import {Component, computed, inject, input, output, signal} from '@angular/core';
 import {CardModule} from "primeng/card";
-import {BolCreatureModel} from "../../models/bol-creature.model";
 import {TagModule} from "primeng/tag";
 import {AsyncPipe, JsonPipe, NgIf} from "@angular/common";
 import {TooltipModule} from "primeng/tooltip";
@@ -13,11 +12,9 @@ import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
 import {NgxSpinnerService} from "ngx-spinner";
 import {BolQuestService} from "../../services/bol-quest.service";
 import {exhaustMap, filter, Subscription} from "rxjs";
-import {BolCreaturesService} from "../../services/bol-creatures.service";
 import {toObservable} from "@angular/core/rxjs-interop";
 import {tap} from "rxjs/operators";
 import {OverlayPanel, OverlayPanelModule} from "primeng/overlaypanel";
-import {BolCreatureCreateComponent} from "../create/create.component";
 import {BtnComponent} from "../../../shared/btn/btn.component";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {InputNumberModule} from "primeng/inputnumber";
@@ -25,9 +22,12 @@ import {SkeletonModule} from "primeng/skeleton";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {BolActionComponent} from "../../quest/action/action.component";
 import {InputTextModule} from "primeng/inputtext";
+import {BolDemonsService} from "../../services/bol-demons.service";
+import {BolDemonModel} from "../../models/bol-demon.model";
+import {BolDemonCreateComponent} from "../create/create.component";
 
 @Component({
-  selector: 'bol-creature-card',
+  selector: 'bol-demon-card',
   standalone: true,
   imports: [
     AsyncPipe,
@@ -53,9 +53,9 @@ import {InputTextModule} from "primeng/inputtext";
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
-export class BolQuestCreatureCardComponent {
+export class BolQuestDemonCardComponent {
 
-  private creatureService = inject(BolCreaturesService);
+  private demonService = inject(BolDemonsService);
   private dialogService = inject(DialogService);
   private spinner = inject(NgxSpinnerService);
   private questService = inject(BolQuestService);
@@ -70,7 +70,7 @@ export class BolQuestCreatureCardComponent {
   deleted = output();
   questProtagonistId = input<number>(0);
   questProtagonist = signal<BolQuestProtagonistModel | null>(null);
-  creature= computed(() => this.questProtagonist()?.protagonist as BolCreatureModel);
+  demon= computed(() => this.questProtagonist()?.protagonist as BolDemonModel);
 
   questProtagonist$ = toObservable<number>(this.questProtagonistId).pipe( // Watch for user changes
     filter((id) => id > 0),                     // Only make http request for users larger than 0
@@ -104,21 +104,21 @@ export class BolQuestCreatureCardComponent {
   }
 
   fichePerso() {
-    this.ref = this.dialogService.open(BolCreatureCreateComponent, {
-      header: 'Fiche de créature',
+    this.ref = this.dialogService.open(BolDemonCreateComponent, {
+      header: 'Fiche du démon',
       data: {
-        creature: this.questProtagonist()?.protagonist
+        demon: this.questProtagonist()?.protagonist
       }
     });
     this.subs?.unsubscribe();
-    this.subs = this.ref.onClose.subscribe((creature: BolCreatureModel) => {
-      if (creature) {
+    this.subs = this.ref.onClose.subscribe((demon: BolDemonModel) => {
+      if (demon) {
         this.spinner.show();
         this.subs?.unsubscribe();
-        const actionService = this.creatureService.updateCreature(creature);
+        const actionService = this.demonService.updateDemon(demon);
         this.subs = actionService.subscribe({
-          next: (creature: BolCreatureModel) => {
-            const questProtagonist = Object.assign({}, this.questProtagonist(), {protagonist: creature});
+          next: (demon: BolDemonModel) => {
+            const questProtagonist = Object.assign({}, this.questProtagonist(), {protagonist: demon});
             this.questProtagonist.set(questProtagonist);
             this.spinner.hide();
           },
@@ -132,7 +132,7 @@ export class BolQuestCreatureCardComponent {
   deleteProtagonist(id: number, event: any) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
-      message: 'Voulez vous supprimer cette créature de l`aventure ?',
+      message: 'Voulez vous supprimer ce hero de l`aventure ?',
       icon: 'pi pi-info-circle',
       acceptButtonStyleClass: 'p-button-danger p-button-sm',
       acceptLabel: "Oui",

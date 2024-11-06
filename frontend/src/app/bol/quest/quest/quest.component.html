@@ -26,6 +26,10 @@
                            (deleted)="refreshQuest()"
                            [questProtagonistId]="creature.id"
                       ></bol-creature-card>
+        <bol-demon-card *ngFor="let demon of demons()"
+                           (deleted)="refreshQuest()"
+                           [questProtagonistId]="demon.id"
+        ></bol-demon-card>
       </div>
 
     </div>

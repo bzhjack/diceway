@@ -22,6 +22,7 @@ import {ConfirmationService} from "primeng/api";
 import {BolQuestHerosCardComponent} from "../../heros/quest-card/card.component";
 import {BolQuestPnjCardComponent} from "../../pnj/quest-card/card.component";
 import {BolQuestCreatureCardComponent} from "../../creatures/quest-card/card.component";
+import {BolQuestDemonCardComponent} from "../../demons/quest-card/card.component";
 
 @Component({
   selector: 'bol-quest',
@@ -42,7 +43,8 @@ import {BolQuestCreatureCardComponent} from "../../creatures/quest-card/card.com
     BolQuestHerosCardComponent,
     NgForOf,
     BolQuestPnjCardComponent,
-    BolQuestCreatureCardComponent
+    BolQuestCreatureCardComponent,
+    BolQuestDemonCardComponent
   ],
   templateUrl: './quest.component.html',
   styleUrl: './quest.component.scss',
