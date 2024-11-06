@@ -1,10 +1,8 @@
 <p-card class="creature_card" [style]="{border: '1px solid #424b57'}">
   @if ((questProtagonist$ | async) && questProtagonist()) {
-    ici
-    {{creature() | json}}
     <div class="flex gap-2">
       <div class="creature_card__img">
-        <img *ngIf="!creature()?.user_id" src="/frontend/assets/bol/creatures/{{creature().id}}.jpg" alt=""/>
+        <img *ngIf="!creature()?.user_id" src="/frontend/assets/bol/bestiary/{{creature().id}}.jpg" alt=""/>
         <img *ngIf="creature()?.user_id" style="width:100%"
              [src]="creature().avatar !== null ? creature().avatar : '/frontend/assets/bol/empty-avatar.jpg'"
              alt="avatar">
