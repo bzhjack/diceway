@@ -5,7 +5,7 @@ export interface BolLangueModel {
 }
 
 export interface BolHerosLangueModel {
-  id?: number,
-  langue_id: number,
-  langue?: BolLangueModel,
+  id?: number;
+  langue_id: number;
+  langue?: BolLangueModel;
 }

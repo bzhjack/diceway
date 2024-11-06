@@ -12,22 +12,22 @@ export interface BolHerosModel {
   active: boolean;
   type: string;
   type_order?: number;
-  combat: BolHerosCombat,
-  attributs: BolHerosAttributs,
-  origines: BolHerosOrigines,
-  ressources: BolHerosRessources,
-  traits: BolHerosTraitsModel[],
-  carrieres: BolHerosCarriereModel[],
-  armures: BolHerosArmureModel[] | number[],
-  armes: BolHerosArmeModel[] | number[],
-  currentQuest?: BolQuestProtagonistModel
+  combat: BolHerosCombat;
+  attributs: BolHerosAttributs;
+  origines: BolHerosOrigines;
+  ressources: BolHerosRessources;
+  traits: BolHerosTraitsModel[];
+  carrieres: BolHerosCarriereModel[];
+  armures: BolHerosArmureModel[] | number[];
+  armes: BolHerosArmeModel[] | number[];
+  currentQuest?: BolQuestProtagonistModel;
 }
 
 export interface BolHerosCombat {
-  initiative: number,
-  melee: number,
-  tir: number,
-  defense: number,
+  initiative: number;
+  melee: number;
+  tir: number;
+  defense: number;
 }
 
 export interface BolHerosAttributs {

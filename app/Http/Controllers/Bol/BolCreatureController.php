@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Bol;
 
+
 use App\Http\Controllers\Controller;
+use App\Http\Services\Bol\BolCreatureService;
 use App\Models\Bol\BolCapacite;
 use App\Models\Bol\BolCreature;
 use App\Models\Bol\BolCreatureCapacite;
@@ -14,19 +16,41 @@ use Illuminate\Support\Facades\Cache;
 
 class BolCreatureController extends Controller
 {
+
+    protected $bolCreatureService;
+
+    public function __construct(BolCreatureService $bolCreatureService)
+    {
+        $this->bolCreatureService = $bolCreatureService;
+    }
+
     public function getAll()
     {
         $cacheKey = 'bol_creatures';
         $cacheDuration = 60 * 24; // 60 minutes
         $creatures = Cache::remember($cacheKey, $cacheDuration, function () {
-            return BolCreature::with('taille', 'capacites.capacite')
-                ->where('user_id', Auth::id())
-                ->orWhereNull('user_id')
-                ->orderBy('user_id', 'desc')
-                ->orderBy('id_taille')
-                ->orderBy('nom')->get();
+            return $this->bolCreatureService->getCreaturesWithRelations();
         });
         return response($creatures);
+    }
+
+    /**
+     * Récupère une créature par son id
+     */
+    public function getOne(Request $request)
+    {
+        $id = $request->route('id');
+        $questId = $request->query('questId'); // Récupération de questId si présent
+        $creature = $this->bolCreatureService->getCreatureWithRelations($id);
+        if ($creature === null) {
+            return response()->json(['error' => 'Créature not found'], 404);
+        } else {
+            if ($questId) {
+                $currentQuest = $creature->currentQuest($questId, 'C')->first();
+                $creature['currentQuest'] = $currentQuest;
+            }
+            return response($creature);
+        }
     }
 
     public function getAllTailles()

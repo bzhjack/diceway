@@ -1,3 +1,5 @@
+import {BolQuestProtagonistModel} from "./bol-quest.model";
+
 export interface BolDemonModel {
   id: string | null;
   user_id: string;
@@ -29,6 +31,7 @@ export interface BolDemonModel {
     }
   ];
   categorie: BolDemonCategorieModel;
+  currentQuest?: BolQuestProtagonistModel;
 }
 
 export interface BolDemonPouvoirModel {

@@ -7,7 +7,7 @@ export interface BolArmureModel {
 }
 
 export interface BolHerosArmureModel {
-  id?: number,
-  armure_id: number,
-  armure?: BolArmureModel,
+  id?: number;
+  armure_id: number;
+  armure?: BolArmureModel;
 }

@@ -1,3 +1,5 @@
+import {BolQuestProtagonistModel} from "./bol-quest.model";
+
 export interface BolCreatureModel {
   id: string | null;
   user_id: string;
@@ -22,7 +24,8 @@ export interface BolCreatureModel {
       id: number;
     }
   ],
-  taille: BolCreatureTailleModel
+  taille: BolCreatureTailleModel;
+  currentQuest?: BolQuestProtagonistModel;
 }
 
 export interface BolCreatureCapaciteModel {

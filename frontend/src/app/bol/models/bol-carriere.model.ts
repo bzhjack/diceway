@@ -6,8 +6,8 @@ export interface BolCarriereModel {
 }
 
 export interface BolHerosCarriereModel {
-  id?: number,
-  carriere_id?: number,
-  value: number,
-  carriere?: BolCarriereModel,
+  id?: number;
+  carriere_id?: number;
+  value: number;
+  carriere?: BolCarriereModel;
 }

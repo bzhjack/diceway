@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\Bol\BolDemonService;
 use App\Models\Bol\BolCategorie;
 use App\Models\Bol\BolDemon;
 use App\Models\Bol\BolDemonPouvoir;
@@ -14,19 +15,41 @@ use Illuminate\Support\Facades\Cache;
 
 class BolDemonController extends Controller
 {
+
+    protected $bolDemonService;
+
+    public function __construct(BolDemonService $bolDemonService)
+    {
+        $this->bolDemonService = $bolDemonService;
+    }
+
     public function getAll()
     {
         $cacheKey = 'bol_demons';
         $cacheDuration = 60 * 24; // 60 minutes
         $demon = Cache::remember($cacheKey, $cacheDuration, function () {
-            return BolDemon::with('categorie', 'pouvoirs.pouvoir')
-                ->where('user_id', Auth::id())
-                ->orWhereNull('user_id')
-                ->orderBy('user_id', 'desc')
-                ->orderBy('id_categorie')
-                ->orderBy('nom')->get();
+            return $this->bolDemonService->getDemonsWithRelations();
         });
         return response($demon);
+    }
+
+    /**
+     * Récupère une créature par son id
+     */
+    public function getOne(Request $request)
+    {
+        $id = $request->route('id');
+        $questId = $request->query('questId'); // Récupération de questId si présent
+        $Demon = $this->bolDemonService->getDemonWithRelations($id);
+        if ($Demon === null) {
+            return response()->json(['error' => 'Demon not found'], 404);
+        } else {
+            if ($questId) {
+                $currentQuest = $Demon->currentQuest($questId, 'D')->first();
+                $Demon['currentQuest'] = $currentQuest;
+            }
+            return response($Demon);
+        }
     }
 
     public function getAllCategories()

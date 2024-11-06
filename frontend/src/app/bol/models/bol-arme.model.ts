@@ -8,7 +8,7 @@ export interface BolArmeModel {
 }
 
 export interface BolHerosArmeModel {
-  id?: number,
-  arme_id: number,
-  arme?: BolArmeModel,
+  id?: number;
+  arme_id: number;
+  arme?: BolArmeModel;
 }

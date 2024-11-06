@@ -1,5 +1,6 @@
 import {BolHerosModel} from "./bol-heros.model";
 import {BolCreatureModel} from "./bol-creature.model";
+import {BolDemonModel} from "./bol-demon.model";
 
 export interface BolQuestModel {
   id: string | null;
@@ -20,5 +21,5 @@ export interface BolQuestProtagonistModel {
   foi: number;
   creation: number;
   vilenie: number;
-  protagonist?: BolHerosModel | BolCreatureModel
+  protagonist?: BolHerosModel | BolCreatureModel | BolDemonModel;
 }

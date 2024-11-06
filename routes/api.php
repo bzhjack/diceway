@@ -91,6 +91,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
 
     // Gestion des créatures
     Route::get('/bol/creature', [BolCreatureController::class, 'getAll']);
+    Route::get('/bol/creature/{id}', [BolCreatureController::class, 'getOne']);
     Route::post('/bol/creature/create', [BolCreatureController::class, 'create']);
     Route::post('/bol/creature/update', [BolCreatureController::class, 'update']);
     Route::delete('/bol/creature/delete/{id}', [BolCreatureController::class, 'delete']);

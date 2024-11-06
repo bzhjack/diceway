@@ -7,13 +7,13 @@ export interface BolRegionModel {
   noms: BolNomModel[];
   nomsFeminins: BolNomModel[];
   nomsMasculins: BolNomModel[];
-  avantages: BolAvantageModel[],
-  desavantages: BolDesavantageModel[],
+  avantages: BolAvantageModel[];
+  desavantages: BolDesavantageModel[];
 }
 
 export interface BolNomModel {
   id: number;
   nom: string;
   region_id: number;
-  gender: "F" | "M",
+  gender: "F" | "M";
 }
