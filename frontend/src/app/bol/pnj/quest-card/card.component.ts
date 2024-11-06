@@ -1,4 +1,4 @@
-import {Component, computed, inject, input, output, signal} from '@angular/core';
+import {Component, computed, effect, inject, input, output, signal} from '@angular/core';
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {ButtonDirective} from "primeng/button";
 import {CardModule} from "primeng/card";
@@ -81,7 +81,6 @@ export class BolQuestPnjCardComponent {
     exhaustMap((id) =>                          // Don't execute the http request if one is already in progress
       this.questService.questProtagonist(id).pipe(tap((questProtagonist) => {
         this.questProtagonist.set(questProtagonist);
-        //this.pnj.set(questProtagonist.protagonist as BolHerosModel);
       }))   // Update the response
     )
   );
@@ -160,9 +159,8 @@ export class BolQuestPnjCardComponent {
         const actionService = this.pnjService.quickUpdate(pnj);
         this.subs = actionService.subscribe({
           next: (character: BolHerosModel) => {
-            const modifiedPnj = Object.assign({}, this.questProtagonist()!.protagonist, character);
-            //this.pnj.set(modifiedPnj);
-            this.questProtagonist()!.protagonist = modifiedPnj;
+            const questProtagonist = Object.assign({}, this.questProtagonist(), {protagonist: character});
+            this.questProtagonist.set(questProtagonist);
             this.spinner.hide();
           },
           error: () => {

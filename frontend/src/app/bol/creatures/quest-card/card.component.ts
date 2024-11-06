@@ -118,7 +118,8 @@ export class BolQuestCreatureCardComponent {
         const actionService = this.creatureService.updateCreature(creature);
         this.subs = actionService.subscribe({
           next: (creature: BolCreatureModel) => {
-            this.questProtagonist()!.protagonist = Object.assign({}, this.questProtagonist()!.protagonist, creature);
+            const questProtagonist = Object.assign({}, this.questProtagonist(), {protagonist: creature});
+            this.questProtagonist.set(questProtagonist);
             this.spinner.hide();
           },
           error: () => {

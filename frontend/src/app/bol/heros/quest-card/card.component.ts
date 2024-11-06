@@ -83,7 +83,6 @@ export class BolQuestHerosCardComponent {
     exhaustMap((id) =>                          // Don't execute the http request if one is already in progress
       this.questService.questProtagonist(id).pipe(tap((questProtagonist) => {
         this.questProtagonist.set(questProtagonist);
-
       }))
     )
   );
@@ -137,8 +136,8 @@ export class BolQuestHerosCardComponent {
         const actionService = this.heroService.quickUpdate(hero);
         this.subs = actionService.subscribe({
           next: (character: BolHerosModel) => {
-            const modifiedHero = Object.assign({}, this.questProtagonist()!.protagonist, character);
-            this.questProtagonist()!.protagonist = modifiedHero;
+            const questProtagonist = Object.assign({}, this.questProtagonist(), {protagonist: character});
+            this.questProtagonist.set(questProtagonist);
             this.spinner.hide();
           },
           error: () => {
