@@ -18,6 +18,8 @@ import {DiceService} from "../../../shared/dice/dice.service";
 import {BOL_DIFFICULTIES} from "../../../shared/constantes/difficulties";
 import {BolAvantageModel} from "../../models/bol-avantage.model";
 import {BolDesavantageModel} from "../../models/bol-desavantage.model";
+import {BolDemonModel} from "../../models/bol-demon.model";
+import {BolCreatureModel} from "../../models/bol-creature.model";
 
 @Component({
   selector: 'bol-action',
@@ -46,7 +48,7 @@ import {BolDesavantageModel} from "../../models/bol-desavantage.model";
 })
 export class BolActionComponent implements AfterViewInit {
   initCarriere = {carriere: 'Aucune', value: 0};
-  hero = signal<BolHerosModel | null>(null);
+  hero = signal<BolHerosModel | BolDemonModel | null>(null);
   diceService = inject(DiceService);
   difficulties = BOL_DIFFICULTIES;
   difficulty = signal(0);
@@ -58,19 +60,27 @@ export class BolActionComponent implements AfterViewInit {
 
   diceResult = this.diceService.diceResult;
   carrieres = computed(() => {
-    return this.hero()?.carrieres.map(item => ({
+    const carrieres = (this.hero() as BolHerosModel)?.carrieres ?? [];
+    return carrieres.map(item => ({
       carriere: item.carriere?.carriere,
       value: item.value
     }));
   });
   attributs = computed(() => {
-    return Object.entries(this.hero()?.attributs ?? {}).map((item: [string, number]) => ({
+    const creature = this.hero() as unknown as BolCreatureModel;
+    const attributs = (this.hero() as BolHerosModel)?.attributs ?? {
+      vigueur: creature.vigueur,
+      agilite: creature.agilite,
+      esprit: creature.esprit,
+      aura: creature.aura
+    };
+    return Object.entries(attributs ?? {}).map((item: [string, number]) => ({
       attr: item[0],
       value: Number(item[1])
     }));
   });
   traits = computed(() => {
-    const traits = this.hero()?.traits ?? [];
+    const traits = (this.hero() as BolHerosModel)?.traits ?? [];
     const filteredTraitables = traits.filter(
       (item) => item.traitable && ((item.traitable as BolAvantageModel).de_bonus || (item.traitable as BolDesavantageModel).de_malus));
 
@@ -100,6 +110,7 @@ export class BolActionComponent implements AfterViewInit {
 
   constructor(private ref: DynamicDialogRef, private config: DynamicDialogConfig) {
     this.hero.set(config.data.hero);
+    console.log(this.hero());
     this.diceResult.set(null);
     effect(() => {
       if (this.diceResult()) {

@@ -21,6 +21,7 @@
         </div>
       </div>
       <div class="flex flex-col gap-2">
+        <app-btn pRipple icon="d6" (click)="openAction()"></app-btn>
         <app-btn *ngIf="demon()?.user_id" pRipple icon="user-edit" (click)="fichePerso()"></app-btn>
         <app-btn pRipple icon="trash" (click)="deleteProtagonist(questProtagonist()!.id, $event)"></app-btn>
       </div>

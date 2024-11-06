@@ -25,6 +25,7 @@ import {InputTextModule} from "primeng/inputtext";
 import {BolDemonsService} from "../../services/bol-demons.service";
 import {BolDemonModel} from "../../models/bol-demon.model";
 import {BolDemonCreateComponent} from "../create/create.component";
+import {BolHerosModel} from "../../models/bol-heros.model";
 
 @Component({
   selector: 'bol-demon-card',
@@ -152,4 +153,16 @@ export class BolQuestDemonCardComponent {
       },
     });
   }
+
+  openAction() {
+    const demon: BolDemonModel = this.questProtagonist()?.protagonist as BolDemonModel;
+    this.dialogService.open(BolActionComponent, {
+      header: demon.nom + 'va effectuer une action.',
+      maximizable: true,
+      data: {
+        hero: this.questProtagonist()?.protagonist
+      }
+    });
+  }
+
 }

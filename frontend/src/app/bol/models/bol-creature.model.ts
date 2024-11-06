@@ -7,6 +7,7 @@ export interface BolCreatureModel {
   vigueur: number;
   agilite: number;
   esprit: number;
+  aura: number;
   vitalite: number;
   attaque: number;
   defense: number;
