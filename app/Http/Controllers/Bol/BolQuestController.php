@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\Bol\BolCreatureService;
+use App\Http\Services\Bol\BolDemonService;
 use App\Http\Services\Bol\BolHerosService;
 use App\Models\Bol\BolCreature;
 use App\Models\Bol\BolDemon;
@@ -18,10 +20,14 @@ class BolQuestController extends Controller
 {
 
     protected $bolHerosService;
+    protected $bolDemonService;
+    protected $bolCreatureService;
 
-    public function __construct(BolHerosService $bolHerosService)
+    public function __construct(BolHerosService $bolHerosService, BolDemonService $bolDemonService, BolCreatureService $bolCreatureService)
     {
         $this->bolHerosService = $bolHerosService;
+        $this->bolCreatureService = $bolCreatureService;
+        $this->bolDemonService = $bolDemonService;
     }
     public function getAll()
     {
@@ -73,6 +79,14 @@ class BolQuestController extends Controller
         } else {
             if ($protagonist->type === 'H' || $protagonist->type === 'P') {
                 $hero = $this->bolHerosService->getHeroWithRelations($protagonist->protagonist_id);
+                $protagonist->protagonist = $hero;
+            }
+            if ($protagonist->type === 'D') {
+                $hero = $this->bolDemonService->getDemonWithRelations($protagonist->protagonist_id);
+                $protagonist->protagonist = $hero;
+            }
+            if ($protagonist->type === 'C') {
+                $hero = $this->bolCreatureService->getCreatureWithRelations($protagonist->protagonist_id);
                 $protagonist->protagonist = $hero;
             }
             return response($protagonist);
