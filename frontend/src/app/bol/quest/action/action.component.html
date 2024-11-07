@@ -16,7 +16,7 @@
         </p-dropdown>
       </p-fieldset>
       <div class="flex gap-2">
-        <p-fieldset legend="Attributs">
+        <p-fieldset legend="Attributs" class="flex-auto">
           <div class="flex flex-col gap-1">
             <div *ngFor="let attr of attributs()" class="flex items-center gap-2">
               <p-radioButton [inputId]="attr.attr" name="attribut" [value]="attr"
@@ -27,7 +27,7 @@
             </div>
           </div>
         </p-fieldset>
-        <p-fieldset legend="Utilisation d'une carrière">
+        <p-fieldset legend="Utilisation d'une carrière" class="flex-auto" *ngIf="carrieres().length > 0">
           <div class="flex flex-col gap-1">
             <div class="flex items-center gap-2">
               <p-radioButton inputId="aucune" name="carriere" [value]="initCarriere" [(ngModel)]="selectedCarriere"/>
@@ -46,7 +46,7 @@
           </div>
         </p-fieldset>
       </div>
-      <p-fieldset legend="Application d'un avantage/désavantage">
+      <p-fieldset legend="Application d'un avantage/désavantage" *ngIf="traits().length > 0">
         <div class="flex flex-col gap-1">
           <div class="flex gap-2 items-center pt-2">
             <p-radioButton inputId="aucun" name="carriere" [value]="null" [(ngModel)]="selectedTrait"/>
