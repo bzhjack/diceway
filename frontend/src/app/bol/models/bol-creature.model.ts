@@ -27,6 +27,7 @@ export interface BolCreatureModel {
   ],
   taille: BolCreatureTailleModel;
   currentQuest?: BolQuestProtagonistModel;
+  type?: 'P' | 'C' | 'R'
 }
 
 export interface BolCreatureCapaciteModel {

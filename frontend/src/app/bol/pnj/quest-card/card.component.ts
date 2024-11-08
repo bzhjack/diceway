@@ -27,6 +27,7 @@ import {BolQuestService} from "../../services/bol-quest.service";
 import {BolPnjCreateComponent} from "../create/create.component";
 import {ConfirmationService} from "primeng/api";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
+import {BadgeModule} from "primeng/badge";
 
 @Component({
   selector: 'bol-pnj-card',
@@ -48,7 +49,8 @@ import {ConfirmPopupModule} from "primeng/confirmpopup";
     OverlayPanelModule,
     SkeletonModule,
     FormsModule,
-    ConfirmPopupModule
+    ConfirmPopupModule,
+    BadgeModule
   ],
   providers: [
     ConfirmationService

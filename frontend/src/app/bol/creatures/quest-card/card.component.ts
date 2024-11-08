@@ -25,31 +25,33 @@ import {SkeletonModule} from "primeng/skeleton";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {BolActionComponent} from "../../quest/action/action.component";
 import {InputTextModule} from "primeng/inputtext";
+import {BadgeModule} from "primeng/badge";
 
 @Component({
   selector: 'bol-creature-card',
   standalone: true,
-  imports: [
-    AsyncPipe,
-    JsonPipe,
-    CardModule,
-    SkeletonModule,
-    NgIf,
-    TooltipModule,
-    Button,
-    OverlayPanelModule,
-    BolActionComponent,
-    ButtonDirective,
-    InlineSVGModule,
-    Ripple,
-    BtnComponent,
-    TagModule,
-    FormsModule,
-    InputTextModule,
-    ReactiveFormsModule,
-    InputNumberModule,
-    ConfirmPopupModule
-  ],
+    imports: [
+        AsyncPipe,
+        JsonPipe,
+        CardModule,
+        SkeletonModule,
+        NgIf,
+        TooltipModule,
+        Button,
+        OverlayPanelModule,
+        BolActionComponent,
+        ButtonDirective,
+        InlineSVGModule,
+        Ripple,
+        BtnComponent,
+        TagModule,
+        FormsModule,
+        InputTextModule,
+        ReactiveFormsModule,
+        InputNumberModule,
+        ConfirmPopupModule,
+        BadgeModule
+    ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
@@ -151,5 +153,28 @@ export class BolQuestCreatureCardComponent {
         });
       },
     });
+  }
+  getType(creature: BolCreatureModel | null) {
+    switch (creature?.type) {
+      case 'C':
+        return 'Coriace';
+      case 'R':
+        return 'Rival';
+      case 'P':
+        return 'Piétaille';
+    }
+    return '';
+  }
+
+  getSeverity(creature: BolCreatureModel | null): "success" | "secondary" | "info" | "warning" | "danger" | "contrast" | undefined {
+    switch (creature?.type) {
+      case 'C':
+        return 'warning';
+      case 'R':
+        return 'danger';
+      case 'P':
+        return 'secondary';
+    }
+    return undefined;
   }
 }
