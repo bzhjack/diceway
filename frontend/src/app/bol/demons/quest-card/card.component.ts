@@ -26,31 +26,34 @@ import {BolDemonsService} from "../../services/bol-demons.service";
 import {BolDemonModel} from "../../models/bol-demon.model";
 import {BolDemonCreateComponent} from "../create/create.component";
 import {BolHerosModel} from "../../models/bol-heros.model";
+import {BadgeModule} from "primeng/badge";
+import {BolCreatureModel} from "../../models/bol-creature.model";
 
 @Component({
   selector: 'bol-demon-card',
   standalone: true,
-  imports: [
-    AsyncPipe,
-    JsonPipe,
-    CardModule,
-    SkeletonModule,
-    NgIf,
-    TooltipModule,
-    Button,
-    OverlayPanelModule,
-    BolActionComponent,
-    ButtonDirective,
-    InlineSVGModule,
-    Ripple,
-    BtnComponent,
-    TagModule,
-    FormsModule,
-    InputTextModule,
-    ReactiveFormsModule,
-    InputNumberModule,
-    ConfirmPopupModule
-  ],
+    imports: [
+        AsyncPipe,
+        JsonPipe,
+        CardModule,
+        SkeletonModule,
+        NgIf,
+        TooltipModule,
+        Button,
+        OverlayPanelModule,
+        BolActionComponent,
+        ButtonDirective,
+        InlineSVGModule,
+        Ripple,
+        BtnComponent,
+        TagModule,
+        FormsModule,
+        InputTextModule,
+        ReactiveFormsModule,
+        InputNumberModule,
+        ConfirmPopupModule,
+        BadgeModule
+    ],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
@@ -163,6 +166,30 @@ export class BolQuestDemonCardComponent {
         hero: this.questProtagonist()?.protagonist
       }
     });
+  }
+
+  getType(demon: BolDemonModel | null) {
+    switch (demon?.type) {
+      case 'C':
+        return 'Coriace';
+      case 'R':
+        return 'Rival';
+      case 'P':
+        return 'Piétaille';
+    }
+    return '';
+  }
+
+  getSeverity(demon: BolDemonModel | null): "success" | "secondary" | "info" | "warning" | "danger" | "contrast" | undefined {
+    switch (demon?.type) {
+      case 'C':
+        return 'warning';
+      case 'R':
+        return 'danger';
+      case 'P':
+        return 'secondary';
+    }
+    return undefined;
   }
 
 }

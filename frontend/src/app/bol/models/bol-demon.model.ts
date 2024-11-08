@@ -32,6 +32,7 @@ export interface BolDemonModel {
   ];
   categorie: BolDemonCategorieModel;
   currentQuest?: BolQuestProtagonistModel;
+  type?: 'P' | 'C' | 'R'
 }
 
 export interface BolDemonPouvoirModel {
