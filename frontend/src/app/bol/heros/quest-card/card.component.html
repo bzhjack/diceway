@@ -37,6 +37,7 @@
         <app-btn *ngIf="hero()?.user_id" pRipple icon="user-edit" (click)="fichePerso()"></app-btn>
         <app-btn pRipple icon="trash" (click)="deleteProtagonist(questProtagonist()!.id, $event)"></app-btn>
       </div>
+      <div class="heros_card__player">{{hero().origines.joueur}}</div>
     </div>
 
   } @else {
