@@ -52,8 +52,8 @@ export class DiceService {
   }
 
   clear() {
-    this.DRP.clear();
-    this.dice().clear();
+    this.DRP?.clear();
+    this.dice()?.clear();
     this.diceResult.set(null);
   }
 
