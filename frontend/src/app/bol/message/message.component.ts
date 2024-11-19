@@ -5,18 +5,17 @@ import {SharedModule} from "primeng/api";
 import {JsonPipe, NgForOf, NgIf} from "@angular/common";
 
 @Component({
-  selector: 'bol-message',
-  standalone: true,
-  imports: [
-    MessagesModule,
-    InlineSVGModule,
-    SharedModule,
-    NgIf,
-    NgForOf,
-    JsonPipe
-  ],
-  templateUrl: './message.component.html',
-  styleUrl: './message.component.scss'
+    selector: 'bol-message',
+    imports: [
+        MessagesModule,
+        InlineSVGModule,
+        SharedModule,
+        NgIf,
+        NgForOf,
+        JsonPipe
+    ],
+    templateUrl: './message.component.html',
+    styleUrl: './message.component.scss'
 })
 export class BolMessageComponent {
   type = input<'lang' | 'attr' | 'apt' | 'orig' | 'form-errors' | 'traits' | 'carrieres' | 'form-warn' | 'form-info'>('attr')

@@ -22,29 +22,28 @@ import {BolDemonModel} from "../../models/bol-demon.model";
 import {BolCreatureModel} from "../../models/bol-creature.model";
 
 @Component({
-  selector: 'bol-action',
-  standalone: true,
-  imports: [
-    DropdownModule,
-    FormsModule,
-    Button,
-    FieldsetModule,
-    NgForOf,
-    CheckboxModule,
-    RadioButtonModule,
-    JsonPipe,
-    NgIf,
-    InlineSVGModule,
-    MenuModule,
-    InputTextModule,
-    ReactiveFormsModule,
-    ButtonDirective,
-    Ripple,
-    InputNumberModule,
-    TagModule
-  ],
-  templateUrl: './action.component.html',
-  styleUrl: './action.component.scss'
+    selector: 'bol-action',
+    imports: [
+        DropdownModule,
+        FormsModule,
+        Button,
+        FieldsetModule,
+        NgForOf,
+        CheckboxModule,
+        RadioButtonModule,
+        JsonPipe,
+        NgIf,
+        InlineSVGModule,
+        MenuModule,
+        InputTextModule,
+        ReactiveFormsModule,
+        ButtonDirective,
+        Ripple,
+        InputNumberModule,
+        TagModule
+    ],
+    templateUrl: './action.component.html',
+    styleUrl: './action.component.scss'
 })
 export class BolActionComponent implements AfterViewInit {
   initCarriere = {carriere: 'Aucune', value: 0};

@@ -16,26 +16,25 @@ import {BolHerosStateService} from "../../../../services/bol-heros-state.service
 import {BolHerosTraitRowComponent} from "./trait-row/trait-row.component";
 
 @Component({
-  selector: 'bol-heros-region',
-  standalone: true,
-  imports: [
-    DataViewModule,
-    NgForOf,
-    PanelModule,
-    ButtonModule,
-    TooltipModule,
-    ScrollPanelModule,
-    TagModule,
-    NgIf,
-    InlineSVGModule,
-    FieldsetModule,
-    MessagesModule,
-    OverlayPanelModule,
-    JsonPipe,
-    BolHerosTraitRowComponent
-  ],
-  templateUrl: './region.component.html',
-  styleUrl: './region.component.scss'
+    selector: 'bol-heros-region',
+    imports: [
+        DataViewModule,
+        NgForOf,
+        PanelModule,
+        ButtonModule,
+        TooltipModule,
+        ScrollPanelModule,
+        TagModule,
+        NgIf,
+        InlineSVGModule,
+        FieldsetModule,
+        MessagesModule,
+        OverlayPanelModule,
+        JsonPipe,
+        BolHerosTraitRowComponent
+    ],
+    templateUrl: './region.component.html',
+    styleUrl: './region.component.scss'
 })
 export class BolHerosRegionComponent {
   readonly #bhss = inject(BolHerosStateService);

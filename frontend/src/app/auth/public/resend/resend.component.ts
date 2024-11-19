@@ -15,24 +15,23 @@ import {MessagesModule} from 'primeng/messages';
 import {Message} from 'primeng/api';
 
 @Component({
-  selector: 'app-resend',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CardModule,
-    InputGroupModule,
-    InputGroupAddonModule,
-    InputTextModule,
-    ButtonModule,
-    RouterModule,
-    FormsModule,
-    ReactiveFormsModule,
-    InlineSVGModule,
-    ProgressBarModule,
-    MessagesModule
-  ],
-  templateUrl: './resend.component.html',
-  styleUrl: './resend.component.scss'
+    selector: 'app-resend',
+    imports: [
+        CommonModule,
+        CardModule,
+        InputGroupModule,
+        InputGroupAddonModule,
+        InputTextModule,
+        ButtonModule,
+        RouterModule,
+        FormsModule,
+        ReactiveFormsModule,
+        InlineSVGModule,
+        ProgressBarModule,
+        MessagesModule
+    ],
+    templateUrl: './resend.component.html',
+    styleUrl: './resend.component.scss'
 })
 export class ResendComponent implements OnDestroy {
   messages: Message[] = [];

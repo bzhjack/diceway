@@ -10,21 +10,20 @@ import {Button, ButtonDirective} from "primeng/button";
 import {Ripple} from "primeng/ripple";
 
 @Component({
-  selector: 'app-topbar',
-  standalone: true,
-  imports: [
-    OverlayPanelModule,
-    CommonModule,
-    AvatarModule,
-    InlineSVGModule,
-    AsyncPipe,
-    RouterLink,
-    Button,
-    ButtonDirective,
-    Ripple
-  ],
-  templateUrl: './topbar.component.html',
-  styleUrl: './topbar.component.scss'
+    selector: 'app-topbar',
+    imports: [
+        OverlayPanelModule,
+        CommonModule,
+        AvatarModule,
+        InlineSVGModule,
+        AsyncPipe,
+        RouterLink,
+        Button,
+        ButtonDirective,
+        Ripple
+    ],
+    templateUrl: './topbar.component.html',
+    styleUrl: './topbar.component.scss'
 })
 export class TopbarComponent {
   nameSpace = signal<string>('');

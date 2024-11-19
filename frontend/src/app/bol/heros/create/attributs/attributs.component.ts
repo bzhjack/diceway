@@ -21,30 +21,29 @@ import {InputNumberModule} from "primeng/inputnumber";
 import {BolHerosStateService} from "../../../services/bol-heros-state.service";
 
 @Component({
-  selector: 'bol-heros-attributs',
-  standalone: true,
-  imports: [
-    InputNumberModule,
-    OverlayPanelModule,
-    BolMessageComponent,
-    ReactiveFormsModule,
-    FieldsetModule,
-    NgIf
-  ],
-  templateUrl: './attributs.component.html',
-  styleUrl: './attributs.component.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolHerosAttributsComponent),
-      multi: true,
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => BolHerosAttributsComponent),
-      multi: true,
-    }
-  ]
+    selector: 'bol-heros-attributs',
+    imports: [
+        InputNumberModule,
+        OverlayPanelModule,
+        BolMessageComponent,
+        ReactiveFormsModule,
+        FieldsetModule,
+        NgIf
+    ],
+    templateUrl: './attributs.component.html',
+    styleUrl: './attributs.component.scss',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => BolHerosAttributsComponent),
+            multi: true,
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => BolHerosAttributsComponent),
+            multi: true,
+        }
+    ]
 })
 export class BolHerosAttributsComponent implements ControlValueAccessor, Validator {
   readonly #fb = inject(FormBuilder);

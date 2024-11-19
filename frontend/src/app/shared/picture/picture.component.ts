@@ -10,20 +10,19 @@ import {DynamicDialogRef} from "primeng/dynamicdialog";
 import {DragDropFileDirective} from "./drag-drop-file.directive";
 
 @Component({
-  selector: 'app-picture',
-  standalone: true,
-  imports: [
-    DragDropFileDirective,
-    ButtonModule,
-    AutoFocusModule,
-    NgIf,
-    ToolbarModule,
-    PanelModule,
-    TooltipModule,
-    ImageCropperComponent
-  ],
-  templateUrl: './picture.component.html',
-  styleUrl: './picture.component.scss'
+    selector: 'app-picture',
+    imports: [
+        DragDropFileDirective,
+        ButtonModule,
+        AutoFocusModule,
+        NgIf,
+        ToolbarModule,
+        PanelModule,
+        TooltipModule,
+        ImageCropperComponent
+    ],
+    templateUrl: './picture.component.html',
+    styleUrl: './picture.component.scss'
 })
 export class PictureComponent {
   imageChangedEvent: any = '';

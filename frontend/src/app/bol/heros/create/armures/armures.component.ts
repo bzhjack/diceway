@@ -28,34 +28,33 @@ import {BtnComponent} from "../../../../shared/btn/btn.component";
 
 
 @Component({
-  selector: 'bol-heros-armures',
-  standalone: true,
-  imports: [
-    Button,
-    FieldsetModule,
-    PrimeTemplate,
-    ButtonDirective,
-    DropdownModule,
-    NgIf,
-    OverlayPanelModule,
-    Ripple,
-    FormsModule,
-    NgForOf,
-    ReactiveFormsModule,
-    BtnComponent,
-    JsonPipe,
-    TableModule,
-    TooltipModule
-  ],
-  templateUrl: './armures.component.html',
-  styleUrl: './armures.component.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolHerosArmuresComponent),
-      multi: true,
-    }
-  ]
+    selector: 'bol-heros-armures',
+    imports: [
+        Button,
+        FieldsetModule,
+        PrimeTemplate,
+        ButtonDirective,
+        DropdownModule,
+        NgIf,
+        OverlayPanelModule,
+        Ripple,
+        FormsModule,
+        NgForOf,
+        ReactiveFormsModule,
+        BtnComponent,
+        JsonPipe,
+        TableModule,
+        TooltipModule
+    ],
+    templateUrl: './armures.component.html',
+    styleUrl: './armures.component.scss',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => BolHerosArmuresComponent),
+            multi: true,
+        }
+    ]
 })
 export class BolHerosArmuresComponent implements ControlValueAccessor, OnDestroy {
   private subs?: Subscription;

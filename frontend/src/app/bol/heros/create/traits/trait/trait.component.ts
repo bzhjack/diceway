@@ -11,19 +11,18 @@ import {BolHerosStateService} from "../../../../services/bol-heros-state.service
 import {TooltipModule} from "primeng/tooltip";
 
 @Component({
-  selector: 'bol-heros-trait',
-  standalone: true,
-  imports: [
-    OverlayPanelModule,
-    NgIf,
-    InlineSVGModule,
-    NgForOf,
-    CheckboxModule,
-    JsonPipe,
-    TooltipModule
-  ],
-  templateUrl: './trait.component.html',
-  styleUrl: './trait.component.scss'
+    selector: 'bol-heros-trait',
+    imports: [
+        OverlayPanelModule,
+        NgIf,
+        InlineSVGModule,
+        NgForOf,
+        CheckboxModule,
+        JsonPipe,
+        TooltipModule
+    ],
+    templateUrl: './trait.component.html',
+    styleUrl: './trait.component.scss'
 })
 export class BolHerosTraitComponent {
   readonly #herosStateService = inject(BolHerosStateService);

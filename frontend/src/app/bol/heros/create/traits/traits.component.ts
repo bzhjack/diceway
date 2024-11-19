@@ -32,37 +32,36 @@ import {TooltipModule} from "primeng/tooltip";
 import {BtnComponent} from "../../../../shared/btn/btn.component";
 
 @Component({
-  selector: 'bol-heros-traits',
-  standalone: true,
-  imports: [
-    ButtonDirective,
-    DropdownModule,
-    NgIf,
-    OverlayPanelModule,
-    PrimeTemplate,
-    Ripple,
-    FormsModule,
-    Button,
-    FieldsetModule,
-    NgForOf,
-    ReactiveFormsModule,
-    BolHerosTraitComponent,
-    JsonPipe,
-    BtnComponent,
-    BolMessageComponent,
-    DividerModule,
-    ScrollPanelModule,
-    TooltipModule
-  ],
-  templateUrl: './traits.component.html',
-  styleUrl: './traits.component.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolHerosTraitsComponent),
-      multi: true,
-    }
-  ]
+    selector: 'bol-heros-traits',
+    imports: [
+        ButtonDirective,
+        DropdownModule,
+        NgIf,
+        OverlayPanelModule,
+        PrimeTemplate,
+        Ripple,
+        FormsModule,
+        Button,
+        FieldsetModule,
+        NgForOf,
+        ReactiveFormsModule,
+        BolHerosTraitComponent,
+        JsonPipe,
+        BtnComponent,
+        BolMessageComponent,
+        DividerModule,
+        ScrollPanelModule,
+        TooltipModule
+    ],
+    templateUrl: './traits.component.html',
+    styleUrl: './traits.component.scss',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => BolHerosTraitsComponent),
+            multi: true,
+        }
+    ]
 })
 export class BolHerosTraitsComponent implements ControlValueAccessor, OnDestroy {
   readonly #fb = inject(FormBuilder);

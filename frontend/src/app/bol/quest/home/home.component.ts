@@ -26,38 +26,37 @@ import {ScrollPanelModule} from "primeng/scrollpanel";
 import {InputTextareaModule} from "primeng/inputtextarea";
 
 @Component({
-  selector: 'bol-quest-home',
-  standalone: true,
-  imports: [
-    ButtonDirective,
-    CheckboxModule,
-    ConfirmPopupModule,
-    DialogModule,
-    DropdownModule,
-    HeaderComponent,
-    IconFieldModule,
-    InputIconModule,
-    InputTextModule,
-    NgForOf,
-    NgIf,
-    PaginatorModule,
-    PrimeTemplate,
-    Ripple,
-    RouterLink,
-    TableModule,
-    TagModule,
-    TooltipModule,
-    BolHerosTraitRowComponent,
-    ScrollPanelModule,
-    Button,
-    ReactiveFormsModule,
-    InputTextareaModule
-  ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
-  providers: [
-    ConfirmationService
-  ]
+    selector: 'bol-quest-home',
+    imports: [
+        ButtonDirective,
+        CheckboxModule,
+        ConfirmPopupModule,
+        DialogModule,
+        DropdownModule,
+        HeaderComponent,
+        IconFieldModule,
+        InputIconModule,
+        InputTextModule,
+        NgForOf,
+        NgIf,
+        PaginatorModule,
+        PrimeTemplate,
+        Ripple,
+        RouterLink,
+        TableModule,
+        TagModule,
+        TooltipModule,
+        BolHerosTraitRowComponent,
+        ScrollPanelModule,
+        Button,
+        ReactiveFormsModule,
+        InputTextareaModule
+    ],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss',
+    providers: [
+        ConfirmationService
+    ]
 })
 export class BolQuestHomeComponent implements OnDestroy {
   @ViewChild('questTable') questTable?: Table;

@@ -23,31 +23,30 @@ import {BtnComponent} from "../../../shared/btn/btn.component";
 
 
 @Component({
-  selector: 'bol-creature-create',
-  standalone: true,
-  imports: [
-    AvatarModule,
-    Button,
-    DialogModule,
-    PrimeTemplate,
-    InputTextModule,
-    FormsModule,
-    ReactiveFormsModule,
-    FieldsetModule,
-    InputNumberModule,
-    DropdownModule,
-    OverlayPanelModule,
-    ButtonDirective,
-    InputTextareaModule,
-    NgIf,
-    Ripple,
-    NgForOf,
-    JsonPipe,
-    TooltipModule,
-    BtnComponent
-  ],
-  templateUrl: './create.component.html',
-  styleUrl: './create.component.scss'
+    selector: 'bol-creature-create',
+    imports: [
+        AvatarModule,
+        Button,
+        DialogModule,
+        PrimeTemplate,
+        InputTextModule,
+        FormsModule,
+        ReactiveFormsModule,
+        FieldsetModule,
+        InputNumberModule,
+        DropdownModule,
+        OverlayPanelModule,
+        ButtonDirective,
+        InputTextareaModule,
+        NgIf,
+        Ripple,
+        NgForOf,
+        JsonPipe,
+        TooltipModule,
+        BtnComponent
+    ],
+    templateUrl: './create.component.html',
+    styleUrl: './create.component.scss'
 })
 export class BolCreatureCreateComponent implements OnDestroy {
   private subs?: Subscription;

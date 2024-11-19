@@ -11,8 +11,7 @@ import {InlineSVGModule} from "ng-inline-svg-2";
 import {MessagesModule} from "primeng/messages";
 
 @Component({
-  selector: 'bol-heros-ressources',
-  standalone: true,
+    selector: 'bol-heros-ressources',
     imports: [
         FieldsetModule,
         PrimeTemplate,
@@ -25,15 +24,15 @@ import {MessagesModule} from "primeng/messages";
         MessagesModule,
         NgForOf
     ],
-  templateUrl: './ressources.component.html',
-  styleUrl: './ressources.component.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolHerosRessourcesComponent),
-      multi: true,
-    }
-  ]
+    templateUrl: './ressources.component.html',
+    styleUrl: './ressources.component.scss',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => BolHerosRessourcesComponent),
+            multi: true,
+        }
+    ]
 })
 export class BolHerosRessourcesComponent implements ControlValueAccessor {
 
