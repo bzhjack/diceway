@@ -1,6 +1,9 @@
+
+@use "sass:color";
 @import "primeng/resources/themes/lara-dark-blue/theme.css";
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
+
 
 //@tailwind base;
 @tailwind components;
@@ -53,7 +56,7 @@ body {
 }
 
 .dw_banner {
-  color: lighten(#83a1a6, 20%);
+  color: color.adjust(#83a1a6, $lightness: 20%);
 }
 
 .dw_title {
