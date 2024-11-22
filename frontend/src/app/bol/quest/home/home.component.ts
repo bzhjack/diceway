@@ -4,7 +4,6 @@ import {CheckboxModule} from "primeng/checkbox";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {DialogModule} from "primeng/dialog";
 import {DropdownModule} from "primeng/dropdown";
-import {HeaderComponent} from "../../../shared/header/header.component";
 import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
 import {InputTextModule} from "primeng/inputtext";
@@ -21,7 +20,6 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {Subscription} from "rxjs";
 import {BolQuestService} from "../../services/bol-quest.service";
 import {BolQuestModel} from "../../models/bol-quest.model";
-import {BolHerosTraitRowComponent} from "../../heros/create/origines/region/trait-row/trait-row.component";
 import {ScrollPanelModule} from "primeng/scrollpanel";
 import {InputTextareaModule} from "primeng/inputtextarea";
 
@@ -33,7 +31,6 @@ import {InputTextareaModule} from "primeng/inputtextarea";
         ConfirmPopupModule,
         DialogModule,
         DropdownModule,
-        HeaderComponent,
         IconFieldModule,
         InputIconModule,
         InputTextModule,
@@ -46,7 +43,6 @@ import {InputTextareaModule} from "primeng/inputtextarea";
         TableModule,
         TagModule,
         TooltipModule,
-        BolHerosTraitRowComponent,
         ScrollPanelModule,
         Button,
         ReactiveFormsModule,

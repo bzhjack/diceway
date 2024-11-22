@@ -1,8 +1,7 @@
-import {Component, computed, inject, output, Signal, ViewChild} from '@angular/core';
+import {Component, computed, inject, Signal, ViewChild} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
-import {HeaderComponent} from "../../../shared/header/header.component";
 import {ActivatedRoute, RouterLink} from "@angular/router";
-import {toObservable, toSignal} from "@angular/core/rxjs-interop";
+import {toSignal} from "@angular/core/rxjs-interop";
 import {BehaviorSubject, exhaustMap, filter, map, Subscription} from "rxjs";
 import {tap} from "rxjs/operators";
 import {BolQuestService} from "../../services/bol-quest.service";
@@ -19,16 +18,11 @@ import {BolQuestStateService} from '../../services/bol-quest-state.service';
 import {Overlay} from 'primeng/overlay';
 import {FieldsetModule} from "primeng/fieldset";
 import {ConfirmationService} from "primeng/api";
-import {BolQuestHerosCardComponent} from "../../heros/quest-card/card.component";
-import {BolQuestPnjCardComponent} from "../../pnj/quest-card/card.component";
-import {BolQuestCreatureCardComponent} from "../../creatures/quest-card/card.component";
-import {BolQuestDemonCardComponent} from "../../demons/quest-card/card.component";
 
 @Component({
     selector: 'bol-quest',
     imports: [
         ButtonDirective,
-        HeaderComponent,
         RouterLink,
         AsyncPipe,
         OverlayPanelModule,
@@ -39,11 +33,7 @@ import {BolQuestDemonCardComponent} from "../../demons/quest-card/card.component
         PaginatorModule,
         ReactiveFormsModule,
         FieldsetModule,
-        BolQuestHerosCardComponent,
         NgForOf,
-        BolQuestPnjCardComponent,
-        BolQuestCreatureCardComponent,
-        BolQuestDemonCardComponent
     ],
     templateUrl: './quest.component.html',
     styleUrl: './quest.component.scss',

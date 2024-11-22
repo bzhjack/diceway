@@ -4,7 +4,6 @@ import {DiceService} from "../dice.service";
 
 @Component({
     selector: 'app-dice-result',
-    imports: [],
     templateUrl: './dice-result.component.html',
     styleUrl: './dice-result.component.scss'
 })

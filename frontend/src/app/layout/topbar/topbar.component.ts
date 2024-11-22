@@ -6,8 +6,7 @@ import {AsyncPipe, CommonModule} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {NavigationEnd, Router, RouterLink} from "@angular/router";
 import {filter} from "rxjs";
-import {Button, ButtonDirective} from "primeng/button";
-import {Ripple} from "primeng/ripple";
+import {Button} from "primeng/button";
 
 @Component({
     selector: 'app-topbar',
@@ -18,9 +17,7 @@ import {Ripple} from "primeng/ripple";
         InlineSVGModule,
         AsyncPipe,
         RouterLink,
-        Button,
-        ButtonDirective,
-        Ripple
+        Button
     ],
     templateUrl: './topbar.component.html',
     styleUrl: './topbar.component.scss'
