@@ -25,30 +25,29 @@ import {BolQuestCreatureCardComponent} from "../../creatures/quest-card/card.com
 import {BolQuestDemonCardComponent} from "../../demons/quest-card/card.component";
 
 @Component({
-  selector: 'bol-quest',
-  standalone: true,
-  imports: [
-    ButtonDirective,
-    HeaderComponent,
-    RouterLink,
-    AsyncPipe,
-    OverlayPanelModule,
-    Button,
-    InputTextModule,
-    InputTextareaModule,
-    NgIf,
-    PaginatorModule,
-    ReactiveFormsModule,
-    FieldsetModule,
-    BolQuestHerosCardComponent,
-    NgForOf,
-    BolQuestPnjCardComponent,
-    BolQuestCreatureCardComponent,
-    BolQuestDemonCardComponent
-  ],
-  templateUrl: './quest.component.html',
-  styleUrl: './quest.component.scss',
-  providers: [ConfirmationService]
+    selector: 'bol-quest',
+    imports: [
+        ButtonDirective,
+        HeaderComponent,
+        RouterLink,
+        AsyncPipe,
+        OverlayPanelModule,
+        Button,
+        InputTextModule,
+        InputTextareaModule,
+        NgIf,
+        PaginatorModule,
+        ReactiveFormsModule,
+        FieldsetModule,
+        BolQuestHerosCardComponent,
+        NgForOf,
+        BolQuestPnjCardComponent,
+        BolQuestCreatureCardComponent,
+        BolQuestDemonCardComponent
+    ],
+    templateUrl: './quest.component.html',
+    styleUrl: './quest.component.scss',
+    providers: [ConfirmationService]
 })
 export class BolQuestComponent {
   questService = inject(BolQuestService);

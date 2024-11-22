@@ -23,31 +23,30 @@ import {BolDemonCategorieModel, BolDemonPouvoirModel} from "../../models/bol-dem
 
 
 @Component({
-  selector: 'bol-demon-create',
-  standalone: true,
-  imports: [
-    AvatarModule,
-    Button,
-    DialogModule,
-    PrimeTemplate,
-    InputTextModule,
-    FormsModule,
-    ReactiveFormsModule,
-    FieldsetModule,
-    InputNumberModule,
-    DropdownModule,
-    OverlayPanelModule,
-    ButtonDirective,
-    InputTextareaModule,
-    NgIf,
-    Ripple,
-    NgForOf,
-    JsonPipe,
-    TooltipModule,
-    BtnComponent
-  ],
-  templateUrl: './create.component.html',
-  styleUrl: './create.component.scss'
+    selector: 'bol-demon-create',
+    imports: [
+        AvatarModule,
+        Button,
+        DialogModule,
+        PrimeTemplate,
+        InputTextModule,
+        FormsModule,
+        ReactiveFormsModule,
+        FieldsetModule,
+        InputNumberModule,
+        DropdownModule,
+        OverlayPanelModule,
+        ButtonDirective,
+        InputTextareaModule,
+        NgIf,
+        Ripple,
+        NgForOf,
+        JsonPipe,
+        TooltipModule,
+        BtnComponent
+    ],
+    templateUrl: './create.component.html',
+    styleUrl: './create.component.scss'
 })
 export class BolDemonCreateComponent implements OnDestroy {
   private subs?: Subscription;

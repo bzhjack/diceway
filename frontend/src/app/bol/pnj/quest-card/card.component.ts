@@ -30,33 +30,32 @@ import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {BadgeModule} from "primeng/badge";
 
 @Component({
-  selector: 'bol-pnj-card',
-  standalone: true,
-  imports: [
-    ButtonDirective,
-    CardModule,
-    FieldsetModule,
-    NgForOf,
-    NgIf,
-    Ripple,
-    TagModule,
-    TooltipModule,
-    AsyncPipe,
-    BtnComponent,
-    KnobModule,
-    InlineSVGModule,
-    InputNumberModule,
-    OverlayPanelModule,
-    SkeletonModule,
-    FormsModule,
-    ConfirmPopupModule,
-    BadgeModule
-  ],
-  providers: [
-    ConfirmationService
-  ],
-  templateUrl: './card.component.html',
-  styleUrl: './card.component.scss'
+    selector: 'bol-pnj-card',
+    imports: [
+        ButtonDirective,
+        CardModule,
+        FieldsetModule,
+        NgForOf,
+        NgIf,
+        Ripple,
+        TagModule,
+        TooltipModule,
+        AsyncPipe,
+        BtnComponent,
+        KnobModule,
+        InlineSVGModule,
+        InputNumberModule,
+        OverlayPanelModule,
+        SkeletonModule,
+        FormsModule,
+        ConfirmPopupModule,
+        BadgeModule
+    ],
+    providers: [
+        ConfirmationService
+    ],
+    templateUrl: './card.component.html',
+    styleUrl: './card.component.scss'
 })
 export class BolQuestPnjCardComponent {
   private pnjService = inject(BolHerosService);

@@ -8,17 +8,16 @@ import {BolDesavantageModel} from "../../../../../models/bol-desavantage.model";
 import {BolHeroCreateTools} from "../../../create.tools";
 
 @Component({
-  selector: 'bol-heros-trait-row',
-  standalone: true,
-  imports: [
-    OverlayPanelModule,
-    NgIf,
-    InlineSVGModule,
-    NgForOf,
-    CheckboxModule
-  ],
-  templateUrl: './trait-row.component.html',
-  styleUrl: './trait-row.component.scss'
+    selector: 'bol-heros-trait-row',
+    imports: [
+        OverlayPanelModule,
+        NgIf,
+        InlineSVGModule,
+        NgForOf,
+        CheckboxModule
+    ],
+    templateUrl: './trait-row.component.html',
+    styleUrl: './trait-row.component.scss'
 })
 export class BolHerosTraitRowComponent {
   @Input() avantage?: BolAvantageModel;

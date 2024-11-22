@@ -30,39 +30,38 @@ import {SkeletonModule} from "primeng/skeleton";
 import {InlineSVGModule} from "ng-inline-svg-2";
 
 @Component({
-  selector: 'bol-demon-home',
-  standalone: true,
-  imports: [
-    ButtonDirective,
-    CheckboxModule,
-    ConfirmPopupModule,
-    DialogModule,
-    DropdownModule,
-    HeaderComponent,
-    IconFieldModule,
-    InputIconModule,
-    InputTextModule,
-    NgForOf,
-    NgIf,
-    PrimeTemplate,
-    ReactiveFormsModule,
-    Ripple,
-    RouterLink,
-    TableModule,
-    TagModule,
-    TooltipModule,
-    FormsModule,
-    JsonPipe,
-    AsyncPipe,
-    Button,
-    SkeletonModule,
-    InlineSVGModule
-  ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
-  providers: [
-    ConfirmationService
-  ],
+    selector: 'bol-demon-home',
+    imports: [
+        ButtonDirective,
+        CheckboxModule,
+        ConfirmPopupModule,
+        DialogModule,
+        DropdownModule,
+        HeaderComponent,
+        IconFieldModule,
+        InputIconModule,
+        InputTextModule,
+        NgForOf,
+        NgIf,
+        PrimeTemplate,
+        ReactiveFormsModule,
+        Ripple,
+        RouterLink,
+        TableModule,
+        TagModule,
+        TooltipModule,
+        FormsModule,
+        JsonPipe,
+        AsyncPipe,
+        Button,
+        SkeletonModule,
+        InlineSVGModule
+    ],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss',
+    providers: [
+        ConfirmationService
+    ]
 })
 export class BolDemonHomeComponent implements OnDestroy {
   private confirmationService = inject(ConfirmationService);

@@ -35,42 +35,41 @@ import {TooltipModule} from "primeng/tooltip";
 import {BtnComponent} from "../../../../shared/btn/btn.component";
 
 @Component({
-  selector: 'bol-heros-langues',
-  standalone: true,
-  imports: [
-    Button,
-    FieldsetModule,
-    PrimeTemplate,
-    ButtonDirective,
-    DropdownModule,
-    NgIf,
-    OverlayPanelModule,
-    Ripple,
-    FormsModule,
-    NgForOf,
-    ReactiveFormsModule,
-    BolMessageComponent,
-    InputNumberModule,
-    BtnComponent,
-    TableModule,
-    JsonPipe,
-    ScrollPanelModule,
-    TooltipModule
-  ],
-  templateUrl: './langues.component.html',
-  styleUrl: './langues.component.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolHerosLanguesComponent),
-      multi: true,
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => BolHerosLanguesComponent),
-      multi: true,
-    }
-  ]
+    selector: 'bol-heros-langues',
+    imports: [
+        Button,
+        FieldsetModule,
+        PrimeTemplate,
+        ButtonDirective,
+        DropdownModule,
+        NgIf,
+        OverlayPanelModule,
+        Ripple,
+        FormsModule,
+        NgForOf,
+        ReactiveFormsModule,
+        BolMessageComponent,
+        InputNumberModule,
+        BtnComponent,
+        TableModule,
+        JsonPipe,
+        ScrollPanelModule,
+        TooltipModule
+    ],
+    templateUrl: './langues.component.html',
+    styleUrl: './langues.component.scss',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => BolHerosLanguesComponent),
+            multi: true,
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => BolHerosLanguesComponent),
+            multi: true,
+        }
+    ]
 })
 export class BolHerosLanguesComponent implements ControlValueAccessor, OnDestroy, Validator {
   private subs?: Subscription;

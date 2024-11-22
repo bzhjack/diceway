@@ -28,8 +28,7 @@ import {InputTextModule} from "primeng/inputtext";
 import {BadgeModule} from "primeng/badge";
 
 @Component({
-  selector: 'bol-creature-card',
-  standalone: true,
+    selector: 'bol-creature-card',
     imports: [
         AsyncPipe,
         JsonPipe,
@@ -52,8 +51,8 @@ import {BadgeModule} from "primeng/badge";
         ConfirmPopupModule,
         BadgeModule
     ],
-  templateUrl: './card.component.html',
-  styleUrl: './card.component.scss'
+    templateUrl: './card.component.html',
+    styleUrl: './card.component.scss'
 })
 export class BolQuestCreatureCardComponent {
 

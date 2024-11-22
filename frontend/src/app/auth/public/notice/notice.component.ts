@@ -6,17 +6,16 @@ import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 
 @Component({
-  selector: 'app-notice',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CardModule,
-    ButtonModule,
-    RouterModule,
-    InlineSVGModule,
-  ],
-  templateUrl: './notice.component.html',
-  styleUrl: './notice.component.scss'
+    selector: 'app-notice',
+    imports: [
+        CommonModule,
+        CardModule,
+        ButtonModule,
+        RouterModule,
+        InlineSVGModule,
+    ],
+    templateUrl: './notice.component.html',
+    styleUrl: './notice.component.scss'
 })
 export class NoticeComponent {
   reset = false;

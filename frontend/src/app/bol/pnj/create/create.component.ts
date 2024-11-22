@@ -25,8 +25,7 @@ import {BolDesavantageModel} from "../../models/bol-desavantage.model";
 import {BolHerosTraitRowComponent} from "../../heros/create/origines/region/trait-row/trait-row.component";
 
 @Component({
-  selector: 'bol-pnj-create',
-  standalone: true,
+    selector: 'bol-pnj-create',
     imports: [
         FormsModule,
         ReactiveFormsModule,
@@ -46,11 +45,11 @@ import {BolHerosTraitRowComponent} from "../../heros/create/origines/region/trai
         JsonPipe,
         BolHerosTraitRowComponent
     ],
-  providers: [
-    ConfirmationService
-  ],
-  templateUrl: './create.component.html',
-  styleUrl: './create.component.scss'
+    providers: [
+        ConfirmationService
+    ],
+    templateUrl: './create.component.html',
+    styleUrl: './create.component.scss'
 })
 export class BolPnjCreateComponent {
   @ViewChild('opPnj') panelPnj?: OverlayPanel;

@@ -34,41 +34,40 @@ import {toObservable} from "@angular/core/rxjs-interop";
 import {tap} from "rxjs/operators";
 
 @Component({
-  selector: 'bol-pnj-home',
-  standalone: true,
-  imports: [
-    ButtonDirective,
-    DropdownModule,
-    FormsModule,
-    HeaderComponent,
-    InputTextModule,
-    RouterLink,
-    BolPnjCreateComponent,
-    NgForOf,
-    Button,
-    ConfirmPopupModule,
-    CardModule,
-    NgIf,
-    TableModule,
-    TooltipModule,
-    CheckboxModule,
-    IconFieldModule,
-    InputIconModule,
-    DialogModule,
-    Ripple,
-    TagModule,
-    JsonPipe,
-    ScrollPanelModule,
-    BolHerosTraitRowComponent,
-    InlineSVGModule,
-    AsyncPipe,
-    SkeletonModule
-  ],
-  providers: [
-    ConfirmationService
-  ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+    selector: 'bol-pnj-home',
+    imports: [
+        ButtonDirective,
+        DropdownModule,
+        FormsModule,
+        HeaderComponent,
+        InputTextModule,
+        RouterLink,
+        BolPnjCreateComponent,
+        NgForOf,
+        Button,
+        ConfirmPopupModule,
+        CardModule,
+        NgIf,
+        TableModule,
+        TooltipModule,
+        CheckboxModule,
+        IconFieldModule,
+        InputIconModule,
+        DialogModule,
+        Ripple,
+        TagModule,
+        JsonPipe,
+        ScrollPanelModule,
+        BolHerosTraitRowComponent,
+        InlineSVGModule,
+        AsyncPipe,
+        SkeletonModule
+    ],
+    providers: [
+        ConfirmationService
+    ],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss'
 })
 export class BolPnjHomeComponent {
   private confirmationService = inject(ConfirmationService);

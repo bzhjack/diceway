@@ -35,41 +35,40 @@ import {SkeletonModule} from "primeng/skeleton";
 
 
 @Component({
-  selector: 'bol-hero-home',
-  standalone: true,
-  imports: [
-    NgForOf,
-    JsonPipe,
-    RouterLink,
-    CardModule,
-    Button,
-    DialogModule,
-    InputTextModule,
-    ReactiveFormsModule,
-    NgIf,
-    TableModule,
-    ButtonDirective,
-    Ripple,
-    ConfirmPopupModule,
-    HeaderComponent,
-    CheckboxModule,
-    DropdownModule,
-    IconFieldModule,
-    InputIconModule,
-    TagModule,
-    TooltipModule,
-    FormsModule,
-    ScrollPanelModule,
-    BolHerosTraitRowComponent,
-    AsyncPipe,
-    InlineSVGModule,
-    SkeletonModule
-  ],
-  providers: [
-    ConfirmationService
-  ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+    selector: 'bol-hero-home',
+    imports: [
+        NgForOf,
+        JsonPipe,
+        RouterLink,
+        CardModule,
+        Button,
+        DialogModule,
+        InputTextModule,
+        ReactiveFormsModule,
+        NgIf,
+        TableModule,
+        ButtonDirective,
+        Ripple,
+        ConfirmPopupModule,
+        HeaderComponent,
+        CheckboxModule,
+        DropdownModule,
+        IconFieldModule,
+        InputIconModule,
+        TagModule,
+        TooltipModule,
+        FormsModule,
+        ScrollPanelModule,
+        BolHerosTraitRowComponent,
+        AsyncPipe,
+        InlineSVGModule,
+        SkeletonModule
+    ],
+    providers: [
+        ConfirmationService
+    ],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss'
 })
 export class BolHeroHomeComponent implements OnDestroy {
   @ViewChild('herosTable') herosTable?: Table;

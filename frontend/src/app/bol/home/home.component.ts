@@ -9,18 +9,17 @@ import {BolDashboardService} from "../services/bol-dashboard.service";
 import {BolHomeCardComponent} from "./home-card/home-card.component";
 
 @Component({
-  selector: 'bol-home',
-  standalone: true,
-  imports: [
-    CardModule,
-    Button,
-    NgIf,
-    RouterLink,
-    BolHomeCardComponent
-  ],
-  providers: [BolDashboardService],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+    selector: 'bol-home',
+    imports: [
+        CardModule,
+        Button,
+        NgIf,
+        RouterLink,
+        BolHomeCardComponent
+    ],
+    providers: [BolDashboardService],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss'
 })
 export class BolHomeComponent implements OnDestroy {
   private dashboardService = inject(BolDashboardService);

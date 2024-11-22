@@ -28,35 +28,34 @@ import {TooltipModule} from "primeng/tooltip";
 import {BtnComponent} from "../../../../shared/btn/btn.component";
 
 @Component({
-  selector: 'bol-heros-armes',
-  standalone: true,
-  imports: [
-    Button,
-    FieldsetModule,
-    PrimeTemplate,
-    ButtonDirective,
-    DropdownModule,
-    NgIf,
-    OverlayPanelModule,
-    Ripple,
-    FormsModule,
-    NgForOf,
-    ReactiveFormsModule,
-    BtnComponent,
-    DividerModule,
-    JsonPipe,
-    TableModule,
-    TooltipModule
-  ],
-  templateUrl: './armes.component.html',
-  styleUrl: './armes.component.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolHerosArmesComponent),
-      multi: true,
-    }
-  ]
+    selector: 'bol-heros-armes',
+    imports: [
+        Button,
+        FieldsetModule,
+        PrimeTemplate,
+        ButtonDirective,
+        DropdownModule,
+        NgIf,
+        OverlayPanelModule,
+        Ripple,
+        FormsModule,
+        NgForOf,
+        ReactiveFormsModule,
+        BtnComponent,
+        DividerModule,
+        JsonPipe,
+        TableModule,
+        TooltipModule
+    ],
+    templateUrl: './armes.component.html',
+    styleUrl: './armes.component.scss',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => BolHerosArmesComponent),
+            multi: true,
+        }
+    ]
 })
 export class BolHerosArmesComponent implements ControlValueAccessor, OnDestroy {
   private subs?: Subscription;

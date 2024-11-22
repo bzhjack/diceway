@@ -5,14 +5,13 @@ import {InlineSVGModule} from 'ng-inline-svg-2';
 import {ProgressBarModule} from 'primeng/progressbar';
 
 @Component({
-  selector: 'app-callback',
-  standalone: true,
-  imports: [
-    InlineSVGModule,
-    ProgressBarModule
-  ],
-  templateUrl: './callback.component.html',
-  styleUrl: './callback.component.scss'
+    selector: 'app-callback',
+    imports: [
+        InlineSVGModule,
+        ProgressBarModule
+    ],
+    templateUrl: './callback.component.html',
+    styleUrl: './callback.component.scss'
 })
 export class CallbackComponent implements OnInit {
   constructor(private route: ActivatedRoute, private userService: UserService, private router: Router) {

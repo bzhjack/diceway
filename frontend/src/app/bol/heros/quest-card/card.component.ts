@@ -28,34 +28,33 @@ import {ConfirmationService} from "primeng/api";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 
 @Component({
-  selector: 'bol-heros-card',
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    JsonPipe,
-    CardModule,
-    SkeletonModule,
-    NgIf,
-    TooltipModule,
-    Button,
-    OverlayPanelModule,
-    BolActionComponent,
-    ButtonDirective,
-    InlineSVGModule,
-    Ripple,
-    BtnComponent,
-    TagModule,
-    FormsModule,
-    InputTextModule,
-    ReactiveFormsModule,
-    InputNumberModule,
-    ConfirmPopupModule
-  ],
-  providers: [
-    ConfirmationService
-  ],
-  templateUrl: './card.component.html',
-  styleUrl: './card.component.scss'
+    selector: 'bol-heros-card',
+    imports: [
+        AsyncPipe,
+        JsonPipe,
+        CardModule,
+        SkeletonModule,
+        NgIf,
+        TooltipModule,
+        Button,
+        OverlayPanelModule,
+        BolActionComponent,
+        ButtonDirective,
+        InlineSVGModule,
+        Ripple,
+        BtnComponent,
+        TagModule,
+        FormsModule,
+        InputTextModule,
+        ReactiveFormsModule,
+        InputNumberModule,
+        ConfirmPopupModule
+    ],
+    providers: [
+        ConfirmationService
+    ],
+    templateUrl: './card.component.html',
+    styleUrl: './card.component.scss'
 })
 export class BolQuestHerosCardComponent {
 

@@ -1,8 +1,10 @@
 @use "../../../styles/colors" as colors;
+@use "sass:color";
+
 .trash-container {
   border-radius: 25%;
   padding: 3px;
-  background-color: darken(#607d8b, 10%);
+  background-color: color.adjust(#607d8b, $lightness: -10%);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -19,7 +21,7 @@
   }
 
   &.warn {
-    background-color: darken(colors.$warn-color, 15%);
+    background-color: color.adjust(colors.$warn-color, $lightness: -15%);
 
     &:hover {
       background-color: colors.$warn-color;
@@ -27,14 +29,14 @@
   }
 
   &.info {
-    background-color: darken(colors.$info-color, 15%);
+    background-color: color.adjust(colors.$info-color, $lightness: -15%);
 
     &:hover {
       background-color: colors.$info-color;
     }
   }
   &.error {
-    background-color: darken(colors.$error-color, 15%);
+    background-color: color.adjust(colors.$error-color, $lightness: -15%);
 
     &:hover {
       background-color: colors.$error-color;

@@ -36,41 +36,40 @@ import {BtnComponent} from "../../../../shared/btn/btn.component";
 
 
 @Component({
-  selector: 'bol-heros-carrieres',
-  standalone: true,
-  imports: [
-    BolMessageComponent,
-    Button,
-    ButtonDirective,
-    DropdownModule,
-    FieldsetModule,
-    FormsModule,
-    InputNumberModule,
-    NgForOf,
-    NgIf,
-    NgTemplateOutlet,
-    OverlayPanelModule,
-    PrimeTemplate,
-    ReactiveFormsModule,
-    Ripple,
-    JsonPipe,
-    TooltipModule,
-    BtnComponent
-  ],
-  templateUrl: './carrieres.component.html',
-  styleUrl: './carrieres.component.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolHerosCarrieresComponent),
-      multi: true,
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => BolHerosCarrieresComponent),
-      multi: true,
-    }
-  ]
+    selector: 'bol-heros-carrieres',
+    imports: [
+        BolMessageComponent,
+        Button,
+        ButtonDirective,
+        DropdownModule,
+        FieldsetModule,
+        FormsModule,
+        InputNumberModule,
+        NgForOf,
+        NgIf,
+        NgTemplateOutlet,
+        OverlayPanelModule,
+        PrimeTemplate,
+        ReactiveFormsModule,
+        Ripple,
+        JsonPipe,
+        TooltipModule,
+        BtnComponent
+    ],
+    templateUrl: './carrieres.component.html',
+    styleUrl: './carrieres.component.scss',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => BolHerosCarrieresComponent),
+            multi: true,
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => BolHerosCarrieresComponent),
+            multi: true,
+        }
+    ]
 })
 export class BolHerosCarrieresComponent implements ControlValueAccessor, Validator, OnDestroy {
   private subs?: Subscription;

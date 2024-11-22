@@ -6,16 +6,15 @@ import {BtnComponent} from "../shared/btn/btn.component";
 
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [
-    TopbarComponent,
-    CardModule,
-    RouterLink,
-    BtnComponent
-  ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+    selector: 'app-home',
+    imports: [
+        TopbarComponent,
+        CardModule,
+        RouterLink,
+        BtnComponent
+    ],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss'
 })
 export class HomeComponent {
 

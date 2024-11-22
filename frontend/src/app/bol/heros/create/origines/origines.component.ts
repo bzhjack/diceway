@@ -32,34 +32,33 @@ import {BolHerosLangueModel} from "../../../models/bol-langue.model";
 import {InputTextareaModule} from "primeng/inputtextarea";
 
 @Component({
-  selector: 'bol-heros-origines',
-  standalone: true,
-  imports: [
-    FieldsetModule,
-    ReactiveFormsModule,
-    InputTextModule,
-    TooltipModule,
-    JsonPipe,
-    BolMessageComponent,
-    NgIf,
-    OverlayPanelModule,
-    BolHerosLanguesComponent,
-    InputTextareaModule
-  ],
-  templateUrl: './origines.component.html',
-  styleUrl: './origines.component.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolHerosOriginesComponent),
-      multi: true,
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => BolHerosOriginesComponent),
-      multi: true,
-    }
-  ]
+    selector: 'bol-heros-origines',
+    imports: [
+        FieldsetModule,
+        ReactiveFormsModule,
+        InputTextModule,
+        TooltipModule,
+        JsonPipe,
+        BolMessageComponent,
+        NgIf,
+        OverlayPanelModule,
+        BolHerosLanguesComponent,
+        InputTextareaModule
+    ],
+    templateUrl: './origines.component.html',
+    styleUrl: './origines.component.scss',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => BolHerosOriginesComponent),
+            multi: true,
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => BolHerosOriginesComponent),
+            multi: true,
+        }
+    ]
 })
 export class BolHerosOriginesComponent implements ControlValueAccessor, Validator, OnDestroy {
 

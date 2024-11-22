@@ -21,30 +21,29 @@ import {BolHeroCreateTools} from '../create.tools';
 import {BolHerosStateService} from "../../../services/bol-heros-state.service";
 
 @Component({
-  selector: 'bol-heros-combat',
-  standalone: true,
-  imports: [
-    InputNumberModule,
-    OverlayPanelModule,
-    BolMessageComponent,
-    ReactiveFormsModule,
-    FieldsetModule,
-    NgIf
-  ],
-  templateUrl: './combat.component.html',
-  styleUrl: './combat.component.scss',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BolHerosCombatComponent),
-      multi: true,
-    },
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => BolHerosCombatComponent),
-      multi: true,
-    }
-  ]
+    selector: 'bol-heros-combat',
+    imports: [
+        InputNumberModule,
+        OverlayPanelModule,
+        BolMessageComponent,
+        ReactiveFormsModule,
+        FieldsetModule,
+        NgIf
+    ],
+    templateUrl: './combat.component.html',
+    styleUrl: './combat.component.scss',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => BolHerosCombatComponent),
+            multi: true,
+        },
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => BolHerosCombatComponent),
+            multi: true,
+        }
+    ]
 })
 export class BolHerosCombatComponent implements ControlValueAccessor, Validator {
   readonly #fb = inject(FormBuilder);

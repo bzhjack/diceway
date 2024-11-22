@@ -1,6 +1,26 @@
-@import "primeng/resources/themes/lara-dark-blue/theme.css";
-@import "primeng/resources/primeng.css";
-@import "primeicons/primeicons.css";
+
+@use "sass:color";
+@use "styles/diceway";
+@use "styles/tag";
+@use "styles/tooltip";
+@use "styles/icon";
+@use "styles/form";
+@use "styles/bol";
+@use "styles/bol_regions";
+@use "styles/messages";
+@use "styles/button";
+@use "styles/card";
+@use "styles/dialog";
+@use "styles/table";
+@use "styles/colors";
+@use "styles/dicebox";
+
+
+
+@use "primeng/resources/themes/lara-dark-blue/theme.css";
+@use "primeng/resources/primeng.css";
+@use "primeicons/primeicons.css";
+
 
 //@tailwind base;
 @tailwind components;
@@ -20,20 +40,8 @@ html {
   --info-color: #60a5fa;
 }
 
-@import "styles/diceway";
-@import "styles/tag";
-@import "styles/tooltip";
-@import "styles/icon";
-@import "styles/form";
-@import "styles/bol";
-@import "styles/bol_regions";
-@import "styles/messages";
-@import "styles/button";
-@import "styles/card";
-@import "styles/dialog";
-@import "styles/table";
-@import "styles/colors";
-@import "styles/dicebox";
+
+
 
 
 /* IE fix */
@@ -53,7 +61,7 @@ body {
 }
 
 .dw_banner {
-  color: lighten(#83a1a6, 20%);
+  color: color.adjust(#83a1a6, $lightness: 20%);
 }
 
 .dw_title {

@@ -15,24 +15,23 @@ import {MessagesModule} from 'primeng/messages';
 import {Message} from 'primeng/api';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CardModule,
-    InputGroupModule,
-    InputGroupAddonModule,
-    InputTextModule,
-    ButtonModule,
-    RouterModule,
-    InlineSVGModule,
-    ProgressBarModule,
-    MessagesModule
-  ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+    selector: 'app-login',
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        CardModule,
+        InputGroupModule,
+        InputGroupAddonModule,
+        InputTextModule,
+        ButtonModule,
+        RouterModule,
+        InlineSVGModule,
+        ProgressBarModule,
+        MessagesModule
+    ],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnDestroy {
   pending = false;

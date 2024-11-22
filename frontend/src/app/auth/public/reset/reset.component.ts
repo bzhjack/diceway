@@ -16,24 +16,23 @@ import {Message} from 'primeng/api';
 import {RegisterComponent} from '../register/register.component';
 
 @Component({
-  selector: 'app-reset',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CardModule,
-    InputGroupModule,
-    InputGroupAddonModule,
-    InputTextModule,
-    ButtonModule,
-    RouterModule,
-    FormsModule,
-    ReactiveFormsModule,
-    InlineSVGModule,
-    ProgressBarModule,
-    MessagesModule
-  ],
-  templateUrl: './reset.component.html',
-  styleUrl: './reset.component.scss'
+    selector: 'app-reset',
+    imports: [
+        CommonModule,
+        CardModule,
+        InputGroupModule,
+        InputGroupAddonModule,
+        InputTextModule,
+        ButtonModule,
+        RouterModule,
+        FormsModule,
+        ReactiveFormsModule,
+        InlineSVGModule,
+        ProgressBarModule,
+        MessagesModule
+    ],
+    templateUrl: './reset.component.html',
+    styleUrl: './reset.component.scss'
 })
 export class ResetComponent implements OnDestroy {
   pending = false;

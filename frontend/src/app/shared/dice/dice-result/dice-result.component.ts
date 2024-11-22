@@ -3,11 +3,10 @@ import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {DiceService} from "../dice.service";
 
 @Component({
-  selector: 'app-dice-result',
-  standalone: true,
-  imports: [],
-  templateUrl: './dice-result.component.html',
-  styleUrl: './dice-result.component.scss'
+    selector: 'app-dice-result',
+    imports: [],
+    templateUrl: './dice-result.component.html',
+    styleUrl: './dice-result.component.scss'
 })
 export class DiceResultsComponent implements AfterViewInit {
   private  diceService = inject(DiceService);

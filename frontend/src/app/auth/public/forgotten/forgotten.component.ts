@@ -15,24 +15,23 @@ import {ProgressBarModule} from 'primeng/progressbar';
 import {MessagesModule} from 'primeng/messages';
 
 @Component({
-  selector: 'app-forgotten',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CardModule,
-    InputGroupModule,
-    InputGroupAddonModule,
-    InputTextModule,
-    ButtonModule,
-    RouterModule,
-    FormsModule,
-    ReactiveFormsModule,
-    InlineSVGModule,
-    ProgressBarModule,
-    MessagesModule
-  ],
-  templateUrl: './forgotten.component.html',
-  styleUrl: './forgotten.component.scss'
+    selector: 'app-forgotten',
+    imports: [
+        CommonModule,
+        CardModule,
+        InputGroupModule,
+        InputGroupAddonModule,
+        InputTextModule,
+        ButtonModule,
+        RouterModule,
+        FormsModule,
+        ReactiveFormsModule,
+        InlineSVGModule,
+        ProgressBarModule,
+        MessagesModule
+    ],
+    templateUrl: './forgotten.component.html',
+    styleUrl: './forgotten.component.scss'
 })
 export class ForgottenComponent {
   messages: Message[] = [];

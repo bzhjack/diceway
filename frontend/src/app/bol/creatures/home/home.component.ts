@@ -33,40 +33,39 @@ import {SkeletonModule} from "primeng/skeleton";
 import {InlineSVGModule} from "ng-inline-svg-2";
 
 @Component({
-  selector: 'bol-creature-home',
-  standalone: true,
-  imports: [
-    RouterLink,
-    CardModule,
-    CheckboxModule,
-    NgForOf,
-    HeaderComponent,
-    ButtonDirective,
-    Button,
-    TagModule,
-    DialogModule,
-    AvatarModule,
-    BolCreatureCreateComponent,
-    ConfirmPopupModule,
-    InputTextModule,
-    FormsModule,
-    RadioButtonModule,
-    DropdownModule,
-    TableModule,
-    NgIf,
-    TooltipModule,
-    Ripple,
-    InputIconModule,
-    IconFieldModule,
-    AsyncPipe,
-    SkeletonModule,
-    InlineSVGModule
-  ],
-  providers: [
-    ConfirmationService
-  ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+    selector: 'bol-creature-home',
+    imports: [
+        RouterLink,
+        CardModule,
+        CheckboxModule,
+        NgForOf,
+        HeaderComponent,
+        ButtonDirective,
+        Button,
+        TagModule,
+        DialogModule,
+        AvatarModule,
+        BolCreatureCreateComponent,
+        ConfirmPopupModule,
+        InputTextModule,
+        FormsModule,
+        RadioButtonModule,
+        DropdownModule,
+        TableModule,
+        NgIf,
+        TooltipModule,
+        Ripple,
+        InputIconModule,
+        IconFieldModule,
+        AsyncPipe,
+        SkeletonModule,
+        InlineSVGModule
+    ],
+    providers: [
+        ConfirmationService
+    ],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss'
 })
 export class BolCreatureHomeComponent implements OnDestroy {
   private confirmationService = inject(ConfirmationService);

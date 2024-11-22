@@ -6,17 +6,16 @@ import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 
 @Component({
-  selector: 'app-welcome',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CardModule,
-    ButtonModule,
-    RouterModule,
-    InlineSVGModule,
-  ],
-  templateUrl: './welcome.component.html',
-  styleUrl: './welcome.component.scss'
+    selector: 'app-welcome',
+    imports: [
+        CommonModule,
+        CardModule,
+        ButtonModule,
+        RouterModule,
+        InlineSVGModule,
+    ],
+    templateUrl: './welcome.component.html',
+    styleUrl: './welcome.component.scss'
 })
 export class WelcomeComponent {
   success = false;

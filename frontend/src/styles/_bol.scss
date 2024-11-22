@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .carte-container {
   width: calc(100vw - 420px);
 }
@@ -27,7 +29,7 @@
   }
 
   .p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(2n) {
-    background: darken(#1c2532, 2%);
+    background: color.adjust(#1c2532, $lightness: -2%);
   }
 
   .p-datatable .p-datatable-thead > tr > th {

@@ -23,24 +23,23 @@ import {UserService} from '../../services/user.service';
 
 
 @Component({
-  selector: 'app-register',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CardModule,
-    InputGroupModule,
-    InputGroupAddonModule,
-    InputTextModule,
-    ButtonModule,
-    RouterModule,
-    FormsModule,
-    ReactiveFormsModule,
-    InlineSVGModule,
-    ProgressBarModule,
-    MessagesModule
-  ],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.scss'
+    selector: 'app-register',
+    imports: [
+        CommonModule,
+        CardModule,
+        InputGroupModule,
+        InputGroupAddonModule,
+        InputTextModule,
+        ButtonModule,
+        RouterModule,
+        FormsModule,
+        ReactiveFormsModule,
+        InlineSVGModule,
+        ProgressBarModule,
+        MessagesModule
+    ],
+    templateUrl: './register.component.html',
+    styleUrl: './register.component.scss'
 })
 export class RegisterComponent implements OnDestroy {
   pending = false;

@@ -25,30 +25,29 @@ import {BolDesavantageModel} from '../../models/bol-desavantage.model';
 import {BolHerosTraitRowComponent} from "../create/origines/region/trait-row/trait-row.component";
 
 @Component({
-  selector: 'bol-heros-update',
-  standalone: true,
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    DropdownModule,
-    InputTextModule,
-    InputTextareaModule,
-    FieldsetModule,
-    InputNumberModule,
-    BtnComponent,
-    Button,
-    NgForOf,
-    NgIf,
-    TooltipModule,
-    ButtonDirective,
-    OverlayPanelModule,
-    Ripple,
-    JsonPipe,
-    BolHerosTraitRowComponent,
-  ],
-  providers: [ConfirmationService],
-  templateUrl: './update.component.html',
-  styleUrl: './update.component.scss',
+    selector: 'bol-heros-update',
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        DropdownModule,
+        InputTextModule,
+        InputTextareaModule,
+        FieldsetModule,
+        InputNumberModule,
+        BtnComponent,
+        Button,
+        NgForOf,
+        NgIf,
+        TooltipModule,
+        ButtonDirective,
+        OverlayPanelModule,
+        Ripple,
+        JsonPipe,
+        BolHerosTraitRowComponent,
+    ],
+    providers: [ConfirmationService],
+    templateUrl: './update.component.html',
+    styleUrl: './update.component.scss'
 })
 export class BolHerosUpdateComponent {
   @ViewChild('opHeros') panelHeros?: OverlayPanel;
