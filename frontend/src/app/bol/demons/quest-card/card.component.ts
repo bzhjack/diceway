@@ -30,31 +30,32 @@ import {BadgeModule} from "primeng/badge";
 import {BolCreatureModel} from "../../models/bol-creature.model";
 
 @Component({
-    selector: 'bol-demon-card',
-    imports: [
-        AsyncPipe,
-        JsonPipe,
-        CardModule,
-        SkeletonModule,
-        NgIf,
-        TooltipModule,
-        Button,
-        OverlayPanelModule,
-        BolActionComponent,
-        ButtonDirective,
-        InlineSVGModule,
-        Ripple,
-        BtnComponent,
-        TagModule,
-        FormsModule,
-        InputTextModule,
-        ReactiveFormsModule,
-        InputNumberModule,
-        ConfirmPopupModule,
-        BadgeModule
-    ],
-    templateUrl: './card.component.html',
-    styleUrl: './card.component.scss'
+  selector: 'bol-demon-card',
+  imports: [
+    AsyncPipe,
+    JsonPipe,
+    CardModule,
+    SkeletonModule,
+    NgIf,
+    TooltipModule,
+    Button,
+    OverlayPanelModule,
+    BolActionComponent,
+    ButtonDirective,
+    InlineSVGModule,
+    Ripple,
+    BtnComponent,
+    TagModule,
+    FormsModule,
+    InputTextModule,
+    ReactiveFormsModule,
+    InputNumberModule,
+    ConfirmPopupModule,
+    BadgeModule
+  ],
+  templateUrl: './card.component.html',
+  standalone: true,
+  styleUrl: './card.component.scss'
 })
 export class BolQuestDemonCardComponent {
 

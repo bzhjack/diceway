@@ -18,26 +18,33 @@ import {BolQuestStateService} from '../../services/bol-quest-state.service';
 import {Overlay} from 'primeng/overlay';
 import {FieldsetModule} from "primeng/fieldset";
 import {ConfirmationService} from "primeng/api";
+import {BolQuestDemonCardComponent} from "../../demons/quest-card/card.component";
+import {BolQuestCreatureCardComponent} from "../../creatures/quest-card/card.component";
+import {BolQuestPnjCardComponent} from "../../pnj/quest-card/card.component";
 
 @Component({
-    selector: 'bol-quest',
-    imports: [
-        ButtonDirective,
-        RouterLink,
-        AsyncPipe,
-        OverlayPanelModule,
-        Button,
-        InputTextModule,
-        InputTextareaModule,
-        NgIf,
-        PaginatorModule,
-        ReactiveFormsModule,
-        FieldsetModule,
-        NgForOf,
-    ],
-    templateUrl: './quest.component.html',
-    styleUrl: './quest.component.scss',
-    providers: [ConfirmationService]
+  selector: 'bol-quest',
+  imports: [
+    ButtonDirective,
+    RouterLink,
+    AsyncPipe,
+    OverlayPanelModule,
+    Button,
+    InputTextModule,
+    InputTextareaModule,
+    NgIf,
+    PaginatorModule,
+    ReactiveFormsModule,
+    FieldsetModule,
+    NgForOf,
+    BolQuestPnjCardComponent,
+    BolQuestCreatureCardComponent,
+    BolQuestDemonCardComponent
+  ],
+  templateUrl: './quest.component.html',
+  styleUrl: './quest.component.scss',
+  standalone: true,
+  providers: [ConfirmationService]
 })
 export class BolQuestComponent {
   questService = inject(BolQuestService);
