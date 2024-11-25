@@ -7,9 +7,9 @@ import {
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule
 } from "@angular/forms";
-import {Button, ButtonDirective} from "primeng/button";
+import {ButtonDirective} from "primeng/button";
 import {DropdownModule} from "primeng/dropdown";
-import {JsonPipe, NgForOf, NgIf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
 import {Ripple} from "primeng/ripple";
@@ -33,26 +33,24 @@ import {BtnComponent} from "../../../../shared/btn/btn.component";
 
 @Component({
     selector: 'bol-heros-traits',
-    imports: [
-        ButtonDirective,
-        DropdownModule,
-        NgIf,
-        OverlayPanelModule,
-        PrimeTemplate,
-        Ripple,
-        FormsModule,
-        Button,
-        FieldsetModule,
-        NgForOf,
-        ReactiveFormsModule,
-        BolHerosTraitComponent,
-        JsonPipe,
-        BtnComponent,
-        BolMessageComponent,
-        DividerModule,
-        ScrollPanelModule,
-        TooltipModule
-    ],
+  imports: [
+    ButtonDirective,
+    DropdownModule,
+    NgIf,
+    OverlayPanelModule,
+    PrimeTemplate,
+    Ripple,
+    FormsModule,
+    FieldsetModule,
+    NgForOf,
+    ReactiveFormsModule,
+    BolHerosTraitComponent,
+    BtnComponent,
+    BolMessageComponent,
+    DividerModule,
+    ScrollPanelModule,
+    TooltipModule
+  ],
     templateUrl: './traits.component.html',
     styleUrl: './traits.component.scss',
     providers: [

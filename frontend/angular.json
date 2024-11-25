@@ -17,6 +17,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "allowedCommonJsDependencies": [
+              "@3d-dice/dice-roller-parser"
+            ],
             "loader": {
               ".svg" : "text",
               ".png" : "text"

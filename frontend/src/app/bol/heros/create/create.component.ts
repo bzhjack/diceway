@@ -21,16 +21,14 @@ import {FieldsetModule} from "primeng/fieldset";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {MessagesModule} from "primeng/messages";
-import {JsonPipe, NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
+import {NgIf} from "@angular/common";
 import {globalFormValidator} from "./create.validators";
-import {BolMessageComponent} from "../../message/message.component";
 import {BolAvantageModel} from "../../models/bol-avantage.model";
 import {BolDesavantageModel} from '../../models/bol-desavantage.model';
 import {BolHerosCarriereModel} from "../../models/bol-carriere.model";
 import {ConfirmationService} from "primeng/api";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {DropdownModule} from "primeng/dropdown";
-import {Ripple} from "primeng/ripple";
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import {toSignal} from "@angular/core/rxjs-interop";
 import {BolHerosStateService} from "../../services/bol-heros-state.service";
@@ -46,51 +44,42 @@ import {BolHerosArmuresComponent} from "./armures/armures.component";
 import {BolHerosArmesComponent} from "./armes/armes.component";
 import {BolHerosTraitsComponent} from "./traits/traits.component";
 import {BolHerosTraitsModel} from "../../models/bol-trait.model";
-import {BolHerosLanguesComponent} from "./langues/langues.component";
 import {HeaderComponent} from "../../../shared/header/header.component";
 import {InputTextareaModule} from "primeng/inputtextarea";
-import {BtnComponent} from "../../../shared/btn/btn.component";
 import {TableModule} from "primeng/table";
 
 
 @Component({
     selector: 'bol-create-heros',
-    imports: [
-        CardModule,
-        InputTextModule,
-        FormsModule,
-        ToolbarModule,
-        ButtonModule,
-        SplitButtonModule,
-        ReactiveFormsModule,
-        InputNumberModule,
-        FieldsetModule,
-        OverlayPanelModule,
-        ScrollPanelModule,
-        InlineSVGModule,
-        MessagesModule,
-        JsonPipe,
-        NgIf,
-        NgForOf,
-        BolMessageComponent,
-        ConfirmPopupModule,
-        DropdownModule,
-        Ripple,
-        NgTemplateOutlet,
-        BolHerosOriginesComponent,
-        BolHerosRessourcesComponent,
-        BolHerosAttributsComponent,
-        BolHerosCombatComponent,
-        BolHerosCarrieresComponent,
-        BolHerosArmuresComponent,
-        BolHerosArmesComponent,
-        BolHerosTraitsComponent,
-        BolHerosLanguesComponent,
-        HeaderComponent,
-        InputTextareaModule,
-        BtnComponent,
-        TableModule,
-    ],
+  imports: [
+    CardModule,
+    InputTextModule,
+    FormsModule,
+    ToolbarModule,
+    ButtonModule,
+    SplitButtonModule,
+    ReactiveFormsModule,
+    InputNumberModule,
+    FieldsetModule,
+    OverlayPanelModule,
+    ScrollPanelModule,
+    InlineSVGModule,
+    MessagesModule,
+    NgIf,
+    ConfirmPopupModule,
+    DropdownModule,
+    BolHerosOriginesComponent,
+    BolHerosRessourcesComponent,
+    BolHerosAttributsComponent,
+    BolHerosCombatComponent,
+    BolHerosCarrieresComponent,
+    BolHerosArmuresComponent,
+    BolHerosArmesComponent,
+    BolHerosTraitsComponent,
+    HeaderComponent,
+    InputTextareaModule,
+    TableModule,
+  ],
     templateUrl: './create.component.html',
     styleUrl: './create.component.scss',
     providers: [

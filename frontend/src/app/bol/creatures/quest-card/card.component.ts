@@ -2,9 +2,9 @@ import {Component, computed, inject, input, output, signal} from '@angular/core'
 import {CardModule} from "primeng/card";
 import {BolCreatureModel} from "../../models/bol-creature.model";
 import {TagModule} from "primeng/tag";
-import {AsyncPipe, JsonPipe, NgIf} from "@angular/common";
+import {AsyncPipe, NgIf} from "@angular/common";
 import {TooltipModule} from "primeng/tooltip";
-import {Button, ButtonDirective} from "primeng/button";
+import {ButtonDirective} from "primeng/button";
 import {Ripple} from "primeng/ripple";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {ConfirmationService} from "primeng/api";
@@ -23,7 +23,6 @@ import {InlineSVGModule} from "ng-inline-svg-2";
 import {InputNumberModule} from "primeng/inputnumber";
 import {SkeletonModule} from "primeng/skeleton";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {BolActionComponent} from "../../quest/action/action.component";
 import {InputTextModule} from "primeng/inputtext";
 import {BadgeModule} from "primeng/badge";
 
@@ -31,14 +30,11 @@ import {BadgeModule} from "primeng/badge";
   selector: 'bol-creature-card',
   imports: [
     AsyncPipe,
-    JsonPipe,
     CardModule,
     SkeletonModule,
     NgIf,
     TooltipModule,
-    Button,
     OverlayPanelModule,
-    BolActionComponent,
     ButtonDirective,
     InlineSVGModule,
     Ripple,

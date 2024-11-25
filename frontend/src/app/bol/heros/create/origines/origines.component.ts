@@ -19,7 +19,7 @@ import {DialogService} from "primeng/dynamicdialog";
 import {Subscription} from "rxjs";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {BolHerosStateService} from "../../../services/bol-heros-state.service";
-import {JsonPipe, NgIf} from "@angular/common";
+import {NgIf} from "@angular/common";
 import {BolHerosService} from "../../../services/bol-heros.service";
 import {NgxSpinnerService} from "ngx-spinner";
 import {BolHerosRegionComponent} from "./region/region.component";
@@ -33,18 +33,17 @@ import {InputTextareaModule} from "primeng/inputtextarea";
 
 @Component({
     selector: 'bol-heros-origines',
-    imports: [
-        FieldsetModule,
-        ReactiveFormsModule,
-        InputTextModule,
-        TooltipModule,
-        JsonPipe,
-        BolMessageComponent,
-        NgIf,
-        OverlayPanelModule,
-        BolHerosLanguesComponent,
-        InputTextareaModule
-    ],
+  imports: [
+    FieldsetModule,
+    ReactiveFormsModule,
+    InputTextModule,
+    TooltipModule,
+    BolMessageComponent,
+    NgIf,
+    OverlayPanelModule,
+    BolHerosLanguesComponent,
+    InputTextareaModule
+  ],
     templateUrl: './origines.component.html',
     styleUrl: './origines.component.scss',
     providers: [

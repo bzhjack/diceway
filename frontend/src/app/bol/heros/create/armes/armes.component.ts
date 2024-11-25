@@ -1,9 +1,9 @@
 import {Component, computed, effect, forwardRef, inject, OnDestroy, signal} from '@angular/core';
-import {Button, ButtonDirective} from "primeng/button";
+import {ButtonDirective} from "primeng/button";
 import {FieldsetModule} from "primeng/fieldset";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
 import {DropdownModule} from "primeng/dropdown";
-import {JsonPipe, NgForOf, NgIf} from "@angular/common";
+import {NgIf} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {Ripple} from "primeng/ripple";
 import {
@@ -29,24 +29,21 @@ import {BtnComponent} from "../../../../shared/btn/btn.component";
 
 @Component({
     selector: 'bol-heros-armes',
-    imports: [
-        Button,
-        FieldsetModule,
-        PrimeTemplate,
-        ButtonDirective,
-        DropdownModule,
-        NgIf,
-        OverlayPanelModule,
-        Ripple,
-        FormsModule,
-        NgForOf,
-        ReactiveFormsModule,
-        BtnComponent,
-        DividerModule,
-        JsonPipe,
-        TableModule,
-        TooltipModule
-    ],
+  imports: [
+    FieldsetModule,
+    PrimeTemplate,
+    ButtonDirective,
+    DropdownModule,
+    NgIf,
+    OverlayPanelModule,
+    Ripple,
+    FormsModule,
+    ReactiveFormsModule,
+    BtnComponent,
+    DividerModule,
+    TableModule,
+    TooltipModule
+  ],
     templateUrl: './armes.component.html',
     styleUrl: './armes.component.scss',
     providers: [

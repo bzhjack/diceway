@@ -1,9 +1,9 @@
-import {Component, computed, effect, inject, input, output, signal} from '@angular/core';
+import {Component, computed, inject, input, output, signal} from '@angular/core';
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {ButtonDirective} from "primeng/button";
 import {CardModule} from "primeng/card";
 import {FieldsetModule} from "primeng/fieldset";
-import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
+import {AsyncPipe, NgIf} from "@angular/common";
 import {Ripple} from "primeng/ripple";
 import {TagModule} from "primeng/tag";
 import {TooltipModule} from "primeng/tooltip";
@@ -31,26 +31,25 @@ import {BadgeModule} from "primeng/badge";
 
 @Component({
     selector: 'bol-pnj-card',
-    imports: [
-        ButtonDirective,
-        CardModule,
-        FieldsetModule,
-        NgForOf,
-        NgIf,
-        Ripple,
-        TagModule,
-        TooltipModule,
-        AsyncPipe,
-        BtnComponent,
-        KnobModule,
-        InlineSVGModule,
-        InputNumberModule,
-        OverlayPanelModule,
-        SkeletonModule,
-        FormsModule,
-        ConfirmPopupModule,
-        BadgeModule
-    ],
+  imports: [
+    ButtonDirective,
+    CardModule,
+    FieldsetModule,
+    NgIf,
+    Ripple,
+    TagModule,
+    TooltipModule,
+    AsyncPipe,
+    BtnComponent,
+    KnobModule,
+    InlineSVGModule,
+    InputNumberModule,
+    OverlayPanelModule,
+    SkeletonModule,
+    FormsModule,
+    ConfirmPopupModule,
+    BadgeModule
+  ],
     providers: [
         ConfirmationService
     ],

@@ -11,7 +11,7 @@ import {exhaustMap, filter, Subscription} from "rxjs";
 import {NgxSpinnerService} from "ngx-spinner";
 import {BolHerosModel} from "../../models/bol-heros.model";
 import {BolHerosService} from "../../services/bol-heros.service";
-import {AsyncPipe, JsonPipe, NgForOf, NgIf} from "@angular/common";
+import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {ConfirmationService} from "primeng/api";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {CardModule} from "primeng/card";
@@ -35,34 +35,32 @@ import {tap} from "rxjs/operators";
 
 @Component({
     selector: 'bol-pnj-home',
-    imports: [
-        ButtonDirective,
-        DropdownModule,
-        FormsModule,
-        HeaderComponent,
-        InputTextModule,
-        RouterLink,
-        BolPnjCreateComponent,
-        NgForOf,
-        Button,
-        ConfirmPopupModule,
-        CardModule,
-        NgIf,
-        TableModule,
-        TooltipModule,
-        CheckboxModule,
-        IconFieldModule,
-        InputIconModule,
-        DialogModule,
-        Ripple,
-        TagModule,
-        JsonPipe,
-        ScrollPanelModule,
-        BolHerosTraitRowComponent,
-        InlineSVGModule,
-        AsyncPipe,
-        SkeletonModule
-    ],
+  imports: [
+    ButtonDirective,
+    DropdownModule,
+    FormsModule,
+    HeaderComponent,
+    InputTextModule,
+    RouterLink,
+    NgForOf,
+    Button,
+    ConfirmPopupModule,
+    CardModule,
+    NgIf,
+    TableModule,
+    TooltipModule,
+    CheckboxModule,
+    IconFieldModule,
+    InputIconModule,
+    DialogModule,
+    Ripple,
+    TagModule,
+    ScrollPanelModule,
+    BolHerosTraitRowComponent,
+    InlineSVGModule,
+    AsyncPipe,
+    SkeletonModule
+  ],
     providers: [
         ConfirmationService
     ],

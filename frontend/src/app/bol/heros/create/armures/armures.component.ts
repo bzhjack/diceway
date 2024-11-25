@@ -1,10 +1,10 @@
 import {Component, computed, effect, forwardRef, inject, OnDestroy, signal} from '@angular/core';
-import {Button, ButtonDirective} from "primeng/button";
+import {ButtonDirective} from "primeng/button";
 import {FieldsetModule} from "primeng/fieldset";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
 import {BolHerosStateService} from "../../../services/bol-heros-state.service";
 import {DropdownModule} from "primeng/dropdown";
-import {JsonPipe, NgForOf, NgIf} from "@angular/common";
+import {NgIf} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {Ripple} from "primeng/ripple";
 import {BolArmureModel, BolHerosArmureModel} from "../../../models/bol-armure.model";
@@ -29,23 +29,20 @@ import {BtnComponent} from "../../../../shared/btn/btn.component";
 
 @Component({
     selector: 'bol-heros-armures',
-    imports: [
-        Button,
-        FieldsetModule,
-        PrimeTemplate,
-        ButtonDirective,
-        DropdownModule,
-        NgIf,
-        OverlayPanelModule,
-        Ripple,
-        FormsModule,
-        NgForOf,
-        ReactiveFormsModule,
-        BtnComponent,
-        JsonPipe,
-        TableModule,
-        TooltipModule
-    ],
+  imports: [
+    FieldsetModule,
+    PrimeTemplate,
+    ButtonDirective,
+    DropdownModule,
+    NgIf,
+    OverlayPanelModule,
+    Ripple,
+    FormsModule,
+    ReactiveFormsModule,
+    BtnComponent,
+    TableModule,
+    TooltipModule
+  ],
     templateUrl: './armures.component.html',
     styleUrl: './armures.component.scss',
     providers: [

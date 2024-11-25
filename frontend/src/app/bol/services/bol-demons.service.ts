@@ -2,8 +2,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {BolDemonCategorieModel, BolDemonModel, BolDemonPouvoirModel} from '../models/bol-demon.model';
-import {BolQuestProtagonistModel} from "../models/bol-quest.model";
-import {BolCreatureModel} from "../models/bol-creature.model";
 
 @Injectable({
   providedIn: 'root'

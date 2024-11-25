@@ -1,9 +1,9 @@
 import {AfterViewInit, Component, computed, effect, inject, signal} from '@angular/core';
 import {DropdownModule} from "primeng/dropdown";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {Button, ButtonDirective} from "primeng/button";
+import {ButtonDirective} from "primeng/button";
 import {FieldsetModule} from "primeng/fieldset";
-import {JsonPipe, NgForOf, NgIf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {CheckboxModule} from "primeng/checkbox";
 import {RadioButtonModule} from "primeng/radiobutton";
 import {InlineSVGModule} from "ng-inline-svg-2";
@@ -23,25 +23,23 @@ import {BolCreatureModel} from "../../models/bol-creature.model";
 
 @Component({
     selector: 'bol-action',
-    imports: [
-        DropdownModule,
-        FormsModule,
-        Button,
-        FieldsetModule,
-        NgForOf,
-        CheckboxModule,
-        RadioButtonModule,
-        JsonPipe,
-        NgIf,
-        InlineSVGModule,
-        MenuModule,
-        InputTextModule,
-        ReactiveFormsModule,
-        ButtonDirective,
-        Ripple,
-        InputNumberModule,
-        TagModule
-    ],
+  imports: [
+    DropdownModule,
+    FormsModule,
+    FieldsetModule,
+    NgForOf,
+    CheckboxModule,
+    RadioButtonModule,
+    NgIf,
+    InlineSVGModule,
+    MenuModule,
+    InputTextModule,
+    ReactiveFormsModule,
+    ButtonDirective,
+    Ripple,
+    InputNumberModule,
+    TagModule
+  ],
     templateUrl: './action.component.html',
     styleUrl: './action.component.scss'
 })

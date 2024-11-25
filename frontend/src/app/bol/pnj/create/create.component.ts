@@ -10,8 +10,8 @@ import {InputTextareaModule} from "primeng/inputtextarea";
 import {FieldsetModule} from "primeng/fieldset";
 import {InputNumberModule} from "primeng/inputnumber";
 import {ConfirmationService} from "primeng/api";
-import {Button, ButtonDirective} from "primeng/button";
-import {JsonPipe, NgForOf, NgIf} from "@angular/common";
+import {ButtonDirective} from "primeng/button";
+import {NgForOf, NgIf} from "@angular/common";
 import {TooltipModule} from "primeng/tooltip";
 import {BolHerosStateService} from "../../services/bol-heros-state.service";
 import {toSignal} from "@angular/core/rxjs-interop";
@@ -26,25 +26,23 @@ import {BolHerosTraitRowComponent} from "../../heros/create/origines/region/trai
 
 @Component({
     selector: 'bol-pnj-create',
-    imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        DropdownModule,
-        InputTextModule,
-        InputTextareaModule,
-        FieldsetModule,
-        InputNumberModule,
-        BtnComponent,
-        Button,
-        NgForOf,
-        NgIf,
-        TooltipModule,
-        ButtonDirective,
-        OverlayPanelModule,
-        Ripple,
-        JsonPipe,
-        BolHerosTraitRowComponent
-    ],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    DropdownModule,
+    InputTextModule,
+    InputTextareaModule,
+    FieldsetModule,
+    InputNumberModule,
+    BtnComponent,
+    NgForOf,
+    NgIf,
+    TooltipModule,
+    ButtonDirective,
+    OverlayPanelModule,
+    Ripple,
+    BolHerosTraitRowComponent
+  ],
     providers: [
         ConfirmationService
     ],

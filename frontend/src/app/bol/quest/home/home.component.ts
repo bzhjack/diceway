@@ -7,10 +7,9 @@ import {DropdownModule} from "primeng/dropdown";
 import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
 import {InputTextModule} from "primeng/inputtext";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgIf} from "@angular/common";
 import {PaginatorModule} from "primeng/paginator";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
-import {Ripple} from "primeng/ripple";
 import {Router, RouterLink} from "@angular/router";
 import {Table, TableModule} from "primeng/table";
 import {TagModule} from "primeng/tag";
@@ -22,32 +21,32 @@ import {BolQuestService} from "../../services/bol-quest.service";
 import {BolQuestModel} from "../../models/bol-quest.model";
 import {ScrollPanelModule} from "primeng/scrollpanel";
 import {InputTextareaModule} from "primeng/inputtextarea";
+import {HeaderComponent} from "../../../shared/header/header.component";
 
 @Component({
     selector: 'bol-quest-home',
-    imports: [
-        ButtonDirective,
-        CheckboxModule,
-        ConfirmPopupModule,
-        DialogModule,
-        DropdownModule,
-        IconFieldModule,
-        InputIconModule,
-        InputTextModule,
-        NgForOf,
-        NgIf,
-        PaginatorModule,
-        PrimeTemplate,
-        Ripple,
-        RouterLink,
-        TableModule,
-        TagModule,
-        TooltipModule,
-        ScrollPanelModule,
-        Button,
-        ReactiveFormsModule,
-        InputTextareaModule
-    ],
+  imports: [
+    ButtonDirective,
+    CheckboxModule,
+    ConfirmPopupModule,
+    DialogModule,
+    DropdownModule,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule,
+    NgIf,
+    PaginatorModule,
+    PrimeTemplate,
+    RouterLink,
+    TableModule,
+    TagModule,
+    TooltipModule,
+    ScrollPanelModule,
+    Button,
+    ReactiveFormsModule,
+    InputTextareaModule,
+    HeaderComponent
+  ],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss',
     providers: [

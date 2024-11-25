@@ -1,10 +1,10 @@
 import {Component, computed, effect, forwardRef, inject, OnDestroy, signal} from '@angular/core';
-import {Button, ButtonDirective} from "primeng/button";
+import {ButtonDirective} from "primeng/button";
 import {FieldsetModule} from "primeng/fieldset";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
 import {BolHerosStateService} from "../../../services/bol-heros-state.service";
 import {DropdownModule} from "primeng/dropdown";
-import {JsonPipe, NgForOf, NgIf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {Ripple} from "primeng/ripple";
 
@@ -36,26 +36,24 @@ import {BtnComponent} from "../../../../shared/btn/btn.component";
 
 @Component({
     selector: 'bol-heros-langues',
-    imports: [
-        Button,
-        FieldsetModule,
-        PrimeTemplate,
-        ButtonDirective,
-        DropdownModule,
-        NgIf,
-        OverlayPanelModule,
-        Ripple,
-        FormsModule,
-        NgForOf,
-        ReactiveFormsModule,
-        BolMessageComponent,
-        InputNumberModule,
-        BtnComponent,
-        TableModule,
-        JsonPipe,
-        ScrollPanelModule,
-        TooltipModule
-    ],
+  imports: [
+    FieldsetModule,
+    PrimeTemplate,
+    ButtonDirective,
+    DropdownModule,
+    NgIf,
+    OverlayPanelModule,
+    Ripple,
+    FormsModule,
+    NgForOf,
+    ReactiveFormsModule,
+    BolMessageComponent,
+    InputNumberModule,
+    BtnComponent,
+    TableModule,
+    ScrollPanelModule,
+    TooltipModule
+  ],
     templateUrl: './langues.component.html',
     styleUrl: './langues.component.scss',
     providers: [

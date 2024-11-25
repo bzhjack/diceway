@@ -1,6 +1,6 @@
 import {Component, computed, effect, inject, OnDestroy, signal} from '@angular/core';
 import {AvatarModule} from "primeng/avatar";
-import {Button, ButtonDirective} from "primeng/button";
+import {ButtonDirective} from "primeng/button";
 import {DialogModule} from "primeng/dialog";
 import {PrimeTemplate} from "primeng/api";
 import {InputTextModule} from "primeng/inputtext";
@@ -15,7 +15,7 @@ import {InputTextareaModule} from "primeng/inputtextarea";
 import {PictureComponent} from "../../../shared/picture/picture.component";
 import {map, Subscription} from "rxjs";
 import {toSignal} from '@angular/core/rxjs-interop';
-import {JsonPipe, NgForOf, NgIf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {OverlayPanel, OverlayPanelModule} from 'primeng/overlaypanel';
 import {Ripple} from "primeng/ripple";
 import {TooltipModule} from "primeng/tooltip";
@@ -24,27 +24,25 @@ import {BtnComponent} from "../../../shared/btn/btn.component";
 
 @Component({
     selector: 'bol-creature-create',
-    imports: [
-        AvatarModule,
-        Button,
-        DialogModule,
-        PrimeTemplate,
-        InputTextModule,
-        FormsModule,
-        ReactiveFormsModule,
-        FieldsetModule,
-        InputNumberModule,
-        DropdownModule,
-        OverlayPanelModule,
-        ButtonDirective,
-        InputTextareaModule,
-        NgIf,
-        Ripple,
-        NgForOf,
-        JsonPipe,
-        TooltipModule,
-        BtnComponent
-    ],
+  imports: [
+    AvatarModule,
+    DialogModule,
+    PrimeTemplate,
+    InputTextModule,
+    FormsModule,
+    ReactiveFormsModule,
+    FieldsetModule,
+    InputNumberModule,
+    DropdownModule,
+    OverlayPanelModule,
+    ButtonDirective,
+    InputTextareaModule,
+    NgIf,
+    Ripple,
+    NgForOf,
+    TooltipModule,
+    BtnComponent
+  ],
     templateUrl: './create.component.html',
     styleUrl: './create.component.scss'
 })

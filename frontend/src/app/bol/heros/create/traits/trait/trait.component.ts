@@ -2,7 +2,7 @@ import {Component, computed, inject, input} from '@angular/core';
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {BolAvantageModel} from "../../../../models/bol-avantage.model";
 import {BolDesavantageModel} from "../../../../models/bol-desavantage.model";
-import {JsonPipe, NgForOf, NgIf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {BolHeroCreateTools} from "../../create.tools";
 import {CheckboxModule} from "primeng/checkbox";
@@ -12,15 +12,14 @@ import {TooltipModule} from "primeng/tooltip";
 
 @Component({
     selector: 'bol-heros-trait',
-    imports: [
-        OverlayPanelModule,
-        NgIf,
-        InlineSVGModule,
-        NgForOf,
-        CheckboxModule,
-        JsonPipe,
-        TooltipModule
-    ],
+  imports: [
+    OverlayPanelModule,
+    NgIf,
+    InlineSVGModule,
+    NgForOf,
+    CheckboxModule,
+    TooltipModule
+  ],
     templateUrl: './trait.component.html',
     styleUrl: './trait.component.scss'
 })

@@ -1,6 +1,6 @@
 import {Component, computed, effect, forwardRef, inject, OnDestroy, output, signal} from '@angular/core';
 import {BolMessageComponent} from "../../../message/message.component";
-import {Button, ButtonDirective} from "primeng/button";
+import {ButtonDirective} from "primeng/button";
 import {DropdownModule} from "primeng/dropdown";
 import {FieldsetModule} from "primeng/fieldset";
 import {
@@ -16,7 +16,7 @@ import {
   Validator
 } from "@angular/forms";
 import {InputNumberModule} from "primeng/inputnumber";
-import {JsonPipe, NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
+import {NgForOf, NgIf, NgTemplateOutlet} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {ConfirmationService, PrimeTemplate} from "primeng/api";
 import {Ripple} from "primeng/ripple";
@@ -37,25 +37,23 @@ import {BtnComponent} from "../../../../shared/btn/btn.component";
 
 @Component({
     selector: 'bol-heros-carrieres',
-    imports: [
-        BolMessageComponent,
-        Button,
-        ButtonDirective,
-        DropdownModule,
-        FieldsetModule,
-        FormsModule,
-        InputNumberModule,
-        NgForOf,
-        NgIf,
-        NgTemplateOutlet,
-        OverlayPanelModule,
-        PrimeTemplate,
-        ReactiveFormsModule,
-        Ripple,
-        JsonPipe,
-        TooltipModule,
-        BtnComponent
-    ],
+  imports: [
+    BolMessageComponent,
+    ButtonDirective,
+    DropdownModule,
+    FieldsetModule,
+    FormsModule,
+    InputNumberModule,
+    NgForOf,
+    NgIf,
+    NgTemplateOutlet,
+    OverlayPanelModule,
+    PrimeTemplate,
+    ReactiveFormsModule,
+    Ripple,
+    TooltipModule,
+    BtnComponent
+  ],
     templateUrl: './carrieres.component.html',
     styleUrl: './carrieres.component.scss',
     providers: [

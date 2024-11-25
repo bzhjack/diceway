@@ -1,9 +1,9 @@
 import {Component, computed, inject, input, output, signal} from '@angular/core';
 import {CardModule} from "primeng/card";
 import {TagModule} from "primeng/tag";
-import {AsyncPipe, JsonPipe, NgIf} from "@angular/common";
+import {AsyncPipe, NgIf} from "@angular/common";
 import {TooltipModule} from "primeng/tooltip";
-import {Button, ButtonDirective} from "primeng/button";
+import {ButtonDirective} from "primeng/button";
 import {Ripple} from "primeng/ripple";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {ConfirmationService} from "primeng/api";
@@ -25,22 +25,17 @@ import {InputTextModule} from "primeng/inputtext";
 import {BolDemonsService} from "../../services/bol-demons.service";
 import {BolDemonModel} from "../../models/bol-demon.model";
 import {BolDemonCreateComponent} from "../create/create.component";
-import {BolHerosModel} from "../../models/bol-heros.model";
 import {BadgeModule} from "primeng/badge";
-import {BolCreatureModel} from "../../models/bol-creature.model";
 
 @Component({
   selector: 'bol-demon-card',
   imports: [
     AsyncPipe,
-    JsonPipe,
     CardModule,
     SkeletonModule,
     NgIf,
     TooltipModule,
-    Button,
     OverlayPanelModule,
-    BolActionComponent,
     ButtonDirective,
     InlineSVGModule,
     Ripple,

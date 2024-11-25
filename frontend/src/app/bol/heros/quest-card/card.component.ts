@@ -4,11 +4,11 @@ import {BolHerosService} from "../../services/bol-heros.service";
 import {toObservable} from "@angular/core/rxjs-interop";
 import {exhaustMap, filter, Subscription} from "rxjs";
 import {tap} from "rxjs/operators";
-import {AsyncPipe, JsonPipe, NgIf} from "@angular/common";
+import {AsyncPipe, NgIf} from "@angular/common";
 import {CardModule} from "primeng/card";
 import {SkeletonModule} from "primeng/skeleton";
 import {TooltipModule} from "primeng/tooltip";
-import {Button, ButtonDirective} from "primeng/button";
+import {ButtonDirective} from "primeng/button";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {BolActionComponent} from "../../quest/action/action.component";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
@@ -29,27 +29,24 @@ import {ConfirmPopupModule} from "primeng/confirmpopup";
 
 @Component({
     selector: 'bol-heros-card',
-    imports: [
-        AsyncPipe,
-        JsonPipe,
-        CardModule,
-        SkeletonModule,
-        NgIf,
-        TooltipModule,
-        Button,
-        OverlayPanelModule,
-        BolActionComponent,
-        ButtonDirective,
-        InlineSVGModule,
-        Ripple,
-        BtnComponent,
-        TagModule,
-        FormsModule,
-        InputTextModule,
-        ReactiveFormsModule,
-        InputNumberModule,
-        ConfirmPopupModule
-    ],
+  imports: [
+    AsyncPipe,
+    CardModule,
+    SkeletonModule,
+    NgIf,
+    TooltipModule,
+    OverlayPanelModule,
+    ButtonDirective,
+    InlineSVGModule,
+    Ripple,
+    BtnComponent,
+    TagModule,
+    FormsModule,
+    InputTextModule,
+    ReactiveFormsModule,
+    InputNumberModule,
+    ConfirmPopupModule
+  ],
     providers: [
         ConfirmationService
     ],

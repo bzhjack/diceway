@@ -1,7 +1,5 @@
 import {Component, effect, inject, OnDestroy} from '@angular/core';
 import {CardModule} from "primeng/card";
-import {Button} from "primeng/button";
-import {NgIf} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {Subscription} from "rxjs";
 import {BolHerosModel} from "../models/bol-heros.model";
@@ -9,12 +7,10 @@ import {BolDashboardService} from "../services/bol-dashboard.service";
 
 @Component({
     selector: 'bol-home',
-    imports: [
-        CardModule,
-        Button,
-        NgIf,
-        RouterLink,
-    ],
+  imports: [
+    CardModule,
+    RouterLink,
+  ],
     providers: [BolDashboardService],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'

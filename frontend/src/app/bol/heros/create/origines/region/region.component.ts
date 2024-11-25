@@ -1,6 +1,6 @@
 import {Component, computed, effect, inject, signal, ViewChild} from '@angular/core';
 import {DataViewModule} from "primeng/dataview";
-import {JsonPipe, NgForOf, NgIf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {PanelModule} from "primeng/panel";
 import {ButtonModule} from "primeng/button";
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
@@ -17,22 +17,21 @@ import {BolHerosTraitRowComponent} from "./trait-row/trait-row.component";
 
 @Component({
     selector: 'bol-heros-region',
-    imports: [
-        DataViewModule,
-        NgForOf,
-        PanelModule,
-        ButtonModule,
-        TooltipModule,
-        ScrollPanelModule,
-        TagModule,
-        NgIf,
-        InlineSVGModule,
-        FieldsetModule,
-        MessagesModule,
-        OverlayPanelModule,
-        JsonPipe,
-        BolHerosTraitRowComponent
-    ],
+  imports: [
+    DataViewModule,
+    NgForOf,
+    PanelModule,
+    ButtonModule,
+    TooltipModule,
+    ScrollPanelModule,
+    TagModule,
+    NgIf,
+    InlineSVGModule,
+    FieldsetModule,
+    MessagesModule,
+    OverlayPanelModule,
+    BolHerosTraitRowComponent
+  ],
     templateUrl: './region.component.html',
     styleUrl: './region.component.scss'
 })

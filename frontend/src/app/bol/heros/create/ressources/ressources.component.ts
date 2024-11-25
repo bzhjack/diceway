@@ -4,26 +4,23 @@ import {PrimeTemplate} from "primeng/api";
 import {ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule} from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
 import {BolHerosStateService} from "../../../services/bol-heros-state.service";
-import {NgForOf, NgIf} from "@angular/common";
-import {BolMessageComponent} from "../../../message/message.component";
+import {NgIf} from "@angular/common";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {MessagesModule} from "primeng/messages";
 
 @Component({
     selector: 'bol-heros-ressources',
-    imports: [
-        FieldsetModule,
-        PrimeTemplate,
-        ReactiveFormsModule,
-        InputTextModule,
-        NgIf,
-        BolMessageComponent,
-        OverlayPanelModule,
-        InlineSVGModule,
-        MessagesModule,
-        NgForOf
-    ],
+  imports: [
+    FieldsetModule,
+    PrimeTemplate,
+    ReactiveFormsModule,
+    InputTextModule,
+    NgIf,
+    OverlayPanelModule,
+    InlineSVGModule,
+    MessagesModule
+  ],
     templateUrl: './ressources.component.html',
     styleUrl: './ressources.component.scss',
     providers: [

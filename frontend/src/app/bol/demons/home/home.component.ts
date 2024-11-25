@@ -13,7 +13,7 @@ import {HeaderComponent} from "../../../shared/header/header.component";
 import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
 import {InputTextModule} from "primeng/inputtext";
-import {AsyncPipe, JsonPipe, NgForOf, NgIf} from "@angular/common";
+import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Ripple} from "primeng/ripple";
 import {RouterLink} from "@angular/router";
@@ -31,32 +31,31 @@ import {InlineSVGModule} from "ng-inline-svg-2";
 
 @Component({
     selector: 'bol-demon-home',
-    imports: [
-        ButtonDirective,
-        CheckboxModule,
-        ConfirmPopupModule,
-        DialogModule,
-        DropdownModule,
-        HeaderComponent,
-        IconFieldModule,
-        InputIconModule,
-        InputTextModule,
-        NgForOf,
-        NgIf,
-        PrimeTemplate,
-        ReactiveFormsModule,
-        Ripple,
-        RouterLink,
-        TableModule,
-        TagModule,
-        TooltipModule,
-        FormsModule,
-        JsonPipe,
-        AsyncPipe,
-        Button,
-        SkeletonModule,
-        InlineSVGModule
-    ],
+  imports: [
+    ButtonDirective,
+    CheckboxModule,
+    ConfirmPopupModule,
+    DialogModule,
+    DropdownModule,
+    HeaderComponent,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule,
+    NgForOf,
+    NgIf,
+    PrimeTemplate,
+    ReactiveFormsModule,
+    Ripple,
+    RouterLink,
+    TableModule,
+    TagModule,
+    TooltipModule,
+    FormsModule,
+    AsyncPipe,
+    Button,
+    SkeletonModule,
+    InlineSVGModule
+  ],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss',
     providers: [

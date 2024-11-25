@@ -1,6 +1,6 @@
 import {Component, inject, OnDestroy, signal, ViewChild} from '@angular/core';
 import {exhaustMap, filter, map, Subscription} from "rxjs";
-import {AsyncPipe, JsonPipe, NgForOf, NgIf} from "@angular/common";
+import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {Router, RouterLink} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
 import {CardModule} from "primeng/card";
@@ -36,34 +36,33 @@ import {SkeletonModule} from "primeng/skeleton";
 
 @Component({
     selector: 'bol-hero-home',
-    imports: [
-        NgForOf,
-        JsonPipe,
-        RouterLink,
-        CardModule,
-        Button,
-        DialogModule,
-        InputTextModule,
-        ReactiveFormsModule,
-        NgIf,
-        TableModule,
-        ButtonDirective,
-        Ripple,
-        ConfirmPopupModule,
-        HeaderComponent,
-        CheckboxModule,
-        DropdownModule,
-        IconFieldModule,
-        InputIconModule,
-        TagModule,
-        TooltipModule,
-        FormsModule,
-        ScrollPanelModule,
-        BolHerosTraitRowComponent,
-        AsyncPipe,
-        InlineSVGModule,
-        SkeletonModule
-    ],
+  imports: [
+    NgForOf,
+    RouterLink,
+    CardModule,
+    Button,
+    DialogModule,
+    InputTextModule,
+    ReactiveFormsModule,
+    NgIf,
+    TableModule,
+    ButtonDirective,
+    Ripple,
+    ConfirmPopupModule,
+    HeaderComponent,
+    CheckboxModule,
+    DropdownModule,
+    IconFieldModule,
+    InputIconModule,
+    TagModule,
+    TooltipModule,
+    FormsModule,
+    ScrollPanelModule,
+    BolHerosTraitRowComponent,
+    AsyncPipe,
+    InlineSVGModule,
+    SkeletonModule
+  ],
     providers: [
         ConfirmationService
     ],
