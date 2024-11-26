@@ -4,12 +4,14 @@ import {RouterLink} from "@angular/router";
 import {Subscription} from "rxjs";
 import {BolHerosModel} from "../models/bol-heros.model";
 import {BolDashboardService} from "../services/bol-dashboard.service";
+import {BolHomeCardComponent} from "./home-card/home-card.component";
 
 @Component({
     selector: 'bol-home',
   imports: [
     CardModule,
     RouterLink,
+    BolHomeCardComponent,
   ],
     providers: [BolDashboardService],
     templateUrl: './home.component.html',
