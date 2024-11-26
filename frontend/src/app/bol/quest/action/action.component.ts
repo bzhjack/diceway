@@ -107,7 +107,6 @@ export class BolActionComponent implements AfterViewInit {
 
   constructor(private ref: DynamicDialogRef, private config: DynamicDialogConfig) {
     this.hero.set(config.data.hero);
-    console.log(this.hero());
     this.diceResult.set(null);
     effect(() => {
       if (this.diceResult()) {
@@ -117,7 +116,7 @@ export class BolActionComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.diceService.initDice('#action-dice-box');
+    setTimeout(() => this.diceService.initDice('#action-dice-box'), 500);
   }
 
   rollDice() {
