@@ -1,4 +1,4 @@
-import {Directive, EventEmitter, HostBinding, HostListener, Input, Output} from '@angular/core';
+import {Directive, HostBinding, HostListener, input, output} from '@angular/core';
 
 @Directive({
   selector: '[dwDragDropFile]',
@@ -6,11 +6,9 @@ import {Directive, EventEmitter, HostBinding, HostListener, Input, Output} from 
 })
 export class DragDropFileDirective {
 
-  @Input()
-  public dropDisabled = false;
+  public readonly dropDisabled = input(false);
 
-  @Output()
-  public filesDropped = new EventEmitter<File[]>();
+  public readonly filesDropped = output<File[]>();
 
   @HostBinding('class.drag-over')
   public dragOverClass?: string;
@@ -20,7 +18,7 @@ export class DragDropFileDirective {
   public dragOver(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
-    this.dragOverClass = this.dropDisabled ? undefined : 'drag-over';
+    this.dragOverClass = this.dropDisabled() ? undefined : 'drag-over';
   }
 
   // Dragleave Event
@@ -37,7 +35,7 @@ export class DragDropFileDirective {
     event.preventDefault();
     event.stopPropagation();
     this.dragOverClass = undefined;
-    if (this.dropDisabled) {
+    if (this.dropDisabled()) {
       return;
     }
     const files = event.dataTransfer?.files;

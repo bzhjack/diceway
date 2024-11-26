@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, inject, Renderer2, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, inject, Renderer2, viewChild} from '@angular/core';
 import {DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {DiceService} from "../dice.service";
 
@@ -9,7 +9,7 @@ import {DiceService} from "../dice.service";
 })
 export class DiceResultsComponent implements AfterViewInit {
   private  diceService = inject(DiceService);
-  @ViewChild('resultContainer') displayContainer!: ElementRef;
+  readonly displayContainer = viewChild.required<ElementRef>('resultContainer');
   private timeout: number = 500;
   private even: boolean = false;
   private resultsElem1!: HTMLElement;
@@ -48,7 +48,7 @@ export class DiceResultsComponent implements AfterViewInit {
     this.renderer.appendChild(elem, this.resultsElem1);
     this.renderer.appendChild(elem, this.resultsElem2);
     // Append the parent element to the target container (displayContainer)
-    this.renderer.appendChild(this.displayContainer.nativeElement, elem);
+    this.renderer.appendChild(this.displayContainer().nativeElement, elem);
   }
   showResults(data: any){
     const resultString = this.diceService.formatDiceResult(data);

@@ -1,4 +1,4 @@
-import {Component, computed, inject, Signal, ViewChild} from '@angular/core';
+import {Component, computed, inject, Signal, viewChild} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {toSignal} from "@angular/core/rxjs-interop";
@@ -57,8 +57,8 @@ export class BolQuestComponent {
   route = inject(ActivatedRoute);
   fb = inject(FormBuilder);
 
-  @ViewChild('questTable') questTable?: Table;
-  @ViewChild('titrePanel') titrePanel?: Overlay;
+  readonly questTable = viewChild<Table>('questTable');
+  readonly titrePanel = viewChild<Overlay>('titrePanel');
 
   private spinner = inject(NgxSpinnerService);
   private subs?: Subscription;
@@ -114,10 +114,10 @@ export class BolQuestComponent {
         next: (quest: BolQuestModel) => {
           this.spinner.hide();
           this.majForm(quest);
-          this.titrePanel?.hide();
+          this.titrePanel()?.hide();
         },
         error: () => {
-          this.titrePanel?.hide();
+          this.titrePanel()?.hide();
           this.spinner.hide();
         }
       });

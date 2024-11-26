@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy, signal, ViewChild} from '@angular/core';
+import {Component, inject, OnDestroy, signal, viewChild} from '@angular/core';
 import {exhaustMap, filter, map, Subscription} from "rxjs";
 import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {Router, RouterLink} from "@angular/router";
@@ -70,7 +70,7 @@ import {SkeletonModule} from "primeng/skeleton";
     styleUrl: './home.component.scss'
 })
 export class BolHeroHomeComponent implements OnDestroy {
-  @ViewChild('herosTable') herosTable?: Table;
+  readonly herosTable = viewChild<Table>('herosTable');
   private confirmationService = inject(ConfirmationService);
   readonly dialogueService = inject(DialogService);
   private herosService = inject(BolHerosService);
@@ -198,7 +198,7 @@ export class BolHeroHomeComponent implements OnDestroy {
   }
 
   filtering(ev: any) {
-    this.herosTable?.filterGlobal(ev.target?.value, 'contains')
+    this.herosTable()?.filterGlobal(ev.target?.value, 'contains')
   }
 
   filterExtended() {

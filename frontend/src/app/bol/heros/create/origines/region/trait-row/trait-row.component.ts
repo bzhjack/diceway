@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, input} from '@angular/core';
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {NgForOf, NgIf} from "@angular/common";
 import {InlineSVGModule} from "ng-inline-svg-2";
@@ -20,9 +20,9 @@ import {BolHeroCreateTools} from "../../../create.tools";
     styleUrl: './trait-row.component.scss'
 })
 export class BolHerosTraitRowComponent {
-  @Input() avantage?: BolAvantageModel;
-  @Input() desavantage?: BolDesavantageModel;
-  @Input() disabled = false;
+  readonly avantage = input<BolAvantageModel>();
+  readonly desavantage = input<BolDesavantageModel>();
+  readonly disabled = input(false);
 
   avantageDescription(avantage: BolAvantageModel) {
     return BolHeroCreateTools.avantageDescription(avantage);

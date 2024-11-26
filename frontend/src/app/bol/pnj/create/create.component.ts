@@ -1,4 +1,4 @@
-import {Component, computed, inject, signal, ViewChild} from '@angular/core';
+import {Component, computed, inject, signal, viewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {map, Subscription} from "rxjs";
 import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
@@ -50,7 +50,7 @@ import {BolHerosTraitRowComponent} from "../../heros/create/origines/region/trai
     styleUrl: './create.component.scss'
 })
 export class BolPnjCreateComponent {
-  @ViewChild('opPnj') panelPnj?: OverlayPanel;
+  readonly panelPnj = viewChild<OverlayPanel>('opPnj');
   public type = [{type: 'Piétaille', value: 'P'}, {type: 'Coriace', value: 'C'}, {type: 'Rival', value: 'R'}];
 
   private subs?: Subscription;
@@ -319,7 +319,7 @@ export class BolPnjCreateComponent {
         this.itemTitle.set('Langues');
         break;
     }
-    this.panelPnj?.toggle(ev);
+    this.panelPnj()?.toggle(ev);
   }
 
 

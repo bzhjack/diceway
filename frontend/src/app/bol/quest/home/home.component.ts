@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy, ViewChild} from '@angular/core';
+import {Component, inject, OnDestroy, viewChild} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {CheckboxModule} from "primeng/checkbox";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
@@ -54,7 +54,7 @@ import {HeaderComponent} from "../../../shared/header/header.component";
     ]
 })
 export class BolQuestHomeComponent implements OnDestroy {
-  @ViewChild('questTable') questTable?: Table;
+  readonly questTable = viewChild<Table>('questTable');
   private questService = inject(BolQuestService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
@@ -98,7 +98,7 @@ export class BolQuestHomeComponent implements OnDestroy {
     });
   }
   filtering(ev: any) {
-    this.questTable?.filterGlobal(ev.target?.value, 'contains')
+    this.questTable()?.filterGlobal(ev.target?.value, 'contains')
   }
   clear(table?: Table) {
     table?.clear();

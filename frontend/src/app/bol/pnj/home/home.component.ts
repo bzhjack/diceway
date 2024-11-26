@@ -1,4 +1,4 @@
-import {Component, inject, signal, ViewChild} from '@angular/core';
+import {Component, inject, signal, viewChild} from '@angular/core';
 import {Button, ButtonDirective} from "primeng/button";
 import {DropdownModule} from "primeng/dropdown";
 import {FormsModule} from "@angular/forms";
@@ -99,7 +99,7 @@ export class BolPnjHomeComponent {
   public searchTerm: string | null = null;
   public showPnj: boolean = false;
   public currentPnj: BolHerosModel | null = null;
-  @ViewChild('pnjTable') pnjTable?: Table;
+  readonly pnjTable = viewChild<Table>('pnjTable');
   public typeList = [
     {type: 'Tous', value: null},
     {type: 'Coriaces', value: 'C'},
@@ -184,7 +184,7 @@ export class BolPnjHomeComponent {
   }
 
   filtering(ev: any) {
-    this.pnjTable?.filterGlobal(ev.target?.value, 'contains')
+    this.pnjTable()?.filterGlobal(ev.target?.value, 'contains')
   }
 
   filterExtended() {

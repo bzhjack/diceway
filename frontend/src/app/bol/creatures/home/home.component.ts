@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy, signal, ViewChild} from '@angular/core';
+import {Component, inject, OnDestroy, signal, viewChild} from '@angular/core';
 import {RouterLink} from "@angular/router";
 import {BolCreaturesService} from "../../services/bol-creatures.service";
 import {NgxSpinnerService} from "ngx-spinner";
@@ -100,7 +100,7 @@ export class BolCreatureHomeComponent implements OnDestroy {
   public searchTerm: string | null = null;
   public tailleList = toSignal(this.creatureService.tailles());
 
-  @ViewChild('beastTable') beastTable?: Table;
+  readonly beastTable = viewChild<Table>('beastTable');
 
   constructor() {
     this.getBestiary();
@@ -190,7 +190,7 @@ export class BolCreatureHomeComponent implements OnDestroy {
   }
 
   filtering(ev: any) {
-    this.beastTable?.filterGlobal(ev.target?.value, 'contains')
+    this.beastTable()?.filterGlobal(ev.target?.value, 'contains')
   }
 
   filterExtended() {

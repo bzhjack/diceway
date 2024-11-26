@@ -1,4 +1,4 @@
-import {Component, computed, effect, inject, signal, ViewChild} from '@angular/core';
+import {Component, computed, effect, inject, signal, viewChild} from '@angular/core';
 import {DataViewModule} from "primeng/dataview";
 import {NgForOf, NgIf} from "@angular/common";
 import {PanelModule} from "primeng/panel";
@@ -49,13 +49,13 @@ export class BolHerosRegionComponent {
   protected nomsFeminins = computed(() => this.selectedRegion()!.noms.filter((nom: BolNomModel) => nom.gender === 'F'));
   protected nomsMasculins = computed(() => this.selectedRegion()!.noms.filter((nom: BolNomModel) => nom.gender === 'M'));
 
-  @ViewChild('regionPanel') scrollRegion!: ScrollPanel;
+  readonly scrollRegion = viewChild.required<ScrollPanel>('regionPanel');
 
   constructor(public ref: DynamicDialogRef) {
     effect(() => {
       let regionElement = document.getElementById('region-' + this.regionId());
       if (regionElement) {
-        this.scrollRegion?.scrollTop(regionElement?.offsetTop);
+        this.scrollRegion()?.scrollTop(regionElement?.offsetTop);
       }
     });
   }

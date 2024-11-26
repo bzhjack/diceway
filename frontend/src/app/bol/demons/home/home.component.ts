@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy, signal, ViewChild} from '@angular/core';
+import {Component, inject, OnDestroy, signal, viewChild} from '@angular/core';
 import {ConfirmationService, PrimeTemplate} from 'primeng/api';
 import {BolDemonsService} from '../../services/bol-demons.service';
 import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
@@ -95,7 +95,7 @@ export class BolDemonHomeComponent implements OnDestroy {
   public currentDemon: BolDemonModel | null = null;
 
   public categorieList = toSignal(this.demonService.categories());
-  @ViewChild('demonTable') demonTable?: Table;
+  readonly demonTable = viewChild<Table>('demonTable');
 
   constructor() {
     this.getDemons();
@@ -120,7 +120,7 @@ export class BolDemonHomeComponent implements OnDestroy {
     });
   }
   filtering(ev: any) {
-    this.demonTable?.filterGlobal(ev.target?.value, 'contains')
+    this.demonTable()?.filterGlobal(ev.target?.value, 'contains')
   }
   filterExtended() {
     this.filteredDemons = this.searchCreation ? this.demons.filter((demon) => demon.user_id !== null) : this.demons;

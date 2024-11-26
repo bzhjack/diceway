@@ -1,46 +1,46 @@
-@if (avantage) {
+@if (avantage()) {
   <div class="flex items-center w-fit">
     <div class="flex items-center cursor-pointer" (click)="avPanel.toggle($event)">
-      <div *ngIf="!avantage.de_bonus && !avantage.attribut" class="tag_icon bonus"
+      <div *ngIf="!avantage()!.de_bonus && !avantage()!.attribut" class="tag_icon bonus"
            inlineSVG="/frontend/assets/info.svg"></div>
-      <div *ngIf="avantage.de_bonus || avantage.attribut" class="tag_icon bonus"
-           [inlineSVG]="avantage.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
+      <div *ngIf="avantage()!.de_bonus || avantage()!.attribut" class="tag_icon bonus"
+           [inlineSVG]="avantage()!.de_bonus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
       <div>
       </div>
     </div>
-    <div [class.disabled]="disabled" style="white-space: nowrap">{{ avantage.avantage }}
-      @if (avantage.pivot && avantage.pivot.detail) {
-        ({{ avantage.pivot.detail }})
+    <div [class.disabled]="disabled()" style="white-space: nowrap">{{ avantage()!.avantage }}
+      @if (avantage()!.pivot && avantage()!.pivot.detail) {
+        ({{ avantage()!.pivot.detail }})
       }
     </div>
   </div>
   <p-overlayPanel #avPanel>
     <div class="dw-panel" style="background: #424B57">
-      <div *ngFor="let desc of avantageDescription(avantage)" class="flex flex-col">
+      <div *ngFor="let desc of avantageDescription(avantage()!)" class="flex flex-col">
         <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
         <div style="font-size: 12px">{{ desc.description }}</div>
       </div>
     </div>
   </p-overlayPanel>
 }
-@if (desavantage) {
-  <div class="flex items-center w-fit" [class.disabled]="disabled">
+@if (desavantage()) {
+  <div class="flex items-center w-fit" [class.disabled]="disabled()">
     <div class="flex items-center  cursor-pointer " (click)="desPanel.toggle($event)">
-      <div *ngIf="!desavantage.de_malus && !desavantage.attribut" class="tag_icon malus"
+      <div *ngIf="!desavantage()!.de_malus && !desavantage()!.attribut" class="tag_icon malus"
            inlineSVG="/frontend/assets/info.svg"></div>
-      <div *ngIf="desavantage.de_malus || desavantage.attribut" class="tag_icon malus"
-           [inlineSVG]="desavantage.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
+      <div *ngIf="desavantage()!.de_malus || desavantage()!.attribut" class="tag_icon malus"
+           [inlineSVG]="desavantage()!.de_malus ? '/frontend/assets/d6.svg' : '/frontend/assets/attr.svg'"></div>
     </div>
-    <div [class.disabled]="disabled" style="white-space: nowrap">{{ desavantage.desavantage }}
-      @if (desavantage.pivot && desavantage.pivot.detail) {
-        ({{ desavantage.pivot.detail }})
+    <div [class.disabled]="disabled()" style="white-space: nowrap">{{ desavantage()!.desavantage }}
+      @if (desavantage()!.pivot && desavantage()!.pivot.detail) {
+        ({{ desavantage()!.pivot.detail }})
       }
     </div>
   </div>
 
   <p-overlayPanel #desPanel>
     <div class="dw-panel" style="background: #424B57">
-      <div *ngFor="let desc of desavantageDescription(desavantage)" class="flex flex-col">
+      <div *ngFor="let desc of desavantageDescription(desavantage()!)" class="flex flex-col">
         <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
         <div style="font-size: 12px">{{ desc.description }}</div>
       </div>
