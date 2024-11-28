@@ -1,5 +1,51 @@
 .heros_card {
   position: relative;
+  border: 1px solid #424b57;
+  border-radius: 5px;
+  width: 150px;
+  height: 230px;
+  display: flex;
+  flex-direction: column;
+  &__name {
+    padding: 5px;
+    font-size: 14px;
+    font-weight: bolder;
+  }
+  &__player {
+    color: gray;
+    font-size: 12px;
+  }
+  &__img {
+    width: 148px;
+    height: 148px;
+  }
+  &__attr {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: 5px;
+    padding: 15px 5px 5px 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 1) 0px,
+        rgba(0, 0, 0, 1) calc(100% - 10px),
+        rgba(0, 0, 0, 0) 100%
+    );
+
+    .item:hover {
+      background: #283545;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  }
+}
+
+.heros_card_old {
+  position: relative;
   &__img {
     min-height: 50px;
     min-width: 50px;

@@ -1,10 +1,10 @@
 import {Component, computed, inject, input, output, signal} from '@angular/core';
-import {BolHerosModel} from "../../models/bol-heros.model";
+import {BolHerosAttributs, BolHerosCombat, BolHerosModel} from "../../models/bol-heros.model";
 import {BolHerosService} from "../../services/bol-heros.service";
 import {toObservable} from "@angular/core/rxjs-interop";
 import {exhaustMap, filter, Subscription} from "rxjs";
 import {tap} from "rxjs/operators";
-import {AsyncPipe, NgIf} from "@angular/common";
+import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {CardModule} from "primeng/card";
 import {SkeletonModule} from "primeng/skeleton";
 import {TooltipModule} from "primeng/tooltip";
@@ -45,7 +45,8 @@ import {ConfirmPopupModule} from "primeng/confirmpopup";
     InputTextModule,
     ReactiveFormsModule,
     InputNumberModule,
-    ConfirmPopupModule
+    ConfirmPopupModule,
+    NgForOf
   ],
     providers: [
         ConfirmationService
@@ -63,6 +64,20 @@ export class BolQuestHerosCardComponent {
 
   private ref?: DynamicDialogRef;
   private subs?: Subscription;
+
+  public heroAttrs = [
+    {attr: 'Vig', field: 'vigueur'},
+    {attr: 'Agi', field: 'agilite'},
+    {attr: 'Esp', field: 'esprit'},
+    {attr: 'Aur', field: 'aura'}
+  ];
+
+  public heroCombat = [
+    {attr: 'Ini', field: 'initiative'},
+    {attr: 'Mêl', field: 'melee'},
+    {attr: 'Tir', field: 'tir'},
+    {attr: 'Déf', field: 'defense'},
+  ];
   ressources = {
     vitalite: 0,
     heroisme: 0,
@@ -83,13 +98,18 @@ export class BolQuestHerosCardComponent {
     )
   );
 
-  openAction() {
+  getAttributValue(field: string): any {
+    return this.hero().attributs[field as keyof BolHerosAttributs] ?? 'Attribut non défini';
+  }
+
+  openAction(attr?: string) {
     const hero: BolHerosModel = this.questProtagonist()?.protagonist as BolHerosModel;
     this.dialogService.open(BolActionComponent, {
-      header: hero.origines.nom + 'va effectuer une action.',
+      header: hero.origines.nom + 'va effectuer une action ' + (attr ? '(' + attr + ')' : ''),
       maximizable: true,
       data: {
-        hero: this.questProtagonist()?.protagonist
+        hero: this.questProtagonist()?.protagonist,
+        attribut: attr
       }
     });
   }

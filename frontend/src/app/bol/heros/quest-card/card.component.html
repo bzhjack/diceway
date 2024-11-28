@@ -1,4 +1,22 @@
-<p-card class="heros_card" [style]="{border: '1px solid #424b57'}">
+<div class="heros_card">
+  @if ((questProtagonist$ | async) && questProtagonist()) {
+    <div class="heros_card__name">
+      {{ hero().origines.nom }}
+      <div class="heros_card__player">{{ hero().origines.joueur }}</div>
+    </div>
+    <img class="heros_card__img"
+         [src]="hero().origines.avatar !== null ? hero().origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+         alt="avatar">
+    <div class="heros_card__attr">
+      <div *ngFor="let attr of heroAttrs" class="item flex flex-col flex-auto" (click)="openAction(attr.field)">
+        <div class="flex justify-center pb-1">{{attr.attr}}</div>
+        <div class="flex justify-center">{{getAttributValue(attr.field)}}</div>
+      </div>
+    </div>
+  }
+</div>
+
+<p-card class="heros_card_old" [style]="{border: '1px solid #424b57', display: 'none'}">
   @if ((questProtagonist$ | async) && questProtagonist()) {
     <div class="flex gap-2">
       <div class="heros_card__img">
@@ -14,7 +32,7 @@
               <div style="width: 15px; height:15px;">
                 <i class="pi pi-heart-fill" style="color: red; padding-top: 2px"></i>
               </div>
-              <span style="color: white">{{questProtagonist()?.vitalite }}</span>
+              <span style="color: white">{{ questProtagonist()?.vitalite }}</span>
             </div>
           </p-tag>
           <p-tag severity="warning">
@@ -37,7 +55,7 @@
         <app-btn *ngIf="hero()?.user_id" pRipple icon="user-edit" (click)="fichePerso()"></app-btn>
         <app-btn pRipple icon="trash" (click)="deleteProtagonist(questProtagonist()!.id, $event)"></app-btn>
       </div>
-      <div class="heros_card__player">{{hero().origines.joueur}}</div>
+      <div class="heros_card__player">{{ hero().origines.joueur }}</div>
     </div>
 
   } @else {
@@ -60,7 +78,7 @@
       <label>Vitalité</label>
       <p-inputNumber [(ngModel)]="ressources.vitalite" inputId="vitalite" variant="filled"/>
     </div>
-    @if(ressources.heroisme > 0) {
+    @if (ressources.heroisme > 0) {
       <div class="flex flex-col gap-1">
         <label>Heroisme</label>
         <p-inputNumber [(ngModel)]="ressources.heroisme" inputId="heroisme" variant="filled"/>
@@ -79,4 +97,4 @@
             (click)="modifResources(heroPanel, $event)"></button>
   </div>
 </p-overlayPanel>
-<p-confirmPopup />
+<p-confirmPopup/>

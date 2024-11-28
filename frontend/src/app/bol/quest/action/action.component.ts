@@ -108,6 +108,12 @@ export class BolActionComponent implements AfterViewInit {
   constructor(private ref: DynamicDialogRef, private config: DynamicDialogConfig) {
     this.hero.set(config.data.hero);
     this.diceResult.set(null);
+    if (config.data.attribut) {
+      const attribut = this.attributs().find((attr) => attr.attr === config.data.attribut);
+      if (attribut) {
+        this.selectedAttribut.set(attribut);
+      }
+    }
     effect(() => {
       if (this.diceResult()) {
         this.checkRoll();
