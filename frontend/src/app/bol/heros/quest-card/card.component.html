@@ -1,7 +1,7 @@
 <div class="heros_card">
   @if ((questProtagonist$ | async) && questProtagonist()) {
     <div class="heros_card__name justify-between">
-      <div>
+      <div class="heros_card__name_left">
         {{ hero().origines.nom }}
         <div class="heros_card__player">{{ hero().origines.joueur }}</div>
       </div>
@@ -73,7 +73,7 @@
       <div class="flex flex-col gap-2">
         <app-btn pRipple icon="d6" (click)="openAction()"></app-btn>
         <app-btn *ngIf="hero()?.user_id" pRipple icon="user-edit" (click)="fichePerso()"></app-btn>
-        <app-btn pRipple icon="trash" (click)="deleteProtagonist(questProtagonist()!.id, $event)"></app-btn>
+        <app-btn pRipple icon="trash" (click)="deleteProtagonist(questProtagonist()!.id)"></app-btn>
       </div>
       <div class="heros_card__player">{{ hero().origines.joueur }}</div>
     </div>
@@ -117,5 +117,12 @@
             (click)="modifResources(heroPanel, $event)"></button>
   </div>
 </p-overlayPanel>
-<p-confirmPopup/>
-<p-menu #menus [model]="items" [popup]="true"/>
+<p-confirmDialog />
+<p-menu #menus [popup]="true" [model]="items">
+  <ng-template pTemplate="item" let-item>
+    <div pRipple class="flex items-center p-menuitem-link" *ngIf="hero()?.user_id">
+      <span [class]="item.icon"></span>
+      <span class="ml-2">{{ item.label }}</span>
+    </div>
+  </ng-template>
+</p-menu>

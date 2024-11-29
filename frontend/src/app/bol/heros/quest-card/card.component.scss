@@ -46,6 +46,12 @@
     font-size: 14px;
     font-weight: bolder;
     display: flex;
+    width: 150px;
+    white-space: nowrap;
+    &_left {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
   &__player {
     color: gray;

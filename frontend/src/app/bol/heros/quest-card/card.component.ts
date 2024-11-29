@@ -27,6 +27,7 @@ import {BolQuestProtagonistModel} from "../../models/bol-quest.model";
 import {ConfirmationService, MenuItem} from "primeng/api";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import {MenuModule} from "primeng/menu";
+import {ConfirmDialogModule} from "primeng/confirmdialog";
 
 @Component({
     selector: 'bol-heros-card',
@@ -49,7 +50,8 @@ import {MenuModule} from "primeng/menu";
     ConfirmPopupModule,
     NgForOf,
     Button,
-    MenuModule
+    MenuModule,
+    ConfirmDialogModule
   ],
     providers: [
         ConfirmationService
@@ -77,15 +79,21 @@ export class BolQuestHerosCardComponent {
 
   items: MenuItem[] = [
     {
-      label: 'Options',
+      label: 'Actions',
       items: [
         {
-          label: 'Refresh',
-          icon: 'pi pi-refresh'
+          label: 'Fiche personnage',
+          icon: 'pi pi-user-edit',
+          command: () => {
+            this.fichePerso();
+          }
         },
         {
-          label: 'Export',
-          icon: 'pi pi-upload'
+          label: "Quitter l'aventure",
+          icon: 'pi pi-trash',
+          command: (ev) => {
+            this.deleteProtagonist(this.questProtagonist()!.id);
+          }
         }
       ]
     }
@@ -183,12 +191,13 @@ export class BolQuestHerosCardComponent {
       }
     });
   }
-  deleteProtagonist(id: number, event: any) {
+  deleteProtagonist(id: number) {
     this.confirmationService.confirm({
-      target: event.target as EventTarget,
+      header :"Confirmation",
       message: 'Voulez vous supprimer ce hero de l`aventure ?',
       icon: 'pi pi-info-circle',
       acceptButtonStyleClass: 'p-button-danger p-button-sm',
+      rejectButtonStyleClass : 'p-button-sm',
       acceptLabel: "Oui",
       rejectLabel: "Non",
       accept: () => {
