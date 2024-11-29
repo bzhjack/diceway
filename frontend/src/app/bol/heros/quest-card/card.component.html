@@ -1,16 +1,36 @@
 <div class="heros_card">
   @if ((questProtagonist$ | async) && questProtagonist()) {
-    <div class="heros_card__name">
-      {{ hero().origines.nom }}
-      <div class="heros_card__player">{{ hero().origines.joueur }}</div>
+    <div class="heros_card__name justify-between">
+      <div>
+        {{ hero().origines.nom }}
+        <div class="heros_card__player">{{ hero().origines.joueur }}</div>
+      </div>
+      <p-button icon="pi pi-ellipsis-v" [rounded]="true" [text]="true" size="small" severity="contrast"
+                (click)="menus.toggle($event)"/>
     </div>
-    <img class="heros_card__img"
-         [src]="hero().origines.avatar !== null ? hero().origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
-         alt="avatar">
+    <div class="flex">
+      <img class="heros_card__img"
+           [src]="hero().origines.avatar !== null ? hero().origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+           alt="avatar">
+      <div class="heros_card__right">
+        <div class="heros_card__health">
+          <i class="pi pi-heart-fill" style="color: red;"></i>
+          <div>{{ questProtagonist()?.vitalite }}</div>
+        </div>
+        <div class="heros_card__heroism">
+          <span class="heroism svg_icon_25" inlineSVG="/frontend/assets/heroism.svg"></span>
+          <div>{{ questProtagonist()?.heroisme }}</div>
+        </div>
+        <!--div class="progress-container">
+          <div class="progress-bar"></div>
+        </div-->
+      </div>
+    </div>
+
     <div class="heros_card__attr">
       <div *ngFor="let attr of heroAttrs" class="item flex flex-col flex-auto" (click)="openAction(attr.field)">
-        <div class="flex justify-center pb-1">{{attr.attr}}</div>
-        <div class="flex justify-center">{{getAttributValue(attr.field)}}</div>
+        <div class="flex justify-center pb-1">{{ attr.attr }}</div>
+        <div class="flex justify-center">{{ getAttributValue(attr.field) }}</div>
       </div>
     </div>
   }
@@ -98,3 +118,4 @@
   </div>
 </p-overlayPanel>
 <p-confirmPopup/>
+<p-menu #menus [model]="items" [popup]="true"/>

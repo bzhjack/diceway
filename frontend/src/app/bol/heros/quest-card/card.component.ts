@@ -8,7 +8,7 @@ import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
 import {CardModule} from "primeng/card";
 import {SkeletonModule} from "primeng/skeleton";
 import {TooltipModule} from "primeng/tooltip";
-import {ButtonDirective} from "primeng/button";
+import {Button, ButtonDirective} from "primeng/button";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {BolActionComponent} from "../../quest/action/action.component";
 import {DialogService, DynamicDialogRef} from "primeng/dynamicdialog";
@@ -24,8 +24,9 @@ import {InputTextModule} from "primeng/inputtext";
 import {InputNumberModule} from "primeng/inputnumber";
 import {BolQuestService} from "../../services/bol-quest.service";
 import {BolQuestProtagonistModel} from "../../models/bol-quest.model";
-import {ConfirmationService} from "primeng/api";
+import {ConfirmationService, MenuItem} from "primeng/api";
 import {ConfirmPopupModule} from "primeng/confirmpopup";
+import {MenuModule} from "primeng/menu";
 
 @Component({
     selector: 'bol-heros-card',
@@ -46,7 +47,9 @@ import {ConfirmPopupModule} from "primeng/confirmpopup";
     ReactiveFormsModule,
     InputNumberModule,
     ConfirmPopupModule,
-    NgForOf
+    NgForOf,
+    Button,
+    MenuModule
   ],
     providers: [
         ConfirmationService
@@ -71,6 +74,23 @@ export class BolQuestHerosCardComponent {
     {attr: 'Esp', field: 'esprit'},
     {attr: 'Aur', field: 'aura'}
   ];
+
+  items: MenuItem[] = [
+    {
+      label: 'Options',
+      items: [
+        {
+          label: 'Refresh',
+          icon: 'pi pi-refresh'
+        },
+        {
+          label: 'Export',
+          icon: 'pi pi-upload'
+        }
+      ]
+    }
+  ];
+
 
   public heroCombat = [
     {attr: 'Ini', field: 'initiative'},
@@ -105,7 +125,7 @@ export class BolQuestHerosCardComponent {
   openAction(attr?: string) {
     const hero: BolHerosModel = this.questProtagonist()?.protagonist as BolHerosModel;
     this.dialogService.open(BolActionComponent, {
-      header: hero.origines.nom + 'va effectuer une action ' + (attr ? '(' + attr + ')' : ''),
+      header: hero.origines.nom + 'va effectuer une action ' + (attr ? '(' + attr.toUpperCase() + ')' : ''),
       maximizable: true,
       data: {
         hero: this.questProtagonist()?.protagonist,

@@ -25,12 +25,16 @@
 .p-tag-value {
   line-height: 15px;
 }
-.svg_icon_15 {
-  width: 15px;
-  height: 15px;
 
-  svg {
-    width: 15px;
-    height: 15px;
+$icon-sizes: 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100;
+
+@each $size in $icon-sizes {
+  .svg_icon_#{$size} {
+    width: #{$size}px;
+    height: #{$size}px;
+    svg {
+      width: #{$size}px;
+      height: #{$size}px;
+    }
   }
 }
