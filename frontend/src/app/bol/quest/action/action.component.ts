@@ -35,7 +35,7 @@ import {BolCreatureModel} from "../../models/bol-creature.model";
     MenuModule,
     InputTextModule,
     ReactiveFormsModule,
-    ButtonDirective,
+     ButtonDirective,
     Ripple,
     InputNumberModule,
     TagModule
@@ -55,6 +55,7 @@ export class BolActionComponent implements AfterViewInit {
       + this.selectedAttribut().value;
   });
 
+  dice = this.diceService.dice;
   diceResult = this.diceService.diceResult;
   carrieres = computed(() => {
     const carrieres = (this.hero() as BolHerosModel)?.carrieres ?? [];

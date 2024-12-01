@@ -107,7 +107,7 @@
                          (onBlur)="checkRoll($event)"/>
         </div>
         <div class="flex justify-center">Ou</div>
-        <button class="dice-button" type="button" size="small" pButton pRipple (click)="rollDice()">
+        <button pButton class="dice-button" type="button" size="small" [disabled]="!dice()" pRipple (click)="rollDice()">
           <div class="flex justify-center gap-2 w-full">
             <div class="dice_icon_15" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
             <div>Lancer les dés</div>
