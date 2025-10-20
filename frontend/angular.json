@@ -25,8 +25,7 @@
               ".png" : "text"
             },
             "outputPath": {
-              "base": "../public/frontend",
-              "browser": ""
+              "base": "dist"
             },
             "index": "src/index.html",
             "browser": "src/main.ts",

@@ -1,5 +1,5 @@
 <div class="flex flex-col h-screen items-center justify-center gap-5">
-  <div class="dw_banner" [inlineSVG]="'/frontend/assets/banner.svg'"></div>
+  <div class="dw_banner" [inlineSVG]="'/assets/banner.svg'"></div>
   <p-card class="relative" header="S'identifier">
     <form [formGroup]="loginForm" class="flex flex-col gap-4">
       <p-inputGroup class="relative">
@@ -36,7 +36,7 @@
     <div *ngIf="!pending" class="flex justify-center">
       <a class="p-button p-button-secondary" size="small" href="/api/auth/google" style="text-decoration: none;">
         <div class="flex login__google items-center">
-          <img src="/frontend/assets/socialite/google.svg">
+          <img src="/assets/socialite/google.svg">
           <div>Continuer avec Google</div>
         </div>
       </a>

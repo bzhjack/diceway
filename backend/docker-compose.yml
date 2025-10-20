@@ -5,6 +5,4 @@ services:
         container_name: diceway
         ports:
             - "8080:80"
-        env_file:
-            - .env
         restart: unless-stopped
