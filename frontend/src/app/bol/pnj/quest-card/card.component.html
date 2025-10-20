@@ -2,9 +2,9 @@
   @if ((questProtagonist$ | async) && questProtagonist()) {
     <div class="flex gap-2">
       <div class="pnj_card__img">
-        <img *ngIf="!pnj()?.user_id" src="/frontend/assets/bol/pnj/{{pnj().id}}.jpg" alt=""/>
+        <img *ngIf="!pnj()?.user_id" src="/assets/bol/pnj/{{pnj().id}}.jpg" alt=""/>
         <img *ngIf="pnj()?.user_id" style="width:100%"
-             [src]="pnj().origines.avatar !== null ? pnj().origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+             [src]="pnj().origines.avatar !== null ? pnj().origines.avatar : '/assets/bol/empty-avatar.jpg'"
              alt="avatar">
       </div>
       <div class="flex flex-col gap-2" style="width: 150px">
@@ -22,12 +22,12 @@
           <p-tag severity="warning">
             @if (questProtagonist()?.heroisme ?? 0 > 0) {
               <div class="flex items-center gap-1 px-0.5" pTooltip="Heroisme">
-                <div class="tag_icon warn" inlineSVG="/frontend/assets/flame.svg"></div>
+                <div class="tag_icon warn" inlineSVG="/assets/flame.svg"></div>
                 <span style="color: white">{{ questProtagonist()?.heroisme }}</span>
               </div>
             } @else {
               <div class="flex items-center gap-1 px-0.5" pTooltip="Vilénie">
-                <div class="tag_icon warn" inlineSVG="/frontend/assets/skull.svg"></div>
+                <div class="tag_icon warn" inlineSVG="/assets/skull.svg"></div>
                 <span style="color: white">{{ questProtagonist()?.vilenie }}</span>
               </div>
             }

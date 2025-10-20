@@ -5,6 +5,7 @@ import {BolQuestModel, BolQuestProtagonistModel} from "../models/bol-quest.model
 import {BolHerosModel} from "../models/bol-heros.model";
 import {BolCreatureModel} from "../models/bol-creature.model";
 import {BolDemonModel} from "../models/bol-demon.model";
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -13,24 +14,25 @@ export class BolQuestService {
   constructor(private http: HttpClient) {
   }
 
+
   quests(): Observable<BolQuestModel[]> {
-    return this.http.get<BolQuestModel[]>('/api/bol/quest');
+    return this.http.get<BolQuestModel[]>(`${environment.apiBase}/api/bol/quest`);
   }
 
   quest(idQuest: string): Observable<BolQuestModel> {
-    return this.http.get<BolQuestModel>('/api/bol/quest/' + idQuest);
+    return this.http.get<BolQuestModel>(`${environment.apiBase}/api/bol/quest/` + idQuest);
   }
 
   createQuest(quest: BolQuestModel): Observable<any> {
-    return this.http.post<BolQuestModel>('/api/bol/quest/create', <BolQuestModel>quest);
+    return this.http.post<BolQuestModel>(`${environment.apiBase}/api/bol/quest/create`, <BolQuestModel>quest);
   }
 
   updateQuest(quest: BolQuestModel): Observable<any> {
-    return this.http.post<BolQuestModel>('/api/bol/quest/update', <BolQuestModel>quest);
+    return this.http.post<BolQuestModel>(`${environment.apiBase}/api/bol/quest/update`, <BolQuestModel>quest);
   }
 
   questProtagonist(idProtagonist: number): Observable<BolQuestProtagonistModel> {
-    return this.http.get<BolQuestProtagonistModel>('/api/bol/quest/protagonist/' + idProtagonist);
+    return this.http.get<BolQuestProtagonistModel>(`${environment.apiBase}/api/bol/quest/protagonist/` + idProtagonist);
   }
 
   addProtagonistToQuest(character: BolHerosModel | BolCreatureModel | BolDemonModel, questId: string, type: 'H' | 'P' | 'C' | 'D'): Observable<any> {
@@ -74,7 +76,7 @@ export class BolQuestService {
         foi: 0
       }
     }
-    return this.http.post('/api/bol/quest/protagonist/create', protagonist);
+    return this.http.post(`${environment.apiBase}/api/bol/quest/protagonist/create`, protagonist);
   }
 
   updateProtagonistToQuest(id: number, ressources: any): Observable<any> {
@@ -86,10 +88,10 @@ export class BolQuestService {
       foi: ressources.foi ?? 0,
       creation: ressources.creation ?? 0,
     }
-    return this.http.post('/api/bol/quest/protagonist/update', protagonist);
+    return this.http.post(`${environment.apiBase}/api/bol/quest/protagonist/update`, protagonist);
   }
 
   deleteProtagonistToQuest(id: number): Observable<any> {
-    return this.http.delete('/api/bol/quest/protagonist/' + id);
+    return this.http.delete(`${environment.apiBase}/api/bol/quest/protagonist/` + id);
   }
 }

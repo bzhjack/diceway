@@ -75,9 +75,9 @@
           <tr>
             <td style="width: 110px" class="relative">
               <div class="demon_row__img cursor-pointer" (click)="showDemonPicture(demon)">
-                <img *ngIf="!demon.user_id" src="/frontend/assets/bol/demon/{{demon.id}}.jpg" alt="" fill/>
+                <img *ngIf="!demon.user_id" src="/assets/bol/demon/{{demon.id}}.jpg" alt="" fill/>
                 <img *ngIf="demon.user_id" style="width:100%"
-                     [src]="demon.avatar !== null ? demon.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+                     [src]="demon.avatar !== null ? demon.avatar : '/assets/bol/empty-avatar.jpg'"
                      alt="avatar"/>
               </div>
               <div style="position: absolute; bottom: 12px; left: 12px;">
@@ -103,7 +103,7 @@
                     (click)="addAdventure(demon)"
                     type="button"
                     size="small" pButton pRipple>
-                    <div class="svg_icon_15" inlineSVG="/frontend/assets/sword.svg"></div>
+                    <div class="svg_icon_15" inlineSVG="/assets/sword.svg"></div>
                   </button>
                   <ng-container *ngIf="demon.user_id">
                     <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-bolt" (click)="createDemon(demon)"></button>
@@ -194,9 +194,9 @@
   [header]="currentDemon?.nom"
   [modal]="true">
   <div *ngIf="currentDemon" class="demon-preview">
-    <img *ngIf="!currentDemon.user_id" src="/frontend/assets/bol/demon/{{currentDemon.id}}.jpg" alt=""/>
+    <img *ngIf="!currentDemon.user_id" src="/assets/bol/demon/{{currentDemon.id}}.jpg" alt=""/>
     <img *ngIf="currentDemon.user_id" style="width:100%"
-         [src]="currentDemon.avatar !== null ? currentDemon.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+         [src]="currentDemon.avatar !== null ? currentDemon.avatar : '/assets/bol/empty-avatar.jpg'"
          alt="avatar">
   </div>
   <ng-template pTemplate="footer">

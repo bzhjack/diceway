@@ -67,7 +67,7 @@
             <td style="width: 110px" class="relative">
               <div class="heros_row__img cursor-pointer" (click)="showHerosPicture(heros)">
                 <img *ngIf="heros.user_id" style="width:100%"
-                     [src]="heros.origines.avatar !== null ? heros.origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+                     [src]="heros.origines.avatar !== null ? heros.origines.avatar : '/assets/bol/empty-avatar.jpg'"
                      alt="avatar">
               </div>
               <div style="position: absolute; bottom: 12px; left: 12px;">
@@ -97,7 +97,7 @@
                     (click)="addAdventure(heros)"
                     type="button"
                     size="small" pButton pRipple>
-                    <div class="svg_icon_15" inlineSVG="/frontend/assets/sword.svg"></div>
+                    <div class="svg_icon_15" inlineSVG="/assets/sword.svg"></div>
                   </button>
 
                   <button *ngIf="!heros.active"
@@ -259,9 +259,9 @@
           [header]="currentHeros.origines.nom ?? ''"
           [modal]="true">
   <div *ngIf="currentHeros" class="heros-preview">
-    <img *ngIf="!currentHeros.user_id" src="/frontend/assets/bol/heros/{{currentHeros.id}}.jpg" alt=""/>
+    <img *ngIf="!currentHeros.user_id" src="/assets/bol/heros/{{currentHeros.id}}.jpg" alt=""/>
     <img *ngIf="currentHeros.user_id" style="width:100%"
-         [src]="currentHeros.origines.avatar !== null ? currentHeros.origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+         [src]="currentHeros.origines.avatar !== null ? currentHeros.origines.avatar : '/assets/bol/empty-avatar.jpg'"
          alt="avatar">
   </div>
   <ng-template pTemplate="footer">

@@ -39,7 +39,7 @@ export class DiceService {
   initDice(selector: string) {
     const dice = new DiceBox({
       container: selector,
-      assetPath: "/frontend/assets/dice/",
+      assetPath: "/assets/dice/",
       theme: "default",
       offscreen: true,
       scale: 5,

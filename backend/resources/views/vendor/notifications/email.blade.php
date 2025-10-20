@@ -1,5 +1,5 @@
 <x-mail::message>
-<img style="margin-bottom: 20px" src="{{ $message->embed(public_path() . '/frontend/assets/banner.png') }}" alt="" />
+<img style="margin-bottom: 20px" src="{{ $message->embed(public_path() . '/banner.png') }}" alt="" />
 {{-- Greeting --}}
 @if (! empty($greeting))
 # {{ $greeting }}

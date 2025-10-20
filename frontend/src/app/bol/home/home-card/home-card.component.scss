@@ -15,22 +15,22 @@
   background-position: center; /* Pour centrer l'image */
   background-repeat: no-repeat; /* Pour éviter que l'image se répète */
   &.heros {
-    background-image: url('/frontend/assets/bol/heros.jpg');
+    background-image: url('/assets/bol/heros.jpg');
   }
 
   &.bestiary {
-    background-image: url('/frontend/assets/bol/bestiary.jpg');
+    background-image: url('/assets/bol/bestiary.jpg');
   }
 
   &.demon {
-    background-image: url('/frontend/assets/bol/demon.jpg');
+    background-image: url('/assets/bol/demon.jpg');
   }
 
   &.pnj {
-    background-image: url('/frontend/assets/bol/pnj.jpg');
+    background-image: url('/assets/bol/pnj.jpg');
   }
   &.quest {
-    background-image: url('/frontend/assets/bol/quest.jpg');
+    background-image: url('/assets/bol/quest.jpg');
   }
 }
 .home-bol-card-title {

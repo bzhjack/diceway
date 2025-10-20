@@ -2,9 +2,9 @@
   @if ((questProtagonist$ | async) && questProtagonist()) {
     <div class="flex gap-2">
       <div class="creature_card__img">
-        <img *ngIf="!creature()?.user_id" src="/frontend/assets/bol/bestiary/{{creature().id}}.jpg" alt=""/>
+        <img *ngIf="!creature()?.user_id" src="/assets/bol/bestiary/{{creature().id}}.jpg" alt=""/>
         <img *ngIf="creature()?.user_id" style="width:100%"
-             [src]="creature().avatar !== null ? creature().avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+             [src]="creature().avatar !== null ? creature().avatar : '/assets/bol/empty-avatar.jpg'"
              alt="avatar">
       </div>
       <div class="flex flex-col gap-2" style="width: 150px">

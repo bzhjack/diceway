@@ -37,7 +37,12 @@ use Illuminate\Support\Facades\Route;
  * Api publiques
  */
 Route::middleware([RequestAcceptJson::class])->group(function () {
-    Route::post('auth/login', [LoginController::class, 'login']); // Authentification
+    // Route publique de test
+    Route::get('/hello', function () {
+        return response()->json(['message' => 'hello']);
+    });
+
+    Route::post('auth/login', [LoginController::class, 'login'])->name('login'); // Authentification
     Route::post('auth/logout', [LoginController::class, 'logout']); // déconnection
     Route::post('auth/register', [RegisterController::class, 'register']); // Création de compte
     Route::post('auth/email/send', [VerifyController::class, 'send']); // Envoi de l'email de vérification
@@ -49,7 +54,6 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
     // Réseaux sociaux
     Route::get('/auth/google', [SocialController::class, 'redirectToGoogle']);
     Route::get('/auth/google/callback', [SocialController::class, 'callbackFromGoogle']);
-
 });
 
 /**

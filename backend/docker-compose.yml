@@ -1,0 +1,8 @@
+services:
+    diceway:
+        build: .
+        image: diceway-app
+        container_name: diceway
+        ports:
+            - "8080:80"
+        restart: unless-stopped
