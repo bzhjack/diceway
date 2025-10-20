@@ -3,6 +3,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {UserModel, UserStorageModel} from './user.model';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Router} from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class UserService {
   ) {
     this.retrieveUser();
   }
+
 
   /**
    * Fonction de vérification de la validité de l'authentification
@@ -93,7 +95,7 @@ export class UserService {
    * @returns
    */
   public profile(token: string): Observable<any> {
-    return this.http.get('api/auth/profile', {
+    return this.http.get(`${environment.apiBase}/api/auth/profile`, {
       headers: new HttpHeaders().set('Authorization', `Bearer ${token}`)
     });
   }
@@ -103,7 +105,7 @@ export class UserService {
    * @param credentials
    */
   public register(credentials: any) {
-    return this.http.post('/api/auth/register', {
+    return this.http.post(`${environment.apiBase}/api/auth/register`, {
       name: credentials.name,
       email: credentials.email,
       password: credentials.password,
@@ -117,7 +119,7 @@ export class UserService {
    * @returns
    */
   public sendMail(email: string) {
-    return this.http.post('/api/auth/email/send', {
+    return this.http.post(`${environment.apiBase}/api/auth/email/send`, {
       email: email
     });
   }
@@ -128,7 +130,7 @@ export class UserService {
    * @returns
    */
   public login(credentials: any) {
-    return this.http.post('/api/auth/login', {
+    return this.http.post(`${environment.apiBase}/api/auth/login`, {
       email: credentials.email,
       password: credentials.password
     })
@@ -136,7 +138,7 @@ export class UserService {
 
   public clearTokens() {
     if (this.currentUser !== null) {
-      this.http.post('/api/auth/logout', {id: this.currentUser.id}).subscribe(() => {
+      this.http.post(`${environment.apiBase}/api/auth/logout`, {id: this.currentUser.id}).subscribe(() => {
         console.log('Tokens cleared :-)');
       });
     }
@@ -148,7 +150,7 @@ export class UserService {
    * @param email
    */
   public forgottenPassword(email: string) {
-    return this.http.post('/api/auth/password/forgotten', {
+    return this.http.post(`${environment.apiBase}/api/auth/password/forgotten`, {
       email: email
     })
   }
@@ -159,7 +161,7 @@ export class UserService {
    * @returns
    */
   public resetPassord(credentials: any) {
-    return this.http.post('/api/auth/password/reset', {
+    return this.http.post(`${environment.apiBase}/api/auth/password/reset`, {
       token: credentials.token,
       email: credentials.email,
       password: credentials.password,

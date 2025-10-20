@@ -10,6 +10,7 @@ import {BolArmureModel, BolHerosArmureModel} from "../models/bol-armure.model";
 import {BolArmeModel, BolHerosArmeModel} from "../models/bol-arme.model";
 import {BolHerosTraitsModel} from "../models/bol-trait.model";
 import {BolHerosLangueModel, BolLangueModel} from "../models/bol-langue.model";
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -20,130 +21,131 @@ export class BolHerosService {
 
   }
 
+
   // Régions
   regions(): Observable<BolRegionModel[]> {
-    return this.http.get<BolRegionModel[]>('/api/bol/region');
+    return this.http.get<BolRegionModel[]>(`${environment.apiBase}/api/bol/region`);
   }
 
   region(id: number): Observable<BolRegionModel> {
-    return this.http.get<BolRegionModel>('/api/bol/region/' + id,);
+    return this.http.get<BolRegionModel>(`${environment.apiBase}/api/bol/region/` + id);
   }
 
   // Traits
   avantages(): Observable<BolAvantageModel[]> {
-    return this.http.get<BolAvantageModel[]>('/api/bol/trait/avantages');
+    return this.http.get<BolAvantageModel[]>(`${environment.apiBase}/api/bol/trait/avantages`);
   }
 
   desavantages(): Observable<BolDesavantageModel[]> {
-    return this.http.get<BolDesavantageModel[]>('/api/bol/trait/desavantages');
+    return this.http.get<BolDesavantageModel[]>(`${environment.apiBase}/api/bol/trait/desavantages`);
   }
 
   createTrait(herosId: string | null | undefined, trait: BolHerosTraitsModel): Observable<any> {
-    return this.http.post<BolHerosTraitsModel>(`/api/bol/heros/traits/create/${herosId}`, <BolHerosTraitsModel>trait);
+    return this.http.post<BolHerosTraitsModel>(`${environment.apiBase}/api/bol/heros/traits/create/${herosId}`, <BolHerosTraitsModel>trait);
   }
 
   deleteTrait(herosId: string | null | undefined, id: number): Observable<any> {
-    return this.http.delete<BolHerosTraitsModel>(`/api/bol/heros/traits/delete/${herosId}/${id}`);
+    return this.http.delete<BolHerosTraitsModel>(`${environment.apiBase}/api/bol/heros/traits/delete/${herosId}/${id}`);
   }
 
 
   // Carrieres
 
   carrieres(): Observable<any> {
-    return this.http.get<BolHerosCarriereModel[]>('/api/bol/carrieres');
+    return this.http.get<BolHerosCarriereModel[]>(`${environment.apiBase}/api/bol/carrieres`);
   }
 
   deleteCarriere(herosId: string | null, id: number): Observable<any> {
-    return this.http.delete<boolean>(`/api/bol/heros/carrieres/delete/${herosId}/${id}`);
+    return this.http.delete<boolean>(`${environment.apiBase}/api/bol/heros/carrieres/delete/${herosId}/${id}`);
   }
 
   createCarriere(herosId: string | null, carriere: BolHerosCarriereModel): Observable<any> {
-    return this.http.post<BolHerosModel>(`/api/bol/heros/carrieres/create/${herosId}`, <BolHerosCarriereModel>carriere);
+    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/carrieres/create/${herosId}`, <BolHerosCarriereModel>carriere);
   }
 
   // Armures
   armures(): Observable<any> {
-    return this.http.get<BolArmureModel[]>('/api/bol/armures');
+    return this.http.get<BolArmureModel[]>(`${environment.apiBase}/api/bol/armures`);
   }
 
   createArmure(herosId: string | null | undefined, armure: BolHerosArmureModel): Observable<any> {
-    return this.http.post<BolHerosArmureModel>(`/api/bol/heros/armures/create/${herosId}`, <BolHerosArmureModel>armure);
+    return this.http.post<BolHerosArmureModel>(`${environment.apiBase}/api/bol/heros/armures/create/${herosId}`, <BolHerosArmureModel>armure);
   }
 
   deleteArmure(herosId: string | null | undefined, id: number): Observable<any> {
-    return this.http.delete<boolean>(`/api/bol/heros/armures/delete/${herosId}/${id}`);
+    return this.http.delete<boolean>(`${environment.apiBase}/api/bol/heros/armures/delete/${herosId}/${id}`);
   }
 
   // Armes
   armes(): Observable<any> {
-    return this.http.get<BolArmeModel[]>('/api/bol/armes');
+    return this.http.get<BolArmeModel[]>(`${environment.apiBase}/api/bol/armes`);
   }
 
   createArme(herosId: string | null | undefined, arme: BolHerosArmeModel): Observable<any> {
-    return this.http.post<BolHerosModel>(`/api/bol/heros/armes/create/${herosId}`, <BolHerosArmeModel>arme);
+    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/armes/create/${herosId}`, <BolHerosArmeModel>arme);
   }
 
   deleteArme(herosId: string | null | undefined, id: number): Observable<any> {
-    return this.http.delete<boolean>(`/api/bol/heros/armes/delete/${herosId}/${id}`);
+    return this.http.delete<boolean>(`${environment.apiBase}/api/bol/heros/armes/delete/${herosId}/${id}`);
   }
 
   // Langues
   langues(): Observable<any> {
-    return this.http.get<BolLangueModel[]>('/api/bol/langues');
+    return this.http.get<BolLangueModel[]>(`${environment.apiBase}/api/bol/langues`);
   }
 
   createLangue(herosId: string | null | undefined, langue: BolHerosLangueModel): Observable<any> {
-    return this.http.post<BolHerosModel>(`/api/bol/heros/langues/create/${herosId}`, <BolHerosLangueModel>langue);
+    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/langues/create/${herosId}`, <BolHerosLangueModel>langue);
   }
 
   deleteLangue(herosId: string | null | undefined, id: number): Observable<any> {
-    return this.http.delete<boolean>(`/api/bol/heros/langues/delete/${herosId}/${id}`);
+    return this.http.delete<boolean>(`${environment.apiBase}/api/bol/heros/langues/delete/${herosId}/${id}`);
   }
 
   // Héros
   createHeros(hero: BolHerosModel): Observable<any> {
-    return this.http.post<BolHerosModel>('/api/bol/heros/create', <BolHerosModel>hero);
+    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/create`, <BolHerosModel>hero);
   }
 
   updateHeros(hero: BolHerosModel): Observable<any> {
-    return this.http.post<BolHerosModel>('/api/bol/heros/update', <BolHerosModel>hero);
+    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/update`, <BolHerosModel>hero);
   }
 
   heroes(): Observable<BolHerosModel[]> {
-    return this.http.get<BolHerosModel[]>('/api/bol/heros');
+    return this.http.get<BolHerosModel[]>(`${environment.apiBase}/api/bol/heros`);
   }
 
   heros(id: string, questId?: string): Observable<BolHerosModel> {
-    return this.http.get<BolHerosModel>('/api/bol/heros/' + id + (questId ? '?questId=' + questId : ''));
+    return this.http.get<BolHerosModel>(`${environment.apiBase}/api/bol/heros/` + id + (questId ? '?questId=' + questId : ''));
   }
 
   deleteHeros(id: string): Observable<any> {
-    return this.http.delete<BolHerosModel>('/api/bol/heros/delete/' + id);
+    return this.http.delete<BolHerosModel>(`${environment.apiBase}/api/bol/heros/delete/` + id);
   }
 
   // Origines
   updateOriginesHeros(herosId: string, origines: BolHerosOrigines): Observable<any> {
-    return this.http.post<BolHerosModel>('/api/bol/heros/origines/update/' + herosId, origines);
+    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/origines/update/` + herosId, origines);
   }
 
   // Pnj
 
   pnjs(): Observable<BolHerosModel[]> {
-    return this.http.get<BolHerosModel[]>('/api/bol/pnj');
+    return this.http.get<BolHerosModel[]>(`${environment.apiBase}/api/bol/pnj`);
   }
   pnj(id: string, questId?: string): Observable<BolHerosModel> {
-    return this.http.get<BolHerosModel>('/api/bol/pnj/' + id + (questId ? '?questId=' + questId : ''));
+    return this.http.get<BolHerosModel>(`${environment.apiBase}/api/bol/pnj/` + id + (questId ? '?questId=' + questId : ''));
   }
 
   quickCreate(pnj: BolHerosModel): Observable<any> {
-    return this.http.post<BolHerosModel>('/api/bol/pnj/create', <BolHerosModel>pnj);
+    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/pnj/create`, <BolHerosModel>pnj);
   }
 
   quickUpdate(pnj: BolHerosModel): Observable<any> {
-    return this.http.post<BolHerosModel>('/api/bol/pnj/update', <BolHerosModel>pnj);
+    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/pnj/update`, <BolHerosModel>pnj);
   }
 
   quickDelete(id: string): Observable<any> {
-    return this.http.delete<BolHerosModel>('/api/bol/pnj/delete/' + id);
+    return this.http.delete<BolHerosModel>(`${environment.apiBase}/api/bol/pnj/delete/` + id);
   }
 }
