@@ -10,7 +10,7 @@
     </div>
     <div class="flex">
       <img class="heros_card__img"
-           [src]="hero().origines.avatar !== null ? hero().origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+           [src]="hero().origines.avatar !== null ? hero().origines.avatar : '/assets/bol/empty-avatar.jpg'"
            alt="avatar">
       <div class="heros_card__right">
         <div class="heros_card__health">
@@ -18,7 +18,7 @@
           <div>{{ questProtagonist()?.vitalite }}</div>
         </div>
         <div class="heros_card__heroism">
-          <span class="heroism svg_icon_25" inlineSVG="/frontend/assets/heroism.svg"></span>
+          <span class="heroism svg_icon_25" inlineSVG="/assets/heroism.svg"></span>
           <div>{{ questProtagonist()?.heroisme }}</div>
         </div>
         <!--div class="progress-container">
@@ -41,7 +41,7 @@
     <div class="flex gap-2">
       <div class="heros_card__img">
         <img style="width:100%"
-             [src]="hero().origines.avatar !== null ? hero().origines.avatar : '/frontend/assets/bol/empty-avatar.jpg'"
+             [src]="hero().origines.avatar !== null ? hero().origines.avatar : '/assets/bol/empty-avatar.jpg'"
              alt="avatar">
       </div>
       <div class="flex flex-col gap-2" style="width: 150px">
@@ -58,12 +58,12 @@
           <p-tag severity="warning">
             @if (questProtagonist()?.heroisme ?? 0 > 0) {
               <div class="flex items-center gap-1 px-0.5" pTooltip="Heroisme">
-                <div class="tag_icon warn" inlineSVG="/frontend/assets/flame.svg"></div>
+                <div class="tag_icon warn" inlineSVG="/assets/flame.svg"></div>
                 <span style="color: white">{{ questProtagonist()?.heroisme }}</span>
               </div>
             } @else {
               <div class="flex items-center gap-1 px-0.5" pTooltip="Vilénie">
-                <div class="tag_icon warn" inlineSVG="/frontend/assets/skull.svg"></div>
+                <div class="tag_icon warn" inlineSVG="/assets/skull.svg"></div>
                 <span style="color: white">{{ questProtagonist()?.vilenie }}</span>
               </div>
             }

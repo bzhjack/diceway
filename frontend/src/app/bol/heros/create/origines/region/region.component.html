@@ -1,12 +1,12 @@
 <div class="region-container flex gap-2">
   <div class="dw-panel carte-region-container">
     <img class="region-carte" id="bol-carte"
-         src="/frontend/assets/bol/cartes/carte{{selectedRegion() ? '-'+ regionId() : ''}}.jpg" alt="carte"/>
+         src="/assets/bol/cartes/carte{{selectedRegion() ? '-'+ regionId() : ''}}.jpg" alt="carte"/>
   </div>
   <div class="flex flex-col gap-1">
     <p-messages severity="info">
       <ng-template pTemplate>
-        <div class="info_icon" inlineSVG="/frontend/assets/rolling-dices.svg"></div>
+        <div class="info_icon" inlineSVG="/assets/rolling-dices.svg"></div>
         <div class="ml-4">
           Sélectionnez la région de votre personnage.<br>
           Vous pourrez choisir si vous le voulez dans la liste des noms.<br>
@@ -40,7 +40,7 @@
     <div *ngIf="regionId() === 1" class="flex-auto flex flex-col gap-2">
       <p-messages severity="warn">
         <ng-template pTemplate>
-          <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
+          <div class="info_icon" inlineSVG="/assets/sword.svg"></div>
           <div class="ml-4">
             Dans "La Côte de Feu", la Reine Sorcière règne avec ses gardes kalukans.<br>
             Si votre héros vient de là, vous pouvez en faire être un <strong>kalukan</strong> avec l'accord du MJ.<br>
@@ -53,7 +53,7 @@
     <div *ngIf="regionId() === 13" class="flex-auto flex flex-col gap-2">
       <p-messages severity="warn">
         <ng-template pTemplate>
-          <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
+          <div class="info_icon" inlineSVG="/assets/sword.svg"></div>
           <div class="ml-4">
             Les plaines de Klaar sont la demeure des
             <strong>céruléens</strong>, une race de géants à la peau gris bleu qu’on surnomme aussi les nomades bleus.
@@ -64,7 +64,7 @@
     <div *ngIf="regionId() === 16" class="flex-auto flex flex-col gap-2">
       <p-messages severity="warn">
         <ng-template pTemplate>
-          <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
+          <div class="info_icon" inlineSVG="/assets/sword.svg"></div>
           <div class="ml-4">
             Personne ne sait grand-chose au sujet des Terres Désolées, et moins encore sur les contrées qui
             s’étendraient au-delà.
@@ -77,7 +77,7 @@
       <div *ngIf="selectedRegion()?.noms?.length == 0" class="flex flex-col gap-2 pt-2">
         <p-messages severity="warn">
           <ng-template pTemplate>
-            <div class="info_icon" inlineSVG="/frontend/assets/sword.svg"></div>
+            <div class="info_icon" inlineSVG="/assets/sword.svg"></div>
             <div class="ml-4">
               Comme des gens de tous horizons se retrouvent ici, on y rencontre des noms provenant de toutes les
               contrées de Lémurie.

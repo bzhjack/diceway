@@ -51,7 +51,7 @@
           <div class="flex gap-2 items-center pt-2">
             <p-radioButton inputId="aucun" name="carriere" [value]="null" [(ngModel)]="selectedTrait"/>
             <label for="aucun" class="flex gap-1 items-center cursor-pointer opacity-60">
-              <div class="tag_icon opacity-35" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
+              <div class="tag_icon opacity-35" [inlineSVG]="'/assets/d6.svg'"></div>
               <div>Aucun</div>
             </label>
           </div>
@@ -59,7 +59,7 @@
             <p-radioButton [inputId]="trait.trait" name="traits" [value]="trait" [(ngModel)]="selectedTrait"/>
             <label [for]="trait.trait" class="flex gap-1 items-center cursor-pointer">
               <div class="tag_icon" [pTooltip]="trait.domaine ?? ''" [class.bonus]="trait.type === 'A'"
-                   [class.malus]="trait.type === 'D'" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
+                   [class.malus]="trait.type === 'D'" [inlineSVG]="'/assets/d6.svg'"></div>
               <div>{{ trait.trait }}</div>
             </label>
           </div>
@@ -72,15 +72,15 @@
     <p-fieldset legend="Jet attendu">
       <div class="modifier text-4xl flex justify-center items-center gap-3" style="height: 50px">
         <div class="flex items-center gap-2">
-          <div class="dice_icon_40" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
+          <div class="dice_icon_40" [inlineSVG]="'/assets/d6.svg'"></div>
           <div>+</div>
-          <div class="dice_icon_40" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
+          <div class="dice_icon_40" [inlineSVG]="'/assets/d6.svg'"></div>
         </div>
 
         <div class="flex items-center gap-2" *ngIf="selectedTrait()">
           <div *ngIf="selectedTrait()">+</div>
           <div class="dice_icon_40" [class.bonus]="selectedTrait()?.type === 'A'"
-               [class.malus]="selectedTrait()?.type === 'D'" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
+               [class.malus]="selectedTrait()?.type === 'D'" [inlineSVG]="'/assets/d6.svg'"></div>
         </div>
 
         <div class="flex items-center gap-2" *ngIf="modifier() > 0">
@@ -109,7 +109,7 @@
         <div class="flex justify-center">Ou</div>
         <button pButton class="dice-button" type="button" size="small" [disabled]="!dice()" pRipple (click)="rollDice()">
           <div class="flex justify-center gap-2 w-full">
-            <div class="dice_icon_15" [inlineSVG]="'/frontend/assets/d6.svg'"></div>
+            <div class="dice_icon_15" [inlineSVG]="'/assets/d6.svg'"></div>
             <div>Lancer les dés</div>
           </div>
         </button>
@@ -129,7 +129,7 @@
             <ng-container *ngIf="critical === 'success'">
               <p-tag pTooltip="Vous pouvez convertir en Succès légendaire pour 1 point d'héroisme." [style]="{ fontSize: '15px', padding: '5px' ,lineHeight: '15px' }" severity="success">
                 <div class="flex align-items-center gap-2 px-1 cursor-pointer">
-                  <div class="tag_icon" [inlineSVG]="'/frontend/assets/skull.svg'"></div>
+                  <div class="tag_icon" [inlineSVG]="'/assets/skull.svg'"></div>
                   <div>Héroïque</div>
                 </div>
               </p-tag>
@@ -142,7 +142,7 @@
 
               <p-tag pTooltip="Vous pouvez convertir en Echec critique pour une contrepartie." [style]="{ fontSize: '15px', padding: '5px' ,lineHeight: '15px' }" severity="danger">
                 <div class="flex align-items-center gap-2 px-1 cursor-pointer">
-                  <div class="tag_icon" [inlineSVG]="'/frontend/assets/skull.svg'"></div>
+                  <div class="tag_icon" [inlineSVG]="'/assets/skull.svg'"></div>
                   <div>Automatique</div>
                 </div>
               </p-tag>

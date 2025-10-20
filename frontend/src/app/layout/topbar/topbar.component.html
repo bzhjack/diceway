@@ -1,7 +1,7 @@
 <div class="dw-topbar items-center justify-between">
   <div class="flex gap-2">
     <div class="dw-topbar__logo relative" [routerLink]="'/'">
-      <div class="dw_banner" [inlineSVG]="'/frontend/assets/banner.svg'"></div>
+      <div class="dw_banner" [inlineSVG]="'/assets/banner.svg'"></div>
     </div>
     <div class="flex items-center text-3xl relative dw_route cursor-pointer" routerLink="/bol">
       {{ route() }}
@@ -32,7 +32,7 @@
 
 <p-overlayPanel #op>
   <div class="flex gap-2">
-    <div [setSVGAttributes]="{width: 20, height: 20}" [inlineSVG]="'/frontend/assets/logout.svg'"></div>
+    <div [setSVGAttributes]="{width: 20, height: 20}" [inlineSVG]="'/assets/logout.svg'"></div>
     <a (click)="logout()" class="underline cursor-pointer">Se déconnecter</a>
   </div>
 </p-overlayPanel>

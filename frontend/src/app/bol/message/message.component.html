@@ -3,7 +3,7 @@
 <!------------------------------->
 <p-messages severity="info" *ngIf="type() === 'lang'">
   <ng-template pTemplate>
-    <div class="info_icon" inlineSVG="/frontend/assets/rolling-dices.svg"></div>
+    <div class="info_icon" inlineSVG="/assets/rolling-dices.svg"></div>
     <div class="ml-4">
       <ul style="margin: 0; padding-inline-start: 20px">
         <li>Vous parlez le lémurien et votre langue natale.</li>
@@ -21,7 +21,7 @@
 <!------------------------------->
 <p-messages severity="info" *ngIf="type() === 'orig'">
   <ng-template pTemplate>
-    <div class="info_icon" inlineSVG="/frontend/assets/rolling-dices.svg"></div>
+    <div class="info_icon" inlineSVG="/assets/rolling-dices.svg"></div>
     <div class="ml-4">
       <ul style="margin: 0; padding-inline-start: 20px">
         <li>Le nom du héros est obligatoire.</li>
@@ -37,7 +37,7 @@
 <!------------------------------->
 <p-messages severity="info" *ngIf="type() === 'attr'">
   <ng-template pTemplate>
-    <div class="info_icon" inlineSVG="/frontend/assets/rolling-dices.svg"></div>
+    <div class="info_icon" inlineSVG="/assets/rolling-dices.svg"></div>
     <div class="ml-4">
       <ul style="margin: 0; padding-inline-start: 20px">
         <li>Tu as <strong>4 points à répartir</strong> entre différents attributs de combat.</li>
@@ -53,7 +53,7 @@
 <!------------------------------->
 <p-messages severity="info" *ngIf="type() === 'apt'">
   <ng-template pTemplate>
-    <div class="info_icon" inlineSVG="/frontend/assets/rolling-dices.svg"></div>
+    <div class="info_icon" inlineSVG="/assets/rolling-dices.svg"></div>
     <div class="ml-4">
       <ul style="margin: 0; padding-inline-start: 20px">
         <li>Tu as <strong>4 points à répartir</strong> entre différentes aptitudes de combat.</li>
@@ -69,7 +69,7 @@
 <!--------------------------------------->
 <p-messages severity="error" *ngIf="type() === 'form-errors'">
   <ng-template pTemplate>
-    <div class="info_icon" inlineSVG="/frontend/assets/flame.svg"></div>
+    <div class="info_icon" inlineSVG="/assets/flame.svg"></div>
     <div class="ml-4">
       <div class="text-xl pb-1">{{ legend() }}</div>
       <ul style="margin: 0; padding-inline-start: 20px">
@@ -85,7 +85,7 @@
 <!------------------------------------------->
 <p-messages severity="info" *ngIf="type() === 'traits'">
   <ng-template pTemplate>
-    <div class="info_icon" inlineSVG="/frontend/assets/rolling-dices.svg"></div>
+    <div class="info_icon" inlineSVG="/assets/rolling-dices.svg"></div>
     <div class="ml-4">
       <ul style="margin: 0; padding-inline-start: 20px">
         <li><strong>1 avantage:</strong> Obligatoire.</li>
@@ -101,7 +101,7 @@
 <!--------------------------->
 <p-messages severity="info" *ngIf="type() === 'carrieres'">
   <ng-template pTemplate>
-    <div class="info_icon" inlineSVG="/frontend/assets/rolling-dices.svg"></div>
+    <div class="info_icon" inlineSVG="/assets/rolling-dices.svg"></div>
     <div class="ml-4">
       <ul style="margin: 0; padding-inline-start: 20px">
         <li>Tu disposes de <strong>4 points</strong> à répartir entre <strong>quatre carrières</strong> de votre choix.
@@ -115,7 +115,7 @@
 
 <p-messages severity="warn" *ngIf="type() === 'form-warn'">
   <ng-template pTemplate>
-    <div class="info_icon_small" inlineSVG="/frontend/assets/sword.svg"></div>
+    <div class="info_icon_small" inlineSVG="/assets/sword.svg"></div>
     <div class="ml-4">
       <ul style="margin: 0; padding-inline-start: 20px">
         <li *ngFor="let warn of data()" [innerHTML]="warn.warn">
@@ -127,7 +127,7 @@
 
 <p-messages severity="success" *ngIf="type() === 'form-info'">
   <ng-template pTemplate>
-    <div class="info_icon_small" inlineSVG="/frontend/assets/sword.svg"></div>
+    <div class="info_icon_small" inlineSVG="/assets/sword.svg"></div>
     <div class="ml-4">
       <ul style="margin: 0; padding-inline-start: 20px">
         <li *ngFor="let warn of data()" [innerHTML]="warn.warn">
