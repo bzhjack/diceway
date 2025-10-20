@@ -50,6 +50,10 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
     Route::get('/auth/google', [SocialController::class, 'redirectToGoogle']);
     Route::get('/auth/google/callback', [SocialController::class, 'callbackFromGoogle']);
 
+    // Route publique de test
+    Route::get('/hello', function () {
+        return response()->json(['message' => 'hello']);
+    });
 });
 
 /**
