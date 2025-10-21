@@ -53,11 +53,8 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
     Route::post('auth/password/forgotten', [ForgotController::class, 'forgot'])->middleware('guest')->name('password.email'); // Envoi d'un mail de reset du mdp
     Route::get('auth/password/forgotten/{token}', [ForgotController::class, 'reset'])->middleware('guest')->name('password.reset'); // Lien dans le mail de reset
     Route::post('auth/password/reset', [ForgotController::class, 'reset_password'])->middleware('guest')->name('password.update'); // Validation du changement
-    // Réseaux sociaux
-    Route::get('/auth/google', [SocialController::class, 'redirectToGoogle']);
-    Route::get('/auth/google/callback', [SocialController::class, 'callbackFromGoogle']);
-    // Frontend-initiated Google OAuth2 (PKCE) verification: receives id_token
-    Route::post('/auth/google', [GoogleAuthController::class, 'verify']);
+    // Auth via Google ID token (frontend handles OAuth, backend verifies and issues Sanctum token)
+    Route::post('/auth/google/id-token', [SocialController::class, 'googleIdToken']);
 });
 
 /**
