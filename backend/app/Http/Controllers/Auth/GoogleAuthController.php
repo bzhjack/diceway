@@ -59,6 +59,8 @@ class GoogleAuthController extends Controller
         $email = strtolower($payload['email']);
         $name = $payload['name'] ?? ($payload['given_name'] ?? 'Google User');
         $emailVerified = filter_var($payload['email_verified'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $googleId = $payload['sub'] ?? null;
+        $picture = $payload['picture'] ?? null;
 
         // Create or get local user
         $user = User::firstOrCreate(
@@ -70,10 +72,13 @@ class GoogleAuthController extends Controller
             ]
         );
 
-        if ($emailVerified && is_null($user->email_verified_at)) {
-            $user->email_verified_at = now();
-            $user->save();
-        }
+        // Update profile fields that may change
+        $dirty = false;
+        if ($googleId && $user->provider_id !== $googleId) { $user->provider_id = $googleId; $dirty = true; }
+        if ($picture && $user->avatar !== $picture) { $user->avatar = $picture; $dirty = true; }
+        if ($name && $user->name !== $name) { $user->name = $name; $dirty = true; }
+        if ($emailVerified && is_null($user->email_verified_at)) { $user->email_verified_at = now(); $dirty = true; }
+        if ($dirty) { $user->save(); }
 
         // Issue Sanctum token
         $token = $user->createToken('google')->plainTextToken;

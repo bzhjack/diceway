@@ -9,6 +9,10 @@ export const routes: Routes = [
     path: 'auth/callback',
     loadComponent: () => import('./auth/callback.component').then(m => m.CallbackComponent),
   },
+  {
+    path: 'profile',
+    loadComponent: () => import('./auth/profile.component').then(m => m.ProfileComponent),
+  },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' },
 ];

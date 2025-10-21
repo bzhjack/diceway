@@ -21,6 +21,7 @@ use App\Http\Controllers\Bol\BolDemonController;
 use App\Http\Controllers\Bol\BolDashboardController;
 use App\Http\Controllers\Bol\BolQuestController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 
 /*
@@ -63,6 +64,11 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
  * Api protégée
  */
 Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function () {
+    // Return current authenticated user (bonus endpoint)
+    Route::get('/me', function (Request $request) {
+        return $request->user();
+    });
+
     Route::get('auth/profile', [ProfileController::class, 'profile']);
     /**
      * BARBARIAN OF LEMURIA
