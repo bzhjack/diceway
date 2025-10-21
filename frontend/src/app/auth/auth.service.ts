@@ -2,12 +2,24 @@ import { Injectable, inject } from '@angular/core';
 import { OAuthService, AuthConfig, OAuthEvent } from 'angular-oauth2-oidc';
 import { googleAuthConfig } from './auth.config';
 import { Router } from '@angular/router';
-import { filter, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, filter } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly oauth = inject(OAuthService);
   private readonly router = inject(Router);
+
+  // In-memory user profile derived from id_token or userinfo endpoint
+  private readonly userSubject = new BehaviorSubject<{
+    sub?: string;
+    email?: string;
+    email_verified?: boolean;
+    name?: string;
+    given_name?: string;
+    family_name?: string;
+    picture?: string;
+  } | null>(null);
+  readonly user$ = this.userSubject.asObservable();
 
   constructor() {
     this.configure(googleAuthConfig);
@@ -16,12 +28,14 @@ export class AuthService {
   private configure(config: AuthConfig) {
     this.oauth.configure(config);
     this.oauth.setupAutomaticSilentRefresh();
-    // Try to login from hash on redirect
+    // Try to login from URL on redirect and populate profile
     this.oauth.loadDiscoveryDocumentAndTryLogin().then(async (loggedIn) => {
       if (!loggedIn) {
         // optionally trigger login on app load
         return;
       }
+      this.updateUserFromClaims();
+      await this.loadUserProfileIfNeeded();
     });
   }
 
@@ -48,6 +62,10 @@ export class AuthService {
   async handleCallback(): Promise<void> {
     // Ensure the library processes the authorization code on the callback route
     await this.oauth.loadDiscoveryDocumentAndTryLogin();
+
+    // Populate user profile from id_token and attempt to enrich from userinfo
+    this.updateUserFromClaims();
+    await this.loadUserProfileIfNeeded();
 
     // After processing, send the id_token to backend to create local session
     const idToken = this.getIdToken();
@@ -79,6 +97,63 @@ export class AuthService {
 
   getLocalApiToken(): string | null {
     return localStorage.getItem('local_token');
+  }
+
+  // Populate user profile from ID token claims
+  private updateUserFromClaims(): void {
+    const claims: any = this.oauth.getIdentityClaims();
+    if (!claims || typeof claims !== 'object') {
+      this.userSubject.next(null);
+      return;
+    }
+
+    const profile = {
+      sub: claims['sub'],
+      email: claims['email'],
+      email_verified: claims['email_verified'],
+      name: claims['name'],
+      given_name: claims['given_name'],
+      family_name: claims['family_name'],
+      picture: claims['picture'],
+    } as {
+      sub?: string;
+      email?: string;
+      email_verified?: boolean;
+      name?: string;
+      given_name?: string;
+      family_name?: string;
+      picture?: string;
+    };
+
+    this.userSubject.next(profile);
+  }
+
+  // Enrich the profile by calling the userinfo endpoint when needed
+  private async loadUserProfileIfNeeded(): Promise<void> {
+    const current = this.userSubject.getValue() || {};
+
+    // If we already have basic fields, we can skip calling userinfo
+    const needsMore = !current.email || !current.name || !current.picture;
+    if (!needsMore) return;
+
+    try {
+      const info: any = await this.oauth.loadUserProfile();
+      if (info && typeof info === 'object') {
+        const enriched = {
+          ...current,
+          sub: info['sub'] ?? current['sub'],
+          email: info['email'] ?? current['email'],
+          email_verified: info['email_verified'] ?? current['email_verified'],
+          name: info['name'] ?? current['name'],
+          given_name: info['given_name'] ?? current['given_name'],
+          family_name: info['family_name'] ?? current['family_name'],
+          picture: info['picture'] ?? current['picture'],
+        };
+        this.userSubject.next(enriched);
+      }
+    } catch {
+      // Ignore userinfo errors; we still have id_token claims
+    }
   }
 
   async exchangeWithBackend(idToken: string): Promise<void> {
