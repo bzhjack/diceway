@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SocialController;
 use App\Http\Controllers\Auth\ForgotController;
 use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Bol\BolRegionController;
 use App\Http\Controllers\Bol\BolTraitController;
 use App\Http\Controllers\Bol\BolCarriereController;
@@ -54,6 +55,8 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
     // Réseaux sociaux
     Route::get('/auth/google', [SocialController::class, 'redirectToGoogle']);
     Route::get('/auth/google/callback', [SocialController::class, 'callbackFromGoogle']);
+    // Frontend-initiated Google OAuth2 (PKCE) verification: receives id_token
+    Route::post('/auth/google', [GoogleAuthController::class, 'verify']);
 });
 
 /**
