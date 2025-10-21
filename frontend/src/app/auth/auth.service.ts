@@ -3,6 +3,7 @@ import { OAuthService, AuthConfig, OAuthEvent } from 'angular-oauth2-oidc';
 import { googleAuthConfig } from './auth.config';
 import { Router } from '@angular/router';
 import { BehaviorSubject, filter } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -157,7 +158,11 @@ export class AuthService {
   }
 
   async exchangeWithBackend(idToken: string): Promise<void> {
-    const res = await fetch('http://localhost:8000/api/auth/google', {
+    // Build API URL from environment; use relative path in dev for proxy
+    const apiBase = environment.apiBase || '';
+    const url = apiBase ? `${apiBase}/api/auth/google/id-token` : `/api/auth/google/id-token`;
+
+    const res = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -173,7 +178,7 @@ export class AuthService {
     }
 
     const data = await res.json();
-    // Save Sanctum/Passport token from backend
+    // Save Sanctum token from backend
     if (data?.token) {
       localStorage.setItem('local_token', data.token);
     }
