@@ -1,0 +1,19 @@
+.home-bol-counter {
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  &__description {
+    font-weight: 200;
+    font-size: 16px;
+  }
+}
+
+
+
+.home-bol-logo-container {
+  width: 360px;
+  display: flex;
+  justify-content: center;
+}

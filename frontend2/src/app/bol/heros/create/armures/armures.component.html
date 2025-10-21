@@ -1,0 +1,82 @@
+<p-fieldset class="armures w-full">
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-2">
+      <div>Armures</div>
+      <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une arme" *ngIf="filteredArmureList()?.length > 0"
+               (click)="selectedArmure.set(null); opArmure.toggle($event)"></app-btn>
+    </div>
+  </ng-template>
+  <!-- Body Armures -->
+  <div *ngIf="selectedArmureDetail()?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des armures</div>
+  <p-table *ngIf="selectedArmureDetail()?.length > 0"
+           [value]="selectedArmureDetail()"
+           styleClass="p-datatable-striped">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Armure</th>
+        <th>Protection</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-armure>
+      <tr>
+        <td>
+          <div class="flex flex-col gap-1">
+            <div class="text-gray-300">{{ armure.armure }}</div>
+            <div class="text-gray-400 armure-detail" style="font-size: smaller" *ngIf="armure.malus">{{ armure.malus }}
+            </div>
+          </div>
+
+        </td>
+        <td>{{ armure.protection }}</td>
+
+        <td>
+          <app-btn (click)="deleteArmure(armure.id, $event)"></app-btn>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-fieldset>
+
+<p-overlayPanel #opArmure>
+  <div class="flex flex-col gap-4">
+    <div>Ajouter une armure</div>
+    <p-dropdown [style]="{ width: '250px' }" [options]="filteredArmureList()"
+                [(ngModel)]="selectedArmure" [ngModelOptions]="{standalone: true}" [filter]="true"
+                filterBy="armure" [showClear]="true" placeholder="Selectionner une armure">
+
+      <ng-template pTemplate="selectedItem" let-selectedOption>
+        <div class="flex align-items-center gap-2">
+          <div>{{ selectedOption.armure }}</div>
+        </div>
+      </ng-template>
+
+      <ng-template let-armure pTemplate="item">
+        <div class="flex flex-col gap-2">
+          <div>{{ armure.armure }}</div>
+          <div class="flex flex-col">
+            <div class="flex gap-2" style="font-size: smaller">
+              <div style="width: 70px"><strong>Protection</strong></div>
+              {{ armure.protection }}
+            </div>
+            <div class="flex gap-2" style="font-size: smaller" *ngIf="armure.malus">
+              <div style="width: 70px"><strong>Malus</strong></div>
+              {{ armure.malus }}
+            </div>
+            <div class="flex gap-2" style="font-size: smaller" *ngIf="armure.pts_de_pouvoir">
+              <div style="width: 70px"><strong>Pts pouvoir</strong></div>
+              {{ armure.pts_de_pouvoir }}
+            </div>
+          </div>
+
+        </div>
+      </ng-template>
+    </p-dropdown>
+    <div class="flex justify-end gap-2">
+      <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
+              (click)="opArmure.toggle($event)"></button>
+      <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
+              (click)="addArmure(opArmure, $event)" [disabled]="!selectedArmure()"></button>
+    </div>
+  </div>
+</p-overlayPanel>

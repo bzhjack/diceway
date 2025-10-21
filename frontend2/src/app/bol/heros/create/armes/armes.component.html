@@ -1,0 +1,77 @@
+<p-fieldset class="armes flex-auto">
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-2">
+      <div>Armes</div>
+      <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une arme" *ngIf="filteredArmeList()?.length > 0"
+               (click)="selectedArme.set(null); opArme.toggle($event)"></app-btn>
+    </div>
+  </ng-template>
+  <!-- Body Armes -->
+  <div *ngIf="selectedArmeDetail()?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des armes</div>
+
+  <p-table *ngIf="selectedArmeDetail()?.length > 0"
+           [value]="selectedArmeDetail()"
+           styleClass="p-datatable-striped">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Arme</th>
+        <th>Dégâts</th>
+        <th>Portée</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-arme>
+      <tr>
+        <td class="whitespace-nowrap text-gray-300">{{ arme.arme }}</td>
+        <td>{{ arme.degats }}</td>
+        <td>{{ arme.portee }}</td>
+        <td>
+          <app-btn (click)="deleteArme(arme.id, $event)"></app-btn>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-fieldset>
+
+<p-overlayPanel #opArme>
+  <div class="flex flex-col gap-4">
+    <div>Ajouter une arme</div>
+    <p-dropdown [style]="{ width: '250px' }" [options]="filteredArmeList()"
+                [(ngModel)]="selectedArme" [ngModelOptions]="{standalone: true}" [filter]="true"
+                filterBy="arme" [showClear]="true" placeholder="Selectionner une arme">
+
+      <ng-template pTemplate="selectedItem" let-selectedOption>
+        <div class="flex align-items-center gap-2">
+          <div>{{ selectedOption.arme }}</div>
+        </div>
+      </ng-template>
+
+      <ng-template let-arme pTemplate="item">
+        <div class="flex flex-col gap-2">
+          <div>{{ arme.arme }}</div>
+          <div class="flex flex-col">
+            <div class="flex gap-2" style="font-size: smaller">
+              <div style="width: 70px"><strong>Dégats</strong></div>
+              {{ arme.degats }}
+            </div>
+            <div class="flex gap-2" style="font-size: smaller">
+              <div style="width: 70px"><strong>Portée</strong></div>
+              {{ arme.portee }}
+            </div>
+            <div class="flex gap-2" style="font-size: smaller">
+              <div style="width: 70px"><strong>Notes</strong></div>
+              {{ arme.notes }}
+            </div>
+          </div>
+
+        </div>
+      </ng-template>
+    </p-dropdown>
+    <div class="flex justify-end gap-2">
+      <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
+              (click)="opArme.toggle($event)"></button>
+      <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
+              (click)="addArme(opArme, $event)" [disabled]="!selectedArme()"></button>
+    </div>
+  </div>
+</p-overlayPanel>

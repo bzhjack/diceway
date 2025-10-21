@@ -1,0 +1,161 @@
+<div class="flex gap-2">
+  <p-fieldset legend="Choissisez les modificateurs appropriés" [style]="{maxWidth: '500px'}">
+    <div class="flex flex-col gap-2">
+      <p-fieldset legend="Niveau de difficulté">
+        <p-dropdown [(ngModel)]="difficulty" [options]="difficulties" optionValue="modifier">
+          <ng-template pTemplate="selectedItem" let-selectedOption>
+            <div class="flex align-items-center gap-2">
+              <div>{{ selectedOption.difficulty }} ({{ selectedOption.modifier }})</div>
+            </div>
+          </ng-template>
+          <ng-template let-difficulty pTemplate="item">
+            <div class="flex flex-col gap-2">
+              <div>{{ difficulty.difficulty }} ({{ difficulty.modifier }})</div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </p-fieldset>
+      <div class="flex gap-2">
+        <p-fieldset legend="Attributs" class="flex-auto">
+          <div class="flex flex-col gap-1">
+            <div *ngFor="let attr of attributs()" class="flex items-center gap-2">
+              <p-radioButton [inputId]="attr.attr" name="attribut" [value]="attr"
+                             [(ngModel)]="selectedAttribut"/>
+              <label [for]="attr.attr" class="cursor-pointer capitalize whitespace-nowrap">
+                {{ attr.attr }} ({{ attr.value }})
+              </label>
+            </div>
+          </div>
+        </p-fieldset>
+        <p-fieldset legend="Utilisation d'une carrière" class="flex-auto" *ngIf="carrieres().length > 0">
+          <div class="flex flex-col gap-1">
+            <div class="flex items-center gap-2">
+              <p-radioButton inputId="aucune" name="carriere" [value]="initCarriere" [(ngModel)]="selectedCarriere"/>
+              <label for="aucune" class="cursor-pointer opacity-60">
+                Aucune
+              </label>
+            </div>
+            <div *ngFor="let career of carrieres()" class="flex items-center gap-2">
+              <p-radioButton [inputId]="career.carriere" name="carriere" [value]="career"
+                             [(ngModel)]="selectedCarriere"/>
+              <label [for]="career.carriere" class="cursor-pointer whitespace-nowrap flex justify-between w-full">
+                <span>{{ career.carriere }}</span>
+                <span>({{ career.value }})</span>
+              </label>
+            </div>
+          </div>
+        </p-fieldset>
+      </div>
+      <p-fieldset legend="Application d'un avantage/désavantage" *ngIf="traits().length > 0">
+        <div class="flex flex-col gap-1">
+          <div class="flex gap-2 items-center pt-2">
+            <p-radioButton inputId="aucun" name="carriere" [value]="null" [(ngModel)]="selectedTrait"/>
+            <label for="aucun" class="flex gap-1 items-center cursor-pointer opacity-60">
+              <div class="tag_icon opacity-35" [inlineSVG]="'/assets/d6.svg'"></div>
+              <div>Aucun</div>
+            </label>
+          </div>
+          <div *ngFor="let trait of traits()" class="flex gap-2 items-center pt-2">
+            <p-radioButton [inputId]="trait.trait" name="traits" [value]="trait" [(ngModel)]="selectedTrait"/>
+            <label [for]="trait.trait" class="flex gap-1 items-center cursor-pointer">
+              <div class="tag_icon" [pTooltip]="trait.domaine ?? ''" [class.bonus]="trait.type === 'A'"
+                   [class.malus]="trait.type === 'D'" [inlineSVG]="'/assets/d6.svg'"></div>
+              <div>{{ trait.trait }}</div>
+            </label>
+          </div>
+        </div>
+      </p-fieldset>
+    </div>
+  </p-fieldset>
+  <div class="flex flex-col gap-2" style="width: 350px">
+
+    <p-fieldset legend="Jet attendu">
+      <div class="modifier text-4xl flex justify-center items-center gap-3" style="height: 50px">
+        <div class="flex items-center gap-2">
+          <div class="dice_icon_40" [inlineSVG]="'/assets/d6.svg'"></div>
+          <div>+</div>
+          <div class="dice_icon_40" [inlineSVG]="'/assets/d6.svg'"></div>
+        </div>
+
+        <div class="flex items-center gap-2" *ngIf="selectedTrait()">
+          <div *ngIf="selectedTrait()">+</div>
+          <div class="dice_icon_40" [class.bonus]="selectedTrait()?.type === 'A'"
+               [class.malus]="selectedTrait()?.type === 'D'" [inlineSVG]="'/assets/d6.svg'"></div>
+        </div>
+
+        <div class="flex items-center gap-2" *ngIf="modifier() > 0">
+          <div>+</div>
+          <div>{{ modifier() }}</div>
+        </div>
+        <div class="flex items-center gap-2" *ngIf="modifier() < 0">
+          <div>-</div>
+          <div>{{ modifier() * -1 }}</div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <div>&ge;</div>
+          <div>9</div>
+        </div>
+      </div>
+    </p-fieldset>
+
+    <p-fieldset legend="Jet de dés">
+      <div class="flex flex-col gap-2 items-center">
+        <div class="flex flex-col gap-1">
+          <label for="roll">Résultat du jet</label>
+          <p-inputNumber inputId="roll" maxFractionDigits="0" (keydown.enter)="checkRoll($event)"
+                         (onBlur)="checkRoll($event)"/>
+        </div>
+        <div class="flex justify-center">Ou</div>
+        <button pButton class="dice-button" type="button" size="small" [disabled]="!dice()" pRipple (click)="rollDice()">
+          <div class="flex justify-center gap-2 w-full">
+            <div class="dice_icon_15" [inlineSVG]="'/assets/d6.svg'"></div>
+            <div>Lancer les dés</div>
+          </div>
+        </button>
+      </div>
+    </p-fieldset>
+    <p-fieldset>
+      <ng-template pTemplate="header">
+        <div class="flex gap-2 items-center" style="height: 25px">
+          <div>Résultat</div>
+          <div class="flex gap-1 items-center diceResults results text-xl" [innerHTML]="parsedResult"></div>
+        </div>
+      </ng-template>
+      <div class="dice-result text-4xl">
+        @if (result === true) {
+          <div class="h-full flex flex-col justify-center items-center gap-2 success-color">
+            <div>Réussite</div>
+            <ng-container *ngIf="critical === 'success'">
+              <p-tag pTooltip="Vous pouvez convertir en Succès légendaire pour 1 point d'héroisme." [style]="{ fontSize: '15px', padding: '5px' ,lineHeight: '15px' }" severity="success">
+                <div class="flex align-items-center gap-2 px-1 cursor-pointer">
+                  <div class="tag_icon" [inlineSVG]="'/assets/skull.svg'"></div>
+                  <div>Héroïque</div>
+                </div>
+              </p-tag>
+            </ng-container>
+          </div>
+        } @else if (result === false) {
+          <div class="h-full flex flex-col justify-center items-center gap-2 error-color">
+            <div>Échec</div>
+            <ng-container *ngIf="critical === 'failure'">
+
+              <p-tag pTooltip="Vous pouvez convertir en Echec critique pour une contrepartie." [style]="{ fontSize: '15px', padding: '5px' ,lineHeight: '15px' }" severity="danger">
+                <div class="flex align-items-center gap-2 px-1 cursor-pointer">
+                  <div class="tag_icon" [inlineSVG]="'/assets/skull.svg'"></div>
+                  <div>Automatique</div>
+                </div>
+              </p-tag>
+            </ng-container>
+          </div>
+        }
+      </div>
+    </p-fieldset>
+  </div>
+
+  <div [style]="{width: '30vw'}">
+    <div class="action-dice-box-container">
+      <div id="action-dice-box"></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+<p-fieldset>
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-2">
+      <div class="cursor-pointer" (click)="aptitudesInfos.toggle($event)">
+        <i *ngIf="!originesErrors.length && !originesWarns.length" class="pi pi-info-circle"></i>
+        <div *ngIf="originesErrors.length" style="color: var(--error-color)">
+          <i class="pi pi-exclamation-triangle"></i> ({{ originesErrors.length }})
+        </div>
+        <div *ngIf="originesWarns.length" style="color: var(--warn-color)">
+          <i class="pi pi-exclamation-triangle"></i> ({{ originesWarns.length }})
+        </div>
+      </div>
+      <div>Origines</div>
+    </div>
+    <p-overlayPanel #aptitudesInfos>
+      <div class="flex flex-col gap-2">
+        <bol-message type="orig"></bol-message>
+        <bol-message type="form-errors" *ngIf="originesErrors.length" legend="Aptitudes invalides"
+                     [data]="originesErrors"></bol-message>
+        <bol-message type="form-warn" *ngIf="originesWarns.length" legend="Aptitudes invalides"
+                     [data]="originesWarns"></bol-message>
+      </div>
+    </p-overlayPanel>
+  </ng-template>
+
+
+  <div class="flex gap-2" [formGroup]="originesForm">
+    <div class="hero-avatar cursor-pointer" (click)="picture()">
+      <img style="width:100%"
+           [src]="avatarCtrl.value !== null ? avatarCtrl.value : '/assets/bol/empty-avatar.jpg'"
+           alt="avatar">
+      <p class="hero-avatar__description">Modifier</p>
+    </div>
+    <div class="flex flex-col gap-1 flex-auto">
+      <div class="flex flex-col gap-1">
+        <label for="joueur">Joueur *</label>
+        <input formControlName="joueur" pInputText id="joueur" class="p-inputtext-sm"/>
+      </div>
+      <div class="flex flex-col gap-1">
+        <label for="nom">Nom *</label>
+        <input formControlName="nom" pInputText id="nom" class="p-inputtext-sm"/>
+      </div>
+      <div class="flex flex-col gap-1">
+      <label for="commentaire">Commentaire</label>
+      <textarea rows="2" id="commentaire" style="width: 100%" pInputTextarea formControlName="commentaire"></textarea>
+      </div>
+    </div>
+
+    <div>
+      <div class="flex flex-col gap-1 relative">
+        <label>Région *</label>
+        <input [value]="currentRegion()?.region" pInputText class="p-inputtext-sm" [class.ng-dirty]="regionIdCtrl.dirty" [class.ng-invalid]="regionIdCtrl.invalid" autocomplete="new" tabindex="-1"/>
+        <div class="input-overlay" style="" (click)="region()">
+          <div><i class="hide-region icon-button pi pi-times" (click)="clearRegion($event)"></i></div>
+        </div>
+      </div>
+      <bol-heros-langues formControlName="langues"></bol-heros-langues>
+    </div>
+  </div>
+</p-fieldset>

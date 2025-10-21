@@ -1,0 +1,59 @@
+<p-fieldset [formGroup]="ressourcesForm">
+  <!-- Header Carrières -->
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-1">
+      <i class="pi pi-info-circle" *ngIf="!heroismCost()"></i>
+      <div class="cursor-pointer" (click)="ressourcesInfos.toggle($event)">
+        <div *ngIf="heroismCost()" style="color: var(--success-color)">
+          <i class="pi pi-bell"></i>
+        </div>
+      </div>
+      <div>Ressources</div>
+    </div>
+    <p-overlayPanel #ressourcesInfos>
+
+      <p-messages severity="success">
+        <ng-template pTemplate>
+          <div class="info_icon_small" inlineSVG="/assets/sword.svg"></div>
+          <div class="ml-4">
+            Vous perdrez {{ heroismCost() }} points d'héroïsme si vous ne
+            choisissez pas {{ heroismCost() }} autre(s) désavantage(s).
+          </div>
+        </ng-template>
+      </p-messages>
+    </p-overlayPanel>
+  </ng-template>
+  <div class="relative">
+    <div class="flex gap-2">
+      <div class="flex flex-col gap-1">
+        <label>Vitalité</label>
+        <input style="width: 50px; text-align: center" formControlName="vitalite" pInputText
+               class="p-inputtext-sm" variant="filled" tabindex="-1"/>
+      </div>
+      <div class="flex flex-col gap-1">
+        <label>Heroisme</label>
+        <input style="width: 50px; text-align: center" formControlName="heroisme" pInputText
+               class="p-inputtext-sm" variant="filled" tabindex="-1"/>
+      </div>
+    </div>
+    <div class="flex gap-2">
+      <div class="flex flex-col gap-1">
+        <label>Foi</label>
+        <input style="width: 50px; text-align: center" formControlName="foi" pInputText
+               class="p-inputtext-sm" variant="filled" tabindex="-1"/>
+      </div>
+      <div class="flex flex-col gap-1">
+        <label>Pouvoir</label>
+        <input style="width: 50px; text-align: center" formControlName="pouvoir" pInputText
+               class="p-inputtext-sm" variant="filled" tabindex="-1"/>
+      </div>
+      <div class="flex flex-col gap-1">
+        <label>Création</label>
+        <input style="width: 50px; text-align: center" formControlName="creation" pInputText
+               class="p-inputtext-sm" variant="filled" tabindex="-1"/>
+      </div>
+    </div>
+    <div style="position: absolute; inset: 0;"></div>
+  </div>
+
+</p-fieldset>

@@ -1,0 +1,250 @@
+<div class="page-container">
+  <app-header legend="Les Démons">
+    <button pButton label="Retour" icon="pi pi-arrow-left" severity="secondary" size="small" routerLink="/bol"></button>
+  </app-header>
+
+  <div class="flex">
+    <div class="flex flex-auto">
+      <p-table
+        #demonTable
+        class="w-full"
+        rowGroupMode="subheader"
+        groupRowsBy="id_categorie"
+        [value]="filteredDemons"
+        [scrollable]="true"
+        dataKey="id"
+        [globalFilterFields]="['nom']"
+        scrollHeight="calc(100vh - 170px)">
+        <ng-template pTemplate="caption">
+          <div class="flex justify-between">
+            <div class="flex gap-2">
+              <p-iconField iconPosition="left">
+                <p-inputIcon>
+                  <i class="pi pi-search"></i>
+                </p-inputIcon>
+                <input
+                  pInputText
+                  class="p-inputtext-sm"
+                  style="padding-left: 2.5rem"
+                  type="text"
+                  [(ngModel)]="searchTerm"
+                  (input)="filtering($event)"
+                  placeholder="Votre recherche"/>
+              </p-iconField>
+              <p-dropdown
+                [options]="categorieList()"
+                optionLabel="categorie"
+                optionValue="id"
+                placeholder="Sélectionner une categorie"
+                [showClear]="true"
+                [(ngModel)]="searchCategorie"
+                (ngModelChange)="filterExtended()"/>
+
+              <p-checkbox
+                class="pr-2 cursor-pointer"
+                [(ngModel)]="searchCreation"
+                [binary]="true" label="Mes créations" (ngModelChange)="filterExtended()"/>
+              <button pTooltip="Supprimer les filtres" pButton icon="pi pi-filter-slash" severity="info" size="small"
+                      (click)="clear(demonTable)"></button>
+            </div>
+            <button pButton label="Création" icon="pi pi-palette" severity="warning" size="small" (click)="createDemon()"></button>
+          </div>
+
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th></th>
+            <th>Description</th>
+            <th>Ressources</th>
+            <th>Attributs</th>
+            <th>Combat</th>
+            <th>Pouvoirs</th>
+          </tr>
+        </ng-template>
+
+
+        <ng-template pTemplate="groupheader" let-demon>
+          <tr pRowGroupHeader>
+            <td colspan="9" style="background: #183641">
+              <div class="text-2xl">{{ demon.categorie.categorie }}</div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-demon>
+          <tr>
+            <td style="width: 110px" class="relative">
+              <div class="demon_row__img cursor-pointer" (click)="showDemonPicture(demon)">
+                <img *ngIf="!demon.user_id" src="/assets/bol/demon/{{demon.id}}.jpg" alt="" fill/>
+                <img *ngIf="demon.user_id" style="width:100%"
+                     [src]="demon.avatar !== null ? demon.avatar : '/assets/bol/empty-avatar.jpg'"
+                     alt="avatar"/>
+              </div>
+              <div style="position: absolute; bottom: 12px; left: 12px;">
+                <p-tag *ngIf="demon.user_id">Création</p-tag>
+              </div>
+
+            </td>
+            <td class="relative">
+              <div class="flex flex-col justify-between" style="height: 100px">
+                <div>
+                  <div class="flex gap-2 items-center text-xl">
+                    <i *ngIf="demon.commentaire" class="pi pi-info-circle cursor-pointer warn-color"
+                       [pTooltip]="demon.commentaire ?? ''"></i>
+                    <div style="text-transform: capitalize">{{ demon.nom }}</div>
+                  </div>
+                  <div class="text-gray-400">{{ demon.categorie.categorie }}</div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <button
+                    class="p-button-icon-only"
+                    pTooltip="En route pour l'aventure"
+                    (click)="addAdventure(demon)"
+                    type="button"
+                    size="small" pButton pRipple>
+                    <div class="svg_icon_15" inlineSVG="/assets/sword.svg"></div>
+                  </button>
+                  <ng-container *ngIf="demon.user_id">
+                    <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-bolt" (click)="createDemon(demon)"></button>
+                    <button severity="danger" type="button" size="small" pButton pRipple icon="pi pi-trash" (click)="askDelete(demon, $event)"></button>
+                  </ng-container>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <div style="height: 100px;">
+                <div class="flex items-center gap-2">
+                  <div class="text-gray-300">Vitalité</div>
+                  <div class="text-gray-400 font-bold">{{ demon.vitalite }}</div>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr>
+                    <td class="text-gray-300">Vigueur</td>
+                    <td class="text-gray-400">{{ demon.vigueur }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Agilité</td>
+                    <td class="text-gray-400">{{ demon.agilite }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Esprit</td>
+                    <td class="text-gray-400">{{ demon.esprit }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Aura</td>
+                    <td class="text-gray-400">{{ demon.aura }}</td>
+                  </tr>
+                </table>
+              </div>
+
+            </td>
+
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr>
+                    <td class="text-gray-300">Melée</td>
+                    <td class="text-gray-400">{{ demon.melee }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Tir</td>
+                    <td class="text-gray-400 whitespace-nowrap">{{ demon.tir }}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-gray-300">Défense</td>
+                    <td class="text-gray-400 whitespace-nowrap">{{ demon.defense }}</td>
+                  </tr>
+
+                  <tr>
+                    <td class="text-gray-300">Dégâts</td>
+                    <td class="text-gray-400 whitespace-nowrap">{{ demon.degats }}</td>
+                  </tr>
+
+                </table>
+              </div>
+            </td>
+
+            <td>
+              <div style="height: 100px">
+                <table>
+                  <tr *ngFor="let pouvoir of demon.pouvoirs">
+                    <td>
+                    </td>
+                    <td class="text-gray-400 whitespace-nowrap">{{ pouvoir.pouvoir.pouvoir }}</td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+<p-confirmPopup/>
+<p-dialog
+  [(visible)]="showDemon"
+  [header]="currentDemon?.nom"
+  [modal]="true">
+  <div *ngIf="currentDemon" class="demon-preview">
+    <img *ngIf="!currentDemon.user_id" src="/assets/bol/demon/{{currentDemon.id}}.jpg" alt=""/>
+    <img *ngIf="currentDemon.user_id" style="width:100%"
+         [src]="currentDemon.avatar !== null ? currentDemon.avatar : '/assets/bol/empty-avatar.jpg'"
+         alt="avatar">
+  </div>
+  <ng-template pTemplate="footer">
+    <button pButton icon="pi pi-times" size="small" label="Quitter" severity="secondary"
+            (click)="showDemon = false"></button>
+  </ng-template>
+</p-dialog>
+<p-dialog [(visible)]="showCard" [modal]="true" header="En route pour l'aventure">
+  @if ((quests$ | async) && quests() !== null) {
+    @if (quests()?.length) {
+      <div class="flex flex-col gap-2">
+        <p-dropdown [style]="{ width: '250px' }"
+                    [options]="quests() ?? []"
+                    [appendTo]="'body'"
+                    [(ngModel)]="selectedQuest"
+                    [ngModelOptions]="{standalone: true}"
+                    [showClear]="true"
+                    placeholder="Faites votre sélection">
+
+          <ng-template pTemplate="selectedItem" let-selectedOption>
+            <div class="flex align-items-center gap-2">
+              {{ selectedOption.titre }}
+            </div>
+          </ng-template>
+
+          <ng-template let-item pTemplate="item">
+            <div class="flex flex-col gap-2">
+              {{ item.titre }}
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+    } @else {
+      <div>Ce démon est déjà dans toutes les aventures ;)</div>
+    }
+    <div class="flex pt-4 justify-end gap-2">
+      <p-button label="Retour" icon="pi pi-times" severity="secondary" size="small"
+                (click)="showCard.set(false)"></p-button>
+      <p-button *ngIf="quests()?.length" label="Ajouter" icon="pi pi-check" size="small" severity="success" (click)="addToAdventure()"
+                [disabled]="!selectedQuest()"></p-button>
+    </div>
+  } @else {
+    <div class="flex flex-col gap-2">
+      <p-skeleton width="250px" height="25px"/>
+      <div class="flex pt-4 justify-end gap-2">
+        <p-skeleton width="85px" height="30px"/>
+        <p-skeleton width="90px" height="30px"/>
+      </div>
+    </div>
+  }
+</p-dialog>

@@ -1,0 +1,38 @@
+<div class="dw-topbar items-center justify-between">
+  <div class="flex gap-2">
+    <div class="dw-topbar__logo relative" [routerLink]="'/'">
+      <div class="dw_banner" [inlineSVG]="'/assets/banner.svg'"></div>
+    </div>
+    <div class="flex items-center text-3xl relative dw_route cursor-pointer" routerLink="/bol">
+      {{ route() }}
+    </div>
+    <div class="flex gap-2 items-center" *ngIf="nameSpace() === 'bol'">
+      <p-button label="Aventures" [link]="true" routerLink="/bol/quest" size="small" />
+      <p-button label="Héros" [link]="true" routerLink="/bol/heros" size="small" />
+      <p-button label="Pnj" [link]="true" routerLink="/bol/pnj" size="small" />
+      <p-button label="Créatures" [link]="true" routerLink="/bol/creature" size="small" />
+      <p-button label="Démons" [link]="true" routerLink="/bol/demon" size="small" />
+    </div>
+  </div>
+  <div class="flex gap-4">
+    <div *ngIf="userObs | async as user" class="flex gap-4 cursor-pointer" (click)="op.toggle($event)">
+      <div class="flex flex-col">
+        <div>{{ user.name }}</div>
+        <div><small>{{ user.email }}</small></div>
+      </div>
+      @if (user.avatar) {
+        <p-avatar [image]="user.avatar" styleClass="mr-2" size="large" shape="circle"></p-avatar>
+      } @else {
+        <p-avatar icon="pi pi-user" styleClass="mr-2" size="large" shape="circle"></p-avatar>
+      }
+    </div>
+  </div>
+
+</div>
+
+<p-overlayPanel #op>
+  <div class="flex gap-2">
+    <div [setSVGAttributes]="{width: 20, height: 20}" [inlineSVG]="'/assets/logout.svg'"></div>
+    <a (click)="logout()" class="underline cursor-pointer">Se déconnecter</a>
+  </div>
+</p-overlayPanel>

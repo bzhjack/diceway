@@ -1,0 +1,51 @@
+@use "sass:color";
+
+.carte-container {
+  width: calc(100vw - 420px);
+}
+
+.carrieres {
+  .p-inputnumber-input {
+    width: 50px;
+  }
+}
+
+.traits {
+  .p-divider-horizontal {
+    margin: 0;
+  }
+}
+
+.footer-separator {
+  border-top: 1px solid #424b57;
+  padding-top: 5px;
+  margin: 5px -15px -10px;
+}
+
+.armes, .armures, .modifiers {
+  .p-datatable .p-datatable-tbody > tr > td {
+    border: none;
+    padding: 5px;
+  }
+
+  .p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(2n) {
+    background: color.adjust(#1c2532, $lightness: -2%);
+  }
+
+  .p-datatable .p-datatable-thead > tr > th {
+    padding: 5px;
+  }
+}
+
+.bol_title {
+  font-size: 2rem;
+  font-weight: 150;
+  white-space: nowrap;
+}
+
+/*.creature_card, .pnj_card {
+  fieldset {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}*/
