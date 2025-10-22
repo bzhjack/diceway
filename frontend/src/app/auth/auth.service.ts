@@ -2,8 +2,9 @@ import {inject, Injectable} from '@angular/core';
 import {AuthConfig, OAuthService} from 'angular-oauth2-oidc';
 import {googleAuthConfig} from './auth.config';
 import {Router} from '@angular/router';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, firstValueFrom} from 'rxjs';
 import {environment} from '../../environments/environment';
+import {filter, take, timeout as rxTimeout} from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -63,6 +64,9 @@ export class AuthService {
   async handleCallback(): Promise<void> {
     // Ensure the library processes the authorization code on the callback route
     await this.oauth.loadDiscoveryDocumentAndTryLogin();
+
+    // Wait until the ID token is actually available (no arbitrary setTimeout)
+    await this.waitForValidIdToken(7000);
 
     // Populate user profile from id_token and attempt to enrich from userinfo
     this.updateUserFromClaims();
@@ -152,6 +156,27 @@ export class AuthService {
       }
     } catch {
       // Ignore userinfo errors; we still have id_token claims
+    }
+  }
+
+  private async waitForValidIdToken(timeoutMs = 7000): Promise<void> {
+    // If token already valid, nothing to wait for
+    if (this.oauth.hasValidIdToken()) return;
+
+    try {
+      await firstValueFrom(
+        this.oauth.events.pipe(
+          filter((e: any) =>
+            e?.type === 'token_received' ||
+            e?.type === 'silently_refreshed' ||
+            e?.type === 'token_refresh_success'
+          ),
+          take(1),
+          rxTimeout(timeoutMs)
+        )
+      );
+    } catch (err) {
+      // If timeout occurs, proceed; getIdToken may still be available shortly after
     }
   }
 

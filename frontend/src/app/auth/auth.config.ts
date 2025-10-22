@@ -12,13 +12,17 @@ export const googleAuthConfig: AuthConfig = {
   dummyClientSecret: environment.googleClientSecret,
   redirectUri: window.location.origin + '/auth/callback',
   postLogoutRedirectUri: window.location.origin,
-  responseType: 'code', // PKCE flow
+  responseType: 'code', // Flux PKCE
   oidc: true,
   requestAccessToken: true,
   scope: 'openid profile email',
   showDebugInformation: true, // Active les logs
   strictDiscoveryDocumentValidation: false,
-  skipIssuerCheck: true,
-  disableAtHashCheck: true,
+  skipIssuerCheck: false,
+  disableAtHashCheck: false, // Désactive la validation du at_hash
+  silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
+  silentRefreshTimeout: 5000,
   requireHttps: !isDevMode(),
+  clockSkewInSec: 300,
 };
+
