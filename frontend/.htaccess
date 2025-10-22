@@ -1,0 +1,13 @@
+# Redirection des routes Angular vers index.html
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Ne pas réécrire les fichiers existants
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Tout le reste renvoie vers index.html
+  RewriteRule ^ index.html [L]
+</IfModule>

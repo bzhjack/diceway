@@ -28,6 +28,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": ".htaccess",
+                "input": ".",
+                "output": ""
               }
             ],
             "styles": [

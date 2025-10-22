@@ -131,7 +131,6 @@ export class AuthService {
   // Enrich the profile by calling the userinfo endpoint when needed
   private async loadUserProfileIfNeeded(): Promise<void> {
     const current = this.userSubject.getValue() || {};
-
     // If we already have basic fields, we can skip calling userinfo
     const needsMore = !current.email || !current.name || !current.picture;
     if (!needsMore) return;
