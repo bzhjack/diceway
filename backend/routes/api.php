@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SocialController;
 use App\Http\Controllers\Auth\ForgotController;
 use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Bol\BolRegionController;
 use App\Http\Controllers\Bol\BolTraitController;
 use App\Http\Controllers\Bol\BolCarriereController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\Bol\BolDemonController;
 use App\Http\Controllers\Bol\BolDashboardController;
 use App\Http\Controllers\Bol\BolQuestController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 
 /*
@@ -51,15 +53,19 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
     Route::post('auth/password/forgotten', [ForgotController::class, 'forgot'])->middleware('guest')->name('password.email'); // Envoi d'un mail de reset du mdp
     Route::get('auth/password/forgotten/{token}', [ForgotController::class, 'reset'])->middleware('guest')->name('password.reset'); // Lien dans le mail de reset
     Route::post('auth/password/reset', [ForgotController::class, 'reset_password'])->middleware('guest')->name('password.update'); // Validation du changement
-    // Réseaux sociaux
-    Route::get('/auth/google', [SocialController::class, 'redirectToGoogle']);
-    Route::get('/auth/google/callback', [SocialController::class, 'callbackFromGoogle']);
+    // Auth via Google ID token (frontend handles OAuth, backend verifies and issues Sanctum token)
+    Route::post('/auth/google/id-token', [SocialController::class, 'googleIdToken']);
 });
 
 /**
  * Api protégée
  */
 Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function () {
+    // Return current authenticated user (bonus endpoint)
+    Route::get('/me', function (Request $request) {
+        return $request->user();
+    });
+
     Route::get('auth/profile', [ProfileController::class, 'profile']);
     /**
      * BARBARIAN OF LEMURIA
