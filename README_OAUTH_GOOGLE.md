@@ -28,7 +28,7 @@ Fichiers — Frontend Angular
 - Contenu principal:
   export const googleAuthConfig: AuthConfig = {
     issuer: 'https://accounts.google.com',
-    clientId: (window as any)["env"]?.NG_APP_GOOGLE_CLIENT_ID || 'GOOGLE_CLIENT_ID_PLACEHOLDER',
+    clientId: environment.googleClientId,
     redirectUri: window.location.origin + '/auth/callback',
     postLogoutRedirectUri: window.location.origin,
     responseType: 'code',

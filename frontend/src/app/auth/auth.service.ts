@@ -1,9 +1,9 @@
-import { Injectable, inject } from '@angular/core';
-import { OAuthService, AuthConfig, OAuthEvent } from 'angular-oauth2-oidc';
-import { googleAuthConfig } from './auth.config';
-import { Router } from '@angular/router';
-import { BehaviorSubject, filter } from 'rxjs';
-import { environment } from '../../environments/environment';
+import {inject, Injectable} from '@angular/core';
+import {AuthConfig, OAuthService} from 'angular-oauth2-oidc';
+import {googleAuthConfig} from './auth.config';
+import {Router} from '@angular/router';
+import {BehaviorSubject} from 'rxjs';
+import {environment} from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -45,9 +45,9 @@ export class AuthService {
     const clientId = (this.oauth as any).clientId || (googleAuthConfig as any).clientId;
     const redirectUri = (googleAuthConfig as any).redirectUri;
 
-    if (!clientId || typeof clientId !== 'string' || clientId.includes('GOOGLE_CLIENT_ID_PLACEHOLDER')) {
-      console.error('[OAuth] Google Client ID is not configured. Set NG_APP_GOOGLE_CLIENT_ID to your real client id.');
-      alert('Configuration OAuth invalide: Google Client ID manquant. Veuillez définir NG_APP_GOOGLE_CLIENT_ID et recharger.');
+    if (!clientId || typeof clientId !== 'string') {
+      console.error('[OAuth] Google Client ID is not configured. Configure environment.googleClientId in environment.ts.');
+      alert('Configuration OAuth invalide: Google Client ID manquant. Veuillez configurer environment.googleClientId et recharger.');
       return;
     }
 
@@ -67,9 +67,9 @@ export class AuthService {
     // Populate user profile from id_token and attempt to enrich from userinfo
     this.updateUserFromClaims();
     await this.loadUserProfileIfNeeded();
-
     // After processing, send the id_token to backend to create local session
     const idToken = this.getIdToken();
+    console.log(this.oauth);
     if (idToken) {
       await this.exchangeWithBackend(idToken);
     }
