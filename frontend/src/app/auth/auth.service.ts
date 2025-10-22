@@ -69,7 +69,6 @@ export class AuthService {
     await this.loadUserProfileIfNeeded();
     // After processing, send the id_token to backend to create local session
     const idToken = this.getIdToken();
-    console.log(this.oauth);
     if (idToken) {
       await this.exchangeWithBackend(idToken);
     }

@@ -41,5 +41,5 @@ export const googleAuthConfig: AuthConfig = {
 
   // Require HTTPS for discovery and redirect URIs in production
   // disable at local dev only if using http://localhost
-  requireHttps: false,
+  requireHttps: true,
 };
