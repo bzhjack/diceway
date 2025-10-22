@@ -80,7 +80,7 @@ export class AuthService {
 
   logout(): void {
     this.oauth.logOut();
-    localStorage.removeItem('local_token');
+    sessionStorage.removeItem('local_token');
   }
 
   getIdToken(): string | null {
@@ -100,7 +100,7 @@ export class AuthService {
   }
 
   getLocalApiToken(): string | null {
-    return localStorage.getItem('local_token');
+    return sessionStorage.getItem('local_token');
   }
 
   // Populate user profile from ID token claims
@@ -203,7 +203,7 @@ export class AuthService {
     const data = await res.json();
     // Save Sanctum token from backend
     if (data?.token) {
-      localStorage.setItem('local_token', data.token);
+      sessionStorage.setItem('local_token', data.token);
     }
   }
 }
