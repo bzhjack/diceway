@@ -1,5 +1,5 @@
 import { AuthConfig } from 'angular-oauth2-oidc';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import {isDevMode} from '@angular/core';
 
 // Google OAuth2 + OIDC with PKCE
@@ -18,7 +18,7 @@ export const googleAuthConfig: AuthConfig = {
   scope: 'openid profile email',
   showDebugInformation: true, // Active les logs
   strictDiscoveryDocumentValidation: false,
-  skipIssuerCheck: false,
+  skipIssuerCheck: true,
   disableAtHashCheck: false, // Désactive la validation du at_hash
   silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
   silentRefreshTimeout: 5000,

@@ -2,12 +2,15 @@
   <div class="dw_banner" [inlineSVG]="'/assets/banner.svg'"></div>
   <p-card class="relative" header="S'identifier">
     <form [formGroup]="loginForm" class="flex flex-col gap-4">
+
       <p-inputGroup class="relative">
         <p-inputGroupAddon>
           <i class="pi pi-user"></i>
         </p-inputGroupAddon>
         <input formControlName="email" pInputText placeholder="Adresse mail" autocomplete="username"/>
-        <small *ngIf="onError('email')" class="dw_error">Adresse mail non valide</small>
+        @if (onError('email')) {
+          <small class="dw_error">Adresse mail non valide</small>
+        }
       </p-inputGroup>
 
       <p-inputGroup class="relative">
@@ -16,36 +19,43 @@
         </p-inputGroupAddon>
         <input formControlName="password" type="password" pInputText placeholder="Mot de passe"
                autocomplete="current-password"/>
-        <small *ngIf="onError('password')" class="dw_error">Minimum 8 caractères</small>
-      </p-inputGroup>
-      <div *ngIf="messages.length > 0">
-        @for (message of messages; track message) {
-          <p-message>{{message}}</p-message>
+        @if (onError('password')) {
+          <small class="dw_error">Minimum 8 caractères</small>
         }
-
-      </div>
+      </p-inputGroup>
+      @if (messages.length > 0) {
+        @for (message of messages; track message) {
+          <p-message severity="error">{{message}}</p-message>
+        }
+      }
       <div class="flex justify-between">
         <p-button [routerLink]="'/forgotten'" label="Mot de passe oublié" size="small" [text]="true"
                   severity="secondary" [disabled]="pending"></p-button>
         <p-button label="Connexion" size="small" (click)="login()" [disabled]="pending"
                   type="submit"></p-button>
       </div>
-      <div *ngIf="!pending" class="flex flex-col items-center pt-4 text-s">
-        <div>Vous n'avez pas de compte ?</div>
-        <p-button [routerLink]="'/register'" label="Inscrivez-vous" size="small" [text]="true"
-                  severity="secondary"></p-button>
-      </div>
-    </form>
-    <div *ngIf="!pending" class="flex justify-center">
-      <a class="p-button p-button-secondary" size="small" (click)="loginWithGoogle()" style="text-decoration: none;">
-        <div class="flex login__google items-center">
-          <img src="/assets/socialite/google.svg">
-          <div>Continuer avec Google</div>
+      @if (!pending) {
+        <div class="flex flex-col items-center pt-4 text-s">
+          <div>Vous n'avez pas de compte ?</div>
+          <p-button [routerLink]="'/register'" label="Inscrivez-vous" size="small" [text]="true"
+                    severity="secondary"></p-button>
         </div>
-      </a>
-    </div>
+      }
+    </form>
+    @if (!pending) {
+      <div class="flex justify-center">
+        <a class="p-button p-button-secondary" size="small" (click)="loginWithGoogle()" style="text-decoration: none;">
+          <div class="flex login__google items-center">
+            <img src="/assets/socialite/google.svg">
+            <div>Continuer avec Google</div>
+          </div>
+        </a>
+      </div>
+    }
 
-    <p-progressBar *ngIf="pending" class="dw_progress" mode="indeterminate"
-                   [style]="{ height: '6px' }"></p-progressBar>
+    @if (pending) {
+      <p-progressBar class="dw_progress" mode="indeterminate"
+                     [style]="{ height: '6px' }"></p-progressBar>
+    }
   </p-card>
 </div>

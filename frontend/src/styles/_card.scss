@@ -1,0 +1,22 @@
+.p-card .p-card-title {
+  font-weight: 300;
+  font-size: 1.25rem;
+}
+
+.p-card .p-card-content {
+  padding: 0;
+}
+
+.p-fieldset .p-fieldset-legend {
+  background: transparent;
+}
+
+.p-card .p-card-footer {
+  padding: 0.5rem 0 0 0;
+}
+
+.creature_card, .pnj_card, .heros_card, .demon_card {
+  .p-card-body {
+    padding: 10px;
+  }
+}

@@ -8,8 +8,9 @@ import {Message} from 'primeng/message';
 import {Button} from 'primeng/button';
 import {RouterLink} from '@angular/router';
 import {ProgressBar} from 'primeng/progressbar';
-import {AuthService} from '../../auth.service';
+import {AuthService} from '../../services/auth.service';
 import {InlineSVGDirective} from 'ng-inline-svg-2';
+import {InputText} from 'primeng/inputtext';
 
 
 @Component({
@@ -25,6 +26,7 @@ import {InlineSVGDirective} from 'ng-inline-svg-2';
     RouterLink,
     ProgressBar,
     InlineSVGDirective,
+    InputText,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
