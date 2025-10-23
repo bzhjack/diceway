@@ -35,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
                 ->subject('Modification du mot de passe')
                 ->greeting('Bonjour!')
                 ->line('Vous recevez cet e-mail car nous avons reçu une demande de réinitialisation du mot de passe pour votre compte.')
-                ->action('Réinitialiser le mot de passe', url(config('app.url') . route('password.reset', ['token' => $token, 'email' => $notifiable->getEmailForPasswordReset()], false)))
+                ->action('Réinitialiser le mot de passe', config('app.frontend_url', 'http://localhost:4200') . "/reset/{$token}?email=" . $notifiable->getEmailForPasswordReset())
                 ->line('Ce lien de réinitialisation de mot de passe expirera dans 60 minutes.')
                 ->line('Si vous n\'avez pas demandé de réinitialisation du mot de passe, aucune autre action n\'est requise.');
         });

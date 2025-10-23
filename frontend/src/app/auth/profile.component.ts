@@ -37,7 +37,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     // Fetch from protected backend endpoint to verify Sanctum token works
-    this.http.get('http://localhost:8000/api/me').subscribe({
+    this.http.get('http://localhost:8080/api/me').subscribe({
       next: (res) => (this.me = res),
       error: () => (this.me = { error: 'Unable to load /api/me' }),
     });

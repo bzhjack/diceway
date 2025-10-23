@@ -3,7 +3,7 @@ import { environment } from '../../environments/environment';
 
 // Minimal interceptor to attach Laravel Sanctum API token from localStorage
 export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = localStorage.getItem('local_token');
+  const token = sessionStorage.getItem('local_token');
   if (!token) {
     return next(req);
   }
@@ -23,7 +23,7 @@ export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
     } else {
       try {
         const u = new URL(req.url);
-        isApi = (u.host === 'localhost:8000' || u.hostname.endsWith('diceway.com'));
+        isApi = (u.host === 'localhost:8080' || u.hostname.endsWith('diceway.com'));
       } catch {
         isApi = false;
       }

@@ -8,6 +8,7 @@ import {WelcomeComponent} from './auth/public/welcome/welcome.component';
 import {ResendComponent} from './auth/public/resend/resend.component';
 import {NoticeComponent} from './auth/public/notice/notice.component';
 import {NotfoundComponent} from './auth/public/notfound/notfound.component';
+import {authGuard} from './auth/auth.guard';
 
 export const routes: Routes = [
   // Public route
@@ -20,13 +21,14 @@ export const routes: Routes = [
   {path: 'resend/:forbidden', component: ResendComponent}, // Renvoi d'un email de confirmation suite à login
   {path: 'notice', component: NoticeComponent}, // Confirmation de création de compte
   {path: 'notice/:reset', component: NoticeComponent}, // Confirmation de reset du mot de passe
-  {path: 'reset/:token/:email', component: ResetComponent}, // Lien sur le mail de reset
-  {path: 'callback/:token', component: CallbackComponent}, // Url de callback après authentification
+  {path: 'reset/:token', component: ResetComponent}, // Lien sur le mail de reset
+  {path: 'auth/callback', component: CallbackComponent}, // Url de callback après authentification
   {path: 'notfound', component: NotfoundComponent}, // Echec à la verification du mail ou 404 standard
   {
     path: 'profile',
     loadComponent: () => import('./auth/profile.component').then(m => m.ProfileComponent),
+    canActivate: [authGuard],
   },
-  {path: '', redirectTo: 'login', pathMatch: 'full'},
+  {path: '', redirectTo: 'profile', pathMatch: 'full'},
   {path: '**', redirectTo: 'login'},
 ];
