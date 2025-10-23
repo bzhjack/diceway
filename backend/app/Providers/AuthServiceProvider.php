@@ -2,24 +2,15 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
-    /**
-     * The model to policy mappings for the application.
-     *
-     * @var array<class-string, class-string>
-     */
     protected $policies = [
         //
     ];
 
-    /**
-     * Register any authentication / authorization services.
-     */
     public function boot(): void
     {
         $this->registerPolicies();
@@ -27,7 +18,7 @@ class AuthServiceProvider extends ServiceProvider
         // URL personnalisée pour le reset password
         ResetPassword::createUrlUsing(function ($notifiable, $token) {
             // URL du frontend Angular
-            $frontendUrl = config('app.app_url', 'http://localhost:4200');
+            $frontendUrl = config('app.frontend_url', 'http://localhost:4200');
             return "{$frontendUrl}/reset/{$token}?email={$notifiable->getEmailForPasswordReset()}";
         });
     }

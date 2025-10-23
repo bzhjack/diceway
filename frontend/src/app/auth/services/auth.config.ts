@@ -17,8 +17,8 @@ export const googleAuthConfig: AuthConfig = {
   requestAccessToken: true,
   scope: 'openid profile email',
   showDebugInformation: true, // Active les logs
-  strictDiscoveryDocumentValidation: true,
-  skipIssuerCheck: false,
+  strictDiscoveryDocumentValidation: false,
+  skipIssuerCheck: true,
   disableAtHashCheck: false, // Désactive la validation du at_hash
   silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
   silentRefreshTimeout: 5000,
