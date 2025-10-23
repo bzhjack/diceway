@@ -20,7 +20,7 @@ export const routes: Routes = [
   {path: 'resend/:forbidden', component: ResendComponent}, // Renvoi d'un email de confirmation suite à login
   {path: 'notice', component: NoticeComponent}, // Confirmation de création de compte
   {path: 'notice/:reset', component: NoticeComponent}, // Confirmation de reset du mot de passe
-  {path: 'reset/:token/:email', component: ResetComponent}, // Lien sur le mail de reset
+  {path: 'reset/:token', component: ResetComponent}, // Lien sur le mail de reset
   {path: 'callback/:token', component: CallbackComponent}, // Url de callback après authentification
   {path: 'notfound', component: NotfoundComponent}, // Echec à la verification du mail ou 404 standard
   {

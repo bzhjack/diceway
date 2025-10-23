@@ -52,7 +52,7 @@ export class ResetComponent implements OnDestroy {
 
   constructor() {
     const token = this.route.snapshot.paramMap.get('token');
-    const email = this.route.snapshot.paramMap.get('email');
+    const email = this.route.snapshot.queryParamMap.get('email');
     this.resetForm.patchValue({
       token,
       email
