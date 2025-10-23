@@ -6,8 +6,7 @@ import { provideOAuthClient } from 'angular-oauth2-oidc';
 import { routes } from './app.routes';
 import { authTokenInterceptor } from './auth/auth.interceptor';
 import {providePrimeNG} from 'primeng/config';
-import Aura from '@primeuix/themes/aura';
-
+import Lara from '@primeuix/themes/lara'
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
@@ -15,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideOAuthClient(),
     providePrimeNG({
       theme: {
-        preset: Aura
+        preset: Lara
       }
     })
   ]
