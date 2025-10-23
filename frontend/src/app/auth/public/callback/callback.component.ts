@@ -2,7 +2,7 @@ import {Component, inject, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {InlineSVGModule} from 'ng-inline-svg-2';
 import {ProgressBarModule} from 'primeng/progressbar';
-import {AuthService} from '../../auth.service';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
     selector: 'app-callback',

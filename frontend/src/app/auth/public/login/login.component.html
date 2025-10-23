@@ -25,7 +25,7 @@
       </p-inputGroup>
       @if (messages.length > 0) {
         @for (message of messages; track message) {
-          <p-message>{{message}}</p-message>
+          <p-message severity="error">{{message}}</p-message>
         }
       }
       <div class="flex justify-between">
