@@ -8,6 +8,7 @@ import {WelcomeComponent} from './auth/public/welcome/welcome.component';
 import {ResendComponent} from './auth/public/resend/resend.component';
 import {NoticeComponent} from './auth/public/notice/notice.component';
 import {NotfoundComponent} from './auth/public/notfound/notfound.component';
+import {authGuard} from './auth/auth.guard';
 
 export const routes: Routes = [
   // Public route
@@ -26,7 +27,8 @@ export const routes: Routes = [
   {
     path: 'profile',
     loadComponent: () => import('./auth/profile.component').then(m => m.ProfileComponent),
+    canActivate: [authGuard],
   },
-  {path: '', redirectTo: 'login', pathMatch: 'full'},
+  {path: '', redirectTo: 'profile', pathMatch: 'full'},
   {path: '**', redirectTo: 'login'},
 ];
