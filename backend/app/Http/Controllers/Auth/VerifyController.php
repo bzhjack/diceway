@@ -34,11 +34,13 @@ class VerifyController extends Controller
     {
         $user = User::find($request->id);
         if (!$user || $request->route('id') != $user->getKey()) {
-            return redirect('/notfound');
+            $frontend = rtrim((string) config('app.frontend_url', 'http://localhost:4200'), '/');
+            return redirect($frontend . '/notfound');
         }
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
         }
-        return redirect('/welcome');
+        $frontend = rtrim((string) config('app.frontend_url', 'http://localhost:4200'), '/');
+        return redirect($frontend . '/welcome');
     }
 }

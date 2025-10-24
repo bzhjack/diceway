@@ -23,11 +23,15 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
+            $frontend = rtrim((string) config('app.frontend_url', 'http://localhost:4200'), '/');
+            // We send users to the frontend first; the SPA can then redirect to the signed backend URL passed as a query param
+            $frontendVerifyUrl = $frontend . '/verify-email?url=' . urlencode($url);
+
             return (new MailMessage)
                 ->subject('Verification de l\'adresse mail')
                 ->greeting('Bienvenue !!!')
                 ->line('Veuillez cliquer sur le bouton ci-dessous pour vérifier votre adresse e-mail.')
-                ->action('Verifier l\'adresse mail', $url);
+                ->action('Verifier l\'adresse mail', $frontendVerifyUrl);
         });
 
         ResetPassword::toMailUsing(function (object $notifiable, string $token) {
