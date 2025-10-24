@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {UserModel, UserStorageModel} from './user.model';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
@@ -9,16 +9,19 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class UserService {
+  private http = inject(HttpClient);
+  private router = inject(Router);
+
   private currentUser: any = null;
   private sessionStorageKeyName = 'diceway-session';
   private userEvents = new BehaviorSubject<UserModel | undefined>(undefined);
   public user$ = this.userEvents.asObservable();
   private userToken: string | null = null;
 
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-  ) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
     this.retrieveUser();
   }
 

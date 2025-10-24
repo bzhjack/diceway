@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
@@ -21,6 +21,7 @@ import { AuthService } from './services/auth.service';
           </div>
         </div>
 
+
         @if (me) {
           <div class="server">
             <h3>Données côté serveur</h3>
@@ -29,11 +30,21 @@ import { AuthService } from './services/auth.service';
         }
       </div>
     }
+    <div class="actions" style="margin-top:16px;">
+      <button type="button" (click)="auth.logout()">Se déconnecter</button>
+    </div>
+
   `,
 })
 export class ProfileComponent implements OnInit {
+  auth = inject(AuthService);
+  private http = inject(HttpClient);
+
   me: any;
-  constructor(public auth: AuthService, private http: HttpClient) {}
+
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit(): void {
     // Fetch from protected backend endpoint to verify Sanctum token works
