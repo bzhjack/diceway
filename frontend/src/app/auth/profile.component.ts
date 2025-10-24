@@ -2,6 +2,7 @@ import {Component, inject, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {HttpClient} from '@angular/common/http';
 import {AuthService} from './services/auth.service';
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-profile',
@@ -48,7 +49,9 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     // Fetch from protected backend endpoint to verify Sanctum token works
-    this.http.get('http://localhost:8080/api/me').subscribe({
+    const apiBase = environment.apiBase;
+    const url = apiBase ? `${apiBase}/api/me` : '/api/me';
+    this.http.get(url).subscribe({
       next: (res) => (this.me = res),
       error: () => (this.me = { error: 'Unable to load /api/me' }),
     });
