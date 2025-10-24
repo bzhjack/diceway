@@ -1,5 +1,5 @@
 import {CommonModule} from '@angular/common';
-import { Component, inject } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {ActivatedRoute, RouterModule} from '@angular/router';
 import {InlineSVGModule} from 'ng-inline-svg-2';
 import {ButtonModule} from 'primeng/button';

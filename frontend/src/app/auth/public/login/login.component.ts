@@ -11,7 +11,7 @@ import {ProgressBar} from 'primeng/progressbar';
 import {AuthService} from '../../services/auth.service';
 import {InlineSVGDirective} from 'ng-inline-svg-2';
 import {InputText} from 'primeng/inputtext';
-import { finalize } from 'rxjs/operators';
+import {finalize} from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',

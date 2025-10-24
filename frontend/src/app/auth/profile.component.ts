@@ -1,7 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { AuthService } from './services/auth.service';
+import {Component, inject, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {HttpClient} from '@angular/common/http';
+import {AuthService} from './services/auth.service';
 
 @Component({
   selector: 'app-profile',
