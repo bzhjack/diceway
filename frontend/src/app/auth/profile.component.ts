@@ -12,11 +12,11 @@ import { AuthService } from './services/auth.service';
       <div class="profile">
         <h2>Mon profil</h2>
         <div class="user-info">
-          @if (user?.picture) {
-            <img [src]="user.picture" alt="Avatar" width="96" height="96" style="border-radius:50%" />
+          @if (user?.avatar) {
+            <img [src]="user.avatar" alt="Avatar" width="96" height="96" style="border-radius:50%" />
           }
           <div class="details">
-            <div><strong>{{ user?.name || (user?.given_name + ' ' + user?.family_name) }}</strong></div>
+            <div><strong>{{ user?.name }}</strong></div>
             <div style="font-size: 0.9em; color: #666">{{ user?.email }}</div>
           </div>
         </div>
