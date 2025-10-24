@@ -24,17 +24,28 @@ export class AuthService {
   private configure(config: AuthConfig) {
     this.oauth.configure(config);
     this.oauth.setupAutomaticSilentRefresh();
-    // Try to login from URL on redirect and populate profile
+
+    // ✅ On ne vide plus le user en cas de refresh tant qu’on n’a pas essayé de le restaurer
     this.oauth.loadDiscoveryDocumentAndTryLogin().then(async (loggedIn) => {
-      if (!loggedIn) {
-        // If not logged in via OAuth, try to initialize from local backend token
+      if (loggedIn && this.oauth.hasValidIdToken()) {
+        // Si on est connecté via OAuth → on restaure le profil Google
+        this.updateUserFromClaims();
+        await this.loadUserProfileIfNeeded();
+        return;
+      }
+
+      // ✅ Sinon, on tente de restaurer le profil depuis le token local
+      const localToken = this.getLocalApiToken();
+      if (localToken) {
         await this.initProfileFromLocalToken();
         return;
       }
-      this.updateUserFromClaims();
-      await this.loadUserProfileIfNeeded();
+
+      // Si rien de valide → on reste déconnecté
+      this.userSubject.next(null);
     });
   }
+
 
   login(): void {
     // Prevent confusing Google 400 errors by ensuring Client ID and Redirect URI are set correctly
