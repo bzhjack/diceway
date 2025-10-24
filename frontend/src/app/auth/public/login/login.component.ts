@@ -66,6 +66,11 @@ export class LoginComponent {
         next: (data: any) => {
           if (data?.token) {
             sessionStorage.setItem('local_token', data.token);
+            // Initialize in-memory profile for credentials-based login
+            this.auth.initProfileFromLocalToken().finally(() => {
+              this.router.navigate(['/profile']);
+            });
+            return;
           }
           this.router.navigate(['/profile']);
         },

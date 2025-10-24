@@ -6,6 +6,7 @@ import {BehaviorSubject, firstValueFrom, Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {filter, take, timeout as rxTimeout} from 'rxjs/operators';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {UserModel} from './user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -13,15 +14,7 @@ export class AuthService {
   private readonly router = inject(Router);
 
   // In-memory user profile derived from id_token or userinfo endpoint
-  private readonly userSubject = new BehaviorSubject<{
-    id?: string;
-    name?: string;
-    email?: string;
-    avatar?: string;
-    email_verified_at?: string | null;
-    created_at?: string | null;
-    updated_at?: string | null;
-  } | null>(null);
+  private readonly userSubject = new BehaviorSubject<UserModel | null>(null);
   readonly user$ = this.userSubject.asObservable();
 
   constructor() {
@@ -34,7 +27,8 @@ export class AuthService {
     // Try to login from URL on redirect and populate profile
     this.oauth.loadDiscoveryDocumentAndTryLogin().then(async (loggedIn) => {
       if (!loggedIn) {
-        // optionally trigger login on app load
+        // If not logged in via OAuth, try to initialize from local backend token
+        await this.initProfileFromLocalToken();
         return;
       }
       this.updateUserFromClaims();
@@ -93,8 +87,9 @@ export class AuthService {
       }
     } catch {}
 
-    // Clear local app token
+    // Clear local app token and in-memory user
     sessionStorage.removeItem('local_token');
+    this.userSubject.next(null);
 
     // OAuth logout if applicable
     try { this.oauth.logOut(); } catch {}
@@ -163,6 +158,32 @@ export class AuthService {
     });
   }
 
+  // Initialize in-memory user profile when using local (credentials-based) login
+  async initProfileFromLocalToken(): Promise<void> {
+    const token = this.getLocalApiToken();
+    if (!token) {
+      this.userSubject.next(null);
+      return;
+    }
+    try {
+      const data: any = await firstValueFrom(this.profile(token));
+      const profile: UserModel = {
+        id: data?.id,
+        name: data?.name,
+        email: data?.email,
+        avatar: data?.avatar,
+        email_verified_at: data?.email_verified_at ?? null,
+        created_at: data?.created_at ?? null,
+        updated_at: data?.updated_at ?? null,
+      };
+      this.userSubject.next(profile);
+    } catch (err) {
+      console.warn('[Auth] Failed to load profile from local token', err);
+      sessionStorage.removeItem('local_token');
+      this.userSubject.next(null);
+    }
+  }
+
   // Populate user profile from ID token claims
   private updateUserFromClaims(): void {
     const claims: any = this.oauth.getIdentityClaims();
@@ -175,15 +196,7 @@ export class AuthService {
       name: claims['name'],
       email: claims['email'],
       avatar: claims['picture'],
-    } as {
-      id?: string;
-      name?: string;
-      email?: string;
-      avatar?: string;
-      email_verified_at?: string | null;
-      created_at?: string | null;
-      updated_at?: string | null;
-    };
+    } as UserModel;
 
     this.userSubject.next(profile);
   }
