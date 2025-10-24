@@ -2,9 +2,10 @@ import {inject, Injectable} from '@angular/core';
 import {AuthConfig, OAuthService} from 'angular-oauth2-oidc';
 import {googleAuthConfig} from './auth.config';
 import {Router} from '@angular/router';
-import {BehaviorSubject, firstValueFrom} from 'rxjs';
+import {BehaviorSubject, firstValueFrom, Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {filter, take, timeout as rxTimeout} from 'rxjs/operators';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -78,9 +79,28 @@ export class AuthService {
     }
   }
 
+  private readonly http = inject(HttpClient);
+
   logout(): void {
-    this.oauth.logOut();
+    try {
+      const current = this.userSubject.getValue();
+      if (current && current.id) {
+        // Best-effort server-side token invalidation
+        this.http.post(`${environment.apiBase}/api/auth/logout`, { id: current.id }).subscribe({
+          next: () => console.log('[Auth] Server tokens cleared'),
+          error: () => console.warn('[Auth] Could not clear server tokens'),
+        });
+      }
+    } catch {}
+
+    // Clear local app token
     sessionStorage.removeItem('local_token');
+
+    // OAuth logout if applicable
+    try { this.oauth.logOut(); } catch {}
+
+    // Navigate to login for a clear UX
+    this.router.navigate(['/login']);
   }
 
   getIdToken(): string | null {
@@ -101,6 +121,46 @@ export class AuthService {
 
   getLocalApiToken(): string | null {
     return sessionStorage.getItem('local_token');
+  }
+
+  // ======= Credentials-based backend auth (migrated from UserService) =======
+  loginWithCredentials(credentials: { email: string; password: string }): Observable<any> {
+    return this.http.post(`${environment.apiBase}/api/auth/login`, {
+      email: credentials.email,
+      password: credentials.password,
+    });
+  }
+
+  profile(token: string): Observable<any> {
+    return this.http.get(`${environment.apiBase}/api/auth/profile`, {
+      headers: new HttpHeaders().set('Authorization', `Bearer ${token}`),
+    });
+  }
+
+  register(credentials: { name: string; email: string; password: string; password_confirmation: string }): Observable<any> {
+    return this.http.post(`${environment.apiBase}/api/auth/register`, {
+      name: credentials.name,
+      email: credentials.email,
+      password: credentials.password,
+      password_confirmation: credentials.password_confirmation,
+    });
+  }
+
+  sendMail(email: string): Observable<any> {
+    return this.http.post(`${environment.apiBase}/api/auth/email/send`, { email });
+  }
+
+  forgottenPassword(email: string): Observable<any> {
+    return this.http.post(`${environment.apiBase}/api/auth/password/forgotten`, { email });
+  }
+
+  resetPassord(credentials: { token: string; email: string; password: string; password_confirmation: string }): Observable<any> { // keep existing name for compatibility
+    return this.http.post(`${environment.apiBase}/api/auth/password/reset`, {
+      token: credentials.token,
+      email: credentials.email,
+      password: credentials.password,
+      password_confirmation: credentials.password_confirmation,
+    });
   }
 
   // Populate user profile from ID token claims

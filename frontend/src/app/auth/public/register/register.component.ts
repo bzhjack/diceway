@@ -17,7 +17,7 @@ import {InputGroupAddonModule} from 'primeng/inputgroupaddon';
 import {InputTextModule} from 'primeng/inputtext';
 import {ProgressBarModule} from 'primeng/progressbar';
 import {Subscription} from 'rxjs';
-import {UserService} from '../../services/user.service';
+import {AuthService} from '../../services/auth.service';
 import {Message} from 'primeng/message';
 
 
@@ -42,7 +42,7 @@ import {Message} from 'primeng/message';
 })
 export class RegisterComponent implements OnDestroy {
   fb = inject(FormBuilder);
-  us = inject(UserService);
+  us = inject(AuthService);
   router = inject(Router);
   pending = false;
   sub?: Subscription;
@@ -58,7 +58,7 @@ export class RegisterComponent implements OnDestroy {
     return password === confirm ? null : {matchingError: true};
   }
 
-  registerForm = this.fb.group({
+  registerForm = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(5)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],

@@ -11,7 +11,6 @@ import {ProgressBar} from 'primeng/progressbar';
 import {AuthService} from '../../services/auth.service';
 import {InlineSVGDirective} from 'ng-inline-svg-2';
 import {InputText} from 'primeng/inputtext';
-import {UserService} from '../../services/user.service';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -36,7 +35,6 @@ export class LoginComponent {
   fb = inject(FormBuilder);
   auth: AuthService = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly userService = inject(UserService);
   pending: boolean = false;
   messages: string[] = [];
   loginForm: FormGroup;
@@ -61,8 +59,8 @@ export class LoginComponent {
     const { email, password } = this.loginForm.value as { email: string; password: string };
 
     this.pending = true;
-    this.userService
-      .login({ email, password })
+    this.auth
+      .loginWithCredentials({ email, password })
       .pipe(finalize(() => (this.pending = false)))
       .subscribe({
         next: (data: any) => {
