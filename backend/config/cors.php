@@ -7,28 +7,30 @@ return [
     | Cross-Origin Resource Sharing (CORS) Configuration
     |--------------------------------------------------------------------------
     |
-    | Here you may configure your settings for cross-origin resource sharing
-    | or "CORS". This determines what cross-origin operations may execute
-    | in web browsers. You are free to adjust these settings as needed.
-    |
-    | To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+    | Configure CORS for API endpoints. In production, restrict origins to the
+    | public frontend domain and allow credentials for cookie-based auth flows.
     |
     */
 
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
+    // Allow all methods for API
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    // Restrict to the public site origin
+    'allowed_origins' => ['https://diceway.com', 'https://www.diceway.com'],
 
     'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['*'],
+    // Typical headers sent by the SPA
+    'allowed_headers' => ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
 
     'exposed_headers' => [],
 
-    'max_age' => 0,
+    // Cache preflight for 1 day
+    'max_age' => 86400,
 
-    'supports_credentials' => false,
+    // Allow credentials (needed for some flows like Sanctum or cookie-based endpoints)
+    'supports_credentials' => true,
 
 ];
