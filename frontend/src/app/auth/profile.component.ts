@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { AuthService } from './services/auth.service';
+import {Component, inject, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {HttpClient} from '@angular/common/http';
+import {AuthService} from './services/auth.service';
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-profile',
@@ -12,14 +13,15 @@ import { AuthService } from './services/auth.service';
       <div class="profile">
         <h2>Mon profil</h2>
         <div class="user-info">
-          @if (user?.picture) {
-            <img [src]="user.picture" alt="Avatar" width="96" height="96" style="border-radius:50%" />
+          @if (user?.avatar) {
+            <img [src]="user.avatar" alt="Avatar" width="96" height="96" style="border-radius:50%" />
           }
           <div class="details">
-            <div><strong>{{ user?.name || (user?.given_name + ' ' + user?.family_name) }}</strong></div>
+            <div><strong>{{ user?.name }}</strong></div>
             <div style="font-size: 0.9em; color: #666">{{ user?.email }}</div>
           </div>
         </div>
+
 
         @if (me) {
           <div class="server">
@@ -29,15 +31,27 @@ import { AuthService } from './services/auth.service';
         }
       </div>
     }
+    <div class="actions" style="margin-top:16px;">
+      <button type="button" (click)="auth.logout()">Se déconnecter</button>
+    </div>
+
   `,
 })
 export class ProfileComponent implements OnInit {
+  auth = inject(AuthService);
+  private http = inject(HttpClient);
+
   me: any;
-  constructor(public auth: AuthService, private http: HttpClient) {}
+
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit(): void {
     // Fetch from protected backend endpoint to verify Sanctum token works
-    this.http.get('http://localhost:8080/api/me').subscribe({
+    const apiBase = environment.apiBase;
+    const url = apiBase ? `${apiBase}/api/me` : '/api/me';
+    this.http.get(url).subscribe({
       next: (res) => (this.me = res),
       error: () => (this.me = { error: 'Unable to load /api/me' }),
     });

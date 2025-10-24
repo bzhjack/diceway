@@ -2,7 +2,7 @@ import {Component, inject, OnDestroy} from '@angular/core';
 import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router, RouterModule} from '@angular/router';
 import {Subscription} from 'rxjs';
-import {UserService} from '../../services/user.service';
+import {AuthService} from '../../services/auth.service';
 import {CardModule} from 'primeng/card';
 import {CommonModule} from '@angular/common';
 import {InputGroupModule} from 'primeng/inputgroup';
@@ -34,7 +34,7 @@ import {Message} from 'primeng/message';
 })
 export class ResendComponent implements OnDestroy {
   fb = inject(FormBuilder);
-  us = inject(UserService);
+  us = inject(AuthService);
   router = inject(Router);
   route = inject(ActivatedRoute);
   messages: string[] = [];

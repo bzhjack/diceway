@@ -1,26 +1,23 @@
-import {inject, Injectable} from '@angular/core';
-import {AuthConfig, OAuthService} from 'angular-oauth2-oidc';
-import {googleAuthConfig} from './auth.config';
-import {Router} from '@angular/router';
-import {BehaviorSubject, firstValueFrom} from 'rxjs';
-import {environment} from '../../../environments/environment';
-import {filter, take, timeout as rxTimeout} from 'rxjs/operators';
+import { inject, Injectable } from '@angular/core';
+import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
+import { googleAuthConfig } from './auth.config';
+import { Router } from '@angular/router';
+import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { filter, take, timeout as rxTimeout } from 'rxjs/operators';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { UserModel } from './user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly oauth = inject(OAuthService);
   private readonly router = inject(Router);
+  private readonly http = inject(HttpClient);
 
-  // In-memory user profile derived from id_token or userinfo endpoint
-  private readonly userSubject = new BehaviorSubject<{
-    sub?: string;
-    email?: string;
-    email_verified?: boolean;
-    name?: string;
-    given_name?: string;
-    family_name?: string;
-    picture?: string;
-  } | null>(null);
+  // ✅ on restaure le user depuis sessionStorage au démarrage
+  private readonly userSubject = new BehaviorSubject<UserModel | null>(
+    this.restoreUserFromStorage()
+  );
   readonly user$ = this.userSubject.asObservable();
 
   constructor() {
@@ -30,34 +27,26 @@ export class AuthService {
   private configure(config: AuthConfig) {
     this.oauth.configure(config);
     this.oauth.setupAutomaticSilentRefresh();
-    // Try to login from URL on redirect and populate profile
+
     this.oauth.loadDiscoveryDocumentAndTryLogin().then(async (loggedIn) => {
-      if (!loggedIn) {
-        // optionally trigger login on app load
+      if (loggedIn && this.oauth.hasValidIdToken()) {
+        this.updateUserFromClaims();
+        await this.loadUserProfileIfNeeded();
         return;
       }
-      this.updateUserFromClaims();
-      await this.loadUserProfileIfNeeded();
+
+      const localToken = this.getLocalApiToken();
+      if (localToken) {
+        await this.initProfileFromLocalToken();
+        return;
+      }
+
+      this.userSubject.next(null);
+      sessionStorage.removeItem('user_profile'); // ✅ on nettoie le cache
     });
   }
 
   login(): void {
-    // Prevent confusing Google 400 errors by ensuring Client ID and Redirect URI are set correctly
-    const clientId = (this.oauth as any).clientId || (googleAuthConfig as any).clientId;
-    const redirectUri = (googleAuthConfig as any).redirectUri;
-
-    if (!clientId || typeof clientId !== 'string') {
-      console.error('[OAuth] Google Client ID is not configured. Configure environment.googleClientId in environment.ts.');
-      alert('Configuration OAuth invalide: Google Client ID manquant. Veuillez configurer environment.googleClientId et recharger.');
-      return;
-    }
-
-    if (!redirectUri || typeof redirectUri !== 'string') {
-      console.error('[OAuth] Redirect URI is not configured.');
-      alert('Configuration OAuth invalide: Redirect URI manquant.');
-      return;
-    }
-
     this.oauth.initLoginFlow();
   }
 
@@ -79,8 +68,18 @@ export class AuthService {
   }
 
   logout(): void {
-    this.oauth.logOut();
+    try {
+      const current = this.userSubject.getValue();
+      if (current && current.id) {
+        this.http.post(`${environment.apiBase}/api/auth/logout`, { id: current.id }).subscribe();
+      }
+    } catch {}
+
     sessionStorage.removeItem('local_token');
+    sessionStorage.removeItem('user_profile'); // ✅ on efface le cache du profil
+    this.userSubject.next(null);
+    try { this.oauth.logOut(); } catch {}
+    this.router.navigate(['/login']);
   }
 
   getIdToken(): string | null {
@@ -103,40 +102,79 @@ export class AuthService {
     return sessionStorage.getItem('local_token');
   }
 
-  // Populate user profile from ID token claims
+  loginWithCredentials(credentials: { email: string; password: string }): Observable<any> {
+    return this.http.post(`${environment.apiBase}/api/auth/login`, credentials);
+  }
+
+  profile(token: string): Observable<any> {
+    return this.http.get(`${environment.apiBase}/api/auth/profile`, {
+      headers: new HttpHeaders().set('Authorization', `Bearer ${token}`),
+    });
+  }
+
+  register(credentials: { name: string; email: string; password: string; password_confirmation: string }): Observable<any> {
+    return this.http.post(`${environment.apiBase}/api/auth/register`, credentials);
+  }
+
+  sendMail(email: string): Observable<any> {
+    return this.http.post(`${environment.apiBase}/api/auth/email/send`, { email });
+  }
+
+  forgottenPassword(email: string): Observable<any> {
+    return this.http.post(`${environment.apiBase}/api/auth/password/forgotten`, { email });
+  }
+
+  resetPassord(credentials: { token: string; email: string; password: string; password_confirmation: string }): Observable<any> {
+    return this.http.post(`${environment.apiBase}/api/auth/password/reset`, credentials);
+  }
+
+  async initProfileFromLocalToken(): Promise<void> {
+    const token = this.getLocalApiToken();
+    if (!token) {
+      this.userSubject.next(null);
+      sessionStorage.removeItem('user_profile');
+      return;
+    }
+    try {
+      const data: any = await firstValueFrom(this.profile(token));
+      const profile: UserModel = {
+        id: data?.id,
+        name: data?.name,
+        email: data?.email,
+        avatar: data?.avatar,
+        email_verified_at: data?.email_verified_at ?? null,
+        created_at: data?.created_at ?? null,
+        updated_at: data?.updated_at ?? null,
+      };
+      this.setUser(profile); // ✅ on passe par setUser
+    } catch (err) {
+      console.warn('[Auth] Failed to load profile from local token', err);
+      sessionStorage.removeItem('local_token');
+      sessionStorage.removeItem('user_profile');
+      this.userSubject.next(null);
+    }
+  }
+
   private updateUserFromClaims(): void {
     const claims: any = this.oauth.getIdentityClaims();
     if (!claims || typeof claims !== 'object') {
       this.userSubject.next(null);
+      sessionStorage.removeItem('user_profile');
       return;
     }
 
     const profile = {
-      sub: claims['sub'],
-      email: claims['email'],
-      email_verified: claims['email_verified'],
       name: claims['name'],
-      given_name: claims['given_name'],
-      family_name: claims['family_name'],
-      picture: claims['picture'],
-    } as {
-      sub?: string;
-      email?: string;
-      email_verified?: boolean;
-      name?: string;
-      given_name?: string;
-      family_name?: string;
-      picture?: string;
-    };
+      email: claims['email'],
+      avatar: claims['picture'],
+    } as UserModel;
 
-    this.userSubject.next(profile);
+    this.setUser(profile); // ✅ au lieu de next direct
   }
 
-  // Enrich the profile by calling the userinfo endpoint when needed
   private async loadUserProfileIfNeeded(): Promise<void> {
     const current = this.userSubject.getValue() || {};
-    // If we already have basic fields, we can skip calling userinfo
-    const needsMore = !current.email || !current.name || !current.picture;
+    const needsMore = !current.email || !current.name || !current.avatar;
     if (!needsMore) return;
 
     try {
@@ -144,25 +182,17 @@ export class AuthService {
       if (info && typeof info === 'object') {
         const enriched = {
           ...current,
-          sub: info['sub'] ?? current['sub'],
-          email: info['email'] ?? current['email'],
-          email_verified: info['email_verified'] ?? current['email_verified'],
           name: info['name'] ?? current['name'],
-          given_name: info['given_name'] ?? current['given_name'],
-          family_name: info['family_name'] ?? current['family_name'],
-          picture: info['picture'] ?? current['picture'],
+          email: info['email'] ?? current['email'],
+          avatar: info['picture'] ?? current['avatar'],
         };
-        this.userSubject.next(enriched);
+        this.setUser(enriched); // ✅
       }
-    } catch {
-      // Ignore userinfo errors; we still have id_token claims
-    }
+    } catch {}
   }
 
   private async waitForValidIdToken(timeoutMs = 7000): Promise<void> {
-    // If token already valid, nothing to wait for
     if (this.oauth.hasValidIdToken()) return;
-
     try {
       await firstValueFrom(
         this.oauth.events.pipe(
@@ -175,13 +205,10 @@ export class AuthService {
           rxTimeout(timeoutMs)
         )
       );
-    } catch (err) {
-      // If timeout occurs, proceed; getIdToken may still be available shortly after
-    }
+    } catch {}
   }
 
   async exchangeWithBackend(idToken: string): Promise<void> {
-    // Build API URL from environment; use relative path in dev for proxy
     const apiBase = environment.apiBase || '';
     const url = apiBase ? `${apiBase}/api/auth/google/id-token` : `/api/auth/google/id-token`;
 
@@ -195,15 +222,30 @@ export class AuthService {
       credentials: 'include',
     });
 
-    if (!res.ok) {
-      const msg = await res.text();
-      throw new Error(`Backend auth failed: ${msg}`);
-    }
+    if (!res.ok) throw new Error(await res.text());
 
     const data = await res.json();
-    // Save Sanctum token from backend
     if (data?.token) {
       sessionStorage.setItem('local_token', data.token);
+    }
+  }
+
+  // ✅ fonctions utilitaires de persistance du user
+  private setUser(user: UserModel | null): void {
+    this.userSubject.next(user);
+    if (user) {
+      sessionStorage.setItem('user_profile', JSON.stringify(user));
+    } else {
+      sessionStorage.removeItem('user_profile');
+    }
+  }
+
+  private restoreUserFromStorage(): UserModel | null {
+    try {
+      const raw = sessionStorage.getItem('user_profile');
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
     }
   }
 }

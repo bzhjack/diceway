@@ -9,7 +9,7 @@ import {InputGroupModule} from 'primeng/inputgroup';
 import {InputGroupAddonModule} from 'primeng/inputgroupaddon';
 import {InputTextModule} from 'primeng/inputtext';
 import {ProgressBarModule} from 'primeng/progressbar';
-import {UserService} from '../../services/user.service';
+import {AuthService} from '../../services/auth.service';
 import {Subscription} from 'rxjs';
 import {RegisterComponent} from '../register/register.component';
 import {Message} from 'primeng/message';
@@ -35,7 +35,7 @@ import {Message} from 'primeng/message';
 })
 export class ResetComponent implements OnDestroy {
   fb = inject(FormBuilder);
-  us = inject(UserService);
+  us = inject(AuthService);
   router = inject(Router);
   route = inject(ActivatedRoute);
 
@@ -43,7 +43,7 @@ export class ResetComponent implements OnDestroy {
   sub?: Subscription;
   messages: string[] = [];
 
-  resetForm = this.fb.group({
+  resetForm = this.fb.nonNullable.group({
     token: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
@@ -54,8 +54,8 @@ export class ResetComponent implements OnDestroy {
     const token = this.route.snapshot.paramMap.get('token');
     const email = this.route.snapshot.queryParamMap.get('email');
     this.resetForm.patchValue({
-      token,
-      email
+      token: token ?? '',
+      email: email ?? ''
     });
   }
 

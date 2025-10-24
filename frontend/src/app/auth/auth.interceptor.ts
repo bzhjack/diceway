@@ -1,5 +1,5 @@
-import { HttpInterceptorFn } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import {HttpInterceptorFn} from '@angular/common/http';
+import {environment} from '../../environments/environment';
 
 // Minimal interceptor to attach Laravel Sanctum API token from localStorage
 export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {

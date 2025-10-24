@@ -11,7 +11,7 @@ import {InputTextModule} from 'primeng/inputtext';
 import {Subscription} from 'rxjs';
 import {ProgressBarModule} from 'primeng/progressbar';
 import {Message} from 'primeng/message';
-import {UserService} from '../../services/user.service';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-forgotten',
@@ -35,7 +35,7 @@ import {UserService} from '../../services/user.service';
 export class ForgottenComponent implements OnDestroy {
   router = inject(Router)
   fb = inject(FormBuilder);
-  userService = inject(UserService);
+  userService = inject(AuthService);
   messages: string[] = [];
   pending = false;
   forbidden = false;

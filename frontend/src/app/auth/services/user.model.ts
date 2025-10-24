@@ -1,11 +1,9 @@
 export interface UserModel {
-  id: string;
-  name: string;
-  avatar: string;
-  email: string;
-}
-
-export interface UserStorageModel {
-  profile: any;
-  token: string;
+  id?: string;
+  name?: string;
+  email?: string;
+  avatar?: string;
+  email_verified_at?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
 }
