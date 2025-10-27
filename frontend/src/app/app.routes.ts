@@ -9,6 +9,7 @@ import {ResendComponent} from './auth/public/resend/resend.component';
 import {NoticeComponent} from './auth/public/notice/notice.component';
 import {NotfoundComponent} from './auth/public/notfound/notfound.component';
 import {authGuard} from './auth/auth.guard';
+import {Home} from './home/home';
 
 export const routes: Routes = [
   // Public route
@@ -24,11 +25,11 @@ export const routes: Routes = [
   {path: 'reset/:token', component: ResetComponent}, // Lien sur le mail de reset
   {path: 'auth/callback', component: CallbackComponent}, // Url de callback après authentification
   {path: 'notfound', component: NotfoundComponent}, // Echec à la verification du mail ou 404 standard
+  {path: '', component: Home, canActivate: [authGuard]},
+  {path: '**', redirectTo: '/'},
   {
     path: 'profile',
     loadComponent: () => import('./auth/profile.component').then(m => m.ProfileComponent),
     canActivate: [authGuard],
-  },
-  {path: '', redirectTo: 'profile', pathMatch: 'full'},
-  {path: '**', redirectTo: 'login'},
+  }
 ];

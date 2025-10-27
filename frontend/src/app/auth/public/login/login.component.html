@@ -2,30 +2,33 @@
   <div class="dw_banner" [inlineSVG]="'/assets/banner.svg'"></div>
   <p-card class="relative" header="S'identifier">
     <form [formGroup]="loginForm" class="flex flex-col gap-4">
-
-      <p-inputGroup class="relative">
-        <p-inputGroupAddon>
-          <i class="pi pi-user"></i>
-        </p-inputGroupAddon>
-        <input formControlName="email" pInputText placeholder="Adresse mail" autocomplete="username"/>
+      <div>
+        <p-inputGroup class="relative">
+          <p-inputGroupAddon>
+            <i class="pi pi-user"></i>
+          </p-inputGroupAddon>
+          <input formControlName="email" pInputText placeholder="Adresse mail" autocomplete="username"/>
+        </p-inputGroup>
         @if (onError('email')) {
-          <small class="dw_error">Adresse mail non valide</small>
+          <p-message severity="error" size="small" variant="simple">Adresse mail non valide</p-message>
         }
-      </p-inputGroup>
-
-      <p-inputGroup class="relative">
-        <p-inputGroupAddon>
-          <i class="pi pi-lock"></i>
-        </p-inputGroupAddon>
-        <input formControlName="password" type="password" pInputText placeholder="Mot de passe"
-               autocomplete="current-password"/>
+      </div>
+      <div>
+        <p-inputGroup class="relative">
+          <p-inputGroupAddon>
+            <i class="pi pi-lock"></i>
+          </p-inputGroupAddon>
+          <input formControlName="password" type="password" pInputText placeholder="Mot de passe"
+                 autocomplete="current-password"/>
+        </p-inputGroup>
         @if (onError('password')) {
-          <small class="dw_error">Minimum 8 caractères</small>
+          <p-message severity="error" size="small" variant="simple">Minimum 8 caractères</p-message>
         }
-      </p-inputGroup>
+      </div>
+
       @if (messages.length > 0) {
         @for (message of messages; track message) {
-          <p-message severity="error">{{message}}</p-message>
+          <p-message severity="error" variant="outlined" size="small">{{ message }}</p-message>
         }
       }
       <div class="flex justify-between">
