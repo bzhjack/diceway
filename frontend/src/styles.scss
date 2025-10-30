@@ -18,18 +18,3 @@
   font-display: swap; /* améliore le chargement */
 }
 
-@layer base {
-  html {
-    @apply bg-white text-slate-900;
-    font-size: 14px;
-    font-family: Inter, serif;
-    font-feature-settings: "cv02","cv03","cv04","cv11";
-    line-height: normal;
-  }
-  html.dark {
-    @apply bg-neutral-950 text-neutral-100;
-    color-scheme: dark;
-  }
-  body { @apply min-h-screen; }
-}
-
