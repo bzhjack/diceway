@@ -19,7 +19,7 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: DwPreset,
         options: {
-          darkModeSelector: 'none', // Désactive le basculement automatique
+          darkModeSelector: false, // Désactive le basculement automatique
         },
       },
     })

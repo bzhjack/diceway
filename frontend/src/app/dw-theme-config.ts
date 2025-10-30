@@ -2,125 +2,89 @@ import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
 
 export const DwPreset = definePreset(Aura, {
-  semantic: {
-    // Couleur principale (utilisée pour les boutons, liens, etc.)
-    primary: {
-      50:  '#1a202c',  // Très sombre
-      100: '#2d3748',  // Un peu plus clair
-      200: '#4a5568',
-      300: '#718096',
-      400: '#a0aec0',
-      500: '#cbd5e0',  // Couleur principale "claire" pour le contraste
-      600: '#a0aec0',
-      700: '#718096',
-      800: '#4a5568',
-      900: '#2d3748',
-      950: '#1a202c',
+  // --- PRIMITIVE TOKENS ---
+  primitive: {
+    slate: {
+      50:  '#f8fafc',
+      100: '#f1f5f9',
+      200: '#e2e8f0',
+      300: '#cbd5e0',
+      400: '#94a3b8',
+      500: '#64748b',
+      600: '#475569',
+      700: '#334155',
+      800: '#1e293b',
+      900: '#0f172a',
+      950: '#020617',
     },
-
-    // Couleurs de surface (fond, cartes, etc.)
-    surface: {
-      0:   '#1a202c',  // Fond principal
-      50:  '#2d3748',  // Surface légèrement plus claire
-      100: '#4a5568',
-      200: '#718096',
-      300: '#a0aec0',
-      400: '#cbd5e0',
-      500: '#e2e8f0',
-      600: '#cbd5e0',
-      700: '#a0aec0',
-      800: '#718096',
-      900: '#4a5568',
-      950: '#2d3748',
+    blue: {
+      50:  '#eff6ff',
+      100: '#dbeafe',
+      200: '#bfdbfe',
+      300: '#93c5fd',
+      400: '#60a5fa',
+      500: '#3b82f6',
+      600: '#2563eb',
+      700: '#1d4ed8',
+      800: '#1e40af',
+      900: '#1e3a8a',
+      950: '#0f172a',
     },
-
-    // Définition des schémas de couleur (même pour light/dark)
-    colorScheme: {
-      light: {
-        primary: {
-          color: '{primary.500}',       // Texte/icônes sur fond primary
-          inverseColor: '{surface.0}',  // Texte inverse (pour les boutons)
-          hoverColor: '{primary.400}',
-          activeColor: '{primary.300}',
-        },
-        surface: {
-          0: '{surface.0}',
-          50: '{surface.50}',
-          100: '{surface.100}',
-          // ... jusqu'à 950
-        },
-        highlight: {
-          background: '{primary.500}',
-          color: '{surface.0}',
-          focusBackground: '{primary.400}',
-          focusColor: '{surface.0}',
-        },
-        formField: {
-          background: '{surface.0}',
-          color: '{surface.500}',
-          borderColor: '{surface.500}',
-          hoverBorderColor: '{primary.500}',
-          focusBorderColor: '{primary.500}',
-        },
-        focusRing: {
-          width: '2px',
-          style: 'solid',
-          color: '{primary.500}',
-          offset: '0',
-        },
-      },
-      dark: {
-        // Identique à light pour un thème sombre fixe
-        primary: {
-          color: '{primary.500}',
-          inverseColor: '{surface.0}',
-          hoverColor: '{primary.400}',
-          activeColor: '{primary.300}',
-        },
-        surface: {
-          0: '{surface.0}',
-          50: '{surface.50}',
-          // ... jusqu'à 950
-        },
-        highlight: {
-          background: '{primary.500}',
-          color: '{surface.0}',
-          focusBackground: '{primary.400}',
-          focusColor: '{surface.0}',
-        },
-        formField: {
-          background: '{surface.0}',
-          color: '{surface.500}',
-          borderColor: '{surface.500}',
-          hoverBorderColor: '{primary.500}',
-          focusBorderColor: '{primary.500}',
-        },
-      },
-    },
-
-    components: {
-      button: {
-        colorScheme: {
-          light: {
-            root: {
-              background: '{primary.500}',
-              color: '{surface.0}',
-            },
-          },
-        },
-      },
-      card: {
-        colorScheme: {
-          light: {
-            root: {
-              background: '{surface.50}',
-              color: '{surface.500}',
-            },
-          },
-        },
-      },
-    }
-
   },
+
+  // --- SEMANTIC TOKENS ---
+  semantic: {
+    primary: {
+      50:  '{blue.50}',
+      100: '{blue.100}',
+      200: '{blue.200}',
+      300: '{blue.300}',
+      400: '{blue.400}',
+      500: '{blue.500}',
+      600: '{blue.600}',
+      700: '{blue.700}',
+      800: '{blue.800}',
+      900: '{blue.900}',
+      950: '{blue.950}',
+    },
+    surface: {
+      0:   '{slate.950}',
+      50:  '{slate.900}',
+      100: '{slate.800}',
+      200: '{slate.700}',
+      300: '{slate.600}',
+      400: '{slate.500}',
+      500: '{slate.400}',
+      600: '{slate.300}',
+      700: '{slate.200}',
+      800: '{slate.100}',
+      900: '{slate.50}',
+      950: '{slate.50}',
+    },
+  },
+
+  // --- COMPONENT TOKENS ---
+  components: {
+    card: {
+      root: {
+        background: '{surface.800}',
+        color: '{surface.0}',
+        borderRadius: '1rem',
+        shadow: '0 2px 12px rgba(0,0,0,0.3)',
+      },
+      body: {
+        padding: '1.5rem',
+        gap: '1rem',
+      },
+      title: {
+        fontWeight: '600',
+        fontSize: '1.25rem',
+      },
+      subtitle: {
+        color: '{surface.300}', // c’est la seule propriété acceptée ici
+      },
+    },
+  }
+
 
 });
