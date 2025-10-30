@@ -6,8 +6,8 @@ import {provideOAuthClient} from 'angular-oauth2-oidc';
 import {routes} from './app.routes';
 import {authTokenInterceptor} from './auth/auth.interceptor';
 import {providePrimeNG} from 'primeng/config';
-import Aura from '@primeuix/themes/aura'
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
+import {DwPreset} from './dw-theme-config';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,8 +17,11 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
-        preset: Aura
-      }
+        preset: DwPreset,
+        options: {
+          darkModeSelector: 'none', // Désactive le basculement automatique
+        },
+      },
     })
   ]
 };

@@ -1,8 +1,8 @@
 .dw-panel {
   border-radius: 6px;
   padding: 4px;
-  border: 1px solid #424b57;
-  background: #1f2937;
+  border: 1px solid #2d3748;
+  background: #1a202c;
   color: rgba(255, 255, 255, 0.87);
 }
 
@@ -28,7 +28,7 @@ Not supports in Firefox and IE */
 
 /* scrollbar itself */
 ::-webkit-scrollbar-thumb {
-  background-color: #424b57;
+  background-color: #2d3748;
   border-radius: 10px;
   border-width: 4px;
 }
