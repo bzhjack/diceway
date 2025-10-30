@@ -9,7 +9,6 @@ import {Button} from 'primeng/button';
 import {Router, RouterLink} from '@angular/router';
 import {ProgressBar} from 'primeng/progressbar';
 import {AuthService} from '../../services/auth.service';
-import {InlineSVGDirective} from 'ng-inline-svg-2';
 import {InputText} from 'primeng/inputtext';
 import {finalize} from 'rxjs/operators';
 
@@ -25,7 +24,6 @@ import {finalize} from 'rxjs/operators';
     Button,
     RouterLink,
     ProgressBar,
-    InlineSVGDirective,
     InputText,
   ],
   templateUrl: './login.component.html',

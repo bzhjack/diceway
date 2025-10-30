@@ -6,7 +6,7 @@ import {provideOAuthClient} from 'angular-oauth2-oidc';
 import {routes} from './app.routes';
 import {authTokenInterceptor} from './auth/auth.interceptor';
 import {providePrimeNG} from 'primeng/config';
-import Lara from '@primeuix/themes/lara'
+import Aura from '@primeuix/themes/aura'
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
@@ -17,7 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
-        preset: Lara
+        preset: Aura
       }
     })
   ]

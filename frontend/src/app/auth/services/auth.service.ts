@@ -1,12 +1,12 @@
-import { inject, Injectable } from '@angular/core';
-import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
-import { googleAuthConfig } from './auth.config';
-import { Router } from '@angular/router';
-import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { filter, take, timeout as rxTimeout } from 'rxjs/operators';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { UserModel } from './user.model';
+import {inject, Injectable} from '@angular/core';
+import {AuthConfig, OAuthService} from 'angular-oauth2-oidc';
+import {googleAuthConfig} from './auth.config';
+import {Router} from '@angular/router';
+import {BehaviorSubject, firstValueFrom, Observable} from 'rxjs';
+import {environment} from '../../../environments/environment';
+import {filter, take, timeout as rxTimeout} from 'rxjs/operators';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {UserModel} from './user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
