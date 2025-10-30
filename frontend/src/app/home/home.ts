@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import {Cloud} from '../cloud/cloud';
+import {SmokeScene} from '../smoke/smoke-scene';
 
 @Component({
   selector: 'app-home',
   imports: [
-    Cloud
+    SmokeScene
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss',

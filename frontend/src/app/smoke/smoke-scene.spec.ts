@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Cloud } from './cloud';
+import { SmokeScene } from './smoke-scene';
 
-describe('Cloud', () => {
-  let component: Cloud;
-  let fixture: ComponentFixture<Cloud>;
+describe('SmokeScene', () => {
+  let component: SmokeScene;
+  let fixture: ComponentFixture<SmokeScene>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Cloud]
+      imports: [SmokeScene]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Cloud);
+    fixture = TestBed.createComponent(SmokeScene);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
