@@ -40,14 +40,16 @@
       @if (!pending) {
         <div class="flex flex-col items-center pt-4 text-s">
           <div>Vous n'avez pas de compte ?</div>
-          <p-button [routerLink]="'/register'" label="Inscrivez-vous" size="small" [text]="true"
+          <p-button [routerLink]="'/register'"
+                    label="Inscrivez-vous" size="small"
+                    variant="text"
                     severity="secondary"></p-button>
         </div>
       }
     </form>
     @if (!pending) {
-      <div class="flex justify-center">
-        <a class="p-button p-button-secondary" size="small" (click)="loginWithGoogle()" style="text-decoration: none;">
+      <div class="flex justify-center pt-1">
+        <a class="p-button p-button-secondary" (click)="loginWithGoogle()" style="text-decoration: none;">
           <div class="flex login__google items-center">
             <img src="/assets/socialite/google.svg">
             <div>Continuer avec Google</div>
@@ -58,7 +60,7 @@
 
     @if (pending) {
       <p-progressBar class="dw_progress" mode="indeterminate"
-                     [style]="{ height: '6px' }"></p-progressBar>
+                     [style]="{ height: '6px'}"></p-progressBar>
     }
   </p-card>
 </div>

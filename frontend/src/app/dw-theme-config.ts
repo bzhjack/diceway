@@ -69,7 +69,7 @@ export const DwPreset = definePreset(Aura, {
       root: {
         background: '{surface.800}',
         color: '{surface.0}',
-        borderRadius: '1rem',
+        borderRadius: '0.5rem',
         shadow: '0 2px 12px rgba(0,0,0,0.3)',
       },
       body: {
