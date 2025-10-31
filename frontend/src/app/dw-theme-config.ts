@@ -31,7 +31,6 @@ export const DwPreset = definePreset(Aura, {
       950: '#0f172a',
     },
   },
-
   // --- SEMANTIC TOKENS ---
   semantic: {
     primary: {
@@ -62,7 +61,6 @@ export const DwPreset = definePreset(Aura, {
       950: '{slate.50}',
     },
   },
-
   // --- COMPONENT TOKENS ---
   components: {
     card: {
@@ -81,7 +79,7 @@ export const DwPreset = definePreset(Aura, {
         fontSize: '1.25rem',
       },
       subtitle: {
-        color: '{surface.300}', // c’est la seule propriété acceptée ici
+        color: '{surface.300}',
       },
     },
   }

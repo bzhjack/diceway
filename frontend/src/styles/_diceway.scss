@@ -6,14 +6,13 @@
   color: rgba(255, 255, 255, 0.87);
 }
 
-
 .dw_banner {
   font-family: 'cyberpunk', serif;
   font-size: 55px;
 }
 
 .dw_progress {
-  position: absolute!important;
+  position: absolute !important;
   bottom: 0;
   left: 0;
   right: 0;
@@ -46,4 +45,9 @@ Not supports in Firefox and IE */
 /* set button(top and bottom of the scrollbar) */
 ::-webkit-scrollbar-button {
   display: none;
+}
+
+html {
+  background-color: #000000 !important;
+  color: #ffffff;
 }
