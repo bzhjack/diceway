@@ -1,14 +1,13 @@
-<div class="flex flex-col h-screen items-center w-full justify-center gap-5">
-  <div class="dw_banner">Diceway</div>
-  <p-card header="404">
+<div class="flex flex-col h-screen items-center gap-1 pt-10">
+  <img src="assets/dw1.jpg" alt="" style="width: 400px; height: 302px;">
+  <div class="text-xl">404</div>
     <div class="flex flex-col">
-      <h3 class="m-0">TOC: échec critique </h3>
-      <div class="mb-4 text-sm">
+      <h3 class="m-0 text-xl">TOC: échec critique </h3>
+      <div class="mb-4">
         La ressource à laquelle vous essayez d'accéder n'existe pas, plus...
       </div>
     </div>
     <div class="flex justify-end">
-      <p-button [routerLink]="'/'" label="Continuer" size="small"></p-button>
+      <p-button [routerLink]="'/'" label="Continuer" size="small" severity="secondary"></p-button>
     </div>
-  </p-card>
 </div>

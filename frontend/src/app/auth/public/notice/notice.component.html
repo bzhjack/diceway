@@ -1,34 +1,33 @@
-<div class="flex flex-col h-screen items-center w-full justify-center gap-5">
-  <div class="dw_banner">Diceway</div>
+<div class="flex flex-col h-screen items-center gap-1 pt-10">
+  <img src="assets/dw1.jpg" alt="" style="width: 400px; height: 302px;">
   @if (!reset) {
-    <p-card header="Finaliser votre inscription">
-      <div class="flex flex-col">
-        <h3 class="m-0">Un mail vient de vous être envoyé</h3>
-        <div class="mb-1 text-sm">
-          Pour finaliser votre inscription, rendez-vous dans votre boîte mail pour activer votre compte.
-        </div>
-        <div class="dw_container mb-4 mt-4">
-          Pas d'e-mail reçu dans votre boîte de réception ou vos spam ?
-          <p-button [routerLink]="'/resend'" label="Renvoyer l'e-mail" size="small" [text]="true"></p-button>
-        </div>
+    <div class="text-xl">Finaliser votre inscription</div>
+    <div class="flex flex-col">
+      <h3 class="m-0">Un mail vient de vous être envoyé</h3>
+      <div class="mb-1">
+        Pour finaliser votre inscription, rendez-vous dans votre boîte mail pour activer votre compte.
       </div>
-      <div class="flex justify-end gap-4">
-        <p-button [routerLink]="'/'" label="Continuer" size="small"></p-button>
+      <div class="dw_container mb-4 mt-4">
+        Pas d'e-mail reçu dans votre boîte de réception ou vos spam ?
+        <p-button [routerLink]="'/resend'" label="Renvoyer l'e-mail" size="small" [text]="true"></p-button>
       </div>
-    </p-card>
+    </div>
+    <div class="flex justify-end gap-4">
+      <p-button [routerLink]="'/'" label="Continuer" size="small"></p-button>
+    </div>
   }
 
   @if (reset) {
-    <p-card header="Mot de passe oublié">
+    <div class="text-xl">Mot de passe oublié</div>
       <div class="flex flex-col">
         <h3 class="m-0">Un mail vient de vous être envoyé</h3>
-        <div class="mb-4 text-sm">
-          Pour accéder à la modification de votre mot de passe, rendez vous dans votre messagerie et cliquez sur le lien.
+        <div class="mb-4">
+          Pour accéder à la modification de votre mot de passe, rendez vous dans votre messagerie et cliquez sur le
+          lien.
         </div>
       </div>
       <div class="flex justify-end gap-4">
         <p-button [routerLink]="'/'" label="Continuer" size="small"></p-button>
       </div>
-    </p-card>
   }
 </div>

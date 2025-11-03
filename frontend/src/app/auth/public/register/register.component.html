@@ -1,32 +1,32 @@
-<div class="flex flex-col h-screen items-center w-full justify-center gap-5">
-  <div class="dw_banner">Diceway</div>
-  <p-card header="Nouveau compte" class="relative w-full md:w-1/2 lg:w-1/3">
+<div class="flex flex-col h-screen items-center gap-1 pt-10">
+  <img src="assets/dw1.jpg" alt="" style="width: 400px; height: 302px;">
+  <div class="text-xl">Nouveau compte</div>
     <form [formGroup]="registerForm" class="flex flex-col gap-4">
       <div class="relative flex flex-col">
         <input class="p-inputtext-sm" formControlName="name" pInputText placeholder="Pseudonyme*"/>
         @if (onError('name')) {
-          <small class="dw_error">Minimum 5 caractères</small>
+          <p-message severity="error" size="small" variant="simple">Minimum 5 caractères</p-message>
         }
       </div>
       <div class="relative flex flex-col">
-        <input class="p-inputtext-sm" formControlName="email" pInputText placeholder="Adresse mail*"
-               autocomplete="username"/>
+        <input class="p-inputtext-sm" formControlName="email" pInputText placeholder="Adresse mail*" autocomplete="username"/>
         @if (onError('email')) {
-          <small class="dw_error">Adresse mail non valide</small>
+          <p-message severity="error" size="small" variant="simple">Adresse mail non valide</p-message>
+
         }
       </div>
       <div class="relative flex flex-col">
         <input class="p-inputtext-sm" type="password" formControlName="password" pInputText placeholder="Mot de passe*"
                autocomplete="new-password"/>
         @if (onError('password')) {
-          <small class="dw_error">Minimum 8 caractères</small>
+          <p-message severity="error" size="small" variant="simple">Minimum 8 caractères</p-message>
         }
       </div>
       <div class="relative flex flex-col">
         <input class="p-inputtext-sm" type="password" formControlName="password_confirmation" pInputText
                placeholder="Confirmer le mot de passe*" autocomplete="new-password"/>
         @if (onError('password_confirmation') || registerForm.hasError('matchingError')) {
-          <small class="dw_error">Ne corresponds pas</small>
+          <p-message severity="error" size="small" variant="simple">Ne corresponds pas</p-message>
         }
 
       </div>
@@ -36,15 +36,15 @@
         }
 
       </div>
-      <div class="flex justify-between">
-        <p-button [routerLink]="'/'" label="retour" size="small" [outlined]="true" severity="secondary"
+      <div class="flex justify-end gap-2">
+        <p-button [routerLink]="'/'" label="retour" size="small" severity="secondary"
                   [disabled]="pending"></p-button>
         <p-button label="Créér le compte" size="small" [disabled]="registerForm.invalid || pending"
                   (click)="register()"></p-button>
       </div>
+      @if (pending) {
+        <p-progressBar mode="indeterminate" [style]="{ height: '6px', width: '100%' }"></p-progressBar>
+      }
     </form>
-    @if (pending) {
-      <p-progressBar class="dw_progress" mode="indeterminate" [style]="{ height: '6px' }"></p-progressBar>
-    }
-  </p-card>
+
 </div>

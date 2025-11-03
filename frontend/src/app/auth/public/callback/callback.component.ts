@@ -20,12 +20,8 @@ export class CallbackComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     try {
       await this.auth.handleCallback();
-      // On successful authentication, go to the protected area
       await this.router.navigate(['/']);
     } catch (e) {
-      // Optionally log the error; keep UX simple
-      // console.error('Auth callback failed', e);
-      // If something went wrong, send the user to login
       await this.router.navigate(['/login']);
     }
   }
