@@ -56,12 +56,7 @@ class SocialController extends Controller
         $name = $payload['name'] ?? ($payload['given_name'] ?? ($payload['family_name'] ?? (explode('@', $email)[0] ?? '')));
         $avatarUrl = $payload['picture'] ?? null;
         $user = User::where('email', $email)->first();
-        $avatarName = Str::random(40);
-        $avatarPath = 'avatars/' . $avatarName . '.jpg';
-        $avatarContents = Http::get($avatarUrl)->body();
-        if ($avatarContents) {
-            Storage::disk('public')->put($avatarPath, $avatarContents);
-        }
+
 
         if (!$user) {
             $user = new User();
@@ -70,15 +65,21 @@ class SocialController extends Controller
             $user->provider_id = $googleUserId;
             // Set a random password since Google users won’t use it for login
             $user->password = Hash::make(bin2hex(random_bytes(16)));
-            $user->avatar = $avatarName;
             $user->save();
         } else {
             $user->provider_id = $googleUserId;
             $user->name = $name;
-            $user->avatar = $avatarName;
             $user->save();
         }
 
+        $avatarName =$user->id;
+        $avatarPath = 'avatars/' . $avatarName . '.jpg';
+        $avatarContents = Http::get($avatarUrl)->body();
+        if ($avatarContents) {
+            Storage::disk('public')->put($avatarPath, $avatarContents);
+        }
+        $user->avatar = $avatarName;
+        $user->save();
         // Mark email as verified if Google says so
         if ($emailVerified && is_null($user->email_verified_at)) {
             if ($user->markEmailAsVerified()) {
