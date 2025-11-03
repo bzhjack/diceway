@@ -1,60 +1,67 @@
 <div class="flex flex-col h-screen items-center gap-1 pt-10">
   <img src="assets/dw1.jpg" alt="" style="width: 400px; height: 302px;">
   <div class="text-xl">S'identifier</div>
-  <form [formGroup]="loginForm" class="flex flex-col gap-4">
-    <div>
-      <p-inputGroup class="relative">
-        <p-inputGroupAddon>
-          <i class="pi pi-user"></i>
-        </p-inputGroupAddon>
-        <input formControlName="email" pInputText placeholder="Adresse mail" autocomplete="username"/>
-      </p-inputGroup>
-      @if (onError('email')) {
-        <p-message severity="error" size="small" variant="simple">Adresse mail non valide</p-message>
-      }
-    </div>
-    <div>
-      <p-inputGroup class="relative">
-        <p-inputGroupAddon>
-          <i class="pi pi-lock"></i>
-        </p-inputGroupAddon>
-        <input formControlName="password" type="password" pInputText placeholder="Mot de passe"
-               autocomplete="current-password"/>
-      </p-inputGroup>
-      @if (onError('password')) {
-        <p-message severity="error" size="small" variant="simple">Minimum 8 caractères</p-message>
-      }
-    </div>
-
-    @if (messages.length > 0) {
-      @for (message of messages; track message) {
-        <p-message severity="error" variant="outlined" size="small">{{ message }}</p-message>
-      }
-    }
-    <div class="flex justify-between">
-      <p-button [routerLink]="'/forgotten'" label="Mot de passe oublié" size="small" [text]="true"
-                severity="secondary" [disabled]="pending"></p-button>
-      <p-button label="Connexion" size="small" (click)="login()" [disabled]="pending"
-                type="submit"></p-button>
-    </div>
-    @if (!pending) {
-      <div class="flex flex-col items-center pt-4 text-s">
-        <div>Vous n'avez pas de compte ?</div>
-        <p-button [routerLink]="'/register'"
-                  label="Inscrivez-vous" size="small"
-                  variant="text"
-                  severity="secondary"></p-button>
+  <div class="flex gap-5">
+    <form [formGroup]="loginForm" class="flex flex-col gap-4">
+      <div>
+        <p-inputGroup class="relative">
+          <p-inputGroupAddon>
+            <i class="pi pi-user"></i>
+          </p-inputGroupAddon>
+          <input formControlName="email" pInputText placeholder="Adresse mail" autocomplete="username"/>
+        </p-inputGroup>
+        @if (onError('email')) {
+          <p-message severity="error" size="small" variant="simple">Adresse mail non valide</p-message>
+        }
       </div>
-    }
-  </form>
-  @if (!pending) {
-    <div class="flex justify-center pt-1">
-      <a class="p-button p-button-secondary" (click)="loginWithGoogle()" style="text-decoration: none;">
+      <div>
+        <p-inputGroup class="relative">
+          <p-inputGroupAddon>
+            <i class="pi pi-lock"></i>
+          </p-inputGroupAddon>
+          <input formControlName="password" type="password" pInputText placeholder="Mot de passe"
+                 autocomplete="current-password"/>
+        </p-inputGroup>
+        @if (onError('password')) {
+          <p-message severity="error" size="small" variant="simple">Minimum 8 caractères</p-message>
+        }
+      </div>
+
+      @if (messages.length > 0) {
+        @for (message of messages; track message) {
+          <p-message severity="error" variant="outlined" size="small">{{ message }}</p-message>
+        }
+      }
+      <div class="flex justify-between">
+        <p-button [routerLink]="'/forgotten'" label="Mot de passe oublié" size="small" [text]="true"
+                  severity="secondary" [disabled]="pending"></p-button>
+        <p-button label="Connexion" size="small" (click)="login()" [disabled]="pending"
+                  type="submit"></p-button>
+      </div>
+      @if (!pending) {
+        <div class="mt-4 text-center">
+          <p class="text-gray-400 text-sm">Vous n'avez pas de compte ? <a href="/register"
+                                                                          class="text-blue-400 hover:underline">Inscrivez-vous</a>
+          </p>
+        </div>
+      }
+    </form>
+    <!-- Séparateur "OU" -->
+    <div class="login_divider">
+      <div></div>
+      <div>Ou</div>
+      <div></div>
+    </div>
+    <div class="flex">
+      <a class="p-button p-button-secondary" (click)="loginWithGoogle()"
+         style="text-decoration: none;height: min-content">
         <div class="flex login__google items-center">
           <img src="assets/socialite/google.svg" alt="Continuer avec Google">
           <div>Continuer avec Google</div>
         </div>
       </a>
     </div>
-  }
+  </div>
+
+
 </div>
