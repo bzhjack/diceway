@@ -56,13 +56,12 @@ class SocialController extends Controller
         $name = $payload['name'] ?? ($payload['given_name'] ?? ($payload['family_name'] ?? (explode('@', $email)[0] ?? '')));
         $avatarUrl = $payload['picture'] ?? null;
         $user = User::where('email', $email)->first();
+        $avatarName = Str::random(40);
+        $avatarPath = 'avatars/' . $avatarName . '.jpg';
         $avatarContents = Http::get($avatarUrl)->body();
         if ($avatarContents) {
-            $avatarName = Str::random(40) . '.jpg';
-            Storage::disk('public')->put('avatars/' . $avatarName, $avatarContents);
+            Storage::disk('public')->put($avatarPath, $avatarContents);
         }
-
-
 
         if (!$user) {
             $user = new User();
@@ -71,44 +70,14 @@ class SocialController extends Controller
             $user->provider_id = $googleUserId;
             // Set a random password since Google users won’t use it for login
             $user->password = Hash::make(bin2hex(random_bytes(16)));
-            $user->avatar = 'avatars/' . $avatarName;
+            $user->avatar = $avatarName;
             $user->save();
         } else {
             $user->provider_id = $googleUserId;
             $user->name = $name;
-            $user->avatar = 'avatars/' . $avatarName;
+            $user->avatar = $avatarName;
             $user->save();
         }
-
-        $userData = [
-            'name' => $name,
-            'provider_id' => $googleUserId,
-        ];
-
-        if ($avatarUrl) {
-            try {
-                $avatarContents = Http::get($avatarUrl)->body();
-                if ($avatarContents) {
-                    $avatarName = Str::random(40) . '.jpg';
-                    Storage::disk('public')->put('avatars/' . $avatarName, $avatarContents);
-                    $userData['avatar'] = 'avatars/' . $avatarName;
-                }
-            } catch (\Exception $e) {
-                // Log the error or handle it as needed
-            }
-        }
-
-        try {
-            $user = User::updateOrCreate(
-                ['email' => $email],
-                array_merge($userData, [
-                    'password' => Hash::make(bin2hex(random_bytes(16))),
-                ])
-            );
-        } catch (RandomException $e) {
-            return response()->json(['message' => 'Could not generate a secure password.'], 500);
-        }
-
 
         // Mark email as verified if Google says so
         if ($emailVerified && is_null($user->email_verified_at)) {

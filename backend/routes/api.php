@@ -10,7 +10,6 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SocialController;
 use App\Http\Controllers\Auth\ForgotController;
 use App\Http\Controllers\Auth\ProfileController;
-use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Bol\BolRegionController;
 use App\Http\Controllers\Bol\BolTraitController;
 use App\Http\Controllers\Bol\BolCarriereController;
@@ -43,12 +42,12 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
     Route::get('/hello', function () {
         return response()->json(['message' => 'hello']);
     });
-
     Route::post('auth/login', [LoginController::class, 'login'])->name('login'); // Authentification
     Route::post('auth/logout', [LoginController::class, 'logout']); // déconnection
     Route::post('auth/register', [RegisterController::class, 'register']); // Création de compte
     Route::post('auth/email/send', [VerifyController::class, 'send']); // Envoi de l'email de vérification
     Route::get('auth/email/verify/{id}/{hash}', [VerifyController::class, 'verify'])->middleware('signed')->name('verification.verify'); // Lien de retour de verification du mail (signed)
+    Route::get('auth/avatar/{id}', [ProfileController::class, 'show']);
     // Gestion du mot de passe
     Route::post('auth/password/forgotten', [ForgotController::class, 'forgot'])->middleware('guest')->name('password.email'); // Envoi d'un mail de reset du mdp
     Route::post('auth/password/reset', [ForgotController::class, 'reset_password'])->middleware('guest')->name('password.update'); // Validation du changement
@@ -60,13 +59,9 @@ Route::middleware([RequestAcceptJson::class])->group(function () {
  * Api protégée
  */
 Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function () {
-    // Return current authenticated user (bonus endpoint)
-    Route::get('/me', function (Request $request) {
-        return $request->user();
-    });
-
     Route::get('auth/profile', [ProfileController::class, 'profile']);
-    /**
+    Route::get('auth/me', [ProfileController::class, 'me']);
+     /**
      * BARBARIAN OF LEMURIA
      **/
     // Gestion du dashboard
