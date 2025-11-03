@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {InputGroup} from 'primeng/inputgroup';
 import {InputGroupAddon} from 'primeng/inputgroupaddon';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -21,6 +21,7 @@ import {finalize} from 'rxjs/operators';
     Button,
     RouterLink,
     InputText,
+    NgOptimizedImage,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'

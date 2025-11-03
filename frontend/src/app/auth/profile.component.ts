@@ -3,18 +3,19 @@ import {CommonModule} from '@angular/common';
 import {HttpClient} from '@angular/common/http';
 import {AuthService} from './services/auth.service';
 import {environment} from '../../environments/environment';
+import {UserModel} from './services/user.model';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule],
   template: `
-    @if ((auth.user$ | async); as user) {
+    @if (me; as user) {
       <div class="profile">
         <h2>Mon profil</h2>
         <div class="user-info">
           @if (user?.avatar) {
-            <img [src]="user.avatar" alt="Avatar" width="96" height="96" style="border-radius:50%" />
+            <img [src]="environment.apiBase + '/api/auth/avatar/' + user.avatar" alt="Avatar" width="96" height="96" style="border-radius:50%" />
           }
           <div class="details">
             <div><strong>{{ user?.name }}</strong></div>
@@ -41,7 +42,7 @@ export class ProfileComponent implements OnInit {
   auth = inject(AuthService);
   private http = inject(HttpClient);
 
-  me: any;
+  me?: UserModel;
 
   /** Inserted by Angular inject() migration for backwards compatibility */
   constructor(...args: unknown[]);
@@ -50,10 +51,11 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     // Fetch from protected backend endpoint to verify Sanctum token works
     const apiBase = environment.apiBase;
-    const url = apiBase ? `${apiBase}/api/me` : '/api/me';
+    const url = apiBase ? `${apiBase}/api/auth/me` : '/api/auth/me';
     this.http.get(url).subscribe({
-      next: (res) => (this.me = res),
-      error: () => (this.me = { error: 'Unable to load /api/me' }),
+      next: (res) => (this.me = res)
     });
   }
+
+  protected readonly environment = environment;
 }
