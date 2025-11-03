@@ -3,12 +3,14 @@ import {Router} from '@angular/router';
 import {InlineSVGModule} from 'ng-inline-svg-2';
 import {ProgressBarModule} from 'primeng/progressbar';
 import {AuthService} from '../../services/auth.service';
+import {NgOptimizedImage} from "@angular/common";
 
 @Component({
   selector: 'app-callback',
   imports: [
     InlineSVGModule,
-    ProgressBarModule
+    ProgressBarModule,
+    NgOptimizedImage
   ],
   templateUrl: './callback.component.html',
   styleUrl: './callback.component.scss'

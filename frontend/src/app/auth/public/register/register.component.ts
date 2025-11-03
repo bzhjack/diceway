@@ -1,4 +1,4 @@
-import {CommonModule} from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {Component, inject, OnDestroy} from '@angular/core';
 import {
   AbstractControl,
@@ -35,7 +35,8 @@ import {Message} from 'primeng/message';
     ReactiveFormsModule,
     InlineSVGModule,
     ProgressBarModule,
-    Message
+    Message,
+    NgOptimizedImage
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
@@ -99,5 +100,3 @@ export class RegisterComponent implements OnDestroy {
     return control?.dirty && control.invalid;
   }
 }
-
-
