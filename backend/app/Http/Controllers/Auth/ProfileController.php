@@ -19,13 +19,13 @@ class ProfileController extends Controller
     }
     public function show($id)
     {
-        $user = User::findOrFail($id);
 
-        if (!$user->avatar || !Storage::disk('public')->exists($user->avatar)) {
-            return response()->json(['message' => 'Avatar not found'], 404);
+        $avatarPath = "avatars/{$id}.jpg";
+        if (!Storage::disk('public')->exists($avatarPath)) {
+            return response()->json(['message' => "Avatar $id not found"], 404);
         }
 
-        $path = Storage::disk('public')->path($user->avatar);
+        $path = Storage::disk('public')->path($avatarPath);
         $mime = mime_content_type($path);
 
         return response()->file($path, [
