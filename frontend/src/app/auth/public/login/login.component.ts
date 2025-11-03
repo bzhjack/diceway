@@ -2,12 +2,10 @@ import {Component, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {InputGroup} from 'primeng/inputgroup';
 import {InputGroupAddon} from 'primeng/inputgroupaddon';
-import {Card} from 'primeng/card';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Message} from 'primeng/message';
 import {Button} from 'primeng/button';
 import {Router, RouterLink} from '@angular/router';
-import {ProgressBar} from 'primeng/progressbar';
 import {AuthService} from '../../services/auth.service';
 import {InputText} from 'primeng/inputtext';
 import {finalize} from 'rxjs/operators';
@@ -18,12 +16,10 @@ import {finalize} from 'rxjs/operators';
     CommonModule,
     InputGroup,
     InputGroupAddon,
-    Card,
     Message,
     ReactiveFormsModule,
     Button,
     RouterLink,
-    ProgressBar,
     InputText,
   ],
   templateUrl: './login.component.html',
