@@ -5,6 +5,7 @@ services:
         container_name: diceway
         volumes:
             - ./.env.local:/var/www/html/.env
+            - ./public:/var/www/html/public
         ports:
             - "8080:80"
         restart: unless-stopped
