@@ -16,7 +16,7 @@ export const googleAuthConfig: AuthConfig = {
   oidc: true,
   requestAccessToken: true,
   scope: 'openid profile email',
-  showDebugInformation: true, // Active les logs
+  showDebugInformation: false, // Active les logs
   strictDiscoveryDocumentValidation: false,
   skipIssuerCheck: true,
   disableAtHashCheck: false, // Désactive la validation du at_hash

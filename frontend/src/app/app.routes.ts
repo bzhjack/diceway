@@ -26,10 +26,5 @@ export const routes: Routes = [
   {path: 'auth/callback', component: CallbackComponent}, // Url de callback après authentification
   {path: 'notfound', component: NotfoundComponent}, // Echec à la verification du mail ou 404 standard
   {path: '', component: Home, canActivate: [authGuard]},
-  {path: '**', redirectTo: '/'},
-  {
-    path: 'profile',
-    loadComponent: () => import('./auth/profile.component').then(m => m.ProfileComponent),
-    canActivate: [authGuard],
-  }
+  {path: '**', redirectTo: '/'}
 ];

@@ -112,6 +112,10 @@ export class AuthService {
     });
   }
 
+  me(): Observable<any> {
+    return this.http.get(`${environment.apiBase}/api/auth/me`);
+  }
+
   register(credentials: { name: string; email: string; password: string; password_confirmation: string }): Observable<any> {
     return this.http.post(`${environment.apiBase}/api/auth/register`, credentials);
   }

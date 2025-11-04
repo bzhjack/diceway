@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
-import {ProfileComponent} from '../auth/profile.component';
+import {Topbar} from '../topbar/topbar';
 
 @Component({
   selector: 'app-home',
   imports: [
-    ProfileComponent
+    Topbar
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
