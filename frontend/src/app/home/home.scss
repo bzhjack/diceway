@@ -1,5 +1,6 @@
 .dw-home {
   display: flex;
+  flex-wrap: wrap;
   padding: 2rem;
   gap: 2rem;
 }
@@ -7,16 +8,24 @@
 .dw-dash {
   &.bol {
     background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)),
-    url('/assets/bol/bol-board.jpg');
+    url('/assets/home/bol-board.jpg');
   }
+
   &.cp {
     background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)),
-    url('/assets/cp/cp-board.jpg');
+    url('/assets/home/cp-board.jpg');
   }
+
   &.cth {
     background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)),
-    url('/assets/cth/cth-board.jpg');
+    url('/assets/home/cth-board.jpg');
   }
+
+  &.db {
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)),
+    url('/assets/home/db-board.jpg');
+  }
+
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
