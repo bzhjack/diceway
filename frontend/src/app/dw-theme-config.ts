@@ -82,6 +82,16 @@ export const DwPreset = definePreset(Aura, {
         color: '{surface.300}',
       },
     },
+    panel: {
+      root: {
+        background: '{surface.800}',
+        color: '{surface.0}',
+        borderColor: '{surface.800}',
+      },
+      header: {
+        color: '{surface.0}',
+      }
+    }
   }
 
 
