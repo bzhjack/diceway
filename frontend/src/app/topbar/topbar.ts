@@ -1,5 +1,5 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {NgIf, NgOptimizedImage} from "@angular/common";
+import {Component, effect, inject, input, OnInit} from '@angular/core';
+import {NgOptimizedImage} from "@angular/common";
 import {AvatarModule} from 'primeng/avatar';
 import {AuthService} from '../auth/services/auth.service';
 import {PopoverModule} from 'primeng/popover';
@@ -24,9 +24,24 @@ import {Ripple} from 'primeng/ripple';
 })
 export class Topbar implements OnInit {
   private authService = inject(AuthService);
-  private http = inject(HttpClient);
+
   me?: UserModel;
   items: MenuItem[] | undefined;
+
+  title = input<string>()
+
+  constructor() {
+    effect(() => {
+      if (this.title()) {
+        this.items?.unshift(
+          {
+            label: 'Retour accueil',
+            icon: 'pi pi-home',
+            url: '/'
+          })
+      }
+    });
+  }
 
   ngOnInit() {
     this.items = [
