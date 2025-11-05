@@ -1,2 +1,14 @@
 <app-topbar title="Barbarian Of Lemuria"></app-topbar>
-<div class="bol-playground"></div>
+<div class="bol-playground" #playgroundContainer>
+  <ko-stage [config]="configStage">
+    <ko-layer>
+      @for (config of starConfigs; track trackConfig($index, config)) {
+        <ko-star
+          (dragstart)="handleDragstart($event.event)"
+          (dragend)="handleDragend($event.event)"
+          [config]="config"
+        />
+      }
+    </ko-layer>
+  </ko-stage>
+</div>
