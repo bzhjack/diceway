@@ -1,6 +1,7 @@
 @use "sass:color";
 @use "styles/diceway";
 @use "primeicons/primeicons.css";
+@use "styles/panel";
 
 @tailwind base;
 @tailwind components;
@@ -16,6 +17,31 @@
   font-style: normal;
   font-display: swap; /* améliore le chargement */
 }
+
+/* --- Muse Sans (variable, pour le corps de texte) --- */
+@font-face {
+  font-family: "Muse Sans";
+  src: url("/assets/fonts/MuseSans-Variable.woff2") format("woff2");
+  font-weight: 100 900; /* plage complète de poids */
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --- Muse Display Harmony (pour les titres) --- */
+@font-face {
+  font-family: "Muse Display Harmony";
+  src: url("/assets/fonts/MuseDisplay-Harmony.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --- Application globale --- */
+body {
+  font-family: "Muse Sans", -apple-system, Roboto, "Open Sans", "Helvetica Neue", Helvetica, sans-serif;
+}
+
+
 
 /* Global dark theme styles */
 /*body {
