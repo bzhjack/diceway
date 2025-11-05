@@ -10,6 +10,7 @@ import {NoticeComponent} from './auth/public/notice/notice.component';
 import {NotfoundComponent} from './auth/public/notfound/notfound.component';
 import {authGuard} from './auth/auth.guard';
 import {Home} from './home/home';
+import {BolPlayground} from './bol/bol-playground/bol-playground';
 
 export const routes: Routes = [
   // Public route
@@ -25,6 +26,13 @@ export const routes: Routes = [
   {path: 'reset/:token', component: ResetComponent}, // Lien sur le mail de reset
   {path: 'auth/callback', component: CallbackComponent}, // Url de callback après authentification
   {path: 'notfound', component: NotfoundComponent}, // Echec à la verification du mail ou 404 standard
+  {
+    path: 'bol',
+    loadComponent: () => import('./bol/bol-playground/bol-playground').then(m => m.BolPlayground),
+    canActivate: [authGuard]
+  },
+
+
   {path: '', component: Home, canActivate: [authGuard]},
   {path: '**', redirectTo: '/'}
 ];
