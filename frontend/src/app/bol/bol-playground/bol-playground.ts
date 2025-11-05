@@ -1,9 +1,10 @@
-import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, inject, OnInit, ViewChild} from '@angular/core';
 import {Topbar} from '../../topbar/topbar';
 import {CoreShapeComponent, StageComponent} from 'ng2-konva';
 import Konva from 'konva';
 import StageConfig = Konva.StageConfig;
 import CircleConfig = Konva.CircleConfig;
+import {BolHerosService} from '../bol-services/bol-heros.service';
 
 type ExtCircleConfig = CircleConfig;
 
@@ -18,16 +19,25 @@ type ExtCircleConfig = CircleConfig;
   styleUrl: './bol-playground.scss',
 })
 export class BolPlayground implements AfterViewInit {
+  private heroService = inject(BolHerosService);
   public circleConfigs: ExtCircleConfig[] = [];
-
   public configStage: Partial<StageConfig> = {};
-
+  @HostListener('window:resize', [])
+  onResize() {
+    this.fitStageIntoParentContainer();
+  }
   @ViewChild('playgroundContainer')
   playgroundContainer!: ElementRef;
+  constructor() {
 
-  public handleDragstart(
-    event: any,
-  ): void {
+  }
+  public ngAfterViewInit() {
+    setTimeout(() => {
+      this.fitStageIntoParentContainer();
+      this.generateCircles();
+    });
+  }
+  public handleDragstart(event: any): void {
     const shape = (event as any).target;
 
     this.circleConfigs = this.circleConfigs.map((conf) => {
@@ -45,10 +55,7 @@ export class BolPlayground implements AfterViewInit {
       this.circleConfigs.find((conf) => conf.name === shape.name())!,
     ];
   }
-
-  public handleDragend(
-    event: any,
-  ): void {
+  public handleDragend(event: any): void {
     const shape = (event as any).target;
     this.circleConfigs = this.circleConfigs.map((conf) => {
       if (conf.name !== shape.name()) {
@@ -61,24 +68,9 @@ export class BolPlayground implements AfterViewInit {
       };
     });
   }
-
-  trackConfig(index: number, config: ExtCircleConfig): string | undefined {
+  public trackConfig(index: number, config: ExtCircleConfig): string | undefined {
     return config.name;
   }
-
-
-  public ngAfterViewInit() {
-    setTimeout(() => {
-      this.fitStageIntoParentContainer();
-      this.generateCircles();
-    });
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.fitStageIntoParentContainer();
-  }
-
   private fitStageIntoParentContainer() {
     const container = this.playgroundContainer.nativeElement;
     const width = container.offsetWidth;
@@ -99,7 +91,6 @@ export class BolPlayground implements AfterViewInit {
       });
     }
   }
-
   private generateCircles() {
     const radius = 30;
     for (let n = 0; n < 100; n++) {
