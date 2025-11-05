@@ -1,16 +1,8 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  HostListener,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, ViewChild} from '@angular/core';
 import {Topbar} from '../../topbar/topbar';
-import {CoreShapeComponent, NgKonvaEventObject, StageComponent} from 'ng2-konva';
+import {CoreShapeComponent, StageComponent} from 'ng2-konva';
 import Konva from 'konva';
 import StageConfig = Konva.StageConfig;
-import CircleConfig = Konva.CircleConfig;
 import StarConfig = Konva.StarConfig;
 
 type ExtStartConfig = StarConfig & { startScale: number };
@@ -25,7 +17,7 @@ type ExtStartConfig = StarConfig & { startScale: number };
   templateUrl: './bol-playground.html',
   styleUrl: './bol-playground.scss',
 })
-export class BolPlayground implements OnInit, AfterViewInit {
+export class BolPlayground implements AfterViewInit {
   public starConfigs: ExtStartConfig[] = [];
 
   public configStage: Partial<StageConfig> = {};
@@ -78,8 +70,6 @@ export class BolPlayground implements OnInit, AfterViewInit {
     return config.name;
   }
 
-  public ngOnInit(): void {
-  }
 
   public ngAfterViewInit() {
     setTimeout(() => {
