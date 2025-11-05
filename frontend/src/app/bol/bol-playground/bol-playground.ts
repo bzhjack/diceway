@@ -82,8 +82,10 @@ export class BolPlayground implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit() {
-    this.fitStageIntoParentContainer();
-    this.generateStars();
+    setTimeout(() => {
+      this.fitStageIntoParentContainer();
+      this.generateStars();
+    });
   }
 
   @HostListener('window:resize', ['$event'])
