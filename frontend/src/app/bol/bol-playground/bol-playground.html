@@ -1,5 +1,10 @@
 <app-topbar title="Barbarian Of Lemuria"></app-topbar>
 <div class="bol-playground" #playgroundContainer>
+  @if (!questLoaded()) {
+    <div class="flex flex-wrap">
+      <p-panel header="Héros" class="dw-bol heroes"></p-panel>
+    </div>
+  }
   <ko-stage [config]="configStage">
     <ko-layer>
       @for (config of circleConfigs; track trackConfig($index, config)) {

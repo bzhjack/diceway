@@ -1,10 +1,11 @@
-import {AfterViewInit, Component, ElementRef, HostListener, inject, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, inject, OnInit, signal, ViewChild} from '@angular/core';
 import {Topbar} from '../../topbar/topbar';
 import {CoreShapeComponent, StageComponent} from 'ng2-konva';
 import Konva from 'konva';
 import StageConfig = Konva.StageConfig;
 import CircleConfig = Konva.CircleConfig;
 import {BolHerosService} from '../bol-services/bol-heros.service';
+import {Panel} from 'primeng/panel';
 
 type ExtCircleConfig = CircleConfig;
 
@@ -13,7 +14,8 @@ type ExtCircleConfig = CircleConfig;
   imports: [
     Topbar,
     StageComponent,
-    CoreShapeComponent
+    CoreShapeComponent,
+    Panel
   ],
   templateUrl: './bol-playground.html',
   styleUrl: './bol-playground.scss',
@@ -22,6 +24,8 @@ export class BolPlayground implements AfterViewInit {
   private heroService = inject(BolHerosService);
   public circleConfigs: ExtCircleConfig[] = [];
   public configStage: Partial<StageConfig> = {};
+  questLoaded = signal<boolean>(false);
+
   @HostListener('window:resize', [])
   onResize() {
     this.fitStageIntoParentContainer();
@@ -29,12 +33,14 @@ export class BolPlayground implements AfterViewInit {
   @ViewChild('playgroundContainer')
   playgroundContainer!: ElementRef;
   constructor() {
-
+    this.heroService.heroes().subscribe(heroes => {
+      console.log(heroes);
+    })
   }
   public ngAfterViewInit() {
     setTimeout(() => {
       this.fitStageIntoParentContainer();
-      this.generateCircles();
+      //this.generateCircles();
     });
   }
   public handleDragstart(event: any): void {
