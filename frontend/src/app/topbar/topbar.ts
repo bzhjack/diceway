@@ -7,6 +7,7 @@ import {MenuItem} from 'primeng/api';
 import {UserModel} from '../auth/services/user.model';
 import {environment} from '../../environments/environment';
 import {Ripple} from 'primeng/ripple';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-topbar',
@@ -14,7 +15,8 @@ import {Ripple} from 'primeng/ripple';
     AvatarModule,
     PopoverModule,
     Menu,
-    Ripple
+    Ripple,
+    RouterLink
   ],
   templateUrl: './topbar.html',
   styleUrl: './topbar.scss',
