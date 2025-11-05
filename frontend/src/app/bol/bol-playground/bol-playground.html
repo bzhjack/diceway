@@ -1,19 +1,22 @@
 <app-topbar title="Barbarian Of Lemuria"></app-topbar>
 <div class="bol-playground" #playgroundContainer>
   @if (!questLoaded()) {
-    <div class="flex flex-wrap">
+    <div class="flex flex-wrap gap-4">
       <p-panel header="Héros" class="dw-bol heroes"></p-panel>
+      <p-panel header="Créatures" class="dw-bol creatures"></p-panel>
+      <p-panel header="Pnj" class="dw-bol pnj"></p-panel>
     </div>
+  } @else {
+    <ko-stage [config]="configStage">
+      <ko-layer>
+        @for (config of circleConfigs; track trackConfig($index, config)) {
+          <ko-circle
+            (dragstart)="handleDragstart($event.event)"
+            (dragend)="handleDragend($event.event)"
+            [config]="config"
+          />
+        }
+      </ko-layer>
+    </ko-stage>
   }
-  <ko-stage [config]="configStage">
-    <ko-layer>
-      @for (config of circleConfigs; track trackConfig($index, config)) {
-        <ko-circle
-          (dragstart)="handleDragstart($event.event)"
-          (dragend)="handleDragend($event.event)"
-          [config]="config"
-        />
-      }
-    </ko-layer>
-  </ko-stage>
 </div>

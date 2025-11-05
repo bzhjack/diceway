@@ -1,6 +1,7 @@
 div.texture-pierre {
 
 }
+
 .bol-playground {
   width: 100%;
   height: calc(100vh - 61px);
@@ -9,6 +10,7 @@ div.texture-pierre {
   background-repeat: repeat;
   padding: 1em;
 }
+
 .dw-bol {
   position: relative;
   cursor: pointer;
@@ -40,11 +42,14 @@ div.texture-pierre {
   }
 
   &.heroes {
-    background-image:
-      linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)),
-      url('/assets/bol/bol-heroes.jpg');
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)), url('/assets/bol/bol-heroes.jpg');
   }
-
+  &.creatures {
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)), url('/assets/bol/bol-creatures.jpg');
+  }
+  &.pnj {
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)), url('/assets/bol/bol-pnj.jpg');
+  }
   // Optionnel : si tu as du texte ou un contenu à l’intérieur
   .dw-dash-content {
     position: relative;
