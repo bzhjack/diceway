@@ -1,11 +1,12 @@
-import {AfterViewInit, Component, ElementRef, HostListener, inject, OnInit, signal, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, inject, signal, ViewChild} from '@angular/core';
 import {Topbar} from '../../topbar/topbar';
 import {CoreShapeComponent, StageComponent} from 'ng2-konva';
 import Konva from 'konva';
+import {BolHerosService} from '../bol-services/bol-heros.service';
+import {ButtonModule} from 'primeng/button';
+import { ButtonGroupModule } from 'primeng/buttongroup';
 import StageConfig = Konva.StageConfig;
 import CircleConfig = Konva.CircleConfig;
-import {BolHerosService} from '../bol-services/bol-heros.service';
-import {Panel} from 'primeng/panel';
 
 type ExtCircleConfig = CircleConfig;
 
@@ -15,7 +16,8 @@ type ExtCircleConfig = CircleConfig;
     Topbar,
     StageComponent,
     CoreShapeComponent,
-    Panel
+    ButtonModule,
+    ButtonGroupModule
   ],
   templateUrl: './bol-playground.html',
   styleUrl: './bol-playground.scss',
@@ -25,7 +27,7 @@ export class BolPlayground implements AfterViewInit {
   public circleConfigs: ExtCircleConfig[] = [];
   public configStage: Partial<StageConfig> = {};
   questLoaded = signal<boolean>(false);
-
+  items: { label?: string; icon?: string; separator?: boolean }[] = [];
   @HostListener('window:resize', [])
   onResize() {
     this.fitStageIntoParentContainer();
@@ -33,15 +35,32 @@ export class BolPlayground implements AfterViewInit {
   @ViewChild('playgroundContainer')
   playgroundContainer!: ElementRef;
   constructor() {
+    this.items = [
+      {
+        label: 'Refresh',
+        icon: 'pi pi-refresh'
+      },
+      {
+        label: 'Search',
+        icon: 'pi pi-search'
+      },
+      {
+        separator: true
+      },
+      {
+        label: 'Delete',
+        icon: 'pi pi-times'
+      }
+    ];
     this.heroService.heroes().subscribe(heroes => {
       console.log(heroes);
     })
   }
   public ngAfterViewInit() {
-    setTimeout(() => {
+    /*setTimeout(() => {
       this.fitStageIntoParentContainer();
-      //this.generateCircles();
-    });
+      this.generateCircles();
+    });*/
   }
   public handleDragstart(event: any): void {
     const shape = (event as any).target;

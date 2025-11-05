@@ -1,11 +1,12 @@
 <app-topbar title="Barbarian Of Lemuria"></app-topbar>
 <div class="bol-playground" #playgroundContainer>
   @if (!questLoaded()) {
-    <div class="flex flex-wrap gap-4">
-      <p-panel header="Héros" class="dw-bol heroes"></p-panel>
-      <p-panel header="Créatures" class="dw-bol creatures"></p-panel>
-      <p-panel header="Pnj" class="dw-bol pnj"></p-panel>
-    </div>
+    <p-buttongroup>
+      <p-button label="Save" icon="pi pi-check" />
+      <p-button label="Delete" icon="pi pi-trash" />
+      <p-button label="Cancel" icon="pi pi-times" />
+    </p-buttongroup>
+
   } @else {
     <ko-stage [config]="configStage">
       <ko-layer>
@@ -20,3 +21,4 @@
     </ko-stage>
   }
 </div>
+
