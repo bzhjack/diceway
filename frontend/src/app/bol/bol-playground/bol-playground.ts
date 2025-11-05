@@ -115,9 +115,10 @@ export class BolPlayground implements OnInit, AfterViewInit {
   private generateStars() {
     for (let n = 0; n < 100; n++) {
       const scale = Math.random();
-      this.starConfigs.push({
-        x: Math.random() * this.configStage.width!,
-        y: Math.random() * this.configStage.height!,
+      const radius = 50 * scale;
+      const starConfig: ExtStartConfig = {
+        x: radius + (Math.random() * (this.configStage.width! - 2 * radius)),
+        y: radius + (Math.random() * (this.configStage.height! - 2 * radius)),
         rotation: Math.random() * 180,
         numPoints: 5,
         innerRadius: 30,
@@ -134,7 +135,26 @@ export class BolPlayground implements OnInit, AfterViewInit {
         shadowOpacity: 0.6,
         startScale: scale,
         name: n.toString(),
-      });
+      };
+      starConfig.dragBoundFunc = (pos) => {
+        const stageWidth = this.configStage.width!;
+        const stageHeight = this.configStage.height!;
+        const radius = starConfig.outerRadius! * starConfig.startScale * 1.2;
+
+        const minX = radius;
+        const maxX = stageWidth - radius;
+        const newX = Math.max(minX, Math.min(pos.x, maxX));
+
+        const minY = radius;
+        const maxY = stageHeight - radius;
+        const newY = Math.max(minY, Math.min(pos.y, maxY));
+
+        return {
+          x: newX,
+          y: newY,
+        };
+      };
+      this.starConfigs.push(starConfig);
     }
   }
 }
