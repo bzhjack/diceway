@@ -5,7 +5,7 @@ export const DwPreset = definePreset(Aura, {
   // --- PRIMITIVE TOKENS ---
   primitive: {
     slate: {
-      50:  '#f8fafc',
+      50: '#f8fafc',
       100: '#f1f5f9',
       200: '#e2e8f0',
       300: '#cbd5e0',
@@ -18,7 +18,7 @@ export const DwPreset = definePreset(Aura, {
       950: '#020617',
     },
     blue: {
-      50:  '#eff6ff',
+      50: '#eff6ff',
       100: '#dbeafe',
       200: '#bfdbfe',
       300: '#93c5fd',
@@ -34,7 +34,7 @@ export const DwPreset = definePreset(Aura, {
   // --- SEMANTIC TOKENS ---
   semantic: {
     primary: {
-      50:  '{blue.50}',
+      50: '{blue.50}',
       100: '{blue.100}',
       200: '{blue.200}',
       300: '{blue.300}',
@@ -47,8 +47,8 @@ export const DwPreset = definePreset(Aura, {
       950: '{blue.950}',
     },
     surface: {
-      0:   '{slate.950}',
-      50:  '{slate.900}',
+      0: '{slate.950}',
+      50: '{slate.900}',
       100: '{slate.800}',
       200: '{slate.700}',
       300: '{slate.600}',
@@ -63,6 +63,26 @@ export const DwPreset = definePreset(Aura, {
   },
   // --- COMPONENT TOKENS ---
   components: {
+    fieldset: {
+      root: {
+        background: '{surface.700}',
+        color: '{surface.0}',
+        borderColor: '{surface.900}',
+      },
+      legend: {
+        background: 'transparent',
+      }
+
+    },
+    dialog: {
+      root: {
+        background: '{surface.800}',
+        borderColor: '{surface.700}',
+        color: '{surface.0}',
+        borderRadius: '0.5rem',
+        shadow: '0 2px 12px rgba(0,0,0,0.3)',
+      },
+    },
     card: {
       root: {
         background: '{surface.800}',
