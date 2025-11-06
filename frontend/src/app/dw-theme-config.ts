@@ -95,7 +95,11 @@ export const DwPreset = definePreset(Aura, {
         shadow: '0 2px 12px rgba(0,0,0,0.3)',
       },
       header: {
-        padding: '1rem',
+        padding: '0.5rem',
+
+      },
+      content: {
+        padding: '0.5rem',
       }
     },
     card: {
@@ -125,6 +129,11 @@ export const DwPreset = definePreset(Aura, {
       },
       header: {
         color: '{surface.0}',
+      }
+    },
+    textarea: {
+      root: {
+        paddingX: '5px'
       }
     }
   }

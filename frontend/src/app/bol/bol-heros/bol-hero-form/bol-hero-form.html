@@ -1,4 +1,4 @@
-<div class="region-container flex gap-2 flex-col">
+<div class="hero-form flex gap-2 flex-col">
   <form [formGroup]="herosForm" autocomplete="off" class="flex flex-col gap-1">
     <div class="flex gap-2">
       <!--- Left part --->
@@ -23,13 +23,6 @@
                 <label for="joueur">Nom du personnage *</label>
               </p-floatlabel>
 
-              <p-floatlabel variant="over">
-                <textarea pTextarea id="commentaire" formControlName="commentaire" rows="2" cols="30"
-                          style="resize: none" class="h-full"></textarea>
-                <label for="commentaire">Commentaire</label>
-              </p-floatlabel>
-            </div>
-            <div>
               <p-floatLabel variant="over">
                 <p-select
                   id="region"
@@ -43,32 +36,14 @@
                   formControlName="region_id"></p-select>
                 <label for="region">Region *</label>
               </p-floatLabel>
-
-              <div>
-                <p-fieldset>
-                  <ng-template pTemplate="header">
-                    <div class="flex items-center gap-2">
-                      <div>Langues</div>
-                      <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une langue"
-                               (click)="addItem('L', $event)"></app-btn>
-                    </div>
-                  </ng-template>
-                  @if (languesCtrl.value.length === 0) {
-                    <div class="text-xl text-gray-500">Vous pouvez choisir des
-                      langues
-                    </div>
-                  }
-                  <div class="flex flex-col gap-2">
-                    @for (item of selectedLangues(); track item.id) {
-                      <div class="flex gap-2 items-center justify-between">
-                        <div class="flex gap-2 items-center" style="width: 250px">
-                          <div class="whitespace-nowrap">{{ item.langue }}</div>
-                        </div>
-                        <app-btn (click)="removeItem(item.id, langues)"></app-btn>
-                      </div>
-                    }
-                  </div>
-                </p-fieldset>
+            </div>
+            <div>
+              <div class="flex flex-col pt-1">
+                <p-floatlabel variant="over">
+                <textarea pTextarea id="commentaire" formControlName="commentaire" rows="2" cols="30"
+                          style="resize: none" class="h-full"></textarea>
+                  <label for="commentaire">Commentaire</label>
+                </p-floatlabel>
               </div>
             </div>
           </div>
@@ -101,7 +76,8 @@
               <div class="flex gap-1">
                 <p-floatLabel variant="over">
                   <label for="pouvoir">Pouvoir</label>
-                  <p-inputNumber class="dw-input-number" formControlName="pouvoir" inputId="pouvoir" maxFractionDigits="0"
+                  <p-inputNumber class="dw-input-number" formControlName="pouvoir" inputId="pouvoir"
+                                 maxFractionDigits="0"
                                  size="small"/>
                 </p-floatLabel>
                 <p-floatLabel variant="over">
@@ -152,7 +128,8 @@
               <div class="flex flex-col gap-5">
                 <p-floatLabel variant="over">
                   <label for="initiative">Initiative</label>
-                  <p-inputNumber class="dw-input-number" formControlName="initiative" inputId="initiative" size="small"/>
+                  <p-inputNumber class="dw-input-number" formControlName="initiative" inputId="initiative"
+                                 size="small"/>
                 </p-floatLabel>
                 <p-floatLabel variant="over">
                   <label for="melee">Mêlée</label>
@@ -179,27 +156,23 @@
         <p-fieldset>
           <ng-template pTemplate="header">
             <div class="flex items-center gap-2">
-              <div>Avantages & Désavantages</div>
-              <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une avantage"
-                       (click)="addItem('TA', $event)"></app-btn>
-              <app-btn type="warn" icon="plus-circle" pTooltip="Ajouter une désavantage"
-                       (click)="addItem('TD', $event)"></app-btn>
+              <div>Langues</div>
+              <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une langue"
+                       (click)="addItem('L', $event)"></app-btn>
             </div>
           </ng-template>
-          @if (traitsCtrl.value.length === 0) {
-            <div class="text-xl text-gray-500">Vous pouvez choisir des traits</div>
+          @if (languesCtrl.value.length === 0) {
+            <div class="text-xl text-gray-500">Vous pouvez choisir des
+              langues
+            </div>
           }
-          <div class="flex flex-col gap-2" formArrayName="traits">
-            @for (trait of traits.controls; track trait.value.id; let i = $index) {
-              <div [formGroupName]="i" class="flex gap-2 items-center justify-between">
-                <div>
-                  @if (trait.value.type === 'D') {
-                    <bol-heros-trait-row [desavantage]="desavantageFromId(trait.value.id)"></bol-heros-trait-row>
-                  } @else {
-                    <bol-heros-trait-row [avantage]="avantageFromId(trait.value.id)"></bol-heros-trait-row>
-                  }
+          <div class="flex flex-col gap-2">
+            @for (item of selectedLangues(); track item.id) {
+              <div class="flex gap-2 items-center justify-between">
+                <div class="flex gap-2 items-center" style="width: 250px">
+                  <div class="whitespace-nowrap">{{ item.langue }}</div>
                 </div>
-                <app-btn (click)="removeTrait(trait.value, traits)"></app-btn>
+                <app-btn (click)="removeItem(item.id, langues)"></app-btn>
               </div>
             }
           </div>
@@ -212,19 +185,19 @@
                        (click)="addItem('C', $event)"></app-btn>
             </div>
           </ng-template>
-          <div style="min-height: 72px;">
+          <div>
             @if (carrieresCtrl.value.length === 0) {
               <div class="text-xl text-gray-500">Vous pouvez choisir des
                 carrières
               </div>
             }
-            <div formArrayName="carrieres">
+            <div class="flex flex-col gap-2" formArrayName="carrieres">
               @for (carriere of carrieres.controls; track carriere.value.id; let i = $index) {
                 <div class="flex flex-col">
                   <div class="flex flex-col">
                     <div [formGroupName]="i" class="flex gap-2 items-center">
                       <div style="width: 100px">{{ carriereFromId(carriere.value.id) }}</div>
-                      <p-inputNumber formControlName="value" inputId="defense" maxFractionDigits="0"/>
+                      <p-inputNumber class="dw-input-number" formControlName="value" inputId="defense" maxFractionDigits="0" size="small"/>
                       <app-btn (click)="removeItem(carriere.value.id, carrieres)"></app-btn>
                     </div>
                   </div>
@@ -284,14 +257,40 @@
           }
         </div>
       </p-fieldset>
+      <p-fieldset class="flex-auto">
+        <ng-template pTemplate="header">
+          <div class="flex items-center gap-2">
+            <div>Avantages & Désavantages</div>
+            <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une avantage"
+                     (click)="addItem('TA', $event)"></app-btn>
+            <app-btn type="warn" icon="plus-circle" pTooltip="Ajouter une désavantage"
+                     (click)="addItem('TD', $event)"></app-btn>
+          </div>
+        </ng-template>
+        @if (traitsCtrl.value.length === 0) {
+          <div class="text-xl text-gray-500">Vous pouvez choisir des traits</div>
+        }
+        <div class="flex flex-col gap-2" formArrayName="traits">
+          @for (trait of traits.controls; track trait.value.id; let i = $index) {
+            <div [formGroupName]="i" class="flex gap-2 items-center justify-between">
+              <div>
+                @if (trait.value.type === 'D') {
+                  <bol-heros-trait-row [desavantage]="desavantageFromId(trait.value.id)"></bol-heros-trait-row>
+                } @else {
+                  <bol-heros-trait-row [avantage]="avantageFromId(trait.value.id)"></bol-heros-trait-row>
+                }
+              </div>
+              <app-btn (click)="removeTrait(trait.value, traits)"></app-btn>
+            </div>
+          }
+        </div>
+      </p-fieldset>
     </div>
   </form>
-
   <div class="flex justify-end gap-2 pt-2">
-    <button pButton icon="pi pi-times" size="small" label="Quitter" severity="secondary"
-            (click)="quit($event)"></button>
-    <button pButton icon="pi pi-save" size="small" label="Enregistrer" severity="success" [disabled]="herosForm.invalid"
-            (click)="submit($event)"></button>
+    <p-button icon="pi pi-times" size="small" label="Quitter" severity="secondary" (click)="quit($event)"/>
+    <p-button icon="pi pi-save" size="small" label="Enregistrer" severity="success" [disabled]="herosForm.invalid"
+              (click)="submit($event)"/>
   </div>
 </div>
 

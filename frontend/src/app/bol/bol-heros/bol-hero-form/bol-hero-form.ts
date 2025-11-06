@@ -9,7 +9,7 @@ import {TextareaModule} from 'primeng/textarea';
 import {FieldsetModule} from 'primeng/fieldset';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {ConfirmationService} from 'primeng/api';
-import {ButtonDirective} from 'primeng/button';
+import {ButtonDirective, ButtonModule} from 'primeng/button';
 import {TooltipModule} from 'primeng/tooltip';
 import {BolHerosStateService} from '../../bol-services/bol-heros-state.service';
 import {toSignal} from '@angular/core/rxjs-interop';
@@ -41,7 +41,8 @@ import {AutoFocus} from 'primeng/autofocus';
     BolHerosTraitRowComponent,
     PopoverModule,
     FloatLabel,
-    AutoFocus
+    AutoFocus,
+    ButtonModule
   ],
     providers: [ConfirmationService],
     templateUrl: './bol-hero-form.html',

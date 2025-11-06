@@ -72,6 +72,7 @@ export class BolPlayground implements AfterViewInit {
     let ref = this.dialogueService.open(BolHerosForm, {
       header: heros ? 'Modification d\'un Héros' : 'Création d\'un Héros',
       dismissableMask :true,
+      position: "top",
       data: {
         heros: heros
       }
