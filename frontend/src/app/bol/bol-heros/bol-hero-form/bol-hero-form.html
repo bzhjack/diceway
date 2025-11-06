@@ -1,5 +1,4 @@
 <div class="region-container flex gap-2 flex-col">
-
   <form [formGroup]="herosForm" autocomplete="off" class="flex flex-col gap-1">
     <div class="flex gap-2">
       <!--- Left part --->
@@ -12,25 +11,25 @@
                    alt="avatar">
               <p class="hero-avatar__description">Modifier</p>
             </div>
-            <div class="flex flex-col gap-2.5 pt-1">
+            <div class="flex flex-col gap-4 pt-1">
               <!--- Nom du joueur --->
-              <p-floatlabel variant="on">
+              <p-floatlabel variant="over">
                 <input pInputText formControlName="joueur" autocomplete="off" id="joueur" pSize="small" [pAutoFocus]="true"/>
                 <label for="joueur">Nom du joueur *</label>
               </p-floatlabel>
 
-              <p-floatlabel variant="on">
+              <p-floatlabel variant="over">
                 <input pInputText id="nom" formControlName="nom" autocomplete="off" id="nom" pSize="small"/>
                 <label for="joueur">Nom du personnage *</label>
               </p-floatlabel>
 
-              <p-floatlabel variant="on">
+              <p-floatlabel variant="over">
                 <textarea pTextarea id="commentaire" formControlName="commentaire" rows="2" cols="30" style="resize: none" class="h-full"></textarea>
                 <label for="commentaire">Commentaire</label>
               </p-floatlabel>
             </div>
             <div>
-                <p-floatLabel variant="on">
+                <p-floatLabel variant="over">
                 <p-select
                   id="region"
                   class="w-full"

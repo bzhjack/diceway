@@ -71,6 +71,7 @@ export class BolPlayground implements AfterViewInit {
   quickCreateHeros(heros?: BolHerosModel) {
     let ref = this.dialogueService.open(BolHerosForm, {
       header: heros ? 'Modification d\'un Héros' : 'Création d\'un Héros',
+      dismissableMask :true,
       data: {
         heros: heros
       }

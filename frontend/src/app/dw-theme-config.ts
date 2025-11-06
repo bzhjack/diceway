@@ -68,11 +68,10 @@ export const DwPreset = definePreset(Aura, {
         activeColor: '{surface.0}',
         focusColor: '{surface.0}',
       },
-      on: {
+      over: {
         active: {
-          background: '{surface.700}'
-        },
-        borderRadius: '0.2rem',
+          top: '-14px'
+        }
 
       }
     },
