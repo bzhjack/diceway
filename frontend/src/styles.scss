@@ -1,6 +1,8 @@
 @use "sass:color";
-@use "styles/diceway";
 @use "primeicons/primeicons.css";
+
+@use "styles/diceway";
+@use "styles/colors";
 @use "styles/panel";
 
 @tailwind base;

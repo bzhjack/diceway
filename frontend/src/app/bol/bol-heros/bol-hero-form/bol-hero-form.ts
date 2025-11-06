@@ -22,6 +22,8 @@ import {BolDesavantageModel} from '../../bol-models/bol-desavantage.model';
 import {Popover, PopoverModule} from 'primeng/popover';
 import {BolHerosTraitRowComponent} from '../../../trait-row/trait-row.component';
 import {SelectModule} from 'primeng/select';
+import {FloatLabel} from 'primeng/floatlabel';
+import {AutoFocus} from 'primeng/autofocus';
 
 @Component({
     selector: 'bol-heros-form',
@@ -40,7 +42,9 @@ import {SelectModule} from 'primeng/select';
     ButtonDirective,
     Ripple,
     BolHerosTraitRowComponent,
-    PopoverModule
+    PopoverModule,
+    FloatLabel,
+    AutoFocus
   ],
     providers: [ConfirmationService],
     templateUrl: './bol-hero-form.html',

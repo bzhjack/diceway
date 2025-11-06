@@ -63,6 +63,19 @@ export const DwPreset = definePreset(Aura, {
   },
   // --- COMPONENT TOKENS ---
   components: {
+    floatlabel: {
+      root: {
+        activeColor: '{surface.0}',
+        focusColor: '{surface.0}',
+      },
+      on: {
+        active: {
+          background: '{surface.700}'
+        },
+        borderRadius: '0.2rem',
+
+      }
+    },
     fieldset: {
       root: {
         background: '{surface.700}',
@@ -82,6 +95,9 @@ export const DwPreset = definePreset(Aura, {
         borderRadius: '0.5rem',
         shadow: '0 2px 12px rgba(0,0,0,0.3)',
       },
+      header: {
+        padding: '1rem',
+      }
     },
     card: {
       root: {
