@@ -10,7 +10,6 @@ import {NoticeComponent} from './auth/public/notice/notice.component';
 import {NotfoundComponent} from './auth/public/notfound/notfound.component';
 import {authGuard} from './auth/auth.guard';
 import {Home} from './home/home';
-import {BolPlayground} from './bol/bol-playground/bol-playground';
 
 export const routes: Routes = [
   // Public route

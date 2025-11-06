@@ -5,7 +5,7 @@ import {BolQuestModel, BolQuestProtagonistModel} from "../bol-models/bol-quest.m
 import {BolHerosModel} from "../bol-models/bol-heros.model";
 import {BolCreatureModel} from "../bol-models/bol-creature.model";
 import {BolDemonModel} from "../bol-models/bol-demon.model";
-import { environment } from '../../../environments/environment';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

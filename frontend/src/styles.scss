@@ -4,10 +4,18 @@
 @use "styles/diceway";
 @use "styles/colors";
 @use "styles/panel";
+@use "styles/form";
+
+:root {
+  --p-floatlabel-font-weight: 500;
+  --p-floatlabel-active-font-size: 1rem !important;
+  --p-floatlabel-active-font-weight: 400;
+}
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');

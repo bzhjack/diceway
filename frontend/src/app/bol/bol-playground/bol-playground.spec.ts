@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { BolPlayground } from './bol-playground';
+import {BolPlayground} from './bol-playground';
 
 describe('BolPlayground', () => {
   let component: BolPlayground;

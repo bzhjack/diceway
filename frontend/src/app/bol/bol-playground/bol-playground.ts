@@ -4,14 +4,14 @@ import {CoreShapeComponent, StageComponent} from 'ng2-konva';
 import Konva from 'konva';
 import {BolHerosService} from '../bol-services/bol-heros.service';
 import {ButtonModule} from 'primeng/button';
-import { ButtonGroupModule } from 'primeng/buttongroup';
-import StageConfig = Konva.StageConfig;
-import CircleConfig = Konva.CircleConfig;
+import {ButtonGroupModule} from 'primeng/buttongroup';
 import {BolHerosModel} from '../bol-models/bol-heros.model';
 import {BolHerosForm} from '../bol-heros/bol-hero-form/bol-hero-form';
 import {DialogService} from 'primeng/dynamicdialog';
 import {Subscription} from 'rxjs';
 import {NgxSpinnerService} from 'ngx-spinner';
+import StageConfig = Konva.StageConfig;
+import CircleConfig = Konva.CircleConfig;
 
 type ExtCircleConfig = CircleConfig;
 

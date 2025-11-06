@@ -70,7 +70,7 @@ export const DwPreset = definePreset(Aura, {
       },
       over: {
         active: {
-          top: '-14px'
+          top: '-18px'
         }
 
       }

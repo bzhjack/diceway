@@ -10,7 +10,7 @@ import {BolArmureModel, BolHerosArmureModel} from "../bol-models/bol-armure.mode
 import {BolArmeModel, BolHerosArmeModel} from "../bol-models/bol-arme.model";
 import {BolHerosTraitsModel} from "../bol-models/bol-trait.model";
 import {BolHerosLangueModel, BolLangueModel} from "../bol-models/bol-langue.model";
-import { environment } from '../../../environments/environment';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

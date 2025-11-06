@@ -11,10 +11,10 @@
                    alt="avatar">
               <p class="hero-avatar__description">Modifier</p>
             </div>
-            <div class="flex flex-col gap-4 pt-1">
-              <!--- Nom du joueur --->
+            <div class="flex flex-col gap-5 pt-1">
               <p-floatlabel variant="over">
-                <input pInputText formControlName="joueur" autocomplete="off" id="joueur" pSize="small" [pAutoFocus]="true"/>
+                <input pInputText formControlName="joueur" autocomplete="off" id="joueur" pSize="small"
+                       [pAutoFocus]="true"/>
                 <label for="joueur">Nom du joueur *</label>
               </p-floatlabel>
 
@@ -24,12 +24,13 @@
               </p-floatlabel>
 
               <p-floatlabel variant="over">
-                <textarea pTextarea id="commentaire" formControlName="commentaire" rows="2" cols="30" style="resize: none" class="h-full"></textarea>
+                <textarea pTextarea id="commentaire" formControlName="commentaire" rows="2" cols="30"
+                          style="resize: none" class="h-full"></textarea>
                 <label for="commentaire">Commentaire</label>
               </p-floatlabel>
             </div>
             <div>
-                <p-floatLabel variant="over">
+              <p-floatLabel variant="over">
                 <p-select
                   id="region"
                   class="w-full"
@@ -39,9 +40,9 @@
                   [filter]="true"
                   filterBy="region"
                   [options]="regionList()"
-                  formControlName="region_id" ></p-select>
-                  <label for="region">Region *</label>
-                </p-floatLabel>
+                  formControlName="region_id"></p-select>
+                <label for="region">Region *</label>
+              </p-floatLabel>
 
               <div>
                 <p-fieldset>
@@ -52,16 +53,20 @@
                                (click)="addItem('L', $event)"></app-btn>
                     </div>
                   </ng-template>
-                  <div *ngIf="languesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des
-                    langues
-                  </div>
-                  <div class="flex flex-col gap-2">
-                    <div *ngFor="let item of selectedLangues()" class="flex gap-2 items-center justify-between">
-                      <div class="flex gap-2 items-center" style="width: 250px">
-                        <div class="whitespace-nowrap">{{ item.langue }}</div>
-                      </div>
-                      <app-btn (click)="removeItem(item.id, langues)"></app-btn>
+                  @if (languesCtrl.value.length === 0) {
+                    <div class="text-xl text-gray-500">Vous pouvez choisir des
+                      langues
                     </div>
+                  }
+                  <div class="flex flex-col gap-2">
+                    @for (item of selectedLangues(); track item.id) {
+                      <div class="flex gap-2 items-center justify-between">
+                        <div class="flex gap-2 items-center" style="width: 250px">
+                          <div class="whitespace-nowrap">{{ item.langue }}</div>
+                        </div>
+                        <app-btn (click)="removeItem(item.id, langues)"></app-btn>
+                      </div>
+                    }
                   </div>
                 </p-fieldset>
               </div>
@@ -71,85 +76,98 @@
 
 
         <div class="flex gap-2">
+
           <p-fieldset class="flex-auto" legend="Ressources">
-            <div class="flex flex-col gap-1">
+            <div class="flex flex-col gap-5 pt-3">
               <div class="flex gap-1">
-                <div class="flex flex-col gap-1">
+                <p-floatLabel variant="over">
                   <label for="vitalite">Vitalité</label>
-                  <p-inputNumber formControlName="vitalite" inputId="vitalite" maxFractionDigits="0" variant="filled"/>
-                </div>
-                <div class="flex flex-col gap-1">
+                  <p-inputNumber class="dw-input-number" formControlName="vitalite" inputId="vitalite"
+                                 maxFractionDigits="0" size="small"/>
+                </p-floatLabel>
+
+                <p-floatLabel variant="over">
                   <label for="heroisme">Héroisme</label>
-                  <p-inputNumber formControlName="heroisme" inputId="heroisme" maxFractionDigits="0" variant="filled"/>
-                </div>
-                <div class="flex flex-col gap-1">
+                  <p-inputNumber class="dw-input-number" formControlName="heroisme" inputId="heroisme"
+                                 maxFractionDigits="0" size="small"/>
+                </p-floatLabel>
+                <p-floatLabel variant="over">
                   <label for="experience">Expérience</label>
-                  <p-inputNumber formControlName="experience" inputId="experience" maxFractionDigits="0" variant="filled"/>
-                </div>
+                  <p-inputNumber class="dw-input-number" formControlName="experience" inputId="experience"
+                                 maxFractionDigits="0"
+                                 size="small"/>
+                </p-floatLabel>
               </div>
               <div class="flex gap-1">
-                <div class="flex flex-col gap-1">
+                <p-floatLabel variant="over">
                   <label for="pouvoir">Pouvoir</label>
-                  <p-inputNumber formControlName="pouvoir" inputId="pouvoir" maxFractionDigits="0" variant="filled"/>
-                </div>
-
-                <div class="flex flex-col gap-1">
+                  <p-inputNumber class="dw-input-number" formControlName="pouvoir" inputId="pouvoir" maxFractionDigits="0"
+                                 size="small"/>
+                </p-floatLabel>
+                <p-floatLabel variant="over">
                   <label for="foi">Foi</label>
-                  <p-inputNumber formControlName="foi" inputId="foi" maxFractionDigits="0" variant="filled"/>
-                </div>
-                <div class="flex flex-col gap-1">
+                  <p-inputNumber class="dw-input-number" formControlName="foi" inputId="foi" maxFractionDigits="0"
+                                 size="small"/>
+                </p-floatLabel>
+                <p-floatLabel variant="over">
                   <label for="creation">Création</label>
-                  <p-inputNumber formControlName="creation" inputId="creation" maxFractionDigits="0" variant="filled"/>
-                </div>
+                  <p-inputNumber class="dw-input-number" formControlName="creation" inputId="creation"
+                                 maxFractionDigits="0" size="small"/>
+                </p-floatLabel>
 
               </div>
             </div>
+
           </p-fieldset>
           <p-fieldset class="flex-auto" legend="Attributs">
-            <div class="flex gap-2">
-              <div class="flex flex-col gap-1">
-                <div class="flex flex-col gap-1">
+            <div class="flex gap-2 pt-3">
+              <div class="flex flex-col gap-5">
+                <p-floatLabel variant="over">
                   <label for="vigueur">Vigueur</label>
-                  <p-inputNumber formControlName="vigueur" inputId="vigueur" maxFractionDigits="0"/>
-                </div>
-                <div class="flex flex-col gap-1">
+                  <p-inputNumber class="dw-input-number" formControlName="vigueur" inputId="vigueur"
+                                 maxFractionDigits="0" size="small"/>
+                </p-floatLabel>
+                <p-floatLabel variant="over">
                   <label for="agilite">Agilité</label>
-                  <p-inputNumber formControlName="agilite" inputId="agilite" maxFractionDigits="0"/>
-                </div>
+                  <p-inputNumber class="dw-input-number" formControlName="agilite" inputId="agilite"
+                                 maxFractionDigits="0" size="small"/>
+                </p-floatLabel>
               </div>
-              <div class="flex flex-col gap-1">
-                <div class="flex flex-col gap-1">
+              <div class="flex flex-col gap-5">
+                <p-floatLabel variant="over">
                   <label for="esprit">Esprit</label>
-                  <p-inputNumber formControlName="esprit" inputId="esprit" maxFractionDigits="0"/>
-                </div>
-                <div class="flex flex-col gap-1">
+                  <p-inputNumber class="dw-input-number" formControlName="esprit" inputId="esprit"
+                                 maxFractionDigits="0" size="small"/>
+                </p-floatLabel>
+                <p-floatLabel variant="over">
                   <label for="aura">Aura</label>
-                  <p-inputNumber formControlName="aura" inputId="aura" maxFractionDigits="0"/>
-                </div>
+                  <p-inputNumber class="dw-input-number" formControlName="aura" inputId="aura" maxFractionDigits="0"
+                                 size="small"/>
+                </p-floatLabel>
               </div>
             </div>
           </p-fieldset>
           <p-fieldset class="flex-auto" legend="Combat">
-            <div class="flex gap-2">
-              <div class="flex flex-col gap-1">
-                <div class="flex flex-col gap-1">
+            <div class="flex gap-2 pt-3">
+              <div class="flex flex-col gap-5">
+                <p-floatLabel variant="over">
                   <label for="initiative">Initiative</label>
-                  <p-inputNumber formControlName="initiative" inputId="initiative"/>
-                </div>
-                <div class="flex flex-col gap-1">
+                  <p-inputNumber class="dw-input-number" formControlName="initiative" inputId="initiative" size="small"/>
+                </p-floatLabel>
+                <p-floatLabel variant="over">
                   <label for="melee">Mêlée</label>
-                  <p-inputNumber formControlName="melee" inputId="melee"/>
-                </div>
+                  <p-inputNumber class="dw-input-number" formControlName="melee" inputId="melee" size="small"/>
+                </p-floatLabel>
               </div>
-              <div class="flex flex-col gap-1">
-                <div class="flex flex-col gap-1">
+              <div class="flex flex-col gap-5">
+                <p-floatLabel variant="over">
                   <label for="tir">Tir</label>
-                  <p-inputNumber formControlName="tir" inputId="tir"/>
-                </div>
-                <div class="flex flex-col gap-1">
+                  <p-inputNumber class="dw-input-number" formControlName="tir" inputId="tir" size="small"/>
+                </p-floatLabel>
+                <p-floatLabel variant="over">
                   <label for="defense">Défense</label>
-                  <p-inputNumber formControlName="defense" inputId="defense"/>
-                </div>
+                  <p-inputNumber class="dw-input-number" formControlName="defense" inputId="defense" size="small"/>
+                </p-floatLabel>
               </div>
             </div>
           </p-fieldset>
@@ -168,9 +186,11 @@
                        (click)="addItem('TD', $event)"></app-btn>
             </div>
           </ng-template>
-          <div *ngIf="traitsCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des traits</div>
+          @if (traitsCtrl.value.length === 0) {
+            <div class="text-xl text-gray-500">Vous pouvez choisir des traits</div>
+          }
           <div class="flex flex-col gap-2" formArrayName="traits">
-            <ng-container *ngFor="let trait of traits.controls; let i = index">
+            @for (trait of traits.controls; track trait.value.id; let i = $index) {
               <div [formGroupName]="i" class="flex gap-2 items-center justify-between">
                 <div>
                   @if (trait.value.type === 'D') {
@@ -181,7 +201,7 @@
                 </div>
                 <app-btn (click)="removeTrait(trait.value, traits)"></app-btn>
               </div>
-            </ng-container>
+            }
           </div>
         </p-fieldset>
         <p-fieldset>
@@ -193,19 +213,23 @@
             </div>
           </ng-template>
           <div style="min-height: 72px;">
-            <div *ngIf="carrieresCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des
-              carrières
-            </div>
+            @if (carrieresCtrl.value.length === 0) {
+              <div class="text-xl text-gray-500">Vous pouvez choisir des
+                carrières
+              </div>
+            }
             <div formArrayName="carrieres">
-              <div class="flex flex-col" *ngFor="let carriere of carrieres.controls; let i = index">
+              @for (carriere of carrieres.controls; track carriere.value.id; let i = $index) {
                 <div class="flex flex-col">
-                  <div [formGroupName]="i" class="flex gap-2 items-center">
-                    <div style="width: 100px">{{ carriereFromId(carriere.value.id) }}</div>
-                    <p-inputNumber formControlName="value" inputId="defense" maxFractionDigits="0"/>
-                    <app-btn (click)="removeItem(carriere.value.id, carrieres)"></app-btn>
+                  <div class="flex flex-col">
+                    <div [formGroupName]="i" class="flex gap-2 items-center">
+                      <div style="width: 100px">{{ carriereFromId(carriere.value.id) }}</div>
+                      <p-inputNumber formControlName="value" inputId="defense" maxFractionDigits="0"/>
+                      <app-btn (click)="removeItem(carriere.value.id, carrieres)"></app-btn>
+                    </div>
                   </div>
                 </div>
-              </div>
+              }
             </div>
           </div>
         </p-fieldset>
@@ -221,15 +245,19 @@
           </div>
         </ng-template>
 
-        <div *ngIf="armesCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des armes</div>
+        @if (armesCtrl.value.length === 0) {
+          <div class="text-xl text-gray-500">Vous pouvez choisir des armes</div>
+        }
         <div class="flex flex-col gap-2">
-          <div *ngFor="let item of selectedArmes()" class="flex gap-2 items-center justify-between">
-            <div class="flex gap-2 items-center" style="width: 250px">
-              <div class="whitespace-nowrap">{{ item.arme }}</div>
-              <div class="text-gray-400 font-bold">{{ item.degats }}</div>
+          @for (item of selectedArmes(); track item.id) {
+            <div class="flex gap-2 items-center justify-between">
+              <div class="flex gap-2 items-center" style="width: 250px">
+                <div class="whitespace-nowrap">{{ item.arme }}</div>
+                <div class="text-gray-400 font-bold">{{ item.degats }}</div>
+              </div>
+              <app-btn (click)="removeItem(item.id, armes)"></app-btn>
             </div>
-            <app-btn (click)="removeItem(item.id, armes)"></app-btn>
-          </div>
+          }
         </div>
       </p-fieldset>
       <p-fieldset class="flex-auto">
@@ -240,16 +268,20 @@
                      (click)="addItem('D', $event)"></app-btn>
           </div>
         </ng-template>
-        <div *ngIf="armuresCtrl.value?.length === 0" class="text-xl text-gray-500">Vous pouvez choisir des armures</div>
+        @if (armuresCtrl.value.length === 0) {
+          <div class="text-xl text-gray-500">Vous pouvez choisir des armures</div>
+        }
         <div class="flex flex-col gap-2">
-          <div *ngFor="let item of selectedArmures()" class="flex gap-2 items-center justify-between">
-            <div class="flex gap-2 items-center" style="width: 250px">
-              <div class="whitespace-nowrap">{{ item.armure }}</div>
-              <div class="text-gray-400 font-bold bol-ellipsis-80" [pTooltip]="item.protection">{{ item.protection }}
+          @for (item of selectedArmures(); track item.id) {
+            <div class="flex gap-2 items-center justify-between">
+              <div class="flex gap-2 items-center" style="width: 250px">
+                <div class="whitespace-nowrap">{{ item.armure }}</div>
+                <div class="text-gray-400 font-bold bol-ellipsis-80" [pTooltip]="item.protection">{{ item.protection }}
+                </div>
               </div>
+              <app-btn (click)="removeItem(item.id, armures)"></app-btn>
             </div>
-            <app-btn (click)="removeItem(item.id, armures)"></app-btn>
-          </div>
+          }
         </div>
       </p-fieldset>
     </div>
@@ -269,22 +301,34 @@
 
     <div class="flex flex-col gap-2">
       <p-select [style]="{ width: '250px' }"
-                  [options]="unselectedItems()"
-                  [(ngModel)]="selectedItem"
-                  [ngModelOptions]="{standalone: true}"
-                  [showClear]="true"
-                  [filter]="true"
-                  [filterBy]="searchFilter()"
-                  placeholder="Faites votre sélection">
+                [options]="unselectedItems()"
+                [(ngModel)]="selectedItem"
+                [ngModelOptions]="{standalone: true}"
+                [showClear]="true"
+                [filter]="true"
+                [filterBy]="searchFilter()"
+                placeholder="Faites votre sélection">
 
         <ng-template pTemplate="selectedItem" let-selectedOption>
           <div class="flex align-items-center gap-2">
-            <div *ngIf="currentField() === 'armes'">{{ selectedOption.arme }}</div>
-            <div *ngIf="currentField() === 'armures'">{{ selectedOption.armure }}</div>
-            <div *ngIf="currentField() === 'carrieres'">{{ selectedOption.carriere }}</div>
-            <div *ngIf="currentField() === 'avantages'">{{ selectedOption.avantage }}</div>
-            <div *ngIf="currentField() === 'desavantages'">{{ selectedOption.desavantage }}</div>
-            <div *ngIf="currentField() === 'langues'">{{ selectedOption.langue }}</div>
+            @if (currentField() === 'armes') {
+              <div>{{ selectedOption.arme }}</div>
+            }
+            @if (currentField() === 'armures') {
+              <div>{{ selectedOption.armure }}</div>
+            }
+            @if (currentField() === 'carrieres') {
+              <div>{{ selectedOption.carriere }}</div>
+            }
+            @if (currentField() === 'avantages') {
+              <div>{{ selectedOption.avantage }}</div>
+            }
+            @if (currentField() === 'desavantages') {
+              <div>{{ selectedOption.desavantage }}</div>
+            }
+            @if (currentField() === 'langues') {
+              <div>{{ selectedOption.langue }}</div>
+            }
           </div>
         </ng-template>
 

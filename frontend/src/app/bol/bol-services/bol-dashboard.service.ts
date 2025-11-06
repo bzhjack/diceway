@@ -5,7 +5,7 @@ import {HttpClient} from "@angular/common/http";
 import {BolDashboardModel} from "../bol-models/bol-dashboard.model";
 import {NgxSpinnerService} from "ngx-spinner";
 import {tap} from "rxjs/operators";
-import { environment } from '../../../environments/environment';
+import {environment} from '../../../environments/environment';
 
 @Injectable()
 export class BolDashboardService {
