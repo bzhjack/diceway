@@ -27,6 +27,7 @@ type ExtCircleConfig = CircleConfig;
   providers: [DialogService],
   templateUrl: './bol-playground.html',
   styleUrl: './bol-playground.scss',
+  standalone: true
 })
 export class BolPlayground implements AfterViewInit {
   private readonly herosService = inject(BolHerosService);
@@ -70,10 +71,12 @@ export class BolPlayground implements AfterViewInit {
 
   quickCreateHeros(heros?: BolHerosModel) {
     let ref = this.dialogueService.open(BolHerosForm, {
-      header: heros ? 'Modification d\'un Héros' : 'Création d\'un Héros',
+
       dismissableMask :true,
       position: "top",
+      showHeader: false,
       data: {
+        header: heros ? 'Modification d\'un Héros' : 'Création d\'un Héros',
         heros: heros
       }
     });

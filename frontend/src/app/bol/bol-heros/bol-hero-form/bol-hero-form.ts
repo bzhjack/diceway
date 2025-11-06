@@ -25,7 +25,7 @@ import {FloatLabel} from 'primeng/floatlabel';
 import {AutoFocus} from 'primeng/autofocus';
 
 @Component({
-    selector: 'bol-heros-form',
+  selector: 'bol-heros-form',
   imports: [
     FormsModule,
     ReactiveFormsModule,
@@ -44,9 +44,10 @@ import {AutoFocus} from 'primeng/autofocus';
     AutoFocus,
     ButtonModule
   ],
-    providers: [ConfirmationService],
-    templateUrl: './bol-hero-form.html',
-    styleUrl: './bol-hero-form.scss'
+  providers: [ConfirmationService],
+  templateUrl: './bol-hero-form.html',
+  standalone: true,
+  styleUrl: './bol-hero-form.scss'
 })
 export class BolHerosForm {
   readonly panelHeros = viewChild<Popover>('opHeros');
@@ -250,7 +251,7 @@ export class BolHerosForm {
 
   constructor(
     private ref: DynamicDialogRef,
-    private config: DynamicDialogConfig
+    protected config: DynamicDialogConfig
   ) {
     if (this.config.data.heros) {
       const heros = this.config.data.heros as BolHerosModel;
@@ -432,6 +433,7 @@ export class BolHerosForm {
   avantageFromId(id: number) {
     return this.avantageList()?.find((item: BolAvantageModel) => Number(item.id) === Number(id));
   }
+
   desavantageFromId(id: number) {
     return this.desavantageList()?.find((item: BolDesavantageModel) => Number(item.id) === Number(id));
   }

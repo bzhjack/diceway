@@ -5,6 +5,9 @@
 @use "styles/colors";
 @use "styles/panel";
 @use "styles/form";
+@use "styles/dialog";
+@use "styles/fieldset";
+@use "styles/tag";
 
 :root {
   --p-floatlabel-font-weight: 500;

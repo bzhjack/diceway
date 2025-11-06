@@ -20,6 +20,7 @@ import {RouterLink} from '@angular/router';
   ],
   templateUrl: './topbar.html',
   styleUrl: './topbar.scss',
+  standalone: true
 })
 export class Topbar implements OnInit {
   private authService = inject(AuthService);

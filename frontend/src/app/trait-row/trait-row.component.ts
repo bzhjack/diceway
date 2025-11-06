@@ -1,5 +1,4 @@
 import {Component, input} from '@angular/core';
-import {NgForOf, NgIf} from "@angular/common";
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {CheckboxModule} from "primeng/checkbox";
 import {PopoverModule} from 'primeng/popover';
@@ -8,16 +7,15 @@ import {BolDesavantageModel} from '../bol/bol-models/bol-desavantage.model';
 import {BolHeroCreateTools} from '../bol/bol-heros/bol-hero-form/create.tools';
 
 @Component({
-    selector: 'bol-heros-trait-row',
-    imports: [
-        PopoverModule,
-        NgIf,
-        InlineSVGModule,
-        NgForOf,
-        CheckboxModule
-    ],
-    templateUrl: './trait-row.component.html',
-    styleUrl: './trait-row.component.scss'
+  selector: 'bol-heros-trait-row',
+  imports: [
+    PopoverModule,
+    InlineSVGModule,
+    CheckboxModule
+  ],
+  templateUrl: './trait-row.component.html',
+  standalone: true,
+  styleUrl: './trait-row.component.scss'
 })
 export class BolHerosTraitRowComponent {
   readonly avantage = input<BolAvantageModel>();

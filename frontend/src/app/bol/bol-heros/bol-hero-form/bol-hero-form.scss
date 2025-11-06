@@ -1,9 +1,11 @@
 .hero-form {
-  height: 100%;
+  height: calc(100vh - 90px);
+  form {
+    height: calc(100vh - 190px);
+    overflow: auto;
+  }
 }
-form {
-  height: calc(100vh - 185px);
-}
+
 .hero-avatar {
   height: 100px;
   width: 100px;

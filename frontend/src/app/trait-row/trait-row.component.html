@@ -1,10 +1,12 @@
 @if (avantage()) {
   <div class="flex items-center w-fit">
     <div class="flex items-center cursor-pointer" (click)="avPanel.toggle($event)">
-      <div *ngIf="!avantage()!.de_bonus && !avantage()!.attribut" class="tag_icon bonus"
-           inlineSVG="/assets/info.svg"></div>
-      <div *ngIf="avantage()!.de_bonus || avantage()!.attribut" class="tag_icon bonus"
-           [inlineSVG]="avantage()!.de_bonus ? '/assets/d6.svg' : '/assets/attr.svg'"></div>
+      @if (!avantage()!.de_bonus && !avantage()!.attribut) {
+        <div class="tag_icon bonus" inlineSVG="/assets/info.svg"></div>
+      }
+      @if (avantage()!.de_bonus || avantage()!.attribut) {
+        <div class="tag_icon bonus" [inlineSVG]="avantage()!.de_bonus ? '/assets/d6.svg' : '/assets/attr.svg'"></div>
+      }
       <div>
       </div>
     </div>
@@ -15,21 +17,26 @@
     </div>
   </div>
   <p-popover #avPanel>
-    <div class="dw-panel" style="background: #424B57">
-      <div *ngFor="let desc of avantageDescription(avantage()!)" class="flex flex-col">
-        <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
-        <div style="font-size: 12px">{{ desc.description }}</div>
-      </div>
+    <div>
+      @for (desc of avantageDescription(avantage()!); track desc) {
+        <div class="flex flex-col">
+          <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
+          <div style="font-size: 12px">{{ desc.description }}</div>
+        </div>
+      }
     </div>
   </p-popover>
 }
 @if (desavantage()) {
   <div class="flex items-center w-fit" [class.disabled]="disabled()">
     <div class="flex items-center  cursor-pointer " (click)="desPanel.toggle($event)">
-      <div *ngIf="!desavantage()!.de_malus && !desavantage()!.attribut" class="tag_icon malus"
-           inlineSVG="/assets/info.svg"></div>
-      <div *ngIf="desavantage()!.de_malus || desavantage()!.attribut" class="tag_icon malus"
-           [inlineSVG]="desavantage()!.de_malus ? '/assets/d6.svg' : '/assets/attr.svg'"></div>
+      @if (!desavantage()!.de_malus && !desavantage()!.attribut) {
+        <div class="tag_icon malus" inlineSVG="/assets/info.svg"></div>
+      }
+      @if (desavantage()!.de_malus || desavantage()!.attribut) {
+        <div class="tag_icon malus"
+             [inlineSVG]="desavantage()!.de_malus ? '/assets/d6.svg' : '/assets/attr.svg'"></div>
+      }
     </div>
     <div [class.disabled]="disabled()" style="white-space: nowrap">{{ desavantage()!.desavantage }}
       @if (desavantage()!.pivot && desavantage()!.pivot.detail) {
@@ -39,11 +46,13 @@
   </div>
 
   <p-popover #desPanel>
-    <div class="dw-panel" style="background: #424B57">
-      <div *ngFor="let desc of desavantageDescription(desavantage()!)" class="flex flex-col">
-        <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
-        <div style="font-size: 12px">{{ desc.description }}</div>
-      </div>
+    <div>
+      @for (desc of desavantageDescription(desavantage()!); track desc) {
+        <div class="flex flex-col">
+          <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
+          <div style="font-size: 12px">{{ desc.description }}</div>
+        </div>
+      }
     </div>
   </p-popover>
 }
