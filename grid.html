@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Mini Battlemap (Konva)</title>
+    <style>
+        body { font-family: system-ui, Arial; display:flex; gap:20px; padding:20px; }
+        #container { border:1px solid #ccc; width:800px; height:600px; background:#f6f6f6; }
+        .controls { width:260px; }
+        label { display:block; margin-top:8px; font-size:14px; }
+        input[type=number] { width:80px; }
+        button { margin-top:8px; display:block; }
+        .token-list { margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; }
+        .token-swatch { width:36px; height:36px; border-radius:6px; display:flex; align-items:center; justify-content:center; color:white; font-weight:700; cursor:pointer; }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+
+<div class="controls">
+    <h3>Contrôles</h3>
+    <label>Cell size: <input id="cellSize" type="number" value="48" min="8" /></label>
+    <label>Cols: <input id="cols" type="number" value="16" min="4" /></label>
+    <label>Rows: <input id="rows" type="number" value="12" min="4" /></label>
+    <button id="redraw">Redessiner la grille</button>
+    <button id="toggleGrid">Masquer / Afficher grille</button>
+    <hr/>
+    <h4>Ajouter un token</h4>
+    <div class="token-list">
+        <div class="token-swatch" data-color="#e74c3c" title="Rouge" style="background:#e74c3c">A</div>
+        <div class="token-swatch" data-color="#3498db" title="Bleu" style="background:#3498db">B</div>
+        <div class="token-swatch" data-color="#2ecc71" title="Vert" style="background:#2ecc71">C</div>
+        <div class="token-swatch" data-color="#f1c40f" title="Jaune" style="background:#f1c40f;color:#222">D</div>
+    </div>
+    <button id="clearTokens">Supprimer tous les tokens</button>
+    <hr/>
+    <p>Astuce: tu peux utiliser les flèches du clavier pour déplacer le token sélectionné (1 case).</p>
+</div>
+
+<!-- Konva via CDN -->
+<script src="https://unpkg.com/konva@8/konva.min.js"></script>
+<script>
+    // === CONFIG & INITIALISATION ===
+    const container = document.getElementById('container');
+    const cellSizeInput = document.getElementById('cellSize');
+    const colsInput = document.getElementById('cols');
+    const rowsInput = document.getElementById('rows');
+    const redrawBtn = document.getElementById('redraw');
+    const toggleGridBtn = document.getElementById('toggleGrid');
+    const clearTokensBtn = document.getElementById('clearTokens');
+
+    let cellSize = parseInt(cellSizeInput.value, 10);
+    let cols = parseInt(colsInput.value, 10);
+    let rows = parseInt(rowsInput.value, 10);
+
+    const width = () => cols * cellSize;
+    const height = () => rows * cellSize;
+
+    const stage = new Konva.Stage({
+        container: 'container',
+        width: width(),
+        height: height()
+    });
+
+    // layers: grid under, tokens over
+    const gridLayer = new Konva.Layer();
+    const tokenLayer = new Konva.Layer();
+    stage.add(gridLayer);
+    stage.add(tokenLayer);
+
+    let gridVisible = true;
+    let selectedToken = null;
+
+    // drawGrid draws grid lines and faint squares
+    function drawGrid() {
+        gridLayer.destroyChildren();
+        stage.width(width());
+        stage.height(height());
+        // background
+        gridLayer.add(new Konva.Rect({ x:0, y:0, width:width(), height:height(), fill:'#f6f6f6' }));
+        // vertical lines
+        for (let c=0; c<=cols; c++) {
+            gridLayer.add(new Konva.Line({
+                points: [c*cellSize, 0, c*cellSize, height()],
+                stroke: '#bbb',
+                strokeWidth: 1
+            }));
+        }
+        // horizontal lines
+        for (let r=0; r<=rows; r++) {
+            gridLayer.add(new Konva.Line({
+                points: [0, r*cellSize, width(), r*cellSize],
+                stroke: '#bbb',
+                strokeWidth: 1
+            }));
+        }
+        gridLayer.draw();
+    }
+
+    // helper snap to grid coordinates (center of cell)
+    function snapToGrid(x, y) {
+        const gx = Math.max(0, Math.min(width()-cellSize, Math.round(x / cellSize) * cellSize));
+        const gy = Math.max(0, Math.min(height()-cellSize, Math.round(y / cellSize) * cellSize));
+        return { x: gx, y: gy };
+    }
+
+    // createToken(x,y,options)
+    function createToken(col, row, opts = {}) {
+        const x = col * cellSize;
+        const y = row * cellSize;
+        const group = new Konva.Group({
+            x, y,
+            draggable: true,
+            width: cellSize, height: cellSize,
+            name: 'token'
+        });
+
+        // token visual (circle or rect)
+        const padding = 6;
+        const circle = new Konva.Circle({
+            x: cellSize/2,
+            y: cellSize/2,
+            radius: Math.max(10, (cellSize/2) - padding),
+            fill: opts.color || '#e74c3c',
+            stroke: '#222',
+            strokeWidth: 2
+        });
+
+        // label
+        const label = new Konva.Text({
+            x: 0,
+            y: cellSize/2 - 8,
+            width: cellSize,
+            align: 'center',
+            text: opts.label || '',
+            fontSize: Math.max(12, Math.round(cellSize/4)),
+            fontStyle: 'bold',
+            fill: opts.labelColor || '#fff'
+        });
+
+        group.add(circle);
+        group.add(label);
+
+        // events: snap on drag end, select on click
+        group.on('dragend', (e) => {
+            const pos = snapToGrid(group.x(), group.y());
+            group.position(pos);
+            tokenLayer.draw();
+        });
+
+        group.on('click touchstart', (e) => {
+            selectToken(group);
+            e.cancelBubble = true;
+        });
+
+        group.on('dragstart', () => {
+            // bring to front while dragging
+            group.moveToTop();
+            tokenLayer.draw();
+            selectToken(group);
+        });
+
+        tokenLayer.add(group);
+        tokenLayer.draw();
+        return group;
+    }
+
+    // select token: visual outline
+    function selectToken(group) {
+        if (selectedToken && selectedToken._selectionRect) {
+            selectedToken._selectionRect.destroy();
+        }
+        selectedToken = group;
+        if (!group) return;
+        // add a dashed rect to show selection
+        const rect = new Konva.Rect({
+            x: 0, y: 0, width: cellSize, height: cellSize,
+            stroke: '#222', dash: [6,4], strokeWidth: 2, listening: false
+        });
+        group.add(rect);
+        group._selectionRect = rect;
+        tokenLayer.draw();
+    }
+
+    // keyboard arrows move selected token by 1 cell
+    window.addEventListener('keydown', (ev) => {
+        if (!selectedToken) return;
+        const key = ev.key;
+        let dx = 0, dy = 0;
+        if (key === 'ArrowLeft') dx = -1;
+        else if (key === 'ArrowRight') dx = 1;
+        else if (key === 'ArrowUp') dy = -1;
+        else if (key === 'ArrowDown') dy = 1;
+        else return;
+        ev.preventDefault();
+        const newX = selectedToken.x() + dx * cellSize;
+        const newY = selectedToken.y() + dy * cellSize;
+        const pos = snapToGrid(newX, newY);
+        selectedToken.position(pos);
+        tokenLayer.draw();
+    });
+
+    // add sample tokens
+    function seedTokens() {
+        tokenLayer.destroyChildren();
+        createToken(1,1,{ color:'#e74c3c', label:'A' });
+        createToken(3,2,{ color:'#3498db', label:'B' });
+        createToken(2,5,{ color:'#2ecc71', label:'C' });
+    }
+
+    // wire UI
+    redrawBtn.addEventListener('click', () => {
+        cellSize = parseInt(cellSizeInput.value,10);
+        cols = parseInt(colsInput.value,10);
+        rows = parseInt(rowsInput.value,10);
+        drawGrid();
+        // reposition tokens to stay in bounds
+        tokenLayer.find('.token').each(g => {
+            const p = snapToGrid(g.x(), g.y());
+            g.position(p);
+        });
+        tokenLayer.draw();
+    });
+
+    toggleGridBtn.addEventListener('click', () => {
+        gridVisible = !gridVisible;
+        gridLayer.visible(gridVisible);
+        gridLayer.draw();
+    });
+
+    clearTokensBtn.addEventListener('click', () => {
+        tokenLayer.destroyChildren();
+        tokenLayer.draw();
+        selectedToken = null;
+    });
+
+    // token swatches click -> spawn token at 0,0
+    document.querySelectorAll('.token-swatch').forEach(s => {
+        s.addEventListener('click', (ev) => {
+            const color = s.getAttribute('data-color') || '#999';
+            // spawn at top-left free cell (naïf : 0,0 or next)
+            let col = 0, row = 0;
+            // find a free spot (simple)
+            const occupied = new Set();
+            tokenLayer.find('.token').each(g=>{
+                const key = `${Math.round(g.x()/cellSize)}:${Math.round(g.y()/cellSize)}`;
+                occupied.add(key);
+            });
+            outer:
+                for (let r=0;r<rows;r++){
+                    for (let c=0;c<cols;c++){
+                        if (!occupied.has(`${c}:${r}`)) { col=c; row=r; break outer; }
+                    }
+                }
+            createToken(col, row, { color, label: '' });
+        });
+    });
+
+    // init
+    drawGrid();
+    seedTokens();
+
+    // responsive: keep container size fixed but center stage if container changes size
+    // (optional: could add zoom/pan later)
+</script>
+</body>
+</html>

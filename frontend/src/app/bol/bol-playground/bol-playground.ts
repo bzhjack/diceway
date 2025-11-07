@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, ElementRef, HostListener, inject, signal, ViewChild} from '@angular/core';
 import {Topbar} from '../../topbar/topbar';
-import {CoreShapeComponent, StageComponent} from 'ng2-konva';
 import Konva from 'konva';
 import {BolHerosService} from '../bol-services/bol-heros.service';
 import {ButtonModule} from 'primeng/button';
@@ -10,6 +9,7 @@ import {BolHerosForm} from '../bol-heros/bol-hero-form/bol-hero-form';
 import {DialogService} from 'primeng/dynamicdialog';
 import {Subscription} from 'rxjs';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {Battlemap} from './battlemap/battlemap';
 import StageConfig = Konva.StageConfig;
 import CircleConfig = Konva.CircleConfig;
 
@@ -19,10 +19,9 @@ type ExtCircleConfig = CircleConfig;
   selector: 'app-bol-playground',
   imports: [
     Topbar,
-    StageComponent,
-    CoreShapeComponent,
     ButtonModule,
-    ButtonGroupModule
+    ButtonGroupModule,
+    Battlemap
   ],
   providers: [DialogService],
   templateUrl: './bol-playground.html',
