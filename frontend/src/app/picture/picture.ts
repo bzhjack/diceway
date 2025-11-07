@@ -2,7 +2,6 @@ import {Component} from '@angular/core';
 import {ButtonModule} from "primeng/button";
 import {AutoFocusModule} from "primeng/autofocus";
 import {ImageCroppedEvent, ImageCropperComponent, ImageTransform} from "ngx-image-cropper";
-import {NgIf} from "@angular/common";
 import {ToolbarModule} from "primeng/toolbar";
 import {PanelModule} from "primeng/panel";
 import {TooltipModule} from 'primeng/tooltip';
@@ -11,16 +10,15 @@ import {DragDropFileDirective} from "./drag-drop-file.directive";
 
 @Component({
     selector: 'app-picture',
-    imports: [
-        DragDropFileDirective,
-        ButtonModule,
-        AutoFocusModule,
-        NgIf,
-        ToolbarModule,
-        PanelModule,
-        TooltipModule,
-        ImageCropperComponent
-    ],
+  imports: [
+    DragDropFileDirective,
+    ButtonModule,
+    AutoFocusModule,
+    ToolbarModule,
+    PanelModule,
+    TooltipModule,
+    ImageCropperComponent
+  ],
     templateUrl: './picture.html',
     styleUrl: './picture.scss'
 })
