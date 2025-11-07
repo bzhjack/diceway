@@ -1,15 +1,16 @@
-import { Component, ElementRef, Input, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, effect, model, AfterViewInit, ViewChild, OnDestroy, Input } from '@angular/core';
 import Konva from 'konva';
+
 @Component({
   selector: 'app-battlemap',
-  imports: [],
   templateUrl: './battlemap.html',
   styleUrl: './battlemap.scss',
 })
-export class Battlemap implements OnInit, AfterViewInit {
+export class Battlemap implements AfterViewInit, OnDestroy {
   @ViewChild('battlemapContainer', { static: true }) containerRef!: ElementRef<HTMLDivElement>;
 
   @Input() cellSize = 48;
+  tokens = model<any[]>([]);
 
   private stage!: Konva.Stage;
   private gridLayer!: Konva.Layer;
@@ -20,15 +21,24 @@ export class Battlemap implements OnInit, AfterViewInit {
   private cols = 0;
   private rows = 0;
 
-  ngOnInit(): void {}
+  constructor() {
+    effect(() => {
+      if (this.tokens().length) {
+        this.drawTokens();
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     this.initStage();
     this.fitToContainer();
-    this.addSampleTokens();
+    this.drawTokens();
 
     // Redimensionnement dynamique
-    this.resizeObserver = new ResizeObserver(() => this.fitToContainer());
+    this.resizeObserver = new ResizeObserver(() => {
+      this.fitToContainer();
+      this.drawTokens();
+    });
     this.resizeObserver.observe(this.containerRef.nativeElement);
 
     window.addEventListener('keydown', (e) => this.handleKeyDown(e));
@@ -78,7 +88,7 @@ export class Battlemap implements OnInit, AfterViewInit {
       this.gridLayer.add(new Konva.Line({
         points: [c * this.cellSize, 0, c * this.cellSize, height],
         stroke: '#bbb',
-        strokeWidth: 1
+        strokeWidth: 1,
       }));
     }
 
@@ -86,11 +96,33 @@ export class Battlemap implements OnInit, AfterViewInit {
       this.gridLayer.add(new Konva.Line({
         points: [0, r * this.cellSize, width, r * this.cellSize],
         stroke: '#bbb',
-        strokeWidth: 1
+        strokeWidth: 1,
       }));
     }
 
     this.gridLayer.draw();
+  }
+
+  private drawTokens(): void {
+    if (!this.stage) {
+      return;
+    }
+    this.tokenLayer.destroyChildren();
+    console.log('draw', this.tokens());
+    // Positionner les tokens automatiquement sur la grille
+    this.tokens().forEach((token, index) => {
+      const col = index % this.cols;
+      const row = Math.floor(index / this.cols);
+
+      this.createToken(
+        col,
+        row,
+        token.origines?.avatar || null,
+        token.origines?.nom || `#${index + 1}`
+      );
+    });
+
+    this.tokenLayer.draw();
   }
 
   private snapToGrid(x: number, y: number): { x: number; y: number } {
@@ -99,7 +131,7 @@ export class Battlemap implements OnInit, AfterViewInit {
     return { x: gx, y: gy };
   }
 
-  private createToken(col: number, row: number, color: string, label: string = ''): void {
+  private createToken(col: number, row: number, avatar: string | null, label: string): void {
     const x = col * this.cellSize;
     const y = row * this.cellSize;
 
@@ -108,19 +140,52 @@ export class Battlemap implements OnInit, AfterViewInit {
       draggable: true,
       width: this.cellSize,
       height: this.cellSize,
-      name: 'token'
+      name: 'token',
     });
 
-    const circle = new Konva.Circle({
-      x: this.cellSize / 2,
-      y: this.cellSize / 2,
-      radius: this.cellSize / 2 - 5,
-      fill: color,
-      stroke: '#222',
-      strokeWidth: 2
-    });
+    // Si l'avatar est une image valide
+    if (avatar && (avatar.startsWith('data:image') || avatar.startsWith('http'))) {
+      const imageObj = new Image();
+      imageObj.src = avatar;
 
-    const text = new Konva.Text({
+      imageObj.onload = () => {
+        const image = new Konva.Image({
+          image: imageObj,
+          x: 0,
+          y: 0,
+          width: this.cellSize,
+          height: this.cellSize,
+          clipFunc: (ctx: CanvasRenderingContext2D) => {
+            ctx.arc(this.cellSize / 2, this.cellSize / 2, this.cellSize / 2 - 2, 0, Math.PI * 2, false);
+          },
+        });
+        group.add(image);
+        group.add(this.createTokenLabel(label));
+        this.addTokenInteractions(group);
+        this.tokenLayer.add(group);
+        this.tokenLayer.draw();
+      };
+    } else {
+      // Cercle par défaut
+      const circle = new Konva.Circle({
+        x: this.cellSize / 2,
+        y: this.cellSize / 2,
+        radius: this.cellSize / 2 - 5,
+        fill: '#3498db',
+        stroke: '#222',
+        strokeWidth: 2,
+      });
+
+      group.add(circle);
+      group.add(this.createTokenLabel(label));
+      this.addTokenInteractions(group);
+      this.tokenLayer.add(group);
+      this.tokenLayer.draw();
+    }
+  }
+
+  private createTokenLabel(label: string): Konva.Text {
+    return new Konva.Text({
       x: 0,
       y: this.cellSize / 2 - 8,
       width: this.cellSize,
@@ -128,18 +193,20 @@ export class Battlemap implements OnInit, AfterViewInit {
       text: label,
       fontSize: Math.max(12, Math.round(this.cellSize / 4)),
       fontStyle: 'bold',
-      fill: '#fff'
+      fill: '#fff',
+      shadowColor: 'black',
+      shadowBlur: 4,
+      shadowOffset: { x: 1, y: 1 },
     });
+  }
 
-    group.add(circle);
-    group.add(text);
-
+  private addTokenInteractions(group: Konva.Group): void {
     group.on('dragend', () => {
       const pos = this.snapToGrid(group.x(), group.y());
       group.position(pos);
+
       this.tokenLayer.draw();
     });
-
     group.on('click', (e) => {
       e.cancelBubble = true;
       this.selectToken(group);
@@ -149,15 +216,6 @@ export class Battlemap implements OnInit, AfterViewInit {
       group.moveToTop();
       this.selectToken(group);
     });
-
-    this.tokenLayer.add(group);
-    this.tokenLayer.draw();
-  }
-
-  private addSampleTokens(): void {
-    this.createToken(1, 1, '#e74c3c', 'A');
-    this.createToken(3, 2, '#3498db', 'B');
-    this.createToken(2, 5, '#2ecc71', 'C');
   }
 
   private selectToken(group: Konva.Group | null): void {
@@ -174,7 +232,7 @@ export class Battlemap implements OnInit, AfterViewInit {
       stroke: '#000',
       dash: [6, 4],
       strokeWidth: 2,
-      listening: false
+      listening: false,
     });
 
     group.add(rect);

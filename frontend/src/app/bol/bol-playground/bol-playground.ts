@@ -33,6 +33,7 @@ export class BolPlayground implements AfterViewInit {
   private readonly dialogueService = inject(DialogService);
   private readonly spinner = inject(NgxSpinnerService);
 
+  public heroes: BolHerosModel[] = [];
   private subs?: Subscription;
   public circleConfigs: ExtCircleConfig[] = [];
   public configStage: Partial<StageConfig> = {};
@@ -64,6 +65,7 @@ export class BolPlayground implements AfterViewInit {
     ];
     this.herosService.heroes().subscribe(heroes => {
       console.log(heroes);
+      this.heroes = heroes;
     })
   }
 
