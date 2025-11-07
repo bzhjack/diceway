@@ -1,12 +1,12 @@
 <app-topbar title="Barbarian Of Lemuria"></app-topbar>
 <div class="bol-playground" #playgroundContainer>
   @if (!questLoaded()) {
+    <app-battlemap></app-battlemap>
     <p-buttongroup>
       <p-button label="Save" icon="pi pi-check" (click)="quickCreateHeros()"/>
       <p-button label="Delete" icon="pi pi-trash" />
       <p-button label="Cancel" icon="pi pi-times" />
     </p-buttongroup>
-    <app-battlemap></app-battlemap>
   } @else {
 
   }

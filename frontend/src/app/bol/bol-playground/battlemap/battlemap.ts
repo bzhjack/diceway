@@ -10,30 +10,39 @@ export class Battlemap implements OnInit, AfterViewInit {
   @ViewChild('battlemapContainer', { static: true }) containerRef!: ElementRef<HTMLDivElement>;
 
   @Input() cellSize = 48;
-  @Input() cols = 16;
-  @Input() rows = 12;
 
   private stage!: Konva.Stage;
   private gridLayer!: Konva.Layer;
   private tokenLayer!: Konva.Layer;
   private selectedToken: Konva.Group | null = null;
+  private resizeObserver!: ResizeObserver;
+
+  private cols = 0;
+  private rows = 0;
 
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.initStage();
-    this.drawGrid();
+    this.fitToContainer();
     this.addSampleTokens();
+
+    // Redimensionnement dynamique
+    this.resizeObserver = new ResizeObserver(() => this.fitToContainer());
+    this.resizeObserver.observe(this.containerRef.nativeElement);
+
+    window.addEventListener('keydown', (e) => this.handleKeyDown(e));
+  }
+
+  ngOnDestroy(): void {
+    this.resizeObserver?.disconnect();
   }
 
   private initStage(): void {
-    const width = this.cols * this.cellSize;
-    const height = this.rows * this.cellSize;
-
     this.stage = new Konva.Stage({
       container: this.containerRef.nativeElement,
-      width,
-      height,
+      width: 0,
+      height: 0,
     });
 
     this.gridLayer = new Konva.Layer();
@@ -41,31 +50,41 @@ export class Battlemap implements OnInit, AfterViewInit {
 
     this.stage.add(this.gridLayer);
     this.stage.add(this.tokenLayer);
+  }
 
-    window.addEventListener('keydown', (e) => this.handleKeyDown(e));
+  private fitToContainer(): void {
+    const container = this.containerRef.nativeElement;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    // recalculer colonnes et lignes selon la taille
+    this.cols = Math.floor(width / this.cellSize);
+    this.rows = Math.floor(height / this.cellSize);
+
+    // redimensionner le canvas
+    this.stage.width(this.cols * this.cellSize);
+    this.stage.height(this.rows * this.cellSize);
+
+    this.drawGrid();
   }
 
   private drawGrid(): void {
     this.gridLayer.destroyChildren();
-    const { cols, rows, cellSize } = this;
-    const width = cols * cellSize;
-    const height = rows * cellSize;
 
-    this.gridLayer.add(new Konva.Rect({
-      x: 0, y: 0, width, height, fill: '#f6f6f6'
-    }));
+    const width = this.cols * this.cellSize;
+    const height = this.rows * this.cellSize;
 
-    for (let c = 0; c <= cols; c++) {
+    for (let c = 0; c <= this.cols; c++) {
       this.gridLayer.add(new Konva.Line({
-        points: [c * cellSize, 0, c * cellSize, height],
+        points: [c * this.cellSize, 0, c * this.cellSize, height],
         stroke: '#bbb',
         strokeWidth: 1
       }));
     }
 
-    for (let r = 0; r <= rows; r++) {
+    for (let r = 0; r <= this.rows; r++) {
       this.gridLayer.add(new Konva.Line({
-        points: [0, r * cellSize, width, r * cellSize],
+        points: [0, r * this.cellSize, width, r * this.cellSize],
         stroke: '#bbb',
         strokeWidth: 1
       }));
@@ -74,23 +93,28 @@ export class Battlemap implements OnInit, AfterViewInit {
     this.gridLayer.draw();
   }
 
+  private snapToGrid(x: number, y: number): { x: number; y: number } {
+    const gx = Math.max(0, Math.min(this.stage.width() - this.cellSize, Math.round(x / this.cellSize) * this.cellSize));
+    const gy = Math.max(0, Math.min(this.stage.height() - this.cellSize, Math.round(y / this.cellSize) * this.cellSize));
+    return { x: gx, y: gy };
+  }
+
   private createToken(col: number, row: number, color: string, label: string = ''): void {
-    const { cellSize } = this;
-    const x = col * cellSize;
-    const y = row * cellSize;
+    const x = col * this.cellSize;
+    const y = row * this.cellSize;
 
     const group = new Konva.Group({
       x, y,
       draggable: true,
-      width: cellSize,
-      height: cellSize,
+      width: this.cellSize,
+      height: this.cellSize,
       name: 'token'
     });
 
     const circle = new Konva.Circle({
-      x: cellSize / 2,
-      y: cellSize / 2,
-      radius: cellSize / 2 - 5,
+      x: this.cellSize / 2,
+      y: this.cellSize / 2,
+      radius: this.cellSize / 2 - 5,
       fill: color,
       stroke: '#222',
       strokeWidth: 2
@@ -98,11 +122,11 @@ export class Battlemap implements OnInit, AfterViewInit {
 
     const text = new Konva.Text({
       x: 0,
-      y: cellSize / 2 - 8,
-      width: cellSize,
+      y: this.cellSize / 2 - 8,
+      width: this.cellSize,
       align: 'center',
       text: label,
-      fontSize: Math.max(12, Math.round(cellSize / 4)),
+      fontSize: Math.max(12, Math.round(this.cellSize / 4)),
       fontStyle: 'bold',
       fill: '#fff'
     });
@@ -134,12 +158,6 @@ export class Battlemap implements OnInit, AfterViewInit {
     this.createToken(1, 1, '#e74c3c', 'A');
     this.createToken(3, 2, '#3498db', 'B');
     this.createToken(2, 5, '#2ecc71', 'C');
-  }
-
-  private snapToGrid(x: number, y: number): { x: number; y: number } {
-    const gx = Math.max(0, Math.min(this.stage.width() - this.cellSize, Math.round(x / this.cellSize) * this.cellSize));
-    const gy = Math.max(0, Math.min(this.stage.height() - this.cellSize, Math.round(y / this.cellSize) * this.cellSize));
-    return { x: gx, y: gy };
   }
 
   private selectToken(group: Konva.Group | null): void {
