@@ -2,9 +2,9 @@ import {Component, input} from '@angular/core';
 import {InlineSVGModule} from "ng-inline-svg-2";
 import {CheckboxModule} from "primeng/checkbox";
 import {PopoverModule} from 'primeng/popover';
-import {BolAvantageModel} from '../bol/bol-models/bol-avantage.model';
-import {BolDesavantageModel} from '../bol/bol-models/bol-desavantage.model';
-import {BolHeroCreateTools} from '../bol/bol-heros/bol-hero-form/create.tools';
+import {BolAvantageModel} from '../../../bol-models/bol-avantage.model';
+import {BolDesavantageModel} from '../../../bol-models/bol-desavantage.model';
+import {BolHeroCreateTools} from '../create.tools';
 
 @Component({
   selector: 'bol-heros-trait-row',
@@ -13,11 +13,11 @@ import {BolHeroCreateTools} from '../bol/bol-heros/bol-hero-form/create.tools';
     InlineSVGModule,
     CheckboxModule
   ],
-  templateUrl: './trait-row.component.html',
+  templateUrl: './bol-hero-trait.html',
   standalone: true,
-  styleUrl: './trait-row.component.scss'
+  styleUrl: './bol-hero-trait.scss'
 })
-export class BolHerosTraitRowComponent {
+export class BolHerosTrait {
   readonly avantage = input<BolAvantageModel>();
   readonly desavantage = input<BolDesavantageModel>();
   readonly disabled = input(false);

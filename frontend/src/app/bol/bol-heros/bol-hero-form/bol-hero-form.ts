@@ -19,10 +19,10 @@ import {BtnComponent} from '../../../btn/btn.component';
 import {BolAvantageModel} from '../../bol-models/bol-avantage.model';
 import {BolDesavantageModel} from '../../bol-models/bol-desavantage.model';
 import {Popover, PopoverModule} from 'primeng/popover';
-import {BolHerosTraitRowComponent} from '../../../trait-row/trait-row.component';
 import {SelectModule} from 'primeng/select';
 import {FloatLabel} from 'primeng/floatlabel';
 import {AutoFocus} from 'primeng/autofocus';
+import {BolHerosTrait} from './bol-hero-trait/bol-hero-trait';
 
 @Component({
   selector: 'bol-heros-form',
@@ -38,7 +38,7 @@ import {AutoFocus} from 'primeng/autofocus';
     TooltipModule,
     ButtonDirective,
     Ripple,
-    BolHerosTraitRowComponent,
+    BolHerosTrait,
     PopoverModule,
     FloatLabel,
     AutoFocus,
