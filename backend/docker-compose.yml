@@ -6,6 +6,7 @@ services:
         volumes:
             - ./.env.local:/var/www/html/.env
             - ./storage/app:/var/www/html/storage/app
+            - ./app:/var/www/html/app
         ports:
             - "8080:80"
         restart: unless-stopped
