@@ -1,7 +1,7 @@
 @use "../../styles/colors" as colors;
 @use "sass:color";
 
-.trash-container {
+.button-container {
   border-radius: 25%;
   padding: 3px;
   background-color: color.adjust(#607d8b, $lightness: -10%);

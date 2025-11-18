@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
-import {Topbar} from '../topbar/topbar';
 import {Panel} from 'primeng/panel';
 import {RouterLink} from '@angular/router';
+import {Topbar} from '../shared/topbar/topbar';
 
 @Component({
   selector: 'app-home',

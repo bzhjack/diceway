@@ -1,5 +1,4 @@
 import {AfterViewInit, Component, ElementRef, HostListener, inject, signal, ViewChild} from '@angular/core';
-import {Topbar} from '../../topbar/topbar';
 import Konva from 'konva';
 import {BolHerosService} from '../bol-services/bol-heros.service';
 import {ButtonModule} from 'primeng/button';
@@ -12,6 +11,7 @@ import {NgxSpinnerService} from 'ngx-spinner';
 import {Battlemap} from './battlemap/battlemap';
 import StageConfig = Konva.StageConfig;
 import CircleConfig = Konva.CircleConfig;
+import {Topbar} from '../../shared/topbar/topbar';
 
 type ExtCircleConfig = CircleConfig;
 
