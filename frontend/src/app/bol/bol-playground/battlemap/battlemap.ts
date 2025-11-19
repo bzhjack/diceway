@@ -1,4 +1,14 @@
-import { Component, ElementRef, effect, model, AfterViewInit, ViewChild, OnDestroy, Input } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  effect,
+  model,
+  AfterViewInit,
+  ViewChild,
+  OnDestroy,
+  Input,
+  EventEmitter, Output
+} from '@angular/core';
 import Konva from 'konva';
 import {BolHerosModel} from '../../bol-models/bol-heros.model';
 
@@ -11,6 +21,8 @@ export class Battlemap implements AfterViewInit, OnDestroy {
   @ViewChild('battlemapContainer', { static: true }) containerRef!: ElementRef<HTMLDivElement>;
 
   @Input() cellSize = 48;
+  @Output() tokenDoubleClick = new EventEmitter<BolHerosModel>();
+
   tokens = model<BolHerosModel[]>([]);
 
   private stage!: Konva.Stage;
@@ -118,7 +130,8 @@ export class Battlemap implements AfterViewInit, OnDestroy {
         col,
         row,
         token.origines?.avatar || null,
-        token.origines?.nom || `#${index + 1}`
+        token.origines?.nom || `#${index + 1}`,
+        token
       );
     });
 
@@ -131,7 +144,7 @@ export class Battlemap implements AfterViewInit, OnDestroy {
     return { x: gx, y: gy };
   }
 
-  private createToken(col: number, row: number, avatar: string | null, label: string): void {
+  private createToken(col: number, row: number, avatar: string | null, label: string, hero: BolHerosModel): void {
     const x = col * this.cellSize;
     const y = row * this.cellSize;
 
@@ -161,7 +174,7 @@ export class Battlemap implements AfterViewInit, OnDestroy {
         });
         group.add(image);
         group.add(this.createTokenLabel(label));
-        this.addTokenInteractions(group);
+        this.addTokenInteractions(group, hero);
         this.tokenLayer.add(group);
         this.tokenLayer.draw();
       };
@@ -178,7 +191,7 @@ export class Battlemap implements AfterViewInit, OnDestroy {
 
       group.add(circle);
       group.add(this.createTokenLabel(label));
-      this.addTokenInteractions(group);
+      this.addTokenInteractions(group, hero);
       this.tokenLayer.add(group);
       this.tokenLayer.draw();
     }
@@ -200,7 +213,7 @@ export class Battlemap implements AfterViewInit, OnDestroy {
     });
   }
 
-  private addTokenInteractions(group: Konva.Group): void {
+  private addTokenInteractions(group: Konva.Group, hero: BolHerosModel): void {
     group.on('dragend', () => {
       const pos = this.snapToGrid(group.x(), group.y());
       group.position(pos);
@@ -217,7 +230,7 @@ export class Battlemap implements AfterViewInit, OnDestroy {
       this.selectToken(group);
     });
     group.on('dblclick dbltap', (e) => {
-      console.log('Double click output:', group);
+      this.tokenDoubleClick.emit(hero);
       e.cancelBubble = true;
     });
   }
