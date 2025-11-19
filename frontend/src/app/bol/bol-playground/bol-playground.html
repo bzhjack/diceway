@@ -1,4 +1,5 @@
 <app-topbar title="Barbarian Of Lemuria"></app-topbar>
+<p-menubar [model]="items" />
 <div class="bol-playground" #playgroundContainer>
   @if (!questLoaded()) {
     <app-battlemap

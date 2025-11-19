@@ -9,9 +9,11 @@ import {DialogService} from 'primeng/dynamicdialog';
 import {Subscription} from 'rxjs';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {Battlemap} from './battlemap/battlemap';
+import {Topbar} from '../../shared/topbar/topbar';
+import {Menubar} from 'primeng/menubar';
 import StageConfig = Konva.StageConfig;
 import CircleConfig = Konva.CircleConfig;
-import {Topbar} from '../../shared/topbar/topbar';
+import {MenuItem, MenuItemCommandEvent} from 'primeng/api';
 
 type ExtCircleConfig = CircleConfig;
 
@@ -21,7 +23,8 @@ type ExtCircleConfig = CircleConfig;
     Topbar,
     ButtonModule,
     ButtonGroupModule,
-    Battlemap
+    Battlemap,
+    Menubar
   ],
   providers: [DialogService],
   templateUrl: './bol-playground.html',
@@ -32,13 +35,12 @@ export class BolPlayground implements AfterViewInit {
   private readonly herosService = inject(BolHerosService);
   private readonly dialogueService = inject(DialogService);
   private readonly spinner = inject(NgxSpinnerService);
-
+  items: MenuItem[] | undefined;
   public heroes: BolHerosModel[] = [];
   private subs?: Subscription;
   public circleConfigs: ExtCircleConfig[] = [];
   public configStage: Partial<StageConfig> = {};
   questLoaded = signal<boolean>(false);
-  items: { label?: string; icon?: string; separator?: boolean }[] = [];
   @HostListener('window:resize', [])
   onResize() {
     this.fitStageIntoParentContainer();
@@ -46,24 +48,7 @@ export class BolPlayground implements AfterViewInit {
   @ViewChild('playgroundContainer')
   playgroundContainer!: ElementRef;
   constructor() {
-    this.items = [
-      {
-        label: 'Refresh',
-        icon: 'pi pi-refresh'
-      },
-      {
-        label: 'Search',
-        icon: 'pi pi-search'
-      },
-      {
-        separator: true
-      },
-      {
-        label: 'Delete',
-        icon: 'pi pi-times'
-      }
-    ];
-    this.herosService.heroes().subscribe(heroes => {
+      this.herosService.heroes().subscribe(heroes => {
       console.log(heroes);
       this.heroes = heroes;
     })
@@ -102,10 +87,20 @@ export class BolPlayground implements AfterViewInit {
   }
 
   public ngAfterViewInit() {
-    /*setTimeout(() => {
-      this.fitStageIntoParentContainer();
-      this.generateCircles();
-    });*/
+    this.items = [
+      {
+        label: 'Home',
+        icon: 'pi pi-home',
+        command: (event: MenuItemCommandEvent) => {
+          this.quickCreateHeros();
+        }
+      },
+      {
+        label: 'Features',
+        icon: 'pi pi-star'
+      },
+
+    ]
   }
 
 
