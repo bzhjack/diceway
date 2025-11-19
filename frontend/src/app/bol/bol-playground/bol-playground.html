@@ -4,6 +4,7 @@
     <app-battlemap
       [cellSize]="50"
       [tokens]="heroes"
+      (tokenDoubleClick)="quickCreateHeros($event)"
     ></app-battlemap>
     <p-buttongroup>
       <p-button label="Save" icon="pi pi-check" (click)="quickCreateHeros()"/>
