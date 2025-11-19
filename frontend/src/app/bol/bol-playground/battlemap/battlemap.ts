@@ -1,5 +1,6 @@
 import { Component, ElementRef, effect, model, AfterViewInit, ViewChild, OnDestroy, Input } from '@angular/core';
 import Konva from 'konva';
+import {BolHerosModel} from '../../bol-models/bol-heros.model';
 
 @Component({
   selector: 'app-battlemap',
@@ -10,7 +11,7 @@ export class Battlemap implements AfterViewInit, OnDestroy {
   @ViewChild('battlemapContainer', { static: true }) containerRef!: ElementRef<HTMLDivElement>;
 
   @Input() cellSize = 48;
-  tokens = model<any[]>([]);
+  tokens = model<BolHerosModel[]>([]);
 
   private stage!: Konva.Stage;
   private gridLayer!: Konva.Layer;
@@ -108,7 +109,6 @@ export class Battlemap implements AfterViewInit, OnDestroy {
       return;
     }
     this.tokenLayer.destroyChildren();
-    console.log('draw', this.tokens());
     // Positionner les tokens automatiquement sur la grille
     this.tokens().forEach((token, index) => {
       const col = index % this.cols;
@@ -215,6 +215,10 @@ export class Battlemap implements AfterViewInit, OnDestroy {
     group.on('dragstart', () => {
       group.moveToTop();
       this.selectToken(group);
+    });
+    group.on('dblclick dbltap', (e) => {
+      console.log('Double click output:', group);
+      e.cancelBubble = true;
     });
   }
 
