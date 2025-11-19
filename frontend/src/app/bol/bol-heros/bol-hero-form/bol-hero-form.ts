@@ -3,7 +3,6 @@ import {FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, V
 import {map, Subscription} from 'rxjs';
 import {DialogService, DynamicDialogConfig, DynamicDialogRef,} from 'primeng/dynamicdialog';
 import {BolCarriereModel, BolHerosCarriereModel,} from '../../bol-models/bol-carriere.model';
-import {Picture} from '../../../picture/picture';
 import {InputTextModule} from 'primeng/inputtext';
 import {TextareaModule} from 'primeng/textarea';
 import {FieldsetModule} from 'primeng/fieldset';
@@ -15,14 +14,15 @@ import {BolHerosStateService} from '../../bol-services/bol-heros-state.service';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {Ripple} from 'primeng/ripple';
 import {BolHerosModel} from '../../bol-models/bol-heros.model';
-import {BtnComponent} from '../../../btn/btn.component';
 import {BolAvantageModel} from '../../bol-models/bol-avantage.model';
 import {BolDesavantageModel} from '../../bol-models/bol-desavantage.model';
 import {Popover, PopoverModule} from 'primeng/popover';
-import {BolHerosTraitRowComponent} from '../../../trait-row/trait-row.component';
 import {SelectModule} from 'primeng/select';
 import {FloatLabel} from 'primeng/floatlabel';
 import {AutoFocus} from 'primeng/autofocus';
+import {BolHerosTrait} from './bol-hero-trait/bol-hero-trait';
+import {Picture} from '../../../shared/picture/picture';
+import {BtnComponent} from '../../../shared/btn/btn.component';
 
 @Component({
   selector: 'bol-heros-form',
@@ -38,7 +38,7 @@ import {AutoFocus} from 'primeng/autofocus';
     TooltipModule,
     ButtonDirective,
     Ripple,
-    BolHerosTraitRowComponent,
+    BolHerosTrait,
     PopoverModule,
     FloatLabel,
     AutoFocus,

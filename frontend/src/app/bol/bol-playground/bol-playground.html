@@ -1,24 +1,17 @@
 <app-topbar title="Barbarian Of Lemuria"></app-topbar>
 <div class="bol-playground" #playgroundContainer>
   @if (!questLoaded()) {
+    <app-battlemap
+      [cellSize]="50"
+      [tokens]="heroes"
+    ></app-battlemap>
     <p-buttongroup>
       <p-button label="Save" icon="pi pi-check" (click)="quickCreateHeros()"/>
       <p-button label="Delete" icon="pi pi-trash" />
       <p-button label="Cancel" icon="pi pi-times" />
     </p-buttongroup>
-
   } @else {
-    <ko-stage [config]="configStage">
-      <ko-layer>
-        @for (config of circleConfigs; track trackConfig($index, config)) {
-          <ko-circle
-            (dragstart)="handleDragstart($event.event)"
-            (dragend)="handleDragend($event.event)"
-            [config]="config"
-          />
-        }
-      </ko-layer>
-    </ko-stage>
+
   }
 </div>
 
