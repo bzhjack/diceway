@@ -41,10 +41,6 @@ export class BolPlayground implements AfterViewInit {
   public circleConfigs: ExtCircleConfig[] = [];
   public configStage: Partial<StageConfig> = {};
   questLoaded = signal<boolean>(false);
-  @HostListener('window:resize', [])
-  onResize() {
-    this.fitStageIntoParentContainer();
-  }
   @ViewChild('playgroundContainer')
   playgroundContainer!: ElementRef;
   constructor() {
@@ -99,103 +95,6 @@ export class BolPlayground implements AfterViewInit {
         label: 'Features',
         icon: 'pi pi-star'
       },
-
     ]
-  }
-
-
-
-
-
-  public handleDragstart(event: any): void {
-    const shape = (event as any).target;
-
-    this.circleConfigs = this.circleConfigs.map((conf) => {
-      if (conf.name !== shape.name()) {
-        return conf;
-      }
-      return {
-        ...conf,
-        shadowOffsetX: 15,
-        shadowOffsetY: 15,
-      };
-    });
-    this.circleConfigs = [
-      ...this.circleConfigs.filter((conf) => conf.name !== shape.name()),
-      this.circleConfigs.find((conf) => conf.name === shape.name())!,
-    ];
-  }
-  public handleDragend(event: any): void {
-    const shape = (event as any).target;
-    this.circleConfigs = this.circleConfigs.map((conf) => {
-      if (conf.name !== shape.name()) {
-        return conf;
-      }
-      return {
-        ...conf,
-        x: shape.x(),
-        y: shape.y(),
-      };
-    });
-  }
-  public trackConfig(index: number, config: ExtCircleConfig): string | undefined {
-    return config.name;
-  }
-  private fitStageIntoParentContainer() {
-    const container = this.playgroundContainer.nativeElement;
-    const width = container.offsetWidth;
-    const height = container.offsetHeight;
-
-    const oldConfig = this.configStage;
-    this.configStage = {
-      width: width,
-      height: height
-    };
-    if (oldConfig.width) {
-      this.circleConfigs = this.circleConfigs.map((conf) => {
-        return {
-          ...conf,
-          x: conf.x! * width / oldConfig.width!,
-          y: conf.y! * height / oldConfig.height!,
-        }
-      });
-    }
-  }
-  private generateCircles() {
-    const radius = 30;
-    for (let n = 0; n < 100; n++) {
-      const circleConfig: ExtCircleConfig = {
-        x: radius + (Math.random() * (this.configStage.width! - 2 * radius)),
-        y: radius + (Math.random() * (this.configStage.height! - 2 * radius)),
-        radius: radius,
-        fill: '#89b717',
-        opacity: 0.8,
-        draggable: true,
-        shadowColor: 'black',
-        shadowBlur: 10,
-        shadowOffsetX: 5,
-        shadowOffsetY: 5,
-        shadowOpacity: 0.6,
-        name: n.toString(),
-      };
-      circleConfig.dragBoundFunc = (pos) => {
-        const stageWidth = this.configStage.width!;
-        const stageHeight = this.configStage.height!;
-
-        const minX = radius;
-        const maxX = stageWidth - radius;
-        const newX = Math.max(minX, Math.min(pos.x, maxX));
-
-        const minY = radius;
-        const maxY = stageHeight - radius;
-        const newY = Math.max(minY, Math.min(pos.y, maxY));
-
-        return {
-          x: newX,
-          y: newY,
-        };
-      };
-      this.circleConfigs.push(circleConfig);
-    }
   }
 }
