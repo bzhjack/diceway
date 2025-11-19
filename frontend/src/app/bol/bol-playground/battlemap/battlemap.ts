@@ -191,7 +191,7 @@ export class Battlemap implements AfterViewInit, OnDestroy {
       width: this.cellSize,
       align: 'center',
       text: label,
-      fontSize: Math.max(12, Math.round(this.cellSize / 4)),
+      fontSize: Math.max(12, Math.round(this.cellSize / 4.5)),
       fontStyle: 'bold',
       fill: '#fff',
       shadowColor: 'black',
