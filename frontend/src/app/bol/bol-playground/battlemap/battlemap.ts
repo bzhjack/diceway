@@ -23,7 +23,7 @@ export class Battlemap implements AfterViewInit, OnDestroy {
   @Input() cellSize = 48;
   @Output() tokenDoubleClick = new EventEmitter<BolHerosModel>();
   @Output() contextMenu = new EventEmitter<any>();
-
+  private tokenPositions = new Map<string | null, { col: number; row: number }>();
   tokens = model<BolHerosModel[]>([]);
 
   private stage!: Konva.Stage;
@@ -44,6 +44,10 @@ export class Battlemap implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    const saved = localStorage.getItem('battlemap_positions');
+    if (saved) {
+      this.tokenPositions = new Map(JSON.parse(saved));
+    }
     this.initStage();
     this.fitToContainer();
     this.drawTokens();
@@ -123,8 +127,23 @@ export class Battlemap implements AfterViewInit, OnDestroy {
     this.tokenLayer.destroyChildren();
     // Positionner les tokens automatiquement sur la grille
     this.tokens().forEach((token, index) => {
-      const col = index % this.cols;
-      const row = Math.floor(index / this.cols);
+
+      const savedPos = this.tokenPositions.get(token.id);
+
+      let col: number;
+      let row: number;
+
+      if (savedPos) {
+        col = savedPos.col;
+        row = savedPos.row;
+      } else {
+        // fallback si aucune position stockée
+        col = index % this.cols;
+        row = Math.floor(index / this.cols);
+
+        // stocker la position par défaut
+        this.tokenPositions.set(token.id, { col, row });
+      }
 
       this.createToken(
         col,
@@ -217,7 +236,12 @@ export class Battlemap implements AfterViewInit, OnDestroy {
     group.on('dragend', () => {
       const pos = this.snapToGrid(group.x(), group.y());
       group.position(pos);
-
+      const col = pos.x / this.cellSize;
+      const row = pos.y / this.cellSize;
+      // Sauvegarder la position dans la Map
+      this.tokenPositions.set(hero.id, { col, row });
+      // Persister
+      localStorage.setItem('battlemap_positions', JSON.stringify([...this.tokenPositions]));
       this.tokenLayer.draw();
     });
     group.on('click', (e) => {
