@@ -63,6 +63,17 @@ export const DwPreset = definePreset(Aura, {
   },
   // --- COMPONENT TOKENS ---
   components: {
+    menubar: {
+      root: {
+        background: '{surface.700}',
+        borderColor: '{surface.700}',
+        borderRadius: '0',
+        padding: '5px'
+      },
+      item: {
+        color: '{surface.0}',
+      }
+    },
     floatlabel: {
       root: {
         activeColor: '{surface.0}',

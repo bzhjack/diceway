@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, HostListener, inject, signal, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, inject, signal, ViewChild} from '@angular/core';
 import Konva from 'konva';
 import {BolHerosService} from '../bol-services/bol-heros.service';
 import {ButtonModule} from 'primeng/button';
@@ -11,9 +11,9 @@ import {NgxSpinnerService} from 'ngx-spinner';
 import {Battlemap} from './battlemap/battlemap';
 import {Topbar} from '../../shared/topbar/topbar';
 import {Menubar} from 'primeng/menubar';
+import {MenuItem, MenuItemCommandEvent} from 'primeng/api';
 import StageConfig = Konva.StageConfig;
 import CircleConfig = Konva.CircleConfig;
-import {MenuItem, MenuItemCommandEvent} from 'primeng/api';
 
 type ExtCircleConfig = CircleConfig;
 
@@ -85,16 +85,12 @@ export class BolPlayground implements AfterViewInit {
   public ngAfterViewInit() {
     this.items = [
       {
-        label: 'Home',
-        icon: 'pi pi-home',
+        label: 'Créer un héros',
+        icon: 'pi pi-plus',
         command: (event: MenuItemCommandEvent) => {
           this.quickCreateHeros();
         }
-      },
-      {
-        label: 'Features',
-        icon: 'pi pi-star'
-      },
+      }
     ]
   }
 }
