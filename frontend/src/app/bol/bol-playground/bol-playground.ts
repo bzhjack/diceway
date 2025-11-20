@@ -31,7 +31,7 @@ type ExtCircleConfig = CircleConfig;
   styleUrl: './bol-playground.scss',
   standalone: true
 })
-export class BolPlayground implements AfterViewInit {
+export class BolPlayground {
   private readonly herosService = inject(BolHerosService);
   private readonly dialogueService = inject(DialogService);
   private readonly spinner = inject(NgxSpinnerService);
@@ -44,13 +44,24 @@ export class BolPlayground implements AfterViewInit {
   @ViewChild('playgroundContainer')
   playgroundContainer!: ElementRef;
   constructor() {
+    this.items = [
+      {
+        label: 'Créer un héros',
+        icon: 'pi pi-plus',
+        command: (event: MenuItemCommandEvent) => {
+          this.quickCreateHeros();
+        }
+      }
+    ]
       this.herosService.heroes().subscribe(heroes => {
       console.log(heroes);
       this.heroes = heroes;
     })
   }
 
-
+  contextMenu(ev: any): void {
+    console.log('contextMenu', ev);
+  }
   quickCreateHeros(heros?: BolHerosModel) {
     let ref = this.dialogueService.open(BolHerosForm, {
 
@@ -80,17 +91,5 @@ export class BolPlayground implements AfterViewInit {
         });
       }
     });
-  }
-
-  public ngAfterViewInit() {
-    this.items = [
-      {
-        label: 'Créer un héros',
-        icon: 'pi pi-plus',
-        command: (event: MenuItemCommandEvent) => {
-          this.quickCreateHeros();
-        }
-      }
-    ]
   }
 }

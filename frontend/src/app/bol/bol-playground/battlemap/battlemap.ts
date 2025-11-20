@@ -22,6 +22,7 @@ export class Battlemap implements AfterViewInit, OnDestroy {
 
   @Input() cellSize = 48;
   @Output() tokenDoubleClick = new EventEmitter<BolHerosModel>();
+  @Output() contextMenu = new EventEmitter<boolean>();
 
   tokens = model<BolHerosModel[]>([]);
 
@@ -232,6 +233,11 @@ export class Battlemap implements AfterViewInit, OnDestroy {
     group.on('dblclick dbltap', (e) => {
       this.tokenDoubleClick.emit(hero);
       e.cancelBubble = true;
+    });
+    group.on('contextmenu', (e) => {
+      e.cancelBubble = true;
+      e.evt.preventDefault();
+      this.contextMenu.emit(true);
     });
   }
 
