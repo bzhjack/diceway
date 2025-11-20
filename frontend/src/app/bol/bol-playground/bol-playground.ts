@@ -14,6 +14,7 @@ import {Menubar} from 'primeng/menubar';
 import {MenuItem, MenuItemCommandEvent} from 'primeng/api';
 import StageConfig = Konva.StageConfig;
 import CircleConfig = Konva.CircleConfig;
+import {ContextMenu} from 'primeng/contextmenu';
 
 type ExtCircleConfig = CircleConfig;
 
@@ -24,7 +25,8 @@ type ExtCircleConfig = CircleConfig;
     ButtonModule,
     ButtonGroupModule,
     Battlemap,
-    Menubar
+    Menubar,
+    ContextMenu
   ],
   providers: [DialogService],
   templateUrl: './bol-playground.html',
@@ -35,14 +37,17 @@ export class BolPlayground {
   private readonly herosService = inject(BolHerosService);
   private readonly dialogueService = inject(DialogService);
   private readonly spinner = inject(NgxSpinnerService);
-  items: MenuItem[] | undefined;
+  items: MenuItem[] = [];
+  contextItems: MenuItem[] = [];
+  private currentHero: BolHerosModel | undefined;
   public heroes: BolHerosModel[] = [];
   private subs?: Subscription;
   public circleConfigs: ExtCircleConfig[] = [];
   public configStage: Partial<StageConfig> = {};
   questLoaded = signal<boolean>(false);
-  @ViewChild('playgroundContainer')
-  playgroundContainer!: ElementRef;
+  @ViewChild('playgroundContainer') playgroundContainer!: ElementRef;
+  @ViewChild('cm') cm!: ContextMenu;
+
   constructor() {
     this.items = [
       {
@@ -53,19 +58,29 @@ export class BolPlayground {
         }
       }
     ]
-      this.herosService.heroes().subscribe(heroes => {
-      console.log(heroes);
+    this.contextItems = [
+      { label: 'Copy', icon: 'pi pi-copy' },
+      {
+        label: 'Modification',
+        icon: 'pi pi-file-edit' ,
+        command: (event: MenuItemCommandEvent) => {
+          this.quickCreateHeros(this.currentHero);
+        }
+      }
+    ];
+    this.herosService.heroes().subscribe(heroes => {
       this.heroes = heroes;
     })
   }
 
   contextMenu(ev: any): void {
-    console.log('contextMenu', ev);
+    this.currentHero = ev.hero;
+    this.cm.show(ev.event);
   }
   quickCreateHeros(heros?: BolHerosModel) {
     let ref = this.dialogueService.open(BolHerosForm, {
 
-      dismissableMask :true,
+      dismissableMask: true,
       position: "top",
       showHeader: false,
       data: {
