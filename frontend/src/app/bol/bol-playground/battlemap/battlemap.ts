@@ -58,6 +58,7 @@ export class Battlemap implements AfterViewInit, OnDestroy {
       .pipe(debounceTime(150))
       .subscribe(() => {
         this.fitToContainer();
+        this.clampTokensInsideGrid();
         this.drawTokens();
       });
 
@@ -102,6 +103,52 @@ export class Battlemap implements AfterViewInit, OnDestroy {
 
     this.drawGrid();
   }
+
+  private clampTokensInsideGrid(): void {
+    let updated = false;
+
+    this.tokens().forEach(hero => {
+      const pos = this.tokenPositions.get(hero.id);
+      if (!pos) return;
+
+      let { col, row } = pos;
+
+      // Vérifier les limites
+      const maxCol = this.cols - 1;
+      const maxRow = this.rows - 1;
+
+      let clamped = false;
+
+      if (col > maxCol) {
+        col = maxCol;
+        clamped = true;
+      }
+      if (row > maxRow) {
+        row = maxRow;
+        clamped = true;
+      }
+
+      if (col < 0) {
+        col = 0;
+        clamped = true;
+      }
+      if (row < 0) {
+        row = 0;
+        clamped = true;
+      }
+
+      // Si on a dû corriger, on sauvegarde
+      if (clamped) {
+        this.tokenPositions.set(hero.id, { col, row });
+        updated = true;
+      }
+    });
+
+    if (updated) {
+      localStorage.setItem('battlemap_positions', JSON.stringify([...this.tokenPositions]));
+    }
+  }
+
 
   private drawGrid(): void {
     this.gridLayer.destroyChildren();
