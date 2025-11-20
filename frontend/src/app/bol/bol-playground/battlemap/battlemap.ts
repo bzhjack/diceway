@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import Konva from 'konva';
 import {BolHerosModel} from '../../bol-models/bol-heros.model';
+import {debounceTime, Subject} from 'rxjs';
 
 @Component({
   selector: 'app-battlemap',
@@ -25,7 +26,7 @@ export class Battlemap implements AfterViewInit, OnDestroy {
   @Output() contextMenu = new EventEmitter<any>();
   private tokenPositions = new Map<string | null, { col: number; row: number }>();
   tokens = model<BolHerosModel[]>([]);
-
+  private resize$ = new Subject<void>();
   private stage!: Konva.Stage;
   private gridLayer!: Konva.Layer;
   private tokenLayer!: Konva.Layer;
@@ -52,11 +53,18 @@ export class Battlemap implements AfterViewInit, OnDestroy {
     this.fitToContainer();
     this.drawTokens();
 
-    // Redimensionnement dynamique
+    // Debounce du resize
+    this.resize$
+      .pipe(debounceTime(150))
+      .subscribe(() => {
+        this.fitToContainer();
+        this.drawTokens();
+      });
+
     this.resizeObserver = new ResizeObserver(() => {
-      this.fitToContainer();
-      this.drawTokens();
+      this.resize$.next();
     });
+
     this.resizeObserver.observe(this.containerRef.nativeElement);
     window.addEventListener('keydown', (e) => this.handleKeyDown(e));
   }
