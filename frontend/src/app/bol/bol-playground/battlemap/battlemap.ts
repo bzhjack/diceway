@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import Konva from 'konva';
 import {BolHerosModel} from '../../bol-models/bol-heros.model';
+import {debounceTime, Subject} from 'rxjs';
 
 @Component({
   selector: 'app-battlemap',
@@ -22,10 +23,10 @@ export class Battlemap implements AfterViewInit, OnDestroy {
 
   @Input() cellSize = 48;
   @Output() tokenDoubleClick = new EventEmitter<BolHerosModel>();
-  @Output() contextMenu = new EventEmitter<boolean>();
-
+  @Output() contextMenu = new EventEmitter<any>();
+  private tokenPositions = new Map<string | null, { col: number; row: number }>();
   tokens = model<BolHerosModel[]>([]);
-
+  private resize$ = new Subject<void>();
   private stage!: Konva.Stage;
   private gridLayer!: Konva.Layer;
   private tokenLayer!: Konva.Layer;
@@ -44,17 +45,28 @@ export class Battlemap implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    const saved = localStorage.getItem('battlemap_positions');
+    if (saved) {
+      this.tokenPositions = new Map(JSON.parse(saved));
+    }
     this.initStage();
     this.fitToContainer();
     this.drawTokens();
 
-    // Redimensionnement dynamique
-    this.resizeObserver = new ResizeObserver(() => {
-      this.fitToContainer();
-      this.drawTokens();
-    });
-    this.resizeObserver.observe(this.containerRef.nativeElement);
+    // Debounce du resize
+    this.resize$
+      .pipe(debounceTime(150))
+      .subscribe(() => {
+        this.fitToContainer();
+        this.clampTokensInsideGrid();
+        this.drawTokens();
+      });
 
+    this.resizeObserver = new ResizeObserver(() => {
+      this.resize$.next();
+    });
+
+    this.resizeObserver.observe(this.containerRef.nativeElement);
     window.addEventListener('keydown', (e) => this.handleKeyDown(e));
   }
 
@@ -92,6 +104,52 @@ export class Battlemap implements AfterViewInit, OnDestroy {
     this.drawGrid();
   }
 
+  private clampTokensInsideGrid(): void {
+    let updated = false;
+
+    this.tokens().forEach(hero => {
+      const pos = this.tokenPositions.get(hero.id);
+      if (!pos) return;
+
+      let { col, row } = pos;
+
+      // Vérifier les limites
+      const maxCol = this.cols - 1;
+      const maxRow = this.rows - 1;
+
+      let clamped = false;
+
+      if (col > maxCol) {
+        col = maxCol;
+        clamped = true;
+      }
+      if (row > maxRow) {
+        row = maxRow;
+        clamped = true;
+      }
+
+      if (col < 0) {
+        col = 0;
+        clamped = true;
+      }
+      if (row < 0) {
+        row = 0;
+        clamped = true;
+      }
+
+      // Si on a dû corriger, on sauvegarde
+      if (clamped) {
+        this.tokenPositions.set(hero.id, { col, row });
+        updated = true;
+      }
+    });
+
+    if (updated) {
+      localStorage.setItem('battlemap_positions', JSON.stringify([...this.tokenPositions]));
+    }
+  }
+
+
   private drawGrid(): void {
     this.gridLayer.destroyChildren();
 
@@ -124,8 +182,23 @@ export class Battlemap implements AfterViewInit, OnDestroy {
     this.tokenLayer.destroyChildren();
     // Positionner les tokens automatiquement sur la grille
     this.tokens().forEach((token, index) => {
-      const col = index % this.cols;
-      const row = Math.floor(index / this.cols);
+
+      const savedPos = this.tokenPositions.get(token.id);
+
+      let col: number;
+      let row: number;
+
+      if (savedPos) {
+        col = savedPos.col;
+        row = savedPos.row;
+      } else {
+        // fallback si aucune position stockée
+        col = index % this.cols;
+        row = Math.floor(index / this.cols);
+
+        // stocker la position par défaut
+        this.tokenPositions.set(token.id, { col, row });
+      }
 
       this.createToken(
         col,
@@ -218,7 +291,12 @@ export class Battlemap implements AfterViewInit, OnDestroy {
     group.on('dragend', () => {
       const pos = this.snapToGrid(group.x(), group.y());
       group.position(pos);
-
+      const col = pos.x / this.cellSize;
+      const row = pos.y / this.cellSize;
+      // Sauvegarder la position dans la Map
+      this.tokenPositions.set(hero.id, { col, row });
+      // Persister
+      localStorage.setItem('battlemap_positions', JSON.stringify([...this.tokenPositions]));
       this.tokenLayer.draw();
     });
     group.on('click', (e) => {
@@ -237,7 +315,7 @@ export class Battlemap implements AfterViewInit, OnDestroy {
     group.on('contextmenu', (e) => {
       e.cancelBubble = true;
       e.evt.preventDefault();
-      this.contextMenu.emit(true);
+      this.contextMenu.emit({event: e.evt, hero: hero});
     });
   }
 
