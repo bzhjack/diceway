@@ -59,7 +59,6 @@ export class BolPlayground {
       }
     ]
     this.contextItems = [
-      { label: 'Copy', icon: 'pi pi-copy' },
       {
         label: 'Modification',
         icon: 'pi pi-file-edit' ,
