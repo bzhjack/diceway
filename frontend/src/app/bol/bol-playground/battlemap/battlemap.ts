@@ -7,12 +7,11 @@ import {
   ViewChild,
   OnDestroy,
   Input,
-  EventEmitter, Output, inject
+  EventEmitter, Output
 } from '@angular/core';
 import Konva from 'konva';
 import {BolHerosModel} from '../../bol-models/bol-heros.model';
 import {debounceTime, Subject} from 'rxjs';
-import {BattlemapUtils} from './battlemap-utils';
 
 @Component({
   selector: 'app-battlemap',
@@ -20,7 +19,6 @@ import {BattlemapUtils} from './battlemap-utils';
   styleUrl: './battlemap.scss',
 })
 export class Battlemap implements AfterViewInit, OnDestroy {
-  bmUtils = inject(BattlemapUtils);
   @ViewChild('battlemapContainer', { static: true }) containerRef!: ElementRef<HTMLDivElement>;
 
   @Input() cellSize = 48;
@@ -107,13 +105,46 @@ export class Battlemap implements AfterViewInit, OnDestroy {
   }
 
   private clampTokensInsideGrid(): void {
-    const maxCol = this.cols - 1;
-    const maxRow = this.rows - 1;
+    let updated = false;
 
-    const { updatedPositions, changed } = this.bmUtils.clampPositions(this.tokenPositions, maxCol, maxRow);
+    this.tokens().forEach(hero => {
+      const pos = this.tokenPositions.get(hero.id);
+      if (!pos) return;
 
-    if (changed) {
-      this.tokenPositions = updatedPositions;
+      let { col, row } = pos;
+
+      // Vérifier les limites
+      const maxCol = this.cols - 1;
+      const maxRow = this.rows - 1;
+
+      let clamped = false;
+
+      if (col > maxCol) {
+        col = maxCol;
+        clamped = true;
+      }
+      if (row > maxRow) {
+        row = maxRow;
+        clamped = true;
+      }
+
+      if (col < 0) {
+        col = 0;
+        clamped = true;
+      }
+      if (row < 0) {
+        row = 0;
+        clamped = true;
+      }
+
+      // Si on a dû corriger, on sauvegarde
+      if (clamped) {
+        this.tokenPositions.set(hero.id, { col, row });
+        updated = true;
+      }
+    });
+
+    if (updated) {
       localStorage.setItem('battlemap_positions', JSON.stringify([...this.tokenPositions]));
     }
   }
@@ -179,6 +210,12 @@ export class Battlemap implements AfterViewInit, OnDestroy {
     });
 
     this.tokenLayer.draw();
+  }
+
+  private snapToGrid(x: number, y: number): { x: number; y: number } {
+    const gx = Math.max(0, Math.min(this.stage.width() - this.cellSize, Math.round(x / this.cellSize) * this.cellSize));
+    const gy = Math.max(0, Math.min(this.stage.height() - this.cellSize, Math.round(y / this.cellSize) * this.cellSize));
+    return { x: gx, y: gy };
   }
 
   private createToken(col: number, row: number, avatar: string | null, label: string, hero: BolHerosModel): void {
@@ -252,29 +289,14 @@ export class Battlemap implements AfterViewInit, OnDestroy {
 
   private addTokenInteractions(group: Konva.Group, hero: BolHerosModel): void {
     group.on('dragend', () => {
-      const pos = this.bmUtils.snapToGrid(group.x(), group.y(), this.cellSize, this.stage.width() - this.cellSize, this.stage.height() - this.cellSize);
-      const newCol = pos.x / this.cellSize;
-      const newRow = pos.y / this.cellSize;
-
-      // Vérifier si la case est déjà occupée
-      const isOccupied = [...this.tokenPositions.entries()].some(([id, p]) => {
-        return id !== hero.id && p.col === newCol && p.row === newRow;
-      });
-
-      if (isOccupied) {
-        // Revenir à l’ancienne position
-        const old = this.tokenPositions.get(hero.id)!;
-        group.position({
-          x: old.col * this.cellSize,
-          y: old.row * this.cellSize,
-        });
-      } else {
-        // Case libre → on accepte
-        group.position(pos);
-        this.tokenPositions.set(hero.id, { col: newCol, row: newRow });
-        localStorage.setItem('battlemap_positions', JSON.stringify([...this.tokenPositions]));
-      }
-
+      const pos = this.snapToGrid(group.x(), group.y());
+      group.position(pos);
+      const col = pos.x / this.cellSize;
+      const row = pos.y / this.cellSize;
+      // Sauvegarder la position dans la Map
+      this.tokenPositions.set(hero.id, { col, row });
+      // Persister
+      localStorage.setItem('battlemap_positions', JSON.stringify([...this.tokenPositions]));
       this.tokenLayer.draw();
     });
     group.on('click', (e) => {
@@ -332,42 +354,11 @@ export class Battlemap implements AfterViewInit, OnDestroy {
     else return;
 
     e.preventDefault();
-
-    // Position actuelle (avant déplacement)
-    const oldCol = this.selectedToken.x() / this.cellSize;
-    const oldRow = this.selectedToken.y() / this.cellSize;
-
-    // Nouvelle position théorique
     const newX = this.selectedToken.x() + dx * this.cellSize;
     const newY = this.selectedToken.y() + dy * this.cellSize;
+    const pos = this.snapToGrid(newX, newY);
 
-    const pos = this.bmUtils.snapToGrid(newX, newY, this.cellSize, this.stage.width() - this.cellSize, this.stage.height() - this.cellSize);
-    const newCol = pos.x / this.cellSize;
-    const newRow = pos.y / this.cellSize;
-
-    // Retrouver le hero sélectionné via tokenPositions
-    const heroId = [...this.tokenPositions.entries()]
-      .find(([_, p]) => p.col === oldCol && p.row === oldRow)?.[0];
-
-    if (!heroId) return;
-
-    // Vérifier si la nouvelle case est occupée
-    const isOccupied = [...this.tokenPositions.entries()].some(([id, p]) => {
-      return id !== heroId && p.col === newCol && p.row === newRow;
-    });
-
-    if (isOccupied) {
-      // Case occupée → on REVIENT à la position initiale
-      this.selectedToken.position({ x: oldCol * this.cellSize, y: oldRow * this.cellSize });
-      this.tokenLayer.draw();
-      return;
-    }
-
-    // Case libre → déplacement + mise à jour
     this.selectedToken.position(pos);
-    this.tokenPositions.set(heroId, { col: newCol, row: newRow });
-    localStorage.setItem('battlemap_positions', JSON.stringify([...this.tokenPositions]));
     this.tokenLayer.draw();
   }
-
 }
