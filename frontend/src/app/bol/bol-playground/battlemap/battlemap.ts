@@ -290,12 +290,26 @@ export class Battlemap implements AfterViewInit, OnDestroy {
   private addTokenInteractions(group: Konva.Group, hero: BolHerosModel): void {
     group.on('dragend', () => {
       const pos = this.snapToGrid(group.x(), group.y());
-      group.position(pos);
       const col = pos.x / this.cellSize;
       const row = pos.y / this.cellSize;
-      // Sauvegarder la position dans la Map
+
+      // Vérification collision
+      if (!this.isCellFree(col, row, hero.id)) {
+        // remettre l’ancien emplacement si collision
+        const previous = this.tokenPositions.get(hero.id);
+        if (previous) {
+          group.position({
+            x: previous.col * this.cellSize,
+            y: previous.row * this.cellSize,
+          });
+        }
+        this.tokenLayer.draw();
+        return;
+      }
+
+      // Si libre → enregistrer
+      group.position(pos);
       this.tokenPositions.set(hero.id, { col, row });
-      // Persister
       localStorage.setItem('battlemap_positions', JSON.stringify([...this.tokenPositions]));
       this.tokenLayer.draw();
     });
@@ -361,4 +375,14 @@ export class Battlemap implements AfterViewInit, OnDestroy {
     this.selectedToken.position(pos);
     this.tokenLayer.draw();
   }
+
+  private isCellFree(col: number, row: number, movingHeroId: string | null): boolean {
+    for (const [heroId, pos] of this.tokenPositions.entries()) {
+      if (heroId !== movingHeroId && pos.col === col && pos.row === row) {
+        return false; // collision
+      }
+    }
+    return true;
+  }
+
 }
