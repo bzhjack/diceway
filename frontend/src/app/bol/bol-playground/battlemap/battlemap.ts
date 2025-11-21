@@ -368,11 +368,38 @@ export class Battlemap implements AfterViewInit, OnDestroy {
     else return;
 
     e.preventDefault();
-    const newX = this.selectedToken.x() + dx * this.cellSize;
-    const newY = this.selectedToken.y() + dy * this.cellSize;
-    const pos = this.snapToGrid(newX, newY);
 
-    this.selectedToken.position(pos);
+    const currentCol = this.selectedToken.x() / this.cellSize;
+    const currentRow = this.selectedToken.y() / this.cellSize;
+
+    let newCol = currentCol + dx;
+    let newRow = currentRow + dy;
+
+    // ⛔ Empêcher de sortir de la grille
+    if (newCol < 0 || newCol >= this.cols) return;
+    if (newRow < 0 || newRow >= this.rows) return;
+
+    // Trouver l'id du token actuellement sélectionné
+    const heroId = [...this.tokenPositions.entries()].find(([id, p]) =>
+      p.col === currentCol && p.row === currentRow
+    )?.[0];
+    if (!heroId) return;
+
+    // ⛔ Collision ?
+    if (!this.isCellFree(newCol, newRow, heroId)) {
+      return;
+    }
+
+    // ✔ Déplacement autorisé
+    this.selectedToken.position({
+      x: newCol * this.cellSize,
+      y: newRow * this.cellSize,
+    });
+
+    // Mettre à jour la map
+    this.tokenPositions.set(heroId, { col: newCol, row: newRow });
+    localStorage.setItem('battlemap_positions', JSON.stringify([...this.tokenPositions]));
+
     this.tokenLayer.draw();
   }
 
