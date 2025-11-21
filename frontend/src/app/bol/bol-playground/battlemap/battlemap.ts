@@ -290,12 +290,26 @@ export class Battlemap implements AfterViewInit, OnDestroy {
   private addTokenInteractions(group: Konva.Group, hero: BolHerosModel): void {
     group.on('dragend', () => {
       const pos = this.snapToGrid(group.x(), group.y());
-      group.position(pos);
       const col = pos.x / this.cellSize;
       const row = pos.y / this.cellSize;
-      // Sauvegarder la position dans la Map
+
+      // Vérification collision
+      if (!this.isCellFree(col, row, hero.id)) {
+        // remettre l’ancien emplacement si collision
+        const previous = this.tokenPositions.get(hero.id);
+        if (previous) {
+          group.position({
+            x: previous.col * this.cellSize,
+            y: previous.row * this.cellSize,
+          });
+        }
+        this.tokenLayer.draw();
+        return;
+      }
+
+      // Si libre → enregistrer
+      group.position(pos);
       this.tokenPositions.set(hero.id, { col, row });
-      // Persister
       localStorage.setItem('battlemap_positions', JSON.stringify([...this.tokenPositions]));
       this.tokenLayer.draw();
     });
@@ -354,11 +368,48 @@ export class Battlemap implements AfterViewInit, OnDestroy {
     else return;
 
     e.preventDefault();
-    const newX = this.selectedToken.x() + dx * this.cellSize;
-    const newY = this.selectedToken.y() + dy * this.cellSize;
-    const pos = this.snapToGrid(newX, newY);
 
-    this.selectedToken.position(pos);
+    const currentCol = this.selectedToken.x() / this.cellSize;
+    const currentRow = this.selectedToken.y() / this.cellSize;
+
+    let newCol = currentCol + dx;
+    let newRow = currentRow + dy;
+
+    // ⛔ Empêcher de sortir de la grille
+    if (newCol < 0 || newCol >= this.cols) return;
+    if (newRow < 0 || newRow >= this.rows) return;
+
+    // Trouver l'id du token actuellement sélectionné
+    const heroId = [...this.tokenPositions.entries()].find(([id, p]) =>
+      p.col === currentCol && p.row === currentRow
+    )?.[0];
+    if (!heroId) return;
+
+    // ⛔ Collision ?
+    if (!this.isCellFree(newCol, newRow, heroId)) {
+      return;
+    }
+
+    // ✔ Déplacement autorisé
+    this.selectedToken.position({
+      x: newCol * this.cellSize,
+      y: newRow * this.cellSize,
+    });
+
+    // Mettre à jour la map
+    this.tokenPositions.set(heroId, { col: newCol, row: newRow });
+    localStorage.setItem('battlemap_positions', JSON.stringify([...this.tokenPositions]));
+
     this.tokenLayer.draw();
   }
+
+  private isCellFree(col: number, row: number, movingHeroId: string | null): boolean {
+    for (const [heroId, pos] of this.tokenPositions.entries()) {
+      if (heroId !== movingHeroId && pos.col === col && pos.row === row) {
+        return false; // collision
+      }
+    }
+    return true;
+  }
+
 }
