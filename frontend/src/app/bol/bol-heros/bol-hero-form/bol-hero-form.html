@@ -23,23 +23,22 @@
                 <input pInputText id="nom" formControlName="nom" autocomplete="off" id="nom" pSize="small"/>
                 <label for="joueur">Nom du personnage *</label>
               </p-floatlabel>
-
-              <p-floatLabel variant="over">
-                <p-select
-                  id="region"
-                  class="w-full"
-                  optionLabel="region"
-                  optionValue="id"
-                  size="small"
-                  [filter]="true"
-                  filterBy="region"
-                  [options]="regionList()"
-                  formControlName="region_id"></p-select>
-                <label for="region">Region *</label>
-              </p-floatLabel>
             </div>
             <div>
-              <div class="flex flex-col pt-1">
+              <div class="flex flex-col pt-1 gap-2">
+                <p-floatLabel variant="over">
+                  <p-select
+                    id="region"
+                    class="w-full"
+                    optionLabel="region"
+                    optionValue="id"
+                    size="small"
+                    [filter]="true"
+                    filterBy="region"
+                    [options]="regionList()"
+                    formControlName="region_id"></p-select>
+                  <label for="region">Region *</label>
+                </p-floatLabel>
                 <p-floatlabel variant="over">
                 <textarea pTextarea id="commentaire" formControlName="commentaire" rows="2" cols="30"
                           style="resize: none" class="h-full"></textarea>
