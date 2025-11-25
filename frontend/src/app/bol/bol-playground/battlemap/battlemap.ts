@@ -21,11 +21,12 @@ import {debounceTime, Subject} from 'rxjs';
 export class Battlemap implements AfterViewInit, OnDestroy {
   @ViewChild('battlemapContainer', { static: true }) containerRef!: ElementRef<HTMLDivElement>;
 
+  tokens = model<BolHerosModel[]>([]);
   @Input() cellSize = 48;
   @Output() tokenDoubleClick = new EventEmitter<BolHerosModel>();
   @Output() contextMenu = new EventEmitter<any>();
+
   private tokenPositions = new Map<string | null, { col: number; row: number }>();
-  tokens = model<BolHerosModel[]>([]);
   private resize$ = new Subject<void>();
   private stage!: Konva.Stage;
   private gridLayer!: Konva.Layer;

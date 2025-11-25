@@ -29,4 +29,7 @@ export class BolHerosTrait {
   desavantageDescription(desavantage: BolDesavantageModel) {
     return BolHeroCreateTools.desavantageDescription(desavantage);
   }
+  trackByItem(index: number, item: any) {
+    return `${item.id}-${item.type}`;
+  }
 }
