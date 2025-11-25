@@ -6,7 +6,7 @@ FROM composer:2 AS vendor
 WORKDIR /app
 
 # Copier uniquement les fichiers Composer pour tirer parti du cache Docker
-COPY composer.json composer.lock* ./
+COPY composer.json ./
 
 # Installer les dépendances PHP sans les packages dev
 RUN composer install --prefer-dist --no-progress --no-interaction --no-scripts
