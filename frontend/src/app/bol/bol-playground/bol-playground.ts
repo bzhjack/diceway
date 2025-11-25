@@ -67,11 +67,13 @@ export class BolPlayground {
         }
       }
     ];
+    this.getHeroes();
+  }
+  getHeroes() {
     this.herosService.heroes().subscribe(heroes => {
       this.heroes = heroes;
     })
   }
-
   contextMenu(ev: any): void {
     this.currentHero = ev.hero;
     this.cm.show(ev.event);
@@ -96,8 +98,7 @@ export class BolPlayground {
         this.subs = actionService.subscribe({
           next: () => {
             this.spinner.hide();
-            //this.clear();
-            //this.getHeroes();
+            this.getHeroes();
           },
           error: () => {
             this.spinner.hide();
