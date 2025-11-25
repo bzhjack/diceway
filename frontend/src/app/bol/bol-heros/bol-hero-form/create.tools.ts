@@ -34,29 +34,29 @@ export class BolHeroCreateTools {
   }
 
   public static avantageDescription(avantage: BolAvantageModel) {
-    let toolTip: { title: string, description: string | null }[] = [];
+    let toolTip: { id: number | null, type: string, title: string, description: string | null }[] = [];
     if (avantage.de_bonus) {
-      toolTip.push({title: 'Dé bonus', description: avantage.de_bonus_domaine});
+      toolTip.push({id: avantage.id, type: 'A', title: 'Dé bonus', description: avantage.de_bonus_domaine});
     }
     if (avantage.attribut) {
-      toolTip.push({title: 'Attribut', description: `${avantage.attribut}(${avantage.attribut_bonus})`});
+      toolTip.push({id: avantage.id, type: 'A',title: 'Attribut', description: `${avantage.attribut}(${avantage.attribut_bonus})`});
     }
     if (avantage.description) {
-      toolTip.push({title: 'Détails', description: avantage.description});
+      toolTip.push({id: avantage.id, type: 'A',title: 'Détails', description: avantage.description});
     }
     return toolTip;
   }
 
   public static desavantageDescription(desavantage: BolDesavantageModel) {
-    let toolTip: { title: string, description: string | null }[] = [];
+    let toolTip: { id: number | null, type: string, title: string, description: string | null }[] = [];
     if (desavantage.de_malus) {
-      toolTip.push({title: 'Dé malus', description: desavantage.de_malus_domaine});
+      toolTip.push({id: desavantage.id, type: 'D', title: 'Dé malus', description: desavantage.de_malus_domaine});
     }
     if (desavantage.attribut) {
-      toolTip.push({title: 'Attribut', description: `${desavantage.attribut}(${desavantage.attribut_malus})`});
+      toolTip.push({id: desavantage.id, type: 'D',title: 'Attribut', description: `${desavantage.attribut}(${desavantage.attribut_malus})`});
     }
     if (desavantage.description) {
-      toolTip.push({title: 'Détails', description: desavantage.description});
+      toolTip.push({id: desavantage.id, type: 'D', title: 'Détails', description: desavantage.description});
     }
     return toolTip;
   }

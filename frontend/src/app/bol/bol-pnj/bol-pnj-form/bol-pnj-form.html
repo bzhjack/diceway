@@ -1,6 +1,6 @@
-<div class="hero-form flex gap-2 flex-col">
-  <div class="dw-dialog-title">{{config.data.header}}</div>
-  <form [formGroup]="herosForm" autocomplete="off" class="flex flex-col gap-1">
+<div class="pnj-form flex gap-2 flex-col">
+  <div class="dw-dialog-title">{{ config.data.header }}</div>
+  <form [formGroup]="pnjForm" autocomplete="off" class="flex flex-col gap-1">
     <div class="flex gap-2">
       <!--- Left part --->
       <div>
@@ -14,13 +14,7 @@
             </div>
             <div class="flex flex-col gap-5 pt-1">
               <p-floatlabel variant="over">
-                <input pInputText formControlName="joueur" autocomplete="off" id="joueur" pSize="small"
-                       [pAutoFocus]="true"/>
-                <label for="joueur">Nom du joueur *</label>
-              </p-floatlabel>
-
-              <p-floatlabel variant="over">
-                <input pInputText id="nom" formControlName="nom" autocomplete="off" id="nom" pSize="small"/>
+                <input pInputText id="nom" formControlName="nom" autocomplete="off" id="nom" pSize="small" [pAutoFocus]="true"/>
                 <label for="joueur">Nom du personnage *</label>
               </p-floatlabel>
 
@@ -28,14 +22,12 @@
                 <p-select
                   id="region"
                   class="w-full"
-                  optionLabel="region"
-                  optionValue="id"
+                  optionLabel="type"
+                  optionValue="value"
                   size="small"
-                  [filter]="true"
-                  filterBy="region"
-                  [options]="regionList()"
-                  formControlName="region_id"></p-select>
-                <label for="region">Region *</label>
+                  [options]="type"
+                  formControlName="type"></p-select>
+                <label for="region">Type *</label>
               </p-floatLabel>
             </div>
             <div>
@@ -60,16 +52,11 @@
                 </p-floatLabel>
 
                 <p-floatLabel variant="over">
-                  <label for="heroisme">Héroisme</label>
-                  <p-inputNumber class="dw-input-number" formControlName="heroisme" inputId="heroisme"
+                  <label for="vilenie">Vilénie</label>
+                  <p-inputNumber class="dw-input-number" formControlName="vilenie" inputId="vilenie"
                                  maxFractionDigits="0" size="small"/>
                 </p-floatLabel>
-                <p-floatLabel variant="over">
-                  <label for="experience">Expérience</label>
-                  <p-inputNumber class="dw-input-number" formControlName="experience" inputId="experience"
-                                 maxFractionDigits="0"
-                                 size="small"/>
-                </p-floatLabel>
+
               </div>
               <div class="flex gap-1">
                 <p-floatLabel variant="over">
@@ -88,10 +75,8 @@
                   <p-inputNumber class="dw-input-number" formControlName="creation" inputId="creation"
                                  maxFractionDigits="0" size="small"/>
                 </p-floatLabel>
-
               </div>
             </div>
-
           </p-fieldset>
           <p-fieldset class="flex-auto" legend="Attributs">
             <div class="flex gap-2 pt-3">
@@ -285,12 +270,14 @@
     </div>
   </form>
   <div class="flex justify-end gap-2 pt-2">
-    <p-button icon="pi pi-times" size="small" label="Quitter" severity="secondary" (click)="quit($event)"/>
-    <p-button icon="pi pi-save" size="small" label="Enregistrer" severity="success" [disabled]="herosForm.invalid"
-              (click)="submit($event)"/>
+    <button pButton icon="pi pi-times" size="small" label="Quitter" severity="secondary"
+            (click)="quit($event)"></button>
+    <button pButton icon="pi pi-check" size="small" label="Valider" severity="success" [disabled]="pnjForm.invalid"
+            (click)="submit($event)"></button>
   </div>
 </div>
-<p-popover #opHeros>
+
+<p-popover #opPnj>
   <div class="flex flex-col gap-4">
     <div>{{ itemTitle() }}</div>
 
@@ -358,9 +345,9 @@
 
     <div class="flex justify-end gap-2">
       <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
-              (click)="opHeros.toggle($event)"></button>
+              (click)="opPnj.toggle($event)"></button>
       <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
-              (click)="createItem(opHeros, $event)"
+              (click)="createItem(opPnj, $event)"
               [disabled]="!selectedItem()"></button>
     </div>
   </div>

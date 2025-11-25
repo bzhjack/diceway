@@ -460,4 +460,7 @@ export class BolHerosForm {
       }
     });
   }
+  trackByItem(item: any) {
+    return `${item.id}-${item.type}`;
+  }
 }

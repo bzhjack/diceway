@@ -18,7 +18,7 @@
   </div>
   <p-popover #avPanel>
     <div>
-      @for (desc of avantageDescription(avantage()!); track desc) {
+      @for (desc of avantageDescription(avantage()!); track trackByItem($index, desc)) {
         <div class="flex flex-col">
           <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
           <div style="font-size: 12px">{{ desc.description }}</div>
@@ -47,7 +47,7 @@
 
   <p-popover #desPanel>
     <div>
-      @for (desc of desavantageDescription(desavantage()!); track desc) {
+      @for (desc of desavantageDescription(desavantage()!); track trackByItem($index, desc)) {
         <div class="flex flex-col">
           <div style="font-size: 12px; white-space: nowrap; font-weight: bolder">{{ desc.title }}</div>
           <div style="font-size: 12px">{{ desc.description }}</div>
