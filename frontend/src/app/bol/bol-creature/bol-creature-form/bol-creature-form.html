@@ -21,19 +21,18 @@
                        pSize="small"
                        class="w-full"
                        [pAutoFocus]="true"/>
-                <label for="joueur">Nom de la créature *</label>
+                <label for="nom">Nom de la créature *</label>
               </p-floatlabel>
 
               <p-floatLabel variant="over">
                 <p-select
-                  id="taille"
                   class="w-full"
                   optionLabel="taille"
                   optionValue="id"
                   size="small"
                   [options]="tailles()"
                   formControlName="id_taille"></p-select>
-                <label for="region">Taille *</label>
+                <label>Taille *</label>
               </p-floatLabel>
             </div>
             <div>
@@ -85,18 +84,18 @@
             <div class="flex flex-col gap-5">
               <p-floatLabel variant="over">
                 <label for="attaque">Attaque</label>
-                <p-inputNumber class="dw-input-number" formControlName="attaque" inputId="initiative"
+                <p-inputNumber class="dw-input-number" formControlName="attaque" inputId="attaque"
                                size="small"/>
               </p-floatLabel>
               <p-floatLabel variant="over">
-                <label for="defence">Défense</label>
-                <p-inputNumber class="dw-input-number" formControlName="defense" inputId="melee" size="small"/>
+                <label for="defense">Défense</label>
+                <p-inputNumber class="dw-input-number" formControlName="defense" inputId="defense" size="small"/>
               </p-floatLabel>
             </div>
             <div class="flex flex-col gap-5">
               <p-floatLabel variant="over">
                 <label for="degats">Dégats</label>
-                <p-inputNumber class="dw-input-number" formControlName="degats" inputId="degat" size="small"/>
+                <p-inputNumber class="dw-input-number" formControlName="degats" inputId="degats" size="small"/>
               </p-floatLabel>
               <p-floatLabel variant="over">
                 <label for="protection">Protection</label>
@@ -106,7 +105,7 @@
           </div>
         </p-fieldset>
 
-        <p-fieldset [style]="{height: '145px'}">
+        <p-fieldset>
           <ng-template pTemplate="header">
             <div class="flex items-center gap-2">
               <div> Capacités spéciales</div>
@@ -115,26 +114,25 @@
             </div>
           </ng-template>
           @if(capacitesCtrl.value.length === 0) {
-            <div class="text-xl text-gray-500">Vous pouvez choisir des capacités
+            <div style="height: 103px; width: 230px" class="text-l text-gray-500 text-center">Vous pouvez choisir des capacités
               spéciales
             </div>
-          }
-
-
-          <div>
-            @for (capacite of selectedCapaciteDetail(); track capacite.id) {
-              <div class="flex gap-2 items-center pb-1">
-                <div class="flex gap-2 items-center" style="width: 150px">
-                  @if (capacite.detail) {
-                    <i class="pi pi-info-circle cursor-pointer text-cyan-600"
-                       [pTooltip]="capacite.detail"></i>
-                  }
-                  {{ capacite.capacite }}
+          } @else {
+            <div style="height: 103px; overflow: auto">
+              @for (capacite of selectedCapaciteDetail(); track capacite.id) {
+                <div class="flex gap-2 items-center pb-1">
+                  <div class="flex gap-2 items-center" style="width:200px">
+                    @if (capacite.detail) {
+                      <i class="pi pi-info-circle cursor-pointer text-cyan-600"
+                         [pTooltip]="capacite.detail"></i>
+                    }
+                    {{ capacite.capacite }}
+                  </div>
+                  <app-btn (click)="removeCapacite(capacite.id)" />
                 </div>
-                <app-btn (click)="removeCapacite(capacite.id)" />
-              </div>
-            }
-          </div>
+              }
+            </div>
+          }
         </p-fieldset>
       </div>
     </div>
