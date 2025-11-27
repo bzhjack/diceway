@@ -16,6 +16,9 @@ import StageConfig = Konva.StageConfig;
 import CircleConfig = Konva.CircleConfig;
 import {ContextMenu} from 'primeng/contextmenu';
 import {BolPnjForm} from '../bol-pnj/bol-pnj-form/bol-pnj-form';
+import {BolCreatureModel} from '../bol-models/bol-creature.model';
+import {BolCreatureForm} from '../bol-creature/bol-creature-form/bol-creature-form';
+import {BolCreaturesService} from '../bol-services/bol-creatures.service';
 
 type ExtCircleConfig = CircleConfig;
 
@@ -37,6 +40,7 @@ type ExtCircleConfig = CircleConfig;
 export class BolPlayground {
   private readonly herosService = inject(BolHerosService);
   private readonly dialogueService = inject(DialogService);
+  private readonly creatureService = inject(BolCreaturesService);
   private readonly spinner = inject(NgxSpinnerService);
   items: MenuItem[] = [];
   contextItems: MenuItem[] = [];
@@ -62,6 +66,13 @@ export class BolPlayground {
         command: () => {
           this.pnjForm();
         }
+      },
+      {
+        label: 'Créer une créature',
+        icon: 'pi pi-plus',
+        command: () => {
+          this.creatureForm();
+        }
       }
     ]
     this.contextItems = [
@@ -85,7 +96,7 @@ export class BolPlayground {
     this.cm.show(ev.event);
   }
   heroForm(heros?: BolHerosModel) {
-    let ref = this.dialogueService.open(BolHerosForm, {
+    const ref = this.dialogueService.open(BolHerosForm, {
       dismissableMask: true,
       position: "top",
       showHeader: false,
@@ -113,7 +124,7 @@ export class BolPlayground {
     });
   }
   pnjForm(heros?: BolHerosModel) {
-    let ref = this.dialogueService.open(BolPnjForm, {
+    const ref = this.dialogueService.open(BolPnjForm, {
       dismissableMask: true,
       position: "top",
       showHeader: false,
@@ -132,6 +143,33 @@ export class BolPlayground {
           next: () => {
             this.spinner.hide();
             this.getHeroes();
+          },
+          error: () => {
+            this.spinner.hide();
+          }
+        });
+      }
+    });
+  }
+  creatureForm(creature?: BolCreatureModel) {
+    const ref = this.dialogueService.open(BolCreatureForm, {
+      dismissableMask: true,
+      position: "top",
+      showHeader: false,
+      data: {
+        header: creature ? 'Modification d\'une créature' : 'Création d\'une créature',
+        creature: creature
+      }
+    });
+    this.subs?.unsubscribe();
+    this.subs = ref?.onClose.subscribe((creature: BolCreatureModel) => {
+      if (creature) {
+        this.spinner.show();
+        this.subs?.unsubscribe();
+        const actionService = creature.id ? this.creatureService.updateCreature(creature) : this.creatureService.createCreature(creature);
+        this.subs = actionService.subscribe({
+          next: () => {
+            this.spinner.hide();
           },
           error: () => {
             this.spinner.hide();

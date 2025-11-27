@@ -1,0 +1,194 @@
+<div class="creature-container flex gap-2 flex-col">
+  <div class="dw-dialog-title">{{ config.data.header }}</div>
+  <form [formGroup]="creatureForm" autocomplete="off">
+    <div class="flex flex-col">
+      <div>
+        <p-fieldset legend="Général" class="w-fit">
+          <div class="flex gap-2">
+            <div class="hero-avatar cursor-pointer" (click)="picture()">
+              <img style="width:100%"
+                   [src]="avatarCtrl.value !== null ? avatarCtrl.value : '/assets/bol/empty-avatar.jpg'"
+                   alt="avatar">
+              <p class="hero-avatar__description">Modifier</p>
+            </div>
+            <div class="flex flex-col gap-5 pt-1">
+              <!--- Nom du joueur --->
+              <p-floatlabel variant="over">
+                <input pInputText
+                       id="nom"
+                       formControlName="nom"
+                       autocomplete="off"
+                       pSize="small"
+                       class="w-full"
+                       [pAutoFocus]="true"/>
+                <label for="joueur">Nom de la créature *</label>
+              </p-floatlabel>
+
+              <p-floatLabel variant="over">
+                <p-select
+                  id="taille"
+                  class="w-full"
+                  optionLabel="taille"
+                  optionValue="id"
+                  size="small"
+                  [options]="tailles()"
+                  formControlName="id_taille"></p-select>
+                <label for="region">Taille *</label>
+              </p-floatLabel>
+            </div>
+            <div>
+              <div class="flex flex-col pt-1">
+                <p-floatlabel variant="over">
+                <textarea pTextarea id="commentaire" formControlName="commentaire" rows="2" cols="30"
+                          style="resize: none" class="h-full"></textarea>
+                  <label for="commentaire">Commentaire</label>
+                </p-floatlabel>
+              </div>
+            </div>
+
+          </div>
+        </p-fieldset>
+      </div>
+      <div class="flex gap-2">
+        <p-fieldset legend="Attributs">
+
+          <div class="flex gap-2 pt-3">
+            <div class="flex flex-col gap-5">
+              <p-floatLabel variant="over">
+                <label for="vigueur">Vigueur</label>
+                <p-inputNumber class="dw-input-number" formControlName="vigueur" inputId="vigueur"
+                               maxFractionDigits="0" size="small"/>
+              </p-floatLabel>
+              <p-floatLabel variant="over">
+                <label for="agilite">Agilité</label>
+                <p-inputNumber class="dw-input-number" formControlName="agilite" inputId="agilite"
+                               maxFractionDigits="0" size="small"/>
+              </p-floatLabel>
+            </div>
+            <div class="flex flex-col gap-5">
+              <p-floatLabel variant="over">
+                <label for="esprit">Esprit</label>
+                <p-inputNumber class="dw-input-number" formControlName="esprit" inputId="esprit"
+                               maxFractionDigits="0" size="small"/>
+              </p-floatLabel>
+              <p-floatLabel variant="over">
+                <label for="vitalite">Vitalité</label>
+                <p-inputNumber class="dw-input-number" formControlName="vitalite" inputId="vitalite" maxFractionDigits="0"
+                               size="small"/>
+              </p-floatLabel>
+            </div>
+          </div>
+        </p-fieldset>
+
+        <p-fieldset class="flex-auto" legend="Combat">
+          <div class="flex gap-2 pt-3">
+            <div class="flex flex-col gap-5">
+              <p-floatLabel variant="over">
+                <label for="attaque">Attaque</label>
+                <p-inputNumber class="dw-input-number" formControlName="attaque" inputId="initiative"
+                               size="small"/>
+              </p-floatLabel>
+              <p-floatLabel variant="over">
+                <label for="defence">Défense</label>
+                <p-inputNumber class="dw-input-number" formControlName="defense" inputId="melee" size="small"/>
+              </p-floatLabel>
+            </div>
+            <div class="flex flex-col gap-5">
+              <p-floatLabel variant="over">
+                <label for="degats">Dégats</label>
+                <p-inputNumber class="dw-input-number" formControlName="degats" inputId="degat" size="small"/>
+              </p-floatLabel>
+              <p-floatLabel variant="over">
+                <label for="protection">Protection</label>
+                <p-inputNumber class="dw-input-number" formControlName="protection" inputId="protection" size="small"/>
+              </p-floatLabel>
+            </div>
+          </div>
+        </p-fieldset>
+
+        <p-fieldset [style]="{height: '145px'}">
+          <ng-template pTemplate="header">
+            <div class="flex items-center gap-2">
+              <div> Capacités spéciales</div>
+              <app-btn type="info" icon="plus-circle" pTooltip="Ajouter une capacité"
+                       (click)="clearSelectedCapacite(); opCapacite.toggle($event)"></app-btn>
+            </div>
+          </ng-template>
+          @if(capacitesCtrl.value.length === 0) {
+            <div class="text-xl text-gray-500">Vous pouvez choisir des capacités
+              spéciales
+            </div>
+          }
+
+
+          <div>
+            @for (capacite of selectedCapaciteDetail(); track capacite.id) {
+              <div class="flex gap-2 items-center pb-1">
+                <div class="flex gap-2 items-center" style="width: 150px">
+                  @if (capacite.detail) {
+                    <i class="pi pi-info-circle cursor-pointer text-cyan-600"
+                       [pTooltip]="capacite.detail"></i>
+                  }
+                  {{ capacite.capacite }}
+                </div>
+                <app-btn (click)="removeCapacite(capacite.id)" />
+              </div>
+            }
+          </div>
+        </p-fieldset>
+      </div>
+    </div>
+  </form>
+  <div class="flex justify-end gap-2 pt-2">
+    <button pButton icon="pi pi-times" size="small" label="Quitter" severity="secondary"
+            (click)="quit($event)"></button>
+    <button pButton icon="pi pi-save" size="small" label="Enregistrer" severity="success"
+            [disabled]="creatureForm.invalid"
+            (click)="submit($event)"></button>
+  </div>
+</div>
+
+<p-popover #opCapacite>
+  <div class="flex flex-col gap-4">
+    <div>Ajouter une capacité</div>
+
+    <div class="flex flex-col gap-2">
+      <p-select [style]="{ width: '250px' }"
+                [options]="filteredCapaciteList()"
+                [(ngModel)]="selectedCapacite"
+                [ngModelOptions]="{standalone: true}"
+                [showClear]="true"
+                [filter]="true"
+                filterBy="capacite"
+                placeholder="Selectionner une capacité">
+
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+          <div class="flex align-items-center gap-2">
+            <div>{{ selectedOption.capacite }}</div>
+          </div>
+        </ng-template>
+
+        <ng-template let-capacite pTemplate="item">
+          <div class="flex flex-col gap-2">
+            <div class="text-xls">{{ capacite.capacite }}</div>
+            <div class="text-gray-400" style="font-size: smaller;">{{ capacite.description }}</div>
+          </div>
+        </ng-template>
+      </p-select>
+      @if (selectedCapacite()) {
+        <div class="flex flex-col gap-1 w-fit justify-end">
+          <label for="detail">Description</label>
+          <textarea id="detail" rows="2" cols="30" pInputTextarea [(ngModel)]="selectedCapacite()!.detail"></textarea>
+        </div>
+      }
+    </div>
+
+
+    <div class="flex justify-end gap-2">
+      <button severity="secondary" type="button" size="small" pButton pRipple icon="pi pi-times"
+              (click)="opCapacite.toggle($event)"></button>
+      <button severity="success" type="button" size="small" pButton pRipple icon="pi pi-check"
+              (click)="addCapacite(opCapacite, $event)" [disabled]="!selectedCapacite()"></button>
+    </div>
+  </div>
+</p-popover>

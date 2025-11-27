@@ -8,7 +8,6 @@ import {FieldsetModule} from "primeng/fieldset";
 import {InputNumberModule} from "primeng/inputnumber";
 import {ConfirmationService} from "primeng/api";
 import {ButtonDirective, ButtonModule} from "primeng/button";
-import {NgForOf, NgIf} from "@angular/common";
 import {TooltipModule} from "primeng/tooltip";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {Popover, PopoverModule} from 'primeng/popover';
