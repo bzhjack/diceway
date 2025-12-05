@@ -1,4 +1,4 @@
-import {CommonModule, NgOptimizedImage} from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import {Component, inject, OnDestroy} from '@angular/core';
 import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router, RouterModule} from '@angular/router';
@@ -16,7 +16,6 @@ import {AuthService} from '../../services/auth.service';
 @Component({
   selector: 'app-forgotten',
   imports: [
-    CommonModule,
     CardModule,
     InputGroupModule,
     InputGroupAddonModule,
@@ -29,7 +28,7 @@ import {AuthService} from '../../services/auth.service';
     ProgressBarModule,
     Message,
     NgOptimizedImage
-  ],
+],
   templateUrl: './forgotten.component.html',
   styleUrl: './forgotten.component.scss'
 })

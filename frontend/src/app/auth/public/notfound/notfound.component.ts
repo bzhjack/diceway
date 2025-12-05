@@ -1,4 +1,4 @@
-import {CommonModule, NgOptimizedImage} from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import {Component} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {InlineSVGModule} from 'ng-inline-svg-2';
@@ -8,13 +8,12 @@ import {CardModule} from 'primeng/card';
 @Component({
     selector: 'app-notfound',
     imports: [
-        CommonModule,
-        CardModule,
-        ButtonModule,
-        RouterModule,
-        InlineSVGModule,
-        NgOptimizedImage,
-    ],
+    CardModule,
+    ButtonModule,
+    RouterModule,
+    InlineSVGModule,
+    NgOptimizedImage
+],
     templateUrl: './notfound.component.html',
     styleUrl: './notfound.component.scss'
 })

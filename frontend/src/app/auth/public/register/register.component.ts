@@ -1,4 +1,4 @@
-import {CommonModule, NgOptimizedImage} from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import {Component, inject, OnDestroy} from '@angular/core';
 import {
   AbstractControl,
@@ -24,7 +24,6 @@ import {Message} from 'primeng/message';
 @Component({
   selector: 'app-register',
   imports: [
-    CommonModule,
     CardModule,
     InputGroupModule,
     InputGroupAddonModule,
@@ -37,7 +36,7 @@ import {Message} from 'primeng/message';
     ProgressBarModule,
     Message,
     NgOptimizedImage
-  ],
+],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })

@@ -14,7 +14,7 @@ RUN composer install --prefer-dist --no-progress --no-interaction --no-scripts
 # -----------------------------
 # 2) Runtime stage with Apache + PHP
 # -----------------------------
-FROM php:8.2-apache
+FROM php:8.4-apache
 
 # Installer les extensions PHP et dépendances système courantes pour Laravel
 RUN apt-get update \

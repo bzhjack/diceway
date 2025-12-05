@@ -4,7 +4,7 @@ import {ActivatedRoute, Router, RouterModule} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {AuthService} from '../../services/auth.service';
 import {CardModule} from 'primeng/card';
-import {CommonModule, NgOptimizedImage} from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import {InputGroupModule} from 'primeng/inputgroup';
 import {InputGroupAddonModule} from 'primeng/inputgroupaddon';
 import {InputTextModule} from 'primeng/inputtext';
@@ -16,7 +16,6 @@ import {Message} from 'primeng/message';
 @Component({
     selector: 'app-resend',
   imports: [
-    CommonModule,
     CardModule,
     InputGroupModule,
     InputGroupAddonModule,
@@ -28,8 +27,8 @@ import {Message} from 'primeng/message';
     InlineSVGModule,
     ProgressBarModule,
     Message,
-    NgOptimizedImage,
-  ],
+    NgOptimizedImage
+],
     templateUrl: './resend.component.html',
     styleUrl: './resend.component.scss'
 })

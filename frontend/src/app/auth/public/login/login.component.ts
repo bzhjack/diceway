@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {CommonModule, NgOptimizedImage} from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import {InputGroup} from 'primeng/inputgroup';
 import {InputGroupAddon} from 'primeng/inputgroupaddon';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -13,7 +13,6 @@ import {finalize} from 'rxjs/operators';
 @Component({
   selector: 'app-login',
   imports: [
-    CommonModule,
     InputGroup,
     InputGroupAddon,
     Message,
@@ -21,8 +20,8 @@ import {finalize} from 'rxjs/operators';
     Button,
     RouterLink,
     InputText,
-    NgOptimizedImage,
-  ],
+    NgOptimizedImage
+],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })

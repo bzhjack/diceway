@@ -1,4 +1,4 @@
-import {CommonModule, NgOptimizedImage} from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import {Component, inject, OnDestroy} from '@angular/core';
 import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router, RouterModule} from '@angular/router';
@@ -17,7 +17,6 @@ import {Message} from 'primeng/message';
 @Component({
     selector: 'app-reset',
   imports: [
-    CommonModule,
     CardModule,
     InputGroupModule,
     InputGroupAddonModule,
@@ -30,7 +29,7 @@ import {Message} from 'primeng/message';
     ProgressBarModule,
     Message,
     NgOptimizedImage
-  ],
+],
     templateUrl: './reset.component.html',
     styleUrl: './reset.component.scss'
 })

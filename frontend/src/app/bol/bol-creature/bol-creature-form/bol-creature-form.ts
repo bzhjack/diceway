@@ -10,7 +10,7 @@ import {InputNumberModule} from "primeng/inputnumber";
 import {DialogService, DynamicDialogConfig, DynamicDialogRef} from "primeng/dynamicdialog";
 import {map, Subscription} from "rxjs";
 import {toSignal} from '@angular/core/rxjs-interop';
-import {NgForOf, NgIf} from '@angular/common';
+
 import {Ripple} from "primeng/ripple";
 import {TooltipModule} from "primeng/tooltip";
 import {BtnComponent} from "../../../shared/btn/btn.component";
