@@ -5,7 +5,7 @@
         "dev": "vite",
         "build": "vite build",
         "docker:build": "docker build -t diceway-app .",
-        "docker:start": "docker-compose down && docker-compose up",
+        "docker:start": "docker compose down && docker compose up",
         "docker:exec": "docker exec -it diceway sh"
     },
     "devDependencies": {
