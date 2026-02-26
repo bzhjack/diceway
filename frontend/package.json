@@ -32,7 +32,7 @@
     "angular-oauth2-oidc": "^17.0.2",
     "konva": "^10.0.8",
     "ng-inline-svg-2": "^20.0.1",
-    "ng2-konva": "^10.0.1",
+    "ng2-konva": "^11.0.0",
     "ngx-image-cropper": "^9.1.5",
     "ngx-spinner": "^19.0.0",
     "primeicons": "^7.0.0",
