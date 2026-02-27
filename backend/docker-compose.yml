@@ -4,9 +4,11 @@ services:
         image: diceway-app
         container_name: diceway
         volumes:
-            - ./.env.local:/var/www/html/.env
+            - ./.env.production:/var/www/html/.env
             - ./storage/app:/var/www/html/storage/app
             - ./app:/var/www/html/app
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
         ports:
             - "8080:80"
         restart: unless-stopped
