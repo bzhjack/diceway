@@ -4,7 +4,7 @@ services:
         image: diceway-app
         container_name: diceway
         volumes:
-            - ./.env.production:/var/www/html/.env
+            - ./.env.local:/var/www/html/.env
             - ./storage/app:/var/www/html/storage/app
             - ./app:/var/www/html/app
         extra_hosts:
