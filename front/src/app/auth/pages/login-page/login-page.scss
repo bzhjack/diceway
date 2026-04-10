@@ -1,0 +1,39 @@
+:host {
+  display: contents;
+  height: 100%;
+}
+
+.login {
+  &__google {
+    img {
+      height: 25px;
+      margin: 0 10px 0 0;
+    }
+  }
+}
+
+.login_divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+
+  div {
+    width: 2px;
+    background-color: lightgray;
+    color: lightgray;
+
+    &:first-of-type,
+    &:last-of-type {
+      flex: 1;
+    }
+
+    &:nth-of-type(2) {
+      flex: 0;
+      width: auto;
+      background: none;
+      color: lightgray;
+      padding: 10px 0;
+    }
+  }
+}
