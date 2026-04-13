@@ -21,13 +21,18 @@ export class ResetPageComponent {
   private readonly authService = inject(AuthService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly token = this.route.snapshot.paramMap.get('token') ?? '';
+  private readonly email =
+    this.route.snapshot.queryParamMap.get('email') ??
+    this.route.snapshot.paramMap.get('email') ??
+    '';
 
   protected pending = false;
   protected messages: string[] = [];
   protected readonly resetForm = this.formBuilder.nonNullable.group(
     {
-      token: [this.route.snapshot.paramMap.get('token') ?? '', [Validators.required]],
-      email: [this.route.snapshot.paramMap.get('email') ?? '', [Validators.required, Validators.email]],
+      token: [this.token, [Validators.required]],
+      email: [this.email, [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       password_confirmation: ['', [Validators.required, Validators.minLength(8)]],
     },

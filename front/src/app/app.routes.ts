@@ -39,6 +39,12 @@ export const routes: Routes = [
     canActivate: [publicOnlyGuard],
   },
   {
+    path: 'reset/:token',
+    loadComponent: () =>
+      import('./auth/pages/reset-page/reset-page').then((module) => module.ResetPageComponent),
+    canActivate: [publicOnlyGuard],
+  },
+  {
     path: 'reset/:token/:email',
     loadComponent: () =>
       import('./auth/pages/reset-page/reset-page').then((module) => module.ResetPageComponent),
