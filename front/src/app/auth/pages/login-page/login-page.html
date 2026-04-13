@@ -35,7 +35,7 @@
 
         @if (messages.length > 0) {
           @for (message of messages; track message) {
-            <p-message severity="error" variant="outlined" size="small">{{ message }}</p-message>
+            <p-message severity="error" size="small">{{ message }}</p-message>
           }
         }
         <div class="flex justify-between">
