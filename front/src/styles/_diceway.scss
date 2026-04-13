@@ -1,0 +1,45 @@
+.dw-panel {
+  border-radius: 6px;
+  padding: 4px;
+  border: 1px solid #2d3748;
+  background: #1a202c;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+.dw_banner {
+  font-family: 'cyberpunk', serif;
+  font-size: 55px;
+}
+
+.dw_progress {
+  position: absolute !important;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
+::-webkit-scrollbar {
+  background-color: transparent;
+  width: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #2d3748;
+  border-radius: 10px;
+  border-width: 4px;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+html {
+  background-color: #000 !important;
+  color: #fff;
+}

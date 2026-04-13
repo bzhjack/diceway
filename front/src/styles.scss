@@ -1,1 +1,408 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'styles/diceway';
+@use 'styles/colors';
+@use 'styles/panel';
+@use 'styles/form';
+@use 'styles/dialog';
+@use 'styles/fieldset';
+@use 'styles/tag';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import 'primeicons/primeicons.css';
+
+@font-face {
+  font-family: 'cyberpunk';
+  src: url('/assets/fonts/cyberpunk.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Muse Sans';
+  src: url('/assets/fonts/MuseSans-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Muse Display Harmony';
+  src: url('/assets/fonts/MuseDisplay-Harmony.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.dw_error {
+  color: #ef4444;
+  font-size: 0.875rem;
+}
+
+.dw_container {
+  border-left: 3px solid #cbd5e1;
+  padding-left: 0.75rem;
+}
+
+.forbidden {
+  color: red;
+}
+
+:root {
+  color-scheme: light;
+  --p-floatlabel-font-weight: 500;
+  --p-floatlabel-active-font-size: 1rem !important;
+  --p-floatlabel-active-font-weight: 400;
+  --bg: #f5efe3;
+  --surface: rgba(255, 252, 246, 0.88);
+  --surface-strong: #fffaf0;
+  --surface-border: rgba(67, 44, 20, 0.12);
+  --text: #26180d;
+  --muted: #6e5a45;
+  --accent: #9b3d23;
+  --accent-strong: #7d2f1a;
+  --success: #2f6b45;
+  --success-soft: rgba(47, 107, 69, 0.14);
+  --danger: #9b2c2c;
+  --danger-soft: rgba(155, 44, 44, 0.12);
+  --shadow: 0 24px 60px rgba(57, 39, 19, 0.12);
+  --radius-lg: 28px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Muse Sans', -apple-system, Roboto, 'Open Sans', 'Helvetica Neue', Helvetica, sans-serif;
+  color: #fff;
+  background: #000;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  color: var(--accent);
+}
+
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgba(155, 61, 35, 0.28);
+  outline-offset: 3px;
+}
+
+.auth-page {
+  min-height: 100dvh;
+}
+
+.auth-shell {
+  width: min(100%, 520px);
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+}
+
+.auth-shell--wide {
+  width: min(100%, 560px);
+}
+
+.auth-hero {
+  width: min(100%, 400px);
+  height: auto;
+  display: block;
+}
+
+.auth-card {
+  width: min(100%, 460px);
+  padding: 36px;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(20px);
+}
+
+.auth-card--compact {
+  width: min(100%, 420px);
+}
+
+.auth-kicker,
+.workspace-kicker {
+  margin: 0 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.auth-title,
+.workspace-header h1 {
+  margin: 0;
+  font-family: 'Muse Display Harmony', 'Open Sans', -apple-system, Roboto, 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 0.96;
+}
+
+.auth-title--danger {
+  color: var(--danger);
+}
+
+.auth-subtitle {
+  margin: 14px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.auth-form {
+  margin-top: 28px;
+  display: grid;
+  gap: 18px;
+}
+
+.form-field {
+  display: grid;
+  gap: 8px;
+}
+
+.form-field label {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.form-field input {
+  width: 100%;
+  border: 1px solid rgba(67, 44, 20, 0.16);
+  border-radius: var(--radius-sm);
+  background: var(--surface-strong);
+  color: var(--text);
+  padding: 14px 16px;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.form-field input:hover {
+  border-color: rgba(67, 44, 20, 0.28);
+}
+
+.form-field input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(155, 61, 35, 0.1);
+}
+
+.field-error {
+  margin: 0;
+  color: var(--danger);
+  font-size: 0.92rem;
+}
+
+.button-primary,
+.button-secondary {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0 22px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.button-link {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 52px;
+  padding: 0 22px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  color: #fffaf4;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.button-link--secondary {
+  background: rgba(255, 250, 240, 0.86);
+  border: 1px solid rgba(67, 44, 20, 0.12);
+  color: var(--text);
+}
+
+.button-primary {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  color: #fffaf4;
+  box-shadow: 0 16px 30px rgba(155, 61, 35, 0.22);
+}
+
+.button-secondary {
+  background: rgba(255, 250, 240, 0.86);
+  border: 1px solid rgba(67, 44, 20, 0.12);
+  color: var(--text);
+}
+
+.button-primary:hover,
+.button-secondary:hover {
+  transform: translateY(-1px);
+}
+
+.button-primary:disabled,
+.button-secondary:disabled {
+  opacity: 0.7;
+  cursor: wait;
+  transform: none;
+}
+
+.auth-alert,
+.auth-success {
+  margin-top: 20px;
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+
+.auth-alert {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.auth-success {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.auth-alert p,
+.auth-success p {
+  margin: 0;
+}
+
+.auth-alert p + p,
+.auth-success p + p {
+  margin-top: 8px;
+}
+
+.auth-links {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.auth-links--stack {
+  flex-direction: column;
+}
+
+.auth-links a {
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-links a:hover {
+  text-decoration: underline;
+}
+
+.workspace-page {
+  min-height: 100dvh;
+  padding: 32px;
+}
+
+.workspace-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+}
+
+.workspace-canvas {
+  display: grid;
+  place-items: center;
+  min-height: calc(100dvh - 128px);
+  margin-top: 24px;
+  border-radius: 32px;
+  border: 1px dashed rgba(67, 44, 20, 0.18);
+  background:
+    linear-gradient(180deg, rgba(255, 252, 246, 0.56), rgba(255, 252, 246, 0.22)),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 36px,
+      rgba(67, 44, 20, 0.03) 36px,
+      rgba(67, 44, 20, 0.03) 37px
+    );
+}
+
+.workspace-canvas p {
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.auth-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.auth-actions--end {
+  justify-content: flex-end;
+}
+
+.auth-footer-copy {
+  margin-top: 20px;
+  color: var(--muted);
+}
+
+.auth-footer-copy a {
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-footer-copy a:hover {
+  text-decoration: underline;
+}
+
+.auth-copy-block {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.auth-copy-block h3,
+.auth-copy-block p {
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .auth-card {
+    padding: 28px;
+  }
+
+  .workspace-page {
+    padding: 20px;
+  }
+
+  .workspace-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

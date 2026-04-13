@@ -12,3 +12,9 @@ services:
         ports:
             - "8080:80"
         restart: unless-stopped
+    mailpit:
+        image: axllent/mailpit:latest
+        container_name: diceway-mailpit
+        ports:
+            - "8025:8025"
+        restart: unless-stopped

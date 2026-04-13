@@ -157,3 +157,6 @@ Liste chronologique des événements importants
 -   Minimum de clics
 -   Lecture rapide
 -   Priorité au narratif
+
+
+Oui. Dans le nouveau chat, mentionne simplement frontend-ui-ux-design et dis quel écran MJ on traite en premier.

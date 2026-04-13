@@ -47,3 +47,5 @@ GRANT ALL PRIVILEGES ON diceway.* TO 'diceway'@'localhost';
 git branch -D -r origin/feature/xxx
 
 export PATH="/opt/alt/alt-nodejs20/root/usr/bin/:$PATH"
+
+Pour mailpit, l'url est http://localhost:8025/
