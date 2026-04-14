@@ -10,6 +10,20 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'session/live',
+    loadComponent: () =>
+      import('./session-live/session-live-page').then((module) => module.SessionLivePageComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'create/:entity',
+    loadComponent: () =>
+      import('./creation-placeholder/creation-placeholder-page').then(
+        (module) => module.CreationPlaceholderPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: 'login',
     loadComponent: () =>
       import('./auth/pages/login-page/login-page').then((module) => module.LoginPageComponent),

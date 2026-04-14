@@ -1,0 +1,64 @@
+<section
+  class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(245,158,11,0.18),_transparent_28%),linear-gradient(135deg,_#120d08,_#2a170d_60%,_#120d08)] px-4 py-6 md:px-6"
+>
+  <div class="mx-auto flex max-w-4xl flex-col gap-4">
+    <p-card
+      styleClass="!border !border-white/10 !bg-[#fffaf2]/94 !text-[#26180d] !shadow-[0_24px_60px_rgba(24,16,8,0.18)]"
+    >
+      <div class="flex flex-col gap-6">
+        <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <div
+                class="flex h-14 w-14 items-center justify-center bg-[#b24c31] text-2xl text-white"
+              >
+                <i [class]="entity().icon" aria-hidden="true"></i>
+              </div>
+              <div class="space-y-1">
+                <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-[#8a5b32]">
+                  Création
+                </p>
+                <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none">
+                  Nouvelle {{ entity().label }}
+                </h1>
+              </div>
+            </div>
+
+            <p class="m-0 max-w-2xl text-sm leading-7 text-[#685544]">
+              {{ entity().helper }}
+            </p>
+          </div>
+
+          <div class="flex flex-wrap gap-2">
+            <p-tag value="Placeholder" severity="warn" />
+            <p-tag value="Route prête" severity="success" />
+          </div>
+        </div>
+
+        <div class="border border-[#3b2615]/10 bg-white/70 p-5">
+          <p class="m-0 text-base leading-8 text-[#26180d]">
+            Le dashboard pointe déjà vers une vraie route de création. On peut maintenant brancher
+            cette page à un vrai formulaire PrimeNG selon l entité à traiter.
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <p-button
+            label="Retour au dashboard"
+            icon="pi pi-arrow-left"
+            [routerLink]="'/'"
+            severity="secondary"
+            [outlined]="true"
+            styleClass="!px-5 !py-3 !font-bold"
+          />
+          <p-button
+            label="Entrer dans la session live"
+            icon="pi pi-play-circle"
+            [routerLink]="'/session/live'"
+            styleClass="!bg-[#b24c31] !border-[#b24c31] !text-white !px-5 !py-3 !font-bold"
+          />
+        </div>
+      </div>
+    </p-card>
+  </div>
+</section>
