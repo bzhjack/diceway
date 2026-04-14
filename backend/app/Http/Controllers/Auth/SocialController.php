@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Random\RandomException;
@@ -72,14 +73,25 @@ class SocialController extends Controller
             $user->save();
         }
 
-        $avatarName =$user->id;
-        $avatarPath = 'avatars/' . $avatarName . '.jpg';
-        $avatarContents = Http::get($avatarUrl)->body();
-        if ($avatarContents) {
-            Storage::disk('public')->put($avatarPath, $avatarContents);
+        if ($avatarUrl) {
+            $avatarName = $user->id;
+            $avatarPath = 'avatars/' . $avatarName . '.jpg';
+
+            try {
+                $avatarContents = Http::get($avatarUrl)->body();
+                if ($avatarContents) {
+                    Storage::disk('public')->put($avatarPath, $avatarContents);
+                    $user->avatar = $avatarName;
+                    $user->save();
+                }
+            } catch (\Throwable $exception) {
+                Log::warning('Unable to persist Google avatar', [
+                    'user_id' => $user->id,
+                    'avatar_url' => $avatarUrl,
+                    'exception' => $exception->getMessage(),
+                ]);
+            }
         }
-        $user->avatar = $avatarName;
-        $user->save();
         // Mark email as verified if Google says so
         if ($emailVerified && is_null($user->email_verified_at)) {
             if ($user->markEmailAsVerified()) {

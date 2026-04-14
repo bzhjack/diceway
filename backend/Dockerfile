@@ -51,6 +51,9 @@ WORKDIR /var/www/html
 # Copier le code source de l'application
 COPY . .
 
+COPY docker/entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # Copier le vendor depuis la stage composer
 COPY --from=vendor /app/vendor ./vendor
 COPY --from=vendor /app/composer.lock ./composer.lock
@@ -62,6 +65,8 @@ RUN chown -R www-data:www-data storage bootstrap/cache \
 
 # Exposer le port HTTP
 EXPOSE 80
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 # Commande par défaut pour démarrer Apache
 CMD ["apache2-foreground"]
