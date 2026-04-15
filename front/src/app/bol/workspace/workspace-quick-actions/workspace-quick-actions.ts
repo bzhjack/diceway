@@ -41,6 +41,13 @@ export class WorkspaceQuickActionsComponent {
       severity: 'secondary',
     },
     {
+      label: 'Créer une créature',
+      detail: 'Alimenter le bestiaire avec un nouveau profil de scène.',
+      icon: 'pi pi-book',
+      link: '/create/creature',
+      severity: 'secondary',
+    },
+    {
       label: 'Créer un PNJ',
       detail: 'Alimenter la réserve d adversaires et alliés.',
       icon: 'pi pi-id-card',
