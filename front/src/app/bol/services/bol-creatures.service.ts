@@ -30,8 +30,11 @@ export class BolCreaturesService {
     return this.http.get<BolCreatureCapaciteModel[]>(`${environment.apiBase}/api/bol/creature/capacites`);
   }
 
-  createCreature(creature: BolCreatureModel): Observable<any> {
-    return this.http.post<BolCreatureModel>(`${environment.apiBase}/api/bol/creature/create`, <BolCreatureModel>creature);
+  createCreature(creature: Record<string, unknown>): Observable<BolCreatureModel> {
+    return this.http.post<BolCreatureModel>(
+      `${environment.apiBase}/api/bol/creature/create`,
+      creature,
+    );
   }
 
   updateCreature(creature: BolCreatureModel): Observable<any> {

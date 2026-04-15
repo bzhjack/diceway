@@ -155,51 +155,7 @@
       </div>
 
       <div class="flex flex-col gap-4 xl:col-span-4">
-        <p-card
-          styleClass="!border !border-[#2d3748] !bg-[#1a202c]/96 !text-slate-50 !shadow-[0_24px_60px_rgba(0,0,0,0.28)] backdrop-blur"
-        >
-          <div class="space-y-5">
-            <div class="space-y-2">
-              <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-sky-300">
-                Création rapide
-              </p>
-              <h2 class="m-0 font-['Muse_Display_Harmony'] text-3xl leading-none">
-                Préparer avant de jouer
-              </h2>
-              <p class="m-0 text-sm leading-7 text-slate-300">
-                Tous les raccourcis de création utiles depuis une seule colonne.
-              </p>
-            </div>
-
-            <div class="grid gap-3">
-              @for (action of quickActions; track action.label) {
-                <div class="border border-[#424b57] bg-[#2d3748]/70 p-3">
-                  <div class="flex items-start gap-3">
-                    <div
-                      class="mt-1 flex h-10 w-10 shrink-0 items-center justify-center border border-[#424b57] bg-[#334155] text-slate-100"
-                    >
-                      <i [class]="action.icon" aria-hidden="true"></i>
-                    </div>
-                    <div class="flex-1 space-y-3">
-                      <div class="space-y-1">
-                        <p class="m-0 text-sm font-bold text-slate-100">{{ action.label }}</p>
-                        <p class="m-0 text-sm leading-6 text-slate-300">{{ action.detail }}</p>
-                      </div>
-                      <p-button
-                        label="Ouvrir"
-                        icon="pi pi-arrow-up-right"
-                        [routerLink]="action.link"
-                        [severity]="action.severity === 'primary' ? undefined : 'secondary'"
-                        [outlined]="action.severity !== 'primary'"
-                        styleClass="!px-4 !py-2 !font-bold"
-                      />
-                    </div>
-                  </div>
-                </div>
-              }
-            </div>
-          </div>
-        </p-card>
+        <bol-workspace-quick-actions />
 
         <p-card
           styleClass="!border !border-[#2d3748] !bg-[#1a202c]/96 !text-slate-50 !shadow-[0_24px_60px_rgba(0,0,0,0.24)]"

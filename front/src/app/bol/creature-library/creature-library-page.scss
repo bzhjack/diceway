@@ -1,0 +1,98 @@
+:host {
+  display: block;
+}
+
+:host ::ng-deep .bol-creature-table {
+  .p-datatable-table-container {
+    overflow: hidden;
+    border: 1px solid #334155;
+    border-radius: 0.85rem;
+  }
+
+  .p-datatable-thead > tr > th {
+    background: #0f172a;
+    border-color: #334155;
+    color: #e2e8f0;
+    padding: 1rem;
+  }
+
+  .p-datatable-tbody > tr {
+    background: rgba(15, 23, 42, 0.72);
+    color: #e2e8f0;
+  }
+
+  .p-datatable-tbody > tr > td {
+    background: transparent;
+    border-color: #334155;
+    padding: 1rem;
+    vertical-align: top;
+  }
+
+  .p-datatable-tbody > tr:hover {
+    background: rgba(30, 41, 59, 0.95);
+  }
+
+  .p-datatable-tbody > tr:hover > td {
+    background: transparent;
+  }
+
+  .p-rowgroup-header > td {
+    background: linear-gradient(90deg, rgba(24, 54, 65, 0.98), rgba(15, 23, 42, 0.95));
+    border-color: #334155;
+    padding: 0 1rem;
+  }
+
+  .p-datatable-header {
+    background: transparent;
+    border: 0;
+    padding: 0 0 1rem;
+  }
+}
+
+.beast-avatar {
+  position: relative;
+  display: flex;
+  height: 5.5rem;
+  width: 5.5rem;
+  overflow: hidden;
+  border: 1px solid #424b57;
+  border-radius: 0.75rem;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.92));
+}
+
+.beast-avatar__fallback {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at top, rgba(251, 191, 36, 0.18), transparent 42%),
+    rgba(15, 23, 42, 0.9);
+}
+
+.beast-avatar__tag {
+  position: absolute;
+  right: 0.35rem;
+  bottom: 0.35rem;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.88);
+  padding: 0.12rem 0.42rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #fbbf24;
+  text-transform: uppercase;
+}
+
+.beast-capacity {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid rgba(71, 85, 105, 0.75);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.92);
+  padding: 0.35rem 0.65rem;
+  font-size: 0.82rem;
+  color: #e2e8f0;
+}

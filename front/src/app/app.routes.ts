@@ -16,6 +16,22 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'create/creature',
+    loadComponent: () =>
+      import('./bol/creature-create/creature-create-page').then(
+        (module) => module.CreatureCreatePageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'library/creatures',
+    loadComponent: () =>
+      import('./bol/creature-library/creature-library-page').then(
+        (module) => module.CreatureLibraryPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: 'create/:entity',
     loadComponent: () =>
       import('./bol/creation-placeholder/creation-placeholder-page').then(
