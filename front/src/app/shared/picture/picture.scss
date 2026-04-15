@@ -1,0 +1,53 @@
+image-cropper {
+  max-height: 55vh;
+}
+
+.picture-body {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.cropper-shell {
+  overflow: hidden;
+  border: 1px solid #334155;
+  background: #0f172a;
+}
+
+.preview-shell {
+  display: flex;
+  width: 256px;
+  min-height: 256px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #334155;
+  background: #0f172a;
+}
+
+.preview-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.preview-placeholder {
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+.picture-dropzone {
+  border-radius: 0.5rem;
+  border: 1px dashed #64748b;
+  background: rgba(15, 23, 42, 0.8);
+  padding: 5rem 2rem;
+  color: #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.picture-dropzone.drag-over {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+}

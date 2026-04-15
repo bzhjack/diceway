@@ -18,8 +18,8 @@ export const routes: Routes = [
   {
     path: 'create/creature',
     loadComponent: () =>
-      import('./bol/creature-create/creature-create-placeholder-page').then(
-        (module) => module.CreatureCreatePlaceholderPageComponent,
+      import('./bol/creature-create/creature-create-page').then(
+        (module) => module.CreatureCreatePageComponent,
       ),
     canActivate: [authGuard],
   },
