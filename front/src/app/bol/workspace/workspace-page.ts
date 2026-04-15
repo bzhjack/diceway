@@ -1,6 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
+import { BolCreaturesService } from '../services/bol-creatures.service';
+import { BolDemonsService } from '../services/bol-demons.service';
+import { BolHerosService } from '../services/bol-heros.service';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
@@ -69,9 +73,16 @@ interface ActivityEntry {
 })
 export class WorkspacePageComponent {
   private readonly authService = inject(AuthService);
+  private readonly bolCreaturesService = inject(BolCreaturesService);
+  private readonly bolDemonsService = inject(BolDemonsService);
+  private readonly bolHerosService = inject(BolHerosService);
+  private readonly creatures = toSignal(this.bolCreaturesService.creatures(), { initialValue: [] });
+  private readonly demons = toSignal(this.bolDemonsService.demons(), { initialValue: [] });
+  private readonly heroes = toSignal(this.bolHerosService.heroes(), { initialValue: [] });
+  private readonly pnjs = toSignal(this.bolHerosService.pnjs(), { initialValue: [] });
 
   protected readonly userName = computed(() => this.authService.user()?.name ?? 'Utilisateur');
-  protected readonly metrics: readonly WorkspaceMetric[] = [
+  protected readonly metrics = computed<readonly WorkspaceMetric[]>(() => [
     {
       label: 'Campagnes',
       value: '4',
@@ -80,27 +91,27 @@ export class WorkspacePageComponent {
       iconClass: 'border border-sky-400/25 bg-sky-400/12 text-sky-300',
     },
     {
-      label: 'Tables',
-      value: '3',
-      detail: '1 table en ligne ce soir, 2 en préparation.',
-      icon: 'pi pi-sitemap',
-      iconClass: 'border border-orange-400/25 bg-orange-400/12 text-orange-300',
-    },
-    {
       label: 'PJ suivis',
-      value: '18',
-      detail: '6 protagonistes déjà assignés à la table active.',
+      value: String(this.heroes().length),
+      detail: 'Nombre de PJ récupéré depuis la bibliothèque Barbarian of Lemuria.',
       icon: 'pi pi-users',
       iconClass: 'border border-emerald-400/25 bg-emerald-400/12 text-emerald-300',
     },
     {
+      label: 'Bestiaire',
+      value: String(this.creatures().length + this.demons().length),
+      detail: 'Créatures et démons disponibles dans le bestiaire Barbarian of Lemuria.',
+      icon: 'pi pi-book',
+      iconClass: 'border border-amber-400/25 bg-amber-400/12 text-amber-300',
+    },
+    {
       label: 'PNJ prêts',
-      value: '47',
-      detail: '9 PNJ marqués comme utilisables immédiatement.',
+      value: String(this.pnjs().length),
+      detail: 'Nombre de PNJ récupéré depuis la bibliothèque Barbarian of Lemuria.',
       icon: 'pi pi-user-edit',
       iconClass: 'border border-rose-400/25 bg-rose-400/12 text-rose-300',
     },
-  ];
+  ]);
   protected readonly activeSession: SessionPreview = {
     title: 'Session du soir',
     campaign: 'Les Cités de Bronze',

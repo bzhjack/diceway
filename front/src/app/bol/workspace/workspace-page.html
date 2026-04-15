@@ -5,7 +5,7 @@
     <bol-workspace-header [userName]="userName()" (logoutRequested)="logout()" />
 
     <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-      @for (metric of metrics; track metric.label) {
+      @for (metric of metrics(); track metric.label) {
         <bol-workspace-metrics [metric]="metric" />
       }
     </div>
