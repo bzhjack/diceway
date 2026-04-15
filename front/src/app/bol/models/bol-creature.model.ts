@@ -2,7 +2,7 @@ import {BolQuestProtagonistModel} from "./bol-quest.model";
 
 export interface BolCreatureModel {
   id: string | null;
-  user_id: string;
+  user_id: string | null;
   nom: string;
   vigueur: number;
   agilite: number;
@@ -15,15 +15,13 @@ export interface BolCreatureModel {
   avatar: string | null;
   commentaire: string | null;
   id_taille: number;
-  capacites: [
-    {
-      capacite: BolCreatureCapaciteModel;
-      capacite_id: number;
-      creature_id: string
-      detail: string;
-      id: number;
-    }
-  ],
+  capacites: {
+    capacite: BolCreatureCapaciteModel;
+    capacite_id: number;
+    creature_id: string;
+    detail: string;
+    id: number;
+  }[];
   taille: BolCreatureTailleModel;
   currentQuest?: BolQuestProtagonistModel;
   type?: 'P' | 'C' | 'R'

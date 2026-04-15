@@ -97,6 +97,7 @@ export class WorkspacePageComponent {
       detail: 'Créatures et démons disponibles dans le bestiaire Barbarian of Lemuria.',
       icon: 'pi pi-book',
       iconClass: 'border border-amber-400/25 bg-amber-400/12 text-amber-300',
+      link: '/library/creatures',
     },
     {
       label: 'PNJ prêts',

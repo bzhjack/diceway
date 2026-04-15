@@ -1,3 +1,4 @@
+import { RouterLink } from '@angular/router';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CardModule } from 'primeng/card';
 
@@ -7,11 +8,12 @@ export interface WorkspaceMetric {
   readonly detail: string;
   readonly icon: string;
   readonly iconClass: string;
+  readonly link?: string;
 }
 
 @Component({
   selector: 'bol-workspace-metrics',
-  imports: [CardModule],
+  imports: [RouterLink, CardModule],
   templateUrl: './workspace-metrics.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
