@@ -1,0 +1,252 @@
+<section
+  class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(250,204,21,0.12),_transparent_28%),linear-gradient(180deg,_#000000,_#0f172a_45%,_#000000)] px-4 py-6 md:px-6 xl:px-8"
+>
+  <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
+    <p-card
+      styleClass="!border !border-[#2d3748] !bg-[#1a202c]/96 !text-slate-50 !shadow-[0_28px_70px_rgba(0,0,0,0.35)] backdrop-blur"
+    >
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+        <div class="space-y-3">
+          <div class="space-y-2">
+            <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-amber-300">
+              Bibliothèque BOL
+            </p>
+            <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-5xl">
+              Bestiaire des créatures
+            </h1>
+          </div>
+
+          <p class="m-0 max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
+            Accès rapide à toutes les créatures actuellement disponibles dans la bibliothèque
+            Barbarian of Lemuria.
+          </p>
+
+          <div class="flex flex-wrap gap-2">
+            <p-tag [value]="totalCreatureCount() + ' créatures'" severity="contrast" />
+            @if (creatureCount() !== totalCreatureCount()) {
+              <p-tag [value]="creatureCount() + ' visibles'" severity="secondary" />
+            }
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
+          <p-button
+            label="Créer une créature"
+            icon="pi pi-plus"
+            [routerLink]="'/create/creature'"
+            styleClass="!bg-[#d97706] !border-[#d97706] !text-white !px-5 !py-3 !font-bold"
+          />
+          <p-button
+            label="Retour au dashboard"
+            icon="pi pi-arrow-left"
+            [routerLink]="'/'"
+            severity="secondary"
+            [outlined]="true"
+            styleClass="!px-5 !py-3 !font-bold"
+          />
+        </div>
+      </div>
+    </p-card>
+
+    <p-card
+      styleClass="!border !border-[#2d3748] !bg-[#1a202c]/96 !text-slate-50 !shadow-[0_24px_60px_rgba(0,0,0,0.24)]"
+    >
+      <p-table
+        [value]="filteredCreatures()"
+        [scrollable]="true"
+        scrollHeight="calc(100vh - 19rem)"
+        rowGroupMode="subheader"
+        groupRowsBy="id_taille"
+        dataKey="id"
+        styleClass="bol-creature-table p-datatable-sm"
+        [tableStyle]="{ 'min-width': '78rem' }"
+      >
+        <ng-template #caption>
+          <div class="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+            <div class="flex flex-col gap-3 lg:flex-row lg:flex-wrap">
+              <p-iconfield iconPosition="left">
+                <p-inputicon styleClass="pi pi-search" />
+                <input
+                  pInputText
+                  class="w-full lg:w-72"
+                  [ngModel]="searchTerm()"
+                  (ngModelChange)="searchTerm.set($event ?? '')"
+                  placeholder="Rechercher une créature"
+                  type="text"
+                />
+              </p-iconfield>
+
+              <p-select
+                [options]="tailles() ?? []"
+                optionLabel="taille"
+                optionValue="id"
+                placeholder="Filtrer par taille"
+                [showClear]="true"
+                [ngModel]="searchTaille()"
+                (ngModelChange)="searchTaille.set($event)"
+                styleClass="w-full lg:w-64"
+              />
+
+              <div class="flex items-center gap-3 rounded-full border border-[#334155] px-4 py-2">
+                <p-checkbox
+                  inputId="creature-library-own"
+                  [binary]="true"
+                  [ngModel]="onlyCreations()"
+                  (ngModelChange)="onlyCreations.set($event)"
+                />
+                <label for="creature-library-own" class="cursor-pointer text-sm text-slate-300">
+                  Mes créations
+                </label>
+              </div>
+
+              <p-button
+                icon="pi pi-filter-slash"
+                label="Effacer"
+                severity="secondary"
+                [outlined]="true"
+                (onClick)="clearFilters()"
+              />
+            </div>
+
+            <p-tag [value]="creatureCount() + ' entrées'" severity="contrast" />
+          </div>
+        </ng-template>
+
+        <ng-template #header>
+          <tr>
+            <th style="width: 7rem">Avatar</th>
+            <th>Description</th>
+            <th style="width: 10rem">Ressources</th>
+            <th style="width: 12rem">Attributs</th>
+            <th style="width: 12rem">Combat</th>
+            <th style="width: 18rem">Capacités</th>
+          </tr>
+        </ng-template>
+
+        <ng-template #groupheader let-creature>
+          <tr pRowGroupHeader>
+            <td colspan="6">
+              <div class="flex items-center gap-3 py-2">
+                <span class="text-xs font-black uppercase tracking-[0.24em] text-amber-300">
+                  Taille
+                </span>
+                <span class="text-xl font-semibold text-slate-50">{{ creature.taille.taille }}</span>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template #body let-creature>
+          <tr>
+            <td>
+              <div class="beast-avatar">
+                <img
+                  [src]="creatureImage(creature)"
+                  [alt]="creature.nom"
+                  class="h-full w-full object-cover"
+                />
+
+                @if (creature.user_id) {
+                  <span class="beast-avatar__tag">Création</span>
+                }
+              </div>
+            </td>
+
+            <td>
+              <div class="flex min-h-24 flex-col justify-between gap-3">
+                <div class="space-y-2">
+                  <div class="flex flex-wrap items-center gap-2">
+                    @if (creature.commentaire) {
+                      <i
+                        class="pi pi-info-circle cursor-pointer text-amber-300"
+                        [pTooltip]="creature.commentaire"
+                      ></i>
+                    }
+                    <p class="m-0 text-lg font-bold text-slate-100">{{ creature.nom }}</p>
+                    @if (creature.user_id) {
+                      <p-tag value="Création" severity="secondary" />
+                    }
+                  </div>
+                  <p class="m-0 text-sm text-slate-400">{{ creature.taille.taille }}</p>
+                  @if (creature.commentaire) {
+                    <p class="m-0 line-clamp-2 text-sm leading-6 text-slate-300">
+                      {{ creature.commentaire }}
+                    </p>
+                  }
+                </div>
+
+              </div>
+            </td>
+
+            <td>
+              <div class="grid gap-2 text-sm text-slate-200">
+                <div class="flex items-center justify-between gap-3">
+                  <span class="text-slate-400">Vitalité</span>
+                  <span class="font-bold">{{ creature.vitalite }}</span>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <div class="grid gap-2 text-sm text-slate-200">
+                <div class="flex items-center justify-between gap-3">
+                  <span class="text-slate-400">Vigueur</span>
+                  <span>{{ creature.vigueur }}</span>
+                </div>
+                <div class="flex items-center justify-between gap-3">
+                  <span class="text-slate-400">Agilité</span>
+                  <span>{{ creature.agilite }}</span>
+                </div>
+                <div class="flex items-center justify-between gap-3">
+                  <span class="text-slate-400">Esprit</span>
+                  <span>{{ creature.esprit }}</span>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <div class="grid gap-2 text-sm text-slate-200">
+                <div class="flex items-center justify-between gap-3">
+                  <span class="text-slate-400">Attaque</span>
+                  <span>{{ creature.attaque }}</span>
+                </div>
+                <div class="flex items-center justify-between gap-3">
+                  <span class="text-slate-400">Défense</span>
+                  <span>{{ creature.defense }}</span>
+                </div>
+                <div class="flex items-center justify-between gap-3">
+                  <span class="text-slate-400">Dégâts</span>
+                  <span>{{ creature.degats }}</span>
+                </div>
+                <div class="flex items-center justify-between gap-3">
+                  <span class="text-slate-400">Protection</span>
+                  <span>{{ creature.protection }}</span>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <div class="flex min-h-24 flex-wrap gap-2">
+                @if (!creature.capacites.length) {
+                  <span class="text-sm text-slate-500">Aucune</span>
+                } @else {
+                  @for (capacite of creature.capacites; track capacite.id) {
+                    <span class="beast-capacity">
+                      {{ capacite.capacite.capacite }}
+                      @if (capacite.detail || capacite.capacite.description) {
+                        <i
+                          class="pi pi-info-circle cursor-pointer text-amber-300"
+                          [pTooltip]="capacite.detail || capacite.capacite.description"
+                        ></i>
+                      }
+                    </span>
+                  }
+                }
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</section>
