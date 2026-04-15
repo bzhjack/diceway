@@ -10,7 +10,7 @@ export interface WorkspaceMetric {
 }
 
 @Component({
-  selector: 'app-workspace-metrics',
+  selector: 'bol-workspace-metrics',
   imports: [CardModule],
   templateUrl: './workspace-metrics.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

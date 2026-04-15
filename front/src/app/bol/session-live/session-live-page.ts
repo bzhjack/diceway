@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { AuthService } from '../core/auth/auth.service';
+import { AuthService } from '../../core/auth/auth.service';
 
 type Tone = 'neutral' | 'accent' | 'success' | 'warning' | 'danger';
 type ProtagonistKind = 'PJ' | 'PNJ';
