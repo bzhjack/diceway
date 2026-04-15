@@ -227,9 +227,7 @@
 
             <td>
               <div class="flex min-h-24 flex-wrap gap-2">
-                @if (!creature.capacites.length) {
-                  <span class="text-sm text-slate-500">Aucune</span>
-                } @else {
+                @if (creature.capacites.length) {
                   @for (capacite of creature.capacites; track capacite.id) {
                     <span class="beast-capacity">
                       {{ capacite.capacite.capacite }}
