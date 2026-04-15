@@ -10,6 +10,7 @@ import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { WorkspaceHeaderComponent } from './workspace-header/workspace-header';
 import { WorkspaceMetric, WorkspaceMetricsComponent } from './workspace-metrics/workspace-metrics';
+import { WorkspaceQuickActionsComponent } from './workspace-quick-actions/workspace-quick-actions';
 
 type TagSeverity = 'secondary' | 'success' | 'info' | 'warn' | 'danger' | 'contrast';
 
@@ -42,14 +43,6 @@ interface CollectionCard {
   readonly items: readonly CollectionItem[];
 }
 
-interface QuickAction {
-  readonly label: string;
-  readonly detail: string;
-  readonly icon: string;
-  readonly link: string;
-  readonly severity: 'primary' | 'secondary';
-}
-
 interface ActivityEntry {
   readonly title: string;
   readonly detail: string;
@@ -66,6 +59,7 @@ interface ActivityEntry {
     TagModule,
     WorkspaceHeaderComponent,
     WorkspaceMetricsComponent,
+    WorkspaceQuickActionsComponent,
   ],
   templateUrl: './workspace-page.html',
   styleUrl: './workspace-page.scss',
@@ -243,36 +237,6 @@ export class WorkspacePageComponent {
           severity: 'info',
         },
       ],
-    },
-  ];
-  protected readonly quickActions: readonly QuickAction[] = [
-    {
-      label: 'Créer une campagne',
-      detail: 'Poser un nouvel arc narratif et ses sessions.',
-      icon: 'pi pi-plus-circle',
-      link: '/create/campaign',
-      severity: 'primary',
-    },
-    {
-      label: 'Créer une session',
-      detail: 'Préparer une table jouable et ses enjeux.',
-      icon: 'pi pi-calendar-plus',
-      link: '/create/session',
-      severity: 'primary',
-    },
-    {
-      label: 'Créer un PJ',
-      detail: 'Ajouter un protagoniste prêt à assigner.',
-      icon: 'pi pi-user-plus',
-      link: '/create/hero',
-      severity: 'secondary',
-    },
-    {
-      label: 'Créer un PNJ',
-      detail: 'Alimenter la réserve d adversaires et alliés.',
-      icon: 'pi pi-id-card',
-      link: '/create/npc',
-      severity: 'secondary',
     },
   ];
   protected readonly activity: readonly ActivityEntry[] = [
