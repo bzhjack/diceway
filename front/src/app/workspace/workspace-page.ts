@@ -76,28 +76,28 @@ export class WorkspacePageComponent {
       value: '4',
       detail: '2 arcs actifs et 1 prêt pour la prochaine session.',
       icon: 'pi pi-compass',
-      iconClass: 'bg-amber-200/80 text-amber-950',
+      iconClass: 'border border-sky-400/25 bg-sky-400/12 text-sky-300',
     },
     {
       label: 'Tables',
       value: '3',
       detail: '1 table en ligne ce soir, 2 en préparation.',
       icon: 'pi pi-sitemap',
-      iconClass: 'bg-rose-200/80 text-rose-950',
+      iconClass: 'border border-orange-400/25 bg-orange-400/12 text-orange-300',
     },
     {
       label: 'PJ suivis',
       value: '18',
       detail: '6 protagonistes déjà assignés à la table active.',
       icon: 'pi pi-users',
-      iconClass: 'bg-emerald-200/80 text-emerald-950',
+      iconClass: 'border border-emerald-400/25 bg-emerald-400/12 text-emerald-300',
     },
     {
       label: 'PNJ prêts',
       value: '47',
       detail: '9 PNJ marqués comme utilisables immédiatement.',
       icon: 'pi pi-user-edit',
-      iconClass: 'bg-sky-200/80 text-sky-950',
+      iconClass: 'border border-rose-400/25 bg-rose-400/12 text-rose-300',
     },
   ];
   protected readonly activeSession: SessionPreview = {
@@ -123,7 +123,7 @@ export class WorkspacePageComponent {
       icon: 'pi pi-compass',
       createLabel: 'Créer une campagne',
       createLink: '/create/campaign',
-      accentClass: 'from-amber-200/80 to-orange-100',
+      accentClass: 'from-sky-500/20 to-slate-700',
       items: [
         {
           name: 'Les Cités de Bronze',
@@ -152,7 +152,7 @@ export class WorkspacePageComponent {
       icon: 'pi pi-sitemap',
       createLabel: 'Créer une table',
       createLink: '/create/table',
-      accentClass: 'from-rose-200/80 to-orange-100',
+      accentClass: 'from-orange-500/20 to-slate-700',
       items: [
         {
           name: 'Banquet à la Citadelle',
@@ -181,7 +181,7 @@ export class WorkspacePageComponent {
       icon: 'pi pi-shield',
       createLabel: 'Créer un PJ',
       createLink: '/create/hero',
-      accentClass: 'from-emerald-200/80 to-lime-100',
+      accentClass: 'from-emerald-500/20 to-slate-700',
       items: [
         {
           name: 'Naïa Sorel',
@@ -210,7 +210,7 @@ export class WorkspacePageComponent {
       icon: 'pi pi-megaphone',
       createLabel: 'Créer un PNJ',
       createLink: '/create/npc',
-      accentClass: 'from-sky-200/80 to-cyan-100',
+      accentClass: 'from-rose-500/20 to-slate-700',
       items: [
         {
           name: 'Veskar le Rouge',
