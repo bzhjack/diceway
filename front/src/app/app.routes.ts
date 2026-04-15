@@ -6,7 +6,21 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./workspace/workspace-page').then((module) => module.WorkspacePageComponent),
+      import('./bol/workspace/workspace-page').then((module) => module.WorkspacePageComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'session/live',
+    loadComponent: () =>
+      import('./bol/session-live/session-live-page').then((module) => module.SessionLivePageComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'create/:entity',
+    loadComponent: () =>
+      import('./bol/creation-placeholder/creation-placeholder-page').then(
+        (module) => module.CreationPlaceholderPageComponent,
+      ),
     canActivate: [authGuard],
   },
   {
