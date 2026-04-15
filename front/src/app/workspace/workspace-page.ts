@@ -4,16 +4,10 @@ import { AuthService } from '../core/auth/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
+import { WorkspaceHeaderComponent } from './workspace-header/workspace-header';
+import { WorkspaceMetric, WorkspaceMetricsComponent } from './workspace-metrics/workspace-metrics';
 
 type TagSeverity = 'secondary' | 'success' | 'info' | 'warn' | 'danger' | 'contrast';
-
-interface DashboardMetric {
-  readonly label: string;
-  readonly value: string;
-  readonly detail: string;
-  readonly icon: string;
-  readonly iconClass: string;
-}
 
 interface SessionPreview {
   readonly title: string;
@@ -61,7 +55,14 @@ interface ActivityEntry {
 
 @Component({
   selector: 'app-workspace-page',
-  imports: [RouterLink, ButtonModule, CardModule, TagModule],
+  imports: [
+    RouterLink,
+    ButtonModule,
+    CardModule,
+    TagModule,
+    WorkspaceHeaderComponent,
+    WorkspaceMetricsComponent,
+  ],
   templateUrl: './workspace-page.html',
   styleUrl: './workspace-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -70,7 +71,7 @@ export class WorkspacePageComponent {
   private readonly authService = inject(AuthService);
 
   protected readonly userName = computed(() => this.authService.user()?.name ?? 'Utilisateur');
-  protected readonly metrics: readonly DashboardMetric[] = [
+  protected readonly metrics: readonly WorkspaceMetric[] = [
     {
       label: 'Campagnes',
       value: '4',
