@@ -1,6 +1,6 @@
-import { RouterLink } from '@angular/router';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { CardModule } from 'primeng/card';
+import {RouterLink} from '@angular/router';
+import {ChangeDetectionStrategy, Component, input} from '@angular/core';
+import {CardModule} from 'primeng/card';
 
 export interface WorkspaceMetric {
   readonly label: string;

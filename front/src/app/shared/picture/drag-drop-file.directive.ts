@@ -1,4 +1,4 @@
-import { Directive, HostBinding, HostListener, input, output } from '@angular/core';
+import {Directive, HostBinding, HostListener, input, output} from '@angular/core';
 
 @Directive({
   selector: '[dwDragDropFile]',

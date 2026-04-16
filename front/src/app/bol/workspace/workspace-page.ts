@@ -1,16 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
-import { AuthService } from '../../core/auth/auth.service';
-import { BolCreaturesService } from '../services/bol-creatures.service';
-import { BolDemonsService } from '../services/bol-demons.service';
-import { BolHerosService } from '../services/bol-heros.service';
-import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
-import { TagModule } from 'primeng/tag';
-import { WorkspaceHeaderComponent } from './workspace-header/workspace-header';
-import { WorkspaceMetric, WorkspaceMetricsComponent } from './workspace-metrics/workspace-metrics';
-import { WorkspaceQuickActionsComponent } from './workspace-quick-actions/workspace-quick-actions';
+import {ChangeDetectionStrategy, Component, computed, inject} from '@angular/core';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {RouterLink} from '@angular/router';
+import {AuthService} from '../../core/auth/auth.service';
+import {BolCreaturesService} from '../services/bol-creatures.service';
+import {BolDemonsService} from '../services/bol-demons.service';
+import {BolHerosService} from '../services/bol-heros.service';
+import {ButtonModule} from 'primeng/button';
+import {CardModule} from 'primeng/card';
+import {TagModule} from 'primeng/tag';
+import {WorkspaceHeaderComponent} from './workspace-header/workspace-header';
+import {WorkspaceMetric, WorkspaceMetricsComponent} from './workspace-metrics/workspace-metrics';
+import {WorkspaceQuickActionsComponent} from './workspace-quick-actions/workspace-quick-actions';
 
 type TagSeverity = 'secondary' | 'success' | 'info' | 'warn' | 'danger' | 'contrast';
 

@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ImageCroppedEvent, ImageCropperComponent, ImageTransform } from 'ngx-image-cropper';
-import { DragDropFileDirective } from './drag-drop-file.directive';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {ButtonModule} from 'primeng/button';
+import {DynamicDialogRef} from 'primeng/dynamicdialog';
+import {ImageCroppedEvent, ImageCropperComponent, ImageTransform} from 'ngx-image-cropper';
+import {DragDropFileDirective} from './drag-drop-file.directive';
 
 @Component({
   selector: 'app-picture',

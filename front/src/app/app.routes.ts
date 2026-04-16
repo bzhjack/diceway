@@ -1,6 +1,6 @@
-import { Routes } from '@angular/router';
-import { authGuard } from './core/auth/auth.guard';
-import { publicOnlyGuard } from './core/auth/public-only.guard';
+import {Routes} from '@angular/router';
+import {authGuard} from './core/auth/auth.guard';
+import {publicOnlyGuard} from './core/auth/public-only.guard';
 
 export const routes: Routes = [
   {

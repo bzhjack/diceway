@@ -1,9 +1,9 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { catchError, filter, firstValueFrom, map, Observable, of, take, tap, timeout } from 'rxjs';
-import { OAuthService } from 'angular-oauth2-oidc';
-import { environment } from '../../../environments/environment';
+import {computed, inject, Injectable, signal} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Router} from '@angular/router';
+import {catchError, filter, firstValueFrom, map, Observable, of, take, tap, timeout} from 'rxjs';
+import {OAuthService} from 'angular-oauth2-oidc';
+import {environment} from '../../../environments/environment';
 import {
   ApiMessageResponse,
   AuthSession,
@@ -14,7 +14,7 @@ import {
   RegisterResponse,
   ResetPasswordPayload,
 } from './auth.models';
-import { googleAuthConfig } from './auth.config';
+import {googleAuthConfig} from './auth.config';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

@@ -1,7 +1,7 @@
-import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
+import {NgOptimizedImage} from '@angular/common';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {ActivatedRoute, RouterLink} from '@angular/router';
+import {ButtonModule} from 'primeng/button';
 
 @Component({
   selector: 'app-welcome-page',

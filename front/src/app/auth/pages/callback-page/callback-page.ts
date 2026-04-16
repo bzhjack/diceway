@@ -1,8 +1,8 @@
-import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ProgressBarModule } from 'primeng/progressbar';
-import { AuthService } from '../../../core/auth/auth.service';
+import {NgOptimizedImage} from '@angular/common';
+import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {ProgressBarModule} from 'primeng/progressbar';
+import {AuthService} from '../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-callback-page',

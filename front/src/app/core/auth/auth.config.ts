@@ -1,6 +1,6 @@
-import { isDevMode } from '@angular/core';
-import { AuthConfig } from 'angular-oauth2-oidc';
-import { environment } from '../../../environments/environment';
+import {isDevMode} from '@angular/core';
+import {AuthConfig} from 'angular-oauth2-oidc';
+import {environment} from '../../../environments/environment';
 
 export const googleAuthConfig: AuthConfig = {
   issuer: 'https://accounts.google.com',

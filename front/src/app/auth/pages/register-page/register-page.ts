@@ -1,18 +1,12 @@
-import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { extractApiErrors } from '../../../core/auth/auth-form.utils';
-import { AuthService } from '../../../core/auth/auth.service';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { Message } from 'primeng/message';
+import {NgOptimizedImage} from '@angular/common';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject} from '@angular/core';
+import {AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators,} from '@angular/forms';
+import {Router, RouterLink} from '@angular/router';
+import {extractApiErrors} from '../../../core/auth/auth-form.utils';
+import {AuthService} from '../../../core/auth/auth.service';
+import {ButtonModule} from 'primeng/button';
+import {InputTextModule} from 'primeng/inputtext';
+import {Message} from 'primeng/message';
 
 @Component({
   selector: 'app-register-page',

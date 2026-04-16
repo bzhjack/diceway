@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
-import { TagModule } from 'primeng/tag';
+import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
+import {RouterLink} from '@angular/router';
+import {ButtonModule} from 'primeng/button';
+import {CardModule} from 'primeng/card';
+import {TagModule} from 'primeng/tag';
 
 @Component({
   selector: 'bol-workspace-header',
