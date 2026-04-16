@@ -60,6 +60,12 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'library/pnjs',
+    loadComponent: () =>
+      import('./bol/pnj-library/pnj-library-page').then((module) => module.PnjLibraryPageComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'create/:entity',
     loadComponent: () =>
       import('./bol/creation-placeholder/creation-placeholder-page').then(

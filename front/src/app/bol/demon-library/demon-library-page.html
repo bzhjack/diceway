@@ -67,7 +67,7 @@
         groupRowsBy="id_categorie"
         dataKey="id"
         styleClass="bol-demon-table p-datatable-sm"
-        [tableStyle]="{ 'min-width': '82rem' }"
+        [tableStyle]="{ 'min-width': '80rem' }"
       >
         <ng-template #caption>
           <div class="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
@@ -123,10 +123,10 @@
         <ng-template #header>
           <tr>
             <th style="width: 7rem">Avatar</th>
-            <th>Description</th>
-            <th style="width: 10rem">Ressources</th>
-            <th style="width: 13rem">Attributs</th>
-            <th style="width: 13rem">Combat</th>
+            <th style="width: 250px">Description</th>
+            <th class="demon-col-compact">Ressources</th>
+            <th class="demon-col-compact">Attributs</th>
+            <th class="demon-col-compact">Combat</th>
             <th style="width: 18rem">Pouvoirs</th>
           </tr>
         </ng-template>
@@ -157,7 +157,7 @@
             </td>
 
             <td>
-              <div class="flex min-h-24 flex-col justify-between gap-3">
+              <div class="demon-description-content flex min-h-24 flex-col justify-between gap-3">
                 <div class="space-y-2">
                   <div class="flex flex-wrap items-center gap-2">
                     @if (demon.commentaire) {
@@ -166,7 +166,7 @@
                         [pTooltip]="demon.commentaire"
                       ></i>
                     }
-                    <p class="m-0 text-lg font-bold text-slate-100">{{ demon.nom }}</p>
+                    <p class="m-0 line-clamp-2 text-lg font-bold text-slate-100">{{ demon.nom }}</p>
                     @if (demon.user_id) {
                       <p-button
                         icon="pi pi-pencil"
@@ -199,8 +199,8 @@
               </div>
             </td>
 
-            <td>
-              <div class="grid gap-2 text-sm text-slate-200">
+            <td class="demon-col-compact">
+              <div class="grid gap-1.5 text-xs text-slate-200 md:text-sm">
                 <div class="flex items-center justify-between gap-3">
                   <span class="text-slate-400">Vitalite</span>
                   <span class="font-bold">{{ demon.vitalite }}</span>
@@ -208,8 +208,8 @@
               </div>
             </td>
 
-            <td>
-              <div class="grid gap-2 text-sm text-slate-200">
+            <td class="demon-col-compact">
+              <div class="grid gap-1.5 text-xs text-slate-200 md:text-sm">
                 <div class="flex items-center justify-between gap-3">
                   <span class="text-slate-400">Vigueur</span>
                   <span>{{ demon.vigueur }}</span>
@@ -229,8 +229,8 @@
               </div>
             </td>
 
-            <td>
-              <div class="grid gap-2 text-sm text-slate-200">
+            <td class="demon-col-compact">
+              <div class="grid gap-1.5 text-xs text-slate-200 md:text-sm">
                 <div class="flex items-center justify-between gap-3">
                   <span class="text-slate-400">Melee</span>
                   <span>{{ demon.melee }}</span>

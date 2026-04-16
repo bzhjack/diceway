@@ -78,6 +78,7 @@ export class WorkspacePageComponent {
       detail: 'Nombre de PNJ récupéré depuis la bibliothèque Barbarian of Lemuria.',
       icon: 'pi pi-user-edit',
       iconClass: 'border border-rose-400/25 bg-rose-400/12 text-rose-300',
+      link: '/library/pnjs',
     },
   ]);
   protected readonly activeSession: SessionPreview = {

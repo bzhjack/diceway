@@ -3,6 +3,11 @@
 }
 
 :host ::ng-deep .bol-creature-table {
+  .creature-col-compact {
+    width: 1%;
+    white-space: nowrap;
+  }
+
   .p-datatable-table-container {
     overflow: hidden;
     border: 1px solid #334155;
@@ -47,6 +52,10 @@
     border: 0;
     padding: 0 0 1rem;
   }
+}
+
+.creature-description-content {
+  max-width: 250px;
 }
 
 .beast-avatar {

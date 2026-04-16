@@ -68,7 +68,7 @@
         groupRowsBy="id_taille"
         dataKey="id"
         styleClass="bol-creature-table p-datatable-sm"
-        [tableStyle]="{ 'min-width': '78rem' }"
+        [tableStyle]="{ 'min-width': '76rem' }"
       >
         <ng-template #caption>
           <div class="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
@@ -124,10 +124,10 @@
         <ng-template #header>
           <tr>
             <th style="width: 7rem">Avatar</th>
-            <th>Description</th>
-            <th style="width: 10rem">Ressources</th>
-            <th style="width: 12rem">Attributs</th>
-            <th style="width: 12rem">Combat</th>
+            <th style="width: 250px">Description</th>
+            <th class="creature-col-compact">Ressources</th>
+            <th class="creature-col-compact">Attributs</th>
+            <th class="creature-col-compact">Combat</th>
             <th style="width: 18rem">Capacités</th>
           </tr>
         </ng-template>
@@ -162,7 +162,7 @@
             </td>
 
             <td>
-              <div class="flex min-h-24 flex-col justify-between gap-3">
+              <div class="creature-description-content flex min-h-24 flex-col justify-between gap-3">
                 <div class="space-y-2">
                   <div class="flex flex-wrap items-center gap-2">
                     @if (creature.commentaire) {
@@ -171,7 +171,7 @@
                         [pTooltip]="creature.commentaire"
                       ></i>
                     }
-                    <p class="m-0 text-lg font-bold text-slate-100">{{ creature.nom }}</p>
+                    <p class="m-0 line-clamp-2 text-lg font-bold text-slate-100">{{ creature.nom }}</p>
                     @if (creature.user_id) {
                       <p-button
                         icon="pi pi-pencil"
@@ -205,8 +205,8 @@
               </div>
             </td>
 
-            <td>
-              <div class="grid gap-2 text-sm text-slate-200">
+            <td class="creature-col-compact">
+              <div class="grid gap-1.5 text-xs text-slate-200 md:text-sm">
                 <div class="flex items-center justify-between gap-3">
                   <span class="text-slate-400">Vitalité</span>
                   <span class="font-bold">{{ creature.vitalite }}</span>
@@ -214,8 +214,8 @@
               </div>
             </td>
 
-            <td>
-              <div class="grid gap-2 text-sm text-slate-200">
+            <td class="creature-col-compact">
+              <div class="grid gap-1.5 text-xs text-slate-200 md:text-sm">
                 <div class="flex items-center justify-between gap-3">
                   <span class="text-slate-400">Vigueur</span>
                   <span>{{ creature.vigueur }}</span>
@@ -231,8 +231,8 @@
               </div>
             </td>
 
-            <td>
-              <div class="grid gap-2 text-sm text-slate-200">
+            <td class="creature-col-compact">
+              <div class="grid gap-1.5 text-xs text-slate-200 md:text-sm">
                 <div class="flex items-center justify-between gap-3">
                   <span class="text-slate-400">Attaque</span>
                   <span>{{ creature.attaque }}</span>
