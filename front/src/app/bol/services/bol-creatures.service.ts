@@ -37,8 +37,8 @@ export class BolCreaturesService {
     );
   }
 
-  updateCreature(creature: BolCreatureModel): Observable<any> {
-    return this.http.post<BolCreatureModel>(`${environment.apiBase}/api/bol/creature/update`, <BolCreatureModel>creature);
+  updateCreature(creature: Record<string, unknown>): Observable<BolCreatureModel> {
+    return this.http.post<BolCreatureModel>(`${environment.apiBase}/api/bol/creature/update`, creature);
   }
 
   deleteCreature(id: string): Observable<any> {

@@ -34,6 +34,7 @@
             label="Créer une créature"
             icon="pi pi-plus"
             [routerLink]="'/create/creature'"
+            [state]="{ returnUrl: '/library/creatures' }"
             styleClass="!bg-[#d97706] !border-[#d97706] !text-white !px-5 !py-3 !font-bold"
           />
           <p-button
@@ -120,12 +121,13 @@
             <th style="width: 12rem">Attributs</th>
             <th style="width: 12rem">Combat</th>
             <th style="width: 18rem">Capacités</th>
+            <th style="width: 10rem">Actions</th>
           </tr>
         </ng-template>
 
         <ng-template #groupheader let-creature>
           <tr pRowGroupHeader>
-            <td colspan="6">
+            <td colspan="7">
               <div class="flex items-center gap-3 py-2">
                 <span class="text-xs font-black uppercase tracking-[0.24em] text-amber-300">
                   Taille
@@ -239,6 +241,22 @@
                       }
                     </span>
                   }
+                }
+              </div>
+            </td>
+
+            <td>
+              <div class="flex min-h-24 items-start">
+                @if (creature.user_id) {
+                  <p-button
+                    label="Modifier"
+                    icon="pi pi-pencil"
+                    severity="secondary"
+                    [outlined]="true"
+                    [routerLink]="['/create/creature', creature.id]"
+                    [state]="{ returnUrl: '/library/creatures' }"
+                    styleClass="!px-4 !py-2 !font-bold"
+                  />
                 }
               </div>
             </td>

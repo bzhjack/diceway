@@ -1,8 +1,8 @@
-import {JsonPipe} from '@angular/common';
+import {JsonPipe, Location} from '@angular/common';
 import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Router, RouterLink} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {startWith, take} from 'rxjs';
 import {finalize} from 'rxjs/operators';
 import {BolCreatureModel} from '../models/bol-creature.model';
@@ -29,7 +29,6 @@ interface CreatureCapaciteDraft {
   imports: [
     JsonPipe,
     ReactiveFormsModule,
-    RouterLink,
     ButtonModule,
     CardModule,
     FloatLabelModule,
@@ -47,15 +46,45 @@ export class CreatureCreatePageComponent {
   private readonly creatureStateService = inject(BolCreatureStateService);
   private readonly creaturesService = inject(BolCreaturesService);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
+  private readonly location = inject(Location);
   private readonly router = inject(Router);
   private readonly dialogService = inject(DialogService);
+  private readonly routeParamMap = toSignal(this.route.paramMap, {
+    initialValue: this.route.snapshot.paramMap,
+  });
+  private hydratedTailleId: number | null = null;
 
   protected readonly tailles = this.creatureStateService.tailleList;
   protected readonly capacitesList = this.creatureStateService.capaciteList;
-  protected readonly payloadPreview = signal<Record<string, unknown> | null>(null);
-  protected readonly createdCreature = signal<BolCreatureModel | null>(null);
+  protected readonly savedCreature = signal<BolCreatureModel | null>(null);
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly pending = signal(false);
+  protected readonly loadingCreature = signal(false);
+  protected readonly returnUrl = signal<string | null>(this.readReturnUrl());
+  protected readonly creatureId = computed(() => this.routeParamMap().get('id'));
+  protected readonly editMode = computed(() => Boolean(this.creatureId()));
+  protected readonly pageTitle = computed(() =>
+    this.editMode() ? 'Modifier la créature' : 'Nouvelle créature',
+  );
+  protected readonly pageEyebrow = computed(() =>
+    this.editMode() ? 'Édition bestiaire BOL' : 'Bestiaire BOL',
+  );
+  protected readonly submitLabel = computed(() => {
+    if (this.pending()) {
+      return 'Enregistrement...';
+    }
+
+    return this.editMode() ? 'Mettre à jour la créature' : 'Enregistrer la créature';
+  });
+  protected readonly saveSuccessTitle = computed(() =>
+    this.editMode() ? 'Créature mise à jour' : 'Créature créée',
+  );
+  protected readonly saveSuccessMessage = computed(() =>
+    this.editMode()
+      ? 'Les modifications ont bien été enregistrées côté backend.'
+      : 'La créature a bien été enregistrée côté backend.',
+  );
 
   protected readonly selectedCapaciteId = new FormControl<number | null>(null);
   protected readonly selectedCapaciteDetail = new FormControl<string>('', {
@@ -116,9 +145,39 @@ export class CreatureCreatePageComponent {
   );
 
   constructor() {
+    effect((onCleanup) => {
+      const creatureId = this.creatureId();
+      this.returnUrl.set(this.readReturnUrl());
+      this.errorMessage.set(null);
+      this.savedCreature.set(null);
+
+      if (!creatureId) {
+        this.resetForm();
+        return;
+      }
+
+      this.loadingCreature.set(true);
+      const subscription = this.creaturesService
+        .creature(creatureId)
+        .pipe(finalize(() => this.loadingCreature.set(false)))
+        .subscribe({
+          next: (creature) => this.hydrateForm(creature),
+          error: (error: unknown) => {
+            this.errorMessage.set(this.extractErrorMessage(error, true));
+          },
+        });
+
+      onCleanup(() => subscription.unsubscribe());
+    });
+
     effect(() => {
       const taille = this.selectedTaille();
       if (!taille) {
+        return;
+      }
+
+      if (this.hydratedTailleId !== null && Number(taille.id) === this.hydratedTailleId) {
+        this.hydratedTailleId = null;
         return;
       }
 
@@ -177,18 +236,8 @@ export class CreatureCreatePageComponent {
     this.creatureForm.controls.avatar.setValue(null);
   }
 
-  protected preparePayload(): void {
-    if (this.creatureForm.invalid) {
-      this.creatureForm.markAllAsTouched();
-      return;
-    }
-
-    this.errorMessage.set(null);
-    this.payloadPreview.set(this.buildCreatePayload());
-  }
-
   protected saveCreature(): void {
-    if (this.pending()) {
+    if (this.pending() || this.loadingCreature()) {
       return;
     }
 
@@ -199,23 +248,28 @@ export class CreatureCreatePageComponent {
 
     this.pending.set(true);
     this.errorMessage.set(null);
-    this.createdCreature.set(null);
+    this.savedCreature.set(null);
 
-    const payload = this.buildCreatePayload();
-    this.payloadPreview.set(payload);
+    const payload = this.buildCreaturePayload();
+    const action$ = this.editMode()
+      ? this.creaturesService.updateCreature(payload)
+      : this.creaturesService.createCreature(payload);
 
-    this.creaturesService
-      .createCreature(payload)
+    action$
       .pipe(finalize(() => this.pending.set(false)))
       .subscribe({
         next: (creature: BolCreatureModel) => {
-          this.createdCreature.set(creature);
-          void this.router.navigateByUrl('/');
+          this.savedCreature.set(creature);
+          this.navigateBack(true);
         },
         error: (error: unknown) => {
-          this.errorMessage.set(this.extractErrorMessage(error));
+          this.errorMessage.set(this.extractErrorMessage(error, false));
         },
       });
+  }
+
+  protected goBack(): void {
+    this.navigateBack(false);
   }
 
   protected onError(controlName: keyof typeof this.creatureForm.controls): boolean {
@@ -223,7 +277,69 @@ export class CreatureCreatePageComponent {
     return control.invalid && (control.dirty || control.touched);
   }
 
-  private buildCreatePayload(): Record<string, unknown> {
+  private resetForm(): void {
+    this.hydratedTailleId = null;
+    this.creatureForm.reset(
+      {
+        id: null,
+        nom: '',
+        id_taille: null,
+        commentaire: null,
+        vigueur: 0,
+        agilite: 0,
+        esprit: 0,
+        vitalite: 0,
+        attaque: 0,
+        defense: 0,
+        degats: '0',
+        protection: '0',
+        avatar: null,
+      },
+      { emitEvent: false },
+    );
+    this.capacites.clear({ emitEvent: false });
+    this.selectedCapaciteId.setValue(null);
+    this.selectedCapaciteDetail.setValue('');
+  }
+
+  private hydrateForm(creature: BolCreatureModel): void {
+    this.hydratedTailleId = Number(creature.id_taille);
+    this.selectedCapaciteId.setValue(null);
+    this.selectedCapaciteDetail.setValue('');
+    this.capacites.clear({ emitEvent: false });
+
+    for (const capacite of creature.capacites) {
+      this.capacites.push(
+        this.formBuilder.group({
+          id: this.formBuilder.control(Number(capacite.capacite_id), Validators.required),
+          detail: this.formBuilder.control(capacite.detail || null),
+        }),
+        { emitEvent: false },
+      );
+    }
+
+    this.creatureForm.patchValue(
+      {
+        id: creature.id,
+        nom: creature.nom,
+        id_taille: Number(creature.id_taille),
+        commentaire: creature.commentaire,
+        vigueur: creature.vigueur,
+        agilite: creature.agilite,
+        esprit: creature.esprit,
+        vitalite: creature.vitalite,
+        attaque: creature.attaque,
+        defense: creature.defense,
+        degats: creature.degats,
+        protection: creature.protection,
+        avatar: creature.avatar,
+      },
+      { emitEvent: true },
+    );
+    this.capacites.updateValueAndValidity({ emitEvent: true });
+  }
+
+  private buildCreaturePayload(): Record<string, unknown> {
     const rawValue = this.creatureForm.getRawValue();
 
     return {
@@ -247,7 +363,31 @@ export class CreatureCreatePageComponent {
     };
   }
 
-  private extractErrorMessage(error: unknown): string {
+  private navigateBack(afterSave: boolean): void {
+    const returnUrl = this.returnUrl();
+    if (returnUrl) {
+      void this.router.navigateByUrl(returnUrl);
+      return;
+    }
+
+    if (!afterSave && typeof history !== 'undefined' && history.length > 1) {
+      this.location.back();
+      return;
+    }
+
+    void this.router.navigateByUrl('/');
+  }
+
+  private readReturnUrl(): string | null {
+    if (typeof history === 'undefined') {
+      return null;
+    }
+
+    const state = history.state as Record<string, unknown> | null;
+    return typeof state?.['returnUrl'] === 'string' ? state['returnUrl'] : null;
+  }
+
+  private extractErrorMessage(error: unknown, loading: boolean): string {
     if (typeof error === 'object' && error !== null) {
       if ('error' in error && typeof error.error === 'object' && error.error !== null) {
         const apiError = error.error as Record<string, unknown>;
@@ -261,6 +401,10 @@ export class CreatureCreatePageComponent {
       }
     }
 
-    return 'La création de la créature a échoué.';
+    return loading
+      ? 'Le chargement de la créature a échoué.'
+      : this.editMode()
+        ? 'La mise à jour de la créature a échoué.'
+        : 'La création de la créature a échoué.';
   }
 }

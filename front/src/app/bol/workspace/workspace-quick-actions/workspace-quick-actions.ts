@@ -8,6 +8,7 @@ interface WorkspaceQuickAction {
   readonly detail: string;
   readonly icon: string;
   readonly link: string;
+  readonly state?: Record<string, string>;
   readonly severity: 'primary' | 'secondary';
 }
 
@@ -45,6 +46,7 @@ export class WorkspaceQuickActionsComponent {
       detail: 'Alimenter le bestiaire avec un nouveau profil de scène.',
       icon: 'pi pi-book',
       link: '/create/creature',
+      state: { returnUrl: '/' },
       severity: 'secondary',
     },
     {
