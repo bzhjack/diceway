@@ -63,6 +63,7 @@ export class WorkspacePageComponent {
       detail: 'Nombre de PJ récupéré depuis la bibliothèque Barbarian of Lemuria.',
       icon: 'pi pi-users',
       iconClass: 'border border-emerald-400/25 bg-emerald-400/12 text-emerald-300',
+      link: '/library/heroes',
     },
     {
       label: 'Bestiaire',

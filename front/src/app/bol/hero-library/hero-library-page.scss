@@ -1,0 +1,112 @@
+:host {
+  display: block;
+}
+
+:host ::ng-deep .bol-hero-table {
+  .hero-col-compact {
+    width: 1%;
+    white-space: nowrap;
+  }
+
+  .p-datatable-table-container {
+    overflow: hidden;
+    border: 1px solid #334155;
+    border-radius: 0.85rem;
+  }
+
+  .p-datatable-thead > tr > th {
+    background: #0f172a;
+    border-color: #334155;
+    color: #e2e8f0;
+    padding: 1rem;
+  }
+
+  .p-datatable-tbody > tr {
+    background: rgba(15, 23, 42, 0.72);
+    color: #e2e8f0;
+  }
+
+  .p-datatable-tbody > tr > td {
+    background: transparent;
+    border-color: #334155;
+    padding: 1rem;
+    vertical-align: top;
+  }
+
+  .p-datatable-tbody > tr:hover {
+    background: rgba(30, 41, 59, 0.95);
+  }
+
+  .p-datatable-tbody > tr:hover > td {
+    background: transparent;
+  }
+
+  .p-datatable-header {
+    background: transparent;
+    border: 0;
+    padding: 0 0 1rem;
+  }
+}
+
+.hero-description-content {
+  max-width: 250px;
+}
+
+.hero-trait-icon {
+  cursor: default;
+}
+
+.hero-trait-icon--clickable {
+  cursor: pointer;
+}
+
+.hero-trait-panel {
+  display: grid;
+  gap: 0.35rem;
+  max-width: 18rem;
+}
+
+.hero-trait-panel__section {
+  display: grid;
+  gap: 0.08rem;
+}
+
+.hero-trait-panel__title {
+  font-size: 0.75rem;
+  line-height: 1.25;
+  font-weight: 800;
+  color: #f8fafc;
+  white-space: nowrap;
+}
+
+.hero-trait-panel__line {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: #e2e8f0;
+}
+
+.hero-avatar {
+  position: relative;
+  display: flex;
+  height: 5.5rem;
+  width: 5.5rem;
+  overflow: hidden;
+  border: 1px solid #424b57;
+  border-radius: 0.75rem;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.92));
+}
+
+.hero-avatar__tag {
+  position: absolute;
+  right: 0.35rem;
+  bottom: 0.35rem;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.88);
+  padding: 0.12rem 0.42rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #fbbf24;
+  text-transform: uppercase;
+}
