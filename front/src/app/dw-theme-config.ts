@@ -136,11 +136,44 @@ export const DwPreset = definePreset(Aura, {
     },
     tooltip: {
       root: {
-        maxWidth: '300px'
-        },
+        maxWidth: '300px',
+        padding: '0.75rem',
+        borderRadius: '6px',
+        background: '#424b57',
+        color: 'rgba(255, 255, 255, 0.87)',
+        shadow:
+          '0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)',
+      },
       css: `
         .p-tooltip .p-tooltip-text {
           font-size: 0.75rem;
+        }
+      `,
+    },
+    popover: {
+      root: {
+        background: '#424b57',
+        borderColor: 'transparent',
+        color: 'rgba(255, 255, 255, 0.87)',
+        borderRadius: '6px',
+        shadow:
+          '0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)',
+      },
+      content: {
+        padding: '0.85rem 0.95rem',
+      },
+      css: `
+        .p-popover {
+          border-color: transparent;
+        }
+
+        .p-popover .p-popover-content {
+          font-size: 0.75rem;
+        }
+
+        .p-popover::before,
+        .p-popover::after {
+          border-bottom-color: #424b57;
         }
       `,
     },

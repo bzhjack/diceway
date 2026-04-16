@@ -296,20 +296,37 @@
             <td>
               <div class="flex min-h-24 flex-col gap-2">
                 @for (trait of traitEntries(pnj); track trait.label) {
-                  <div class="flex items-center gap-1 text-sm text-slate-200">
-                    <span [class.text-emerald-200]="trait.severity === 'positive'"
-                      [class.text-rose-200]="trait.severity === 'negative'">
+                  <div class="flex items-center gap-2 text-sm text-slate-200">
+                    <div
+                      class="tag_icon pnj-trait-icon"
+                      [class.bonus]="trait.severity === 'positive'"
+                      [class.malus]="trait.severity === 'negative'"
+                      [class.pnj-trait-icon--clickable]="trait.details.length"
+                      (click)="trait.details.length ? traitPanel.toggle($event) : null"
+                    >
+                      <div [inlineSVG]="traitIconPath(trait.icon)"></div>
+                    </div>
+                    <p-popover #traitPanel>
+                      <div class="pnj-trait-panel">
+                        @for (detail of trait.details; track detail) {
+                          <div class="pnj-trait-panel__section">
+                            <div class="pnj-trait-panel__title">{{ detail.title }}</div>
+                            @if (detail.description) {
+                              <div class="pnj-trait-panel__line">{{ detail.description }}</div>
+                            }
+                          </div>
+                        } @empty {
+                          <div class="pnj-trait-panel__line">Aucun détail</div>
+                        }
+                      </div>
+                    </p-popover>
+                    <span
+                      [class.text-emerald-200]="trait.severity === 'positive'"
+                      [class.text-rose-200]="trait.severity === 'negative'"
+                    >
                       {{ trait.label }}
                     </span>
-                    @if (trait.detail) {
-                      <i
-                        class="pi pi-info-circle cursor-pointer text-emerald-300"
-                        [pTooltip]="trait.detail"
-                      ></i>
-                    }
                   </div>
-                } @empty {
-                  <span class="text-sm text-slate-500">Aucun trait</span>
                 }
               </div>
             </td>

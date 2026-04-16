@@ -14,6 +14,8 @@ import {SelectModule} from 'primeng/select';
 import {TagModule} from 'primeng/tag';
 import {TableModule} from 'primeng/table';
 import {TooltipModule} from 'primeng/tooltip';
+import {InlineSVGModule} from 'ng-inline-svg-2';
+import {PopoverModule} from 'primeng/popover';
 import {startWith, switchMap} from 'rxjs';
 
 type PnjType = 'P' | 'C' | 'R';
@@ -30,8 +32,14 @@ interface PnjListEntry {
 
 interface PnjTraitEntry {
   readonly label: string;
-  readonly detail: string | null;
+  readonly details: readonly PnjTraitDetail[];
   readonly severity: 'positive' | 'negative';
+  readonly icon: 'info' | 'attr' | 'd6';
+}
+
+interface PnjTraitDetail {
+  readonly title: string;
+  readonly description: string | null;
 }
 
 @Component({
@@ -49,6 +57,8 @@ interface PnjTraitEntry {
     TagModule,
     TableModule,
     TooltipModule,
+    InlineSVGModule,
+    PopoverModule,
   ],
   templateUrl: './pnj-library-page.html',
   styleUrl: './pnj-library-page.scss',
@@ -179,15 +189,17 @@ export class PnjLibraryPageComponent {
         if (trait.type === 'D') {
           return {
             label: this.desavantageLabel(trait.traitable),
-            detail: trait.detail || trait.traitable?.description || null,
+            details: this.traitDetails(trait),
             severity: 'negative' as const,
+            icon: this.traitIcon(trait),
           };
         }
 
         return {
           label: this.avantageLabel(trait.traitable),
-          detail: trait.detail || trait.traitable?.description || null,
+          details: this.traitDetails(trait),
           severity: 'positive' as const,
+          icon: this.traitIcon(trait),
         };
       })
       .filter((entry) => entry.label);
@@ -199,6 +211,17 @@ export class PnjLibraryPageComponent {
       .map((langue) => langue.langue?.langue ?? '')
       .filter(Boolean)
       .join(', ');
+  }
+
+  protected traitIconPath(icon: PnjTraitEntry['icon']): string {
+    switch (icon) {
+      case 'd6':
+        return '/assets/d6.svg';
+      case 'attr':
+        return '/assets/attr.svg';
+      default:
+        return '/assets/info.svg';
+    }
   }
 
   private typeOrder(type: string | null | undefined): number {
@@ -228,5 +251,69 @@ export class PnjLibraryPageComponent {
     }
 
     return '';
+  }
+
+  private traitIcon(trait: BolHerosModel['traits'][number]): 'info' | 'attr' | 'd6' {
+    if (trait.traitable && 'de_bonus' in trait.traitable && trait.traitable.de_bonus) {
+      return 'd6';
+    }
+
+    if (trait.traitable && 'de_malus' in trait.traitable && trait.traitable.de_malus) {
+      return 'd6';
+    }
+
+    if (trait.traitable && 'attribut' in trait.traitable && trait.traitable.attribut) {
+      return 'attr';
+    }
+
+    return 'info';
+  }
+
+  private traitDetails(trait: BolHerosModel['traits'][number]): readonly PnjTraitDetail[] {
+    const details: PnjTraitDetail[] = [];
+
+    if (trait.traitable && 'de_bonus' in trait.traitable && trait.traitable.de_bonus) {
+      details.push({
+        title: 'Dé bonus',
+        description: trait.traitable.de_bonus_domaine,
+      });
+    }
+
+    if (trait.traitable && 'de_malus' in trait.traitable && trait.traitable.de_malus) {
+      details.push({
+        title: 'Dé malus',
+        description: trait.traitable.de_malus_domaine,
+      });
+    }
+
+    if (trait.traitable && 'attribut' in trait.traitable && trait.traitable.attribut) {
+      const attributeValue =
+        'attribut_bonus' in trait.traitable
+          ? trait.traitable.attribut_bonus
+          : 'attribut_malus' in trait.traitable
+            ? trait.traitable.attribut_malus
+            : null;
+
+      details.push({
+        title: 'Attribut',
+        description: `${trait.traitable.attribut}${attributeValue !== null ? `(${attributeValue})` : ''}`,
+      });
+    }
+
+    if (trait.traitable?.description) {
+      details.push({
+        title: 'Détails',
+        description: trait.traitable.description,
+      });
+    }
+
+    if (trait.detail) {
+      details.push({
+        title: 'Précision',
+        description: trait.detail,
+      });
+    }
+
+    return details;
   }
 }

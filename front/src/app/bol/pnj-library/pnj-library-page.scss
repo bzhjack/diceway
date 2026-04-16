@@ -58,6 +58,39 @@
   max-width: 250px;
 }
 
+.pnj-trait-icon {
+  cursor: default;
+}
+
+.pnj-trait-icon--clickable {
+  cursor: pointer;
+}
+
+.pnj-trait-panel {
+  display: grid;
+  gap: 0.35rem;
+  max-width: 18rem;
+}
+
+.pnj-trait-panel__section {
+  display: grid;
+  gap: 0.08rem;
+}
+
+.pnj-trait-panel__title {
+  font-size: 0.75rem;
+  line-height: 1.25;
+  font-weight: 800;
+  color: #f8fafc;
+  white-space: nowrap;
+}
+
+.pnj-trait-panel__line {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: #e2e8f0;
+}
+
 .pnj-avatar {
   position: relative;
   display: flex;
