@@ -118,81 +118,136 @@
               }
             </div>
 
-            <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_14rem]">
-              <div class="grid gap-4 lg:grid-cols-2">
-                <div class="border border-[#52414b] bg-[#27272a]/75 p-5">
-                  <div class="mb-5 space-y-2">
-                    <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-slate-400">
-                      Attributs
-                    </p>
-                  </div>
+            <div class="grid gap-4 xl:grid-cols-3 xl:items-start">
+              <div class="border border-[#52414b] bg-[#27272a]/75 p-5 xl:h-full">
+                <div class="mb-5 space-y-2">
+                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-rose-300">
+                    Attributs
+                  </p>
+                </div>
 
-                  <div class="grid gap-5 sm:grid-cols-2">
+                <div class="flex flex-col gap-6">
+                  <div class="flex gap-4">
                     <p-floatlabel variant="over">
-                      <p-inputNumber inputId="vigueur" formControlName="vigueur" class="w-full" />
+                      <p-inputNumber
+                        inputId="vigueur"
+                        formControlName="vigueur"
+                        class="dw-input-number"
+                        inputStyleClass="!py-2 !text-sm"
+                      />
                       <label for="vigueur">Vigueur</label>
                     </p-floatlabel>
                     <p-floatlabel variant="over">
-                      <p-inputNumber inputId="agilite" formControlName="agilite" class="w-full" />
+                      <p-inputNumber
+                        inputId="agilite"
+                        formControlName="agilite"
+                        class="dw-input-number"
+                        inputStyleClass="!py-2 !text-sm"
+                      />
                       <label for="agilite">Agilite</label>
                     </p-floatlabel>
+                  </div>
+                  <div class="flex gap-4">
                     <p-floatlabel variant="over">
-                      <p-inputNumber inputId="esprit" formControlName="esprit" class="w-full" />
+                      <p-inputNumber
+                        inputId="esprit"
+                        formControlName="esprit"
+                        class="dw-input-number"
+                        inputStyleClass="!py-2 !text-sm"
+                      />
                       <label for="esprit">Esprit</label>
                     </p-floatlabel>
                     <p-floatlabel variant="over">
-                      <p-inputNumber inputId="aura" formControlName="aura" class="w-full" />
+                      <p-inputNumber
+                        inputId="aura"
+                        formControlName="aura"
+                        class="dw-input-number"
+                        inputStyleClass="!py-2 !text-sm"
+                      />
                       <label for="aura">Aura</label>
                     </p-floatlabel>
                   </div>
                 </div>
+              </div>
 
-                <div class="border border-[#52414b] bg-[#27272a]/75 p-5">
-                  <div class="mb-5 space-y-2">
-                    <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-slate-400">
-                      Combat
-                    </p>
-                  </div>
+              <div class="border border-[#52414b] bg-[#27272a]/75 p-5 xl:h-full">
+                <div class="mb-5 space-y-2">
+                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-rose-300">
+                    Combat
+                  </p>
+                </div>
 
-                  <div class="grid gap-5 sm:grid-cols-2">
+                <div class="flex flex-col gap-6">
+                  <div class="flex gap-4">
                     <p-floatlabel variant="over">
-                      <p-inputNumber inputId="melee" formControlName="melee" class="w-full" />
+                      <p-inputNumber
+                        inputId="melee"
+                        formControlName="melee"
+                        class="dw-input-number"
+                        inputStyleClass="!py-2 !text-sm"
+                      />
                       <label for="melee">Melee</label>
                     </p-floatlabel>
                     <p-floatlabel variant="over">
-                      <p-inputNumber inputId="tir" formControlName="tir" class="w-full" />
+                      <p-inputNumber
+                        inputId="tir"
+                        formControlName="tir"
+                        class="dw-input-number"
+                        inputStyleClass="!py-2 !text-sm"
+                      />
                       <label for="tir">Tir</label>
                     </p-floatlabel>
+                  </div>
+                  <div class="flex gap-4">
                     <p-floatlabel variant="over">
-                      <p-inputNumber inputId="defense" formControlName="defense" class="w-full" />
+                      <p-inputNumber
+                        inputId="defense"
+                        formControlName="defense"
+                        class="dw-input-number"
+                        inputStyleClass="!py-2 !text-sm"
+                      />
                       <label for="defense">Defense</label>
                     </p-floatlabel>
                     <p-floatlabel variant="over">
-                      <input pInputText id="degats" formControlName="degats" class="w-full" />
+                      <input
+                        pInputText
+                        id="degats"
+                        formControlName="degats"
+                        class="w-full !py-2 !text-sm"
+                      />
                       <label for="degats">Degats</label>
                     </p-floatlabel>
                   </div>
                 </div>
               </div>
 
-              <div class="border border-[#52414b] bg-[#27272a]/75 p-5">
+              <div class="border border-[#52414b] bg-[#27272a]/75 p-5 xl:h-full">
                 <div class="mb-5 space-y-2">
-                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-slate-400">
+                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-rose-300">
                     Ressources
                   </p>
                 </div>
 
-                <p-floatlabel variant="over">
-                  <p-inputNumber inputId="vitalite" formControlName="vitalite" class="w-full" />
-                  <label for="vitalite">Vitalite</label>
-                </p-floatlabel>
+                <div class="flex flex-col gap-6">
+                  <div class="flex gap-4">
+                    <p-floatlabel variant="over">
+                      <p-inputNumber
+                        inputId="vitalite"
+                        formControlName="vitalite"
+                        class="dw-input-number"
+                        inputStyleClass="!py-2 !text-sm"
+                      />
+                      <label for="vitalite">Vitalite</label>
+                    </p-floatlabel>
+                  </div>
+                </div>
               </div>
             </div>
 
             <div class="border border-[#52414b] bg-[#27272a]/75 p-5">
               <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                 <div class="space-y-2">
-                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-slate-400">
+                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-rose-300">
                     Pouvoirs infernaux
                   </p>
                   <p class="m-0 text-sm leading-7 text-slate-300">

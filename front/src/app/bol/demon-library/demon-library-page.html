@@ -128,13 +128,12 @@
             <th style="width: 13rem">Attributs</th>
             <th style="width: 13rem">Combat</th>
             <th style="width: 18rem">Pouvoirs</th>
-            <th style="width: 10rem">Actions</th>
           </tr>
         </ng-template>
 
         <ng-template #groupheader let-demon>
           <tr pRowGroupHeader>
-            <td colspan="7">
+            <td colspan="6">
               <div class="flex items-center gap-3 py-2">
                 <span class="text-xs font-black uppercase tracking-[0.24em] text-rose-300">
                   Categorie
@@ -169,7 +168,25 @@
                     }
                     <p class="m-0 text-lg font-bold text-slate-100">{{ demon.nom }}</p>
                     @if (demon.user_id) {
-                      <p-tag value="Creation" severity="secondary" />
+                      <p-button
+                        icon="pi pi-pencil"
+                        severity="secondary"
+                        [text]="true"
+                        [rounded]="true"
+                        size="small"
+                        pTooltip="Modifier"
+                        [routerLink]="['/create/demon', demon.id]"
+                        [state]="{ returnUrl: '/library/demons' }"
+                      />
+                      <p-button
+                        icon="pi pi-trash"
+                        severity="danger"
+                        [text]="true"
+                        [rounded]="true"
+                        size="small"
+                        pTooltip="Supprimer"
+                        (onClick)="askDelete($event, demon)"
+                      />
                     }
                   </div>
                   <p class="m-0 text-sm text-slate-400">{{ demon.categorie.categorie }}</p>
@@ -250,25 +267,10 @@
                 }
               </div>
             </td>
-
-            <td>
-              <div class="flex min-h-24 items-start">
-                @if (demon.user_id) {
-                  <p-button
-                    label="Modifier"
-                    icon="pi pi-pencil"
-                    severity="secondary"
-                    [outlined]="true"
-                    [routerLink]="['/create/demon', demon.id]"
-                    [state]="{ returnUrl: '/library/demons' }"
-                    styleClass="!px-4 !py-2 !font-bold"
-                  />
-                }
-              </div>
-            </td>
           </tr>
         </ng-template>
       </p-table>
     </p-card>
   </div>
 </section>
+<p-confirmpopup />

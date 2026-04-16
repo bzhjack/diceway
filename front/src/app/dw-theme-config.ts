@@ -103,6 +103,46 @@ export const DwPreset = definePreset(Aura, {
       header: {
         color: '{surface.0}',
       },
+      css: `
+        .p-panel-title {
+          font-family: 'Muse Display Harmony', 'Open Sans', -apple-system, Roboto, 'Helvetica Neue', Helvetica, sans-serif;
+          font-size: 30px;
+          letter-spacing: 0.1em;
+        }
+      `,
+    },
+    inputtext: {
+      css: `
+        .p-inputtext.p-inputtext-sm {
+          padding: 5px;
+          font-size: 0.9rem;
+        }
+      `,
+    },
+    inputnumber: {
+      css: `
+        .p-inputnumber-input {
+          padding: 5px;
+          font-size: 0.9rem;
+        }
+      `,
+    },
+    tag: {
+      css: `
+        .p-tag-value {
+          line-height: 15px;
+        }
+      `,
+    },
+    tooltip: {
+      root: {
+        maxWidth: '300px'
+        },
+      css: `
+        .p-tooltip .p-tooltip-text {
+          font-size: 0.75rem;
+        }
+      `,
     },
   },
 });

@@ -183,6 +183,15 @@
                         [routerLink]="['/create/creature', creature.id]"
                         [state]="{ returnUrl: '/library/creatures' }"
                       />
+                      <p-button
+                        icon="pi pi-trash"
+                        severity="danger"
+                        [text]="true"
+                        [rounded]="true"
+                        size="small"
+                        pTooltip="Supprimer"
+                        (onClick)="askDelete($event, creature)"
+                      />
                     }
                   </div>
                   <p class="m-0 text-sm text-slate-400">{{ creature.taille.taille }}</p>
@@ -266,3 +275,4 @@
     </p-card>
   </div>
 </section>
+<p-confirmpopup />

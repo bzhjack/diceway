@@ -47,11 +47,11 @@
               </div>
 
               <div class="grid gap-5 md:grid-cols-[220px_minmax(0,1fr)]">
-	                <div class="space-y-3">
-	                  <div
-	                    class="group relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden border border-[#424b57] bg-[#0f172a] transition-colors hover:border-amber-300/70"
-	                    (click)="pickAvatar()"
-	                  >
+                <div class="space-y-3">
+                  <div
+                    class="group relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden border border-[#424b57] bg-[#0f172a] transition-colors hover:border-amber-300/70"
+                    (click)="pickAvatar()"
+                  >
                     @if (avatarPreview()) {
                       <img
                         [src]="avatarPreview()!"
@@ -59,29 +59,29 @@
                         class="h-full w-full object-cover"
                       />
                     } @else {
-	                      <div class="flex flex-col items-center gap-3 text-slate-400">
-	                        <i class="pi pi-image text-4xl"></i>
-	                        <span class="text-xs font-bold uppercase tracking-[0.2em]">Avatar</span>
-	                        <span class="text-xs text-slate-500">Cliquer pour modifier</span>
-	                      </div>
-	                    }
+                      <div class="flex flex-col items-center gap-3 text-slate-400">
+                        <i class="pi pi-image text-4xl"></i>
+                        <span class="text-xs font-bold uppercase tracking-[0.2em]">Avatar</span>
+                        <span class="text-xs text-slate-500">Cliquer pour modifier</span>
+                      </div>
+                    }
 
-	                    <div
-	                      class="pointer-events-none absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
-	                    >
+                    <div
+                      class="pointer-events-none absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
+                    >
 	                      <span
-	                        class="mb-4 border border-white/20 bg-black/55 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-white"
-	                      >
+                          class="mb-4 border border-white/20 bg-black/55 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-white"
+                        >
 	                        Modifier
 	                      </span>
-	                    </div>
-	                  </div>
+                    </div>
+                  </div>
 
-	                </div>
+                </div>
 
                 <div class="grid gap-5 md:grid-cols-2">
                   <p-floatlabel variant="over">
-                    <input pInputText id="nom" formControlName="nom" class="w-full" />
+                    <input pInputText id="nom" formControlName="nom" class="w-full"/>
                     <label for="nom">Nom de la créature *</label>
                   </p-floatlabel>
 
@@ -119,71 +119,126 @@
               }
             </div>
 
-            <div class="grid gap-4 lg:grid-cols-2">
-              <div class="border border-[#424b57] bg-[#334155]/55 p-5">
+            <div class="grid gap-4 xl:grid-cols-3 xl:items-start">
+              <div class="border border-[#424b57] bg-[#334155]/55 p-5 xl:h-full">
                 <div class="mb-5 space-y-2">
-                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-slate-400">
+                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-amber-300">
                     Attributs
                   </p>
                 </div>
 
-                <div class="grid gap-5 sm:grid-cols-2">
-                  <p-floatlabel variant="over">
-                    <p-inputNumber inputId="vigueur" formControlName="vigueur" class="w-full" />
-                    <label for="vigueur">Vigueur</label>
-                  </p-floatlabel>
-                  <p-floatlabel variant="over">
-                    <p-inputNumber inputId="agilite" formControlName="agilite" class="w-full" />
-                    <label for="agilite">Agilité</label>
-                  </p-floatlabel>
-                  <p-floatlabel variant="over">
-                    <p-inputNumber inputId="esprit" formControlName="esprit" class="w-full" />
-                    <label for="esprit">Esprit</label>
-                  </p-floatlabel>
-                  <p-floatlabel variant="over">
-                    <p-inputNumber inputId="vitalite" formControlName="vitalite" class="w-full" />
-                    <label for="vitalite">Vitalité</label>
-                  </p-floatlabel>
+                <div class="flex flex-col gap-6">
+                  <div class="flex gap-4">
+                    <p-floatlabel variant="over">
+                      <p-inputNumber
+                        inputId="vigueur"
+                        formControlName="vigueur"
+                        class="dw-input-number"
+                        inputStyleClass="!py-2 !text-sm"
+                      />
+                      <label for="vigueur">Vigueur</label>
+                    </p-floatlabel>
+                    <p-floatlabel variant="over">
+                      <p-inputNumber
+                        inputId="agilite"
+                        formControlName="agilite"
+                        class="dw-input-number"
+                        inputStyleClass="!py-2 !text-sm"
+                      />
+                      <label for="agilite">Agilité</label>
+                    </p-floatlabel>
+                  </div>
+                  <div class="flex gap-4">
+                    <p-floatlabel variant="over" class="md:col-span-2">
+                      <p-inputNumber
+                        inputId="esprit"
+                        formControlName="esprit"
+                        class="dw-input-number"
+                        inputStyleClass="!py-2 !text-sm"
+                      />
+                      <label for="esprit">Esprit</label>
+                    </p-floatlabel>
+                  </div>
                 </div>
               </div>
 
-              <div class="border border-[#424b57] bg-[#334155]/55 p-5">
+              <div class="border border-[#424b57] bg-[#334155]/55 p-5 xl:h-full">
                 <div class="mb-5 space-y-2">
-                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-slate-400">
+                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-amber-300">
                     Combat
                   </p>
                 </div>
 
-                <div class="grid gap-5 sm:grid-cols-2">
-                  <p-floatlabel variant="over">
-                    <p-inputNumber inputId="attaque" formControlName="attaque" class="w-full" />
-                    <label for="attaque">Attaque</label>
-                  </p-floatlabel>
-                  <p-floatlabel variant="over">
-                    <p-inputNumber inputId="defense" formControlName="defense" class="w-full" />
-                    <label for="defense">Défense</label>
-                  </p-floatlabel>
-                  <p-floatlabel variant="over">
-                    <input pInputText id="degats" formControlName="degats" class="w-full" />
-                    <label for="degats">Dégâts</label>
-                  </p-floatlabel>
-                  <p-floatlabel variant="over">
-                    <input
-                      pInputText
-                      id="protection"
-                      formControlName="protection"
-                      class="w-full"
-                    />
-                    <label for="protection">Protection</label>
-                  </p-floatlabel>
+                <div class="flex flex-col gap-6">
+                  <div class="flex gap-4">
+                    <p-floatlabel variant="over">
+                      <p-inputNumber
+                        inputId="attaque"
+                        formControlName="attaque"
+                        class="dw-input-number"
+                        inputStyleClass="!py-2 !text-sm"
+                      />
+                      <label for="attaque">Attaque</label>
+                    </p-floatlabel>
+                    <p-floatlabel variant="over">
+                      <input
+                        pInputText
+                        id="degats"
+                        formControlName="degats"
+                        class="w-full !py-2 !text-sm"
+                      />
+                      <label for="degats">Dégâts</label>
+                    </p-floatlabel>
+                  </div>
+                  <div class="flex gap-4">
+                    <p-floatlabel variant="over">
+                      <p-inputNumber
+                        inputId="defense"
+                        formControlName="defense"
+                        class="dw-input-number"
+                        inputStyleClass="!py-2 !text-sm"
+                      />
+                      <label for="defense">Défense</label>
+                    </p-floatlabel>
+                    <p-floatlabel variant="over">
+                      <input
+                        pInputText
+                        id="protection"
+                        formControlName="protection"
+                        class="w-full !py-2 !text-sm"
+                      />
+                      <label for="protection">Protection</label>
+                    </p-floatlabel>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border border-[#424b57] bg-[#334155]/55 p-5 xl:h-full">
+                <div class="mb-5 space-y-2">
+                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-amber-300">
+                    Ressources
+                  </p>
+                </div>
+
+                <div class="flex flex-col gap-6">
+                  <div class="flex gap-4">
+                    <p-floatlabel variant="over">
+                      <p-inputNumber
+                        inputId="vitalite"
+                        formControlName="vitalite"
+                        class="dw-input-number"
+                        inputStyleClass="!py-2 !text-sm"
+                      />
+                      <label for="vitalite">Vitalité</label>
+                    </p-floatlabel>
+                  </div>
                 </div>
               </div>
             </div>
-
             <div class="border border-[#424b57] bg-[#334155]/55 p-5">
               <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                 <div class="space-y-2">
-                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-slate-400">
+                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-amber-300">
                     Capacités spéciales
                   </p>
                   <p class="m-0 text-sm leading-7 text-slate-300">
@@ -191,7 +246,7 @@
                     formulaire historique.
                   </p>
                 </div>
-                <p-tag [value]="selectedCapaciteEntries().length + ' sélectionnée(s)'" severity="contrast" />
+                <p-tag [value]="selectedCapaciteEntries().length + ' sélectionnée(s)'" severity="contrast"/>
               </div>
 
               <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
@@ -236,7 +291,8 @@
                   </div>
                 } @else {
                   @for (entry of selectedCapaciteEntries(); track entry.id; let index = $index) {
-                    <div class="flex flex-col gap-3 border border-[#424b57] bg-[#1f2937]/70 p-4 md:flex-row md:items-start md:justify-between">
+                    <div
+                      class="flex flex-col gap-3 border border-[#424b57] bg-[#1f2937]/70 p-4 md:flex-row md:items-start md:justify-between">
                       <div class="space-y-1">
                         <p class="m-0 text-sm font-bold text-slate-100">
                           {{ entry.definition?.capacite ?? ('Capacité #' + entry.id) }}

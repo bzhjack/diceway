@@ -1,13 +1,15 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {toSignal} from '@angular/core/rxjs-interop';
+import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
+import {ConfirmationService} from 'primeng/api';
 import {BolDemonModel} from '../models/bol-demon.model';
 import {BolDemonStateService} from '../services/bol-demon-state.service';
 import {BolDemonsService} from '../services/bol-demons.service';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {CheckboxModule} from 'primeng/checkbox';
+import {ConfirmPopupModule} from 'primeng/confirmpopup';
 import {IconFieldModule} from 'primeng/iconfield';
 import {InputIconModule} from 'primeng/inputicon';
 import {InputTextModule} from 'primeng/inputtext';
@@ -15,6 +17,7 @@ import {SelectModule} from 'primeng/select';
 import {TagModule} from 'primeng/tag';
 import {TableModule} from 'primeng/table';
 import {TooltipModule} from 'primeng/tooltip';
+import {startWith, switchMap} from 'rxjs';
 
 @Component({
   selector: 'bol-demon-library-page',
@@ -24,6 +27,7 @@ import {TooltipModule} from 'primeng/tooltip';
     ButtonModule,
     CardModule,
     CheckboxModule,
+    ConfirmPopupModule,
     IconFieldModule,
     InputIconModule,
     InputTextModule,
@@ -35,11 +39,20 @@ import {TooltipModule} from 'primeng/tooltip';
   templateUrl: './demon-library-page.html',
   styleUrl: './demon-library-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ConfirmationService],
 })
 export class DemonLibraryPageComponent {
   private readonly demonStateService = inject(BolDemonStateService);
   private readonly demonsService = inject(BolDemonsService);
-  private readonly demons = toSignal(this.demonsService.demons(), { initialValue: [] });
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly refreshTrigger = signal(0);
+  private readonly demons = toSignal(
+    toObservable(this.refreshTrigger).pipe(
+      startWith(0),
+      switchMap(() => this.demonsService.demons()),
+    ),
+    { initialValue: [] },
+  );
 
   protected readonly categories = this.demonStateService.categorieList;
   protected readonly searchTerm = signal('');
@@ -77,6 +90,18 @@ export class DemonLibraryPageComponent {
   protected readonly demonCount = computed(() => this.filteredDemons().length);
   protected readonly totalDemonCount = computed(() => this.demons().length);
 
+  protected askDelete(event: Event, demon: BolDemonModel): void {
+    this.confirmationService.confirm({
+      target: event.currentTarget as EventTarget,
+      message: 'Voulez-vous supprimer ce demon ?',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass: 'p-button-danger p-button-sm',
+      acceptLabel: 'Oui',
+      rejectLabel: 'Non',
+      accept: () => this.deleteDemon(demon),
+    });
+  }
+
   protected clearFilters(): void {
     this.searchTerm.set('');
     this.searchCategorie.set(null);
@@ -89,5 +114,15 @@ export class DemonLibraryPageComponent {
     }
 
     return demon.avatar || '/assets/bol/empty-avatar.jpg';
+  }
+
+  private deleteDemon(demon: BolDemonModel): void {
+    if (!demon.id) {
+      return;
+    }
+
+    this.demonsService.deleteDemon(demon.id).subscribe({
+      next: () => this.refreshTrigger.update((value) => value + 1),
+    });
   }
 }
