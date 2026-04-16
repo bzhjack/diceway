@@ -1,0 +1,274 @@
+<section
+  class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(251,113,133,0.12),_transparent_28%),linear-gradient(180deg,_#000000,_#1f172a_45%,_#000000)] px-4 py-6 md:px-6 xl:px-8"
+>
+  <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
+    <p-card
+      styleClass="!border !border-[#3f3f46] !bg-[#18181b]/96 !text-slate-50 !shadow-[0_28px_70px_rgba(0,0,0,0.35)] backdrop-blur"
+    >
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+        <div class="space-y-3">
+          <div class="space-y-2">
+            <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-rose-300">
+              Bibliotheque BOL
+            </p>
+            <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-5xl">
+              Bestiaire des demons
+            </h1>
+          </div>
+
+          <p class="m-0 max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
+            Acces rapide a tous les demons disponibles dans la bibliotheque Barbarian of Lemuria.
+          </p>
+
+          <div class="flex flex-wrap gap-2">
+            <p-tag [value]="totalDemonCount() + ' demons'" severity="contrast" />
+            @if (demonCount() !== totalDemonCount()) {
+              <p-tag [value]="demonCount() + ' visibles'" severity="secondary" />
+            }
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
+          <p-button
+            label="Voir les creatures"
+            icon="pi pi-book"
+            [routerLink]="'/library/creatures'"
+            severity="secondary"
+            [outlined]="true"
+            styleClass="!px-5 !py-3 !font-bold"
+          />
+          <p-button
+            label="Creer un demon"
+            icon="pi pi-plus"
+            [routerLink]="'/create/demon'"
+            [state]="{ returnUrl: '/library/demons' }"
+            styleClass="!bg-[#b91c1c] !border-[#b91c1c] !text-white !px-5 !py-3 !font-bold"
+          />
+          <p-button
+            label="Retour au dashboard"
+            icon="pi pi-arrow-left"
+            [routerLink]="'/'"
+            severity="secondary"
+            [outlined]="true"
+            styleClass="!px-5 !py-3 !font-bold"
+          />
+        </div>
+      </div>
+    </p-card>
+
+    <p-card
+      styleClass="!border !border-[#3f3f46] !bg-[#18181b]/96 !text-slate-50 !shadow-[0_24px_60px_rgba(0,0,0,0.24)]"
+    >
+      <p-table
+        [value]="filteredDemons()"
+        [scrollable]="true"
+        scrollHeight="calc(100vh - 19rem)"
+        rowGroupMode="subheader"
+        groupRowsBy="id_categorie"
+        dataKey="id"
+        styleClass="bol-demon-table p-datatable-sm"
+        [tableStyle]="{ 'min-width': '82rem' }"
+      >
+        <ng-template #caption>
+          <div class="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+            <div class="flex flex-col gap-3 lg:flex-row lg:flex-wrap">
+              <p-iconfield iconPosition="left">
+                <p-inputicon styleClass="pi pi-search" />
+                <input
+                  pInputText
+                  class="w-full lg:w-72"
+                  [ngModel]="searchTerm()"
+                  (ngModelChange)="searchTerm.set($event ?? '')"
+                  placeholder="Rechercher un demon"
+                  type="text"
+                />
+              </p-iconfield>
+
+              <p-select
+                [options]="categories() ?? []"
+                optionLabel="categorie"
+                optionValue="id"
+                placeholder="Filtrer par categorie"
+                [showClear]="true"
+                [ngModel]="searchCategorie()"
+                (ngModelChange)="searchCategorie.set($event)"
+                styleClass="w-full lg:w-64"
+              />
+
+              <div class="flex items-center gap-3 rounded-full border border-[#3f3f46] px-4 py-2">
+                <p-checkbox
+                  inputId="demon-library-own"
+                  [binary]="true"
+                  [ngModel]="onlyCreations()"
+                  (ngModelChange)="onlyCreations.set($event)"
+                />
+                <label for="demon-library-own" class="cursor-pointer text-sm text-slate-300">
+                  Mes creations
+                </label>
+              </div>
+
+              <p-button
+                icon="pi pi-filter-slash"
+                label="Effacer"
+                severity="secondary"
+                [outlined]="true"
+                (onClick)="clearFilters()"
+              />
+            </div>
+
+            <p-tag [value]="demonCount() + ' entrees'" severity="contrast" />
+          </div>
+        </ng-template>
+
+        <ng-template #header>
+          <tr>
+            <th style="width: 7rem">Avatar</th>
+            <th>Description</th>
+            <th style="width: 10rem">Ressources</th>
+            <th style="width: 13rem">Attributs</th>
+            <th style="width: 13rem">Combat</th>
+            <th style="width: 18rem">Pouvoirs</th>
+            <th style="width: 10rem">Actions</th>
+          </tr>
+        </ng-template>
+
+        <ng-template #groupheader let-demon>
+          <tr pRowGroupHeader>
+            <td colspan="7">
+              <div class="flex items-center gap-3 py-2">
+                <span class="text-xs font-black uppercase tracking-[0.24em] text-rose-300">
+                  Categorie
+                </span>
+                <span class="text-xl font-semibold text-slate-50">{{ demon.categorie.categorie }}</span>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template #body let-demon>
+          <tr>
+            <td>
+              <div class="demon-avatar">
+                <img [src]="demonImage(demon)" [alt]="demon.nom" class="h-full w-full object-cover" />
+
+                @if (demon.user_id) {
+                  <span class="demon-avatar__tag">Creation</span>
+                }
+              </div>
+            </td>
+
+            <td>
+              <div class="flex min-h-24 flex-col justify-between gap-3">
+                <div class="space-y-2">
+                  <div class="flex flex-wrap items-center gap-2">
+                    @if (demon.commentaire) {
+                      <i
+                        class="pi pi-info-circle cursor-pointer text-rose-300"
+                        [pTooltip]="demon.commentaire"
+                      ></i>
+                    }
+                    <p class="m-0 text-lg font-bold text-slate-100">{{ demon.nom }}</p>
+                    @if (demon.user_id) {
+                      <p-tag value="Creation" severity="secondary" />
+                    }
+                  </div>
+                  <p class="m-0 text-sm text-slate-400">{{ demon.categorie.categorie }}</p>
+                  @if (demon.commentaire) {
+                    <p class="m-0 line-clamp-2 text-sm leading-6 text-slate-300">
+                      {{ demon.commentaire }}
+                    </p>
+                  }
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <div class="grid gap-2 text-sm text-slate-200">
+                <div class="flex items-center justify-between gap-3">
+                  <span class="text-slate-400">Vitalite</span>
+                  <span class="font-bold">{{ demon.vitalite }}</span>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <div class="grid gap-2 text-sm text-slate-200">
+                <div class="flex items-center justify-between gap-3">
+                  <span class="text-slate-400">Vigueur</span>
+                  <span>{{ demon.vigueur }}</span>
+                </div>
+                <div class="flex items-center justify-between gap-3">
+                  <span class="text-slate-400">Agilite</span>
+                  <span>{{ demon.agilite }}</span>
+                </div>
+                <div class="flex items-center justify-between gap-3">
+                  <span class="text-slate-400">Esprit</span>
+                  <span>{{ demon.esprit }}</span>
+                </div>
+                <div class="flex items-center justify-between gap-3">
+                  <span class="text-slate-400">Aura</span>
+                  <span>{{ demon.aura }}</span>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <div class="grid gap-2 text-sm text-slate-200">
+                <div class="flex items-center justify-between gap-3">
+                  <span class="text-slate-400">Melee</span>
+                  <span>{{ demon.melee }}</span>
+                </div>
+                <div class="flex items-center justify-between gap-3">
+                  <span class="text-slate-400">Tir</span>
+                  <span>{{ demon.tir }}</span>
+                </div>
+                <div class="flex items-center justify-between gap-3">
+                  <span class="text-slate-400">Defense</span>
+                  <span>{{ demon.defense }}</span>
+                </div>
+                <div class="flex items-center justify-between gap-3">
+                  <span class="text-slate-400">Degats</span>
+                  <span>{{ demon.degats }}</span>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <div class="flex min-h-24 flex-col gap-2">
+                @if (demon.pouvoirs.length) {
+                  @for (pouvoir of demon.pouvoirs; track pouvoir.id) {
+                    <div class="flex items-center gap-1 text-sm text-slate-200">
+                      {{ pouvoir.pouvoir.pouvoir }}
+                      @if (pouvoir.detail || pouvoir.pouvoir.description) {
+                        <i
+                          class="pi pi-info-circle cursor-pointer text-rose-300"
+                          [pTooltip]="pouvoir.detail || pouvoir.pouvoir.description"
+                        ></i>
+                      }
+                    </div>
+                  }
+                }
+              </div>
+            </td>
+
+            <td>
+              <div class="flex min-h-24 items-start">
+                @if (demon.user_id) {
+                  <p-button
+                    label="Modifier"
+                    icon="pi pi-pencil"
+                    severity="secondary"
+                    [outlined]="true"
+                    [routerLink]="['/create/demon', demon.id]"
+                    [state]="{ returnUrl: '/library/demons' }"
+                    styleClass="!px-4 !py-2 !font-bold"
+                  />
+                }
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</section>

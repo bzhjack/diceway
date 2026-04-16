@@ -50,6 +50,14 @@ export class WorkspaceQuickActionsComponent {
       severity: 'secondary',
     },
     {
+      label: 'Créer un démon',
+      detail: 'Préparer une entité infernale prête pour la scène ou l aventure.',
+      icon: 'pi pi-bolt',
+      link: '/create/demon',
+      state: { returnUrl: '/' },
+      severity: 'secondary',
+    },
+    {
       label: 'Créer un PNJ',
       detail: 'Alimenter la réserve d adversaires et alliés.',
       icon: 'pi pi-id-card',

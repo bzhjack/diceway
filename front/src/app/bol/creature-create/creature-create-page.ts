@@ -298,6 +298,7 @@ export class CreatureCreatePageComponent {
       { emitEvent: false },
     );
     this.capacites.clear({ emitEvent: false });
+    this.capacites.updateValueAndValidity({ emitEvent: true });
     this.selectedCapaciteId.setValue(null);
     this.selectedCapaciteDetail.setValue('');
   }

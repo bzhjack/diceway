@@ -17,7 +17,7 @@ export class BolDemonsService {
     return this.http.get<BolDemonModel[]>(`${environment.apiBase}/api/bol/demon`);
   }
 
-  creature(id: string, questId?: string): Observable<BolDemonModel> {
+  demon(id: string, questId?: string): Observable<BolDemonModel> {
     return this.http.get<BolDemonModel>(`${environment.apiBase}/api/bol/demon/` + id + (questId ? '?questId=' + questId : ''));
   }
 
@@ -29,12 +29,12 @@ export class BolDemonsService {
     return this.http.get<BolDemonPouvoirModel[]>(`${environment.apiBase}/api/bol/demon/pouvoirs`);
   }
 
-  createDemon(demon: BolDemonModel): Observable<BolDemonModel> {
-    return this.http.post<BolDemonModel>(`${environment.apiBase}/api/bol/demon/create`, <BolDemonModel>demon);
+  createDemon(demon: Record<string, unknown>): Observable<BolDemonModel> {
+    return this.http.post<BolDemonModel>(`${environment.apiBase}/api/bol/demon/create`, demon);
   }
 
-  updateDemon(demon: BolDemonModel): Observable<BolDemonModel> {
-    return this.http.post<BolDemonModel>(`${environment.apiBase}/api/bol/demon/update`, <BolDemonModel>demon);
+  updateDemon(demon: Record<string, unknown>): Observable<BolDemonModel> {
+    return this.http.post<BolDemonModel>(`${environment.apiBase}/api/bol/demon/update`, demon);
   }
 
   deleteDemon(id: string): Observable<BolDemonModel> {

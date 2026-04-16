@@ -32,10 +32,30 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'create/demon',
+    loadComponent: () =>
+      import('./bol/demon-create/demon-create-page').then((module) => module.DemonCreatePageComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'create/demon/:id',
+    loadComponent: () =>
+      import('./bol/demon-create/demon-create-page').then((module) => module.DemonCreatePageComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'library/creatures',
     loadComponent: () =>
       import('./bol/creature-library/creature-library-page').then(
         (module) => module.CreatureLibraryPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'library/demons',
+    loadComponent: () =>
+      import('./bol/demon-library/demon-library-page').then(
+        (module) => module.DemonLibraryPageComponent,
       ),
     canActivate: [authGuard],
   },

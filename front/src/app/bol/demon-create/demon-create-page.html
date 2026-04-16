@@ -1,0 +1,323 @@
+<section
+  class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(251,113,133,0.12),_transparent_28%),linear-gradient(180deg,_#000000,_#1f172a_45%,_#000000)] px-4 py-6 md:px-6"
+>
+  <div class="mx-auto flex max-w-6xl flex-col gap-4">
+    <p-card
+      styleClass="!border !border-[#3f3f46] !bg-[#18181b]/96 !text-slate-50 !shadow-[0_24px_60px_rgba(0,0,0,0.28)]"
+    >
+      <form class="flex flex-col gap-6" [formGroup]="demonForm" (ngSubmit)="saveDemon()">
+        <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <div
+                class="flex h-14 w-14 items-center justify-center border border-[#52414b] bg-[#b91c1c] text-2xl text-white"
+              >
+                <i class="pi pi-bolt" aria-hidden="true"></i>
+              </div>
+              <div class="space-y-1">
+                <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-rose-300">
+                  {{ pageEyebrow() }}
+                </p>
+                <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none">
+                  {{ pageTitle() }}
+                </h1>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid gap-4">
+          @if (loadingDemon()) {
+            <div class="border border-[#52414b] bg-[#111827]/80 p-5">
+              <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-rose-300">
+                Chargement
+              </p>
+              <p class="mt-3 mb-0 text-sm leading-7 text-slate-200">
+                Recuperation du demon a modifier.
+              </p>
+            </div>
+          }
+
+          <div class="grid gap-4">
+            <div class="border border-[#52414b] bg-[#27272a]/75 p-5">
+              <div class="mb-5 space-y-2">
+                <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-rose-300">
+                  General
+                </p>
+              </div>
+
+              <div class="grid gap-5 md:grid-cols-[220px_minmax(0,1fr)]">
+                <div class="space-y-3">
+                  <div
+                    class="group relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden border border-[#52414b] bg-[#09090b] transition-colors hover:border-rose-300/70"
+                    (click)="pickAvatar()"
+                  >
+                    @if (avatarPreview()) {
+                      <img
+                        [src]="avatarPreview()!"
+                        alt="Avatar demon"
+                        class="h-full w-full object-cover"
+                      />
+                    } @else {
+                      <div class="flex flex-col items-center gap-3 text-slate-400">
+                        <i class="pi pi-image text-4xl"></i>
+                        <span class="text-xs font-bold uppercase tracking-[0.2em]">Avatar</span>
+                        <span class="text-xs text-slate-500">Cliquer pour modifier</span>
+                      </div>
+                    }
+
+                    <div
+                      class="pointer-events-none absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
+                    >
+                      <span
+                        class="mb-4 border border-white/20 bg-black/55 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-white"
+                      >
+                        Modifier
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="grid gap-5 md:grid-cols-2">
+                  <p-floatlabel variant="over">
+                    <input pInputText id="nom" formControlName="nom" class="w-full" />
+                    <label for="nom">Nom du demon *</label>
+                  </p-floatlabel>
+
+                  <p-floatlabel variant="over">
+                    <p-select
+                      inputId="id_categorie"
+                      class="w-full"
+                      [options]="categories() ?? []"
+                      optionLabel="categorie"
+                      optionValue="id"
+                      formControlName="id_categorie"
+                    />
+                    <label for="id_categorie">Categorie *</label>
+                  </p-floatlabel>
+
+                  <div class="md:col-span-2">
+                    <p-floatlabel variant="over">
+                      <textarea
+                        pTextarea
+                        id="commentaire"
+                        formControlName="commentaire"
+                        rows="4"
+                        class="w-full resize-none"
+                      ></textarea>
+                      <label for="commentaire">Commentaire de scene</label>
+                    </p-floatlabel>
+                  </div>
+                </div>
+              </div>
+
+              @if (onError('nom') || onError('id_categorie')) {
+                <p class="mt-4 mb-0 text-sm text-rose-300">
+                  Le nom et la categorie sont requis pour preparer le demon.
+                </p>
+              }
+            </div>
+
+            <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_14rem]">
+              <div class="grid gap-4 lg:grid-cols-2">
+                <div class="border border-[#52414b] bg-[#27272a]/75 p-5">
+                  <div class="mb-5 space-y-2">
+                    <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-slate-400">
+                      Attributs
+                    </p>
+                  </div>
+
+                  <div class="grid gap-5 sm:grid-cols-2">
+                    <p-floatlabel variant="over">
+                      <p-inputNumber inputId="vigueur" formControlName="vigueur" class="w-full" />
+                      <label for="vigueur">Vigueur</label>
+                    </p-floatlabel>
+                    <p-floatlabel variant="over">
+                      <p-inputNumber inputId="agilite" formControlName="agilite" class="w-full" />
+                      <label for="agilite">Agilite</label>
+                    </p-floatlabel>
+                    <p-floatlabel variant="over">
+                      <p-inputNumber inputId="esprit" formControlName="esprit" class="w-full" />
+                      <label for="esprit">Esprit</label>
+                    </p-floatlabel>
+                    <p-floatlabel variant="over">
+                      <p-inputNumber inputId="aura" formControlName="aura" class="w-full" />
+                      <label for="aura">Aura</label>
+                    </p-floatlabel>
+                  </div>
+                </div>
+
+                <div class="border border-[#52414b] bg-[#27272a]/75 p-5">
+                  <div class="mb-5 space-y-2">
+                    <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-slate-400">
+                      Combat
+                    </p>
+                  </div>
+
+                  <div class="grid gap-5 sm:grid-cols-2">
+                    <p-floatlabel variant="over">
+                      <p-inputNumber inputId="melee" formControlName="melee" class="w-full" />
+                      <label for="melee">Melee</label>
+                    </p-floatlabel>
+                    <p-floatlabel variant="over">
+                      <p-inputNumber inputId="tir" formControlName="tir" class="w-full" />
+                      <label for="tir">Tir</label>
+                    </p-floatlabel>
+                    <p-floatlabel variant="over">
+                      <p-inputNumber inputId="defense" formControlName="defense" class="w-full" />
+                      <label for="defense">Defense</label>
+                    </p-floatlabel>
+                    <p-floatlabel variant="over">
+                      <input pInputText id="degats" formControlName="degats" class="w-full" />
+                      <label for="degats">Degats</label>
+                    </p-floatlabel>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border border-[#52414b] bg-[#27272a]/75 p-5">
+                <div class="mb-5 space-y-2">
+                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-slate-400">
+                    Ressources
+                  </p>
+                </div>
+
+                <p-floatlabel variant="over">
+                  <p-inputNumber inputId="vitalite" formControlName="vitalite" class="w-full" />
+                  <label for="vitalite">Vitalite</label>
+                </p-floatlabel>
+              </div>
+            </div>
+
+            <div class="border border-[#52414b] bg-[#27272a]/75 p-5">
+              <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                <div class="space-y-2">
+                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-slate-400">
+                    Pouvoirs infernaux
+                  </p>
+                  <p class="m-0 text-sm leading-7 text-slate-300">
+                    Ajout local des pouvoirs avec detail optionnel, en suivant la mecanique
+                    historique.
+                  </p>
+                </div>
+                <p-tag [value]="selectedPouvoirEntries().length + ' selectionne(s)'" severity="contrast" />
+              </div>
+
+              <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
+                <p-floatlabel variant="over">
+                  <p-select
+                    inputId="pouvoir"
+                    class="w-full"
+                    [options]="filteredPouvoirs()"
+                    optionLabel="pouvoir"
+                    optionValue="id"
+                    [formControl]="selectedPouvoirId"
+                    [showClear]="true"
+                    [filter]="true"
+                    filterBy="pouvoir"
+                  />
+                  <label for="pouvoir">Pouvoir a ajouter</label>
+                </p-floatlabel>
+
+                <p-floatlabel variant="over">
+                  <input
+                    pInputText
+                    id="pouvoir-detail"
+                    [formControl]="selectedPouvoirDetail"
+                    class="w-full"
+                  />
+                  <label for="pouvoir-detail">Detail optionnel</label>
+                </p-floatlabel>
+
+                <p-button
+                  label="Ajouter"
+                  icon="pi pi-plus"
+                  [disabled]="!selectedPouvoirId.value"
+                  (onClick)="addPouvoir()"
+                  styleClass="!px-4 !py-3 !font-bold"
+                />
+              </div>
+
+              <div class="mt-5 grid gap-3">
+                @if (selectedPouvoirEntries().length === 0) {
+                  <div class="border border-dashed border-[#6b4b56] bg-[#18181b]/80 p-4 text-sm text-slate-400">
+                    Aucun pouvoir ajoute pour le moment.
+                  </div>
+                } @else {
+                  @for (entry of selectedPouvoirEntries(); track entry.id; let index = $index) {
+                    <div class="flex flex-col gap-3 border border-[#52414b] bg-[#18181b]/80 p-4 md:flex-row md:items-start md:justify-between">
+                      <div class="space-y-1">
+                        <p class="m-0 text-sm font-bold text-slate-100">
+                          {{ entry.definition?.pouvoir ?? ('Pouvoir #' + entry.id) }}
+                        </p>
+                        <p class="m-0 text-sm leading-6 text-slate-300">
+                          {{ entry.definition?.description || 'Pas de description chargee.' }}
+                        </p>
+                        @if (entry.detail) {
+                          <p class="m-0 text-sm leading-6 text-rose-200">
+                            Detail: {{ entry.detail }}
+                          </p>
+                        }
+                      </div>
+
+                      <p-button
+                        label="Retirer"
+                        icon="pi pi-times"
+                        severity="secondary"
+                        [outlined]="true"
+                        (onClick)="removePouvoir(index)"
+                        styleClass="!px-4 !py-2 !font-bold"
+                      />
+                    </div>
+                  }
+                }
+              </div>
+            </div>
+          </div>
+
+          @if (errorMessage()) {
+            <div class="border border-red-400/30 bg-red-500/10 p-5">
+              <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-red-300">
+                Erreur API
+              </p>
+              <p class="mt-3 mb-0 text-sm leading-7 text-red-100">
+                {{ errorMessage() }}
+              </p>
+            </div>
+          }
+
+          @if (savedDemon()) {
+            <div class="border border-emerald-400/30 bg-emerald-500/10 p-5">
+              <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                {{ saveSuccessTitle() }}
+              </p>
+              <p class="mt-3 mb-0 text-sm leading-7 text-emerald-100">
+                {{ saveSuccessMessage() }}
+              </p>
+              <pre class="mt-3 mb-0 overflow-x-auto text-xs leading-6 text-slate-100">{{ savedDemon() | json }}</pre>
+            </div>
+          }
+        </div>
+
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <p-button
+            type="button"
+            icon="pi pi-arrow-left"
+            [label]="returnUrl() === '/library/demons' ? 'Retour a la bibliotheque' : 'Retour'"
+            severity="secondary"
+            [outlined]="true"
+            (onClick)="goBack()"
+            styleClass="!px-5 !py-3 !font-bold"
+          />
+          <p-button
+            type="submit"
+            [label]="submitLabel()"
+            icon="pi pi-check"
+            [disabled]="pending() || loadingDemon() || demonForm.invalid"
+            styleClass="!bg-[#b91c1c] !border-[#b91c1c] !text-white !px-5 !py-3 !font-bold"
+          />
+        </div>
+      </form>
+    </p-card>
+  </div>
+</section>

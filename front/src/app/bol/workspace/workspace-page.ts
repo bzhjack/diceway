@@ -12,8 +12,6 @@ import {WorkspaceHeaderComponent} from './workspace-header/workspace-header';
 import {WorkspaceMetric, WorkspaceMetricsComponent} from './workspace-metrics/workspace-metrics';
 import {WorkspaceQuickActionsComponent} from './workspace-quick-actions/workspace-quick-actions';
 
-type TagSeverity = 'secondary' | 'success' | 'info' | 'warn' | 'danger' | 'contrast';
-
 interface SessionPreview {
   readonly title: string;
   readonly campaign: string;
@@ -23,31 +21,6 @@ interface SessionPreview {
   readonly summary: string;
   readonly players: readonly string[];
   readonly beats: readonly { label: string; value: string }[];
-}
-
-interface CollectionItem {
-  readonly name: string;
-  readonly meta: string;
-  readonly status: string;
-  readonly severity: TagSeverity;
-}
-
-interface CollectionCard {
-  readonly title: string;
-  readonly countLabel: string;
-  readonly summary: string;
-  readonly icon: string;
-  readonly createLabel: string;
-  readonly createLink: string;
-  readonly accentClass: string;
-  readonly items: readonly CollectionItem[];
-}
-
-interface ActivityEntry {
-  readonly title: string;
-  readonly detail: string;
-  readonly time: string;
-  readonly severity: TagSeverity;
 }
 
 @Component({
@@ -122,145 +95,6 @@ export class WorkspacePageComponent {
       { label: 'Risque', value: 'Combat diplomatique très probable' },
     ],
   };
-  protected readonly collections: readonly CollectionCard[] = [
-    {
-      title: 'Mes campagnes',
-      countLabel: '4',
-      summary: 'Vue sur les arcs, l état des sessions et les campagnes à relancer.',
-      icon: 'pi pi-compass',
-      createLabel: 'Créer une campagne',
-      createLink: '/create/campaign',
-      accentClass: 'from-sky-500/20 to-slate-700',
-      items: [
-        {
-          name: 'Les Cités de Bronze',
-          meta: 'Arc III · prochaine session ce soir',
-          status: 'Actif',
-          severity: 'success',
-        },
-        {
-          name: 'Les Brumes de Varn',
-          meta: 'En pause · 2 fils narratifs ouverts',
-          status: 'En pause',
-          severity: 'warn',
-        },
-        {
-          name: 'La Reine aux Cendres',
-          meta: 'Préproduction · bible de campagne',
-          status: 'Prépa',
-          severity: 'info',
-        },
-      ],
-    },
-    {
-      title: 'Mes tables',
-      countLabel: '3',
-      summary: 'Tables prêtes à jouer, organisées autour des sessions à venir.',
-      icon: 'pi pi-sitemap',
-      createLabel: 'Créer une table',
-      createLink: '/create/table',
-      accentClass: 'from-orange-500/20 to-slate-700',
-      items: [
-        {
-          name: 'Banquet à la Citadelle',
-          meta: '4 joueurs · 1 session live prête',
-          status: 'Ce soir',
-          severity: 'danger',
-        },
-        {
-          name: 'Poursuite dans les Docks',
-          meta: 'Table secondaire · scène d action',
-          status: 'Prêt',
-          severity: 'success',
-        },
-        {
-          name: 'Audience du Temple Noir',
-          meta: 'Encore sans PJ assigné',
-          status: 'À compléter',
-          severity: 'secondary',
-        },
-      ],
-    },
-    {
-      title: 'Mes PJ',
-      countLabel: '18',
-      summary: 'Accès rapide aux fiches, aux archétypes et aux PJ à préparer.',
-      icon: 'pi pi-shield',
-      createLabel: 'Créer un PJ',
-      createLink: '/create/hero',
-      accentClass: 'from-emerald-500/20 to-slate-700',
-      items: [
-        {
-          name: 'Naïa Sorel',
-          meta: 'Duelliste · Blessée légère',
-          status: 'Assignée',
-          severity: 'success',
-        },
-        {
-          name: 'Malik Khar',
-          meta: 'Mercenaire · Ressources complètes',
-          status: 'Assigné',
-          severity: 'success',
-        },
-        {
-          name: 'Ysolde de Marne',
-          meta: 'Occultiste · poison latent',
-          status: 'Alerte',
-          severity: 'warn',
-        },
-      ],
-    },
-    {
-      title: 'Mes PNJ',
-      countLabel: '47',
-      summary: 'Réserve de figures récurrentes, antagonistes et alliés contextuels.',
-      icon: 'pi pi-megaphone',
-      createLabel: 'Créer un PNJ',
-      createLink: '/create/npc',
-      accentClass: 'from-rose-500/20 to-slate-700',
-      items: [
-        {
-          name: 'Veskar le Rouge',
-          meta: 'Capitaine du prince exilé',
-          status: 'Hostile',
-          severity: 'danger',
-        },
-        {
-          name: 'Sélène Avra',
-          meta: 'Intendante du palais',
-          status: 'Alliée',
-          severity: 'success',
-        },
-        {
-          name: 'Garde de galerie',
-          meta: 'Archers secondaires pour la scène',
-          status: 'Réserve',
-          severity: 'info',
-        },
-      ],
-    },
-  ];
-  protected readonly activity: readonly ActivityEntry[] = [
-    {
-      title: 'Banquet à la Citadelle mis à jour',
-      detail: 'Le timing fictionnel et les PNJ de scène ont été revus.',
-      time: 'Il y a 18 min',
-      severity: 'info',
-    },
-    {
-      title: 'Naïa Sorel modifiée',
-      detail: 'Vitalité et état blessée synchronisés avant la session.',
-      time: 'Il y a 43 min',
-      severity: 'warn',
-    },
-    {
-      title: 'Nouvelle campagne en brouillon',
-      detail: 'La Reine aux Cendres est prête pour la phase de cadrage.',
-      time: 'Hier',
-      severity: 'success',
-    },
-  ];
-
   protected logout(): void {
     this.authService.logout();
   }

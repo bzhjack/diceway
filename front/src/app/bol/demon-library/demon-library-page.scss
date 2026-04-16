@@ -2,34 +2,34 @@
   display: block;
 }
 
-:host ::ng-deep .bol-creature-table {
+:host ::ng-deep .bol-demon-table {
   .p-datatable-table-container {
     overflow: hidden;
-    border: 1px solid #334155;
+    border: 1px solid #3f3f46;
     border-radius: 0.85rem;
   }
 
   .p-datatable-thead > tr > th {
-    background: #0f172a;
-    border-color: #334155;
+    background: #09090b;
+    border-color: #3f3f46;
     color: #e2e8f0;
     padding: 1rem;
   }
 
   .p-datatable-tbody > tr {
-    background: rgba(15, 23, 42, 0.72);
+    background: rgba(24, 24, 27, 0.82);
     color: #e2e8f0;
   }
 
   .p-datatable-tbody > tr > td {
     background: transparent;
-    border-color: #334155;
+    border-color: #3f3f46;
     padding: 1rem;
     vertical-align: top;
   }
 
   .p-datatable-tbody > tr:hover {
-    background: rgba(30, 41, 59, 0.95);
+    background: rgba(39, 39, 42, 0.98);
   }
 
   .p-datatable-tbody > tr:hover > td {
@@ -37,8 +37,8 @@
   }
 
   .p-rowgroup-header > td {
-    background: linear-gradient(90deg, rgba(24, 54, 65, 0.98), rgba(15, 23, 42, 0.95));
-    border-color: #334155;
+    background: linear-gradient(90deg, rgba(69, 10, 10, 0.98), rgba(24, 24, 27, 0.95));
+    border-color: #3f3f46;
     padding: 0 1rem;
   }
 
@@ -49,38 +49,28 @@
   }
 }
 
-.beast-avatar {
+.demon-avatar {
   position: relative;
   display: flex;
   height: 5.5rem;
   width: 5.5rem;
   overflow: hidden;
-  border: 1px solid #424b57;
+  border: 1px solid #52414b;
   border-radius: 0.75rem;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.92));
+  background: linear-gradient(180deg, rgba(9, 9, 11, 0.96), rgba(39, 39, 42, 0.94));
 }
 
-.beast-avatar__fallback {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  background:
-    radial-gradient(circle at top, rgba(251, 191, 36, 0.18), transparent 42%),
-    rgba(15, 23, 42, 0.9);
-}
-
-.beast-avatar__tag {
+.demon-avatar__tag {
   position: absolute;
   right: 0.35rem;
   bottom: 0.35rem;
-  border: 1px solid rgba(251, 191, 36, 0.35);
+  border: 1px solid rgba(251, 113, 133, 0.35);
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.88);
+  background: rgba(9, 9, 11, 0.88);
   padding: 0.12rem 0.42rem;
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.06em;
-  color: #fbbf24;
+  color: #fda4af;
   text-transform: uppercase;
 }

@@ -2,7 +2,7 @@ import {BolQuestProtagonistModel} from "./bol-quest.model";
 
 export interface BolDemonModel {
   id: string | null;
-  user_id: string;
+  user_id: string | null;
   nom: string;
   avatar: string | null;
   commentaire: string | null;
@@ -21,15 +21,13 @@ export interface BolDemonModel {
 
   id_categorie: number;
 
-  pouvoirs: [
-    {
-      pouvoir: BolDemonPouvoirModel;
-      pouvoir_id: number;
-      demon_id: string;
-      detail: string;
-      id: number;
-    }
-  ];
+  pouvoirs: {
+    pouvoir: BolDemonPouvoirModel;
+    pouvoir_id: number;
+    demon_id: string;
+    detail: string;
+    id: number;
+  }[];
   categorie: BolDemonCategorieModel;
   currentQuest?: BolQuestProtagonistModel;
   type?: 'P' | 'C' | 'R'
