@@ -21,6 +21,7 @@ import {toSignal} from '@angular/core/rxjs-interop';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {BolHerosLangueModel, BolLangueModel} from '../../models/bol-langue.model';
+import {automaticLanguageIdsForRegion, selectedLanguageTarget} from '../create.rules';
 
 @Component({
   selector: 'bol-hero-advanced-langues',
@@ -58,23 +59,35 @@ export class HeroAdvancedLanguesComponent implements ControlValueAccessor, Valid
     initialValue: this.languesForm.getRawValue(),
   });
   protected readonly langueList = this.herosStateService.langueList;
+  protected readonly regionId = computed(() => this.herosStateService.currentHeros()?.origines.region_id ?? null);
   protected readonly heroId = computed(() => this.herosStateService.currentHeros()?.id);
   protected readonly selectedLangueIds = computed(() =>
     (this.formChange()?.langues ?? []).map((langueId) => Number(langueId)),
   );
+  protected readonly automaticLanguageIds = computed(() => automaticLanguageIdsForRegion(this.regionId()));
+  protected readonly automaticLanguageLabels = computed(() =>
+    this.automaticLanguageIds()
+      .map((languageId) =>
+        (this.langueList() ?? []).find((langue: BolLangueModel) => Number(langue.id) === Number(languageId))?.langue,
+      )
+      .filter((label): label is string => Boolean(label)),
+  );
+  protected readonly selectedLanguageTarget = computed(() =>
+    selectedLanguageTarget(
+      this.regionId(),
+      Number(this.herosStateService.currentHeros()?.attributs.esprit ?? 0),
+      this.herosStateService.currentHeros()?.carrieres ?? [],
+    ),
+  );
   protected readonly filteredLangueList = computed(() =>
     (this.langueList() ?? []).filter(
-      (langue: BolLangueModel) => !this.selectedLangueIds().includes(Number(langue.id)),
+      (langue: BolLangueModel) =>
+        !this.selectedLangueIds().includes(Number(langue.id)) &&
+        !this.automaticLanguageIds().includes(Number(langue.id)),
     ),
   );
   protected readonly availableLang = computed(() => {
-    const hero = this.herosStateService.currentHeros();
-    const careerSum =
-      hero?.carrieres
-        .filter((carriere) => [1, 24, 12, 16, 18, 14, 21, 22].includes(carriere.carriere_id ?? -1))
-        .reduce((sum, carriere) => sum + (Number(carriere.value) || 0), 0) ?? 0;
-    const esprit = Number(hero?.attributs.esprit ?? 0);
-    return esprit + careerSum - this.selectedLangueIds().length;
+    return this.selectedLanguageTarget() - this.selectedLangueIds().length;
   });
 
   private onChange: (value: number[]) => void = () => undefined;
@@ -160,6 +173,11 @@ export class HeroAdvancedLanguesComponent implements ControlValueAccessor, Valid
 
   private updateErrors(): void {
     const errors: {control: string; error: string}[] = [];
+    if (this.regionId() && this.selectedLanguageTarget() === 0) {
+      this.langueErrors.set(errors);
+      this.languesForm.setErrors(null);
+      return;
+    }
     if (this.availableLang() < 0) {
       errors.push({
         control: 'Langues',
@@ -176,7 +194,7 @@ export class HeroAdvancedLanguesComponent implements ControlValueAccessor, Valid
     if (!this.langueErrors().length && this.availableLang() > 0) {
       warnings.push({
         step: 'Langues',
-        warn: `Vous pouvez encore choisir ${this.availableLang()} langue(s).`,
+        warn: `Vous devez encore choisir ${this.availableLang()} langue(s).`,
       });
     }
 

@@ -78,6 +78,7 @@ export class HeroAdvancedTraitsComponent implements ControlValueAccessor {
   protected readonly herosRegionalDesavantages = computed(() =>
     this.herosDesavantages().filter((trait) => Number(trait.region_id) > 0),
   );
+  protected readonly canAddAdvantage = computed(() => this.herosAvantages().length < 3);
   protected readonly traitList = computed(() => {
     const allTraits = this.contextType() === 'A' ? this.mergedAvantages() : this.mergedDesavantages();
     const selectedIds = this.herosTraits()
@@ -104,6 +105,9 @@ export class HeroAdvancedTraitsComponent implements ControlValueAccessor {
 
   protected addTrait(): void {
     if (this.pending() || !this.selectedTrait() || !this.heroId()) {
+      return;
+    }
+    if (this.contextType() === 'A' && !this.canAddAdvantage()) {
       return;
     }
 
@@ -185,13 +189,13 @@ export class HeroAdvancedTraitsComponent implements ControlValueAccessor {
       warnings.push({step: 'Traits', warn: 'Vous devez choisir au moins un avantage.'});
     }
 
+    if (this.herosAvantages().length > 3) {
+      warnings.push({step: 'Traits', warn: 'Un héros ne peut pas avoir plus de trois avantages à la création.'});
+    }
+
     const regionalAvantageCount = this.herosStateService.regionalAvantages().length;
-    const regionalDesavantageCount = this.herosStateService.regionalDesavantages().length;
     if (regionalAvantageCount && !this.herosRegionalAvantages().length) {
       warnings.push({step: 'Traits', warn: 'Vous devez choisir au moins un avantage régional.'});
-    }
-    if (regionalDesavantageCount && this.herosDesavantages().length && !this.herosRegionalDesavantages().length) {
-      warnings.push({step: 'Traits', warn: 'Vous devez choisir au moins un désavantage régional.'});
     }
 
     this.traitsWarns.set(warnings);

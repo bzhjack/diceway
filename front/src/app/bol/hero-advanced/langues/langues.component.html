@@ -1,4 +1,16 @@
 <div class="space-y-3">
+  @if (automaticLanguageLabels().length) {
+    <div class="border border-[#424b57] bg-[#0f172a]/60 p-3 text-sm text-slate-300">
+      <p class="m-0 text-xs font-black uppercase tracking-[0.18em] text-slate-500">Langues automatiques</p>
+      <p class="mt-2 mb-0">{{ automaticLanguageLabels().join(', ') }}</p>
+      @if (selectedLanguageTarget() > 0) {
+        <p class="mt-2 mb-0 text-xs text-slate-400">
+          Langues supplémentaires à choisir : {{ selectedLanguageTarget() }}
+        </p>
+      }
+    </div>
+  }
+
   <div class="flex flex-col gap-3 md:flex-row">
     <div class="min-w-0 flex-1">
       <p-floatlabel variant="over">

@@ -25,6 +25,7 @@ import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {HeroAdvancedCreateTools} from '../create.tools';
 import {carriereValidator, carrieresFormValidator} from '../create.validators';
+import {REGION_CAREER_RULES} from '../create.rules';
 
 @Component({
   selector: 'bol-hero-advanced-carrieres',
@@ -76,6 +77,7 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
     initialValue: this.carrieresForm.getRawValue(),
   });
   protected readonly heroId = computed(() => this.herosStateService.currentHeros()?.id);
+  protected readonly regionId = computed(() => this.herosStateService.currentHeros()?.origines.region_id ?? null);
   protected readonly carrieresList = this.herosStateService.carriereList;
   protected readonly carriereDesavangeCount = this.herosStateService.carriereDesavangeCount;
   protected readonly desavantagesList = this.herosStateService.desavantagesList;
@@ -251,6 +253,35 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
           step: 'Traits',
           warn: `Carrière dangereuse : il faut encore ${this.carriereDesavangeCount()} désavantage(s) supplémentaire(s).`,
         });
+      }
+
+      const regionRule = this.regionId() ? REGION_CAREER_RULES[Number(this.regionId())] : undefined;
+      const selectedCareerIds = this.carrieres.controls.map((control) => Number(control.get('carriere_id')?.value ?? 0));
+      if (regionRule?.firstCareerId && selectedCareerIds.length > 0 && selectedCareerIds[0] !== regionRule.firstCareerId) {
+        warnings.push({
+          step: 'Carrières',
+          warn: `Pour cette origine, la première carrière doit être ${this.carriereFromId(regionRule.firstCareerId)?.carriere ?? 'requise'}.`,
+        });
+      }
+      if (regionRule?.requiredCareerIds) {
+        for (const requiredCareerId of regionRule.requiredCareerIds) {
+          if (!selectedCareerIds.includes(requiredCareerId)) {
+            warnings.push({
+              step: 'Carrières',
+              warn: `Pour cette origine, une carrière ${this.carriereFromId(requiredCareerId)?.carriere ?? 'requise'} doit être choisie.`,
+            });
+          }
+        }
+      }
+      if (regionRule?.forbiddenCareerIds) {
+        for (const forbiddenCareerId of regionRule.forbiddenCareerIds) {
+          if (selectedCareerIds.includes(forbiddenCareerId)) {
+            warnings.push({
+              step: 'Carrières',
+              warn: `Pour cette origine, la carrière ${this.carriereFromId(forbiddenCareerId)?.carriere ?? 'interdite'} n'est pas autorisée.`,
+            });
+          }
+        }
       }
     }
 
