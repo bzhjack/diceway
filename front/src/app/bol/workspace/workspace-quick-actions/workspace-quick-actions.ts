@@ -61,7 +61,8 @@ export class WorkspaceQuickActionsComponent {
       label: 'Créer un PNJ',
       detail: 'Alimenter la réserve d adversaires et alliés.',
       icon: 'pi pi-id-card',
-      link: '/create/npc',
+      link: '/create/pnj',
+      state: { returnUrl: '/' },
       severity: 'secondary',
     },
   ];

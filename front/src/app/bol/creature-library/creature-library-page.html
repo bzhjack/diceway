@@ -21,7 +21,7 @@
             Barbarian of Lemuria.
           </p>
 
-          <div class="flex flex-wrap gap-2">
+          <div class="flex flex-wrap gap-1">
             <p-tag [value]="totalCreatureCount() + ' créatures'" severity="contrast" />
             @if (creatureCount() !== totalCreatureCount()) {
               <p-tag [value]="creatureCount() + ' visibles'" severity="secondary" />
@@ -123,7 +123,7 @@
 
         <ng-template #header>
           <tr>
-            <th style="width: 7rem">Avatar</th>
+            <th class="creature-col-avatar">Avatar</th>
             <th style="width: 250px">Description</th>
             <th class="creature-col-compact">Ressources</th>
             <th class="creature-col-compact">Attributs</th>
@@ -147,7 +147,7 @@
 
         <ng-template #body let-creature>
           <tr>
-            <td>
+            <td class="creature-col-avatar">
               <div class="beast-avatar">
                 <img
                   [src]="creatureImage(creature)"
@@ -164,7 +164,7 @@
             <td>
               <div class="creature-description-content flex min-h-24 flex-col justify-between gap-3">
                 <div class="space-y-2">
-                  <div class="flex flex-wrap items-center gap-2">
+                  <div class="flex flex-wrap items-center gap-1">
                     @if (creature.commentaire) {
                       <i
                         class="pi pi-info-circle cursor-pointer text-amber-300"
@@ -206,7 +206,7 @@
             </td>
 
             <td class="creature-col-compact">
-              <div class="grid gap-1.5 text-xs text-slate-200 md:text-sm">
+              <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
                 <div class="flex items-center justify-between gap-3">
                   <span class="text-slate-400">Vitalité</span>
                   <span class="font-bold">{{ creature.vitalite }}</span>
@@ -215,7 +215,7 @@
             </td>
 
             <td class="creature-col-compact">
-              <div class="grid gap-1.5 text-xs text-slate-200 md:text-sm">
+              <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
                 <div class="flex items-center justify-between gap-3">
                   <span class="text-slate-400">Vigueur</span>
                   <span>{{ creature.vigueur }}</span>
@@ -232,7 +232,7 @@
             </td>
 
             <td class="creature-col-compact">
-              <div class="grid gap-1.5 text-xs text-slate-200 md:text-sm">
+              <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
                 <div class="flex items-center justify-between gap-3">
                   <span class="text-slate-400">Attaque</span>
                   <span>{{ creature.attaque }}</span>
@@ -253,7 +253,7 @@
             </td>
 
             <td>
-              <div class="flex min-h-24 flex-col gap-2">
+              <div class="flex min-h-24 flex-col gap-1">
                 @if (creature.capacites.length) {
                   @for (capacite of creature.capacites; track capacite.id) {
                     <div class="flex items-center gap-1 text-sm text-slate-200">

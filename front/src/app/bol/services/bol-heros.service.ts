@@ -137,12 +137,12 @@ export class BolHerosService {
     return this.http.get<BolHerosModel>(`${environment.apiBase}/api/bol/pnj/` + id + (questId ? '?questId=' + questId : ''));
   }
 
-  quickCreate(pnj: BolHerosModel): Observable<any> {
-    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/pnj/create`, <BolHerosModel>pnj);
+  quickCreate(pnj: Record<string, unknown>): Observable<any> {
+    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/pnj/create`, pnj);
   }
 
-  quickUpdate(pnj: BolHerosModel): Observable<any> {
-    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/pnj/update`, <BolHerosModel>pnj);
+  quickUpdate(pnj: Record<string, unknown>): Observable<any> {
+    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/pnj/update`, pnj);
   }
 
   quickDelete(id: string): Observable<any> {

@@ -1,0 +1,632 @@
+<section
+  class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(34,197,94,0.1),_transparent_26%),radial-gradient(circle_at_top_right,_rgba(56,189,248,0.12),_transparent_22%),linear-gradient(180deg,_#000000,_#0f172a_45%,_#000000)] px-4 py-6 md:px-6"
+>
+  <div class="mx-auto flex max-w-7xl flex-col gap-4">
+    <p-card
+      styleClass="!border !border-[#2d3748] !bg-[#1a202c]/96 !text-slate-50 !shadow-[0_24px_60px_rgba(0,0,0,0.28)]"
+    >
+      <form class="flex flex-col gap-6" [formGroup]="pnjForm" (ngSubmit)="savePnj()">
+        <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <div
+                class="flex h-14 w-14 items-center justify-center border border-[#424b57] bg-[#059669] text-2xl text-white"
+              >
+                <i class="pi pi-user-edit" aria-hidden="true"></i>
+              </div>
+              <div class="space-y-1">
+                <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-emerald-300">
+                  {{ pageEyebrow() }}
+                </p>
+                <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none">
+                  {{ pageTitle() }}
+                </h1>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid gap-4">
+          @if (loadingPnj()) {
+            <div class="border border-[#424b57] bg-[#111827]/80 p-5">
+              <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                Chargement
+              </p>
+              <p class="mt-3 mb-0 text-sm leading-7 text-slate-200">
+                Récupération du PNJ à modifier.
+              </p>
+            </div>
+          }
+
+          <div class="border border-[#424b57] bg-[#334155]/55 p-5">
+            <div class="mb-5 space-y-2">
+              <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                Général
+              </p>
+            </div>
+
+            <div class="grid gap-5 md:grid-cols-[220px_minmax(0,1fr)]">
+              <div class="space-y-3">
+                <div
+                  class="group relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden border border-[#424b57] bg-[#0f172a] transition-colors hover:border-emerald-300/70"
+                  (click)="pickAvatar()"
+                >
+                  @if (avatarPreview()) {
+                    <img [src]="avatarPreview()!" alt="Avatar PNJ" class="h-full w-full object-cover" />
+                  } @else {
+                    <div class="flex flex-col items-center gap-3 text-slate-400">
+                      <i class="pi pi-image text-4xl"></i>
+                      <span class="text-xs font-bold uppercase tracking-[0.2em]">Avatar</span>
+                      <span class="text-xs text-slate-500">Cliquer pour modifier</span>
+                    </div>
+                  }
+
+                  <div
+                    class="pointer-events-none absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
+                  >
+                    <span
+                      class="mb-4 border border-white/20 bg-black/55 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-white"
+                    >
+                      Modifier
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid gap-5 md:grid-cols-2">
+                <p-floatlabel variant="over">
+                  <input pInputText id="nom" formControlName="nom" class="w-full" />
+                  <label for="nom">Nom du PNJ *</label>
+                </p-floatlabel>
+
+                <p-floatlabel variant="over">
+                  <p-select
+                    inputId="type"
+                    class="w-full"
+                    [options]="typeOptions"
+                    optionLabel="label"
+                    optionValue="value"
+                    formControlName="type"
+                  />
+                  <label for="type">Type *</label>
+                </p-floatlabel>
+
+                <div class="md:col-span-2">
+                  <p-floatlabel variant="over">
+                    <textarea
+                      pTextarea
+                      id="commentaire"
+                      formControlName="commentaire"
+                      rows="4"
+                      class="w-full resize-none"
+                    ></textarea>
+                    <label for="commentaire">Commentaire de scène</label>
+                  </p-floatlabel>
+                </div>
+              </div>
+            </div>
+
+            @if (onError('nom') || onError('type')) {
+              <p class="mt-4 mb-0 text-sm text-emerald-300">
+                Le nom et le type sont requis pour préparer le PNJ.
+              </p>
+            }
+          </div>
+
+          <div class="grid gap-4 xl:grid-cols-3 xl:items-start">
+            <div class="border border-[#424b57] bg-[#334155]/55 p-5 xl:h-full">
+              <div class="mb-5 space-y-2">
+                <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                  Attributs
+                </p>
+              </div>
+
+              <div class="flex flex-col gap-6">
+                <div class="flex gap-4">
+                  <p-floatlabel variant="over">
+                    <p-inputNumber
+                      inputId="vigueur"
+                      formControlName="vigueur"
+                      class="dw-input-number"
+                      inputStyleClass="!py-2 !text-sm"
+                    />
+                    <label for="vigueur">Vigueur</label>
+                  </p-floatlabel>
+                  <p-floatlabel variant="over">
+                    <p-inputNumber
+                      inputId="agilite"
+                      formControlName="agilite"
+                      class="dw-input-number"
+                      inputStyleClass="!py-2 !text-sm"
+                    />
+                    <label for="agilite">Agilité</label>
+                  </p-floatlabel>
+                </div>
+                <div class="flex gap-4">
+                  <p-floatlabel variant="over">
+                    <p-inputNumber
+                      inputId="esprit"
+                      formControlName="esprit"
+                      class="dw-input-number"
+                      inputStyleClass="!py-2 !text-sm"
+                    />
+                    <label for="esprit">Esprit</label>
+                  </p-floatlabel>
+                  <p-floatlabel variant="over">
+                    <p-inputNumber
+                      inputId="aura"
+                      formControlName="aura"
+                      class="dw-input-number"
+                      inputStyleClass="!py-2 !text-sm"
+                    />
+                    <label for="aura">Aura</label>
+                  </p-floatlabel>
+                </div>
+              </div>
+            </div>
+
+            <div class="border border-[#424b57] bg-[#334155]/55 p-5 xl:h-full">
+              <div class="mb-5 space-y-2">
+                <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                  Combat
+                </p>
+              </div>
+
+              <div class="flex flex-col gap-6">
+                <div class="flex gap-4">
+                  <p-floatlabel variant="over">
+                    <p-inputNumber
+                      inputId="initiative"
+                      formControlName="initiative"
+                      class="dw-input-number"
+                      inputStyleClass="!py-2 !text-sm"
+                    />
+                    <label for="initiative">Initiative</label>
+                  </p-floatlabel>
+                  <p-floatlabel variant="over">
+                    <p-inputNumber
+                      inputId="melee"
+                      formControlName="melee"
+                      class="dw-input-number"
+                      inputStyleClass="!py-2 !text-sm"
+                    />
+                    <label for="melee">Mêlée</label>
+                  </p-floatlabel>
+                </div>
+                <div class="flex gap-4">
+                  <p-floatlabel variant="over">
+                    <p-inputNumber
+                      inputId="tir"
+                      formControlName="tir"
+                      class="dw-input-number"
+                      inputStyleClass="!py-2 !text-sm"
+                    />
+                    <label for="tir">Tir</label>
+                  </p-floatlabel>
+                  <p-floatlabel variant="over">
+                    <p-inputNumber
+                      inputId="defense"
+                      formControlName="defense"
+                      class="dw-input-number"
+                      inputStyleClass="!py-2 !text-sm"
+                    />
+                    <label for="defense">Défense</label>
+                  </p-floatlabel>
+                </div>
+              </div>
+            </div>
+
+            <div class="border border-[#424b57] bg-[#334155]/55 p-5 xl:h-full">
+              <div class="mb-5 space-y-2">
+                <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                  Ressources
+                </p>
+              </div>
+
+              <div class="grid gap-4 md:grid-cols-2">
+                <p-floatlabel variant="over">
+                  <p-inputNumber
+                    inputId="vitalite"
+                    formControlName="vitalite"
+                    class="dw-input-number"
+                    inputStyleClass="!py-2 !text-sm"
+                  />
+                  <label for="vitalite">Vitalité</label>
+                </p-floatlabel>
+                <p-floatlabel variant="over">
+                  <p-inputNumber
+                    inputId="vilenie"
+                    formControlName="vilenie"
+                    class="dw-input-number"
+                    inputStyleClass="!py-2 !text-sm"
+                  />
+                  <label for="vilenie">Vilénie</label>
+                </p-floatlabel>
+                <p-floatlabel variant="over">
+                  <p-inputNumber
+                    inputId="pouvoir"
+                    formControlName="pouvoir"
+                    class="dw-input-number"
+                    inputStyleClass="!py-2 !text-sm"
+                  />
+                  <label for="pouvoir">Pouvoir</label>
+                </p-floatlabel>
+                <p-floatlabel variant="over">
+                  <p-inputNumber
+                    inputId="foi"
+                    formControlName="foi"
+                    class="dw-input-number"
+                    inputStyleClass="!py-2 !text-sm"
+                  />
+                  <label for="foi">Foi</label>
+                </p-floatlabel>
+                <p-floatlabel variant="over" class="md:col-span-2">
+                  <p-inputNumber
+                    inputId="creation"
+                    formControlName="creation"
+                    class="dw-input-number"
+                    inputStyleClass="!py-2 !text-sm"
+                  />
+                  <label for="creation">Création</label>
+                </p-floatlabel>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid gap-4 xl:grid-cols-3 xl:items-start">
+            <div class="border border-[#424b57] bg-[#334155]/55 p-5 xl:h-full">
+              <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                <div class="space-y-2">
+                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                    Traits
+                  </p>
+                </div>
+                <p-tag [value]="selectedTraitEntries().length + ' sélectionné(s)'" severity="contrast" />
+              </div>
+
+              <div class="grid gap-3">
+                <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
+                  <p-floatlabel variant="over">
+                    <p-select
+                      inputId="avantage"
+                      class="w-full"
+                      [options]="filteredAvantages()"
+                      optionLabel="avantage"
+                      optionValue="id"
+                      [formControl]="selectedAvantageId"
+                    />
+                    <label for="avantage">Ajouter un avantage</label>
+                  </p-floatlabel>
+                  <p-button
+                    label="Ajouter"
+                    icon="pi pi-plus"
+                    severity="secondary"
+                    [outlined]="true"
+                    [disabled]="!selectedAvantageId.value"
+                    (onClick)="addTrait('A')"
+                  />
+                </div>
+
+                <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
+                  <p-floatlabel variant="over">
+                    <p-select
+                      inputId="desavantage"
+                      class="w-full"
+                      [options]="filteredDesavantages()"
+                      optionLabel="desavantage"
+                      optionValue="id"
+                      [formControl]="selectedDesavantageId"
+                    />
+                    <label for="desavantage">Ajouter un désavantage</label>
+                  </p-floatlabel>
+                  <p-button
+                    label="Ajouter"
+                    icon="pi pi-plus"
+                    severity="secondary"
+                    [outlined]="true"
+                    [disabled]="!selectedDesavantageId.value"
+                    (onClick)="addTrait('D')"
+                  />
+                </div>
+              </div>
+
+              <div class="mt-4 flex flex-col gap-3">
+                @for (trait of selectedTraitEntries(); track trait.type + '-' + trait.id; let index = $index) {
+                  <div class="flex items-start justify-between gap-3 border border-[#424b57] bg-[#0f172a]/65 p-3">
+                    <div class="space-y-1">
+                      <div class="flex items-center gap-2">
+                        <p-tag
+                          [value]="trait.type === 'A' ? 'Avantage' : 'Désavantage'"
+                          [severity]="trait.type === 'A' ? 'success' : 'danger'"
+                        />
+                        <span class="font-semibold text-slate-100">{{ trait.label }}</span>
+                      </div>
+                      @for (detail of trait.details; track detail.title + detail.description) {
+                        <p class="m-0 text-xs leading-6 text-slate-400">
+                          <span class="font-bold text-slate-200">{{ detail.title }} :</span>
+                          {{ detail.description }}
+                        </p>
+                      }
+                    </div>
+
+                    <p-button
+                      icon="pi pi-trash"
+                      severity="danger"
+                      [text]="true"
+                      [rounded]="true"
+                      size="small"
+                      (onClick)="removeItem(traits, index)"
+                    />
+                  </div>
+                } @empty {
+                  <p class="m-0 text-sm leading-7 text-slate-400">
+                    Ajoute les traits significatifs du PNJ pour préparer la scène.
+                  </p>
+                }
+              </div>
+            </div>
+
+            <div class="border border-[#424b57] bg-[#334155]/55 p-5 xl:h-full">
+              <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                <div class="space-y-2">
+                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                    Carrières
+                  </p>
+                </div>
+                <p-tag [value]="selectedCarrieres().length + ' sélectionnée(s)'" severity="contrast" />
+              </div>
+
+              <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
+                <p-floatlabel variant="over">
+                  <p-select
+                    inputId="carriere"
+                    class="w-full"
+                    [options]="filteredCarrieres()"
+                    optionLabel="carriere"
+                    optionValue="id"
+                    [formControl]="selectedCarriereId"
+                  />
+                  <label for="carriere">Ajouter une carrière</label>
+                </p-floatlabel>
+                <p-button
+                  label="Ajouter"
+                  icon="pi pi-plus"
+                  severity="secondary"
+                  [outlined]="true"
+                  [disabled]="!selectedCarriereId.value"
+                  (onClick)="addCarriere()"
+                />
+              </div>
+
+              <div class="mt-4 flex flex-col gap-3">
+                @for (carriere of selectedCarrieres(); track carriere.id; let index = $index) {
+                  <div class="flex items-center justify-between gap-3 border border-[#424b57] bg-[#0f172a]/65 p-3">
+                    <div class="min-w-0 flex-1">
+                      <p class="m-0 text-sm font-semibold text-slate-100">
+                        {{ carriere.definition?.carriere }}
+                      </p>
+                    </div>
+
+                    <p-floatlabel variant="over">
+                      <p-inputNumber
+                        [formControl]="$any(carrieres.at(index).get('value'))"
+                        class="dw-input-number"
+                        inputStyleClass="!py-2 !text-sm"
+                      />
+                      <label>Rang</label>
+                    </p-floatlabel>
+
+                    <p-button
+                      icon="pi pi-trash"
+                      severity="danger"
+                      [text]="true"
+                      [rounded]="true"
+                      size="small"
+                      (onClick)="removeItem(carrieres, index)"
+                    />
+                  </div>
+                } @empty {
+                  <p class="m-0 text-sm leading-7 text-slate-400">
+                    Ajoute les carrières qui résument le rôle du PNJ.
+                  </p>
+                }
+              </div>
+            </div>
+
+            <div class="border border-[#424b57] bg-[#334155]/55 p-5 xl:h-full">
+              <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                <div class="space-y-2">
+                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                    Langues
+                  </p>
+                </div>
+                <p-tag [value]="selectedLangues().length + ' sélectionnée(s)'" severity="contrast" />
+              </div>
+
+              <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
+                <p-floatlabel variant="over">
+                  <p-select
+                    inputId="langue"
+                    class="w-full"
+                    [options]="filteredLangues()"
+                    optionLabel="langue"
+                    optionValue="id"
+                    [formControl]="selectedLangueId"
+                  />
+                  <label for="langue">Ajouter une langue</label>
+                </p-floatlabel>
+                <p-button
+                  label="Ajouter"
+                  icon="pi pi-plus"
+                  severity="secondary"
+                  [outlined]="true"
+                  [disabled]="!selectedLangueId.value"
+                  (onClick)="addLangue()"
+                />
+              </div>
+
+              <div class="mt-4 flex flex-col gap-3">
+                @for (langue of selectedLangues(); track langue?.id; let index = $index) {
+                  <div class="flex items-center justify-between gap-3 border border-[#424b57] bg-[#0f172a]/65 p-3">
+                    <p class="m-0 text-sm font-semibold text-slate-100">{{ langue?.langue }}</p>
+                    <p-button
+                      icon="pi pi-trash"
+                      severity="danger"
+                      [text]="true"
+                      [rounded]="true"
+                      size="small"
+                      (onClick)="removeItem(langues, index)"
+                    />
+                  </div>
+                } @empty {
+                  <p class="m-0 text-sm leading-7 text-slate-400">
+                    Ajoute les langues que le PNJ peut mobiliser en scène.
+                  </p>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="grid gap-4 xl:grid-cols-2 xl:items-start">
+            <div class="border border-[#424b57] bg-[#334155]/55 p-5">
+              <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                <div class="space-y-2">
+                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                    Armes
+                  </p>
+                </div>
+                <p-tag [value]="selectedArmes().length + ' sélectionnée(s)'" severity="contrast" />
+              </div>
+
+              <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
+                <p-floatlabel variant="over">
+                  <p-select
+                    inputId="arme"
+                    class="w-full"
+                    [options]="filteredArmes()"
+                    optionLabel="arme"
+                    optionValue="id"
+                    [formControl]="selectedArmeId"
+                  />
+                  <label for="arme">Ajouter une arme</label>
+                </p-floatlabel>
+                <p-button
+                  label="Ajouter"
+                  icon="pi pi-plus"
+                  severity="secondary"
+                  [outlined]="true"
+                  [disabled]="!selectedArmeId.value"
+                  (onClick)="addArme()"
+                />
+              </div>
+
+              <div class="mt-4 flex flex-col gap-3">
+                @for (arme of selectedArmes(); track arme?.id; let index = $index) {
+                  <div class="flex items-center justify-between gap-3 border border-[#424b57] bg-[#0f172a]/65 p-3">
+                    <div class="space-y-1">
+                      <p class="m-0 text-sm font-semibold text-slate-100">{{ arme?.arme }}</p>
+                      <p class="m-0 text-xs text-slate-400">{{ arme?.degats }}</p>
+                    </div>
+                    <p-button
+                      icon="pi pi-trash"
+                      severity="danger"
+                      [text]="true"
+                      [rounded]="true"
+                      size="small"
+                      (onClick)="removeItem(armes, index)"
+                    />
+                  </div>
+                } @empty {
+                  <p class="m-0 text-sm leading-7 text-slate-400">
+                    Ajoute l’arsenal utile à ce PNJ.
+                  </p>
+                }
+              </div>
+            </div>
+
+            <div class="border border-[#424b57] bg-[#334155]/55 p-5">
+              <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                <div class="space-y-2">
+                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                    Armures
+                  </p>
+                </div>
+                <p-tag [value]="selectedArmures().length + ' sélectionnée(s)'" severity="contrast" />
+              </div>
+
+              <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
+                <p-floatlabel variant="over">
+                  <p-select
+                    inputId="armure"
+                    class="w-full"
+                    [options]="filteredArmures()"
+                    optionLabel="armure"
+                    optionValue="id"
+                    [formControl]="selectedArmureId"
+                  />
+                  <label for="armure">Ajouter une armure</label>
+                </p-floatlabel>
+                <p-button
+                  label="Ajouter"
+                  icon="pi pi-plus"
+                  severity="secondary"
+                  [outlined]="true"
+                  [disabled]="!selectedArmureId.value"
+                  (onClick)="addArmure()"
+                />
+              </div>
+
+              <div class="mt-4 flex flex-col gap-3">
+                @for (armure of selectedArmures(); track armure?.id; let index = $index) {
+                  <div class="flex items-center justify-between gap-3 border border-[#424b57] bg-[#0f172a]/65 p-3">
+                    <div class="space-y-1">
+                      <p class="m-0 text-sm font-semibold text-slate-100">{{ armure?.armure }}</p>
+                      <p class="m-0 text-xs text-slate-400">{{ armure?.protection }}</p>
+                    </div>
+                    <p-button
+                      icon="pi pi-trash"
+                      severity="danger"
+                      [text]="true"
+                      [rounded]="true"
+                      size="small"
+                      (onClick)="removeItem(armures, index)"
+                    />
+                  </div>
+                } @empty {
+                  <p class="m-0 text-sm leading-7 text-slate-400">
+                    Ajoute les protections qui définissent ce PNJ.
+                  </p>
+                }
+              </div>
+            </div>
+          </div>
+
+          @if (errorMessage()) {
+            <div class="border border-rose-400/40 bg-rose-950/30 px-4 py-3 text-sm text-rose-200">
+              {{ errorMessage() }}
+            </div>
+          }
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <p-button
+            icon="pi pi-arrow-left"
+            size="small"
+            label="Retour"
+            severity="secondary"
+            [outlined]="true"
+            (onClick)="goBack()"
+          />
+          <p-button
+            icon="pi pi-check"
+            size="small"
+            [label]="submitLabel()"
+            severity="success"
+            [disabled]="pnjForm.invalid || pending() || loadingPnj()"
+            type="submit"
+          />
+        </div>
+      </form>
+    </p-card>
+  </div>
+</section>

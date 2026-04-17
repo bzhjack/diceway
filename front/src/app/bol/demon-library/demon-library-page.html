@@ -20,7 +20,7 @@
             Acces rapide a tous les demons disponibles dans la bibliotheque Barbarian of Lemuria.
           </p>
 
-          <div class="flex flex-wrap gap-2">
+          <div class="flex flex-wrap gap-1">
             <p-tag [value]="totalDemonCount() + ' demons'" severity="contrast" />
             @if (demonCount() !== totalDemonCount()) {
               <p-tag [value]="demonCount() + ' visibles'" severity="secondary" />
@@ -122,7 +122,7 @@
 
         <ng-template #header>
           <tr>
-            <th style="width: 7rem">Avatar</th>
+            <th class="demon-col-avatar">Avatar</th>
             <th style="width: 250px">Description</th>
             <th class="demon-col-compact">Ressources</th>
             <th class="demon-col-compact">Attributs</th>
@@ -146,7 +146,7 @@
 
         <ng-template #body let-demon>
           <tr>
-            <td>
+            <td class="demon-col-avatar">
               <div class="demon-avatar">
                 <img [src]="demonImage(demon)" [alt]="demon.nom" class="h-full w-full object-cover" />
 
@@ -159,7 +159,7 @@
             <td>
               <div class="demon-description-content flex min-h-24 flex-col justify-between gap-3">
                 <div class="space-y-2">
-                  <div class="flex flex-wrap items-center gap-2">
+                  <div class="flex flex-wrap items-center gap-1">
                     @if (demon.commentaire) {
                       <i
                         class="pi pi-info-circle cursor-pointer text-rose-300"
@@ -200,7 +200,7 @@
             </td>
 
             <td class="demon-col-compact">
-              <div class="grid gap-1.5 text-xs text-slate-200 md:text-sm">
+              <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
                 <div class="flex items-center justify-between gap-3">
                   <span class="text-slate-400">Vitalite</span>
                   <span class="font-bold">{{ demon.vitalite }}</span>
@@ -209,7 +209,7 @@
             </td>
 
             <td class="demon-col-compact">
-              <div class="grid gap-1.5 text-xs text-slate-200 md:text-sm">
+              <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
                 <div class="flex items-center justify-between gap-3">
                   <span class="text-slate-400">Vigueur</span>
                   <span>{{ demon.vigueur }}</span>
@@ -230,7 +230,7 @@
             </td>
 
             <td class="demon-col-compact">
-              <div class="grid gap-1.5 text-xs text-slate-200 md:text-sm">
+              <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
                 <div class="flex items-center justify-between gap-3">
                   <span class="text-slate-400">Melee</span>
                   <span>{{ demon.melee }}</span>
@@ -251,7 +251,7 @@
             </td>
 
             <td>
-              <div class="flex min-h-24 flex-col gap-2">
+              <div class="flex min-h-24 flex-col gap-1">
                 @if (demon.pouvoirs.length) {
                   @for (pouvoir of demon.pouvoirs; track pouvoir.id) {
                     <div class="flex items-center gap-1 text-sm text-slate-200">

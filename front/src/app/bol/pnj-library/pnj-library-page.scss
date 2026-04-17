@@ -3,6 +3,11 @@
 }
 
 :host ::ng-deep .bol-pnj-table {
+  .pnj-col-avatar {
+    width: 1%;
+    padding: 0.5rem;
+  }
+
   .pnj-col-compact {
     width: 1%;
     white-space: nowrap;

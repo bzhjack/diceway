@@ -2,11 +2,13 @@ import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@ang
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
+import {ConfirmationService} from 'primeng/api';
 import {BolHerosModel} from '../models/bol-heros.model';
 import {BolHerosService} from '../services/bol-heros.service';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {CheckboxModule} from 'primeng/checkbox';
+import {ConfirmPopupModule} from 'primeng/confirmpopup';
 import {IconFieldModule} from 'primeng/iconfield';
 import {InputIconModule} from 'primeng/inputicon';
 import {InputTextModule} from 'primeng/inputtext';
@@ -50,6 +52,7 @@ interface PnjTraitDetail {
     ButtonModule,
     CardModule,
     CheckboxModule,
+    ConfirmPopupModule,
     IconFieldModule,
     InputIconModule,
     InputTextModule,
@@ -63,9 +66,11 @@ interface PnjTraitDetail {
   templateUrl: './pnj-library-page.html',
   styleUrl: './pnj-library-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ConfirmationService],
 })
 export class PnjLibraryPageComponent {
   private readonly herosService = inject(BolHerosService);
+  private readonly confirmationService = inject(ConfirmationService);
   private readonly refreshTrigger = signal(0);
   private readonly pnjs = toSignal(
     toObservable(this.refreshTrigger).pipe(
@@ -116,6 +121,18 @@ export class PnjLibraryPageComponent {
   );
   protected readonly pnjCount = computed(() => this.filteredPnjs().length);
   protected readonly totalPnjCount = computed(() => this.pnjs().length);
+
+  protected askDelete(event: Event, pnj: BolHerosModel): void {
+    this.confirmationService.confirm({
+      target: event.currentTarget as EventTarget,
+      message: 'Voulez-vous supprimer ce PNJ ?',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass: 'p-button-danger p-button-sm',
+      acceptLabel: 'Oui',
+      rejectLabel: 'Non',
+      accept: () => this.deletePnj(pnj),
+    });
+  }
 
   protected clearFilters(): void {
     this.searchTerm.set('');
@@ -267,6 +284,16 @@ export class PnjLibraryPageComponent {
     }
 
     return 'info';
+  }
+
+  private deletePnj(pnj: BolHerosModel): void {
+    if (!pnj.id) {
+      return;
+    }
+
+    this.herosService.quickDelete(pnj.id).subscribe({
+      next: () => this.refreshTrigger.update((value) => value + 1),
+    });
   }
 
   private traitDetails(trait: BolHerosModel['traits'][number]): readonly PnjTraitDetail[] {

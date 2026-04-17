@@ -44,6 +44,18 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'create/pnj',
+    loadComponent: () =>
+      import('./bol/pnj-create/pnj-create-page').then((module) => module.PnjCreatePageComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'create/pnj/:id',
+    loadComponent: () =>
+      import('./bol/pnj-create/pnj-create-page').then((module) => module.PnjCreatePageComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'library/creatures',
     loadComponent: () =>
       import('./bol/creature-library/creature-library-page').then(

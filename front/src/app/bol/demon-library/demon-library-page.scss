@@ -3,6 +3,11 @@
 }
 
 :host ::ng-deep .bol-demon-table {
+  .demon-col-avatar {
+    width: 1%;
+    padding: 0.5rem;
+  }
+
   .demon-col-compact {
     width: 1%;
     white-space: nowrap;
