@@ -2,11 +2,13 @@ import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@ang
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
+import {ConfirmationService} from 'primeng/api';
 import {BolHerosModel} from '../models/bol-heros.model';
 import {BolHerosService} from '../services/bol-heros.service';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {CheckboxModule} from 'primeng/checkbox';
+import {ConfirmPopupModule} from 'primeng/confirmpopup';
 import {IconFieldModule} from 'primeng/iconfield';
 import {InputIconModule} from 'primeng/inputicon';
 import {InputTextModule} from 'primeng/inputtext';
@@ -42,6 +44,7 @@ interface HeroTraitEntry {
     ButtonModule,
     CardModule,
     CheckboxModule,
+    ConfirmPopupModule,
     IconFieldModule,
     InputIconModule,
     InputTextModule,
@@ -54,9 +57,11 @@ interface HeroTraitEntry {
   templateUrl: './hero-library-page.html',
   styleUrl: './hero-library-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ConfirmationService],
 })
 export class HeroLibraryPageComponent {
   private readonly herosService = inject(BolHerosService);
+  private readonly confirmationService = inject(ConfirmationService);
   private readonly refreshTrigger = signal(0);
   private readonly heroes = toSignal(
     toObservable(this.refreshTrigger).pipe(
@@ -98,6 +103,18 @@ export class HeroLibraryPageComponent {
   );
   protected readonly heroCount = computed(() => this.filteredHeroes().length);
   protected readonly totalHeroCount = computed(() => this.heroes().length);
+
+  protected askDelete(event: Event, hero: BolHerosModel): void {
+    this.confirmationService.confirm({
+      target: event.currentTarget as EventTarget,
+      message: 'Voulez-vous supprimer ce héros ?',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass: 'p-button-danger p-button-sm',
+      acceptLabel: 'Oui',
+      rejectLabel: 'Non',
+      accept: () => this.deleteHero(hero),
+    });
+  }
 
   protected clearFilters(): void {
     this.searchTerm.set('');
@@ -218,6 +235,16 @@ export class HeroLibraryPageComponent {
     }
 
     return 'info';
+  }
+
+  private deleteHero(hero: BolHerosModel): void {
+    if (!hero.id) {
+      return;
+    }
+
+    this.herosService.deleteHeros(hero.id).subscribe({
+      next: () => this.refreshTrigger.update((value) => value + 1),
+    });
   }
 
   private traitDetails(trait: BolHerosModel['traits'][number]): readonly HeroTraitDetail[] {

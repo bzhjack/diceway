@@ -9,6 +9,8 @@ interface WorkspaceQuickAction {
   readonly icon: string;
   readonly link: string;
   readonly state?: Record<string, string>;
+  readonly advancedLink?: string;
+  readonly advancedState?: Record<string, string>;
   readonly severity: 'primary' | 'secondary';
 }
 
@@ -26,6 +28,8 @@ export class WorkspaceQuickActionsComponent {
       icon: 'pi pi-user-plus',
       link: '/create/hero',
       state: { returnUrl: '/' },
+      advancedLink: '/create/hero-advanced',
+      advancedState: { returnUrl: '/' },
       severity: 'secondary',
     },
     {
