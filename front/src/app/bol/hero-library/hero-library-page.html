@@ -167,9 +167,6 @@
                       [routerLink]="['/create/hero', hero.id]"
                       [state]="{ returnUrl: '/library/heroes' }"
                     />
-                    @if (!hero.active) {
-                      <p-tag value="En cours" severity="warn" />
-                    }
                   </div>
 
                   <div class="grid gap-1 text-sm text-slate-400">
