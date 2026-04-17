@@ -3,7 +3,13 @@
 namespace App\Http\Controllers\Bol;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bol\BolAvantage;
+use App\Models\Bol\BolDesavantage;
 use App\Models\Bol\BolHeros;
+use App\Models\Bol\BolHerosArme;
+use App\Models\Bol\BolHerosArmure;
+use App\Models\Bol\BolHerosCarriere;
+use App\Models\Bol\BolHerosLangue;
 use App\Models\Bol\BolHerosTrait;
 use App\Http\Services\Bol\BolHerosService;
 use Illuminate\Http\Request;
@@ -61,6 +67,7 @@ class BolHerosController extends Controller
         $heros = $request->input();
         $heros['user_id'] = Auth::id();
         $heros = BolHeros::create($heros);
+        $this->syncHeroRelations($heros['id'], $request, true);
         return response($heros);
     }
 
@@ -105,17 +112,8 @@ class BolHerosController extends Controller
             return response()->json(['error' => 'Hero not found'], 404);
         }
         BolHeros::where('id', $herosId)->update($heros);
+        $this->syncHeroRelations($herosId, $request, false);
 
-        // Maj des carrières
-        $carrieres = $request->input('carrieres');
-        foreach ($carrieres as $carriere) {
-            BolCarriereController::update($carriere, $herosId);
-        }
-
-        $traits = $request->input('traits');
-        if ($heros["region_id"] === null || count($traits) === 0) {
-            BolHerosTrait::where('heros_id', $herosId)->delete();
-        }
         $result = $this->bolHerosService->getHeroWithRelations($herosId);
         return response($result);
     }
@@ -157,6 +155,129 @@ class BolHerosController extends Controller
         $bolHeros['region_id'] = $request->input('region_id');
         $bolHeros->update();
         return response($bolHeros);
+    }
+
+    private function syncHeroRelations(string $herosId, Request $request, bool $creating): void
+    {
+        $carrieres = $request->input('carrieres', []);
+        $carrieres = is_array($carrieres) ? $carrieres : [];
+        $carriereIds = array_values(array_map(fn ($item) => (int) ($item['carriere_id'] ?? $item['id'] ?? 0), $carrieres));
+        if (!$creating) {
+            if (count($carriereIds) === 0) {
+                BolHerosCarriere::where('heros_id', $herosId)->delete();
+            } else {
+                BolHerosCarriere::where('heros_id', $herosId)->whereNotIn('carriere_id', $carriereIds)->delete();
+            }
+        }
+        foreach ($carrieres as $carriere) {
+            $carriereId = (int) ($carriere['carriere_id'] ?? $carriere['id'] ?? 0);
+            if ($carriereId === 0) {
+                continue;
+            }
+            BolHerosCarriere::updateOrCreate(
+                ['heros_id' => $herosId, 'carriere_id' => $carriereId],
+                ['value' => (int) ($carriere['value'] ?? 0)]
+            );
+        }
+
+        $armes = $request->input('armes', []);
+        $armes = is_array($armes) ? $armes : [];
+        $armeIds = array_values(array_map(fn ($item) => (int) ($item['arme_id'] ?? $item['id'] ?? 0), $armes));
+        if (!$creating) {
+            if (count($armeIds) === 0) {
+                BolHerosArme::where('heros_id', $herosId)->delete();
+            } else {
+                BolHerosArme::where('heros_id', $herosId)->whereNotIn('arme_id', $armeIds)->delete();
+            }
+        }
+        foreach ($armes as $arme) {
+            $armeId = (int) ($arme['arme_id'] ?? $arme['id'] ?? 0);
+            if ($armeId === 0) {
+                continue;
+            }
+            BolHerosArme::updateOrCreate(['heros_id' => $herosId, 'arme_id' => $armeId], []);
+        }
+
+        $armures = $request->input('armures', []);
+        $armures = is_array($armures) ? $armures : [];
+        $armureIds = array_values(array_map(fn ($item) => (int) ($item['armure_id'] ?? $item['id'] ?? 0), $armures));
+        if (!$creating) {
+            if (count($armureIds) === 0) {
+                BolHerosArmure::where('heros_id', $herosId)->delete();
+            } else {
+                BolHerosArmure::where('heros_id', $herosId)->whereNotIn('armure_id', $armureIds)->delete();
+            }
+        }
+        foreach ($armures as $armure) {
+            $armureId = (int) ($armure['armure_id'] ?? $armure['id'] ?? 0);
+            if ($armureId === 0) {
+                continue;
+            }
+            BolHerosArmure::updateOrCreate(['heros_id' => $herosId, 'armure_id' => $armureId], []);
+        }
+
+        $langues = $request->input('langues', []);
+        if (!is_array($langues) && is_array($request->input('origines')) && isset($request->input('origines')['langues'])) {
+            $langues = $request->input('origines')['langues'];
+        }
+        $langues = is_array($langues) ? $langues : [];
+        $langueIds = array_values(array_map(fn ($item) => (int) ($item['langue_id'] ?? $item['id'] ?? 0), $langues));
+        if (!$creating) {
+            if (count($langueIds) === 0) {
+                BolHerosLangue::where('heros_id', $herosId)->delete();
+            } else {
+                BolHerosLangue::where('heros_id', $herosId)->whereNotIn('langue_id', $langueIds)->delete();
+            }
+        }
+        foreach ($langues as $langue) {
+            $langueId = (int) ($langue['langue_id'] ?? $langue['id'] ?? 0);
+            if ($langueId === 0) {
+                continue;
+            }
+            BolHerosLangue::updateOrCreate(['heros_id' => $herosId, 'langue_id' => $langueId], []);
+        }
+
+        $traits = $request->input('traits', []);
+        $traits = is_array($traits) ? $traits : [];
+        $avantageIds = [];
+        $desavantageIds = [];
+        foreach ($traits as $trait) {
+            $traitId = (int) ($trait['traitable_id'] ?? $trait['id'] ?? 0);
+            if ($traitId === 0 || !isset($trait['type'])) {
+                continue;
+            }
+            if ($trait['type'] === 'A') {
+                $avantageIds[] = $traitId;
+            }
+            if ($trait['type'] === 'D') {
+                $desavantageIds[] = $traitId;
+            }
+            BolHerosTrait::updateOrCreate(
+                [
+                    'heros_id' => $herosId,
+                    'traitable_id' => $traitId,
+                    'type' => $trait['type'],
+                    'traitable_type' => $trait['type'] === 'A' ? BolAvantage::class : BolDesavantage::class,
+                ],
+                [
+                    'detail' => $trait['detail'] ?? null,
+                    'region_id' => $trait['region_id'] ?? null,
+                    'carriere' => $trait['carriere'] ?? false,
+                ]
+            );
+        }
+        if (!$creating) {
+            if (count($avantageIds) === 0) {
+                BolHerosTrait::where('heros_id', $herosId)->where('type', 'A')->delete();
+            } else {
+                BolHerosTrait::where('heros_id', $herosId)->where('type', 'A')->whereNotIn('traitable_id', $avantageIds)->delete();
+            }
+            if (count($desavantageIds) === 0) {
+                BolHerosTrait::where('heros_id', $herosId)->where('type', 'D')->delete();
+            } else {
+                BolHerosTrait::where('heros_id', $herosId)->where('type', 'D')->whereNotIn('traitable_id', $desavantageIds)->delete();
+            }
+        }
     }
 
 }
