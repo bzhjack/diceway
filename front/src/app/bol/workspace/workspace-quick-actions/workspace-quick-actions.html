@@ -25,15 +25,28 @@
                 <p class="m-0 text-sm font-bold leading-5 text-slate-100">{{ action.label }}</p>
                 <p class="m-0 text-xs leading-5 text-slate-300">{{ action.detail }}</p>
               </div>
-              <p-button
-                label="Ouvrir"
-                icon="pi pi-arrow-up-right"
-                [routerLink]="action.link"
-                [state]="action.state"
-                severity="secondary"
-                [outlined]="true"
-                styleClass="!px-3 !py-1.5 !text-sm !font-bold"
-              />
+              <div class="flex flex-wrap gap-1.5">
+                <p-button
+                  label="Ouvrir"
+                  icon="pi pi-arrow-up-right"
+                  [routerLink]="action.link"
+                  [state]="action.state"
+                  severity="secondary"
+                  [outlined]="true"
+                  styleClass="!px-3 !py-1.5 !text-sm !font-bold"
+                />
+                @if (action.advancedLink) {
+                  <p-button
+                    label="Avancé"
+                    icon="pi pi-cog"
+                    [routerLink]="action.advancedLink"
+                    [state]="action.advancedState"
+                    severity="secondary"
+                    [outlined]="true"
+                    styleClass="!px-3 !py-1.5 !text-sm !font-bold"
+                  />
+                }
+              </div>
             </div>
           </div>
         </div>

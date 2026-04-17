@@ -103,11 +103,11 @@ export class BolHerosService {
   }
 
   // Héros
-  createHeros(hero: Record<string, unknown>): Observable<any> {
+  createHeros(hero: Record<string, unknown> | BolHerosModel): Observable<any> {
     return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/create`, hero);
   }
 
-  updateHeros(hero: Record<string, unknown>): Observable<any> {
+  updateHeros(hero: Record<string, unknown> | BolHerosModel): Observable<any> {
     return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/update`, hero);
   }
 

@@ -1,0 +1,39 @@
+<div class="space-y-4">
+  <div class="grid gap-4">
+    <div class="grid gap-4 sm:grid-cols-2">
+      <p-floatlabel variant="over">
+        <p-inputNumber inputId="advanced-initiative" class="dw-input-number" [formControl]="initiativeCtrl" />
+        <label for="advanced-initiative">Initiative</label>
+      </p-floatlabel>
+      <p-floatlabel variant="over">
+        <p-inputNumber inputId="advanced-melee" class="dw-input-number" [formControl]="meleeCtrl" />
+        <label for="advanced-melee">Mêlée</label>
+      </p-floatlabel>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <p-floatlabel variant="over">
+        <p-inputNumber inputId="advanced-tir" class="dw-input-number" [formControl]="tirCtrl" />
+        <label for="advanced-tir">Tir</label>
+      </p-floatlabel>
+      <p-floatlabel variant="over">
+        <p-inputNumber inputId="advanced-defense" class="dw-input-number" [formControl]="defenseCtrl" />
+        <label for="advanced-defense">Défense</label>
+      </p-floatlabel>
+    </div>
+  </div>
+
+  @if (aptitudeErrors().length) {
+    <div class="border border-red-400/35 bg-red-950/20 p-3 text-sm text-red-200">
+      @for (error of aptitudeErrors(); track error.control + error.error) {
+        <p class="m-0">{{ error.control ? error.control + ' ' : '' }}{{ error.error }}</p>
+      }
+    </div>
+  } @else if (aptitudeWarns().length) {
+    <div class="border border-amber-400/30 bg-amber-950/15 p-3 text-sm text-amber-200">
+      @for (warning of aptitudeWarns(); track warning.warn) {
+        <p class="m-0">{{ warning.warn }}</p>
+      }
+    </div>
+  }
+</div>

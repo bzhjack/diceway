@@ -1,0 +1,70 @@
+<div class="space-y-3">
+  @if (automaticLanguageLabels().length) {
+    <div class="border border-[#424b57] bg-[#0f172a]/60 p-3 text-sm text-slate-300">
+      <p class="m-0 text-xs font-black uppercase tracking-[0.18em] text-slate-500">Langues automatiques</p>
+      <p class="mt-2 mb-0">{{ automaticLanguageLabels().join(', ') }}</p>
+      @if (selectedLanguageTarget() > 0) {
+        <p class="mt-2 mb-0 text-xs text-slate-400">
+          Langues supplémentaires à choisir : {{ selectedLanguageTarget() }}
+        </p>
+      }
+    </div>
+  }
+
+  <div class="flex flex-col gap-3 md:flex-row">
+    <div class="min-w-0 flex-1">
+      <p-floatlabel variant="over">
+        <p-select
+          inputId="hero-advanced-langue"
+          class="w-full"
+          [options]="filteredLangueList()"
+          [ngModel]="selectedLangue()"
+          (ngModelChange)="selectedLangue.set($event)"
+          optionLabel="langue"
+          placeholder="Choisir une langue"
+        />
+        <label for="hero-advanced-langue">Ajouter une langue</label>
+      </p-floatlabel>
+    </div>
+
+    <p-button
+      label="Ajouter"
+      icon="pi pi-plus"
+      [disabled]="pending() || !selectedLangue()"
+      (onClick)="addLangue()"
+    />
+  </div>
+
+  @if (langueErrors().length) {
+    <div class="border border-red-400/35 bg-red-950/20 p-3 text-sm text-red-200">
+      @for (error of langueErrors(); track error.error) {
+        <p class="m-0">{{ error.error }}</p>
+      }
+    </div>
+  } @else if (langueWarns().length) {
+    <div class="border border-amber-400/30 bg-amber-950/15 p-3 text-sm text-amber-200">
+      @for (warning of langueWarns(); track warning.warn) {
+        <p class="m-0">{{ warning.warn }}</p>
+      }
+    </div>
+  }
+
+  <div class="grid gap-2">
+    @for (langueId of selectedLangueIds(); track langueId) {
+      <div class="flex items-center justify-between border border-[#424b57] bg-[#0f172a]/60 px-3 py-2">
+        <span class="text-sm text-slate-200">{{ langueFromId(langueId) }}</span>
+        <p-button
+          icon="pi pi-trash"
+          severity="danger"
+          [text]="true"
+          [rounded]="true"
+          size="small"
+          pTooltip="Supprimer"
+          (onClick)="deleteLangue(langueId, $event)"
+        />
+      </div>
+    } @empty {
+      <p class="m-0 text-sm text-slate-500">Aucune langue sélectionnée.</p>
+    }
+  </div>
+</div>

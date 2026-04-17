@@ -1,0 +1,102 @@
+<div class="space-y-4">
+  <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
+    <div class="min-w-0">
+      <p-floatlabel variant="over">
+        <p-select
+          inputId="advanced-carriere"
+          class="w-full"
+          [options]="availableCarrieres()"
+          [ngModel]="selectedCarriere()"
+          (ngModelChange)="selectedCarriere.set($event)"
+          optionLabel="carriere"
+          placeholder="Choisir une carrière"
+        />
+        <label for="advanced-carriere">Ajouter une carrière</label>
+      </p-floatlabel>
+    </div>
+
+    <p-button
+      label="Ajouter"
+      icon="pi pi-plus"
+      [disabled]="pending() || !selectedCarriere()"
+      (onClick)="addCarriere()"
+    />
+  </div>
+
+  @if (carriereDesavangeCount() > 0) {
+    <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
+      <div class="min-w-0">
+        <p-floatlabel variant="over">
+          <p-select
+            inputId="advanced-carriere-disadvantage"
+            class="w-full"
+            [options]="availableDesavantages()"
+            [ngModel]="selectedTrait()"
+            (ngModelChange)="selectedTrait.set($event)"
+            optionLabel="desavantage"
+            placeholder="Choisir un désavantage"
+          />
+          <label for="advanced-carriere-disadvantage">Désavantage de carrière</label>
+        </p-floatlabel>
+      </div>
+
+      <p-button
+        label="Ajouter"
+        icon="pi pi-exclamation-triangle"
+        severity="warn"
+        [disabled]="pending() || !selectedTrait()"
+        (onClick)="addCareerDisadvantage()"
+      />
+    </div>
+  }
+
+  @if (carriereErrors().length) {
+    <div class="border border-red-400/35 bg-red-950/20 p-3 text-sm text-red-200">
+      @for (error of carriereErrors(); track error.control + error.error) {
+        <p class="m-0">{{ error.control ? error.control + ' ' : '' }}{{ error.error }}</p>
+      }
+    </div>
+  } @else if (carriereWarns().length) {
+    <div class="border border-amber-400/30 bg-amber-950/15 p-3 text-sm text-amber-200">
+      @for (warning of carriereWarns(); track warning.warn) {
+        <p class="m-0">{{ warning.warn }}</p>
+      }
+    </div>
+  }
+
+  <div class="grid gap-2">
+    @for (control of carrieres.controls; track $index) {
+      @if (carriereFromId(control.get('carriere_id')?.value); as currentCarriere) {
+        <div class="grid gap-3 border border-[#424b57] bg-[#0f172a]/60 px-3 py-3 md:grid-cols-[minmax(0,1fr)_7rem_auto] md:items-center">
+          <div class="min-w-0">
+            <p class="m-0 text-sm font-semibold text-slate-100">{{ currentCarriere.carriere }}</p>
+            @if (currentCarriere.description) {
+              <p class="m-0 text-xs text-slate-400">{{ currentCarriere.description }}</p>
+            }
+          </div>
+
+          <p-floatlabel variant="over">
+            <p-inputNumber
+              inputId="advanced-carriere-value-{{ $index }}"
+              class="dw-input-number"
+              [formControl]="$any(control.get('value'))"
+            />
+            <label for="advanced-carriere-value-{{ $index }}">Rang</label>
+          </p-floatlabel>
+
+          <p-button
+            icon="pi pi-trash"
+            severity="danger"
+            [text]="true"
+            [rounded]="true"
+            size="small"
+            pTooltip="Supprimer"
+            (onClick)="deleteCarriere(control.get('carriere_id')?.value, $event)"
+          />
+        </div>
+      }
+    } @empty {
+      <p class="m-0 text-sm text-slate-500">Aucune carrière sélectionnée.</p>
+    }
+  </div>
+</div>

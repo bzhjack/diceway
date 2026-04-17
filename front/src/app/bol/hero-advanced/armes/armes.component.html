@@ -1,0 +1,50 @@
+<div class="space-y-4">
+  <div class="flex flex-col gap-3 md:flex-row">
+    <div class="min-w-0 flex-1">
+      <p-floatlabel variant="over">
+        <p-select
+          inputId="advanced-arme"
+          class="w-full"
+          [options]="filteredArmeList()"
+          [ngModel]="selectedArme()"
+          (ngModelChange)="selectedArme.set($event)"
+          optionLabel="arme"
+          placeholder="Choisir une arme"
+        />
+        <label for="advanced-arme">Ajouter une arme</label>
+      </p-floatlabel>
+    </div>
+
+    <p-button label="Ajouter" icon="pi pi-plus" [disabled]="pending() || !selectedArme()" (onClick)="addArme()" />
+  </div>
+
+  <div class="grid gap-2">
+    @for (arme of selectedArmeDetail(); track arme.id) {
+      <div class="flex items-center justify-between border border-[#424b57] bg-[#0f172a]/60 px-3 py-2">
+        <div class="min-w-0">
+          <p class="m-0 text-sm font-semibold text-slate-100">{{ arme.arme }}</p>
+          <p class="m-0 text-xs text-slate-400">
+            {{ arme.type === 'M' ? 'Mêlée' : 'Tir' }}
+            @if (arme.degats) {
+              · Dégâts {{ arme.degats }}
+            }
+            @if (arme.portee) {
+              · Portée {{ arme.portee }}
+            }
+          </p>
+        </div>
+        <p-button
+          icon="pi pi-trash"
+          severity="danger"
+          [text]="true"
+          [rounded]="true"
+          size="small"
+          pTooltip="Supprimer"
+          (onClick)="deleteArme(arme.id!, $event)"
+        />
+      </div>
+    } @empty {
+      <p class="m-0 text-sm text-slate-500">Aucune arme sélectionnée.</p>
+    }
+  </div>
+</div>

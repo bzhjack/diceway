@@ -1,0 +1,14 @@
+<div class="grid gap-3">
+  @for (entry of displayResources(); track entry.label) {
+    <div class="flex items-center justify-between border border-[#424b57] bg-[#0f172a]/60 px-3 py-2">
+      <span class="text-sm text-slate-400">{{ entry.label }}</span>
+      <span class="text-sm font-bold text-slate-100">{{ entry.value }}</span>
+    </div>
+  }
+
+  @if (heroismCost() > 0) {
+    <div class="border border-amber-400/30 bg-amber-950/15 p-3 text-sm text-amber-200">
+      Coût d'héroïsme en attente : {{ heroismCost() }}
+    </div>
+  }
+</div>

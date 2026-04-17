@@ -1,0 +1,54 @@
+<div class="space-y-4">
+  <div class="flex flex-col gap-3 md:flex-row">
+    <div class="min-w-0 flex-1">
+      <p-floatlabel variant="over">
+        <p-select
+          inputId="advanced-armure"
+          class="w-full"
+          [options]="filteredArmureList()"
+          [ngModel]="selectedArmure()"
+          (ngModelChange)="selectedArmure.set($event)"
+          optionLabel="armure"
+          placeholder="Choisir une armure"
+        />
+        <label for="advanced-armure">Ajouter une armure</label>
+      </p-floatlabel>
+    </div>
+
+    <p-button
+      label="Ajouter"
+      icon="pi pi-plus"
+      [disabled]="pending() || !selectedArmure()"
+      (onClick)="addArmure()"
+    />
+  </div>
+
+  <div class="grid gap-2">
+    @for (armure of selectedArmureDetail(); track armure.id) {
+      <div class="flex items-center justify-between border border-[#424b57] bg-[#0f172a]/60 px-3 py-2">
+        <div class="min-w-0">
+          <p class="m-0 text-sm font-semibold text-slate-100">{{ armure.armure }}</p>
+          <p class="m-0 text-xs text-slate-400">
+            @if (armure.protection) {
+              Protection {{ armure.protection }}
+            }
+            @if (armure.malus) {
+              · Malus {{ armure.malus }}
+            }
+          </p>
+        </div>
+        <p-button
+          icon="pi pi-trash"
+          severity="danger"
+          [text]="true"
+          [rounded]="true"
+          size="small"
+          pTooltip="Supprimer"
+          (onClick)="deleteArmure(armure.id!, $event)"
+        />
+      </div>
+    } @empty {
+      <p class="m-0 text-sm text-slate-500">Aucune armure sélectionnée.</p>
+    }
+  </div>
+</div>

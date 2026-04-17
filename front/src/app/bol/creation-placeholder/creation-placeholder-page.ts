@@ -23,6 +23,7 @@ export class CreationPlaceholderPageComponent {
   private readonly routeParamMap = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
   });
+  protected readonly placeholderId = computed(() => this.routeParamMap().get('id'));
   private readonly definitions: Record<string, CreationDefinition> = {
     campaign: {
       label: 'campagne',
@@ -38,6 +39,11 @@ export class CreationPlaceholderPageComponent {
       label: 'Héros',
       helper: 'Ajouter un protagoniste prêt à assigner à une table.',
       icon: 'pi pi-shield',
+    },
+    'hero-advanced': {
+      label: 'Héros avancé',
+      helper: 'Brancher le créateur avancé modulaire des héros avec ses validations et ses sous-blocs.',
+      icon: 'pi pi-cog',
     },
     npc: {
       label: 'PNJ',
@@ -55,4 +61,7 @@ export class CreationPlaceholderPageComponent {
     const key = this.routeParamMap().get('entity') ?? 'session';
     return this.definitions[key] ?? this.definitions['session'];
   });
+  protected readonly pageTitle = computed(() =>
+    this.placeholderId() ? `Édition ${this.entity().label}` : `Nouvelle ${this.entity().label}`,
+  );
 }

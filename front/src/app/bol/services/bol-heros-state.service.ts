@@ -41,7 +41,6 @@ export class BolHerosStateService {
         Number(this.currentHeros()?.origines.region_id) === Number(region.id)
     )
   );
-  heroismCost = computed(() => Math.max(this.currentHeroAvantages().length - this.currentHeroDesavantages().length - 1, 0));
 
   protected currentHeroAvantages = computed(
     () => this.currentHeros()?.traits?.filter((item) => item.type === 'A') ?? []
@@ -52,6 +51,9 @@ export class BolHerosStateService {
         (item) => item.type === 'D' && item.carriere === false
       ) ?? []
   );
+  protected currentHeroRegionalDesavantages = computed(
+    () => this.currentHeroDesavantages().filter((item) => Number(item.region_id) > 0) ?? []
+  );
   protected currentHeroCarriereDesvantages = computed(
     () =>
       this.currentHeros()?.traits?.filter(
@@ -61,6 +63,27 @@ export class BolHerosStateService {
   allHerosDesavantages = computed(
     () => this.currentHeros()?.traits?.filter((item) => item.type === 'D') ?? []
   );
+  heroismCost = computed(() => {
+    const advantageCount = this.currentHeroAvantages().length;
+    const nonCareerDisadvantageCount = this.currentHeroDesavantages().length;
+    const regionalDisadvantageCount = this.currentHeroRegionalDesavantages().length;
+    const extraAdvantages = Math.max(advantageCount - 1, 0);
+
+    let cost = 0;
+    if (extraAdvantages >= 1 && regionalDisadvantageCount === 0) {
+      cost += 1;
+    }
+
+    if (extraAdvantages >= 2) {
+      const usedRegionalDisadvantage = regionalDisadvantageCount > 0 ? 1 : 0;
+      const remainingDisadvantages = nonCareerDisadvantageCount - usedRegionalDisadvantage;
+      if (remainingDisadvantages < 1) {
+        cost += 1;
+      }
+    }
+
+    return cost;
+  });
 
   regionalAvantages = computed(
     () =>
@@ -133,16 +156,16 @@ export class BolHerosStateService {
   warnCombat = signal([]);
   warnCarrieres = signal([]);
   warnOrigines = signal([]);
+  warnLangues = signal([]);
   warnCount= computed(() =>
     this.warnTraits().length +
     this.warnAttrs().length +
     this.warnCombat().length +
     this.warnCarrieres().length +
-    this.warnOrigines().length);
+    this.warnOrigines().length +
+    this.warnLangues().length);
   constructor() {
-    effect(() => {
-      console.log('currentHero changed:', this.currentHeros());
-    });
+    effect(() => this.currentHeros());
   }
 
   setWarnTraits(traits: any) {
@@ -159,5 +182,16 @@ export class BolHerosStateService {
   }
   setwarnCarrieres(carrieres: any) {
     this.warnCarrieres.set(carrieres);
+  }
+  setWarnLangues(langues: any) {
+    this.warnLangues.set(langues);
+  }
+  clearWarnings() {
+    this.warnTraits.set([]);
+    this.warnAttrs.set([]);
+    this.warnCombat.set([]);
+    this.warnCarrieres.set([]);
+    this.warnOrigines.set([]);
+    this.warnLangues.set([]);
   }
 }
