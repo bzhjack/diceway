@@ -53,7 +53,7 @@
 
       <section class="panel-group" aria-labelledby="players-title">
         <div class="panel-group__title-row">
-          <h3 id="players-title">PJ présents</h3>
+          <h3 id="players-title">Héros présents</h3>
           <span>{{ playerCharacters.length }}</span>
         </div>
 
@@ -65,7 +65,7 @@
                   <h4>{{ protagonist.name }}</h4>
                   <p>{{ protagonist.title }}</p>
                 </div>
-                <span class="kind-pill">{{ protagonist.kind }}</span>
+                <span class="kind-pill">{{ protagonist.kind === 'PJ' ? 'Héros' : protagonist.kind }}</span>
               </div>
 
               <div class="vitality-block">
@@ -111,7 +111,7 @@
                   <h4>{{ protagonist.name }}</h4>
                   <p>{{ protagonist.title }}</p>
                 </div>
-                <span class="kind-pill">{{ protagonist.kind }}</span>
+                <span class="kind-pill">{{ protagonist.kind === 'PJ' ? 'Héros' : protagonist.kind }}</span>
               </div>
 
               <div class="vitality-block">
@@ -246,7 +246,7 @@
               <div class="combatant-row__header">
                 <div>
                   <h4>{{ combatant.name }}</h4>
-                  <p>{{ combatant.role }} · INIT {{ combatant.initiative }}</p>
+                  <p>{{ combatant.role === 'PJ' ? 'Héros' : combatant.role }} · INIT {{ combatant.initiative }}</p>
                 </div>
                 <strong>{{ combatant.vitality }}</strong>
               </div>

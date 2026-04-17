@@ -281,7 +281,7 @@ export class SessionLivePageComponent {
       id: 'notes',
       name: 'Notes de session',
       icon: 'pi pi-file-edit',
-      detail: '3 notes épinglées. Une dette envers la guilde reste cachée aux PJ.',
+      detail: '3 notes épinglées. Une dette envers la guilde reste cachée aux héros.',
       mode: 'active',
     },
     {

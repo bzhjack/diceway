@@ -21,22 +21,8 @@ interface WorkspaceQuickAction {
 export class WorkspaceQuickActionsComponent {
   protected readonly quickActions: readonly WorkspaceQuickAction[] = [
     {
-      label: 'Créer une campagne',
-      detail: 'Poser un nouvel arc narratif et ses sessions.',
-      icon: 'pi pi-plus-circle',
-      link: '/create/campaign',
-      severity: 'primary',
-    },
-    {
-      label: 'Créer une session',
-      detail: 'Préparer une table jouable et ses enjeux.',
-      icon: 'pi pi-calendar-plus',
-      link: '/create/session',
-      severity: 'primary',
-    },
-    {
-      label: 'Créer un PJ',
-      detail: 'Ajouter un protagoniste prêt à assigner.',
+      label: 'Créer un héros',
+      detail: 'Ajouter un héros jouable prêt pour la table.',
       icon: 'pi pi-user-plus',
       link: '/create/hero',
       state: { returnUrl: '/' },
@@ -44,7 +30,7 @@ export class WorkspaceQuickActionsComponent {
     },
     {
       label: 'Créer une créature',
-      detail: 'Alimenter le bestiaire avec un nouveau profil de scène.',
+      detail: 'Ajouter une créature au bestiaire de scène.',
       icon: 'pi pi-book',
       link: '/create/creature',
       state: { returnUrl: '/' },
@@ -52,7 +38,7 @@ export class WorkspaceQuickActionsComponent {
     },
     {
       label: 'Créer un démon',
-      detail: 'Préparer une entité infernale prête pour la scène ou l aventure.',
+      detail: 'Préparer un démon pour la scène ou l intrigue.',
       icon: 'pi pi-bolt',
       link: '/create/demon',
       state: { returnUrl: '/' },
@@ -60,7 +46,7 @@ export class WorkspaceQuickActionsComponent {
     },
     {
       label: 'Créer un PNJ',
-      detail: 'Alimenter la réserve d adversaires et alliés.',
+      detail: 'Ajouter un PNJ à la réserve de jeu.',
       icon: 'pi pi-id-card',
       link: '/create/pnj',
       state: { returnUrl: '/' },

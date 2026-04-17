@@ -35,7 +35,7 @@ export class CreationPlaceholderPageComponent {
       icon: 'pi pi-sitemap',
     },
     hero: {
-      label: 'PJ',
+      label: 'Héros',
       helper: 'Ajouter un protagoniste prêt à assigner à une table.',
       icon: 'pi pi-shield',
     },

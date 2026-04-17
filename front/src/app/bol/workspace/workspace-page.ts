@@ -58,9 +58,9 @@ export class WorkspacePageComponent {
       iconClass: 'border border-sky-400/25 bg-sky-400/12 text-sky-300',
     },
     {
-      label: 'PJ suivis',
+      label: 'Héros suivis',
       value: String(this.heroes().length),
-      detail: 'Nombre de PJ récupéré depuis la bibliothèque Barbarian of Lemuria.',
+      detail: 'Nombre de héros récupéré depuis la bibliothèque Barbarian of Lemuria.',
       icon: 'pi pi-users',
       iconClass: 'border border-emerald-400/25 bg-emerald-400/12 text-emerald-300',
       link: '/library/heroes',
@@ -89,7 +89,7 @@ export class WorkspacePageComponent {
     location: 'Citadelle d Argos · salle aux lions',
     schedule: 'Ce soir · 20:30',
     summary:
-      'La table est prête. Les PJ, les factions et les outils narratifs sont alignés pour reprendre immédiatement.',
+      'La table est prête. Les héros, les factions et les outils narratifs sont alignés pour reprendre immédiatement.',
     players: ['Naïa', 'Malik', 'Ysolde', 'Cassian'],
     beats: [
       { label: 'Scène d ouverture', value: 'Négociation sous tension' },
