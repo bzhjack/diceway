@@ -56,6 +56,18 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'create/hero',
+    loadComponent: () =>
+      import('./bol/hero-create/hero-create-page').then((module) => module.HeroCreatePageComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'create/hero/:id',
+    loadComponent: () =>
+      import('./bol/hero-create/hero-create-page').then((module) => module.HeroCreatePageComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'library/creatures',
     loadComponent: () =>
       import('./bol/creature-library/creature-library-page').then(

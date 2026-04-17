@@ -39,6 +39,7 @@ export class WorkspaceQuickActionsComponent {
       detail: 'Ajouter un protagoniste prêt à assigner.',
       icon: 'pi pi-user-plus',
       link: '/create/hero',
+      state: { returnUrl: '/' },
       severity: 'secondary',
     },
     {

@@ -30,6 +30,13 @@
 
         <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
           <p-button
+            label="Créer un PJ"
+            icon="pi pi-plus"
+            [routerLink]="'/create/hero'"
+            [state]="{ returnUrl: '/library/heroes' }"
+            styleClass="!bg-[#059669] !border-[#059669] !text-white !px-5 !py-3 !font-bold"
+          />
+          <p-button
             label="Voir les PNJ"
             icon="pi pi-user-edit"
             [routerLink]="'/library/pnjs'"
@@ -150,9 +157,16 @@
                     <p class="m-0 line-clamp-2 text-lg font-bold text-slate-100">
                       {{ hero.origines.nom || 'Héros sans nom' }}
                     </p>
-                    @if (!hero.active) {
-                      <p-tag value="En cours" severity="warn" />
-                    }
+                    <p-button
+                      icon="pi pi-pencil"
+                      severity="secondary"
+                      [text]="true"
+                      [rounded]="true"
+                      size="small"
+                      pTooltip="Modifier"
+                      [routerLink]="['/create/hero', hero.id]"
+                      [state]="{ returnUrl: '/library/heroes' }"
+                    />
                   </div>
 
                   <div class="grid gap-1 text-sm text-slate-400">
