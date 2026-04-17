@@ -133,16 +133,16 @@ export class BolHerosStateService {
   warnCombat = signal([]);
   warnCarrieres = signal([]);
   warnOrigines = signal([]);
+  warnLangues = signal([]);
   warnCount= computed(() =>
     this.warnTraits().length +
     this.warnAttrs().length +
     this.warnCombat().length +
     this.warnCarrieres().length +
-    this.warnOrigines().length);
+    this.warnOrigines().length +
+    this.warnLangues().length);
   constructor() {
-    effect(() => {
-      console.log('currentHero changed:', this.currentHeros());
-    });
+    effect(() => this.currentHeros());
   }
 
   setWarnTraits(traits: any) {
@@ -159,5 +159,16 @@ export class BolHerosStateService {
   }
   setwarnCarrieres(carrieres: any) {
     this.warnCarrieres.set(carrieres);
+  }
+  setWarnLangues(langues: any) {
+    this.warnLangues.set(langues);
+  }
+  clearWarnings() {
+    this.warnTraits.set([]);
+    this.warnAttrs.set([]);
+    this.warnCombat.set([]);
+    this.warnCarrieres.set([]);
+    this.warnOrigines.set([]);
+    this.warnLangues.set([]);
   }
 }

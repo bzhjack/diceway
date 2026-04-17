@@ -70,17 +70,13 @@ export const routes: Routes = [
   {
     path: 'create/hero-advanced',
     loadComponent: () =>
-      import('./bol/creation-placeholder/creation-placeholder-page').then(
-        (module) => module.CreationPlaceholderPageComponent,
-      ),
+      import('./bol/hero-advanced/hero-advanced-page').then((module) => module.HeroAdvancedPageComponent),
     canActivate: [authGuard],
   },
   {
     path: 'create/hero-advanced/:id',
     loadComponent: () =>
-      import('./bol/creation-placeholder/creation-placeholder-page').then(
-        (module) => module.CreationPlaceholderPageComponent,
-      ),
+      import('./bol/hero-advanced/hero-advanced-page').then((module) => module.HeroAdvancedPageComponent),
     canActivate: [authGuard],
   },
   {

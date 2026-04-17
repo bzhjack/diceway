@@ -1,0 +1,93 @@
+<div class="space-y-4">
+  <div class="grid gap-3 md:grid-cols-[10rem_minmax(0,1fr)_auto]">
+    <p-floatlabel variant="over">
+      <p-select
+        inputId="advanced-trait-type"
+        class="w-full"
+        [options]="[
+          { label: 'Avantage', value: 'A' },
+          { label: 'Désavantage', value: 'D' }
+        ]"
+        [ngModel]="contextType()"
+        (ngModelChange)="contextType.set($event)"
+        optionLabel="label"
+        optionValue="value"
+      />
+      <label for="advanced-trait-type">Type</label>
+    </p-floatlabel>
+
+    <p-floatlabel variant="over">
+      <p-select
+        inputId="advanced-trait"
+        class="w-full"
+        [options]="traitList()"
+        [ngModel]="selectedTrait()"
+        (ngModelChange)="selectedTrait.set($event)"
+        [optionLabel]="contextType() === 'A' ? 'avantage' : 'desavantage'"
+        placeholder="Choisir un trait"
+      >
+        <ng-template #selectedItem let-selectedOption>
+          @if (selectedOption) {
+            <div class="flex items-center gap-2">
+              @if (selectedOption.region_id) {
+                <i class="pi pi-map-marker text-xs text-emerald-300"></i>
+              }
+              <span>
+                {{ contextType() === 'A' ? selectedOption.avantage : selectedOption.desavantage }}
+              </span>
+            </div>
+          }
+        </ng-template>
+
+        <ng-template #item let-trait>
+          <div class="flex flex-col gap-1 py-1">
+            <div class="flex items-center gap-2">
+              @if (trait.region_id) {
+                <i class="pi pi-map-marker text-xs text-emerald-300"></i>
+              }
+              <span>
+                {{ contextType() === 'A' ? trait.avantage : trait.desavantage }}
+              </span>
+            </div>
+            @if (trait.detail) {
+              <div class="pl-5 text-xs text-slate-400">
+                {{ trait.detail }}
+              </div>
+            }
+          </div>
+        </ng-template>
+      </p-select>
+      <label for="advanced-trait">Trait</label>
+    </p-floatlabel>
+
+    <p-button label="Ajouter" icon="pi pi-plus" [disabled]="pending() || !selectedTrait()" (onClick)="addTrait()" />
+  </div>
+
+  @if (traitsWarns().length) {
+    <div class="border border-amber-400/30 bg-amber-950/15 p-3 text-sm text-amber-200">
+      @for (warning of traitsWarns(); track warning.warn) {
+        <p class="m-0">{{ warning.warn }}</p>
+      }
+    </div>
+  }
+
+  <div class="grid gap-2">
+    @for (trait of herosTraits(); track trait.id ?? ($index + '-' + trait.traitable_id + '-' + trait.type)) {
+      <div class="flex items-start justify-between gap-3 border border-[#424b57] bg-[#0f172a]/60 px-3 py-3">
+        <div class="min-w-0 flex-1">
+          <bol-hero-advanced-trait [trait]="trait" />
+        </div>
+        <p-button
+          icon="pi pi-trash"
+          severity="danger"
+          [text]="true"
+          [rounded]="true"
+          size="small"
+          (onClick)="deleteTrait(trait.id!, $event)"
+        />
+      </div>
+    } @empty {
+      <p class="m-0 text-sm text-slate-500">Aucun trait sélectionné.</p>
+    }
+  </div>
+</div>

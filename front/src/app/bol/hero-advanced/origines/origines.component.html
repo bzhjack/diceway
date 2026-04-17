@@ -1,0 +1,90 @@
+<div class="space-y-4">
+  <div class="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
+    <button
+      type="button"
+      class="group relative flex aspect-square w-full items-center justify-center overflow-hidden border border-[#424b57] bg-[#0f172a] transition-colors hover:border-emerald-300/70"
+      (click)="pickAvatar()"
+    >
+      @if (avatarPreview()) {
+        <img [src]="avatarPreview()!" alt="Avatar héros" class="h-full w-full object-cover" />
+      } @else {
+        <div class="flex flex-col items-center gap-3 text-slate-400">
+          <i class="pi pi-image text-4xl"></i>
+          <span class="text-xs font-bold uppercase tracking-[0.2em]">Avatar</span>
+          <span class="text-xs text-slate-500">Cliquer pour modifier</span>
+        </div>
+      }
+      <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 to-transparent opacity-0 transition-opacity group-hover:opacity-100"></div>
+    </button>
+
+    <div class="grid gap-4">
+      <div class="grid gap-4 md:grid-cols-2">
+        <p-floatlabel variant="over">
+          <input pInputText id="advanced-joueur" class="w-full" [formControl]="joueurCtrl" />
+          <label for="advanced-joueur">Joueur</label>
+        </p-floatlabel>
+
+        <p-floatlabel variant="over">
+          <input pInputText id="advanced-nom" class="w-full" [formControl]="nomCtrl" />
+          <label for="advanced-nom">Nom du héros</label>
+        </p-floatlabel>
+      </div>
+
+      <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto_auto]">
+        <div class="min-w-0 rounded-sm border border-[#424b57] bg-[#0f172a]/70 px-4 py-3">
+          <p class="m-0 text-xs font-black uppercase tracking-[0.18em] text-slate-500">Région</p>
+          <p class="mt-2 mb-0 text-sm text-slate-100">
+            {{ currentRegion()?.region || 'Aucune région sélectionnée' }}
+          </p>
+        </div>
+
+        <p-button
+          label="Choisir"
+          icon="pi pi-map"
+          [disabled]="pending()"
+          (onClick)="openRegionPicker()"
+        />
+
+        <p-button
+          icon="pi pi-times"
+          severity="secondary"
+          [outlined]="true"
+          [disabled]="pending() || !regionIdCtrl.value"
+          (onClick)="clearRegion()"
+        />
+      </div>
+
+      <p-floatlabel variant="over">
+        <textarea
+          pTextarea
+          id="advanced-commentaire"
+          class="w-full resize-none"
+          rows="4"
+          [formControl]="commentaireCtrl"
+        ></textarea>
+        <label for="advanced-commentaire">Commentaire</label>
+      </p-floatlabel>
+    </div>
+  </div>
+
+  @if (originesErrors().length) {
+    <div class="border border-red-400/35 bg-red-950/20 p-3 text-sm text-red-200">
+      @for (error of originesErrors(); track error.control + error.error) {
+        <p class="m-0">{{ error.error }}</p>
+      }
+    </div>
+  } @else if (originesWarns().length) {
+    <div class="border border-amber-400/30 bg-amber-950/15 p-3 text-sm text-amber-200">
+      @for (warning of originesWarns(); track warning.warn) {
+        <p class="m-0">{{ warning.warn }}</p>
+      }
+    </div>
+  }
+
+  <div class="border border-[#424b57] bg-[#0f172a]/55 p-4">
+    <div class="mb-3">
+      <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-emerald-300">Langues</p>
+    </div>
+    <bol-hero-advanced-langues [formControl]="languesCtrl" />
+  </div>
+</div>
