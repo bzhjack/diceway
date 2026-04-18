@@ -24,6 +24,25 @@
               </div>
             </div>
           </div>
+
+          <div class="flex flex-col gap-3 sm:flex-row md:justify-end">
+            <p-button
+              type="button"
+              icon="pi pi-arrow-left"
+              [label]="returnUrl() === '/library/demons' ? 'Retour a la bibliotheque' : 'Retour'"
+              severity="secondary"
+              [outlined]="true"
+              (onClick)="goBack()"
+              styleClass="!px-5 !py-3 !font-bold"
+            />
+            <p-button
+              type="submit"
+              [label]="submitLabel()"
+              icon="pi pi-check"
+              [disabled]="pending() || loadingDemon() || demonForm.invalid"
+              styleClass="!bg-[#b91c1c] !border-[#b91c1c] !text-white !px-5 !py-3 !font-bold"
+            />
+          </div>
         </div>
 
         <div class="grid gap-4">
@@ -354,24 +373,6 @@
           }
         </div>
 
-        <div class="flex flex-col gap-3 sm:flex-row">
-          <p-button
-            type="button"
-            icon="pi pi-arrow-left"
-            [label]="returnUrl() === '/library/demons' ? 'Retour a la bibliotheque' : 'Retour'"
-            severity="secondary"
-            [outlined]="true"
-            (onClick)="goBack()"
-            styleClass="!px-5 !py-3 !font-bold"
-          />
-          <p-button
-            type="submit"
-            [label]="submitLabel()"
-            icon="pi pi-check"
-            [disabled]="pending() || loadingDemon() || demonForm.invalid"
-            styleClass="!bg-[#b91c1c] !border-[#b91c1c] !text-white !px-5 !py-3 !font-bold"
-          />
-        </div>
       </form>
     </p-card>
   </div>

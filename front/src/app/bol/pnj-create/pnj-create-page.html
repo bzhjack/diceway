@@ -24,6 +24,25 @@
               </div>
             </div>
           </div>
+
+          <div class="flex flex-col gap-3 sm:flex-row md:justify-end">
+            <p-button
+              icon="pi pi-arrow-left"
+              size="small"
+              label="Retour"
+              severity="secondary"
+              [outlined]="true"
+              (onClick)="goBack()"
+            />
+            <p-button
+              icon="pi pi-check"
+              size="small"
+              [label]="submitLabel()"
+              severity="success"
+              [disabled]="pnjForm.invalid || pending() || loadingPnj()"
+              type="submit"
+            />
+          </div>
         </div>
 
         <div class="grid gap-4">
@@ -608,24 +627,6 @@
           }
         </div>
 
-        <div class="flex justify-end gap-2 pt-2">
-          <p-button
-            icon="pi pi-arrow-left"
-            size="small"
-            label="Retour"
-            severity="secondary"
-            [outlined]="true"
-            (onClick)="goBack()"
-          />
-          <p-button
-            icon="pi pi-check"
-            size="small"
-            [label]="submitLabel()"
-            severity="success"
-            [disabled]="pnjForm.invalid || pending() || loadingPnj()"
-            type="submit"
-          />
-        </div>
       </form>
     </p-card>
   </div>

@@ -121,6 +121,9 @@ export const DwPreset = definePreset(Aura, {
     },
     floatlabel: {
       root: {
+        active: {
+          fontSize: '0.8rem',
+        },
         focusColor: '{form.field.float.label.color}',
       },
       css: `
@@ -134,6 +137,7 @@ export const DwPreset = definePreset(Aura, {
     },
     iftalabel: {
       root: {
+        fontSize: '0.8rem',
         focusColor: '{form.field.float.label.color}',
       },
       css: `
