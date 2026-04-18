@@ -13,7 +13,7 @@ import {
 } from '@angular/forms';
 import {DialogService} from 'primeng/dynamicdialog';
 import {ButtonModule} from 'primeng/button';
-import {FloatLabelModule} from 'primeng/floatlabel';
+import {IftaLabelModule} from 'primeng/iftalabel';
 import {InputTextModule} from 'primeng/inputtext';
 import {TextareaModule} from 'primeng/textarea';
 import {toSignal} from '@angular/core/rxjs-interop';
@@ -30,7 +30,7 @@ import {HeroAdvancedRegionComponent} from './region/region.component';
   imports: [
     ReactiveFormsModule,
     ButtonModule,
-    FloatLabelModule,
+    IftaLabelModule,
     InputTextModule,
     TextareaModule,
     HeroAdvancedLanguesComponent,

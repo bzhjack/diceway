@@ -8,7 +8,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import {ButtonModule} from 'primeng/button';
-import {FloatLabelModule} from 'primeng/floatlabel';
+import {IftaLabelModule} from 'primeng/iftalabel';
 import {SelectModule} from 'primeng/select';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {ConfirmationService} from 'primeng/api';
@@ -22,7 +22,7 @@ import {HeroAdvancedTraitComponent} from './trait/trait.component';
 
 @Component({
   selector: 'bol-hero-advanced-traits',
-  imports: [ReactiveFormsModule, FormsModule, ButtonModule, FloatLabelModule, SelectModule, HeroAdvancedTraitComponent],
+  imports: [ReactiveFormsModule, FormsModule, ButtonModule, IftaLabelModule, SelectModule, HeroAdvancedTraitComponent],
   templateUrl: './traits.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [

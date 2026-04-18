@@ -13,7 +13,7 @@ import {
 } from '@angular/forms';
 import {ConfirmationService} from 'primeng/api';
 import {ButtonModule} from 'primeng/button';
-import {FloatLabelModule} from 'primeng/floatlabel';
+import {IftaLabelModule} from 'primeng/iftalabel';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {SelectModule} from 'primeng/select';
 import {TooltipModule} from 'primeng/tooltip';
@@ -33,7 +33,7 @@ import {REGION_CAREER_RULES} from '../create.rules';
     ReactiveFormsModule,
     FormsModule,
     ButtonModule,
-    FloatLabelModule,
+    IftaLabelModule,
     InputNumberModule,
     SelectModule,
     TooltipModule,

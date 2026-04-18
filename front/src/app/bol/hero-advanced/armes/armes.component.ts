@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 import {ConfirmationService} from 'primeng/api';
 import {ButtonModule} from 'primeng/button';
-import {FloatLabelModule} from 'primeng/floatlabel';
+import {IftaLabelModule} from 'primeng/iftalabel';
 import {SelectModule} from 'primeng/select';
 import {TooltipModule} from 'primeng/tooltip';
 import {toSignal} from '@angular/core/rxjs-interop';
@@ -20,7 +20,7 @@ import {BolHerosService} from '../../services/bol-heros.service';
 
 @Component({
   selector: 'bol-hero-advanced-armes',
-  imports: [ReactiveFormsModule, FormsModule, ButtonModule, FloatLabelModule, SelectModule, TooltipModule],
+  imports: [ReactiveFormsModule, FormsModule, ButtonModule, IftaLabelModule, SelectModule, TooltipModule],
   templateUrl: './armes.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [

@@ -79,12 +79,12 @@
                 </div>
 
                 <div class="grid gap-5 md:grid-cols-2">
-                  <p-floatlabel variant="over">
+                  <p-iftalabel>
                     <input pInputText id="nom" formControlName="nom" class="w-full" />
                     <label for="nom">Nom du demon *</label>
-                  </p-floatlabel>
+                  </p-iftalabel>
 
-                  <p-floatlabel variant="over">
+                  <p-iftalabel>
                     <p-select
                       inputId="id_categorie"
                       class="w-full"
@@ -94,10 +94,10 @@
                       formControlName="id_categorie"
                     />
                     <label for="id_categorie">Categorie *</label>
-                  </p-floatlabel>
+                  </p-iftalabel>
 
                   <div class="md:col-span-2">
-                    <p-floatlabel variant="over">
+                    <p-iftalabel>
                       <textarea
                         pTextarea
                         id="commentaire"
@@ -106,7 +106,7 @@
                         class="w-full resize-none"
                       ></textarea>
                       <label for="commentaire">Commentaire de scene</label>
-                    </p-floatlabel>
+                    </p-iftalabel>
                   </div>
                 </div>
               </div>
@@ -128,44 +128,44 @@
 
                 <div class="flex flex-col gap-6">
                   <div class="flex gap-4">
-                    <p-floatlabel variant="over">
+                    <p-iftalabel>
                       <p-inputNumber
                         inputId="vigueur"
                         formControlName="vigueur"
                         class="dw-input-number"
-                        inputStyleClass="!py-2 !text-sm"
+                        inputStyleClass="!text-sm"
                       />
                       <label for="vigueur">Vigueur</label>
-                    </p-floatlabel>
-                    <p-floatlabel variant="over">
+                    </p-iftalabel>
+                    <p-iftalabel>
                       <p-inputNumber
                         inputId="agilite"
                         formControlName="agilite"
                         class="dw-input-number"
-                        inputStyleClass="!py-2 !text-sm"
+                        inputStyleClass="!text-sm"
                       />
                       <label for="agilite">Agilite</label>
-                    </p-floatlabel>
+                    </p-iftalabel>
                   </div>
                   <div class="flex gap-4">
-                    <p-floatlabel variant="over">
+                    <p-iftalabel>
                       <p-inputNumber
                         inputId="esprit"
                         formControlName="esprit"
                         class="dw-input-number"
-                        inputStyleClass="!py-2 !text-sm"
+                        inputStyleClass="!text-sm"
                       />
                       <label for="esprit">Esprit</label>
-                    </p-floatlabel>
-                    <p-floatlabel variant="over">
+                    </p-iftalabel>
+                    <p-iftalabel>
                       <p-inputNumber
                         inputId="aura"
                         formControlName="aura"
                         class="dw-input-number"
-                        inputStyleClass="!py-2 !text-sm"
+                        inputStyleClass="!text-sm"
                       />
                       <label for="aura">Aura</label>
-                    </p-floatlabel>
+                    </p-iftalabel>
                   </div>
                 </div>
               </div>
@@ -179,36 +179,36 @@
 
                 <div class="flex flex-col gap-6">
                   <div class="flex gap-4">
-                    <p-floatlabel variant="over">
+                    <p-iftalabel>
                       <p-inputNumber
                         inputId="melee"
                         formControlName="melee"
                         class="dw-input-number"
-                        inputStyleClass="!py-2 !text-sm"
+                        inputStyleClass="!text-sm"
                       />
                       <label for="melee">Melee</label>
-                    </p-floatlabel>
-                    <p-floatlabel variant="over">
+                    </p-iftalabel>
+                    <p-iftalabel>
                       <p-inputNumber
                         inputId="tir"
                         formControlName="tir"
                         class="dw-input-number"
-                        inputStyleClass="!py-2 !text-sm"
+                        inputStyleClass="!text-sm"
                       />
                       <label for="tir">Tir</label>
-                    </p-floatlabel>
+                    </p-iftalabel>
                   </div>
                   <div class="flex gap-4">
-                    <p-floatlabel variant="over">
+                    <p-iftalabel>
                       <p-inputNumber
                         inputId="defense"
                         formControlName="defense"
                         class="dw-input-number"
-                        inputStyleClass="!py-2 !text-sm"
+                        inputStyleClass="!text-sm"
                       />
                       <label for="defense">Defense</label>
-                    </p-floatlabel>
-                    <p-floatlabel variant="over">
+                    </p-iftalabel>
+                    <p-iftalabel>
                       <input
                         pInputText
                         id="degats"
@@ -216,7 +216,7 @@
                         class="w-full !py-2 !text-sm"
                       />
                       <label for="degats">Degats</label>
-                    </p-floatlabel>
+                    </p-iftalabel>
                   </div>
                 </div>
               </div>
@@ -230,15 +230,15 @@
 
                 <div class="flex flex-col gap-6">
                   <div class="flex gap-4">
-                    <p-floatlabel variant="over">
+                    <p-iftalabel>
                       <p-inputNumber
                         inputId="vitalite"
                         formControlName="vitalite"
                         class="dw-input-number"
-                        inputStyleClass="!py-2 !text-sm"
+                        inputStyleClass="!text-sm"
                       />
                       <label for="vitalite">Vitalite</label>
-                    </p-floatlabel>
+                    </p-iftalabel>
                   </div>
                 </div>
               </div>
@@ -259,7 +259,7 @@
               </div>
 
               <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
-                <p-floatlabel variant="over">
+                <p-iftalabel>
                   <p-select
                     inputId="pouvoir"
                     class="w-full"
@@ -272,9 +272,9 @@
                     filterBy="pouvoir"
                   />
                   <label for="pouvoir">Pouvoir a ajouter</label>
-                </p-floatlabel>
+                </p-iftalabel>
 
-                <p-floatlabel variant="over">
+                <p-iftalabel>
                   <input
                     pInputText
                     id="pouvoir-detail"
@@ -282,7 +282,7 @@
                     class="w-full"
                   />
                   <label for="pouvoir-detail">Detail optionnel</label>
-                </p-floatlabel>
+                </p-iftalabel>
 
                 <p-button
                   label="Ajouter"

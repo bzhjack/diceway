@@ -74,12 +74,12 @@
               </div>
 
               <div class="grid gap-5 md:grid-cols-2">
-                <p-floatlabel variant="over">
+                <p-iftalabel>
                   <input pInputText id="nom" formControlName="nom" class="w-full" />
                   <label for="nom">Nom du PNJ *</label>
-                </p-floatlabel>
+                </p-iftalabel>
 
-                <p-floatlabel variant="over">
+                <p-iftalabel>
                   <p-select
                     inputId="type"
                     class="w-full"
@@ -89,10 +89,10 @@
                     formControlName="type"
                   />
                   <label for="type">Type *</label>
-                </p-floatlabel>
+                </p-iftalabel>
 
                 <div class="md:col-span-2">
-                  <p-floatlabel variant="over">
+                  <p-iftalabel>
                     <textarea
                       pTextarea
                       id="commentaire"
@@ -101,7 +101,7 @@
                       class="w-full resize-none"
                     ></textarea>
                     <label for="commentaire">Commentaire de scène</label>
-                  </p-floatlabel>
+                  </p-iftalabel>
                 </div>
               </div>
             </div>
@@ -123,44 +123,44 @@
 
               <div class="flex flex-col gap-6">
                 <div class="flex gap-4">
-                  <p-floatlabel variant="over">
+                  <p-iftalabel>
                     <p-inputNumber
                       inputId="vigueur"
                       formControlName="vigueur"
                       class="dw-input-number"
-                      inputStyleClass="!py-2 !text-sm"
+                      inputStyleClass="!text-sm"
                     />
                     <label for="vigueur">Vigueur</label>
-                  </p-floatlabel>
-                  <p-floatlabel variant="over">
+                  </p-iftalabel>
+                  <p-iftalabel>
                     <p-inputNumber
                       inputId="agilite"
                       formControlName="agilite"
                       class="dw-input-number"
-                      inputStyleClass="!py-2 !text-sm"
+                      inputStyleClass="!text-sm"
                     />
                     <label for="agilite">Agilité</label>
-                  </p-floatlabel>
+                  </p-iftalabel>
                 </div>
                 <div class="flex gap-4">
-                  <p-floatlabel variant="over">
+                  <p-iftalabel>
                     <p-inputNumber
                       inputId="esprit"
                       formControlName="esprit"
                       class="dw-input-number"
-                      inputStyleClass="!py-2 !text-sm"
+                      inputStyleClass="!text-sm"
                     />
                     <label for="esprit">Esprit</label>
-                  </p-floatlabel>
-                  <p-floatlabel variant="over">
+                  </p-iftalabel>
+                  <p-iftalabel>
                     <p-inputNumber
                       inputId="aura"
                       formControlName="aura"
                       class="dw-input-number"
-                      inputStyleClass="!py-2 !text-sm"
+                      inputStyleClass="!text-sm"
                     />
                     <label for="aura">Aura</label>
-                  </p-floatlabel>
+                  </p-iftalabel>
                 </div>
               </div>
             </div>
@@ -174,44 +174,44 @@
 
               <div class="flex flex-col gap-6">
                 <div class="flex gap-4">
-                  <p-floatlabel variant="over">
+                  <p-iftalabel>
                     <p-inputNumber
                       inputId="initiative"
                       formControlName="initiative"
                       class="dw-input-number"
-                      inputStyleClass="!py-2 !text-sm"
+                      inputStyleClass="!text-sm"
                     />
                     <label for="initiative">Initiative</label>
-                  </p-floatlabel>
-                  <p-floatlabel variant="over">
+                  </p-iftalabel>
+                  <p-iftalabel>
                     <p-inputNumber
                       inputId="melee"
                       formControlName="melee"
                       class="dw-input-number"
-                      inputStyleClass="!py-2 !text-sm"
+                      inputStyleClass="!text-sm"
                     />
                     <label for="melee">Mêlée</label>
-                  </p-floatlabel>
+                  </p-iftalabel>
                 </div>
                 <div class="flex gap-4">
-                  <p-floatlabel variant="over">
+                  <p-iftalabel>
                     <p-inputNumber
                       inputId="tir"
                       formControlName="tir"
                       class="dw-input-number"
-                      inputStyleClass="!py-2 !text-sm"
+                      inputStyleClass="!text-sm"
                     />
                     <label for="tir">Tir</label>
-                  </p-floatlabel>
-                  <p-floatlabel variant="over">
+                  </p-iftalabel>
+                  <p-iftalabel>
                     <p-inputNumber
                       inputId="defense"
                       formControlName="defense"
                       class="dw-input-number"
-                      inputStyleClass="!py-2 !text-sm"
+                      inputStyleClass="!text-sm"
                     />
                     <label for="defense">Défense</label>
-                  </p-floatlabel>
+                  </p-iftalabel>
                 </div>
               </div>
             </div>
@@ -224,51 +224,51 @@
               </div>
 
               <div class="grid gap-4 md:grid-cols-2">
-                <p-floatlabel variant="over">
+                <p-iftalabel>
                   <p-inputNumber
                     inputId="vitalite"
                     formControlName="vitalite"
                     class="dw-input-number"
-                    inputStyleClass="!py-2 !text-sm"
+                    inputStyleClass="!text-sm"
                   />
                   <label for="vitalite">Vitalité</label>
-                </p-floatlabel>
-                <p-floatlabel variant="over">
+                </p-iftalabel>
+                <p-iftalabel>
                   <p-inputNumber
                     inputId="vilenie"
                     formControlName="vilenie"
                     class="dw-input-number"
-                    inputStyleClass="!py-2 !text-sm"
+                    inputStyleClass="!text-sm"
                   />
                   <label for="vilenie">Vilénie</label>
-                </p-floatlabel>
-                <p-floatlabel variant="over">
+                </p-iftalabel>
+                <p-iftalabel>
                   <p-inputNumber
                     inputId="pouvoir"
                     formControlName="pouvoir"
                     class="dw-input-number"
-                    inputStyleClass="!py-2 !text-sm"
+                    inputStyleClass="!text-sm"
                   />
                   <label for="pouvoir">Pouvoir</label>
-                </p-floatlabel>
-                <p-floatlabel variant="over">
+                </p-iftalabel>
+                <p-iftalabel>
                   <p-inputNumber
                     inputId="foi"
                     formControlName="foi"
                     class="dw-input-number"
-                    inputStyleClass="!py-2 !text-sm"
+                    inputStyleClass="!text-sm"
                   />
                   <label for="foi">Foi</label>
-                </p-floatlabel>
-                <p-floatlabel variant="over" class="md:col-span-2">
+                </p-iftalabel>
+                <p-iftalabel class="md:col-span-2">
                   <p-inputNumber
                     inputId="creation"
                     formControlName="creation"
                     class="dw-input-number"
-                    inputStyleClass="!py-2 !text-sm"
+                    inputStyleClass="!text-sm"
                   />
                   <label for="creation">Création</label>
-                </p-floatlabel>
+                </p-iftalabel>
               </div>
             </div>
           </div>
@@ -286,7 +286,7 @@
 
               <div class="grid gap-3">
                 <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                  <p-floatlabel variant="over">
+                  <p-iftalabel>
                     <p-select
                       inputId="avantage"
                       class="w-full"
@@ -296,7 +296,7 @@
                       [formControl]="selectedAvantageId"
                     />
                     <label for="avantage">Ajouter un avantage</label>
-                  </p-floatlabel>
+                  </p-iftalabel>
                   <p-button
                     label="Ajouter"
                     icon="pi pi-plus"
@@ -308,7 +308,7 @@
                 </div>
 
                 <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                  <p-floatlabel variant="over">
+                  <p-iftalabel>
                     <p-select
                       inputId="desavantage"
                       class="w-full"
@@ -318,7 +318,7 @@
                       [formControl]="selectedDesavantageId"
                     />
                     <label for="desavantage">Ajouter un désavantage</label>
-                  </p-floatlabel>
+                  </p-iftalabel>
                   <p-button
                     label="Ajouter"
                     icon="pi pi-plus"
@@ -377,7 +377,7 @@
               </div>
 
               <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                <p-floatlabel variant="over">
+                <p-iftalabel>
                   <p-select
                     inputId="carriere"
                     class="w-full"
@@ -387,7 +387,7 @@
                     [formControl]="selectedCarriereId"
                   />
                   <label for="carriere">Ajouter une carrière</label>
-                </p-floatlabel>
+                </p-iftalabel>
                 <p-button
                   label="Ajouter"
                   icon="pi pi-plus"
@@ -407,14 +407,14 @@
                       </p>
                     </div>
 
-                    <p-floatlabel variant="over">
+                    <p-iftalabel>
                       <p-inputNumber
                         [formControl]="$any(carrieres.at(index).get('value'))"
                         class="dw-input-number"
-                        inputStyleClass="!py-2 !text-sm"
+                        inputStyleClass="!text-sm"
                       />
                       <label>Rang</label>
-                    </p-floatlabel>
+                    </p-iftalabel>
 
                     <p-button
                       icon="pi pi-trash"
@@ -444,7 +444,7 @@
               </div>
 
               <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                <p-floatlabel variant="over">
+                <p-iftalabel>
                   <p-select
                     inputId="langue"
                     class="w-full"
@@ -454,7 +454,7 @@
                     [formControl]="selectedLangueId"
                   />
                   <label for="langue">Ajouter une langue</label>
-                </p-floatlabel>
+                </p-iftalabel>
                 <p-button
                   label="Ajouter"
                   icon="pi pi-plus"
@@ -499,7 +499,7 @@
               </div>
 
               <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                <p-floatlabel variant="over">
+                <p-iftalabel>
                   <p-select
                     inputId="arme"
                     class="w-full"
@@ -509,7 +509,7 @@
                     [formControl]="selectedArmeId"
                   />
                   <label for="arme">Ajouter une arme</label>
-                </p-floatlabel>
+                </p-iftalabel>
                 <p-button
                   label="Ajouter"
                   icon="pi pi-plus"
@@ -555,7 +555,7 @@
               </div>
 
               <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                <p-floatlabel variant="over">
+                <p-iftalabel>
                   <p-select
                     inputId="armure"
                     class="w-full"
@@ -565,7 +565,7 @@
                     [formControl]="selectedArmureId"
                   />
                   <label for="armure">Ajouter une armure</label>
-                </p-floatlabel>
+                </p-iftalabel>
                 <p-button
                   label="Ajouter"
                   icon="pi pi-plus"

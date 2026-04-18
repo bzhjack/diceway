@@ -119,11 +119,23 @@ export const DwPreset = definePreset(Aura, {
         }
       `,
     },
+    floatlabel: {
+      root: {
+        focusColor: '{surface.0}',
+      },
+    },
     inputnumber: {
       css: `
         .p-inputnumber-input {
-          padding: 5px;
+          padding-block: 5px;
+          padding-inline: var(--p-form-field-padding-x);
           font-size: 0.9rem;
+        }
+
+        .p-iftalabel .p-inputnumber-input {
+          padding-block-start: var(--p-iftalabel-input-padding-top);
+          padding-block-end: var(--p-iftalabel-input-padding-bottom);
+          padding-inline: var(--p-form-field-padding-x);
         }
       `,
     },

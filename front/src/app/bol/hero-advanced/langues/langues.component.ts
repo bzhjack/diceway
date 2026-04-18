@@ -14,7 +14,7 @@ import {
 } from '@angular/forms';
 import {ConfirmationService} from 'primeng/api';
 import {ButtonModule} from 'primeng/button';
-import {FloatLabelModule} from 'primeng/floatlabel';
+import {IftaLabelModule} from 'primeng/iftalabel';
 import {SelectModule} from 'primeng/select';
 import {TooltipModule} from 'primeng/tooltip';
 import {toSignal} from '@angular/core/rxjs-interop';
@@ -25,7 +25,7 @@ import {automaticLanguageIdsForRegion, selectedLanguageTarget} from '../create.r
 
 @Component({
   selector: 'bol-hero-advanced-langues',
-  imports: [ReactiveFormsModule, FormsModule, ButtonModule, FloatLabelModule, SelectModule, TooltipModule],
+  imports: [ReactiveFormsModule, FormsModule, ButtonModule, IftaLabelModule, SelectModule, TooltipModule],
   templateUrl: './langues.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [

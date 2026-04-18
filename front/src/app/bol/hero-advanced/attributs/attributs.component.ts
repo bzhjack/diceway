@@ -10,7 +10,7 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import {FloatLabelModule} from 'primeng/floatlabel';
+import {IftaLabelModule} from 'primeng/iftalabel';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {BolHerosAttributs} from '../../models/bol-heros.model';
@@ -20,7 +20,7 @@ import {attributValidator, attributsFormValidator} from '../create.validators';
 
 @Component({
   selector: 'bol-hero-advanced-attributs',
-  imports: [ReactiveFormsModule, FloatLabelModule, InputNumberModule],
+  imports: [ReactiveFormsModule, IftaLabelModule, InputNumberModule],
   templateUrl: './attributs.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [

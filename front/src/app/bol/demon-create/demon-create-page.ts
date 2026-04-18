@@ -11,7 +11,7 @@ import {BolDemonsService} from '../services/bol-demons.service';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {DialogService} from 'primeng/dynamicdialog';
-import {FloatLabelModule} from 'primeng/floatlabel';
+import {IftaLabelModule} from 'primeng/iftalabel';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {InputTextModule} from 'primeng/inputtext';
 import {SelectModule} from 'primeng/select';
@@ -31,7 +31,7 @@ interface DemonPouvoirDraft {
     ReactiveFormsModule,
     ButtonModule,
     CardModule,
-    FloatLabelModule,
+    IftaLabelModule,
     InputNumberModule,
     InputTextModule,
     SelectModule,

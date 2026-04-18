@@ -1,7 +1,7 @@
 <div class="space-y-4">
   <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
     <div class="min-w-0">
-      <p-floatlabel variant="over">
+      <p-iftalabel>
         <p-select
           inputId="advanced-carriere"
           class="w-full"
@@ -12,7 +12,7 @@
           placeholder="Choisir une carrière"
         />
         <label for="advanced-carriere">Ajouter une carrière</label>
-      </p-floatlabel>
+      </p-iftalabel>
     </div>
 
     <p-button
@@ -26,7 +26,7 @@
   @if (carriereDesavangeCount() > 0) {
     <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
       <div class="min-w-0">
-        <p-floatlabel variant="over">
+        <p-iftalabel>
           <p-select
             inputId="advanced-carriere-disadvantage"
             class="w-full"
@@ -37,7 +37,7 @@
             placeholder="Choisir un désavantage"
           />
           <label for="advanced-carriere-disadvantage">Désavantage de carrière</label>
-        </p-floatlabel>
+        </p-iftalabel>
       </div>
 
       <p-button
@@ -75,14 +75,14 @@
             }
           </div>
 
-          <p-floatlabel variant="over">
+          <p-iftalabel>
             <p-inputNumber
               inputId="advanced-carriere-value-{{ $index }}"
               class="dw-input-number"
               [formControl]="$any(control.get('value'))"
             />
             <label for="advanced-carriere-value-{{ $index }}">Rang</label>
-          </p-floatlabel>
+          </p-iftalabel>
 
           <p-button
             icon="pi pi-trash"

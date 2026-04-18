@@ -1,6 +1,6 @@
 <div class="space-y-4">
   <div class="grid gap-3 md:grid-cols-[10rem_minmax(0,1fr)_auto]">
-    <p-floatlabel variant="over">
+    <p-iftalabel>
       <p-select
         inputId="advanced-trait-type"
         class="w-full"
@@ -14,9 +14,9 @@
         optionValue="value"
       />
       <label for="advanced-trait-type">Type</label>
-    </p-floatlabel>
+    </p-iftalabel>
 
-    <p-floatlabel variant="over">
+    <p-iftalabel>
       <p-select
         inputId="advanced-trait"
         class="w-full"
@@ -58,7 +58,7 @@
         </ng-template>
       </p-select>
       <label for="advanced-trait">Trait</label>
-    </p-floatlabel>
+    </p-iftalabel>
 
     <p-button
       label="Ajouter"

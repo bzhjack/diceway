@@ -19,15 +19,15 @@
 
     <div class="grid gap-4">
       <div class="grid gap-4 md:grid-cols-2">
-        <p-floatlabel variant="over">
+        <p-iftalabel>
           <input pInputText id="advanced-joueur" class="w-full" [formControl]="joueurCtrl" />
           <label for="advanced-joueur">Joueur</label>
-        </p-floatlabel>
+        </p-iftalabel>
 
-        <p-floatlabel variant="over">
+        <p-iftalabel>
           <input pInputText id="advanced-nom" class="w-full" [formControl]="nomCtrl" />
           <label for="advanced-nom">Nom du héros</label>
-        </p-floatlabel>
+        </p-iftalabel>
       </div>
 
       <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto_auto]">
@@ -54,7 +54,7 @@
         />
       </div>
 
-      <p-floatlabel variant="over">
+      <p-iftalabel>
         <textarea
           pTextarea
           id="advanced-commentaire"
@@ -63,7 +63,7 @@
           [formControl]="commentaireCtrl"
         ></textarea>
         <label for="advanced-commentaire">Commentaire</label>
-      </p-floatlabel>
+      </p-iftalabel>
     </div>
   </div>
 

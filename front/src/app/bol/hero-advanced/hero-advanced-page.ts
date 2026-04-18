@@ -9,7 +9,7 @@ import {CardModule} from 'primeng/card';
 import {ConfirmPopupModule} from 'primeng/confirmpopup';
 import {ConfirmationService} from 'primeng/api';
 import {DialogService, DynamicDialogModule} from 'primeng/dynamicdialog';
-import {FloatLabelModule} from 'primeng/floatlabel';
+import {IftaLabelModule} from 'primeng/iftalabel';
 import {InputTextModule} from 'primeng/inputtext';
 import {TableModule} from 'primeng/table';
 import {BolHerosAttributs, BolHerosCombat, BolHerosModel, BolHerosOrigines, BolHerosRessources} from '../models/bol-heros.model';
@@ -35,7 +35,7 @@ import {HeroAdvancedArmuresComponent} from './armures/armures.component';
     CardModule,
     ConfirmPopupModule,
     DynamicDialogModule,
-    FloatLabelModule,
+    IftaLabelModule,
     InputTextModule,
     TableModule,
     HeroAdvancedOriginesComponent,
