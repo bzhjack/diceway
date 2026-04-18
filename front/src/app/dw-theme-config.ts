@@ -121,8 +121,29 @@ export const DwPreset = definePreset(Aura, {
     },
     floatlabel: {
       root: {
-        focusColor: '{surface.0}',
+        focusColor: '{form.field.float.label.color}',
       },
+      css: `
+        .p-floatlabel:has(input:focus) label,
+        .p-floatlabel:has(input:-webkit-autofill) label,
+        .p-floatlabel:has(textarea:focus) label,
+        .p-floatlabel:has(.p-inputwrapper-focus) label {
+          font-weight: 700;
+        }
+      `,
+    },
+    iftalabel: {
+      root: {
+        focusColor: '{form.field.float.label.color}',
+      },
+      css: `
+        .p-iftalabel:has(input:focus) label,
+        .p-iftalabel:has(input:-webkit-autofill) label,
+        .p-iftalabel:has(textarea:focus) label,
+        .p-iftalabel:has(.p-inputwrapper-focus) label {
+          font-weight: 700;
+        }
+      `,
     },
     inputnumber: {
       css: `
@@ -136,6 +157,11 @@ export const DwPreset = definePreset(Aura, {
           padding-block-start: var(--p-iftalabel-input-padding-top);
           padding-block-end: var(--p-iftalabel-input-padding-bottom);
           padding-inline: var(--p-form-field-padding-x);
+        }
+
+        .p-floatlabel:has(.p-inputwrapper-focus) label,
+        .p-iftalabel:has(.p-inputwrapper-focus) label {
+          font-weight: 700;
         }
       `,
     },
