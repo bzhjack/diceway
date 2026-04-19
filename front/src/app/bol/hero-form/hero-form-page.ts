@@ -470,6 +470,22 @@ export class HeroFormPageComponent {
     return control.invalid && (control.dirty || control.touched);
   }
 
+  protected armeOption(id: number | null | undefined): BolArmeModel | null {
+    if (!id) {
+      return null;
+    }
+
+    return (this.armesList() ?? []).find((arme: BolArmeModel) => Number(arme.id) === Number(id)) ?? null;
+  }
+
+  protected armureOption(id: number | null | undefined): BolArmureModel | null {
+    if (!id) {
+      return null;
+    }
+
+    return (this.armuresList() ?? []).find((armure: BolArmureModel) => Number(armure.id) === Number(id)) ?? null;
+  }
+
   private resetForm(): void {
     this.heroForm.reset(
       {

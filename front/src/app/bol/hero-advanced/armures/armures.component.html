@@ -10,7 +10,35 @@
           (ngModelChange)="selectedArmure.set($event)"
           optionLabel="armure"
           placeholder="Choisir une armure"
-        />
+        >
+          <ng-template #selectedItem let-armure>
+            @if (armure) {
+              <div class="flex min-w-0 flex-col gap-0.5 py-1">
+                <span class="truncate">{{ armure.armure }}</span>
+                <span class="text-xs text-slate-400">
+                  @if (armure.protection) {
+                    Protection {{ armure.protection }}
+                  } @else {
+                    Protection -
+                  }
+                </span>
+              </div>
+            }
+          </ng-template>
+
+          <ng-template #item let-armure>
+            <div class="flex min-w-0 flex-col gap-0.5 py-1">
+              <span class="truncate">{{ armure.armure }}</span>
+              <span class="text-xs text-slate-400">
+                @if (armure.protection) {
+                  Protection {{ armure.protection }}
+                } @else {
+                  Protection -
+                }
+              </span>
+            </div>
+          </ng-template>
+        </p-select>
         <label for="advanced-armure">Ajouter une armure</label>
       </p-iftalabel>
     </div>

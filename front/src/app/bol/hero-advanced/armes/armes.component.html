@@ -10,7 +10,35 @@
           (ngModelChange)="selectedArme.set($event)"
           optionLabel="arme"
           placeholder="Choisir une arme"
-        />
+        >
+          <ng-template #selectedItem let-arme>
+            @if (arme) {
+              <div class="flex min-w-0 flex-col gap-0.5 py-1">
+                <span class="truncate">{{ arme.arme }}</span>
+                <span class="text-xs text-slate-400">
+                  @if (arme.degats) {
+                    Dégâts {{ arme.degats }}
+                  } @else {
+                    Dégâts -
+                  }
+                </span>
+              </div>
+            }
+          </ng-template>
+
+          <ng-template #item let-arme>
+            <div class="flex min-w-0 flex-col gap-0.5 py-1">
+              <span class="truncate">{{ arme.arme }}</span>
+              <span class="text-xs text-slate-400">
+                @if (arme.degats) {
+                  Dégâts {{ arme.degats }}
+                } @else {
+                  Dégâts -
+                }
+              </span>
+            </div>
+          </ng-template>
+        </p-select>
         <label for="advanced-arme">Ajouter une arme</label>
       </p-iftalabel>
     </div>
