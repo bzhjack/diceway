@@ -16,6 +16,7 @@ Le projet s'appuie sur deux répertoires de travail principaux :
 - Ne pas modifier les fichiers générés dans `dist/`, `.angular/` ou `node_modules/`.
 - Préférer des changements ciblés qui respectent les conventions déjà en place.
 - Ne pas déplacer de code entre `front/` et `backend/` sans demande explicite.
+- Quand une tâche touche aux règles métier, à la création, à l'équipement, aux carrières, aux langues, aux traits ou à l'activation, consulter si nécessaire les fichiers `.md` du répertoire `rules/` avant de modifier le code.
 
 ## Commandes utiles
 
