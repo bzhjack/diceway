@@ -12,6 +12,7 @@ import {BolCarriereModel} from '../models/bol-carriere.model';
 import {BolDesavantageModel} from '../models/bol-desavantage.model';
 import {BolHerosModel} from '../models/bol-heros.model';
 import {BolLangueModel} from '../models/bol-langue.model';
+import {BolRegionModel} from '../models/bol-region.model';
 import {BolHerosStateService} from '../services/bol-heros-state.service';
 import {BolHerosService} from '../services/bol-heros.service';
 import {ButtonModule} from 'primeng/button';
@@ -25,34 +26,34 @@ import {TagModule} from 'primeng/tag';
 import {TextareaModule} from 'primeng/textarea';
 import {PictureComponent} from '../../shared/picture/picture';
 
-interface PnjSimpleDraft {
+interface HeroSimpleDraft {
   id: number;
 }
 
-interface PnjCarriereDraft extends PnjSimpleDraft {
+interface HeroCarriereDraft extends HeroSimpleDraft {
   value: number;
 }
 
-interface PnjTraitDraft extends PnjSimpleDraft {
+interface HeroTraitDraft extends HeroSimpleDraft {
   type: 'A' | 'D';
 }
 
-interface PnjTraitDetail {
+interface HeroTraitDetail {
   readonly title: string;
   readonly description: string | null;
 }
 
-interface PnjTraitEntry extends PnjTraitDraft {
+interface HeroTraitEntry extends HeroTraitDraft {
   readonly label: string;
-  readonly details: readonly PnjTraitDetail[];
+  readonly details: readonly HeroTraitDetail[];
 }
 
-interface PnjSelectedCarriereEntry extends PnjCarriereDraft {
+interface HeroSelectedCarriereEntry extends HeroCarriereDraft {
   readonly definition: BolCarriereModel;
 }
 
 @Component({
-  selector: 'bol-pnj-create-page',
+  selector: 'bol-hero-form-page',
   imports: [
     ReactiveFormsModule,
     ButtonModule,
@@ -64,11 +65,11 @@ interface PnjSelectedCarriereEntry extends PnjCarriereDraft {
     TagModule,
     TextareaModule,
   ],
-  templateUrl: './pnj-create-page.html',
+  templateUrl: './hero-form-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DialogService],
 })
-export class PnjCreatePageComponent {
+export class HeroFormPageComponent {
   private readonly herosService = inject(BolHerosService);
   private readonly herosStateService = inject(BolHerosStateService);
   private readonly formBuilder = inject(FormBuilder);
@@ -86,21 +87,16 @@ export class PnjCreatePageComponent {
   protected readonly languesList = this.herosStateService.langueList;
   protected readonly avantagesList = this.herosStateService.avantagesList;
   protected readonly desavantagesList = this.herosStateService.desavantagesList;
-
-  protected readonly typeOptions = [
-    { label: 'Piétaille', value: 'P' },
-    { label: 'Coriace', value: 'C' },
-    { label: 'Rival', value: 'R' },
-  ];
+  protected readonly regionList = this.herosStateService.regionList;
 
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly pending = signal(false);
-  protected readonly loadingPnj = signal(false);
+  protected readonly loadingHero = signal(false);
   protected readonly returnUrl = signal<string | null>(this.readReturnUrl());
-  protected readonly pnjId = computed(() => this.routeParamMap().get('id'));
-  protected readonly editMode = computed(() => Boolean(this.pnjId()));
+  protected readonly heroId = computed(() => this.routeParamMap().get('id'));
+  protected readonly editMode = computed(() => Boolean(this.heroId()));
   protected readonly pageTitle = computed(() =>
-    this.editMode() ? 'Modifier le PNJ' : 'Nouveau PNJ',
+    this.editMode() ? 'Modifier le héros' : 'Nouveau héros',
   );
   protected readonly pageEyebrow = computed(() =>
     this.editMode() ? 'Édition galerie BOL' : 'Galerie BOL',
@@ -110,7 +106,7 @@ export class PnjCreatePageComponent {
       return 'Enregistrement...';
     }
 
-    return this.editMode() ? 'Mettre à jour le PNJ' : 'Enregistrer le PNJ';
+    return this.editMode() ? 'Mettre à jour le héros' : 'Enregistrer le héros';
   });
 
   protected readonly selectedArmeId = new FormControl<number | null>(null);
@@ -120,11 +116,13 @@ export class PnjCreatePageComponent {
   protected readonly selectedAvantageId = new FormControl<number | null>(null);
   protected readonly selectedDesavantageId = new FormControl<number | null>(null);
 
-  protected readonly pnjForm = this.formBuilder.group({
+  protected readonly heroForm = this.formBuilder.group({
     id: this.formBuilder.control<string | null>(null),
+    active: this.formBuilder.control(false, Validators.required),
+    type: this.formBuilder.control<'H'>('H', Validators.required),
     nom: this.formBuilder.control('', Validators.required),
-    type: this.formBuilder.control<'P' | 'C' | 'R'>('P', Validators.required),
-    joueur: this.formBuilder.control('master', Validators.required),
+    joueur: this.formBuilder.control('', Validators.required),
+    region_id: this.formBuilder.control<number | null>(null, Validators.required),
     commentaire: this.formBuilder.control<string | null>(null),
     avatar: this.formBuilder.control<string | null>(null),
     vigueur: this.formBuilder.control(0, Validators.required),
@@ -135,10 +133,11 @@ export class PnjCreatePageComponent {
     melee: this.formBuilder.control(0, Validators.required),
     tir: this.formBuilder.control(0, Validators.required),
     defense: this.formBuilder.control(0, Validators.required),
-    vitalite: this.formBuilder.control(0, Validators.required),
+    vitalite: this.formBuilder.control(10, Validators.required),
+    heroisme: this.formBuilder.control(5, Validators.required),
+    experience: this.formBuilder.control(0, Validators.required),
     pouvoir: this.formBuilder.control(0, Validators.required),
     foi: this.formBuilder.control(0, Validators.required),
-    vilenie: this.formBuilder.control(0, Validators.required),
     creation: this.formBuilder.control(0, Validators.required),
     armes: this.formBuilder.array([]),
     armures: this.formBuilder.array([]),
@@ -148,82 +147,82 @@ export class PnjCreatePageComponent {
   });
 
   protected readonly avatarPreview = toSignal(
-    this.pnjForm.controls.avatar.valueChanges.pipe(startWith(this.pnjForm.controls.avatar.value)),
-    {
-      initialValue: this.pnjForm.controls.avatar.value,
-    },
+    this.heroForm.controls.avatar.valueChanges.pipe(startWith(this.heroForm.controls.avatar.value)),
+    {initialValue: this.heroForm.controls.avatar.value},
   );
   protected readonly selectedArmesDraft = toSignal(
     this.armes.valueChanges.pipe(startWith(this.armes.getRawValue())),
-    { initialValue: this.armes.getRawValue() },
+    {initialValue: this.armes.getRawValue()},
   );
   protected readonly selectedArmuresDraft = toSignal(
     this.armures.valueChanges.pipe(startWith(this.armures.getRawValue())),
-    { initialValue: this.armures.getRawValue() },
+    {initialValue: this.armures.getRawValue()},
   );
   protected readonly selectedCarrieresDraft = toSignal(
     this.carrieres.valueChanges.pipe(startWith(this.carrieres.getRawValue())),
-    { initialValue: this.carrieres.getRawValue() },
+    {initialValue: this.carrieres.getRawValue()},
   );
   protected readonly selectedLanguesDraft = toSignal(
     this.langues.valueChanges.pipe(startWith(this.langues.getRawValue())),
-    { initialValue: this.langues.getRawValue() },
+    {initialValue: this.langues.getRawValue()},
   );
   protected readonly selectedTraitsDraft = toSignal(
     this.traits.valueChanges.pipe(startWith(this.traits.getRawValue())),
-    { initialValue: this.traits.getRawValue() },
+    {initialValue: this.traits.getRawValue()},
   );
 
   protected readonly filteredArmes = computed(() => {
-    const ids = new Set((this.selectedArmesDraft() ?? []).map((item: PnjSimpleDraft) => Number(item.id)));
+    const ids = new Set((this.selectedArmesDraft() ?? []).map((item: HeroSimpleDraft) => Number(item.id)));
     return (this.armesList() ?? []).filter((arme: BolArmeModel) => !ids.has(Number(arme.id)));
   });
   protected readonly filteredArmures = computed(() => {
-    const ids = new Set((this.selectedArmuresDraft() ?? []).map((item: PnjSimpleDraft) => Number(item.id)));
+    const ids = new Set((this.selectedArmuresDraft() ?? []).map((item: HeroSimpleDraft) => Number(item.id)));
     return (this.armuresList() ?? []).filter((armure: BolArmureModel) => !ids.has(Number(armure.id)));
   });
   protected readonly filteredCarrieres = computed(() => {
-    const ids = new Set((this.selectedCarrieresDraft() ?? []).map((item: PnjCarriereDraft) => Number(item.id)));
+    const ids = new Set((this.selectedCarrieresDraft() ?? []).map((item: HeroCarriereDraft) => Number(item.id)));
     return (this.carrieresList() ?? []).filter((carriere: BolCarriereModel) => !ids.has(Number(carriere.id)));
   });
   protected readonly filteredLangues = computed(() => {
-    const ids = new Set((this.selectedLanguesDraft() ?? []).map((item: PnjSimpleDraft) => Number(item.id)));
+    const ids = new Set((this.selectedLanguesDraft() ?? []).map((item: HeroSimpleDraft) => Number(item.id)));
     return (this.languesList() ?? []).filter((langue: BolLangueModel) => !ids.has(Number(langue.id)));
   });
   protected readonly filteredAvantages = computed(() => {
     const ids = new Set(
       (this.selectedTraitsDraft() ?? [])
-        .filter((item: PnjTraitDraft) => item.type === 'A')
-        .map((item: PnjTraitDraft) => Number(item.id)),
+        .filter((item: HeroTraitDraft) => item.type === 'A')
+        .map((item: HeroTraitDraft) => Number(item.id)),
     );
-    return (this.avantagesList() ?? []).filter((avantage) => !ids.has(Number(avantage.id)));
+    return (this.avantagesList() ?? []).filter((avantage: BolAvantageModel) => !ids.has(Number(avantage.id)));
   });
   protected readonly filteredDesavantages = computed(() => {
     const ids = new Set(
       (this.selectedTraitsDraft() ?? [])
-        .filter((item: PnjTraitDraft) => item.type === 'D')
-        .map((item: PnjTraitDraft) => Number(item.id)),
+        .filter((item: HeroTraitDraft) => item.type === 'D')
+        .map((item: HeroTraitDraft) => Number(item.id)),
     );
-    return (this.desavantagesList() ?? []).filter((desavantage) => !ids.has(Number(desavantage.id)));
+    return (this.desavantagesList() ?? []).filter(
+      (desavantage: BolDesavantageModel) => !ids.has(Number(desavantage.id)),
+    );
   });
 
   protected readonly selectedArmes = computed(() =>
     (this.selectedArmesDraft() ?? [])
-      .map((entry: PnjSimpleDraft) =>
+      .map((entry: HeroSimpleDraft) =>
         (this.armesList() ?? []).find((arme: BolArmeModel) => Number(arme.id) === Number(entry.id)),
       )
       .filter((arme: BolArmeModel | undefined): arme is BolArmeModel => Boolean(arme)),
   );
   protected readonly selectedArmures = computed(() =>
     (this.selectedArmuresDraft() ?? [])
-      .map((entry: PnjSimpleDraft) =>
+      .map((entry: HeroSimpleDraft) =>
         (this.armuresList() ?? []).find((armure: BolArmureModel) => Number(armure.id) === Number(entry.id)),
       )
       .filter((armure: BolArmureModel | undefined): armure is BolArmureModel => Boolean(armure)),
   );
   protected readonly selectedCarrieres = computed(() =>
     (this.selectedCarrieresDraft() ?? [])
-      .map((entry: PnjCarriereDraft) => ({
+      .map((entry: HeroCarriereDraft) => ({
         ...entry,
         definition: (this.carrieresList() ?? []).find(
           (carriere: BolCarriereModel) => Number(carriere.id) === Number(entry.id),
@@ -231,20 +230,20 @@ export class PnjCreatePageComponent {
       }))
       .filter(
         (
-          entry: PnjCarriereDraft & {definition?: BolCarriereModel},
-        ): entry is PnjSelectedCarriereEntry => Boolean(entry.definition),
+          entry: HeroCarriereDraft & {definition?: BolCarriereModel},
+        ): entry is HeroSelectedCarriereEntry => Boolean(entry.definition),
       ),
   );
   protected readonly selectedLangues = computed(() =>
     (this.selectedLanguesDraft() ?? [])
-      .map((entry: PnjSimpleDraft) =>
+      .map((entry: HeroSimpleDraft) =>
         (this.languesList() ?? []).find((langue: BolLangueModel) => Number(langue.id) === Number(entry.id)),
       )
       .filter((langue: BolLangueModel | undefined): langue is BolLangueModel => Boolean(langue)),
   );
   protected readonly selectedTraitEntries = computed(() =>
     (this.selectedTraitsDraft() ?? [])
-      .map((entry: PnjTraitDraft) => ({
+      .map((entry: HeroTraitDraft) => ({
         ...entry,
         label:
           entry.type === 'A'
@@ -258,28 +257,38 @@ export class PnjCreatePageComponent {
       }))
       .filter(
         (
-          entry: PnjTraitDraft & {label?: string; details: readonly PnjTraitDetail[]},
-        ): entry is PnjTraitEntry => Boolean(entry.label),
+          entry: HeroTraitDraft & {label?: string; details: readonly HeroTraitDetail[]},
+        ): entry is HeroTraitEntry => Boolean(entry.label),
       ),
   );
+  protected readonly selectedRegion = computed(() => {
+    const regionId = this.heroForm.controls.region_id.value;
+    if (regionId === null) {
+      return null;
+    }
+
+    return (this.regionList() ?? []).find(
+      (region: BolRegionModel) => Number(region.id) === Number(regionId),
+    ) ?? null;
+  });
 
   constructor() {
     effect((onCleanup) => {
-      const pnjId = this.pnjId();
+      const heroId = this.heroId();
       this.returnUrl.set(this.readReturnUrl());
       this.errorMessage.set(null);
 
-      if (!pnjId) {
+      if (!heroId) {
         this.resetForm();
         return;
       }
 
-      this.loadingPnj.set(true);
+      this.loadingHero.set(true);
       const subscription = this.herosService
-        .pnj(pnjId)
-        .pipe(finalize(() => this.loadingPnj.set(false)))
+        .heros(heroId)
+        .pipe(finalize(() => this.loadingHero.set(false)))
         .subscribe({
-          next: (pnj) => this.hydrateForm(pnj),
+          next: (hero) => this.hydrateForm(hero),
           error: (error: unknown) => {
             this.errorMessage.set(this.extractErrorMessage(error, true));
           },
@@ -290,28 +299,28 @@ export class PnjCreatePageComponent {
   }
 
   protected get armes(): FormArray {
-    return this.pnjForm.controls.armes as FormArray;
+    return this.heroForm.controls.armes as FormArray;
   }
 
   protected get armures(): FormArray {
-    return this.pnjForm.controls.armures as FormArray;
+    return this.heroForm.controls.armures as FormArray;
   }
 
   protected get carrieres(): FormArray {
-    return this.pnjForm.controls.carrieres as FormArray;
+    return this.heroForm.controls.carrieres as FormArray;
   }
 
   protected get langues(): FormArray {
-    return this.pnjForm.controls.langues as FormArray;
+    return this.heroForm.controls.langues as FormArray;
   }
 
   protected get traits(): FormArray {
-    return this.pnjForm.controls.traits as FormArray;
+    return this.heroForm.controls.traits as FormArray;
   }
 
   protected pickAvatar(): void {
     const ref = this.dialogService.open(PictureComponent, {
-      header: 'Avatar du PNJ',
+      header: 'Avatar du héros',
       modal: true,
       closable: false,
       width: 'min(960px, 92vw)',
@@ -319,7 +328,7 @@ export class PnjCreatePageComponent {
 
     ref?.onClose.pipe(take(1)).subscribe((avatar: string | null) => {
       if (avatar) {
-        this.pnjForm.controls.avatar.setValue(avatar);
+        this.heroForm.controls.avatar.setValue(avatar);
       }
     });
   }
@@ -330,7 +339,7 @@ export class PnjCreatePageComponent {
       return;
     }
 
-    this.armes.push(this.formBuilder.group({ id: this.formBuilder.control(Number(id), Validators.required) }));
+    this.armes.push(this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}));
     this.selectedArmeId.setValue(null);
   }
 
@@ -341,7 +350,7 @@ export class PnjCreatePageComponent {
     }
 
     this.armures.push(
-      this.formBuilder.group({ id: this.formBuilder.control(Number(id), Validators.required) }),
+      this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}),
     );
     this.selectedArmureId.setValue(null);
   }
@@ -368,7 +377,7 @@ export class PnjCreatePageComponent {
     }
 
     this.langues.push(
-      this.formBuilder.group({ id: this.formBuilder.control(Number(id), Validators.required) }),
+      this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}),
     );
     this.selectedLangueId.setValue(null);
   }
@@ -393,23 +402,23 @@ export class PnjCreatePageComponent {
     items.removeAt(index);
   }
 
-  protected savePnj(): void {
-    if (this.pending() || this.loadingPnj()) {
+  protected saveHero(): void {
+    if (this.pending() || this.loadingHero()) {
       return;
     }
 
-    if (this.pnjForm.invalid) {
-      this.pnjForm.markAllAsTouched();
+    if (this.heroForm.invalid) {
+      this.heroForm.markAllAsTouched();
       return;
     }
 
     this.pending.set(true);
     this.errorMessage.set(null);
 
-    const payload = this.buildPnjPayload();
+    const payload = this.buildHeroPayload();
     const action$ = this.editMode()
-      ? this.herosService.quickUpdate(payload)
-      : this.herosService.quickCreate(payload);
+      ? this.herosService.updateHeros(payload)
+      : this.herosService.createHeros(payload);
 
     action$
       .pipe(finalize(() => this.pending.set(false)))
@@ -425,18 +434,20 @@ export class PnjCreatePageComponent {
     this.navigateBack(false);
   }
 
-  protected onError(controlName: keyof typeof this.pnjForm.controls): boolean {
-    const control = this.pnjForm.controls[controlName];
+  protected onError(controlName: keyof typeof this.heroForm.controls): boolean {
+    const control = this.heroForm.controls[controlName];
     return control.invalid && (control.dirty || control.touched);
   }
 
   private resetForm(): void {
-    this.pnjForm.reset(
+    this.heroForm.reset(
       {
         id: null,
+        active: false,
+        type: 'H',
         nom: '',
-        type: 'P',
-        joueur: 'master',
+        joueur: '',
+        region_id: null,
         commentaire: null,
         avatar: null,
         vigueur: 0,
@@ -447,19 +458,20 @@ export class PnjCreatePageComponent {
         melee: 0,
         tir: 0,
         defense: 0,
-        vitalite: 0,
+        vitalite: 10,
+        heroisme: 5,
+        experience: 0,
         pouvoir: 0,
         foi: 0,
-        vilenie: 0,
         creation: 0,
       },
-      { emitEvent: false },
+      {emitEvent: false},
     );
-    this.armes.clear({ emitEvent: false });
-    this.armures.clear({ emitEvent: false });
-    this.carrieres.clear({ emitEvent: false });
-    this.langues.clear({ emitEvent: false });
-    this.traits.clear({ emitEvent: false });
+    this.armes.clear({emitEvent: false});
+    this.armures.clear({emitEvent: false});
+    this.carrieres.clear({emitEvent: false});
+    this.langues.clear({emitEvent: false});
+    this.traits.clear({emitEvent: false});
     this.selectedArmeId.setValue(null);
     this.selectedArmureId.setValue(null);
     this.selectedCarriereId.setValue(null);
@@ -469,123 +481,184 @@ export class PnjCreatePageComponent {
     this.syncSelectionArrays();
   }
 
-  private hydrateForm(pnj: BolHerosModel): void {
+  private hydrateForm(hero: BolHerosModel): void {
     this.resetForm();
 
-    for (const arme of pnj.armes) {
+    for (const arme of hero.armes) {
       if (typeof arme === 'object') {
         this.armes.push(
           this.formBuilder.group({
             id: this.formBuilder.control(Number(arme.arme_id), Validators.required),
           }),
-          { emitEvent: false },
+          {emitEvent: false},
         );
       }
     }
 
-    for (const armure of pnj.armures) {
+    for (const armure of hero.armures) {
       if (typeof armure === 'object') {
         this.armures.push(
           this.formBuilder.group({
             id: this.formBuilder.control(Number(armure.armure_id), Validators.required),
           }),
-          { emitEvent: false },
+          {emitEvent: false},
         );
       }
     }
 
-    for (const carriere of pnj.carrieres) {
+    for (const carriere of hero.carrieres) {
       this.carrieres.push(
         this.formBuilder.group({
           id: this.formBuilder.control(Number(carriere.carriere_id), Validators.required),
           value: this.formBuilder.control(Number(carriere.value), Validators.required),
         }),
-        { emitEvent: false },
+        {emitEvent: false},
       );
     }
 
-    for (const langue of pnj.origines.langues) {
+    for (const langue of hero.origines.langues) {
       if (typeof langue === 'object') {
         this.langues.push(
           this.formBuilder.group({
             id: this.formBuilder.control(Number(langue.langue_id), Validators.required),
           }),
-          { emitEvent: false },
+          {emitEvent: false},
         );
       }
     }
 
-    for (const trait of pnj.traits) {
+    for (const trait of hero.traits) {
       this.traits.push(
         this.formBuilder.group({
           id: this.formBuilder.control(Number(trait.traitable_id), Validators.required),
           type: this.formBuilder.control<'A' | 'D'>(trait.type, Validators.required),
         }),
-        { emitEvent: false },
+        {emitEvent: false},
       );
     }
 
-    this.pnjForm.patchValue(
+    this.heroForm.patchValue(
       {
-        id: pnj.id,
-        nom: pnj.origines.nom ?? '',
-        type: (pnj.type as 'P' | 'C' | 'R') ?? 'P',
-        joueur: pnj.origines.joueur ?? 'master',
-        commentaire: pnj.origines.commentaire ?? null,
-        avatar: pnj.origines.avatar ?? null,
-        vigueur: pnj.attributs.vigueur,
-        agilite: pnj.attributs.agilite,
-        esprit: pnj.attributs.esprit,
-        aura: pnj.attributs.aura,
-        initiative: pnj.combat.initiative,
-        melee: pnj.combat.melee,
-        tir: pnj.combat.tir,
-        defense: pnj.combat.defense,
-        vitalite: pnj.ressources.vitalite,
-        pouvoir: pnj.ressources.pouvoir,
-        foi: pnj.ressources.foi,
-        vilenie: pnj.ressources.vilenie,
-        creation: pnj.ressources.creation,
+        id: hero.id,
+        active: hero.active,
+        type: 'H',
+        nom: hero.origines.nom ?? '',
+        joueur: hero.origines.joueur ?? '',
+        region_id: hero.origines.region_id !== null ? Number(hero.origines.region_id) : null,
+        commentaire: hero.origines.commentaire ?? null,
+        avatar: hero.origines.avatar ?? null,
+        vigueur: hero.attributs.vigueur,
+        agilite: hero.attributs.agilite,
+        esprit: hero.attributs.esprit,
+        aura: hero.attributs.aura,
+        initiative: hero.combat.initiative,
+        melee: hero.combat.melee,
+        tir: hero.combat.tir,
+        defense: hero.combat.defense,
+        vitalite: hero.ressources.vitalite,
+        heroisme: hero.ressources.heroisme,
+        experience: hero.ressources.experience,
+        pouvoir: hero.ressources.pouvoir,
+        foi: hero.ressources.foi,
+        creation: hero.ressources.creation,
       },
-      { emitEvent: true },
+      {emitEvent: true},
     );
     this.syncSelectionArrays();
   }
 
-  private buildPnjPayload(): Record<string, unknown> {
-    const rawValue = this.pnjForm.getRawValue();
+  private buildHeroPayload(): Record<string, unknown> {
+    const rawValue = this.heroForm.getRawValue();
+    const origines = {
+      joueur: rawValue.joueur,
+      nom: rawValue.nom,
+      commentaire: rawValue.commentaire,
+      region_id: rawValue.region_id !== null ? Number(rawValue.region_id) : null,
+      avatar: rawValue.avatar,
+      langues: (rawValue.langues as HeroSimpleDraft[]).map((langue) => ({
+        id: Number(langue.id),
+        langue_id: Number(langue.id),
+      })),
+    };
+    const attributs = {
+      vigueur: Number(rawValue.vigueur),
+      agilite: Number(rawValue.agilite),
+      esprit: Number(rawValue.esprit),
+      aura: Number(rawValue.aura),
+    };
+    const combat = {
+      initiative: Number(rawValue.initiative),
+      melee: Number(rawValue.melee),
+      tir: Number(rawValue.tir),
+      defense: Number(rawValue.defense),
+    };
+    const ressources = {
+      vitalite: Number(rawValue.vitalite),
+      heroisme: Number(rawValue.heroisme),
+      experience: Number(rawValue.experience),
+      pouvoir: Number(rawValue.pouvoir),
+      foi: Number(rawValue.foi),
+      creation: Number(rawValue.creation),
+      vilenie: 0,
+    };
+    const carrieres = (rawValue.carrieres as HeroCarriereDraft[]).map((carriere) => ({
+      id: Number(carriere.id),
+      carriere_id: Number(carriere.id),
+      value: Number(carriere.value),
+    }));
+    const traits = (rawValue.traits as HeroTraitDraft[]).map((trait) => ({
+      id: Number(trait.id),
+      traitable_id: Number(trait.id),
+      type: trait.type,
+      detail: null,
+      region_id: null,
+      carriere: false,
+    }));
+    const armes = (rawValue.armes as HeroSimpleDraft[]).map((arme) => ({
+      id: Number(arme.id),
+      arme_id: Number(arme.id),
+    }));
+    const armures = (rawValue.armures as HeroSimpleDraft[]).map((armure) => ({
+      id: Number(armure.id),
+      armure_id: Number(armure.id),
+    }));
+    const langues = (rawValue.langues as HeroSimpleDraft[]).map((langue) => ({
+      id: Number(langue.id),
+      langue_id: Number(langue.id),
+    }));
 
     return {
       id: rawValue.id,
-      nom: rawValue.nom,
+      active: Boolean(rawValue.active),
       type: rawValue.type,
-      joueur: rawValue.joueur,
-      commentaire: rawValue.commentaire,
-      avatar: rawValue.avatar,
-      vigueur: rawValue.vigueur,
-      agilite: rawValue.agilite,
-      esprit: rawValue.esprit,
-      aura: rawValue.aura,
-      initiative: rawValue.initiative,
-      melee: rawValue.melee,
-      tir: rawValue.tir,
-      defense: rawValue.defense,
-      vitalite: rawValue.vitalite,
-      pouvoir: rawValue.pouvoir,
-      foi: rawValue.foi,
-      vilenie: rawValue.vilenie,
-      creation: rawValue.creation,
-      armes: (rawValue.armes as PnjSimpleDraft[]).map((arme) => ({ id: Number(arme.id) })),
-      armures: (rawValue.armures as PnjSimpleDraft[]).map((armure) => ({ id: Number(armure.id) })),
-      carrieres: (rawValue.carrieres as PnjCarriereDraft[]).map((carriere) => ({
-        id: Number(carriere.id),
-        value: Number(carriere.value),
-      })),
-      langues: (rawValue.langues as PnjSimpleDraft[]).map((langue) => ({ id: Number(langue.id) })),
-      traits: (rawValue.traits as PnjTraitDraft[]).map((trait) => ({
-        id: Number(trait.id),
-        type: trait.type,
-      })),
+      nom: origines.nom,
+      joueur: origines.joueur,
+      region_id: origines.region_id,
+      commentaire: origines.commentaire,
+      avatar: origines.avatar,
+      vigueur: attributs.vigueur,
+      agilite: attributs.agilite,
+      esprit: attributs.esprit,
+      aura: attributs.aura,
+      initiative: combat.initiative,
+      melee: combat.melee,
+      tir: combat.tir,
+      defense: combat.defense,
+      vitalite: ressources.vitalite,
+      heroisme: ressources.heroisme,
+      experience: ressources.experience,
+      pouvoir: ressources.pouvoir,
+      foi: ressources.foi,
+      creation: ressources.creation,
+      origines,
+      attributs,
+      combat,
+      ressources,
+      armes,
+      armures,
+      carrieres,
+      langues,
+      traits,
     };
   }
 
@@ -628,13 +701,13 @@ export class PnjCreatePageComponent {
     }
 
     return loading
-      ? 'Le chargement du PNJ a échoué.'
+      ? 'Le chargement du héros a échoué.'
       : this.editMode()
-        ? 'La mise à jour du PNJ a échoué.'
-        : 'La création du PNJ a échoué.';
+        ? 'La mise à jour du héros a échoué.'
+        : 'La création du héros a échoué.';
   }
 
-  private traitDetails(entry: PnjTraitDraft): readonly PnjTraitDetail[] {
+  private traitDetails(entry: HeroTraitDraft): readonly HeroTraitDetail[] {
     const source =
       entry.type === 'A'
         ? (this.avantagesList() ?? []).find(
@@ -648,12 +721,12 @@ export class PnjCreatePageComponent {
       return [];
     }
 
-    const details: PnjTraitDetail[] = [];
+    const details: HeroTraitDetail[] = [];
     if ('de_bonus' in source && source.de_bonus) {
-      details.push({ title: 'Dé bonus', description: source.de_bonus_domaine });
+      details.push({title: 'Dé bonus', description: source.de_bonus_domaine});
     }
     if ('de_malus' in source && source.de_malus) {
-      details.push({ title: 'Dé malus', description: source.de_malus_domaine });
+      details.push({title: 'Dé malus', description: source.de_malus_domaine});
     }
     if (source.attribut) {
       const attributeValue =
@@ -664,17 +737,17 @@ export class PnjCreatePageComponent {
       });
     }
     if (source.description) {
-      details.push({ title: 'Détails', description: source.description });
+      details.push({title: 'Détails', description: source.description});
     }
 
     return details;
   }
 
   private syncSelectionArrays(): void {
-    this.armes.updateValueAndValidity({ emitEvent: true });
-    this.armures.updateValueAndValidity({ emitEvent: true });
-    this.carrieres.updateValueAndValidity({ emitEvent: true });
-    this.langues.updateValueAndValidity({ emitEvent: true });
-    this.traits.updateValueAndValidity({ emitEvent: true });
+    this.armes.updateValueAndValidity({emitEvent: true});
+    this.armures.updateValueAndValidity({emitEvent: true});
+    this.carrieres.updateValueAndValidity({emitEvent: true});
+    this.langues.updateValueAndValidity({emitEvent: true});
+    this.traits.updateValueAndValidity({emitEvent: true});
   }
 }

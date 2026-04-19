@@ -18,53 +18,53 @@ export const routes: Routes = [
   {
     path: 'create/creature',
     loadComponent: () =>
-      import('./bol/creature-create/creature-create-page').then(
-        (module) => module.CreatureCreatePageComponent,
+      import('./bol/creature-form/creature-form-page').then(
+        (module) => module.CreatureFormPageComponent,
       ),
     canActivate: [authGuard],
   },
   {
     path: 'create/creature/:id',
     loadComponent: () =>
-      import('./bol/creature-create/creature-create-page').then(
-        (module) => module.CreatureCreatePageComponent,
+      import('./bol/creature-form/creature-form-page').then(
+        (module) => module.CreatureFormPageComponent,
       ),
     canActivate: [authGuard],
   },
   {
     path: 'create/demon',
     loadComponent: () =>
-      import('./bol/demon-create/demon-create-page').then((module) => module.DemonCreatePageComponent),
+      import('./bol/demon-form/demon-form-page').then((module) => module.DemonFormPageComponent),
     canActivate: [authGuard],
   },
   {
     path: 'create/demon/:id',
     loadComponent: () =>
-      import('./bol/demon-create/demon-create-page').then((module) => module.DemonCreatePageComponent),
+      import('./bol/demon-form/demon-form-page').then((module) => module.DemonFormPageComponent),
     canActivate: [authGuard],
   },
   {
     path: 'create/pnj',
     loadComponent: () =>
-      import('./bol/pnj-create/pnj-create-page').then((module) => module.PnjCreatePageComponent),
+      import('./bol/pnj-form/pnj-form-page').then((module) => module.PnjFormPageComponent),
     canActivate: [authGuard],
   },
   {
     path: 'create/pnj/:id',
     loadComponent: () =>
-      import('./bol/pnj-create/pnj-create-page').then((module) => module.PnjCreatePageComponent),
+      import('./bol/pnj-form/pnj-form-page').then((module) => module.PnjFormPageComponent),
     canActivate: [authGuard],
   },
   {
     path: 'create/hero',
     loadComponent: () =>
-      import('./bol/hero-create/hero-create-page').then((module) => module.HeroCreatePageComponent),
+      import('./bol/hero-form/hero-form-page').then((module) => module.HeroFormPageComponent),
     canActivate: [authGuard],
   },
   {
     path: 'create/hero/:id',
     loadComponent: () =>
-      import('./bol/hero-create/hero-create-page').then((module) => module.HeroCreatePageComponent),
+      import('./bol/hero-form/hero-form-page').then((module) => module.HeroFormPageComponent),
     canActivate: [authGuard],
   },
   {

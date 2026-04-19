@@ -25,7 +25,7 @@ interface CreatureCapaciteDraft {
 }
 
 @Component({
-  selector: 'bol-creature-create-page',
+  selector: 'bol-creature-form-page',
   imports: [
     JsonPipe,
     ReactiveFormsModule,
@@ -38,11 +38,11 @@ interface CreatureCapaciteDraft {
     TagModule,
     TextareaModule,
   ],
-  templateUrl: './creature-create-page.html',
+  templateUrl: './creature-form-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DialogService],
 })
-export class CreatureCreatePageComponent {
+export class CreatureFormPageComponent {
   private readonly creatureStateService = inject(BolCreatureStateService);
   private readonly creaturesService = inject(BolCreaturesService);
   private readonly formBuilder = inject(FormBuilder);

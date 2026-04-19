@@ -25,7 +25,7 @@ interface DemonPouvoirDraft {
 }
 
 @Component({
-  selector: 'bol-demon-create-page',
+  selector: 'bol-demon-form-page',
   imports: [
     JsonPipe,
     ReactiveFormsModule,
@@ -38,11 +38,11 @@ interface DemonPouvoirDraft {
     TagModule,
     TextareaModule,
   ],
-  templateUrl: './demon-create-page.html',
+  templateUrl: './demon-form-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DialogService],
 })
-export class DemonCreatePageComponent {
+export class DemonFormPageComponent {
   private readonly demonStateService = inject(BolDemonStateService);
   private readonly demonsService = inject(BolDemonsService);
   private readonly formBuilder = inject(FormBuilder);
