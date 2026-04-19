@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, effect, forwardRef, inject, input, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, effect, forwardRef, inject, input, signal} from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -17,6 +17,7 @@ import {IftaLabelModule} from 'primeng/iftalabel';
 import {InputTextModule} from 'primeng/inputtext';
 import {TextareaModule} from 'primeng/textarea';
 import {toSignal} from '@angular/core/rxjs-interop';
+import {startWith} from 'rxjs';
 import {BolHerosLangueModel} from '../../models/bol-langue.model';
 import {BolHerosOrigines} from '../../models/bol-heros.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
@@ -82,7 +83,10 @@ export class HeroAdvancedOriginesComponent implements ControlValueAccessor, Vali
     initialValue: this.originesForm.getRawValue(),
   });
   protected readonly currentRegion = this.herosStateService.currentHerosRegion;
-  protected readonly avatarPreview = computed(() => this.avatarCtrl.value);
+  protected readonly avatarPreview = toSignal(
+    this.avatarCtrl.valueChanges.pipe(startWith(this.avatarCtrl.value)),
+    {initialValue: this.avatarCtrl.value},
+  );
 
   private onChange: (value: BolHerosOrigines) => void = () => undefined;
   private onTouched: () => void = () => undefined;
