@@ -78,6 +78,9 @@ export class HeroAdvancedTraitsComponent implements ControlValueAccessor {
   protected readonly herosRegionalDesavantages = computed(() =>
     this.herosDesavantages().filter((trait) => Number(trait.region_id) > 0),
   );
+  protected readonly herosGeneralDesavantages = computed(() =>
+    this.herosDesavantages().filter((trait) => Number(trait.region_id) <= 0),
+  );
   protected readonly canAddAdvantage = computed(() => this.herosAvantages().length < 3);
   protected readonly traitList = computed(() => {
     const allTraits = this.contextType() === 'A' ? this.mergedAvantages() : this.mergedDesavantages();
@@ -196,6 +199,20 @@ export class HeroAdvancedTraitsComponent implements ControlValueAccessor {
     const regionalAvantageCount = this.herosStateService.regionalAvantages().length;
     if (regionalAvantageCount && !this.herosRegionalAvantages().length) {
       warnings.push({step: 'Traits', warn: 'Vous devez choisir au moins un avantage régional.'});
+    }
+
+    if (this.herosAvantages().length >= 2 && this.herosRegionalDesavantages().length === 0) {
+      warnings.push({
+        step: 'Traits',
+        warn: 'Le 2e avantage exige un désavantage régional ou coûte 1 point d’héroïsme.',
+      });
+    }
+
+    if (this.herosAvantages().length >= 3 && this.herosGeneralDesavantages().length === 0) {
+      warnings.push({
+        step: 'Traits',
+        warn: 'Le 3e avantage exige un désavantage général ou coûte 1 point d’héroïsme.',
+      });
     }
 
     this.traitsWarns.set(warnings);

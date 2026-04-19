@@ -54,6 +54,9 @@ export class BolHerosStateService {
   protected currentHeroRegionalDesavantages = computed(
     () => this.currentHeroDesavantages().filter((item) => Number(item.region_id) > 0) ?? []
   );
+  protected currentHeroGeneralDesavantages = computed(
+    () => this.currentHeroDesavantages().filter((item) => Number(item.region_id) <= 0) ?? []
+  );
   protected currentHeroCarriereDesvantages = computed(
     () =>
       this.currentHeros()?.traits?.filter(
@@ -65,8 +68,8 @@ export class BolHerosStateService {
   );
   heroismCost = computed(() => {
     const advantageCount = this.currentHeroAvantages().length;
-    const nonCareerDisadvantageCount = this.currentHeroDesavantages().length;
     const regionalDisadvantageCount = this.currentHeroRegionalDesavantages().length;
+    const generalDisadvantageCount = this.currentHeroGeneralDesavantages().length;
     const extraAdvantages = Math.max(advantageCount - 1, 0);
 
     let cost = 0;
@@ -74,12 +77,8 @@ export class BolHerosStateService {
       cost += 1;
     }
 
-    if (extraAdvantages >= 2) {
-      const usedRegionalDisadvantage = regionalDisadvantageCount > 0 ? 1 : 0;
-      const remainingDisadvantages = nonCareerDisadvantageCount - usedRegionalDisadvantage;
-      if (remainingDisadvantages < 1) {
-        cost += 1;
-      }
+    if (extraAdvantages >= 2 && generalDisadvantageCount === 0) {
+      cost += 1;
     }
 
     return cost;
