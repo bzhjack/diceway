@@ -100,7 +100,7 @@ export class HeroAdvancedLanguesComponent implements ControlValueAccessor, Valid
       this.updateWarnings();
       this.onChange(this.langues.getRawValue());
       this.onTouched();
-    }, {allowSignalWrites: true});
+    });
   }
 
   protected get langues(): FormArray<FormControl<number>> {

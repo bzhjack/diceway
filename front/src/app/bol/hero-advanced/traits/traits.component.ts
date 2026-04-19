@@ -99,7 +99,7 @@ export class HeroAdvancedTraitsComponent implements ControlValueAccessor {
       this.checkWarnings();
       this.onChange(this.traits.getRawValue() as BolHerosTraitsModel[]);
       this.onTouched();
-    }, {allowSignalWrites: true});
+    });
   }
 
   protected get traits(): FormArray {

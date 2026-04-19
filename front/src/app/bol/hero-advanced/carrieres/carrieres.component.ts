@@ -102,7 +102,7 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
       this.updateWarnings();
       this.onChange(this.carrieres.getRawValue() as BolHerosCarriereModel[]);
       this.onTouched();
-    }, {allowSignalWrites: true});
+    });
   }
 
   protected get carrieres(): FormArray {

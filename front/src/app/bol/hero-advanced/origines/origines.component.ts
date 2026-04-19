@@ -98,7 +98,7 @@ export class HeroAdvancedOriginesComponent implements ControlValueAccessor, Vali
       this.updateWarnings();
       this.onChange(this.originesForm.getRawValue() as BolHerosOrigines);
       this.onTouched();
-    }, {allowSignalWrites: true});
+    });
   }
 
   protected pickAvatar(): void {

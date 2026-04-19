@@ -322,7 +322,7 @@
                     </div>
                     <p-popover #traitPanel>
                       <div class="hero-trait-panel">
-                        @for (detail of trait.details; track detail) {
+                        @for (detail of trait.details; track detail.title + '-' + (detail.description ?? '')) {
                           <div class="hero-trait-panel__section">
                             <div class="hero-trait-panel__title">{{ detail.title }}</div>
                             @if (detail.description) {
