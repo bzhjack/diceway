@@ -2,6 +2,8 @@
   class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(52,211,153,0.1),_transparent_26%),radial-gradient(circle_at_top_right,_rgba(56,189,248,0.12),_transparent_22%),linear-gradient(180deg,_#000000,_#0f172a_45%,_#000000)] px-4 py-6 md:px-6"
 >
   <div class="mx-auto flex max-w-7xl flex-col gap-4">
+    <p-confirmpopup />
+
     <p-card
       styleClass="!border !border-[#2d3748] !bg-[#1a202c]/96 !text-slate-50 !shadow-[0_24px_60px_rgba(0,0,0,0.28)]"
     >
@@ -42,6 +44,16 @@
               [disabled]="pending() || loadingHero()"
               styleClass="!bg-[#059669] !border-[#059669] !text-white !px-5"
             />
+
+            @if (editMode() && !heroForm.controls.active.value) {
+              <p-button
+                label="Activer le héros"
+                icon="pi pi-check"
+                severity="success"
+                [disabled]="activateDisabled()"
+                (onClick)="confirmActivation($event)"
+              />
+            }
           </div>
         </div>
 

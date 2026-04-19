@@ -5,6 +5,7 @@ import {FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators} fr
 import {ActivatedRoute, Router} from '@angular/router';
 import {startWith, take} from 'rxjs';
 import {finalize} from 'rxjs/operators';
+import {ConfirmationService} from 'primeng/api';
 import {BolArmureModel} from '../models/bol-armure.model';
 import {BolArmeModel} from '../models/bol-arme.model';
 import {BolAvantageModel} from '../models/bol-avantage.model';
@@ -17,6 +18,7 @@ import {BolHerosStateService} from '../services/bol-heros-state.service';
 import {BolHerosService} from '../services/bol-heros.service';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
+import {ConfirmPopupModule} from 'primeng/confirmpopup';
 import {DialogService} from 'primeng/dynamicdialog';
 import {IftaLabelModule} from 'primeng/iftalabel';
 import {InputNumberModule} from 'primeng/inputnumber';
@@ -58,6 +60,7 @@ interface HeroSelectedCarriereEntry extends HeroCarriereDraft {
     ReactiveFormsModule,
     ButtonModule,
     CardModule,
+    ConfirmPopupModule,
     IftaLabelModule,
     InputNumberModule,
     InputTextModule,
@@ -67,7 +70,7 @@ interface HeroSelectedCarriereEntry extends HeroCarriereDraft {
   ],
   templateUrl: './hero-form-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService],
+  providers: [DialogService, ConfirmationService],
 })
 export class HeroFormPageComponent {
   private readonly herosService = inject(BolHerosService);
@@ -77,6 +80,7 @@ export class HeroFormPageComponent {
   private readonly location = inject(Location);
   private readonly router = inject(Router);
   private readonly dialogService = inject(DialogService);
+  private readonly confirmationService = inject(ConfirmationService);
   private readonly routeParamMap = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
   });
@@ -106,8 +110,11 @@ export class HeroFormPageComponent {
       return 'Enregistrement...';
     }
 
-    return this.editMode() ? 'Mettre à jour le héros' : 'Enregistrer le héros';
+    return this.editMode() ? 'Enregistrer' : 'Créer le brouillon';
   });
+  protected readonly activateDisabled = computed(
+    () => this.pending() || this.loadingHero() || this.heroForm.invalid || this.heroForm.controls.active.value,
+  );
 
   protected readonly selectedArmeId = new FormControl<number | null>(null);
   protected readonly selectedArmureId = new FormControl<number | null>(null);
@@ -403,6 +410,22 @@ export class HeroFormPageComponent {
   }
 
   protected saveHero(): void {
+    this.submit(false);
+  }
+
+  protected confirmActivation(event: Event): void {
+    this.confirmationService.confirm({
+      target: event.currentTarget as EventTarget,
+      message: 'Voulez-vous activer ce héros ?',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass: 'p-button-success p-button-sm',
+      acceptLabel: 'Oui',
+      rejectLabel: 'Non',
+      accept: () => this.submit(true),
+    });
+  }
+
+  private submit(activate: boolean): void {
     if (this.pending() || this.loadingHero()) {
       return;
     }
@@ -416,6 +439,7 @@ export class HeroFormPageComponent {
     this.errorMessage.set(null);
 
     const payload = this.buildHeroPayload();
+    payload['active'] = activate || Boolean(payload['active']);
     const action$ = this.editMode()
       ? this.herosService.updateHeros(payload)
       : this.herosService.createHeros(payload);
@@ -423,7 +447,14 @@ export class HeroFormPageComponent {
     action$
       .pipe(finalize(() => this.pending.set(false)))
       .subscribe({
-        next: () => this.navigateBack(true),
+        next: (hero: BolHerosModel) => {
+          if (!this.editMode() && !activate && hero.id) {
+            this.navigateToDraft(hero.id);
+            return;
+          }
+
+          this.navigateBack(true);
+        },
         error: (error: unknown) => {
           this.errorMessage.set(this.extractErrorMessage(error, false));
         },
@@ -675,6 +706,12 @@ export class HeroFormPageComponent {
     }
 
     void this.router.navigateByUrl('/');
+  }
+
+  private navigateToDraft(heroId: string | number): void {
+    void this.router.navigate(['/create/hero', heroId], {
+      state: this.returnUrl() ? {returnUrl: this.returnUrl()!} : undefined,
+    });
   }
 
   private readReturnUrl(): string | null {
