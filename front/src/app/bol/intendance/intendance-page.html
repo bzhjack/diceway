@@ -1,0 +1,73 @@
+<section
+  class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(245,158,11,0.13),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(16,185,129,0.08),_transparent_22%),linear-gradient(180deg,_#000000,_#0f172a_45%,_#000000)] px-4 py-6 md:px-6"
+>
+  <div class="mx-auto flex max-w-5xl flex-col gap-4">
+    <p-card
+      styleClass="!border !border-[#2d3748] !bg-[#1a202c]/96 !text-slate-50 !shadow-[0_24px_60px_rgba(0,0,0,0.28)]"
+    >
+      <div class="flex flex-col gap-6">
+        <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <div
+                class="flex h-14 w-14 items-center justify-center border border-[#424b57] bg-[#b45309] text-2xl text-white"
+              >
+                <i class="pi pi-briefcase" aria-hidden="true"></i>
+              </div>
+              <div class="space-y-1">
+                <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-amber-300">
+                  Référentiels de jeu
+                </p>
+                <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none">
+                  Intendance
+                </h1>
+              </div>
+            </div>
+
+            <p class="m-0 max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
+              Cette entrée servira à gérer l’équipement et les listes de référence de la table:
+              armes, armures et autres ressources de création.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap gap-2">
+            <p-tag value="Nouvelle entrée" severity="contrast" />
+            <p-tag value="Placeholder" severity="warn" />
+          </div>
+        </div>
+
+        <div class="grid gap-3 md:grid-cols-3">
+          @for (section of sections; track section) {
+            <div class="border border-[#424b57] bg-[#334155]/55 p-4">
+              <p class="m-0 text-sm font-semibold text-slate-100">{{ section }}</p>
+            </div>
+          }
+        </div>
+
+        <div class="border border-[#424b57] bg-[#334155]/55 p-5">
+          <p class="m-0 text-base leading-8 text-slate-100">
+            La route est prête. On pourra maintenant y brancher un vrai écran de gestion pour éditer
+            les armes, armures, carrières, langues et traits sans passer par les formulaires de héros.
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <p-button
+            label="Retour au dashboard"
+            icon="pi pi-arrow-left"
+            [routerLink]="'/'"
+            severity="secondary"
+            [outlined]="true"
+            styleClass="!px-5 !py-3 !font-bold"
+          />
+          <p-button
+            label="Ouvrir la bibliothèque des héros"
+            icon="pi pi-users"
+            [routerLink]="'/library/heroes'"
+            styleClass="!bg-[#b45309] !border-[#b45309] !text-white !px-5 !py-3 !font-bold"
+          />
+        </div>
+      </div>
+    </p-card>
+  </div>
+</section>

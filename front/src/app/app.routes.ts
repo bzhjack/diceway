@@ -108,6 +108,12 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'intendance',
+    loadComponent: () =>
+      import('./bol/intendance/intendance-page').then((module) => module.IntendancePageComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'create/:entity',
     loadComponent: () =>
       import('./bol/creation-placeholder/creation-placeholder-page').then(

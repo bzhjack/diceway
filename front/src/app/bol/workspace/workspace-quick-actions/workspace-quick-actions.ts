@@ -56,5 +56,12 @@ export class WorkspaceQuickActionsComponent {
       state: { returnUrl: '/' },
       severity: 'secondary',
     },
+    {
+      label: 'Intendance',
+      detail: 'Gérer armes, armures et autres référentiels utiles à la table.',
+      icon: 'pi pi-briefcase',
+      link: '/intendance',
+      severity: 'secondary',
+    },
   ];
 }
