@@ -33,6 +33,17 @@ interface IntendanceLibraryEntry {
   selector: 'bol-intendance-page',
   imports: [RouterLink, ButtonModule, CardModule, TagModule],
   templateUrl: './intendance-page.html',
+  styles: [
+    `
+      :host ::ng-deep .intendance-header-tag {
+        font-size: 0.8rem;
+      }
+
+      :host ::ng-deep .intendance-header-tag .p-tag-label {
+        line-height: 1;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IntendancePageComponent {

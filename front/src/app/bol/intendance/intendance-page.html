@@ -12,29 +12,46 @@
               >
                 <i class="pi pi-briefcase" aria-hidden="true"></i>
               </div>
-              <div class="space-y-1">
+              <div class="flex min-w-0 flex-1 flex-col gap-2">
                 <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-amber-300">
                   Outils MJ
                 </p>
-                <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
-                  Intendance
-                </h1>
+                <div class="flex flex-col gap-2 xl:flex-row xl:items-center xl:justify-between">
+                  <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
+                    Intendance
+                  </h1>
+
+                  <div class="flex flex-wrap gap-2 xl:justify-end">
+                    <p-tag
+                      class="intendance-header-tag"
+                      [value]="totalEntries() + ' entrées actives'"
+                      severity="contrast"
+                    />
+                    <p-tag
+                      class="intendance-header-tag"
+                      [value]="customEntries() + ' créations de table'"
+                      severity="secondary"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
-            <p class="m-0 max-w-3xl text-sm leading-7 text-slate-300 md:text-[0.95rem]">
+            <p class="m-0 text-sm leading-7 text-slate-300 md:text-[0.95rem]">
               L’intendance devient l’espace du meneur pour cadrer l’équipement de la table. Tu y
               pilotes les catalogues d’armes et d’armures qui servent à préparer les héros, les
               PNJ, les adversaires et les scènes où le matériel doit rester lisible et cohérent.
             </p>
           </div>
-
-          <div class="flex flex-wrap gap-2 lg:max-w-sm lg:justify-end">
-            <p-tag [value]="totalEntries() + ' entrées actives'" severity="contrast"/>
-            <p-tag [value]="customEntries() + ' créations de table'" severity="secondary"/>
-          </div>
         </div>
-        <div class="flex flex-col gap-3 sm:flex-row">
+        <div class="library-header-actions flex flex-col gap-3 sm:flex-row sm:justify-end">
+          <p-button
+            label="Ouvrir la bibliothèque des héros"
+            icon="pi pi-users"
+            [routerLink]="'/library/heroes'"
+            severity="warn"
+            size="small"
+          />
           <p-button
             label="Retour au dashboard"
             icon="pi pi-arrow-left"
@@ -42,13 +59,6 @@
             size="small"
             severity="secondary"
             [outlined]="true"
-          />
-          <p-button
-            label="Ouvrir la bibliothèque des héros"
-            icon="pi pi-users"
-            [routerLink]="'/library/heroes'"
-            severity="warn"
-            size="small"
           />
         </div>
       </div>
