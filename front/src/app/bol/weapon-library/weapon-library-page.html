@@ -185,7 +185,6 @@
                 label="Effacer"
                 severity="secondary"
                 [outlined]="true"
-                size="small"
                 (onClick)="clearFilters()"
               />
             </div>
@@ -252,8 +251,6 @@
                     (onClick)="confirmDelete($event, weapon)"
                   />
                 </div>
-              } @else {
-                <span class="text-xs uppercase tracking-[0.18em] text-slate-500">Canon</span>
               }
             </td>
           </tr>

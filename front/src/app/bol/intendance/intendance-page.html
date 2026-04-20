@@ -1,10 +1,10 @@
 <section
-  class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(245,158,11,0.13),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(16,185,129,0.08),_transparent_22%),linear-gradient(180deg,_#000000,_#0f172a_45%,_#000000)] px-4 py-6 md:px-6"
+  class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(245,158,11,0.16),_transparent_24%),radial-gradient(circle_at_top_right,_rgba(56,189,248,0.12),_transparent_20%),linear-gradient(180deg,_#000000,_#0f172a_45%,_#000000)] px-4 py-6 md:px-6 xl:px-8"
 >
-  <div class="mx-auto flex max-w-5xl flex-col gap-4">
-    <p-card>
+  <div class="mx-auto flex max-w-[1200px] flex-col gap-4">
+    <p-card styleClass="dw-card--header">
       <div class="flex flex-col gap-6">
-        <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div class="space-y-3">
             <div class="flex items-center gap-3">
               <div
@@ -14,80 +14,26 @@
               </div>
               <div class="space-y-1">
                 <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-amber-300">
-                  Référentiels de jeu
+                  Outils MJ
                 </p>
-                <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none">
+                <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
                   Intendance
                 </h1>
               </div>
             </div>
 
-            <p class="m-0 max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
-              Cette entrée servira à gérer l’équipement et les listes de référence de la table:
-              armes, armures et autres ressources de création.
+            <p class="m-0 max-w-3xl text-sm leading-7 text-slate-300 md:text-[0.95rem]">
+              L’intendance devient l’espace du meneur pour cadrer l’équipement de la table. Tu y
+              pilotes les catalogues d’armes et d’armures qui servent à préparer les héros, les
+              PNJ, les adversaires et les scènes où le matériel doit rester lisible et cohérent.
             </p>
           </div>
 
-          <div class="flex flex-wrap gap-2">
-            <p-tag value="Armes & armures" severity="contrast" />
-            <p-tag value="Premier lot" severity="warn" />
+          <div class="flex flex-wrap gap-2 lg:max-w-sm lg:justify-end">
+            <p-tag [value]="totalEntries() + ' entrées actives'" severity="contrast"/>
+            <p-tag [value]="customEntries() + ' créations de table'" severity="secondary"/>
           </div>
         </div>
-
-        <div class="grid gap-3 lg:grid-cols-2">
-          @for (entry of libraryEntries; track entry.route) {
-            <article class="border border-[#424b57] bg-[#334155]/55 p-5">
-              <div class="flex h-full flex-col gap-4">
-                <div class="flex items-start justify-between gap-3">
-                  <div class="space-y-2">
-                    <div
-                      [class]="
-                        'flex h-11 w-11 items-center justify-center border border-[#424b57] text-lg text-white ' +
-                        entry.accentClass
-                      "
-                    >
-                      <i [class]="entry.icon" aria-hidden="true"></i>
-                    </div>
-
-                    <div class="space-y-1">
-                      <p class="m-0 text-lg font-bold text-slate-100">{{ entry.title }}</p>
-                      <p class="m-0 text-sm leading-6 text-slate-300">{{ entry.description }}</p>
-                    </div>
-                  </div>
-
-                  <p-tag [value]="entry.status" severity="success" />
-                </div>
-
-                <div class="flex justify-end">
-                  <p-button
-                    label="Ouvrir la bibliothèque"
-                    icon="pi pi-arrow-right"
-                    size="small"
-                    [routerLink]="entry.route"
-                    severity="secondary"
-                    [outlined]="true"
-                  />
-                </div>
-              </div>
-            </article>
-          }
-        </div>
-
-        <div class="border border-[#424b57] bg-[#334155]/55 p-5">
-          <div class="space-y-3">
-            <p class="m-0 text-base leading-8 text-slate-100">
-              Les premières bibliothèques d’intendance sont ouvertes. Les prochains lots à raccorder
-              seront les référentiels suivants :
-            </p>
-
-            <div class="flex flex-wrap gap-2">
-              @for (section of pendingSections; track section) {
-                <p-tag [value]="section" severity="secondary" />
-              }
-            </div>
-          </div>
-        </div>
-
         <div class="flex flex-col gap-3 sm:flex-row">
           <p-button
             label="Retour au dashboard"
@@ -107,5 +53,55 @@
         </div>
       </div>
     </p-card>
+
+    <div class="grid gap-4 lg:grid-cols-2">
+      @for (entry of libraryEntries(); track entry.route) {
+        <p-card>
+          <article class="flex h-full flex-col gap-5">
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <div
+                    [class]="
+                      'flex h-12 w-12 items-center justify-center border border-[#424b57] text-lg text-white ' +
+                      entry.accentClass
+                    "
+                  >
+                    <i [class]="entry.icon" aria-hidden="true"></i>
+                  </div>
+
+                  <div class="space-y-1">
+                    <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-slate-400">
+                      {{ entry.kicker }}
+                    </p>
+                    <h2 class="m-0 text-2xl font-bold leading-none text-slate-100">{{ entry.title }}</h2>
+                  </div>
+                </div>
+
+                <p class="m-0 text-sm leading-7 text-slate-300">{{ entry.description }}</p>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+              @for (stat of entry.stats; track stat) {
+                <p-tag [value]="stat" severity="secondary"/>
+              }
+            </div>
+
+            <div class="flex justify-end">
+              <p-button
+                [label]="entry.buttonLabel"
+                icon="pi pi-arrow-right"
+                size="small"
+                [routerLink]="entry.route"
+                severity="secondary"
+                [outlined]="true"
+              />
+            </div>
+          </article>
+        </p-card>
+      }
+    </div>
+
   </div>
 </section>

@@ -53,13 +53,6 @@ export class WorkspacePageComponent {
   protected readonly userName = computed(() => this.authService.user()?.name ?? 'Utilisateur');
   protected readonly metrics = computed<readonly WorkspaceMetric[]>(() => [
     {
-      label: 'Campagnes',
-      value: '4',
-      detail: '2 arcs actifs et 1 prêt pour la prochaine session.',
-      icon: 'pi pi-compass',
-      iconClass: 'border border-sky-400/25 bg-sky-400/12 text-sky-300',
-    },
-    {
       label: 'Héros suivis',
       value: String(this.heroes().length),
       detail: 'Nombre de héros récupéré depuis la bibliothèque Barbarian of Lemuria.',
