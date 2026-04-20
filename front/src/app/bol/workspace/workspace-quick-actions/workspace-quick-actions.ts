@@ -57,8 +57,8 @@ export class WorkspaceQuickActionsComponent {
       severity: 'secondary',
     },
     {
-      label: 'Intendance',
-      detail: 'Gérer armes, armures et autres référentiels utiles à la table.',
+      label: 'Bibliothèque d’intendance',
+      detail: 'Ouvrir les référentiels armes, armures et les prochaines entrées de table.',
       icon: 'pi pi-briefcase',
       link: '/intendance',
       severity: 'secondary',

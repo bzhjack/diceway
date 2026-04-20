@@ -47,6 +47,8 @@ export class WorkspacePageComponent {
   private readonly demons = toSignal(this.bolDemonsService.demons(), { initialValue: [] });
   private readonly heroes = toSignal(this.bolHerosService.heroes(), { initialValue: [] });
   private readonly pnjs = toSignal(this.bolHerosService.pnjs(), { initialValue: [] });
+  private readonly armes = toSignal(this.bolHerosService.armes(), { initialValue: [] });
+  private readonly armures = toSignal(this.bolHerosService.armures(), { initialValue: [] });
 
   protected readonly userName = computed(() => this.authService.user()?.name ?? 'Utilisateur');
   protected readonly metrics = computed<readonly WorkspaceMetric[]>(() => [
@@ -80,6 +82,14 @@ export class WorkspacePageComponent {
       icon: 'pi pi-user-edit',
       iconClass: 'border border-rose-400/25 bg-rose-400/12 text-rose-300',
       link: '/library/pnjs',
+    },
+    {
+      label: 'Intendance',
+      value: String(this.armes().length + this.armures().length),
+      detail: 'Entrées d’armes et d’armures disponibles dans la bibliothèque d’intendance.',
+      icon: 'pi pi-briefcase',
+      iconClass: 'border border-violet-400/25 bg-violet-400/12 text-violet-300',
+      link: '/intendance',
     },
   ]);
   protected readonly activeSession: SessionPreview = {
