@@ -43,7 +43,7 @@ class BolPnjSeeder extends Seeder
                 ],
                 'armes' => [
                     ['arme_id' => '15'],
-                    ['arme_id' => '18']
+                    ['arme_id' => '3']
                 ]
             ],
             [
@@ -95,9 +95,9 @@ class BolPnjSeeder extends Seeder
                 'carrieres' => [
                     ['carriere_id' => '2', 'value' => '2']
                 ],
+                'commentaire' => 'Armes emblématiques : kriss et couteaux de lancer.',
                 'armes' => [
-                    ['arme_id' => '26'],
-                    ['arme_id' => '19']
+                    ['arme_id' => '3']
                 ]
             ],
             [
@@ -183,7 +183,7 @@ class BolPnjSeeder extends Seeder
                 'armures' => [
                 ],
                 'armes' => [
-                    ['arme_id' => '18'],
+                    ['arme_id' => '3'],
                 ]
             ],
             [
@@ -212,8 +212,8 @@ class BolPnjSeeder extends Seeder
                     ['armure_id' => '2'],
                 ],
                 'armes' => [
-                    ['arme_id' => '27'],
-                    ['arme_id' => '19']
+                    ['arme_id' => '1'],
+                    ['arme_id' => '3']
                 ]
             ],
             [
@@ -241,7 +241,7 @@ class BolPnjSeeder extends Seeder
 
                 ],
                 'armes' => [
-                    ['arme_id' => '24'],
+                    ['arme_id' => '17'],
                     ['arme_id' => '16']
                 ]
             ],
@@ -270,7 +270,7 @@ class BolPnjSeeder extends Seeder
 
                 ],
                 'armes' => [
-                    ['arme_id' => '22'],
+                    ['arme_id' => '4'],
                     ['arme_id' => '3']
                 ]
             ],
@@ -356,12 +356,12 @@ class BolPnjSeeder extends Seeder
                     ['carriere_id' => '23', 'value' => '1'],
                     ['carriere_id' => '8', 'value' => '1'],
                 ],
+                'commentaire' => 'Armes emblématiques : tulwar ou hache.',
                 'armures' => [
                     ['armure_id' => '6'],
                 ],
                 'armes' => [
-                    ['arme_id' => '25'],
-                    ['arme_id' => '8']
+                    ['arme_id' => '4']
                 ]
             ],
             [
@@ -385,14 +385,13 @@ class BolPnjSeeder extends Seeder
                 'vilenie' => '6',
                 'foi' => '2',
                 'pouvoir' => '16',
-                'commentaire' => "Dague sanglante de Zaggath, d6 (arme mythique – dé de bonus aux jets d’attaque et de dégâts)",
+                'commentaire' => "Dague sanglante de Zaggath, d6 (arme mythique – dé de bonus aux jets d’attaque et de dégâts). Protection : baudrier de guerre, traité par l’avantage dédié.",
                 'carrieres' => [
                     ['carriere_id' => '24', 'value' => '4'],
                     ['carriere_id' => '18', 'value' => '1'],
                     ['carriere_id' => '4', 'value' => '1'],
                 ],
                 'armures' => [
-                    ['armure_id' => '8'],
                 ],
                 'armes' => [
                     ['arme_id' => '3']

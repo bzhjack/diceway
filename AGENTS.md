@@ -16,7 +16,8 @@ Le projet s'appuie sur deux répertoires de travail principaux :
 - Ne pas modifier les fichiers générés dans `dist/`, `.angular/` ou `node_modules/`.
 - Préférer des changements ciblés qui respectent les conventions déjà en place.
 - Ne pas déplacer de code entre `front/` et `backend/` sans demande explicite.
-- Quand une tâche touche aux règles métier, à la création, à l'équipement, aux carrières, aux langues, aux traits ou à l'activation, consulter si nécessaire les fichiers `.md` du répertoire `rules/` avant de modifier le code.
+- Quand une tâche touche aux règles métier, à la création, à l'équipement, aux carrières, aux langues, aux traits ou à l'activation, consulter en priorité les fichiers `.md` du répertoire `resources/` quand ils existent.
+- Utiliser les fichiers `.md` du répertoire `rules/` en complément quand il faut du contexte métier ou des détails non présents dans `resources/`.
 
 ## Commandes utiles
 
@@ -38,3 +39,4 @@ Le projet s'appuie sur deux répertoires de travail principaux :
 
 - `backend/package.json` sert surtout au build Vite côté Laravel.
 - Les conventions Angular détaillées du frontend vivent dans `front/AGENTS.md`.
+- Le répertoire `resources/` contient une base de référence locale extraite/synthétisée du document BoL : armes, armures, carrières, langues, avantages, désavantages, régions, bestiaire, démons et PNJ.

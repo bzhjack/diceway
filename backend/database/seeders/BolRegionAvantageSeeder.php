@@ -16,7 +16,7 @@ class BolRegionAvantageSeeder extends Seeder
             // Côte de Feu (kalukan)
             // Désert de Beshaar
             ["region_id" => 2, "avantage_id" => 2], // Ami des bêtes
-            ["region_id" => 2, "avantage_id" => 6 ,'detail' => 'Javelot'], // Arme favorite (Javelot)
+            ["region_id" => 2, "avantage_id" => 6 ,'detail' => 'Javelot / fléchette'], // Arme favorite
             ["region_id" => 2, "avantage_id" => 9], // Attirant
             ["region_id" => 2, "avantage_id" => 11], // Baudrier de guerre
             ["region_id" => 2, "avantage_id" => 35], // Né en selle
@@ -24,7 +24,7 @@ class BolRegionAvantageSeeder extends Seeder
             ["region_id" => 2, "avantage_id" => 58], // Vision nocturne
             ["region_id" => 2, "avantage_id" => 59], // Vue perçante
             // Halakh
-            ["region_id" => 3, "avantage_id" => 6, 'detail' => 'Kriss'], // Arme favorite (Kriss)
+            ["region_id" => 3, "avantage_id" => 6, 'detail' => 'Dague'], // Arme favorite
             ["region_id" => 3, "avantage_id" => 18], // Discret
             ["region_id" => 3, "avantage_id" => 34], // Montagnard
             ["region_id" => 3, "avantage_id" => 38], // Outillage
@@ -71,7 +71,7 @@ class BolRegionAvantageSeeder extends Seeder
 
             // Malakut
             ["region_id" => 7, "avantage_id" => 4], // Amis dans la pègre
-            ["region_id" => 7, "avantage_id" => 6, 'detail' => 'Khastok'], // Arme favorite (Khastok)
+            ["region_id" => 7, "avantage_id" => 6, 'detail' => 'Arme d’hast'], // Arme favorite
             ["region_id" => 7, "avantage_id" => 16], // Combat à l’aveugle
             ["region_id" => 7, "avantage_id" => 18], // Discret
             ["region_id" => 7, "avantage_id" => 19], // Doigts de fée
@@ -104,7 +104,7 @@ class BolRegionAvantageSeeder extends Seeder
             ["region_id" => 9, "avantage_id" => 56], // Vigilant
 
             // Montagnes de l’Axos
-            ["region_id" => 10, "avantage_id" => 6, "detail" => "Fronde de l’Axos"], // Arme favorite (Fronde de l’Axos)
+            ["region_id" => 10, "avantage_id" => 6, "detail" => "Fronde / bâton-fronde"], // Arme favorite
             ["region_id" => 10, "avantage_id" => 8], // Athlète
             ["region_id" => 10, "avantage_id" => 15], // Colosse
             ["region_id" => 10, "avantage_id" => 17], // Cri de guerre
@@ -122,7 +122,7 @@ class BolRegionAvantageSeeder extends Seeder
             ["region_id" => 11, "avantage_id" => 24], // Fortuné
             ["region_id" => 11, "avantage_id" => 40], // Perspicace
             // Parsool
-            ["region_id" => 12, "avantage_id" => 6, "detail" => "Hache d’abordage de Parsool"], // Arme favorite (Hache d’abordage de Parsool)
+            ["region_id" => 12, "avantage_id" => 6, "detail" => "Hache"], // Arme favorite
             ["region_id" => 12, "avantage_id" => 17, "detail" => "Parsool"] , // Cri de guerre (Parsool)
             ["region_id" => 12, "avantage_id" => 22], // Fêtard
             ["region_id" => 12, "avantage_id" => 41], // Pied marin
@@ -147,7 +147,7 @@ class BolRegionAvantageSeeder extends Seeder
             ["region_id" => 15, "avantage_id" => 59], // Vue perçante
             // Terres Désolées ( choisir dans la liste générale)
             // Tyrus
-            ["region_id" => 17, "avantage_id" => 6, "detail" => 'Arc long de Tyrus'], // Arme favorite (Arc long de Tyrus)
+            ["region_id" => 17, "avantage_id" => 6, "detail" => 'Arc'], // Arme favorite
             ["region_id" => 17, "avantage_id" => 10], // Bagarreur
             ["region_id" => 17, "avantage_id" => 17, "detail" => "Tyrus"], // Cri de guerre (Tyrus)
             ["region_id" => 17, "avantage_id" => 22], // Fêtard
@@ -164,7 +164,7 @@ class BolRegionAvantageSeeder extends Seeder
             ["region_id" => 18, "avantage_id" => 50], // Roi de l’évasion
             ["region_id" => 18, "avantage_id" => 58], // Vision nocturne
             // Valgard
-            ["region_id" => 19, "avantage_id" => 6, "detail" => "Épée valgardienne"], // Arme favorite (Épée valgardienne)
+            ["region_id" => 19, "avantage_id" => 6, "detail" => "Épée"], // Arme favorite
             ["region_id" => 19, "avantage_id" => 17, "detail" => "Valgard"], // Cri de guerre (Valgard)
             ["region_id" => 19, "avantage_id" => 33], // Marqué par les dieux
             ["region_id" => 19, "avantage_id" => 36], // Odorat développé

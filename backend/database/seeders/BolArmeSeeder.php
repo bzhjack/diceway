@@ -13,8 +13,7 @@ class BolArmeSeeder extends Seeder
      */
     public function run(): void
     {
-        // Le tableau BoL fournit 18 catégories d’armes. Le projet conserve
-        // aussi quelques variantes nommées utiles dans les profils existants.
+        // Table des armes alignée sur les 18 catégories du livre BoL.
         $armes = [
             [
                 'id' => 1,
@@ -40,10 +39,10 @@ class BolArmeSeeder extends Seeder
             ],
             [
                 'id' => 4,
-                'arme' => 'Épée / hache à 2 mains',
+                'arme' => 'Épée',
                 'type' => 'M',
-                'degats' => 'd6B',
-                'notes' => 'Armes à deux mains.'
+                'degats' => 'd6',
+                'notes' => 'Inclut cimeterre, glaive, sabre, tulwar...'
             ],
             [
                 'id' => 5,
@@ -131,7 +130,7 @@ class BolArmeSeeder extends Seeder
             ],
             [
                 'id' => 16,
-                'arme' => 'Fronde/bâton-fronde',
+                'arme' => 'Fronde / bâton-fronde',
                 'type' => 'T',
                 'degats' => 'd6M',
                 'portee' => '9m / 18m',
@@ -139,7 +138,7 @@ class BolArmeSeeder extends Seeder
             ],
             [
                 'id' => 17,
-                'arme' => 'Javelot/fléchette',
+                'arme' => 'Javelot / fléchette',
                 'type' => 'T',
                 'degats' => 'd6M',
                 'portee' => '6m',
@@ -147,77 +146,10 @@ class BolArmeSeeder extends Seeder
             ],
             [
                 'id' => 18,
-                'arme' => 'Coutelas',
-                'type' => 'M',
-                'degats' => 'd6M',
-                'portee' => '3m',
-                'notes' => 'Variante nommée de la catégorie Dague ; peut être lancée.'
-            ],
-            [
-                'id' => 19,
-                'arme' => 'Couteau',
-                'type' => 'M',
-                'degats' => 'd6M',
-                'portee' => '3m',
-                'notes' => 'Variante nommée de la catégorie Dague ; peut être lancée.'
-            ],
-            [
-                'id' => 20,
-                'arme' => 'Hache à deux mains',
+                'arme' => 'Épée / hache à 2 mains',
                 'type' => 'M',
                 'degats' => 'd6B',
-                'notes' => 'Variante nommée de la ligne officielle Épée / hache à 2 mains.'
-            ],
-            [
-                'id' => 21,
-                'arme' => 'Épée',
-                'type' => 'M',
-                'degats' => 'd6',
-                'notes' => 'Inclut cimeterre, glaive, sabre, tulwar...'
-            ],
-            [
-                'id' => 22,
-                'arme' => 'Sabre',
-                'type' => 'M',
-                'degats' => 'd6',
-                'notes' => 'Variante nommée de la catégorie Épée.'
-            ],
-            [
-                'id' => 23,
-                'arme' => 'Bâton-fronde',
-                'type' => 'T',
-                'degats' => 'd6M',
-                'portee' => '18m',
-                'notes' => 'Variante nommée à deux mains de la ligne officielle Fronde/bâton-fronde.'
-            ],
-            [
-                'id' => 24,
-                'arme' => 'Fléchette',
-                'type' => 'T',
-                'degats' => 'd6M',
-                'portee' => '6m',
-                'notes' => 'Variante nommée de la ligne officielle Javelot/fléchette.'
-            ],
-            [
-                'id' => 25,
-                'arme' => 'Tulwar',
-                'type' => 'M',
-                'degats' => 'd6',
-                'notes' => 'Variante nommée de la catégorie Épée.'
-            ],
-            [
-                'id' => 26,
-                'arme' => 'Kriss',
-                'type' => 'M',
-                'degats' => 'd6M',
-                'notes' => 'Variante nommée de la catégorie Dague.'
-            ],
-            [
-                'id' => 27,
-                'arme' => 'Khastok (lance lourde)',
-                'type' => 'M',
-                'degats' => 'd6B',
-                'notes' => 'Variante nommée liée à la catégorie Arme d’hast.'
+                'notes' => 'Armes à deux mains.'
             ],
         ];
         BolArme::truncate();

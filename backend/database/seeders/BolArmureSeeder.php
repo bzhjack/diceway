@@ -15,6 +15,7 @@ class BolArmureSeeder extends Seeder
     {
         // Le cas "Pas d’armure" de la table BoL est représenté dans le projet
         // par l’absence d’entrée d’équipement défensif sur le personnage.
+        // Le baudrier de guerre reste un avantage, pas une armure seedée.
         BolArmure::truncate();
 
         $armures = [
@@ -55,12 +56,6 @@ class BolArmureSeeder extends Seeder
                 'armure' => 'Grand bouclier',
                 'protection' => 'Impose un malus de -1 à toutes les attaques subies par round',
                 'malus' => 'Agilité -1',
-            ],
-            [
-                'id' => 8,
-                'armure' => 'Baudrier de guerre',
-                'protection' => 'd6-2 (2)',
-                'malus' => 'Aucun malus d’armure (compte comme une armure moyenne)',
             ],
         ];
         foreach ($armures as $armure) {
