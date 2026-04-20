@@ -2,6 +2,16 @@
   display: block;
 }
 
+:host ::ng-deep .hero-library-header-card {
+  .p-card-body {
+    padding: 1.25rem;
+  }
+
+  .p-card-content {
+    padding: 0;
+  }
+}
+
 :host ::ng-deep .bol-hero-table {
   .hero-col-avatar {
     width: 1%;
@@ -50,6 +60,17 @@
     background: transparent;
     border: 0;
     padding: 0 0 1rem;
+  }
+}
+
+:host ::ng-deep .library-header-actions__primary .p-button {
+  justify-content: center;
+  min-width: 9.75rem;
+}
+
+@media (min-width: 1024px) {
+  :host ::ng-deep .hero-library-header-card .p-card-body {
+    padding: 1.25rem 1.5rem;
   }
 }
 

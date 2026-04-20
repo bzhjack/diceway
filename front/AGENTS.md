@@ -14,6 +14,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use signals for state management
 - Implement lazy loading for feature routes
 - Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
+- For PrimeNG buttons, do not use `styleClass`; prefer component inputs such as `size`, `severity`, `outlined`, `text`, and CSS on container wrappers when custom layout is needed
 - Use `NgOptimizedImage` for all static images.
   - `NgOptimizedImage` does not work for inline base64 images.
 

@@ -3,24 +3,24 @@
 >
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
     <p-card
-      styleClass="!border !border-[#3f3f46] !bg-[#18181b]/96 !text-slate-50 !shadow-[0_28px_70px_rgba(0,0,0,0.35)] backdrop-blur"
+      styleClass="demon-library-header-card !border !border-[#3f3f46] !bg-[#18181b]/96 !text-slate-50 !shadow-[0_28px_70px_rgba(0,0,0,0.35)] backdrop-blur"
     >
-      <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-        <div class="space-y-3">
-          <div class="space-y-2">
+      <div class="flex flex-col gap-4">
+        <div class="space-y-2.5">
+          <div class="space-y-1.5">
             <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-rose-300">
               Bibliotheque BOL
             </p>
-            <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-5xl">
+            <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
               Bestiaire des demons
             </h1>
           </div>
 
-          <p class="m-0 max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
+          <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
             Acces rapide a tous les demons disponibles dans la bibliotheque Barbarian of Lemuria.
           </p>
 
-          <div class="flex flex-wrap gap-1">
+          <div class="flex flex-wrap gap-1.5">
             <p-tag [value]="totalDemonCount() + ' demons'" severity="contrast" />
             @if (demonCount() !== totalDemonCount()) {
               <p-tag [value]="demonCount() + ' visibles'" severity="secondary" />
@@ -28,29 +28,32 @@
           </div>
         </div>
 
-        <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
+        <div class="library-header-actions flex flex-wrap justify-end gap-1.5">
           <p-button
             label="Voir les creatures"
             icon="pi pi-book"
+            size="small"
             [routerLink]="'/library/creatures'"
             severity="secondary"
             [outlined]="true"
-            styleClass="!px-5 !py-3 !font-bold"
           />
-          <p-button
-            label="Creer un demon"
-            icon="pi pi-plus"
-            [routerLink]="'/create/demon'"
-            [state]="{ returnUrl: '/library/demons' }"
-            styleClass="!bg-[#b91c1c] !border-[#b91c1c] !text-white !px-5 !py-3 !font-bold"
-          />
+          <span class="library-header-actions__primary">
+            <p-button
+              label="Creer un demon"
+              icon="pi pi-plus"
+              severity="danger"
+              size="small"
+              [routerLink]="'/create/demon'"
+              [state]="{ returnUrl: '/library/demons' }"
+            />
+          </span>
           <p-button
             label="Retour au dashboard"
             icon="pi pi-arrow-left"
+            size="small"
             [routerLink]="'/'"
             severity="secondary"
             [outlined]="true"
-            styleClass="!px-5 !py-3 !font-bold"
           />
         </div>
       </div>

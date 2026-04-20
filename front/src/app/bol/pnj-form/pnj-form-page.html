@@ -28,7 +28,6 @@
           <div class="flex flex-col gap-3 sm:flex-row md:justify-end">
             <p-button
               icon="pi pi-arrow-left"
-              size="small"
               label="Retour"
               severity="secondary"
               [outlined]="true"
@@ -36,7 +35,6 @@
             />
             <p-button
               icon="pi pi-check"
-              size="small"
               [label]="submitLabel()"
               severity="success"
               [disabled]="pnjForm.invalid || pending() || loadingPnj()"
