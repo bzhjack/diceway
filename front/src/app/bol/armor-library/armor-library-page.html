@@ -1,0 +1,121 @@
+<section
+  class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(14,165,233,0.12),_transparent_24%),radial-gradient(circle_at_top_right,_rgba(148,163,184,0.12),_transparent_18%),linear-gradient(180deg,_#000000,_#0f172a_45%,_#000000)] px-4 py-6 md:px-6 xl:px-8"
+>
+  <div class="mx-auto flex max-w-[1200px] flex-col gap-4">
+    <p-card styleClass="dw-card--header">
+      <div class="flex flex-col gap-4">
+        <div class="space-y-2.5">
+          <div class="space-y-1.5">
+            <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-sky-300">
+              Bibliothèque BOL
+            </p>
+            <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
+              Armures et boucliers
+            </h1>
+          </div>
+
+          <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
+            Table des armures et boucliers alignée sur le livre de base BoL, avec les effets
+            défensifs, malus et impacts sur le coût des sorts.
+          </p>
+
+          <div class="flex flex-wrap gap-1.5">
+            <p-tag [value]="totalArmorCount() + ' entrées'" severity="contrast" />
+            <p-tag [value]="shieldCount() + ' boucliers'" severity="secondary" />
+          </div>
+        </div>
+
+        <div class="library-header-actions flex flex-wrap justify-end gap-1.5">
+          <p-button
+            label="Voir l’arsenal"
+            icon="pi pi-bolt"
+            size="small"
+            [routerLink]="'/library/weapons'"
+            severity="secondary"
+            [outlined]="true"
+          />
+          <p-button
+            label="Retour à l’intendance"
+            icon="pi pi-arrow-left"
+            size="small"
+            [routerLink]="'/intendance'"
+            severity="secondary"
+            [outlined]="true"
+          />
+        </div>
+      </div>
+    </p-card>
+
+    <p-card>
+      <p-table
+        [value]="filteredArmors()"
+        size="small"
+        dataKey="id"
+        styleClass="bol-armor-table"
+        [tableStyle]="{ 'min-width': '58rem' }"
+      >
+        <ng-template #caption>
+          <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <p-iconfield iconPosition="left">
+                <p-inputicon styleClass="pi pi-search" />
+                <input
+                  pInputText
+                  class="w-full sm:w-72"
+                  [ngModel]="searchTerm()"
+                  (ngModelChange)="searchTerm.set($event ?? '')"
+                  placeholder="Rechercher une armure"
+                  type="text"
+                />
+              </p-iconfield>
+
+              <p-button
+                icon="pi pi-filter-slash"
+                label="Effacer"
+                severity="secondary"
+                [outlined]="true"
+                size="small"
+                (onClick)="clearFilters()"
+              />
+            </div>
+
+            <p-tag [value]="filteredArmors().length + ' visibles'" severity="contrast" />
+          </div>
+        </ng-template>
+
+        <ng-template #header>
+          <tr>
+            <th>Équipement</th>
+            <th>Protection</th>
+            <th>Malus</th>
+            <th class="armor-col-narrow">Pts de pouvoir</th>
+          </tr>
+        </ng-template>
+
+        <ng-template #body let-armor>
+          <tr>
+            <td>
+              <p class="m-0 font-semibold text-slate-100">{{ armor.armure }}</p>
+            </td>
+            <td class="text-slate-300">
+              {{ armor.protection || '-' }}
+            </td>
+            <td class="text-slate-300">
+              {{ armor.malus || '-' }}
+            </td>
+            <td class="armor-col-narrow text-slate-300">
+              {{ armor.pts_de_pouvoir || '-' }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+
+    <p-card>
+      <p class="m-0 text-sm leading-7 text-slate-300">
+        Le baudrier de guerre n’apparaît pas dans ce tableau, car le livre le traite via l’avantage
+        du même nom plutôt que comme une entrée standard d’armure.
+      </p>
+    </p-card>
+  </div>
+</section>

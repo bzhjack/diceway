@@ -1,0 +1,10 @@
+:host {
+  display: block;
+}
+
+:host ::ng-deep .bol-armor-table {
+  .armor-col-narrow {
+    width: 1%;
+    white-space: nowrap;
+  }
+}

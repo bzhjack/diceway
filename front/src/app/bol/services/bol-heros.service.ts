@@ -64,7 +64,7 @@ export class BolHerosService {
   }
 
   // Armures
-  armures(): Observable<any> {
+  armures(): Observable<BolArmureModel[]> {
     return this.http.get<BolArmureModel[]>(`${environment.apiBase}/api/bol/armures`);
   }
 
@@ -77,7 +77,7 @@ export class BolHerosService {
   }
 
   // Armes
-  armes(): Observable<any> {
+  armes(): Observable<BolArmeModel[]> {
     return this.http.get<BolArmeModel[]>(`${environment.apiBase}/api/bol/armes`);
   }
 

@@ -29,24 +29,63 @@
           </div>
 
           <div class="flex flex-wrap gap-2">
-            <p-tag value="Nouvelle entrée" severity="contrast" />
-            <p-tag value="Placeholder" severity="warn" />
+            <p-tag value="Armes & armures" severity="contrast" />
+            <p-tag value="Premier lot" severity="warn" />
           </div>
         </div>
 
-        <div class="grid gap-3 md:grid-cols-3">
-          @for (section of sections; track section) {
-            <div class="border border-[#424b57] bg-[#334155]/55 p-4">
-              <p class="m-0 text-sm font-semibold text-slate-100">{{ section }}</p>
-            </div>
+        <div class="grid gap-3 lg:grid-cols-2">
+          @for (entry of libraryEntries; track entry.route) {
+            <article class="border border-[#424b57] bg-[#334155]/55 p-5">
+              <div class="flex h-full flex-col gap-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="space-y-2">
+                    <div
+                      [class]="
+                        'flex h-11 w-11 items-center justify-center border border-[#424b57] text-lg text-white ' +
+                        entry.accentClass
+                      "
+                    >
+                      <i [class]="entry.icon" aria-hidden="true"></i>
+                    </div>
+
+                    <div class="space-y-1">
+                      <p class="m-0 text-lg font-bold text-slate-100">{{ entry.title }}</p>
+                      <p class="m-0 text-sm leading-6 text-slate-300">{{ entry.description }}</p>
+                    </div>
+                  </div>
+
+                  <p-tag [value]="entry.status" severity="success" />
+                </div>
+
+                <div class="flex justify-end">
+                  <p-button
+                    label="Ouvrir la bibliothèque"
+                    icon="pi pi-arrow-right"
+                    size="small"
+                    [routerLink]="entry.route"
+                    severity="secondary"
+                    [outlined]="true"
+                  />
+                </div>
+              </div>
+            </article>
           }
         </div>
 
         <div class="border border-[#424b57] bg-[#334155]/55 p-5">
-          <p class="m-0 text-base leading-8 text-slate-100">
-            La route est prête. On pourra maintenant y brancher un vrai écran de gestion pour éditer
-            les armes, armures, carrières, langues et traits sans passer par les formulaires de héros.
-          </p>
+          <div class="space-y-3">
+            <p class="m-0 text-base leading-8 text-slate-100">
+              Les premières bibliothèques d’intendance sont ouvertes. Les prochains lots à raccorder
+              seront les référentiels suivants :
+            </p>
+
+            <div class="flex flex-wrap gap-2">
+              @for (section of pendingSections; track section) {
+                <p-tag [value]="section" severity="secondary" />
+              }
+            </div>
+          </div>
         </div>
 
         <div class="flex flex-col gap-3 sm:flex-row">

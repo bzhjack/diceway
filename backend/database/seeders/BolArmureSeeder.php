@@ -13,10 +13,10 @@ class BolArmureSeeder extends Seeder
      */
     public function run()
     {
-        // Vide la table avant d'ajouter de nouveaux éléments
+        // Le cas "Pas d’armure" de la table BoL est représenté dans le projet
+        // par l’absence d’entrée d’équipement défensif sur le personnage.
         BolArmure::truncate();
 
-        // Nouveaux éléments à insérer avec ID
         $armures = [
             [
                 'id' => 2,
@@ -48,21 +48,21 @@ class BolArmureSeeder extends Seeder
             [
                 'id' => 6,
                 'armure' => 'Petit bouclier',
-                'protection' => 'Défense +1 contre une attaque par round',
+                'protection' => 'Impose un malus de -1 à une attaque subie par round',
             ],
             [
                 'id' => 7,
                 'armure' => 'Grand bouclier',
-                'protection' => 'Défense +1 contre toutes les attaques',
+                'protection' => 'Impose un malus de -1 à toutes les attaques subies par round',
                 'malus' => 'Agilité -1',
             ],
             [
                 'id' => 8,
                 'armure' => 'Baudrier de guerre',
-                'protection' => 'd6-2 (2)'
+                'protection' => 'd6-2 (2)',
+                'malus' => 'Aucun malus d’armure (compte comme une armure moyenne)',
             ],
         ];
-        // Insère les nouveaux éléments
         foreach ($armures as $armure) {
             BolArmure::create($armure);
         }

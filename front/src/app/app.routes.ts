@@ -108,6 +108,22 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'library/weapons',
+    loadComponent: () =>
+      import('./bol/weapon-library/weapon-library-page').then(
+        (module) => module.WeaponLibraryPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'library/armors',
+    loadComponent: () =>
+      import('./bol/armor-library/armor-library-page').then(
+        (module) => module.ArmorLibraryPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: 'intendance',
     loadComponent: () =>
       import('./bol/intendance/intendance-page').then((module) => module.IntendancePageComponent),

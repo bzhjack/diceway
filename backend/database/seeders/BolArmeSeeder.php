@@ -13,6 +13,8 @@ class BolArmeSeeder extends Seeder
      */
     public function run(): void
     {
+        // Le tableau BoL fournit 18 catégories d’armes. Le projet conserve
+        // aussi quelques variantes nommées utiles dans les profils existants.
         $armes = [
             [
                 'id' => 1,
@@ -38,10 +40,10 @@ class BolArmeSeeder extends Seeder
             ],
             [
                 'id' => 4,
-                'arme' => 'Épée à deux mains',
+                'arme' => 'Épée / hache à 2 mains',
                 'type' => 'M',
                 'degats' => 'd6B',
-                'notes' => 'Armes à deux mains'
+                'notes' => 'Armes à deux mains.'
             ],
             [
                 'id' => 5,
@@ -129,19 +131,19 @@ class BolArmeSeeder extends Seeder
             ],
             [
                 'id' => 16,
-                'arme' => 'Fronde',
+                'arme' => 'Fronde/bâton-fronde',
                 'type' => 'T',
                 'degats' => 'd6M',
-                'portee' => '9m',
-                'notes' => 'Arme à une main'
+                'portee' => '9m / 18m',
+                'notes' => 'Arme à une main / arme à deux mains.'
             ],
             [
                 'id' => 17,
-                'arme' => 'Javelot',
+                'arme' => 'Javelot/fléchette',
                 'type' => 'T',
                 'degats' => 'd6M',
                 'portee' => '6m',
-                'notes' => 'Arme de jet'
+                'notes' => 'Arme de jet.'
             ],
             [
                 'id' => 18,
@@ -149,7 +151,7 @@ class BolArmeSeeder extends Seeder
                 'type' => 'M',
                 'degats' => 'd6M',
                 'portee' => '3m',
-                'notes' => 'Peut être lancée.'
+                'notes' => 'Variante nommée de la catégorie Dague ; peut être lancée.'
             ],
             [
                 'id' => 19,
@@ -157,34 +159,36 @@ class BolArmeSeeder extends Seeder
                 'type' => 'M',
                 'degats' => 'd6M',
                 'portee' => '3m',
-                'notes' => 'Peut être lancée.'
+                'notes' => 'Variante nommée de la catégorie Dague ; peut être lancée.'
             ],
             [
                 'id' => 20,
                 'arme' => 'Hache à deux mains',
                 'type' => 'M',
                 'degats' => 'd6B',
-                'notes' => 'Armes à deux mains'
+                'notes' => 'Variante nommée de la ligne officielle Épée / hache à 2 mains.'
             ],
             [
                 'id' => 21,
                 'arme' => 'Épée',
                 'type' => 'M',
-                'degats' => 'd6'
+                'degats' => 'd6',
+                'notes' => 'Inclut cimeterre, glaive, sabre, tulwar...'
             ],
             [
                 'id' => 22,
                 'arme' => 'Sabre',
                 'type' => 'M',
-                'degats' => 'd6'
+                'degats' => 'd6',
+                'notes' => 'Variante nommée de la catégorie Épée.'
             ],
             [
                 'id' => 23,
-                'arme' => 'bâton-fronde',
+                'arme' => 'Bâton-fronde',
                 'type' => 'T',
                 'degats' => 'd6M',
                 'portee' => '18m',
-                'notes' => 'arme à deux mains'
+                'notes' => 'Variante nommée à deux mains de la ligne officielle Fronde/bâton-fronde.'
             ],
             [
                 'id' => 24,
@@ -192,29 +196,29 @@ class BolArmeSeeder extends Seeder
                 'type' => 'T',
                 'degats' => 'd6M',
                 'portee' => '6m',
-                'notes' => 'Arme de jet'
+                'notes' => 'Variante nommée de la ligne officielle Javelot/fléchette.'
             ],
             [
                 'id' => 25,
                 'arme' => 'Tulwar',
                 'type' => 'M',
-                'degats' => 'd6'
+                'degats' => 'd6',
+                'notes' => 'Variante nommée de la catégorie Épée.'
             ],
             [
                 'id' => 26,
                 'arme' => 'Kriss',
                 'type' => 'M',
-                'degats' => 'd6M'
+                'degats' => 'd6M',
+                'notes' => 'Variante nommée de la catégorie Dague.'
             ],
             [
                 'id' => 27,
                 'arme' => 'Khastok (lance lourde)',
                 'type' => 'M',
                 'degats' => 'd6B',
-                'portee' => '6m',
-                'notes' => 'Peut être lancée.'
+                'notes' => 'Variante nommée liée à la catégorie Arme d’hast.'
             ],
-            // Ajoutez d'autres armes si nécessaire
         ];
         BolArme::truncate();
         foreach ($armes as $arme) {

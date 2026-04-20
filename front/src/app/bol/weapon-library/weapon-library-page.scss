@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+
+:host ::ng-deep .bol-weapon-table {
+  .weapon-col-narrow,
+  .weapon-col-range {
+    width: 1%;
+    white-space: nowrap;
+  }
+}

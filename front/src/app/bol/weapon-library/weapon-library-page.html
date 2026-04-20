@@ -1,0 +1,122 @@
+<section
+  class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(245,158,11,0.12),_transparent_24%),radial-gradient(circle_at_top_right,_rgba(56,189,248,0.1),_transparent_18%),linear-gradient(180deg,_#000000,_#0f172a_45%,_#000000)] px-4 py-6 md:px-6 xl:px-8"
+>
+  <div class="mx-auto flex max-w-[1200px] flex-col gap-4">
+    <p-card styleClass="dw-card--header">
+      <div class="flex flex-col gap-4">
+        <div class="space-y-2.5">
+          <div class="space-y-1.5">
+            <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-amber-300">
+              Bibliothèque BOL
+            </p>
+            <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
+              Arsenal
+            </h1>
+          </div>
+
+          <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
+            Table des armes alignée sur le livre de base BoL, avec les libellés, dégâts, portées et
+            notes du tableau de référence.
+          </p>
+
+          <div class="flex flex-wrap gap-1.5">
+            <p-tag [value]="totalWeaponCount() + ' entrées'" severity="contrast" />
+            <p-tag [value]="meleeCount() + ' mêlée'" severity="secondary" />
+            <p-tag [value]="rangedCount() + ' tir'" severity="secondary" />
+          </div>
+        </div>
+
+        <div class="library-header-actions flex flex-wrap justify-end gap-1.5">
+          <p-button
+            label="Voir les armures"
+            icon="pi pi-shield"
+            size="small"
+            [routerLink]="'/library/armors'"
+            severity="secondary"
+            [outlined]="true"
+          />
+          <p-button
+            label="Retour à l’intendance"
+            icon="pi pi-arrow-left"
+            size="small"
+            [routerLink]="'/intendance'"
+            severity="secondary"
+            [outlined]="true"
+          />
+        </div>
+      </div>
+    </p-card>
+
+    <p-card>
+      <p-table
+        [value]="filteredWeapons()"
+        size="small"
+        dataKey="id"
+        styleClass="bol-weapon-table"
+        [tableStyle]="{ 'min-width': '58rem' }"
+      >
+        <ng-template #caption>
+          <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <p-iconfield iconPosition="left">
+                <p-inputicon styleClass="pi pi-search" />
+                <input
+                  pInputText
+                  class="w-full sm:w-72"
+                  [ngModel]="searchTerm()"
+                  (ngModelChange)="searchTerm.set($event ?? '')"
+                  placeholder="Rechercher une arme"
+                  type="text"
+                />
+              </p-iconfield>
+
+              <p-button
+                icon="pi pi-filter-slash"
+                label="Effacer"
+                severity="secondary"
+                [outlined]="true"
+                size="small"
+                (onClick)="clearFilters()"
+              />
+            </div>
+
+            <p-tag [value]="filteredWeapons().length + ' visibles'" severity="contrast" />
+          </div>
+        </ng-template>
+
+        <ng-template #header>
+          <tr>
+            <th>Arme</th>
+            <th class="weapon-col-narrow">Type</th>
+            <th class="weapon-col-narrow">Dégâts</th>
+            <th class="weapon-col-range">Portée</th>
+            <th>Notes</th>
+          </tr>
+        </ng-template>
+
+        <ng-template #body let-weapon>
+          <tr>
+            <td>
+              <p class="m-0 font-semibold text-slate-100">{{ weapon.arme }}</p>
+            </td>
+            <td class="weapon-col-narrow">
+              <p-tag
+                [value]="weaponTypeLabel(weapon.type)"
+                [severity]="weapon.type === 'M' ? 'warn' : 'info'"
+              />
+            </td>
+            <td class="weapon-col-narrow">
+              <span class="font-semibold text-slate-100">{{ weapon.degats || '-' }}</span>
+            </td>
+            <td class="weapon-col-range text-slate-300">
+              {{ weapon.portee || '-' }}
+            </td>
+            <td class="text-slate-300">
+              {{ weapon.notes || '-' }}
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+</section>
