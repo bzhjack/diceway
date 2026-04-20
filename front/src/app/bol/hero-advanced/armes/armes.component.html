@@ -46,12 +46,12 @@
     <p-button label="Ajouter" icon="pi pi-plus" [disabled]="pending() || !selectedArme()" (onClick)="addArme()" />
   </div>
 
-  <div class="grid gap-2">
+  <div class="dw-advanced-list">
     @for (arme of selectedArmeDetail(); track arme.id) {
-      <div class="flex items-center justify-between border border-[#424b57] bg-[#0f172a]/60 px-3 py-2">
-        <div class="min-w-0">
-          <p class="m-0 text-sm font-semibold text-slate-100">{{ arme.arme }}</p>
-          <p class="m-0 text-xs text-slate-400">
+      <div class="dw-advanced-list-row">
+        <div class="dw-advanced-list-content">
+          <p class="dw-advanced-list-title">{{ arme.arme }}</p>
+          <p class="dw-advanced-list-meta">
             {{ arme.type === 'M' ? 'Mêlée' : 'Tir' }}
             @if (arme.degats) {
               · Dégâts {{ arme.degats }}

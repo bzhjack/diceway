@@ -49,10 +49,10 @@
     </div>
   }
 
-  <div class="grid gap-2">
+  <div class="dw-advanced-list">
     @for (langueId of selectedLangueIds(); track langueId) {
-      <div class="flex items-center justify-between border border-[#424b57] bg-[#0f172a]/60 px-3 py-2">
-        <span class="text-sm text-slate-200">{{ langueFromId(langueId) }}</span>
+      <div class="dw-advanced-list-row">
+        <span class="dw-advanced-list-label">{{ langueFromId(langueId) }}</span>
         <p-button
           icon="pi pi-trash"
           severity="danger"

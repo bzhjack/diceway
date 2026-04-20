@@ -51,12 +51,12 @@
     />
   </div>
 
-  <div class="grid gap-2">
+  <div class="dw-advanced-list">
     @for (armure of selectedArmureDetail(); track armure.id) {
-      <div class="flex items-center justify-between border border-[#424b57] bg-[#0f172a]/60 px-3 py-2">
-        <div class="min-w-0">
-          <p class="m-0 text-sm font-semibold text-slate-100">{{ armure.armure }}</p>
-          <p class="m-0 text-xs text-slate-400">
+      <div class="dw-advanced-list-row">
+        <div class="dw-advanced-list-content">
+          <p class="dw-advanced-list-title">{{ armure.armure }}</p>
+          <p class="dw-advanced-list-meta">
             @if (armure.protection) {
               Protection {{ armure.protection }}
             }
