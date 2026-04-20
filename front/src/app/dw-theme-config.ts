@@ -321,5 +321,36 @@ export const DwPreset = definePreset(Aura, {
       justify-content: center;
       min-width: 9.75rem;
     }
+
+    .dw-creation-form .p-inputtext,
+    .dw-creation-form .p-textarea,
+    .dw-creation-form .p-inputnumber-input,
+    .dw-creation-form .p-select {
+      font-size: 0.9rem;
+      line-height: 1.2;
+    }
+
+    .dw-creation-form .p-iftalabel {
+      --p-iftalabel-top: 0.32rem;
+      --p-iftalabel-font-size: 0.78rem;
+      --p-iftalabel-input-padding-top: 0.95rem;
+      --p-iftalabel-input-padding-bottom: 0.32rem;
+    }
+
+    .dw-creation-form .p-inputtext,
+    .dw-creation-form .p-textarea,
+    .dw-creation-form .p-inputnumber-input {
+      padding-block: 0.35rem;
+    }
+
+    .dw-creation-form .p-select-label {
+      padding-top: 0.95rem;
+      padding-bottom: 0.32rem;
+      font-size: 0.9rem;
+    }
+
+    .dw-creation-form .p-select-dropdown {
+      width: 2.5rem;
+    }
   `,
 });
