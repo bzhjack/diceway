@@ -77,10 +77,10 @@ export const DwPreset = definePreset(Aura, {
     },
     card: {
       root: {
-        background: '{surface.800}',
-        color: '{surface.0}',
+        background: 'rgba(26, 32, 44, 0.96)',
+        color: '#f8fafc',
         borderRadius: '0.5rem',
-        shadow: '0 2px 12px rgba(0,0,0,0.3)',
+        shadow: '0 24px 60px rgba(0, 0, 0, 0.28)',
       },
       body: {
         padding: '1.5rem',
@@ -93,6 +93,97 @@ export const DwPreset = definePreset(Aura, {
       subtitle: {
         color: '{surface.300}',
       },
+      css: `
+        .p-card {
+          border: 1px solid #2d3748;
+        }
+
+        .p-card.dw-card--header {
+          box-shadow: 0 28px 70px rgba(0, 0, 0, 0.35);
+          backdrop-filter: blur(12px);
+        }
+
+        .p-card.dw-card--header .p-card-body {
+          padding: 1.25rem;
+        }
+
+        .p-card.dw-card--header .p-card-content {
+          padding: 0;
+        }
+
+        .p-card.dw-card--demon {
+          background: rgba(24, 24, 27, 0.96);
+          border-color: #3f3f46;
+        }
+
+        .p-card.dw-card--metric {
+          height: 100%;
+          background: rgba(45, 55, 72, 0.92);
+          box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+        }
+
+        .p-card.dw-card--interactive {
+          transition:
+            transform 150ms ease,
+            border-color 150ms ease;
+        }
+
+        .p-card.dw-card--metric.dw-card--interactive:hover {
+          transform: translateY(-0.125rem);
+          border-color: rgba(252, 211, 77, 0.6);
+        }
+
+        .p-card.dw-card--blur {
+          backdrop-filter: blur(12px);
+        }
+
+        @media (min-width: 1024px) {
+          .p-card.dw-card--header .p-card-body {
+            padding: 1.25rem 1.5rem;
+          }
+        }
+      `,
+    },
+    datatable: {
+      root: {
+        borderColor: '#334155',
+      },
+      header: {
+        background: 'transparent',
+        borderWidth: '0',
+        padding: '0 0 1rem',
+      },
+      headerCell: {
+        background: '#0f172a',
+        borderColor: '#334155',
+        color: '#e2e8f0',
+        padding: '1rem',
+      },
+      row: {
+        background: 'rgba(15, 23, 42, 0.72)',
+        hoverBackground: 'rgba(30, 41, 59, 0.95)',
+        color: '#e2e8f0',
+      },
+      bodyCell: {
+        borderColor: '#334155',
+        padding: '1rem',
+      },
+      css: `
+        .p-datatable .p-datatable-table-container {
+          overflow: hidden;
+          border: 1px solid #334155;
+          border-radius: 0.85rem;
+        }
+
+        .p-datatable .p-datatable-tbody > tr > td {
+          background: transparent;
+          vertical-align: top;
+        }
+
+        .p-datatable .p-datatable-tbody > tr:hover > td {
+          background: transparent;
+        }
+      `,
     },
     panel: {
       root: {
@@ -118,6 +209,11 @@ export const DwPreset = definePreset(Aura, {
           font-size: 0.9rem;
         }
       `,
+    },
+    iconfield: {
+      icon: {
+        color: '#94a3b8',
+      },
     },
     floatlabel: {
       root: {
@@ -220,4 +316,10 @@ export const DwPreset = definePreset(Aura, {
       `,
     },
   },
+  css: `
+    .library-header-actions__primary .p-button {
+      justify-content: center;
+      min-width: 9.75rem;
+    }
+  `,
 });

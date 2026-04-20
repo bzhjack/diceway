@@ -2,9 +2,7 @@
   class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(251,113,133,0.12),_transparent_28%),linear-gradient(180deg,_#000000,_#1f172a_45%,_#000000)] px-4 py-6 md:px-6 xl:px-8"
 >
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
-    <p-card
-      styleClass="demon-library-header-card !border !border-[#3f3f46] !bg-[#18181b]/96 !text-slate-50 !shadow-[0_28px_70px_rgba(0,0,0,0.35)] backdrop-blur"
-    >
+    <p-card styleClass="demon-library-header-card dw-card--demon dw-card--header">
       <div class="flex flex-col gap-4">
         <div class="space-y-2.5">
           <div class="space-y-1.5">
@@ -59,17 +57,16 @@
       </div>
     </p-card>
 
-    <p-card
-      styleClass="!border !border-[#3f3f46] !bg-[#18181b]/96 !text-slate-50 !shadow-[0_24px_60px_rgba(0,0,0,0.24)]"
-    >
+    <p-card styleClass="dw-card--demon">
       <p-table
         [value]="filteredDemons()"
+        size="small"
         [scrollable]="true"
         scrollHeight="calc(100vh - 19rem)"
         rowGroupMode="subheader"
         groupRowsBy="id_categorie"
         dataKey="id"
-        styleClass="bol-demon-table p-datatable-sm"
+        styleClass="bol-demon-table"
         [tableStyle]="{ 'min-width': '80rem' }"
       >
         <ng-template #caption>

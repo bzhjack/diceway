@@ -4,9 +4,7 @@
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
     <p-confirmpopup />
 
-    <p-card
-      styleClass="hero-library-header-card !border !border-[#2d3748] !bg-[#1a202c]/96 !text-slate-50 !shadow-[0_28px_70px_rgba(0,0,0,0.35)] backdrop-blur"
-    >
+    <p-card styleClass="hero-library-header-card dw-card--header">
       <div class="flex flex-col gap-4">
         <div class="space-y-2.5">
           <div class="space-y-1.5">
@@ -69,15 +67,14 @@
       </div>
     </p-card>
 
-    <p-card
-      styleClass="!border !border-[#2d3748] !bg-[#1a202c]/96 !text-slate-50 !shadow-[0_24px_60px_rgba(0,0,0,0.24)]"
-    >
+    <p-card>
       <p-table
         [value]="filteredHeroes()"
+        size="small"
         [scrollable]="true"
         scrollHeight="calc(100vh - 19rem)"
         dataKey="id"
-        styleClass="bol-hero-table p-datatable-sm"
+        styleClass="bol-hero-table"
         [tableStyle]="{ 'min-width': '96rem' }"
       >
         <ng-template #caption>
