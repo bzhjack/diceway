@@ -1,66 +1,90 @@
-import {ChangeDetectionStrategy, Component, computed, signal} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {HttpErrorResponse} from '@angular/common/http';
+import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {toObservable, toSignal} from '@angular/core/rxjs-interop';
+import {ReactiveFormsModule, FormBuilder, FormsModule, Validators} from '@angular/forms';
 import {RouterLink} from '@angular/router';
+import {ConfirmationService} from 'primeng/api';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
+import {CheckboxModule} from 'primeng/checkbox';
+import {ConfirmPopupModule} from 'primeng/confirmpopup';
 import {IconFieldModule} from 'primeng/iconfield';
+import {IftaLabelModule} from 'primeng/iftalabel';
 import {InputIconModule} from 'primeng/inputicon';
 import {InputTextModule} from 'primeng/inputtext';
+import {SelectModule} from 'primeng/select';
 import {TableModule} from 'primeng/table';
 import {TagModule} from 'primeng/tag';
+import {TextareaModule} from 'primeng/textarea';
+import {startWith, switchMap} from 'rxjs';
+import {BolArmeModel} from '../models/bol-arme.model';
+import {BolHerosService} from '../services/bol-heros.service';
 
-interface WeaponReferenceRow {
-  readonly arme: string;
-  readonly type: 'M' | 'T';
-  readonly degats: string;
-  readonly portee: string | null;
-  readonly notes: string;
+interface WeaponTypeOption {
+  readonly label: string;
+  readonly value: 'M' | 'T';
 }
 
 @Component({
   selector: 'bol-weapon-library-page',
   imports: [
     FormsModule,
+    ReactiveFormsModule,
     RouterLink,
     ButtonModule,
     CardModule,
+    CheckboxModule,
+    ConfirmPopupModule,
     IconFieldModule,
+    IftaLabelModule,
     InputIconModule,
     InputTextModule,
+    SelectModule,
     TableModule,
     TagModule,
+    TextareaModule,
   ],
   templateUrl: './weapon-library-page.html',
   styleUrl: './weapon-library-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ConfirmationService],
 })
 export class WeaponLibraryPageComponent {
-  private readonly weapons: readonly WeaponReferenceRow[] = [
-    {arme: 'Arme d’hast', type: 'M', degats: 'd6B', portee: null, notes: 'Arme à deux mains ; inclut le khastok de Malakut.'},
-    {arme: 'Bâton', type: 'M', degats: 'd6', portee: null, notes: 'Arme à deux mains.'},
-    {arme: 'Dague', type: 'M', degats: 'd6M', portee: '3 m', notes: 'Dissimulable ; inclut kriss, poignard, coutelas...'},
-    {arme: 'Épée', type: 'M', degats: 'd6', portee: null, notes: 'Inclut cimeterre, glaive, sabre, tulwar...'},
-    {arme: 'Épée / hache à 2 mains', type: 'M', degats: 'd6B', portee: null, notes: 'Armes à deux mains.'},
-    {arme: 'Fléau', type: 'M', degats: 'd6', portee: null, notes: 'Ignore les boucliers.'},
-    {arme: 'Gourdin', type: 'M', degats: 'd6M', portee: null, notes: 'Option : dégâts non létaux.'},
-    {arme: 'Hache', type: 'M', degats: 'd6', portee: '3 m', notes: 'Peut être lancée.'},
-    {arme: 'Lance', type: 'M', degats: 'd6', portee: '6 m', notes: 'Peut être lancée.'},
-    {arme: 'Masse d’armes', type: 'M', degats: 'd6', portee: '1,5 m', notes: 'Peut être lancée.'},
-    {arme: 'Massue', type: 'M', degats: 'd6', portee: '3 m', notes: 'Peut être lancée.'},
-    {arme: 'Morgenstern', type: 'M', degats: 'd6B', portee: null, notes: 'Arme à deux mains.'},
-    {arme: 'Rapière', type: 'M', degats: 'd6M', portee: null, notes: 'Très chic !'},
-    {arme: 'Arbalète', type: 'T', degats: 'd6', portee: '30 m', notes: 'Arme à deux mains ; rechargement : 1 round de combat.'},
-    {arme: 'Arbalète lourde', type: 'T', degats: 'd6B', portee: '45 m', notes: 'Arme à deux mains ; rechargement : 2 rounds de combat.'},
-    {arme: 'Arc', type: 'T', degats: 'd6', portee: '22 m', notes: 'Arme à deux mains.'},
-    {arme: 'Fronde/bâton-fronde', type: 'T', degats: 'd6M', portee: '9 m / 18 m', notes: 'Arme à une main / arme à deux mains.'},
-    {arme: 'Javelot/fléchette', type: 'T', degats: 'd6M', portee: '6 m', notes: 'Arme de jet.'},
-  ] as const;
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly herosService = inject(BolHerosService);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly refreshTrigger = signal(0);
+  private readonly weapons = toSignal(
+    toObservable(this.refreshTrigger).pipe(
+      startWith(0),
+      switchMap(() => this.herosService.armes()),
+    ),
+    {initialValue: [] as BolArmeModel[]},
+  );
 
+  protected readonly weaponTypeOptions: WeaponTypeOption[] = [
+    {label: 'Mêlée', value: 'M'},
+    {label: 'Tir', value: 'T'},
+  ];
   protected readonly searchTerm = signal('');
+  protected readonly onlyCreations = signal(false);
+  protected readonly formVisible = signal(false);
+  protected readonly editingWeaponId = signal<number | null>(null);
+  protected readonly submitting = signal(false);
+  protected readonly errorMessage = signal('');
+  protected readonly weaponForm = this.formBuilder.nonNullable.group({
+    arme: ['', [Validators.required, Validators.maxLength(255)]],
+    type: ['M' as 'M' | 'T', [Validators.required]],
+    degats: ['', [Validators.required, Validators.maxLength(50)]],
+    portee: ['', [Validators.maxLength(50)]],
+    notes: ['', [Validators.maxLength(65535)]],
+  });
+
   protected readonly filteredWeapons = computed(() => {
     const term = this.searchTerm().trim().toLocaleLowerCase();
 
-    return [...this.weapons]
+    return [...this.weapons()]
+      .filter((weapon) => (this.onlyCreations() ? Boolean(weapon.user_id) : true))
       .filter((weapon) => {
         if (!term) {
           return true;
@@ -73,17 +97,180 @@ export class WeaponLibraryPageComponent {
           weapon.portee,
           weapon.notes,
         ].some((value) => value?.toLocaleLowerCase().includes(term));
+      })
+      .sort((left, right) => {
+        if (left.type !== right.type) {
+          return left.type.localeCompare(right.type);
+        }
+
+        return left.arme.localeCompare(right.arme);
       });
   });
-  protected readonly totalWeaponCount = computed(() => this.weapons.length);
-  protected readonly meleeCount = computed(() => this.weapons.filter((weapon) => weapon.type === 'M').length);
-  protected readonly rangedCount = computed(() => this.weapons.filter((weapon) => weapon.type === 'T').length);
+  protected readonly weaponCount = computed(() => this.filteredWeapons().length);
+  protected readonly totalWeaponCount = computed(() => this.weapons().length);
+  protected readonly customWeaponCount = computed(() => this.weapons().filter((weapon) => Boolean(weapon.user_id)).length);
+  protected readonly canonicalWeaponCount = computed(() =>
+    this.weapons().filter((weapon) => !weapon.user_id).length,
+  );
+  protected readonly meleeCount = computed(() => this.weapons().filter((weapon) => weapon.type === 'M').length);
+  protected readonly rangedCount = computed(() => this.weapons().filter((weapon) => weapon.type === 'T').length);
+  protected readonly formTitle = computed(() => (this.editingWeaponId() ? 'Modifier l’arme' : 'Nouvelle arme'));
+  protected readonly submitLabel = computed(() => (this.editingWeaponId() ? 'Enregistrer' : 'Créer'));
 
   protected clearFilters(): void {
     this.searchTerm.set('');
+    this.onlyCreations.set(false);
   }
 
-  protected weaponTypeLabel(type: WeaponReferenceRow['type']): string {
+  protected startCreate(): void {
+    this.editingWeaponId.set(null);
+    this.formVisible.set(true);
+    this.errorMessage.set('');
+    this.weaponForm.reset({
+      arme: '',
+      type: 'M',
+      degats: '',
+      portee: '',
+      notes: '',
+    });
+  }
+
+  protected startEdit(weapon: BolArmeModel): void {
+    if (!this.canManage(weapon)) {
+      return;
+    }
+
+    this.editingWeaponId.set(weapon.id);
+    this.formVisible.set(true);
+    this.errorMessage.set('');
+    this.weaponForm.reset({
+      arme: weapon.arme,
+      type: weapon.type,
+      degats: weapon.degats ?? '',
+      portee: weapon.portee ?? '',
+      notes: weapon.notes ?? '',
+    });
+  }
+
+  protected cancelForm(): void {
+    this.formVisible.set(false);
+    this.editingWeaponId.set(null);
+    this.errorMessage.set('');
+    this.weaponForm.reset({
+      arme: '',
+      type: 'M',
+      degats: '',
+      portee: '',
+      notes: '',
+    });
+  }
+
+  protected submitForm(): void {
+    if (this.submitting()) {
+      return;
+    }
+
+    if (this.weaponForm.invalid) {
+      this.weaponForm.markAllAsTouched();
+      return;
+    }
+
+    const payload: BolArmeModel = {
+      id: this.editingWeaponId(),
+      arme: this.weaponForm.controls.arme.getRawValue().trim(),
+      type: this.weaponForm.controls.type.getRawValue(),
+      degats: this.weaponForm.controls.degats.getRawValue().trim(),
+      portee: this.nullableTrimmed(this.weaponForm.controls.portee.getRawValue()),
+      notes: this.nullableTrimmed(this.weaponForm.controls.notes.getRawValue()),
+    };
+
+    this.submitting.set(true);
+    this.errorMessage.set('');
+
+    const request$ = this.editingWeaponId()
+      ? this.herosService.updateArmeCatalog(payload)
+      : this.herosService.createArmeCatalog(payload);
+
+    request$.subscribe({
+      next: () => {
+        this.submitting.set(false);
+        this.refreshTrigger.update((value) => value + 1);
+        this.cancelForm();
+      },
+      error: (error) => {
+        this.submitting.set(false);
+        this.errorMessage.set(this.resolveErrorMessage(error, 'Impossible d’enregistrer cette arme.'));
+      },
+    });
+  }
+
+  protected confirmDelete(event: Event, weapon: BolArmeModel): void {
+    if (!this.canManage(weapon)) {
+      return;
+    }
+
+    this.confirmationService.confirm({
+      target: event.currentTarget as EventTarget,
+      message: `Supprimer ${weapon.arme} du catalogue ?`,
+      icon: 'pi pi-info-circle',
+      acceptLabel: 'Supprimer',
+      rejectLabel: 'Annuler',
+      accept: () => this.deleteWeapon(weapon),
+    });
+  }
+
+  protected weaponTypeLabel(type: BolArmeModel['type']): string {
     return type === 'M' ? 'Mêlée' : 'Tir';
+  }
+
+  protected canManage(weapon: BolArmeModel): boolean {
+    return Boolean(weapon.user_id);
+  }
+
+  protected onError(controlName: keyof typeof this.weaponForm.controls): boolean {
+    const control = this.weaponForm.controls[controlName];
+    return control.invalid && (control.dirty || control.touched);
+  }
+
+  private deleteWeapon(weapon: BolArmeModel): void {
+    if (!weapon.id) {
+      return;
+    }
+
+    this.herosService.deleteArmeCatalog(weapon.id).subscribe({
+      next: () => {
+        this.refreshTrigger.update((value) => value + 1);
+
+        if (this.editingWeaponId() === weapon.id) {
+          this.cancelForm();
+        }
+      },
+      error: (error) => {
+        this.errorMessage.set(this.resolveErrorMessage(error, 'Impossible de supprimer cette arme.'));
+      },
+    });
+  }
+
+  private nullableTrimmed(value: string): string | null {
+    const trimmed = value.trim();
+    return trimmed ? trimmed : null;
+  }
+
+  private resolveErrorMessage(error: unknown, fallback: string): string {
+    if (error instanceof HttpErrorResponse) {
+      if (typeof error.error?.message === 'string') {
+        return error.error.message;
+      }
+
+      const errors = error.error?.errors;
+      if (errors && typeof errors === 'object') {
+        const firstError = Object.values(errors)[0];
+        if (Array.isArray(firstError) && firstError.length > 0 && typeof firstError[0] === 'string') {
+          return firstError[0];
+        }
+      }
+    }
+
+    return fallback;
   }
 }

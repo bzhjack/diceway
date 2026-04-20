@@ -71,7 +71,7 @@ class BolPnjSeeder extends Seeder
                     ['armure_id' => '2']
                 ],
                 'armes' => [
-                    ['arme_id' => '4']
+                    ['arme_id' => '18']
                 ]
             ],
             [
@@ -126,7 +126,7 @@ class BolPnjSeeder extends Seeder
                     ['armure_id' => '6']
                 ],
                 'armes' => [
-                    ['arme_id' => '21']
+                    ['arme_id' => '4']
                 ]
             ],
             [
@@ -300,7 +300,7 @@ class BolPnjSeeder extends Seeder
                     ['armure_id' => '2'],
                 ],
                 'armes' => [
-                    ['arme_id' => '21'],
+                    ['arme_id' => '4'],
                     ['arme_id' => '13']
                 ]
             ],
@@ -330,7 +330,7 @@ class BolPnjSeeder extends Seeder
                     ['armure_id' => '6'],
                 ],
                 'armes' => [
-                    ['arme_id' => '21'],
+                    ['arme_id' => '4'],
                     ['arme_id' => '6']
                 ]
             ],
@@ -482,7 +482,7 @@ class BolPnjSeeder extends Seeder
 
                 ],
                 'armes' => [
-                    ['arme_id' => '21'],
+                    ['arme_id' => '4'],
                 ],
                 'traits' => [
                     ['traitable_id' => '26', 'type' => 'D', 'traitable_type' => BolDesavantage::class],

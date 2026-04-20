@@ -1,5 +1,6 @@
 export interface BolArmeModel {
   id: number | null;
+  user_id?: string | null;
   arme: string;
   type: 'T' | 'M';
   degats: string | null;
