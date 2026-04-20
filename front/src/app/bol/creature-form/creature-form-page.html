@@ -30,17 +30,18 @@
               type="button"
               icon="pi pi-arrow-left"
               [label]="returnUrl() === '/library/creatures' ? 'Retour à la bibliothèque' : 'Retour'"
+              size="large"
               severity="secondary"
               [outlined]="true"
               (onClick)="goBack()"
-              styleClass="!px-5 !py-3 !font-bold"
             />
             <p-button
               type="submit"
               [label]="submitLabel()"
               icon="pi pi-check"
+              severity="warn"
+              size="large"
               [disabled]="pending() || loadingCreature() || creatureForm.invalid"
-              styleClass="!bg-[#d97706] !border-[#d97706] !text-white !px-5 !py-3 !font-bold"
             />
           </div>
         </div>
@@ -297,9 +298,9 @@
                 <p-button
                   label="Ajouter"
                   icon="pi pi-plus"
+                  size="large"
                   [disabled]="!selectedCapaciteId.value"
                   (onClick)="addCapacite()"
-                  styleClass="!px-4 !py-3 !font-bold"
                 />
               </div>
 
@@ -329,10 +330,10 @@
                       <p-button
                         label="Retirer"
                         icon="pi pi-times"
+                        size="small"
                         severity="secondary"
                         [outlined]="true"
                         (onClick)="removeCapacite(index)"
-                        styleClass="!px-4 !py-2 !font-bold"
                       />
                     </div>
                   }

@@ -31,9 +31,9 @@
                   icon="pi pi-arrow-up-right"
                   [routerLink]="action.link"
                   [state]="action.state"
+                  size="small"
                   severity="secondary"
                   [outlined]="true"
-                  styleClass="!px-3 !py-1.5 !text-sm !font-bold"
                 />
                 @if (action.advancedLink) {
                   <p-button
@@ -41,9 +41,9 @@
                     icon="pi pi-cog"
                     [routerLink]="action.advancedLink"
                     [state]="action.advancedState"
+                    size="small"
                     severity="secondary"
                     [outlined]="true"
-                    styleClass="!px-3 !py-1.5 !text-sm !font-bold"
                   />
                 }
               </div>

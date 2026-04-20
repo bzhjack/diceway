@@ -29,22 +29,23 @@
         label="Entrer dans la session"
         icon="pi pi-play-circle"
         [routerLink]="'/session/live'"
-        styleClass="!bg-[#2563eb] !border-[#2563eb] !text-white !px-5 !py-3 !font-bold"
+        severity="info"
+        size="large"
       />
       <p-button
         label="Créer une session"
         icon="pi pi-calendar-plus"
         [routerLink]="'/create/session'"
         severity="secondary"
-        styleClass="!px-5 !py-3 !font-bold"
+        size="large"
       />
       <p-button
         label="Déconnexion"
         icon="pi pi-sign-out"
         severity="contrast"
+        size="large"
         [outlined]="true"
         (onClick)="requestLogout()"
-        styleClass="!px-5 !py-3 !font-bold"
       />
     </div>
   </div>

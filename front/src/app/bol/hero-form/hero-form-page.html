@@ -41,8 +41,9 @@
               type="submit"
               [label]="submitLabel()"
               icon="pi pi-save"
+              severity="success"
+              size="large"
               [disabled]="pending() || loadingHero()"
-              styleClass="!bg-[#059669] !border-[#059669] !text-white !px-5"
             />
 
             @if (editMode() && !heroForm.controls.active.value) {

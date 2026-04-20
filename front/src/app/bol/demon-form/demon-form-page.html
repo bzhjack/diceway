@@ -30,17 +30,18 @@
               type="button"
               icon="pi pi-arrow-left"
               [label]="returnUrl() === '/library/demons' ? 'Retour a la bibliotheque' : 'Retour'"
+              size="large"
               severity="secondary"
               [outlined]="true"
               (onClick)="goBack()"
-              styleClass="!px-5 !py-3 !font-bold"
             />
             <p-button
               type="submit"
               [label]="submitLabel()"
               icon="pi pi-check"
+              severity="danger"
+              size="large"
               [disabled]="pending() || loadingDemon() || demonForm.invalid"
-              styleClass="!bg-[#b91c1c] !border-[#b91c1c] !text-white !px-5 !py-3 !font-bold"
             />
           </div>
         </div>
@@ -306,9 +307,9 @@
                 <p-button
                   label="Ajouter"
                   icon="pi pi-plus"
+                  size="large"
                   [disabled]="!selectedPouvoirId.value"
                   (onClick)="addPouvoir()"
-                  styleClass="!px-4 !py-3 !font-bold"
                 />
               </div>
 
@@ -337,10 +338,10 @@
                       <p-button
                         label="Retirer"
                         icon="pi pi-times"
+                        size="small"
                         severity="secondary"
                         [outlined]="true"
                         (onClick)="removePouvoir(index)"
-                        styleClass="!px-4 !py-2 !font-bold"
                       />
                     </div>
                   }
