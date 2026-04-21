@@ -1,0 +1,90 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+**Diceway** is a role-playing game companion app for **Barbarians of Lemuria (BoL)**. It supports character creation, creature/demon/NPC management, and live game sessions.
+
+- **Frontend**: Angular 21 app in `/front/`
+- **Backend**: Laravel 12 REST API in `/backend/`
+- Game rules reference: `/rules/` and `/resources/` (Markdown)
+
+> `/frontend/` and `/frontend2/` are deprecated — all active frontend work is in `/front/`.
+
+## Commands
+
+### Frontend (`front/`)
+
+```bash
+npm start          # Dev server on localhost:4200 (proxies API to localhost:8080)
+npm run build      # Production build — run this to validate any frontend change
+npm test           # Unit tests with Vitest
+npm run watch      # Incremental dev build
+```
+
+### Backend (`backend/`)
+
+```bash
+php artisan serve              # Dev server on port 8080
+php artisan migrate            # Run migrations
+php artisan test               # PHPUnit tests — run the closest test to validate any backend change
+
+# Docker
+npm run docker:build           # Build image (diceway-app)
+npm run docker:start           # docker-compose up + mailpit
+npm run docker:exec            # Shell into container
+```
+
+> `backend/package.json` is only for Vite asset bundling on the Laravel side, not a Node app.
+
+## Business rules & reference data
+
+When a task touches game rules, character creation, equipment, careers, languages, traits, or activation:
+1. Check `/resources/` first — authoritative reference data (weapons, armor, careers, languages, advantages, disadvantages, regions, bestiary, demons, NPCs).
+2. Use `/rules/` for additional context or mechanics not covered in `/resources/`.
+
+## Angular conventions (`front/`)
+
+### TypeScript
+- Strict type checking; avoid `any`, use `unknown` when type is uncertain.
+- Prefer type inference when the type is obvious.
+
+### Components
+- **Standalone by default** — never set `standalone: true` explicitly (it's the default since Angular v20).
+- `changeDetection: ChangeDetectionStrategy.OnPush` on every component.
+- Use `input()` and `output()` functions instead of `@Input()`/`@Output()` decorators.
+- Do NOT use `@HostBinding` or `@HostListener` — put host bindings in the `host` object of `@Component`/`@Directive`.
+- Do NOT use `ngClass` or `ngStyle` — use `class` and `style` bindings instead.
+- Use native control flow (`@if`, `@for`, `@switch`) — not `*ngIf`, `*ngFor`, `*ngSwitch`.
+- Keep templates simple; no arrow functions and no globals (e.g. `new Date()`) in templates.
+- Use `NgOptimizedImage` for all static images (not for inline base64).
+- Prefer inline templates for small components.
+- External templates/styles: use paths relative to the component `.ts` file.
+
+### State
+- Signals for local state; `computed()` for derived state.
+- Use `.update()` or `.set()` on signals — not `.mutate()`.
+- Keep state transformations pure.
+
+### Forms
+- Prefer Reactive Forms over template-driven forms.
+
+### Services
+- `inject()` function instead of constructor injection.
+- `providedIn: 'root'` for singleton services.
+- Single responsibility per service.
+
+### PrimeNG
+- For buttons, do not use `styleClass` — prefer component inputs (`size`, `severity`, `outlined`, `text`) and CSS on container wrappers.
+
+### Accessibility
+- All components must pass AXE checks and meet WCAG AA minimums (focus management, color contrast, ARIA attributes).
+
+## Backend architecture (`backend/`)
+
+- **RESTful API** — 150+ routes in `routes/api.php`, grouped under `sanctum` auth middleware.
+- **Service layer** — business logic in `app/Http/Services/Bol/`, not in controllers.
+- **Eloquent models** — 27+ models in `app/Models/Bol/`. Primary entities: `BolHeros`, `BolCreature`, `BolDemon`, `BolPnj`, `BolQuest`.
+- **Auth** — Laravel Sanctum (Bearer tokens) + Google OAuth (`POST /api/auth/google/id-token`). Tokens stored in `sessionStorage` on the frontend.
+- **Note** — `DatabaseSeeder.php` does not call the 19 seeders; reference data requires manual population.
