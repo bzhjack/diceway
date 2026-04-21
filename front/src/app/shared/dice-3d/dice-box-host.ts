@@ -81,7 +81,7 @@ export class DiceBoxHostComponent {
         assetPath: '/assets/dice-box/',
         theme: 'default',
         offscreen: true,
-        scale: 4.8,
+        scale: 8,
         themeColor: '#60a5fa',
         id: `${this.hostId}-canvas`,
       });
