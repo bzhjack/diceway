@@ -16,6 +16,12 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'create/scenario',
+    loadComponent: () =>
+      import('./bol/scenario-form/scenario-form-page').then((module) => module.ScenarioFormPageComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'create/creature',
     loadComponent: () =>
       import('./bol/creature-form/creature-form-page').then(
