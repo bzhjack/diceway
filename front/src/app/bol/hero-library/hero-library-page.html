@@ -4,7 +4,7 @@
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
     <p-confirmpopup />
 
-    <p-card styleClass="hero-library-header-card dw-card--header">
+    <p-card class="hero-library-header-card dw-card--header">
       <div class="flex flex-col gap-4">
         <div class="space-y-2.5">
           <div class="space-y-1.5">
@@ -28,33 +28,35 @@
           </div>
         </div>
 
-        <div class="library-header-actions flex flex-wrap justify-end gap-1.5">
-          <span class="library-header-actions__primary">
+        <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
+          <div class="flex flex-wrap gap-1.5">
+            <span class="library-header-actions__primary">
+              <p-button
+                label="Créer un héros"
+                icon="pi pi-plus"
+                severity="success"
+                size="small"
+                [routerLink]="'/create/hero'"
+                [state]="{ returnUrl: '/library/heroes' }"
+              />
+            </span>
             <p-button
-              label="Créer un héros"
-              icon="pi pi-plus"
-              severity="success"
+              label="Voir les PNJ"
+              icon="pi pi-user-edit"
               size="small"
-              [routerLink]="'/create/hero'"
-              [state]="{ returnUrl: '/library/heroes' }"
+              [routerLink]="'/library/pnjs'"
+              severity="secondary"
+              [outlined]="true"
             />
-          </span>
-          <p-button
-            label="Voir les PNJ"
-            icon="pi pi-user-edit"
-            size="small"
-            [routerLink]="'/library/pnjs'"
-            severity="secondary"
-            [outlined]="true"
-          />
-          <p-button
-            label="Voir le bestiaire"
-            icon="pi pi-book"
-            size="small"
-            [routerLink]="'/library/creatures'"
-            severity="secondary"
-            [outlined]="true"
-          />
+            <p-button
+              label="Voir le bestiaire"
+              icon="pi pi-book"
+              size="small"
+              [routerLink]="'/library/creatures'"
+              severity="secondary"
+              [outlined]="true"
+            />
+          </div>
           <p-button
             label="Retour au dashboard"
             icon="pi pi-arrow-left"
@@ -74,14 +76,14 @@
         [scrollable]="true"
         scrollHeight="calc(100vh - 19rem)"
         dataKey="id"
-        styleClass="bol-hero-table"
+        class="bol-hero-table"
         [tableStyle]="{ 'min-width': '96rem' }"
       >
         <ng-template #caption>
           <div class="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
             <div class="flex flex-col gap-3 lg:flex-row lg:flex-wrap">
               <p-iconfield iconPosition="left">
-                <p-inputicon styleClass="pi pi-search" />
+                <p-inputicon class="pi pi-search" />
                 <input
                   pInputText
                   class="w-full lg:w-72"
@@ -169,16 +171,18 @@
                       [routerLink]="['/create/hero', hero.id]"
                       [state]="{ returnUrl: '/library/heroes' }"
                     />
-                    <p-button
-                      icon="pi pi-cog"
-                      severity="secondary"
-                      [text]="true"
-                      [rounded]="true"
-                      size="small"
-                      pTooltip="Édition avancée"
-                      [routerLink]="['/create/hero-advanced', hero.id]"
-                      [state]="{ returnUrl: '/library/heroes' }"
-                    />
+                    @if (!hero.active) {
+                      <p-button
+                        icon="pi pi-cog"
+                        severity="secondary"
+                        [text]="true"
+                        [rounded]="true"
+                        size="small"
+                        pTooltip="Édition avancée"
+                        [routerLink]="['/create/hero-advanced', hero.id]"
+                        [state]="{ returnUrl: '/library/heroes' }"
+                      />
+                    }
                     <p-button
                       icon="pi pi-trash"
                       severity="danger"
