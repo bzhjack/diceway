@@ -11,16 +11,20 @@ interface ModeOption {
 }
 
 interface RollDieView {
+  readonly accent: 'kept' | 'dropped';
   readonly id: string;
   readonly kept: boolean;
+  readonly label: string;
   readonly value: number;
 }
 
 interface RollSummary {
   readonly detail: string;
   readonly dice: readonly RollDieView[];
+  readonly formula: string;
   readonly headline: string;
   readonly label: string;
+  readonly meta: readonly string[];
   readonly tone: RollTone;
   readonly totalLabel: string;
 }
@@ -83,6 +87,8 @@ export class BolDicePanelComponent {
         this.modifier() === 0 ? 'sans modificateur' : `avec ${this.formatModifier(this.modifier())}`;
       const diceLabel =
         keptDice.length > 0 ? keptDice.map((die) => die.value).join(' + ') : 'jet sans résultat exploitable';
+      const modeLabel =
+        this.mode() === 'standard' ? 'Standard' : this.mode() === 'bonus' ? 'Bonus' : 'Malus';
       const statusLabel =
         critical === 'success'
           ? 'Critique automatique'
@@ -95,12 +101,16 @@ export class BolDicePanelComponent {
       this.lastRoll.set({
         label: 'Jet BoL',
         headline: `${statusLabel} · seuil ${this.target()}`,
+        formula: this.buildFormula(keptDice.map((die) => die.value), this.modifier(), finalTotal),
         totalLabel: `${finalTotal}`,
+        meta: [`Seuil ${this.target()}`, `Mode ${modeLabel}`, `Mod ${this.formatModifier(this.modifier())}`],
         tone: success ? 'success' : 'danger',
         detail: `${diceLabel} ${modifierLabel}. Mode ${this.mode()}.`,
         dice: dice.map((die) => ({
+          accent: keptIds.has(die.rollId) ? 'kept' : 'dropped',
           id: die.rollId,
           kept: keptIds.has(die.rollId),
+          label: keptIds.has(die.rollId) ? 'Gardé' : 'Écarté',
           value: die.value,
         })),
       });
@@ -146,5 +156,15 @@ export class BolDicePanelComponent {
 
   private formatModifier(value: number): string {
     return value > 0 ? `+${value}` : `${value}`;
+  }
+
+  private buildFormula(values: readonly number[], modifier: number, total: number): string {
+    const base = values.length > 0 ? values.join(' + ') : '0';
+
+    if (modifier === 0) {
+      return `${base} = ${total}`;
+    }
+
+    return `${base} ${this.formatModifier(modifier)} = ${total}`;
   }
 }

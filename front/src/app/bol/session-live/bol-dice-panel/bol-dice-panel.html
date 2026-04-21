@@ -56,22 +56,32 @@
 
   @if (lastRoll(); as roll) {
     <article class="dice-result" [attr.data-tone]="roll.tone">
+      <div class="dice-result__banner">
+        <p class="dice-result__label">{{ roll.label }}</p>
+        <strong>{{ roll.totalLabel }}</strong>
+      </div>
+
       <div class="dice-result__header">
         <div>
-          <p class="dice-result__label">{{ roll.label }}</p>
           <h4>{{ roll.headline }}</h4>
+          <div class="dice-result__meta" aria-label="Contexte du jet">
+            @for (item of roll.meta; track item) {
+              <span>{{ item }}</span>
+            }
+          </div>
         </div>
-        <strong>{{ roll.totalLabel }}</strong>
       </div>
 
       <div class="dice-result__dice" aria-label="Résultat des dés">
         @for (die of roll.dice; track die.id) {
-          <span class="dice-result__die" [attr.data-kept]="die.kept" [attr.data-dropped]="!die.kept">
-            {{ die.value }}
+          <span class="dice-result__die" [attr.data-accent]="die.accent" [attr.data-kept]="die.kept" [attr.data-dropped]="!die.kept">
+            <small>{{ die.label }}</small>
+            <strong>{{ die.value }}</strong>
           </span>
         }
       </div>
 
+      <p class="dice-result__formula">{{ roll.formula }}</p>
       <p class="dice-result__detail">{{ roll.detail }}</p>
     </article>
   }
