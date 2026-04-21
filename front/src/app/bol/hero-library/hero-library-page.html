@@ -171,16 +171,18 @@
                       [routerLink]="['/create/hero', hero.id]"
                       [state]="{ returnUrl: '/library/heroes' }"
                     />
-                    <p-button
-                      icon="pi pi-cog"
-                      severity="secondary"
-                      [text]="true"
-                      [rounded]="true"
-                      size="small"
-                      pTooltip="Édition avancée"
-                      [routerLink]="['/create/hero-advanced', hero.id]"
-                      [state]="{ returnUrl: '/library/heroes' }"
-                    />
+                    @if (!hero.active) {
+                      <p-button
+                        icon="pi pi-cog"
+                        severity="secondary"
+                        [text]="true"
+                        [rounded]="true"
+                        size="small"
+                        pTooltip="Édition avancée"
+                        [routerLink]="['/create/hero-advanced', hero.id]"
+                        [state]="{ returnUrl: '/library/heroes' }"
+                      />
+                    }
                     <p-button
                       icon="pi pi-trash"
                       severity="danger"
