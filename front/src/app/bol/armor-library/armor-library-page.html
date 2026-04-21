@@ -4,7 +4,7 @@
   <div class="mx-auto flex max-w-[1200px] flex-col gap-4">
     <p-confirmpopup />
 
-    <p-card styleClass="dw-card--header">
+    <p-card class="dw-card--header">
       <div class="flex flex-col gap-4">
         <div class="space-y-2.5">
           <div class="space-y-1.5">
@@ -130,14 +130,14 @@
         [value]="filteredArmors()"
         size="small"
         dataKey="id"
-        styleClass="bol-armor-table"
+        class="bol-armor-table"
         [tableStyle]="{ 'min-width': '64rem' }"
       >
         <ng-template #caption>
           <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <p-iconfield iconPosition="left">
-                <p-inputicon styleClass="pi pi-search" />
+                <p-inputicon class="pi pi-search" />
                 <input
                   pInputText
                   class="w-full sm:w-72"

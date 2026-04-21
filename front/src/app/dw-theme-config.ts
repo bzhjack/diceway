@@ -98,47 +98,47 @@ export const DwPreset = definePreset(Aura, {
           border: 1px solid #2d3748;
         }
 
-        .p-card.dw-card--header {
+        .dw-card--header .p-card {
           box-shadow: 0 28px 70px rgba(0, 0, 0, 0.35);
           backdrop-filter: blur(12px);
         }
 
-        .p-card.dw-card--header .p-card-body {
+        .dw-card--header .p-card-body {
           padding: 1.25rem;
         }
 
-        .p-card.dw-card--header .p-card-content {
+        .dw-card--header .p-card-content {
           padding: 0;
         }
 
-        .p-card.dw-card--demon {
+        .dw-card--demon .p-card {
           background: rgba(24, 24, 27, 0.96);
           border-color: #3f3f46;
         }
 
-        .p-card.dw-card--metric {
+        .dw-card--metric .p-card {
           height: 100%;
           background: rgba(45, 55, 72, 0.92);
           box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
         }
 
-        .p-card.dw-card--interactive {
+        .dw-card--interactive .p-card {
           transition:
             transform 150ms ease,
             border-color 150ms ease;
         }
 
-        .p-card.dw-card--metric.dw-card--interactive:hover {
+        .dw-card--metric.dw-card--interactive:hover .p-card {
           transform: translateY(-0.125rem);
           border-color: rgba(252, 211, 77, 0.6);
         }
 
-        .p-card.dw-card--blur {
+        .dw-card--blur .p-card {
           backdrop-filter: blur(12px);
         }
 
         @media (min-width: 1024px) {
-          .p-card.dw-card--header .p-card-body {
+          .dw-card--header .p-card-body {
             padding: 1.25rem 1.5rem;
           }
         }
@@ -331,8 +331,8 @@ export const DwPreset = definePreset(Aura, {
     .dw-creation-form .p-textarea,
     .dw-creation-form .p-inputnumber-input,
     .dw-creation-form .p-select {
-      font-size: 0.9rem;
-      line-height: 1.2;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
     }
 
     .dw-creation-form .p-iftalabel {

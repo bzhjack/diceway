@@ -4,7 +4,7 @@
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
     <p-confirmpopup />
 
-    <p-card styleClass="hero-library-header-card dw-card--header">
+    <p-card class="hero-library-header-card dw-card--header">
       <div class="flex flex-col gap-4">
         <div class="space-y-2.5">
           <div class="space-y-1.5">
@@ -76,14 +76,14 @@
         [scrollable]="true"
         scrollHeight="calc(100vh - 19rem)"
         dataKey="id"
-        styleClass="bol-hero-table"
+        class="bol-hero-table"
         [tableStyle]="{ 'min-width': '96rem' }"
       >
         <ng-template #caption>
           <div class="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
             <div class="flex flex-col gap-3 lg:flex-row lg:flex-wrap">
               <p-iconfield iconPosition="left">
-                <p-inputicon styleClass="pi pi-search" />
+                <p-inputicon class="pi pi-search" />
                 <input
                   pInputText
                   class="w-full lg:w-72"
