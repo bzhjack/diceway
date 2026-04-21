@@ -23,6 +23,7 @@
   "private": true,
   "packageManager": "npm@11.8.0",
   "dependencies": {
+    "@3d-dice/dice-box": "^1.1.4",
     "@angular/animations": "^21.2.9",
     "@angular/common": "^21.2.9",
     "@angular/compiler": "^21.2.9",

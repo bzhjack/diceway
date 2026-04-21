@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, computed, inject} from '@angular/core';
 import {AuthService} from '../../core/auth/auth.service';
+import {BolDicePanelComponent} from './bol-dice-panel/bol-dice-panel';
 
 type Tone = 'neutral' | 'accent' | 'success' | 'warning' | 'danger';
 type ProtagonistKind = 'PJ' | 'PNJ';
@@ -80,6 +81,7 @@ interface Combatant {
 
 @Component({
   selector: 'app-session-live-page',
+  imports: [BolDicePanelComponent],
   templateUrl: './session-live-page.html',
   styleUrl: './session-live-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

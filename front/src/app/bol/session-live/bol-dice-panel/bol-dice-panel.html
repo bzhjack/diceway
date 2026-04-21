@@ -1,0 +1,99 @@
+<section class="dice-panel" aria-labelledby="dice-panel-title">
+  <div class="dice-panel__heading">
+    <div>
+      <p class="dice-panel__kicker">Assistant de jets</p>
+      <h3 id="dice-panel-title">Dés 3D</h3>
+    </div>
+    <span class="dice-panel__badge">BoL prêt</span>
+  </div>
+
+  <app-dice-box-host #diceBox></app-dice-box-host>
+
+  <div class="dice-panel__controls">
+    <div class="dice-panel__section">
+      <div class="dice-panel__section-header">
+        <h4>Jet BoL</h4>
+        <p>2d6, bonus et malus calculés côté app pour garder une intégration stable.</p>
+      </div>
+
+      <div class="dice-panel__mode-row" role="group" aria-label="Mode de jet BoL">
+        @for (option of modeOptions; track option.value) {
+          <button
+            type="button"
+            class="dice-toggle"
+            [attr.data-active]="mode() === option.value"
+            (click)="selectMode(option.value)"
+          >
+            {{ option.label }}
+          </button>
+        }
+      </div>
+
+      <div class="dice-panel__numeric-grid">
+        <label class="dice-field">
+          <span>Modificateur</span>
+          <input type="number" [value]="modifier()" (input)="updateModifier($event)" />
+        </label>
+
+        <label class="dice-field">
+          <span>Seuil</span>
+          <input type="number" [value]="target()" (input)="updateTarget($event)" />
+        </label>
+      </div>
+
+      <div class="dice-panel__action-row">
+        <button type="button" class="dice-button dice-button--primary" [disabled]="rolling()" (click)="rollBolAction()">
+          {{ rolling() ? 'Jet en cours…' : 'Lancer le jet BoL' }}
+        </button>
+        <button type="button" class="dice-button" (click)="clearTray()">Vider le plateau</button>
+      </div>
+    </div>
+
+    <div class="dice-panel__section">
+      <div class="dice-panel__section-header">
+        <h4>Lancers rapides</h4>
+        <p>Pour dégâts, tables, tirages et vérifications hors jet d’action.</p>
+      </div>
+
+      <div class="dice-panel__preset-grid">
+        @for (preset of quickPresets; track preset.label) {
+          <button
+            type="button"
+            class="dice-preset"
+            [disabled]="rolling()"
+            (click)="rollQuickPreset(preset.notation, preset.label)"
+          >
+            <strong>{{ preset.label }}</strong>
+            <span>{{ preset.notation }}</span>
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <p class="dice-panel__error">{{ errorMessage() }}</p>
+  }
+
+  @if (lastRoll(); as roll) {
+    <article class="dice-result" [attr.data-tone]="roll.tone">
+      <div class="dice-result__header">
+        <div>
+          <p class="dice-result__label">{{ roll.label }}</p>
+          <h4>{{ roll.headline }}</h4>
+        </div>
+        <strong>{{ roll.totalLabel }}</strong>
+      </div>
+
+      <div class="dice-result__dice" aria-label="Résultat des dés">
+        @for (die of roll.dice; track die.id) {
+          <span class="dice-result__die" [attr.data-kept]="die.kept" [attr.data-dropped]="!die.kept">
+            {{ die.value }}
+          </span>
+        }
+      </div>
+
+      <p class="dice-result__detail">{{ roll.detail }}</p>
+    </article>
+  }
+</section>
