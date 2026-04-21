@@ -10,6 +10,7 @@ import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {CheckboxModule} from 'primeng/checkbox';
 import {ConfirmPopupModule} from 'primeng/confirmpopup';
+import {DialogModule} from 'primeng/dialog';
 import {IconFieldModule} from 'primeng/iconfield';
 import {InputIconModule} from 'primeng/inputicon';
 import {InputTextModule} from 'primeng/inputtext';
@@ -18,6 +19,7 @@ import {TagModule} from 'primeng/tag';
 import {TableModule} from 'primeng/table';
 import {TooltipModule} from 'primeng/tooltip';
 import {startWith, switchMap} from 'rxjs';
+import {CreatureStatblockComponent} from '../creature-statblock/creature-statblock.component';
 
 @Component({
   selector: 'bol-creature-library-page',
@@ -28,6 +30,7 @@ import {startWith, switchMap} from 'rxjs';
     CardModule,
     CheckboxModule,
     ConfirmPopupModule,
+    DialogModule,
     IconFieldModule,
     InputIconModule,
     InputTextModule,
@@ -35,6 +38,7 @@ import {startWith, switchMap} from 'rxjs';
     TagModule,
     TableModule,
     TooltipModule,
+    CreatureStatblockComponent,
   ],
   templateUrl: './creature-library-page.html',
   styleUrl: './creature-library-page.scss',
@@ -58,6 +62,7 @@ export class CreatureLibraryPageComponent {
   protected readonly searchTerm = signal('');
   protected readonly searchTaille = signal<number | null>(null);
   protected readonly onlyCreations = signal(false);
+  protected readonly inspectedCreature = signal<BolCreatureModel | null>(null);
 
   protected readonly filteredCreatures = computed(() =>
     [...this.creatures()]
@@ -114,6 +119,16 @@ export class CreatureLibraryPageComponent {
     }
 
     return creature.avatar || '/assets/bol/empty-avatar.jpg';
+  }
+
+  protected openStatblock(creature: BolCreatureModel): void {
+    this.inspectedCreature.set(creature);
+  }
+
+  protected onStatblockVisibilityChange(visible: boolean): void {
+    if (!visible) {
+      this.inspectedCreature.set(null);
+    }
   }
 
   private deleteCreature(creature: BolCreatureModel): void {

@@ -16,7 +16,7 @@ import {toSignal} from '@angular/core/rxjs-interop';
 import {BolHerosAttributs} from '../../models/bol-heros.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {HeroAdvancedCreateTools} from '../create.tools';
-import {attributValidator, attributsFormValidator} from '../create.validators';
+import {attributsFormValidator, attributValidator} from '../create.validators';
 
 @Component({
   selector: 'bol-hero-advanced-attributs',

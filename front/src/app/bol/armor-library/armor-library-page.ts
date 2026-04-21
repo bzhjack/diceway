@@ -1,7 +1,7 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
-import {ReactiveFormsModule, FormBuilder, FormsModule, Validators} from '@angular/forms';
+import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {RouterLink} from '@angular/router';
 import {ConfirmationService} from 'primeng/api';
 import {ButtonModule} from 'primeng/button';

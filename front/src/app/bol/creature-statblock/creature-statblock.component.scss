@@ -1,0 +1,221 @@
+:host {
+  display: block;
+}
+
+.creature-statblock {
+  border: 1px solid #424b57;
+  border-radius: 1rem;
+  background:
+    radial-gradient(circle at top left, rgba(250, 204, 21, 0.12), transparent 28%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.94));
+  padding: 1rem;
+}
+
+.creature-statblock__header {
+  display: grid;
+  gap: 1rem;
+}
+
+.creature-statblock__avatar {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #424b57;
+  border-radius: 0.9rem;
+  background: rgba(15, 23, 42, 0.9);
+  aspect-ratio: 1;
+  width: 100%;
+  max-width: 8rem;
+}
+
+.creature-statblock__avatar-tag {
+  position: absolute;
+  right: 0.45rem;
+  bottom: 0.45rem;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.88);
+  padding: 0.16rem 0.45rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fbbf24;
+}
+
+.creature-statblock__main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.creature-statblock__topline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.creature-statblock__eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #fbbf24;
+}
+
+.creature-statblock__title {
+  margin: 0;
+  font-family: 'Muse Display Harmony', 'Open Sans', sans-serif;
+  font-size: clamp(1.8rem, 2vw, 2.3rem);
+  line-height: 0.98;
+  color: #f8fafc;
+}
+
+.creature-statblock__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.creature-statblock__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.creature-statblock__chip {
+  border: 1px solid rgba(251, 191, 36, 0.28);
+  border-radius: 999px;
+  background: rgba(251, 191, 36, 0.08);
+  padding: 0.24rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fde68a;
+}
+
+.creature-statblock__chip--muted {
+  border-color: rgba(148, 163, 184, 0.22);
+  background: rgba(148, 163, 184, 0.08);
+  color: #cbd5e1;
+}
+
+.creature-statblock__comment {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #cbd5e1;
+}
+
+.creature-statblock__grid {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.creature-statblock__panel {
+  border: 1px solid rgba(66, 75, 87, 0.9);
+  border-radius: 0.85rem;
+  background: rgba(15, 23, 42, 0.52);
+  padding: 0.85rem;
+}
+
+.creature-statblock__panel--abilities {
+  min-width: 0;
+}
+
+.creature-statblock__panel-title {
+  margin: 0 0 0.7rem;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.creature-statblock__stats {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.creature-statblock__stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.creature-statblock__stat-label {
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.creature-statblock__stat-value {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.creature-statblock__abilities {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.creature-statblock__ability {
+  border-left: 2px solid rgba(251, 191, 36, 0.35);
+  padding-left: 0.6rem;
+}
+
+.creature-statblock__ability-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.creature-statblock__ability-title {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.creature-statblock__ability-detail {
+  margin: 0.2rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: #cbd5e1;
+}
+
+.creature-statblock__empty {
+  margin: 0;
+  font-size: 0.84rem;
+  color: #64748b;
+}
+
+@media (min-width: 768px) {
+  .creature-statblock__header {
+    grid-template-columns: 8rem minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .creature-statblock__topline {
+    flex-direction: row;
+    align-items: start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .creature-statblock__actions {
+    justify-content: flex-end;
+  }
+
+  .creature-statblock__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .creature-statblock__panel--abilities {
+    grid-column: 1 / -1;
+  }
+}

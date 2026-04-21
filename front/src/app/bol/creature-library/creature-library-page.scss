@@ -35,6 +35,22 @@
   background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.92));
 }
 
+.beast-avatar--trigger {
+  cursor: pointer;
+  padding: 0;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.beast-avatar--trigger:hover {
+  border-color: rgba(251, 191, 36, 0.55);
+  transform: translateY(-1px);
+}
+
+.beast-avatar--trigger:focus-visible {
+  outline: 3px solid rgba(251, 191, 36, 0.28);
+  outline-offset: 3px;
+}
+
 .beast-avatar__fallback {
   display: flex;
   flex: 1;
@@ -58,4 +74,22 @@
   letter-spacing: 0.06em;
   color: #fbbf24;
   text-transform: uppercase;
+}
+
+:host ::ng-deep .creature-statblock-dialog {
+  .p-dialog {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .p-dialog-header {
+    padding: 0 0 0.75rem;
+    background: transparent;
+    border: 0;
+  }
+
+  .p-dialog-content {
+    background: transparent;
+  }
 }
