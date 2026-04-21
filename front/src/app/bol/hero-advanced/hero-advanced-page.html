@@ -4,9 +4,7 @@
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
     <p-confirmpopup />
 
-    <p-card
-      styleClass="!border !border-[#2d3748] !bg-[#1a202c]/96 !text-slate-50 !shadow-[0_28px_70px_rgba(0,0,0,0.35)] backdrop-blur"
-    >
+    <p-card styleClass="dw-card--header">
       <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         <div class="space-y-2">
           <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-emerald-300">
@@ -62,9 +60,7 @@
     }
 
     @if (!hasDraft()) {
-      <p-card
-        styleClass="!border !border-[#2d3748] !bg-[#1a202c]/96 !text-slate-50 !shadow-[0_24px_60px_rgba(0,0,0,0.24)]"
-      >
+      <p-card>
         <form class="mx-auto flex max-w-3xl flex-col gap-5" [formGroup]="draftForm" (ngSubmit)="startDraft()">
           <div class="space-y-2">
             <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-slate-400">Étape 1</p>
@@ -180,7 +176,7 @@
                     Modificateurs après activation
                   </p>
                 </div>
-                <p-table [value]="modifiers()" styleClass="p-datatable-sm">
+                <p-table [value]="modifiers()" size="small">
                   <ng-template #header>
                     <tr>
                       <th>Attribut</th>

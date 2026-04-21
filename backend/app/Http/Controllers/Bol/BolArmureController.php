@@ -6,18 +6,92 @@ use App\Http\Controllers\Controller;
 use App\Models\Bol\BolArmure;
 use App\Models\Bol\BolHerosArmure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Validation\Rule;
 
 class BolArmureController extends Controller
 {
+    private const CACHE_KEY = 'bol_armures_all';
+
     public function getAll()
     {
-        $cacheKey = 'bol_armures_all';
         $cacheDuration = 60 * 24; // 60 minutes
+        $cacheKey = self::CACHE_KEY . '_' . Auth::id();
         $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
-            return BolArmure::all();
+            return BolArmure::query()
+                ->where(function ($query) {
+                    $query->whereNull('user_id')->orWhere('user_id', Auth::id());
+                })
+                ->orderByRaw('case when user_id is null then 0 else 1 end')
+                ->orderBy('armure')
+                ->get();
         });
         return response()->json($donnees);
+    }
+
+    public function createCatalog(Request $request)
+    {
+        $payload = $this->validatedPayload($request);
+
+        $armure = new BolArmure();
+        $armure->user_id = Auth::id();
+        $armure->armure = $payload['armure'];
+        $armure->protection = $payload['protection'];
+        $armure->malus = $payload['malus'];
+        $armure->pts_de_pouvoir = $payload['pts_de_pouvoir'];
+        $armure->save();
+
+        $this->flushCache();
+
+        return response()->json($armure, 201);
+    }
+
+    public function updateCatalog(Request $request)
+    {
+        $request->validate([
+            'id' => ['required', 'integer'],
+        ]);
+
+        $id = (int) $request->input('id');
+        $armure = BolArmure::query()->where('user_id', Auth::id())->find($id);
+
+        if (!$armure) {
+            return response()->json(['message' => 'Armure personnelle introuvable.'], 404);
+        }
+
+        $payload = $this->validatedPayload($request, $armure->id);
+
+        $armure->armure = $payload['armure'];
+        $armure->protection = $payload['protection'];
+        $armure->malus = $payload['malus'];
+        $armure->pts_de_pouvoir = $payload['pts_de_pouvoir'];
+        $armure->save();
+
+        $this->flushCache();
+
+        return response()->json($armure);
+    }
+
+    public function deleteCatalog(int $id)
+    {
+        $armure = BolArmure::query()->where('user_id', Auth::id())->find($id);
+
+        if (!$armure) {
+            return response()->json(['message' => 'Seules vos armures personnelles peuvent etre supprimees.'], 404);
+        }
+
+        if (BolHerosArmure::query()->where('armure_id', $id)->exists()) {
+            return response()->json(
+                ['message' => 'Cette armure est encore utilisée par des héros ou des PNJ.'],
+                409,
+            );
+        }
+
+        $armure->delete();
+        $this->flushCache();
+
+        return response()->json(['success' => true]);
     }
 
     public function create(Request $request, $herosId)
@@ -43,5 +117,36 @@ class BolArmureController extends Controller
         }
         $armure->delete();
         return response()->json(['success' => true]);
+    }
+
+    private function validatedPayload(Request $request, ?int $ignoreId = null): array
+    {
+        $request->merge([
+            'armure' => is_string($request->input('armure')) ? trim($request->input('armure')) : $request->input('armure'),
+            'protection' => is_string($request->input('protection')) ? trim($request->input('protection')) : $request->input('protection'),
+            'malus' => is_string($request->input('malus')) ? trim($request->input('malus')) : $request->input('malus'),
+            'pts_de_pouvoir' => is_string($request->input('pts_de_pouvoir'))
+                ? trim($request->input('pts_de_pouvoir'))
+                : $request->input('pts_de_pouvoir'),
+        ]);
+
+        $validated = $request->validate([
+            'armure' => ['required', 'string', 'max:255', Rule::unique('bol_armure', 'armure')->ignore($ignoreId)],
+            'protection' => ['required', 'string', 'max:255'],
+            'malus' => ['nullable', 'string', 'max:255'],
+            'pts_de_pouvoir' => ['nullable', 'string', 'max:50'],
+        ]);
+
+        $validated['malus'] = isset($validated['malus']) && $validated['malus'] !== '' ? $validated['malus'] : null;
+        $validated['pts_de_pouvoir'] = isset($validated['pts_de_pouvoir']) && $validated['pts_de_pouvoir'] !== ''
+            ? $validated['pts_de_pouvoir']
+            : null;
+
+        return $validated;
+    }
+
+    private function flushCache(): void
+    {
+        Cache::forget(self::CACHE_KEY . '_' . Auth::id());
     }
 }

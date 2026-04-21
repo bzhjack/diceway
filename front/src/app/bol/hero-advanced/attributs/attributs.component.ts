@@ -70,7 +70,7 @@ export class HeroAdvancedAttributsComponent implements ControlValueAccessor, Val
       this.updateWarnings();
       this.onChange(this.attributsForm.getRawValue() as BolHerosAttributs);
       this.onTouched();
-    }, {allowSignalWrites: true});
+    });
   }
 
   writeValue(value: BolHerosAttributs | null): void {

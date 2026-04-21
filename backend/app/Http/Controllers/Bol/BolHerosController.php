@@ -159,9 +159,24 @@ class BolHerosController extends Controller
 
     private function syncHeroRelations(string $herosId, Request $request, bool $creating): void
     {
+        $extractRelationId = static function ($item, string $primaryKey, string $fallbackKey = 'id'): int {
+            if (is_numeric($item)) {
+                return (int) $item;
+            }
+
+            if (!is_array($item)) {
+                return 0;
+            }
+
+            return (int) ($item[$primaryKey] ?? $item[$fallbackKey] ?? 0);
+        };
+
         $carrieres = $request->input('carrieres', []);
         $carrieres = is_array($carrieres) ? $carrieres : [];
-        $carriereIds = array_values(array_map(fn ($item) => (int) ($item['carriere_id'] ?? $item['id'] ?? 0), $carrieres));
+        $carriereIds = array_values(array_map(
+            fn ($item) => $extractRelationId($item, 'carriere_id'),
+            $carrieres
+        ));
         if (!$creating) {
             if (count($carriereIds) === 0) {
                 BolHerosCarriere::where('heros_id', $herosId)->delete();
@@ -170,7 +185,7 @@ class BolHerosController extends Controller
             }
         }
         foreach ($carrieres as $carriere) {
-            $carriereId = (int) ($carriere['carriere_id'] ?? $carriere['id'] ?? 0);
+            $carriereId = $extractRelationId($carriere, 'carriere_id');
             if ($carriereId === 0) {
                 continue;
             }
@@ -182,7 +197,10 @@ class BolHerosController extends Controller
 
         $armes = $request->input('armes', []);
         $armes = is_array($armes) ? $armes : [];
-        $armeIds = array_values(array_map(fn ($item) => (int) ($item['arme_id'] ?? $item['id'] ?? 0), $armes));
+        $armeIds = array_values(array_map(
+            fn ($item) => $extractRelationId($item, 'arme_id'),
+            $armes
+        ));
         if (!$creating) {
             if (count($armeIds) === 0) {
                 BolHerosArme::where('heros_id', $herosId)->delete();
@@ -191,7 +209,7 @@ class BolHerosController extends Controller
             }
         }
         foreach ($armes as $arme) {
-            $armeId = (int) ($arme['arme_id'] ?? $arme['id'] ?? 0);
+            $armeId = $extractRelationId($arme, 'arme_id');
             if ($armeId === 0) {
                 continue;
             }
@@ -200,7 +218,10 @@ class BolHerosController extends Controller
 
         $armures = $request->input('armures', []);
         $armures = is_array($armures) ? $armures : [];
-        $armureIds = array_values(array_map(fn ($item) => (int) ($item['armure_id'] ?? $item['id'] ?? 0), $armures));
+        $armureIds = array_values(array_map(
+            fn ($item) => $extractRelationId($item, 'armure_id'),
+            $armures
+        ));
         if (!$creating) {
             if (count($armureIds) === 0) {
                 BolHerosArmure::where('heros_id', $herosId)->delete();
@@ -209,19 +230,28 @@ class BolHerosController extends Controller
             }
         }
         foreach ($armures as $armure) {
-            $armureId = (int) ($armure['armure_id'] ?? $armure['id'] ?? 0);
+            $armureId = $extractRelationId($armure, 'armure_id');
             if ($armureId === 0) {
                 continue;
             }
             BolHerosArmure::updateOrCreate(['heros_id' => $herosId, 'armure_id' => $armureId], []);
         }
 
-        $langues = $request->input('langues', []);
-        if (!is_array($langues) && is_array($request->input('origines')) && isset($request->input('origines')['langues'])) {
-            $langues = $request->input('origines')['langues'];
+        $langues = $request->input('langues');
+        $origines = $request->input('origines');
+        if (
+            (!is_array($langues) || count($langues) === 0)
+            && is_array($origines)
+            && isset($origines['langues'])
+            && is_array($origines['langues'])
+        ) {
+            $langues = $origines['langues'];
         }
         $langues = is_array($langues) ? $langues : [];
-        $langueIds = array_values(array_map(fn ($item) => (int) ($item['langue_id'] ?? $item['id'] ?? 0), $langues));
+        $langueIds = array_values(array_map(
+            fn ($item) => $extractRelationId($item, 'langue_id'),
+            $langues
+        ));
         if (!$creating) {
             if (count($langueIds) === 0) {
                 BolHerosLangue::where('heros_id', $herosId)->delete();
@@ -230,7 +260,7 @@ class BolHerosController extends Controller
             }
         }
         foreach ($langues as $langue) {
-            $langueId = (int) ($langue['langue_id'] ?? $langue['id'] ?? 0);
+            $langueId = $extractRelationId($langue, 'langue_id');
             if ($langueId === 0) {
                 continue;
             }

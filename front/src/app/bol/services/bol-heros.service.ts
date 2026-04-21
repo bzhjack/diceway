@@ -64,8 +64,20 @@ export class BolHerosService {
   }
 
   // Armures
-  armures(): Observable<any> {
+  armures(): Observable<BolArmureModel[]> {
     return this.http.get<BolArmureModel[]>(`${environment.apiBase}/api/bol/armures`);
+  }
+
+  createArmureCatalog(armure: BolArmureModel): Observable<BolArmureModel> {
+    return this.http.post<BolArmureModel>(`${environment.apiBase}/api/bol/armures/create`, armure);
+  }
+
+  updateArmureCatalog(armure: BolArmureModel): Observable<BolArmureModel> {
+    return this.http.post<BolArmureModel>(`${environment.apiBase}/api/bol/armures/update`, armure);
+  }
+
+  deleteArmureCatalog(id: number): Observable<boolean> {
+    return this.http.delete<boolean>(`${environment.apiBase}/api/bol/armures/delete/${id}`);
   }
 
   createArmure(herosId: string | null | undefined, armure: BolHerosArmureModel): Observable<any> {
@@ -77,8 +89,20 @@ export class BolHerosService {
   }
 
   // Armes
-  armes(): Observable<any> {
+  armes(): Observable<BolArmeModel[]> {
     return this.http.get<BolArmeModel[]>(`${environment.apiBase}/api/bol/armes`);
+  }
+
+  createArmeCatalog(arme: BolArmeModel): Observable<BolArmeModel> {
+    return this.http.post<BolArmeModel>(`${environment.apiBase}/api/bol/armes/create`, arme);
+  }
+
+  updateArmeCatalog(arme: BolArmeModel): Observable<BolArmeModel> {
+    return this.http.post<BolArmeModel>(`${environment.apiBase}/api/bol/armes/update`, arme);
+  }
+
+  deleteArmeCatalog(id: number): Observable<boolean> {
+    return this.http.delete<boolean>(`${environment.apiBase}/api/bol/armes/delete/${id}`);
   }
 
   createArme(herosId: string | null | undefined, arme: BolHerosArmeModel): Observable<any> {

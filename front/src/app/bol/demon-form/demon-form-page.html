@@ -2,10 +2,8 @@
   class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(251,113,133,0.12),_transparent_28%),linear-gradient(180deg,_#000000,_#1f172a_45%,_#000000)] px-4 py-6 md:px-6"
 >
   <div class="mx-auto flex max-w-6xl flex-col gap-4">
-    <p-card
-      styleClass="!border !border-[#3f3f46] !bg-[#18181b]/96 !text-slate-50 !shadow-[0_24px_60px_rgba(0,0,0,0.28)]"
-    >
-      <form class="flex flex-col gap-6" [formGroup]="demonForm" (ngSubmit)="saveDemon()">
+    <p-card styleClass="dw-card--demon">
+      <form class="dw-creation-form flex flex-col gap-6" [formGroup]="demonForm" (ngSubmit)="saveDemon()">
         <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div class="space-y-3">
             <div class="flex items-center gap-3">
@@ -33,14 +31,13 @@
               severity="secondary"
               [outlined]="true"
               (onClick)="goBack()"
-              styleClass="!px-5 !py-3 !font-bold"
             />
             <p-button
               type="submit"
               [label]="submitLabel()"
               icon="pi pi-check"
+              severity="danger"
               [disabled]="pending() || loadingDemon() || demonForm.invalid"
-              styleClass="!bg-[#b91c1c] !border-[#b91c1c] !text-white !px-5 !py-3 !font-bold"
             />
           </div>
         </div>
@@ -308,7 +305,6 @@
                   icon="pi pi-plus"
                   [disabled]="!selectedPouvoirId.value"
                   (onClick)="addPouvoir()"
-                  styleClass="!px-4 !py-3 !font-bold"
                 />
               </div>
 
@@ -337,10 +333,10 @@
                       <p-button
                         label="Retirer"
                         icon="pi pi-times"
+                        size="small"
                         severity="secondary"
                         [outlined]="true"
                         (onClick)="removePouvoir(index)"
-                        styleClass="!px-4 !py-2 !font-bold"
                       />
                     </div>
                   }

@@ -185,7 +185,7 @@ Ces regles sont explicites dans le livre et doivent etre controlees au minimum p
 
 Regles actuellement identifiees :
 - `Desert de Beshaar` : premiere carriere = `Barbare`
-- `Iles du Crane` : une carriere doit etre `Marin`
+- `Iles du Crane` : une carriere doit etre `Marin (matelot/pirate)`
 - `Montagnes de l'Axos` : premiere carriere = `Barbare`
 - `Valgard` : une carriere doit etre `Barbare`
 

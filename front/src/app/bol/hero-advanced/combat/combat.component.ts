@@ -70,7 +70,7 @@ export class HeroAdvancedCombatComponent implements ControlValueAccessor, Valida
       this.updateWarnings();
       this.onChange(this.combatForm.getRawValue() as BolHerosCombat);
       this.onTouched();
-    }, {allowSignalWrites: true});
+    });
   }
 
   writeValue(value: BolHerosCombat | null): void {

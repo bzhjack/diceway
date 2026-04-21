@@ -18,6 +18,7 @@ export interface BolHerosModel {
   ressources: BolHerosRessources;
   traits: BolHerosTraitsModel[];
   carrieres: BolHerosCarriereModel[];
+  langues?: BolHerosLangueModel[] | number[];
   armures: BolHerosArmureModel[] | number[];
   armes: BolHerosArmeModel[] | number[];
   currentQuest?: BolQuestProtagonistModel;
@@ -56,4 +57,3 @@ export interface BolHerosRessources {
   creation: number;
   experience: number;
 }
-

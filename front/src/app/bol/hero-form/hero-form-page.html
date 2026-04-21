@@ -2,10 +2,10 @@
   class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(52,211,153,0.1),_transparent_26%),radial-gradient(circle_at_top_right,_rgba(56,189,248,0.12),_transparent_22%),linear-gradient(180deg,_#000000,_#0f172a_45%,_#000000)] px-4 py-6 md:px-6"
 >
   <div class="mx-auto flex max-w-7xl flex-col gap-4">
-    <p-card
-      styleClass="!border !border-[#2d3748] !bg-[#1a202c]/96 !text-slate-50 !shadow-[0_24px_60px_rgba(0,0,0,0.28)]"
-    >
-      <form class="flex flex-col gap-6" [formGroup]="heroForm" (ngSubmit)="saveHero()">
+    <p-confirmpopup />
+
+    <p-card>
+      <form class="dw-creation-form flex flex-col gap-6" [formGroup]="heroForm" (ngSubmit)="saveHero()">
         <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div class="space-y-3">
             <div class="flex items-center gap-3">
@@ -39,9 +39,19 @@
               type="submit"
               [label]="submitLabel()"
               icon="pi pi-save"
+              severity="success"
               [disabled]="pending() || loadingHero()"
-              styleClass="!bg-[#059669] !border-[#059669] !text-white !px-5"
             />
+
+            @if (editMode() && !heroForm.controls.active.value) {
+              <p-button
+                label="Activer le héros"
+                icon="pi pi-check"
+                severity="success"
+                [disabled]="activateDisabled()"
+                (onClick)="confirmActivation($event)"
+              />
+            }
           </div>
         </div>
 
@@ -552,7 +562,35 @@
                     optionLabel="arme"
                     optionValue="id"
                     [formControl]="selectedArmeId"
-                  />
+                  >
+                    <ng-template #selectedItem let-selectedArmeId>
+                      @if (armeOption(selectedArmeId); as arme) {
+                        <div class="flex min-w-0 flex-col gap-0.5 py-1">
+                          <span class="truncate">{{ arme.arme }}</span>
+                          <span class="text-xs text-slate-400">
+                            @if (arme.degats) {
+                              Dégâts {{ arme.degats }}
+                            } @else {
+                              Dégâts -
+                            }
+                          </span>
+                        </div>
+                      }
+                    </ng-template>
+
+                    <ng-template #item let-arme>
+                      <div class="flex min-w-0 flex-col gap-0.5 py-1">
+                        <span class="truncate">{{ arme.arme }}</span>
+                        <span class="text-xs text-slate-400">
+                          @if (arme.degats) {
+                            Dégâts {{ arme.degats }}
+                          } @else {
+                            Dégâts -
+                          }
+                        </span>
+                      </div>
+                    </ng-template>
+                  </p-select>
                   <label for="arme">Ajouter une arme</label>
                 </p-iftalabel>
                 <p-button
@@ -610,7 +648,35 @@
                     optionLabel="armure"
                     optionValue="id"
                     [formControl]="selectedArmureId"
-                  />
+                  >
+                    <ng-template #selectedItem let-selectedArmureId>
+                      @if (armureOption(selectedArmureId); as armure) {
+                        <div class="flex min-w-0 flex-col gap-0.5 py-1">
+                          <span class="truncate">{{ armure.armure }}</span>
+                          <span class="text-xs text-slate-400">
+                            @if (armure.protection) {
+                              Protection {{ armure.protection }}
+                            } @else {
+                              Protection -
+                            }
+                          </span>
+                        </div>
+                      }
+                    </ng-template>
+
+                    <ng-template #item let-armure>
+                      <div class="flex min-w-0 flex-col gap-0.5 py-1">
+                        <span class="truncate">{{ armure.armure }}</span>
+                        <span class="text-xs text-slate-400">
+                          @if (armure.protection) {
+                            Protection {{ armure.protection }}
+                          } @else {
+                            Protection -
+                          }
+                        </span>
+                      </div>
+                    </ng-template>
+                  </p-select>
                   <label for="armure">Ajouter une armure</label>
                 </p-iftalabel>
                 <p-button

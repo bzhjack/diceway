@@ -2,10 +2,8 @@
   class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(250,204,21,0.12),_transparent_28%),linear-gradient(180deg,_#000000,_#0f172a_45%,_#000000)] px-4 py-6 md:px-6"
 >
   <div class="mx-auto flex max-w-6xl flex-col gap-4">
-    <p-card
-      styleClass="!border !border-[#2d3748] !bg-[#1a202c]/96 !text-slate-50 !shadow-[0_24px_60px_rgba(0,0,0,0.28)]"
-    >
-      <form class="flex flex-col gap-6" [formGroup]="creatureForm" (ngSubmit)="saveCreature()">
+    <p-card>
+      <form class="dw-creation-form flex flex-col gap-6" [formGroup]="creatureForm" (ngSubmit)="saveCreature()">
         <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div class="space-y-3">
             <div class="flex items-center gap-3">
@@ -33,14 +31,13 @@
               severity="secondary"
               [outlined]="true"
               (onClick)="goBack()"
-              styleClass="!px-5 !py-3 !font-bold"
             />
             <p-button
               type="submit"
               [label]="submitLabel()"
               icon="pi pi-check"
+              severity="warn"
               [disabled]="pending() || loadingCreature() || creatureForm.invalid"
-              styleClass="!bg-[#d97706] !border-[#d97706] !text-white !px-5 !py-3 !font-bold"
             />
           </div>
         </div>
@@ -299,7 +296,6 @@
                   icon="pi pi-plus"
                   [disabled]="!selectedCapaciteId.value"
                   (onClick)="addCapacite()"
-                  styleClass="!px-4 !py-3 !font-bold"
                 />
               </div>
 
@@ -329,10 +325,10 @@
                       <p-button
                         label="Retirer"
                         icon="pi pi-times"
+                        size="small"
                         severity="secondary"
                         [outlined]="true"
                         (onClick)="removeCapacite(index)"
-                        styleClass="!px-4 !py-2 !font-bold"
                       />
                     </div>
                   }

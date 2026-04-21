@@ -11,6 +11,14 @@ class BolArme extends Model
 
     protected $table = 'bol_arme';
     protected $hidden = ['created_at', 'updated_at'];
+    protected $fillable = [
+        'user_id',
+        'arme',
+        'type',
+        'degats',
+        'portee',
+        'notes',
+    ];
     protected $casts = [
         'id' => 'integer',
     ];

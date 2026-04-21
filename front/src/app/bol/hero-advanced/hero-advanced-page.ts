@@ -288,6 +288,8 @@ export class HeroAdvancedPageComponent {
   }
 
   private mapToHero(raw: typeof this.herosForm.value): BolHerosModel {
+    const langues = (raw.origines?.langues ?? raw.langues ?? []).map((item) => Number(item));
+
     return {
       id: raw.id ?? null,
       user_id: raw.user_id ?? null,
@@ -298,7 +300,7 @@ export class HeroAdvancedPageComponent {
         nom: raw.origines?.nom ?? null,
         region_id: raw.origines?.region_id ?? null,
         joueur: raw.origines?.joueur ?? null,
-        langues: raw.origines?.langues ?? [],
+        langues,
         commentaire: raw.origines?.commentaire ?? null,
       },
       ressources: {
@@ -324,12 +326,17 @@ export class HeroAdvancedPageComponent {
       },
       traits: raw.traits ?? [],
       carrieres: raw.carrieres ?? [],
+      langues,
       armures: raw.armures ?? [],
       armes: raw.armes ?? [],
     };
   }
 
   private hydrateForm(hero: BolHerosModel): void {
+    const langues = (hero.langues ?? hero.origines.langues ?? []).map((item) =>
+      typeof item === 'number' ? item : item.langue_id,
+    );
+
     const heroRessources = {
       ...hero.ressources,
       vitalite: hero.active ? Number(hero.ressources.vitalite ?? 10) : 10,
@@ -348,12 +355,13 @@ export class HeroAdvancedPageComponent {
       attributs: hero.attributs,
       origines: {
         ...hero.origines,
-        langues: hero.origines.langues.map((item) => (typeof item === 'number' ? item : item.langue_id)),
+        langues,
       },
       carrieres: hero.carrieres.map((item) => ({
         carriere_id: item.carriere_id,
         value: item.value,
       })),
+      langues,
       traits: hero.traits.map((item) => ({
         id: item.id,
         traitable_id: item.traitable_id,

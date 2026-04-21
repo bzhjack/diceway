@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+
+:host ::ng-deep .bol-armor-table {
+  .armor-col-narrow,
+  .armor-col-actions {
+    width: 1%;
+    white-space: nowrap;
+  }
+}

@@ -13,6 +13,7 @@ class BolArmeSeeder extends Seeder
      */
     public function run(): void
     {
+        // Table des armes alignée sur les 18 catégories du livre BoL.
         $armes = [
             [
                 'id' => 1,
@@ -38,10 +39,10 @@ class BolArmeSeeder extends Seeder
             ],
             [
                 'id' => 4,
-                'arme' => 'Épée à deux mains',
+                'arme' => 'Épée',
                 'type' => 'M',
-                'degats' => 'd6B',
-                'notes' => 'Armes à deux mains'
+                'degats' => 'd6',
+                'notes' => 'Inclut cimeterre, glaive, sabre, tulwar...'
             ],
             [
                 'id' => 5,
@@ -129,92 +130,27 @@ class BolArmeSeeder extends Seeder
             ],
             [
                 'id' => 16,
-                'arme' => 'Fronde',
+                'arme' => 'Fronde / bâton-fronde',
                 'type' => 'T',
                 'degats' => 'd6M',
-                'portee' => '9m',
-                'notes' => 'Arme à une main'
+                'portee' => '9m / 18m',
+                'notes' => 'Arme à une main / arme à deux mains.'
             ],
             [
                 'id' => 17,
-                'arme' => 'Javelot',
+                'arme' => 'Javelot / fléchette',
                 'type' => 'T',
                 'degats' => 'd6M',
                 'portee' => '6m',
-                'notes' => 'Arme de jet'
+                'notes' => 'Arme de jet.'
             ],
             [
                 'id' => 18,
-                'arme' => 'Coutelas',
-                'type' => 'M',
-                'degats' => 'd6M',
-                'portee' => '3m',
-                'notes' => 'Peut être lancée.'
-            ],
-            [
-                'id' => 19,
-                'arme' => 'Couteau',
-                'type' => 'M',
-                'degats' => 'd6M',
-                'portee' => '3m',
-                'notes' => 'Peut être lancée.'
-            ],
-            [
-                'id' => 20,
-                'arme' => 'Hache à deux mains',
+                'arme' => 'Épée / hache à 2 mains',
                 'type' => 'M',
                 'degats' => 'd6B',
-                'notes' => 'Armes à deux mains'
+                'notes' => 'Armes à deux mains.'
             ],
-            [
-                'id' => 21,
-                'arme' => 'Épée',
-                'type' => 'M',
-                'degats' => 'd6'
-            ],
-            [
-                'id' => 22,
-                'arme' => 'Sabre',
-                'type' => 'M',
-                'degats' => 'd6'
-            ],
-            [
-                'id' => 23,
-                'arme' => 'bâton-fronde',
-                'type' => 'T',
-                'degats' => 'd6M',
-                'portee' => '18m',
-                'notes' => 'arme à deux mains'
-            ],
-            [
-                'id' => 24,
-                'arme' => 'Fléchette',
-                'type' => 'T',
-                'degats' => 'd6M',
-                'portee' => '6m',
-                'notes' => 'Arme de jet'
-            ],
-            [
-                'id' => 25,
-                'arme' => 'Tulwar',
-                'type' => 'M',
-                'degats' => 'd6'
-            ],
-            [
-                'id' => 26,
-                'arme' => 'Kriss',
-                'type' => 'M',
-                'degats' => 'd6M'
-            ],
-            [
-                'id' => 27,
-                'arme' => 'Khastok (lance lourde)',
-                'type' => 'M',
-                'degats' => 'd6B',
-                'portee' => '6m',
-                'notes' => 'Peut être lancée.'
-            ],
-            // Ajoutez d'autres armes si nécessaire
         ];
         BolArme::truncate();
         foreach ($armes as $arme) {

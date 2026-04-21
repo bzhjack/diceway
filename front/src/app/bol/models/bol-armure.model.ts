@@ -1,5 +1,6 @@
 export interface BolArmureModel {
   id: number | null;
+  user_id?: string | null;
   armure: string;
   protection: string | null;
   malus: string | null;
