@@ -1,21 +1,12 @@
 <section class="dice-panel" aria-labelledby="dice-panel-title">
   <div class="dice-panel__heading">
-    <div>
-      <p class="dice-panel__kicker">Assistant de jets</p>
-      <h3 id="dice-panel-title">Dés 3D</h3>
-    </div>
-    <span class="dice-panel__badge">BoL prêt</span>
+    <p id="dice-panel-title" class="dice-panel__kicker">Assistant de jets</p>
   </div>
 
   <app-dice-box-host #diceBox></app-dice-box-host>
 
   <div class="dice-panel__controls">
     <div class="dice-panel__section">
-      <div class="dice-panel__section-header">
-        <h4>Jet BoL</h4>
-        <p>2d6, bonus et malus calculés côté app pour garder une intégration stable.</p>
-      </div>
-
       <div class="dice-panel__mode-row" role="group" aria-label="Mode de jet BoL">
         @for (option of modeOptions; track option.value) {
           <button
