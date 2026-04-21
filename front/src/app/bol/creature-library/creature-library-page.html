@@ -27,25 +27,27 @@
           </div>
         </div>
 
-        <div class="library-header-actions flex flex-wrap justify-end gap-1.5">
-          <p-button
-            label="Voir les demons"
-            icon="pi pi-bolt"
-            size="small"
-            [routerLink]="'/library/demons'"
-            severity="secondary"
-            [outlined]="true"
-          />
-          <span class="library-header-actions__primary">
+        <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
+          <div class="flex flex-wrap gap-1.5">
             <p-button
-              label="Créer une créature"
-              icon="pi pi-plus"
-              severity="warn"
+              label="Voir les demons"
+              icon="pi pi-bolt"
               size="small"
-              [routerLink]="'/create/creature'"
-              [state]="{ returnUrl: '/library/creatures' }"
+              [routerLink]="'/library/demons'"
+              severity="secondary"
+              [outlined]="true"
             />
-          </span>
+            <span class="library-header-actions__primary">
+              <p-button
+                label="Créer une créature"
+                icon="pi pi-plus"
+                severity="warn"
+                size="small"
+                [routerLink]="'/create/creature'"
+                [state]="{ returnUrl: '/library/creatures' }"
+              />
+            </span>
+          </div>
           <p-button
             label="Retour au dashboard"
             icon="pi pi-arrow-left"

@@ -53,42 +53,37 @@
             </div>
           }
 
-          <div class="border border-[#424b57] bg-[#334155]/55 p-5">
-            <div class="mb-5 space-y-2">
-              <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
-                Général
-              </p>
-            </div>
+          <div class="border border-[#424b57] bg-[#334155]/55 px-4 py-3">
+            <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+              Général
+            </p>
 
-            <div class="grid gap-5 md:grid-cols-[220px_minmax(0,1fr)]">
-              <div class="space-y-3">
-                <div
-                  class="group relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden border border-[#424b57] bg-[#0f172a] transition-colors hover:border-emerald-300/70"
-                  (click)="pickAvatar()"
-                >
-                  @if (avatarPreview()) {
-                    <img [src]="avatarPreview()!" alt="Avatar PNJ" class="h-full w-full object-cover" />
-                  } @else {
-                    <div class="flex flex-col items-center gap-3 text-slate-400">
-                      <i class="pi pi-image text-4xl"></i>
-                      <span class="text-xs font-bold uppercase tracking-[0.2em]">Avatar</span>
-                      <span class="text-xs text-slate-500">Cliquer pour modifier</span>
-                    </div>
-                  }
-
-                  <div
-                    class="pointer-events-none absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
-                  >
-                    <span
-                      class="mb-4 border border-white/20 bg-black/55 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-white"
-                    >
-                      Modifier
-                    </span>
+            <div class="grid gap-4 md:grid-cols-[140px_minmax(0,1fr)]">
+              <div
+                class="group relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden border border-[#424b57] bg-[#0f172a] transition-colors hover:border-emerald-300/70"
+                (click)="pickAvatar()"
+              >
+                @if (avatarPreview()) {
+                  <img [src]="avatarPreview()!" alt="Avatar PNJ" class="h-full w-full object-cover" />
+                } @else {
+                  <div class="flex flex-col items-center gap-2 text-slate-400">
+                    <i class="pi pi-image text-3xl"></i>
+                    <span class="text-[0.65rem] font-bold uppercase tracking-[0.2em]">Avatar</span>
                   </div>
+                }
+
+                <div
+                  class="pointer-events-none absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
+                >
+                  <span
+                    class="mb-3 border border-white/20 bg-black/55 px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white"
+                  >
+                    Modifier
+                  </span>
                 </div>
               </div>
 
-              <div class="grid gap-5 md:grid-cols-2">
+              <div class="grid gap-2 md:grid-cols-2">
                 <p-iftalabel>
                   <input pInputText id="nom" formControlName="nom" class="w-full" />
                   <label for="nom">Nom du PNJ *</label>
@@ -112,7 +107,7 @@
                       pTextarea
                       id="commentaire"
                       formControlName="commentaire"
-                      rows="4"
+                      rows="2"
                       class="w-full resize-none"
                     ></textarea>
                     <label for="commentaire">Commentaire de scène</label>
@@ -122,22 +117,20 @@
             </div>
 
             @if (onError('nom') || onError('type')) {
-              <p class="mt-4 mb-0 text-sm text-emerald-300">
+              <p class="mt-3 mb-0 text-sm text-emerald-300">
                 Le nom et le type sont requis pour préparer le PNJ.
               </p>
             }
           </div>
 
           <div class="grid gap-4 xl:grid-cols-3 xl:items-start">
-            <div class="border border-[#424b57] bg-[#334155]/55 p-5 xl:h-full">
-              <div class="mb-5 space-y-2">
-                <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
-                  Attributs
-                </p>
-              </div>
+            <div class="border border-[#424b57] bg-[#334155]/55 px-4 py-3 xl:h-full">
+              <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                Attributs
+              </p>
 
-              <div class="flex flex-col gap-6">
-                <div class="flex gap-4">
+              <div class="flex flex-col gap-2">
+                <div class="flex gap-2">
                   <p-iftalabel>
                     <p-inputNumber
                       inputId="vigueur"
@@ -157,7 +150,7 @@
                     <label for="agilite">Agilité</label>
                   </p-iftalabel>
                 </div>
-                <div class="flex gap-4">
+                <div class="flex gap-2">
                   <p-iftalabel>
                     <p-inputNumber
                       inputId="esprit"
@@ -180,15 +173,13 @@
               </div>
             </div>
 
-            <div class="border border-[#424b57] bg-[#334155]/55 p-5 xl:h-full">
-              <div class="mb-5 space-y-2">
-                <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
-                  Combat
-                </p>
-              </div>
+            <div class="border border-[#424b57] bg-[#334155]/55 px-4 py-3 xl:h-full">
+              <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                Combat
+              </p>
 
-              <div class="flex flex-col gap-6">
-                <div class="flex gap-4">
+              <div class="flex flex-col gap-2">
+                <div class="flex gap-2">
                   <p-iftalabel>
                     <p-inputNumber
                       inputId="initiative"
@@ -208,7 +199,7 @@
                     <label for="melee">Mêlée</label>
                   </p-iftalabel>
                 </div>
-                <div class="flex gap-4">
+                <div class="flex gap-2">
                   <p-iftalabel>
                     <p-inputNumber
                       inputId="tir"
@@ -231,14 +222,12 @@
               </div>
             </div>
 
-            <div class="border border-[#424b57] bg-[#334155]/55 p-5 xl:h-full">
-              <div class="mb-5 space-y-2">
-                <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
-                  Ressources
-                </p>
-              </div>
+            <div class="border border-[#424b57] bg-[#334155]/55 px-4 py-3 xl:h-full">
+              <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                Ressources
+              </p>
 
-              <div class="grid gap-4 md:grid-cols-2">
+              <div class="grid gap-2 md:grid-cols-2">
                 <p-iftalabel>
                   <p-inputNumber
                     inputId="vitalite"

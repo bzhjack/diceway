@@ -183,6 +183,11 @@ export const DwPreset = definePreset(Aura, {
         .p-datatable .p-datatable-tbody > tr:hover > td {
           background: transparent;
         }
+
+        .p-datatable .p-datatable-thead > tr > th:not(:last-child),
+        .p-datatable .p-datatable-tbody > tr > td:not(:last-child) {
+          border-right: 1px solid #334155;
+        }
       `,
     },
     panel: {

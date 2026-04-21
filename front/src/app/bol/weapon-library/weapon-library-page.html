@@ -30,23 +30,25 @@
           </div>
         </div>
 
-        <div class="library-header-actions flex flex-wrap justify-end gap-1.5">
-          <p-button
-            [label]="formVisible() && !editingWeaponId() ? 'Création en cours' : 'Nouvelle arme'"
-            icon="pi pi-plus"
-            size="small"
-            severity="warn"
-            [disabled]="formVisible() && !editingWeaponId()"
-            (onClick)="startCreate()"
-          />
-          <p-button
-            label="Voir les armures"
-            icon="pi pi-shield"
-            size="small"
-            [routerLink]="'/library/armors'"
-            severity="secondary"
-            [outlined]="true"
-          />
+        <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
+          <div class="flex flex-wrap gap-1.5">
+            <p-button
+              [label]="formVisible() && !editingWeaponId() ? 'Création en cours' : 'Nouvelle arme'"
+              icon="pi pi-plus"
+              size="small"
+              severity="warn"
+              [disabled]="formVisible() && !editingWeaponId()"
+              (onClick)="startCreate()"
+            />
+            <p-button
+              label="Voir les armures"
+              icon="pi pi-shield"
+              size="small"
+              [routerLink]="'/library/armors'"
+              severity="secondary"
+              [outlined]="true"
+            />
+          </div>
           <p-button
             label="Retour à l’intendance"
             icon="pi pi-arrow-left"

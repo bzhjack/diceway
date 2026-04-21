@@ -28,33 +28,35 @@
           </div>
         </div>
 
-        <div class="library-header-actions flex flex-wrap justify-end gap-1.5">
-          <span class="library-header-actions__primary">
+        <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
+          <div class="flex flex-wrap gap-1.5">
+            <span class="library-header-actions__primary">
+              <p-button
+                label="Créer un PNJ"
+                icon="pi pi-plus"
+                severity="success"
+                size="small"
+                [routerLink]="'/create/pnj'"
+                [state]="{ returnUrl: '/library/pnjs' }"
+              />
+            </span>
             <p-button
-              label="Créer un PNJ"
-              icon="pi pi-plus"
-              severity="success"
+              label="Voir les creatures"
+              icon="pi pi-book"
               size="small"
-              [routerLink]="'/create/pnj'"
-              [state]="{ returnUrl: '/library/pnjs' }"
+              [routerLink]="'/library/creatures'"
+              severity="secondary"
+              [outlined]="true"
             />
-          </span>
-          <p-button
-            label="Voir les creatures"
-            icon="pi pi-book"
-            size="small"
-            [routerLink]="'/library/creatures'"
-            severity="secondary"
-            [outlined]="true"
-          />
-          <p-button
-            label="Voir les demons"
-            icon="pi pi-bolt"
-            size="small"
-            [routerLink]="'/library/demons'"
-            severity="secondary"
-            [outlined]="true"
-          />
+            <p-button
+              label="Voir les demons"
+              icon="pi pi-bolt"
+              size="small"
+              [routerLink]="'/library/demons'"
+              severity="secondary"
+              [outlined]="true"
+            />
+          </div>
           <p-button
             label="Retour au dashboard"
             icon="pi pi-arrow-left"
