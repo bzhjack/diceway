@@ -150,7 +150,12 @@
         <ng-template #body let-creature>
           <tr>
             <td class="creature-col-avatar">
-              <div class="beast-avatar">
+              <button
+                type="button"
+                class="beast-avatar beast-avatar--trigger"
+                (click)="openStatblock(creature)"
+                [attr.aria-label]="'Ouvrir le statbloc de ' + creature.nom"
+              >
                 <img
                   [src]="creatureImage(creature)"
                   [alt]="creature.nom"
@@ -160,7 +165,7 @@
                 @if (creature.user_id) {
                   <span class="beast-avatar__tag">Création</span>
                 }
-              </div>
+              </button>
             </td>
 
             <td>
@@ -203,7 +208,6 @@
                     </p>
                   }
                 </div>
-
               </div>
             </td>
 
@@ -277,4 +281,21 @@
     </p-card>
   </div>
 </section>
+<p-dialog
+  [visible]="!!inspectedCreature()"
+  (visibleChange)="onStatblockVisibilityChange($event)"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="true"
+  [style]="{ width: 'min(760px, 92vw)' }"
+  [breakpoints]="{ '960px': '96vw' }"
+  [contentStyle]="{ padding: '0', overflow: 'visible', background: 'transparent' }"
+  styleClass="creature-statblock-dialog"
+>
+  @if (inspectedCreature(); as creature) {
+    <bol-creature-statblock [creature]="creature" [imageSrc]="creatureImage(creature)" />
+  }
+</p-dialog>
 <p-confirmpopup />

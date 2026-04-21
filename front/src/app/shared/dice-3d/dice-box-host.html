@@ -1,0 +1,15 @@
+<div class="dw-dice-box-host">
+  <div #surface class="dw-dice-box-host__surface"></div>
+
+  @if (!ready() && !failed()) {
+    <div class="dw-dice-box-host__overlay">
+      <p>Chargement du plateau 3D…</p>
+    </div>
+  }
+
+  @if (failed()) {
+    <div class="dw-dice-box-host__overlay dw-dice-box-host__overlay--error">
+      <p>Impossible d’initialiser les dés 3D.</p>
+    </div>
+  }
+</div>

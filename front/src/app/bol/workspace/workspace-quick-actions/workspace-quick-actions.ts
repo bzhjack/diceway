@@ -58,7 +58,7 @@ export class WorkspaceQuickActionsComponent {
     },
     {
       label: 'Bibliothèque d’intendance',
-      detail: 'Ouvrir les référentiels armes, armures et les prochaines entrées de table.',
+      detail: 'Ouvrir les référentiels armes, armures.',
       icon: 'pi pi-briefcase',
       link: '/intendance',
       severity: 'secondary',

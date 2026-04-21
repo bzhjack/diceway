@@ -12,7 +12,13 @@ import {DialogService, DynamicDialogModule} from 'primeng/dynamicdialog';
 import {IftaLabelModule} from 'primeng/iftalabel';
 import {InputTextModule} from 'primeng/inputtext';
 import {TableModule} from 'primeng/table';
-import {BolHerosAttributs, BolHerosCombat, BolHerosModel, BolHerosOrigines, BolHerosRessources} from '../models/bol-heros.model';
+import {
+  BolHerosAttributs,
+  BolHerosCombat,
+  BolHerosModel,
+  BolHerosOrigines,
+  BolHerosRessources
+} from '../models/bol-heros.model';
 import {BolHerosCarriereModel} from '../models/bol-carriere.model';
 import {BolHerosTraitsModel} from '../models/bol-trait.model';
 import {BolHerosService} from '../services/bol-heros.service';

@@ -24,7 +24,7 @@ import {BolHerosTraitsModel} from '../../models/bol-trait.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {HeroAdvancedCreateTools} from '../create.tools';
-import {carriereValidator, carrieresFormValidator} from '../create.validators';
+import {carrieresFormValidator, carriereValidator} from '../create.validators';
 import {REGION_CAREER_RULES} from '../create.rules';
 
 @Component({
