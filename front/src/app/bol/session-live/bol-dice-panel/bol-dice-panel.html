@@ -48,27 +48,6 @@
         <button type="button" class="dice-button" (click)="clearTray()">Vider le plateau</button>
       </div>
     </div>
-
-    <div class="dice-panel__section">
-      <div class="dice-panel__section-header">
-        <h4>Lancers rapides</h4>
-        <p>Pour dégâts, tables, tirages et vérifications hors jet d’action.</p>
-      </div>
-
-      <div class="dice-panel__preset-grid">
-        @for (preset of quickPresets; track preset.label) {
-          <button
-            type="button"
-            class="dice-preset"
-            [disabled]="rolling()"
-            (click)="rollQuickPreset(preset.notation, preset.label)"
-          >
-            <strong>{{ preset.label }}</strong>
-            <span>{{ preset.notation }}</span>
-          </button>
-        }
-      </div>
-    </div>
   </div>
 
   @if (errorMessage()) {

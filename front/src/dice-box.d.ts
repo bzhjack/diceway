@@ -16,10 +16,11 @@ declare module '@3d-dice/dice-box' {
     die?: number | string;
   }
 
-  export interface DiceBoxRollGroup {
-    qty: number;
-    value: number;
-    rolls: DiceBoxRollDie[];
+  export interface DiceBoxRollResult extends DiceBoxRollDie {
+    groupId?: number;
+    modifier?: number;
+    qty?: number;
+    theme?: string;
   }
 
   export default class DiceBox {
@@ -27,7 +28,7 @@ declare module '@3d-dice/dice-box' {
     clear(): this;
     hide(className?: string): this;
     init(): Promise<this>;
-    roll(notation: string | readonly string[]): Promise<DiceBoxRollGroup[]>;
+    roll(notation: string | readonly string[]): Promise<DiceBoxRollResult[]>;
     show(): this;
   }
 }

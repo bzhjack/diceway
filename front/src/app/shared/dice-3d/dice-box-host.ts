@@ -10,7 +10,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import type DiceBox from '@3d-dice/dice-box';
-import type {DiceBoxRollGroup} from '@3d-dice/dice-box';
+import type {DiceBoxRollResult} from '@3d-dice/dice-box';
 
 let nextDiceHostId = 0;
 
@@ -47,7 +47,7 @@ export class DiceBoxHostComponent {
     this.box?.clear();
   }
 
-  async rollNotation(notation: string): Promise<DiceBoxRollGroup[]> {
+  async rollNotation(notation: string): Promise<DiceBoxRollResult[]> {
     await this.ensureReady();
 
     if (!this.box) {

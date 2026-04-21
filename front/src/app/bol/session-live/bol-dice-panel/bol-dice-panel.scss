@@ -74,7 +74,6 @@
 
 .dice-panel__mode-row,
 .dice-panel__action-row,
-.dice-panel__preset-grid,
 .dice-result__dice {
   display: flex;
   flex-wrap: wrap;
@@ -155,31 +154,9 @@
 }
 
 .dice-button:disabled,
-.dice-preset:disabled {
+.dice-button:disabled {
   cursor: wait;
   opacity: 0.68;
-}
-
-.dice-preset {
-  display: grid;
-  gap: 0.15rem;
-  min-width: 5rem;
-  padding: 0.7rem 0.8rem;
-  text-align: left;
-}
-
-.dice-preset strong,
-.dice-preset span {
-  display: block;
-}
-
-.dice-preset strong {
-  font-size: 0.95rem;
-}
-
-.dice-preset span {
-  color: #94a3b8;
-  font-size: 0.78rem;
 }
 
 .dice-result {

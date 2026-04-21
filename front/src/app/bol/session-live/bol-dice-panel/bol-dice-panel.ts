@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, signal, viewChild} from '@angular/core';
-import type {DiceBoxRollDie, DiceBoxRollGroup} from '@3d-dice/dice-box';
+import type {DiceBoxRollResult} from '@3d-dice/dice-box';
 import {DiceBoxHostComponent} from '../../../shared/dice-3d/dice-box-host';
 
 type BolRollMode = 'standard' | 'bonus' | 'malus';
@@ -8,11 +8,6 @@ type RollTone = 'neutral' | 'success' | 'danger';
 interface ModeOption {
   readonly label: string;
   readonly value: BolRollMode;
-}
-
-interface QuickPreset {
-  readonly label: string;
-  readonly notation: string;
 }
 
 interface RollDieView {
@@ -53,15 +48,6 @@ export class BolDicePanelComponent {
     {label: 'Malus', value: 'malus'},
   ];
 
-  protected readonly quickPresets: readonly QuickPreset[] = [
-    {label: 'd6', notation: '1d6'},
-    {label: '2d6', notation: '2d6'},
-    {label: 'd8', notation: '1d8'},
-    {label: 'd10', notation: '1d10'},
-    {label: 'd12', notation: '1d12'},
-    {label: 'd20', notation: '1d20'},
-  ];
-
   protected selectMode(mode: BolRollMode): void {
     this.mode.set(mode);
   }
@@ -87,13 +73,16 @@ export class BolDicePanelComponent {
       const keptTotal = keptDice.reduce((total, die) => total + die.value, 0);
       const finalTotal = keptTotal + this.modifier();
       const critical =
-        keptDice.every((die) => die.value === 6)
+        keptDice.length === 2 && keptDice.every((die) => die.value === 6)
           ? 'success'
-          : keptDice.every((die) => die.value === 1)
+          : keptDice.length === 2 && keptDice.every((die) => die.value === 1)
             ? 'failure'
             : null;
       const success = critical === 'success' || (critical !== 'failure' && finalTotal >= this.target());
-      const modifierLabel = this.modifier() === 0 ? 'sans modificateur' : `avec ${this.formatModifier(this.modifier())}`;
+      const modifierLabel =
+        this.modifier() === 0 ? 'sans modificateur' : `avec ${this.formatModifier(this.modifier())}`;
+      const diceLabel =
+        keptDice.length > 0 ? keptDice.map((die) => die.value).join(' + ') : 'jet sans résultat exploitable';
       const statusLabel =
         critical === 'success'
           ? 'Critique automatique'
@@ -108,7 +97,7 @@ export class BolDicePanelComponent {
         headline: `${statusLabel} · seuil ${this.target()}`,
         totalLabel: `${finalTotal}`,
         tone: success ? 'success' : 'danger',
-        detail: `${keptDice.map((die) => die.value).join(' + ')} ${modifierLabel}. Mode ${this.mode()}.`,
+        detail: `${diceLabel} ${modifierLabel}. Mode ${this.mode()}.`,
         dice: dice.map((die) => ({
           id: die.rollId,
           kept: keptIds.has(die.rollId),
@@ -123,50 +112,21 @@ export class BolDicePanelComponent {
     }
   }
 
-  protected async rollQuickPreset(notation: string, label: string): Promise<void> {
-    this.errorMessage.set('');
-    this.rolling.set(true);
-
-    try {
-      const result = await this.roll(notation);
-      const dice = this.extractDice(result);
-      const total = result[0]?.value ?? dice.reduce((sum, die) => sum + die.value, 0);
-
-      this.lastRoll.set({
-        label: label,
-        headline: `Lancer rapide · ${notation}`,
-        totalLabel: `${total}`,
-        tone: 'neutral',
-        detail: `${dice.map((die) => die.value).join(' + ')} = ${total}`,
-        dice: dice.map((die) => ({
-          id: die.rollId,
-          kept: true,
-          value: die.value,
-        })),
-      });
-    } catch (error) {
-      console.error('Quick roll failed', error);
-      this.errorMessage.set(`Le lancer ${notation} a échoué.`);
-    } finally {
-      this.rolling.set(false);
-    }
-  }
-
   protected async clearTray(): Promise<void> {
     this.lastRoll.set(null);
     this.errorMessage.set('');
     await this.diceBoxHost().clear();
   }
 
-  private async roll(notation: string): Promise<DiceBoxRollGroup[]> {
+  private async roll(notation: string): Promise<DiceBoxRollResult[]> {
     return this.diceBoxHost().rollNotation(notation);
   }
 
-  private extractDice(result: DiceBoxRollGroup[]): DiceBoxRollDie[] {
-    return result[0]?.rolls ?? [];
+  private extractDice(result: DiceBoxRollResult[]): DiceBoxRollResult[] {
+    return result.filter((die) => Number.isFinite(die.value));
   }
 
-  private resolveKeptRollIds(dice: DiceBoxRollDie[]): Set<string> {
+  private resolveKeptRollIds(dice: DiceBoxRollResult[]): Set<string> {
     if (this.mode() === 'standard') {
       return new Set(dice.map((die) => die.rollId));
     }
