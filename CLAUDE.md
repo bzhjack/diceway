@@ -10,7 +10,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Backend**: Laravel 12 REST API in `/backend/`
 - Game rules reference: `/doc/rules/` and `/doc/resources/` (Markdown)
 
-> `/frontend/` and `/frontend2/` are deprecated — all active frontend work is in `/front/`.
 
 ## Commands
 
