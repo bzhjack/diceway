@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Frontend**: Angular 21 app in `/front/`
 - **Backend**: Laravel 12 REST API in `/backend/`
-- Game rules reference: `/rules/` and `/resources/` (Markdown)
+- Game rules reference: `/doc/rules/` and `/doc/resources/` (Markdown)
 
 > `/frontend/` and `/frontend2/` are deprecated — all active frontend work is in `/front/`.
 
@@ -41,8 +41,8 @@ npm run docker:exec            # Shell into container
 ## Business rules & reference data
 
 When a task touches game rules, character creation, equipment, careers, languages, traits, or activation:
-1. Check `/resources/` first — authoritative reference data (weapons, armor, careers, languages, advantages, disadvantages, regions, bestiary, demons, NPCs).
-2. Use `/rules/` for additional context or mechanics not covered in `/resources/`.
+1. Check `/doc/resources/` first — authoritative reference data (weapons, armor, careers, languages, advantages, disadvantages, regions, bestiary, demons, NPCs).
+2. Use `/doc/rules/` for additional context or mechanics not covered in `/doc/resources/`.
 
 ## Angular conventions (`front/`)
 

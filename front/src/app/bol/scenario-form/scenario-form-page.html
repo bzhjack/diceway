@@ -3,8 +3,8 @@
 >
   <div class="mx-auto flex max-w-7xl flex-col gap-4">
     <p-card>
-      <form class="scenario-form-layout" [formGroup]="scenarioForm" (ngSubmit)="saveDraft()">
-        <div class="scenario-form-header">
+      <form class="grid gap-6" [formGroup]="scenarioForm" (ngSubmit)="saveDraft()">
+        <div class="grid gap-4 md:flex md:items-start md:justify-between">
           <div class="space-y-3">
             <div class="flex items-center gap-3">
               <div
@@ -21,21 +21,12 @@
                 </h1>
               </div>
             </div>
-
             <p class="m-0 max-w-3xl text-sm leading-7 text-slate-300">
-              Le scénario devient le conteneur maître. Tu prépares ici l’axe narratif, les lieux et les scènes,
-              puis tu ouvriras ensuite une ou plusieurs sessions à partir de ce socle.
+              Pose ici l'accroche, les lieux clés et les scènes. Le reste s'improvise à la table.
             </p>
           </div>
 
           <div class="flex flex-col gap-3 sm:flex-row md:justify-end">
-            <p-button
-              label="Retour dashboard"
-              icon="pi pi-arrow-left"
-              severity="secondary"
-              [outlined]="true"
-              [routerLink]="'/'"
-            />
             <p-button
               label="Réinitialiser"
               icon="pi pi-refresh"
@@ -45,66 +36,68 @@
               (onClick)="resetAll()"
             />
             <p-button label="Enregistrer le brouillon" icon="pi pi-save" severity="warn" type="submit" />
+            <p-button
+              label="Retour"
+              icon="pi pi-arrow-left"
+              severity="secondary"
+              [outlined]="true"
+              [routerLink]="'/'"
+            />
           </div>
         </div>
 
-        <div class="scenario-form-grid">
-          <div class="scenario-form-main">
-            <section class="scenario-section">
-              <div class="scenario-section__title">
-                <p>Identité</p>
-                <h2>Promesse de jeu</h2>
+        <div class="grid items-start gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(19rem,24rem)]">
+          <div class="grid gap-4">
+            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
+              <div>
+                <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
+                  Identité
+                </p>
+                <h2 class="m-0">Promesse de jeu</h2>
               </div>
 
-              <div class="grid gap-3 md:grid-cols-2">
-                <div class="md:col-span-2">
+              <div class="grid gap-3">
+                <p-iftalabel>
+                  <input pInputText id="scenario-title" formControlName="title" class="w-full" />
+                  <label for="scenario-title">Titre du scénario *</label>
+                </p-iftalabel>
+
+                <p-iftalabel>
+                  <textarea
+                    pTextarea
+                    id="scenario-pitch"
+                    formControlName="pitch"
+                    rows="3"
+                    class="w-full resize-none"
+                  ></textarea>
+                  <label for="scenario-pitch">Accroche MJ * — en 2-3 lignes, la promesse de jeu</label>
+                </p-iftalabel>
+
+                <div class="grid gap-3 sm:grid-cols-2">
                   <p-iftalabel>
-                    <input pInputText id="scenario-title" formControlName="title" class="w-full" />
-                    <label for="scenario-title">Titre du scénario *</label>
+                    <p-select
+                      inputId="scenario-tone"
+                      class="w-full"
+                      [options]="toneOptions"
+                      optionLabel="label"
+                      optionValue="value"
+                      formControlName="tone"
+                    />
+                    <label for="scenario-tone">Tonalité</label>
+                  </p-iftalabel>
+
+                  <p-iftalabel>
+                    <p-select
+                      inputId="scenario-scope"
+                      class="w-full"
+                      [options]="scopeOptions"
+                      optionLabel="label"
+                      optionValue="value"
+                      formControlName="scope"
+                    />
+                    <label for="scenario-scope">Format</label>
                   </p-iftalabel>
                 </div>
-
-                <div class="md:col-span-2">
-                  <p-iftalabel>
-                    <textarea
-                      pTextarea
-                      id="scenario-pitch"
-                      formControlName="pitch"
-                      rows="3"
-                      class="w-full resize-none"
-                    ></textarea>
-                    <label for="scenario-pitch">Pitch MJ *</label>
-                  </p-iftalabel>
-                </div>
-
-                <p-iftalabel>
-                  <p-select
-                    inputId="scenario-tone"
-                    class="w-full"
-                    [options]="toneOptions"
-                    optionLabel="label"
-                    optionValue="value"
-                    formControlName="tone"
-                  />
-                  <label for="scenario-tone">Tonalité</label>
-                </p-iftalabel>
-
-                <p-iftalabel>
-                  <p-select
-                    inputId="scenario-scope"
-                    class="w-full"
-                    [options]="scopeOptions"
-                    optionLabel="label"
-                    optionValue="value"
-                    formControlName="scope"
-                  />
-                  <label for="scenario-scope">Format</label>
-                </p-iftalabel>
-
-                <p-iftalabel>
-                  <p-inputNumber inputId="scenario-sessions" formControlName="sessionsPlanned" class="w-full" />
-                  <label for="scenario-sessions">Sessions prévues</label>
-                </p-iftalabel>
 
                 <p-iftalabel>
                   <input pInputText id="scenario-location" formControlName="startingLocation" class="w-full" />
@@ -113,76 +106,30 @@
               </div>
             </section>
 
-            <section class="scenario-section">
-              <div class="scenario-section__title">
-                <p>Axe narratif</p>
-                <h2>Enjeux et opposition</h2>
+            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
+              <div>
+                <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
+                  Lieux
+                </p>
+                <h2 class="m-0">Lieux clés</h2>
               </div>
 
-              <div class="grid gap-3">
+              <div
+                class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]"
+                [formGroup]="locationForm"
+              >
                 <p-iftalabel>
-                  <textarea
-                    pTextarea
-                    id="scenario-stakes"
-                    formControlName="stakes"
-                    rows="4"
-                    class="w-full resize-none"
-                  ></textarea>
-                  <label for="scenario-stakes">Enjeux *</label>
+                  <input pInputText id="location-name" formControlName="name" class="w-full" />
+                  <label for="location-name">Nom *</label>
                 </p-iftalabel>
 
                 <p-iftalabel>
-                  <textarea
-                    pTextarea
-                    id="scenario-opposition"
-                    formControlName="opposition"
-                    rows="4"
-                    class="w-full resize-none"
-                  ></textarea>
-                  <label for="scenario-opposition">Opposition et pression *</label>
+                  <input pInputText id="location-purpose" formControlName="purpose" class="w-full" />
+                  <label for="location-purpose">Rôle dramatique *</label>
                 </p-iftalabel>
-
-                <p-iftalabel>
-                  <textarea
-                    pTextarea
-                    id="scenario-notes"
-                    formControlName="notes"
-                    rows="4"
-                    class="w-full resize-none"
-                  ></textarea>
-                  <label for="scenario-notes">Notes MJ</label>
-                </p-iftalabel>
-              </div>
-            </section>
-
-            <section class="scenario-section">
-              <div class="scenario-section__title">
-                <p>Lieux</p>
-                <h2>Lieux clés</h2>
-              </div>
-
-              <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_12rem]">
-                <div class="grid gap-3 md:grid-cols-2" [formGroup]="locationForm">
-                  <p-iftalabel>
-                    <input pInputText id="location-name" formControlName="name" class="w-full" />
-                    <label for="location-name">Nom du lieu *</label>
-                  </p-iftalabel>
-
-                  <p-iftalabel>
-                    <input pInputText id="location-purpose" formControlName="purpose" class="w-full" />
-                    <label for="location-purpose">Rôle dramatique *</label>
-                  </p-iftalabel>
-
-                  <div class="md:col-span-2">
-                    <p-iftalabel>
-                      <input pInputText id="location-atmosphere" formControlName="atmosphere" class="w-full" />
-                      <label for="location-atmosphere">Atmosphère</label>
-                    </p-iftalabel>
-                  </div>
-                </div>
 
                 <p-button
-                  label="Ajouter le lieu"
+                  label="Ajouter"
                   icon="pi pi-plus"
                   severity="secondary"
                   type="button"
@@ -191,121 +138,98 @@
                 />
               </div>
 
-              <div class="scenario-chip-grid">
+              <div class="grid gap-2">
                 @for (location of locations(); track location.id) {
-                  <article class="scenario-chip">
-                    <div class="scenario-chip__body">
-                      <p>{{ location.name }}</p>
-                      <strong>{{ location.purpose }}</strong>
-                      @if (location.atmosphere) {
-                        <span>{{ location.atmosphere }}</span>
-                      }
+                  <div
+                    class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border border-[#424b57] bg-[#020617]/58 px-3 py-2"
+                  >
+                    <div>
+                      <p class="m-0 text-sm font-semibold text-slate-100">{{ location.name }}</p>
+                      <p class="m-0 text-xs text-slate-400">{{ location.purpose }}</p>
                     </div>
-                    <button type="button" class="scenario-chip__action" (click)="removeLocation(location.id)">
-                      <i class="pi pi-trash" aria-hidden="true"></i>
+                    <button
+                      type="button"
+                      class="inline-grid h-8 w-8 cursor-pointer place-items-center border border-[#5b2a2a] bg-red-950/18 text-red-200"
+                      (click)="removeLocation(location.id)"
+                    >
+                      <i class="pi pi-trash text-xs" aria-hidden="true"></i>
                     </button>
-                  </article>
+                  </div>
                 }
 
                 @if (locations().length === 0) {
-                  <div class="scenario-empty-state">
-                    Aucun lieu clé ajouté pour le moment.
+                  <div class="border border-dashed border-[#424b57] bg-[#0f172a]/32 p-3 text-sm text-slate-400">
+                    Aucun lieu clé ajouté.
                   </div>
                 }
               </div>
             </section>
 
-            <section class="scenario-section">
-              <div class="scenario-section__title">
-                <p>Scènes</p>
-                <h2>Progression préparée</h2>
+            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
+              <div>
+                <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
+                  Scènes
+                </p>
+                <h2 class="m-0">Progression préparée</h2>
               </div>
 
-              <div class="grid gap-3" [formGroup]="sceneForm">
-                <div class="grid gap-3 md:grid-cols-2">
-                  <p-iftalabel>
-                    <input pInputText id="scene-title" formControlName="title" class="w-full" />
-                    <label for="scene-title">Titre de scène *</label>
-                  </p-iftalabel>
+              <div
+                class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]"
+                [formGroup]="sceneForm"
+              >
+                <p-iftalabel>
+                  <input pInputText id="scene-title" formControlName="title" class="w-full" />
+                  <label for="scene-title">Titre de scène *</label>
+                </p-iftalabel>
 
-                  <p-iftalabel>
-                    <input pInputText id="scene-location" formControlName="location" class="w-full" />
-                    <label for="scene-location">Lieu *</label>
-                  </p-iftalabel>
-                </div>
+                <p-iftalabel>
+                  <input pInputText id="scene-objective" formControlName="objective" class="w-full" />
+                  <label for="scene-objective">Objectif dramatique *</label>
+                </p-iftalabel>
 
-                <div class="grid gap-3 md:grid-cols-2">
-                  <p-iftalabel>
-                    <input pInputText id="scene-objective" formControlName="objective" class="w-full" />
-                    <label for="scene-objective">Objectif dramatique *</label>
-                  </p-iftalabel>
-
-                  <p-iftalabel>
-                    <input pInputText id="scene-opposition" formControlName="opposition" class="w-full" />
-                    <label for="scene-opposition">Obstacle ou opposition</label>
-                  </p-iftalabel>
-                </div>
-
-                <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_12rem]">
-                  <p-iftalabel>
-                    <p-select
-                      inputId="scene-beat"
-                      class="w-full"
-                      [options]="beatOptions"
-                      optionLabel="label"
-                      optionValue="value"
-                      formControlName="beat"
-                    />
-                    <label for="scene-beat">Temps de scénario</label>
-                  </p-iftalabel>
-
-                  <p-button
-                    label="Ajouter la scène"
-                    icon="pi pi-plus"
-                    severity="contrast"
-                    type="button"
-                    (onClick)="addScene()"
-                  />
-                </div>
+                <p-button
+                  label="Ajouter"
+                  icon="pi pi-plus"
+                  severity="contrast"
+                  type="button"
+                  (onClick)="addScene()"
+                />
               </div>
 
-              <div class="scenario-scene-list">
+              <div class="grid gap-2">
                 @for (scene of scenes(); track scene.id) {
-                  <article class="scenario-scene-card">
-                    <div class="scenario-scene-card__header">
-                      <div>
-                        <p>{{ beatLabel(scene.beat) }}</p>
-                        <h3>{{ scene.title }}</h3>
-                      </div>
-                      <button type="button" class="scenario-chip__action" (click)="removeScene(scene.id)">
-                        <i class="pi pi-trash" aria-hidden="true"></i>
-                      </button>
+                  <div
+                    class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border border-[#424b57] bg-[#020617]/58 px-3 py-2"
+                  >
+                    <div>
+                      <p class="m-0 text-sm font-semibold text-slate-100">{{ scene.title }}</p>
+                      <p class="m-0 text-xs text-slate-300">{{ scene.objective }}</p>
                     </div>
-
-                    <div class="scenario-scene-card__meta">
-                      <span>{{ scene.location }}</span>
-                      @if (scene.opposition) {
-                        <span>{{ scene.opposition }}</span>
-                      }
-                    </div>
-
-                    <p>{{ scene.objective }}</p>
-                  </article>
+                    <button
+                      type="button"
+                      class="inline-grid h-8 w-8 cursor-pointer place-items-center border border-[#5b2a2a] bg-red-950/18 text-red-200"
+                      (click)="removeScene(scene.id)"
+                    >
+                      <i class="pi pi-trash text-xs" aria-hidden="true"></i>
+                    </button>
+                  </div>
                 }
 
                 @if (scenes().length === 0) {
-                  <div class="scenario-empty-state">
-                    Ajoute les premières scènes du scénario pour structurer la future session.
+                  <div class="border border-dashed border-[#424b57] bg-[#0f172a]/32 p-3 text-sm text-slate-400">
+                    Ajoute les premières scènes pour structurer la session.
                   </div>
                 }
               </div>
             </section>
           </div>
 
-          <aside class="scenario-form-side">
-            <section class="scenario-side-card">
-              <p class="scenario-side-card__eyebrow">État</p>
-              <h2>{{ readinessLabel() }}</h2>
+          <aside class="grid gap-4 xl:sticky xl:top-4">
+            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
+              <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
+                État
+              </p>
+              <h2 class="m-0">{{ readinessLabel() }}</h2>
               <div class="flex flex-wrap gap-2">
                 <p-tag value="Scénario" severity="contrast" />
                 <p-tag [value]="scenarioSummary().tone" severity="warn" />
@@ -313,54 +237,67 @@
               </div>
             </section>
 
-            <section class="scenario-side-card">
-              <p class="scenario-side-card__eyebrow">Résumé MJ</p>
-              <h2>{{ scenarioSummary().title }}</h2>
-              <p class="scenario-side-card__lead">{{ scenarioSummary().pitch }}</p>
-              <div class="scenario-side-card__stack">
+            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
+              <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
+                Résumé MJ
+              </p>
+              <h2 class="m-0">{{ scenarioSummary().title }}</h2>
+              <p class="m-0 text-sm text-slate-300">{{ scenarioSummary().pitch }}</p>
+              <div class="grid gap-[0.55rem]">
                 <div>
-                  <span>Départ</span>
-                  <strong>{{ scenarioSummary().location }}</strong>
+                  <span class="block text-[0.82rem] text-slate-400">Départ</span>
+                  <strong class="text-sm text-slate-50">{{ scenarioSummary().location }}</strong>
                 </div>
                 <div>
-                  <span>Dernier enregistrement</span>
-                  <strong>{{ formatSavedAt(lastSavedAt()) }}</strong>
+                  <span class="block text-[0.82rem] text-slate-400">Dernier enregistrement</span>
+                  <strong class="text-sm text-slate-50">{{ formatSavedAt(lastSavedAt()) }}</strong>
                 </div>
               </div>
             </section>
 
-            <section class="scenario-side-card">
-              <p class="scenario-side-card__eyebrow">Préparation</p>
-              <div class="scenario-stat-grid">
+            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
+              <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
+                Préparation
+              </p>
+              <div class="grid gap-[0.55rem]">
                 @for (stat of scenarioStats(); track stat.label) {
-                  <article class="scenario-stat">
-                    <span>{{ stat.label }}</span>
-                    <strong>{{ stat.value }}</strong>
-                  </article>
+                  <div
+                    class="flex items-center justify-between border border-[#424b57] bg-[#020617]/52 px-3 py-2"
+                  >
+                    <span class="text-[0.82rem] text-slate-400">{{ stat.label }}</span>
+                    <strong class="text-sm text-slate-50">{{ stat.value }}</strong>
+                  </div>
                 }
               </div>
             </section>
 
-            <section class="scenario-side-card scenario-side-card--accent">
-              <p class="scenario-side-card__eyebrow">Étape suivante</p>
-              <h2>Créer une session à partir du scénario</h2>
-              <p class="scenario-side-card__lead">
-                Une fois le brouillon prêt, la session servira d’instance jouée: date, scène active, timeline et
-                événements de table.
+            <section
+              class="grid gap-4 border border-[#424b57] bg-[linear-gradient(180deg,rgba(194,65,12,0.18),rgba(15,23,42,0.72))] p-4"
+            >
+              <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
+                Étape suivante
+              </p>
+              <h2 class="m-0">Créer une session</h2>
+              <p class="m-0 text-sm text-slate-300">
+                Une fois le brouillon prêt, ouvre une session à partir de ce scénario pour jouer.
               </p>
             </section>
           </aside>
         </div>
 
         @if (errorMessage(); as message) {
-          <div class="scenario-feedback scenario-feedback--error">
+          <div
+            class="flex items-center gap-3 border border-red-400/35 bg-red-950/20 px-4 py-3 text-sm text-red-200"
+          >
             <i class="pi pi-exclamation-triangle" aria-hidden="true"></i>
             <span>{{ message }}</span>
           </div>
         }
 
         @if (successMessage(); as message) {
-          <div class="scenario-feedback scenario-feedback--success">
+          <div
+            class="flex items-center gap-3 border border-green-400/35 bg-[rgba(20,83,45,0.24)] px-4 py-3 text-sm text-green-100"
+          >
             <i class="pi pi-check-circle" aria-hidden="true"></i>
             <span>{{ message }}</span>
           </div>

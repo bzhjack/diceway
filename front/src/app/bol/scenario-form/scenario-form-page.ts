@@ -4,7 +4,6 @@ import {RouterLink} from '@angular/router';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {IftaLabelModule} from 'primeng/iftalabel';
-import {InputNumberModule} from 'primeng/inputnumber';
 import {InputTextModule} from 'primeng/inputtext';
 import {SelectModule} from 'primeng/select';
 import {TagModule} from 'primeng/tag';
@@ -19,16 +18,12 @@ interface ScenarioLocationDraft {
   readonly id: string;
   readonly name: string;
   readonly purpose: string;
-  readonly atmosphere: string;
 }
 
 interface ScenarioSceneDraft {
   readonly id: string;
   readonly title: string;
-  readonly location: string;
   readonly objective: string;
-  readonly opposition: string;
-  readonly beat: 'opening' | 'twist' | 'pressure' | 'climax';
 }
 
 interface StoredScenarioDraft {
@@ -36,11 +31,7 @@ interface StoredScenarioDraft {
   readonly pitch: string;
   readonly tone: string;
   readonly scope: string;
-  readonly sessionsPlanned: number;
   readonly startingLocation: string;
-  readonly stakes: string;
-  readonly opposition: string;
-  readonly notes: string;
   readonly locations: readonly ScenarioLocationDraft[];
   readonly scenes: readonly ScenarioSceneDraft[];
   readonly savedAt: string;
@@ -54,14 +45,13 @@ interface StoredScenarioDraft {
     ButtonModule,
     CardModule,
     IftaLabelModule,
-    InputNumberModule,
     InputTextModule,
     SelectModule,
     TagModule,
     TextareaModule,
   ],
   templateUrl: './scenario-form-page.html',
-  styleUrl: './scenario-form-page.scss',
+  host: {class: 'block'},
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScenarioFormPageComponent {
@@ -79,12 +69,6 @@ export class ScenarioFormPageComponent {
     {label: 'Mini-arc', value: 'mini-arc'},
     {label: 'Ouvert', value: 'sandbox'},
   ];
-  protected readonly beatOptions: ScenarioOption<ScenarioSceneDraft['beat']>[] = [
-    {label: 'Ouverture', value: 'opening'},
-    {label: 'Twist', value: 'twist'},
-    {label: 'Pression', value: 'pressure'},
-    {label: 'Climax', value: 'climax'},
-  ];
 
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly successMessage = signal<string | null>(null);
@@ -98,45 +82,33 @@ export class ScenarioFormPageComponent {
     pitch: ['', [Validators.required, Validators.maxLength(240)]],
     tone: ['intrigue' as const, [Validators.required]],
     scope: ['mini-arc' as const, [Validators.required]],
-    sessionsPlanned: [2, [Validators.required, Validators.min(1), Validators.max(12)]],
     startingLocation: ['', [Validators.required, Validators.maxLength(120)]],
-    stakes: ['', [Validators.required, Validators.maxLength(2000)]],
-    opposition: ['', [Validators.required, Validators.maxLength(2000)]],
-    notes: ['', [Validators.maxLength(4000)]],
   });
   protected readonly locationForm = this.formBuilder.nonNullable.group({
     name: ['', [Validators.required, Validators.maxLength(120)]],
     purpose: ['', [Validators.required, Validators.maxLength(200)]],
-    atmosphere: ['', [Validators.maxLength(200)]],
   });
   protected readonly sceneForm = this.formBuilder.nonNullable.group({
     title: ['', [Validators.required, Validators.maxLength(120)]],
-    location: ['', [Validators.required, Validators.maxLength(120)]],
     objective: ['', [Validators.required, Validators.maxLength(240)]],
-    opposition: ['', [Validators.maxLength(240)]],
-    beat: ['opening' as const, [Validators.required]],
   });
 
   protected readonly readinessLabel = computed(() => {
     if (this.scenarioForm.valid && this.scenes().length >= 2 && this.locations().length >= 1) {
       return 'Prêt à ouvrir une session';
     }
-
     if (this.scenarioForm.valid && this.scenes().length >= 1) {
       return 'Base jouable';
     }
-
     return 'Brouillon MJ';
   });
   protected readonly scenarioStats = computed(() => [
-    {label: 'Scènes', value: String(this.scenes().length || 0)},
-    {label: 'Lieux', value: String(this.locations().length || 0)},
-    {label: 'Sessions prévues', value: String(this.scenarioForm.controls.sessionsPlanned.getRawValue())},
+    {label: 'Scènes', value: String(this.scenes().length)},
+    {label: 'Lieux', value: String(this.locations().length)},
     {label: 'Brouillons locaux', value: String(this.savedDraftCount())},
   ]);
   protected readonly scenarioSummary = computed(() => {
     const form = this.scenarioForm.getRawValue();
-
     return {
       title: form.title.trim() || 'Titre du scénario',
       pitch: form.pitch.trim() || 'Ajoute un pitch court pour poser la promesse de jeu.',
@@ -162,14 +134,9 @@ export class ScenarioFormPageComponent {
         id: this.createDraftId('location'),
         name: value.name.trim(),
         purpose: value.purpose.trim(),
-        atmosphere: value.atmosphere.trim(),
       },
     ]);
-    this.locationForm.reset({
-      name: '',
-      purpose: '',
-      atmosphere: '',
-    });
+    this.locationForm.reset({name: '', purpose: ''});
   }
 
   protected removeLocation(locationId: string): void {
@@ -191,19 +158,10 @@ export class ScenarioFormPageComponent {
       {
         id: this.createDraftId('scene'),
         title: value.title.trim(),
-        location: value.location.trim(),
         objective: value.objective.trim(),
-        opposition: value.opposition.trim(),
-        beat: value.beat,
       },
     ]);
-    this.sceneForm.reset({
-      title: '',
-      location: '',
-      objective: '',
-      opposition: '',
-      beat: 'opening',
-    });
+    this.sceneForm.reset({title: '', objective: ''});
   }
 
   protected removeScene(sceneId: string): void {
@@ -216,7 +174,7 @@ export class ScenarioFormPageComponent {
 
     if (this.scenarioForm.invalid) {
       this.scenarioForm.markAllAsTouched();
-      this.errorMessage.set('Le titre, le pitch, le lieu de départ, les enjeux et l’opposition sont requis.');
+      this.errorMessage.set('Le titre, le pitch et le lieu de départ sont requis.');
       return;
     }
 
@@ -233,66 +191,34 @@ export class ScenarioFormPageComponent {
       savedAt,
     };
     const drafts = this.readStoredDrafts();
-
     localStorage.setItem(this.storageKey, JSON.stringify([draft, ...drafts].slice(0, 12)));
-
     this.savedDraftCount.set(this.readStoredDraftCount());
     this.lastSavedAt.set(savedAt);
     this.successMessage.set('Brouillon enregistré localement. Tu pourras ensuite ouvrir une session depuis ce scénario.');
   }
 
   protected resetAll(): void {
-    this.scenarioForm.reset({
-      title: '',
-      pitch: '',
-      tone: 'intrigue',
-      scope: 'mini-arc',
-      sessionsPlanned: 2,
-      startingLocation: '',
-      stakes: '',
-      opposition: '',
-      notes: '',
-    });
-    this.locationForm.reset({
-      name: '',
-      purpose: '',
-      atmosphere: '',
-    });
-    this.sceneForm.reset({
-      title: '',
-      location: '',
-      objective: '',
-      opposition: '',
-      beat: 'opening',
-    });
+    this.scenarioForm.reset({title: '', pitch: '', tone: 'intrigue', scope: 'mini-arc', startingLocation: ''});
+    this.locationForm.reset({name: '', purpose: ''});
+    this.sceneForm.reset({title: '', objective: ''});
     this.locations.set([]);
     this.scenes.set([]);
     this.errorMessage.set(null);
     this.successMessage.set(null);
   }
 
-  protected beatLabel(value: ScenarioSceneDraft['beat']): string {
-    return this.beatOptions.find((option) => option.value === value)?.label ?? value;
-  }
-
   protected formatSavedAt(value: string | null): string {
     if (!value) {
       return 'Pas encore enregistré';
     }
-
-    return new Date(value).toLocaleString('fr-FR', {
-      dateStyle: 'short',
-      timeStyle: 'short',
-    });
+    return new Date(value).toLocaleString('fr-FR', {dateStyle: 'short', timeStyle: 'short'});
   }
 
   private readStoredDrafts(): StoredScenarioDraft[] {
     const rawValue = localStorage.getItem(this.storageKey);
-
     if (!rawValue) {
       return [];
     }
-
     try {
       const parsed = JSON.parse(rawValue) as StoredScenarioDraft[];
       return Array.isArray(parsed) ? parsed : [];
