@@ -120,7 +120,12 @@
                   <div
                     class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border border-[#424b57] bg-[#020617]/58 px-3 py-2"
                   >
-                    <p class="m-0 text-sm font-semibold text-slate-100">{{ personnage.name }}</p>
+                    <div>
+                      <p class="m-0 text-sm font-semibold text-slate-100">{{ personnage.name }}</p>
+                      @if (personnage.joueur) {
+                        <p class="m-0 text-xs text-slate-400">{{ personnage.joueur }}</p>
+                      }
+                    </div>
                     <button
                       type="button"
                       class="inline-grid h-8 w-8 cursor-pointer place-items-center border border-[#5b2a2a] bg-red-950/18 text-red-200"

@@ -17,6 +17,7 @@ interface ScenarioPjDraft {
   readonly id: string;
   readonly heroId: string;
   readonly name: string;
+  readonly joueur: string | null;
 }
 
 @Component({
@@ -94,6 +95,7 @@ export class ScenarioFormPageComponent {
             id: this.createDraftId('pj'),
             heroId: p.heros_id,
             name: p.heros?.origines.nom ?? '?',
+            joueur: p.heros?.origines.joueur ?? null,
           })),
         );
       });
@@ -122,7 +124,12 @@ export class ScenarioFormPageComponent {
 
     this.pj.update((entries) => [
       ...entries,
-      {id: this.createDraftId('pj'), heroId, name: hero.origines.nom ?? '(sans nom)'},
+      {
+        id: this.createDraftId('pj'),
+        heroId,
+        name: hero.origines.nom ?? '(sans nom)',
+        joueur: hero.origines.joueur ?? null,
+      },
     ]);
     this.pjForm.reset({heroId: null});
   }

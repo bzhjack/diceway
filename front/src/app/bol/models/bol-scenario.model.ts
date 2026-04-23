@@ -12,6 +12,6 @@ export interface BolScenarioPjModel {
   heros_id: string;
   heros?: {
     id: string | null;
-    origines: {nom: string | null; avatar: string | null};
+    origines: {nom: string | null; avatar: string | null; joueur: string | null};
   };
 }
