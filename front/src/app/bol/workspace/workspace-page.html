@@ -1,5 +1,5 @@
 <section
-  class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(96,165,250,0.12),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(248,113,113,0.1),_transparent_24%),linear-gradient(180deg,_#000000,_#0f172a_45%,_#000000)] px-4 py-4 md:px-6 xl:px-8"
+  class="dw-page xl:px-8"
 >
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
     <bol-workspace-header [userName]="userName()" (logoutRequested)="logout()" />
@@ -58,7 +58,7 @@
 
         <div class="grid gap-4 md:grid-cols-3">
           @for (beat of activeSession.beats; track beat.label) {
-            <div class="border border-[#424b57] bg-[#334155]/55 p-4">
+            <div class="dw-section--form">
               <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-slate-400">
                 {{ beat.label }}
               </p>

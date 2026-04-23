@@ -363,9 +363,21 @@ export const DwPreset = definePreset(Aura, {
     }
 
     .p-select-label {
+non      font-size: 0.9rem;
+    }
+
+    .p-iftalabel .p-select-label {
       padding-top: 0.95rem;
       padding-bottom: 0.32rem;
-      font-size: 0.9rem;
+    }
+
+    .p-select:not(.p-iftalabel .p-select) {
+      --p-form-field-padding-y: 0.35rem;
+      --p-select-padding-y: 0.35rem;
+    }
+
+    .p-select:not(.p-iftalabel .p-select) .p-select-label {
+      padding-block: 0.35rem !important;
     }
 
     .p-select-dropdown {

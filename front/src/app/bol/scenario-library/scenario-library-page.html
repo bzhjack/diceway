@@ -1,5 +1,5 @@
 <section
-  class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(251,191,36,0.14),_transparent_24%),radial-gradient(circle_at_top_right,_rgba(56,189,248,0.12),_transparent_22%),linear-gradient(180deg,_#000000,_#0f172a_45%,_#000000)] px-4 py-6 md:px-6 xl:px-8"
+  class="dw-page xl:px-8"
 >
   <p-confirmdialog />
 
@@ -64,7 +64,7 @@
 
         @if (filteredScenarios().length === 0) {
           <div
-            class="flex flex-col items-center gap-3 border border-dashed border-[#424b57] bg-[#0f172a]/32 py-12 text-center"
+            class="dw-empty flex flex-col items-center gap-3 py-12 text-center"
           >
             <i class="pi pi-compass text-3xl text-slate-500" aria-hidden="true"></i>
             <p class="m-0 text-sm text-slate-400">
@@ -80,7 +80,7 @@
         <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           @for (scenario of filteredScenarios(); track scenario.id) {
             <div
-              class="grid grid-rows-[1fr_auto] gap-3 border border-[#424b57] bg-[#0f172a]/72 p-4"
+              class="dw-section grid-rows-[1fr_auto] gap-3"
             >
               <div class="grid gap-2">
                 <div class="flex items-start justify-between gap-2">
@@ -96,17 +96,30 @@
                   </p>
                 }
 
-                @if (pjNames(scenario).length > 0) {
-                  <div class="flex flex-wrap gap-1 pt-1">
-                    @for (name of pjNames(scenario); track name) {
-                      <span
-                        class="border border-[#334155] bg-[#1e293b] px-2 py-0.5 text-xs text-slate-300"
-                      >
-                        {{ name }}
-                      </span>
-                    }
-                  </div>
-                }
+                <div class="flex flex-wrap gap-1 pt-1">
+                  @for (name of pjNames(scenario); track name) {
+                    <span
+                      class="border border-[#334155] bg-[#1e293b] px-2 py-0.5 text-xs text-slate-300"
+                    >
+                      {{ name }}
+                    </span>
+                  }
+                  @if ((scenario.creatures?.length ?? 0) > 0) {
+                    <span class="border border-amber-400/25 bg-amber-400/10 px-2 py-0.5 text-xs text-amber-300">
+                      {{ scenario.creatures!.length }} créature{{ scenario.creatures!.length > 1 ? 's' : '' }}
+                    </span>
+                  }
+                  @if ((scenario.demons?.length ?? 0) > 0) {
+                    <span class="border border-red-400/25 bg-red-400/10 px-2 py-0.5 text-xs text-red-300">
+                      {{ scenario.demons!.length }} démon{{ scenario.demons!.length > 1 ? 's' : '' }}
+                    </span>
+                  }
+                  @if ((scenario.pnjs?.length ?? 0) > 0) {
+                    <span class="border border-slate-400/25 bg-slate-400/10 px-2 py-0.5 text-xs text-slate-300">
+                      {{ scenario.pnjs!.length }} PNJ
+                    </span>
+                  }
+                </div>
               </div>
 
               <div class="flex justify-end gap-2 border-t border-[#424b57] pt-3">
