@@ -52,10 +52,12 @@ export class ScenarioFormPageComponent {
   protected readonly pj = signal<ScenarioPjDraft[]>([]);
 
   protected readonly heroOptions = computed(() =>
-    this.heroes().map((h) => ({
-      label: h.origines.nom ?? '(sans nom)',
-      value: h.id as string,
-    })),
+    this.heroes()
+      .filter((h) => h.active)
+      .map((h) => ({
+        label: h.origines.nom ?? '(sans nom)',
+        value: h.id as string,
+      })),
   );
 
   protected readonly scenarioForm = this.formBuilder.nonNullable.group({

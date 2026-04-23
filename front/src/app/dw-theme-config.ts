@@ -332,7 +332,7 @@ export const DwPreset = definePreset(Aura, {
       min-width: 9.75rem;
     }
 
-k     .p-inputtext,
+    .p-inputtext,
     .p-textarea,
     .p-inputnumber-input,
     .p-select {
@@ -347,10 +347,19 @@ k     .p-inputtext,
       --p-iftalabel-input-padding-bottom: 0.32rem;
     }
 
-    .p-inputtext,
+    .p-inputtext:not(.p-select-filter),
     .p-textarea,
     .p-inputnumber-input {
       padding-block: 0.35rem;
+    }
+
+    .p-select-overlay {
+      --p-iftalabel-input-padding-top: 0.5rem;
+      --p-iftalabel-input-padding-bottom: 0.5rem;
+    }
+
+    .p-select-filter-container {
+      align-items: center;
     }
 
     .p-select-label {
