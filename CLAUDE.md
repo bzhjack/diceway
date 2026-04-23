@@ -77,6 +77,22 @@ When a task touches game rules, character creation, equipment, careers, language
 ### PrimeNG
 - For buttons, do not use `styleClass` — prefer component inputs (`size`, `severity`, `outlined`, `text`) and CSS on container wrappers.
 
+### Library pages
+
+Every library page (list of entities) follows this structure:
+
+1. **Header card** — `<p-card class="dw-card--header">` containing:
+   - Eyebrow (`text-xs font-black uppercase tracking-[0.22em] text-amber-300`) + `<h1>` title
+   - Short description paragraph
+   - `<p-tag>` with the item count
+   - `<div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">`:
+     - Left side: navigation links + primary action wrapped in `<span class="library-header-actions__primary">` (`severity="warn"`, `size="small"`)
+     - Right side: `<p-button label="Retour au dashboard" icon="pi pi-arrow-left" [routerLink]="'/'" severity="secondary" [outlined]="true" size="small" />`
+
+2. **Content card** — `<p-card>` with search field and item list/table.
+
+See `creature-library-page.html` or `pnj-library-page.html` as reference.
+
 ### Accessibility
 - All components must pass AXE checks and meet WCAG AA minimums (focus management, color contrast, ARIA attributes).
 
@@ -84,6 +100,6 @@ When a task touches game rules, character creation, equipment, careers, language
 
 - **RESTful API** — 150+ routes in `routes/api.php`, grouped under `sanctum` auth middleware.
 - **Service layer** — business logic in `app/Http/Services/Bol/`, not in controllers.
-- **Eloquent models** — 27+ models in `app/Models/Bol/`. Primary entities: `BolHeros`, `BolCreature`, `BolDemon`, `BolPnj`, `BolQuest`.
+- **Eloquent models** — in `app/Models/Bol/`. Primary entities: `BolHeros`, `BolCreature`, `BolDemon`, `BolPnj`, `BolScenario`.
 - **Auth** — Laravel Sanctum (Bearer tokens) + Google OAuth (`POST /api/auth/google/id-token`). Tokens stored in `sessionStorage` on the frontend.
 - **Note** — `DatabaseSeeder.php` does not call the 19 seeders; reference data requires manual population.
