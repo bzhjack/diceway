@@ -22,4 +22,19 @@ class BolScenario extends Model
     {
         return $this->hasMany(BolScenarioPj::class, 'scenario_id', 'id');
     }
+
+    public function creatures(): HasMany
+    {
+        return $this->hasMany(BolScenarioCreature::class, 'scenario_id', 'id');
+    }
+
+    public function demons(): HasMany
+    {
+        return $this->hasMany(BolScenarioDemon::class, 'scenario_id', 'id');
+    }
+
+    public function pnjs(): HasMany
+    {
+        return $this->hasMany(BolScenarioPnj::class, 'scenario_id', 'id');
+    }
 }

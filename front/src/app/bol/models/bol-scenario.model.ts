@@ -4,6 +4,70 @@ export interface BolScenarioModel {
   titre: string;
   pitch: string | null;
   pj?: BolScenarioPjModel[];
+  creatures?: BolScenarioCreatureModel[];
+  demons?: BolScenarioDemonModel[];
+  pnjs?: BolScenarioPnjModel[];
+}
+
+export interface BolScenarioCreatureModel {
+  id: number;
+  scenario_id: string;
+  creature_id: string | null;
+  surnom: string | null;
+  nom: string;
+  vigueur: number;
+  agilite: number;
+  esprit: number;
+  vitalite_max: number;
+  vitalite_courante: number;
+  attaque: number;
+  defense: number;
+  degats: string | null;
+  protection: string | null;
+  id_taille: number;
+}
+
+export interface BolScenarioDemonModel {
+  id: number;
+  scenario_id: string;
+  demon_id: string | null;
+  surnom: string | null;
+  nom: string;
+  vigueur: number;
+  agilite: number;
+  esprit: number;
+  aura: number;
+  melee: number;
+  tir: number;
+  defense: number;
+  vitalite_max: number;
+  vitalite_courante: number;
+  degats: string | null;
+  id_taille: number | null;
+}
+
+export interface BolScenarioPnjArmeModel {
+  nom: string | null;
+  degats: string | null;
+  type: 'M' | 'T' | null;
+}
+
+export interface BolScenarioPnjModel {
+  id: number;
+  scenario_id: string;
+  pnj_id: string | null;
+  surnom: string | null;
+  nom: string;
+  vigueur: number;
+  agilite: number;
+  esprit: number;
+  aura: number;
+  melee: number;
+  tir: number;
+  defense: number;
+  vitalite_max: number;
+  vitalite_courante: number;
+  armes: BolScenarioPnjArmeModel[] | null;
 }
 
 export interface BolScenarioPjModel {

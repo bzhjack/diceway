@@ -143,6 +143,229 @@
                 }
               </div>
             </section>
+
+            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
+              <div>
+                <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
+                  Antagonistes
+                </p>
+                <h2 class="m-0">Bestiaire de scène</h2>
+              </div>
+
+              <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]" [formGroup]="creatureForm">
+                <p-iftalabel>
+                  <p-select
+                    inputId="creature-select"
+                    class="w-full"
+                    [options]="creatureOptions()"
+                    optionLabel="label"
+                    optionValue="value"
+                    formControlName="creatureId"
+                    [filter]="true"
+                    filterPlaceholder="Rechercher..."
+                    emptyMessage="Aucune créature disponible"
+                  />
+                  <label for="creature-select">Choisir une créature</label>
+                </p-iftalabel>
+
+                <p-iftalabel>
+                  <input pInputText id="creature-surnom" formControlName="surnom" class="w-full" />
+                  <label for="creature-surnom">Surnom (optionnel)</label>
+                </p-iftalabel>
+
+                <p-button
+                  label="Ajouter"
+                  icon="pi pi-plus"
+                  severity="secondary"
+                  type="button"
+                  [outlined]="true"
+                  (onClick)="addCreature()"
+                />
+              </div>
+
+              <div class="grid gap-2">
+                @for (creature of creatures(); track creature.id) {
+                  <div
+                    class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border border-[#424b57] bg-[#020617]/58 px-3 py-2"
+                  >
+                    <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5">
+                      <p class="m-0 text-sm font-semibold text-slate-100">
+                        @if (creature.surnom) { {{ creature.surnom }} } @else { {{ creature.nom }} }
+                      </p>
+                      @if (creature.surnom) {
+                        <p class="m-0 text-xs text-slate-400">{{ creature.nom }}</p>
+                      }
+                      <span class="text-xs text-slate-400">PV {{ creature.vitaliteMax }}</span>
+                    </div>
+                    <button
+                      type="button"
+                      class="inline-grid h-8 w-8 cursor-pointer place-items-center border border-[#5b2a2a] bg-red-950/18 text-red-200"
+                      (click)="removeCreature(creature.id)"
+                    >
+                      <i class="pi pi-trash text-xs" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                }
+
+                @if (creatures().length === 0) {
+                  <div class="border border-dashed border-[#424b57] bg-[#0f172a]/32 p-3 text-sm text-slate-400">
+                    Aucune créature ajoutée.
+                  </div>
+                }
+              </div>
+            </section>
+            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
+              <div>
+                <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
+                  Antagonistes
+                </p>
+                <h2 class="m-0">Démons</h2>
+              </div>
+
+              <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]" [formGroup]="demonForm">
+                <p-iftalabel>
+                  <p-select
+                    inputId="demon-select"
+                    class="w-full"
+                    [options]="demonOptions()"
+                    optionLabel="label"
+                    optionValue="value"
+                    formControlName="demonId"
+                    [filter]="true"
+                    filterPlaceholder="Rechercher..."
+                    emptyMessage="Aucun démon disponible"
+                  />
+                  <label for="demon-select">Choisir un démon</label>
+                </p-iftalabel>
+
+                <p-iftalabel>
+                  <input pInputText id="demon-surnom" formControlName="surnom" class="w-full" />
+                  <label for="demon-surnom">Surnom (optionnel)</label>
+                </p-iftalabel>
+
+                <p-button
+                  label="Ajouter"
+                  icon="pi pi-plus"
+                  severity="secondary"
+                  type="button"
+                  [outlined]="true"
+                  (onClick)="addDemon()"
+                />
+              </div>
+
+              <div class="grid gap-2">
+                @for (demon of demons(); track demon.id) {
+                  <div
+                    class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border border-[#424b57] bg-[#020617]/58 px-3 py-2"
+                  >
+                    <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5">
+                      <p class="m-0 text-sm font-semibold text-slate-100">
+                        @if (demon.surnom) { {{ demon.surnom }} } @else { {{ demon.nom }} }
+                      </p>
+                      @if (demon.surnom) {
+                        <p class="m-0 text-xs text-slate-400">{{ demon.nom }}</p>
+                      }
+                      <span class="text-xs text-slate-400">PV {{ demon.vitaliteMax }}</span>
+                    </div>
+                    <button
+                      type="button"
+                      class="inline-grid h-8 w-8 cursor-pointer place-items-center border border-[#5b2a2a] bg-red-950/18 text-red-200"
+                      (click)="removeDemon(demon.id)"
+                    >
+                      <i class="pi pi-trash text-xs" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                }
+
+                @if (demons().length === 0) {
+                  <div class="border border-dashed border-[#424b57] bg-[#0f172a]/32 p-3 text-sm text-slate-400">
+                    Aucun démon ajouté.
+                  </div>
+                }
+              </div>
+            </section>
+
+            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
+              <div>
+                <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
+                  Antagonistes
+                </p>
+                <h2 class="m-0">PNJ</h2>
+              </div>
+
+              <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]" [formGroup]="pnjForm">
+                <p-iftalabel>
+                  <p-select
+                    inputId="pnj-select"
+                    class="w-full"
+                    [options]="pnjOptions()"
+                    optionLabel="label"
+                    optionValue="value"
+                    formControlName="pnjId"
+                    [filter]="true"
+                    filterPlaceholder="Rechercher..."
+                    emptyMessage="Aucun PNJ disponible"
+                  />
+                  <label for="pnj-select">Choisir un PNJ</label>
+                </p-iftalabel>
+
+                <p-iftalabel>
+                  <input pInputText id="pnj-surnom" formControlName="surnom" class="w-full" />
+                  <label for="pnj-surnom">Surnom (optionnel)</label>
+                </p-iftalabel>
+
+                <p-button
+                  label="Ajouter"
+                  icon="pi pi-plus"
+                  severity="secondary"
+                  type="button"
+                  [outlined]="true"
+                  (onClick)="addPnj()"
+                />
+              </div>
+
+              <div class="grid gap-2">
+                @for (pnj of pnjs(); track pnj.id) {
+                  <div
+                    class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 border border-[#424b57] bg-[#020617]/58 px-3 py-2"
+                  >
+                    <div class="grid gap-1">
+                      <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5">
+                        <p class="m-0 text-sm font-semibold text-slate-100">
+                          @if (pnj.surnom) { {{ pnj.surnom }} } @else { {{ pnj.nom }} }
+                        </p>
+                        @if (pnj.surnom) {
+                          <p class="m-0 text-xs text-slate-400">{{ pnj.nom }}</p>
+                        }
+                        <span class="text-xs text-slate-400">PV {{ pnj.vitaliteMax }}</span>
+                      </div>
+                      @if (pnj.armes.length > 0) {
+                        <div class="flex flex-wrap gap-1">
+                          @for (arme of pnj.armes; track $index) {
+                            <span class="border border-[#334155] bg-[#1e293b] px-1.5 py-0.5 text-xs text-slate-300">
+                              {{ arme.nom }}@if (arme.degats) { — {{ arme.degats }}}
+                            </span>
+                          }
+                        </div>
+                      }
+                    </div>
+                    <button
+                      type="button"
+                      class="inline-grid h-8 w-8 cursor-pointer place-items-center border border-[#5b2a2a] bg-red-950/18 text-red-200"
+                      (click)="removePnj(pnj.id)"
+                    >
+                      <i class="pi pi-trash text-xs" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                }
+
+                @if (pnjs().length === 0) {
+                  <div class="border border-dashed border-[#424b57] bg-[#0f172a]/32 p-3 text-sm text-slate-400">
+                    Aucun PNJ ajouté.
+                  </div>
+                }
+              </div>
+            </section>
           </div>
 
           <aside class="grid gap-4 xl:sticky xl:top-4">
@@ -156,6 +379,15 @@
                 <p-tag value="Scénario" severity="contrast" />
                 @if (pj().length > 0) {
                   <p-tag [value]="pj().length + ' PJ'" severity="info" />
+                }
+                @if (creatures().length > 0) {
+                  <p-tag [value]="creatures().length + ' créature' + (creatures().length > 1 ? 's' : '')" severity="warn" />
+                }
+                @if (demons().length > 0) {
+                  <p-tag [value]="demons().length + ' démon' + (demons().length > 1 ? 's' : '')" severity="danger" />
+                }
+                @if (pnjs().length > 0) {
+                  <p-tag [value]="pnjs().length + ' PNJ'" severity="secondary" />
                 }
               </div>
               <div>
