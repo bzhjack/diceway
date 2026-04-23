@@ -116,6 +116,11 @@ export const DwPreset = definePreset(Aura, {
           border-color: #3f3f46;
         }
 
+        .dw-card--metric {
+          display: block;
+          height: 100%;
+        }
+
         .dw-card--metric .p-card {
           height: 100%;
           background: rgba(45, 55, 72, 0.92);
