@@ -3,7 +3,7 @@
 >
   <div class="mx-auto flex max-w-7xl flex-col gap-4">
     <p-card>
-      <form class="grid gap-6" [formGroup]="scenarioForm" (ngSubmit)="saveDraft()">
+      <form class="grid gap-6" [formGroup]="scenarioForm" (ngSubmit)="save()">
         <div class="grid gap-4 md:flex md:items-start md:justify-between">
           <div class="space-y-3">
             <div class="flex items-center gap-3">
@@ -17,7 +17,7 @@
                   Préparation MJ
                 </p>
                 <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none">
-                  Nouveau scénario
+                  {{ pageTitle() }}
                 </h1>
               </div>
             </div>
@@ -35,7 +35,13 @@
               type="button"
               (onClick)="resetAll()"
             />
-            <p-button label="Enregistrer le brouillon" icon="pi pi-save" severity="warn" type="submit" />
+            <p-button
+              [label]="scenarioId() ? 'Enregistrer' : 'Créer le scénario'"
+              icon="pi pi-save"
+              severity="warn"
+              type="submit"
+              [disabled]="pending()"
+            />
             <p-button
               label="Retour"
               icon="pi pi-arrow-left"
@@ -85,8 +91,18 @@
 
               <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]" [formGroup]="pjForm">
                 <p-iftalabel>
-                  <input pInputText id="pj-name" formControlName="name" class="w-full" />
-                  <label for="pj-name">Nom du personnage</label>
+                  <p-select
+                    inputId="pj-hero"
+                    class="w-full"
+                    [options]="heroOptions()"
+                    optionLabel="label"
+                    optionValue="value"
+                    formControlName="heroId"
+                    [filter]="true"
+                    filterPlaceholder="Rechercher..."
+                    emptyMessage="Aucun héros disponible"
+                  />
+                  <label for="pj-hero">Choisir un héros</label>
                 </p-iftalabel>
 
                 <p-button
@@ -139,7 +155,9 @@
               </div>
               <div>
                 <span class="block text-[0.82rem] text-slate-400">Dernier enregistrement</span>
-                <strong class="text-sm text-slate-50">{{ formatSavedAt(lastSavedAt()) }}</strong>
+                <strong class="text-sm text-slate-50">
+                @if (scenarioId()) { Modification } @else { Nouveau }
+              </strong>
               </div>
             </section>
 

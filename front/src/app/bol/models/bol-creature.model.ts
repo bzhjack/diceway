@@ -1,5 +1,3 @@
-import {BolQuestProtagonistModel} from "./bol-quest.model";
-
 export interface BolCreatureModel {
   id: string | null;
   user_id: string | null;
@@ -23,7 +21,6 @@ export interface BolCreatureModel {
     id: number;
   }[];
   taille: BolCreatureTailleModel;
-  currentQuest?: BolQuestProtagonistModel;
   type?: 'P' | 'C' | 'R'
 }
 

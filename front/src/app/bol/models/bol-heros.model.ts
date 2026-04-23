@@ -4,8 +4,6 @@ import {BolHerosArmeModel} from "./bol-arme.model";
 import {BolHerosTraitsModel} from "./bol-trait.model";
 import {BolHerosLangueModel} from "./bol-langue.model";
 import {BolRegionModel} from "./bol-region.model";
-import {BolQuestProtagonistModel} from "./bol-quest.model";
-
 export interface BolHerosModel {
   id: string | null;
   user_id: string | null;
@@ -21,7 +19,6 @@ export interface BolHerosModel {
   langues?: BolHerosLangueModel[] | number[];
   armures: BolHerosArmureModel[] | number[];
   armes: BolHerosArmeModel[] | number[];
-  currentQuest?: BolQuestProtagonistModel;
 }
 
 export interface BolHerosCombat {

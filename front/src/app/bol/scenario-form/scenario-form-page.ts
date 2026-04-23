@@ -1,23 +1,22 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {toSignal} from '@angular/core/rxjs-interop';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
-import {RouterLink} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
+import {switchMap, filter} from 'rxjs/operators';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {IftaLabelModule} from 'primeng/iftalabel';
 import {InputTextModule} from 'primeng/inputtext';
+import {SelectModule} from 'primeng/select';
 import {TagModule} from 'primeng/tag';
 import {TextareaModule} from 'primeng/textarea';
+import {BolHerosService} from '../services/bol-heros.service';
+import {BolScenarioService} from '../services/bol-scenario.service';
 
 interface ScenarioPjDraft {
   readonly id: string;
+  readonly heroId: string;
   readonly name: string;
-}
-
-interface StoredScenarioDraft {
-  readonly title: string;
-  readonly pitch: string;
-  readonly pj: readonly ScenarioPjDraft[];
-  readonly savedAt: string;
 }
 
 @Component({
@@ -29,6 +28,7 @@ interface StoredScenarioDraft {
     CardModule,
     IftaLabelModule,
     InputTextModule,
+    SelectModule,
     TagModule,
     TextareaModule,
   ],
@@ -38,21 +38,37 @@ interface StoredScenarioDraft {
 })
 export class ScenarioFormPageComponent {
   private readonly formBuilder = inject(FormBuilder);
-  private readonly storageKey = 'diceway-scenario-drafts';
+  private readonly bolHerosService = inject(BolHerosService);
+  private readonly scenarioService = inject(BolScenarioService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
+  private readonly heroes = toSignal(this.bolHerosService.heroes(), {initialValue: []});
+
+  protected readonly scenarioId = signal<string | null>(null);
+  protected readonly pending = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly successMessage = signal<string | null>(null);
-  protected readonly savedDraftCount = signal(this.readStoredDraftCount());
-  protected readonly lastSavedAt = signal<string | null>(null);
   protected readonly pj = signal<ScenarioPjDraft[]>([]);
+
+  protected readonly heroOptions = computed(() =>
+    this.heroes().map((h) => ({
+      label: h.origines.nom ?? '(sans nom)',
+      value: h.id as string,
+    })),
+  );
 
   protected readonly scenarioForm = this.formBuilder.nonNullable.group({
     title: ['', [Validators.required, Validators.maxLength(120)]],
     pitch: ['', [Validators.required, Validators.maxLength(240)]],
   });
-  protected readonly pjForm = this.formBuilder.nonNullable.group({
-    name: ['', [Validators.required, Validators.maxLength(80)]],
+  protected readonly pjForm = this.formBuilder.group({
+    heroId: [null as string | null, [Validators.required]],
   });
+
+  protected readonly pageTitle = computed(() =>
+    this.scenarioId() ? 'Modifier le scénario' : 'Nouveau scénario',
+  );
 
   protected readonly scenarioSummary = computed(() => {
     const form = this.scenarioForm.getRawValue();
@@ -61,6 +77,26 @@ export class ScenarioFormPageComponent {
       pitch: form.pitch.trim() || 'Ajoute une accroche pour poser la promesse de jeu.',
     };
   });
+
+  constructor() {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.scenarioId.set(id);
+      this.scenarioService.scenario(id).subscribe((scenario) => {
+        this.scenarioForm.setValue({
+          title: scenario.titre,
+          pitch: scenario.pitch ?? '',
+        });
+        this.pj.set(
+          (scenario.pj ?? []).map((p) => ({
+            id: this.createDraftId('pj'),
+            heroId: p.heros_id,
+            name: p.heros?.origines.nom ?? '?',
+          })),
+        );
+      });
+    }
+  }
 
   protected addPj(): void {
     this.successMessage.set(null);
@@ -71,71 +107,69 @@ export class ScenarioFormPageComponent {
       return;
     }
 
-    const value = this.pjForm.getRawValue();
+    const heroId = this.pjForm.getRawValue().heroId!;
+    const hero = this.heroes().find((h) => h.id === heroId);
+    if (!hero) {
+      return;
+    }
+
+    if (this.pj().some((p) => p.heroId === heroId)) {
+      this.errorMessage.set('Ce personnage est déjà dans la liste.');
+      return;
+    }
+
     this.pj.update((entries) => [
       ...entries,
-      {id: this.createDraftId('pj'), name: value.name.trim()},
+      {id: this.createDraftId('pj'), heroId, name: hero.origines.nom ?? '(sans nom)'},
     ]);
-    this.pjForm.reset({name: ''});
+    this.pjForm.reset({heroId: null});
   }
 
   protected removePj(pjId: string): void {
     this.pj.update((entries) => entries.filter((entry) => entry.id !== pjId));
   }
 
-  protected saveDraft(): void {
+  protected save(): void {
     this.successMessage.set(null);
     this.errorMessage.set(null);
 
     if (this.scenarioForm.invalid) {
       this.scenarioForm.markAllAsTouched();
-      this.errorMessage.set('Le titre et l\'accroche sont requis.');
+      this.errorMessage.set("Le titre et l'accroche sont requis.");
       return;
     }
 
-    const savedAt = new Date().toISOString();
-    const draft: StoredScenarioDraft = {
-      ...this.scenarioForm.getRawValue(),
-      pj: this.pj(),
-      savedAt,
+    this.pending.set(true);
+    const form = this.scenarioForm.getRawValue();
+    const payload = {
+      id: this.scenarioId(),
+      titre: form.title,
+      pitch: form.pitch,
+      pj: this.pj().map((p) => ({heroId: p.heroId})),
     };
-    const drafts = this.readStoredDrafts();
-    localStorage.setItem(this.storageKey, JSON.stringify([draft, ...drafts].slice(0, 12)));
-    this.savedDraftCount.set(this.readStoredDraftCount());
-    this.lastSavedAt.set(savedAt);
-    this.successMessage.set('Brouillon enregistré localement. Tu pourras ensuite ouvrir une session depuis ce scénario.');
+
+    const request$ = this.scenarioId()
+      ? this.scenarioService.update(payload)
+      : this.scenarioService.create(payload);
+
+    request$.subscribe({
+      next: () => {
+        this.pending.set(false);
+        this.router.navigate(['/library/scenarios']);
+      },
+      error: () => {
+        this.pending.set(false);
+        this.errorMessage.set('Une erreur est survenue. Réessaie.');
+      },
+    });
   }
 
   protected resetAll(): void {
     this.scenarioForm.reset({title: '', pitch: ''});
-    this.pjForm.reset({name: ''});
+    this.pjForm.reset({heroId: null});
     this.pj.set([]);
     this.errorMessage.set(null);
     this.successMessage.set(null);
-  }
-
-  protected formatSavedAt(value: string | null): string {
-    if (!value) {
-      return 'Pas encore enregistré';
-    }
-    return new Date(value).toLocaleString('fr-FR', {dateStyle: 'short', timeStyle: 'short'});
-  }
-
-  private readStoredDrafts(): StoredScenarioDraft[] {
-    const rawValue = localStorage.getItem(this.storageKey);
-    if (!rawValue) {
-      return [];
-    }
-    try {
-      const parsed = JSON.parse(rawValue) as StoredScenarioDraft[];
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
-  }
-
-  private readStoredDraftCount(): number {
-    return this.readStoredDrafts().length;
   }
 
   private createDraftId(prefix: string): string {

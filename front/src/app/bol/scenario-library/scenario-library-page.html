@@ -1,0 +1,134 @@
+<section
+  class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(251,191,36,0.14),_transparent_24%),radial-gradient(circle_at_top_right,_rgba(56,189,248,0.12),_transparent_22%),linear-gradient(180deg,_#000000,_#0f172a_45%,_#000000)] px-4 py-6 md:px-6 xl:px-8"
+>
+  <p-confirmdialog />
+
+  <div class="mx-auto flex max-w-7xl flex-col gap-4">
+    <p-card class="dw-card--header">
+      <div class="flex flex-col gap-4">
+        <div class="space-y-2.5">
+          <div class="space-y-1.5">
+            <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-amber-300">
+              Bibliothèque BOL
+            </p>
+            <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
+              Scénarios
+            </h1>
+          </div>
+
+          <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
+            Scénarios préparés pour la table. Chaque scénario regroupe une accroche et les
+            personnages joueurs associés.
+          </p>
+
+          <div class="flex flex-wrap gap-1.5">
+            <p-tag [value]="filteredScenarios().length + ' scénario(s)'" severity="contrast" />
+          </div>
+        </div>
+
+        <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
+          <span class="library-header-actions__primary">
+            <p-button
+              label="Nouveau scénario"
+              icon="pi pi-plus"
+              severity="warn"
+              size="small"
+              [routerLink]="'/create/scenario'"
+            />
+          </span>
+          <p-button
+            label="Retour au dashboard"
+            icon="pi pi-arrow-left"
+            size="small"
+            [routerLink]="'/'"
+            severity="secondary"
+            [outlined]="true"
+          />
+        </div>
+      </div>
+    </p-card>
+
+    <p-card>
+      <div class="flex flex-col gap-4">
+        <p-iconfield>
+          <p-inputicon styleClass="pi pi-search" />
+          <input
+            type="text"
+            pInputText
+            placeholder="Rechercher par titre ou accroche…"
+            class="w-full"
+            [value]="searchTerm()"
+            (input)="searchTerm.set($any($event.target).value)"
+          />
+        </p-iconfield>
+
+        @if (filteredScenarios().length === 0) {
+          <div
+            class="flex flex-col items-center gap-3 border border-dashed border-[#424b57] bg-[#0f172a]/32 py-12 text-center"
+          >
+            <i class="pi pi-compass text-3xl text-slate-500" aria-hidden="true"></i>
+            <p class="m-0 text-sm text-slate-400">
+              @if (searchTerm()) {
+                Aucun scénario ne correspond à « {{ searchTerm() }} ».
+              } @else {
+                Aucun scénario créé. Commence par en préparer un.
+              }
+            </p>
+          </div>
+        }
+
+        <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          @for (scenario of filteredScenarios(); track scenario.id) {
+            <div
+              class="grid grid-rows-[1fr_auto] gap-3 border border-[#424b57] bg-[#0f172a]/72 p-4"
+            >
+              <div class="grid gap-2">
+                <div class="flex items-start justify-between gap-2">
+                  <h2 class="m-0 text-base font-semibold leading-snug text-slate-50">
+                    {{ scenario.titre }}
+                  </h2>
+                  <p-tag value="Scénario" severity="contrast" />
+                </div>
+
+                @if (scenario.pitch) {
+                  <p class="m-0 line-clamp-3 text-sm leading-relaxed text-slate-400">
+                    {{ scenario.pitch }}
+                  </p>
+                }
+
+                @if (pjNames(scenario).length > 0) {
+                  <div class="flex flex-wrap gap-1 pt-1">
+                    @for (name of pjNames(scenario); track name) {
+                      <span
+                        class="border border-[#334155] bg-[#1e293b] px-2 py-0.5 text-xs text-slate-300"
+                      >
+                        {{ name }}
+                      </span>
+                    }
+                  </div>
+                }
+              </div>
+
+              <div class="flex justify-end gap-2 border-t border-[#424b57] pt-3">
+                <p-button
+                  icon="pi pi-pencil"
+                  severity="secondary"
+                  [outlined]="true"
+                  size="small"
+                  [routerLink]="'/create/scenario/' + scenario.id"
+                />
+                <p-button
+                  icon="pi pi-trash"
+                  severity="danger"
+                  [outlined]="true"
+                  size="small"
+                  (onClick)="confirmDelete(scenario)"
+                />
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </p-card>
+  </div>
+</section>
