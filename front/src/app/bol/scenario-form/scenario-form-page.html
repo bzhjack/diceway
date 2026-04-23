@@ -22,7 +22,7 @@
               </div>
             </div>
             <p class="m-0 max-w-3xl text-sm leading-7 text-slate-300">
-              Pose ici l'accroche, les lieux clés et les scènes. Le reste s'improvise à la table.
+              Pose ici le titre, l'accroche et les personnages joueurs. Le reste s'improvise à la table.
             </p>
           </div>
 
@@ -53,7 +53,7 @@
                 <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
                   Identité
                 </p>
-                <h2 class="m-0">Promesse de jeu</h2>
+                <h2 class="m-0">Accroche</h2>
               </div>
 
               <div class="grid gap-3">
@@ -67,41 +67,10 @@
                     pTextarea
                     id="scenario-pitch"
                     formControlName="pitch"
-                    rows="3"
+                    rows="4"
                     class="w-full resize-none"
                   ></textarea>
                   <label for="scenario-pitch">Accroche MJ * — en 2-3 lignes, la promesse de jeu</label>
-                </p-iftalabel>
-
-                <div class="grid gap-3 sm:grid-cols-2">
-                  <p-iftalabel>
-                    <p-select
-                      inputId="scenario-tone"
-                      class="w-full"
-                      [options]="toneOptions"
-                      optionLabel="label"
-                      optionValue="value"
-                      formControlName="tone"
-                    />
-                    <label for="scenario-tone">Tonalité</label>
-                  </p-iftalabel>
-
-                  <p-iftalabel>
-                    <p-select
-                      inputId="scenario-scope"
-                      class="w-full"
-                      [options]="scopeOptions"
-                      optionLabel="label"
-                      optionValue="value"
-                      formControlName="scope"
-                    />
-                    <label for="scenario-scope">Format</label>
-                  </p-iftalabel>
-                </div>
-
-                <p-iftalabel>
-                  <input pInputText id="scenario-location" formControlName="startingLocation" class="w-full" />
-                  <label for="scenario-location">Lieu de départ *</label>
                 </p-iftalabel>
               </div>
             </section>
@@ -109,23 +78,15 @@
             <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
               <div>
                 <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
-                  Lieux
+                  Table
                 </p>
-                <h2 class="m-0">Lieux clés</h2>
+                <h2 class="m-0">Personnages joueurs</h2>
               </div>
 
-              <div
-                class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]"
-                [formGroup]="locationForm"
-              >
+              <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]" [formGroup]="pjForm">
                 <p-iftalabel>
-                  <input pInputText id="location-name" formControlName="name" class="w-full" />
-                  <label for="location-name">Nom *</label>
-                </p-iftalabel>
-
-                <p-iftalabel>
-                  <input pInputText id="location-purpose" formControlName="purpose" class="w-full" />
-                  <label for="location-purpose">Rôle dramatique *</label>
+                  <input pInputText id="pj-name" formControlName="name" class="w-full" />
+                  <label for="pj-name">Nom du personnage</label>
                 </p-iftalabel>
 
                 <p-button
@@ -134,90 +95,29 @@
                   severity="secondary"
                   type="button"
                   [outlined]="true"
-                  (onClick)="addLocation()"
+                  (onClick)="addPj()"
                 />
               </div>
 
               <div class="grid gap-2">
-                @for (location of locations(); track location.id) {
+                @for (personnage of pj(); track personnage.id) {
                   <div
                     class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border border-[#424b57] bg-[#020617]/58 px-3 py-2"
                   >
-                    <div>
-                      <p class="m-0 text-sm font-semibold text-slate-100">{{ location.name }}</p>
-                      <p class="m-0 text-xs text-slate-400">{{ location.purpose }}</p>
-                    </div>
+                    <p class="m-0 text-sm font-semibold text-slate-100">{{ personnage.name }}</p>
                     <button
                       type="button"
                       class="inline-grid h-8 w-8 cursor-pointer place-items-center border border-[#5b2a2a] bg-red-950/18 text-red-200"
-                      (click)="removeLocation(location.id)"
+                      (click)="removePj(personnage.id)"
                     >
                       <i class="pi pi-trash text-xs" aria-hidden="true"></i>
                     </button>
                   </div>
                 }
 
-                @if (locations().length === 0) {
+                @if (pj().length === 0) {
                   <div class="border border-dashed border-[#424b57] bg-[#0f172a]/32 p-3 text-sm text-slate-400">
-                    Aucun lieu clé ajouté.
-                  </div>
-                }
-              </div>
-            </section>
-
-            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
-              <div>
-                <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
-                  Scènes
-                </p>
-                <h2 class="m-0">Progression préparée</h2>
-              </div>
-
-              <div
-                class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]"
-                [formGroup]="sceneForm"
-              >
-                <p-iftalabel>
-                  <input pInputText id="scene-title" formControlName="title" class="w-full" />
-                  <label for="scene-title">Titre de scène *</label>
-                </p-iftalabel>
-
-                <p-iftalabel>
-                  <input pInputText id="scene-objective" formControlName="objective" class="w-full" />
-                  <label for="scene-objective">Objectif dramatique *</label>
-                </p-iftalabel>
-
-                <p-button
-                  label="Ajouter"
-                  icon="pi pi-plus"
-                  severity="contrast"
-                  type="button"
-                  (onClick)="addScene()"
-                />
-              </div>
-
-              <div class="grid gap-2">
-                @for (scene of scenes(); track scene.id) {
-                  <div
-                    class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border border-[#424b57] bg-[#020617]/58 px-3 py-2"
-                  >
-                    <div>
-                      <p class="m-0 text-sm font-semibold text-slate-100">{{ scene.title }}</p>
-                      <p class="m-0 text-xs text-slate-300">{{ scene.objective }}</p>
-                    </div>
-                    <button
-                      type="button"
-                      class="inline-grid h-8 w-8 cursor-pointer place-items-center border border-[#5b2a2a] bg-red-950/18 text-red-200"
-                      (click)="removeScene(scene.id)"
-                    >
-                      <i class="pi pi-trash text-xs" aria-hidden="true"></i>
-                    </button>
-                  </div>
-                }
-
-                @if (scenes().length === 0) {
-                  <div class="border border-dashed border-[#424b57] bg-[#0f172a]/32 p-3 text-sm text-slate-400">
-                    Ajoute les premières scènes pour structurer la session.
+                    Aucun personnage joueur ajouté.
                   </div>
                 }
               </div>
@@ -227,47 +127,19 @@
           <aside class="grid gap-4 xl:sticky xl:top-4">
             <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
               <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
-                État
-              </p>
-              <h2 class="m-0">{{ readinessLabel() }}</h2>
-              <div class="flex flex-wrap gap-2">
-                <p-tag value="Scénario" severity="contrast" />
-                <p-tag [value]="scenarioSummary().tone" severity="warn" />
-                <p-tag [value]="scenarioSummary().scope" severity="info" />
-              </div>
-            </section>
-
-            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
-              <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
                 Résumé MJ
               </p>
               <h2 class="m-0">{{ scenarioSummary().title }}</h2>
               <p class="m-0 text-sm text-slate-300">{{ scenarioSummary().pitch }}</p>
-              <div class="grid gap-[0.55rem]">
-                <div>
-                  <span class="block text-[0.82rem] text-slate-400">Départ</span>
-                  <strong class="text-sm text-slate-50">{{ scenarioSummary().location }}</strong>
-                </div>
-                <div>
-                  <span class="block text-[0.82rem] text-slate-400">Dernier enregistrement</span>
-                  <strong class="text-sm text-slate-50">{{ formatSavedAt(lastSavedAt()) }}</strong>
-                </div>
-              </div>
-            </section>
-
-            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
-              <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
-                Préparation
-              </p>
-              <div class="grid gap-[0.55rem]">
-                @for (stat of scenarioStats(); track stat.label) {
-                  <div
-                    class="flex items-center justify-between border border-[#424b57] bg-[#020617]/52 px-3 py-2"
-                  >
-                    <span class="text-[0.82rem] text-slate-400">{{ stat.label }}</span>
-                    <strong class="text-sm text-slate-50">{{ stat.value }}</strong>
-                  </div>
+              <div class="flex flex-wrap gap-2 pt-1">
+                <p-tag value="Scénario" severity="contrast" />
+                @if (pj().length > 0) {
+                  <p-tag [value]="pj().length + ' PJ'" severity="info" />
                 }
+              </div>
+              <div>
+                <span class="block text-[0.82rem] text-slate-400">Dernier enregistrement</span>
+                <strong class="text-sm text-slate-50">{{ formatSavedAt(lastSavedAt()) }}</strong>
               </div>
             </section>
 
