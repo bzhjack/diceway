@@ -1,10 +1,11 @@
 // Layout commun aux pages BOL
 // ─────────────────────────────────────────────
 
-// Wrapper de page (sans le gradient — celui-ci varie par page)
+// Wrapper de page — gradient de structure commun, couleurs via custom properties
 .dw-page {
   min-height: 100dvh;
   padding: 1.5rem 1rem;
+  background: linear-gradient(180deg, #000000, #0f172a 45%, #000000);
 
   @media (min-width: 768px) {
     padding-left: 1.5rem;
