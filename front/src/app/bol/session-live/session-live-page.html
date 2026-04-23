@@ -1,288 +1,79 @@
-<section class="workspace-page" aria-labelledby="workspace-title">
-  <header class="workspace-header">
-    <div class="workspace-title-block">
-      <p class="workspace-kicker">Table de session BoL</p>
-      <h1 id="workspace-title">Cockpit MJ · Le banquet des ombres</h1>
-      <p class="workspace-subtitle">
-        Vue unique pour mener la scène, suivre les protagonistes et basculer en combat sans
-        changer d écran. Connecté en tant que {{ userName() }}.
-      </p>
-    </div>
+<div class="dw-page">
+  <div class="mx-auto flex max-w-7xl flex-col gap-4">
 
-    <div class="workspace-header-actions">
-      <button class="button-secondary workspace-logout" type="button" (click)="logout()">
-        <i class="pi pi-sign-out" aria-hidden="true"></i>
-        <span>Déconnexion</span>
-      </button>
-    </div>
-  </header>
-
-  <section class="workspace-facts" aria-label="Contexte de session">
-    @for (fact of sessionFacts; track fact.label) {
-      <article class="fact-card" [attr.data-tone]="fact.tone">
-        <div class="fact-card__icon" aria-hidden="true">
-          <i [class]="fact.icon"></i>
-        </div>
-        <div class="fact-card__body">
-          <p class="fact-card__label">{{ fact.label }}</p>
-          <h2 class="fact-card__value">{{ fact.value }}</h2>
-          <p class="fact-card__detail">{{ fact.detail }}</p>
-        </div>
-      </article>
-    }
-  </section>
-
-  <nav class="workspace-quick-actions" aria-label="Actions rapides">
-    @for (action of quickActions; track action.label) {
-      <button class="quick-action" type="button" [attr.data-emphasis]="action.emphasis">
-        <i [class]="action.icon" aria-hidden="true"></i>
-        <span>{{ action.label }}</span>
-      </button>
-    }
-  </nav>
-
-  <main class="workspace-board" aria-label="Table de session du maître de jeu">
-    <aside class="workspace-panel workspace-panel--protagonists" aria-labelledby="protagonists-title">
-      <div class="panel-heading">
-        <div>
-          <p class="panel-kicker">Protagonistes</p>
-          <h2 id="protagonists-title">Présence en scène</h2>
-        </div>
-        <span class="panel-badge">{{ protagonists.length }} actifs</span>
-      </div>
-
-      <section class="panel-group" aria-labelledby="players-title">
-        <div class="panel-group__title-row">
-          <h3 id="players-title">Héros présents</h3>
-          <span>{{ playerCharacters.length }}</span>
-        </div>
-
-        <div class="character-list">
-          @for (protagonist of playerCharacters; track protagonist.id) {
-            <article class="character-card" [attr.data-kind]="protagonist.kind">
-              <div class="character-card__header">
-                <div>
-                  <h4>{{ protagonist.name }}</h4>
-                  <p>{{ protagonist.title }}</p>
-                </div>
-                <span class="kind-pill">{{ protagonist.kind === 'PJ' ? 'Héros' : protagonist.kind }}</span>
-              </div>
-
-              <div class="vitality-block">
-                <div class="vitality-block__meta">
-                  <span>Vitalité</span>
-                  <strong>{{ protagonist.vitality }}</strong>
-                </div>
-                <div class="vitality-bar" aria-hidden="true">
-                  <span [style.width.%]="protagonist.vitalityPercent"></span>
-                </div>
-              </div>
-
-              <p class="character-card__intent">{{ protagonist.intent }}</p>
-              <p class="character-card__beat">{{ protagonist.lastBeat }}</p>
-
-              <div class="status-list" aria-label="États">
-                @for (state of protagonist.states; track state.label) {
-                  <span class="status-tag" [attr.data-tone]="state.tone">{{ state.label }}</span>
-                }
-              </div>
-
-              <div class="character-card__actions">
-                <button type="button">Fiche</button>
-                <button type="button">Jet</button>
-                <button type="button">Effet</button>
-              </div>
-            </article>
-          }
-        </div>
-      </section>
-
-      <section class="panel-group" aria-labelledby="npcs-title">
-        <div class="panel-group__title-row">
-          <h3 id="npcs-title">PNJ impliqués</h3>
-          <span>{{ nonPlayerCharacters.length }}</span>
-        </div>
-
-        <div class="character-list">
-          @for (protagonist of nonPlayerCharacters; track protagonist.id) {
-            <article class="character-card" [attr.data-kind]="protagonist.kind">
-              <div class="character-card__header">
-                <div>
-                  <h4>{{ protagonist.name }}</h4>
-                  <p>{{ protagonist.title }}</p>
-                </div>
-                <span class="kind-pill">{{ protagonist.kind === 'PJ' ? 'Héros' : protagonist.kind }}</span>
-              </div>
-
-              <div class="vitality-block">
-                <div class="vitality-block__meta">
-                  <span>Vitalité</span>
-                  <strong>{{ protagonist.vitality }}</strong>
-                </div>
-                <div class="vitality-bar" aria-hidden="true">
-                  <span [style.width.%]="protagonist.vitalityPercent"></span>
-                </div>
-              </div>
-
-              <p class="character-card__intent">{{ protagonist.intent }}</p>
-              <p class="character-card__beat">{{ protagonist.lastBeat }}</p>
-
-              <div class="status-list" aria-label="États">
-                @for (state of protagonist.states; track state.label) {
-                  <span class="status-tag" [attr.data-tone]="state.tone">{{ state.label }}</span>
-                }
-              </div>
-
-              <div class="character-card__actions">
-                <button type="button">Fiche</button>
-                <button type="button">Réplique</button>
-                <button type="button">Hostilité</button>
-              </div>
-            </article>
-          }
-        </div>
-      </section>
-    </aside>
-
-    <section class="workspace-panel workspace-panel--scene" aria-labelledby="scene-title">
-      <div class="panel-heading">
-        <div>
-          <p class="panel-kicker">Scène active</p>
-          <h2 id="scene-title">Négociation sous tension</h2>
-        </div>
-        <span class="panel-badge panel-badge--danger">Risque de combat élevé</span>
-      </div>
-
-      <section class="focus-strip" aria-label="Niveaux de focus">
-        @for (level of focusLevels; track level.name) {
-          <article class="focus-chip" [attr.data-current]="level.current">
-            <p>{{ level.name }}</p>
-            <span>{{ level.summary }}</span>
-          </article>
-        }
-      </section>
-
-      <section class="scene-overview" aria-label="Résumé de scène">
-        @for (card of sceneCards; track card.label) {
-          <article class="scene-card">
-            <p class="scene-card__label">{{ card.label }}</p>
-            <h3>{{ card.value }}</h3>
-            <p>{{ card.detail }}</p>
-          </article>
-        }
-      </section>
-
-      <nav class="scene-actions" aria-label="Actions de scène">
-        @for (action of sceneActions; track action.label) {
-          <button class="quick-action quick-action--compact" type="button" [attr.data-emphasis]="action.emphasis">
-            <i [class]="action.icon" aria-hidden="true"></i>
-            <span>{{ action.label }}</span>
-          </button>
-        }
-      </nav>
-
-      <section class="timeline-section" aria-labelledby="timeline-title">
-        <div class="panel-group__title-row">
-          <h3 id="timeline-title">Timeline narrative</h3>
-          <span>Chronologie vive</span>
-        </div>
-
-        <div class="timeline-list">
-          @for (entry of timeline; track entry.id) {
-            <article class="timeline-entry" [attr.data-tone]="entry.tone">
-              <div class="timeline-entry__marker" aria-hidden="true"></div>
-              <div class="timeline-entry__content">
-                <div class="timeline-entry__meta">
-                  <h4>{{ entry.title }}</h4>
-                  <span>{{ entry.time }}</span>
-                </div>
-                <p>{{ entry.detail }}</p>
-              </div>
-            </article>
-          }
-        </div>
-      </section>
-    </section>
-
-    <aside class="workspace-panel workspace-panel--tools" aria-labelledby="tools-title">
-      <div class="panel-heading">
-        <div>
-          <p class="panel-kicker">Outils</p>
-          <h2 id="tools-title">Contexte et combat</h2>
-        </div>
-        <span class="panel-badge panel-badge--accent">Mode assistant</span>
-      </div>
-
-      <section class="tool-list" aria-label="Modules contextuels">
-        @for (tool of toolModules; track tool.id) {
-          <article class="tool-card" [attr.data-mode]="tool.mode">
-            <div class="tool-card__header">
-              <div class="tool-card__icon" aria-hidden="true">
-                <i [class]="tool.icon"></i>
-              </div>
-              <div>
-                <h3>{{ tool.name }}</h3>
-                <p>{{ tool.detail }}</p>
-              </div>
+    @if (scenario(); as s) {
+      <p-card class="dw-card--header">
+        <div class="flex flex-col gap-4">
+          <div class="space-y-2.5">
+            <div class="space-y-1.5">
+              <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-amber-300">
+                Session en cours
+              </p>
+              <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
+                {{ s.titre }}
+              </h1>
             </div>
-          </article>
-        }
-      </section>
 
-      <app-bol-dice-panel />
+            @if (s.pitch) {
+              <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
+                {{ s.pitch }}
+              </p>
+            }
 
-      <section class="combat-card" aria-labelledby="combat-title">
-        <div class="panel-group__title-row">
-          <h3 id="combat-title">Mode combat</h3>
-          <span>{{ combatSummary.round }}</span>
+            <div class="flex flex-wrap gap-1.5">
+              @if ((s.pj?.length ?? 0) > 0) {
+                <p-tag [value]="(s.pj?.length ?? 0) + ' PJ'" severity="info" />
+              }
+              @if ((s.creatures?.length ?? 0) > 0) {
+                <p-tag [value]="(s.creatures?.length ?? 0) + ' créature' + ((s.creatures?.length ?? 0) > 1 ? 's' : '')" severity="warn" />
+              }
+              @if ((s.demons?.length ?? 0) > 0) {
+                <p-tag [value]="(s.demons?.length ?? 0) + ' démon' + ((s.demons?.length ?? 0) > 1 ? 's' : '')" severity="danger" />
+              }
+              @if ((s.pnjs?.length ?? 0) > 0) {
+                <p-tag [value]="(s.pnjs?.length ?? 0) + ' PNJ'" severity="secondary" />
+              }
+            </div>
+          </div>
+
+          <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
+            <span class="library-header-actions__primary">
+              <p-button
+                label="Lancer un combat"
+                icon="pi pi-bolt"
+                severity="warn"
+                size="small"
+                (onClick)="combatMode.set(true)"
+              />
+            </span>
+            <p-button
+              label="Retour aux scénarios"
+              icon="pi pi-arrow-left"
+              size="small"
+              [routerLink]="'/library/scenarios'"
+              severity="secondary"
+              [outlined]="true"
+            />
+          </div>
         </div>
+      </p-card>
 
-        <p class="combat-card__lead">
-          {{ combatSummary.currentTurn }} · Le système prépare initiative, vitalité et suggestion
-          de résolution automatique.
-        </p>
-
-        <div class="combat-list">
-          @for (combatant of combatants; track combatant.id) {
-            <article class="combatant-row" [attr.data-allegiance]="combatant.allegiance">
-              <div class="combatant-row__header">
-                <div>
-                  <h4>{{ combatant.name }}</h4>
-                  <p>{{ combatant.role === 'PJ' ? 'Héros' : combatant.role }} · INIT {{ combatant.initiative }}</p>
-                </div>
-                <strong>{{ combatant.vitality }}</strong>
-              </div>
-
-              <div class="vitality-bar vitality-bar--compact" aria-hidden="true">
-                <span [style.width.%]="combatant.vitalityPercent"></span>
-              </div>
-
-              <p class="combatant-row__action">{{ combatant.nextAction }}</p>
-
-              <div class="status-list" aria-label="États de combat">
-                @for (state of combatant.states; track state.label) {
-                  <span class="status-tag" [attr.data-tone]="state.tone">{{ state.label }}</span>
-                }
-              </div>
-            </article>
-          }
+    } @else {
+      <p-card>
+        <div class="flex flex-col items-center gap-3 py-12 text-center text-slate-400">
+          <i class="pi pi-compass text-3xl text-slate-500" aria-hidden="true"></i>
+          <p class="m-0 text-sm">Aucun scénario sélectionné.</p>
+          <p-button
+            label="Choisir un scénario"
+            icon="pi pi-list"
+            severity="secondary"
+            [outlined]="true"
+            size="small"
+            [routerLink]="'/library/scenarios'"
+          />
         </div>
+      </p-card>
+    }
 
-        <div class="combat-actions" aria-label="Actions de combat">
-          <button type="button">Attaquer</button>
-          <button type="button">Défendre</button>
-          <button type="button">Manœuvre</button>
-          <button type="button">Héroïsme</button>
-        </div>
-      </section>
-
-      <section class="resolution-card" aria-labelledby="resolution-title">
-        <div class="panel-group__title-row">
-          <h3 id="resolution-title">Résolution suggérée</h3>
-          <span>Calcul auto</span>
-        </div>
-        <p>{{ combatSummary.resolution }}</p>
-      </section>
-    </aside>
-  </main>
-</section>
+  </div>
+</div>
