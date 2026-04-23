@@ -1,5 +1,5 @@
 <section
-  class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(251,191,36,0.14),_transparent_24%),radial-gradient(circle_at_top_right,_rgba(56,189,248,0.12),_transparent_22%),linear-gradient(180deg,_#000000,_#0f172a_45%,_#000000)] px-4 py-6 md:px-6"
+  class="dw-page bg-[radial-gradient(circle_at_top_left,_rgba(251,191,36,0.14),_transparent_24%),radial-gradient(circle_at_top_right,_rgba(56,189,248,0.12),_transparent_22%),linear-gradient(180deg,_#000000,_#0f172a_45%,_#000000)]"
 >
   <div class="mx-auto flex max-w-7xl flex-col gap-4">
     <p-card>
@@ -54,7 +54,7 @@
 
         <div class="grid items-start gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(19rem,24rem)]">
           <div class="grid gap-4">
-            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
+            <section class="dw-section">
               <div>
                 <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
                   Identité
@@ -81,7 +81,7 @@
               </div>
             </section>
 
-            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
+            <section class="dw-section">
               <div>
                 <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
                   Table
@@ -118,7 +118,7 @@
               <div class="grid gap-2">
                 @for (personnage of pj(); track personnage.id) {
                   <div
-                    class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border border-[#424b57] bg-[#020617]/58 px-3 py-2"
+                    class="dw-list-item"
                   >
                     <div>
                       <p class="m-0 text-sm font-semibold text-slate-100">{{ personnage.name }}</p>
@@ -128,7 +128,7 @@
                     </div>
                     <button
                       type="button"
-                      class="inline-grid h-8 w-8 cursor-pointer place-items-center border border-[#5b2a2a] bg-red-950/18 text-red-200"
+                      class="dw-btn-remove"
                       (click)="removePj(personnage.id)"
                     >
                       <i class="pi pi-trash text-xs" aria-hidden="true"></i>
@@ -137,14 +137,14 @@
                 }
 
                 @if (pj().length === 0) {
-                  <div class="border border-dashed border-[#424b57] bg-[#0f172a]/32 p-3 text-sm text-slate-400">
+                  <div class="dw-empty">
                     Aucun personnage joueur ajouté.
                   </div>
                 }
               </div>
             </section>
 
-            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
+            <section class="dw-section">
               <div>
                 <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
                   Antagonistes
@@ -186,7 +186,7 @@
               <div class="grid gap-2">
                 @for (creature of creatures(); track creature.id) {
                   <div
-                    class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border border-[#424b57] bg-[#020617]/58 px-3 py-2"
+                    class="dw-list-item"
                   >
                     <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5">
                       <p class="m-0 text-sm font-semibold text-slate-100">
@@ -199,7 +199,7 @@
                     </div>
                     <button
                       type="button"
-                      class="inline-grid h-8 w-8 cursor-pointer place-items-center border border-[#5b2a2a] bg-red-950/18 text-red-200"
+                      class="dw-btn-remove"
                       (click)="removeCreature(creature.id)"
                     >
                       <i class="pi pi-trash text-xs" aria-hidden="true"></i>
@@ -208,13 +208,13 @@
                 }
 
                 @if (creatures().length === 0) {
-                  <div class="border border-dashed border-[#424b57] bg-[#0f172a]/32 p-3 text-sm text-slate-400">
+                  <div class="dw-empty">
                     Aucune créature ajoutée.
                   </div>
                 }
               </div>
             </section>
-            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
+            <section class="dw-section">
               <div>
                 <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
                   Antagonistes
@@ -256,7 +256,7 @@
               <div class="grid gap-2">
                 @for (demon of demons(); track demon.id) {
                   <div
-                    class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border border-[#424b57] bg-[#020617]/58 px-3 py-2"
+                    class="dw-list-item"
                   >
                     <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5">
                       <p class="m-0 text-sm font-semibold text-slate-100">
@@ -269,7 +269,7 @@
                     </div>
                     <button
                       type="button"
-                      class="inline-grid h-8 w-8 cursor-pointer place-items-center border border-[#5b2a2a] bg-red-950/18 text-red-200"
+                      class="dw-btn-remove"
                       (click)="removeDemon(demon.id)"
                     >
                       <i class="pi pi-trash text-xs" aria-hidden="true"></i>
@@ -278,14 +278,14 @@
                 }
 
                 @if (demons().length === 0) {
-                  <div class="border border-dashed border-[#424b57] bg-[#0f172a]/32 p-3 text-sm text-slate-400">
+                  <div class="dw-empty">
                     Aucun démon ajouté.
                   </div>
                 }
               </div>
             </section>
 
-            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
+            <section class="dw-section">
               <div>
                 <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
                   Antagonistes
@@ -327,7 +327,7 @@
               <div class="grid gap-2">
                 @for (pnj of pnjs(); track pnj.id) {
                   <div
-                    class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 border border-[#424b57] bg-[#020617]/58 px-3 py-2"
+                    class="dw-list-item dw-list-item--top"
                   >
                     <div class="grid gap-1">
                       <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5">
@@ -351,7 +351,7 @@
                     </div>
                     <button
                       type="button"
-                      class="inline-grid h-8 w-8 cursor-pointer place-items-center border border-[#5b2a2a] bg-red-950/18 text-red-200"
+                      class="dw-btn-remove"
                       (click)="removePnj(pnj.id)"
                     >
                       <i class="pi pi-trash text-xs" aria-hidden="true"></i>
@@ -360,7 +360,7 @@
                 }
 
                 @if (pnjs().length === 0) {
-                  <div class="border border-dashed border-[#424b57] bg-[#0f172a]/32 p-3 text-sm text-slate-400">
+                  <div class="dw-empty">
                     Aucun PNJ ajouté.
                   </div>
                 }
@@ -369,7 +369,7 @@
           </div>
 
           <aside class="grid gap-4 xl:sticky xl:top-4">
-            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
+            <section class="dw-section">
               <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
                 Résumé MJ
               </p>

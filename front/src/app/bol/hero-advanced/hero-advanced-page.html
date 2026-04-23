@@ -1,5 +1,5 @@
 <section
-  class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(52,211,153,0.12),_transparent_26%),radial-gradient(circle_at_top_right,_rgba(56,189,248,0.12),_transparent_22%),linear-gradient(180deg,_#000000,_#0f172a_45%,_#000000)] px-4 py-6 md:px-6 xl:px-8"
+  class="dw-page bg-[radial-gradient(circle_at_top_left,_rgba(52,211,153,0.12),_transparent_26%),radial-gradient(circle_at_top_right,_rgba(56,189,248,0.12),_transparent_22%),linear-gradient(180deg,_#000000,_#0f172a_45%,_#000000)] xl:px-8"
 >
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
     <p-confirmpopup />
@@ -94,14 +94,14 @@
       </p-card>
     } @else {
       @if (loadingHero()) {
-        <div class="border border-[#424b57] bg-[#111827]/80 p-5">
+        <div class="dw-section--loading">
           <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">Chargement</p>
           <p class="mt-3 mb-0 text-sm leading-7 text-slate-200">Récupération du héros avancé.</p>
         </div>
       } @else {
         <form class="dw-creation-form grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]" [formGroup]="herosForm">
           <div class="space-y-4">
-            <div class="border border-[#424b57] bg-[#334155]/55 p-5">
+            <div class="dw-section--form">
               <div class="mb-5 space-y-2">
                 <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">Origines</p>
               </div>
@@ -112,21 +112,21 @@
             </div>
 
             <div class="grid gap-4 xl:grid-cols-3 xl:items-start">
-              <div class="border border-[#424b57] bg-[#334155]/55 p-5">
+              <div class="dw-section--form">
                 <div class="mb-5 space-y-2">
                   <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">Attributs</p>
                 </div>
                 <bol-hero-advanced-attributs formControlName="attributs" />
               </div>
 
-              <div class="border border-[#424b57] bg-[#334155]/55 p-5">
+              <div class="dw-section--form">
                 <div class="mb-5 space-y-2">
                   <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">Combat</p>
                 </div>
                 <bol-hero-advanced-combat formControlName="combat" />
               </div>
 
-              <div class="border border-[#424b57] bg-[#334155]/55 p-5">
+              <div class="dw-section--form">
                 <div class="mb-5 space-y-2">
                   <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">Ressources</p>
                 </div>
@@ -135,14 +135,14 @@
             </div>
 
             <div class="grid gap-4 xl:grid-cols-2">
-              <div class="border border-[#424b57] bg-[#334155]/55 p-5">
+              <div class="dw-section--form">
                 <div class="mb-5 space-y-2">
                   <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">Armes</p>
                 </div>
                 <bol-hero-advanced-armes formControlName="armes" />
               </div>
 
-              <div class="border border-[#424b57] bg-[#334155]/55 p-5">
+              <div class="dw-section--form">
                 <div class="mb-5 space-y-2">
                   <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">Armures</p>
                 </div>
@@ -152,14 +152,14 @@
           </div>
 
           <div class="space-y-4">
-            <div class="border border-[#424b57] bg-[#334155]/55 p-5">
+            <div class="dw-section--form">
               <div class="mb-5 space-y-2">
                 <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">Traits</p>
               </div>
               <bol-hero-advanced-traits formControlName="traits" />
             </div>
 
-            <div class="border border-[#424b57] bg-[#334155]/55 p-5">
+            <div class="dw-section--form">
               <div class="mb-5 space-y-2">
                 <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">Carrières</p>
               </div>
@@ -170,7 +170,7 @@
             </div>
 
             @if (modifiers().length) {
-              <div class="border border-[#424b57] bg-[#334155]/55 p-5">
+              <div class="dw-section--form">
                 <div class="mb-5 space-y-2">
                   <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-slate-400">
                     Modificateurs après activation
