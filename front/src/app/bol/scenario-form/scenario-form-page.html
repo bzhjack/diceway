@@ -1,0 +1,203 @@
+<section
+  class="min-h-dvh bg-[radial-gradient(circle_at_top_left,_rgba(251,191,36,0.14),_transparent_24%),radial-gradient(circle_at_top_right,_rgba(56,189,248,0.12),_transparent_22%),linear-gradient(180deg,_#000000,_#0f172a_45%,_#000000)] px-4 py-6 md:px-6"
+>
+  <div class="mx-auto flex max-w-7xl flex-col gap-4">
+    <p-card>
+      <form class="grid gap-6" [formGroup]="scenarioForm" (ngSubmit)="save()">
+        <div class="grid gap-4 md:flex md:items-start md:justify-between">
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <div
+                class="flex h-14 w-14 items-center justify-center border border-[#5b4a1e] bg-[#c2410c] text-2xl text-white"
+              >
+                <i class="pi pi-compass" aria-hidden="true"></i>
+              </div>
+              <div class="space-y-1">
+                <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-amber-300">
+                  Préparation MJ
+                </p>
+                <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none">
+                  {{ pageTitle() }}
+                </h1>
+              </div>
+            </div>
+            <p class="m-0 max-w-3xl text-sm leading-7 text-slate-300">
+              Pose ici le titre, l'accroche et les personnages joueurs. Le reste s'improvise à la table.
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-3 sm:flex-row md:justify-end">
+            <p-button
+              label="Réinitialiser"
+              icon="pi pi-refresh"
+              severity="secondary"
+              [outlined]="true"
+              type="button"
+              (onClick)="resetAll()"
+            />
+            <p-button
+              [label]="scenarioId() ? 'Enregistrer' : 'Créer le scénario'"
+              icon="pi pi-save"
+              severity="warn"
+              type="submit"
+              [disabled]="pending()"
+            />
+            <p-button
+              label="Retour"
+              icon="pi pi-arrow-left"
+              severity="secondary"
+              [outlined]="true"
+              [routerLink]="'/'"
+            />
+          </div>
+        </div>
+
+        <div class="grid items-start gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(19rem,24rem)]">
+          <div class="grid gap-4">
+            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
+              <div>
+                <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
+                  Identité
+                </p>
+                <h2 class="m-0">Accroche</h2>
+              </div>
+
+              <div class="grid gap-3">
+                <p-iftalabel>
+                  <input pInputText id="scenario-title" formControlName="title" class="w-full" />
+                  <label for="scenario-title">Titre du scénario *</label>
+                </p-iftalabel>
+
+                <p-iftalabel>
+                  <textarea
+                    pTextarea
+                    id="scenario-pitch"
+                    formControlName="pitch"
+                    rows="4"
+                    class="w-full resize-none"
+                  ></textarea>
+                  <label for="scenario-pitch">Accroche MJ * — en 2-3 lignes, la promesse de jeu</label>
+                </p-iftalabel>
+              </div>
+            </section>
+
+            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
+              <div>
+                <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
+                  Table
+                </p>
+                <h2 class="m-0">Personnages joueurs</h2>
+              </div>
+
+              <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]" [formGroup]="pjForm">
+                <p-iftalabel>
+                  <p-select
+                    inputId="pj-hero"
+                    class="w-full"
+                    [options]="heroOptions()"
+                    optionLabel="label"
+                    optionValue="value"
+                    formControlName="heroId"
+                    [filter]="true"
+                    filterPlaceholder="Rechercher..."
+                    emptyMessage="Aucun héros disponible"
+                  />
+                  <label for="pj-hero">Choisir un héros</label>
+                </p-iftalabel>
+
+                <p-button
+                  label="Ajouter"
+                  icon="pi pi-plus"
+                  severity="secondary"
+                  type="button"
+                  [outlined]="true"
+                  (onClick)="addPj()"
+                />
+              </div>
+
+              <div class="grid gap-2">
+                @for (personnage of pj(); track personnage.id) {
+                  <div
+                    class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border border-[#424b57] bg-[#020617]/58 px-3 py-2"
+                  >
+                    <div>
+                      <p class="m-0 text-sm font-semibold text-slate-100">{{ personnage.name }}</p>
+                      @if (personnage.joueur) {
+                        <p class="m-0 text-xs text-slate-400">{{ personnage.joueur }}</p>
+                      }
+                    </div>
+                    <button
+                      type="button"
+                      class="inline-grid h-8 w-8 cursor-pointer place-items-center border border-[#5b2a2a] bg-red-950/18 text-red-200"
+                      (click)="removePj(personnage.id)"
+                    >
+                      <i class="pi pi-trash text-xs" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                }
+
+                @if (pj().length === 0) {
+                  <div class="border border-dashed border-[#424b57] bg-[#0f172a]/32 p-3 text-sm text-slate-400">
+                    Aucun personnage joueur ajouté.
+                  </div>
+                }
+              </div>
+            </section>
+          </div>
+
+          <aside class="grid gap-4 xl:sticky xl:top-4">
+            <section class="grid gap-4 border border-[#424b57] bg-[#0f172a]/72 p-4">
+              <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
+                Résumé MJ
+              </p>
+              <h2 class="m-0">{{ scenarioSummary().title }}</h2>
+              <p class="m-0 text-sm text-slate-300">{{ scenarioSummary().pitch }}</p>
+              <div class="flex flex-wrap gap-2 pt-1">
+                <p-tag value="Scénario" severity="contrast" />
+                @if (pj().length > 0) {
+                  <p-tag [value]="pj().length + ' PJ'" severity="info" />
+                }
+              </div>
+              <div>
+                <span class="block text-[0.82rem] text-slate-400">Dernier enregistrement</span>
+                <strong class="text-sm text-slate-50">
+                @if (scenarioId()) { Modification } @else { Nouveau }
+              </strong>
+              </div>
+            </section>
+
+            <section
+              class="grid gap-4 border border-[#424b57] bg-[linear-gradient(180deg,rgba(194,65,12,0.18),rgba(15,23,42,0.72))] p-4"
+            >
+              <p class="m-0 mb-[0.35rem] text-[0.72rem] font-black uppercase tracking-[0.18em] text-amber-300">
+                Étape suivante
+              </p>
+              <h2 class="m-0">Créer une session</h2>
+              <p class="m-0 text-sm text-slate-300">
+                Une fois le brouillon prêt, ouvre une session à partir de ce scénario pour jouer.
+              </p>
+            </section>
+          </aside>
+        </div>
+
+        @if (errorMessage(); as message) {
+          <div
+            class="flex items-center gap-3 border border-red-400/35 bg-red-950/20 px-4 py-3 text-sm text-red-200"
+          >
+            <i class="pi pi-exclamation-triangle" aria-hidden="true"></i>
+            <span>{{ message }}</span>
+          </div>
+        }
+
+        @if (successMessage(); as message) {
+          <div
+            class="flex items-center gap-3 border border-green-400/35 bg-[rgba(20,83,45,0.24)] px-4 py-3 text-sm text-green-100"
+          >
+            <i class="pi pi-check-circle" aria-hidden="true"></i>
+            <span>{{ message }}</span>
+          </div>
+        }
+      </form>
+    </p-card>
+  </div>
+</section>

@@ -59,9 +59,4 @@ class BolCreature extends Model
         return $this->taille->type;
     }
 
-    public function currentQuest($idQuest, $type): HasOne
-    {
-        return $this->HasOne(BolQuestProtagonist::class, 'protagonist_id', 'id')->where('type', $type)->where('quest_id', $idQuest);
-    }
-
 }

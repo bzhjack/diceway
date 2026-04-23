@@ -15,6 +15,7 @@ export interface WorkspaceMetric {
   selector: 'bol-workspace-metrics',
   imports: [RouterLink, CardModule],
   templateUrl: './workspace-metrics.html',
+  host: {class: 'block h-full'},
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkspaceMetricsComponent {

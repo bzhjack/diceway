@@ -116,6 +116,11 @@ export const DwPreset = definePreset(Aura, {
           border-color: #3f3f46;
         }
 
+        .dw-card--metric {
+          display: block;
+          height: 100%;
+        }
+
         .dw-card--metric .p-card {
           height: 100%;
           background: rgba(45, 55, 72, 0.92);
@@ -327,34 +332,43 @@ export const DwPreset = definePreset(Aura, {
       min-width: 9.75rem;
     }
 
-    .dw-creation-form .p-inputtext,
-    .dw-creation-form .p-textarea,
-    .dw-creation-form .p-inputnumber-input,
-    .dw-creation-form .p-select {
+    .p-inputtext,
+    .p-textarea,
+    .p-inputnumber-input,
+    .p-select {
       font-size: 0.875rem;
       line-height: 1.25rem;
     }
 
-    .dw-creation-form .p-iftalabel {
+    .p-iftalabel {
       --p-iftalabel-top: 0.32rem;
       --p-iftalabel-font-size: 0.78rem;
       --p-iftalabel-input-padding-top: 0.95rem;
       --p-iftalabel-input-padding-bottom: 0.32rem;
     }
 
-    .dw-creation-form .p-inputtext,
-    .dw-creation-form .p-textarea,
-    .dw-creation-form .p-inputnumber-input {
+    .p-inputtext:not(.p-select-filter),
+    .p-textarea,
+    .p-inputnumber-input {
       padding-block: 0.35rem;
     }
 
-    .dw-creation-form .p-select-label {
+    .p-select-overlay {
+      --p-iftalabel-input-padding-top: 0.5rem;
+      --p-iftalabel-input-padding-bottom: 0.5rem;
+    }
+
+    .p-select-filter-container {
+      align-items: center;
+    }
+
+    .p-select-label {
       padding-top: 0.95rem;
       padding-bottom: 0.32rem;
       font-size: 0.9rem;
     }
 
-    .dw-creation-form .p-select-dropdown {
+    .p-select-dropdown {
       width: 2.5rem;
     }
   `,

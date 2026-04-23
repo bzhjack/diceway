@@ -5,6 +5,7 @@ import {AuthService} from '../../core/auth/auth.service';
 import {BolCreaturesService} from '../services/bol-creatures.service';
 import {BolDemonsService} from '../services/bol-demons.service';
 import {BolHerosService} from '../services/bol-heros.service';
+import {BolScenarioService} from '../services/bol-scenario.service';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {TagModule} from 'primeng/tag';
@@ -43,12 +44,14 @@ export class WorkspacePageComponent {
   private readonly bolCreaturesService = inject(BolCreaturesService);
   private readonly bolDemonsService = inject(BolDemonsService);
   private readonly bolHerosService = inject(BolHerosService);
+  private readonly bolScenarioService = inject(BolScenarioService);
   private readonly creatures = toSignal(this.bolCreaturesService.creatures(), { initialValue: [] });
   private readonly demons = toSignal(this.bolDemonsService.demons(), { initialValue: [] });
   private readonly heroes = toSignal(this.bolHerosService.heroes(), { initialValue: [] });
   private readonly pnjs = toSignal(this.bolHerosService.pnjs(), { initialValue: [] });
   private readonly armes = toSignal(this.bolHerosService.armes(), { initialValue: [] });
   private readonly armures = toSignal(this.bolHerosService.armures(), { initialValue: [] });
+  private readonly scenariosCount = toSignal(this.bolScenarioService.scenarios(), {initialValue: []});
 
   protected readonly userName = computed(() => this.authService.user()?.name ?? 'Utilisateur');
   protected readonly metrics = computed<readonly WorkspaceMetric[]>(() => [
@@ -75,6 +78,14 @@ export class WorkspacePageComponent {
       icon: 'pi pi-user-edit',
       iconClass: 'border border-rose-400/25 bg-rose-400/12 text-rose-300',
       link: '/library/pnjs',
+    },
+    {
+      label: 'Scénarios',
+      value: String(this.scenariosCount().length),
+      detail: 'Scénarios préparés pour la table.',
+      icon: 'pi pi-compass',
+      iconClass: 'border border-sky-400/25 bg-sky-400/12 text-sky-300',
+      link: '/library/scenarios',
     },
     {
       label: 'Intendance',

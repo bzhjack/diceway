@@ -11,6 +11,7 @@ interface CreatureStatValue {
   templateUrl: './creature-statblock.component.html',
   styleUrl: './creature-statblock.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true
 })
 export class CreatureStatblockComponent {
   readonly creature = input.required<BolCreatureModel>();

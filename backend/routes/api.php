@@ -18,7 +18,7 @@ use App\Http\Controllers\Bol\BolArmeController;
 use App\Http\Controllers\Bol\BolPnjController;
 use App\Http\Controllers\Bol\BolDemonController;
 use App\Http\Controllers\Bol\BolDashboardController;
-use App\Http\Controllers\Bol\BolQuestController;
+use App\Http\Controllers\Bol\BolScenarioController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -140,13 +140,11 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::post('/bol/heros/traits/create/{herosId}', [BolTraitController::class, 'create']);
     Route::delete('/bol/heros/traits/delete/{herosId}/{id}', [BolTraitController::class, 'delete']);
 
-    // Gestion des aventures
-    Route::get('/bol/quest', [BolQuestController::class, 'getAll']);
-    Route::post('/bol/quest/create', [BolQuestController::class, 'create']);
-    Route::post('/bol/quest/update', [BolQuestController::class, 'update']);
-    Route::get('/bol/quest/{id}', [BolQuestController::class, 'getOne']);
-    Route::delete('/bol/quest/protagonist/{id}', [BolQuestController::class, 'deleteProtagonist']);
-    Route::get('/bol/quest/protagonist/{id}', [BolQuestController::class, 'getOneProtagonist']);
-    Route::post('/bol/quest/protagonist/create', [BolQuestController::class, 'addProtagonist']);
-    Route::post('/bol/quest/protagonist/update', [BolQuestController::class, 'updateProtagonist']);
+    // Scénarios
+    Route::get('/bol/scenario', [BolScenarioController::class, 'getAll']);
+    Route::get('/bol/scenario/{id}', [BolScenarioController::class, 'getOne']);
+    Route::post('/bol/scenario/create', [BolScenarioController::class, 'create']);
+    Route::post('/bol/scenario/update', [BolScenarioController::class, 'update']);
+    Route::delete('/bol/scenario/delete/{id}', [BolScenarioController::class, 'delete']);
+
 });
