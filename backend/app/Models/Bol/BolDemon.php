@@ -36,7 +36,7 @@ class BolDemon extends Model
         'vitalite',
         'degats',
 
-        'id_taille'
+        'id_categorie'
     ];
     protected $casts = [
         'vigueur' => 'integer',

@@ -1,82 +1,92 @@
 <section class="dice-panel" aria-labelledby="dice-panel-title">
-  <div class="dice-panel__heading">
-    <p id="dice-panel-title" class="dice-panel__kicker">Assistant de jets</p>
-    @if (rollContext()) {
-      <p class="dice-panel__context">{{ rollContext() }}</p>
+
+  <!-- Plateau 3D -->
+  <div class="dice-panel__tray">
+    <app-dice-box-host #diceBox></app-dice-box-host>
+  </div>
+
+  <!-- Options -->
+  <div class="dice-panel__options">
+    <div class="dice-panel__heading">
+      <p id="dice-panel-title" class="dice-panel__kicker">Assistant de jets</p>
+      @if (rollContext()) {
+        <p class="dice-panel__context">{{ rollContext() }}</p>
+      }
+    </div>
+
+    <div class="dice-panel__mode-row" role="group" aria-label="Mode de jet BoL">
+      @for (option of modeOptions; track option.value) {
+        <button
+          type="button"
+          class="dice-toggle"
+          [attr.data-active]="mode() === option.value"
+          (click)="selectMode(option.value)"
+        >
+          {{ option.label }}
+        </button>
+      }
+    </div>
+
+    <div class="dice-panel__numeric-grid">
+      <label class="dice-field">
+        <span>Modificateur</span>
+        <input type="number" [value]="modifier()" (input)="updateModifier($event)" />
+      </label>
+      <label class="dice-field">
+        <span>Seuil</span>
+        <input type="number" [value]="target()" (input)="updateTarget($event)" />
+      </label>
+    </div>
+
+    <div class="dice-panel__action-row">
+      <button type="button" class="dice-button dice-button--primary" [disabled]="rolling()" (click)="rollBolAction()">
+        {{ rolling() ? 'Jet en cours…' : 'Lancer' }}
+      </button>
+      <button type="button" class="dice-button" (click)="clearTray()">Vider</button>
+    </div>
+
+    @if (errorMessage()) {
+      <p class="dice-panel__error">{{ errorMessage() }}</p>
     }
   </div>
 
-  <app-dice-box-host #diceBox></app-dice-box-host>
+  <!-- Résultat -->
+  <div class="dice-panel__result-col">
+    @if (lastRoll(); as roll) {
+      <article class="dice-result" [attr.data-tone]="roll.tone">
+        <div class="dice-result__banner">
+          <p class="dice-result__label">{{ roll.label }}</p>
+          <strong>{{ roll.totalLabel }}</strong>
+        </div>
 
-  <div class="dice-panel__controls">
-    <div class="dice-panel__section">
-      <div class="dice-panel__mode-row" role="group" aria-label="Mode de jet BoL">
-        @for (option of modeOptions; track option.value) {
-          <button
-            type="button"
-            class="dice-toggle"
-            [attr.data-active]="mode() === option.value"
-            (click)="selectMode(option.value)"
-          >
-            {{ option.label }}
-          </button>
-        }
-      </div>
-
-      <div class="dice-panel__numeric-grid">
-        <label class="dice-field">
-          <span>Modificateur</span>
-          <input type="number" [value]="modifier()" (input)="updateModifier($event)" />
-        </label>
-
-        <label class="dice-field">
-          <span>Seuil</span>
-          <input type="number" [value]="target()" (input)="updateTarget($event)" />
-        </label>
-      </div>
-
-      <div class="dice-panel__action-row">
-        <button type="button" class="dice-button dice-button--primary" [disabled]="rolling()" (click)="rollBolAction()">
-          {{ rolling() ? 'Jet en cours…' : 'Lancer' }}
-        </button>
-        <button type="button" class="dice-button" (click)="clearTray()">Vider le plateau</button>
-      </div>
-    </div>
-  </div>
-
-  @if (errorMessage()) {
-    <p class="dice-panel__error">{{ errorMessage() }}</p>
-  }
-
-  @if (lastRoll(); as roll) {
-    <article class="dice-result" [attr.data-tone]="roll.tone">
-      <div class="dice-result__banner">
-        <p class="dice-result__label">{{ roll.label }}</p>
-        <strong>{{ roll.totalLabel }}</strong>
-      </div>
-
-      <div class="dice-result__header">
-        <div>
-          <h4>{{ roll.headline }}</h4>
-          <div class="dice-result__meta" aria-label="Contexte du jet">
-            @for (item of roll.meta; track item) {
-              <span>{{ item }}</span>
-            }
+        <div class="dice-result__header">
+          <div>
+            <h4>{{ roll.headline }}</h4>
+            <div class="dice-result__meta" aria-label="Contexte du jet">
+              @for (item of roll.meta; track item) {
+                <span>{{ item }}</span>
+              }
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="dice-result__dice" aria-label="Résultat des dés">
-        @for (die of roll.dice; track die.id) {
-          <span class="dice-result__die" [attr.data-accent]="die.accent" [attr.data-kept]="die.kept" [attr.data-dropped]="!die.kept">
-            <small>{{ die.label }}</small>
-            <strong>{{ die.value }}</strong>
-          </span>
-        }
-      </div>
+        <div class="dice-result__dice" aria-label="Résultat des dés">
+          @for (die of roll.dice; track die.id) {
+            <span class="dice-result__die" [attr.data-accent]="die.accent" [attr.data-kept]="die.kept" [attr.data-dropped]="!die.kept">
+              <small>{{ die.label }}</small>
+              <strong>{{ die.value }}</strong>
+            </span>
+          }
+        </div>
 
-      <p class="dice-result__formula">{{ roll.formula }}</p>
-      <p class="dice-result__detail">{{ roll.detail }}</p>
-    </article>
-  }
+        <p class="dice-result__formula">{{ roll.formula }}</p>
+        <p class="dice-result__detail">{{ roll.detail }}</p>
+      </article>
+    } @else {
+      <div class="dice-panel__result-empty" aria-hidden="true">
+        <span>En attente d'un jet…</span>
+      </div>
+    }
+  </div>
+
 </section>

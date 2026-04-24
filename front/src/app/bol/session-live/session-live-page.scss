@@ -19,12 +19,39 @@
   margin-bottom: 0.5rem;
 }
 
-// ── Initiative band ────────────────────────────────────────────────────────────
+// ── Initiative band ───────────────────────────────────────────────────────────
+
+.combat-initiative-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.combat-initiative-notice {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid;
+}
+
+.combat-initiative-notice--legendary {
+  color: #fcd34d;
+  border-color: rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.08);
+}
+
+.combat-initiative-notice--blocked {
+  color: #fca5a5;
+  border-color: rgba(248, 113, 113, 0.3);
+  background: rgba(248, 113, 113, 0.07);
+}
 
 .combat-initiative-list {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  flex-direction: column;
+  gap: 0.3rem;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -33,58 +60,141 @@
 .combat-initiative-item {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   border: 1px solid #424b57;
   background: rgb(2 6 23 / 0.58);
-  padding: 0.35rem 0.6rem;
-  font-size: 0.8rem;
+  padding: 0.5rem 0.6rem;
 }
 
-.combat-initiative-item[data-type='hero'] { border-color: rgba(96, 165, 250, 0.35); }
-.combat-initiative-item[data-type='demon'] { border-color: rgba(248, 113, 113, 0.3); }
-.combat-initiative-item[data-type='creature'] { border-color: rgba(251, 191, 36, 0.3); }
+.combat-initiative-item[data-cat='legendaire']    { border-color: rgba(251, 191, 36, 0.5); }
+.combat-initiative-item[data-cat='heroique']      { border-color: rgba(251, 191, 36, 0.28); }
+.combat-initiative-item[data-cat='reussite']      { border-color: rgba(96, 165, 250, 0.3); }
+.combat-initiative-item[data-cat='rival']         { border-color: rgba(251, 146, 60, 0.35); }
+.combat-initiative-item[data-cat='coriace']       { border-color: rgba(251, 191, 36, 0.22); }
+.combat-initiative-item[data-cat='echec']         { border-color: rgba(248, 113, 113, 0.25); }
+.combat-initiative-item[data-cat='pietaille']     { border-color: rgba(100, 116, 139, 0.3); }
+.combat-initiative-item[data-cat='echec-critique']{ border-color: rgba(185, 28, 28, 0.45); }
 
 .combat-initiative-item__pos {
   color: #475569;
   font-size: 0.68rem;
   font-weight: 700;
-  min-width: 0.9rem;
+  min-width: 1rem;
+  text-align: center;
+}
+
+.combat-initiative-item__identity {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 120px;
+  flex: 0 0 auto;
 }
 
 .combat-initiative-item__name {
   color: #e2e8f0;
+  font-size: 0.85rem;
   font-weight: 600;
 }
 
-.combat-initiative-item[data-type='hero'] .combat-initiative-item__name { color: #93c5fd; }
-.combat-initiative-item[data-type='demon'] .combat-initiative-item__name { color: #fca5a5; }
-.combat-initiative-item[data-type='creature'] .combat-initiative-item__name { color: #fcd34d; }
-
 .combat-initiative-item__type {
   color: #475569;
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-.combat-initiative-item__arrows {
+.combat-initiative-cats {
   display: flex;
-  gap: 0.1rem;
-  margin-left: 0.2rem;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  flex: 1 1 auto;
+}
 
-  button {
-    background: none;
-    border: none;
-    color: #475569;
-    cursor: pointer;
-    font-size: 0.75rem;
-    line-height: 1;
-    padding: 0.1rem 0.2rem;
+.combat-cat-btn {
+  min-height: 1.6rem;
+  padding: 0 0.55rem;
+  border: 1px solid #334155;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: border-color 120ms, color 120ms, background 120ms;
 
-    &:hover:not(:disabled) { color: #94a3b8; }
-    &:disabled { opacity: 0.25; cursor: default; }
-  }
+  &:hover { color: #94a3b8; border-color: #475569; }
+}
+
+.combat-cat-btn[data-cat='legendaire'][data-active='true']    { border-color: rgba(251,191,36,.6);  color: #fcd34d; background: rgba(251,191,36,.14); }
+.combat-cat-btn[data-cat='heroique'][data-active='true']      { border-color: rgba(251,191,36,.4);  color: #fde68a; background: rgba(251,191,36,.09); }
+.combat-cat-btn[data-cat='reussite'][data-active='true']      { border-color: rgba(96,165,250,.5);  color: #93c5fd; background: rgba(96,165,250,.12); }
+.combat-cat-btn[data-cat='rival'][data-active='true']         { border-color: rgba(251,146,60,.5);  color: #fdba74; background: rgba(251,146,60,.12); }
+.combat-cat-btn[data-cat='coriace'][data-active='true']       { border-color: rgba(234,179,8,.4);   color: #fef08a; background: rgba(234,179,8,.09); }
+.combat-cat-btn[data-cat='echec'][data-active='true']         { border-color: rgba(248,113,113,.45);color: #fca5a5; background: rgba(248,113,113,.1); }
+.combat-cat-btn[data-cat='pietaille'][data-active='true']     { border-color: rgba(100,116,139,.5); color: #94a3b8; background: rgba(100,116,139,.12);}
+.combat-cat-btn[data-cat='echec-critique'][data-active='true']{ border-color: rgba(185,28,28,.55);  color: #fca5a5; background: rgba(185,28,28,.16); }
+
+.combat-initiative-item__indicators {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.combat-indicator {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.15rem 0.4rem;
+  border: 1px solid;
+}
+
+.combat-indicator--blocked {
+  color: #fca5a5;
+  border-color: rgba(248, 113, 113, 0.4);
+  background: rgba(248, 113, 113, 0.08);
+}
+
+.combat-indicator--warn {
+  color: #fde68a;
+  border-color: rgba(251, 191, 36, 0.4);
+  background: rgba(251, 191, 36, 0.08);
+}
+
+.combat-initiative-empty {
+  margin: 0;
+  color: #475569;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.combat-initiative-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.combat-initiative-select {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.combat-initiative-add__btn {
+  height: 2.25rem;
+  padding: 0 0.9rem;
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  background: rgba(96, 165, 250, 0.1);
+  color: #93c5fd;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) { background: rgba(96, 165, 250, 0.18); }
+  &:disabled { opacity: 0.35; cursor: default; }
 }
 
 // ── Shared card parts ─────────────────────────────────────────────────────────

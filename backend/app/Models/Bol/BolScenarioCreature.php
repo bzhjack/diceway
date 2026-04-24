@@ -10,7 +10,7 @@ class BolScenarioCreature extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'scenario_id', 'creature_id', 'surnom', 'nom',
+        'scenario_id', 'creature_id', 'surnom', 'rang', 'nom',
         'vigueur', 'agilite', 'esprit',
         'vitalite_max', 'vitalite_courante',
         'attaque', 'defense', 'degats', 'protection', 'id_taille',

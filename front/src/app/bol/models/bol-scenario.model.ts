@@ -14,6 +14,7 @@ export interface BolScenarioCreatureModel {
   scenario_id: string;
   creature_id: string | null;
   surnom: string | null;
+  rang: 'rival' | 'coriace' | 'pietaille';
   nom: string;
   vigueur: number;
   agilite: number;
@@ -32,6 +33,7 @@ export interface BolScenarioDemonModel {
   scenario_id: string;
   demon_id: string | null;
   surnom: string | null;
+  rang: 'rival' | 'coriace' | 'pietaille';
   nom: string;
   vigueur: number;
   agilite: number;
@@ -57,6 +59,7 @@ export interface BolScenarioPnjModel {
   scenario_id: string;
   pnj_id: string | null;
   surnom: string | null;
+  rang: 'rival' | 'coriace' | 'pietaille';
   nom: string;
   vigueur: number;
   agilite: number;

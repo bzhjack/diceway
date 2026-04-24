@@ -11,7 +11,7 @@ class BolScenarioDemon extends Model
     protected $table = 'bol_scenario_demon';
 
     protected $fillable = [
-        'scenario_id', 'demon_id', 'surnom', 'nom',
+        'scenario_id', 'demon_id', 'surnom', 'rang', 'nom',
         'vigueur', 'agilite', 'esprit', 'aura',
         'melee', 'tir', 'defense',
         'vitalite_max', 'vitalite_courante',

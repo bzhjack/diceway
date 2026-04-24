@@ -11,7 +11,7 @@ class BolScenarioPnj extends Model
     protected $table = 'bol_scenario_pnj';
 
     protected $fillable = [
-        'scenario_id', 'pnj_id', 'surnom', 'nom',
+        'scenario_id', 'pnj_id', 'surnom', 'rang', 'nom',
         'vigueur', 'agilite', 'esprit', 'aura',
         'melee', 'tir', 'defense',
         'vitalite_max', 'vitalite_courante',

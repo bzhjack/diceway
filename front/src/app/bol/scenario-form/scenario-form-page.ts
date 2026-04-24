@@ -14,6 +14,8 @@ import {BolDemonsService} from '../services/bol-demons.service';
 import {BolHerosService} from '../services/bol-heros.service';
 import {BolScenarioService} from '../services/bol-scenario.service';
 
+type Rang = 'rival' | 'coriace' | 'pietaille';
+
 interface ScenarioPjDraft {
   readonly id: string;
   readonly heroId: string;
@@ -25,6 +27,7 @@ interface ScenarioCreatureDraft {
   readonly id: string;
   readonly creatureId: string;
   readonly surnom: string;
+  readonly rang: Rang;
   readonly nom: string;
   readonly vitaliteMax: number;
 }
@@ -33,6 +36,7 @@ interface ScenarioDemonDraft {
   readonly id: string;
   readonly demonId: string;
   readonly surnom: string;
+  readonly rang: Rang;
   readonly nom: string;
   readonly vitaliteMax: number;
 }
@@ -47,10 +51,17 @@ interface ScenarioPnjDraft {
   readonly id: string;
   readonly pnjId: string;
   readonly surnom: string;
+  readonly rang: Rang;
   readonly nom: string;
   readonly vitaliteMax: number;
   readonly armes: ScenarioPnjArme[];
 }
+
+const RANG_OPTIONS: {label: string; value: Rang}[] = [
+  {label: 'Rival', value: 'rival'},
+  {label: 'Coriace', value: 'coriace'},
+  {label: 'Piétaille', value: 'pietaille'},
+];
 
 @Component({
   selector: 'app-scenario-form-page',
@@ -91,6 +102,8 @@ export class ScenarioFormPageComponent {
   protected readonly creatures = signal<ScenarioCreatureDraft[]>([]);
   protected readonly demons = signal<ScenarioDemonDraft[]>([]);
   protected readonly pnjs = signal<ScenarioPnjDraft[]>([]);
+
+  protected readonly rangOptions = RANG_OPTIONS;
 
   protected readonly heroOptions = computed(() =>
     this.heroes()
@@ -140,6 +153,7 @@ export class ScenarioFormPageComponent {
   protected readonly pnjForm = this.formBuilder.nonNullable.group({
     pnjId: [null as string | null, [Validators.required]],
     surnom: ['', [Validators.maxLength(80)]],
+    rang: ['coriace' as Rang, [Validators.required]],
   });
 
   protected readonly pageTitle = computed(() =>
@@ -176,6 +190,7 @@ export class ScenarioFormPageComponent {
             id: this.createDraftId('creature'),
             creatureId: c.creature_id ?? '',
             surnom: c.surnom ?? '',
+            rang: c.rang,
             nom: c.nom,
             vitaliteMax: c.vitalite_max,
           })),
@@ -185,6 +200,7 @@ export class ScenarioFormPageComponent {
             id: this.createDraftId('demon'),
             demonId: d.demon_id ?? '',
             surnom: d.surnom ?? '',
+            rang: d.rang,
             nom: d.nom,
             vitaliteMax: d.vitalite_max,
           })),
@@ -194,6 +210,7 @@ export class ScenarioFormPageComponent {
             id: this.createDraftId('pnj'),
             pnjId: p.pnj_id ?? '',
             surnom: p.surnom ?? '',
+            rang: p.rang,
             nom: p.nom,
             vitaliteMax: p.vitalite_max,
             armes: p.armes ?? [],
@@ -242,12 +259,14 @@ export class ScenarioFormPageComponent {
     if (!creatureId) return;
     const creature = this.allCreatures().find((c) => c.id === creatureId);
     if (!creature) return;
+    const rang = this.rangFromType(creature.taille?.type);
     this.creatures.update((entries) => [
       ...entries,
       {
         id: this.createDraftId('creature'),
         creatureId,
         surnom: surnom.trim(),
+        rang,
         nom: creature.nom,
         vitaliteMax: creature.vitalite,
       },
@@ -269,12 +288,14 @@ export class ScenarioFormPageComponent {
     if (!demonId) return;
     const demon = this.allDemons().find((d) => d.id === demonId);
     if (!demon) return;
+    const rang = this.rangFromType(demon.categorie?.type);
     this.demons.update((entries) => [
       ...entries,
       {
         id: this.createDraftId('demon'),
         demonId,
         surnom: surnom.trim(),
+        rang,
         nom: demon.nom,
         vitaliteMax: demon.vitalite,
       },
@@ -292,7 +313,7 @@ export class ScenarioFormPageComponent {
       this.pnjForm.markAllAsTouched();
       return;
     }
-    const {pnjId, surnom} = this.pnjForm.getRawValue();
+    const {pnjId, surnom, rang} = this.pnjForm.getRawValue();
     if (!pnjId) return;
     const pnj = this.allPnjs().find((p) => p.id === pnjId);
     if (!pnj) return;
@@ -309,12 +330,13 @@ export class ScenarioFormPageComponent {
         id: this.createDraftId('pnj'),
         pnjId,
         surnom: surnom.trim(),
+        rang,
         nom: pnj.origines?.nom ?? '(sans nom)',
         vitaliteMax: pnj.ressources?.vitalite ?? 0,
         armes,
       },
     ]);
-    this.pnjForm.reset({pnjId: null, surnom: ''});
+    this.pnjForm.reset({pnjId: null, surnom: '', rang: 'coriace'});
   }
 
   protected removePnj(pnjId: string): void {
@@ -335,9 +357,9 @@ export class ScenarioFormPageComponent {
       titre: form.title,
       pitch: form.pitch,
       pj: this.pj().map((p) => ({heroId: p.heroId})),
-      creatures: this.creatures().map((c) => ({creatureId: c.creatureId, surnom: c.surnom})),
-      demons: this.demons().map((d) => ({demonId: d.demonId, surnom: d.surnom})),
-      pnjs: this.pnjs().map((p) => ({pnjId: p.pnjId, surnom: p.surnom})),
+      creatures: this.creatures().map((c) => ({creatureId: c.creatureId, surnom: c.surnom, rang: c.rang})),
+      demons: this.demons().map((d) => ({demonId: d.demonId, surnom: d.surnom, rang: d.rang})),
+      pnjs: this.pnjs().map((p) => ({pnjId: p.pnjId, surnom: p.surnom, rang: p.rang})),
     };
     const request$ = this.scenarioId()
       ? this.scenarioService.update(payload)
@@ -359,13 +381,19 @@ export class ScenarioFormPageComponent {
     this.pjForm.reset({heroId: null});
     this.creatureForm.reset({creatureId: null, surnom: ''});
     this.demonForm.reset({demonId: null, surnom: ''});
-    this.pnjForm.reset({pnjId: null, surnom: ''});
+    this.pnjForm.reset({pnjId: null, surnom: '', rang: 'coriace'});
     this.pj.set([]);
     this.creatures.set([]);
     this.demons.set([]);
     this.pnjs.set([]);
     this.errorMessage.set(null);
     this.successMessage.set(null);
+  }
+
+  private rangFromType(type: 'P' | 'C' | 'R' | null | undefined): Rang {
+    if (type === 'P') return 'pietaille';
+    if (type === 'R') return 'rival';
+    return 'coriace';
   }
 
   private createDraftId(prefix: string): string {

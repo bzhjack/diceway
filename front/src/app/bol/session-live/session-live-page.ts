@@ -1,45 +1,72 @@
-import {ChangeDetectionStrategy, Component, computed, inject, signal, viewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
+import {FormsModule} from '@angular/forms';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {of, switchMap} from 'rxjs';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
+import {SelectModule} from 'primeng/select';
 import {TagModule} from 'primeng/tag';
 import {BolScenarioService} from '../services/bol-scenario.service';
-import {BolDicePanelComponent} from './bol-dice-panel/bol-dice-panel';
 
-interface CombatHero {
-  readonly id: string;
-  readonly nom: string;
-  readonly joueur: string | null;
-  vitalite: number;
-  readonly vitaliteMax: number;
-  heroisme: number;
-}
+type ParticipantType = 'hero' | 'creature' | 'demon' | 'pnj';
+type ReactionResult =
+  | 'legendaire'
+  | 'heroique'
+  | 'reussite'
+  | 'rival'
+  | 'coriace'
+  | 'echec'
+  | 'pietaille'
+  | 'echec-critique';
 
-interface CombatAntagonist {
-  readonly id: string;
-  readonly type: 'creature' | 'demon' | 'pnj';
-  readonly nom: string;
-  readonly surnom: string | null;
-  readonly vitaliteMax: number;
-  readonly defense: number;
-  readonly rollAttaque: number;
-  readonly rollInitiative: number;
-  readonly degats: string | null;
-  vitalite: number;
-  eliminated: boolean;
+interface CategoryOption {
+  readonly label: string;
+  readonly value: ReactionResult;
 }
 
 interface InitiativeSlot {
   readonly id: string;
   readonly nom: string;
-  readonly type: 'hero' | 'creature' | 'demon' | 'pnj';
+  readonly type: ParticipantType;
+  category: ReactionResult | null;
 }
+
+const INITIATIVE_ORDER: Record<ReactionResult, number> = {
+  legendaire: 0,
+  heroique: 1,
+  reussite: 2,
+  rival: 3,
+  coriace: 4,
+  echec: 5,
+  pietaille: 6,
+  'echec-critique': 7,
+};
+
+const HERO_OPTIONS: readonly CategoryOption[] = [
+  {label: 'Lég. ★★', value: 'legendaire'},
+  {label: 'Hér. ★', value: 'heroique'},
+  {label: 'Réussite', value: 'reussite'},
+  {label: 'Échec', value: 'echec'},
+  {label: 'Éch. crit.', value: 'echec-critique'},
+];
+
+const ANTAGONIST_OPTIONS: readonly CategoryOption[] = [
+  {label: 'Rival', value: 'rival'},
+  {label: 'Coriace', value: 'coriace'},
+  {label: 'Piétaille', value: 'pietaille'},
+];
+
+const TYPE_LABELS: Record<ParticipantType, string> = {
+  hero: 'PJ',
+  creature: 'Créature',
+  demon: 'Démon',
+  pnj: 'PNJ',
+};
 
 @Component({
   selector: 'app-session-live-page',
-  imports: [RouterLink, ButtonModule, CardModule, TagModule, BolDicePanelComponent],
+  imports: [RouterLink, FormsModule, ButtonModule, CardModule, SelectModule, TagModule],
   templateUrl: './session-live-page.html',
   styleUrl: './session-live-page.scss',
   host: {class: 'block'},
@@ -48,7 +75,6 @@ interface InitiativeSlot {
 export class SessionLivePageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly scenarioService = inject(BolScenarioService);
-  private readonly dicePanel = viewChild(BolDicePanelComponent);
 
   protected readonly combatMode = signal(false);
 
@@ -61,135 +87,110 @@ export class SessionLivePageComponent {
     ),
   );
 
-  protected readonly combatHeroes = signal<CombatHero[]>([]);
-  protected readonly combatAntagonists = signal<CombatAntagonist[]>([]);
+  protected readonly allParticipants = signal<InitiativeSlot[]>([]);
   protected readonly initiativeOrder = signal<InitiativeSlot[]>([]);
+  protected readonly selectedParticipantId = signal<string | null>(null);
 
-  protected readonly aliveAntagonists = computed(() =>
-    this.combatAntagonists().filter((a) => !a.eliminated),
+  protected readonly availableParticipants = computed(() => {
+    const inOrder = new Set(this.initiativeOrder().map((s) => s.id));
+    return this.allParticipants().filter((p) => !inOrder.has(p.id));
+  });
+
+  protected readonly availableParticipantOptions = computed(() =>
+    this.availableParticipants().map((p) => ({
+      label: `${p.nom} — ${TYPE_LABELS[p.type]}`,
+      value: p.id,
+    })),
   );
+
+  protected readonly sortedInitiative = computed(() =>
+    [...this.initiativeOrder()].sort((a, b) => {
+      const orderA = a.category != null ? INITIATIVE_ORDER[a.category] : 99;
+      const orderB = b.category != null ? INITIATIVE_ORDER[b.category] : 99;
+      return orderA - orderB;
+    }),
+  );
+
+  protected readonly round1Blocked = computed(() =>
+    this.initiativeOrder().some(
+      (s) => s.type === 'hero' && (s.category === 'heroique' || s.category === 'legendaire'),
+    ),
+  );
+
+  protected readonly legendaryBonus = computed(() =>
+    this.initiativeOrder().some((s) => s.type === 'hero' && s.category === 'legendaire'),
+  );
+
+  protected readonly heroOptions: readonly CategoryOption[] = HERO_OPTIONS;
+  protected readonly antagonistOptions: readonly CategoryOption[] = ANTAGONIST_OPTIONS;
+
+  protected categoryOptionsFor(type: ParticipantType): readonly CategoryOption[] {
+    return type === 'hero' ? HERO_OPTIONS : ANTAGONIST_OPTIONS;
+  }
 
   protected startCombat(): void {
     const s = this.scenario();
     if (!s) return;
 
-    const heroes: CombatHero[] = (s.pj ?? []).map((pj) => ({
-      id: String(pj.id),
-      nom: pj.heros?.origines.nom ?? 'Héros',
-      joueur: pj.heros?.origines.joueur ?? null,
-      vitalite: 10,
-      vitaliteMax: 10,
-      heroisme: 3,
-    }));
-
-    const antagonists: CombatAntagonist[] = [
-      ...(s.creatures ?? []).map((c): CombatAntagonist => ({
+    const all: InitiativeSlot[] = [
+      ...(s.pj ?? []).map((pj): InitiativeSlot => ({
+        id: `hero-${pj.id}`,
+        nom: pj.heros?.origines.nom ?? 'Héros',
+        type: 'hero',
+        category: null,
+      })),
+      ...(s.creatures ?? []).map((c): InitiativeSlot => ({
         id: `creature-${c.id}`,
-        type: 'creature',
         nom: c.surnom ?? c.nom,
-        surnom: c.surnom,
-        vitaliteMax: c.vitalite_max,
-        vitalite: c.vitalite_max,
-        defense: c.defense,
-        rollAttaque: c.agilite + c.attaque,
-        rollInitiative: c.esprit,
-        degats: c.degats,
-        eliminated: false,
+        type: 'creature',
+        category: c.rang,
       })),
-      ...(s.demons ?? []).map((d): CombatAntagonist => ({
+      ...(s.demons ?? []).map((d): InitiativeSlot => ({
         id: `demon-${d.id}`,
-        type: 'demon',
         nom: d.surnom ?? d.nom,
-        surnom: d.surnom,
-        vitaliteMax: d.vitalite_max,
-        vitalite: d.vitalite_max,
-        defense: d.defense,
-        rollAttaque: d.agilite + d.melee,
-        rollInitiative: d.esprit,
-        degats: d.degats,
-        eliminated: false,
+        type: 'demon',
+        category: d.rang,
       })),
-      ...(s.pnjs ?? []).map((p): CombatAntagonist => ({
+      ...(s.pnjs ?? []).map((p): InitiativeSlot => ({
         id: `pnj-${p.id}`,
-        type: 'pnj',
         nom: p.surnom ?? p.nom,
-        surnom: p.surnom,
-        vitaliteMax: p.vitalite_max,
-        vitalite: p.vitalite_max,
-        defense: p.defense,
-        rollAttaque: p.agilite + p.melee,
-        rollInitiative: p.esprit,
-        degats: p.armes?.[0]?.degats ?? null,
-        eliminated: false,
+        type: 'pnj',
+        category: p.rang,
       })),
     ];
 
-    this.combatHeroes.set(heroes);
-    this.combatAntagonists.set(antagonists);
-    this.initiativeOrder.set([
-      ...heroes.map((h): InitiativeSlot => ({id: h.id, nom: h.nom, type: 'hero'})),
-      ...antagonists.map((a): InitiativeSlot => ({id: a.id, nom: a.nom, type: a.type})),
-    ]);
+    this.allParticipants.set(all);
+    this.initiativeOrder.set([]);
+    this.selectedParticipantId.set(all[0]?.id ?? null);
     this.combatMode.set(true);
   }
 
   protected stopCombat(): void {
     this.combatMode.set(false);
-    this.combatHeroes.set([]);
-    this.combatAntagonists.set([]);
+    this.allParticipants.set([]);
     this.initiativeOrder.set([]);
+    this.selectedParticipantId.set(null);
   }
 
-  protected adjustHeroHp(id: string, delta: number): void {
-    this.combatHeroes.update((list) =>
-      list.map((h) =>
-        h.id === id ? {...h, vitalite: Math.max(0, Math.min(h.vitaliteMax, h.vitalite + delta))} : h,
+  protected addToInitiative(): void {
+    const id = this.selectedParticipantId();
+    if (!id) return;
+    const participant = this.allParticipants().find((p) => p.id === id);
+    if (!participant) return;
+    this.initiativeOrder.update((list) => [...list, {...participant, category: null}]);
+    const next = this.availableParticipants().find((p) => p.id !== id);
+    this.selectedParticipantId.set(next?.id ?? null);
+  }
+
+  protected removeFromInitiative(id: string): void {
+    this.initiativeOrder.update((list) => list.filter((s) => s.id !== id));
+  }
+
+  protected setCategory(id: string, category: ReactionResult): void {
+    this.initiativeOrder.update((list) =>
+      list.map((s) =>
+        s.id === id ? {...s, category: s.category === category ? null : category} : s,
       ),
     );
-  }
-
-  protected adjustHeroHeroisme(id: string, delta: number): void {
-    this.combatHeroes.update((list) =>
-      list.map((h) => (h.id === id ? {...h, heroisme: Math.max(0, h.heroisme + delta)} : h)),
-    );
-  }
-
-  protected adjustAntagonistHp(id: string, delta: number): void {
-    this.combatAntagonists.update((list) =>
-      list.map((a) =>
-        a.id === id ? {...a, vitalite: Math.max(0, Math.min(a.vitaliteMax, a.vitalite + delta))} : a,
-      ),
-    );
-  }
-
-  protected eliminateAntagonist(id: string): void {
-    this.combatAntagonists.update((list) =>
-      list.map((a) => (a.id === id ? {...a, eliminated: true} : a)),
-    );
-    this.initiativeOrder.update((list) => list.filter((slot) => slot.id !== id));
-  }
-
-  protected moveInitiative(index: number, direction: -1 | 1): void {
-    const target = index + direction;
-    const list = this.initiativeOrder();
-    if (target < 0 || target >= list.length) return;
-    const updated = [...list];
-    [updated[index], updated[target]] = [updated[target], updated[index]];
-    this.initiativeOrder.set(updated);
-  }
-
-  protected quickRollHero(hero: CombatHero, type: 'initiative' | 'attaque'): void {
-    const label = type === 'initiative' ? `Initiative — ${hero.nom}` : `Attaque — ${hero.nom}`;
-    this.dicePanel()?.configureRoll(0, label);
-  }
-
-  protected quickRollAntagonist(ant: CombatAntagonist, type: 'initiative' | 'attaque'): void {
-    const modifier = type === 'initiative' ? ant.rollInitiative : ant.rollAttaque;
-    const label = type === 'initiative' ? `Initiative — ${ant.nom}` : `Attaque — ${ant.nom}`;
-    this.dicePanel()?.configureRoll(modifier, label);
-  }
-
-  protected vitalitePercent(current: number, max: number): number {
-    return max > 0 ? Math.round((current / max) * 100) : 0;
   }
 }

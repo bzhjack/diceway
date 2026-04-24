@@ -185,9 +185,7 @@
 
               <div class="grid gap-2">
                 @for (creature of creatures(); track creature.id) {
-                  <div
-                    class="dw-list-item"
-                  >
+                  <div class="dw-list-item">
                     <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5">
                       <p class="m-0 text-sm font-semibold text-slate-100">
                         @if (creature.surnom) { {{ creature.surnom }} } @else { {{ creature.nom }} }
@@ -196,6 +194,7 @@
                         <p class="m-0 text-xs text-slate-400">{{ creature.nom }}</p>
                       }
                       <span class="text-xs text-slate-400">PV {{ creature.vitaliteMax }}</span>
+                      <span class="text-xs text-amber-300/80">{{ creature.rang }}</span>
                     </div>
                     <button
                       type="button"
@@ -255,9 +254,7 @@
 
               <div class="grid gap-2">
                 @for (demon of demons(); track demon.id) {
-                  <div
-                    class="dw-list-item"
-                  >
+                  <div class="dw-list-item">
                     <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5">
                       <p class="m-0 text-sm font-semibold text-slate-100">
                         @if (demon.surnom) { {{ demon.surnom }} } @else { {{ demon.nom }} }
@@ -266,6 +263,7 @@
                         <p class="m-0 text-xs text-slate-400">{{ demon.nom }}</p>
                       }
                       <span class="text-xs text-slate-400">PV {{ demon.vitaliteMax }}</span>
+                      <span class="text-xs text-amber-300/80">{{ demon.rang }}</span>
                     </div>
                     <button
                       type="button"
@@ -293,7 +291,7 @@
                 <h2 class="m-0">PNJ</h2>
               </div>
 
-              <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]" [formGroup]="pnjForm">
+              <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto_auto]" [formGroup]="pnjForm">
                 <p-iftalabel>
                   <p-select
                     inputId="pnj-select"
@@ -312,6 +310,18 @@
                 <p-iftalabel>
                   <input pInputText id="pnj-surnom" formControlName="surnom" class="w-full" />
                   <label for="pnj-surnom">Surnom (optionnel)</label>
+                </p-iftalabel>
+
+                <p-iftalabel>
+                  <p-select
+                    inputId="pnj-rang"
+                    class="w-full"
+                    [options]="rangOptions"
+                    optionLabel="label"
+                    optionValue="value"
+                    formControlName="rang"
+                  />
+                  <label for="pnj-rang">Rang</label>
                 </p-iftalabel>
 
                 <p-button
@@ -338,6 +348,7 @@
                           <p class="m-0 text-xs text-slate-400">{{ pnj.nom }}</p>
                         }
                         <span class="text-xs text-slate-400">PV {{ pnj.vitaliteMax }}</span>
+                        <span class="text-xs text-amber-300/80">{{ pnj.rang }}</span>
                       </div>
                       @if (pnj.armes.length > 0) {
                         <div class="flex flex-wrap gap-1">
