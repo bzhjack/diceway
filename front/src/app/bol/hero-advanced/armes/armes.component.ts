@@ -46,7 +46,7 @@ export class HeroAdvancedArmesComponent implements ControlValueAccessor {
     initialValue: this.armesForm.getRawValue(),
   });
   protected readonly armeList = this.herosStateService.armeList;
-  protected readonly selectedArmeIds = computed(() => this.armes.controls.map((control) => Number(control.value)));
+  protected readonly selectedArmeIds = computed(() => (this.formChange().armes ?? []).map(Number));
   protected readonly filteredArmeList = computed(() =>
     (this.armeList() ?? []).filter((arme: BolArmeModel) => !this.selectedArmeIds().includes(Number(arme.id))),
   );
