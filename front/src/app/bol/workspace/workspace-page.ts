@@ -56,6 +56,14 @@ export class WorkspacePageComponent {
   protected readonly userName = computed(() => this.authService.user()?.name ?? 'Utilisateur');
   protected readonly metrics = computed<readonly WorkspaceMetric[]>(() => [
     {
+      label: 'Scénarios',
+      value: String(this.scenariosCount().length),
+      detail: 'Scénarios préparés pour la table.',
+      icon: 'pi pi-compass',
+      iconClass: 'border border-sky-400/25 bg-sky-400/12 text-sky-300',
+      link: '/library/scenarios',
+    },
+    {
       label: 'Héros suivis',
       value: String(this.heroes().length),
       detail: 'Nombre de héros récupéré depuis la bibliothèque Barbarian of Lemuria.',
@@ -79,14 +87,7 @@ export class WorkspacePageComponent {
       iconClass: 'border border-rose-400/25 bg-rose-400/12 text-rose-300',
       link: '/library/pnjs',
     },
-    {
-      label: 'Scénarios',
-      value: String(this.scenariosCount().length),
-      detail: 'Scénarios préparés pour la table.',
-      icon: 'pi pi-compass',
-      iconClass: 'border border-sky-400/25 bg-sky-400/12 text-sky-300',
-      link: '/library/scenarios',
-    },
+
     {
       label: 'Intendance',
       value: String(this.armes().length + this.armures().length),
