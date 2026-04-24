@@ -1,6 +1,9 @@
 <section class="dice-panel" aria-labelledby="dice-panel-title">
   <div class="dice-panel__heading">
     <p id="dice-panel-title" class="dice-panel__kicker">Assistant de jets</p>
+    @if (rollContext()) {
+      <p class="dice-panel__context">{{ rollContext() }}</p>
+    }
   </div>
 
   <app-dice-box-host #diceBox></app-dice-box-host>

@@ -38,13 +38,23 @@
 
           <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
             <span class="library-header-actions__primary">
-              <p-button
-                label="Lancer un combat"
-                icon="pi pi-bolt"
-                severity="warn"
-                size="small"
-                (onClick)="combatMode.set(true)"
-              />
+              @if (!combatMode()) {
+                <p-button
+                  label="Lancer un combat"
+                  icon="pi pi-bolt"
+                  severity="warn"
+                  size="small"
+                  (onClick)="startCombat()"
+                />
+              } @else {
+                <p-button
+                  label="Arrêter le combat"
+                  icon="pi pi-times"
+                  severity="danger"
+                  size="small"
+                  (onClick)="stopCombat()"
+                />
+              }
             </span>
             <p-button
               label="Retour aux scénarios"
@@ -57,6 +67,168 @@
           </div>
         </div>
       </p-card>
+
+      @if (combatMode()) {
+
+        <!-- INITIATIVE -->
+        <div class="dw-section">
+          <p class="combat-kicker">Ordre d'initiative</p>
+          <ol class="combat-initiative-list" aria-label="Ordre d'initiative">
+            @for (slot of initiativeOrder(); track slot.id; let i = $index) {
+              <li class="combat-initiative-item" [attr.data-type]="slot.type">
+                <span class="combat-initiative-item__pos">{{ i + 1 }}</span>
+                <span class="combat-initiative-item__name">{{ slot.nom }}</span>
+                <span class="combat-initiative-item__type">
+                  @switch (slot.type) {
+                    @case ('hero') { PJ }
+                    @case ('creature') { Créature }
+                    @case ('demon') { Démon }
+                    @case ('pnj') { PNJ }
+                  }
+                </span>
+                <div class="combat-initiative-item__arrows">
+                  <button
+                    type="button"
+                    [disabled]="i === 0"
+                    (click)="moveInitiative(i, -1)"
+                    aria-label="Monter dans l'ordre"
+                  >↑</button>
+                  <button
+                    type="button"
+                    [disabled]="i === initiativeOrder().length - 1"
+                    (click)="moveInitiative(i, 1)"
+                    aria-label="Descendre dans l'ordre"
+                  >↓</button>
+                </div>
+              </li>
+            }
+          </ol>
+        </div>
+
+        <!-- 3-COLUMN LAYOUT -->
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_300px_1fr]">
+
+          <!-- HÉROS -->
+          <div class="flex flex-col gap-3">
+            <p class="combat-col-label">Héros</p>
+            @for (hero of combatHeroes(); track hero.id) {
+              <div class="combat-hero-card">
+                <div class="combat-card__header">
+                  <div class="min-w-0">
+                    <p class="combat-card__name">{{ hero.nom }}</p>
+                    @if (hero.joueur) {
+                      <p class="combat-card__sub">{{ hero.joueur }}</p>
+                    }
+                  </div>
+                  <span class="combat-badge combat-badge--hero">PJ</span>
+                </div>
+
+                <div class="combat-stats-row">
+                  <div class="combat-stat-block">
+                    <span class="combat-stat-block__label">Vitalité</span>
+                    <div class="combat-stepper">
+                      <button type="button" class="combat-stepper__btn" (click)="adjustHeroHp(hero.id, -1)" aria-label="Réduire vitalité">−</button>
+                      <span class="combat-stepper__value">{{ hero.vitalite }} / {{ hero.vitaliteMax }}</span>
+                      <button type="button" class="combat-stepper__btn" (click)="adjustHeroHp(hero.id, 1)" aria-label="Augmenter vitalité">+</button>
+                    </div>
+                    <div class="combat-vit-bar">
+                      <div class="combat-vit-bar__fill" [style.width.%]="vitalitePercent(hero.vitalite, hero.vitaliteMax)"></div>
+                    </div>
+                  </div>
+                  <div class="combat-stat-block">
+                    <span class="combat-stat-block__label">Héroïsme</span>
+                    <div class="combat-stepper">
+                      <button type="button" class="combat-stepper__btn" (click)="adjustHeroHeroisme(hero.id, -1)" aria-label="Dépenser héroïsme">−</button>
+                      <span class="combat-stepper__value">{{ hero.heroisme }}</span>
+                      <button type="button" class="combat-stepper__btn" (click)="adjustHeroHeroisme(hero.id, 1)" aria-label="Gagner héroïsme">+</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="combat-card__actions">
+                  <button type="button" class="combat-roll-btn" (click)="quickRollHero(hero, 'initiative')">
+                    🎲 Initiative
+                  </button>
+                  <button type="button" class="combat-roll-btn" (click)="quickRollHero(hero, 'attaque')">
+                    🎲 Attaque
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- DÉS -->
+          <div>
+            <app-bol-dice-panel />
+          </div>
+
+          <!-- ANTAGONISTES -->
+          <div class="flex flex-col gap-3">
+            <p class="combat-col-label">Antagonistes</p>
+
+            @for (ant of aliveAntagonists(); track ant.id) {
+              <div class="combat-ant-card" [attr.data-type]="ant.type">
+                <div class="combat-card__header">
+                  <div class="min-w-0">
+                    <p class="combat-card__name">{{ ant.nom }}</p>
+                    @if (ant.surnom && ant.surnom !== ant.nom) {
+                      <p class="combat-card__sub">« {{ ant.surnom }} »</p>
+                    }
+                  </div>
+                  <span class="combat-badge" [attr.data-type]="ant.type">
+                    @switch (ant.type) {
+                      @case ('creature') { Créature }
+                      @case ('demon') { Démon }
+                      @case ('pnj') { PNJ }
+                    }
+                  </span>
+                </div>
+
+                <div class="combat-stat-block">
+                  <span class="combat-stat-block__label">Vitalité</span>
+                  <div class="combat-stepper">
+                    <button type="button" class="combat-stepper__btn" (click)="adjustAntagonistHp(ant.id, -1)" aria-label="Infliger dégât">−</button>
+                    <span class="combat-stepper__value">{{ ant.vitalite }} / {{ ant.vitaliteMax }}</span>
+                    <button type="button" class="combat-stepper__btn" (click)="adjustAntagonistHp(ant.id, 1)" aria-label="Soigner">+</button>
+                  </div>
+                  <div class="combat-vit-bar">
+                    <div class="combat-vit-bar__fill" [style.width.%]="vitalitePercent(ant.vitalite, ant.vitaliteMax)"></div>
+                  </div>
+                </div>
+
+                <div class="combat-ant-stats">
+                  <span>ATT <strong>{{ ant.rollAttaque >= 0 ? '+' + ant.rollAttaque : ant.rollAttaque }}</strong></span>
+                  <span>DÉF <strong>{{ ant.defense }}</strong></span>
+                  @if (ant.degats) {
+                    <span>DÉG <strong>{{ ant.degats }}</strong></span>
+                  }
+                </div>
+
+                <div class="combat-card__actions">
+                  <button type="button" class="combat-roll-btn" (click)="quickRollAntagonist(ant, 'initiative')">
+                    🎲 Initiative
+                  </button>
+                  <button type="button" class="combat-roll-btn" (click)="quickRollAntagonist(ant, 'attaque')">
+                    🎲 Attaque
+                  </button>
+                  <button
+                    type="button"
+                    class="dw-btn-remove"
+                    style="margin-left: auto"
+                    (click)="eliminateAntagonist(ant.id)"
+                    aria-label="Éliminer du combat"
+                  >✕</button>
+                </div>
+              </div>
+            }
+
+            @if (aliveAntagonists().length === 0) {
+              <div class="dw-empty">Tous les antagonistes ont été éliminés.</div>
+            }
+          </div>
+
+        </div>
+      }
 
     } @else {
       <p-card>

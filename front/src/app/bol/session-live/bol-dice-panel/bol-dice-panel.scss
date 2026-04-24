@@ -38,6 +38,13 @@
   text-transform: uppercase;
 }
 
+.dice-panel__context {
+  margin: 0.3rem 0 0;
+  color: #f8fafc;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
 .dice-panel__badge {
   display: inline-flex;
   align-items: center;
