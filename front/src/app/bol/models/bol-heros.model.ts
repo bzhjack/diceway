@@ -4,6 +4,7 @@ import {BolHerosArmeModel} from "./bol-arme.model";
 import {BolHerosTraitsModel} from "./bol-trait.model";
 import {BolHerosLangueModel} from "./bol-langue.model";
 import {BolRegionModel} from "./bol-region.model";
+
 export interface BolHerosModel {
   id: string | null;
   user_id: string | null;
