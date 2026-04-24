@@ -15,7 +15,12 @@ class BolScenarioDemon extends Model
         'vigueur', 'agilite', 'esprit', 'aura',
         'melee', 'tir', 'defense',
         'vitalite_max', 'vitalite_courante',
-        'degats', 'id_taille',
+        'degats',
+        'pouvoirs',
+    ];
+
+    protected $casts = [
+        'pouvoirs' => 'array',
     ];
 
     public function demon(): BelongsTo

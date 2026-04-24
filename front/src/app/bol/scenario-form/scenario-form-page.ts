@@ -269,7 +269,7 @@ export class ScenarioFormPageComponent {
     if (!creatureId) return;
     const creature = this.allCreatures().find((c) => c.id === creatureId);
     if (!creature) return;
-    const rang = this.rangFromType(creature.taille?.type);
+    const rang = creature.rang ?? this.rangFromType(creature.taille?.type);
     this.creatures.update((entries) => [
       ...entries,
       {

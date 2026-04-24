@@ -14,6 +14,7 @@ class BolScenarioCreature extends Model
         'vigueur', 'agilite', 'esprit',
         'vitalite_max', 'vitalite_courante',
         'attaque', 'defense', 'degats', 'protection', 'id_taille',
+        'capacites',
     ];
 
     protected $casts = [
@@ -25,5 +26,6 @@ class BolScenarioCreature extends Model
         'attaque'          => 'integer',
         'defense'          => 'integer',
         'id_taille'        => 'integer',
+        'capacites'        => 'array',
     ];
 }

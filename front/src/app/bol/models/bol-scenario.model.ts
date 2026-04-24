@@ -9,6 +9,14 @@ export interface BolScenarioModel {
   pnjs?: BolScenarioPnjModel[];
 }
 
+export interface BolScenarioCapaciteModel {
+  capacite_id: number;
+  capacite: string | null;
+  de_bonus: boolean;
+  de_malus: boolean;
+  detail: string | null;
+}
+
 export interface BolScenarioCreatureModel {
   id: number;
   scenario_id: string;
@@ -26,6 +34,13 @@ export interface BolScenarioCreatureModel {
   degats: string | null;
   protection: string | null;
   id_taille: number;
+  capacites: BolScenarioCapaciteModel[] | null;
+}
+
+export interface BolScenarioPouvoirModel {
+  pouvoir_id: number;
+  pouvoir: string | null;
+  detail: string | null;
 }
 
 export interface BolScenarioDemonModel {
@@ -45,7 +60,7 @@ export interface BolScenarioDemonModel {
   vitalite_max: number;
   vitalite_courante: number;
   degats: string | null;
-  id_taille: number | null;
+  pouvoirs: BolScenarioPouvoirModel[] | null;
 }
 
 export interface BolScenarioPnjArmeModel {
