@@ -119,11 +119,23 @@
                 @for (personnage of pj(); track personnage.id) {
                   <div
                     class="dw-list-item"
+                    [class.dw-list-item--top]="personnage.armes.length > 0"
                   >
-                    <div>
-                      <p class="m-0 text-sm font-semibold text-slate-100">{{ personnage.name }}</p>
-                      @if (personnage.joueur) {
-                        <p class="m-0 text-xs text-slate-400">{{ personnage.joueur }}</p>
+                    <div class="grid gap-1">
+                      <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5">
+                        <p class="m-0 text-sm font-semibold text-slate-100">{{ personnage.name }}</p>
+                        @if (personnage.joueur) {
+                          <p class="m-0 text-xs text-slate-400">{{ personnage.joueur }}</p>
+                        }
+                      </div>
+                      @if (personnage.armes.length > 0) {
+                        <div class="flex flex-wrap gap-1">
+                          @for (arme of personnage.armes; track $index) {
+                            <span class="border border-[#334155] bg-[#1e293b] px-1.5 py-0.5 text-xs text-slate-300">
+                              {{ arme.nom }}@if (arme.degats) { — {{ arme.degats }}}
+                            </span>
+                          }
+                        </div>
                       }
                     </div>
                     <button
@@ -194,6 +206,9 @@
                         <p class="m-0 text-xs text-slate-400">{{ creature.nom }}</p>
                       }
                       <span class="text-xs text-slate-400">PV {{ creature.vitaliteMax }}</span>
+                      @if (creature.degats) {
+                        <span class="border border-[#334155] bg-[#1e293b] px-1.5 py-0.5 text-xs text-slate-300">{{ creature.degats }}</span>
+                      }
                       <span class="text-xs text-amber-300/80">{{ creature.rang }}</span>
                     </div>
                     <button
@@ -263,6 +278,9 @@
                         <p class="m-0 text-xs text-slate-400">{{ demon.nom }}</p>
                       }
                       <span class="text-xs text-slate-400">PV {{ demon.vitaliteMax }}</span>
+                      @if (demon.degats) {
+                        <span class="border border-[#334155] bg-[#1e293b] px-1.5 py-0.5 text-xs text-slate-300">{{ demon.degats }}</span>
+                      }
                       <span class="text-xs text-amber-300/80">{{ demon.rang }}</span>
                     </div>
                     <button

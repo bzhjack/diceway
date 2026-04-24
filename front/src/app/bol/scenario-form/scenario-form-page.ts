@@ -21,6 +21,7 @@ interface ScenarioPjDraft {
   readonly heroId: string;
   readonly name: string;
   readonly joueur: string | null;
+  readonly armes: ScenarioPnjArme[];
 }
 
 interface ScenarioCreatureDraft {
@@ -30,6 +31,7 @@ interface ScenarioCreatureDraft {
   readonly rang: Rang;
   readonly nom: string;
   readonly vitaliteMax: number;
+  readonly degats: string | null;
 }
 
 interface ScenarioDemonDraft {
@@ -39,6 +41,7 @@ interface ScenarioDemonDraft {
   readonly rang: Rang;
   readonly nom: string;
   readonly vitaliteMax: number;
+  readonly degats: string | null;
 }
 
 interface ScenarioPnjArme {
@@ -178,12 +181,16 @@ export class ScenarioFormPageComponent {
           pitch: scenario.pitch ?? '',
         });
         this.pj.set(
-          (scenario.pj ?? []).map((p) => ({
-            id: this.createDraftId('pj'),
-            heroId: p.heros_id,
-            name: p.heros?.origines.nom ?? '?',
-            joueur: p.heros?.origines.joueur ?? null,
-          })),
+          (scenario.pj ?? []).map((p) => {
+            const hero = this.heroes().find((h) => h.id === p.heros_id);
+            return {
+              id: this.createDraftId('pj'),
+              heroId: p.heros_id,
+              name: p.heros?.origines.nom ?? '?',
+              joueur: p.heros?.origines.joueur ?? null,
+              armes: this.extractArmes(hero?.armes),
+            };
+          }),
         );
         this.creatures.set(
           (scenario.creatures ?? []).map((c) => ({
@@ -193,6 +200,7 @@ export class ScenarioFormPageComponent {
             rang: c.rang,
             nom: c.nom,
             vitaliteMax: c.vitalite_max,
+            degats: c.degats,
           })),
         );
         this.demons.set(
@@ -203,6 +211,7 @@ export class ScenarioFormPageComponent {
             rang: d.rang,
             nom: d.nom,
             vitaliteMax: d.vitalite_max,
+            degats: d.degats,
           })),
         );
         this.pnjs.set(
@@ -240,6 +249,7 @@ export class ScenarioFormPageComponent {
         heroId,
         name: hero.origines.nom ?? '(sans nom)',
         joueur: hero.origines.joueur ?? null,
+        armes: this.extractArmes(hero.armes),
       },
     ]);
     this.pjForm.reset({heroId: null});
@@ -269,6 +279,7 @@ export class ScenarioFormPageComponent {
         rang,
         nom: creature.nom,
         vitaliteMax: creature.vitalite,
+        degats: creature.degats ?? null,
       },
     ]);
     this.creatureForm.reset({creatureId: null, surnom: ''});
@@ -298,6 +309,7 @@ export class ScenarioFormPageComponent {
         rang,
         nom: demon.nom,
         vitaliteMax: demon.vitalite,
+        degats: demon.degats ?? null,
       },
     ]);
     this.demonForm.reset({demonId: null, surnom: ''});
@@ -317,13 +329,7 @@ export class ScenarioFormPageComponent {
     if (!pnjId) return;
     const pnj = this.allPnjs().find((p) => p.id === pnjId);
     if (!pnj) return;
-    const armes = (Array.isArray(pnj.armes) ? pnj.armes : [])
-      .filter((ha): ha is import('../models/bol-arme.model').BolHerosArmeModel => typeof ha === 'object')
-      .map((ha) => ({
-        nom: ha.arme?.arme ?? null,
-        degats: ha.arme?.degats ?? null,
-        type: ha.arme?.type ?? null,
-      }));
+    const armes = this.extractArmes(pnj.armes);
     this.pnjs.update((entries) => [
       ...entries,
       {
@@ -388,6 +394,17 @@ export class ScenarioFormPageComponent {
     this.pnjs.set([]);
     this.errorMessage.set(null);
     this.successMessage.set(null);
+  }
+
+  private extractArmes(armes: unknown): ScenarioPnjArme[] {
+    if (!Array.isArray(armes)) return [];
+    return armes
+      .filter((ha): ha is import('../models/bol-arme.model').BolHerosArmeModel => typeof ha === 'object' && ha !== null)
+      .map((ha) => ({
+        nom: ha.arme?.arme ?? null,
+        degats: ha.arme?.degats ?? null,
+        type: ha.arme?.type ?? null,
+      }));
   }
 
   private rangFromType(type: 'P' | 'C' | 'R' | null | undefined): Rang {
