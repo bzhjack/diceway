@@ -29,6 +29,16 @@
   margin-bottom: 0.5rem;
 }
 
+.combat-table-caption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  text-align: left;
+  border-bottom: 1px solid #1e293b;
+  caption-side: top;
+}
+
 .combat-initiative-notice {
   font-size: 0.75rem;
   font-weight: 600;
@@ -387,4 +397,240 @@
     border-color: rgba(96, 165, 250, 0.4);
     color: #93c5fd;
   }
+}
+
+// ── Combat table ──────────────────────────────────────────────────────────────
+
+.combat-table-wrap {
+  overflow-x: auto;
+}
+
+.combat-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.combat-th {
+  padding: 0.35rem 0.6rem;
+  color: #475569;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: left;
+  text-transform: uppercase;
+  border-bottom: 1px solid #1e293b;
+  white-space: nowrap;
+
+  &.combat-th--pos,
+  &.combat-th--def,
+  &.combat-th--remove { text-align: center; }
+}
+
+.combat-tr {
+  border-bottom: 1px solid #1e293b;
+  transition: background 120ms;
+
+  &:hover { background: rgb(30 41 59 / 0.4); }
+
+  &[data-cat='legendaire']     { border-left: 2px solid rgba(251, 191, 36, 0.5); }
+  &[data-cat='heroique']       { border-left: 2px solid rgba(251, 191, 36, 0.28); }
+  &[data-cat='reussite']       { border-left: 2px solid rgba(96, 165, 250, 0.3); }
+  &[data-cat='rival']          { border-left: 2px solid rgba(251, 146, 60, 0.35); }
+  &[data-cat='coriace']        { border-left: 2px solid rgba(251, 191, 36, 0.22); }
+  &[data-cat='echec']          { border-left: 2px solid rgba(248, 113, 113, 0.25); }
+  &[data-cat='pietaille']      { border-left: 2px solid rgba(100, 116, 139, 0.3); }
+  &[data-cat='echec-critique'] { border-left: 2px solid rgba(185, 28, 28, 0.45); }
+}
+
+.combat-td {
+  padding: 0.55rem 0.6rem;
+  vertical-align: middle;
+
+  &.combat-td--pos {
+    color: #475569;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-align: center;
+    width: 2rem;
+  }
+
+  &.combat-td--nom { min-width: 140px; }
+
+  &.combat-td--initiative { min-width: 170px; }
+
+  &.combat-td--pv {
+    min-width: 130px;
+    white-space: nowrap;
+  }
+
+  &.combat-td--def,
+  &.combat-td--degats { white-space: nowrap; }
+
+  &.combat-td--remove { text-align: center; width: 2.5rem; }
+}
+
+.combat-participant-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.combat-participant-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.combat-participant-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.combat-tag {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid #334155;
+  color: #64748b;
+  background: rgb(2 6 23 / 0.4);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.combat-stat-chip {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  background: rgb(15 23 42 / 0.6);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.combat-degats-chip {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid rgba(251, 146, 60, 0.3);
+  color: #fdba74;
+  background: rgba(251, 146, 60, 0.08);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.combat-vit-bar__fill--low {
+  background: #ef4444;
+}
+
+// ── Rang pill (read-only, all categories) ─────────────────────────────────────
+
+.combat-rang-pill {
+  display: inline-block;
+  flex-shrink: 0;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid #334155;
+  color: #64748b;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+
+  &[data-cat='legendaire']     { border-color: rgba(251,191,36,.6);  color: #fcd34d; }
+  &[data-cat='heroique']       { border-color: rgba(251,191,36,.4);  color: #fde68a; }
+  &[data-cat='reussite']       { border-color: rgba(96,165,250,.5);  color: #93c5fd; }
+  &[data-cat='rival']          { border-color: rgba(251,146,60,.35); color: #fdba74; }
+  &[data-cat='coriace']        { border-color: rgba(234,179,8,.35);  color: #fef08a; }
+  &[data-cat='echec']          { border-color: rgba(248,113,113,.45);color: #fca5a5; }
+  &[data-cat='pietaille']      { border-color: rgba(100,116,139,.4); color: #94a3b8; }
+  &[data-cat='echec-critique'] { border-color: rgba(185,28,28,.55);  color: #fca5a5; }
+}
+
+// ── Rules reminder panel ──────────────────────────────────────────────────────
+
+.combat-rules-panel {
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  background: rgb(2 6 23 / 0.4);
+  margin-bottom: 0.75rem;
+}
+.combat-rules-summary {
+  padding: 0.45rem 0.75rem;
+  color: #64748b;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+
+  &::marker,
+  &::-webkit-details-marker { display: none; }
+
+  &::before {
+    content: '▸ ';
+    color: #475569;
+    font-size: 0.65rem;
+  }
+
+  details[open] > & {
+    color: #94a3b8;
+    &::before { content: '▾ '; }
+  }
+}
+
+.combat-rules-body {
+  padding: 0.6rem 0.75rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.combat-rules-formula {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: monospace;
+}
+
+.combat-rules-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.combat-rules-entry {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.combat-rules-desc {
+  color: #64748b;
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+.combat-rules-modifiers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.08);
+  color: #475569;
+  font-size: 0.68rem;
+
+  strong { color: #94a3b8; margin-left: 0.1rem; }
+}
+
+.combat-rules-mod-label {
+  color: #64748b;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }

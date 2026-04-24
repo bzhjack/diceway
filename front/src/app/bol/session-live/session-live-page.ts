@@ -29,7 +29,12 @@ interface InitiativeSlot {
   readonly id: string;
   readonly nom: string;
   readonly type: ParticipantType;
+  readonly vitaliteMax: number;
+  readonly defense: number | null;
+  readonly degats: string | null;
+  readonly tags: string[];
   category: ReactionResult | null;
+  vitaliteCourante: number;
 }
 
 const INITIATIVE_ORDER: Record<ReactionResult, number> = {
@@ -62,6 +67,17 @@ const TYPE_LABELS: Record<ParticipantType, string> = {
   creature: 'Créature',
   demon: 'Démon',
   pnj: 'PNJ',
+};
+
+const CATEGORY_LABELS: Record<ReactionResult, string> = {
+  legendaire: 'Légendaire ★★',
+  heroique: 'Héroïque ★',
+  reussite: 'Réussite',
+  rival: 'Rival',
+  coriace: 'Coriace',
+  echec: 'Échec',
+  pietaille: 'Piétaille',
+  'echec-critique': 'Échec critique',
 };
 
 @Component({
@@ -122,10 +138,9 @@ export class SessionLivePageComponent {
   );
 
   protected readonly heroOptions: readonly CategoryOption[] = HERO_OPTIONS;
-  protected readonly antagonistOptions: readonly CategoryOption[] = ANTAGONIST_OPTIONS;
 
-  protected categoryOptionsFor(type: ParticipantType): readonly CategoryOption[] {
-    return type === 'hero' ? HERO_OPTIONS : ANTAGONIST_OPTIONS;
+  protected categoryLabel(category: ReactionResult): string {
+    return CATEGORY_LABELS[category];
   }
 
   protected startCombat(): void {
@@ -137,24 +152,46 @@ export class SessionLivePageComponent {
         id: `hero-${pj.id}`,
         nom: pj.heros?.origines.nom ?? 'Héros',
         type: 'hero',
+        vitaliteMax: pj.heros?.ressources?.vitalite ?? 0,
+        vitaliteCourante: pj.heros?.ressources?.vitalite ?? 0,
+        defense: pj.heros?.combat?.defense ?? null,
+        degats: null,
+        tags: [],
         category: null,
       })),
       ...(s.creatures ?? []).map((c): InitiativeSlot => ({
         id: `creature-${c.id}`,
         nom: c.surnom ?? c.nom,
         type: 'creature',
+        vitaliteMax: c.vitalite_max,
+        vitaliteCourante: c.vitalite_max,
+        defense: c.defense,
+        degats: c.degats,
+        tags: (c.capacites ?? []).map((cap) => cap.capacite ?? '').filter(Boolean),
         category: c.rang,
       })),
       ...(s.demons ?? []).map((d): InitiativeSlot => ({
         id: `demon-${d.id}`,
         nom: d.surnom ?? d.nom,
         type: 'demon',
+        vitaliteMax: d.vitalite_max,
+        vitaliteCourante: d.vitalite_max,
+        defense: d.defense,
+        degats: d.degats,
+        tags: (d.pouvoirs ?? []).map((p) => p.pouvoir ?? '').filter(Boolean),
         category: d.rang,
       })),
       ...(s.pnjs ?? []).map((p): InitiativeSlot => ({
         id: `pnj-${p.id}`,
         nom: p.surnom ?? p.nom,
         type: 'pnj',
+        vitaliteMax: p.vitalite_max,
+        vitaliteCourante: p.vitalite_max,
+        defense: p.defense,
+        degats: null,
+        tags: (p.armes ?? [])
+          .filter((a) => a.degats)
+          .map((a) => (a.nom ? `${a.nom} ${a.degats}` : (a.degats ?? ''))),
         category: p.rang,
       })),
     ];
@@ -177,9 +214,19 @@ export class SessionLivePageComponent {
     if (!id) return;
     const participant = this.allParticipants().find((p) => p.id === id);
     if (!participant) return;
-    this.initiativeOrder.update((list) => [...list, {...participant, category: null}]);
+    this.initiativeOrder.update((list) => [...list, participant]);
     const next = this.availableParticipants().find((p) => p.id !== id);
     this.selectedParticipantId.set(next?.id ?? null);
+  }
+
+  protected adjustHp(id: string, delta: number): void {
+    this.initiativeOrder.update((list) =>
+      list.map((s) =>
+        s.id === id
+          ? {...s, vitaliteCourante: Math.max(0, Math.min(s.vitaliteMax, s.vitaliteCourante + delta))}
+          : s,
+      ),
+    );
   }
 
   protected removeFromInitiative(id: string): void {
