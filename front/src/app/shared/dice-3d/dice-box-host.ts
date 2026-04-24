@@ -9,7 +9,8 @@ import {
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import type DiceBox, {DiceBoxRollResult} from '@3d-dice/dice-box';
+import type DiceBox from '@3d-dice/dice-box';
+import type { DiceBoxRollResult } from '@3d-dice/dice-box';
 
 let nextDiceHostId = 0;
 
