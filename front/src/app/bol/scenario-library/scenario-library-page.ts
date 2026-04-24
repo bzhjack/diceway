@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@ang
 import {toSignal} from '@angular/core/rxjs-interop';
 import {RouterLink} from '@angular/router';
 import {Subject} from 'rxjs';
-import {switchMap, startWith} from 'rxjs/operators';
+import {startWith, switchMap} from 'rxjs/operators';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {IconFieldModule} from 'primeng/iconfield';

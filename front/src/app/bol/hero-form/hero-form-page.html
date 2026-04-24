@@ -540,30 +540,11 @@
                     optionValue="id"
                     [formControl]="selectedArmeId"
                   >
-                    <ng-template #selectedItem let-selectedArmeId>
-                      @if (armeOption(selectedArmeId); as arme) {
-                        <div class="flex min-w-0 flex-col gap-0.5 py-1">
-                          <span class="truncate">{{ arme.arme }}</span>
-                          <span class="text-xs text-slate-400">
-                            @if (arme.degats) {
-                              Dégâts {{ arme.degats }}
-                            } @else {
-                              Dégâts -
-                            }
-                          </span>
-                        </div>
-                      }
-                    </ng-template>
-
                     <ng-template #item let-arme>
-                      <div class="flex min-w-0 flex-col gap-0.5 py-1">
+                      <div class="flex min-w-0 flex-col gap-0.5">
                         <span class="truncate">{{ arme.arme }}</span>
                         <span class="text-xs text-slate-400">
-                          @if (arme.degats) {
-                            Dégâts {{ arme.degats }}
-                          } @else {
-                            Dégâts -
-                          }
+                          @if (arme.degats) { Dégâts {{ arme.degats }} } @else { Dégâts - }
                         </span>
                       </div>
                     </ng-template>
@@ -626,30 +607,11 @@
                     optionValue="id"
                     [formControl]="selectedArmureId"
                   >
-                    <ng-template #selectedItem let-selectedArmureId>
-                      @if (armureOption(selectedArmureId); as armure) {
-                        <div class="flex min-w-0 flex-col gap-0.5 py-1">
-                          <span class="truncate">{{ armure.armure }}</span>
-                          <span class="text-xs text-slate-400">
-                            @if (armure.protection) {
-                              Protection {{ armure.protection }}
-                            } @else {
-                              Protection -
-                            }
-                          </span>
-                        </div>
-                      }
-                    </ng-template>
-
                     <ng-template #item let-armure>
-                      <div class="flex min-w-0 flex-col gap-0.5 py-1">
+                      <div class="flex min-w-0 flex-col gap-0.5">
                         <span class="truncate">{{ armure.armure }}</span>
                         <span class="text-xs text-slate-400">
-                          @if (armure.protection) {
-                            Protection {{ armure.protection }}
-                          } @else {
-                            Protection -
-                          }
+                          @if (armure.protection) { Protection {{ armure.protection }} } @else { Protection - }
                         </span>
                       </div>
                     </ng-template>

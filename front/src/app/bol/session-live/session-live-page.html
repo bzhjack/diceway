@@ -1,288 +1,288 @@
-<section class="workspace-page" aria-labelledby="workspace-title">
-  <header class="workspace-header">
-    <div class="workspace-title-block">
-      <p class="workspace-kicker">Table de session BoL</p>
-      <h1 id="workspace-title">Cockpit MJ · Le banquet des ombres</h1>
-      <p class="workspace-subtitle">
-        Vue unique pour mener la scène, suivre les protagonistes et basculer en combat sans
-        changer d écran. Connecté en tant que {{ userName() }}.
-      </p>
-    </div>
+<div class="dw-page">
+  <div class="mx-auto flex max-w-7xl flex-col gap-4">
 
-    <div class="workspace-header-actions">
-      <button class="button-secondary workspace-logout" type="button" (click)="logout()">
-        <i class="pi pi-sign-out" aria-hidden="true"></i>
-        <span>Déconnexion</span>
-      </button>
-    </div>
-  </header>
+    @if (scenario(); as s) {
+      <p-card class="dw-card--header">
+        <div class="flex flex-col gap-4">
+          <div class="space-y-2.5">
+            <div class="space-y-1.5">
+              <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-amber-300">
+                Session en cours
+              </p>
+              <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
+                {{ s.titre }}
+              </h1>
+            </div>
 
-  <section class="workspace-facts" aria-label="Contexte de session">
-    @for (fact of sessionFacts; track fact.label) {
-      <article class="fact-card" [attr.data-tone]="fact.tone">
-        <div class="fact-card__icon" aria-hidden="true">
-          <i [class]="fact.icon"></i>
+            @if (s.pitch) {
+              <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
+                {{ s.pitch }}
+              </p>
+            }
+
+            <div class="flex flex-wrap gap-1.5">
+              @if ((s.pj?.length ?? 0) > 0) {
+                <p-tag [value]="(s.pj?.length ?? 0) + ' PJ'" severity="info" />
+              }
+              @if ((s.creatures?.length ?? 0) > 0) {
+                <p-tag [value]="(s.creatures?.length ?? 0) + ' créature' + ((s.creatures?.length ?? 0) > 1 ? 's' : '')" severity="warn" />
+              }
+              @if ((s.demons?.length ?? 0) > 0) {
+                <p-tag [value]="(s.demons?.length ?? 0) + ' démon' + ((s.demons?.length ?? 0) > 1 ? 's' : '')" severity="danger" />
+              }
+              @if ((s.pnjs?.length ?? 0) > 0) {
+                <p-tag [value]="(s.pnjs?.length ?? 0) + ' PNJ'" severity="secondary" />
+              }
+            </div>
+          </div>
+
+          <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
+            <span class="library-header-actions__primary">
+              @if (!combatMode()) {
+                <p-button
+                  label="Lancer un combat"
+                  icon="pi pi-bolt"
+                  severity="warn"
+                  size="small"
+                  (onClick)="startCombat()"
+                />
+              } @else {
+                <p-button
+                  label="Arrêter le combat"
+                  icon="pi pi-times"
+                  severity="danger"
+                  size="small"
+                  (onClick)="stopCombat()"
+                />
+              }
+            </span>
+            <p-button
+              label="Retour aux scénarios"
+              icon="pi pi-arrow-left"
+              size="small"
+              [routerLink]="'/library/scenarios'"
+              severity="secondary"
+              [outlined]="true"
+            />
+          </div>
         </div>
-        <div class="fact-card__body">
-          <p class="fact-card__label">{{ fact.label }}</p>
-          <h2 class="fact-card__value">{{ fact.value }}</h2>
-          <p class="fact-card__detail">{{ fact.detail }}</p>
-        </div>
-      </article>
-    }
-  </section>
+      </p-card>
 
-  <nav class="workspace-quick-actions" aria-label="Actions rapides">
-    @for (action of quickActions; track action.label) {
-      <button class="quick-action" type="button" [attr.data-emphasis]="action.emphasis">
-        <i [class]="action.icon" aria-hidden="true"></i>
-        <span>{{ action.label }}</span>
-      </button>
-    }
-  </nav>
+      @if (combatMode()) {
 
-  <main class="workspace-board" aria-label="Table de session du maître de jeu">
-    <aside class="workspace-panel workspace-panel--protagonists" aria-labelledby="protagonists-title">
-      <div class="panel-heading">
-        <div>
-          <p class="panel-kicker">Protagonistes</p>
-          <h2 id="protagonists-title">Présence en scène</h2>
-        </div>
-        <span class="panel-badge">{{ protagonists.length }} actifs</span>
-      </div>
+        <div class="dw-section">
+          <div class="combat-initiative-header">
+            <p class="combat-kicker">Ordre d'initiative</p>
+          </div>
 
-      <section class="panel-group" aria-labelledby="players-title">
-        <div class="panel-group__title-row">
-          <h3 id="players-title">Héros présents</h3>
-          <span>{{ playerCharacters.length }}</span>
-        </div>
-
-        <div class="character-list">
-          @for (protagonist of playerCharacters; track protagonist.id) {
-            <article class="character-card" [attr.data-kind]="protagonist.kind">
-              <div class="character-card__header">
-                <div>
-                  <h4>{{ protagonist.name }}</h4>
-                  <p>{{ protagonist.title }}</p>
+          <details class="combat-rules-panel" open>
+            <summary class="combat-rules-summary">Jet de réaction — rappel</summary>
+            <div class="combat-rules-body">
+              <p class="combat-rules-formula">2d6 + Esprit + Initiative &mdash; réussite à 9+</p>
+              <div class="combat-rules-entries">
+                <div class="combat-rules-entry">
+                  <span class="combat-rang-pill" data-cat="legendaire">★★ Légendaire</span>
+                  <span class="combat-rules-desc">12 naturel + dépense 1 point d'héroïsme · Agit en premier · +1 à tous les jets d'attaque (toute la rencontre) · R1 : coriaces et piétaille bloqués</span>
                 </div>
-                <span class="kind-pill">{{ protagonist.kind === 'PJ' ? 'Héros' : protagonist.kind }}</span>
-              </div>
-
-              <div class="vitality-block">
-                <div class="vitality-block__meta">
-                  <span>Vitalité</span>
-                  <strong>{{ protagonist.vitality }}</strong>
+                <div class="combat-rules-entry">
+                  <span class="combat-rang-pill" data-cat="heroique">★ Héroïque</span>
+                  <span class="combat-rules-desc">12 naturel · Agit en premier · R1 : coriaces et piétaille bloqués</span>
                 </div>
-                <div class="vitality-bar" aria-hidden="true">
-                  <span [style.width.%]="protagonist.vitalityPercent"></span>
+                <div class="combat-rules-entry">
+                  <span class="combat-rang-pill" data-cat="reussite">Réussite</span>
+                  <span class="combat-rules-desc">Agit avant tout le monde</span>
                 </div>
-              </div>
-
-              <p class="character-card__intent">{{ protagonist.intent }}</p>
-              <p class="character-card__beat">{{ protagonist.lastBeat }}</p>
-
-              <div class="status-list" aria-label="États">
-                @for (state of protagonist.states; track state.label) {
-                  <span class="status-tag" [attr.data-tone]="state.tone">{{ state.label }}</span>
-                }
-              </div>
-
-              <div class="character-card__actions">
-                <button type="button">Fiche</button>
-                <button type="button">Jet</button>
-                <button type="button">Effet</button>
-              </div>
-            </article>
-          }
-        </div>
-      </section>
-
-      <section class="panel-group" aria-labelledby="npcs-title">
-        <div class="panel-group__title-row">
-          <h3 id="npcs-title">PNJ impliqués</h3>
-          <span>{{ nonPlayerCharacters.length }}</span>
-        </div>
-
-        <div class="character-list">
-          @for (protagonist of nonPlayerCharacters; track protagonist.id) {
-            <article class="character-card" [attr.data-kind]="protagonist.kind">
-              <div class="character-card__header">
-                <div>
-                  <h4>{{ protagonist.name }}</h4>
-                  <p>{{ protagonist.title }}</p>
+                <div class="combat-rules-entry">
+                  <span class="combat-rang-pill" data-cat="echec">Échec</span>
+                  <span class="combat-rules-desc">Agit avant la piétaille, après tous les autres</span>
                 </div>
-                <span class="kind-pill">{{ protagonist.kind === 'PJ' ? 'Héros' : protagonist.kind }}</span>
-              </div>
-
-              <div class="vitality-block">
-                <div class="vitality-block__meta">
-                  <span>Vitalité</span>
-                  <strong>{{ protagonist.vitality }}</strong>
-                </div>
-                <div class="vitality-bar" aria-hidden="true">
-                  <span [style.width.%]="protagonist.vitalityPercent"></span>
+                <div class="combat-rules-entry">
+                  <span class="combat-rang-pill" data-cat="echec-critique">Échec critique</span>
+                  <span class="combat-rules-desc">2 naturel (choix du joueur) · Agit en dernier · R1 : ne peut pas agir, pas de bonus de bouclier en défense</span>
                 </div>
               </div>
-
-              <p class="character-card__intent">{{ protagonist.intent }}</p>
-              <p class="character-card__beat">{{ protagonist.lastBeat }}</p>
-
-              <div class="status-list" aria-label="États">
-                @for (state of protagonist.states; track state.label) {
-                  <span class="status-tag" [attr.data-tone]="state.tone">{{ state.label }}</span>
-                }
-              </div>
-
-              <div class="character-card__actions">
-                <button type="button">Fiche</button>
-                <button type="button">Réplique</button>
-                <button type="button">Hostilité</button>
-              </div>
-            </article>
-          }
-        </div>
-      </section>
-    </aside>
-
-    <section class="workspace-panel workspace-panel--scene" aria-labelledby="scene-title">
-      <div class="panel-heading">
-        <div>
-          <p class="panel-kicker">Scène active</p>
-          <h2 id="scene-title">Négociation sous tension</h2>
-        </div>
-        <span class="panel-badge panel-badge--danger">Risque de combat élevé</span>
-      </div>
-
-      <section class="focus-strip" aria-label="Niveaux de focus">
-        @for (level of focusLevels; track level.name) {
-          <article class="focus-chip" [attr.data-current]="level.current">
-            <p>{{ level.name }}</p>
-            <span>{{ level.summary }}</span>
-          </article>
-        }
-      </section>
-
-      <section class="scene-overview" aria-label="Résumé de scène">
-        @for (card of sceneCards; track card.label) {
-          <article class="scene-card">
-            <p class="scene-card__label">{{ card.label }}</p>
-            <h3>{{ card.value }}</h3>
-            <p>{{ card.detail }}</p>
-          </article>
-        }
-      </section>
-
-      <nav class="scene-actions" aria-label="Actions de scène">
-        @for (action of sceneActions; track action.label) {
-          <button class="quick-action quick-action--compact" type="button" [attr.data-emphasis]="action.emphasis">
-            <i [class]="action.icon" aria-hidden="true"></i>
-            <span>{{ action.label }}</span>
-          </button>
-        }
-      </nav>
-
-      <section class="timeline-section" aria-labelledby="timeline-title">
-        <div class="panel-group__title-row">
-          <h3 id="timeline-title">Timeline narrative</h3>
-          <span>Chronologie vive</span>
-        </div>
-
-        <div class="timeline-list">
-          @for (entry of timeline; track entry.id) {
-            <article class="timeline-entry" [attr.data-tone]="entry.tone">
-              <div class="timeline-entry__marker" aria-hidden="true"></div>
-              <div class="timeline-entry__content">
-                <div class="timeline-entry__meta">
-                  <h4>{{ entry.title }}</h4>
-                  <span>{{ entry.time }}</span>
-                </div>
-                <p>{{ entry.detail }}</p>
-              </div>
-            </article>
-          }
-        </div>
-      </section>
-    </section>
-
-    <aside class="workspace-panel workspace-panel--tools" aria-labelledby="tools-title">
-      <div class="panel-heading">
-        <div>
-          <p class="panel-kicker">Outils</p>
-          <h2 id="tools-title">Contexte et combat</h2>
-        </div>
-        <span class="panel-badge panel-badge--accent">Mode assistant</span>
-      </div>
-
-      <section class="tool-list" aria-label="Modules contextuels">
-        @for (tool of toolModules; track tool.id) {
-          <article class="tool-card" [attr.data-mode]="tool.mode">
-            <div class="tool-card__header">
-              <div class="tool-card__icon" aria-hidden="true">
-                <i [class]="tool.icon"></i>
-              </div>
-              <div>
-                <h3>{{ tool.name }}</h3>
-                <p>{{ tool.detail }}</p>
+              <div class="combat-rules-modifiers">
+                <span class="combat-rules-mod-label">Modificateurs :</span>
+                <span>Surpris / embuscade subie <strong>−1</strong></span>
+                <span>Pose une embuscade <strong>+2</strong></span>
+                <span>Carrière utile <strong>+rang</strong></span>
+                <span>Initiative ennemie (coriace/rival) <strong>−X</strong></span>
               </div>
             </div>
-          </article>
-        }
-      </section>
+          </details>
 
-      <app-bol-dice-panel />
+          @if (legendaryBonus() || round1Blocked()) {
+            <div class="combat-notices flex gap-2">
+              @if (legendaryBonus()) {
+                <span class="combat-initiative-notice combat-initiative-notice--legendary">
+                  ★★ Un héros légendaire : +1 à toutes les attaques ce combat
+                </span>
+              }
+              @if (round1Blocked()) {
+                <span class="combat-initiative-notice combat-initiative-notice--blocked">
+                  ⛔ Coriaces et piétaille bloqués au round 1
+                </span>
+              }
+            </div>
+          }
 
-      <section class="combat-card" aria-labelledby="combat-title">
-        <div class="panel-group__title-row">
-          <h3 id="combat-title">Mode combat</h3>
-          <span>{{ combatSummary.round }}</span>
-        </div>
+          @if (sortedInitiative().length > 0) {
+            <div class="combat-table-wrap">
+              <table class="combat-table" aria-label="Tableau de combat">
+                <thead>
+                  <tr>
+                    <th class="combat-th combat-th--pos">#</th>
+                    <th class="combat-th combat-th--nom">Participant</th>
+                    <th class="combat-th combat-th--initiative">Initiative</th>
+                    <th class="combat-th combat-th--pv">PV</th>
+                    <th class="combat-th combat-th--def">Déf</th>
+                    <th class="combat-th combat-th--degats">Dégâts</th>
+                    <th class="combat-th combat-th--remove"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (slot of sortedInitiative(); track slot.id; let i = $index) {
+                    <tr class="combat-tr" [attr.data-type]="slot.type" [attr.data-cat]="slot.category">
 
-        <p class="combat-card__lead">
-          {{ combatSummary.currentTurn }} · Le système prépare initiative, vitalité et suggestion
-          de résolution automatique.
-        </p>
+                      <td class="combat-td combat-td--pos">{{ i + 1 }}</td>
 
-        <div class="combat-list">
-          @for (combatant of combatants; track combatant.id) {
-            <article class="combatant-row" [attr.data-allegiance]="combatant.allegiance">
-              <div class="combatant-row__header">
-                <div>
-                  <h4>{{ combatant.name }}</h4>
-                  <p>{{ combatant.role === 'PJ' ? 'Héros' : combatant.role }} · INIT {{ combatant.initiative }}</p>
-                </div>
-                <strong>{{ combatant.vitality }}</strong>
-              </div>
+                      <td class="combat-td combat-td--nom">
+                        <div class="combat-participant-identity">
+                          <div class="combat-participant-header">
+                            <span class="combat-initiative-item__name">{{ slot.nom }}</span>
+                            <span class="combat-badge" [attr.data-type]="slot.type">
+                              @switch (slot.type) {
+                                @case ('hero') { PJ }
+                                @case ('creature') { Créature }
+                                @case ('demon') { Démon }
+                                @case ('pnj') { PNJ }
+                              }
+                            </span>
+                            @if (slot.category === 'echec-critique') {
+                              <span class="combat-indicator combat-indicator--blocked" title="Ne peut pas agir au round 1 — pas de bonus de bouclier en défense">⛔ R1</span>
+                            }
+                            @if (round1Blocked() && (slot.category === 'coriace' || slot.category === 'pietaille')) {
+                              <span class="combat-indicator combat-indicator--blocked" title="Ne joue pas au round 1">⛔ R1</span>
+                            }
+                          </div>
+                          @if (slot.tags.length > 0) {
+                            <div class="combat-participant-tags">
+                              @for (tag of slot.tags; track tag) {
+                                <span class="combat-tag">{{ tag }}</span>
+                              }
+                            </div>
+                          }
+                        </div>
+                      </td>
 
-              <div class="vitality-bar vitality-bar--compact" aria-hidden="true">
-                <span [style.width.%]="combatant.vitalityPercent"></span>
-              </div>
+                      <td class="combat-td combat-td--initiative">
+                        @if (slot.type === 'hero') {
+                          <div class="combat-initiative-cats" role="group" [attr.aria-label]="'Catégorie de ' + slot.nom">
+                            @for (opt of heroOptions; track opt.value) {
+                              <button
+                                type="button"
+                                class="combat-cat-btn"
+                                [attr.data-cat]="opt.value"
+                                [attr.data-active]="slot.category === opt.value"
+                                (click)="setCategory(slot.id, opt.value)"
+                              >{{ opt.label }}</button>
+                            }
+                          </div>
+                        } @else {
+                          @if (slot.category) {
+                            <span class="combat-rang-pill" [attr.data-cat]="slot.category">{{ categoryLabel(slot.category) }}</span>
+                          }
+                        }
+                      </td>
 
-              <p class="combatant-row__action">{{ combatant.nextAction }}</p>
+                      <td class="combat-td combat-td--pv">
+                        <div class="combat-stepper">
+                          <button type="button" class="combat-stepper__btn" (click)="adjustHp(slot.id, -1)" aria-label="Réduire PV">−</button>
+                          <span class="combat-stepper__value">{{ slot.vitaliteCourante }}/{{ slot.vitaliteMax }}</span>
+                          <button type="button" class="combat-stepper__btn" (click)="adjustHp(slot.id, 1)" aria-label="Augmenter PV">+</button>
+                        </div>
+                        @if (slot.vitaliteMax > 0) {
+                          <div class="combat-vit-bar">
+                            <div
+                              class="combat-vit-bar__fill"
+                              [style.width.%]="slot.vitaliteCourante / slot.vitaliteMax * 100"
+                              [class.combat-vit-bar__fill--low]="slot.vitaliteCourante / slot.vitaliteMax <= 0.33"
+                            ></div>
+                          </div>
+                        }
+                      </td>
 
-              <div class="status-list" aria-label="États de combat">
-                @for (state of combatant.states; track state.label) {
-                  <span class="status-tag" [attr.data-tone]="state.tone">{{ state.label }}</span>
-                }
-              </div>
-            </article>
+                      <td class="combat-td combat-td--def">
+                        @if (slot.defense != null) {
+                          <span class="combat-stat-chip">{{ slot.defense }}</span>
+                        }
+                      </td>
+
+                      <td class="combat-td combat-td--degats">
+                        @if (slot.degats) {
+                          <span class="combat-degats-chip">{{ slot.degats }}</span>
+                        }
+                      </td>
+
+                      <td class="combat-td combat-td--remove">
+                        <button
+                          type="button"
+                          class="dw-btn-remove"
+                          (click)="removeFromInitiative(slot.id)"
+                          aria-label="Retirer de l'initiative"
+                        >✕</button>
+                      </td>
+
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else {
+            <p class="combat-initiative-empty">Aucun participant. Ajoutez-en ci-dessous.</p>
+          }
+
+          @if (availableParticipants().length > 0) {
+            <div class="combat-initiative-add">
+              <p-select
+                class="combat-initiative-select"
+                [options]="availableParticipantOptions()"
+                optionLabel="label"
+                optionValue="value"
+                [ngModel]="selectedParticipantId()"
+                (ngModelChange)="selectedParticipantId.set($event)"
+                placeholder="Choisir un participant"
+              />
+              <button
+                type="button"
+                class="combat-initiative-add__btn"
+                [disabled]="!selectedParticipantId()"
+                (click)="addToInitiative()"
+              >
+                + Ajouter
+              </button>
+            </div>
           }
         </div>
 
-        <div class="combat-actions" aria-label="Actions de combat">
-          <button type="button">Attaquer</button>
-          <button type="button">Défendre</button>
-          <button type="button">Manœuvre</button>
-          <button type="button">Héroïsme</button>
-        </div>
-      </section>
+      }
 
-      <section class="resolution-card" aria-labelledby="resolution-title">
-        <div class="panel-group__title-row">
-          <h3 id="resolution-title">Résolution suggérée</h3>
-          <span>Calcul auto</span>
+    } @else {
+      <p-card>
+        <div class="flex flex-col items-center gap-3 py-12 text-center text-slate-400">
+          <i class="pi pi-compass text-3xl text-slate-500" aria-hidden="true"></i>
+          <p class="m-0 text-sm">Aucun scénario sélectionné.</p>
+          <p-button
+            label="Choisir un scénario"
+            icon="pi pi-list"
+            severity="secondary"
+            [outlined]="true"
+            size="small"
+            [routerLink]="'/library/scenarios'"
+          />
         </div>
-        <p>{{ combatSummary.resolution }}</p>
-      </section>
-    </aside>
-  </main>
-</section>
+      </p-card>
+    }
+
+  </div>
+</div>

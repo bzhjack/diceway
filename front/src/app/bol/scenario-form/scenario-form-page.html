@@ -119,11 +119,23 @@
                 @for (personnage of pj(); track personnage.id) {
                   <div
                     class="dw-list-item"
+                    [class.dw-list-item--top]="personnage.armes.length > 0"
                   >
-                    <div>
-                      <p class="m-0 text-sm font-semibold text-slate-100">{{ personnage.name }}</p>
-                      @if (personnage.joueur) {
-                        <p class="m-0 text-xs text-slate-400">{{ personnage.joueur }}</p>
+                    <div class="grid gap-1">
+                      <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5">
+                        <p class="m-0 text-sm font-semibold text-slate-100">{{ personnage.name }}</p>
+                        @if (personnage.joueur) {
+                          <p class="m-0 text-xs text-slate-400">{{ personnage.joueur }}</p>
+                        }
+                      </div>
+                      @if (personnage.armes.length > 0) {
+                        <div class="flex flex-wrap gap-1">
+                          @for (arme of personnage.armes; track $index) {
+                            <span class="border border-[#334155] bg-[#1e293b] px-1.5 py-0.5 text-xs text-slate-300">
+                              {{ arme.nom }}@if (arme.degats) { — {{ arme.degats }}}
+                            </span>
+                          }
+                        </div>
                       }
                     </div>
                     <button
@@ -164,7 +176,14 @@
                     [filter]="true"
                     filterPlaceholder="Rechercher..."
                     emptyMessage="Aucune créature disponible"
-                  />
+                  >
+                    <ng-template #item let-opt>
+                      <div class="flex flex-col gap-0.5">
+                        <span>{{ opt.label }}</span>
+                        <span class="text-xs text-slate-400">{{ opt.rang }}</span>
+                      </div>
+                    </ng-template>
+                  </p-select>
                   <label for="creature-select">Choisir une créature</label>
                 </p-iftalabel>
 
@@ -185,17 +204,30 @@
 
               <div class="grid gap-2">
                 @for (creature of creatures(); track creature.id) {
-                  <div
-                    class="dw-list-item"
-                  >
-                    <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5">
-                      <p class="m-0 text-sm font-semibold text-slate-100">
-                        @if (creature.surnom) { {{ creature.surnom }} } @else { {{ creature.nom }} }
-                      </p>
-                      @if (creature.surnom) {
-                        <p class="m-0 text-xs text-slate-400">{{ creature.nom }}</p>
+                  <div class="dw-list-item" [class.dw-list-item--top]="creature.capacites.length > 0">
+                    <div class="grid gap-1">
+                      <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5">
+                        <p class="m-0 text-sm font-semibold text-slate-100">
+                          @if (creature.surnom) { {{ creature.surnom }} } @else { {{ creature.nom }} }
+                        </p>
+                        @if (creature.surnom) {
+                          <p class="m-0 text-xs text-slate-400">{{ creature.nom }}</p>
+                        }
+                        <span class="text-xs text-slate-400">PV {{ creature.vitaliteMax }}</span>
+                        @if (creature.degats) {
+                          <span class="border border-[#334155] bg-[#1e293b] px-1.5 py-0.5 text-xs text-slate-300">{{ creature.degats }}</span>
+                        }
+                        <span class="text-xs text-amber-300/80">{{ creature.rang }}</span>
+                      </div>
+                      @if (creature.capacites.length > 0) {
+                        <div class="flex flex-wrap gap-1">
+                          @for (cap of creature.capacites; track $index) {
+                            <span class="border border-[#334155] bg-[#1e293b] px-1.5 py-0.5 text-xs text-slate-300">
+                              {{ cap.nom }}@if (cap.detail) { — {{ cap.detail }}}
+                            </span>
+                          }
+                        </div>
                       }
-                      <span class="text-xs text-slate-400">PV {{ creature.vitaliteMax }}</span>
                     </div>
                     <button
                       type="button"
@@ -234,7 +266,14 @@
                     [filter]="true"
                     filterPlaceholder="Rechercher..."
                     emptyMessage="Aucun démon disponible"
-                  />
+                  >
+                    <ng-template #item let-opt>
+                      <div class="flex flex-col gap-0.5">
+                        <span>{{ opt.label }}</span>
+                        <span class="text-xs text-slate-400">{{ opt.rang }}</span>
+                      </div>
+                    </ng-template>
+                  </p-select>
                   <label for="demon-select">Choisir un démon</label>
                 </p-iftalabel>
 
@@ -255,9 +294,7 @@
 
               <div class="grid gap-2">
                 @for (demon of demons(); track demon.id) {
-                  <div
-                    class="dw-list-item"
-                  >
+                  <div class="dw-list-item">
                     <div class="flex flex-wrap items-center gap-x-3 gap-y-0.5">
                       <p class="m-0 text-sm font-semibold text-slate-100">
                         @if (demon.surnom) { {{ demon.surnom }} } @else { {{ demon.nom }} }
@@ -266,6 +303,10 @@
                         <p class="m-0 text-xs text-slate-400">{{ demon.nom }}</p>
                       }
                       <span class="text-xs text-slate-400">PV {{ demon.vitaliteMax }}</span>
+                      @if (demon.degats) {
+                        <span class="border border-[#334155] bg-[#1e293b] px-1.5 py-0.5 text-xs text-slate-300">{{ demon.degats }}</span>
+                      }
+                      <span class="text-xs text-amber-300/80">{{ demon.rang }}</span>
                     </div>
                     <button
                       type="button"
@@ -305,7 +346,14 @@
                     [filter]="true"
                     filterPlaceholder="Rechercher..."
                     emptyMessage="Aucun PNJ disponible"
-                  />
+                  >
+                    <ng-template #item let-opt>
+                      <div class="flex flex-col gap-0.5">
+                        <span>{{ opt.label }}</span>
+                        <span class="text-xs text-slate-400">{{ opt.rang }}</span>
+                      </div>
+                    </ng-template>
+                  </p-select>
                   <label for="pnj-select">Choisir un PNJ</label>
                 </p-iftalabel>
 
@@ -338,6 +386,7 @@
                           <p class="m-0 text-xs text-slate-400">{{ pnj.nom }}</p>
                         }
                         <span class="text-xs text-slate-400">PV {{ pnj.vitaliteMax }}</span>
+                        <span class="text-xs text-amber-300/80">{{ pnj.rang }}</span>
                       </div>
                       @if (pnj.armes.length > 0) {
                         <div class="flex flex-wrap gap-1">

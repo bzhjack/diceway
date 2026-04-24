@@ -1,16 +1,15 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
-  afterNextRender,
   inject,
   signal,
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import type DiceBox from '@3d-dice/dice-box';
-import type {DiceBoxRollResult} from '@3d-dice/dice-box';
+import type DiceBox, {DiceBoxRollResult} from '@3d-dice/dice-box';
 
 let nextDiceHostId = 0;
 

@@ -1,5 +1,5 @@
 <p-card class="dw-card--header">
-  <div class="flex flex-col gap-4">
+  <div class="flex items-start justify-between gap-4">
     <div class="space-y-2.5">
       <div class="space-y-1.5">
         <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-sky-300">
@@ -22,26 +22,13 @@
       </div>
     </div>
 
-    <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
-      <div class="flex flex-wrap gap-1.5">
-        <span class="library-header-actions__primary">
-          <p-button
-            label="Entrer dans la session"
-            icon="pi pi-play-circle"
-            [routerLink]="'/session/live'"
-            severity="info"
-            size="small"
-          />
-        </span>
-      </div>
-      <p-button
-        label="Déconnexion"
-        icon="pi pi-sign-out"
-        severity="secondary"
-        size="small"
-        [outlined]="true"
-        (onClick)="requestLogout()"
-      />
-    </div>
+    <p-button
+      label="Déconnexion"
+      icon="pi pi-sign-out"
+      severity="secondary"
+      size="small"
+      [outlined]="true"
+      (onClick)="requestLogout()"
+    />
   </div>
 </p-card>

@@ -82,14 +82,23 @@ class BolScenarioController extends Controller
     {
         BolScenarioCreature::where('scenario_id', $scenarioId)->delete();
         foreach ($creatureList as $item) {
-            $creature = BolCreature::find($item['creatureId']);
+            $creature = BolCreature::with('capacites.capacite')->find($item['creatureId']);
             if (!$creature) {
                 continue;
             }
+            $capacites = collect($creature->capacites ?? [])->map(fn($c) => [
+                'capacite_id' => $c->capacite_id,
+                'capacite'    => $c->capacite?->capacite,
+                'de_bonus'    => $c->capacite?->de_bonus,
+                'de_malus'    => $c->capacite?->de_malus,
+                'detail'      => $c->detail,
+            ])->values()->toArray();
+
             BolScenarioCreature::create([
                 'scenario_id'       => $scenarioId,
                 'creature_id'       => $creature->id,
                 'surnom'            => $item['surnom'] ?? null,
+                'rang'              => $item['rang'] ?? 'coriace',
                 'nom'               => $creature->nom,
                 'vigueur'           => $creature->vigueur,
                 'agilite'           => $creature->agilite,
@@ -101,6 +110,7 @@ class BolScenarioController extends Controller
                 'degats'            => $creature->degats,
                 'protection'        => $creature->protection,
                 'id_taille'         => $creature->id_taille,
+                'capacites'         => $capacites,
             ]);
         }
     }
@@ -109,14 +119,21 @@ class BolScenarioController extends Controller
     {
         BolScenarioDemon::where('scenario_id', $scenarioId)->delete();
         foreach ($demonList as $item) {
-            $demon = BolDemon::find($item['demonId']);
+            $demon = BolDemon::with('pouvoirs.pouvoir')->find($item['demonId']);
             if (!$demon) {
                 continue;
             }
+            $pouvoirs = collect($demon->pouvoirs ?? [])->map(fn($p) => [
+                'pouvoir_id' => $p->pouvoir_id,
+                'pouvoir'    => $p->pouvoir?->pouvoir,
+                'detail'     => $p->detail,
+            ])->values()->toArray();
+
             BolScenarioDemon::create([
                 'scenario_id'       => $scenarioId,
                 'demon_id'          => $demon->id,
                 'surnom'            => $item['surnom'] ?? null,
+                'rang'              => $item['rang'] ?? 'rival',
                 'nom'               => $demon->nom,
                 'vigueur'           => $demon->vigueur,
                 'agilite'           => $demon->agilite,
@@ -128,7 +145,7 @@ class BolScenarioController extends Controller
                 'vitalite_max'      => $demon->vitalite,
                 'vitalite_courante' => $demon->vitalite,
                 'degats'            => $demon->degats,
-                'id_taille'         => $demon->id_taille,
+                'pouvoirs'          => $pouvoirs,
             ]);
         }
     }
@@ -152,6 +169,7 @@ class BolScenarioController extends Controller
                 'scenario_id'       => $scenarioId,
                 'pnj_id'            => $pnj->id,
                 'surnom'            => $item['surnom'] ?? null,
+                'rang'              => $item['rang'] ?? 'coriace',
                 'nom'               => $pnj->nom,
                 'vigueur'           => $pnj->vigueur,
                 'agilite'           => $pnj->agilite,

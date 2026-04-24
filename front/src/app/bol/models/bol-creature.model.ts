@@ -21,7 +21,8 @@ export interface BolCreatureModel {
     id: number;
   }[];
   taille: BolCreatureTailleModel;
-  type?: 'P' | 'C' | 'R'
+  type?: 'P' | 'C' | 'R';
+  rang?: 'rival' | 'coriace' | 'pietaille';
 }
 
 export interface BolCreatureCapaciteModel {

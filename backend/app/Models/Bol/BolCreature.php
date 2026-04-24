@@ -16,7 +16,7 @@ class BolCreature extends Model
     public $incrementing = false;
     protected $keyType = 'uuid';
     protected $hidden = ['created_at', 'updated_at'];
-    protected $appends = ['type'];
+    protected $appends = ['type', 'rang'];
     protected $fillable = [
         'id',
         'user_id',
@@ -54,9 +54,18 @@ class BolCreature extends Model
         return $this->HasOne(BolTaille::class, 'id', 'id_taille');
     }
 
-    public function getTypeAttribute()
+    public function getTypeAttribute(): string
     {
         return $this->taille->type;
+    }
+
+    public function getRangAttribute(): string
+    {
+        return match($this->taille?->type) {
+            'P' => 'pietaille',
+            'R' => 'rival',
+            default => 'coriace',
+        };
     }
 
 }

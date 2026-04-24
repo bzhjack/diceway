@@ -45,6 +45,7 @@ export class BolDicePanelComponent {
   protected readonly rolling = signal(false);
   protected readonly errorMessage = signal('');
   protected readonly lastRoll = signal<RollSummary | null>(null);
+  protected readonly rollContext = signal('');
 
   protected readonly modeOptions: readonly ModeOption[] = [
     {label: 'Standard', value: 'standard'},
@@ -122,9 +123,16 @@ export class BolDicePanelComponent {
     }
   }
 
+  public configureRoll(modifier: number, label: string, mode: BolRollMode = 'standard'): void {
+    this.modifier.set(modifier);
+    this.mode.set(mode);
+    this.rollContext.set(label);
+  }
+
   protected async clearTray(): Promise<void> {
     this.lastRoll.set(null);
     this.errorMessage.set('');
+    this.rollContext.set('');
     await this.diceBoxHost().clear();
   }
 

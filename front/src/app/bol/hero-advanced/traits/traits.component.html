@@ -9,7 +9,7 @@
           { label: 'Désavantage', value: 'D' }
         ]"
         [ngModel]="contextType()"
-        (ngModelChange)="contextType.set($event)"
+        (ngModelChange)="contextType.set($event); selectedTrait.set(null)"
         optionLabel="label"
         optionValue="value"
       />
@@ -27,16 +27,12 @@
         placeholder="Choisir un trait"
       >
         <ng-template #selectedItem let-selectedOption>
-          @if (selectedOption) {
-            <div class="flex items-center gap-2">
-              @if (selectedOption.region_id) {
-                <i class="pi pi-map-marker text-xs text-emerald-300"></i>
-              }
-              <span>
-                {{ contextType() === 'A' ? selectedOption.avantage : selectedOption.desavantage }}
-              </span>
-            </div>
-          }
+          <div class="flex items-center gap-2">
+            @if (selectedOption.region_id) {
+              <i class="pi pi-map-marker text-xs text-emerald-300"></i>
+            }
+            <span>{{ contextType() === 'A' ? selectedOption.avantage : selectedOption.desavantage }}</span>
+          </div>
         </ng-template>
 
         <ng-template #item let-trait>

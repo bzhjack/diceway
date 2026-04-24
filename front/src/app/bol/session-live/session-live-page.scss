@@ -2,700 +2,635 @@
   display: block;
 }
 
-.workspace-page {
-  --workspace-bg: #000000;
-  --workspace-ink: #f8fafc;
-  --workspace-muted: #94a3b8;
-  --workspace-panel: rgba(26, 32, 44, 0.92);
-  --workspace-panel-strong: rgba(45, 55, 72, 0.94);
-  --workspace-line: rgba(148, 163, 184, 0.18);
-  --workspace-gold: #60a5fa;
-  --workspace-gold-soft: rgba(96, 165, 250, 0.18);
-  --workspace-red: #f87171;
-  --workspace-red-soft: rgba(248, 113, 113, 0.16);
-  --workspace-green: #4ade80;
-  --workspace-green-soft: rgba(74, 222, 128, 0.16);
-  min-height: 100dvh;
-  padding: clamp(1.25rem, 2vw, 2rem);
-  color: var(--workspace-ink);
-  background:
-    radial-gradient(circle at top left, rgba(96, 165, 250, 0.12), transparent 28%),
-    radial-gradient(circle at top right, rgba(248, 113, 113, 0.1), transparent 22%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.98), rgba(15, 23, 42, 0.94)),
-    var(--workspace-bg);
+// ── Shared labels ─────────────────────────────────────────────────────────────
+
+.combat-kicker,
+.combat-col-label {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-.workspace-page::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
-    repeating-linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.012) 0,
-      rgba(255, 255, 255, 0.012) 2px,
-      transparent 2px,
-      transparent 10px
-    );
-  mix-blend-mode: soft-light;
+.combat-kicker {
+  color: #fbbf24;
+  margin-bottom: 0.5rem;
 }
 
-.workspace-header,
-.workspace-facts,
-.workspace-quick-actions,
-.workspace-board {
-  position: relative;
-  z-index: 1;
-}
+// ── Initiative band ───────────────────────────────────────────────────────────
 
-.workspace-header {
+.combat-initiative-header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
-  padding: clamp(1.25rem, 2vw, 1.75rem);
-  border: 1px solid #2d3748;
-  border-radius: 0;
-  color: #f8fafc;
-  background:
-    linear-gradient(145deg, rgba(37, 99, 235, 0.12), rgba(26, 32, 44, 0.94)),
-    rgba(26, 32, 44, 0.96);
-  box-shadow:
-    0 28px 50px rgba(0, 0, 0, 0.28),
-    inset 0 1px 0 rgba(148, 163, 184, 0.08);
-  backdrop-filter: blur(18px);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
-.workspace-title-block {
-  max-width: 56rem;
-}
-
-.workspace-kicker {
-  color: #60a5fa;
-}
-
-.workspace-header h1 {
-  color: #f8fafc;
-}
-
-.workspace-subtitle {
-  margin: 1rem 0 0;
-  max-width: 48rem;
-  color: #cbd5e1;
-  line-height: 1.6;
-}
-
-.workspace-header-actions {
+.combat-table-caption {
   display: flex;
-  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  text-align: left;
+  border-bottom: 1px solid #1e293b;
+  caption-side: top;
 }
 
-.workspace-logout {
-  white-space: nowrap;
+.combat-initiative-notice {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid;
 }
 
-.workspace-facts {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem;
-  margin-bottom: 1rem;
+.combat-initiative-notice--legendary {
+  color: #fcd34d;
+  border-color: rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.08);
 }
 
-.fact-card {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 1rem;
-  padding: 1rem 1.1rem;
-  border: 1px solid #2d3748;
-  border-radius: 0;
-  color: #f8fafc;
-  background:
-    linear-gradient(180deg, rgba(96, 165, 250, 0.05), rgba(96, 165, 250, 0)),
-    rgba(45, 55, 72, 0.78);
-  box-shadow: 0 22px 34px rgba(0, 0, 0, 0.18);
-  backdrop-filter: blur(14px);
+.combat-initiative-notice--blocked {
+  color: #fca5a5;
+  border-color: rgba(248, 113, 113, 0.3);
+  background: rgba(248, 113, 113, 0.07);
 }
 
-.fact-card__icon {
-  display: grid;
-  place-items: center;
-  width: 2.8rem;
-  height: 2.8rem;
-  border-radius: 0;
-  font-size: 1.15rem;
-  color: #f8fafc;
-  background: rgba(148, 163, 184, 0.12);
+.combat-initiative-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.fact-card__body {
+.combat-initiative-item {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border: 1px solid #424b57;
+  background: rgb(2 6 23 / 0.58);
+  padding: 0.5rem 0.6rem;
+}
+
+.combat-initiative-item[data-cat='legendaire']    { border-color: rgba(251, 191, 36, 0.5); }
+.combat-initiative-item[data-cat='heroique']      { border-color: rgba(251, 191, 36, 0.28); }
+.combat-initiative-item[data-cat='reussite']      { border-color: rgba(96, 165, 250, 0.3); }
+.combat-initiative-item[data-cat='rival']         { border-color: rgba(251, 146, 60, 0.35); }
+.combat-initiative-item[data-cat='coriace']       { border-color: rgba(251, 191, 36, 0.22); }
+.combat-initiative-item[data-cat='echec']         { border-color: rgba(248, 113, 113, 0.25); }
+.combat-initiative-item[data-cat='pietaille']     { border-color: rgba(100, 116, 139, 0.3); }
+.combat-initiative-item[data-cat='echec-critique']{ border-color: rgba(185, 28, 28, 0.45); }
+
+.combat-initiative-item__pos {
+  color: #475569;
+  font-size: 0.68rem;
+  font-weight: 700;
+  min-width: 1rem;
+  text-align: center;
+}
+
+.combat-initiative-item__identity {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 120px;
+  flex: 0 0 auto;
+}
+
+.combat-initiative-item__name {
+  color: #e2e8f0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.combat-initiative-item__type {
+  color: #475569;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.combat-initiative-cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  flex: 1 1 auto;
+}
+
+.combat-cat-btn {
+  min-height: 1.6rem;
+  padding: 0 0.55rem;
+  border: 1px solid #334155;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: border-color 120ms, color 120ms, background 120ms;
+
+  &:hover { color: #94a3b8; border-color: #475569; }
+}
+
+.combat-cat-btn[data-cat='legendaire'][data-active='true']    { border-color: rgba(251,191,36,.6);  color: #fcd34d; background: rgba(251,191,36,.14); }
+.combat-cat-btn[data-cat='heroique'][data-active='true']      { border-color: rgba(251,191,36,.4);  color: #fde68a; background: rgba(251,191,36,.09); }
+.combat-cat-btn[data-cat='reussite'][data-active='true']      { border-color: rgba(96,165,250,.5);  color: #93c5fd; background: rgba(96,165,250,.12); }
+.combat-cat-btn[data-cat='rival'][data-active='true']         { border-color: rgba(251,146,60,.5);  color: #fdba74; background: rgba(251,146,60,.12); }
+.combat-cat-btn[data-cat='coriace'][data-active='true']       { border-color: rgba(234,179,8,.4);   color: #fef08a; background: rgba(234,179,8,.09); }
+.combat-cat-btn[data-cat='echec'][data-active='true']         { border-color: rgba(248,113,113,.45);color: #fca5a5; background: rgba(248,113,113,.1); }
+.combat-cat-btn[data-cat='pietaille'][data-active='true']     { border-color: rgba(100,116,139,.5); color: #94a3b8; background: rgba(100,116,139,.12);}
+.combat-cat-btn[data-cat='echec-critique'][data-active='true']{ border-color: rgba(185,28,28,.55);  color: #fca5a5; background: rgba(185,28,28,.16); }
+
+.combat-initiative-item__indicators {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.combat-indicator {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.15rem 0.4rem;
+  border: 1px solid;
+}
+
+.combat-indicator--blocked {
+  color: #fca5a5;
+  border-color: rgba(248, 113, 113, 0.4);
+  background: rgba(248, 113, 113, 0.08);
+}
+
+.combat-indicator--warn {
+  color: #fde68a;
+  border-color: rgba(251, 191, 36, 0.4);
+  background: rgba(251, 191, 36, 0.08);
+}
+
+.combat-initiative-empty {
+  margin: 0;
+  color: #475569;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.combat-initiative-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.combat-initiative-select {
+  flex: 1 1 200px;
   min-width: 0;
 }
 
-.fact-card__label,
-.panel-kicker,
-.scene-card__label {
+.combat-initiative-add__btn {
+  height: 2.25rem;
+  padding: 0 0.9rem;
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  background: rgba(96, 165, 250, 0.1);
+  color: #93c5fd;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) { background: rgba(96, 165, 250, 0.18); }
+  &:disabled { opacity: 0.35; cursor: default; }
+}
+
+// ── Shared card parts ─────────────────────────────────────────────────────────
+
+.combat-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.combat-card__name {
   margin: 0;
+  color: #f1f5f9;
+  font-size: 0.92rem;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.combat-card__sub {
+  margin: 0.15rem 0 0;
+  color: #64748b;
+  font-size: 0.72rem;
+}
+
+.combat-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+// ── Type badges ───────────────────────────────────────────────────────────────
+
+.combat-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.18rem 0.5rem;
+  border: 1px solid #424b57;
+  color: #94a3b8;
+  background: rgb(15 23 42 / 0.6);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.combat-badge--hero,
+.combat-badge[data-type='hero'] {
+  border-color: rgba(96, 165, 250, 0.4);
+  color: #93c5fd;
+  background: rgba(96, 165, 250, 0.1);
+}
+
+.combat-badge[data-type='creature'] {
+  border-color: rgba(251, 191, 36, 0.4);
+  color: #fcd34d;
+  background: rgba(251, 191, 36, 0.1);
+}
+
+.combat-badge[data-type='demon'] {
+  border-color: rgba(248, 113, 113, 0.4);
+  color: #fca5a5;
+  background: rgba(248, 113, 113, 0.1);
+}
+
+.combat-badge[data-type='pnj'] {
+  border-color: rgba(148, 163, 184, 0.35);
+  color: #cbd5e1;
+  background: rgba(148, 163, 184, 0.08);
+}
+
+// ── Hero card ─────────────────────────────────────────────────────────────────
+
+.combat-hero-card {
+  display: grid;
+  gap: 0.85rem;
+  border: 1px solid rgba(96, 165, 250, 0.22);
+  background: rgb(15 23 42 / 0.72);
+  padding: 1rem;
+}
+
+// ── Antagonist card ───────────────────────────────────────────────────────────
+
+.combat-ant-card {
+  display: grid;
+  gap: 0.85rem;
+  border: 1px solid #424b57;
+  background: rgb(15 23 42 / 0.72);
+  padding: 1rem;
+
+  &[data-type='demon'] { border-color: rgba(248, 113, 113, 0.28); }
+  &[data-type='creature'] { border-color: rgba(251, 191, 36, 0.22); }
+}
+
+.combat-ant-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  color: #64748b;
+  font-size: 0.78rem;
+
+  strong {
+    color: #f1f5f9;
+    font-weight: 700;
+    margin-left: 0.15rem;
+  }
+}
+
+// ── Stats / vitality ──────────────────────────────────────────────────────────
+
+.combat-stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.combat-stat-block {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.combat-stat-block__label {
+  color: #475569;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.combat-stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.combat-stepper__btn {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid #334155;
+  background: rgb(2 6 23 / 0.6);
+  color: #e2e8f0;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+
+  &:hover { border-color: #4b5563; }
+}
+
+.combat-stepper__value {
+  min-width: 3rem;
+  color: #f1f5f9;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.combat-vit-bar {
+  height: 4px;
+  background: #1e293b;
+  overflow: hidden;
+}
+
+.combat-vit-bar__fill {
+  height: 100%;
+  background: #22c55e;
+  transition: width 250ms ease;
+}
+
+// ── Roll buttons ──────────────────────────────────────────────────────────────
+
+.combat-roll-btn {
+  min-height: 2rem;
+  padding: 0 0.7rem;
+  border: 1px solid #334155;
+  background: rgb(2 6 23 / 0.6);
+  color: #e2e8f0;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+
+  &:hover {
+    border-color: rgba(96, 165, 250, 0.4);
+    color: #93c5fd;
+  }
+}
+
+// ── Combat table ──────────────────────────────────────────────────────────────
+
+.combat-table-wrap {
+  overflow-x: auto;
+}
+
+.combat-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.combat-th {
+  padding: 0.35rem 0.6rem;
+  color: #475569;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: left;
+  text-transform: uppercase;
+  border-bottom: 1px solid #1e293b;
+  white-space: nowrap;
+
+  &.combat-th--pos,
+  &.combat-th--def,
+  &.combat-th--remove { text-align: center; }
+}
+
+.combat-tr {
+  border-bottom: 1px solid #1e293b;
+  transition: background 120ms;
+
+  &:hover { background: rgb(30 41 59 / 0.4); }
+
+  &[data-cat='legendaire']     { border-left: 2px solid rgba(251, 191, 36, 0.5); }
+  &[data-cat='heroique']       { border-left: 2px solid rgba(251, 191, 36, 0.28); }
+  &[data-cat='reussite']       { border-left: 2px solid rgba(96, 165, 250, 0.3); }
+  &[data-cat='rival']          { border-left: 2px solid rgba(251, 146, 60, 0.35); }
+  &[data-cat='coriace']        { border-left: 2px solid rgba(251, 191, 36, 0.22); }
+  &[data-cat='echec']          { border-left: 2px solid rgba(248, 113, 113, 0.25); }
+  &[data-cat='pietaille']      { border-left: 2px solid rgba(100, 116, 139, 0.3); }
+  &[data-cat='echec-critique'] { border-left: 2px solid rgba(185, 28, 28, 0.45); }
+}
+
+.combat-td {
+  padding: 0.55rem 0.6rem;
+  vertical-align: middle;
+
+  &.combat-td--pos {
+    color: #475569;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-align: center;
+    width: 2rem;
+  }
+
+  &.combat-td--nom { min-width: 140px; }
+
+  &.combat-td--initiative { min-width: 170px; }
+
+  &.combat-td--pv {
+    min-width: 130px;
+    white-space: nowrap;
+  }
+
+  &.combat-td--def,
+  &.combat-td--degats { white-space: nowrap; }
+
+  &.combat-td--remove { text-align: center; width: 2.5rem; }
+}
+
+.combat-participant-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.combat-participant-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.combat-participant-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.combat-tag {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid #334155;
+  color: #64748b;
+  background: rgb(2 6 23 / 0.4);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.combat-stat-chip {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  background: rgb(15 23 42 / 0.6);
   font-size: 0.72rem;
   font-weight: 700;
 }
 
-.fact-card__value {
-  margin: 0.25rem 0 0;
-  font-family: 'Muse Display Harmony', 'Open Sans', -apple-system, Roboto, 'Helvetica Neue',
-    Helvetica, sans-serif;
-  font-size: 1.2rem;
-  line-height: 1.05;
-}
-
-.fact-card__detail {
-  margin: 0.35rem 0 0;
-  color: #cbd5e1;
-  line-height: 1.45;
-}
-
-.fact-card[data-tone='accent'] .fact-card__icon,
-.panel-badge--accent {
-  background: var(--workspace-gold-soft);
-  color: #93c5fd;
-}
-
-.fact-card[data-tone='success'] .fact-card__icon {
-  background: var(--workspace-green-soft);
-  color: #bde6cb;
-}
-
-.fact-card[data-tone='warning'] .fact-card__icon {
-  background: rgba(251, 146, 60, 0.18);
+.combat-degats-chip {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid rgba(251, 146, 60, 0.3);
   color: #fdba74;
-}
-
-.fact-card[data-tone='danger'] .fact-card__icon,
-.panel-badge--danger {
-  background: var(--workspace-red-soft);
-  color: #fecaca;
-}
-
-.workspace-quick-actions,
-.scene-actions,
-.combat-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.workspace-quick-actions {
-  margin-bottom: 1rem;
-}
-
-.quick-action,
-.character-card__actions button,
-.combat-actions button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.65rem;
-  min-height: 2.9rem;
-  padding: 0 1rem;
-  border: 1px solid transparent;
-  border-radius: 0;
+  background: rgba(251, 146, 60, 0.08);
+  font-size: 0.72rem;
   font-weight: 700;
-  cursor: pointer;
-  transition:
-    transform 180ms ease,
-    border-color 180ms ease,
-    background 180ms ease,
-    box-shadow 180ms ease;
 }
 
-.quick-action {
-  color: #f8fafc;
-  background: rgba(45, 55, 72, 0.72);
-  border-color: #424b57;
-  box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.08);
+.combat-vit-bar__fill--low {
+  background: #ef4444;
 }
 
-.quick-action[data-emphasis='primary'] {
-  color: #ffffff;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  box-shadow: 0 18px 30px rgba(37, 99, 235, 0.28);
-}
+// ── Rang pill (read-only, all categories) ─────────────────────────────────────
 
-.quick-action:hover,
-.character-card__actions button:hover,
-.combat-actions button:hover {
-  transform: translateY(-1px);
-}
-
-.quick-action--compact {
-  min-height: 2.75rem;
-  color: var(--workspace-ink);
-  background: rgba(45, 55, 72, 0.88);
-  border-color: var(--workspace-line);
-  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.16);
-}
-
-.workspace-board {
-  display: grid;
-  grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr) minmax(20rem, 24rem);
-  gap: 1rem;
-  align-items: start;
-}
-
-.workspace-panel {
-  padding: 1.15rem;
-  border: 1px solid rgba(67, 44, 20, 0.14);
-  border-radius: 0;
-  background:
-    linear-gradient(180deg, rgba(148, 163, 184, 0.1), rgba(148, 163, 184, 0.02)),
-    var(--workspace-panel);
-  box-shadow:
-    0 22px 48px rgba(0, 0, 0, 0.24),
-    inset 0 1px 0 rgba(148, 163, 184, 0.14);
-  backdrop-filter: blur(20px);
-}
-
-.workspace-panel--tools {
-  position: sticky;
-  top: 1.25rem;
-}
-
-.panel-heading,
-.panel-group__title-row,
-.combatant-row__header,
-.timeline-entry__meta,
-.vitality-block__meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.panel-heading {
-  margin-bottom: 1rem;
-}
-
-.panel-heading h2,
-.panel-group__title-row h3,
-.scene-card h3,
-.tool-card h3,
-.character-card h4,
-.combatant-row h4,
-.timeline-entry h4 {
-  margin: 0;
-}
-
-.panel-heading h2,
-.scene-card h3 {
-  font-family: 'Muse Display Harmony', 'Open Sans', -apple-system, Roboto, 'Helvetica Neue',
-    Helvetica, sans-serif;
-}
-
-.panel-badge {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2rem;
-  padding: 0 0.8rem;
-  border-radius: 0;
-  background: rgba(148, 163, 184, 0.12);
-  color: var(--workspace-ink);
-  font-size: 0.78rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.panel-group {
-  display: grid;
-  gap: 0.85rem;
-}
-
-.workspace-panel--protagonists,
-.workspace-panel--tools {
-  display: grid;
-  gap: 1rem;
-}
-
-.character-list,
-.tool-list,
-.combat-list,
-.timeline-list {
-  display: grid;
-  gap: 0.8rem;
-}
-
-.character-card,
-.tool-card,
-.combat-card,
-.resolution-card,
-.scene-card {
-  border: 1px solid var(--workspace-line);
-  border-radius: 0;
-  background: var(--workspace-panel-strong);
-}
-
-.character-card {
-  padding: 1rem;
-  display: grid;
-  gap: 0.85rem;
-  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.16);
-}
-
-.character-card[data-kind='PJ'] {
-  border-left: 4px solid var(--workspace-gold);
-}
-
-.character-card[data-kind='PNJ'] {
-  border-left: 4px solid #f87171;
-}
-
-.character-card__header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.75rem;
-}
-
-.character-card__header p,
-.tool-card p,
-.scene-card p,
-.combat-card__lead,
-.combatant-row__header p,
-.combatant-row__action,
-.timeline-entry p,
-.workspace-panel p,
-.panel-group__title-row span {
-  margin: 0;
-  color: var(--workspace-muted);
-  line-height: 1.5;
-}
-
-.kind-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 3rem;
-  min-height: 2rem;
-  padding: 0 0.7rem;
-  border-radius: 0;
-  background: rgba(148, 163, 184, 0.12);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-}
-
-.vitality-block {
-  display: grid;
-  gap: 0.45rem;
-}
-
-.vitality-block__meta span {
-  font-size: 0.85rem;
-  color: var(--workspace-muted);
-}
-
-.vitality-bar {
-  overflow: hidden;
-  height: 0.65rem;
-  border-radius: 0;
-  background: rgba(148, 163, 184, 0.12);
-}
-
-.vitality-bar span {
-  display: block;
-  height: 100%;
-  border-radius: 0;
-  background: linear-gradient(90deg, #2563eb, #60a5fa);
-}
-
-.vitality-bar--compact {
-  height: 0.55rem;
-}
-
-.character-card__intent {
+.combat-rang-pill {
+  display: inline-block;
+  flex-shrink: 0;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid #334155;
+  color: #64748b;
+  font-size: 0.7rem;
   font-weight: 700;
-  color: var(--workspace-ink);
-}
-
-.character-card__beat {
-  padding-left: 0.9rem;
-  border-left: 2px solid rgba(96, 165, 250, 0.28);
-}
-
-.status-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-}
-
-.status-tag {
-  display: inline-flex;
-  align-items: center;
-  min-height: 1.9rem;
-  padding: 0 0.7rem;
-  border-radius: 0;
-  font-size: 0.76rem;
-  font-weight: 800;
   letter-spacing: 0.04em;
+  white-space: nowrap;
+
+  &[data-cat='legendaire']     { border-color: rgba(251,191,36,.6);  color: #fcd34d; }
+  &[data-cat='heroique']       { border-color: rgba(251,191,36,.4);  color: #fde68a; }
+  &[data-cat='reussite']       { border-color: rgba(96,165,250,.5);  color: #93c5fd; }
+  &[data-cat='rival']          { border-color: rgba(251,146,60,.35); color: #fdba74; }
+  &[data-cat='coriace']        { border-color: rgba(234,179,8,.35);  color: #fef08a; }
+  &[data-cat='echec']          { border-color: rgba(248,113,113,.45);color: #fca5a5; }
+  &[data-cat='pietaille']      { border-color: rgba(100,116,139,.4); color: #94a3b8; }
+  &[data-cat='echec-critique'] { border-color: rgba(185,28,28,.55);  color: #fca5a5; }
+}
+
+// ── Rules reminder panel ──────────────────────────────────────────────────────
+
+.combat-rules-panel {
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  background: rgb(2 6 23 / 0.4);
+  margin-bottom: 0.75rem;
+}
+.combat-rules-summary {
+  padding: 0.45rem 0.75rem;
+  color: #64748b;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  background: rgba(148, 163, 184, 0.12);
-  color: var(--workspace-ink);
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+
+  &::marker,
+  &::-webkit-details-marker { display: none; }
+
+  &::before {
+    content: '▸ ';
+    color: #475569;
+    font-size: 0.65rem;
+  }
+
+  details[open] > & {
+    color: #94a3b8;
+    &::before { content: '▾ '; }
+  }
 }
 
-.status-tag[data-tone='success'] {
-  background: var(--workspace-green-soft);
-  color: var(--workspace-green);
-}
-
-.status-tag[data-tone='warning'] {
-  background: rgba(251, 146, 60, 0.18);
-  color: #fdba74;
-}
-
-.status-tag[data-tone='danger'] {
-  background: var(--workspace-red-soft);
-  color: var(--workspace-red);
-}
-
-.status-tag[data-tone='accent'] {
-  background: rgba(96, 165, 250, 0.18);
-  color: #93c5fd;
-}
-
-.character-card__actions,
-.combat-actions {
+.combat-rules-body {
+  padding: 0.6rem 0.75rem 0.75rem;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 0.6rem;
 }
 
-.character-card__actions button,
-.combat-actions button {
-  color: var(--workspace-ink);
-  background: rgba(148, 163, 184, 0.08);
-  border-color: var(--workspace-line);
-}
-
-.workspace-panel--scene {
-  display: grid;
-  gap: 1rem;
-}
-
-.focus-strip {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.75rem;
-}
-
-.focus-chip {
-  display: grid;
-  gap: 0.3rem;
-  padding: 0.95rem 1rem;
-  border: 1px solid var(--workspace-line);
-  border-radius: 0;
-  background: rgba(15, 23, 42, 0.42);
-}
-
-.focus-chip p {
+.combat-rules-formula {
   margin: 0;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.76rem;
-  color: var(--workspace-muted);
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: monospace;
 }
 
-.focus-chip span {
-  color: var(--workspace-ink);
+.combat-rules-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.combat-rules-entry {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.combat-rules-desc {
+  color: #64748b;
+  font-size: 0.72rem;
   line-height: 1.4;
 }
 
-.focus-chip[data-current='true'] {
-  background: linear-gradient(135deg, rgba(96, 165, 250, 0.18), rgba(15, 23, 42, 0.88));
-  border-color: rgba(96, 165, 250, 0.32);
-  box-shadow: 0 16px 28px rgba(96, 165, 250, 0.14);
+.combat-rules-modifiers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.08);
+  color: #475569;
+  font-size: 0.68rem;
+
+  strong { color: #94a3b8; margin-left: 0.1rem; }
 }
 
-.scene-overview {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.85rem;
-}
-
-.scene-card {
-  padding: 1rem;
-  display: grid;
-  gap: 0.55rem;
-}
-
-.timeline-section {
-  padding: 1rem;
-  border: 1px solid var(--workspace-line);
-  border-radius: 0;
-  background: rgba(15, 23, 42, 0.42);
-}
-
-.timeline-entry {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.8rem;
-  align-items: start;
-}
-
-.timeline-entry__marker {
-  width: 0.8rem;
-  height: 0.8rem;
-  margin-top: 0.45rem;
-  border-radius: 0;
-  background: #60a5fa;
-  box-shadow: 0 0 0 6px rgba(96, 165, 250, 0.12);
-}
-
-.timeline-entry[data-tone='consequence'] .timeline-entry__marker {
-  background: var(--workspace-red);
-  box-shadow: 0 0 0 6px rgba(179, 74, 49, 0.14);
-}
-
-.timeline-entry[data-tone='escalation'] .timeline-entry__marker {
-  background: #fb923c;
-  box-shadow: 0 0 0 6px rgba(251, 146, 60, 0.14);
-}
-
-.tool-card,
-.combat-card,
-.resolution-card {
-  padding: 1rem;
-}
-
-.tool-card__header {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.85rem;
-  align-items: start;
-}
-
-.tool-card__icon {
-  display: grid;
-  place-items: center;
-  width: 2.6rem;
-  height: 2.6rem;
-  border-radius: 0;
-  background: rgba(148, 163, 184, 0.12);
-  color: var(--workspace-ink);
-}
-
-.tool-card[data-mode='active'] {
-  border-color: rgba(96, 165, 250, 0.28);
-  box-shadow: inset 0 0 0 1px rgba(96, 165, 250, 0.14);
-}
-
-.tool-card[data-mode='ready'] {
-  border-color: rgba(53, 104, 76, 0.22);
-}
-
-.combat-card {
-  display: grid;
-  gap: 0.95rem;
-  background:
-    linear-gradient(180deg, rgba(45, 55, 72, 0.92), rgba(26, 32, 44, 0.98)),
-    var(--workspace-panel-strong);
-}
-
-.combatant-row {
-  display: grid;
-  gap: 0.55rem;
-  padding: 0.85rem;
-  border: 1px solid var(--workspace-line);
-  border-radius: 0;
-  background: rgba(15, 23, 42, 0.4);
-}
-
-.combatant-row[data-allegiance='ally'] {
-  border-left: 4px solid var(--workspace-green);
-}
-
-.combatant-row[data-allegiance='foe'] {
-  border-left: 4px solid var(--workspace-red);
-}
-
-.combatant-row[data-allegiance='wildcard'] {
-  border-left: 4px solid var(--workspace-gold);
-}
-
-.resolution-card {
-  background: linear-gradient(135deg, rgba(96, 165, 250, 0.14), rgba(26, 32, 44, 0.96));
-}
-
-.resolution-card p {
-  margin: 0;
-  color: var(--workspace-ink);
-  line-height: 1.6;
-}
-
-@media (max-width: 1199px) {
-  .workspace-facts {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .workspace-board {
-    grid-template-columns: minmax(18rem, 22rem) minmax(0, 1fr);
-  }
-
-  .workspace-panel--tools {
-    grid-column: 1 / -1;
-    position: static;
-  }
-
-  .scene-overview,
-  .focus-strip {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 767px) {
-  .workspace-page {
-    padding: 1rem;
-  }
-
-  .workspace-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .workspace-header-actions {
-    justify-content: flex-start;
-  }
-
-  .workspace-facts,
-  .workspace-board,
-  .scene-overview,
-  .focus-strip {
-    grid-template-columns: 1fr;
-  }
-
-  .workspace-panel {
-    padding: 1rem;
-    border-radius: 0;
-  }
-
-  .fact-card,
-  .timeline-entry__meta,
-  .panel-heading,
-  .panel-group__title-row,
-  .combatant-row__header,
-  .vitality-block__meta {
-    align-items: flex-start;
-  }
-
-  .fact-card,
-  .timeline-entry__meta,
-  .panel-heading,
-  .panel-group__title-row,
-  .combatant-row__header {
-    flex-direction: column;
-  }
+.combat-rules-mod-label {
+  color: #64748b;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
