@@ -74,6 +74,12 @@ const RANG_OPTIONS: {label: string; value: Rang}[] = [
   {label: 'Piétaille', value: 'pietaille'},
 ];
 
+const RANG_LABELS: Record<Rang, string> = {
+  rival: 'Rival',
+  coriace: 'Coriace',
+  pietaille: 'Piétaille',
+};
+
 @Component({
   selector: 'app-scenario-form-page',
   imports: [
@@ -126,24 +132,28 @@ export class ScenarioFormPageComponent {
   );
 
   protected readonly creatureOptions = computed(() =>
-    this.allCreatures().map((c) => ({
-      label: c.nom,
-      value: c.id as string,
-    })),
+    this.allCreatures().map((c) => {
+      const rang = c.rang ?? this.rangFromType(c.taille?.type);
+      return {label: c.nom, rang: RANG_LABELS[rang], value: c.id as string};
+    }),
   );
 
   protected readonly demonOptions = computed(() =>
-    this.allDemons().map((d) => ({
-      label: d.nom,
-      value: d.id as string,
-    })),
+    this.allDemons().map((d) => {
+      const rang = this.rangFromType(d.categorie?.type);
+      return {label: d.nom, rang: RANG_LABELS[rang], value: d.id as string};
+    }),
   );
 
   protected readonly pnjOptions = computed(() =>
-    this.allPnjs().map((p) => ({
-      label: p.origines?.nom ?? '(sans nom)',
-      value: p.id as string,
-    })),
+    this.allPnjs().map((p) => {
+      const rang = this.rangFromType(p.type as 'P' | 'C' | 'R');
+      return {
+        label: p.origines?.nom ?? '(sans nom)',
+        rang: RANG_LABELS[rang],
+        value: p.id as string,
+      };
+    }),
   );
 
   protected readonly scenarioForm = this.formBuilder.nonNullable.group({
@@ -164,7 +174,6 @@ export class ScenarioFormPageComponent {
   protected readonly pnjForm = this.formBuilder.nonNullable.group({
     pnjId: [null as string | null, [Validators.required]],
     surnom: ['', [Validators.maxLength(80)]],
-    rang: ['coriace' as Rang, [Validators.required]],
   });
 
   protected readonly pageTitle = computed(() =>
@@ -345,10 +354,11 @@ export class ScenarioFormPageComponent {
       this.pnjForm.markAllAsTouched();
       return;
     }
-    const {pnjId, surnom, rang} = this.pnjForm.getRawValue();
+    const {pnjId, surnom} = this.pnjForm.getRawValue();
     if (!pnjId) return;
     const pnj = this.allPnjs().find((p) => p.id === pnjId);
     if (!pnj) return;
+    const rang = this.rangFromType(pnj.type as 'P' | 'C' | 'R');
     const armes = this.extractArmes(pnj.armes);
     this.pnjs.update((entries) => [
       ...entries,
@@ -362,7 +372,7 @@ export class ScenarioFormPageComponent {
         armes,
       },
     ]);
-    this.pnjForm.reset({pnjId: null, surnom: '', rang: 'coriace'});
+    this.pnjForm.reset({pnjId: null, surnom: ''});
   }
 
   protected removePnj(pnjId: string): void {
@@ -407,7 +417,7 @@ export class ScenarioFormPageComponent {
     this.pjForm.reset({heroId: null});
     this.creatureForm.reset({creatureId: null, surnom: ''});
     this.demonForm.reset({demonId: null, surnom: ''});
-    this.pnjForm.reset({pnjId: null, surnom: '', rang: 'coriace'});
+    this.pnjForm.reset({pnjId: null, surnom: ''});
     this.pj.set([]);
     this.creatures.set([]);
     this.demons.set([]);

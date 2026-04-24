@@ -176,7 +176,14 @@
                     [filter]="true"
                     filterPlaceholder="Rechercher..."
                     emptyMessage="Aucune créature disponible"
-                  />
+                  >
+                    <ng-template #item let-opt>
+                      <div class="flex flex-col gap-0.5">
+                        <span>{{ opt.label }}</span>
+                        <span class="text-xs text-slate-400">{{ opt.rang }}</span>
+                      </div>
+                    </ng-template>
+                  </p-select>
                   <label for="creature-select">Choisir une créature</label>
                 </p-iftalabel>
 
@@ -259,7 +266,14 @@
                     [filter]="true"
                     filterPlaceholder="Rechercher..."
                     emptyMessage="Aucun démon disponible"
-                  />
+                  >
+                    <ng-template #item let-opt>
+                      <div class="flex flex-col gap-0.5">
+                        <span>{{ opt.label }}</span>
+                        <span class="text-xs text-slate-400">{{ opt.rang }}</span>
+                      </div>
+                    </ng-template>
+                  </p-select>
                   <label for="demon-select">Choisir un démon</label>
                 </p-iftalabel>
 
@@ -320,7 +334,7 @@
                 <h2 class="m-0">PNJ</h2>
               </div>
 
-              <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto_auto]" [formGroup]="pnjForm">
+              <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]" [formGroup]="pnjForm">
                 <p-iftalabel>
                   <p-select
                     inputId="pnj-select"
@@ -332,25 +346,20 @@
                     [filter]="true"
                     filterPlaceholder="Rechercher..."
                     emptyMessage="Aucun PNJ disponible"
-                  />
+                  >
+                    <ng-template #item let-opt>
+                      <div class="flex flex-col gap-0.5">
+                        <span>{{ opt.label }}</span>
+                        <span class="text-xs text-slate-400">{{ opt.rang }}</span>
+                      </div>
+                    </ng-template>
+                  </p-select>
                   <label for="pnj-select">Choisir un PNJ</label>
                 </p-iftalabel>
 
                 <p-iftalabel>
                   <input pInputText id="pnj-surnom" formControlName="surnom" class="w-full" />
                   <label for="pnj-surnom">Surnom (optionnel)</label>
-                </p-iftalabel>
-
-                <p-iftalabel>
-                  <p-select
-                    inputId="pnj-rang"
-                    class="w-full"
-                    [options]="rangOptions"
-                    optionLabel="label"
-                    optionValue="value"
-                    formControlName="rang"
-                  />
-                  <label for="pnj-rang">Rang</label>
                 </p-iftalabel>
 
                 <p-button
