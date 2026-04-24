@@ -24,6 +24,13 @@ interface ScenarioPjDraft {
   readonly armes: ScenarioPnjArme[];
 }
 
+interface ScenarioCreatureCapacite {
+  readonly nom: string;
+  readonly detail: string | null;
+  readonly deBonus: boolean;
+  readonly deMalus: boolean;
+}
+
 interface ScenarioCreatureDraft {
   readonly id: string;
   readonly creatureId: string;
@@ -32,6 +39,7 @@ interface ScenarioCreatureDraft {
   readonly nom: string;
   readonly vitaliteMax: number;
   readonly degats: string | null;
+  readonly capacites: ScenarioCreatureCapacite[];
 }
 
 interface ScenarioDemonDraft {
@@ -201,6 +209,12 @@ export class ScenarioFormPageComponent {
             nom: c.nom,
             vitaliteMax: c.vitalite_max,
             degats: c.degats,
+            capacites: (c.capacites ?? []).map((cap) => ({
+              nom: cap.capacite ?? '',
+              detail: cap.detail,
+              deBonus: cap.de_bonus,
+              deMalus: cap.de_malus,
+            })),
           })),
         );
         this.demons.set(
@@ -280,6 +294,12 @@ export class ScenarioFormPageComponent {
         nom: creature.nom,
         vitaliteMax: creature.vitalite,
         degats: creature.degats ?? null,
+        capacites: (creature.capacites ?? []).map((c) => ({
+          nom: c.capacite?.capacite ?? '',
+          detail: c.detail ?? null,
+          deBonus: c.capacite?.de_bonus ?? false,
+          deMalus: c.capacite?.de_malus ?? false,
+        })),
       },
     ]);
     this.creatureForm.reset({creatureId: null, surnom: ''});
