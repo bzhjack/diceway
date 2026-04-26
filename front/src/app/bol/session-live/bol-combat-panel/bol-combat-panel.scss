@@ -1,0 +1,224 @@
+// ── Section header ────────────────────────────────────────────────────────────
+
+.combat-kicker {
+  margin: 0 0 0.5rem;
+  color: #fbbf24;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.combat-initiative-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+// ── Rules panel (p-panel override) ────────────────────────────────────────────
+
+.combat-rules-panel {
+  margin-bottom: 0.75rem;
+}
+
+.combat-rules-formula {
+  margin: 0 0 0.6rem;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: monospace;
+}
+
+.combat-rules-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 0.6rem;
+}
+
+.combat-rules-entry {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.combat-rules-desc {
+  color: #94a3b8;
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+.combat-rules-modifiers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.08);
+  color: #94a3b8;
+  font-size: 0.68rem;
+
+  strong { color: #94a3b8; margin-left: 0.1rem; }
+}
+
+.combat-rules-mod-label {
+  color: #94a3b8;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+// ── Notices (p-message) ───────────────────────────────────────────────────────
+
+.combat-notices {
+  margin-bottom: 0.5rem;
+}
+
+// ── Initiative empty state ────────────────────────────────────────────────────
+
+.combat-initiative-empty {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+// ── Add participant row ───────────────────────────────────────────────────────
+
+.combat-initiative-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.combat-initiative-select {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+// ── Combat table ──────────────────────────────────────────────────────────────
+
+.combat-table-wrap {
+  overflow-x: auto;
+}
+
+.combat-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.combat-th {
+  padding: 0.35rem 0.6rem;
+  color: #94a3b8;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: left;
+  text-transform: uppercase;
+  border-bottom: 1px solid #1e293b;
+  white-space: nowrap;
+
+  &.combat-th--pos,
+  &.combat-th--def,
+  &.combat-th--remove { text-align: center; }
+}
+
+.combat-tr {
+  border-bottom: 1px solid #1e293b;
+  transition: background 120ms;
+
+  &:hover { background: rgb(30 41 59 / 0.4); }
+
+  &[data-cat='legendaire']     { border-left: 2px solid rgba(251, 191, 36, 0.5); }
+  &[data-cat='heroique']       { border-left: 2px solid rgba(251, 191, 36, 0.28); }
+  &[data-cat='reussite']       { border-left: 2px solid rgba(96, 165, 250, 0.3); }
+  &[data-cat='rival']          { border-left: 2px solid rgba(251, 146, 60, 0.35); }
+  &[data-cat='coriace']        { border-left: 2px solid rgba(251, 191, 36, 0.22); }
+  &[data-cat='echec']          { border-left: 2px solid rgba(248, 113, 113, 0.25); }
+  &[data-cat='pietaille']      { border-left: 2px solid rgba(100, 116, 139, 0.3); }
+  &[data-cat='echec-critique'] { border-left: 2px solid rgba(185, 28, 28, 0.45); }
+}
+
+.combat-td {
+  padding: 0.55rem 0.6rem;
+  vertical-align: middle;
+
+  &.combat-td--pos {
+    color: #94a3b8;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-align: center;
+    width: 2rem;
+  }
+
+  &.combat-td--nom { min-width: 140px; }
+  &.combat-td--initiative { min-width: 200px; }
+  &.combat-td--pv { min-width: 130px; white-space: nowrap; }
+  &.combat-td--def, &.combat-td--degats { white-space: nowrap; }
+  &.combat-td--remove { text-align: center; width: 2.5rem; }
+}
+
+// ── Participant identity ───────────────────────────────────────────────────────
+
+.combat-initiative-item__name {
+  color: #e2e8f0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.combat-participant-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.combat-participant-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.combat-participant-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+// ── HP stepper ────────────────────────────────────────────────────────────────
+
+.combat-stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.combat-stepper__value {
+  min-width: 3rem;
+  color: #f1f5f9;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.combat-vit-bar {
+  height: 4px;
+  background: #1e293b;
+  overflow: hidden;
+  margin-top: 0.3rem;
+}
+
+.combat-vit-bar__fill {
+  height: 100%;
+  background: #22c55e;
+  transition: width 250ms ease;
+
+  &--low { background: #ef4444; }
+}

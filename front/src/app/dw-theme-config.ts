@@ -60,6 +60,20 @@ export const DwPreset = definePreset(Aura, {
     },
   },
   components: {
+    button: {
+      colorScheme: {
+        light: {
+          outlined: {
+            secondary: {
+              color: '#cbd5e1',
+              borderColor: 'rgba(148, 163, 184, 0.45)',
+              hoverBackground: 'rgba(148, 163, 184, 0.1)',
+              activeBackground: 'rgba(148, 163, 184, 0.16)',
+            },
+          },
+        },
+      },
+    },
     dialog: {
       root: {
         background: '{surface.800}',
@@ -91,7 +105,7 @@ export const DwPreset = definePreset(Aura, {
         fontSize: '1.25rem',
       },
       subtitle: {
-        color: '{surface.300}',
+        color: '{surface.500}',
       },
       css: `
         .p-card {
@@ -363,7 +377,7 @@ export const DwPreset = definePreset(Aura, {
     }
 
     .p-select-label {
-non      font-size: 0.9rem;
+      font-size: 0.9rem;
     }
 
     .p-iftalabel .p-select-label {
@@ -382,6 +396,17 @@ non      font-size: 0.9rem;
 
     .p-select-dropdown {
       width: 2.5rem;
+    }
+
+    .p-button-outlined[data-p-severity="secondary"] {
+      border-color: rgba(148, 163, 184, 0.45);
+      color: #cbd5e1;
+    }
+
+    .p-button-outlined[data-p-severity="secondary"]:not(:disabled):hover {
+      border-color: rgba(203, 213, 225, 0.6);
+      color: #f1f5f9;
+      background: rgba(148, 163, 184, 0.1);
     }
   `,
 });

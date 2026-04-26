@@ -1,0 +1,199 @@
+<p-card>
+  <div class="combat-initiative-header">
+    <p class="combat-kicker">Ordre d'initiative</p>
+  </div>
+
+  <p-panel header="Jet de réaction — rappel" [toggleable]="true" styleClass="combat-rules-panel">
+    <p class="combat-rules-formula">2d6 + Esprit + Initiative &mdash; réussite à 9+</p>
+    <div class="combat-rules-entries">
+      <div class="combat-rules-entry">
+        <p-tag value="★★ Légendaire" severity="warn" />
+        <span class="combat-rules-desc">12 naturel + dépense 1 point d'héroïsme · Agit en premier · +1 à tous les jets d'attaque (toute la rencontre) · R1 : coriaces et piétaille bloqués</span>
+      </div>
+      <div class="combat-rules-entry">
+        <p-tag value="★ Héroïque" severity="warn" />
+        <span class="combat-rules-desc">12 naturel · Agit en premier · R1 : coriaces et piétaille bloqués</span>
+      </div>
+      <div class="combat-rules-entry">
+        <p-tag value="Réussite" severity="info" />
+        <span class="combat-rules-desc">Agit avant tout le monde</span>
+      </div>
+      <div class="combat-rules-entry">
+        <p-tag value="Échec" severity="danger" />
+        <span class="combat-rules-desc">Agit avant la piétaille, après tous les autres</span>
+      </div>
+      <div class="combat-rules-entry">
+        <p-tag value="Échec critique" severity="danger" />
+        <span class="combat-rules-desc">2 naturel (choix du joueur) · Agit en dernier · R1 : ne peut pas agir, pas de bonus de bouclier en défense</span>
+      </div>
+    </div>
+    <div class="combat-rules-modifiers">
+      <span class="combat-rules-mod-label">Modificateurs :</span>
+      <span>Surpris / embuscade subie <strong>−1</strong></span>
+      <span>Pose une embuscade <strong>+2</strong></span>
+      <span>Carrière utile <strong>+rang</strong></span>
+      <span>Initiative ennemie (coriace/rival) <strong>−X</strong></span>
+    </div>
+  </p-panel>
+
+  @if (legendaryBonus() || round1Blocked()) {
+    <div class="combat-notices flex gap-2">
+      @if (legendaryBonus()) {
+        <p-message severity="warn" text="★★ Un héros légendaire : +1 à toutes les attaques ce combat" />
+      }
+      @if (round1Blocked()) {
+        <p-message severity="error" text="⛔ Coriaces et piétaille bloqués au round 1" />
+      }
+    </div>
+  }
+
+  @if (sortedInitiative().length > 0) {
+    <div class="combat-table-wrap">
+      <table class="combat-table" aria-label="Tableau de combat">
+        <thead>
+          <tr>
+            <th class="combat-th combat-th--pos">#</th>
+            <th class="combat-th combat-th--nom">Participant</th>
+            <th class="combat-th combat-th--initiative">Initiative</th>
+            <th class="combat-th combat-th--pv">PV</th>
+            <th class="combat-th combat-th--def">Déf</th>
+            <th class="combat-th combat-th--degats">Dégâts</th>
+            <th class="combat-th combat-th--remove"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (slot of sortedInitiative(); track slot.id; let i = $index) {
+            <tr class="combat-tr" [attr.data-type]="slot.type" [attr.data-cat]="slot.category">
+
+              <td class="combat-td combat-td--pos">{{ i + 1 }}</td>
+
+              <td class="combat-td combat-td--nom">
+                <div class="combat-participant-identity">
+                  <div class="combat-participant-header">
+                    <span class="combat-initiative-item__name">{{ slot.nom }}</span>
+                    <p-tag [value]="typeLabel(slot.type)" [severity]="typeSeverity(slot.type)" />
+                    @if (slot.category === 'echec-critique') {
+                      <p-tag
+                        value="⛔ R1"
+                        severity="danger"
+                        pTooltip="Ne peut pas agir au round 1 — pas de bonus de bouclier en défense"
+                      />
+                    }
+                    @if (round1Blocked() && (slot.category === 'coriace' || slot.category === 'pietaille')) {
+                      <p-tag
+                        value="⛔ R1"
+                        severity="danger"
+                        pTooltip="Ne joue pas au round 1"
+                      />
+                    }
+                  </div>
+                  @if (slot.tags.length > 0) {
+                    <div class="combat-participant-tags">
+                      @for (tag of slot.tags; track tag) {
+                        <p-tag [value]="tag" severity="secondary" />
+                      }
+                    </div>
+                  }
+                </div>
+              </td>
+
+              <td class="combat-td combat-td--initiative">
+                @if (slot.type === 'hero') {
+                  <p-selectButton
+                    [options]="heroOptions"
+                    optionLabel="label"
+                    optionValue="value"
+                    [ngModel]="slot.category"
+                    (ngModelChange)="setCategory(slot.id, $event)"
+                    [allowEmpty]="true"
+                    [attr.aria-label]="'Catégorie de ' + slot.nom"
+                  />
+                } @else {
+                  @if (slot.category) {
+                    <p-tag [value]="categoryLabel(slot.category)" [severity]="categorySeverity(slot.category)" />
+                  }
+                }
+              </td>
+
+              <td class="combat-td combat-td--pv">
+                <div class="combat-stepper">
+                  <p-button
+                    icon="pi pi-minus"
+                    [text]="true"
+                    size="small"
+                    (onClick)="adjustHp(slot.id, -1)"
+                    aria-label="Réduire PV"
+                  />
+                  <span class="combat-stepper__value">{{ slot.vitaliteCourante }}/{{ slot.vitaliteMax }}</span>
+                  <p-button
+                    icon="pi pi-plus"
+                    [text]="true"
+                    size="small"
+                    (onClick)="adjustHp(slot.id, 1)"
+                    aria-label="Augmenter PV"
+                  />
+                </div>
+                @if (slot.vitaliteMax > 0) {
+                  <div class="combat-vit-bar">
+                    <div
+                      class="combat-vit-bar__fill"
+                      [style.width.%]="slot.vitaliteCourante / slot.vitaliteMax * 100"
+                      [class.combat-vit-bar__fill--low]="slot.vitaliteCourante / slot.vitaliteMax <= 0.33"
+                    ></div>
+                  </div>
+                }
+              </td>
+
+              <td class="combat-td combat-td--def">
+                @if (slot.defense != null) {
+                  <p-tag [value]="'' + slot.defense" severity="secondary" />
+                }
+              </td>
+
+              <td class="combat-td combat-td--degats">
+                @if (slot.degats) {
+                  <p-tag [value]="slot.degats" severity="warn" />
+                }
+              </td>
+
+              <td class="combat-td combat-td--remove">
+                <p-button
+                  icon="pi pi-times"
+                  [text]="true"
+                  severity="danger"
+                  size="small"
+                  (onClick)="removeFromInitiative(slot.id)"
+                  aria-label="Retirer de l'initiative"
+                />
+              </td>
+
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <p class="combat-initiative-empty">Aucun participant. Ajoutez-en ci-dessous.</p>
+  }
+
+  @if (availableParticipants().length > 0) {
+    <div class="combat-initiative-add">
+      <p-select
+        class="combat-initiative-select"
+        [options]="availableParticipantOptions()"
+        optionLabel="label"
+        optionValue="value"
+        [ngModel]="selectedParticipantId()"
+        (ngModelChange)="selectedParticipantId.set($event)"
+        placeholder="Choisir un participant"
+      />
+      <p-button
+        label="Ajouter"
+        icon="pi pi-plus"
+        size="small"
+        [disabled]="!selectedParticipantId()"
+        (onClick)="addToInitiative()"
+      />
+    </div>
+  }
+</p-card>
