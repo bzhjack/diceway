@@ -1,3 +1,121 @@
+// ── Combat rules popover (rendered outside component shadow) ──────────────────
+
+.combat-rules-popover {
+  max-width: 500px;
+
+  .combat-rules-title {
+    margin: 0 0 0.6rem;
+    color: #e2e8f0;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .combat-rules-formula {
+    margin: 0 0 0.85rem;
+    padding: 0.45rem 0.75rem;
+    background: rgba(15, 23, 42, 0.6);
+    border-left: 3px solid #fbbf24;
+    border-radius: 4px;
+    color: #fbbf24;
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-family: monospace;
+    letter-spacing: 0.03em;
+  }
+
+  .combat-rules-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .combat-rules-entry {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(15, 23, 42, 0.35);
+  }
+
+  .combat-rules-badge {
+    display: inline-block;
+    padding: 0.1rem 0.45rem;
+    border-radius: 3px;
+    font-size: 0.67rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border: 1px solid transparent;
+
+    &--legendaire  { color: #fbbf24; background: rgba(251,191,36,.12); border-color: rgba(251,191,36,.3); }
+    &--heroique    { color: #fbbf24; background: rgba(251,191,36,.08); border-color: rgba(251,191,36,.2); }
+    &--reussite    { color: #60a5fa; background: rgba(96,165,250,.1);  border-color: rgba(96,165,250,.28); }
+    &--echec       { color: #f87171; background: rgba(248,113,113,.1); border-color: rgba(248,113,113,.28); }
+    &--echec-critique { color: #ef4444; background: rgba(239,68,68,.1); border-color: rgba(239,68,68,.3); }
+  }
+
+  .combat-rules-desc {
+    color: #cbd5e1;
+    font-size: 0.7rem;
+    line-height: 1.4;
+  }
+
+
+  .combat-rules-modifiers {
+    padding-top: 0.65rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.12);
+  }
+
+  .combat-rules-mod-label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #e2e8f0;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .combat-rules-mod-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .combat-rules-mod-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(15, 23, 42, 0.35);
+  }
+
+  .combat-rules-mod-desc {
+    color: #94a3b8;
+    font-size: 0.7rem;
+  }
+
+  .combat-rules-mod-value {
+    font-size: 0.78rem;
+    font-weight: 700;
+    font-family: monospace;
+    white-space: nowrap;
+
+    &--pos { color: #22c55e; }
+    &--neg { color: #f87171; }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 .dw-panel {
   border-radius: 6px;
   padding: 4px;

@@ -3,11 +3,10 @@ import {FormsModule} from '@angular/forms';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {MessageModule} from 'primeng/message';
-import {PanelModule} from 'primeng/panel';
+import {PopoverModule} from 'primeng/popover';
 import {SelectModule} from 'primeng/select';
 import {SelectButtonModule} from 'primeng/selectbutton';
 import {TagModule} from 'primeng/tag';
-import {TooltipModule} from 'primeng/tooltip';
 
 export type ParticipantType = 'hero' | 'creature' | 'demon' | 'pnj';
 export type ReactionResult =
@@ -96,7 +95,7 @@ const CATEGORY_SEVERITIES: Record<ReactionResult, PrimeSeverity> = {
 
 @Component({
   selector: 'app-bol-combat-panel',
-  imports: [FormsModule, ButtonModule, CardModule, MessageModule, PanelModule, SelectModule, SelectButtonModule, TagModule, TooltipModule],
+  imports: [FormsModule, ButtonModule, CardModule, MessageModule, PopoverModule, SelectModule, SelectButtonModule, TagModule],
   templateUrl: './bol-combat-panel.html',
   styleUrl: './bol-combat-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
