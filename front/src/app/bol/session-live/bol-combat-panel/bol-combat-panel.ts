@@ -2,6 +2,8 @@ import {ChangeDetectionStrategy, Component, computed, input, signal} from '@angu
 import {FormsModule} from '@angular/forms';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
+import {CheckboxModule} from 'primeng/checkbox';
+import {InputNumberModule} from 'primeng/inputnumber';
 import {MessageModule} from 'primeng/message';
 import {PopoverModule} from 'primeng/popover';
 import {SelectModule} from 'primeng/select';
@@ -31,12 +33,36 @@ export interface InitiativeSlot {
   vitaliteCourante: number;
 }
 
+interface RollEntry {
+  esprit: number;
+  bonusInit: number;
+  dice: number | null;
+  surpris: boolean;
+  embuscade: boolean;
+  carriere: number;
+  initiativeEnnemie: number;
+  acceptEchecCritique: boolean;
+  depenseHeroisme: boolean;
+}
+
 interface CategoryOption {
   readonly label: string;
   readonly value: ReactionResult;
 }
 
 type PrimeSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast';
+
+const DEFAULT_ROLL_ENTRY: RollEntry = {
+  esprit: 0,
+  bonusInit: 0,
+  dice: null,
+  surpris: false,
+  embuscade: false,
+  carriere: 0,
+  initiativeEnnemie: 0,
+  acceptEchecCritique: false,
+  depenseHeroisme: false,
+};
 
 const INITIATIVE_ORDER: Record<ReactionResult, number> = {
   legendaire: 0,
@@ -95,7 +121,7 @@ const CATEGORY_SEVERITIES: Record<ReactionResult, PrimeSeverity> = {
 
 @Component({
   selector: 'app-bol-combat-panel',
-  imports: [FormsModule, ButtonModule, CardModule, MessageModule, PopoverModule, SelectModule, SelectButtonModule, TagModule],
+  imports: [FormsModule, ButtonModule, CardModule, CheckboxModule, InputNumberModule, MessageModule, PopoverModule, SelectModule, SelectButtonModule, TagModule],
   templateUrl: './bol-combat-panel.html',
   styleUrl: './bol-combat-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -105,6 +131,8 @@ export class BolCombatPanelComponent {
 
   protected readonly initiativeOrder = signal<InitiativeSlot[]>([]);
   protected readonly selectedParticipantId = signal<string | null>(null);
+  protected readonly rollPhase = signal(false);
+  protected readonly rollEntries = signal<Record<string, RollEntry>>({});
 
   protected readonly availableParticipants = computed(() => {
     const inOrder = new Set(this.initiativeOrder().map((s) => s.id));
@@ -136,7 +164,74 @@ export class BolCombatPanelComponent {
     this.initiativeOrder().some((s) => s.type === 'hero' && s.category === 'legendaire'),
   );
 
+  protected readonly heroesInOrder = computed(() =>
+    this.initiativeOrder().filter((s) => s.type === 'hero'),
+  );
+
+  protected readonly nonHeroesInOrder = computed(() =>
+    this.initiativeOrder().filter((s) => s.type !== 'hero'),
+  );
+
+  protected readonly allHeroesRolled = computed(() =>
+    this.heroesInOrder().every((s) => this.rollEntries()[s.id]?.dice != null),
+  );
+
   protected readonly heroOptions: CategoryOption[] = [...HERO_OPTIONS];
+
+  protected getEntry(id: string): RollEntry {
+    return this.rollEntries()[id] ?? DEFAULT_ROLL_ENTRY;
+  }
+
+  protected updateEntry(id: string, patch: Partial<RollEntry>): void {
+    this.rollEntries.update((r) => ({
+      ...r,
+      [id]: {...this.getEntry(id), ...patch},
+    }));
+  }
+
+  protected rollTotal(id: string): number | null {
+    const e = this.getEntry(id);
+    if (e.dice === null || e.dice === 12 || (e.dice === 2 && e.acceptEchecCritique)) return null;
+    return (
+      e.dice +
+      e.esprit +
+      e.bonusInit +
+      (e.surpris ? -1 : 0) +
+      (e.embuscade ? 2 : 0) +
+      e.carriere -
+      e.initiativeEnnemie
+    );
+  }
+
+  protected rollResultFor(id: string): ReactionResult | null {
+    const e = this.getEntry(id);
+    if (e.dice === null) return null;
+    if (e.dice === 2 && e.acceptEchecCritique) return 'echec-critique';
+    if (e.dice === 12) return e.depenseHeroisme ? 'legendaire' : 'heroique';
+    const total = this.rollTotal(id);
+    if (total === null) return null;
+    return total >= 9 ? 'reussite' : 'echec';
+  }
+
+  protected startRollPhase(): void {
+    const entries: Record<string, RollEntry> = {};
+    for (const slot of this.heroesInOrder()) {
+      entries[slot.id] = {...DEFAULT_ROLL_ENTRY};
+    }
+    this.rollEntries.set(entries);
+    this.rollPhase.set(true);
+  }
+
+  protected confirmRollPhase(): void {
+    this.initiativeOrder.update((list) =>
+      list.map((s) => {
+        if (s.type !== 'hero') return s;
+        const result = this.rollResultFor(s.id);
+        return result ? {...s, category: result} : s;
+      }),
+    );
+    this.rollPhase.set(false);
+  }
 
   protected typeLabel(type: ParticipantType): string {
     return TYPE_LABELS[type];
@@ -180,7 +275,7 @@ export class BolCombatPanelComponent {
 
   protected setCategory(id: string, category: ReactionResult | null): void {
     this.initiativeOrder.update((list) =>
-      list.map((s) => s.id === id ? {...s, category} : s),
+      list.map((s) => (s.id === id ? {...s, category} : s)),
     );
   }
 }
