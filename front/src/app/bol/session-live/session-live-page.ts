@@ -40,6 +40,7 @@ export class SessionLivePageComponent {
       ...(s.pj ?? []).map((pj): InitiativeSlot => ({
         id: `hero-${pj.id}`,
         nom: pj.heros?.origines.nom ?? 'Héros',
+        avatar: pj.heros?.origines.avatar ?? null,
         type: 'hero',
         vitaliteMax: pj.heros?.ressources?.vitalite ?? 0,
         vitaliteCourante: pj.heros?.ressources?.vitalite ?? 0,
@@ -51,6 +52,7 @@ export class SessionLivePageComponent {
       ...(s.creatures ?? []).map((c): InitiativeSlot => ({
         id: `creature-${c.id}`,
         nom: c.surnom ?? c.nom,
+        avatar: c.creature?.avatar ?? null,
         type: 'creature',
         vitaliteMax: c.vitalite_max,
         vitaliteCourante: c.vitalite_max,
@@ -62,6 +64,7 @@ export class SessionLivePageComponent {
       ...(s.demons ?? []).map((d): InitiativeSlot => ({
         id: `demon-${d.id}`,
         nom: d.surnom ?? d.nom,
+        avatar: d.demon?.avatar ?? null,
         type: 'demon',
         vitaliteMax: d.vitalite_max,
         vitaliteCourante: d.vitalite_max,
@@ -73,6 +76,7 @@ export class SessionLivePageComponent {
       ...(s.pnjs ?? []).map((p): InitiativeSlot => ({
         id: `pnj-${p.id}`,
         nom: p.surnom ?? p.nom,
+        avatar: p.pnj?.origines?.avatar ?? null,
         type: 'pnj',
         vitaliteMax: p.vitalite_max,
         vitaliteCourante: p.vitalite_max,

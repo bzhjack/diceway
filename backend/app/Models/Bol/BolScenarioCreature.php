@@ -3,6 +3,7 @@
 namespace App\Models\Bol;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BolScenarioCreature extends Model
 {
@@ -28,4 +29,9 @@ class BolScenarioCreature extends Model
         'id_taille'        => 'integer',
         'capacites'        => 'array',
     ];
+
+    public function creature(): BelongsTo
+    {
+        return $this->belongsTo(BolCreature::class, 'creature_id', 'id');
+    }
 }

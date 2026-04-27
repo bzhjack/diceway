@@ -290,9 +290,17 @@ export const DwPreset = definePreset(Aura, {
       `,
     },
     tag: {
+      root: {
+        fontSize: '0.8rem',
+        padding: '0.2rem 0.45rem',
+        gap: '0.2rem',
+      },
+      icon: {
+        size: '0.7rem',
+      },
       css: `
         .p-tag-value {
-          line-height: 15px;
+          line-height: 1.1;
         }
       `,
     },

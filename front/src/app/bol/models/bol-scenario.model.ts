@@ -35,6 +35,9 @@ export interface BolScenarioCreatureModel {
   protection: string | null;
   id_taille: number;
   capacites: BolScenarioCapaciteModel[] | null;
+  creature?: {
+    avatar: string | null;
+  } | null;
 }
 
 export interface BolScenarioPouvoirModel {
@@ -61,6 +64,9 @@ export interface BolScenarioDemonModel {
   vitalite_courante: number;
   degats: string | null;
   pouvoirs: BolScenarioPouvoirModel[] | null;
+  demon?: {
+    avatar: string | null;
+  } | null;
 }
 
 export interface BolScenarioPnjArmeModel {
@@ -86,6 +92,11 @@ export interface BolScenarioPnjModel {
   vitalite_max: number;
   vitalite_courante: number;
   armes: BolScenarioPnjArmeModel[] | null;
+  pnj?: {
+    origines?: {
+      avatar: string | null;
+    } | null;
+  } | null;
 }
 
 export interface BolScenarioPjModel {

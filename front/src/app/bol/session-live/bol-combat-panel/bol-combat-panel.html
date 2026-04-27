@@ -1,14 +1,19 @@
 <p-card>
   <div class="combat-initiative-header">
-    <p class="combat-kicker">Ordre d'initiative</p>
-    <p-button
-      icon="pi pi-info-circle"
-      [text]="true"
-      severity="info"
-      size="small"
-      (onClick)="rulesOverlay.toggle($event)"
-      aria-label="Règles — jet de réaction"
-    />
+    <div class="flex flex-col">
+      <p class="combat-kicker title">COMBAT</p>
+      <div class="flex items-center gap-2">
+        <p class="combat-kicker">Ordre d'initiative</p>
+        <p-button
+          icon="pi pi-info-circle"
+          [text]="true"
+          severity="info"
+          size="small"
+          (onClick)="rulesOverlay.toggle($event)"
+          aria-label="Règles — jet de réaction"
+        />
+      </div>
+    </div>
     @if (!rollPhase() && heroesInOrder().length > 0) {
       <p-button
         label="Jets de réaction"
@@ -138,12 +143,20 @@
             <!-- Cas naturel 2 -->
             @if (entry.dice === 2) {
               <div class="roll-card__special roll-card__special--danger">
-                <p-checkbox
-                  label="Accepter l'échec critique → possible gain d'héroïsme"
-                  [binary]="true"
-                  [ngModel]="entry.acceptEchecCritique"
-                  (ngModelChange)="updateEntry(slot.id, {acceptEchecCritique: $event})"
-                />
+                <div class="roll-check-inline">
+                  <p-checkbox
+                    [inputId]="'accept-echec-critique-' + slot.id"
+                    [binary]="true"
+                    [ngModel]="entry.acceptEchecCritique"
+                    (ngModelChange)="updateEntry(slot.id, {acceptEchecCritique: $event})"
+                  />
+                  <label
+                    class="roll-check-inline__label"
+                    [attr.for]="'accept-echec-critique-' + slot.id"
+                  >
+                    Accepter l'échec critique → possible gain d'héroïsme
+                  </label>
+                </div>
               </div>
             }
 
@@ -151,50 +164,73 @@
             @if (entry.dice === 12) {
               <div class="roll-card__special roll-card__special--heroique">
                 <span class="roll-card__natural12">★ Héroïque automatique</span>
-                <p-checkbox
-                  label="Dépenser 1 point d'héroïsme → Légendaire ★★"
-                  [binary]="true"
-                  [ngModel]="entry.depenseHeroisme"
-                  (ngModelChange)="updateEntry(slot.id, {depenseHeroisme: $event})"
-                />
+                <div class="roll-check-inline">
+                  <p-checkbox
+                    [inputId]="'depense-heroisme-' + slot.id"
+                    [binary]="true"
+                    [ngModel]="entry.depenseHeroisme"
+                    (ngModelChange)="updateEntry(slot.id, {depenseHeroisme: $event})"
+                  />
+                  <label
+                    class="roll-check-inline__label"
+                    [attr.for]="'depense-heroisme-' + slot.id"
+                  >
+                    Dépenser 1 point d'héroïsme → Légendaire ★★
+                  </label>
+                </div>
               </div>
             }
 
             <!-- Modificateurs de situation -->
             @if (entry.dice !== null && entry.dice !== 12 && !(entry.dice === 2 && entry.acceptEchecCritique)) {
               <div class="roll-card__mods">
-                <div class="roll-mod-checks">
-                  <p-checkbox
-                    label="Surpris / embuscade subie (−1)"
-                    [binary]="true"
-                    [ngModel]="entry.surpris"
-                    (ngModelChange)="updateEntry(slot.id, {surpris: $event})"
-                  />
-                  <p-checkbox
-                    label="Pose une embuscade (+2)"
-                    [binary]="true"
-                    [ngModel]="entry.embuscade"
-                    (ngModelChange)="updateEntry(slot.id, {embuscade: $event})"
-                  />
-                </div>
-                <div class="roll-mod-numbers">
-                  <div class="roll-mod-num">
-                    <span class="roll-mod-num__label">Carrière utile</span>
-                    <p-inputNumber
-                      [ngModel]="entry.carriere"
-                      (ngModelChange)="updateEntry(slot.id, {carriere: $event ?? 0})"
-                      [min]="0" [max]="5" prefix="+"
-                      [inputStyle]="{'width':'3rem','text-align':'center'}"
-                    />
+                <p class="roll-card__mods-title">Modificateurs de situation</p>
+                <div class="roll-card__mods-grid">
+                  <div class="roll-mod-checks">
+                    <div class="roll-check-option">
+                      <p-checkbox
+                        [inputId]="'surpris-' + slot.id"
+                        [binary]="true"
+                        [ngModel]="entry.surpris"
+                        (ngModelChange)="updateEntry(slot.id, {surpris: $event})"
+                      />
+                      <label class="roll-check-option__text" [attr.for]="'surpris-' + slot.id">
+                        Surpris / embuscade subie
+                      </label>
+                      <span class="roll-check-option__value roll-check-option__value--neg">−1</span>
+                    </div>
+                    <div class="roll-check-option">
+                      <p-checkbox
+                        [inputId]="'embuscade-' + slot.id"
+                        [binary]="true"
+                        [ngModel]="entry.embuscade"
+                        (ngModelChange)="updateEntry(slot.id, {embuscade: $event})"
+                      />
+                      <label class="roll-check-option__text" [attr.for]="'embuscade-' + slot.id">
+                        Pose une embuscade
+                      </label>
+                      <span class="roll-check-option__value roll-check-option__value--pos">+2</span>
+                    </div>
                   </div>
-                  <div class="roll-mod-num">
-                    <span class="roll-mod-num__label">Initiative ennemie</span>
-                    <p-inputNumber
-                      [ngModel]="entry.initiativeEnnemie"
-                      (ngModelChange)="updateEntry(slot.id, {initiativeEnnemie: $event ?? 0})"
-                      [min]="0" [max]="10" prefix="−"
-                      [inputStyle]="{'width':'3rem','text-align':'center'}"
-                    />
+                  <div class="roll-mod-numbers">
+                    <div class="roll-mod-num">
+                      <span class="roll-mod-num__label">Carrière utile</span>
+                      <p-inputNumber
+                        [ngModel]="entry.carriere"
+                        (ngModelChange)="updateEntry(slot.id, {carriere: $event ?? 0})"
+                        [min]="0" [max]="5" prefix="+"
+                        [inputStyle]="{'width':'3rem','text-align':'center'}"
+                      />
+                    </div>
+                    <div class="roll-mod-num">
+                      <span class="roll-mod-num__label">Initiative ennemie</span>
+                      <p-inputNumber
+                        [ngModel]="entry.initiativeEnnemie"
+                        (ngModelChange)="updateEntry(slot.id, {initiativeEnnemie: $event ?? 0})"
+                        [min]="0" [max]="10" prefix="−"
+                        [inputStyle]="{'width':'3rem','text-align':'center'}"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -253,7 +289,26 @@
         }
       </div>
     }
-
+    @if (availableParticipants().length > 0) {
+      <div class="combat-initiative-add">
+        <p-select
+          class="combat-initiative-select"
+          [options]="availableParticipantOptions()"
+          optionLabel="label"
+          optionValue="value"
+          [ngModel]="selectedParticipantId()"
+          (ngModelChange)="selectedParticipantId.set($event)"
+          placeholder="Choisir un participant"
+        />
+        <p-button
+          label="Ajouter"
+          icon="pi pi-plus"
+          size="small"
+          [disabled]="!selectedParticipantId()"
+          (onClick)="addToInitiative()"
+        />
+      </div>
+    }
     @if (sortedInitiative().length > 0) {
       <div class="combat-table-wrap">
         <table class="combat-table" aria-label="Tableau de combat">
@@ -275,50 +330,45 @@
                 <td class="combat-td combat-td--pos">{{ i + 1 }}</td>
 
                 <td class="combat-td combat-td--nom">
-                  <div class="combat-participant-identity">
-                    <div class="combat-participant-header">
-                      <span class="combat-initiative-item__name">{{ slot.nom }}</span>
-                      <p-tag [value]="typeLabel(slot.type)" [severity]="typeSeverity(slot.type)" />
-                      @if (slot.category === 'echec-critique') {
-                        <p-tag
-                          value="⛔ R1"
-                          severity="danger"
-                          pTooltip="Ne peut pas agir au round 1 — pas de bonus de bouclier en défense"
-                        />
-                      }
-                      @if (round1Blocked() && (slot.category === 'coriace' || slot.category === 'pietaille')) {
-                        <p-tag
-                          value="⛔ R1"
-                          severity="danger"
-                          pTooltip="Ne joue pas au round 1"
-                        />
-                      }
+                  <div class="combat-participant-row">
+                    <div class="combat-participant-avatar">
+                      <img [src]="slot.avatar || '/assets/bol/empty-avatar.jpg'" [alt]="slot.nom" class="h-full w-full object-cover" />
                     </div>
-                    @if (slot.tags.length > 0) {
-                      <div class="combat-participant-tags">
-                        @for (tag of slot.tags; track tag) {
-                          <p-tag [value]="tag" severity="secondary" />
+                    <div class="combat-participant-identity">
+                      <div class="combat-participant-header">
+                        <span class="combat-initiative-item__name">{{ slot.nom }}</span>
+                        <p-tag [value]="typeLabel(slot.type)" [severity]="typeSeverity(slot.type)" />
+                        @if (slot.category === 'echec-critique') {
+                          <p-tag
+                            value="⛔ R1"
+                            severity="danger"
+                            pTooltip="Ne peut pas agir au round 1 — pas de bonus de bouclier en défense"
+                          />
+                        }
+                        @if (round1Blocked() && (slot.category === 'coriace' || slot.category === 'pietaille')) {
+                          <p-tag
+                            value="⛔ R1"
+                            severity="danger"
+                            pTooltip="Ne joue pas au round 1"
+                          />
                         }
                       </div>
-                    }
+                      @if (slot.tags.length > 0) {
+                        <div class="combat-participant-tags">
+                          @for (tag of slot.tags; track tag) {
+                            <p-tag [value]="tag" severity="secondary" />
+                          }
+                        </div>
+                      }
+                    </div>
                   </div>
                 </td>
 
                 <td class="combat-td combat-td--initiative">
-                  @if (slot.type === 'hero') {
-                    <p-selectButton
-                      [options]="heroOptions"
-                      optionLabel="label"
-                      optionValue="value"
-                      [ngModel]="slot.category"
-                      (ngModelChange)="setCategory(slot.id, $event)"
-                      [allowEmpty]="true"
-                      [attr.aria-label]="'Catégorie de ' + slot.nom"
-                    />
+                  @if (slot.category) {
+                    <p-tag [value]="categoryLabel(slot.category)" [severity]="categorySeverity(slot.category)" />
                   } @else {
-                    @if (slot.category) {
-                      <p-tag [value]="categoryLabel(slot.category)" [severity]="categorySeverity(slot.category)" />
-                    }
+                    <p-tag value="En attente" severity="secondary" />
                   }
                 </td>
 
@@ -383,26 +433,7 @@
       <p class="combat-initiative-empty">Aucun participant. Ajoutez-en ci-dessous.</p>
     }
 
-    @if (availableParticipants().length > 0) {
-      <div class="combat-initiative-add">
-        <p-select
-          class="combat-initiative-select"
-          [options]="availableParticipantOptions()"
-          optionLabel="label"
-          optionValue="value"
-          [ngModel]="selectedParticipantId()"
-          (ngModelChange)="selectedParticipantId.set($event)"
-          placeholder="Choisir un participant"
-        />
-        <p-button
-          label="Ajouter"
-          icon="pi pi-plus"
-          size="small"
-          [disabled]="!selectedParticipantId()"
-          (onClick)="addToInitiative()"
-        />
-      </div>
-    }
+
 
   }
 </p-card>

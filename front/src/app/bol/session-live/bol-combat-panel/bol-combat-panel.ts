@@ -7,7 +7,6 @@ import {InputNumberModule} from 'primeng/inputnumber';
 import {MessageModule} from 'primeng/message';
 import {PopoverModule} from 'primeng/popover';
 import {SelectModule} from 'primeng/select';
-import {SelectButtonModule} from 'primeng/selectbutton';
 import {TagModule} from 'primeng/tag';
 
 export type ParticipantType = 'hero' | 'creature' | 'demon' | 'pnj';
@@ -24,6 +23,7 @@ export type ReactionResult =
 export interface InitiativeSlot {
   readonly id: string;
   readonly nom: string;
+  readonly avatar: string | null;
   readonly type: ParticipantType;
   readonly vitaliteMax: number;
   readonly defense: number | null;
@@ -43,11 +43,6 @@ interface RollEntry {
   initiativeEnnemie: number;
   acceptEchecCritique: boolean;
   depenseHeroisme: boolean;
-}
-
-interface CategoryOption {
-  readonly label: string;
-  readonly value: ReactionResult;
 }
 
 type PrimeSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast';
@@ -74,14 +69,6 @@ const INITIATIVE_ORDER: Record<ReactionResult, number> = {
   pietaille: 6,
   'echec-critique': 7,
 };
-
-const HERO_OPTIONS: readonly CategoryOption[] = [
-  {label: 'Lég. ★★', value: 'legendaire'},
-  {label: 'Hér. ★', value: 'heroique'},
-  {label: 'Réussite', value: 'reussite'},
-  {label: 'Échec', value: 'echec'},
-  {label: 'Éch. crit.', value: 'echec-critique'},
-];
 
 const TYPE_LABELS: Record<ParticipantType, string> = {
   hero: 'PJ',
@@ -121,7 +108,7 @@ const CATEGORY_SEVERITIES: Record<ReactionResult, PrimeSeverity> = {
 
 @Component({
   selector: 'app-bol-combat-panel',
-  imports: [FormsModule, ButtonModule, CardModule, CheckboxModule, InputNumberModule, MessageModule, PopoverModule, SelectModule, SelectButtonModule, TagModule],
+  imports: [FormsModule, ButtonModule, CardModule, CheckboxModule, InputNumberModule, MessageModule, PopoverModule, SelectModule, TagModule],
   templateUrl: './bol-combat-panel.html',
   styleUrl: './bol-combat-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -175,8 +162,6 @@ export class BolCombatPanelComponent {
   protected readonly allHeroesRolled = computed(() =>
     this.heroesInOrder().every((s) => this.rollEntries()[s.id]?.dice != null),
   );
-
-  protected readonly heroOptions: CategoryOption[] = [...HERO_OPTIONS];
 
   protected getEntry(id: string): RollEntry {
     return this.rollEntries()[id] ?? DEFAULT_ROLL_ENTRY;
@@ -273,9 +258,4 @@ export class BolCombatPanelComponent {
     this.initiativeOrder.update((list) => list.filter((s) => s.id !== id));
   }
 
-  protected setCategory(id: string, category: ReactionResult | null): void {
-    this.initiativeOrder.update((list) =>
-      list.map((s) => (s.id === id ? {...s, category} : s)),
-    );
-  }
 }

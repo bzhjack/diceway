@@ -22,6 +22,14 @@ class BolScenarioService
 
     private function relations(): array
     {
-        return ['pj.heros', 'creatures', 'demons', 'pnjs'];
+        return [
+            'pj.heros',
+            'creatures',
+            'creatures.creature',
+            'demons',
+            'demons.demon',
+            'pnjs',
+            'pnjs.pnj',
+        ];
     }
 }
