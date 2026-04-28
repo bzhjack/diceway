@@ -1,13 +1,8 @@
-import {ChangeDetectionStrategy, Component, OnInit, computed, input, output, signal} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {ButtonModule} from 'primeng/button';
-import {CheckboxModule} from 'primeng/checkbox';
-import {FieldsetModule} from 'primeng/fieldset';
-import {InputNumberModule} from 'primeng/inputnumber';
+import {ChangeDetectionStrategy, Component, OnInit, computed, effect, input, output, signal} from '@angular/core';
 import {InitiativeSlot, ReactionResult} from '../bol-combat-panel';
-import {ValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
+import {RpCardComponent} from './rp-card/rp-card';
 
-interface RollEntry {
+export interface RollEntry {
   esprit: number;
   bonusInit: number;
   dice: number | null;
@@ -44,14 +39,7 @@ const CATEGORY_LABELS: Record<ReactionResult, string> = {
 
 @Component({
   selector: 'app-bol-roll-phase',
-  imports: [
-    FormsModule,
-    ButtonModule,
-    CheckboxModule,
-    InputNumberModule,
-    FieldsetModule,
-    ValueStepperComponent,
-  ],
+  imports: [RpCardComponent],
   templateUrl: './bol-roll-phase.html',
   styleUrl: './bol-roll-phase.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,8 +50,13 @@ export class BolRollPhaseComponent implements OnInit {
 
   readonly cancelled = output<void>();
   readonly confirmed = output<{id: string; category: ReactionResult}[]>();
+  readonly allHeroesRolledChange = output<boolean>();
 
   protected readonly rollEntries = signal<Record<string, RollEntry>>({});
+
+  constructor() {
+    effect(() => this.allHeroesRolledChange.emit(this.allHeroesRolled()));
+  }
 
   protected readonly rolledHeroesCount = computed(
     () => this.heroesInOrder().filter((s) => this.rollEntries()[s.id]?.dice != null).length,
@@ -73,7 +66,7 @@ export class BolRollPhaseComponent implements OnInit {
     () => this.heroesInOrder().find((s) => this.rollEntries()[s.id]?.dice == null)?.id ?? null,
   );
 
-  protected readonly allHeroesRolled = computed(() =>
+  readonly allHeroesRolled = computed(() =>
     this.rolledHeroesCount() === this.heroesInOrder().length,
   );
 
@@ -100,63 +93,35 @@ export class BolRollPhaseComponent implements OnInit {
     }));
   }
 
-  protected resetModifiers(id: string): void {
-    this.updateEntry(id, {
-      surpris: false,
-      embuscade: false,
-      carriere: 0,
-      initiativeEnnemie: 0,
-    });
-  }
-
   protected resetAllModifiers(): void {
     const current = this.rollEntries();
     const next: Record<string, RollEntry> = {};
     for (const slot of this.heroesInOrder()) {
       const entry = current[slot.id] ?? DEFAULT_ROLL_ENTRY;
-      next[slot.id] = {
-        ...entry,
-        surpris: false,
-        embuscade: false,
-        carriere: 0,
-        initiativeEnnemie: 0,
-      };
+      next[slot.id] = {...entry, surpris: false, embuscade: false, carriere: 0, initiativeEnnemie: 0};
     }
     this.rollEntries.set(next);
-  }
-
-  protected rollTotal(id: string): number | null {
-    const e = this.getEntry(id);
-    if (e.dice === null) return null;
-    return (
-      e.dice +
-      e.esprit +
-      e.bonusInit +
-      (e.surpris ? -1 : 0) +
-      (e.embuscade ? 2 : 0) +
-      e.carriere -
-      e.initiativeEnnemie
-    );
-  }
-
-  protected rollResultFor(id: string): ReactionResult | null {
-    const e = this.getEntry(id);
-    if (e.dice === null) return null;
-    if (e.dice === 2) return e.acceptEchecCritique ? 'echec-critique' : 'echec';
-    if (e.dice === 12) return e.depenseHeroisme ? 'legendaire' : 'heroique';
-    const total = this.rollTotal(id);
-    if (total === null) return null;
-    return total >= 9 ? 'reussite' : 'echec';
   }
 
   protected categoryLabel(category: ReactionResult): string {
     return CATEGORY_LABELS[category];
   }
 
-  protected confirm(): void {
+  confirm(): void {
     const results = this.heroesInOrder()
-      .map((s) => ({id: s.id, category: this.rollResultFor(s.id)}))
-      .filter((r): r is {id: string; category: ReactionResult} => r.category !== null);
+      .map((s) => {
+        const e = this.getEntry(s.id);
+        if (e.dice === null) return null;
+        let category: ReactionResult;
+        if (e.dice === 2) category = e.acceptEchecCritique ? 'echec-critique' : 'echec';
+        else if (e.dice === 12) category = e.depenseHeroisme ? 'legendaire' : 'heroique';
+        else {
+          const total = e.dice + e.esprit + e.bonusInit + (e.surpris ? -1 : 0) + (e.embuscade ? 2 : 0) + e.carriere - e.initiativeEnnemie;
+          category = total >= 9 ? 'reussite' : 'echec';
+        }
+        return {id: s.id, category};
+      })
+      .filter((r): r is NonNullable<typeof r> => r !== null);
     this.confirmed.emit(results);
   }
 }

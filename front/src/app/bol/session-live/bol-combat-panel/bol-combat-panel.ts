@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, input, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, input, signal, viewChild} from '@angular/core';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {DialogModule} from 'primeng/dialog';
@@ -65,10 +65,13 @@ const INITIATIVE_ORDER: Record<ReactionResult, number> = {
 export class BolCombatPanelComponent {
   readonly participants = input.required<InitiativeSlot[]>();
 
+  private readonly rollPhaseRef = viewChild(BolRollPhaseComponent);
+
   protected readonly initiativeOrder = signal<InitiativeSlot[]>([]);
   protected readonly selectedParticipantId = signal<string | null>(null);
   protected readonly rollPhase = signal(false);
   protected readonly rulesDialogVisible = signal(false);
+  protected readonly allHeroesRolled = signal(false);
 
   protected readonly availableParticipants = computed(() => {
     const inOrder = new Set(this.initiativeOrder().map((s) => s.id));
@@ -142,6 +145,20 @@ export class BolCombatPanelComponent {
     this.initiativeOrder.update((list) => list.filter((s) => s.id !== id));
   }
 
+  protected startRollPhase(): void {
+    this.allHeroesRolled.set(false);
+    this.rollPhase.set(true);
+  }
+
+  protected cancelRollPhase(): void {
+    this.allHeroesRolled.set(false);
+    this.rollPhase.set(false);
+  }
+
+  protected confirmRollPhase(): void {
+    this.rollPhaseRef()?.confirm();
+  }
+
   protected onRollConfirmed(results: {id: string; category: ReactionResult}[]): void {
     this.initiativeOrder.update((list) =>
       list.map((s) => {
@@ -149,6 +166,7 @@ export class BolCombatPanelComponent {
         return result ? {...s, category: result.category} : s;
       }),
     );
+    this.allHeroesRolled.set(false);
     this.rollPhase.set(false);
   }
 }

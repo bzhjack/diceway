@@ -14,14 +14,25 @@
         />
       </div>
     </div>
-    @if (!rollPhase() && heroesInOrder().length > 0) {
+    @if (rollPhase()) {
+      <div class="flex items-center gap-2 ml-auto">
+        <p-button label="Annuler" severity="secondary" [outlined]="true" size="small" (onClick)="cancelRollPhase()" />
+        <p-button
+          label="Confirmer l'initiative"
+          icon="pi pi-check"
+          size="small"
+          [disabled]="!allHeroesRolled()"
+          (onClick)="confirmRollPhase()"
+        />
+      </div>
+    } @else if (heroesInOrder().length > 0) {
       <p-button
         label="Jets de réaction"
         icon="pi pi-bolt"
         severity="warn"
         size="small"
         class="ml-auto"
-        (onClick)="rollPhase.set(true)"
+        (onClick)="startRollPhase()"
       />
     }
   </div>
@@ -87,8 +98,9 @@
     <app-bol-roll-phase
       [heroesInOrder]="heroesInOrder()"
       [nonHeroesInOrder]="nonHeroesInOrder()"
-      (cancelled)="rollPhase.set(false)"
+      (cancelled)="cancelRollPhase()"
       (confirmed)="onRollConfirmed($event)"
+      (allHeroesRolledChange)="allHeroesRolled.set($event)"
     />
   } @else {
     <app-bol-combat-grid

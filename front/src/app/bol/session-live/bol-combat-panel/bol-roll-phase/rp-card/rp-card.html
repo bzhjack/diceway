@@ -1,0 +1,157 @@
+@let e = entry();
+@let s = slot();
+@let r = result();
+@let t = total();
+@let mod = modTotal();
+
+<div
+  class="rp-card"
+  [class.rp-card--done]="r !== null"
+  [class.rp-card--pending]="e.dice === null"
+  [class.rp-card--next]="isNext()"
+>
+
+  <div class="rp-card__header">
+    <span class="rp-card__name">{{ s.nom }}</span>
+    @if (!r) {
+      <span class="rp-badge rp-badge--pending">En attente</span>
+    }
+  </div>
+
+  <div class="rp-row">
+    <div class="rp-row__calc">
+      <div class="rp-field rp-field--dice">
+        <span class="rp-field__label">2d6</span>
+        <p-inputNumber
+          [ngModel]="e.dice"
+          (ngModelChange)="entryChange.emit({dice: $event, acceptEchecCritique: false, depenseHeroisme: false})"
+          [min]="2" [max]="12"
+          [inputStyle]="{'width':'3.4rem','text-align':'center','font-size':'1.1rem','font-weight':'700'}"
+        />
+      </div>
+      <span class="rp-op">+</span>
+      <div class="rp-field rp-field--stat">
+        <span class="rp-field__label">Esprit</span>
+        <span class="rp-field__value">{{ e.esprit }}</span>
+      </div>
+      <span class="rp-op">+</span>
+      <div class="rp-field rp-field--stat">
+        <span class="rp-field__label">Init</span>
+        <span class="rp-field__value">{{ e.bonusInit }}</span>
+      </div>
+      @if (mod !== 0) {
+        <span class="rp-op">{{ mod > 0 ? '+' : '−' }}</span>
+        <div class="rp-field rp-field--mod">
+          <span class="rp-field__label">Mod</span>
+          <span
+            class="rp-field__value rp-field__value--mod"
+            [class.rp-field__value--mod-pos]="mod > 0"
+            [class.rp-field__value--mod-neg]="mod < 0"
+          >{{ mod > 0 ? mod : -mod }}</span>
+        </div>
+      }
+      <span class="rp-op rp-op--eq">=</span>
+      @if (t !== null) {
+        <div class="rp-total rp-total--inline">
+          <span class="rp-total__eq">{{ t }}</span>
+          @if (r) {
+            <span class="rp-badge rp-badge--{{ r }} rp-badge--inline">{{ categoryLabel(r) }}</span>
+          }
+        </div>
+      } @else {
+        <div class="rp-total rp-total--pending rp-total--inline">
+          —
+          @if (r) {
+            <span class="rp-badge rp-badge--{{ r }} rp-badge--inline">{{ categoryLabel(r) }}</span>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <p-fieldset legend="Modificateurs">
+    <div class="rp-mods">
+      <div class="rp-mods__list">
+        <div class="rp-toggle">
+          <p-checkbox
+            [inputId]="'surpris-' + s.id"
+            [binary]="true"
+            [ngModel]="e.surpris"
+            (ngModelChange)="entryChange.emit({surpris: $event})"
+          />
+          <label class="rp-toggle__text" [attr.for]="'surpris-' + s.id">Surpris</label>
+          <span class="rp-toggle__val rp-toggle__val--neg">−1</span>
+        </div>
+        <div class="rp-toggle">
+          <p-checkbox
+            [inputId]="'embuscade-' + s.id"
+            [binary]="true"
+            [ngModel]="e.embuscade"
+            (ngModelChange)="entryChange.emit({embuscade: $event})"
+          />
+          <label class="rp-toggle__text" [attr.for]="'embuscade-' + s.id">Embuscade</label>
+          <span class="rp-toggle__val rp-toggle__val--pos">+2</span>
+        </div>
+        <div class="rp-toggle">
+          <app-value-stepper
+            [value]="e.carriere"
+            [min]="0"
+            [max]="9"
+            prefix="+"
+            ariaLabel="Modificateur de carrière"
+            decrementAriaLabel="Diminuer carrière"
+            incrementAriaLabel="Augmenter carrière"
+            (valueChanged)="entryChange.emit({carriere: $event})"
+          />
+          <span class="rp-toggle__text">Carrière</span>
+        </div>
+        <div class="rp-toggle">
+          <app-value-stepper
+            [value]="e.initiativeEnnemie"
+            [min]="0"
+            [max]="9"
+            prefix="−"
+            ariaLabel="Modificateur d'initiative ennemie"
+            decrementAriaLabel="Diminuer initiative ennemie"
+            incrementAriaLabel="Augmenter initiative ennemie"
+            (valueChanged)="entryChange.emit({initiativeEnnemie: $event})"
+          />
+          <span class="rp-toggle__text">Init. ennemie</span>
+        </div>
+      </div>
+      <button type="button" class="rp-mods__reset" (click)="resetModifiers()">Réinit.</button>
+    </div>
+  </p-fieldset>
+
+  @if (e.dice === 2) {
+    <div class="rp-alert rp-alert--danger">
+      <p-checkbox
+        [inputId]="'accept-echec-critique-' + s.id"
+        [binary]="true"
+        [ngModel]="e.acceptEchecCritique"
+        (ngModelChange)="entryChange.emit({acceptEchecCritique: $event})"
+      />
+      <label class="rp-alert__label" [attr.for]="'accept-echec-critique-' + s.id">
+        Accepter l'échec critique &mdash; possible gain d'héroïsme
+      </label>
+    </div>
+  }
+
+  @if (e.dice === 12) {
+    <div class="rp-alert rp-alert--gold">
+      <span class="rp-alert__title">★ Héroïque automatique</span>
+      <div class="rp-alert__opt">
+        <p-checkbox
+          [inputId]="'depense-heroisme-' + s.id"
+          [binary]="true"
+          [ngModel]="e.depenseHeroisme"
+          (ngModelChange)="entryChange.emit({depenseHeroisme: $event})"
+        />
+        <label class="rp-alert__label" [attr.for]="'depense-heroisme-' + s.id">
+          Dépenser 1 point d'héroïsme &rarr; Légendaire ★★
+        </label>
+      </div>
+    </div>
+  }
+
+</div>
