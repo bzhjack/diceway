@@ -7,7 +7,7 @@ import {DialogModule} from 'primeng/dialog';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {MessageModule} from 'primeng/message';
 import {SelectModule} from 'primeng/select';
-import {TagModule} from 'primeng/tag';
+import {TooltipModule} from 'primeng/tooltip';
 
 export type ParticipantType = 'hero' | 'creature' | 'demon' | 'pnj';
 export type ReactionResult =
@@ -27,9 +27,15 @@ export interface InitiativeSlot {
   readonly type: ParticipantType;
   readonly vitaliteMax: number;
   readonly heroismMax: number | null;
+  readonly esprit: number | null;
+  readonly initiative: number | null;
+  readonly melee: number | null;
+  readonly tir: number | null;
   readonly defense: number | null;
   readonly degats: string | null;
   readonly tags: string[];
+  readonly armesList: {nom: string; degats: string | null; type: 'M' | 'T' | null; portee: string | null; notes: string | null}[];
+  readonly armures: {nom: string; protection: string | null; malus: string | null}[];
   category: ReactionResult | null;
   vitaliteCourante: number;
   heroismCourant: number | null;
@@ -47,7 +53,6 @@ interface RollEntry {
   depenseHeroisme: boolean;
 }
 
-type PrimeSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast';
 
 const DEFAULT_ROLL_ENTRY: RollEntry = {
   esprit: 0,
@@ -79,12 +84,6 @@ const TYPE_LABELS: Record<ParticipantType, string> = {
   pnj: 'PNJ',
 };
 
-const TYPE_SEVERITIES: Record<ParticipantType, PrimeSeverity> = {
-  hero: 'info',
-  creature: 'warn',
-  demon: 'danger',
-  pnj: 'secondary',
-};
 
 const CATEGORY_LABELS: Record<ReactionResult, string> = {
   legendaire: 'Légendaire ★★',
@@ -97,20 +96,10 @@ const CATEGORY_LABELS: Record<ReactionResult, string> = {
   'echec-critique': 'Échec critique',
 };
 
-const CATEGORY_SEVERITIES: Record<ReactionResult, PrimeSeverity> = {
-  legendaire: 'warn',
-  heroique: 'warn',
-  reussite: 'info',
-  rival: 'warn',
-  coriace: 'secondary',
-  echec: 'danger',
-  pietaille: 'secondary',
-  'echec-critique': 'danger',
-};
 
 @Component({
   selector: 'app-bol-combat-panel',
-  imports: [FormsModule, ButtonModule, CardModule, CheckboxModule, DialogModule, InputNumberModule, MessageModule, SelectModule, TagModule],
+  imports: [FormsModule, ButtonModule, CardModule, CheckboxModule, DialogModule, InputNumberModule, MessageModule, SelectModule, TooltipModule],
   templateUrl: './bol-combat-panel.html',
   styleUrl: './bol-combat-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -204,7 +193,11 @@ export class BolCombatPanelComponent {
   protected startRollPhase(): void {
     const entries: Record<string, RollEntry> = {};
     for (const slot of this.heroesInOrder()) {
-      entries[slot.id] = {...DEFAULT_ROLL_ENTRY};
+      entries[slot.id] = {
+        ...DEFAULT_ROLL_ENTRY,
+        esprit: slot.esprit ?? 0,
+        bonusInit: slot.initiative ?? 0,
+      };
     }
     this.rollEntries.set(entries);
     this.rollPhase.set(true);
@@ -225,16 +218,27 @@ export class BolCombatPanelComponent {
     return TYPE_LABELS[type];
   }
 
-  protected typeSeverity(type: ParticipantType): PrimeSeverity {
-    return TYPE_SEVERITIES[type];
-  }
-
   protected categoryLabel(category: ReactionResult): string {
     return CATEGORY_LABELS[category];
   }
 
-  protected categorySeverity(category: ReactionResult): PrimeSeverity {
-    return CATEGORY_SEVERITIES[category];
+  protected armeTooltip(arme: InitiativeSlot['armesList'][number]): string {
+    const parts: string[] = [];
+    parts.push(arme.type === 'T' ? 'Tir' : 'Mêlée');
+    if (arme.portee) parts.push(`Portée : ${arme.portee}`);
+    if (arme.notes) parts.push(arme.notes);
+    return parts.join('\n');
+  }
+
+  protected armureTooltip(armures: InitiativeSlot['armures']): string {
+    return armures
+      .map((a) => {
+        const parts = [a.nom];
+        if (a.protection) parts.push(`Protection : ${a.protection}`);
+        if (a.malus) parts.push(`Malus : ${a.malus}`);
+        return parts.join('\n');
+      })
+      .join('\n\n');
   }
 
   protected addToInitiative(): void {

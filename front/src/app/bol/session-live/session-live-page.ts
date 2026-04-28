@@ -46,9 +46,29 @@ export class SessionLivePageComponent {
         vitaliteCourante: pj.heros?.ressources?.vitalite ?? 0,
         heroismMax: pj.heros?.ressources?.heroisme ?? null,
         heroismCourant: pj.heros?.ressources?.heroisme ?? null,
+        esprit: pj.heros?.attributs?.esprit ?? null,
+        initiative: pj.heros?.combat?.initiative ?? null,
+        melee: pj.heros?.combat?.melee ?? null,
+        tir: pj.heros?.combat?.tir ?? null,
         defense: pj.heros?.combat?.defense ?? null,
         degats: null,
         tags: [],
+        armesList: (pj.heros?.armes ?? [])
+          .filter((a) => a.arme)
+          .map((a) => ({
+            nom: a.arme!.arme,
+            degats: a.arme!.degats,
+            type: a.arme!.type,
+            portee: a.arme!.portee,
+            notes: a.arme!.notes,
+          })),
+        armures: (pj.heros?.armures ?? [])
+          .filter((a) => a.armure)
+          .map((a) => ({
+            nom: a.armure!.armure,
+            protection: a.armure!.protection,
+            malus: a.armure!.malus,
+          })),
         category: null,
       })),
       ...(s.creatures ?? []).map((c): InitiativeSlot => ({
@@ -60,9 +80,18 @@ export class SessionLivePageComponent {
         vitaliteCourante: c.vitalite_max,
         heroismMax: null,
         heroismCourant: null,
+        esprit: c.esprit,
+        initiative: null,
+        melee: c.attaque,
+        tir: null,
         defense: c.defense,
         degats: c.degats,
-        tags: (c.capacites ?? []).map((cap) => cap.capacite ?? '').filter(Boolean),
+        tags: [
+          ...(c.capacites ?? []).map((cap) => cap.capacite ?? '').filter(Boolean),
+          ...(c.protection ? [`Protection: ${c.protection}`] : []),
+        ],
+        armesList: [],
+        armures: [],
         category: c.rang,
       })),
       ...(s.demons ?? []).map((d): InitiativeSlot => ({
@@ -74,9 +103,15 @@ export class SessionLivePageComponent {
         vitaliteCourante: d.vitalite_max,
         heroismMax: null,
         heroismCourant: null,
+        esprit: d.esprit,
+        initiative: null,
+        melee: d.melee,
+        tir: d.tir,
         defense: d.defense,
         degats: d.degats,
         tags: (d.pouvoirs ?? []).map((p) => p.pouvoir ?? '').filter(Boolean),
+        armesList: [],
+        armures: [],
         category: d.rang,
       })),
       ...(s.pnjs ?? []).map((p): InitiativeSlot => ({
@@ -88,11 +123,23 @@ export class SessionLivePageComponent {
         vitaliteCourante: p.vitalite_max,
         heroismMax: null,
         heroismCourant: null,
+        esprit: p.esprit,
+        initiative: null,
+        melee: p.melee,
+        tir: p.tir,
         defense: p.defense,
         degats: null,
-        tags: (p.armes ?? [])
-          .filter((a) => a.degats)
-          .map((a) => (a.nom ? `${a.nom} ${a.degats}` : (a.degats ?? ''))),
+        tags: [],
+        armesList: (p.armes ?? [])
+          .filter((a) => a.nom || a.degats)
+          .map((a) => ({
+            nom: a.nom ?? '',
+            degats: a.degats,
+            type: a.type,
+            portee: null,
+            notes: null,
+          })),
+        armures: [],
         category: p.rang,
       })),
     ];

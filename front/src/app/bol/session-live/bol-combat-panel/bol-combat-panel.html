@@ -326,8 +326,12 @@
               <th class="combat-th combat-th--pos">#</th>
               <th class="combat-th combat-th--nom">Participant</th>
               <th class="combat-th combat-th--initiative">Initiative</th>
-              <th class="combat-th combat-th--pv">PV</th>
+              <th class="combat-th combat-th--pv">Vitalité</th>
               <th class="combat-th combat-th--heroism">Héroïsme</th>
+              <th class="combat-th combat-th--esprit">Esp.</th>
+              <th class="combat-th combat-th--init">Init</th>
+              <th class="combat-th combat-th--melee">Mêlée</th>
+              <th class="combat-th combat-th--tir">Tir</th>
               <th class="combat-th combat-th--def">Déf</th>
               <th class="combat-th combat-th--degats">Dégâts</th>
               <th class="combat-th combat-th--remove"></th>
@@ -347,26 +351,36 @@
                     <div class="combat-participant-identity">
                       <div class="combat-participant-header">
                         <span class="combat-initiative-item__name">{{ slot.nom }}</span>
-                        <p-tag [value]="typeLabel(slot.type)" [severity]="typeSeverity(slot.type)" />
+                        <span class="combat-type combat-type--{{ slot.type }}">{{ typeLabel(slot.type) }}</span>
                         @if (slot.category === 'echec-critique') {
-                          <p-tag
-                            value="⛔ R1"
-                            severity="danger"
-                            pTooltip="Ne peut pas agir au round 1 — pas de bonus de bouclier en défense"
-                          />
+                          <span
+                            class="combat-r1"
+                            title="Ne peut pas agir au round 1 — pas de bonus de bouclier en défense"
+                          >⛔ R1</span>
                         }
                         @if (round1Blocked() && (slot.category === 'coriace' || slot.category === 'pietaille')) {
-                          <p-tag
-                            value="⛔ R1"
-                            severity="danger"
-                            pTooltip="Ne joue pas au round 1"
-                          />
+                          <span
+                            class="combat-r1"
+                            title="Ne joue pas au round 1"
+                          >⛔ R1</span>
                         }
                       </div>
-                      @if (slot.tags.length > 0) {
+                      @if (slot.tags.length > 0 || slot.armesList.length > 0 || slot.armures.length > 0) {
                         <div class="combat-participant-tags">
                           @for (tag of slot.tags; track tag) {
-                            <p-tag [value]="tag" severity="secondary" />
+                            <span class="combat-chip">{{ tag }}</span>
+                          }
+                          @for (arme of slot.armesList; track arme.nom) {
+                            <span
+                              class="combat-chip combat-chip--arme"
+                              [pTooltip]="armeTooltip(arme)"
+                            >{{ arme.nom }}{{ arme.degats ? ' ' + arme.degats : '' }}</span>
+                          }
+                          @for (armure of slot.armures; track armure.nom) {
+                            <span
+                              class="combat-chip combat-chip--armure"
+                              [pTooltip]="armureTooltip([armure])"
+                            >🛡 {{ armure.nom }}</span>
                           }
                         </div>
                       }
@@ -376,72 +390,80 @@
 
                 <td class="combat-td combat-td--initiative">
                   @if (slot.category) {
-                    <p-tag [value]="categoryLabel(slot.category)" [severity]="categorySeverity(slot.category)" />
+                    <span class="combat-cat combat-cat--{{ slot.category }}">{{ categoryLabel(slot.category) }}</span>
                   } @else {
-                    <p-tag value="En attente" severity="secondary" />
+                    <span class="combat-pending">En attente</span>
                   }
                 </td>
 
                 <td class="combat-td combat-td--pv">
-                  <div class="combat-stepper">
-                    <p-button
-                      icon="pi pi-minus"
-                      [text]="true"
-                      size="small"
-                      (onClick)="adjustHp(slot.id, -1)"
-                      aria-label="Réduire PV"
-                    />
-                    <span class="combat-stepper__value">{{ slot.vitaliteCourante }}/{{ slot.vitaliteMax }}</span>
-                    <p-button
-                      icon="pi pi-plus"
-                      [text]="true"
-                      size="small"
-                      (onClick)="adjustHp(slot.id, 1)"
-                      aria-label="Augmenter PV"
-                    />
-                  </div>
-                  @if (slot.vitaliteMax > 0) {
-                    <div class="combat-vit-bar">
-                      <div
-                        class="combat-vit-bar__fill"
-                        [style.width.%]="slot.vitaliteCourante / slot.vitaliteMax * 100"
-                        [class.combat-vit-bar__fill--low]="slot.vitaliteCourante / slot.vitaliteMax <= 0.33"
-                      ></div>
+                  <div class="combat-hp">
+                    <div class="combat-hp__row">
+                      <button class="combat-hp__btn" (click)="adjustHp(slot.id, -1)" aria-label="Réduire PV">−</button>
+                      <span class="combat-hp__frac">
+                        <span class="combat-hp__cur">{{ slot.vitaliteCourante }}</span><span class="combat-hp__slash">/</span><span class="combat-hp__max">{{ slot.vitaliteMax }}</span>
+                      </span>
+                      <button class="combat-hp__btn" (click)="adjustHp(slot.id, 1)" aria-label="Augmenter PV">+</button>
                     </div>
-                  }
+                    @if (slot.vitaliteMax > 0) {
+                      <div class="combat-hp__bar">
+                        <div
+                          class="combat-hp__fill"
+                          [style.width.%]="slot.vitaliteCourante / slot.vitaliteMax * 100"
+                          [class.combat-hp__fill--low]="slot.vitaliteCourante / slot.vitaliteMax <= 0.33"
+                        ></div>
+                      </div>
+                    }
+                  </div>
                 </td>
 
                 <td class="combat-td combat-td--heroism">
                   @if (slot.heroismMax != null) {
-                    <div class="combat-stepper">
-                      <p-button
-                        icon="pi pi-minus"
-                        [text]="true"
-                        size="small"
-                        (onClick)="adjustHeroism(slot.id, -1)"
-                        aria-label="Réduire héroïsme"
-                      />
-                      <span class="combat-stepper__value">{{ slot.heroismCourant }}/{{ slot.heroismMax }}</span>
-                      <p-button
-                        icon="pi pi-plus"
-                        [text]="true"
-                        size="small"
-                        (onClick)="adjustHeroism(slot.id, 1)"
-                        aria-label="Augmenter héroïsme"
-                      />
+                    <div class="combat-hp combat-hp--heroism">
+                      <div class="combat-hp__row">
+                        <button class="combat-hp__btn" (click)="adjustHeroism(slot.id, -1)" aria-label="Réduire héroïsme">−</button>
+                        <span class="combat-hp__frac">
+                          <span class="combat-hp__cur">{{ slot.heroismCourant }}</span><span class="combat-hp__slash">/</span><span class="combat-hp__max">{{ slot.heroismMax }}</span>
+                        </span>
+                        <button class="combat-hp__btn" (click)="adjustHeroism(slot.id, 1)" aria-label="Augmenter héroïsme">+</button>
+                      </div>
                     </div>
+                  }
+                </td>
+
+                <td class="combat-td combat-td--esprit">
+                  @if (slot.esprit != null) {
+                    <span class="combat-stat-value">{{ slot.esprit }}</span>
+                  }
+                </td>
+
+                <td class="combat-td combat-td--init">
+                  @if (slot.initiative != null) {
+                    <span class="combat-stat-value">{{ slot.initiative }}</span>
+                  }
+                </td>
+
+                <td class="combat-td combat-td--melee">
+                  @if (slot.melee != null) {
+                    <span class="combat-stat-value">{{ slot.melee }}</span>
+                  }
+                </td>
+
+                <td class="combat-td combat-td--tir">
+                  @if (slot.tir != null) {
+                    <span class="combat-stat-value">{{ slot.tir }}</span>
                   }
                 </td>
 
                 <td class="combat-td combat-td--def">
                   @if (slot.defense != null) {
-                    <p-tag [value]="'' + slot.defense" severity="secondary" />
+                    <span class="combat-stat combat-stat--def">{{ slot.defense }}</span>
                   }
                 </td>
 
                 <td class="combat-td combat-td--degats">
                   @if (slot.degats) {
-                    <p-tag [value]="slot.degats" severity="warn" />
+                    <span class="combat-stat combat-stat--degats">{{ slot.degats }}</span>
                   }
                 </td>
 

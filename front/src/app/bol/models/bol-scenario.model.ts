@@ -107,6 +107,9 @@ export interface BolScenarioPjModel {
     id: string | null;
     origines: {nom: string | null; avatar: string | null; joueur: string | null};
     ressources?: {vitalite: number; heroisme: number};
-    combat?: {defense: number};
+    attributs?: {esprit: number};
+    combat?: {defense: number; initiative: number; melee: number; tir: number};
+    armes?: {arme?: {arme: string; degats: string | null; type: 'M' | 'T'; portee: string | null; notes: string | null} | null}[];
+    armures?: {armure?: {armure: string; protection: string | null; malus: string | null} | null}[];
   };
 }

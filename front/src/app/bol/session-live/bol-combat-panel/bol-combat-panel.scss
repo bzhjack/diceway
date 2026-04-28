@@ -438,33 +438,196 @@
   }
 }
 
-// ── HP stepper ────────────────────────────────────────────────────────────────
+// ── Type badge ────────────────────────────────────────────────────────────────
 
-.combat-stepper {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.combat-stepper__value {
-  min-width: 3rem;
-  color: #f1f5f9;
-  font-size: 0.85rem;
+.combat-type {
+  display: inline-block;
+  padding: 0.05rem 0.38rem;
+  border-radius: 3px;
+  font-size: 0.6rem;
   font-weight: 700;
-  text-align: center;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  opacity: 0.75;
+
+  &--hero     { color: #60a5fa; background: rgba(59, 130, 246, 0.08); }
+  &--creature { color: #f59e0b; background: rgba(245, 158, 11, 0.08); }
+  &--demon    { color: #f87171; background: rgba(239, 68, 68, 0.08); }
+  &--pnj      { color: #94a3b8; background: rgba(148, 163, 184, 0.06); }
 }
 
-.combat-vit-bar {
-  height: 4px;
-  background: #1e293b;
-  overflow: hidden;
-  margin-top: 0.3rem;
+// ── R1 warning badge ──────────────────────────────────────────────────────────
+
+.combat-r1 {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #f87171;
+  letter-spacing: 0.04em;
+  cursor: default;
 }
 
-.combat-vit-bar__fill {
-  height: 100%;
-  background: #22c55e;
-  transition: width 250ms ease;
+// ── Initiative category label ─────────────────────────────────────────────────
 
-  &--low { background: #ef4444; }
+.combat-cat {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+
+  &--legendaire    { color: #fbbf24; }
+  &--heroique      { color: #fbbf24; }
+  &--reussite      { color: #60a5fa; }
+  &--echec         { color: #f87171; }
+  &--echec-critique { color: #ef4444; }
+  &--rival         { color: #fb923c; }
+  &--coriace       { color: #94a3b8; }
+  &--pietaille     { color: #64748b; }
+}
+
+.combat-pending {
+  font-size: 0.75rem;
+  color: #334155;
+  font-style: italic;
+}
+
+// ── Stat values (def / dégâts / esprit / init) ────────────────────────────────
+
+.combat-stat {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #94a3b8;
+
+  &--def    { color: #cbd5e1; }
+  &--degats { color: #fbbf24; font-family: monospace; letter-spacing: 0.04em; }
+}
+
+.combat-stat-value {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+// ── Capacity / tag chips ──────────────────────────────────────────────────────
+
+.combat-chip {
+  display: inline-block;
+  padding: 0.05rem 0.4rem;
+  border-radius: 3px;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  font-size: 0.62rem;
+  color: #64748b;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+
+  &--arme {
+    cursor: default;
+    color: #fbbf24;
+    border-color: rgba(251, 191, 36, 0.2);
+  }
+
+  &--armure {
+    cursor: default;
+    color: #94a3b8;
+    border-color: rgba(148, 163, 184, 0.25);
+  }
+}
+
+// ── Column widths (new) ───────────────────────────────────────────────────────
+
+.combat-td {
+  &.combat-td--esprit,
+  &.combat-td--init,
+  &.combat-td--melee,
+  &.combat-td--tir { text-align: center; white-space: nowrap; width: 3rem; }
+}
+
+.combat-th {
+  &.combat-th--esprit,
+  &.combat-th--init,
+  &.combat-th--melee,
+  &.combat-th--tir { text-align: center; }
+}
+
+// ── HP / Héroïsme stepper ─────────────────────────────────────────────────────
+
+.combat-hp {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+  }
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.3rem;
+    height: 1.3rem;
+    padding: 0;
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 3px;
+    background: transparent;
+    color: #64748b;
+    font-size: 0.85rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color 120ms, color 120ms, background 120ms;
+    flex-shrink: 0;
+
+    &:hover {
+      border-color: rgba(148, 163, 184, 0.35);
+      color: #cbd5e1;
+      background: rgba(148, 163, 184, 0.06);
+    }
+
+    &:active { background: rgba(148, 163, 184, 0.12); }
+  }
+
+  &__frac {
+    min-width: 2.8rem;
+    text-align: center;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__cur {
+    color: #f1f5f9;
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+
+  &__slash {
+    color: #1e293b;
+    font-size: 0.65rem;
+    margin: 0 0.05rem;
+  }
+
+  &__max {
+    color: #475569;
+    font-size: 0.68rem;
+    font-weight: 500;
+  }
+
+  &__bar {
+    height: 3px;
+    background: rgba(15, 23, 42, 0.8);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  &__fill {
+    height: 100%;
+    background: #22c55e;
+    border-radius: 2px;
+    transition: width 280ms ease, background 280ms;
+
+    &--low { background: #ef4444; }
+  }
+
+  &--heroism &__cur { color: #fbbf24; }
 }

@@ -24,6 +24,8 @@ class BolScenarioService
     {
         return [
             'pj.heros',
+            'pj.heros.armes.arme',
+            'pj.heros.armures.armure',
             'creatures',
             'creatures.creature',
             'demons',
