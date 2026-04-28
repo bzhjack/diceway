@@ -15,7 +15,7 @@
 
 .dice-panel__tray {
   --dice-box-min-height: 13rem;
-  border-right: 1px solid rgba(148, 163, 184, 0.1);
+  border-right: 1px solid var(--dw-combat-border);
 }
 
 .dice-panel__options {
@@ -23,7 +23,7 @@
   align-content: start;
   gap: 0.8rem;
   padding: 1rem;
-  border-right: 1px solid rgba(148, 163, 184, 0.1);
+  border-right: 1px solid var(--dw-combat-border);
 }
 
 .dice-panel__result-col {
@@ -36,7 +36,7 @@
   place-items: center;
   height: 100%;
   min-height: 6rem;
-  color: #94a3b8;
+  color: var(--p-surface-500);
   font-size: 0.78rem;
   font-style: italic;
   letter-spacing: 0.05em;
@@ -57,7 +57,7 @@
 .dice-panel__kicker,
 .dice-result__label {
   margin: 0;
-  color: #93c5fd;
+  color: var(--dw-color-dice-kicker);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -66,7 +66,7 @@
 
 .dice-panel__context {
   margin: 0.3rem 0 0;
-  color: #f8fafc;
+  color: var(--dw-color-text-bright);
   font-size: 0.82rem;
   font-weight: 600;
 }
@@ -77,7 +77,7 @@
   min-height: 2rem;
   padding: 0 0.75rem;
   border: 1px solid rgba(96, 165, 250, 0.22);
-  color: #dbeafe;
+  color: var(--dw-color-dice-muted);
   background: rgba(96, 165, 250, 0.12);
   font-size: 0.76rem;
   font-weight: 800;
@@ -88,7 +88,7 @@
 
 .dice-result__detail {
   margin: 0.2rem 0 0;
-  color: #94a3b8;
+  color: var(--p-surface-500);
   line-height: 1.45;
 }
 
@@ -112,7 +112,7 @@
 }
 
 .dice-field span {
-  color: #cbd5e1;
+  color: var(--p-surface-600);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -123,18 +123,18 @@
   min-width: 0;
   height: 2.75rem;
   padding: 0 0.8rem;
-  border: 1px solid #334155;
+  border: 1px solid var(--p-surface-200);
   border-radius: 0;
-  color: #f8fafc;
+  color: var(--dw-color-text-bright);
   background: rgba(15, 23, 42, 0.88);
 }
 
 .dice-toggle,
 .dice-button,
 .dice-preset {
-  border: 1px solid #334155;
+  border: 1px solid var(--p-surface-200);
   border-radius: 0;
-  color: #f8fafc;
+  color: var(--dw-color-text-bright);
   background: rgba(15, 23, 42, 0.88);
   cursor: pointer;
   transition:
@@ -158,7 +158,7 @@
 
 .dice-toggle[data-active='true'] {
   border-color: rgba(96, 165, 250, 0.5);
-  color: #dbeafe;
+  color: var(--dw-color-dice-muted);
   background: rgba(96, 165, 250, 0.16);
 }
 
@@ -207,7 +207,7 @@
 }
 
 .dice-result__banner strong {
-  color: #f8fafc;
+  color: var(--dw-color-text-bright);
   font-size: 1.9rem;
   line-height: 1;
 }
@@ -248,7 +248,7 @@
   min-height: 1.7rem;
   padding: 0 0.55rem;
   border: 1px solid rgba(148, 163, 184, 0.16);
-  color: #cbd5e1;
+  color: var(--p-surface-600);
   background: rgba(15, 23, 42, 0.82);
   font-size: 0.72rem;
   font-weight: 700;
@@ -267,7 +267,7 @@
 }
 
 .dice-result__die small {
-  color: #94a3b8;
+  color: var(--p-surface-500);
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -275,14 +275,14 @@
 }
 
 .dice-result__die strong {
-  color: #f8fafc;
+  color: var(--dw-color-text-bright);
   font-size: 1.2rem;
   line-height: 1;
 }
 
 .dice-result__die[data-accent='kept'] {
   border-color: rgba(96, 165, 250, 0.5);
-  color: #dbeafe;
+  color: var(--dw-color-dice-muted);
   background: rgba(96, 165, 250, 0.14);
 }
 
@@ -298,7 +298,7 @@
 
 .dice-result__formula {
   margin: 0;
-  color: #f8fafc;
+  color: var(--dw-color-text-bright);
   font-size: 1.02rem;
   font-weight: 800;
   letter-spacing: 0.02em;
@@ -306,7 +306,7 @@
 
 .dice-panel__error {
   margin: 0;
-  color: #fecaca;
+  color: var(--dw-color-danger-muted);
 }
 
 @media (max-width: 640px) {

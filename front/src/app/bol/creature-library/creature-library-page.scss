@@ -15,7 +15,7 @@
 
   .p-rowgroup-header > td {
     background: linear-gradient(90deg, rgba(24, 54, 65, 0.98), rgba(15, 23, 42, 0.95));
-    border-color: #334155;
+    border-color: var(--p-surface-200);
     padding: 0 1rem;
   }
 }
@@ -30,7 +30,7 @@
   height: 5.5rem;
   width: 5.5rem;
   overflow: hidden;
-  border: 1px solid #424b57;
+  border: 1px solid var(--dw-border);
   border-radius: 0.75rem;
   background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.92));
 }
@@ -72,7 +72,7 @@
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.06em;
-  color: #fbbf24;
+  color: var(--dw-color-legendary);
   text-transform: uppercase;
 }
 

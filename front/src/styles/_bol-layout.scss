@@ -5,7 +5,7 @@
 .dw-page {
   min-height: 100dvh;
   padding: 1.5rem 1rem;
-  background: linear-gradient(180deg, #000000, #0f172a 45%, #000000);
+  background: linear-gradient(180deg, #000000, var(--p-surface-50) 45%, #000000);
 
   @media (min-width: 768px) {
     padding-left: 1.5rem;
@@ -17,21 +17,21 @@
 .dw-section {
   display: grid;
   gap: 1rem;
-  border: 1px solid #424b57;
+  border: 1px solid var(--dw-border);
   background: rgb(15 23 42 / 0.72);
   padding: 1rem;
 }
 
 // Section de formulaire — fond mid (hero-form, creature-form, demon-form, pnj-form, hero-advanced)
 .dw-section--form {
-  border: 1px solid #424b57;
+  border: 1px solid var(--dw-border);
   background: rgb(51 65 85 / 0.55);
   padding: 1.25rem;
 }
 
 // Section chargement / placeholder
 .dw-section--loading {
-  border: 1px solid #424b57;
+  border: 1px solid var(--dw-border);
   background: rgb(17 24 39 / 0.8);
   padding: 1.25rem;
 }
@@ -42,7 +42,7 @@
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.75rem;
-  border: 1px solid #424b57;
+  border: 1px solid var(--dw-border);
   background: rgb(2 6 23 / 0.58);
   padding: 0.5rem 0.75rem;
 }
@@ -53,11 +53,11 @@
 
 // État vide d'une liste
 .dw-empty {
-  border: 1px dashed #424b57;
+  border: 1px dashed var(--dw-border);
   background: rgb(15 23 42 / 0.32);
   padding: 0.75rem;
   font-size: 0.875rem;
-  color: #94a3b8;
+  color: var(--p-surface-500);
 }
 
 // Bouton de suppression (poubelle rouge)
@@ -68,9 +68,9 @@
   width: 2rem;
   cursor: pointer;
   place-items: center;
-  border: 1px solid #5b2a2a;
+  border: 1px solid var(--dw-border-remove);
   background: rgb(69 10 10 / 0.18);
-  color: #fecaca;
+  color: var(--dw-color-danger-muted);
   transition: background 120ms ease;
 
   &:hover {

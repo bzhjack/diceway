@@ -10,8 +10,8 @@ image-cropper {
 
 .cropper-shell {
   overflow: hidden;
-  border: 1px solid #334155;
-  background: #0f172a;
+  border: 1px solid var(--p-surface-200);
+  background: var(--p-surface-50);
 }
 
 .preview-shell {
@@ -20,8 +20,8 @@ image-cropper {
   min-height: 256px;
   align-items: center;
   justify-content: center;
-  border: 1px solid #334155;
-  background: #0f172a;
+  border: 1px solid var(--p-surface-200);
+  background: var(--p-surface-50);
 }
 
 .preview-image {
@@ -31,16 +31,16 @@ image-cropper {
 }
 
 .preview-placeholder {
-  color: #94a3b8;
+  color: var(--p-surface-500);
   font-size: 0.875rem;
 }
 
 .picture-dropzone {
   border-radius: 0.5rem;
-  border: 1px dashed #64748b;
+  border: 1px dashed var(--p-surface-400);
   background: rgba(15, 23, 42, 0.8);
   padding: 5rem 2rem;
-  color: #e2e8f0;
+  color: var(--p-surface-700);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -48,6 +48,6 @@ image-cropper {
 }
 
 .picture-dropzone.drag-over {
-  border-color: #f59e0b;
+  border-color: var(--dw-color-creature);
   background: rgba(245, 158, 11, 0.08);
 }

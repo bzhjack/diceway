@@ -3,7 +3,7 @@
 }
 
 .creature-statblock {
-  border: 1px solid #424b57;
+  border: 1px solid var(--dw-border);
   background:
     radial-gradient(circle at top left, rgba(250, 204, 21, 0.12), transparent 28%),
     linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.94));
@@ -18,7 +18,7 @@
 .creature-statblock__avatar {
   position: relative;
   overflow: hidden;
-  border: 1px solid #424b57;
+  border: 1px solid var(--dw-border);
   background: rgba(15, 23, 42, 0.9);
   aspect-ratio: 1;
   width: 100%;
@@ -37,7 +37,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #fbbf24;
+  color: var(--dw-color-legendary);
 }
 
 .creature-statblock__main {
@@ -59,7 +59,7 @@
   font-weight: 900;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #fbbf24;
+  color: var(--dw-color-legendary);
 }
 
 .creature-statblock__title {
@@ -67,7 +67,7 @@
   font-family: 'Muse Display Harmony', 'Open Sans', sans-serif;
   font-size: clamp(1.45rem, 1.6vw, 1.85rem);
   line-height: 0.98;
-  color: #f8fafc;
+  color: var(--dw-color-text-bright);
 }
 
 .creature-statblock__actions {
@@ -91,20 +91,20 @@
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #fde68a;
+  color: var(--dw-color-legendary-muted);
 }
 
 .creature-statblock__chip--muted {
   border-color: rgba(148, 163, 184, 0.22);
   background: rgba(148, 163, 184, 0.08);
-  color: #cbd5e1;
+  color: var(--p-surface-600);
 }
 
 .creature-statblock__comment {
   margin: 0;
   font-size: 0.84rem;
   line-height: 1.55;
-  color: #cbd5e1;
+  color: var(--p-surface-600);
 }
 
 .creature-statblock__grid {
@@ -129,7 +129,7 @@
   font-weight: 900;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #94a3b8;
+  color: var(--p-surface-500);
 }
 
 .creature-statblock__stats {
@@ -146,13 +146,13 @@
 
 .creature-statblock__stat-label {
   font-size: 0.72rem;
-  color: #94a3b8;
+  color: var(--p-surface-500);
 }
 
 .creature-statblock__stat-value {
   font-size: 0.86rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--dw-color-text-bright);
 }
 
 .creature-statblock__abilities {
@@ -175,20 +175,20 @@
   margin: 0;
   font-size: 0.8rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--dw-color-text-bright);
 }
 
 .creature-statblock__ability-detail {
   margin: 0.2rem 0 0;
   font-size: 0.74rem;
   line-height: 1.45;
-  color: #cbd5e1;
+  color: var(--p-surface-600);
 }
 
 .creature-statblock__empty {
   margin: 0;
   font-size: 0.76rem;
-  color: #64748b;
+  color: var(--p-surface-400);
 }
 
 @media (min-width: 768px) {

@@ -41,14 +41,14 @@
   font-size: 0.75rem;
   line-height: 1.25;
   font-weight: 800;
-  color: #f8fafc;
+  color: var(--dw-color-text-bright);
   white-space: nowrap;
 }
 
 .hero-trait-panel__line {
   font-size: 0.75rem;
   line-height: 1.35;
-  color: #e2e8f0;
+  color: var(--p-surface-700);
 }
 
 .hero-avatar {
@@ -57,7 +57,7 @@
   height: 5.5rem;
   width: 5.5rem;
   overflow: hidden;
-  border: 1px solid #424b57;
+  border: 1px solid var(--dw-border);
   border-radius: 0.75rem;
   background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.92));
 }
@@ -73,6 +73,6 @@
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.06em;
-  color: #fbbf24;
+  color: var(--dw-color-legendary);
   text-transform: uppercase;
 }

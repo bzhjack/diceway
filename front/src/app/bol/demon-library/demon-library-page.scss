@@ -13,6 +13,7 @@
     white-space: nowrap;
   }
 
+  // La bibliothèque des démons utilise une palette zinc (noir intense) intentionnelle
   .p-datatable-table-container {
     overflow: hidden;
     border: 1px solid #3f3f46;
@@ -22,13 +23,13 @@
   .p-datatable-thead > tr > th {
     background: #09090b;
     border-color: #3f3f46;
-    color: #e2e8f0;
+    color: var(--p-surface-700);
     padding: 1rem;
   }
 
   .p-datatable-tbody > tr {
     background: rgba(24, 24, 27, 0.82);
-    color: #e2e8f0;
+    color: var(--p-surface-700);
   }
 
   .p-datatable-tbody > tr > td {
@@ -85,6 +86,6 @@
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.06em;
-  color: #fda4af;
+  color: var(--dw-color-demon);
   text-transform: uppercase;
 }

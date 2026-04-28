@@ -33,12 +33,12 @@
 }
 
 .dw_error {
-  color: #ef4444;
+  color: var(--dw-color-echec-forte);
   font-size: 0.875rem;
 }
 
 .dw_container {
-  border-left: 3px solid #cbd5e1;
+  border-left: 3px solid var(--p-surface-600);
   padding-left: 0.75rem;
 }
 
@@ -47,6 +47,36 @@
 }
 
 :root {
+  // ── Palette sémantique BoL ────────────────────────────────────────────────
+  --dw-color-legendary:       #fbbf24;  // légendaire, héroïque, kicker accent
+  --dw-color-legendary-muted: #fde68a;  // amber clair — chips créature
+  --dw-color-rival:           #fb923c;  // rival
+  --dw-color-reussite:        #60a5fa;  // réussite, type PJ
+  --dw-color-echec:           #f87171;  // échec, danger, R1
+  --dw-color-echec-forte:     #ef4444;  // échec critique, low health
+  --dw-color-health:          #22c55e;  // barre vitalité
+  --dw-color-creature:        #f59e0b;  // type créature
+  --dw-color-pnj:             #6ee7b7;  // émeraude — type PNJ
+  --dw-color-demon:           #fda4af;  // rose — type démon
+  --dw-color-danger-muted:    #fecaca;  // rouge pâle — erreurs, suppression
+  --dw-color-bonus:           #4ade80;  // vert clair — tags bonus
+  --dw-color-warn:            #f97316;  // orange — tags avertissement
+  --dw-color-dice-kicker:     #93c5fd;  // bleu-300 — kicker panneau dés
+  --dw-color-dice-muted:      #dbeafe;  // bleu-100 — badges/actifs dés
+  --dw-color-text-bright:     #f8fafc;  // quasi-blanc — titres, valeurs fortes
+
+  // ── Bordures UI ───────────────────────────────────────────────────────────
+  --dw-border:              #424b57;  // bordure sombre standard (très utilisée)
+  --dw-border-remove:       #5b2a2a;  // bordeaux — bouton suppression
+
+  // ── Surfaces semi-transparentes (combat) ──────────────────────────────────
+  --dw-combat-border:        rgba(148, 163, 184, 0.10);
+  --dw-combat-border-strong: rgba(148, 163, 184, 0.22);
+  --dw-combat-hover:         rgba(30, 41, 59, 0.40);
+  --dw-combat-bg-dark:       rgba(15, 23, 42, 0.80);
+  --dw-combat-bg-input:      rgba(30, 41, 59, 0.38);
+  --dw-combat-bg-muted:      rgba(15, 23, 42, 0.25);
+
   color-scheme: light;
   --p-floatlabel-font-weight: 500;
   --p-floatlabel-active-font-size: 1rem !important;
@@ -270,7 +300,7 @@ a:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  border: 1px solid #424b57;
+  border: 1px solid var(--dw-border);
   background: rgb(15 23 42 / 0.6);
   padding: 0.5rem 0.75rem;
 }
@@ -289,19 +319,19 @@ a:focus-visible {
   margin: 0;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #f1f5f9;
+  color: var(--p-surface-800);
 }
 
 .dw-advanced-list-meta {
   margin: 0;
   font-size: 0.75rem;
   line-height: 1.35;
-  color: #94a3b8;
+  color: var(--p-surface-500);
 }
 
 .dw-advanced-list-label {
   font-size: 0.875rem;
-  color: #e2e8f0;
+  color: var(--p-surface-700);
 }
 
 .dw-header-tag .p-tag-label {

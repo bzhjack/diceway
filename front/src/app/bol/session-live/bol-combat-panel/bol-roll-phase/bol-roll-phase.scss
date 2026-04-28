@@ -1,7 +1,7 @@
 .roll-phase {
   &__formula {
     margin: 0 0 1rem;
-    color: #64748b;
+    color: var(--p-surface-400);
     font-size: 0.7rem;
     font-family: monospace;
   }
@@ -11,7 +11,7 @@
     justify-content: flex-end;
     gap: 0.5rem;
     padding-top: 1rem;
-    border-top: 1px solid rgba(148, 163, 184, 0.1);
+    border-top: 1px solid var(--dw-combat-border);
     margin-top: 1rem;
   }
 }
@@ -26,11 +26,11 @@
 .roll-card {
   padding: 0.75rem 0.85rem;
   border-radius: 6px;
-  border: 1px solid rgba(148, 163, 184, 0.1);
+  border: 1px solid var(--dw-combat-border);
   background: rgba(15, 23, 42, 0.4);
   transition: border-color 200ms;
 
-  &--done { border-color: rgba(148, 163, 184, 0.22); }
+  &--done { border-color: var(--dw-combat-border-strong); }
 
   &__header {
     display: flex;
@@ -41,7 +41,7 @@
   }
 
   &__name {
-    color: #e2e8f0;
+    color: var(--p-surface-700);
     font-size: 0.9rem;
     font-weight: 700;
   }
@@ -62,12 +62,12 @@
     padding: 0.45rem 0.6rem;
     border-radius: 4px;
 
-    &--danger  { background: rgba(239, 68, 68, 0.06); border: 1px solid rgba(239, 68, 68, 0.18); }
-    &--heroique { background: rgba(251, 191, 36, 0.06); border: 1px solid rgba(251, 191, 36, 0.2); }
+    &--danger  { background: rgba(239, 68, 68, 0.06);  border: 1px solid rgba(239, 68, 68, 0.18); }
+    &--heroique { background: rgba(251, 191, 36, 0.06); border: 1px solid rgba(251, 191, 36, 0.20); }
   }
 
   &__natural12 {
-    color: #fbbf24;
+    color: var(--dw-color-legendary);
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.04em;
@@ -86,7 +86,7 @@
 
   &__mods-title {
     margin: 0;
-    color: #64748b;
+    color: var(--p-surface-400);
     font-size: 0.62rem;
     font-weight: 700;
     letter-spacing: 0.1em;
@@ -107,7 +107,7 @@
   gap: 0.45rem;
 
   &__label {
-    color: #cbd5e1;
+    color: var(--p-surface-600);
     font-size: 0.8rem;
     line-height: 1.35;
     cursor: pointer;
@@ -120,7 +120,7 @@
   gap: 0.2rem;
 
   &__label {
-    color: #64748b;
+    color: var(--p-surface-400);
     font-size: 0.62rem;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -128,11 +128,11 @@
     text-align: center;
   }
 
-  &--dice &__label { color: #fbbf24; }
+  &--dice &__label { color: var(--dw-color-legendary); }
 }
 
 .roll-op {
-  color: #475569;
+  color: var(--p-surface-300);
   font-size: 1rem;
   font-weight: 300;
   align-self: flex-end;
@@ -146,9 +146,9 @@
   align-self: flex-end;
   padding-bottom: 0.35rem;
 
-  &__eq    { color: #e2e8f0; font-size: 1rem; font-weight: 700; font-family: monospace; }
-  &__check { color: #22c55e; font-size: 1rem; font-weight: 700; }
-  &__fail  { color: #f87171; font-size: 1rem; font-weight: 700; }
+  &__eq    { color: var(--p-surface-700); font-size: 1rem; font-weight: 700; font-family: monospace; }
+  &__check { color: var(--dw-color-health);  font-size: 1rem; font-weight: 700; }
+  &__fail  { color: var(--dw-color-echec);   font-size: 1rem; font-weight: 700; }
 }
 
 .roll-cat {
@@ -156,14 +156,14 @@
   font-weight: 700;
   letter-spacing: 0.03em;
 
-  &--legendaire     { color: #fbbf24; }
-  &--heroique       { color: #fbbf24; }
-  &--reussite       { color: #60a5fa; }
-  &--echec          { color: #f87171; }
-  &--echec-critique { color: #ef4444; }
-  &--rival          { color: #fb923c; }
-  &--coriace        { color: #94a3b8; }
-  &--pietaille      { color: #64748b; }
+  &--legendaire     { color: var(--dw-color-legendary); }
+  &--heroique       { color: var(--dw-color-legendary); }
+  &--reussite       { color: var(--dw-color-reussite); }
+  &--echec          { color: var(--dw-color-echec); }
+  &--echec-critique { color: var(--dw-color-echec-forte); }
+  &--rival          { color: var(--dw-color-rival); }
+  &--coriace        { color: var(--p-surface-500); }
+  &--pietaille      { color: var(--p-surface-400); }
 }
 
 .roll-mod-checks {
@@ -178,12 +178,12 @@
   gap: 0.45rem;
   padding: 0.35rem 0.45rem;
   border-radius: 4px;
-  border: 1px solid rgba(148, 163, 184, 0.1);
-  background: rgba(30, 41, 59, 0.38);
+  border: 1px solid var(--dw-combat-border);
+  background: var(--dw-combat-bg-input);
 
   &__text {
     flex: 1;
-    color: #cbd5e1;
+    color: var(--p-surface-600);
     font-size: 0.76rem;
     line-height: 1.35;
     cursor: pointer;
@@ -214,7 +214,7 @@
   align-items: center;
   gap: 0.5rem;
 
-  &__label { color: #94a3b8; font-size: 0.72rem; }
+  &__label { color: var(--p-surface-500); font-size: 0.72rem; }
 }
 
 @media (max-width: 820px) {
@@ -228,11 +228,11 @@
   margin-bottom: 1rem;
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
-  background: rgba(15, 23, 42, 0.25);
+  background: var(--dw-combat-bg-muted);
 
   &__label {
     margin: 0 0 0.4rem;
-    color: #475569;
+    color: var(--p-surface-300);
     font-size: 0.62rem;
     font-weight: 700;
     letter-spacing: 0.1em;
@@ -249,6 +249,6 @@
 
   &:last-child { border-bottom: none; }
 
-  &__nom   { color: #94a3b8; font-size: 0.8rem; }
-  &__nocat { color: #334155; font-size: 0.75rem; font-style: italic; }
+  &__nom   { color: var(--p-surface-500); font-size: 0.8rem; }
+  &__nocat { color: var(--p-surface-200); font-size: 0.75rem; font-style: italic; }
 }

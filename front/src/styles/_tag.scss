@@ -9,15 +9,15 @@
   }
 
   &.malus {
-    color: #f87171;
+    color: var(--dw-color-echec);
   }
 
   &.bonus {
-    color: #4ade80;
+    color: var(--dw-color-bonus);
   }
 
   &.warn {
-    color: #f97316;
+    color: var(--dw-color-warn);
   }
 }
 
