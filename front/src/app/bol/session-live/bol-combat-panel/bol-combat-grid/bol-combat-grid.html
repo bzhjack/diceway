@@ -1,0 +1,184 @@
+@if (legendaryBonus() || round1Blocked()) {
+  <div class="combat-notices flex gap-2">
+    @if (legendaryBonus()) {
+      <p-message severity="warn" text="★★ Un héros légendaire : +1 à toutes les attaques ce combat" />
+    }
+    @if (round1Blocked()) {
+      <p-message severity="error" text="⛔ Coriaces et piétaille bloqués au round 1" />
+    }
+  </div>
+}
+
+@if (availableParticipantOptions().length > 0) {
+  <div class="combat-initiative-add">
+    <p-select
+      class="combat-initiative-select"
+      [options]="availableParticipantOptions()"
+      optionLabel="label"
+      optionValue="value"
+      [ngModel]="selectedParticipantId()"
+      (ngModelChange)="selectedParticipantChange.emit($event)"
+      placeholder="Choisir un participant"
+    />
+    <p-button
+      label="Ajouter"
+      icon="pi pi-plus"
+      size="small"
+      [disabled]="!selectedParticipantId()"
+      (onClick)="addParticipant.emit()"
+    />
+  </div>
+}
+
+@if (sortedInitiative().length > 0) {
+  <div class="combat-table-wrap">
+    <table class="combat-table" aria-label="Tableau de combat">
+      <thead>
+        <tr>
+          <th class="combat-th combat-th--pos">#</th>
+          <th class="combat-th combat-th--nom">Participant</th>
+          <th class="combat-th combat-th--initiative">Initiative</th>
+          <th class="combat-th combat-th--pv">Vitalité</th>
+          <th class="combat-th combat-th--heroism">Héroïsme</th>
+          <th class="combat-th combat-th--esprit">Esp.</th>
+          <th class="combat-th combat-th--init">Init</th>
+          <th class="combat-th combat-th--melee">Mêlée</th>
+          <th class="combat-th combat-th--tir">Tir</th>
+          <th class="combat-th combat-th--def">Déf</th>
+          <th class="combat-th combat-th--degats">Dégâts</th>
+          <th class="combat-th combat-th--remove"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (slot of sortedInitiative(); track slot.id; let i = $index) {
+          <tr class="combat-tr" [attr.data-type]="slot.type" [attr.data-cat]="slot.category">
+
+            <td class="combat-td combat-td--pos">{{ i + 1 }}</td>
+
+            <td class="combat-td combat-td--nom">
+              <div class="combat-participant-row">
+                <div class="combat-participant-avatar">
+                  <img [src]="slot.avatar || '/assets/bol/empty-avatar.jpg'" [alt]="slot.nom" class="h-full w-full object-cover" />
+                </div>
+                <div class="combat-participant-identity">
+                  <div class="combat-participant-header">
+                    <span class="combat-initiative-item__name">{{ slot.nom }}</span>
+                    <span class="combat-type combat-type--{{ slot.type }}">{{ typeLabel(slot.type) }}</span>
+                    @if (slot.category === 'echec-critique') {
+                      <span class="combat-r1" title="Ne peut pas agir au round 1 — pas de bonus de bouclier en défense">⛔ R1</span>
+                    }
+                    @if (round1Blocked() && (slot.category === 'coriace' || slot.category === 'pietaille')) {
+                      <span class="combat-r1" title="Ne joue pas au round 1">⛔ R1</span>
+                    }
+                  </div>
+                  @if (slot.tags.length > 0) {
+                    <div class="combat-participant-tags">
+                      @for (tag of slot.tags; track tag) {
+                        <span class="combat-chip">{{ tag }}</span>
+                      }
+                    </div>
+                  }
+                  @if (slot.armesList.length > 0) {
+                    <div class="combat-participant-tags">
+                      @for (arme of slot.armesList; track arme.nom) {
+                        <span class="combat-chip combat-chip--arme" [pTooltip]="armeTooltip(arme)">{{ arme.nom }}{{ arme.degats ? ' ' + arme.degats : '' }}</span>
+                      }
+                    </div>
+                  }
+                  @if (slot.armures.length > 0) {
+                    <div class="combat-participant-tags">
+                      @for (armure of slot.armures; track armure.nom) {
+                        <span class="combat-chip combat-chip--armure" [pTooltip]="armureTooltip(armure)">🛡 {{ armure.nom }}</span>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            </td>
+
+            <td class="combat-td combat-td--initiative">
+              @if (slot.category) {
+                <span class="combat-cat combat-cat--{{ slot.category }}">{{ categoryLabel(slot.category) }}</span>
+              } @else {
+                <span class="combat-pending">En attente</span>
+              }
+            </td>
+
+            <td class="combat-td combat-td--pv">
+              <div class="combat-hp">
+                <div class="combat-hp__row">
+                  <button class="combat-hp__btn" (click)="hpChange.emit({id: slot.id, delta: -1})" aria-label="Réduire PV">−</button>
+                  <span class="combat-hp__frac">
+                    <span class="combat-hp__cur">{{ slot.vitaliteCourante }}</span><span class="combat-hp__slash">/</span><span class="combat-hp__max">{{ slot.vitaliteMax }}</span>
+                  </span>
+                  <button class="combat-hp__btn" (click)="hpChange.emit({id: slot.id, delta: 1})" aria-label="Augmenter PV">+</button>
+                </div>
+                @if (slot.vitaliteMax > 0) {
+                  <div class="combat-hp__bar">
+                    <div
+                      class="combat-hp__fill"
+                      [style.width.%]="slot.vitaliteCourante / slot.vitaliteMax * 100"
+                      [class.combat-hp__fill--low]="slot.vitaliteCourante / slot.vitaliteMax <= 0.33"
+                    ></div>
+                  </div>
+                }
+              </div>
+            </td>
+
+            <td class="combat-td combat-td--heroism">
+              @if (slot.heroismMax != null) {
+                <div class="combat-hp combat-hp--heroism">
+                  <div class="combat-hp__row">
+                    <button class="combat-hp__btn" (click)="heroismChange.emit({id: slot.id, delta: -1})" aria-label="Réduire héroïsme">−</button>
+                    <span class="combat-hp__frac">
+                      <span class="combat-hp__cur">{{ slot.heroismCourant }}</span><span class="combat-hp__slash">/</span><span class="combat-hp__max">{{ slot.heroismMax }}</span>
+                    </span>
+                    <button class="combat-hp__btn" (click)="heroismChange.emit({id: slot.id, delta: 1})" aria-label="Augmenter héroïsme">+</button>
+                  </div>
+                </div>
+              }
+            </td>
+
+            <td class="combat-td combat-td--esprit">
+              @if (slot.esprit != null) { <span class="combat-stat-value">{{ slot.esprit }}</span> }
+            </td>
+
+            <td class="combat-td combat-td--init">
+              @if (slot.initiative != null) { <span class="combat-stat-value">{{ slot.initiative }}</span> }
+            </td>
+
+            <td class="combat-td combat-td--melee">
+              @if (slot.melee != null) { <span class="combat-stat-value">{{ slot.melee }}</span> }
+            </td>
+
+            <td class="combat-td combat-td--tir">
+              @if (slot.tir != null) { <span class="combat-stat-value">{{ slot.tir }}</span> }
+            </td>
+
+            <td class="combat-td combat-td--def">
+              @if (slot.defense != null) { <span class="combat-stat combat-stat--def">{{ slot.defense }}</span> }
+            </td>
+
+            <td class="combat-td combat-td--degats">
+              @if (slot.degats) { <span class="combat-stat combat-stat--degats">{{ slot.degats }}</span> }
+            </td>
+
+            <td class="combat-td combat-td--remove">
+              <p-button
+                icon="pi pi-times"
+                [text]="true"
+                severity="danger"
+                size="small"
+                (onClick)="removeParticipant.emit(slot.id)"
+                aria-label="Retirer de l'initiative"
+              />
+            </td>
+
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+} @else {
+  <p class="combat-initiative-empty">Aucun participant. Ajoutez-en ci-dessous.</p>
+}
