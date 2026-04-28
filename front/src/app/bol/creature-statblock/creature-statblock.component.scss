@@ -97,14 +97,14 @@
 .creature-statblock__chip--muted {
   border-color: rgba(148, 163, 184, 0.22);
   background: rgba(148, 163, 184, 0.08);
-  color: var(--p-surface-600);
+  color: var(--dw-surface-600);
 }
 
 .creature-statblock__comment {
   margin: 0;
   font-size: 0.84rem;
   line-height: 1.55;
-  color: var(--p-surface-600);
+  color: var(--dw-surface-600);
 }
 
 .creature-statblock__grid {
@@ -129,7 +129,7 @@
   font-weight: 900;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--p-surface-500);
+  color: var(--dw-surface-500);
 }
 
 .creature-statblock__stats {
@@ -146,7 +146,7 @@
 
 .creature-statblock__stat-label {
   font-size: 0.72rem;
-  color: var(--p-surface-500);
+  color: var(--dw-surface-500);
 }
 
 .creature-statblock__stat-value {
@@ -182,13 +182,13 @@
   margin: 0.2rem 0 0;
   font-size: 0.74rem;
   line-height: 1.45;
-  color: var(--p-surface-600);
+  color: var(--dw-surface-600);
 }
 
 .creature-statblock__empty {
   margin: 0;
   font-size: 0.76rem;
-  color: var(--p-surface-400);
+  color: var(--dw-surface-400);
 }
 
 @media (min-width: 768px) {

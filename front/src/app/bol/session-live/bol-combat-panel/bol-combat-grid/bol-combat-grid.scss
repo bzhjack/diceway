@@ -6,7 +6,7 @@
 
 .combat-initiative-empty {
   margin: 0;
-  color: var(--p-surface-500);
+  color: var(--dw-surface-500);
   font-size: 0.8rem;
   font-style: italic;
 }
@@ -42,13 +42,13 @@
 
 .combat-th {
   padding: 0.35rem 0.6rem;
-  color: var(--p-surface-500);
+  color: var(--dw-surface-500);
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-align: left;
   text-transform: uppercase;
-  border-bottom: 1px solid var(--p-surface-100);
+  border-bottom: 1px solid var(--dw-surface-100);
   white-space: nowrap;
 
   &.combat-th--pos,
@@ -62,7 +62,7 @@
 }
 
 .combat-tr {
-  border-bottom: 1px solid var(--p-surface-100);
+  border-bottom: 1px solid var(--dw-surface-100);
   transition: background 120ms;
 
   &:hover { background: var(--dw-combat-hover); }
@@ -82,7 +82,7 @@
   vertical-align: middle;
 
   &.combat-td--pos {
-    color: var(--p-surface-500);
+    color: var(--dw-surface-500);
     font-size: 0.68rem;
     font-weight: 700;
     text-align: center;
@@ -106,7 +106,7 @@
 // ── Participant identity ──────────────────────────────────────────────────────
 
 .combat-initiative-item__name {
-  color: var(--p-surface-700);
+  color: var(--dw-surface-700);
   font-size: 0.85rem;
   font-weight: 600;
 }
@@ -131,7 +131,7 @@
   overflow: hidden;
   border-radius: 9999px;
   border: 1px solid rgba(148, 163, 184, 0.3);
-  background: var(--p-surface-50);
+  background: var(--dw-surface-50);
 }
 
 .combat-participant-header {
@@ -163,7 +163,7 @@
   &--hero     { color: var(--dw-color-reussite);  background: rgba(96,  165, 250, 0.08); }
   &--creature { color: var(--dw-color-creature);  background: rgba(245, 158,  11, 0.08); }
   &--demon    { color: var(--dw-color-echec);     background: rgba(239,  68,  68, 0.08); }
-  &--pnj      { color: var(--p-surface-500);      background: rgba(148, 163, 184, 0.06); }
+  &--pnj      { color: var(--dw-surface-500);      background: rgba(148, 163, 184, 0.06); }
 }
 
 // ── R1 warning ────────────────────────────────────────────────────────────────
@@ -190,13 +190,13 @@
   &--echec          { color: var(--dw-color-echec); }
   &--echec-critique { color: var(--dw-color-echec-forte); }
   &--rival          { color: var(--dw-color-rival); }
-  &--coriace        { color: var(--p-surface-500); }
-  &--pietaille      { color: var(--p-surface-400); }
+  &--coriace        { color: var(--dw-surface-500); }
+  &--pietaille      { color: var(--dw-surface-400); }
 }
 
 .combat-pending {
   font-size: 0.75rem;
-  color: var(--p-surface-200);
+  color: var(--dw-surface-200);
   font-style: italic;
 }
 
@@ -205,16 +205,16 @@
 .combat-stat {
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--p-surface-500);
+  color: var(--dw-surface-500);
 
-  &--def    { color: var(--p-surface-600); }
+  &--def    { color: var(--dw-surface-600); }
   &--degats { color: var(--dw-color-legendary); font-family: monospace; letter-spacing: 0.04em; }
 }
 
 .combat-stat-value {
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--p-surface-500);
+  color: var(--dw-surface-500);
 }
 
 // ── Chips ─────────────────────────────────────────────────────────────────────
@@ -225,12 +225,12 @@
   border-radius: 3px;
   border: 1px solid var(--dw-combat-border);
   font-size: 0.62rem;
-  color: var(--p-surface-500);
+  color: var(--dw-surface-500);
   letter-spacing: 0.02em;
   white-space: nowrap;
 
-  &--arme   { cursor: default; color: var(--p-surface-500); border-color: var(--dw-combat-border-strong); }
-  &--armure { cursor: default; color: var(--p-surface-500); border-color: var(--dw-combat-border-strong); }
+  &--arme   { cursor: default; color: var(--dw-surface-500); border-color: var(--dw-combat-border-strong); }
+  &--armure { cursor: default; color: var(--dw-surface-500); border-color: var(--dw-combat-border-strong); }
 }
 
 // ── HP / Héroïsme stepper ─────────────────────────────────────────────────────
@@ -256,7 +256,7 @@
     border: 1px solid var(--dw-combat-border);
     border-radius: 3px;
     background: transparent;
-    color: var(--p-surface-400);
+    color: var(--dw-surface-400);
     font-size: 0.85rem;
     line-height: 1;
     cursor: pointer;
@@ -265,7 +265,7 @@
 
     &:hover {
       border-color: var(--dw-combat-border-strong);
-      color: var(--p-surface-600);
+      color: var(--dw-surface-600);
       background: rgba(148, 163, 184, 0.06);
     }
 
@@ -279,9 +279,9 @@
     font-variant-numeric: tabular-nums;
   }
 
-  &__cur   { color: var(--p-surface-800); font-size: 0.88rem; font-weight: 700; }
-  &__slash { color: var(--p-surface-100); font-size: 0.65rem; margin: 0 0.05rem; }
-  &__max   { color: var(--p-surface-300); font-size: 0.68rem; font-weight: 500; }
+  &__cur   { color: var(--dw-surface-800); font-size: 0.88rem; font-weight: 700; }
+  &__slash { color: var(--dw-surface-100); font-size: 0.65rem; margin: 0 0.05rem; }
+  &__max   { color: var(--dw-surface-300); font-size: 0.68rem; font-weight: 500; }
 
   &__bar {
     height: 3px;

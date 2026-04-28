@@ -6,7 +6,7 @@
 
   .combat-rules-title {
     margin: 0 0 0.6rem;
-    color: var(--p-surface-700);
+    color: var(--dw-surface-700);
     font-size: 0.95rem;
     font-weight: 800;
     letter-spacing: 0.1em;
@@ -63,7 +63,7 @@
 
   .combat-rules-desc,
   .combat-rules-mod-desc {
-    color: var(--p-surface-600);
+    color: var(--dw-surface-600);
     font-size: 0.8rem;
     line-height: 1.4;
   }
@@ -76,7 +76,7 @@
   .combat-rules-mod-label {
     display: block;
     margin-bottom: 0.4rem;
-    color: var(--p-surface-700);
+    color: var(--dw-surface-700);
     font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: 0.06em;
@@ -115,8 +115,8 @@
 .dw-panel {
   border-radius: 6px;
   padding: 4px;
-  border: 1px solid var(--p-surface-200);
-  background: var(--p-surface-100);
+  border: 1px solid var(--dw-surface-200);
+  background: var(--dw-surface-100);
   color: rgba(255, 255, 255, 0.87);
 }
 
@@ -144,7 +144,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--p-surface-200);
+  background-color: var(--dw-surface-200);
   border-radius: 10px;
   border-width: 4px;
 }

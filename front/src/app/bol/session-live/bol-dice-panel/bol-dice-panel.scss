@@ -36,7 +36,7 @@
   place-items: center;
   height: 100%;
   min-height: 6rem;
-  color: var(--p-surface-500);
+  color: var(--dw-surface-500);
   font-size: 0.78rem;
   font-style: italic;
   letter-spacing: 0.05em;
@@ -88,7 +88,7 @@
 
 .dice-result__detail {
   margin: 0.2rem 0 0;
-  color: var(--p-surface-500);
+  color: var(--dw-surface-500);
   line-height: 1.45;
 }
 
@@ -112,7 +112,7 @@
 }
 
 .dice-field span {
-  color: var(--p-surface-600);
+  color: var(--dw-surface-600);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -123,7 +123,7 @@
   min-width: 0;
   height: 2.75rem;
   padding: 0 0.8rem;
-  border: 1px solid var(--p-surface-200);
+  border: 1px solid var(--dw-surface-200);
   border-radius: 0;
   color: var(--dw-color-text-bright);
   background: rgba(15, 23, 42, 0.88);
@@ -132,7 +132,7 @@
 .dice-toggle,
 .dice-button,
 .dice-preset {
-  border: 1px solid var(--p-surface-200);
+  border: 1px solid var(--dw-surface-200);
   border-radius: 0;
   color: var(--dw-color-text-bright);
   background: rgba(15, 23, 42, 0.88);
@@ -248,7 +248,7 @@
   min-height: 1.7rem;
   padding: 0 0.55rem;
   border: 1px solid rgba(148, 163, 184, 0.16);
-  color: var(--p-surface-600);
+  color: var(--dw-surface-600);
   background: rgba(15, 23, 42, 0.82);
   font-size: 0.72rem;
   font-weight: 700;
@@ -267,7 +267,7 @@
 }
 
 .dice-result__die small {
-  color: var(--p-surface-500);
+  color: var(--dw-surface-500);
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.08em;

@@ -5,7 +5,7 @@
 .dw-page {
   min-height: 100dvh;
   padding: 1.5rem 1rem;
-  background: linear-gradient(180deg, #000000, var(--p-surface-50) 45%, #000000);
+  background: linear-gradient(180deg, #000000, #0f172a 45%, #000000);
 
   @media (min-width: 768px) {
     padding-left: 1.5rem;
@@ -57,7 +57,7 @@
   background: rgb(15 23 42 / 0.32);
   padding: 0.75rem;
   font-size: 0.875rem;
-  color: var(--p-surface-500);
+  color: var(--dw-surface-500);
 }
 
 // Bouton de suppression (poubelle rouge)

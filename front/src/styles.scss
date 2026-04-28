@@ -38,7 +38,7 @@
 }
 
 .dw_container {
-  border-left: 3px solid var(--p-surface-600);
+  border-left: 3px solid var(--dw-surface-600);
   padding-left: 0.75rem;
 }
 
@@ -47,6 +47,19 @@
 }
 
 :root {
+  // ── Palette surface sombre (échelle slate inversée, dark UI) ─────────────
+  --dw-surface-0:   #020617;  // slate-950
+  --dw-surface-50:  #0f172a;  // slate-900
+  --dw-surface-100: #1e293b;  // slate-800
+  --dw-surface-200: #334155;  // slate-700
+  --dw-surface-300: #475569;  // slate-600
+  --dw-surface-400: #64748b;  // slate-500
+  --dw-surface-500: #94a3b8;  // slate-400
+  --dw-surface-600: #cbd5e1;  // slate-300
+  --dw-surface-700: #e2e8f0;  // slate-200
+  --dw-surface-800: #f1f5f9;  // slate-100
+  --dw-surface-900: #f8fafc;  // slate-50
+
   // ── Palette sémantique BoL ────────────────────────────────────────────────
   --dw-color-legendary:       #fbbf24;  // légendaire, héroïque, kicker accent
   --dw-color-legendary-muted: #fde68a;  // amber clair — chips créature
@@ -319,19 +332,19 @@ a:focus-visible {
   margin: 0;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--p-surface-800);
+  color: var(--dw-surface-800);
 }
 
 .dw-advanced-list-meta {
   margin: 0;
   font-size: 0.75rem;
   line-height: 1.35;
-  color: var(--p-surface-500);
+  color: var(--dw-surface-500);
 }
 
 .dw-advanced-list-label {
   font-size: 0.875rem;
-  color: var(--p-surface-700);
+  color: var(--dw-surface-700);
 }
 
 .dw-header-tag .p-tag-label {
