@@ -25,10 +25,11 @@
 
   &__value {
     height: 1.35rem;
+    min-width: 2.2rem;
     border: 1px solid var(--dw-surface-300);
     border-radius: 3px;
-    background: var(--dw-surface-50);
-    color: var(--dw-surface-700);
+    background: var(--dw-surface-900);
+    color: var(--dw-surface-0);
     font-family: monospace;
     font-size: 0.8rem;
     font-weight: 700;

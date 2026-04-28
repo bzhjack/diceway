@@ -258,6 +258,43 @@ export const DwPreset = definePreset(Aura, {
         }
       `,
     },
+    checkbox: {
+      root: {
+        background: '{surface.400}',
+        checkedBackground: '{surface.300}',
+        borderColor: '{surface.400}',
+        checkedHoverBackground: '{surface.300}',
+        hoverBorderColor: '{surface.400}',
+        focusBorderColor: '{surface.400}',
+        checkedFocusBorderColor: '{surface.400}'
+      },
+      icon: {
+        color: '{surface.700}',
+        checkedColor: '{surface.600}',
+        checkedHoverColor: '{surface.600}'
+      },
+      css: `
+        .p-checkbox-box {
+          border-color: var(--dw-surface-400) !important;
+          background: var(--dw-surface-400) !important;
+        }
+        .p-checkbox-box:hover {
+          border-color: var(--dw-surface-400) !important;
+          background: var(--dw-surface-400) !important;
+        }
+        .p-checkbox-box.p-highlight {
+          border-color: var(--dw-surface-400) !important;
+          background: var(--dw-surface-300) !important;
+        }
+        .p-checkbox-box.p-highlight:hover {
+          border-color: var(--dw-surface-400) !important;
+          background: var(--dw-surface-300) !important;
+        }
+        .p-checkbox-icon {
+          color: var(--dw-surface-600) !important;
+        }
+      `
+    },
     inputtext: {
       css: `
         .p-inputtext.p-inputtext-sm {

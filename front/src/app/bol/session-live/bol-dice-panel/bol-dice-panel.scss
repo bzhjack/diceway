@@ -15,7 +15,7 @@
 
 .dice-panel__tray {
   --dice-box-min-height: 13rem;
-  border-right: 1px solid var(--dw-combat-border);
+  border-right: 1px solid rgba(var(--dw-surface-500), 0.10);
 }
 
 .dice-panel__options {
@@ -23,7 +23,7 @@
   align-content: start;
   gap: 0.8rem;
   padding: 1rem;
-  border-right: 1px solid var(--dw-combat-border);
+  border-right: 1px solid rgba(var(--dw-surface-500), 0.10);
 }
 
 .dice-panel__result-col {

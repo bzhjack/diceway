@@ -92,9 +92,7 @@
         </div>
         <p-fieldset legend="Modificateurs">
           <div class="rp-mods">
-
-
-            <div class="rp-mods__checks">
+            <div class="rp-mods__list">
               <div class="rp-toggle">
                 <p-checkbox
                   [inputId]="'surpris-' + slot.id"
@@ -115,10 +113,7 @@
                 <label class="rp-toggle__text" [attr.for]="'embuscade-' + slot.id">Embuscade</label>
                 <span class="rp-toggle__val rp-toggle__val--pos">+2</span>
               </div>
-            </div>
-            <div class="rp-mods__nums">
-              <div class="rp-num">
-                <span class="rp-num__label">Carrière</span>
+              <div class="rp-toggle">
                 <app-value-stepper
                   [value]="e.carriere"
                   [min]="0"
@@ -129,9 +124,9 @@
                   incrementAriaLabel="Augmenter carrière"
                   (valueChanged)="updateEntry(slot.id, {carriere: $event})"
                 />
+                <span class="rp-toggle__text">Carrière</span>
               </div>
-              <div class="rp-num">
-                <span class="rp-num__label">Init. ennemie</span>
+              <div class="rp-toggle">
                 <app-value-stepper
                   [value]="e.initiativeEnnemie"
                   [min]="0"
@@ -142,6 +137,7 @@
                   incrementAriaLabel="Augmenter initiative ennemie"
                   (valueChanged)="updateEntry(slot.id, {initiativeEnnemie: $event})"
                 />
+                <span class="rp-toggle__text">Init. ennemie</span>
               </div>
             </div>
             <button type="button" class="rp-mods__reset" (click)="resetModifiers(slot.id)">Réinit.</button>

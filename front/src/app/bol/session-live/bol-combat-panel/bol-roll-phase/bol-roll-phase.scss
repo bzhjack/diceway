@@ -37,7 +37,7 @@
     justify-content: flex-end;
     gap: 0.5rem;
     padding-top: 0.85rem;
-    border-top: 1px solid var(--dw-combat-border);
+    border-top: 1px solid rgba(var(--dw-surface-500), 0.10);
   }
 }
 
@@ -97,7 +97,7 @@
 .rp-card {
   padding: 0.7rem 0.85rem;
   border-radius: 6px;
-  border: 1px solid var(--dw-combat-border);
+  border: 1px solid rgba(var(--dw-surface-500), 0.10);
   background: rgba(15, 23, 42, 0.32);
   display: flex;
   flex-direction: column;
@@ -105,7 +105,7 @@
   transition: border-color 200ms, background 200ms;
 
   &--done {
-    border-color: var(--dw-combat-border-strong);
+    border-color: rgba(var(--dw-surface-500), 0.22);
     background: rgba(15, 23, 42, 0.2);
   }
 
@@ -318,66 +318,19 @@
 
 .rp-mods {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.4rem 1rem;
+  flex-direction: column;
+  gap: 0.5rem;
   padding: 0;
 
-  &__label {
-    color: var(--dw-surface-400);
-    font-size: 0.58rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-right: 0.25rem;
-    flex-shrink: 0;
-  }
-
-  &__checks {
+  &__list {
     display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    flex-wrap: wrap;
-  }
-
-  &__total {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 2rem;
-    height: 1.2rem;
-    padding: 0 0.3rem;
-    border-radius: 3px;
-    border: 1px solid rgba(148, 163, 184, 0.2);
-    color: var(--dw-surface-500);
-    background: rgba(15, 23, 42, 0.35);
-    font-family: monospace;
-    font-size: 0.72rem;
-    font-weight: 700;
-  }
-
-  &__total--pos {
-    color: #86efac;
-    border-color: rgba(134, 239, 172, 0.25);
-    background: rgba(34, 197, 94, 0.09);
-  }
-
-  &__total--neg {
-    color: #fda4af;
-    border-color: rgba(253, 164, 175, 0.25);
-    background: rgba(244, 63, 94, 0.1);
-  }
-
-  &__nums {
-    display: flex;
-    align-items: flex-end;
-    gap: 0.6rem 0.9rem;
-    flex-wrap: wrap;
-    margin-left: auto;
+    flex-direction: column;
+    gap: 0.45rem;
+    align-items: flex-start;
   }
 
   &__reset {
-    margin-left: auto;
+    align-self: flex-start;
     height: 1.35rem;
     border: 1px solid rgba(148, 163, 184, 0.2);
     border-radius: 3px;
@@ -396,6 +349,12 @@
       background: rgba(15, 23, 42, 0.42);
     }
   }
+}
+
+.rp-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .rp-toggle {
@@ -439,7 +398,7 @@
   margin-bottom: 0.9rem;
   padding: 0.45rem 0.7rem;
   border-radius: 6px;
-  background: var(--dw-combat-bg-muted);
+  background: rgba(15, 23, 42, 0.25);
 
   &__label {
     margin: 0 0 0.35rem;

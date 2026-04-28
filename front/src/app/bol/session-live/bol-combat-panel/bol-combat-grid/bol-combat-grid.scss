@@ -19,7 +19,7 @@
   gap: 0.5rem;
   align-items: center;
   padding-top: 0.75rem;
-  border-top: 1px solid var(--dw-combat-border);
+  border-top: 1px solid rgba(var(--dw-surface-500), 0.10);
   width: 30%;
 }
 
@@ -65,7 +65,7 @@
   border-bottom: 1px solid var(--dw-surface-100);
   transition: background 120ms;
 
-  &:hover { background: var(--dw-combat-hover); }
+  &:hover { background: rgba(30, 41, 59, 0.40); }
 
   &[data-cat='legendaire']     { border-left: 2px solid rgba(251, 191, 36, 0.50); }
   &[data-cat='heroique']       { border-left: 2px solid rgba(251, 191, 36, 0.28); }
@@ -130,7 +130,7 @@
   flex-shrink: 0;
   overflow: hidden;
   border-radius: 9999px;
-  border: 1px solid rgba(148, 163, 184, 0.3);
+  border: 1px solid rgba(var(--dw-surface-500), 0.3);
   background: var(--dw-surface-50);
 }
 
@@ -223,14 +223,14 @@
   display: inline-block;
   padding: 0.05rem 0.4rem;
   border-radius: 3px;
-  border: 1px solid var(--dw-combat-border);
+  border: 1px solid rgba(var(--dw-surface-500), 0.10);
   font-size: 0.62rem;
   color: var(--dw-surface-500);
   letter-spacing: 0.02em;
   white-space: nowrap;
 
-  &--arme   { cursor: default; color: var(--dw-surface-500); border-color: var(--dw-combat-border-strong); }
-  &--armure { cursor: default; color: var(--dw-surface-500); border-color: var(--dw-combat-border-strong); }
+  &--arme   { cursor: default; color: var(--dw-surface-500); border-color: rgba(var(--dw-surface-500), 0.22); }
+  &--armure { cursor: default; color: var(--dw-surface-500); border-color: rgba(var(--dw-surface-500), 0.22); }
 }
 
 // ── HP / Héroïsme stepper ─────────────────────────────────────────────────────
@@ -253,7 +253,7 @@
     width: 1.3rem;
     height: 1.3rem;
     padding: 0;
-    border: 1px solid var(--dw-combat-border);
+    border: 1px solid rgba(var(--dw-surface-500), 0.10);
     border-radius: 3px;
     background: transparent;
     color: var(--dw-surface-400);
@@ -264,7 +264,7 @@
     flex-shrink: 0;
 
     &:hover {
-      border-color: var(--dw-combat-border-strong);
+      border-color: rgba(var(--dw-surface-500), 0.22);
       color: var(--dw-surface-600);
       background: rgba(148, 163, 184, 0.06);
     }
@@ -285,7 +285,7 @@
 
   &__bar {
     height: 3px;
-    background: var(--dw-combat-bg-dark);
+    background: rgba(15, 23, 42, 0.80);
     border-radius: 2px;
     overflow: hidden;
   }
