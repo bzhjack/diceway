@@ -253,8 +253,6 @@ export const DwPreset = definePreset(Aura, {
 
         .p-fieldset .p-fieldset-content {
           border: 0;
-          background: var(--dw-surface-300);
-          border: 1px solid var(--dw-surface-300);
           border-radius: 5px;
           padding: 0.45rem 0.55rem 0.5rem;
         }

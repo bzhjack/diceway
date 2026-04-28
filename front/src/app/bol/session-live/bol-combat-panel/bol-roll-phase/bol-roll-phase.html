@@ -92,13 +92,8 @@
         </div>
         <p-fieldset legend="Modificateurs">
           <div class="rp-mods">
-            <span
-              class="rp-mods__total"
-              [class.rp-mods__total--pos]="modTotal > 0"
-              [class.rp-mods__total--neg]="modTotal < 0"
-            >
-              {{ modTotal > 0 ? '+' : '' }}{{ modTotal }}
-            </span>
+
+
             <div class="rp-mods__checks">
               <div class="rp-toggle">
                 <p-checkbox
@@ -124,20 +119,28 @@
             <div class="rp-mods__nums">
               <div class="rp-num">
                 <span class="rp-num__label">Carrière</span>
-                <p-inputNumber
-                  [ngModel]="e.carriere"
-                  (ngModelChange)="updateEntry(slot.id, {carriere: $event ?? 0})"
-                  [min]="0" [max]="5" prefix="+"
-                  [inputStyle]="{'width':'3rem','text-align':'center'}"
+                <app-value-stepper
+                  [value]="e.carriere"
+                  [min]="0"
+                  [max]="9"
+                  prefix="+"
+                  ariaLabel="Modificateur de carrière"
+                  decrementAriaLabel="Diminuer carrière"
+                  incrementAriaLabel="Augmenter carrière"
+                  (valueChanged)="updateEntry(slot.id, {carriere: $event})"
                 />
               </div>
               <div class="rp-num">
                 <span class="rp-num__label">Init. ennemie</span>
-                <p-inputNumber
-                  [ngModel]="e.initiativeEnnemie"
-                  (ngModelChange)="updateEntry(slot.id, {initiativeEnnemie: $event ?? 0})"
-                  [min]="0" [max]="10" prefix="−"
-                  [inputStyle]="{'width':'3rem','text-align':'center'}"
+                <app-value-stepper
+                  [value]="e.initiativeEnnemie"
+                  [min]="0"
+                  [max]="9"
+                  prefix="−"
+                  ariaLabel="Modificateur d'initiative ennemie"
+                  decrementAriaLabel="Diminuer initiative ennemie"
+                  incrementAriaLabel="Augmenter initiative ennemie"
+                  (valueChanged)="updateEntry(slot.id, {initiativeEnnemie: $event})"
                 />
               </div>
             </div>

@@ -5,6 +5,7 @@ import {CheckboxModule} from 'primeng/checkbox';
 import {FieldsetModule} from 'primeng/fieldset';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {InitiativeSlot, ReactionResult} from '../bol-combat-panel';
+import {ValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
 
 interface RollEntry {
   esprit: number;
@@ -43,7 +44,14 @@ const CATEGORY_LABELS: Record<ReactionResult, string> = {
 
 @Component({
   selector: 'app-bol-roll-phase',
-  imports: [FormsModule, ButtonModule, CheckboxModule, InputNumberModule, FieldsetModule],
+  imports: [
+    FormsModule,
+    ButtonModule,
+    CheckboxModule,
+    InputNumberModule,
+    FieldsetModule,
+    ValueStepperComponent,
+  ],
   templateUrl: './bol-roll-phase.html',
   styleUrl: './bol-roll-phase.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

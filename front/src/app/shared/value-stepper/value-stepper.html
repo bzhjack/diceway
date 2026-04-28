@@ -1,0 +1,22 @@
+<div class="vs" [attr.aria-label]="ariaLabel()">
+  <button
+    type="button"
+    class="vs__btn"
+    (click)="decrement()"
+    [disabled]="isMin()"
+    [attr.aria-label]="decrementAriaLabel()"
+  >
+    −
+  </button>
+  <div class="vs__value">{{ prefix() }}{{ value() }}</div>
+  <button
+    type="button"
+    class="vs__btn"
+    (click)="increment()"
+    [disabled]="isMax()"
+    [attr.aria-label]="incrementAriaLabel()"
+  >
+    +
+  </button>
+</div>
+
