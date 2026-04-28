@@ -1,10 +1,10 @@
 @if (legendaryBonus() || round1Blocked()) {
   <div class="combat-notices flex gap-2">
     @if (legendaryBonus()) {
-      <p-message severity="warn" text="★★ Un héros légendaire : +1 à toutes les attaques ce combat" />
+      <p-message severity="warn">★★ Un héros légendaire : +1 à toutes les attaques de ce combat</p-message>
     }
     @if (round1Blocked()) {
-      <p-message severity="error" text="⛔ Coriaces et piétaille bloqués au round 1" />
+      <p-message severity="error">⛔ Coriaces et piétaille bloqués au round 1</p-message>
     }
   </div>
 }

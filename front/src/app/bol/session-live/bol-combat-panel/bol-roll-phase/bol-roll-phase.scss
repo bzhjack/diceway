@@ -199,6 +199,21 @@
   &--dice &__label {
     color: var(--dw-color-legendary);
   }
+
+  &--dice {
+    .p-inputnumber-input {
+      width: 3.4rem;
+      height: 1.9rem;
+      padding: 0;
+      border: 1px solid rgba(var(--dw-surface-500), 0.22) !important;
+      border-radius: 4px !important;
+      background: rgba(15, 23, 42, 0.36) !important;
+      color: var(--dw-surface-700) !important;
+      text-align: center !important;
+      font-size: 1.1rem !important;
+      font-weight: 700 !important;
+    }
+  }
 }
 
 .rp-op {
@@ -263,7 +278,7 @@
 
   &--legendaire     { color: var(--dw-color-legendary);   background: rgba(251,191,36,.10); border-color: rgba(251,191,36,.28); }
   &--heroique       { color: var(--dw-color-legendary);   background: rgba(251,191,36,.06); border-color: rgba(251,191,36,.18); }
-  &--reussite       { color: var(--dw-color-reussite);    background: rgba(96,165,250,.08); border-color: rgba(96,165,250,.22); }
+  &--reussite       { color: var(--dw-color-health);      background: rgba(34, 197, 94, 0.08); border-color: rgba(34, 197, 94, 0.22); }
   &--echec          { color: var(--dw-color-echec);       background: rgba(248,113,113,.07);border-color: rgba(248,113,113,.2); }
   &--echec-critique { color: var(--dw-color-echec-forte); background: rgba(239,68,68,.07);  border-color: rgba(239,68,68,.2);  }
   &--rival          { color: var(--dw-color-rival);       background: rgba(251,146,60,.07); border-color: rgba(251,146,60,.2); }
