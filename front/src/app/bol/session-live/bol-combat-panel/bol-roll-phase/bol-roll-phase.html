@@ -1,143 +1,177 @@
-<div class="roll-phase">
+<div class="rp">
+  <div class="rp__top">
+    <p class="rp__hint">2d6 + Esprit + Init + modificateurs &mdash; réussite à 9+</p>
+    <div class="rp__top-right">
+      <button type="button" class="rp-tool-btn" (click)="resetAllModifiers()">
+        <i class="pi pi-refresh" aria-hidden="true"></i>
+        <span>Mods à zéro</span>
+      </button>
+      <div class="rp-progress" [class.rp-progress--done]="allHeroesRolled()">
+        <span class="rp-progress__count">{{ rolledHeroesCount() }}/{{ heroesInOrder().length }}</span>
+        @if (allHeroesRolled()) {
+          <span class="rp-progress__label">Tous les jets sont saisis</span>
+        } @else {
+          <span class="rp-progress__label">Jets saisis</span>
+        }
+      </div>
+    </div>
+  </div>
 
-  <p class="roll-phase__formula">2d6 + Esprit + Init + modificateurs &mdash; réussite à 9+</p>
-
-  <div class="roll-cards">
+  <div class="rp__cards">
     @for (slot of heroesInOrder(); track slot.id) {
-      @let entry = getEntry(slot.id);
+      @let e = getEntry(slot.id);
       @let result = rollResultFor(slot.id);
       @let total = rollTotal(slot.id);
+      @let modTotal = (e.surpris ? -1 : 0) + (e.embuscade ? 2 : 0) + e.carriere - e.initiativeEnnemie;
 
-      <div class="roll-card" [class.roll-card--done]="result !== null">
-        <div class="roll-card__header">
-          <span class="roll-card__name">{{ slot.nom }}</span>
-          @if (result) {
-            <span class="roll-cat roll-cat--{{ result }}">{{ categoryLabel(result) }}</span>
+      <div
+        class="rp-card"
+        [class.rp-card--done]="result !== null"
+        [class.rp-card--pending]="e.dice === null"
+        [class.rp-card--next]="slot.id === nextPendingHeroId()"
+      >
+
+        <div class="rp-card__header">
+          <span class="rp-card__name">{{ slot.nom }}</span>
+          @if (!result) {
+            <span class="rp-badge rp-badge--pending">En attente</span>
           }
         </div>
 
-        <div class="roll-card__inputs">
-          <div class="roll-field">
-            <span class="roll-field__label">Esprit</span>
-            <p-inputNumber
-              [ngModel]="entry.esprit"
-              (ngModelChange)="updateEntry(slot.id, {esprit: $event ?? 0})"
-              [min]="0" [max]="5"
-              [inputStyle]="{'width':'2.8rem','text-align':'center'}"
-            />
-          </div>
-          <span class="roll-op">+</span>
-          <div class="roll-field">
-            <span class="roll-field__label">Init</span>
-            <p-inputNumber
-              [ngModel]="entry.bonusInit"
-              (ngModelChange)="updateEntry(slot.id, {bonusInit: $event ?? 0})"
-              [min]="0" [max]="5"
-              [inputStyle]="{'width':'2.8rem','text-align':'center'}"
-            />
-          </div>
-          <span class="roll-op">+</span>
-          <div class="roll-field roll-field--dice">
-            <span class="roll-field__label">2d6</span>
-            <p-inputNumber
-              [ngModel]="entry.dice"
-              (ngModelChange)="updateEntry(slot.id, {dice: $event, acceptEchecCritique: false, depenseHeroisme: false})"
-              [min]="2" [max]="12"
-              [inputStyle]="{'width':'3.2rem','text-align':'center','font-size':'1.15rem','font-weight':'700'}"
-              placeholder="—"
-            />
-          </div>
-          @if (total !== null) {
-            <div class="roll-total">
-              <span class="roll-total__eq">= {{ total }}</span>
-              @if (total >= 9) {
-                <span class="roll-total__check">✓</span>
-              } @else {
-                <span class="roll-total__fail">✗</span>
-              }
-            </div>
-          }
-        </div>
-
-        @if (entry.dice === 2) {
-          <div class="roll-card__special roll-card__special--danger">
-            <div class="roll-check-inline">
-              <p-checkbox
-                [inputId]="'accept-echec-critique-' + slot.id"
-                [binary]="true"
-                [ngModel]="entry.acceptEchecCritique"
-                (ngModelChange)="updateEntry(slot.id, {acceptEchecCritique: $event})"
+        <div class="rp-row">
+          <div class="rp-row__calc">
+            <div class="rp-field rp-field--dice">
+              <span class="rp-field__label">2d6</span>
+              <p-inputNumber
+                [ngModel]="e.dice"
+                (ngModelChange)="updateEntry(slot.id, {dice: $event, acceptEchecCritique: false, depenseHeroisme: false})"
+                [min]="2" [max]="12"
+                [inputStyle]="{'width':'3.4rem','text-align':'center','font-size':'1.1rem','font-weight':'700'}"
               />
-              <label class="roll-check-inline__label" [attr.for]="'accept-echec-critique-' + slot.id">
-                Accepter l'échec critique → possible gain d'héroïsme
-              </label>
             </div>
+            <span class="rp-op">+</span>
+            <div class="rp-field rp-field--stat">
+              <span class="rp-field__label">Esprit</span>
+              <span class="rp-field__value">{{ e.esprit }}</span>
+            </div>
+            <span class="rp-op">+</span>
+            <div class="rp-field rp-field--stat">
+              <span class="rp-field__label">Init</span>
+              <span class="rp-field__value">{{ e.bonusInit }}</span>
+            </div>
+            @if (modTotal !== 0) {
+              <span class="rp-op">{{ modTotal > 0 ? '+' : '−' }}</span>
+              <div class="rp-field rp-field--mod">
+                <span class="rp-field__label">Mod</span>
+                <span
+                  class="rp-field__value rp-field__value--mod"
+                  [class.rp-field__value--mod-pos]="modTotal > 0"
+                  [class.rp-field__value--mod-neg]="modTotal < 0"
+                >
+                  {{ modTotal > 0 ? modTotal : -modTotal }}
+                </span>
+              </div>
+            }
+            <span class="rp-op rp-op--eq">=</span>
+            @if (total !== null) {
+              <div class="rp-total rp-total--inline">
+                <span class="rp-total__eq">{{ total }}</span>
+                @if (result) {
+                  <span class="rp-badge rp-badge--{{ result }} rp-badge--inline">{{ categoryLabel(result) }}</span>
+                }
+              </div>
+            } @else {
+              <div class="rp-total rp-total--pending rp-total--inline">
+                —
+                @if (result) {
+                  <span class="rp-badge rp-badge--{{ result }} rp-badge--inline">{{ categoryLabel(result) }}</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+        <p-fieldset legend="Modificateurs">
+          <div class="rp-mods">
+            <span
+              class="rp-mods__total"
+              [class.rp-mods__total--pos]="modTotal > 0"
+              [class.rp-mods__total--neg]="modTotal < 0"
+            >
+              {{ modTotal > 0 ? '+' : '' }}{{ modTotal }}
+            </span>
+            <div class="rp-mods__checks">
+              <div class="rp-toggle">
+                <p-checkbox
+                  [inputId]="'surpris-' + slot.id"
+                  [binary]="true"
+                  [ngModel]="e.surpris"
+                  (ngModelChange)="updateEntry(slot.id, {surpris: $event})"
+                />
+                <label class="rp-toggle__text" [attr.for]="'surpris-' + slot.id">Surpris</label>
+                <span class="rp-toggle__val rp-toggle__val--neg">−1</span>
+              </div>
+              <div class="rp-toggle">
+                <p-checkbox
+                  [inputId]="'embuscade-' + slot.id"
+                  [binary]="true"
+                  [ngModel]="e.embuscade"
+                  (ngModelChange)="updateEntry(slot.id, {embuscade: $event})"
+                />
+                <label class="rp-toggle__text" [attr.for]="'embuscade-' + slot.id">Embuscade</label>
+                <span class="rp-toggle__val rp-toggle__val--pos">+2</span>
+              </div>
+            </div>
+            <div class="rp-mods__nums">
+              <div class="rp-num">
+                <span class="rp-num__label">Carrière</span>
+                <p-inputNumber
+                  [ngModel]="e.carriere"
+                  (ngModelChange)="updateEntry(slot.id, {carriere: $event ?? 0})"
+                  [min]="0" [max]="5" prefix="+"
+                  [inputStyle]="{'width':'3rem','text-align':'center'}"
+                />
+              </div>
+              <div class="rp-num">
+                <span class="rp-num__label">Init. ennemie</span>
+                <p-inputNumber
+                  [ngModel]="e.initiativeEnnemie"
+                  (ngModelChange)="updateEntry(slot.id, {initiativeEnnemie: $event ?? 0})"
+                  [min]="0" [max]="10" prefix="−"
+                  [inputStyle]="{'width':'3rem','text-align':'center'}"
+                />
+              </div>
+            </div>
+            <button type="button" class="rp-mods__reset" (click)="resetModifiers(slot.id)">Réinit.</button>
+          </div>
+        </p-fieldset>
+
+        @if (e.dice === 2) {
+          <div class="rp-alert rp-alert--danger">
+            <p-checkbox
+              [inputId]="'accept-echec-critique-' + slot.id"
+              [binary]="true"
+              [ngModel]="e.acceptEchecCritique"
+              (ngModelChange)="updateEntry(slot.id, {acceptEchecCritique: $event})"
+            />
+            <label class="rp-alert__label" [attr.for]="'accept-echec-critique-' + slot.id">
+              Accepter l'échec critique &mdash; possible gain d'héroïsme
+            </label>
           </div>
         }
 
-        @if (entry.dice === 12) {
-          <div class="roll-card__special roll-card__special--heroique">
-            <span class="roll-card__natural12">★ Héroïque automatique</span>
-            <div class="roll-check-inline">
+        @if (e.dice === 12) {
+          <div class="rp-alert rp-alert--gold">
+            <span class="rp-alert__title">★ Héroïque automatique</span>
+            <div class="rp-alert__opt">
               <p-checkbox
                 [inputId]="'depense-heroisme-' + slot.id"
                 [binary]="true"
-                [ngModel]="entry.depenseHeroisme"
+                [ngModel]="e.depenseHeroisme"
                 (ngModelChange)="updateEntry(slot.id, {depenseHeroisme: $event})"
               />
-              <label class="roll-check-inline__label" [attr.for]="'depense-heroisme-' + slot.id">
-                Dépenser 1 point d'héroïsme → Légendaire ★★
+              <label class="rp-alert__label" [attr.for]="'depense-heroisme-' + slot.id">
+                Dépenser 1 point d'héroïsme &rarr; Légendaire ★★
               </label>
-            </div>
-          </div>
-        }
-
-        @if (entry.dice !== null && entry.dice !== 12 && !(entry.dice === 2 && entry.acceptEchecCritique)) {
-          <div class="roll-card__mods">
-            <p class="roll-card__mods-title">Modificateurs de situation</p>
-            <div class="roll-card__mods-grid">
-              <div class="roll-mod-checks">
-                <div class="roll-check-option">
-                  <p-checkbox
-                    [inputId]="'surpris-' + slot.id"
-                    [binary]="true"
-                    [ngModel]="entry.surpris"
-                    (ngModelChange)="updateEntry(slot.id, {surpris: $event})"
-                  />
-                  <label class="roll-check-option__text" [attr.for]="'surpris-' + slot.id">Surpris / embuscade subie</label>
-                  <span class="roll-check-option__value roll-check-option__value--neg">−1</span>
-                </div>
-                <div class="roll-check-option">
-                  <p-checkbox
-                    [inputId]="'embuscade-' + slot.id"
-                    [binary]="true"
-                    [ngModel]="entry.embuscade"
-                    (ngModelChange)="updateEntry(slot.id, {embuscade: $event})"
-                  />
-                  <label class="roll-check-option__text" [attr.for]="'embuscade-' + slot.id">Pose une embuscade</label>
-                  <span class="roll-check-option__value roll-check-option__value--pos">+2</span>
-                </div>
-              </div>
-              <div class="roll-mod-numbers">
-                <div class="roll-mod-num">
-                  <span class="roll-mod-num__label">Carrière utile</span>
-                  <p-inputNumber
-                    [ngModel]="entry.carriere"
-                    (ngModelChange)="updateEntry(slot.id, {carriere: $event ?? 0})"
-                    [min]="0" [max]="5" prefix="+"
-                    [inputStyle]="{'width':'3rem','text-align':'center'}"
-                  />
-                </div>
-                <div class="roll-mod-num">
-                  <span class="roll-mod-num__label">Initiative ennemie</span>
-                  <p-inputNumber
-                    [ngModel]="entry.initiativeEnnemie"
-                    (ngModelChange)="updateEntry(slot.id, {initiativeEnnemie: $event ?? 0})"
-                    [min]="0" [max]="10" prefix="−"
-                    [inputStyle]="{'width':'3rem','text-align':'center'}"
-                  />
-                </div>
-              </div>
             </div>
           </div>
         }
@@ -147,25 +181,25 @@
   </div>
 
   @if (nonHeroesInOrder().length > 0) {
-    <div class="roll-enemies">
-      <p class="roll-enemies__label">Adversaires</p>
+    <div class="rp-enemies">
+      <p class="rp-enemies__label">Adversaires</p>
       @for (slot of nonHeroesInOrder(); track slot.id) {
-        <div class="roll-enemy">
-          <span class="roll-enemy__nom">{{ slot.nom }}</span>
+        <div class="rp-enemy">
+          <span class="rp-enemy__name">{{ slot.nom }}</span>
           @if (slot.category) {
-            <span class="roll-cat roll-cat--{{ slot.category }}">{{ categoryLabel(slot.category) }}</span>
+            <span class="rp-badge rp-badge--{{ slot.category }}">{{ categoryLabel(slot.category) }}</span>
           } @else {
-            <span class="roll-enemy__nocat">rang non défini</span>
+            <span class="rp-enemy__nocat">rang non défini</span>
           }
         </div>
       }
     </div>
   }
 
-  <div class="roll-phase__footer">
+  <div class="rp__footer">
     <p-button label="Annuler" severity="secondary" [outlined]="true" size="small" (onClick)="cancelled.emit()" />
     <p-button
-      label="Confirmer l'ordre d'initiative"
+      label="Confirmer l'initiative"
       icon="pi pi-check"
       size="small"
       [disabled]="!allHeroesRolled()"

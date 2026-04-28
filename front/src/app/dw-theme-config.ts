@@ -226,6 +226,40 @@ export const DwPreset = definePreset(Aura, {
         }
       `,
     },
+    fieldset: {
+      css: `
+        .p-fieldset {
+          margin: 0.15rem 0 0;
+          border: 1px solid var(--dw-border);
+          border-radius: 6px;
+          background: var(--dw-surface-100);
+        }
+
+        .p-fieldset .p-fieldset-legend {
+          margin-left: 0.45rem;
+          border: 0;
+          border-radius: 4px;
+          background: none;
+          padding: 0.04rem 0.3rem;
+        }
+
+        .p-fieldset .p-fieldset-legend-label {
+          color: var(--dw-surface-500);
+          font-size: 0.62rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+
+        .p-fieldset .p-fieldset-content {
+          border: 0;
+          background: var(--dw-surface-300);
+          border: 1px solid var(--dw-surface-300);
+          border-radius: 5px;
+          padding: 0.45rem 0.55rem 0.5rem;
+        }
+      `,
+    },
     inputtext: {
       css: `
         .p-inputtext.p-inputtext-sm {

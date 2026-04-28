@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, OnInit, computed, input, output, sig
 import {FormsModule} from '@angular/forms';
 import {ButtonModule} from 'primeng/button';
 import {CheckboxModule} from 'primeng/checkbox';
+import {FieldsetModule} from 'primeng/fieldset';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {InitiativeSlot, ReactionResult} from '../bol-combat-panel';
 
@@ -42,7 +43,7 @@ const CATEGORY_LABELS: Record<ReactionResult, string> = {
 
 @Component({
   selector: 'app-bol-roll-phase',
-  imports: [FormsModule, ButtonModule, CheckboxModule, InputNumberModule],
+  imports: [FormsModule, ButtonModule, CheckboxModule, InputNumberModule, FieldsetModule],
   templateUrl: './bol-roll-phase.html',
   styleUrl: './bol-roll-phase.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,8 +57,16 @@ export class BolRollPhaseComponent implements OnInit {
 
   protected readonly rollEntries = signal<Record<string, RollEntry>>({});
 
+  protected readonly rolledHeroesCount = computed(
+    () => this.heroesInOrder().filter((s) => this.rollEntries()[s.id]?.dice != null).length,
+  );
+
+  protected readonly nextPendingHeroId = computed(
+    () => this.heroesInOrder().find((s) => this.rollEntries()[s.id]?.dice == null)?.id ?? null,
+  );
+
   protected readonly allHeroesRolled = computed(() =>
-    this.heroesInOrder().every((s) => this.rollEntries()[s.id]?.dice != null),
+    this.rolledHeroesCount() === this.heroesInOrder().length,
   );
 
   ngOnInit(): void {
@@ -83,9 +92,34 @@ export class BolRollPhaseComponent implements OnInit {
     }));
   }
 
+  protected resetModifiers(id: string): void {
+    this.updateEntry(id, {
+      surpris: false,
+      embuscade: false,
+      carriere: 0,
+      initiativeEnnemie: 0,
+    });
+  }
+
+  protected resetAllModifiers(): void {
+    const current = this.rollEntries();
+    const next: Record<string, RollEntry> = {};
+    for (const slot of this.heroesInOrder()) {
+      const entry = current[slot.id] ?? DEFAULT_ROLL_ENTRY;
+      next[slot.id] = {
+        ...entry,
+        surpris: false,
+        embuscade: false,
+        carriere: 0,
+        initiativeEnnemie: 0,
+      };
+    }
+    this.rollEntries.set(next);
+  }
+
   protected rollTotal(id: string): number | null {
     const e = this.getEntry(id);
-    if (e.dice === null || e.dice === 12 || (e.dice === 2 && e.acceptEchecCritique)) return null;
+    if (e.dice === null) return null;
     return (
       e.dice +
       e.esprit +
@@ -100,7 +134,7 @@ export class BolRollPhaseComponent implements OnInit {
   protected rollResultFor(id: string): ReactionResult | null {
     const e = this.getEntry(id);
     if (e.dice === null) return null;
-    if (e.dice === 2 && e.acceptEchecCritique) return 'echec-critique';
+    if (e.dice === 2) return e.acceptEchecCritique ? 'echec-critique' : 'echec';
     if (e.dice === 12) return e.depenseHeroisme ? 'legendaire' : 'heroique';
     const total = this.rollTotal(id);
     if (total === null) return null;
