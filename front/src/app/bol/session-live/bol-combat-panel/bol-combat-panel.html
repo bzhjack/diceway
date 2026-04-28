@@ -9,7 +9,7 @@
           [text]="true"
           severity="info"
           size="small"
-          (onClick)="rulesOverlay.toggle($event)"
+          (onClick)="rulesDialogVisible.set(true)"
           aria-label="Règles — jet de réaction"
         />
       </div>
@@ -26,8 +26,16 @@
     }
   </div>
 
-  <p-popover #rulesOverlay styleClass="combat-rules-popover">
-    <p class="combat-rules-title">Jet de réaction</p>
+  <p-dialog
+    header="Jet de réaction — rappel des règles"
+    [visible]="rulesDialogVisible()"
+    (visibleChange)="rulesDialogVisible.set($event)"
+    [modal]="true"
+    [closable]="true"
+    [draggable]="false"
+    [resizable]="false"
+    styleClass="combat-rules-dialog"
+  >
     <div class="combat-rules-formula">2d6 + Esprit + Initiative &mdash; réussite à 9+</div>
     <div class="combat-rules-entries">
       <div class="combat-rules-entry combat-rules-entry--legendaire">
@@ -48,7 +56,7 @@
       </div>
       <div class="combat-rules-entry combat-rules-entry--echec-critique">
         <span class="combat-rules-badge combat-rules-badge--echec-critique">Échec critique</span>
-        <span class="combat-rules-desc">2 naturel · Agit en dernier · R1 : ne peut pas agir, pas de bonus de bouclier</span>
+        <span class="combat-rules-desc">2 naturel (choix du joueur) · Agit en dernier · R1 : ne peut pas agir, pas de bonus de bouclier</span>
       </div>
     </div>
     <div class="combat-rules-modifiers">
@@ -72,7 +80,7 @@
         </div>
       </div>
     </div>
-  </p-popover>
+  </p-dialog>
 
   @if (rollPhase()) {
 
@@ -318,6 +326,7 @@
               <th class="combat-th combat-th--nom">Participant</th>
               <th class="combat-th combat-th--initiative">Initiative</th>
               <th class="combat-th combat-th--pv">PV</th>
+              <th class="combat-th combat-th--heroism">Héroïsme</th>
               <th class="combat-th combat-th--def">Déf</th>
               <th class="combat-th combat-th--degats">Dégâts</th>
               <th class="combat-th combat-th--remove"></th>
@@ -397,6 +406,28 @@
                         [style.width.%]="slot.vitaliteCourante / slot.vitaliteMax * 100"
                         [class.combat-vit-bar__fill--low]="slot.vitaliteCourante / slot.vitaliteMax <= 0.33"
                       ></div>
+                    </div>
+                  }
+                </td>
+
+                <td class="combat-td combat-td--heroism">
+                  @if (slot.heroismMax != null) {
+                    <div class="combat-stepper">
+                      <p-button
+                        icon="pi pi-minus"
+                        [text]="true"
+                        size="small"
+                        (onClick)="adjustHeroism(slot.id, -1)"
+                        aria-label="Réduire héroïsme"
+                      />
+                      <span class="combat-stepper__value">{{ slot.heroismCourant }}/{{ slot.heroismMax }}</span>
+                      <p-button
+                        icon="pi pi-plus"
+                        [text]="true"
+                        size="small"
+                        (onClick)="adjustHeroism(slot.id, 1)"
+                        aria-label="Augmenter héroïsme"
+                      />
                     </div>
                   }
                 </td>

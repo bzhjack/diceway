@@ -1,7 +1,8 @@
-// ── Combat rules popover (rendered outside component shadow) ──────────────────
+// ── Combat rules popover / dialog (rendered outside component shadow) ─────────
 
-.combat-rules-popover {
-  max-width: 500px;
+.combat-rules-popover,
+.combat-rules-dialog {
+  max-width: 540px;
 
   .combat-rules-title {
     margin: 0 0 0.6rem;

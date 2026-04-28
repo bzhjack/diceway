@@ -106,7 +106,7 @@ export interface BolScenarioPjModel {
   heros?: {
     id: string | null;
     origines: {nom: string | null; avatar: string | null; joueur: string | null};
-    ressources?: {vitalite: number};
+    ressources?: {vitalite: number; heroisme: number};
     combat?: {defense: number};
   };
 }

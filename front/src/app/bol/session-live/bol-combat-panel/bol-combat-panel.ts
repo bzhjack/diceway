@@ -3,9 +3,9 @@ import {FormsModule} from '@angular/forms';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {CheckboxModule} from 'primeng/checkbox';
+import {DialogModule} from 'primeng/dialog';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {MessageModule} from 'primeng/message';
-import {PopoverModule} from 'primeng/popover';
 import {SelectModule} from 'primeng/select';
 import {TagModule} from 'primeng/tag';
 
@@ -26,11 +26,13 @@ export interface InitiativeSlot {
   readonly avatar: string | null;
   readonly type: ParticipantType;
   readonly vitaliteMax: number;
+  readonly heroismMax: number | null;
   readonly defense: number | null;
   readonly degats: string | null;
   readonly tags: string[];
   category: ReactionResult | null;
   vitaliteCourante: number;
+  heroismCourant: number | null;
 }
 
 interface RollEntry {
@@ -108,7 +110,7 @@ const CATEGORY_SEVERITIES: Record<ReactionResult, PrimeSeverity> = {
 
 @Component({
   selector: 'app-bol-combat-panel',
-  imports: [FormsModule, ButtonModule, CardModule, CheckboxModule, InputNumberModule, MessageModule, PopoverModule, SelectModule, TagModule],
+  imports: [FormsModule, ButtonModule, CardModule, CheckboxModule, DialogModule, InputNumberModule, MessageModule, SelectModule, TagModule],
   templateUrl: './bol-combat-panel.html',
   styleUrl: './bol-combat-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -120,6 +122,7 @@ export class BolCombatPanelComponent {
   protected readonly selectedParticipantId = signal<string | null>(null);
   protected readonly rollPhase = signal(false);
   protected readonly rollEntries = signal<Record<string, RollEntry>>({});
+  protected readonly rulesDialogVisible = signal(false);
 
   protected readonly availableParticipants = computed(() => {
     const inOrder = new Set(this.initiativeOrder().map((s) => s.id));
@@ -249,6 +252,16 @@ export class BolCombatPanelComponent {
       list.map((s) =>
         s.id === id
           ? {...s, vitaliteCourante: Math.max(0, Math.min(s.vitaliteMax, s.vitaliteCourante + delta))}
+          : s,
+      ),
+    );
+  }
+
+  protected adjustHeroism(id: string, delta: number): void {
+    this.initiativeOrder.update((list) =>
+      list.map((s) =>
+        s.id === id && s.heroismMax != null
+          ? {...s, heroismCourant: Math.max(0, Math.min(s.heroismMax, (s.heroismCourant ?? 0) + delta))}
           : s,
       ),
     );
