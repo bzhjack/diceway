@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit, computed, effect, input, output, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, computed, effect, input, output, signal, viewChildren} from '@angular/core';
 import {InitiativeSlot, ReactionResult} from '../bol-combat-panel';
 import {RpCardComponent} from './rp-card/rp-card';
 
@@ -54,6 +54,8 @@ export class BolRollPhaseComponent implements OnInit {
 
   protected readonly rollEntries = signal<Record<string, RollEntry>>({});
 
+  private readonly rpCards = viewChildren(RpCardComponent);
+
   constructor() {
     effect(() => this.allHeroesRolledChange.emit(this.allHeroesRolled()));
   }
@@ -80,6 +82,16 @@ export class BolRollPhaseComponent implements OnInit {
       };
     }
     this.rollEntries.set(entries);
+  }
+
+  protected focusNextCard(currentId: string): void {
+    const heroes = this.heroesInOrder();
+    const cards = this.rpCards();
+    const currentIndex = heroes.findIndex((s) => s.id === currentId);
+    const nextIndex = currentIndex + 1;
+    if (nextIndex < cards.length) {
+      cards[nextIndex].focusDiceInput();
+    }
   }
 
   protected getEntry(id: string): RollEntry {

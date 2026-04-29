@@ -70,6 +70,7 @@ export class SessionLivePageComponent {
             malus: a.armure!.malus,
           })),
         category: null,
+        etats: [],
       })),
       ...(s.creatures ?? []).map((c): InitiativeSlot => ({
         id: `creature-${c.id}`,
@@ -93,6 +94,7 @@ export class SessionLivePageComponent {
         armesList: [],
         armures: [],
         category: c.rang,
+        etats: [],
       })),
       ...(s.demons ?? []).map((d): InitiativeSlot => ({
         id: `demon-${d.id}`,
@@ -113,6 +115,7 @@ export class SessionLivePageComponent {
         armesList: [],
         armures: [],
         category: d.rang,
+        etats: [],
       })),
       ...(s.pnjs ?? []).map((p): InitiativeSlot => ({
         id: `pnj-${p.id}`,
@@ -141,6 +144,7 @@ export class SessionLivePageComponent {
           })),
         armures: [],
         category: p.rang,
+        etats: [],
       })),
     ];
 

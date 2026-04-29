@@ -92,6 +92,21 @@
                       }
                     </div>
                   }
+                  <div class="combat-etats">
+                    @for (etat of autoEtats(slot); track etat) {
+                      <span class="combat-etat combat-etat--{{ etat }}">{{ etat }}</span>
+                    }
+                    @for (etat of slot.etats; track etat) {
+                      <button class="combat-etat combat-etat--manual" (click)="etatToggle.emit({id: slot.id, etat})">
+                        {{ etat }} ×
+                      </button>
+                    }
+                    <button
+                      class="combat-etat-add"
+                      (click)="activePopoverSlotId.set(slot.id); etatPopover.toggle($event)"
+                      aria-label="Ajouter un état"
+                    >+</button>
+                  </div>
                 </div>
               </div>
             </td>
@@ -182,3 +197,21 @@
 } @else {
   <p class="combat-initiative-empty">Aucun participant. Ajoutez-en ci-dessous.</p>
 }
+
+<p-popover #etatPopover>
+  @let slotId = activePopoverSlotId();
+  @let activeSlot = activePopoverSlot();
+  <div class="combat-etat-popover">
+    @for (etat of etatsManuels; track etat) {
+      @let active = activeSlot !== null && activeSlot.etats.includes(etat);
+      <button
+        class="combat-etat-popover__item"
+        [class.combat-etat-popover__item--active]="active"
+        (click)="slotId && etatToggle.emit({id: slotId, etat})"
+      >
+        {{ etat }}
+        @if (active) { <span>✓</span> }
+      </button>
+    }
+  </div>
+</p-popover>

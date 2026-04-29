@@ -233,6 +233,86 @@
   &--armure { cursor: default; color: var(--dw-surface-500); border-color: rgba(var(--dw-surface-500), 0.22); }
 }
 
+// ── États ─────────────────────────────────────────────────────────────────────
+
+.combat-etats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem;
+  margin-top: 0.2rem;
+}
+
+.combat-etat {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.05rem 0.35rem;
+  border-radius: 3px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  border: 1px solid transparent;
+
+  &--manual {
+    cursor: pointer;
+    background: rgba(148, 163, 184, 0.08);
+    border-color: rgba(148, 163, 184, 0.2);
+    color: var(--dw-surface-500);
+    transition: background 120ms, border-color 120ms;
+    &:hover { background: rgba(148, 163, 184, 0.14); border-color: rgba(248, 113, 113, 0.3); color: #fda4af; }
+  }
+
+  &--hors-combat { color: #fb923c; background: rgba(251, 146, 60, 0.08); border-color: rgba(251, 146, 60, 0.2); }
+  &--coma        { color: #f87171; background: rgba(248, 113, 113, 0.08); border-color: rgba(248, 113, 113, 0.2); }
+  &--mort        { color: #ef4444; background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); }
+}
+
+.combat-etat-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  padding: 0;
+  border-radius: 3px;
+  border: 1px dashed rgba(148, 163, 184, 0.28);
+  background: transparent;
+  color: var(--dw-surface-400);
+  font-size: 0.75rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 120ms, color 120ms, background 120ms;
+
+  &:hover { border-color: rgba(148, 163, 184, 0.5); color: var(--dw-surface-600); background: rgba(148, 163, 184, 0.06); }
+}
+
+.combat-etat-popover {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 8rem;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    border: none;
+    background: transparent;
+    color: var(--dw-surface-600);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: background 120ms, color 120ms;
+    text-align: left;
+
+    &:hover { background: rgba(148, 163, 184, 0.08); color: var(--dw-surface-700); }
+    &--active { color: var(--dw-surface-700); font-weight: 600; }
+  }
+}
+
 // ── HP / Héroïsme stepper ─────────────────────────────────────────────────────
 
 .combat-hp {

@@ -35,6 +35,7 @@ export interface InitiativeSlot {
   category: ReactionResult | null;
   vitaliteCourante: number;
   heroismCourant: number | null;
+  etats: string[];
 }
 
 const TYPE_LABELS: Record<ParticipantType, string> = {
@@ -72,6 +73,7 @@ export class BolCombatPanelComponent {
   protected readonly rollPhase = signal(false);
   protected readonly rulesDialogVisible = signal(false);
   protected readonly allHeroesRolled = signal(false);
+  protected readonly currentRound = signal(1);
 
   protected readonly availableParticipants = computed(() => {
     const inOrder = new Set(this.initiativeOrder().map((s) => s.id));
@@ -120,7 +122,7 @@ export class BolCombatPanelComponent {
     if (!id) return;
     const participant = this.participants().find((p) => p.id === id);
     if (!participant) return;
-    this.initiativeOrder.update((list) => [...list, participant]);
+    this.initiativeOrder.update((list) => [...list, {...participant, etats: []}]);
     const next = this.availableParticipants().find((p) => p.id !== id);
     this.selectedParticipantId.set(next?.id ?? null);
   }
@@ -145,6 +147,18 @@ export class BolCombatPanelComponent {
     );
   }
 
+  protected toggleEtat(id: string, etat: string): void {
+    this.initiativeOrder.update((list) =>
+      list.map((s) => {
+        if (s.id !== id) return s;
+        const etats = s.etats.includes(etat)
+          ? s.etats.filter((e) => e !== etat)
+          : [...s.etats, etat];
+        return {...s, etats};
+      }),
+    );
+  }
+
   protected removeFromInitiative(id: string): void {
     this.initiativeOrder.update((list) => list.filter((s) => s.id !== id));
   }
@@ -152,6 +166,10 @@ export class BolCombatPanelComponent {
   protected startRollPhase(): void {
     this.allHeroesRolled.set(false);
     this.rollPhase.set(true);
+  }
+
+  protected startNewRound(): void {
+    this.currentRound.update((r) => r + 1);
   }
 
   protected cancelRollPhase(): void {

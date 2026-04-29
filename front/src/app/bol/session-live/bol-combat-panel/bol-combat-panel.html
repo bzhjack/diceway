@@ -14,6 +14,11 @@
         />
       </div>
     </div>
+
+    @if (initiativeConfirmed()) {
+      <span class="combat-round-badge">Round {{ currentRound() }}</span>
+    }
+
     @if (rollPhase()) {
       <div class="flex items-center gap-2 ml-auto">
         <p-button label="Annuler" severity="secondary" [outlined]="true" size="small" (onClick)="cancelRollPhase()" />
@@ -25,7 +30,16 @@
           (onClick)="confirmRollPhase()"
         />
       </div>
-    } @else if (heroesInOrder().length > 0 && !initiativeConfirmed()) {
+    } @else if (initiativeConfirmed()) {
+      <p-button
+        label="Nouveau round"
+        icon="pi pi-refresh"
+        severity="secondary"
+        size="small"
+        class="ml-auto"
+        (onClick)="startNewRound()"
+      />
+    } @else if (heroesInOrder().length > 0) {
       <p-button
         label="Jets de réaction"
         icon="pi pi-bolt"
@@ -114,6 +128,7 @@
       (hpChange)="adjustHp($event.id, $event.delta)"
       (heroismChange)="adjustHeroism($event.id, $event.delta)"
       (removeParticipant)="removeFromInitiative($event)"
+      (etatToggle)="toggleEtat($event.id, $event.etat)"
     />
   }
 </p-card>
