@@ -1,0 +1,28 @@
+:host { display: block; }
+
+.dw-panel {
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 5px;
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.25rem 0.5rem;
+    background: rgba(15, 23, 42, 0.3);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  }
+
+  &__title {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dw-surface-400);
+  }
+
+  &__body {
+    padding: 0.45rem 0.5rem;
+  }
+}

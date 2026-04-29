@@ -1,0 +1,9 @@
+<div class="dw-panel">
+  <div class="dw-panel__header">
+    <span class="dw-panel__title">{{ title() }}</span>
+    <ng-content select="[dwPanelAction]" />
+  </div>
+  <div class="dw-panel__body">
+    <ng-content />
+  </div>
+</div>

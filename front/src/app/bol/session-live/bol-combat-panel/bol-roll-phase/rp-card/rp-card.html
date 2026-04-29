@@ -63,7 +63,8 @@
     </div>
   </div>
 
-  <p-fieldset legend="Modificateurs">
+  <dw-panel title="Modificateurs">
+    <button dwPanelAction type="button" class="rp-mods__reset" (click)="resetModifiers()">Réinit.</button>
     <div class="rp-mods">
       <div class="rp-mods__list">
         <div class="rp-toggle">
@@ -113,9 +114,8 @@
           <span class="rp-toggle__text">Init. ennemie</span>
         </div>
       </div>
-      <button type="button" class="rp-mods__reset" (click)="resetModifiers()">Réinit.</button>
     </div>
-  </p-fieldset>
+  </dw-panel>
 
   @if (e.dice === 2) {
     <div class="rp-alert rp-alert--danger">

@@ -203,7 +203,6 @@ po:host { display: block; flex: 1 1 17rem; min-width: 17rem; }
   &__list { display: flex; flex-direction: column; gap: 0.45rem; align-items: flex-start; }
 
   &__reset {
-    align-self: flex-start;
     height: 1.35rem;
     border: 1px solid rgba(148, 163, 184, 0.2);
     border-radius: 3px;

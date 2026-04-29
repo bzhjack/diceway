@@ -1,10 +1,10 @@
 import {ChangeDetectionStrategy, Component, computed, input, output} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CheckboxModule} from 'primeng/checkbox';
-import {FieldsetModule} from 'primeng/fieldset';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {InitiativeSlot, ReactionResult} from '../../bol-combat-panel';
 import {RollEntry} from '../bol-roll-phase';
+import {DwPanelComponent} from '../../../../../shared/dw-panel/dw-panel';
 import {ValueStepperComponent} from '../../../../../shared/value-stepper/value-stepper';
 
 const CATEGORY_LABELS: Record<ReactionResult, string> = {
@@ -20,7 +20,7 @@ const CATEGORY_LABELS: Record<ReactionResult, string> = {
 
 @Component({
   selector: 'app-rp-card',
-  imports: [FormsModule, CheckboxModule, FieldsetModule, InputNumberModule, ValueStepperComponent],
+  imports: [FormsModule, CheckboxModule, InputNumberModule, DwPanelComponent, ValueStepperComponent],
   templateUrl: './rp-card.html',
   styleUrl: './rp-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
