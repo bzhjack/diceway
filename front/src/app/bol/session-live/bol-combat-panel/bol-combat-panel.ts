@@ -107,6 +107,10 @@ export class BolCombatPanelComponent {
     this.initiativeOrder().filter((s) => s.type === 'hero'),
   );
 
+  protected readonly initiativeConfirmed = computed(() =>
+    this.heroesInOrder().length > 0 && this.heroesInOrder().every((s) => s.category !== null),
+  );
+
   protected readonly nonHeroesInOrder = computed(() =>
     this.initiativeOrder().filter((s) => s.type !== 'hero'),
   );

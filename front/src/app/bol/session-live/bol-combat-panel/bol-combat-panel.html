@@ -25,7 +25,7 @@
           (onClick)="confirmRollPhase()"
         />
       </div>
-    } @else if (heroesInOrder().length > 0) {
+    } @else if (heroesInOrder().length > 0 && !initiativeConfirmed()) {
       <p-button
         label="Jets de réaction"
         icon="pi pi-bolt"
