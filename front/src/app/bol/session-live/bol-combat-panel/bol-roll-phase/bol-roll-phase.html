@@ -2,11 +2,7 @@
   <div class="rp__top">
     <p class="rp__hint">2d6 + Esprit + Init + modificateurs &mdash; réussite à 9+</p>
     <div class="rp__top-right">
-      <button type="button" class="rp-tool-btn" (click)="resetAllModifiers()">
-        <i class="pi pi-refresh" aria-hidden="true"></i>
-        <span>Mods à zéro</span>
-      </button>
-      <div class="rp-progress" [class.rp-progress--done]="allHeroesRolled()">
+<div class="rp-progress" [class.rp-progress--done]="allHeroesRolled()">
         <span class="rp-progress__count">{{ rolledHeroesCount() }}/{{ heroesInOrder().length }}</span>
         @if (allHeroesRolled()) {
           <span class="rp-progress__label">Tous les jets sont saisis</span>

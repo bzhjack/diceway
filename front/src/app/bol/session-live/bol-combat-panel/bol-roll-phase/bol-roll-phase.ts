@@ -93,16 +93,6 @@ export class BolRollPhaseComponent implements OnInit {
     }));
   }
 
-  protected resetAllModifiers(): void {
-    const current = this.rollEntries();
-    const next: Record<string, RollEntry> = {};
-    for (const slot of this.heroesInOrder()) {
-      const entry = current[slot.id] ?? DEFAULT_ROLL_ENTRY;
-      next[slot.id] = {...entry, surpris: false, embuscade: false, carriere: 0, initiativeEnnemie: 0};
-    }
-    this.rollEntries.set(next);
-  }
-
   protected categoryLabel(category: ReactionResult): string {
     return CATEGORY_LABELS[category];
   }

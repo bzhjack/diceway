@@ -13,7 +13,9 @@
 
   <div class="rp-card__header">
     <span class="rp-card__name">{{ s.nom }}</span>
-    @if (!r) {
+    @if (r) {
+      <span class="rp-badge rp-badge--{{ r }}">{{ categoryLabel(r) }}</span>
+    } @else {
       <span class="rp-badge rp-badge--pending">En attente</span>
     }
   </div>
@@ -54,17 +56,9 @@
       @if (t !== null) {
         <div class="rp-total rp-total--inline">
           <span class="rp-total__eq">{{ t }}</span>
-          @if (r) {
-            <span class="rp-badge rp-badge--{{ r }} rp-badge--inline">{{ categoryLabel(r) }}</span>
-          }
         </div>
       } @else {
-        <div class="rp-total rp-total--pending rp-total--inline">
-          —
-          @if (r) {
-            <span class="rp-badge rp-badge--{{ r }} rp-badge--inline">{{ categoryLabel(r) }}</span>
-          }
-        </div>
+        <div class="rp-total rp-total--pending rp-total--inline">—</div>
       }
     </div>
   </div>
