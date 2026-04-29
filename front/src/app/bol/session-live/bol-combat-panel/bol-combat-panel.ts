@@ -35,7 +35,6 @@ export interface InitiativeSlot {
   category: ReactionResult | null;
   vitaliteCourante: number;
   heroismCourant: number | null;
-  etats: string[];
 }
 
 const TYPE_LABELS: Record<ParticipantType, string> = {
@@ -122,7 +121,7 @@ export class BolCombatPanelComponent {
     if (!id) return;
     const participant = this.participants().find((p) => p.id === id);
     if (!participant) return;
-    this.initiativeOrder.update((list) => [...list, {...participant, etats: []}]);
+    this.initiativeOrder.update((list) => [...list, participant]);
     const next = this.availableParticipants().find((p) => p.id !== id);
     this.selectedParticipantId.set(next?.id ?? null);
   }
@@ -147,18 +146,6 @@ export class BolCombatPanelComponent {
     );
   }
 
-  protected toggleEtat(id: string, etat: string): void {
-    this.initiativeOrder.update((list) =>
-      list.map((s) => {
-        if (s.id !== id) return s;
-        const etats = s.etats.includes(etat)
-          ? s.etats.filter((e) => e !== etat)
-          : [...s.etats, etat];
-        return {...s, etats};
-      }),
-    );
-  }
-
   protected removeFromInitiative(id: string): void {
     this.initiativeOrder.update((list) => list.filter((s) => s.id !== id));
   }
@@ -169,6 +156,9 @@ export class BolCombatPanelComponent {
   }
 
   protected startNewRound(): void {
+    this.initiativeOrder.update((list) =>
+      list.map((s) => s.vitaliteCourante < 0 ? {...s, vitaliteCourante: s.vitaliteCourante - 1} : s),
+    );
     this.currentRound.update((r) => r + 1);
   }
 

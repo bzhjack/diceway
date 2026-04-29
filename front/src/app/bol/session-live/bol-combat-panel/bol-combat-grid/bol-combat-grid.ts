@@ -1,14 +1,10 @@
-import {ChangeDetectionStrategy, Component, computed, input, output, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {ButtonModule} from 'primeng/button';
 import {MessageModule} from 'primeng/message';
-import {PopoverModule} from 'primeng/popover';
 import {SelectModule} from 'primeng/select';
 import {TooltipModule} from 'primeng/tooltip';
 import {InitiativeSlot, ParticipantType, ReactionResult} from '../bol-combat-panel';
-
-export const ETATS_MANUELS = ['blessé', 'empoisonné', 'retardé', 'allié', 'hostile'] as const;
-export type EtatManuel = (typeof ETATS_MANUELS)[number];
 
 const TYPE_LABELS: Record<ParticipantType, string> = {
   hero: 'PJ',
@@ -30,7 +26,7 @@ const CATEGORY_LABELS: Record<ReactionResult, string> = {
 
 @Component({
   selector: 'app-bol-combat-grid',
-  imports: [FormsModule, ButtonModule, MessageModule, PopoverModule, SelectModule, TooltipModule],
+  imports: [FormsModule, ButtonModule, MessageModule, SelectModule, TooltipModule],
   templateUrl: './bol-combat-grid.html',
   styleUrl: './bol-combat-grid.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,14 +43,6 @@ export class BolCombatGridComponent {
   readonly hpChange = output<{id: string; delta: number}>();
   readonly heroismChange = output<{id: string; delta: number}>();
   readonly removeParticipant = output<string>();
-  readonly etatToggle = output<{id: string; etat: string}>();
-
-  protected readonly etatsManuels = ETATS_MANUELS;
-  protected readonly activePopoverSlotId = signal<string | null>(null);
-  protected readonly activePopoverSlot = computed(() => {
-    const id = this.activePopoverSlotId();
-    return id ? (this.sortedInitiative().find((s) => s.id === id) ?? null) : null;
-  });
 
   protected typeLabel(type: ParticipantType): string {
     return TYPE_LABELS[type];
