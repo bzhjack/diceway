@@ -46,6 +46,7 @@ export class SessionLivePageComponent {
         vitaliteCourante: pj.heros?.ressources?.vitalite ?? 0,
         heroismMax: pj.heros?.ressources?.heroisme ?? null,
         heroismCourant: pj.heros?.ressources?.heroisme ?? null,
+        agilite: pj.heros?.attributs?.agilite ?? null,
         esprit: pj.heros?.attributs?.esprit ?? null,
         initiative: pj.heros?.combat?.initiative ?? null,
         melee: pj.heros?.combat?.melee ?? null,
@@ -53,6 +54,7 @@ export class SessionLivePageComponent {
         defense: pj.heros?.combat?.defense ?? null,
         degats: null,
         tags: [],
+        pouvoirs: [],
         armesList: (pj.heros?.armes ?? [])
           .filter((a) => a.arme)
           .map((a) => ({
@@ -80,6 +82,7 @@ export class SessionLivePageComponent {
         vitaliteCourante: c.vitalite_max,
         heroismMax: null,
         heroismCourant: null,
+        agilite: null,
         esprit: c.esprit,
         initiative: null,
         melee: c.attaque,
@@ -88,32 +91,49 @@ export class SessionLivePageComponent {
         degats: c.degats,
         tags: [
           ...(c.capacites ?? []).map((cap) => cap.capacite ?? '').filter(Boolean),
-          ...(c.protection ? [`Protection: ${c.protection}`] : []),
         ],
+        pouvoirs: [],
         armesList: [],
-        armures: [],
+        armures: c.protection ? [{nom: 'Protection naturelle', protection: c.protection, malus: null}] : [],
         category: c.rang,
       })),
-      ...(s.demons ?? []).map((d): InitiativeSlot => ({
-        id: `demon-${d.id}`,
-        nom: d.surnom ?? d.nom,
-        avatar: d.demon?.avatar ?? null,
-        type: 'demon',
-        vitaliteMax: d.vitalite_max,
-        vitaliteCourante: d.vitalite_max,
-        heroismMax: null,
-        heroismCourant: null,
-        esprit: d.esprit,
-        initiative: null,
-        melee: d.melee,
-        tir: d.tir,
-        defense: d.defense,
-        degats: d.degats,
-        tags: (d.pouvoirs ?? []).map((p) => p.pouvoir ?? '').filter(Boolean),
-        armesList: [],
-        armures: [],
-        category: d.rang,
-      })),
+      ...(s.demons ?? []).map((d): InitiativeSlot => {
+        const armorPowers: {nom: string; protection: string | null; malus: string | null}[] = [];
+        const pouvoirs = (d.pouvoirs ?? []).filter((p) => p.pouvoir);
+        if (pouvoirs.some((p) => p.pouvoir === 'Armure')) armorPowers.push({nom: 'Armure', protection: 'd6-2 (2)', malus: null});
+        if (pouvoirs.some((p) => p.pouvoir === 'Cuirassé')) armorPowers.push({nom: 'Cuirassé', protection: 'd6 (4)', malus: null});
+        return {
+          id: `demon-${d.id}`,
+          nom: d.surnom ?? d.nom,
+          avatar: d.demon?.avatar ?? null,
+          type: 'demon',
+          vitaliteMax: d.vitalite_max,
+          vitaliteCourante: d.vitalite_max,
+          heroismMax: null,
+          heroismCourant: null,
+          agilite: null,
+          esprit: d.esprit,
+          initiative: null,
+          melee: d.melee,
+          tir: d.tir,
+          defense: d.defense,
+          degats: d.degats,
+          tags: [],
+          pouvoirs: pouvoirs
+            .filter((p) => p.pouvoir !== 'Armure' && p.pouvoir !== 'Cuirassé')
+            .map((p) => ({
+              nom: p.pouvoir!,
+              avantage_attaque: p.avantage_attaque ?? false,
+              degats_superieurs: p.degats_superieurs ?? false,
+              regeneration: p.regeneration ?? false,
+              intangible: p.intangible ?? false,
+              avertissement_combat: p.avertissement_combat ?? false,
+            })),
+          armesList: [],
+          armures: armorPowers,
+          category: d.rang,
+        };
+      }),
       ...(s.pnjs ?? []).map((p): InitiativeSlot => ({
         id: `pnj-${p.id}`,
         nom: p.surnom ?? p.nom,
@@ -123,6 +143,7 @@ export class SessionLivePageComponent {
         vitaliteCourante: p.vitalite_max,
         heroismMax: null,
         heroismCourant: null,
+        agilite: null,
         esprit: p.esprit,
         initiative: null,
         melee: p.melee,
@@ -130,6 +151,7 @@ export class SessionLivePageComponent {
         defense: p.defense,
         degats: null,
         tags: [],
+        pouvoirs: [],
         armesList: (p.armes ?? [])
           .filter((a) => a.nom || a.degats)
           .map((a) => ({

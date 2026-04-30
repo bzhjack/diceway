@@ -5,24 +5,7 @@ import {MessageModule} from 'primeng/message';
 import {SelectModule} from 'primeng/select';
 import {TooltipModule} from 'primeng/tooltip';
 import {InitiativeSlot, ParticipantType, ReactionResult} from '../bol-combat-panel';
-
-const TYPE_LABELS: Record<ParticipantType, string> = {
-  hero: 'PJ',
-  creature: 'Créature',
-  demon: 'Démon',
-  pnj: 'PNJ',
-};
-
-const CATEGORY_LABELS: Record<ReactionResult, string> = {
-  legendaire: 'Légendaire ★★',
-  heroique: 'Héroïque ★',
-  reussite: 'Réussite',
-  rival: 'Rival',
-  coriace: 'Coriace',
-  echec: 'Échec',
-  pietaille: 'Piétaille',
-  'echec-critique': 'Échec critique',
-};
+import {CATEGORY_LABELS, TYPE_LABELS} from '../combat.constants';
 
 @Component({
   selector: 'app-bol-combat-grid',
@@ -37,12 +20,14 @@ export class BolCombatGridComponent {
   readonly selectedParticipantId = input<string | null>(null);
   readonly round1Blocked = input.required<boolean>();
   readonly legendaryBonus = input.required<boolean>();
+  readonly initiativeConfirmed = input.required<boolean>();
 
   readonly selectedParticipantChange = output<string | null>();
   readonly addParticipant = output<void>();
   readonly hpChange = output<{id: string; delta: number}>();
   readonly heroismChange = output<{id: string; delta: number}>();
   readonly removeParticipant = output<string>();
+  readonly attackStart = output<InitiativeSlot>();
 
   protected typeLabel(type: ParticipantType): string {
     return TYPE_LABELS[type];
@@ -57,6 +42,18 @@ export class BolCombatGridComponent {
     if (arme.portee) parts.push(`Portée : ${arme.portee}`);
     if (arme.notes) parts.push(arme.notes);
     return parts.join('\n');
+  }
+
+  protected autoEtats(slot: InitiativeSlot): string[] {
+    const v = slot.vitaliteCourante;
+    if (v < -5) return ['mort'];
+    if (v < 0) return ['coma'];
+    if (v === 0) return ['hors-combat'];
+    return [];
+  }
+
+  protected warningPouvoirs(slot: InitiativeSlot): string[] {
+    return slot.pouvoirs.filter((p) => p.avertissement_combat).map((p) => p.nom);
   }
 
   protected armureTooltip(armure: InitiativeSlot['armures'][number]): string {

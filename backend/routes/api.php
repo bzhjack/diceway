@@ -19,6 +19,7 @@ use App\Http\Controllers\Bol\BolPnjController;
 use App\Http\Controllers\Bol\BolDemonController;
 use App\Http\Controllers\Bol\BolDashboardController;
 use App\Http\Controllers\Bol\BolScenarioController;
+use App\Http\Controllers\Bol\BolCombatReferenceController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -72,6 +73,10 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     // Gestion des traits régionaux
     Route::get('/bol/trait/avantages', [BolTraitController::class, 'getAllAvantages']);
     Route::get('/bol/trait/desavantages', [BolTraitController::class, 'getAllDesavantages']);
+    // Références de combat
+    Route::get('/bol/combat/options', [BolCombatReferenceController::class, 'getCombatOptions']);
+    Route::get('/bol/combat/heroic-options', [BolCombatReferenceController::class, 'getHeroicOptions']);
+    Route::get('/bol/combat/difficultes', [BolCombatReferenceController::class, 'getDifficultes']);
 
     // Gestion des carrieres
     Route::get('/bol/carrieres', [BolCarriereController::class, 'getAll']);
@@ -123,6 +128,8 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::get('/bol/heros/{id}', [BolHerosController::class, 'getOne']);
     Route::post('/bol/heros/create', [BolHerosController::class, 'create']);
     Route::post('/bol/heros/update', [BolHerosController::class, 'update']);
+    Route::post('/bol/heros/create/advanced', [BolHerosController::class, 'createAdvanced']);
+    Route::post('/bol/heros/update/advanced', [BolHerosController::class, 'updateAdvanced']);
     Route::delete('/bol/heros/delete/{id}', [BolHerosController::class, 'delete']);
 
     // Gestion de Pnj

@@ -27,6 +27,7 @@
         <p-inputNumber
           [ngModel]="e.dice"
           (ngModelChange)="entryChange.emit({dice: $event, acceptEchecCritique: false, depenseHeroisme: false})"
+          (onKeyDown)="$event.key === 'Enter' && diceEnter.emit()"
           [min]="2" [max]="12"
           [inputStyle]="{'width':'3.4rem','text-align':'center','font-size':'1.1rem','font-weight':'700'}"
         />

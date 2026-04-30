@@ -14,22 +14,22 @@ class BolPouvoirSeeder extends Seeder
     public function run(): void
     {
         $pouvoirs = [
-            ['id' => 1, 'pouvoir' => 'Armes améliorées', 'description' => 'Démons avec des armes naturelles ou maîtrisant des armes humaines. Bonus aux attaques.'],
-            ['id' => 2, 'pouvoir' => 'Armure', 'description' => 'Peau épaisse ou plaques osseuses offrant une protection physique de d6-2 (2).'],
-            ['id' => 3, 'pouvoir' => 'Attaques dévastatrices', 'description' => 'Attaques plus puissantes, infligeant des dégâts d\'une catégorie supérieure.'],
-            ['id' => 4, 'pouvoir' => 'Chair malléable', 'description' => 'Corps malléable, pouvant prendre des formes variées. Impossible à emprisonner sans sorcellerie.'],
-            ['id' => 5, 'pouvoir' => 'Cuirassé', 'description' => 'Protection élevée d6 (4), mais coûte deux points de pouvoir.'],
-            ['id' => 6, 'pouvoir' => 'Faculté de parole', 'description' => 'Le démon peut parler comme un humain.'],
-            ['id' => 7, 'pouvoir' => 'Forme humaine', 'description' => 'Peut prendre une apparence humaine, mais retourne à sa forme démoniaque en cas de combat ou blessure.'],
-            ['id' => 8, 'pouvoir' => 'Intangible', 'description' => 'Pas de corps physique, seulement vulnérable à la sorcellerie ou à l\'alchimie.'],
-            ['id' => 9, 'pouvoir' => 'Poison', 'description' => 'Contact toxique provoquant paralysie et mort si le jet de vigueur est raté.'],
-            ['id' => 10, 'pouvoir' => 'Progéniture', 'description' => 'Produit 1d6 rejetons par semaine, qui évoluent en démons de catégorie inférieure.'],
-            ['id' => 11, 'pouvoir' => 'Régénération', 'description' => 'Régénère 1 point de dégâts par round et guérit des coups précis en deux rounds.'],
-            ['id' => 12, 'pouvoir' => 'Savoir spécial', 'description' => 'Possède une carrière au rang 6.'],
-            ['id' => 13, 'pouvoir' => 'Séducteur', 'description' => 'Charme irrésistible permettant de séduire et contrôler des individus faibles ou des héros.'],
-            ['id' => 14, 'pouvoir' => 'Sorcellerie', 'description' => 'Capable de lancer des sorts avec des points de pouvoir selon sa catégorie démoniaque.'],
-            ['id' => 15, 'pouvoir' => 'Télépathie', 'description' => 'Implante des messages dans l\'esprit d\'autrui et peut lire les pensées.'],
-            ['id' => 16, 'pouvoir' => 'Vulnérabilité', 'description' => 'Une faiblesse double les dégâts reçus par certains éléments (feu, magie, etc.).'],
+            ['id' =>  1, 'pouvoir' => 'Armes améliorées',    'description' => 'Dé de bonus à toutes les attaques (griffes, crocs, lames, bec, queue, etc.).', 'avantage_attaque' => true],
+            ['id' =>  2, 'pouvoir' => 'Armure',              'description' => 'Protection d6-2 (2).'],
+            ['id' =>  3, 'pouvoir' => 'Attaques dévastatrices', 'description' => 'Les dégâts passent à la catégorie de taille supérieure.', 'degats_superieurs' => true],
+            ['id' =>  4, 'pouvoir' => 'Chair malléable',     'description' => 'Corps déformable ; aucun lien ni prison ne le retient, sauf sorcellerie.'],
+            ['id' =>  5, 'pouvoir' => 'Cuirassé',            'description' => 'Protection d6 (4) ; compte comme 2 pouvoirs.'],
+            ['id' =>  6, 'pouvoir' => 'Faculté de parole',   'description' => 'Peut parler comme un humain.'],
+            ['id' =>  7, 'pouvoir' => 'Forme humaine',       'description' => 'Prend l\'apparence humaine ; retour à la forme démoniaque dès qu\'il se bat ou est blessé.'],
+            ['id' =>  8, 'pouvoir' => 'Intangible',          'description' => 'Pas de corps physique dans cette dimension ; blessé uniquement par sorcellerie ou alchimie.', 'intangible' => true, 'avertissement_combat' => true],
+            ['id' =>  9, 'pouvoir' => 'Poison',              'description' => 'Contact paralysant ; jet de vigueur Difficile (−2) pour éviter la paralysie. Paralysé = mort dans l\'heure sauf nouveau jet Difficile (−2) réussi.', 'avertissement_combat' => true],
+            ['id' => 10, 'pouvoir' => 'Progéniture',         'description' => 'Produit 1d6 rejetons par semaine, considérés comme piétaille la 1re semaine puis comme démons mineurs d\'une catégorie en dessous.'],
+            ['id' => 11, 'pouvoir' => 'Régénération',        'description' => 'Récupère 1 PV par round ; se débarrasse des effets d\'un coup précis au bout de 2 rounds.', 'regeneration' => true],
+            ['id' => 12, 'pouvoir' => 'Savoir spécial',      'description' => 'Possède une carrière au rang 6.'],
+            ['id' => 13, 'pouvoir' => 'Séducteur',           'description' => 'Peut asservir 1d6+6 piétaille. Un héros résiste via un jet d\'esprit.', 'avertissement_combat' => true],
+            ['id' => 14, 'pouvoir' => 'Sorcellerie',         'description' => 'Réserve de pouvoir selon la catégorie : mineur 2, inférieur 5, majeur 10.'],
+            ['id' => 15, 'pouvoir' => 'Télépathie',          'description' => 'Communication mentale et lecture de pensées.'],
+            ['id' => 16, 'pouvoir' => 'Vulnérabilité',       'description' => 'Ajoute un pouvoir supplémentaire mais donne une faiblesse : un élément inflige le double des dégâts (magie, feu, électricité, fer, acide...), ou un élément inoffensif pour les humains devient dommageable (lumière du jour, eau, musique, symboles...).', 'avertissement_combat' => true],
         ];
 
 

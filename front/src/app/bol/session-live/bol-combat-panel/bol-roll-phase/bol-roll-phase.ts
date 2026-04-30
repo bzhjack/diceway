@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, Component, OnInit, computed, effect, input, output, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, computed, effect, input, output, signal, viewChildren} from '@angular/core';
 import {InitiativeSlot, ReactionResult} from '../bol-combat-panel';
+import {CATEGORY_LABELS} from '../combat.constants';
 import {RpCardComponent} from './rp-card/rp-card';
 
 export interface RollEntry {
@@ -26,17 +27,6 @@ const DEFAULT_ROLL_ENTRY: RollEntry = {
   depenseHeroisme: false,
 };
 
-const CATEGORY_LABELS: Record<ReactionResult, string> = {
-  legendaire: 'Légendaire ★★',
-  heroique: 'Héroïque ★',
-  reussite: 'Réussite',
-  rival: 'Rival',
-  coriace: 'Coriace',
-  echec: 'Échec',
-  pietaille: 'Piétaille',
-  'echec-critique': 'Échec critique',
-};
-
 @Component({
   selector: 'app-bol-roll-phase',
   imports: [RpCardComponent],
@@ -53,6 +43,8 @@ export class BolRollPhaseComponent implements OnInit {
   readonly allHeroesRolledChange = output<boolean>();
 
   protected readonly rollEntries = signal<Record<string, RollEntry>>({});
+
+  private readonly rpCards = viewChildren(RpCardComponent);
 
   constructor() {
     effect(() => this.allHeroesRolledChange.emit(this.allHeroesRolled()));
@@ -80,6 +72,16 @@ export class BolRollPhaseComponent implements OnInit {
       };
     }
     this.rollEntries.set(entries);
+  }
+
+  protected focusNextCard(currentId: string): void {
+    const heroes = this.heroesInOrder();
+    const cards = this.rpCards();
+    const currentIndex = heroes.findIndex((s) => s.id === currentId);
+    const nextIndex = currentIndex + 1;
+    if (nextIndex < cards.length) {
+      cards[nextIndex].focusDiceInput();
+    }
   }
 
   protected getEntry(id: string): RollEntry {

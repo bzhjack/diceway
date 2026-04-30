@@ -1,277 +1,294 @@
 # Actions et combat
 
-Pages source principales: p. 56-65
+Pages source : p. 56-66
 
 ## Jet d'action
 
-Formule generale:
+Formule générale :
 
-`2d6 + attribut approprie + carriere appropriee si hors combat`
+`2d6 + attribut approprié + carrière appropriée si hors combat`
 
-En combat:
+En combat :
 
-`2d6 + attribut approprie + aptitude de combat appropriee`
+`2d6 + attribut approprié + aptitude de combat appropriée`
 
-Seuil standard:
+Seuil standard :
 
-- Reussite a `9+`
-- Echec en dessous de `9`
+- Réussite à `9+`
+- Échec en dessous de `9`
 
-Regles absolues:
+Règles absolues :
 
-- `12 naturel`: reussite automatique
-- `2 naturel`: echec automatique
+- `12 naturel` : réussite automatique
+- `2 naturel` : échec automatique
 
-## Des de bonus et de malus
+## Dés de bonus et de malus
 
-- Avantage: lancer `3d6` et garder les `2` meilleurs.
-- Desavantage: lancer `3d6` et garder les `2` moins bons.
-- Deux avantages applicables: `4d6`, garder les `2` meilleurs.
-- Deux desavantages applicables: `4d6`, garder les `2` moins bons.
+- Avantage : lancer `3d6` et garder les `2` meilleurs.
+- Désavantage : lancer `3d6` et garder les `2` moins bons.
+- Deux avantages applicables : `4d6`, garder les `2` meilleurs.
+- Deux désavantages applicables : `4d6`, garder les `2` moins bons.
 
-## Difficulte et portee
+## Difficulté et portée
 
-| Difficulte | Modificateur | Portee associee des armes a distance |
+| Difficulté | Modificateur | Portée associée des armes à distance |
 | --- | --- | --- |
-| Tres facile | `+2` | - |
+| Très facile | `+2` | - |
 | Facile | `+1` | bout portant |
 | Moyenne | `0` | courte |
 | Ardue | `-1` | moyenne |
 | Difficile | `-2` | longue |
-| Tres difficile | `-4` | tres longue |
-| Impossible | `-6` | extreme |
-| Heroique | `-8` | maximale |
+| Très difficile | `-4` | très longue |
+| Impossible | `-6` | extrême |
+| Héroïque | `-8` | maximale |
 
-## Succes heroique et legendaire
+## Succès héroïque et légendaire
 
-Succes heroique:
+Succès héroïque :
 
-- Obtenu sur `12 naturel`, sauf si l'action n'etait possible que grace a cette reussite automatique.
-- Hors combat, c'est une reussite exceptionnelle avec effet superieur au resultat normal.
-- En combat, il ouvre des options speciales.
+- Obtenu sur `12 naturel`, sauf si l'action n'était possible que grâce à cette réussite automatique.
+- Peut aussi être obtenu en convertissant une réussite normale en dépensant `1 point d'héroïsme` (avec accord du MJ).
+- Hors combat : réussite exceptionnelle avec effet supérieur au résultat normal.
+- En combat : permet de choisir une option de succès héroïque.
 
-Succes legendaire:
+Succès légendaire :
 
-- Si un succes heroique est obtenu, depenser `1 point d'heroisme` permet de le convertir en succes legendaire.
-- Hors combat, c'est un succes exceptionnel avec un benefice notable supplementaire.
-- En combat, il permet de prendre deux options heroiques.
+- Uniquement accessible sur `12 naturel` (double 6). On ne peut pas convertir une réussite normale en héroïque puis en légendaire via deux dépenses de PH.
+- Si un succès héroïque est obtenu (double 6), dépenser `1 point d'héroïsme` permet de le convertir en succès légendaire.
+- En combat : permet de choisir **deux** options de succès héroïque (la même option peut être choisie deux fois si le MJ l'estime cohérent).
 
-## Echec critique
+## Échec critique
 
-- Sur `2 naturel`, le personnage echoue automatiquement.
-- Le joueur peut choisir de transformer cet echec automatique en echec critique.
-- Il decrit alors une issue franchement defavorable, au moins pour le round en cours et le suivant, ou pour le futur immediat hors combat.
-- Ce type d'acceptation volontaire peut justifier l'octroi d'`1 point d'heroisme`.
+- Sur `2 naturel`, le personnage échoue automatiquement.
+- Le joueur peut choisir de transformer cet échec automatique en échec critique.
+- Il décrit alors une issue franchement défavorable, au moins pour le round en cours et le suivant.
+- Ce type d'acceptation volontaire peut justifier l'octroi d'`1 point d'héroïsme`.
 
-## Points d'heroisme
+## Points d'héroïsme
 
-Usages releves:
+Usages en jeu :
 
-- Transformer un succes heroique en succes legendaire.
-- Transformer une reussite normale en succes heroique si le MJ l'accepte dans le contexte.
-- Interrompre une action apres avoir retarde la sienne.
-- `Defier la mort`.
-- `Faveur divine`: relancer et garder le second resultat.
-- `Juste une egratignure`: perdre sa prochaine action et recuperer `1d6`, jusqu'au montant des degats tout juste encaisses.
-- `Parade in extremis`: annuler un coup subi, mais le bouclier ou l'arme utilises sont brises.
-- `Coup de chance` ou negociation contextuelle avec le MJ pour integrer un element favorable de scene.
-- Reutiliser certaines capacites a usage journalier comme `cri de guerre` ou `inspirateur`.
+- **Coup de chance** : suggérer un élément favorable de scène, soumis à l'approbation du MJ. Ne peut pas apporter de changement majeur ni modifier un élément déjà établi.
+- **Défier la mort** : si la vitalité tombe entre `-1` et `-5`, dépenser `1 PH` pour la ramener immédiatement à `0` (vivant mais inconscient). Si la vitalité tombe en dessous de `-5`, dépenser `1 PH` pour se stabiliser (reste inconscient, récupère 1 vitalité/jour jusqu'à score positif).
+- **Faveur divine** : relancer tous les dés d'un jet d'action (y compris les dés de bonus), conserver le résultat du second jet.
+- **Juste une égratignure** : perdre sa prochaine action et lancer `1d6` pour récupérer ce nombre de points de vitalité (sans dépasser le nombre de dégâts tout juste encaissés lors de cette attaque).
+- **Parade in extremis** : annuler les dégâts d'une attaque en interposant bouclier ou arme ; ce bouclier/arme est brisé(e) et devient inutilisable.
+- **Négocier avec le MJ** : tout autre avantage ponctuel non couvert par les options ci-dessus, soumis à l'accord du MJ.
+- **Succès héroïque** : convertir une réussite normale en succès héroïque (accord du MJ requis).
+- **Succès légendaire** : convertir un succès héroïque (double 6) en succès légendaire.
+- **Interrompre une action** : après avoir retardé la sienne, interrompre l'action d'un autre protagoniste.
+- Réutiliser certaines capacités à usage journalier (ex. : cri de guerre, inspirateur).
 
-## Jet de reaction
+Récupération des points d'héroïsme : tous les points utilisés sont récupérés **à la fin d'une aventure**. Le total ne peut pas dépasser le score de départ, sauf bonus issu d'un échec critique volontaire.
 
-Formule:
-
-`2d6 + esprit + initiative + modificateurs`
-
-Seuil:
-
-- Reussite a `9+`
-
-Effets:
-
-| Resultat | Effet |
-| --- | --- |
-| Echec critique | Le heros agit en dernier tout le combat; au 1er round il reste interdit et ne beneficie pas de son bouclier. |
-| Echec | Le heros agit avant la pietaille, mais apres tous les autres. |
-| Reussite | Le heros agit avant tout le monde. |
-| Succes heroique | Comme une reussite, mais au 1er round seuls les heros et rivaux peuvent agir. |
-| Succes legendaire | Comme un succes heroique, et `+1` a tous les jets d'attaque pendant toute la rencontre. |
-
-Ordre de reaction:
-
-1. Heros en succes legendaire
-2. Heros en succes heroique
-3. Heros en succes
-4. Rivaux
-5. Coriaces
-6. Heros en echec
-7. Pietaille
-8. Heros en echec critique
-
-Effets speciaux du premier round:
-
-- Face a un succes heroique ou legendaire d'un heros, les `coriaces` et la `pietaille` ne jouent pas au 1er round.
-
-Modificateurs au jet de reaction:
-
-- Surpris ou pris en embuscade: `Ardue`, donc `-1`
-- Poser une embuscade ou surprendre l'ennemi: `Tres facile`, donc `+2`
-- Une carriere utile peut ajouter son rang si le MJ l'accorde.
-- Si un coriace ou un rival ennemi possede de l'initiative, prendre la plus haute valeur d'initiative adverse et l'appliquer en malus au jet de reaction des heros.
-
-## Retarder son action et interrompre
-
-- Un personnage peut retarder son action.
-- Il agit alors plus tard dans le round, ou renonce a agir si rien ne justifie de se declencher.
-- Pour interrompre l'action d'un autre protagoniste, depenser `1 point d'heroisme`.
-
-## Deplacement
-
-Gestion par defaut:
-
-- Le systeme fonctionne de facon abstraite, sans quadrillage obligatoire.
-- Le MJ decrit, les joueurs proposent, le bon sens prime.
-
-Equivalent quadrille si necessaire:
-
-- Deplacement normal: `7,5 m + 1,5 m par point d'agilite` par round
-- Course: distance x2
-- Sprint: distance x4
-
-## Jet d'attaque
-
-Formule:
-
-`2d6 + agilite + melee ou tir - defense de la cible +/- modificateurs`
-
-Exception:
-
-- Le MJ peut parfois autoriser `vigueur` a la place d'`agilite`, notamment pour certaines attaques a mains nues ou luttes.
-
-Seuil:
-
-- Touche a `9+`
-
-Rappel:
-
-- La defense de la cible se soustrait toujours au total.
-- La distance agit comme un modificateur de difficulte.
-
-## Degats
-
-Formules de base:
-
-| Type d'attaque | Degats |
-| --- | --- |
-| Mains nues | `d3 + vigueur/2` |
-| Arme improvisee en melee | `d3 + vigueur` |
-| Arme improvisee jetee | `d3 + vigueur/2` |
-| Arme legere | `d6M + vigueur` en melee, `d6M + vigueur/2` a distance |
-| Arme moyenne | `d6 + vigueur` en melee, `d6 + vigueur/2` a distance |
-| Arme lourde | `d6B + vigueur` en melee, `d6B + vigueur/2` a distance |
-
-Modificateurs notables:
-
-- `Poings d'acier`: ajoute toute la vigueur aux degats a mains nues.
-- `Tireur puissant`: ajoute toute la vigueur avec un type d'arme a distance choisi.
-- Une carriere martiale peut, dans un cas exceptionnel et avec accord du MJ, ajouter son rang soit a l'attaque, soit aux degats, jamais aux deux.
-
-## Protection
-
-- L'armure protege en absorbant tout ou partie des degats selon sa categorie.
-- Les boucliers influencent surtout les chances d'etre touche.
-
-Valeurs synthetiques:
-
-| Protection | Valeur |
-| --- | --- |
-| Aucune | `0` |
-| Legere | `d6-3 (1)` |
-| Moyenne | `d6-2 (2)` |
-| Lourde | `d6-1 (3)` |
-| Casque | `+1 protection` |
-
-## Options de combat
-
-### Attaque au defaut de l'armure
-
-- Appliquer un malus d'attaque egal a la protection fixe de l'armure visee.
-- Si l'attaque touche, ignorer l'armure.
-
-### Attaque intrepide
-
-- `-2 defense`
-- `+2 attaque`
-- Perte du benefice du bouclier et de certaines parades.
-
-### Combat a deux armes
-
-Mode parade:
-
-- La main secondaire agit comme un petit bouclier.
-- Elle donne l'equivalent de `-1` a une attaque subie.
-- En contrepartie: `-1` a l'attaque principale.
-
-Mode double frappe:
-
-- 1 seul jet d'attaque a `-1`.
-- Les degats montent d'une categorie:
-- 2 armes legeres => degats d'arme moyenne
-- 1 arme moyenne + 1 legere, ou 2 armes moyennes => degats d'arme lourde
-
-### Defense totale
-
-- Aucune attaque ce round.
-- `+2 defense`
-- Se cumule avec bouclier et autres bonus defensifs pertinents.
-
-### Posture defensive
-
-- `+1 defense`
-- `-1 attaque`
-
-### Posture offensive
-
-- `+1 attaque`
-- `-1 defense`
-
-## Options de succes heroique en combat
+## Options de succès héroïque en combat
 
 | Option | Effet |
 | --- | --- |
-| Carnage | Faire immediatement une attaque supplementaire. |
-| Coup devastateur | `+6 degats`. |
-| Coup precis | Blessure localisee, effet choisi avec le MJ: de de malus sur certains actes, membre sectionne, armure naturelle reduite, etc. |
-| Desarmement | L'adversaire perd son arme ou son objet tenu. |
-| Massacrer la pietaille | Les degats deviennent le nombre de pietaille eliminees. |
-| Renversement | Jeter l'adversaire a terre ou en arriere; apres s'etre releve, il subit un de malus a sa prochaine action. |
+| Carnage | Effectuer immédiatement une nouvelle attaque (même adversaire ou adversaire différent). Pas de dépense de PH pour cette attaque supplémentaire. |
+| Coup dévastateur | `+6 dégâts`. |
+| Coup précis | Dégâts normaux + imposer un dé de malus à la cible sur un type spécifique de jets (attaque, vue, déplacement…). Peut aussi trancher un tentacule, réduire l'armure naturelle d'une créature, etc. (accord MJ). |
+| Désarmement | L'adversaire perd son arme ou objet tenu (au lieu de subir des dégâts). |
+| Massacrer la piétaille | Les dégâts infligés représentent le nombre d'adversaires de type piétaille mis hors combat (pas forcément tués). |
+| Renversement | Jeter l'adversaire à terre (taille max. supérieure d'une catégorie à la vôtre). L'adversaire qui se relève subit un dé de malus à sa prochaine action. |
 
-Succes legendaire:
+## Jet de réaction
 
-- Choisir `2` options heroiques.
-- La meme option peut etre choisie deux fois si le MJ estime cela coherent.
+Formule :
+
+`2d6 + esprit + initiative + modificateurs` — réussite à `9+`
+
+Résultats :
+
+| Résultat | Effet |
+| --- | --- |
+| Échec critique | Agit en dernier tout le combat. Au 1er round : reste interdit, ne peut pas agir et ne bénéficie pas de son bouclier en défense. |
+| Échec | Agit avant la piétaille, mais après tous les autres. |
+| Réussite | Agit avant tout le monde. |
+| Succès héroïque | Comme réussite. De plus, au 1er round seuls les héros et les rivaux peuvent agir (coriaces et piétaille bloqués). |
+| Succès légendaire | Comme succès héroïque + `+1` à tous les jets d'attaque durant toute la rencontre. |
+
+Ordre de réaction :
+
+| Ordre | Personnage |
+| --- | --- |
+| 1 | Héros ayant obtenu un succès légendaire |
+| 2 | Héros ayant obtenu un succès héroïque |
+| 3 | Héros ayant obtenu un succès |
+| 4 | Rivaux |
+| 5 | Coriaces (pas au 1er round si un héros a succès héroïque/légendaire) |
+| 6 | Héros ayant obtenu un échec |
+| 7 | Piétaille (pas au 1er round si un héros a succès héroïque/légendaire) |
+| 8 | Héros ayant obtenu un échec critique |
+
+Notes :
+
+- Les PNJ ne font **pas** de jet de réaction ; ils agissent selon la table ci-dessus.
+- Si plusieurs héros obtiennent le même résultat : ils décident entre eux ou agissent par ordre décroissant d'agilité. En cas d'égalité parfaite, leurs actions sont simultanées.
+- Un nouveau combat (pause entre deux affrontements) réclame un nouveau jet de réaction.
+
+Modificateurs au jet de réaction :
+
+- Surpris ou pris en embuscade : `Ardue` (−1)
+- Tend une embuscade ou surprend l'ennemi : `Très facile` (+2)
+- Carrière utile accordée par le MJ : +rang dans la carrière
+- Si un coriace ou un rival ennemi possède de l'initiative : appliquer la plus haute valeur d'initiative adverse en malus au jet de réaction des héros.
+
+## Retarder son action et interrompre
+
+- Un personnage peut retarder son action : il agit plus tard dans le round, ou renonce à agir si rien ne justifie de se déclencher.
+- Pour interrompre l'action d'un autre protagoniste après avoir retardé la sienne : dépenser `1 point d'héroïsme`.
+
+## Déplacement et distances
+
+Le système fonctionne de façon abstraite, sans quadrillage obligatoire. Le MJ décrit la scène, les joueurs expliquent les déplacements ; le bon sens prime.
+
+Si un quadrillage est utilisé :
+
+- Déplacement normal : `7,5 m + 1,5 m par point d'agilité` par round
+- Course : distance ×2
+- Sprint : distance ×4
+
+Un jet d'agilité peut être demandé pour déterminer qui arrive en premier à un endroit précis ou si un fuyard échappe à un poursuivant.
+
+## Jet d'attaque
+
+Formule :
+
+`2d6 + agilité* + mêlée (ou tir) − défense de la cible +/− modificateurs`
+
+*Le MJ peut autoriser `vigueur` à la place d'`agilité` (ex. : bagarre à mains nues).
+
+Seuil : `9+` pour toucher.
+
+La défense de la cible se soustrait toujours au total. La distance agit comme un modificateur de difficulté.
+
+### Portée des armes à distance
+
+| Facteur de portée | Modificateur au jet d'attaque |
+| --- | --- |
+| Bout portant | +1 |
+| Courte | 0 |
+| Moyenne | −1 |
+| Longue | −2 |
+| Très longue | −4 |
+| Extrême | −6 |
+| Maximale | −8 |
+
+La portée de base d'une arme à distance est indiquée dans le tableau des armes (p. 49). Chaque facteur de portée au-delà de la portée de base accroît la difficulté d'un cran.
+
+## Dégâts
+
+| Arme | Dégâts | Bonus de vigueur |
+| --- | --- | --- |
+| Mains nues | d3 | + vigueur/2 (arrondi à l'inférieur) |
+| Improvisée | d3 | + vigueur (mêlée) ou vigueur/2 (tir) |
+| Légère | d6M | + vigueur (mêlée) ou vigueur/2 (tir) |
+| Moyenne | d6 | + vigueur (mêlée) ou vigueur/2 (tir) |
+| Lourde | d6B | + vigueur (mêlée) ou vigueur/2 (tir) |
+
+- **d6M** (dé de malus) : lancer 2d6, garder le moins bon.
+- **d6B** (dé de bonus) : lancer 2d6, garder le meilleur.
+- Les personnages ayant moins de `0` en vigueur ne peuvent pas manier les armes lourdes.
+- Les dégâts sont soustraits à la vitalité de la cible, après déduction de la protection de l'armure.
+
+## Protection (armures)
+
+L'armure protège en absorbant tout ou partie des dégâts. Les boucliers influencent surtout les chances d'être touché (défense).
+
+| Protection | Valeur fixe | Dé |
+| --- | --- | --- |
+| Aucune | 0 | — |
+| Légère | 1 | d6−3 |
+| Moyenne | 2 | d6−2 |
+| Lourde | 3 | d6−1 |
+| Casque | +1 protection | — |
+
+## Carrières et combat
+
+En règle générale, une carrière martiale (soldat, gladiateur, pirate, mercenaire…) ne confère pas de bonus direct aux aptitudes de combat. Dans des situations exceptionnelles, le MJ peut permettre qu'une carrière ajoute son rang à un jet d'attaque **ou** à un jet de dégâts — jamais les deux simultanément.
+
+## Options de combat
+
+> Ces options peuvent ralentir le jeu. Le MJ décide de les autoriser en partie ou en totalité. Il peut réserver leur usage aux personnages possédant au moins une carrière de combattant.
+
+### Attaque au défaut de l'armure
+
+Viser une zone non protégée ou un point faible de l'armure adverse. Appliquer la valeur de **protection fixe** de l'armure en malus au jet d'attaque (−1 légère, −2 moyenne, −3 lourde). Si l'attaque touche malgré ce malus, les dégâts ignorent entièrement la protection de l'armure. Cette option peut aussi permettre de trouver le défaut de l'armure naturelle d'une créature (accord MJ).
+
+### Attaque intrépide
+
+Attaquer avec la plus extrême témérité. Pas de bénéfice de bouclier ni d'arme secondaire de parade.
+
+- `+2` au jet d'attaque
+- `−2` en défense
+
+### Combat à deux armes
+
+Uniquement avec des armes légères ou moyennes.
+
+**Mode parade** : l'arme secondaire agit comme un petit bouclier.
+
+- `+1` en défense contre une attaque subie
+- `−1` au jet d'attaque de l'arme principale
+
+**Mode double frappe** : un seul jet d'attaque à `−1`. Les dégâts montent d'une catégorie :
+
+- 2 armes légères → dégâts d'arme moyenne
+- 1 moyenne + 1 légère, ou 2 armes moyennes → dégâts d'arme lourde
+
+### Défense totale
+
+Consacrer le round entier à esquiver et parer. Pas d'attaque.
+
+- `+2` en défense
+- Se cumule avec bouclier et arme secondaire de parade (mode parade du combat à deux armes)
+
+### Posture défensive
+
+- `+1` en défense
+- `−1` au jet d'attaque
+
+### Posture offensive
+
+- `+1` au jet d'attaque
+- `−1` en défense
 
 ## Blessures, inconscience et mort
 
-| Etat | Effet |
+| Vitalité | Effet |
 | --- | --- |
-| Vitalite `> 0` | Le personnage agit normalement. |
-| Vitalite `= 0` | Le personnage est hors de combat. Au round suivant: soit inconscient jusqu'a la fin du combat puis revient a la moitie de sa vitalite; soit depense `1 point d'heroisme` pour reprendre ses sens plus vite et revenir ensuite a la moitie. |
-| Vitalite `< 0` | Le personnage est dans le coma et perd `1 vitalite` par round jusqu'a stabilisation, aide medicale, mort ou usage d'heroisme. |
-| Vitalite `< -5` | Mort, sauf si un usage adequat de `Defier la mort` s'applique. |
+| `> 0` | Le personnage agit normalement. |
+| `= 0` | Hors de combat, s'effondre. Au round suivant : a) sombre dans l'inconscience (reprend connaissance à la fin du combat, remonte à vitalité/2 arrondie au supérieur) ; ou b) dépense 1 PH pour reprendre ses esprits au round suivant (remonte également à vitalité/2). |
+| `< 0` | Dans le coma et mourant : perd `1 vitalité` par round jusqu'à soins, mort ou usage de PH (Défier la mort). |
+| `≤ −6` | Mort, sauf usage adéquat de **Défier la mort**. |
 
-## Recuperation
+Exception — bagarre à mains nues : le personnage perd simplement connaissance (pas de coma ni de perte progressive de vitalité). Il reprend ses esprits après une quinzaine de minutes.
 
-Apres le combat:
+## Secourir un mourant
 
-- Si le personnage est encore a `> 0`, ou a `0` mais peut souffler 10 a 15 minutes avec eau ou vin, il recupere la moitie des points de vitalite perdus, arrondi au superieur.
-- Les degats de bagarre purement a mains nues recuperent entierement apres ce court repos.
-- Ensuite, recuperation normale: `1 point de vitalite par jour` si l'activite reste raisonnable.
-- `Recuperation rapide`: ajoute `+1` juste apres le combat et garantit `1 point par jour` meme en etant actif.
-- `Souffreteux`: pas de recuperation naturelle normale.
+Avant qu'un personnage n'atteigne `−6`, un allié peut tenter de le stabiliser :
 
-Soins medicaux:
+- Jet d'action de difficulté **Moyenne** (0), faisant intervenir l'`esprit` et une carrière de soins appropriée.
+- La difficulté augmente d'**un niveau par point de vitalité négatif** (ex. : vitalité = −3 → difficulté Très difficile, −4).
+- En cas de réussite : le personnage est stabilisé (inconscient), ne perd plus de vitalité, récupère 1 vitalité par jour jusqu'à score positif.
 
-- Une carriere de soin adaptee peut stabiliser un personnage en vitalite negative.
-- La difficulte augmente d'un cran par point de vitalite negatif.
-- En cas de reussite, le personnage cesse de perdre des points.
+## Récupération
+
+Après le combat :
+
+- Si le personnage est à `> 0`, ou à `0` mais peut se reposer 10-15 minutes avec eau ou vin, il récupère la **moitié des points de vitalité perdus**, arrondie au supérieur.
+- Les dégâts de bagarre purement à mains nues récupèrent entièrement après ce court repos.
+- Récupération normale ensuite : `1 point de vitalité par jour` si l'activité reste raisonnable.
+
+Soins médicaux (carrière de soin adaptée) :
+
+- Récupération immédiate de `rang du soigneur` en vitalité.
+- Puis jet d'action Moyenne pour doubler le rythme : récupère 2 vitalités par jour.
+- La difficulté du jet de soins augmente d'un niveau par point de vitalité négatif de la cible.
+
+## Vitalité des PNJ
+
+- **Rivaux** : créés comme des héros, vitalité autour de `10` (ajustée par la vigueur).
+- **Coriaces** : `5` à `9` points de vitalité.
+- **Piétaille** : `1` à `3` points de vitalité. Une seule attaque bien placée suffit généralement. Tués ou assommés (choix du joueur) dès qu'ils tombent à `0` ou moins.

@@ -44,6 +44,11 @@ export interface BolScenarioPouvoirModel {
   pouvoir_id: number;
   pouvoir: string | null;
   detail: string | null;
+  avantage_attaque: boolean;
+  degats_superieurs: boolean;
+  regeneration: boolean;
+  intangible: boolean;
+  avertissement_combat: boolean;
 }
 
 export interface BolScenarioDemonModel {
@@ -107,7 +112,7 @@ export interface BolScenarioPjModel {
     id: string | null;
     origines: {nom: string | null; avatar: string | null; joueur: string | null};
     ressources?: {vitalite: number; heroisme: number};
-    attributs?: {esprit: number};
+    attributs?: {vigueur: number; agilite: number; esprit: number; aura: number};
     combat?: {defense: number; initiative: number; melee: number; tir: number};
     armes?: {arme?: {arme: string; degats: string | null; type: 'M' | 'T'; portee: string | null; notes: string | null} | null}[];
     armures?: {armure?: {armure: string; protection: string | null; malus: string | null} | null}[];

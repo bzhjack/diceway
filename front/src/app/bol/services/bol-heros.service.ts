@@ -135,6 +135,14 @@ export class BolHerosService {
     return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/update`, hero);
   }
 
+  createHerosAdvanced(hero: Record<string, unknown> | BolHerosModel): Observable<any> {
+    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/create/advanced`, hero);
+  }
+
+  updateHerosAdvanced(hero: Record<string, unknown> | BolHerosModel): Observable<any> {
+    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/update/advanced`, hero);
+  }
+
   heroes(): Observable<BolHerosModel[]> {
     return this.http.get<BolHerosModel[]>(`${environment.apiBase}/api/bol/heros`);
   }

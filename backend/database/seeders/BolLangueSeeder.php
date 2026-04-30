@@ -22,15 +22,16 @@ class BolLangueSeeder extends Seeder
             ["id" => 6, "langue" => "Festreli", "description" => "Dialecte originaire du lémurien, devenu presque inintelligible pour les locuteurs du lémurien en raison de son éloignement évolutif."],
             ["id" => 7, "langue" => "Grooth", "description" => "Langage rudimentaire des tribus des grooth, composé de grognements, de grimaces, de tapements du pied et de mouvements simiesques. Aucune forme écrite, inusité en dehors des tribus des grooth."],
             ["id" => 8, "langue" => "Kashtien", "description" => "Langue propre aux habitants des marais de Kasht, chaque tribu utilisant une variante qui lui est propre."],
-            ["id" => 9, "langue" => "Lémurien", "description" => "Langue la plus couramment parlée en Lémurie, mais chaque cité a son propre dialecte lémurien. Les voyageurs peuvent avoir du mal à comprendre les gens du coin, nécessitant parfois un jet d'esprit pour communiquer avec ceux d'autres cités."],
+            ["id" => 9, "langue" => "Lémurien", "description" => "Langue la plus couramment parlée en Lémurie, mais chaque cité a son propre dialecte lémurien. Les voyageurs peuvent avoir du mal à comprendre les gens du coin, nécessitant parfois un jet d'esprit pour communiquer avec ceux d'autres cités.", "est_lemurienne" => true],
             ["id" => 10, "langue" => "Malakutien", "description" => "Langue parlée par les habitants de Malakut et des régions environnantes."],
             ["id" => 11, "langue" => "Shamite", "description" => "Langue parlée par les habitants de Shamballah et des régions environnantes."],
             ["id" => 12, "langue" => "Chant du vent", "description" => "Langue chantante des hommes-oiseaux, évoquant le son de la brise et des bourrasques. Très difficile à parler correctement pour un étranger. Possède une forme écrite tout aussi difficile à maîtriser et à traduire."],
             ["id" => 13, "langue" => "Valgardien", "description" => "Langue parlée et écrite par les habitants du Valgard, étonnamment élaborée."],
             ["id" => 14, "langue" => "Ygddari", "description" => "Ancienne langue des hommes (aussi appelée langue des Anciens). Peu d'individus la parlent aujourd'hui, et encore moins peuvent la lire. Des textes antiques sont parfois retrouvés dans les ruines, nécessitant les services d'un scribe particulièrement compétent pour leur traduction."],
         ];
+        Schema::disableForeignKeyConstraints();
         BolLangue::truncate();
-        // Insérer les données dans la table des régions
+        Schema::enableForeignKeyConstraints();
         foreach ($langues as $langue) {
             BolLangue::create($langue);
         }

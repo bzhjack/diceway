@@ -11,7 +11,9 @@ class BolLangue extends Model
 
     protected $table = 'bol_langue';
     protected $hidden = ['created_at', 'updated_at'];
+    protected $fillable = ['langue', 'description', 'est_lemurienne'];
     protected $casts = [
         'id' => 'integer',
+        'est_lemurienne' => 'boolean',
     ];
 }

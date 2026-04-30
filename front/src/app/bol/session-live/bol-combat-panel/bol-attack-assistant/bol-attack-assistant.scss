@@ -1,0 +1,329 @@
+.atk {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 22rem;
+}
+
+// ── Ligne label + contrôle ────────────────────────────────────────────────────
+
+.atk-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  &--dice { margin-top: 0.25rem; }
+}
+
+.atk-label {
+  flex-shrink: 0;
+  width: 5.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dw-surface-400);
+}
+
+.atk-select { flex: 1; }
+
+.atk-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+
+  &__note {
+    font-size: 0.62rem;
+    color: var(--dw-surface-400);
+    font-style: italic;
+    white-space: nowrap;
+  }
+}
+
+.atk-power-badge {
+  padding: 0.05rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--dw-color-echec);
+  border: 1px solid rgba(239, 68, 68, 0.22);
+  background: rgba(239, 68, 68, 0.05);
+  white-space: nowrap;
+}
+
+.atk-warning {
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #fb923c;
+  background: rgba(251, 146, 60, 0.08);
+  border: 1px solid rgba(251, 146, 60, 0.22);
+}
+
+.atk-advantage {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  &__hint {
+    font-size: 0.65rem;
+    color: var(--dw-surface-400);
+    font-style: italic;
+  }
+}
+
+// ── Formule ───────────────────────────────────────────────────────────────────
+
+.atk-formula {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.35);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+
+  &__parts {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 0.3rem 0.5rem;
+  }
+
+  &__bonus {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-top: 0.4rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.1);
+  }
+
+  &__bonus-label {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dw-surface-400);
+  }
+
+  &__bonus-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-family: monospace;
+    color: var(--dw-surface-700);
+
+    &--pos { color: #86efac; }
+    &--neg { color: #fda4af; }
+  }
+}
+
+.atk-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.12rem;
+
+  &__label {
+    font-size: 0.54rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dw-surface-300);
+    white-space: nowrap;
+  }
+
+  &__value {
+    min-width: 2.2rem;
+    height: 1.8rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    background: rgba(15, 23, 42, 0.4);
+    color: var(--dw-surface-700);
+    font-family: monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+
+    &--dice { border-color: rgba(148, 163, 184, 0.1); color: var(--dw-surface-300); font-style: italic; }
+    &--def  { color: #fda4af; border-color: rgba(253, 164, 175, 0.3); background: rgba(244, 63, 94, 0.08); }
+    &--pos  { color: #86efac; border-color: rgba(134, 239, 172, 0.3); background: rgba(34, 197, 94, 0.08); }
+    &--neg  { color: #fda4af; border-color: rgba(253, 164, 175, 0.3); background: rgba(244, 63, 94, 0.08); }
+  }
+}
+
+.atk-op {
+  color: var(--dw-surface-300);
+  font-size: 0.85rem;
+  font-weight: 300;
+  padding-bottom: 0.25rem;
+  align-self: flex-end;
+}
+
+// ── Résultat ──────────────────────────────────────────────────────────────────
+
+.atk-result {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+
+  &--hit  { background: rgba(34, 197, 94, 0.07);  border-color: rgba(34, 197, 94, 0.22); }
+  &--miss { background: rgba(248, 113, 113, 0.06); border-color: rgba(248, 113, 113, 0.2); }
+
+  &__total {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1rem;
+  }
+
+  &__label {
+    font-size: 0.54rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dw-surface-300);
+  }
+
+  &__value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    font-family: monospace;
+    color: var(--dw-surface-800);
+    line-height: 1;
+  }
+
+  &__verdict {
+    font-size: 0.82rem;
+    font-weight: 700;
+
+    &--hit    { color: var(--dw-color-health); }
+    &--miss   { color: var(--dw-color-echec); }
+    &--heroic { color: var(--dw-color-legendary); }
+  }
+}
+
+// ── Succès héroïque / légendaire ─────────────────────────────────────────────
+
+.atk-heroic {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 6px;
+  background: rgba(251, 191, 36, 0.05);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  &__title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dw-color-legendary);
+  }
+
+  &__legendary-btn {
+    padding: 0.15rem 0.55rem;
+    border-radius: 3px;
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    background: transparent;
+    color: var(--dw-surface-400);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 120ms;
+
+    &:hover { border-color: rgba(251, 191, 36, 0.5); color: var(--dw-color-legendary); }
+
+    &--active {
+      background: rgba(251, 191, 36, 0.12);
+      border-color: rgba(251, 191, 36, 0.55);
+      color: var(--dw-color-legendary);
+    }
+  }
+
+  &__options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  &__option-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  &__desc {
+    font-size: 0.65rem;
+    color: var(--dw-surface-400);
+    font-style: italic;
+    padding-left: 0.2rem;
+  }
+}
+
+// ── Dégâts ────────────────────────────────────────────────────────────────────
+
+.atk-damage {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.25);
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  &__weapon {
+    font-size: 0.78rem;
+    color: var(--dw-surface-600);
+  }
+
+  &__armor-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  &__armor-title {
+    font-size: 0.54rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dw-surface-500);
+  }
+
+  &__armor {
+    font-size: 0.72rem;
+    color: var(--dw-surface-400);
+    font-style: italic;
+  }
+
+  &__none { color: var(--dw-surface-300); font-size: 0.78rem; }
+
+  &__devastatrices {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--dw-color-legendary);
+    letter-spacing: 0.02em;
+  }
+}

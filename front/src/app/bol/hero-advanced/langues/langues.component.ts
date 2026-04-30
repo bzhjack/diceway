@@ -59,12 +59,14 @@ export class HeroAdvancedLanguesComponent implements ControlValueAccessor, Valid
     initialValue: this.languesForm.getRawValue(),
   });
   protected readonly langueList = this.herosStateService.langueList;
-  protected readonly regionId = computed(() => this.herosStateService.currentHeros()?.origines.region_id ?? null);
   protected readonly heroId = computed(() => this.herosStateService.currentHeros()?.id);
+  protected readonly currentRegion = this.herosStateService.currentHerosRegion;
   protected readonly selectedLangueIds = computed(() =>
     (this.formChange()?.langues ?? []).map((langueId) => Number(langueId)),
   );
-  protected readonly automaticLanguageIds = computed(() => automaticLanguageIdsForRegion(this.regionId()));
+  protected readonly automaticLanguageIds = computed(() =>
+    automaticLanguageIdsForRegion(this.currentRegion(), this.langueList()),
+  );
   protected readonly automaticLanguageLabels = computed(() =>
     this.automaticLanguageIds()
       .map((languageId) =>
@@ -74,9 +76,10 @@ export class HeroAdvancedLanguesComponent implements ControlValueAccessor, Valid
   );
   protected readonly selectedLanguageTarget = computed(() =>
     selectedLanguageTarget(
-      this.regionId(),
+      this.currentRegion(),
       Number(this.herosStateService.currentHeros()?.attributs.esprit ?? 0),
       this.herosStateService.currentHeros()?.carrieres ?? [],
+      this.langueList(),
     ),
   );
   protected readonly filteredLangueList = computed(() =>
@@ -173,7 +176,7 @@ export class HeroAdvancedLanguesComponent implements ControlValueAccessor, Valid
 
   private updateErrors(): void {
     const errors: {control: string; error: string}[] = [];
-    if (this.regionId() && this.selectedLanguageTarget() === 0) {
+    if (this.currentRegion() && this.selectedLanguageTarget() === 0) {
       this.langueErrors.set(errors);
       this.languesForm.setErrors(null);
       return;
@@ -197,7 +200,6 @@ export class HeroAdvancedLanguesComponent implements ControlValueAccessor, Valid
         warn: `Vous devez encore choisir ${this.availableLang()} langue(s).`,
       });
     }
-
     this.langueWarns.set(warnings);
     this.herosStateService.setWarnLangues(warnings);
   }

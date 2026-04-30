@@ -1,22 +1,12 @@
-import {ChangeDetectionStrategy, Component, computed, input, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, computed, inject, input, output} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CheckboxModule} from 'primeng/checkbox';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {InitiativeSlot, ReactionResult} from '../../bol-combat-panel';
+import {CATEGORY_LABELS} from '../../combat.constants';
 import {RollEntry} from '../bol-roll-phase';
 import {DwPanelComponent} from '../../../../../shared/dw-panel/dw-panel';
 import {ValueStepperComponent} from '../../../../../shared/value-stepper/value-stepper';
-
-const CATEGORY_LABELS: Record<ReactionResult, string> = {
-  legendaire: 'Légendaire ★★',
-  heroique: 'Héroïque ★',
-  reussite: 'Réussite',
-  rival: 'Rival',
-  coriace: 'Coriace',
-  echec: 'Échec',
-  pietaille: 'Piétaille',
-  'echec-critique': 'Échec critique',
-};
 
 @Component({
   selector: 'app-rp-card',
@@ -31,6 +21,9 @@ export class RpCardComponent {
   readonly isNext = input(false);
 
   readonly entryChange = output<Partial<RollEntry>>();
+  readonly diceEnter = output<void>();
+
+  private readonly el = inject(ElementRef);
 
   protected readonly modTotal = computed(() => {
     const e = this.entry();
@@ -51,6 +44,10 @@ export class RpCardComponent {
     const t = this.total();
     return t !== null ? (t >= 9 ? 'reussite' : 'echec') : null;
   });
+
+  focusDiceInput(): void {
+    (this.el.nativeElement as HTMLElement).querySelector<HTMLInputElement>('.p-inputnumber-input')?.focus();
+  }
 
   protected categoryLabel(category: ReactionResult): string {
     return CATEGORY_LABELS[category];

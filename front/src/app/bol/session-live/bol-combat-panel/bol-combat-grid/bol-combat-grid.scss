@@ -18,8 +18,7 @@
   flex-wrap: wrap;
   gap: 0.5rem;
   align-items: center;
-  padding-top: 0.75rem;
-  border-top: 1px solid rgba(var(--dw-surface-500), 0.10);
+  margin-bottom: 0.75rem;
   width: 30%;
 }
 
@@ -28,123 +27,181 @@
   min-width: 0;
 }
 
-// ── Table ─────────────────────────────────────────────────────────────────────
+// ── Cards wrap ────────────────────────────────────────────────────────────────
 
-.combat-table-wrap {
-  overflow-x: auto;
+.combat-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
-.combat-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: auto;
-}
+// ── Card ──────────────────────────────────────────────────────────────────────
 
-.combat-th {
-  padding: 0.35rem 0.6rem;
-  color: var(--dw-surface-500);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-align: left;
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--dw-surface-100);
-  white-space: nowrap;
-
-  &.combat-th--pos,
-  &.combat-th--def,
-  &.combat-th--remove { text-align: center; }
-
-  &.combat-th--esprit,
-  &.combat-th--init,
-  &.combat-th--melee,
-  &.combat-th--tir { text-align: center; }
-}
-
-.combat-tr {
-  border-bottom: 1px solid var(--dw-surface-100);
-  transition: background 120ms;
-
-  &:hover { background: rgba(30, 41, 59, 0.40); }
-
-  &[data-cat='legendaire']     { border-left: 2px solid rgba(251, 191, 36, 0.50); }
-  &[data-cat='heroique']       { border-left: 2px solid rgba(251, 191, 36, 0.28); }
-  &[data-cat='reussite']       { border-left: 2px solid rgba(96, 165, 250, 0.30); }
-  &[data-cat='rival']          { border-left: 2px solid rgba(251, 146, 60, 0.35); }
-  &[data-cat='coriace']        { border-left: 2px solid rgba(251, 191, 36, 0.22); }
-  &[data-cat='echec']          { border-left: 2px solid rgba(248, 113, 113, 0.25); }
-  &[data-cat='pietaille']      { border-left: 2px solid rgba(100, 116, 139, 0.30); }
-  &[data-cat='echec-critique'] { border-left: 2px solid rgba(185, 28, 28, 0.45); }
-}
-
-.combat-td {
-  padding: 0.55rem 0.6rem;
-  vertical-align: middle;
-
-  &.combat-td--pos {
-    color: var(--dw-surface-500);
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-align: center;
-    vertical-align: top;
-    padding-top: 0.75rem;
-    width: 2rem;
-  }
-
-  &.combat-td--nom { min-width: 140px; }
-  &.combat-td--initiative { min-width: 200px; }
-  &.combat-td--pv { min-width: 130px; white-space: nowrap; }
-  &.combat-td--def, &.combat-td--degats { white-space: nowrap; }
-  &.combat-td--remove { text-align: center; width: 2.5rem; }
-
-  &.combat-td--esprit,
-  &.combat-td--init,
-  &.combat-td--melee,
-  &.combat-td--tir { text-align: center; white-space: nowrap; width: 3rem; }
-}
-
-// ── Participant identity ──────────────────────────────────────────────────────
-
-.combat-initiative-item__name {
-  color: var(--dw-surface-700);
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.combat-participant-identity {
+.combat-card {
+  flex: 0 0 18rem;
+  width: 18rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-left-width: 3px;
+  background: rgba(15, 23, 42, 0.32);
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
-  min-width: 0;
-}
+  gap: 0.45rem;
 
-.combat-participant-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.55rem;
-}
+  &[data-cat='legendaire']     { border-left-color: rgba(251, 191,  36, 0.65); }
+  &[data-cat='heroique']       { border-left-color: rgba(251, 191,  36, 0.38); }
+  &[data-cat='reussite']       { border-left-color: rgba( 96, 165, 250, 0.45); }
+  &[data-cat='rival']          { border-left-color: rgba(251, 146,  60, 0.50); }
+  &[data-cat='coriace']        { border-left-color: rgba(148, 163, 184, 0.28); }
+  &[data-cat='echec']          { border-left-color: rgba(248, 113, 113, 0.35); }
+  &[data-cat='pietaille']      { border-left-color: rgba(100, 116, 139, 0.30); }
+  &[data-cat='echec-critique'] { border-left-color: rgba(185,  28,  28, 0.55); }
+  &[data-cat='none']           { border-left-color: rgba(148, 163, 184, 0.14); border-left-style: dashed; }
 
-.combat-participant-avatar {
-  width: 2rem;
-  height: 2rem;
-  flex-shrink: 0;
-  overflow: hidden;
-  border-radius: 9999px;
-  border: 1px solid rgba(var(--dw-surface-500), 0.3);
-  background: var(--dw-surface-50);
-}
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
 
-.combat-participant-header {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-}
+  &__avatar {
+    width: 3.125rem;
+    height: 3.125rem;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 4px;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    background: var(--dw-surface-50);
+  }
 
-.combat-participant-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
+  &__identity {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name-row {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  &__pos {
+    color: var(--dw-surface-300);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+
+  &__name {
+    color: var(--dw-surface-700);
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__badges {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  &__chip-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  &__chip-title {
+    font-size: 0.54rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dw-surface-500);
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem;
+  }
+
+  &__resource {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    &--heroism .combat-hp__cur { color: var(--dw-color-legendary); }
+  }
+
+  &__res-label {
+    flex-shrink: 0;
+    width: 1.6rem;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dw-surface-500);
+  }
+
+  &__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 0.5rem;
+    padding-bottom: 0.2rem;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+  }
+
+  &__stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1rem;
+  }
+
+  &__stat-label {
+    font-size: 0.54rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dw-surface-500);
+    white-space: nowrap;
+  }
+
+  &__stat-value {
+    min-width: 2rem;
+    height: 1.7rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    background: rgba(15, 23, 42, 0.35);
+    color: var(--dw-surface-600);
+    font-family: monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0 0.3rem;
+
+    &--def    { color: #fda4af; border-color: rgba(253, 164, 175, 0.3); background: rgba(244, 63, 94, 0.07); }
+    &--degats { color: var(--dw-color-legendary); border-color: rgba(251, 191, 36, 0.22); background: rgba(251, 191, 36, 0.05); font-size: 0.75rem; }
+  }
 }
 
 // ── Type badge ────────────────────────────────────────────────────────────────
@@ -160,16 +217,15 @@
   border: 1px solid currentColor;
   opacity: 0.75;
 
-  &--hero     { color: var(--dw-color-reussite);  background: rgba(96,  165, 250, 0.08); }
+  &--hero     { color: var(--dw-color-reussite);  background: rgba( 96, 165, 250, 0.08); }
   &--creature { color: var(--dw-color-creature);  background: rgba(245, 158,  11, 0.08); }
   &--demon    { color: var(--dw-color-echec);     background: rgba(239,  68,  68, 0.08); }
-  &--pnj      { color: var(--dw-surface-500);      background: rgba(148, 163, 184, 0.06); }
+  &--pnj      { color: var(--dw-surface-500);     background: rgba(148, 163, 184, 0.06); }
 }
 
 // ── R1 warning ────────────────────────────────────────────────────────────────
 
 .combat-r1 {
-  display: inline-block;
   font-size: 0.62rem;
   font-weight: 700;
   color: var(--dw-color-echec);
@@ -180,9 +236,10 @@
 // ── Initiative category ───────────────────────────────────────────────────────
 
 .combat-cat {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.03em;
+  white-space: nowrap;
 
   &--legendaire     { color: var(--dw-color-legendary); }
   &--heroique       { color: var(--dw-color-legendary); }
@@ -195,26 +252,9 @@
 }
 
 .combat-pending {
-  font-size: 0.75rem;
-  color: var(--dw-surface-200);
+  font-size: 0.72rem;
+  color: var(--dw-surface-300);
   font-style: italic;
-}
-
-// ── Stat values ───────────────────────────────────────────────────────────────
-
-.combat-stat {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--dw-surface-500);
-
-  &--def    { color: var(--dw-surface-600); }
-  &--degats { color: var(--dw-color-legendary); font-family: monospace; letter-spacing: 0.04em; }
-}
-
-.combat-stat-value {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--dw-surface-500);
 }
 
 // ── Chips ─────────────────────────────────────────────────────────────────────
@@ -223,29 +263,45 @@
   display: inline-block;
   padding: 0.05rem 0.4rem;
   border-radius: 3px;
-  border: 1px solid rgba(var(--dw-surface-500), 0.10);
+  border: 1px solid rgba(148, 163, 184, 0.14);
   font-size: 0.62rem;
   color: var(--dw-surface-500);
   letter-spacing: 0.02em;
   white-space: nowrap;
 
-  &--arme   { cursor: default; color: var(--dw-surface-500); border-color: rgba(var(--dw-surface-500), 0.22); }
-  &--armure { cursor: default; color: var(--dw-surface-500); border-color: rgba(var(--dw-surface-500), 0.22); }
+  &--arme    { cursor: default; border-color: rgba(148, 163, 184, 0.22); }
+  &--armure  { cursor: default; border-color: rgba(148, 163, 184, 0.22); }
+  &--pouvoir { cursor: default; color: var(--dw-color-echec); border-color: rgba(239, 68, 68, 0.22); background: rgba(239, 68, 68, 0.05); }
+}
+
+// ── États ─────────────────────────────────────────────────────────────────────
+
+.combat-etats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+}
+
+.combat-etat {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.05rem 0.35rem;
+  border-radius: 3px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  border: 1px solid transparent;
+
+  &--hors-combat { color: #fb923c; background: rgba(251, 146,  60, 0.08); border-color: rgba(251, 146,  60, 0.2); }
+  &--coma        { color: #f87171; background: rgba(248, 113, 113, 0.08); border-color: rgba(248, 113, 113, 0.2); }
+  &--mort        { color: #ef4444; background: rgba(239,  68,  68, 0.10); border-color: rgba(239,  68,  68, 0.3); }
+  &--warning     { color: #fb923c; background: rgba(251, 146,  60, 0.06); border-color: rgba(251, 146,  60, 0.25); font-style: italic; }
 }
 
 // ── HP / Héroïsme stepper ─────────────────────────────────────────────────────
 
 .combat-hp {
-  display: inline-flex;
-  flex-direction: column;
-  gap: 0.25rem;
-
-  &__row {
-    display: flex;
-    align-items: center;
-    gap: 0.15rem;
-  }
-
   &__btn {
     display: flex;
     align-items: center;
@@ -253,7 +309,7 @@
     width: 1.3rem;
     height: 1.3rem;
     padding: 0;
-    border: 1px solid rgba(var(--dw-surface-500), 0.10);
+    border: 1px solid rgba(148, 163, 184, 0.14);
     border-radius: 3px;
     background: transparent;
     color: var(--dw-surface-400);
@@ -264,7 +320,7 @@
     flex-shrink: 0;
 
     &:hover {
-      border-color: rgba(var(--dw-surface-500), 0.22);
+      border-color: rgba(148, 163, 184, 0.28);
       color: var(--dw-surface-600);
       background: rgba(148, 163, 184, 0.06);
     }
@@ -273,31 +329,24 @@
   }
 
   &__frac {
-    min-width: 2.8rem;
+    min-width: 2.4rem;
     text-align: center;
-    line-height: 1;
     font-variant-numeric: tabular-nums;
+    line-height: 1;
+    flex-shrink: 0;
   }
 
-  &__cur   { color: var(--dw-surface-800); font-size: 0.88rem; font-weight: 700; }
+  &__cur {
+    font-size: 0.88rem;
+    font-weight: 700;
+    transition: color 200ms;
+
+    &--high { color: #86efac; }
+    &--mid  { color: #fb923c; }
+    &--low  { color: #f87171; }
+  }
   &__slash { color: var(--dw-surface-100); font-size: 0.65rem; margin: 0 0.05rem; }
   &__max   { color: var(--dw-surface-300); font-size: 0.68rem; font-weight: 500; }
 
-  &__bar {
-    height: 3px;
-    background: rgba(15, 23, 42, 0.80);
-    border-radius: 2px;
-    overflow: hidden;
-  }
 
-  &__fill {
-    height: 100%;
-    background: var(--dw-color-health);
-    border-radius: 2px;
-    transition: width 280ms ease, background 280ms;
-
-    &--low { background: var(--dw-color-echec-forte); }
-  }
-
-  &--heroism &__cur { color: var(--dw-color-legendary); }
 }

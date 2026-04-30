@@ -18,7 +18,7 @@ class BolRegionController extends Controller
         $cacheKey = 'bol_regions_all';
         $cacheDuration = 60 * 24; // 60 minutes
         $donnees = Cache::remember($cacheKey, $cacheDuration, function () {
-            return BolRegion::with('avantages', 'desavantages', 'noms')->get();
+            return BolRegion::with('avantages', 'desavantages', 'noms', 'langueNative', 'premiereCarriere')->get();
         });
         // Retourner les données en tant que réponse JSON
         return response()->json($donnees);
@@ -27,7 +27,7 @@ class BolRegionController extends Controller
     public function getOne(Request $request)
     {
         $id = $request->route('id');
-        $hero = BolRegion::with('avantages', 'desavantages', 'noms')->where('id', $id)->get()->first();
+        $hero = BolRegion::with('avantages', 'desavantages', 'noms', 'langueNative', 'premiereCarriere')->where('id', $id)->get()->first();
         if ($hero === null) {
             return response()->json(['error' => 'Country not found'], 404);
         } else {

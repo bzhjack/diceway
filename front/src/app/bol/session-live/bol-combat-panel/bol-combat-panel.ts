@@ -2,8 +2,10 @@ import {ChangeDetectionStrategy, Component, computed, input, signal, viewChild} 
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {DialogModule} from 'primeng/dialog';
+import {BolAttackAssistantComponent} from './bol-attack-assistant/bol-attack-assistant';
 import {BolCombatGridComponent} from './bol-combat-grid/bol-combat-grid';
 import {BolRollPhaseComponent} from './bol-roll-phase/bol-roll-phase';
+import {INITIATIVE_ORDER, TYPE_LABELS} from './combat.constants';
 
 export type ParticipantType = 'hero' | 'creature' | 'demon' | 'pnj';
 export type ReactionResult =
@@ -16,6 +18,15 @@ export type ReactionResult =
   | 'pietaille'
   | 'echec-critique';
 
+export interface PouvoirSlot {
+  readonly nom: string;
+  readonly avantage_attaque: boolean;
+  readonly degats_superieurs: boolean;
+  readonly regeneration: boolean;
+  readonly intangible: boolean;
+  readonly avertissement_combat: boolean;
+}
+
 export interface InitiativeSlot {
   readonly id: string;
   readonly nom: string;
@@ -23,6 +34,7 @@ export interface InitiativeSlot {
   readonly type: ParticipantType;
   readonly vitaliteMax: number;
   readonly heroismMax: number | null;
+  readonly agilite: number | null;
   readonly esprit: number | null;
   readonly initiative: number | null;
   readonly melee: number | null;
@@ -30,6 +42,7 @@ export interface InitiativeSlot {
   readonly defense: number | null;
   readonly degats: string | null;
   readonly tags: string[];
+  readonly pouvoirs: PouvoirSlot[];
   readonly armesList: {nom: string; degats: string | null; type: 'M' | 'T' | null; portee: string | null; notes: string | null}[];
   readonly armures: {nom: string; protection: string | null; malus: string | null}[];
   category: ReactionResult | null;
@@ -37,27 +50,10 @@ export interface InitiativeSlot {
   heroismCourant: number | null;
 }
 
-const TYPE_LABELS: Record<ParticipantType, string> = {
-  hero: 'PJ',
-  creature: 'Créature',
-  demon: 'Démon',
-  pnj: 'PNJ',
-};
-
-const INITIATIVE_ORDER: Record<ReactionResult, number> = {
-  legendaire: 0,
-  heroique: 1,
-  reussite: 2,
-  rival: 3,
-  coriace: 4,
-  echec: 5,
-  pietaille: 6,
-  'echec-critique': 7,
-};
 
 @Component({
   selector: 'app-bol-combat-panel',
-  imports: [ButtonModule, CardModule, DialogModule, BolCombatGridComponent, BolRollPhaseComponent],
+  imports: [ButtonModule, CardModule, DialogModule, BolAttackAssistantComponent, BolCombatGridComponent, BolRollPhaseComponent],
   templateUrl: './bol-combat-panel.html',
   styleUrl: './bol-combat-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,10 +64,12 @@ export class BolCombatPanelComponent {
   private readonly rollPhaseRef = viewChild(BolRollPhaseComponent);
 
   protected readonly initiativeOrder = signal<InitiativeSlot[]>([]);
+  protected readonly attackerSlot = signal<InitiativeSlot | null>(null);
   protected readonly selectedParticipantId = signal<string | null>(null);
   protected readonly rollPhase = signal(false);
   protected readonly rulesDialogVisible = signal(false);
   protected readonly allHeroesRolled = signal(false);
+  protected readonly currentRound = signal(1);
 
   protected readonly availableParticipants = computed(() => {
     const inOrder = new Set(this.initiativeOrder().map((s) => s.id));
@@ -129,7 +127,7 @@ export class BolCombatPanelComponent {
     this.initiativeOrder.update((list) =>
       list.map((s) =>
         s.id === id
-          ? {...s, vitaliteCourante: Math.max(0, Math.min(s.vitaliteMax, s.vitaliteCourante + delta))}
+          ? {...s, vitaliteCourante: Math.max(-10, Math.min(s.vitaliteMax, s.vitaliteCourante + delta))}
           : s,
       ),
     );
@@ -152,6 +150,19 @@ export class BolCombatPanelComponent {
   protected startRollPhase(): void {
     this.allHeroesRolled.set(false);
     this.rollPhase.set(true);
+  }
+
+  protected startNewRound(): void {
+    this.initiativeOrder.update((list) =>
+      list.map((s) => {
+        let next = s.vitaliteCourante < 0 ? {...s, vitaliteCourante: s.vitaliteCourante - 1} : s;
+        if (next.pouvoirs.some((p) => p.regeneration)) {
+          next = {...next, vitaliteCourante: Math.min(next.vitaliteMax, next.vitaliteCourante + 1)};
+        }
+        return next;
+      }),
+    );
+    this.currentRound.update((r) => r + 1);
   }
 
   protected cancelRollPhase(): void {
