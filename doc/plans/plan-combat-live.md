@@ -14,74 +14,35 @@
 - **Démons** — rang snapshot, pouvoirs en chips rouges ; "Armure" et "Cuirassé" convertis en entrées `armures` (d6-2 (2) / d6 (4))
 - **PNJs** — rang snapshot, armes
 
-### Assistant jet d'attaque
+### Assistant jet d'attaque ✅
 - Formule `2d6 + agilité + mêlée/tir − défense ± difficulté ± option`
 - Avantage / désavantage (3d6 garder 2)
 - Affichage des dégâts de l'attaquant et des armures de la cible
-- Options de combat (posture offensive/défensive, attaque intrépide, combat 2 armes ×2, attaque au défaut de l'armure)
-- Bouton jet d'attaque caché tant que l'initiative n'est pas confirmée
+- Bouton caché tant que l'initiative n'est pas confirmée
+
+### Étape 2 — Options de combat ✅
+- Sélecteur option de combat : posture offensive/défensive, attaque intrépide, combat 2 armes ×2, attaque au défaut de l'armure
+- Malus "défaut d'armure" paramétrable (saisie manuelle de la protection)
+
+### Étape 3 — Succès héroïque et légendaire ✅
+- Quand `dice === 12` : sélecteur des 6 options héroïques (Carnage, Coup dévastateur, Coup précis, Désarmement, Massacrer la piétaille, Renversement)
+- Si `heroismCourant > 0` : bouton succès légendaire (−1 PH) → 2 options
+
+### Étape 4 — Pouvoirs mécaniques des démons ✅
+- Flags booléens sur `bol_pouvoir` : `avantage_attaque`, `degats_superieurs`, `regeneration`, `intangible`, `avertissement_combat`
+- `PouvoirSlot` remplace `string[]` dans `InitiativeSlot`
+- Avantage auto si attaquant a "Armes améliorées" (`avantage_attaque`)
+- Badge dégâts devastatrices (`degats_superieurs`)
+- Régénération appliquée à chaque `startNewRound()` (`regeneration`)
+- Badge ⚠ intangible dans l'assistant (`intangible`)
+- Badges d'avertissement sur les cartes (`avertissement_combat`)
 
 ### Bugs corrigés
 - Vitalité bloquée à 0 → clamp à −10 (coma fonctionnel)
 
-### Backend
-- `BolPouvoirSeeder` — 16 descriptions alignées avec les règles
-
 ---
 
-## Étapes restantes
-
-### Étape 2 — Options de combat dans l'assistant ✅
-
-Sélecteur "Option de combat" dans `BolAttackAssistantComponent`. Ajuste la formule automatiquement.
-
-| Option | Δ attaque | Note |
-|---|---|---|
-| Aucune | 0 | — |
-| Posture offensive | +1 | −1 défense attaquant |
-| Attaque intrépide | +2 | −2 défense, perd le bonus bouclier |
-| Posture défensive | −1 | +1 défense attaquant |
-| Défense totale | — | +2 défense, pas d'attaque |
-| Combat 2 armes — parade | −1 | +1 défense, armes légères/moyennes |
-| Combat 2 armes — double frappe | −1 | Dégâts +1 catégorie |
-| Attaque au défaut de l'armure | −protection cible | Si touche : dégâts ignorent l'armure |
-
-Règles "défaut d'armure" : malus = valeur fixe de la protection (légère −1, moyenne −2, lourde −3).
-
----
-
-### Étape 3 — Succès héroïque et légendaire dans l'assistant
-
-Quand `dice === 12` : afficher les 6 options héroïques.
-
-| Option | Effet |
-|---|---|
-| Carnage | Attaque supplémentaire immédiate |
-| Coup dévastateur | +6 dégâts |
-| Coup précis | Dégâts normaux + dé de malus (accord MJ) |
-| Désarmement | Adversaire perd son arme |
-| Massacrer la piétaille | Dégâts = nombre de piétaille éliminés |
-| Renversement | Adversaire à terre, dé de malus à sa prochaine action |
-
-Si `heroismCourant > 0` : proposer de dépenser 1 PH → **succès légendaire** → choisir 2 options.
-
----
-
-### Étape 4 — Pouvoirs mécaniques des démons
-
-Pouvoirs qui ont un impact direct en combat :
-
-| Pouvoir | Mécanique | Implémentation |
-|---|---|---|
-| Armes améliorées | Dé de bonus à toutes les attaques | Avantage auto dans l'assistant si le démon attaque |
-| Attaques dévastatrices | Dégâts +1 catégorie | Badge + indication dans l'assistant (dégâts) |
-| Régénération | +1 PV par round | `startNewRound()` : incrémenter vitalité des démons avec ce pouvoir (max vitaliteMax) |
-| Intangible | Blessé seulement par magie/alchimie | Badge d'avertissement sur la carte |
-| Vulnérabilité | Élément inflige ×2 | Badge d'avertissement sur la carte |
-| Séducteur | Asservit 1d6+6 piétaille, résistance esprit | Informatif (géré par le MJ) |
-| Poison | Paralysie, jet vigueur Difficile (−2) | Badge d'avertissement sur la carte |
-
----
+## Étape restante
 
 ### Étape 5 — Récupération post-combat
 
