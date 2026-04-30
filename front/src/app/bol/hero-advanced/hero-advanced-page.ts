@@ -190,7 +190,7 @@ export class HeroAdvancedPageComponent {
       active: false,
     };
 
-    this.herosService.createHeros(draft).subscribe({
+    this.herosService.createHerosAdvanced(draft).subscribe({
       next: (hero: BolHerosModel) => {
         this.creatingDraft.set(false);
         this.router.navigate(['/create/hero-advanced', hero.id], {
@@ -247,7 +247,7 @@ export class HeroAdvancedPageComponent {
     const payload = activate ? this.buildActivatedHero() : this.mapToHero(this.herosForm.getRawValue());
     payload.active = activate || payload.active;
 
-    this.herosService.updateHeros(payload).subscribe({
+    this.herosService.updateHerosAdvanced(payload).subscribe({
       next: () => {
         this.pending.set(false);
         const returnUrl = this.returnUrl();

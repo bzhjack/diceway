@@ -26,6 +26,11 @@ class BolHerosRequest extends FormRequest
 
             'carrieres'         => 'sometimes|array',
             'carrieres.*.value' => 'integer|min:0|max:3',
+
+            'combat.melee'      => 'sometimes|integer|min:-1|max:3',
+            'combat.tir'        => 'sometimes|integer|min:-1|max:3',
+            'combat.defense'    => 'sometimes|integer|min:-1|max:3',
+            'combat.initiative' => 'sometimes|integer|min:-1|max:3',
         ];
     }
 
@@ -34,6 +39,7 @@ class BolHerosRequest extends FormRequest
         $validator->after(function (Validator $v) {
             $this->validateAttributs($v);
             $this->validateCarrieres($v);
+            $this->validateCombat($v);
         });
     }
 
@@ -58,6 +64,29 @@ class BolHerosRequest extends FormRequest
         $sum = array_sum($values);
         if ($sum > 4) {
             $v->errors()->add('attributs', 'La somme des attributs ne peut pas dépasser 4.');
+        }
+    }
+
+    private function validateCombat(Validator $v): void
+    {
+        $combat = $this->input('combat');
+        if (!is_array($combat)) {
+            return;
+        }
+
+        $keys = ['melee', 'tir', 'defense', 'initiative'];
+        $values = array_filter(
+            array_map(fn($k) => isset($combat[$k]) ? (int) $combat[$k] : null, $keys),
+            fn($val) => $val !== null,
+        );
+
+        $negatives = count(array_filter($values, fn($val) => $val < 0));
+        if ($negatives > 1) {
+            $v->errors()->add('combat', 'Une seule aptitude de combat peut être négative.');
+        }
+
+        if (array_sum($values) > 4) {
+            $v->errors()->add('combat', 'La somme des aptitudes de combat ne peut pas dépasser 4.');
         }
     }
 

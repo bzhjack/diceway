@@ -59,8 +59,9 @@ class BolHerosController extends Controller
     /**
      * Création d'un hero
      */
-    public function create(BolHerosRequest $request)
+    public function create(Request $request)
     {
+        $request->validate(['nom' => 'required|max:255', 'joueur' => 'required|max:255']);
         $heros = $request->input();
         $heros['user_id'] = Auth::id();
         $heros = BolHeros::create($heros);
@@ -71,7 +72,21 @@ class BolHerosController extends Controller
     /**
      * Mise à jour d'un hero
      */
-    public function update(BolHerosRequest $request)
+    public function createAdvanced(BolHerosRequest $request)
+    {
+        $heros = $request->input();
+        $heros['user_id'] = Auth::id();
+        $heros = BolHeros::create($heros);
+        $this->syncHeroRelations($heros['id'], $request, true);
+        return response($heros);
+    }
+
+    public function updateAdvanced(BolHerosRequest $request)
+    {
+        return $this->update($request);
+    }
+
+    public function update(Request $request)
     {
         $herosId = $request->input('id');
 
