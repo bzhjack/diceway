@@ -1,0 +1,182 @@
+@let a = attacker();
+@let t = target();
+
+<p-dialog
+  [header]="'Jet d\'attaque — ' + a.nom"
+  [visible]="visible()"
+  (visibleChange)="close()"
+  [modal]="true"
+  [closable]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="atk-dialog"
+>
+
+  <div class="atk">
+
+    <!-- Cible -->
+    <div class="atk-row">
+      <span class="atk-label">Cible</span>
+      <p-select
+        [options]="targets()"
+        [ngModel]="targetId()"
+        (ngModelChange)="targetId.set($event)"
+        placeholder="Choisir une cible"
+        class="atk-select"
+      />
+    </div>
+
+    <!-- Type d'attaque -->
+    @if (hasTir()) {
+      <div class="atk-row">
+        <span class="atk-label">Type</span>
+        <p-selectButton
+          [options]="[{label: 'Mêlée', value: 'melee'}, {label: 'Tir', value: 'tir'}]"
+          [ngModel]="attackType()"
+          (ngModelChange)="attackType.set($event)"
+          optionLabel="label"
+          optionValue="value"
+        />
+      </div>
+    }
+
+    <!-- Formule de base -->
+    <div class="atk-formula">
+      <div class="atk-formula__parts">
+        <div class="atk-stat">
+          <span class="atk-stat__label">2d6</span>
+          <span class="atk-stat__value atk-stat__value--dice">?</span>
+        </div>
+        @if (a.agilite !== null) {
+          <span class="atk-op">+</span>
+          <div class="atk-stat">
+            <span class="atk-stat__label">Agilité</span>
+            <span class="atk-stat__value">{{ a.agilite }}</span>
+          </div>
+        }
+        <span class="atk-op">+</span>
+        <div class="atk-stat">
+          <span class="atk-stat__label">{{ attackType() === 'melee' ? 'Mêlée' : 'Tir' }}</span>
+          <span class="atk-stat__value">{{ attackAptitude() }}</span>
+        </div>
+        @if (t) {
+          <span class="atk-op">−</span>
+          <div class="atk-stat">
+            <span class="atk-stat__label">Déf. {{ t.nom }}</span>
+            <span class="atk-stat__value atk-stat__value--def">{{ t.defense ?? 0 }}</span>
+          </div>
+        }
+        @if (difficultyMod() !== 0) {
+          <span class="atk-op">{{ difficultyMod() > 0 ? '+' : '−' }}</span>
+          <div class="atk-stat">
+            <span class="atk-stat__label">Difficulté</span>
+            <span
+              class="atk-stat__value"
+              [class.atk-stat__value--pos]="difficultyMod() > 0"
+              [class.atk-stat__value--neg]="difficultyMod() < 0"
+            >{{ difficultyMod() > 0 ? difficultyMod() : -difficultyMod() }}</span>
+          </div>
+        }
+      </div>
+      <div class="atk-formula__bonus">
+        <span class="atk-formula__bonus-label">Bonus total</span>
+        <span class="atk-formula__bonus-value" [class.atk-formula__bonus-value--pos]="totalBonus() > 0" [class.atk-formula__bonus-value--neg]="totalBonus() < 0">
+          {{ totalBonus() > 0 ? '+' : '' }}{{ totalBonus() }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Difficulté -->
+    <div class="atk-row">
+      <span class="atk-label">Difficulté</span>
+      <p-select
+        [options]="difficultyOptions"
+        optionLabel="label"
+        optionValue="value"
+        [ngModel]="difficultyMod()"
+        (ngModelChange)="difficultyMod.set($event)"
+        class="atk-select"
+      />
+    </div>
+
+    <!-- Avantage / Désavantage -->
+    <div class="atk-row">
+      <span class="atk-label">Dés</span>
+      <div class="atk-advantage">
+        <p-selectButton
+          [options]="advantageOptions"
+          [ngModel]="advantage()"
+          (ngModelChange)="advantage.set($event)"
+          optionLabel="label"
+          optionValue="value"
+        />
+        <span class="atk-advantage__hint">{{ advantageDiceLabel() }}</span>
+      </div>
+    </div>
+
+    <!-- Saisie du résultat des dés -->
+    <div class="atk-row atk-row--dice">
+      <span class="atk-label">Résultat 2d6</span>
+      <p-inputNumber
+        [ngModel]="dice()"
+        (ngModelChange)="dice.set($event)"
+        [min]="2" [max]="12"
+        placeholder="—"
+        [inputStyle]="{'width':'4rem','text-align':'center','font-size':'1.2rem','font-weight':'700'}"
+      />
+    </div>
+
+    <!-- Résultat -->
+    @if (total() !== null) {
+      <div class="atk-result" [class.atk-result--hit]="isHit()" [class.atk-result--miss]="!isHit()">
+        <div class="atk-result__total">
+          <span class="atk-result__label">Total</span>
+          <span class="atk-result__value">{{ total() }}</span>
+        </div>
+        @if (isHeroic()) {
+          <div class="atk-result__verdict atk-result__verdict--heroic">
+            ★ Succès héroïque automatique
+          </div>
+        } @else if (dice() === 2) {
+          <div class="atk-result__verdict atk-result__verdict--miss">
+            ✗ Échec automatique (2 naturel)
+          </div>
+        } @else if (isHit()) {
+          <div class="atk-result__verdict atk-result__verdict--hit">✓ Touché</div>
+        } @else {
+          <div class="atk-result__verdict atk-result__verdict--miss">✗ Raté</div>
+        }
+      </div>
+    }
+
+    <!-- Dégâts (si touché) -->
+    @if (isHit()) {
+      <div class="atk-damage">
+        <span class="atk-label">Dégâts</span>
+        <div class="atk-damage__content">
+          @if (a.armesList.length > 0) {
+            @for (arme of a.armesList; track arme.nom) {
+              @if (arme.degats) {
+                <span class="atk-damage__weapon">{{ arme.nom }} : <strong>{{ arme.degats }}</strong></span>
+              }
+            }
+          } @else if (a.degats) {
+            <strong>{{ a.degats }}</strong>
+          } @else {
+            <span class="atk-damage__none">—</span>
+          }
+          @if (t && t.armures.length > 0) {
+            <div class="atk-damage__armor">
+              Protection cible :
+              @for (armure of t.armures; track armure.nom) {
+                <span>{{ armure.nom }}{{ armure.protection ? ' ' + armure.protection : '' }}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+  </div>
+</p-dialog>

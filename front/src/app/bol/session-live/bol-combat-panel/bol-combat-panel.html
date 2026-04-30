@@ -128,6 +128,16 @@
       (hpChange)="adjustHp($event.id, $event.delta)"
       (heroismChange)="adjustHeroism($event.id, $event.delta)"
       (removeParticipant)="removeFromInitiative($event)"
+      (attackStart)="attackerSlot.set($event)"
+    />
+  }
+
+  @if (attackerSlot(); as attacker) {
+    <app-bol-attack-assistant
+      [attacker]="attacker"
+      [allSlots]="sortedInitiative()"
+      [visible]="true"
+      (visibleChange)="!$event && attackerSlot.set(null)"
     />
   }
 </p-card>

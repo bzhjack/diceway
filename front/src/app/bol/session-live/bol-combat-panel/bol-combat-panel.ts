@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, computed, input, signal, viewChild} 
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {DialogModule} from 'primeng/dialog';
+import {BolAttackAssistantComponent} from './bol-attack-assistant/bol-attack-assistant';
 import {BolCombatGridComponent} from './bol-combat-grid/bol-combat-grid';
 import {BolRollPhaseComponent} from './bol-roll-phase/bol-roll-phase';
 
@@ -23,6 +24,7 @@ export interface InitiativeSlot {
   readonly type: ParticipantType;
   readonly vitaliteMax: number;
   readonly heroismMax: number | null;
+  readonly agilite: number | null;
   readonly esprit: number | null;
   readonly initiative: number | null;
   readonly melee: number | null;
@@ -57,7 +59,7 @@ const INITIATIVE_ORDER: Record<ReactionResult, number> = {
 
 @Component({
   selector: 'app-bol-combat-panel',
-  imports: [ButtonModule, CardModule, DialogModule, BolCombatGridComponent, BolRollPhaseComponent],
+  imports: [ButtonModule, CardModule, DialogModule, BolAttackAssistantComponent, BolCombatGridComponent, BolRollPhaseComponent],
   templateUrl: './bol-combat-panel.html',
   styleUrl: './bol-combat-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,6 +70,7 @@ export class BolCombatPanelComponent {
   private readonly rollPhaseRef = viewChild(BolRollPhaseComponent);
 
   protected readonly initiativeOrder = signal<InitiativeSlot[]>([]);
+  protected readonly attackerSlot = signal<InitiativeSlot | null>(null);
   protected readonly selectedParticipantId = signal<string | null>(null);
   protected readonly rollPhase = signal(false);
   protected readonly rulesDialogVisible = signal(false);

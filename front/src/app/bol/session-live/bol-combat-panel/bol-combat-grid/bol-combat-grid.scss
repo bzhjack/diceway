@@ -53,7 +53,7 @@
 
   &.combat-th--pos,
   &.combat-th--def,
-  &.combat-th--remove { text-align: center; }
+  &.combat-th--actions { text-align: center; }
 
   &.combat-th--esprit,
   &.combat-th--init,
@@ -95,7 +95,7 @@
   &.combat-td--initiative { min-width: 200px; }
   &.combat-td--pv { min-width: 130px; white-space: nowrap; }
   &.combat-td--def, &.combat-td--degats { white-space: nowrap; }
-  &.combat-td--remove { text-align: center; width: 2.5rem; }
+  &.combat-td--actions { text-align: center; white-space: nowrap; }
 
   &.combat-td--esprit,
   &.combat-td--init,

@@ -43,6 +43,7 @@ export class BolCombatGridComponent {
   readonly hpChange = output<{id: string; delta: number}>();
   readonly heroismChange = output<{id: string; delta: number}>();
   readonly removeParticipant = output<string>();
+  readonly attackStart = output<InitiativeSlot>();
 
   protected typeLabel(type: ParticipantType): string {
     return TYPE_LABELS[type];

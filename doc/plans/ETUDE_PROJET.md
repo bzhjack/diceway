@@ -16,11 +16,7 @@ Diceway est un projet oriente jeu de role, centre ici sur **Barbarians of Lemuri
 Le depot contient :
 
 - un **backend Laravel 12** dans `backend/`
-- au moins **3 applications Angular** distinctes :
-  - `frontend/` : front riche, recent, avec auth, BoL, dice UI et PrimeNG
-  - `frontend2/` : front BoL tres fourni, semble etre la branche fonctionnelle la plus complete cote metier
-  - `front/` : squelette Angular 21 quasi vierge, probablement un redemarrage ou une base de refonte
-- un document produit/metier a la racine : `interface_mj_session_bol.md`
+- `front/` : squelette Angular 21 quasi vierge, probablement un redemarrage ou une base de refonte
 
 ## Lecture rapide par dossier
 

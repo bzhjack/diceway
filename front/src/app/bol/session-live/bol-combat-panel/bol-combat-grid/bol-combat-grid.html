@@ -46,7 +46,7 @@
           <th class="combat-th combat-th--tir">Tir</th>
           <th class="combat-th combat-th--def">Déf</th>
           <th class="combat-th combat-th--degats">Dégâts</th>
-          <th class="combat-th combat-th--remove"></th>
+          <th class="combat-th combat-th--actions"></th>
         </tr>
       </thead>
       <tbody>
@@ -171,7 +171,16 @@
               @if (slot.degats) { <span class="combat-stat combat-stat--degats">{{ slot.degats }}</span> }
             </td>
 
-            <td class="combat-td combat-td--remove">
+            <td class="combat-td combat-td--actions">
+              <p-button
+                icon="pi pi-bolt"
+                [text]="true"
+                severity="warn"
+                size="small"
+                (onClick)="attackStart.emit(slot)"
+                aria-label="Jet d'attaque"
+                pTooltip="Jet d'attaque"
+              />
               <p-button
                 icon="pi pi-times"
                 [text]="true"
