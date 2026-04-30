@@ -15,35 +15,23 @@
 - **PNJs** — rang snapshot, armes
 
 ### Assistant jet d'attaque
-- Formule `2d6 + agilité + mêlée/tir − défense ± difficulté`
+- Formule `2d6 + agilité + mêlée/tir − défense ± difficulté ± option`
 - Avantage / désavantage (3d6 garder 2)
 - Affichage des dégâts de l'attaquant et des armures de la cible
+- Options de combat (posture offensive/défensive, attaque intrépide, combat 2 armes ×2, attaque au défaut de l'armure)
+- Bouton jet d'attaque caché tant que l'initiative n'est pas confirmée
+
+### Bugs corrigés
+- Vitalité bloquée à 0 → clamp à −10 (coma fonctionnel)
 
 ### Backend
 - `BolPouvoirSeeder` — 16 descriptions alignées avec les règles
 
 ---
 
-## Bugs à corriger
-
-### Bug — Vitalité bloquée à 0
-
-`adjustHp` fait `Math.max(0, ...)` : la vitalité ne peut pas devenir négative.
-Or le coma (vitalité < 0) est une règle centrale.
-
-**Fix** : dans `bol-combat-panel.ts`, remplacer `Math.max(0, ...)` par `Math.max(-10, ...)`.
-
----
-
 ## Étapes restantes
 
-### Étape 1 — Fix vitalité négative *(prioritaire)*
-
-- `adjustHp` : `Math.max(0, s.vitaliteCourante + delta)` → `Math.max(-10, s.vitaliteCourante + delta)`
-
----
-
-### Étape 2 — Options de combat dans l'assistant
+### Étape 2 — Options de combat dans l'assistant ✅
 
 Sélecteur "Option de combat" dans `BolAttackAssistantComponent`. Ajuste la formule automatiquement.
 

@@ -153,6 +153,9 @@
           optionValue="value"
         />
         <span class="atk-advantage__hint">{{ advantageDiceLabel() }}</span>
+        @if (attackerHasArmeAmeliorees()) {
+          <span class="atk-power-badge">Armes améliorées</span>
+        }
       </div>
     </div>
 
@@ -191,6 +194,61 @@
       </div>
     }
 
+    <!-- Succès héroïque / légendaire -->
+    @if (isHeroic()) {
+      <div class="atk-heroic">
+        <div class="atk-heroic__header">
+          <span class="atk-heroic__title">★ Succès héroïque</span>
+          @if (hasHeroism()) {
+            <button
+              class="atk-heroic__legendary-btn"
+              [class.atk-heroic__legendary-btn--active]="useLegendary()"
+              (click)="useLegendary.set(!useLegendary())"
+            >★★ Légendaire (−1 PH)</button>
+          }
+        </div>
+
+        <div class="atk-heroic__options">
+          <div class="atk-heroic__option-row">
+            <p-select
+              [options]="heroicOptions"
+              optionLabel="label"
+              optionValue="value"
+              [ngModel]="heroicOption1()"
+              (ngModelChange)="heroicOption1.set($event)"
+              placeholder="Choisir une option"
+              class="atk-select"
+            />
+            @if (heroicOption1Def()) {
+              <span class="atk-heroic__desc">{{ heroicOption1Def()!.desc }}</span>
+            }
+          </div>
+
+          @if (useLegendary()) {
+            <div class="atk-heroic__option-row">
+              <p-select
+                [options]="heroicOptions"
+                optionLabel="label"
+                optionValue="value"
+                [ngModel]="heroicOption2()"
+                (ngModelChange)="heroicOption2.set($event)"
+                placeholder="Deuxième option"
+                class="atk-select"
+              />
+              @if (heroicOption2Def()) {
+                <span class="atk-heroic__desc">{{ heroicOption2Def()!.desc }}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Avertissements -->
+    @if (targetIsIntangible()) {
+      <div class="atk-warning">⚠ Cible intangible — blessé uniquement par magie ou alchimie</div>
+    }
+
     <!-- Dégâts (si touché) -->
     @if (isHit()) {
       <div class="atk-damage">
@@ -206,6 +264,9 @@
             <strong>{{ a.degats }}</strong>
           } @else {
             <span class="atk-damage__none">—</span>
+          }
+          @if (attackerHasDevastatrices()) {
+            <span class="atk-damage__devastatrices">Attaques dévastatrices — dégâts +1 catégorie</span>
           }
           @if (t && t.armures.length > 0) {
             <div class="atk-damage__armor-group">

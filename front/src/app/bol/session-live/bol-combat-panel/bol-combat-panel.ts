@@ -161,7 +161,13 @@ export class BolCombatPanelComponent {
 
   protected startNewRound(): void {
     this.initiativeOrder.update((list) =>
-      list.map((s) => s.vitaliteCourante < 0 ? {...s, vitaliteCourante: s.vitaliteCourante - 1} : s),
+      list.map((s) => {
+        let next = s.vitaliteCourante < 0 ? {...s, vitaliteCourante: s.vitaliteCourante - 1} : s;
+        if (next.pouvoirs.includes('Régénération')) {
+          next = {...next, vitaliteCourante: Math.min(next.vitaliteMax, next.vitaliteCourante + 1)};
+        }
+        return next;
+      }),
     );
     this.currentRound.update((r) => r + 1);
   }

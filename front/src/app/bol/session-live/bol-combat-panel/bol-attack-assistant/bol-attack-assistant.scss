@@ -41,6 +41,28 @@
   }
 }
 
+.atk-power-badge {
+  padding: 0.05rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--dw-color-echec);
+  border: 1px solid rgba(239, 68, 68, 0.22);
+  background: rgba(239, 68, 68, 0.05);
+  white-space: nowrap;
+}
+
+.atk-warning {
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #fb923c;
+  background: rgba(251, 146, 60, 0.08);
+  border: 1px solid rgba(251, 146, 60, 0.22);
+}
+
 .atk-advantage {
   display: flex;
   align-items: center;
@@ -188,6 +210,73 @@
   }
 }
 
+// ── Succès héroïque / légendaire ─────────────────────────────────────────────
+
+.atk-heroic {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 6px;
+  background: rgba(251, 191, 36, 0.05);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  &__title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dw-color-legendary);
+  }
+
+  &__legendary-btn {
+    padding: 0.15rem 0.55rem;
+    border-radius: 3px;
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    background: transparent;
+    color: var(--dw-surface-400);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 120ms;
+
+    &:hover { border-color: rgba(251, 191, 36, 0.5); color: var(--dw-color-legendary); }
+
+    &--active {
+      background: rgba(251, 191, 36, 0.12);
+      border-color: rgba(251, 191, 36, 0.55);
+      color: var(--dw-color-legendary);
+    }
+  }
+
+  &__options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  &__option-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  &__desc {
+    font-size: 0.65rem;
+    color: var(--dw-surface-400);
+    font-style: italic;
+    padding-left: 0.2rem;
+  }
+}
+
 // ── Dégâts ────────────────────────────────────────────────────────────────────
 
 .atk-damage {
@@ -230,4 +319,11 @@
   }
 
   &__none { color: var(--dw-surface-300); font-size: 0.78rem; }
+
+  &__devastatrices {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--dw-color-legendary);
+    letter-spacing: 0.02em;
+  }
 }

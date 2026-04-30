@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, input, output, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, effect, input, output, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {ButtonModule} from 'primeng/button';
 import {DialogModule} from 'primeng/dialog';
@@ -36,6 +36,21 @@ interface CombatOptionDef {
   note: string;
 }
 
+interface HeroicOptionDef {
+  label: string;
+  value: string;
+  desc: string;
+}
+
+const HEROIC_OPTIONS: HeroicOptionDef[] = [
+  {label: 'Carnage', value: 'carnage', desc: 'Attaque supplémentaire immédiate'},
+  {label: 'Coup dévastateur', value: 'devastateur', desc: '+6 dégâts'},
+  {label: 'Coup précis', value: 'precis', desc: 'Dégâts normaux + dé de malus sur un jet (accord MJ)'},
+  {label: 'Désarmement', value: 'desarmement', desc: 'Adversaire perd son arme (pas de dégâts)'},
+  {label: 'Massacrer la piétaille', value: 'massacre', desc: 'Dégâts = nombre de piétaille mis hors combat'},
+  {label: 'Renversement', value: 'renversement', desc: 'Adversaire à terre, dé de malus à sa prochaine action'},
+];
+
 const COMBAT_OPTIONS: CombatOptionDef[] = [
   {label: 'Aucune', value: 'none', mod: 0, note: ''},
   {label: 'Posture offensive', value: 'offensive', mod: 1, note: '+1 atk / −1 déf'},
@@ -66,10 +81,14 @@ export class BolAttackAssistantComponent {
   protected readonly advantage = signal<'normal' | 'avantage' | 'desavantage'>('normal');
   protected readonly combatOption = signal<string>('none');
   protected readonly armorChinkPenalty = signal<number>(0);
+  protected readonly heroicOption1 = signal<string | null>(null);
+  protected readonly heroicOption2 = signal<string | null>(null);
+  protected readonly useLegendary = signal(false);
 
   protected readonly difficultyOptions = DIFFICULTY_OPTIONS;
   protected readonly advantageOptions = ADVANTAGE_OPTIONS;
   protected readonly combatOptions = COMBAT_OPTIONS;
+  protected readonly heroicOptions = HEROIC_OPTIONS;
 
   protected readonly targets = computed(() =>
     this.allSlots()
@@ -125,6 +144,36 @@ export class BolAttackAssistantComponent {
 
   protected readonly isHeroic = computed(() => this.dice() === 12);
 
+  protected readonly hasHeroism = computed(() => (this.attacker().heroismCourant ?? 0) > 0);
+
+  protected readonly heroicOption1Def = computed(() =>
+    HEROIC_OPTIONS.find((o) => o.value === this.heroicOption1()) ?? null,
+  );
+
+  protected readonly heroicOption2Def = computed(() =>
+    HEROIC_OPTIONS.find((o) => o.value === this.heroicOption2()) ?? null,
+  );
+
+  protected readonly attackerHasArmeAmeliorees = computed(() =>
+    this.attacker().pouvoirs.includes('Armes améliorées'),
+  );
+
+  protected readonly attackerHasDevastatrices = computed(() =>
+    this.attacker().pouvoirs.includes('Attaques dévastatrices'),
+  );
+
+  protected readonly targetIsIntangible = computed(() =>
+    this.target()?.pouvoirs.includes('Intangible') ?? false,
+  );
+
+  constructor() {
+    effect(() => {
+      if (this.attackerHasArmeAmeliorees()) {
+        this.advantage.set('avantage');
+      }
+    });
+  }
+
   protected readonly advantageDiceLabel = computed(() => {
     switch (this.advantage()) {
       case 'avantage': return '3d6 garder les 2 meilleurs';
@@ -141,6 +190,9 @@ export class BolAttackAssistantComponent {
     this.advantage.set('normal');
     this.combatOption.set('none');
     this.armorChinkPenalty.set(0);
+    this.heroicOption1.set(null);
+    this.heroicOption2.set(null);
+    this.useLegendary.set(false);
     this.visibleChange.emit(false);
   }
 }
