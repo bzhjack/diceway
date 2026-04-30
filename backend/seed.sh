@@ -20,3 +20,7 @@ php artisan db:seed --class=BolDemonSeeder
 php artisan db:seed --class=BolPouvoirSeeder
 php artisan db:seed --class=BolCategorieSeeder
 
+php artisan db:seed --class=BolCombatOptionSeeder
+php artisan db:seed --class=BolHeroicOptionSeeder
+php artisan db:seed --class=BolDifficulteSeeder
+
