@@ -15,7 +15,6 @@ use App\Http\Services\Bol\BolHerosService;
 use App\Http\Requests\Bol\BolHerosRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
 class BolHerosController extends Controller
@@ -146,9 +145,6 @@ class BolHerosController extends Controller
         }
         // Delete the resource
         $bolHeros->delete();
-
-        // Suppression en tant que protagonist
-        DB::table('bol_quest_protagonist')->where('protagonist_id', $id)->where('type', 'H')->delete();
 
         // Return a successful response
         return response()->json(['message' => 'Character deleted successfully'], Response::HTTP_OK);

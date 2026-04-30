@@ -40,7 +40,7 @@
               [label]="submitLabel()"
               icon="pi pi-save"
               severity="success"
-              [disabled]="pending() || loadingHero()"
+              [disabled]="pending() || loadingHero() || heroForm.invalid"
             />
 
             @if (editMode() && !heroForm.controls.active.value) {
