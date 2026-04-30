@@ -3,6 +3,7 @@ export interface BolCarriereModel {
   carriere: string;
   description: string;
   detail: string;
+  donne_langue?: boolean;
 }
 
 export interface BolHerosCarriereModel {

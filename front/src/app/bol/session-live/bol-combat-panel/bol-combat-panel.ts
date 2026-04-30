@@ -5,6 +5,7 @@ import {DialogModule} from 'primeng/dialog';
 import {BolAttackAssistantComponent} from './bol-attack-assistant/bol-attack-assistant';
 import {BolCombatGridComponent} from './bol-combat-grid/bol-combat-grid';
 import {BolRollPhaseComponent} from './bol-roll-phase/bol-roll-phase';
+import {INITIATIVE_ORDER, TYPE_LABELS} from './combat.constants';
 
 export type ParticipantType = 'hero' | 'creature' | 'demon' | 'pnj';
 export type ReactionResult =
@@ -16,6 +17,15 @@ export type ReactionResult =
   | 'echec'
   | 'pietaille'
   | 'echec-critique';
+
+export interface PouvoirSlot {
+  readonly nom: string;
+  readonly avantage_attaque: boolean;
+  readonly degats_superieurs: boolean;
+  readonly regeneration: boolean;
+  readonly intangible: boolean;
+  readonly avertissement_combat: boolean;
+}
 
 export interface InitiativeSlot {
   readonly id: string;
@@ -32,7 +42,7 @@ export interface InitiativeSlot {
   readonly defense: number | null;
   readonly degats: string | null;
   readonly tags: string[];
-  readonly pouvoirs: string[];
+  readonly pouvoirs: PouvoirSlot[];
   readonly armesList: {nom: string; degats: string | null; type: 'M' | 'T' | null; portee: string | null; notes: string | null}[];
   readonly armures: {nom: string; protection: string | null; malus: string | null}[];
   category: ReactionResult | null;
@@ -40,23 +50,6 @@ export interface InitiativeSlot {
   heroismCourant: number | null;
 }
 
-const TYPE_LABELS: Record<ParticipantType, string> = {
-  hero: 'PJ',
-  creature: 'Créature',
-  demon: 'Démon',
-  pnj: 'PNJ',
-};
-
-const INITIATIVE_ORDER: Record<ReactionResult, number> = {
-  legendaire: 0,
-  heroique: 1,
-  reussite: 2,
-  rival: 3,
-  coriace: 4,
-  echec: 5,
-  pietaille: 6,
-  'echec-critique': 7,
-};
 
 @Component({
   selector: 'app-bol-combat-panel',
@@ -163,7 +156,7 @@ export class BolCombatPanelComponent {
     this.initiativeOrder.update((list) =>
       list.map((s) => {
         let next = s.vitaliteCourante < 0 ? {...s, vitaliteCourante: s.vitaliteCourante - 1} : s;
-        if (next.pouvoirs.includes('Régénération')) {
+        if (next.pouvoirs.some((p) => p.regeneration)) {
           next = {...next, vitaliteCourante: Math.min(next.vitaliteMax, next.vitaliteCourante + 1)};
         }
         return next;

@@ -296,6 +296,7 @@
   &--hors-combat { color: #fb923c; background: rgba(251, 146,  60, 0.08); border-color: rgba(251, 146,  60, 0.2); }
   &--coma        { color: #f87171; background: rgba(248, 113, 113, 0.08); border-color: rgba(248, 113, 113, 0.2); }
   &--mort        { color: #ef4444; background: rgba(239,  68,  68, 0.10); border-color: rgba(239,  68,  68, 0.3); }
+  &--warning     { color: #fb923c; background: rgba(251, 146,  60, 0.06); border-color: rgba(251, 146,  60, 0.25); font-style: italic; }
 }
 
 // ── HP / Héroïsme stepper ─────────────────────────────────────────────────────

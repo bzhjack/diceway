@@ -12,6 +12,7 @@ use App\Models\Bol\BolHerosCarriere;
 use App\Models\Bol\BolHerosLangue;
 use App\Models\Bol\BolHerosTrait;
 use App\Http\Services\Bol\BolHerosService;
+use App\Http\Requests\Bol\BolHerosRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -58,12 +59,8 @@ class BolHerosController extends Controller
     /**
      * Création d'un hero
      */
-    public function create(Request $request)
+    public function create(BolHerosRequest $request)
     {
-        $data = $request->validate([
-            'nom' => 'required|max:255',
-            'joueur' => 'required|max:255'
-        ]);
         $heros = $request->input();
         $heros['user_id'] = Auth::id();
         $heros = BolHeros::create($heros);
@@ -74,7 +71,7 @@ class BolHerosController extends Controller
     /**
      * Mise à jour d'un hero
      */
-    public function update(Request $request)
+    public function update(BolHerosRequest $request)
     {
         $herosId = $request->input('id');
 

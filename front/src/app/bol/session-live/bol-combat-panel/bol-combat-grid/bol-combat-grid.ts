@@ -5,24 +5,7 @@ import {MessageModule} from 'primeng/message';
 import {SelectModule} from 'primeng/select';
 import {TooltipModule} from 'primeng/tooltip';
 import {InitiativeSlot, ParticipantType, ReactionResult} from '../bol-combat-panel';
-
-const TYPE_LABELS: Record<ParticipantType, string> = {
-  hero: 'PJ',
-  creature: 'Créature',
-  demon: 'Démon',
-  pnj: 'PNJ',
-};
-
-const CATEGORY_LABELS: Record<ReactionResult, string> = {
-  legendaire: 'Légendaire ★★',
-  heroique: 'Héroïque ★',
-  reussite: 'Réussite',
-  rival: 'Rival',
-  coriace: 'Coriace',
-  echec: 'Échec',
-  pietaille: 'Piétaille',
-  'echec-critique': 'Échec critique',
-};
+import {CATEGORY_LABELS, TYPE_LABELS} from '../combat.constants';
 
 @Component({
   selector: 'app-bol-combat-grid',
@@ -67,6 +50,10 @@ export class BolCombatGridComponent {
     if (v < 0) return ['coma'];
     if (v === 0) return ['hors-combat'];
     return [];
+  }
+
+  protected warningPouvoirs(slot: InitiativeSlot): string[] {
+    return slot.pouvoirs.filter((p) => p.avertissement_combat).map((p) => p.nom);
   }
 
   protected armureTooltip(armure: InitiativeSlot['armures'][number]): string {

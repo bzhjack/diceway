@@ -11,7 +11,9 @@ class BolCarriere extends Model
 
     protected $table = 'bol_carriere';
     protected $hidden = ['created_at', 'updated_at'];
+    protected $fillable = ['carriere', 'detail', 'description', 'donne_langue'];
     protected $casts = [
         'id' => 'integer',
+        'donne_langue' => 'boolean',
     ];
 }

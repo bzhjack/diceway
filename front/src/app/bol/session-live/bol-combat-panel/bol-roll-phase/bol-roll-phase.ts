@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, OnInit, computed, effect, input, output, signal, viewChildren} from '@angular/core';
 import {InitiativeSlot, ReactionResult} from '../bol-combat-panel';
+import {CATEGORY_LABELS} from '../combat.constants';
 import {RpCardComponent} from './rp-card/rp-card';
 
 export interface RollEntry {
@@ -24,17 +25,6 @@ const DEFAULT_ROLL_ENTRY: RollEntry = {
   initiativeEnnemie: 0,
   acceptEchecCritique: false,
   depenseHeroisme: false,
-};
-
-const CATEGORY_LABELS: Record<ReactionResult, string> = {
-  legendaire: 'Légendaire ★★',
-  heroique: 'Héroïque ★',
-  reussite: 'Réussite',
-  rival: 'Rival',
-  coriace: 'Coriace',
-  echec: 'Échec',
-  pietaille: 'Piétaille',
-  'echec-critique': 'Échec critique',
 };
 
 @Component({

@@ -135,8 +135,8 @@
           <div class="combat-card__chip-group">
             <span class="combat-card__chip-title">Pouvoirs</span>
             <div class="combat-card__chips">
-              @for (pouvoir of slot.pouvoirs; track pouvoir) {
-                <span class="combat-chip combat-chip--pouvoir">{{ pouvoir }}</span>
+              @for (pouvoir of slot.pouvoirs; track pouvoir.nom) {
+                <span class="combat-chip combat-chip--pouvoir">{{ pouvoir.nom }}</span>
               }
             </div>
           </div>
@@ -164,10 +164,14 @@
 
         <!-- États auto -->
         @let autoE = autoEtats(slot);
-        @if (autoE.length > 0) {
+        @let warnP = warningPouvoirs(slot);
+        @if (autoE.length > 0 || warnP.length > 0) {
           <div class="combat-etats">
             @for (etat of autoE; track etat) {
               <span class="combat-etat combat-etat--{{ etat }}">{{ etat }}</span>
+            }
+            @for (p of warnP; track p) {
+              <span class="combat-etat combat-etat--warning">⚠ {{ p }}</span>
             }
           </div>
         }

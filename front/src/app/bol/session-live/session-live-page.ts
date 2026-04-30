@@ -98,10 +98,10 @@ export class SessionLivePageComponent {
         category: c.rang,
       })),
       ...(s.demons ?? []).map((d): InitiativeSlot => {
-        const pouvoirNames = (d.pouvoirs ?? []).map((p) => p.pouvoir ?? '').filter(Boolean);
         const armorPowers: {nom: string; protection: string | null; malus: string | null}[] = [];
-        if (pouvoirNames.includes('Armure')) armorPowers.push({nom: 'Armure', protection: 'd6-2 (2)', malus: null});
-        if (pouvoirNames.includes('Cuirassé')) armorPowers.push({nom: 'Cuirassé', protection: 'd6 (4)', malus: null});
+        const pouvoirs = (d.pouvoirs ?? []).filter((p) => p.pouvoir);
+        if (pouvoirs.some((p) => p.pouvoir === 'Armure')) armorPowers.push({nom: 'Armure', protection: 'd6-2 (2)', malus: null});
+        if (pouvoirs.some((p) => p.pouvoir === 'Cuirassé')) armorPowers.push({nom: 'Cuirassé', protection: 'd6 (4)', malus: null});
         return {
           id: `demon-${d.id}`,
           nom: d.surnom ?? d.nom,
@@ -119,7 +119,16 @@ export class SessionLivePageComponent {
           defense: d.defense,
           degats: d.degats,
           tags: [],
-          pouvoirs: pouvoirNames.filter((p) => p !== 'Armure' && p !== 'Cuirassé'),
+          pouvoirs: pouvoirs
+            .filter((p) => p.pouvoir !== 'Armure' && p.pouvoir !== 'Cuirassé')
+            .map((p) => ({
+              nom: p.pouvoir!,
+              avantage_attaque: p.avantage_attaque ?? false,
+              degats_superieurs: p.degats_superieurs ?? false,
+              regeneration: p.regeneration ?? false,
+              intangible: p.intangible ?? false,
+              avertissement_combat: p.avertissement_combat ?? false,
+            })),
           armesList: [],
           armures: armorPowers,
           category: d.rang,

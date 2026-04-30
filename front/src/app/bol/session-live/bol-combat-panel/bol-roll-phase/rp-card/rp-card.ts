@@ -3,20 +3,10 @@ import {FormsModule} from '@angular/forms';
 import {CheckboxModule} from 'primeng/checkbox';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {InitiativeSlot, ReactionResult} from '../../bol-combat-panel';
+import {CATEGORY_LABELS} from '../../combat.constants';
 import {RollEntry} from '../bol-roll-phase';
 import {DwPanelComponent} from '../../../../../shared/dw-panel/dw-panel';
 import {ValueStepperComponent} from '../../../../../shared/value-stepper/value-stepper';
-
-const CATEGORY_LABELS: Record<ReactionResult, string> = {
-  legendaire: 'Légendaire ★★',
-  heroique: 'Héroïque ★',
-  reussite: 'Réussite',
-  rival: 'Rival',
-  coriace: 'Coriace',
-  echec: 'Échec',
-  pietaille: 'Piétaille',
-  'echec-critique': 'Échec critique',
-};
 
 @Component({
   selector: 'app-rp-card',

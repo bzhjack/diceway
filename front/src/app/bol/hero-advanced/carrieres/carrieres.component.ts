@@ -25,7 +25,6 @@ import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {HeroAdvancedCreateTools} from '../create.tools';
 import {carrieresFormValidator, carriereValidator} from '../create.validators';
-import {REGION_CAREER_RULES} from '../create.rules';
 
 @Component({
   selector: 'bol-hero-advanced-carrieres',
@@ -77,7 +76,7 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
     initialValue: this.carrieresForm.getRawValue(),
   });
   protected readonly heroId = computed(() => this.herosStateService.currentHeros()?.id);
-  protected readonly regionId = computed(() => this.herosStateService.currentHeros()?.origines.region_id ?? null);
+  protected readonly currentRegion = this.herosStateService.currentHerosRegion;
   protected readonly carrieresList = this.herosStateService.carriereList;
   protected readonly carriereDesavangeCount = this.herosStateService.carriereDesavangeCount;
   protected readonly desavantagesList = this.herosStateService.desavantagesList;
@@ -255,32 +254,28 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
         });
       }
 
-      const regionRule = this.regionId() ? REGION_CAREER_RULES[Number(this.regionId())] : undefined;
+      const region = this.currentRegion();
       const selectedCareerIds = this.carrieres.controls.map((control) => Number(control.get('carriere_id')?.value ?? 0));
-      if (regionRule?.firstCareerId && selectedCareerIds.length > 0 && selectedCareerIds[0] !== regionRule.firstCareerId) {
+      if (region?.premiere_carriere_id && selectedCareerIds.length > 0 && selectedCareerIds[0] !== region.premiere_carriere_id) {
         warnings.push({
           step: 'Carrières',
-          warn: `Pour cette origine, la première carrière doit être ${this.carriereFromId(regionRule.firstCareerId)?.carriere ?? 'requise'}.`,
+          warn: `Pour cette origine, la première carrière doit être ${region.premiere_carriere?.carriere ?? this.carriereFromId(region.premiere_carriere_id)?.carriere ?? 'requise'}.`,
         });
       }
-      if (regionRule?.requiredCareerIds) {
-        for (const requiredCareerId of regionRule.requiredCareerIds) {
-          if (!selectedCareerIds.includes(requiredCareerId)) {
-            warnings.push({
-              step: 'Carrières',
-              warn: `Pour cette origine, une carrière ${this.carriereFromId(requiredCareerId)?.carriere ?? 'requise'} doit être choisie.`,
-            });
-          }
+      for (const requiredId of region?.carrieres_requises ?? []) {
+        if (!selectedCareerIds.includes(requiredId)) {
+          warnings.push({
+            step: 'Carrières',
+            warn: `Pour cette origine, la carrière ${this.carriereFromId(requiredId)?.carriere ?? 'requise'} doit être choisie.`,
+          });
         }
       }
-      if (regionRule?.forbiddenCareerIds) {
-        for (const forbiddenCareerId of regionRule.forbiddenCareerIds) {
-          if (selectedCareerIds.includes(forbiddenCareerId)) {
-            warnings.push({
-              step: 'Carrières',
-              warn: `Pour cette origine, la carrière ${this.carriereFromId(forbiddenCareerId)?.carriere ?? 'interdite'} n'est pas autorisée.`,
-            });
-          }
+      for (const forbiddenId of region?.carrieres_interdites ?? []) {
+        if (selectedCareerIds.includes(forbiddenId)) {
+          warnings.push({
+            step: 'Carrières',
+            warn: `Pour cette origine, la carrière ${this.carriereFromId(forbiddenId)?.carriere ?? 'interdite'} n'est pas autorisée.`,
+          });
         }
       }
     }

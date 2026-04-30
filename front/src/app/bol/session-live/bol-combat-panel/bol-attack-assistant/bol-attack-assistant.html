@@ -46,15 +46,15 @@
       <span class="atk-label">Option</span>
       <div class="atk-option">
         <p-select
-          [options]="combatOptions"
+          [options]="combatOptions()"
           optionLabel="label"
-          optionValue="value"
-          [ngModel]="combatOption()"
-          (ngModelChange)="combatOption.set($event)"
+          optionValue="slug"
+          [ngModel]="combatOptionSlug()"
+          (ngModelChange)="combatOptionSlug.set($event)"
           class="atk-select"
         />
-        @if (selectedCombatOption().note) {
-          <span class="atk-option__note">{{ selectedCombatOption().note }}</span>
+        @if (selectedCombatOption()?.note) {
+          <span class="atk-option__note">{{ selectedCombatOption()!.note }}</span>
         }
       </div>
     </div>
@@ -132,9 +132,9 @@
     <div class="atk-row">
       <span class="atk-label">Difficulté</span>
       <p-select
-        [options]="difficultyOptions"
+        [options]="difficultyOptions()"
         optionLabel="label"
-        optionValue="value"
+        optionValue="modificateur"
         [ngModel]="difficultyMod()"
         (ngModelChange)="difficultyMod.set($event)"
         class="atk-select"
@@ -211,32 +211,32 @@
         <div class="atk-heroic__options">
           <div class="atk-heroic__option-row">
             <p-select
-              [options]="heroicOptions"
+              [options]="heroicOptions()"
               optionLabel="label"
-              optionValue="value"
-              [ngModel]="heroicOption1()"
-              (ngModelChange)="heroicOption1.set($event)"
+              optionValue="slug"
+              [ngModel]="heroicOptionSlug1()"
+              (ngModelChange)="heroicOptionSlug1.set($event)"
               placeholder="Choisir une option"
               class="atk-select"
             />
             @if (heroicOption1Def()) {
-              <span class="atk-heroic__desc">{{ heroicOption1Def()!.desc }}</span>
+              <span class="atk-heroic__desc">{{ heroicOption1Def()!.description }}</span>
             }
           </div>
 
           @if (useLegendary()) {
             <div class="atk-heroic__option-row">
               <p-select
-                [options]="heroicOptions"
+                [options]="heroicOptions()"
                 optionLabel="label"
-                optionValue="value"
-                [ngModel]="heroicOption2()"
-                (ngModelChange)="heroicOption2.set($event)"
+                optionValue="slug"
+                [ngModel]="heroicOptionSlug2()"
+                (ngModelChange)="heroicOptionSlug2.set($event)"
                 placeholder="Deuxième option"
                 class="atk-select"
               />
               @if (heroicOption2Def()) {
-                <span class="atk-heroic__desc">{{ heroicOption2Def()!.desc }}</span>
+                <span class="atk-heroic__desc">{{ heroicOption2Def()!.description }}</span>
               }
             </div>
           }
