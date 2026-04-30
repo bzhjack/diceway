@@ -29,6 +29,23 @@ const ADVANTAGE_OPTIONS = [
   {label: 'Avantage', value: 'avantage'},
 ];
 
+interface CombatOptionDef {
+  label: string;
+  value: string;
+  mod: number | 'armor';
+  note: string;
+}
+
+const COMBAT_OPTIONS: CombatOptionDef[] = [
+  {label: 'Aucune', value: 'none', mod: 0, note: ''},
+  {label: 'Posture offensive', value: 'offensive', mod: 1, note: '+1 atk / −1 déf'},
+  {label: 'Attaque intrépide', value: 'intrepid', mod: 2, note: '+2 atk / −2 déf, perd bouclier'},
+  {label: 'Posture défensive', value: 'defensive', mod: -1, note: '−1 atk / +1 déf'},
+  {label: 'Combat 2 armes — parade', value: 'dual-parry', mod: -1, note: '−1 atk / +1 déf'},
+  {label: 'Combat 2 armes — double frappe', value: 'dual-strike', mod: -1, note: '−1 atk / dégâts +1 catégorie'},
+  {label: 'Attaque au défaut de l\'armure', value: 'armor-chink', mod: 'armor', note: 'Si touché : ignore l\'armure'},
+];
+
 @Component({
   selector: 'app-bol-attack-assistant',
   imports: [FormsModule, ButtonModule, DialogModule, SelectButtonModule, SelectModule, InputNumberModule],
@@ -47,9 +64,12 @@ export class BolAttackAssistantComponent {
   protected readonly dice = signal<number | null>(null);
   protected readonly difficultyMod = signal(0);
   protected readonly advantage = signal<'normal' | 'avantage' | 'desavantage'>('normal');
+  protected readonly combatOption = signal<string>('none');
+  protected readonly armorChinkPenalty = signal<number>(0);
 
   protected readonly difficultyOptions = DIFFICULTY_OPTIONS;
   protected readonly advantageOptions = ADVANTAGE_OPTIONS;
+  protected readonly combatOptions = COMBAT_OPTIONS;
 
   protected readonly targets = computed(() =>
     this.allSlots()
@@ -69,12 +89,24 @@ export class BolAttackAssistantComponent {
     return this.attackType() === 'melee' ? (a.melee ?? 0) : (a.tir ?? 0);
   });
 
+  protected readonly selectedCombatOption = computed(() =>
+    COMBAT_OPTIONS.find((o) => o.value === this.combatOption()) ?? COMBAT_OPTIONS[0],
+  );
+
+  protected readonly combatOptionMod = computed(() => {
+    const opt = this.selectedCombatOption();
+    if (opt.mod === 'armor') return -this.armorChinkPenalty();
+    return opt.mod;
+  });
+
+  protected readonly isArmorChink = computed(() => this.combatOption() === 'armor-chink');
+
   protected readonly totalBonus = computed(() => {
     const a = this.attacker();
     const aptitude = this.attackAptitude();
     const agilite = a.agilite ?? 0;
     const defense = this.target()?.defense ?? 0;
-    return agilite + aptitude - defense + this.difficultyMod();
+    return agilite + aptitude - defense + this.difficultyMod() + this.combatOptionMod();
   });
 
   protected readonly total = computed(() => {
@@ -107,6 +139,8 @@ export class BolAttackAssistantComponent {
     this.dice.set(null);
     this.difficultyMod.set(0);
     this.advantage.set('normal');
+    this.combatOption.set('none');
+    this.armorChinkPenalty.set(0);
     this.visibleChange.emit(false);
   }
 }

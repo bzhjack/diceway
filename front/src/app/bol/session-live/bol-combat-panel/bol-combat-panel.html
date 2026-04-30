@@ -123,6 +123,7 @@
       [selectedParticipantId]="selectedParticipantId()"
       [round1Blocked]="round1Blocked()"
       [legendaryBonus]="legendaryBonus()"
+      [initiativeConfirmed]="initiativeConfirmed()"
       (selectedParticipantChange)="selectedParticipantId.set($event)"
       (addParticipant)="addToInitiative()"
       (hpChange)="adjustHp($event.id, $event.delta)"

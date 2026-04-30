@@ -134,7 +134,7 @@ export class BolCombatPanelComponent {
     this.initiativeOrder.update((list) =>
       list.map((s) =>
         s.id === id
-          ? {...s, vitaliteCourante: Math.max(0, Math.min(s.vitaliteMax, s.vitaliteCourante + delta))}
+          ? {...s, vitaliteCourante: Math.max(-10, Math.min(s.vitaliteMax, s.vitaliteCourante + delta))}
           : s,
       ),
     );

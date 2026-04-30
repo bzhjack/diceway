@@ -61,15 +61,17 @@
             </div>
           </div>
           <div class="combat-card__actions">
-            <p-button
-              icon="pi pi-bolt"
-              [text]="true"
-              severity="warn"
-              size="small"
-              (onClick)="attackStart.emit(slot)"
-              aria-label="Jet d'attaque"
-              pTooltip="Jet d'attaque"
-            />
+            @if (initiativeConfirmed()) {
+              <p-button
+                icon="pi pi-bolt"
+                [text]="true"
+                severity="warn"
+                size="small"
+                (onClick)="attackStart.emit(slot)"
+                aria-label="Jet d'attaque"
+                pTooltip="Jet d'attaque"
+              />
+            }
             <p-button
               icon="pi pi-times"
               [text]="true"

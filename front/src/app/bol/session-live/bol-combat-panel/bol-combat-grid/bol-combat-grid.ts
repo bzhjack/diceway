@@ -37,6 +37,7 @@ export class BolCombatGridComponent {
   readonly selectedParticipantId = input<string | null>(null);
   readonly round1Blocked = input.required<boolean>();
   readonly legendaryBonus = input.required<boolean>();
+  readonly initiativeConfirmed = input.required<boolean>();
 
   readonly selectedParticipantChange = output<string | null>();
   readonly addParticipant = output<void>();

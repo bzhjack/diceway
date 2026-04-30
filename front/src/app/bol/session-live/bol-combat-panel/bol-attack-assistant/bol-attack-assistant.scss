@@ -27,6 +27,20 @@
 
 .atk-select { flex: 1; }
 
+.atk-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+
+  &__note {
+    font-size: 0.62rem;
+    color: var(--dw-surface-400);
+    font-style: italic;
+    white-space: nowrap;
+  }
+}
+
 .atk-advantage {
   display: flex;
   align-items: center;
