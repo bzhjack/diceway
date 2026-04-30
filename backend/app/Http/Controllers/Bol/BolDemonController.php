@@ -39,17 +39,11 @@ class BolDemonController extends Controller
     public function getOne(Request $request)
     {
         $id = $request->route('id');
-        $questId = $request->query('questId'); // Récupération de questId si présent
         $Demon = $this->bolDemonService->getDemonWithRelations($id);
         if ($Demon === null) {
             return response()->json(['error' => 'Demon not found'], 404);
-        } else {
-            if ($questId) {
-                $currentQuest = $Demon->currentQuest($questId, 'D')->first();
-                $Demon['currentQuest'] = $currentQuest;
-            }
-            return response($Demon);
         }
+        return response($Demon);
     }
 
     public function getAllCategories()

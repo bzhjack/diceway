@@ -42,17 +42,11 @@ class BolHerosController extends Controller
     public function getOne(Request $request)
     {
         $id = $request->route('id');
-        $questId = $request->query('questId'); // Récupération de questId si présent
         $hero = $this->bolHerosService->getHeroWithRelations($id);
         if ($hero === null) {
             return response()->json(['error' => 'Hero not found'], 404);
-        } else {
-            if ($questId) {
-                $currentQuest = $hero->currentQuest($questId, 'H')->first();
-                $hero['currentQuest'] = $currentQuest;
-            }
-            return response($hero);
         }
+        return response($hero);
     }
 
     /**
