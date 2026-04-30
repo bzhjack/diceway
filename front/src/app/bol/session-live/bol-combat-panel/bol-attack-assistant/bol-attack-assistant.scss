@@ -195,6 +195,20 @@
     color: var(--dw-surface-600);
   }
 
+  &__armor-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  &__armor-title {
+    font-size: 0.54rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dw-surface-500);
+  }
+
   &__armor {
     font-size: 0.72rem;
     color: var(--dw-surface-400);

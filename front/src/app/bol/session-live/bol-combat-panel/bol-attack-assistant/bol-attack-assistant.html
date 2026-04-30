@@ -167,11 +167,13 @@
             <span class="atk-damage__none">—</span>
           }
           @if (t && t.armures.length > 0) {
-            <div class="atk-damage__armor">
-              Protection cible :
-              @for (armure of t.armures; track armure.nom) {
-                <span>{{ armure.nom }}{{ armure.protection ? ' ' + armure.protection : '' }}</span>
-              }
+            <div class="atk-damage__armor-group">
+              <span class="atk-damage__armor-title">Armures</span>
+              <div class="atk-damage__armor">
+                @for (armure of t.armures; track armure.nom) {
+                  <span>{{ armure.nom }}{{ armure.protection ? ' ' + armure.protection : '' }}</span>
+                }
+              </div>
             </div>
           }
         </div>

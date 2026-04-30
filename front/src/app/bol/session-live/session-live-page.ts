@@ -54,6 +54,7 @@ export class SessionLivePageComponent {
         defense: pj.heros?.combat?.defense ?? null,
         degats: null,
         tags: [],
+        pouvoirs: [],
         armesList: (pj.heros?.armes ?? [])
           .filter((a) => a.arme)
           .map((a) => ({
@@ -90,33 +91,40 @@ export class SessionLivePageComponent {
         degats: c.degats,
         tags: [
           ...(c.capacites ?? []).map((cap) => cap.capacite ?? '').filter(Boolean),
-          ...(c.protection ? [`Protection: ${c.protection}`] : []),
         ],
+        pouvoirs: [],
         armesList: [],
-        armures: [],
+        armures: c.protection ? [{nom: 'Protection naturelle', protection: c.protection, malus: null}] : [],
         category: c.rang,
       })),
-      ...(s.demons ?? []).map((d): InitiativeSlot => ({
-        id: `demon-${d.id}`,
-        nom: d.surnom ?? d.nom,
-        avatar: d.demon?.avatar ?? null,
-        type: 'demon',
-        vitaliteMax: d.vitalite_max,
-        vitaliteCourante: d.vitalite_max,
-        heroismMax: null,
-        heroismCourant: null,
-        agilite: null,
-        esprit: d.esprit,
-        initiative: null,
-        melee: d.melee,
-        tir: d.tir,
-        defense: d.defense,
-        degats: d.degats,
-        tags: (d.pouvoirs ?? []).map((p) => p.pouvoir ?? '').filter(Boolean),
-        armesList: [],
-        armures: [],
-        category: d.rang,
-      })),
+      ...(s.demons ?? []).map((d): InitiativeSlot => {
+        const pouvoirNames = (d.pouvoirs ?? []).map((p) => p.pouvoir ?? '').filter(Boolean);
+        const armorPowers: {nom: string; protection: string | null; malus: string | null}[] = [];
+        if (pouvoirNames.includes('Armure')) armorPowers.push({nom: 'Armure', protection: 'd6-2 (2)', malus: null});
+        if (pouvoirNames.includes('Cuirassé')) armorPowers.push({nom: 'Cuirassé', protection: 'd6 (4)', malus: null});
+        return {
+          id: `demon-${d.id}`,
+          nom: d.surnom ?? d.nom,
+          avatar: d.demon?.avatar ?? null,
+          type: 'demon',
+          vitaliteMax: d.vitalite_max,
+          vitaliteCourante: d.vitalite_max,
+          heroismMax: null,
+          heroismCourant: null,
+          agilite: null,
+          esprit: d.esprit,
+          initiative: null,
+          melee: d.melee,
+          tir: d.tir,
+          defense: d.defense,
+          degats: d.degats,
+          tags: [],
+          pouvoirs: pouvoirNames.filter((p) => p !== 'Armure' && p !== 'Cuirassé'),
+          armesList: [],
+          armures: armorPowers,
+          category: d.rang,
+        };
+      }),
       ...(s.pnjs ?? []).map((p): InitiativeSlot => ({
         id: `pnj-${p.id}`,
         nom: p.surnom ?? p.nom,
@@ -134,6 +142,7 @@ export class SessionLivePageComponent {
         defense: p.defense,
         degats: null,
         tags: [],
+        pouvoirs: [],
         armesList: (p.armes ?? [])
           .filter((a) => a.nom || a.degats)
           .map((a) => ({

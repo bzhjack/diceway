@@ -32,6 +32,7 @@ export interface InitiativeSlot {
   readonly defense: number | null;
   readonly degats: string | null;
   readonly tags: string[];
+  readonly pouvoirs: string[];
   readonly armesList: {nom: string; degats: string | null; type: 'M' | 'T' | null; portee: string | null; notes: string | null}[];
   readonly armures: {nom: string; protection: string | null; malus: string | null}[];
   category: ReactionResult | null;
