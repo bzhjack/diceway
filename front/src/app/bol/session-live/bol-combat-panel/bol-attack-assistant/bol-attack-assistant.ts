@@ -247,6 +247,8 @@ export class BolAttackAssistantComponent {
     const dmg = this.totalDamage();
     if (!t || dmg === null) return;
     this.hpChange.emit({id: t.id, delta: -dmg});
+    this.damageRoll.set(null);
+    this.dice.set(null);
   }
 
   protected close(): void {

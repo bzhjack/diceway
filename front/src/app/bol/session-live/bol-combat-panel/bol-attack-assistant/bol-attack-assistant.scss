@@ -394,6 +394,29 @@
     color: var(--dw-surface-400);
   }
 
+  &__hp {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__hp-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dw-surface-400);
+  }
+
+  &__hp-value {
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-family: monospace;
+    color: #86efac;
+
+    &--danger { color: #fda4af; }
+  }
+
   &__result {
     display: flex;
     align-items: center;

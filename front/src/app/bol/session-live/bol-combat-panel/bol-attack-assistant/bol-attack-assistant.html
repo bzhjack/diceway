@@ -334,6 +334,16 @@
             <div class="atk-dmg__note">Défaut d'armure — protection ignorée</div>
           }
 
+          <!-- PV actuels de la cible -->
+          @if (t) {
+            <div class="atk-dmg__hp">
+              <span class="atk-dmg__hp-label">PV {{ t.nom }}</span>
+              <span class="atk-dmg__hp-value" [class.atk-dmg__hp-value--danger]="t.vitaliteCourante <= 0">
+                {{ t.vitaliteCourante }} / {{ t.vitaliteMax }}
+              </span>
+            </div>
+          }
+
           <!-- Résultat net + bouton appliquer -->
           @if (totalDamage() !== null) {
             <div class="atk-dmg__result">
