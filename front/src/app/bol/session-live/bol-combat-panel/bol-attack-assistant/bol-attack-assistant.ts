@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal, untracked} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {FormsModule} from '@angular/forms';
 import {ButtonModule} from 'primeng/button';
@@ -6,8 +6,32 @@ import {DialogModule} from 'primeng/dialog';
 import {SelectButtonModule} from 'primeng/selectbutton';
 import {SelectModule} from 'primeng/select';
 import {InputNumberModule} from 'primeng/inputnumber';
-import {InitiativeSlot} from '../bol-combat-panel';
+import {ArmeSlot, DamageCategorie, InitiativeSlot} from '../bol-combat-panel';
 import {BolCombatReferenceService} from '../../../services/bol-combat-reference.service';
+
+const MAINS_NUES: ArmeSlot = {nom: 'Mains nues', degats: 'd3', type: 'M', portee: null, notes: null, categorie: 'nue'};
+
+function categorieFromDegats(degats: string | null): DamageCategorie | null {
+  if (!degats) return null;
+  if (degats.startsWith('d3'))  return 'nue';
+  if (degats.startsWith('d6M')) return 'legere';
+  if (degats.startsWith('d6B')) return 'lourde';
+  if (degats.startsWith('d6'))  return 'moyenne';
+  return null;
+}
+
+function protectionFixed(s: string | null): number {
+  if (!s) return 0;
+  const parens = s.match(/\((\d+)\)/);
+  if (parens) return parseInt(parens[1], 10);
+  const num = s.match(/^\+?(\d+)$/);
+  if (num) return parseInt(num[1], 10);
+  return 0;
+}
+
+function protectionHasVariable(s: string | null): boolean {
+  return !!s?.startsWith('d6');
+}
 
 const ADVANTAGE_OPTIONS = [
   {label: 'Désav.', value: 'desavantage'},
@@ -29,7 +53,12 @@ export class BolAttackAssistantComponent {
   readonly allSlots = input.required<InitiativeSlot[]>();
   readonly visible = input.required<boolean>();
   readonly visibleChange = output<boolean>();
+  readonly hpChange = output<{id: string; delta: number}>();
 
+  protected readonly mainsNues = MAINS_NUES;
+  protected readonly selectedArme = signal<ArmeSlot | null>(null);
+  protected readonly damageRoll = signal<number | null>(null);
+  protected readonly armorValue = signal<number>(0);
   protected readonly targetId = signal<string | null>(null);
   protected readonly attackType = signal<'melee' | 'tir'>('melee');
   protected readonly dice = signal<number | null>(null);
@@ -45,6 +74,20 @@ export class BolAttackAssistantComponent {
   protected readonly combatOptions = toSignal(this.refService.getCombatOptions(), {initialValue: []});
   protected readonly heroicOptions = toSignal(this.refService.getHeroicOptions(), {initialValue: []});
   protected readonly advantageOptions = ADVANTAGE_OPTIONS;
+
+  protected readonly availableArmes = computed((): ArmeSlot[] => {
+    const attacker = this.attacker();
+    if (attacker.armesList.length > 0) return attacker.armesList;
+    if (attacker.degats) {
+      return [{nom: 'Attaque', degats: attacker.degats, type: 'M', portee: null, notes: null, categorie: categorieFromDegats(attacker.degats)}];
+    }
+    return [];
+  });
+
+  protected readonly showTypeToggle = computed(() => {
+    const arme = this.selectedArme();
+    return !arme || arme.type === null;
+  });
 
   protected readonly targets = computed(() =>
     this.allSlots()
@@ -129,7 +172,67 @@ export class BolAttackAssistantComponent {
         this.advantage.set('avantage');
       }
     });
+    effect(() => {
+      // Reset weapon selection when attacker changes (new dialog open)
+      void this.attacker().id;
+      this.selectedArme.set(null);
+      this.attackType.set('melee');
+    });
+    effect(() => {
+      // Pre-fill armor value with fixed protection when target changes
+      void this.targetId();
+      this.armorValue.set(untracked(() => this.targetArmorFixed()));
+    });
   }
+
+  protected selectArme(arme: ArmeSlot): void {
+    this.selectedArme.set(arme);
+    if (arme.type === 'T') this.attackType.set('tir');
+    else this.attackType.set('melee');
+  }
+
+  protected readonly defautArmure = computed(() => this.combatOptionSlug() === 'armor-chink');
+
+  protected readonly effectiveDamageCategorie = computed((): DamageCategorie => {
+    const ORDER: DamageCategorie[] = ['nue', 'legere', 'moyenne', 'lourde'];
+    let idx = ORDER.indexOf(this.selectedArme()?.categorie ?? 'nue');
+    if (this.combatOptionSlug() === 'dual-strike' && idx < 3) idx++;
+    if (this.attackerHasDevastatrices() && idx < 3) idx++;
+    return ORDER[Math.min(idx, 3)];
+  });
+
+  protected readonly damageDiceLabel = computed(() => {
+    switch (this.effectiveDamageCategorie()) {
+      case 'nue':     return 'd3';
+      case 'legere':  return '2d6 garder le moins bon';
+      case 'moyenne': return '1d6';
+      case 'lourde':  return '2d6 garder le meilleur';
+    }
+  });
+
+  protected readonly vigBonus = computed(() => {
+    const vigueur = this.attacker().vigueur ?? 0;
+    const arme = this.selectedArme();
+    if (!arme || arme.categorie === 'nue') return Math.floor(vigueur / 2);
+    return this.attackType() === 'tir' ? Math.floor(vigueur / 2) : vigueur;
+  });
+
+  protected readonly targetArmorFixed = computed(() =>
+    (this.target()?.armures ?? []).reduce((sum, a) => sum + protectionFixed(a.protection), 0),
+  );
+
+  protected readonly targetHasArmor = computed(() =>
+    !this.defautArmure() && (this.target()?.armures ?? []).length > 0,
+  );
+
+  protected readonly totalDamage = computed(() => {
+    const roll = this.damageRoll();
+    if (roll === null) return null;
+    let base = roll + this.vigBonus();
+    if ([this.heroicOptionSlug1(), this.heroicOptionSlug2()].some((s) => s === 'devastateur')) base += 6;
+    const armor = this.defautArmure() ? 0 : this.armorValue();
+    return Math.max(0, base - armor);
+  });
 
   protected readonly advantageDiceLabel = computed(() => {
     switch (this.advantage()) {
@@ -139,7 +242,17 @@ export class BolAttackAssistantComponent {
     }
   });
 
+  protected applyDamage(): void {
+    const t = this.target();
+    const dmg = this.totalDamage();
+    if (!t || dmg === null) return;
+    this.hpChange.emit({id: t.id, delta: -dmg});
+  }
+
   protected close(): void {
+    this.selectedArme.set(null);
+    this.damageRoll.set(null);
+    this.armorValue.set(0);
     this.targetId.set(null);
     this.attackType.set('melee');
     this.dice.set(null);

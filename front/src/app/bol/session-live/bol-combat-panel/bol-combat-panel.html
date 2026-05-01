@@ -139,6 +139,7 @@
       [allSlots]="sortedInitiative()"
       [visible]="true"
       (visibleChange)="!$event && attackerSlot.set(null)"
+      (hpChange)="adjustHp($event.id, $event.delta)"
     />
   }
 </p-card>

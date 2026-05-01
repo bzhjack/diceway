@@ -1,10 +1,10 @@
 # Plan — Sélection d'arme et gestion des dégâts dans l'assistant d'attaque
 
+**✅ Toutes les priorités terminées — 2026-05-01**
+
 ## Contexte MJ
 
 En session live, le MJ jongle avec plusieurs participants. Le panneau d'attaque doit aller vite : sélectionner l'arme, lancer les dés physiques, saisir les résultats, voir les dégâts nets, cliquer "Appliquer". Chaque étape superflue casse le rythme de la table.
-
-Problème actuel : l'arme n'est pas sélectionnée avant le jet — le type d'attaque (mêlée/tir) n'est donc pas automatiquement lié à l'arme. Après le toucher, la liste des armes s'affiche en lecture seule, sans calcul de dégâts. La vigueur de l'attaquant est absente de `InitiativeSlot`.
 
 ---
 

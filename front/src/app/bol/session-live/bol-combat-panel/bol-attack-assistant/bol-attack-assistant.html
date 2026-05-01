@@ -15,6 +15,32 @@
 
   <div class="atk">
 
+    <!-- Sélection d'arme -->
+    <div class="atk-weapons">
+      @for (arme of availableArmes(); track arme.nom) {
+        <button
+          class="atk-weapon-btn"
+          [class.atk-weapon-btn--active]="selectedArme()?.nom === arme.nom"
+          (click)="selectArme(arme)"
+          type="button"
+        >
+          <span class="atk-weapon-btn__nom">{{ arme.nom }}</span>
+          @if (arme.degats) {
+            <span class="atk-weapon-btn__degats">{{ arme.degats }}</span>
+          }
+        </button>
+      }
+      <button
+        class="atk-weapon-btn atk-weapon-btn--nue"
+        [class.atk-weapon-btn--active]="selectedArme()?.nom === 'Mains nues'"
+        (click)="selectArme(mainsNues)"
+        type="button"
+      >
+        <span class="atk-weapon-btn__nom">Mains nues</span>
+        <span class="atk-weapon-btn__degats">d3</span>
+      </button>
+    </div>
+
     <!-- Cible -->
     <div class="atk-row">
       <span class="atk-label">Cible</span>
@@ -27,8 +53,8 @@
       />
     </div>
 
-    <!-- Type d'attaque -->
-    @if (hasTir()) {
+    <!-- Type d'attaque (visible uniquement si l'arme n'impose pas le type) -->
+    @if (hasTir() && showTypeToggle()) {
       <div class="atk-row">
         <span class="atk-label">Type</span>
         <p-selectButton
@@ -249,36 +275,87 @@
       <div class="atk-warning">⚠ Cible intangible — blessé uniquement par magie ou alchimie</div>
     }
 
-    <!-- Dégâts (si touché) -->
+    <!-- Dégâts interactifs (si touché) -->
     @if (isHit()) {
-      <div class="atk-damage">
-        <span class="atk-label">Dégâts</span>
-        <div class="atk-damage__content">
-          @if (a.armesList.length > 0) {
-            @for (arme of a.armesList; track arme.nom) {
-              @if (arme.degats) {
-                <span class="atk-damage__weapon">{{ arme.nom }} : <strong>{{ arme.degats }}</strong></span>
+      <div class="atk-dmg">
+
+        @if (selectedArme()) {
+
+          <!-- Badges modificateurs de catégorie -->
+          @if (attackerHasDevastatrices() || combatOptionSlug() === 'dual-strike') {
+            <div class="atk-dmg__badges">
+              @if (combatOptionSlug() === 'dual-strike') {
+                <span class="atk-power-badge">Double frappe +1 cat.</span>
               }
-            }
-          } @else if (a.degats) {
-            <strong>{{ a.degats }}</strong>
-          } @else {
-            <span class="atk-damage__none">—</span>
+              @if (attackerHasDevastatrices()) {
+                <span class="atk-power-badge">Dévastatrices +1 cat.</span>
+              }
+            </div>
           }
-          @if (attackerHasDevastatrices()) {
-            <span class="atk-damage__devastatrices">Attaques dévastatrices — dégâts +1 catégorie</span>
-          }
-          @if (t && t.armures.length > 0) {
-            <div class="atk-damage__armor-group">
-              <span class="atk-damage__armor-title">Armures</span>
-              <div class="atk-damage__armor">
-                @for (armure of t.armures; track armure.nom) {
-                  <span>{{ armure.nom }}{{ armure.protection ? ' ' + armure.protection : '' }}</span>
-                }
+
+          <!-- Saisie du dé de dégâts -->
+          <div class="atk-row">
+            <span class="atk-label">Dégâts</span>
+            <div class="atk-dmg__input">
+              <span class="atk-dmg__dice-label">{{ damageDiceLabel() }}</span>
+              <p-inputNumber
+                [ngModel]="damageRoll()"
+                (ngModelChange)="damageRoll.set($event)"
+                [min]="1" [max]="20"
+                placeholder="—"
+                [inputStyle]="{'width':'3.5rem','text-align':'center','font-size':'1.15rem','font-weight':'700'}"
+              />
+              @if (vigBonus() !== 0) {
+                <span class="atk-dmg__vig">+{{ vigBonus() }} vig.</span>
+              }
+            </div>
+          </div>
+
+          <!-- Armure de la cible -->
+          @if (targetHasArmor()) {
+            <div class="atk-row">
+              <span class="atk-label">Armure</span>
+              <div class="atk-dmg__armor">
+                <p-inputNumber
+                  [ngModel]="armorValue()"
+                  (ngModelChange)="armorValue.set($event ?? 0)"
+                  [min]="0" [max]="10"
+                  [inputStyle]="{'width':'3.5rem','text-align':'center'}"
+                />
+                <span class="atk-dmg__armor-hint">
+                  @for (armure of t!.armures; track armure.nom) {
+                    {{ armure.nom }}{{ armure.protection ? ' (' + armure.protection + ')' : '' }}
+                  }
+                </span>
               </div>
             </div>
           }
-        </div>
+          @if (defautArmure()) {
+            <div class="atk-dmg__note">Défaut d'armure — protection ignorée</div>
+          }
+
+          <!-- Résultat net + bouton appliquer -->
+          @if (totalDamage() !== null) {
+            <div class="atk-dmg__result">
+              <div class="atk-dmg__result-calc">
+                <span class="atk-dmg__result-label">Dégâts nets</span>
+                <span class="atk-dmg__result-value">{{ totalDamage() }}</span>
+              </div>
+              <p-button
+                label="Appliquer"
+                icon="pi pi-heart-break"
+                severity="danger"
+                size="small"
+                [disabled]="!target() || targetIsIntangible()"
+                (onClick)="applyDamage()"
+              />
+            </div>
+          }
+
+        } @else {
+          <div class="atk-dmg__hint">← Sélectionner une arme en haut</div>
+        }
+
       </div>
     }
 

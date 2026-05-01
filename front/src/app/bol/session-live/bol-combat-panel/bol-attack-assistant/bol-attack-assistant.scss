@@ -1,3 +1,63 @@
+// ── Sélection d'arme ─────────────────────────────────────────────────────────
+
+.atk-weapons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.atk-weapon-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 5px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(15, 23, 42, 0.3);
+  cursor: pointer;
+  transition: border-color 120ms, background 120ms;
+
+  &:hover {
+    border-color: rgba(148, 163, 184, 0.4);
+    background: rgba(15, 23, 42, 0.5);
+  }
+
+  &--active {
+    border-color: rgba(251, 191, 36, 0.55);
+    background: rgba(251, 191, 36, 0.08);
+
+    .atk-weapon-btn__nom { color: var(--dw-color-legendary); }
+  }
+
+  &--nue {
+    border-style: dashed;
+    border-color: rgba(148, 163, 184, 0.14);
+
+    &.atk-weapon-btn--active {
+      border-style: solid;
+      border-color: rgba(251, 191, 36, 0.55);
+    }
+  }
+
+  &__nom {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--dw-surface-600);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  &__degats {
+    font-size: 0.6rem;
+    font-family: monospace;
+    color: var(--dw-surface-400);
+    letter-spacing: 0.04em;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 .atk {
   display: flex;
   flex-direction: column;
@@ -277,53 +337,98 @@
   }
 }
 
-// ── Dégâts ────────────────────────────────────────────────────────────────────
+// ── Section dégâts interactive ────────────────────────────────────────────────
 
-.atk-damage {
+.atk-dmg {
   display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding: 0.45rem 0.7rem;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.55rem 0.7rem;
   border-radius: 6px;
-  background: rgba(15, 23, 42, 0.25);
+  background: rgba(244, 63, 94, 0.04);
+  border: 1px solid rgba(244, 63, 94, 0.18);
 
-  &__content {
+  &__badges {
     display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
+    flex-wrap: wrap;
+    gap: 0.35rem;
   }
 
-  &__weapon {
-    font-size: 0.78rem;
-    color: var(--dw-surface-600);
-  }
-
-  &__armor-group {
+  &__input {
     display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
   }
 
-  &__armor-title {
-    font-size: 0.54rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+  &__dice-label {
+    font-size: 0.68rem;
+    font-family: monospace;
     color: var(--dw-surface-500);
+    white-space: nowrap;
+  }
+
+  &__vig {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--dw-surface-500);
+    white-space: nowrap;
   }
 
   &__armor {
-    font-size: 0.72rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+  }
+
+  &__armor-hint {
+    font-size: 0.65rem;
     color: var(--dw-surface-400);
     font-style: italic;
   }
 
-  &__none { color: var(--dw-surface-300); font-size: 0.78rem; }
-
-  &__devastatrices {
+  &__note {
     font-size: 0.65rem;
+    font-style: italic;
+    color: var(--dw-surface-400);
+  }
+
+  &__result {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-top: 0.35rem;
+    border-top: 1px solid rgba(244, 63, 94, 0.15);
+  }
+
+  &__result-calc {
+    display: flex;
+    align-items: baseline;
+    gap: 0.45rem;
+  }
+
+  &__result-label {
+    font-size: 0.58rem;
     font-weight: 700;
-    color: var(--dw-color-legendary);
-    letter-spacing: 0.02em;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dw-surface-400);
+  }
+
+  &__result-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    font-family: monospace;
+    color: #fda4af;
+    line-height: 1;
+  }
+
+  &__hint {
+    font-size: 0.68rem;
+    color: var(--dw-surface-300);
+    font-style: italic;
+    padding: 0.15rem 0;
   }
 }
