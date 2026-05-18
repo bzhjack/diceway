@@ -11,12 +11,12 @@
       <span class="combat-card__name">{{ s.nom }}</span>
     </div>
     <div class="combat-card__badges">
-      <span class="combat-type combat-type--{{ s.type }}">{{ typeLabel(s.type) }}</span>
       @if (s.category) {
         <span class="combat-cat combat-cat--{{ s.category }}">{{ categoryLabel(s.category) }}</span>
       } @else {
         <span class="combat-pending">En attente</span>
       }
+      <span class="combat-type combat-type--{{ s.type }}">{{ typeLabel(s.type) }}</span>
       @if (showR1Block()) {
         <span class="combat-r1" [pTooltip]="r1Tooltip()">⛔ R1</span>
       }
