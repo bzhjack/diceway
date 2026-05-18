@@ -1,167 +1,177 @@
 @let s = slot();
 
-<!-- En-tête : avatar + identité + actions -->
-<div class="combat-card__header">
-  <div class="combat-card__avatar">
-    @if (s.avatar) {
-      <img [src]="s.avatar" [alt]="s.nom" class="h-full w-full object-cover" />
-    } @else {
-      <span class="combat-card__avatar-placeholder">{{ s.nom[0] }}</span>
-    }
-  </div>
-  <div class="combat-card__identity">
-    <div class="combat-card__name-row">
-      <span class="combat-card__pos">{{ index() + 1 }}</span>
-      <span class="combat-card__name">{{ s.nom }}</span>
-    </div>
-    <div class="combat-card__badges">
-      @if (s.category) {
-        <span class="combat-cat combat-cat--{{ s.category }}">{{ categoryLabel(s.category) }}</span>
-      } @else {
-        <span class="combat-pending">En attente</span>
-      }
-      <span class="combat-type combat-type--{{ s.type }}">{{ typeLabel(s.type) }}</span>
-      @if (showR1Block()) {
-        <span class="combat-r1" [pTooltip]="r1Tooltip()">⛔ R1</span>
-      }
-    </div>
-  </div>
-  <div class="combat-card__actions">
+<!-- Portrait -->
+<div class="cc-portrait">
+  @if (s.avatar) {
+    <img [src]="s.avatar" [alt]="s.nom" class="cc-portrait__img" />
+  } @else {
+    <span class="cc-portrait__placeholder">{{ s.nom[0] }}</span>
+  }
+  <div class="cc-portrait__gradient"></div>
+
+  <span class="cc-num">{{ index() + 1 }}</span>
+
+  <div class="cc-actions">
     @if (initiativeConfirmed()) {
-      <p-button
-        icon="pi pi-bolt"
-        [text]="true"
-        severity="warn"
-        size="small"
-        (onClick)="attackStart.emit(s)"
-        aria-label="Jet d'attaque"
-        pTooltip="Jet d'attaque"
-      />
+      <p-button icon="pi pi-bolt" [text]="true" severity="warn" size="small"
+        (onClick)="attackStart.emit(s)" aria-label="Jet d'attaque" pTooltip="Jet d'attaque" />
     }
-    <p-button
-      icon="pi pi-times"
-      [text]="true"
-      severity="danger"
-      size="small"
-      (onClick)="removeParticipant.emit(s.id)"
-      aria-label="Retirer de l'initiative"
-    />
+    <p-button icon="pi pi-times" [text]="true" severity="danger" size="small"
+      (onClick)="removeParticipant.emit(s.id)" aria-label="Retirer de l'initiative" />
   </div>
-</div>
 
-<!-- Stats -->
-<div class="combat-card__stats">
-  @if (s.esprit != null) {
-    <div class="combat-card__stat">
-      <span class="combat-card__stat-label">Esp.</span>
-      <span class="combat-card__stat-value">{{ s.esprit }}</span>
-    </div>
+  @if (showR1Block()) {
+    <span class="cc-r1badge" [pTooltip]="r1Tooltip()">R1</span>
   }
-  @if (s.initiative != null) {
-    <div class="combat-card__stat">
-      <span class="combat-card__stat-label">Init</span>
-      <span class="combat-card__stat-value">{{ s.initiative }}</span>
-    </div>
-  }
-  @if (s.melee != null) {
-    <div class="combat-card__stat">
-      <span class="combat-card__stat-label">Mêlée</span>
-      <span class="combat-card__stat-value">{{ s.melee }}</span>
-    </div>
-  }
-  @if (s.tir != null) {
-    <div class="combat-card__stat">
-      <span class="combat-card__stat-label">Tir</span>
-      <span class="combat-card__stat-value">{{ s.tir }}</span>
-    </div>
-  }
-  @if (s.defense != null) {
-    <div class="combat-card__stat">
-      <span class="combat-card__stat-label">Déf.</span>
-      <span class="combat-card__stat-value combat-card__stat-value--def">{{ s.defense }}</span>
-    </div>
-  }
-  @if (s.degats) {
-    <div class="combat-card__stat">
-      <span class="combat-card__stat-label">Dégâts</span>
-      <span class="combat-card__stat-value combat-card__stat-value--degats">{{ s.degats }}</span>
-    </div>
-  }
-</div>
 
-<!-- Chips : tags, pouvoirs, armes, armures -->
-@if (s.tags.length > 0) {
-  <div class="combat-card__chips">
-    @for (tag of s.tags; track tag) {
-      <span class="combat-chip">{{ tag }}</span>
-    }
-  </div>
-}
-@if (s.pouvoirs.length > 0) {
-  <div class="combat-card__chip-group">
-    <span class="combat-card__chip-title">Pouvoirs</span>
-    <div class="combat-card__chips">
-      @for (pouvoir of s.pouvoirs; track pouvoir.nom) {
-        <span class="combat-chip combat-chip--pouvoir" [pTooltip]="pouvoir.description ?? undefined" tooltipPosition="top">{{ pouvoir.nom }}</span>
+  <!-- Identité superposée au bas du dégradé -->
+  <div class="cc-identity">
+    <span class="cc-name">{{ s.nom }}</span>
+    <span class="cc-subtitle">
+      @if (s.category) {
+        <span class="cc-cat--{{ s.category }}">{{ categoryLabel(s.category) }}</span>
+      } @else {
+        <span class="cc-cat--none">En attente</span>
       }
-    </div>
-  </div>
-}
-@if (s.armesList.length > 0) {
-  <div class="combat-card__chip-group">
-    <span class="combat-card__chip-title">Armes</span>
-    <div class="combat-card__chips">
-      @for (arme of s.armesList; track arme.nom) {
-        <span class="combat-chip combat-chip--arme" [pTooltip]="armeTooltip(arme)">{{ arme.nom }}{{ arme.degats ? ' ' + arme.degats : '' }}</span>
-      }
-    </div>
-  </div>
-}
-@if (s.armures.length > 0) {
-  <div class="combat-card__chip-group">
-    <span class="combat-card__chip-title">Armures</span>
-    <div class="combat-card__chips">
-      @for (armure of s.armures; track armure.nom) {
-        <span class="combat-chip combat-chip--armure" [pTooltip]="armureTooltip(armure)">{{ armure.nom }}</span>
-      }
-    </div>
-  </div>
-}
-
-<!-- États auto -->
-@if (autoEtats().length > 0 || warningPouvoirs().length > 0) {
-  <div class="combat-etats">
-    @for (etat of autoEtats(); track etat) {
-      <span class="combat-etat combat-etat--{{ etat }}">{{ etat }}</span>
-    }
-    @for (p of warningPouvoirs(); track p) {
-      <span class="combat-etat combat-etat--warning">⚠ {{ p }}</span>
-    }
-  </div>
-}
-
-<!-- Vitalité -->
-<div class="combat-card__resource">
-  <span class="combat-card__res-label">PV</span>
-  <button class="combat-hp__btn" (click)="hpChange.emit({id: s.id, delta: -1})" aria-label="Réduire PV">−</button>
-  <span class="combat-hp__frac">
-    <span class="combat-hp__cur"
-      [class.combat-hp__cur--high]="hpRatio() > 0.5"
-      [class.combat-hp__cur--mid]="hpRatio() > 0.25 && hpRatio() <= 0.5"
-      [class.combat-hp__cur--low]="hpRatio() <= 0.25"
-    >{{ s.vitaliteCourante }}</span><span class="combat-hp__slash">/</span><span class="combat-hp__max">{{ s.vitaliteMax }}</span>
-  </span>
-  <button class="combat-hp__btn" (click)="hpChange.emit({id: s.id, delta: 1})" aria-label="Augmenter PV">+</button>
-</div>
-
-<!-- Héroïsme -->
-@if (s.heroismMax != null) {
-  <div class="combat-card__resource combat-card__resource--heroism">
-    <span class="combat-card__res-label">PH</span>
-    <button class="combat-hp__btn" (click)="heroismChange.emit({id: s.id, delta: -1})" aria-label="Réduire héroïsme">−</button>
-    <span class="combat-hp__frac combat-hp__frac--heroism">
-      <span class="combat-hp__cur">{{ s.heroismCourant }}</span><span class="combat-hp__slash">/</span><span class="combat-hp__max">{{ s.heroismMax }}</span>
+      <span class="cc-dot">•</span>
+      <span class="cc-type--{{ s.type }}">{{ typeLabel(s.type) }}</span>
     </span>
-    <button class="combat-hp__btn" (click)="heroismChange.emit({id: s.id, delta: 1})" aria-label="Augmenter héroïsme">+</button>
   </div>
-}
+</div>
+
+<!-- Corps -->
+<div class="cc-body">
+
+  <!-- Stats -->
+  <div class="cc-stats">
+    @if (s.esprit != null) {
+      <div class="cc-stat">
+        <i class="pi pi-lightbulb cc-stat__ico"></i>
+        <span class="cc-stat__val">{{ s.esprit }}</span>
+        <span class="cc-stat__lbl">Esp.</span>
+      </div>
+    }
+    @if (s.initiative != null) {
+      <div class="cc-stat">
+        <i class="pi pi-bolt cc-stat__ico"></i>
+        <span class="cc-stat__val">{{ s.initiative }}</span>
+        <span class="cc-stat__lbl">Init.</span>
+      </div>
+    }
+    @if (s.melee != null) {
+      <div class="cc-stat">
+        <i class="pi pi-hammer cc-stat__ico"></i>
+        <span class="cc-stat__val">{{ s.melee }}</span>
+        <span class="cc-stat__lbl">Mêlée</span>
+      </div>
+    }
+    @if (s.tir != null) {
+      <div class="cc-stat">
+        <i class="pi pi-bullseye cc-stat__ico"></i>
+        <span class="cc-stat__val">{{ s.tir }}</span>
+        <span class="cc-stat__lbl">Tir</span>
+      </div>
+    }
+    @if (s.defense != null) {
+      <div class="cc-stat">
+        <i class="pi pi-shield cc-stat__ico"></i>
+        <span class="cc-stat__val">{{ s.defense }}</span>
+        <span class="cc-stat__lbl">Déf.</span>
+      </div>
+    }
+    @if (s.degats) {
+      <div class="cc-stat">
+        <i class="pi pi-exclamation-triangle cc-stat__ico"></i>
+        <span class="cc-stat__val">{{ s.degats }}</span>
+        <span class="cc-stat__lbl">Dégâts</span>
+      </div>
+    }
+  </div>
+
+  <!-- PV / PH -->
+  <div class="cc-resources">
+    <div class="cc-res">
+      <i class="pi pi-heart-fill cc-res__ico cc-res__ico--pv"
+        [class.cc-res__ico--high]="hpRatio() > 0.5"
+        [class.cc-res__ico--mid]="hpRatio() > 0.25 && hpRatio() <= 0.5"
+        [class.cc-res__ico--low]="hpRatio() <= 0.25"
+      ></i>
+      <span class="cc-res__val"
+        [class.cc-res__val--high]="hpRatio() > 0.5"
+        [class.cc-res__val--mid]="hpRatio() > 0.25 && hpRatio() <= 0.5"
+        [class.cc-res__val--low]="hpRatio() <= 0.25"
+      >{{ s.vitaliteCourante }}</span>
+      <span class="cc-res__sep">/</span>
+      <span class="cc-res__max">{{ s.vitaliteMax }}</span>
+      <div class="cc-res__stepper">
+        <button class="cc-btn" (click)="hpChange.emit({id: s.id, delta: -1})" aria-label="Réduire PV">−</button>
+        <button class="cc-btn" (click)="hpChange.emit({id: s.id, delta: 1})" aria-label="Augmenter PV">+</button>
+      </div>
+    </div>
+
+    @if (s.heroismMax != null) {
+      <div class="cc-res cc-res--ph">
+        <i class="pi pi-sparkles cc-res__ico cc-res__ico--ph"></i>
+        <span class="cc-res__val">{{ s.heroismCourant }}</span>
+        <span class="cc-res__sep">/</span>
+        <span class="cc-res__max">{{ s.heroismMax }}</span>
+        <div class="cc-res__stepper">
+          <button class="cc-btn" (click)="heroismChange.emit({id: s.id, delta: -1})" aria-label="Réduire héroïsme">−</button>
+          <button class="cc-btn" (click)="heroismChange.emit({id: s.id, delta: 1})" aria-label="Augmenter héroïsme">+</button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- États auto -->
+  @if (autoEtats().length > 0 || warningPouvoirs().length > 0) {
+    <div class="cc-etats">
+      @for (etat of autoEtats(); track etat) {
+        <span class="cc-etat cc-etat--{{ etat }}">{{ etat }}</span>
+      }
+      @for (p of warningPouvoirs(); track p) {
+        <span class="cc-etat cc-etat--warning">⚠ {{ p }}</span>
+      }
+    </div>
+  }
+
+  <!-- Équipement + pouvoirs -->
+  @if (s.armesList.length > 0 || s.armures.length > 0 || s.tags.length > 0 || s.pouvoirs.length > 0 || s.degats) {
+    <div class="cc-equip">
+      <div class="cc-equip__col">
+        @if (s.degats && s.armesList.length === 0) {
+          <span class="cc-equip__row">
+            <span class="cc-equip__ico">⚔</span>{{ s.degats }}
+          </span>
+        }
+        @for (arme of s.armesList; track arme.nom) {
+          <span class="cc-equip__row" [pTooltip]="armeTooltip(arme)">
+            <span class="cc-equip__ico">⚔</span>{{ arme.nom }}{{ arme.degats ? ' ' + arme.degats : '' }}
+          </span>
+        }
+        @for (armure of s.armures; track armure.nom) {
+          <span class="cc-equip__row cc-equip__row--armure" [pTooltip]="armureTooltip(armure)">
+            <span class="cc-equip__ico">☰</span>{{ armure.nom }}
+          </span>
+        }
+        @for (tag of s.tags; track tag) {
+          <span class="cc-equip__row cc-equip__row--tag">
+            <span class="cc-equip__ico">◆</span>{{ tag }}
+          </span>
+        }
+      </div>
+
+      @if (s.pouvoirs.length > 0) {
+        <div class="cc-equip__col cc-equip__col--right">
+          @for (pouvoir of s.pouvoirs; track pouvoir.nom) {
+            <span class="cc-equip__row cc-equip__row--pouvoir"
+              [pTooltip]="pouvoir.description ?? undefined" tooltipPosition="top">
+              {{ pouvoir.nom }}
+            </span>
+          }
+        </div>
+      }
+    </div>
+  }
+
+</div>
