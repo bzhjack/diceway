@@ -136,6 +136,7 @@ export class SessionLivePageComponent {
             .filter((p) => p.pouvoir !== 'Armure' && p.pouvoir !== 'Cuirassé')
             .map((p) => ({
               nom: p.pouvoir!,
+              description: p.description ?? null,
               avantage_attaque: p.avantage_attaque ?? false,
               degats_superieurs: p.degats_superieurs ?? false,
               regeneration: p.regeneration ?? false,

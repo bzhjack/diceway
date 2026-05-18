@@ -208,7 +208,7 @@
           <div class="atk-result__verdict atk-result__verdict--heroic">
             ★ Succès héroïque automatique
           </div>
-        } @else if (dice() === 2) {
+        } @else if ((dice() ?? 0) <= 2) {
           <div class="atk-result__verdict atk-result__verdict--miss">
             ✗ Échec automatique (2 naturel)
           </div>

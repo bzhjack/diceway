@@ -137,12 +137,12 @@ export class BolAttackAssistantComponent {
     const d = this.dice();
     const t = this.total();
     if (d === null || t === null) return null;
-    if (d === 2) return false;
-    if (d === 12) return true;
+    if (d <= 2) return false;
+    if (d >= 12) return true;
     return t >= 9;
   });
 
-  protected readonly isHeroic = computed(() => this.dice() === 12);
+  protected readonly isHeroic = computed(() => (this.dice() ?? 0) >= 12);
 
   protected readonly hasHeroism = computed(() => (this.attacker().heroismCourant ?? 0) > 0);
 

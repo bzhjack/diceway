@@ -34,13 +34,14 @@ class BolScenarioService
         if ($pouvoirIds->isEmpty()) return;
 
         $flags = BolPouvoir::whereIn('id', $pouvoirIds)
-            ->get(['id', 'avantage_attaque', 'degats_superieurs', 'regeneration', 'intangible', 'avertissement_combat'])
+            ->get(['id', 'description', 'avantage_attaque', 'degats_superieurs', 'regeneration', 'intangible', 'avertissement_combat'])
             ->keyBy('id');
 
         $demons->each(function ($demon) use ($flags) {
             $demon->pouvoirs = collect($demon->pouvoirs ?? [])->map(function ($p) use ($flags) {
                 $f = $flags->get($p['pouvoir_id'] ?? null);
                 return array_merge($p, [
+                    'description'         => $f?->description ?? null,
                     'avantage_attaque'    => (bool) ($f?->avantage_attaque ?? false),
                     'degats_superieurs'   => (bool) ($f?->degats_superieurs ?? false),
                     'regeneration'        => (bool) ($f?->regeneration ?? false),

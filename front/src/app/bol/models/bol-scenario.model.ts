@@ -44,6 +44,7 @@ export interface BolScenarioPouvoirModel {
   pouvoir_id: number;
   pouvoir: string | null;
   detail: string | null;
+  description: string | null;
   avantage_attaque: boolean;
   degats_superieurs: boolean;
   regeneration: boolean;

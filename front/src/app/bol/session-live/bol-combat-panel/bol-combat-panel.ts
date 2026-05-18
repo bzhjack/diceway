@@ -20,6 +20,7 @@ export type ReactionResult =
 
 export interface PouvoirSlot {
   readonly nom: string;
+  readonly description: string | null;
   readonly avantage_attaque: boolean;
   readonly degats_superieurs: boolean;
   readonly regeneration: boolean;
