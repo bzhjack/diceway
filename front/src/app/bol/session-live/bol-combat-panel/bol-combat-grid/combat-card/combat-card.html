@@ -3,7 +3,11 @@
 <!-- En-tête : avatar + identité + actions -->
 <div class="combat-card__header">
   <div class="combat-card__avatar">
-    <img [src]="s.avatar || '/assets/bol/empty-avatar.jpg'" [alt]="s.nom" class="h-full w-full object-cover" />
+    @if (s.avatar) {
+      <img [src]="s.avatar" [alt]="s.nom" class="h-full w-full object-cover" />
+    } @else {
+      <span class="combat-card__avatar-placeholder">{{ s.nom[0] }}</span>
+    }
   </div>
   <div class="combat-card__identity">
     <div class="combat-card__name-row">

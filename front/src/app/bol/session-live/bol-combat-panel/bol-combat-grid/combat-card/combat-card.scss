@@ -38,7 +38,19 @@
     overflow: hidden;
     border-radius: 4px;
     border: 1px solid rgba(148, 163, 184, 0.25);
-    background: var(--dw-surface-50);
+    background: rgba(15, 23, 42, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__avatar-placeholder {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--dw-surface-400);
+    text-transform: uppercase;
+    line-height: 1;
+    user-select: none;
   }
 
   &__identity {
