@@ -87,7 +87,7 @@ export class SessionLivePageComponent {
       ...(s.creatures ?? []).map((c): InitiativeSlot => ({
         id: `creature-${c.id}`,
         nom: c.surnom ?? c.nom,
-        avatar: c.creature?.avatar ?? null,
+        avatar: c.creature ? (c.creature.user_id ? c.creature.avatar : `/assets/bol/bestiary/${c.creature_id}.jpg`) : null,
         type: 'creature',
         vitaliteMax: c.vitalite_max,
         vitaliteCourante: c.vitalite_max,
@@ -117,7 +117,7 @@ export class SessionLivePageComponent {
         return {
           id: `demon-${d.id}`,
           nom: d.surnom ?? d.nom,
-          avatar: d.demon?.avatar ?? null,
+          avatar: d.demon ? (d.demon.user_id ? d.demon.avatar : `/assets/bol/demon/${d.demon_id}.jpg`) : null,
           type: 'demon',
           vitaliteMax: d.vitalite_max,
           vitaliteCourante: d.vitalite_max,
@@ -151,7 +151,7 @@ export class SessionLivePageComponent {
       ...(s.pnjs ?? []).map((p): InitiativeSlot => ({
         id: `pnj-${p.id}`,
         nom: p.surnom ?? p.nom,
-        avatar: p.pnj?.origines?.avatar ?? null,
+        avatar: p.pnj ? (p.pnj.user_id ? (p.pnj.origines?.avatar ?? null) : `/assets/bol/pnj/${p.pnj.id}.jpg`) : null,
         type: 'pnj',
         vitaliteMax: p.vitalite_max,
         vitaliteCourante: p.vitalite_max,
