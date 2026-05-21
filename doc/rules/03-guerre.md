@@ -104,12 +104,17 @@ Effets:
 | Courte | `0` |
 | Bout portant | `+1` |
 
-Usages typiques:
+Portee maximale par action ou arme navale:
 
-- `Maximale`: tirs indirects lourds
-- `Moyenne`: eperonnage
-- `Courte`: grappins, bris de rames
-- `Bout portant`: abordage, desengagement
+| Action ou arme | Portee maximale |
+| --- | --- |
+| Catapulte | `Maximale` |
+| Crache-feu, projectiles (arcs, frondes, etc.) | `Longue` |
+| Eperonner | `Moyenne` |
+| Lancer les grappins, briser les rames | `Courte` |
+| Abordage, desengagement | `Bout portant` |
+
+Chaque action reste utilisable a toute portee inferieure ou egale a sa portee maximale, en appliquant le modificateur correspondant.
 
 ### Sequence d'un round naval
 

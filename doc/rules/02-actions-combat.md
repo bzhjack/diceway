@@ -208,6 +208,8 @@ L'armure protège en absorbant tout ou partie des dégâts. Les boucliers influe
 
 En règle générale, une carrière martiale (soldat, gladiateur, pirate, mercenaire…) ne confère pas de bonus direct aux aptitudes de combat. Dans des situations exceptionnelles, le MJ peut permettre qu'une carrière ajoute son rang à un jet d'attaque **ou** à un jet de dégâts — jamais les deux simultanément.
 
+Le joueur doit décrire la manœuvre spéciale ou la feinte qui justifie ce bonus. Une même feinte ne fonctionne **pas deux fois contre le même adversaire** ; certains PNJ expérimentés ne se laisseront pas non plus abuser.
+
 ## Options de combat
 
 > Ces options peuvent ralentir le jeu. Le MJ décide de les autoriser en partie ou en totalité. Il peut réserver leur usage aux personnages possédant au moins une carrière de combattant.
