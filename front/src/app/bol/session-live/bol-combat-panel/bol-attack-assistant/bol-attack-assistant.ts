@@ -6,7 +6,7 @@ import {DialogModule} from 'primeng/dialog';
 import {SelectButtonModule} from 'primeng/selectbutton';
 import {SelectModule} from 'primeng/select';
 import {InputNumberModule} from 'primeng/inputnumber';
-import {ArmeSlot, DamageCategorie, InitiativeSlot} from '../bol-combat-panel';
+import {ArmeSlot, DamageCategorie, InitiativeSlot, ParticipantType, ReactionResult} from '../bol-combat-panel';
 import {BolCombatReferenceService} from '../../../services/bol-combat-reference.service';
 
 const MAINS_NUES: ArmeSlot = {nom: 'Mains nues', degats: 'd3', type: 'M', portee: null, notes: null, categorie: 'nue'};
@@ -29,15 +29,29 @@ function protectionFixed(s: string | null): number {
   return 0;
 }
 
-function protectionHasVariable(s: string | null): boolean {
-  return !!s?.startsWith('d6');
-}
-
 const ADVANTAGE_OPTIONS = [
-  {label: 'Désav.', value: 'desavantage'},
+  {label: 'Désavantage', value: 'desavantage'},
   {label: 'Normal', value: 'normal'},
   {label: 'Avantage', value: 'avantage'},
 ];
+
+const TYPE_LABELS: Record<ParticipantType, string> = {
+  hero: 'PJ',
+  creature: 'Créature',
+  demon: 'Démon',
+  pnj: 'PNJ',
+};
+
+const REACTION_LABELS: Record<ReactionResult, string> = {
+  'legendaire': 'Légendaire',
+  'heroique': 'Héroïque',
+  'reussite': 'Réussite',
+  'echec': 'Échec',
+  'echec-critique': 'Échec critique',
+  'rival': 'Rival',
+  'coriace': 'Coriace',
+  'pietaille': 'Piétaille',
+};
 
 @Component({
   selector: 'app-bol-attack-assistant',
@@ -62,6 +76,7 @@ export class BolAttackAssistantComponent {
   protected readonly targetId = signal<string | null>(null);
   protected readonly attackType = signal<'melee' | 'tir'>('melee');
   protected readonly dice = signal<number | null>(null);
+  protected readonly diceDetail = signal<number[]>([]);
   protected readonly difficultyMod = signal(0);
   protected readonly advantage = signal<'normal' | 'avantage' | 'desavantage'>('normal');
   protected readonly combatOptionSlug = signal<string>('none');
@@ -89,15 +104,28 @@ export class BolAttackAssistantComponent {
     return !arme || arme.type === null;
   });
 
-  protected readonly targets = computed(() =>
-    this.allSlots()
-      .filter((s) => s.id !== this.attacker().id)
-      .map((s) => ({label: s.nom, value: s.id})),
-  );
-
   protected readonly target = computed(() => {
     const id = this.targetId();
     return id ? (this.allSlots().find((s) => s.id === id) ?? null) : null;
+  });
+
+  protected readonly targetCards = computed(() =>
+    this.allSlots()
+      .filter((s) => s.id !== this.attacker().id)
+      .map((s, idx) => ({
+        slot: s,
+        order: idx + 1,
+        typeLabel: TYPE_LABELS[s.type],
+        categoryLabel: s.category ? REACTION_LABELS[s.category] : null,
+      })),
+  );
+
+  protected readonly targetTypeText = computed(() => {
+    const t = this.target();
+    if (!t) return '';
+    const parts: string[] = [TYPE_LABELS[t.type]];
+    if (t.category) parts.push(REACTION_LABELS[t.category]);
+    return parts.join(' • ');
   });
 
   protected readonly hasTir = computed(() => (this.attacker().tir ?? 0) !== 0);
@@ -106,6 +134,8 @@ export class BolAttackAssistantComponent {
     const a = this.attacker();
     return this.attackType() === 'melee' ? (a.melee ?? 0) : (a.tir ?? 0);
   });
+
+  protected readonly attackAptitudeLabel = computed(() => this.attackType() === 'melee' ? 'Mêlée' : 'Tir');
 
   protected readonly selectedCombatOption = computed(() =>
     this.combatOptions().find((o) => o.slug === this.combatOptionSlug()) ?? null,
@@ -166,6 +196,42 @@ export class BolAttackAssistantComponent {
     this.target()?.pouvoirs.some((p) => p.intangible) ?? false,
   );
 
+  protected readonly bonusSummary = computed(() => {
+    const parts: string[] = [];
+    if (this.difficultyMod() !== 0) {
+      const d = this.difficultyOptions().find((o) => o.modificateur === this.difficultyMod());
+      const sign = this.difficultyMod() > 0 ? '+' : '';
+      parts.push(`${d?.label ?? 'Difficulté'} ${sign}${this.difficultyMod()}`);
+    }
+    if (this.combatOptionMod() !== 0) {
+      const opt = this.selectedCombatOption();
+      const sign = this.combatOptionMod() > 0 ? '+' : '';
+      parts.push(`${opt?.label ?? 'Option'} ${sign}${this.combatOptionMod()}`);
+    }
+    if (this.advantage() !== 'normal') {
+      parts.push(this.advantage() === 'avantage' ? 'Avantage (3d6 ↑)' : 'Désavantage (3d6 ↓)');
+    }
+    return parts.length === 0 ? 'Aucun modificateur' : parts.join(' • ');
+  });
+
+  protected readonly rollStatus = computed<'pending' | 'hit' | 'miss' | 'heroic' | 'critical'>(() => {
+    const d = this.dice();
+    if (d === null) return 'pending';
+    if (d >= 12) return 'heroic';
+    if (d <= 2) return 'critical';
+    return this.isHit() ? 'hit' : 'miss';
+  });
+
+  protected readonly rollStatusLabel = computed(() => {
+    switch (this.rollStatus()) {
+      case 'pending':  return 'En attente';
+      case 'hit':      return 'Touché';
+      case 'miss':     return 'Échec';
+      case 'heroic':   return 'Succès héroïque';
+      case 'critical': return 'Échec critique';
+    }
+  });
+
   constructor() {
     effect(() => {
       if (this.attackerHasArmeAmeliorees()) {
@@ -189,6 +255,25 @@ export class BolAttackAssistantComponent {
     this.selectedArme.set(arme);
     if (arme.type === 'T') this.attackType.set('tir');
     else this.attackType.set('melee');
+  }
+
+  protected rollDice(): void {
+    const adv = this.advantage();
+    const count = adv === 'normal' ? 2 : 3;
+    const rolls = Array.from({length: count}, () => Math.floor(Math.random() * 6) + 1);
+    const sorted = [...rolls].sort((a, b) => b - a);
+    const kept = adv === 'desavantage' ? sorted.slice(-2) : sorted.slice(0, 2);
+    this.diceDetail.set(rolls);
+    this.dice.set(kept[0] + kept[1]);
+  }
+
+  protected resetRoll(): void {
+    this.dice.set(null);
+    this.diceDetail.set([]);
+    this.damageRoll.set(null);
+    this.heroicOptionSlug1.set(null);
+    this.heroicOptionSlug2.set(null);
+    this.useLegendary.set(false);
   }
 
   protected readonly defautArmure = computed(() => this.combatOptionSlug() === 'armor-chink');
@@ -236,8 +321,8 @@ export class BolAttackAssistantComponent {
 
   protected readonly advantageDiceLabel = computed(() => {
     switch (this.advantage()) {
-      case 'avantage': return '3d6 garder les 2 meilleurs';
-      case 'desavantage': return '3d6 garder les 2 moins bons';
+      case 'avantage': return '3d6 — garder les 2 meilleurs';
+      case 'desavantage': return '3d6 — garder les 2 moins bons';
       default: return '2d6';
     }
   });
@@ -249,6 +334,7 @@ export class BolAttackAssistantComponent {
     this.hpChange.emit({id: t.id, delta: -dmg});
     this.damageRoll.set(null);
     this.dice.set(null);
+    this.diceDetail.set([]);
   }
 
   protected close(): void {
@@ -258,6 +344,7 @@ export class BolAttackAssistantComponent {
     this.targetId.set(null);
     this.attackType.set('melee');
     this.dice.set(null);
+    this.diceDetail.set([]);
     this.difficultyMod.set(0);
     this.advantage.set('normal');
     this.combatOptionSlug.set('none');
