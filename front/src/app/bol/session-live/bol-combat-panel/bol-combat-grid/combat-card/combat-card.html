@@ -17,7 +17,7 @@
         (onClick)="attackStart.emit(s)" aria-label="Jet d'attaque" pTooltip="Jet d'attaque" />
     }
     @if (showEquip()) {
-      <p-button icon="pi pi-book" [text]="true" severity="secondary" size="small"
+      <p-button icon="pi pi-book" [text]="true" severity="warn" size="small"
         (onClick)="equipOp.toggle($event)" aria-label="Équipement & pouvoirs" pTooltip="Équipement & pouvoirs" />
     }
     <p-button icon="pi pi-times" [text]="true" severity="danger" size="small"
@@ -155,7 +155,7 @@
 
     @if (s.armesList.length > 0 || (s.degats && s.armesList.length === 0)) {
       <section class="cc-equip__section">
-        <h4 class="cc-equip__label">Arme</h4>
+        <h4 class="cc-equip__label">Armes</h4>
         @if (s.degats && s.armesList.length === 0) {
           <span class="cc-equip__row">
             <i class="pi pi-send cc-equip__ico"></i>{{ s.degats }}
@@ -172,7 +172,7 @@
 
     @if (s.armures.length > 0) {
       <section class="cc-equip__section">
-        <h4 class="cc-equip__label">Armure</h4>
+        <h4 class="cc-equip__label">Armures</h4>
         @for (armure of s.armures; track armure.nom) {
           <span class="cc-equip__row" [pTooltip]="armureTooltip(armure)" tooltipPosition="left">
             <i class="pi pi-shield cc-equip__ico"></i>{{ armure.nom }}
