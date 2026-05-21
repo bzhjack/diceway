@@ -141,39 +141,69 @@
 </div>
 
 <!-- Popover équipement & pouvoirs -->
-<p-popover #equipOp>
+<p-popover #equipOp styleClass="equip-popover">
   <div class="cc-equip">
-    <div class="cc-equip__col">
-      @if (s.degats && s.armesList.length === 0) {
-        <span class="cc-equip__row">
-          <span class="cc-equip__ico">⚔</span>{{ s.degats }}
-        </span>
-      }
-      @for (arme of s.armesList; track arme.nom) {
-        <span class="cc-equip__row" [pTooltip]="armeTooltip(arme)">
-          <span class="cc-equip__ico">⚔</span>{{ arme.nom }}{{ arme.degats ? ' ' + arme.degats : '' }}
-        </span>
-      }
-      @for (armure of s.armures; track armure.nom) {
-        <span class="cc-equip__row cc-equip__row--armure" [pTooltip]="armureTooltip(armure)">
-          <span class="cc-equip__ico">☰</span>{{ armure.nom }}
-        </span>
-      }
-      @for (tag of s.tags; track tag) {
-        <span class="cc-equip__row cc-equip__row--tag">
-          <span class="cc-equip__ico">◆</span>{{ tag }}
-        </span>
-      }
+
+    <div class="cc-equip__header">
+      <i class="pi pi-spin-off pi-database cc-equip__gem"></i>
+      <div class="cc-equip__headline">
+        <span class="cc-equip__hline"></span>
+        <span class="cc-equip__htitle">Équipement</span>
+        <span class="cc-equip__hline"></span>
+      </div>
     </div>
+
+    @if (s.armesList.length > 0 || (s.degats && s.armesList.length === 0)) {
+      <section class="cc-equip__section">
+        <h4 class="cc-equip__label">Arme</h4>
+        @if (s.degats && s.armesList.length === 0) {
+          <span class="cc-equip__row">
+            <i class="pi pi-send cc-equip__ico"></i>{{ s.degats }}
+          </span>
+        }
+        @for (arme of s.armesList; track arme.nom) {
+          <span class="cc-equip__row" [pTooltip]="armeTooltip(arme)" tooltipPosition="left">
+            <i class="pi pi-send cc-equip__ico"></i>
+            {{ arme.nom }}@if (arme.degats) { <span class="cc-equip__badge">{{ arme.degats }}</span> }
+          </span>
+        }
+      </section>
+    }
+
+    @if (s.armures.length > 0) {
+      <section class="cc-equip__section">
+        <h4 class="cc-equip__label">Armure</h4>
+        @for (armure of s.armures; track armure.nom) {
+          <span class="cc-equip__row" [pTooltip]="armureTooltip(armure)" tooltipPosition="left">
+            <i class="pi pi-shield cc-equip__ico"></i>{{ armure.nom }}
+          </span>
+        }
+      </section>
+    }
+
+    @if (s.tags.length > 0) {
+      <section class="cc-equip__section">
+        <h4 class="cc-equip__label">Tags</h4>
+        @for (tag of s.tags; track tag) {
+          <span class="cc-equip__row cc-equip__row--tag">
+            <i class="pi pi-tag cc-equip__ico"></i>{{ tag }}
+          </span>
+        }
+      </section>
+    }
+
     @if (s.pouvoirs.length > 0) {
-      <div class="cc-equip__col cc-equip__col--right">
+      <section class="cc-equip__section">
+        <h4 class="cc-equip__label">Pouvoirs</h4>
         @for (pouvoir of s.pouvoirs; track pouvoir.nom) {
           <span class="cc-equip__row cc-equip__row--pouvoir"
-            [pTooltip]="pouvoir.description ?? undefined" tooltipPosition="top">
+            [pTooltip]="pouvoir.description ?? undefined" tooltipPosition="left">
+            <i class="pi pi-sparkles cc-equip__ico cc-equip__ico--pouvoir"></i>
             {{ pouvoir.nom }}
           </span>
         }
-      </div>
+      </section>
     }
+
   </div>
 </p-popover>
