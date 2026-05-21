@@ -35,7 +35,7 @@ Fichiers:
 - `05-alchimie-foi-sorcellerie.md`: moteurs de magie, foi et alchimie.
 - `06-progression.md`: recompenses, experience, progression et suivants.
 
-Pages PDF utiles:
+Pages PDF utiles (numerotation du livre):
 
 - Creation des heros: p. 12-55
 - Actions et combat: p. 56-66
@@ -47,6 +47,8 @@ Pages PDF utiles:
 - Categories de PNJ: p. 132-135
 - Alchimie, foi, sorcellerie: p. 138-157
 - Progression et suivants: p. 164-166
+
+Note: les references ci-dessus utilisent la pagination imprimee du livre. Pour ouvrir le PDF source, ajouter `+2` (la pagination PDF demarre 2 pages avant celle du livre). Exemple: livre p. 56 = PDF p. 58.
 
 Convention de lecture:
 
