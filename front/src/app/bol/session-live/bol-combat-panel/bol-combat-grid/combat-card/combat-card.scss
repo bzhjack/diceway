@@ -8,17 +8,10 @@
   border-radius: 7px;
   border: 1px solid var(--dw-surface-500);
   background: var(--dw-surface-50);
-  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   position: relative;
-  transition: box-shadow 200ms, transform 150ms;
-
-  &:hover {
-    box-shadow: 0 4px 26px rgba(0, 0, 0, 0.72);
-    transform: translateY(-1px);
-  }
 
   // PJ — border plus épais, fond plus clair
   &[data-type='hero'] {
@@ -28,7 +21,7 @@
     .cc-portrait__gradient {
       background: linear-gradient(
         to bottom,
-        rgba(0, 0, 0, 0.28) 0%,
+        color-mix(in srgb, var(--dw-surface-0) 28%, transparent) 0%,
         transparent 25%,
         transparent 65%,
         var(--dw-surface-200) 88%,
@@ -37,10 +30,7 @@
     }
   }
 
-  // Border color by category
-  &[data-cat='rival']          { box-shadow: 0 0 22px color-mix(in srgb, var(--dw-color-rival) 14%, transparent), 0 2px 14px rgba(0, 0, 0, 0.55); }
-  &[data-cat='echec-critique'] { box-shadow: 0 0 18px color-mix(in srgb, var(--dw-color-echec-forte) 10%, transparent), 0 2px 14px rgba(0, 0, 0, 0.55); }
-  &[data-cat='none']           { border-style: dashed; }
+  &[data-cat='none'] { border-style: dashed; }
 }
 
 // ── Portrait ──────────────────────────────────────────────────────────────────
@@ -81,7 +71,7 @@
     pointer-events: none;
     background: linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.28) 0%,
+      color-mix(in srgb, var(--dw-surface-0) 28%, transparent) 0%,
       transparent 25%,
       transparent 65%,
       var(--dw-surface-50) 88%,
@@ -103,8 +93,8 @@
   width: 2.1rem;
   height: 2.1rem;
   background: var(--dw-surface-0);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid color-mix(in srgb, var(--dw-surface-900) 8%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--dw-surface-900) 8%, transparent);
   border-bottom-right-radius: 7px;
   color: var(--dw-surface-700);
   font-size: 1rem;
@@ -219,10 +209,10 @@
 .cc-stats {
   display: flex;
   align-items: stretch;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid color-mix(in srgb, var(--dw-surface-900) 5%, transparent);
   border-radius: 5px;
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.18);
+  background: color-mix(in srgb, var(--dw-surface-0) 18%, transparent);
 }
 
 .cc-stat {
@@ -235,7 +225,7 @@
   padding: 0.3rem 0.12rem 0.25rem;
 
   & + & {
-    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: 1px solid color-mix(in srgb, var(--dw-surface-900) 5%, transparent);
   }
 
   &__ico {
@@ -376,8 +366,6 @@
     text-overflow: ellipsis;
     max-width: 100%;
 
-    &--armure { color: var(--dw-surface-500); }
-    &--tag    { color: var(--dw-surface-500); }
     &--pouvoir {
       color: color-mix(in srgb, var(--dw-color-echec) 72%, transparent);
       font-style: italic;
@@ -401,9 +389,9 @@
   width: 1.1rem;
   height: 1.1rem;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid color-mix(in srgb, var(--dw-surface-900) 9%, transparent);
   border-radius: 2px;
-  background: rgba(255, 255, 255, 0.02);
+  background: color-mix(in srgb, var(--dw-surface-900) 2%, transparent);
   color: var(--dw-surface-500);
   font-size: 0.8rem;
   line-height: 1;
@@ -412,10 +400,10 @@
   transition: border-color 100ms, color 100ms, background 100ms;
 
   &:hover {
-    border-color: rgba(255, 255, 255, 0.22);
+    border-color: color-mix(in srgb, var(--dw-surface-900) 22%, transparent);
     color: var(--dw-surface-700);
-    background: rgba(255, 255, 255, 0.06);
+    background: color-mix(in srgb, var(--dw-surface-900) 6%, transparent);
   }
 
-  &:active { background: rgba(255, 255, 255, 0.1); }
+  &:active { background: color-mix(in srgb, var(--dw-surface-900) 10%, transparent); }
 }

@@ -1,12 +1,13 @@
 import {ChangeDetectionStrategy, Component, computed, input, output} from '@angular/core';
 import {ButtonModule} from 'primeng/button';
+import {PopoverModule} from 'primeng/popover';
 import {TooltipModule} from 'primeng/tooltip';
 import {InitiativeSlot, ParticipantType, ReactionResult} from '../../bol-combat-panel';
 import {CATEGORY_LABELS, TYPE_LABELS} from '../../combat.constants';
 
 @Component({
   selector: 'app-combat-card',
-  imports: [ButtonModule, TooltipModule],
+  imports: [ButtonModule, PopoverModule, TooltipModule],
   templateUrl: './combat-card.html',
   styleUrl: './combat-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,6 +41,11 @@ export class CombatCardComponent {
   protected readonly warningPouvoirs = computed(() =>
     this.slot().pouvoirs.filter((p) => p.avertissement_combat).map((p) => p.nom),
   );
+
+  protected readonly showEquip = computed(() => {
+    const s = this.slot();
+    return s.armesList.length > 0 || s.armures.length > 0 || s.tags.length > 0 || s.pouvoirs.length > 0 || !!s.degats;
+  });
 
   protected readonly showR1Block = computed(() => {
     const s = this.slot();

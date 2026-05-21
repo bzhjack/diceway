@@ -16,6 +16,10 @@
       <p-button icon="pi pi-bolt" [text]="true" severity="warn" size="small"
         (onClick)="attackStart.emit(s)" aria-label="Jet d'attaque" pTooltip="Jet d'attaque" />
     }
+    @if (showEquip()) {
+      <p-button icon="pi pi-book" [text]="true" severity="secondary" size="small"
+        (onClick)="equipOp.toggle($event)" aria-label="Équipement & pouvoirs" pTooltip="Équipement & pouvoirs" />
+    }
     <p-button icon="pi pi-times" [text]="true" severity="danger" size="small"
       (onClick)="removeParticipant.emit(s.id)" aria-label="Retirer de l'initiative" />
   </div>
@@ -134,44 +138,42 @@
     }
   </div>
 
+</div>
 
-  <!-- Équipement + pouvoirs -->
-  @if ( s.armesList.length > 0 || s.armures.length > 0 || s.tags.length > 0 || s.pouvoirs.length > 0 || s.degats) {
-    <div class="cc-equip" style="display: none">
-      <div class="cc-equip__col">
-        @if (s.degats && s.armesList.length === 0) {
-          <span class="cc-equip__row">
-            <span class="cc-equip__ico">⚔</span>{{ s.degats }}
-          </span>
-        }
-        @for (arme of s.armesList; track arme.nom) {
-          <span class="cc-equip__row" [pTooltip]="armeTooltip(arme)">
-            <span class="cc-equip__ico">⚔</span>{{ arme.nom }}{{ arme.degats ? ' ' + arme.degats : '' }}
-          </span>
-        }
-        @for (armure of s.armures; track armure.nom) {
-          <span class="cc-equip__row cc-equip__row--armure" [pTooltip]="armureTooltip(armure)">
-            <span class="cc-equip__ico">☰</span>{{ armure.nom }}
-          </span>
-        }
-        @for (tag of s.tags; track tag) {
-          <span class="cc-equip__row cc-equip__row--tag">
-            <span class="cc-equip__ico">◆</span>{{ tag }}
+<!-- Popover équipement & pouvoirs -->
+<p-popover #equipOp>
+  <div class="cc-equip">
+    <div class="cc-equip__col">
+      @if (s.degats && s.armesList.length === 0) {
+        <span class="cc-equip__row">
+          <span class="cc-equip__ico">⚔</span>{{ s.degats }}
+        </span>
+      }
+      @for (arme of s.armesList; track arme.nom) {
+        <span class="cc-equip__row" [pTooltip]="armeTooltip(arme)">
+          <span class="cc-equip__ico">⚔</span>{{ arme.nom }}{{ arme.degats ? ' ' + arme.degats : '' }}
+        </span>
+      }
+      @for (armure of s.armures; track armure.nom) {
+        <span class="cc-equip__row cc-equip__row--armure" [pTooltip]="armureTooltip(armure)">
+          <span class="cc-equip__ico">☰</span>{{ armure.nom }}
+        </span>
+      }
+      @for (tag of s.tags; track tag) {
+        <span class="cc-equip__row cc-equip__row--tag">
+          <span class="cc-equip__ico">◆</span>{{ tag }}
+        </span>
+      }
+    </div>
+    @if (s.pouvoirs.length > 0) {
+      <div class="cc-equip__col cc-equip__col--right">
+        @for (pouvoir of s.pouvoirs; track pouvoir.nom) {
+          <span class="cc-equip__row cc-equip__row--pouvoir"
+            [pTooltip]="pouvoir.description ?? undefined" tooltipPosition="top">
+            {{ pouvoir.nom }}
           </span>
         }
       </div>
-
-      @if (s.pouvoirs.length > 0) {
-        <div class="cc-equip__col cc-equip__col--right">
-          @for (pouvoir of s.pouvoirs; track pouvoir.nom) {
-            <span class="cc-equip__row cc-equip__row--pouvoir"
-              [pTooltip]="pouvoir.description ?? undefined" tooltipPosition="top">
-              {{ pouvoir.nom }}
-            </span>
-          }
-        </div>
-      }
-    </div>
-  }
-
-</div>
+    }
+  </div>
+</p-popover>
