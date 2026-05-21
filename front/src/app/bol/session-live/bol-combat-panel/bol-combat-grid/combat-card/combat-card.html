@@ -28,13 +28,13 @@
   <div class="cc-identity">
     <span class="cc-name">{{ s.nom }}</span>
     <span class="cc-subtitle">
+      <span class="cc-type--{{ s.type }}">{{ typeLabel(s.type) }}</span>
+      <span class="cc-dot">•</span>
       @if (s.category) {
         <span class="cc-cat--{{ s.category }}">{{ categoryLabel(s.category) }}</span>
       } @else {
         <span class="cc-cat--none">En attente</span>
       }
-      <span class="cc-dot">•</span>
-      <span class="cc-type--{{ s.type }}">{{ typeLabel(s.type) }}</span>
     </span>
   </div>
 </div>
@@ -136,8 +136,8 @@
   }
 
   <!-- Équipement + pouvoirs -->
-  @if (s.armesList.length > 0 || s.armures.length > 0 || s.tags.length > 0 || s.pouvoirs.length > 0 || s.degats) {
-    <div class="cc-equip">
+  @if ( s.armesList.length > 0 || s.armures.length > 0 || s.tags.length > 0 || s.pouvoirs.length > 0 || s.degats) {
+    <div class="cc-equip" style="display: none">
       <div class="cc-equip__col">
         @if (s.degats && s.armesList.length === 0) {
           <span class="cc-equip__row">
