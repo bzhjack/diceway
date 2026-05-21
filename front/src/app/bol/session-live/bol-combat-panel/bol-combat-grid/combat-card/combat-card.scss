@@ -6,7 +6,7 @@
   flex: 0 0 17rem;
   width: 17rem;
   border-radius: 7px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--dw-surface-500);
   background: var(--dw-surface-50);
   box-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
   display: flex;
@@ -20,16 +20,27 @@
     transform: translateY(-1px);
   }
 
+  // PJ — border plus épais, fond plus clair
+  &[data-type='hero'] {
+    border-width: 2px;
+    background: var(--dw-surface-200);
+
+    .cc-portrait__gradient {
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.28) 0%,
+        transparent 25%,
+        transparent 65%,
+        var(--dw-surface-200) 88%,
+        var(--dw-surface-200) 100%
+      );
+    }
+  }
+
   // Border color by category
-  &[data-cat='legendaire']     { border-color: color-mix(in srgb, var(--dw-color-legendary) 45%, transparent); }
-  &[data-cat='heroique']       { border-color: color-mix(in srgb, var(--dw-color-legendary) 28%, transparent); }
-  &[data-cat='reussite']       { border-color: color-mix(in srgb, var(--dw-color-reussite) 32%, transparent); }
-  &[data-cat='rival']          { border-color: color-mix(in srgb, var(--dw-color-rival) 55%, transparent); box-shadow: 0 0 22px color-mix(in srgb, var(--dw-color-rival) 14%, transparent), 0 2px 14px rgba(0, 0, 0, 0.55); }
-  &[data-cat='coriace']        { border-color: var(--dw-surface-500); }
-  &[data-cat='echec']          { border-color: color-mix(in srgb, var(--dw-color-echec) 32%, transparent); }
-  &[data-cat='pietaille']      { border-color: var(--dw-surface-400); }
-  &[data-cat='echec-critique'] { border-color: color-mix(in srgb, var(--dw-color-echec-forte) 62%, transparent); box-shadow: 0 0 18px color-mix(in srgb, var(--dw-color-echec-forte) 10%, transparent), 0 2px 14px rgba(0, 0, 0, 0.55); }
-  &[data-cat='none']           { border-color: var(--dw-surface-500); border-style: dashed; }
+  &[data-cat='rival']          { box-shadow: 0 0 22px color-mix(in srgb, var(--dw-color-rival) 14%, transparent), 0 2px 14px rgba(0, 0, 0, 0.55); }
+  &[data-cat='echec-critique'] { box-shadow: 0 0 18px color-mix(in srgb, var(--dw-color-echec-forte) 10%, transparent), 0 2px 14px rgba(0, 0, 0, 0.55); }
+  &[data-cat='none']           { border-style: dashed; }
 }
 
 // ── Portrait ──────────────────────────────────────────────────────────────────
@@ -320,8 +331,8 @@
   display: inline-flex;
   align-items: center;
   padding: 0.04rem 0.26rem;
-  border-radius: 3px;
-  font-size: 0.55rem;
+  border-radius: 2px;
+  font-size: 0.56rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;

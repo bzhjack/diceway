@@ -35,6 +35,17 @@
       } @else {
         <span class="cc-cat--none">En attente</span>
       }
+      <!-- États auto -->
+      @if (autoEtats().length > 0 || warningPouvoirs().length > 0) {
+        <div class="cc-etats">
+      @for (etat of autoEtats(); track etat) {
+        <span class="cc-etat cc-etat--{{ etat }}">{{ etat }}</span>
+      }
+          @for (p of warningPouvoirs(); track p) {
+            <span class="cc-etat cc-etat--warning">⚠ {{ p }}</span>
+          }
+    </div>
+      }
     </span>
   </div>
 </div>
@@ -123,17 +134,6 @@
     }
   </div>
 
-  <!-- États auto -->
-  @if (autoEtats().length > 0 || warningPouvoirs().length > 0) {
-    <div class="cc-etats">
-      @for (etat of autoEtats(); track etat) {
-        <span class="cc-etat cc-etat--{{ etat }}">{{ etat }}</span>
-      }
-      @for (p of warningPouvoirs(); track p) {
-        <span class="cc-etat cc-etat--warning">⚠ {{ p }}</span>
-      }
-    </div>
-  }
 
   <!-- Équipement + pouvoirs -->
   @if ( s.armesList.length > 0 || s.armures.length > 0 || s.tags.length > 0 || s.pouvoirs.length > 0 || s.degats) {
