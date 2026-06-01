@@ -17,8 +17,8 @@ export class BolCreaturesService {
     return this.http.get<BolCreatureModel[]>(`${environment.apiBase}/api/bol/creature`);
   }
 
-  creature(id: string, questId?: string): Observable<BolCreatureModel> {
-    return this.http.get<BolCreatureModel>(`${environment.apiBase}/api/bol/creature/` + id + (questId ? '?questId=' + questId : ''));
+  creature(id: string): Observable<BolCreatureModel> {
+    return this.http.get<BolCreatureModel>(`${environment.apiBase}/api/bol/creature/` + id);
   }
 
 

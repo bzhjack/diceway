@@ -137,6 +137,19 @@ Regle de reduction du cout:
 
 - Pour les sorts de cercle `1` a `3`, chaque condition supplementaire au-dela de la premiere reduit le cout de `1`, sans descendre sous le minimum.
 
+### Effets blessants par defaut
+
+- Un sort du `1er cercle` destine a blesser inflige `d6` degats par defaut.
+- Les sorts plus puissants infligent generalement davantage, selon leur description.
+
+### Echelle qualitative des cercles
+
+Reperes du livre pour situer un sort improvise:
+
+- `1er cercle`: reproduit ce qu'un humain bien equipe peut accomplir (ex. detruire une porte, escalader avec materiel).
+- `2e cercle`: depasse les capacites d'un simple mortel (ex. detruire un mur, controler les esprits).
+- `3e cercle`: catastrophes a l'echelle d'une cite ou malediction generationnelle.
+
 ### Conditions de lancement relevees
 
 #### Premier cercle

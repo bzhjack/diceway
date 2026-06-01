@@ -110,6 +110,21 @@
   }
 }
 
+// ── Equipment popover (rendered outside component shadow) ────────────────────
+
+.equip-popover.p-popover {
+  background: var(--dw-surface-50);
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 35%, transparent);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--dw-surface-0) 70%, transparent),
+              0 0 0 1px color-mix(in srgb, var(--dw-color-legendary) 10%, transparent);
+
+  .p-popover-content { padding: 0.9rem 1rem; }
+
+  &::before { border-bottom-color: color-mix(in srgb, var(--dw-color-legendary) 35%, transparent); }
+  &::after  { border-bottom-color: var(--dw-surface-50); }
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 
 .dw-panel {

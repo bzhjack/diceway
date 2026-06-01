@@ -6,7 +6,16 @@ import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {TagModule} from 'primeng/tag';
 import {BolScenarioService} from '../services/bol-scenario.service';
-import {BolCombatPanelComponent, InitiativeSlot} from './bol-combat-panel/bol-combat-panel';
+import {BolCombatPanelComponent, DamageCategorie, InitiativeSlot} from './bol-combat-panel/bol-combat-panel';
+
+function categorieFromDegats(degats: string | null): DamageCategorie | null {
+  if (!degats) return null;
+  if (degats.startsWith('d3'))  return 'nue';
+  if (degats.startsWith('d6M')) return 'legere';
+  if (degats.startsWith('d6B')) return 'lourde';
+  if (degats.startsWith('d6'))  return 'moyenne';
+  return null;
+}
 
 @Component({
   selector: 'app-session-live-page',
@@ -46,6 +55,7 @@ export class SessionLivePageComponent {
         vitaliteCourante: pj.heros?.ressources?.vitalite ?? 0,
         heroismMax: pj.heros?.ressources?.heroisme ?? null,
         heroismCourant: pj.heros?.ressources?.heroisme ?? null,
+        vigueur: pj.heros?.attributs?.vigueur ?? null,
         agilite: pj.heros?.attributs?.agilite ?? null,
         esprit: pj.heros?.attributs?.esprit ?? null,
         initiative: pj.heros?.combat?.initiative ?? null,
@@ -63,6 +73,7 @@ export class SessionLivePageComponent {
             type: a.arme!.type,
             portee: a.arme!.portee,
             notes: a.arme!.notes,
+            categorie: categorieFromDegats(a.arme!.degats),
           })),
         armures: (pj.heros?.armures ?? [])
           .filter((a) => a.armure)
@@ -76,13 +87,14 @@ export class SessionLivePageComponent {
       ...(s.creatures ?? []).map((c): InitiativeSlot => ({
         id: `creature-${c.id}`,
         nom: c.surnom ?? c.nom,
-        avatar: c.creature?.avatar ?? null,
+        avatar: c.creature ? (c.creature.user_id ? c.creature.avatar : `/assets/bol/bestiary/${c.creature_id}.jpg`) : null,
         type: 'creature',
         vitaliteMax: c.vitalite_max,
         vitaliteCourante: c.vitalite_max,
         heroismMax: null,
         heroismCourant: null,
-        agilite: null,
+        vigueur: c.vigueur,
+        agilite: c.agilite,
         esprit: c.esprit,
         initiative: null,
         melee: c.attaque,
@@ -105,13 +117,14 @@ export class SessionLivePageComponent {
         return {
           id: `demon-${d.id}`,
           nom: d.surnom ?? d.nom,
-          avatar: d.demon?.avatar ?? null,
+          avatar: d.demon ? (d.demon.user_id ? d.demon.avatar : `/assets/bol/demon/${d.demon_id}.jpg`) : null,
           type: 'demon',
           vitaliteMax: d.vitalite_max,
           vitaliteCourante: d.vitalite_max,
           heroismMax: null,
           heroismCourant: null,
-          agilite: null,
+          vigueur: d.vigueur,
+          agilite: d.agilite,
           esprit: d.esprit,
           initiative: null,
           melee: d.melee,
@@ -123,6 +136,7 @@ export class SessionLivePageComponent {
             .filter((p) => p.pouvoir !== 'Armure' && p.pouvoir !== 'Cuirassé')
             .map((p) => ({
               nom: p.pouvoir!,
+              description: p.description ?? null,
               avantage_attaque: p.avantage_attaque ?? false,
               degats_superieurs: p.degats_superieurs ?? false,
               regeneration: p.regeneration ?? false,
@@ -137,13 +151,14 @@ export class SessionLivePageComponent {
       ...(s.pnjs ?? []).map((p): InitiativeSlot => ({
         id: `pnj-${p.id}`,
         nom: p.surnom ?? p.nom,
-        avatar: p.pnj?.origines?.avatar ?? null,
+        avatar: p.pnj ? (p.pnj.user_id ? (p.pnj.origines?.avatar ?? null) : `/assets/bol/pnj/${p.pnj.id}.jpg`) : null,
         type: 'pnj',
         vitaliteMax: p.vitalite_max,
         vitaliteCourante: p.vitalite_max,
         heroismMax: null,
         heroismCourant: null,
-        agilite: null,
+        vigueur: p.vigueur,
+        agilite: p.agilite,
         esprit: p.esprit,
         initiative: null,
         melee: p.melee,
@@ -160,6 +175,7 @@ export class SessionLivePageComponent {
             type: a.type,
             portee: null,
             notes: null,
+            categorie: categorieFromDegats(a.degats),
           })),
         armures: [],
         category: p.rang,

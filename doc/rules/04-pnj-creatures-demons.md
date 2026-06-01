@@ -25,8 +25,8 @@ Notes:
 Regle de horde:
 
 - Une seule attaque de groupe, un seul jet.
-- Bonus d'attaque egal au nombre de membres engages moins 1.
-- Exemple: 3 pietaille => `+2`.
+- Bonus d'attaque egal a `+1` par pietaille engage.
+- Exemple: 2 pietaille => `+2`; 3 pietaille => `+3`.
 - Si la horde touche: degats `d6M`.
 - Pietaille contre pietaille: le groupe le plus nombreux inflige `d6M` pertes; le plus faible riposte a `d3`.
 

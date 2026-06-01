@@ -1,5 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {toObservable, toSignal} from '@angular/core/rxjs-interop';
+import {ChangeDetectionStrategy, Component, OnInit, computed, inject, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
 import {ConfirmationService} from 'primeng/api';
@@ -17,7 +16,6 @@ import {TableModule} from 'primeng/table';
 import {TagModule} from 'primeng/tag';
 import {TooltipModule} from 'primeng/tooltip';
 import {InlineSVGModule} from 'ng-inline-svg-2';
-import {startWith, switchMap} from 'rxjs';
 
 interface HeroListEntry {
   readonly label: string;
@@ -59,17 +57,14 @@ interface HeroTraitEntry {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ConfirmationService],
 })
-export class HeroLibraryPageComponent {
+export class HeroLibraryPageComponent implements OnInit {
   private readonly herosService = inject(BolHerosService);
   private readonly confirmationService = inject(ConfirmationService);
-  private readonly refreshTrigger = signal(0);
-  private readonly heroes = toSignal(
-    toObservable(this.refreshTrigger).pipe(
-      startWith(0),
-      switchMap(() => this.herosService.heroes()),
-    ),
-    { initialValue: [] },
-  );
+  private readonly heroes = this.herosService.heroesList;
+
+  ngOnInit(): void {
+    this.herosService.loadHeroes();
+  }
 
   protected readonly searchTerm = signal('');
   protected readonly onlyPending = signal(false);
@@ -243,7 +238,7 @@ export class HeroLibraryPageComponent {
     }
 
     this.herosService.deleteHeros(hero.id).subscribe({
-      next: () => this.refreshTrigger.update((value) => value + 1),
+      next: () => this.herosService.loadHeroes(),
     });
   }
 

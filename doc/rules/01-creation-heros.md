@@ -111,7 +111,7 @@ Interaction avantages / desavantages:
 | Cote de Feu | Les humains utilisent les listes d'Halakh ou des Marais de Kasht. Les kalukans sont une option raciale separee. |
 | Desert de Beshaar | La 1re carriere doit etre `barbare`. |
 | Halakh | Pas de contrainte de carriere absolue dans l'extrait exploite. |
-| Iles du Crane | Une carriere doit etre `Marin (matelot/pirate)`. |
+| Iles du Crane | Une carriere doit etre `pirate`. |
 | Jungle de Qo / Qush | Normalement reserve aux grooth avec accord du MJ; sinon utiliser Shamballah. |
 | Lysor | Pas de contrainte supplementaire relevee. |
 | Malakut | Une carriere `voleur` est fortement suggeree, pas imposee strictement. |

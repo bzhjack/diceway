@@ -41,17 +41,11 @@ class BolCreatureController extends Controller
     public function getOne(Request $request)
     {
         $id = $request->route('id');
-        $questId = $request->query('questId'); // Récupération de questId si présent
         $creature = $this->bolCreatureService->getCreatureWithRelations($id);
         if ($creature === null) {
             return response()->json(['error' => 'Créature not found'], 404);
-        } else {
-            if ($questId) {
-                $currentQuest = $creature->currentQuest($questId, 'C')->first();
-                $creature['currentQuest'] = $currentQuest;
-            }
-            return response($creature);
         }
+        return response($creature);
     }
 
     public function getAllTailles()

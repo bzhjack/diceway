@@ -3,13 +3,12 @@ import {FormsModule} from '@angular/forms';
 import {ButtonModule} from 'primeng/button';
 import {MessageModule} from 'primeng/message';
 import {SelectModule} from 'primeng/select';
-import {TooltipModule} from 'primeng/tooltip';
-import {InitiativeSlot, ParticipantType, ReactionResult} from '../bol-combat-panel';
-import {CATEGORY_LABELS, TYPE_LABELS} from '../combat.constants';
+import {InitiativeSlot} from '../bol-combat-panel';
+import {CombatCardComponent} from './combat-card/combat-card';
 
 @Component({
   selector: 'app-bol-combat-grid',
-  imports: [FormsModule, ButtonModule, MessageModule, SelectModule, TooltipModule],
+  imports: [FormsModule, ButtonModule, MessageModule, SelectModule, CombatCardComponent],
   templateUrl: './bol-combat-grid.html',
   styleUrl: './bol-combat-grid.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,38 +27,4 @@ export class BolCombatGridComponent {
   readonly heroismChange = output<{id: string; delta: number}>();
   readonly removeParticipant = output<string>();
   readonly attackStart = output<InitiativeSlot>();
-
-  protected typeLabel(type: ParticipantType): string {
-    return TYPE_LABELS[type];
-  }
-
-  protected categoryLabel(category: ReactionResult): string {
-    return CATEGORY_LABELS[category];
-  }
-
-  protected armeTooltip(arme: InitiativeSlot['armesList'][number]): string {
-    const parts: string[] = [arme.type === 'T' ? 'Tir' : 'Mêlée'];
-    if (arme.portee) parts.push(`Portée : ${arme.portee}`);
-    if (arme.notes) parts.push(arme.notes);
-    return parts.join('\n');
-  }
-
-  protected autoEtats(slot: InitiativeSlot): string[] {
-    const v = slot.vitaliteCourante;
-    if (v < -5) return ['mort'];
-    if (v < 0) return ['coma'];
-    if (v === 0) return ['hors-combat'];
-    return [];
-  }
-
-  protected warningPouvoirs(slot: InitiativeSlot): string[] {
-    return slot.pouvoirs.filter((p) => p.avertissement_combat).map((p) => p.nom);
-  }
-
-  protected armureTooltip(armure: InitiativeSlot['armures'][number]): string {
-    const parts: string[] = [armure.nom];
-    if (armure.protection) parts.push(`Protection : ${armure.protection}`);
-    if (armure.malus) parts.push(`Malus : ${armure.malus}`);
-    return parts.join('\n');
-  }
 }

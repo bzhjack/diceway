@@ -46,7 +46,7 @@ Regle:
 
 - Cout = `nouvelle valeur + 1`
 - Exemple: passer de `2` a `3` coute `4 XP`
-- Cas special `-1` vers `0`: `2 XP`
+- Cas special `-1` vers `0`: `1 XP` (formule normale: `0 + 1`)
 - Progression obligatoire un palier a la fois
 - Maximum humain: `5`
 - Avec `non-combattant`, ce cout est double

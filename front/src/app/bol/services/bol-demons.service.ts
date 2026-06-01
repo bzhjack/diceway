@@ -17,8 +17,8 @@ export class BolDemonsService {
     return this.http.get<BolDemonModel[]>(`${environment.apiBase}/api/bol/demon`);
   }
 
-  demon(id: string, questId?: string): Observable<BolDemonModel> {
-    return this.http.get<BolDemonModel>(`${environment.apiBase}/api/bol/demon/` + id + (questId ? '?questId=' + questId : ''));
+  demon(id: string): Observable<BolDemonModel> {
+    return this.http.get<BolDemonModel>(`${environment.apiBase}/api/bol/demon/` + id);
   }
 
   categories(): Observable<BolDemonCategorieModel[]> {

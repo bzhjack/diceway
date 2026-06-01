@@ -41,6 +41,15 @@
               />
             </span>
             <p-button
+              label="Création avancée"
+              icon="pi pi-star"
+              size="small"
+              severity="warn"
+              [outlined]="true"
+              [routerLink]="'/create/hero-advanced'"
+              [state]="{ returnUrl: '/library/heroes' }"
+            />
+            <p-button
               label="Voir les PNJ"
               icon="pi pi-user-edit"
               size="small"

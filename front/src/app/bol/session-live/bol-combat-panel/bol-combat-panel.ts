@@ -20,11 +20,23 @@ export type ReactionResult =
 
 export interface PouvoirSlot {
   readonly nom: string;
+  readonly description: string | null;
   readonly avantage_attaque: boolean;
   readonly degats_superieurs: boolean;
   readonly regeneration: boolean;
   readonly intangible: boolean;
   readonly avertissement_combat: boolean;
+}
+
+export type DamageCategorie = 'nue' | 'legere' | 'moyenne' | 'lourde';
+
+export interface ArmeSlot {
+  readonly nom: string;
+  readonly degats: string | null;
+  readonly type: 'M' | 'T' | null;
+  readonly portee: string | null;
+  readonly notes: string | null;
+  readonly categorie: DamageCategorie | null;
 }
 
 export interface InitiativeSlot {
@@ -34,6 +46,7 @@ export interface InitiativeSlot {
   readonly type: ParticipantType;
   readonly vitaliteMax: number;
   readonly heroismMax: number | null;
+  readonly vigueur: number | null;
   readonly agilite: number | null;
   readonly esprit: number | null;
   readonly initiative: number | null;
@@ -43,7 +56,7 @@ export interface InitiativeSlot {
   readonly degats: string | null;
   readonly tags: string[];
   readonly pouvoirs: PouvoirSlot[];
-  readonly armesList: {nom: string; degats: string | null; type: 'M' | 'T' | null; portee: string | null; notes: string | null}[];
+  readonly armesList: ArmeSlot[];
   readonly armures: {nom: string; protection: string | null; malus: string | null}[];
   category: ReactionResult | null;
   vitaliteCourante: number;

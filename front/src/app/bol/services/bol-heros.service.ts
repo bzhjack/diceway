@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, signal} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {BolHerosModel, BolHerosOrigines} from "../models/bol-heros.model";
@@ -143,12 +143,21 @@ export class BolHerosService {
     return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/update/advanced`, hero);
   }
 
+  private readonly _heroesList = signal<BolHerosModel[]>([]);
+  readonly heroesList = this._heroesList.asReadonly();
+
+  loadHeroes(): void {
+    this.http.get<BolHerosModel[]>(`${environment.apiBase}/api/bol/heros`).subscribe(
+      (data) => this._heroesList.set(data),
+    );
+  }
+
   heroes(): Observable<BolHerosModel[]> {
     return this.http.get<BolHerosModel[]>(`${environment.apiBase}/api/bol/heros`);
   }
 
-  heros(id: string, questId?: string): Observable<BolHerosModel> {
-    return this.http.get<BolHerosModel>(`${environment.apiBase}/api/bol/heros/` + id + (questId ? '?questId=' + questId : ''));
+  heros(id: string): Observable<BolHerosModel> {
+    return this.http.get<BolHerosModel>(`${environment.apiBase}/api/bol/heros/` + id);
   }
 
   deleteHeros(id: string): Observable<any> {
@@ -165,8 +174,8 @@ export class BolHerosService {
   pnjs(): Observable<BolHerosModel[]> {
     return this.http.get<BolHerosModel[]>(`${environment.apiBase}/api/bol/pnj`);
   }
-  pnj(id: string, questId?: string): Observable<BolHerosModel> {
-    return this.http.get<BolHerosModel>(`${environment.apiBase}/api/bol/pnj/` + id + (questId ? '?questId=' + questId : ''));
+  pnj(id: string): Observable<BolHerosModel> {
+    return this.http.get<BolHerosModel>(`${environment.apiBase}/api/bol/pnj/` + id);
   }
 
   quickCreate(pnj: Record<string, unknown>): Observable<any> {

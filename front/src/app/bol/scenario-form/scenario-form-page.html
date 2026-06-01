@@ -40,7 +40,7 @@
               icon="pi pi-save"
               severity="warn"
               type="submit"
-              [disabled]="pending()"
+              [disabled]="pending() || scenarioForm.invalid"
             />
             <p-button
               label="Retour au dashboard"
