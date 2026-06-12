@@ -69,7 +69,7 @@
       </p-card>
 
       @if (combatMode()) {
-        <app-bol-combat-panel [participants]="combatParticipants()" />
+        <app-bol-combat-panel [participants]="combatParticipants()" (combatEnded)="stopCombat()" />
       }
 
     } @else {

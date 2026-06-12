@@ -1,7 +1,9 @@
-import {ChangeDetectionStrategy, Component, computed, input, signal, viewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, input, output, signal, viewChild} from '@angular/core';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
+import {CheckboxModule} from 'primeng/checkbox';
 import {DialogModule} from 'primeng/dialog';
+import {FormsModule} from '@angular/forms';
 import {BolAttackAssistantComponent} from './bol-attack-assistant/bol-attack-assistant';
 import {BolCombatGridComponent} from './bol-combat-grid/bol-combat-grid';
 import {BolRollPhaseComponent} from './bol-roll-phase/bol-roll-phase';
@@ -107,7 +109,7 @@ export function makeEtat(
 
 @Component({
   selector: 'app-bol-combat-panel',
-  imports: [ButtonModule, CardModule, DialogModule, BolAttackAssistantComponent, BolCombatGridComponent, BolRollPhaseComponent],
+  imports: [FormsModule, ButtonModule, CardModule, CheckboxModule, DialogModule, BolAttackAssistantComponent, BolCombatGridComponent, BolRollPhaseComponent],
   templateUrl: './bol-combat-panel.html',
   styleUrl: './bol-combat-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -117,6 +119,7 @@ export function makeEtat(
 })
 export class BolCombatPanelComponent {
   readonly participants = input.required<InitiativeSlot[]>();
+  readonly combatEnded = output<void>();
 
   private readonly rollPhaseRef = viewChild(BolRollPhaseComponent);
 
@@ -125,10 +128,13 @@ export class BolCombatPanelComponent {
   protected readonly selectedParticipantId = signal<string | null>(null);
   protected readonly rollPhase = signal(false);
   protected readonly rulesDialogVisible = signal(false);
+  protected readonly endCombatDialogVisible = signal(false);
   protected readonly allHeroesRolled = signal(false);
   protected readonly currentRound = signal(1);
   protected readonly activeTurnId = signal<string | null>(null);
   protected readonly delayedIds = signal<Set<string>>(new Set());
+  protected readonly brawlIds = signal<Set<string>>(new Set());
+  private readonly lastDamageById = signal<Record<string, number>>({});
 
   protected readonly availableParticipants = computed(() => {
     const inOrder = new Set(this.initiativeOrder().map((s) => s.id));
@@ -192,6 +198,22 @@ export class BolCombatPanelComponent {
     this.turnOrder().findIndex((s) => s.id === this.activeTurnId()),
   );
 
+  protected readonly recoveryRows = computed(() =>
+    this.initiativeOrder().map((s) => {
+      const brawl = this.brawlIds().has(s.id);
+      const lost = s.vitaliteMax - Math.max(0, s.vitaliteCourante);
+      let recovery = 0;
+      let note = '';
+      if (s.vitaliteCourante < 0) {
+        recovery = 0;
+        note = 'Soins requis';
+      } else {
+        recovery = brawl ? lost : Math.ceil(lost / 2);
+      }
+      return {slot: s, lost, recovery, note, brawl};
+    }),
+  );
+
   // ── Mutations ────────────────────────────────────────────────────────────────
 
   protected addToInitiative(): void {
@@ -205,6 +227,9 @@ export class BolCombatPanelComponent {
   }
 
   protected adjustHp(id: string, delta: number): void {
+    if (delta < 0) {
+      this.lastDamageById.update((m) => ({...m, [id]: -delta}));
+    }
     this.initiativeOrder.update((list) =>
       list.map((s) =>
         s.id === id
@@ -312,6 +337,55 @@ export class BolCombatPanelComponent {
     this.initiativeOrder.update((list) =>
       list.map((s) => ({...s, etats: s.etats.filter((e) => e.expiresAtTurnOf !== turnId)})),
     );
+  }
+
+  protected toggleBrawl(id: string): void {
+    this.brawlIds.update((set) => {
+      const next = new Set(set);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+
+  protected confirmRecovery(): void {
+    for (const row of this.recoveryRows()) {
+      if (row.recovery > 0) this.adjustHp(row.slot.id, row.recovery);
+    }
+    this.brawlIds.set(new Set());
+    this.endCombatDialogVisible.set(false);
+    this.combatEnded.emit();
+  }
+
+  protected onPhAction(id: string, action: string): void {
+    const slot = this.initiativeOrder().find((s) => s.id === id);
+    if (!slot || (slot.heroismCourant ?? 0) <= 0) return;
+
+    switch (action) {
+      case 'defier-mort':
+        if (slot.vitaliteCourante >= -5 && slot.vitaliteCourante < 0) {
+          this.adjustHp(id, -slot.vitaliteCourante); // bring to 0
+        } else if (slot.vitaliteCourante < -5) {
+          this.adjustStates(id, [makeEtat('stabilise')]);
+        }
+        this.adjustHeroism(id, -1);
+        break;
+      case 'egratignure': {
+        const roll = Math.ceil(Math.random() * 6);
+        const cap = this.lastDamageById()[id] ?? roll;
+        this.adjustHp(id, Math.min(roll, cap));
+        this.adjustHeroism(id, -1);
+        break;
+      }
+      case 'parade': {
+        const last = this.lastDamageById()[id] ?? 0;
+        if (last > 0) this.adjustHp(id, last);
+        this.adjustHeroism(id, -1);
+        break;
+      }
+      case 'interruption':
+        this.adjustHeroism(id, -1);
+        break;
+    }
   }
 
   protected cancelRollPhase(): void {

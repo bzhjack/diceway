@@ -29,9 +29,48 @@
       <p-button icon="pi pi-book" [text]="true" severity="warn" size="small"
         (onClick)="equipOp.toggle($event)" aria-label="Équipement & pouvoirs" pTooltip="Équipement & pouvoirs" />
     }
+    @if (hasHeroism()) {
+      <p-button icon="pi pi-sparkles" [text]="true" severity="warn" size="small"
+        (onClick)="togglePhPop($event)" aria-label="Points d'héroïsme" pTooltip="Points d'héroïsme" />
+    }
     <p-button icon="pi pi-times" [text]="true" severity="danger" size="small"
       (onClick)="removeParticipant.emit(s.id)" aria-label="Retirer de l'initiative" />
   </div>
+
+  <!-- Popover menu PH -->
+  <p-popover #phPopRef styleClass="ph-popover">
+    <div class="ph-menu">
+      <p class="ph-menu__title">Points d'héroïsme ({{ s.heroismCourant }} / {{ s.heroismMax }})</p>
+      <button type="button" class="ph-menu__item" (click)="emitPhAction(s.id, 'defier-mort')">
+        <i class="pi pi-heart-fill"></i>
+        <span>
+          <strong>Défier la mort</strong>
+          <small>Entre −5 et −1 PV → remonte à 0 · En dessous → Stabilisé</small>
+        </span>
+      </button>
+      <button type="button" class="ph-menu__item" (click)="emitPhAction(s.id, 'egratignure')">
+        <i class="pi pi-bandage"></i>
+        <span>
+          <strong>Juste une égratignure</strong>
+          <small>+1d6 PV (plafonné aux derniers dégâts reçus)</small>
+        </span>
+      </button>
+      <button type="button" class="ph-menu__item" (click)="emitPhAction(s.id, 'parade')">
+        <i class="pi pi-shield"></i>
+        <span>
+          <strong>Parade in extremis</strong>
+          <small>Annule les derniers dégâts reçus</small>
+        </span>
+      </button>
+      <button type="button" class="ph-menu__item" (click)="emitPhAction(s.id, 'interruption')">
+        <i class="pi pi-bolt"></i>
+        <span>
+          <strong>Interruption</strong>
+          <small>−1 PH, le MJ applique l'effet</small>
+        </span>
+      </button>
+    </div>
+  </p-popover>
 
   @if (showR1Block()) {
     <span class="cc-r1badge" [pTooltip]="r1Tooltip()">R1</span>
@@ -62,6 +101,16 @@
     </span>
   </div>
 </div>
+
+<!-- Bannière piétaille hors combat -->
+@if (shouldProposeRemoval()) {
+  <div class="cc-removal-banner">
+    <span>Piétaille hors combat</span>
+    <button type="button" class="cc-removal-btn" (click)="removeParticipant.emit(s.id)">
+      Retirer de la grille
+    </button>
+  </div>
+}
 
 <!-- Corps -->
 <div class="cc-body">

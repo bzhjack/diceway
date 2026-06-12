@@ -54,6 +54,14 @@
           size="small"
           (onClick)="startNewRound()"
         />
+        <p-button
+          label="Terminer"
+          icon="pi pi-flag-fill"
+          severity="danger"
+          [outlined]="true"
+          size="small"
+          (onClick)="endCombatDialogVisible.set(true)"
+        />
       </div>
     } @else if (heroesInOrder().length > 0) {
       <p-button
@@ -124,6 +132,59 @@
     </div>
   </p-dialog>
 
+  <!-- Dialogue fin de combat -->
+  <p-dialog
+    header="Fin de combat — Récupération"
+    [visible]="endCombatDialogVisible()"
+    (visibleChange)="endCombatDialogVisible.set($event)"
+    [modal]="true"
+    [closable]="true"
+    [dismissableMask]="true"
+    [draggable]="false"
+    [resizable]="false"
+    styleClass="combat-end-dialog"
+  >
+    <p class="combat-end-hint">
+      Bagarre à mains nues = récupération totale des PV perdus.
+      Sinon : ⌈perdus / 2⌉.
+    </p>
+    <div class="combat-end-rows">
+      @for (row of recoveryRows(); track row.slot.id) {
+        <div class="combat-end-row">
+          <span class="combat-end-name">{{ row.slot.nom }}</span>
+          <span class="combat-end-hp">{{ row.slot.vitaliteCourante }} / {{ row.slot.vitaliteMax }}</span>
+          @if (row.slot.vitaliteCourante < 0) {
+            <span class="combat-end-note">{{ row.note }}</span>
+          } @else {
+            <p-checkbox
+              [binary]="true"
+              [ngModel]="brawlIds().has(row.slot.id)"
+              (ngModelChange)="toggleBrawl(row.slot.id)"
+              label="Bagarre"
+            />
+            <span class="combat-end-recovery">+{{ row.recovery }} PV</span>
+          }
+        </div>
+      }
+    </div>
+    <ng-template #footer>
+      <p-button
+        label="Annuler"
+        severity="secondary"
+        [outlined]="true"
+        size="small"
+        (onClick)="endCombatDialogVisible.set(false)"
+      />
+      <p-button
+        label="Confirmer et terminer"
+        icon="pi pi-check"
+        severity="danger"
+        size="small"
+        (onClick)="confirmRecovery()"
+      />
+    </ng-template>
+  </p-dialog>
+
   @if (rollPhase()) {
     <app-bol-roll-phase
       [heroesInOrder]="heroesInOrder()"
@@ -150,6 +211,7 @@
       (delayTurn)="delayTurn($event)"
       (defenseTotale)="defenseTotale($event)"
       (removeEtat)="removeEtat($event.slotId, $event.etatId)"
+      (phAction)="onPhAction($event.id, $event.action)"
     />
   }
 

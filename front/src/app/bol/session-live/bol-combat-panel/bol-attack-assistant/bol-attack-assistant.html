@@ -433,6 +433,45 @@
             }
           </section>
         }
+
+        <!-- Phase 4: Carnage — enchaîner une attaque -->
+        @if (carnagePending()) {
+          <div class="atk-carnage">
+            <span class="atk-carnage__label">★ Carnage — Attaque supplémentaire</span>
+            <button type="button" class="atk-roll-btn" (click)="continueAttack()">
+              <span class="atk-roll-btn__icon" aria-hidden="true">⬢</span>
+              Enchaîner une attaque
+            </button>
+          </div>
+        }
+
+        <!-- Phase 4: Massacre piétaille — multi-sélection -->
+        @if (massacrePending()) {
+          <div class="atk-massacre">
+            <p class="atk-massacre__label">
+              ★ Massacrer la piétaille — Choisissez jusqu'à {{ massacreMax() }} cible(s)
+              ({{ massacreSelected().size }} sélectionné(s))
+            </p>
+            <div class="atk-massacre__list">
+              @for (p of availablePietaille(); track p.id) {
+                <button
+                  type="button"
+                  class="atk-massacre__item"
+                  [class.atk-massacre__item--selected]="massacreSelected().has(p.id)"
+                  (click)="toggleMassacreTarget(p.id)"
+                >
+                  {{ p.nom }}
+                  <span class="atk-massacre__hp">{{ p.vitaliteCourante }} PV</span>
+                </button>
+              }
+            </div>
+            @if (massacreSelected().size > 0) {
+              <button type="button" class="atk-apply-btn" (click)="confirmMassacre()">
+                Éliminer ({{ massacreSelected().size }} piétaille)
+              </button>
+            }
+          </div>
+        }
       </section>
 
       <!-- ══════════════ COLONNE DROITE — Sélection de cible ══════════════ -->

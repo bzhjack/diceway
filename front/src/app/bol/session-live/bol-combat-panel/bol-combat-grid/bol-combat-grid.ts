@@ -31,4 +31,5 @@ export class BolCombatGridComponent {
   readonly delayTurn = output<string>();
   readonly defenseTotale = output<string>();
   readonly removeEtat = output<{slotId: string; etatId: string}>();
+  readonly phAction = output<{id: string; action: string}>();
 }

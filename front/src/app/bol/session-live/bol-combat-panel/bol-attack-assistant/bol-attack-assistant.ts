@@ -113,6 +113,10 @@ export class BolAttackAssistantComponent {
   protected readonly convertedToHeroic = signal(false);   // E3
   protected readonly echecCritiqueAccepte = signal(false); // E4
   protected readonly vigBonusOverride = signal<number | null>(null); // E5
+  protected readonly carnagePending = signal(false);
+  protected readonly massacrePending = signal(false);
+  protected readonly massacreMax = signal(0);
+  protected readonly massacreSelected = signal<Set<string>>(new Set());
 
   protected readonly difficultyOptions = toSignal(this.refService.getDifficultes(), {initialValue: []});
   protected readonly combatOptions = toSignal(this.refService.getCombatOptions(), {initialValue: []});
@@ -142,6 +146,12 @@ export class BolAttackAssistantComponent {
 
   protected readonly targetHasDeMalus = computed(() =>
     (this.target()?.etats ?? []).some((e) => e.type === 'de-malus'),
+  );
+
+  protected readonly availablePietaille = computed(() =>
+    this.allSlots().filter(
+      (s) => s.category === 'pietaille' && s.vitaliteCourante > 0 && s.id !== this.attacker().id,
+    ),
   );
 
   protected readonly effectiveTargetDefense = computed(() =>
@@ -407,6 +417,9 @@ export class BolAttackAssistantComponent {
     this.convertedToHeroic.set(false);
     this.echecCritiqueAccepte.set(false);
     this.vigBonusOverride.set(null);
+    this.carnagePending.set(false);
+    this.massacrePending.set(false);
+    this.massacreSelected.set(new Set());
   }
 
   protected readonly defautArmure = computed(() => this.combatOptionSlug() === 'armor-chink');
@@ -463,9 +476,52 @@ export class BolAttackAssistantComponent {
 
     if (changes.length > 0) this.stateChange.emit(changes);
 
+    // Phase 4: Carnage → chain attack; Massacre → multi-select piétaille
+    if (heroicSlugs.includes('carnage')) {
+      this.carnagePending.set(true);
+    }
+    if (heroicSlugs.includes('massacre')) {
+      this.massacrePending.set(true);
+      this.massacreMax.set(dmg);
+      this.massacreSelected.set(new Set());
+    }
+
     this.damageRoll.set(null);
     this.dice.set(null);
     this.diceDetail.set([]);
+  }
+
+  protected continueAttack(): void {
+    this.carnagePending.set(false);
+    this.damageRoll.set(null);
+    this.dice.set(null);
+    this.diceDetail.set([]);
+    this.heroicOptionSlug1.set(null);
+    this.heroicOptionSlug2.set(null);
+    this.useLegendary.set(false);
+    this.convertedToHeroic.set(false);
+    this.echecCritiqueAccepte.set(false);
+    this.vigBonusOverride.set(null);
+  }
+
+  protected toggleMassacreTarget(id: string): void {
+    this.massacreSelected.update((set) => {
+      const next = new Set(set);
+      if (next.has(id)) {
+        next.delete(id);
+      } else if (next.size < this.massacreMax()) {
+        next.add(id);
+      }
+      return next;
+    });
+  }
+
+  protected confirmMassacre(): void {
+    for (const id of this.massacreSelected()) {
+      this.hpChange.emit({id, delta: -999});
+    }
+    this.massacrePending.set(false);
+    this.massacreSelected.set(new Set());
   }
 
   protected close(): void {
@@ -487,6 +543,9 @@ export class BolAttackAssistantComponent {
     this.convertedToHeroic.set(false);
     this.echecCritiqueAccepte.set(false);
     this.vigBonusOverride.set(null);
+    this.carnagePending.set(false);
+    this.massacrePending.set(false);
+    this.massacreSelected.set(new Set());
     this.visibleChange.emit(false);
   }
 

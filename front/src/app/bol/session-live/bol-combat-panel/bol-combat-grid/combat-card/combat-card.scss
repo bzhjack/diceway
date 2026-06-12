@@ -471,3 +471,68 @@
 
   &:active { background: color-mix(in srgb, var(--dw-surface-900) 10%, transparent); }
 }
+
+// ── Bannière retrait piétaille ────────────────────────────────────────────────
+
+.cc-removal-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.35rem 0.6rem;
+  background: color-mix(in srgb, var(--p-red-500) 12%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--p-red-400) 30%, transparent);
+  font-size: 0.72rem;
+  color: var(--p-red-300);
+}
+
+.cc-removal-btn {
+  padding: 0.15rem 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--p-red-400) 50%, transparent);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--p-red-500) 18%, transparent);
+  color: var(--p-red-300);
+  font-size: 0.7rem;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover { background: color-mix(in srgb, var(--p-red-500) 28%, transparent); }
+}
+
+// ── Popover menu PH ──────────────────────────────────────────────────────────
+
+.ph-menu {
+  min-width: 16rem;
+
+  &__title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--dw-surface-400);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 0.5rem;
+  }
+
+  &__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.4rem 0.5rem;
+    border: none;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--dw-surface-700);
+    text-align: left;
+    cursor: pointer;
+    transition: background 120ms;
+
+    i { font-size: 0.8rem; color: var(--p-amber-400); margin-top: 0.15rem; flex-shrink: 0; }
+
+    span { display: flex; flex-direction: column; gap: 0.15rem; }
+    strong { font-size: 0.82rem; }
+    small { font-size: 0.7rem; color: var(--dw-surface-400); }
+
+    &:hover { background: color-mix(in srgb, var(--p-amber-400) 10%, transparent); }
+  }
+}
