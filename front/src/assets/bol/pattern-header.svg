@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+  <!-- Diamond grid tile — vertices at edge midpoints so it tiles seamlessly -->
+  <path d="M40 0 L80 40 L40 80 L0 40 Z" fill="none" stroke="#c9972a" stroke-width="0.7" stroke-opacity="0.16"/>
+  <!-- Vertex nodes at edge midpoints (shared across 4 tiles) -->
+  <circle cx="40" cy="0"  r="2.2" fill="#c9972a" fill-opacity="0.24"/>
+  <circle cx="80" cy="40" r="2.2" fill="#c9972a" fill-opacity="0.24"/>
+  <circle cx="40" cy="80" r="2.2" fill="#c9972a" fill-opacity="0.24"/>
+  <circle cx="0"  cy="40" r="2.2" fill="#c9972a" fill-opacity="0.24"/>
+  <!-- Small cross at each node for a forged-metal feel -->
+  <line x1="37" y1="0"  x2="43" y2="0"  stroke="#c9972a" stroke-width="0.7" stroke-opacity="0.18"/>
+  <line x1="80" y1="37" x2="80" y2="43" stroke="#c9972a" stroke-width="0.7" stroke-opacity="0.18"/>
+  <line x1="37" y1="80" x2="43" y2="80" stroke="#c9972a" stroke-width="0.7" stroke-opacity="0.18"/>
+  <line x1="0"  y1="37" x2="0"  y2="43" stroke="#c9972a" stroke-width="0.7" stroke-opacity="0.18"/>
+  <!-- Center diamond pip -->
+  <circle cx="40" cy="40" r="1.6" fill="#c9972a" fill-opacity="0.13"/>
+</svg>
