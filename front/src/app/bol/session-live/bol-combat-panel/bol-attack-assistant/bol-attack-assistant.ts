@@ -6,8 +6,27 @@ import {DialogModule} from 'primeng/dialog';
 import {SelectButtonModule} from 'primeng/selectbutton';
 import {SelectModule} from 'primeng/select';
 import {InputNumberModule} from 'primeng/inputnumber';
-import {ArmeSlot, DamageCategorie, InitiativeSlot, ParticipantType, ReactionResult} from '../bol-combat-panel';
+import {ArmeSlot, DamageCategorie, EtatSlot, InitiativeSlot, ParticipantType, POSTURE_TYPES, ReactionResult, effectiveDefense, makeEtat} from '../bol-combat-panel';
 import {BolCombatReferenceService} from '../../../services/bol-combat-reference.service';
+
+// Maps combat option slugs that create posture states
+const POSTURE_BY_SLUG: Partial<Record<string, EtatSlot['type']>> = {
+  'offensive':  'posture-off',
+  'intrepid':   'intrepide',
+  'defensive':  'posture-def',
+  'dual-parry': 'posture-def',
+};
+
+const ETAT_LABELS: Record<EtatSlot['type'], string> = {
+  'posture-off':    'Posture offensive',
+  'posture-def':    'Posture défensive',
+  'defense-totale': 'Défense totale',
+  'intrepide':      'Intrépide',
+  'a-terre':        'À terre',
+  'desarme':        'Désarmé',
+  'de-malus':       'Dé de malus',
+  'stabilise':      'Stabilisé',
+};
 
 const MAINS_NUES: ArmeSlot = {nom: 'Mains nues', degats: 'd3', type: 'M', portee: null, notes: null, categorie: 'nue'};
 
@@ -29,10 +48,15 @@ function protectionFixed(s: string | null): number {
   return 0;
 }
 
-const ADVANTAGE_OPTIONS = [
-  {label: 'Désavantage', value: 'desavantage'},
+// E6: 5-level advantage/disadvantage
+type AdvantageMode = 'desavantage2' | 'desavantage' | 'normal' | 'avantage' | 'avantage2';
+
+const ADVANTAGE_OPTIONS: {label: string; value: AdvantageMode}[] = [
+  {label: 'Dés.×2', value: 'desavantage2'},
+  {label: 'Désav.', value: 'desavantage'},
   {label: 'Normal', value: 'normal'},
   {label: 'Avantage', value: 'avantage'},
+  {label: 'Av.×2', value: 'avantage2'},
 ];
 
 const TYPE_LABELS: Record<ParticipantType, string> = {
@@ -68,6 +92,8 @@ export class BolAttackAssistantComponent {
   readonly visible = input.required<boolean>();
   readonly visibleChange = output<boolean>();
   readonly hpChange = output<{id: string; delta: number}>();
+  readonly heroismChange = output<{id: string; delta: number}>();  // E2
+  readonly stateChange = output<{id: string; etats: EtatSlot[]}[]>();  // Phase 3
 
   protected readonly mainsNues = MAINS_NUES;
   protected readonly selectedArme = signal<ArmeSlot | null>(null);
@@ -78,12 +104,15 @@ export class BolAttackAssistantComponent {
   protected readonly dice = signal<number | null>(null);
   protected readonly diceDetail = signal<number[]>([]);
   protected readonly difficultyMod = signal(0);
-  protected readonly advantage = signal<'normal' | 'avantage' | 'desavantage'>('normal');
+  protected readonly advantage = signal<AdvantageMode>('normal');
   protected readonly combatOptionSlug = signal<string>('none');
   protected readonly armorChinkPenalty = signal<number>(0);
   protected readonly heroicOptionSlug1 = signal<string | null>(null);
   protected readonly heroicOptionSlug2 = signal<string | null>(null);
   protected readonly useLegendary = signal(false);
+  protected readonly convertedToHeroic = signal(false);   // E3
+  protected readonly echecCritiqueAccepte = signal(false); // E4
+  protected readonly vigBonusOverride = signal<number | null>(null); // E5
 
   protected readonly difficultyOptions = toSignal(this.refService.getDifficultes(), {initialValue: []});
   protected readonly combatOptions = toSignal(this.refService.getCombatOptions(), {initialValue: []});
@@ -92,12 +121,32 @@ export class BolAttackAssistantComponent {
 
   protected readonly availableArmes = computed((): ArmeSlot[] => {
     const attacker = this.attacker();
+    // E8: disarmed → only mains nues available
+    if (attacker.etats.some((e) => e.type === 'desarme')) return [];
     if (attacker.armesList.length > 0) return attacker.armesList;
     if (attacker.degats) {
       return [{nom: 'Attaque', degats: attacker.degats, type: 'M', portee: null, notes: null, categorie: categorieFromDegats(attacker.degats)}];
     }
     return [];
   });
+
+  protected readonly attackerIsDisarmed = computed(() =>
+    this.attacker().etats.some((e) => e.type === 'desarme'),
+  );
+
+  protected readonly attackerEtats = computed(() =>
+    this.attacker().etats.filter((e) => !POSTURE_TYPES.has(e.type) || true), // show all including postures
+  );
+
+  protected readonly targetEtats = computed(() => this.target()?.etats ?? []);
+
+  protected readonly targetHasDeMalus = computed(() =>
+    (this.target()?.etats ?? []).some((e) => e.type === 'de-malus'),
+  );
+
+  protected readonly effectiveTargetDefense = computed(() =>
+    this.target() ? effectiveDefense(this.target()!) : 0,
+  );
 
   protected readonly showTypeToggle = computed(() => {
     const arme = this.selectedArme();
@@ -150,12 +199,18 @@ export class BolAttackAssistantComponent {
 
   protected readonly isArmorChink = computed(() => this.selectedCombatOption()?.modificateur_armor ?? false);
 
+  // E1: +1 bonus if attacker is a legendary hero (applies only to heroes)
+  protected readonly legendaryAttackBonus = computed(() =>
+    this.attacker().type === 'hero' && this.attacker().category === 'legendaire' ? 1 : 0,
+  );
+
   protected readonly totalBonus = computed(() => {
     const a = this.attacker();
     const aptitude = this.attackAptitude();
     const agilite = a.agilite ?? 0;
-    const defense = this.target()?.defense ?? 0;
-    return agilite + aptitude - defense + this.difficultyMod() + this.combatOptionMod();
+    const t = this.target();
+    const defense = t ? effectiveDefense(t) : 0;
+    return agilite + aptitude - defense + this.difficultyMod() + this.combatOptionMod() + this.legendaryAttackBonus();
   });
 
   protected readonly total = computed(() => {
@@ -172,7 +227,8 @@ export class BolAttackAssistantComponent {
     return t >= 9;
   });
 
-  protected readonly isHeroic = computed(() => (this.dice() ?? 0) >= 12);
+  // E3: heroic if 12+ OR converted via 1 PH
+  protected readonly isHeroic = computed(() => (this.dice() ?? 0) >= 12 || this.convertedToHeroic());
 
   protected readonly hasHeroism = computed(() => (this.attacker().heroismCourant ?? 0) > 0);
 
@@ -198,6 +254,7 @@ export class BolAttackAssistantComponent {
 
   protected readonly bonusSummary = computed(() => {
     const parts: string[] = [];
+    if (this.legendaryAttackBonus() > 0) parts.push('Légendaire +1');  // E1
     if (this.difficultyMod() !== 0) {
       const d = this.difficultyOptions().find((o) => o.modificateur === this.difficultyMod());
       const sign = this.difficultyMod() > 0 ? '+' : '';
@@ -209,7 +266,14 @@ export class BolAttackAssistantComponent {
       parts.push(`${opt?.label ?? 'Option'} ${sign}${this.combatOptionMod()}`);
     }
     if (this.advantage() !== 'normal') {
-      parts.push(this.advantage() === 'avantage' ? 'Avantage (3d6 ↑)' : 'Désavantage (3d6 ↓)');
+      const labels: Record<AdvantageMode, string> = {
+        desavantage2: 'Désavantage ×2 (4d6 ↓)',
+        desavantage:  'Désavantage (3d6 ↓)',
+        normal:       '',
+        avantage:     'Avantage (3d6 ↑)',
+        avantage2:    'Avantage ×2 (4d6 ↑)',
+      };
+      parts.push(labels[this.advantage()]);
     }
     return parts.length === 0 ? 'Aucun modificateur' : parts.join(' • ');
   });
@@ -219,6 +283,7 @@ export class BolAttackAssistantComponent {
     if (d === null) return 'pending';
     if (d >= 12) return 'heroic';
     if (d <= 2) return 'critical';
+    if (this.convertedToHeroic()) return 'heroic';  // E3
     return this.isHit() ? 'hit' : 'miss';
   });
 
@@ -228,9 +293,55 @@ export class BolAttackAssistantComponent {
       case 'hit':      return 'Touché';
       case 'miss':     return 'Échec';
       case 'heroic':   return 'Succès héroïque';
-      case 'critical': return 'Échec critique';
+      case 'critical': return this.echecCritiqueAccepte() ? 'Échec critique' : 'Échec automatique';  // E4
     }
   });
+
+  // E5: vigor bonus with manual override
+  protected readonly vigBonusBase = computed(() => {
+    const vigueur = this.attacker().vigueur ?? 0;
+    const arme = this.selectedArme();
+    if (!arme || arme.categorie === 'nue') return Math.floor(vigueur / 2);
+    return this.attackType() === 'tir' ? Math.floor(vigueur / 2) : vigueur;
+  });
+
+  protected readonly vigBonus = computed(() => this.vigBonusOverride() ?? this.vigBonusBase());
+
+  protected readonly targetArmorFixed = computed(() =>
+    (this.target()?.armures ?? []).reduce((sum, a) => sum + protectionFixed(a.protection), 0),
+  );
+
+  protected readonly targetHasArmor = computed(() =>
+    !this.defautArmure() && (this.target()?.armures ?? []).length > 0,
+  );
+
+  protected readonly totalDamage = computed(() => {
+    const roll = this.damageRoll();
+    if (roll === null) return null;
+    let base = roll + this.vigBonus();
+    if ([this.heroicOptionSlug1(), this.heroicOptionSlug2()].some((s) => s === 'devastateur')) base += 6;
+    const armor = this.defautArmure() ? 0 : this.armorValue();
+    return Math.max(0, base - armor);
+  });
+
+  protected readonly advantageDiceLabel = computed(() => {
+    switch (this.advantage()) {
+      case 'avantage2':    return '4d6 — garder les 2 meilleurs';
+      case 'avantage':     return '3d6 — garder les 2 meilleurs';
+      case 'desavantage':  return '3d6 — garder les 2 moins bons';
+      case 'desavantage2': return '4d6 — garder les 2 moins bons';
+      default:             return '2d6';
+    }
+  });
+
+  // E10: warnings (no blocking)
+  protected readonly warnHeavyDualStrike = computed(() =>
+    this.selectedArme()?.categorie === 'lourde' && this.combatOptionSlug() === 'dual-strike',
+  );
+
+  protected readonly warnHeavyLowVigueur = computed(() =>
+    this.selectedArme()?.categorie === 'lourde' && (this.attacker().vigueur ?? 0) < 0,
+  );
 
   constructor() {
     effect(() => {
@@ -239,13 +350,11 @@ export class BolAttackAssistantComponent {
       }
     });
     effect(() => {
-      // Reset weapon selection when attacker changes (new dialog open)
       void this.attacker().id;
       this.selectedArme.set(null);
       this.attackType.set('melee');
     });
     effect(() => {
-      // Pre-fill armor value with fixed protection when target changes
       void this.targetId();
       this.armorValue.set(untracked(() => this.targetArmorFixed()));
     });
@@ -259,21 +368,45 @@ export class BolAttackAssistantComponent {
 
   protected rollDice(): void {
     const adv = this.advantage();
-    const count = adv === 'normal' ? 2 : 3;
+    const count = adv === 'normal' ? 2 : (adv === 'avantage2' || adv === 'desavantage2') ? 4 : 3;
     const rolls = Array.from({length: count}, () => Math.floor(Math.random() * 6) + 1);
     const sorted = [...rolls].sort((a, b) => b - a);
-    const kept = adv === 'desavantage' ? sorted.slice(-2) : sorted.slice(0, 2);
+    const kept = (adv === 'desavantage' || adv === 'desavantage2') ? sorted.slice(-2) : sorted.slice(0, 2);
     this.diceDetail.set(rolls);
     this.dice.set(kept[0] + kept[1]);
   }
 
+  // E2: toggle legendary with live PH adjustment
+  protected toggleLegendary(): void {
+    const newVal = !this.useLegendary();
+    this.heroismChange.emit({id: this.attacker().id, delta: newVal ? -1 : 1});
+    this.useLegendary.set(newVal);
+  }
+
+  // E3: convert normal hit to heroic via 1 PH
+  protected convertToHeroic(): void {
+    this.convertedToHeroic.set(true);
+    this.heroismChange.emit({id: this.attacker().id, delta: -1});
+  }
+
+  // E4: voluntary critical failure (+1 PH)
+  protected toggleEchecCritique(): void {
+    const newVal = !this.echecCritiqueAccepte();
+    this.heroismChange.emit({id: this.attacker().id, delta: newVal ? 1 : -1});
+    this.echecCritiqueAccepte.set(newVal);
+  }
+
   protected resetRoll(): void {
+    this._reverseHeroismChanges();
     this.dice.set(null);
     this.diceDetail.set([]);
     this.damageRoll.set(null);
     this.heroicOptionSlug1.set(null);
     this.heroicOptionSlug2.set(null);
     this.useLegendary.set(false);
+    this.convertedToHeroic.set(false);
+    this.echecCritiqueAccepte.set(false);
+    this.vigBonusOverride.set(null);
   }
 
   protected readonly defautArmure = computed(() => this.combatOptionSlug() === 'armor-chink');
@@ -295,49 +428,48 @@ export class BolAttackAssistantComponent {
     }
   });
 
-  protected readonly vigBonus = computed(() => {
-    const vigueur = this.attacker().vigueur ?? 0;
-    const arme = this.selectedArme();
-    if (!arme || arme.categorie === 'nue') return Math.floor(vigueur / 2);
-    return this.attackType() === 'tir' ? Math.floor(vigueur / 2) : vigueur;
-  });
-
-  protected readonly targetArmorFixed = computed(() =>
-    (this.target()?.armures ?? []).reduce((sum, a) => sum + protectionFixed(a.protection), 0),
-  );
-
-  protected readonly targetHasArmor = computed(() =>
-    !this.defautArmure() && (this.target()?.armures ?? []).length > 0,
-  );
-
-  protected readonly totalDamage = computed(() => {
-    const roll = this.damageRoll();
-    if (roll === null) return null;
-    let base = roll + this.vigBonus();
-    if ([this.heroicOptionSlug1(), this.heroicOptionSlug2()].some((s) => s === 'devastateur')) base += 6;
-    const armor = this.defautArmure() ? 0 : this.armorValue();
-    return Math.max(0, base - armor);
-  });
-
-  protected readonly advantageDiceLabel = computed(() => {
-    switch (this.advantage()) {
-      case 'avantage': return '3d6 — garder les 2 meilleurs';
-      case 'desavantage': return '3d6 — garder les 2 moins bons';
-      default: return '2d6';
-    }
-  });
+  protected etatLabel(etat: EtatSlot): string {
+    return etat.type === 'de-malus' && etat.note ? etat.note : ETAT_LABELS[etat.type];
+  }
 
   protected applyDamage(): void {
     const t = this.target();
     const dmg = this.totalDamage();
     if (!t || dmg === null) return;
+
     this.hpChange.emit({id: t.id, delta: -dmg});
+
+    // Phase 3: build state changes for attacker (posture) and target (heroic effects)
+    const changes: {id: string; etats: EtatSlot[]}[] = [];
+
+    const postureType = POSTURE_BY_SLUG[this.combatOptionSlug()];
+    if (postureType) {
+      changes.push({id: this.attacker().id, etats: [makeEtat(postureType, this.attacker().id)]});
+    }
+
+    const heroicSlugs = [this.heroicOptionSlug1(), this.heroicOptionSlug2()].filter((s): s is string => !!s);
+    const targetEtats: EtatSlot[] = [];
+    if (heroicSlugs.includes('renversement')) {
+      targetEtats.push(makeEtat('a-terre', t.id));
+      targetEtats.push(makeEtat('de-malus', t.id));
+    }
+    if (heroicSlugs.includes('desarmement')) {
+      targetEtats.push(makeEtat('desarme'));
+    }
+    if (heroicSlugs.includes('precis')) {
+      targetEtats.push(makeEtat('de-malus', undefined, 'Coup précis'));
+    }
+    if (targetEtats.length > 0) changes.push({id: t.id, etats: targetEtats});
+
+    if (changes.length > 0) this.stateChange.emit(changes);
+
     this.damageRoll.set(null);
     this.dice.set(null);
     this.diceDetail.set([]);
   }
 
   protected close(): void {
+    this._reverseHeroismChanges();
     this.selectedArme.set(null);
     this.damageRoll.set(null);
     this.armorValue.set(0);
@@ -352,6 +484,17 @@ export class BolAttackAssistantComponent {
     this.heroicOptionSlug1.set(null);
     this.heroicOptionSlug2.set(null);
     this.useLegendary.set(false);
+    this.convertedToHeroic.set(false);
+    this.echecCritiqueAccepte.set(false);
+    this.vigBonusOverride.set(null);
     this.visibleChange.emit(false);
+  }
+
+  // Reverse any pending heroism changes before resetting state
+  private _reverseHeroismChanges(): void {
+    const id = this.attacker().id;
+    if (this.useLegendary()) this.heroismChange.emit({id, delta: 1});
+    if (this.convertedToHeroic()) this.heroismChange.emit({id, delta: 1});
+    if (this.echecCritiqueAccepte()) this.heroismChange.emit({id, delta: -1});
   }
 }

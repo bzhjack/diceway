@@ -39,7 +39,7 @@ export class BolRollPhaseComponent implements OnInit {
   readonly nonHeroesInOrder = input.required<InitiativeSlot[]>();
 
   readonly cancelled = output<void>();
-  readonly confirmed = output<{id: string; category: ReactionResult}[]>();
+  readonly confirmed = output<{id: string; category: ReactionResult; spentHeroism: boolean}[]>();
   readonly allHeroesRolledChange = output<boolean>();
 
   protected readonly rollEntries = signal<Record<string, RollEntry>>({});
@@ -111,7 +111,7 @@ export class BolRollPhaseComponent implements OnInit {
           const total = e.dice + e.esprit + e.bonusInit + (e.surpris ? -1 : 0) + (e.embuscade ? 2 : 0) + e.carriere - e.initiativeEnnemie;
           category = total >= 9 ? 'reussite' : 'echec';
         }
-        return {id: s.id, category};
+        return {id: s.id, category, spentHeroism: category === 'legendaire'};
       })
       .filter((r): r is NonNullable<typeof r> => r !== null);
     this.confirmed.emit(results);

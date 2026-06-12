@@ -38,10 +38,14 @@
         [index]="i"
         [round1Blocked]="round1Blocked()"
         [initiativeConfirmed]="initiativeConfirmed()"
+        [isActiveTurn]="activeTurnId() === slot.id"
         (hpChange)="hpChange.emit($event)"
         (heroismChange)="heroismChange.emit($event)"
         (removeParticipant)="removeParticipant.emit($event)"
         (attackStart)="attackStart.emit($event)"
+        (delayTurn)="delayTurn.emit($event)"
+        (defenseTotale)="defenseTotale.emit($event)"
+        (removeEtat)="removeEtat.emit($event)"
       />
     }
   </div>

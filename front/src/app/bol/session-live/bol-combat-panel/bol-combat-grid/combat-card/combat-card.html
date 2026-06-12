@@ -13,8 +13,17 @@
 
   <div class="cc-actions">
     @if (initiativeConfirmed()) {
-      <p-button icon="pi pi-bolt" [text]="true" severity="warn" size="small"
-        (onClick)="attackStart.emit(s)" aria-label="Jet d'attaque" pTooltip="Jet d'attaque" />
+      @if (isActiveTurn()) {
+        <p-button icon="pi pi-bolt" severity="warn" size="small"
+          (onClick)="attackStart.emit(s)" aria-label="Jet d'attaque" pTooltip="Jet d'attaque" />
+        <p-button icon="pi pi-shield" [text]="true" severity="info" size="small"
+          (onClick)="defenseTotale.emit(s.id)" aria-label="Défense totale" pTooltip="Défense totale (+2 déf)" />
+        <p-button icon="pi pi-clock" [text]="true" severity="secondary" size="small"
+          (onClick)="delayTurn.emit(s.id)" aria-label="Retarder son action" pTooltip="Retarder son action" />
+      } @else {
+        <p-button icon="pi pi-bolt" [text]="true" severity="warn" size="small"
+          (onClick)="attackStart.emit(s)" aria-label="Jet d'attaque" pTooltip="Jet d'attaque" />
+      }
     }
     @if (showEquip()) {
       <p-button icon="pi pi-book" [text]="true" severity="warn" size="small"
@@ -102,6 +111,20 @@
       </div>
     }
   </div>
+
+  <!-- États actifs (Phase 3) -->
+  @if (s.etats.length > 0) {
+    <div class="cc-etats cc-etats--active">
+      @for (etat of s.etats; track etat.id) {
+        <button
+          type="button"
+          class="cc-etat cc-etat--{{ etat.type }}"
+          (click)="removeEtat.emit({slotId: s.id, etatId: etat.id})"
+          [title]="'Lever l\'état ' + etatLabel(etat)"
+        >{{ etatLabel(etat) }} ×</button>
+      }
+    </div>
+  }
 
   <!-- PV / PH -->
   <div class="cc-resources">

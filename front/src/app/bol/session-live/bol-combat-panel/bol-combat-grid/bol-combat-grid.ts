@@ -20,6 +20,7 @@ export class BolCombatGridComponent {
   readonly round1Blocked = input.required<boolean>();
   readonly legendaryBonus = input.required<boolean>();
   readonly initiativeConfirmed = input.required<boolean>();
+  readonly activeTurnId = input<string | null>(null);
 
   readonly selectedParticipantChange = output<string | null>();
   readonly addParticipant = output<void>();
@@ -27,4 +28,7 @@ export class BolCombatGridComponent {
   readonly heroismChange = output<{id: string; delta: number}>();
   readonly removeParticipant = output<string>();
   readonly attackStart = output<InitiativeSlot>();
+  readonly delayTurn = output<string>();
+  readonly defenseTotale = output<string>();
+  readonly removeEtat = output<{slotId: string; etatId: string}>();
 }

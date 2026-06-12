@@ -39,6 +39,21 @@ export interface ArmeSlot {
   readonly categorie: DamageCategorie | null;
 }
 
+export interface EtatSlot {
+  readonly id: string;
+  readonly type:
+    | 'posture-off'
+    | 'posture-def'
+    | 'defense-totale'
+    | 'intrepide'
+    | 'a-terre'
+    | 'desarme'
+    | 'de-malus'
+    | 'stabilise';
+  readonly note?: string;
+  readonly expiresAtTurnOf?: string;
+}
+
 export interface InitiativeSlot {
   readonly id: string;
   readonly nom: string;
@@ -61,8 +76,34 @@ export interface InitiativeSlot {
   category: ReactionResult | null;
   vitaliteCourante: number;
   heroismCourant: number | null;
+  etats: EtatSlot[];
 }
 
+// ── Defense helpers ───────────────────────────────────────────────────────────
+
+const ETAT_DEFENSE_DELTA: Partial<Record<EtatSlot['type'], number>> = {
+  'posture-off':    -1,
+  'intrepide':      -2,
+  'posture-def':    +1,
+  'defense-totale': +2,
+};
+
+export const POSTURE_TYPES: ReadonlySet<EtatSlot['type']> = new Set([
+  'posture-off', 'posture-def', 'defense-totale', 'intrepide',
+]);
+
+export function effectiveDefense(slot: {defense: number | null; etats: EtatSlot[]}): number {
+  const base = slot.defense ?? 0;
+  return slot.etats.reduce((sum, e) => sum + (ETAT_DEFENSE_DELTA[e.type] ?? 0), base);
+}
+
+export function makeEtat(
+  type: EtatSlot['type'],
+  expiresAtTurnOf?: string,
+  note?: string,
+): EtatSlot {
+  return {id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, type, expiresAtTurnOf, note};
+}
 
 @Component({
   selector: 'app-bol-combat-panel',
@@ -70,6 +111,9 @@ export interface InitiativeSlot {
   templateUrl: './bol-combat-panel.html',
   styleUrl: './bol-combat-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(document:keydown)': 'onKeydown($event)',
+  },
 })
 export class BolCombatPanelComponent {
   readonly participants = input.required<InitiativeSlot[]>();
@@ -83,6 +127,8 @@ export class BolCombatPanelComponent {
   protected readonly rulesDialogVisible = signal(false);
   protected readonly allHeroesRolled = signal(false);
   protected readonly currentRound = signal(1);
+  protected readonly activeTurnId = signal<string | null>(null);
+  protected readonly delayedIds = signal<Set<string>>(new Set());
 
   protected readonly availableParticipants = computed(() => {
     const inOrder = new Set(this.initiativeOrder().map((s) => s.id));
@@ -126,6 +172,28 @@ export class BolCombatPanelComponent {
     this.initiativeOrder().filter((s) => s.type !== 'hero'),
   );
 
+  protected readonly turnOrder = computed((): InitiativeSlot[] => {
+    const round = this.currentRound();
+    const delayed = this.delayedIds();
+    const base = this.sortedInitiative().filter((s) => {
+      if (s.vitaliteCourante <= 0) return false;
+      if (round === 1) {
+        if (s.category === 'echec-critique') return false;
+        if (this.round1Blocked() && (s.category === 'coriace' || s.category === 'pietaille')) return false;
+      }
+      return true;
+    });
+    const normal = base.filter((s) => !delayed.has(s.id));
+    const delayedSlots = base.filter((s) => delayed.has(s.id));
+    return [...normal, ...delayedSlots];
+  });
+
+  protected readonly activeTurnIndex = computed(() =>
+    this.turnOrder().findIndex((s) => s.id === this.activeTurnId()),
+  );
+
+  // ── Mutations ────────────────────────────────────────────────────────────────
+
   protected addToInitiative(): void {
     const id = this.selectedParticipantId();
     if (!id) return;
@@ -156,9 +224,41 @@ export class BolCombatPanelComponent {
     );
   }
 
+  // Adds states to a slot; posture types are mutually exclusive
+  protected adjustStates(id: string, etats: EtatSlot[]): void {
+    const hasPosture = etats.some((e) => POSTURE_TYPES.has(e.type));
+    this.initiativeOrder.update((list) =>
+      list.map((s) => {
+        if (s.id !== id) return s;
+        const existing = hasPosture ? s.etats.filter((e) => !POSTURE_TYPES.has(e.type)) : s.etats;
+        return {...s, etats: [...existing, ...etats]};
+      }),
+    );
+  }
+
+  protected removeEtat(slotId: string, etatId: string): void {
+    this.initiativeOrder.update((list) =>
+      list.map((s) =>
+        s.id === slotId ? {...s, etats: s.etats.filter((e) => e.id !== etatId)} : s,
+      ),
+    );
+  }
+
+  protected onStateChanges(changes: {id: string; etats: EtatSlot[]}[]): void {
+    for (const c of changes) this.adjustStates(c.id, c.etats);
+  }
+
+  // Défense totale: apply state and advance turn
+  protected defenseTotale(id: string): void {
+    this.adjustStates(id, [makeEtat('defense-totale', id)]);
+    this.advanceTurn();
+  }
+
   protected removeFromInitiative(id: string): void {
     this.initiativeOrder.update((list) => list.filter((s) => s.id !== id));
   }
+
+  // ── Turn flow ────────────────────────────────────────────────────────────────
 
   protected startRollPhase(): void {
     this.allHeroesRolled.set(false);
@@ -176,6 +276,42 @@ export class BolCombatPanelComponent {
       }),
     );
     this.currentRound.update((r) => r + 1);
+    this.delayedIds.set(new Set());
+    const firstId = this.turnOrder()[0]?.id ?? null;
+    if (firstId) this._purgeExpiringStates(firstId);
+    this.activeTurnId.set(firstId);
+  }
+
+  protected advanceTurn(): void {
+    const order = this.turnOrder();
+    if (order.length === 0) return;
+    const idx = this.activeTurnIndex();
+    if (idx === -1 || idx >= order.length - 1) {
+      this.startNewRound();
+    } else {
+      const nextId = order[idx + 1].id;
+      this._purgeExpiringStates(nextId);
+      this.activeTurnId.set(nextId);
+    }
+  }
+
+  protected delayTurn(id: string): void {
+    const orderBefore = this.turnOrder();
+    const idx = orderBefore.findIndex((s) => s.id === id);
+    const nextSlot = idx >= 0 && idx < orderBefore.length - 1 ? orderBefore[idx + 1] : null;
+    this.delayedIds.update((set) => new Set([...set, id]));
+    if (nextSlot) {
+      this._purgeExpiringStates(nextSlot.id);
+      this.activeTurnId.set(nextSlot.id);
+    } else {
+      this.startNewRound();
+    }
+  }
+
+  private _purgeExpiringStates(turnId: string): void {
+    this.initiativeOrder.update((list) =>
+      list.map((s) => ({...s, etats: s.etats.filter((e) => e.expiresAtTurnOf !== turnId)})),
+    );
   }
 
   protected cancelRollPhase(): void {
@@ -187,14 +323,27 @@ export class BolCombatPanelComponent {
     this.rollPhaseRef()?.confirm();
   }
 
-  protected onRollConfirmed(results: {id: string; category: ReactionResult}[]): void {
+  protected onRollConfirmed(results: {id: string; category: ReactionResult; spentHeroism: boolean}[]): void {
     this.initiativeOrder.update((list) =>
       list.map((s) => {
         const result = results.find((r) => r.id === s.id);
         return result ? {...s, category: result.category} : s;
       }),
     );
+    for (const r of results) {
+      if (r.spentHeroism) this.adjustHeroism(r.id, -1);
+    }
     this.allHeroesRolled.set(false);
     this.rollPhase.set(false);
+    this.delayedIds.set(new Set());
+    this.activeTurnId.set(this.turnOrder()[0]?.id ?? null);
+  }
+
+  protected onKeydown(event: KeyboardEvent): void {
+    if (event.key !== 'n' && event.key !== 'N') return;
+    const target = event.target as HTMLElement;
+    if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) return;
+    if (!this.initiativeConfirmed() || this.rollPhase()) return;
+    this.advanceTurn();
   }
 }

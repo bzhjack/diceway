@@ -16,7 +16,12 @@
     </div>
 
     @if (initiativeConfirmed()) {
-      <span class="combat-round-badge">Round {{ currentRound() }}</span>
+      <span class="combat-round-badge">
+        Round {{ currentRound() }}
+        @if (activeTurnId()) {
+          &nbsp;• Tour {{ activeTurnIndex() + 1 }}/{{ turnOrder().length }}
+        }
+      </span>
     }
 
     @if (rollPhase()) {
@@ -31,14 +36,25 @@
         />
       </div>
     } @else if (initiativeConfirmed()) {
-      <p-button
-        label="Nouveau round"
-        icon="pi pi-refresh"
-        severity="secondary"
-        size="small"
-        class="ml-auto"
-        (onClick)="startNewRound()"
-      />
+      <div class="flex items-center gap-2 ml-auto">
+        <p-button
+          label="Suivant"
+          icon="pi pi-chevron-right"
+          iconPos="right"
+          severity="warn"
+          size="small"
+          pTooltip="Prochain tour (N)"
+          (onClick)="advanceTurn()"
+        />
+        <p-button
+          label="Nouveau round"
+          icon="pi pi-refresh"
+          severity="secondary"
+          [outlined]="true"
+          size="small"
+          (onClick)="startNewRound()"
+        />
+      </div>
     } @else if (heroesInOrder().length > 0) {
       <p-button
         label="Jets de réaction"
@@ -126,10 +142,14 @@
       [initiativeConfirmed]="initiativeConfirmed()"
       (selectedParticipantChange)="selectedParticipantId.set($event)"
       (addParticipant)="addToInitiative()"
+      [activeTurnId]="activeTurnId()"
       (hpChange)="adjustHp($event.id, $event.delta)"
       (heroismChange)="adjustHeroism($event.id, $event.delta)"
       (removeParticipant)="removeFromInitiative($event)"
       (attackStart)="attackerSlot.set($event)"
+      (delayTurn)="delayTurn($event)"
+      (defenseTotale)="defenseTotale($event)"
+      (removeEtat)="removeEtat($event.slotId, $event.etatId)"
     />
   }
 
@@ -140,6 +160,8 @@
       [visible]="true"
       (visibleChange)="!$event && attackerSlot.set(null)"
       (hpChange)="adjustHp($event.id, $event.delta)"
+      (heroismChange)="adjustHeroism($event.id, $event.delta)"
+      (stateChange)="onStateChanges($event)"
     />
   }
 </p-card>
