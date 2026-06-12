@@ -48,21 +48,25 @@ export const carriereValidator: ValidatorFn = (control: AbstractControl): Valida
   return null;
 };
 
-export const combatFormValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-  const controlIds = ['tir', 'melee', 'defense', 'initiative'];
-  const values = controlIds.map((id) => Number(control.get(id)?.value ?? 0));
-  let errors: ValidationErrors = {};
+export function combatFormValidatorFn(budget: number): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const controlIds = ['tir', 'melee', 'defense', 'initiative'];
+    const values = controlIds.map((id) => Number(control.get(id)?.value ?? 0));
+    let errors: ValidationErrors = {};
 
-  if (values.filter((value) => value === -1).length > 1) {
-    errors = {...errors, aptTooManyNegative: true};
-  }
+    if (values.filter((value) => value === -1).length > 1) {
+      errors = {...errors, aptTooManyNegative: true};
+    }
 
-  if (values.reduce((sum, value) => sum + value, 0) > 4) {
-    errors = {...errors, aptSumExceeded: true};
-  }
+    if (values.reduce((sum, value) => sum + value, 0) > budget) {
+      errors = {...errors, aptSumExceeded: true};
+    }
 
-  return Object.keys(errors).length ? errors : null;
-};
+    return Object.keys(errors).length ? errors : null;
+  };
+}
+
+export const combatFormValidator: ValidatorFn = combatFormValidatorFn(4);
 
 export const attributsFormValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const controlIds = ['vigueur', 'agilite', 'aura', 'esprit'];
@@ -80,12 +84,13 @@ export const attributsFormValidator: ValidatorFn = (control: AbstractControl): V
   return Object.keys(errors).length ? errors : null;
 };
 
-export const carrieresFormValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-  const carrieres = control.get('carrieres') as FormArray | null;
-  if (!carrieres) {
-    return null;
-  }
+export function carrieresFormValidatorFn(budget: number): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const carrieres = control.get('carrieres') as FormArray | null;
+    if (!carrieres) return null;
+    const sum = carrieres.controls.reduce((total, current) => total + Number(current.get('value')?.value ?? 0), 0);
+    return sum > budget ? {carrSumExceeded: true} : null;
+  };
+}
 
-  const sum = carrieres.controls.reduce((total, current) => total + Number(current.get('value')?.value ?? 0), 0);
-  return sum > 4 ? {carrSumExceeded: true} : null;
-};
+export const carrieresFormValidator: ValidatorFn = carrieresFormValidatorFn(4);
