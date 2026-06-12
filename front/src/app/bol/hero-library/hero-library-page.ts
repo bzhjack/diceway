@@ -15,7 +15,7 @@ import {PopoverModule} from 'primeng/popover';
 import {TableModule} from 'primeng/table';
 import {TagModule} from 'primeng/tag';
 import {TooltipModule} from 'primeng/tooltip';
-import {InlineSVGModule} from 'ng-inline-svg-2';
+import {InlineSvgDirective} from '../../shared/inline-svg/inline-svg.directive';
 
 interface HeroListEntry {
   readonly label: string;
@@ -50,7 +50,7 @@ interface HeroTraitEntry {
     TableModule,
     TagModule,
     TooltipModule,
-    InlineSVGModule,
+    InlineSvgDirective,
   ],
   templateUrl: './hero-library-page.html',
   styleUrl: './hero-library-page.scss',
