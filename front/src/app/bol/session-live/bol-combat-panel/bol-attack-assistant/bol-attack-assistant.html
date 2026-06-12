@@ -240,7 +240,7 @@
           <p class="atk-warning">⚠ Arme lourde avec vigueur {{ a.vigueur }} — difficile à manier</p>
         }
 
-        <!-- Action principale : lancer les dés -->
+        <!-- Action principale : lancer les dés + saisie manuelle -->
         <div class="atk-actions">
           @if (dice() === null) {
             <button
@@ -262,6 +262,20 @@
               Relancer
             </button>
           }
+          <!-- E6: saisie manuelle du résultat 2d6 -->
+          <div class="atk-manual">
+            <span class="atk-manual__label">ou saisir</span>
+            <p-inputNumber
+              [ngModel]="dice()"
+              (ngModelChange)="setDiceManual($event)"
+              [min]="2" [max]="12"
+              placeholder="2–12"
+              [inputStyle]="{'width':'3.2rem','text-align':'center','font-weight':'700'}"
+            />
+            @if (diceDetail().length === 0 && dice() !== null) {
+              <span class="atk-manual__tag">manuel</span>
+            }
+          </div>
         </div>
 
         <!-- E4: échec critique au choix du joueur (2 naturel) -->
@@ -372,6 +386,10 @@
                 placeholder="—"
                 [inputStyle]="{'width':'3.75rem','text-align':'center','font-size':'1.1rem','font-weight':'700'}"
               />
+              <!-- E6: bouton lancer dégâts -->
+              <button type="button" class="atk-dice-btn" (click)="rollDamage()" title="Lancer {{ damageDiceLabel() }}">
+                ⬢
+              </button>
             </div>
 
             <!-- E5: bonus de vigueur éditable -->
@@ -401,9 +419,18 @@
                 <p-inputNumber
                   [ngModel]="armorValue()"
                   (ngModelChange)="armorValue.set($event ?? 0)"
-                  [min]="0" [max]="10"
+                  [min]="0" [max]="20"
                   [inputStyle]="{'width':'3.75rem','text-align':'center'}"
                 />
+                <!-- E6: bouton d6 variable armure -->
+                @if (targetArmorVariableMod() !== null) {
+                  <button
+                    type="button"
+                    class="atk-dice-btn"
+                    (click)="rollArmorBonus()"
+                    title="Lancer le dé d'armure (d6{{ targetArmorVariableMod()! >= 0 ? '+' : '' }}{{ targetArmorVariableMod() }})"
+                  >⬢</button>
+                }
                 <span class="atk-dmg__hint">
                   @for (armure of t!.armures; track armure.nom) {
                     {{ armure.nom }}{{ armure.protection ? ' (' + armure.protection + ')' : '' }}
@@ -411,6 +438,19 @@
                 </span>
               </div>
             }
+
+            <!-- E6: ajustement libre -->
+            <div class="atk-dmg__row">
+              <span class="atk-dmg__label">Ajustement</span>
+              <p-inputNumber
+                [ngModel]="damageAdjust()"
+                (ngModelChange)="damageAdjust.set($event ?? 0)"
+                [min]="-20" [max]="20"
+                [showButtons]="true"
+                [inputStyle]="{'width':'3.75rem','text-align':'center'}"
+              />
+              <span class="atk-dmg__hint">± libre (carrière, magie, MJ…)</span>
+            </div>
             @if (defautArmure()) {
               <p class="atk-dmg__note">Défaut d'armure — protection ignorée</p>
             }

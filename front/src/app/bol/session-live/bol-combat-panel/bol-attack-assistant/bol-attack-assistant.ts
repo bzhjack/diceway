@@ -117,6 +117,7 @@ export class BolAttackAssistantComponent {
   protected readonly massacrePending = signal(false);
   protected readonly massacreMax = signal(0);
   protected readonly massacreSelected = signal<Set<string>>(new Set());
+  protected readonly damageAdjust = signal(0); // E6: free adjustment
 
   protected readonly difficultyOptions = toSignal(this.refService.getDifficultes(), {initialValue: []});
   protected readonly combatOptions = toSignal(this.refService.getCombatOptions(), {initialValue: []});
@@ -328,10 +329,26 @@ export class BolAttackAssistantComponent {
   protected readonly totalDamage = computed(() => {
     const roll = this.damageRoll();
     if (roll === null) return null;
-    let base = roll + this.vigBonus();
+    let base = roll + this.vigBonus() + this.damageAdjust();
     if ([this.heroicOptionSlug1(), this.heroicOptionSlug2()].some((s) => s === 'devastateur')) base += 6;
     const armor = this.defautArmure() ? 0 : this.armorValue();
     return Math.max(0, base - armor);
+  });
+
+  // Returns the d6 modifier for the target's variable armor, null if no variable component
+  protected readonly targetArmorVariableMod = computed((): number | null => {
+    if (this.defautArmure()) return null;
+    const armors = this.target()?.armures ?? [];
+    let totalMod = 0;
+    let hasVariable = false;
+    for (const a of armors) {
+      const match = (a.protection ?? '').match(/d6([+-]\d+)?/);
+      if (match) {
+        totalMod += match[1] ? parseInt(match[1], 10) : 0;
+        hasVariable = true;
+      }
+    }
+    return hasVariable ? totalMod : null;
   });
 
   protected readonly advantageDiceLabel = computed(() => {
@@ -386,6 +403,31 @@ export class BolAttackAssistantComponent {
     this.dice.set(kept[0] + kept[1]);
   }
 
+  // E6: set dice manually (clears detail)
+  protected setDiceManual(val: number | null): void {
+    this.dice.set(val !== null ? Math.max(2, Math.min(12, val)) : null);
+    this.diceDetail.set([]);
+  }
+
+  // E6: roll damage according to effectiveDamageCategorie
+  protected rollDamage(): void {
+    const d6 = () => Math.ceil(Math.random() * 6);
+    switch (this.effectiveDamageCategorie()) {
+      case 'nue':     this.damageRoll.set(Math.ceil(Math.random() * 3)); break;
+      case 'legere':  this.damageRoll.set(Math.min(d6(), d6())); break;
+      case 'moyenne': this.damageRoll.set(d6()); break;
+      case 'lourde':  this.damageRoll.set(Math.max(d6(), d6())); break;
+    }
+  }
+
+  // E6: roll d6 variable armor component and add to armorValue
+  protected rollArmorBonus(): void {
+    const mod = this.targetArmorVariableMod();
+    if (mod === null) return;
+    const roll = Math.ceil(Math.random() * 6);
+    this.armorValue.update((v) => v + Math.max(0, roll + mod));
+  }
+
   // E2: toggle legendary with live PH adjustment
   protected toggleLegendary(): void {
     const newVal = !this.useLegendary();
@@ -417,6 +459,7 @@ export class BolAttackAssistantComponent {
     this.convertedToHeroic.set(false);
     this.echecCritiqueAccepte.set(false);
     this.vigBonusOverride.set(null);
+    this.damageAdjust.set(0);
     this.carnagePending.set(false);
     this.massacrePending.set(false);
     this.massacreSelected.set(new Set());
@@ -502,6 +545,7 @@ export class BolAttackAssistantComponent {
     this.convertedToHeroic.set(false);
     this.echecCritiqueAccepte.set(false);
     this.vigBonusOverride.set(null);
+    this.damageAdjust.set(0);
   }
 
   protected toggleMassacreTarget(id: string): void {
@@ -543,6 +587,7 @@ export class BolAttackAssistantComponent {
     this.convertedToHeroic.set(false);
     this.echecCritiqueAccepte.set(false);
     this.vigBonusOverride.set(null);
+    this.damageAdjust.set(0);
     this.carnagePending.set(false);
     this.massacrePending.set(false);
     this.massacreSelected.set(new Set());

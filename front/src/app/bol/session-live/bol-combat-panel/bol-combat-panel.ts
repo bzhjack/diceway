@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, input, output, signal, viewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal, untracked, viewChild} from '@angular/core';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {CheckboxModule} from 'primeng/checkbox';
@@ -8,6 +8,8 @@ import {BolAttackAssistantComponent} from './bol-attack-assistant/bol-attack-ass
 import {BolCombatGridComponent} from './bol-combat-grid/bol-combat-grid';
 import {BolRollPhaseComponent} from './bol-roll-phase/bol-roll-phase';
 import {INITIATIVE_ORDER, TYPE_LABELS} from './combat.constants';
+import {BolCombatStorageService, CombatSnapshot} from '../../services/bol-combat-storage.service';
+export type {CombatSnapshot};
 
 export type ParticipantType = 'hero' | 'creature' | 'demon' | 'pnj';
 export type ReactionResult =
@@ -119,8 +121,11 @@ export function makeEtat(
 })
 export class BolCombatPanelComponent {
   readonly participants = input.required<InitiativeSlot[]>();
+  readonly scenarioId = input<string | null>(null);
+  readonly initialSnapshot = input<CombatSnapshot | null>(null);
   readonly combatEnded = output<void>();
 
+  private readonly storage = inject(BolCombatStorageService);
   private readonly rollPhaseRef = viewChild(BolRollPhaseComponent);
 
   protected readonly initiativeOrder = signal<InitiativeSlot[]>([]);
@@ -213,6 +218,48 @@ export class BolCombatPanelComponent {
       return {slot: s, lost, recovery, note, brawl};
     }),
   );
+
+  constructor() {
+    // Restore from snapshot when provided (resume flow)
+    effect(() => {
+      const snap = this.initialSnapshot();
+      if (!snap) return;
+      untracked(() => {
+        const ps = this.participants();
+        const restored: InitiativeSlot[] = snap.initiativeIds
+          .map((id) => ps.find((p) => p.id === id))
+          .filter((p): p is InitiativeSlot => !!p)
+          .map((p) => {
+            const state = snap.slotStates[p.id];
+            return state ? {...p, ...state} : p;
+          });
+        this.initiativeOrder.set(restored);
+        this.currentRound.set(snap.round);
+        this.activeTurnId.set(snap.activeTurnId);
+        this.delayedIds.set(new Set(snap.delayedIds));
+      });
+    });
+
+    // Auto-save after initiative is confirmed
+    effect(() => {
+      const id = this.scenarioId();
+      if (!id || !this.initiativeConfirmed()) return;
+      const snap: CombatSnapshot = {
+        scenarioId: id,
+        round: this.currentRound(),
+        activeTurnId: this.activeTurnId(),
+        delayedIds: [...this.delayedIds()],
+        initiativeIds: this.initiativeOrder().map((s) => s.id),
+        slotStates: Object.fromEntries(
+          this.initiativeOrder().map((s) => [
+            s.id,
+            {vitaliteCourante: s.vitaliteCourante, heroismCourant: s.heroismCourant, category: s.category, etats: s.etats},
+          ]),
+        ),
+      };
+      this.storage.save(id, snap);
+    });
+  }
 
   // ── Mutations ────────────────────────────────────────────────────────────────
 
@@ -353,6 +400,8 @@ export class BolCombatPanelComponent {
     }
     this.brawlIds.set(new Set());
     this.endCombatDialogVisible.set(false);
+    const id = this.scenarioId();
+    if (id) this.storage.clear(id);
     this.combatEnded.emit();
   }
 
