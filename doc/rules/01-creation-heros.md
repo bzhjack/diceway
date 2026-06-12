@@ -26,7 +26,7 @@ Regles de repartition:
 
 - 4 points au total.
 - Maximum 3 dans un attribut a la creation.
-- Un seul attribut peut etre abaisse a `-1` pour recuperer 1 point supplementaire a placer ailleurs.
+- Un seul attribut peut etre abaisse a `-1` (avec l'accord du MJ) pour recuperer 1 point supplementaire a placer ailleurs.
 
 Echelle de valeur:
 
@@ -91,7 +91,7 @@ Regle de base:
 
 - Choisir une patrie ou origine.
 - Elle donne 1 avantage gratuit pris dans sa liste regionale.
-- Un 2e avantage est possible si le personnage prend aussi 1 desavantage regional, ou perd de facon permanente 1 point d'heroisme.
+- Un 2e avantage (regional, ou pris dans la liste generale) est possible si le personnage prend aussi 1 desavantage regional, ou perd de facon permanente 1 point d'heroisme.
 - Un 3e avantage est possible si le personnage prend encore 1 desavantage supplementaire, y compris dans la liste generale, ou perd encore 1 point d'heroisme permanent.
 
 Interaction avantages / desavantages:

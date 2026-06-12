@@ -30,6 +30,11 @@ Gain reduit:
 | Acheter 1 avantage | `2 XP` |
 | Retirer 1 desavantage | `2 XP` |
 
+Restrictions:
+
+- Certains avantages ne peuvent etre choisis qu'a la creation du personnage.
+- Certains desavantages ne peuvent pas etre supprimes.
+
 ### Ameliorer un attribut
 
 Regle:
@@ -38,7 +43,7 @@ Regle:
 - Exemple: passer de `1` a `2` coute `3 XP`
 - Cas special `-1` vers `0`: `2 XP`
 - Progression obligatoire un palier a la fois
-- Maximum humain: `5`
+- Maximum humain: `5` (certains avantages relevent cette limite a `6`, cf. `01-creation-heros.md`)
 
 ### Ameliorer une aptitude de combat
 

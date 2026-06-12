@@ -73,7 +73,7 @@ Principe:
 
 ### Acquisition de points de foi
 
-- Les `pretres` et `druides` gagnent des points de foi par devotions.
+- Les `pretres` et `druides` gagnent `1 point de foi` par heure passee en devotions.
 - Reserve maximale: egale au rang de `pretre` ou `druide`.
 
 Temps de devotion:

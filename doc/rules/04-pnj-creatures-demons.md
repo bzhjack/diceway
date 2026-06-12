@@ -37,7 +37,7 @@ Profil type:
 - Attributs: `0 a 2`
 - Aptitudes de combat: `0 a 2`
 - Carrieres: autour de `2`
-- Vitalite: `5 a 8`, ou `6 + vigueur` pour un profil rapide
+- Vitalite: `5 a 8`, ou `6 + vigueur` pour un profil rapide (le chapitre 3 du livre indique `5 a 9` p. 66 — incoherence interne du livre ; l'app retient `5-9`)
 - Degats d'armes normaux
 
 ### Rivaux

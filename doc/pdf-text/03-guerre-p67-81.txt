@@ -1,0 +1,945 @@
+                                                                                                               Chapitre 4 : La Guerre sur Terre
+                                         Chapitre 4
+
+Les Guerres de Lémurie
+La guerre sur terre                                     Cadence de marche
+                                                          Lorsqu’une armée se déplace, de nombreux
+  La Lémurie est un monde dangereux et                  facteurs sont à prendre en compte : la qualité
+instable qui est pour ainsi dire en état de guerre      des routes (si tant est qu’il y en ait), la nature
+permanent. Des aristocrates de second rang              du terrain, la taille, la composition et l’état des
+n’hésitent pas à régler leurs querelles mesquines       troupes, les conditions climatiques, etc.
+en levant des troupes de mercenaires pour
+                                                           La cadence de marche moyenne pour de
+attaquer leurs voisins. Certains nobles nourrissent
+                                                        l’infanterie entraînée, dans de bonnes conditions
+de plus grandes ambitions et rassemblent des
+                                                        climatiques, est de 4 kilomètres à l’heure sur
+armées pour défier leur souverain légitime. Des
+                                                        route, et 1,5 km à l’heure à travers champs. Dès
+tribus barbares descendent fréquemment de leurs
+                                                        qu’un terrain de montagne ou un important train
+montagnes ou traversent les grandes plaines en
+                                                        de bagages et de servants entrent dans l’équation,
+expéditions de pillage qui fondent sur les villages
+                                                        cette cadence peut diminuer drastiquement. Une
+et les bourgs mal défendus. Des bandits attaquent
+                                                        grande armée en marche avec son ravitaillement
+les voyageurs et les caravanes, lesquelles sont
+                                                        peut couvrir entre 18 et 22 km par jour. En marche
+souvent lourdement gardées, ce qui peut conduire
+                                                        forcée, elle peut parcourir quotidiennement
+à de sanglantes batailles rangées. Les nomades du
+                                                        plus de 30 km, mais une telle allure ne peut être
+désert de Beshaar et, dans une moindre mesure,
+                                                        maintenue que sur quelques jours.
+les céruléens des plaines de Klaar, recourent à la
+guerre à la moindre dispute entre tribus.                 Des forces de plus petite taille, notamment celles
+                                                        qui sont montées, peuvent avancer beaucoup plus
+  Par le passé, de nombreuses cités de Lémurie se
+                                                        rapidement et couvrir le double de distance, voire
+sont livré des guerres effroyables, et des tensions
+                                                        davantage sur de courtes périodes.
+subsistent entre elles aujourd’hui encore. De loin
+en loin, un roi se lève avec l’ambition d’unifier
+la Lémurie sous son sceptre… et de devenir              La composition des
+empereur. Jusqu’à ce jour, tous ont échoué à
+accomplir cette ambition. Mais à chaque fois,
+                                                        armées
+                                                           En Lémurie, la guerre est essentiellement
+cela a plongé la Lémurie dans de longues guerres,
+                                                        livrée à l’aide de levées de paysans et de fermiers
+coûteuses et meurtrières.
+                                                        arrachés à leurs champs, répartis en unités
+   Quand la guerre forme l’arrière-plan d’une saga,     d’infanterie de masse et armés rapidement et à
+il est à peu près inévitable que les héros finissent    moindre coût de lances, d’arcs et de frondes. Ils ne
+par se retrouver sur un champ de bataille où ils ne     portent généralement pas d’armure, mais certains
+se contenteront pas de prendre simplement part          peuvent être équipés de boucliers en bois, en cuir
+à l’affrontement, mais joueront un rôle actif dans      ou en matériau encore moins robuste.
+la victoire !
+
+
+
+                                                       67
+                                                                                            La sorcellerie sur le
+
+
+
+
+Chapitre 4 : La Guerre sur Terre
+                                      Infanterie : l’infanterie professionnelle porte
+                                   des armures et un armement variés. Elle forme
+                                   des unités distinctes en fonction de l’armure            champ de bataille
+                                   portée, constituant des corps d’infanterie légère,         Une règle tacite postule que la sorcellerie n’a
+                                   moyenne ou lourde. Ces professionnels sont               rien à faire sur un champ de bataille. Les rois
+                                   souvent des mercenaires issus des quatre coins           et les chefs militaires se voient constamment
+                                   de Lémurie, à moins qu’il ne s’agisse d’unités de        rappeler que se tourner vers les arts occultes
+                                   l’armée régulière du roi et de la noblesse. Tyrus        des Rois-Sorciers serait un retour en arrière qui
+                                   est réputée pour ses archers, tandis que Malakut         créerait les conditions d’un réveil des Seigneurs
+                                   dispose d’une unité uniquement composée de               Sombres (cf. chapitre 6 pour plus d’informations
+                                   femmes, la Garde jemadar, très entraînée et              sur la sorcellerie).
+                                   redoutablement efficace sur le champ de bataille.
+                                                                                              La sorcellerie est d’un usage limité sur un
+                                     Cavalerie : comme pour l’infanterie, il existe         champ de bataille. Puisque la sorcellerie de
+                                   différentes catégories de cavalerie, qui se compose      base (les sortilèges du premier cercle) reproduit
+                                   généralement de guerriers professionnels.                simplement des choses que peut accomplir
+                                   La cavalerie légère des Beshaaris part au combat         un homme à condition de disposer des outils
+                                   montée sur des coursiers des sables : c’est une          adéquats, il est bien plus simple d’armer un
+                                   cavalerie de harcèlement, qui s’approche à               soldat et de l’envoyer se faire tuer pour vous que
+                                   portée d’arc ou de javeline et décoche ses traits        de convaincre un sorcier de vous aider, pour un
+                                   avant de tourner bride. La plupart des autres            résultat globalement similaire. Les sorciers ont de
+                                   armées de Lémurie disposent d’une cavalerie              toute façon rarement intérêt à s’impliquer dans
+                                   légère similaire, montée sur des parvalus.               une bataille ; ils n’ont pas grand-chose à y gagner,
+                                   La cavalerie lourde est une troupe de choc               et beaucoup à y perdre.
+                                   destinée à enfoncer les lignes ennemies pour y
+                                                                                              Néanmoins, il est possible qu’en certaines
+                                   répandre le chaos. Celle-ci monte généralement
+                                                                                            occasions, un magicien estime que ses projets
+                                   des kroarks, créatures farouches aussi dangereuses
+                                                                                            nécessitent qu’il prenne position dans une guerre.
+                                   que les cavaliers qu’elles portent. Les chevaliers de
+                                                                                            Pour avoir un effet sensible sur le cours de la
+                                   Satarla sont particulièrement réputés pour leurs
+                                                                                            bataille, le personnage doit posséder un certain
+                                   charges dévastatrices.
+                                                                                            rang dans la carrière de sorcier et être capable de
+                                      L’emploi des chars est largement répandu,             lancer au moins des sorts du deuxième cercle.
+                                   qu’ils soient tirés par des parvalus, des bubalus        À ce niveau de maîtrise des arts impies, le sorcier
+                                   ou même des banths, soit pour transporter                est capable d’invoquer de puissantes créatures
+                                   rapidement des troupes au combat, soit pour              pour les envoyer semer la mort dans les rangs
+                                   servir de plates-formes mobiles d’archerie, ou           ennemis ; des troupes peuvent être renvoyées au
+                                   encore de puissantes unités de choc. Malakut             combat après leur trépas, et des unités forcées
+                                   possède une charrerie légère dont la réputation          à se battre contre leurs propres camarades.
+                                   n’ est plus à faire.                                     Au troisième cercle, la sorcellerie peut même
+                                                                                            décider de l’issue de la bataille : un séisme peut
+                                      Des eldaphons sont spécialement élevés et
+                                                                                            éventrer le sol sous l’armée adverse, à moins que le
+                                   entraînés pour la guerre. Leur fonction principale
+                                                                                            sorcier n’invoque un démon invulnérable.
+                                   est d’enfoncer les lignes ennemies en écrasant tout
+                                   sur leur passage, et de répandre la terreur dans les       Les sorcelleries utilisables sur un champ
+                                   rangs. Comme si leur cuir épais ne suffisait pas,        de bataille requièrent toutes ou presque une
+                                   ils peuvent également être caparaçonnés, ce qui          condition d’incantation d’un genre ou d’un
+                                   les rend quasiment invincibles. Les céruléens font       autre : il peut s’agir d’une durée d’incantation
+                                   usage d’eldaphons de guerre.                             particulièrement longue, d’un sacrifice rituel,
+                                                                                            de l’attente d’un événement précis (comme une
+                                                                                            certaine phase de la lune), ou que les serviteurs
+                                                                                            du sorcier lui rapportent des ingrédients rares
+                                                                                            ou un vieux grimoire magique. Dès qu’un
+
+
+
+                                                                                       68
+                                                                                                                    Chapitre 4 : La Guerre sur Terre
+commandant apprend que l’armée adverse                                    Entraînement de l’armée
+compte un sorcier dans ses rangs, il peut engager                          +1 légèrement meilleur
+à son tour un maître des arts occultes pour                                   +2 bien meilleur
+contrer la sorcellerie ennemie. Mais comme cela
+conduit inévitablement à une sorte de course à                               Taille de l’armée
+l’armement, cela ne se produit pas très souvent.                         +1 modérément supérieure
+La solution préférée est de dépêcher un groupe                            +2 largement supérieure
+de héros pour s’occuper de la menace posée                                +4 supériorité écrasante
+par le sorcier. Les règles des Actions héroïques
+(cf. page 70) permettent justement de répondre à                            Avantage du terrain
+ce genre de situation.                                                       +1 bonne position
+                                                                            +2 excellente position
+Les rounds de bataille                                                      +4 avantage écrasant
+  Un round de bataille, à la différence d’un round
+                                                                     Approvisionnement/Équipement
+de combat normal, dure bien plus que quelques
+                                                                      +1 mieux approvisionnée/équipée
+secondes. Selon la taille des forces en présence,
+                                                                 +2 beaucoup mieux approvisionnée/équipée
+un round de bataille peut représenter une heure
+                                                               +2 pour une armée de Satarla incluant des nefs
+(pour un affrontement entre de petites armées),
+                                                              volantes (pour un total de +4 si l’armée est aussi
+une journée pour de grandes batailles rangées ou
+                                                                     beaucoup mieux approvisionnée)
+même un mois dans le cas d’un siège. Beaucoup
+plus de « temps dans le jeu » s’écoule durant un
+                                                                                    Sorcier
+round de bataille, même si sa résolution ne prend
+                                                                  +2 si un sort de deuxième cercle est lancé
+pas forcément longtemps.
+                                                                  +4 si un sort de troisième cercle est lancé
+  À chaque round de bataille, un des héros effectue
+un jet pour l’armée dans laquelle ils combattent                               Commandant
+afin de déterminer si la victoire se précise. Entre                      Ajoutez le rang de soldat du
+deux rounds de bataille, le MJ peut permettre                            commandant de l’armée
+certaines Actions héroïques, au cours desquelles
+les héros auront une chance de renverser le cours           Notez qu’en temps normal, les héros n’auront
+de la bataille.                                           qu’une idée très limitée des forces et faiblesses des
+                                                          armées en présence.
+Valeur d’armée                                               Exemple : la cité de Satarla est assiégée par une
+   Les différents belligérants se voient attribuer une    armée de Tyrus. L’armée du roi Juvor profite d’un
+Valeur d’armée qui mesure leur force respective.          entraînement légèrement meilleur (+1), parce qu’elle
+La faiblesse d’un camp dans un domaine donné              s’est préparée à cette attaque-surprise, et d’une
+ne se traduit pas par un malus, mais par un bonus         supériorité numérique écrasante (+4). Cependant les
+pour le camp adverse. Ainsi, si l’armée des héros         défenseurs satarlans, à l’abri des remparts de la ville
+doit se battre à un contre trois, cela n’affecte          qui ne peut être attaquée que d’un seul côté, profitent
+pas leur Valeur d’armée, mais confère un bonus            d’un avantage écrasant (+4) en terme de terrain.
+de +4 à la Valeur d’armée de l’adversaire. Pour           Aucun camp n’a réellement l’avantage au niveau
+l’essentiel, si une armée dispose d’un bonus dans         de l’approvisionnement et de l’équipement, mais
+une catégorie, l’autre armée n’aura rien dans cette       les Satarlans ont leurs nefs volantes (+2). Les deux
+même catégorie. Si les deux camps sont à égalité          armées ont à leur tête des chefs compétents (+2 pour
+dans une catégorie, personne n’obtiendra de               chacun). L’armée du roi Davym de Satarla a donc
+bonus. La seule exception concerne la catégorie           une valeur d’armée de 8, tandis que celle de Tyrus a
+Commandement, qui utilise comme bonus le                  une valeur d’armée de 7, ce qui donne au défenseur
+rang du chef d’armée dans sa carrière de soldat.          un bonus de +1 sur ses jets.
+
+
+
+
+                                                         69
+Chapitre 4 : La Guerre sur Terre
+                                     Les attaquants ne mèneront peut-être pas à bien               donner une dernière chance de renverser le cours
+                                   leur audacieuse attaque-surprise, mais le jeune roi             de la bataille. Peu importe quel camp l’emporte,
+                                   Juvor n’ est pas stupide : il a engagé des négociations         les héros survivent à la bataille.
+                                   avec Parsool dont la flotte fait mouvement afin de
+                                   venir détruire celle de Satarla. En cas de succès, cette        Le jet de bataille
+                                   attaque navale annulera en partie l’avantage du                   À chaque round de bataille, un des héros
+                                   terrain pour le défenseur, désormais attaqué par mer            effectue un jet d’action (appelé jet de bataille)
+                                   et par terre (faisant chuter son avantage du terrain            pour leur camp. Le jet de bataille est égal à 2d6
+                                   de +4 à seulement +1). Mais les actions valeureuses             + la valeur de leur d’armée – la valeur de l’armée
+                                   d’un petit groupe de héros pourraient permettre aux             adverse. Retranchez 7 au résultat, même si cela
+                                   défenseurs de repousser l’armée de Tyrus avant que les          aboutit à un chiffre négatif. Ce total représente le
+                                   renforts navals de Parsool n’arrivent…                          nombre de points de victoire gagnés (ou perdus, si
+                                                                                                   le résultat est négatif ) durant ce round de bataille.
+                                                                                                   Répétez le jet de bataille à chaque round jusqu’à ce
+                                                                                                   que l’armée des héros atteigne +10 ou -10 points
+                                                                                                   de victoire, ce qui signe la fin de l’affrontement.
+
+
+
+
+                                   Combat d’armées                                                 Actions héroïques
+                                     La victoire ou la défaite lors d’une bataille                   Alors que le combat de masse est géré en
+                                   d’armées est déterminée par l’utilisation d’un                  rounds de bataille (qui peuvent durer une heure,
+                                   système de points de victoire. Chaque camp                      un jour ou même un mois dans le cas d’un
+                                   débute avec 0 point de victoire. Au fil des                     siège), les Actions héroïques sont résolues en
+                                   événements, gardez le compte du nombre de                       rounds de combat normaux. Si les jets de bataille
+                                   points de victoire que le camp des héros possède.               déterminent l’issue de l’affrontement sur un plan
+                                   Si ce nombre est positif, cela signifie que le camp             global, les Actions héroïques se penchent sur ce
+                                   des héros est en train de l’emporter. Si ce nombre              qui arrive aux héros eux-mêmes. Car ces derniers
+                                   est négatif, leur armée est en train de perdre.                 ont toujours un moyen de renverser le cours de
+                                                                                                   la bataille, et leurs actions peuvent même faire
+                                     Les héros ne subissent pas de dégâts durant
+                                                                                                   gagner des points de victoire à leur camp.
+                                   un round de bataille. En revanche, ils peuvent
+                                   influencer le cours de la bataille en entreprenant                 Les Actions héroïques que les PJ vont
+                                   des Actions héroïques (cf. ci-dessous).                         pouvoir entreprendre dépendent largement de
+                                                                                                   la situation. Ils peuvent simplement se trouver
+                                     Si le camp des héros totalise 10 points de
+                                                                                                   au bon endroit au bon moment, ou remplir une
+                                   victoire, il gagne la bataille et l’ennemi se rend ou
+                                                                                                   mission que leur a confiée le chef de leur armée.
+                                   bat en retraite.
+                                                                                                   Il est également possible que les héros se portent
+                                     Si le camp des héros descend à -10 points                     volontaires pour une mission, ou décident de
+                                   de victoire, il perd la bataille (à moins qu’une                l’entreprendre de leur propre chef. Les missions
+                                   Action héroïque ne vienne renverser le cours                    particulièrement longues sont plus adaptées aux
+                                   des choses). L’armée des héros se rend ou bat en                situations de siège ou de grande bataille rangée,
+                                   retraite. Quand l’armée des héros atteint le chiffre            tandis que les missions courtes prennent plus de
+                                   fatidique de -10 points de victoire, laissez-les                sens dans le cadre d’une escarmouche ou d’un
+                                   accomplir une ultime Action héroïque afin de leur               petit affrontement.
+
+
+
+                                                                                              70
+  Apporter un message : une information vitale                  Ralliement : sur le champ de bataille, les héros
+
+
+
+
+                                                                                                                      Chapitre 4 : La Guerre sur Terre
+doit être délivrée au commandant de l’armée des               ont l’occasion d’influer sur le moral des troupes,
+héros. Cela peut impliquer une course-poursuite               par exemple en ralliant des soldats sur le point
+ou une opération d’infiltration, ou encore de                 de céder ou au contraire en menant la charge
+franchir les lignes sous le feu de l’ennemi. Une              finale qui décidera de l’issue de la bataille. Cela
+réussite accordera 2 points de victoire à l’armée             nécessite un jet d’action basé sur l’aura + une
+des héros.                                                    carrière appropriée, suivi de quelques rounds de
+                                                              combat. Une réussite accordera un dé de bonus au
+  Capturer un personnage-clé : il y a quelqu’un
+                                                              prochain jet de bataille de l’armée.
+dans l’armée ennemie que le haut commandement
+veut capturer vivant afin de pouvoir l’interroger.              Ramener des renforts : cette action héroïque se
+Cela risque d’être une mission particulièrement               résout généralement par une poursuite, alors que
+difficile requérant de monter une véritable                   les héros tentent de quitter la mêlée, à moins qu’ils
+opération d’espionnage, mais qui rapportera 2 à 3             ne doivent se frayer un chemin à coups d’épée pour
+points de victoire en cas de réussite.                        amener les renforts jusqu’au lieu de la bataille. Une
+                                                              fois que les héros ont réussi à ramener des renforts,
+   Détruire : il y a quelque chose sur le champ de
+                                                              le MJ compare à nouveau les tailles des deux
+bataille qui doit être détruit, et c’est aux héros de
+                                                              armées. Des renforts peuvent réellement changer
+s’en charger, ce qui peut donner lieu à une véritable
+                                                              le cours d’une bataille, puisqu’ils affecteront la
+aventure. Il peut s’agir d’ouvrir une brèche dans
+                                                              quantité de points de victoire gagnés à chaque
+les remparts de la forteresse ennemie, de détruire
+                                                              round. Dans le même ordre d’idée, les héros
+un pont, ou les armes de siège de l’armée adverse.
+                                                              peuvent également réapprovisionner une garnison
+Il faudra certainement un jet d’action d’un héros
+                                                              assiégée, ou toute autre situation similaire.
+possédant une carrière appropriée, et l’opération
+réclamera sans doute de la discrétion, et pourquoi               Tenir une position : les héros doivent à tout
+pas du combat, à la fois pour atteindre l’objectif            prix garder le contrôle d’une position stratégique.
+et pour repartir vivant. Cette mission accomplie              Il peut s’agir du sommet d’une colline, d’un pont,
+avec succès rapportera 2 points de victoire.                  d’une brèche dans l’enceinte, etc. Si les héros
+                                                              parviennent à conserver le contrôle de l’endroit
+  Empêcher l’intervention de la sorcellerie :                 durant trois rounds de combat, leur armée obtient
+les héros sont chargés d’interrompre un rituel                1 point de victoire. Ils peuvent continuer à tenir
+perpétré par un sorcier ennemi. Cela formera                  la position durant plusieurs rounds de bataille,
+en général une petite aventure en elle-même et                en gagnant 1 point de victoire à chaque fois.
+permettra d’annuler le bonus de sorcellerie de la             Au lieu de tenir une position, les héros peuvent
+Valeur d’armée adverse.                                       être chargés de protéger une personnalité
+                                                              importante de leur camp.
+  Opération de sauvetage : un personnage
+important de l’armée des héros est prisonnier                    Tuer un personnage-clé : si l’armée des
+dans le camp ennemi. Les héros doivent s’y                    héros veut l’emporter, il faut qu’un personnage
+introduire afin de le libérer. Il s’agit d’une mission        particulièrement important du camp adverse soit
+des plus dangereuses, une aventure à part entière             éliminé. Il peut s’agir de le tuer à distance par un
+avec infiltration en territoire adverse et sûrement           tir bien placé ou d’aller personnellement croiser le
+des combats. Une réussite rapportera 2 à 3 points             fer avec ce personnage au beau milieu de la mêlée,
+de victoire à l’armée des héros.                              pour une version plus héroïque ! Une réussite
+                                                              rapportera 1 ou 2 points de victoire.
+   Prendre une position : les héros doivent
+capturer une position névralgique tenue par                     Vol de renseignement : les héros doivent
+l’ennemi. Cela peut se résoudre par quelques                  récupérer une information vitale sur l’armée
+rounds de combat. Si les héros tuent ou repoussent            adverse. Cela peut se faire en infiltrant le camp
+l’ennemi, leur armée gagne de 1 à 3 points de                 ennemi, en menant une opération d’espionnage
+victoire, en fonction de la situation. Mais par               derrière les lignes adverses ou en interceptant un
+la suite, les héros devront sans doute tenir cette            messager. Une réussite rapportera 2 points de
+position chèrement gagnée.                                    victoire à l’armée des héros.
+
+
+
+                                                         71
+Chapitre 4 : La Guerre en Mer
+
+
+
+
+                                La guerre en mer
+                                  Une part importante du commerce et des                       en 6 à 8 heures d’effort, les rameurs peuvent faire
+                                déplacements s’effectue par voie maritime en                   parcourir au navire entre 75 et 90 kilomètres.
+                                raison de la lenteur et des difficultés du voyage              Les équipages expérimentés et les bons navires
+                                par voie terrestre. Des négociants aventureux                  peuvent couvrir presque le double de distance,
+                                explorent de nouvelles terres et font fortune en               mais au prix d’un effort inhumain. Les voiliers
+                                commerçant avec des peuples lointains. Des                     atteignent des performances similaires, mais qui
+                                marchands et des pêcheurs cabotent dans les eaux               dépendent davantage de la force et de la direction
+                                côtières. Des pirates sans foi ni loi écument les              du vent que de la sueur des galériens.
+                                océans à la recherche des lourdes nefs marchandes.
+                                                                                                 Les personnages peuvent affréter un navire, se
+                                Les vaisseaux de guerre transportent des soldats
+                                                                                               payer une place à bord d’un vaisseau en partance,
+                                qui partent se battre dans des contrées lointaines.
+                                                                                               ou se faire engager à son bord comme mercenaires.
+                                  La façon la plus courante de naviguer consiste à             Ils peuvent avoir accès à un navire s’ils possèdent
+                                rester près des côtes et à tirer le bateau à sec sur la        un rang élevé dans la carrière de noble. Un roi peut
+                                plage chaque nuit ou en cas de gros temps. L’effort            aussi fournir une embarcation aux héros s’il leur
+                                de la chiourme pour propulser une rapide galère                confie une quête qui exige d’eux qu’ils prennent
+                                exige de grandes réserves d’eau potable et les                 la mer.
+                                galères de guerre comme les vaisseaux marchands
+                                                                                                 Les personnages peuvent commander le navire
+                                sont donc contraints à de fréquentes escales.
+                                                                                               eux-mêmes ou s’offrir les services d’un capitaine
+                                   La distance que peut parcourir une galère en                expérimenté, mais dans tous les cas il leur faudra
+                                l’espace d’une journée dépend beaucoup des                     aussi un équipage, qui peut être recruté au port ou
+                                conditions de navigation. Si le temps est clément,             se composer de suivants (cf. page 165).
+
+
+
+                                                                                          72
+Batailles navales
+
+
+
+
+                                                                                                                    Chapitre 4 : La Guerre en Mer
+   Les batailles navales sont fréquentes le long                Au début de la scène, le capitaine effectue un
+des côtes de Lémurie. La tactique habituelle                  jet de réaction pour déterminer l’ordre de jeu.
+consiste à poursuivre le vaisseau ennemi et à
+l’éperonner. Durant l’abordage, les voiles sont                Jet de réaction = 2d6
+amenées et les rameurs s’échinent à donner au                  + esprit
+navire la vitesse maximale tandis que ce dernier               + initiative
+fonce vers l’ennemi. Dès qu’il arrive à portée,                - esprit du rival (s’il y a un rival sur le navire
+les archers et les frondeurs entrent en action                  ennemi)
+pour blesser et tuer les rameurs et l’équipage du              Résultat modifié : 9 ou + pour réussir
+vaisseau adverse. Certains navires de guerre sont
+équipés d’une catapulte qui projette des pierres
+                                                                Échec critique : votre navire agit en dernier
+ou des jarres de goudron enflammé, et il en est
+                                                              durant tout le combat. De plus, il est incapable
+même qui possèdent une de ces redoutables
+                                                              d’entreprendre la moindre action lors du premier
+machines cracheuses de flammes inventées par les
+                                                              round (et reste immobile en raison du désordre
+alchimistes. Une fois que le vaisseau ennemi a été
+                                                              qui règne à bord).
+éperonné, les marins se jettent à l’abordage et une
+mêlée sanglante s’ensuit.                                      Échec : vous agissez en dernier.
+  Les affrontements entre navires sont gérés                   Réussite : vous agissez en premier.
+suivant les règles normales de combat. Chaque
+                                                                Succès héroïque : vous agissez en premier. De
+round est juste un peu plus long qu’un round de
+                                                              plus, lors du premier round, vous bénéficiez d’un
+combat habituel, de l’ordre de quelques minutes
+                                                              round gratuit durant lequel vos adversaires ne
+ou d’une dizaine de minutes, durant lesquelles
+                                                              peuvent agir (à l’exception des navires ayant un
+un navire peut faire tirer sa catapulte, gagner du
+                                                              rival à bord).
+terrain sur l’ennemi ou lancer des grappins en vue
+de l’abordage.                                                  Succès légendaire : comme pour un succès
+                                                              héroïque, mais vous bénéficiez en plus d’un bonus
+  À bord d’un navire, chaque héros a son rôle
+                                                              de +1 à tous les jets d’attaque effectués au cours
+à jouer. Le héros qui possède le navire en sera
+                                                              de la rencontre.
+sûrement le capitaine, un autre personnage pourra
+commander les soldats et s’occuper des abordages
+comme de repousser les assauts ennemis, un autre
+encore avoir la responsabilité de la catapulte, etc.
+                                                              Le Round de bataille
+Ces postes déterminent quel personnage effectue               navale
+quelle tâche et donc qui lance le jet d’action                  Chaque round de bataille navale se décompose
+correspondant. En cas de doute, il revient au                 en trois phases. Un navire peut effectuer une
+capitaine du navire d’effectuer le jet d’action.              action par phase, au choix :
+
+
+Les portées en mer                                             Phase 1 : Manœuvres
+                                                               Fuir/S’approcher, Éperonner, Briser les rames,
+  La distance initiale entre deux vaisseaux est dictée
+                                                               Lancer les grappins, Désengagement.
+par la situation et donc estimée de façon abstraite.
+La portée détermine quel type de manœuvre ou
+                                                               Phase 2 : Attaques
+d’attaque un navire peut effectuer. Un jour de
+                                                               Projectiles, Catapulte, Crache-feu, Abordage.
+grand beau temps, il est possible de repérer un
+navire à portée Maximale (cf. table page 74).
+                                                               Phase 3 : Réparations
+Un jour plus brumeux, la portée de repérage
+                                                               Réparer la coque, Secourir l’équipage, Éteindre
+tombe à Extrême. Les jours de brouillard ou de
+                                                               les incendies.
+tempête, ou bien de nuit, la portée de repérage se
+raccourcit encore, selon les circonstances.
+
+
+
+
+                                                         73
+                                                                   Modificateur                  Portée maximale pour un type
+                                     Portée navale
+                                                                     au jet                       d’attaque ou de manœuvre
+
+
+
+
+Chapitre 4 : La Guerre en Mer
+                                        Hors de vue                        -
+                                         Maximale                          -8
+                                          Extrême                          -6                                    Catapulte
+                                         Très longue                       -4
+                                           Longue                          -2                   Crache-feu, Projectiles (arcs, frondes, etc.)
+                                          Moyenne                          -1                                    Éperonner
+                                           Courte                          0                       Lancer les grappins, Briser les rames
+                                        Bout portant                      +1                            Abordage, Désengagement
+
+
+                                Manœuvres                                                     Options de succès légendaire : choisissez deux
+                                                                                            options de succès héroïque (vous pouvez choisir
+                                  Pour déterminer l’issue d’une manœuvre,
+                                                                                            deux fois la même option).
+                                effectuez un jet d’action :
+
+                                  Jet de manœuvre = 2d6
+                                                                                            Désengagement
+                                                                                              Cette manœuvre permet à un navire de se
+                                  + rang de carrière du héros chargé de l’action
+                                                                                            désengager après avoir été éperonné ou pris par
+                                  + ressources allouées à l’action
+                                                                                            des grappins. Les navires sont à ce moment-là
+                                  +/- modificateurs *
+                                                                                            à Bout portant. En cas de réussite, le navire se
+                                  Résultat modifié : 9 ou + pour réussir
+                                                                                            détache du vaisseau ennemi et la distance entre
+                                                                                            eux passe à portée Courte.
+                                  * Modificateurs = portée, défense de la cible
+
+                                Briser les rames                                            Éperonner
+                                                                                              Pour cette manœuvre, les navires doivent
+                                   Le navire attaquant frôle le navire ennemi
+                                                                                            commencer le round à portée Courte ou
+                                dans le but de briser ses rangées de rames afin de
+                                                                                            Moyenne. Le navire qui éperonne effectue un jet
+                                l’immobiliser sans le couler. Pour cette manœuvre,
+                                                                                            d’action. Le défenseur peut utiliser ses ressources
+                                les navires doivent commencer le round à Bout
+                                                                                            pour éviter l’attaque (ce qui lui octroie un bonus
+                                portant ou à portée Courte. L’attaquant effectue
+                                                                                            en défense). Un vaisseau éperonné subit des
+                                un jet d’action. Le défenseur peut utiliser ses
+                                                                                            dégâts (soit un nombre de d6 qui dépend du type
+                                ressources pour éviter l’attaque (ce qui lui octroie
+                                                                                            d’éperon qui équipe le navire attaquant) qui sont
+                                un bonus en défense).
+                                                                                            soustraits à ses points de coque. Si la manœuvre
+                                  Dégâts : d6 à la coque du vaisseau ennemi.                réussit, elle laisse les deux navires encastrés l’un
+                                                                                            dans l’autre, et il faut réussir une manœuvre de
+                                  Options de succès héroïque :
+                                                                                            Désengagement pour se libérer.
+                                  g +6 points de dégâts à la coque du vaisseau
+                                ennemi ;                                                    Fuir/S’approcher
+                                                                                               Un navire peut essayer de semer un navire
+                                  g Coup d’éperon précis : inflige un dé de malus à
+                                                                                            ennemi, ou au contraire de s’en rapprocher. Si
+                                un jet d’action (de votre choix) du navire ennemi ;
+                                                                                            l’autre navire décide de ne pas le poursuivre, le
+                                  g Massacre d’équipage : les dégâts infligés à la          vaisseau en fuite augmente automatiquement
+                                coque de la cible le sont également à son équipage ;        d’un facteur de portée la distance entre eux.
+                                                                                            Si les deux navires décident de se rapprocher l’un
+                                  g Navire en panne : le navire perd son prochain
+                                                                                            de l’autre, la distance entre eux diminue de deux
+                                round d’action.
+                                                                                            facteurs de portée. Si l’un fuit et que l’autre le
+                                                                                            poursuit, chaque navire effectue un jet d’action.
+
+
+
+                                                                                       74
+Si les deux réussissent ou que les deux échouent, la
+distance entre eux reste la même. Si l’un réussit et
+                                                             Abordage
+
+
+
+
+                                                                                                                     Chapitre 4 : La Guerre en Mer
+                                                                Une action d’Abordage peut être tentée si
+l’autre échoue, la distance entre eux augmente ou
+                                                             deux navires sont bloqués l’un contre l’autre suite
+diminue d’un facteur de portée, selon le navire qui
+                                                             à une action réussie d’Éperonner ou de Lancer
+a réussi son jet d’action. Une fois que le vaisseau
+                                                             les grappins. L’Abordage est la seule action
+en fuite atteint la portée Hors de vue, il disparaît
+                                                             pour laquelle il n’y a pas de limite aux points de
+à l’horizon et réussit à échapper à l’ennemi.
+                                                             ressources que vous pouvez engager afin d’avoir
+   Succès héroïque : le navire se rapproche ou               un bonus au jet d’attaque. L’Abordage est aussi
+s’éloigne de deux facteurs de portée.                        l’occasion pour des héros d’entreprendre des
+                                                             Actions héroïques en mer, de la même façon
+   Succès légendaire : le navire se rapproche ou
+                                                             qu’ils peuvent le faire lors de batailles terrestres.
+s’éloigne de trois facteurs de portée.
+                                                             Ces actions formeront une petite aventure à part
+                                                             entière, par exemple si les héros doivent fouiller
+Lancer les grappins                                          le navire ennemi tout en affrontant son équipage.
+  À l’aide de gaffes ou de grappins, l’équipage
+amène le vaisseau ennemi bord à bord afin de                   Dégâts : d6 points de dégâts d’équipage.
+préparer l’abordage. Pour cette manœuvre, les
+                                                               Options de succès héroïque :
+navires doivent commencer le round à Bout
+portant ou à portée Courte. L’attaquant effectue               g +6 points de dégâts d’équipage ;
+un jet d’action. Le défenseur peut utiliser ses
+                                                               g Navire en panne : le navire ennemi perd son
+ressources pour éviter l’attaque (ce qui lui octroie
+                                                             prochain round d’action.
+un bonus en défense). En cas de réussite, le vaisseau
+ennemi est immobilisé jusqu’à ce qu’il réussisse               Options de succès légendaire : choisissez deux
+une manœuvre de Désengagement.                               options de succès héroïque (vous pouvez choisir
+                                                             deux fois la même option).
+  Options de succès héroïque :
+  g Navire bloqué : le navire ennemi perd son                Catapulte
+prochain round d’action ;                                       Les catapultes peuvent tirer des pierres ou des
+                                                             pots de goudron enflammé jusqu’à une portée
+  g Un dé de bonus pour une action Abordage.
+                                                             Extrême. Les pierres font des dégâts à la coque
+  Options de succès légendaire : choisissez deux             et au gréement du navire, mais peuvent aussi
+options de succès héroïque (vous pouvez choisir              tuer des matelots. Un pot à feu qui explose sur
+deux fois la même option).                                   le pont arrose la coque et l’équipage de goudron
+                                                             enflammé, qui continue à brûler jusqu’à ce que
+Attaques des navires                                         l’incendie soit maîtrisé.
+                                                               Dégâts :
+  Jet d’attaque de navire = 2d6                                Pierre : d6 points de dégâts de coque et d3
+  + rang de carrière du héros chargé de l’action             d’équipage ;
+  + ressources allouées à l’action                             Feu : d3 points de dégâts de coque et d3
+  +/- modificateurs de portée                                d’équipage.
+  - défense de la cible
+  Résultat modifié : 9 ou + pour réussir
+
+
+                    Dégâts
+  Les dégâts sont soustraits des points de coque
+  et des points d’équipage du navire visé. Les
+  dégâts prennent effet immédiatement, dans
+  le cours du jeu. Si un navire brûle et que le
+  feu n’ est pas éteint, il subit de nouveaux dé-
+  gâts de feu au début du round suivant.
+
+
+
+                                                        75
+                                Crache-feu                                                    Réparer la coque, secourir
+
+
+
+
+Chapitre 4 : La Guerre en Mer
+                                  L’usage de cet appareil d’alchimiste exige des              l’équipage, éteindre les
+                                compétences particulières. Sa conception comme                incendies
+                                la formule du produit qui l’alimente sont des                    La dernière phase du round est consacrée aux
+                                secrets jalousement gardés. Le crache-feu est un              réparations. L’équipage peut tenter de colmater
+                                gros réservoir pressurisé équipé d’un tube à son              les voies d’eau dans la coque, de remettre de
+                                sommet. La machine tire un jet de liquide brûlant             l’ordre dans le gréement, d’éteindre les incendies
+                                à de grandes distances (jusqu’à portée Longue).               et de s’occuper des blessés. Les héros doivent donc
+                                Les flammes sont presque impossibles à éteindre.              décider soit de réparer le navire, soit d’éteindre les
+                                                                                              feux, soit de prendre soin des blessés.
+                                  Dégâts : d6 points de dégâts de coque et d6
+                                                                                                 Sur un jet d’action réussi, le navire regagne d6
+                                d’équipage.
+                                                                                              points d’équipage ou de coque. Si un incendie est
+                                  Options de succès héroïque :                                éteint, le navire ne subit plus de dégâts de feu aux
+                                                                                              rounds suivants.
+                                  g +6 points de dégâts d’équipage ;
+                                                                                                Options de succès héroïque :
+                                  g +6 points de dégâts de coque ;
+                                                                                                Vous effectuez deux de ces actions, au choix :
+                                  g Tir de précision : inflige un dé de malus à un jet
+                                d’action (de votre choix) du navire ennemi.                     g Réparer la coque ;
+                                  g Navire en panne : le navire ennemi perd son                 g Éteindre les incendies ;
+                                prochain round d’action.
+                                                                                                g Secourir l’équipage.
+                                  Options de succès légendaire : choisissez deux
+                                                                                                Options de succès légendaire : vous effectuez
+                                options de succès héroïque (vous pouvez choisir
+                                                                                              trois des actions ci-dessus.
+                                deux fois la même option).
+                                                                                                En cas de succès héroïque ou légendaire, la
+                                Projectiles                                                   même option d’action peut être choisie plusieurs
+                                  L’équipage du navire envoie une volée de                    fois.
+                                projectiles (javelines, flèches, billes de fronde) sur
+                                le vaisseau ennemi, à condition que ce dernier se
+                                trouve au maximum à portée Longue.
+                                                                                              Le feu
+                                                                                                C’est l’arme la plus redoutée dans les batailles
+                                  Dégâts : d6 points de dégâts à l’équipage.                  navales. Quand un feu se déclare à bord d’un
+                                                                                              navire, il continue de brûler jusqu’à ce qu’il soit
+                                  Options de succès héroïque :
+                                                                                              éteint. La coque et l’équipage du navire subissent
+                                  g +6 points de dégâts à l’équipage ;                        des dégâts à chaque round jusqu’à ce que le joueur
+                                                                                              réussisse un jet de réparation durant la troisième
+                                  g Tir de précision : inflige un dé de malus à un jet
+                                                                                              phase d’un round de bataille navale.
+                                d’action (de votre choix) du navire ennemi.
+                                  Options de succès légendaire : choisissez deux
+                                options de succès héroïque (vous pouvez choisir
+                                                                                              Naufrage
+                                                                                                Quand les points de coque d’un navire tombent
+                                deux fois la même option).
+                                                                                              à 0, il coule. Cela prend généralement un peu de
+                                                                                              temps, ce qui permet à l’équipage d’abandonner
+                                Réparations                                                   le navire en priant Shazzadion d’avoir pitié d’eux.
+                                                                                                Quand les points d’équipage d’un navire
+                                  Jet d’action = 2d6                                          tombent à 0, cela veut dire qu’il ne reste plus
+                                  + rang de carrière du héros chargé de l’action              personne à bord pour implorer Shazzadion…
+                                  + ressources allouées à cette action
+                                  Résultat modifié : 9 ou + pour réussir
+
+
+
+
+                                                                                         76
+Exemples de navires
+
+
+
+
+                                                                                                                 Chapitre 4 : La Guerre en Mer
+   Il existe une grande variété de navires.
+Les vaisseaux marchands sont des voiliers et
+dépendent des caprices du vent pour avancer.
+Les navires de guerre sont des galères rapides,
+longues et élancées, qui possèdent des voiles en
+plus de leurs rangs de rames. Certaines galères
+de guerre sont très lentes en raison de leur taille
+colossale et, malgré leur puissance, ne sont pas à
+l’abri des assauts d’une flottille de navires plus
+petits et plus rapides.
+  Vous trouverez ici les profils de différents types                         Petit navire à voiles
+de navires, qui donnent des indications sur leur                                     Rames 0 Équipage 4
+manœuvrabilité ainsi que sur leurs capacités de                                      Coque 4 Ressources 0
+combat.                                                                                    Éperonner d6M
+  Rames : ce chiffre indique le nombre de rames
+d’une galère. Certains grands navires possèdent
+deux rangs de rames. Chaque rame est maniée
+par un membre d’équipage. D’ailleurs, la majorité
+de l’équipage d’une galère de guerre se compose
+de rameurs.                                                   Un voilier pansu à un mât, qui sert au transport
+                                                            des marchandises. La cargaison est entreposée di-
+  Équipage : ce chiffre détermine le bonus
+                                                            rectement dans le fond du navire, sans véritable
+que l’équipage peut apporter aux actions et
+                                                            cale. Une paire de rames à la poupe fait office de
+aux manœuvres ordonnées par le capitaine.
+                                                            gouvernail. Des variantes peuvent embarquer un
+Un navire bénéficie de 1 point de ressources pour
+                                                            équipage de 20 marins ou plus.
+chaque tranche de 20 points d’équipage. La perte
+d’équipage (suite à une volée de projectiles, par
+exemple) a donc une incidence sur les ressources                           Grand navire à voiles
+du navire.                                                                         Rames 0 Équipage 20
+                                                                                  Coque 8 Ressources +1
+  Coque : il s’agit de la « vitalité » du navire.
+                                                                                         Éperonner d6M
+Ce chiffre représente la quantité de dégâts que le
+                                                                                     Armement : catapulte
+vaisseau peut encaisser avant de sombrer.
+  Ressources : ce chiffre représente l’aptitude
+de l’équipage à accomplir les tâches demandées.
+Le navire reçoit 1 point de ressource par tranche
+de 20 points d’équipage, arrondi à l’entier le plus
+proche. La valeur de ressources peut être ajoutée
+en bonus à des jets d’actions (manœuvres, attaques
+et réparations) ou à la défense du navire pour le
+round (auquel cas, le chiffre est appliqué en malus
+à toutes les attaques qui visent le navire durant le          Ces gros voiliers marchands qui possèdent un
+round). La valeur de ressources peut être divisée           ou deux mâts sont conçus pour transporter de
+ou utilisée entièrement pour une même tâche,                grandes quantités de marchandises. Ils disposent
+avec un maximum de +3 pour une seule action,                d’une ou de plusieurs cabines à la poupe pour le
+à l’exception de l’Abordage. Dès que l’équipage             capitaine ou pour un passager de marque. Il existe
+d’un navire diminue, la valeur de ressources                des variantes de différentes tailles.
+diminue en conséquence.
+
+
+
+
+                                                       77
+                                Petite galère de guerre ou
+
+
+
+
+Chapitre 4 : La Guerre en Mer
+                                galère marchande
+                                Rames 20 Équipage 24
+                                Coque 14 Ressources +1                                            Grande galère de guerre
+                                Éperonner d6 x2
+                                Armement : catapulte                                              Rames 50 Équipage 55
+                                                                                                 Coque 50 Ressources +3
+                                                                                         			                Éperonner d6 x4
+                                                                                           Armement : catapulte ou crache-feu
+
+
+
+
+                                  Une petite galère de guerre, ou une galère
+                                marchande avec du répondant. Ce type
+                                de navire est généralement utilisé pour le
+                                transport rapide de marchandises ou de
+                                troupes. Il est capable de semer les pirates et
+                                de fuir l’affrontement. C’est un navire
+                                apprécié des marchands aventureux.
+                                                                                            Ce navire est la pièce maîtresse des flottes
+                                Galère de guerre                                          de guerre des cités portuaires. Il mesure dans
+                                Rames 30 Équipage 35                                      les 35 mètres de long pour 3,5 mètres de large,
+                                Coque 30 Ressources +2                                    avec 25 rames sur chaque bord. Ces galères
+                                Éperonner d6 x3                                           sont utilisées pour écraser l’ennemi au cours
+                                Armement : catapulte                                      de batailles navales, ainsi que pour le transport
+                                                                                          de troupes. Elles peuvent embarquer de 15 à
+                                                                                          20 soldats, auquel cas on ajoute un bonus de
+                                                                                          +1 aux ressources pour les actions d’Abordage.
+
+
+
+
+                                                                                                                  Galère amirale
+                                                                                                              Rames 100 Équipage 110
+                                  Le plus rapide des navires de guerre, également
+                                                                                                              Coque 65 Ressources +5
+                                très prisé des pirates.
+                                                                                                                     Éperonner d6 x5
+                                                                                                                 Armement : catapulte
+                                                                                                                        ou crache-feu
+                                                                                            Le fleuron de la flotte d’une cité. Satarla
+                                                                                          et Parsool possèdent même plusieurs de ces
+                                                                                           gigantesques galères de guerre. Ce navire
+                                                                                              mesure dans les 40 mètres de long pour
+                                                                                                  3,5 mètres de large et les rames sont
+                                                                                                  disposées sur deux rangs superposés, ce
+                                                                                                     qui permet d’en aligner 50 sur chaque
+                                                                                                      bord. Elles peuvent embarquer 30 à
+                                                                                                      40 soldats, auquel cas on ajoute un
+                                                                                                    bonus de +2 aux ressources pour les
+                                                                                                 actions d’Abordage.
+
+
+
+                                                                                    78
+La Gloire de Parsool
+
+
+
+
+                                                                                                            Chapitre 4 : La Guerre en Mer
+Rames 170 Équipage 220
+Coque 80 Ressources +11
+Éperonner d6 x6
+Armement : catapulte et crache-feu
+  Voici la plus puissante galère de
+guerre qui existe. Quand elle entre
+dans la bataille, les autres na-
+vires ont tendance à prendre
+la fuite sans demander leur
+reste. La Gloire de Parsool
+mesure 45 mètres de
+long pour 4,5 mètres
+de large et aligne 85
+rames sur chaque bord, disposées sur trois rangs.
+                                                        Créatures marines
+  Le vaisseau fait preuve d’une grande                    Les kalathorns, les poads et les crocators,
+manœuvrabilité pour sa taille et, à la différence de    sans oublier bien sûr le redouté béhémathon,
+la plupart des galères, ce sont des hommes libres       sont des créatures si énormes qu’elles peuvent
+qui peinent sur ses rames, pas des esclaves. C’est      menacer les bateaux qui parcourent les fleuves
+un honneur insigne de servir à bord de la Gloire        et les mers. Elles peuvent attaquer les navires
+de Parsool et il se trouve toujours des dizaines        (et inversement), en utilisant les règles des
+de volontaires pour combler les places vacantes.        combats navals. En général, les créatures marines
+Ce vaisseau peut embarquer 60 à 80 soldats,             percutent les flancs des navires pour les couler,
+auquel cas on ajoute un bonus de +3 ou +4 aux           mais certaines préfèrent s’en prendre directement
+ressources pour les actions d’Abordage.                 à l’équipage. Vous trouverez une description de
+                                                        ces créatures au chapitre 5.
+
+
+
+
+                                                       79
+                                Exemple de bataille navale                                     Comme il ne veut pas voir ce navire lui échapper
+
+
+
+
+Chapitre 4 : La Guerre en Mer
+                                   La Gloire de Parsool repère trois galères de
+                                                                                               et préférerait le capturer plutôt que de le couler, il
+                                guerre pirates. C’est un jour de ciel clair et ensoleillé ;
+                                                                                               choisit les options de succès héroïque « +6 points de
+                                les vaisseaux ennemis sont donc détectés de très loin
+                                                                                               dégâts à l’équipage » et « navire en panne » (la galère
+                                (portée Maximale). La Gloire a deux héros à son
+                                                                                               perd son prochain round d’action). Il lance le d6 de
+                                bord, le capitaine (qui est marin de rang 3), et un
+                                                                                               dégâts de la catapulte et obtient un 3. Les points de
+                                autre qui est soldat de rang 2 et a été placé à la tête des
+                                                                                               coque de la galère pirate passent de 30 à 27. Il lance
+                                armes de tir du navire et commandera les abordages.
+                                                                                               ensuite d6+6 points de dégâts d’équipage et obtient
+                                La Gloire a 60 soldats à son bord (+3 aux actions
+                                                                                               10. L’équipage des pirates passe de 35 à 25, ce qui
+                                d’Abordage).
+                                                                                               signifie que ce navire n’aura désormais que +1 en
+                                  Elle prend en chasse les vaisseaux pirates, qui              ressources et qu’il ne pourra pas agir à son prochain
+                                prennent la fuite. Le jet de réaction donne 8 + esprit         round non plus. La galère est immobile sur les eaux, à
+                                (1) + initiative (2), pour un total de 11 (une réussite).      la merci de la Gloire de Parsool !
+                                Mais une des galères pirates a un rival à son bord ; on
+                                                                                                  L’autre galère pirate fait tirer sa catapulte sur la
+                                soustrait son esprit (3) du résultat, ce qui donne un
+                                                                                               Gloire, qui utilise +3 ressources (il ne lui en reste
+                                échec par rapport à ce navire. La galère commandée
+                                                                                               donc que +2) pour sa défense. Le pirate obtient un
+                                par le rival (pirate 2) fuit en utilisant toutes ses
+                                                                                               11, mais avec -3 en défense et -6 de portée Extrême,
+                                ressources (+2). Le jet donne 7 + 2 + 2 = 11. Il réussit
+                                                                                               le projectile rate sa cible.
+                                son action et s’éloigne au-delà de la portée Maximale,
+                                disparaissant à l’horizon.                                       C’est désormais la phase de réparations. Le seul
+                                                                                               navire endommagé est le premier pirate, qui décide
+                                  Le capitaine de la Gloire grommelle un juron et se
+                                                                                               de s’occuper de ses blessés. Il obtient un 7 et n’a plus
+                                lance à la poursuite des deux autres galères. Il obtient
+                                                                                               de ressources à consacrer à cette action, qui est donc
+                                un 6, auquel il ajoute son rang de marin (+3) et des
+                                                                                               un échec. Aucun des marins n’a pu être sauvé, il ne
+                                ressources (+3), ce qui fait un total de 12. Les navires
+                                                                                               reste donc plus qu’à balancer les corps par-dessus bord.
+                                pirates obtiennent respectivement un total de 6 et
+                                                                                               Le premier round de bataille navale prend fin.
+                                de 7 (même en ayant utilisé leur +2 de ressources) et
+                                échouent tous les deux. La Gloire se rapproche donc
+                                d’un facteur de portée, pour se retrouver à portée             Batailles navales de
+                                Extrême de ses proies.
+                                                                                               masse
+                                  La seule arme à bord de la Gloire capable de                   Les règles ci-dessus concernent les batailles
+                                tirer aussi loin est la catapulte. Le héros soldat             navales mettant aux prises le navire des héros
+                                ordonne donc le tir sur une des galères ennemies.              avec un ou plusieurs navires ennemis. Si vous
+                                Il utilise +3 ressources (ce qui laisse la Gloire avec         souhaitez simuler une bataille navale de grande
+                                +5 ressources) et effectue un jet d’attaque. Il obtient        ampleur, vous pouvez utiliser les règles des
+                                un double 6, ce qui avec le +2 de son rang de soldat           batailles terrestres à peu près telles qu’elles sont
+                                et le +3 de ressources donne un résultat de 17. Même           décrites. Il vous suffit de changer le mot « armée »
+                                avec le -6 de portée Extrême, cela donne un succès             par « flotte », et là où la carrière de soldat est
+                                héroïque, et le joueur s’empresse de dépenser 1 point          utilisée comme modificateur, d’employer à la
+                                d’héroïsme pour le transformer en succès légendaire !          place la carrière de marin (ou de pirate).
+
+
+
+
+                                                                                          80
+                                                                                                                    Chapitre 4 : Les Nefs volantes
+
+
+
+
+Les nefs volantes au                                        rapidement un message. De temps à autre, il
+
+combat                                                      arrive qu’ils volent en escadrille de trois nefs pour
+                                                            des missions spéciales. Ils peuvent également être
+                                                            utilisés à la guerre. Le largage de grosses pierres
+                                                            sur l’ennemi depuis le ciel est une méthode peu
+   Les nefs volantes sont fabriquées avec de
+                                                            coûteuse et très efficace. L’utilisation de bombes
+l’allanium, un métal plus léger que l’air. Dondar
+                                                            incendiaires alchimiques est plus chère, mais
+Thulë, un alchimiste de Lysor, a construit le
+                                                            terriblement destructrice contre des engins de
+premier de ces navires. Le roi de Satarla lui a
+                                                            siège ou des navires ennemis. L’équipage classique
+ensuite commandé une flottille de douze de ces
+                                                            d’une nef volante se compose de trois hommes,
+navires volants, pour un coût faramineux.
+                                                            mais elle peut embarquer jusqu’à 16 personnes,
+  Les nefs volantes mesurent 25 m de long et                ce qui lui confère un +1 en ressources. L’équipage
+sont propulsées par de puissants rotors à ressort.          utilise des arcs ou des javelines pour harceler les
+Un rotor à l’arrière assure la propulsion du navire,        navires ennemis.
+tandis qu’un autre rotor sous la proue permet de
+                                                               Seuls les hommes-oiseaux des montagnes de
+le faire reculer si nécessaire. Les autres rotors au
+                                                            l’Axos peuvent rivaliser avec une nef volante,
+centre du pont et sous la quille permettent de le
+                                                            mais face à une escadrille de ces navires du ciel,
+faire monter et descendre. Tous sont contrôlés
+                                                            ils préféreront généralement battre en retraite.
+par quatre leviers installés dans la petite cabine
+                                                            Les choses sont différentes avec un azhdarkho,
+du vaisseau. Les navires volants sont capables
+                                                            un mythunga ou un terrible drakk ; ces monstres
+d’atteindre une vitesse de 80 kilomètres à l’heure.
+                                                            volants sont aisément capables de détruire une
+  Les nefs volantes sont généralement armées                nef volante solitaire. Bien sûr, si Parsool ou Tyrus
+d’une arbalète lourde montée à la proue. Cette              parviennent un jour à se bâtir leur propre flotte de
+dernière est renforcée d’un éperon sur le modèle            nefs volantes, les batailles aériennes risquent de
+de ceux qui équipent les galères de guerre, mais            devenir un élément-clé de la guerre en Lémurie.
+jusqu’à ce jour, aucune nef volante n’a eu besoin
+d’éperonner quoi que ce soit dans le ciel.
+                                                            Nef volante
+  Habituellement, les navires volants opèrent               Coque 6 Équipage 3
+seuls ; ils sont particulièrement efficaces pour            Éperonner d6 Ressources 0 (ou +1)
+mener des missions de surveillance ou délivrer              Armement : arbalète lourde
+
+
+
+
+                                                       81
+
