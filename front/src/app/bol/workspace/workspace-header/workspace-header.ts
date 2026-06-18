@@ -7,6 +7,7 @@ import {TagModule} from 'primeng/tag';
   selector: 'bol-workspace-header',
   imports: [ButtonModule, CardModule, TagModule],
   templateUrl: './workspace-header.html',
+  styleUrl: './workspace-header.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkspaceHeaderComponent {

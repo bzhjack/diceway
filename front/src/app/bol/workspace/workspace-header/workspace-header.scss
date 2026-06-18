@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+:host ::ng-deep .p-card {
+  background-color: #12100a;
+  background-image:
+    linear-gradient(to right, rgba(12, 10, 6, 0.82) 0%, rgba(12, 10, 6, 0.55) 50%, rgba(12, 10, 6, 0.80) 100%),
+    url('/assets/bol/dashboard-header.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
