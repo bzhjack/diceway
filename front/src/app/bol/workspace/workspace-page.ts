@@ -1,36 +1,17 @@
 import {ChangeDetectionStrategy, Component, computed, inject} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
-import {RouterLink} from '@angular/router';
 import {AuthService} from '../../core/auth/auth.service';
 import {BolCreaturesService} from '../services/bol-creatures.service';
 import {BolDemonsService} from '../services/bol-demons.service';
 import {BolHerosService} from '../services/bol-heros.service';
 import {BolScenarioService} from '../services/bol-scenario.service';
-import {ButtonModule} from 'primeng/button';
-import {CardModule} from 'primeng/card';
-import {TagModule} from 'primeng/tag';
 import {WorkspaceHeaderComponent} from './workspace-header/workspace-header';
 import {WorkspaceMetric, WorkspaceMetricsComponent} from './workspace-metrics/workspace-metrics';
 import {WorkspaceQuickActionsComponent} from './workspace-quick-actions/workspace-quick-actions';
 
-interface SessionPreview {
-  readonly title: string;
-  readonly campaign: string;
-  readonly table: string;
-  readonly location: string;
-  readonly schedule: string;
-  readonly summary: string;
-  readonly players: readonly string[];
-  readonly beats: readonly { label: string; value: string }[];
-}
-
 @Component({
   selector: 'app-workspace-page',
   imports: [
-    RouterLink,
-    ButtonModule,
-    CardModule,
-    TagModule,
     WorkspaceHeaderComponent,
     WorkspaceMetricsComponent,
     WorkspaceQuickActionsComponent,
@@ -97,21 +78,6 @@ export class WorkspacePageComponent {
       link: '/intendance',
     },
   ]);
-  protected readonly activeSession: SessionPreview = {
-    title: 'Session du soir',
-    campaign: 'Les Cités de Bronze',
-    table: 'Banquet à la Citadelle',
-    location: 'Citadelle d Argos · salle aux lions',
-    schedule: 'Ce soir · 20:30',
-    summary:
-      'La table est prête. Les héros, les factions et les outils narratifs sont alignés pour reprendre immédiatement.',
-    players: ['Naïa', 'Malik', 'Ysolde', 'Cassian'],
-    beats: [
-      { label: 'Scène d ouverture', value: 'Négociation sous tension' },
-      { label: 'Enjeu principal', value: 'Conserver le sceau sans guerre ouverte' },
-      { label: 'Risque', value: 'Combat diplomatique très probable' },
-    ],
-  };
   protected logout(): void {
     this.authService.logout();
   }
