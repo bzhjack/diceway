@@ -34,6 +34,24 @@
       <!-- ══════════════ COLONNE GAUCHE — Formulaire d'attaque ══════════════ -->
       <section class="atk-form">
 
+        <!-- Phase 3: états actifs attaquant / cible -->
+        @if (attackerEtats().length > 0 || targetEtats().length > 0) {
+          <div class="atk-states">
+            @for (e of attackerEtats(); track e.id) {
+              <span class="atk-state atk-state--self">{{ etatLabel(e) }}</span>
+            }
+            @for (e of targetEtats(); track e.id) {
+              <span class="atk-state atk-state--target">Cible : {{ etatLabel(e) }}</span>
+            }
+          </div>
+        }
+        @if (attackerIsDisarmed()) {
+          <p class="atk-warning">⚠ Désarmé — attaque à mains nues uniquement</p>
+        }
+        @if (targetHasDeMalus()) {
+          <p class="atk-info">ℹ La cible subit un dé de malus sur sa prochaine action</p>
+        }
+
         <!-- Sélection d'arme : grands onglets -->
         <div class="atk-weapons">
           @for (arme of availableArmes(); track arme.nom) {
@@ -92,10 +110,21 @@
               <span class="atk-cell__label">{{ attackAptitudeLabel() }}</span>
               <span class="atk-cell__value">{{ attackAptitude() }}</span>
             </div>
+            <!-- E1: bonus légendaire -->
+            @if (legendaryAttackBonus() > 0) {
+              <span class="atk-op">+</span>
+              <div class="atk-cell atk-cell--legendary">
+                <span class="atk-cell__label">Légendaire</span>
+                <span class="atk-cell__value">+1</span>
+              </div>
+            }
             <span class="atk-op">−</span>
             <div class="atk-cell">
               <span class="atk-cell__label atk-cell__label--def">Déf. cible</span>
-              <span class="atk-cell__value atk-cell__value--def">{{ t?.defense ?? 0 }}</span>
+              <span class="atk-cell__value atk-cell__value--def">{{ effectiveTargetDefense() }}</span>
+              @if (t && effectiveTargetDefense() !== (t.defense ?? 0)) {
+                <span class="atk-cell__sub">(base {{ t.defense ?? 0 }})</span>
+              }
             </div>
             <span class="atk-op">=</span>
             <div class="atk-cell atk-cell--total">
@@ -203,8 +232,15 @@
         @if (attackerHasArmeAmeliorees()) {
           <p class="atk-info">✦ Armes améliorées : avantage appliqué automatiquement</p>
         }
+        <!-- E10: warnings armes lourdes -->
+        @if (warnHeavyDualStrike()) {
+          <p class="atk-warning">⚠ Double frappe : réservé aux armes légères et moyennes</p>
+        }
+        @if (warnHeavyLowVigueur()) {
+          <p class="atk-warning">⚠ Arme lourde avec vigueur {{ a.vigueur }} — difficile à manier</p>
+        }
 
-        <!-- Action principale : lancer les dés -->
+        <!-- Action principale : lancer les dés + saisie manuelle -->
         <div class="atk-actions">
           @if (dice() === null) {
             <button
@@ -226,19 +262,64 @@
               Relancer
             </button>
           }
+          <!-- E6: saisie manuelle du résultat 2d6 -->
+          <div class="atk-manual">
+            <span class="atk-manual__label">ou saisir</span>
+            <p-inputNumber
+              [ngModel]="dice()"
+              (ngModelChange)="setDiceManual($event)"
+              [min]="2" [max]="12"
+              placeholder="2–12"
+              [inputStyle]="{'width':'3.2rem','text-align':'center','font-weight':'700'}"
+            />
+            @if (diceDetail().length === 0 && dice() !== null) {
+              <span class="atk-manual__tag">manuel</span>
+            }
+          </div>
         </div>
+
+        <!-- E4: échec critique au choix du joueur (2 naturel) -->
+        @if (rollStatus() === 'critical') {
+          <div class="atk-critical">
+            <button
+              type="button"
+              class="atk-critical__btn"
+              [class.is-active]="echecCritiqueAccepte()"
+              (click)="toggleEchecCritique()"
+            >
+              @if (echecCritiqueAccepte()) {
+                ✓ Échec critique accepté — +1 PH gagné
+              } @else {
+                Accepter l'échec critique (+1 PH)
+              }
+            </button>
+            <span class="atk-critical__hint">Le joueur peut choisir de l'accepter pour gagner 1 PH</span>
+          </div>
+        }
+
+        <!-- E3: conversion réussite normale → héroïque (−1 PH) -->
+        @if (rollStatus() === 'hit' && hasHeroism() && !convertedToHeroic()) {
+          <div class="atk-convert">
+            <button
+              type="button"
+              class="atk-heroic__legendary"
+              (click)="convertToHeroic()"
+            >★ Convertir en succès héroïque (−1 PH)</button>
+          </div>
+        }
 
         <!-- ─── Section héroïque (apparait si succès héroïque) ─── -->
         @if (isHeroic()) {
           <section class="atk-heroic">
             <header class="atk-heroic__head">
               <span class="atk-heroic__title">★ Succès héroïque</span>
-              @if (hasHeroism()) {
+              <!-- Légendaire uniquement sur 12 naturel, pas sur conversion PH -->
+              @if (hasHeroism() && !convertedToHeroic()) {
                 <button
                   type="button"
                   class="atk-heroic__legendary"
                   [class.is-active]="useLegendary()"
-                  (click)="useLegendary.set(!useLegendary())"
+                  (click)="toggleLegendary()"
                 >★★ Légendaire (−1 PH)</button>
               }
             </header>
@@ -305,8 +386,30 @@
                 placeholder="—"
                 [inputStyle]="{'width':'3.75rem','text-align':'center','font-size':'1.1rem','font-weight':'700'}"
               />
-              @if (vigBonus() !== 0) {
-                <span class="atk-dmg__vig">+{{ vigBonus() }} vig.</span>
+              <!-- E6: bouton lancer dégâts -->
+              <button type="button" class="atk-dice-btn" (click)="rollDamage()" title="Lancer {{ damageDiceLabel() }}">
+                ⬢
+              </button>
+            </div>
+
+            <!-- E5: bonus de vigueur éditable -->
+            <div class="atk-dmg__row">
+              <span class="atk-dmg__label">Bonus vigueur</span>
+              <p-inputNumber
+                [ngModel]="vigBonus()"
+                (ngModelChange)="vigBonusOverride.set($event)"
+                [min]="-5" [max]="10"
+                [inputStyle]="{'width':'3.75rem','text-align':'center'}"
+              />
+              @if (vigBonusOverride() !== null) {
+                <button
+                  type="button"
+                  class="atk-dmg__reset"
+                  (click)="vigBonusOverride.set(null)"
+                  title="Remettre la valeur calculée automatiquement ({{ vigBonusBase() }})"
+                >↺ auto</button>
+              } @else {
+                <span class="atk-dmg__hint">auto</span>
               }
             </div>
 
@@ -316,9 +419,18 @@
                 <p-inputNumber
                   [ngModel]="armorValue()"
                   (ngModelChange)="armorValue.set($event ?? 0)"
-                  [min]="0" [max]="10"
+                  [min]="0" [max]="20"
                   [inputStyle]="{'width':'3.75rem','text-align':'center'}"
                 />
+                <!-- E6: bouton d6 variable armure -->
+                @if (targetArmorVariableMod() !== null) {
+                  <button
+                    type="button"
+                    class="atk-dice-btn"
+                    (click)="rollArmorBonus()"
+                    title="Lancer le dé d'armure (d6{{ targetArmorVariableMod()! >= 0 ? '+' : '' }}{{ targetArmorVariableMod() }})"
+                  >⬢</button>
+                }
                 <span class="atk-dmg__hint">
                   @for (armure of t!.armures; track armure.nom) {
                     {{ armure.nom }}{{ armure.protection ? ' (' + armure.protection + ')' : '' }}
@@ -326,6 +438,19 @@
                 </span>
               </div>
             }
+
+            <!-- E6: ajustement libre -->
+            <div class="atk-dmg__row">
+              <span class="atk-dmg__label">Ajustement</span>
+              <p-inputNumber
+                [ngModel]="damageAdjust()"
+                (ngModelChange)="damageAdjust.set($event ?? 0)"
+                [min]="-20" [max]="20"
+                [showButtons]="true"
+                [inputStyle]="{'width':'3.75rem','text-align':'center'}"
+              />
+              <span class="atk-dmg__hint">± libre (carrière, magie, MJ…)</span>
+            </div>
             @if (defautArmure()) {
               <p class="atk-dmg__note">Défaut d'armure — protection ignorée</p>
             }
@@ -347,6 +472,45 @@
               </div>
             }
           </section>
+        }
+
+        <!-- Phase 4: Carnage — enchaîner une attaque -->
+        @if (carnagePending()) {
+          <div class="atk-carnage">
+            <span class="atk-carnage__label">★ Carnage — Attaque supplémentaire</span>
+            <button type="button" class="atk-roll-btn" (click)="continueAttack()">
+              <span class="atk-roll-btn__icon" aria-hidden="true">⬢</span>
+              Enchaîner une attaque
+            </button>
+          </div>
+        }
+
+        <!-- Phase 4: Massacre piétaille — multi-sélection -->
+        @if (massacrePending()) {
+          <div class="atk-massacre">
+            <p class="atk-massacre__label">
+              ★ Massacrer la piétaille — Choisissez jusqu'à {{ massacreMax() }} cible(s)
+              ({{ massacreSelected().size }} sélectionné(s))
+            </p>
+            <div class="atk-massacre__list">
+              @for (p of availablePietaille(); track p.id) {
+                <button
+                  type="button"
+                  class="atk-massacre__item"
+                  [class.atk-massacre__item--selected]="massacreSelected().has(p.id)"
+                  (click)="toggleMassacreTarget(p.id)"
+                >
+                  {{ p.nom }}
+                  <span class="atk-massacre__hp">{{ p.vitaliteCourante }} PV</span>
+                </button>
+              }
+            </div>
+            @if (massacreSelected().size > 0) {
+              <button type="button" class="atk-apply-btn" (click)="confirmMassacre()">
+                Éliminer ({{ massacreSelected().size }} piétaille)
+              </button>
+            }
+          </div>
         }
       </section>
 

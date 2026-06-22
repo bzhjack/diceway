@@ -1,11 +1,13 @@
-import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, effect, inject, signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {ActivatedRoute, RouterLink} from '@angular/router';
-import {of, switchMap} from 'rxjs';
+import {map, of, switchMap} from 'rxjs';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
+import {MessageModule} from 'primeng/message';
 import {TagModule} from 'primeng/tag';
 import {BolScenarioService} from '../services/bol-scenario.service';
+import {BolCombatStorageService, CombatSnapshot} from '../services/bol-combat-storage.service';
 import {BolCombatPanelComponent, DamageCategorie, InitiativeSlot} from './bol-combat-panel/bol-combat-panel';
 
 function categorieFromDegats(degats: string | null): DamageCategorie | null {
@@ -19,7 +21,7 @@ function categorieFromDegats(degats: string | null): DamageCategorie | null {
 
 @Component({
   selector: 'app-session-live-page',
-  imports: [RouterLink, ButtonModule, CardModule, TagModule, BolCombatPanelComponent],
+  imports: [RouterLink, ButtonModule, CardModule, MessageModule, TagModule, BolCombatPanelComponent],
   templateUrl: './session-live-page.html',
   styleUrl: './session-live-page.scss',
   host: {class: 'block'},
@@ -28,9 +30,16 @@ function categorieFromDegats(degats: string | null): DamageCategorie | null {
 export class SessionLivePageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly scenarioService = inject(BolScenarioService);
+  private readonly storage = inject(BolCombatStorageService);
 
   protected readonly combatMode = signal(false);
   protected readonly combatParticipants = signal<InitiativeSlot[]>([]);
+  protected readonly savedSnapshot = signal<CombatSnapshot | null>(null);
+  protected readonly activeSnapshot = signal<CombatSnapshot | null>(null);
+
+  protected readonly scenarioId = toSignal(
+    this.route.queryParamMap.pipe(map((p) => p.get('scenarioId'))),
+  );
 
   protected readonly scenario = toSignal(
     this.route.queryParamMap.pipe(
@@ -40,6 +49,26 @@ export class SessionLivePageComponent {
       }),
     ),
   );
+
+  constructor() {
+    effect(() => {
+      const id = this.scenarioId();
+      if (id) this.savedSnapshot.set(this.storage.load(id));
+    });
+  }
+
+  protected resumeCombat(): void {
+    const snap = this.savedSnapshot();
+    if (!snap) return;
+    this.startCombat();
+    this.activeSnapshot.set(snap);
+  }
+
+  protected abandonCombat(): void {
+    const id = this.scenarioId();
+    if (id) this.storage.clear(id);
+    this.savedSnapshot.set(null);
+  }
 
   protected startCombat(): void {
     const s = this.scenario();
@@ -83,6 +112,7 @@ export class SessionLivePageComponent {
             malus: a.armure!.malus,
           })),
         category: null,
+        etats: [],
       })),
       ...(s.creatures ?? []).map((c): InitiativeSlot => ({
         id: `creature-${c.id}`,
@@ -108,6 +138,7 @@ export class SessionLivePageComponent {
         armesList: [],
         armures: c.protection ? [{nom: 'Protection naturelle', protection: c.protection, malus: null}] : [],
         category: c.rang,
+        etats: [],
       })),
       ...(s.demons ?? []).map((d): InitiativeSlot => {
         const armorPowers: {nom: string; protection: string | null; malus: string | null}[] = [];
@@ -146,6 +177,7 @@ export class SessionLivePageComponent {
           armesList: [],
           armures: armorPowers,
           category: d.rang,
+          etats: [],
         };
       }),
       ...(s.pnjs ?? []).map((p): InitiativeSlot => ({
@@ -179,6 +211,7 @@ export class SessionLivePageComponent {
           })),
         armures: [],
         category: p.rang,
+        etats: [],
       })),
     ];
 
@@ -189,5 +222,7 @@ export class SessionLivePageComponent {
   protected stopCombat(): void {
     this.combatMode.set(false);
     this.combatParticipants.set([]);
+    this.activeSnapshot.set(null);
+    this.savedSnapshot.set(null);
   }
 }

@@ -66,7 +66,7 @@
 
   <div class="grid gap-2">
     @for (control of carrieres.controls; track $index) {
-      @if (carriereFromId(control.get('carriere_id')?.value); as currentCarriere) {
+      @if (carriereFromId($safeNavigationMigration(control.get('carriere_id')?.value)); as currentCarriere) {
         <div class="grid gap-3 border border-[#424b57] bg-[#0f172a]/60 px-3 py-3 md:grid-cols-[minmax(0,1fr)_7rem_auto] md:items-center">
           <div class="min-w-0">
             <p class="m-0 text-sm font-semibold text-slate-100">{{ currentCarriere.carriere }}</p>
@@ -91,7 +91,7 @@
             [rounded]="true"
             size="small"
             pTooltip="Supprimer"
-            (onClick)="deleteCarriere(control.get('carriere_id')?.value, $event)"
+            (onClick)="deleteCarriere($safeNavigationMigration(control.get('carriere_id')?.value), $event)"
           />
         </div>
       }

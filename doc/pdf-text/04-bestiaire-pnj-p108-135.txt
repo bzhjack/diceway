@@ -1,0 +1,1618 @@
+Chapitre 5 : Bestiaire de la Lémurie
+                                       Bestiaire de la Lémurie                                      La « Table des créatures » (cf. page 109) est
+                                                                                                  une aide de jeu qui vous permettra de créer votre
+                                         La Lémurie abrite une grande variété de                  propre bestiaire. Il vous suffit de décider de la
+                                       créatures étranges, qui pour beaucoup sont le              taille de votre créature, et la table vous indiquera
+                                       résultat d’expériences menées par les Rois-                ses dégâts et sa vitalité (il s’agit bien sûr d’une
+                                       Sorciers voici des millénaires. Les mammifères             base, que vous pouvez modifier selon vos désirs).
+                                       sont relativement rares tandis que les reptiles et
+                                       les dinosaures pullulent. Des animaux dangereux
+                                       rôdent un peu partout dans les terres sauvages et
+                                                                                                  Attaques et dégâts
+                                                                                                     En général, les créatures n’ effectuent qu’une
+                                       aucun voyageur ne s’aventure dans les profondeurs
+                                                                                                  attaque par round ; on considère qu’une bête
+                                       des jungles de Qush ou de Qo sans prendre ses
+                                                                                                  attaque sa proie avec les armes naturelles dont
+                                       précautions.
+                                                                                                  elle dispose (griffes, crocs, sabots, etc.) et que
+                                         On rencontre toutes sortes d’insectes (cafards,          les dégâts indiqués représentent l’ effet global de
+                                       termites, fourmis, mouches, frelons, etc.) dont            l’attaque.
+                                       certains peuvent atteindre des tailles démesurées.
+                                                                                                  Quelques commentaires sur les dégâts des
+                                       Par exemple, le zula est un papillon de nuit dont
+                                                                                                  créatures :
+                                       les ailes s’ornent de couleurs diaphanes, qui
+                                                                                                    - les dégâts : « d6M » signifient que vous lancez
+                                       vit dans les jungles et peut avoir la taille d’une
+                                                                                                  2d6 et conservez le moins bon ; « d6B » signifie
+                                       chauve-souris ou d’un petit oiseau.
+                                                                                                  que vous lancez 2d6 et conservez le meilleur.
+                                         Les animaux domestiqués sont nombreux,                   Si le dé de dégâts est suivi d’un x2, x3 ou x4, cela
+                                       mais ils ne présentent pas une très grande variété         signifie que vous multipliez le résultat du dé par le
+                                       d’espèces. On trouve ainsi le plus couramment les          chiffre indiqué afin d’obtenir le nombre de points
+                                       espèces suivantes : mouflons, soay (qui ressemblent        de dégâts infligés ;
+                                       à des moutons), chèvres, porcs, poulets, dindes,
+                                                                                                    - les dégâts indiqués représentent une moyenne
+                                       bovidés, etc. Les poissons peuplent les mers et
+                                                                                                  pour une créature de cette taille. Celles qui
+                                       les cours d’eau en abondance. Quant aux oiseaux,
+                                                                                                  sont particulièrement féroces ou puissantes,
+                                       bien que présents dans la plupart des régions
+                                                                                                  ou celles qui disposent d’attaques multiples,
+                                       de Lémurie, ils ne foisonnent pas autant qu’on
+                                                                                                  infligeront des dégâts équivalents à ceux d’une
+                                       pourrait l’imaginer.
+                                                                                                  bête de taille supérieure. À l’inverse, une créature
+                                         Ce bestiaire propose une large palette de                particulièrement placide causera des dégâts
+                                       créatures, monstres et animaux à opposer à vos             équivalents à une ou deux catégories de taille de
+                                       joueurs. Dans Barbarians of Lemuria, les créatures         moins ;
+                                       possèdent des attributs (à l’ exception de l’aura)
+                                                                                                    - la vigueur de la créature est déjà prise en
+                                       ainsi que des aptitudes de combat qui représentent
+                                                                                                  compte dans les dégâts qu’infligent ses attaques.
+                                       leurs forces respectives. Chacune est présentée
+                                       comme suit : une brève description, suivie des
+                                       caractéristiques d’un spécimen ordinaire de cette          Protection
+                                       espèce. Vous pouvez évidemment l’adapter afin                 Les créatures ont très souvent des muscles épais,
+                                       de créer un profil plus fort ou plus faible, selon vos     de la fourrure ou du cuir, ce qui leur offre une
+                                       besoins. Les aptitudes de combat d’une créature            protection efficace contre les attaques. Certaines
+                                       incorporent déjà tous les modificateurs : n’ajoutez        bêtes peuvent aussi être protégées par des plaques
+                                       pas son agilité à ses jets d’attaque ni sa vigueur à       et/ou des crêtes osseuses, des carapaces, etc.
+                                       ses jets de dégâts. Certaines possèdent aussi des          D’autres sont si gigantesques qu’aucune arme
+                                       capacités spéciales, sous la forme d’avantages et          n’ est capable d’atteindre leurs organes internes
+                                       de désavantages, qui s’utilisent exactement comme          pour leur infliger un coup mortel.
+                                       ceux des héros.
+
+
+
+
+                                                                                            108
+                                                                                                                               Chapitre 5 : Bestiaire de la Lémurie
+                  Ordre de                                      Déplace-
+     Taille                    Dégâts Vitalité Vigueur                                       Exemples
+                  réaction                                       ment
+ Minuscule         piétaille       1          1         -3        4,5 m      ganuc, jit
+
+ Très petite       piétaille      d3          2         -2         6m        cathgan, kyphus
+
+ Petite             coriace      d6M          5         -1        7,5 m      frossor, phong, purgat, uzeg
+                                                                             loup, scorpion-araignée, ursavus, venator,
+ Moyenne            coriace       d6         10           0       7,5 m      ver des glaces, xolag
+                                                                             andrak, anguille chasseresse, bubalus, coursier
+ Grande              rival       d6B         20           4        9m        des sables, crocator, fangeux, kroark, loup
+                                                                             géant, parvalus, singe des neiges, yorth
+                                                                             azhdarkho, bronyx, dracophon, jemadar,
+ Très grande         rival       d6B         30           6        9m        phororacos, triotaur
+ Énorme                                                                      banth, dinohyus, mythunga, ours des
+                     rival       d6 x 2      40           8       10,5 m     cavernes / ours polaire, zathog
+                                                                             chark, deodarg, drakk, elasmotherium,
+ Massive             rival      d6B x 2      50         10        10,5 m     eldaphon
+ Colossale           rival      d6B x 2      60         12         12 m      poad, scorpion-araignée géant
+
+ Gigantesque         rival       d6 x 3      70         14         12 m      kalathorn, sardolith
+
+ Immense             rival      d6B x 3      85         16        13,5 m     xolth
+
+ Monstrueuse         rival       d6 x 4      100        18        13,5 m     béhémathon
+
+
+
+  La protection d’une créature fonctionne
+                                                        Avantages
+                                                          Attaque féroce : la créature bénéficie d’un dé de
+comme une armure : le MJ lance le dé indiqué
+                                                        bonus aux jets d’attaque.
+afin de déterminer combien de points de dégâts
+sont annulés par la protection. Vous pouvez bien          Attaques multiples : la créature possède
+sûr utiliser la valeur fixe de protection pour les      deux types d’attaque totalement différents qui
+créatures (celle indiquée entre parenthèses), et ce     nécessitent deux jets d’attaque séparés.
+même si vous utilisez la règle de valeur variable
+                                                          Attaque spéciale : la créature attaque selon une
+pour les armures fabriquées par l’homme.
+                                                        méthode inhabituelle. La nature de cette attaque
+                                                        est expliquée dans sa description.
+Ordre de réaction                                         Attaque venimeuse : la description de la
+  Concernant les règles de réaction et de horde,        créature indique les effets de son venin.
+les créatures de taille minuscule et très petite sont
+considérées comme de la piétaille, les créatures          Camouflage : la créature est difficile à repérer
+de taille petite et moyenne sont des coriaces avec      en raison de la coloration ou de la texture de sa
++0 en initiative, et les créatures de taille grande     peau ou de son pelage (dé de bonus pour se cacher).
+ou plus comptent comme des rivaux avec +0 en              Prédateur : la créature lance un dé de bonus pour
+initiative.                                             tout ce qui concerne le pistage d’une proie.
+
+
+Capacités spéciales                                     Désavantages
+  La liste ci-contre représente les avantages             Attaque timide : la créature subit un dé de malus
+et désavantages communs des animaux et des              aux jets d’attaque.
+monstres. Lorsque les capacités spéciales de ces          Déficience : la créature est affligée d’un odorat,
+derniers sont spécifiques ou peu courantes, elles       d’une audition ou d’une vision déficiente et subit
+sont décrites directement dans leur profil.             un dé de malus quand elle doit y faire appel.
+
+
+
+
+                                                    109
+Chapitre 5 : Bestiaire de la Lémurie
+
+                                       Andrak                                                 Anguille chasseresse
+                                        Taille : grande.                                        Taille : grande.
+                                        Environnement naturel : montagnes, plaines.             Environnement naturel : marais, rivières.
+                                         Les andraks sont des fauves ressemblant à              L’anguille chasseresse est une sorte de grosse
+                                       des lions noirs à l’épaisse crinière, qui peuvent      anguille avec une tête volumineuse, de longs
+                                       atteindre plus de trois mètres de long. Ils            piquants et un corps serpentin. Certains racontent
+                                       attaquent à l’aide de leurs crocs acérés et de         qu’une espèce d’anguille chasseresse nagerait dans
+                                       leurs griffes rétractables. Les andraks qui vivent     les eaux du golfe de Satarla, mais ce poisson vit
+                                       dans les montagnes de l’Axos sont généralement         normalement dans les eaux douces des marécages
+                                       solitaires, tandis que ceux qui rôdent dans les        et des rivières. L’anguille chasseresse possède un
+                                       plaines de Klaar s’organisent en meutes. L’andrak      odorat et un sens du toucher très développés.
+                                       est un des meilleurs prédateurs de Lémurie.
+                                                                                              Capacités spéciales :
+                                       Capacité spéciale :                                      Prédateur : l’anguille chasseresse est capable de
+                                        Prédateur                                             percevoir les mouvements dans l’ eau à plus d’un
+                                                                                              kilomètre de distance.
+                                               Attributs        Aptitudes de combat
+                                               Vigueur 4        Attaque +3                       Attaque spéciale : l’anguille chasseresse a
+                                               Agilité 2        Dégâts d6B                    développé une tactique de chasse très sophistiquée
+                                               Esprit 0         Défense 2                     qui utilise la bioélectricité. Elle crée un champ
+                                               Vitalité 20      Protection d6-3 (1)           électrique de faible intensité et détecte tout
+                                                                                              mouvement à l’intérieur de ce dernier. Dès qu’une
+                                                                                              proie se trouve à portée, elle libère une décharge
+                                                                                              de très forte intensité qui assomme sa victime, et
+                                                                                              il ne lui reste plus qu’à passer à table. Pour résister
+                                                                                              à la décharge électrique, un héros doit réussir un
+                                                                                              jet de vigueur de difficulté Ardue (-1). En cas
+                                                                                              d’échec, il perd connaissance pour une durée en
+                                                                                              rounds égale à 6 moins sa vigueur.
+
+                                                                                                       Attributs         Aptitudes de combat
+                                                                                                       Vigueur 3         Attaque +1
+                                                                                                       Agilité 1         Dégâts d6
+                                                                                                       Esprit 0          Défense 0
+                                                                                                       Vitalité 20       Protection 0
+
+
+
+
+                                                                                        110
+                                                                                                                     Chapitre 5 : Bestiaire de la Lémurie
+Azhdarkho
+  Taille : très grande.
+  Environnement naturel : montagnes, plaines.
+  Les azhdarkhos sont de grands lézards volants
+qui ressemblent un peu à des drakks, en étant
+plus petits et plus agiles. Ils sont également plus
+colorés que leurs cousins, avec une peau écailleuse
+                                                             Banth
+                                                               Taille : énorme.
+serpentine pouvant présenter différentes nuances
+de pourpre, de bleu, de rouge et de jaune. Leurs               Environnement naturel : plaines de Klaar.
+ailes membraneuses semblables à celles d’une
+                                                               Les banths sont d’énormes bêtes ressemblant
+chauve-souris peuvent atteindre neuf mètres
+                                                             à des tricératops qui vivent dans les plaines de
+d’envergure. Comme les drakks, ils aiment
+                                                             Klaar. Il est possible de les domestiquer et ils
+emporter leur proie dans leur nid, surtout s’ils ont
+                                                             sont très appréciés des marchands en raison des
+des petits à nourrir.
+                                                             charges colossales qu’ils peuvent transporter.
+  Les azhdarkhos sont capables de cracher                    Les céruléens les utilisent pour tirer leurs chariots
+à 15 mètres de distance un fluide collant qui                dans la plaine. Quand ils se mettent en colère (ce
+empêtre leur proie et l’ empêche de s’enfuir.                qui n’ est guère fréquent), les banths attaquent
+                                                             avec leurs cornes ou piétinent tous ceux qui se
+Capacité spéciale :
+                                                             trouvent sur leur chemin.
+  Attaque spéciale : crachat gluant. Une créature
+touchée par le crachat d’un azhdarkho doit réussir           Capacités spéciales :
+un jet de vigueur Très difficile (-4), sous peine de          Attaque timide
+se retrouver engluée et incapable de se déplacer.             Déficience (vision)
+        Attributs         Aptitudes de combat                        Attributs         Aptitudes de combat
+        Vigueur 5         Attaque +2                                 Vigueur 8         Attaque +0
+        Agilité 1         Dégâts d6B                                 Agilité -3        Dégâts d6 x2
+        Esprit -2         Défense 2                                  Esprit -2         Défense 0
+        Vitalité 25       Protection d6-3 (1)                        Vitalité 40       Protection d6 (4)
+
+
+
+
+                                                       111
+Chapitre 5 : Bestiaire de la Lémurie
+                                       Béhémathon                                              Bubalus
+                                         Taille : monstrueuse.                                   Taille : grande.
+                                         Environnement naturel : mer.                            Environnement naturel : sur les berges des
+                                                                                               rivières du golfe de Satarla ou en bordure des
+                                         Le béhémathon est le plus grand monstre
+                                                                                               marécages.
+                                       marin connu. C’est une gigantesque pieuvre qui
+                                       possède dix tentacules dont chacun est assez long         Les bubalus sont des bovidés qui ressemblent
+                                       pour s’enrouler autour d’une galère de guerre. On       à des bisons. Très appréciés pour leur viande
+                                       raconte que le plus gros béhémathon existant            et leur cuir épais, ils sont aussi utilisés comme
+                                       vivrait dans les profondeurs de la mer de Vhendis.      bêtes de somme. À l’état sauvage, ils aiment les
+                                                                                               environnements humides comme les berges
+                                           Au combat, ce monstre attaque à chaque
+                                                                                               de rivières ou de lacs, ou encore les terres
+                                       round avec deux tentacules, cependant que les
+                                                                                               marécageuses.
+                                       autres s’agitent violemment en battant les flots.
+                                       S’il touche la même cible avec ses deux tentacules,     Attributs          Aptitudes de combat
+                                       il l’attrape et tente de l’avaler tout rond ou de       Vigueur 5          Attaque +0
+                                       l’ entraîner au fond de la mer.                         Agilité -2         Dégâts d6B
+                                                                                               Esprit -2          Défense 0
+                                       Capacité spéciale :
+                                                                                               Vitalité 20        Protection d6-3 (1)
+                                         Attaques multiples : le béhémathon effectue
+                                       deux jets d’attaque par round.
+                                       Attributs
+                                       Vigueur 18
+                                                       Aptitudes de combat
+                                                       Attaque (x2) +0
+                                                                                               Bronyx
+                                                                                                 Taille : très grande.
+                                       Agilité -4      Dégâts d6B x4
+                                       Esprit -2       Défense 0                                Environnement naturel : jungles de Qo et de
+                                       Vitalité 100    Protection d6 (4)                       Qush.
+                                                                                                 Le bronyx est une créature étrange, ressemblant
+                                                                                               un peu à un chark, en moins énorme. Il possède
+                                                                                               une longue queue, de puissantes griffes aussi
+                                                                                               longues qu’une épée courte et une gueule
+                                                                                               allongée d’alligator, hérissée de crocs acérés.
+                                                                                               C’est un dangereux prédateur, capable aussi bien
+                                                                                                      d’attaquer avec ses griffes qu’avec sa gueule.
+
+
+
+
+                                                                                                             Attributs      Aptitudes de combat
+                                                                                                             Vigueur 6      Attaque +2
+                                                                                                             Agilité 1      Dégâts d6B
+                                                                                                             Esprit -1      Défense 0
+                                                                                                             Vitalité 30    Protection d6-2 (2)
+
+
+
+
+                                                                                         112
+                                                                                                                Chapitre 5 : Bestiaire de la Lémurie
+Cathgan                                                  Coursier des sables
+  Taille : très petite.                                      Taille : grande.
+  Environnement naturel : déserts.                           Environnement naturel : déserts.
+  Les cathgans sont de petites vipères écarlates qui       Les coursiers des sables sont de grands oiseaux
+se rencontrent dans les déserts au sud de Malakut        coureurs ressemblant à des autruches, au plumage
+et d’Halakh. Leur morsure est particulièrement           ocre et aux pattes puissantes, parfaitement adaptés
+venimeuse.                                               aux dunes du désert de Beshaar et capables de
+                                                         pointes de vitesse impressionnantes. Les tribus
+Capacité spéciale :
+                                                         beshaaries les utilisent comme montures.
+  Morsure venimeuse : si le cathgan touche et
+inflige des dégâts qui passent l’armure, il injecte                Attributs       Aptitudes de combat
+son venin, capable de paralyser une créature de                    Vigueur 3       Attaque +1
+taille humaine (taille moyenne). Un héros doit                     Agilité 2       Dégâts d6
+réussir un jet de vigueur Difficile (-2) sous peine                Esprit -2       Défense 2
+de se retrouver paralysé. Une fois dans cet état,                  Vitalité 12     Protection 0
+la victime succombera dans l’heure. Les héros
+affectés peuvent accomplir un nouveau jet de
+vigueur Difficile pour éviter la mort.                   Crocator
+                                                             Taille : grande.
+         Attributs        Aptitudes de combat
+         Vigueur -2       Attaque +3                         Environnement naturel : marais, rivières.
+         Agilité 2        Dégâts d3
+                                                            Ce crocodile géant, à la gueule puissante aux
+         Esprit -4        Défense 4
+                                                         dents acérées, peut aisément être confondu avec
+         Vitalité 2       Protection 0
+                                                         un tronc à la dérive quand il se laisse flotter à la
+                                                         surface de l’eau, avant de passer brusquement à
+                                                         l’attaque avec une vitesse fulgurante. Très agile
+Chark                                                    dans l’ eau, le crocator est beaucoup plus pataud
+  Taille : massive.                                      sur terre.
+  Environnement naturel : jungles.                       Capacité spéciale :
+                                                           Camouflage : quand il flotte immobile à fleur
+  Le redouté « dragon des jungles » habite dans
+                                                         d’eau, le crocator est difficile à repérer.
+les forêts vierges de Qush et de Qo. La vie de ce
+monstre, qui ressemble à un tyrannosaure en plus                   Attributs         Aptitudes de combat
+imposant, se résume à une quête permanente de                      Vigueur 4         Attaque +2
+viande fraîche pour remplir son estomac immense                    Agilité 1 (-1*) Dégâts d6B
+et insatiable.                                                     Esprit -2         Défense 0
+                                                                   Vitalité 20       Protection d6-2 (2)
+  La gueule caverneuse du chark est hérissée de
+                                                                   * sur la terre ferme.
+plusieurs rangées de crocs aussi grands que des
+épées valgardiennes.
+         Attributs        Aptitudes de combat
+         Vigueur 10       Attaque +3
+         Agilité 0        Dégâts d6B x2
+         Esprit -1        Défense 0
+         Vitalité 50      Protection d6-1 (3)
+
+
+
+
+                                                       113
+Chapitre 5 : Bestiaire de la Lémurie
+                                                                                                     Deodarg
+                                                                                                        Taille : massive.
+                                                                                                        Environnement naturel : jungles.
+                                                                                                               Gigantesque croisement de félin et de
+                                                                                                             reptile, le deodarg est un des prédateurs les
+                                                                                                             plus redoutables des jungles de Lémurie.
+                                                                                                             On raconte que les deodargs furent créés
+                                                                                                               par les Rois-Sorciers pour garder leurs
+                                                                                                                ziggourats et leurs citadelles et qu’ils
+                                                                                                                se seraient répandus dans les jungles
+                                                                                                                 sauvages après la chute de leurs
+                                                                                                                 maîtres.
+                                                                                                                  Les deodargs ont deux cœurs et deux
+                                                                                                                cerveaux, ce qui les rend quasiment
+                                                                                                                invincibles, et seuls les plus puissants
+                                                                                                         héros osent les affronter. Ils attaquent avec
+                                                                                                     leurs griffes acérées, et leurs mâchoires ont la
+                                                                                                     puissance d’un étau. Ce sont de remarquables
+                                                                                                     pisteurs, capables de sentir le sang à plus d’un
+                                       Dinohyus                                                      kilomètre de distance.
+                                        Taille : énorme.                                             Capacités spéciales :
+                                                                                                      Prédateur
+                                        Environnement naturel : jungles.
+                                                                                                      Attaque féroce
+                                         Le dinohyus est une sorte de phacochère géant.
+                                                                                                             Attributs         Aptitudes de combat
+                                       Il possède un crâne allongé qui abrite un petit cerveau,
+                                                                                                             Vigueur 10        Attaque +3
+                                       deux protubérances osseuses à l’arrière de la mâchoire
+                                                                                                             Agilité 2         Dégâts d6B x2
+                                       inférieure, des incisives émoussées et de larges et
+                                                                                                             Esprit 1          Défense 4
+                                       puissantes canines. Son cou trapu est prolongé d’une
+                                                                                                             Vitalité 55       Protection d6 (4)
+                                       bosse entre les épaules, formée de piquants qui hérissent
+                                       également sa colonne vertébrale sur toute sa longueur.
+                                       Il se nourrit de plantes, de racines et de champignons.
+                                       Ses longues pattes lui confèrent une rapidité surprenante
+                                       compte tenu de sa masse. Le dinohyus est réputé pour
+                                       avoir un sale caractère.
+                                         Un individu moyen mesure près de 3,5 m de
+                                       long (à elle seule, sa tête allongée mesure près
+                                       d’un mètre) pour 1,80 m au garrot.
+                                       Capacité spéciale :
+                                        Attaque féroce
+                                       Attributs       Aptitudes de combat
+                                       Vigueur 8       Attaque +1
+                                       Agilité -2      Dégâts d6 x2
+                                       Esprit -2       Défense 0
+                                       Vitalité 40     Protection d6-2 (2)
+
+
+
+
+                                                                                               114
+                                                                                                                Chapitre 5 : Bestiaire de la Lémurie
+Dracophon                                                Drakk
+  Taille : très grande.                                      Taille : massive.
+  Environnement naturel : plaines, jungles.                  Environnement naturel : montagnes, plaines.
+  Avec ses six pattes courtes et larges comme              Les drakks sont des monstres volants
+des souches, sa peau épaisse et son air pataud, le       qui ressemblent à des ptérodactyles géants.
+dracophon peut donner l’impression d’être un gros        Ils ont un corps écailleux et serpentin, et des
+herbivore placide… jusqu’à ce que vous aperceviez        ailes membraneuses semblables à celles d’une
+les énormes crocs qui saillent de sa gueule et           chauve-souris, mais qui dépassent les treize
+indiquent que vous avez affaire à un prédateur.          mètres d’envergure. Leur tête hideuse, au bout
+Le régime alimentaire d’un dracophon consiste            d’un long cou sinueux, se termine sur un énorme
+essentiellement en serpents et en créatures              bec crochu. Ils ont de petits yeux rouges et cruels,
+vermiformes géantes qui vivent à l’orée de la            et le sommet de leur crâne est couronné d’une
+jungle ou qui sont enfouis sous l’herbe des plaines.     crête de piquants de couleur bleue. Ils sont armés
+Les dents du dracophon sont particulièrement             de grandes serres d’oiseau aux ergots tranchants
+adaptées pour se saisir d’une proie serpentine et        qu’ils déploient sous leur ventre jaunâtre. Une
+ondulante. Lorsqu’il est effrayé ou en colère, le        longue queue ophidienne prolonge leur corps.
+dracophon se dresse sur ses deux pattes arrière          Les drakks aiment emporter leurs proies dans
+pour adopter une posture plus intimidante.               leur nid, surtout s’ils ont des jeunes à nourrir.
+Attributs        Aptitudes de combat                               Attributs       Aptitudes de combat
+Vigueur 7        Attaque +1                                        Vigueur 9       Attaque +3
+Agilité 0        Dégâts d6B                                        Agilité 0       Dégâts d6B x2
+Esprit -3        Défense 1                                         Esprit -2       Défense 3
+Vitalité 35      Protection d6-3 (1)                               Vitalité 45     Protection d6-3 (1)
+
+
+
+
+Elasmotherium
+  Taille : massive.
+  Environnement naturel : plaines.
+  L’ elasmotherium ressemble à un rhinocéros
+au museau armé d’une longue corne. Il mesure
+près de 4 m au garrot, pour 6 m de long, avec une
+corne de 1,80 m de long. C’est un animal solitaire       Attributs          Aptitudes de combat
+et diurne. Il fuit généralement les hommes,              Vigueur 10         Attaque +1
+sauf quand il est blessé ou quand il protège sa          Agilité -3         Dégâts d6B x2
+progéniture, et peut se montrer particulièrement         Esprit -2          Défense 0
+dangereux lorsqu’il se sent acculé.                      Vitalité 45        Protection d6-1 (3)
+
+
+
+                                                       115
+Chapitre 5 : Bestiaire de la Lémurie
+                                                                                                        Eldaphon
+                                                                                                         Taille : massive.
+                                                                                                         Environnement naturel : plaines.
+                                                                                                          L’ eldaphon est un mastodonte à la longue
+                                                                                                          trompe, encadrée de défenses pouvant
+                                                                                                            dépasser 4 m de longueur. Les nomades bleus
+                                                                                                            les montent parfois pour partir au combat,
+                                                                                                            mais les eldaphons sont connus pour être
+                                                                                                            difficiles à dresser et à contrôler. Ils attaquent
+                                                                                                           avec leurs défenses ou en piétinant ceux qui se
+                                                                                                         dressent sur leur chemin.
+                                                                                                                Attributs         Aptitudes de combat
+                                                                                                                Vigueur 11        Attaque +0
+                                                                                                                Agilité -2        Dégâts d6B x2
+                                                                                                                Esprit -2         Défense 0
+                                                                                                                Vitalité 50       Protection d6-2 (2)
+
+
+
+
+                                       Fangeux                                                          Capacités spéciales :
+                                         Taille : grande.
+                                                                                                          Attaques multiples : le fangeux effectue deux
+                                         Environnement naturel : rivières, marais.                      jets d’attaque, généralement contre la même
+                                                                                                        cible. Il doit toucher avec ses deux tentacules
+                                         Lointains cousins de la pieuvre, les fangeux vivent
+                                                                                                        pour attraper une proie afin de pouvoir la mordre.
+                                       dans les marécages de Lémurie et s’aventurent parfois
+                                                                                                        La victime peut se libérer en réussissant un jet
+                                       dans des cours d’eau.
+                                                                                                        de vigueur Difficile (-2), ou subir une morsure
+                                          Ils possèdent quatre tentacules ainsi que quatre pieds        automatique au round suivant.
+                                       semblables à ceux d’un escargot, grâce auxquels ils
+                                                                                                          Morsure venimeuse : le venin tue sur-le-
+                                       peuvent s’aventurer sur la terre ferme (et rester à l’air
+                                                                                                        champ une proie de taille petite ou moins. Les
+                                       libre plusieurs jours d’affilée). Ils attrapent leur proie à
+                                                                                                        héros doivent réussir un jet de vigueur Très
+                                       l’aide de leurs deux tentacules antérieurs et l’amènent à
+                                                                                                        difficile (-4) à chaque round pour ne pas mourir.
+                                       leur bouche, en espérant que le venin de leur morsure
+                                                                                                        En cas d’échec, la mort survient en 3 rounds.
+                                       la tue sans attendre.
+                                                                                                                Attributs         Aptitudes de combat
+                                         Les chasseurs et les aventuriers comptent sur le fait
+                                                                                                                Vigueur 2         Attaque (x2) +2 (+0*)
+                                       qu’un fangeux est bien moins véloce quand il se trouve
+                                                                                                                Agilité 1 (-1*) Dégâts cf. ci-dessus
+                                       sur la terre ferme (utilisez dans ce cas les valeurs entre
+                                                                                                                Esprit -1         Défense 1 (0*)
+                                       parenthèses).
+                                                                                                                Vitalité 20       Protection 0
+                                                                                                                * sur la terre ferme.
+
+
+                                                                                                  116
+                                                                                                                   Chapitre 5 : Bestiaire de la Lémurie
+                                                                  Ganuc
+                                                                  Taille : minuscule.
+                                                                  Environnement naturel : plaines.
+                                                            Petit phytophage sauteur, le ganuc présente à
+                                                          la fois des caractéristiques de mammifère et de
+Frossor                                                   reptile. Il tient confortablement dans la paume
+                                                          d’une main ; à Satarla ainsi que dans d’autres
+  Taille : petite.
+                                                          cités, les ganucs sont élevés comme animaux de
+  Environnement naturel : jungles, plaines.               compagnie pour les enfants. Certaines espèces de
+                                                          ganucs sont venimeuses, alors faites attention à ce
+   Ce croisement de reptile et de mammifère
+                                                          que vous achetez !
+mesure un peu plus d’un mètre de long. Il est
+couvert d’une fourrure grise et possède de                Capacité spéciale :
+puissantes griffes au bout de ses pattes antérieures,       Morsure venimeuse : n’affecte que les créatures
+qui lui servent à creuser la terre pour trouver les       de taille moyenne ou moins. La victime subit un
+termites dont il se nourrit. Le frossor a de petites      malus de -1 à tous ses jets d’action pendant une
+dents, un long museau et une longue langue.               demi-journée, à moins de réussir un jet de vigueur
+Il n’attaque que rarement les hommes.                     Moyen (0) pour résister au venin.
+         Attributs        Aptitudes de combat                     Attributs         Aptitudes de combat
+         Vigueur 0        Attaque +0                              Vigueur -3        Attaque +1
+         Agilité -1       Dégâts d6M                              Agilité 2         Dégâts 1
+         Esprit -1        Défense 0                               Esprit -3         Défense 0
+         Vitalité 5       Protection 0                            Vitalité 1        Protection 0
+
+
+
+
+Jemadar                                                   les collines au pied de la chaîne des Besharoon.
+  Taille : très grande.
+                                                          Ils peuvent se dresser sur leurs deux pattes arrière
+  Environnement naturel : montagnes, plaines.             pour déchirer leur proie avec leurs quatre autres
+                                                          pattes, et leur morsure a la réputation d’être fatale.
+  Les jemadars sont d’énormes prédateurs à la
+peau épaisse de couleur pourpre. Ils ressemblent                  Attributs         Aptitudes de combat
+un peu à un croisement entre un chat sauvage et                   Vigueur 6         Attaque +4
+un raptor, mais avec six longues pattes armées de                 Agilité 1         Dégâts d6B x2
+griffes acérées, une queue à piquants et des crocs                Esprit 0          Défense 3
+terrifiants. On les rencontre généralement dans                   Vitalité 30       Protection d6-2 (2)
+
+
+
+
+                                                        117
+Chapitre 5 : Bestiaire de la Lémurie
+                                       Jit                                                     Kalathorn
+                                         Taille : minuscule.                                     Taille : gigantesque.
+                                         Environnement naturel : jungles, marais.                Environnement naturel : mer.
+                                         La jit est une petite araignée jaune à pois             Le kalathorn est un serpent de mer géant, deux
+                                       rouges. Elle apprécie les environnements chauds         fois plus long qu’une galère de guerre. Il ressemble
+                                       et humides et vit essentiellement dans les jungles      à un plésiosaure préhistorique.
+                                       et les marécages.
+                                                                                                       Attributs         Aptitudes de combat
+                                       Capacité spéciale :                                             Vigueur 14        Attaque +1
+                                          Attaque spéciale : quand une jit mord une                    Agilité -1        Dégâts d6B x3
+                                       créature vivante, lancez un d6. Sur un 1, la jit                Esprit -2         Défense 0
+                                       injecte ses œufs dans la plaie. Quelques jours                  Vitalité 70       Protection d6-1 (3)
+                                       plus tard, des centaines d’araignées éclosent et se
+                                       frayent un chemin dans la chair de leur hôte en
+                                       provoquant généralement sa mort. Si un médecin          Kroark
+                                       s’occupe de la plaie moins d’une heure après la           Taille : grande.
+                                       morsure, il pourra en retirer les œufs avant qu’ils
+                                                                                                 Environnement naturel : tous.
+                                       se soient insinués en profondeur. Sinon, il est
+                                       encore possible d’intervenir durant les premières         Le kroark est une créature reptilienne à la peau
+                                       vingt-quatre heures en rouvrant la plaie pour en        gris-vert qui se tient sur ses deux puissantes pattes
+                                       extraire les œufs (infligeant d6 points de dégâts       postérieures. Il peut être dressé pour la monte et
+                                       à l’hôte). Passé ce délai, il est trop tard pour        pour le combat, mais c’est un animal rétif ; un
+                                       intervenir : les araignées éclosent et sortent de       kroark bien entraîné peut donc valoir une petite
+                                       leur hôte en creusant sa chair, ce qui lui inflige      fortune.
+                                       d6 x2 points de dégâts.
+                                                                                                       Attributs         Aptitudes de combat
+                                       Attributs        Aptitudes de combat                            Vigueur 4         Attaque +2
+                                       Vigueur -4       Attaque +2                                     Agilité 1         Dégâts d6B
+                                       Agilité 4        Dégâts 1                                       Esprit -2         Défense 2
+                                       Esprit -4        Défense 5                                      Vitalité 15       Protection d6-3 (1)
+                                       Vitalité 1       Protection 0
+
+
+
+
+                                                                                         118
+                                                                                                            Chapitre 5 : Bestiaire de la Lémurie
+Kyphus                                                   Mythunga
+  Taille : très petite.                                      Taille : énorme.
+  Environnement naturel : tous.                           Environnement naturel : montagnes, bord de
+                                                         mer.
+  Croisement de mammifère et de reptile, le
+kyphus ressemble à un petit lézard à fourrure avec         Cet immense oiseau aux serres puissantes est
+des dents de rongeur. Il ne mesure pas plus de           capable d’emporter un homme pour le dévorer
+30 cm de long et se nourrit d’insectes et de larves.     dans son nid, sur la cime d’une montagne.
+On le trouve un peu partout en Lémurie, mais             Il se cache dans le soleil ou derrière des bancs
+ceux qui vivent dans les plaines et les déserts ont      de nuages pour rester invisible et émet un cri
+généralement un pelage plus rare et ressemblent          puissant au moment où il fond sur sa proie.
+davantage à un petit lézard.
+                                                                   Attributs     Aptitudes de combat
+         Attributs        Aptitudes de combat                      Vigueur 7     Attaque +4
+         Vigueur -2       Attaque +1                               Agilité 1     Dégâts d6B
+         Agilité 0        Dégâts d6-2                              Esprit 0      Défense 2
+         Esprit -2        Défense 0                                Vitalité 35   Protection 0
+         Vitalité 2       Protection 0
+
+
+
+Loup
+  Taille : moyenne.
+  Environnement naturel : tous.
+  Déjà dangereux en soi, c’est en meute que le
+loup devient un prédateur redoutable.
+         Attributs        Aptitudes de combat
+         Vigueur 1        Attaque +3
+         Agilité 2        Dégâts d6
+         Esprit -1        Défense 1
+         Vitalité 10      Protection 0
+
+
+Loup géant
+  Taille : grande.
+  Environnement naturel : tous.
+  Plus grand et plus imposant qu’un loup
+ordinaire, le loup géant se distingue également de
+ses congénères par le fait qu’il est le plus souvent
+un animal solitaire.
+         Attributs        Aptitudes de combat
+         Vigueur 4        Attaque +2
+         Agilité 1        Dégâts d6B
+         Esprit -1        Défense 0
+         Vitalité 20      Protection d6-3 (1)
+
+
+
+
+                                                       119
+Chapitre 5 : Bestiaire de la Lémurie
+                                       Ours des cavernes /                                      Parvalus
+                                       ours polaire                                               Taille : grande.
+                                         Taille : énorme.                                         Environnement naturel : plaines.
+                                         Environnement naturel : montagnes, toundras.             Le parvalus est un équidé qui vit en grands
+                                                                                                troupeaux, essentiellement dans les plaines de
+                                         Dressé sur ses pattes arrière, cet ours peut
+                                                                                                Klaar et dans les vastes prairies entre Parsool et
+                                       dépasser les trois mètres de hauteur. Ses griffes
+                                                                                                Malakut. Il possède un pelage présentant diverses
+                                       redoutables sont capables de réduire un homme
+                                                                                                nuances de brun ou de gris, parfois noir, souvent
+                                       en charpie, tout comme ses mâchoires puissantes
+                                                                                                rayé. La crinière est courte, ou longue s’il est
+                                       aux dents pointues de carnivore.
+                                                                                                domestiqué. Plus docile et facile à dresser qu’un
+                                         Les ours polaires ont un pelage blanc et vivent        kroark, le parvalus fait une excellente monture.
+                                       dans le Grand Nord. Leur fourrure est très
+                                                                                                Capacité spéciale :
+                                       recherchée, mais bien difficile à obtenir !
+                                                                                                 Attaque timide
+                                                Attributs       Aptitudes de combat
+                                                                                                        Attributs         Aptitudes de combat
+                                                Vigueur 8       Attaque +2
+                                                                                                        Vigueur 4         Attaque +0
+                                                Agilité 0       Dégâts d6 x2
+                                                                                                        Agilité 1         Dégâts d6
+                                                Esprit -1       Défense 1
+                                                                                                        Esprit -2         Défense 0
+                                                Vitalité 40     Protection d6-2 (2)
+                                                                                                        Vitalité 15       Protection 0
+
+                                       Phong
+                                         Taille : petite.
+                                                                                                d’un point de vitalité toutes les 5 minutes. Une
+                                         Environnement naturel : tous.
+                                                                                                phong peut boire jusqu’à 4 points de vitalité avant
+                                         Les phongs sont des chauves-souris suceuses de         d’être rassasiée. Souvent, les victimes ne se rendent
+                                       sang de la taille d’un petit chat, qui chassent en       compte qu’elles ont été la proie de phongs qu’en
+                                       grandes nuées.                                           se réveillant au matin et en se sentant « vidées ».
+                                       Capacité spéciale :                                      Attributs        Aptitudes de combat
+                                         Attaque nocturne : si une phong est en mesure          Vigueur -1       Attaque +2
+                                       de mordre une victime sans que celle-ci se réveille,     Agilité 3        Dégâts d6M
+                                       elle aspire son sang, ce qui se traduit par la perte     Esprit -2        Défense 3
+                                                                                                Vitalité 3       Protection 0
+
+
+
+
+                                                                                          120
+Phororacos                                                                                                         Chapitre 5 : Bestiaire de la Lémurie
+  Taille : très grande.
+  Environnement naturel : déserts, plaines.
+   Ces énormes oiseaux coureurs qui n’ont plus
+que des vestiges d’ailes ressemblent aux coursiers
+des sables, mais en bien plus grands et bien
+plus hideux. Ils possèdent des pattes aux serres
+impressionnantes et un bec acéré, qui font d’eux
+l’un des prédateurs les plus redoutés des sables
+                                                            Poad
+                                                                Taille : colossale.
+de Beshaar. Ils tuent leur proie en l’écrasant
+violemment au sol, s’y reprenant à plusieurs                    Environnement naturel : rivières, marécages.
+reprises si besoin est.
+                                                              Les poads sont d’énormes serpents-dragons qui
+Capacité spéciale :                                         vivent dans les cours d’eau. Quand ils ont faim (ce
+  Attaque féroce : quand il touche une créature             qui leur arrive fréquemment), ils n’hésitent pas à
+de taille moyenne ou moins, le phororacos peut              attaquer les barges et les galères qui naviguent sur
+choisir de saisir sa proie dans son bec et de l’écraser     les rivières. Leur peau épaisse peut présenter une
+au sol, ajoutant +2 aux dégâts de son attaque.              grande variété de couleurs.
+         Attributs         Aptitudes de combat                        Attributs       Aptitudes de combat
+         Vigueur 4         Attaque +2                                 Vigueur 12      Attaque +2
+         Agilité -1        Dégâts d6B                                 Agilité 0       Dégâts d6 x3
+         Esprit -1         Défense 0                                  Esprit -1       Défense 0
+         Vitalité 30       Protection 0                               Vitalité 60     Protection d6-2 (2)
+
+
+
+
+                                                          121
+Chapitre 5 : Bestiaire de la Lémurie
+                                       Purgat                                                    Sardolith
+                                         Taille : petite.                                          Taille : gigantesque.
+                                         Environnement naturel : tous.                             Environnement naturel : jungles.
+                                         Le purgat est un petit mammifère un peu                   Le sardolith est un dinosaure quadrupède à la
+                                       semblable au rat, à la fourrure marron et à la longue     peau épaisse couverte de petites plaques osseuses
+                                       queue squameuse. Il se nourrit normalement de             qui forment une sorte d’armure articulée. Mais le
+                                       larves, d’insectes et de végétaux. Mais c’est un          sardolith est surtout impressionnant à cause de sa
+                                       opportuniste que l’on rencontre partout où il             paire de têtes ophidiennes au sommet de ses deux
+                                       peut trouver facilement de la nourriture : dans           longs cous. Chez certains spécimens, une des têtes
+                                       les fermes, les caves, les égouts ou dans les cales       possède une morsure particulièrement venimeuse.
+                                       des navires. Certains prétendent que les purgats
+                                                                                                 Capacités spéciales :
+                                       propagent les maladies. Seul, le purgat est plutôt
+                                                                                                   Attaques multiples : le sardolith peut effectuer
+                                       inoffensif, mais il peut devenir dangereux dès
+                                                                                                 deux jets d’attaque contre la même cible ou contre
+                                       qu’il se rassemble en meute.
+                                                                                                 des cibles différentes.
+                                                Attributs        Aptitudes de combat
+                                                                                                   Morsure venimeuse : le poison de la morsure
+                                                Vigueur -1       Attaque +1
+                                                                                                 du sardolith tue sur-le-champ toute créature
+                                                Agilité 1        Dégâts d6M
+                                                                                                 de taille petite ou moins. Pour les autres, il faut
+                                                Esprit 0         Défense 1
+                                                                                                 réussir un jet de vigueur de difficulté Impossible
+                                                Vitalité 3       Protection 0
+                                                                                                 (-6) pour résister au poison. En cas d’échec, la
+                                                                                                 victime sombre dans un coma qui dure 1d6 jours
+                                                                                                 et se conclut par la mort, si un antidote n’ est pas
+                                                                                                 administré dans l’intervalle. Tous les sardoliths ne
+                                                                                                 possèdent pas cette capacité spéciale.
+                                                                                                         Attributs         Aptitudes de combat
+                                                                                                         Vigueur 14        Attaque (x2) +0
+                                                                                                         Agilité -2        Dégâts d6 x3
+                                                                                                         Esprit -2         Défense 0
+                                                                                                         Vitalité 70       Protection d6 (4)
+
+
+
+
+                                                                                           122
+Scorpion-araignée
+  Taille : moyenne.
+  Environnement naturel : déserts, plaines.
+  Cet hybride de scorpion et d’araignée peut
+atteindre un mètre de long. Il est noir, avec de
+grosses pinces et un dard au bout de sa queue. Les
+scorpions-araignées sont extrêmement agressifs
+et n’hésitent pas à attaquer des créatures bien plus
+grosses qu’eux ; pour cela, il leur arrive parfois de
+chasser en groupe. Leur dard injecte une toxine
+qui paralyse leur proie. Des on-dit parlent de
+scorpions-araignées géants qui vivraient dans les
+régions les plus inhospitalières au cœur du désert.
+Capacité spéciale :
+  Dard venimeux : le venin du scorpion-araignée
+paralyse sur-le-champ toute créature de taille
+grande ou moins. Les héros ont droit à un jet
+de vigueur Ardu (-1) pour résister au venin. Une
+fois paralysée, la victime succombera dans l’heure.
+Les héros affectés peuvent accomplir un nouveau
+jet de vigueur Ardu pour éviter la mort.
+Attributs        Aptitudes de combat
+Vigueur 0        Attaque (pinces)+2, d6M
+Agilité 0        Attaque (dard) +0, d3 + poison           Singe des neiges
+Esprit -2        Défense 0                                    Taille : grande.
+Vitalité 8       Protection d6-2 (2)
+                                                              Environnement naturel : montagnes, toundras.
+                                                            Ce primate bipède se rencontre dans les terres
+Scorpion-araignée géant                                   gelées du Nord ou en altitude dans les chaînes
+  Taille : colossale.                                     de montagnes. Ressemblant à un grand singe, il
+                                                          possède quatre bras et a un tempérament bien
+  Environnement naturel : déserts, plaines.
+                                                          plus agressif que ses cousins.
+  Il s’agit de la version géante du scorpion-
+araignée normal.                                             Il est, paraît-il, une variété très rare de ces
+                                                          singes qui se serait adaptée aux climats humides
+Capacité spéciale :
+                                                          et chauds de certaines jungles. Mais peut-être ne
+  Dard venimeux : le venin du scorpion-araignée
+                                                          s’agit-il là que d’une légende sans fondement…
+paralyse sur-le-champ toute créature de taille
+immense ou moins. Les héros ont droit à un                Capacité spéciale :
+jet de vigueur Très difficile (-4) pour résister au        Attaque féroce
+venin. Une fois paralysée, la victime succombera
+                                                                    Attributs      Aptitudes de combat
+dans l’heure. Les héros affectés peuvent accomplir
+                                                                    Vigueur 5      Attaque +1
+un nouveau jet de vigueur Très difficile pour éviter
+                                                                    Agilité 0      Dégâts d6B
+la mort.
+                                                                    Esprit -1      Défense 1
+Attributs        Aptitudes de combat                                Vitalité 15    Protection 0
+Vigueur 10       Attaque (pinces)+3, d6 x2
+Agilité -1       Attaque (dard) +1, d6 + poison
+Esprit -1        Défense 0
+Vitalité 60      Protection d6 (4)
+
+
+
+                                                        123
+Chapitre 5 : Bestiaire de la Lémurie
+
+
+                                       Triotaur
+                                         Taille : très grande.
+                                         Environnement naturel : jungles.
+                                         Le triotaur ressemble un peu à un banth, mais
+                                       possède une épaisse collerette osseuse au niveau          Uzeg
+                                       du cou, une courte corne sur le museau, et deux            Taille : petite.
+                                       défenses qui encadrent sa gueule. Bien plus
+                                                                                                  Environnement naturel : tous.
+                                       agressif que le placide banth, il est très difficile
+                                       à dresser.                                                  L’uzeg est une sorte de petit rat sans pelage,
+                                                                                                 aux yeux d’un vert brillant et aux longs crocs
+                                               Attributs         Aptitudes de combat
+                                                                                                 venimeux. Il atteint parfois la taille d’un petit
+                                               Vigueur 7         Attaque +2
+                                                                                                 chien, mais certains récits parlent d’uzegs encore
+                                               Agilité -2        Dégâts d6B
+                                                                                                 plus gros qui hanteraient les égouts des grandes
+                                               Esprit -2         Défense 0
+                                                                                                 cités.
+                                               Vitalité 30       Protection d6-1 (3)
+                                                                                                         Attributs         Aptitudes de combat
+                                                                                                         Vigueur -1        Attaque +2
+                                       Ursavus                                                           Agilité 2
+                                                                                                         Esprit -1
+                                                                                                                           Dégâts d6M
+                                                                                                                           Défense 3
+                                         Taille : moyenne.
+                                                                                                         Vitalité 5        Protection 0
+                                         Environnement naturel : jungles.
+                                         L’ursavus est une sorte d’ours, un peu plus petit
+                                       qu’un homme adulte, avec des traits qui rappellent
+                                       à la fois le chien et le félin. Il vit et chasse dans
+                                       les arbres, se nourrissant d’oiseaux et de leurs
+                                       œufs, de petits singes et d’autres animaux
+                                       arboricoles. Il arrive parfois qu’il se jette sur
+                                       une proie qui passe au sol, mais il attaque
+                                       rarement l’homme, à moins d’être affamé.
+                                       Attributs        Aptitudes de combat
+                                       Vigueur 0        Attaque +2
+                                       Agilité 1        Dégâts d6
+                                       Esprit -1        Défense 0
+                                       Vitalité 10      Protection 0
+
+
+
+
+                                                                                           124
+                                                                                                                 Chapitre 5 : Bestiaire de la Lémurie
+Venator                                                   en cas de succès héroïque). Une fois inconscient,
+                                                          un héros se réveille naturellement au bout de
+  Taille : moyenne.
+                                                          5 minutes s’il réussit un jet de vigueur Ardu (-1) ;
+  Environnement naturel : plaines, jungles.               sinon, au bout d’une heure environ.
+  Le venator est un petit prédateur rapide                  Attaque timide : les vers des glaces ne sont
+qui marche sur ses deux pattes postérieures et            pas des créatures très agressives, puisqu’ils s’en
+ressemble à une version miniature du chark. Il est        prennent généralement à des proies endormies
+un peu plus petit qu’un homme adulte, possède             par leur brume somnifère.
+deux courtes pattes antérieures, de grands yeux,
+                                                                    Attributs       Aptitudes de combat
+un long cou et une petite tête terminée par un
+                                                                    Vigueur 3       Attaque +0
+bec osseux.
+                                                                    Agilité 0       Dégâts d6
+        Attributs         Aptitudes de combat                       Esprit 1        Défense 0
+        Vigueur 0         Attaque +3                                Vitalité 10     Protection d6-3 (1)
+        Agilité 2         Dégâts d6
+        Esprit -2         Défense 2
+        Vitalité 10       Protection 0
+
+
+
+Ver des glaces
+  Taille : moyenne.
+  Environnement naturel :            montagnes,
+toundras.
+  Ces gros vers à la fourrure blanche
+vivent dans les terres gelées du Nord ou les
+montagnes. Ils sont lents, mais rusés et très
+discrets, et chassent à l’affût. Ils ont également la
+capacité d’exhaler une fine brume somnifère, qui
+se diffuse jusqu’à 3 m autour d’eux. Une fois que
+sa proie a sombré dans le sommeil, le ver s’enroule
+autour d’elle et l’étouffe.
+                                                          Xolag
+                                                              Taille : moyenne.
+Capacités spéciales :
+                                                            Environnement naturel : grottes humides,
+  Camouflage : les vers des glaces sont lents mais
+                                                          jungles, marais.
+très discrets.
+                                                             Carnivore hybride d’animal et de champignon,
+   Attaque spéciale : brume somnifère. Cette
+                                                          le xolag est doué d’une capacité de mouvement
+attaque n’affecte que les créatures se trouvant
+                                                          limitée et capture de petits animaux (et
+devant la gueule du ver des glaces, jusqu’à une
+                                                          occasionnellement un homme imprudent) à
+portée de 3 m, ce qui veut dire qu’elle ne peut
+                                                          l’aide de ses deux longs pseudopodes.
+affecter qu’un ou deux héros à la fois. Les héros
+pris dans le nuage exhalé par le ver commencent           Capacité spéciale :
+à se sentir somnolents. Les deux premiers rounds
+                                                            Attaques multiples : le xolag effectue deux jets
+après avoir été touchés par la brume, ils subissent
+                                                          d’attaque.
+un malus de -2 aux jets d’attaque et se déplacent
+à la moitié de leur vitesse. Le troisième round,                    Attributs       Aptitudes de combat
+ils doivent réussir un jet de vigueur Ardu (-1) ou                  Vigueur 2       Attaque (x2) +1
+tomber inconscients. En cas de réussite, ils mettent                Agilité -1      Dégâts d6M
+encore deux rounds à se débarrasser de cette                        Esprit -2       Défense 0
+somnolence handicapante (ou immédiatement                           Vitalité 8      Protection 0
+
+
+
+                                                        125
+Chapitre 5 : Bestiaire de la Lémurie
+                                       Xolth                                                   Attributs
+                                                                                               Vigueur 16
+                                                                                                                Aptitudes de combat
+                                                                                                                Attaque +1
+                                         Taille : immense.
+                                                                                               Agilité -3       Dégâts spécial
+                                         Environnement naturel       : grottes humides,        Esprit -3        Défense 0
+                                       souterrains.                                            Vitalité 85      Protection d6 (4)
+                                         Le xolth est une limace gigantesque et hideuse
+                                       qui rôde dans les grottes, les catacombes et les
+                                       cités ensevelies de Lémurie. Aveugle, il absorbe
+                                                                                               Yorth
+                                                                                                 Taille : grande.
+                                       sa nourriture en enveloppant ses proies dans la
+                                       masse gélatineuse de son corps amiboïde. Les plus         Environnement naturel : jungles, montagnes,
+                                       gros xolth sont virtuellement indestructibles, et       plaines.
+                                       un xolth continue à grossir tout au long de sa vie.
+                                                                                                  Les yorths sont de grands prédateurs qui
+                                       Un spécimen d’une taille titanesque (mesurant,
+                                                                                               présentent une crête osseuse pointue le long du
+                                       dit-on, 300 m de long) fut jadis l’objet d’un culte
+                                                                                               dos et deux cornes atrophiées au sommet du crâne.
+                                       dépravé dans les catacombes de Qeb. D’après
+                                                                                               Ils mesurent jusqu’à 2,5 m de long à l’âge adulte.
+                                       ce qui est raconté dans l’Edda pourpre, les xolth
+                                                                                               Leur couleur varie en fonction de leur habitat ;
+                                       craindraient le feu.
+                                                                                               ils se rencontrent essentiellement dans les jungles,
+                                       Capacités spéciales :                                   mais parfois aussi au pied des montagnes ou
+                                         Peur du feu : un xolth évitera autant que             même dans les plaines de Klaar.
+                                       possible le feu.
+                                                                                                       Attributs         Aptitudes de combat
+                                         Attaque spéciale : une fois enveloppé dans la                 Vigueur 4         Attaque +3
+                                       masse gélatineuse du xolth, un héros devra tuer le              Agilité 2         Dégâts d6B
+                                       monstre pour se sortir de là. Mais à chaque round               Esprit -1         Défense 2
+                                       passé dans le corps du xolth, il subit d6 points de             Vitalité 20       Protection d6-3 (1)
+                                       dégâts.
+
+
+
+
+                                       Zathog
+                                         Taille : énorme.
+                                         Environnement naturel : marais.                       un zathog doit immédiatement effectuer un
+                                                                                               jet de vigueur Difficile (-2). En cas d’échec, il
+                                         Cet ignoble reptile des marais ressemble un peu
+                                                                                               encaisse 2 points de dégâts supplémentaires
+                                       à un crocator géant. Sa peau gris-vert ou gris-
+                                                                                               dus au poison. Chaque round suivant, le héros
+                                       marron est particulièrement épaisse et résistante,
+                                                                                               subit automatiquement la perte de 2 points de
+                                       et sa gueule énorme est hérissée de plusieurs
+                                                                                               dégâts supplémentaires. Pour chaque point de
+                                       rangées de crocs venimeux.
+                                                                                               vitalité perdu à cause du poison, le héros reçoit
+                                       Capacité spéciale :                                     un malus de -1 à tous ses jets, jusqu’à ce qu’il soit
+                                        Attaque venimeuse : un héros mordu par                 guéri de son empoisonnement (ce qui nécessite
+
+
+
+                                                                                         126
+qu’un médecin réussisse un jet d’action Difficile).
+                                                         Main cavaleuse
+
+
+
+
+                                                                                                                   Chapitre 5 : Les Morts-vivants
+Si le héros tombe à 0 point de vitalité, il sombre
+                                                             Taille : très petite.
+dans l’inconscience et doit effectuer un nouveau
+jet de vigueur Difficile (-2). En cas de succès, il          Environnement : antres de sorciers.
+reste stable, ne subit plus de dégâts dus au poison,
+                                                           De nombreuses vies ont été rituellement
+mais ne reprend conscience qu’à condition de
+                                                         sacrifiées au nom des Rois-Sorciers. Fréquemment,
+réussir un jet de vigueur Ardu (-1) pouvant être
+                                                         les mains des victimes étaient prélevées sur leur
+tenté chaque matin, jusqu’à ce qu’un médecin le
+                                                         cadavre et animées par sorcellerie afin d’obéir aux
+soigne (jet d’action Difficile) ou qu’un alchimiste
+                                                         ordres de leurs créateurs. Les mains cavaleuses
+lui administre un antidote.
+                                                         errent encore dans les ruines des palais des Rois-
+        Attributs        Aptitudes de combat             Sorciers, ainsi que dans les demeures de certains
+        Vigueur 8        Attaque +2                      dévots des arts impies.
+        Agilité -1       Dégâts d6 x2
+                                                         Capacité spéciale :
+        Esprit -2        Défense 0
+                                                           Attaque spéciale : face à une personne endormie,
+        Vitalité 40      Protection d6-2 (2)
+                                                         la main cavaleuse effectue un jet d’attaque Très
+                                                         facile (+2), qui ignore la défense de la cible, pour
+                                                         la saisir à la gorge. Elle l’étrangle alors, infligeant
+                                                         automatiquement d3 points de dégâts à chaque
+Les morts-vivants                                        round. Il faut réussir un jet de vigueur Moyen
+                                                         (+0) pour arracher la main cavaleuse.
+  Les morts-vivants sont des cadavres qui ont
+                                                                    Attributs        Aptitudes de combat
+été réanimés par des sortilèges ou des pratiques
+                                                                    Vigueur 0        Attaque +3
+alchimiques infâmes, ou encore des créatures
+                                                                    Agilité 3        Dégâts d3
+qui ont vécu si longtemps qu’elles finissent par
+                                                                    Esprit -2        Défense 4
+ressembler à des morts.
+                                                                    Force vitale 3   Protection 0
+  Les morts-vivants anciens sont secs et friables
+comme des momies, mais conservent souvent les
+pouvoirs magiques puissants qu’ils détenaient de
+                                                         Nécropède
+                                                             Taille : grande.
+leur vivant.
+                                                           Environnement : cryptes ou tombeaux dont ils
+  Ceux qui ont été plus récemment créés sont
+                                                         sont les gardiens, ou invoqués par sorcellerie.
+soit des squelettes portant des morceaux d’armure
+rouillée ou les lambeaux des vêtements dans                Les nécropèdes font partie des plus abominables
+lesquels ils ont été enterrés, soit des cadavres en      créatures engendrées par la magie noire. Ils sont
+décomposition ramenés à un semblant de vie par           constitués de plusieurs torses de cadavres humains
+les plus viles nécromancies, et réduits à l’état de      cousus ensemble en une parodie grotesque de
+marionnettes décérébrées.                                mille-pattes. Seul le torse supérieur a conservé
+                                                         sa tête. Cette monstruosité grimpe et court sur
+  Ces créatures innommables n’ont pas de score
+                                                         ses multiples bras pour se saisir des intrus et les
+de vitalité et ne souffrent pas des blessures comme
+                                                         déchiqueter de ses mains griffues.
+les êtres vivants. En revanche, ils possèdent une
+valeur de force vitale qui représente l’énergie          Capacité spéciale :
+magique qui les anime. Quand leur force vitale            Attaque féroce
+tombe à 0, ils retournent à la mort à laquelle ils
+                                                                    Attributs       Aptitudes de combat
+ont été si cruellement arrachés.
+                                                                    Vigueur 6       Attaque +4
+                                                                    Agilité 0       Dégâts d6B
+                                                                    Esprit 0        Défense 0
+                                                                    Force vitale 30 Protection 0
+
+
+
+
+                                                       127
+                                 Nécrophage                                             Rois-Sorciers morts-
+
+
+
+
+Chapitre 5 : Les Morts-vivants
+                                  Taille : moyenne.
+                                                                                        vivants
+                                   Environnement : cryptes ou tombeaux, ou                 Avec leur visage blafard et squelettique, ils
+                                 invoqués par sorcellerie.                              ressemblent aux morgal avec qui, dit-on, ils
+                                                                                        partageraient un ancêtre commun. Les Rois-
+                                   Les nécrophages sont des sous-humains
+                                                                                        Sorciers morts-vivants sont d’une malfaisance
+                                 dégénérés, mangeurs de chair putréfiée, blafards,
+                                                                                        démente et se terrent dans des cryptes obscures
+                                 décharnés et totalement glabres. Ils ont de grands
+                                                                                        et des souterrains perdus, attendant que revienne
+                                 yeux globuleux, des mains griffues et une bouche
+                                                                                        l’heure où ils pourront de nouveau gouverner le
+                                 pleine de crocs qui exhale une puanteur de
+                                                                                        monde. Même si leurs pouvoirs se sont étiolés
+                                 cadavre. Les nécrophages sont animés d’une ruse
+                                                                                        au fil des siècles, ils savent encore manier les
+                                 bestiale.
+                                                                                        nécromancies sacrilèges qui avaient jadis fait
+                                         Attributs       Aptitudes de combat            d’eux les êtres les plus puissants sur cette terre.
+                                         Vigueur 2       Attaque +3                     On raconte que les magiciens de Zalut recevraient
+                                         Agilité 2       Dégâts d6                      leurs ordres de Zorphalar, un Roi-Sorcier mort-
+                                         Esprit 0        Défense 2                      vivant si vieux qu’il était présent à la bataille du
+                                         Force vitale 10 Protection 0                   gouffre d’Hyrdral, quand ses frères furent vaincus
+                                                                                        et contraints de se terrer pour éviter la destruction.
+                                                                                        Capacités spéciales :
+                                                                                          Magie des Rois-Sorciers : bénéficie d’un dé de
+                                                                                        bonus pour lancer des sorts.
+                                                                                          Pouvoir du Néant : (inclus dans le profil ci-
+                                                                                        dessous).
+                                                                                          Inquiétant : subit un dé de malus dans les
+                                                                                        situations sociales ou quand il est face à des
+                                                                                        animaux.
+                                                                                          Deux autres désavantages au choix.
+                                                                                                Attributs        Aptitudes de combat
+                                                                                                Vigueur 3        Attaque +2
+                                                                                                Agilité 0        Dégâts d6+3 (épée)
+                                                                                                Esprit 3         Défense 2
+                                                                                                Force vitale 13 Protection 0
+                                                                                                Points de pouvoir 15
+                                                                                                Carrières : Sorcier 3-6
+
+
+                                                                                        Squelettes et zombies
+                                                                                          Les morts-vivants de type squelette et
+                                                                                        zombie peuvent être créés en tant que piétaille.
+                                                                                        Ils portent les restes des vêtements pourrissants
+                                                                                        et des protections rouillées qui les habillaient au
+                                                                                        moment de leur mort. On les rencontre dans les
+                                                                                        cryptes, les tombeaux, les cimetières, les ponts
+                                                                                        des vaisseaux fantômes et autres lieux du même
+                                                                                        acabit. Ces morts-vivants avancent d’un pas
+                                                                                        traînant, incapables de parler comme de penser
+                                                                                        par eux-mêmes.
+
+
+
+
+                                                                                  128
+                                                         Il est possible de diminuer un ou deux attributs
+                                                       en dessous de 0 (maximum -2) et de récupérer
+                                                       un bonus équivalent en points, à répartir dans les
+                                                       autres attributs.
+
+
+
+
+                                                                                                             Chapitre 5 : Les Démons
+                                                         Les démons n’ont pas de carrières, mais des
+                                                       pouvoirs démoniaques. Les démons mineurs
+                                                       possèdent un seul pouvoir démoniaque, les
+                                                       démons inférieurs disposent de deux pouvoirs et
+                                                       les démons majeurs en ont quatre.
+
+
+                                                       Pouvoirs démoniaques
+                                                         Armes améliorées : le démon possède des
+
+                           Les démons                  armes naturelles, comme des griffes, des crocs, des
+                                                       lames, un bec, une queue puissante, etc., ou est
+                                                       particulièrement habile au maniement d’armes
+  Les démons sont les laquais des Dieux Sombres.
+                                                       humaines. Le démon reçoit un dé de bonus à tous
+Druides et sorciers utilisent leur magie noire pour
+                                                       ses jets d’attaque.
+les invoquer et les asservir.
+                                                          Armure : le démon possède des plaques ou des
+  Les démons se répartissent en trois catégories :
+                                                       protubérances osseuses, un cuir épais ou un autre
+démons mineurs, démons inférieurs et démons
+                                                       type de protection contre les attaques physiques.
+majeurs. Ils peuvent avoir n’importe quelle taille
+                                                       Il bénéficie d’une protection d6-2 (2).
+ou apparence, selon les souhaits du MJ.
+                                                         Attaques dévastatrices : les attaques du démon
+                                                       sont particulièrement puissantes. Il inflige des
+  Démons mineurs                                       dégâts d’une catégorie supérieure sur la table des
+    Attributs : 2 points à répartir
+                                                       créatures (ainsi, un démon majeur avec ce pouvoir
+    Aptitudes de combat : 2 points à répartir
+                                                       infligera d6 x2 points de dégâts).
+    Vitalité : 10 + vigueur
+    Dégâts : d6M + vigueur                                Chair malléable : le démon a la malléabilité de
+    Ordre de réaction : piétaille                      l’argile ou un corps spongieux répugnant pouvant
+                                                       prendre les formes les plus déroutantes. Il peut
+                                                       s’aplatir complètement, ressembler à une amibe
+  Démons inférieurs                                    ou à une sphère, se faufiler dans la moindre
+    Attributs : 6 points à répartir
+                                                       anfractuosité. Aucun lien ne peut l’ entraver
+    (4 points au maximum dans un attribut)
+                                                       ni aucune prison le retenir (sauf à utiliser la
+    Aptitudes de combat : 6 points à répartir
+                                                       sorcellerie pour l’ enfermer).
+    (4 points au maximum dans une aptitude)
+    Vitalité : 20 + vigueur                              Cuirassé : le démon bénéficie d’une protection d6
+    Dégâts : d6 + vigueur                              (4), mais ce pouvoir démoniaque compte pour deux.
+    Ordre de réaction : coriace
+                                                         Faculté de parole : le démon est capable de
+                                                       parler comme un humain.
+  Démons majeurs                                          Forme humaine : le démon peut prendre
+    Attributs : 12 points à répartir
+                                                       l’apparence d’un humain, mais retourne à sa
+    (6 points au maximum dans un attribut)
+                                                       forme démoniaque dès qu’il se bat ou qu’il subit
+    Aptitudes de combat : 12 points à répartir
+                                                       une blessure.
+    (6 points au maximum dans une aptitude)
+    Vitalité : 30 + vigueur                              Intangible : le démon n’a pas de corps physique
+    Dégâts : d6B + vigueur                             (du moins, pas dans cette dimension), et ne peut
+    Ordre de réaction : rival                          être blessé que par la sorcellerie ou l’alchimie.
+
+
+
+
+                                                     129
+                              Poison : le démon exsude une substance toxique            Vulnérabilité : en échange d’un pouvoir
+                            dont le contact provoque une paralysie immédiate          démoniaque supplémentaire, vous donnez une
+                            chez une créature de taille moyenne ou inférieure.        faiblesse au démon. Un élément inflige des dégâts
+                            Les héros ont droit à un jet de vigueur Difficile         doublés au démon (la magie, le feu, l’électricité,
+
+
+
+
+Chapitre 5 : Les Démons
+                            (-2) pour éviter la paralysie. Une fois paralysée, la     le fer, l’acide…), ou une chose normalement
+                            victime meurt dans l’heure, à moins de réussir un         inoffensive pour les êtres humains lui inflige
+                            jet de vigueur Difficile (-2).                            des dégâts normaux (la lumière du jour, l’ eau, la
+                                                                                      musique, certains symboles…).
+                              Progéniture : le démon produit 1d6 rejetons
+                            chaque semaine. Ils sont considérés comme
+                            de la piétaille la première semaine après leur
+                            naissance, puis deviennent des démons mineurs
+                                                                                      Invoquer des démons
+                                                                                        Invoquer un démon mineur est un sort du
+                            la semaine suivante, et ainsi de suite, en restant
+                                                                                      premier cercle ; un démon inférieur, un sort du
+                            d’une catégorie démoniaque inférieure à celle de
+                                                                                      deuxième cercle ; un démon majeur, un sort du
+                            leur géniteur (ainsi, un démon mineur ne peut
+                                                                                      troisième cercle (cf. chapitre 6).
+                            engendrer que de la piétaille, par exemple).
+                                                                                         Quand un démon est invoqué, le sorcier doit le
+                              Régénération : à chaque round, le démon
+                                                                                      lier ou passer un pacte avec lui. Sinon, le démon
+                            régénère 1 point de dégâts subi, et il se débarrasse
+                                                                                      sera hors de contrôle et pourra s’en prendre au
+                            des effets négatifs d’un coup précis au bout de
+                                                                                      sorcier qui l’a invoqué.
+                            deux rounds.
+                                                                                        Lier un démon nécessite de lancer un nouveau
+                              Savoir spécial : le démon possède une carrière
+                                                                                      sort : du premier cercle pour lier un démon mineur,
+                            au rang 6.
+                                                                                      du deuxième cercle pour un démon inférieur et
+                              Séducteur : le démon possède un charme                  du troisième cercle pour un démon majeur.
+                            magnétique et il peut se faire obéir aveuglément
+                                                                                        Passer un pacte avec un démon ne nécessite
+                            de 1d6+6 piétaille sans que ceux-ci puissent
+                                                                                      aucun jet d’action ; il suffit au sorcier d’accepter
+                            résister à son pouvoir. Il peut également séduire
+                                                                                      de satisfaire régulièrement les besoins du démon.
+                            un héros, mais celui-ci a droit à un jet d’esprit.
+                                                                                      La nature et la fréquence de ces besoins sont
+                            En cas d’échec, le héros accueille favorablement
+                                                                                      laissées à l’appréciation du MJ, mais cela devrait
+                            les requêtes du démon.
+                                                                                      être compliqué, douloureux ou dégradant. Voici
+                              Sorcellerie : le démon est capable de lancer            quelques exemples : le sorcier ne doit plus jamais
+                            des sorts. Les démons mineurs ont 2 points de             se retrouver sous la lumière du jour, le démon doit
+                            pouvoir, les démons inférieurs 5 et les démons            recevoir une vierge de sang royal en sacrifice à
+                            majeurs 10.                                               chaque nouvelle lune, la sorcière doit accepter de
+                                                                                      porter l’ enfant du démon, etc.
+                              Télépathie : le démon a le pouvoir d’implanter
+                            des messages et des suggestions dans l’ esprit d’une
+                            personne, ainsi que de lire dans les pensées.
+
+
+                           Catégorie de      Ordre de                               Aptitudes de                   Vitalité
+                                                              Attributs                               Pouvoirs                 Dégâts
+                             démon           réaction                                 Combat                       de base
+
+                          Démon mineur        piétaille        2 points               2 points            1           10         d6M
+
+
+                                                          6 points (max 4    6 points (max 4
+                          Démon inférieur      coriace                                                    2           20          d6
+                                                          dans un attribut) dans une aptitude)
+
+                                                          12 points (max 6 12 points (max 6
+                          Démon majeur          rival                                                     4           30         d6B
+                                                          dans un attribut) dans une aptitude)
+
+
+
+
+                                                                                130
+Exemples de démons                                      Démon majeur :
+                                                        Mazallakos le Voilé
+                                                           Calme, vigilant et patient, Mazallakos le Voilé
+Démon mineur :
+
+
+
+
+                                                                                                               Chapitre 5 : Les Démons
+                                                        est un démon majeur qui nourrit un profond
+Zullthegg                                               ressentiment à l’égard des mortels qui voudraient
+  Zullthegg est une créature dégingandée et             l’asservir. Aussi malfaisant que n’importe quel
+simiesque qui se déplace à quatre pattes, mais          démon, Mazallakos est également calme et
+peut se redresser sur ses pattes arrière, dominant      posé, ne perdant jamais son sang-froid, et prêt
+d’une bonne tête un homme de taille moyenne.            à patienter et à comploter aussi longtemps que
+Sa peau est d’un vert marronnasse, il a de longs        nécessaire pour exercer sa vengeance contre ceux
+bras et des jambes courtaudes sous un torse étiré.      qui ont su s’attirer les foudres de sa haine froide.
+  Il est plus fort que son corps émacié ne le             Son apparence exacte reste un mystère, car il
+laisse penser, et ne manque pas non plus d’agilité.     apparaît entièrement voilé sous plusieurs couches
+Au bout de ses doigts poussent de longs ongles          de gaze noire. Tout ce que l’on peut dire est qu’il
+qu’il peut projeter comme des fléchettes (au            se déplace avec des mouvements sinueux, qu’il
+double de la portée des fléchettes normales).           possède une forme vaguement humanoïde et
+                                                        semble flotter juste au-dessus du sol.
+  Zullthegg semble appartenir à une « famille »
+de démons mineurs présentant de grandes                          Attributs         Aptitudes de combat
+similitudes. Il est possible que « Zullthegg » soit              Vigueur 2         Mêlée 4
+un nom propre, ou celui de la race démoniaque à                  Agilité 4         Tir     0
+laquelle ce démon appartient.                                    Esprit 5          Défense 4
+                                                                 Aura 1
+        Attributs      Aptitudes de combat
+                                                                 Vitalité 32       Dégâts d6B
+        Vigueur 1      Mêlée 0
+                                                                 Pouvoirs :
+        Agilité 2      Tir      2
+                                                                 Forme humaine
+        Esprit -1      Défense 0
+                                                                 Intangible
+        Aura 0
+                                                                 Savoir spécial : érudit 6
+        Vitalité 11    Dégâts d6M
+                                                                 Télépathie
+        Pouvoir :
+        Armes améliorées (fléchettes 		
+        démoniaques)
+
+
+Démon inférieur :
+Vul’mazzanlu, la chose-
+singe
+  Vul’mazzanlu est un démon inférieur (mais
+ne vous avisez pas de l’appeler ainsi), typique de
+ceux invoqués pour servir les noirs desseins d’un
+sorcier. Il est raisonnablement intelligent, mais
+pas aussi malin qu’il voudrait bien le croire, et           Attributs       Aptitudes de combat
+prompt à perdre son sang-froid sous le coup de              Vigueur 3       Mêlée 3
+la frustration ou de ce qu’il considère comme des           Agilité 3       Tir     1
+injustices à son endroit.                                   Esprit 2        Défense 2
+                                                            Aura -2
+  Créature à la cruauté mesquine, c’est un être
+                                                            Vitalité 23     Dégâts d6B
+grotesque et avachi à l’allure simiesque, couvert
+                                                            Pouvoirs :
+d’une fourrure noire luisante, possédant des
+                                                            Attaques dévastatrices
+tentacules en guise de membres et une langue
+                                                            Poison
+venimeuse d’une longueur démesurée.
+
+
+
+                                                      131
+Chapitre 5 : Personnages non joueurs
+                                        Personnages non
+                                        joueurs
+                                          Les PNJ se répartissent en trois catégories :
+                                                    W Piétaille
+                                                    W Coriaces
+                                                    W Rivaux
+                                                                                                      S’il s’agit de sorciers, ce sont des apprentis qui
+                                          Ces catégories seront examinées plus en détail            possèdent 1 point de pouvoir. S’ils sont prêtres ou
+                                        dans les sections suivantes, mais la table ci-dessous       druides, ce sont des acolytes et parmi eux, un sur
+                                        vous donnera déjà une idée du profil général des            six possède 1 point de foi.
+                                        différents types de PNJ.
+                                                                                                      Horde : si des PNJ piétaille ont la place
+                                                                                                    d’attaquer à plusieurs un héros, ils suivent la règle
+                                        Piétaille                                                   de horde. La horde n’ effectue qu’une seule attaque,
+                                          Les PNJ de type piétaille représentent la masse           mais avec un bonus de +1 au jet d’attaque pour
+                                        des anonymes : les aubergistes, les boutiquiers, les        chaque piétaille impliquée (donc +2 s’ils sont 2,
+                                        mendiants, les gamins, les acolytes. Ils forment la         +3 s’ils sont 3, etc.). Les circonstances et les armes
+                                        foule qui encombre la place du marché, le public            utilisées dicteront le nombre d’entre eux pouvant
+                                        qui se presse sur les gradins de l’arène, la horde          attaquer simultanément un même héros. Si cette
+                                        de pillards barbares qui saccagent la région, les           attaque de groupe touche, elle inflige d6M points
+                                        soldats ordinaires de l’armée.                              de dégâts (chaque piétaille n’inflige pas de dégâts
+                                                                                                    individuellement).
+                                          En général, ils sont pauvrement armés et
+                                        équipés et ne représentent pas individuellement               D’importants groupes de piétaille s’affrontant
+                                        un danger pour les héros. Ce n’ est qu’en groupe            ne méritent pas trop d’attention ; l’histoire se
+                                        qu’ils sont en mesure de devenir une menace.                concentre sur les héros, pas sur les sous-fifres.
+                                                                                                    Dans une situation où de la piétaille combat de la
+                                           La piétaille a un score de 0 dans les attributs
+                                                                                                    piétaille, ne vous embêtez pas à effectuer des jets
+                                        aussi bien que dans les aptitudes de combat, et
+                                                                                                    d’attaque : le camp le plus nombreux tue d6M
+                                        peut avoir au maximum 1 rang dans une carrière.
+                                                                                                    adversaires, qui lui inflige en retour d3 pertes.
+                                        Même si des PNJ de type piétaille seront parfois
+                                        décrits comme portant des armes et des armures,               Exemple : 10 bandits piétaille affrontent les 7
+                                        ils sont si médiocres en comparaison des héros              suivants piétaille du héros, tandis que ce dernier
+                                        que cela ne fera pas ou peu de différence quant             se bat contre leur chef. Le MJ lance d6M et obtient
+                                        à leurs chances de survie. Avec 1 à 3 points de             un 3 et un 2 ; les bandits tuent donc 2 des suivants
+                                        vitalité, chaque coup ou presque leur sera fatal.           du héros. Le joueur lance un d3 et obtient un 1 ; ses
+                                        Individuellement, ils infligent d3 points de                suivants ont tué un des bandits. Ils tiennent bon,
+                                        dégâts, peu importe l’arme exacte qui les équipe,           mais ont besoin que le héros abatte rapidement le chef
+                                        et seulement 1 point de dégâts à mains nues.                des brigands et vienne les mener à la victoire !
+
+
+                                       Catégorie                    Aptitudes
+                                                       Attributs                    Carrières         Vitalité         Dégâts              Spécial
+                                        de PNJ                      de Combat
+                                        Piétaille         0               0             0-1              1-3       1 ou d3 (armé)           horde
+
+                                        Coriaces         0-2            0-2              2               5-8          par arme                 -
+
+                                        Rivaux           0-4            0-4              4+              10+          par arme         Points de vilenie
+
+
+
+
+                                                                                              132
+                                                                                                                Chapitre 5 : Personnages non joueurs
+Coriaces                                                Barbare tribal
+  Vous aurez parfois besoin de PNJ meilleurs              Un guerrier des tribus primitives des montagnes,
+que de la piétaille, sans pour autant en faire de       couvert de tatouages et de cicatrices héritées des
+véritables rivaux. Il peut s’agir d’un sergent          guerres tribales et des affrontements avec de
+du guet de la cité, des gardes du temple, de            féroces bêtes sauvages.
+mercenaires ou d’aventuriers, bref, un cran au-
+                                                            Attributs		             Aptitudes de combat
+dessus du simple troufion, sans pour autant
+                                                            Vigueur    2            Initiative     1
+pouvoir aspirer à devenir un véritable héros.
+                                                            Agilité		  1            Mêlée          2
+Ces personnages peuvent se créer facilement en
+                                                            Esprit		   0            Tir            -1
+répartissant quelques points dans leurs attributs,
+                                                            Aura       -1           Défense        0
+aptitudes de combat et carrières. Donnez-leur
+une vitalité de 6 + leur vigueur et vous êtes paré.         Carrières : Barbare 2
+                                                            Protection : Armure légère d6-3 (1)
+  Voici quelques exemples de PNJ coriaces
+                                                            Armes : Épée à deux mains d6B+2
+typiques :
+                                                            Vitalité : 8
+
+
+Archer de Tyrus                                         Champion gladiateur
+  Un archer d’élite de l’armée de Tyrus.                  Un combattant de l’arène, vainqueur de
+                                                        plusieurs combats contre des hommes et des
+ Attributs		             Aptitudes de combat
+                                                        bêtes. Les héros ont peut-être même déjà entendu
+ Vigueur    1            Initiative     0
+                                                        son nom…
+ Agilité		  1            Mêlée          0
+ Esprit		   0            Tir            2                   Attributs		          Aptitudes de combat
+ Aura		     0            Défense        0                   Vigueur      2       Initiative     1
+                                                            Agilité		    1 (0*) Mêlée           1
+ Carrières : Soldat 2
+                                                            Esprit		     -1      Tir            -1
+ Protection : Armure légère d6-3 (1)
+                                                            Aura         0       Défense 		     1 (2*)
+ Armes : Arc long de Tyrus d6
+                                                                      * modificateur d’armure.
+          Coutelas d6M+1
+ Vitalité : 7                                               Carrières : Gladiateur 2
+                                                            Protection : Armure moyenne d6-2 (2) (-1
+                                                            en agilité ) ; Bouclier (+1 en défense contre une
+Assassin halakhi                                            attaque par round)
+  Un tueur expérimenté de la cité montagneuse               Armes : Épée d6+2
+d’Halakh.                                                   Vitalité : 8
+Attributs		              Aptitudes de combat
+Vigueur    0             Initiative     1
+Agilité		  1             Mêlée          0
+Esprit		   1             Tir            0
+Aura		     0             Défense        1
+Carrières : Assassin 2
+Protection : Aucune armure 0
+Armes : Kriss d6M
+         Couteaux (lancer) d6M
+Vitalité : 6
+
+
+
+
+                                                      133
+Chapitre 5 : Personnages non joueurs
+                                       Chef de bande                                           Guetteur homme-oiseau
+                                         Le chef d’une bande de voyous qui rôdent dans           Ces sentinelles évitent l’affrontement direct,
+                                       les ruelles sombres pour dépouiller les passants.       mais harcèlent les intrus en provoquant des
+                                                                                               chutes de pierre ou en leur tirant des projectiles.
+                                        Attributs		             Aptitudes de combat
+                                        Vigueur    1            Initiative     1                Attributs		              Aptitudes de combat
+                                        Agilité    1            Mêlée          1                Vigueur    -1            Initiative     0
+                                        Esprit     1            Tir            0                Agilité    2             Mêlée          0
+                                        Aura		     -1           Défense        0                Esprit		   1             Tir            1
+                                                                                                Aura		     0             Défense        1
+                                        Carrières : Voleur 1, Mercenaire 1
+                                        Protection : Aucune armure 0                            Carrières : Chasseur 2
+                                        Armes : Gourdin d6M+1                                   Protection : Aucune armure 0
+                                                 Dague d6M+1                                    Armes : Fléchettes ou fronde d6M-1
+                                        Vitalité : 7                                            Vitalité : 5
+
+
+                                       Druide jaune d’Oomis                                    Matelot de Parsool
+                                         Un druide fou, adorateur de Morgazzon.                  Un soldat vétéran de la marine de Parsool,
+                                                                                               qui a survécu à plusieurs combats navals, et ne
+                                        Attributs		             Aptitudes de combat
+                                                                                               se prive pas de les raconter. Il peut occuper un
+                                        Vigueur    0            Initiative     0
+                                                                                               poste d’officier à bord d’un navire, comme maître
+                                        Agilité    0            Mêlée 		       1
+                                                                                               d’équipage ou second.
+                                        Esprit     2            Tir 		         0
+                                        Aura       0            Défense        1                Attributs		              Aptitudes de combat
+                                                                                                Vigueur    1             Initiative     1
+                                        Carrières : Druide 2
+                                                                                                Agilité    1             Mêlée          1
+                                        Protection : Aucune armure 0
+                                                                                                Esprit		   0             Tir            0
+                                        Armes : Coutelas d6M
+                                                                                                Aura       0             Défense 		     0
+                                        Points de foi : 2
+                                        Vitalité : 6                                            Carrières : Marin 2
+                                                                                                Protection : Aucune armure 0
+                                                                                                Armes : Sabre d6+1
+                                       Garde jemadar                                                     Dague d6M+1
+                                         La Garde jemadar veille à la sécurité de la reine      Vitalité : 7
+                                       de Malakut. Cette unité d’élite, réputée pour sa
+                                       loyauté, se compose exclusivement de guerrières
+                                       maniant le khastok, une longue lance au fer effilé.
+                                                                                               Pilote de nef volante de
+                                                                                               Satarla
+                                        Attributs		             Aptitudes de combat               Le cadet d’une famille noble qui a acheté son
+                                        Vigueur    0            Initiative     1               titre d’officier dans la marine aérienne de Satarla.
+                                        Agilité    2            Mêlée          1
+                                                                                                Attributs		              Aptitudes de combat
+                                        Esprit		   -1           Tir            -1
+                                                                                                Vigueur    0             Initiative     1
+                                        Aura       1            Défense        1
+                                                                                                Agilité		  0             Mêlée          0
+                                        Carrières : Soldat 1, Danseuse 1                        Esprit		   1             Tir            1
+                                        Protection : Armure légère d6-3 (1)                     Aura		     1             Défense        0
+                                        Armes : Khastok (lance lourde) d6B
+                                                                                                Carrières : Noble 1, Pilote des airs 1
+                                                Couteau d6M
+                                                                                                Protection : Armure légère d6-3 (1)
+                                        Vitalité : 6
+                                                                                                Armes : Épée d6
+                                                                                                         Arbalète d6
+                                                                                                Vitalité : 6
+
+
+
+
+                                                                                         134
+                                                                                                               Chapitre 5 : Personnages non joueurs
+Sergent du guet                                        Rivaux
+  Un guerrier expérimenté qui n’ est plus de prime       Les rivaux sont les ennemis jurés des héros,
+jeunesse, mais encore capable d’en remontrer aux       les êtres malfaisants derrière les complots que les
+jeunes blancs-becs sous ses ordres.                    joueurs doivent déjouer. Ces PNJ sont créés en
+                                                       suivant les mêmes règles que les héros.
+ Attributs		             Aptitudes de combat
+ Vigueur         2       Initiative     0                Les rivaux disposent généralement de piétaille
+ Agilité         0 (-1*) Mêlée          2              en nombre, ainsi que d’un ou deux coriaces qui leur
+ Esprit		        0       Tir            0              servent de lieutenants et de gardes du corps.
+ Aura		          0       Défense        0 (1*)
+         * modificateur d’armure.                      Points de vilenie
+                                                          Les rivaux disposent de points de vilenie,
+ Carrières : Soldat 2
+                                                       l’équivalent des points d’héroïsme des héros,
+ Protection : Armure moyenne d6-2 ( 2 ) ( -1
+                                                       qui s’utilisent de la même façon, avec quelques
+ en agilité) ; Bouclier ( +1 en défense contre une
+                                                       options supplémentaires :
+ attaque par round )
+ Armes : Gourdin d6M+2                                   Bouclier humain : un rival peut utiliser un des
+           Épée d6+2                                   PNJ piétaille qui l’ entourent comme « bouclier
+ Vitalité : 8                                          humain » pour absorber les dégâts d’une attaque.
+                                                       Cela fonctionne comme l’option « parade in
+                                                       extremis » des points d’héroïsme (cf. page 58).
+Sentinelle kalukan
+  Un exemple des dangereux gardes du corps               Fuite opportune : le rival parvient à s’enfuir
+qui entourent la Reine Sorcière. Ils n’ont aucune      quand les choses commencent à tourner mal pour
+émotion ni aucune volonté propre et obéissent          lui :
+aux ordres avec une froide efficacité.
+                                                         - Alors que l’attention des héros est détournée,
+ Attributs		               Aptitudes de combat         le rival disparaît au coin d’un couloir…
+ Vigueur    3              Initiative     1
+                                                          - Alors que les héros avancent vers le
+ Agilité    0              Mêlée          2
+                                                       nécromancien pour en finir avec lui, il sourit et
+ Esprit		   0              Tir            -1
+                                                       ouvre un panneau secret dans le mur par lequel
+ Aura		     -1             Défense        0
+                                                       il s’enfuit…
+ Carrières : Esclave 1, Soldat 1
+                                                         - Le rival tombe d’une falaise, mais quand les
+ Protection : Aucune armure 0 ; Bouclier (+1
+                                                       héros se penchent au bord du précipice pour
+ en défense contre une attaque par round )
+                                                       constater sa mort, nulle trace de son corps en
+ Armes : Tulwar ou hache d6+3
+                                                       contrebas…
+ Vitalité : 9
+                                                          Peu importe la manière, le rival parvient à
+                                                       s’enfuir, pour recommencer à comploter. En
+                                                       combinant cette option à celle de « défier la
+                                                       mort », un rival peut parvenir à s’échapper même
+                                                       s’il semble bel et bien mort. Il doit toutefois avoir
+                                                       une occasion de prendre la fuite, aussi les héros
+                                                       doivent-ils être distraits par autre chose pour que
+                                                       celui-ci puisse utiliser ses points de vilenie afin
+                                                       d’échapper à son destin.
+                                                         Les pages suivantes vous proposent quelques
+                                                       exemples de rivaux prêts à jouer.
+
+
+
+
+                                                     135
+

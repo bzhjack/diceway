@@ -18,6 +18,21 @@ export class BolHerosStateService {
   desavantagesList = toSignal(this.#bhs.desavantages());
   currentHerosCarrieres = computed(() => this.currentHeros()?.carrieres ?? []);
 
+  // E11: Non-combattant (désavantage id=33) modifies combat and carrière budgets
+  isNonCombattant = computed(() =>
+    this.currentHeros()?.traits?.some(
+      (t) => t.type === 'D' && t.carriere === false && Number(t.traitable_id) === 33,
+    ) ?? false,
+  );
+  combatBudget = computed(() => (this.isNonCombattant() ? 2 : 4));
+  carriereBudget = computed(() => (this.isNonCombattant() ? 6 : 4));
+
+  // E12: Special avantages requiring extra désavantages (ids 30 and 44)
+  specialAvantageDesavantageRequired = computed(() => {
+    const ids = this.currentHeroAvantages().map((t) => Number(t.traitable_id));
+    return (ids.includes(30) ? 1 : 0) + (ids.includes(44) ? 1 : 0);
+  });
+
   carriereDesavangeCount = computed(() => {
     let countDesavantage = 0;
     this.currentHerosCarrieres().forEach((carriere) => {

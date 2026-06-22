@@ -1,8 +1,8 @@
-import {ChangeDetectionStrategy, Component, computed, input, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, input, output, viewChild} from '@angular/core';
 import {ButtonModule} from 'primeng/button';
-import {PopoverModule} from 'primeng/popover';
+import {Popover, PopoverModule} from 'primeng/popover';
 import {TooltipModule} from 'primeng/tooltip';
-import {InitiativeSlot, ParticipantType, ReactionResult} from '../../bol-combat-panel';
+import {EtatSlot, InitiativeSlot, ParticipantType, ReactionResult} from '../../bol-combat-panel';
 import {CATEGORY_LABELS, TYPE_LABELS} from '../../combat.constants';
 
 @Component({
@@ -15,6 +15,7 @@ import {CATEGORY_LABELS, TYPE_LABELS} from '../../combat.constants';
     'class': 'combat-card',
     '[attr.data-type]': 'slot().type',
     '[attr.data-cat]': 'slot().category ?? "none"',
+    '[class.combat-card--active]': 'isActiveTurn()',
   },
 })
 export class CombatCardComponent {
@@ -22,13 +23,28 @@ export class CombatCardComponent {
   readonly index = input.required<number>();
   readonly round1Blocked = input.required<boolean>();
   readonly initiativeConfirmed = input.required<boolean>();
+  readonly isActiveTurn = input(false);
 
   readonly hpChange = output<{id: string; delta: number}>();
   readonly heroismChange = output<{id: string; delta: number}>();
   readonly removeParticipant = output<string>();
   readonly attackStart = output<InitiativeSlot>();
+  readonly delayTurn = output<string>();
+  readonly defenseTotale = output<string>();
+  readonly removeEtat = output<{slotId: string; etatId: string}>();
+  readonly phAction = output<{id: string; action: string}>();
+
+  protected readonly phPopRef = viewChild<Popover>('phPopRef');
 
   protected readonly hpRatio = computed(() => this.slot().vitaliteCourante / this.slot().vitaliteMax);
+
+  protected readonly hasHeroism = computed(() =>
+    this.slot().heroismMax != null && (this.slot().heroismCourant ?? 0) > 0,
+  );
+
+  protected readonly shouldProposeRemoval = computed(() =>
+    this.slot().vitaliteCourante <= 0 && this.slot().category === 'pietaille',
+  );
 
   protected readonly autoEtats = computed((): string[] => {
     const v = this.slot().vitaliteCourante;
@@ -71,6 +87,29 @@ export class CombatCardComponent {
     if (arme.portee) parts.push(`Portée : ${arme.portee}`);
     if (arme.notes) parts.push(arme.notes);
     return parts.join('\n');
+  }
+
+  protected togglePhPop(event: Event): void {
+    this.phPopRef()?.toggle(event);
+  }
+
+  protected emitPhAction(id: string, action: string): void {
+    this.phAction.emit({id, action});
+    this.phPopRef()?.hide();
+  }
+
+  protected etatLabel(etat: EtatSlot): string {
+    const labels: Record<EtatSlot['type'], string> = {
+      'posture-off':    'Off.',
+      'posture-def':    'Déf.',
+      'defense-totale': 'Déf. totale',
+      'intrepide':      'Intrépide',
+      'a-terre':        'À terre',
+      'desarme':        'Désarmé',
+      'de-malus':       etat.note ?? 'Dé malus',
+      'stabilise':      'Stabilisé',
+    };
+    return labels[etat.type];
   }
 
   protected armureTooltip(armure: InitiativeSlot['armures'][number]): string {

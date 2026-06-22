@@ -82,6 +82,7 @@ export class HeroAdvancedTraitsComponent implements ControlValueAccessor {
     this.herosDesavantages().filter((trait) => Number(trait.region_id) <= 0),
   );
   protected readonly canAddAdvantage = computed(() => this.herosAvantages().length < 3);
+  protected readonly specialAvantageRequired = this.herosStateService.specialAvantageDesavantageRequired;
   protected readonly traitList = computed(() => {
     const allTraits = this.contextType() === 'A' ? this.mergedAvantages() : this.mergedDesavantages();
     const selectedIds = this.herosTraits()
@@ -204,14 +205,29 @@ export class HeroAdvancedTraitsComponent implements ControlValueAccessor {
     if (this.herosAvantages().length >= 2 && this.herosRegionalDesavantages().length === 0) {
       warnings.push({
         step: 'Traits',
-        warn: 'Le 2e avantage exige un désavantage régional ou coûte 1 point d’héroïsme.',
+        warn: "Le 2e avantage exige un désavantage régional ou coûte 1 point d'héroïsme.",
       });
     }
 
     if (this.herosAvantages().length >= 3 && this.herosGeneralDesavantages().length === 0) {
       warnings.push({
         step: 'Traits',
-        warn: 'Le 3e avantage exige un désavantage général ou coûte 1 point d’héroïsme.',
+        warn: "Le 3e avantage exige un désavantage général ou coûte 1 point d'héroïsme.",
+      });
+    }
+
+    // E12: avantages spéciaux exigeant un désavantage supplémentaire chacun
+    const avantageIds = this.herosAvantages().map((t) => Number(t.traitable_id));
+    const specialNames: string[] = [];
+    if (avantageIds.includes(30)) specialNames.push('Magie des Rois-Sorciers');
+    if (avantageIds.includes(44)) specialNames.push('Pouvoir du Néant');
+    const extraRequired = this.specialAvantageRequired();
+    const extraActual = this.herosGeneralDesavantages().length;
+    if (extraRequired > 0 && extraActual < extraRequired) {
+      const solde = extraRequired - extraActual;
+      warnings.push({
+        step: 'Traits',
+        warn: `${specialNames.join(', ')} exige(nt) encore ${solde} désavantage(s) général(aux) supplémentaire(s).`,
       });
     }
 

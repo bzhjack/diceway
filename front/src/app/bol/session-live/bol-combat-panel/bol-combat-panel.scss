@@ -31,3 +31,50 @@
   text-transform: uppercase;
   font-family: monospace;
 }
+
+// ── Dialog fin de combat ──────────────────────────────────────────────────────
+
+.combat-end-hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.8rem;
+  color: var(--dw-surface-400);
+}
+
+.combat-end-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.combat-end-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--dw-surface-900) 4%, transparent);
+  font-size: 0.82rem;
+}
+
+.combat-end-name {
+  flex: 1;
+  font-weight: 600;
+}
+
+.combat-end-hp {
+  color: var(--dw-surface-400);
+  min-width: 5rem;
+  text-align: right;
+}
+
+.combat-end-note {
+  color: var(--p-red-400);
+  font-size: 0.75rem;
+}
+
+.combat-end-recovery {
+  font-weight: 700;
+  color: var(--p-green-400);
+  min-width: 3.5rem;
+  text-align: right;
+}

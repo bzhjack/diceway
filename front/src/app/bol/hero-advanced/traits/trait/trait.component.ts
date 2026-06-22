@@ -1,14 +1,14 @@
 import {ChangeDetectionStrategy, Component, computed, inject, input} from '@angular/core';
 import {PopoverModule} from 'primeng/popover';
 import {TooltipModule} from 'primeng/tooltip';
-import {InlineSVGModule} from 'ng-inline-svg-2';
+import {InlineSvgDirective} from '../../../../shared/inline-svg/inline-svg.directive';
 import {BolHerosTraitsModel} from '../../../models/bol-trait.model';
 import {BolHerosStateService} from '../../../services/bol-heros-state.service';
 import {HeroAdvancedCreateTools} from '../../create.tools';
 
 @Component({
   selector: 'bol-hero-advanced-trait',
-  imports: [PopoverModule, TooltipModule, InlineSVGModule],
+  imports: [PopoverModule, TooltipModule, InlineSvgDirective],
   templateUrl: './trait.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

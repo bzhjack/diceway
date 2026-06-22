@@ -16,7 +16,7 @@ import {toSignal} from '@angular/core/rxjs-interop';
 import {BolHerosCombat} from '../../models/bol-heros.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {HeroAdvancedCreateTools} from '../create.tools';
-import {attributValidator, combatFormValidator} from '../create.validators';
+import {attributValidator, combatFormValidatorFn} from '../create.validators';
 
 @Component({
   selector: 'bol-hero-advanced-combat',
@@ -47,6 +47,8 @@ export class HeroAdvancedCombatComponent implements ControlValueAccessor, Valida
   protected readonly aptitudeErrors = signal<{control: string; error: string}[]>([]);
   protected readonly aptitudeWarns = signal<{step: string; warn: string}[]>([]);
 
+  protected readonly combatBudget = this.herosStateService.combatBudget;
+
   protected readonly combatForm = this.formBuilder.group(
     {
       initiative: this.initiativeCtrl,
@@ -54,7 +56,7 @@ export class HeroAdvancedCombatComponent implements ControlValueAccessor, Valida
       tir: this.tirCtrl,
       defense: this.defenseCtrl,
     },
-    {validators: combatFormValidator},
+    {validators: combatFormValidatorFn(4)},
   );
   protected readonly formChange = toSignal(this.combatForm.valueChanges, {
     initialValue: this.combatForm.getRawValue(),
@@ -70,6 +72,13 @@ export class HeroAdvancedCombatComponent implements ControlValueAccessor, Valida
       this.updateWarnings();
       this.onChange(this.combatForm.getRawValue() as BolHerosCombat);
       this.onTouched();
+    });
+
+    // E11: update validator when Non-combattant changes
+    effect(() => {
+      const budget = this.combatBudget();
+      this.combatForm.setValidators(combatFormValidatorFn(budget));
+      this.combatForm.updateValueAndValidity();
     });
   }
 
@@ -117,7 +126,7 @@ export class HeroAdvancedCombatComponent implements ControlValueAccessor, Valida
       errors.push({control: '', error: 'Une seule aptitude de combat peut descendre a -1.'});
     }
     if (formErrors?.['aptSumExceeded']) {
-      errors.push({control: '', error: 'La somme des aptitudes de combat ne doit pas dépasser 4.'});
+      errors.push({control: '', error: `La somme des aptitudes de combat ne doit pas dépasser ${this.combatBudget()}.`});
     }
 
     this.aptitudeErrors.set(errors);
@@ -129,9 +138,11 @@ export class HeroAdvancedCombatComponent implements ControlValueAccessor, Valida
       const values = ['initiative', 'melee', 'tir', 'defense'].map((key) =>
         Number(this.combatForm.get(key)?.value ?? 0),
       );
+      const budget = this.combatBudget();
       const sum = values.reduce((total, value) => total + value, 0);
-      if (sum < 4) {
-        warnings.push({step: 'Combat', warn: `Il manque ${4 - sum} point(s) dans le combat.`});
+      if (sum < budget) {
+        const prefix = this.herosStateService.isNonCombattant() ? '⚔ Non-combattant — ' : '';
+        warnings.push({step: 'Combat', warn: `${prefix}Il manque ${budget - sum} point(s) dans le combat (budget : ${budget}).`});
       }
     }
 

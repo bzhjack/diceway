@@ -16,7 +16,7 @@ import {SelectModule} from 'primeng/select';
 import {TagModule} from 'primeng/tag';
 import {TableModule} from 'primeng/table';
 import {TooltipModule} from 'primeng/tooltip';
-import {InlineSVGModule} from 'ng-inline-svg-2';
+import {InlineSvgDirective} from '../../shared/inline-svg/inline-svg.directive';
 import {PopoverModule} from 'primeng/popover';
 import {startWith, switchMap} from 'rxjs';
 
@@ -60,7 +60,7 @@ interface PnjTraitDetail {
     TagModule,
     TableModule,
     TooltipModule,
-    InlineSVGModule,
+    InlineSvgDirective,
     PopoverModule,
   ],
   templateUrl: './pnj-library-page.html',

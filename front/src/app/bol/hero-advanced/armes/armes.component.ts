@@ -11,6 +11,7 @@ import {
 import {ConfirmationService} from 'primeng/api';
 import {ButtonModule} from 'primeng/button';
 import {IftaLabelModule} from 'primeng/iftalabel';
+import {MessageModule} from 'primeng/message';
 import {SelectModule} from 'primeng/select';
 import {TooltipModule} from 'primeng/tooltip';
 import {toSignal} from '@angular/core/rxjs-interop';
@@ -20,7 +21,7 @@ import {BolHerosService} from '../../services/bol-heros.service';
 
 @Component({
   selector: 'bol-hero-advanced-armes',
-  imports: [ReactiveFormsModule, FormsModule, ButtonModule, IftaLabelModule, SelectModule, TooltipModule],
+  imports: [ReactiveFormsModule, FormsModule, ButtonModule, IftaLabelModule, MessageModule, SelectModule, TooltipModule],
   templateUrl: './armes.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
@@ -54,6 +55,15 @@ export class HeroAdvancedArmesComponent implements ControlValueAccessor {
     (this.armeList() ?? []).filter((arme: BolArmeModel) => this.selectedArmeIds().includes(Number(arme.id))),
   );
   protected readonly heroId = computed(() => this.herosStateService.currentHeros()?.id);
+
+  // E13: warning arme lourde (d6B) avec vigueur < 0
+  protected readonly vigueur = computed(() =>
+    Number(this.herosStateService.currentHeros()?.attributs?.vigueur ?? 0),
+  );
+  protected readonly warnHeavyArme = computed(() =>
+    this.vigueur() < 0 &&
+    this.selectedArmeDetail().some((a) => a.degats?.startsWith('d6B')),
+  );
 
   private onChange: (value: number[]) => void = () => undefined;
   private onTouched: () => void = () => undefined;

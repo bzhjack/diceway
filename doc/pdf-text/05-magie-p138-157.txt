@@ -1,0 +1,1226 @@
+                                                                         Chapitre 6
+
+
+
+Chapitre 6 : Les Alchimistes
+                                   Les Mystères de la
+                                        Lémurie
+                                   Les sorciers, les prêtres et les alchimistes sont des figures récurrentes de la Sword & Sorcery. Cela
+                                 dit, ces personnages énigmatiques ne font pas forcément de bons personnages-joueurs : ils répugnent
+                                 généralement à délaisser leur temple ou leur laboratoire pour courir l’aventure, et sont pour la
+                                 plupart malfaisants et déments, corrompus par leur savoir impie et leur sorcellerie sacrilège, ou par la
+                                 vénération de dieux maléfiques.
+
+                                                                                               des athanors et autres ustensiles alchimiques.
+
+                               Les alchimistes                                                 Avec l’aide de forgerons, ils font appel à leur
+                                                                                               connaissance de la métallurgie pour fabriquer
+                                                                                               des armes ou des armures à la fois légères et
+                                 « Krongar examina les lieux. Les murs de la salle
+                                                                                               résistantes, ou pour concevoir des instruments
+                                 étaient couverts d’étagères qui croulaient sous les
+                                                                                               et des appareils merveilleux. Ils sont notamment
+                                 bouteilles et les pots, les creusets et les alambics,
+                                                                                               capables de fabriquer de l’allanium, un métal plus
+                                 dont certains étaient emplis de fluides malodorants.
+                                                                                               léger que l’air qui est utilisé dans la construction
+                                 Il y avait des livres également, de toutes tailles,
+                                                                                               des nefs volantes.
+                                 dont certains étaient aussi grands que lui, à la
+                                 reliure en peau de bubalus, en plaques de métal
+                                 ouvragé ou en bois de zannibal sculpté. Ils étaient           Du temps et de l’argent
+                                 rédigés dans des langues inconnues, dans une                    Comme les sorciers, les alchimistes doivent
+                                 écriture ancienne et illisible, aux lettres fanées et         payer le prix de leur savoir, mais en ce qui les
+                                 aux glyphes étranges. Un tome, relié de cuir et d’or,         concerne, ce prix se règle en temps et en argent.
+                                 attira l’œil de Krongar ; le serpent vert qui ornait          En général, l’alchimie est un art qui ne se pratique
+                                 sa couverture semblait bouger et il crut entendre un          pas durant une aventure. L’alchimiste a besoin de
+                                 sifflement sourd provenant de l’intérieur du livre. »         temps pour rassembler et préparer les ingrédients
+                                                                                               nécessaires, mener des expériences, dessiner des
+                                 — La Saga de Krongar
+                                                                                               plans, commander à un artisan certaines pièces,
+                                 Les alchimistes ne sont pas des magiciens.                    etc. Et même quand il a terminé la fabrication
+                               On les qualifierait plutôt de chercheurs et                     d’un appareil merveilleux, celui-ci doit encore
+                               d’inventeurs. Les barbares et les gens du commun                être testé et corrigé avant de pouvoir servir.
+                               les confondent souvent avec les sorciers, sans
+                                                                                                 L’alchimie ne peut donc se pratiquer qu’entre
+                               comprendre véritablement ce qui les distingue de
+                                                                                               deux aventures, lorsque vous disposez au moins
+                               ces derniers.
+                                                                                               d’une semaine de temps libre. Avant le début
+                                 Les alchimistes créent des potions « magiques »,              de l’aventure suivante, le joueur doit décrire ce
+                               des baumes, des onguents, des poudres, et utilisent             que son personnage a fait de son temps et de
+                               pour ce faire tout un attirail d’instruments                    son argent depuis la dernière partie, et quelles
+                               spéciaux, comme des alambics, des creusets,                     préparations alchimiques il a tenté de fabriquer.
+
+
+
+
+                                                                                         138
+Points de création                                        Points de création et
+  Les préparations alchimiques ont une valeur
+                                                          équipement de départ
+
+
+
+
+                                                                                                                     Chapitre 6 : Les Alchimistes
+                                                            Le MJ peut décider d’autoriser un alchimiste
+en points de création. Entre deux aventures, un
+                                                          à utiliser ses points de création avant la première
+personnage reçoit un nombre de points de création
+                                                          aventure. Toutefois, ces points doivent être utilisés
+égal à son rang dans la carrière d’alchimiste. La
+                                                          pour une préparation complète ; ils ne peuvent
+création de certains objets exigera de dépenser des
+                                                          servir de première étape à un projet de longue
+points de création en plusieurs fois, entre plusieurs
+                                                          haleine. De cette façon, un héros alchimiste de
+aventures d’affilée. Par exemple, si vous possédez
+                                                          rang 2 pourra commencer le jeu avec une flasque
+un rang 3 dans la carrière d’alchimiste, il vous
+                                                          d’huile brûlante, mais pas avec 2 points de création
+faudra jouer au moins trois aventures pour générer
+                                                          déjà investis dans une préparation mythique.
+les 8 points de création nécessaires à la fabrication
+d’une préparation de catégorie mythique (soit 3 pts
+entre les aventures 1 et 2, puis 3 pts de plus entre      Étapes
+les aventures 2 et 3, et un résiduel de 2 points à la        Lorsqu’il faut plus qu’un seul intervalle entre
+suite de l’aventure 3, avant d’entamer l’aventure 4).     deux aventures à un alchimiste pour créer quelque
+                                                          chose, ce dernier doit procéder en plusieurs fois ;
+  Vous ne pouvez pas dépenser plus de 5 points
+                                                          c’est que l’on appelle des étapes. Vous dépensez
+entre deux aventures, et vous ne pouvez pas non plus
+                                                          des points de création à chaque étape, jusqu’à ce
+les accumuler d’une aventure sur l’autre, puisqu’ils
+                                                          que vous atteigniez le total de points de création
+représentent à la fois du temps de recherche et des
+                                                          nécessaire pour finir la préparation. En d’autres
+ingrédients. Avant chaque nouvelle aventure, vous
+                                                          mots, un alchimiste de rang 2 aura besoin de quatre
+devez donc décider d’investir vos points de création
+                                                          étapes pour terminer une préparation mythique
+dans un projet, même si ce dernier n’arrivera pas
+                                                          (8 points de création). Lors de la dernière
+immédiatement à son terme du fait de son coût
+                                                          étape, il doit effectuer un jet d’action (esprit +
+important (cf. « étapes », ci-dessous).
+                                                          alchimiste +/- modificateur de difficulté). S’il le
+                                                          rate, la préparation échoue et tous les points de
+Coût des préparations                                     création investis sont perdus. La difficulté du jet
+alchimiques                                               d’action dépend de la catégorie de la préparation
+W Une préparation courante coûte 1 point                  alchimique, comme indiquée dans la table ci-
+de création.                                              dessous.
+W Une préparation rare coûte 2 points de                    N.B. La table ci-dessous suppose l’accès à un
+création.                                                 laboratoire comprenant tout l’équipement de base.
+                                                          Dans le cas contraire, augmentez la difficulté d’un
+W Une préparation légendaire coûte 4 points
+                                                          cran (exemple : de Moyenne à Ardue).
+de création. Vous ne pouvez pas en entreprendre
+plus d’une par aventure.
+W Une préparation mythique coûte 8 points                     Catégorie de                             Modif. au
+                                                                                   Difficulté
+de création. Vous ne pouvez pas en entreprendre
+                                                              préparation                             jet d’action
+plus d’une toutes les deux aventures.                           Courante -             Facile               +1
+  Un alchimiste peut travailler simultanément sur               Courante             Moyenne                 0
+des préparations courantes, rares et légendaires.
+Par exemple, entre deux aventures un alchimiste                   Rare                 Ardue                 -1
+de rang 3 pourrait fabriquer un répulsif à insectes            Légendaire             Difficile              -2
+(courante) ainsi qu’une dose de poudre pour
+améliorer la vigueur (rare). Cela n’ est pas possible           Mythique           Très difficile            -4
+pour les préparations mythiques qui nécessitent
+                                                               Mythique +           Impossible               -6
+que l’alchimiste se consacre exclusivement à un
+projet unique.
+
+
+
+
+                                                        139
+                                                                                         Les ingrédients sont généralement rares,
+                               Autres modificateurs :                                  exotiques ou périssables. L’alchimiste aura besoin
+                                 Quand un alchimiste analyse un objet ou une           d’aventuriers pour lui trouver certains d’entre
+
+
+
+
+Chapitre 6 : Les Alchimistes
+                               potion non identifiée, augmentez la difficulté          eux. Il peut s’agir d’animaux en voie d’extinction,
+                               d’un cran.                                              de plantes poussant dans des environnements
+                                                                                       très spécifiques, de distillats de minéraux rares,
+                                 Quand l’alchimiste se contente de réparer
+                                                                                       ou d’éléments qui ne peuvent être produits ou
+                               un objet ou de rallonger une potion, réduisez
+                                                                                       récoltés que dans des conditions particulières.
+                               la difficulté d’un cran pour les préparations
+                               courantes et rares. Les réparations nécessitent la        Lorsque vous fabriquez une préparation
+                               moitié du nombre de points de création requis           légendaire, vous devez dépenser 4 points de
+                               pour la fabrication.                                    création au moment de votre jet d’action. Si vous
+                                                                                       fabriquez une potion, vous ne perdez que 2 points
+                               Préparations                                            de création en cas d’échec. Si vous fabriquez un
+                                                                                       objet ou une création, vous perdez alors les 4
+                               alchimiques                                             points.
+
+                               Préparations courantes                                  Préparations mythiques
+                                 Il s’agit de potions, d’objets et d’instruments         Ces préparations figurent dans les anciens écrits,
+                               pouvant être fabriqués par d’autres professions         dans les légendes des Rois-Sorciers et des races
+                               et ne nécessitant pas l’usage de la magie, mais         disparues. Ce sont des créations rares et uniques,
+                               seulement des connaissances spécifiques acquises        dont le secret de fabrication, une fois découvert,
+                               par des observations et des expérimentations            est jalousement gardé et peut rester caché
+                               minutieuses.                                            pendant des siècles. Avant même d’entreprendre
+                                                                                       une préparation mythique, il vous faudra mettre
+                                 Lorsque vous fabriquez une préparation
+                                                                                       la main sur quelque antique manuscrit décrivant
+                               courante, vous devez dépenser 1 point de création
+                                                                                       en détail la fabrication de la chose que vous
+                               au moment de votre jet d’action, que vous le
+                                                                                       souhaitez créer.
+                               réussissiez ou non.
+                                                                                         Les ingrédients nécessaires peuvent exiger
+                               Préparations rares                                      plusieurs années de travail, au gré de lentes
+                                 Ces préparations vont au-delà des capacités           décantations et autres opérations alchimiques.
+                               du simple rebouteux du village ou de celles des         Les plantes, organes d’animaux et/ou
+                               artisans les plus doués. Les ingrédients nécessaires    minéraux proviennent de contrées lointaines
+                               restent relativement faciles à trouver dans la nature   ou d’environnements très spécifiques (du fond
+                               ou sur le marché local et se conservent aisément.       des mers, du sommet d’une montagne, d’un
+                                                                                       tombeau au cœur des marécages, du sarcophage
+                                 Lorsque vous fabriquez une préparation
+                                                                                       d’une momie…) et exigent d’entreprendre de
+                               rare, vous devez dépenser 2 points de création
+                                                                                       longs et périlleux voyages. Une fois trouvés,
+                               au moment de votre jet d’action, que vous le
+                                                                                       leur conservation demandera des précautions
+                               réussissiez ou non.
+                                                                                       particulières, de peur que ces éléments perdent
+                                                                                       leurs vertus.
+                               Préparations légendaires
+                                 Ces préparations sont bien connues des                  Lorsque vous fabriquez une préparation
+                               hommes de l’art, mais ne se fabriquent que dans         mythique, vous devez dépenser 8 points de
+                               les grandes villes ou dans le riche laboratoire de      création au moment de votre jet d’action. Si vous
+                               quelque alchimiste reclus et renommé. Pour le           fabriquez une potion, vous ne perdez que 4 points
+                               commun des mortels, elles relèvent de la magie          de création en cas d’échec. Si vous fabriquez un
+                               et du domaine des contes et légendes plutôt que         objet ou une création, vous perdez alors les 8
+                               de la réalité.                                          points.
+
+
+
+
+                                                                                   140
+                                                              Potions rares
+                                                                Ces mixtures provoquent chez ceux qui les boivent
+                                                              une amélioration ou au contraire une diminution de
+
+
+
+
+                                                                                                                         Chapitre 6 : Les Alchimistes
+                                                              leurs capacités. Elles induisent des effets temporaires,
+                                                              à l’exception des potions curatives.
+Potions
+                                                                  Agrandissement ou rapetissement (durée :
+Potions courantes                                                 une scène).
+  Ce sont là les décoctions, remèdes et cataplasmes
+à la portée d’un herboriste ordinaire, dont la                    Antidote aux poisons alchimiques (soigne
+fabrication ne consiste qu’à préparer et mélanger                 l’ empoisonnement en 1 heure, 3 doses).
+différents ingrédients dans des proportions bien
+                                                                  Beauté (+1 en aura ; durée : une scène).
+précises. Ces potions induisent des effets temporaires,
+à l’exception des potions curatives.                              Neutralisant d’acide (stoppe instantanément
+                                                                  les effets d’une quantité équivalente d’acide ;
+  Acide (1 petite fiole, inflige d3 points de                     9 petites fioles).
+  dégâts ou peut percer 2,5 cm de bois ou de
+                                                                  Perspicacité (+1 en esprit ; durée : une scène).
+  métal).
+                                                                  Précision (un dé de bonus aux jets d’attaque de
+  Alcool de qualité (3 bouteilles).
+                                                                  tir ; durée : une scène).
+  Antalgique (2d6 heures d’effet, 3 doses).
+                                                                  Prouesse (un dé de bonus aux jets d’attaque de
+  Anti-fièvre (2d6 heures d’effet, 3 doses).                      corps à corps ; durée : une scène).
+  Antidote contre les venins animaux et les                       Puissance (+1 en vigueur ; durée : une scène).
+  poisons végétaux (soigne l’ empoisonnement
+                                                                  Sens accrus (un dé de bonus aux jets d’action
+  en 1 heure, 3 doses).
+                                                                  pour détecter ou repérer quelque chose ;
+  Encre invisible (réapparaît quand elle est                      durée : une scène).
+  mouillée ou chauffée).
+                                                                  Sommeil instantané (le buveur doit réussir un
+  Mort-aux-rats (tue          les   petits   animaux              jet de vigueur avec votre rang d’alchimiste en
+  nuisibles).                                                     malus, ou sombrer dans un profond sommeil
+                                                                  pendant une demi-journée).
+  Remède contre le scorbut.
+                                                                  Vivacité (+1 en agilité ; durée : une scène).
+  Remède contre la vérole.
+  Répulsif à insectes (4d6 heures d’effet, 3
+  doses).
+                                                              Potions légendaires
+  Somnifère (à l’ingestion, provoque 2d6 heures                   Antidote universel (soigne instantanément
+  de sommeil profond, 3 doses).                                   n’importe quel empoisonnement, même
+                                                                  magique ; 1 dose).
+   Exemple : Argol Arran se dit que le groupe aura
+                                                                  Feu alchimique (une fiole qui, quand elle est
+bien besoin d’un répulsif à insectes dans son périple
+                                                                  brisée, explose en une boule de feu de 3 m de
+à travers les marais de Festrel. Il est alchimiste 1,
+                                                                  rayon, infligeant d6 x2 points de dégâts).
+ce qui lui donne 1 point de création. Il peut donc
+fabriquer une préparation courante avant le début de              Héroïsme (le buveur bénéficie d’un bonus de
+l’aventure. Comme il se trouve dans une auberge, il               +1 à toutes ses aptitudes de combat ; durée :
+doit se débrouiller avec ce qu’il a sous la main, ce qui          une scène ; 1 dose).
+augmente la difficulté du jet, de Moyenne à Ardue
+                                                                  Illusion de la jeunesse (le buveur retrouve
+(-1). Argol a 1 en esprit et 1 en alchimiste. Il effectue
+                                                                  l’apparence qu’il avait à 25 ans ; durée : une
+donc son jet à +1, ce qui signifie qu’il lui faut obtenir
+                                                                  semaine ; 1 dose).
+au moins un 8 aux dés pour réussir sa préparation.
+
+
+
+                                                            141
+                                Métamorphose (le buveur prend l’apparence
+                                d’une autre personne, pour une durée d’une
+                                                                                         Objets et créations
+                                heure. Nécessite quelques cheveux, rognures              Objets et créations courantes
+
+
+
+
+Chapitre 6 : Les Alchimistes
+                                d’ongles, ou gouttes de sang de la personne en             Il s’agit d’objets courants, mais de grande qualité,
+                                question ; 1 dose).                                      plus légers et plus résistants que la normale.
+                                                                                         L’alchimiste peut avoir besoin de l’aide d’un
+                                Panacée (le buveur est guéri de n’importe
+                                                                                         forgeron pour façonner ses créations.
+                                quelle maladie ; 2 doses).
+                                Paralysant (le buveur doit réussir un jet de               Arme.
+                                vigueur avec votre rang d’alchimiste en malus
+                                                                                           Armure.
+                                ou se retrouver paralysé pour une durée de 24
+                                heures ; 1 dose).                                          Outil.
+                                Philtre d’amour (le buveur doit réussir un jet             Piège (malus de -2 pour le repérer et le
+                                d’esprit avec votre rang d’alchimiste en malus             désamorcer ; inflige d3+1 points de dégâts).
+                                ou tomber follement amoureux ; durée : une
+                                                                                           Serrure (malus de -2 pour la forcer).
+                                lune ; 1 dose).
+                                Poudre d’invisibilité (rend invisible aux yeux             Les armes et armures de cette qualité
+                                d’autrui, à moins d’entreprendre une action              permettent, une fois par round, de relancer un 1
+                                qui attire l’attention ; durée : une scène).             obtenu sur un jet de dégâts/de protection.
+                                Résistance (la peau du buveur devient aussi                En dehors des armes, les autres créations
+                                résistante qu’une armure, lui offrant d6 de              infligeant des dégâts ou soignant des blessures
+                                protection ; durée : une scène ; 1 dose).                provoquent respectivement la perte ou la
+                                                                                         récupération de d3 points de vitalité.
+                                Teinture de respiration aquatique (permet
+                                au buveur de respirer sous l’ eau pendant une              Vous pouvez également inventer d’autres objets
+                                demi-journée).                                           ou potions, avec l’accord du MJ, sur la base des
+                                                                                         exemples proposés ici.
+                               Potions mythiques                                         Objets et créations rares
+                                 Ces élixirs sont uniques en leur genre. Voici
+                                                                                           Ces préparations nécessitent des recherches
+                               quelques exemples :
+                                                                                         pointues et des capacités techniques qui outrepassent
+                                Altération permanente (bonus permanent                   celles du meilleur artisan.
+                                de +1 dans un attribut ; on ne peut bénéficier
+                                                                                           Allume-feu (permet d’allumer un feu
+                                qu’une seule fois des effets de cet élixir).
+                                                                                           facilement et rapidement).
+                                Immortalité (prévient toute mort naturelle.
+                                                                                           Antirouille (quantité suffisante pour ôter la
+                                Le buveur vieillit lentement, en se desséchant
+                                                                                           rouille d’une armure complète).
+                                au fil des siècles. Seule une mort violente peut
+                                l’ emporter).                                              Arme dissimulée dans un objet courant.
+                                Poudre de phénix (une poudre qui brûle au                  Arme supérieure (un dé de bonus aux jets de
+                                contact, même sous l’ eau, en infligeant d6 x3             dégâts).
+                                points de dégâts).
+                                                                                           Armure supérieure (offre une protection
+                                Régénération suprême          (provoque     la             semblable à celle d’une armure de la catégorie
+                                régénération d’un membre amputé, d’un œil                  supérieure – une armure légère apporte la
+                                perdu, etc., annulant le désavantage associé à             même protection qu’une armure moyenne, et
+                                ce handicap).                                              une armure lourde apporte une protection de
+                                                                                           d6. De plus, l’armure diminue de moitié les
+                                                                                           dégâts supplémentaires infligés par un succès
+                                                                                           héroïque ou légendaire).
+
+
+
+                                                                                   142
+                                                                Arme légendaire (ajoute un dé de bonus
+
+
+
+
+                                                                                                                  Chapitre 6 : Les Alchimistes
+                                                                aux jets de dégâts et ignore les armures, à
+                                                                l’exception de celles créées par un alchimiste.
+                                                                De plus, l’arme est incassable. Une arme aussi
+                                                                exceptionnelle se doit de recevoir un nom).
+                                                                Armure légendaire (offre une protection
+  Arbalète à grappin (tire un grappin attaché                   semblable à celle d’une armure de la catégorie
+  à une corde en soie avec un facteur de portée                 supérieure – une armure légère apporte la
+  de 7,5 m).                                                    même protection qu’une armure moyenne, et
+                                                                une armure lourde apporte une protection de
+  Dague à lame creuse en verre (remplie
+                                                                d6. De plus, le jet de protection de l’armure
+  d’acide ou de poison).
+                                                                se fait avec un dé de bonus, et elle diminue de
+  Horloge.                                                      moitié les dégâts supplémentaires infligés par
+                                                                un succès héroïque ou légendaire).
+  Huile brûlante (brûle au contact et inflige d6
+  points de dégâts).                                            Automate ou golem ayant la forme d’une
+                                                                armure animée.
+  Instrument de musique au son parfait (un
+  dé de bonus pour en jouer).                                   Casque permettant à son porteur de respirer
+                                                                sous l’eau.
+  Membre artificiel (non articulé, mais bien
+  plus élégant qu’un simple crochet).                           Ceinture d’allanium (permet de flotter dans
+                                                                les airs).
+  Microscope.
+                                                                Ceinture d’invisibilité (quand on la boucle,
+  Périscope.
+                                                                cette ceinture offre le même effet que la
+  Serrure ou piège élaboré (-4 pour les                         poudre d’invisibilité).
+  crocheter/désamorcer ; un piège inflige d6+1
+                                                                Création par croisement et hybridation
+  points de dégâts).
+                                                                de plantes ou d’animaux mortellement
+  Substance chimique luminescente (produit                      dangereux.
+  de la lumière pour une demi-journée).
+                                                                Fabrication d’allanium et de janium.
+  Télescope.
+                                                                Lance-éclair (une arme qui a vaguement
+                                                                la forme d’une arbalète et projette un éclair.
+  En dehors des armes, les autres créations                     Facteur de portée : 75 m ; d6 x2 points de
+infligeant des dégâts ou soignant des blessures                 dégâts ignorant les armures).
+provoquent respectivement la perte ou la
+                                                                Machine volante (nef volante, par exemple).
+récupération de d6 points de vitalité.
+                                                                Serrure ou piège particulièrement ingénieux
+  Vous pouvez également inventer d’autres objets
+                                                                (-6 pour les crocheter/désamorcer ; le piège
+ou potions, avec l’accord du MJ, sur la base des
+                                                                inflige d6 x2 points de dégâts).
+exemples proposés ici.
+                                                              En dehors des armes, les autres créations
+Objets et créations                                         infligeant des dégâts ou soignant des blessures
+légendaires                                                 provoquent respectivement la perte ou la
+   Les Rois-Sorciers utilisaient quotidiennement ce
+                                                            récupération de d6 x2 points de vitalité.
+genre d’artefacts, mais le secret de leur fabrication
+n’est plus connu aujourd’hui que de quelques                  Vous pouvez également inventer d’autres objets
+personnes, et plus rares encore sont celles capables de     ou potions, avec l’accord du MJ, sur la base des
+les fabriquer effectivement.                                exemples proposés ici.
+
+
+
+                                                          143
+                               Objets et créations mythiques                           Exemple : Jesharek Jool (esprit 3, alchimiste 3)
+                                  Ces merveilles ne sont même pas concevables pour   décide de créer une épée mythique pour son ami
+
+
+
+
+Chapitre 6 : Les Alchimistes
+                               les habitants ordinaires de la Lémurie, mais elles    Krongar, qu’il nommera la Fendeuse de crânes.
+                               n’étaient pas jadis hors de portée des pouvoirs des   Jesharek sait que son travail demandera trois étapes
+                               Rois-Sorciers.                                        pour arriver au bout, puisqu’il dispose de 3 points de
+                                                                                     création et qu’une arme mythique nécessite la dépense
+                                 Arme mythique (comme une arme légendaire,           de 8 points de création.
+                                 mais elle est de plus considérée comme une
+                                                                                       Pour la première étape, il explique comment
+                                 arme favorite, cf. l’avantage du même nom).
+                                                                                     il réussit à trouver les métaux rares et précieux
+                                 Armure mythique (comme une armure                   nécessaires pour créer du janium avec lequel il forgera
+                                 légendaire, mais sans malus d’agilité ; un          la lame, et comment il dépense pour cela tout le butin
+                                 héros pourrait même nager en portant cette          récupéré lors de sa dernière aventure. Il investit 3
+                                 armure).                                            points de création et a terminé l’étape 1.
+                                 Création de formes de vie en laboratoire.             Il explique ensuite au MJ qu’il a besoin de retrouver
+                                                                                     un parchemin rare qui, d’après ses recherches, se
+                                 Création de formes de vie hybrides
+                                                                                     trouverait dans les catacombes sous les ruines d’Oosal,
+                                 d’homme et d’animal.
+                                                                                     et réunit quelques aventuriers pour l’accompagner. Il
+                                 Cuve de clonage des individus.                      sera en mesure de passer à l’étape 2 une fois qu’il aura
+                                                                                     retrouvé ce texte ancien.
+                                 Habitation intelligente.
+                                 Machine à transfert de cerveau.
+                                                                                              Quelques alliages
+                                 Machine de guerre blindée.                                 alchimiques précieux
+                                 Machine dotée d’une semi-conscience.
+                                                                                         Allanium : un métal plus léger que l’air dont
+                                 Navire submersible           (un    sous-marin          les secrets de fabrication ne sont connus que
+                                 descendant à une profondeur maximale de                 de rares alchimistes. L’allanium est utilisé
+                                 6 mètres et pouvant emporter un équipage                pour la construction des nefs volantes de
+                                 de quatre personnes. Un tuyau flottant                  Satarla.
+                                 jusqu’à la surface alimente le sous-marin
+                                                                                         Janium : un des métaux les plus rares et les
+                                 en oxygène (et peut être repéré en surface).
+                                                                                         plus solides. Il est d’un noir opaque, doux
+                                 Le sous-marin contient suffisamment d’air
+                                                                                         comme la soie au toucher, et possède une
+                                 pour rester en plongée pendant une heure. Il
+                                                                                         très forte densité. Le secret de sa fabrication
+                                 se déplace à une vitesse d’environ 8 kilomètres
+                                                                                         s’est perdu, et de nombreux alchimistes
+                                 à l’heure, propulsé par la force des membres
+                                                                                         cherchent depuis à le redécouvrir.
+                                 de l’équipage qui pédalent pour faire tourner
+                                 l’hélice).                                              Jazite : un métal apprécié pour ses teintes
+                                                                                         opalines.
+                                 Serrure ou piège à la complexité unique
+                                 (-8 pour les crocheter/désamorcer ; un piège
+                                 inflige d6 x3 points de dégâts).
+
+                                 En dehors des armes, les autres créations
+                               infligeant des dégâts ou soignant des blessures
+                               provoquent respectivement la perte ou la
+                               récupération de d6 x3 points de vitalité.
+                                 Vous pouvez également inventer d’autres objets
+                               ou potions, avec l’accord du MJ, sur la base des
+                               exemples proposés ici.
+
+
+
+
+                                                                                   144
+                                                                                                                  Chapitre 6 : Prêtres et Druides
+
+
+
+
+Prêtres et druides                                         Dévotions
+                                                             Les prêtres révèrent l’ ensemble du panthéon
+  « Les Rois-Sorciers voulaient devenir des dieux,         lémurien, mais ceux qui possèdent un rang de
+  et leur orgueil les perdit. Hadron vint à eux            1 ou plus dans la carrière de prêtre doivent se
+  et sema la dévastation. Le temps que les Rois-           choisir une divinité tutélaire (cf. chapitre 5). Les
+  Sorciers comprennent leur erreur, le mal était fait      druides vénèrent tous les dieux sombres, mais de
+  et rien ne put leur éviter la destruction. Il fallut     la même manière, ils doivent se choisir un dieu
+  de longs siècles avant que le pouvoir des Rois-          de prédilection s’ils ont un rang de 1 ou plus dans
+  Sorciers ne puisse de nouveau se relever, et dans        la carrière. Les prêtres et druides de rang 0 sont
+  l’intervalle il appartint aux hommes de dominer          encore des novices et n’ont pas à se vouer au culte
+  la Lémurie, sous la férule des Vingt Dieux. »            d’une divinité en particulier.
+  — L’Edda pourpre                                           Prêtres et druides ne lancent pas de sorts, mais
+                                                           il est fréquent qu’ils soient également sorciers
+  Les prêtres sont les représentants des Vingt             (notamment les druides) et aient accès à la magie
+Dieux de Lémurie. Ils portent la parole des                par cette autre carrière. Les gens croient souvent
+divinités aux fidèles et élèvent des temples en leur       que les prêtres qui pratiquent la magie reçoivent
+honneur. Chaque dieu possède son clergé et ses             leurs pouvoirs des dieux, et ces prêtres se gardent
+sanctuaires.                                               bien de les démentir, car cela contribue à renforcer
+                                                           le prestige associé à la prêtrise et accroît leur
+  Les druides sont les représentants des dieux
+                                                           autorité sur leurs fidèles.
+sombres, les divinités démoniaques du Néant. Ils
+sont moins nombreux que les prêtres et attirent de            Les prêtres et les druides se doivent de rendre
+moins grandes foules de fidèles. Mais leur nombre          un culte à leurs dieux. Cela implique d’aller au
+croît chaque jour, cependant qu’Hadron teste ses           temple pour prier, de méditer, de jeûner, de
+forces et manigance pour retrouver sa place dans           remplir les devoirs de leur charge et d’accomplir
+le monde. Les druides élèvent leurs temples dans           des offrandes et des sacrifices. Un prêtre qui
+des lieux reculés ou les installent au cœur des cités,     s’acquitte comme il faut de ses dévotions en reçoit
+mais toujours dans le plus grand secret.                   un bénéfice sous la forme de points de foi.
+
+
+
+                                                         145
+                                  Gagner des points                                            Le soir, Bellys retrouve à la taverne son ami Jomi,
+
+
+
+
+Chapitre 6 : Prêtres et Druides
+                                                                                             un ancien fermier. Des brutes avinées s’en prennent
+                                  de foi                                                     à eux et Bellys en appelle aux pouvoirs de sa déesse
+                                    Prêtres et druides reçoivent 1 point de foi par          pour accorder un avantage à Jomi (expliquant au MJ
+                                  heure passée à faire leurs dévotions. Ils peuvent          que son ami étant un ancien fermier, il est approprié
+                                  accumuler un nombre de points de foi égal à                que la déesse des moissons puisse lui accorder sa
+                                  leur rang dans la carrière de prêtre ou de druide.         bénédiction). Jomi pourra ainsi écraser son poing
+                                  Toutefois, plus ils prolongent leurs dévotions,            dans la figure d’un des voyous en bénéficiant d’un dé
+                                  plus ils se doivent de s’impliquer dans le culte :         de bonus à son jet d’attaque.
+                                    W Pour une heure de dévotion, le prêtre a                  Usage plus créatif d’un point de foi : un des soudards
+                                  seulement besoin de prier et de méditer ;                  attaque Bellys, qui décide de faire de nouveau appel
+                                                                                             à Chiomalla. Cette fois, réfléchissant au fait que son
+                                    W Pour deux heures, en plus des prières,
+                                                                                             agresseur a vidé quelques pintes, le joueur de Bellys
+                                  on attendra de lui qu’il accomplisse une courte
+                                                                                             argue du fait que la bière, produit de la distillation
+                                  cérémonie ou s’occupe d’accueillir les fidèles ;
+                                                                                             du grain, pourrait avoir saoulé l’homme plus que de
+                                    W Pour trois heures, il devra, en plus du                coutume, et ce dernier reçoit donc un dé de malus à
+                                  reste, assister à une cérémonie importante ;               son jet d’attaque contre Bellys.
+                                    W Si le prêtre passe quatre heures au
+                                  temple, on attendra de lui qu’il célèbre un service,       Domaines
+                                  comprenant sans doute un sacrifice aux dieux.                Chaque divinité préside à un domaine spécifique
+                                  La forme de ce sacrifice dépend du dieu en                 (Dyr est le dieu des tempêtes, Tharungozoth le
+                                  question : il peut s’agir du sacrifice d’un simple         dieu du carnage, etc.). Il est essentiel de choisir
+                                  animal, mais les dieux sombres requièrent souvent          le bon dieu en fonction de l’usage que vous
+                                  des sacrifices humains...                                  souhaitez faire de vos points de foi. Le MJ a le
+                                                                                             dernier mot pour décider si oui ou non un point
+                                  Utiliser les points                                        de foi peut être utilisé dans une situation donnée,
+                                                                                             mais ce dernier devrait toujours récompenser la
+                                  de foi                                                     créativité.
+                                     Les points de foi permettent au prêtre d’accorder
+                                  à un personnage l’équivalent d’un avantage pour               Exemple : Argandros Drall est un druide de
+                                  une tâche spécifique ou une courte activité, ou à          Zaggath, le seigneur du feu. Il a remarqué Krongar
+                                  l’inverse d’infliger un désavantage. L’activité en         qui se faufilait vers son autel ensanglanté pour sauver
+                                  question devra avoir un lien quelconque avec le            la vierge qu’il voulait sacrifier à son dieu maléfique.
+                                  domaine de prédilection de son dieu.                       Le druide lève les bras et en appelle à Zaggath avant
+                                                                                             de pointer le doigt vers Krongar, qui s’apprête à
+                                    Au prix de la dépense de 1 point de foi, le prêtre
+                                                                                             jeter sa lance sur lui. Est-ce un reflet de la lumière
+                                  peut attribuer un dé de bonus (ou un dé de malus) à
+                                                                                             de la torche sur la pointe de sa lance ou une illusion
+                                  lui-même ou à quelqu’un de son choix qu’il peut
+                                                                                             de l’esprit? Mais toujours est-il que Krongar a un
+                                  voir. Aucun jet d’action n’ est requis : la cible est
+                                                                                             instant l’impression que sa lance s’illumine, comme
+                                  affectée automatiquement.
+                                                                                             chauffée à blanc, juste au moment où il la projette vers
+                                                                                             le druide, ce qui le perturbe dans son action.
+                                    Exemple : Bellys Blak est prêtre de rang 2 de
+                                  Chiomalla (la déesse des moissons). Bellys passe             Krongar jette 3 dés et obtient 1, 6 et 3. Il écarte le
+                                  une heure au temple à prier, puis dirige une petite        plus haut résultat (6), pour un résultat de 4. Il ajoute
+                                  cérémonie pour la congrégation qui s’est rassemblée        son agilité et son tir, mais cela ne suffit pas pour
+                                  afin de déposer quelques offrandes sur l’autel de la       toucher le druide maléfique et sa lance vient s’écraser
+                                  déesse. Cela lui prend deux heures en tout, et il reçoit   contre le mur au fond du temple.
+                                  donc 2 points de foi.
+
+
+
+
+                                                                                         146
+Créer de nouveaux                                     Regagner des points
+
+
+
+
+                                                                                                          Chapitre 6 : Prêtres et Druides
+domaines                                              de foi
+   Vous constaterez que le panthéon de Lémurie          Une fois qu’un point de foi est dépensé, il est
+comprend plusieurs dieux qui ne sont pas décrits      perdu. Il faut que le prêtre retourne à un temple
+en détail. Cela laisse aux joueurs la possibilité     pour renouveler ses dévotions s’il veut regagner
+d’inventer de nouveaux domaines pour ces dieux        des points de foi.
+s’ils le désirent.
+
+
+
+
+  Les druides sont les adorateurs des Seigneurs Sombres. Même s’ils œuvrent dans la clandestinité,
+  leurs cultes commencent à retrouver une certaine influence. Leurs cérémonies incluent parfois
+  des sacrifices humains.
+  Druides pourpres : ces prêtres maléfiques offrent des sacrifices humains à leur dieu Zylidith,
+  le seigneur sanglant. Ils ont établi un culte secret à Malakut et à Halakh, et sans doute dans
+  d’autres cités.
+  Druides gris : leur culte est celui de Nemmereth, le dieu de la mort. Les druides gris le vénèrent
+  comme un seigneur sombre, et affirment qu’être sacrifié à Nemmereth est un grand honneur
+  dont on doit se réjouir. La cité d’Halakh, réputée pour ses assassins, est le centre névralgique
+  de ce culte.
+  Druides rouges : les adorateurs de Zaggath, le seigneur du feu. Le feu et les flammes occupent
+  toujours une place centrale dans leurs sinistres cérémonies.
+  Druides jaunes : ces druides, que l’on croyait disparus avec les Rois-Sorciers, rendent un culte
+  à Morgazzon, le démon de la folie, dans leurs temples secrets à Oomis et Lysor, ainsi que dans
+  leur sanctuaire principal, caché dans les marais de Festrel.
+
+
+
+                                                    147
+                                                                                         Puissance des sortilèges
+                            Les Sorciers                                                   Les sortilèges sont répartis en quatre
+                                                                                         catégories : les charmes et les sorts de premier,
+
+
+
+
+Chapitre 6 : Les Sorciers
+                              « Krongar n’avait encore jamais rencontré de               deuxième et troisième cercles.
+                              sorcier, et bien que l’homme devant lui fût
+                                                                                           Les sorciers portent toujours sur eux des anneaux
+                              un vieillard frêle qui flottait dans ses robes, il
+                                                                                         gravés de runes, des amulettes, des talismans et
+                              émanait de lui un pouvoir qui fit hésiter un
+                                                                                         autres colifichets grâce auxquels ils peuvent lancer
+                              instant le barbare. Cela suffit à Jesharek pour
+                                                                                         des sortilèges très simples, appelés charmes.
+                              marmonner un sort d’entrave et d’épaisses cordes
+                                                                                         Un sorcier dépouillé de ces objets occultes aura
+                              s’enroulèrent autour de Krongar, l’empêchant de
+                                                                                         des difficultés à lancer même les plus simples des
+                              lever sa redoutable épée valgardienne. »
+                                                                                         charmes.
+                              — La saga de Krongar
+                                                                                           Les sortilèges d’une plus grande puissance ont
+                              Dans Barbarians of Lemuria, les sorciers sont              un coût en points de pouvoir plus élevé et sont
+                            généralement les méchants de l’histoire, ceux que            plus difficiles à lancer (cf. la table page 151).
+                            les héros doivent traquer et détruire. Ils sont craints
+                                                                                           Lancer un sortilège nécessite de réussir un
+                            par la population, et pas uniquement pour leurs
+                                                                                         jet d’action esprit + sorcier (+/- modificateur de
+                            moeurs étranges et leurs activités nocturnes, mais
+                                                                                         difficulté).
+                            parce qu’ils possèdent des pouvoirs mystérieux et
+                            dévastateurs (et parfois imprévisibles).                       Sortilèges affectant l’esprit : les sorts qui
+                                                                                         interfèrent directement avec l’ esprit ou les
+                              Il existe toutefois quelques exemples de héros
+                                                                                         perceptions d’une personne, comme une magie
+                            magiciens dans les fictions de Sword & Sorcery,
+                                                                                         de contrôle mental ou de lecture des pensées,
+                            aussi la carrière de sorcier est-elle accessible
+                                                                                         subissent un malus supplémentaire égal au score
+                            aux joueurs. Mais ces derniers doivent bien
+                                                                                         d’esprit de la victime.
+                            appréhender les conséquences qu’ils peuvent
+                            encourir à jouer un personnage qui s’adonne à la               Soins magiques : la sorcellerie n’a pas pour
+                            sorcellerie.                                                 vocation de soigner les blessés. Sorciers et
+                                                                                         magiciens ne peuvent donc user de leur art pour
+                            Points de pouvoir                                            soigner des êtres vivants ; ils peuvent en revanche
+                                                                                         réparer des objets inanimés.
+                              Les personnages possédant un rang dans la
+                            carrière de sorcier commencent le jeu avec un                  Sorcellerie et armures : il est difficile d’effectuer
+                            nombre de points de pouvoir égal à 10 + le rang              une incantation magique en portant une armure,
+                            de sorcier. Les magiciens PNJ de type piétaille              ce qui se traduit par une augmentation du coût
+                            (acolytes, apprentis) disposent de 1 à 3 points de           en points de pouvoir. Le port d’une armure légère
+                            pouvoir (autant que leur vitalité).                          augmente de 1 point de pouvoir le coût d’un
+                                                                                         sortilège, de 2 points pour une armure moyenne,
+                                                                                         et de 3 points pour une armure lourde.
+
+
+
+
+                                                                                   148
+149
+                            Charmes                                                   Sorts du premier cercle
+                              Il s’agit de sortilèges très simples, permettant au         Ces sortilèges, plus puissants que des charmes,
+                            sorcier de faire apparaître une brève lumière, de         sont ceux dont un magicien se servira couramment
+
+
+
+
+Chapitre 6 : Les Sorciers
+                            produire le son d’un rire lointain ou des étincelles      lors des aventures. Ce sont des sorts utilitaires :
+                            pour allumer un feu. Les charmes peuvent être             ils permettent au sorcier d’accomplir des choses
+                            utilisés pour réparer un objet ordinaire, rendre          que pourrait entreprendre n’importe qui avec
+                            une bière aigre ou générer l’illusion d’un objet          l’ entraînement et l’équipement nécessaires.
+                            commun. Ils peuvent également servir à réaliser           Par exemple, un sort du premier cercle pourrait
+                            des tours de prestidigitation, à faire grimper une        permettre à un sorcier de monter au sommet
+                            corde vers le haut d’une muraille ou à distraire          d’une falaise en lévitant, pour un résultat similaire
+                            un garde par un bruit illusoire. Les charmes              à celui que pourrait obtenir une personne équipée
+                            coûtent rarement plus de 1 point de pouvoir               de matériel d’escalade. Ceux destinés à blesser
+                            et ne nécessitent un jet d’action que lorsqu’ils          infligent d6 points de dégâts à la cible.
+                            affectent directement une créature, ou si le sorcier        Les sorts du premier cercle coûtent 5 points
+                            a été dépossédé de ses fétiches et amulettes (ce          de pouvoir, et vous devez choisir une condition
+                            qui augmentera également le coût en points de             d’incantation qu’il vous faut respecter pour
+                            pouvoir).                                                 pouvoir lancer un sortilège de cette puissance. Pour
+                                                                                      chaque condition d’incantation supplémentaire
+                              Exemples de charmes :                                   remplie, le coût en points de pouvoir est réduit de
+                                                                                      1 (avec un coût minimum de 2 points de pouvoir).
+                               Douleur (fait perdre 1 point de vitalité à la
+                               cible).
+                               Maladresse momentanée (la cible lâche un                 Exemples de sortilèges du
+                               objet, trébuche, etc.).                                  premier cercle :
+                               Malédiction mineure (-1 au prochain jet
+                                                                                         Illusion.
+                               d’action de la cible).
+                                                                                         Invocation de démons mineurs.
+                               Putréfaction de nourriture.
+                                                                                         Peur.
+                               Regard paralysant (paralyse la cible durant
+                                                                                         Visions d’événements récents ou se
+                               un round).
+                                                                                         déroulant à proximité.
+                               Sons illusoires.
+                              Charmes                                                   Sorts du premier cercle
+                                                                                         Coût : 5 points de pouvoir.
+                               Coût : 1 ou 2 points de pouvoir.
+                                                                                         Conditions : -1 point de pouvoir par
+                               Conditions : aucune.
+                                                                                         condition remplie au-delà de la première.
+                               Coût minimum : 1 point de pouvoir.
+                                                                                         Coût minimum : 2 points de pouvoir.
+                               Difficulté : automatique (pas de jet néces-
+                                                                                         Difficulté : Moyenne (0) ou Ardue (-1).
+                               saire), Très facile (+2) ou Facile (+1).
+
+                                                                                      Conditions d’incantation des
+                                                                                      sorts du premier cercle
+                                                                                        Objet spécial : un vieux grimoire, une tablette
+                                                                                      de pierre ou un parchemin fragile est nécessaire
+                                                                                      pour lancer ce sort, mais l’objet reste relativement
+                                                                                      facile à trouver (un peu de marchandage, un
+                                                                                      rapide voyage ou une dépense raisonnable).
+                                                                                        Ligne de vue : le sorcier doit voir sa cible.
+                                                                                        Temps d’incantation : le sortilège demande de
+                                                                                      consacrer 1d6 x 30 minutes à méditer, chanter,
+                                                                                      danser, etc., pour être correctement lancé.
+
+
+
+                                                                                150
+  Focaliseur : un objet personnel de la cible (ou, si      Sorts du deuxième cercle
+le sort vise un bâtiment, une tuile ou un moellon).
+                                                             Ce sont de puissants sortilèges, qui en général
+   Connaissances spéciales : le sorcier doit               ne pourront être employés au cours d’une
+
+
+
+
+                                                                                                                     Chapitre 6 : Les Sorciers
+mener de longues et laborieuses recherches                 aventure que si les recherches et préparations
+avant de posséder les informations nécessaires à           indispensables ont été effectuées au préalable
+l’incantation du sortilège.                                (cf. chapitre 7, « points d’expérience »). Il est
+                                                           possible de contrôler les esprits, de raser des
+  Ostentation : le sorcier doit effectuer des
+                                                           bâtiments, de transformer de puissants guerriers
+gestes précis, chanter, danser ou produire des sons
+                                                           en uzegs glapissants. Ces sortilèges ont des effets
+étranges au cours de l’incantation.
+                                                           qui dépassent les capacités d’un simple mortel.
+  Heure propice : le sort ne peut être lancé qu’à          Détruire une porte serait un sort du premier
+une heure précise de la journée.                           cercle ; détruire un mur relèverait du deuxième
+                                                           cercle.
+  Rituel de purification : le sorcier doit se
+baigner dans de l’ eau pure agrémentée d’huiles              Ces sorts coûtent 10 points de pouvoir. Pour
+essentielles, et se raser tout le corps.                   chaque condition d’incantation que le sorcier
+                                                           choisit de remplir au-delà de la première, le coût
+  Blessures : le sorcier subit la perte de d3 points
+                                                           est réduit de 1 point, jusqu’à un minimum de 6
+de vitalité au moment de l’incantation.
+                                                           points de pouvoir.
+  Rituel de groupe : nécessite d6 assistants,
+chacun devant posséder au moins un rang 0 dans
+la carrière de sorcier.
+                                                               Exemples de sorts du
+                                                               deuxième cercle :
+  Exemple : Methyn Sarr (la Reine Sorcière de la               Hypnotisme instantané.
+Côte de Feu) projette un javelot de flammes magiques           Invocation de démons inférieurs.
+sur Krongar. Le MJ considère qu’il s’agit d’un sort            Suggestion prolongée.
+du premier cercle ; elle bénéficie d’une ligne de vue          Visions d’événements se déroulant à
+(qui paraît indispensable pour un sort de ce genre) et         l’échelle d’une cité ou de souvenirs du
+utilise des pratiques ostentatoires (la Reine Sorcière         passé d’une personne.
+aime se donner en spectacle). Elle répond donc à une
+première condition d’incantation (indispensable),
+                                                               Sorts du deuxième cercle
+ainsi qu’à une deuxième, ce qui réduit le coût du sort         Coût : 10 points de pouvoir.
+à 4 points de pouvoir. Le javelot de flammes infligera         Conditions : -1 point de pouvoir par
+automatiquement d6 points de dégâts à Krongar.                 condition remplie au-delà de la première.
+                                                               Coût minimum : 6 points de pouvoir.
+                                                               Difficulté : Difficile (-2) ou Très difficile (-4).
+
+
+      Puissance                                                             Coût en pts            Coût
+                                Difficulté          Modificateur
+       du sort                                                              de Pouvoir           minimum
+                                Automatique                     -
+         Charme                  Très facile                   +2                 1à2                   1
+                                   Facile                      +1
+                                  Moyenne                       0
+     Premier Cercle                                                                 5                   2
+                                   Ardue                       -1
+                                  Difficile                    -2
+    Deuxième Cercle                                                                10                   6
+                                Très difficile                 -4
+                                 Impossible                    -6
+    Troisième Cercle                                                               15                  11
+                                  Héroïque                     -8
+
+
+
+                                                         151
+                            Conditions d’incantation des                                 Focaliseur permanent : le sorcier doit en passer
+                            sorts du deuxième cercle                                   par un tatouage rituel pour inscrire dans sa chair
+                                                                                       de manière permanente les formules magiques du
+                              Objet spécial : un vieux grimoire, une tablette
+                                                                                       sortilège.
+
+
+
+
+Chapitre 6 : Les Sorciers
+                            de pierre ou un parchemin fragile est requis pour
+                            lancer ce sort, et sera difficile à obtenir. Il s’agit       Temps d’incantation : le sort demande de
+                            d’un objet rare, ou se trouvant dans une contrée           consacrer d6 x2 heures à méditer, chanter, danser,
+                            lointaine, ou au sommet de la tour d’un sorcier            etc., pour être correctement lancé.
+                            maléfique, gardée par de féroces gorilles ailés !
+                                                                                          Sacrifice rituel : un animal (au moins de la
+                               Ingrédients rares : une expédition est                  taille d’un jeune bubalus) doit être sacrifié avant
+                            nécessaire pour trouver les ingrédients servant à          l’incantation.
+                            l’incantation. Il faudra 1d6 semaines et au moins
+                                                                                         Influence de la lune : le sort ne peut être lancé
+                            une pleine bourse d’or pour obtenir les éléments
+                                                                                       que durant une certaine phase de la lune.
+                            requis. Bien sûr, tout sorcier digne de ce nom
+                            disposera d’hommes de main prêts à se mettre en              Jeûne : le sorcier doit jeûner pendant 2d6 jours.
+                            quête de ces ingrédients spéciaux pour lui !
+                                                                                         Blessures : le sorcier subit la perte de d6+1
+                                                                                       points de vitalité au moment de l’incantation.
+                                                                                         Rituel de groupe : nécessite 2d6 assistants,
+                                                                                       chacun devant posséder au moins un rang 0 dans
+                                                                                       la carrière de sorcier.
+
+                                                                                          Exemple : Methyn Sarr a réussi à capturer
+                                                                                       Krongar. Il lui plairait de faire du puissant barbare sa
+                                                                                       marionnette afin de le châtier d’avoir osé s’introduire
+                                                                                       dans sa forteresse dans le but de la voler. Pendant que
+                                                                                       Krongar croupit dans les geôles de la Reine Sorcière,
+                                                                                       celle-ci se lance à la recherche du sort adéquat. Il lui
+                                                                                       en coûterait normalement 10 points de pouvoir, mais
+                                                                                       elle envoie quelques-unes de ses sentinelles kalukans
+                                                                                       fouiller une vieille tombe pour lui ramener un
+                                                                                       grimoire perdu dont elle a retrouvé la trace.
+                                                                                          Elle jeûne pendant une semaine (elle a obtenu 7 à
+                                                                                       son jet de 2d6 jours de jeûne) et étudie les étoiles pour
+                                                                                       déterminer le moment propice à son incantation (et
+                                                                                       effectue pour cela un jet de connaissance, en utilisant
+                                                                                       son rang dans la carrière de sorcière).
+                                                                                         Quand elle est prête, elle fait amener Krongar
+                                                                                       devant elle et sacrifie un animal. Elle a donc rempli
+                                                                                       la première condition d’incantation, plus trois
+                                                                                       conditions supplémentaires, ce qui réduit le coût du
+                                                                                       sort à 7 points de pouvoir.
+                                                                                          Le MJ décide qu’il s’agit d’un jet Difficile, auquel
+                                                                                       s’ajoute en malus l’esprit de Krongar (qui est de 0,
+                                                                                       aucun problème de ce côté-là !).
+
+
+
+
+                                                                                 152
+Sorts du troisième cercle                                     d’un sort du troisième cercle et, puisque Vulkfind est un
+                                                              PNJ, choisit comme première condition d’incantation
+   Ces sorts sont extrêmement rares dans le jeu.
+                                                              « conjonction astrale », à laquelle il ajoute la condition
+Ils sont capables de provoquer des catastrophes
+                                                              « sacrifice rituel ». Vulkfind a organisé l’enlèvement de
+
+
+
+
+                                                                                                                           Chapitre 6 : Les Sorciers
+naturelles ou de terribles malédictions pouvant
+                                                              la princesse Somua dans le palais de Satarla. Cette
+s’étendre sur plusieurs générations. Ces sorts
+                                                              condition supplémentaire réduit le coût du sort à 14
+coûtent 15 points de pouvoir. Pour chaque
+                                                              points de pouvoir. Les héros disposent de trente jours
+condition d’incantation au-delà de la première
+                                                              pour arrêter le sorcier maléfique et sauver la princesse
+que le sorcier choisit de remplir, le coût est réduit
+                                                              avant l’éclipse qui permettra à Vulkfind de lancer son
+de 1 point, jusqu’à un minimum de 11 points de
+                                                              terrible sortilège !
+pouvoir.
+
+ Conditions d’incantation des                                     Exemples de sorts du
+sorts du troisième cercle                                         troisième cercle :
+  Mortification : le sorcier doit s’infliger des                  Catastrophe « naturelle ».
+scarifications rituelles et/ou une mutilation afin                Cauchemars/hallucinations persistantes.
+d’atteindre l’état mental nécessaire à l’incantation.             Esclaves enchaînés psychiquement.
+                                                                  Invocation de démons majeurs.
+  Temps d’incantation : le sort demande de
+                                                                  Visions de contrées lointaines ou d’un passé
+consacrer 3d6 heures à méditer, chanter, danser,
+                                                                  ancien.
+etc., pour être correctement lancé.
+  Sacrifice rituel : un être doué de conscience
+                                                                  Sorts du troisième cercle
+doit être sacrifié pour fournir l’énergie nécessaire              Coût : 15 points de pouvoir.
+à l’incantation (les jeunes et belles jeunes filles               Conditions : -1 point de pouvoir par
+représentent des victimes de choix, mais elles                    condition remplie au-delà de la première.
+ont une fâcheuse tendance à attirer les barbares                  Coût minimum : 11 points de pouvoir.
+hirsutes ayant à redire sur l’idée de les sacrifier…).            Difficulté : Impossible (-6) ou Héroïque (-8).
+  Conjonction astrale : le sort ne peut être lancé
+que lors d’un alignement particulier d’étoiles et
+de planètes.
+  Lieu de pouvoir : il n’y a qu’un seul endroit
+au monde où ce sort peut être lancé, et devinez
+quoi ? Ce n’ est pas tout près !
+  Transformation démoniaque : l’incantation
+de ce sort transformera de manière permanente
+(ou pas) le sorcier en une forme démoniaque
+terrifiante au rire dément (allons-y pour les
+clichés !).
+  Blessures : le sorcier subit la perte de 2d6+1
+points de vitalité au moment de l’incantation.
+  Rituel de groupe : nécessite 3d6 assistants,
+chacun devant posséder au moins un rang 0 dans
+la carrière de sorcier.
+
+  Exemple : Vulkfind le Noir a l’intention de faire
+jaillir de terre un volcan au beau milieu de la ville
+natale des héros. Le MJ décide fort à propos qu’il s’agit
+
+
+
+
+                                                            153
+                            Récupérer des points                                      Invocation animale
+                            de pouvoir                                                  Le sorcier invoque une créature qui se
+                                                                                      rencontre normalement dans l’ environnement
+                              Le sorcier récupère à midi ET à minuit tous
+
+
+
+
+Chapitre 6 : Les Sorciers
+                                                                                      local. La créature peut être au maximum de taille
+                            les points de pouvoir dépensés pour lancer des
+                                                                                      très grande et, une fois apparue, elle obéit au
+                            charmes.
+                                                                                      sorcier jusqu’à avoir accompli la tâche qui lui a
+                              Il récupère à midi OU à minuit 4 points de              été confiée. Ce sort nécessite habituellement la
+                            pouvoir dépensés pour lancer des sorts du premier         condition « temps d’incantation ».
+                            cercle. Il doit choisir une fois pour toutes à quel
+                            moment de la journée il récupère ses points de            Invocation d’objet
+                            pouvoir.                                                    Ce sort permet au sorcier de faire apparaître un
+                                                                                      petit objet usuel : une longueur de corde, une arme
+                              Les points de pouvoir dépensés pour créer
+                                                                                      ou un outil, un vêtement, une flasque de vin ou
+                            des sorts des deuxième et troisième cercles sont
+                                                                                      d’eau. Normalement, le sorcier ne peut pas utiliser
+                            récupérés au rythme de 4 points par mois lunaire.
+                                                                                      la condition « ligne de vue » pour ce sort. Ce sort
+                            C’est en général lors de la première nuit de pleine
+                                                                                      nécessite habituellement la condition « temps
+                            lune, mais un sorcier peut toujours choisir une
+                                                                                      d’incantation ». Ce sort nécessite fréquemment la
+                            autre phase du cycle lunaire.
+                                                                                      condition « ostentation ».
+                              De plus, à chaque fois qu’un sorcier lance un sort
+                            du troisième cercle, il perd définitivement 1 point       Mauvais œil
+                            de pouvoir. Cette pénalité peut être échangée               Le sorcier inflige à sa cible une malédiction qui
+                            contre la perte définitive d’un point d’attribut (ce      affecte sa capacité à agir : la victime subit un dé
+                            qui peut éventuellement amener ce dernier dans            de malus à tous ses jets d’action. Ce sort nécessite
+                            les négatifs).                                            toujours la condition « ligne de vue ». L’esprit de
+                                                                                      la cible est toujours utilisé comme malus au jet
+                            Exemples de sorts du                                      d’action pour lancer le sort.
+
+                            premier cercle                                                                         Peau
+                                                                                                                   écailleuse
+                            Arme démoniaque                                                                          La peau de la cible
+                              Ce sort anime une épée ou une autre arme                                             de ce sort se couvre
+                            de corps à corps, qui s’attaque aux ennemis                                            d’écailles rigides, ce qui
+                            du sorcier, en obéissant à ses injonctions                                             lui confère une protec-
+                            mentales. L’arme attaque en utilisant l’esprit                                         tion d’armure de 1d6.
+                            du sorcier pour les jets d’action et les jets de                                       La condition d’incan-
+                            dégâts, au lieu de son agilité et de sa vigueur.                                       tation initiale de ce
+                            Ce sort nécessite toujours la condition « ligne                                        sort est un morceau
+                            de vue ». Ce sort nécessite de disposer d’une                                          de peau écailleuse d’un
+                            arme de corps à corps à animer. Ce sort                                                reptile.
+                            nécessite souvent la condition « ostentation ».
+                                                                                      Sujétion
+                            Esprits voilés                                              Le sorcier plie la victime du sort à sa volonté.
+                              Ce sort permet au sorcier de marcher au milieu          La victime est forcée d’agir selon le bon vouloir
+                            de ses ennemis sans qu’ils le remarquent. Il n’ est       du sorcier, à condition que ses ordres restent dans
+                            pas invisible, mais ils ne lui prêtent pas attention,     la catégorie des choses qu’elle pourrait faire si elle
+                            considèrent sa présence comme normale, ou tout            n’était sous son contrôle (elle n’attaquera pas ses
+                            simplement ne le voient pas. Le score d’esprit le         amis, par exemple). La valeur d’esprit de la cible
+                            plus élevé parmi ces ennemis est utilisé comme            est toujours utilisée comme malus au jet d’action
+                            malus au jet d’action pour lancer le sort.                pour lancer le sort.
+
+
+
+
+                                                                                154
+Exemple de sorts du                                       Vaisseau fantôme
+deuxième cercle                                             Ce sort fait remonter des profondeurs de l’océan
+                                                          une galère coulée et son équipage de marins ou de
+
+
+
+
+                                                                                                                 Chapitre 6 : Les Sorciers
+                                                          pirates morts. L’équipage se compose de piétaille
+Brouillard de Festrel                                     armée de coutelas. Lancez 2d6 pour déterminer le
+  Ce sort fait apparaître une nappe de brouillard
+                                                          nombre de marins. L’équipage conduira le navire
+d’un vert malsain qui, tant que le sorcier se
+                                                          où le sorcier le souhaite, et obéira à ses ordres
+concentre, s’étend rapidement pour atteindre une
+                                                          au mieux de ses capacités. Le vaisseau fantôme
+taille lui permettant de recouvrir un gros village.
+                                                          poursuit invariablement sa tâche, à moins
+La nappe peut également se déplacer comme
+                                                          que le sorcier ne soit présent à son bord pour
+poussée par le vent, dans une direction déterminée
+                                                          donner d’autres ordres. Si le magicien opte pour
+par le sorcier. Le brouillard s’accompagne d’une
+                                                          la condition « blessures », il y aura un membre
+odeur pestilentielle qui provoque des nausées
+                                                          d’équipage de plus pour chaque point de vitalité
+à ceux qui le respirent, et réduit la visibilité à
+                                                          perdu.
+6 mètres. Ce sort nécessite toujours un bol d’eau
+puisée dans les marais de Festrel.
+                                                          Exemples de sorts du
+Ensorcellement                                            troisième cercle
+  Ce sort place sa victime entièrement sous le
+pouvoir du sorcier. Elle obéit à tous les ordres
+qu’il lui donne sans discuter et n’a pas d’autres
+                                                          Foulée de Quathoomar
+                                                            Ce sort permet au sorcier d’ouvrir une brèche
+choix que de s’exécuter. L’esprit de la cible est
+                                                          dans l’ espace, dans laquelle il pénètre pour
+toujours utilisé comme malus au jet d’action
+                                                          ressortir en n’importe quel endroit du monde,
+pour lancer le sort. Des ingrédients rares sont
+                                                          selon son désir.
+généralement nécessaires, ainsi qu’un objet
+personnel appartenant à la victime.
+                                                          Peste noire
+                                                            Ce sort provoque une terrible épidémie dans une
+Invocation de monstre                                     ville. La moitié des habitants tombent gravement
+  Le sorcier invoque une créature qui se
+                                                          malades et se retrouvent très affaiblis. Un quart
+rencontre normalement dans l’ environnement
+                                                          des habitants meurent de l’épidémie en l’ espace
+local. La créature peut être au maximum de taille
+                                                          d’une semaine. La condition d’incantation initiale
+monstrueuse et, une fois apparue, elle obéit au
+                                                          de ce sort sera habituellement « sacrifice rituel ».
+sorcier jusqu’à avoir accompli la tâche qui lui a
+été confiée. Ce sort nécessite habituellement
+la condition « temps d’incantation ». Ce sort
+nécessite souvent la condition « ingrédients rares ».
+
+
+
+
+                                                        155
+Savoir et pouvoir                                    Bien des savants tueraient pour pouvoir le
+                                                     consulter, mais la plupart doivent se contenter
+  De nombreux manuscrits et grimoires
+                                                     des copies de certaines de ses pages (copies
+renferment les secrets de l’histoire et les
+                                                     qui sont elles-mêmes assez rares). L’Edda
+savoirs perdus d’époques révolues. Voici
+                                                     pourpre narre les exploits d’un grand héros,
+quelques-uns des ouvrages les plus convoités
+                                                     donnant au passage de précieuses indications
+par les sages et les savants de Lémurie.
+                                                     sur des lieux secrets, des trésors cachés et
+  Annales de Parsool : un livre qui relate           autres merveilles.
+l’histoire de Parsool, conservé dans la
+                                                       Grimoire de Jesharek : un légendaire
+bibliothèque du palais royal.
+                                                     recueil écrit par le grand alchimiste Jesharek.
+  Chroniques d’Oomis : ce manuscrit
+                                                        Grimoire noir : ce livre contient les rituels
+contient l’histoire et les archives de la cité
+                                                     et les formules permettant d’invoquer les
+d’Oomis depuis sa création. Il est conservé à
+                                                     démons, de relever les morts et de détruire
+la bibliothèque d’Oomis.
+                                                     l’âme des hommes. On raconte que les druides
+  Codex d’ambre : ce manuscrit légendaire            noirs détiendraient ce manuscrit impie dans
+mesure trois pieds de haut sur huit pieds de         leur temple à Zalut, mais d’aucuns prétendent
+large, et chaque page est constituée d’une           qu’ils ne sont en possession que d’une copie
+feuille d’ambre incrustée de pierres précieuses      lacunaire.
+formant les lettres du texte. Un pareil
+                                                       Manuscrit du Néant : le recueil des
+ouvrage ne peut qu’être l’œuvre des dieux,
+                                                     connaissances des Rois-Sorciers. Il est rédigé
+et il renfermerait les formules magiques et
+                                                     en démonique, et donc illisible pour le
+les instructions permettant de créer toutes
+                                                     commun des mortels.
+sortes de merveilles : navires volants, statues
+animées, etc. Le Codex d’ambre est perdu               Les parchemins d’Urceb : racontent
+depuis des millénaires.                              l’histoire d’Urceb. De nombreux chapitres ont
+                                                     été perdus, mais les érudits espèrent toujours
+    Codex d’Ygddar : un récit perdu de
+                                                     la découverte de parchemins inédits dans les
+l’ expansion de l’homme à l’époque de Kylarth,
+                                                     catacombes sous la ville. Certains sorciers
+rédigé sur plusieurs générations par les scribes
+                                                     ou érudits fortunés possèdent des copies
+d’Ygddar. Il relate notamment la mort de
+                                                     partielles des parchemins d’Urceb.
+Kylarth dans les marais de Festrel et la chute
+des vieilles cités de l’ Est. Il contiendrait          Rhadathmazar : un grimoire sacrilège de
+également certains secrets des temps anciens.        sorcellerie, en possession des magiciens de
+                                                     Zalut.
+  L’Edda pourpre : un antique et légendaire
+ouvrage rédigé sur des feuilles de janium              Le Testament de C’Thoollanax : un antique
+ayant l’épaisseur du vélin. Ses pages avaient        manuscrit remontant à l’époque des Rois-
+été dispersées aux quatre coins de la Lémurie,       Sorciers et qui décrit (entre autres choses) la
+mais elles ont été patiemment réunies et             création des céruléens, des slorth et de bien
+l’Edda pourpre est actuellement conservée            d’autres étranges créatures qui peuplent la
+dans la Grande Bibliothèque de Satarla.              Lémurie.
+
+
+
+
+                                               156
+                                                                                                                    Chapitre 6 : Les Cultes de Lémurie
+Les cultes de Lémurie                                      brasero en bronze ayant la forme d’un crâne
+                                                           (que l’on ne peut porter qu’à deux mains et en
+  Cette partie présente quelques exemples de               réussissant un test de vigueur). Les combattants
+cultes implantés en Lémurie, en précisant leurs            doivent s’en emparer et le transporter jusqu’à
+croyances et leurs méthodes douteuses.                     leur position d’origine sans que ses flammes ne
+                                                           s’éteignent. Si cela se produit, les deux équipes
+L’Arène des ronces                                         ont échoué et leurs membres sont achevés par des
+                                                           archers disposés sur les passerelles, en punition de
+   Dans les faubourgs de Shamballah, depuis                leur manque d’opiniâtreté.
+lesquels s’aperçoit dans le lointain la vaste et
+                                                             - Le dernier guerrier : tous les participants ont
+lugubre étendue des Terres Désolées, il existe une
+                                                           reçu la piqûre d’une épine dont le poison leur
+grande structure en pierre grossière à la sinistre
+                                                           provoquera un arrêt cardiaque quelques heures
+réputation, dont toute personne censée évite de
+                                                           plus tard. Un seul d’entre eux pourra recevoir
+s’approcher. Les gens de Shamballah l’appellent
+                                                           un antidote, mais à condition que tous les autres
+l’Arène des ronces, quand toutefois ils acceptent
+                                                           soient morts.
+d’évoquer ce lieu sinistre.
+                                                             - Le trophée sanglant : une variation du « dernier
+  L’arène fut bâtie avec les mêmes pierres que le
+                                                           guerrier » où le gagnant est le premier participant
+palais et le centre de la cité, des pierres de taille
+                                                           à couper les têtes de cinq adversaires et à les
+récupérées dans les ruines d’une mystérieuse
+                                                           ramener jusqu’au pieu qui lui a été assigné et les y
+ville abandonnée au cœur de la jungle. Personne
+                                                           empaler l’une après l’autre. D’autres participants
+ne connaît l’identité de celui qui l’érigea, mais
+                                                           peuvent survivre, mais le vainqueur se verra
+son maître actuel est le sorcier Tokalu, aussi
+                                                           généralement accorder un petit bénéfice ou un
+surnommé le Maître des Haies.
+                                                           avantage pour le jeu suivant.
+   Les malheureux qui se retrouvent à l’intérieur de
+                                                             Tokalu organise encore bien d’autres spectacles
+l’arène découvrent que l’ endroit est un immense
+                                                           cruels et mortels dans son arène, dont la variété
+dédale changeant, fait de haies épineuses hautes
+                                                           n’a pour limite que son imagination malveillante.
+et épaisses, dont les épines acérées sécrètent
+souvent des poisons qui provoquent des douleurs              Ses invités appartiennent à un groupe restreint
+insoutenables ou la paralysie.Ils se voient promettre      de riches nobles et marchands, triés sur le volet
+la liberté s’ils survivent à une série d’« épreuves »      pour leur immoralité et leur goût pervers, et
+auxquelles ils sont forcés de participer. Et s’il leur     disposés à payer des sommes indécentes pour
+faut quelques encouragements pour se mettre                assister à ce genre de spectacles sanglants.
+dans le bon état d’esprit, des bêtes féroces peuvent
+                                                              L’Arène des ronces est détestée de la population
+être lâchées dans le dédale afin de les traquer et
+                                                           de Shamballah ; cette dernière soupçonne que
+de les dévorer.
+                                                           beaucoup de ses fils et filles à avoir mystérieusement
+  Dominant les haies, un réseau de ponts de                disparu ont en fait « nourri les ronces ». Mais
+pierre et de passerelles suspendues en bois                jusqu’à ce jour, personne n’a osé s’en prendre à
+quadrille l’ ensemble du labyrinthe. Depuis ces            Tokalu. Ce dernier dispose d’une petite troupe
+hauteurs privilégiées, les invités du sorcier suivent      de redoutables chasseurs qui lui fournissent les
+les progrès des malheureux prisonniers du dédale,          bêtes sauvages nécessaires à ses spectacles et qui
+font des paris et se divertissent du spectacle.            partagent la cruauté de leur maître. Par ailleurs,
+                                                           l’arène est tolérée par le roi, qui ne se prive pas
+  Voici quelques-uns des « jeux » les plus courants
+                                                           de s’en servir pour se débarrasser discrètement de
+de l’Arène des ronces :
+                                                           certains opposants. Ainsi la simple existence de
+  - Capturer le crâne : deux équipes de guerriers          l’Arène des ronces suffit à décourager bien des
+désarmés doivent parcourir le labyrinthe pour y            velléités de rébellion...
+retrouver des armes cachées, ainsi qu’un grand
+
+
+
+
+                                                         157
+

@@ -24,7 +24,7 @@ import {BolHerosTraitsModel} from '../../models/bol-trait.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {HeroAdvancedCreateTools} from '../create.tools';
-import {carrieresFormValidator, carriereValidator} from '../create.validators';
+import {carrieresFormValidatorFn, carriereValidator} from '../create.validators';
 
 @Component({
   selector: 'bol-hero-advanced-carrieres',
@@ -70,7 +70,7 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
     {
       carrieres: this.formBuilder.array([]),
     },
-    {validators: carrieresFormValidator},
+    {validators: carrieresFormValidatorFn(4)},
   );
   protected readonly formChange = toSignal(this.carrieresForm.valueChanges, {
     initialValue: this.carrieresForm.getRawValue(),
@@ -79,6 +79,7 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
   protected readonly currentRegion = this.herosStateService.currentHerosRegion;
   protected readonly carrieresList = this.herosStateService.carriereList;
   protected readonly carriereDesavangeCount = this.herosStateService.carriereDesavangeCount;
+  protected readonly carriereBudget = this.herosStateService.carriereBudget;
   protected readonly desavantagesList = this.herosStateService.desavantagesList;
   protected readonly availableCarrieres = computed(() => {
     const selectedIds = this.carrieres.controls.map((control) => Number(control.get('carriere_id')?.value ?? 0));
@@ -101,6 +102,13 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
       this.updateWarnings();
       this.onChange(this.carrieres.getRawValue() as BolHerosCarriereModel[]);
       this.onTouched();
+    });
+
+    // E11: update validator when Non-combattant changes
+    effect(() => {
+      const budget = this.carriereBudget();
+      this.carrieresForm.setValidators(carrieresFormValidatorFn(budget));
+      this.carrieresForm.updateValueAndValidity();
     });
   }
 
@@ -225,7 +233,7 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
     });
 
     if (this.carrieresForm.errors?.['carrSumExceeded']) {
-      errors.push({control: '', error: 'La somme des carrières ne doit pas dépasser 4.'});
+      errors.push({control: '', error: `La somme des carrières ne doit pas dépasser ${this.carriereBudget()}.`});
     }
 
     this.carriereErrors.set(errors);
@@ -239,12 +247,13 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
         warnings.push({step: 'Carrières', warn: 'Vous devez choisir 4 carrières.'});
       }
 
+      const budget = this.carriereBudget();
       const sum = this.carrieres.controls.reduce(
         (total, current) => total + Number(current.get('value')?.value ?? 0),
         0,
       );
-      if (sum < 4) {
-        warnings.push({step: 'Carrières', warn: `Il manque ${4 - sum} point(s) dans les carrières.`});
+      if (sum < budget) {
+        warnings.push({step: 'Carrières', warn: `Il manque ${budget - sum} point(s) dans les carrières (budget : ${budget}).`});
       }
 
       if (this.carriereDesavangeCount()) {

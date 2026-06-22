@@ -1,0 +1,736 @@
+Chapitre 3 : Accomplir une action
+                                                                            Chapitre 3
+
+                                    Le Chemin de la Gloire
+                                    « Alors le seigneur Hurm baissa le regard vers la cité d’Oosal où Thangard avait grimpé au sommet de
+                                    la plus haute tour afin d’implorer le dieu. Peu enclin à s’immiscer dans les affaires des hommes, Hurm
+                                    fut pourtant touché par le désespoir passionné du héros et décida de répondre à ses prières. Il manda
+                                    Karyzon le Messager et le chargea de rapporter à Thangard ses paroles. »
+                                    — L’Edda pourpre
+                                                                                             Effets des avantages et
+                                                                                             des désavantages
+                                                                                               Lors de certains jets d’action, il se peut qu’un
+                                                                                             de vos avantages ou de vos désavantages vous
+                                                                                             fasse lancer trois dés au lieu de deux. Dans le cas
+                                                                                             d’un avantage (qui vous octroie un dé de bonus),
+                                                                                             vous gardez les deux meilleurs résultats. Dans le
+                                                                                             cas d’un désavantage (qui vous impose un dé de
+                                                                                             malus), gardez les deux moins bons résultats.
+
+
+                                                                                             Modificateurs
+                                    Accomplir une action                                        Le MJ vous indiquera si un modificateur
+                                                                                             s’applique à votre jet d’action. Pour les tâches
+                                      Pour accomplir une action, il vous suffit de lancer
+                                                                                             les plus simples, vous pourrez bénéficier d’un
+                                    2d6 et d’additionner leur résultat, auquel s’ajoute
+                                                                                             bonus ; pour les tâches les plus ardues, un malus
+                                    alors l’attribut approprié à l’action entreprise.
+                                                                                             s’appliquera à votre jet.
+                                    En combat, vous ajoutez également l’aptitude de
+                                    combat correspondant au type d’attaque que vous            Si le résultat final est de 9 ou plus, vous
+                                    voulez effectuer. En dehors des combats, vous            réussissez l’action entreprise. Si le résultat est
+                                    ajoutez éventuellement le rang d’une carrière            inférieur à 9, vous échouez.
+                                    appropriée à l’action entreprise.
+                                       La décision finale appartient au MJ quand il          Réussite automatique
+                                    s’agit de décider si une carrière peut intervenir           Si vous obtenez un double 6 sur votre jet de
+                                    dans l’action entreprise, mais le joueur peut            dés, c’est une réussite automatique. Cela veut dire
+                                    toujours essayer de l’en convaincre. Par exemple,        que vous avez toujours une chance d’accomplir
+                                    un héros possédant un rang dans la carrière              l’impossible.
+                                    d’assassin aura sans doute quelques connaissances
+                                    dans l’usage des poisons, aussi le MJ lui permettra      Succès héroïque
+                                    sûrement d’ajouter son rang d’assassin à un jet            À moins que vous n’ayez entrepris une action
+                                    d’action (basé sur son esprit) pour détecter un          qui ne pouvait réussir qu’avec un double 6 (auquel
+                                    poison dans son verre de vin. En revanche, une           cas l’action réussit normalement), vous bénéficiez
+                                    carrière d’assassin ne vous servira à rien pour          d’un succès héroïque lorsque vous obtenez un 12
+                                    traquer un deodarg dans les jungles de Qush ;            naturel à un jet d’action. Le résultat d’un succès
+                                    cette tâche relève plutôt des compétences d’un           héroïque au combat sera expliqué plus tard.
+                                    chasseur.                                                Hors combat, un succès héroïque vous permet
+
+
+
+
+                                                                                        56
+                                                                                                                       Chapitre 3 : Accomplir une action
+d’accomplir brillamment votre                               Modificateur au             Portée des armes
+tâche ; charge à vous (ou au MJ)      Difficulté
+                                                             jet d’action                    de tir
+de décrire les conséquences de ce
+                                        Très facile                    +2                           -
+résultat exceptionnel.
+                                          Facile                       +1                    Bout portant
+Succès légendaire                      Moyenne                         0                         Courte
+  Si vous obtenez un double 6
+sur un jet d’action et dépensez         Ardue                          -1                      Moyenne
+1 point d’héroïsme, vous pouvez        Difficile                       -2                       Longue
+convertir un succès héroïque en
+                                     Très difficile                    -4                     Très longue
+succès légendaire. Le résultat d’un
+succès légendaire au combat sera      Impossible                       -6                       Extrême
+expliqué plus tard. Hors combat,       Héroïque                        -8                      Maximale
+un succès légendaire vous permet
+d’accomplir brillamment votre
+tâche ; charge à vous (ou au MJ) de décrire les
+conséquences de ce résultat exceptionnel, qui de
+                                                           Exemple de jet d’action n° 1
+                                                             Krongar le Puissant, un barbare du Nord avec 3 en
+surcroît vous apporte un bonus, une information
+                                                           vigueur, veut briser une porte qui, il en est persuadé,
+supplémentaire ou un avantage quelconque, en
+                                                           doit s’ouvrir sur une salle au trésor.
+fonction de l’action entreprise.
+                                                             Le MJ décide qu’aucune des carrières de Krongar ne
+Échec automatique                                          peut l’aider dans cette tâche et que briser cette solide
+                                                           porte est d’une difficulté Ardue, soit un malus de -1.
+  Obtenir un double 1 sur un jet d’action signifie
+un échec automatique. Cela veut dire qu’il y                  Le joueur lance 2d6 et obtient 10, ajoute 3 (la
+a toujours une possibilité que le meilleur des             vigueur de Krongar) pour un résultat de 13. Il
+personnages connaisse un moment de défaillance,            soustrait 1 pour la difficulté Ardue, pour un résultat
+ou que la malchance vienne s’en mêler.                     final de 12, bien plus que le 9 nécessaire pour réussir
+                                                           une action. La porte s’ouvre à toute volée.
+Échec critique
+  Si vous obtenez un double 1, vous pouvez
+choisir de convertir cet échec automatique en
+échec critique. C’est au joueur de décrire un échec
+critique, mais ce dernier doit placer son héros
+dans une situation désavantageuse au moins pour            Exemple de jet d’action n° 2
+le round en cours et le suivant, ou dans un futur             Supposons que lorsqu’il franchit le seuil, notre héros
+immédiat s’il s’agit d’une scène sans combat.              ne trouve pas un trésor, mais une fosse profonde.
+Ce faisant, le joueur peut se voir accorder 1 point        Emporté par son élan après avoir défoncé la porte,
+d’héroïsme supplémentaire à utiliser plus tard             il risque fort de tomber dans le gouffre béant. Pour
+dans cette aventure (ce qui peut lui permettre de          sauter par-dessus la fosse, Krongar doit réussir un jet
+dépasser temporairement la limite habituelle de            d’agilité. Krongar a 1 en agilité, mais heureusement
+5 points d’héroïsme). Il revient au MJ d’accorder          le MJ est d’humeur conciliante et décide que ses
+ou non ce point d’héroïsme en bonus.                       instincts affûtés de barbare peuvent l’aider en la
+                                                           circonstance, et permet au joueur d’ajouter le rang de
+Modificateurs                                              Krongar dans cette carrière (rang 2) à son jet.
+   La table ci-dessus indique la difficulté d’une            Les dés donnent un résultat de 6, qui additionné au
+tâche (et son équivalent en terme de portée de             bonus de +3 (agilité + rang de barbare) amène à un
+tir) et le modificateur à appliquer en fonction.           total de 9. La difficulté du jet d’action est Moyenne
+D’autres modificateurs peuvent intervenir au gré           (modificateur 0), ce qui signifie que Krongar parvient
+de circonstances particulières.                            à bondir par-dessus la fosse.
+
+
+
+
+                                                      57
+Chapitre 3 : Les points d’Héroïsme
+                                     Utiliser les points
+                                     d’héroïsme
+                                       Vous pouvez utiliser les points d’héroïsme pour
+                                     peser sur l’issue d’un combat ou d’une situation
+                                     afin de faire pencher la balance en votre faveur.
+                                     Voici les différentes façons d’utiliser un point           Défier la mort
+                                     d’héroïsme :                                                 Les points d’héroïsme peuvent toujours servir
+                                                                                                à garder un héros en vie alors qu’il devrait
+                                        Coup de chance                                          mourir. Si vous avez subi des dégâts qui ont fait
+                                                                                                chuter votre vitalité entre -1 et -5, vous pouvez
+                                        Défier la mort
+                                                                                                dépenser 1 point d’héroïsme pour ramener
+                                        Faveur divine                                           immédiatement votre vitalité à 0. Vous êtes
+                                                                                                vivant, mais inconscient.
+                                        Juste une égratignure
+                                                                                                  Si les dégâts subis vous amènent au-dessous
+                                        Parade in extremis
+                                                                                                de -5 en vitalité, vous pouvez dépenser 1 point
+                                        Négocier avec le MJ                                     d’héroïsme pour stabiliser vos blessures. Vous
+                                                                                                restez inconscient, et vous pourrez vous remettre
+                                        Succès héroïque
+                                                                                                sur pied avec quelques jours de repos.
+                                        Succès légendaire
+                                                                                                Faveur divine
+                                                                                                  Vous pouvez dépenser 1 point d’héroïsme
+                                     Coup de chance                                             pour relancer les dés d’un jet d’action (même si
+                                       Quand la description d’une scène n’a pas                 vous avez obtenu un double 1, qui est un échec
+                                     clairement défini certains détails, le joueur peut         automatique). Vous devez relancer tous les dés
+                                     suggérer quelque chose qui paraisse raisonnable            (y compris les dés de bonus) et conserver le résultat
+                                     et utiliser 1 point d’héroïsme pour que cela               du second jet.
+                                     devienne une réalité. Cette façon d’utiliser un
+                                     point d’héroïsme reste soumise à l’approbation             Juste une égratignure
+                                     du MJ. Cela ne doit pas permettre d’apporter un               Quand un héros subit des dégâts, il peut
+                                     changement majeur dans une scène ni de modifier            prendre un petit moment (ce qui lui coûte sa
+                                     un élément qui a déjà été déterminé.                       prochaine action) pour se remettre du coup qu’il
+                                                                                                vient d’encaisser. En d’autres termes, sa blessure
+                                       Par exemple, si un personnage est emprisonné
+                                                                                                n’ est finalement pas aussi grave qu’elle paraissait.
+                                     dans une geôle, il peut utiliser 1 point d’héroïsme
+                                                                                                Vous lancez 1d6 et récupérez le nombre
+                                     pour découvrir une pierre disjointe dans le
+                                                                                                correspondant de points de vitalité (sans pouvoir
+                                     mur et réussir à l’extraire, peut-être dans le but
+                                                                                                dépasser le nombre de points de dégâts subis du
+                                     d’assommer le garde la prochaine fois que celui-ci
+                                                                                                fait de cette attaque).
+                                     viendra lui apporter sa pitance.
+                                       Un sorcier peut utiliser 1 point d’héroïsme              Parade in extremis
+                                     afin de remplir une condition d’incantation.                 Vous pouvez dépenser 1 point d’héroïsme
+                                     Par exemple, si le MJ n’a pas encore précisé le            pour éviter de subir les dégâts d’une attaque
+                                     moment de la journée, le sorcier pourra s’exclamer :       en interposant votre bouclier ou votre arme au
+                                     « Ah, cette heure du jour est idéale pour la réussite      dernier moment. Toutefois, le coup fracasse votre
+                                     de mon invocation ! »                                      bouclier ou brise votre arme qui devient alors
+                                                                                                inutilisable.
+
+
+
+
+                                                                                           58
+                                                                                                                  Chapitre 3 : Les points d’Héroïsme
+                                                           Renversement. Vous pouvez renverser un
+Négocier avec le MJ                                      adversaire, dont la taille peut être supérieure à la
+  Tout autre avantage ponctuel (non couvert par
+                                                         vôtre d’une catégorie au maximum. L’adversaire se
+les différentes options d’utilisation des points
+                                                         retrouve à terre après avoir été repoussé de quelques
+d’héroïsme) que vous pourriez convaincre le MJ
+                                                         pas (il ne fait pas bon combattre au bord d’une
+de vous accorder.
+                                                         falaise !). Si le combat continue, l’adversaire qui se
+                                                         relève subit un dé de malus à sa prochaine action.
+Succès héroïque
+  Lorsque vous obtenez un double 6 sur un jet
+d’action, il s’agit d’un succès héroïque. Mais vous
+                                                         Succès légendaire
+                                                           Si vous obtenez un double 6 sur un jet d’action
+pouvez aussi convertir un simple succès en succès
+                                                         et qu’il s’agit d’un succès héroïque (pas d’un jet
+héroïque par la dépense de 1 point d’héroïsme.
+                                                         d’action qui ne pouvait réussir que sur un double
+Le résultat exact d’un succès héroïque dépend de
+                                                         6), vous pouvez dépenser 1 point d’héroïsme
+la tâche entreprise, mais dans tous les cas le héros
+                                                         pour transformer ce succès héroïque en succès
+réussit brillamment son action.
+                                                         légendaire, et cela même si vous avez dépensé
+  Au combat, un succès héroïque vous permet de           1 point d’héroïsme pour refaire votre jet d’action,
+choisir une des options suivantes :                      du moment que vous obtenez un double 6 au
+                                                         second jet.
+  Carnage. Vous effectuez immédiatement une
+nouvelle attaque, contre le même adversaire ou             Le succès légendaire n’ est accessible que si
+contre un adversaire différent. Vous ne pouvez           vous obtenez un double 6. Vous ne pouvez pas
+pas dépenser de point d’héroïsme dans le cadre           convertir un succès normal en succès héroïque,
+de cette attaque supplémentaire.                         puis dépenser un deuxième point d’héroïsme
+                                                         pour le transformer en succès légendaire.
+  Coup dévastateur. Vous ajoutez +6 aux dégâts.
+                                                           Au combat, un succès légendaire vous permet
+  Coup précis. Vous frappez votre ennemi à
+                                                         de choisir deux options de succès héroïque.
+un endroit précis, dans l’intention de l’estropier
+                                                         Par exemple, si vous affrontez de la piétaille,
+afin de diminuer ses capacités. Vous déterminez
+                                                         vous pouvez choisir Massacrer la piétaille et
+les dégâts normalement et imposez à la cible un
+                                                         Coup dévastateur afin d’éliminer encore plus
+dé de malus à un type spécifique de jets d’action
+                                                         d’adversaires. Vous pouvez choisir deux fois la
+(en règle générale, vous voudrez affecter ses jets
+                                                         même option, si vous le souhaitez (par exemple,
+d’attaque, mais ce n’ est pas une obligation ; un
+                                                         choisir deux fois Coup dévastateur pour un bonus
+coup porté à l’œil imposera un dé de malus à tous
+                                                         aux dégâts de +12 !).
+les jets d’action faisant appel à la vue, ce qui peut
+inclure – ou pas – les jets d’attaque). Les autres
+options d’un coup précis peuvent être de trancher
+un tentacule ou un dard, ou d’ouvrir une large
+                                                         Récupérer les points
+plaie dans le cuir épais d’un monstre (pour réduire      d’héroïsme
+la protection de la créature d’une catégorie).             Vous récupérez à la fin d’une aventure tous les
+Vous pourrez décider avec le MJ d’autres effets          points d’héroïsme utilisés.
+similaires en fonction des circonstances.
+                                                           Vous ne pouvez pas dépasser votre total de
+  Désarmement. Si votre adversaire a une arme            points d’héroïsme de départ, à moins de recevoir
+en main, vous le désarmez (au lieu de lui infliger       un point d’héroïsme en bonus du fait d’un échec
+des dégâts).                                             critique.
+  Massacrer la piétaille. Si vous combattez de la
+piétaille, les dégâts infligés représentent le nombre
+d’adversaires mis hors de combat par votre assaut.
+Ils ne sont pas forcément morts, mais ils ne sont
+pas près de revenir vous affronter de sitôt.
+
+
+
+
+                                                        59
+                                Le fracas de l’acier :                                 rivaux peuvent agir, les coriaces et la piétaille sont
+
+
+
+
+Chapitre 3 : Règles de Combat
+                                                                                       complètement pris de vitesse.
+
+
+                                règles de combat                                         Succès légendaire : comme pour un succès
+                                                                                       héroïque, mais vous obtenez en plus un bonus de
+                                                                                       +1 à vos jets d’attaque durant tout le combat.
+                                   Le combat se divise en rounds, qui représentent
+                                                                                          Si plusieurs héros obtiennent le même résultat,
+                                chacun un intervalle de quelques secondes.
+                                                                                       ils peuvent décider entre eux qui agit le premier
+                                Durant un round, un personnage peut tirer une
+                                                                                       ou procéder par ordre décroissant d’agilité. En cas
+                                flèche, frapper ou parer avec une arme, lancer une
+                                                                                       d’égalité, leurs actions se déroulent simultanément.
+                                hache, etc.
+                                                                                         Les PNJ ne font pas de jet de réaction. Ils
+                                Qui agit en premier ?                                  agissent en fonction des jets de réaction des héros,
+                                                                                       comme indiqué dans la table ci-dessous.
+                                  Au début d’un combat, les joueurs effectuent un
+                                jet de réaction pour déterminer dans quel ordre          Si les héros ont le temps de faire une pause
+                                les héros et les PNJ vont agir durant les rounds       à l’issue d’un combat, un nouvel affrontement
+                                de combat.                                             réclamera un nouveau jet de réaction.
+
+                                  Jet de réaction : 2d6 + esprit + initiative +
+                                d’éventuels modificateurs. Comme toujours, il          Modificateurs aux jets de
+                                faut obtenir 9 ou plus pour réussir.                   réaction
+                                                                                         Si vous tombez dans une embuscade ou si vous
+                                  Échec critique : vous agissez en dernier durant      êtes surpris, votre jet de réaction devient Ardu
+                                tout le temps du combat. De plus, pour le premier      (malus de -1).
+                                round de combat, vous restez interdit, incapable
+                                                                                         Si vous tendez une embuscade ou si vous
+                                d’agir. Si vous portez un bouclier, vous ne pouvez
+                                                                                       surprenez l’ennemi, votre jet de réaction devient
+                                pas ajouter son bonus à votre défense.
+                                                                                       Très facile (bonus de +2).
+                                  Échec : vous effectuez votre action avant la
+                                                                                         Si vous possédez une carrière que le MJ juge
+                                piétaille, mais après tous les autres.
+                                                                                       utile dans la situation, vous pouvez recevoir un
+                                  Réussite : vous effectuez votre action avant tout    bonus égal à votre rang dans cette carrière.
+                                le monde.
+                                                                                         Si un coriace ou un rival possède une valeur
+                                  Succès héroïque : vous agissez avant tout le         d’initiative, prenez la plus haute valeur d’initiative
+                                monde. De plus, en raison de ce succès, durant         parmi les adversaires des héros, et appliquez-la en
+                                le premier round du combat, seuls les héros et les     malus au jet de réaction des héros.
+
+                                   Ordre de
+                                                                                      Personnage
+                                   Réaction
+                                        1            Héros ayant obtenu un succès légendaire
+                                        2            Héros ayant obtenu un succès héroïque
+                                        3            Héros ayant obtenu un succès
+                                        4            Rivaux
+                                        5            Coriaces (pas de 1er round de combat face à un succès héroïque ou légendaire)
+                                        6            Héros ayant obtenu un échec
+                                        7            Piétaille (pas de 1er round de combat face à un succès héroïque ou légendaire)
+                                        8            Héros ayant obtenu un échec critique
+
+
+
+
+                                                                                  60
+Exemples de jets de réaction                                      Déplacement et
+
+
+
+
+                                                                                                                         Chapitre 3 : Règles de Combat
+   Krongar (esprit 0 et initiative 1) et Rork Kozaar
+(esprit 1 et initiative 1) affrontent des bandits
+                                                                  distances
+                                                                     Quand le combat fait rage, la disposition des
+(piétaille) menés par un chef coriace (initiative 1).
+                                                                  lieux peut se révéler d’une importance cruciale.
+Les héros effectuent leur jet de réaction. Krongar
+                                                                  Pour Barbarians of Lemuria, inutile d’utiliser
+obtient 11, +1 d’initiative et -1 à cause de l’initiative
+                                                                  des figurines et un plan quadrillé ; le MJ et les
+de l’ennemi = 11, soit un succès. Rork obtient un 7,
+                                                                  joueurs doivent imaginer la scène dans leur tête.
++1 d’esprit, +1 d’initiative et -1 pour l’initiative de
+                                                                  Le MJ décrit à grands traits la situation, puis
+l’ennemi = 8, soit un échec. Krongar agit en premier,
+                                                                  affine sa description en fonction des besoins
+puis le chef des bandits (coriace), suivi de Rork, et
+                                                                  et des questions des joueurs. Le MJ comme
+enfin les bandits (piétaille).
+                                                                  les joueurs doivent faire appel à leur bon sens.
+   Exemple de succès légendaire : Krongar                         En règle générale, le MJ répondra oui à la plupart
+et Rork Kozaar s’aventurent prudemment dans                       des questions raisonnables, à moins qu’une raison
+une grotte où résonnent d’étranges bruissements.                  spéciale (dont les joueurs ne sont peut-être pas
+Soudain, un scorpion-araignée géant (classé comme                 conscients…) ne l’en empêche.
+rival), 3 scorpions-araignées normaux (classés comme
+                                                                    Par exemple, si le combat se déroule dans des
+coriaces) et 6 jeunes scorpions-araignées (classé
+                                                                  souterrains humides faiblement éclairés par
+comme piétaille) se jettent sur eux. Krongar et Rork
+                                                                  quelques torches fumantes, il serait raisonnable
+étaient sur leurs gardes et le MJ décide qu’ils ne sont
+                                                                  qu’un joueur suggère la présence d’un recoin
+pas surpris (ce qui ne les empêche pas de s’inquiéter un
+                                                                  d’ombre où il pourrait s’embusquer afin de
+peu !). Les joueurs effectuent donc leur jet de réaction.
+                                                                  surprendre un garde peu méfiant. Ou, dans la
+Le joueur de Rork obtient un total de 9 (après
+                                                                  jungle, un joueur pourra raisonnablement suggérer
+modificateurs) et celui de Krongar tire un double 6
+                                                                  que des lianes pendent des branches des arbres,
+! Cela donne un total de 13 (puisque Krongar a 0
+                                                                  auxquelles il pourrait grimper pour se balancer et
+en esprit et 1 en initiative), une réussite au jet de
+                                                                  sauter sur le dos du chark qui attaque le groupe.
+réaction qui est de plus un succès héroïque. Krongar
+                                                                  Lorsque les choses sont moins évidentes, le MJ
+et Rork ont donc un round pour agir avant que les
+                                                                  peut demander au joueur de dépenser 1 point
+scorpions-araignées les plus petits puissent passer à
+                                                                  d’héroïsme pour que la scène offre bien l’élément
+l’action. Mais inquiets du scorpion-araignée géant,
+                                                                  souhaité par ce dernier.
+et parce que l’occasion ne se présente pas tous les jours,
+le joueur de Krongar décide de dépenser 1 point                     Les combats et les déplacements sont gérés de
+d’héroïsme pour transformer son succès héroïque en                manière abstraite. Le MJ décrit la scène et les
+succès légendaire, et obtenir ainsi un bonus de +1 à ses          joueurs expliquent les actions et les déplacements
+jets d’attaque pour toute la rencontre.                           de leurs personnages, dans la limite du raisonnable.
+                                                                    Vous pouvez demander un jet d’agilité s’il est
+Retarder son action et                                            important de savoir qui arrive en premier à un
+interrompre                                                       endroit précis, ou pour voir si un fuyard échappe
+  Lorsque c’est à votre tour de jouer, vous pouvez
+                                                                  au héros qui le poursuit. Une carrière peut
+retarder votre action. Cela signifie que votre
+                                                                  intervenir, selon les situations. Par exemple, lors
+personnage jauge la situation et attend une
+                                                                  d’une poursuite dans la jungle, une carrière de
+occasion d’agir. Ce faisant, vous pourrez ensuite
+                                                                  chasseur ou de barbare pourra apporter son bonus
+interrompre l’action d’un autre protagoniste en
+                                                                  au jet d’action.
+dépensant 1 point d’héroïsme. Sinon, vous agissez
+en toute fin de round, ou vous perdez simplement                    Si vous préférez vraiment utiliser des figurines
+votre action de combat pour ce round.                             et un plan quadrillé, considérez qu’un personnage
+                                                                  se déplace en un round de 7,5 m, plus 1,5 m par
+                                                                  point d’agilité. Si le personnage court, il double
+                                                                  cette distance, et s’il sprinte, il la quadruple.
+
+
+
+
+                                                             61
+                                Effectuer une attaque                                         Armes à distance
+
+
+
+
+Chapitre 3 : Règles de Combat
+                                   La résolution d’une attaque n’ est pas très                  La portée des armes à distance est indiquée
+                                différente d’un jet d’action, à ceci près que                 dans le tableau des armes page 49, où la colonne
+                                s’ajoute à l’attribut non pas une carrière, mais              « portée » donne la portée de base à Bout portant.
+                                l’aptitude de combat appropriée. Le jet d’action              Chaque ajout d’un facteur de portée accroît la
+                                (appelé dans ce cas un jet d’attaque) doit toujours           difficulté du jet d’attaque, comme indiqué sur la
+                                obtenir 9 ou plus en comptant les modificateurs               table ci-dessous.
+                                imposés par le MJ (qui peuvent par exemple être
+                                                                                                Exemple 1 : une dague de jet a un facteur de portée
+                                dus à la distance pour les armes de tir et de jet,
+                                                                                              de 3 m. Jusqu’à 3 m, le jet s’effectue à Bout portant
+                                à une position avantageuse par rapport à votre
+                                                                                              (+1 au jet d’attaque) ; jusqu’à 6 m, à portée Courte
+                                adversaire, etc.), ainsi que la défense de l’adversaire
+                                                                                              (0 au jet d’attaque), et ainsi de suite.
+                                qui vient se soustraire au résultat.
+                                                                                                Exemple 2 : Krongar (agilité 1, tir 0) jette sa
+                                                                                              lance sur le singe des neiges (défense 1) qui se trouve
+                                  Jet d’attaque = 2d6                                         à 15 m de lui. Une lance possédant un facteur de
+                                                                                              portée de 6 m, le jet s’effectue donc à une distance
+                                  		 + agilité (ou vigueur*)
+                                                                                              relevant du troisième facteur de portée, c’est-à-dire
+                                  		 + mêlée (ou tir)                                         à portée Moyenne, ce qui impose un malus de -1 au
+                                                                                              jet d’attaque. Krongar obtient un 10, +1 d’agilité,
+                                  		 - défense de la cible
+                                                                                              +0 de tir, -1 de portée Moyenne, -1 de défense de la
+                                		                 +/- d’éventuels modificateurs              cible = 9. Il touche tout juste !
+                                		                 (distance ou autres)
+                                                                                                   Facteur de             Modificateur au
+                                  Résultat modifié : 9 ou + pour réussir
+                                                                                                     portée                jet d’attaque
+                                                                                                   Bout portant                     +1
+                                  * Au choix du MJ (par exemple, vigueur peut                         Courte                         0
+                                se substituer à agilité dans le cas d’une bagarre à
+                                                                                                     Moyenne                        -1
+                                mains nues).
+                                                                                                      Longue                        -2
+                                Exemples de jet d’attaque                                           Très longue                     -4
+                                  Exemple 1 : Krongar (agilité 1, mêlée 2) s’empare                   Extrême                       -6
+                                d’une épée et effectue un grand moulinet vers les
+                                mercenaires (piétaille) qui l’encerclent. Il obtient 11,             Maximale                       -8
+                                +1 d’agilité, +2 de mêlée = 14, plus qu’il n’en faut
+                                pour que son attaque touche.
+                                                                                              Appliquer les dégâts
+                                   Exemple 2 : Krongar a remis la main sur son                   Une fois que vous avez touché votre cible, il vous
+                                épée valgardienne (son arme favorite) et charge le            faut déterminer les dégâts que vous lui infligez.
+                                capitaine des mercenaires (un rival, défense 1). Il jette     Vous devez pour cela jeter un ou deux dés, selon
+                                un dé de bonus grâce à l’avantage arme favorite et            l’arme utilisée. Les dégâts sont soustraits à la
+                                obtient 1, 2, 5. Il conserve les deux meilleurs : 5+2 = 7.    vitalité de votre adversaire, après déduction de la
+                                Il ajoute son +1 d’agilité, son +2 de mêlée et soustrait      protection d’une éventuelle armure.
+                                la défense de l’ennemi, soit -1, pour un résultat final
+                                                                                                Mains nues ( pieds, poings, coudes, genoux,
+                                de 9. Son attaque touche le capitaine.
+                                                                                              tête...) : lors d’une bagarre à mains nues, vous
+                                                                                              infligez d3 + la moitié de votre vigueur (arrondie
+                                                                                              à l’inférieur) points de dégâts.
+                                                                                                Armes improvisées ( tabouret, tesson de
+                                                                                              bouteille, dent de chark… ) : si vous utilisez une
+
+
+
+
+                                                                                         62
+                                                                                                                     Chapitre 3 : Règles de Combat
+
+arme improvisée, vous infligez d3 points de                 Armes lourdes (épées et haches à deux mains,
+dégâts. Ajoutez votre vigueur si l’arme est utilisée     armes d’hast, morgenstern, khastoks, arbalètes
+en mêlée, ou la moitié de votre vigueur (arrondie        lourdes... ) : il s’agit d’armes particulièrement
+à l’inférieur) si elle est lancée.                       létales, capables d’infliger de sérieux dégâts.
+                                                         Les personnages ayant moins de 0 en vigueur ne
+   Armes légères ( dagues, gourdins, rapières,
+                                                         peuvent pas les manier. Lorsque vous déterminez les
+fléchettes, javelines, frondes… ) : il s’agit de
+                                                         dégâts d’une arme lourde, vous avez un dé de bonus
+petites armes qui sont, pour certaines, facilement
+                                                         (indiqué par le d6B) : lancez 2 dés et conservez le
+dissimulables. Elles infligent moins de dégâts,
+                                                         meilleur. Ajoutez votre vigueur s’il s’agit d’une arme
+mais n’en restent pas moins mortelles quand elles
+                                                         de mêlée, ou la moitié de votre vigueur (arrondie à
+sont maniées par des mains expertes. Lorsque
+                                                         l’inférieur) s’il s’agit d’une arme de tir.
+vous déterminez les dégâts d’une arme légère,
+vous avez un dé de malus (indiqué par le d6M) :          Exemples de jet de dégâts
+lancez 2 dés et conservez le moins bon. Ajoutez            Exemple 1 : Krongar donne un coup de couteau
+votre vigueur s’il s’agit d’une arme de mêlée, ou la     (d6M) à un voleur (piétaille), et obtient au jet de dés
+moitié de votre vigueur (arrondie à l’inférieur) s’il    un 1 et un 5. Il doit conserver le moins bon résultat,
+s’agit d’une arme de tir.                                1, mais y ajoute sa vigueur (3), pour un résultat final
+                                                         de 4 points de dégâts, ce qui suffit pour tuer le voleur.
+   Armes moyennes ( épées, bâtons, masses, haches,
+lances, arcs, arbalètes…) : il s’agit des armes les         Exemple 2 : Krongar porte une armure moyenne
+plus courantes, celles qui équipent les soldats          (d6-2) et se fait toucher par un soldat (coriace,
+et celles qui, portées à la ceinture, indiquent          vigueur 1) qui manie une hallebarde (arme lourde,
+clairement aux autres que vous êtes armé et              d6B). Le MJ lance les dés de dégâts et obtient un 2
+dangereux. Si vous utilisez une arme de cette            et un 5. Il conserve le meilleur résultat, soit 5, auquel
+catégorie, vous infligez d6 points de dégâts.            il ajoute la vigueur du soldat (1) pour un total de 6
+Ajoutez votre vigueur s’il s’agit d’une arme de          points de dégâts. Krongar lance le dé de protection de
+mêlée, ou la moitié de votre vigueur (arrondie à         son armure : 4-2 = 2 points de réduction des dégâts.
+l’inférieur) s’il s’agit d’une arme de tir.              Krongar perd donc 6-2 = 4 points de vitalité.
+
+
+     Arme                 Dégâts                                  Bonus de Vigueur
+   Mains nues                 d3                              + vigueur/2 (arrondie à l’inférieur)
+   Improvisée                 d3                             + vigueur (mêlée) ou vigueur/2 (tir)
+     Légère                 d6M                              + vigueur (mêlée) ou vigueur/2 (tir)
+    Moyenne                   d6                             + vigueur (mêlée) ou vigueur/2 (tir)
+     Lourde                  d6B                             +vigueur (mêlée) ou vigueur/2 (tir)
+
+
+
+                                                        63
+                                Carrières et combat                                     En revanche, ce genre de feinte ne risque pas
+
+
+
+
+Chapitre 3 : Règles de Combat
+                                                                                        de marcher deux fois contre un même ennemi.
+                                  Les carrières à orientation martiale (soldat,
+                                                                                        Il vous faut décrire au MJ cette manœuvre
+                                gladiateur, pirate, mercenaire, etc.) offrent des
+                                                                                        spéciale, en expliquant quel pourrait en être son
+                                compétences, des capacités et une expérience
+                                                                                        effet. Toutefois, certains PNJ expérimentés, ayant
+                                dans les différentes tâches qui échoient aux
+                                                                                        déjà eu leur lot de combats, ne se laisseront sans
+                                combattants. Mais en règle générale, une
+                                                                                        doute pas abuser. La description des carrières, au
+                                carrière de ce genre ne confère pas de bonus à
+                                                                                        chapitre 2, vous donnera plus d’indications sur
+                                vos aptitudes de combat. Posséder un rang élevé
+                                                                                        leur utilisation au combat.
+                                dans la carrière de soldat ne fait pas de vous un
+                                meilleur combattant, mais un meilleur tacticien,
+                                vous octroie des contacts et des connaissances          Options de combat
+                                particulières, améliore votre compréhension du             Dans Barbarians of Lemuria, le combat se doit
+                                métier de soldat.                                       d’être rapide et brutal. Les options proposées ci-
+                                                                                        dessous risquent de ralentir le rythme de jeu et
+                                  Il existe toutefois des circonstances où faire
+                                                                                        il appartient au MJ de décider de les autoriser
+                                partie des guerriers (mais ce peut être aussi le cas
+                                                                                        en partie ou en totalité. Il peut aussi décider que
+                                pour d’autres carrières, comme acrobate, pirate ou
+                                                                                        seuls les personnages possédant au moins une
+                                voleur) peut vous octroyer un léger avantage au
+                                                                                        carrière de combattant ont la possibilité d’utiliser
+                                combat. Dans certaines situations, qui doivent
+                                                                                        ces options.
+                                rester exceptionnelles, le MJ peut permettre
+                                qu’une carrière confère un bonus supplémentaire,
+                                égal au rang dans la carrière en question, à un
+                                                                                        Attaque au défaut de l’armure
+                                                                                          Vous visez une zone du corps non protégée ou
+                                jet d’attaque ou un jet de dégâts (mais jamais les
+                                                                                        un point faible de l’armure de votre adversaire.
+                                deux en même temps).
+                                                                                        Appliquez la valeur de protection fixe de l’armure
+                                  Par exemple, un assassin peut recevoir ce             comme malus à votre jet d’attaque (-1 pour une
+                                bonus de carrière quand il frappe un ennemi             armure légère, -2 pour une armure moyenne et -3
+                                par surprise, ou un gladiateur se voir autoriser        pour une armure lourde). Si votre attaque passe
+                                certaines manœuvres spéciales lui permettant de         malgré ce malus, les dégâts de votre coup ignorent
+                                prendre un léger ascendant sur son adversaire.          la protection de l’armure. Si le MJ l’accepte, cette
+
+
+
+
+                                                                                   64
+option de combat pourra également permettre
+                                                       Les blessures et la mort
+
+
+                                                                                                                   Chapitre 3 : Règles de Combat
+de trouver le défaut de l’armure naturelle d’une
+créature.
+                                                         Lorsqu’un héros est blessé, les points de dégâts
+Attaque intrépide                                      subis sont soustraits à son score de vitalité. Tant
+  Vous attaquez avec la plus extrême témérité.         qu’il lui reste de la vitalité, il peut continuer à agir
+Vous ne bénéficiez pas de l’éventuel bonus d’un        normalement.
+bouclier ou d’une arme secondaire de parade et
+                                                         Si la vitalité tombe à 0, le personnage est mis
+subissez un malus de -2 à la défense. En revanche,
+                                                       hors de combat et s’effondre. Au round suivant,
+vous bénéficiez d’un bonus de +2 au jet d’attaque.
+                                                       il a le choix entre :
+Combat à deux armes                                      a) sombrer dans l’inconscience. Il ne reprend
+   Vous ne pouvez utiliser que des armes légères       connaissance qu’à la fin du combat et remonte
+ou moyennes. Ce type de combat vous offre deux         alors à la moitié de son score de vitalité (arrondie
+options : vous attaquez avec une arme et parez         au supérieur) ;
+avec l’autre, ou vous attaquez avec vos deux armes.
+                                                         b) dépenser 1 point d’héroïsme et consacrer le
+Dans le premier cas, vous considérez l’arme de
+                                                       round de combat suivant à reprendre ses esprits,
+parade comme l’équivalent d’un petit bouclier (+1
+                                                       ce qui lui permet de remonter à la moitié de son
+en défense contre une attaque), mais vous subissez
+                                                       score de vitalité (arrondie au supérieur) et de
+un malus de -1 sur votre jet d’attaque avec votre
+                                                       pouvoir reprendre le combat au round suivant.
+autre arme. Si vous attaquez avec vos deux armes,
+vous n’ effectuez qu’un seul jet d’attaque avec un       Si la vitalité tombe en dessous de 0, le personnage
+malus de -1, mais vous infligez des dégâts comme       sombre dans le coma, et il est mourant. Il perd 1
+si vous maniez une arme moyenne (si vous utilisez      point de vitalité à chaque round qui suit jusqu’à
+deux armes légères) ou une arme lourde (si vous        ce qu’il meure (voir ci-dessous), qu’il reçoive des
+utilisez une arme moyenne et une arme légère, ou       soins médicaux ou qu’il décide de dépenser 1 point
+deux armes moyennes).                                  d’héroïsme pour Défier la mort (cf. page 58).
+                                                         Si en raison des blessures reçues la vitalité du
+Défense totale                                         personnage tombe en dessous de -5, ce dernier
+  Vous consacrez votre round à esquiver, parer
+                                                       meurt. Rien ne peut plus le sauver, à part dépenser
+et vous protéger des coups. Vous n’ effectuez pas
+                                                       1 point d’héroïsme pour Défier la mort.
+d’attaque durant le round, mais bénéficiez d’un
+bonus de +2 en défense, qui s’ajoute éventuellement
+à celui que pourrait vous apporter un bouclier
+ou une arme secondaire de parade (cf. ci-dessus,
+                                                       Récupérer des points
+combat à deux armes).                                  de vitalité
+                                                         Tant qu’un héros a encore des points de vitalité
+Posture défensive                                      ou qu’il est à 0, et qu’il a la possibilité de se reposer
+  Vous choisissez d’adopter une attitude               pendant 10 ou 15 minutes à l’issue d’un combat et
+prudente, en restant toujours prêt à parer ou à        de se rincer le gosier avec un peu d’eau fraîche ou
+esquiver l’attaque de votre adversaire. Combattre      une lampée de vin, il récupère la moitié des points
+en posture défensive vous confère un bonus de +1       de vitalité perdus (arrondie au supérieur). Cela
+en défense, mais vous subissez un malus de -1 à        représente sa capacité à récupérer de l’épuisement
+votre jet d’attaque.                                   et à se remettre d’ecchymoses et de blessures
+                                                       mineures. Les dégâts consécutifs à une bagarre
+Posture offensive                                      (c’est-à-dire les dégâts infligés à mains nues) sont
+  Vous vous concentrez sur l’attaque, au détriment     récupérés en totalité à l’issue de ce petit moment
+de votre défense. Cette option vous confère un         de repos. À la suite de quoi le personnage récupère
+bonus de +1 au jet d’attaque, mais vous subissez       1 point de vitalité par jour, à condition de ne pas
+un malus de -1 en défense.                             entreprendre d’activités trop éreintantes.
+
+
+
+
+                                                      65
+                                  Les carrières qui permettent de soigner (comme                carrière appropriée. La difficulté du jet augmente
+                                médecin, ou pourquoi pas alchimiste si ce dernier               d’un niveau de difficulté par point de vitalité
+
+
+
+
+Chapitre 3 : Règles de Combat
+                                dispose d’une potion curative ou de plantes                     négatif.
+                                médicinales) font récupérer immédiatement à
+                                                                                                  En cas de réussite, le personnage est stabilisé.
+                                un blessé 1 point de vitalité par rang du soigneur
+                                                                                                Il est toujours inconscient, mais ne continue plus
+                                dans la carrière en question. Par la suite, le
+                                                                                                à descendre dans les négatifs. Puis il récupère
+                                guérisseur pourra effectuer chaque jour un jet
+                                                                                                1 point de vitalité par jour jusqu’à ce qu’il retrouve
+                                d’action de difficulté Moyenne (+0) pour doubler
+                                                                                                un score de vitalité positif.
+                                le rythme de guérison du blessé, qui récupérera
+                                donc 2 points de vitalité par jour.                               Exemple : Sharangara (vitalité 10) est attaquée
+                                                                                                dans la jungle par une bête féroce et subit 12 points de
+                                   Exemple : Krongar, qui a un score de vitalité de
+                                                                                                dégâts. Elle s’effondre au sol, blessée à mort, puisqu’elle
+                                13, est blessé au cours d’un combat. Il subit 6 points de
+                                                                                                est tombée à -2 en vitalité.
+                                dégâts ; sa vitalité tombe donc à 7. Après la bataille,
+                                il prend un peu de repos et étanche sa soif à son outre           Au round suivant, Krongar terrasse la bête tandis
+                                de vin. Il regagne 3 points de vitalité (la moitié des          qu’Argol traîne Sharangara à l’écart du combat.
+                                dégâts subis).                                                  Sharangara tombe à -3 en vitalité (elle a perdu 1
+                                                                                                point supplémentaire durant ce round puisqu’elle
+                                  Sa compagne d’aventure, Sharangara d’Oomis,
+                                                                                                était déjà dans les négatifs au round précédent).
+                                est médecin de rang 1, ce qui signifie qu’en prenant
+                                                                                                Comme Argol est alchimiste, son joueur persuade le
+                                le temps de panser ses blessures, elle lui permet de
+                                                                                                MJ que son personnage est en possession de certaines
+                                récupérer immédiatement 1 point de vitalité en
+                                                                                                poudres aux vertus curatives. Il doit effectuer un jet
+                                plus. Krongar a récupéré 4 points de vitalité, qui est
+                                                                                                d’action avec en bonus son esprit (+1) et son rang de
+                                remontée à 11, et il se sent prêt à reprendre la route.
+                                                                                                carrière d’alchimiste (+1), pour un total de +2. Mais
+                                  Les deux héros poursuivent leur chemin tout le jour           comme Sharangara est à -3 en vitalité, la difficulté du
+                                sans autre encombre. Krongar récupère encore 1 point            jet augmente de trois niveaux, passant de Moyenne
+                                de vitalité et Sharangara effectue un jet d’action afin         à Très difficile (-4 ; cf. la table des jets d’action au
+                                de doubler cette récupération. Le joueur lance les dés          chapitre 3). Argol hérite donc d’un malus de -2 à son
+                                et obtient 8, y ajoute son rang dans la carrière de             jet d’action (+2 – 4 = -2).
+                                médecin (1) ainsi que son score d’esprit (1), pour un
+                                                                                                  Il obtient un 11 qui, après application du malus
+                                total de 10, ce qui est une réussite (il lui fallait obtenir
+                                                                                                de -2, donne un total de 9, le score minimum pour
+                                9 ou plus). Krongar récupère donc ses 2 points encore
+                                                                                                réussir à stabiliser Sharangara ! Celle-ci va devoir
+                                manquants ; il est à présent totalement remis de ses
+                                                                                                se reposer, mais grâce aux bons soins d’Argol, elle
+                                blessures et prêt pour l’action.
+                                                                                                devrait être remise sur pieds en quelques jours.
+
+                                Secourir un mourant                                             La vitalité des PNJ
+                                  Si votre personnage voit son score de vitalité
+                                                                                                  Le MJ génère les PNJ importants (les rivaux)
+                                descendre dans les négatifs, il est hors de combat
+                                                                                                de la même manière que les joueurs créent leurs
+                                et mourant. Il perd 1 point de vitalité à chaque
+                                                                                                héros. Ces PNJ ont généralement un score de
+                                round jusqu’à ce qu’il atteigne -6 et meure. Cette
+                                                                                                vitalité qui tourne autour de 10, ajusté en fonction
+                                règle ne s’applique pas dans le cas d’une bagarre
+                                                                                                de leur vigueur. La piétaille ne dispose que de 1 à
+                                à mains nues, où le personnage perd simplement
+                                                                                                3 points de vitalité, et en général une seule attaque
+                                connaissance et reprend ses esprits au bout d’une
+                                                                                                bien placée suffit à envoyer ce genre d’adversaires
+                                quinzaine de minutes (et suit ensuite les règles de
+                                                                                                mordre la poussière. Ils sont tués ou assommés (au
+                                récupération présentées ci-dessus).
+                                                                                                choix du joueur) dès qu’ils tombent à 0 ou moins
+                                  Avant qu’un personnage atteigne -6, un autre                  en vitalité. Les PNJ de la catégorie coriace ont
+                                héros ou un PNJ peut le secourir en s’occupant de               quant à eux entre 5 à 9 points de vitalité.
+                                lui et en réussissant un jet d’action de difficulté
+                                Moyenne (0), faisant intervenir l’esprit et une
+
+
+
+
+                                                                                           66
+

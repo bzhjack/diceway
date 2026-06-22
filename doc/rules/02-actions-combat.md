@@ -47,7 +47,7 @@ Règles absolues :
 Succès héroïque :
 
 - Obtenu sur `12 naturel`, sauf si l'action n'était possible que grâce à cette réussite automatique.
-- Peut aussi être obtenu en convertissant une réussite normale en dépensant `1 point d'héroïsme` (avec accord du MJ).
+- Peut aussi être obtenu en convertissant une réussite normale en dépensant `1 point d'héroïsme`.
 - Hors combat : réussite exceptionnelle avec effet supérieur au résultat normal.
 - En combat : permet de choisir une option de succès héroïque.
 
@@ -55,6 +55,7 @@ Succès légendaire :
 
 - Uniquement accessible sur `12 naturel` (double 6). On ne peut pas convertir une réussite normale en héroïque puis en légendaire via deux dépenses de PH.
 - Si un succès héroïque est obtenu (double 6), dépenser `1 point d'héroïsme` permet de le convertir en succès légendaire.
+- La conversion reste possible après une relance par **Faveur divine**, si le second jet donne un double 6 (même si un PH a déjà été dépensé pour relancer).
 - En combat : permet de choisir **deux** options de succès héroïque (la même option peut être choisie deux fois si le MJ l'estime cohérent).
 
 ## Échec critique
@@ -69,12 +70,12 @@ Succès légendaire :
 Usages en jeu :
 
 - **Coup de chance** : suggérer un élément favorable de scène, soumis à l'approbation du MJ. Ne peut pas apporter de changement majeur ni modifier un élément déjà établi.
-- **Défier la mort** : si la vitalité tombe entre `-1` et `-5`, dépenser `1 PH` pour la ramener immédiatement à `0` (vivant mais inconscient). Si la vitalité tombe en dessous de `-5`, dépenser `1 PH` pour se stabiliser (reste inconscient, récupère 1 vitalité/jour jusqu'à score positif).
-- **Faveur divine** : relancer tous les dés d'un jet d'action (y compris les dés de bonus), conserver le résultat du second jet.
+- **Défier la mort** : si la vitalité tombe entre `-1` et `-5`, dépenser `1 PH` pour la ramener immédiatement à `0` (vivant mais inconscient). Si la vitalité tombe en dessous de `-5`, dépenser `1 PH` pour se stabiliser (reste inconscient, se remet sur pied après quelques jours de repos).
+- **Faveur divine** : relancer tous les dés d'un jet d'action (y compris les dés de bonus), conserver le résultat du second jet ; utilisable même après un `2` naturel (échec automatique).
 - **Juste une égratignure** : perdre sa prochaine action et lancer `1d6` pour récupérer ce nombre de points de vitalité (sans dépasser le nombre de dégâts tout juste encaissés lors de cette attaque).
 - **Parade in extremis** : annuler les dégâts d'une attaque en interposant bouclier ou arme ; ce bouclier/arme est brisé(e) et devient inutilisable.
 - **Négocier avec le MJ** : tout autre avantage ponctuel non couvert par les options ci-dessus, soumis à l'accord du MJ.
-- **Succès héroïque** : convertir une réussite normale en succès héroïque (accord du MJ requis).
+- **Succès héroïque** : convertir une réussite normale en succès héroïque.
 - **Succès légendaire** : convertir un succès héroïque (double 6) en succès légendaire.
 - **Interrompre une action** : après avoir retardé la sienne, interrompre l'action d'un autre protagoniste.
 - Réutiliser certaines capacités à usage journalier (ex. : cri de guerre, inspirateur).
@@ -136,7 +137,7 @@ Modificateurs au jet de réaction :
 
 ## Retarder son action et interrompre
 
-- Un personnage peut retarder son action : il agit plus tard dans le round, ou renonce à agir si rien ne justifie de se déclencher.
+- Un personnage peut retarder son action : il agit alors en toute fin de round, ou perd simplement son action de combat pour ce round.
 - Pour interrompre l'action d'un autre protagoniste après avoir retardé la sienne : dépenser `1 point d'héroïsme`.
 
 ## Déplacement et distances
@@ -286,11 +287,12 @@ Après le combat :
 Soins médicaux (carrière de soin adaptée) :
 
 - Récupération immédiate de `rang du soigneur` en vitalité.
-- Puis jet d'action Moyenne pour doubler le rythme : récupère 2 vitalités par jour.
-- La difficulté du jet de soins augmente d'un niveau par point de vitalité négatif de la cible.
+- Puis jet d'action Moyenne (chaque jour) pour doubler le rythme : récupère 2 vitalités par jour.
+
+> L'aggravation de difficulté par point de vitalité négatif ne s'applique qu'au jet de **stabilisation** (cf. Secourir un mourant), pas au jet quotidien de doublement.
 
 ## Vitalité des PNJ
 
 - **Rivaux** : créés comme des héros, vitalité autour de `10` (ajustée par la vigueur).
-- **Coriaces** : `5` à `9` points de vitalité.
+- **Coriaces** : `5` à `9` points de vitalité (le chapitre 5 du livre indique `5 à 8` p. 132 — incohérence interne du livre ; on retient `5-9`).
 - **Piétaille** : `1` à `3` points de vitalité. Une seule attaque bien placée suffit généralement. Tués ou assommés (choix du joueur) dès qu'ils tombent à `0` ou moins.

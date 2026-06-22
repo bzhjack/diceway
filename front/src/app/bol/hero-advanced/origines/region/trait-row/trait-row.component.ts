@@ -1,13 +1,13 @@
 import {ChangeDetectionStrategy, Component, computed, input} from '@angular/core';
 import {PopoverModule} from 'primeng/popover';
-import {InlineSVGModule} from 'ng-inline-svg-2';
+import {InlineSvgDirective} from '../../../../../shared/inline-svg/inline-svg.directive';
 import {BolAvantageModel} from '../../../../models/bol-avantage.model';
 import {BolDesavantageModel} from '../../../../models/bol-desavantage.model';
 import {HeroAdvancedCreateTools} from '../../../create.tools';
 
 @Component({
   selector: 'bol-hero-advanced-trait-row',
-  imports: [PopoverModule, InlineSVGModule],
+  imports: [PopoverModule, InlineSvgDirective],
   templateUrl: './trait-row.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

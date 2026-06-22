@@ -46,6 +46,12 @@
     <p-button label="Ajouter" icon="pi pi-plus" [disabled]="pending() || !selectedArme()" (onClick)="addArme()" />
   </div>
 
+  @if (warnHeavyArme()) {
+    <p-message severity="warn" styleClass="w-full">
+      Arme lourde (d6B) — Vigueur négative : le personnage subit un malus au combat. Vérifiez la cohérence avec les règles.
+    </p-message>
+  }
+
   <div class="dw-advanced-list">
     @for (arme of selectedArmeDetail(); track arme.id) {
       <div class="dw-advanced-list-row">
