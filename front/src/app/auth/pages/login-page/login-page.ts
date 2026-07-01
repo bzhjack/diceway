@@ -1,7 +1,6 @@
-import {NgOptimizedImage} from '@angular/common';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Router, RouterLink} from '@angular/router';
+import {Router} from '@angular/router';
 import {finalize} from 'rxjs/operators';
 import {extractApiErrors} from '../../../core/auth/auth-form.utils';
 import {AuthService} from '../../../core/auth/auth.service';
@@ -9,17 +8,29 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
+import {
+  MatCard,
+  MatCardActions,
+  MatCardContent,
+  MatCardHeader,
+  MatCardSubtitle,
+  MatCardTitle
+} from '@angular/material/card';
 
 @Component({
   selector: 'app-login-page',
   imports: [
     ReactiveFormsModule,
-    RouterLink,
-    NgOptimizedImage,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatCard,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardSubtitle,
+    MatCardContent,
+    MatCardActions,
   ],
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss',

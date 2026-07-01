@@ -80,6 +80,9 @@ When a task touches game rules, character creation, equipment, careers, language
 ### PrimeNG
 - For buttons, do not use `styleClass` — prefer component inputs (`size`, `severity`, `outlined`, `text`) and CSS on container wrappers.
 
+### Theming
+- Angular Material theming (used for `front/src/styles/_material-theme.scss`) — reference guide: https://material.angular.dev/guide/theming
+
 ### Library pages
 
 Every library page (list of entities) follows this structure:
