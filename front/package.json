@@ -25,10 +25,12 @@
   "dependencies": {
     "@3d-dice/dice-box": "^1.1.4",
     "@angular/animations": "^22.0.0",
+    "@angular/cdk": "^22.0.2",
     "@angular/common": "^22.0.0",
     "@angular/compiler": "^22.0.0",
     "@angular/core": "^22.0.0",
     "@angular/forms": "^22.0.0",
+    "@angular/material": "^22.0.2",
     "@angular/platform-browser": "^22.0.0",
     "@angular/router": "^22.0.0",
     "@primeuix/themes": "^2.0.3",

@@ -1,39 +1,83 @@
 :host {
   display: contents;
-  height: 100%;
 }
 
-.login {
-  &__google {
-    img {
-      height: 25px;
-      margin: 0 10px 0 0;
-    }
-  }
-}
-
-.login_divider {
+.login-shell {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%;
+  gap: 20px;
+  padding: 40px 16px;
+  min-height: 100dvh;
+}
+
+.login-panel {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.login-divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+  align-self: stretch;
 
   div {
-    width: 2px;
-    background-color: lightgray;
-    color: lightgray;
+    flex: 1;
+    width: 1px;
+    background: var(--surface-border);
+  }
 
-    &:first-of-type,
-    &:last-of-type {
+  span {
+    padding: 10px 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+}
+
+.login-google {
+  display: flex;
+  align-items: center;
+  padding-top: 20px;
+}
+
+.login-google-btn img {
+  height: 22px;
+  margin-right: 8px;
+}
+
+.auth-link-muted {
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+@media (max-width: 700px) {
+  .login-panel {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .login-divider {
+    flex-direction: row;
+    padding: 12px 0;
+    width: 100%;
+    align-self: auto;
+
+    div {
       flex: 1;
+      height: 1px;
+      width: auto;
     }
 
-    &:nth-of-type(2) {
-      flex: 0;
-      width: auto;
-      background: none;
-      color: lightgray;
-      padding: 10px 0;
+    span {
+      padding: 0 12px;
     }
   }
 }
