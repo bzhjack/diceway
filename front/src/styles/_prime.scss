@@ -1,0 +1,15 @@
+// ── PrimeNG / PrimeIcons ─────────────────────────────────────────────────────
+// Ce fichier isole tout ce qui est lié à PrimeNG.
+// À supprimer une fois la migration vers Angular Material terminée.
+
+@import 'primeicons/primeicons.css';
+
+:root {
+  --p-floatlabel-font-weight: 500;
+  --p-floatlabel-active-font-size: 1rem;
+  --p-floatlabel-active-font-weight: 400;
+}
+
+.dw-header-tag .p-tag-label {
+  line-height: 1;
+}

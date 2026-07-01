@@ -1,0 +1,35 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Muse Sans', -apple-system, Roboto, 'Open Sans', 'Helvetica Neue', Helvetica, sans-serif;
+  color: #fff;
+  background: #000;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  color: var(--accent);
+}
+
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgba(155, 61, 35, 0.28);
+  outline-offset: 3px;
+}
