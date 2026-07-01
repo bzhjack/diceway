@@ -37,7 +37,7 @@
           </div>
 
           <!-- Bandeau reprise de combat -->
-          @if (savedSnapshot() && !combatMode()) {
+          @if (savedSnapshot() && !combatMode() && !pickerMode()) {
             <p-message severity="warn" styleClass="w-full">
               <div class="flex items-center gap-3 w-full">
                 <span class="flex-1">
@@ -64,15 +64,15 @@
 
           <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
             <span class="library-header-actions__primary">
-              @if (!combatMode()) {
+              @if (!combatMode() && !pickerMode()) {
                 <p-button
                   label="Lancer un combat"
                   icon="pi pi-bolt"
                   severity="warn"
                   size="small"
-                  (onClick)="startCombat()"
+                  (onClick)="openPicker()"
                 />
-              } @else {
+              } @else if (combatMode()) {
                 <p-button
                   label="Arrêter le combat"
                   icon="pi pi-times"
@@ -93,6 +93,14 @@
           </div>
         </div>
       </p-card>
+
+      @if (pickerMode()) {
+        <app-bol-combatant-picker
+          [participants]="availablePool()"
+          (confirmed)="onRosterConfirmed($event)"
+          (cancelled)="cancelPicker()"
+        />
+      }
 
       @if (combatMode()) {
         <app-bol-combat-panel

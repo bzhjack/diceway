@@ -9,6 +9,7 @@ import {TagModule} from 'primeng/tag';
 import {BolScenarioService} from '../services/bol-scenario.service';
 import {BolCombatStorageService, CombatSnapshot} from '../services/bol-combat-storage.service';
 import {BolCombatPanelComponent, DamageCategorie, InitiativeSlot} from './bol-combat-panel/bol-combat-panel';
+import {BolCombatantPickerComponent, CombatantSelection} from './bol-combat-panel/bol-combatant-picker/bol-combatant-picker';
 
 function categorieFromDegats(degats: string | null): DamageCategorie | null {
   if (!degats) return null;
@@ -21,7 +22,7 @@ function categorieFromDegats(degats: string | null): DamageCategorie | null {
 
 @Component({
   selector: 'app-session-live-page',
-  imports: [RouterLink, ButtonModule, CardModule, MessageModule, TagModule, BolCombatPanelComponent],
+  imports: [RouterLink, ButtonModule, CardModule, MessageModule, TagModule, BolCombatPanelComponent, BolCombatantPickerComponent],
   templateUrl: './session-live-page.html',
   styleUrl: './session-live-page.scss',
   host: {class: 'block'},
@@ -36,6 +37,9 @@ export class SessionLivePageComponent {
   protected readonly combatParticipants = signal<InitiativeSlot[]>([]);
   protected readonly savedSnapshot = signal<CombatSnapshot | null>(null);
   protected readonly activeSnapshot = signal<CombatSnapshot | null>(null);
+  protected readonly pickerMode = signal(false);
+  protected readonly availablePool = signal<InitiativeSlot[]>([]);
+  protected readonly reactionModifier = signal(0);
 
   protected readonly scenarioId = toSignal(
     this.route.queryParamMap.pipe(map((p) => p.get('scenarioId'))),
@@ -60,7 +64,10 @@ export class SessionLivePageComponent {
   protected resumeCombat(): void {
     const snap = this.savedSnapshot();
     if (!snap) return;
-    this.startCombat();
+    const all = this.buildPool();
+    if (!all.length) return;
+    this.combatParticipants.set(all);
+    this.combatMode.set(true);
     this.activeSnapshot.set(snap);
   }
 
@@ -70,9 +77,27 @@ export class SessionLivePageComponent {
     this.savedSnapshot.set(null);
   }
 
-  protected startCombat(): void {
+  protected openPicker(): void {
+    const all = this.buildPool();
+    if (!all.length) return;
+    this.availablePool.set(all);
+    this.pickerMode.set(true);
+  }
+
+  protected onRosterConfirmed(sel: CombatantSelection): void {
+    this.combatParticipants.set(sel.slots);
+    this.reactionModifier.set(sel.reactionModifier);
+    this.pickerMode.set(false);
+    this.combatMode.set(true);
+  }
+
+  protected cancelPicker(): void {
+    this.pickerMode.set(false);
+  }
+
+  protected buildPool(): InitiativeSlot[] {
     const s = this.scenario();
-    if (!s) return;
+    if (!s) return [];
 
     const all: InitiativeSlot[] = [
       ...(s.pj ?? []).map((pj): InitiativeSlot => ({
@@ -215,8 +240,7 @@ export class SessionLivePageComponent {
       })),
     ];
 
-    this.combatParticipants.set(all);
-    this.combatMode.set(true);
+    return all;
   }
 
   protected stopCombat(): void {

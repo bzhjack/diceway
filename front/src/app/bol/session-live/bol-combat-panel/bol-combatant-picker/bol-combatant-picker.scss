@@ -1,0 +1,89 @@
+:host {
+  display: block;
+}
+
+// ── Layout grid ───────────────────────────────────────────────────────────────
+
+.picker__grid {
+  grid-template-columns: 300px 1fr;
+  height: clamp(480px, calc(100svh - 260px), 900px);
+
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+}
+
+// ── Réserve ───────────────────────────────────────────────────────────────────
+
+.picker__pool {
+  @media (max-width: 860px) {
+    border-right-width: 0;
+    border-bottom: 1px solid var(--dw-surface-100);
+    max-height: 300px;
+  }
+}
+
+.picker-row__add {
+  background: color-mix(in srgb, var(--dw-color-legendary) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 40%, transparent);
+  color: var(--dw-color-legendary);
+  transition: background 120ms ease;
+
+  &:hover { background: color-mix(in srgb, var(--dw-color-legendary) 26%, transparent); }
+}
+
+// ── Cartes combattants ────────────────────────────────────────────────────────
+
+.picker-card {
+  border: 1px solid var(--dw-surface-500);
+  background: var(--dw-surface-50);
+
+  &--hero {
+    border-width: 2px;
+    border-color: var(--dw-surface-300);
+    background: var(--dw-surface-200);
+  }
+
+  &__portrait::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(to bottom, transparent 55%, rgba(2, 6, 23, 0.55));
+  }
+
+  &__remove:hover {
+    background: color-mix(in srgb, var(--dw-color-echec-forte) 60%, transparent);
+  }
+}
+
+// ── Indicateur malus ──────────────────────────────────────────────────────────
+
+.picker__malus {
+  background: color-mix(in srgb, var(--dw-color-echec) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--dw-color-echec) 25%, transparent);
+}
+
+// ── PrimeNG p-selectbutton ────────────────────────────────────────────────────
+
+:host ::ng-deep .picker__situation .p-selectbutton,
+:host ::ng-deep .picker__filter .p-selectbutton {
+  display: flex;
+  width: 100%;
+}
+
+:host ::ng-deep .picker__situation .p-togglebutton,
+:host ::ng-deep .picker__filter .p-togglebutton {
+  flex: 1;
+  min-width: 0;
+  justify-content: center;
+  padding-inline: 0.375rem;
+}
+
+:host ::ng-deep .picker__filter .p-togglebutton-label {
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
