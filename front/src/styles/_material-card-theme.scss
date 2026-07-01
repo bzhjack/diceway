@@ -1,0 +1,13 @@
+// Surcharge du style des mat-card (fond plus sombre, cohérent avec --dw-surface-*).
+// Doc : https://material.angular.dev/components/card/styling
+@use '@angular/material' as mat;
+
+html {
+  @include mat.card-overrides((
+    elevated-container-color: var(--dw-surface-50),
+    filled-container-color: var(--dw-surface-100),
+    outlined-container-color: var(--dw-surface-50),
+    outlined-outline-color: var(--dw-border),
+    subtitle-text-color: var(--dw-surface-500),
+  ));
+}
