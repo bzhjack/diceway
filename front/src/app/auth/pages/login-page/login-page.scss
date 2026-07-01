@@ -1,8 +1,106 @@
-.example-card {
-  max-width: 400px;
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
 }
 
-.example-header-image {
-  background-image: url('https://material.angular.dev/assets/img/examples/shiba1.jpg');
-  background-size: cover;
+.login-card {
+  width: 100%;
+  max-width: 400px;
+
+  img[mat-card-image] {
+    width: 100%;
+    height: auto;
+    margin: 0;
+  }
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.login-alert {
+  margin: 4px 0 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(248, 113, 113, 0.28);
+  border-radius: 8px;
+  background: rgba(248, 113, 113, 0.1);
+  color: var(--dw-color-echec);
+  font-size: 0.875rem;
+
+  p {
+    margin: 0;
+
+    & + p {
+      margin-top: 4px;
+    }
+  }
+}
+
+.login-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.login-link-muted {
+  color: var(--dw-surface-500);
+  font-size: 0.875rem;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--dw-color-legendary);
+    text-decoration: underline;
+  }
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: var(--dw-surface-500);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--dw-border);
+  }
+}
+
+.login-google-btn {
+  width: 100%;
+  --mat-button-outlined-label-text-color: var(--dw-surface-800);
+
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+}
+
+.login-footer-copy {
+  color: var(--dw-surface-500);
+  font-size: 0.875rem;
+
+  a {
+    color: var(--dw-color-legendary);
+  }
 }

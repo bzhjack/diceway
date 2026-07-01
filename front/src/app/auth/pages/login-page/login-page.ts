@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject} from '@angular/core';
+import {NgOptimizedImage} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {finalize} from 'rxjs/operators';
 import {extractApiErrors} from '../../../core/auth/auth-form.utils';
 import {AuthService} from '../../../core/auth/auth.service';
@@ -8,11 +9,13 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {
   MatCard,
   MatCardActions,
   MatCardContent,
   MatCardHeader,
+  MatCardImage,
   MatCardSubtitle,
   MatCardTitle
 } from '@angular/material/card';
@@ -21,11 +24,15 @@ import {
   selector: 'app-login-page',
   imports: [
     ReactiveFormsModule,
+    RouterLink,
+    NgOptimizedImage,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     MatCard,
+    MatCardImage,
     MatCardHeader,
     MatCardTitle,
     MatCardSubtitle,
@@ -100,11 +107,6 @@ export class LoginPageComponent {
           this.cdr.markForCheck();
         },
       });
-  }
-
-  protected onError(controlName: string): boolean {
-    const control = this.loginForm.get(controlName);
-    return !!control && control.dirty && control.invalid;
   }
 
   protected loginWithGoogle(): void {
