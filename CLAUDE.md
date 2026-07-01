@@ -82,6 +82,7 @@ When a task touches game rules, character creation, equipment, careers, language
 
 ### Theming
 - Angular Material theming (used for `front/src/styles/_material-theme.scss`) — reference guide: https://material.angular.dev/guide/theming
+- `MatFormField` app-wide defaults (`appearance: 'outline'`, `floatLabel: 'always'`) are set via `MAT_FORM_FIELD_DEFAULT_OPTIONS` in `front/src/app/app.config.ts` — don't re-set `appearance="outline"` on individual `<mat-form-field>` elements.
 
 ### Library pages
 

@@ -4,6 +4,7 @@ import {provideAnimationsAsync} from '@angular/platform-browser/animations/async
 import {provideRouter} from '@angular/router';
 import {provideOAuthClient} from 'angular-oauth2-oidc';
 import {providePrimeNG} from 'primeng/config';
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 import {authInterceptor} from './core/auth/auth.interceptor';
 import {DwPreset} from './dw-theme-config';
 import {routes} from './app.routes';
@@ -23,5 +24,9 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     provideRouter(routes),
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { appearance: 'outline', floatLabel: 'always' },
+    },
   ],
 };
