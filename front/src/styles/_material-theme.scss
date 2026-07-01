@@ -3,7 +3,7 @@
 html {
   @include mat.theme((
     color: (
-      primary: mat.$rose-palette,
+      primary: mat.$cyan-palette,
       tertiary: mat.$orange-palette,
     ),
     typography: 'Muse Sans',
