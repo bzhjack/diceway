@@ -1,41 +1,67 @@
-<section class="auth-page">
-  <div class="flex flex-col h-screen items-center gap-1 pt-10">
-    <img ngSrc="assets/dw1.jpg" alt="" width="400" height="265" priority />
-    <div class="text-xl">Nouveau compte</div>
-    <form [formGroup]="registerForm" class="flex flex-col gap-4 w-1/4" (ngSubmit)="register()">
-      <div class="relative flex flex-col">
-        <input class="p-inputtext-sm" formControlName="name" pInputText placeholder="Pseudonyme*" />
-        @if (onError('name')) {
-          <p-message severity="error" size="small" variant="simple">Minimum 5 caractères</p-message>
+<section class="auth-mat-page">
+  <mat-card class="auth-mat-card" appearance="outlined">
+    <img mat-card-image ngSrc="assets/dw1.jpg" alt="" width="400" height="265" priority />
+
+    <mat-card-header>
+      <mat-card-title>Nouveau compte</mat-card-title>
+      <mat-card-subtitle>Créez votre compte pour rejoindre l'aventure</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="registerForm" class="auth-mat-form" (ngSubmit)="register()">
+        <mat-form-field>
+          <mat-label>Pseudonyme</mat-label>
+          <mat-icon matPrefix>person</mat-icon>
+          <input matInput formControlName="name" autocomplete="nickname" />
+          <mat-error>Minimum 5 caractères</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Adresse mail</mat-label>
+          <mat-icon matPrefix>mail</mat-icon>
+          <input matInput type="email" formControlName="email" autocomplete="username" />
+          <mat-error>Adresse mail non valide</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Mot de passe</mat-label>
+          <mat-icon matPrefix>lock</mat-icon>
+          <input matInput type="password" formControlName="password" autocomplete="new-password" />
+          <mat-error>Minimum 8 caractères</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Confirmer le mot de passe</mat-label>
+          <mat-icon matPrefix>lock</mat-icon>
+          <input matInput type="password" formControlName="password_confirmation" autocomplete="new-password" />
+          <mat-error>Les mots de passe ne correspondent pas</mat-error>
+        </mat-form-field>
+
+        @if (messages.length > 0) {
+          <div class="auth-mat-alert" role="alert">
+            @for (message of messages; track message) {
+              <p>{{ message }}</p>
+            }
+          </div>
         }
-      </div>
-      <div class="relative flex flex-col">
-        <input class="p-inputtext-sm" formControlName="email" pInputText placeholder="Adresse mail*" autocomplete="username" />
-        @if (onError('email')) {
-          <p-message severity="error" size="small" variant="simple">Adresse mail non valide</p-message>
-        }
-      </div>
-      <div class="relative flex flex-col">
-        <input class="p-inputtext-sm" type="password" formControlName="password" pInputText placeholder="Mot de passe*" autocomplete="new-password" />
-        @if (onError('password')) {
-          <p-message severity="error" size="small" variant="simple">Minimum 8 caractères</p-message>
-        }
-      </div>
-      <div class="relative flex flex-col">
-        <input class="p-inputtext-sm" type="password" formControlName="password_confirmation" pInputText placeholder="Confirmer le mot de passe*" autocomplete="new-password" />
-        @if (onError('password_confirmation') || registerForm.hasError('matchingError')) {
-          <p-message severity="error" size="small" variant="simple">Ne corresponds pas</p-message>
-        }
-      </div>
-      <div>
-        @for (message of messages; track message) {
-          <p-message severity="error" [closable]="false">{{ message }}</p-message>
-        }
-      </div>
-      <div class="flex justify-end gap-2">
-        <p-button [routerLink]="'/login'" label="retour" size="small" severity="secondary" [disabled]="pending" />
-        <p-button label="Créér le compte" size="small" [disabled]="registerForm.invalid || pending" type="submit" />
-      </div>
-    </form>
-  </div>
+
+        <div class="auth-mat-actions auth-mat-actions--end">
+          <button mat-stroked-button type="button" routerLink="/login" [disabled]="pending">Retour</button>
+          <button mat-flat-button type="submit" [disabled]="pending || registerForm.invalid">
+            @if (pending) {
+              <mat-progress-spinner mode="indeterminate" diameter="18" />
+            } @else {
+              Créer le compte
+            }
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <span class="auth-mat-footer">
+        Déjà un compte ? <a routerLink="/login">Se connecter</a>
+      </span>
+    </mat-card-actions>
+  </mat-card>
 </section>

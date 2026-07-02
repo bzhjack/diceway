@@ -1,19 +1,47 @@
 import {NgOptimizedImage} from '@angular/common';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject} from '@angular/core';
-import {AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators,} from '@angular/forms';
+import {AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
 import {extractApiErrors} from '../../../core/auth/auth-form.utils';
 import {AuthService} from '../../../core/auth/auth.service';
-import {ButtonModule} from 'primeng/button';
-import {InputTextModule} from 'primeng/inputtext';
-import {Message} from 'primeng/message';
+import {MatButtonModule} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {
+  MatCard,
+  MatCardActions,
+  MatCardContent,
+  MatCardHeader,
+  MatCardImage,
+  MatCardSubtitle,
+  MatCardTitle,
+} from '@angular/material/card';
 
 @Component({
   selector: 'app-register-page',
-  imports: [ReactiveFormsModule, RouterLink, ButtonModule, InputTextModule, Message, NgOptimizedImage],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    NgOptimizedImage,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatCard,
+    MatCardImage,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardSubtitle,
+    MatCardContent,
+    MatCardActions,
+  ],
   templateUrl: './register-page.html',
   styleUrl: './register-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true
 })
 export class RegisterPageComponent {
   private readonly cdr = inject(ChangeDetectorRef);
@@ -30,16 +58,16 @@ export class RegisterPageComponent {
       password: ['', [Validators.required, Validators.minLength(8)]],
       password_confirmation: ['', [Validators.required, Validators.minLength(8)]],
     },
-    { validators: RegisterPageComponent.passwordMatch },
+    {validators: RegisterPageComponent.passwordMatch},
   );
 
   static passwordMatch(group: AbstractControl): ValidationErrors | null {
     const password = group.value.password;
     const confirm = group.value.password_confirmation;
     if (password !== confirm) {
-      group.get('password_confirmation')?.setErrors({ notMatch: true });
+      group.get('password_confirmation')?.setErrors({notMatch: true});
     }
-    return password === confirm ? null : { matchingError: true };
+    return password === confirm ? null : {matchingError: true};
   }
 
   protected register(): void {
@@ -64,10 +92,5 @@ export class RegisterPageComponent {
           this.cdr.markForCheck();
         },
       });
-  }
-
-  protected onError(controlName: 'name' | 'email' | 'password' | 'password_confirmation'): boolean {
-    const control = this.registerForm.controls[controlName];
-    return control.invalid && control.dirty;
   }
 }

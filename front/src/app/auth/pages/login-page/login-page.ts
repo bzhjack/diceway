@@ -42,6 +42,7 @@ import {
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true
 })
 export class LoginPageComponent {
   private readonly cdr = inject(ChangeDetectorRef);
