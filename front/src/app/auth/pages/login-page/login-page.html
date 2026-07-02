@@ -23,13 +23,7 @@
           <mat-error>Minimum 8 caractères</mat-error>
         </mat-form-field>
 
-        @if (messages.length > 0) {
-          <div class="auth-mat-alert" role="alert">
-            @for (message of messages; track message) {
-              <p>{{ message }}</p>
-            }
-          </div>
-        }
+        <dw-error-message [messages]="messages" />
 
         <div class="auth-mat-actions">
           <a routerLink="/forgotten" class="login-link-muted">Mot de passe oublié ?</a>

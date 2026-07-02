@@ -4,13 +4,42 @@ import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {extractApiErrors, passwordMatchValidator} from '../../../core/auth/auth-form.utils';
 import {AuthService} from '../../../core/auth/auth.service';
-import {ButtonModule} from 'primeng/button';
-import {InputTextModule} from 'primeng/inputtext';
-import {Message} from 'primeng/message';
+import {MatButtonModule} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {DwErrorMessageComponent} from '../../../shared/dw-error-message/dw-error-message';
+import {
+  MatCard,
+  MatCardActions,
+  MatCardContent,
+  MatCardHeader,
+  MatCardImage,
+  MatCardSubtitle,
+  MatCardTitle,
+} from '@angular/material/card';
 
 @Component({
   selector: 'app-reset-page',
-  imports: [ReactiveFormsModule, RouterLink, ButtonModule, InputTextModule, Message, NgOptimizedImage],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    NgOptimizedImage,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatCard,
+    MatCardImage,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardSubtitle,
+    MatCardContent,
+    MatCardActions,
+    DwErrorMessageComponent,
+  ],
   templateUrl: './reset-page.html',
   styleUrl: './reset-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,8 +65,15 @@ export class ResetPageComponent {
       password: ['', [Validators.required, Validators.minLength(8)]],
       password_confirmation: ['', [Validators.required, Validators.minLength(8)]],
     },
-    { validators: passwordMatchValidator },
+    {validators: passwordMatchValidator},
   );
+
+  get showPasswordMismatch(): boolean {
+    return (
+      this.resetForm.hasError('passwordMismatch') &&
+      (this.resetForm.get('password_confirmation')?.touched ?? false)
+    );
+  }
 
   protected reset(): void {
     if (this.resetForm.invalid) {
@@ -57,14 +93,9 @@ export class ResetPageComponent {
         },
         error: (error: unknown) => {
           this.pending = false;
-          this.messages = extractApiErrors(error, 'Reinitialisation impossible.');
+          this.messages = extractApiErrors(error, 'Réinitialisation impossible.');
           this.cdr.markForCheck();
         },
       });
-  }
-
-  protected onError(controlName: 'password' | 'password_confirmation'): boolean {
-    const control = this.resetForm.controls[controlName];
-    return control.invalid && control.dirty;
   }
 }

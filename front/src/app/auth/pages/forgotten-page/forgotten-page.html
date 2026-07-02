@@ -16,13 +16,7 @@
           <mat-error>Adresse mail non valide</mat-error>
         </mat-form-field>
 
-        @if (messages.length > 0) {
-          <div class="auth-mat-alert" role="alert">
-            @for (message of messages; track message) {
-              <p>{{ message }}</p>
-            }
-          </div>
-        }
+        <dw-error-message [messages]="messages" />
 
         <div class="auth-mat-actions auth-mat-actions--end">
           <button mat-stroked-button type="button" routerLink="/login" [disabled]="pending">Retour</button>

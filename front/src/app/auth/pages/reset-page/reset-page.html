@@ -1,29 +1,48 @@
-<section class="auth-page">
-  <div class="flex flex-col h-screen items-center gap-1 pt-10">
-    <img ngSrc="assets/dw1.jpg" alt="" width="400" height="265" priority />
-    <div class="text-xl">Nouveau mot de passe</div>
-    <form [formGroup]="resetForm" class="flex flex-col gap-2 w-1/4" (ngSubmit)="reset()">
-      <div class="relative flex flex-col">
-        <input class="p-inputtext-sm" type="password" formControlName="password" pInputText placeholder="Mot de passe*" autocomplete="new-password" />
-        @if (onError('password')) {
-          <p-message severity="error" size="small" variant="simple">Minimum 8 caractères</p-message>
-        }
-      </div>
-      <div class="relative flex flex-col">
-        <input class="p-inputtext-sm" type="password" formControlName="password_confirmation" pInputText placeholder="Confirmer le mot de passe*" autocomplete="new-password" />
-        @if (onError('password_confirmation') || resetForm.hasError('passwordMismatch')) {
-          <p-message severity="error" size="small" variant="simple">Ne corresponds pas</p-message>
-        }
-      </div>
-      <div>
-        @for (message of messages; track message) {
-          <p-message severity="error" [closable]="false">{{ message }}</p-message>
-        }
-      </div>
-      <div class="flex justify-end gap-2">
-        <p-button [routerLink]="'/login'" label="retour" size="small" severity="secondary" [disabled]="pending" />
-        <p-button label="Valider" size="small" [disabled]="resetForm.invalid || pending" type="submit" />
-      </div>
-    </form>
-  </div>
+<section class="auth-mat-page">
+  <mat-card class="auth-mat-card" appearance="outlined">
+    <img mat-card-image ngSrc="assets/dw1.jpg" alt="" width="400" height="265" priority />
+
+    <mat-card-header>
+      <mat-card-title>Nouveau mot de passe</mat-card-title>
+      <mat-card-subtitle>Choisissez un nouveau mot de passe pour votre compte.</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="resetForm" class="auth-mat-form" (ngSubmit)="reset()">
+        <mat-form-field>
+          <mat-label>Mot de passe</mat-label>
+          <mat-icon matPrefix>lock</mat-icon>
+          <input matInput type="password" formControlName="password" autocomplete="new-password" />
+          <mat-error>Minimum 8 caractères</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Confirmer le mot de passe</mat-label>
+          <mat-icon matPrefix>lock</mat-icon>
+          <input matInput type="password" formControlName="password_confirmation" autocomplete="new-password" />
+          <mat-error>Minimum 8 caractères</mat-error>
+        </mat-form-field>
+
+        <dw-error-message [messages]="showPasswordMismatch ? ['Les mots de passe ne correspondent pas'] : []" />
+        <dw-error-message [messages]="messages" />
+
+        <div class="auth-mat-actions auth-mat-actions--end">
+          <button mat-stroked-button type="button" routerLink="/login" [disabled]="pending">Retour</button>
+          <button mat-flat-button type="submit" [disabled]="pending || resetForm.invalid">
+            @if (pending) {
+              <mat-progress-spinner mode="indeterminate" diameter="18" />
+            } @else {
+              Valider
+            }
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <span class="auth-mat-footer">
+        Vous vous souvenez de votre mot de passe ? <a routerLink="/login">Se connecter</a>
+      </span>
+    </mat-card-actions>
+  </mat-card>
 </section>

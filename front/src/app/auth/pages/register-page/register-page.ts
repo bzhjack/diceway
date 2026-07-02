@@ -9,6 +9,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {DwErrorMessageComponent} from '../../../shared/dw-error-message/dw-error-message';
 import {
   MatCard,
   MatCardActions,
@@ -37,6 +38,7 @@ import {
     MatCardSubtitle,
     MatCardContent,
     MatCardActions,
+    DwErrorMessageComponent,
   ],
   templateUrl: './register-page.html',
   styleUrl: './register-page.scss',
