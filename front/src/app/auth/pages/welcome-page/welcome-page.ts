@@ -1,11 +1,29 @@
 import {NgOptimizedImage} from '@angular/common';
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {ActivatedRoute, RouterLink} from '@angular/router';
-import {ButtonModule} from 'primeng/button';
+import {MatButtonModule} from '@angular/material/button';
+import {
+  MatCard,
+  MatCardActions,
+  MatCardContent,
+  MatCardHeader,
+  MatCardImage,
+  MatCardTitle,
+} from '@angular/material/card';
 
 @Component({
   selector: 'app-welcome-page',
-  imports: [RouterLink, ButtonModule, NgOptimizedImage],
+  imports: [
+    RouterLink,
+    NgOptimizedImage,
+    MatButtonModule,
+    MatCard,
+    MatCardImage,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardContent,
+    MatCardActions,
+  ],
   templateUrl: './welcome-page.html',
   styleUrl: './welcome-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
