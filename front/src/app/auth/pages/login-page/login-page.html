@@ -1,5 +1,5 @@
-<section class="login-page">
-  <mat-card class="login-card" appearance="outlined">
+<section class="auth-mat-page">
+  <mat-card class="auth-mat-card" appearance="outlined">
     <img mat-card-image ngSrc="assets/dw1.jpg" alt="" width="400" height="265" priority />
 
     <mat-card-header>
@@ -8,7 +8,7 @@
     </mat-card-header>
 
     <mat-card-content>
-      <form [formGroup]="loginForm" class="login-form" (ngSubmit)="login()">
+      <form [formGroup]="loginForm" class="auth-mat-form" (ngSubmit)="login()">
         <mat-form-field>
           <mat-label>Adresse mail</mat-label>
           <mat-icon matPrefix>person</mat-icon>
@@ -24,16 +24,16 @@
         </mat-form-field>
 
         @if (messages.length > 0) {
-          <div class="login-alert" role="alert">
+          <div class="auth-mat-alert" role="alert">
             @for (message of messages; track message) {
               <p>{{ message }}</p>
             }
           </div>
         }
 
-        <div class="login-actions">
+        <div class="auth-mat-actions">
           <a routerLink="/forgotten" class="login-link-muted">Mot de passe oublié ?</a>
-          <button matButton="filled" type="submit" [disabled]="pending">
+          <button mat-flat-button type="submit" [disabled]="pending || loginForm.invalid">
             @if (pending) {
               <mat-progress-spinner mode="indeterminate" diameter="18" />
             } @else {
@@ -47,7 +47,7 @@
         <span>ou</span>
       </div>
 
-      <button matButton="outlined" type="button" class="login-google-btn" [disabled]="pending" (click)="loginWithGoogle()">
+      <button mat-stroked-button type="button" class="login-google-btn" [disabled]="pending" (click)="loginWithGoogle()">
         <span class="login-google-btn__content">
           <img ngSrc="assets/socialite/google.svg" alt="" width="18" height="18" aria-hidden="true" />
           Continuer avec Google
@@ -56,7 +56,7 @@
     </mat-card-content>
 
     <mat-card-actions>
-      <span class="login-footer-copy">
+      <span class="auth-mat-footer">
         Pas encore de compte ? <a routerLink="/register">Inscrivez-vous</a>
       </span>
     </mat-card-actions>

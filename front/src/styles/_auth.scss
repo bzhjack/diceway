@@ -1,0 +1,71 @@
+// Classes partagées entre toutes les pages auth Material.
+// Nommage auth-mat-* pour distinguer de l'ancien design system.
+
+.auth-mat-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.auth-mat-card {
+  width: 100%;
+  max-width: 400px;
+
+  img[mat-card-image] {
+    width: 100%;
+    height: auto;
+    margin: 0;
+  }
+}
+
+.auth-mat-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 10px;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.auth-mat-alert {
+  margin: 4px 0 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(248, 113, 113, 0.28);
+  border-radius: 8px;
+  background: rgba(248, 113, 113, 0.1);
+  color: var(--dw-color-echec);
+  font-size: 0.875rem;
+
+  p {
+    margin: 0;
+
+    & + p {
+      margin-top: 4px;
+    }
+  }
+}
+
+.auth-mat-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+
+  &--end {
+    justify-content: flex-end;
+  }
+}
+
+.auth-mat-footer {
+  color: var(--dw-surface-500);
+  font-size: 0.875rem;
+
+  a {
+    color: var(--dw-color-legendary);
+  }
+}

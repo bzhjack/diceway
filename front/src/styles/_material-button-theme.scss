@@ -1,0 +1,11 @@
+// Surcharge du style des boutons Material (état disabled visible sur fond sombre).
+// Doc : https://material.angular.dev/components/button/styling
+@use '@angular/material' as mat;
+
+html {
+  @include mat.button-overrides((
+    // Filled (mat-flat-button) : fond atténué mais coloré, texte lisible
+    filled-disabled-container-color: color-mix(in srgb, var(--mat-sys-primary) 40%, transparent),
+    filled-disabled-label-text-color: color-mix(in srgb, var(--mat-sys-on-primary) 55%, transparent),
+  ));
+}

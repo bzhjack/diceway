@@ -2,6 +2,7 @@
 @use 'styles/material-theme';
 @use 'styles/material-card-theme';
 @use 'styles/material-form-field-theme';
+@use 'styles/material-button-theme';
 
 // ── Design tokens & base ──────────────────────────────────────────────────────
 @use 'styles/fonts';
@@ -9,6 +10,7 @@
 @use 'styles/reset';
 
 // ── Composants UI ─────────────────────────────────────────────────────────────
+@use 'styles/auth';
 @use 'styles/workspace';
 
 // ── PrimeNG (migration en cours — retirer ce bloc à la fin) ───────────────────
