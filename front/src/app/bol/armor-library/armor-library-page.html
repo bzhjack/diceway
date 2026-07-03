@@ -1,241 +1,209 @@
-<section
-  class="dw-page xl:px-8"
->
+<section class="dw-page xl:px-8">
   <div class="mx-auto flex max-w-[1200px] flex-col gap-4">
-    <p-confirmpopup />
 
-    <p-card class="dw-card--header">
-      <div class="flex flex-col gap-4">
-        <div class="space-y-2.5">
-          <div class="space-y-1.5">
-            <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-sky-300">
-              Bibliothèque BOL
-            </p>
-            <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
-              Armures et boucliers
-            </h1>
-          </div>
-
-          <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
-            Catalogue défensif de la table, initialisé sur BoL et éditable depuis l’intendance.
-          </p>
-
-          <div class="flex flex-wrap gap-1.5">
-            <p-tag [value]="totalArmorCount() + ' entrées'" severity="contrast" />
-            <p-tag [value]="canonicalArmorCount() + ' canon'" severity="secondary" />
-            <p-tag [value]="customArmorCount() + ' créations'" severity="secondary" />
-            <p-tag [value]="shieldCount() + ' boucliers'" severity="secondary" />
-          </div>
-        </div>
-
-        <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
-          <div class="flex flex-wrap gap-1.5">
-            <p-button
-              [label]="formVisible() && !editingArmorId() ? 'Création en cours' : 'Nouvelle armure'"
-              icon="pi pi-plus"
-              size="small"
-              severity="info"
-              [disabled]="formVisible() && !editingArmorId()"
-              (onClick)="startCreate()"
-            />
-            <p-button
-              label="Voir l’arsenal"
-              icon="pi pi-bolt"
-              size="small"
-              [routerLink]="'/library/weapons'"
-              severity="secondary"
-              [outlined]="true"
-            />
-          </div>
-          <p-button
-            label="Retour à l’intendance"
-            icon="pi pi-arrow-left"
-            size="small"
-            [routerLink]="'/intendance'"
-            severity="secondary"
-            [outlined]="true"
-          />
-        </div>
-      </div>
-    </p-card>
-
-    @if (formVisible()) {
-      <p-card>
-        <div class="dw-creation-form space-y-4">
-          <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div class="space-y-1">
-              <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-sky-300">
-                Intendance
+    <!-- Header card -->
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <div class="flex flex-col gap-4">
+          <div class="space-y-2.5">
+            <div class="space-y-1.5">
+              <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-sky-300">
+                Bibliothèque BOL
               </p>
-              <h2 class="m-0 text-2xl font-bold leading-none text-slate-100">{{ formTitle() }}</h2>
+              <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
+                Armures et boucliers
+              </h1>
             </div>
 
-            <div class="flex flex-wrap gap-2">
-              <p-button
-                label="Annuler"
-                icon="pi pi-times"
-                size="small"
-                severity="secondary"
-                [outlined]="true"
-                (onClick)="cancelForm()"
-              />
-              <p-button
-                [label]="submitLabel()"
-                icon="pi pi-check"
-                size="small"
-                severity="info"
-                [disabled]="submitting()"
-                (onClick)="submitForm()"
-              />
+            <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
+              Catalogue défensif de la table, initialisé sur BoL et éditable depuis l'intendance.
+            </p>
+
+            <div class="flex flex-wrap gap-1.5">
+              <dw-tag>{{ totalArmorCount() }} entrées</dw-tag>
+              <dw-tag>{{ canonicalArmorCount() }} canon</dw-tag>
+              <dw-tag>{{ customArmorCount() }} créations</dw-tag>
+              <dw-tag>{{ shieldCount() }} boucliers</dw-tag>
             </div>
           </div>
 
-          <form [formGroup]="armorForm" class="grid gap-4 md:grid-cols-2">
-            <p-iftalabel>
-              <input pInputText id="armor-name" formControlName="armure" class="w-full" />
-              <label for="armor-name">Nom de l’armure *</label>
-            </p-iftalabel>
-
-            <p-iftalabel>
-              <input pInputText id="armor-protection" formControlName="protection" class="w-full" />
-              <label for="armor-protection">Protection *</label>
-            </p-iftalabel>
-
-            <p-iftalabel>
-              <input pInputText id="armor-malus" formControlName="malus" class="w-full" />
-              <label for="armor-malus">Malus</label>
-            </p-iftalabel>
-
-            <p-iftalabel>
-              <input pInputText id="armor-power" formControlName="pts_de_pouvoir" class="w-full" />
-              <label for="armor-power">Pts de pouvoir</label>
-            </p-iftalabel>
-          </form>
-
-          @if (onError('armure') || onError('protection')) {
-            <p class="m-0 text-sm text-amber-300">
-              Le nom et la protection sont requis pour enregistrer l’armure.
-            </p>
-          }
-
-          @if (errorMessage()) {
-            <p class="m-0 text-sm text-rose-300">{{ errorMessage() }}</p>
-          }
+          <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
+            <div class="flex flex-wrap gap-1.5">
+              <button
+                mat-flat-button
+                size="small"
+                [disabled]="formVisible() && !editingArmorId()"
+                (click)="startCreate()"
+              >
+                <i class="pi pi-plus"></i>
+                {{ formVisible() && !editingArmorId() ? 'Création en cours' : 'Nouvelle armure' }}
+              </button>
+              <button mat-stroked-button size="small" routerLink="/library/weapons">
+                <i class="pi pi-bolt"></i> Voir l'arsenal
+              </button>
+            </div>
+            <button mat-stroked-button size="small" routerLink="/intendance">
+              <i class="pi pi-arrow-left"></i> Retour à l'intendance
+            </button>
+          </div>
         </div>
-      </p-card>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Form card -->
+    @if (formVisible()) {
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <div class="space-y-4">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div class="space-y-1">
+                <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-sky-300">
+                  Intendance
+                </p>
+                <h2 class="m-0 text-2xl font-bold leading-none text-slate-100">{{ formTitle() }}</h2>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                <button mat-stroked-button size="small" (click)="cancelForm()">
+                  <i class="pi pi-times"></i> Annuler
+                </button>
+                <button mat-flat-button size="small" [disabled]="submitting()" (click)="submitForm()">
+                  <i class="pi pi-check"></i> {{ submitLabel() }}
+                </button>
+              </div>
+            </div>
+
+            <form [formGroup]="armorForm" class="grid gap-4 md:grid-cols-2">
+              <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Nom de l'armure *</mat-label>
+                <input matInput formControlName="armure" />
+                @if (onError('armure')) {
+                  <mat-error>Nom requis (255 caractères max)</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Protection *</mat-label>
+                <input matInput formControlName="protection" />
+                @if (onError('protection')) {
+                  <mat-error>Protection requise (255 caractères max)</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Malus</mat-label>
+                <input matInput formControlName="malus" />
+              </mat-form-field>
+
+              <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Pts de pouvoir</mat-label>
+                <input matInput formControlName="pts_de_pouvoir" />
+              </mat-form-field>
+            </form>
+
+            @if (errorMessage()) {
+              <p class="m-0 text-sm text-rose-300">{{ errorMessage() }}</p>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
     }
 
-    <p-card>
-      <p-table
-        [value]="filteredArmors()"
-        size="small"
-        dataKey="id"
-        class="bol-armor-table"
-        [tableStyle]="{ 'min-width': '64rem' }"
-      >
-        <ng-template #caption>
-          <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-            <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <p-iconfield iconPosition="left">
-                <p-inputicon class="pi pi-search" />
-                <input
-                  pInputText
-                  class="w-full sm:w-72"
-                  [value]="searchTerm()"
-                  (input)="searchTerm.set($any($event.target).value ?? '')"
-                  placeholder="Rechercher une armure"
-                  type="text"
-                />
-              </p-iconfield>
+    <!-- Content card -->
+    <mat-card appearance="outlined">
 
-              <div class="flex items-center gap-3 rounded-full border border-[#334155] px-4 py-2">
-                <p-checkbox
-                  inputId="armor-library-own"
-                  [binary]="true"
-                  [ngModel]="onlyCreations()"
-                  (ngModelChange)="onlyCreations.set($event)"
-                />
-                <label for="armor-library-own" class="cursor-pointer text-sm text-slate-300">
-                  Mes créations
-                </label>
-              </div>
+      <!-- Toolbar -->
+      <div class="armor-toolbar">
+        <div class="armor-toolbar__controls">
+          <mat-form-field class="armor-search-field" subscriptSizing="dynamic">
+            <mat-icon matPrefix>search</mat-icon>
+            <input
+              matInput
+              type="text"
+              [ngModel]="searchTerm()"
+              (ngModelChange)="searchTerm.set($event ?? '')"
+              placeholder="Rechercher une armure"
+            />
+          </mat-form-field>
 
-              <p-button
-                icon="pi pi-filter-slash"
-                label="Effacer"
-                severity="secondary"
-                [outlined]="true"
-                (onClick)="clearFilters()"
-              />
-            </div>
-
-            <p-tag [value]="armorCount() + ' visibles'" severity="contrast" />
+          <div class="armor-filter-chip">
+            <mat-checkbox [ngModel]="onlyCreations()" (ngModelChange)="onlyCreations.set($event)">
+              Mes créations
+            </mat-checkbox>
           </div>
-        </ng-template>
 
-        <ng-template #header>
-          <tr>
-            <th>Équipement</th>
-            <th>Protection</th>
-            <th>Malus</th>
-            <th class="armor-col-narrow">Pts de pouvoir</th>
-            <th class="armor-col-actions">Actions</th>
-          </tr>
-        </ng-template>
+          <button mat-stroked-button size="small" (click)="clearFilters()">
+            <i class="pi pi-filter-slash"></i> Effacer
+          </button>
+        </div>
 
-        <ng-template #body let-armor>
-          <tr>
-            <td>
-              <div class="flex items-center gap-2">
-                <p class="m-0 font-semibold text-slate-100">{{ armor.armure }}</p>
-                @if (armor.user_id) {
-                  <span class="rounded-full border border-sky-400/30 bg-sky-400/10 px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-sky-200">
-                    Création
-                  </span>
-                }
-              </div>
-            </td>
-            <td class="text-slate-300">
-              {{ armor.protection || '-' }}
-            </td>
-            <td class="text-slate-300">
-              {{ armor.malus || '-' }}
-            </td>
-            <td class="armor-col-narrow text-slate-300">
-              {{ armor.pts_de_pouvoir || '-' }}
-            </td>
-            <td class="armor-col-actions">
-              @if (canManage(armor)) {
-                <div class="flex justify-end gap-1">
-                  <p-button
-                    icon="pi pi-pencil"
-                    severity="secondary"
-                    [text]="true"
-                    [rounded]="true"
-                    size="small"
-                    (onClick)="startEdit(armor)"
-                  />
-                  <p-button
-                    icon="pi pi-trash"
-                    severity="danger"
-                    [text]="true"
-                    [rounded]="true"
-                    size="small"
-                    (onClick)="confirmDelete($event, armor)"
-                  />
-                </div>
-              }
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </p-card>
+        <dw-tag>{{ armorCount() }} visibles</dw-tag>
+      </div>
 
-    <p-card>
-      <p class="m-0 text-sm leading-7 text-slate-300">
-        Le baudrier de guerre n’apparaît pas ici, car il est traité comme avantage et non comme une
-        armure standard du catalogue.
-      </p>
-    </p-card>
+      <!-- Table -->
+      <div class="armor-table-scroll">
+        <table class="bol-armor-table">
+          <thead>
+            <tr>
+              <th>Équipement</th>
+              <th>Protection</th>
+              <th>Malus</th>
+              <th class="armor-col-compact">Pts de pouvoir</th>
+              <th class="armor-col-compact">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (armor of filteredArmors(); track armor.id) {
+              <tr>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <span class="font-semibold text-slate-100">{{ armor.armure }}</span>
+                    @if (armor.user_id) {
+                      <span class="armor-creation-badge">Création</span>
+                    }
+                  </div>
+                </td>
+                <td class="text-slate-300">{{ armor.protection || '-' }}</td>
+                <td class="text-slate-300">{{ armor.malus || '-' }}</td>
+                <td class="armor-col-compact text-slate-300">{{ armor.pts_de_pouvoir || '-' }}</td>
+                <td class="armor-col-compact">
+                  @if (canManage(armor)) {
+                    <div class="flex justify-end gap-0.5">
+                      <button
+                        mat-icon-button
+                        class="armor-action-btn"
+                        matTooltip="Modifier"
+                        (click)="startEdit(armor)"
+                      >
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button
+                        mat-icon-button
+                        class="armor-action-btn armor-btn-danger"
+                        matTooltip="Supprimer"
+                        (click)="askDelete(armor)"
+                      >
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </mat-card>
+
+    <!-- Note card -->
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <p class="m-0 text-sm leading-7 text-slate-300">
+          Le baudrier de guerre n'apparaît pas ici, car il est traité comme avantage et non comme une
+          armure standard du catalogue.
+        </p>
+      </mat-card-content>
+    </mat-card>
+
   </div>
 </section>

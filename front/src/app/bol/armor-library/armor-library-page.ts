@@ -3,21 +3,19 @@ import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@ang
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {RouterLink} from '@angular/router';
-import {ConfirmationService} from 'primeng/api';
-import {ButtonModule} from 'primeng/button';
-import {CardModule} from 'primeng/card';
-import {CheckboxModule} from 'primeng/checkbox';
-import {ConfirmPopupModule} from 'primeng/confirmpopup';
-import {IconFieldModule} from 'primeng/iconfield';
-import {IftaLabelModule} from 'primeng/iftalabel';
-import {InputIconModule} from 'primeng/inputicon';
-import {InputTextModule} from 'primeng/inputtext';
-import {TableModule} from 'primeng/table';
-import {TagModule} from 'primeng/tag';
-import {TextareaModule} from 'primeng/textarea';
+import {MatDialog} from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCard, MatCardContent} from '@angular/material/card';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {startWith, switchMap} from 'rxjs';
 import {BolArmureModel} from '../models/bol-armure.model';
 import {BolHerosService} from '../services/bol-heros.service';
+import {DwConfirmDialogComponent} from '../../shared/dw-confirm-dialog/dw-confirm-dialog';
+import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
 
 @Component({
   selector: 'bol-armor-library-page',
@@ -25,27 +23,24 @@ import {BolHerosService} from '../services/bol-heros.service';
     FormsModule,
     ReactiveFormsModule,
     RouterLink,
-    ButtonModule,
-    CardModule,
-    CheckboxModule,
-    ConfirmPopupModule,
-    IconFieldModule,
-    IftaLabelModule,
-    InputIconModule,
-    InputTextModule,
-    TableModule,
-    TagModule,
-    TextareaModule,
+    MatButtonModule,
+    MatCard,
+    MatCardContent,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatTooltipModule,
+    DwTagComponent,
   ],
   templateUrl: './armor-library-page.html',
   styleUrl: './armor-library-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ConfirmationService],
 })
 export class ArmorLibraryPageComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly herosService = inject(BolHerosService);
-  private readonly confirmationService = inject(ConfirmationService);
+  private readonly dialog = inject(MatDialog);
   private readonly refreshTrigger = signal(0);
   private readonly armors = toSignal(
     toObservable(this.refreshTrigger).pipe(
@@ -78,25 +73,26 @@ export class ArmorLibraryPageComponent {
           return true;
         }
 
-        return [
-          armor.armure,
-          armor.protection,
-          armor.malus,
-          armor.pts_de_pouvoir,
-        ].some((value) => value?.toLocaleLowerCase().includes(term));
+        return [armor.armure, armor.protection, armor.malus, armor.pts_de_pouvoir].some((value) =>
+          value?.toLocaleLowerCase().includes(term),
+        );
       })
       .sort((left, right) => left.armure.localeCompare(right.armure));
   });
   protected readonly armorCount = computed(() => this.filteredArmors().length);
   protected readonly totalArmorCount = computed(() => this.armors().length);
-  protected readonly customArmorCount = computed(() => this.armors().filter((armor) => Boolean(armor.user_id)).length);
-  protected readonly canonicalArmorCount = computed(() =>
-    this.armors().filter((armor) => !armor.user_id).length,
+  protected readonly customArmorCount = computed(
+    () => this.armors().filter((armor) => Boolean(armor.user_id)).length,
   );
-  protected readonly shieldCount = computed(() =>
-    this.armors().filter((armor) => armor.armure.toLocaleLowerCase().includes('bouclier')).length,
+  protected readonly canonicalArmorCount = computed(
+    () => this.armors().filter((armor) => !armor.user_id).length,
   );
-  protected readonly formTitle = computed(() => (this.editingArmorId() ? 'Modifier l’armure' : 'Nouvelle armure'));
+  protected readonly shieldCount = computed(
+    () => this.armors().filter((armor) => armor.armure.toLocaleLowerCase().includes('bouclier')).length,
+  );
+  protected readonly formTitle = computed(() =>
+    this.editingArmorId() ? 'Modifier l’armure' : 'Nouvelle armure',
+  );
   protected readonly submitLabel = computed(() => (this.editingArmorId() ? 'Enregistrer' : 'Créer'));
 
   protected clearFilters(): void {
@@ -108,12 +104,7 @@ export class ArmorLibraryPageComponent {
     this.editingArmorId.set(null);
     this.formVisible.set(true);
     this.errorMessage.set('');
-    this.armorForm.reset({
-      armure: '',
-      protection: '',
-      malus: '',
-      pts_de_pouvoir: '',
-    });
+    this.armorForm.reset({armure: '', protection: '', malus: '', pts_de_pouvoir: ''});
   }
 
   protected startEdit(armor: BolArmureModel): void {
@@ -136,12 +127,7 @@ export class ArmorLibraryPageComponent {
     this.formVisible.set(false);
     this.editingArmorId.set(null);
     this.errorMessage.set('');
-    this.armorForm.reset({
-      armure: '',
-      protection: '',
-      malus: '',
-      pts_de_pouvoir: '',
-    });
+    this.armorForm.reset({armure: '', protection: '', malus: '', pts_de_pouvoir: ''});
   }
 
   protected submitForm(): void {
@@ -182,19 +168,26 @@ export class ArmorLibraryPageComponent {
     });
   }
 
-  protected confirmDelete(event: Event, armor: BolArmureModel): void {
+  protected askDelete(armor: BolArmureModel): void {
     if (!this.canManage(armor)) {
       return;
     }
 
-    this.confirmationService.confirm({
-      target: event.currentTarget as EventTarget,
-      message: `Supprimer ${armor.armure} du catalogue ?`,
-      icon: 'pi pi-info-circle',
-      acceptLabel: 'Supprimer',
-      rejectLabel: 'Annuler',
-      accept: () => this.deleteArmor(armor),
-    });
+    this.dialog
+      .open(DwConfirmDialogComponent, {
+        data: {
+          title: 'Supprimer l’armure',
+          message: `Supprimer "${armor.armure}" du catalogue ?`,
+          confirmLabel: 'Supprimer',
+        },
+        width: '380px',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.deleteArmor(armor);
+        }
+      });
   }
 
   protected onError(controlName: keyof typeof this.armorForm.controls): boolean {
