@@ -21,3 +21,16 @@ html {
     supporting-text-color: var(--dw-surface-700),
   ));
 }
+
+// Statblock créature — dialog sans chrome Material (fond transparent)
+.creature-statblock-dialog {
+  .mdc-dialog__surface {
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible;
+  }
+
+  .mat-mdc-dialog-container {
+    overflow: visible;
+  }
+}

@@ -2,7 +2,81 @@
   display: block;
 }
 
-:host ::ng-deep .bol-creature-table {
+.creature-content-card {
+  overflow: hidden;
+}
+
+// ── Toolbar ───────────────────────────────────────────────
+.creature-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--dw-border);
+}
+
+.creature-toolbar__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.creature-search-field {
+  width: 18rem;
+}
+
+.creature-taille-field {
+  width: 14rem;
+}
+
+.creature-filter-chip {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--dw-border);
+}
+
+// ── Table scroll ──────────────────────────────────────────
+.creature-table-scroll {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: calc(100vh - 19rem);
+}
+
+// ── Native table ──────────────────────────────────────────
+.bol-creature-table {
+  width: 100%;
+  min-width: 76rem;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 0.6rem 1rem;
+    text-align: left;
+    vertical-align: top;
+    font-size: 0.875rem;
+    color: var(--dw-surface-100, #f1f5f9);
+    border-bottom: 1px solid var(--dw-border, rgba(255, 255, 255, 0.08));
+  }
+
+  th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--dw-surface-400, #94a3b8);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background-color: var(--mat-sys-surface-container-low);
+    border-bottom-width: 2px;
+    border-bottom-color: var(--dw-border, rgba(255, 255, 255, 0.12));
+  }
+
   .creature-col-avatar {
     width: 1%;
     padding: 0.5rem;
@@ -12,18 +86,21 @@
     width: 1%;
     white-space: nowrap;
   }
-
-  .p-rowgroup-header > td {
-    background: linear-gradient(90deg, rgba(24, 54, 65, 0.98), rgba(15, 23, 42, 0.95));
-    border-color: var(--dw-surface-200);
-    padding: 0 1rem;
-  }
 }
 
+// ── Group header row ──────────────────────────────────────
+.creature-group-header td {
+  background: linear-gradient(90deg, rgba(24, 54, 65, 0.98), rgba(15, 23, 42, 0.95));
+  border-color: var(--dw-surface-200);
+  padding: 0 1rem;
+}
+
+// ── Description ───────────────────────────────────────────
 .creature-description-content {
   max-width: 250px;
 }
 
+// ── Avatar ────────────────────────────────────────────────
 .beast-avatar {
   position: relative;
   display: flex;
@@ -38,27 +115,19 @@
 .beast-avatar--trigger {
   cursor: pointer;
   padding: 0;
-  transition: border-color 160ms ease, transform 160ms ease;
-}
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease;
 
-.beast-avatar--trigger:hover {
-  border-color: rgba(251, 191, 36, 0.55);
-  transform: translateY(-1px);
-}
+  &:hover {
+    border-color: rgba(251, 191, 36, 0.55);
+    transform: translateY(-1px);
+  }
 
-.beast-avatar--trigger:focus-visible {
-  outline: 3px solid rgba(251, 191, 36, 0.28);
-  outline-offset: 3px;
-}
-
-.beast-avatar__fallback {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  background:
-    radial-gradient(circle at top, rgba(251, 191, 36, 0.18), transparent 42%),
-    rgba(15, 23, 42, 0.9);
+  &:focus-visible {
+    outline: 3px solid rgba(251, 191, 36, 0.28);
+    outline-offset: 3px;
+  }
 }
 
 .beast-avatar__tag {
@@ -76,20 +145,11 @@
   text-transform: uppercase;
 }
 
-:host ::ng-deep .creature-statblock-dialog {
-  .p-dialog {
-    background: transparent;
-    border: 0;
-    box-shadow: none;
-  }
+// ── Buttons ───────────────────────────────────────────────
+.creature-btn-danger {
+  color: var(--mat-sys-error);
+}
 
-  .p-dialog-header {
-    padding: 0 0 0.75rem;
-    background: transparent;
-    border: 0;
-  }
-
-  .p-dialog-content {
-    background: transparent;
-  }
+.creature-action-btn {
+  margin-block: -8px;
 }
