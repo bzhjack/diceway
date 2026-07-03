@@ -2,7 +2,99 @@
   display: block;
 }
 
-:host ::ng-deep .bol-demon-table {
+// ── Palette zinc (thème démon : noir intense) ─────────────
+$demon-bg: rgba(24, 24, 27, 0.82);
+$demon-bg-header: #09090b;
+$demon-border: #3f3f46;
+$demon-group-bg: linear-gradient(90deg, rgba(69, 10, 10, 0.98), rgba(24, 24, 27, 0.95));
+
+// ── Cards ─────────────────────────────────────────────────
+.demon-header-card,
+.demon-content-card {
+  --mat-card-elevated-container-color: #{$demon-bg};
+  border-color: #{$demon-border} !important;
+  overflow: hidden;
+}
+
+// ── Toolbar ───────────────────────────────────────────────
+.demon-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #{$demon-border};
+}
+
+.demon-toolbar__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.demon-search-field {
+  width: 18rem;
+}
+
+.demon-categorie-field {
+  width: 14rem;
+}
+
+.demon-filter-chip {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 1rem;
+  border-radius: 999px;
+  border: 1px solid #{$demon-border};
+}
+
+// ── Table scroll ──────────────────────────────────────────
+.demon-table-scroll {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: calc(100vh - 19rem);
+}
+
+// ── Native table ──────────────────────────────────────────
+.bol-demon-table {
+  width: 100%;
+  min-width: 80rem;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 0.6rem 1rem;
+    text-align: left;
+    vertical-align: top;
+    font-size: 0.875rem;
+    color: var(--dw-surface-700);
+    border-bottom: 1px solid #{$demon-border};
+  }
+
+  th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--dw-surface-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background-color: #{$demon-bg-header};
+    border-bottom-width: 2px;
+    border-bottom-color: #{$demon-border};
+  }
+
+  tbody tr {
+    background: #{$demon-bg};
+
+    &:hover {
+      background: rgba(39, 39, 42, 0.98);
+    }
+  }
+
   .demon-col-avatar {
     width: 1%;
     padding: 0.5rem;
@@ -12,58 +104,21 @@
     width: 1%;
     white-space: nowrap;
   }
-
-  // La bibliothèque des démons utilise une palette zinc (noir intense) intentionnelle
-  .p-datatable-table-container {
-    overflow: hidden;
-    border: 1px solid #3f3f46;
-    border-radius: 0.85rem;
-  }
-
-  .p-datatable-thead > tr > th {
-    background: #09090b;
-    border-color: #3f3f46;
-    color: var(--dw-surface-700);
-    padding: 1rem;
-  }
-
-  .p-datatable-tbody > tr {
-    background: rgba(24, 24, 27, 0.82);
-    color: var(--dw-surface-700);
-  }
-
-  .p-datatable-tbody > tr > td {
-    background: transparent;
-    border-color: #3f3f46;
-    padding: 1rem;
-    vertical-align: top;
-  }
-
-  .p-datatable-tbody > tr:hover {
-    background: rgba(39, 39, 42, 0.98);
-  }
-
-  .p-datatable-tbody > tr:hover > td {
-    background: transparent;
-  }
-
-  .p-rowgroup-header > td {
-    background: linear-gradient(90deg, rgba(69, 10, 10, 0.98), rgba(24, 24, 27, 0.95));
-    border-color: #3f3f46;
-    padding: 0 1rem;
-  }
-
-  .p-datatable-header {
-    background: transparent;
-    border: 0;
-    padding: 0 0 1rem;
-  }
 }
 
+// ── Group header row ──────────────────────────────────────
+.demon-group-header td {
+  background: #{$demon-group-bg};
+  border-color: #{$demon-border};
+  padding: 0 1rem;
+}
+
+// ── Description ───────────────────────────────────────────
 .demon-description-content {
   max-width: 250px;
 }
 
+// ── Avatar ────────────────────────────────────────────────
 .demon-avatar {
   position: relative;
   display: flex;
@@ -88,4 +143,13 @@
   letter-spacing: 0.06em;
   color: var(--dw-color-demon);
   text-transform: uppercase;
+}
+
+// ── Buttons ───────────────────────────────────────────────
+.demon-btn-danger {
+  color: var(--mat-sys-error);
+}
+
+.demon-action-btn {
+  margin-block: -8px;
 }
