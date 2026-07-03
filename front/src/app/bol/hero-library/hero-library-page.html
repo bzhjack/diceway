@@ -20,9 +20,9 @@
             </p>
 
             <div class="flex flex-wrap gap-1.5">
-              <span class="dw-tag">{{ totalHeroCount() }} héros</span>
+              <dw-tag>{{ totalHeroCount() }} héros</dw-tag>
               @if (heroCount() !== totalHeroCount()) {
-                <span class="dw-tag">{{ heroCount() }} visibles</span>
+                <dw-tag>{{ heroCount() }} visibles</dw-tag>
               }
             </div>
           </div>
@@ -91,7 +91,7 @@
           </button>
         </div>
 
-        <span class="dw-tag">{{ heroCount() }} entrées</span>
+        <dw-tag>{{ heroCount() }} entrées</dw-tag>
       </div>
 
       <!-- Table -->
@@ -140,6 +140,7 @@
                         </p>
                         <button
                           mat-icon-button
+                          class="hero-action-btn"
                           matTooltip="Modifier"
                           [routerLink]="['/create/hero', hero.id]"
                           [state]="{ returnUrl: '/library/heroes' }"
@@ -149,6 +150,7 @@
                         @if (!hero.active) {
                           <button
                             mat-icon-button
+                            class="hero-action-btn"
                             matTooltip="Édition avancée"
                             [routerLink]="['/create/hero-advanced', hero.id]"
                             [state]="{ returnUrl: '/library/heroes' }"
@@ -158,8 +160,8 @@
                         }
                         <button
                           mat-icon-button
+                          class="hero-action-btn hero-btn-danger"
                           matTooltip="Supprimer"
-                          class="hero-btn-danger"
                           (click)="askDelete(hero)"
                         >
                           <i class="pi pi-trash"></i>

@@ -13,3 +13,10 @@
 .dw-header-tag .p-tag-label {
   line-height: 1;
 }
+
+// Alignement des PrimeIcons dans les boutons Angular Material
+.mdc-button__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}

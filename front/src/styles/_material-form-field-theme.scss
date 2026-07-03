@@ -9,6 +9,7 @@ html {
     outlined-label-text-color: var(--dw-surface-500),
     outlined-hover-label-text-color: var(--dw-surface-700),
     outlined-input-text-color: var(--dw-surface-800),
+    outlined-input-text-placeholder-color: var(--dw-surface-600),
     leading-icon-color: var(--dw-surface-500),
     trailing-icon-color: var(--dw-surface-500),
     // Densité -2 du système M3 (cf. get-density-tokens dans _m3-form-field.scss)
@@ -26,8 +27,3 @@ html {
   border-radius: var(--mat-form-field-outlined-container-shape, var(--mat-sys-corner-extra-small));
 }
 
-// Placeholder : pas de token M3, override via pseudo-élément.
-.mat-mdc-input-element::placeholder {
-  color: var(--dw-surface-400);
-  opacity: 1;
-}

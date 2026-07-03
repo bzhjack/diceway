@@ -1,6 +1,8 @@
 import {ChangeDetectionStrategy, Component, OnInit, computed, inject, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
+import {MatDialog} from '@angular/material/dialog';
+import {DwConfirmDialogComponent} from '../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {BolHerosModel} from '../models/bol-heros.model';
 import {BolHerosService} from '../services/bol-heros.service';
 import {MatButtonModule} from '@angular/material/button';
@@ -12,6 +14,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {InlineSvgDirective} from '../../shared/inline-svg/inline-svg.directive';
+import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
 
 interface HeroListEntry {
   readonly label: string;
@@ -45,6 +48,7 @@ interface HeroTraitEntry {
     MatCard,
     MatCardContent,
     InlineSvgDirective,
+    DwTagComponent,
   ],
   templateUrl: './hero-library-page.html',
   styleUrl: './hero-library-page.scss',
@@ -52,6 +56,7 @@ interface HeroTraitEntry {
 })
 export class HeroLibraryPageComponent implements OnInit {
   private readonly herosService = inject(BolHerosService);
+  private readonly dialog = inject(MatDialog);
   private readonly heroes = this.herosService.heroesList;
 
   ngOnInit(): void {
@@ -92,9 +97,21 @@ export class HeroLibraryPageComponent implements OnInit {
   protected readonly totalHeroCount = computed(() => this.heroes().length);
 
   protected askDelete(hero: BolHerosModel): void {
-    if (window.confirm(`Supprimer "${hero.origines.nom ?? 'ce héros'}" ?`)) {
-      this.deleteHero(hero);
-    }
+    this.dialog
+      .open(DwConfirmDialogComponent, {
+        data: {
+          title: 'Supprimer le héros',
+          message: `Voulez-vous supprimer "${hero.origines.nom ?? 'ce héros'}" ?`,
+          confirmLabel: 'Supprimer',
+        },
+        width: '380px',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.deleteHero(hero);
+        }
+      });
   }
 
   protected clearFilters(): void {
