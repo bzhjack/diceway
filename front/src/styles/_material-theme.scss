@@ -9,4 +9,9 @@ html {
     typography: 'Muse Sans',
     density: 0,
   ));
+
+  // M3 light scheme génère le ton-40 du palette cyan (~#006874 trop sombre sur
+  // fond sombre). On force le ton-80 (équivalent dark scheme).
+  --mat-sys-primary: #06b6d4; // cyan-500
+  --mat-sys-on-primary: #003640;
 }

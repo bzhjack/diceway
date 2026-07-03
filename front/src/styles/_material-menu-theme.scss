@@ -1,0 +1,10 @@
+// Surcharge du fond et texte du mat-menu pour le thème sombre.
+@use '@angular/material' as mat;
+
+html {
+  @include mat.menu-overrides((
+    container-color: var(--dw-surface-50),
+    item-label-text-color: var(--dw-surface-800),
+    item-icon-color: var(--dw-surface-500),
+  ));
+}

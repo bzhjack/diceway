@@ -2,7 +2,78 @@
   display: block;
 }
 
-:host ::ng-deep .bol-hero-table {
+// ── Content card ──────────────────────────────────────────
+.hero-content-card {
+  overflow: hidden;
+}
+
+// ── Toolbar (search + filters) ───────────────────────────
+.hero-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--dw-border);
+}
+
+.hero-toolbar__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hero-search-field {
+  width: 18rem;
+}
+
+.hero-filter-chip {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--dw-border);
+}
+
+// ── Table scroll wrapper ──────────────────────────────────
+.hero-table-scroll {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: calc(100vh - 19rem);
+}
+
+// ── Native table ──────────────────────────────────────────
+.bol-hero-table {
+  width: 100%;
+  min-width: 96rem;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 0.6rem 1rem;
+    text-align: left;
+    vertical-align: top;
+    font-size: 0.875rem;
+    color: var(--dw-surface-100, #f1f5f9);
+    border-bottom: 1px solid var(--dw-border, rgba(255, 255, 255, 0.08));
+  }
+
+  th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--dw-surface-400, #94a3b8);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background-color: var(--mat-sys-surface-container-low);
+    border-bottom-width: 2px;
+    border-bottom-color: var(--dw-border, rgba(255, 255, 255, 0.12));
+  }
+
   .hero-col-avatar {
     width: 1%;
     padding: 0.5rem;
@@ -14,41 +85,9 @@
   }
 }
 
+// ── Avatar ────────────────────────────────────────────────
 .hero-description-content {
   max-width: 250px;
-}
-
-.hero-trait-icon {
-  cursor: default;
-}
-
-.hero-trait-icon--clickable {
-  cursor: pointer;
-}
-
-.hero-trait-panel {
-  display: grid;
-  gap: 0.35rem;
-  max-width: 18rem;
-}
-
-.hero-trait-panel__section {
-  display: grid;
-  gap: 0.08rem;
-}
-
-.hero-trait-panel__title {
-  font-size: 0.75rem;
-  line-height: 1.25;
-  font-weight: 800;
-  color: var(--dw-color-text-bright);
-  white-space: nowrap;
-}
-
-.hero-trait-panel__line {
-  font-size: 0.75rem;
-  line-height: 1.35;
-  color: var(--dw-surface-700);
 }
 
 .hero-avatar {
@@ -75,4 +114,58 @@
   letter-spacing: 0.06em;
   color: var(--dw-color-legendary);
   text-transform: uppercase;
+}
+
+// ── Buttons ───────────────────────────────────────────────
+.hero-btn-danger {
+  color: var(--mat-sys-error);
+}
+
+// ── Trait icon as button ──────────────────────────────────
+button.hero-trait-icon {
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-trait-icon {
+  cursor: default;
+}
+
+.hero-trait-icon--clickable {
+  cursor: pointer;
+}
+
+// ── Trait panel (inside mat-menu) ─────────────────────────
+.hero-trait-panel {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 10rem;
+  max-width: 18rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.hero-trait-panel__section {
+  display: grid;
+  gap: 0.08rem;
+}
+
+.hero-trait-panel__title {
+  font-size: 0.75rem;
+  line-height: 1.25;
+  font-weight: 800;
+  color: var(--dw-color-text-bright);
+  white-space: nowrap;
+}
+
+.hero-trait-panel__line {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--dw-surface-700);
 }

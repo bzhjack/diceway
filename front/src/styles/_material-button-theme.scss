@@ -7,5 +7,18 @@ html {
     // Filled (mat-flat-button) : fond atténué mais coloré, texte lisible
     filled-disabled-container-color: color-mix(in srgb, var(--mat-sys-primary) 40%, transparent),
     filled-disabled-label-text-color: color-mix(in srgb, var(--mat-sys-on-primary) 55%, transparent),
+    // Outlined (mat-stroked-button) : couleur primaire pour texte et contour
+    outlined-label-text-color: var(--mat-sys-primary),
+    outlined-outline-color: var(--dw-surface-400),
+    // Text (mat-button) : couleur primaire
+    text-label-text-color: var(--mat-sys-primary),
+  ));
+
+  // Checkbox : contour et label lisibles sur fond sombre
+  @include mat.checkbox-overrides((
+    label-text-color: var(--dw-surface-700),
+    unselected-icon-color: var(--dw-surface-400),
+    unselected-hover-icon-color: var(--dw-surface-600),
+    unselected-focus-icon-color: var(--dw-surface-500),
   ));
 }

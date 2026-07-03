@@ -25,3 +25,9 @@ html {
   background-color: var(--dw-surface-100);
   border-radius: var(--mat-form-field-outlined-container-shape, var(--mat-sys-corner-extra-small));
 }
+
+// Placeholder : pas de token M3, override via pseudo-élément.
+.mat-mdc-input-element::placeholder {
+  color: var(--dw-surface-400);
+  opacity: 1;
+}
