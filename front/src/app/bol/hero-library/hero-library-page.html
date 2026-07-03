@@ -145,7 +145,7 @@
                           [routerLink]="['/create/hero', hero.id]"
                           [state]="{ returnUrl: '/library/heroes' }"
                         >
-                          <i class="pi pi-pencil"></i>
+                          <mat-icon>edit</mat-icon>
                         </button>
                         @if (!hero.active) {
                           <button
@@ -155,7 +155,7 @@
                             [routerLink]="['/create/hero-advanced', hero.id]"
                             [state]="{ returnUrl: '/library/heroes' }"
                           >
-                            <i class="pi pi-cog"></i>
+                            <mat-icon>settings</mat-icon>
                           </button>
                         }
                         <button
@@ -164,7 +164,7 @@
                           matTooltip="Supprimer"
                           (click)="askDelete(hero)"
                         >
-                          <i class="pi pi-trash"></i>
+                          <mat-icon>delete</mat-icon>
                         </button>
                       </div>
 

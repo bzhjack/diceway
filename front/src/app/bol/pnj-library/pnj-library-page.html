@@ -153,7 +153,7 @@
                             [routerLink]="['/create/pnj', pnj.id]"
                             [state]="{ returnUrl: '/library/pnjs' }"
                           >
-                            <i class="pi pi-pencil"></i>
+                            <mat-icon>edit</mat-icon>
                           </button>
                           <button
                             mat-icon-button
@@ -161,7 +161,7 @@
                             matTooltip="Supprimer"
                             (click)="askDelete(pnj)"
                           >
-                            <i class="pi pi-trash"></i>
+                            <mat-icon>delete</mat-icon>
                           </button>
                         }
                       </div>

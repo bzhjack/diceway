@@ -148,7 +148,7 @@
                             [routerLink]="['/create/creature', creature.id]"
                             [state]="{ returnUrl: '/library/creatures' }"
                           >
-                            <i class="pi pi-pencil"></i>
+                            <mat-icon>edit</mat-icon>
                           </button>
                           <button
                             mat-icon-button
@@ -156,7 +156,7 @@
                             matTooltip="Supprimer"
                             (click)="askDelete(creature)"
                           >
-                            <i class="pi pi-trash"></i>
+                            <mat-icon>delete</mat-icon>
                           </button>
                         }
                       </div>
