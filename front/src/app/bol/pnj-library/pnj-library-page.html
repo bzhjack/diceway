@@ -1,362 +1,334 @@
-<section
-  class="dw-page xl:px-8"
->
-  <p-confirmpopup />
+<section class="dw-page xl:px-8">
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
-    <p-card class="pnj-library-header-card dw-card--header">
-      <div class="flex flex-col gap-4">
-        <div class="space-y-2.5">
-          <div class="space-y-1.5">
-            <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-emerald-300">
-              Bibliotheque BOL
-            </p>
-            <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
-              Galerie des PNJ
-            </h1>
-          </div>
 
-          <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
-            Tous les personnages non joueurs disponibles pour preparer une scene, une faction ou
-            une rencontre.
-          </p>
-
-          <div class="flex flex-wrap gap-1.5">
-            <p-tag [value]="totalPnjCount() + ' PNJ'" severity="contrast" />
-            @if (pnjCount() !== totalPnjCount()) {
-              <p-tag [value]="pnjCount() + ' visibles'" severity="secondary" />
-            }
-          </div>
-        </div>
-
-        <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
-          <div class="flex flex-wrap gap-1.5">
-            <span class="library-header-actions__primary">
-              <p-button
-                label="Créer un PNJ"
-                icon="pi pi-plus"
-                severity="success"
-                size="small"
-                [routerLink]="'/create/pnj'"
-                [state]="{ returnUrl: '/library/pnjs' }"
-              />
-            </span>
-            <p-button
-              label="Voir les creatures"
-              icon="pi pi-book"
-              size="small"
-              [routerLink]="'/library/creatures'"
-              severity="secondary"
-              [outlined]="true"
-            />
-            <p-button
-              label="Voir les demons"
-              icon="pi pi-bolt"
-              size="small"
-              [routerLink]="'/library/demons'"
-              severity="secondary"
-              [outlined]="true"
-            />
-          </div>
-          <p-button
-            label="Retour au dashboard"
-            icon="pi pi-arrow-left"
-            size="small"
-            [routerLink]="'/'"
-            severity="secondary"
-            [outlined]="true"
-          />
-        </div>
-      </div>
-    </p-card>
-
-    <p-card>
-      <p-table
-        [value]="filteredPnjs()"
-        size="small"
-        [scrollable]="true"
-        scrollHeight="calc(100vh - 19rem)"
-        rowGroupMode="subheader"
-        groupRowsBy="type"
-        dataKey="id"
-        class="bol-pnj-table"
-        [tableStyle]="{ 'min-width': '92rem' }"
-      >
-        <ng-template #caption>
-          <div class="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-            <div class="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center">
-              <p-iconfield iconPosition="left">
-                <p-inputicon class="pi pi-search" />
-                <input
-                  pInputText
-                  class="w-full lg:w-72"
-                  [ngModel]="searchTerm()"
-                  (ngModelChange)="searchTerm.set($event ?? '')"
-                  placeholder="Rechercher un PNJ"
-                  type="text"
-                />
-              </p-iconfield>
-
-              <p-select
-                [options]="typeOptions"
-                optionLabel="label"
-                optionValue="value"
-                placeholder="Filtrer par type"
-                [showClear]="true"
-                [ngModel]="searchType()"
-                (ngModelChange)="searchType.set($event)"
-                class="w-full lg:w-64"
-              />
-
-              <div class="flex items-center gap-3 rounded-full border border-[#334155] px-4 py-2">
-                <p-checkbox
-                  inputId="pnj-library-own"
-                  [binary]="true"
-                  [ngModel]="onlyCreations()"
-                  (ngModelChange)="onlyCreations.set($event)"
-                />
-                <label for="pnj-library-own" class="cursor-pointer text-sm text-slate-300">
-                  Mes creations
-                </label>
-              </div>
-
-              <p-button
-                icon="pi pi-filter-slash"
-                label="Effacer"
-                severity="secondary"
-                [outlined]="true"
-                (onClick)="clearFilters()"
-              />
+    <!-- Header card -->
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <div class="flex flex-col gap-4">
+          <div class="space-y-2.5">
+            <div class="space-y-1.5">
+              <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-emerald-300">
+                Bibliothèque BOL
+              </p>
+              <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
+                Galerie des PNJ
+              </h1>
             </div>
 
-            <p-tag [value]="pnjCount() + ' entrees'" severity="contrast" />
+            <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
+              Tous les personnages non joueurs disponibles pour préparer une scène, une faction ou une rencontre.
+            </p>
+
+            <div class="flex flex-wrap gap-1.5">
+              <dw-tag>{{ totalPnjCount() }} PNJ</dw-tag>
+              @if (pnjCount() !== totalPnjCount()) {
+                <dw-tag>{{ pnjCount() }} visibles</dw-tag>
+              }
+            </div>
           </div>
-        </ng-template>
 
-        <ng-template #header>
-          <tr>
-            <th class="pnj-col-avatar">Avatar</th>
-            <th style="width: 250px">Description</th>
-            <th class="pnj-col-compact">Ressources</th>
-            <th class="pnj-col-compact">Attributs</th>
-            <th class="pnj-col-compact">Combat</th>
-            <th class="pnj-col-compact">Carrieres</th>
-            <th style="width: 16rem">Equipement</th>
-            <th style="width: 18rem">Traits</th>
-          </tr>
-        </ng-template>
+          <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
+            <div class="flex flex-wrap gap-1.5">
+              <button
+                mat-flat-button
+                size="small"
+                routerLink="/create/pnj"
+                [state]="{ returnUrl: '/library/pnjs' }"
+              >
+                <i class="pi pi-plus"></i> Créer un PNJ
+              </button>
+              <button mat-stroked-button size="small" routerLink="/library/creatures">
+                <i class="pi pi-book"></i> Voir les créatures
+              </button>
+              <button mat-stroked-button size="small" routerLink="/library/demons">
+                <i class="pi pi-bolt"></i> Voir les démons
+              </button>
+            </div>
+            <button mat-stroked-button size="small" routerLink="/">
+              <i class="pi pi-arrow-left"></i> Retour au dashboard
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
 
-        <ng-template #groupheader let-pnj>
-          <tr pRowGroupHeader>
-            <td colspan="8">
-              <div class="flex items-center gap-3 py-2">
-                <span class="text-xs font-black uppercase tracking-[0.24em] text-emerald-300">
-                  Type
-                </span>
-                <span class="text-xl font-semibold text-slate-50">{{ typeLabel(pnj.type) }}</span>
-              </div>
-            </td>
-          </tr>
-        </ng-template>
+    <!-- Content card -->
+    <mat-card appearance="outlined" class="pnj-content-card">
 
-        <ng-template #body let-pnj>
-          <tr>
-            <td class="pnj-col-avatar">
-              <div class="pnj-avatar">
-                <img [src]="pnjImage(pnj)" [alt]="pnj.origines.nom ?? 'PNJ'" class="h-full w-full object-cover" />
-              </div>
-            </td>
+      <!-- Toolbar -->
+      <div class="pnj-toolbar">
+        <div class="pnj-toolbar__controls">
+          <mat-form-field class="pnj-search-field" subscriptSizing="dynamic">
+            <mat-icon matPrefix>search</mat-icon>
+            <input
+              matInput
+              type="text"
+              [ngModel]="searchTerm()"
+              (ngModelChange)="searchTerm.set($event ?? '')"
+              placeholder="Rechercher un PNJ"
+            />
+          </mat-form-field>
 
-            <td>
-              <div class="pnj-description-content flex min-h-24 flex-col justify-between gap-3">
-                <div class="space-y-2">
-                  <div class="flex flex-wrap items-center gap-1">
-                    @if (pnj.origines.commentaire) {
-                      <i
-                        class="pi pi-info-circle cursor-pointer text-emerald-300"
-                        [pTooltip]="pnj.origines.commentaire"
-                      ></i>
-                    }
-                    <p class="m-0 line-clamp-2 text-lg font-bold text-slate-100">
-                      {{ pnj.origines.nom || 'PNJ sans nom' }}
-                    </p>
-                    @if (pnj.user_id) {
-                      <p-button
-                        icon="pi pi-pencil"
-                        severity="secondary"
-                        [text]="true"
-                        [rounded]="true"
-                        size="small"
-                        pTooltip="Modifier"
-                        [routerLink]="['/create/pnj', pnj.id]"
-                        [state]="{ returnUrl: '/library/pnjs' }"
-                      />
-                      <p-button
-                        icon="pi pi-trash"
-                        severity="danger"
-                        [text]="true"
-                        [rounded]="true"
-                        size="small"
-                        pTooltip="Supprimer"
-                        (onClick)="askDelete($event, pnj)"
-                      />
-                    }
-                  </div>
+          <mat-form-field class="pnj-type-field" subscriptSizing="dynamic">
+            <mat-icon matPrefix>filter_list</mat-icon>
+            <mat-select
+              [ngModel]="searchType()"
+              (ngModelChange)="searchType.set($event)"
+            >
+              @for (option of typeOptions; track option.value) {
+                <mat-option [value]="option.value">{{ option.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
 
-                  <div class="grid gap-1 text-sm text-slate-400">
-                    <p class="m-0">{{ typeLabel(pnj.type) }}</p>
-                    @if (pnj.origines.region?.region) {
-                      <p class="m-0">{{ pnj.origines.region?.region }}</p>
-                    }
-                    @if (languagesText(pnj)) {
-                      <p class="m-0 line-clamp-2">{{ languagesText(pnj) }}</p>
-                    }
-                  </div>
-                </div>
-              </div>
-            </td>
+          <div class="pnj-filter-chip">
+            <mat-checkbox
+              [ngModel]="onlyCreations()"
+              (ngModelChange)="onlyCreations.set($event)"
+            >
+              Mes créations
+            </mat-checkbox>
+          </div>
 
-            <td class="pnj-col-compact">
-              <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
-                @for (entry of resourceEntries(pnj); track entry.label) {
-                  <div class="flex items-center justify-between gap-3">
-                    <span class="text-slate-400">{{ entry.label }}</span>
-                    <span [class.font-bold]="entry.label === 'Vitalite'">{{ entry.value }}</span>
-                  </div>
-                }
-              </div>
-            </td>
+          <button mat-stroked-button size="small" (click)="clearFilters()">
+            <i class="pi pi-filter-slash"></i> Effacer
+          </button>
+        </div>
 
-            <td class="pnj-col-compact">
-              <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
-                <div class="flex items-center justify-between gap-3">
-                  <span class="text-slate-400">Vigueur</span>
-                  <span>{{ pnj.attributs.vigueur }}</span>
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                  <span class="text-slate-400">Agilite</span>
-                  <span>{{ pnj.attributs.agilite }}</span>
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                  <span class="text-slate-400">Esprit</span>
-                  <span>{{ pnj.attributs.esprit }}</span>
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                  <span class="text-slate-400">Aura</span>
-                  <span>{{ pnj.attributs.aura }}</span>
-                </div>
-              </div>
-            </td>
+        <dw-tag>{{ pnjCount() }} entrées</dw-tag>
+      </div>
 
-            <td class="pnj-col-compact">
-              <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
-                <div class="flex items-center justify-between gap-3">
-                  <span class="text-slate-400">Initiative</span>
-                  <span>{{ pnj.combat.initiative }}</span>
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                  <span class="text-slate-400">Melee</span>
-                  <span>{{ pnj.combat.melee }}</span>
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                  <span class="text-slate-400">Tir</span>
-                  <span>{{ pnj.combat.tir }}</span>
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                  <span class="text-slate-400">Defense</span>
-                  <span>{{ pnj.combat.defense }}</span>
-                </div>
-              </div>
-            </td>
-
-            <td class="pnj-col-compact">
-              <div class="flex min-h-24 flex-col gap-1 text-sm text-slate-200">
-                @for (entry of careerEntries(pnj); track entry.label) {
-                  <div class="flex items-center justify-between gap-3">
-                    <span class="text-slate-300">{{ entry.label }}</span>
-                    <span class="text-slate-400">{{ entry.value }}</span>
-                  </div>
-                } @empty {
-                  <span class="text-sm text-slate-500">Aucune carriere</span>
-                }
-              </div>
-            </td>
-
-            <td>
-              <div class="grid min-h-24 gap-3">
-                <div class="space-y-2">
-                  <p class="m-0 text-xs font-black uppercase tracking-[0.18em] text-slate-500">
-                    Armures
-                  </p>
-                  <div class="flex flex-col gap-1 text-sm text-slate-200">
-                    @for (entry of armorEntries(pnj); track entry.label) {
-                      <div class="flex items-center justify-between gap-3">
-                        <span class="text-slate-300">{{ entry.label }}</span>
-                        <span class="text-slate-400">{{ entry.value }}</span>
-                      </div>
-                    } @empty {
-                      <span class="text-sm text-slate-500">Aucune</span>
-                    }
-                  </div>
-                </div>
-
-                <div class="space-y-2">
-                  <p class="m-0 text-xs font-black uppercase tracking-[0.18em] text-slate-500">
-                    Armes
-                  </p>
-                  <div class="flex flex-col gap-1 text-sm text-slate-200">
-                    @for (entry of weaponEntries(pnj); track entry.label) {
-                      <div class="flex items-center justify-between gap-3">
-                        <span class="text-slate-300">{{ entry.label }}</span>
-                        <span class="text-slate-400">{{ entry.value }}</span>
-                      </div>
-                    } @empty {
-                      <span class="text-sm text-slate-500">Aucune</span>
-                    }
-                  </div>
-                </div>
-              </div>
-            </td>
-
-            <td>
-              <div class="flex min-h-24 flex-col gap-1">
-                @for (trait of traitEntries(pnj); track trait.label) {
-                  <div class="flex items-center gap-1 text-sm text-slate-200">
-                    <div
-                      class="tag_icon pnj-trait-icon"
-                      [class.bonus]="trait.severity === 'positive'"
-                      [class.malus]="trait.severity === 'negative'"
-                      [class.pnj-trait-icon--clickable]="trait.details.length"
-                      (click)="trait.details.length ? traitPanel.toggle($event) : null"
-                    >
-                      <div [inlineSVG]="traitIconPath(trait.icon)"></div>
+      <!-- Table -->
+      <div class="pnj-table-scroll">
+        <table class="bol-pnj-table">
+          <thead>
+            <tr>
+              <th class="pnj-col-avatar">Avatar</th>
+              <th style="width: 250px">Description</th>
+              <th class="pnj-col-compact">Ressources</th>
+              <th class="pnj-col-compact">Attributs</th>
+              <th class="pnj-col-compact">Combat</th>
+              <th class="pnj-col-compact">Carrières</th>
+              <th style="width: 16rem">Équipement</th>
+              <th style="width: 18rem">Traits</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (pnj of filteredPnjs(); track pnj.id; let i = $index) {
+              @if (showGroupHeader(i)) {
+                <tr class="pnj-group-header">
+                  <td colspan="8">
+                    <div class="flex items-center gap-3 py-2">
+                      <span class="text-xs font-black uppercase tracking-[0.24em] text-emerald-300">Type</span>
+                      <span class="text-xl font-semibold text-slate-50">{{ typeLabel(pnj.type) }}</span>
                     </div>
-                    <p-popover #traitPanel>
-                      <div class="pnj-trait-panel">
-                        @for (detail of trait.details; track detail) {
-                          <div class="pnj-trait-panel__section">
-                            <div class="pnj-trait-panel__title">{{ detail.title }}</div>
-                            @if (detail.description) {
-                              <div class="pnj-trait-panel__line">{{ detail.description }}</div>
-                            }
-                          </div>
-                        } @empty {
-                          <div class="pnj-trait-panel__line">Aucun détail</div>
+                  </td>
+                </tr>
+              }
+              <tr>
+                <td class="pnj-col-avatar">
+                  <div class="pnj-avatar">
+                    <img [src]="pnjImage(pnj)" [alt]="pnj.origines.nom ?? 'PNJ'" class="h-full w-full object-cover" />
+                  </div>
+                </td>
+
+                <td>
+                  <div class="pnj-description-content flex min-h-24 flex-col justify-between gap-3">
+                    <div class="space-y-2">
+                      <div class="flex flex-wrap items-center gap-1">
+                        @if (pnj.origines.commentaire) {
+                          <i
+                            class="pi pi-info-circle cursor-pointer text-emerald-300"
+                            [matTooltip]="pnj.origines.commentaire"
+                          ></i>
+                        }
+                        <p class="m-0 line-clamp-2 text-lg font-bold text-slate-100">
+                          {{ pnj.origines.nom || 'PNJ sans nom' }}
+                        </p>
+                        @if (pnj.user_id) {
+                          <button
+                            mat-icon-button
+                            class="pnj-action-btn"
+                            matTooltip="Modifier"
+                            [routerLink]="['/create/pnj', pnj.id]"
+                            [state]="{ returnUrl: '/library/pnjs' }"
+                          >
+                            <i class="pi pi-pencil"></i>
+                          </button>
+                          <button
+                            mat-icon-button
+                            class="pnj-action-btn pnj-btn-danger"
+                            matTooltip="Supprimer"
+                            (click)="askDelete(pnj)"
+                          >
+                            <i class="pi pi-trash"></i>
+                          </button>
                         }
                       </div>
-                    </p-popover>
-                    <span
-                      [class.text-emerald-200]="trait.severity === 'positive'"
-                      [class.text-rose-200]="trait.severity === 'negative'"
-                    >
-                      {{ trait.label }}
-                    </span>
+
+                      <div class="grid gap-1 text-sm text-slate-400">
+                        <p class="m-0">{{ typeLabel(pnj.type) }}</p>
+                        @if (pnj.origines.region?.region) {
+                          <p class="m-0">{{ pnj.origines.region?.region }}</p>
+                        }
+                        @if (languagesText(pnj)) {
+                          <p class="m-0 line-clamp-2">{{ languagesText(pnj) }}</p>
+                        }
+                      </div>
+                    </div>
                   </div>
-                }
-              </div>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </p-card>
+                </td>
+
+                <td class="pnj-col-compact">
+                  <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
+                    @for (entry of resourceEntries(pnj); track entry.label) {
+                      <div class="flex items-center justify-between gap-3">
+                        <span class="text-slate-400">{{ entry.label }}</span>
+                        <span [class.font-bold]="entry.label === 'Vitalite'">{{ entry.value }}</span>
+                      </div>
+                    }
+                  </div>
+                </td>
+
+                <td class="pnj-col-compact">
+                  <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="text-slate-400">Vigueur</span>
+                      <span>{{ pnj.attributs.vigueur }}</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="text-slate-400">Agilité</span>
+                      <span>{{ pnj.attributs.agilite }}</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="text-slate-400">Esprit</span>
+                      <span>{{ pnj.attributs.esprit }}</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="text-slate-400">Aura</span>
+                      <span>{{ pnj.attributs.aura }}</span>
+                    </div>
+                  </div>
+                </td>
+
+                <td class="pnj-col-compact">
+                  <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="text-slate-400">Initiative</span>
+                      <span>{{ pnj.combat.initiative }}</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="text-slate-400">Mêlée</span>
+                      <span>{{ pnj.combat.melee }}</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="text-slate-400">Tir</span>
+                      <span>{{ pnj.combat.tir }}</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="text-slate-400">Défense</span>
+                      <span>{{ pnj.combat.defense }}</span>
+                    </div>
+                  </div>
+                </td>
+
+                <td class="pnj-col-compact">
+                  <div class="flex min-h-24 flex-col gap-1 text-sm text-slate-200">
+                    @for (entry of careerEntries(pnj); track entry.label) {
+                      <div class="flex items-center justify-between gap-3">
+                        <span class="text-slate-300">{{ entry.label }}</span>
+                        <span class="text-slate-400">{{ entry.value }}</span>
+                      </div>
+                    } @empty {
+                      <span class="text-sm text-slate-500">Aucune carrière</span>
+                    }
+                  </div>
+                </td>
+
+                <td>
+                  <div class="grid min-h-24 gap-3">
+                    <div class="space-y-2">
+                      <p class="m-0 text-xs font-black uppercase tracking-[0.18em] text-slate-500">Armures</p>
+                      <div class="flex flex-col gap-1 text-sm text-slate-200">
+                        @for (entry of armorEntries(pnj); track entry.label) {
+                          <div class="flex items-center justify-between gap-3">
+                            <span class="text-slate-300">{{ entry.label }}</span>
+                            <span class="text-slate-400">{{ entry.value }}</span>
+                          </div>
+                        } @empty {
+                          <span class="text-sm text-slate-500">Aucune</span>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="space-y-2">
+                      <p class="m-0 text-xs font-black uppercase tracking-[0.18em] text-slate-500">Armes</p>
+                      <div class="flex flex-col gap-1 text-sm text-slate-200">
+                        @for (entry of weaponEntries(pnj); track entry.label) {
+                          <div class="flex items-center justify-between gap-3">
+                            <span class="text-slate-300">{{ entry.label }}</span>
+                            <span class="text-slate-400">{{ entry.value }}</span>
+                          </div>
+                        } @empty {
+                          <span class="text-sm text-slate-500">Aucune</span>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </td>
+
+                <td>
+                  <div class="flex min-h-24 flex-col gap-1">
+                    @for (trait of traitEntries(pnj); track trait.label) {
+                      <div class="flex items-center gap-1 text-sm text-slate-200">
+                        @if (trait.details.length) {
+                          <button
+                            class="tag_icon pnj-trait-icon pnj-trait-icon--clickable"
+                            [class.bonus]="trait.severity === 'positive'"
+                            [class.malus]="trait.severity === 'negative'"
+                            [matMenuTriggerFor]="traitMenu"
+                          >
+                            <div [inlineSVG]="traitIconPath(trait.icon)"></div>
+                          </button>
+                        } @else {
+                          <div
+                            class="tag_icon pnj-trait-icon"
+                            [class.bonus]="trait.severity === 'positive'"
+                            [class.malus]="trait.severity === 'negative'"
+                          >
+                            <div [inlineSVG]="traitIconPath(trait.icon)"></div>
+                          </div>
+                        }
+                        <mat-menu #traitMenu>
+                          <div class="pnj-trait-panel">
+                            @for (detail of trait.details; track detail.title + '-' + (detail.description ?? '')) {
+                              <div class="pnj-trait-panel__section">
+                                <div class="pnj-trait-panel__title">{{ detail.title }}</div>
+                                @if (detail.description) {
+                                  <div class="pnj-trait-panel__line">{{ detail.description }}</div>
+                                }
+                              </div>
+                            }
+                          </div>
+                        </mat-menu>
+                        <span
+                          [class.text-emerald-200]="trait.severity === 'positive'"
+                          [class.text-rose-200]="trait.severity === 'negative'"
+                        >
+                          {{ trait.label }}
+                        </span>
+                      </div>
+                    } @empty {
+                      <span class="text-sm text-slate-500">Aucun trait</span>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </mat-card>
+
   </div>
 </section>

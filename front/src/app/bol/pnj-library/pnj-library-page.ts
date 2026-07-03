@@ -2,29 +2,28 @@ import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@ang
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
-import {ConfirmationService} from 'primeng/api';
+import {MatDialog} from '@angular/material/dialog';
 import {BolHerosModel} from '../models/bol-heros.model';
 import {BolHerosService} from '../services/bol-heros.service';
-import {ButtonModule} from 'primeng/button';
-import {CardModule} from 'primeng/card';
-import {CheckboxModule} from 'primeng/checkbox';
-import {ConfirmPopupModule} from 'primeng/confirmpopup';
-import {IconFieldModule} from 'primeng/iconfield';
-import {InputIconModule} from 'primeng/inputicon';
-import {InputTextModule} from 'primeng/inputtext';
-import {SelectModule} from 'primeng/select';
-import {TagModule} from 'primeng/tag';
-import {TableModule} from 'primeng/table';
-import {TooltipModule} from 'primeng/tooltip';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatSelectModule} from '@angular/material/select';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatCard, MatCardContent} from '@angular/material/card';
 import {InlineSvgDirective} from '../../shared/inline-svg/inline-svg.directive';
-import {PopoverModule} from 'primeng/popover';
+import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
+import {DwConfirmDialogComponent} from '../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {startWith, switchMap} from 'rxjs';
 
 type PnjType = 'P' | 'C' | 'R';
 
 interface PnjTypeOption {
   readonly label: string;
-  readonly value: PnjType | null;
+  readonly value: PnjType | '';
 }
 
 interface PnjListEntry {
@@ -49,45 +48,43 @@ interface PnjTraitDetail {
   imports: [
     FormsModule,
     RouterLink,
-    ButtonModule,
-    CardModule,
-    CheckboxModule,
-    ConfirmPopupModule,
-    IconFieldModule,
-    InputIconModule,
-    InputTextModule,
-    SelectModule,
-    TagModule,
-    TableModule,
-    TooltipModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatTooltipModule,
+    MatCard,
+    MatCardContent,
     InlineSvgDirective,
-    PopoverModule,
+    DwTagComponent,
   ],
   templateUrl: './pnj-library-page.html',
   styleUrl: './pnj-library-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ConfirmationService],
 })
 export class PnjLibraryPageComponent {
   private readonly herosService = inject(BolHerosService);
-  private readonly confirmationService = inject(ConfirmationService);
+  private readonly dialog = inject(MatDialog);
   private readonly refreshTrigger = signal(0);
   private readonly pnjs = toSignal(
     toObservable(this.refreshTrigger).pipe(
       startWith(0),
       switchMap(() => this.herosService.pnjs()),
     ),
-    { initialValue: [] },
+    {initialValue: []},
   );
 
   protected readonly typeOptions: PnjTypeOption[] = [
-    { label: 'Tous les profils', value: null },
-    { label: 'Coriaces', value: 'C' },
-    { label: 'Rivaux', value: 'R' },
-    { label: 'Pietaille', value: 'P' },
+    {label: 'Tous les profils', value: ''},
+    {label: 'Coriaces', value: 'C'},
+    {label: 'Rivaux', value: 'R'},
+    {label: 'Pietaille', value: 'P'},
   ];
   protected readonly searchTerm = signal('');
-  protected readonly searchType = signal<PnjType | null>(null);
+  protected readonly searchType = signal<PnjType | ''>('');
   protected readonly onlyCreations = signal(false);
 
   protected readonly filteredPnjs = computed(() =>
@@ -122,21 +119,32 @@ export class PnjLibraryPageComponent {
   protected readonly pnjCount = computed(() => this.filteredPnjs().length);
   protected readonly totalPnjCount = computed(() => this.pnjs().length);
 
-  protected askDelete(event: Event, pnj: BolHerosModel): void {
-    this.confirmationService.confirm({
-      target: event.currentTarget as EventTarget,
-      message: 'Voulez-vous supprimer ce PNJ ?',
-      icon: 'pi pi-info-circle',
-      acceptButtonStyleClass: 'p-button-danger p-button-sm',
-      acceptLabel: 'Oui',
-      rejectLabel: 'Non',
-      accept: () => this.deletePnj(pnj),
-    });
+  protected showGroupHeader(index: number): boolean {
+    const pnjs = this.filteredPnjs();
+    return index === 0 || pnjs[index - 1].type !== pnjs[index].type;
+  }
+
+  protected askDelete(pnj: BolHerosModel): void {
+    this.dialog
+      .open(DwConfirmDialogComponent, {
+        data: {
+          title: 'Supprimer le PNJ',
+          message: `Voulez-vous supprimer "${pnj.origines.nom ?? 'ce PNJ'}" ?`,
+          confirmLabel: 'Supprimer',
+        },
+        width: '380px',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.deletePnj(pnj);
+        }
+      });
   }
 
   protected clearFilters(): void {
     this.searchTerm.set('');
-    this.searchType.set(null);
+    this.searchType.set('');
     this.onlyCreations.set(false);
   }
 
@@ -163,11 +171,11 @@ export class PnjLibraryPageComponent {
 
   protected resourceEntries(pnj: BolHerosModel): readonly PnjListEntry[] {
     return [
-      { label: 'Vitalite', value: pnj.ressources.vitalite },
-      { label: 'Pouvoir', value: pnj.ressources.pouvoir },
-      { label: 'Foi', value: pnj.ressources.foi },
-      { label: 'Vilenie', value: pnj.ressources.vilenie },
-      { label: 'Heroisme', value: pnj.ressources.heroisme },
+      {label: 'Vitalite', value: pnj.ressources.vitalite},
+      {label: 'Pouvoir', value: pnj.ressources.pouvoir},
+      {label: 'Foi', value: pnj.ressources.foi},
+      {label: 'Vilenie', value: pnj.ressources.vilenie},
+      {label: 'Heroisme', value: pnj.ressources.heroisme},
     ].filter((entry, index) => index === 0 || Number(entry.value) > 0);
   }
 
@@ -300,17 +308,11 @@ export class PnjLibraryPageComponent {
     const details: PnjTraitDetail[] = [];
 
     if (trait.traitable && 'de_bonus' in trait.traitable && trait.traitable.de_bonus) {
-      details.push({
-        title: 'Dé bonus',
-        description: trait.traitable.de_bonus_domaine,
-      });
+      details.push({title: 'Dé bonus', description: trait.traitable.de_bonus_domaine});
     }
 
     if (trait.traitable && 'de_malus' in trait.traitable && trait.traitable.de_malus) {
-      details.push({
-        title: 'Dé malus',
-        description: trait.traitable.de_malus_domaine,
-      });
+      details.push({title: 'Dé malus', description: trait.traitable.de_malus_domaine});
     }
 
     if (trait.traitable && 'attribut' in trait.traitable && trait.traitable.attribut) {
@@ -328,17 +330,11 @@ export class PnjLibraryPageComponent {
     }
 
     if (trait.traitable?.description) {
-      details.push({
-        title: 'Détails',
-        description: trait.traitable.description,
-      });
+      details.push({title: 'Détails', description: trait.traitable.description});
     }
 
     if (trait.detail) {
-      details.push({
-        title: 'Précision',
-        description: trait.detail,
-      });
+      details.push({title: 'Précision', description: trait.detail});
     }
 
     return details;

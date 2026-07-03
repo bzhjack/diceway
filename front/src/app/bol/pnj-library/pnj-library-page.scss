@@ -2,7 +2,81 @@
   display: block;
 }
 
-:host ::ng-deep .bol-pnj-table {
+.pnj-content-card {
+  overflow: hidden;
+}
+
+// ── Toolbar ───────────────────────────────────────────────
+.pnj-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--dw-border);
+}
+
+.pnj-toolbar__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pnj-search-field {
+  width: 18rem;
+}
+
+.pnj-type-field {
+  width: 14rem;
+}
+
+.pnj-filter-chip {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--dw-border);
+}
+
+// ── Table scroll ──────────────────────────────────────────
+.pnj-table-scroll {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: calc(100vh - 19rem);
+}
+
+// ── Native table ──────────────────────────────────────────
+.bol-pnj-table {
+  width: 100%;
+  min-width: 92rem;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 0.6rem 1rem;
+    text-align: left;
+    vertical-align: top;
+    font-size: 0.875rem;
+    color: var(--dw-surface-100, #f1f5f9);
+    border-bottom: 1px solid var(--dw-border, rgba(255, 255, 255, 0.08));
+  }
+
+  th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--dw-surface-400, #94a3b8);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background-color: var(--mat-sys-surface-container-low);
+    border-bottom-width: 2px;
+    border-bottom-color: var(--dw-border, rgba(255, 255, 255, 0.12));
+  }
+
   .pnj-col-avatar {
     width: 1%;
     padding: 0.5rem;
@@ -12,18 +86,53 @@
     width: 1%;
     white-space: nowrap;
   }
-
-  .p-rowgroup-header > td {
-    background: linear-gradient(90deg, rgba(24, 54, 65, 0.98), rgba(15, 23, 42, 0.95));
-    border-color: var(--dw-surface-200);
-    padding: 0 1rem;
-  }
 }
 
+// ── Group header row ──────────────────────────────────────
+.pnj-group-header td {
+  background: linear-gradient(90deg, rgba(24, 54, 65, 0.98), rgba(15, 23, 42, 0.95));
+  border-color: var(--dw-surface-200);
+  padding: 0 1rem;
+}
+
+// ── Avatar ────────────────────────────────────────────────
 .pnj-description-content {
   max-width: 250px;
 }
 
+.pnj-avatar {
+  position: relative;
+  display: flex;
+  height: 5.5rem;
+  width: 5.5rem;
+  overflow: hidden;
+  border: 1px solid var(--dw-border);
+  border-radius: 0.75rem;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.92));
+}
+
+// ── Buttons ───────────────────────────────────────────────
+.pnj-btn-danger {
+  color: var(--mat-sys-error);
+}
+
+.pnj-action-btn {
+  margin-block: -8px;
+}
+
+button.pnj-trait-icon {
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ── Trait panel ───────────────────────────────────────────
 .pnj-trait-icon {
   cursor: default;
 }
@@ -35,7 +144,9 @@
 .pnj-trait-panel {
   display: grid;
   gap: 0.35rem;
+  min-width: 10rem;
   max-width: 18rem;
+  padding: 0.5rem 0.75rem;
 }
 
 .pnj-trait-panel__section {
@@ -55,30 +166,4 @@
   font-size: 0.75rem;
   line-height: 1.35;
   color: var(--dw-surface-700);
-}
-
-.pnj-avatar {
-  position: relative;
-  display: flex;
-  height: 5.5rem;
-  width: 5.5rem;
-  overflow: hidden;
-  border: 1px solid var(--dw-border);
-  border-radius: 0.75rem;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.92));
-}
-
-.pnj-avatar__tag {
-  position: absolute;
-  right: 0.35rem;
-  bottom: 0.35rem;
-  border: 1px solid rgba(52, 211, 153, 0.35);
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.88);
-  padding: 0.12rem 0.42rem;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--dw-color-pnj);
-  text-transform: uppercase;
 }
