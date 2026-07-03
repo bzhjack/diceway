@@ -2,11 +2,128 @@
   display: block;
 }
 
-:host ::ng-deep .bol-weapon-table {
-  .weapon-col-narrow,
-  .weapon-col-range,
-  .weapon-col-actions {
+// ── Toolbar ───────────────────────────────────────────────
+.weapon-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--dw-surface-200);
+}
+
+.weapon-toolbar__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.weapon-search-field {
+  width: 18rem;
+}
+
+.weapon-filter-chip {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--dw-surface-200);
+}
+
+// ── Table scroll ──────────────────────────────────────────
+.weapon-table-scroll {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: calc(100vh - 19rem);
+}
+
+// ── Native table ──────────────────────────────────────────
+.bol-weapon-table {
+  width: 100%;
+  min-width: 60rem;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 0.6rem 1rem;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 0.875rem;
+    color: var(--dw-surface-700);
+    border-bottom: 1px solid var(--dw-surface-100);
+  }
+
+  th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--dw-surface-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background-color: var(--dw-surface-0);
+    border-bottom-width: 2px;
+    border-bottom-color: var(--dw-surface-100);
+  }
+
+  tbody tr:hover {
+    background-color: var(--dw-surface-50);
+  }
+
+  .weapon-col-compact {
     width: 1%;
     white-space: nowrap;
   }
+
+  .weapon-col-range {
+    width: 10rem;
+    white-space: nowrap;
+  }
+}
+
+// ── Badges ────────────────────────────────────────────────
+.weapon-creation-badge {
+  border-radius: 999px;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  background: rgba(251, 191, 36, 0.1);
+  padding: 0.1rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fde68a;
+}
+
+.weapon-type-badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  &--melee {
+    background: rgba(180, 83, 9, 0.2);
+    border: 1px solid rgba(180, 83, 9, 0.4);
+    color: #fbbf24;
+  }
+
+  &--tir {
+    background: rgba(14, 116, 144, 0.2);
+    border: 1px solid rgba(14, 116, 144, 0.4);
+    color: #67e8f9;
+  }
+}
+
+// ── Buttons ───────────────────────────────────────────────
+.weapon-btn-danger {
+  color: var(--mat-sys-error);
+}
+
+.weapon-action-btn {
+  margin-block: -8px;
 }
