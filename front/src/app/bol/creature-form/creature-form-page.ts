@@ -8,15 +8,14 @@ import {finalize} from 'rxjs/operators';
 import {BolCreatureModel} from '../models/bol-creature.model';
 import {BolCreatureStateService} from '../services/bol-creature-state.service';
 import {BolCreaturesService} from '../services/bol-creatures.service';
-import {ButtonModule} from 'primeng/button';
-import {CardModule} from 'primeng/card';
 import {MatDialog} from '@angular/material/dialog';
-import {IftaLabelModule} from 'primeng/iftalabel';
-import {InputNumberModule} from 'primeng/inputnumber';
-import {InputTextModule} from 'primeng/inputtext';
-import {SelectModule} from 'primeng/select';
-import {TagModule} from 'primeng/tag';
-import {TextareaModule} from 'primeng/textarea';
+import {MatCard, MatCardContent} from '@angular/material/card';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
 import {PictureComponent} from '../../shared/picture/picture';
 
 interface CreatureCapaciteDraft {
@@ -29,14 +28,14 @@ interface CreatureCapaciteDraft {
   imports: [
     JsonPipe,
     ReactiveFormsModule,
-    ButtonModule,
-    CardModule,
-    IftaLabelModule,
-    InputNumberModule,
-    InputTextModule,
-    SelectModule,
-    TagModule,
-    TextareaModule,
+    MatCard,
+    MatCardContent,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    DwTagComponent,
   ],
   templateUrl: './creature-form-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -84,6 +83,9 @@ export class CreatureFormPageComponent {
       ? 'Les modifications ont bien été enregistrées côté backend.'
       : 'La créature a bien été enregistrée côté backend.',
   );
+
+  protected readonly compareById = (a: number | string | null, b: number | string | null): boolean =>
+    Number(a) === Number(b);
 
   protected readonly selectedCapaciteId = new FormControl<number | null>(null);
   protected readonly selectedCapaciteDetail = new FormControl<string>('', {

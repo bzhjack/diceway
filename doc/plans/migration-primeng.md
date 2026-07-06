@@ -68,6 +68,7 @@
 | `bol/workspace/workspace-metrics` | mat-card + SCSS local (background, hover lift), routerLink conditionnel via `null`, template simplifié (plus de duplication) |
 | `bol/workspace/workspace-quick-actions` | mat-card + backdrop-filter, `WorkspaceActionCardComponent` extrait (composant local), icônes Material dans les données |
 | `shared/picture/picture` | `MatDialogRef` + `MAT_DIALOG_DATA` (titre passé par l'appelant), `MatButtonModule` + `MatIconModule`, `mat-dialog-title/content/actions` ; 5 appelants migré vers `MatDialog.open()` + `afterClosed()` |
+| `bol/creature-form/creature-form-page` | mat-card, mat-form-field (input, select, textarea), mat-button, dw-tag ; `compareWith` pour le select taille (coercition string/number) |
 
 ---
 
@@ -113,7 +114,7 @@ Classé par complexité estimée (TS + HTML lignes combinées).
 | `bol/session-live/bol-combat-panel/bol-combatant-picker` | button, card, iconfield, inputtext, selectbutton, tooltip | ~475 | sélection combattants, selectbutton → mat-button-toggle |
 | `bol/session-live/session-live-page` | button, card, message, tag | ~385 | page session live |
 | `bol/session-live/bol-combat-panel/bol-combat-panel` | button, card, checkbox, dialog | ~700 | panneau combat principal, p-dialog → MatDialog |
-| `bol/creature-form/creature-form-page` | button, card, dynamicdialog, iftalabel, inputnumber, inputtext, select, tag, textarea | ~750 | formulaire créature |
+| ~~`bol/creature-form/creature-form-page`~~ | ~~button, card, dynamicdialog, ...~~ | ~~migré~~ | ~~formulaire créature~~ |
 | `bol/demon-form/demon-form-page` | button, card, dynamicdialog, iftalabel, inputnumber, inputtext, select, tag, textarea | ~750 | formulaire démon |
 | `bol/scenario-form/scenario-form-page` | button, card, iftalabel, inputtext, select, tag, textarea | ~935 | formulaire scénario |
 | `bol/pnj-form/pnj-form-page` | button, card, dynamicdialog, iftalabel, inputnumber, inputtext, select, tag, textarea | ~1285 | formulaire PNJ (le plus gros) |
