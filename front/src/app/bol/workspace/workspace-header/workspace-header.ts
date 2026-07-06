@@ -1,11 +1,11 @@
 import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
-import {ButtonModule} from 'primeng/button';
-import {CardModule} from 'primeng/card';
-import {TagModule} from 'primeng/tag';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCard, MatCardContent} from '@angular/material/card';
+import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 
 @Component({
   selector: 'bol-workspace-header',
-  imports: [ButtonModule, CardModule, TagModule],
+  imports: [MatButtonModule, MatCard, MatCardContent, DwTagComponent],
   templateUrl: './workspace-header.html',
   styleUrl: './workspace-header.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
