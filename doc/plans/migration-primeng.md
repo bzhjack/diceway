@@ -29,6 +29,8 @@
 
 **Règle apostrophes** : délimiteur `'` (U+0027 ASCII), apostrophe française `'` (U+2019) à l'intérieur des strings — ne jamais mélanger les deux.
 
+**Icônes** : PrimeIcons (`pi pi-*`) remplacés par `<mat-icon>nom</mat-icon>` (Material Symbols). Les icônes dans les données TS (dynamiques) utilisent directement le nom Material (`'explore'`, `'add'`, etc.). Mapping de référence dans le script Python de session. Les fichiers non encore migrés conservent leurs `icon="pi pi-*"` sur `<p-button>` — ils seront traités à la migration.
+
 ---
 
 ## Composants shared créés pendant la migration
@@ -64,6 +66,7 @@
 | `bol/workspace/workspace-page` | — |
 | `bol/workspace/workspace-header` | mat-card + background-image via classe locale (pas de `::ng-deep`), dw-tag x3, mat-stroked-button |
 | `bol/workspace/workspace-metrics` | mat-card + SCSS local (background, hover lift), routerLink conditionnel via `null`, template simplifié (plus de duplication) |
+| `bol/workspace/workspace-quick-actions` | mat-card + backdrop-filter, `WorkspaceActionCardComponent` extrait (composant local), icônes Material dans les données |
 
 ---
 
@@ -77,7 +80,7 @@ Classé par complexité estimée (TS + HTML lignes combinées).
 |---|---|---|
 | ~~`bol/workspace/workspace-header`~~ | ~~button, card, tag~~ | ~~migré~~ |
 | ~~`bol/workspace/workspace-metrics`~~ | ~~card~~ | ~~migré~~ |
-| `bol/workspace/workspace-quick-actions` | button, card | ~130 |
+| ~~`bol/workspace/workspace-quick-actions`~~ | ~~button, card~~ | ~~migré~~ |
 | `bol/creation-placeholder/creation-placeholder-page` | button, card, tag | ~130 |
 | `bol/hero-advanced/attributs/attributs.component` | iftalabel, inputnumber | ~180 |
 | `bol/hero-advanced/combat/combat.component` | iftalabel, inputnumber | ~190 |
