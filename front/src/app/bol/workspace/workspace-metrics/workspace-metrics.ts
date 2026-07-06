@@ -1,6 +1,6 @@
 import {RouterLink} from '@angular/router';
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
-import {CardModule} from 'primeng/card';
+import {MatCard, MatCardContent} from '@angular/material/card';
 
 export interface WorkspaceMetric {
   readonly label: string;
@@ -13,8 +13,9 @@ export interface WorkspaceMetric {
 
 @Component({
   selector: 'bol-workspace-metrics',
-  imports: [RouterLink, CardModule],
+  imports: [RouterLink, MatCard, MatCardContent],
   templateUrl: './workspace-metrics.html',
+  styleUrl: './workspace-metrics.scss',
   host: {class: 'block h-full'},
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

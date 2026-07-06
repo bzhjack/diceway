@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.wm-card {
+  height: 100%;
+  background: rgba(45, 55, 72, 0.92) !important;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+}
+
+.wm-card--interactive {
+  cursor: pointer;
+  transition:
+    transform 150ms ease,
+    border-color 150ms ease;
+
+  &:hover {
+    transform: translateY(-0.125rem);
+    border-color: rgba(252, 211, 77, 0.6) !important;
+  }
+}

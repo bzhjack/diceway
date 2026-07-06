@@ -5,8 +5,11 @@
 html {
   @include mat.card-overrides((
     elevated-container-color: var(--dw-surface-50),
+    elevated-container-shape: 0.5rem,
     filled-container-color: var(--dw-surface-100),
+    filled-container-shape: 0.5rem,
     outlined-container-color: var(--dw-surface-50),
+    outlined-container-shape: 0.5rem,
     outlined-outline-color: var(--dw-border),
     subtitle-text-color: var(--dw-surface-500),
   ));

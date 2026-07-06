@@ -62,6 +62,7 @@
 | `bol/weapon-library/weapon-library-page` | `DwLibraryHeaderComponent` (amber) + `DwLibraryToolbarComponent`, formulaire inline create/edit |
 | `bol/armor-library/armor-library-page` | `DwLibraryHeaderComponent` (sky) + `DwLibraryToolbarComponent`, formulaire inline create/edit |
 | `bol/workspace/workspace-page` | — |
+| `bol/workspace/workspace-header` | mat-card + background-image via classe locale (pas de `::ng-deep`), dw-tag x3, mat-stroked-button |
 
 ---
 
@@ -73,7 +74,7 @@ Classé par complexité estimée (TS + HTML lignes combinées).
 
 | Fichier | PrimeNG restant | Lignes |
 |---|---|---|
-| `bol/workspace/workspace-header` | button, card, tag | ~60 |
+| ~~`bol/workspace/workspace-header`~~ | ~~button, card, tag~~ | ~~migré~~ |
 | `bol/workspace/workspace-metrics` | card | ~70 |
 | `bol/workspace/workspace-quick-actions` | button, card | ~130 |
 | `bol/creation-placeholder/creation-placeholder-page` | button, card, tag | ~130 |
