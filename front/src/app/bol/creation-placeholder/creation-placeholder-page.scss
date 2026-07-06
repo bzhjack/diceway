@@ -1,11 +1,3 @@
 :host {
   display: block;
 }
-
-:host ::ng-deep .p-card,
-:host ::ng-deep .p-card-body,
-:host ::ng-deep .p-card-content,
-:host ::ng-deep .p-button,
-:host ::ng-deep .p-tag {
-  border-radius: 0 !important;
-}

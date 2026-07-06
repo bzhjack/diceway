@@ -9,7 +9,7 @@
         <img [src]="avatarPreview()!" alt="Avatar héros" class="h-full w-full object-cover" />
       } @else {
         <div class="flex flex-col items-center gap-3 text-slate-400">
-          <i class="pi pi-image text-4xl"></i>
+          <mat-icon class="!text-4xl">image</mat-icon>
           <span class="text-xs font-bold uppercase tracking-[0.2em]">Avatar</span>
           <span class="text-xs text-slate-500">Cliquer pour modifier</span>
         </div>
@@ -19,15 +19,15 @@
 
     <div class="grid gap-4">
       <div class="grid gap-4 md:grid-cols-2">
-        <p-iftalabel>
-          <input pInputText id="advanced-joueur" class="w-full" [formControl]="joueurCtrl" />
-          <label for="advanced-joueur">Joueur</label>
-        </p-iftalabel>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Joueur</mat-label>
+          <input matInput id="advanced-joueur" [formControl]="joueurCtrl" />
+        </mat-form-field>
 
-        <p-iftalabel>
-          <input pInputText id="advanced-nom" class="w-full" [formControl]="nomCtrl" />
-          <label for="advanced-nom">Nom du héros</label>
-        </p-iftalabel>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Nom du héros</mat-label>
+          <input matInput id="advanced-nom" [formControl]="nomCtrl" />
+        </mat-form-field>
       </div>
 
       <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto_auto]">
@@ -38,32 +38,24 @@
           </p>
         </div>
 
-        <p-button
-          label="Choisir"
-          icon="pi pi-map"
-          [disabled]="pending()"
-          (onClick)="openRegionPicker()"
-        />
+        <button mat-flat-button type="button" [disabled]="pending()" (click)="openRegionPicker()">
+          <mat-icon>map</mat-icon> Choisir
+        </button>
 
-        <p-button
-          icon="pi pi-times"
-          severity="secondary"
-          [outlined]="true"
+        <button
+          mat-stroked-button
+          type="button"
           [disabled]="pending() || !regionIdCtrl.value"
-          (onClick)="clearRegion()"
-        />
+          (click)="clearRegion()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
 
-      <p-iftalabel>
-        <textarea
-          pTextarea
-          id="advanced-commentaire"
-          class="w-full resize-none"
-          rows="4"
-          [formControl]="commentaireCtrl"
-        ></textarea>
-        <label for="advanced-commentaire">Commentaire</label>
-      </p-iftalabel>
+      <mat-form-field subscriptSizing="dynamic">
+        <mat-label>Commentaire</mat-label>
+        <textarea matInput id="advanced-commentaire" class="resize-none" rows="4" [formControl]="commentaireCtrl"></textarea>
+      </mat-form-field>
     </div>
   </div>
 

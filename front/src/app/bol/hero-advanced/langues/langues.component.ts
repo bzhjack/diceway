@@ -5,19 +5,21 @@ import {
   FormArray,
   FormBuilder,
   FormControl,
-  FormsModule,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import {ConfirmationService} from 'primeng/api';
-import {ButtonModule} from 'primeng/button';
-import {IftaLabelModule} from 'primeng/iftalabel';
-import {SelectModule} from 'primeng/select';
-import {TooltipModule} from 'primeng/tooltip';
+import {MatButtonModule} from '@angular/material/button';
+import {MatDialog} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatSelectModule} from '@angular/material/select';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {toSignal} from '@angular/core/rxjs-interop';
+import {take} from 'rxjs';
+import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {BolHerosLangueModel, BolLangueModel} from '../../models/bol-langue.model';
@@ -25,7 +27,7 @@ import {automaticLanguageIdsForRegion, selectedLanguageTarget} from '../create.r
 
 @Component({
   selector: 'bol-hero-advanced-langues',
-  imports: [ReactiveFormsModule, FormsModule, ButtonModule, IftaLabelModule, SelectModule, TooltipModule],
+  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatIconModule, MatSelectModule, MatTooltipModule],
   templateUrl: './langues.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
@@ -45,9 +47,10 @@ export class HeroAdvancedLanguesComponent implements ControlValueAccessor, Valid
   private readonly formBuilder = inject(FormBuilder);
   private readonly herosStateService = inject(BolHerosStateService);
   private readonly herosService = inject(BolHerosService);
-  private readonly confirmationService = inject(ConfirmationService);
+  private readonly dialog = inject(MatDialog);
 
-  protected readonly selectedLangue = signal<BolLangueModel | null>(null);
+  protected readonly selectedLangueId = new FormControl<number | null>(null);
+  private readonly selectedLangueIdValue = toSignal(this.selectedLangueId.valueChanges, {initialValue: null});
   protected readonly pending = signal(false);
   protected readonly langueErrors = signal<{control: string; error: string}[]>([]);
   protected readonly langueWarns = signal<{step: string; warn: string}[]>([]);
@@ -59,6 +62,12 @@ export class HeroAdvancedLanguesComponent implements ControlValueAccessor, Valid
     initialValue: this.languesForm.getRawValue(),
   });
   protected readonly langueList = this.herosStateService.langueList;
+  protected readonly selectedLangue = computed(
+    () =>
+      (this.langueList() ?? []).find(
+        (langue: BolLangueModel) => Number(langue.id) === Number(this.selectedLangueIdValue()),
+      ) ?? null,
+  );
   protected readonly heroId = computed(() => this.herosStateService.currentHeros()?.id);
   protected readonly currentRegion = this.herosStateService.currentHerosRegion;
   protected readonly selectedLangueIds = computed(() =>
@@ -120,31 +129,36 @@ export class HeroAdvancedLanguesComponent implements ControlValueAccessor, Valid
     this.herosService.createLangue(this.heroId(), langue).subscribe({
       next: () => {
         this.langues.push(this.formBuilder.control(langue.langue_id, {nonNullable: true}));
-        this.selectedLangue.set(null);
+        this.selectedLangueId.setValue(null);
         this.pending.set(false);
       },
       error: () => this.pending.set(false),
     });
   }
 
-  protected deleteLangue(langueId: number, event: Event): void {
-    this.confirmationService.confirm({
-      target: event.currentTarget as EventTarget,
-      message: 'Voulez-vous supprimer cette langue ?',
-      icon: 'pi pi-info-circle',
-      acceptButtonStyleClass: 'p-button-danger p-button-sm',
-      acceptLabel: 'Oui',
-      rejectLabel: 'Non',
-      accept: () => {
-        this.pending.set(true);
-        this.herosService.deleteLangue(this.heroId(), langueId).subscribe({
-          next: () => {
-            this.removeLangue(langueId);
-            this.pending.set(false);
-          },
-          error: () => this.pending.set(false),
-        });
+  protected deleteLangue(langueId: number): void {
+    const ref = this.dialog.open(DwConfirmDialogComponent, {
+      data: {
+        title: 'Supprimer la langue',
+        message: 'Voulez-vous supprimer cette langue ?',
+        confirmLabel: 'Oui',
+        cancelLabel: 'Non',
       },
+    });
+
+    ref.afterClosed().pipe(take(1)).subscribe((confirmed: boolean | undefined) => {
+      if (!confirmed) {
+        return;
+      }
+
+      this.pending.set(true);
+      this.herosService.deleteLangue(this.heroId(), langueId).subscribe({
+        next: () => {
+          this.removeLangue(langueId);
+          this.pending.set(false);
+        },
+        error: () => this.pending.set(false),
+      });
     });
   }
 

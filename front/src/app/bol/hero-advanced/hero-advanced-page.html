@@ -2,9 +2,8 @@
   class="dw-page xl:px-8"
 >
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
-    <p-confirmpopup />
-
-    <p-card class="dw-card--header">
+    <mat-card appearance="outlined" class="dw-card--header">
+      <mat-card-content>
       <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         <div class="space-y-2">
           <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-emerald-300">
@@ -24,34 +23,30 @@
         </div>
 
         <div class="flex flex-wrap gap-3">
-          <p-button
-            label="Retour"
-            icon="pi pi-arrow-left"
-            severity="secondary"
-            [outlined]="true"
-            (onClick)="goBack()"
-          />
+          <button mat-stroked-button type="button" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon> Retour
+          </button>
 
           @if (hasDraft()) {
-            <p-button
-              label="Enregistrer"
-              icon="pi pi-save"
-              [disabled]="submitDisabled()"
-              (onClick)="save()"
-            />
+            <button mat-flat-button type="button" [disabled]="submitDisabled()" (click)="save()">
+              <mat-icon>save</mat-icon> Enregistrer
+            </button>
             @if (!herosForm.controls.active.value) {
-              <p-button
-                label="Activer le héros"
-                icon="pi pi-check"
-                severity="success"
+              <button
+                mat-flat-button
+                type="button"
+                class="!bg-emerald-600 !text-white"
                 [disabled]="activateDisabled()"
-                (onClick)="confirmActivation($event)"
-              />
+                (click)="confirmActivation()"
+              >
+                <mat-icon>check</mat-icon> Activer le héros
+              </button>
             }
           }
         </div>
       </div>
-    </p-card>
+      </mat-card-content>
+    </mat-card>
 
     @if (errorMessage()) {
       <div class="border border-red-400/35 bg-red-950/20 p-4 text-sm text-red-200">
@@ -60,7 +55,8 @@
     }
 
     @if (!hasDraft()) {
-      <p-card>
+      <mat-card appearance="outlined">
+        <mat-card-content>
         <form class="mx-auto flex max-w-3xl flex-col gap-5" [formGroup]="draftForm" (ngSubmit)="startDraft()">
           <div class="space-y-2">
             <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-slate-400">Étape 1</p>
@@ -71,27 +67,25 @@
           </div>
 
           <div class="grid gap-4 md:grid-cols-2">
-            <p-iftalabel>
-              <input pInputText id="draft-joueur" class="w-full" formControlName="joueur" />
-              <label for="draft-joueur">Joueur</label>
-            </p-iftalabel>
+            <mat-form-field subscriptSizing="dynamic">
+              <mat-label>Joueur</mat-label>
+              <input matInput id="draft-joueur" formControlName="joueur" />
+            </mat-form-field>
 
-            <p-iftalabel>
-              <input pInputText id="draft-nom" class="w-full" formControlName="nom" />
-              <label for="draft-nom">Nom du héros</label>
-            </p-iftalabel>
+            <mat-form-field subscriptSizing="dynamic">
+              <mat-label>Nom du héros</mat-label>
+              <input matInput id="draft-nom" formControlName="nom" />
+            </mat-form-field>
           </div>
 
           <div class="flex justify-end">
-            <p-button
-              type="submit"
-              label="Démarrer la création guidée"
-              icon="pi pi-arrow-right"
-              [disabled]="creatingDraft() || draftForm.invalid"
-            />
+            <button mat-flat-button type="submit" [disabled]="creatingDraft() || draftForm.invalid">
+              Démarrer la création guidée <mat-icon>arrow_forward</mat-icon>
+            </button>
           </div>
         </form>
-      </p-card>
+        </mat-card-content>
+      </mat-card>
     } @else {
       @if (loadingHero()) {
         <div class="dw-section--loading">
@@ -176,20 +170,22 @@
                     Modificateurs après activation
                   </p>
                 </div>
-                <p-table [value]="modifiers()" size="small">
-                  <ng-template #header>
+                <table class="w-full border-collapse text-sm">
+                  <thead>
                     <tr>
-                      <th>Attribut</th>
-                      <th>Valeur</th>
+                      <th class="border-b border-[#424b57] py-2 text-left text-slate-400">Attribut</th>
+                      <th class="border-b border-[#424b57] py-2 text-left text-slate-400">Valeur</th>
                     </tr>
-                  </ng-template>
-                  <ng-template #body let-modifier>
-                    <tr>
-                      <td class="capitalize text-slate-200">{{ modifier.attr }}</td>
-                      <td class="text-slate-100">{{ modifier.value }}</td>
-                    </tr>
-                  </ng-template>
-                </p-table>
+                  </thead>
+                  <tbody>
+                    @for (modifier of modifiers(); track modifier.attr) {
+                      <tr>
+                        <td class="border-b border-[#424b57]/50 py-2 capitalize text-slate-200">{{ modifier.attr }}</td>
+                        <td class="border-b border-[#424b57]/50 py-2 text-slate-100">{{ modifier.value }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
               </div>
             }
           </div>

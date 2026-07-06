@@ -1,3 +1,6 @@
+<h2 mat-dialog-title>Choix de la région</h2>
+
+<mat-dialog-content>
 <div class="grid gap-4 lg:grid-cols-[340px_minmax(0,1fr)]">
   <div class="space-y-4">
     <div class="overflow-hidden border border-[#424b57] bg-[#0f172a]/80">
@@ -8,25 +11,24 @@
       />
     </div>
 
-    <p-message severity="info">
+    <p class="m-0 border border-sky-400/30 bg-sky-950/15 p-3 text-sm text-sky-200">
       Sélectionnez la région du héros. Le nom proposé et les traits régionaux seront utilisés dans la création guidée.
-    </p-message>
+    </p>
   </div>
 
   <div class="flex flex-col gap-4">
     <div class="dw-section--loading">
       <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-emerald-300">Régions</p>
-      <p-scrollpanel class="mt-3 h-28">
+      <div class="mt-3 h-28 overflow-y-auto">
         <div class="flex flex-wrap gap-2 pr-3">
           @for (region of regionList(); track region.id) {
-            <p-tag
-              [value]="region.region"
-              [styleClass]="region.id === regionId() ? 'cursor-pointer !bg-[#059669] !text-white' : 'cursor-pointer'"
+            <dw-tag
+              [class]="region.id === regionId() ? 'cursor-pointer !bg-[#059669] !text-white' : 'cursor-pointer'"
               (click)="setCurrentRegion(region)"
-            />
+            >{{ region.region }}</dw-tag>
           }
         </div>
-      </p-scrollpanel>
+      </div>
     </div>
 
     @if (!selectedRegion()) {
@@ -35,36 +37,35 @@
       </div>
     } @else {
       @if (regionId() === 1) {
-        <p-message severity="warn">
+        <p class="m-0 border border-amber-400/30 bg-amber-950/15 p-3 text-sm text-amber-200">
           Dans la Côte de Feu, un héros peut être kalukan avec l'accord du MJ. Sinon, utilisez les listes Halakh ou marais de Kasht.
-        </p-message>
+        </p>
       }
       @if (regionId() === 13) {
-        <p-message severity="warn">
+        <p class="m-0 border border-amber-400/30 bg-amber-950/15 p-3 text-sm text-amber-200">
           Les plaines de Klaar sont la demeure des céruléens, des géants à la peau gris bleu.
-        </p-message>
+        </p>
       }
       @if (regionId() === 16) {
-        <p-message severity="warn">
+        <p class="m-0 border border-amber-400/30 bg-amber-950/15 p-3 text-sm text-amber-200">
           Les Terres Désolées restent largement inconnues, même pour les habitants de Lémurie.
-        </p-message>
+        </p>
       }
 
       @if (!(selectedRegion()?.noms?.length ?? 0)) {
-        <p-message severity="secondary">
+        <p class="m-0 border border-slate-500/25 bg-slate-900/30 p-3 text-sm text-slate-300">
           Cette région mélange des gens de tous horizons. Tous les noms de Lémurie y sont plausibles.
-        </p-message>
+        </p>
       } @else {
         <div class="grid gap-4 md:grid-cols-2">
           <div class="dw-section--loading">
             <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-slate-400">Noms masculins</p>
             <div class="mt-3 flex flex-wrap gap-2">
               @for (nom of nomsMasculins(); track nom.id) {
-                <p-tag
-                  [value]="nom.nom"
-                  [styleClass]="selectedName() === nom.nom ? 'cursor-pointer !bg-[#059669] !text-white' : 'cursor-pointer'"
+                <dw-tag
+                  [class]="selectedName() === nom.nom ? 'cursor-pointer !bg-[#059669] !text-white' : 'cursor-pointer'"
                   (click)="selectedName.set(nom.nom)"
-                />
+                >{{ nom.nom }}</dw-tag>
               }
             </div>
           </div>
@@ -73,11 +74,10 @@
             <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-slate-400">Noms féminins</p>
             <div class="mt-3 flex flex-wrap gap-2">
               @for (nom of nomsFeminins(); track nom.id) {
-                <p-tag
-                  [value]="nom.nom"
-                  [styleClass]="selectedName() === nom.nom ? 'cursor-pointer !bg-[#059669] !text-white' : 'cursor-pointer'"
+                <dw-tag
+                  [class]="selectedName() === nom.nom ? 'cursor-pointer !bg-[#059669] !text-white' : 'cursor-pointer'"
                   (click)="selectedName.set(nom.nom)"
-                />
+                >{{ nom.nom }}</dw-tag>
               }
             </div>
           </div>
@@ -108,10 +108,15 @@
         </div>
       </div>
     }
-
-    <div class="flex justify-end gap-2">
-      <p-button label="Quitter" icon="pi pi-times" severity="secondary" [outlined]="true" (onClick)="quit()" />
-      <p-button label="Valider" icon="pi pi-check" [disabled]="!selectedRegion()" (onClick)="validate()" />
-    </div>
   </div>
 </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button type="button" (click)="quit()">
+    <mat-icon>close</mat-icon> Quitter
+  </button>
+  <button mat-flat-button type="button" [disabled]="!selectedRegion()" (click)="validate()">
+    <mat-icon>check</mat-icon> Valider
+  </button>
+</mat-dialog-actions>

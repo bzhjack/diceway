@@ -4,24 +4,25 @@ import {
   FormArray,
   FormBuilder,
   FormControl,
-  FormsModule,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
 } from '@angular/forms';
-import {ConfirmationService} from 'primeng/api';
-import {ButtonModule} from 'primeng/button';
-import {IftaLabelModule} from 'primeng/iftalabel';
-import {MessageModule} from 'primeng/message';
-import {SelectModule} from 'primeng/select';
-import {TooltipModule} from 'primeng/tooltip';
+import {MatButtonModule} from '@angular/material/button';
+import {MatDialog} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatSelectModule} from '@angular/material/select';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {toSignal} from '@angular/core/rxjs-interop';
+import {take} from 'rxjs';
+import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {BolArmeModel, BolHerosArmeModel} from '../../models/bol-arme.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 
 @Component({
   selector: 'bol-hero-advanced-armes',
-  imports: [ReactiveFormsModule, FormsModule, ButtonModule, IftaLabelModule, MessageModule, SelectModule, TooltipModule],
+  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatIconModule, MatSelectModule, MatTooltipModule],
   templateUrl: './armes.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
@@ -36,9 +37,10 @@ export class HeroAdvancedArmesComponent implements ControlValueAccessor {
   private readonly formBuilder = inject(FormBuilder);
   private readonly herosStateService = inject(BolHerosStateService);
   private readonly herosService = inject(BolHerosService);
-  private readonly confirmationService = inject(ConfirmationService);
+  private readonly dialog = inject(MatDialog);
 
-  protected readonly selectedArme = signal<BolArmeModel | null>(null);
+  protected readonly selectedArmeId = new FormControl<number | null>(null);
+  private readonly selectedArmeIdValue = toSignal(this.selectedArmeId.valueChanges, {initialValue: null});
   protected readonly pending = signal(false);
   protected readonly armesForm = this.formBuilder.group({
     armes: this.formBuilder.array<FormControl<number>>([]),
@@ -50,6 +52,9 @@ export class HeroAdvancedArmesComponent implements ControlValueAccessor {
   protected readonly selectedArmeIds = computed(() => (this.formChange().armes ?? []).map(Number));
   protected readonly filteredArmeList = computed(() =>
     (this.armeList() ?? []).filter((arme: BolArmeModel) => !this.selectedArmeIds().includes(Number(arme.id))),
+  );
+  protected readonly selectedArme = computed(
+    () => (this.armeList() ?? []).find((arme) => Number(arme.id) === Number(this.selectedArmeIdValue())) ?? null,
   );
   protected readonly selectedArmeDetail = computed(() =>
     (this.armeList() ?? []).filter((arme: BolArmeModel) => this.selectedArmeIds().includes(Number(arme.id))),
@@ -90,31 +95,36 @@ export class HeroAdvancedArmesComponent implements ControlValueAccessor {
     this.herosService.createArme(this.heroId(), arme).subscribe({
       next: () => {
         this.armes.push(this.formBuilder.control(arme.arme_id, {nonNullable: true}));
-        this.selectedArme.set(null);
+        this.selectedArmeId.setValue(null);
         this.pending.set(false);
       },
       error: () => this.pending.set(false),
     });
   }
 
-  protected deleteArme(armeId: number, event: Event): void {
-    this.confirmationService.confirm({
-      target: event.currentTarget as EventTarget,
-      message: 'Voulez-vous supprimer cette arme ?',
-      icon: 'pi pi-info-circle',
-      acceptButtonStyleClass: 'p-button-danger p-button-sm',
-      acceptLabel: 'Oui',
-      rejectLabel: 'Non',
-      accept: () => {
-        this.pending.set(true);
-        this.herosService.deleteArme(this.heroId(), armeId).subscribe({
-          next: () => {
-            this.removeArme(armeId);
-            this.pending.set(false);
-          },
-          error: () => this.pending.set(false),
-        });
+  protected deleteArme(armeId: number): void {
+    const ref = this.dialog.open(DwConfirmDialogComponent, {
+      data: {
+        title: 'Supprimer l’arme',
+        message: 'Voulez-vous supprimer cette arme ?',
+        confirmLabel: 'Oui',
+        cancelLabel: 'Non',
       },
+    });
+
+    ref.afterClosed().pipe(take(1)).subscribe((confirmed: boolean | undefined) => {
+      if (!confirmed) {
+        return;
+      }
+
+      this.pending.set(true);
+      this.herosService.deleteArme(this.heroId(), armeId).subscribe({
+        next: () => {
+          this.removeArme(armeId);
+          this.pending.set(false);
+        },
+        error: () => this.pending.set(false),
+      });
     });
   }
 

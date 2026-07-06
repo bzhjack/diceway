@@ -3,15 +3,14 @@ import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} fr
 import {toSignal} from '@angular/core/rxjs-interop';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import {startWith} from 'rxjs';
-import {ButtonModule} from 'primeng/button';
-import {CardModule} from 'primeng/card';
-import {ConfirmPopupModule} from 'primeng/confirmpopup';
-import {ConfirmationService} from 'primeng/api';
-import {DialogService, DynamicDialogModule} from 'primeng/dynamicdialog';
-import {IftaLabelModule} from 'primeng/iftalabel';
-import {InputTextModule} from 'primeng/inputtext';
-import {TableModule} from 'primeng/table';
+import {startWith, take} from 'rxjs';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCard, MatCardContent} from '@angular/material/card';
+import {MatDialog} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {DwConfirmDialogComponent} from '../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {
   BolHerosAttributs,
   BolHerosCombat,
@@ -37,13 +36,12 @@ import {HeroAdvancedArmuresComponent} from './armures/armures.component';
   selector: 'bol-hero-advanced-page',
   imports: [
     ReactiveFormsModule,
-    ButtonModule,
-    CardModule,
-    ConfirmPopupModule,
-    DynamicDialogModule,
-    IftaLabelModule,
-    InputTextModule,
-    TableModule,
+    MatButtonModule,
+    MatCard,
+    MatCardContent,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
     HeroAdvancedOriginesComponent,
     HeroAdvancedAttributsComponent,
     HeroAdvancedCombatComponent,
@@ -55,7 +53,6 @@ import {HeroAdvancedArmuresComponent} from './armures/armures.component';
   ],
   templateUrl: './hero-advanced-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ConfirmationService, DialogService],
 })
 export class HeroAdvancedPageComponent {
   private readonly herosService = inject(BolHerosService);
@@ -64,7 +61,7 @@ export class HeroAdvancedPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly location = inject(Location);
-  private readonly confirmationService = inject(ConfirmationService);
+  private readonly dialog = inject(MatDialog);
   private readonly routeParamMap = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
   });
@@ -208,15 +205,20 @@ export class HeroAdvancedPageComponent {
     this.submit(false);
   }
 
-  protected confirmActivation(event: Event): void {
-    this.confirmationService.confirm({
-      target: event.currentTarget as EventTarget,
-      message: 'Voulez-vous valider la création de ce héros ?',
-      icon: 'pi pi-info-circle',
-      acceptButtonStyleClass: 'p-button-success p-button-sm',
-      acceptLabel: 'Oui',
-      rejectLabel: 'Non',
-      accept: () => this.submit(true),
+  protected confirmActivation(): void {
+    const ref = this.dialog.open(DwConfirmDialogComponent, {
+      data: {
+        title: 'Activer le héros',
+        message: 'Voulez-vous valider la création de ce héros ?',
+        confirmLabel: 'Oui',
+        cancelLabel: 'Non',
+      },
+    });
+
+    ref.afterClosed().pipe(take(1)).subscribe((confirmed: boolean | undefined) => {
+      if (confirmed) {
+        this.submit(true);
+      }
     });
   }
 

@@ -1,25 +1,25 @@
 <div class="space-y-4">
   <div class="grid gap-4">
     <div class="grid gap-4 sm:grid-cols-2">
-      <p-iftalabel>
-        <p-inputNumber inputId="advanced-initiative" class="dw-input-number" [formControl]="initiativeCtrl" />
-        <label for="advanced-initiative">Initiative</label>
-      </p-iftalabel>
-      <p-iftalabel>
-        <p-inputNumber inputId="advanced-melee" class="dw-input-number" [formControl]="meleeCtrl" />
-        <label for="advanced-melee">Mêlée</label>
-      </p-iftalabel>
+      <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+        <mat-label>Initiative</mat-label>
+        <input matInput type="number" id="advanced-initiative" [formControl]="initiativeCtrl" />
+      </mat-form-field>
+      <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+        <mat-label>Mêlée</mat-label>
+        <input matInput type="number" id="advanced-melee" [formControl]="meleeCtrl" />
+      </mat-form-field>
     </div>
 
     <div class="grid gap-4 sm:grid-cols-2">
-      <p-iftalabel>
-        <p-inputNumber inputId="advanced-tir" class="dw-input-number" [formControl]="tirCtrl" />
-        <label for="advanced-tir">Tir</label>
-      </p-iftalabel>
-      <p-iftalabel>
-        <p-inputNumber inputId="advanced-defense" class="dw-input-number" [formControl]="defenseCtrl" />
-        <label for="advanced-defense">Défense</label>
-      </p-iftalabel>
+      <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+        <mat-label>Tir</mat-label>
+        <input matInput type="number" id="advanced-tir" [formControl]="tirCtrl" />
+      </mat-form-field>
+      <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+        <mat-label>Défense</mat-label>
+        <input matInput type="number" id="advanced-defense" [formControl]="defenseCtrl" />
+      </mat-form-field>
     </div>
   </div>
 

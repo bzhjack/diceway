@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, computed, inject, input} from '@angular/core';
-import {PopoverModule} from 'primeng/popover';
-import {TooltipModule} from 'primeng/tooltip';
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {InlineSvgDirective} from '../../../../shared/inline-svg/inline-svg.directive';
 import {BolHerosTraitsModel} from '../../../models/bol-trait.model';
 import {BolHerosStateService} from '../../../services/bol-heros-state.service';
@@ -8,7 +9,7 @@ import {HeroAdvancedCreateTools} from '../../create.tools';
 
 @Component({
   selector: 'bol-hero-advanced-trait',
-  imports: [PopoverModule, TooltipModule, InlineSvgDirective],
+  imports: [MatIconModule, MatMenuModule, MatTooltipModule, InlineSvgDirective],
   templateUrl: './trait.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

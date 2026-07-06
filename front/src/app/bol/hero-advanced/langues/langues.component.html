@@ -12,27 +12,19 @@
   }
 
   <div class="flex flex-col gap-3 md:flex-row">
-    <div class="min-w-0 flex-1">
-      <p-iftalabel>
-        <p-select
-          inputId="hero-advanced-langue"
-          class="w-full"
-          [options]="filteredLangueList()"
-          [ngModel]="selectedLangue()"
-          (ngModelChange)="selectedLangue.set($event)"
-          optionLabel="langue"
-          placeholder="Choisir une langue"
-        />
-        <label for="hero-advanced-langue">Ajouter une langue</label>
-      </p-iftalabel>
-    </div>
+    <mat-form-field subscriptSizing="dynamic" class="min-w-0 flex-1">
+      <mat-label>Ajouter une langue</mat-label>
+      <mat-select inputId="hero-advanced-langue" [formControl]="selectedLangueId">
+        <mat-option [value]="null">Choisir une langue</mat-option>
+        @for (langue of filteredLangueList(); track langue.id) {
+          <mat-option [value]="langue.id">{{ langue.langue }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
 
-    <p-button
-      label="Ajouter"
-      icon="pi pi-plus"
-      [disabled]="pending() || !selectedLangue()"
-      (onClick)="addLangue()"
-    />
+    <button mat-flat-button type="button" [disabled]="pending() || !selectedLangue()" (click)="addLangue()">
+      <mat-icon>add</mat-icon> Ajouter
+    </button>
   </div>
 
   @if (langueErrors().length) {
@@ -53,15 +45,15 @@
     @for (langueId of selectedLangueIds(); track langueId) {
       <div class="dw-advanced-list-row">
         <span class="dw-advanced-list-label">{{ langueFromId(langueId) }}</span>
-        <p-button
-          icon="pi pi-trash"
-          severity="danger"
-          [text]="true"
-          [rounded]="true"
-          size="small"
-          pTooltip="Supprimer"
-          (onClick)="deleteLangue(langueId, $event)"
-        />
+        <button
+          mat-icon-button
+          type="button"
+          class="!text-rose-400/80"
+          matTooltip="Supprimer"
+          (click)="deleteLangue(langueId)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
       </div>
     } @empty {
       <p class="m-0 text-sm text-slate-500">Aucune langue sélectionnée.</p>

@@ -1,54 +1,23 @@
 <div class="space-y-4">
   <div class="flex flex-col gap-3 md:flex-row">
-    <div class="min-w-0 flex-1">
-      <p-iftalabel>
-        <p-select
-          inputId="advanced-armure"
-          class="w-full"
-          [options]="filteredArmureList()"
-          [ngModel]="selectedArmure()"
-          (ngModelChange)="selectedArmure.set($event)"
-          optionLabel="armure"
-          placeholder="Choisir une armure"
-        >
-          <ng-template #selectedItem let-armure>
-            @if (armure) {
-              <div class="flex min-w-0 flex-col gap-0.5 py-1">
-                <span class="truncate">{{ armure.armure }}</span>
-                <span class="text-xs text-slate-400">
-                  @if (armure.protection) {
-                    Protection {{ armure.protection }}
-                  } @else {
-                    Protection -
-                  }
-                </span>
-              </div>
-            }
-          </ng-template>
+    <mat-form-field subscriptSizing="dynamic" class="min-w-0 flex-1">
+      <mat-label>Ajouter une armure</mat-label>
+      <mat-select inputId="advanced-armure" [formControl]="selectedArmureId">
+        <mat-option [value]="null">Choisir une armure</mat-option>
+        @for (armure of filteredArmureList(); track armure.id) {
+          <mat-option [value]="armure.id">
+            <span class="truncate">{{ armure.armure }}</span>
+            <span class="ml-1 text-xs text-slate-400">
+              {{ armure.protection ? 'Protection ' + armure.protection : 'Protection -' }}
+            </span>
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
 
-          <ng-template #item let-armure>
-            <div class="flex min-w-0 flex-col gap-0.5 py-1">
-              <span class="truncate">{{ armure.armure }}</span>
-              <span class="text-xs text-slate-400">
-                @if (armure.protection) {
-                  Protection {{ armure.protection }}
-                } @else {
-                  Protection -
-                }
-              </span>
-            </div>
-          </ng-template>
-        </p-select>
-        <label for="advanced-armure">Ajouter une armure</label>
-      </p-iftalabel>
-    </div>
-
-    <p-button
-      label="Ajouter"
-      icon="pi pi-plus"
-      [disabled]="pending() || !selectedArmure()"
-      (onClick)="addArmure()"
-    />
+    <button mat-flat-button type="button" [disabled]="pending() || !selectedArmure()" (click)="addArmure()">
+      <mat-icon>add</mat-icon> Ajouter
+    </button>
   </div>
 
   <div class="dw-advanced-list">
@@ -65,15 +34,15 @@
             }
           </p>
         </div>
-        <p-button
-          icon="pi pi-trash"
-          severity="danger"
-          [text]="true"
-          [rounded]="true"
-          size="small"
-          pTooltip="Supprimer"
-          (onClick)="deleteArmure(armure.id!, $event)"
-        />
+        <button
+          mat-icon-button
+          type="button"
+          class="!text-rose-400/80"
+          matTooltip="Supprimer"
+          (click)="deleteArmure(armure.id!)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
       </div>
     } @empty {
       <p class="m-0 text-sm text-slate-500">Aucune armure sélectionnée.</p>

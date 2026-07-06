@@ -3,7 +3,7 @@
     <button
       type="button"
       class="inline-flex h-5 w-5 items-center justify-center"
-      (click)="avPanel.toggle($event)"
+      [matMenuTriggerFor]="avPanel"
     >
       <div
         class="tag_icon bonus"
@@ -18,8 +18,8 @@
     </div>
   </div>
 
-  <p-popover #avPanel>
-    <div class="flex min-w-40 flex-col gap-2">
+  <mat-menu #avPanel="matMenu">
+    <div class="flex min-w-40 flex-col gap-2 p-3">
       @for (line of avantageDescription(); track line.title) {
         <div class="flex flex-col">
           <span class="text-xs font-bold uppercase tracking-[0.16em] text-slate-100">{{ line.title }}</span>
@@ -27,7 +27,7 @@
         </div>
       }
     </div>
-  </p-popover>
+  </mat-menu>
 }
 
 @if (desavantage(); as currentDesavantage) {
@@ -35,7 +35,7 @@
     <button
       type="button"
       class="inline-flex h-5 w-5 items-center justify-center"
-      (click)="desPanel.toggle($event)"
+      [matMenuTriggerFor]="desPanel"
     >
       <div
         class="tag_icon malus"
@@ -50,8 +50,8 @@
     </div>
   </div>
 
-  <p-popover #desPanel>
-    <div class="flex min-w-40 flex-col gap-2">
+  <mat-menu #desPanel="matMenu">
+    <div class="flex min-w-40 flex-col gap-2 p-3">
       @for (line of desavantageDescription(); track line.title) {
         <div class="flex flex-col">
           <span class="text-xs font-bold uppercase tracking-[0.16em] text-slate-100">{{ line.title }}</span>
@@ -59,5 +59,5 @@
         </div>
       }
     </div>
-  </p-popover>
+  </mat-menu>
 }

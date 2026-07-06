@@ -1,26 +1,34 @@
 import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} from '@angular/core';
-import {DynamicDialogConfig, DynamicDialogRef} from 'primeng/dynamicdialog';
-import {ButtonModule} from 'primeng/button';
-import {CardModule} from 'primeng/card';
-import {MessageModule} from 'primeng/message';
-import {ScrollPanelModule} from 'primeng/scrollpanel';
-import {TagModule} from 'primeng/tag';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {DwTagComponent} from '../../../../shared/dw-tag/dw-tag';
 import {BolNomModel, BolRegionModel} from '../../../models/bol-region.model';
 import {BolHerosStateService} from '../../../services/bol-heros-state.service';
 import {HeroAdvancedTraitRowComponent} from './trait-row/trait-row.component';
 
+export interface HeroAdvancedRegionDialogData {
+  id_region?: number;
+  nom?: string;
+}
+
+export interface HeroAdvancedRegionDialogResult {
+  region: BolRegionModel;
+  nom?: string;
+}
+
 @Component({
   selector: 'bol-hero-advanced-region',
-  imports: [ButtonModule, CardModule, MessageModule, ScrollPanelModule, TagModule, HeroAdvancedTraitRowComponent],
+  imports: [MatButtonModule, MatIconModule, MatDialogModule, DwTagComponent, HeroAdvancedTraitRowComponent],
   templateUrl: './region.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroAdvancedRegionComponent {
   private readonly herosStateService = inject(BolHerosStateService);
-  private readonly dialogConfig = inject(DynamicDialogConfig);
+  private readonly dialogData = inject<HeroAdvancedRegionDialogData>(MAT_DIALOG_DATA);
 
-  protected readonly regionId = signal<number>(Number(this.dialogConfig.data?.id_region ?? 0));
-  protected readonly selectedName = signal<string | undefined>(this.dialogConfig.data?.nom);
+  protected readonly regionId = signal<number>(Number(this.dialogData.id_region ?? 0));
+  protected readonly selectedName = signal<string | undefined>(this.dialogData.nom);
   protected readonly regionList = this.herosStateService.regionList;
   protected readonly selectedRegion = computed(
     () => (this.regionList() ?? []).find((region) => Number(region.id) === Number(this.regionId())) ?? null,
@@ -32,7 +40,7 @@ export class HeroAdvancedRegionComponent {
     (this.selectedRegion()?.noms ?? []).filter((nom: BolNomModel) => nom.gender === 'M'),
   );
 
-  constructor(public readonly ref: DynamicDialogRef) {
+  constructor(public readonly ref: MatDialogRef<HeroAdvancedRegionComponent, HeroAdvancedRegionDialogResult | null>) {
     effect(() => this.selectedRegion());
   }
 
@@ -41,7 +49,7 @@ export class HeroAdvancedRegionComponent {
   }
 
   protected validate(): void {
-    this.ref.close({region: this.selectedRegion(), nom: this.selectedName()});
+    this.ref.close({region: this.selectedRegion()!, nom: this.selectedName()});
   }
 
   protected setCurrentRegion(region: BolRegionModel): void {
