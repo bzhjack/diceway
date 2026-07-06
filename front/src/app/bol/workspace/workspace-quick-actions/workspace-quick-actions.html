@@ -1,54 +1,28 @@
-<p-card class="dw-card--blur">
-  <div class="space-y-5">
-    <div class="space-y-2">
-      <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-sky-300">
-        Création rapide
-      </p>
-      <h2 class="m-0 font-['Muse_Display_Harmony'] text-3xl leading-none">
-        Préparer avant de jouer
-      </h2>
-    </div>
+<mat-card class="wqa-card" appearance="outlined">
+  <mat-card-content>
+    <div class="space-y-5">
+      <div class="space-y-2">
+        <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-sky-300">
+          Création rapide
+        </p>
+        <h2 class="m-0 font-['Muse_Display_Harmony'] text-3xl leading-none">
+          Préparer avant de jouer
+        </h2>
+      </div>
 
-    <div class="grid gap-2 md:grid-cols-2 xl:grid-cols-4">
-      @for (action of quickActions; track action.label) {
-        <div class="border border-[#424b57] bg-[#2d3748]/70 p-2.5">
-          <div class="flex items-start gap-2.5">
-            <div
-              class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center border border-[#424b57] bg-[#334155] text-sm text-slate-100"
-            >
-              <i [class]="action.icon" aria-hidden="true"></i>
-            </div>
-            <div class="flex-1 space-y-2">
-              <div class="space-y-1">
-                <p class="m-0 text-sm font-bold leading-5 text-slate-100">{{ action.label }}</p>
-                <p class="m-0 text-xs leading-5 text-slate-300">{{ action.detail }}</p>
-              </div>
-              <div class="flex flex-wrap gap-1.5">
-                <p-button
-                  label="Ouvrir"
-                  icon="pi pi-arrow-up-right"
-                  [routerLink]="action.link"
-                  [state]="action.state"
-                  size="small"
-                  severity="secondary"
-                  [outlined]="true"
-                />
-                @if (action.advancedLink) {
-                  <p-button
-                    label="Avancé"
-                    icon="pi pi-cog"
-                    [routerLink]="action.advancedLink"
-                    [state]="action.advancedState"
-                    size="small"
-                    severity="secondary"
-                    [outlined]="true"
-                  />
-                }
-              </div>
-            </div>
-          </div>
-        </div>
-      }
+      <div class="grid gap-2 md:grid-cols-2 xl:grid-cols-4">
+        @for (action of quickActions; track action.label) {
+          <bol-workspace-action-card
+            [label]="action.label"
+            [detail]="action.detail"
+            [icon]="action.icon"
+            [link]="action.link"
+            [state]="action.state"
+            [advancedLink]="action.advancedLink"
+            [advancedState]="action.advancedState"
+          />
+        }
+      </div>
     </div>
-  </div>
-</p-card>
+  </mat-card-content>
+</mat-card>

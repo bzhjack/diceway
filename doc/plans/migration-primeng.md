@@ -63,6 +63,7 @@
 | `bol/armor-library/armor-library-page` | `DwLibraryHeaderComponent` (sky) + `DwLibraryToolbarComponent`, formulaire inline create/edit |
 | `bol/workspace/workspace-page` | — |
 | `bol/workspace/workspace-header` | mat-card + background-image via classe locale (pas de `::ng-deep`), dw-tag x3, mat-stroked-button |
+| `bol/workspace/workspace-metrics` | mat-card + SCSS local (background, hover lift), routerLink conditionnel via `null`, template simplifié (plus de duplication) |
 
 ---
 
@@ -75,7 +76,7 @@ Classé par complexité estimée (TS + HTML lignes combinées).
 | Fichier | PrimeNG restant | Lignes |
 |---|---|---|
 | ~~`bol/workspace/workspace-header`~~ | ~~button, card, tag~~ | ~~migré~~ |
-| `bol/workspace/workspace-metrics` | card | ~70 |
+| ~~`bol/workspace/workspace-metrics`~~ | ~~card~~ | ~~migré~~ |
 | `bol/workspace/workspace-quick-actions` | button, card | ~130 |
 | `bol/creation-placeholder/creation-placeholder-page` | button, card, tag | ~130 |
 | `bol/hero-advanced/attributs/attributs.component` | iftalabel, inputnumber | ~180 |
