@@ -10,7 +10,7 @@ import {MatIconModule} from '@angular/material/icon';
     <div class="border border-[#424b57] bg-[#2d3748]/70 p-2.5">
       <div class="flex items-start gap-2.5">
         <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center border border-[#424b57] bg-[#334155] text-sm text-slate-100">
-          <i [class]="icon()" aria-hidden="true"></i>
+          <mat-icon>{{ icon() }}</mat-icon>
         </div>
         <div class="flex-1 space-y-2">
           <div class="space-y-1">

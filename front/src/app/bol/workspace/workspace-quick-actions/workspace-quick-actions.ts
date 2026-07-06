@@ -25,7 +25,7 @@ export class WorkspaceQuickActionsComponent {
     {
       label: 'Créer un scénario',
       detail: 'Préparer l’accroche et les PJ pour une session.',
-      icon: 'pi pi-compass',
+      icon: 'explore',
       link: '/create/scenario',
       state: {returnUrl: '/'},
       severity: 'secondary',
@@ -33,7 +33,7 @@ export class WorkspaceQuickActionsComponent {
     {
       label: 'Créer un héros',
       detail: 'Ajouter un héros jouable prêt pour la table.',
-      icon: 'pi pi-user-plus',
+      icon: 'person_add',
       link: '/create/hero',
       state: {returnUrl: '/'},
       advancedLink: '/create/hero-advanced',
@@ -43,7 +43,7 @@ export class WorkspaceQuickActionsComponent {
     {
       label: 'Créer une créature',
       detail: 'Ajouter une créature au bestiaire de scène.',
-      icon: 'pi pi-book',
+      icon: 'menu_book',
       link: '/create/creature',
       state: {returnUrl: '/'},
       severity: 'secondary',
@@ -51,7 +51,7 @@ export class WorkspaceQuickActionsComponent {
     {
       label: 'Créer un démon',
       detail: 'Préparer un démon pour la scène ou l’intrigue.',
-      icon: 'pi pi-bolt',
+      icon: 'bolt',
       link: '/create/demon',
       state: {returnUrl: '/'},
       severity: 'secondary',
@@ -59,7 +59,7 @@ export class WorkspaceQuickActionsComponent {
     {
       label: 'Créer un PNJ',
       detail: 'Ajouter un PNJ à la réserve de jeu.',
-      icon: 'pi pi-id-card',
+      icon: 'badge',
       link: '/create/pnj',
       state: {returnUrl: '/'},
       severity: 'secondary',
@@ -67,7 +67,7 @@ export class WorkspaceQuickActionsComponent {
     {
       label: 'Bibliothèque d’intendance',
       detail: 'Ouvrir les référentiels armes, armures.',
-      icon: 'pi pi-briefcase',
+      icon: 'work',
       link: '/intendance',
       severity: 'secondary',
     },
