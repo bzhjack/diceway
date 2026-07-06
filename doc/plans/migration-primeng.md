@@ -1,6 +1,6 @@
 # Migration PrimeNG → Angular Material
 
-> Rédigé le 2026-07-03, mis à jour le 2026-07-06 (3). Objectif : supprimer la dépendance PrimeNG (passage en payant) au profit d'Angular Material + SCSS natif. PrimeIcons (`primeicons/primeicons.css`) est conservé pour les icônes — seuls les **composants** PrimeNG sont retirés.
+> Rédigé le 2026-07-03, mis à jour le 2026-07-06 (4). Objectif : supprimer la dépendance PrimeNG (passage en payant) au profit d'Angular Material + SCSS natif. PrimeIcons (`primeicons/primeicons.css`) est conservé pour les icônes — seuls les **composants** PrimeNG sont retirés.
 
 ---
 
@@ -70,6 +70,7 @@
 | `shared/picture/picture` | `MatDialogRef` + `MAT_DIALOG_DATA` (titre passé par l'appelant), `MatButtonModule` + `MatIconModule`, `mat-dialog-title/content/actions` ; 5 appelants migré vers `MatDialog.open()` + `afterClosed()` |
 | `bol/creature-form/creature-form-page` | mat-card, mat-form-field (input, select, textarea), mat-button, dw-tag ; `compareWith` pour le select taille (coercition string/number) |
 | `bol/demon-form/demon-form-page` | mat-card, mat-form-field (input, select, textarea), mat-button, dw-tag ; thème zinc/rose conservé avec inline classes ; `compareWith` pour le select catégorie |
+| `bol/pnj-form/pnj-form-page` | mat-card, mat-form-field (input, select, textarea), mat-button, dw-tag, dw-badge (traits A/D) ; mat-icon-button pour supprimer ; `compareWith` sur tous les selects sauf type (string) |
 
 ---
 
@@ -118,7 +119,7 @@ Classé par complexité estimée (TS + HTML lignes combinées).
 | ~~`bol/creature-form/creature-form-page`~~ | ~~button, card, dynamicdialog, ...~~ | ~~migré~~ | ~~formulaire créature~~ |
 | ~~`bol/demon-form/demon-form-page`~~ | ~~button, card, dynamicdialog, ...~~ | ~~migré~~ | ~~formulaire démon~~ |
 | `bol/scenario-form/scenario-form-page` | button, card, iftalabel, inputtext, select, tag, textarea | ~935 | formulaire scénario |
-| `bol/pnj-form/pnj-form-page` | button, card, dynamicdialog, iftalabel, inputnumber, inputtext, select, tag, textarea | ~1285 | formulaire PNJ (le plus gros) |
+| ~~`bol/pnj-form/pnj-form-page`~~ | ~~button, card, dynamicdialog, ...~~ | ~~migré~~ | ~~formulaire PNJ~~ |
 | `bol/hero-form/hero-form-page` | api, button, card, confirmpopup, dynamicdialog, iftalabel, inputnumber, inputtext, select, tag, textarea | ~1475 | formulaire héros (le plus complexe) |
 | `bol/session-live/bol-combat-panel/bol-attack-assistant` | button, dialog, selectbutton, select, inputnumber | ~1180 | assistant d'attaque (selectbutton → mat-button-toggle, dialog → MatDialog) |
 
