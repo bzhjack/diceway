@@ -59,7 +59,7 @@
 
             <form [formGroup]="armorForm" class="grid gap-4 md:grid-cols-2">
               <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Nom de l'armure *</mat-label>
+                <mat-label>Nom de l'armure</mat-label>
                 <input matInput formControlName="armure" />
                 @if (onError('armure')) {
                   <mat-error>Nom requis (255 caractères max)</mat-error>
@@ -67,7 +67,7 @@
               </mat-form-field>
 
               <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Protection *</mat-label>
+                <mat-label>Protection</mat-label>
                 <input matInput formControlName="protection" />
                 @if (onError('protection')) {
                   <mat-error>Protection requise (255 caractères max)</mat-error>

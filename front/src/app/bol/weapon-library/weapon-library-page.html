@@ -55,7 +55,7 @@
 
             <form [formGroup]="weaponForm" class="grid gap-4 md:grid-cols-2">
               <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Nom de l'arme *</mat-label>
+                <mat-label>Nom de l'arme</mat-label>
                 <input matInput formControlName="arme" />
                 @if (onError('arme')) {
                   <mat-error>Nom requis (255 caractères max)</mat-error>
@@ -63,7 +63,7 @@
               </mat-form-field>
 
               <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Type *</mat-label>
+                <mat-label>Type</mat-label>
                 <mat-select formControlName="type">
                   @for (opt of weaponTypeOptions; track opt.value) {
                     <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
@@ -72,7 +72,7 @@
               </mat-form-field>
 
               <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Dégâts *</mat-label>
+                <mat-label>Dégâts</mat-label>
                 <input matInput formControlName="degats" />
                 @if (onError('degats')) {
                   <mat-error>Dégâts requis (50 caractères max)</mat-error>
