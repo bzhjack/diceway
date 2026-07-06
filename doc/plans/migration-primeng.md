@@ -1,6 +1,6 @@
 # Migration PrimeNG → Angular Material
 
-> Rédigé le 2026-07-03, mis à jour le 2026-07-06 (2). Objectif : supprimer la dépendance PrimeNG (passage en payant) au profit d'Angular Material + SCSS natif. PrimeIcons (`primeicons/primeicons.css`) est conservé pour les icônes — seuls les **composants** PrimeNG sont retirés.
+> Rédigé le 2026-07-03, mis à jour le 2026-07-06 (3). Objectif : supprimer la dépendance PrimeNG (passage en payant) au profit d'Angular Material + SCSS natif. PrimeIcons (`primeicons/primeicons.css`) est conservé pour les icônes — seuls les **composants** PrimeNG sont retirés.
 
 ---
 
@@ -69,6 +69,7 @@
 | `bol/workspace/workspace-quick-actions` | mat-card + backdrop-filter, `WorkspaceActionCardComponent` extrait (composant local), icônes Material dans les données |
 | `shared/picture/picture` | `MatDialogRef` + `MAT_DIALOG_DATA` (titre passé par l'appelant), `MatButtonModule` + `MatIconModule`, `mat-dialog-title/content/actions` ; 5 appelants migré vers `MatDialog.open()` + `afterClosed()` |
 | `bol/creature-form/creature-form-page` | mat-card, mat-form-field (input, select, textarea), mat-button, dw-tag ; `compareWith` pour le select taille (coercition string/number) |
+| `bol/demon-form/demon-form-page` | mat-card, mat-form-field (input, select, textarea), mat-button, dw-tag ; thème zinc/rose conservé avec inline classes ; `compareWith` pour le select catégorie |
 
 ---
 
@@ -115,7 +116,7 @@ Classé par complexité estimée (TS + HTML lignes combinées).
 | `bol/session-live/session-live-page` | button, card, message, tag | ~385 | page session live |
 | `bol/session-live/bol-combat-panel/bol-combat-panel` | button, card, checkbox, dialog | ~700 | panneau combat principal, p-dialog → MatDialog |
 | ~~`bol/creature-form/creature-form-page`~~ | ~~button, card, dynamicdialog, ...~~ | ~~migré~~ | ~~formulaire créature~~ |
-| `bol/demon-form/demon-form-page` | button, card, dynamicdialog, iftalabel, inputnumber, inputtext, select, tag, textarea | ~750 | formulaire démon |
+| ~~`bol/demon-form/demon-form-page`~~ | ~~button, card, dynamicdialog, ...~~ | ~~migré~~ | ~~formulaire démon~~ |
 | `bol/scenario-form/scenario-form-page` | button, card, iftalabel, inputtext, select, tag, textarea | ~935 | formulaire scénario |
 | `bol/pnj-form/pnj-form-page` | button, card, dynamicdialog, iftalabel, inputnumber, inputtext, select, tag, textarea | ~1285 | formulaire PNJ (le plus gros) |
 | `bol/hero-form/hero-form-page` | api, button, card, confirmpopup, dynamicdialog, iftalabel, inputnumber, inputtext, select, tag, textarea | ~1475 | formulaire héros (le plus complexe) |

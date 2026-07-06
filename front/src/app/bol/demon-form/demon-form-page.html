@@ -85,7 +85,7 @@
                     </mat-form-field>
 
                     <mat-form-field subscriptSizing="dynamic">
-                      <mat-label>Catégorie *</mat-label>
+                      <mat-label>Catégorie</mat-label>
                       <mat-select inputId="id_categorie" formControlName="id_categorie" [compareWith]="compareById">
                         @for (categorie of categories() ?? []; track categorie.id) {
                           <mat-option [value]="categorie.id">{{ categorie.categorie }}</mat-option>

@@ -14,15 +14,15 @@ import {BolHerosModel} from '../models/bol-heros.model';
 import {BolLangueModel} from '../models/bol-langue.model';
 import {BolHerosStateService} from '../services/bol-heros-state.service';
 import {BolHerosService} from '../services/bol-heros.service';
-import {ButtonModule} from 'primeng/button';
-import {CardModule} from 'primeng/card';
 import {MatDialog} from '@angular/material/dialog';
-import {IftaLabelModule} from 'primeng/iftalabel';
-import {InputNumberModule} from 'primeng/inputnumber';
-import {InputTextModule} from 'primeng/inputtext';
-import {SelectModule} from 'primeng/select';
-import {TagModule} from 'primeng/tag';
-import {TextareaModule} from 'primeng/textarea';
+import {MatCard, MatCardContent} from '@angular/material/card';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {DwBadgeComponent} from '../../shared/dw-badge/dw-badge';
+import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
 import {PictureComponent} from '../../shared/picture/picture';
 
 interface PnjSimpleDraft {
@@ -55,14 +55,15 @@ interface PnjSelectedCarriereEntry extends PnjCarriereDraft {
   selector: 'bol-pnj-form-page',
   imports: [
     ReactiveFormsModule,
-    ButtonModule,
-    CardModule,
-    IftaLabelModule,
-    InputNumberModule,
-    InputTextModule,
-    SelectModule,
-    TagModule,
-    TextareaModule,
+    MatCard,
+    MatCardContent,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    DwBadgeComponent,
+    DwTagComponent,
   ],
   templateUrl: './pnj-form-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -111,6 +112,9 @@ export class PnjFormPageComponent {
 
     return this.editMode() ? 'Mettre à jour le PNJ' : 'Enregistrer le PNJ';
   });
+
+  protected readonly compareById = (a: number | string | null, b: number | string | null): boolean =>
+    Number(a) === Number(b);
 
   protected readonly selectedArmeId = new FormControl<number | null>(null);
   protected readonly selectedArmureId = new FormControl<number | null>(null);
