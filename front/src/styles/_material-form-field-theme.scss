@@ -12,8 +12,8 @@ html {
     outlined-input-text-placeholder-color: var(--dw-surface-600),
     leading-icon-color: var(--dw-surface-500),
     trailing-icon-color: var(--dw-surface-500),
-    container-height: 48px,
-    container-vertical-padding: 12px,
+    container-height: 40px,
+    container-vertical-padding: 8px,
   ));
   @include mat.select-overrides((
     enabled-trigger-text-color: var(--dw-surface-800),
@@ -21,12 +21,9 @@ html {
   ));
 }
 
-// L'appearance "outline" n'a pas de token de fond dans le système M3 (fond
-// transparent par design) — on l'éclaircit légèrement à la main pour le
-// détacher du fond sombre des mat-card.
-.mat-form-field-appearance-outline .mat-mdc-text-field-wrapper {
+.mat-mdc-text-field-wrapper.mdc-text-field--outlined {
+  flex: none;
   background-color: var(--dw-surface-100);
   border-radius: var(--mat-form-field-outlined-container-shape, var(--mat-sys-corner-extra-small));
 }
-
 
