@@ -19,7 +19,7 @@ import {BolHerosService} from '../services/bol-heros.service';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
 import {ConfirmPopupModule} from 'primeng/confirmpopup';
-import {DialogService} from 'primeng/dynamicdialog';
+import {MatDialog} from '@angular/material/dialog';
 import {IftaLabelModule} from 'primeng/iftalabel';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {InputTextModule} from 'primeng/inputtext';
@@ -70,7 +70,7 @@ interface HeroSelectedCarriereEntry extends HeroCarriereDraft {
   ],
   templateUrl: './hero-form-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService, ConfirmationService],
+  providers: [ConfirmationService],
 })
 export class HeroFormPageComponent {
   private readonly herosService = inject(BolHerosService);
@@ -79,7 +79,7 @@ export class HeroFormPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
   private readonly router = inject(Router);
-  private readonly dialogService = inject(DialogService);
+  private readonly dialog = inject(MatDialog);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly routeParamMap = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
@@ -326,14 +326,13 @@ export class HeroFormPageComponent {
   }
 
   protected pickAvatar(): void {
-    const ref = this.dialogService.open(PictureComponent, {
-      header: 'Avatar du héros',
-      modal: true,
-      closable: false,
+    const ref = this.dialog.open(PictureComponent, {
+      data: {title: 'Avatar du héros'},
       width: 'min(960px, 92vw)',
+      disableClose: true,
     });
 
-    ref?.onClose.pipe(take(1)).subscribe((avatar: string | null) => {
+    ref.afterClosed().pipe(take(1)).subscribe((avatar: string | null) => {
       if (avatar) {
         this.heroForm.controls.avatar.setValue(avatar);
       }

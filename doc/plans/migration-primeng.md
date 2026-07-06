@@ -1,6 +1,6 @@
 # Migration PrimeNG → Angular Material
 
-> Rédigé le 2026-07-03, mis à jour le 2026-07-06. Objectif : supprimer la dépendance PrimeNG (passage en payant) au profit d'Angular Material + SCSS natif. PrimeIcons (`primeicons/primeicons.css`) est conservé pour les icônes — seuls les **composants** PrimeNG sont retirés.
+> Rédigé le 2026-07-03, mis à jour le 2026-07-06 (2). Objectif : supprimer la dépendance PrimeNG (passage en payant) au profit d'Angular Material + SCSS natif. PrimeIcons (`primeicons/primeicons.css`) est conservé pour les icônes — seuls les **composants** PrimeNG sont retirés.
 
 ---
 
@@ -67,6 +67,7 @@
 | `bol/workspace/workspace-header` | mat-card + background-image via classe locale (pas de `::ng-deep`), dw-tag x3, mat-stroked-button |
 | `bol/workspace/workspace-metrics` | mat-card + SCSS local (background, hover lift), routerLink conditionnel via `null`, template simplifié (plus de duplication) |
 | `bol/workspace/workspace-quick-actions` | mat-card + backdrop-filter, `WorkspaceActionCardComponent` extrait (composant local), icônes Material dans les données |
+| `shared/picture/picture` | `MatDialogRef` + `MAT_DIALOG_DATA` (titre passé par l'appelant), `MatButtonModule` + `MatIconModule`, `mat-dialog-title/content/actions` ; 5 appelants migré vers `MatDialog.open()` + `afterClosed()` |
 
 ---
 
@@ -86,7 +87,7 @@ Classé par complexité estimée (TS + HTML lignes combinées).
 | `bol/hero-advanced/combat/combat.component` | iftalabel, inputnumber | ~190 |
 | `bol/hero-advanced/origines/region/trait-row/trait-row.component` | popover | ~90 |
 | `bol/hero-advanced/traits/trait/trait.component` | popover, tooltip | ~120 |
-| `shared/picture/picture` | button, dynamicdialog | ~150 |
+| ~~`shared/picture/picture`~~ | ~~button, dynamicdialog~~ | ~~migré~~ |
 
 #### Niveau 2 — Moyen (150–400 lignes)
 

@@ -11,6 +11,7 @@ import {
   Validator,
   Validators,
 } from '@angular/forms';
+import {MatDialog} from '@angular/material/dialog';
 import {DialogService} from 'primeng/dynamicdialog';
 import {ButtonModule} from 'primeng/button';
 import {IftaLabelModule} from 'primeng/iftalabel';
@@ -53,6 +54,7 @@ import {HeroAdvancedRegionComponent} from './region/region.component';
 })
 export class HeroAdvancedOriginesComponent implements ControlValueAccessor, Validator {
   private readonly formBuilder = inject(FormBuilder);
+  private readonly dialog = inject(MatDialog);
   private readonly dialogService = inject(DialogService);
   private readonly herosStateService = inject(BolHerosStateService);
   private readonly herosService = inject(BolHerosService);
@@ -102,14 +104,13 @@ export class HeroAdvancedOriginesComponent implements ControlValueAccessor, Vali
   }
 
   protected pickAvatar(): void {
-    const ref = this.dialogService.open(PictureComponent, {
-      header: 'Avatar du héros',
-      modal: true,
-      closable: false,
+    const ref = this.dialog.open(PictureComponent, {
+      data: {title: 'Avatar du héros'},
       width: 'min(960px, 92vw)',
+      disableClose: true,
     });
 
-    ref?.onClose.subscribe((avatar: string | null) => {
+    ref.afterClosed().subscribe((avatar: string | null) => {
       if (avatar) {
         this.avatarCtrl.setValue(avatar);
         this.updateOrigines();

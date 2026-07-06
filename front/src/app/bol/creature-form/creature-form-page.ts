@@ -10,7 +10,7 @@ import {BolCreatureStateService} from '../services/bol-creature-state.service';
 import {BolCreaturesService} from '../services/bol-creatures.service';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
-import {DialogService} from 'primeng/dynamicdialog';
+import {MatDialog} from '@angular/material/dialog';
 import {IftaLabelModule} from 'primeng/iftalabel';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {InputTextModule} from 'primeng/inputtext';
@@ -40,7 +40,6 @@ interface CreatureCapaciteDraft {
   ],
   templateUrl: './creature-form-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService],
 })
 export class CreatureFormPageComponent {
   private readonly creatureStateService = inject(BolCreatureStateService);
@@ -49,7 +48,7 @@ export class CreatureFormPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
   private readonly router = inject(Router);
-  private readonly dialogService = inject(DialogService);
+  private readonly dialog = inject(MatDialog);
   private readonly routeParamMap = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
   });
@@ -218,14 +217,13 @@ export class CreatureFormPageComponent {
   }
 
   protected pickAvatar(): void {
-    const ref = this.dialogService.open(PictureComponent, {
-      header: 'Avatar de la créature',
-      modal: true,
-      closable: false,
+    const ref = this.dialog.open(PictureComponent, {
+      data: {title: 'Avatar de la créature'},
       width: 'min(960px, 92vw)',
+      disableClose: true,
     });
 
-    ref?.onClose.pipe(take(1)).subscribe((avatar: string | null) => {
+    ref.afterClosed().pipe(take(1)).subscribe((avatar: string | null) => {
       if (avatar) {
         this.creatureForm.controls.avatar.setValue(avatar);
       }

@@ -16,7 +16,7 @@ import {BolHerosStateService} from '../services/bol-heros-state.service';
 import {BolHerosService} from '../services/bol-heros.service';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
-import {DialogService} from 'primeng/dynamicdialog';
+import {MatDialog} from '@angular/material/dialog';
 import {IftaLabelModule} from 'primeng/iftalabel';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {InputTextModule} from 'primeng/inputtext';
@@ -66,7 +66,6 @@ interface PnjSelectedCarriereEntry extends PnjCarriereDraft {
   ],
   templateUrl: './pnj-form-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService],
 })
 export class PnjFormPageComponent {
   private readonly herosService = inject(BolHerosService);
@@ -75,7 +74,7 @@ export class PnjFormPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
   private readonly router = inject(Router);
-  private readonly dialogService = inject(DialogService);
+  private readonly dialog = inject(MatDialog);
   private readonly routeParamMap = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
   });
@@ -310,14 +309,13 @@ export class PnjFormPageComponent {
   }
 
   protected pickAvatar(): void {
-    const ref = this.dialogService.open(PictureComponent, {
-      header: 'Avatar du PNJ',
-      modal: true,
-      closable: false,
+    const ref = this.dialog.open(PictureComponent, {
+      data: {title: 'Avatar du PNJ'},
       width: 'min(960px, 92vw)',
+      disableClose: true,
     });
 
-    ref?.onClose.pipe(take(1)).subscribe((avatar: string | null) => {
+    ref.afterClosed().pipe(take(1)).subscribe((avatar: string | null) => {
       if (avatar) {
         this.pnjForm.controls.avatar.setValue(avatar);
       }

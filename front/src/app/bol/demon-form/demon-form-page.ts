@@ -10,7 +10,7 @@ import {BolDemonStateService} from '../services/bol-demon-state.service';
 import {BolDemonsService} from '../services/bol-demons.service';
 import {ButtonModule} from 'primeng/button';
 import {CardModule} from 'primeng/card';
-import {DialogService} from 'primeng/dynamicdialog';
+import {MatDialog} from '@angular/material/dialog';
 import {IftaLabelModule} from 'primeng/iftalabel';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {InputTextModule} from 'primeng/inputtext';
@@ -40,7 +40,6 @@ interface DemonPouvoirDraft {
   ],
   templateUrl: './demon-form-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService],
 })
 export class DemonFormPageComponent {
   private readonly demonStateService = inject(BolDemonStateService);
@@ -49,7 +48,7 @@ export class DemonFormPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
   private readonly router = inject(Router);
-  private readonly dialogService = inject(DialogService);
+  private readonly dialog = inject(MatDialog);
   private readonly routeParamMap = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
   });
@@ -219,14 +218,13 @@ export class DemonFormPageComponent {
   }
 
   protected pickAvatar(): void {
-    const ref = this.dialogService.open(PictureComponent, {
-      header: 'Avatar du demon',
-      modal: true,
-      closable: false,
+    const ref = this.dialog.open(PictureComponent, {
+      data: {title: 'Avatar du démon'},
       width: 'min(960px, 92vw)',
+      disableClose: true,
     });
 
-    ref?.onClose.pipe(take(1)).subscribe((avatar: string | null) => {
+    ref.afterClosed().pipe(take(1)).subscribe((avatar: string | null) => {
       if (avatar) {
         this.demonForm.controls.avatar.setValue(avatar);
       }
