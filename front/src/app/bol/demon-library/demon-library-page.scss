@@ -128,3 +128,59 @@ $demon-group-bg: linear-gradient(90deg, rgba(69, 10, 10, 0.98), rgba(24, 24, 27,
 .demon-action-btn {
   margin-block: -8px;
 }
+
+// ── Cellules du tableau (tons de texte) ────────────────────
+.dlp-group-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  color: #fda4af;
+}
+
+.dlp-group-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--dw-surface-900);
+}
+
+.dlp-info-icon {
+  color: #fda4af;
+}
+
+.dlp-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--dw-surface-800);
+}
+
+.dlp-meta {
+  font-size: 0.875rem;
+  color: var(--dw-surface-500);
+}
+
+.dlp-description {
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  color: var(--dw-surface-600);
+}
+
+.dlp-cell {
+  font-size: 0.75rem;
+
+  @media (min-width: 768px) {
+    font-size: 0.875rem;
+  }
+}
+
+.dlp-muted {
+  color: var(--dw-surface-500);
+}
+
+.dlp-value--strong {
+  font-weight: 700;
+}
+
+.dlp-power-row {
+  font-size: 0.875rem;
+}

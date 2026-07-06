@@ -57,3 +57,14 @@ image-cropper {
   border-color: var(--dw-color-creature);
   background: rgba(245, 158, 11, 0.08);
 }
+
+.picture-dropzone-text {
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.75rem;
+}
+
+.picture-dropzone-link {
+  color: var(--dw-color-creature);
+  text-decoration: underline;
+}

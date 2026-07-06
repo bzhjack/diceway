@@ -145,3 +145,62 @@ button.hero-trait-icon {
   line-height: 1.35;
   color: var(--dw-surface-700);
 }
+
+// ── Cellules du tableau (tons de texte) ────────────────────
+.hlp-info-icon {
+  color: #6ee7b7;
+}
+
+.hlp-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--dw-surface-800);
+}
+
+.hlp-meta {
+  font-size: 0.875rem;
+  color: var(--dw-surface-500);
+}
+
+.hlp-cell {
+  font-size: 0.75rem;
+  color: var(--dw-surface-700);
+
+  @media (min-width: 768px) {
+    font-size: 0.875rem;
+  }
+}
+
+.hlp-career-cell {
+  font-size: 0.875rem;
+  color: var(--dw-surface-700);
+}
+
+.hlp-muted {
+  color: var(--dw-surface-500);
+}
+
+.hlp-label {
+  color: var(--dw-surface-600);
+}
+
+.hlp-section-title {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--dw-surface-400);
+}
+
+.hlp-empty {
+  font-size: 0.875rem;
+  color: var(--dw-surface-400);
+}
+
+.hlp-trait--positive {
+  color: #a7f3d0;
+}
+
+.hlp-trait--negative {
+  color: #fecdd3;
+}

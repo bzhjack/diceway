@@ -37,6 +37,7 @@ import {HeroAdvancedRegionComponent, HeroAdvancedRegionDialogResult} from './reg
     HeroAdvancedLanguesComponent,
   ],
   templateUrl: './origines.component.html',
+  styleUrl: './origines.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {

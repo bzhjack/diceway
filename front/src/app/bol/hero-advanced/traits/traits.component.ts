@@ -25,6 +25,7 @@ import {HeroAdvancedTraitComponent} from './trait/trait.component';
   selector: 'bol-hero-advanced-traits',
   imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatIconModule, MatSelectModule, HeroAdvancedTraitComponent],
   templateUrl: './traits.component.html',
+  styleUrl: './traits.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {

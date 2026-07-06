@@ -11,6 +11,7 @@ import {HeroAdvancedCreateTools} from '../../create.tools';
   selector: 'bol-hero-advanced-trait',
   imports: [MatIconModule, MatMenuModule, MatTooltipModule, InlineSvgDirective],
   templateUrl: './trait.component.html',
+  styleUrl: './trait.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroAdvancedTraitComponent {

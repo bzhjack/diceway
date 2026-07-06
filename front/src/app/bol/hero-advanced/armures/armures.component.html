@@ -7,7 +7,7 @@
         @for (armure of filteredArmureList(); track armure.id) {
           <mat-option [value]="armure.id">
             <span class="truncate">{{ armure.armure }}</span>
-            <span class="ml-1 text-xs text-slate-400">
+            <span class="dw-option-detail ml-1">
               {{ armure.protection ? 'Protection ' + armure.protection : 'Protection -' }}
             </span>
           </mat-option>
@@ -37,7 +37,7 @@
         <button
           mat-icon-button
           type="button"
-          class="!text-rose-400/80"
+          class="dw-delete-btn"
           matTooltip="Supprimer"
           (click)="deleteArmure(armure.id!)"
         >
@@ -45,7 +45,7 @@
         </button>
       </div>
     } @empty {
-      <p class="m-0 text-sm text-slate-500">Aucune armure sélectionnée.</p>
+      <p class="dw-empty-state m-0">Aucune armure sélectionnée.</p>
     }
   </div>
 </div>

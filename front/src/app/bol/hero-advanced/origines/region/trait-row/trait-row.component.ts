@@ -9,6 +9,7 @@ import {HeroAdvancedCreateTools} from '../../../create.tools';
   selector: 'bol-hero-advanced-trait-row',
   imports: [MatMenuModule, InlineSvgDirective],
   templateUrl: './trait-row.component.html',
+  styleUrl: './trait-row.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroAdvancedTraitRowComponent {

@@ -62,3 +62,33 @@
 .weapon-action-btn {
   margin-block: -8px;
 }
+
+// ── Formulaire & cellules (tons de texte) ──────────────────
+.wlp-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #fcd34d;
+}
+
+.wlp-form-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--dw-surface-800);
+}
+
+.wlp-error {
+  font-size: 0.875rem;
+  color: #fda4af;
+}
+
+.wlp-strong {
+  font-weight: 600;
+  color: var(--dw-surface-800);
+}
+
+.wlp-muted-cell {
+  color: var(--dw-surface-600);
+}

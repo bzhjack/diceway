@@ -6,14 +6,14 @@
           <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div class="space-y-3">
               <div class="flex items-center gap-3">
-                <div class="flex h-14 w-14 items-center justify-center border border-[#424b57] bg-[#059669] text-2xl text-white">
+                <div class="pfp-icon flex h-14 w-14 items-center justify-center">
                   <mat-icon>manage_accounts</mat-icon>
                 </div>
                 <div class="space-y-1">
-                  <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-emerald-300">
+                  <p class="pfp-eyebrow m-0">
                     {{ pageEyebrow() }}
                   </p>
-                  <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none">
+                  <h1 class="pfp-title m-0">
                     {{ pageTitle() }}
                   </h1>
                 </div>
@@ -37,10 +37,10 @@
           <div class="grid gap-4">
             @if (loadingPnj()) {
               <div class="dw-section--loading">
-                <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                <p class="pfp-section-eyebrow m-0">
                   Chargement
                 </p>
-                <p class="mt-3 mb-0 text-sm leading-7 text-slate-200">
+                <p class="pfp-loading-detail m-0 mt-3">
                   Récupération du PNJ à modifier.
                 </p>
               </div>
@@ -48,25 +48,25 @@
 
             <!-- Général -->
             <div class="dw-section--form">
-              <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+              <p class="pfp-section-eyebrow m-0 mb-2">
                 Général
               </p>
 
               <div class="grid gap-4 md:grid-cols-[140px_minmax(0,1fr)]">
                 <div
-                  class="group relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden border border-[#424b57] bg-[#0f172a] transition-colors hover:border-emerald-300/70"
+                  class="pfp-avatar group relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden transition-colors"
                   (click)="pickAvatar()"
                 >
                   @if (avatarPreview()) {
                     <img [src]="avatarPreview()!" alt="Avatar PNJ" class="h-full w-full object-cover" />
                   } @else {
-                    <div class="flex flex-col items-center gap-2 text-slate-400">
+                    <div class="pfp-avatar-placeholder flex flex-col items-center gap-2">
                       <mat-icon class="!text-3xl">image</mat-icon>
-                      <span class="text-[0.65rem] font-bold uppercase tracking-[0.2em]">Avatar</span>
+                      <span class="pfp-avatar-label">Avatar</span>
                     </div>
                   }
-                  <div class="pointer-events-none absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100">
-                    <span class="mb-3 border border-white/20 bg-black/55 px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white">
+                  <div class="pfp-avatar-overlay pointer-events-none absolute inset-0 flex items-end justify-center opacity-0 transition-opacity group-hover:opacity-100">
+                    <span class="pfp-avatar-overlay-label mb-3 px-2 py-0.5">
                       Modifier
                     </span>
                   </div>
@@ -97,7 +97,7 @@
               </div>
 
               @if (onError('nom') || onError('type')) {
-                <p class="mt-3 mb-0 text-sm text-emerald-300">
+                <p class="pfp-field-hint m-0 mt-3">
                   Le nom et le type sont requis pour préparer le PNJ.
                 </p>
               }
@@ -106,7 +106,7 @@
             <!-- Attributs / Combat / Ressources -->
             <div class="grid gap-4 xl:grid-cols-3 xl:items-start">
               <div class="dw-section--form xl:h-full">
-                <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                <p class="pfp-section-eyebrow m-0 mb-2">
                   Attributs
                 </p>
                 <div class="flex flex-col gap-2">
@@ -134,7 +134,7 @@
               </div>
 
               <div class="dw-section--form xl:h-full">
-                <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                <p class="pfp-section-eyebrow m-0 mb-2">
                   Combat
                 </p>
                 <div class="flex flex-col gap-2">
@@ -162,7 +162,7 @@
               </div>
 
               <div class="dw-section--form xl:h-full">
-                <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                <p class="pfp-section-eyebrow m-0 mb-2">
                   Ressources
                 </p>
                 <div class="grid gap-2 md:grid-cols-2">
@@ -195,7 +195,7 @@
               <!-- Traits -->
               <div class="dw-section--form xl:h-full">
                 <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                  <p class="pfp-section-eyebrow m-0">
                     Traits
                   </p>
                   <dw-tag>{{ selectedTraitEntries().length }} sélectionné(s)</dw-tag>
@@ -235,27 +235,27 @@
 
                 <div class="mt-4 flex flex-col gap-3">
                   @for (trait of selectedTraitEntries(); track trait.type + '-' + trait.id; let index = $index) {
-                    <div class="flex items-start justify-between gap-3 border border-[#424b57] bg-[#0f172a]/65 p-3">
+                    <div class="pfp-item-row flex items-start justify-between gap-3 p-3">
                       <div class="space-y-1">
                         <div class="flex items-center gap-2">
                           <dw-badge [color]="trait.type === 'A' ? 'emerald' : 'rose'">
                             {{ trait.type === 'A' ? 'Avantage' : 'Désavantage' }}
                           </dw-badge>
-                          <span class="font-semibold text-slate-100">{{ trait.label }}</span>
+                          <span class="pfp-trait-label">{{ trait.label }}</span>
                         </div>
                         @for (detail of trait.details; track detail.title + detail.description) {
-                          <p class="m-0 text-xs leading-6 text-slate-400">
-                            <span class="font-bold text-slate-200">{{ detail.title }} :</span>
+                          <p class="pfp-item-meta m-0 leading-6">
+                            <span class="pfp-detail-title">{{ detail.title }} :</span>
                             {{ detail.description }}
                           </p>
                         }
                       </div>
-                      <button mat-icon-button type="button" class="!text-rose-400/80" (click)="removeItem(traits, index)">
+                      <button mat-icon-button type="button" class="pfp-delete-btn" (click)="removeItem(traits, index)">
                         <mat-icon>delete</mat-icon>
                       </button>
                     </div>
                   } @empty {
-                    <p class="m-0 text-sm leading-7 text-slate-400">
+                    <p class="pfp-empty-state m-0">
                       Ajoute les traits significatifs du PNJ pour préparer la scène.
                     </p>
                   }
@@ -265,7 +265,7 @@
               <!-- Carrières -->
               <div class="dw-section--form xl:h-full">
                 <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                  <p class="pfp-section-eyebrow m-0">
                     Carrières
                   </p>
                   <dw-tag>{{ selectedCarrieres().length }} sélectionnée(s)</dw-tag>
@@ -288,20 +288,20 @@
 
                 <div class="mt-4 flex flex-col gap-3">
                   @for (carriere of selectedCarrieres(); track carriere.id; let index = $index) {
-                    <div class="flex items-center justify-between gap-3 border border-[#424b57] bg-[#0f172a]/65 p-3">
-                      <p class="m-0 min-w-0 flex-1 truncate text-sm font-semibold text-slate-100">
+                    <div class="pfp-item-row flex items-center justify-between gap-3 p-3">
+                      <p class="pfp-item-title m-0 min-w-0 flex-1 truncate">
                         {{ carriere.definition?.carriere }}
                       </p>
                       <mat-form-field subscriptSizing="dynamic" class="w-[70px]">
                         <mat-label>Rang</mat-label>
                         <input matInput type="number" [formControl]="$any(carrieres.at(index).get('value'))" />
                       </mat-form-field>
-                      <button mat-icon-button type="button" class="!text-rose-400/80" (click)="removeItem(carrieres, index)">
+                      <button mat-icon-button type="button" class="pfp-delete-btn" (click)="removeItem(carrieres, index)">
                         <mat-icon>delete</mat-icon>
                       </button>
                     </div>
                   } @empty {
-                    <p class="m-0 text-sm leading-7 text-slate-400">
+                    <p class="pfp-empty-state m-0">
                       Ajoute les carrières qui résument le rôle du PNJ.
                     </p>
                   }
@@ -311,7 +311,7 @@
               <!-- Langues -->
               <div class="dw-section--form xl:h-full">
                 <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                  <p class="pfp-section-eyebrow m-0">
                     Langues
                   </p>
                   <dw-tag>{{ selectedLangues().length }} sélectionnée(s)</dw-tag>
@@ -334,14 +334,14 @@
 
                 <div class="mt-4 flex flex-col gap-3">
                   @for (langue of selectedLangues(); track langue?.id; let index = $index) {
-                    <div class="flex items-center justify-between gap-3 border border-[#424b57] bg-[#0f172a]/65 p-3">
-                      <p class="m-0 text-sm font-semibold text-slate-100">{{ langue?.langue }}</p>
-                      <button mat-icon-button type="button" class="!text-rose-400/80" (click)="removeItem(langues, index)">
+                    <div class="pfp-item-row flex items-center justify-between gap-3 p-3">
+                      <p class="pfp-item-title m-0">{{ langue?.langue }}</p>
+                      <button mat-icon-button type="button" class="pfp-delete-btn" (click)="removeItem(langues, index)">
                         <mat-icon>delete</mat-icon>
                       </button>
                     </div>
                   } @empty {
-                    <p class="m-0 text-sm leading-7 text-slate-400">
+                    <p class="pfp-empty-state m-0">
                       Ajoute les langues que le PNJ peut mobiliser en scène.
                     </p>
                   }
@@ -353,7 +353,7 @@
             <div class="grid gap-4 xl:grid-cols-2 xl:items-start">
               <div class="dw-section--form">
                 <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                  <p class="pfp-section-eyebrow m-0">
                     Armes
                   </p>
                   <dw-tag>{{ selectedArmes().length }} sélectionnée(s)</dw-tag>
@@ -376,17 +376,17 @@
 
                 <div class="mt-4 flex flex-col gap-3">
                   @for (arme of selectedArmes(); track arme?.id; let index = $index) {
-                    <div class="flex items-center justify-between gap-3 border border-[#424b57] bg-[#0f172a]/65 p-3">
+                    <div class="pfp-item-row flex items-center justify-between gap-3 p-3">
                       <div class="space-y-1">
-                        <p class="m-0 text-sm font-semibold text-slate-100">{{ arme?.arme }}</p>
-                        <p class="m-0 text-xs text-slate-400">{{ arme?.degats }}</p>
+                        <p class="pfp-item-title m-0">{{ arme?.arme }}</p>
+                        <p class="pfp-item-meta m-0">{{ arme?.degats }}</p>
                       </div>
-                      <button mat-icon-button type="button" class="!text-rose-400/80" (click)="removeItem(armes, index)">
+                      <button mat-icon-button type="button" class="pfp-delete-btn" (click)="removeItem(armes, index)">
                         <mat-icon>delete</mat-icon>
                       </button>
                     </div>
                   } @empty {
-                    <p class="m-0 text-sm leading-7 text-slate-400">
+                    <p class="pfp-empty-state m-0">
                       Ajoute l'arsenal utile à ce PNJ.
                     </p>
                   }
@@ -395,7 +395,7 @@
 
               <div class="dw-section--form">
                 <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                  <p class="pfp-section-eyebrow m-0">
                     Armures
                   </p>
                   <dw-tag>{{ selectedArmures().length }} sélectionnée(s)</dw-tag>
@@ -418,17 +418,17 @@
 
                 <div class="mt-4 flex flex-col gap-3">
                   @for (armure of selectedArmures(); track armure?.id; let index = $index) {
-                    <div class="flex items-center justify-between gap-3 border border-[#424b57] bg-[#0f172a]/65 p-3">
+                    <div class="pfp-item-row flex items-center justify-between gap-3 p-3">
                       <div class="space-y-1">
-                        <p class="m-0 text-sm font-semibold text-slate-100">{{ armure?.armure }}</p>
-                        <p class="m-0 text-xs text-slate-400">{{ armure?.protection }}</p>
+                        <p class="pfp-item-title m-0">{{ armure?.armure }}</p>
+                        <p class="pfp-item-meta m-0">{{ armure?.protection }}</p>
                       </div>
-                      <button mat-icon-button type="button" class="!text-rose-400/80" (click)="removeItem(armures, index)">
+                      <button mat-icon-button type="button" class="pfp-delete-btn" (click)="removeItem(armures, index)">
                         <mat-icon>delete</mat-icon>
                       </button>
                     </div>
                   } @empty {
-                    <p class="m-0 text-sm leading-7 text-slate-400">
+                    <p class="pfp-empty-state m-0">
                       Ajoute les protections qui définissent ce PNJ.
                     </p>
                   }
@@ -437,7 +437,7 @@
             </div>
 
             @if (errorMessage()) {
-              <div class="border border-rose-400/40 bg-rose-950/30 px-4 py-3 text-sm text-rose-200">
+              <div class="pfp-error-box px-4 py-3">
                 {{ errorMessage() }}
               </div>
             }

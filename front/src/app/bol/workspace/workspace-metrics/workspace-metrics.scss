@@ -20,3 +20,58 @@
     border-color: rgba(252, 211, 77, 0.6) !important;
   }
 }
+
+.wm-label {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--dw-surface-500);
+}
+
+.wm-value {
+  font-size: 2.25rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.wm-detail {
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  color: var(--dw-surface-600);
+}
+
+.wm-icon {
+  font-size: 1.25rem;
+  border: 1px solid;
+}
+
+.wm-icon--sky {
+  border-color: rgba(56, 189, 248, 0.25);
+  background: rgba(56, 189, 248, 0.12);
+  color: #7dd3fc;
+}
+
+.wm-icon--emerald {
+  border-color: rgba(52, 211, 153, 0.25);
+  background: rgba(52, 211, 153, 0.12);
+  color: #6ee7b7;
+}
+
+.wm-icon--amber {
+  border-color: rgba(251, 191, 36, 0.25);
+  background: rgba(251, 191, 36, 0.12);
+  color: #fcd34d;
+}
+
+.wm-icon--rose {
+  border-color: rgba(251, 113, 133, 0.25);
+  background: rgba(251, 113, 133, 0.12);
+  color: #fda4af;
+}
+
+.wm-icon--violet {
+  border-color: rgba(167, 139, 250, 0.25);
+  background: rgba(167, 139, 250, 0.12);
+  color: #c4b5fd;
+}

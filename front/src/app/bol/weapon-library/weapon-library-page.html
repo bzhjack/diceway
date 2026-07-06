@@ -37,10 +37,10 @@
           <div class="space-y-4">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div class="space-y-1">
-                <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-amber-300">
+                <p class="wlp-eyebrow m-0">
                   Intendance
                 </p>
-                <h2 class="m-0 text-2xl font-bold leading-none text-slate-100">{{ formTitle() }}</h2>
+                <h2 class="wlp-form-title m-0">{{ formTitle() }}</h2>
               </div>
 
               <div class="flex flex-wrap gap-2">
@@ -91,7 +91,7 @@
             </form>
 
             @if (errorMessage()) {
-              <p class="m-0 text-sm text-rose-300">{{ errorMessage() }}</p>
+              <p class="wlp-error m-0">{{ errorMessage() }}</p>
             }
           </div>
         </mat-card-content>
@@ -129,7 +129,7 @@
               <tr>
                 <td>
                   <div class="flex items-center gap-2">
-                    <span class="font-semibold text-slate-100">{{ weapon.arme }}</span>
+                    <span class="wlp-strong">{{ weapon.arme }}</span>
                     @if (weapon.user_id) {
                       <dw-badge color="amber">Création</dw-badge>
                     }
@@ -141,12 +141,12 @@
                   </dw-badge>
                 </td>
                 <td class="weapon-col-compact">
-                  <span class="font-semibold text-slate-100">{{ weapon.degats || '-' }}</span>
+                  <span class="wlp-strong">{{ weapon.degats || '-' }}</span>
                 </td>
-                <td class="weapon-col-range text-slate-300">
+                <td class="weapon-col-range wlp-muted-cell">
                   {{ weapon.portee || '-' }}
                 </td>
-                <td class="text-slate-300">
+                <td class="wlp-muted-cell">
                   {{ weapon.notes || '-' }}
                 </td>
                 <td class="weapon-col-compact">

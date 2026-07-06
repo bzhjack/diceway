@@ -137,3 +137,76 @@ button.pnj-trait-icon {
   line-height: 1.35;
   color: var(--dw-surface-700);
 }
+
+// ── Cellules du tableau (tons de texte) ────────────────────
+.plp-group-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  color: #6ee7b7;
+}
+
+.plp-group-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--dw-surface-900);
+}
+
+.plp-info-icon {
+  color: #6ee7b7;
+}
+
+.plp-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--dw-surface-800);
+}
+
+.plp-meta {
+  font-size: 0.875rem;
+  color: var(--dw-surface-500);
+}
+
+.plp-cell {
+  font-size: 0.75rem;
+  color: var(--dw-surface-700);
+
+  @media (min-width: 768px) {
+    font-size: 0.875rem;
+  }
+}
+
+.plp-career-cell {
+  font-size: 0.875rem;
+  color: var(--dw-surface-700);
+}
+
+.plp-muted {
+  color: var(--dw-surface-500);
+}
+
+.plp-label {
+  color: var(--dw-surface-600);
+}
+
+.plp-section-title {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--dw-surface-400);
+}
+
+.plp-empty {
+  font-size: 0.875rem;
+  color: var(--dw-surface-400);
+}
+
+.plp-trait--positive {
+  color: #a7f3d0;
+}
+
+.plp-trait--negative {
+  color: #fecdd3;
+}

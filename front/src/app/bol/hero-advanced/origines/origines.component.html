@@ -2,19 +2,19 @@
   <div class="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
     <button
       type="button"
-      class="group relative flex aspect-square w-full items-center justify-center overflow-hidden border border-[#424b57] bg-[#0f172a] transition-colors hover:border-emerald-300/70"
+      class="doo-avatar group relative flex aspect-square w-full items-center justify-center overflow-hidden transition-colors"
       (click)="pickAvatar()"
     >
       @if (avatarPreview()) {
         <img [src]="avatarPreview()!" alt="Avatar héros" class="h-full w-full object-cover" />
       } @else {
-        <div class="flex flex-col items-center gap-3 text-slate-400">
+        <div class="doo-avatar-placeholder flex flex-col items-center gap-3">
           <mat-icon class="!text-4xl">image</mat-icon>
-          <span class="text-xs font-bold uppercase tracking-[0.2em]">Avatar</span>
-          <span class="text-xs text-slate-500">Cliquer pour modifier</span>
+          <span class="doo-avatar-label">Avatar</span>
+          <span class="doo-avatar-hint">Cliquer pour modifier</span>
         </div>
       }
-      <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 to-transparent opacity-0 transition-opacity group-hover:opacity-100"></div>
+      <div class="doo-avatar-overlay pointer-events-none absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100"></div>
     </button>
 
     <div class="grid gap-4">
@@ -31,9 +31,9 @@
       </div>
 
       <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto_auto]">
-        <div class="min-w-0 rounded-sm border border-[#424b57] bg-[#0f172a]/70 px-4 py-3">
-          <p class="m-0 text-xs font-black uppercase tracking-[0.18em] text-slate-500">Région</p>
-          <p class="mt-2 mb-0 text-sm text-slate-100">
+        <div class="doo-region-box min-w-0 px-4 py-3">
+          <p class="doo-region-eyebrow m-0">Région</p>
+          <p class="doo-region-value m-0 mt-2">
             {{ currentRegion()?.region || 'Aucune région sélectionnée' }}
           </p>
         </div>
@@ -60,22 +60,22 @@
   </div>
 
   @if (originesErrors().length) {
-    <div class="border border-red-400/35 bg-red-950/20 p-3 text-sm text-red-200">
+    <div class="dw-field-error p-3">
       @for (error of originesErrors(); track error.control + error.error) {
         <p class="m-0">{{ error.error }}</p>
       }
     </div>
   } @else if (originesWarns().length) {
-    <div class="border border-amber-400/30 bg-amber-950/15 p-3 text-sm text-amber-200">
+    <div class="dw-field-warning p-3">
       @for (warning of originesWarns(); track warning.warn) {
         <p class="m-0">{{ warning.warn }}</p>
       }
     </div>
   }
 
-  <div class="border border-[#424b57] bg-[#0f172a]/55 p-4">
+  <div class="doo-langues-box p-4">
     <div class="mb-3">
-      <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-emerald-300">Langues</p>
+      <p class="doo-langues-eyebrow m-0">Langues</p>
     </div>
     <bol-hero-advanced-langues [formControl]="languesCtrl" />
   </div>

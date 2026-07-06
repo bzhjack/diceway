@@ -24,13 +24,13 @@
   </div>
 
   @if (attributErrors().length) {
-    <div class="border border-red-400/35 bg-red-950/20 p-3 text-sm text-red-200">
+    <div class="dw-field-error p-3">
       @for (error of attributErrors(); track error.control + error.error) {
         <p class="m-0">{{ error.control ? error.control + ' ' : '' }}{{ error.error }}</p>
       }
     </div>
   } @else if (attributWarns().length) {
-    <div class="border border-amber-400/30 bg-amber-950/15 p-3 text-sm text-amber-200">
+    <div class="dw-field-warning p-3">
       @for (warning of attributWarns(); track warning.warn) {
         <p class="m-0">{{ warning.warn }}</p>
       }

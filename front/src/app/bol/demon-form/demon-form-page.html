@@ -6,14 +6,14 @@
           <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div class="space-y-3">
               <div class="flex items-center gap-3">
-                <div class="flex h-14 w-14 items-center justify-center border border-[#52414b] bg-[#b91c1c] text-2xl text-white">
+                <div class="dfp-icon flex h-14 w-14 items-center justify-center">
                   <mat-icon>bolt</mat-icon>
                 </div>
                 <div class="space-y-1">
-                  <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-rose-300">
+                  <p class="dfp-eyebrow m-0">
                     {{ pageEyebrow() }}
                   </p>
-                  <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none">
+                  <h1 class="dfp-title m-0">
                     {{ pageTitle() }}
                   </h1>
                 </div>
@@ -37,25 +37,25 @@
 
           <div class="grid gap-4">
             @if (loadingDemon()) {
-              <div class="border border-[#52414b] bg-[#111827]/80 p-5">
-                <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-rose-300">
+              <div class="dfp-loading-box p-5">
+                <p class="dfp-section-eyebrow m-0">
                   Chargement
                 </p>
-                <p class="mt-3 mb-0 text-sm leading-7 text-slate-200">
+                <p class="dfp-loading-detail m-0 mt-3">
                   Récupération du démon à modifier.
                 </p>
               </div>
             }
 
             <div class="grid gap-4">
-              <div class="border border-[#52414b] bg-[#27272a]/75 px-4 py-3">
-                <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-rose-300">
+              <div class="dfp-section-card px-4 py-3">
+                <p class="dfp-section-eyebrow m-0 mb-2">
                   Général
                 </p>
 
                 <div class="grid gap-4 md:grid-cols-[140px_minmax(0,1fr)]">
                   <div
-                    class="group relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden border border-[#52414b] bg-[#09090b] transition-colors hover:border-rose-300/70"
+                    class="dfp-avatar group relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden transition-colors"
                     (click)="pickAvatar()"
                   >
                     @if (avatarPreview()) {
@@ -65,14 +65,14 @@
                         class="h-full w-full object-cover"
                       />
                     } @else {
-                      <div class="flex flex-col items-center gap-2 text-slate-400">
+                      <div class="dfp-avatar-placeholder flex flex-col items-center gap-2">
                         <mat-icon class="!text-3xl">image</mat-icon>
-                        <span class="text-[0.65rem] font-bold uppercase tracking-[0.2em]">Avatar</span>
+                        <span class="dfp-avatar-label">Avatar</span>
                       </div>
                     }
 
-                    <div class="pointer-events-none absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100">
-                      <span class="mb-3 border border-white/20 bg-black/55 px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white">
+                    <div class="dfp-avatar-overlay pointer-events-none absolute inset-0 flex items-end justify-center opacity-0 transition-opacity group-hover:opacity-100">
+                      <span class="dfp-avatar-overlay-label mb-3 px-2 py-0.5">
                         Modifier
                       </span>
                     </div>
@@ -103,15 +103,15 @@
                 </div>
 
                 @if (onError('nom') || onError('id_categorie')) {
-                  <p class="mt-3 mb-0 text-sm text-rose-300">
+                  <p class="dfp-field-hint m-0 mt-3">
                     Le nom et la catégorie sont requis pour préparer le démon.
                   </p>
                 }
               </div>
 
               <div class="grid gap-4 xl:grid-cols-3 xl:items-start">
-                <div class="border border-[#52414b] bg-[#27272a]/75 px-4 py-3 xl:h-full">
-                  <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-rose-300">
+                <div class="dfp-section-card px-4 py-3 xl:h-full">
+                  <p class="dfp-section-eyebrow m-0 mb-2">
                     Attributs
                   </p>
                   <div class="flex flex-col gap-2">
@@ -138,8 +138,8 @@
                   </div>
                 </div>
 
-                <div class="border border-[#52414b] bg-[#27272a]/75 px-4 py-3 xl:h-full">
-                  <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-rose-300">
+                <div class="dfp-section-card px-4 py-3 xl:h-full">
+                  <p class="dfp-section-eyebrow m-0 mb-2">
                     Combat
                   </p>
                   <div class="flex flex-col gap-2">
@@ -166,8 +166,8 @@
                   </div>
                 </div>
 
-                <div class="border border-[#52414b] bg-[#27272a]/75 px-4 py-3 xl:h-full">
-                  <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-rose-300">
+                <div class="dfp-section-card px-4 py-3 xl:h-full">
+                  <p class="dfp-section-eyebrow m-0 mb-2">
                     Ressources
                   </p>
                   <div class="flex gap-2">
@@ -179,9 +179,9 @@
                 </div>
               </div>
 
-              <div class="border border-[#52414b] bg-[#27272a]/75 px-4 py-3">
+              <div class="dfp-section-card px-4 py-3">
                 <div class="mb-2 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-rose-300">
+                  <p class="dfp-section-eyebrow m-0">
                     Pouvoirs infernaux
                   </p>
                   <dw-tag>{{ selectedPouvoirEntries().length }} sélectionné(s)</dw-tag>
@@ -210,21 +210,21 @@
 
                 <div class="mt-3 grid gap-2">
                   @if (selectedPouvoirEntries().length === 0) {
-                    <div class="border border-dashed border-[#6b4b56] bg-[#18181b]/80 px-3 py-2 text-sm text-slate-400">
+                    <div class="dfp-empty-pouvoir px-3 py-2">
                       Aucun pouvoir ajouté pour le moment.
                     </div>
                   } @else {
                     @for (entry of selectedPouvoirEntries(); track entry.id; let index = $index) {
-                      <div class="flex flex-col gap-2 border border-[#52414b] bg-[#18181b]/80 px-3 py-2 md:flex-row md:items-start md:justify-between">
+                      <div class="dfp-pouvoir-row flex flex-col gap-2 px-3 py-2 md:flex-row md:items-start md:justify-between">
                         <div class="space-y-1">
-                          <p class="m-0 text-sm font-bold text-slate-100">
+                          <p class="dfp-pouvoir-title m-0">
                             {{ entry.definition?.pouvoir ?? ('Pouvoir #' + entry.id) }}
                           </p>
-                          <p class="m-0 text-sm leading-5 text-slate-300">
+                          <p class="dfp-pouvoir-description m-0">
                             {{ entry.definition?.description || 'Pas de description chargée.' }}
                           </p>
                           @if (entry.detail) {
-                            <p class="m-0 text-sm leading-5 text-rose-200">
+                            <p class="dfp-pouvoir-detail m-0">
                               Détail : {{ entry.detail }}
                             </p>
                           }
@@ -241,25 +241,25 @@
             </div>
 
             @if (errorMessage()) {
-              <div class="border border-red-400/30 bg-red-500/10 p-5">
-                <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-red-300">
+              <div class="dfp-error-box p-5">
+                <p class="dfp-error-eyebrow m-0">
                   Erreur API
                 </p>
-                <p class="mt-3 mb-0 text-sm leading-7 text-red-100">
+                <p class="dfp-error-detail m-0 mt-3">
                   {{ errorMessage() }}
                 </p>
               </div>
             }
 
             @if (savedDemon()) {
-              <div class="border border-emerald-400/30 bg-emerald-500/10 p-5">
-                <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+              <div class="dfp-success-box p-5">
+                <p class="dfp-success-eyebrow m-0">
                   {{ saveSuccessTitle() }}
                 </p>
-                <p class="mt-3 mb-0 text-sm leading-7 text-emerald-100">
+                <p class="dfp-success-detail m-0 mt-3">
                   {{ saveSuccessMessage() }}
                 </p>
-                <pre class="mt-3 mb-0 overflow-x-auto text-xs leading-6 text-slate-100">{{ savedDemon() | json }}</pre>
+                <pre class="dfp-success-json m-0 mt-3 overflow-x-auto">{{ savedDemon() | json }}</pre>
               </div>
             }
           </div>

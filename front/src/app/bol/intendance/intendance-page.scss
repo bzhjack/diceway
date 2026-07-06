@@ -1,0 +1,73 @@
+:host {
+  display: block;
+}
+
+.ip-icon {
+  border: 1px solid var(--dw-border);
+  background: #b45309;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.ip-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: #fcd34d;
+}
+
+.ip-title {
+  font-family: 'Muse Display Harmony';
+  font-size: 2.25rem;
+  line-height: 1;
+
+  @media (min-width: 768px) {
+    font-size: 2.8rem;
+  }
+}
+
+.ip-description {
+  font-size: 0.875rem;
+  line-height: 1.75rem;
+  color: var(--dw-surface-600);
+
+  @media (min-width: 768px) {
+    font-size: 0.95rem;
+  }
+}
+
+.ip-entry-icon {
+  border: 1px solid var(--dw-border);
+  font-size: 1.125rem;
+  color: #fff;
+}
+
+.ip-entry-icon--amber {
+  background: rgba(180, 83, 9, 0.9);
+}
+
+.ip-entry-icon--sky {
+  background: rgba(3, 105, 161, 0.9);
+}
+
+.ip-entry-kicker {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--dw-surface-500);
+}
+
+.ip-entry-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--dw-surface-800);
+}
+
+.ip-entry-description {
+  font-size: 0.875rem;
+  line-height: 1.75rem;
+  color: var(--dw-surface-600);
+}

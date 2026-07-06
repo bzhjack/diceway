@@ -38,6 +38,7 @@ interface CreatureCapaciteDraft {
     DwTagComponent,
   ],
   templateUrl: './creature-form-page.html',
+  styleUrl: './creature-form-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreatureFormPageComponent {

@@ -9,6 +9,8 @@ import {BolArmureModel} from '../models/bol-armure.model';
 import {BolHerosService} from '../services/bol-heros.service';
 import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
 
+type IntendanceAccent = 'amber' | 'sky';
+
 interface IntendanceLibraryEntry {
   readonly title: string;
   readonly kicker: string;
@@ -16,7 +18,7 @@ interface IntendanceLibraryEntry {
   readonly route: string;
   readonly buttonLabel: string;
   readonly icon: string;
-  readonly accentClass: string;
+  readonly accent: IntendanceAccent;
   readonly stats: readonly string[];
 }
 
@@ -24,6 +26,7 @@ interface IntendanceLibraryEntry {
   selector: 'bol-intendance-page',
   imports: [RouterLink, MatButtonModule, MatIconModule, MatCard, MatCardContent, DwTagComponent],
   templateUrl: './intendance-page.html',
+  styleUrl: './intendance-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IntendancePageComponent {
@@ -52,7 +55,7 @@ export class IntendancePageComponent {
       route: '/library/weapons',
       buttonLabel: 'Ouvrir l’arsenal',
       icon: 'bolt',
-      accentClass: 'bg-amber-700/90',
+      accent: 'amber',
       stats: [
         `${this.weapons().length} entrées`,
         `${this.meleeWeapons()} mêlée`,
@@ -67,7 +70,7 @@ export class IntendancePageComponent {
       route: '/library/armors',
       buttonLabel: 'Ouvrir les armures',
       icon: 'shield',
-      accentClass: 'bg-sky-700/90',
+      accent: 'sky',
       stats: [
         `${this.armors().length} entrées`,
         `${this.shieldEntries()} boucliers`,

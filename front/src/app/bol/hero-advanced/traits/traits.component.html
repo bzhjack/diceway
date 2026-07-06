@@ -15,7 +15,7 @@
           @if (selectedTrait(); as trait) {
             <span class="inline-flex items-center gap-2">
               @if ($any(trait).region_id) {
-                <mat-icon class="!h-3 !w-3 !text-xs !leading-3 text-emerald-300">place</mat-icon>
+                <mat-icon class="dw-icon-region !h-3 !w-3 !text-xs !leading-3">place</mat-icon>
               }
               <span>{{ contextType() === 'A' ? $any(trait).avantage : $any(trait).desavantage }}</span>
             </span>
@@ -27,14 +27,14 @@
             <div class="flex flex-col gap-1 py-1">
               <div class="flex items-center gap-2">
                 @if ($any(trait).region_id) {
-                  <mat-icon class="!h-3 !w-3 !text-xs !leading-3 text-emerald-300">place</mat-icon>
+                  <mat-icon class="dw-icon-region !h-3 !w-3 !text-xs !leading-3">place</mat-icon>
                 }
                 <span>
                   {{ contextType() === 'A' ? $any(trait).avantage : $any(trait).desavantage }}
                 </span>
               </div>
               @if ($any(trait).detail) {
-                <div class="pl-5 text-xs text-slate-400">
+                <div class="dw-option-subtitle pl-5">
                   {{ $any(trait).detail }}
                 </div>
               }
@@ -55,13 +55,13 @@
   </div>
 
   @if (contextType() === 'A' && !canAddAdvantage()) {
-    <div class="border border-slate-500/25 bg-slate-900/30 p-3 text-sm text-slate-300">
+    <div class="dw-info-neutral p-3">
       Le maximum de trois avantages de création est atteint.
     </div>
   }
 
   @if (traitsWarns().length) {
-    <div class="border border-amber-400/30 bg-amber-950/15 p-3 text-sm text-amber-200">
+    <div class="dw-field-warning p-3">
       @for (warning of traitsWarns(); track warning.warn) {
         <p class="m-0">{{ warning.warn }}</p>
       }
@@ -70,16 +70,16 @@
 
   <div class="grid gap-2">
     @for (trait of herosTraits(); track trait.id ?? ($index + '-' + trait.traitable_id + '-' + trait.type)) {
-      <div class="flex items-start justify-between gap-3 border border-[#424b57] bg-[#0f172a]/60 px-3 py-3">
+      <div class="dw-row-card flex items-start justify-between gap-3 px-3 py-3">
         <div class="min-w-0 flex-1">
           <bol-hero-advanced-trait [trait]="trait" />
         </div>
-        <button mat-icon-button type="button" class="!text-rose-400/80" (click)="deleteTrait(trait.id!)">
+        <button mat-icon-button type="button" class="dw-delete-btn" (click)="deleteTrait(trait.id!)">
           <mat-icon>delete</mat-icon>
         </button>
       </div>
     } @empty {
-      <p class="m-0 text-sm text-slate-500">Aucun trait sélectionné.</p>
+      <p class="dw-empty-state m-0">Aucun trait sélectionné.</p>
     }
   </div>
 </div>

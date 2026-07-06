@@ -3,15 +3,15 @@
     <div class="flex flex-col gap-4">
       <div class="space-y-2.5">
         <div class="space-y-1.5">
-          <p class="dw-lh-eyebrow m-0 text-xs font-black uppercase tracking-[0.22em]">
+          <p class="dw-lh-eyebrow m-0">
             {{ kicker() }}
           </p>
-          <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
+          <h1 class="dw-lh-title m-0">
             {{ title() }}
           </h1>
         </div>
         @if (description()) {
-          <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
+          <p class="dw-lh-description m-0 max-w-3xl">
             {{ description() }}
           </p>
         }

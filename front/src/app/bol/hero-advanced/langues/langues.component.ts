@@ -29,6 +29,7 @@ import {automaticLanguageIdsForRegion, selectedLanguageTarget} from '../create.r
   selector: 'bol-hero-advanced-langues',
   imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatIconModule, MatSelectModule, MatTooltipModule],
   templateUrl: './langues.component.html',
+  styleUrl: './langues.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {

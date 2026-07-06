@@ -52,6 +52,7 @@ import {HeroAdvancedArmuresComponent} from './armures/armures.component';
     HeroAdvancedArmuresComponent,
   ],
   templateUrl: './hero-advanced-page.html',
+  styleUrl: './hero-advanced-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroAdvancedPageComponent {

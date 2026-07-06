@@ -10,10 +10,10 @@
         [inlineSVG]="currentAvantage.de_bonus ? '/assets/d6.svg' : currentAvantage.attribut ? '/assets/attr.svg' : '/assets/info.svg'"
       ></div>
     </button>
-    <div class="text-sm text-slate-200" [class.opacity-50]="disabled()">
+    <div class="htr-label" [class.opacity-50]="disabled()">
       {{ currentAvantage.avantage }}
       @if (currentAvantage.pivot.detail) {
-        <span class="text-slate-400">({{ currentAvantage.pivot.detail }})</span>
+        <span class="htr-detail">({{ currentAvantage.pivot.detail }})</span>
       }
     </div>
   </div>
@@ -22,8 +22,8 @@
     <div class="flex min-w-40 flex-col gap-2 p-3">
       @for (line of avantageDescription(); track line.title) {
         <div class="flex flex-col">
-          <span class="text-xs font-bold uppercase tracking-[0.16em] text-slate-100">{{ line.title }}</span>
-          <span class="text-sm text-slate-300">{{ line.description }}</span>
+          <span class="htr-menu-title">{{ line.title }}</span>
+          <span class="htr-menu-description">{{ line.description }}</span>
         </div>
       }
     </div>
@@ -42,10 +42,10 @@
         [inlineSVG]="currentDesavantage.de_malus ? '/assets/d6.svg' : currentDesavantage.attribut ? '/assets/attr.svg' : '/assets/info.svg'"
       ></div>
     </button>
-    <div class="text-sm text-slate-200" [class.opacity-50]="disabled()">
+    <div class="htr-label" [class.opacity-50]="disabled()">
       {{ currentDesavantage.desavantage }}
       @if (currentDesavantage.pivot.detail) {
-        <span class="text-slate-400">({{ currentDesavantage.pivot.detail }})</span>
+        <span class="htr-detail">({{ currentDesavantage.pivot.detail }})</span>
       }
     </div>
   </div>
@@ -54,8 +54,8 @@
     <div class="flex min-w-40 flex-col gap-2 p-3">
       @for (line of desavantageDescription(); track line.title) {
         <div class="flex flex-col">
-          <span class="text-xs font-bold uppercase tracking-[0.16em] text-slate-100">{{ line.title }}</span>
-          <span class="text-sm text-slate-300">{{ line.description }}</span>
+          <span class="htr-menu-title">{{ line.title }}</span>
+          <span class="htr-menu-description">{{ line.description }}</span>
         </div>
       }
     </div>

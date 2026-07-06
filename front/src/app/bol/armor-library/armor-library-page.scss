@@ -57,3 +57,39 @@
 .armor-action-btn {
   margin-block: -8px;
 }
+
+// ── Formulaire & cellules (tons de texte) ──────────────────
+.alp-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #7dd3fc;
+}
+
+.alp-form-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--dw-surface-800);
+}
+
+.alp-error {
+  font-size: 0.875rem;
+  color: #fda4af;
+}
+
+.alp-strong {
+  font-weight: 600;
+  color: var(--dw-surface-800);
+}
+
+.alp-muted-cell {
+  color: var(--dw-surface-600);
+}
+
+.alp-note {
+  font-size: 0.875rem;
+  line-height: 1.75rem;
+  color: var(--dw-surface-600);
+}

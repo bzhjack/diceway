@@ -21,6 +21,7 @@ export interface HeroAdvancedRegionDialogResult {
   selector: 'bol-hero-advanced-region',
   imports: [MatButtonModule, MatIconModule, MatDialogModule, DwTagComponent, HeroAdvancedTraitRowComponent],
   templateUrl: './region.component.html',
+  styleUrl: './region.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroAdvancedRegionComponent {

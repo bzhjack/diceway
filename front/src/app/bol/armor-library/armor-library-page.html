@@ -41,10 +41,10 @@
           <div class="space-y-4">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div class="space-y-1">
-                <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-sky-300">
+                <p class="alp-eyebrow m-0">
                   Intendance
                 </p>
-                <h2 class="m-0 text-2xl font-bold leading-none text-slate-100">{{ formTitle() }}</h2>
+                <h2 class="alp-form-title m-0">{{ formTitle() }}</h2>
               </div>
 
               <div class="flex flex-wrap gap-2">
@@ -86,7 +86,7 @@
             </form>
 
             @if (errorMessage()) {
-              <p class="m-0 text-sm text-rose-300">{{ errorMessage() }}</p>
+              <p class="alp-error m-0">{{ errorMessage() }}</p>
             }
           </div>
         </mat-card-content>
@@ -123,15 +123,15 @@
               <tr>
                 <td>
                   <div class="flex items-center gap-2">
-                    <span class="font-semibold text-slate-100">{{ armor.armure }}</span>
+                    <span class="alp-strong">{{ armor.armure }}</span>
                     @if (armor.user_id) {
                       <dw-badge color="sky">Création</dw-badge>
                     }
                   </div>
                 </td>
-                <td class="text-slate-300">{{ armor.protection || '-' }}</td>
-                <td class="text-slate-300">{{ armor.malus || '-' }}</td>
-                <td class="armor-col-compact text-slate-300">{{ armor.pts_de_pouvoir || '-' }}</td>
+                <td class="alp-muted-cell">{{ armor.protection || '-' }}</td>
+                <td class="alp-muted-cell">{{ armor.malus || '-' }}</td>
+                <td class="armor-col-compact alp-muted-cell">{{ armor.pts_de_pouvoir || '-' }}</td>
                 <td class="armor-col-compact">
                   @if (canManage(armor)) {
                     <div class="flex justify-end gap-0.5">
@@ -164,7 +164,7 @@
     <!-- Note card -->
     <mat-card appearance="outlined">
       <mat-card-content>
-        <p class="m-0 text-sm leading-7 text-slate-300">
+        <p class="alp-note m-0">
           Le baudrier de guerre n'apparaît pas ici, car il est traité comme avantage et non comme une
           armure standard du catalogue.
         </p>

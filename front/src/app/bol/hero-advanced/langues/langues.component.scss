@@ -1,0 +1,42 @@
+.dw-info-box {
+  border: 1px solid var(--dw-border);
+  background: rgba(15, 23, 42, 0.6);
+  font-size: 0.875rem;
+  color: var(--dw-surface-600);
+}
+
+.dw-info-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--dw-surface-400);
+}
+
+.dw-info-detail {
+  font-size: 0.75rem;
+  color: var(--dw-surface-500);
+}
+
+.dw-field-error {
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  background: rgba(69, 10, 10, 0.2);
+  font-size: 0.875rem;
+  color: #fecaca;
+}
+
+.dw-field-warning {
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  background: rgba(69, 26, 3, 0.15);
+  font-size: 0.875rem;
+  color: #fde68a;
+}
+
+.dw-delete-btn {
+  color: rgba(251, 113, 133, 0.8) !important;
+}
+
+.dw-empty-state {
+  font-size: 0.875rem;
+  color: var(--dw-surface-400);
+}

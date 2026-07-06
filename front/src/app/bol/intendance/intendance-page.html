@@ -8,15 +8,15 @@
           <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div class="space-y-3">
               <div class="flex items-center gap-3">
-                <div class="flex h-14 w-14 items-center justify-center border border-[#424b57] bg-[#b45309] text-2xl text-white">
+                <div class="ip-icon flex h-14 w-14 items-center justify-center">
                   <mat-icon>work</mat-icon>
                 </div>
                 <div class="flex min-w-0 flex-1 flex-col gap-2">
-                  <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-amber-300">
+                  <p class="ip-eyebrow m-0">
                     Outils MJ
                   </p>
                   <div class="flex flex-col gap-2 xl:flex-row xl:items-center xl:justify-between">
-                    <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
+                    <h1 class="ip-title m-0">
                       Intendance
                     </h1>
                     <div class="flex flex-wrap gap-2 xl:justify-end">
@@ -27,7 +27,7 @@
                 </div>
               </div>
 
-              <p class="m-0 text-sm leading-7 text-slate-300 md:text-[0.95rem]">
+              <p class="ip-description m-0">
                 L'intendance devient l'espace du meneur pour cadrer l'équipement de la table. Tu y
                 pilotes les catalogues d'armes et d'armures qui servent à préparer les héros, les
                 PNJ, les adversaires et les scènes où le matériel doit rester lisible et cohérent.
@@ -56,17 +56,20 @@
               <div class="flex items-start justify-between gap-3">
                 <div class="space-y-3">
                   <div class="flex items-center gap-3">
-                    <div [class]="'flex h-12 w-12 items-center justify-center border border-[#424b57] text-lg text-white ' + entry.accentClass">
+                    <div
+                      class="ip-entry-icon flex h-12 w-12 items-center justify-center"
+                      [class]="'ip-entry-icon--' + entry.accent"
+                    >
                       <mat-icon>{{ entry.icon }}</mat-icon>
                     </div>
                     <div class="space-y-1">
-                      <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-slate-400">
+                      <p class="ip-entry-kicker m-0">
                         {{ entry.kicker }}
                       </p>
-                      <h2 class="m-0 text-2xl font-bold leading-none text-slate-100">{{ entry.title }}</h2>
+                      <h2 class="ip-entry-title m-0">{{ entry.title }}</h2>
                     </div>
                   </div>
-                  <p class="m-0 text-sm leading-7 text-slate-300">{{ entry.description }}</p>
+                  <p class="ip-entry-description m-0">{{ entry.description }}</p>
                 </div>
               </div>
 

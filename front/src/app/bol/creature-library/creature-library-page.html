@@ -72,8 +72,8 @@
                 <tr class="creature-group-header">
                   <td colspan="6">
                     <div class="flex items-center gap-3 py-2">
-                      <span class="text-xs font-black uppercase tracking-[0.24em] text-amber-300">Taille</span>
-                      <span class="text-xl font-semibold text-slate-50">{{ creature.taille.taille }}</span>
+                      <span class="clp-group-eyebrow">Taille</span>
+                      <span class="clp-group-value">{{ creature.taille.taille }}</span>
                     </div>
                   </td>
                 </tr>
@@ -98,12 +98,12 @@
                     <div class="space-y-2">
                       <div class="flex flex-wrap items-center gap-1">
                         @if (creature.commentaire) {
-                          <i
-                            class="pi pi-info-circle cursor-pointer text-amber-300"
+                          <mat-icon
+                            class="clp-info-icon cursor-pointer !h-4 !w-4 !text-base !leading-4"
                             [matTooltip]="creature.commentaire"
-                          ></i>
+                          >info</mat-icon>
                         }
-                        <p class="m-0 line-clamp-2 text-lg font-bold text-slate-100">{{ creature.nom }}</p>
+                        <p class="clp-name m-0 line-clamp-2">{{ creature.nom }}</p>
                         @if (creature.user_id) {
                           <button
                             mat-icon-button
@@ -124,9 +124,9 @@
                           </button>
                         }
                       </div>
-                      <p class="m-0 text-sm text-slate-400">{{ creature.taille.taille }}</p>
+                      <p class="clp-meta m-0">{{ creature.taille.taille }}</p>
                       @if (creature.commentaire) {
-                        <p class="m-0 line-clamp-2 text-sm leading-6 text-slate-300">
+                        <p class="clp-description m-0 line-clamp-2">
                           {{ creature.commentaire }}
                         </p>
                       }
@@ -135,47 +135,47 @@
                 </td>
 
                 <td class="creature-col-compact">
-                  <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
+                  <div class="clp-cell grid gap-1">
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Vitalité</span>
-                      <span class="font-bold">{{ creature.vitalite }}</span>
+                      <span class="clp-muted">Vitalité</span>
+                      <span class="clp-value--strong">{{ creature.vitalite }}</span>
                     </div>
                   </div>
                 </td>
 
                 <td class="creature-col-compact">
-                  <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
+                  <div class="clp-cell grid gap-1">
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Vigueur</span>
+                      <span class="clp-muted">Vigueur</span>
                       <span>{{ creature.vigueur }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Agilité</span>
+                      <span class="clp-muted">Agilité</span>
                       <span>{{ creature.agilite }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Esprit</span>
+                      <span class="clp-muted">Esprit</span>
                       <span>{{ creature.esprit }}</span>
                     </div>
                   </div>
                 </td>
 
                 <td class="creature-col-compact">
-                  <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
+                  <div class="clp-cell grid gap-1">
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Attaque</span>
+                      <span class="clp-muted">Attaque</span>
                       <span>{{ creature.attaque }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Défense</span>
+                      <span class="clp-muted">Défense</span>
                       <span>{{ creature.defense }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Dégâts</span>
+                      <span class="clp-muted">Dégâts</span>
                       <span>{{ creature.degats }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Protection</span>
+                      <span class="clp-muted">Protection</span>
                       <span>{{ creature.protection }}</span>
                     </div>
                   </div>
@@ -184,13 +184,13 @@
                 <td>
                   <div class="flex min-h-24 flex-col gap-1">
                     @for (capacite of creature.capacites; track capacite.id) {
-                      <div class="flex items-center gap-1 text-sm text-slate-200">
+                      <div class="clp-capacite-row flex items-center gap-1">
                         {{ capacite.capacite.capacite }}
                         @if (capacite.detail || capacite.capacite.description) {
-                          <i
-                            class="pi pi-info-circle cursor-pointer text-amber-300"
+                          <mat-icon
+                            class="clp-info-icon cursor-pointer !h-4 !w-4 !text-base !leading-4"
                             [matTooltip]="capacite.detail || capacite.capacite.description"
-                          ></i>
+                          >info</mat-icon>
                         }
                       </div>
                     }

@@ -41,6 +41,7 @@ import {carrieresFormValidatorFn, carriereValidator} from '../create.validators'
     MatTooltipModule,
   ],
   templateUrl: './carrieres.component.html',
+  styleUrl: './carrieres.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {

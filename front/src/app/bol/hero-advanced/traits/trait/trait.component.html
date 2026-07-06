@@ -10,13 +10,13 @@
         [inlineSVG]="currentAvantage.de_bonus ? '/assets/d6.svg' : currentAvantage.attribut ? '/assets/attr.svg' : '/assets/info.svg'"
       ></div>
     </button>
-    <div class="relative text-sm text-slate-200">
+    <div class="ht-label relative">
       @if (trait()?.region_id) {
-        <mat-icon class="absolute -left-4 top-0 !h-3 !w-3 !text-xs !leading-3 text-emerald-300">place</mat-icon>
+        <mat-icon class="ht-icon--region absolute -left-4 top-0 !h-3 !w-3 !text-xs !leading-3">place</mat-icon>
       }
       {{ currentAvantage.avantage }}
       @if (trait()?.detail) {
-        <div class="text-xs text-slate-400">{{ trait()?.detail }}</div>
+        <div class="ht-detail">{{ trait()?.detail }}</div>
       }
     </div>
   </div>
@@ -25,8 +25,8 @@
     <div class="flex min-w-40 flex-col gap-2 p-3">
       @for (line of avantageDescription(); track line.title) {
         <div class="flex flex-col">
-          <span class="text-xs font-bold uppercase tracking-[0.16em] text-slate-100">{{ line.title }}</span>
-          <span class="text-sm text-slate-300">{{ line.description }}</span>
+          <span class="ht-menu-title">{{ line.title }}</span>
+          <span class="ht-menu-description">{{ line.description }}</span>
         </div>
       }
     </div>
@@ -45,18 +45,18 @@
         [inlineSVG]="currentDesavantage.de_malus ? '/assets/d6.svg' : currentDesavantage.attribut ? '/assets/attr.svg' : '/assets/info.svg'"
       ></div>
     </button>
-    <div class="relative text-sm text-slate-200">
+    <div class="ht-label relative">
       @if (trait()?.carriere) {
         <mat-icon
-          class="absolute -left-4 top-0 !h-3 !w-3 !text-xs !leading-3 text-amber-300"
+          class="ht-icon--career absolute -left-4 top-0 !h-3 !w-3 !text-xs !leading-3"
           matTooltip="Désavantage de carrière"
         >construction</mat-icon>
       } @else if (trait()?.region_id) {
-        <mat-icon class="absolute -left-4 top-0 !h-3 !w-3 !text-xs !leading-3 text-emerald-300">place</mat-icon>
+        <mat-icon class="ht-icon--region absolute -left-4 top-0 !h-3 !w-3 !text-xs !leading-3">place</mat-icon>
       }
       {{ currentDesavantage.desavantage }}
       @if (trait()?.detail) {
-        <div class="text-xs text-slate-400">{{ trait()?.detail }}</div>
+        <div class="ht-detail">{{ trait()?.detail }}</div>
       }
     </div>
   </div>
@@ -65,8 +65,8 @@
     <div class="flex min-w-40 flex-col gap-2 p-3">
       @for (line of desavantageDescription(); track line.title) {
         <div class="flex flex-col">
-          <span class="text-xs font-bold uppercase tracking-[0.16em] text-slate-100">{{ line.title }}</span>
-          <span class="text-sm text-slate-300">{{ line.description }}</span>
+          <span class="ht-menu-title">{{ line.title }}</span>
+          <span class="ht-menu-description">{{ line.description }}</span>
         </div>
       }
     </div>

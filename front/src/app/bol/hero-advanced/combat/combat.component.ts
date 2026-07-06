@@ -22,6 +22,7 @@ import {attributValidator, combatFormValidatorFn} from '../create.validators';
   selector: 'bol-hero-advanced-combat',
   imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule],
   templateUrl: './combat.component.html',
+  styleUrl: './combat.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {

@@ -34,13 +34,13 @@
   }
 
   @if (carriereErrors().length) {
-    <div class="border border-red-400/35 bg-red-950/20 p-3 text-sm text-red-200">
+    <div class="dw-field-error p-3">
       @for (error of carriereErrors(); track error.control + error.error) {
         <p class="m-0">{{ error.control ? error.control + ' ' : '' }}{{ error.error }}</p>
       }
     </div>
   } @else if (carriereWarns().length) {
-    <div class="border border-amber-400/30 bg-amber-950/15 p-3 text-sm text-amber-200">
+    <div class="dw-field-warning p-3">
       @for (warning of carriereWarns(); track warning.warn) {
         <p class="m-0">{{ warning.warn }}</p>
       }
@@ -50,11 +50,11 @@
   <div class="grid gap-2">
     @for (control of carrieres.controls; track $index) {
       @if (carriereFromId($safeNavigationMigration(control.get('carriere_id')?.value)); as currentCarriere) {
-        <div class="grid gap-3 border border-[#424b57] bg-[#0f172a]/60 px-3 py-3 md:grid-cols-[minmax(0,1fr)_7rem_auto] md:items-center">
+        <div class="dw-row-card grid gap-3 px-3 py-3 md:grid-cols-[minmax(0,1fr)_7rem_auto] md:items-center">
           <div class="min-w-0">
-            <p class="m-0 text-sm font-semibold text-slate-100">{{ currentCarriere.carriere }}</p>
+            <p class="dw-row-title m-0">{{ currentCarriere.carriere }}</p>
             @if (currentCarriere.description) {
-              <p class="m-0 text-xs text-slate-400">{{ currentCarriere.description }}</p>
+              <p class="dw-row-subtitle m-0">{{ currentCarriere.description }}</p>
             }
           </div>
 
@@ -71,7 +71,7 @@
           <button
             mat-icon-button
             type="button"
-            class="!text-rose-400/80"
+            class="dw-delete-btn"
             matTooltip="Supprimer"
             (click)="deleteCarriere($safeNavigationMigration(control.get('carriere_id')?.value))"
           >
@@ -80,7 +80,7 @@
         </div>
       }
     } @empty {
-      <p class="m-0 text-sm text-slate-500">Aucune carrière sélectionnée.</p>
+      <p class="dw-empty-state m-0">Aucune carrière sélectionnée.</p>
     }
   </div>
 </div>

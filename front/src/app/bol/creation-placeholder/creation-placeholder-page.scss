@@ -1,3 +1,36 @@
 :host {
   display: block;
 }
+
+.cpp-icon {
+  border: 1px solid var(--dw-border);
+  background: #2563eb;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.cpp-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: #7dd3fc;
+}
+
+.cpp-title {
+  font-family: 'Muse Display Harmony';
+  font-size: 2.25rem;
+  line-height: 1;
+}
+
+.cpp-helper {
+  font-size: 0.875rem;
+  line-height: 1.75rem;
+  color: var(--dw-surface-600);
+}
+
+.cpp-body {
+  font-size: 1rem;
+  line-height: 2rem;
+  color: var(--dw-surface-800);
+}

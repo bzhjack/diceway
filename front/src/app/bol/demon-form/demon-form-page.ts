@@ -38,6 +38,7 @@ interface DemonPouvoirDraft {
     DwTagComponent,
   ],
   templateUrl: './demon-form-page.html',
+  styleUrl: './demon-form-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemonFormPageComponent {

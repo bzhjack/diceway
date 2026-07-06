@@ -7,7 +7,7 @@
         @for (arme of filteredArmeList(); track arme.id) {
           <mat-option [value]="arme.id">
             <span class="truncate">{{ arme.arme }}</span>
-            <span class="ml-1 text-xs text-slate-400">{{ arme.degats ? 'Dégâts ' + arme.degats : 'Dégâts -' }}</span>
+            <span class="dw-option-detail ml-1">{{ arme.degats ? 'Dégâts ' + arme.degats : 'Dégâts -' }}</span>
           </mat-option>
         }
       </mat-select>
@@ -19,7 +19,7 @@
   </div>
 
   @if (warnHeavyArme()) {
-    <p class="m-0 w-full border border-amber-400/30 bg-amber-950/15 p-3 text-sm text-amber-200">
+    <p class="dw-field-warning m-0 w-full p-3">
       Arme lourde (d6B) — Vigueur négative : le personnage subit un malus au combat. Vérifiez la cohérence avec les règles.
     </p>
   }
@@ -42,7 +42,7 @@
         <button
           mat-icon-button
           type="button"
-          class="!text-rose-400/80"
+          class="dw-delete-btn"
           matTooltip="Supprimer"
           (click)="deleteArme(arme.id!)"
         >
@@ -50,7 +50,7 @@
         </button>
       </div>
     } @empty {
-      <p class="m-0 text-sm text-slate-500">Aucune arme sélectionnée.</p>
+      <p class="dw-empty-state m-0">Aucune arme sélectionnée.</p>
     }
   </div>
 </div>

@@ -74,8 +74,8 @@
                 <tr class="demon-group-header">
                   <td colspan="6">
                     <div class="flex items-center gap-3 py-2">
-                      <span class="text-xs font-black uppercase tracking-[0.24em] text-rose-300">Catégorie</span>
-                      <span class="text-xl font-semibold text-slate-50">{{ demon.categorie.categorie }}</span>
+                      <span class="dlp-group-eyebrow">Catégorie</span>
+                      <span class="dlp-group-value">{{ demon.categorie.categorie }}</span>
                     </div>
                   </td>
                 </tr>
@@ -95,12 +95,12 @@
                     <div class="space-y-2">
                       <div class="flex flex-wrap items-center gap-1">
                         @if (demon.commentaire) {
-                          <i
-                            class="pi pi-info-circle cursor-pointer text-rose-300"
+                          <mat-icon
+                            class="dlp-info-icon cursor-pointer !h-4 !w-4 !text-base !leading-4"
                             [matTooltip]="demon.commentaire"
-                          ></i>
+                          >info</mat-icon>
                         }
-                        <p class="m-0 line-clamp-2 text-lg font-bold text-slate-100">{{ demon.nom }}</p>
+                        <p class="dlp-name m-0 line-clamp-2">{{ demon.nom }}</p>
                         @if (demon.user_id) {
                           <button
                             mat-icon-button
@@ -121,9 +121,9 @@
                           </button>
                         }
                       </div>
-                      <p class="m-0 text-sm text-slate-400">{{ demon.categorie.categorie }}</p>
+                      <p class="dlp-meta m-0">{{ demon.categorie.categorie }}</p>
                       @if (demon.commentaire) {
-                        <p class="m-0 line-clamp-2 text-sm leading-6 text-slate-300">
+                        <p class="dlp-description m-0 line-clamp-2">
                           {{ demon.commentaire }}
                         </p>
                       }
@@ -132,51 +132,51 @@
                 </td>
 
                 <td class="demon-col-compact">
-                  <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
+                  <div class="dlp-cell grid gap-1">
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Vitalité</span>
-                      <span class="font-bold">{{ demon.vitalite }}</span>
+                      <span class="dlp-muted">Vitalité</span>
+                      <span class="dlp-value--strong">{{ demon.vitalite }}</span>
                     </div>
                   </div>
                 </td>
 
                 <td class="demon-col-compact">
-                  <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
+                  <div class="dlp-cell grid gap-1">
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Vigueur</span>
+                      <span class="dlp-muted">Vigueur</span>
                       <span>{{ demon.vigueur }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Agilité</span>
+                      <span class="dlp-muted">Agilité</span>
                       <span>{{ demon.agilite }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Esprit</span>
+                      <span class="dlp-muted">Esprit</span>
                       <span>{{ demon.esprit }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Aura</span>
+                      <span class="dlp-muted">Aura</span>
                       <span>{{ demon.aura }}</span>
                     </div>
                   </div>
                 </td>
 
                 <td class="demon-col-compact">
-                  <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
+                  <div class="dlp-cell grid gap-1">
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Mêlée</span>
+                      <span class="dlp-muted">Mêlée</span>
                       <span>{{ demon.melee }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Tir</span>
+                      <span class="dlp-muted">Tir</span>
                       <span>{{ demon.tir }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Défense</span>
+                      <span class="dlp-muted">Défense</span>
                       <span>{{ demon.defense }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Dégâts</span>
+                      <span class="dlp-muted">Dégâts</span>
                       <span>{{ demon.degats }}</span>
                     </div>
                   </div>
@@ -185,13 +185,13 @@
                 <td>
                   <div class="flex min-h-24 flex-col gap-1">
                     @for (pouvoir of demon.pouvoirs; track pouvoir.id) {
-                      <div class="flex items-center gap-1 text-sm text-slate-200">
+                      <div class="dlp-power-row flex items-center gap-1">
                         {{ pouvoir.pouvoir.pouvoir }}
                         @if (pouvoir.detail || pouvoir.pouvoir.description) {
-                          <i
-                            class="pi pi-info-circle cursor-pointer text-rose-300"
+                          <mat-icon
+                            class="dlp-info-icon cursor-pointer !h-4 !w-4 !text-base !leading-4"
                             [matTooltip]="pouvoir.detail || pouvoir.pouvoir.description"
-                          ></i>
+                          >info</mat-icon>
                         }
                       </div>
                     }

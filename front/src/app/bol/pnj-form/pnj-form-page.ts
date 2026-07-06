@@ -66,6 +66,7 @@ interface PnjSelectedCarriereEntry extends PnjCarriereDraft {
     DwTagComponent,
   ],
   templateUrl: './pnj-form-page.html',
+  styleUrl: './pnj-form-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PnjFormPageComponent {

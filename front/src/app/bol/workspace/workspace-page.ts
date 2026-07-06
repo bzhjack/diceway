@@ -41,7 +41,7 @@ export class WorkspacePageComponent {
       value: String(this.scenariosCount().length),
       detail: 'Scénarios préparés pour la table.',
       icon: 'explore',
-      iconClass: 'border border-sky-400/25 bg-sky-400/12 text-sky-300',
+      color: 'sky',
       link: '/library/scenarios',
     },
     {
@@ -49,7 +49,7 @@ export class WorkspacePageComponent {
       value: String(this.heroes().length),
       detail: 'Nombre de héros récupéré depuis la bibliothèque Barbarian of Lemuria.',
       icon: 'group',
-      iconClass: 'border border-emerald-400/25 bg-emerald-400/12 text-emerald-300',
+      color: 'emerald',
       link: '/library/heroes',
     },
     {
@@ -57,7 +57,7 @@ export class WorkspacePageComponent {
       value: String(this.creatures().length + this.demons().length),
       detail: 'Créatures et démons disponibles dans le bestiaire Barbarian of Lemuria.',
       icon: 'menu_book',
-      iconClass: 'border border-amber-400/25 bg-amber-400/12 text-amber-300',
+      color: 'amber',
       link: '/library/creatures',
     },
     {
@@ -65,7 +65,7 @@ export class WorkspacePageComponent {
       value: String(this.pnjs().length),
       detail: 'Nombre de PNJ récupéré depuis la bibliothèque Barbarian of Lemuria.',
       icon: 'manage_accounts',
-      iconClass: 'border border-rose-400/25 bg-rose-400/12 text-rose-300',
+      color: 'rose',
       link: '/library/pnjs',
     },
 
@@ -74,7 +74,7 @@ export class WorkspacePageComponent {
       value: String(this.armes().length + this.armures().length),
       detail: 'Entrées d’armes et d’armures disponibles dans la bibliothèque d’intendance.',
       icon: 'work',
-      iconClass: 'border border-violet-400/25 bg-violet-400/12 text-violet-300',
+      color: 'violet',
       link: '/intendance',
     },
   ]);

@@ -1,10 +1,10 @@
 <div class="space-y-3">
   @if (automaticLanguageLabels().length) {
-    <div class="border border-[#424b57] bg-[#0f172a]/60 p-3 text-sm text-slate-300">
-      <p class="m-0 text-xs font-black uppercase tracking-[0.18em] text-slate-500">Langues automatiques</p>
-      <p class="mt-2 mb-0">{{ automaticLanguageLabels().join(', ') }}</p>
+    <div class="dw-info-box p-3">
+      <p class="dw-info-eyebrow m-0">Langues automatiques</p>
+      <p class="m-0 mt-2">{{ automaticLanguageLabels().join(', ') }}</p>
       @if (selectedLanguageTarget() > 0) {
-        <p class="mt-2 mb-0 text-xs text-slate-400">
+        <p class="dw-info-detail m-0 mt-2">
           Langues supplémentaires à choisir : {{ selectedLanguageTarget() }}
         </p>
       }
@@ -28,13 +28,13 @@
   </div>
 
   @if (langueErrors().length) {
-    <div class="border border-red-400/35 bg-red-950/20 p-3 text-sm text-red-200">
+    <div class="dw-field-error p-3">
       @for (error of langueErrors(); track error.error) {
         <p class="m-0">{{ error.error }}</p>
       }
     </div>
   } @else if (langueWarns().length) {
-    <div class="border border-amber-400/30 bg-amber-950/15 p-3 text-sm text-amber-200">
+    <div class="dw-field-warning p-3">
       @for (warning of langueWarns(); track warning.warn) {
         <p class="m-0">{{ warning.warn }}</p>
       }
@@ -48,7 +48,7 @@
         <button
           mat-icon-button
           type="button"
-          class="!text-rose-400/80"
+          class="dw-delete-btn"
           matTooltip="Supprimer"
           (click)="deleteLangue(langueId)"
         >
@@ -56,7 +56,7 @@
         </button>
       </div>
     } @empty {
-      <p class="m-0 text-sm text-slate-500">Aucune langue sélectionnée.</p>
+      <p class="dw-empty-state m-0">Aucune langue sélectionnée.</p>
     }
   </div>
 </div>

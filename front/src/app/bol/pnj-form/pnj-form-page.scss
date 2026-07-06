@@ -1,0 +1,120 @@
+:host {
+  display: block;
+}
+
+.pfp-icon {
+  border: 1px solid var(--dw-border);
+  background: #059669;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.pfp-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: #6ee7b7;
+}
+
+.pfp-title {
+  font-family: 'Muse Display Harmony';
+  font-size: 2.25rem;
+  line-height: 1;
+}
+
+.pfp-section-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #6ee7b7;
+}
+
+.pfp-loading-detail {
+  font-size: 0.875rem;
+  line-height: 1.75rem;
+  color: var(--dw-surface-700);
+}
+
+.pfp-avatar {
+  border: 1px solid var(--dw-border);
+  background: var(--dw-surface-50);
+
+  &:hover {
+    border-color: rgba(110, 231, 183, 0.7);
+  }
+}
+
+.pfp-avatar-placeholder {
+  color: var(--dw-surface-500);
+}
+
+.pfp-avatar-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+.pfp-avatar-overlay {
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1), transparent);
+}
+
+.pfp-avatar-overlay-label {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.55);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #fff;
+}
+
+.pfp-field-hint {
+  font-size: 0.875rem;
+  color: #6ee7b7;
+}
+
+.pfp-item-row {
+  border: 1px solid var(--dw-border);
+  background: rgba(15, 23, 42, 0.65);
+}
+
+.pfp-item-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--dw-surface-800);
+}
+
+.pfp-item-meta {
+  font-size: 0.75rem;
+  color: var(--dw-surface-500);
+}
+
+.pfp-trait-label {
+  font-weight: 600;
+  color: var(--dw-surface-800);
+}
+
+.pfp-detail-title {
+  font-weight: 700;
+  color: var(--dw-surface-700);
+}
+
+.pfp-delete-btn {
+  color: rgba(251, 113, 133, 0.8) !important;
+}
+
+.pfp-empty-state {
+  font-size: 0.875rem;
+  line-height: 1.75rem;
+  color: var(--dw-surface-500);
+}
+
+.pfp-error-box {
+  border: 1px solid rgba(251, 113, 133, 0.4);
+  background: rgba(76, 5, 25, 0.3);
+  font-size: 0.875rem;
+  color: #fecdd3;
+}

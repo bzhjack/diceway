@@ -24,6 +24,7 @@ import {BolHerosService} from '../../services/bol-heros.service';
   selector: 'bol-hero-advanced-armures',
   imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatIconModule, MatSelectModule, MatTooltipModule],
   templateUrl: './armures.component.html',
+  styleUrl: './armures.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {

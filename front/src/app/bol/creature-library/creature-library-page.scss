@@ -120,3 +120,61 @@
   color: var(--mat-sys-error);
 }
 
+// ── Cellules du tableau (tons de texte) ────────────────────
+.clp-group-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  color: #fcd34d;
+}
+
+.clp-group-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--dw-surface-900);
+}
+
+.clp-info-icon {
+  color: #fcd34d;
+}
+
+.clp-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--dw-surface-800);
+}
+
+.clp-meta {
+  font-size: 0.875rem;
+  color: var(--dw-surface-500);
+}
+
+.clp-description {
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  color: var(--dw-surface-600);
+}
+
+.clp-cell {
+  font-size: 0.75rem;
+  color: var(--dw-surface-700);
+
+  @media (min-width: 768px) {
+    font-size: 0.875rem;
+  }
+}
+
+.clp-muted {
+  color: var(--dw-surface-500);
+}
+
+.clp-value--strong {
+  font-weight: 700;
+}
+
+.clp-capacite-row {
+  font-size: 0.875rem;
+  color: var(--dw-surface-700);
+}
+

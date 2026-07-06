@@ -22,6 +22,7 @@ import {attributsFormValidator, attributValidator} from '../create.validators';
   selector: 'bol-hero-advanced-attributs',
   imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule],
   templateUrl: './attributs.component.html',
+  styleUrl: './attributs.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {

@@ -7,20 +7,20 @@
   <mat-card-content>
     <div class="flex items-start justify-between gap-4">
       <div class="space-y-2">
-        <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-slate-400">
+        <p class="wm-label m-0">
           {{ metric().label }}
         </p>
-        <p class="m-0 text-4xl font-black leading-none">
+        <p class="wm-value m-0">
           {{ metric().value }}
         </p>
-        <p class="m-0 min-h-[3rem] text-sm leading-6 text-slate-300">
+        <p class="wm-detail m-0 min-h-[3rem]">
           {{ metric().detail }}
         </p>
       </div>
 
       <div
-        class="flex h-12 w-12 shrink-0 items-center justify-center text-xl"
-        [class]="metric().iconClass"
+        class="wm-icon flex h-12 w-12 shrink-0 items-center justify-center"
+        [class]="'wm-icon--' + metric().color"
       >
         <mat-icon>{{ metric().icon }}</mat-icon>
       </div>

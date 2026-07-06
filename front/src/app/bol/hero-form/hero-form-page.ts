@@ -68,6 +68,7 @@ interface HeroSelectedCarriereEntry extends HeroCarriereDraft {
     DwTagComponent,
   ],
   templateUrl: './hero-form-page.html',
+  styleUrl: './hero-form-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroFormPageComponent {

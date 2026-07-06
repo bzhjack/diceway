@@ -81,8 +81,8 @@
                 <tr class="pnj-group-header">
                   <td colspan="8">
                     <div class="flex items-center gap-3 py-2">
-                      <span class="text-xs font-black uppercase tracking-[0.24em] text-emerald-300">Type</span>
-                      <span class="text-xl font-semibold text-slate-50">{{ typeLabel(pnj.type) }}</span>
+                      <span class="plp-group-eyebrow">Type</span>
+                      <span class="plp-group-value">{{ typeLabel(pnj.type) }}</span>
                     </div>
                   </td>
                 </tr>
@@ -99,12 +99,12 @@
                     <div class="space-y-2">
                       <div class="flex flex-wrap items-center gap-1">
                         @if (pnj.origines.commentaire) {
-                          <i
-                            class="pi pi-info-circle cursor-pointer text-emerald-300"
+                          <mat-icon
+                            class="plp-info-icon cursor-pointer !h-4 !w-4 !text-base !leading-4"
                             [matTooltip]="pnj.origines.commentaire"
-                          ></i>
+                          >info</mat-icon>
                         }
-                        <p class="m-0 line-clamp-2 text-lg font-bold text-slate-100">
+                        <p class="plp-name m-0 line-clamp-2">
                           {{ pnj.origines.nom || 'PNJ sans nom' }}
                         </p>
                         @if (pnj.user_id) {
@@ -128,7 +128,7 @@
                         }
                       </div>
 
-                      <div class="grid gap-1 text-sm text-slate-400">
+                      <div class="plp-meta grid gap-1">
                         <p class="m-0">{{ typeLabel(pnj.type) }}</p>
                         @if (pnj.origines.region?.region) {
                           <p class="m-0">{{ pnj.origines.region?.region }}</p>
@@ -142,10 +142,10 @@
                 </td>
 
                 <td class="pnj-col-compact">
-                  <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
+                  <div class="plp-cell grid gap-1">
                     @for (entry of resourceEntries(pnj); track entry.label) {
                       <div class="flex items-center justify-between gap-3">
-                        <span class="text-slate-400">{{ entry.label }}</span>
+                        <span class="plp-muted">{{ entry.label }}</span>
                         <span [class.font-bold]="entry.label === 'Vitalite'">{{ entry.value }}</span>
                       </div>
                     }
@@ -153,56 +153,56 @@
                 </td>
 
                 <td class="pnj-col-compact">
-                  <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
+                  <div class="plp-cell grid gap-1">
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Vigueur</span>
+                      <span class="plp-muted">Vigueur</span>
                       <span>{{ pnj.attributs.vigueur }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Agilité</span>
+                      <span class="plp-muted">Agilité</span>
                       <span>{{ pnj.attributs.agilite }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Esprit</span>
+                      <span class="plp-muted">Esprit</span>
                       <span>{{ pnj.attributs.esprit }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Aura</span>
+                      <span class="plp-muted">Aura</span>
                       <span>{{ pnj.attributs.aura }}</span>
                     </div>
                   </div>
                 </td>
 
                 <td class="pnj-col-compact">
-                  <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
+                  <div class="plp-cell grid gap-1">
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Initiative</span>
+                      <span class="plp-muted">Initiative</span>
                       <span>{{ pnj.combat.initiative }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Mêlée</span>
+                      <span class="plp-muted">Mêlée</span>
                       <span>{{ pnj.combat.melee }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Tir</span>
+                      <span class="plp-muted">Tir</span>
                       <span>{{ pnj.combat.tir }}</span>
                     </div>
                     <div class="flex items-center justify-between gap-3">
-                      <span class="text-slate-400">Défense</span>
+                      <span class="plp-muted">Défense</span>
                       <span>{{ pnj.combat.defense }}</span>
                     </div>
                   </div>
                 </td>
 
                 <td class="pnj-col-compact">
-                  <div class="flex min-h-24 flex-col gap-1 text-sm text-slate-200">
+                  <div class="plp-career-cell flex min-h-24 flex-col gap-1">
                     @for (entry of careerEntries(pnj); track entry.label) {
                       <div class="flex items-center justify-between gap-3">
-                        <span class="text-slate-300">{{ entry.label }}</span>
-                        <span class="text-slate-400">{{ entry.value }}</span>
+                        <span class="plp-label">{{ entry.label }}</span>
+                        <span class="plp-muted">{{ entry.value }}</span>
                       </div>
                     } @empty {
-                      <span class="text-sm text-slate-500">Aucune carrière</span>
+                      <span class="plp-empty">Aucune carrière</span>
                     }
                   </div>
                 </td>
@@ -210,29 +210,29 @@
                 <td>
                   <div class="grid min-h-24 gap-3">
                     <div class="space-y-2">
-                      <p class="m-0 text-xs font-black uppercase tracking-[0.18em] text-slate-500">Armures</p>
-                      <div class="flex flex-col gap-1 text-sm text-slate-200">
+                      <p class="plp-section-title m-0">Armures</p>
+                      <div class="plp-career-cell flex flex-col gap-1">
                         @for (entry of armorEntries(pnj); track entry.label) {
                           <div class="flex items-center justify-between gap-3">
-                            <span class="text-slate-300">{{ entry.label }}</span>
-                            <span class="text-slate-400">{{ entry.value }}</span>
+                            <span class="plp-label">{{ entry.label }}</span>
+                            <span class="plp-muted">{{ entry.value }}</span>
                           </div>
                         } @empty {
-                          <span class="text-sm text-slate-500">Aucune</span>
+                          <span class="plp-empty">Aucune</span>
                         }
                       </div>
                     </div>
 
                     <div class="space-y-2">
-                      <p class="m-0 text-xs font-black uppercase tracking-[0.18em] text-slate-500">Armes</p>
-                      <div class="flex flex-col gap-1 text-sm text-slate-200">
+                      <p class="plp-section-title m-0">Armes</p>
+                      <div class="plp-career-cell flex flex-col gap-1">
                         @for (entry of weaponEntries(pnj); track entry.label) {
                           <div class="flex items-center justify-between gap-3">
-                            <span class="text-slate-300">{{ entry.label }}</span>
-                            <span class="text-slate-400">{{ entry.value }}</span>
+                            <span class="plp-label">{{ entry.label }}</span>
+                            <span class="plp-muted">{{ entry.value }}</span>
                           </div>
                         } @empty {
-                          <span class="text-sm text-slate-500">Aucune</span>
+                          <span class="plp-empty">Aucune</span>
                         }
                       </div>
                     </div>
@@ -242,7 +242,7 @@
                 <td>
                   <div class="flex min-h-24 flex-col gap-1">
                     @for (trait of traitEntries(pnj); track trait.label) {
-                      <div class="flex items-center gap-1 text-sm text-slate-200">
+                      <div class="plp-career-cell flex items-center gap-1">
                         @if (trait.details.length) {
                           <button
                             class="tag_icon pnj-trait-icon pnj-trait-icon--clickable"
@@ -274,14 +274,14 @@
                           </div>
                         </mat-menu>
                         <span
-                          [class.text-emerald-200]="trait.severity === 'positive'"
-                          [class.text-rose-200]="trait.severity === 'negative'"
+                          [class.plp-trait--positive]="trait.severity === 'positive'"
+                          [class.plp-trait--negative]="trait.severity === 'negative'"
                         >
                           {{ trait.label }}
                         </span>
                       </div>
                     } @empty {
-                      <span class="text-sm text-slate-500">Aucun trait</span>
+                      <span class="plp-empty">Aucun trait</span>
                     }
                   </div>
                 </td>
