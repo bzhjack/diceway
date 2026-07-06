@@ -16,6 +16,7 @@ import {BolArmureModel} from '../models/bol-armure.model';
 import {BolHerosService} from '../services/bol-heros.service';
 import {DwConfirmDialogComponent} from '../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
+import {DwBadgeComponent} from '../../shared/dw-badge/dw-badge';
 
 @Component({
   selector: 'bol-armor-library-page',
@@ -32,6 +33,7 @@ import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
     MatInputModule,
     MatTooltipModule,
     DwTagComponent,
+    DwBadgeComponent,
   ],
   templateUrl: './armor-library-page.html',
   styleUrl: './armor-library-page.scss',

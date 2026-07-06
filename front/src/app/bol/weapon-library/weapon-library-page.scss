@@ -84,41 +84,6 @@
   }
 }
 
-// ── Badges ────────────────────────────────────────────────
-.weapon-creation-badge {
-  border-radius: 999px;
-  border: 1px solid rgba(251, 191, 36, 0.3);
-  background: rgba(251, 191, 36, 0.1);
-  padding: 0.1rem 0.5rem;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #fde68a;
-}
-
-.weapon-type-badge {
-  display: inline-block;
-  border-radius: 999px;
-  padding: 0.15rem 0.6rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-
-  &--melee {
-    background: rgba(180, 83, 9, 0.2);
-    border: 1px solid rgba(180, 83, 9, 0.4);
-    color: #fbbf24;
-  }
-
-  &--tir {
-    background: rgba(14, 116, 144, 0.2);
-    border: 1px solid rgba(14, 116, 144, 0.4);
-    color: #67e8f9;
-  }
-}
-
 // ── Buttons ───────────────────────────────────────────────
 .weapon-btn-danger {
   color: var(--mat-sys-error);
