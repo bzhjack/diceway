@@ -8,15 +8,15 @@
       <div class="flex flex-col gap-4">
         <div class="space-y-2.5">
           <div class="space-y-1.5">
-            <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-amber-300">
+            <p class="slp-eyebrow m-0">
               Bibliothèque BOL
             </p>
-            <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
+            <h1 class="slp-title m-0">
               Scénarios
             </h1>
           </div>
 
-          <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
+          <p class="slp-description m-0 max-w-3xl">
             Scénarios préparés pour la table. Chaque scénario regroupe une accroche et les
             personnages joueurs associés.
           </p>
@@ -66,8 +66,8 @@
           <div
             class="dw-empty flex flex-col items-center gap-3 py-12 text-center"
           >
-            <i class="pi pi-compass text-3xl text-slate-500" aria-hidden="true"></i>
-            <p class="m-0 text-sm text-slate-400">
+            <i class="slp-empty-icon pi pi-compass" aria-hidden="true"></i>
+            <p class="slp-empty-text m-0">
               @if (searchTerm()) {
                 Aucun scénario ne correspond à « {{ searchTerm() }} ».
               } @else {
@@ -84,14 +84,14 @@
             >
               <div class="grid gap-2">
                 <div class="flex items-start justify-between gap-2">
-                  <h2 class="m-0 text-base font-semibold leading-snug text-slate-50">
+                  <h2 class="slp-card-title m-0">
                     {{ scenario.titre }}
                   </h2>
                   <p-tag value="Scénario" severity="contrast" />
                 </div>
 
                 @if (scenario.pitch) {
-                  <p class="m-0 line-clamp-3 text-sm leading-relaxed text-slate-400">
+                  <p class="slp-card-pitch m-0 line-clamp-3">
                     {{ scenario.pitch }}
                   </p>
                 }
@@ -99,30 +99,30 @@
                 <div class="flex flex-wrap gap-1 pt-1">
                   @for (name of pjNames(scenario); track name) {
                     <span
-                      class="border border-[#334155] bg-[#1e293b] px-2 py-0.5 text-xs text-slate-300"
+                      class="slp-chip px-2 py-0.5"
                     >
                       {{ name }}
                     </span>
                   }
                   @if ((scenario.creatures?.length ?? 0) > 0) {
-                    <span class="border border-amber-400/25 bg-amber-400/10 px-2 py-0.5 text-xs text-amber-300">
+                    <span class="slp-chip--amber px-2 py-0.5">
                       {{ scenario.creatures!.length }} créature{{ scenario.creatures!.length > 1 ? 's' : '' }}
                     </span>
                   }
                   @if ((scenario.demons?.length ?? 0) > 0) {
-                    <span class="border border-red-400/25 bg-red-400/10 px-2 py-0.5 text-xs text-red-300">
+                    <span class="slp-chip--red px-2 py-0.5">
                       {{ scenario.demons!.length }} démon{{ scenario.demons!.length > 1 ? 's' : '' }}
                     </span>
                   }
                   @if ((scenario.pnjs?.length ?? 0) > 0) {
-                    <span class="border border-slate-400/25 bg-slate-400/10 px-2 py-0.5 text-xs text-slate-300">
+                    <span class="slp-chip--slate px-2 py-0.5">
                       {{ scenario.pnjs!.length }} PNJ
                     </span>
                   }
                 </div>
               </div>
 
-              <div class="flex items-center justify-between gap-2 border-t border-[#424b57] pt-3">
+              <div class="slp-card-footer flex items-center justify-between gap-2 pt-3">
                 <p-button
                   label="Jouer"
                   icon="pi pi-play"

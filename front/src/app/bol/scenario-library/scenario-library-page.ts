@@ -28,6 +28,7 @@ import {BolScenarioModel} from '../models/bol-scenario.model';
   ],
   providers: [ConfirmationService],
   templateUrl: './scenario-library-page.html',
+  styleUrl: './scenario-library-page.scss',
   host: {class: 'block'},
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

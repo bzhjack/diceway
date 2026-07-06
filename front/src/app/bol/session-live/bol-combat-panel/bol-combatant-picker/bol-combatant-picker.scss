@@ -87,3 +87,77 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+// ── Tons de texte ─────────────────────────────────────────────────────────────
+
+.bcp-eyebrow {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #fcd34d;
+}
+
+.bcp-row-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--dw-surface-800);
+}
+
+.bcp-row-rang {
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.bcp-row-qty {
+  font-size: 11px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--dw-surface-500);
+}
+
+.bcp-row-added {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--dw-surface-300);
+}
+
+.bcp-empty {
+  color: var(--dw-surface-300);
+}
+
+.bcp-empty-text {
+  font-size: 0.875rem;
+}
+
+.bcp-subtitle {
+  font-size: 11.5px;
+  color: var(--dw-surface-400);
+}
+
+.bcp-hint {
+  font-size: 11px;
+  color: var(--dw-surface-400);
+}
+
+.bcp-situation-label {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #4ade80;
+}
+
+.bcp-situation-hint {
+  font-size: 10.5px;
+  color: var(--dw-surface-400);
+}
+
+.bcp-footer-count {
+  font-size: 12.5px;
+  color: var(--dw-surface-500);
+}

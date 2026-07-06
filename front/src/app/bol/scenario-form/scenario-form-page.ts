@@ -94,6 +94,7 @@ const RANG_LABELS: Record<Rang, string> = {
     TextareaModule,
   ],
   templateUrl: './scenario-form-page.html',
+  styleUrl: './scenario-form-page.scss',
   host: {class: 'block'},
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
