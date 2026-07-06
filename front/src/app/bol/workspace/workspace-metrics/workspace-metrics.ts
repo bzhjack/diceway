@@ -1,6 +1,7 @@
 import {RouterLink} from '@angular/router';
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {MatCard, MatCardContent} from '@angular/material/card';
+import {MatIconModule} from '@angular/material/icon';
 
 export interface WorkspaceMetric {
   readonly label: string;
@@ -13,7 +14,7 @@ export interface WorkspaceMetric {
 
 @Component({
   selector: 'bol-workspace-metrics',
-  imports: [RouterLink, MatCard, MatCardContent],
+  imports: [RouterLink, MatIconModule, MatCard, MatCardContent],
   templateUrl: './workspace-metrics.html',
   styleUrl: './workspace-metrics.scss',
   host: {class: 'block h-full'},

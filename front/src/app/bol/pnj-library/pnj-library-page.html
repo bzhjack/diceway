@@ -21,17 +21,17 @@
             routerLink="/create/pnj"
             [state]="{ returnUrl: '/library/pnjs' }"
           >
-            <i class="pi pi-plus"></i> Créer un PNJ
+            <mat-icon>add</mat-icon> Créer un PNJ
           </button>
           <button mat-stroked-button size="small" routerLink="/library/creatures">
-            <i class="pi pi-book"></i> Voir les créatures
+            <mat-icon>menu_book</mat-icon> Voir les créatures
           </button>
           <button mat-stroked-button size="small" routerLink="/library/demons">
-            <i class="pi pi-bolt"></i> Voir les démons
+            <mat-icon>bolt</mat-icon> Voir les démons
           </button>
         </div>
         <button mat-stroked-button size="small" routerLink="/">
-          <i class="pi pi-arrow-left"></i> Retour au dashboard
+          <mat-icon>arrow_back</mat-icon> Retour au dashboard
         </button>
       </ng-container>
     </dw-library-header>

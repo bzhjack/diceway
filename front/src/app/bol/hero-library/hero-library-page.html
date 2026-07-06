@@ -21,7 +21,7 @@
             routerLink="/create/hero"
             [state]="{ returnUrl: '/library/heroes' }"
           >
-            <i class="pi pi-plus"></i> Créer un héros
+            <mat-icon>add</mat-icon> Créer un héros
           </button>
           <button
             mat-stroked-button
@@ -29,17 +29,17 @@
             routerLink="/create/hero-advanced"
             [state]="{ returnUrl: '/library/heroes' }"
           >
-            <i class="pi pi-star"></i> Création avancée
+            <mat-icon>star</mat-icon> Création avancée
           </button>
           <button mat-stroked-button size="small" routerLink="/library/pnjs">
-            <i class="pi pi-user-edit"></i> Voir les PNJ
+            <mat-icon>manage_accounts</mat-icon> Voir les PNJ
           </button>
           <button mat-stroked-button size="small" routerLink="/library/creatures">
-            <i class="pi pi-book"></i> Voir le bestiaire
+            <mat-icon>menu_book</mat-icon> Voir le bestiaire
           </button>
         </div>
         <button mat-stroked-button size="small" routerLink="/">
-          <i class="pi pi-arrow-left"></i> Retour au dashboard
+          <mat-icon>arrow_back</mat-icon> Retour au dashboard
         </button>
       </ng-container>
     </dw-library-header>

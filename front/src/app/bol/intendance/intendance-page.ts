@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, computed, inject} from '@angular/cor
 import {toSignal} from '@angular/core/rxjs-interop';
 import {RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {BolArmeModel} from '../models/bol-arme.model';
 import {BolArmureModel} from '../models/bol-armure.model';
@@ -21,7 +22,7 @@ interface IntendanceLibraryEntry {
 
 @Component({
   selector: 'bol-intendance-page',
-  imports: [RouterLink, MatButtonModule, MatCard, MatCardContent, DwTagComponent],
+  imports: [RouterLink, MatButtonModule, MatIconModule, MatCard, MatCardContent, DwTagComponent],
   templateUrl: './intendance-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -50,7 +51,7 @@ export class IntendancePageComponent {
         'Catalogue offensif stabilisé avec types, dégâts, portée et notes. C’est le point d’entrée pour gérer le stock jouable de la table.',
       route: '/library/weapons',
       buttonLabel: 'Ouvrir l’arsenal',
-      icon: 'pi pi-bolt',
+      icon: 'bolt',
       accentClass: 'bg-amber-700/90',
       stats: [
         `${this.weapons().length} entrées`,
@@ -65,7 +66,7 @@ export class IntendancePageComponent {
         'Catalogue défensif finalisé avec protections, malus et points de pouvoir. Il couvre armures, casques et boucliers utilisables dans les profils.',
       route: '/library/armors',
       buttonLabel: 'Ouvrir les armures',
-      icon: 'pi pi-shield',
+      icon: 'shield',
       accentClass: 'bg-sky-700/90',
       stats: [
         `${this.armors().length} entrées`,

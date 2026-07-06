@@ -21,15 +21,15 @@
             [disabled]="formVisible() && !editingArmorId()"
             (click)="startCreate()"
           >
-            <i class="pi pi-plus"></i>
+            <mat-icon>add</mat-icon>
             {{ formVisible() && !editingArmorId() ? 'Création en cours' : 'Nouvelle armure' }}
           </button>
           <button mat-stroked-button size="small" routerLink="/library/weapons">
-            <i class="pi pi-bolt"></i> Voir l'arsenal
+            <mat-icon>bolt</mat-icon> Voir l'arsenal
           </button>
         </div>
         <button mat-stroked-button size="small" routerLink="/intendance">
-          <i class="pi pi-arrow-left"></i> Retour à l'intendance
+          <mat-icon>arrow_back</mat-icon> Retour à l'intendance
         </button>
       </ng-container>
     </dw-library-header>
@@ -49,10 +49,10 @@
 
               <div class="flex flex-wrap gap-2">
                 <button mat-stroked-button size="small" (click)="cancelForm()">
-                  <i class="pi pi-times"></i> Annuler
+                  <mat-icon>close</mat-icon> Annuler
                 </button>
                 <button mat-flat-button size="small" [disabled]="submitting()" (click)="submitForm()">
-                  <i class="pi pi-check"></i> {{ submitLabel() }}
+                  <mat-icon>check</mat-icon> {{ submitLabel() }}
                 </button>
               </div>
             </div>

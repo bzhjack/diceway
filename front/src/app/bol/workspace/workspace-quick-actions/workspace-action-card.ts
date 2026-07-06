@@ -1,10 +1,11 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   selector: 'bol-workspace-action-card',
-  imports: [RouterLink, MatButtonModule],
+  imports: [RouterLink, MatButtonModule, MatIconModule],
   template: `
     <div class="border border-[#424b57] bg-[#2d3748]/70 p-2.5">
       <div class="flex items-start gap-2.5">
@@ -18,11 +19,11 @@ import {MatButtonModule} from '@angular/material/button';
           </div>
           <div class="flex flex-wrap gap-1.5">
             <button mat-stroked-button size="small" [routerLink]="link()" [state]="state()">
-              <i class="pi pi-arrow-up-right"></i> Ouvrir
+              <mat-icon>open_in_new</mat-icon> Ouvrir
             </button>
             @if (advancedLink()) {
               <button mat-stroked-button size="small" [routerLink]="advancedLink()" [state]="advancedState()">
-                <i class="pi pi-cog"></i> Avancé
+                <mat-icon>settings</mat-icon> Avancé
               </button>
             }
           </div>

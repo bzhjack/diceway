@@ -17,17 +17,17 @@
       <ng-container dwHeaderActions>
         <div class="flex flex-wrap gap-1.5">
           <button mat-flat-button size="small" routerLink="/create/demon" [state]="{ returnUrl: '/library/demons' }">
-            <i class="pi pi-plus"></i> Créer un démon
+            <mat-icon>add</mat-icon> Créer un démon
           </button>
           <button mat-stroked-button size="small" routerLink="/library/creatures">
-            <i class="pi pi-book"></i> Voir les créatures
+            <mat-icon>menu_book</mat-icon> Voir les créatures
           </button>
           <button mat-stroked-button size="small" routerLink="/library/pnjs">
-            <i class="pi pi-user-edit"></i> Voir les PNJ
+            <mat-icon>manage_accounts</mat-icon> Voir les PNJ
           </button>
         </div>
         <button mat-stroked-button size="small" routerLink="/">
-          <i class="pi pi-arrow-left"></i> Retour au dashboard
+          <mat-icon>arrow_back</mat-icon> Retour au dashboard
         </button>
       </ng-container>
     </dw-library-header>
