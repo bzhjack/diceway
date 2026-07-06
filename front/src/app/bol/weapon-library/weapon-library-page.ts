@@ -17,6 +17,7 @@ import {BolArmeModel} from '../models/bol-arme.model';
 import {BolHerosService} from '../services/bol-heros.service';
 import {DwConfirmDialogComponent} from '../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
+import {DwBadgeComponent} from '../../shared/dw-badge/dw-badge';
 
 interface WeaponTypeOption {
   readonly label: string;
@@ -39,6 +40,7 @@ interface WeaponTypeOption {
     MatSelectModule,
     MatTooltipModule,
     DwTagComponent,
+    DwBadgeComponent,
   ],
   templateUrl: './weapon-library-page.html',
   styleUrl: './weapon-library-page.scss',

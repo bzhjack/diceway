@@ -171,14 +171,14 @@
                   <div class="flex items-center gap-2">
                     <span class="font-semibold text-slate-100">{{ weapon.arme }}</span>
                     @if (weapon.user_id) {
-                      <span class="weapon-creation-badge">Création</span>
+                      <dw-badge color="amber">Création</dw-badge>
                     }
                   </div>
                 </td>
                 <td class="weapon-col-compact">
-                  <span [class]="weapon.type === 'M' ? 'weapon-type-badge weapon-type-badge--melee' : 'weapon-type-badge weapon-type-badge--tir'">
+                  <dw-badge [color]="weapon.type === 'M' ? 'amber' : 'sky'">
                     {{ weaponTypeLabel(weapon.type) }}
-                  </span>
+                  </dw-badge>
                 </td>
                 <td class="weapon-col-compact">
                   <span class="font-semibold text-slate-100">{{ weapon.degats || '-' }}</span>
