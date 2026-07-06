@@ -1,6 +1,6 @@
 # Migration PrimeNG → Angular Material
 
-> Rédigé le 2026-07-03. Objectif : supprimer la dépendance PrimeNG (passage en payant) au profit d'Angular Material + SCSS natif. PrimeIcons (`primeicons/primeicons.css`) est conservé pour les icônes — seuls les **composants** PrimeNG sont retirés.
+> Rédigé le 2026-07-03, mis à jour le 2026-07-06. Objectif : supprimer la dépendance PrimeNG (passage en payant) au profit d'Angular Material + SCSS natif. PrimeIcons (`primeicons/primeicons.css`) est conservé pour les icônes — seuls les **composants** PrimeNG sont retirés.
 
 ---
 
@@ -31,6 +31,18 @@
 
 ---
 
+## Composants shared créés pendant la migration
+
+| Composant | Sélecteur | Rôle |
+|---|---|---|
+| `DwTagComponent` | `<dw-tag>` | Pastille de compteur / label neutre |
+| `DwBadgeComponent` | `<dw-badge color="amber|sky|rose|emerald|neutral">` | Badge coloré (type, statut) |
+| `DwConfirmDialogComponent` | via `MatDialog.open()` | Boîte de confirmation destructive |
+| `DwLibraryHeaderComponent` | `<dw-library-header title kicker description color>` | Carte en-tête des pages bibliothèque (eyebrow + h1 + tags + actions) — slots `[dwHeaderTags]` et `[dwHeaderActions]` |
+| `DwLibraryToolbarComponent` | `<dw-library-toolbar placeholder checkboxLabel [(searchTerm)] [(checked)] (cleared)>` | Barre de filtres des pages bibliothèque — slots `[dwToolbarFilter]` (select optionnel) et `[dwToolbarCount]` |
+
+---
+
 ## État des lieux
 
 ### ✅ Pages / composants migrés
@@ -42,13 +54,13 @@
 | `auth/pages/forgotten-page` | — |
 | `auth/pages/reset-page` | — |
 | `auth/pages/*` (5 autres) | — |
-| `bol/hero-library/hero-library-page` | mat-card, mat-icon-button (`edit`, `settings`, `delete`) |
-| `bol/pnj-library/pnj-library-page` | table native, mat-menu pour détails traits, groupement par type |
-| `bol/creature-library/creature-library-page` | dialog statblock via `panelClass: 'creature-statblock-dialog'` |
-| `bol/demon-library/demon-library-page` | thème zinc, groupement par catégorie |
+| `bol/hero-library/hero-library-page` | `DwLibraryHeaderComponent` (emerald) + `DwLibraryToolbarComponent` (checkbox "En cours de création") |
+| `bol/pnj-library/pnj-library-page` | `DwLibraryHeaderComponent` (emerald) + `DwLibraryToolbarComponent` (+ select type via `[dwToolbarFilter]`) |
+| `bol/creature-library/creature-library-page` | `DwLibraryHeaderComponent` (amber) + `DwLibraryToolbarComponent` (+ select taille) |
+| `bol/demon-library/demon-library-page` | `DwLibraryHeaderComponent` (rose) + `DwLibraryToolbarComponent` (+ select catégorie, thème zinc via `--dw-lt-border`) |
 | `bol/intendance/intendance-page` | mat-card x2, layout grille 2 col |
-| `bol/weapon-library/weapon-library-page` | formulaire inline create/edit, mat-select type M/T |
-| `bol/armor-library/armor-library-page` | formulaire inline create/edit, accent sky |
+| `bol/weapon-library/weapon-library-page` | `DwLibraryHeaderComponent` (amber) + `DwLibraryToolbarComponent`, formulaire inline create/edit |
+| `bol/armor-library/armor-library-page` | `DwLibraryHeaderComponent` (sky) + `DwLibraryToolbarComponent`, formulaire inline create/edit |
 | `bol/workspace/workspace-page` | — |
 
 ---

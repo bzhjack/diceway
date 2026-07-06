@@ -2,55 +2,33 @@
   <div class="mx-auto flex max-w-[1200px] flex-col gap-4">
 
     <!-- Header card -->
-    <mat-card appearance="outlined">
-      <mat-card-content>
-        <div class="flex flex-col gap-4">
-          <div class="space-y-2.5">
-            <div class="space-y-1.5">
-              <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-amber-300">
-                Bibliothèque BOL
-              </p>
-              <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
-                Arsenal
-              </h1>
-            </div>
-
-            <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
-              Catalogue des armes de la table, initialisé sur la base BoL et éditable depuis
-              l'intendance.
-            </p>
-
-            <div class="flex flex-wrap gap-1.5">
-              <dw-tag>{{ totalWeaponCount() }} entrées</dw-tag>
-              <dw-tag>{{ canonicalWeaponCount() }} canon</dw-tag>
-              <dw-tag>{{ customWeaponCount() }} créations</dw-tag>
-              <dw-tag>{{ meleeCount() }} mêlée</dw-tag>
-              <dw-tag>{{ rangedCount() }} tir</dw-tag>
-            </div>
-          </div>
-
-          <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
-            <div class="flex flex-wrap gap-1.5">
-              <button
-                mat-flat-button
-                size="small"
-                [disabled]="formVisible() && !editingWeaponId()"
-                (click)="startCreate()"
-              >
-                <i class="pi pi-plus"></i>
-                {{ formVisible() && !editingWeaponId() ? 'Création en cours' : 'Nouvelle arme' }}
-              </button>
-              <button mat-stroked-button size="small" routerLink="/library/armors">
-                <i class="pi pi-shield"></i> Voir les armures
-              </button>
-            </div>
-            <button mat-stroked-button size="small" routerLink="/intendance">
-              <i class="pi pi-arrow-left"></i> Retour à l'intendance
-            </button>
-          </div>
+    <dw-library-header
+      title="Arsenal"
+      description="Catalogue des armes de la table, initialisé sur la base BoL et éditable depuis l'intendance."
+      color="amber"
+    >
+      <ng-container dwHeaderTags>
+        <dw-tag>{{ totalWeaponCount() }} entrées</dw-tag>
+        <dw-tag>{{ canonicalWeaponCount() }} canon</dw-tag>
+        <dw-tag>{{ customWeaponCount() }} créations</dw-tag>
+        <dw-tag>{{ meleeCount() }} mêlée</dw-tag>
+        <dw-tag>{{ rangedCount() }} tir</dw-tag>
+      </ng-container>
+      <ng-container dwHeaderActions>
+        <div class="flex flex-wrap gap-1.5">
+          <button mat-flat-button size="small" [disabled]="formVisible() && !editingWeaponId()" (click)="startCreate()">
+            <i class="pi pi-plus"></i>
+            {{ formVisible() && !editingWeaponId() ? 'Création en cours' : 'Nouvelle arme' }}
+          </button>
+          <button mat-stroked-button size="small" routerLink="/library/armors">
+            <i class="pi pi-shield"></i> Voir les armures
+          </button>
         </div>
-      </mat-card-content>
-    </mat-card>
+        <button mat-stroked-button size="small" routerLink="/intendance">
+          <i class="pi pi-arrow-left"></i> Retour à l'intendance
+        </button>
+      </ng-container>
+    </dw-library-header>
 
     <!-- Form card -->
     @if (formVisible()) {
@@ -124,32 +102,14 @@
     <mat-card appearance="outlined">
 
       <!-- Toolbar -->
-      <div class="weapon-toolbar">
-        <div class="weapon-toolbar__controls">
-          <mat-form-field class="weapon-search-field" subscriptSizing="dynamic">
-            <mat-icon matPrefix>search</mat-icon>
-            <input
-              matInput
-              type="text"
-              [ngModel]="searchTerm()"
-              (ngModelChange)="searchTerm.set($event ?? '')"
-              placeholder="Rechercher une arme"
-            />
-          </mat-form-field>
-
-          <div class="weapon-filter-chip">
-            <mat-checkbox [ngModel]="onlyCreations()" (ngModelChange)="onlyCreations.set($event)">
-              Mes créations
-            </mat-checkbox>
-          </div>
-
-          <button mat-stroked-button size="small" (click)="clearFilters()">
-            <i class="pi pi-filter-slash"></i> Effacer
-          </button>
-        </div>
-
-        <dw-tag>{{ weaponCount() }} visibles</dw-tag>
-      </div>
+      <dw-library-toolbar
+        placeholder="Rechercher une arme"
+        [(searchTerm)]="searchTerm"
+        [(checked)]="onlyCreations"
+        (cleared)="clearFilters()"
+      >
+        <dw-tag dwToolbarCount>{{ weaponCount() }} visibles</dw-tag>
+      </dw-library-toolbar>
 
       <!-- Table -->
       <div class="weapon-table-scroll">

@@ -14,8 +14,10 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatCard, MatCardContent} from '@angular/material/card';
+import {MatCard} from '@angular/material/card';
 import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
+import {DwLibraryHeaderComponent} from '../../shared/dw-library-header/dw-library-header';
+import {DwLibraryToolbarComponent} from '../../shared/dw-library-toolbar/dw-library-toolbar';
 import {CreatureStatblockComponent} from '../creature-statblock/creature-statblock.component';
 import {startWith, switchMap} from 'rxjs';
 
@@ -42,8 +44,9 @@ export class CreatureStatblockDialogContent {
     MatSelectModule,
     MatTooltipModule,
     MatCard,
-    MatCardContent,
     DwTagComponent,
+    DwLibraryHeaderComponent,
+    DwLibraryToolbarComponent,
   ],
   templateUrl: './creature-library-page.html',
   styleUrl: './creature-library-page.scss',

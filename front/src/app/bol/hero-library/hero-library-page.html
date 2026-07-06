@@ -2,97 +2,61 @@
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
 
     <!-- Header card -->
-    <mat-card appearance="outlined">
-      <mat-card-content>
-        <div class="flex flex-col gap-4">
-          <div class="space-y-2.5">
-            <div class="space-y-1.5">
-              <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-emerald-300">
-                Bibliothèque BOL
-              </p>
-              <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
-                Galerie des héros
-              </h1>
-            </div>
-
-            <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
-              Vue d'ensemble des héros de Lémurie, avec leur profil, leur équipement et leurs traits.
-            </p>
-
-            <div class="flex flex-wrap gap-1.5">
-              <dw-tag>{{ totalHeroCount() }} héros</dw-tag>
-              @if (heroCount() !== totalHeroCount()) {
-                <dw-tag>{{ heroCount() }} visibles</dw-tag>
-              }
-            </div>
-          </div>
-
-          <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
-            <div class="flex flex-wrap gap-1.5">
-              <button
-                mat-flat-button
-                size="small"
-                routerLink="/create/hero"
-                [state]="{ returnUrl: '/library/heroes' }"
-              >
-                <i class="pi pi-plus"></i> Créer un héros
-              </button>
-              <button
-                mat-stroked-button
-                size="small"
-                routerLink="/create/hero-advanced"
-                [state]="{ returnUrl: '/library/heroes' }"
-              >
-                <i class="pi pi-star"></i> Création avancée
-              </button>
-              <button mat-stroked-button size="small" routerLink="/library/pnjs">
-                <i class="pi pi-user-edit"></i> Voir les PNJ
-              </button>
-              <button mat-stroked-button size="small" routerLink="/library/creatures">
-                <i class="pi pi-book"></i> Voir le bestiaire
-              </button>
-            </div>
-            <button mat-stroked-button size="small" routerLink="/">
-              <i class="pi pi-arrow-left"></i> Retour au dashboard
-            </button>
-          </div>
+    <dw-library-header
+      title="Galerie des héros"
+      description="Vue d'ensemble des héros de Lémurie, avec leur profil, leur équipement et leurs traits."
+      color="emerald"
+    >
+      <ng-container dwHeaderTags>
+        <dw-tag>{{ totalHeroCount() }} héros</dw-tag>
+        @if (heroCount() !== totalHeroCount()) {
+          <dw-tag>{{ heroCount() }} visibles</dw-tag>
+        }
+      </ng-container>
+      <ng-container dwHeaderActions>
+        <div class="flex flex-wrap gap-1.5">
+          <button
+            mat-flat-button
+            size="small"
+            routerLink="/create/hero"
+            [state]="{ returnUrl: '/library/heroes' }"
+          >
+            <i class="pi pi-plus"></i> Créer un héros
+          </button>
+          <button
+            mat-stroked-button
+            size="small"
+            routerLink="/create/hero-advanced"
+            [state]="{ returnUrl: '/library/heroes' }"
+          >
+            <i class="pi pi-star"></i> Création avancée
+          </button>
+          <button mat-stroked-button size="small" routerLink="/library/pnjs">
+            <i class="pi pi-user-edit"></i> Voir les PNJ
+          </button>
+          <button mat-stroked-button size="small" routerLink="/library/creatures">
+            <i class="pi pi-book"></i> Voir le bestiaire
+          </button>
         </div>
-      </mat-card-content>
-    </mat-card>
+        <button mat-stroked-button size="small" routerLink="/">
+          <i class="pi pi-arrow-left"></i> Retour au dashboard
+        </button>
+      </ng-container>
+    </dw-library-header>
 
     <!-- Content card -->
     <mat-card appearance="outlined" class="hero-content-card">
 
       <!-- Toolbar -->
-      <div class="hero-toolbar">
-        <div class="hero-toolbar__controls">
-          <mat-form-field class="hero-search-field" subscriptSizing="dynamic">
-            <mat-icon matPrefix>search</mat-icon>
-            <input
-              matInput
-              type="text"
-              [ngModel]="searchTerm()"
-              (ngModelChange)="searchTerm.set($event ?? '')"
-              placeholder="Rechercher un héros"
-            />
-          </mat-form-field>
-
-          <div class="hero-filter-chip">
-            <mat-checkbox
-              [ngModel]="onlyPending()"
-              (ngModelChange)="onlyPending.set($event)"
-            >
-              En cours de création
-            </mat-checkbox>
-          </div>
-
-          <button mat-stroked-button size="small" (click)="clearFilters()">
-            <i class="pi pi-filter-slash"></i> Effacer
-          </button>
-        </div>
-
-        <dw-tag>{{ heroCount() }} entrées</dw-tag>
-      </div>
+      <dw-library-toolbar
+        placeholder="Rechercher un héros"
+        checkboxLabel="En cours de création"
+        [(searchTerm)]="searchTerm"
+        [(checked)]="onlyPending"
+        (cleared)="clearFilters()"
+      >
+        <dw-tag dwToolbarCount>{{ heroCount() }} entrées</dw-tag>
+      </dw-library-toolbar>
 
       <!-- Table -->
       <div class="hero-table-scroll">

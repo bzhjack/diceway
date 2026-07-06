@@ -2,53 +2,37 @@
   <div class="mx-auto flex max-w-[1200px] flex-col gap-4">
 
     <!-- Header card -->
-    <mat-card appearance="outlined">
-      <mat-card-content>
-        <div class="flex flex-col gap-4">
-          <div class="space-y-2.5">
-            <div class="space-y-1.5">
-              <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-sky-300">
-                Bibliothèque BOL
-              </p>
-              <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
-                Armures et boucliers
-              </h1>
-            </div>
-
-            <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
-              Catalogue défensif de la table, initialisé sur BoL et éditable depuis l'intendance.
-            </p>
-
-            <div class="flex flex-wrap gap-1.5">
-              <dw-tag>{{ totalArmorCount() }} entrées</dw-tag>
-              <dw-tag>{{ canonicalArmorCount() }} canon</dw-tag>
-              <dw-tag>{{ customArmorCount() }} créations</dw-tag>
-              <dw-tag>{{ shieldCount() }} boucliers</dw-tag>
-            </div>
-          </div>
-
-          <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
-            <div class="flex flex-wrap gap-1.5">
-              <button
-                mat-flat-button
-                size="small"
-                [disabled]="formVisible() && !editingArmorId()"
-                (click)="startCreate()"
-              >
-                <i class="pi pi-plus"></i>
-                {{ formVisible() && !editingArmorId() ? 'Création en cours' : 'Nouvelle armure' }}
-              </button>
-              <button mat-stroked-button size="small" routerLink="/library/weapons">
-                <i class="pi pi-bolt"></i> Voir l'arsenal
-              </button>
-            </div>
-            <button mat-stroked-button size="small" routerLink="/intendance">
-              <i class="pi pi-arrow-left"></i> Retour à l'intendance
-            </button>
-          </div>
+    <dw-library-header
+      title="Armures et boucliers"
+      description="Catalogue défensif de la table, initialisé sur BoL et éditable depuis l'intendance."
+      color="sky"
+    >
+      <ng-container dwHeaderTags>
+        <dw-tag>{{ totalArmorCount() }} entrées</dw-tag>
+        <dw-tag>{{ canonicalArmorCount() }} canon</dw-tag>
+        <dw-tag>{{ customArmorCount() }} créations</dw-tag>
+        <dw-tag>{{ shieldCount() }} boucliers</dw-tag>
+      </ng-container>
+      <ng-container dwHeaderActions>
+        <div class="flex flex-wrap gap-1.5">
+          <button
+            mat-flat-button
+            size="small"
+            [disabled]="formVisible() && !editingArmorId()"
+            (click)="startCreate()"
+          >
+            <i class="pi pi-plus"></i>
+            {{ formVisible() && !editingArmorId() ? 'Création en cours' : 'Nouvelle armure' }}
+          </button>
+          <button mat-stroked-button size="small" routerLink="/library/weapons">
+            <i class="pi pi-bolt"></i> Voir l'arsenal
+          </button>
         </div>
-      </mat-card-content>
-    </mat-card>
+        <button mat-stroked-button size="small" routerLink="/intendance">
+          <i class="pi pi-arrow-left"></i> Retour à l'intendance
+        </button>
+      </ng-container>
+    </dw-library-header>
 
     <!-- Form card -->
     @if (formVisible()) {
@@ -113,32 +97,14 @@
     <mat-card appearance="outlined">
 
       <!-- Toolbar -->
-      <div class="armor-toolbar">
-        <div class="armor-toolbar__controls">
-          <mat-form-field class="armor-search-field" subscriptSizing="dynamic">
-            <mat-icon matPrefix>search</mat-icon>
-            <input
-              matInput
-              type="text"
-              [ngModel]="searchTerm()"
-              (ngModelChange)="searchTerm.set($event ?? '')"
-              placeholder="Rechercher une armure"
-            />
-          </mat-form-field>
-
-          <div class="armor-filter-chip">
-            <mat-checkbox [ngModel]="onlyCreations()" (ngModelChange)="onlyCreations.set($event)">
-              Mes créations
-            </mat-checkbox>
-          </div>
-
-          <button mat-stroked-button size="small" (click)="clearFilters()">
-            <i class="pi pi-filter-slash"></i> Effacer
-          </button>
-        </div>
-
-        <dw-tag>{{ armorCount() }} visibles</dw-tag>
-      </div>
+      <dw-library-toolbar
+        placeholder="Rechercher une armure"
+        [(searchTerm)]="searchTerm"
+        [(checked)]="onlyCreations"
+        (cleared)="clearFilters()"
+      >
+        <dw-tag dwToolbarCount>{{ armorCount() }} visibles</dw-tag>
+      </dw-library-toolbar>
 
       <!-- Table -->
       <div class="armor-table-scroll">
@@ -159,7 +125,7 @@
                   <div class="flex items-center gap-2">
                     <span class="font-semibold text-slate-100">{{ armor.armure }}</span>
                     @if (armor.user_id) {
-                      <span class="armor-creation-badge">Création</span>
+                      <dw-badge color="sky">Création</dw-badge>
                     }
                   </div>
                 </td>

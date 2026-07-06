@@ -14,8 +14,10 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatCard, MatCardContent} from '@angular/material/card';
+import {MatCard} from '@angular/material/card';
 import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
+import {DwLibraryHeaderComponent} from '../../shared/dw-library-header/dw-library-header';
+import {DwLibraryToolbarComponent} from '../../shared/dw-library-toolbar/dw-library-toolbar';
 import {startWith, switchMap} from 'rxjs';
 
 @Component({
@@ -31,8 +33,9 @@ import {startWith, switchMap} from 'rxjs';
     MatSelectModule,
     MatTooltipModule,
     MatCard,
-    MatCardContent,
     DwTagComponent,
+    DwLibraryHeaderComponent,
+    DwLibraryToolbarComponent,
   ],
   templateUrl: './demon-library-page.html',
   styleUrl: './demon-library-page.scss',

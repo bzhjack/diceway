@@ -2,91 +2,58 @@
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
 
     <!-- Header card -->
-    <mat-card appearance="outlined" class="demon-header-card">
-      <mat-card-content>
-        <div class="flex flex-col gap-4">
-          <div class="space-y-2.5">
-            <div class="space-y-1.5">
-              <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-rose-300">
-                Bibliothèque BOL
-              </p>
-              <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
-                Bestiaire des démons
-              </h1>
-            </div>
-
-            <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
-              Accès rapide à tous les démons disponibles dans la bibliothèque Barbarians of Lemuria.
-            </p>
-
-            <div class="flex flex-wrap gap-1.5">
-              <dw-tag>{{ totalDemonCount() }} démons</dw-tag>
-              @if (demonCount() !== totalDemonCount()) {
-                <dw-tag>{{ demonCount() }} visibles</dw-tag>
-              }
-            </div>
-          </div>
-
-          <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
-            <div class="flex flex-wrap gap-1.5">
-              <button mat-flat-button size="small" routerLink="/create/demon" [state]="{ returnUrl: '/library/demons' }">
-                <i class="pi pi-plus"></i> Créer un démon
-              </button>
-              <button mat-stroked-button size="small" routerLink="/library/creatures">
-                <i class="pi pi-book"></i> Voir les créatures
-              </button>
-              <button mat-stroked-button size="small" routerLink="/library/pnjs">
-                <i class="pi pi-user-edit"></i> Voir les PNJ
-              </button>
-            </div>
-            <button mat-stroked-button size="small" routerLink="/">
-              <i class="pi pi-arrow-left"></i> Retour au dashboard
-            </button>
-          </div>
+    <dw-library-header
+      class="demon-header-card"
+      title="Bestiaire des démons"
+      description="Accès rapide à tous les démons disponibles dans la bibliothèque Barbarians of Lemuria."
+      color="rose"
+    >
+      <ng-container dwHeaderTags>
+        <dw-tag>{{ totalDemonCount() }} démons</dw-tag>
+        @if (demonCount() !== totalDemonCount()) {
+          <dw-tag>{{ demonCount() }} visibles</dw-tag>
+        }
+      </ng-container>
+      <ng-container dwHeaderActions>
+        <div class="flex flex-wrap gap-1.5">
+          <button mat-flat-button size="small" routerLink="/create/demon" [state]="{ returnUrl: '/library/demons' }">
+            <i class="pi pi-plus"></i> Créer un démon
+          </button>
+          <button mat-stroked-button size="small" routerLink="/library/creatures">
+            <i class="pi pi-book"></i> Voir les créatures
+          </button>
+          <button mat-stroked-button size="small" routerLink="/library/pnjs">
+            <i class="pi pi-user-edit"></i> Voir les PNJ
+          </button>
         </div>
-      </mat-card-content>
-    </mat-card>
+        <button mat-stroked-button size="small" routerLink="/">
+          <i class="pi pi-arrow-left"></i> Retour au dashboard
+        </button>
+      </ng-container>
+    </dw-library-header>
 
     <!-- Content card -->
     <mat-card appearance="outlined" class="demon-content-card">
 
       <!-- Toolbar -->
-      <div class="demon-toolbar">
-        <div class="demon-toolbar__controls">
-          <mat-form-field class="demon-search-field" subscriptSizing="dynamic">
-            <mat-icon matPrefix>search</mat-icon>
-            <input
-              matInput
-              type="text"
-              [ngModel]="searchTerm()"
-              (ngModelChange)="searchTerm.set($event ?? '')"
-              placeholder="Rechercher un démon"
-            />
-          </mat-form-field>
-
-          <mat-form-field class="demon-categorie-field" subscriptSizing="dynamic">
-            <mat-icon matPrefix>filter_list</mat-icon>
-            <mat-select [ngModel]="searchCategorie()" (ngModelChange)="searchCategorie.set($event)">
-              <mat-option value="">Toutes les catégories</mat-option>
-              @for (categorie of categories() ?? []; track categorie.id) {
-                <mat-option [value]="categorie.id">{{ categorie.categorie }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-
-          <div class="demon-filter-chip">
-            <mat-checkbox [ngModel]="onlyCreations()" (ngModelChange)="onlyCreations.set($event)">
-              Mes créations
-            </mat-checkbox>
-          </div>
-
-          <button mat-stroked-button size="small" (click)="clearFilters()">
-            <i class="pi pi-filter-slash"></i> Effacer
-          </button>
-        </div>
-
-        <dw-tag>{{ demonCount() }} entrées</dw-tag>
-      </div>
+      <dw-library-toolbar
+        placeholder="Rechercher un démon"
+        [(searchTerm)]="searchTerm"
+        [(checked)]="onlyCreations"
+        (cleared)="clearFilters()"
+        style="--dw-lt-border: #3f3f46"
+      >
+        <mat-form-field dwToolbarFilter class="demon-categorie-field" subscriptSizing="dynamic">
+          <mat-icon matPrefix>filter_list</mat-icon>
+          <mat-select [ngModel]="searchCategorie()" (ngModelChange)="searchCategorie.set($event)">
+            <mat-option value="">Toutes les catégories</mat-option>
+            @for (categorie of categories() ?? []; track categorie.id) {
+              <mat-option [value]="categorie.id">{{ categorie.categorie }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <dw-tag dwToolbarCount>{{ demonCount() }} entrées</dw-tag>
+      </dw-library-toolbar>
 
       <!-- Table -->
       <div class="demon-table-scroll">

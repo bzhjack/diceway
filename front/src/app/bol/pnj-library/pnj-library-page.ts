@@ -13,9 +13,11 @@ import {MatInputModule} from '@angular/material/input';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatCard, MatCardContent} from '@angular/material/card';
+import {MatCard} from '@angular/material/card';
 import {InlineSvgDirective} from '../../shared/inline-svg/inline-svg.directive';
 import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
+import {DwLibraryHeaderComponent} from '../../shared/dw-library-header/dw-library-header';
+import {DwLibraryToolbarComponent} from '../../shared/dw-library-toolbar/dw-library-toolbar';
 import {DwConfirmDialogComponent} from '../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {startWith, switchMap} from 'rxjs';
 
@@ -57,9 +59,10 @@ interface PnjTraitDetail {
     MatSelectModule,
     MatTooltipModule,
     MatCard,
-    MatCardContent,
     InlineSvgDirective,
     DwTagComponent,
+    DwLibraryHeaderComponent,
+    DwLibraryToolbarComponent,
   ],
   templateUrl: './pnj-library-page.html',
   styleUrl: './pnj-library-page.scss',

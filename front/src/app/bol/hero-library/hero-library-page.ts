@@ -12,9 +12,11 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatCard, MatCardContent} from '@angular/material/card';
+import {MatCard} from '@angular/material/card';
 import {InlineSvgDirective} from '../../shared/inline-svg/inline-svg.directive';
 import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
+import {DwLibraryHeaderComponent} from '../../shared/dw-library-header/dw-library-header';
+import {DwLibraryToolbarComponent} from '../../shared/dw-library-toolbar/dw-library-toolbar';
 
 interface HeroListEntry {
   readonly label: string;
@@ -46,9 +48,10 @@ interface HeroTraitEntry {
     MatMenuModule,
     MatTooltipModule,
     MatCard,
-    MatCardContent,
     InlineSvgDirective,
     DwTagComponent,
+    DwLibraryHeaderComponent,
+    DwLibraryToolbarComponent,
   ],
   templateUrl: './hero-library-page.html',
   styleUrl: './hero-library-page.scss',

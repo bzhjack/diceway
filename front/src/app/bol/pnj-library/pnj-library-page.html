@@ -2,101 +2,63 @@
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
 
     <!-- Header card -->
-    <mat-card appearance="outlined">
-      <mat-card-content>
-        <div class="flex flex-col gap-4">
-          <div class="space-y-2.5">
-            <div class="space-y-1.5">
-              <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-emerald-300">
-                Bibliothèque BOL
-              </p>
-              <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
-                Galerie des PNJ
-              </h1>
-            </div>
-
-            <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
-              Tous les personnages non joueurs disponibles pour préparer une scène, une faction ou une rencontre.
-            </p>
-
-            <div class="flex flex-wrap gap-1.5">
-              <dw-tag>{{ totalPnjCount() }} PNJ</dw-tag>
-              @if (pnjCount() !== totalPnjCount()) {
-                <dw-tag>{{ pnjCount() }} visibles</dw-tag>
-              }
-            </div>
-          </div>
-
-          <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
-            <div class="flex flex-wrap gap-1.5">
-              <button
-                mat-flat-button
-                size="small"
-                routerLink="/create/pnj"
-                [state]="{ returnUrl: '/library/pnjs' }"
-              >
-                <i class="pi pi-plus"></i> Créer un PNJ
-              </button>
-              <button mat-stroked-button size="small" routerLink="/library/creatures">
-                <i class="pi pi-book"></i> Voir les créatures
-              </button>
-              <button mat-stroked-button size="small" routerLink="/library/demons">
-                <i class="pi pi-bolt"></i> Voir les démons
-              </button>
-            </div>
-            <button mat-stroked-button size="small" routerLink="/">
-              <i class="pi pi-arrow-left"></i> Retour au dashboard
-            </button>
-          </div>
+    <dw-library-header
+      title="Galerie des PNJ"
+      description="Tous les personnages non joueurs disponibles pour préparer une scène, une faction ou une rencontre."
+      color="emerald"
+    >
+      <ng-container dwHeaderTags>
+        <dw-tag>{{ totalPnjCount() }} PNJ</dw-tag>
+        @if (pnjCount() !== totalPnjCount()) {
+          <dw-tag>{{ pnjCount() }} visibles</dw-tag>
+        }
+      </ng-container>
+      <ng-container dwHeaderActions>
+        <div class="flex flex-wrap gap-1.5">
+          <button
+            mat-flat-button
+            size="small"
+            routerLink="/create/pnj"
+            [state]="{ returnUrl: '/library/pnjs' }"
+          >
+            <i class="pi pi-plus"></i> Créer un PNJ
+          </button>
+          <button mat-stroked-button size="small" routerLink="/library/creatures">
+            <i class="pi pi-book"></i> Voir les créatures
+          </button>
+          <button mat-stroked-button size="small" routerLink="/library/demons">
+            <i class="pi pi-bolt"></i> Voir les démons
+          </button>
         </div>
-      </mat-card-content>
-    </mat-card>
+        <button mat-stroked-button size="small" routerLink="/">
+          <i class="pi pi-arrow-left"></i> Retour au dashboard
+        </button>
+      </ng-container>
+    </dw-library-header>
 
     <!-- Content card -->
     <mat-card appearance="outlined" class="pnj-content-card">
 
       <!-- Toolbar -->
-      <div class="pnj-toolbar">
-        <div class="pnj-toolbar__controls">
-          <mat-form-field class="pnj-search-field" subscriptSizing="dynamic">
-            <mat-icon matPrefix>search</mat-icon>
-            <input
-              matInput
-              type="text"
-              [ngModel]="searchTerm()"
-              (ngModelChange)="searchTerm.set($event ?? '')"
-              placeholder="Rechercher un PNJ"
-            />
-          </mat-form-field>
-
-          <mat-form-field class="pnj-type-field" subscriptSizing="dynamic">
-            <mat-icon matPrefix>filter_list</mat-icon>
-            <mat-select
-              [ngModel]="searchType()"
-              (ngModelChange)="searchType.set($event)"
-            >
-              @for (option of typeOptions; track option.value) {
-                <mat-option [value]="option.value">{{ option.label }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-
-          <div class="pnj-filter-chip">
-            <mat-checkbox
-              [ngModel]="onlyCreations()"
-              (ngModelChange)="onlyCreations.set($event)"
-            >
-              Mes créations
-            </mat-checkbox>
-          </div>
-
-          <button mat-stroked-button size="small" (click)="clearFilters()">
-            <i class="pi pi-filter-slash"></i> Effacer
-          </button>
-        </div>
-
-        <dw-tag>{{ pnjCount() }} entrées</dw-tag>
-      </div>
+      <dw-library-toolbar
+        placeholder="Rechercher un PNJ"
+        [(searchTerm)]="searchTerm"
+        [(checked)]="onlyCreations"
+        (cleared)="clearFilters()"
+      >
+        <mat-form-field dwToolbarFilter class="pnj-type-field" subscriptSizing="dynamic">
+          <mat-icon matPrefix>filter_list</mat-icon>
+          <mat-select
+            [ngModel]="searchType()"
+            (ngModelChange)="searchType.set($event)"
+          >
+            @for (option of typeOptions; track option.value) {
+              <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <dw-tag dwToolbarCount>{{ pnjCount() }} entrées</dw-tag>
+      </dw-library-toolbar>
 
       <!-- Table -->
       <div class="pnj-table-scroll">

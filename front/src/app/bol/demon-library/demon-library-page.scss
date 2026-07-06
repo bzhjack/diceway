@@ -9,45 +9,20 @@ $demon-border: #3f3f46;
 $demon-group-bg: linear-gradient(90deg, rgba(69, 10, 10, 0.98), rgba(24, 24, 27, 0.95));
 
 // ── Cards ─────────────────────────────────────────────────
-.demon-header-card,
+.demon-header-card {
+  --mat-card-elevated-container-color: #{$demon-bg};
+  --mat-card-outlined-outline-color: #{$demon-border};
+  overflow: hidden;
+}
+
 .demon-content-card {
   --mat-card-elevated-container-color: #{$demon-bg};
   border-color: #{$demon-border} !important;
   overflow: hidden;
 }
 
-// ── Toolbar ───────────────────────────────────────────────
-.demon-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #{$demon-border};
-}
-
-.demon-toolbar__controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.demon-search-field {
-  width: 18rem;
-}
-
 .demon-categorie-field {
   width: 14rem;
-}
-
-.demon-filter-chip {
-  display: flex;
-  align-items: center;
-  padding: 0.25rem 1rem;
-  border-radius: 999px;
-  border: 1px solid #{$demon-border};
 }
 
 // ── Table scroll ──────────────────────────────────────────

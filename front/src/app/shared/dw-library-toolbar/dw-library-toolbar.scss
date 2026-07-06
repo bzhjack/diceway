@@ -1,0 +1,33 @@
+:host {
+  display: block;
+  --dw-lt-border: var(--dw-surface-200);
+}
+
+.dw-lt-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--dw-lt-border);
+}
+
+.dw-lt-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dw-lt-search-field {
+  width: 18rem;
+}
+
+.dw-lt-filter-chip {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--dw-lt-border);
+}
