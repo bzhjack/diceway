@@ -23,14 +23,6 @@ interface WorkspaceQuickAction {
 export class WorkspaceQuickActionsComponent {
   protected readonly quickActions: readonly WorkspaceQuickAction[] = [
     {
-      label: 'Créer un scénario',
-      detail: 'Préparer l’accroche et les PJ pour une session.',
-      icon: 'explore',
-      link: '/create/scenario',
-      state: {returnUrl: '/'},
-      severity: 'secondary',
-    },
-    {
       label: 'Créer un héros',
       detail: 'Ajouter un héros jouable prêt pour la table.',
       icon: 'person_add',
