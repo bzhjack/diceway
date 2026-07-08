@@ -42,7 +42,6 @@ export class WorkspacePageComponent {
       detail: 'Scénarios préparés pour la table.',
       icon: 'explore',
       color: 'sky',
-      link: '/library/scenarios',
     },
     {
       label: 'Héros suivis',
