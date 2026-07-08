@@ -1,0 +1,122 @@
+:host {
+  display: block;
+}
+
+.hap-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: #6ee7b7;
+}
+
+.hap-title {
+  font-family: 'Muse Display Harmony';
+  font-size: 2.25rem;
+  line-height: 1;
+
+  @media (min-width: 768px) {
+    font-size: 3rem;
+  }
+}
+
+.hap-description {
+  font-size: 0.875rem;
+  line-height: 1.75rem;
+  color: var(--dw-surface-600);
+
+  @media (min-width: 768px) {
+    font-size: 1rem;
+  }
+}
+
+.hap-warn-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #fcd34d;
+}
+
+.hap-activate-btn {
+  --mat-filled-button-container-color: #059669 !important;
+  --mat-filled-button-label-text-color: #fff !important;
+}
+
+.dw-field-error {
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  background: rgba(69, 10, 10, 0.2);
+  font-size: 0.875rem;
+  color: #fecaca;
+}
+
+.hap-step-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--dw-surface-500);
+}
+
+.hap-step-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--dw-surface-800);
+}
+
+.hap-step-description {
+  font-size: 0.875rem;
+  line-height: 1.75rem;
+  color: var(--dw-surface-600);
+}
+
+.hap-section-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #6ee7b7;
+}
+
+.hap-section-eyebrow--muted {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--dw-surface-500);
+}
+
+.hap-loading-detail {
+  font-size: 0.875rem;
+  line-height: 1.75rem;
+  color: var(--dw-surface-700);
+}
+
+.hap-table {
+  border-collapse: collapse;
+  font-size: 0.875rem;
+
+  th,
+  td {
+    padding: 0.5rem 0;
+    text-align: left;
+  }
+
+  th {
+    border-bottom: 1px solid var(--dw-border);
+    color: var(--dw-surface-500);
+  }
+
+  td {
+    border-bottom: 1px solid rgba(66, 75, 87, 0.5);
+  }
+}
+
+.hap-table-attr {
+  text-transform: capitalize;
+  color: var(--dw-surface-700);
+}
+
+.hap-table-value {
+  color: var(--dw-surface-800);
+}

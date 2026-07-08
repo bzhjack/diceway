@@ -1,0 +1,56 @@
+:root {
+  // ── Palette surface sombre (échelle slate inversée, dark UI) ─────────────
+  --dw-surface-0:   #020617; // slate-950
+  --dw-surface-50:  #0f172a; // slate-900
+  --dw-surface-100: #1e293b; // slate-800
+  --dw-surface-200: #334155; // slate-700
+  --dw-surface-300: #475569; // slate-600
+  --dw-surface-400: #64748b; // slate-500
+  --dw-surface-500: #94a3b8; // slate-400
+  --dw-surface-600: #cbd5e1; // slate-300
+  --dw-surface-700: #e2e8f0; // slate-200
+  --dw-surface-800: #f1f5f9; // slate-100
+  --dw-surface-900: #f8fafc; // slate-50
+
+  // ── Palette sémantique BoL ────────────────────────────────────────────────
+  --dw-color-legendary:       #fbbf24; // légendaire, héroïque, kicker accent
+  --dw-color-legendary-muted: #fde68a; // amber clair — chips créature
+  --dw-color-rival:           #fb923c; // rival
+  --dw-color-reussite:        #22c55e; // réussite, type PJ
+  --dw-color-echec:           #f87171; // échec, danger, R1
+  --dw-color-echec-forte:     #ef4444; // échec critique, low health
+  --dw-color-health:          #22c55e; // barre vitalité
+  --dw-color-creature:        #f59e0b; // type créature
+  --dw-color-pnj:             #6ee7b7; // émeraude — type PNJ
+  --dw-color-demon:           #fda4af; // rose — type démon
+  --dw-color-danger-muted:    #fecaca; // rouge pâle — erreurs, suppression
+  --dw-color-bonus:           #4ade80; // vert clair — tags bonus
+  --dw-color-warn:            #f97316; // orange — tags avertissement
+  --dw-color-dice-kicker:     #93c5fd; // bleu-300 — kicker panneau dés
+  --dw-color-dice-muted:      #dbeafe; // bleu-100 — badges/actifs dés
+  --dw-color-text-bright:     #f8fafc; // quasi-blanc — titres, valeurs fortes
+
+  // ── Bordures UI ───────────────────────────────────────────────────────────
+  --dw-border:        #424b57; // bordure sombre standard
+  --dw-border-remove: #5b2a2a; // bordeaux — bouton suppression
+
+  color-scheme: light;
+
+  // ── Tokens auth / UI chaud ────────────────────────────────────────────────
+  --bg:             #f5efe3;
+  --surface:        rgba(255, 252, 246, 0.88);
+  --surface-strong: #fffaf0;
+  --surface-border: rgba(67, 44, 20, 0.12);
+  --text:           #26180d;
+  --muted:          #6e5a45;
+  --accent:         #9b3d23;
+  --accent-strong:  #7d2f1a;
+  --success:        #2f6b45;
+  --success-soft:   rgba(47, 107, 69, 0.14);
+  --danger:         #9b2c2c;
+  --danger-soft:    rgba(155, 44, 44, 0.12);
+  --shadow:         0 24px 60px rgba(57, 39, 19, 0.12);
+  --radius-lg:      28px;
+  --radius-md:      16px;
+  --radius-sm:      12px;
+}

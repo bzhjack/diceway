@@ -5,7 +5,13 @@ import {FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators} fr
 import {ActivatedRoute, Router} from '@angular/router';
 import {startWith, take} from 'rxjs';
 import {finalize} from 'rxjs/operators';
-import {ConfirmationService} from 'primeng/api';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCard, MatCardContent} from '@angular/material/card';
+import {MatDialog} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
 import {BolArmureModel} from '../models/bol-armure.model';
 import {BolArmeModel} from '../models/bol-arme.model';
 import {BolAvantageModel} from '../models/bol-avantage.model';
@@ -16,16 +22,9 @@ import {BolLangueModel} from '../models/bol-langue.model';
 import {BolRegionModel} from '../models/bol-region.model';
 import {BolHerosStateService} from '../services/bol-heros-state.service';
 import {BolHerosService} from '../services/bol-heros.service';
-import {ButtonModule} from 'primeng/button';
-import {CardModule} from 'primeng/card';
-import {ConfirmPopupModule} from 'primeng/confirmpopup';
-import {DialogService} from 'primeng/dynamicdialog';
-import {IftaLabelModule} from 'primeng/iftalabel';
-import {InputNumberModule} from 'primeng/inputnumber';
-import {InputTextModule} from 'primeng/inputtext';
-import {SelectModule} from 'primeng/select';
-import {TagModule} from 'primeng/tag';
-import {TextareaModule} from 'primeng/textarea';
+import {DwBadgeComponent} from '../../shared/dw-badge/dw-badge';
+import {DwConfirmDialogComponent} from '../../shared/dw-confirm-dialog/dw-confirm-dialog';
+import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
 import {PictureComponent} from '../../shared/picture/picture';
 
 interface HeroSimpleDraft {
@@ -58,19 +57,19 @@ interface HeroSelectedCarriereEntry extends HeroCarriereDraft {
   selector: 'bol-hero-form-page',
   imports: [
     ReactiveFormsModule,
-    ButtonModule,
-    CardModule,
-    ConfirmPopupModule,
-    IftaLabelModule,
-    InputNumberModule,
-    InputTextModule,
-    SelectModule,
-    TagModule,
-    TextareaModule,
+    MatButtonModule,
+    MatCard,
+    MatCardContent,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatSelectModule,
+    DwBadgeComponent,
+    DwTagComponent,
   ],
   templateUrl: './hero-form-page.html',
+  styleUrl: './hero-form-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService, ConfirmationService],
 })
 export class HeroFormPageComponent {
   private readonly herosService = inject(BolHerosService);
@@ -79,8 +78,7 @@ export class HeroFormPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
   private readonly router = inject(Router);
-  private readonly dialogService = inject(DialogService);
-  private readonly confirmationService = inject(ConfirmationService);
+  private readonly dialog = inject(MatDialog);
   private readonly routeParamMap = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
   });
@@ -152,6 +150,9 @@ export class HeroFormPageComponent {
     langues: this.formBuilder.array([]),
     traits: this.formBuilder.array([]),
   });
+
+  protected readonly compareById = (a: number | string | null, b: number | string | null): boolean =>
+    Number(a) === Number(b);
 
   protected readonly avatarPreview = toSignal(
     this.heroForm.controls.avatar.valueChanges.pipe(startWith(this.heroForm.controls.avatar.value)),
@@ -326,14 +327,13 @@ export class HeroFormPageComponent {
   }
 
   protected pickAvatar(): void {
-    const ref = this.dialogService.open(PictureComponent, {
-      header: 'Avatar du héros',
-      modal: true,
-      closable: false,
+    const ref = this.dialog.open(PictureComponent, {
+      data: {title: 'Avatar du héros'},
       width: 'min(960px, 92vw)',
+      disableClose: true,
     });
 
-    ref?.onClose.pipe(take(1)).subscribe((avatar: string | null) => {
+    ref.afterClosed().pipe(take(1)).subscribe((avatar: string | null) => {
       if (avatar) {
         this.heroForm.controls.avatar.setValue(avatar);
       }
@@ -413,15 +413,20 @@ export class HeroFormPageComponent {
     this.submit(false);
   }
 
-  protected confirmActivation(event: Event): void {
-    this.confirmationService.confirm({
-      target: event.currentTarget as EventTarget,
-      message: 'Voulez-vous activer ce héros ?',
-      icon: 'pi pi-info-circle',
-      acceptButtonStyleClass: 'p-button-success p-button-sm',
-      acceptLabel: 'Oui',
-      rejectLabel: 'Non',
-      accept: () => this.submit(true),
+  protected confirmActivation(): void {
+    const ref = this.dialog.open(DwConfirmDialogComponent, {
+      data: {
+        title: 'Activer le héros',
+        message: 'Voulez-vous activer ce héros ?',
+        confirmLabel: 'Oui, activer',
+        cancelLabel: 'Non',
+      },
+    });
+
+    ref.afterClosed().pipe(take(1)).subscribe((confirmed: boolean | undefined) => {
+      if (confirmed) {
+        this.submit(true);
+      }
     });
   }
 

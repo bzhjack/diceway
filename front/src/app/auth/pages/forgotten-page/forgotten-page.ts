@@ -1,26 +1,44 @@
-import {NgOptimizedImage} from '@angular/common';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject} from '@angular/core';
+import {NgOptimizedImage} from '@angular/common';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
 import {extractApiErrors} from '../../../core/auth/auth-form.utils';
 import {AuthService} from '../../../core/auth/auth.service';
-import {ButtonModule} from 'primeng/button';
-import {InputGroupModule} from 'primeng/inputgroup';
-import {InputGroupAddonModule} from 'primeng/inputgroupaddon';
-import {InputTextModule} from 'primeng/inputtext';
-import {Message} from 'primeng/message';
+import {MatButtonModule} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {DwErrorMessageComponent} from '../../../shared/dw-error-message/dw-error-message';
+import {
+  MatCard,
+  MatCardActions,
+  MatCardContent,
+  MatCardHeader,
+  MatCardImage,
+  MatCardSubtitle,
+  MatCardTitle,
+} from '@angular/material/card';
 
 @Component({
   selector: 'app-forgotten-page',
   imports: [
     ReactiveFormsModule,
     RouterLink,
-    ButtonModule,
-    InputGroupModule,
-    InputGroupAddonModule,
-    InputTextModule,
-    Message,
     NgOptimizedImage,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatCard,
+    MatCardImage,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardSubtitle,
+    MatCardContent,
+    MatCardActions,
+    DwErrorMessageComponent,
   ],
   templateUrl: './forgotten-page.html',
   styleUrl: './forgotten-page.scss',
@@ -61,10 +79,5 @@ export class ForgottenPageComponent {
           this.cdr.markForCheck();
         },
       });
-  }
-
-  protected onError(controlName: 'email'): boolean {
-    const control = this.forgotForm.controls[controlName];
-    return control.invalid && control.touched;
   }
 }

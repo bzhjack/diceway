@@ -1,12 +1,13 @@
 import {NgOptimizedImage} from '@angular/common';
 import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {ProgressBarModule} from 'primeng/progressbar';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {AuthService} from '../../../core/auth/auth.service';
+import {MatCard, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from '@angular/material/card';
 
 @Component({
   selector: 'app-callback-page',
-  imports: [ProgressBarModule, NgOptimizedImage],
+  imports: [NgOptimizedImage, MatProgressBarModule, MatCard, MatCardImage, MatCardHeader, MatCardTitle, MatCardContent],
   templateUrl: './callback-page.html',
   styleUrl: './callback-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

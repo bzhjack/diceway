@@ -4,20 +4,23 @@ import {
   ControlValueAccessor,
   FormArray,
   FormBuilder,
-  FormsModule,
+  FormControl,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
   ValidationErrors,
   Validator,
 } from '@angular/forms';
-import {ConfirmationService} from 'primeng/api';
-import {ButtonModule} from 'primeng/button';
-import {IftaLabelModule} from 'primeng/iftalabel';
-import {InputNumberModule} from 'primeng/inputnumber';
-import {SelectModule} from 'primeng/select';
-import {TooltipModule} from 'primeng/tooltip';
+import {MatButtonModule} from '@angular/material/button';
+import {MatDialog} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {toSignal} from '@angular/core/rxjs-interop';
+import {take} from 'rxjs';
+import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {BolCarriereModel, BolHerosCarriereModel} from '../../models/bol-carriere.model';
 import {BolDesavantageModel} from '../../models/bol-desavantage.model';
 import {BolHerosTraitsModel} from '../../models/bol-trait.model';
@@ -30,14 +33,15 @@ import {carrieresFormValidatorFn, carriereValidator} from '../create.validators'
   selector: 'bol-hero-advanced-carrieres',
   imports: [
     ReactiveFormsModule,
-    FormsModule,
-    ButtonModule,
-    IftaLabelModule,
-    InputNumberModule,
-    SelectModule,
-    TooltipModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatSelectModule,
+    MatTooltipModule,
   ],
   templateUrl: './carrieres.component.html',
+  styleUrl: './carrieres.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
@@ -56,12 +60,14 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
   private readonly formBuilder = inject(FormBuilder);
   private readonly herosStateService = inject(BolHerosStateService);
   private readonly herosService = inject(BolHerosService);
-  private readonly confirmationService = inject(ConfirmationService);
+  private readonly dialog = inject(MatDialog);
 
   readonly desavantageCreated = output<BolHerosTraitsModel | null>();
 
-  protected readonly selectedCarriere = signal<BolCarriereModel | null>(null);
-  protected readonly selectedTrait = signal<BolDesavantageModel | null>(null);
+  protected readonly selectedCarriereId = new FormControl<number | null>(null);
+  private readonly selectedCarriereIdValue = toSignal(this.selectedCarriereId.valueChanges, {initialValue: null});
+  protected readonly selectedTraitId = new FormControl<number | null>(null);
+  private readonly selectedTraitIdValue = toSignal(this.selectedTraitId.valueChanges, {initialValue: null});
   protected readonly pending = signal(false);
   protected readonly carriereErrors = signal<{control: string; error: string}[]>([]);
   protected readonly carriereWarns = signal<{step: string; warn: string}[]>([]);
@@ -91,6 +97,18 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
     const takenIds = this.herosStateService.allHerosDesavantages().map((trait) => Number(trait.traitable_id));
     return (this.desavantagesList() ?? []).filter((desavantage) => !takenIds.includes(Number(desavantage.id)));
   });
+  protected readonly selectedCarriere = computed(
+    () =>
+      this.availableCarrieres().find(
+        (carriere: BolCarriereModel) => Number(carriere.id) === Number(this.selectedCarriereIdValue()),
+      ) ?? null,
+  );
+  protected readonly selectedTrait = computed(
+    () =>
+      this.availableDesavantages().find(
+        (desavantage: BolDesavantageModel) => Number(desavantage.id) === Number(this.selectedTraitIdValue()),
+      ) ?? null,
+  );
 
   private onChange: (value: BolHerosCarriereModel[]) => void = () => undefined;
   private onTouched: () => void = () => undefined;
@@ -134,31 +152,36 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
             value: [0, carriereValidator],
           }),
         );
-        this.selectedCarriere.set(null);
+        this.selectedCarriereId.setValue(null);
         this.pending.set(false);
       },
       error: () => this.pending.set(false),
     });
   }
 
-  protected deleteCarriere(carriereId: number, event: Event): void {
-    this.confirmationService.confirm({
-      target: event.currentTarget as EventTarget,
-      message: 'Voulez-vous supprimer cette carrière ?',
-      icon: 'pi pi-info-circle',
-      acceptButtonStyleClass: 'p-button-danger p-button-sm',
-      acceptLabel: 'Oui',
-      rejectLabel: 'Non',
-      accept: () => {
-        this.pending.set(true);
-        this.herosService.deleteCarriere(this.heroId() as string, carriereId).subscribe({
-          next: () => {
-            this.removeCarriere(carriereId);
-            this.pending.set(false);
-          },
-          error: () => this.pending.set(false),
-        });
+  protected deleteCarriere(carriereId: number): void {
+    const ref = this.dialog.open(DwConfirmDialogComponent, {
+      data: {
+        title: 'Supprimer la carrière',
+        message: 'Voulez-vous supprimer cette carrière ?',
+        confirmLabel: 'Oui',
+        cancelLabel: 'Non',
       },
+    });
+
+    ref.afterClosed().pipe(take(1)).subscribe((confirmed: boolean | undefined) => {
+      if (!confirmed) {
+        return;
+      }
+
+      this.pending.set(true);
+      this.herosService.deleteCarriere(this.heroId() as string, carriereId).subscribe({
+        next: () => {
+          this.removeCarriere(carriereId);
+          this.pending.set(false);
+        },
+        error: () => this.pending.set(false),
+      });
     });
   }
 
@@ -178,7 +201,7 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
     this.pending.set(true);
     this.herosService.createTrait(this.heroId(), trait).subscribe({
       next: (newTrait) => {
-        this.selectedTrait.set(null);
+        this.selectedTraitId.setValue(null);
         this.pending.set(false);
         this.desavantageCreated.emit(newTrait);
       },

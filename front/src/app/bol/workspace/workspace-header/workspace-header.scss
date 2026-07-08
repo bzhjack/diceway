@@ -2,7 +2,7 @@
   display: block;
 }
 
-:host ::ng-deep .p-card {
+.wsh-header-card {
   background-color: #12100a;
   background-image:
     linear-gradient(to right, rgba(12, 10, 6, 0.40) 0%, rgba(12, 10, 6, 0.12) 50%, rgba(12, 10, 6, 0.35) 100%),
@@ -10,4 +10,40 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: top;
+}
+
+.wsh-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  color: var(--dw-color-legendary);
+}
+
+.wsh-subeyebrow {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: #b45309;
+}
+
+.wsh-title {
+  font-family: 'Muse Display Harmony';
+  font-size: 2.25rem;
+  line-height: 1;
+
+  @media (min-width: 768px) {
+    font-size: 3rem;
+  }
+}
+
+.wsh-description {
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  color: var(--dw-surface-600);
+
+  @media (min-width: 768px) {
+    font-size: 0.95rem;
+  }
 }

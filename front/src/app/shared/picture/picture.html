@@ -1,81 +1,85 @@
-<div class="flex flex-col gap-4 p-2">
-  <div class="flex w-full items-center justify-between gap-3">
-    @if (imageChangedEvent) {
-      <p-button
-        (onClick)="file.click()"
-        icon="pi pi-upload"
-        size="small"
-        label="Importer une image"
-      />
+<h2 mat-dialog-title>{{ title }}</h2>
 
-      <div class="flex gap-2">
-        <p-button icon="pi pi-search-plus" size="small" (onClick)="zoomIn()" />
-        <p-button icon="pi pi-search-minus" size="small" (onClick)="zoomOut()" />
-        <p-button icon="pi pi-sync" size="small" (onClick)="resetImage()" />
+<mat-dialog-content>
+  <div class="flex flex-col gap-4 p-2">
+    <div class="flex w-full items-center justify-between gap-3">
+      @if (imageChangedEvent) {
+        <button mat-stroked-button size="small" (click)="file.click()">
+          <mat-icon>upload</mat-icon> Importer une image
+        </button>
+
+        <div class="flex gap-2">
+          <button mat-icon-button (click)="zoomIn()" aria-label="Zoom avant">
+            <mat-icon>zoom_in</mat-icon>
+          </button>
+          <button mat-icon-button (click)="zoomOut()" aria-label="Zoom arrière">
+            <mat-icon>zoom_out</mat-icon>
+          </button>
+          <button mat-icon-button (click)="resetImage()" aria-label="Réinitialiser">
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </div>
+      }
+
+      <input
+        #file
+        id="importFile"
+        type="file"
+        accept="image/*"
+        class="hidden"
+        (change)="fileChangeEvent($event)"
+      />
+    </div>
+
+    @if (imageChangedEvent) {
+      <div class="picture-body">
+        <div class="cropper-shell">
+          <image-cropper
+            [transform]="transform"
+            [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true"
+            [aspectRatio]="1 / 1"
+            [backgroundColor]="'#111827'"
+            format="png"
+            output="base64"
+            [resizeToWidth]="256"
+            [cropperMinWidth]="128"
+            (loadImageFailed)="loadImageFailed()"
+            (imageCropped)="imageCropped($event)"
+          />
+        </div>
+
+        <div class="preview-shell">
+          @if (croppedImage) {
+            <img [src]="croppedImage" alt="Aperçu avatar" class="preview-image" />
+          } @else {
+            <div class="preview-placeholder">Aperçu</div>
+          }
+        </div>
+      </div>
+    } @else {
+      <div
+        class="picture-dropzone"
+        dwDragDropFile
+        (filesDropped)="dropFileEvent($event)"
+      >
+        <mat-icon class="picture-dropzone-icon">upload</mat-icon>
+        <div class="pt-4 picture-dropzone-text">
+          Dépose l'image ici, ou
+          <button type="button" class="ml-1 picture-dropzone-link" (click)="file.click()">
+            sélectionne un fichier
+          </button>
+        </div>
       </div>
     }
-
-    <input
-      #file
-      id="importFile"
-      type="file"
-      accept="image/*"
-      class="hidden"
-      (change)="fileChangeEvent($event)"
-    />
   </div>
+</mat-dialog-content>
 
-  @if (imageChangedEvent) {
-    <div class="picture-body">
-      <div class="cropper-shell">
-        <image-cropper
-          [transform]="transform"
-          [imageChangedEvent]="imageChangedEvent"
-          [maintainAspectRatio]="true"
-          [aspectRatio]="1 / 1"
-          [backgroundColor]="'#111827'"
-          format="png"
-          output="base64"
-          [resizeToWidth]="256"
-          [cropperMinWidth]="128"
-          (loadImageFailed)="loadImageFailed()"
-          (imageCropped)="imageCropped($event)"
-        />
-      </div>
-
-      <div class="preview-shell">
-        @if (croppedImage) {
-          <img [src]="croppedImage" alt="Aperçu avatar" class="preview-image" />
-        } @else {
-          <div class="preview-placeholder">Aperçu</div>
-        }
-      </div>
-    </div>
-  } @else {
-    <div
-      class="picture-dropzone"
-      dwDragDropFile
-      (filesDropped)="dropFileEvent($event)"
-    >
-      <i class="pi pi-upload text-4xl"></i>
-      <div class="pt-4 text-center text-sm leading-7">
-        Dépose l'image ici, ou
-        <button type="button" class="ml-1 text-amber-300 underline" (click)="file.click()">
-          sélectionne un fichier
-        </button>
-      </div>
-    </div>
-  }
-
-  <div class="flex justify-end gap-2 pt-2">
-    <p-button icon="pi pi-times" size="small" label="Quitter" severity="secondary" (onClick)="quit()" />
-    <p-button
-      [disabled]="!croppedImage"
-      icon="pi pi-check"
-      size="small"
-      label="Valider"
-      severity="success"
-      (onClick)="validate()"
-    />
-  </div>
-</div>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="quit()">
+    <mat-icon>close</mat-icon> Quitter
+  </button>
+  <button mat-flat-button [disabled]="!croppedImage" (click)="validate()">
+    <mat-icon>check</mat-icon> Valider
+  </button>
+</mat-dialog-actions>

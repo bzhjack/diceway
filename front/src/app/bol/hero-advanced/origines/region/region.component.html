@@ -1,6 +1,9 @@
+<h2 mat-dialog-title>Choix de la région</h2>
+
+<mat-dialog-content>
 <div class="grid gap-4 lg:grid-cols-[340px_minmax(0,1fr)]">
   <div class="space-y-4">
-    <div class="overflow-hidden border border-[#424b57] bg-[#0f172a]/80">
+    <div class="hrg-map-frame overflow-hidden">
       <img
         class="h-full w-full object-cover"
         [src]="selectedRegion() ? '/assets/bol/cartes/carte-' + regionId() + '.jpg' : '/assets/bol/cartes/carte.jpg'"
@@ -8,76 +11,76 @@
       />
     </div>
 
-    <p-message severity="info">
+    <p class="hrg-info-box m-0 p-3">
       Sélectionnez la région du héros. Le nom proposé et les traits régionaux seront utilisés dans la création guidée.
-    </p-message>
+    </p>
   </div>
 
   <div class="flex flex-col gap-4">
     <div class="dw-section--loading">
-      <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-emerald-300">Régions</p>
-      <p-scrollpanel class="mt-3 h-28">
+      <p class="hrg-eyebrow m-0">Régions</p>
+      <div class="mt-3 h-28 overflow-y-auto">
         <div class="flex flex-wrap gap-2 pr-3">
           @for (region of regionList(); track region.id) {
-            <p-tag
-              [value]="region.region"
-              [styleClass]="region.id === regionId() ? 'cursor-pointer !bg-[#059669] !text-white' : 'cursor-pointer'"
+            <dw-tag
+              class="cursor-pointer"
+              [class.hrg-tag--active]="region.id === regionId()"
               (click)="setCurrentRegion(region)"
-            />
+            >{{ region.region }}</dw-tag>
           }
         </div>
-      </p-scrollpanel>
+      </div>
     </div>
 
     @if (!selectedRegion()) {
-      <div class="flex min-h-64 items-center justify-center border border-dashed border-[#424b57] bg-[#0f172a]/60 p-6 text-center text-slate-400">
+      <div class="hrg-empty-region flex min-h-64 items-center justify-center p-6 text-center">
         Sélectionnez une région d'origine pour voir les noms et les traits associés.
       </div>
     } @else {
       @if (regionId() === 1) {
-        <p-message severity="warn">
+        <p class="hrg-warn-box m-0 p-3">
           Dans la Côte de Feu, un héros peut être kalukan avec l'accord du MJ. Sinon, utilisez les listes Halakh ou marais de Kasht.
-        </p-message>
+        </p>
       }
       @if (regionId() === 13) {
-        <p-message severity="warn">
+        <p class="hrg-warn-box m-0 p-3">
           Les plaines de Klaar sont la demeure des céruléens, des géants à la peau gris bleu.
-        </p-message>
+        </p>
       }
       @if (regionId() === 16) {
-        <p-message severity="warn">
+        <p class="hrg-warn-box m-0 p-3">
           Les Terres Désolées restent largement inconnues, même pour les habitants de Lémurie.
-        </p-message>
+        </p>
       }
 
       @if (!(selectedRegion()?.noms?.length ?? 0)) {
-        <p-message severity="secondary">
+        <p class="hrg-neutral-box m-0 p-3">
           Cette région mélange des gens de tous horizons. Tous les noms de Lémurie y sont plausibles.
-        </p-message>
+        </p>
       } @else {
         <div class="grid gap-4 md:grid-cols-2">
           <div class="dw-section--loading">
-            <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-slate-400">Noms masculins</p>
+            <p class="hrg-eyebrow--muted m-0">Noms masculins</p>
             <div class="mt-3 flex flex-wrap gap-2">
               @for (nom of nomsMasculins(); track nom.id) {
-                <p-tag
-                  [value]="nom.nom"
-                  [styleClass]="selectedName() === nom.nom ? 'cursor-pointer !bg-[#059669] !text-white' : 'cursor-pointer'"
+                <dw-tag
+                  class="cursor-pointer"
+                  [class.hrg-tag--active]="selectedName() === nom.nom"
                   (click)="selectedName.set(nom.nom)"
-                />
+                >{{ nom.nom }}</dw-tag>
               }
             </div>
           </div>
 
           <div class="dw-section--loading">
-            <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-slate-400">Noms féminins</p>
+            <p class="hrg-eyebrow--muted m-0">Noms féminins</p>
             <div class="mt-3 flex flex-wrap gap-2">
               @for (nom of nomsFeminins(); track nom.id) {
-                <p-tag
-                  [value]="nom.nom"
-                  [styleClass]="selectedName() === nom.nom ? 'cursor-pointer !bg-[#059669] !text-white' : 'cursor-pointer'"
+                <dw-tag
+                  class="cursor-pointer"
+                  [class.hrg-tag--active]="selectedName() === nom.nom"
                   (click)="selectedName.set(nom.nom)"
-                />
+                >{{ nom.nom }}</dw-tag>
               }
             </div>
           </div>
@@ -86,32 +89,37 @@
 
       <div class="grid gap-4 md:grid-cols-2">
         <div class="dw-section--loading">
-          <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-slate-400">Avantages</p>
+          <p class="hrg-eyebrow--muted m-0">Avantages</p>
           <div class="mt-3 grid gap-2">
             @for (avantage of selectedRegion()?.avantages ?? []; track avantage.id) {
               <bol-hero-advanced-trait-row [avantage]="avantage" />
             } @empty {
-              <p class="m-0 text-sm text-slate-500">Aucun avantage régional.</p>
+              <p class="dw-empty-state m-0">Aucun avantage régional.</p>
             }
           </div>
         </div>
 
         <div class="dw-section--loading">
-          <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-slate-400">Désavantages</p>
+          <p class="hrg-eyebrow--muted m-0">Désavantages</p>
           <div class="mt-3 grid gap-2">
             @for (desavantage of selectedRegion()?.desavantages ?? []; track desavantage.id) {
               <bol-hero-advanced-trait-row [desavantage]="desavantage" />
             } @empty {
-              <p class="m-0 text-sm text-slate-500">Aucun désavantage régional.</p>
+              <p class="dw-empty-state m-0">Aucun désavantage régional.</p>
             }
           </div>
         </div>
       </div>
     }
-
-    <div class="flex justify-end gap-2">
-      <p-button label="Quitter" icon="pi pi-times" severity="secondary" [outlined]="true" (onClick)="quit()" />
-      <p-button label="Valider" icon="pi pi-check" [disabled]="!selectedRegion()" (onClick)="validate()" />
-    </div>
   </div>
 </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button type="button" (click)="quit()">
+    <mat-icon>close</mat-icon> Quitter
+  </button>
+  <button mat-flat-button type="button" [disabled]="!selectedRegion()" (click)="validate()">
+    <mat-icon>check</mat-icon> Valider
+  </button>
+</mat-dialog-actions>

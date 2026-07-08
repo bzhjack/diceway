@@ -9,6 +9,7 @@ interface ResourceEntry {
 @Component({
   selector: 'bol-hero-advanced-ressources',
   templateUrl: './ressources.component.html',
+  styleUrl: './ressources.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroAdvancedRessourcesComponent {

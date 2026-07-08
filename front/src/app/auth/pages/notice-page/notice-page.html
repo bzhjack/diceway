@@ -1,34 +1,32 @@
-<section class="auth-page">
-  <div class="flex flex-col h-screen items-center gap-1 pt-10">
-    <img ngSrc="assets/dw1.jpg" alt="" width="400" height="265" priority />
-    @if (!reset) {
-      <div class="text-xl">Finaliser votre inscription</div>
-      <div class="flex flex-col">
-        <h3 class="m-0">Un mail vient de vous être envoyé</h3>
-        <div class="mb-1">
-          Pour finaliser votre inscription, rendez-vous dans votre boîte mail pour activer votre compte.
-        </div>
-        <div class="dw_container mb-4 mt-4">
-          Pas d'e-mail reçu dans votre boîte de réception ou vos spam ?
-          <p-button [routerLink]="'/resend'" label="Renvoyer l'e-mail" size="small" [text]="true" />
-        </div>
-      </div>
-      <div class="flex justify-end gap-4">
-        <p-button [routerLink]="'/login'" label="Continuer" size="small" />
-      </div>
-    }
+<section class="auth-mat-page">
+  <mat-card class="auth-mat-card" appearance="outlined">
+    <img mat-card-image ngSrc="assets/dw1.jpg" alt="" width="400" height="265" priority />
 
-    @if (reset) {
-      <div class="text-xl">Mot de passe oublié</div>
-      <div class="flex flex-col">
-        <h3 class="m-0">Un mail vient de vous être envoyé</h3>
-        <div class="mb-4">
-          Pour accéder à la modification de votre mot de passe, rendez vous dans votre messagerie et cliquez sur le lien.
-        </div>
+    <mat-card-header>
+      @if (!reset) {
+        <mat-card-title>Finaliser votre inscription</mat-card-title>
+      } @else {
+        <mat-card-title>Mot de passe oublié</mat-card-title>
+      }
+      <mat-card-subtitle>Un mail vient de vous être envoyé</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (!reset) {
+        <p>Pour finaliser votre inscription, rendez-vous dans votre boîte mail pour activer votre compte.</p>
+        <p>
+          Pas d'e-mail reçu dans votre boîte de réception ou vos spam ?
+          <button mat-button routerLink="/resend">Renvoyer l'e-mail</button>
+        </p>
+      } @else {
+        <p>Pour accéder à la modification de votre mot de passe, rendez-vous dans votre messagerie et cliquez sur le lien.</p>
+      }
+    </mat-card-content>
+
+    <mat-card-actions>
+      <div class="auth-mat-actions auth-mat-actions--end">
+        <button mat-flat-button routerLink="/login">Continuer</button>
       </div>
-      <div class="flex justify-end gap-4">
-        <p-button [routerLink]="'/login'" label="Continuer" size="small" />
-      </div>
-    }
-  </div>
+    </mat-card-actions>
+  </mat-card>
 </section>

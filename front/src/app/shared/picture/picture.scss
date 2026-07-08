@@ -35,6 +35,12 @@ image-cropper {
   font-size: 0.875rem;
 }
 
+.picture-dropzone-icon {
+  font-size: 2.25rem;
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
 .picture-dropzone {
   border-radius: 0.5rem;
   border: 1px dashed var(--dw-surface-400);
@@ -50,4 +56,15 @@ image-cropper {
 .picture-dropzone.drag-over {
   border-color: var(--dw-color-creature);
   background: rgba(245, 158, 11, 0.08);
+}
+
+.picture-dropzone-text {
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.75rem;
+}
+
+.picture-dropzone-link {
+  color: var(--dw-color-creature);
+  text-decoration: underline;
 }

@@ -1,0 +1,27 @@
+<mat-card appearance="outlined">
+  <mat-card-content>
+    <div class="flex flex-col gap-4">
+      <div class="space-y-2.5">
+        <div class="space-y-1.5">
+          <p class="dw-lh-eyebrow m-0">
+            {{ kicker() }}
+          </p>
+          <h1 class="dw-lh-title m-0">
+            {{ title() }}
+          </h1>
+        </div>
+        @if (description()) {
+          <p class="dw-lh-description m-0 max-w-3xl">
+            {{ description() }}
+          </p>
+        }
+        <div class="flex flex-wrap gap-1.5">
+          <ng-content select="[dwHeaderTags]" />
+        </div>
+      </div>
+      <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
+        <ng-content select="[dwHeaderActions]" />
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,348 +1,270 @@
-<section
-  class="dw-page"
->
+<section class="dw-page">
   <div class="mx-auto flex max-w-6xl flex-col gap-4">
-    <p-card class="dw-card--demon">
-      <form class="dw-creation-form flex flex-col gap-6" [formGroup]="demonForm" (ngSubmit)="saveDemon()">
-        <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div class="space-y-3">
-            <div class="flex items-center gap-3">
-              <div
-                class="flex h-14 w-14 items-center justify-center border border-[#52414b] bg-[#b91c1c] text-2xl text-white"
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <form class="flex flex-col gap-6" [formGroup]="demonForm" (ngSubmit)="saveDemon()">
+          <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="dfp-icon flex h-14 w-14 items-center justify-center">
+                  <mat-icon>bolt</mat-icon>
+                </div>
+                <div class="space-y-1">
+                  <p class="dfp-eyebrow m-0">
+                    {{ pageEyebrow() }}
+                  </p>
+                  <h1 class="dfp-title m-0">
+                    {{ pageTitle() }}
+                  </h1>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-3 sm:flex-row md:justify-end">
+              <button mat-stroked-button type="button" (click)="goBack()">
+                <mat-icon>arrow_back</mat-icon>
+                {{ returnUrl() === '/library/demons' ? 'Retour à la bibliothèque' : 'Retour' }}
+              </button>
+              <button
+                mat-flat-button
+                type="submit"
+                [disabled]="pending() || loadingDemon() || demonForm.invalid"
               >
-                <i class="pi pi-bolt" aria-hidden="true"></i>
-              </div>
-              <div class="space-y-1">
-                <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-rose-300">
-                  {{ pageEyebrow() }}
-                </p>
-                <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none">
-                  {{ pageTitle() }}
-                </h1>
-              </div>
+                <mat-icon>check</mat-icon> {{ submitLabel() }}
+              </button>
             </div>
           </div>
-
-          <div class="flex flex-col gap-3 sm:flex-row md:justify-end">
-            <p-button
-              type="button"
-              icon="pi pi-arrow-left"
-              [label]="returnUrl() === '/library/demons' ? 'Retour a la bibliotheque' : 'Retour'"
-              severity="secondary"
-              [outlined]="true"
-              (onClick)="goBack()"
-            />
-            <p-button
-              type="submit"
-              [label]="submitLabel()"
-              icon="pi pi-check"
-              severity="danger"
-              [disabled]="pending() || loadingDemon() || demonForm.invalid"
-            />
-          </div>
-        </div>
-
-        <div class="grid gap-4">
-          @if (loadingDemon()) {
-            <div class="border border-[#52414b] bg-[#111827]/80 p-5">
-              <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-rose-300">
-                Chargement
-              </p>
-              <p class="mt-3 mb-0 text-sm leading-7 text-slate-200">
-                Recuperation du demon a modifier.
-              </p>
-            </div>
-          }
 
           <div class="grid gap-4">
-            <div class="border border-[#52414b] bg-[#27272a]/75 px-4 py-3">
-              <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-rose-300">
-                General
-              </p>
+            @if (loadingDemon()) {
+              <div class="dfp-loading-box p-5">
+                <p class="dfp-section-eyebrow m-0">
+                  Chargement
+                </p>
+                <p class="dfp-loading-detail m-0 mt-3">
+                  Récupération du démon à modifier.
+                </p>
+              </div>
+            }
 
-              <div class="grid gap-4 md:grid-cols-[140px_minmax(0,1fr)]">
-                <div
-                  class="group relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden border border-[#52414b] bg-[#09090b] transition-colors hover:border-rose-300/70"
-                  (click)="pickAvatar()"
-                >
-                  @if (avatarPreview()) {
-                    <img
-                      [src]="avatarPreview()!"
-                      alt="Avatar demon"
-                      class="h-full w-full object-cover"
-                    />
-                  } @else {
-                    <div class="flex flex-col items-center gap-2 text-slate-400">
-                      <i class="pi pi-image text-3xl"></i>
-                      <span class="text-[0.65rem] font-bold uppercase tracking-[0.2em]">Avatar</span>
-                    </div>
-                  }
+            <div class="grid gap-4">
+              <div class="dfp-section-card px-4 py-3">
+                <p class="dfp-section-eyebrow m-0 mb-2">
+                  Général
+                </p>
 
+                <div class="grid gap-4 md:grid-cols-[140px_minmax(0,1fr)]">
                   <div
-                    class="pointer-events-none absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
+                    class="dfp-avatar group relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden transition-colors"
+                    (click)="pickAvatar()"
                   >
-                    <span
-                      class="mb-3 border border-white/20 bg-black/55 px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white"
-                    >
-                      Modifier
-                    </span>
-                  </div>
-                </div>
-
-                <div class="grid gap-2 md:grid-cols-2">
-                  <p-iftalabel>
-                    <input pInputText id="nom" formControlName="nom" class="w-full" />
-                    <label for="nom">Nom du demon *</label>
-                  </p-iftalabel>
-
-                  <p-iftalabel>
-                    <p-select
-                      inputId="id_categorie"
-                      class="w-full"
-                      [options]="categories() ?? []"
-                      optionLabel="categorie"
-                      optionValue="id"
-                      formControlName="id_categorie"
-                    />
-                    <label for="id_categorie">Categorie *</label>
-                  </p-iftalabel>
-
-                  <div class="md:col-span-2">
-                    <p-iftalabel>
-                      <textarea
-                        pTextarea
-                        id="commentaire"
-                        formControlName="commentaire"
-                        rows="2"
-                        class="w-full resize-none"
-                      ></textarea>
-                      <label for="commentaire">Commentaire de scene</label>
-                    </p-iftalabel>
-                  </div>
-                </div>
-              </div>
-
-              @if (onError('nom') || onError('id_categorie')) {
-                <p class="mt-3 mb-0 text-sm text-rose-300">
-                  Le nom et la categorie sont requis pour preparer le demon.
-                </p>
-              }
-            </div>
-
-            <div class="grid gap-4 xl:grid-cols-3 xl:items-start">
-              <div class="border border-[#52414b] bg-[#27272a]/75 px-4 py-3 xl:h-full">
-                <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-rose-300">
-                  Attributs
-                </p>
-
-                <div class="flex flex-col gap-2">
-                  <div class="flex gap-2">
-                    <p-iftalabel>
-                      <p-inputNumber
-                        inputId="vigueur"
-                        formControlName="vigueur"
-                        class="dw-input-number"
+                    @if (avatarPreview()) {
+                      <img
+                        [src]="avatarPreview()!"
+                        alt="Avatar démon"
+                        class="h-full w-full object-cover"
                       />
-                      <label for="vigueur">Vigueur</label>
-                    </p-iftalabel>
-                    <p-iftalabel>
-                      <p-inputNumber
-                        inputId="agilite"
-                        formControlName="agilite"
-                        class="dw-input-number"
-                      />
-                      <label for="agilite">Agilite</label>
-                    </p-iftalabel>
-                  </div>
-                  <div class="flex gap-2">
-                    <p-iftalabel>
-                      <p-inputNumber
-                        inputId="esprit"
-                        formControlName="esprit"
-                        class="dw-input-number"
-                      />
-                      <label for="esprit">Esprit</label>
-                    </p-iftalabel>
-                    <p-iftalabel>
-                      <p-inputNumber
-                        inputId="aura"
-                        formControlName="aura"
-                        class="dw-input-number"
-                      />
-                      <label for="aura">Aura</label>
-                    </p-iftalabel>
-                  </div>
-                </div>
-              </div>
-
-              <div class="border border-[#52414b] bg-[#27272a]/75 px-4 py-3 xl:h-full">
-                <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-rose-300">
-                  Combat
-                </p>
-
-                <div class="flex flex-col gap-2">
-                  <div class="flex gap-2">
-                    <p-iftalabel>
-                      <p-inputNumber
-                        inputId="melee"
-                        formControlName="melee"
-                        class="dw-input-number"
-                      />
-                      <label for="melee">Melee</label>
-                    </p-iftalabel>
-                    <p-iftalabel>
-                      <p-inputNumber
-                        inputId="tir"
-                        formControlName="tir"
-                        class="dw-input-number"
-                      />
-                      <label for="tir">Tir</label>
-                    </p-iftalabel>
-                  </div>
-                  <div class="flex gap-2">
-                    <p-iftalabel>
-                      <p-inputNumber
-                        inputId="defense"
-                        formControlName="defense"
-                        class="dw-input-number"
-                      />
-                      <label for="defense">Defense</label>
-                    </p-iftalabel>
-                    <p-iftalabel>
-                      <input
-                        pInputText
-                        id="degats"
-                        formControlName="degats"
-                        class="w-full !text-sm"
-                      />
-                      <label for="degats">Degats</label>
-                    </p-iftalabel>
-                  </div>
-                </div>
-              </div>
-
-              <div class="border border-[#52414b] bg-[#27272a]/75 px-4 py-3 xl:h-full">
-                <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-rose-300">
-                  Ressources
-                </p>
-
-                <div class="flex gap-2">
-                  <p-iftalabel>
-                    <p-inputNumber
-                      inputId="vitalite"
-                      formControlName="vitalite"
-                      class="dw-input-number"
-                    />
-                    <label for="vitalite">Vitalite</label>
-                  </p-iftalabel>
-                </div>
-              </div>
-            </div>
-
-            <div class="border border-[#52414b] bg-[#27272a]/75 px-4 py-3">
-              <div class="mb-2 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-rose-300">
-                  Pouvoirs infernaux
-                </p>
-                <p-tag [value]="selectedPouvoirEntries().length + ' selectionne(s)'" severity="contrast" />
-              </div>
-
-              <div class="grid gap-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
-                <p-iftalabel>
-                  <p-select
-                    inputId="pouvoir"
-                    class="w-full"
-                    [options]="filteredPouvoirs()"
-                    optionLabel="pouvoir"
-                    optionValue="id"
-                    [formControl]="selectedPouvoirId"
-                    [showClear]="true"
-                    [filter]="true"
-                    filterBy="pouvoir"
-                  />
-                  <label for="pouvoir">Pouvoir a ajouter</label>
-                </p-iftalabel>
-
-                <p-iftalabel>
-                  <input
-                    pInputText
-                    id="pouvoir-detail"
-                    [formControl]="selectedPouvoirDetail"
-                    class="w-full"
-                  />
-                  <label for="pouvoir-detail">Detail optionnel</label>
-                </p-iftalabel>
-
-                <p-button
-                  label="Ajouter"
-                  icon="pi pi-plus"
-                  [disabled]="!selectedPouvoirId.value"
-                  (onClick)="addPouvoir()"
-                />
-              </div>
-
-              <div class="mt-3 grid gap-2">
-                @if (selectedPouvoirEntries().length === 0) {
-                  <div class="border border-dashed border-[#6b4b56] bg-[#18181b]/80 px-3 py-2 text-sm text-slate-400">
-                    Aucun pouvoir ajoute pour le moment.
-                  </div>
-                } @else {
-                  @for (entry of selectedPouvoirEntries(); track entry.id; let index = $index) {
-                    <div class="flex flex-col gap-2 border border-[#52414b] bg-[#18181b]/80 px-3 py-2 md:flex-row md:items-start md:justify-between">
-                      <div class="space-y-1">
-                        <p class="m-0 text-sm font-bold text-slate-100">
-                          {{ entry.definition?.pouvoir ?? ('Pouvoir #' + entry.id) }}
-                        </p>
-                        <p class="m-0 text-sm leading-5 text-slate-300">
-                          {{ entry.definition?.description || 'Pas de description chargee.' }}
-                        </p>
-                        @if (entry.detail) {
-                          <p class="m-0 text-sm leading-5 text-rose-200">
-                            Detail: {{ entry.detail }}
-                          </p>
-                        }
+                    } @else {
+                      <div class="dfp-avatar-placeholder flex flex-col items-center gap-2">
+                        <mat-icon class="!text-3xl">image</mat-icon>
+                        <span class="dfp-avatar-label">Avatar</span>
                       </div>
+                    }
 
-                      <p-button
-                        label="Retirer"
-                        icon="pi pi-times"
-                        size="small"
-                        severity="secondary"
-                        [outlined]="true"
-                        (onClick)="removePouvoir(index)"
-                      />
+                    <div class="dfp-avatar-overlay pointer-events-none absolute inset-0 flex items-end justify-center opacity-0 transition-opacity group-hover:opacity-100">
+                      <span class="dfp-avatar-overlay-label mb-3 px-2 py-0.5">
+                        Modifier
+                      </span>
                     </div>
-                  }
+                  </div>
+
+                  <div class="grid gap-3 md:grid-cols-2">
+                    <mat-form-field subscriptSizing="dynamic">
+                      <mat-label>Nom du démon</mat-label>
+                      <input matInput id="nom" formControlName="nom" />
+                    </mat-form-field>
+
+                    <mat-form-field subscriptSizing="dynamic">
+                      <mat-label>Catégorie</mat-label>
+                      <mat-select inputId="id_categorie" formControlName="id_categorie" [compareWith]="compareById">
+                        @for (categorie of categories() ?? []; track categorie.id) {
+                          <mat-option [value]="categorie.id">{{ categorie.categorie }}</mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+
+                    <div class="md:col-span-2">
+                      <mat-form-field subscriptSizing="dynamic" class="w-full">
+                        <mat-label>Commentaire de scène</mat-label>
+                        <textarea matInput id="commentaire" formControlName="commentaire" rows="2" class="resize-none"></textarea>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+                @if (onError('nom') || onError('id_categorie')) {
+                  <p class="dfp-field-hint m-0 mt-3">
+                    Le nom et la catégorie sont requis pour préparer le démon.
+                  </p>
                 }
               </div>
+
+              <div class="grid gap-4 xl:grid-cols-3 xl:items-start">
+                <div class="dfp-section-card px-4 py-3 xl:h-full">
+                  <p class="dfp-section-eyebrow m-0 mb-2">
+                    Attributs
+                  </p>
+                  <div class="flex flex-col gap-2">
+                    <div class="flex gap-2">
+                      <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                        <mat-label>Vigueur</mat-label>
+                        <input matInput type="number" id="vigueur" formControlName="vigueur" />
+                      </mat-form-field>
+                      <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                        <mat-label>Agilité</mat-label>
+                        <input matInput type="number" id="agilite" formControlName="agilite" />
+                      </mat-form-field>
+                    </div>
+                    <div class="flex gap-2">
+                      <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                        <mat-label>Esprit</mat-label>
+                        <input matInput type="number" id="esprit" formControlName="esprit" />
+                      </mat-form-field>
+                      <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                        <mat-label>Aura</mat-label>
+                        <input matInput type="number" id="aura" formControlName="aura" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="dfp-section-card px-4 py-3 xl:h-full">
+                  <p class="dfp-section-eyebrow m-0 mb-2">
+                    Combat
+                  </p>
+                  <div class="flex flex-col gap-2">
+                    <div class="flex gap-2">
+                      <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                        <mat-label>Mêlée</mat-label>
+                        <input matInput type="number" id="melee" formControlName="melee" />
+                      </mat-form-field>
+                      <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                        <mat-label>Tir</mat-label>
+                        <input matInput type="number" id="tir" formControlName="tir" />
+                      </mat-form-field>
+                    </div>
+                    <div class="flex gap-2">
+                      <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                        <mat-label>Défense</mat-label>
+                        <input matInput type="number" id="defense" formControlName="defense" />
+                      </mat-form-field>
+                      <mat-form-field subscriptSizing="dynamic">
+                        <mat-label>Dégâts</mat-label>
+                        <input matInput id="degats" formControlName="degats" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="dfp-section-card px-4 py-3 xl:h-full">
+                  <p class="dfp-section-eyebrow m-0 mb-2">
+                    Ressources
+                  </p>
+                  <div class="flex gap-2">
+                    <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                      <mat-label>Vitalité</mat-label>
+                      <input matInput type="number" id="vitalite" formControlName="vitalite" />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+
+              <div class="dfp-section-card px-4 py-3">
+                <div class="mb-2 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                  <p class="dfp-section-eyebrow m-0">
+                    Pouvoirs infernaux
+                  </p>
+                  <dw-tag>{{ selectedPouvoirEntries().length }} sélectionné(s)</dw-tag>
+                </div>
+
+                <div class="grid gap-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] lg:items-end">
+                  <mat-form-field subscriptSizing="dynamic">
+                    <mat-label>Pouvoir à ajouter</mat-label>
+                    <mat-select inputId="pouvoir" [formControl]="selectedPouvoirId">
+                      <mat-option [value]="null">— Aucun —</mat-option>
+                      @for (pouvoir of filteredPouvoirs(); track pouvoir.id) {
+                        <mat-option [value]="pouvoir.id">{{ pouvoir.pouvoir }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field subscriptSizing="dynamic">
+                    <mat-label>Détail optionnel</mat-label>
+                    <input matInput id="pouvoir-detail" [formControl]="selectedPouvoirDetail" />
+                  </mat-form-field>
+
+                  <button mat-flat-button type="button" [disabled]="!selectedPouvoirId.value" (click)="addPouvoir()">
+                    <mat-icon>add</mat-icon> Ajouter
+                  </button>
+                </div>
+
+                <div class="mt-3 grid gap-2">
+                  @if (selectedPouvoirEntries().length === 0) {
+                    <div class="dfp-empty-pouvoir px-3 py-2">
+                      Aucun pouvoir ajouté pour le moment.
+                    </div>
+                  } @else {
+                    @for (entry of selectedPouvoirEntries(); track entry.id; let index = $index) {
+                      <div class="dfp-pouvoir-row flex flex-col gap-2 px-3 py-2 md:flex-row md:items-start md:justify-between">
+                        <div class="space-y-1">
+                          <p class="dfp-pouvoir-title m-0">
+                            {{ entry.definition?.pouvoir ?? ('Pouvoir #' + entry.id) }}
+                          </p>
+                          <p class="dfp-pouvoir-description m-0">
+                            {{ entry.definition?.description || 'Pas de description chargée.' }}
+                          </p>
+                          @if (entry.detail) {
+                            <p class="dfp-pouvoir-detail m-0">
+                              Détail : {{ entry.detail }}
+                            </p>
+                          }
+                        </div>
+
+                        <button mat-stroked-button size="small" type="button" (click)="removePouvoir(index)">
+                          <mat-icon>close</mat-icon> Retirer
+                        </button>
+                      </div>
+                    }
+                  }
+                </div>
+              </div>
             </div>
+
+            @if (errorMessage()) {
+              <div class="dfp-error-box p-5">
+                <p class="dfp-error-eyebrow m-0">
+                  Erreur API
+                </p>
+                <p class="dfp-error-detail m-0 mt-3">
+                  {{ errorMessage() }}
+                </p>
+              </div>
+            }
+
+            @if (savedDemon()) {
+              <div class="dfp-success-box p-5">
+                <p class="dfp-success-eyebrow m-0">
+                  {{ saveSuccessTitle() }}
+                </p>
+                <p class="dfp-success-detail m-0 mt-3">
+                  {{ saveSuccessMessage() }}
+                </p>
+                <pre class="dfp-success-json m-0 mt-3 overflow-x-auto">{{ savedDemon() | json }}</pre>
+              </div>
+            }
           </div>
-
-          @if (errorMessage()) {
-            <div class="border border-red-400/30 bg-red-500/10 p-5">
-              <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-red-300">
-                Erreur API
-              </p>
-              <p class="mt-3 mb-0 text-sm leading-7 text-red-100">
-                {{ errorMessage() }}
-              </p>
-            </div>
-          }
-
-          @if (savedDemon()) {
-            <div class="border border-emerald-400/30 bg-emerald-500/10 p-5">
-              <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
-                {{ saveSuccessTitle() }}
-              </p>
-              <p class="mt-3 mb-0 text-sm leading-7 text-emerald-100">
-                {{ saveSuccessMessage() }}
-              </p>
-              <pre class="mt-3 mb-0 overflow-x-auto text-xs leading-6 text-slate-100">{{ savedDemon() | json }}</pre>
-            </div>
-          }
-        </div>
-
-      </form>
-    </p-card>
+        </form>
+      </mat-card-content>
+    </mat-card>
   </div>
 </section>

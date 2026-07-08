@@ -1,63 +1,46 @@
 <div class="space-y-4">
   <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-    <div class="min-w-0">
-      <p-iftalabel>
-        <p-select
-          inputId="advanced-carriere"
-          class="w-full"
-          [options]="availableCarrieres()"
-          [ngModel]="selectedCarriere()"
-          (ngModelChange)="selectedCarriere.set($event)"
-          optionLabel="carriere"
-          placeholder="Choisir une carrière"
-        />
-        <label for="advanced-carriere">Ajouter une carrière</label>
-      </p-iftalabel>
-    </div>
+    <mat-form-field subscriptSizing="dynamic" class="min-w-0">
+      <mat-label>Ajouter une carrière</mat-label>
+      <mat-select inputId="advanced-carriere" [formControl]="selectedCarriereId">
+        <mat-option [value]="null">Choisir une carrière</mat-option>
+        @for (carriere of availableCarrieres(); track carriere.id) {
+          <mat-option [value]="carriere.id">{{ carriere.carriere }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
 
-    <p-button
-      label="Ajouter"
-      icon="pi pi-plus"
-      [disabled]="pending() || !selectedCarriere()"
-      (onClick)="addCarriere()"
-    />
+    <button mat-flat-button type="button" [disabled]="pending() || !selectedCarriere()" (click)="addCarriere()">
+      <mat-icon>add</mat-icon> Ajouter
+    </button>
   </div>
 
   @if (carriereDesavangeCount() > 0) {
     <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-      <div class="min-w-0">
-        <p-iftalabel>
-          <p-select
-            inputId="advanced-carriere-disadvantage"
-            class="w-full"
-            [options]="availableDesavantages()"
-            [ngModel]="selectedTrait()"
-            (ngModelChange)="selectedTrait.set($event)"
-            optionLabel="desavantage"
-            placeholder="Choisir un désavantage"
-          />
-          <label for="advanced-carriere-disadvantage">Désavantage de carrière</label>
-        </p-iftalabel>
-      </div>
+      <mat-form-field subscriptSizing="dynamic" class="min-w-0">
+        <mat-label>Désavantage de carrière</mat-label>
+        <mat-select inputId="advanced-carriere-disadvantage" [formControl]="selectedTraitId">
+          <mat-option [value]="null">Choisir un désavantage</mat-option>
+          @for (desavantage of availableDesavantages(); track desavantage.id) {
+            <mat-option [value]="desavantage.id">{{ desavantage.desavantage }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
 
-      <p-button
-        label="Ajouter"
-        icon="pi pi-exclamation-triangle"
-        severity="warn"
-        [disabled]="pending() || !selectedTrait()"
-        (onClick)="addCareerDisadvantage()"
-      />
+      <button mat-flat-button type="button" [disabled]="pending() || !selectedTrait()" (click)="addCareerDisadvantage()">
+        <mat-icon>warning</mat-icon> Ajouter
+      </button>
     </div>
   }
 
   @if (carriereErrors().length) {
-    <div class="border border-red-400/35 bg-red-950/20 p-3 text-sm text-red-200">
+    <div class="dw-field-error p-3">
       @for (error of carriereErrors(); track error.control + error.error) {
         <p class="m-0">{{ error.control ? error.control + ' ' : '' }}{{ error.error }}</p>
       }
     </div>
   } @else if (carriereWarns().length) {
-    <div class="border border-amber-400/30 bg-amber-950/15 p-3 text-sm text-amber-200">
+    <div class="dw-field-warning p-3">
       @for (warning of carriereWarns(); track warning.warn) {
         <p class="m-0">{{ warning.warn }}</p>
       }
@@ -67,36 +50,37 @@
   <div class="grid gap-2">
     @for (control of carrieres.controls; track $index) {
       @if (carriereFromId($safeNavigationMigration(control.get('carriere_id')?.value)); as currentCarriere) {
-        <div class="grid gap-3 border border-[#424b57] bg-[#0f172a]/60 px-3 py-3 md:grid-cols-[minmax(0,1fr)_7rem_auto] md:items-center">
+        <div class="dw-row-card grid gap-3 px-3 py-3 md:grid-cols-[minmax(0,1fr)_7rem_auto] md:items-center">
           <div class="min-w-0">
-            <p class="m-0 text-sm font-semibold text-slate-100">{{ currentCarriere.carriere }}</p>
+            <p class="dw-row-title m-0">{{ currentCarriere.carriere }}</p>
             @if (currentCarriere.description) {
-              <p class="m-0 text-xs text-slate-400">{{ currentCarriere.description }}</p>
+              <p class="dw-row-subtitle m-0">{{ currentCarriere.description }}</p>
             }
           </div>
 
-          <p-iftalabel>
-            <p-inputNumber
-              inputId="advanced-carriere-value-{{ $index }}"
-              class="dw-input-number"
+          <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+            <mat-label>Rang</mat-label>
+            <input
+              matInput
+              type="number"
+              id="advanced-carriere-value-{{ $index }}"
               [formControl]="$any(control.get('value'))"
             />
-            <label for="advanced-carriere-value-{{ $index }}">Rang</label>
-          </p-iftalabel>
+          </mat-form-field>
 
-          <p-button
-            icon="pi pi-trash"
-            severity="danger"
-            [text]="true"
-            [rounded]="true"
-            size="small"
-            pTooltip="Supprimer"
-            (onClick)="deleteCarriere($safeNavigationMigration(control.get('carriere_id')?.value), $event)"
-          />
+          <button
+            mat-icon-button
+            type="button"
+            class="dw-delete-btn"
+            matTooltip="Supprimer"
+            (click)="deleteCarriere($safeNavigationMigration(control.get('carriere_id')?.value))"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
         </div>
       }
     } @empty {
-      <p class="m-0 text-sm text-slate-500">Aucune carrière sélectionnée.</p>
+      <p class="dw-empty-state m-0">Aucune carrière sélectionnée.</p>
     }
   </div>
 </div>

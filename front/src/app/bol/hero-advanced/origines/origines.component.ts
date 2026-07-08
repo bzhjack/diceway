@@ -11,11 +11,11 @@ import {
   Validator,
   Validators,
 } from '@angular/forms';
-import {DialogService} from 'primeng/dynamicdialog';
-import {ButtonModule} from 'primeng/button';
-import {IftaLabelModule} from 'primeng/iftalabel';
-import {InputTextModule} from 'primeng/inputtext';
-import {TextareaModule} from 'primeng/textarea';
+import {MatDialog} from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {startWith} from 'rxjs';
 import {BolHerosLangueModel} from '../../models/bol-langue.model';
@@ -24,19 +24,20 @@ import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {PictureComponent} from '../../../shared/picture/picture';
 import {HeroAdvancedLanguesComponent} from '../langues/langues.component';
-import {HeroAdvancedRegionComponent} from './region/region.component';
+import {HeroAdvancedRegionComponent, HeroAdvancedRegionDialogResult} from './region/region.component';
 
 @Component({
   selector: 'bol-hero-advanced-origines',
   imports: [
     ReactiveFormsModule,
-    ButtonModule,
-    IftaLabelModule,
-    InputTextModule,
-    TextareaModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
     HeroAdvancedLanguesComponent,
   ],
   templateUrl: './origines.component.html',
+  styleUrl: './origines.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
@@ -53,7 +54,7 @@ import {HeroAdvancedRegionComponent} from './region/region.component';
 })
 export class HeroAdvancedOriginesComponent implements ControlValueAccessor, Validator {
   private readonly formBuilder = inject(FormBuilder);
-  private readonly dialogService = inject(DialogService);
+  private readonly dialog = inject(MatDialog);
   private readonly herosStateService = inject(BolHerosStateService);
   private readonly herosService = inject(BolHerosService);
 
@@ -102,14 +103,13 @@ export class HeroAdvancedOriginesComponent implements ControlValueAccessor, Vali
   }
 
   protected pickAvatar(): void {
-    const ref = this.dialogService.open(PictureComponent, {
-      header: 'Avatar du héros',
-      modal: true,
-      closable: false,
+    const ref = this.dialog.open(PictureComponent, {
+      data: {title: 'Avatar du héros'},
       width: 'min(960px, 92vw)',
+      disableClose: true,
     });
 
-    ref?.onClose.subscribe((avatar: string | null) => {
+    ref.afterClosed().subscribe((avatar: string | null) => {
       if (avatar) {
         this.avatarCtrl.setValue(avatar);
         this.updateOrigines();
@@ -118,9 +118,7 @@ export class HeroAdvancedOriginesComponent implements ControlValueAccessor, Vali
   }
 
   protected openRegionPicker(): void {
-    const ref = this.dialogService.open(HeroAdvancedRegionComponent, {
-      header: 'Choix de la région',
-      modal: true,
+    const ref = this.dialog.open(HeroAdvancedRegionComponent, {
       width: 'min(1280px, 96vw)',
       data: {
         id_region: this.regionIdCtrl.value,
@@ -128,7 +126,7 @@ export class HeroAdvancedOriginesComponent implements ControlValueAccessor, Vali
       },
     });
 
-    ref?.onClose.subscribe((data: {region: {id: number}; nom?: string} | null) => {
+    ref.afterClosed().subscribe((data: HeroAdvancedRegionDialogResult | null | undefined) => {
       if (!data?.region) {
         return;
       }

@@ -3,17 +3,18 @@ import {
   ControlValueAccessor,
   FormArray,
   FormBuilder,
-  FormsModule,
+  FormControl,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
 } from '@angular/forms';
-import {ButtonModule} from 'primeng/button';
-import {IftaLabelModule} from 'primeng/iftalabel';
-import {SelectModule} from 'primeng/select';
+import {MatButtonModule} from '@angular/material/button';
+import {MatDialog} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatSelectModule} from '@angular/material/select';
 import {toSignal} from '@angular/core/rxjs-interop';
-import {ConfirmationService} from 'primeng/api';
-import {BolAvantageModel} from '../../models/bol-avantage.model';
-import {BolDesavantageModel} from '../../models/bol-desavantage.model';
+import {take} from 'rxjs';
+import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {BolHerosTraitsModel} from '../../models/bol-trait.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolHerosService} from '../../services/bol-heros.service';
@@ -22,8 +23,9 @@ import {HeroAdvancedTraitComponent} from './trait/trait.component';
 
 @Component({
   selector: 'bol-hero-advanced-traits',
-  imports: [ReactiveFormsModule, FormsModule, ButtonModule, IftaLabelModule, SelectModule, HeroAdvancedTraitComponent],
+  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatIconModule, MatSelectModule, HeroAdvancedTraitComponent],
   templateUrl: './traits.component.html',
+  styleUrl: './traits.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
@@ -37,10 +39,12 @@ export class HeroAdvancedTraitsComponent implements ControlValueAccessor {
   private readonly formBuilder = inject(FormBuilder);
   private readonly herosStateService = inject(BolHerosStateService);
   private readonly herosService = inject(BolHerosService);
-  private readonly confirmationService = inject(ConfirmationService);
+  private readonly dialog = inject(MatDialog);
 
-  protected readonly contextType = signal<'A' | 'D'>('A');
-  protected readonly selectedTrait = signal<BolAvantageModel | BolDesavantageModel | null>(null);
+  protected readonly contextTypeCtrl = new FormControl<'A' | 'D'>('A', {nonNullable: true});
+  protected readonly contextType = toSignal(this.contextTypeCtrl.valueChanges, {initialValue: 'A' as const});
+  protected readonly selectedTraitId = new FormControl<number | null>(null);
+  private readonly selectedTraitIdValue = toSignal(this.selectedTraitId.valueChanges, {initialValue: null});
   protected readonly pending = signal(false);
   protected readonly traitsWarns = signal<{step: string; warn: string}[]>([]);
 
@@ -90,6 +94,9 @@ export class HeroAdvancedTraitsComponent implements ControlValueAccessor {
       .map((trait) => Number(trait.traitable_id));
     return allTraits.filter((trait) => !selectedIds.includes(Number(trait.id)));
   });
+  protected readonly selectedTrait = computed(
+    () => this.traitList().find((trait) => Number(trait.id) === Number(this.selectedTraitIdValue())) ?? null,
+  );
 
   private onChange: (value: BolHerosTraitsModel[]) => void = () => undefined;
   private onTouched: () => void = () => undefined;
@@ -105,6 +112,10 @@ export class HeroAdvancedTraitsComponent implements ControlValueAccessor {
 
   protected get traits(): FormArray {
     return this.traitsForm.controls.traits as FormArray;
+  }
+
+  protected onContextTypeChange(): void {
+    this.selectedTraitId.setValue(null);
   }
 
   protected addTrait(): void {
@@ -128,31 +139,36 @@ export class HeroAdvancedTraitsComponent implements ControlValueAccessor {
     this.herosService.createTrait(this.heroId(), trait).subscribe({
       next: (newTrait) => {
         this.addTraitToForm(newTrait);
-        this.selectedTrait.set(null);
+        this.selectedTraitId.setValue(null);
         this.pending.set(false);
       },
       error: () => this.pending.set(false),
     });
   }
 
-  protected deleteTrait(traitId: number, event: Event): void {
-    this.confirmationService.confirm({
-      target: event.currentTarget as EventTarget,
-      message: 'Voulez-vous supprimer ce trait ?',
-      icon: 'pi pi-info-circle',
-      acceptButtonStyleClass: 'p-button-danger p-button-sm',
-      acceptLabel: 'Oui',
-      rejectLabel: 'Non',
-      accept: () => {
-        this.pending.set(true);
-        this.herosService.deleteTrait(this.heroId(), traitId).subscribe({
-          next: () => {
-            this.removeTrait(traitId);
-            this.pending.set(false);
-          },
-          error: () => this.pending.set(false),
-        });
+  protected deleteTrait(traitId: number): void {
+    const ref = this.dialog.open(DwConfirmDialogComponent, {
+      data: {
+        title: 'Supprimer le trait',
+        message: 'Voulez-vous supprimer ce trait ?',
+        confirmLabel: 'Oui',
+        cancelLabel: 'Non',
       },
+    });
+
+    ref.afterClosed().pipe(take(1)).subscribe((confirmed: boolean | undefined) => {
+      if (!confirmed) {
+        return;
+      }
+
+      this.pending.set(true);
+      this.herosService.deleteTrait(this.heroId(), traitId).subscribe({
+        next: () => {
+          this.removeTrait(traitId);
+          this.pending.set(false);
+        },
+        error: () => this.pending.set(false),
+      });
     });
   }
 

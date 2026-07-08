@@ -1,0 +1,17 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Muse Sans', -apple-system, Roboto, 'Open Sans', 'Helvetica Neue', Helvetica, sans-serif;
+  color: #fff;
+  background: #000;
+}

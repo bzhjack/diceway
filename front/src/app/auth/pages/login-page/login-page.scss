@@ -1,39 +1,42 @@
-:host {
-  display: contents;
-  height: 100%;
-}
+.login-link-muted {
+  color: var(--dw-surface-500);
+  font-size: 0.875rem;
+  text-decoration: none;
 
-.login {
-  &__google {
-    img {
-      height: 25px;
-      margin: 0 10px 0 0;
-    }
+  &:hover,
+  &:focus-visible {
+    color: var(--dw-color-legendary);
+    text-decoration: underline;
   }
 }
 
-.login_divider {
+.login-divider {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  height: 100%;
+  gap: 12px;
+  margin: 20px 0;
+  color: var(--dw-surface-500);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 
-  div {
-    width: 2px;
-    background-color: lightgray;
-    color: lightgray;
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--dw-border);
+  }
+}
 
-    &:first-of-type,
-    &:last-of-type {
-      flex: 1;
-    }
+.login-google-btn {
+  width: 100%;
+  --mat-button-outlined-label-text-color: var(--dw-surface-800);
 
-    &:nth-of-type(2) {
-      flex: 0;
-      width: auto;
-      background: none;
-      color: lightgray;
-      padding: 10px 0;
-    }
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
 }

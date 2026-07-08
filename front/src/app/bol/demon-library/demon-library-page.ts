@@ -2,21 +2,22 @@ import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@ang
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
-import {ConfirmationService} from 'primeng/api';
+import {MatDialog} from '@angular/material/dialog';
 import {BolDemonModel} from '../models/bol-demon.model';
 import {BolDemonStateService} from '../services/bol-demon-state.service';
 import {BolDemonsService} from '../services/bol-demons.service';
-import {ButtonModule} from 'primeng/button';
-import {CardModule} from 'primeng/card';
-import {CheckboxModule} from 'primeng/checkbox';
-import {ConfirmPopupModule} from 'primeng/confirmpopup';
-import {IconFieldModule} from 'primeng/iconfield';
-import {InputIconModule} from 'primeng/inputicon';
-import {InputTextModule} from 'primeng/inputtext';
-import {SelectModule} from 'primeng/select';
-import {TagModule} from 'primeng/tag';
-import {TableModule} from 'primeng/table';
-import {TooltipModule} from 'primeng/tooltip';
+import {DwConfirmDialogComponent} from '../../shared/dw-confirm-dialog/dw-confirm-dialog';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatCard} from '@angular/material/card';
+import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
+import {DwLibraryHeaderComponent} from '../../shared/dw-library-header/dw-library-header';
+import {DwLibraryToolbarComponent} from '../../shared/dw-library-toolbar/dw-library-toolbar';
 import {startWith, switchMap} from 'rxjs';
 
 @Component({
@@ -24,46 +25,45 @@ import {startWith, switchMap} from 'rxjs';
   imports: [
     FormsModule,
     RouterLink,
-    ButtonModule,
-    CardModule,
-    CheckboxModule,
-    ConfirmPopupModule,
-    IconFieldModule,
-    InputIconModule,
-    InputTextModule,
-    SelectModule,
-    TagModule,
-    TableModule,
-    TooltipModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatSelectModule,
+    MatTooltipModule,
+    MatCard,
+    DwTagComponent,
+    DwLibraryHeaderComponent,
+    DwLibraryToolbarComponent,
   ],
   templateUrl: './demon-library-page.html',
   styleUrl: './demon-library-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ConfirmationService],
 })
 export class DemonLibraryPageComponent {
   private readonly demonStateService = inject(BolDemonStateService);
   private readonly demonsService = inject(BolDemonsService);
-  private readonly confirmationService = inject(ConfirmationService);
+  private readonly dialog = inject(MatDialog);
   private readonly refreshTrigger = signal(0);
   private readonly demons = toSignal(
     toObservable(this.refreshTrigger).pipe(
       startWith(0),
       switchMap(() => this.demonsService.demons()),
     ),
-    { initialValue: [] },
+    {initialValue: []},
   );
 
   protected readonly categories = this.demonStateService.categorieList;
   protected readonly searchTerm = signal('');
-  protected readonly searchCategorie = signal<number | null>(null);
+  protected readonly searchCategorie = signal<number | ''>('');
   protected readonly onlyCreations = signal(false);
 
   protected readonly filteredDemons = computed(() =>
     [...this.demons()]
       .filter((demon) => (this.onlyCreations() ? Boolean(demon.user_id) : true))
       .filter((demon) =>
-        this.searchCategorie() !== null
+        this.searchCategorie() !== ''
           ? Number(demon.id_categorie) === Number(this.searchCategorie())
           : true,
       )
@@ -90,21 +90,32 @@ export class DemonLibraryPageComponent {
   protected readonly demonCount = computed(() => this.filteredDemons().length);
   protected readonly totalDemonCount = computed(() => this.demons().length);
 
-  protected askDelete(event: Event, demon: BolDemonModel): void {
-    this.confirmationService.confirm({
-      target: event.currentTarget as EventTarget,
-      message: 'Voulez-vous supprimer ce demon ?',
-      icon: 'pi pi-info-circle',
-      acceptButtonStyleClass: 'p-button-danger p-button-sm',
-      acceptLabel: 'Oui',
-      rejectLabel: 'Non',
-      accept: () => this.deleteDemon(demon),
-    });
+  protected showGroupHeader(index: number): boolean {
+    const demons = this.filteredDemons();
+    return index === 0 || demons[index - 1].id_categorie !== demons[index].id_categorie;
+  }
+
+  protected askDelete(demon: BolDemonModel): void {
+    this.dialog
+      .open(DwConfirmDialogComponent, {
+        data: {
+          title: 'Supprimer le démon',
+          message: `Voulez-vous supprimer "${demon.nom}" ?`,
+          confirmLabel: 'Supprimer',
+        },
+        width: '380px',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.deleteDemon(demon);
+        }
+      });
   }
 
   protected clearFilters(): void {
     this.searchTerm.set('');
-    this.searchCategorie.set(null);
+    this.searchCategorie.set('');
     this.onlyCreations.set(false);
   }
 

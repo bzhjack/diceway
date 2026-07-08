@@ -1,77 +1,67 @@
 <div class="space-y-4">
   <div class="grid gap-3 md:grid-cols-[10rem_minmax(0,1fr)_auto]">
-    <p-iftalabel>
-      <p-select
-        inputId="advanced-trait-type"
-        class="w-full"
-        [options]="[
-          { label: 'Avantage', value: 'A' },
-          { label: 'Désavantage', value: 'D' }
-        ]"
-        [ngModel]="contextType()"
-        (ngModelChange)="contextType.set($event); selectedTrait.set(null)"
-        optionLabel="label"
-        optionValue="value"
-      />
-      <label for="advanced-trait-type">Type</label>
-    </p-iftalabel>
+    <mat-form-field subscriptSizing="dynamic" class="w-full">
+      <mat-label>Type</mat-label>
+      <mat-select inputId="advanced-trait-type" [formControl]="contextTypeCtrl" (selectionChange)="onContextTypeChange()">
+        <mat-option value="A">Avantage</mat-option>
+        <mat-option value="D">Désavantage</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-    <p-iftalabel>
-      <p-select
-        inputId="advanced-trait"
-        class="w-full"
-        [options]="traitList()"
-        [ngModel]="selectedTrait()"
-        (ngModelChange)="selectedTrait.set($event)"
-        [optionLabel]="contextType() === 'A' ? 'avantage' : 'desavantage'"
-        placeholder="Choisir un trait"
-      >
-        <ng-template #selectedItem let-selectedOption>
-          <div class="flex items-center gap-2">
-            @if (selectedOption.region_id) {
-              <i class="pi pi-map-marker text-xs text-emerald-300"></i>
-            }
-            <span>{{ contextType() === 'A' ? selectedOption.avantage : selectedOption.desavantage }}</span>
-          </div>
-        </ng-template>
-
-        <ng-template #item let-trait>
-          <div class="flex flex-col gap-1 py-1">
-            <div class="flex items-center gap-2">
-              @if (trait.region_id) {
-                <i class="pi pi-map-marker text-xs text-emerald-300"></i>
+    <mat-form-field subscriptSizing="dynamic" class="w-full">
+      <mat-label>Trait</mat-label>
+      <mat-select inputId="advanced-trait" [formControl]="selectedTraitId">
+        <mat-select-trigger>
+          @if (selectedTrait(); as trait) {
+            <span class="inline-flex items-center gap-2">
+              @if ($any(trait).region_id) {
+                <mat-icon class="dw-icon-region !h-3 !w-3 !text-xs !leading-3">place</mat-icon>
               }
-              <span>
-                {{ contextType() === 'A' ? trait.avantage : trait.desavantage }}
-              </span>
-            </div>
-            @if (trait.detail) {
-              <div class="pl-5 text-xs text-slate-400">
-                {{ trait.detail }}
+              <span>{{ contextType() === 'A' ? $any(trait).avantage : $any(trait).desavantage }}</span>
+            </span>
+          }
+        </mat-select-trigger>
+        <mat-option [value]="null">Choisir un trait</mat-option>
+        @for (trait of traitList(); track trait.id) {
+          <mat-option [value]="trait.id">
+            <div class="flex flex-col gap-1 py-1">
+              <div class="flex items-center gap-2">
+                @if ($any(trait).region_id) {
+                  <mat-icon class="dw-icon-region !h-3 !w-3 !text-xs !leading-3">place</mat-icon>
+                }
+                <span>
+                  {{ contextType() === 'A' ? $any(trait).avantage : $any(trait).desavantage }}
+                </span>
               </div>
-            }
-          </div>
-        </ng-template>
-      </p-select>
-      <label for="advanced-trait">Trait</label>
-    </p-iftalabel>
+              @if ($any(trait).detail) {
+                <div class="dw-option-subtitle pl-5">
+                  {{ $any(trait).detail }}
+                </div>
+              }
+            </div>
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
 
-    <p-button
-      label="Ajouter"
-      icon="pi pi-plus"
+    <button
+      mat-flat-button
+      type="button"
       [disabled]="pending() || !selectedTrait() || (contextType() === 'A' && !canAddAdvantage())"
-      (onClick)="addTrait()"
-    />
+      (click)="addTrait()"
+    >
+      <mat-icon>add</mat-icon> Ajouter
+    </button>
   </div>
 
   @if (contextType() === 'A' && !canAddAdvantage()) {
-    <div class="border border-slate-500/25 bg-slate-900/30 p-3 text-sm text-slate-300">
+    <div class="dw-info-neutral p-3">
       Le maximum de trois avantages de création est atteint.
     </div>
   }
 
   @if (traitsWarns().length) {
-    <div class="border border-amber-400/30 bg-amber-950/15 p-3 text-sm text-amber-200">
+    <div class="dw-field-warning p-3">
       @for (warning of traitsWarns(); track warning.warn) {
         <p class="m-0">{{ warning.warn }}</p>
       }
@@ -80,21 +70,16 @@
 
   <div class="grid gap-2">
     @for (trait of herosTraits(); track trait.id ?? ($index + '-' + trait.traitable_id + '-' + trait.type)) {
-      <div class="flex items-start justify-between gap-3 border border-[#424b57] bg-[#0f172a]/60 px-3 py-3">
+      <div class="dw-row-card flex items-start justify-between gap-3 px-3 py-3">
         <div class="min-w-0 flex-1">
           <bol-hero-advanced-trait [trait]="trait" />
         </div>
-        <p-button
-          icon="pi pi-trash"
-          severity="danger"
-          [text]="true"
-          [rounded]="true"
-          size="small"
-          (onClick)="deleteTrait(trait.id!, $event)"
-        />
+        <button mat-icon-button type="button" class="dw-delete-btn" (click)="deleteTrait(trait.id!)">
+          <mat-icon>delete</mat-icon>
+        </button>
       </div>
     } @empty {
-      <p class="m-0 text-sm text-slate-500">Aucun trait sélectionné.</p>
+      <p class="dw-empty-state m-0">Aucun trait sélectionné.</p>
     }
   </div>
 </div>

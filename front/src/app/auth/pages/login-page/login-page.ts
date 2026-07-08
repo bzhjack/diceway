@@ -1,31 +1,49 @@
-import {NgOptimizedImage} from '@angular/common';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject} from '@angular/core';
+import {NgOptimizedImage} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
 import {finalize} from 'rxjs/operators';
 import {extractApiErrors} from '../../../core/auth/auth-form.utils';
 import {AuthService} from '../../../core/auth/auth.service';
-import {Button} from 'primeng/button';
-import {InputGroup} from 'primeng/inputgroup';
-import {InputGroupAddon} from 'primeng/inputgroupaddon';
-import {InputText} from 'primeng/inputtext';
-import {Message} from 'primeng/message';
+import {MatButtonModule} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {DwErrorMessageComponent} from '../../../shared/dw-error-message/dw-error-message';
+import {
+  MatCard,
+  MatCardActions,
+  MatCardContent,
+  MatCardHeader,
+  MatCardImage,
+  MatCardSubtitle,
+  MatCardTitle
+} from '@angular/material/card';
 
 @Component({
   selector: 'app-login-page',
   imports: [
-    InputGroup,
-    InputGroupAddon,
-    Message,
     ReactiveFormsModule,
-    Button,
     RouterLink,
-    InputText,
     NgOptimizedImage,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatCard,
+    MatCardImage,
+    MatCardHeader,
+    MatCardTitle,
+    MatCardSubtitle,
+    MatCardContent,
+    MatCardActions,
+    DwErrorMessageComponent,
   ],
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginPageComponent {
   private readonly cdr = inject(ChangeDetectorRef);
@@ -91,11 +109,6 @@ export class LoginPageComponent {
           this.cdr.markForCheck();
         },
       });
-  }
-
-  protected onError(controlName: string): boolean {
-    const control = this.loginForm.get(controlName);
-    return !!control && control.dirty && control.invalid;
   }
 
   protected loginWithGoogle(): void {

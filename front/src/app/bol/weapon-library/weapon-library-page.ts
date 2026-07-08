@@ -3,22 +3,23 @@ import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@ang
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {RouterLink} from '@angular/router';
-import {ConfirmationService} from 'primeng/api';
-import {ButtonModule} from 'primeng/button';
-import {CardModule} from 'primeng/card';
-import {CheckboxModule} from 'primeng/checkbox';
-import {ConfirmPopupModule} from 'primeng/confirmpopup';
-import {IconFieldModule} from 'primeng/iconfield';
-import {IftaLabelModule} from 'primeng/iftalabel';
-import {InputIconModule} from 'primeng/inputicon';
-import {InputTextModule} from 'primeng/inputtext';
-import {SelectModule} from 'primeng/select';
-import {TableModule} from 'primeng/table';
-import {TagModule} from 'primeng/tag';
-import {TextareaModule} from 'primeng/textarea';
+import {MatDialog} from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCard, MatCardContent} from '@angular/material/card';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {startWith, switchMap} from 'rxjs';
 import {BolArmeModel} from '../models/bol-arme.model';
 import {BolHerosService} from '../services/bol-heros.service';
+import {DwConfirmDialogComponent} from '../../shared/dw-confirm-dialog/dw-confirm-dialog';
+import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
+import {DwBadgeComponent} from '../../shared/dw-badge/dw-badge';
+import {DwLibraryHeaderComponent} from '../../shared/dw-library-header/dw-library-header';
+import {DwLibraryToolbarComponent} from '../../shared/dw-library-toolbar/dw-library-toolbar';
 
 interface WeaponTypeOption {
   readonly label: string;
@@ -31,28 +32,28 @@ interface WeaponTypeOption {
     FormsModule,
     ReactiveFormsModule,
     RouterLink,
-    ButtonModule,
-    CardModule,
-    CheckboxModule,
-    ConfirmPopupModule,
-    IconFieldModule,
-    IftaLabelModule,
-    InputIconModule,
-    InputTextModule,
-    SelectModule,
-    TableModule,
-    TagModule,
-    TextareaModule,
+    MatButtonModule,
+    MatCard,
+    MatCardContent,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatSelectModule,
+    MatTooltipModule,
+    DwTagComponent,
+    DwBadgeComponent,
+    DwLibraryHeaderComponent,
+    DwLibraryToolbarComponent,
   ],
   templateUrl: './weapon-library-page.html',
   styleUrl: './weapon-library-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ConfirmationService],
 })
 export class WeaponLibraryPageComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly herosService = inject(BolHerosService);
-  private readonly confirmationService = inject(ConfirmationService);
+  private readonly dialog = inject(MatDialog);
   private readonly refreshTrigger = signal(0);
   private readonly weapons = toSignal(
     toObservable(this.refreshTrigger).pipe(
@@ -108,9 +109,11 @@ export class WeaponLibraryPageComponent {
   });
   protected readonly weaponCount = computed(() => this.filteredWeapons().length);
   protected readonly totalWeaponCount = computed(() => this.weapons().length);
-  protected readonly customWeaponCount = computed(() => this.weapons().filter((weapon) => Boolean(weapon.user_id)).length);
-  protected readonly canonicalWeaponCount = computed(() =>
-    this.weapons().filter((weapon) => !weapon.user_id).length,
+  protected readonly customWeaponCount = computed(
+    () => this.weapons().filter((weapon) => Boolean(weapon.user_id)).length,
+  );
+  protected readonly canonicalWeaponCount = computed(
+    () => this.weapons().filter((weapon) => !weapon.user_id).length,
   );
   protected readonly meleeCount = computed(() => this.weapons().filter((weapon) => weapon.type === 'M').length);
   protected readonly rangedCount = computed(() => this.weapons().filter((weapon) => weapon.type === 'T').length);
@@ -126,13 +129,7 @@ export class WeaponLibraryPageComponent {
     this.editingWeaponId.set(null);
     this.formVisible.set(true);
     this.errorMessage.set('');
-    this.weaponForm.reset({
-      arme: '',
-      type: 'M',
-      degats: '',
-      portee: '',
-      notes: '',
-    });
+    this.weaponForm.reset({arme: '', type: 'M', degats: '', portee: '', notes: ''});
   }
 
   protected startEdit(weapon: BolArmeModel): void {
@@ -156,13 +153,7 @@ export class WeaponLibraryPageComponent {
     this.formVisible.set(false);
     this.editingWeaponId.set(null);
     this.errorMessage.set('');
-    this.weaponForm.reset({
-      arme: '',
-      type: 'M',
-      degats: '',
-      portee: '',
-      notes: '',
-    });
+    this.weaponForm.reset({arme: '', type: 'M', degats: '', portee: '', notes: ''});
   }
 
   protected submitForm(): void {
@@ -204,19 +195,26 @@ export class WeaponLibraryPageComponent {
     });
   }
 
-  protected confirmDelete(event: Event, weapon: BolArmeModel): void {
+  protected askDelete(weapon: BolArmeModel): void {
     if (!this.canManage(weapon)) {
       return;
     }
 
-    this.confirmationService.confirm({
-      target: event.currentTarget as EventTarget,
-      message: `Supprimer ${weapon.arme} du catalogue ?`,
-      icon: 'pi pi-info-circle',
-      acceptLabel: 'Supprimer',
-      rejectLabel: 'Annuler',
-      accept: () => this.deleteWeapon(weapon),
-    });
+    this.dialog
+      .open(DwConfirmDialogComponent, {
+        data: {
+          title: 'Supprimer l’arme',
+          message: `Supprimer "${weapon.arme}" du catalogue ?`,
+          confirmLabel: 'Supprimer',
+        },
+        width: '380px',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.deleteWeapon(weapon);
+        }
+      });
   }
 
   protected weaponTypeLabel(type: BolArmeModel['type']): string {

@@ -1,0 +1,37 @@
+:host {
+  display: block;
+  --dw-lh-eyebrow-color: #fcd34d; // amber-300 par défaut
+}
+
+:host.dw-lh-color-emerald { --dw-lh-eyebrow-color: #6ee7b7; }
+:host.dw-lh-color-sky     { --dw-lh-eyebrow-color: #7dd3fc; }
+:host.dw-lh-color-rose    { --dw-lh-eyebrow-color: #fda4af; }
+:host.dw-lh-color-neutral { --dw-lh-eyebrow-color: #cbd5e1; }
+
+.dw-lh-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--dw-lh-eyebrow-color);
+}
+
+.dw-lh-title {
+  font-family: 'Muse Display Harmony';
+  font-size: 2.25rem;
+  line-height: 1;
+
+  @media (min-width: 768px) {
+    font-size: 2.8rem;
+  }
+}
+
+.dw-lh-description {
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  color: var(--dw-surface-600);
+
+  @media (min-width: 768px) {
+    font-size: 0.95rem;
+  }
+}

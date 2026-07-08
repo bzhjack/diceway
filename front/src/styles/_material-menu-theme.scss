@@ -1,0 +1,36 @@
+// Surcharge du fond et texte du mat-menu pour le thème sombre.
+@use '@angular/material' as mat;
+
+html {
+  @include mat.menu-overrides((
+    container-color: var(--dw-surface-50),
+    item-label-text-color: var(--dw-surface-800),
+    item-icon-color: var(--dw-surface-500),
+  ));
+}
+
+.mat-mdc-menu-panel {
+  border: 1px solid var(--dw-border);
+}
+
+// Dialog — fond sombre + texte lisible
+html {
+  @include mat.dialog-overrides((
+    container-color: var(--dw-surface-100),
+    subhead-color: var(--dw-surface-800),
+    supporting-text-color: var(--dw-surface-700),
+  ));
+}
+
+// Statblock créature — dialog sans chrome Material (fond transparent)
+.creature-statblock-dialog {
+  .mdc-dialog__surface {
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible;
+  }
+
+  .mat-mdc-dialog-container {
+    overflow: visible;
+  }
+}

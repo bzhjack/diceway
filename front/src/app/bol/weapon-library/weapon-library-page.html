@@ -1,263 +1,182 @@
-<section
-  class="dw-page xl:px-8"
->
+<section class="dw-page xl:px-8">
   <div class="mx-auto flex max-w-[1200px] flex-col gap-4">
-    <p-confirmpopup />
 
-    <p-card class="dw-card--header">
-      <div class="flex flex-col gap-4">
-        <div class="space-y-2.5">
-          <div class="space-y-1.5">
-            <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-amber-300">
-              Bibliothèque BOL
-            </p>
-            <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
-              Arsenal
-            </h1>
-          </div>
-
-          <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
-            Catalogue des armes de la table, initialisé sur la base BoL et éditable depuis
-            l’intendance.
-          </p>
-
-          <div class="flex flex-wrap gap-1.5">
-            <p-tag [value]="totalWeaponCount() + ' entrées'" severity="contrast" />
-            <p-tag [value]="canonicalWeaponCount() + ' canon'" severity="secondary" />
-            <p-tag [value]="customWeaponCount() + ' créations'" severity="secondary" />
-            <p-tag [value]="meleeCount() + ' mêlée'" severity="secondary" />
-            <p-tag [value]="rangedCount() + ' tir'" severity="secondary" />
-          </div>
+    <!-- Header card -->
+    <dw-library-header
+      title="Arsenal"
+      description="Catalogue des armes de la table, initialisé sur la base BoL et éditable depuis l'intendance."
+      color="amber"
+    >
+      <ng-container dwHeaderTags>
+        <dw-tag>{{ totalWeaponCount() }} entrées</dw-tag>
+        <dw-tag>{{ canonicalWeaponCount() }} canon</dw-tag>
+        <dw-tag>{{ customWeaponCount() }} créations</dw-tag>
+        <dw-tag>{{ meleeCount() }} mêlée</dw-tag>
+        <dw-tag>{{ rangedCount() }} tir</dw-tag>
+      </ng-container>
+      <ng-container dwHeaderActions>
+        <div class="flex flex-wrap gap-1.5">
+          <button mat-flat-button size="small" [disabled]="formVisible() && !editingWeaponId()" (click)="startCreate()">
+            <mat-icon>add</mat-icon>
+            {{ formVisible() && !editingWeaponId() ? 'Création en cours' : 'Nouvelle arme' }}
+          </button>
+          <button mat-stroked-button size="small" routerLink="/library/armors">
+            <mat-icon>shield</mat-icon> Voir les armures
+          </button>
         </div>
+        <button mat-stroked-button size="small" routerLink="/intendance">
+          <mat-icon>arrow_back</mat-icon> Retour à l'intendance
+        </button>
+      </ng-container>
+    </dw-library-header>
 
-        <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
-          <div class="flex flex-wrap gap-1.5">
-            <p-button
-              [label]="formVisible() && !editingWeaponId() ? 'Création en cours' : 'Nouvelle arme'"
-              icon="pi pi-plus"
-              size="small"
-              severity="warn"
-              [disabled]="formVisible() && !editingWeaponId()"
-              (onClick)="startCreate()"
-            />
-            <p-button
-              label="Voir les armures"
-              icon="pi pi-shield"
-              size="small"
-              [routerLink]="'/library/armors'"
-              severity="secondary"
-              [outlined]="true"
-            />
-          </div>
-          <p-button
-            label="Retour à l’intendance"
-            icon="pi pi-arrow-left"
-            size="small"
-            [routerLink]="'/intendance'"
-            severity="secondary"
-            [outlined]="true"
-          />
-        </div>
-      </div>
-    </p-card>
-
+    <!-- Form card -->
     @if (formVisible()) {
-      <p-card>
-        <div class="dw-creation-form space-y-4">
-          <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div class="space-y-1">
-              <p class="m-0 text-xs font-black uppercase tracking-[0.2em] text-amber-300">
-                Intendance
-              </p>
-              <h2 class="m-0 text-2xl font-bold leading-none text-slate-100">{{ formTitle() }}</h2>
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <div class="space-y-4">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div class="space-y-1">
+                <p class="wlp-eyebrow m-0">
+                  Intendance
+                </p>
+                <h2 class="wlp-form-title m-0">{{ formTitle() }}</h2>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                <button mat-stroked-button size="small" (click)="cancelForm()">
+                  <mat-icon>close</mat-icon> Annuler
+                </button>
+                <button mat-flat-button size="small" [disabled]="submitting()" (click)="submitForm()">
+                  <mat-icon>check</mat-icon> {{ submitLabel() }}
+                </button>
+              </div>
             </div>
 
-            <div class="flex flex-wrap gap-2">
-              <p-button
-                label="Annuler"
-                icon="pi pi-times"
-                size="small"
-                severity="secondary"
-                [outlined]="true"
-                (onClick)="cancelForm()"
-              />
-              <p-button
-                [label]="submitLabel()"
-                icon="pi pi-check"
-                size="small"
-                severity="warn"
-                [disabled]="submitting()"
-                (onClick)="submitForm()"
-              />
-            </div>
+            <form [formGroup]="weaponForm" class="grid gap-4 md:grid-cols-2">
+              <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Nom de l'arme</mat-label>
+                <input matInput formControlName="arme" />
+                @if (onError('arme')) {
+                  <mat-error>Nom requis (255 caractères max)</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Type</mat-label>
+                <mat-select formControlName="type">
+                  @for (opt of weaponTypeOptions; track opt.value) {
+                    <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Dégâts</mat-label>
+                <input matInput formControlName="degats" />
+                @if (onError('degats')) {
+                  <mat-error>Dégâts requis (50 caractères max)</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Portée</mat-label>
+                <input matInput formControlName="portee" />
+              </mat-form-field>
+
+              <mat-form-field class="md:col-span-2" subscriptSizing="dynamic">
+                <mat-label>Notes</mat-label>
+                <textarea matInput formControlName="notes" rows="4" class="resize-none"></textarea>
+              </mat-form-field>
+            </form>
+
+            @if (errorMessage()) {
+              <p class="wlp-error m-0">{{ errorMessage() }}</p>
+            }
           </div>
-
-          <form [formGroup]="weaponForm" class="grid gap-4 md:grid-cols-2">
-            <p-iftalabel>
-              <input pInputText id="weapon-name" formControlName="arme" class="w-full" />
-              <label for="weapon-name">Nom de l’arme *</label>
-            </p-iftalabel>
-
-            <p-iftalabel>
-              <p-select
-                inputId="weapon-type"
-                class="w-full"
-                [options]="weaponTypeOptions"
-                optionLabel="label"
-                optionValue="value"
-                formControlName="type"
-              />
-              <label for="weapon-type">Type *</label>
-            </p-iftalabel>
-
-            <p-iftalabel>
-              <input pInputText id="weapon-damage" formControlName="degats" class="w-full" />
-              <label for="weapon-damage">Dégâts *</label>
-            </p-iftalabel>
-
-            <p-iftalabel>
-              <input pInputText id="weapon-range" formControlName="portee" class="w-full" />
-              <label for="weapon-range">Portée</label>
-            </p-iftalabel>
-
-            <div class="md:col-span-2">
-              <p-iftalabel>
-                <textarea
-                  pTextarea
-                  id="weapon-notes"
-                  formControlName="notes"
-                  rows="4"
-                  class="w-full resize-none"
-                ></textarea>
-                <label for="weapon-notes">Notes</label>
-              </p-iftalabel>
-            </div>
-          </form>
-
-          @if (onError('arme') || onError('type') || onError('degats')) {
-            <p class="m-0 text-sm text-amber-300">
-              Le nom, le type et les dégâts sont requis pour enregistrer l’arme.
-            </p>
-          }
-
-          @if (errorMessage()) {
-            <p class="m-0 text-sm text-rose-300">{{ errorMessage() }}</p>
-          }
-        </div>
-      </p-card>
+        </mat-card-content>
+      </mat-card>
     }
 
-    <p-card>
-      <p-table
-        [value]="filteredWeapons()"
-        size="small"
-        dataKey="id"
-        class="bol-weapon-table"
-        [tableStyle]="{ 'min-width': '68rem' }"
+    <!-- Content card -->
+    <mat-card appearance="outlined">
+
+      <!-- Toolbar -->
+      <dw-library-toolbar
+        placeholder="Rechercher une arme"
+        [(searchTerm)]="searchTerm"
+        [(checked)]="onlyCreations"
+        (cleared)="clearFilters()"
       >
-        <ng-template #caption>
-          <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-            <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <p-iconfield iconPosition="left">
-                <p-inputicon class="pi pi-search" />
-                <input
-                  pInputText
-                  class="w-full sm:w-72"
-                  [value]="searchTerm()"
-                  (input)="searchTerm.set($any($event.target).value ?? '')"
-                  placeholder="Rechercher une arme"
-                  type="text"
-                />
-              </p-iconfield>
+        <dw-tag dwToolbarCount>{{ weaponCount() }} visibles</dw-tag>
+      </dw-library-toolbar>
 
-              <div class="flex items-center gap-3 rounded-full border border-[#334155] px-4 py-2">
-                <p-checkbox
-                  inputId="weapon-library-own"
-                  [binary]="true"
-                  [ngModel]="onlyCreations()"
-                  (ngModelChange)="onlyCreations.set($event)"
-                />
-                <label for="weapon-library-own" class="cursor-pointer text-sm text-slate-300">
-                  Mes créations
-                </label>
-              </div>
+      <!-- Table -->
+      <div class="weapon-table-scroll">
+        <table class="bol-weapon-table">
+          <thead>
+            <tr>
+              <th>Arme</th>
+              <th class="weapon-col-compact">Type</th>
+              <th class="weapon-col-compact">Dégâts</th>
+              <th class="weapon-col-range">Portée</th>
+              <th>Notes</th>
+              <th class="weapon-col-compact">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (weapon of filteredWeapons(); track weapon.id) {
+              <tr>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <span class="wlp-strong">{{ weapon.arme }}</span>
+                    @if (weapon.user_id) {
+                      <dw-badge color="amber">Création</dw-badge>
+                    }
+                  </div>
+                </td>
+                <td class="weapon-col-compact">
+                  <dw-badge [color]="weapon.type === 'M' ? 'amber' : 'sky'">
+                    {{ weaponTypeLabel(weapon.type) }}
+                  </dw-badge>
+                </td>
+                <td class="weapon-col-compact">
+                  <span class="wlp-strong">{{ weapon.degats || '-' }}</span>
+                </td>
+                <td class="weapon-col-range wlp-muted-cell">
+                  {{ weapon.portee || '-' }}
+                </td>
+                <td class="wlp-muted-cell">
+                  {{ weapon.notes || '-' }}
+                </td>
+                <td class="weapon-col-compact">
+                  @if (canManage(weapon)) {
+                    <div class="flex justify-end gap-0.5">
+                      <button
+                        mat-icon-button
+                        class="weapon-action-btn"
+                        matTooltip="Modifier"
+                        (click)="startEdit(weapon)"
+                      >
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button
+                        mat-icon-button
+                        class="weapon-action-btn weapon-btn-danger"
+                        matTooltip="Supprimer"
+                        (click)="askDelete(weapon)"
+                      >
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </mat-card>
 
-              <p-button
-                icon="pi pi-filter-slash"
-                label="Effacer"
-                severity="secondary"
-                [outlined]="true"
-                (onClick)="clearFilters()"
-              />
-            </div>
-
-            <p-tag [value]="weaponCount() + ' visibles'" severity="contrast" />
-          </div>
-        </ng-template>
-
-        <ng-template #header>
-          <tr>
-            <th>Arme</th>
-            <th class="weapon-col-narrow">Type</th>
-            <th class="weapon-col-narrow">Dégâts</th>
-            <th class="weapon-col-range">Portée</th>
-            <th>Notes</th>
-            <th class="weapon-col-actions">Actions</th>
-          </tr>
-        </ng-template>
-
-        <ng-template #body let-weapon>
-          <tr>
-            <td>
-              <div class="flex items-center gap-2">
-                <p class="m-0 font-semibold text-slate-100">{{ weapon.arme }}</p>
-                @if (weapon.user_id) {
-                  <span class="rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-amber-200">
-                    Création
-                  </span>
-                }
-              </div>
-            </td>
-            <td class="weapon-col-narrow">
-              <p-tag
-                [value]="weaponTypeLabel(weapon.type)"
-                [severity]="weapon.type === 'M' ? 'warn' : 'info'"
-              />
-            </td>
-            <td class="weapon-col-narrow">
-              <span class="font-semibold text-slate-100">{{ weapon.degats || '-' }}</span>
-            </td>
-            <td class="weapon-col-range text-slate-300">
-              {{ weapon.portee || '-' }}
-            </td>
-            <td class="text-slate-300">
-              {{ weapon.notes || '-' }}
-            </td>
-            <td class="weapon-col-actions">
-              @if (canManage(weapon)) {
-                <div class="flex justify-end gap-1">
-                  <p-button
-                    icon="pi pi-pencil"
-                    severity="secondary"
-                    [text]="true"
-                    [rounded]="true"
-                    size="small"
-                    (onClick)="startEdit(weapon)"
-                  />
-                  <p-button
-                    icon="pi pi-trash"
-                    severity="danger"
-                    [text]="true"
-                    [rounded]="true"
-                    size="small"
-                    (onClick)="confirmDelete($event, weapon)"
-                  />
-                </div>
-              }
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </p-card>
   </div>
 </section>

@@ -8,15 +8,14 @@ import {finalize} from 'rxjs/operators';
 import {BolDemonModel} from '../models/bol-demon.model';
 import {BolDemonStateService} from '../services/bol-demon-state.service';
 import {BolDemonsService} from '../services/bol-demons.service';
-import {ButtonModule} from 'primeng/button';
-import {CardModule} from 'primeng/card';
-import {DialogService} from 'primeng/dynamicdialog';
-import {IftaLabelModule} from 'primeng/iftalabel';
-import {InputNumberModule} from 'primeng/inputnumber';
-import {InputTextModule} from 'primeng/inputtext';
-import {SelectModule} from 'primeng/select';
-import {TagModule} from 'primeng/tag';
-import {TextareaModule} from 'primeng/textarea';
+import {MatDialog} from '@angular/material/dialog';
+import {MatCard, MatCardContent} from '@angular/material/card';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
 import {PictureComponent} from '../../shared/picture/picture';
 
 interface DemonPouvoirDraft {
@@ -29,18 +28,18 @@ interface DemonPouvoirDraft {
   imports: [
     JsonPipe,
     ReactiveFormsModule,
-    ButtonModule,
-    CardModule,
-    IftaLabelModule,
-    InputNumberModule,
-    InputTextModule,
-    SelectModule,
-    TagModule,
-    TextareaModule,
+    MatCard,
+    MatCardContent,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    DwTagComponent,
   ],
   templateUrl: './demon-form-page.html',
+  styleUrl: './demon-form-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService],
 })
 export class DemonFormPageComponent {
   private readonly demonStateService = inject(BolDemonStateService);
@@ -49,7 +48,7 @@ export class DemonFormPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly location = inject(Location);
   private readonly router = inject(Router);
-  private readonly dialogService = inject(DialogService);
+  private readonly dialog = inject(MatDialog);
   private readonly routeParamMap = toSignal(this.route.paramMap, {
     initialValue: this.route.snapshot.paramMap,
   });
@@ -85,6 +84,9 @@ export class DemonFormPageComponent {
       ? 'Les modifications ont bien ete enregistrees cote backend.'
       : 'Le demon a bien ete enregistre cote backend.',
   );
+
+  protected readonly compareById = (a: number | string | null, b: number | string | null): boolean =>
+    Number(a) === Number(b);
 
   protected readonly selectedPouvoirId = new FormControl<number | null>(null);
   protected readonly selectedPouvoirDetail = new FormControl<string>('', {
@@ -219,14 +221,13 @@ export class DemonFormPageComponent {
   }
 
   protected pickAvatar(): void {
-    const ref = this.dialogService.open(PictureComponent, {
-      header: 'Avatar du demon',
-      modal: true,
-      closable: false,
+    const ref = this.dialog.open(PictureComponent, {
+      data: {title: 'Avatar du démon'},
       width: 'min(960px, 92vw)',
+      disableClose: true,
     });
 
-    ref?.onClose.pipe(take(1)).subscribe((avatar: string | null) => {
+    ref.afterClosed().pipe(take(1)).subscribe((avatar: string | null) => {
       if (avatar) {
         this.demonForm.controls.avatar.setValue(avatar);
       }

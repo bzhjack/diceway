@@ -1,39 +1,36 @@
-<p-card class="dw-card--header">
-  <div class="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
-    <div class="max-w-4xl space-y-4">
-      <div class="space-y-2">
-        <div class="flex flex-col gap-0.5">
-          <p class="m-0 text-xs font-black uppercase tracking-[0.28em] text-amber-400">
-            Barbarians of Lemuria
-          </p>
-          <p class="m-0 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-amber-700">
-            Dashboard MJ
-          </p>
+<mat-card class="wsh-header-card" appearance="outlined">
+  <mat-card-content>
+    <div class="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+      <div class="max-w-4xl space-y-4">
+        <div class="space-y-2">
+          <div class="flex flex-col gap-0.5">
+            <p class="wsh-eyebrow m-0">
+              Barbarians of Lemuria
+            </p>
+            <p class="wsh-subeyebrow m-0">
+              Dashboard MJ
+            </p>
+          </div>
+          <h1 class="wsh-title m-0">
+            Vue globale avant session
+          </h1>
         </div>
-        <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-5xl">
-          Vue globale avant session
-        </h1>
+
+        <p class="wsh-description m-0 max-w-3xl">
+          Tu vois ici tes scénarios, tes héros, tes PNJ et tes ressources sans entrer dans la scène.
+          Depuis ce hub, tu peux créer, préparer puis seulement ensuite basculer dans la session live.
+        </p>
+
+        <div class="flex flex-wrap gap-1.5">
+          <dw-tag>MJ connecté</dw-tag>
+          <dw-tag>{{ userName() }}</dw-tag>
+          <dw-tag>1 session prête</dw-tag>
+        </div>
       </div>
 
-      <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
-        Tu vois ici tes scénarios, tes héros, tes PNJ et tes ressources sans entrer dans la scène.
-        Depuis ce hub, tu peux créer, préparer puis seulement ensuite basculer dans la session live.
-      </p>
-
-      <div class="flex flex-wrap gap-1.5">
-        <p-tag value="MJ connecté" severity="contrast" />
-        <p-tag [value]="userName()" severity="info" />
-        <p-tag value="1 session prête" severity="success" />
-      </div>
+      <button mat-stroked-button size="small" (click)="requestLogout()">
+        <mat-icon>logout</mat-icon> Déconnexion
+      </button>
     </div>
-
-    <p-button
-      label="Déconnexion"
-      icon="pi pi-sign-out"
-      severity="secondary"
-      size="small"
-      [outlined]="true"
-      (onClick)="requestLogout()"
-    />
-  </div>
-</p-card>
+  </mat-card-content>
+</mat-card>

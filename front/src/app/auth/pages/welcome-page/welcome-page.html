@@ -1,23 +1,27 @@
-<section class="auth-page">
-  <div class="flex flex-col h-screen items-center gap-1 pt-10">
-    <img ngSrc="assets/dw1.jpg" alt="" width="400" height="265" priority />
-    @if (!success) {
-      <div class="text-xl">Bienvenue sur Diceway</div>
-      <div class="flex flex-col gap-4">
-        <div class="text-sm">Votre compte est désormais actif et vous pouvez maintenant vous connecter</div>
-        <div class="flex justify-end gap-4">
-          <p-button [routerLink]="'/login'" label="Continuer" size="small" />
-        </div>
+<section class="auth-mat-page">
+  <mat-card class="auth-mat-card" appearance="outlined">
+    <img mat-card-image ngSrc="assets/dw1.jpg" alt="" width="400" height="265" priority />
+
+    <mat-card-header>
+      @if (!success) {
+        <mat-card-title>Bienvenue sur Diceway</mat-card-title>
+      } @else {
+        <mat-card-title>Mot de passe modifié</mat-card-title>
+      }
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (!success) {
+        <p>Votre compte est désormais actif, vous pouvez maintenant vous connecter.</p>
+      } @else {
+        <p>Votre mot de passe a été modifié avec succès, vous pouvez maintenant vous connecter.</p>
+      }
+    </mat-card-content>
+
+    <mat-card-actions>
+      <div class="auth-mat-actions auth-mat-actions--end">
+        <button mat-flat-button routerLink="/login">Continuer</button>
       </div>
-    }
-    @if (success) {
-      <div class="text-xl">Mot de passe modifié.</div>
-      <div class="flex flex-col gap-4">
-        <div class="text-sm">Votre mot de passe a été modifié avec succès, vous pouvez maintenant vous connecter</div>
-        <div class="flex justify-end gap-4">
-          <p-button [routerLink]="'/login'" label="Continuer" size="small" />
-        </div>
-      </div>
-    }
-  </div>
+    </mat-card-actions>
+  </mat-card>
 </section>

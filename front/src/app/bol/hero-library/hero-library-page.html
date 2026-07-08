@@ -1,367 +1,302 @@
-<section
-  class="dw-page xl:px-8"
->
+<section class="dw-page xl:px-8">
   <div class="mx-auto flex max-w-[1600px] flex-col gap-4">
-    <p-confirmpopup />
 
-    <p-card class="hero-library-header-card dw-card--header">
-      <div class="flex flex-col gap-4">
-        <div class="space-y-2.5">
-          <div class="space-y-1.5">
-            <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-emerald-300">
-              Bibliothèque BOL
-            </p>
-            <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none md:text-[2.8rem]">
-              Galerie des héros
-            </h1>
-          </div>
-
-          <p class="m-0 max-w-3xl text-sm leading-6 text-slate-300 md:text-[0.95rem]">
-            Vue d’ensemble des héros de Lémurie, avec leur profil, leur équipement et leurs traits.
-          </p>
-
-          <div class="flex flex-wrap gap-1.5">
-            <p-tag [value]="totalHeroCount() + ' héros'" severity="contrast" />
-            @if (heroCount() !== totalHeroCount()) {
-              <p-tag [value]="heroCount() + ' visibles'" severity="secondary" />
-            }
-          </div>
-        </div>
-
-        <div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">
-          <div class="flex flex-wrap gap-1.5">
-            <span class="library-header-actions__primary">
-              <p-button
-                label="Créer un héros"
-                icon="pi pi-plus"
-                severity="success"
-                size="small"
-                [routerLink]="'/create/hero'"
-                [state]="{ returnUrl: '/library/heroes' }"
-              />
-            </span>
-            <p-button
-              label="Création avancée"
-              icon="pi pi-star"
-              size="small"
-              severity="warn"
-              [outlined]="true"
-              [routerLink]="'/create/hero-advanced'"
-              [state]="{ returnUrl: '/library/heroes' }"
-            />
-            <p-button
-              label="Voir les PNJ"
-              icon="pi pi-user-edit"
-              size="small"
-              [routerLink]="'/library/pnjs'"
-              severity="secondary"
-              [outlined]="true"
-            />
-            <p-button
-              label="Voir le bestiaire"
-              icon="pi pi-book"
-              size="small"
-              [routerLink]="'/library/creatures'"
-              severity="secondary"
-              [outlined]="true"
-            />
-          </div>
-          <p-button
-            label="Retour au dashboard"
-            icon="pi pi-arrow-left"
+    <!-- Header card -->
+    <dw-library-header
+      title="Galerie des héros"
+      description="Vue d'ensemble des héros de Lémurie, avec leur profil, leur équipement et leurs traits."
+      color="emerald"
+    >
+      <ng-container dwHeaderTags>
+        <dw-tag>{{ totalHeroCount() }} héros</dw-tag>
+        @if (heroCount() !== totalHeroCount()) {
+          <dw-tag>{{ heroCount() }} visibles</dw-tag>
+        }
+      </ng-container>
+      <ng-container dwHeaderActions>
+        <div class="flex flex-wrap gap-1.5">
+          <button
+            mat-flat-button
             size="small"
-            [routerLink]="'/'"
-            severity="secondary"
-            [outlined]="true"
-          />
+            routerLink="/create/hero"
+            [state]="{ returnUrl: '/library/heroes' }"
+          >
+            <mat-icon>add</mat-icon> Créer un héros
+          </button>
+          <button
+            mat-stroked-button
+            size="small"
+            routerLink="/create/hero-advanced"
+            [state]="{ returnUrl: '/library/heroes' }"
+          >
+            <mat-icon>star</mat-icon> Création avancée
+          </button>
+          <button mat-stroked-button size="small" routerLink="/library/pnjs">
+            <mat-icon>manage_accounts</mat-icon> Voir les PNJ
+          </button>
+          <button mat-stroked-button size="small" routerLink="/library/creatures">
+            <mat-icon>menu_book</mat-icon> Voir le bestiaire
+          </button>
         </div>
-      </div>
-    </p-card>
+        <button mat-stroked-button size="small" routerLink="/">
+          <mat-icon>arrow_back</mat-icon> Retour au dashboard
+        </button>
+      </ng-container>
+    </dw-library-header>
 
-    <p-card>
-      <p-table
-        [value]="filteredHeroes()"
-        size="small"
-        [scrollable]="true"
-        scrollHeight="calc(100vh - 19rem)"
-        dataKey="id"
-        class="bol-hero-table"
-        [tableStyle]="{ 'min-width': '96rem' }"
+    <!-- Content card -->
+    <mat-card appearance="outlined" class="hero-content-card">
+
+      <!-- Toolbar -->
+      <dw-library-toolbar
+        placeholder="Rechercher un héros"
+        checkboxLabel="En cours de création"
+        [(searchTerm)]="searchTerm"
+        [(checked)]="onlyPending"
+        (cleared)="clearFilters()"
       >
-        <ng-template #caption>
-          <div class="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-            <div class="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center">
-              <p-iconfield iconPosition="left">
-                <p-inputicon class="pi pi-search" />
-                <input
-                  pInputText
-                  class="w-full lg:w-72"
-                  [ngModel]="searchTerm()"
-                  (ngModelChange)="searchTerm.set($event ?? '')"
-                  placeholder="Rechercher un héros"
-                  type="text"
-                />
-              </p-iconfield>
+        <dw-tag dwToolbarCount>{{ heroCount() }} entrées</dw-tag>
+      </dw-library-toolbar>
 
-              <div class="flex items-center gap-3 rounded-full border border-[#334155] px-4 py-2">
-                <p-checkbox
-                  inputId="hero-library-pending"
-                  [binary]="true"
-                  [ngModel]="onlyPending()"
-                  (ngModelChange)="onlyPending.set($event)"
-                />
-                <label for="hero-library-pending" class="cursor-pointer text-sm text-slate-300">
-                  En cours de création
-                </label>
-              </div>
-
-              <p-button
-                icon="pi pi-filter-slash"
-                label="Effacer"
-                severity="secondary"
-                [outlined]="true"
-                (onClick)="clearFilters()"
-              />
-            </div>
-
-            <p-tag [value]="heroCount() + ' entrées'" severity="contrast" />
-          </div>
-        </ng-template>
-
-        <ng-template #header>
-          <tr>
-            <th class="hero-col-avatar">Avatar</th>
-            <th style="width: 250px">Description</th>
-            <th class="hero-col-compact">Ressources</th>
-            <th class="hero-col-compact">Attributs</th>
-            <th class="hero-col-compact">Combat</th>
-            <th class="hero-col-compact">Carrières</th>
-            <th style="width: 16rem">Équipement</th>
-            <th style="width: 18rem">Traits</th>
-          </tr>
-        </ng-template>
-
-        <ng-template #body let-hero>
-          <tr>
-            <td class="hero-col-avatar">
-              <div class="hero-avatar">
-                <img
-                  [src]="heroImage(hero)"
-                  [alt]="hero.origines.nom ?? 'Héros'"
-                  class="h-full w-full object-cover"
-                />
-
-                @if (!hero.active) {
-                  <span class="hero-avatar__tag">En cours</span>
-                }
-              </div>
-            </td>
-
-            <td>
-              <div class="hero-description-content flex min-h-24 flex-col justify-between gap-3">
-                <div class="space-y-2">
-                  <div class="flex flex-wrap items-center gap-1">
-                    @if (hero.origines.commentaire) {
-                      <i
-                        class="pi pi-info-circle cursor-pointer text-emerald-300"
-                        [pTooltip]="hero.origines.commentaire"
-                      ></i>
-                    }
-                    <p class="m-0 line-clamp-2 text-lg font-bold text-slate-100">
-                      {{ hero.origines.nom || 'Héros sans nom' }}
-                    </p>
-                    <p-button
-                      icon="pi pi-pencil"
-                      severity="secondary"
-                      [text]="true"
-                      [rounded]="true"
-                      size="small"
-                      pTooltip="Modifier"
-                      [routerLink]="['/create/hero', hero.id]"
-                      [state]="{ returnUrl: '/library/heroes' }"
+      <!-- Table -->
+      <div class="hero-table-scroll">
+        <table class="bol-hero-table">
+          <thead>
+            <tr>
+              <th class="hero-col-avatar">Avatar</th>
+              <th style="width: 250px">Description</th>
+              <th class="hero-col-compact">Ressources</th>
+              <th class="hero-col-compact">Attributs</th>
+              <th class="hero-col-compact">Combat</th>
+              <th class="hero-col-compact">Carrières</th>
+              <th style="width: 16rem">Équipement</th>
+              <th style="width: 18rem">Traits</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (hero of filteredHeroes(); track hero.id) {
+              <tr>
+                <td class="hero-col-avatar">
+                  <div class="hero-avatar">
+                    <img
+                      [src]="heroImage(hero)"
+                      [alt]="hero.origines.nom ?? 'Héros'"
+                      class="h-full w-full object-cover"
                     />
                     @if (!hero.active) {
-                      <p-button
-                        icon="pi pi-cog"
-                        severity="secondary"
-                        [text]="true"
-                        [rounded]="true"
-                        size="small"
-                        pTooltip="Édition avancée"
-                        [routerLink]="['/create/hero-advanced', hero.id]"
-                        [state]="{ returnUrl: '/library/heroes' }"
-                      />
-                    }
-                    <p-button
-                      icon="pi pi-trash"
-                      severity="danger"
-                      [text]="true"
-                      [rounded]="true"
-                      size="small"
-                      pTooltip="Supprimer"
-                      (onClick)="askDelete($event, hero)"
-                    />
-                  </div>
-
-                  <div class="grid gap-1 text-sm text-slate-400">
-                    @if (hero.origines.joueur) {
-                      <p class="m-0">{{ hero.origines.joueur }}</p>
-                    }
-                    @if (hero.origines.region?.region) {
-                      <p class="m-0">{{ hero.origines.region?.region }}</p>
-                    }
-                    @if (languagesText(hero)) {
-                      <p class="m-0 line-clamp-2">{{ languagesText(hero) }}</p>
+                      <span class="hero-avatar__tag">En cours</span>
                     }
                   </div>
-                </div>
-              </div>
-            </td>
+                </td>
 
-            <td class="hero-col-compact">
-              <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
-                @for (entry of resourceEntries(hero); track entry.label) {
-                  <div class="flex items-center justify-between gap-3">
-                    <span class="text-slate-400">{{ entry.label }}</span>
-                    <span [class.font-bold]="entry.label === 'Vitalité'">{{ entry.value }}</span>
-                  </div>
-                }
-              </div>
-            </td>
-
-            <td class="hero-col-compact">
-              <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
-                <div class="flex items-center justify-between gap-3">
-                  <span class="text-slate-400">Vigueur</span>
-                  <span>{{ hero.attributs.vigueur }}</span>
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                  <span class="text-slate-400">Agilité</span>
-                  <span>{{ hero.attributs.agilite }}</span>
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                  <span class="text-slate-400">Esprit</span>
-                  <span>{{ hero.attributs.esprit }}</span>
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                  <span class="text-slate-400">Aura</span>
-                  <span>{{ hero.attributs.aura }}</span>
-                </div>
-              </div>
-            </td>
-
-            <td class="hero-col-compact">
-              <div class="grid gap-1 text-xs text-slate-200 md:text-sm">
-                <div class="flex items-center justify-between gap-3">
-                  <span class="text-slate-400">Initiative</span>
-                  <span>{{ hero.combat.initiative }}</span>
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                  <span class="text-slate-400">Mêlée</span>
-                  <span>{{ hero.combat.melee }}</span>
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                  <span class="text-slate-400">Tir</span>
-                  <span>{{ hero.combat.tir }}</span>
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                  <span class="text-slate-400">Défense</span>
-                  <span>{{ hero.combat.defense }}</span>
-                </div>
-              </div>
-            </td>
-
-            <td class="hero-col-compact">
-              <div class="flex min-h-24 flex-col gap-1 text-sm text-slate-200">
-                @for (entry of careerEntries(hero); track entry.label) {
-                  <div class="flex items-center justify-between gap-3">
-                    <span class="text-slate-300">{{ entry.label }}</span>
-                    <span class="text-slate-400">{{ entry.value }}</span>
-                  </div>
-                } @empty {
-                  <span class="text-sm text-slate-500">Aucune carrière</span>
-                }
-              </div>
-            </td>
-
-            <td>
-              <div class="grid min-h-24 gap-3">
-                <div class="space-y-2">
-                  <p class="m-0 text-xs font-black uppercase tracking-[0.18em] text-slate-500">
-                    Armures
-                  </p>
-                  <div class="flex flex-col gap-1 text-sm text-slate-200">
-                    @for (entry of armorEntries(hero); track entry.label) {
-                      <div class="flex items-center justify-between gap-3">
-                        <span class="text-slate-300">{{ entry.label }}</span>
-                        <span class="text-slate-400">{{ entry.value }}</span>
+                <td>
+                  <div class="hero-description-content flex min-h-24 flex-col justify-between gap-3">
+                    <div class="space-y-2">
+                      <div class="flex flex-wrap items-center gap-1">
+                        @if (hero.origines.commentaire) {
+                          <mat-icon
+                            class="hlp-info-icon cursor-pointer !h-4 !w-4 !text-base !leading-4"
+                            [matTooltip]="hero.origines.commentaire"
+                          >info</mat-icon>
+                        }
+                        <p class="hlp-name m-0 line-clamp-2">
+                          {{ hero.origines.nom || 'Héros sans nom' }}
+                        </p>
+                        <button
+                          mat-icon-button
+                          class="hero-action-btn"
+                          matTooltip="Modifier"
+                          [routerLink]="['/create/hero', hero.id]"
+                          [state]="{ returnUrl: '/library/heroes' }"
+                        >
+                          <mat-icon>edit</mat-icon>
+                        </button>
+                        @if (!hero.active) {
+                          <button
+                            mat-icon-button
+                            class="hero-action-btn"
+                            matTooltip="Édition avancée"
+                            [routerLink]="['/create/hero-advanced', hero.id]"
+                            [state]="{ returnUrl: '/library/heroes' }"
+                          >
+                            <mat-icon>settings</mat-icon>
+                          </button>
+                        }
+                        <button
+                          mat-icon-button
+                          class="hero-action-btn hero-btn-danger"
+                          matTooltip="Supprimer"
+                          (click)="askDelete(hero)"
+                        >
+                          <mat-icon>delete</mat-icon>
+                        </button>
                       </div>
-                    } @empty {
-                      <span class="text-sm text-slate-500">Aucune</span>
-                    }
-                  </div>
-                </div>
 
-                <div class="space-y-2">
-                  <p class="m-0 text-xs font-black uppercase tracking-[0.18em] text-slate-500">
-                    Armes
-                  </p>
-                  <div class="flex flex-col gap-1 text-sm text-slate-200">
-                    @for (entry of weaponEntries(hero); track entry.label) {
-                      <div class="flex items-center justify-between gap-3">
-                        <span class="text-slate-300">{{ entry.label }}</span>
-                        <span class="text-slate-400">{{ entry.value }}</span>
-                      </div>
-                    } @empty {
-                      <span class="text-sm text-slate-500">Aucune</span>
-                    }
-                  </div>
-                </div>
-              </div>
-            </td>
-
-            <td>
-              <div class="flex min-h-24 flex-col gap-1">
-                @for (trait of traitEntries(hero); track trait.label) {
-                  <div class="flex items-center gap-1 text-sm text-slate-200">
-                    <div
-                      class="tag_icon hero-trait-icon"
-                      [class.bonus]="trait.severity === 'positive'"
-                      [class.malus]="trait.severity === 'negative'"
-                      [class.hero-trait-icon--clickable]="trait.details.length"
-                      (click)="trait.details.length ? traitPanel.toggle($event) : null"
-                    >
-                      <div [inlineSVG]="traitIconPath(trait.icon)"></div>
-                    </div>
-                    <p-popover #traitPanel>
-                      <div class="hero-trait-panel">
-                        @for (detail of trait.details; track detail.title + '-' + (detail.description ?? '')) {
-                          <div class="hero-trait-panel__section">
-                            <div class="hero-trait-panel__title">{{ detail.title }}</div>
-                            @if (detail.description) {
-                              <div class="hero-trait-panel__line">{{ detail.description }}</div>
-                            }
-                          </div>
-                        } @empty {
-                          <div class="hero-trait-panel__line">Aucun détail</div>
+                      <div class="hlp-meta grid gap-1">
+                        @if (hero.origines.joueur) {
+                          <p class="m-0">{{ hero.origines.joueur }}</p>
+                        }
+                        @if (hero.origines.region?.region) {
+                          <p class="m-0">{{ hero.origines.region?.region }}</p>
+                        }
+                        @if (languagesText(hero)) {
+                          <p class="m-0 line-clamp-2">{{ languagesText(hero) }}</p>
                         }
                       </div>
-                    </p-popover>
-                    <span
-                      [class.text-emerald-200]="trait.severity === 'positive'"
-                      [class.text-rose-200]="trait.severity === 'negative'"
-                    >
-                      {{ trait.label }}
-                    </span>
+                    </div>
                   </div>
-                } @empty {
-                  <span class="text-sm text-slate-500">Aucun trait</span>
-                }
-              </div>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </p-card>
+                </td>
+
+                <td class="hero-col-compact">
+                  <div class="hlp-cell grid gap-1">
+                    @for (entry of resourceEntries(hero); track entry.label) {
+                      <div class="flex items-center justify-between gap-3">
+                        <span class="hlp-muted">{{ entry.label }}</span>
+                        <span [class.font-bold]="entry.label === 'Vitalité'">{{ entry.value }}</span>
+                      </div>
+                    }
+                  </div>
+                </td>
+
+                <td class="hero-col-compact">
+                  <div class="hlp-cell grid gap-1">
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="hlp-muted">Vigueur</span>
+                      <span>{{ hero.attributs.vigueur }}</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="hlp-muted">Agilité</span>
+                      <span>{{ hero.attributs.agilite }}</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="hlp-muted">Esprit</span>
+                      <span>{{ hero.attributs.esprit }}</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="hlp-muted">Aura</span>
+                      <span>{{ hero.attributs.aura }}</span>
+                    </div>
+                  </div>
+                </td>
+
+                <td class="hero-col-compact">
+                  <div class="hlp-cell grid gap-1">
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="hlp-muted">Initiative</span>
+                      <span>{{ hero.combat.initiative }}</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="hlp-muted">Mêlée</span>
+                      <span>{{ hero.combat.melee }}</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="hlp-muted">Tir</span>
+                      <span>{{ hero.combat.tir }}</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="hlp-muted">Défense</span>
+                      <span>{{ hero.combat.defense }}</span>
+                    </div>
+                  </div>
+                </td>
+
+                <td class="hero-col-compact">
+                  <div class="hlp-career-cell flex min-h-24 flex-col gap-1">
+                    @for (entry of careerEntries(hero); track entry.label) {
+                      <div class="flex items-center justify-between gap-3">
+                        <span class="hlp-label">{{ entry.label }}</span>
+                        <span class="hlp-muted">{{ entry.value }}</span>
+                      </div>
+                    } @empty {
+                      <span class="hlp-empty">Aucune carrière</span>
+                    }
+                  </div>
+                </td>
+
+                <td>
+                  <div class="grid min-h-24 gap-3">
+                    <div class="space-y-2">
+                      <p class="hlp-section-title m-0">Armures</p>
+                      <div class="hlp-career-cell flex flex-col gap-1">
+                        @for (entry of armorEntries(hero); track entry.label) {
+                          <div class="flex items-center justify-between gap-3">
+                            <span class="hlp-label">{{ entry.label }}</span>
+                            <span class="hlp-muted">{{ entry.value }}</span>
+                          </div>
+                        } @empty {
+                          <span class="hlp-empty">Aucune</span>
+                        }
+                      </div>
+                    </div>
+
+                    <div class="space-y-2">
+                      <p class="hlp-section-title m-0">Armes</p>
+                      <div class="hlp-career-cell flex flex-col gap-1">
+                        @for (entry of weaponEntries(hero); track entry.label) {
+                          <div class="flex items-center justify-between gap-3">
+                            <span class="hlp-label">{{ entry.label }}</span>
+                            <span class="hlp-muted">{{ entry.value }}</span>
+                          </div>
+                        } @empty {
+                          <span class="hlp-empty">Aucune</span>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </td>
+
+                <td>
+                  <div class="flex min-h-24 flex-col gap-1">
+                    @for (trait of traitEntries(hero); track trait.label) {
+                      <div class="hlp-career-cell flex items-center gap-1">
+                        @if (trait.details.length) {
+                          <button
+                            class="tag_icon hero-trait-icon hero-trait-icon--clickable"
+                            [class.bonus]="trait.severity === 'positive'"
+                            [class.malus]="trait.severity === 'negative'"
+                            [matMenuTriggerFor]="traitMenu"
+                          >
+                            <div [inlineSVG]="traitIconPath(trait.icon)"></div>
+                          </button>
+                        } @else {
+                          <div
+                            class="tag_icon hero-trait-icon"
+                            [class.bonus]="trait.severity === 'positive'"
+                            [class.malus]="trait.severity === 'negative'"
+                          >
+                            <div [inlineSVG]="traitIconPath(trait.icon)"></div>
+                          </div>
+                        }
+                        <mat-menu #traitMenu>
+                          <div class="hero-trait-panel">
+                            @for (detail of trait.details; track detail.title + '-' + (detail.description ?? '')) {
+                              <div class="hero-trait-panel__section">
+                                <div class="hero-trait-panel__title">{{ detail.title }}</div>
+                                @if (detail.description) {
+                                  <div class="hero-trait-panel__line">{{ detail.description }}</div>
+                                }
+                              </div>
+                            }
+                          </div>
+                        </mat-menu>
+                        <span
+                          [class.hlp-trait--positive]="trait.severity === 'positive'"
+                          [class.hlp-trait--negative]="trait.severity === 'negative'"
+                        >
+                          {{ trait.label }}
+                        </span>
+                      </div>
+                    } @empty {
+                      <span class="hlp-empty">Aucun trait</span>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </mat-card>
+
   </div>
 </section>

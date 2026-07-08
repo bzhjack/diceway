@@ -1,0 +1,29 @@
+// Surcharge du style des mat-form-field (contraste renforcé sur fond sombre).
+// Doc : https://material.angular.dev/components/form-field/styling
+@use '@angular/material' as mat;
+
+html {
+  @include mat.form-field-overrides((
+    outlined-outline-color: var(--dw-surface-300),
+    outlined-hover-outline-color: var(--dw-surface-500),
+    outlined-label-text-color: var(--dw-surface-500),
+    outlined-hover-label-text-color: var(--dw-surface-700),
+    outlined-input-text-color: var(--dw-surface-800),
+    outlined-input-text-placeholder-color: var(--dw-surface-600),
+    leading-icon-color: var(--dw-surface-500),
+    trailing-icon-color: var(--dw-surface-500),
+    container-height: 40px,
+    container-vertical-padding: 8px,
+  ));
+  @include mat.select-overrides((
+    enabled-trigger-text-color: var(--dw-surface-800),
+    placeholder-text-color: var(--dw-surface-600),
+  ));
+}
+
+.mat-mdc-text-field-wrapper.mdc-text-field--outlined {
+  flex: none;
+  background-color: var(--dw-surface-100);
+  border-radius: var(--mat-form-field-outlined-container-shape, var(--mat-sys-corner-extra-small));
+}
+

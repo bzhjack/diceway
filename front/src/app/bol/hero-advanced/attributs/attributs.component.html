@@ -1,36 +1,36 @@
 <div class="space-y-4">
   <div class="grid gap-4">
     <div class="grid gap-4 sm:grid-cols-2">
-      <p-iftalabel>
-        <p-inputNumber inputId="advanced-vigueur" class="dw-input-number" [formControl]="vigueurCtrl" />
-        <label for="advanced-vigueur">Vigueur</label>
-      </p-iftalabel>
-      <p-iftalabel>
-        <p-inputNumber inputId="advanced-agilite" class="dw-input-number" [formControl]="agiliteCtrl" />
-        <label for="advanced-agilite">Agilité</label>
-      </p-iftalabel>
+      <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+        <mat-label>Vigueur</mat-label>
+        <input matInput type="number" id="advanced-vigueur" [formControl]="vigueurCtrl" />
+      </mat-form-field>
+      <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+        <mat-label>Agilité</mat-label>
+        <input matInput type="number" id="advanced-agilite" [formControl]="agiliteCtrl" />
+      </mat-form-field>
     </div>
 
     <div class="grid gap-4 sm:grid-cols-2">
-      <p-iftalabel>
-        <p-inputNumber inputId="advanced-esprit" class="dw-input-number" [formControl]="espritCtrl" />
-        <label for="advanced-esprit">Esprit</label>
-      </p-iftalabel>
-      <p-iftalabel>
-        <p-inputNumber inputId="advanced-aura" class="dw-input-number" [formControl]="auraCtrl" />
-        <label for="advanced-aura">Aura</label>
-      </p-iftalabel>
+      <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+        <mat-label>Esprit</mat-label>
+        <input matInput type="number" id="advanced-esprit" [formControl]="espritCtrl" />
+      </mat-form-field>
+      <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+        <mat-label>Aura</mat-label>
+        <input matInput type="number" id="advanced-aura" [formControl]="auraCtrl" />
+      </mat-form-field>
     </div>
   </div>
 
   @if (attributErrors().length) {
-    <div class="border border-red-400/35 bg-red-950/20 p-3 text-sm text-red-200">
+    <div class="dw-field-error p-3">
       @for (error of attributErrors(); track error.control + error.error) {
         <p class="m-0">{{ error.control ? error.control + ' ' : '' }}{{ error.error }}</p>
       }
     </div>
   } @else if (attributWarns().length) {
-    <div class="border border-amber-400/30 bg-amber-950/15 p-3 text-sm text-amber-200">
+    <div class="dw-field-warning p-3">
       @for (warning of attributWarns(); track warning.warn) {
         <p class="m-0">{{ warning.warn }}</p>
       }

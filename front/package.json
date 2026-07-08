@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "screenshot": "node scripts/screenshot.mjs"
   },
   "prettier": {
     "printWidth": 100,
@@ -25,17 +26,16 @@
   "dependencies": {
     "@3d-dice/dice-box": "^1.1.4",
     "@angular/animations": "^22.0.0",
+    "@angular/cdk": "^22.0.2",
     "@angular/common": "^22.0.0",
     "@angular/compiler": "^22.0.0",
     "@angular/core": "^22.0.0",
     "@angular/forms": "^22.0.0",
+    "@angular/material": "^22.0.2",
     "@angular/platform-browser": "^22.0.0",
     "@angular/router": "^22.0.0",
-    "@primeuix/themes": "^2.0.3",
     "angular-oauth2-oidc": "^20.0.2",
     "ngx-image-cropper": "^9.1.6",
-    "primeicons": "^7.0.0",
-    "primeng": "^21.1.5",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -45,6 +45,7 @@
     "@angular/compiler-cli": "^22.0.0",
     "@tailwindcss/postcss": "^4.2.2",
     "jsdom": "^27.1.0",
+    "playwright": "^1.61.1",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.2.2",
     "typescript": "~6.0.3",

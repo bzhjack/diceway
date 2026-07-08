@@ -10,30 +10,6 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'session/live',
-    loadComponent: () =>
-      import('./bol/session-live/session-live-page').then((module) => module.SessionLivePageComponent),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'create/scenario',
-    loadComponent: () =>
-      import('./bol/scenario-form/scenario-form-page').then((module) => module.ScenarioFormPageComponent),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'create/scenario/:id',
-    loadComponent: () =>
-      import('./bol/scenario-form/scenario-form-page').then((module) => module.ScenarioFormPageComponent),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'library/scenarios',
-    loadComponent: () =>
-      import('./bol/scenario-library/scenario-library-page').then((module) => module.ScenarioLibraryPageComponent),
-    canActivate: [authGuard],
-  },
-  {
     path: 'create/creature',
     loadComponent: () =>
       import('./bol/creature-form/creature-form-page').then(
@@ -145,14 +121,6 @@ export const routes: Routes = [
     path: 'intendance',
     loadComponent: () =>
       import('./bol/intendance/intendance-page').then((module) => module.IntendancePageComponent),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'create/:entity',
-    loadComponent: () =>
-      import('./bol/creation-placeholder/creation-placeholder-page').then(
-        (module) => module.CreationPlaceholderPageComponent,
-      ),
     canActivate: [authGuard],
   },
   {

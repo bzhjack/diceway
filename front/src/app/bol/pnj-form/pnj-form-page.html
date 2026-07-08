@@ -1,604 +1,449 @@
-<section
-  class="dw-page"
->
+<section class="dw-page">
   <div class="mx-auto flex max-w-7xl flex-col gap-4">
-    <p-card>
-      <form class="dw-creation-form flex flex-col gap-6" [formGroup]="pnjForm" (ngSubmit)="savePnj()">
-        <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div class="space-y-3">
-            <div class="flex items-center gap-3">
-              <div
-                class="flex h-14 w-14 items-center justify-center border border-[#424b57] bg-[#059669] text-2xl text-white"
-              >
-                <i class="pi pi-user-edit" aria-hidden="true"></i>
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <form class="flex flex-col gap-6" [formGroup]="pnjForm" (ngSubmit)="savePnj()">
+          <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="pfp-icon flex h-14 w-14 items-center justify-center">
+                  <mat-icon>manage_accounts</mat-icon>
+                </div>
+                <div class="space-y-1">
+                  <p class="pfp-eyebrow m-0">
+                    {{ pageEyebrow() }}
+                  </p>
+                  <h1 class="pfp-title m-0">
+                    {{ pageTitle() }}
+                  </h1>
+                </div>
               </div>
-              <div class="space-y-1">
-                <p class="m-0 text-xs font-black uppercase tracking-[0.22em] text-emerald-300">
-                  {{ pageEyebrow() }}
+            </div>
+
+            <div class="flex flex-col gap-3 sm:flex-row md:justify-end">
+              <button mat-stroked-button type="button" (click)="goBack()">
+                <mat-icon>arrow_back</mat-icon> Retour
+              </button>
+              <button
+                mat-flat-button
+                type="submit"
+                [disabled]="pnjForm.invalid || pending() || loadingPnj()"
+              >
+                <mat-icon>check</mat-icon> {{ submitLabel() }}
+              </button>
+            </div>
+          </div>
+
+          <div class="grid gap-4">
+            @if (loadingPnj()) {
+              <div class="dw-section--loading">
+                <p class="pfp-section-eyebrow m-0">
+                  Chargement
                 </p>
-                <h1 class="m-0 font-['Muse_Display_Harmony'] text-4xl leading-none">
-                  {{ pageTitle() }}
-                </h1>
+                <p class="pfp-loading-detail m-0 mt-3">
+                  Récupération du PNJ à modifier.
+                </p>
               </div>
-            </div>
-          </div>
-
-          <div class="flex flex-col gap-3 sm:flex-row md:justify-end">
-            <p-button
-              icon="pi pi-arrow-left"
-              label="Retour"
-              severity="secondary"
-              [outlined]="true"
-              (onClick)="goBack()"
-            />
-            <p-button
-              icon="pi pi-check"
-              [label]="submitLabel()"
-              severity="success"
-              [disabled]="pnjForm.invalid || pending() || loadingPnj()"
-              type="submit"
-            />
-          </div>
-        </div>
-
-        <div class="grid gap-4">
-          @if (loadingPnj()) {
-            <div class="dw-section--loading">
-              <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
-                Chargement
-              </p>
-              <p class="mt-3 mb-0 text-sm leading-7 text-slate-200">
-                Récupération du PNJ à modifier.
-              </p>
-            </div>
-          }
-
-          <div class="dw-section--form">
-            <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
-              Général
-            </p>
-
-            <div class="grid gap-4 md:grid-cols-[140px_minmax(0,1fr)]">
-              <div
-                class="group relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden border border-[#424b57] bg-[#0f172a] transition-colors hover:border-emerald-300/70"
-                (click)="pickAvatar()"
-              >
-                @if (avatarPreview()) {
-                  <img [src]="avatarPreview()!" alt="Avatar PNJ" class="h-full w-full object-cover" />
-                } @else {
-                  <div class="flex flex-col items-center gap-2 text-slate-400">
-                    <i class="pi pi-image text-3xl"></i>
-                    <span class="text-[0.65rem] font-bold uppercase tracking-[0.2em]">Avatar</span>
-                  </div>
-                }
-
-                <div
-                  class="pointer-events-none absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
-                >
-                  <span
-                    class="mb-3 border border-white/20 bg-black/55 px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-white"
-                  >
-                    Modifier
-                  </span>
-                </div>
-              </div>
-
-              <div class="grid gap-2 md:grid-cols-2">
-                <p-iftalabel>
-                  <input pInputText id="nom" formControlName="nom" class="w-full" />
-                  <label for="nom">Nom du PNJ *</label>
-                </p-iftalabel>
-
-                <p-iftalabel>
-                  <p-select
-                    inputId="type"
-                    class="w-full"
-                    [options]="typeOptions"
-                    optionLabel="label"
-                    optionValue="value"
-                    formControlName="type"
-                  />
-                  <label for="type">Type *</label>
-                </p-iftalabel>
-
-                <div class="md:col-span-2">
-                  <p-iftalabel>
-                    <textarea
-                      pTextarea
-                      id="commentaire"
-                      formControlName="commentaire"
-                      rows="2"
-                      class="w-full resize-none"
-                    ></textarea>
-                    <label for="commentaire">Commentaire de scène</label>
-                  </p-iftalabel>
-                </div>
-              </div>
-            </div>
-
-            @if (onError('nom') || onError('type')) {
-              <p class="mt-3 mb-0 text-sm text-emerald-300">
-                Le nom et le type sont requis pour préparer le PNJ.
-              </p>
             }
-          </div>
 
-          <div class="grid gap-4 xl:grid-cols-3 xl:items-start">
-            <div class="dw-section--form xl:h-full">
-              <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
-                Attributs
+            <!-- Général -->
+            <div class="dw-section--form">
+              <p class="pfp-section-eyebrow m-0 mb-2">
+                Général
               </p>
 
-              <div class="flex flex-col gap-2">
-                <div class="flex gap-2">
-                  <p-iftalabel>
-                    <p-inputNumber
-                      inputId="vigueur"
-                      formControlName="vigueur"
-                      class="dw-input-number"
-                    />
-                    <label for="vigueur">Vigueur</label>
-                  </p-iftalabel>
-                  <p-iftalabel>
-                    <p-inputNumber
-                      inputId="agilite"
-                      formControlName="agilite"
-                      class="dw-input-number"
-                    />
-                    <label for="agilite">Agilité</label>
-                  </p-iftalabel>
+              <div class="grid gap-4 md:grid-cols-[140px_minmax(0,1fr)]">
+                <div
+                  class="pfp-avatar group relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden transition-colors"
+                  (click)="pickAvatar()"
+                >
+                  @if (avatarPreview()) {
+                    <img [src]="avatarPreview()!" alt="Avatar PNJ" class="h-full w-full object-cover" />
+                  } @else {
+                    <div class="pfp-avatar-placeholder flex flex-col items-center gap-2">
+                      <mat-icon class="!text-3xl">image</mat-icon>
+                      <span class="pfp-avatar-label">Avatar</span>
+                    </div>
+                  }
+                  <div class="pfp-avatar-overlay pointer-events-none absolute inset-0 flex items-end justify-center opacity-0 transition-opacity group-hover:opacity-100">
+                    <span class="pfp-avatar-overlay-label mb-3 px-2 py-0.5">
+                      Modifier
+                    </span>
+                  </div>
                 </div>
-                <div class="flex gap-2">
-                  <p-iftalabel>
-                    <p-inputNumber
-                      inputId="esprit"
-                      formControlName="esprit"
-                      class="dw-input-number"
-                    />
-                    <label for="esprit">Esprit</label>
-                  </p-iftalabel>
-                  <p-iftalabel>
-                    <p-inputNumber
-                      inputId="aura"
-                      formControlName="aura"
-                      class="dw-input-number"
-                    />
-                    <label for="aura">Aura</label>
-                  </p-iftalabel>
+
+                <div class="grid gap-2 md:grid-cols-2">
+                  <mat-form-field subscriptSizing="dynamic">
+                    <mat-label>Nom du PNJ</mat-label>
+                    <input matInput id="nom" formControlName="nom" />
+                  </mat-form-field>
+
+                  <mat-form-field subscriptSizing="dynamic">
+                    <mat-label>Type</mat-label>
+                    <mat-select inputId="type" formControlName="type">
+                      @for (opt of typeOptions; track opt.value) {
+                        <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+
+                  <div class="md:col-span-2">
+                    <mat-form-field subscriptSizing="dynamic" class="w-full">
+                      <mat-label>Commentaire de scène</mat-label>
+                      <textarea matInput id="commentaire" formControlName="commentaire" rows="2" class="resize-none"></textarea>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+
+              @if (onError('nom') || onError('type')) {
+                <p class="pfp-field-hint m-0 mt-3">
+                  Le nom et le type sont requis pour préparer le PNJ.
+                </p>
+              }
+            </div>
+
+            <!-- Attributs / Combat / Ressources -->
+            <div class="grid gap-4 xl:grid-cols-3 xl:items-start">
+              <div class="dw-section--form xl:h-full">
+                <p class="pfp-section-eyebrow m-0 mb-2">
+                  Attributs
+                </p>
+                <div class="flex flex-col gap-2">
+                  <div class="flex gap-2">
+                    <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                      <mat-label>Vigueur</mat-label>
+                      <input matInput type="number" id="vigueur" formControlName="vigueur" />
+                    </mat-form-field>
+                    <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                      <mat-label>Agilité</mat-label>
+                      <input matInput type="number" id="agilite" formControlName="agilite" />
+                    </mat-form-field>
+                  </div>
+                  <div class="flex gap-2">
+                    <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                      <mat-label>Esprit</mat-label>
+                      <input matInput type="number" id="esprit" formControlName="esprit" />
+                    </mat-form-field>
+                    <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                      <mat-label>Aura</mat-label>
+                      <input matInput type="number" id="aura" formControlName="aura" />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+
+              <div class="dw-section--form xl:h-full">
+                <p class="pfp-section-eyebrow m-0 mb-2">
+                  Combat
+                </p>
+                <div class="flex flex-col gap-2">
+                  <div class="flex gap-2">
+                    <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                      <mat-label>Initiative</mat-label>
+                      <input matInput type="number" id="initiative" formControlName="initiative" />
+                    </mat-form-field>
+                    <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                      <mat-label>Mêlée</mat-label>
+                      <input matInput type="number" id="melee" formControlName="melee" />
+                    </mat-form-field>
+                  </div>
+                  <div class="flex gap-2">
+                    <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                      <mat-label>Tir</mat-label>
+                      <input matInput type="number" id="tir" formControlName="tir" />
+                    </mat-form-field>
+                    <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                      <mat-label>Défense</mat-label>
+                      <input matInput type="number" id="defense" formControlName="defense" />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+
+              <div class="dw-section--form xl:h-full">
+                <p class="pfp-section-eyebrow m-0 mb-2">
+                  Ressources
+                </p>
+                <div class="grid gap-2 md:grid-cols-2">
+                  <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                    <mat-label>Vitalité</mat-label>
+                    <input matInput type="number" id="vitalite" formControlName="vitalite" />
+                  </mat-form-field>
+                  <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                    <mat-label>Vilénie</mat-label>
+                    <input matInput type="number" id="vilenie" formControlName="vilenie" />
+                  </mat-form-field>
+                  <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                    <mat-label>Pouvoir</mat-label>
+                    <input matInput type="number" id="pouvoir" formControlName="pouvoir" />
+                  </mat-form-field>
+                  <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
+                    <mat-label>Foi</mat-label>
+                    <input matInput type="number" id="foi" formControlName="foi" />
+                  </mat-form-field>
+                  <mat-form-field subscriptSizing="dynamic" class="w-[90px] md:col-span-2">
+                    <mat-label>Création</mat-label>
+                    <input matInput type="number" id="creation" formControlName="creation" />
+                  </mat-form-field>
                 </div>
               </div>
             </div>
 
-            <div class="dw-section--form xl:h-full">
-              <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
-                Combat
-              </p>
-
-              <div class="flex flex-col gap-2">
-                <div class="flex gap-2">
-                  <p-iftalabel>
-                    <p-inputNumber
-                      inputId="initiative"
-                      formControlName="initiative"
-                      class="dw-input-number"
-                    />
-                    <label for="initiative">Initiative</label>
-                  </p-iftalabel>
-                  <p-iftalabel>
-                    <p-inputNumber
-                      inputId="melee"
-                      formControlName="melee"
-                      class="dw-input-number"
-                    />
-                    <label for="melee">Mêlée</label>
-                  </p-iftalabel>
-                </div>
-                <div class="flex gap-2">
-                  <p-iftalabel>
-                    <p-inputNumber
-                      inputId="tir"
-                      formControlName="tir"
-                      class="dw-input-number"
-                    />
-                    <label for="tir">Tir</label>
-                  </p-iftalabel>
-                  <p-iftalabel>
-                    <p-inputNumber
-                      inputId="defense"
-                      formControlName="defense"
-                      class="dw-input-number"
-                    />
-                    <label for="defense">Défense</label>
-                  </p-iftalabel>
-                </div>
-              </div>
-            </div>
-
-            <div class="dw-section--form xl:h-full">
-              <p class="m-0 mb-2 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
-                Ressources
-              </p>
-
-              <div class="grid gap-2 md:grid-cols-2">
-                <p-iftalabel>
-                  <p-inputNumber
-                    inputId="vitalite"
-                    formControlName="vitalite"
-                    class="dw-input-number"
-                  />
-                  <label for="vitalite">Vitalité</label>
-                </p-iftalabel>
-                <p-iftalabel>
-                  <p-inputNumber
-                    inputId="vilenie"
-                    formControlName="vilenie"
-                    class="dw-input-number"
-                  />
-                  <label for="vilenie">Vilénie</label>
-                </p-iftalabel>
-                <p-iftalabel>
-                  <p-inputNumber
-                    inputId="pouvoir"
-                    formControlName="pouvoir"
-                    class="dw-input-number"
-                  />
-                  <label for="pouvoir">Pouvoir</label>
-                </p-iftalabel>
-                <p-iftalabel>
-                  <p-inputNumber
-                    inputId="foi"
-                    formControlName="foi"
-                    class="dw-input-number"
-                  />
-                  <label for="foi">Foi</label>
-                </p-iftalabel>
-                <p-iftalabel class="md:col-span-2">
-                  <p-inputNumber
-                    inputId="creation"
-                    formControlName="creation"
-                    class="dw-input-number"
-                  />
-                  <label for="creation">Création</label>
-                </p-iftalabel>
-              </div>
-            </div>
-          </div>
-
-          <div class="grid gap-4 xl:grid-cols-3 xl:items-start">
-            <div class="dw-section--form xl:h-full">
-              <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                <div class="space-y-2">
-                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+            <!-- Traits / Carrières / Langues -->
+            <div class="grid gap-4 xl:grid-cols-3 xl:items-start">
+              <!-- Traits -->
+              <div class="dw-section--form xl:h-full">
+                <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                  <p class="pfp-section-eyebrow m-0">
                     Traits
                   </p>
-                </div>
-                <p-tag [value]="selectedTraitEntries().length + ' sélectionné(s)'" severity="contrast" />
-              </div>
-
-              <div class="grid gap-3">
-                <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                  <p-iftalabel>
-                    <p-select
-                      inputId="avantage"
-                      class="w-full"
-                      [options]="filteredAvantages()"
-                      optionLabel="avantage"
-                      optionValue="id"
-                      [formControl]="selectedAvantageId"
-                    />
-                    <label for="avantage">Ajouter un avantage</label>
-                  </p-iftalabel>
-                  <p-button
-                    label="Ajouter"
-                    icon="pi pi-plus"
-                    severity="secondary"
-                    [outlined]="true"
-                    [disabled]="!selectedAvantageId.value"
-                    (onClick)="addTrait('A')"
-                  />
+                  <dw-tag>{{ selectedTraitEntries().length }} sélectionné(s)</dw-tag>
                 </div>
 
-                <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                  <p-iftalabel>
-                    <p-select
-                      inputId="desavantage"
-                      class="w-full"
-                      [options]="filteredDesavantages()"
-                      optionLabel="desavantage"
-                      optionValue="id"
-                      [formControl]="selectedDesavantageId"
-                    />
-                    <label for="desavantage">Ajouter un désavantage</label>
-                  </p-iftalabel>
-                  <p-button
-                    label="Ajouter"
-                    icon="pi pi-plus"
-                    severity="secondary"
-                    [outlined]="true"
-                    [disabled]="!selectedDesavantageId.value"
-                    (onClick)="addTrait('D')"
-                  />
-                </div>
-              </div>
-
-              <div class="mt-4 flex flex-col gap-3">
-                @for (trait of selectedTraitEntries(); track trait.type + '-' + trait.id; let index = $index) {
-                  <div class="flex items-start justify-between gap-3 border border-[#424b57] bg-[#0f172a]/65 p-3">
-                    <div class="space-y-1">
-                      <div class="flex items-center gap-2">
-                        <p-tag
-                          [value]="trait.type === 'A' ? 'Avantage' : 'Désavantage'"
-                          [severity]="trait.type === 'A' ? 'success' : 'danger'"
-                        />
-                        <span class="font-semibold text-slate-100">{{ trait.label }}</span>
-                      </div>
-                      @for (detail of trait.details; track detail.title + detail.description) {
-                        <p class="m-0 text-xs leading-6 text-slate-400">
-                          <span class="font-bold text-slate-200">{{ detail.title }} :</span>
-                          {{ detail.description }}
-                        </p>
-                      }
-                    </div>
-
-                    <p-button
-                      icon="pi pi-trash"
-                      severity="danger"
-                      [text]="true"
-                      [rounded]="true"
-                      size="small"
-                      (onClick)="removeItem(traits, index)"
-                    />
+                <div class="grid gap-3">
+                  <div class="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+                    <mat-form-field subscriptSizing="dynamic">
+                      <mat-label>Ajouter un avantage</mat-label>
+                      <mat-select inputId="avantage" [formControl]="selectedAvantageId" [compareWith]="compareById">
+                        <mat-option [value]="null">— Aucun —</mat-option>
+                        @for (avantage of filteredAvantages(); track avantage.id) {
+                          <mat-option [value]="avantage.id">{{ avantage.avantage }}</mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                    <button mat-stroked-button type="button" [disabled]="!selectedAvantageId.value" (click)="addTrait('A')">
+                      <mat-icon>add</mat-icon> Ajouter
+                    </button>
                   </div>
-                } @empty {
-                  <p class="m-0 text-sm leading-7 text-slate-400">
-                    Ajoute les traits significatifs du PNJ pour préparer la scène.
-                  </p>
-                }
-              </div>
-            </div>
 
-            <div class="dw-section--form xl:h-full">
-              <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                <div class="space-y-2">
-                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+                  <div class="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+                    <mat-form-field subscriptSizing="dynamic">
+                      <mat-label>Ajouter un désavantage</mat-label>
+                      <mat-select inputId="desavantage" [formControl]="selectedDesavantageId" [compareWith]="compareById">
+                        <mat-option [value]="null">— Aucun —</mat-option>
+                        @for (desavantage of filteredDesavantages(); track desavantage.id) {
+                          <mat-option [value]="desavantage.id">{{ desavantage.desavantage }}</mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                    <button mat-stroked-button type="button" [disabled]="!selectedDesavantageId.value" (click)="addTrait('D')">
+                      <mat-icon>add</mat-icon> Ajouter
+                    </button>
+                  </div>
+                </div>
+
+                <div class="mt-4 flex flex-col gap-3">
+                  @for (trait of selectedTraitEntries(); track trait.type + '-' + trait.id; let index = $index) {
+                    <div class="pfp-item-row flex items-start justify-between gap-3 p-3">
+                      <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                          <dw-badge [color]="trait.type === 'A' ? 'emerald' : 'rose'">
+                            {{ trait.type === 'A' ? 'Avantage' : 'Désavantage' }}
+                          </dw-badge>
+                          <span class="pfp-trait-label">{{ trait.label }}</span>
+                        </div>
+                        @for (detail of trait.details; track detail.title + detail.description) {
+                          <p class="pfp-item-meta m-0 leading-6">
+                            <span class="pfp-detail-title">{{ detail.title }} :</span>
+                            {{ detail.description }}
+                          </p>
+                        }
+                      </div>
+                      <button mat-icon-button type="button" class="pfp-delete-btn" (click)="removeItem(traits, index)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  } @empty {
+                    <p class="pfp-empty-state m-0">
+                      Ajoute les traits significatifs du PNJ pour préparer la scène.
+                    </p>
+                  }
+                </div>
+              </div>
+
+              <!-- Carrières -->
+              <div class="dw-section--form xl:h-full">
+                <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                  <p class="pfp-section-eyebrow m-0">
                     Carrières
                   </p>
+                  <dw-tag>{{ selectedCarrieres().length }} sélectionnée(s)</dw-tag>
                 </div>
-                <p-tag [value]="selectedCarrieres().length + ' sélectionnée(s)'" severity="contrast" />
-              </div>
 
-              <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                <p-iftalabel>
-                  <p-select
-                    inputId="carriere"
-                    class="w-full"
-                    [options]="filteredCarrieres()"
-                    optionLabel="carriere"
-                    optionValue="id"
-                    [formControl]="selectedCarriereId"
-                  />
-                  <label for="carriere">Ajouter une carrière</label>
-                </p-iftalabel>
-                <p-button
-                  label="Ajouter"
-                  icon="pi pi-plus"
-                  severity="secondary"
-                  [outlined]="true"
-                  [disabled]="!selectedCarriereId.value"
-                  (onClick)="addCarriere()"
-                />
-              </div>
+                <div class="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+                  <mat-form-field subscriptSizing="dynamic">
+                    <mat-label>Ajouter une carrière</mat-label>
+                    <mat-select inputId="carriere" [formControl]="selectedCarriereId" [compareWith]="compareById">
+                      <mat-option [value]="null">— Aucune —</mat-option>
+                      @for (carriere of filteredCarrieres(); track carriere.id) {
+                        <mat-option [value]="carriere.id">{{ carriere.carriere }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                  <button mat-stroked-button type="button" [disabled]="!selectedCarriereId.value" (click)="addCarriere()">
+                    <mat-icon>add</mat-icon> Ajouter
+                  </button>
+                </div>
 
-              <div class="mt-4 flex flex-col gap-3">
-                @for (carriere of selectedCarrieres(); track carriere.id; let index = $index) {
-                  <div class="flex items-center justify-between gap-3 border border-[#424b57] bg-[#0f172a]/65 p-3">
-                    <div class="min-w-0 flex-1">
-                      <p class="m-0 text-sm font-semibold text-slate-100">
+                <div class="mt-4 flex flex-col gap-3">
+                  @for (carriere of selectedCarrieres(); track carriere.id; let index = $index) {
+                    <div class="pfp-item-row flex items-center justify-between gap-3 p-3">
+                      <p class="pfp-item-title m-0 min-w-0 flex-1 truncate">
                         {{ carriere.definition?.carriere }}
                       </p>
+                      <mat-form-field subscriptSizing="dynamic" class="w-[70px]">
+                        <mat-label>Rang</mat-label>
+                        <input matInput type="number" [formControl]="$any(carrieres.at(index).get('value'))" />
+                      </mat-form-field>
+                      <button mat-icon-button type="button" class="pfp-delete-btn" (click)="removeItem(carrieres, index)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
                     </div>
-
-                    <p-iftalabel>
-                      <p-inputNumber
-                        [formControl]="$any(carrieres.at(index).get('value'))"
-                        class="dw-input-number"
-                      />
-                      <label>Rang</label>
-                    </p-iftalabel>
-
-                    <p-button
-                      icon="pi pi-trash"
-                      severity="danger"
-                      [text]="true"
-                      [rounded]="true"
-                      size="small"
-                      (onClick)="removeItem(carrieres, index)"
-                    />
-                  </div>
-                } @empty {
-                  <p class="m-0 text-sm leading-7 text-slate-400">
-                    Ajoute les carrières qui résument le rôle du PNJ.
-                  </p>
-                }
+                  } @empty {
+                    <p class="pfp-empty-state m-0">
+                      Ajoute les carrières qui résument le rôle du PNJ.
+                    </p>
+                  }
+                </div>
               </div>
-            </div>
 
-            <div class="dw-section--form xl:h-full">
-              <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                <div class="space-y-2">
-                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+              <!-- Langues -->
+              <div class="dw-section--form xl:h-full">
+                <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                  <p class="pfp-section-eyebrow m-0">
                     Langues
                   </p>
+                  <dw-tag>{{ selectedLangues().length }} sélectionnée(s)</dw-tag>
                 </div>
-                <p-tag [value]="selectedLangues().length + ' sélectionnée(s)'" severity="contrast" />
-              </div>
 
-              <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                <p-iftalabel>
-                  <p-select
-                    inputId="langue"
-                    class="w-full"
-                    [options]="filteredLangues()"
-                    optionLabel="langue"
-                    optionValue="id"
-                    [formControl]="selectedLangueId"
-                  />
-                  <label for="langue">Ajouter une langue</label>
-                </p-iftalabel>
-                <p-button
-                  label="Ajouter"
-                  icon="pi pi-plus"
-                  severity="secondary"
-                  [outlined]="true"
-                  [disabled]="!selectedLangueId.value"
-                  (onClick)="addLangue()"
-                />
-              </div>
+                <div class="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+                  <mat-form-field subscriptSizing="dynamic">
+                    <mat-label>Ajouter une langue</mat-label>
+                    <mat-select inputId="langue" [formControl]="selectedLangueId" [compareWith]="compareById">
+                      <mat-option [value]="null">— Aucune —</mat-option>
+                      @for (langue of filteredLangues(); track langue.id) {
+                        <mat-option [value]="langue.id">{{ langue.langue }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                  <button mat-stroked-button type="button" [disabled]="!selectedLangueId.value" (click)="addLangue()">
+                    <mat-icon>add</mat-icon> Ajouter
+                  </button>
+                </div>
 
-              <div class="mt-4 flex flex-col gap-3">
-                @for (langue of selectedLangues(); track langue?.id; let index = $index) {
-                  <div class="flex items-center justify-between gap-3 border border-[#424b57] bg-[#0f172a]/65 p-3">
-                    <p class="m-0 text-sm font-semibold text-slate-100">{{ langue?.langue }}</p>
-                    <p-button
-                      icon="pi pi-trash"
-                      severity="danger"
-                      [text]="true"
-                      [rounded]="true"
-                      size="small"
-                      (onClick)="removeItem(langues, index)"
-                    />
-                  </div>
-                } @empty {
-                  <p class="m-0 text-sm leading-7 text-slate-400">
-                    Ajoute les langues que le PNJ peut mobiliser en scène.
-                  </p>
-                }
+                <div class="mt-4 flex flex-col gap-3">
+                  @for (langue of selectedLangues(); track langue?.id; let index = $index) {
+                    <div class="pfp-item-row flex items-center justify-between gap-3 p-3">
+                      <p class="pfp-item-title m-0">{{ langue?.langue }}</p>
+                      <button mat-icon-button type="button" class="pfp-delete-btn" (click)="removeItem(langues, index)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  } @empty {
+                    <p class="pfp-empty-state m-0">
+                      Ajoute les langues que le PNJ peut mobiliser en scène.
+                    </p>
+                  }
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="grid gap-4 xl:grid-cols-2 xl:items-start">
-            <div class="dw-section--form">
-              <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                <div class="space-y-2">
-                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+            <!-- Armes / Armures -->
+            <div class="grid gap-4 xl:grid-cols-2 xl:items-start">
+              <div class="dw-section--form">
+                <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                  <p class="pfp-section-eyebrow m-0">
                     Armes
                   </p>
+                  <dw-tag>{{ selectedArmes().length }} sélectionnée(s)</dw-tag>
                 </div>
-                <p-tag [value]="selectedArmes().length + ' sélectionnée(s)'" severity="contrast" />
-              </div>
 
-              <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                <p-iftalabel>
-                  <p-select
-                    inputId="arme"
-                    class="w-full"
-                    [options]="filteredArmes()"
-                    optionLabel="arme"
-                    optionValue="id"
-                    [formControl]="selectedArmeId"
-                  />
-                  <label for="arme">Ajouter une arme</label>
-                </p-iftalabel>
-                <p-button
-                  label="Ajouter"
-                  icon="pi pi-plus"
-                  severity="secondary"
-                  [outlined]="true"
-                  [disabled]="!selectedArmeId.value"
-                  (onClick)="addArme()"
-                />
-              </div>
+                <div class="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+                  <mat-form-field subscriptSizing="dynamic">
+                    <mat-label>Ajouter une arme</mat-label>
+                    <mat-select inputId="arme" [formControl]="selectedArmeId" [compareWith]="compareById">
+                      <mat-option [value]="null">— Aucune —</mat-option>
+                      @for (arme of filteredArmes(); track arme.id) {
+                        <mat-option [value]="arme.id">{{ arme.arme }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                  <button mat-stroked-button type="button" [disabled]="!selectedArmeId.value" (click)="addArme()">
+                    <mat-icon>add</mat-icon> Ajouter
+                  </button>
+                </div>
 
-              <div class="mt-4 flex flex-col gap-3">
-                @for (arme of selectedArmes(); track arme?.id; let index = $index) {
-                  <div class="flex items-center justify-between gap-3 border border-[#424b57] bg-[#0f172a]/65 p-3">
-                    <div class="space-y-1">
-                      <p class="m-0 text-sm font-semibold text-slate-100">{{ arme?.arme }}</p>
-                      <p class="m-0 text-xs text-slate-400">{{ arme?.degats }}</p>
+                <div class="mt-4 flex flex-col gap-3">
+                  @for (arme of selectedArmes(); track arme?.id; let index = $index) {
+                    <div class="pfp-item-row flex items-center justify-between gap-3 p-3">
+                      <div class="space-y-1">
+                        <p class="pfp-item-title m-0">{{ arme?.arme }}</p>
+                        <p class="pfp-item-meta m-0">{{ arme?.degats }}</p>
+                      </div>
+                      <button mat-icon-button type="button" class="pfp-delete-btn" (click)="removeItem(armes, index)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
                     </div>
-                    <p-button
-                      icon="pi pi-trash"
-                      severity="danger"
-                      [text]="true"
-                      [rounded]="true"
-                      size="small"
-                      (onClick)="removeItem(armes, index)"
-                    />
-                  </div>
-                } @empty {
-                  <p class="m-0 text-sm leading-7 text-slate-400">
-                    Ajoute l’arsenal utile à ce PNJ.
-                  </p>
-                }
+                  } @empty {
+                    <p class="pfp-empty-state m-0">
+                      Ajoute l'arsenal utile à ce PNJ.
+                    </p>
+                  }
+                </div>
               </div>
-            </div>
 
-            <div class="dw-section--form">
-              <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                <div class="space-y-2">
-                  <p class="m-0 text-[0.72rem] font-black uppercase tracking-[0.2em] text-emerald-300">
+              <div class="dw-section--form">
+                <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                  <p class="pfp-section-eyebrow m-0">
                     Armures
                   </p>
+                  <dw-tag>{{ selectedArmures().length }} sélectionnée(s)</dw-tag>
                 </div>
-                <p-tag [value]="selectedArmures().length + ' sélectionnée(s)'" severity="contrast" />
-              </div>
 
-              <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                <p-iftalabel>
-                  <p-select
-                    inputId="armure"
-                    class="w-full"
-                    [options]="filteredArmures()"
-                    optionLabel="armure"
-                    optionValue="id"
-                    [formControl]="selectedArmureId"
-                  />
-                  <label for="armure">Ajouter une armure</label>
-                </p-iftalabel>
-                <p-button
-                  label="Ajouter"
-                  icon="pi pi-plus"
-                  severity="secondary"
-                  [outlined]="true"
-                  [disabled]="!selectedArmureId.value"
-                  (onClick)="addArmure()"
-                />
-              </div>
+                <div class="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+                  <mat-form-field subscriptSizing="dynamic">
+                    <mat-label>Ajouter une armure</mat-label>
+                    <mat-select inputId="armure" [formControl]="selectedArmureId" [compareWith]="compareById">
+                      <mat-option [value]="null">— Aucune —</mat-option>
+                      @for (armure of filteredArmures(); track armure.id) {
+                        <mat-option [value]="armure.id">{{ armure.armure }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                  <button mat-stroked-button type="button" [disabled]="!selectedArmureId.value" (click)="addArmure()">
+                    <mat-icon>add</mat-icon> Ajouter
+                  </button>
+                </div>
 
-              <div class="mt-4 flex flex-col gap-3">
-                @for (armure of selectedArmures(); track armure?.id; let index = $index) {
-                  <div class="flex items-center justify-between gap-3 border border-[#424b57] bg-[#0f172a]/65 p-3">
-                    <div class="space-y-1">
-                      <p class="m-0 text-sm font-semibold text-slate-100">{{ armure?.armure }}</p>
-                      <p class="m-0 text-xs text-slate-400">{{ armure?.protection }}</p>
+                <div class="mt-4 flex flex-col gap-3">
+                  @for (armure of selectedArmures(); track armure?.id; let index = $index) {
+                    <div class="pfp-item-row flex items-center justify-between gap-3 p-3">
+                      <div class="space-y-1">
+                        <p class="pfp-item-title m-0">{{ armure?.armure }}</p>
+                        <p class="pfp-item-meta m-0">{{ armure?.protection }}</p>
+                      </div>
+                      <button mat-icon-button type="button" class="pfp-delete-btn" (click)="removeItem(armures, index)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
                     </div>
-                    <p-button
-                      icon="pi pi-trash"
-                      severity="danger"
-                      [text]="true"
-                      [rounded]="true"
-                      size="small"
-                      (onClick)="removeItem(armures, index)"
-                    />
-                  </div>
-                } @empty {
-                  <p class="m-0 text-sm leading-7 text-slate-400">
-                    Ajoute les protections qui définissent ce PNJ.
-                  </p>
-                }
+                  } @empty {
+                    <p class="pfp-empty-state m-0">
+                      Ajoute les protections qui définissent ce PNJ.
+                    </p>
+                  }
+                </div>
               </div>
             </div>
+
+            @if (errorMessage()) {
+              <div class="pfp-error-box px-4 py-3">
+                {{ errorMessage() }}
+              </div>
+            }
           </div>
-
-          @if (errorMessage()) {
-            <div class="border border-rose-400/40 bg-rose-950/30 px-4 py-3 text-sm text-rose-200">
-              {{ errorMessage() }}
-            </div>
-          }
-        </div>
-
-      </form>
-    </p-card>
+        </form>
+      </mat-card-content>
+    </mat-card>
   </div>
 </section>

@@ -1,21 +1,22 @@
 import {ChangeDetectionStrategy, Component, OnInit, computed, inject, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
-import {ConfirmationService} from 'primeng/api';
+import {MatDialog} from '@angular/material/dialog';
+import {DwConfirmDialogComponent} from '../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {BolHerosModel} from '../models/bol-heros.model';
 import {BolHerosService} from '../services/bol-heros.service';
-import {ButtonModule} from 'primeng/button';
-import {CardModule} from 'primeng/card';
-import {CheckboxModule} from 'primeng/checkbox';
-import {ConfirmPopupModule} from 'primeng/confirmpopup';
-import {IconFieldModule} from 'primeng/iconfield';
-import {InputIconModule} from 'primeng/inputicon';
-import {InputTextModule} from 'primeng/inputtext';
-import {PopoverModule} from 'primeng/popover';
-import {TableModule} from 'primeng/table';
-import {TagModule} from 'primeng/tag';
-import {TooltipModule} from 'primeng/tooltip';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatCard} from '@angular/material/card';
 import {InlineSvgDirective} from '../../shared/inline-svg/inline-svg.directive';
+import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
+import {DwLibraryHeaderComponent} from '../../shared/dw-library-header/dw-library-header';
+import {DwLibraryToolbarComponent} from '../../shared/dw-library-toolbar/dw-library-toolbar';
 
 interface HeroListEntry {
   readonly label: string;
@@ -39,27 +40,26 @@ interface HeroTraitEntry {
   imports: [
     FormsModule,
     RouterLink,
-    ButtonModule,
-    CardModule,
-    CheckboxModule,
-    ConfirmPopupModule,
-    IconFieldModule,
-    InputIconModule,
-    InputTextModule,
-    PopoverModule,
-    TableModule,
-    TagModule,
-    TooltipModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatMenuModule,
+    MatTooltipModule,
+    MatCard,
     InlineSvgDirective,
+    DwTagComponent,
+    DwLibraryHeaderComponent,
+    DwLibraryToolbarComponent,
   ],
   templateUrl: './hero-library-page.html',
   styleUrl: './hero-library-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ConfirmationService],
 })
 export class HeroLibraryPageComponent implements OnInit {
   private readonly herosService = inject(BolHerosService);
-  private readonly confirmationService = inject(ConfirmationService);
+  private readonly dialog = inject(MatDialog);
   private readonly heroes = this.herosService.heroesList;
 
   ngOnInit(): void {
@@ -99,16 +99,22 @@ export class HeroLibraryPageComponent implements OnInit {
   protected readonly heroCount = computed(() => this.filteredHeroes().length);
   protected readonly totalHeroCount = computed(() => this.heroes().length);
 
-  protected askDelete(event: Event, hero: BolHerosModel): void {
-    this.confirmationService.confirm({
-      target: event.currentTarget as EventTarget,
-      message: 'Voulez-vous supprimer ce héros ?',
-      icon: 'pi pi-info-circle',
-      acceptButtonStyleClass: 'p-button-danger p-button-sm',
-      acceptLabel: 'Oui',
-      rejectLabel: 'Non',
-      accept: () => this.deleteHero(hero),
-    });
+  protected askDelete(hero: BolHerosModel): void {
+    this.dialog
+      .open(DwConfirmDialogComponent, {
+        data: {
+          title: 'Supprimer le héros',
+          message: `Voulez-vous supprimer "${hero.origines.nom ?? 'ce héros'}" ?`,
+          confirmLabel: 'Supprimer',
+        },
+        width: '380px',
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.deleteHero(hero);
+        }
+      });
   }
 
   protected clearFilters(): void {

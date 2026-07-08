@@ -1,0 +1,28 @@
+<div class="dw-lt-toolbar">
+  <div class="dw-lt-controls">
+    <mat-form-field class="dw-lt-search-field" subscriptSizing="dynamic">
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        matInput
+        type="text"
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event ?? '')"
+        [placeholder]="placeholder()"
+      />
+    </mat-form-field>
+
+    <ng-content select="[dwToolbarFilter]" />
+
+    <div class="dw-lt-filter-chip">
+      <mat-checkbox [ngModel]="checked()" (ngModelChange)="checked.set($event)">
+        {{ checkboxLabel() }}
+      </mat-checkbox>
+    </div>
+
+    <button mat-stroked-button size="small" (click)="clear()">
+      <mat-icon>filter_alt_off</mat-icon> Effacer
+    </button>
+  </div>
+
+  <ng-content select="[dwToolbarCount]" />
+</div>
