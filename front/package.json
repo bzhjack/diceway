@@ -34,11 +34,8 @@
     "@angular/material": "^22.0.2",
     "@angular/platform-browser": "^22.0.0",
     "@angular/router": "^22.0.0",
-    "@primeuix/themes": "^2.0.3",
     "angular-oauth2-oidc": "^20.0.2",
     "ngx-image-cropper": "^9.1.6",
-    "primeicons": "^7.0.0",
-    "primeng": "^21.1.5",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
