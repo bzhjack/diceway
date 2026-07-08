@@ -124,14 +124,6 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'create/:entity',
-    loadComponent: () =>
-      import('./bol/creation-placeholder/creation-placeholder-page').then(
-        (module) => module.CreationPlaceholderPageComponent,
-      ),
-    canActivate: [authGuard],
-  },
-  {
     path: 'login',
     loadComponent: () =>
       import('./auth/pages/login-page/login-page').then((module) => module.LoginPageComponent),
