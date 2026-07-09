@@ -339,64 +339,18 @@
               </div>
 
               <div class="dw-section--form">
-                <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                  <p class="hfp-section-eyebrow m-0">
-                    Armures
-                  </p>
-                  <dw-tag>{{ selectedArmures().length }} sélectionnée(s)</dw-tag>
-                </div>
-
-                <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                  <mat-form-field subscriptSizing="dynamic">
-                    <mat-label>Ajouter une armure</mat-label>
-                    <mat-select inputId="armure" [formControl]="selectedArmureId">
-                      <mat-option [value]="null">— Aucune —</mat-option>
-                      @for (armure of filteredArmures(); track armure.id) {
-                        <mat-option [value]="armure.id">
-                          <span class="truncate">{{ armure.armure }}</span>
-                          <span class="hfp-option-detail ml-1">
-                            {{ armure.protection ? '· Protection ' + armure.protection : '' }}
-                          </span>
-                        </mat-option>
-                      }
-                    </mat-select>
-                  </mat-form-field>
-                  <button
-                    mat-stroked-button
-                    type="button"
-                    [disabled]="!selectedArmureId.value"
-                    (click)="addArmure()"
-                  >
-                    <mat-icon>add</mat-icon> Ajouter
-                  </button>
-                </div>
-
-                <div class="mt-4 flex flex-col gap-3">
-                  @for (armure of selectedArmures(); track armure.id; let index = $index) {
-                    <div class="hfp-item-row flex items-center justify-between gap-3 p-3">
-                      <div>
-                        <p class="hfp-item-title m-0">{{ armure.armure }}</p>
-                        @if (armure.protection) {
-                          <p class="hfp-item-meta m-0">
-                            Protection : {{ armure.protection }}
-                          </p>
-                        }
-                      </div>
-                      <button
-                        mat-icon-button
-                        type="button"
-                        class="hfp-delete-btn"
-                        (click)="removeItem(armures, index)"
-                      >
-                        <mat-icon>delete</mat-icon>
-                      </button>
-                    </div>
-                  } @empty {
-                    <p class="hfp-empty-state m-0">
-                      Ajoute l'armure ou les protections portées par le héros.
+                <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+                  <div class="flex items-center gap-2">
+                    <p class="hfp-section-eyebrow m-0">
+                      Armures
                     </p>
-                  }
+                    <dw-tag>{{ selectedArmures().length }} sélectionnée(s)</dw-tag>
+                  </div>
+
+                  <bol-armure-add-menu [armures]="filteredArmures()" (added)="addArmureEntry($event)" />
                 </div>
+
+                <bol-armure-list [armures]="selectedArmures()" (removed)="removeItem(armures, $event)" />
               </div>
             </div>
 

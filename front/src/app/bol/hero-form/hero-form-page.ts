@@ -25,8 +25,10 @@ import {BolHerosService} from '../services/bol-heros.service';
 import {DwConfirmDialogComponent} from '../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
 import {PictureComponent} from '../../shared/picture/picture';
-import {ArmeAddMenuComponent} from './arme-add-menu/arme-add-menu.component';
-import {ArmeEntry, ArmeListComponent} from './arme-list/arme-list.component';
+import {ArmeAddMenuComponent} from './arme/add-menu/arme-add-menu.component';
+import {ArmeEntry, ArmeListComponent} from './arme/list/arme-list.component';
+import {ArmureAddMenuComponent} from './armure/add-menu/armure-add-menu.component';
+import {ArmureEntry, ArmureListComponent} from './armure/list/armure-list.component';
 import {CarriereAddMenuComponent} from './carriere-add-menu/carriere-add-menu.component';
 import {CarriereEntry, CarriereListComponent} from './carriere-list/carriere-list.component';
 import {TraitAddEvent, TraitAddMenuComponent} from './trait-add-menu/trait-add-menu.component';
@@ -59,6 +61,8 @@ interface HeroTraitDraft extends HeroSimpleDraft {
     DwTagComponent,
     ArmeAddMenuComponent,
     ArmeListComponent,
+    ArmureAddMenuComponent,
+    ArmureListComponent,
     CarriereAddMenuComponent,
     CarriereListComponent,
     TraitAddMenuComponent,
@@ -111,7 +115,6 @@ export class HeroFormPageComponent {
     () => this.pending() || this.loadingHero() || this.heroForm.invalid || this.heroForm.controls.active.value,
   );
 
-  protected readonly selectedArmureId = new FormControl<number | null>(null);
   protected readonly selectedLangueId = new FormControl<number | null>(null);
 
   protected readonly heroForm = this.formBuilder.group({
@@ -226,7 +229,14 @@ export class HeroFormPageComponent {
       .map((entry: HeroSimpleDraft) =>
         (this.armuresList() ?? []).find((armure: BolArmureModel) => Number(armure.id) === Number(entry.id)),
       )
-      .filter((armure: BolArmureModel | undefined): armure is BolArmureModel => Boolean(armure)),
+      .filter((armure: BolArmureModel | undefined): armure is BolArmureModel => Boolean(armure))
+      .map((armure: BolArmureModel): ArmureEntry => ({
+        id: Number(armure.id),
+        label: armure.armure,
+        protection: armure.protection,
+        malus: armure.malus,
+        ptsDePouvoir: armure.pts_de_pouvoir,
+      })),
   );
   protected readonly selectedCarrieres = computed(() =>
     (this.selectedCarrieresDraft() ?? [])
@@ -351,16 +361,10 @@ export class HeroFormPageComponent {
     this.armes.push(this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}));
   }
 
-  protected addArmure(): void {
-    const id = this.selectedArmureId.value;
-    if (!id) {
-      return;
-    }
-
+  protected addArmureEntry(id: number): void {
     this.armures.push(
       this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}),
     );
-    this.selectedArmureId.setValue(null);
   }
 
   protected addCarriereEntry(id: number): void {
@@ -463,22 +467,6 @@ export class HeroFormPageComponent {
     return control.invalid && (control.dirty || control.touched);
   }
 
-  protected armeOption(id: number | null | undefined): BolArmeModel | null {
-    if (!id) {
-      return null;
-    }
-
-    return (this.armesList() ?? []).find((arme: BolArmeModel) => Number(arme.id) === Number(id)) ?? null;
-  }
-
-  protected armureOption(id: number | null | undefined): BolArmureModel | null {
-    if (!id) {
-      return null;
-    }
-
-    return (this.armuresList() ?? []).find((armure: BolArmureModel) => Number(armure.id) === Number(id)) ?? null;
-  }
-
   private resetForm(): void {
     this.heroForm.reset(
       {
@@ -512,7 +500,6 @@ export class HeroFormPageComponent {
     this.carrieres.clear({emitEvent: false});
     this.langues.clear({emitEvent: false});
     this.traits.clear({emitEvent: false});
-    this.selectedArmureId.setValue(null);
     this.selectedLangueId.setValue(null);
     this.syncSelectionArrays();
   }

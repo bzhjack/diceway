@@ -5,7 +5,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatSelectModule} from '@angular/material/select';
-import {BolArmeModel} from '../../models/bol-arme.model';
+import {BolArmeModel} from '../../../models/bol-arme.model';
 
 @Component({
   selector: 'bol-arme-add-menu',
