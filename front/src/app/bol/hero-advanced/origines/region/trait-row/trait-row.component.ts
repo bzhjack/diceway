@@ -3,6 +3,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {InlineSvgDirective} from '../../../../../shared/inline-svg/inline-svg.directive';
 import {BolAvantageModel} from '../../../../models/bol-avantage.model';
 import {BolDesavantageModel} from '../../../../models/bol-desavantage.model';
+import {traitIconPath, traitIconType} from '../../../../shared/trait-icon';
 import {HeroAdvancedCreateTools} from '../../../create.tools';
 
 @Component({
@@ -23,4 +24,7 @@ export class HeroAdvancedTraitRowComponent {
   protected readonly desavantageDescription = computed(() =>
     HeroAdvancedCreateTools.desavantageDescription(this.desavantage()),
   );
+
+  protected readonly traitIconPath = traitIconPath;
+  protected readonly traitIconType = traitIconType;
 }

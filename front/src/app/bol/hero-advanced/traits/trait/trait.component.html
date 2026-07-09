@@ -7,7 +7,7 @@
     >
       <div
         class="tag_icon bonus"
-        [inlineSVG]="currentAvantage.de_bonus ? '/assets/d6.svg' : currentAvantage.attribut ? '/assets/attr.svg' : '/assets/info.svg'"
+        [inlineSVG]="traitIconPath(traitIconType(currentAvantage))"
       ></div>
     </button>
     <div class="ht-label relative">
@@ -42,7 +42,7 @@
     >
       <div
         class="tag_icon malus"
-        [inlineSVG]="currentDesavantage.de_malus ? '/assets/d6.svg' : currentDesavantage.attribut ? '/assets/attr.svg' : '/assets/info.svg'"
+        [inlineSVG]="traitIconPath(traitIconType(currentDesavantage))"
       ></div>
     </button>
     <div class="ht-label relative">

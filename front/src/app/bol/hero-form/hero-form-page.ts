@@ -27,6 +27,7 @@ import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
 import {PictureComponent} from '../../shared/picture/picture';
 import {TraitAddEvent, TraitAddMenuComponent} from './trait-add-menu/trait-add-menu.component';
 import {TraitDetail, TraitEntry, TraitListComponent} from './trait-list/trait-list.component';
+import {TraitIcon, traitIconType} from '../shared/trait-icon';
 
 interface HeroSimpleDraft {
   id: number;
@@ -252,10 +253,11 @@ export class HeroFormPageComponent {
                 (desavantage: BolDesavantageModel) => Number(desavantage.id) === Number(entry.id),
               )?.desavantage,
         details: this.traitDetails(entry),
+        icon: this.traitIcon(entry),
       }))
       .filter(
         (
-          entry: HeroTraitDraft & {label?: string; details: readonly TraitDetail[]},
+          entry: HeroTraitDraft & {label?: string; details: readonly TraitDetail[]; icon: TraitIcon},
         ): entry is TraitEntry => Boolean(entry.label),
       ),
   );
@@ -746,15 +748,22 @@ export class HeroFormPageComponent {
         : 'La création du héros a échoué.';
   }
 
+  private traitSource(entry: HeroTraitDraft): BolAvantageModel | BolDesavantageModel | undefined {
+    return entry.type === 'A'
+      ? (this.avantagesList() ?? []).find(
+          (avantage: BolAvantageModel) => Number(avantage.id) === Number(entry.id),
+        )
+      : (this.desavantagesList() ?? []).find(
+          (desavantage: BolDesavantageModel) => Number(desavantage.id) === Number(entry.id),
+        );
+  }
+
+  private traitIcon(entry: HeroTraitDraft): TraitIcon {
+    return traitIconType(this.traitSource(entry));
+  }
+
   private traitDetails(entry: HeroTraitDraft): readonly TraitDetail[] {
-    const source =
-      entry.type === 'A'
-        ? (this.avantagesList() ?? []).find(
-            (avantage: BolAvantageModel) => Number(avantage.id) === Number(entry.id),
-          )
-        : (this.desavantagesList() ?? []).find(
-            (desavantage: BolDesavantageModel) => Number(desavantage.id) === Number(entry.id),
-          );
+    const source = this.traitSource(entry);
 
     if (!source) {
       return [];

@@ -20,6 +20,7 @@ import {DwLibraryHeaderComponent} from '../../shared/dw-library-header/dw-librar
 import {DwLibraryToolbarComponent} from '../../shared/dw-library-toolbar/dw-library-toolbar';
 import {DwConfirmDialogComponent} from '../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {startWith, switchMap} from 'rxjs';
+import {TraitIcon, traitIconPath, traitIconType} from '../shared/trait-icon';
 
 type PnjType = 'P' | 'C' | 'R';
 
@@ -37,7 +38,7 @@ interface PnjTraitEntry {
   readonly label: string;
   readonly details: readonly PnjTraitDetail[];
   readonly severity: 'positive' | 'negative';
-  readonly icon: 'info' | 'attr' | 'd6';
+  readonly icon: TraitIcon;
 }
 
 interface PnjTraitDetail {
@@ -241,16 +242,7 @@ export class PnjLibraryPageComponent {
       .join(', ');
   }
 
-  protected traitIconPath(icon: PnjTraitEntry['icon']): string {
-    switch (icon) {
-      case 'd6':
-        return '/assets/d6.svg';
-      case 'attr':
-        return '/assets/attr.svg';
-      default:
-        return '/assets/info.svg';
-    }
-  }
+  protected readonly traitIconPath = traitIconPath;
 
   private typeOrder(type: string | null | undefined): number {
     switch (type) {
@@ -281,20 +273,8 @@ export class PnjLibraryPageComponent {
     return '';
   }
 
-  private traitIcon(trait: BolHerosModel['traits'][number]): 'info' | 'attr' | 'd6' {
-    if (trait.traitable && 'de_bonus' in trait.traitable && trait.traitable.de_bonus) {
-      return 'd6';
-    }
-
-    if (trait.traitable && 'de_malus' in trait.traitable && trait.traitable.de_malus) {
-      return 'd6';
-    }
-
-    if (trait.traitable && 'attribut' in trait.traitable && trait.traitable.attribut) {
-      return 'attr';
-    }
-
-    return 'info';
+  private traitIcon(trait: BolHerosModel['traits'][number]): TraitIcon {
+    return traitIconType(trait.traitable);
   }
 
   private deletePnj(pnj: BolHerosModel): void {

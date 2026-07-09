@@ -1,24 +1,39 @@
-<div class="flex flex-col gap-3">
+<div class="flex flex-col gap-2">
   @for (trait of traits(); track trait.type + '-' + trait.id; let index = $index) {
-    <div class="tl-item-row flex items-start justify-between gap-3 p-3">
-      <div class="space-y-1">
-        <div class="flex items-center gap-2">
-          <dw-badge [color]="trait.type === 'A' ? 'emerald' : 'rose'">
-            {{ trait.type === 'A' ? 'Avantage' : 'Désavantage' }}
-          </dw-badge>
-          <span class="tl-label">{{ trait.label }}</span>
-        </div>
-        @for (detail of trait.details; track detail.title + detail.description) {
-          <p class="tl-meta m-0">
-            <span class="tl-detail-title">{{ detail.title }} :</span>
-            {{ detail.description }}
-          </p>
-        }
-      </div>
-
-      <button mat-icon-button type="button" class="tl-delete-btn" (click)="removed.emit(index)">
-        <mat-icon>delete</mat-icon>
+    <div
+      class="tl-row"
+      [class.tl-row--avantage]="trait.type === 'A'"
+      [class.tl-row--desavantage]="trait.type === 'D'"
+      [class.tl-row--expanded]="isExpanded(trait)"
+    >
+      <button
+        type="button"
+        class="tl-toggle flex w-full min-w-0 items-center gap-2"
+        [attr.aria-expanded]="isExpanded(trait)"
+        [attr.aria-label]="(trait.type === 'A' ? 'Avantage' : 'Désavantage') + ' : ' + trait.label"
+        (click)="toggle(trait)"
+      >
+        <mat-icon class="tl-chevron">chevron_right</mat-icon>
+        <div class="tag_icon tl-trait-icon" [inlineSVG]="traitIconPath(trait.icon)"></div>
+        <span class="tl-label truncate">{{ trait.label }}</span>
       </button>
+
+      @if (isExpanded(trait)) {
+        <div class="tl-body">
+          @for (detail of trait.details; track detail.title + detail.description) {
+            <div class="tl-meta m-0">
+              <div class="tl-detail-title">{{ detail.title }} :</div>
+              <div>
+              {{ detail.description }}
+              </div>
+            </div>
+          }
+
+          <button mat-button type="button" class="tl-delete-btn" (click)="removed.emit(index)">
+            <mat-icon>delete</mat-icon> Supprimer
+          </button>
+        </div>
+      }
     </div>
   } @empty {
     <p class="tl-empty-state m-0">

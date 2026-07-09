@@ -17,6 +17,7 @@ import {InlineSvgDirective} from '../../shared/inline-svg/inline-svg.directive';
 import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
 import {DwLibraryHeaderComponent} from '../../shared/dw-library-header/dw-library-header';
 import {DwLibraryToolbarComponent} from '../../shared/dw-library-toolbar/dw-library-toolbar';
+import {TraitIcon, traitIconPath, traitIconType} from '../shared/trait-icon';
 
 interface HeroListEntry {
   readonly label: string;
@@ -32,7 +33,7 @@ interface HeroTraitEntry {
   readonly label: string;
   readonly details: readonly HeroTraitDetail[];
   readonly severity: 'positive' | 'negative';
-  readonly icon: 'info' | 'attr' | 'd6';
+  readonly icon: TraitIcon;
 }
 
 @Component({
@@ -195,16 +196,7 @@ export class HeroLibraryPageComponent implements OnInit {
       .join(', ');
   }
 
-  protected traitIconPath(icon: HeroTraitEntry['icon']): string {
-    switch (icon) {
-      case 'd6':
-        return '/assets/d6.svg';
-      case 'attr':
-        return '/assets/attr.svg';
-      default:
-        return '/assets/info.svg';
-    }
-  }
+  protected readonly traitIconPath = traitIconPath;
 
   private avantageLabel(traitable: BolHerosModel['traits'][number]['traitable'] | undefined): string {
     if (traitable && 'avantage' in traitable) {
@@ -222,20 +214,8 @@ export class HeroLibraryPageComponent implements OnInit {
     return '';
   }
 
-  private traitIcon(trait: BolHerosModel['traits'][number]): 'info' | 'attr' | 'd6' {
-    if (trait.traitable && 'de_bonus' in trait.traitable && trait.traitable.de_bonus) {
-      return 'd6';
-    }
-
-    if (trait.traitable && 'de_malus' in trait.traitable && trait.traitable.de_malus) {
-      return 'd6';
-    }
-
-    if (trait.traitable && 'attribut' in trait.traitable && trait.traitable.attribut) {
-      return 'attr';
-    }
-
-    return 'info';
+  private traitIcon(trait: BolHerosModel['traits'][number]): TraitIcon {
+    return traitIconType(trait.traitable);
   }
 
   private deleteHero(hero: BolHerosModel): void {

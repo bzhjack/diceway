@@ -5,6 +5,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {InlineSvgDirective} from '../../../../shared/inline-svg/inline-svg.directive';
 import {BolHerosTraitsModel} from '../../../models/bol-trait.model';
 import {BolHerosStateService} from '../../../services/bol-heros-state.service';
+import {traitIconPath, traitIconType} from '../../../shared/trait-icon';
 import {HeroAdvancedCreateTools} from '../../create.tools';
 
 @Component({
@@ -47,4 +48,7 @@ export class HeroAdvancedTraitComponent {
   protected readonly desavantageDescription = computed(() =>
     HeroAdvancedCreateTools.desavantageDescription(this.desavantage()),
   );
+
+  protected readonly traitIconPath = traitIconPath;
+  protected readonly traitIconType = traitIconType;
 }
