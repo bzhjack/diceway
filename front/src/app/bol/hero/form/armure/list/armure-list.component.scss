@@ -8,8 +8,12 @@
   font-size: 0.875rem;
 }
 
-.aral-stat-display {
+.aral-label {
   flex-shrink: 0;
+}
+
+.aral-stat-display {
+  margin-left: auto;
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--dw-surface-500);

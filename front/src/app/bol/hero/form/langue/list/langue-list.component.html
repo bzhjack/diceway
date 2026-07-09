@@ -6,9 +6,9 @@
       (toggled)="toggle(langue)"
     >
       <ng-container row-summary>
-        <span class="ll-label min-w-0 flex-1 truncate">{{ langue.label }}</span>
+        <span class="ll-label">{{ langue.label }}</span>
         @if (langue.estLemurienne) {
-          <span class="ll-stat-display">Lémurienne</span>
+          <span class="ll-stat-display min-w-0 truncate">Lémurienne</span>
         }
       </ng-container>
 

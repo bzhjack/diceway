@@ -6,9 +6,9 @@
       (toggled)="toggle(armure)"
     >
       <ng-container row-summary>
-        <span class="aral-label min-w-0 flex-1 truncate">{{ armure.label }}</span>
+        <span class="aral-label">{{ armure.label }}</span>
         @if (armure.protection) {
-          <span class="aral-stat-display">{{ armure.protection }}</span>
+          <span class="aral-stat-display min-w-0 truncate">{{ armure.protection }}</span>
         }
       </ng-container>
 

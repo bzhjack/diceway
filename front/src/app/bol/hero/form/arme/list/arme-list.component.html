@@ -6,9 +6,9 @@
       (toggled)="toggle(arme)"
     >
       <ng-container row-summary>
-        <span class="al-label min-w-0 flex-1 truncate">{{ arme.label }}</span>
+        <span class="al-label">{{ arme.label }}</span>
         @if (arme.degats) {
-          <span class="al-stat-display">{{ arme.degats }}</span>
+          <span class="al-stat-display min-w-0 truncate">{{ arme.degats }}</span>
         }
       </ng-container>
 
