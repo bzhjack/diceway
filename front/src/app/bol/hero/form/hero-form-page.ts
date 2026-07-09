@@ -159,6 +159,14 @@ export class HeroFormPageComponent {
     this.heroForm.controls.joueur.valueChanges.pipe(startWith(this.heroForm.controls.joueur.value)),
     {initialValue: this.heroForm.controls.joueur.value},
   );
+  protected readonly heroVitalite = toSignal(
+    this.heroForm.controls.vitalite.valueChanges.pipe(startWith(this.heroForm.controls.vitalite.value)),
+    {initialValue: this.heroForm.controls.vitalite.value},
+  );
+  protected readonly heroHeroisme = toSignal(
+    this.heroForm.controls.heroisme.valueChanges.pipe(startWith(this.heroForm.controls.heroisme.value)),
+    {initialValue: this.heroForm.controls.heroisme.value},
+  );
   protected readonly selectedArmesDraft = toSignal(
     this.armes.valueChanges.pipe(startWith(this.armes.getRawValue())),
     {initialValue: this.armes.getRawValue()},

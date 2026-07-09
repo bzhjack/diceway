@@ -27,6 +27,8 @@ export class HeroSummaryRailComponent {
   readonly heroName = input<string | null>(null);
   readonly playerName = input<string | null>(null);
   readonly region = input<BolRegionModel | null>(null);
+  readonly vitalite = input<number | null>(null);
+  readonly heroisme = input<number | null>(null);
   readonly traits = input.required<readonly TraitEntry[]>();
   readonly avantagesDisponibles = input.required<readonly BolAvantageModel[]>();
   readonly desavantagesDisponibles = input.required<readonly BolDesavantageModel[]>();
