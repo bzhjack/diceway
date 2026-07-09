@@ -1,0 +1,39 @@
+:host {
+  display: block;
+}
+
+.aral-label {
+  font-weight: 600;
+  color: var(--dw-surface-800);
+  font-size: 0.875rem;
+}
+
+.aral-stat-display {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--dw-surface-500);
+}
+
+.aral-delete-btn {
+  color: rgba(251, 113, 133, 0.85) !important;
+  margin-top: 0.35rem;
+}
+
+.aral-meta {
+  align-self: stretch;
+  font-size: 0.75rem;
+  line-height: 1.5rem;
+  color: var(--dw-surface-500);
+}
+
+.aral-detail-title {
+  font-weight: 700;
+  color: var(--dw-surface-700);
+}
+
+.aral-empty-state {
+  font-size: 0.875rem;
+  line-height: 1.75rem;
+  color: var(--dw-surface-500);
+}

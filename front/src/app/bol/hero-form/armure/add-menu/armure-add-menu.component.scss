@@ -1,0 +1,17 @@
+:host {
+  display: contents;
+}
+
+::ng-deep .aram-panel.mat-mdc-menu-panel {
+  width: 300px;
+  max-width: 300px;
+}
+
+.aram-content {
+  width: 100%;
+}
+
+.aram-option-detail {
+  font-size: 0.75rem;
+  color: var(--dw-surface-500);
+}
