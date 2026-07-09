@@ -1,11 +1,14 @@
 <button
-  mat-stroked-button
+  mat-icon-button
   type="button"
+  class="dw-add-trigger"
+  aria-label="Ajouter une armure"
+  matTooltip="Ajouter une armure"
   #trigger="matMenuTrigger"
   [matMenuTriggerFor]="menu"
   (menuOpened)="reset()"
 >
-  <mat-icon>add</mat-icon> Ajouter
+  <mat-icon>add</mat-icon>
 </button>
 
 <mat-menu #menu="matMenu" class="aram-panel">

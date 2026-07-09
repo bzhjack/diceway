@@ -5,6 +5,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatSelectModule} from '@angular/material/select';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolLangueModel} from '../../../../models/bol-langue.model';
 
 @Component({
@@ -16,6 +17,7 @@ import {BolLangueModel} from '../../../../models/bol-langue.model';
     MatIconModule,
     MatMenuModule,
     MatSelectModule,
+    MatTooltipModule,
   ],
   templateUrl: './langue-add-menu.component.html',
   styleUrl: './langue-add-menu.component.scss',

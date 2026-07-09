@@ -5,6 +5,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatSelectModule} from '@angular/material/select';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolCarriereModel} from '../../../models/bol-carriere.model';
 
 @Component({
@@ -16,6 +17,7 @@ import {BolCarriereModel} from '../../../models/bol-carriere.model';
     MatIconModule,
     MatMenuModule,
     MatSelectModule,
+    MatTooltipModule,
   ],
   templateUrl: './carriere-add-menu.component.html',
   styleUrl: './carriere-add-menu.component.scss',
