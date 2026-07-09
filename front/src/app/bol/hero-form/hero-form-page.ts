@@ -26,6 +26,7 @@ import {DwBadgeComponent} from '../../shared/dw-badge/dw-badge';
 import {DwConfirmDialogComponent} from '../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
 import {PictureComponent} from '../../shared/picture/picture';
+import {TraitAddEvent, TraitAddMenuComponent} from './trait-add-menu/trait-add-menu.component';
 
 interface HeroSimpleDraft {
   id: number;
@@ -66,6 +67,7 @@ interface HeroSelectedCarriereEntry extends HeroCarriereDraft {
     MatSelectModule,
     DwBadgeComponent,
     DwTagComponent,
+    TraitAddMenuComponent,
   ],
   templateUrl: './hero-form-page.html',
   styleUrl: './hero-form-page.scss',
@@ -118,8 +120,6 @@ export class HeroFormPageComponent {
   protected readonly selectedArmureId = new FormControl<number | null>(null);
   protected readonly selectedCarriereId = new FormControl<number | null>(null);
   protected readonly selectedLangueId = new FormControl<number | null>(null);
-  protected readonly selectedAvantageId = new FormControl<number | null>(null);
-  protected readonly selectedDesavantageId = new FormControl<number | null>(null);
 
   protected readonly heroForm = this.formBuilder.group({
     id: this.formBuilder.control<string | null>(null),
@@ -389,20 +389,13 @@ export class HeroFormPageComponent {
     this.selectedLangueId.setValue(null);
   }
 
-  protected addTrait(type: 'A' | 'D'): void {
-    const control = type === 'A' ? this.selectedAvantageId : this.selectedDesavantageId;
-    const id = control.value;
-    if (!id) {
-      return;
-    }
-
+  protected addTraitEntry(entry: TraitAddEvent): void {
     this.traits.push(
       this.formBuilder.group({
-        id: this.formBuilder.control(Number(id), Validators.required),
-        type: this.formBuilder.control<'A' | 'D'>(type, Validators.required),
+        id: this.formBuilder.control(entry.id, Validators.required),
+        type: this.formBuilder.control<'A' | 'D'>(entry.type, Validators.required),
       }),
     );
-    control.setValue(null);
   }
 
   protected removeItem(items: FormArray, index: number): void {
@@ -528,8 +521,6 @@ export class HeroFormPageComponent {
     this.selectedArmureId.setValue(null);
     this.selectedCarriereId.setValue(null);
     this.selectedLangueId.setValue(null);
-    this.selectedAvantageId.setValue(null);
-    this.selectedDesavantageId.setValue(null);
     this.syncSelectionArrays();
   }
 

@@ -1,0 +1,12 @@
+:host {
+  display: contents;
+}
+
+::ng-deep .tam-panel.mat-mdc-menu-panel {
+  width: 300px;
+  max-width: 300px;
+}
+
+.tam-content {
+  width: 100%;
+}

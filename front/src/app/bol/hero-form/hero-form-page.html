@@ -239,56 +239,22 @@
 
             <div class="grid gap-4 xl:grid-cols-3 xl:items-start">
               <div class="dw-section--form xl:h-full">
-                <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                  <p class="hfp-section-eyebrow m-0">
-                    Traits
-                  </p>
-                  <dw-tag>{{ selectedTraitEntries().length }} sélectionné(s)</dw-tag>
-                </div>
-
-                <div class="grid gap-3">
-                  <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                    <mat-form-field subscriptSizing="dynamic">
-                      <mat-label>Ajouter un avantage</mat-label>
-                      <mat-select inputId="avantage" [formControl]="selectedAvantageId">
-                        <mat-option [value]="null">— Aucun —</mat-option>
-                        @for (avantage of filteredAvantages(); track avantage.id) {
-                          <mat-option [value]="avantage.id">{{ avantage.avantage }}</mat-option>
-                        }
-                      </mat-select>
-                    </mat-form-field>
-                    <button
-                      mat-stroked-button
-                      type="button"
-                      [disabled]="!selectedAvantageId.value"
-                      (click)="addTrait('A')"
-                    >
-                      <mat-icon>add</mat-icon> Ajouter
-                    </button>
+                <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+                  <div class="flex items-center gap-2">
+                    <p class="hfp-section-eyebrow m-0">
+                      Traits
+                    </p>
+                    <dw-tag>{{ selectedTraitEntries().length }} sélectionné(s)</dw-tag>
                   </div>
 
-                  <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                    <mat-form-field subscriptSizing="dynamic">
-                      <mat-label>Ajouter un désavantage</mat-label>
-                      <mat-select inputId="desavantage" [formControl]="selectedDesavantageId">
-                        <mat-option [value]="null">— Aucun —</mat-option>
-                        @for (desavantage of filteredDesavantages(); track desavantage.id) {
-                          <mat-option [value]="desavantage.id">{{ desavantage.desavantage }}</mat-option>
-                        }
-                      </mat-select>
-                    </mat-form-field>
-                    <button
-                      mat-stroked-button
-                      type="button"
-                      [disabled]="!selectedDesavantageId.value"
-                      (click)="addTrait('D')"
-                    >
-                      <mat-icon>add</mat-icon> Ajouter
-                    </button>
-                  </div>
+                  <bol-trait-add-menu
+                    [avantages]="filteredAvantages()"
+                    [desavantages]="filteredDesavantages()"
+                    (added)="addTraitEntry($event)"
+                  />
                 </div>
 
-                <div class="mt-4 flex flex-col gap-3">
+                <div class="flex flex-col gap-3">
                   @for (trait of selectedTraitEntries(); track trait.type + '-' + trait.id; let index = $index) {
                     <div class="hfp-item-row flex items-start justify-between gap-3 p-3">
                       <div class="space-y-1">

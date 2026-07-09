@@ -31,4 +31,10 @@ html {
     unselected-hover-icon-color: var(--dw-surface-600),
     unselected-focus-icon-color: var(--dw-surface-500),
   ));
+
+  // Button toggle : état non sélectionné lisible sur fond sombre
+  @include mat.button-toggle-overrides((
+    text-color: var(--dw-surface-600),
+    selected-state-text-color: var(--mat-sys-on-primary),
+  ));
 }

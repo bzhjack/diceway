@@ -1,0 +1,48 @@
+<button
+  mat-stroked-button
+  type="button"
+  #trigger="matMenuTrigger"
+  [matMenuTriggerFor]="menu"
+  (menuOpened)="reset()"
+>
+  <mat-icon>add</mat-icon> Ajouter
+</button>
+
+<mat-menu #menu="matMenu" class="tam-panel">
+  <div class="tam-content flex flex-col gap-3 p-3" (click)="$event.stopPropagation()">
+    <mat-button-toggle-group
+      class="w-full"
+      [value]="menuType()"
+      (change)="menuType.set($event.value)"
+    >
+      <mat-button-toggle value="A" class="flex-1">Avantage</mat-button-toggle>
+      <mat-button-toggle value="D" class="flex-1">Désavantage</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    @if (menuType() === 'A') {
+      <mat-form-field subscriptSizing="dynamic">
+        <mat-label>Avantage</mat-label>
+        <mat-select [formControl]="selectedId">
+          <mat-option [value]="null">— Aucun —</mat-option>
+          @for (avantage of avantages(); track avantage.id) {
+            <mat-option [value]="avantage.id">{{ avantage.avantage }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    } @else {
+      <mat-form-field subscriptSizing="dynamic">
+        <mat-label>Désavantage</mat-label>
+        <mat-select [formControl]="selectedId">
+          <mat-option [value]="null">— Aucun —</mat-option>
+          @for (desavantage of desavantages(); track desavantage.id) {
+            <mat-option [value]="desavantage.id">{{ desavantage.desavantage }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    <button mat-flat-button type="button" [disabled]="!selectedId.value" (click)="add(); trigger.closeMenu()">
+      <mat-icon>add</mat-icon> {{ menuType() === 'A' ? "Ajouter l'avantage" : 'Ajouter le désavantage' }}
+    </button>
+  </div>
+</mat-menu>
