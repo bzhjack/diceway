@@ -47,7 +47,6 @@ html {
   --mdc-icon-button-state-layer-size: 32px;
   --mdc-icon-button-icon-size: 20px;
   color: var(--mat-sys-primary);
-  border: 1px solid color-mix(in srgb, var(--mat-sys-primary) 45%, transparent);
 
   .mat-mdc-button-touch-target {
     width: 32px;
