@@ -63,7 +63,7 @@
                 Général
               </p>
 
-              <div class="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
+              <div class="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)] xl:grid-cols-[220px_minmax(0,1fr)_300px]">
                 <div class="space-y-3">
                   <div
                     class="hfp-avatar group relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden transition-colors"
@@ -102,18 +102,18 @@
 
                 <div class="grid gap-2 md:grid-cols-2">
                   <mat-form-field subscriptSizing="dynamic">
-                    <mat-label>Nom du joueur *</mat-label>
+                    <mat-label>Nom du joueur</mat-label>
                     <input matInput id="joueur" formControlName="joueur" />
                   </mat-form-field>
 
                   <mat-form-field subscriptSizing="dynamic">
-                    <mat-label>Nom du héros *</mat-label>
+                    <mat-label>Nom du héros</mat-label>
                     <input matInput id="nom" formControlName="nom" />
                   </mat-form-field>
 
                   <div class="md:col-span-2">
                     <mat-form-field subscriptSizing="dynamic" class="w-full">
-                      <mat-label>Région *</mat-label>
+                      <mat-label>Région</mat-label>
                       <mat-select inputId="region_id" formControlName="region_id" [compareWith]="compareById">
                         @for (region of regionList() ?? []; track region.id) {
                           <mat-option [value]="region.id">{{ region.region }}</mat-option>
@@ -134,6 +134,21 @@
                       ></textarea>
                     </mat-form-field>
                   </div>
+                </div>
+
+                <div class="md:col-span-2 xl:col-span-1">
+                  <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                      <p class="hfp-section-eyebrow m-0">
+                        Langues
+                      </p>
+                      <dw-tag>{{ selectedLangues().length }} sélectionnée(s)</dw-tag>
+                    </div>
+
+                    <bol-langue-add-menu [langues]="filteredLangues()" (added)="addLangueEntry($event)" />
+                  </div>
+
+                  <bol-langue-list [langues]="selectedLangues()" (removed)="removeItem(langues, $event)" />
                 </div>
               </div>
 
@@ -237,7 +252,7 @@
               </div>
             </div>
 
-            <div class="grid gap-4 xl:grid-cols-3 xl:items-start">
+            <div class="grid gap-4 xl:grid-cols-2 xl:items-start">
               <div class="dw-section--form xl:h-full">
                 <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
                   <div class="flex items-center gap-2">
@@ -270,55 +285,6 @@
                 </div>
 
                 <bol-carriere-list [carrieres]="selectedCarrieres()" (removed)="removeItem(carrieres, $event)" />
-              </div>
-
-              <div class="dw-section--form xl:h-full">
-                <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                  <p class="hfp-section-eyebrow m-0">
-                    Langues
-                  </p>
-                  <dw-tag>{{ selectedLangues().length }} sélectionnée(s)</dw-tag>
-                </div>
-
-                <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                  <mat-form-field subscriptSizing="dynamic">
-                    <mat-label>Ajouter une langue</mat-label>
-                    <mat-select inputId="langue" [formControl]="selectedLangueId">
-                      <mat-option [value]="null">— Aucune —</mat-option>
-                      @for (langue of filteredLangues(); track langue.id) {
-                        <mat-option [value]="langue.id">{{ langue.langue }}</mat-option>
-                      }
-                    </mat-select>
-                  </mat-form-field>
-                  <button
-                    mat-stroked-button
-                    type="button"
-                    [disabled]="!selectedLangueId.value"
-                    (click)="addLangue()"
-                  >
-                    <mat-icon>add</mat-icon> Ajouter
-                  </button>
-                </div>
-
-                <div class="mt-4 flex flex-col gap-3">
-                  @for (langue of selectedLangues(); track langue?.id; let index = $index) {
-                    <div class="hfp-item-row flex items-center justify-between gap-3 p-3">
-                      <p class="hfp-item-title m-0">{{ langue?.langue }}</p>
-                      <button
-                        mat-icon-button
-                        type="button"
-                        class="hfp-delete-btn"
-                        (click)="removeItem(langues, index)"
-                      >
-                        <mat-icon>delete</mat-icon>
-                      </button>
-                    </div>
-                  } @empty {
-                    <p class="hfp-empty-state m-0">
-                      Ajoute les langues que le héros peut parler ou comprendre.
-                    </p>
-                  }
-                </div>
               </div>
             </div>
 

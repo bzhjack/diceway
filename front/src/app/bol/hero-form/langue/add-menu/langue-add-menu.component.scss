@@ -1,0 +1,12 @@
+:host {
+  display: contents;
+}
+
+::ng-deep .lam-panel.mat-mdc-menu-panel {
+  width: 280px;
+  max-width: 280px;
+}
+
+.lam-content {
+  width: 100%;
+}

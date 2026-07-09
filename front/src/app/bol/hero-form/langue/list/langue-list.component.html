@@ -1,0 +1,30 @@
+<div class="flex flex-col gap-2">
+  @for (langue of langues(); track langue.id; let index = $index) {
+    <dw-collapsible-row
+      [expanded]="isExpanded(langue)"
+      [ariaLabel]="'Langue : ' + langue.label"
+      (toggled)="toggle(langue)"
+    >
+      <ng-container row-summary>
+        <span class="ll-label min-w-0 flex-1 truncate">{{ langue.label }}</span>
+        @if (langue.estLemurienne) {
+          <span class="ll-stat-display">Lémurienne</span>
+        }
+      </ng-container>
+
+      <ng-container row-body>
+        @if (langue.description) {
+          <p class="ll-meta m-0">{{ langue.description }}</p>
+        }
+
+        <button mat-button type="button" class="ll-delete-btn" (click)="removed.emit(index)">
+          <mat-icon>delete</mat-icon> Supprimer
+        </button>
+      </ng-container>
+    </dw-collapsible-row>
+  } @empty {
+    <p class="ll-empty-state m-0">
+      Ajoute les langues que le héros peut parler ou comprendre.
+    </p>
+  }
+</div>

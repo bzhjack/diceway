@@ -31,6 +31,8 @@ import {ArmureAddMenuComponent} from './armure/add-menu/armure-add-menu.componen
 import {ArmureEntry, ArmureListComponent} from './armure/list/armure-list.component';
 import {CarriereAddMenuComponent} from './carriere-add-menu/carriere-add-menu.component';
 import {CarriereEntry, CarriereListComponent} from './carriere-list/carriere-list.component';
+import {LangueAddMenuComponent} from './langue/add-menu/langue-add-menu.component';
+import {LangueEntry, LangueListComponent} from './langue/list/langue-list.component';
 import {TraitAddEvent, TraitAddMenuComponent} from './trait-add-menu/trait-add-menu.component';
 import {TraitDetail, TraitEntry, TraitListComponent} from './trait-list/trait-list.component';
 import {TraitIcon, traitIconType} from '../shared/trait-icon';
@@ -65,6 +67,8 @@ interface HeroTraitDraft extends HeroSimpleDraft {
     ArmureListComponent,
     CarriereAddMenuComponent,
     CarriereListComponent,
+    LangueAddMenuComponent,
+    LangueListComponent,
     TraitAddMenuComponent,
     TraitListComponent,
   ],
@@ -114,8 +118,6 @@ export class HeroFormPageComponent {
   protected readonly activateDisabled = computed(
     () => this.pending() || this.loadingHero() || this.heroForm.invalid || this.heroForm.controls.active.value,
   );
-
-  protected readonly selectedLangueId = new FormControl<number | null>(null);
 
   protected readonly heroForm = this.formBuilder.group({
     id: this.formBuilder.control<string | null>(null),
@@ -263,7 +265,13 @@ export class HeroFormPageComponent {
       .map((entry: HeroSimpleDraft) =>
         (this.languesList() ?? []).find((langue: BolLangueModel) => Number(langue.id) === Number(entry.id)),
       )
-      .filter((langue: BolLangueModel | undefined): langue is BolLangueModel => Boolean(langue)),
+      .filter((langue: BolLangueModel | undefined): langue is BolLangueModel => Boolean(langue))
+      .map((langue: BolLangueModel): LangueEntry => ({
+        id: Number(langue.id),
+        label: langue.langue,
+        description: langue.description || null,
+        estLemurienne: Boolean(langue.est_lemurienne),
+      })),
   );
   protected readonly selectedTraitEntries = computed(() =>
     (this.selectedTraitsDraft() ?? [])
@@ -376,16 +384,10 @@ export class HeroFormPageComponent {
     );
   }
 
-  protected addLangue(): void {
-    const id = this.selectedLangueId.value;
-    if (!id) {
-      return;
-    }
-
+  protected addLangueEntry(id: number): void {
     this.langues.push(
       this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}),
     );
-    this.selectedLangueId.setValue(null);
   }
 
   protected addTraitEntry(entry: TraitAddEvent): void {
@@ -500,7 +502,6 @@ export class HeroFormPageComponent {
     this.carrieres.clear({emitEvent: false});
     this.langues.clear({emitEvent: false});
     this.traits.clear({emitEvent: false});
-    this.selectedLangueId.setValue(null);
     this.syncSelectionArrays();
   }
 
