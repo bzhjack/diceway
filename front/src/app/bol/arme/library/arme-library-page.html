@@ -1,0 +1,182 @@
+<section class="dw-page xl:px-8">
+  <div class="mx-auto flex max-w-[1200px] flex-col gap-4">
+
+    <!-- Header card -->
+    <dw-library-header
+      title="Arsenal"
+      description="Catalogue des armes de la table, initialisé sur la base BoL et éditable depuis l'intendance."
+      color="amber"
+    >
+      <ng-container dwHeaderTags>
+        <dw-tag>{{ totalWeaponCount() }} entrées</dw-tag>
+        <dw-tag>{{ canonicalWeaponCount() }} canon</dw-tag>
+        <dw-tag>{{ customWeaponCount() }} créations</dw-tag>
+        <dw-tag>{{ meleeCount() }} mêlée</dw-tag>
+        <dw-tag>{{ rangedCount() }} tir</dw-tag>
+      </ng-container>
+      <ng-container dwHeaderActions>
+        <div class="flex flex-wrap gap-1.5">
+          <button mat-flat-button size="small" [disabled]="formVisible() && !editingWeaponId()" (click)="startCreate()">
+            <mat-icon>add</mat-icon>
+            {{ formVisible() && !editingWeaponId() ? 'Création en cours' : 'Nouvelle arme' }}
+          </button>
+          <button mat-stroked-button size="small" routerLink="/library/armors">
+            <mat-icon>shield</mat-icon> Voir les armures
+          </button>
+        </div>
+        <button mat-stroked-button size="small" routerLink="/intendance">
+          <mat-icon>arrow_back</mat-icon> Retour à l'intendance
+        </button>
+      </ng-container>
+    </dw-library-header>
+
+    <!-- Form card -->
+    @if (formVisible()) {
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <div class="space-y-4">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div class="space-y-1">
+                <p class="alp-eyebrow m-0">
+                  Intendance
+                </p>
+                <h2 class="alp-form-title m-0">{{ formTitle() }}</h2>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                <button mat-stroked-button size="small" (click)="cancelForm()">
+                  <mat-icon>close</mat-icon> Annuler
+                </button>
+                <button mat-flat-button size="small" [disabled]="submitting()" (click)="submitForm()">
+                  <mat-icon>check</mat-icon> {{ submitLabel() }}
+                </button>
+              </div>
+            </div>
+
+            <form [formGroup]="weaponForm" class="grid gap-4 md:grid-cols-2">
+              <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Nom de l'arme</mat-label>
+                <input matInput formControlName="arme" />
+                @if (onError('arme')) {
+                  <mat-error>Nom requis (255 caractères max)</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Type</mat-label>
+                <mat-select formControlName="type">
+                  @for (opt of weaponTypeOptions; track opt.value) {
+                    <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Dégâts</mat-label>
+                <input matInput formControlName="degats" />
+                @if (onError('degats')) {
+                  <mat-error>Dégâts requis (50 caractères max)</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Portée</mat-label>
+                <input matInput formControlName="portee" />
+              </mat-form-field>
+
+              <mat-form-field class="md:col-span-2" subscriptSizing="dynamic">
+                <mat-label>Notes</mat-label>
+                <textarea matInput formControlName="notes" rows="4" class="resize-none"></textarea>
+              </mat-form-field>
+            </form>
+
+            @if (errorMessage()) {
+              <p class="alp-error m-0">{{ errorMessage() }}</p>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <!-- Content card -->
+    <mat-card appearance="outlined">
+
+      <!-- Toolbar -->
+      <dw-library-toolbar
+        placeholder="Rechercher une arme"
+        [(searchTerm)]="searchTerm"
+        [(checked)]="onlyCreations"
+        (cleared)="clearFilters()"
+      >
+        <dw-tag dwToolbarCount>{{ weaponCount() }} visibles</dw-tag>
+      </dw-library-toolbar>
+
+      <!-- Table -->
+      <div class="weapon-table-scroll">
+        <table class="bol-weapon-table">
+          <thead>
+            <tr>
+              <th>Arme</th>
+              <th class="weapon-col-compact">Type</th>
+              <th class="weapon-col-compact">Dégâts</th>
+              <th class="weapon-col-range">Portée</th>
+              <th>Notes</th>
+              <th class="weapon-col-compact">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (weapon of filteredWeapons(); track weapon.id) {
+              <tr>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <span class="alp-strong">{{ weapon.arme }}</span>
+                    @if (weapon.user_id) {
+                      <dw-badge color="amber">Création</dw-badge>
+                    }
+                  </div>
+                </td>
+                <td class="weapon-col-compact">
+                  <dw-badge [color]="weapon.type === 'M' ? 'amber' : 'sky'">
+                    {{ weaponTypeLabel(weapon.type) }}
+                  </dw-badge>
+                </td>
+                <td class="weapon-col-compact">
+                  <span class="alp-strong">{{ weapon.degats || '-' }}</span>
+                </td>
+                <td class="weapon-col-range alp-muted-cell">
+                  {{ weapon.portee || '-' }}
+                </td>
+                <td class="alp-muted-cell">
+                  {{ weapon.notes || '-' }}
+                </td>
+                <td class="weapon-col-compact">
+                  @if (canManage(weapon)) {
+                    <div class="flex justify-end gap-0.5">
+                      <button
+                        mat-icon-button
+                        class="weapon-action-btn"
+                        matTooltip="Modifier"
+                        (click)="startEdit(weapon)"
+                      >
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button
+                        mat-icon-button
+                        class="weapon-action-btn weapon-btn-danger"
+                        matTooltip="Supprimer"
+                        (click)="askDelete(weapon)"
+                      >
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </mat-card>
+
+  </div>
+</section>
