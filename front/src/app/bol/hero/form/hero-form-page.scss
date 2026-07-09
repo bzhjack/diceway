@@ -47,3 +47,13 @@ dw-tag {
   font-size: 0.875rem;
   color: #fecdd3;
 }
+
+// Puce « modifications non enregistrées » — inline après le libellé
+// (le .mdc-button__label est position: relative, un absolu s'ancrerait sur le texte)
+.hfp-dirty-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dw-color-legendary);
+}

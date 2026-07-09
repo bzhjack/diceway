@@ -1,5 +1,6 @@
 import {Routes} from '@angular/router';
 import {authGuard} from './core/auth/auth.guard';
+import {pendingChangesGuard} from './core/pending-changes.guard';
 import {publicOnlyGuard} from './core/auth/public-only.guard';
 
 export const routes: Routes = [
@@ -54,12 +55,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./bol/hero/form/hero-form-page').then((module) => module.HeroFormPageComponent),
     canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'create/hero/:id',
     loadComponent: () =>
       import('./bol/hero/form/hero-form-page').then((module) => module.HeroFormPageComponent),
     canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'create/hero-advanced',

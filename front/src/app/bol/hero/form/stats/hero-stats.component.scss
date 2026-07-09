@@ -96,3 +96,8 @@
     grid-template-columns: 1fr;
   }
 }
+
+// Vitalité / Héroïsme : les deux ressources d'action courante, mises en avant
+.hs-cell--key {
+  background: rgba(147, 197, 253, 0.12);
+}

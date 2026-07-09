@@ -80,6 +80,12 @@ export class DwValueStepperComponent implements ControlValueAccessor, OnInit {
     this.setValue(this.value() + this.step());
   }
 
+  // Entrée valide la saisie sans déclencher la soumission implicite du <form> parent
+  protected onEnterKey(event: Event): void {
+    event.preventDefault();
+    (event.target as HTMLInputElement).blur();
+  }
+
   protected onInput(event: Event): void {
     const parsed = Number((event.target as HTMLInputElement).value);
     this.setValue(Number.isFinite(parsed) ? parsed : 0);

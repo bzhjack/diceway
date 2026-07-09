@@ -5,6 +5,7 @@ import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-st
 interface StatCell {
   readonly control: string;
   readonly label: string;
+  readonly highlight?: boolean;
 }
 
 interface StatGroup {
@@ -42,8 +43,8 @@ const STAT_GROUPS: readonly StatGroup[] = [
     label: 'Ressources',
     columns: 3,
     cells: [
-      {control: 'vitalite', label: 'Vitalité'},
-      {control: 'heroisme', label: 'Héroïsme'},
+      {control: 'vitalite', label: 'Vitalité', highlight: true},
+      {control: 'heroisme', label: 'Héroïsme', highlight: true},
       {control: 'experience', label: 'Expérience'},
       {control: 'pouvoir', label: 'Pouvoir'},
       {control: 'foi', label: 'Foi'},

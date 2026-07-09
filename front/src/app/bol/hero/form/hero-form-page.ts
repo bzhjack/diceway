@@ -1,9 +1,9 @@
 import {Location} from '@angular/common';
-import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Signal, computed, effect, inject, signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
-import {FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, PristineChangeEvent, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import {startWith, take} from 'rxjs';
+import {Observable, filter, map, startWith, take} from 'rxjs';
 import {finalize} from 'rxjs/operators';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
@@ -19,6 +19,7 @@ import {BolLangueModel} from '../../models/bol-langue.model';
 import {BolRegionModel} from '../../models/bol-region.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolHerosService} from '../../services/bol-heros.service';
+import {HasPendingChanges} from '../../../core/pending-changes.guard';
 import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {PictureComponent} from '../../../shared/picture/picture';
@@ -69,9 +70,12 @@ interface HeroTraitDraft extends HeroSimpleDraft {
   ],
   templateUrl: './hero-form-page.html',
   styleUrl: './hero-form-page.scss',
+  host: {
+    '(document:keydown.control.s)': 'onSaveShortcut($event)',
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeroFormPageComponent {
+export class HeroFormPageComponent implements HasPendingChanges {
   private readonly herosService = inject(BolHerosService);
   private readonly herosStateService = inject(BolHerosStateService);
   private readonly formBuilder = inject(FormBuilder);
@@ -147,25 +151,22 @@ export class HeroFormPageComponent {
   protected readonly compareById = (a: number | string | null, b: number | string | null): boolean =>
     Number(a) === Number(b);
 
-  protected readonly avatarPreview = toSignal(
-    this.heroForm.controls.avatar.valueChanges.pipe(startWith(this.heroForm.controls.avatar.value)),
-    {initialValue: this.heroForm.controls.avatar.value},
-  );
-  protected readonly heroNom = toSignal(
-    this.heroForm.controls.nom.valueChanges.pipe(startWith(this.heroForm.controls.nom.value)),
-    {initialValue: this.heroForm.controls.nom.value},
-  );
-  protected readonly heroJoueur = toSignal(
-    this.heroForm.controls.joueur.valueChanges.pipe(startWith(this.heroForm.controls.joueur.value)),
-    {initialValue: this.heroForm.controls.joueur.value},
-  );
-  protected readonly heroVitalite = toSignal(
-    this.heroForm.controls.vitalite.valueChanges.pipe(startWith(this.heroForm.controls.vitalite.value)),
-    {initialValue: this.heroForm.controls.vitalite.value},
-  );
-  protected readonly heroHeroisme = toSignal(
-    this.heroForm.controls.heroisme.valueChanges.pipe(startWith(this.heroForm.controls.heroisme.value)),
-    {initialValue: this.heroForm.controls.heroisme.value},
+  private controlValueSignal<T>(control: FormControl<T>): Signal<T> {
+    return toSignal(control.valueChanges.pipe(startWith(control.value)), {initialValue: control.value});
+  }
+
+  protected readonly avatarPreview = this.controlValueSignal(this.heroForm.controls.avatar);
+  protected readonly heroNom = this.controlValueSignal(this.heroForm.controls.nom);
+  protected readonly heroJoueur = this.controlValueSignal(this.heroForm.controls.joueur);
+  protected readonly heroVitalite = this.controlValueSignal(this.heroForm.controls.vitalite);
+  protected readonly heroHeroisme = this.controlValueSignal(this.heroForm.controls.heroisme);
+
+  protected readonly formDirty = toSignal(
+    this.heroForm.events.pipe(
+      filter((event): event is PristineChangeEvent => event instanceof PristineChangeEvent),
+      map((event) => !event.pristine),
+    ),
+    {initialValue: false},
   );
   protected readonly selectedArmesDraft = toSignal(
     this.armes.valueChanges.pipe(startWith(this.armes.getRawValue())),
@@ -376,18 +377,21 @@ export class HeroFormPageComponent {
     ref.afterClosed().pipe(take(1)).subscribe((avatar: string | null) => {
       if (avatar) {
         this.heroForm.controls.avatar.setValue(avatar);
+        this.heroForm.controls.avatar.markAsDirty();
       }
     });
   }
 
   protected addArmeEntry(id: number): void {
     this.armes.push(this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}));
+    this.armes.markAsDirty();
   }
 
   protected addArmureEntry(id: number): void {
     this.armures.push(
       this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}),
     );
+    this.armures.markAsDirty();
   }
 
   protected addCarriereEntry(id: number): void {
@@ -397,12 +401,14 @@ export class HeroFormPageComponent {
         value: this.formBuilder.control(0, Validators.required),
       }),
     );
+    this.carrieres.markAsDirty();
   }
 
   protected addLangueEntry(id: number): void {
     this.langues.push(
       this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}),
     );
+    this.langues.markAsDirty();
   }
 
   protected addTraitEntry(entry: TraitAddEvent): void {
@@ -412,10 +418,12 @@ export class HeroFormPageComponent {
         type: this.formBuilder.control<'A' | 'D'>(entry.type, Validators.required),
       }),
     );
+    this.traits.markAsDirty();
   }
 
   protected removeItem(items: FormArray, index: number): void {
     items.removeAt(index);
+    items.markAsDirty();
   }
 
   protected saveHero(): void {
@@ -462,6 +470,8 @@ export class HeroFormPageComponent {
       .pipe(finalize(() => this.pending.set(false)))
       .subscribe({
         next: (hero: BolHerosModel) => {
+          this.heroForm.markAsPristine();
+
           if (!this.editMode() && !activate && hero.id) {
             this.navigateToDraft(hero.id);
             return;
@@ -482,6 +492,28 @@ export class HeroFormPageComponent {
   protected onError(controlName: keyof typeof this.heroForm.controls): boolean {
     const control = this.heroForm.controls[controlName];
     return control.invalid && (control.dirty || control.touched);
+  }
+
+  canLeave(): boolean | Observable<boolean> {
+    if (!this.formDirty()) {
+      return true;
+    }
+
+    const ref = this.dialog.open(DwConfirmDialogComponent, {
+      data: {
+        title: 'Modifications non enregistrées',
+        message: 'Ce héros a des changements non sauvegardés. Quitter sans enregistrer ?',
+        confirmLabel: 'Quitter sans sauver',
+        cancelLabel: 'Annuler',
+      },
+    });
+
+    return ref.afterClosed().pipe(map((confirmed: boolean | undefined) => Boolean(confirmed)));
+  }
+
+  protected onSaveShortcut(event: Event): void {
+    event.preventDefault();
+    this.saveHero();
   }
 
   private resetForm(): void {

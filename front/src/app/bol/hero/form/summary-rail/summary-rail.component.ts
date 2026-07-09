@@ -40,4 +40,5 @@ export class HeroSummaryRailComponent {
   readonly traitRemoved = output<number>();
   readonly langueAdded = output<number>();
   readonly langueRemoved = output<number>();
+
 }

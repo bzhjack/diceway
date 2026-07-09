@@ -31,6 +31,9 @@
                 [disabled]="pending() || loadingHero() || heroForm.invalid"
               >
                 <mat-icon>save</mat-icon> {{ submitLabel() }}
+                @if (formDirty()) {
+                  <span class="hfp-dirty-dot" aria-label="Modifications non enregistrées"></span>
+                }
               </button>
 
               @if (editMode() && !heroForm.controls.active.value) {

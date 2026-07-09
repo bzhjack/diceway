@@ -4,7 +4,7 @@
       <div class="hs-block-head">{{ group.label }}</div>
       <div class="hs-block-cells hs-block-cells--{{ group.columns }}">
         @for (cell of group.cells; track cell.control) {
-          <div class="hs-cell">
+          <div class="hs-cell" [class.hs-cell--key]="cell.highlight">
             <span class="hs-lbl">{{ cell.label }}</span>
             <dw-value-stepper [formControlName]="cell.control" [ariaLabel]="cell.label" />
           </div>

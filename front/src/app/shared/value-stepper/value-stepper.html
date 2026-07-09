@@ -15,6 +15,7 @@
     [disabled]="disabled()"
     [attr.aria-label]="ariaLabel()"
     (change)="onInput($event)"
+    (keydown.enter)="onEnterKey($event)"
   />
   <button
     type="button"
