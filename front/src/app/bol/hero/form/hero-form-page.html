@@ -75,13 +75,30 @@
               </div>
 
               <div class="flex min-w-0 flex-col gap-4">
-                <div class="dw-section--form">
-                  <bol-hero-general
-                    [form]="heroForm"
-                    [regionList]="regionList()"
-                    [compareById]="compareById"
-                    [showValidationHint]="onError('joueur') || onError('nom') || onError('region_id')"
-                  />
+                <div class="grid gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] xl:items-stretch">
+                  <div class="dw-section--form xl:h-full">
+                    <bol-hero-general
+                      [form]="heroForm"
+                      [regionList]="regionList()"
+                      [compareById]="compareById"
+                      [showValidationHint]="onError('joueur') || onError('nom') || onError('region_id')"
+                    />
+                  </div>
+
+                  <div class="dw-section--form xl:h-full">
+                    <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+                      <div class="flex items-center gap-2">
+                        <p class="hfp-section-eyebrow m-0">
+                          Carrières
+                        </p>
+                        <dw-tag>{{ selectedCarrieres().length }} sélectionnée(s)</dw-tag>
+                      </div>
+
+                      <bol-carriere-add-menu [carrieres]="filteredCarrieres()" (added)="addCarriereEntry($event)" />
+                    </div>
+
+                    <bol-carriere-list [carrieres]="selectedCarrieres()" (removed)="removeItem(carrieres, $event)" />
+                  </div>
                 </div>
 
                 <div class="dw-section--form">
@@ -108,51 +125,36 @@
                     <bol-trait-list [traits]="selectedTraitEntries()" (removed)="removeItem(traits, $event)" />
                   </div>
 
-                  <div class="dw-section--form xl:h-full">
-                    <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-                      <div class="flex items-center gap-2">
-                        <p class="hfp-section-eyebrow m-0">
-                          Carrières
-                        </p>
-                        <dw-tag>{{ selectedCarrieres().length }} sélectionnée(s)</dw-tag>
+                  <div class="flex flex-col gap-4">
+                    <div class="dw-section--form">
+                      <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                          <p class="hfp-section-eyebrow m-0">
+                            Armes
+                          </p>
+                          <dw-tag>{{ selectedArmes().length }} sélectionnée(s)</dw-tag>
+                        </div>
+
+                        <bol-arme-add-menu [armes]="filteredArmes()" (added)="addArmeEntry($event)" />
                       </div>
 
-                      <bol-carriere-add-menu [carrieres]="filteredCarrieres()" (added)="addCarriereEntry($event)" />
+                      <bol-arme-list [armes]="selectedArmes()" (removed)="removeItem(armes, $event)" />
                     </div>
 
-                    <bol-carriere-list [carrieres]="selectedCarrieres()" (removed)="removeItem(carrieres, $event)" />
-                  </div>
-                </div>
+                    <div class="dw-section--form">
+                      <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                          <p class="hfp-section-eyebrow m-0">
+                            Armures
+                          </p>
+                          <dw-tag>{{ selectedArmures().length }} sélectionnée(s)</dw-tag>
+                        </div>
 
-                <div class="grid gap-4 xl:grid-cols-2 xl:items-start">
-                  <div class="dw-section--form">
-                    <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-                      <div class="flex items-center gap-2">
-                        <p class="hfp-section-eyebrow m-0">
-                          Armes
-                        </p>
-                        <dw-tag>{{ selectedArmes().length }} sélectionnée(s)</dw-tag>
+                        <bol-armure-add-menu [armures]="filteredArmures()" (added)="addArmureEntry($event)" />
                       </div>
 
-                      <bol-arme-add-menu [armes]="filteredArmes()" (added)="addArmeEntry($event)" />
+                      <bol-armure-list [armures]="selectedArmures()" (removed)="removeItem(armures, $event)" />
                     </div>
-
-                    <bol-arme-list [armes]="selectedArmes()" (removed)="removeItem(armes, $event)" />
-                  </div>
-
-                  <div class="dw-section--form">
-                    <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-                      <div class="flex items-center gap-2">
-                        <p class="hfp-section-eyebrow m-0">
-                          Armures
-                        </p>
-                        <dw-tag>{{ selectedArmures().length }} sélectionnée(s)</dw-tag>
-                      </div>
-
-                      <bol-armure-add-menu [armures]="filteredArmures()" (added)="addArmureEntry($event)" />
-                    </div>
-
-                    <bol-armure-list [armures]="selectedArmures()" (removed)="removeItem(armures, $event)" />
                   </div>
                 </div>
               </div>

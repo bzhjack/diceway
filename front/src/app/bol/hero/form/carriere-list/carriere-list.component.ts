@@ -1,10 +1,9 @@
 import {ChangeDetectionStrategy, Component, input, output, signal} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
-import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
 import {DwCollapsibleRowComponent} from '../../../../shared/dw-collapsible-row/dw-collapsible-row';
+import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
 
 export interface CarriereEntry {
   readonly id: number;
@@ -15,7 +14,7 @@ export interface CarriereEntry {
 
 @Component({
   selector: 'bol-carriere-list',
-  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatIconModule, MatInputModule, DwCollapsibleRowComponent],
+  imports: [ReactiveFormsModule, MatButtonModule, MatIconModule, DwCollapsibleRowComponent, DwValueStepperComponent],
   templateUrl: './carriere-list.component.html',
   styleUrl: './carriere-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

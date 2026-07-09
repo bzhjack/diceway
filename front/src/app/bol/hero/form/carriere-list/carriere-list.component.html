@@ -17,10 +17,7 @@
 
         <div class="cl-rank-row">
           <span class="cl-detail-title">Rang de carrière</span>
-          <mat-form-field subscriptSizing="dynamic" class="cl-rank-field">
-            <mat-label>Rang</mat-label>
-            <input matInput type="number" [formControl]="carriere.rank" />
-          </mat-form-field>
+          <dw-value-stepper [formControl]="carriere.rank" [min]="0" ariaLabel="Rang de carrière" />
         </div>
 
         <button mat-button type="button" class="cl-delete-btn" (click)="removed.emit(index)">
