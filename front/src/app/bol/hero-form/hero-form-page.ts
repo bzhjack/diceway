@@ -22,11 +22,11 @@ import {BolLangueModel} from '../models/bol-langue.model';
 import {BolRegionModel} from '../models/bol-region.model';
 import {BolHerosStateService} from '../services/bol-heros-state.service';
 import {BolHerosService} from '../services/bol-heros.service';
-import {DwBadgeComponent} from '../../shared/dw-badge/dw-badge';
 import {DwConfirmDialogComponent} from '../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
 import {PictureComponent} from '../../shared/picture/picture';
 import {TraitAddEvent, TraitAddMenuComponent} from './trait-add-menu/trait-add-menu.component';
+import {TraitDetail, TraitEntry, TraitListComponent} from './trait-list/trait-list.component';
 
 interface HeroSimpleDraft {
   id: number;
@@ -38,16 +38,6 @@ interface HeroCarriereDraft extends HeroSimpleDraft {
 
 interface HeroTraitDraft extends HeroSimpleDraft {
   type: 'A' | 'D';
-}
-
-interface HeroTraitDetail {
-  readonly title: string;
-  readonly description: string | null;
-}
-
-interface HeroTraitEntry extends HeroTraitDraft {
-  readonly label: string;
-  readonly details: readonly HeroTraitDetail[];
 }
 
 interface HeroSelectedCarriereEntry extends HeroCarriereDraft {
@@ -65,9 +55,9 @@ interface HeroSelectedCarriereEntry extends HeroCarriereDraft {
     MatIconModule,
     MatInputModule,
     MatSelectModule,
-    DwBadgeComponent,
     DwTagComponent,
     TraitAddMenuComponent,
+    TraitListComponent,
   ],
   templateUrl: './hero-form-page.html',
   styleUrl: './hero-form-page.scss',
@@ -265,8 +255,8 @@ export class HeroFormPageComponent {
       }))
       .filter(
         (
-          entry: HeroTraitDraft & {label?: string; details: readonly HeroTraitDetail[]},
-        ): entry is HeroTraitEntry => Boolean(entry.label),
+          entry: HeroTraitDraft & {label?: string; details: readonly TraitDetail[]},
+        ): entry is TraitEntry => Boolean(entry.label),
       ),
   );
   protected readonly selectedRegion = computed(() => {
@@ -756,7 +746,7 @@ export class HeroFormPageComponent {
         : 'La création du héros a échoué.';
   }
 
-  private traitDetails(entry: HeroTraitDraft): readonly HeroTraitDetail[] {
+  private traitDetails(entry: HeroTraitDraft): readonly TraitDetail[] {
     const source =
       entry.type === 'A'
         ? (this.avantagesList() ?? []).find(
@@ -770,7 +760,7 @@ export class HeroFormPageComponent {
       return [];
     }
 
-    const details: HeroTraitDetail[] = [];
+    const details: TraitDetail[] = [];
     if ('de_bonus' in source && source.de_bonus) {
       details.push({title: 'Dé bonus', description: source.de_bonus_domaine});
     }
