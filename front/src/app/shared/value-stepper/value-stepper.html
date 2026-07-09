@@ -3,20 +3,26 @@
     type="button"
     class="vs__btn"
     (click)="decrement()"
-    [disabled]="isMin()"
-    [attr.aria-label]="decrementAriaLabel()"
+    [disabled]="disabled() || isMin()"
+    aria-label="Diminuer"
   >
     −
   </button>
-  <div class="vs__value">{{ prefix() }}{{ value() }}</div>
+  <input
+    class="vs__value"
+    type="number"
+    [value]="value()"
+    [disabled]="disabled()"
+    [attr.aria-label]="ariaLabel()"
+    (change)="onInput($event)"
+  />
   <button
     type="button"
     class="vs__btn"
     (click)="increment()"
-    [disabled]="isMax()"
-    [attr.aria-label]="incrementAriaLabel()"
+    [disabled]="disabled() || isMax()"
+    aria-label="Augmenter"
   >
     +
   </button>
 </div>
-

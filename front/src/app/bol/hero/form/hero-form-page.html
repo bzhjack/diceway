@@ -58,193 +58,103 @@
               </div>
             }
 
-            <div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px] xl:items-stretch">
-              <div class="dw-section--form xl:h-full">
-                <bol-hero-general
+            <div class="grid gap-4 xl:grid-cols-[260px_minmax(0,1fr)] xl:items-start">
+              <div class="dw-section--form xl:sticky xl:top-4">
+                <bol-hero-summary-rail
                   [form]="heroForm"
                   [avatarPreview]="avatarPreview()"
-                  [selectedRegion]="selectedRegion()"
-                  [regionList]="regionList()"
-                  [compareById]="compareById"
-                  [showValidationHint]="onError('joueur') || onError('nom') || onError('region_id')"
+                  [heroName]="heroNom()"
+                  [playerName]="heroJoueur()"
+                  [region]="selectedRegion()"
+                  [langues]="selectedLangues()"
+                  [languesDisponibles]="filteredLangues()"
                   (avatarClick)="pickAvatar()"
+                  (langueAdded)="addLangueEntry($event)"
+                  (langueRemoved)="removeItem(langues, $event)"
                 />
               </div>
 
-              <div class="dw-section--form flex flex-col xl:h-full">
-                <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-                  <div class="flex items-center gap-2">
-                    <p class="hfp-section-eyebrow m-0">
-                      Langues
-                    </p>
-                    <dw-tag>{{ selectedLangues().length }} sélectionnée(s)</dw-tag>
-                  </div>
-
-                  <bol-langue-add-menu [langues]="filteredLangues()" (added)="addLangueEntry($event)" />
-                </div>
-
-                <bol-langue-list [langues]="selectedLangues()" (removed)="removeItem(langues, $event)" />
-              </div>
-            </div>
-
-            <div class="grid gap-4 xl:grid-cols-3 xl:items-start">
-              <div class="dw-section--form xl:h-full">
-                <p class="hfp-section-eyebrow m-0 mb-2">
-                  Attributs
-                </p>
-
-                <div class="flex flex-col gap-2">
-                  <div class="flex gap-2">
-                    <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
-                      <mat-label>Vigueur</mat-label>
-                      <input matInput type="number" id="vigueur" formControlName="vigueur" />
-                    </mat-form-field>
-                    <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
-                      <mat-label>Agilité</mat-label>
-                      <input matInput type="number" id="agilite" formControlName="agilite" />
-                    </mat-form-field>
-                  </div>
-                  <div class="flex gap-2">
-                    <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
-                      <mat-label>Esprit</mat-label>
-                      <input matInput type="number" id="esprit" formControlName="esprit" />
-                    </mat-form-field>
-                    <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
-                      <mat-label>Aura</mat-label>
-                      <input matInput type="number" id="aura" formControlName="aura" />
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-
-              <div class="dw-section--form xl:h-full">
-                <p class="hfp-section-eyebrow m-0 mb-2">
-                  Combat
-                </p>
-
-                <div class="flex flex-col gap-2">
-                  <div class="flex gap-2">
-                    <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
-                      <mat-label>Initiative</mat-label>
-                      <input matInput type="number" id="initiative" formControlName="initiative" />
-                    </mat-form-field>
-                    <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
-                      <mat-label>Mêlée</mat-label>
-                      <input matInput type="number" id="melee" formControlName="melee" />
-                    </mat-form-field>
-                  </div>
-                  <div class="flex gap-2">
-                    <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
-                      <mat-label>Tir</mat-label>
-                      <input matInput type="number" id="tir" formControlName="tir" />
-                    </mat-form-field>
-                    <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
-                      <mat-label>Défense</mat-label>
-                      <input matInput type="number" id="defense" formControlName="defense" />
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-
-              <div class="dw-section--form xl:h-full">
-                <p class="hfp-section-eyebrow m-0 mb-2">
-                  Ressources
-                </p>
-
-                <div class="grid gap-2 md:grid-cols-2">
-                  <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
-                    <mat-label>Vitalité</mat-label>
-                    <input matInput type="number" id="vitalite" formControlName="vitalite" />
-                  </mat-form-field>
-                  <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
-                    <mat-label>Héroïsme</mat-label>
-                    <input matInput type="number" id="heroisme" formControlName="heroisme" />
-                  </mat-form-field>
-                  <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
-                    <mat-label>Expérience</mat-label>
-                    <input matInput type="number" id="experience" formControlName="experience" />
-                  </mat-form-field>
-                  <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
-                    <mat-label>Pouvoir</mat-label>
-                    <input matInput type="number" id="pouvoir" formControlName="pouvoir" />
-                  </mat-form-field>
-                  <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
-                    <mat-label>Foi</mat-label>
-                    <input matInput type="number" id="foi" formControlName="foi" />
-                  </mat-form-field>
-                  <mat-form-field subscriptSizing="dynamic" class="w-[90px]">
-                    <mat-label>Création</mat-label>
-                    <input matInput type="number" id="creation" formControlName="creation" />
-                  </mat-form-field>
-                </div>
-              </div>
-            </div>
-
-            <div class="grid gap-4 xl:grid-cols-2 xl:items-start">
-              <div class="dw-section--form xl:h-full">
-                <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-                  <div class="flex items-center gap-2">
-                    <p class="hfp-section-eyebrow m-0">
-                      Traits
-                    </p>
-                    <dw-tag>{{ selectedTraitEntries().length }} sélectionné(s)</dw-tag>
-                  </div>
-
-                  <bol-trait-add-menu
-                    [avantages]="filteredAvantages()"
-                    [desavantages]="filteredDesavantages()"
-                    (added)="addTraitEntry($event)"
+              <div class="flex min-w-0 flex-col gap-4">
+                <div class="dw-section--form">
+                  <bol-hero-general
+                    [form]="heroForm"
+                    [regionList]="regionList()"
+                    [compareById]="compareById"
+                    [showValidationHint]="onError('joueur') || onError('nom') || onError('region_id')"
                   />
                 </div>
 
-                <bol-trait-list [traits]="selectedTraitEntries()" (removed)="removeItem(traits, $event)" />
-              </div>
-
-              <div class="dw-section--form xl:h-full">
-                <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-                  <div class="flex items-center gap-2">
-                    <p class="hfp-section-eyebrow m-0">
-                      Carrières
-                    </p>
-                    <dw-tag>{{ selectedCarrieres().length }} sélectionnée(s)</dw-tag>
-                  </div>
-
-                  <bol-carriere-add-menu [carrieres]="filteredCarrieres()" (added)="addCarriereEntry($event)" />
+                <div class="dw-section--form">
+                  <bol-hero-stats [form]="heroForm" />
                 </div>
 
-                <bol-carriere-list [carrieres]="selectedCarrieres()" (removed)="removeItem(carrieres, $event)" />
-              </div>
-            </div>
+                <div class="grid gap-4 xl:grid-cols-2 xl:items-start">
+                  <div class="dw-section--form xl:h-full">
+                    <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+                      <div class="flex items-center gap-2">
+                        <p class="hfp-section-eyebrow m-0">
+                          Traits
+                        </p>
+                        <dw-tag>{{ selectedTraitEntries().length }} sélectionné(s)</dw-tag>
+                      </div>
 
-            <div class="grid gap-4 xl:grid-cols-2 xl:items-start">
-              <div class="dw-section--form">
-                <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-                  <div class="flex items-center gap-2">
-                    <p class="hfp-section-eyebrow m-0">
-                      Armes
-                    </p>
-                    <dw-tag>{{ selectedArmes().length }} sélectionnée(s)</dw-tag>
+                      <bol-trait-add-menu
+                        [avantages]="filteredAvantages()"
+                        [desavantages]="filteredDesavantages()"
+                        (added)="addTraitEntry($event)"
+                      />
+                    </div>
+
+                    <bol-trait-list [traits]="selectedTraitEntries()" (removed)="removeItem(traits, $event)" />
                   </div>
 
-                  <bol-arme-add-menu [armes]="filteredArmes()" (added)="addArmeEntry($event)" />
+                  <div class="dw-section--form xl:h-full">
+                    <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+                      <div class="flex items-center gap-2">
+                        <p class="hfp-section-eyebrow m-0">
+                          Carrières
+                        </p>
+                        <dw-tag>{{ selectedCarrieres().length }} sélectionnée(s)</dw-tag>
+                      </div>
+
+                      <bol-carriere-add-menu [carrieres]="filteredCarrieres()" (added)="addCarriereEntry($event)" />
+                    </div>
+
+                    <bol-carriere-list [carrieres]="selectedCarrieres()" (removed)="removeItem(carrieres, $event)" />
+                  </div>
                 </div>
 
-                <bol-arme-list [armes]="selectedArmes()" (removed)="removeItem(armes, $event)" />
-              </div>
+                <div class="grid gap-4 xl:grid-cols-2 xl:items-start">
+                  <div class="dw-section--form">
+                    <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+                      <div class="flex items-center gap-2">
+                        <p class="hfp-section-eyebrow m-0">
+                          Armes
+                        </p>
+                        <dw-tag>{{ selectedArmes().length }} sélectionnée(s)</dw-tag>
+                      </div>
 
-              <div class="dw-section--form">
-                <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-                  <div class="flex items-center gap-2">
-                    <p class="hfp-section-eyebrow m-0">
-                      Armures
-                    </p>
-                    <dw-tag>{{ selectedArmures().length }} sélectionnée(s)</dw-tag>
+                      <bol-arme-add-menu [armes]="filteredArmes()" (added)="addArmeEntry($event)" />
+                    </div>
+
+                    <bol-arme-list [armes]="selectedArmes()" (removed)="removeItem(armes, $event)" />
                   </div>
 
-                  <bol-armure-add-menu [armures]="filteredArmures()" (added)="addArmureEntry($event)" />
-                </div>
+                  <div class="dw-section--form">
+                    <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+                      <div class="flex items-center gap-2">
+                        <p class="hfp-section-eyebrow m-0">
+                          Armures
+                        </p>
+                        <dw-tag>{{ selectedArmures().length }} sélectionnée(s)</dw-tag>
+                      </div>
 
-                <bol-armure-list [armures]="selectedArmures()" (removed)="removeItem(armures, $event)" />
+                      <bol-armure-add-menu [armures]="filteredArmures()" (added)="addArmureEntry($event)" />
+                    </div>
+
+                    <bol-armure-list [armures]="selectedArmures()" (removed)="removeItem(armures, $event)" />
+                  </div>
+                </div>
               </div>
             </div>
 

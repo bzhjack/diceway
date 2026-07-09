@@ -8,10 +8,7 @@ import {finalize} from 'rxjs/operators';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatDialog} from '@angular/material/dialog';
-import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
-import {MatSelectModule} from '@angular/material/select';
 import {BolArmureModel} from '../../models/bol-armure.model';
 import {BolArmeModel} from '../../models/bol-arme.model';
 import {BolAvantageModel} from '../../models/bol-avantage.model';
@@ -32,8 +29,9 @@ import {ArmureEntry, ArmureListComponent} from './armure/list/armure-list.compon
 import {CarriereAddMenuComponent} from './carriere-add-menu/carriere-add-menu.component';
 import {CarriereEntry, CarriereListComponent} from './carriere-list/carriere-list.component';
 import {HeroGeneralComponent} from './general/general.component';
-import {LangueAddMenuComponent} from './langue/add-menu/langue-add-menu.component';
-import {LangueEntry, LangueListComponent} from './langue/list/langue-list.component';
+import {LangueEntry} from './langue/list/langue-list.component';
+import {HeroStatsComponent} from './stats/hero-stats.component';
+import {HeroSummaryRailComponent} from './summary-rail/summary-rail.component';
 import {TraitAddEvent, TraitAddMenuComponent} from './trait-add-menu/trait-add-menu.component';
 import {TraitDetail, TraitEntry, TraitListComponent} from './trait-list/trait-list.component';
 import {TraitIcon, traitIconType} from '../../shared/trait-icon';
@@ -57,10 +55,7 @@ interface HeroTraitDraft extends HeroSimpleDraft {
     MatButtonModule,
     MatCard,
     MatCardContent,
-    MatFormFieldModule,
     MatIconModule,
-    MatInputModule,
-    MatSelectModule,
     DwTagComponent,
     ArmeAddMenuComponent,
     ArmeListComponent,
@@ -69,8 +64,8 @@ interface HeroTraitDraft extends HeroSimpleDraft {
     CarriereAddMenuComponent,
     CarriereListComponent,
     HeroGeneralComponent,
-    LangueAddMenuComponent,
-    LangueListComponent,
+    HeroStatsComponent,
+    HeroSummaryRailComponent,
     TraitAddMenuComponent,
     TraitListComponent,
   ],
@@ -157,6 +152,14 @@ export class HeroFormPageComponent {
   protected readonly avatarPreview = toSignal(
     this.heroForm.controls.avatar.valueChanges.pipe(startWith(this.heroForm.controls.avatar.value)),
     {initialValue: this.heroForm.controls.avatar.value},
+  );
+  protected readonly heroNom = toSignal(
+    this.heroForm.controls.nom.valueChanges.pipe(startWith(this.heroForm.controls.nom.value)),
+    {initialValue: this.heroForm.controls.nom.value},
+  );
+  protected readonly heroJoueur = toSignal(
+    this.heroForm.controls.joueur.valueChanges.pipe(startWith(this.heroForm.controls.joueur.value)),
+    {initialValue: this.heroForm.controls.joueur.value},
   );
   protected readonly selectedArmesDraft = toSignal(
     this.armes.valueChanges.pipe(startWith(this.armes.getRawValue())),
@@ -296,8 +299,12 @@ export class HeroFormPageComponent {
         ): entry is TraitEntry => Boolean(entry.label),
       ),
   );
+  private readonly regionIdValue = toSignal(
+    this.heroForm.controls.region_id.valueChanges.pipe(startWith(this.heroForm.controls.region_id.value)),
+    {initialValue: this.heroForm.controls.region_id.value},
+  );
   protected readonly selectedRegion = computed(() => {
-    const regionId = this.heroForm.controls.region_id.value;
+    const regionId = this.regionIdValue();
     if (regionId === null) {
       return null;
     }

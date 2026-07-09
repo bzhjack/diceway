@@ -1,0 +1,46 @@
+<div
+  class="sr-avatar group relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden transition-colors"
+  (click)="avatarClick.emit()"
+>
+  @if (avatarPreview()) {
+    <img [src]="avatarPreview()!" alt="Avatar héros" class="h-full w-full object-cover" />
+  } @else {
+    <div class="sr-avatar-placeholder flex flex-col items-center gap-2">
+      <mat-icon class="!text-3xl">image</mat-icon>
+      <span class="sr-avatar-hint">Cliquer pour modifier</span>
+    </div>
+  }
+
+  <div
+    class="sr-avatar-overlay pointer-events-none absolute inset-0 flex items-end justify-center opacity-0 transition-opacity group-hover:opacity-100"
+  >
+    <span class="sr-avatar-overlay-label mb-3 px-3 py-1">Modifier</span>
+  </div>
+</div>
+
+<p class="sr-name m-0 mt-3">{{ heroName() || 'Nouveau héros' }}</p>
+@if (playerName()) {
+  <p class="sr-player m-0">joué par {{ playerName() }}</p>
+}
+@if (region(); as currentRegion) {
+  <span class="sr-region mt-2">{{ currentRegion.region }}</span>
+}
+
+<p class="sr-sub m-0 mt-4 mb-2">En séance</p>
+<div class="flex flex-col gap-1.5" [formGroup]="form()">
+  @for (vital of vitals; track vital.control) {
+    <div class="sr-vital flex items-center justify-between gap-2">
+      <span class="sr-vital-label">{{ vital.label }}</span>
+      <dw-value-stepper [formControlName]="vital.control" [ariaLabel]="vital.label" />
+    </div>
+  }
+</div>
+
+<div class="sr-langues mt-4">
+  <div class="mb-2 flex items-center justify-between gap-2">
+    <p class="sr-sub m-0">Langues</p>
+    <bol-langue-add-menu [langues]="languesDisponibles()" (added)="langueAdded.emit($event)" />
+  </div>
+
+  <bol-langue-list [langues]="langues()" (removed)="langueRemoved.emit($event)" />
+</div>

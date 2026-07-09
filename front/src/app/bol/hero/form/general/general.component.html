@@ -1,76 +1,38 @@
 <p class="hfp-section-eyebrow m-0 mb-2">
-  Général
+  Identité
 </p>
 
-<div class="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)]" [formGroup]="form()">
-  <div class="space-y-3">
-    <div
-      class="hfp-avatar group relative flex aspect-square w-full cursor-pointer items-center justify-center overflow-hidden transition-colors"
-      (click)="avatarClick.emit()"
-    >
-      @if (avatarPreview()) {
-        <img [src]="avatarPreview()!" alt="Avatar héros" class="h-full w-full object-cover" />
-      } @else {
-        <div class="hfp-avatar-placeholder flex flex-col items-center gap-3">
-          <mat-icon class="!text-4xl">image</mat-icon>
-          <span class="hfp-avatar-label">Avatar</span>
-          <span class="hfp-avatar-hint">Cliquer pour modifier</span>
-        </div>
+<div class="grid gap-2 md:grid-cols-3" [formGroup]="form()">
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Nom du joueur</mat-label>
+    <input matInput id="joueur" formControlName="joueur" />
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Nom du héros</mat-label>
+    <input matInput id="nom" formControlName="nom" />
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Région</mat-label>
+    <mat-select inputId="region_id" formControlName="region_id" [compareWith]="compareById()">
+      @for (region of regionList() ?? []; track region.id) {
+        <mat-option [value]="region.id">{{ region.region }}</mat-option>
       }
+    </mat-select>
+  </mat-form-field>
 
-      <div
-        class="hfp-avatar-overlay pointer-events-none absolute inset-0 flex items-end justify-center opacity-0 transition-opacity group-hover:opacity-100"
-      >
-        <span class="hfp-avatar-overlay-label mb-4 px-3 py-1">
-          Modifier
-        </span>
-      </div>
-    </div>
-
-    @if (selectedRegion(); as region) {
-      <div class="hfp-item-row p-3">
-        <p class="hfp-region-eyebrow m-0">
-          Région active
-        </p>
-        <p class="hfp-item-title m-0 mt-2">{{ region.region }}</p>
-      </div>
-    }
-  </div>
-
-  <div class="grid gap-2 md:grid-cols-2">
-    <mat-form-field subscriptSizing="dynamic">
-      <mat-label>Nom du joueur</mat-label>
-      <input matInput id="joueur" formControlName="joueur" />
+  <div class="md:col-span-3">
+    <mat-form-field subscriptSizing="dynamic" class="w-full">
+      <mat-label>Commentaire</mat-label>
+      <textarea
+        matInput
+        id="commentaire"
+        formControlName="commentaire"
+        rows="3"
+        class="resize-none"
+      ></textarea>
     </mat-form-field>
-
-    <mat-form-field subscriptSizing="dynamic">
-      <mat-label>Nom du héros</mat-label>
-      <input matInput id="nom" formControlName="nom" />
-    </mat-form-field>
-
-    <div class="md:col-span-2">
-      <mat-form-field subscriptSizing="dynamic" class="w-full">
-        <mat-label>Région</mat-label>
-        <mat-select inputId="region_id" formControlName="region_id" [compareWith]="compareById()">
-          @for (region of regionList() ?? []; track region.id) {
-            <mat-option [value]="region.id">{{ region.region }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-    </div>
-
-    <div class="md:col-span-2">
-      <mat-form-field subscriptSizing="dynamic" class="w-full">
-        <mat-label>Commentaire</mat-label>
-        <textarea
-          matInput
-          id="commentaire"
-          formControlName="commentaire"
-          rows="4"
-          class="resize-none"
-        ></textarea>
-      </mat-form-field>
-    </div>
   </div>
 </div>
 
