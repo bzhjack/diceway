@@ -1,40 +1,31 @@
 <div class="flex flex-col gap-2">
   @for (trait of traits(); track trait.type + '-' + trait.id; let index = $index) {
-    <div
-      class="tl-row"
-      [class.tl-row--avantage]="trait.type === 'A'"
-      [class.tl-row--desavantage]="trait.type === 'D'"
-      [class.tl-row--expanded]="isExpanded(trait)"
+    <dw-collapsible-row
+      [tone]="trait.type === 'A' ? 'positive' : 'negative'"
+      [expanded]="isExpanded(trait)"
+      [ariaLabel]="(trait.type === 'A' ? 'Avantage' : 'Désavantage') + ' : ' + trait.label"
+      (toggled)="toggle(trait)"
     >
-      <button
-        type="button"
-        class="tl-toggle flex w-full min-w-0 items-center gap-2"
-        [attr.aria-expanded]="isExpanded(trait)"
-        [attr.aria-label]="(trait.type === 'A' ? 'Avantage' : 'Désavantage') + ' : ' + trait.label"
-        (click)="toggle(trait)"
-      >
-        <mat-icon class="tl-chevron">chevron_right</mat-icon>
+      <ng-container row-summary>
         <div class="tag_icon tl-trait-icon" [inlineSVG]="traitIconPath(trait.icon)"></div>
         <span class="tl-label truncate">{{ trait.label }}</span>
-      </button>
+      </ng-container>
 
-      @if (isExpanded(trait)) {
-        <div class="tl-body">
-          @for (detail of trait.details; track detail.title + detail.description) {
-            <div class="tl-meta m-0">
-              <div class="tl-detail-title">{{ detail.title }} :</div>
-              <div>
-              {{ detail.description }}
-              </div>
+      <ng-container row-body>
+        @for (detail of trait.details; track detail.title + detail.description) {
+          <div class="tl-meta m-0">
+            <div class="tl-detail-title">{{ detail.title }} :</div>
+            <div>
+            {{ detail.description }}
             </div>
-          }
+          </div>
+        }
 
-          <button mat-button type="button" class="tl-delete-btn" (click)="removed.emit(index)">
-            <mat-icon>delete</mat-icon> Supprimer
-          </button>
-        </div>
-      }
-    </div>
+        <button mat-button type="button" class="tl-delete-btn" (click)="removed.emit(index)">
+          <mat-icon>delete</mat-icon> Supprimer
+        </button>
+      </ng-container>
+    </dw-collapsible-row>
   } @empty {
     <p class="tl-empty-state m-0">
       Ajoute les avantages et désavantages qui définissent le héros.

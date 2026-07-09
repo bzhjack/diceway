@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, input, output, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import {DwCollapsibleRowComponent} from '../../../shared/dw-collapsible-row/dw-collapsible-row';
 import {InlineSvgDirective} from '../../../shared/inline-svg/inline-svg.directive';
 import {TraitIcon, traitIconPath} from '../../shared/trait-icon';
 
@@ -19,7 +20,7 @@ export interface TraitEntry {
 
 @Component({
   selector: 'bol-trait-list',
-  imports: [MatButtonModule, MatIconModule, InlineSvgDirective],
+  imports: [MatButtonModule, MatIconModule, DwCollapsibleRowComponent, InlineSvgDirective],
   templateUrl: './trait-list.component.html',
   styleUrl: './trait-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
