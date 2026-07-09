@@ -258,62 +258,18 @@
               </div>
 
               <div class="dw-section--form xl:h-full">
-                <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                  <p class="hfp-section-eyebrow m-0">
-                    Carrières
-                  </p>
-                  <dw-tag>{{ selectedCarrieres().length }} sélectionnée(s)</dw-tag>
-                </div>
-
-                <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                  <mat-form-field subscriptSizing="dynamic">
-                    <mat-label>Ajouter une carrière</mat-label>
-                    <mat-select inputId="carriere" [formControl]="selectedCarriereId">
-                      <mat-option [value]="null">— Aucune —</mat-option>
-                      @for (carriere of filteredCarrieres(); track carriere.id) {
-                        <mat-option [value]="carriere.id">{{ carriere.carriere }}</mat-option>
-                      }
-                    </mat-select>
-                  </mat-form-field>
-                  <button
-                    mat-stroked-button
-                    type="button"
-                    [disabled]="!selectedCarriereId.value"
-                    (click)="addCarriere()"
-                  >
-                    <mat-icon>add</mat-icon> Ajouter
-                  </button>
-                </div>
-
-                <div class="mt-4 flex flex-col gap-3">
-                  @for (carriere of selectedCarrieres(); track carriere.id; let index = $index) {
-                    <div class="hfp-item-row flex items-center justify-between gap-3 p-3">
-                      <div class="min-w-0 flex-1">
-                        <p class="hfp-item-title m-0">
-                          {{ carriere.definition?.carriere }}
-                        </p>
-                      </div>
-
-                      <mat-form-field subscriptSizing="dynamic" class="w-[70px]">
-                        <mat-label>Rang</mat-label>
-                        <input matInput type="number" [formControl]="$any(carrieres.at(index).get('value'))" />
-                      </mat-form-field>
-
-                      <button
-                        mat-icon-button
-                        type="button"
-                        class="hfp-delete-btn"
-                        (click)="removeItem(carrieres, index)"
-                      >
-                        <mat-icon>delete</mat-icon>
-                      </button>
-                    </div>
-                  } @empty {
-                    <p class="hfp-empty-state m-0">
-                      Ajoute les carrières qui résument le parcours du héros.
+                <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+                  <div class="flex items-center gap-2">
+                    <p class="hfp-section-eyebrow m-0">
+                      Carrières
                     </p>
-                  }
+                    <dw-tag>{{ selectedCarrieres().length }} sélectionnée(s)</dw-tag>
+                  </div>
+
+                  <bol-carriere-add-menu [carrieres]="filteredCarrieres()" (added)="addCarriereEntry($event)" />
                 </div>
+
+                <bol-carriere-list [carrieres]="selectedCarrieres()" (removed)="removeItem(carrieres, $event)" />
               </div>
 
               <div class="dw-section--form xl:h-full">
@@ -368,62 +324,18 @@
 
             <div class="grid gap-4 xl:grid-cols-2 xl:items-start">
               <div class="dw-section--form">
-                <div class="mb-5 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                  <p class="hfp-section-eyebrow m-0">
-                    Armes
-                  </p>
-                  <dw-tag>{{ selectedArmes().length }} sélectionnée(s)</dw-tag>
-                </div>
-
-                <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
-                  <mat-form-field subscriptSizing="dynamic">
-                    <mat-label>Ajouter une arme</mat-label>
-                    <mat-select inputId="arme" [formControl]="selectedArmeId">
-                      <mat-option [value]="null">— Aucune —</mat-option>
-                      @for (arme of filteredArmes(); track arme.id) {
-                        <mat-option [value]="arme.id">
-                          <span class="truncate">{{ arme.arme }}</span>
-                          <span class="hfp-option-detail ml-1">
-                            {{ arme.degats ? '· Dégâts ' + arme.degats : '' }}
-                          </span>
-                        </mat-option>
-                      }
-                    </mat-select>
-                  </mat-form-field>
-                  <button
-                    mat-stroked-button
-                    type="button"
-                    [disabled]="!selectedArmeId.value"
-                    (click)="addArme()"
-                  >
-                    <mat-icon>add</mat-icon> Ajouter
-                  </button>
-                </div>
-
-                <div class="mt-4 flex flex-col gap-3">
-                  @for (arme of selectedArmes(); track arme.id; let index = $index) {
-                    <div class="hfp-item-row flex items-center justify-between gap-3 p-3">
-                      <div>
-                        <p class="hfp-item-title m-0">{{ arme.arme }}</p>
-                        @if (arme.degats) {
-                          <p class="hfp-item-meta m-0">Dégâts : {{ arme.degats }}</p>
-                        }
-                      </div>
-                      <button
-                        mat-icon-button
-                        type="button"
-                        class="hfp-delete-btn"
-                        (click)="removeItem(armes, index)"
-                      >
-                        <mat-icon>delete</mat-icon>
-                      </button>
-                    </div>
-                  } @empty {
-                    <p class="hfp-empty-state m-0">
-                      Ajoute l'équipement offensif marquant du héros.
+                <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+                  <div class="flex items-center gap-2">
+                    <p class="hfp-section-eyebrow m-0">
+                      Armes
                     </p>
-                  }
+                    <dw-tag>{{ selectedArmes().length }} sélectionnée(s)</dw-tag>
+                  </div>
+
+                  <bol-arme-add-menu [armes]="filteredArmes()" (added)="addArmeEntry($event)" />
                 </div>
+
+                <bol-arme-list [armes]="selectedArmes()" (removed)="removeItem(armes, $event)" />
               </div>
 
               <div class="dw-section--form">

@@ -25,6 +25,10 @@ import {BolHerosService} from '../services/bol-heros.service';
 import {DwConfirmDialogComponent} from '../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
 import {PictureComponent} from '../../shared/picture/picture';
+import {ArmeAddMenuComponent} from './arme-add-menu/arme-add-menu.component';
+import {ArmeEntry, ArmeListComponent} from './arme-list/arme-list.component';
+import {CarriereAddMenuComponent} from './carriere-add-menu/carriere-add-menu.component';
+import {CarriereEntry, CarriereListComponent} from './carriere-list/carriere-list.component';
 import {TraitAddEvent, TraitAddMenuComponent} from './trait-add-menu/trait-add-menu.component';
 import {TraitDetail, TraitEntry, TraitListComponent} from './trait-list/trait-list.component';
 import {TraitIcon, traitIconType} from '../shared/trait-icon';
@@ -41,10 +45,6 @@ interface HeroTraitDraft extends HeroSimpleDraft {
   type: 'A' | 'D';
 }
 
-interface HeroSelectedCarriereEntry extends HeroCarriereDraft {
-  readonly definition: BolCarriereModel;
-}
-
 @Component({
   selector: 'bol-hero-form-page',
   imports: [
@@ -57,6 +57,10 @@ interface HeroSelectedCarriereEntry extends HeroCarriereDraft {
     MatInputModule,
     MatSelectModule,
     DwTagComponent,
+    ArmeAddMenuComponent,
+    ArmeListComponent,
+    CarriereAddMenuComponent,
+    CarriereListComponent,
     TraitAddMenuComponent,
     TraitListComponent,
   ],
@@ -107,9 +111,7 @@ export class HeroFormPageComponent {
     () => this.pending() || this.loadingHero() || this.heroForm.invalid || this.heroForm.controls.active.value,
   );
 
-  protected readonly selectedArmeId = new FormControl<number | null>(null);
   protected readonly selectedArmureId = new FormControl<number | null>(null);
-  protected readonly selectedCarriereId = new FormControl<number | null>(null);
   protected readonly selectedLangueId = new FormControl<number | null>(null);
 
   protected readonly heroForm = this.formBuilder.group({
@@ -210,7 +212,14 @@ export class HeroFormPageComponent {
       .map((entry: HeroSimpleDraft) =>
         (this.armesList() ?? []).find((arme: BolArmeModel) => Number(arme.id) === Number(entry.id)),
       )
-      .filter((arme: BolArmeModel | undefined): arme is BolArmeModel => Boolean(arme)),
+      .filter((arme: BolArmeModel | undefined): arme is BolArmeModel => Boolean(arme))
+      .map((arme: BolArmeModel): ArmeEntry => ({
+        id: Number(arme.id),
+        label: arme.arme,
+        degats: arme.degats,
+        portee: arme.portee,
+        notes: arme.notes,
+      })),
   );
   protected readonly selectedArmures = computed(() =>
     (this.selectedArmuresDraft() ?? [])
@@ -221,17 +230,23 @@ export class HeroFormPageComponent {
   );
   protected readonly selectedCarrieres = computed(() =>
     (this.selectedCarrieresDraft() ?? [])
-      .map((entry: HeroCarriereDraft) => ({
-        ...entry,
-        definition: (this.carrieresList() ?? []).find(
+      .map((entry: HeroCarriereDraft, index: number) => {
+        const definition = (this.carrieresList() ?? []).find(
           (carriere: BolCarriereModel) => Number(carriere.id) === Number(entry.id),
-        ),
-      }))
-      .filter(
-        (
-          entry: HeroCarriereDraft & {definition?: BolCarriereModel},
-        ): entry is HeroSelectedCarriereEntry => Boolean(entry.definition),
-      ),
+        );
+
+        if (!definition) {
+          return null;
+        }
+
+        return {
+          id: Number(entry.id),
+          label: definition.carriere,
+          description: definition.description || null,
+          rank: this.carrieres.at(index).get('value') as FormControl<number>,
+        };
+      })
+      .filter((entry: CarriereEntry | null): entry is CarriereEntry => entry !== null),
   );
   protected readonly selectedLangues = computed(() =>
     (this.selectedLanguesDraft() ?? [])
@@ -332,14 +347,8 @@ export class HeroFormPageComponent {
     });
   }
 
-  protected addArme(): void {
-    const id = this.selectedArmeId.value;
-    if (!id) {
-      return;
-    }
-
+  protected addArmeEntry(id: number): void {
     this.armes.push(this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}));
-    this.selectedArmeId.setValue(null);
   }
 
   protected addArmure(): void {
@@ -354,19 +363,13 @@ export class HeroFormPageComponent {
     this.selectedArmureId.setValue(null);
   }
 
-  protected addCarriere(): void {
-    const id = this.selectedCarriereId.value;
-    if (!id) {
-      return;
-    }
-
+  protected addCarriereEntry(id: number): void {
     this.carrieres.push(
       this.formBuilder.group({
         id: this.formBuilder.control(Number(id), Validators.required),
         value: this.formBuilder.control(0, Validators.required),
       }),
     );
-    this.selectedCarriereId.setValue(null);
   }
 
   protected addLangue(): void {
@@ -509,9 +512,7 @@ export class HeroFormPageComponent {
     this.carrieres.clear({emitEvent: false});
     this.langues.clear({emitEvent: false});
     this.traits.clear({emitEvent: false});
-    this.selectedArmeId.setValue(null);
     this.selectedArmureId.setValue(null);
-    this.selectedCarriereId.setValue(null);
     this.selectedLangueId.setValue(null);
     this.syncSelectionArrays();
   }

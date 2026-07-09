@@ -1,14 +1,17 @@
 @if (expandable()) {
-  <button
-    type="button"
+  <div
     class="dw-row-toggle flex w-full min-w-0 items-center gap-2"
+    role="button"
+    tabindex="0"
     [attr.aria-expanded]="expanded()"
     [attr.aria-label]="ariaLabel()"
     (click)="toggled.emit()"
+    (keydown.enter)="toggled.emit()"
+    (keydown.space)="onSpace($event)"
   >
     <mat-icon class="dw-row-chevron">chevron_right</mat-icon>
     <ng-content select="[row-summary]" />
-  </button>
+  </div>
 
   @if (expanded()) {
     <div class="dw-row-body">

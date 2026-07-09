@@ -1,0 +1,32 @@
+<button
+  mat-stroked-button
+  type="button"
+  #trigger="matMenuTrigger"
+  [matMenuTriggerFor]="menu"
+  (menuOpened)="reset()"
+>
+  <mat-icon>add</mat-icon> Ajouter
+</button>
+
+<mat-menu #menu="matMenu" class="aam-panel">
+  <div class="aam-content flex flex-col gap-3 p-3" (click)="$event.stopPropagation()">
+    <mat-form-field subscriptSizing="dynamic">
+      <mat-label>Arme</mat-label>
+      <mat-select [formControl]="selectedId">
+        <mat-option [value]="null">— Aucune —</mat-option>
+        @for (arme of armes(); track arme.id) {
+          <mat-option [value]="arme.id">
+            <span class="truncate">{{ arme.arme }}</span>
+            <span class="aam-option-detail ml-1">
+              {{ arme.degats ? '· Dégâts ' + arme.degats : '' }}
+            </span>
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-flat-button type="button" [disabled]="!selectedId.value" (click)="add(); trigger.closeMenu()">
+      <mat-icon>add</mat-icon> Ajouter l'arme
+    </button>
+  </div>
+</mat-menu>

@@ -1,0 +1,12 @@
+:host {
+  display: contents;
+}
+
+::ng-deep .cam-panel.mat-mdc-menu-panel {
+  width: 280px;
+  max-width: 280px;
+}
+
+.cam-content {
+  width: 100%;
+}

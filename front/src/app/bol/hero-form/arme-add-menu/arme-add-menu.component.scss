@@ -1,0 +1,17 @@
+:host {
+  display: contents;
+}
+
+::ng-deep .aam-panel.mat-mdc-menu-panel {
+  width: 300px;
+  max-width: 300px;
+}
+
+.aam-content {
+  width: 100%;
+}
+
+.aam-option-detail {
+  font-size: 0.75rem;
+  color: var(--dw-surface-500);
+}

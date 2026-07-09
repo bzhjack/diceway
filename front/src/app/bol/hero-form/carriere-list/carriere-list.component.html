@@ -1,0 +1,36 @@
+<div class="flex flex-col gap-2">
+  @for (carriere of carrieres(); track carriere.id; let index = $index) {
+    <dw-collapsible-row
+      [expanded]="isExpanded(carriere)"
+      [ariaLabel]="'Carrière : ' + carriere.label"
+      (toggled)="toggle(carriere)"
+    >
+      <ng-container row-summary>
+        <span class="cl-label min-w-0 flex-1 truncate">{{ carriere.label }}</span>
+        <span class="cl-rank-display">Rang {{ carriere.rank.value }}</span>
+      </ng-container>
+
+      <ng-container row-body>
+        @if (carriere.description) {
+          <p class="cl-meta m-0">{{ carriere.description }}</p>
+        }
+
+        <div class="cl-rank-row">
+          <span class="cl-detail-title">Rang de carrière</span>
+          <mat-form-field subscriptSizing="dynamic" class="cl-rank-field">
+            <mat-label>Rang</mat-label>
+            <input matInput type="number" [formControl]="carriere.rank" />
+          </mat-form-field>
+        </div>
+
+        <button mat-button type="button" class="cl-delete-btn" (click)="removed.emit(index)">
+          <mat-icon>delete</mat-icon> Supprimer
+        </button>
+      </ng-container>
+    </dw-collapsible-row>
+  } @empty {
+    <p class="cl-empty-state m-0">
+      Ajoute les carrières qui résument le parcours du héros.
+    </p>
+  }
+</div>

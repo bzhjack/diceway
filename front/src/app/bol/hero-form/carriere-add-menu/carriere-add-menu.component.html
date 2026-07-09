@@ -1,0 +1,27 @@
+<button
+  mat-stroked-button
+  type="button"
+  #trigger="matMenuTrigger"
+  [matMenuTriggerFor]="menu"
+  (menuOpened)="reset()"
+>
+  <mat-icon>add</mat-icon> Ajouter
+</button>
+
+<mat-menu #menu="matMenu" class="cam-panel">
+  <div class="cam-content flex flex-col gap-3 p-3" (click)="$event.stopPropagation()">
+    <mat-form-field subscriptSizing="dynamic">
+      <mat-label>Carrière</mat-label>
+      <mat-select [formControl]="selectedId">
+        <mat-option [value]="null">— Aucune —</mat-option>
+        @for (carriere of carrieres(); track carriere.id) {
+          <mat-option [value]="carriere.id">{{ carriere.carriere }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-flat-button type="button" [disabled]="!selectedId.value" (click)="add(); trigger.closeMenu()">
+      <mat-icon>add</mat-icon> Ajouter la carrière
+    </button>
+  </div>
+</mat-menu>

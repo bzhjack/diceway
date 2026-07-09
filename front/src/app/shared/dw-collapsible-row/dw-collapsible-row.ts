@@ -22,4 +22,9 @@ export class DwCollapsibleRowComponent {
   readonly expandable = input(true);
   readonly ariaLabel = input<string | null>(null);
   readonly toggled = output<void>();
+
+  protected onSpace(event: Event): void {
+    event.preventDefault();
+    this.toggled.emit();
+  }
 }
