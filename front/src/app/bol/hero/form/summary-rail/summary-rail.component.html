@@ -26,14 +26,17 @@
   <span class="sr-region mt-2">{{ currentRegion.region }}</span>
 }
 
-<p class="sr-sub m-0 mt-4 mb-2">En séance</p>
-<div class="flex flex-col gap-1.5" [formGroup]="form()">
-  @for (vital of vitals; track vital.control) {
-    <div class="sr-vital flex items-center justify-between gap-2">
-      <span class="sr-vital-label">{{ vital.label }}</span>
-      <dw-value-stepper [formControlName]="vital.control" [ariaLabel]="vital.label" />
-    </div>
-  }
+<div class="sr-traits mt-4">
+  <div class="mb-2 flex items-center justify-between gap-2">
+    <p class="sr-sub m-0">Traits</p>
+    <bol-trait-add-menu
+      [avantages]="avantagesDisponibles()"
+      [desavantages]="desavantagesDisponibles()"
+      (added)="traitAdded.emit($event)"
+    />
+  </div>
+
+  <bol-trait-list [traits]="traits()" (removed)="traitRemoved.emit($event)" />
 </div>
 
 <div class="sr-langues mt-4">

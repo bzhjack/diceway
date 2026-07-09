@@ -32,8 +32,8 @@ import {HeroGeneralComponent} from './general/general.component';
 import {LangueEntry} from './langue/list/langue-list.component';
 import {HeroStatsComponent} from './stats/hero-stats.component';
 import {HeroSummaryRailComponent} from './summary-rail/summary-rail.component';
-import {TraitAddEvent, TraitAddMenuComponent} from './trait-add-menu/trait-add-menu.component';
-import {TraitDetail, TraitEntry, TraitListComponent} from './trait-list/trait-list.component';
+import {TraitAddEvent} from './trait-add-menu/trait-add-menu.component';
+import {TraitDetail, TraitEntry} from './trait-list/trait-list.component';
 import {TraitIcon, traitIconType} from '../../shared/trait-icon';
 
 interface HeroSimpleDraft {
@@ -66,8 +66,6 @@ interface HeroTraitDraft extends HeroSimpleDraft {
     HeroGeneralComponent,
     HeroStatsComponent,
     HeroSummaryRailComponent,
-    TraitAddMenuComponent,
-    TraitListComponent,
   ],
   templateUrl: './hero-form-page.html',
   styleUrl: './hero-form-page.scss',

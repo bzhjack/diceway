@@ -40,16 +40,32 @@ html {
 }
 
 // Déclencheur « + » compact des menus d'ajout (traits, carrières, langues, armes, armures)
-.dw-add-trigger.mat-mdc-icon-button {
-  width: 32px;
-  height: 32px;
-  padding: 4px;
-  --mdc-icon-button-state-layer-size: 32px;
-  --mdc-icon-button-icon-size: 20px;
+.dw-add-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
   color: var(--mat-sys-primary);
+  cursor: pointer;
 
-  .mat-mdc-button-touch-target {
-    width: 32px;
-    height: 32px;
+  .mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--mat-sys-primary) 15%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 1px;
   }
 }

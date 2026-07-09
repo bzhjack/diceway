@@ -61,14 +61,18 @@
             <div class="grid gap-4 xl:grid-cols-[260px_minmax(0,1fr)] xl:items-start">
               <div class="dw-section--form xl:sticky xl:top-4">
                 <bol-hero-summary-rail
-                  [form]="heroForm"
                   [avatarPreview]="avatarPreview()"
                   [heroName]="heroNom()"
                   [playerName]="heroJoueur()"
                   [region]="selectedRegion()"
+                  [traits]="selectedTraitEntries()"
+                  [avantagesDisponibles]="filteredAvantages()"
+                  [desavantagesDisponibles]="filteredDesavantages()"
                   [langues]="selectedLangues()"
                   [languesDisponibles]="filteredLangues()"
                   (avatarClick)="pickAvatar()"
+                  (traitAdded)="addTraitEntry($event)"
+                  (traitRemoved)="removeItem(traits, $event)"
                   (langueAdded)="addLangueEntry($event)"
                   (langueRemoved)="removeItem(langues, $event)"
                 />
@@ -106,55 +110,34 @@
                 </div>
 
                 <div class="grid gap-4 xl:grid-cols-2 xl:items-start">
-                  <div class="dw-section--form xl:h-full">
+                  <div class="dw-section--form">
                     <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
                       <div class="flex items-center gap-2">
                         <p class="hfp-section-eyebrow m-0">
-                          Traits
+                          Armes
                         </p>
-                        <dw-tag>{{ selectedTraitEntries().length }} sélectionné(s)</dw-tag>
+                        <dw-tag>{{ selectedArmes().length }} sélectionnée(s)</dw-tag>
                       </div>
 
-                      <bol-trait-add-menu
-                        [avantages]="filteredAvantages()"
-                        [desavantages]="filteredDesavantages()"
-                        (added)="addTraitEntry($event)"
-                      />
+                      <bol-arme-add-menu [armes]="filteredArmes()" (added)="addArmeEntry($event)" />
                     </div>
 
-                    <bol-trait-list [traits]="selectedTraitEntries()" (removed)="removeItem(traits, $event)" />
+                    <bol-arme-list [armes]="selectedArmes()" (removed)="removeItem(armes, $event)" />
                   </div>
 
-                  <div class="flex flex-col gap-4">
-                    <div class="dw-section--form">
-                      <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-                        <div class="flex items-center gap-2">
-                          <p class="hfp-section-eyebrow m-0">
-                            Armes
-                          </p>
-                          <dw-tag>{{ selectedArmes().length }} sélectionnée(s)</dw-tag>
-                        </div>
-
-                        <bol-arme-add-menu [armes]="filteredArmes()" (added)="addArmeEntry($event)" />
+                  <div class="dw-section--form">
+                    <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+                      <div class="flex items-center gap-2">
+                        <p class="hfp-section-eyebrow m-0">
+                          Armures
+                        </p>
+                        <dw-tag>{{ selectedArmures().length }} sélectionnée(s)</dw-tag>
                       </div>
 
-                      <bol-arme-list [armes]="selectedArmes()" (removed)="removeItem(armes, $event)" />
+                      <bol-armure-add-menu [armures]="filteredArmures()" (added)="addArmureEntry($event)" />
                     </div>
 
-                    <div class="dw-section--form">
-                      <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-                        <div class="flex items-center gap-2">
-                          <p class="hfp-section-eyebrow m-0">
-                            Armures
-                          </p>
-                          <dw-tag>{{ selectedArmures().length }} sélectionnée(s)</dw-tag>
-                        </div>
-
-                        <bol-armure-add-menu [armures]="filteredArmures()" (added)="addArmureEntry($event)" />
-                      </div>
-
-                      <bol-armure-list [armures]="selectedArmures()" (removed)="removeItem(armures, $event)" />
-                    </div>
+                    <bol-armure-list [armures]="selectedArmures()" (removed)="removeItem(armures, $event)" />
                   </div>
                 </div>
               </div>
