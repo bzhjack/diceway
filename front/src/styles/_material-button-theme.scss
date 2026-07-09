@@ -17,8 +17,11 @@ html {
     // Outlined (mat-stroked-button) : couleur primaire pour texte et contour
     outlined-label-text-color: var(--mat-sys-primary),
     outlined-outline-color: var(--dw-surface-400),
+    outlined-disabled-label-text-color: color-mix(in srgb, var(--mat-sys-primary) 55%, transparent),
+    outlined-disabled-outline-color: color-mix(in srgb, var(--dw-surface-400) 55%, transparent),
     // Text (mat-button) : couleur primaire
     text-label-text-color: var(--mat-sys-primary),
+    text-disabled-label-text-color: color-mix(in srgb, var(--mat-sys-primary) 55%, transparent),
   ));
 
   // Checkbox : contour et label lisibles sur fond sombre
