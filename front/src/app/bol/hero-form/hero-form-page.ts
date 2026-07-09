@@ -31,6 +31,7 @@ import {ArmureAddMenuComponent} from './armure/add-menu/armure-add-menu.componen
 import {ArmureEntry, ArmureListComponent} from './armure/list/armure-list.component';
 import {CarriereAddMenuComponent} from './carriere-add-menu/carriere-add-menu.component';
 import {CarriereEntry, CarriereListComponent} from './carriere-list/carriere-list.component';
+import {HeroGeneralComponent} from './general/general.component';
 import {LangueAddMenuComponent} from './langue/add-menu/langue-add-menu.component';
 import {LangueEntry, LangueListComponent} from './langue/list/langue-list.component';
 import {TraitAddEvent, TraitAddMenuComponent} from './trait-add-menu/trait-add-menu.component';
@@ -67,6 +68,7 @@ interface HeroTraitDraft extends HeroSimpleDraft {
     ArmureListComponent,
     CarriereAddMenuComponent,
     CarriereListComponent,
+    HeroGeneralComponent,
     LangueAddMenuComponent,
     LangueListComponent,
     TraitAddMenuComponent,
