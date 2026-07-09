@@ -2,29 +2,54 @@ import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
 
-type StatGroup = 'attr' | 'combat' | 'res';
-
 interface StatCell {
   readonly control: string;
   readonly label: string;
-  readonly group: StatGroup;
 }
 
-const STAT_CELLS: readonly StatCell[] = [
-  {control: 'vigueur', label: 'Vigueur', group: 'attr'},
-  {control: 'agilite', label: 'Agilité', group: 'attr'},
-  {control: 'esprit', label: 'Esprit', group: 'attr'},
-  {control: 'aura', label: 'Aura', group: 'attr'},
-  {control: 'initiative', label: 'Initiative', group: 'combat'},
-  {control: 'melee', label: 'Mêlée', group: 'combat'},
-  {control: 'tir', label: 'Tir', group: 'combat'},
-  {control: 'defense', label: 'Défense', group: 'combat'},
-  {control: 'vitalite', label: 'Vitalité', group: 'res'},
-  {control: 'heroisme', label: 'Héroïsme', group: 'res'},
-  {control: 'experience', label: 'Expérience', group: 'res'},
-  {control: 'pouvoir', label: 'Pouvoir', group: 'res'},
-  {control: 'foi', label: 'Foi', group: 'res'},
-  {control: 'creation', label: 'Création', group: 'res'},
+interface StatGroup {
+  readonly key: 'attr' | 'combat' | 'res';
+  readonly label: string;
+  readonly columns: 2 | 3;
+  readonly cells: readonly StatCell[];
+}
+
+const STAT_GROUPS: readonly StatGroup[] = [
+  {
+    key: 'attr',
+    label: 'Attributs',
+    columns: 2,
+    cells: [
+      {control: 'vigueur', label: 'Vigueur'},
+      {control: 'agilite', label: 'Agilité'},
+      {control: 'esprit', label: 'Esprit'},
+      {control: 'aura', label: 'Aura'},
+    ],
+  },
+  {
+    key: 'combat',
+    label: 'Combat',
+    columns: 2,
+    cells: [
+      {control: 'initiative', label: 'Initiative'},
+      {control: 'melee', label: 'Mêlée'},
+      {control: 'tir', label: 'Tir'},
+      {control: 'defense', label: 'Défense'},
+    ],
+  },
+  {
+    key: 'res',
+    label: 'Ressources',
+    columns: 3,
+    cells: [
+      {control: 'vitalite', label: 'Vitalité'},
+      {control: 'heroisme', label: 'Héroïsme'},
+      {control: 'experience', label: 'Expérience'},
+      {control: 'pouvoir', label: 'Pouvoir'},
+      {control: 'foi', label: 'Foi'},
+      {control: 'creation', label: 'Création'},
+    ],
+  },
 ];
 
 @Component({
@@ -37,5 +62,5 @@ const STAT_CELLS: readonly StatCell[] = [
 export class HeroStatsComponent {
   readonly form = input.required<FormGroup>();
 
-  protected readonly cells = STAT_CELLS;
+  protected readonly groups = STAT_GROUPS;
 }

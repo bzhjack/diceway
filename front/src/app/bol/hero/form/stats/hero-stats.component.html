@@ -1,14 +1,15 @@
-<div class="hs-groups">
-  <span class="hs-g hs-g--attr">Attributs</span>
-  <span class="hs-g hs-g--combat">Combat</span>
-  <span class="hs-g hs-g--res">Ressources</span>
-</div>
-
-<div class="hs-grid" [formGroup]="form()">
-  @for (cell of cells; track cell.control) {
-    <div class="hs-cell hs-cell--{{ cell.group }}">
-      <span class="hs-lbl">{{ cell.label }}</span>
-      <dw-value-stepper [formControlName]="cell.control" [ariaLabel]="cell.label" />
+<div class="hs-blocks" [formGroup]="form()">
+  @for (group of groups; track group.key) {
+    <div class="hs-block hs-block--{{ group.key }}">
+      <div class="hs-block-head">{{ group.label }}</div>
+      <div class="hs-block-cells hs-block-cells--{{ group.columns }}">
+        @for (cell of group.cells; track cell.control) {
+          <div class="hs-cell">
+            <span class="hs-lbl">{{ cell.label }}</span>
+            <dw-value-stepper [formControlName]="cell.control" [ariaLabel]="cell.label" />
+          </div>
+        }
+      </div>
     </div>
   }
 </div>
