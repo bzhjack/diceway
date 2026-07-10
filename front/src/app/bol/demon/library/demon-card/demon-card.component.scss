@@ -1,0 +1,192 @@
+:host {
+  display: contents;
+}
+
+$demon-bg: rgba(24, 24, 27, 0.82);
+$demon-border: #3f3f46;
+
+.demon-card {
+  display: flex;
+  border: 1px solid $demon-border;
+  border-radius: 10px;
+  background: $demon-bg;
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: rgba(251, 113, 133, 0.45);
+  }
+}
+
+.demon-card__portrait {
+  position: relative;
+  width: 92px;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, rgba(9, 9, 11, 0.96), rgba(39, 39, 42, 0.94));
+}
+
+.demon-card__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.demon-card__badge {
+  position: absolute;
+  bottom: 0.4rem;
+  left: 0.4rem;
+  padding: 0.12rem 0.4rem;
+  border-radius: 999px;
+  font-size: 0.58rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: rgba(9, 9, 11, 0.88);
+  color: var(--dw-color-demon);
+  border: 1px solid rgba(251, 113, 133, 0.35);
+}
+
+.demon-card__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.55rem 0.65rem;
+}
+
+.demon-card__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.demon-card__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+
+.demon-card__name {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--dw-surface-800);
+}
+
+.demon-card__meta {
+  margin: 0.1rem 0 0;
+  font-size: 0.68rem;
+  color: var(--dw-surface-500);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.demon-card__actions {
+  display: flex;
+  gap: 0.05rem;
+  flex-shrink: 0;
+}
+
+.demon-card__action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  color: var(--dw-surface-700);
+
+  ::ng-deep .mat-mdc-button-touch-target {
+    width: 26px;
+    height: 26px;
+  }
+
+  .mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+  }
+}
+
+.demon-card__action-btn--danger {
+  color: var(--mat-sys-error);
+}
+
+.demon-card__gauges {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.demon-gauge {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 8px;
+  border: 1px solid $demon-border;
+  background: rgba(9, 9, 11, 0.5);
+
+  .mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    flex-shrink: 0;
+  }
+}
+
+.demon-gauge--pv .mat-icon {
+  color: #f43f5e;
+}
+
+.demon-gauge__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+
+  b {
+    font-size: 0.82rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--dw-color-text-bright);
+  }
+
+  span {
+    font-size: 0.56rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--dw-surface-500);
+  }
+}
+
+.demon-card__summary {
+  display: flex;
+  gap: 0.3rem;
+  margin-top: auto;
+}
+
+.demon-count-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--dw-surface-600);
+  padding: 0.18rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(9, 9, 11, 0.5);
+  border: 1px solid $demon-border;
+
+  .mat-icon {
+    font-size: 13px;
+    width: 13px;
+    height: 13px;
+    line-height: 13px;
+    color: var(--dw-surface-500);
+  }
+}

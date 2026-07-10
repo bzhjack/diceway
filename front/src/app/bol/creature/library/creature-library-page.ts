@@ -13,13 +13,13 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
-import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatCard} from '@angular/material/card';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
 import {CreatureStatblockComponent} from '../statblock/creature-statblock.component';
 import {startWith, switchMap} from 'rxjs';
+import {CreatureCardComponent, creatureImage} from './creature-card/creature-card.component';
 
 @Component({
   selector: 'creature-statblock-dialog',
@@ -42,11 +42,11 @@ export class CreatureStatblockDialogContent {
     MatIconModule,
     MatInputModule,
     MatSelectModule,
-    MatTooltipModule,
     MatCard,
     DwTagComponent,
     DwLibraryHeaderComponent,
     DwLibraryToolbarComponent,
+    CreatureCardComponent,
   ],
   templateUrl: './creature-library-page.html',
   styleUrl: './creature-library-page.scss',
@@ -130,17 +130,9 @@ export class CreatureLibraryPageComponent {
     this.onlyCreations.set(false);
   }
 
-  protected creatureImage(creature: BolCreatureModel): string {
-    if (!creature.user_id) {
-      return `/assets/bol/bestiary/${creature.id}.jpg`;
-    }
-
-    return creature.avatar || '/assets/bol/empty-avatar.jpg';
-  }
-
   protected openStatblock(creature: BolCreatureModel): void {
     this.dialog.open(CreatureStatblockDialogContent, {
-      data: {creature, imageSrc: this.creatureImage(creature)},
+      data: {creature, imageSrc: creatureImage(creature)},
       maxWidth: 'min(760px, 92vw)',
       panelClass: 'creature-statblock-dialog',
     });

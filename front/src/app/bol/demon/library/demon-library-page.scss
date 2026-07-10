@@ -6,7 +6,6 @@
 $demon-bg: rgba(24, 24, 27, 0.82);
 $demon-bg-header: #09090b;
 $demon-border: #3f3f46;
-$demon-group-bg: linear-gradient(90deg, rgba(69, 10, 10, 0.98), rgba(24, 24, 27, 0.95));
 
 // ── Cards ─────────────────────────────────────────────────
 .demon-header-card {
@@ -25,112 +24,43 @@ $demon-group-bg: linear-gradient(90deg, rgba(69, 10, 10, 0.98), rgba(24, 24, 27,
   width: 14rem;
 }
 
-// ── Table scroll ──────────────────────────────────────────
-.demon-table-scroll {
-  overflow-x: auto;
+// ── Grid scroll wrapper ───────────────────────────────────
+.demon-grid-scroll {
   overflow-y: auto;
   max-height: calc(100vh - 19rem);
+  padding: 1rem;
 }
 
-// ── Native table ──────────────────────────────────────────
-.bol-demon-table {
-  width: 100%;
-  min-width: 80rem;
-  border-collapse: collapse;
-
-  th,
-  td {
-    padding: 0.6rem 1rem;
-    text-align: left;
-    vertical-align: top;
-    font-size: 0.875rem;
-    color: var(--dw-surface-700);
-    border-bottom: 1px solid #{$demon-border};
-  }
-
-  th {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--dw-surface-500);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    background-color: #{$demon-bg-header};
-    border-bottom-width: 2px;
-    border-bottom-color: #{$demon-border};
-  }
-
-  tbody tr {
-    background: #{$demon-bg};
-
-    &:hover {
-      background: rgba(39, 39, 42, 0.98);
-    }
-  }
-
-  .demon-col-avatar {
-    width: 1%;
-    padding: 0.5rem;
-  }
-
-  .demon-col-compact {
-    width: 1%;
-    white-space: nowrap;
-  }
+.demon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 0.75rem;
 }
 
-// ── Group header row ──────────────────────────────────────
-.demon-group-header td {
-  background: #{$demon-group-bg};
-  border-color: #{$demon-border};
-  padding: 0 1rem;
+.demon-grid__empty {
+  grid-column: 1 / -1;
+  padding: 2rem 0;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--dw-surface-500);
 }
 
-// ── Description ───────────────────────────────────────────
-.demon-description-content {
-  max-width: 250px;
-}
-
-// ── Avatar ────────────────────────────────────────────────
-.demon-avatar {
-  position: relative;
+// ── Group header ──────────────────────────────────────────
+.demon-group-header {
+  grid-column: 1 / -1;
   display: flex;
-  height: 5.5rem;
-  width: 5.5rem;
-  overflow: hidden;
-  border: 1px solid #52414b;
-  border-radius: 0.75rem;
-  background: linear-gradient(180deg, rgba(9, 9, 11, 0.96), rgba(39, 39, 42, 0.94));
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.5rem 0.1rem;
+
+  &:not(:first-child) {
+    margin-top: 0.5rem;
+    border-top: 1px solid #{$demon-border};
+    padding-top: 1rem;
+  }
 }
 
-.demon-avatar__tag {
-  position: absolute;
-  right: 0.35rem;
-  bottom: 0.35rem;
-  border: 1px solid rgba(251, 113, 133, 0.35);
-  border-radius: 999px;
-  background: rgba(9, 9, 11, 0.88);
-  padding: 0.12rem 0.42rem;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--dw-color-demon);
-  text-transform: uppercase;
-}
-
-// ── Buttons ───────────────────────────────────────────────
-.demon-btn-danger {
-  color: var(--mat-sys-error);
-}
-
-.demon-action-btn {
-  margin-block: -8px;
-}
-
-// ── Cellules du tableau (tons de texte) ────────────────────
-.dlp-group-eyebrow {
+.demon-group-header__eyebrow {
   font-size: 0.75rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -138,49 +68,8 @@ $demon-group-bg: linear-gradient(90deg, rgba(69, 10, 10, 0.98), rgba(24, 24, 27,
   color: #fda4af;
 }
 
-.dlp-group-value {
-  font-size: 1.25rem;
+.demon-group-header__value {
+  font-size: 1.1rem;
   font-weight: 600;
   color: var(--dw-surface-900);
-}
-
-.dlp-info-icon {
-  color: #fda4af;
-}
-
-.dlp-name {
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: var(--dw-surface-800);
-}
-
-.dlp-meta {
-  font-size: 0.875rem;
-  color: var(--dw-surface-500);
-}
-
-.dlp-description {
-  font-size: 0.875rem;
-  line-height: 1.5rem;
-  color: var(--dw-surface-600);
-}
-
-.dlp-cell {
-  font-size: 0.75rem;
-
-  @media (min-width: 768px) {
-    font-size: 0.875rem;
-  }
-}
-
-.dlp-muted {
-  color: var(--dw-surface-500);
-}
-
-.dlp-value--strong {
-  font-weight: 700;
-}
-
-.dlp-power-row {
-  font-size: 0.875rem;
 }

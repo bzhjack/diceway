@@ -13,12 +13,12 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
-import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatCard} from '@angular/material/card';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
 import {startWith, switchMap} from 'rxjs';
+import {DemonCardComponent} from './demon-card/demon-card.component';
 
 @Component({
   selector: 'bol-demon-library-page',
@@ -31,11 +31,11 @@ import {startWith, switchMap} from 'rxjs';
     MatIconModule,
     MatInputModule,
     MatSelectModule,
-    MatTooltipModule,
     MatCard,
     DwTagComponent,
     DwLibraryHeaderComponent,
     DwLibraryToolbarComponent,
+    DemonCardComponent,
   ],
   templateUrl: './demon-library-page.html',
   styleUrl: './demon-library-page.scss',
@@ -117,14 +117,6 @@ export class DemonLibraryPageComponent {
     this.searchTerm.set('');
     this.searchCategorie.set('');
     this.onlyCreations.set(false);
-  }
-
-  protected demonImage(demon: BolDemonModel): string {
-    if (!demon.user_id) {
-      return `/assets/bol/demon/${demon.id}.jpg`;
-    }
-
-    return demon.avatar || '/assets/bol/empty-avatar.jpg';
   }
 
   private deleteDemon(demon: BolDemonModel): void {

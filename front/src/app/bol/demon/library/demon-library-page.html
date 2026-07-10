@@ -55,152 +55,21 @@
         <dw-tag dwToolbarCount>{{ demonCount() }} entrées</dw-tag>
       </dw-library-toolbar>
 
-      <!-- Table -->
-      <div class="demon-table-scroll">
-        <table class="bol-demon-table">
-          <thead>
-            <tr>
-              <th class="demon-col-avatar">Avatar</th>
-              <th style="width: 250px">Description</th>
-              <th class="demon-col-compact">Ressources</th>
-              <th class="demon-col-compact">Attributs</th>
-              <th class="demon-col-compact">Combat</th>
-              <th style="width: 18rem">Pouvoirs</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (demon of filteredDemons(); track demon.id; let i = $index) {
-              @if (showGroupHeader(i)) {
-                <tr class="demon-group-header">
-                  <td colspan="6">
-                    <div class="flex items-center gap-3 py-2">
-                      <span class="dlp-group-eyebrow">Catégorie</span>
-                      <span class="dlp-group-value">{{ demon.categorie.categorie }}</span>
-                    </div>
-                  </td>
-                </tr>
-              }
-              <tr>
-                <td class="demon-col-avatar">
-                  <div class="demon-avatar">
-                    <img [src]="demonImage(demon)" [alt]="demon.nom" class="h-full w-full object-cover" />
-                    @if (demon.user_id) {
-                      <span class="demon-avatar__tag">Création</span>
-                    }
-                  </div>
-                </td>
-
-                <td>
-                  <div class="demon-description-content flex min-h-24 flex-col justify-between gap-3">
-                    <div class="space-y-2">
-                      <div class="flex flex-wrap items-center gap-1">
-                        @if (demon.commentaire) {
-                          <mat-icon
-                            class="dlp-info-icon cursor-pointer !h-4 !w-4 !text-base !leading-4"
-                            [matTooltip]="demon.commentaire"
-                          >info</mat-icon>
-                        }
-                        <p class="dlp-name m-0 line-clamp-2">{{ demon.nom }}</p>
-                        @if (demon.user_id) {
-                          <button
-                            mat-icon-button
-                            class="demon-action-btn"
-                            matTooltip="Modifier"
-                            [routerLink]="['/create/demon', demon.id]"
-                            [state]="{ returnUrl: '/library/demons' }"
-                          >
-                            <mat-icon>edit</mat-icon>
-                          </button>
-                          <button
-                            mat-icon-button
-                            class="demon-action-btn demon-btn-danger"
-                            matTooltip="Supprimer"
-                            (click)="askDelete(demon)"
-                          >
-                            <mat-icon>delete</mat-icon>
-                          </button>
-                        }
-                      </div>
-                      <p class="dlp-meta m-0">{{ demon.categorie.categorie }}</p>
-                      @if (demon.commentaire) {
-                        <p class="dlp-description m-0 line-clamp-2">
-                          {{ demon.commentaire }}
-                        </p>
-                      }
-                    </div>
-                  </div>
-                </td>
-
-                <td class="demon-col-compact">
-                  <div class="dlp-cell grid gap-1">
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="dlp-muted">Vitalité</span>
-                      <span class="dlp-value--strong">{{ demon.vitalite }}</span>
-                    </div>
-                  </div>
-                </td>
-
-                <td class="demon-col-compact">
-                  <div class="dlp-cell grid gap-1">
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="dlp-muted">Vigueur</span>
-                      <span>{{ demon.vigueur }}</span>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="dlp-muted">Agilité</span>
-                      <span>{{ demon.agilite }}</span>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="dlp-muted">Esprit</span>
-                      <span>{{ demon.esprit }}</span>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="dlp-muted">Aura</span>
-                      <span>{{ demon.aura }}</span>
-                    </div>
-                  </div>
-                </td>
-
-                <td class="demon-col-compact">
-                  <div class="dlp-cell grid gap-1">
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="dlp-muted">Mêlée</span>
-                      <span>{{ demon.melee }}</span>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="dlp-muted">Tir</span>
-                      <span>{{ demon.tir }}</span>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="dlp-muted">Défense</span>
-                      <span>{{ demon.defense }}</span>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="dlp-muted">Dégâts</span>
-                      <span>{{ demon.degats }}</span>
-                    </div>
-                  </div>
-                </td>
-
-                <td>
-                  <div class="flex min-h-24 flex-col gap-1">
-                    @for (pouvoir of demon.pouvoirs; track pouvoir.id) {
-                      <div class="dlp-power-row flex items-center gap-1">
-                        {{ pouvoir.pouvoir.pouvoir }}
-                        @if (pouvoir.detail || pouvoir.pouvoir.description) {
-                          <mat-icon
-                            class="dlp-info-icon cursor-pointer !h-4 !w-4 !text-base !leading-4"
-                            [matTooltip]="pouvoir.detail || pouvoir.pouvoir.description"
-                          >info</mat-icon>
-                        }
-                      </div>
-                    }
-                  </div>
-                </td>
-              </tr>
+      <!-- Grille de cartes -->
+      <div class="demon-grid-scroll">
+        <div class="demon-grid">
+          @for (demon of filteredDemons(); track demon.id; let i = $index) {
+            @if (showGroupHeader(i)) {
+              <div class="demon-group-header">
+                <span class="demon-group-header__eyebrow">Catégorie</span>
+                <span class="demon-group-header__value">{{ demon.categorie.categorie }}</span>
+              </div>
             }
-          </tbody>
-        </table>
+            <bol-demon-card [demon]="demon" (deleteRequested)="askDelete(demon)" />
+          } @empty {
+            <p class="demon-grid__empty">Aucun démon ne correspond à cette recherche.</p>
+          }
+        </div>
       </div>
     </mat-card>
 
