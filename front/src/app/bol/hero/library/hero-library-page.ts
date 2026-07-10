@@ -10,31 +10,11 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatCard} from '@angular/material/card';
-import {InlineSvgDirective} from '../../../shared/inline-svg/inline-svg.directive';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
-import {TraitIcon, traitIconPath, traitIconType} from '../../shared/trait-icon';
-
-interface HeroListEntry {
-  readonly label: string;
-  readonly value: string | number;
-}
-
-interface HeroTraitDetail {
-  readonly title: string;
-  readonly description: string | null;
-}
-
-interface HeroTraitEntry {
-  readonly label: string;
-  readonly details: readonly HeroTraitDetail[];
-  readonly severity: 'positive' | 'negative';
-  readonly icon: TraitIcon;
-}
+import {HeroCardComponent, heroLanguagesText} from './hero-card/hero-card.component';
 
 @Component({
   selector: 'bol-hero-library-page',
@@ -46,13 +26,11 @@ interface HeroTraitEntry {
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    MatMenuModule,
-    MatTooltipModule,
     MatCard,
-    InlineSvgDirective,
     DwTagComponent,
     DwLibraryHeaderComponent,
     DwLibraryToolbarComponent,
+    HeroCardComponent,
   ],
   templateUrl: './hero-library-page.html',
   styleUrl: './hero-library-page.scss',
@@ -84,7 +62,7 @@ export class HeroLibraryPageComponent implements OnInit {
           hero.origines.joueur,
           hero.origines.commentaire,
           hero.origines.region?.region,
-          this.languagesText(hero),
+          heroLanguagesText(hero),
         ];
 
         return searchValues.some((value) => value?.toLocaleLowerCase().includes(term));
@@ -123,101 +101,6 @@ export class HeroLibraryPageComponent implements OnInit {
     this.onlyPending.set(false);
   }
 
-  protected heroImage(hero: BolHerosModel): string {
-    return hero.origines.avatar || '/assets/bol/empty-avatar.jpg';
-  }
-
-  protected resourceEntries(hero: BolHerosModel): readonly HeroListEntry[] {
-    return [
-      { label: 'Vitalité', value: hero.ressources.vitalite },
-      { label: 'Pouvoir', value: hero.ressources.pouvoir },
-      { label: 'Foi', value: hero.ressources.foi },
-      { label: 'Vilénie', value: hero.ressources.vilenie },
-      { label: 'Héroïsme', value: hero.ressources.heroisme },
-    ].filter((entry, index) => index === 0 || Number(entry.value) > 0);
-  }
-
-  protected careerEntries(hero: BolHerosModel): readonly HeroListEntry[] {
-    return hero.carrieres
-      .map((carriere) => ({
-        label: carriere.carriere?.carriere ?? '',
-        value: carriere.value,
-      }))
-      .filter((entry) => entry.label);
-  }
-
-  protected armorEntries(hero: BolHerosModel): readonly HeroListEntry[] {
-    return hero.armures
-      .filter((armure): armure is Exclude<(typeof hero.armures)[number], number> => typeof armure === 'object')
-      .map((armure) => ({
-        label: armure.armure?.armure ?? '',
-        value: armure.armure?.protection ?? '-',
-      }))
-      .filter((entry) => entry.label);
-  }
-
-  protected weaponEntries(hero: BolHerosModel): readonly HeroListEntry[] {
-    return hero.armes
-      .filter((arme): arme is Exclude<(typeof hero.armes)[number], number> => typeof arme === 'object')
-      .map((arme) => ({
-        label: arme.arme?.arme ?? '',
-        value: arme.arme?.degats ?? '-',
-      }))
-      .filter((entry) => entry.label);
-  }
-
-  protected traitEntries(hero: BolHerosModel): readonly HeroTraitEntry[] {
-    return hero.traits
-      .map((trait) => {
-        if (trait.type === 'D') {
-          return {
-            label: this.desavantageLabel(trait.traitable),
-            details: this.traitDetails(trait),
-            severity: 'negative' as const,
-            icon: this.traitIcon(trait),
-          };
-        }
-
-        return {
-          label: this.avantageLabel(trait.traitable),
-          details: this.traitDetails(trait),
-          severity: 'positive' as const,
-          icon: this.traitIcon(trait),
-        };
-      })
-      .filter((entry) => entry.label);
-  }
-
-  protected languagesText(hero: BolHerosModel): string {
-    return hero.origines.langues
-      .filter((langue): langue is Exclude<(typeof hero.origines.langues)[number], number> => typeof langue === 'object')
-      .map((langue) => langue.langue?.langue ?? '')
-      .filter(Boolean)
-      .join(', ');
-  }
-
-  protected readonly traitIconPath = traitIconPath;
-
-  private avantageLabel(traitable: BolHerosModel['traits'][number]['traitable'] | undefined): string {
-    if (traitable && 'avantage' in traitable) {
-      return traitable.avantage;
-    }
-
-    return '';
-  }
-
-  private desavantageLabel(traitable: BolHerosModel['traits'][number]['traitable'] | undefined): string {
-    if (traitable && 'desavantage' in traitable) {
-      return traitable.desavantage;
-    }
-
-    return '';
-  }
-
-  private traitIcon(trait: BolHerosModel['traits'][number]): TraitIcon {
-    return traitIconType(trait.traitable);
-  }
-
   private deleteHero(hero: BolHerosModel): void {
     if (!hero.id) {
       return;
@@ -226,53 +109,5 @@ export class HeroLibraryPageComponent implements OnInit {
     this.herosService.deleteHeros(hero.id).subscribe({
       next: () => this.herosService.loadHeroes(),
     });
-  }
-
-  private traitDetails(trait: BolHerosModel['traits'][number]): readonly HeroTraitDetail[] {
-    const details: HeroTraitDetail[] = [];
-
-    if (trait.traitable && 'de_bonus' in trait.traitable && trait.traitable.de_bonus) {
-      details.push({
-        title: 'Dé bonus',
-        description: trait.traitable.de_bonus_domaine,
-      });
-    }
-
-    if (trait.traitable && 'de_malus' in trait.traitable && trait.traitable.de_malus) {
-      details.push({
-        title: 'Dé malus',
-        description: trait.traitable.de_malus_domaine,
-      });
-    }
-
-    if (trait.traitable && 'attribut' in trait.traitable && trait.traitable.attribut) {
-      const attributeValue =
-        'attribut_bonus' in trait.traitable
-          ? trait.traitable.attribut_bonus
-          : 'attribut_malus' in trait.traitable
-            ? trait.traitable.attribut_malus
-            : null;
-
-      details.push({
-        title: 'Attribut',
-        description: `${trait.traitable.attribut}${attributeValue !== null ? `(${attributeValue})` : ''}`,
-      });
-    }
-
-    if (trait.traitable?.description) {
-      details.push({
-        title: 'Détails',
-        description: trait.traitable.description,
-      });
-    }
-
-    if (trait.detail) {
-      details.push({
-        title: 'Précision',
-        description: trait.detail,
-      });
-    }
-
-    return details;
   }
 }

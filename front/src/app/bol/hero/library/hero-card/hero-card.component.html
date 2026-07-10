@@ -1,0 +1,83 @@
+<article class="hero-card">
+  <div class="hero-card__portrait">
+    <img [src]="image()" [alt]="hero().origines.nom ?? 'Héros'" class="hero-card__img" />
+    @if (!hero().active) {
+      <span class="hero-card__status">En cours</span>
+    }
+  </div>
+
+  <div class="hero-card__body">
+    <div class="hero-card__head">
+      <div class="hero-card__title-row">
+        <h3 class="hero-card__name">{{ hero().origines.nom || 'Héros sans nom' }}</h3>
+        <div class="hero-card__actions">
+          <button
+            mat-icon-button
+            class="hero-card__action-btn"
+            matTooltip="Modifier"
+            [routerLink]="['/create/hero', hero().id]"
+            [state]="{ returnUrl: '/library/heroes' }"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          @if (!hero().active) {
+            <button
+              mat-icon-button
+              class="hero-card__action-btn"
+              matTooltip="Édition avancée"
+              [routerLink]="['/create/hero-advanced', hero().id]"
+              [state]="{ returnUrl: '/library/heroes' }"
+            >
+              <mat-icon>settings</mat-icon>
+            </button>
+          }
+          <button
+            mat-icon-button
+            class="hero-card__action-btn hero-card__action-btn--danger"
+            matTooltip="Supprimer"
+            (click)="deleteRequested.emit()"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      @if (meta()) {
+        <p class="hero-card__meta">{{ meta() }}</p>
+      }
+    </div>
+
+    <div class="hero-card__gauges">
+      <div class="hero-gauge hero-gauge--pv">
+        <mat-icon>favorite</mat-icon>
+        <div class="hero-gauge__text">
+          <b>{{ hero().ressources.vitalite }}</b>
+          <span>Vitalité</span>
+        </div>
+      </div>
+      @if (hero().ressources.heroisme > 0) {
+        <div class="hero-gauge hero-gauge--ph">
+          <mat-icon>star</mat-icon>
+          <div class="hero-gauge__text">
+            <b>{{ hero().ressources.heroisme }}</b>
+            <span>Héroïsme</span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="hero-card__summary">
+      <span class="hero-count-chip" matTooltip="Carrières">
+        <mat-icon>work</mat-icon>{{ careerEntries().length }}
+      </span>
+      <span class="hero-count-chip" matTooltip="Traits">
+        <mat-icon>auto_awesome</mat-icon>{{ traitCount() }}
+      </span>
+      <span class="hero-count-chip" matTooltip="Armures">
+        <mat-icon>shield</mat-icon>{{ armorCount() }}
+      </span>
+      <span class="hero-count-chip" matTooltip="Armes">
+        <mat-icon>gavel</mat-icon>{{ weaponCount() }}
+      </span>
+    </div>
+  </div>
+</article>
