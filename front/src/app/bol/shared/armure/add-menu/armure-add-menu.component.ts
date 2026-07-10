@@ -6,10 +6,10 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {BolArmeModel} from '../../../../models/bol-arme.model';
+import {BolArmureModel} from '../../../models/bol-armure.model';
 
 @Component({
-  selector: 'bol-arme-add-menu',
+  selector: 'bol-armure-add-menu',
   imports: [
     ReactiveFormsModule,
     MatButtonModule,
@@ -19,12 +19,12 @@ import {BolArmeModel} from '../../../../models/bol-arme.model';
     MatSelectModule,
     MatTooltipModule,
   ],
-  templateUrl: './arme-add-menu.component.html',
-  styleUrl: './arme-add-menu.component.scss',
+  templateUrl: './armure-add-menu.component.html',
+  styleUrl: './armure-add-menu.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ArmeAddMenuComponent {
-  readonly armes = input.required<readonly BolArmeModel[]>();
+export class ArmureAddMenuComponent {
+  readonly armures = input.required<readonly BolArmureModel[]>();
   readonly added = output<number>();
 
   protected readonly selectedId = new FormControl<number | null>(null);

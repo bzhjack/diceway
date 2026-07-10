@@ -4,11 +4,13 @@
 
 .hs-blocks {
   display: grid;
-  grid-template-columns: 4fr 4fr 6fr;
+  grid-template-columns: var(--hs-cols, 4fr 4fr 6fr);
   gap: 0.7rem;
 }
 
 .hs-block {
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--dw-border);
   border-radius: 8px;
   overflow: hidden;
@@ -40,6 +42,15 @@
 
 .hs-block-cells {
   display: grid;
+  flex: 1;
+  align-content: center;
+}
+
+.hs-block-cells--1 {
+  grid-template-columns: 1fr;
+
+  .hs-cell { border-right: none; }
+  .hs-cell:last-child { border-bottom: none; }
 }
 
 .hs-block-cells--2 {

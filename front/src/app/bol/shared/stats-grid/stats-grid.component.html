@@ -1,5 +1,5 @@
-<div class="hs-blocks" [formGroup]="form()">
-  @for (group of groups; track group.key) {
+<div class="hs-blocks" [style.--hs-cols]="blocksTemplate()" [formGroup]="form()">
+  @for (group of groups(); track group.key) {
     <div class="hs-block hs-block--{{ group.key }}">
       <div class="hs-block-head">{{ group.label }}</div>
       <div class="hs-block-cells hs-block-cells--{{ group.columns }}">

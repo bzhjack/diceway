@@ -3,6 +3,11 @@
 }
 
 .pfp-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
   border: 1px solid var(--dw-border);
   background: #059669;
   font-size: 1.5rem;
@@ -10,6 +15,7 @@
 }
 
 .pfp-eyebrow {
+  margin: 0;
   font-size: 0.75rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -18,12 +24,14 @@
 }
 
 .pfp-title {
+  margin: 0;
   font-family: 'Muse Display Harmony';
   font-size: 2.25rem;
   line-height: 1;
 }
 
 .pfp-section-eyebrow {
+  margin: 0;
   font-size: 0.72rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -31,90 +39,48 @@
   color: #6ee7b7;
 }
 
+dw-tag {
+  --p-tag-font-size: 0.7rem;
+}
+
 .pfp-loading-detail {
+  margin: 0;
+  margin-top: 0.75rem;
   font-size: 0.875rem;
   line-height: 1.75rem;
   color: var(--dw-surface-700);
-}
-
-.pfp-avatar {
-  border: 1px solid var(--dw-border);
-  background: var(--dw-surface-50);
-
-  &:hover {
-    border-color: rgba(110, 231, 183, 0.7);
-  }
-}
-
-.pfp-avatar-placeholder {
-  color: var(--dw-surface-500);
-}
-
-.pfp-avatar-label {
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-}
-
-.pfp-avatar-overlay {
-  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1), transparent);
-}
-
-.pfp-avatar-overlay-label {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(0, 0, 0, 0.55);
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: #fff;
-}
-
-.pfp-field-hint {
-  font-size: 0.875rem;
-  color: #6ee7b7;
-}
-
-.pfp-item-row {
-  border: 1px solid var(--dw-border);
-  background: rgba(15, 23, 42, 0.65);
-}
-
-.pfp-item-title {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--dw-surface-800);
-}
-
-.pfp-item-meta {
-  font-size: 0.75rem;
-  color: var(--dw-surface-500);
-}
-
-.pfp-trait-label {
-  font-weight: 600;
-  color: var(--dw-surface-800);
-}
-
-.pfp-detail-title {
-  font-weight: 700;
-  color: var(--dw-surface-700);
-}
-
-.pfp-delete-btn {
-  color: rgba(251, 113, 133, 0.8) !important;
-}
-
-.pfp-empty-state {
-  font-size: 0.875rem;
-  line-height: 1.75rem;
-  color: var(--dw-surface-500);
 }
 
 .pfp-error-box {
-  border: 1px solid rgba(251, 113, 133, 0.4);
-  background: rgba(76, 5, 25, 0.3);
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  background: rgba(244, 63, 94, 0.1);
   font-size: 0.875rem;
   color: #fecdd3;
+}
+
+// Modificateurs de mise en page sur .dw-section--form (global, partagé entre
+// hero-form/creature-form/demon-form/pnj-form) : positionnement propre à cette
+// page uniquement, on n'étend pas la classe globale.
+.pfp-rail-panel {
+  @media (min-width: 1280px) {
+    position: sticky;
+    top: 1rem;
+  }
+}
+
+.pfp-panel--stretch {
+  @media (min-width: 1280px) {
+    height: 100%;
+  }
+}
+
+// Puce « modifications non enregistrées » — inline après le libellé
+// (le .mdc-button__label est position: relative, un absolu s'ancrerait sur le texte)
+.pfp-dirty-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dw-color-legendary);
 }

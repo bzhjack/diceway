@@ -23,18 +23,18 @@ import {HasPendingChanges} from '../../../core/pending-changes.guard';
 import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {PictureComponent} from '../../../shared/picture/picture';
-import {ArmeAddMenuComponent} from './arme/add-menu/arme-add-menu.component';
-import {ArmeEntry, ArmeListComponent} from './arme/list/arme-list.component';
-import {ArmureAddMenuComponent} from './armure/add-menu/armure-add-menu.component';
-import {ArmureEntry, ArmureListComponent} from './armure/list/armure-list.component';
-import {CarriereAddMenuComponent} from './carriere-add-menu/carriere-add-menu.component';
-import {CarriereEntry, CarriereListComponent} from './carriere-list/carriere-list.component';
+import {ArmeAddMenuComponent} from '../../shared/arme/add-menu/arme-add-menu.component';
+import {ArmeEntry, ArmeListComponent} from '../../shared/arme/list/arme-list.component';
+import {ArmureAddMenuComponent} from '../../shared/armure/add-menu/armure-add-menu.component';
+import {ArmureEntry, ArmureListComponent} from '../../shared/armure/list/armure-list.component';
+import {CarriereAddMenuComponent} from '../../shared/carriere/add-menu/carriere-add-menu.component';
+import {CarriereEntry, CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
 import {HeroGeneralComponent} from './general/general.component';
-import {LangueEntry} from './langue/list/langue-list.component';
-import {HeroStatsComponent} from './stats/hero-stats.component';
+import {LangueEntry} from '../../shared/langue/list/langue-list.component';
+import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
 import {HeroSummaryRailComponent} from './summary-rail/summary-rail.component';
-import {TraitAddEvent} from './trait-add-menu/trait-add-menu.component';
-import {TraitDetail, TraitEntry} from './trait-list/trait-list.component';
+import {TraitAddEvent} from '../../shared/trait/add-menu/trait-add-menu.component';
+import {TraitDetail, TraitEntry} from '../../shared/trait/list/trait-list.component';
 import {TraitIcon, traitIconType} from '../../shared/trait-icon';
 
 interface HeroSimpleDraft {
@@ -48,6 +48,44 @@ interface HeroCarriereDraft extends HeroSimpleDraft {
 interface HeroTraitDraft extends HeroSimpleDraft {
   type: 'A' | 'D';
 }
+
+const HERO_STAT_GROUPS: readonly StatGroup[] = [
+  {
+    key: 'attr',
+    label: 'Attributs',
+    columns: 2,
+    cells: [
+      {control: 'vigueur', label: 'Vigueur'},
+      {control: 'agilite', label: 'Agilité'},
+      {control: 'esprit', label: 'Esprit'},
+      {control: 'aura', label: 'Aura'},
+    ],
+  },
+  {
+    key: 'combat',
+    label: 'Combat',
+    columns: 2,
+    cells: [
+      {control: 'initiative', label: 'Initiative'},
+      {control: 'melee', label: 'Mêlée'},
+      {control: 'tir', label: 'Tir'},
+      {control: 'defense', label: 'Défense'},
+    ],
+  },
+  {
+    key: 'res',
+    label: 'Ressources',
+    columns: 3,
+    cells: [
+      {control: 'vitalite', label: 'Vitalité', highlight: true},
+      {control: 'heroisme', label: 'Héroïsme', highlight: true},
+      {control: 'experience', label: 'Expérience'},
+      {control: 'pouvoir', label: 'Pouvoir'},
+      {control: 'foi', label: 'Foi'},
+      {control: 'creation', label: 'Création'},
+    ],
+  },
+];
 
 @Component({
   selector: 'bol-hero-form-page',
@@ -65,7 +103,7 @@ interface HeroTraitDraft extends HeroSimpleDraft {
     CarriereAddMenuComponent,
     CarriereListComponent,
     HeroGeneralComponent,
-    HeroStatsComponent,
+    StatsGridComponent,
     HeroSummaryRailComponent,
   ],
   templateUrl: './hero-form-page.html',
@@ -150,6 +188,8 @@ export class HeroFormPageComponent implements HasPendingChanges {
 
   protected readonly compareById = (a: number | string | null, b: number | string | null): boolean =>
     Number(a) === Number(b);
+
+  protected readonly heroStatGroups = HERO_STAT_GROUPS;
 
   private controlValueSignal<T>(control: FormControl<T>): Signal<T> {
     return toSignal(control.valueChanges.pipe(startWith(control.value)), {initialValue: control.value});

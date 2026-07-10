@@ -6,10 +6,10 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {BolLangueModel} from '../../../../models/bol-langue.model';
+import {BolArmeModel} from '../../../models/bol-arme.model';
 
 @Component({
-  selector: 'bol-langue-add-menu',
+  selector: 'bol-arme-add-menu',
   imports: [
     ReactiveFormsModule,
     MatButtonModule,
@@ -19,12 +19,12 @@ import {BolLangueModel} from '../../../../models/bol-langue.model';
     MatSelectModule,
     MatTooltipModule,
   ],
-  templateUrl: './langue-add-menu.component.html',
-  styleUrl: './langue-add-menu.component.scss',
+  templateUrl: './arme-add-menu.component.html',
+  styleUrl: './arme-add-menu.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LangueAddMenuComponent {
-  readonly langues = input.required<readonly BolLangueModel[]>();
+export class ArmeAddMenuComponent {
+  readonly armes = input.required<readonly BolArmeModel[]>();
   readonly added = output<number>();
 
   protected readonly selectedId = new FormControl<number | null>(null);

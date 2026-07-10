@@ -43,12 +43,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./bol/pnj/form/pnj-form-page').then((module) => module.PnjFormPageComponent),
     canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'create/pnj/:id',
     loadComponent: () =>
       import('./bol/pnj/form/pnj-form-page').then((module) => module.PnjFormPageComponent),
     canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'create/hero',

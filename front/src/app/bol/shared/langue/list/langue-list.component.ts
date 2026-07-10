@@ -1,34 +1,33 @@
 import {ChangeDetectionStrategy, Component, input, output, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {DwCollapsibleRowComponent} from '../../../../../shared/dw-collapsible-row/dw-collapsible-row';
+import {DwCollapsibleRowComponent} from '../../../../shared/dw-collapsible-row/dw-collapsible-row';
 
-export interface ArmureEntry {
+export interface LangueEntry {
   readonly id: number;
   readonly label: string;
-  readonly protection: string | null;
-  readonly malus: string | null;
-  readonly ptsDePouvoir: string | null;
+  readonly description: string | null;
+  readonly estLemurienne: boolean;
 }
 
 @Component({
-  selector: 'bol-armure-list',
+  selector: 'bol-langue-list',
   imports: [MatButtonModule, MatIconModule, DwCollapsibleRowComponent],
-  templateUrl: './armure-list.component.html',
-  styleUrl: './armure-list.component.scss',
+  templateUrl: './langue-list.component.html',
+  styleUrl: './langue-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ArmureListComponent {
-  readonly armures = input.required<readonly ArmureEntry[]>();
+export class LangueListComponent {
+  readonly langues = input.required<readonly LangueEntry[]>();
   readonly removed = output<number>();
 
   protected readonly expandedIds = signal<ReadonlySet<number>>(new Set());
 
-  protected isExpanded(entry: ArmureEntry): boolean {
+  protected isExpanded(entry: LangueEntry): boolean {
     return this.expandedIds().has(entry.id);
   }
 
-  protected toggle(entry: ArmureEntry): void {
+  protected toggle(entry: LangueEntry): void {
     const next = new Set(this.expandedIds());
     if (next.has(entry.id)) {
       next.delete(entry.id);
