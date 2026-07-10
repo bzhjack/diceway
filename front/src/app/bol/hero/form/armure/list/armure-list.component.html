@@ -6,39 +6,39 @@
       (toggled)="toggle(armure)"
     >
       <ng-container row-summary>
-        <span class="aral-label">{{ armure.label }}</span>
+        <span class="dw-entry-label shrink-0">{{ armure.label }}</span>
         @if (armure.protection) {
-          <span class="aral-stat-display min-w-0 truncate">{{ armure.protection }}</span>
+          <span class="dw-entry-stat ml-auto min-w-0 truncate">{{ armure.protection }}</span>
         }
       </ng-container>
 
       <ng-container row-body>
         @if (armure.protection) {
-          <p class="aral-meta m-0">
-            <span class="aral-detail-title">Protection :</span>
+          <p class="dw-entry-meta m-0">
+            <span class="dw-entry-detail-title">Protection :</span>
             {{ armure.protection }}
           </p>
         }
         @if (armure.malus) {
-          <p class="aral-meta m-0">
-            <span class="aral-detail-title">Malus :</span>
+          <p class="dw-entry-meta m-0">
+            <span class="dw-entry-detail-title">Malus :</span>
             {{ armure.malus }}
           </p>
         }
         @if (armure.ptsDePouvoir) {
-          <p class="aral-meta m-0">
-            <span class="aral-detail-title">Points de pouvoir :</span>
+          <p class="dw-entry-meta m-0">
+            <span class="dw-entry-detail-title">Points de pouvoir :</span>
             {{ armure.ptsDePouvoir }}
           </p>
         }
 
-        <button mat-button type="button" class="aral-delete-btn" (click)="removed.emit(index)">
+        <button mat-button type="button" class="dw-entry-delete-btn" (click)="removed.emit(index)">
           <mat-icon>delete</mat-icon> Supprimer
         </button>
       </ng-container>
     </dw-collapsible-row>
   } @empty {
-    <p class="aral-empty-state m-0">
+    <p class="dw-entry-empty m-0">
       Ajoute l'armure ou les protections portées par le héros.
     </p>
   }

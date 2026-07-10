@@ -60,6 +60,15 @@
   color: var(--dw-surface-500);
 }
 
+// État vide d'une liste de dw-collapsible-row (armes, armures, langues, carrières,
+// traits) — variante texte simple, hors du composant : c'est le bloc @empty du
+// @for du composant liste, pas du contenu projeté dans dw-collapsible-row.
+.dw-entry-empty {
+  font-size: 0.875rem;
+  line-height: 1.75rem;
+  color: var(--dw-surface-500);
+}
+
 // Bouton de suppression (poubelle rouge)
 .dw-btn-remove {
   display: inline-grid;

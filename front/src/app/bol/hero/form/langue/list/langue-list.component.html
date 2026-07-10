@@ -6,24 +6,24 @@
       (toggled)="toggle(langue)"
     >
       <ng-container row-summary>
-        <span class="ll-label">{{ langue.label }}</span>
+        <span class="dw-entry-label shrink-0">{{ langue.label }}</span>
         @if (langue.estLemurienne) {
-          <span class="ll-stat-display min-w-0 truncate">Lémurienne</span>
+          <span class="dw-entry-stat ml-auto min-w-0 truncate">Lémurienne</span>
         }
       </ng-container>
 
       <ng-container row-body>
         @if (langue.description) {
-          <p class="ll-meta m-0">{{ langue.description }}</p>
+          <p class="dw-entry-meta m-0">{{ langue.description }}</p>
         }
 
-        <button mat-button type="button" class="ll-delete-btn" (click)="removed.emit(index)">
+        <button mat-button type="button" class="dw-entry-delete-btn" (click)="removed.emit(index)">
           <mat-icon>delete</mat-icon> Supprimer
         </button>
       </ng-container>
     </dw-collapsible-row>
   } @empty {
-    <p class="ll-empty-state m-0">
+    <p class="dw-entry-empty m-0">
       Ajoute les langues que le héros peut parler ou comprendre.
     </p>
   }

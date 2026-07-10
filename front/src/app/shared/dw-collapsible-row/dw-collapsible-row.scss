@@ -73,3 +73,41 @@
   background: rgba(15, 23, 42, 0.65);
   border-top: 1px solid var(--dw-border);
 }
+
+// Typographie du contenu projeté dans [row-summary]/[row-body] (armes, armures,
+// langues, carrières, traits…). ::ng-deep est nécessaire : le contenu projeté
+// garde l'attribut de scope du composant appelant, pas celui de dw-collapsible-row,
+// donc du CSS scope classique ne le matcherait jamais.
+::ng-deep {
+  .dw-entry-label {
+    font-weight: 600;
+    color: var(--dw-surface-800);
+    font-size: 0.875rem;
+  }
+
+  .dw-entry-stat {
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--dw-surface-700);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .dw-entry-meta {
+    align-self: stretch;
+    font-size: 0.75rem;
+    line-height: 1.5rem;
+    color: var(--dw-surface-500);
+  }
+
+  .dw-entry-detail-title {
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: var(--dw-surface-700);
+  }
+
+  .dw-entry-delete-btn {
+    color: rgba(251, 113, 133, 0.85) !important;
+    margin-top: 0.35rem;
+  }
+}

@@ -6,27 +6,27 @@
       (toggled)="toggle(carriere)"
     >
       <ng-container row-summary>
-        <span class="cl-label min-w-0 flex-1 truncate">{{ carriere.label }}</span>
-        <span class="cl-rank-display">Rang {{ carriere.rank.value }}</span>
+        <span class="dw-entry-label min-w-0 flex-1 truncate">{{ carriere.label }}</span>
+        <span class="dw-entry-stat shrink-0">Rang {{ carriere.rank.value }}</span>
       </ng-container>
 
       <ng-container row-body>
         @if (carriere.description) {
-          <p class="cl-meta m-0">{{ carriere.description }}</p>
+          <p class="dw-entry-meta m-0">{{ carriere.description }}</p>
         }
 
         <div class="cl-rank-row">
-          <span class="cl-detail-title">Rang de carrière</span>
+          <span class="dw-entry-detail-title">Rang de carrière</span>
           <dw-value-stepper [formControl]="carriere.rank" [min]="0" ariaLabel="Rang de carrière" />
         </div>
 
-        <button mat-button type="button" class="cl-delete-btn" (click)="removed.emit(index)">
+        <button mat-button type="button" class="dw-entry-delete-btn" (click)="removed.emit(index)">
           <mat-icon>delete</mat-icon> Supprimer
         </button>
       </ng-container>
     </dw-collapsible-row>
   } @empty {
-    <p class="cl-empty-state m-0">
+    <p class="dw-entry-empty m-0">
       Ajoute les carrières qui résument le parcours du héros.
     </p>
   }

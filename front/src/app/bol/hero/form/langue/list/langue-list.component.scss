@@ -1,38 +1,3 @@
 :host {
   display: block;
 }
-
-.ll-label {
-  font-weight: 600;
-  color: var(--dw-surface-800);
-  font-size: 0.875rem;
-}
-
-.ll-label {
-  flex-shrink: 0;
-}
-
-.ll-stat-display {
-  margin-left: auto;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--dw-surface-500);
-}
-
-.ll-delete-btn {
-  color: rgba(251, 113, 133, 0.85) !important;
-  margin-top: 0.35rem;
-}
-
-.ll-meta {
-  align-self: stretch;
-  font-size: 0.75rem;
-  line-height: 1.5rem;
-  color: var(--dw-surface-500);
-}
-
-.ll-empty-state {
-  font-size: 0.875rem;
-  line-height: 1.75rem;
-  color: var(--dw-surface-500);
-}

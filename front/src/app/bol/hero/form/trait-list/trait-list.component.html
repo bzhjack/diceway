@@ -8,26 +8,26 @@
     >
       <ng-container row-summary>
         <div class="tag_icon tl-trait-icon" [inlineSVG]="traitIconPath(trait.icon)"></div>
-        <span class="tl-label truncate">{{ trait.label }}</span>
+        <span class="dw-entry-label truncate">{{ trait.label }}</span>
       </ng-container>
 
       <ng-container row-body>
         @for (detail of trait.details; track detail.title + detail.description) {
-          <div class="tl-meta m-0">
-            <div class="tl-detail-title">{{ detail.title }} :</div>
+          <div class="dw-entry-meta m-0">
+            <div class="dw-entry-detail-title">{{ detail.title }} :</div>
             <div>
             {{ detail.description }}
             </div>
           </div>
         }
 
-        <button mat-button type="button" class="tl-delete-btn" (click)="removed.emit(index)">
+        <button mat-button type="button" class="dw-entry-delete-btn" (click)="removed.emit(index)">
           <mat-icon>delete</mat-icon> Supprimer
         </button>
       </ng-container>
     </dw-collapsible-row>
   } @empty {
-    <p class="tl-empty-state m-0">
+    <p class="dw-entry-empty m-0">
       Ajoute les avantages et désavantages qui définissent le héros.
     </p>
   }

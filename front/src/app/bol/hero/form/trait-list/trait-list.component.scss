@@ -15,32 +15,3 @@ dw-collapsible-row.dw-row--positive .tl-trait-icon {
 dw-collapsible-row.dw-row--negative .tl-trait-icon {
   color: var(--dw-color-echec);
 }
-
-.tl-label {
-  font-weight: 600;
-  color: var(--dw-surface-800);
-  font-size: 0.875rem;
-}
-
-.tl-delete-btn {
-  color: rgba(251, 113, 133, 0.85) !important;
-  margin-top: 0.35rem;
-}
-
-.tl-meta {
-  align-self: stretch;
-  font-size: 0.75rem;
-  line-height: 1.5rem;
-  color: var(--dw-surface-500);
-}
-
-.tl-detail-title {
-  font-weight: 700;
-  color: var(--dw-surface-700);
-}
-
-.tl-empty-state {
-  font-size: 0.875rem;
-  line-height: 1.75rem;
-  color: var(--dw-surface-500);
-}

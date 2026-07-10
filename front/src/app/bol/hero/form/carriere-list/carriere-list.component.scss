@@ -2,48 +2,10 @@
   display: block;
 }
 
-.cl-label {
-  font-weight: 600;
-  color: var(--dw-surface-800);
-  font-size: 0.875rem;
-}
-
-.cl-rank-display {
-  flex-shrink: 0;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--dw-surface-500);
-  font-variant-numeric: tabular-nums;
-}
-
 .cl-rank-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   align-self: stretch;
   gap: 0.5rem;
-}
-
-.cl-detail-title {
-  font-weight: 700;
-  font-size: 0.75rem;
-  color: var(--dw-surface-700);
-}
-
-.cl-delete-btn {
-  color: rgba(251, 113, 133, 0.85) !important;
-  margin-top: 0.35rem;
-}
-
-.cl-meta {
-  align-self: stretch;
-  font-size: 0.75rem;
-  line-height: 1.5rem;
-  color: var(--dw-surface-500);
-}
-
-.cl-empty-state {
-  font-size: 0.875rem;
-  line-height: 1.75rem;
-  color: var(--dw-surface-500);
 }
