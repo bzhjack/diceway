@@ -1,47 +1,81 @@
-import {JsonPipe, Location} from '@angular/common';
-import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} from '@angular/core';
+import {Location} from '@angular/common';
+import {ChangeDetectionStrategy, Component, Signal, computed, effect, inject, signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
-import {FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, PristineChangeEvent, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import {startWith, take} from 'rxjs';
+import {Observable, filter, map, startWith, take} from 'rxjs';
 import {finalize} from 'rxjs/operators';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCard, MatCardContent} from '@angular/material/card';
+import {MatDialog} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
 import {BolDemonModel} from '../../models/bol-demon.model';
 import {BolDemonStateService} from '../../services/bol-demon-state.service';
 import {BolDemonsService} from '../../services/bol-demons.service';
-import {MatDialog} from '@angular/material/dialog';
-import {MatCard, MatCardContent} from '@angular/material/card';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatSelectModule} from '@angular/material/select';
-import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
+import {HasPendingChanges} from '../../../core/pending-changes.guard';
+import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {PictureComponent} from '../../../shared/picture/picture';
+import {PouvoirAddEvent} from '../../shared/pouvoir/add-menu/pouvoir-add-menu.component';
+import {PouvoirEntry} from '../../shared/pouvoir/list/pouvoir-list.component';
+import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
+import {DemonGeneralComponent} from './general/demon-general.component';
+import {DemonPouvoirsComponent} from './pouvoirs/demon-pouvoirs.component';
 
 interface DemonPouvoirDraft {
   id: number;
   detail: string | null;
 }
 
+const DEMON_STAT_GROUPS: readonly StatGroup[] = [
+  {
+    key: 'attr',
+    label: 'Attributs',
+    columns: 4,
+    cells: [
+      {control: 'vigueur', label: 'Vigueur'},
+      {control: 'agilite', label: 'Agilité'},
+      {control: 'esprit', label: 'Esprit'},
+      {control: 'aura', label: 'Aura'},
+    ],
+  },
+  {
+    key: 'combat',
+    label: 'Combat',
+    columns: 3,
+    cells: [
+      {control: 'melee', label: 'Mêlée'},
+      {control: 'tir', label: 'Tir'},
+      {control: 'defense', label: 'Défense'},
+    ],
+  },
+  {
+    key: 'res',
+    label: 'Ressources',
+    columns: 1,
+    cells: [{control: 'vitalite', label: 'Vitalité', highlight: true}],
+  },
+];
+
 @Component({
   selector: 'bol-demon-form-page',
   imports: [
-    JsonPipe,
     ReactiveFormsModule,
     MatCard,
     MatCardContent,
     MatButtonModule,
     MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    DwTagComponent,
+    DemonGeneralComponent,
+    DemonPouvoirsComponent,
+    StatsGridComponent,
   ],
   templateUrl: './demon-form-page.html',
   styleUrl: './demon-form-page.scss',
+  host: {
+    '(document:keydown.control.s)': 'onSaveShortcut($event)',
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DemonFormPageComponent {
+export class DemonFormPageComponent implements HasPendingChanges {
   private readonly demonStateService = inject(BolDemonStateService);
   private readonly demonsService = inject(BolDemonsService);
   private readonly formBuilder = inject(FormBuilder);
@@ -56,7 +90,8 @@ export class DemonFormPageComponent {
 
   protected readonly categories = this.demonStateService.categorieList;
   protected readonly pouvoirsList = this.demonStateService.pouvoirList;
-  protected readonly savedDemon = signal<BolDemonModel | null>(null);
+  protected readonly demonStatGroups = DEMON_STAT_GROUPS;
+
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly pending = signal(false);
   protected readonly loadingDemon = signal(false);
@@ -64,34 +99,21 @@ export class DemonFormPageComponent {
   protected readonly demonId = computed(() => this.routeParamMap().get('id'));
   protected readonly editMode = computed(() => Boolean(this.demonId()));
   protected readonly pageTitle = computed(() =>
-    this.editMode() ? 'Modifier le demon' : 'Nouveau demon',
+    this.editMode() ? 'Modifier le démon' : 'Nouveau démon',
   );
   protected readonly pageEyebrow = computed(() =>
-    this.editMode() ? 'Edition infernale BOL' : 'Bestiaire infernal BOL',
+    this.editMode() ? 'Édition infernale BOL' : 'Bestiaire infernal BOL',
   );
   protected readonly submitLabel = computed(() => {
     if (this.pending()) {
       return 'Enregistrement...';
     }
 
-    return this.editMode() ? 'Mettre a jour le demon' : 'Enregistrer le demon';
+    return this.editMode() ? 'Mettre à jour le démon' : 'Enregistrer le démon';
   });
-  protected readonly saveSuccessTitle = computed(() =>
-    this.editMode() ? 'Demon mis a jour' : 'Demon cree',
-  );
-  protected readonly saveSuccessMessage = computed(() =>
-    this.editMode()
-      ? 'Les modifications ont bien ete enregistrees cote backend.'
-      : 'Le demon a bien ete enregistre cote backend.',
-  );
 
   protected readonly compareById = (a: number | string | null, b: number | string | null): boolean =>
     Number(a) === Number(b);
-
-  protected readonly selectedPouvoirId = new FormControl<number | null>(null);
-  protected readonly selectedPouvoirDetail = new FormControl<string>('', {
-    nonNullable: true,
-  });
 
   protected readonly demonForm = this.formBuilder.group({
     id: this.formBuilder.control<string | null>(null),
@@ -111,38 +133,53 @@ export class DemonFormPageComponent {
     pouvoirs: this.formBuilder.array([]),
   });
 
-  protected readonly categorieId = toSignal(this.demonForm.controls.id_categorie.valueChanges, {
-    initialValue: this.demonForm.controls.id_categorie.value,
-  });
-  protected readonly avatarPreview = toSignal(
-    this.demonForm.controls.avatar.valueChanges.pipe(startWith(this.demonForm.controls.avatar.value)),
-    {
-      initialValue: this.demonForm.controls.avatar.value,
-    },
+  private controlValueSignal<T>(control: FormControl<T>): Signal<T> {
+    return toSignal(control.valueChanges.pipe(startWith(control.value)), {initialValue: control.value});
+  }
+
+  protected readonly categorieId = this.controlValueSignal(this.demonForm.controls.id_categorie);
+  protected readonly avatarPreview = this.controlValueSignal(this.demonForm.controls.avatar);
+
+  protected readonly formDirty = toSignal(
+    this.demonForm.events.pipe(
+      filter((event): event is PristineChangeEvent => event instanceof PristineChangeEvent),
+      map((event) => !event.pristine),
+    ),
+    {initialValue: false},
   );
-  protected readonly selectedPouvoirs = toSignal(
+  protected readonly selectedPouvoirsDraft = toSignal(
     this.pouvoirs.valueChanges.pipe(startWith(this.pouvoirs.getRawValue())),
-    {
-      initialValue: this.pouvoirs.getRawValue(),
-    },
+    {initialValue: this.pouvoirs.getRawValue()},
   );
   protected readonly selectedCategorie = computed(() =>
     (this.categories() ?? []).find((categorie) => Number(categorie.id) === Number(this.categorieId())),
   );
   protected readonly filteredPouvoirs = computed(() => {
     const selectedIds = new Set(
-      (this.selectedPouvoirs() ?? []).map((pouvoir: DemonPouvoirDraft) => Number(pouvoir.id)),
+      (this.selectedPouvoirsDraft() ?? []).map((pouvoir: DemonPouvoirDraft) => Number(pouvoir.id)),
     );
 
     return (this.pouvoirsList() ?? []).filter((pouvoir) => !selectedIds.has(Number(pouvoir.id)));
   });
   protected readonly selectedPouvoirEntries = computed(() =>
-    (this.selectedPouvoirs() ?? []).map((entry: DemonPouvoirDraft) => ({
-      ...entry,
-      definition: (this.pouvoirsList() ?? []).find(
-        (pouvoir) => Number(pouvoir.id) === Number(entry.id),
-      ),
-    })),
+    (this.selectedPouvoirsDraft() ?? [])
+      .map((entry: DemonPouvoirDraft) => {
+        const definition = (this.pouvoirsList() ?? []).find(
+          (pouvoir) => Number(pouvoir.id) === Number(entry.id),
+        );
+
+        if (!definition) {
+          return null;
+        }
+
+        return {
+          id: Number(entry.id),
+          label: definition.pouvoir,
+          description: definition.description || null,
+          detail: entry.detail || null,
+        };
+      })
+      .filter((entry: PouvoirEntry | null): entry is PouvoirEntry => entry !== null),
   );
 
   constructor() {
@@ -150,7 +187,6 @@ export class DemonFormPageComponent {
       const demonId = this.demonId();
       this.returnUrl.set(this.readReturnUrl());
       this.errorMessage.set(null);
-      this.savedDemon.set(null);
 
       if (!demonId) {
         this.resetForm();
@@ -190,7 +226,7 @@ export class DemonFormPageComponent {
           vitalite: categorie.vitalite ?? 0,
           degats: categorie.degats ?? '0',
         },
-        { emitEvent: false },
+        {emitEvent: false},
       );
     });
   }
@@ -199,25 +235,19 @@ export class DemonFormPageComponent {
     return this.demonForm.controls.pouvoirs as FormArray;
   }
 
-  protected addPouvoir(): void {
-    const pouvoirId = this.selectedPouvoirId.value;
-    if (!pouvoirId) {
-      return;
-    }
-
+  protected addPouvoirEntry(event: PouvoirAddEvent): void {
     this.pouvoirs.push(
       this.formBuilder.group({
-        id: this.formBuilder.control(pouvoirId, Validators.required),
-        detail: this.formBuilder.control(this.selectedPouvoirDetail.value || null),
+        id: this.formBuilder.control(event.id, Validators.required),
+        detail: this.formBuilder.control(event.detail),
       }),
     );
-
-    this.selectedPouvoirId.setValue(null);
-    this.selectedPouvoirDetail.setValue('');
+    this.pouvoirs.markAsDirty();
   }
 
   protected removePouvoir(index: number): void {
     this.pouvoirs.removeAt(index);
+    this.pouvoirs.markAsDirty();
   }
 
   protected pickAvatar(): void {
@@ -230,6 +260,7 @@ export class DemonFormPageComponent {
     ref.afterClosed().pipe(take(1)).subscribe((avatar: string | null) => {
       if (avatar) {
         this.demonForm.controls.avatar.setValue(avatar);
+        this.demonForm.controls.avatar.markAsDirty();
       }
     });
   }
@@ -246,7 +277,6 @@ export class DemonFormPageComponent {
 
     this.pending.set(true);
     this.errorMessage.set(null);
-    this.savedDemon.set(null);
 
     const payload = this.buildDemonPayload();
     const action$ = this.editMode()
@@ -256,8 +286,8 @@ export class DemonFormPageComponent {
     action$
       .pipe(finalize(() => this.pending.set(false)))
       .subscribe({
-        next: (demon: BolDemonModel) => {
-          this.savedDemon.set(demon);
+        next: () => {
+          this.demonForm.markAsPristine();
           this.navigateBack(true);
         },
         error: (error: unknown) => {
@@ -273,6 +303,28 @@ export class DemonFormPageComponent {
   protected onError(controlName: keyof typeof this.demonForm.controls): boolean {
     const control = this.demonForm.controls[controlName];
     return control.invalid && (control.dirty || control.touched);
+  }
+
+  canLeave(): boolean | Observable<boolean> {
+    if (!this.formDirty()) {
+      return true;
+    }
+
+    const ref = this.dialog.open(DwConfirmDialogComponent, {
+      data: {
+        title: 'Modifications non enregistrées',
+        message: 'Ce démon a des changements non sauvegardés. Quitter sans enregistrer ?',
+        confirmLabel: 'Quitter sans sauver',
+        cancelLabel: 'Annuler',
+      },
+    });
+
+    return ref.afterClosed().pipe(map((confirmed: boolean | undefined) => Boolean(confirmed)));
+  }
+
+  protected onSaveShortcut(event: Event): void {
+    event.preventDefault();
+    this.saveDemon();
   }
 
   private resetForm(): void {
@@ -294,19 +346,15 @@ export class DemonFormPageComponent {
         degats: '0',
         avatar: null,
       },
-      { emitEvent: false },
+      {emitEvent: false},
     );
-    this.pouvoirs.clear({ emitEvent: false });
-    this.pouvoirs.updateValueAndValidity({ emitEvent: true });
-    this.selectedPouvoirId.setValue(null);
-    this.selectedPouvoirDetail.setValue('');
+    this.pouvoirs.clear({emitEvent: false});
+    this.pouvoirs.updateValueAndValidity({emitEvent: true});
   }
 
   private hydrateForm(demon: BolDemonModel): void {
     this.hydratedCategorieId = Number(demon.id_categorie);
-    this.selectedPouvoirId.setValue(null);
-    this.selectedPouvoirDetail.setValue('');
-    this.pouvoirs.clear({ emitEvent: false });
+    this.pouvoirs.clear({emitEvent: false});
 
     for (const pouvoir of demon.pouvoirs) {
       this.pouvoirs.push(
@@ -314,7 +362,7 @@ export class DemonFormPageComponent {
           id: this.formBuilder.control(Number(pouvoir.pouvoir_id), Validators.required),
           detail: this.formBuilder.control(pouvoir.detail || null),
         }),
-        { emitEvent: false },
+        {emitEvent: false},
       );
     }
 
@@ -335,9 +383,9 @@ export class DemonFormPageComponent {
         degats: demon.degats,
         avatar: demon.avatar,
       },
-      { emitEvent: true },
+      {emitEvent: true},
     );
-    this.pouvoirs.updateValueAndValidity({ emitEvent: true });
+    this.pouvoirs.updateValueAndValidity({emitEvent: true});
   }
 
   private buildDemonPayload(): Record<string, unknown> {
@@ -404,9 +452,9 @@ export class DemonFormPageComponent {
     }
 
     return loading
-      ? 'Le chargement du demon a echoue.'
+      ? 'Le chargement du démon a échoué.'
       : this.editMode()
-        ? 'La mise a jour du demon a echoue.'
-        : 'La creation du demon a echoue.';
+        ? 'La mise à jour du démon a échoué.'
+        : 'La création du démon a échoué.';
   }
 }

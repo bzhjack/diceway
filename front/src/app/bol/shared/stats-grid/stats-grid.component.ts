@@ -11,7 +11,7 @@ export interface StatCell {
 export interface StatGroup {
   readonly key: 'attr' | 'combat' | 'res';
   readonly label: string;
-  readonly columns: 1 | 2 | 3;
+  readonly columns: 1 | 2 | 3 | 4;
   readonly cells: readonly StatCell[];
 }
 

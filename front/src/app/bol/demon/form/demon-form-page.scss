@@ -3,6 +3,11 @@
 }
 
 .dfp-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
   border: 1px solid #52414b;
   background: #b91c1c;
   font-size: 1.5rem;
@@ -10,6 +15,7 @@
 }
 
 .dfp-eyebrow {
+  margin: 0;
   font-size: 0.75rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -18,17 +24,14 @@
 }
 
 .dfp-title {
+  margin: 0;
   font-family: 'Muse Display Harmony';
   font-size: 2.25rem;
   line-height: 1;
 }
 
-.dfp-loading-box {
-  border: 1px solid #52414b;
-  background: rgba(17, 24, 39, 0.8);
-}
-
 .dfp-section-eyebrow {
+  margin: 0;
   font-size: 0.72rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -36,126 +39,42 @@
   color: #fda4af;
 }
 
+.dfp-loading-box {
+  padding: 1.25rem;
+  border: 1px solid #52414b;
+  background: rgba(17, 24, 39, 0.8);
+}
+
 .dfp-loading-detail {
+  margin: 0;
+  margin-top: 0.75rem;
   font-size: 0.875rem;
   line-height: 1.75rem;
   color: var(--dw-surface-700);
 }
 
+// Carte de section — équivalent de .dw-section--form (global) mais avec la
+// palette zinc propre au thème démon (cf. demon-library-page.scss).
 .dfp-section-card {
+  padding: 1.25rem;
   border: 1px solid #52414b;
   background: rgba(39, 39, 42, 0.75);
 }
 
-.dfp-avatar {
-  border: 1px solid #52414b;
-  background: #09090b;
-
-  &:hover {
-    border-color: rgba(253, 164, 175, 0.7);
-  }
-}
-
-.dfp-avatar-placeholder {
-  color: var(--dw-surface-500);
-}
-
-.dfp-avatar-label {
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-}
-
-.dfp-avatar-overlay {
-  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1), transparent);
-}
-
-.dfp-avatar-overlay-label {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(0, 0, 0, 0.55);
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: #fff;
-}
-
-.dfp-field-hint {
+.dfp-error-box {
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  background: rgba(244, 63, 94, 0.1);
   font-size: 0.875rem;
-  color: #fda4af;
-}
-
-.dfp-empty-pouvoir {
-  border: 1px dashed #6b4b56;
-  background: rgba(24, 24, 27, 0.8);
-  font-size: 0.875rem;
-  color: var(--dw-surface-500);
-}
-
-.dfp-pouvoir-row {
-  border: 1px solid #52414b;
-  background: rgba(24, 24, 27, 0.8);
-}
-
-.dfp-pouvoir-title {
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--dw-surface-800);
-}
-
-.dfp-pouvoir-description {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  color: var(--dw-surface-600);
-}
-
-.dfp-pouvoir-detail {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
   color: #fecdd3;
 }
 
-.dfp-error-box {
-  border: 1px solid rgba(248, 113, 113, 0.3);
-  background: rgba(239, 68, 68, 0.1);
-}
-
-.dfp-error-eyebrow {
-  font-size: 0.72rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: #fca5a5;
-}
-
-.dfp-error-detail {
-  font-size: 0.875rem;
-  line-height: 1.75rem;
-  color: #fee2e2;
-}
-
-.dfp-success-box {
-  border: 1px solid rgba(52, 211, 153, 0.3);
-  background: rgba(16, 185, 129, 0.1);
-}
-
-.dfp-success-eyebrow {
-  font-size: 0.72rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: #6ee7b7;
-}
-
-.dfp-success-detail {
-  font-size: 0.875rem;
-  line-height: 1.75rem;
-  color: #d1fae5;
-}
-
-.dfp-success-json {
-  font-size: 0.75rem;
-  line-height: 1.5rem;
-  color: var(--dw-surface-800);
+// Puce « modifications non enregistrées » — inline après le libellé
+// (le .mdc-button__label est position: relative, un absolu s'ancrerait sur le texte)
+.dfp-dirty-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dw-color-legendary);
 }

@@ -33,12 +33,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./bol/demon/form/demon-form-page').then((module) => module.DemonFormPageComponent),
     canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'create/demon/:id',
     loadComponent: () =>
       import('./bol/demon/form/demon-form-page').then((module) => module.DemonFormPageComponent),
     canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'create/pnj',
