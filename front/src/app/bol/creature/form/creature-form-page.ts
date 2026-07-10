@@ -9,19 +9,17 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatSelectModule} from '@angular/material/select';
 import {BolCreatureModel} from '../../models/bol-creature.model';
 import {BolCreatureStateService} from '../../services/bol-creature-state.service';
 import {BolCreaturesService} from '../../services/bol-creatures.service';
 import {HasPendingChanges} from '../../../core/pending-changes.guard';
 import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
-import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {PictureComponent} from '../../../shared/picture/picture';
-import {CapaciteAddEvent, CapaciteAddMenuComponent} from '../../shared/capacite/add-menu/capacite-add-menu.component';
-import {CapaciteEntry, CapaciteListComponent} from '../../shared/capacite/list/capacite-list.component';
+import {CapaciteAddEvent} from '../../shared/capacite/add-menu/capacite-add-menu.component';
+import {CapaciteEntry} from '../../shared/capacite/list/capacite-list.component';
 import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
+import {CreatureCapacitesComponent} from './capacites/creature-capacites.component';
+import {CreatureGeneralComponent} from './general/creature-general.component';
 
 interface CreatureCapaciteDraft {
   id: number;
@@ -64,12 +62,8 @@ const CREATURE_STAT_GROUPS: readonly StatGroup[] = [
     MatCardContent,
     MatButtonModule,
     MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    DwTagComponent,
-    CapaciteAddMenuComponent,
-    CapaciteListComponent,
+    CreatureGeneralComponent,
+    CreatureCapacitesComponent,
     StatsGridComponent,
   ],
   templateUrl: './creature-form-page.html',

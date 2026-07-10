@@ -51,97 +51,30 @@
               </div>
             }
 
-            <div class="dw-section--form">
-              <p class="cfp-section-eyebrow">
-                Général
-              </p>
-
-              <div class="grid gap-4 md:grid-cols-[140px_minmax(0,1fr)]">
-                <div class="cfp-avatar" (click)="pickAvatar()">
-                  @if (avatarPreview()) {
-                    <img
-                      [src]="avatarPreview()!"
-                      alt="Avatar créature"
-                      class="h-full w-full object-cover"
-                    />
-                  } @else {
-                    <div class="cfp-avatar-placeholder">
-                      <mat-icon class="!text-3xl">image</mat-icon>
-                      <span class="cfp-avatar-hint">Cliquer pour modifier</span>
-                    </div>
-                  }
-
-                  <div class="cfp-avatar-overlay">
-                    <span class="cfp-avatar-overlay-label">Modifier</span>
-                  </div>
-                </div>
-
-                <div class="grid gap-3 md:grid-cols-2">
-                  <mat-form-field subscriptSizing="dynamic">
-                    <mat-label>Nom de la créature</mat-label>
-                    <input matInput id="nom" formControlName="nom" />
-                  </mat-form-field>
-
-                  <mat-form-field subscriptSizing="dynamic">
-                    <mat-label>Taille</mat-label>
-                    <mat-select inputId="id_taille" formControlName="id_taille" [compareWith]="compareById">
-                      @for (taille of tailles() ?? []; track taille.id) {
-                        <mat-option [value]="taille.id">{{ taille.taille }}</mat-option>
-                      }
-                    </mat-select>
-                  </mat-form-field>
-
-                  <mat-form-field subscriptSizing="dynamic">
-                    <mat-label>Dégâts</mat-label>
-                    <input matInput id="degats" formControlName="degats" />
-                  </mat-form-field>
-
-                  <mat-form-field subscriptSizing="dynamic">
-                    <mat-label>Protection</mat-label>
-                    <input matInput id="protection" formControlName="protection" />
-                  </mat-form-field>
-
-                  <div class="md:col-span-2">
-                    <mat-form-field subscriptSizing="dynamic" class="w-full">
-                      <mat-label>Commentaire de scène</mat-label>
-                      <textarea
-                        matInput
-                        id="commentaire"
-                        formControlName="commentaire"
-                        rows="2"
-                        class="resize-none"
-                      ></textarea>
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-
-              @if (onError('nom') || onError('id_taille')) {
-                <p class="cfp-field-hint">
-                  Le nom et la taille sont requis pour préparer la créature.
-                </p>
-              }
-            </div>
-
             <div class="grid gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] xl:items-stretch">
               <div class="dw-section--form xl:h-full">
-                <bol-stats-grid [form]="creatureForm" [groups]="creatureStatGroups" />
+                <bol-creature-general
+                  [form]="creatureForm"
+                  [tailles]="tailles()"
+                  [compareById]="compareById"
+                  [avatarPreview]="avatarPreview()"
+                  [showValidationHint]="onError('nom') || onError('id_taille')"
+                  (avatarClick)="pickAvatar()"
+                />
               </div>
 
               <div class="dw-section--form xl:h-full">
-                <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-                  <div class="flex items-center gap-2">
-                    <p class="cfp-section-eyebrow">
-                      Capacités
-                    </p>
-                    <dw-tag>{{ selectedCapaciteEntries().length }} sélectionnée(s)</dw-tag>
-                  </div>
-
-                  <bol-capacite-add-menu [capacites]="filteredCapacites()" (added)="addCapaciteEntry($event)" />
-                </div>
-
-                <bol-capacite-list [capacites]="selectedCapaciteEntries()" (removed)="removeCapacite($event)" />
+                <bol-creature-capacites
+                  [capacites]="selectedCapaciteEntries()"
+                  [capacitesDisponibles]="filteredCapacites()"
+                  (added)="addCapaciteEntry($event)"
+                  (removed)="removeCapacite($event)"
+                />
               </div>
+            </div>
+
+            <div class="dw-section--form">
+              <bol-stats-grid [form]="creatureForm" [groups]="creatureStatGroups" />
             </div>
 
             @if (errorMessage()) {

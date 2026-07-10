@@ -32,16 +32,11 @@
 
 .cfp-section-eyebrow {
   margin: 0;
-  margin-bottom: 0.5rem;
   font-size: 0.72rem;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.2em;
   color: #fcd34d;
-}
-
-dw-tag {
-  --p-tag-font-size: 0.7rem;
 }
 
 .cfp-loading-detail {
@@ -50,74 +45,6 @@ dw-tag {
   font-size: 0.875rem;
   line-height: 1.75rem;
   color: var(--dw-surface-700);
-}
-
-.cfp-avatar {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  aspect-ratio: 1 / 1;
-  width: 100%;
-  overflow: hidden;
-  cursor: pointer;
-  border: 1px solid var(--dw-border);
-  border-radius: 8px;
-  background: var(--dw-surface-50);
-  transition: border-color 0.15s ease;
-
-  &:hover {
-    border-color: rgba(252, 211, 77, 0.7);
-  }
-
-  &:hover .cfp-avatar-overlay {
-    opacity: 1;
-  }
-}
-
-.cfp-avatar-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--dw-surface-500);
-}
-
-.cfp-avatar-hint {
-  font-size: 0.68rem;
-  color: var(--dw-surface-400);
-}
-
-.cfp-avatar-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1), transparent);
-  transition: opacity 0.15s ease;
-}
-
-.cfp-avatar-overlay-label {
-  margin-bottom: 0.75rem;
-  padding: 0.25rem 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(0, 0, 0, 0.55);
-  border-radius: 999px;
-  font-size: 0.68rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: #fff;
-}
-
-.cfp-field-hint {
-  margin: 0;
-  margin-top: 0.75rem;
-  font-size: 0.875rem;
-  color: #fcd34d;
 }
 
 .cfp-error-box {

@@ -1,0 +1,12 @@
+<div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+  <div class="flex items-center gap-2">
+    <p class="cfp-section-eyebrow">
+      Capacités
+    </p>
+    <dw-tag>{{ capacites().length }} sélectionnée(s)</dw-tag>
+  </div>
+
+  <bol-capacite-add-menu [capacites]="capacitesDisponibles()" (added)="added.emit($event)" />
+</div>
+
+<bol-capacite-list [capacites]="capacites()" (removed)="removed.emit($event)" />
