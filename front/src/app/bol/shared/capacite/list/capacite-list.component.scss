@@ -1,3 +1,17 @@
 :host {
   display: block;
 }
+
+.cl-capacite-icon {
+  flex-shrink: 0;
+  margin-right: 0;
+  color: var(--dw-surface-500);
+}
+
+dw-collapsible-row.dw-row--positive .cl-capacite-icon {
+  color: var(--dw-color-bonus);
+}
+
+dw-collapsible-row.dw-row--negative .cl-capacite-icon {
+  color: var(--dw-color-echec);
+}

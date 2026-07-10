@@ -18,6 +18,7 @@ import {PictureComponent} from '../../../shared/picture/picture';
 import {CapaciteAddEvent} from '../../shared/capacite/add-menu/capacite-add-menu.component';
 import {CapaciteEntry} from '../../shared/capacite/list/capacite-list.component';
 import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
+import {traitIconType} from '../../shared/trait-icon';
 import {CreatureCapacitesComponent} from './capacites/creature-capacites.component';
 import {CreatureGeneralComponent} from './general/creature-general.component';
 
@@ -174,6 +175,8 @@ export class CreatureFormPageComponent implements HasPendingChanges {
           label: definition.capacite,
           description: definition.description || null,
           detail: entry.detail || null,
+          icon: traitIconType(definition),
+          tone: definition.de_bonus ? 'positive' : definition.de_malus ? 'negative' : 'neutral',
         };
       })
       .filter((entry: CapaciteEntry | null): entry is CapaciteEntry => entry !== null),
