@@ -1,32 +1,64 @@
-import {JsonPipe, Location} from '@angular/common';
-import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} from '@angular/core';
+import {Location} from '@angular/common';
+import {ChangeDetectionStrategy, Component, Signal, computed, effect, inject, signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
-import {FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, PristineChangeEvent, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import {startWith, take} from 'rxjs';
+import {Observable, filter, map, startWith, take} from 'rxjs';
 import {finalize} from 'rxjs/operators';
-import {BolCreatureModel} from '../../models/bol-creature.model';
-import {BolCreatureStateService} from '../../services/bol-creature-state.service';
-import {BolCreaturesService} from '../../services/bol-creatures.service';
-import {MatDialog} from '@angular/material/dialog';
-import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
+import {MatCard, MatCardContent} from '@angular/material/card';
+import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
+import {BolCreatureModel} from '../../models/bol-creature.model';
+import {BolCreatureStateService} from '../../services/bol-creature-state.service';
+import {BolCreaturesService} from '../../services/bol-creatures.service';
+import {HasPendingChanges} from '../../../core/pending-changes.guard';
+import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {PictureComponent} from '../../../shared/picture/picture';
+import {CapaciteAddEvent, CapaciteAddMenuComponent} from '../../shared/capacite/add-menu/capacite-add-menu.component';
+import {CapaciteEntry, CapaciteListComponent} from '../../shared/capacite/list/capacite-list.component';
+import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
 
 interface CreatureCapaciteDraft {
   id: number;
   detail: string | null;
 }
 
+const CREATURE_STAT_GROUPS: readonly StatGroup[] = [
+  {
+    key: 'attr',
+    label: 'Attributs',
+    columns: 3,
+    cells: [
+      {control: 'vigueur', label: 'Vigueur'},
+      {control: 'agilite', label: 'Agilité'},
+      {control: 'esprit', label: 'Esprit'},
+    ],
+  },
+  {
+    key: 'combat',
+    label: 'Combat',
+    columns: 2,
+    cells: [
+      {control: 'attaque', label: 'Attaque'},
+      {control: 'defense', label: 'Défense'},
+    ],
+  },
+  {
+    key: 'res',
+    label: 'Ressources',
+    columns: 1,
+    cells: [{control: 'vitalite', label: 'Vitalité', highlight: true}],
+  },
+];
+
 @Component({
   selector: 'bol-creature-form-page',
   imports: [
-    JsonPipe,
     ReactiveFormsModule,
     MatCard,
     MatCardContent,
@@ -36,12 +68,18 @@ interface CreatureCapaciteDraft {
     MatInputModule,
     MatSelectModule,
     DwTagComponent,
+    CapaciteAddMenuComponent,
+    CapaciteListComponent,
+    StatsGridComponent,
   ],
   templateUrl: './creature-form-page.html',
   styleUrl: './creature-form-page.scss',
+  host: {
+    '(document:keydown.control.s)': 'onSaveShortcut($event)',
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreatureFormPageComponent {
+export class CreatureFormPageComponent implements HasPendingChanges {
   private readonly creatureStateService = inject(BolCreatureStateService);
   private readonly creaturesService = inject(BolCreaturesService);
   private readonly formBuilder = inject(FormBuilder);
@@ -56,7 +94,8 @@ export class CreatureFormPageComponent {
 
   protected readonly tailles = this.creatureStateService.tailleList;
   protected readonly capacitesList = this.creatureStateService.capaciteList;
-  protected readonly savedCreature = signal<BolCreatureModel | null>(null);
+  protected readonly creatureStatGroups = CREATURE_STAT_GROUPS;
+
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly pending = signal(false);
   protected readonly loadingCreature = signal(false);
@@ -76,22 +115,9 @@ export class CreatureFormPageComponent {
 
     return this.editMode() ? 'Mettre à jour la créature' : 'Enregistrer la créature';
   });
-  protected readonly saveSuccessTitle = computed(() =>
-    this.editMode() ? 'Créature mise à jour' : 'Créature créée',
-  );
-  protected readonly saveSuccessMessage = computed(() =>
-    this.editMode()
-      ? 'Les modifications ont bien été enregistrées côté backend.'
-      : 'La créature a bien été enregistrée côté backend.',
-  );
 
   protected readonly compareById = (a: number | string | null, b: number | string | null): boolean =>
     Number(a) === Number(b);
-
-  protected readonly selectedCapaciteId = new FormControl<number | null>(null);
-  protected readonly selectedCapaciteDetail = new FormControl<string>('', {
-    nonNullable: true,
-  });
 
   protected readonly creatureForm = this.formBuilder.group({
     id: this.formBuilder.control<string | null>(null),
@@ -110,40 +136,53 @@ export class CreatureFormPageComponent {
     capacites: this.formBuilder.array([]),
   });
 
-  protected readonly tailleId = toSignal(this.creatureForm.controls.id_taille.valueChanges, {
-    initialValue: this.creatureForm.controls.id_taille.value,
-  });
-  protected readonly avatarPreview = toSignal(
-    this.creatureForm.controls.avatar.valueChanges.pipe(
-      startWith(this.creatureForm.controls.avatar.value),
+  private controlValueSignal<T>(control: FormControl<T>): Signal<T> {
+    return toSignal(control.valueChanges.pipe(startWith(control.value)), {initialValue: control.value});
+  }
+
+  protected readonly tailleId = this.controlValueSignal(this.creatureForm.controls.id_taille);
+  protected readonly avatarPreview = this.controlValueSignal(this.creatureForm.controls.avatar);
+
+  protected readonly formDirty = toSignal(
+    this.creatureForm.events.pipe(
+      filter((event): event is PristineChangeEvent => event instanceof PristineChangeEvent),
+      map((event) => !event.pristine),
     ),
-    {
-      initialValue: this.creatureForm.controls.avatar.value,
-    },
+    {initialValue: false},
   );
-  protected readonly selectedCapacites = toSignal(
+  protected readonly selectedCapacitesDraft = toSignal(
     this.capacites.valueChanges.pipe(startWith(this.capacites.getRawValue())),
-    {
-      initialValue: this.capacites.getRawValue(),
-    },
+    {initialValue: this.capacites.getRawValue()},
   );
   protected readonly selectedTaille = computed(() =>
     (this.tailles() ?? []).find((taille) => Number(taille.id) === Number(this.tailleId())),
   );
   protected readonly filteredCapacites = computed(() => {
     const selectedIds = new Set(
-      (this.selectedCapacites() ?? []).map((capacite: CreatureCapaciteDraft) => Number(capacite.id)),
+      (this.selectedCapacitesDraft() ?? []).map((capacite: CreatureCapaciteDraft) => Number(capacite.id)),
     );
 
     return (this.capacitesList() ?? []).filter((capacite) => !selectedIds.has(Number(capacite.id)));
   });
   protected readonly selectedCapaciteEntries = computed(() =>
-    (this.selectedCapacites() ?? []).map((entry: CreatureCapaciteDraft) => ({
-      ...entry,
-      definition: (this.capacitesList() ?? []).find(
-        (capacite) => Number(capacite.id) === Number(entry.id),
-      ),
-    })),
+    (this.selectedCapacitesDraft() ?? [])
+      .map((entry: CreatureCapaciteDraft) => {
+        const definition = (this.capacitesList() ?? []).find(
+          (capacite) => Number(capacite.id) === Number(entry.id),
+        );
+
+        if (!definition) {
+          return null;
+        }
+
+        return {
+          id: Number(entry.id),
+          label: definition.capacite,
+          description: definition.description || null,
+          detail: entry.detail || null,
+        };
+      })
+      .filter((entry: CapaciteEntry | null): entry is CapaciteEntry => entry !== null),
   );
 
   constructor() {
@@ -151,7 +190,6 @@ export class CreatureFormPageComponent {
       const creatureId = this.creatureId();
       this.returnUrl.set(this.readReturnUrl());
       this.errorMessage.set(null);
-      this.savedCreature.set(null);
 
       if (!creatureId) {
         this.resetForm();
@@ -189,7 +227,7 @@ export class CreatureFormPageComponent {
           vitalite: taille.vitalite ?? 0,
           degats: taille.degats ?? '0',
         },
-        { emitEvent: false },
+        {emitEvent: false},
       );
     });
   }
@@ -198,25 +236,19 @@ export class CreatureFormPageComponent {
     return this.creatureForm.controls.capacites as FormArray;
   }
 
-  protected addCapacite(): void {
-    const capaciteId = this.selectedCapaciteId.value;
-    if (!capaciteId) {
-      return;
-    }
-
+  protected addCapaciteEntry(event: CapaciteAddEvent): void {
     this.capacites.push(
       this.formBuilder.group({
-        id: this.formBuilder.control(capaciteId, Validators.required),
-        detail: this.formBuilder.control(this.selectedCapaciteDetail.value || null),
+        id: this.formBuilder.control(event.id, Validators.required),
+        detail: this.formBuilder.control(event.detail),
       }),
     );
-
-    this.selectedCapaciteId.setValue(null);
-    this.selectedCapaciteDetail.setValue('');
+    this.capacites.markAsDirty();
   }
 
   protected removeCapacite(index: number): void {
     this.capacites.removeAt(index);
+    this.capacites.markAsDirty();
   }
 
   protected pickAvatar(): void {
@@ -229,12 +261,9 @@ export class CreatureFormPageComponent {
     ref.afterClosed().pipe(take(1)).subscribe((avatar: string | null) => {
       if (avatar) {
         this.creatureForm.controls.avatar.setValue(avatar);
+        this.creatureForm.controls.avatar.markAsDirty();
       }
     });
-  }
-
-  protected clearAvatar(): void {
-    this.creatureForm.controls.avatar.setValue(null);
   }
 
   protected saveCreature(): void {
@@ -249,7 +278,6 @@ export class CreatureFormPageComponent {
 
     this.pending.set(true);
     this.errorMessage.set(null);
-    this.savedCreature.set(null);
 
     const payload = this.buildCreaturePayload();
     const action$ = this.editMode()
@@ -259,8 +287,8 @@ export class CreatureFormPageComponent {
     action$
       .pipe(finalize(() => this.pending.set(false)))
       .subscribe({
-        next: (creature: BolCreatureModel) => {
-          this.savedCreature.set(creature);
+        next: () => {
+          this.creatureForm.markAsPristine();
           this.navigateBack(true);
         },
         error: (error: unknown) => {
@@ -276,6 +304,28 @@ export class CreatureFormPageComponent {
   protected onError(controlName: keyof typeof this.creatureForm.controls): boolean {
     const control = this.creatureForm.controls[controlName];
     return control.invalid && (control.dirty || control.touched);
+  }
+
+  canLeave(): boolean | Observable<boolean> {
+    if (!this.formDirty()) {
+      return true;
+    }
+
+    const ref = this.dialog.open(DwConfirmDialogComponent, {
+      data: {
+        title: 'Modifications non enregistrées',
+        message: 'Cette créature a des changements non sauvegardés. Quitter sans enregistrer ?',
+        confirmLabel: 'Quitter sans sauver',
+        cancelLabel: 'Annuler',
+      },
+    });
+
+    return ref.afterClosed().pipe(map((confirmed: boolean | undefined) => Boolean(confirmed)));
+  }
+
+  protected onSaveShortcut(event: Event): void {
+    event.preventDefault();
+    this.saveCreature();
   }
 
   private resetForm(): void {
@@ -296,19 +346,15 @@ export class CreatureFormPageComponent {
         protection: '0',
         avatar: null,
       },
-      { emitEvent: false },
+      {emitEvent: false},
     );
-    this.capacites.clear({ emitEvent: false });
-    this.capacites.updateValueAndValidity({ emitEvent: true });
-    this.selectedCapaciteId.setValue(null);
-    this.selectedCapaciteDetail.setValue('');
+    this.capacites.clear({emitEvent: false});
+    this.capacites.updateValueAndValidity({emitEvent: true});
   }
 
   private hydrateForm(creature: BolCreatureModel): void {
     this.hydratedTailleId = Number(creature.id_taille);
-    this.selectedCapaciteId.setValue(null);
-    this.selectedCapaciteDetail.setValue('');
-    this.capacites.clear({ emitEvent: false });
+    this.capacites.clear({emitEvent: false});
 
     for (const capacite of creature.capacites) {
       this.capacites.push(
@@ -316,7 +362,7 @@ export class CreatureFormPageComponent {
           id: this.formBuilder.control(Number(capacite.capacite_id), Validators.required),
           detail: this.formBuilder.control(capacite.detail || null),
         }),
-        { emitEvent: false },
+        {emitEvent: false},
       );
     }
 
@@ -336,9 +382,9 @@ export class CreatureFormPageComponent {
         protection: creature.protection,
         avatar: creature.avatar,
       },
-      { emitEvent: true },
+      {emitEvent: true},
     );
-    this.capacites.updateValueAndValidity({ emitEvent: true });
+    this.capacites.updateValueAndValidity({emitEvent: true});
   }
 
   private buildCreaturePayload(): Record<string, unknown> {

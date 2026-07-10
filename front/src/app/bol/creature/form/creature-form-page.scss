@@ -3,6 +3,11 @@
 }
 
 .cfp-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
   border: 1px solid var(--dw-border);
   background: #d97706;
   font-size: 1.5rem;
@@ -10,6 +15,7 @@
 }
 
 .cfp-eyebrow {
+  margin: 0;
   font-size: 0.75rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -18,12 +24,15 @@
 }
 
 .cfp-title {
+  margin: 0;
   font-family: 'Muse Display Harmony';
   font-size: 2.25rem;
   line-height: 1;
 }
 
 .cfp-section-eyebrow {
+  margin: 0;
+  margin-bottom: 0.5rem;
   font-size: 0.72rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -31,121 +40,100 @@
   color: #fcd34d;
 }
 
+dw-tag {
+  --p-tag-font-size: 0.7rem;
+}
+
 .cfp-loading-detail {
+  margin: 0;
+  margin-top: 0.75rem;
   font-size: 0.875rem;
   line-height: 1.75rem;
   color: var(--dw-surface-700);
 }
 
 .cfp-avatar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  overflow: hidden;
+  cursor: pointer;
   border: 1px solid var(--dw-border);
+  border-radius: 8px;
   background: var(--dw-surface-50);
+  transition: border-color 0.15s ease;
 
   &:hover {
     border-color: rgba(252, 211, 77, 0.7);
   }
+
+  &:hover .cfp-avatar-overlay {
+    opacity: 1;
+  }
 }
 
 .cfp-avatar-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
   color: var(--dw-surface-500);
 }
 
-.cfp-avatar-label {
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
+.cfp-avatar-hint {
+  font-size: 0.68rem;
+  color: var(--dw-surface-400);
 }
 
 .cfp-avatar-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
   background-image: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1), transparent);
+  transition: opacity 0.15s ease;
 }
 
 .cfp-avatar-overlay-label {
+  margin-bottom: 0.75rem;
+  padding: 0.25rem 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(0, 0, 0, 0.55);
-  font-size: 0.65rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.18em;
   color: #fff;
 }
 
 .cfp-field-hint {
+  margin: 0;
+  margin-top: 0.75rem;
   font-size: 0.875rem;
   color: #fcd34d;
 }
 
-.cfp-empty-capacite {
-  border: 1px dashed #586170;
-  background: rgba(31, 41, 55, 0.6);
-  font-size: 0.875rem;
-  color: var(--dw-surface-500);
-}
-
-.cfp-capacite-row {
-  border: 1px solid var(--dw-border);
-  background: rgba(31, 41, 55, 0.7);
-}
-
-.cfp-capacite-title {
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--dw-surface-800);
-}
-
-.cfp-capacite-description {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  color: var(--dw-surface-600);
-}
-
-.cfp-capacite-detail {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  color: #fde68a;
-}
-
 .cfp-error-box {
-  border: 1px solid rgba(248, 113, 113, 0.3);
-  background: rgba(239, 68, 68, 0.1);
-}
-
-.cfp-error-eyebrow {
-  font-size: 0.72rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: #fca5a5;
-}
-
-.cfp-error-detail {
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  background: rgba(244, 63, 94, 0.1);
   font-size: 0.875rem;
-  line-height: 1.75rem;
-  color: #fee2e2;
+  color: #fecdd3;
 }
 
-.cfp-success-box {
-  border: 1px solid rgba(52, 211, 153, 0.3);
-  background: rgba(16, 185, 129, 0.1);
-}
-
-.cfp-success-eyebrow {
-  font-size: 0.72rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: #6ee7b7;
-}
-
-.cfp-success-detail {
-  font-size: 0.875rem;
-  line-height: 1.75rem;
-  color: #d1fae5;
-}
-
-.cfp-success-json {
-  font-size: 0.75rem;
-  line-height: 1.5rem;
-  color: var(--dw-surface-800);
+// Puce « modifications non enregistrées » — inline après le libellé
+// (le .mdc-button__label est position: relative, un absolu s'ancrerait sur le texte)
+.cfp-dirty-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dw-color-legendary);
 }

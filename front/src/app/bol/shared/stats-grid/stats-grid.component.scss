@@ -43,28 +43,32 @@
 .hs-block-cells {
   display: grid;
   flex: 1;
-  align-content: center;
+  align-content: start;
 }
 
+// Diviseurs de ligne en border-top à partir de la 2e ligne (au lieu de retirer
+// le border-bottom de la dernière ligne) : robuste même quand le nombre de
+// cellules ne remplit pas exactement un multiple de colonnes (ex. 3 cellules
+// sur 2 colonnes) — nth-last-child ne peut pas distinguer ce cas correctement.
 .hs-block-cells--1 {
   grid-template-columns: 1fr;
 
   .hs-cell { border-right: none; }
-  .hs-cell:last-child { border-bottom: none; }
+  .hs-cell:nth-child(n + 2) { border-top: 1px solid var(--dw-border); }
 }
 
 .hs-block-cells--2 {
   grid-template-columns: repeat(2, 1fr);
 
   .hs-cell:nth-child(2n) { border-right: none; }
-  .hs-cell:nth-last-child(-n + 2) { border-bottom: none; }
+  .hs-cell:nth-child(n + 3) { border-top: 1px solid var(--dw-border); }
 }
 
 .hs-block-cells--3 {
   grid-template-columns: repeat(3, 1fr);
 
   .hs-cell:nth-child(3n) { border-right: none; }
-  .hs-cell:nth-last-child(-n + 3) { border-bottom: none; }
+  .hs-cell:nth-child(n + 4) { border-top: 1px solid var(--dw-border); }
 }
 
 .hs-cell {
@@ -74,7 +78,6 @@
   gap: 0.2rem;
   padding: 0.5rem 0.3rem 0.45rem;
   border-right: 1px solid var(--dw-border);
-  border-bottom: 1px solid var(--dw-border);
 }
 
 .hs-lbl {

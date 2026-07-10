@@ -17,6 +17,7 @@ export const routes: Routes = [
         (module) => module.CreatureFormPageComponent,
       ),
     canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'create/creature/:id',
@@ -25,6 +26,7 @@ export const routes: Routes = [
         (module) => module.CreatureFormPageComponent,
       ),
     canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'create/demon',

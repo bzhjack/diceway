@@ -1,0 +1,30 @@
+<div class="flex flex-col gap-2">
+  @for (capacite of capacites(); track capacite.id; let index = $index) {
+    <dw-collapsible-row
+      [expanded]="isExpanded(capacite)"
+      [ariaLabel]="'Capacité : ' + capacite.label"
+      [label]="capacite.label"
+      (toggled)="toggle(capacite)"
+    >
+      <ng-container row-body>
+        @if (capacite.description) {
+          <p class="dw-entry-meta">{{ capacite.description }}</p>
+        }
+        @if (capacite.detail) {
+          <p class="dw-entry-meta">
+            <span class="dw-entry-detail-title">Détail :</span>
+            {{ capacite.detail }}
+          </p>
+        }
+
+        <button mat-button type="button" class="dw-entry-delete-btn" (click)="removed.emit(index)">
+          <mat-icon>delete</mat-icon> Supprimer
+        </button>
+      </ng-container>
+    </dw-collapsible-row>
+  } @empty {
+    <p class="dw-entry-empty">
+      Ajoute les capacités spéciales de la créature.
+    </p>
+  }
+</div>
