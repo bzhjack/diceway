@@ -1,0 +1,178 @@
+:host {
+  display: contents;
+}
+
+.pnj-card {
+  display: flex;
+  border: 1px solid var(--dw-border);
+  border-radius: 10px;
+  background: rgb(51 65 85 / 0.35);
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: rgba(110, 231, 183, 0.45);
+  }
+}
+
+.pnj-card__portrait {
+  position: relative;
+  width: 92px;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.92));
+}
+
+.pnj-card__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pnj-card__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.55rem 0.65rem;
+}
+
+.pnj-card__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.pnj-card__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+
+.pnj-card__name {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--dw-surface-800);
+}
+
+.pnj-card__meta {
+  margin: 0.1rem 0 0;
+  font-size: 0.68rem;
+  color: var(--dw-surface-500);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pnj-card__actions {
+  display: flex;
+  gap: 0.05rem;
+  flex-shrink: 0;
+}
+
+.pnj-card__action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  color: var(--dw-surface-700);
+
+  ::ng-deep .mat-mdc-button-touch-target {
+    width: 26px;
+    height: 26px;
+  }
+
+  .mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+  }
+}
+
+.pnj-card__action-btn--danger {
+  color: var(--dw-color-echec);
+}
+
+.pnj-card__gauges {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.pnj-gauge {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 8px;
+  border: 1px solid var(--dw-border);
+  background: rgba(2, 6, 23, 0.45);
+
+  .mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    flex-shrink: 0;
+  }
+}
+
+.pnj-gauge--pv .mat-icon {
+  color: #f43f5e;
+}
+
+.pnj-gauge--ph .mat-icon {
+  color: var(--dw-color-legendary);
+}
+
+.pnj-gauge__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+
+  b {
+    font-size: 0.82rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--dw-color-text-bright);
+  }
+
+  span {
+    font-size: 0.56rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--dw-surface-500);
+  }
+}
+
+.pnj-card__summary {
+  display: flex;
+  gap: 0.3rem;
+  margin-top: auto;
+}
+
+.pnj-count-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--dw-surface-600);
+  padding: 0.18rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid var(--dw-border);
+
+  .mat-icon {
+    font-size: 13px;
+    width: 13px;
+    height: 13px;
+    line-height: 13px;
+    color: var(--dw-surface-500);
+  }
+}
