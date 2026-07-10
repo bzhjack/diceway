@@ -1,0 +1,40 @@
+<div class="flex flex-col gap-2">
+  @for (arme of armes(); track arme.id; let index = $index) {
+    <dw-collapsible-row
+      [expanded]="isExpanded(arme)"
+      [ariaLabel]="'Arme : ' + arme.label"
+      [label]="arme.label"
+      [stat]="arme.degats"
+      (toggled)="toggle(arme)"
+    >
+      <ng-container row-body>
+        @if (arme.degats) {
+          <p class="dw-entry-meta">
+            <span class="dw-entry-detail-title">Dégâts :</span>
+            {{ arme.degats }}
+          </p>
+        }
+        @if (arme.portee) {
+          <p class="dw-entry-meta">
+            <span class="dw-entry-detail-title">Portée :</span>
+            {{ arme.portee }}
+          </p>
+        }
+        @if (arme.notes) {
+          <p class="dw-entry-meta">
+            <span class="dw-entry-detail-title">Notes :</span>
+            {{ arme.notes }}
+          </p>
+        }
+
+        <button mat-button type="button" class="dw-entry-delete-btn" (click)="removed.emit(index)">
+          <mat-icon>delete</mat-icon> Supprimer
+        </button>
+      </ng-container>
+    </dw-collapsible-row>
+  } @empty {
+    <p class="dw-entry-empty">
+      Ajoute l'équipement offensif marquant du héros.
+    </p>
+  }
+</div>

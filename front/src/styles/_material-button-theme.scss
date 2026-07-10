@@ -17,8 +17,11 @@ html {
     // Outlined (mat-stroked-button) : couleur primaire pour texte et contour
     outlined-label-text-color: var(--mat-sys-primary),
     outlined-outline-color: var(--dw-surface-400),
+    outlined-disabled-label-text-color: color-mix(in srgb, var(--mat-sys-primary) 55%, transparent),
+    outlined-disabled-outline-color: color-mix(in srgb, var(--dw-surface-400) 55%, transparent),
     // Text (mat-button) : couleur primaire
     text-label-text-color: var(--mat-sys-primary),
+    text-disabled-label-text-color: color-mix(in srgb, var(--mat-sys-primary) 55%, transparent),
   ));
 
   // Checkbox : contour et label lisibles sur fond sombre
@@ -28,4 +31,41 @@ html {
     unselected-hover-icon-color: var(--dw-surface-600),
     unselected-focus-icon-color: var(--dw-surface-500),
   ));
+
+  // Button toggle : état non sélectionné lisible sur fond sombre
+  @include mat.button-toggle-overrides((
+    text-color: var(--dw-surface-600),
+    selected-state-text-color: var(--mat-sys-on-primary),
+  ));
+}
+
+// Déclencheur « + » compact des menus d'ajout (traits, carrières, langues, armes, armures)
+.dw-add-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--mat-sys-primary);
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--mat-sys-primary) 15%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 1px;
+  }
 }

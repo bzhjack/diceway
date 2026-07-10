@@ -1,0 +1,43 @@
+<p class="hfp-section-eyebrow">
+  Identité
+</p>
+
+<div class="grid gap-2 md:grid-cols-3" [formGroup]="form()">
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Nom du joueur</mat-label>
+    <input matInput id="joueur" formControlName="joueur" />
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Nom du héros</mat-label>
+    <input matInput id="nom" formControlName="nom" />
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Région</mat-label>
+    <mat-select inputId="region_id" formControlName="region_id" [compareWith]="compareById()">
+      @for (region of regionList() ?? []; track region.id) {
+        <mat-option [value]="region.id">{{ region.region }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <div class="md:col-span-3">
+    <mat-form-field subscriptSizing="dynamic" class="w-full">
+      <mat-label>Commentaire</mat-label>
+      <textarea
+        matInput
+        id="commentaire"
+        formControlName="commentaire"
+        rows="3"
+        class="resize-none"
+      ></textarea>
+    </mat-form-field>
+  </div>
+</div>
+
+@if (showValidationHint()) {
+  <p class="hfp-field-hint">
+    Le joueur, le nom et la région sont requis pour préparer le héros.
+  </p>
+}

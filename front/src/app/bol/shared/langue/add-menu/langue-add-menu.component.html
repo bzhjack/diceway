@@ -1,0 +1,29 @@
+<button
+  type="button"
+  class="dw-add-trigger"
+  aria-label="Ajouter une langue"
+  matTooltip="Ajouter une langue"
+  #trigger="matMenuTrigger"
+  [matMenuTriggerFor]="menu"
+  (menuOpened)="reset()"
+>
+  <mat-icon>add</mat-icon>
+</button>
+
+<mat-menu #menu="matMenu" class="lam-panel">
+  <div class="lam-content" (click)="$event.stopPropagation()">
+    <mat-form-field subscriptSizing="dynamic">
+      <mat-label>Langue</mat-label>
+      <mat-select [formControl]="selectedId">
+        <mat-option [value]="null">— Aucune —</mat-option>
+        @for (langue of langues(); track langue.id) {
+          <mat-option [value]="langue.id">{{ langue.langue }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-flat-button type="button" [disabled]="!selectedId.value" (click)="add(); trigger.closeMenu()">
+      <mat-icon>add</mat-icon> Ajouter la langue
+    </button>
+  </div>
+</mat-menu>

@@ -1,0 +1,34 @@
+<button
+  type="button"
+  class="dw-add-trigger"
+  aria-label="Ajouter une armure"
+  matTooltip="Ajouter une armure"
+  #trigger="matMenuTrigger"
+  [matMenuTriggerFor]="menu"
+  (menuOpened)="reset()"
+>
+  <mat-icon>add</mat-icon>
+</button>
+
+<mat-menu #menu="matMenu" class="aram-panel">
+  <div class="aram-content" (click)="$event.stopPropagation()">
+    <mat-form-field subscriptSizing="dynamic">
+      <mat-label>Armure</mat-label>
+      <mat-select [formControl]="selectedId">
+        <mat-option [value]="null">— Aucune —</mat-option>
+        @for (armure of armures(); track armure.id) {
+          <mat-option [value]="armure.id">
+            <span class="truncate">{{ armure.armure }}</span>
+            <span class="aram-option-detail">
+              {{ armure.protection ? '· Protection ' + armure.protection : '' }}
+            </span>
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-flat-button type="button" [disabled]="!selectedId.value" (click)="add(); trigger.closeMenu()">
+      <mat-icon>add</mat-icon> Ajouter l'armure
+    </button>
+  </div>
+</mat-menu>

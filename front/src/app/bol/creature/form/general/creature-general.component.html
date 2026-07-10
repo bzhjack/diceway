@@ -1,0 +1,69 @@
+<p class="cfp-section-eyebrow">
+  Général
+</p>
+
+<div class="grid gap-4 md:grid-cols-[140px_minmax(0,1fr)]" [formGroup]="form()">
+  <div class="cfp-avatar" (click)="avatarClick.emit()">
+    @if (avatarPreview()) {
+      <img
+        [src]="avatarPreview()!"
+        alt="Avatar créature"
+        class="h-full w-full object-cover"
+      />
+    } @else {
+      <div class="cfp-avatar-placeholder">
+        <mat-icon class="!text-3xl">image</mat-icon>
+        <span class="cfp-avatar-hint">Cliquer pour modifier</span>
+      </div>
+    }
+
+    <div class="cfp-avatar-overlay">
+      <span class="cfp-avatar-overlay-label">Modifier</span>
+    </div>
+  </div>
+
+  <div class="grid gap-3 md:grid-cols-2">
+    <mat-form-field subscriptSizing="dynamic">
+      <mat-label>Nom de la créature</mat-label>
+      <input matInput id="nom" formControlName="nom" />
+    </mat-form-field>
+
+    <mat-form-field subscriptSizing="dynamic">
+      <mat-label>Taille</mat-label>
+      <mat-select inputId="id_taille" formControlName="id_taille" [compareWith]="compareById()">
+        @for (taille of tailles() ?? []; track taille.id) {
+          <mat-option [value]="taille.id">{{ taille.taille }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field subscriptSizing="dynamic">
+      <mat-label>Dégâts</mat-label>
+      <input matInput id="degats" formControlName="degats" />
+    </mat-form-field>
+
+    <mat-form-field subscriptSizing="dynamic">
+      <mat-label>Protection</mat-label>
+      <input matInput id="protection" formControlName="protection" />
+    </mat-form-field>
+
+    <div class="md:col-span-2">
+      <mat-form-field subscriptSizing="dynamic" class="w-full">
+        <mat-label>Commentaire de scène</mat-label>
+        <textarea
+          matInput
+          id="commentaire"
+          formControlName="commentaire"
+          rows="2"
+          class="resize-none"
+        ></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+@if (showValidationHint()) {
+  <p class="cfp-field-hint">
+    Le nom et la taille sont requis pour préparer la créature.
+  </p>
+}

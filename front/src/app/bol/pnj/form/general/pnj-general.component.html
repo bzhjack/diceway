@@ -1,0 +1,38 @@
+<p class="pfp-section-eyebrow">
+  Identité
+</p>
+
+<div class="grid gap-2 md:grid-cols-2" [formGroup]="form()">
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Nom du PNJ</mat-label>
+    <input matInput id="nom" formControlName="nom" />
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Type</mat-label>
+    <mat-select inputId="type" formControlName="type">
+      @for (opt of typeOptions(); track opt.value) {
+        <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <div class="md:col-span-2">
+    <mat-form-field subscriptSizing="dynamic" class="w-full">
+      <mat-label>Commentaire de scène</mat-label>
+      <textarea
+        matInput
+        id="commentaire"
+        formControlName="commentaire"
+        rows="3"
+        class="resize-none"
+      ></textarea>
+    </mat-form-field>
+  </div>
+</div>
+
+@if (showValidationHint()) {
+  <p class="pfp-field-hint">
+    Le nom et le type sont requis pour préparer le PNJ.
+  </p>
+}

@@ -1,0 +1,30 @@
+<div class="flex flex-col gap-2">
+  @for (pouvoir of pouvoirs(); track pouvoir.id; let index = $index) {
+    <dw-collapsible-row
+      [expanded]="isExpanded(pouvoir)"
+      [ariaLabel]="'Pouvoir : ' + pouvoir.label"
+      [label]="pouvoir.label"
+      (toggled)="toggle(pouvoir)"
+    >
+      <ng-container row-body>
+        @if (pouvoir.description) {
+          <p class="dw-entry-meta">{{ pouvoir.description }}</p>
+        }
+        @if (pouvoir.detail) {
+          <p class="dw-entry-meta">
+            <span class="dw-entry-detail-title">Détail :</span>
+            {{ pouvoir.detail }}
+          </p>
+        }
+
+        <button mat-button type="button" class="dw-entry-delete-btn" (click)="removed.emit(index)">
+          <mat-icon>delete</mat-icon> Supprimer
+        </button>
+      </ng-container>
+    </dw-collapsible-row>
+  } @empty {
+    <p class="dw-entry-empty">
+      Ajoute les pouvoirs infernaux du démon.
+    </p>
+  }
+</div>

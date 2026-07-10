@@ -1,5 +1,6 @@
 import {Routes} from '@angular/router';
 import {authGuard} from './core/auth/auth.guard';
+import {pendingChangesGuard} from './core/pending-changes.guard';
 import {publicOnlyGuard} from './core/auth/public-only.guard';
 
 export const routes: Routes = [
@@ -12,71 +13,79 @@ export const routes: Routes = [
   {
     path: 'create/creature',
     loadComponent: () =>
-      import('./bol/creature-form/creature-form-page').then(
+      import('./bol/creature/form/creature-form-page').then(
         (module) => module.CreatureFormPageComponent,
       ),
     canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'create/creature/:id',
     loadComponent: () =>
-      import('./bol/creature-form/creature-form-page').then(
+      import('./bol/creature/form/creature-form-page').then(
         (module) => module.CreatureFormPageComponent,
       ),
     canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'create/demon',
     loadComponent: () =>
-      import('./bol/demon-form/demon-form-page').then((module) => module.DemonFormPageComponent),
+      import('./bol/demon/form/demon-form-page').then((module) => module.DemonFormPageComponent),
     canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'create/demon/:id',
     loadComponent: () =>
-      import('./bol/demon-form/demon-form-page').then((module) => module.DemonFormPageComponent),
+      import('./bol/demon/form/demon-form-page').then((module) => module.DemonFormPageComponent),
     canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'create/pnj',
     loadComponent: () =>
-      import('./bol/pnj-form/pnj-form-page').then((module) => module.PnjFormPageComponent),
+      import('./bol/pnj/form/pnj-form-page').then((module) => module.PnjFormPageComponent),
     canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'create/pnj/:id',
     loadComponent: () =>
-      import('./bol/pnj-form/pnj-form-page').then((module) => module.PnjFormPageComponent),
+      import('./bol/pnj/form/pnj-form-page').then((module) => module.PnjFormPageComponent),
     canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'create/hero',
     loadComponent: () =>
-      import('./bol/hero-form/hero-form-page').then((module) => module.HeroFormPageComponent),
+      import('./bol/hero/form/hero-form-page').then((module) => module.HeroFormPageComponent),
     canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'create/hero/:id',
     loadComponent: () =>
-      import('./bol/hero-form/hero-form-page').then((module) => module.HeroFormPageComponent),
+      import('./bol/hero/form/hero-form-page').then((module) => module.HeroFormPageComponent),
     canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'create/hero-advanced',
     loadComponent: () =>
-      import('./bol/hero-advanced/hero-advanced-page').then((module) => module.HeroAdvancedPageComponent),
+      import('./bol/hero/advanced/hero-advanced-page').then((module) => module.HeroAdvancedPageComponent),
     canActivate: [authGuard],
   },
   {
     path: 'create/hero-advanced/:id',
     loadComponent: () =>
-      import('./bol/hero-advanced/hero-advanced-page').then((module) => module.HeroAdvancedPageComponent),
+      import('./bol/hero/advanced/hero-advanced-page').then((module) => module.HeroAdvancedPageComponent),
     canActivate: [authGuard],
   },
   {
     path: 'library/creatures',
     loadComponent: () =>
-      import('./bol/creature-library/creature-library-page').then(
+      import('./bol/creature/library/creature-library-page').then(
         (module) => module.CreatureLibraryPageComponent,
       ),
     canActivate: [authGuard],
@@ -84,7 +93,7 @@ export const routes: Routes = [
   {
     path: 'library/demons',
     loadComponent: () =>
-      import('./bol/demon-library/demon-library-page').then(
+      import('./bol/demon/library/demon-library-page').then(
         (module) => module.DemonLibraryPageComponent,
       ),
     canActivate: [authGuard],
@@ -92,28 +101,28 @@ export const routes: Routes = [
   {
     path: 'library/pnjs',
     loadComponent: () =>
-      import('./bol/pnj-library/pnj-library-page').then((module) => module.PnjLibraryPageComponent),
+      import('./bol/pnj/library/pnj-library-page').then((module) => module.PnjLibraryPageComponent),
     canActivate: [authGuard],
   },
   {
     path: 'library/heroes',
     loadComponent: () =>
-      import('./bol/hero-library/hero-library-page').then((module) => module.HeroLibraryPageComponent),
+      import('./bol/hero/library/hero-library-page').then((module) => module.HeroLibraryPageComponent),
     canActivate: [authGuard],
   },
   {
     path: 'library/weapons',
     loadComponent: () =>
-      import('./bol/weapon-library/weapon-library-page').then(
-        (module) => module.WeaponLibraryPageComponent,
+      import('./bol/arme/library/arme-library-page').then(
+        (module) => module.ArmeLibraryPageComponent,
       ),
     canActivate: [authGuard],
   },
   {
     path: 'library/armors',
     loadComponent: () =>
-      import('./bol/armor-library/armor-library-page').then(
-        (module) => module.ArmorLibraryPageComponent,
+      import('./bol/armure/library/armure-library-page').then(
+        (module) => module.ArmureLibraryPageComponent,
       ),
     canActivate: [authGuard],
   },

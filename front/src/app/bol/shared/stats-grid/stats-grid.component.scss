@@ -1,0 +1,124 @@
+:host {
+  display: block;
+}
+
+.hs-blocks {
+  display: grid;
+  grid-template-columns: var(--hs-cols, 4fr 4fr 6fr);
+  gap: 0.7rem;
+}
+
+.hs-block {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--dw-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.hs-block-head {
+  padding: 0.4rem 0.65rem;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--dw-border);
+}
+
+.hs-block--attr .hs-block-head {
+  color: #6ee7b7;
+  background: rgba(110, 231, 183, 0.06);
+}
+
+.hs-block--combat .hs-block-head {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.06);
+}
+
+.hs-block--res .hs-block-head {
+  color: #93c5fd;
+  background: rgba(147, 197, 253, 0.06);
+}
+
+.hs-block-cells {
+  display: grid;
+  flex: 1;
+  align-content: start;
+}
+
+// Diviseurs de ligne en border-top à partir de la 2e ligne (au lieu de retirer
+// le border-bottom de la dernière ligne) : robuste même quand le nombre de
+// cellules ne remplit pas exactement un multiple de colonnes (ex. 3 cellules
+// sur 2 colonnes) — nth-last-child ne peut pas distinguer ce cas correctement.
+.hs-block-cells--1 {
+  grid-template-columns: 1fr;
+
+  .hs-cell { border-right: none; }
+  .hs-cell:nth-child(n + 2) { border-top: 1px solid var(--dw-border); }
+}
+
+.hs-block-cells--2 {
+  grid-template-columns: repeat(2, 1fr);
+
+  .hs-cell:nth-child(2n) { border-right: none; }
+  .hs-cell:nth-child(n + 3) { border-top: 1px solid var(--dw-border); }
+}
+
+.hs-block-cells--3 {
+  grid-template-columns: repeat(3, 1fr);
+
+  .hs-cell:nth-child(3n) { border-right: none; }
+  .hs-cell:nth-child(n + 4) { border-top: 1px solid var(--dw-border); }
+}
+
+.hs-block-cells--4 {
+  grid-template-columns: repeat(4, 1fr);
+
+  .hs-cell:nth-child(4n) { border-right: none; }
+  .hs-cell:nth-child(n + 5) { border-top: 1px solid var(--dw-border); }
+}
+
+.hs-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.5rem 0.3rem 0.45rem;
+  border-right: 1px solid var(--dw-border);
+}
+
+.hs-lbl {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--dw-surface-600);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+// Chiffres plus grands que le stepper par défaut (lecture en séance)
+.hs-cell ::ng-deep .vs__value {
+  font-size: 1.3rem;
+  width: 2.6rem;
+  height: 1.7rem;
+}
+
+.hs-cell ::ng-deep .vs__btn {
+  width: 1.35rem;
+  height: 1.35rem;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 1100px) {
+  .hs-blocks {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Vitalité / Héroïsme : les deux ressources d'action courante, mises en avant
+.hs-cell--key {
+  background: rgba(147, 197, 253, 0.12);
+}

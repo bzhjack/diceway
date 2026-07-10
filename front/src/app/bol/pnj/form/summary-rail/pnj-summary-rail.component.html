@@ -1,0 +1,51 @@
+<div class="sr-avatar" (click)="avatarClick.emit()">
+  @if (avatarPreview()) {
+    <img [src]="avatarPreview()!" alt="Avatar PNJ" class="h-full w-full object-cover" />
+  } @else {
+    <div class="sr-avatar-placeholder">
+      <mat-icon class="!text-3xl">image</mat-icon>
+      <span class="sr-avatar-hint">Cliquer pour modifier</span>
+    </div>
+  }
+
+  <div class="sr-avatar-overlay">
+    <span class="sr-avatar-overlay-label">Modifier</span>
+  </div>
+</div>
+
+<p class="sr-name">{{ pnjName() || 'Nouveau PNJ' }}</p>
+@if (typeLabel(); as type) {
+  <span class="sr-region">{{ type }}</span>
+}
+
+<div class="sr-lifes">
+  <div class="sr-life" [attr.aria-label]="'Points de vie : ' + (vitalite() ?? 0)">
+    <div class="sr-life-icon sr-life-icon--pv">
+      <mat-icon>favorite</mat-icon>
+      <span class="sr-life-value">{{ vitalite() ?? 0 }}</span>
+    </div>
+    <span class="sr-life-label">Vitalité</span>
+  </div>
+</div>
+
+<div class="sr-traits">
+  <div class="mb-2 flex items-center justify-between gap-2">
+    <p class="sr-sub">Traits</p>
+    <bol-trait-add-menu
+      [avantages]="avantagesDisponibles()"
+      [desavantages]="desavantagesDisponibles()"
+      (added)="traitAdded.emit($event)"
+    />
+  </div>
+
+  <bol-trait-list [traits]="traits()" (removed)="traitRemoved.emit($event)" />
+</div>
+
+<div class="sr-langues">
+  <div class="mb-2 flex items-center justify-between gap-2">
+    <p class="sr-sub">Langues</p>
+    <bol-langue-add-menu [langues]="languesDisponibles()" (added)="langueAdded.emit($event)" />
+  </div>
+
+  <bol-langue-list [langues]="langues()" (removed)="langueRemoved.emit($event)" />
+</div>

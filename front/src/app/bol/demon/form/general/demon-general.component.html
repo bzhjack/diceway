@@ -1,0 +1,64 @@
+<p class="dfp-section-eyebrow">
+  Général
+</p>
+
+<div class="grid gap-4 md:grid-cols-[140px_minmax(0,1fr)]" [formGroup]="form()">
+  <div class="dfp-avatar" (click)="avatarClick.emit()">
+    @if (avatarPreview()) {
+      <img
+        [src]="avatarPreview()!"
+        alt="Avatar démon"
+        class="h-full w-full object-cover"
+      />
+    } @else {
+      <div class="dfp-avatar-placeholder">
+        <mat-icon class="!text-3xl">image</mat-icon>
+        <span class="dfp-avatar-hint">Cliquer pour modifier</span>
+      </div>
+    }
+
+    <div class="dfp-avatar-overlay">
+      <span class="dfp-avatar-overlay-label">Modifier</span>
+    </div>
+  </div>
+
+  <div class="grid gap-3 md:grid-cols-2">
+    <mat-form-field subscriptSizing="dynamic">
+      <mat-label>Nom du démon</mat-label>
+      <input matInput id="nom" formControlName="nom" />
+    </mat-form-field>
+
+    <mat-form-field subscriptSizing="dynamic">
+      <mat-label>Catégorie</mat-label>
+      <mat-select inputId="id_categorie" formControlName="id_categorie" [compareWith]="compareById()">
+        @for (categorie of categories() ?? []; track categorie.id) {
+          <mat-option [value]="categorie.id">{{ categorie.categorie }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field subscriptSizing="dynamic">
+      <mat-label>Dégâts</mat-label>
+      <input matInput id="degats" formControlName="degats" />
+    </mat-form-field>
+
+    <div class="md:col-span-2">
+      <mat-form-field subscriptSizing="dynamic" class="w-full">
+        <mat-label>Commentaire de scène</mat-label>
+        <textarea
+          matInput
+          id="commentaire"
+          formControlName="commentaire"
+          rows="2"
+          class="resize-none"
+        ></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+@if (showValidationHint()) {
+  <p class="dfp-field-hint">
+    Le nom et la catégorie sont requis pour préparer le démon.
+  </p>
+}

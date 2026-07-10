@@ -1,0 +1,17 @@
+:host {
+  display: block;
+}
+
+.tl-trait-icon {
+  flex-shrink: 0;
+  margin-right: 0;
+  color: var(--dw-surface-500);
+}
+
+dw-collapsible-row.dw-row--positive .tl-trait-icon {
+  color: var(--dw-color-bonus);
+}
+
+dw-collapsible-row.dw-row--negative .tl-trait-icon {
+  color: var(--dw-color-echec);
+}

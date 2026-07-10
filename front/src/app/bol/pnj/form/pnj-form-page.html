@@ -1,0 +1,148 @@
+<section class="dw-page">
+  <div class="mx-auto flex max-w-7xl flex-col gap-4">
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <form class="dw-creation-form flex flex-col gap-6" [formGroup]="pnjForm" (ngSubmit)="savePnj()">
+          <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="pfp-icon">
+                  <mat-icon>manage_accounts</mat-icon>
+                </div>
+                <div class="space-y-1">
+                  <p class="pfp-eyebrow">
+                    {{ pageEyebrow() }}
+                  </p>
+                  <h1 class="pfp-title">
+                    {{ pageTitle() }}
+                  </h1>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-3 sm:flex-row md:justify-end">
+              <button mat-stroked-button type="button" [disabled]="pending()" (click)="goBack()">
+                <mat-icon>arrow_back</mat-icon> Retour
+              </button>
+
+              <button
+                mat-flat-button
+                type="submit"
+                [disabled]="pending() || loadingPnj() || pnjForm.invalid"
+              >
+                <mat-icon>save</mat-icon> {{ submitLabel() }}
+                @if (formDirty()) {
+                  <span class="pfp-dirty-dot" aria-label="Modifications non enregistrées"></span>
+                }
+              </button>
+            </div>
+          </div>
+
+          <div class="grid gap-4">
+            @if (loadingPnj()) {
+              <div class="dw-section--loading">
+                <p class="pfp-section-eyebrow">
+                  Chargement
+                </p>
+                <p class="pfp-loading-detail">
+                  Récupération du PNJ à modifier.
+                </p>
+              </div>
+            }
+
+            <div class="grid gap-4 xl:grid-cols-[260px_minmax(0,1fr)] xl:items-start">
+              <div class="dw-section--form pfp-rail-panel">
+                <bol-pnj-summary-rail
+                  [avatarPreview]="avatarPreview()"
+                  [pnjName]="pnjNom()"
+                  [typeLabel]="pnjTypeLabel()"
+                  [vitalite]="pnjVitalite()"
+                  [traits]="selectedTraitEntries()"
+                  [avantagesDisponibles]="filteredAvantages()"
+                  [desavantagesDisponibles]="filteredDesavantages()"
+                  [langues]="selectedLangues()"
+                  [languesDisponibles]="filteredLangues()"
+                  (avatarClick)="pickAvatar()"
+                  (traitAdded)="addTraitEntry($event)"
+                  (traitRemoved)="removeItem(traits, $event)"
+                  (langueAdded)="addLangueEntry($event)"
+                  (langueRemoved)="removeItem(langues, $event)"
+                />
+              </div>
+
+              <div class="flex min-w-0 flex-col gap-4">
+                <div class="grid gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] xl:items-stretch">
+                  <div class="dw-section--form pfp-panel--stretch">
+                    <bol-pnj-general
+                      [form]="pnjForm"
+                      [typeOptions]="typeOptions"
+                      [showValidationHint]="onError('nom') || onError('type')"
+                    />
+                  </div>
+
+                  <div class="dw-section--form pfp-panel--stretch">
+                    <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+                      <div class="flex items-center gap-2">
+                        <p class="pfp-section-eyebrow">
+                          Carrières
+                        </p>
+                        <dw-tag>{{ selectedCarrieres().length }} sélectionnée(s)</dw-tag>
+                      </div>
+
+                      <bol-carriere-add-menu [carrieres]="filteredCarrieres()" (added)="addCarriereEntry($event)" />
+                    </div>
+
+                    <bol-carriere-list [carrieres]="selectedCarrieres()" (removed)="removeItem(carrieres, $event)" />
+                  </div>
+                </div>
+
+                <div class="dw-section--form">
+                  <bol-stats-grid [form]="pnjForm" [groups]="pnjStatGroups" />
+                </div>
+
+                <div class="grid gap-4 xl:grid-cols-2 xl:items-start">
+                  <div class="dw-section--form">
+                    <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+                      <div class="flex items-center gap-2">
+                        <p class="pfp-section-eyebrow">
+                          Armes
+                        </p>
+                        <dw-tag>{{ selectedArmes().length }} sélectionnée(s)</dw-tag>
+                      </div>
+
+                      <bol-arme-add-menu [armes]="filteredArmes()" (added)="addArmeEntry($event)" />
+                    </div>
+
+                    <bol-arme-list [armes]="selectedArmes()" (removed)="removeItem(armes, $event)" />
+                  </div>
+
+                  <div class="dw-section--form">
+                    <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+                      <div class="flex items-center gap-2">
+                        <p class="pfp-section-eyebrow">
+                          Armures
+                        </p>
+                        <dw-tag>{{ selectedArmures().length }} sélectionnée(s)</dw-tag>
+                      </div>
+
+                      <bol-armure-add-menu [armures]="filteredArmures()" (added)="addArmureEntry($event)" />
+                    </div>
+
+                    <bol-armure-list [armures]="selectedArmures()" (removed)="removeItem(armures, $event)" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            @if (errorMessage()) {
+              <div class="pfp-error-box">
+                {{ errorMessage() }}
+              </div>
+            }
+          </div>
+
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>

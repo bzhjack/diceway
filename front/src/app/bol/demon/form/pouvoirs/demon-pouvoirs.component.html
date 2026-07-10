@@ -1,0 +1,12 @@
+<div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+  <div class="flex items-center gap-2">
+    <p class="dfp-section-eyebrow">
+      Pouvoirs infernaux
+    </p>
+    <dw-tag>{{ pouvoirs().length }} sélectionné(s)</dw-tag>
+  </div>
+
+  <bol-pouvoir-add-menu [pouvoirs]="pouvoirsDisponibles()" (added)="added.emit($event)" />
+</div>
+
+<bol-pouvoir-list [pouvoirs]="pouvoirs()" (removed)="removed.emit($event)" />

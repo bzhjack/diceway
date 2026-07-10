@@ -1,0 +1,40 @@
+<div class="flex flex-col gap-2">
+  @for (armure of armures(); track armure.id; let index = $index) {
+    <dw-collapsible-row
+      [expanded]="isExpanded(armure)"
+      [ariaLabel]="'Armure : ' + armure.label"
+      [label]="armure.label"
+      [stat]="armure.protection"
+      (toggled)="toggle(armure)"
+    >
+      <ng-container row-body>
+        @if (armure.protection) {
+          <p class="dw-entry-meta">
+            <span class="dw-entry-detail-title">Protection :</span>
+            {{ armure.protection }}
+          </p>
+        }
+        @if (armure.malus) {
+          <p class="dw-entry-meta">
+            <span class="dw-entry-detail-title">Malus :</span>
+            {{ armure.malus }}
+          </p>
+        }
+        @if (armure.ptsDePouvoir) {
+          <p class="dw-entry-meta">
+            <span class="dw-entry-detail-title">Points de pouvoir :</span>
+            {{ armure.ptsDePouvoir }}
+          </p>
+        }
+
+        <button mat-button type="button" class="dw-entry-delete-btn" (click)="removed.emit(index)">
+          <mat-icon>delete</mat-icon> Supprimer
+        </button>
+      </ng-container>
+    </dw-collapsible-row>
+  } @empty {
+    <p class="dw-entry-empty">
+      Ajoute l'armure ou les protections portées par le héros.
+    </p>
+  }
+</div>

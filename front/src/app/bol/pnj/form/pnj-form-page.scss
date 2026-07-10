@@ -1,0 +1,86 @@
+:host {
+  display: block;
+}
+
+.pfp-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 1px solid var(--dw-border);
+  background: #059669;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.pfp-eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: #6ee7b7;
+}
+
+.pfp-title {
+  margin: 0;
+  font-family: 'Muse Display Harmony';
+  font-size: 2.25rem;
+  line-height: 1;
+}
+
+.pfp-section-eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #6ee7b7;
+}
+
+dw-tag {
+  --p-tag-font-size: 0.7rem;
+}
+
+.pfp-loading-detail {
+  margin: 0;
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.75rem;
+  color: var(--dw-surface-700);
+}
+
+.pfp-error-box {
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  background: rgba(244, 63, 94, 0.1);
+  font-size: 0.875rem;
+  color: #fecdd3;
+}
+
+// Modificateurs de mise en page sur .dw-section--form (global, partagé entre
+// hero-form/creature-form/demon-form/pnj-form) : positionnement propre à cette
+// page uniquement, on n'étend pas la classe globale.
+.pfp-rail-panel {
+  @media (min-width: 1280px) {
+    position: sticky;
+    top: 1rem;
+  }
+}
+
+.pfp-panel--stretch {
+  @media (min-width: 1280px) {
+    height: 100%;
+  }
+}
+
+// Puce « modifications non enregistrées » — inline après le libellé
+// (le .mdc-button__label est position: relative, un absolu s'ancrerait sur le texte)
+.pfp-dirty-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dw-color-legendary);
+}

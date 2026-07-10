@@ -1,0 +1,94 @@
+:host {
+  display: block;
+}
+
+// ── Table scroll ──────────────────────────────────────────
+.weapon-table-scroll {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: calc(100vh - 19rem);
+}
+
+// ── Native table ──────────────────────────────────────────
+.bol-weapon-table {
+  width: 100%;
+  min-width: 60rem;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 0.6rem 1rem;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 0.875rem;
+    color: var(--dw-surface-700);
+    border-bottom: 1px solid var(--dw-surface-100);
+  }
+
+  th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--dw-surface-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background-color: var(--dw-surface-0);
+    border-bottom-width: 2px;
+    border-bottom-color: var(--dw-surface-100);
+  }
+
+  tbody tr:hover {
+    background-color: var(--dw-surface-50);
+  }
+
+  .weapon-col-compact {
+    width: 1%;
+    white-space: nowrap;
+  }
+
+  .weapon-col-range {
+    width: 10rem;
+    white-space: nowrap;
+  }
+}
+
+// ── Buttons ───────────────────────────────────────────────
+.weapon-btn-danger {
+  color: var(--mat-sys-error);
+}
+
+.weapon-action-btn {
+  margin-block: -8px;
+}
+
+// ── Formulaire & cellules (tons de texte) ──────────────────
+.alp-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #fcd34d;
+}
+
+.alp-form-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--dw-surface-800);
+}
+
+.alp-error {
+  font-size: 0.875rem;
+  color: #fda4af;
+}
+
+.alp-strong {
+  font-weight: 600;
+  color: var(--dw-surface-800);
+}
+
+.alp-muted-cell {
+  color: var(--dw-surface-600);
+}
