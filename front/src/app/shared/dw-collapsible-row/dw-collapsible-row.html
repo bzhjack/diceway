@@ -10,7 +10,13 @@
     (keydown.space)="onSpace($event)"
   >
     <mat-icon class="dw-row-chevron">chevron_right</mat-icon>
+    @if (label()) {
+      <span class="dw-row-label" [class.dw-row-label--grow]="labelGrows()">{{ label() }}</span>
+    }
     <ng-content select="[row-summary]" />
+    @if (stat()) {
+      <span class="dw-row-stat">{{ stat() }}</span>
+    }
   </div>
 
   @if (expanded()) {
@@ -20,6 +26,12 @@
   }
 } @else {
   <div class="dw-row-summary flex w-full min-w-0 items-center gap-2">
+    @if (label()) {
+      <span class="dw-row-label" [class.dw-row-label--grow]="labelGrows()">{{ label() }}</span>
+    }
     <ng-content select="[row-summary]" />
+    @if (stat()) {
+      <span class="dw-row-stat">{{ stat() }}</span>
+    }
   </div>
 }

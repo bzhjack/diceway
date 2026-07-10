@@ -11,7 +11,7 @@
 </button>
 
 <mat-menu #menu="matMenu" class="lam-panel">
-  <div class="lam-content flex flex-col gap-3 p-3" (click)="$event.stopPropagation()">
+  <div class="lam-content" (click)="$event.stopPropagation()">
     <mat-form-field subscriptSizing="dynamic">
       <mat-label>Langue</mat-label>
       <mat-select [formControl]="selectedId">

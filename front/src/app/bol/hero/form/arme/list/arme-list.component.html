@@ -3,30 +3,25 @@
     <dw-collapsible-row
       [expanded]="isExpanded(arme)"
       [ariaLabel]="'Arme : ' + arme.label"
+      [label]="arme.label"
+      [stat]="arme.degats"
       (toggled)="toggle(arme)"
     >
-      <ng-container row-summary>
-        <span class="dw-entry-label shrink-0">{{ arme.label }}</span>
-        @if (arme.degats) {
-          <span class="dw-entry-stat ml-auto min-w-0 truncate">{{ arme.degats }}</span>
-        }
-      </ng-container>
-
       <ng-container row-body>
         @if (arme.degats) {
-          <p class="dw-entry-meta m-0">
+          <p class="dw-entry-meta">
             <span class="dw-entry-detail-title">Dégâts :</span>
             {{ arme.degats }}
           </p>
         }
         @if (arme.portee) {
-          <p class="dw-entry-meta m-0">
+          <p class="dw-entry-meta">
             <span class="dw-entry-detail-title">Portée :</span>
             {{ arme.portee }}
           </p>
         }
         @if (arme.notes) {
-          <p class="dw-entry-meta m-0">
+          <p class="dw-entry-meta">
             <span class="dw-entry-detail-title">Notes :</span>
             {{ arme.notes }}
           </p>
@@ -38,7 +33,7 @@
       </ng-container>
     </dw-collapsible-row>
   } @empty {
-    <p class="dw-entry-empty m-0">
+    <p class="dw-entry-empty">
       Ajoute l'équipement offensif marquant du héros.
     </p>
   }

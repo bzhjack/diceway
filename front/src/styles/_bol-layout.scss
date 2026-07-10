@@ -64,6 +64,7 @@
 // traits) — variante texte simple, hors du composant : c'est le bloc @empty du
 // @for du composant liste, pas du contenu projeté dans dw-collapsible-row.
 .dw-entry-empty {
+  margin: 0;
   font-size: 0.875rem;
   line-height: 1.75rem;
   color: var(--dw-surface-500);

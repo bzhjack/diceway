@@ -64,6 +64,12 @@ When a task touches game rules, character creation, equipment, careers, language
 - Prefer inline templates for small components.
 - External templates/styles: use paths relative to the component `.ts` file.
 
+### Styling
+- If an element carries a custom (non-Tailwind) class alongside Tailwind utility classes, fold the utilities' styles into the custom class's CSS so the element ends up with only that one class (e.g. `class="dw-row-stat ml-auto min-w-0 truncate"` → move `margin-left`/`min-width`/`truncate` into `.dw-row-stat`, leaving `class="dw-row-stat"`).
+- Exception: shared cross-page layout primitives (`dw-section--form`, `dw-page`, …) may be combined with page-specific Tailwind utilities — don't fold page-specific composition into a primitive used by other pages. If a page needs its own variant, add a small local modifier class instead (e.g. `hfp-rail-panel` for `xl:sticky xl:top-4`).
+- An element with only Tailwind utility classes (no custom class) is fine as-is — this rule only applies once a custom class is already present.
+- Multiple custom classes together (e.g. BEM-style `hs-block hs-block--attr`) are not a violation — the rule targets mixing custom classes with Tailwind utilities, not custom classes with each other.
+
 ### State
 - Signals for local state; `computed()` for derived state.
 - Use `.update()` or `.set()` on signals — not `.mutate()`.

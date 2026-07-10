@@ -74,6 +74,39 @@
   border-top: 1px solid var(--dw-border);
 }
 
+// Libellé principal de la ligne — rendu par le composant lui-même via l'input
+// `label`, donc pas de souci de scope ici. Par défaut, largeur fixe (le stat
+// tronque en priorité) ; `--grow` inverse la priorité (cas carrières).
+.dw-row-label {
+  font-weight: 600;
+  color: var(--dw-surface-800);
+  font-size: 0.875rem;
+  flex-shrink: 0;
+
+  &--grow {
+    flex: 1 1 0%;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// Valeur affichée en bout de ligne (dégâts, protection, rang…) — rendue par le
+// composant lui-même via l'input `stat`, donc pas de souci de scope ici.
+.dw-row-stat {
+  margin-left: auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--dw-surface-500);
+  font-variant-numeric: tabular-nums;
+}
+
 // Typographie du contenu projeté dans [row-summary]/[row-body] (armes, armures,
 // langues, carrières, traits…). ::ng-deep est nécessaire : le contenu projeté
 // garde l'attribut de scope du composant appelant, pas celui de dw-collapsible-row,
@@ -83,18 +116,14 @@
     font-weight: 600;
     color: var(--dw-surface-800);
     font-size: 0.875rem;
-  }
-
-  .dw-entry-stat {
-    font-size: 0.875rem;
-    font-weight: 700;
-    line-height: 1.1;
-    color: var(--dw-surface-700);
-    font-variant-numeric: tabular-nums;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .dw-entry-meta {
     align-self: stretch;
+    margin: 0;
     font-size: 0.75rem;
     line-height: 1.5rem;
     color: var(--dw-surface-500);

@@ -3,18 +3,13 @@
     <dw-collapsible-row
       [expanded]="isExpanded(langue)"
       [ariaLabel]="'Langue : ' + langue.label"
+      [label]="langue.label"
+      [stat]="langue.estLemurienne ? 'Lémurienne' : null"
       (toggled)="toggle(langue)"
     >
-      <ng-container row-summary>
-        <span class="dw-entry-label shrink-0">{{ langue.label }}</span>
-        @if (langue.estLemurienne) {
-          <span class="dw-entry-stat ml-auto min-w-0 truncate">Lémurienne</span>
-        }
-      </ng-container>
-
       <ng-container row-body>
         @if (langue.description) {
-          <p class="dw-entry-meta m-0">{{ langue.description }}</p>
+          <p class="dw-entry-meta">{{ langue.description }}</p>
         }
 
         <button mat-button type="button" class="dw-entry-delete-btn" (click)="removed.emit(index)">
@@ -23,7 +18,7 @@
       </ng-container>
     </dw-collapsible-row>
   } @empty {
-    <p class="dw-entry-empty m-0">
+    <p class="dw-entry-empty">
       Ajoute les langues que le héros peut parler ou comprendre.
     </p>
   }

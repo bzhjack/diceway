@@ -11,7 +11,7 @@
 </button>
 
 <mat-menu #menu="matMenu" class="tam-panel">
-  <div class="tam-content flex flex-col gap-3 p-3" (click)="$event.stopPropagation()">
+  <div class="tam-content" (click)="$event.stopPropagation()">
     <mat-button-toggle-group
       class="w-full"
       [value]="menuType()"

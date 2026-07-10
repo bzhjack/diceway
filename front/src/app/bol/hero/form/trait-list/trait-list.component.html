@@ -8,12 +8,12 @@
     >
       <ng-container row-summary>
         <div class="tag_icon tl-trait-icon" [inlineSVG]="traitIconPath(trait.icon)"></div>
-        <span class="dw-entry-label truncate">{{ trait.label }}</span>
+        <span class="dw-entry-label">{{ trait.label }}</span>
       </ng-container>
 
       <ng-container row-body>
         @for (detail of trait.details; track detail.title + detail.description) {
-          <div class="dw-entry-meta m-0">
+          <div class="dw-entry-meta">
             <div class="dw-entry-detail-title">{{ detail.title }} :</div>
             <div>
             {{ detail.description }}
@@ -27,7 +27,7 @@
       </ng-container>
     </dw-collapsible-row>
   } @empty {
-    <p class="dw-entry-empty m-0">
+    <p class="dw-entry-empty">
       Ajoute les avantages et désavantages qui définissent le héros.
     </p>
   }

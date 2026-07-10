@@ -11,7 +11,7 @@
 </button>
 
 <mat-menu #menu="matMenu" class="cam-panel">
-  <div class="cam-content flex flex-col gap-3 p-3" (click)="$event.stopPropagation()">
+  <div class="cam-content" (click)="$event.stopPropagation()">
     <mat-form-field subscriptSizing="dynamic">
       <mat-label>Carrière</mat-label>
       <mat-select [formControl]="selectedId">

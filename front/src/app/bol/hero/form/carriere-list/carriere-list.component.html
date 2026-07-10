@@ -3,16 +3,14 @@
     <dw-collapsible-row
       [expanded]="isExpanded(carriere)"
       [ariaLabel]="'Carrière : ' + carriere.label"
+      [label]="carriere.label"
+      [labelGrows]="true"
+      [stat]="'Rang ' + carriere.rank.value"
       (toggled)="toggle(carriere)"
     >
-      <ng-container row-summary>
-        <span class="dw-entry-label min-w-0 flex-1 truncate">{{ carriere.label }}</span>
-        <span class="dw-entry-stat shrink-0">Rang {{ carriere.rank.value }}</span>
-      </ng-container>
-
       <ng-container row-body>
         @if (carriere.description) {
-          <p class="dw-entry-meta m-0">{{ carriere.description }}</p>
+          <p class="dw-entry-meta">{{ carriere.description }}</p>
         }
 
         <div class="cl-rank-row">
@@ -26,7 +24,7 @@
       </ng-container>
     </dw-collapsible-row>
   } @empty {
-    <p class="dw-entry-empty m-0">
+    <p class="dw-entry-empty">
       Ajoute les carrières qui résument le parcours du héros.
     </p>
   }
