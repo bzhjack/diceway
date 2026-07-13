@@ -207,7 +207,7 @@ Les meilleurs candidats à tester (logique pure, sans DOM) :
 | # | Chantier | Effort | Gain |
 |---|---|---|---|
 | 1 | ✅ ~~Helper d'erreur API unique + gestion d'erreur des deletes~~ (fait le 2026-07-13) | S | robustesse immédiate |
-| 2 | Typage services (`Observable<any>` → types réels) + `any` du state service | S | sécurité de type, mécanique |
+| 2 | ✅ ~~Typage services (`Observable<any>` → types réels) + `any` du state service~~ (fait le 2026-07-13) | S | sécurité de type, mécanique |
 | 3 | Factorisation form-pages (base + selection factory + trait utils) | L | −800 à −1000 lignes |
 | 4 | Factorisation library-pages (`refreshableResource`, `confirmDelete`, recherche, statblock dialog) | M | −400 lignes |
 | 5 | Add-menu générique | M | −6 dossiers de composants |

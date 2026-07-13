@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
+import {BolApiMessage} from '../models/bol-api.model';
 import {BolDemonCategorieModel, BolDemonModel, BolDemonPouvoirModel} from '../models/bol-demon.model';
 import {environment} from '../../../environments/environment';
 
@@ -37,7 +38,7 @@ export class BolDemonsService {
     return this.http.post<BolDemonModel>(`${environment.apiBase}/api/bol/demon/update`, demon);
   }
 
-  deleteDemon(id: string): Observable<BolDemonModel> {
-    return this.http.delete<BolDemonModel>(`${environment.apiBase}/api/bol/demon/delete/` + id);
+  deleteDemon(id: string): Observable<BolApiMessage> {
+    return this.http.delete<BolApiMessage>(`${environment.apiBase}/api/bol/demon/delete/` + id);
   }
 }

@@ -84,7 +84,7 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
   protected readonly heroId = computed(() => this.herosStateService.currentHeros()?.id);
   protected readonly currentRegion = this.herosStateService.currentHerosRegion;
   protected readonly carrieresList = this.herosStateService.carriereList;
-  protected readonly carriereDesavangeCount = this.herosStateService.carriereDesavangeCount;
+  protected readonly carriereDesavantageCount = this.herosStateService.carriereDesavantageCount;
   protected readonly carriereBudget = this.herosStateService.carriereBudget;
   protected readonly desavantagesList = this.herosStateService.desavantagesList;
   protected readonly availableCarrieres = computed(() => {
@@ -279,10 +279,10 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
         warnings.push({step: 'Carrières', warn: `Il manque ${budget - sum} point(s) dans les carrières (budget : ${budget}).`});
       }
 
-      if (this.carriereDesavangeCount()) {
+      if (this.carriereDesavantageCount()) {
         warnings.push({
           step: 'Traits',
-          warn: `Carrière dangereuse : il faut encore ${this.carriereDesavangeCount()} désavantage(s) supplémentaire(s).`,
+          warn: `Carrière dangereuse : il faut encore ${this.carriereDesavantageCount()} désavantage(s) supplémentaire(s).`,
         });
       }
 
@@ -313,7 +313,7 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
     }
 
     this.carriereWarns.set(warnings);
-    this.herosStateService.setwarnCarrieres(warnings);
+    this.herosStateService.setWarnCarrieres(warnings);
   }
 
   private removeCarriere(carriereId: number): void {

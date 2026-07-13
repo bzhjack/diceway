@@ -1,7 +1,17 @@
-import {computed, effect, inject, Injectable, signal} from '@angular/core';
+import {computed, inject, Injectable, signal} from '@angular/core';
 import {BolHerosService} from './bol-heros.service';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {BolHerosModel} from '../models/bol-heros.model';
+
+export interface HeroCreationWarning {
+  step: string;
+  warn: string;
+}
+
+export interface AttributModifier {
+  attr: string;
+  value: number;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +43,7 @@ export class BolHerosStateService {
     return (ids.includes(30) ? 1 : 0) + (ids.includes(44) ? 1 : 0);
   });
 
-  carriereDesavangeCount = computed(() => {
+  carriereDesavantageCount = computed(() => {
     let countDesavantage = 0;
     this.currentHerosCarrieres().forEach((carriere) => {
       switch (carriere.carriere_id) {
@@ -127,17 +137,17 @@ export class BolHerosStateService {
   );
 
   traitsModifiers = computed(() => {
-    const modifiers: any[] = [];
-    this.currentHeroAvantages().map((trait) => {
+    const modifiers: AttributModifier[] = [];
+    this.currentHeroAvantages().forEach((trait) => {
         const trt = this.avantagesList()?.filter((item) => item.attribut !== null)?.find((item) => Number(item.id) === Number(trait.traitable_id));
-        if (trt) {
-          modifiers.push({attr:trt.attribut, value: Number(trt.attribut_bonus)});
+        if (trt?.attribut) {
+          modifiers.push({attr: trt.attribut, value: Number(trt.attribut_bonus)});
         }
     });
-    this.currentHeroDesavantages().map((trait) => {
+    this.currentHeroDesavantages().forEach((trait) => {
       const trt = this.desavantagesList()?.filter((item) => item.attribut !== null)?.find((item) => Number(item.id) === Number(trait.traitable_id));
-      if (trt) {
-        modifiers.push({attr:trt.attribut, value: Number(trt.attribut_malus)});
+      if (trt?.attribut) {
+        modifiers.push({attr: trt.attribut, value: Number(trt.attribut_malus)});
       }
     });
     if (this.heroismCost() > 0) {
@@ -165,39 +175,36 @@ export class BolHerosStateService {
     return modifiers;
   });
 
-  warnTraits = signal([]);
-  warnAttrs = signal([]);
-  warnCombat = signal([]);
-  warnCarrieres = signal([]);
-  warnOrigines = signal([]);
-  warnLangues = signal([]);
-  warnCount= computed(() =>
+  warnTraits = signal<HeroCreationWarning[]>([]);
+  warnAttrs = signal<HeroCreationWarning[]>([]);
+  warnCombat = signal<HeroCreationWarning[]>([]);
+  warnCarrieres = signal<HeroCreationWarning[]>([]);
+  warnOrigines = signal<HeroCreationWarning[]>([]);
+  warnLangues = signal<HeroCreationWarning[]>([]);
+  warnCount = computed(() =>
     this.warnTraits().length +
     this.warnAttrs().length +
     this.warnCombat().length +
     this.warnCarrieres().length +
     this.warnOrigines().length +
     this.warnLangues().length);
-  constructor() {
-    effect(() => this.currentHeros());
-  }
 
-  setWarnTraits(traits: any) {
+  setWarnTraits(traits: HeroCreationWarning[]) {
     this.warnTraits.set(traits);
   }
-  setWarnAttrs(attr: any) {
-    this.warnAttrs.set(attr);
+  setWarnAttrs(attrs: HeroCreationWarning[]) {
+    this.warnAttrs.set(attrs);
   }
-  setWarnCombat(combat: any) {
+  setWarnCombat(combat: HeroCreationWarning[]) {
     this.warnCombat.set(combat);
   }
-  setWarnOrigines(origines: any) {
+  setWarnOrigines(origines: HeroCreationWarning[]) {
     this.warnOrigines.set(origines);
   }
-  setwarnCarrieres(carrieres: any) {
+  setWarnCarrieres(carrieres: HeroCreationWarning[]) {
     this.warnCarrieres.set(carrieres);
   }
-  setWarnLangues(langues: any) {
+  setWarnLangues(langues: HeroCreationWarning[]) {
     this.warnLangues.set(langues);
   }
   clearWarnings() {

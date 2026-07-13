@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
+import {BolApiMessage} from "../models/bol-api.model";
 import {BolCreatureCapaciteModel, BolCreatureModel, BolCreatureTailleModel} from "../models/bol-creature.model";
 import {environment} from '../../../environments/environment';
 
@@ -41,7 +42,7 @@ export class BolCreaturesService {
     return this.http.post<BolCreatureModel>(`${environment.apiBase}/api/bol/creature/update`, creature);
   }
 
-  deleteCreature(id: string): Observable<any> {
-    return this.http.delete<BolCreatureModel>(`${environment.apiBase}/api/bol/creature/delete/` + id);
+  deleteCreature(id: string): Observable<BolApiMessage> {
+    return this.http.delete<BolApiMessage>(`${environment.apiBase}/api/bol/creature/delete/` + id);
   }
 }

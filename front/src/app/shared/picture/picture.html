@@ -3,7 +3,7 @@
 <mat-dialog-content>
   <div class="flex flex-col gap-4 p-2">
     <div class="flex w-full items-center justify-between gap-3">
-      @if (imageChangedEvent) {
+      @if (hasImage) {
         <button mat-stroked-button size="small" (click)="file.click()">
           <mat-icon>upload</mat-icon> Importer une image
         </button>
@@ -31,12 +31,13 @@
       />
     </div>
 
-    @if (imageChangedEvent) {
+    @if (hasImage) {
       <div class="picture-body">
         <div class="cropper-shell">
           <image-cropper
             [transform]="transform"
             [imageChangedEvent]="imageChangedEvent"
+            [imageFile]="imageFile ?? undefined"
             [maintainAspectRatio]="true"
             [aspectRatio]="1 / 1"
             [backgroundColor]="'#111827'"
