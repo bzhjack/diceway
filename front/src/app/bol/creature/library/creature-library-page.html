@@ -56,13 +56,7 @@
       <!-- Grille de cartes -->
       <div class="creature-grid-scroll">
         <div class="creature-grid">
-          @for (creature of filteredCreatures(); track creature.id; let i = $index) {
-            @if (showGroupHeader(i)) {
-              <div class="creature-group-header">
-                <span class="creature-group-header__eyebrow">Taille</span>
-                <span class="creature-group-header__value">{{ creature.taille.taille }}</span>
-              </div>
-            }
+          @for (creature of filteredCreatures(); track creature.id) {
             <bol-creature-card
               [creature]="creature"
               (deleteRequested)="askDelete(creature)"

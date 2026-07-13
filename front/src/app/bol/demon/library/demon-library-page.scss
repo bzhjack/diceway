@@ -44,32 +44,3 @@ $demon-border: #3f3f46;
   font-size: 0.875rem;
   color: var(--dw-surface-500);
 }
-
-// ── Group header ──────────────────────────────────────────
-.demon-group-header {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  padding: 0.5rem 0.1rem;
-
-  &:not(:first-child) {
-    margin-top: 0.5rem;
-    border-top: 1px solid #{$demon-border};
-    padding-top: 1rem;
-  }
-}
-
-.demon-group-header__eyebrow {
-  font-size: 0.75rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.24em;
-  color: #fda4af;
-}
-
-.demon-group-header__value {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--dw-surface-900);
-}

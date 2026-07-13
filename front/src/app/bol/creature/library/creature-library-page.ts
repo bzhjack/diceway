@@ -90,9 +90,9 @@ export class CreatureLibraryPageComponent {
         );
       })
       .sort((left, right) => {
-        const sizeCompare = Number(left.id_taille) - Number(right.id_taille);
-        if (sizeCompare !== 0) {
-          return sizeCompare;
+        const ownCompare = (left.user_id ? 0 : 1) - (right.user_id ? 0 : 1);
+        if (ownCompare !== 0) {
+          return ownCompare;
         }
 
         return left.nom.localeCompare(right.nom);
@@ -100,11 +100,6 @@ export class CreatureLibraryPageComponent {
   );
   protected readonly creatureCount = computed(() => this.filteredCreatures().length);
   protected readonly totalCreatureCount = computed(() => this.creatures().length);
-
-  protected showGroupHeader(index: number): boolean {
-    const creatures = this.filteredCreatures();
-    return index === 0 || creatures[index - 1].id_taille !== creatures[index].id_taille;
-  }
 
   protected askDelete(creature: BolCreatureModel): void {
     this.dialog

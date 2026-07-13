@@ -1,4 +1,4 @@
-<article class="creature-card">
+<article class="creature-card" [class.creature-card--own]="creature().user_id">
   <button
     type="button"
     class="creature-card__portrait"
@@ -6,9 +6,12 @@
     [attr.aria-label]="'Ouvrir le statbloc de ' + creature().nom"
   >
     <img [src]="image()" [alt]="creature().nom" class="creature-card__img" />
-    @if (creature().user_id) {
-      <span class="creature-card__badge">Création</span>
-    }
+    <span
+      class="creature-card__badge"
+      [class.creature-card__badge--coriace]="creature().taille.type === 'C'"
+      [class.creature-card__badge--rival]="creature().taille.type === 'R'"
+      [class.creature-card__badge--pietaille]="creature().taille.type === 'P'"
+    >{{ creature().taille.taille }}</span>
   </button>
 
   <div class="creature-card__body">
@@ -37,7 +40,6 @@
           </div>
         }
       </div>
-      <p class="creature-card__meta">{{ creature().taille.taille }}</p>
     </div>
 
     <div class="creature-card__gauges">

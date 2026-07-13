@@ -1,9 +1,12 @@
-<article class="demon-card">
+<article class="demon-card" [class.demon-card--own]="demon().user_id">
   <div class="demon-card__portrait">
     <img [src]="image()" [alt]="demon().nom" class="demon-card__img" />
-    @if (demon().user_id) {
-      <span class="demon-card__badge">Création</span>
-    }
+    <span
+      class="demon-card__badge"
+      [class.demon-card__badge--coriace]="demon().categorie.type === 'C'"
+      [class.demon-card__badge--rival]="demon().categorie.type === 'R'"
+      [class.demon-card__badge--pietaille]="demon().categorie.type === 'P'"
+    >{{ demon().categorie.categorie }}</span>
   </div>
 
   <div class="demon-card__body">
@@ -32,7 +35,6 @@
           </div>
         }
       </div>
-      <p class="demon-card__meta">{{ demon().categorie.categorie }}</p>
     </div>
 
     <div class="demon-card__gauges">

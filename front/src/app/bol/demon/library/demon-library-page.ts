@@ -79,9 +79,9 @@ export class DemonLibraryPageComponent {
         );
       })
       .sort((left, right) => {
-        const categoryCompare = Number(left.id_categorie) - Number(right.id_categorie);
-        if (categoryCompare !== 0) {
-          return categoryCompare;
+        const ownCompare = (left.user_id ? 0 : 1) - (right.user_id ? 0 : 1);
+        if (ownCompare !== 0) {
+          return ownCompare;
         }
 
         return left.nom.localeCompare(right.nom);
@@ -89,11 +89,6 @@ export class DemonLibraryPageComponent {
   );
   protected readonly demonCount = computed(() => this.filteredDemons().length);
   protected readonly totalDemonCount = computed(() => this.demons().length);
-
-  protected showGroupHeader(index: number): boolean {
-    const demons = this.filteredDemons();
-    return index === 0 || demons[index - 1].id_categorie !== demons[index].id_categorie;
-  }
 
   protected askDelete(demon: BolDemonModel): void {
     this.dialog

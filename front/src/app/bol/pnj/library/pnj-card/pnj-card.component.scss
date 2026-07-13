@@ -15,6 +15,15 @@
   }
 }
 
+.pnj-card--own {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.16), rgb(51 65 85 / 0.35) 60%);
+  border-color: rgba(167, 139, 250, 0.4);
+
+  &:hover {
+    border-color: rgba(167, 139, 250, 0.65);
+  }
+}
+
 .pnj-card__portrait {
   position: relative;
   aspect-ratio: 1 / 1;

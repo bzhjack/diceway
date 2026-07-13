@@ -89,7 +89,14 @@ export class PnjLibraryPageComponent {
 
         return searchValues.some((value) => value?.toLocaleLowerCase().includes(term));
       })
-      .sort((left, right) => (left.origines.nom ?? '').localeCompare(right.origines.nom ?? '')),
+      .sort((left, right) => {
+        const ownCompare = (left.user_id ? 0 : 1) - (right.user_id ? 0 : 1);
+        if (ownCompare !== 0) {
+          return ownCompare;
+        }
+
+        return (left.origines.nom ?? '').localeCompare(right.origines.nom ?? '');
+      }),
   );
   protected readonly pnjCount = computed(() => this.filteredPnjs().length);
   protected readonly totalPnjCount = computed(() => this.pnjs().length);

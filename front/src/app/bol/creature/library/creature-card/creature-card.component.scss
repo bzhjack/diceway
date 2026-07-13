@@ -15,6 +15,15 @@
   }
 }
 
+.creature-card--own {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.16), rgb(51 65 85 / 0.35) 60%);
+  border-color: rgba(167, 139, 250, 0.4);
+
+  &:hover {
+    border-color: rgba(167, 139, 250, 0.65);
+  }
+}
+
 .creature-card__portrait {
   position: relative;
   aspect-ratio: 1 / 1;
@@ -59,9 +68,22 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   background: rgba(15, 23, 42, 0.85);
-  color: var(--dw-color-legendary);
-  border: 1px solid var(--dw-color-legendary);
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.6);
+
+  &--coriace {
+    color: #fbbf24;
+    border: 1px solid #fbbf24;
+  }
+
+  &--rival {
+    color: #fb7185;
+    border: 1px solid #fb7185;
+  }
+
+  &--pietaille {
+    color: #94a3b8;
+    border: 1px solid #94a3b8;
+  }
 }
 
 .creature-card__body {
@@ -97,15 +119,6 @@
   font-weight: 800;
   line-height: 1.2;
   color: var(--dw-surface-800);
-}
-
-.creature-card__meta {
-  margin: 0.1rem 0 0;
-  font-size: 0.68rem;
-  color: var(--dw-surface-500);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .creature-card__actions {

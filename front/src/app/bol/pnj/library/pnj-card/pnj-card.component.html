@@ -1,4 +1,4 @@
-<article class="pnj-card">
+<article class="pnj-card" [class.pnj-card--own]="pnj().user_id">
   <div class="pnj-card__portrait">
     <img [src]="image()" [alt]="pnj().origines.nom ?? 'PNJ'" class="pnj-card__img" />
     @if (typeLabel()) {
