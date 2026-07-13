@@ -63,13 +63,7 @@
       <!-- Grille de cartes -->
       <div class="pnj-grid-scroll">
         <div class="pnj-grid">
-          @for (pnj of filteredPnjs(); track pnj.id; let i = $index) {
-            @if (showGroupHeader(i)) {
-              <div class="pnj-group-header">
-                <span class="pnj-group-header__eyebrow">Type</span>
-                <span class="pnj-group-header__value">{{ typeLabel(pnj.type) }}</span>
-              </div>
-            }
+          @for (pnj of filteredPnjs(); track pnj.id) {
             <bol-pnj-card [pnj]="pnj" (deleteRequested)="askDelete(pnj)" />
           } @empty {
             <p class="pnj-grid__empty">Aucun PNJ ne correspond à cette recherche.</p>

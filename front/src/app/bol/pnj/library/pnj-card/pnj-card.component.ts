@@ -26,6 +26,19 @@ export function pnjImage(pnj: BolHerosModel): string {
   return pnj.origines.avatar || '/assets/bol/empty-avatar.jpg';
 }
 
+export function pnjTypeLabel(type: string | null | undefined): string {
+  switch (type) {
+    case 'C':
+      return 'Coriace';
+    case 'R':
+      return 'Rival';
+    case 'P':
+      return 'Piétaille';
+    default:
+      return '';
+  }
+}
+
 @Component({
   selector: 'bol-pnj-card',
   imports: [RouterLink, MatButtonModule, MatIconModule, MatTooltipModule],
@@ -39,6 +52,10 @@ export class PnjCardComponent {
 
   protected image(): string {
     return pnjImage(this.pnj());
+  }
+
+  protected typeLabel(): string {
+    return pnjTypeLabel(this.pnj().type);
   }
 
   protected meta(): string {

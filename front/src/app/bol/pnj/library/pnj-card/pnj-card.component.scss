@@ -40,6 +40,35 @@
   object-fit: cover;
 }
 
+.pnj-card__badge {
+  position: absolute;
+  bottom: 0.4rem;
+  left: 0.4rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.58rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: rgba(15, 23, 42, 0.85);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.6);
+
+  &--coriace {
+    color: #fbbf24;
+    border: 1px solid #fbbf24;
+  }
+
+  &--rival {
+    color: #fb7185;
+    border: 1px solid #fb7185;
+  }
+
+  &--pietaille {
+    color: #94a3b8;
+    border: 1px solid #94a3b8;
+  }
+}
+
 .pnj-card__body {
   flex: 1;
   min-width: 0;

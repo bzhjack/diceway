@@ -1,6 +1,14 @@
 <article class="pnj-card">
   <div class="pnj-card__portrait">
     <img [src]="image()" [alt]="pnj().origines.nom ?? 'PNJ'" class="pnj-card__img" />
+    @if (typeLabel()) {
+      <span
+        class="pnj-card__badge"
+        [class.pnj-card__badge--coriace]="pnj().type === 'C'"
+        [class.pnj-card__badge--rival]="pnj().type === 'R'"
+        [class.pnj-card__badge--pietaille]="pnj().type === 'P'"
+      >{{ typeLabel() }}</span>
+    }
   </div>
 
   <div class="pnj-card__body">

@@ -17,7 +17,7 @@ import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-lib
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
 import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {startWith, switchMap} from 'rxjs';
-import {PnjCardComponent, pnjLanguagesText} from './pnj-card/pnj-card.component';
+import {PnjCardComponent, pnjLanguagesText, pnjTypeLabel} from './pnj-card/pnj-card.component';
 
 type PnjType = 'P' | 'C' | 'R';
 
@@ -83,28 +83,16 @@ export class PnjLibraryPageComponent {
           pnj.origines.nom,
           pnj.origines.commentaire,
           pnj.origines.region?.region,
-          this.typeLabel(pnj.type),
+          pnjTypeLabel(pnj.type),
           pnjLanguagesText(pnj),
         ];
 
         return searchValues.some((value) => value?.toLocaleLowerCase().includes(term));
       })
-      .sort((left, right) => {
-        const typeCompare = this.typeOrder(left.type) - this.typeOrder(right.type);
-        if (typeCompare !== 0) {
-          return typeCompare;
-        }
-
-        return (left.origines.nom ?? '').localeCompare(right.origines.nom ?? '');
-      }),
+      .sort((left, right) => (left.origines.nom ?? '').localeCompare(right.origines.nom ?? '')),
   );
   protected readonly pnjCount = computed(() => this.filteredPnjs().length);
   protected readonly totalPnjCount = computed(() => this.pnjs().length);
-
-  protected showGroupHeader(index: number): boolean {
-    const pnjs = this.filteredPnjs();
-    return index === 0 || pnjs[index - 1].type !== pnjs[index].type;
-  }
 
   protected askDelete(pnj: BolHerosModel): void {
     this.dialog
@@ -128,32 +116,6 @@ export class PnjLibraryPageComponent {
     this.searchTerm.set('');
     this.searchType.set('');
     this.onlyCreations.set(false);
-  }
-
-  protected typeLabel(type: string | null | undefined): string {
-    switch (type) {
-      case 'C':
-        return 'Coriaces';
-      case 'R':
-        return 'Rivaux';
-      case 'P':
-        return 'Pietaille';
-      default:
-        return 'Profils';
-    }
-  }
-
-  private typeOrder(type: string | null | undefined): number {
-    switch (type) {
-      case 'C':
-        return 1;
-      case 'R':
-        return 2;
-      case 'P':
-        return 3;
-      default:
-        return 99;
-    }
   }
 
   private deletePnj(pnj: BolHerosModel): void {
