@@ -1,54 +1,30 @@
-import {Location} from '@angular/common';
-import {ChangeDetectionStrategy, Component, Signal, computed, effect, inject, signal} from '@angular/core';
-import {toSignal} from '@angular/core/rxjs-interop';
-import {FormArray, FormBuilder, FormControl, PristineChangeEvent, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Observable, filter, map, startWith, take} from 'rxjs';
-import {finalize} from 'rxjs/operators';
+import {ChangeDetectionStrategy, Component, computed, inject} from '@angular/core';
+import {FormArray, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Observable, take} from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
-import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
-import {BolArmureModel} from '../../models/bol-armure.model';
-import {BolArmeModel} from '../../models/bol-arme.model';
-import {BolAvantageModel} from '../../models/bol-avantage.model';
-import {BolCarriereModel} from '../../models/bol-carriere.model';
-import {BolDesavantageModel} from '../../models/bol-desavantage.model';
 import {BolHerosModel} from '../../models/bol-heros.model';
-import {BolLangueModel} from '../../models/bol-langue.model';
 import {BolRegionModel} from '../../models/bol-region.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolHerosService} from '../../services/bol-heros.service';
-import {extractApiErrorMessage} from '../../../core/api-error.utils';
-import {HasPendingChanges} from '../../../core/pending-changes.guard';
 import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
-import {PictureComponent} from '../../../shared/picture/picture';
 import {ArmeAddMenuComponent} from '../../shared/arme/add-menu/arme-add-menu.component';
 import {ArmeEntry, ArmeListComponent} from '../../shared/arme/list/arme-list.component';
 import {ArmureAddMenuComponent} from '../../shared/armure/add-menu/armure-add-menu.component';
 import {ArmureEntry, ArmureListComponent} from '../../shared/armure/list/armure-list.component';
 import {CarriereAddMenuComponent} from '../../shared/carriere/add-menu/carriere-add-menu.component';
 import {CarriereEntry, CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
-import {HeroGeneralComponent} from './general/general.component';
+import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
+import {IdDraft, RankedDraft, availableCatalog, referencedIds, selectedEntries} from '../../shared/form/form-selection';
+import {controlValueSignal, formArrayValueSignal, formDirtySignal} from '../../shared/form/form-signals';
 import {LangueEntry} from '../../shared/langue/list/langue-list.component';
 import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
-import {HeroSummaryRailComponent} from './summary-rail/summary-rail.component';
 import {TraitAddEvent} from '../../shared/trait/add-menu/trait-add-menu.component';
-import {TraitDetail, TraitEntry} from '../../shared/trait/list/trait-list.component';
-import {TraitIcon, traitIconType} from '../../shared/trait-icon';
-
-interface HeroSimpleDraft {
-  id: number;
-}
-
-interface HeroCarriereDraft extends HeroSimpleDraft {
-  value: number;
-}
-
-interface HeroTraitDraft extends HeroSimpleDraft {
-  type: 'A' | 'D';
-}
+import {TraitDraft, traitEntriesSignal} from '../../shared/trait/trait-entry.utils';
+import {HeroGeneralComponent} from './general/general.component';
+import {HeroSummaryRailComponent} from './summary-rail/summary-rail.component';
 
 const HERO_STAT_GROUPS: readonly StatGroup[] = [
   {
@@ -88,6 +64,20 @@ const HERO_STAT_GROUPS: readonly StatGroup[] = [
   },
 ];
 
+const HERO_FORM_LABELS: EntityFormLabels = {
+  createTitle: 'Nouveau héros',
+  editTitle: 'Modifier le héros',
+  createEyebrow: 'Galerie BOL',
+  editEyebrow: 'Édition galerie BOL',
+  createSubmitLabel: 'Créer le brouillon',
+  editSubmitLabel: 'Enregistrer',
+  loadError: 'Le chargement du héros a échoué.',
+  createError: 'La création du héros a échoué.',
+  updateError: 'La mise à jour du héros a échoué.',
+  unsavedChanges: 'Ce héros a des changements non sauvegardés. Quitter sans enregistrer ?',
+  avatarDialogTitle: 'Avatar du héros',
+};
+
 @Component({
   selector: 'bol-hero-form-page',
   imports: [
@@ -114,17 +104,9 @@ const HERO_STAT_GROUPS: readonly StatGroup[] = [
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeroFormPageComponent implements HasPendingChanges {
+export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel> {
   private readonly herosService = inject(BolHerosService);
   private readonly herosStateService = inject(BolHerosStateService);
-  private readonly formBuilder = inject(FormBuilder);
-  private readonly route = inject(ActivatedRoute);
-  private readonly location = inject(Location);
-  private readonly router = inject(Router);
-  private readonly dialog = inject(MatDialog);
-  private readonly routeParamMap = toSignal(this.route.paramMap, {
-    initialValue: this.route.snapshot.paramMap,
-  });
 
   protected readonly armesList = this.herosStateService.armeList;
   protected readonly armuresList = this.herosStateService.armureList;
@@ -134,28 +116,8 @@ export class HeroFormPageComponent implements HasPendingChanges {
   protected readonly desavantagesList = this.herosStateService.desavantagesList;
   protected readonly regionList = this.herosStateService.regionList;
 
-  protected readonly errorMessage = signal<string | null>(null);
-  protected readonly pending = signal(false);
-  protected readonly loadingHero = signal(false);
-  protected readonly returnUrl = signal<string | null>(this.readReturnUrl());
-  protected readonly heroId = computed(() => this.routeParamMap().get('id'));
-  protected readonly editMode = computed(() => Boolean(this.heroId()));
-  protected readonly pageTitle = computed(() =>
-    this.editMode() ? 'Modifier le héros' : 'Nouveau héros',
-  );
-  protected readonly pageEyebrow = computed(() =>
-    this.editMode() ? 'Édition galerie BOL' : 'Galerie BOL',
-  );
-  protected readonly submitLabel = computed(() => {
-    if (this.pending()) {
-      return 'Enregistrement...';
-    }
-
-    return this.editMode() ? 'Enregistrer' : 'Créer le brouillon';
-  });
-  protected readonly activateDisabled = computed(
-    () => this.pending() || this.loadingHero() || this.heroForm.invalid || this.heroForm.controls.active.value,
-  );
+  protected readonly labels = HERO_FORM_LABELS;
+  protected readonly heroStatGroups = HERO_STAT_GROUPS;
 
   protected readonly heroForm = this.formBuilder.group({
     id: this.formBuilder.control<string | null>(null),
@@ -187,170 +149,88 @@ export class HeroFormPageComponent implements HasPendingChanges {
     traits: this.formBuilder.array([]),
   });
 
-  protected readonly compareById = (a: number | string | null, b: number | string | null): boolean =>
-    Number(a) === Number(b);
-
-  protected readonly heroStatGroups = HERO_STAT_GROUPS;
-
-  private controlValueSignal<T>(control: FormControl<T>): Signal<T> {
-    return toSignal(control.valueChanges.pipe(startWith(control.value)), {initialValue: control.value});
+  protected get entityForm() {
+    return this.heroForm;
   }
 
-  protected readonly avatarPreview = this.controlValueSignal(this.heroForm.controls.avatar);
-  protected readonly heroNom = this.controlValueSignal(this.heroForm.controls.nom);
-  protected readonly heroJoueur = this.controlValueSignal(this.heroForm.controls.joueur);
-  protected readonly heroVitalite = this.controlValueSignal(this.heroForm.controls.vitalite);
-  protected readonly heroHeroisme = this.controlValueSignal(this.heroForm.controls.heroisme);
+  protected readonly formDirty = formDirtySignal(this.heroForm);
 
-  protected readonly formDirty = toSignal(
-    this.heroForm.events.pipe(
-      filter((event): event is PristineChangeEvent => event instanceof PristineChangeEvent),
-      map((event) => !event.pristine),
-    ),
-    {initialValue: false},
-  );
-  protected readonly selectedArmesDraft = toSignal(
-    this.armes.valueChanges.pipe(startWith(this.armes.getRawValue())),
-    {initialValue: this.armes.getRawValue()},
-  );
-  protected readonly selectedArmuresDraft = toSignal(
-    this.armures.valueChanges.pipe(startWith(this.armures.getRawValue())),
-    {initialValue: this.armures.getRawValue()},
-  );
-  protected readonly selectedCarrieresDraft = toSignal(
-    this.carrieres.valueChanges.pipe(startWith(this.carrieres.getRawValue())),
-    {initialValue: this.carrieres.getRawValue()},
-  );
-  protected readonly selectedLanguesDraft = toSignal(
-    this.langues.valueChanges.pipe(startWith(this.langues.getRawValue())),
-    {initialValue: this.langues.getRawValue()},
-  );
-  protected readonly selectedTraitsDraft = toSignal(
-    this.traits.valueChanges.pipe(startWith(this.traits.getRawValue())),
-    {initialValue: this.traits.getRawValue()},
+  protected readonly activateDisabled = computed(
+    () => this.pending() || this.loading() || this.heroForm.invalid || this.heroForm.controls.active.value,
   );
 
-  protected readonly filteredArmes = computed(() => {
-    const ids = new Set((this.selectedArmesDraft() ?? []).map((item: HeroSimpleDraft) => Number(item.id)));
-    return (this.armesList() ?? []).filter((arme: BolArmeModel) => !ids.has(Number(arme.id)));
-  });
-  protected readonly filteredArmures = computed(() => {
-    const ids = new Set((this.selectedArmuresDraft() ?? []).map((item: HeroSimpleDraft) => Number(item.id)));
-    return (this.armuresList() ?? []).filter((armure: BolArmureModel) => !ids.has(Number(armure.id)));
-  });
-  protected readonly filteredCarrieres = computed(() => {
-    const ids = new Set((this.selectedCarrieresDraft() ?? []).map((item: HeroCarriereDraft) => Number(item.id)));
-    return (this.carrieresList() ?? []).filter((carriere: BolCarriereModel) => !ids.has(Number(carriere.id)));
-  });
-  protected readonly filteredLangues = computed(() => {
-    const ids = new Set((this.selectedLanguesDraft() ?? []).map((item: HeroSimpleDraft) => Number(item.id)));
-    return (this.languesList() ?? []).filter((langue: BolLangueModel) => !ids.has(Number(langue.id)));
-  });
-  protected readonly filteredAvantages = computed(() => {
-    const ids = new Set(
-      (this.selectedTraitsDraft() ?? [])
-        .filter((item: HeroTraitDraft) => item.type === 'A')
-        .map((item: HeroTraitDraft) => Number(item.id)),
-    );
-    return (this.avantagesList() ?? []).filter((avantage: BolAvantageModel) => !ids.has(Number(avantage.id)));
-  });
-  protected readonly filteredDesavantages = computed(() => {
-    const ids = new Set(
-      (this.selectedTraitsDraft() ?? [])
-        .filter((item: HeroTraitDraft) => item.type === 'D')
-        .map((item: HeroTraitDraft) => Number(item.id)),
-    );
-    return (this.desavantagesList() ?? []).filter(
-      (desavantage: BolDesavantageModel) => !ids.has(Number(desavantage.id)),
-    );
-  });
+  protected readonly avatarPreview = controlValueSignal(this.heroForm.controls.avatar);
+  protected readonly heroNom = controlValueSignal(this.heroForm.controls.nom);
+  protected readonly heroJoueur = controlValueSignal(this.heroForm.controls.joueur);
+  protected readonly heroVitalite = controlValueSignal(this.heroForm.controls.vitalite);
+  protected readonly heroHeroisme = controlValueSignal(this.heroForm.controls.heroisme);
 
-  protected readonly selectedArmes = computed(() =>
-    (this.selectedArmesDraft() ?? [])
-      .map((entry: HeroSimpleDraft) =>
-        (this.armesList() ?? []).find((arme: BolArmeModel) => Number(arme.id) === Number(entry.id)),
-      )
-      .filter((arme: BolArmeModel | undefined): arme is BolArmeModel => Boolean(arme))
-      .map((arme: BolArmeModel): ArmeEntry => ({
-        id: Number(arme.id),
-        label: arme.arme,
-        degats: arme.degats,
-        portee: arme.portee,
-        notes: arme.notes,
-      })),
-  );
-  protected readonly selectedArmures = computed(() =>
-    (this.selectedArmuresDraft() ?? [])
-      .map((entry: HeroSimpleDraft) =>
-        (this.armuresList() ?? []).find((armure: BolArmureModel) => Number(armure.id) === Number(entry.id)),
-      )
-      .filter((armure: BolArmureModel | undefined): armure is BolArmureModel => Boolean(armure))
-      .map((armure: BolArmureModel): ArmureEntry => ({
-        id: Number(armure.id),
-        label: armure.armure,
-        protection: armure.protection,
-        malus: armure.malus,
-        ptsDePouvoir: armure.pts_de_pouvoir,
-      })),
-  );
-  protected readonly selectedCarrieres = computed(() =>
-    (this.selectedCarrieresDraft() ?? [])
-      .map((entry: HeroCarriereDraft, index: number) => {
-        const definition = (this.carrieresList() ?? []).find(
-          (carriere: BolCarriereModel) => Number(carriere.id) === Number(entry.id),
-        );
+  protected readonly selectedArmesDraft = formArrayValueSignal<IdDraft>(this.armes);
+  protected readonly selectedArmuresDraft = formArrayValueSignal<IdDraft>(this.armures);
+  protected readonly selectedCarrieresDraft = formArrayValueSignal<RankedDraft>(this.carrieres);
+  protected readonly selectedLanguesDraft = formArrayValueSignal<IdDraft>(this.langues);
+  protected readonly selectedTraitsDraft = formArrayValueSignal<TraitDraft>(this.traits);
 
-        if (!definition) {
-          return null;
-        }
+  protected readonly filteredArmes = availableCatalog(this.armesList, this.selectedArmesDraft);
+  protected readonly filteredArmures = availableCatalog(this.armuresList, this.selectedArmuresDraft);
+  protected readonly filteredCarrieres = availableCatalog(this.carrieresList, this.selectedCarrieresDraft);
+  protected readonly filteredLangues = availableCatalog(this.languesList, this.selectedLanguesDraft);
+  protected readonly filteredAvantages = availableCatalog(this.avantagesList, () =>
+    this.selectedTraitsDraft().filter((trait) => trait.type === 'A'),
+  );
+  protected readonly filteredDesavantages = availableCatalog(this.desavantagesList, () =>
+    this.selectedTraitsDraft().filter((trait) => trait.type === 'D'),
+  );
 
-        return {
-          id: Number(entry.id),
-          label: definition.carriere,
-          description: definition.description || null,
-          rank: this.carrieres.at(index).get('value') as FormControl<number>,
-        };
-      })
-      .filter((entry: CarriereEntry | null): entry is CarriereEntry => entry !== null),
+  protected readonly selectedArmes = selectedEntries(
+    this.selectedArmesDraft,
+    this.armesList,
+    (arme): ArmeEntry => ({
+      id: Number(arme.id),
+      label: arme.arme,
+      degats: arme.degats,
+      portee: arme.portee,
+      notes: arme.notes,
+    }),
   );
-  protected readonly selectedLangues = computed(() =>
-    (this.selectedLanguesDraft() ?? [])
-      .map((entry: HeroSimpleDraft) =>
-        (this.languesList() ?? []).find((langue: BolLangueModel) => Number(langue.id) === Number(entry.id)),
-      )
-      .filter((langue: BolLangueModel | undefined): langue is BolLangueModel => Boolean(langue))
-      .map((langue: BolLangueModel): LangueEntry => ({
-        id: Number(langue.id),
-        label: langue.langue,
-        description: langue.description || null,
-        estLemurienne: Boolean(langue.est_lemurienne),
-      })),
+  protected readonly selectedArmures = selectedEntries(
+    this.selectedArmuresDraft,
+    this.armuresList,
+    (armure): ArmureEntry => ({
+      id: Number(armure.id),
+      label: armure.armure,
+      protection: armure.protection,
+      malus: armure.malus,
+      ptsDePouvoir: armure.pts_de_pouvoir,
+    }),
   );
-  protected readonly selectedTraitEntries = computed(() =>
-    (this.selectedTraitsDraft() ?? [])
-      .map((entry: HeroTraitDraft) => ({
-        ...entry,
-        label:
-          entry.type === 'A'
-            ? (this.avantagesList() ?? []).find(
-                (avantage: BolAvantageModel) => Number(avantage.id) === Number(entry.id),
-              )?.avantage
-            : (this.desavantagesList() ?? []).find(
-                (desavantage: BolDesavantageModel) => Number(desavantage.id) === Number(entry.id),
-              )?.desavantage,
-        details: this.traitDetails(entry),
-        icon: this.traitIcon(entry),
-      }))
-      .filter(
-        (
-          entry: HeroTraitDraft & {label?: string; details: readonly TraitDetail[]; icon: TraitIcon},
-        ): entry is TraitEntry => Boolean(entry.label),
-      ),
+  protected readonly selectedCarrieres = selectedEntries(
+    this.selectedCarrieresDraft,
+    this.carrieresList,
+    (definition, entry, index): CarriereEntry => ({
+      id: Number(entry.id),
+      label: definition.carriere,
+      description: definition.description || null,
+      rank: this.carrieres.at(index).get('value') as FormControl<number>,
+    }),
   );
-  private readonly regionIdValue = toSignal(
-    this.heroForm.controls.region_id.valueChanges.pipe(startWith(this.heroForm.controls.region_id.value)),
-    {initialValue: this.heroForm.controls.region_id.value},
+  protected readonly selectedLangues = selectedEntries(
+    this.selectedLanguesDraft,
+    this.languesList,
+    (langue): LangueEntry => ({
+      id: Number(langue.id),
+      label: langue.langue,
+      description: langue.description || null,
+      estLemurienne: Boolean(langue.est_lemurienne),
+    }),
   );
+  protected readonly selectedTraitEntries = traitEntriesSignal(
+    this.selectedTraitsDraft,
+    this.avantagesList,
+    this.desavantagesList,
+  );
+
+  private readonly regionIdValue = controlValueSignal(this.heroForm.controls.region_id);
   protected readonly selectedRegion = computed(() => {
     const regionId = this.regionIdValue();
     if (regionId === null) {
@@ -361,32 +241,6 @@ export class HeroFormPageComponent implements HasPendingChanges {
       (region: BolRegionModel) => Number(region.id) === Number(regionId),
     ) ?? null;
   });
-
-  constructor() {
-    effect((onCleanup) => {
-      const heroId = this.heroId();
-      this.returnUrl.set(this.readReturnUrl());
-      this.errorMessage.set(null);
-
-      if (!heroId) {
-        this.resetForm();
-        return;
-      }
-
-      this.loadingHero.set(true);
-      const subscription = this.herosService
-        .heros(heroId)
-        .pipe(finalize(() => this.loadingHero.set(false)))
-        .subscribe({
-          next: (hero) => this.hydrateForm(hero),
-          error: (error: unknown) => {
-            this.errorMessage.set(extractApiErrorMessage(error, 'Le chargement du héros a échoué.'));
-          },
-        });
-
-      onCleanup(() => subscription.unsubscribe());
-    });
-  }
 
   protected get armes(): FormArray {
     return this.heroForm.controls.armes as FormArray;
@@ -408,31 +262,16 @@ export class HeroFormPageComponent implements HasPendingChanges {
     return this.heroForm.controls.traits as FormArray;
   }
 
-  protected pickAvatar(): void {
-    const ref = this.dialog.open(PictureComponent, {
-      data: {title: 'Avatar du héros'},
-      width: 'min(960px, 92vw)',
-      disableClose: true,
-    });
-
-    ref.afterClosed().pipe(take(1)).subscribe((avatar: string | null) => {
-      if (avatar) {
-        this.heroForm.controls.avatar.setValue(avatar);
-        this.heroForm.controls.avatar.markAsDirty();
-      }
-    });
-  }
-
   protected addArmeEntry(id: number): void {
-    this.armes.push(this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}));
-    this.armes.markAsDirty();
+    this.addIdEntry(this.armes, id);
   }
 
   protected addArmureEntry(id: number): void {
-    this.armures.push(
-      this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}),
-    );
-    this.armures.markAsDirty();
+    this.addIdEntry(this.armures, id);
+  }
+
+  protected addLangueEntry(id: number): void {
+    this.addIdEntry(this.langues, id);
   }
 
   protected addCarriereEntry(id: number): void {
@@ -445,13 +284,6 @@ export class HeroFormPageComponent implements HasPendingChanges {
     this.carrieres.markAsDirty();
   }
 
-  protected addLangueEntry(id: number): void {
-    this.langues.push(
-      this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}),
-    );
-    this.langues.markAsDirty();
-  }
-
   protected addTraitEntry(entry: TraitAddEvent): void {
     this.traits.push(
       this.formBuilder.group({
@@ -462,12 +294,7 @@ export class HeroFormPageComponent implements HasPendingChanges {
     this.traits.markAsDirty();
   }
 
-  protected removeItem(items: FormArray, index: number): void {
-    items.removeAt(index);
-    items.markAsDirty();
-  }
-
-  protected saveHero(): void {
+  protected override save(): void {
     this.submit(false);
   }
 
@@ -489,75 +316,32 @@ export class HeroFormPageComponent implements HasPendingChanges {
   }
 
   private submit(activate: boolean): void {
-    if (this.pending() || this.loadingHero()) {
-      return;
-    }
-
-    if (this.heroForm.invalid) {
-      this.heroForm.markAllAsTouched();
-      return;
-    }
-
-    this.pending.set(true);
-    this.errorMessage.set(null);
-
-    const payload = this.buildHeroPayload();
+    const payload = this.buildPayload();
     payload['active'] = activate || Boolean(payload['active']);
-    const action$ = this.editMode()
-      ? this.herosService.updateHeros(payload)
-      : this.herosService.createHeros(payload);
 
-    action$
-      .pipe(finalize(() => this.pending.set(false)))
-      .subscribe({
-        next: (hero: BolHerosModel) => {
-          this.heroForm.markAsPristine();
+    this.performSave(payload, (hero) => {
+      if (!this.editMode() && !activate && hero.id) {
+        this.navigateToDraft(hero.id);
+        return;
+      }
 
-          if (!this.editMode() && !activate && hero.id) {
-            this.navigateToDraft(hero.id);
-            return;
-          }
-
-          this.navigateBack(true);
-        },
-        error: (error: unknown) => {
-          this.errorMessage.set(extractApiErrorMessage(error, this.saveErrorFallback()));
-        },
-      });
-  }
-
-  protected goBack(): void {
-    this.navigateBack(false);
-  }
-
-  protected onError(controlName: keyof typeof this.heroForm.controls): boolean {
-    const control = this.heroForm.controls[controlName];
-    return control.invalid && (control.dirty || control.touched);
-  }
-
-  canLeave(): boolean | Observable<boolean> {
-    if (!this.formDirty()) {
-      return true;
-    }
-
-    const ref = this.dialog.open(DwConfirmDialogComponent, {
-      data: {
-        title: 'Modifications non enregistrées',
-        message: 'Ce héros a des changements non sauvegardés. Quitter sans enregistrer ?',
-        confirmLabel: 'Quitter sans sauver',
-        cancelLabel: 'Annuler',
-      },
+      this.navigateBack(true);
     });
-
-    return ref.afterClosed().pipe(map((confirmed: boolean | undefined) => Boolean(confirmed)));
   }
 
-  protected onSaveShortcut(event: Event): void {
-    event.preventDefault();
-    this.saveHero();
+  protected loadEntity(id: string): Observable<BolHerosModel> {
+    return this.herosService.heros(id);
   }
 
-  private resetForm(): void {
+  protected createEntity(payload: Record<string, unknown>): Observable<BolHerosModel> {
+    return this.herosService.createHeros(payload);
+  }
+
+  protected updateEntity(payload: Record<string, unknown>): Observable<BolHerosModel> {
+    return this.herosService.updateHeros(payload);
+  }
+
+  protected resetForm(): void {
     this.heroForm.reset(
       {
         id: null,
@@ -590,33 +374,15 @@ export class HeroFormPageComponent implements HasPendingChanges {
     this.carrieres.clear({emitEvent: false});
     this.langues.clear({emitEvent: false});
     this.traits.clear({emitEvent: false});
-    this.syncSelectionArrays();
+    this.syncArrays(this.armes, this.armures, this.carrieres, this.langues, this.traits);
   }
 
-  private hydrateForm(hero: BolHerosModel): void {
+  protected hydrateForm(hero: BolHerosModel): void {
     this.resetForm();
 
-    for (const arme of hero.armes) {
-      if (typeof arme === 'object') {
-        this.armes.push(
-          this.formBuilder.group({
-            id: this.formBuilder.control(Number(arme.arme_id), Validators.required),
-          }),
-          {emitEvent: false},
-        );
-      }
-    }
-
-    for (const armure of hero.armures) {
-      if (typeof armure === 'object') {
-        this.armures.push(
-          this.formBuilder.group({
-            id: this.formBuilder.control(Number(armure.armure_id), Validators.required),
-          }),
-          {emitEvent: false},
-        );
-      }
-    }
+    this.pushIdGroups(this.armes, referencedIds(hero.armes, (arme) => arme.arme_id));
+    this.pushIdGroups(this.armures, referencedIds(hero.armures, (armure) => armure.armure_id));
+    this.pushIdGroups(this.langues, referencedIds(hero.origines.langues, (langue) => langue.langue_id));
 
     for (const carriere of hero.carrieres) {
       this.carrieres.push(
@@ -626,17 +392,6 @@ export class HeroFormPageComponent implements HasPendingChanges {
         }),
         {emitEvent: false},
       );
-    }
-
-    for (const langue of hero.origines.langues) {
-      if (typeof langue === 'object') {
-        this.langues.push(
-          this.formBuilder.group({
-            id: this.formBuilder.control(Number(langue.langue_id), Validators.required),
-          }),
-          {emitEvent: false},
-        );
-      }
     }
 
     for (const trait of hero.traits) {
@@ -676,10 +431,10 @@ export class HeroFormPageComponent implements HasPendingChanges {
       },
       {emitEvent: true},
     );
-    this.syncSelectionArrays();
+    this.syncArrays(this.armes, this.armures, this.carrieres, this.langues, this.traits);
   }
 
-  private buildHeroPayload(): Record<string, unknown> {
+  protected buildPayload(): Record<string, unknown> {
     const rawValue = this.heroForm.getRawValue();
     const origines = {
       joueur: rawValue.joueur,
@@ -687,7 +442,7 @@ export class HeroFormPageComponent implements HasPendingChanges {
       commentaire: rawValue.commentaire,
       region_id: rawValue.region_id !== null ? Number(rawValue.region_id) : null,
       avatar: rawValue.avatar,
-      langues: (rawValue.langues as HeroSimpleDraft[]).map((langue) => ({
+      langues: (rawValue.langues as IdDraft[]).map((langue) => ({
         id: Number(langue.id),
         langue_id: Number(langue.id),
       })),
@@ -713,12 +468,12 @@ export class HeroFormPageComponent implements HasPendingChanges {
       creation: Number(rawValue.creation),
       vilenie: 0,
     };
-    const carrieres = (rawValue.carrieres as HeroCarriereDraft[]).map((carriere) => ({
+    const carrieres = (rawValue.carrieres as RankedDraft[]).map((carriere) => ({
       id: Number(carriere.id),
       carriere_id: Number(carriere.id),
       value: Number(carriere.value),
     }));
-    const traits = (rawValue.traits as HeroTraitDraft[]).map((trait) => ({
+    const traits = (rawValue.traits as TraitDraft[]).map((trait) => ({
       id: Number(trait.id),
       traitable_id: Number(trait.id),
       type: trait.type,
@@ -726,15 +481,15 @@ export class HeroFormPageComponent implements HasPendingChanges {
       region_id: null,
       carriere: false,
     }));
-    const armes = (rawValue.armes as HeroSimpleDraft[]).map((arme) => ({
+    const armes = (rawValue.armes as IdDraft[]).map((arme) => ({
       id: Number(arme.id),
       arme_id: Number(arme.id),
     }));
-    const armures = (rawValue.armures as HeroSimpleDraft[]).map((armure) => ({
+    const armures = (rawValue.armures as IdDraft[]).map((armure) => ({
       id: Number(armure.id),
       armure_id: Number(armure.id),
     }));
-    const langues = (rawValue.langues as HeroSimpleDraft[]).map((langue) => ({
+    const langues = (rawValue.langues as IdDraft[]).map((langue) => ({
       id: Number(langue.id),
       langue_id: Number(langue.id),
     }));
@@ -774,88 +529,9 @@ export class HeroFormPageComponent implements HasPendingChanges {
     };
   }
 
-  private navigateBack(afterSave: boolean): void {
-    const returnUrl = this.returnUrl();
-    if (returnUrl) {
-      void this.router.navigateByUrl(returnUrl);
-      return;
-    }
-
-    if (!afterSave && typeof history !== 'undefined' && history.length > 1) {
-      this.location.back();
-      return;
-    }
-
-    void this.router.navigateByUrl('/');
-  }
-
   private navigateToDraft(heroId: string | number): void {
     void this.router.navigate(['/create/hero', heroId], {
       state: this.returnUrl() ? {returnUrl: this.returnUrl()!} : undefined,
     });
-  }
-
-  private readReturnUrl(): string | null {
-    if (typeof history === 'undefined') {
-      return null;
-    }
-
-    const state = history.state as Record<string, unknown> | null;
-    return typeof state?.['returnUrl'] === 'string' ? state['returnUrl'] : null;
-  }
-
-  private saveErrorFallback(): string {
-    return this.editMode() ? 'La mise à jour du héros a échoué.' : 'La création du héros a échoué.';
-  }
-
-  private traitSource(entry: HeroTraitDraft): BolAvantageModel | BolDesavantageModel | undefined {
-    return entry.type === 'A'
-      ? (this.avantagesList() ?? []).find(
-          (avantage: BolAvantageModel) => Number(avantage.id) === Number(entry.id),
-        )
-      : (this.desavantagesList() ?? []).find(
-          (desavantage: BolDesavantageModel) => Number(desavantage.id) === Number(entry.id),
-        );
-  }
-
-  private traitIcon(entry: HeroTraitDraft): TraitIcon {
-    return traitIconType(this.traitSource(entry));
-  }
-
-  private traitDetails(entry: HeroTraitDraft): readonly TraitDetail[] {
-    const source = this.traitSource(entry);
-
-    if (!source) {
-      return [];
-    }
-
-    const details: TraitDetail[] = [];
-    if ('de_bonus' in source && source.de_bonus) {
-      details.push({title: 'Dé bonus', description: source.de_bonus_domaine});
-    }
-    if ('de_malus' in source && source.de_malus) {
-      details.push({title: 'Dé malus', description: source.de_malus_domaine});
-    }
-    if (source.attribut) {
-      const attributeValue =
-        'attribut_bonus' in source ? source.attribut_bonus : 'attribut_malus' in source ? source.attribut_malus : null;
-      details.push({
-        title: 'Attribut',
-        description: `${source.attribut}${attributeValue !== null ? `(${attributeValue})` : ''}`,
-      });
-    }
-    if (source.description) {
-      details.push({title: 'Détails', description: source.description});
-    }
-
-    return details;
-  }
-
-  private syncSelectionArrays(): void {
-    this.armes.updateValueAndValidity({emitEvent: true});
-    this.armures.updateValueAndValidity({emitEvent: true});
-    this.carrieres.updateValueAndValidity({emitEvent: true});
-    this.langues.updateValueAndValidity({emitEvent: true});
-    this.traits.updateValueAndValidity({emitEvent: true});
   }
 }
