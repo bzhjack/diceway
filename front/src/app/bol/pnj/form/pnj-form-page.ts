@@ -190,8 +190,8 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel> {
   protected readonly selectedArmes = selectedEntries(
     this.selectedArmesDraft,
     this.armesList,
-    (arme): ArmeEntry => ({
-      id: Number(arme.id),
+    (arme, entry): ArmeEntry => ({
+      id: entry.id,
       label: arme.arme,
       degats: arme.degats,
       portee: arme.portee,
@@ -201,8 +201,8 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel> {
   protected readonly selectedArmures = selectedEntries(
     this.selectedArmuresDraft,
     this.armuresList,
-    (armure): ArmureEntry => ({
-      id: Number(armure.id),
+    (armure, entry): ArmureEntry => ({
+      id: entry.id,
       label: armure.armure,
       protection: armure.protection,
       malus: armure.malus,
@@ -213,7 +213,7 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel> {
     this.selectedCarrieresDraft,
     this.carrieresList,
     (definition, entry, index): CarriereEntry => ({
-      id: Number(entry.id),
+      id: entry.id,
       label: definition.carriere,
       description: definition.description || null,
       rank: this.carrieres.at(index).get('value') as FormControl<number>,
@@ -222,8 +222,8 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel> {
   protected readonly selectedLangues = selectedEntries(
     this.selectedLanguesDraft,
     this.languesList,
-    (langue): LangueEntry => ({
-      id: Number(langue.id),
+    (langue, entry): LangueEntry => ({
+      id: entry.id,
       label: langue.langue,
       description: langue.description || null,
       estLemurienne: Boolean(langue.est_lemurienne),
@@ -270,7 +270,7 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel> {
   protected addCarriereEntry(id: number): void {
     this.carrieres.push(
       this.formBuilder.group({
-        id: this.formBuilder.control(Number(id), Validators.required),
+        id: this.formBuilder.control(id, Validators.required),
         value: this.formBuilder.control(0, Validators.required),
       }),
     );
@@ -342,8 +342,8 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel> {
     for (const carriere of pnj.carrieres) {
       this.carrieres.push(
         this.formBuilder.group({
-          id: this.formBuilder.control(Number(carriere.carriere_id), Validators.required),
-          value: this.formBuilder.control(Number(carriere.value), Validators.required),
+          id: this.formBuilder.control(carriere.carriere_id ?? null, Validators.required),
+          value: this.formBuilder.control(carriere.value, Validators.required),
         }),
         {emitEvent: false},
       );
@@ -352,7 +352,7 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel> {
     for (const trait of pnj.traits) {
       this.traits.push(
         this.formBuilder.group({
-          id: this.formBuilder.control(Number(trait.traitable_id), Validators.required),
+          id: this.formBuilder.control(trait.traitable_id, Validators.required),
           type: this.formBuilder.control<'A' | 'D'>(trait.type, Validators.required),
         }),
         {emitEvent: false},
@@ -409,15 +409,15 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel> {
       foi: rawValue.foi,
       vilenie: rawValue.vilenie,
       creation: rawValue.creation,
-      armes: (rawValue.armes as IdDraft[]).map((arme) => ({id: Number(arme.id)})),
-      armures: (rawValue.armures as IdDraft[]).map((armure) => ({id: Number(armure.id)})),
+      armes: (rawValue.armes as IdDraft[]).map((arme) => ({id: arme.id})),
+      armures: (rawValue.armures as IdDraft[]).map((armure) => ({id: armure.id})),
       carrieres: (rawValue.carrieres as RankedDraft[]).map((carriere) => ({
-        id: Number(carriere.id),
-        value: Number(carriere.value),
+        id: carriere.id,
+        value: carriere.value,
       })),
-      langues: (rawValue.langues as IdDraft[]).map((langue) => ({id: Number(langue.id)})),
+      langues: (rawValue.langues as IdDraft[]).map((langue) => ({id: langue.id})),
       traits: (rawValue.traits as TraitDraft[]).map((trait) => ({
-        id: Number(trait.id),
+        id: trait.id,
         type: trait.type,
       })),
     };

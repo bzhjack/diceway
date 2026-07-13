@@ -116,14 +116,14 @@ export class CreatureFormPageComponent extends BolEntityFormPageBase<BolCreature
 
   protected readonly selectedCapacitesDraft = formArrayValueSignal<DetailDraft>(this.capacites);
   protected readonly selectedTaille = computed(() =>
-    (this.tailles() ?? []).find((taille) => Number(taille.id) === Number(this.tailleId())),
+    (this.tailles() ?? []).find((taille) => taille.id === this.tailleId()),
   );
   protected readonly filteredCapacites = availableCatalog(this.capacitesList, this.selectedCapacitesDraft);
   protected readonly selectedCapaciteEntries = selectedEntries(
     this.selectedCapacitesDraft,
     this.capacitesList,
     (definition, entry): CapaciteEntry => ({
-      id: Number(entry.id),
+      id: entry.id,
       label: definition.capacite,
       description: definition.description || null,
       detail: entry.detail || null,
@@ -136,7 +136,7 @@ export class CreatureFormPageComponent extends BolEntityFormPageBase<BolCreature
     super();
     this.setupReferenceDefaults(
       this.selectedTaille,
-      (taille) => Number(taille.id),
+      (taille) => taille.id,
       (taille) => ({
         vigueur: taille.vigueur ?? 0,
         vitalite: taille.vitalite ?? 0,
@@ -200,13 +200,13 @@ export class CreatureFormPageComponent extends BolEntityFormPageBase<BolCreature
   }
 
   protected hydrateForm(creature: BolCreatureModel): void {
-    this.hydratedReferenceId = Number(creature.id_taille);
+    this.hydratedReferenceId = creature.id_taille;
     this.capacites.clear({emitEvent: false});
 
     for (const capacite of creature.capacites) {
       this.capacites.push(
         this.formBuilder.group({
-          id: this.formBuilder.control(Number(capacite.capacite_id), Validators.required),
+          id: this.formBuilder.control(capacite.capacite_id, Validators.required),
           detail: this.formBuilder.control(capacite.detail || null),
         }),
         {emitEvent: false},
@@ -217,7 +217,7 @@ export class CreatureFormPageComponent extends BolEntityFormPageBase<BolCreature
       {
         id: creature.id,
         nom: creature.nom,
-        id_taille: Number(creature.id_taille),
+        id_taille: creature.id_taille,
         commentaire: creature.commentaire,
         vigueur: creature.vigueur,
         agilite: creature.agilite,

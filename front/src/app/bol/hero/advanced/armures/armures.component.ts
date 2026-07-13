@@ -56,7 +56,7 @@ export class HeroAdvancedArmuresComponent implements ControlValueAccessor {
     ),
   );
   protected readonly selectedArmure = computed(
-    () => (this.armureList() ?? []).find((armure) => Number(armure.id) === Number(this.selectedArmureIdValue())) ?? null,
+    () => (this.armureList() ?? []).find((armure) => armure.id === this.selectedArmureIdValue()) ?? null,
   );
   protected readonly selectedArmureDetail = computed(() =>
     (this.armureList() ?? []).filter(

@@ -193,8 +193,8 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel> 
   protected readonly selectedArmes = selectedEntries(
     this.selectedArmesDraft,
     this.armesList,
-    (arme): ArmeEntry => ({
-      id: Number(arme.id),
+    (arme, entry): ArmeEntry => ({
+      id: entry.id,
       label: arme.arme,
       degats: arme.degats,
       portee: arme.portee,
@@ -204,8 +204,8 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel> 
   protected readonly selectedArmures = selectedEntries(
     this.selectedArmuresDraft,
     this.armuresList,
-    (armure): ArmureEntry => ({
-      id: Number(armure.id),
+    (armure, entry): ArmureEntry => ({
+      id: entry.id,
       label: armure.armure,
       protection: armure.protection,
       malus: armure.malus,
@@ -216,7 +216,7 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel> 
     this.selectedCarrieresDraft,
     this.carrieresList,
     (definition, entry, index): CarriereEntry => ({
-      id: Number(entry.id),
+      id: entry.id,
       label: definition.carriere,
       description: definition.description || null,
       rank: this.carrieres.at(index).get('value') as FormControl<number>,
@@ -225,8 +225,8 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel> 
   protected readonly selectedLangues = selectedEntries(
     this.selectedLanguesDraft,
     this.languesList,
-    (langue): LangueEntry => ({
-      id: Number(langue.id),
+    (langue, entry): LangueEntry => ({
+      id: entry.id,
       label: langue.langue,
       description: langue.description || null,
       estLemurienne: Boolean(langue.est_lemurienne),
@@ -245,9 +245,7 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel> 
       return null;
     }
 
-    return (this.regionList() ?? []).find(
-      (region: BolRegionModel) => Number(region.id) === Number(regionId),
-    ) ?? null;
+    return (this.regionList() ?? []).find((region: BolRegionModel) => region.id === regionId) ?? null;
   });
 
   protected get armes(): FormArray {
@@ -285,7 +283,7 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel> 
   protected addCarriereEntry(id: number): void {
     this.carrieres.push(
       this.formBuilder.group({
-        id: this.formBuilder.control(Number(id), Validators.required),
+        id: this.formBuilder.control(id, Validators.required),
         value: this.formBuilder.control(0, Validators.required),
       }),
     );
@@ -391,8 +389,8 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel> 
     for (const carriere of hero.carrieres) {
       this.carrieres.push(
         this.formBuilder.group({
-          id: this.formBuilder.control(Number(carriere.carriere_id), Validators.required),
-          value: this.formBuilder.control(Number(carriere.value), Validators.required),
+          id: this.formBuilder.control(carriere.carriere_id ?? null, Validators.required),
+          value: this.formBuilder.control(carriere.value, Validators.required),
         }),
         {emitEvent: false},
       );
@@ -401,7 +399,7 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel> 
     for (const trait of hero.traits) {
       this.traits.push(
         this.formBuilder.group({
-          id: this.formBuilder.control(Number(trait.traitable_id), Validators.required),
+          id: this.formBuilder.control(trait.traitable_id, Validators.required),
           type: this.formBuilder.control<'A' | 'D'>(trait.type, Validators.required),
         }),
         {emitEvent: false},
@@ -415,7 +413,7 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel> 
         type: 'H',
         nom: hero.origines.nom ?? '',
         joueur: hero.origines.joueur ?? '',
-        region_id: hero.origines.region_id !== null ? Number(hero.origines.region_id) : null,
+        region_id: hero.origines.region_id,
         commentaire: hero.origines.commentaire ?? null,
         avatar: hero.origines.avatar ?? null,
         vigueur: hero.attributs.vigueur,
@@ -444,58 +442,58 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel> 
       joueur: rawValue.joueur,
       nom: rawValue.nom,
       commentaire: rawValue.commentaire,
-      region_id: rawValue.region_id !== null ? Number(rawValue.region_id) : null,
+      region_id: rawValue.region_id,
       avatar: rawValue.avatar,
       langues: (rawValue.langues as IdDraft[]).map((langue) => ({
-        id: Number(langue.id),
-        langue_id: Number(langue.id),
+        id: langue.id,
+        langue_id: langue.id,
       })),
     };
     const attributs = {
-      vigueur: Number(rawValue.vigueur),
-      agilite: Number(rawValue.agilite),
-      esprit: Number(rawValue.esprit),
-      aura: Number(rawValue.aura),
+      vigueur: rawValue.vigueur,
+      agilite: rawValue.agilite,
+      esprit: rawValue.esprit,
+      aura: rawValue.aura,
     };
     const combat = {
-      initiative: Number(rawValue.initiative),
-      melee: Number(rawValue.melee),
-      tir: Number(rawValue.tir),
-      defense: Number(rawValue.defense),
+      initiative: rawValue.initiative,
+      melee: rawValue.melee,
+      tir: rawValue.tir,
+      defense: rawValue.defense,
     };
     const ressources = {
-      vitalite: Number(rawValue.vitalite),
-      heroisme: Number(rawValue.heroisme),
-      experience: Number(rawValue.experience),
-      pouvoir: Number(rawValue.pouvoir),
-      foi: Number(rawValue.foi),
-      creation: Number(rawValue.creation),
+      vitalite: rawValue.vitalite,
+      heroisme: rawValue.heroisme,
+      experience: rawValue.experience,
+      pouvoir: rawValue.pouvoir,
+      foi: rawValue.foi,
+      creation: rawValue.creation,
       vilenie: 0,
     };
     const carrieres = (rawValue.carrieres as RankedDraft[]).map((carriere) => ({
-      id: Number(carriere.id),
-      carriere_id: Number(carriere.id),
-      value: Number(carriere.value),
+      id: carriere.id,
+      carriere_id: carriere.id,
+      value: carriere.value,
     }));
     const traits = (rawValue.traits as TraitDraft[]).map((trait) => ({
-      id: Number(trait.id),
-      traitable_id: Number(trait.id),
+      id: trait.id,
+      traitable_id: trait.id,
       type: trait.type,
       detail: null,
       region_id: null,
       carriere: false,
     }));
     const armes = (rawValue.armes as IdDraft[]).map((arme) => ({
-      id: Number(arme.id),
-      arme_id: Number(arme.id),
+      id: arme.id,
+      arme_id: arme.id,
     }));
     const armures = (rawValue.armures as IdDraft[]).map((armure) => ({
-      id: Number(armure.id),
-      armure_id: Number(armure.id),
+      id: armure.id,
+      armure_id: armure.id,
     }));
     const langues = (rawValue.langues as IdDraft[]).map((langue) => ({
-      id: Number(langue.id),
-      langue_id: Number(langue.id),
+      id: langue.id,
+      langue_id: langue.id,
     }));
 
     return {

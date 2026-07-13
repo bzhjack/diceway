@@ -118,14 +118,14 @@ export class DemonFormPageComponent extends BolEntityFormPageBase<BolDemonModel>
 
   protected readonly selectedPouvoirsDraft = formArrayValueSignal<DetailDraft>(this.pouvoirs);
   protected readonly selectedCategorie = computed(() =>
-    (this.categories() ?? []).find((categorie) => Number(categorie.id) === Number(this.categorieId())),
+    (this.categories() ?? []).find((categorie) => categorie.id === this.categorieId()),
   );
   protected readonly filteredPouvoirs = availableCatalog(this.pouvoirsList, this.selectedPouvoirsDraft);
   protected readonly selectedPouvoirEntries = selectedEntries(
     this.selectedPouvoirsDraft,
     this.pouvoirsList,
     (definition, entry): PouvoirEntry => ({
-      id: Number(entry.id),
+      id: entry.id,
       label: definition.pouvoir,
       description: definition.description || null,
       detail: entry.detail || null,
@@ -136,7 +136,7 @@ export class DemonFormPageComponent extends BolEntityFormPageBase<BolDemonModel>
     super();
     this.setupReferenceDefaults(
       this.selectedCategorie,
-      (categorie) => Number(categorie.id),
+      (categorie) => categorie.id,
       (categorie) => ({
         vitalite: categorie.vitalite ?? 0,
         degats: categorie.degats ?? '0',
@@ -200,13 +200,13 @@ export class DemonFormPageComponent extends BolEntityFormPageBase<BolDemonModel>
   }
 
   protected hydrateForm(demon: BolDemonModel): void {
-    this.hydratedReferenceId = Number(demon.id_categorie);
+    this.hydratedReferenceId = demon.id_categorie;
     this.pouvoirs.clear({emitEvent: false});
 
     for (const pouvoir of demon.pouvoirs) {
       this.pouvoirs.push(
         this.formBuilder.group({
-          id: this.formBuilder.control(Number(pouvoir.pouvoir_id), Validators.required),
+          id: this.formBuilder.control(pouvoir.pouvoir_id, Validators.required),
           detail: this.formBuilder.control(pouvoir.detail || null),
         }),
         {emitEvent: false},
@@ -217,7 +217,7 @@ export class DemonFormPageComponent extends BolEntityFormPageBase<BolDemonModel>
       {
         id: demon.id,
         nom: demon.nom,
-        id_categorie: Number(demon.id_categorie),
+        id_categorie: demon.id_categorie,
         commentaire: demon.commentaire,
         vigueur: demon.vigueur,
         agilite: demon.agilite,

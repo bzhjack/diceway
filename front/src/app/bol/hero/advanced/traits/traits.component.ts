@@ -73,16 +73,16 @@ export class HeroAdvancedTraitsComponent implements ControlValueAccessor {
     this.herosTraits().filter((trait) => trait.type === 'A'),
   );
   protected readonly herosRegionalAvantages = computed(() =>
-    this.herosAvantages().filter((trait) => Number(trait.region_id) > 0),
+    this.herosAvantages().filter((trait) => (trait.region_id ?? 0) > 0),
   );
   protected readonly herosDesavantages = computed(() =>
     this.herosTraits().filter((trait) => trait.type === 'D' && trait.carriere === false),
   );
   protected readonly herosRegionalDesavantages = computed(() =>
-    this.herosDesavantages().filter((trait) => Number(trait.region_id) > 0),
+    this.herosDesavantages().filter((trait) => (trait.region_id ?? 0) > 0),
   );
   protected readonly herosGeneralDesavantages = computed(() =>
-    this.herosDesavantages().filter((trait) => Number(trait.region_id) <= 0),
+    this.herosDesavantages().filter((trait) => (trait.region_id ?? 0) <= 0),
   );
   protected readonly canAddAdvantage = computed(() => this.herosAvantages().length < 3);
   protected readonly specialAvantageRequired = this.herosStateService.specialAvantageDesavantageRequired;
@@ -90,7 +90,7 @@ export class HeroAdvancedTraitsComponent implements ControlValueAccessor {
     const allTraits = this.contextType() === 'A' ? this.mergedAvantages() : this.mergedDesavantages();
     const selectedIds = this.herosTraits()
       .filter((trait) => trait.type === this.contextType())
-      .map((trait) => Number(trait.traitable_id));
+      .map((trait) => trait.traitable_id);
     return allTraits.filter((trait) => !selectedIds.includes(Number(trait.id)));
   });
   protected readonly selectedTrait = computed(
@@ -189,10 +189,10 @@ export class HeroAdvancedTraitsComponent implements ControlValueAccessor {
     this.traits.push(
       this.formBuilder.group({
         id: [Number(trait.id)],
-        traitable_id: [Number(trait.traitable_id)],
+        traitable_id: [trait.traitable_id],
         type: [trait.type],
         detail: [trait.detail],
-        region_id: [trait.region_id ? Number(trait.region_id) : null],
+        region_id: [trait.region_id ?? null],
         carriere: [trait.carriere],
       }),
     );
@@ -228,7 +228,7 @@ export class HeroAdvancedTraitsComponent implements ControlValueAccessor {
     }
 
     // E12: avantages spéciaux exigeant un désavantage supplémentaire chacun
-    const avantageIds = this.herosAvantages().map((t) => Number(t.traitable_id));
+    const avantageIds = this.herosAvantages().map((t) => t.traitable_id);
     const specialNames: string[] = [];
     if (avantageIds.includes(30)) specialNames.push('Magie des Rois-Sorciers');
     if (avantageIds.includes(44)) specialNames.push('Pouvoir du Néant');

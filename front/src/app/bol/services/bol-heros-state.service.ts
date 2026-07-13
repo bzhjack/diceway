@@ -31,7 +31,7 @@ export class BolHerosStateService {
   // E11: Non-combattant (désavantage id=33) modifies combat and carrière budgets
   isNonCombattant = computed(() =>
     this.currentHeros()?.traits?.some(
-      (t) => t.type === 'D' && t.carriere === false && Number(t.traitable_id) === 33,
+      (t) => t.type === 'D' && t.carriere === false && t.traitable_id === 33,
     ) ?? false,
   );
   combatBudget = computed(() => (this.isNonCombattant() ? 2 : 4));
@@ -39,7 +39,7 @@ export class BolHerosStateService {
 
   // E12: Special avantages requiring extra désavantages (ids 30 and 44)
   specialAvantageDesavantageRequired = computed(() => {
-    const ids = this.currentHeroAvantages().map((t) => Number(t.traitable_id));
+    const ids = this.currentHeroAvantages().map((t) => t.traitable_id);
     return (ids.includes(30) ? 1 : 0) + (ids.includes(44) ? 1 : 0);
   });
 
@@ -63,7 +63,7 @@ export class BolHerosStateService {
   currentHerosRegion = computed(() =>
     this.regionList()?.find(
       (region) =>
-        Number(this.currentHeros()?.origines.region_id) === Number(region.id)
+        this.currentHeros()?.origines.region_id === region.id
     )
   );
 
@@ -77,10 +77,10 @@ export class BolHerosStateService {
       ) ?? []
   );
   protected currentHeroRegionalDesavantages = computed(
-    () => this.currentHeroDesavantages().filter((item) => Number(item.region_id) > 0) ?? []
+    () => this.currentHeroDesavantages().filter((item) => (item.region_id ?? 0) > 0) ?? []
   );
   protected currentHeroGeneralDesavantages = computed(
-    () => this.currentHeroDesavantages().filter((item) => Number(item.region_id) <= 0) ?? []
+    () => this.currentHeroDesavantages().filter((item) => (item.region_id ?? 0) <= 0) ?? []
   );
   protected currentHeroCarriereDesvantages = computed(
     () =>
@@ -115,9 +115,9 @@ export class BolHerosStateService {
         return {
           ...item,
           ...{
-            id: Number(item.pivot.avantage_id),
+            id: item.pivot.avantage_id,
             detail: item.pivot.detail,
-            region_id: Number(item.pivot.region_id),
+            region_id: item.pivot.region_id,
           },
         };
       }) ?? []
@@ -128,9 +128,9 @@ export class BolHerosStateService {
         return {
           ...item,
           ...{
-            id: Number(item.pivot.desavantage_id),
+            id: item.pivot.desavantage_id,
             detail: item.pivot.detail,
-            region_id: Number(item.pivot.region_id),
+            region_id: item.pivot.region_id,
           },
         };
       }) ?? []
@@ -139,21 +139,21 @@ export class BolHerosStateService {
   traitsModifiers = computed(() => {
     const modifiers: AttributModifier[] = [];
     this.currentHeroAvantages().forEach((trait) => {
-        const trt = this.avantagesList()?.filter((item) => item.attribut !== null)?.find((item) => Number(item.id) === Number(trait.traitable_id));
+        const trt = this.avantagesList()?.filter((item) => item.attribut !== null)?.find((item) => item.id === trait.traitable_id);
         if (trt?.attribut) {
-          modifiers.push({attr: trt.attribut, value: Number(trt.attribut_bonus)});
+          modifiers.push({attr: trt.attribut, value: trt.attribut_bonus ?? 0});
         }
     });
     this.currentHeroDesavantages().forEach((trait) => {
-      const trt = this.desavantagesList()?.filter((item) => item.attribut !== null)?.find((item) => Number(item.id) === Number(trait.traitable_id));
+      const trt = this.desavantagesList()?.filter((item) => item.attribut !== null)?.find((item) => item.id === trait.traitable_id);
       if (trt?.attribut) {
-        modifiers.push({attr: trt.attribut, value: Number(trt.attribut_malus)});
+        modifiers.push({attr: trt.attribut, value: trt.attribut_malus ?? 0});
       }
     });
     if (this.heroismCost() > 0) {
-      modifiers.push({attr: 'heroisme', value: Number(this.heroismCost()) * -1});
+      modifiers.push({attr: 'heroisme', value: -this.heroismCost()});
     }
-    const vigueur = Number(this.currentHeros()?.attributs.vigueur ?? 0);
+    const vigueur = this.currentHeros()?.attributs.vigueur ?? 0;
     if (vigueur !== 0) {
       modifiers.push({attr: 'vitalite', value: vigueur});
     }
@@ -163,13 +163,13 @@ export class BolHerosStateService {
       // points de pouvoir = 10 + rang de sorcier
       // point de foi = rang pretre.
       if (carriere.carriere_id === 24) {
-        modifiers.push({attr: 'pouvoir', value: 10 + Number(carriere.value) });
+        modifiers.push({attr: 'pouvoir', value: 10 + carriere.value});
       }
-      if (carriere.carriere_id === 1 && Number(carriere.value) !== 0) {
-        modifiers.push({attr: 'creation', value: Number(carriere.value) });
+      if (carriere.carriere_id === 1 && carriere.value !== 0) {
+        modifiers.push({attr: 'creation', value: carriere.value});
       }
-      if (carriere.carriere_id === 21 && Number(carriere.value) !== 0) {
-        modifiers.push({attr: 'foi', value: Number(carriere.value) });
+      if (carriere.carriere_id === 21 && carriere.value !== 0) {
+        modifiers.push({attr: 'foi', value: carriere.value});
       }
     });
     return modifiers;

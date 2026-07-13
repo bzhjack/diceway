@@ -93,19 +93,19 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
     );
   });
   protected readonly availableDesavantages = computed(() => {
-    const takenIds = this.herosStateService.allHerosDesavantages().map((trait) => Number(trait.traitable_id));
+    const takenIds = this.herosStateService.allHerosDesavantages().map((trait) => trait.traitable_id);
     return (this.desavantagesList() ?? []).filter((desavantage) => !takenIds.includes(Number(desavantage.id)));
   });
   protected readonly selectedCarriere = computed(
     () =>
       this.availableCarrieres().find(
-        (carriere: BolCarriereModel) => Number(carriere.id) === Number(this.selectedCarriereIdValue()),
+        (carriere: BolCarriereModel) => carriere.id === this.selectedCarriereIdValue(),
       ) ?? null,
   );
   protected readonly selectedTrait = computed(
     () =>
       this.availableDesavantages().find(
-        (desavantage: BolDesavantageModel) => Number(desavantage.id) === Number(this.selectedTraitIdValue()),
+        (desavantage: BolDesavantageModel) => desavantage.id === this.selectedTraitIdValue(),
       ) ?? null,
   );
 
@@ -206,7 +206,7 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
 
   protected carriereFromId(id: number): BolCarriereModel | null {
     return (
-      (this.carrieresList() ?? []).find((carriere: BolCarriereModel) => Number(carriere.id) === Number(id)) ??
+      (this.carrieresList() ?? []).find((carriere: BolCarriereModel) => carriere.id === id) ??
       null
     );
   }

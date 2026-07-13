@@ -62,7 +62,7 @@ export class DemonLibraryPageComponent {
       .filter((demon) => (this.onlyCreations() ? Boolean(demon.user_id) : true))
       .filter((demon) =>
         this.searchCategorie() !== ''
-          ? Number(demon.id_categorie) === Number(this.searchCategorie())
+          ? demon.id_categorie === this.searchCategorie()
           : true,
       )
       .filter((demon) => matchesTerm(this.searchTerm(), demon.nom, demon.commentaire))

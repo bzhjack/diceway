@@ -211,7 +211,7 @@ Les meilleurs candidats à tester (logique pure, sans DOM) :
 | 3 | ✅ ~~Factorisation form-pages (base + selection factory + trait utils)~~ (fait le 2026-07-13 : `BolEntityFormPageBase` + `form-signals`/`form-selection`/`trait-entry.utils`) | L | −800 à −1000 lignes |
 | 4 | ✅ ~~Factorisation library-pages (`refreshableResource`, `confirmDelete`, recherche, statblock dialog)~~ (fait le 2026-07-13 : `refreshable-resource`, `list.utils`, `confirm-dialog.utils`, `dw-statblock-dialog`) | M | −400 lignes |
 | 5 | ✅ ~~Add-menu générique~~ (fait le 2026-07-13 : `bol-add-menu` + `addMenuOptions()`, 6 dossiers supprimés, trait-add-menu conservé) | M | −6 dossiers de composants |
-| 6 | Normalisation des ids à la frontière API (suppression des `Number()`) | M | lisibilité globale |
+| 6 | ✅ ~~Normalisation des ids à la frontière API (suppression des `Number()`)~~ (fait le 2026-07-13 : `apiIdNormalizerInterceptor` + 242→83 `Number()`, restants légitimes sur valeurs de FormControl non typées) | M | lisibilité globale |
 | 7 | Découpage `BolHerosService` + constantes de règles BoL nommées | M | maintenabilité |
 | 8 | Tests sur la logique métier state service | M | filet de sécurité |
 

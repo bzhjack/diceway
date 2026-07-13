@@ -65,7 +65,7 @@ export class HeroAdvancedLanguesComponent implements ControlValueAccessor, Valid
   protected readonly selectedLangue = computed(
     () =>
       (this.langueList() ?? []).find(
-        (langue: BolLangueModel) => Number(langue.id) === Number(this.selectedLangueIdValue()),
+        (langue: BolLangueModel) => langue.id === this.selectedLangueIdValue(),
       ) ?? null,
   );
   protected readonly heroId = computed(() => this.herosStateService.currentHeros()?.id);
@@ -79,14 +79,14 @@ export class HeroAdvancedLanguesComponent implements ControlValueAccessor, Valid
   protected readonly automaticLanguageLabels = computed(() =>
     this.automaticLanguageIds()
       .map((languageId) =>
-        (this.langueList() ?? []).find((langue: BolLangueModel) => Number(langue.id) === Number(languageId))?.langue,
+        (this.langueList() ?? []).find((langue: BolLangueModel) => langue.id === languageId)?.langue,
       )
       .filter((label): label is string => Boolean(label)),
   );
   protected readonly selectedLanguageTarget = computed(() =>
     selectedLanguageTarget(
       this.currentRegion(),
-      Number(this.herosStateService.currentHeros()?.attributs.esprit ?? 0),
+      this.herosStateService.currentHeros()?.attributs.esprit ?? 0,
       this.herosStateService.currentHeros()?.carrieres ?? [],
       this.langueList(),
     ),
@@ -160,7 +160,7 @@ export class HeroAdvancedLanguesComponent implements ControlValueAccessor, Valid
 
   protected langueFromId(id: number): string | null {
     return (
-      (this.langueList() ?? []).find((langue: BolLangueModel) => Number(langue.id) === Number(id))?.langue ??
+      (this.langueList() ?? []).find((langue: BolLangueModel) => langue.id === id)?.langue ??
       null
     );
   }

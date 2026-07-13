@@ -54,7 +54,7 @@ export class HeroAdvancedArmesComponent implements ControlValueAccessor {
     (this.armeList() ?? []).filter((arme: BolArmeModel) => !this.selectedArmeIds().includes(Number(arme.id))),
   );
   protected readonly selectedArme = computed(
-    () => (this.armeList() ?? []).find((arme) => Number(arme.id) === Number(this.selectedArmeIdValue())) ?? null,
+    () => (this.armeList() ?? []).find((arme) => arme.id === this.selectedArmeIdValue()) ?? null,
   );
   protected readonly selectedArmeDetail = computed(() =>
     (this.armeList() ?? []).filter((arme: BolArmeModel) => this.selectedArmeIds().includes(Number(arme.id))),
@@ -63,7 +63,7 @@ export class HeroAdvancedArmesComponent implements ControlValueAccessor {
 
   // E13: warning arme lourde (d6B) avec vigueur < 0
   protected readonly vigueur = computed(() =>
-    Number(this.herosStateService.currentHeros()?.attributs?.vigueur ?? 0),
+    this.herosStateService.currentHeros()?.attributs?.vigueur ?? 0,
   );
   protected readonly warnHeavyArme = computed(() =>
     this.vigueur() < 0 &&

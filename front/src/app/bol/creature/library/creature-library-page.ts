@@ -62,7 +62,7 @@ export class CreatureLibraryPageComponent {
       .filter((creature) => (this.onlyCreations() ? Boolean(creature.user_id) : true))
       .filter((creature) =>
         this.searchTaille() !== ''
-          ? Number(creature.id_taille) === Number(this.searchTaille())
+          ? creature.id_taille === this.searchTaille()
           : true,
       )
       .filter((creature) => matchesTerm(this.searchTerm(), creature.nom, creature.commentaire))
