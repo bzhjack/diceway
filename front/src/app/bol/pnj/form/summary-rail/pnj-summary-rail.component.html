@@ -44,7 +44,13 @@
 <div class="sr-langues">
   <div class="mb-2 flex items-center justify-between gap-2">
     <p class="sr-sub">Langues</p>
-    <bol-langue-add-menu [langues]="languesDisponibles()" (added)="langueAdded.emit($event)" />
+    <bol-add-menu
+      [options]="langueOptions()"
+      label="Langue"
+      triggerLabel="Ajouter une langue"
+      addLabel="Ajouter la langue"
+      (added)="langueAdded.emit($event.id)"
+    />
   </div>
 
   <bol-langue-list [langues]="langues()" (removed)="langueRemoved.emit($event)" />

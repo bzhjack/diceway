@@ -10,11 +10,9 @@ import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
-import {ArmeAddMenuComponent} from '../../shared/arme/add-menu/arme-add-menu.component';
+import {AddMenuComponent, addMenuOptions} from '../../shared/add-menu/add-menu.component';
 import {ArmeEntry, ArmeListComponent} from '../../shared/arme/list/arme-list.component';
-import {ArmureAddMenuComponent} from '../../shared/armure/add-menu/armure-add-menu.component';
 import {ArmureEntry, ArmureListComponent} from '../../shared/armure/list/armure-list.component';
-import {CarriereAddMenuComponent} from '../../shared/carriere/add-menu/carriere-add-menu.component';
 import {CarriereEntry, CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
 import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
 import {IdDraft, RankedDraft, availableCatalog, referencedIds, selectedEntries} from '../../shared/form/form-selection';
@@ -87,11 +85,9 @@ const HERO_FORM_LABELS: EntityFormLabels = {
     MatCardContent,
     MatIconModule,
     DwTagComponent,
-    ArmeAddMenuComponent,
+    AddMenuComponent,
     ArmeListComponent,
-    ArmureAddMenuComponent,
     ArmureListComponent,
-    CarriereAddMenuComponent,
     CarriereListComponent,
     HeroGeneralComponent,
     StatsGridComponent,
@@ -181,6 +177,18 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel> 
   protected readonly filteredDesavantages = availableCatalog(this.desavantagesList, () =>
     this.selectedTraitsDraft().filter((trait) => trait.type === 'D'),
   );
+
+  protected readonly armeOptions = addMenuOptions(
+    this.filteredArmes,
+    (arme) => arme.arme,
+    (arme) => (arme.degats ? `· Dégâts ${arme.degats}` : null),
+  );
+  protected readonly armureOptions = addMenuOptions(
+    this.filteredArmures,
+    (armure) => armure.armure,
+    (armure) => (armure.protection ? `· Protection ${armure.protection}` : null),
+  );
+  protected readonly carriereOptions = addMenuOptions(this.filteredCarrieres, (carriere) => carriere.carriere);
 
   protected readonly selectedArmes = selectedEntries(
     this.selectedArmesDraft,

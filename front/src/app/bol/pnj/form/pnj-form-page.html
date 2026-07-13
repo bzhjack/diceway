@@ -89,7 +89,13 @@
                         <dw-tag>{{ selectedCarrieres().length }} sélectionnée(s)</dw-tag>
                       </div>
 
-                      <bol-carriere-add-menu [carrieres]="filteredCarrieres()" (added)="addCarriereEntry($event)" />
+                      <bol-add-menu
+                        [options]="carriereOptions()"
+                        label="Carrière"
+                        triggerLabel="Ajouter une carrière"
+                        addLabel="Ajouter la carrière"
+                        (added)="addCarriereEntry($event.id)"
+                      />
                     </div>
 
                     <bol-carriere-list [carrieres]="selectedCarrieres()" (removed)="removeItem(carrieres, $event)" />
@@ -110,7 +116,13 @@
                         <dw-tag>{{ selectedArmes().length }} sélectionnée(s)</dw-tag>
                       </div>
 
-                      <bol-arme-add-menu [armes]="filteredArmes()" (added)="addArmeEntry($event)" />
+                      <bol-add-menu
+                        [options]="armeOptions()"
+                        label="Arme"
+                        triggerLabel="Ajouter une arme"
+                        addLabel="Ajouter l'arme"
+                        (added)="addArmeEntry($event.id)"
+                      />
                     </div>
 
                     <bol-arme-list [armes]="selectedArmes()" (removed)="removeItem(armes, $event)" />
@@ -125,7 +137,13 @@
                         <dw-tag>{{ selectedArmures().length }} sélectionnée(s)</dw-tag>
                       </div>
 
-                      <bol-armure-add-menu [armures]="filteredArmures()" (added)="addArmureEntry($event)" />
+                      <bol-add-menu
+                        [options]="armureOptions()"
+                        label="Armure"
+                        triggerLabel="Ajouter une armure"
+                        addLabel="Ajouter l'armure"
+                        (added)="addArmureEntry($event.id)"
+                      />
                     </div>
 
                     <bol-armure-list [armures]="selectedArmures()" (removed)="removeItem(armures, $event)" />

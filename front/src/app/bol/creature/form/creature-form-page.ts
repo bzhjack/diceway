@@ -7,7 +7,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {BolCreatureModel} from '../../models/bol-creature.model';
 import {BolCreatureStateService} from '../../services/bol-creature-state.service';
 import {BolCreaturesService} from '../../services/bol-creatures.service';
-import {CapaciteAddEvent} from '../../shared/capacite/add-menu/capacite-add-menu.component';
+import {AddMenuEvent} from '../../shared/add-menu/add-menu.component';
 import {CapaciteEntry} from '../../shared/capacite/list/capacite-list.component';
 import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
 import {DetailDraft, availableCatalog, selectedEntries} from '../../shared/form/form-selection';
@@ -149,7 +149,7 @@ export class CreatureFormPageComponent extends BolEntityFormPageBase<BolCreature
     return this.creatureForm.controls.capacites as FormArray;
   }
 
-  protected addCapaciteEntry(event: CapaciteAddEvent): void {
+  protected addCapaciteEntry(event: AddMenuEvent): void {
     this.capacites.push(
       this.formBuilder.group({
         id: this.formBuilder.control(event.id, Validators.required),

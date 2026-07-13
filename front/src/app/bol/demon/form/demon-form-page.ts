@@ -7,10 +7,10 @@ import {MatIconModule} from '@angular/material/icon';
 import {BolDemonModel} from '../../models/bol-demon.model';
 import {BolDemonStateService} from '../../services/bol-demon-state.service';
 import {BolDemonsService} from '../../services/bol-demons.service';
+import {AddMenuEvent} from '../../shared/add-menu/add-menu.component';
 import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
 import {DetailDraft, availableCatalog, selectedEntries} from '../../shared/form/form-selection';
 import {controlValueSignal, formArrayValueSignal, formDirtySignal} from '../../shared/form/form-signals';
-import {PouvoirAddEvent} from '../../shared/pouvoir/add-menu/pouvoir-add-menu.component';
 import {PouvoirEntry} from '../../shared/pouvoir/list/pouvoir-list.component';
 import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
 import {DemonGeneralComponent} from './general/demon-general.component';
@@ -148,7 +148,7 @@ export class DemonFormPageComponent extends BolEntityFormPageBase<BolDemonModel>
     return this.demonForm.controls.pouvoirs as FormArray;
   }
 
-  protected addPouvoirEntry(event: PouvoirAddEvent): void {
+  protected addPouvoirEntry(event: AddMenuEvent): void {
     this.pouvoirs.push(
       this.formBuilder.group({
         id: this.formBuilder.control(event.id, Validators.required),

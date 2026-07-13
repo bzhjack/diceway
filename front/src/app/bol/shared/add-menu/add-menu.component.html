@@ -1,0 +1,41 @@
+<button
+  type="button"
+  class="dw-add-trigger"
+  [attr.aria-label]="triggerLabel()"
+  [matTooltip]="triggerLabel()"
+  #trigger="matMenuTrigger"
+  [matMenuTriggerFor]="menu"
+  (menuOpened)="reset()"
+>
+  <mat-icon>add</mat-icon>
+</button>
+
+<mat-menu #menu="matMenu" class="dw-add-menu-panel">
+  <div class="dw-add-menu-content" (click)="$event.stopPropagation()">
+    <mat-form-field subscriptSizing="dynamic">
+      <mat-label>{{ label() }}</mat-label>
+      <mat-select [formControl]="selectedId">
+        <mat-option [value]="null">{{ emptyLabel() }}</mat-option>
+        @for (option of options(); track option.id) {
+          <mat-option [value]="option.id">
+            <span class="truncate">{{ option.label }}</span>
+            @if (option.detail) {
+              <span class="dw-add-menu-option-detail">{{ option.detail }}</span>
+            }
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (withDetail()) {
+      <mat-form-field subscriptSizing="dynamic">
+        <mat-label>Détail (optionnel)</mat-label>
+        <input matInput [formControl]="detailControl" />
+      </mat-form-field>
+    }
+
+    <button mat-flat-button type="button" [disabled]="!selectedId.value" (click)="add(); trigger.closeMenu()">
+      <mat-icon>add</mat-icon> {{ addLabel() }}
+    </button>
+  </div>
+</mat-menu>
