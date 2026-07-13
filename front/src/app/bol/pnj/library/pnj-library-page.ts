@@ -4,7 +4,7 @@ import {RouterLink} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {BolHerosModel} from '../../models/bol-heros.model';
-import {BolHerosService} from '../../services/bol-heros.service';
+import {BolPnjService} from '../../services/bol-pnj.service';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
@@ -52,10 +52,10 @@ interface PnjTypeOption {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PnjLibraryPageComponent {
-  private readonly herosService = inject(BolHerosService);
+  private readonly pnjService = inject(BolPnjService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
-  private readonly pnjs = refreshableResource(() => this.herosService.pnjs());
+  private readonly pnjs = refreshableResource(() => this.pnjService.pnjs());
 
   protected readonly typeOptions: PnjTypeOption[] = [
     {label: 'Tous les profils', value: ''},
@@ -120,7 +120,7 @@ export class PnjLibraryPageComponent {
       return;
     }
 
-    this.herosService.quickDelete(pnj.id).subscribe({
+    this.pnjService.deletePnj(pnj.id).subscribe({
       next: () => this.pnjs.refresh(),
       error: (error: unknown) => {
         this.snackBar.open(

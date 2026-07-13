@@ -3,7 +3,9 @@ import {toSignal} from '@angular/core/rxjs-interop';
 import {AuthService} from '../../core/auth/auth.service';
 import {BolCreaturesService} from '../services/bol-creatures.service';
 import {BolDemonsService} from '../services/bol-demons.service';
+import {BolCatalogService} from '../services/bol-catalog.service';
 import {BolHerosService} from '../services/bol-heros.service';
+import {BolPnjService} from '../services/bol-pnj.service';
 import {BolScenarioService} from '../services/bol-scenario.service';
 import {WorkspaceHeaderComponent} from './workspace-header/workspace-header';
 import {WorkspaceMetric, WorkspaceMetricsComponent} from './workspace-metrics/workspace-metrics';
@@ -25,13 +27,15 @@ export class WorkspacePageComponent {
   private readonly bolCreaturesService = inject(BolCreaturesService);
   private readonly bolDemonsService = inject(BolDemonsService);
   private readonly bolHerosService = inject(BolHerosService);
+  private readonly pnjService = inject(BolPnjService);
+  private readonly catalogService = inject(BolCatalogService);
   private readonly bolScenarioService = inject(BolScenarioService);
   private readonly creatures = toSignal(this.bolCreaturesService.creatures(), { initialValue: [] });
   private readonly demons = toSignal(this.bolDemonsService.demons(), { initialValue: [] });
   private readonly heroes = toSignal(this.bolHerosService.heroes(), { initialValue: [] });
-  private readonly pnjs = toSignal(this.bolHerosService.pnjs(), { initialValue: [] });
-  private readonly armes = toSignal(this.bolHerosService.armes(), { initialValue: [] });
-  private readonly armures = toSignal(this.bolHerosService.armures(), { initialValue: [] });
+  private readonly pnjs = toSignal(this.pnjService.pnjs(), { initialValue: [] });
+  private readonly armes = toSignal(this.catalogService.armes(), { initialValue: [] });
+  private readonly armures = toSignal(this.catalogService.armures(), { initialValue: [] });
   private readonly scenariosCount = toSignal(this.bolScenarioService.scenarios(), {initialValue: []});
 
   protected readonly userName = computed(() => this.authService.user()?.name ?? 'Utilisateur');

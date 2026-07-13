@@ -6,7 +6,7 @@ import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
-import {BolHerosService} from '../../services/bol-heros.service';
+import {BolPnjService} from '../../services/bol-pnj.service';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {AddMenuComponent, addMenuOptions} from '../../shared/add-menu/add-menu.component';
 import {ArmeEntry, ArmeListComponent} from '../../shared/arme/list/arme-list.component';
@@ -105,7 +105,7 @@ const PNJ_FORM_LABELS: EntityFormLabels = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel> {
-  private readonly herosService = inject(BolHerosService);
+  private readonly pnjService = inject(BolPnjService);
   private readonly herosStateService = inject(BolHerosStateService);
 
   protected readonly armesList = this.herosStateService.armeList;
@@ -288,15 +288,15 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel> {
   }
 
   protected loadEntity(id: string): Observable<BolHerosModel> {
-    return this.herosService.pnj(id);
+    return this.pnjService.pnj(id);
   }
 
   protected createEntity(payload: Record<string, unknown>): Observable<BolHerosModel> {
-    return this.herosService.quickCreate(payload);
+    return this.pnjService.createPnj(payload);
   }
 
   protected updateEntity(payload: Record<string, unknown>): Observable<BolHerosModel> {
-    return this.herosService.quickUpdate(payload);
+    return this.pnjService.updatePnj(payload);
   }
 
   protected resetForm(): void {

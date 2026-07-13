@@ -6,7 +6,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {BolArmeModel} from '../models/bol-arme.model';
 import {BolArmureModel} from '../models/bol-armure.model';
-import {BolHerosService} from '../services/bol-heros.service';
+import {BolCatalogService} from '../services/bol-catalog.service';
 import {DwTagComponent} from '../../shared/dw-tag/dw-tag';
 
 type IntendanceAccent = 'amber' | 'sky';
@@ -30,9 +30,9 @@ interface IntendanceLibraryEntry {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IntendancePageComponent {
-  private readonly herosService = inject(BolHerosService);
-  private readonly weapons = toSignal(this.herosService.armes(), {initialValue: [] as BolArmeModel[]});
-  private readonly armors = toSignal(this.herosService.armures(), {initialValue: [] as BolArmureModel[]});
+  private readonly catalogService = inject(BolCatalogService);
+  private readonly weapons = toSignal(this.catalogService.armes(), {initialValue: [] as BolArmeModel[]});
+  private readonly armors = toSignal(this.catalogService.armures(), {initialValue: [] as BolArmureModel[]});
 
   protected readonly totalEntries = computed(() => this.weapons().length + this.armors().length);
   protected readonly customEntries = computed(

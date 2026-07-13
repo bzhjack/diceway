@@ -1,7 +1,15 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
-import {BolHerosService} from './bol-heros.service';
 import {toSignal} from '@angular/core/rxjs-interop';
+import {
+  AVANTAGE_MAGIE_DES_ROIS_SORCIERS_ID,
+  AVANTAGE_POUVOIR_DU_NEANT_ID,
+  CARRIERE_ALCHIMISTE_ID,
+  CARRIERE_PRETRE_ID,
+  CARRIERE_SORCIER_ID,
+  DESAVANTAGE_NON_COMBATTANT_ID,
+} from '../bol-rules.constants';
 import {BolHerosModel} from '../models/bol-heros.model';
+import {BolCatalogService} from './bol-catalog.service';
 
 export interface HeroCreationWarning {
   step: string;
@@ -17,42 +25,45 @@ export interface AttributModifier {
   providedIn: 'root',
 })
 export class BolHerosStateService {
-  #bhs = inject(BolHerosService);
-  langueList = toSignal(this.#bhs.langues());
-  armureList = toSignal(this.#bhs.armures());
-  armeList = toSignal(this.#bhs.armes());
-  regionList = toSignal(this.#bhs.regions());
-  carriereList = toSignal(this.#bhs.carrieres());
+  #catalog = inject(BolCatalogService);
+  langueList = toSignal(this.#catalog.langues());
+  armureList = toSignal(this.#catalog.armures());
+  armeList = toSignal(this.#catalog.armes());
+  regionList = toSignal(this.#catalog.regions());
+  carriereList = toSignal(this.#catalog.carrieres());
   currentHeros = signal<BolHerosModel | null>(null);
-  avantagesList = toSignal(this.#bhs.avantages());
-  desavantagesList = toSignal(this.#bhs.desavantages());
+  avantagesList = toSignal(this.#catalog.avantages());
+  desavantagesList = toSignal(this.#catalog.desavantages());
   currentHerosCarrieres = computed(() => this.currentHeros()?.carrieres ?? []);
 
-  // E11: Non-combattant (désavantage id=33) modifies combat and carrière budgets
+  // E11: Non-combattant modifie les budgets combat et carrières
   isNonCombattant = computed(() =>
     this.currentHeros()?.traits?.some(
-      (t) => t.type === 'D' && t.carriere === false && t.traitable_id === 33,
+      (t) => t.type === 'D' && t.carriere === false && t.traitable_id === DESAVANTAGE_NON_COMBATTANT_ID,
     ) ?? false,
   );
   combatBudget = computed(() => (this.isNonCombattant() ? 2 : 4));
   carriereBudget = computed(() => (this.isNonCombattant() ? 6 : 4));
 
-  // E12: Special avantages requiring extra désavantages (ids 30 and 44)
+  // E12: avantages spéciaux exigeant un désavantage supplémentaire
   specialAvantageDesavantageRequired = computed(() => {
     const ids = this.currentHeroAvantages().map((t) => t.traitable_id);
-    return (ids.includes(30) ? 1 : 0) + (ids.includes(44) ? 1 : 0);
+    return (
+      (ids.includes(AVANTAGE_MAGIE_DES_ROIS_SORCIERS_ID) ? 1 : 0) +
+      (ids.includes(AVANTAGE_POUVOIR_DU_NEANT_ID) ? 1 : 0)
+    );
   });
 
   carriereDesavantageCount = computed(() => {
     let countDesavantage = 0;
     this.currentHerosCarrieres().forEach((carriere) => {
       switch (carriere.carriere_id) {
-        // 1 : Alchimiste ( au dessus rang 2)
-        case 1:
+        // Alchimiste : un désavantage par rang au-dessus de 2
+        case CARRIERE_ALCHIMISTE_ID:
           countDesavantage += Math.max(carriere.value - 2, 0);
           break;
-        // 24: Sorcier (au dessus rang 1)
-        case 24:
+        // Sorcier : un désavantage par rang au-dessus de 1
+        case CARRIERE_SORCIER_ID:
           countDesavantage += Math.max(carriere.value - 1, 0);
           break;
       }
@@ -158,17 +169,14 @@ export class BolHerosStateService {
       modifiers.push({attr: 'vitalite', value: vigueur});
     }
     this.currentHerosCarrieres().forEach((carriere) => {
-      // 24: sorcier, 1: alchimiste, 21: pretre/druide
-      // points de créations = rang d'alchimiste
-      // points de pouvoir = 10 + rang de sorcier
-      // point de foi = rang pretre.
-      if (carriere.carriere_id === 24) {
+      // points de pouvoir = 10 + rang de sorcier ; création = rang d'alchimiste ; foi = rang de prêtre
+      if (carriere.carriere_id === CARRIERE_SORCIER_ID) {
         modifiers.push({attr: 'pouvoir', value: 10 + carriere.value});
       }
-      if (carriere.carriere_id === 1 && carriere.value !== 0) {
+      if (carriere.carriere_id === CARRIERE_ALCHIMISTE_ID && carriere.value !== 0) {
         modifiers.push({attr: 'creation', value: carriere.value});
       }
-      if (carriere.carriere_id === 21 && carriere.value !== 0) {
+      if (carriere.carriere_id === CARRIERE_PRETRE_ID && carriere.value !== 0) {
         modifiers.push({attr: 'foi', value: carriere.value});
       }
     });

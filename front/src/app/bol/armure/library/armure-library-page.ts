@@ -10,7 +10,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolArmureModel} from '../../models/bol-armure.model';
-import {BolHerosService} from '../../services/bol-heros.service';
+import {BolCatalogService} from '../../services/bol-catalog.service';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {matchesTerm} from '../../../shared/list.utils';
@@ -45,9 +45,9 @@ import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-l
 })
 export class ArmureLibraryPageComponent {
   private readonly formBuilder = inject(FormBuilder);
-  private readonly herosService = inject(BolHerosService);
+  private readonly catalogService = inject(BolCatalogService);
   private readonly dialog = inject(MatDialog);
-  private readonly armors = refreshableResource(() => this.herosService.armures());
+  private readonly armors = refreshableResource(() => this.catalogService.armures());
 
   protected readonly searchTerm = signal('');
   protected readonly onlyCreations = signal(false);
@@ -143,8 +143,8 @@ export class ArmureLibraryPageComponent {
     this.errorMessage.set('');
 
     const request$ = this.editingArmorId()
-      ? this.herosService.updateArmureCatalog(payload)
-      : this.herosService.createArmureCatalog(payload);
+      ? this.catalogService.updateArmure(payload)
+      : this.catalogService.createArmure(payload);
 
     request$.subscribe({
       next: () => {
@@ -193,7 +193,7 @@ export class ArmureLibraryPageComponent {
       return;
     }
 
-    this.herosService.deleteArmureCatalog(armor.id).subscribe({
+    this.catalogService.deleteArmure(armor.id).subscribe({
       next: () => {
         this.armors.refresh();
 

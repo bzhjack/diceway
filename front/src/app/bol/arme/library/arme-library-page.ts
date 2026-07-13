@@ -11,7 +11,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolArmeModel} from '../../models/bol-arme.model';
-import {BolHerosService} from '../../services/bol-heros.service';
+import {BolCatalogService} from '../../services/bol-catalog.service';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {matchesTerm} from '../../../shared/list.utils';
@@ -52,9 +52,9 @@ interface WeaponTypeOption {
 })
 export class ArmeLibraryPageComponent {
   private readonly formBuilder = inject(FormBuilder);
-  private readonly herosService = inject(BolHerosService);
+  private readonly catalogService = inject(BolCatalogService);
   private readonly dialog = inject(MatDialog);
-  private readonly weapons = refreshableResource(() => this.herosService.armes());
+  private readonly weapons = refreshableResource(() => this.catalogService.armes());
 
   protected readonly weaponTypeOptions: WeaponTypeOption[] = [
     {label: 'Mêlée', value: 'M'},
@@ -167,8 +167,8 @@ export class ArmeLibraryPageComponent {
     this.errorMessage.set('');
 
     const request$ = this.editingWeaponId()
-      ? this.herosService.updateArmeCatalog(payload)
-      : this.herosService.createArmeCatalog(payload);
+      ? this.catalogService.updateArme(payload)
+      : this.catalogService.createArme(payload);
 
     request$.subscribe({
       next: () => {
@@ -221,7 +221,7 @@ export class ArmeLibraryPageComponent {
       return;
     }
 
-    this.herosService.deleteArmeCatalog(weapon.id).subscribe({
+    this.catalogService.deleteArme(weapon.id).subscribe({
       next: () => {
         this.weapons.refresh();
 
