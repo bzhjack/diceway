@@ -12,6 +12,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {BolCreatureModel} from '../../models/bol-creature.model';
 import {BolCreatureStateService} from '../../services/bol-creature-state.service';
 import {BolCreaturesService} from '../../services/bol-creatures.service';
+import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {HasPendingChanges} from '../../../core/pending-changes.guard';
 import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {PictureComponent} from '../../../shared/picture/picture';
@@ -200,7 +201,7 @@ export class CreatureFormPageComponent implements HasPendingChanges {
         .subscribe({
           next: (creature) => this.hydrateForm(creature),
           error: (error: unknown) => {
-            this.errorMessage.set(this.extractErrorMessage(error, true));
+            this.errorMessage.set(extractApiErrorMessage(error, 'Le chargement de la créature a échoué.'));
           },
         });
 
@@ -289,7 +290,7 @@ export class CreatureFormPageComponent implements HasPendingChanges {
           this.navigateBack(true);
         },
         error: (error: unknown) => {
-          this.errorMessage.set(this.extractErrorMessage(error, false));
+          this.errorMessage.set(extractApiErrorMessage(error, this.saveErrorFallback()));
         },
       });
   }
@@ -432,24 +433,7 @@ export class CreatureFormPageComponent implements HasPendingChanges {
     return typeof state?.['returnUrl'] === 'string' ? state['returnUrl'] : null;
   }
 
-  private extractErrorMessage(error: unknown, loading: boolean): string {
-    if (typeof error === 'object' && error !== null) {
-      if ('error' in error && typeof error.error === 'object' && error.error !== null) {
-        const apiError = error.error as Record<string, unknown>;
-        if (typeof apiError['message'] === 'string') {
-          return apiError['message'];
-        }
-      }
-
-      if ('message' in error && typeof error.message === 'string') {
-        return error.message;
-      }
-    }
-
-    return loading
-      ? 'Le chargement de la créature a échoué.'
-      : this.editMode()
-        ? 'La mise à jour de la créature a échoué.'
-        : 'La création de la créature a échoué.';
+  private saveErrorFallback(): string {
+    return this.editMode() ? 'La mise à jour de la créature a échoué.' : 'La création de la créature a échoué.';
   }
 }

@@ -1,4 +1,3 @@
-import {HttpErrorResponse} from '@angular/common/http';
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -15,6 +14,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {startWith, switchMap} from 'rxjs';
 import {BolArmeModel} from '../../models/bol-arme.model';
 import {BolHerosService} from '../../services/bol-heros.service';
+import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {DwBadgeComponent} from '../../../shared/dw-badge/dw-badge';
@@ -190,7 +190,7 @@ export class ArmeLibraryPageComponent {
       },
       error: (error) => {
         this.submitting.set(false);
-        this.errorMessage.set(this.resolveErrorMessage(error, 'Impossible d’enregistrer cette arme.'));
+        this.errorMessage.set(extractApiErrorMessage(error, 'Impossible d’enregistrer cette arme.'));
       },
     });
   }
@@ -244,7 +244,7 @@ export class ArmeLibraryPageComponent {
         }
       },
       error: (error) => {
-        this.errorMessage.set(this.resolveErrorMessage(error, 'Impossible de supprimer cette arme.'));
+        this.errorMessage.set(extractApiErrorMessage(error, 'Impossible de supprimer cette arme.'));
       },
     });
   }
@@ -252,23 +252,5 @@ export class ArmeLibraryPageComponent {
   private nullableTrimmed(value: string): string | null {
     const trimmed = value.trim();
     return trimmed ? trimmed : null;
-  }
-
-  private resolveErrorMessage(error: unknown, fallback: string): string {
-    if (error instanceof HttpErrorResponse) {
-      if (typeof error.error?.message === 'string') {
-        return error.error.message;
-      }
-
-      const errors = error.error?.errors;
-      if (errors && typeof errors === 'object') {
-        const firstError = Object.values(errors)[0];
-        if (Array.isArray(firstError) && firstError.length > 0 && typeof firstError[0] === 'string') {
-          return firstError[0];
-        }
-      }
-    }
-
-    return fallback;
   }
 }

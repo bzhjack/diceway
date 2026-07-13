@@ -19,6 +19,7 @@ import {BolLangueModel} from '../../models/bol-langue.model';
 import {BolRegionModel} from '../../models/bol-region.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolHerosService} from '../../services/bol-heros.service';
+import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {HasPendingChanges} from '../../../core/pending-changes.guard';
 import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
@@ -379,7 +380,7 @@ export class HeroFormPageComponent implements HasPendingChanges {
         .subscribe({
           next: (hero) => this.hydrateForm(hero),
           error: (error: unknown) => {
-            this.errorMessage.set(this.extractErrorMessage(error, true));
+            this.errorMessage.set(extractApiErrorMessage(error, 'Le chargement du héros a échoué.'));
           },
         });
 
@@ -520,7 +521,7 @@ export class HeroFormPageComponent implements HasPendingChanges {
           this.navigateBack(true);
         },
         error: (error: unknown) => {
-          this.errorMessage.set(this.extractErrorMessage(error, false));
+          this.errorMessage.set(extractApiErrorMessage(error, this.saveErrorFallback()));
         },
       });
   }
@@ -803,25 +804,8 @@ export class HeroFormPageComponent implements HasPendingChanges {
     return typeof state?.['returnUrl'] === 'string' ? state['returnUrl'] : null;
   }
 
-  private extractErrorMessage(error: unknown, loading: boolean): string {
-    if (typeof error === 'object' && error !== null) {
-      if ('error' in error && typeof error.error === 'object' && error.error !== null) {
-        const apiError = error.error as Record<string, unknown>;
-        if (typeof apiError['message'] === 'string') {
-          return apiError['message'];
-        }
-      }
-
-      if ('message' in error && typeof error.message === 'string') {
-        return error.message;
-      }
-    }
-
-    return loading
-      ? 'Le chargement du héros a échoué.'
-      : this.editMode()
-        ? 'La mise à jour du héros a échoué.'
-        : 'La création du héros a échoué.';
+  private saveErrorFallback(): string {
+    return this.editMode() ? 'La mise à jour du héros a échoué.' : 'La création du héros a échoué.';
   }
 
   private traitSource(entry: HeroTraitDraft): BolAvantageModel | BolDesavantageModel | undefined {

@@ -2,6 +2,8 @@ import {ChangeDetectionStrategy, Component, OnInit, computed, inject, signal} fr
 import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolHerosService} from '../../services/bol-heros.service';
@@ -50,6 +52,7 @@ export class HeroStatblockDialogContent {
 export class HeroLibraryPageComponent implements OnInit {
   private readonly herosService = inject(BolHerosService);
   private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
   private readonly heroes = this.herosService.heroesList;
 
   ngOnInit(): void {
@@ -127,6 +130,13 @@ export class HeroLibraryPageComponent implements OnInit {
 
     this.herosService.deleteHeros(hero.id).subscribe({
       next: () => this.herosService.loadHeroes(),
+      error: (error: unknown) => {
+        this.snackBar.open(
+          extractApiErrorMessage(error, 'La suppression du héros a échoué.'),
+          'Fermer',
+          {duration: 5000},
+        );
+      },
     });
   }
 }

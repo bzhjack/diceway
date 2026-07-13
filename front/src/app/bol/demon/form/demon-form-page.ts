@@ -12,6 +12,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {BolDemonModel} from '../../models/bol-demon.model';
 import {BolDemonStateService} from '../../services/bol-demon-state.service';
 import {BolDemonsService} from '../../services/bol-demons.service';
+import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {HasPendingChanges} from '../../../core/pending-changes.guard';
 import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {PictureComponent} from '../../../shared/picture/picture';
@@ -200,7 +201,7 @@ export class DemonFormPageComponent implements HasPendingChanges {
         .subscribe({
           next: (demon) => this.hydrateForm(demon),
           error: (error: unknown) => {
-            this.errorMessage.set(this.extractErrorMessage(error, true));
+            this.errorMessage.set(extractApiErrorMessage(error, 'Le chargement du démon a échoué.'));
           },
         });
 
@@ -291,7 +292,7 @@ export class DemonFormPageComponent implements HasPendingChanges {
           this.navigateBack(true);
         },
         error: (error: unknown) => {
-          this.errorMessage.set(this.extractErrorMessage(error, false));
+          this.errorMessage.set(extractApiErrorMessage(error, this.saveErrorFallback()));
         },
       });
   }
@@ -437,24 +438,7 @@ export class DemonFormPageComponent implements HasPendingChanges {
     return typeof state?.['returnUrl'] === 'string' ? state['returnUrl'] : null;
   }
 
-  private extractErrorMessage(error: unknown, loading: boolean): string {
-    if (typeof error === 'object' && error !== null) {
-      if ('error' in error && typeof error.error === 'object' && error.error !== null) {
-        const apiError = error.error as Record<string, unknown>;
-        if (typeof apiError['message'] === 'string') {
-          return apiError['message'];
-        }
-      }
-
-      if ('message' in error && typeof error.message === 'string') {
-        return error.message;
-      }
-    }
-
-    return loading
-      ? 'Le chargement du démon a échoué.'
-      : this.editMode()
-        ? 'La mise à jour du démon a échoué.'
-        : 'La création du démon a échoué.';
+  private saveErrorFallback(): string {
+    return this.editMode() ? 'La mise à jour du démon a échoué.' : 'La création du démon a échoué.';
   }
 }

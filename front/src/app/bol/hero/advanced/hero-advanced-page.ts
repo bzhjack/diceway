@@ -10,6 +10,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
+import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {
   BolHerosAttributs,
@@ -166,7 +167,7 @@ export class HeroAdvancedPageComponent {
           this.loadingHero.set(false);
         },
         error: (error) => {
-          this.errorMessage.set(this.extractErrorMessage(error));
+          this.errorMessage.set(extractApiErrorMessage(error, 'Le chargement du héros a échoué.'));
           this.loadingHero.set(false);
         },
       });
@@ -197,7 +198,7 @@ export class HeroAdvancedPageComponent {
       },
       error: (error) => {
         this.creatingDraft.set(false);
-        this.errorMessage.set(this.extractErrorMessage(error));
+        this.errorMessage.set(extractApiErrorMessage(error, "Impossible d'enregistrer le héros pour le moment."));
       },
     });
   }
@@ -262,7 +263,7 @@ export class HeroAdvancedPageComponent {
       },
       error: (error) => {
         this.pending.set(false);
-        this.errorMessage.set(this.extractErrorMessage(error));
+        this.errorMessage.set(extractApiErrorMessage(error, "Impossible d'enregistrer le héros pour le moment."));
       },
     });
   }
@@ -412,14 +413,4 @@ export class HeroAdvancedPageComponent {
     return state?.returnUrl ?? null;
   }
 
-  private extractErrorMessage(error: unknown): string {
-    if (typeof error === 'object' && error !== null && 'error' in error) {
-      const errorPayload = (error as {error?: {message?: string}}).error;
-      if (errorPayload?.message) {
-        return errorPayload.message;
-      }
-    }
-
-    return "Impossible d'enregistrer le héros pour le moment.";
-  }
 }

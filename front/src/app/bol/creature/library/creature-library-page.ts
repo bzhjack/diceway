@@ -3,9 +3,11 @@ import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {BolCreatureModel} from '../../models/bol-creature.model';
 import {BolCreatureStateService} from '../../services/bol-creature-state.service';
 import {BolCreaturesService} from '../../services/bol-creatures.service';
+import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -56,6 +58,7 @@ export class CreatureLibraryPageComponent {
   private readonly creatureStateService = inject(BolCreatureStateService);
   private readonly creaturesService = inject(BolCreaturesService);
   private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
   private readonly refreshTrigger = signal(0);
   private readonly creatures = toSignal(
     toObservable(this.refreshTrigger).pipe(
@@ -140,6 +143,13 @@ export class CreatureLibraryPageComponent {
 
     this.creaturesService.deleteCreature(creature.id).subscribe({
       next: () => this.refreshTrigger.update((value) => value + 1),
+      error: (error: unknown) => {
+        this.snackBar.open(
+          extractApiErrorMessage(error, 'La suppression de la créature a échoué.'),
+          'Fermer',
+          {duration: 5000},
+        );
+      },
     });
   }
 }

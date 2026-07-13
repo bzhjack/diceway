@@ -3,8 +3,10 @@ import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolHerosService} from '../../services/bol-heros.service';
+import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -61,6 +63,7 @@ export class PnjStatblockDialogContent {
 export class PnjLibraryPageComponent {
   private readonly herosService = inject(BolHerosService);
   private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
   private readonly refreshTrigger = signal(0);
   private readonly pnjs = toSignal(
     toObservable(this.refreshTrigger).pipe(
@@ -151,6 +154,13 @@ export class PnjLibraryPageComponent {
 
     this.herosService.quickDelete(pnj.id).subscribe({
       next: () => this.refreshTrigger.update((value) => value + 1),
+      error: (error: unknown) => {
+        this.snackBar.open(
+          extractApiErrorMessage(error, 'La suppression du PNJ a échoué.'),
+          'Fermer',
+          {duration: 5000},
+        );
+      },
     });
   }
 }
