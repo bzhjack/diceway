@@ -64,7 +64,11 @@
       <div class="pnj-grid-scroll">
         <div class="pnj-grid">
           @for (pnj of filteredPnjs(); track pnj.id) {
-            <bol-pnj-card [pnj]="pnj" (deleteRequested)="askDelete(pnj)" />
+            <bol-pnj-card
+              [pnj]="pnj"
+              (deleteRequested)="askDelete(pnj)"
+              (statblockRequested)="openStatblock(pnj)"
+            />
           } @empty {
             <p class="pnj-grid__empty">Aucun PNJ ne correspond à cette recherche.</p>
           }

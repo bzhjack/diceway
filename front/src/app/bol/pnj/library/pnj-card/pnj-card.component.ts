@@ -42,6 +42,22 @@ export function pnjTypeLabel(type: string | null | undefined): string {
   }
 }
 
+export function pnjBadge(pnj: BolHerosModel): EntityCardBadge | null {
+  const label = pnjTypeLabel(pnj.type);
+  if (!label) {
+    return null;
+  }
+
+  switch (pnj.type) {
+    case 'C':
+      return {label, variant: 'amber'};
+    case 'R':
+      return {label, variant: 'rose'};
+    default:
+      return {label, variant: 'slate'};
+  }
+}
+
 @Component({
   selector: 'bol-pnj-card',
   imports: [EntityCardComponent],
@@ -52,25 +68,14 @@ export function pnjTypeLabel(type: string | null | undefined): string {
 export class PnjCardComponent {
   readonly pnj = input.required<BolHerosModel>();
   readonly deleteRequested = output<void>();
+  readonly statblockRequested = output<void>();
 
   protected image(): string {
     return pnjImage(this.pnj());
   }
 
   protected badge(): EntityCardBadge | null {
-    const label = pnjTypeLabel(this.pnj().type);
-    if (!label) {
-      return null;
-    }
-
-    switch (this.pnj().type) {
-      case 'C':
-        return {label, variant: 'amber'};
-      case 'R':
-        return {label, variant: 'rose'};
-      default:
-        return {label, variant: 'slate'};
-    }
+    return pnjBadge(this.pnj());
   }
 
   protected meta(): string {

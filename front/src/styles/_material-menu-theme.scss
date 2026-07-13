@@ -22,9 +22,10 @@ html {
   ));
 }
 
-// Statblock créature/démon — dialog sans chrome Material (fond transparent)
+// Statblock créature/démon/pnj — dialog sans chrome Material (fond transparent)
 .creature-statblock-dialog,
-.demon-statblock-dialog {
+.demon-statblock-dialog,
+.pnj-statblock-dialog {
   .mdc-dialog__surface {
     background: transparent !important;
     box-shadow: none !important;

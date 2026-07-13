@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@ang
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
-import {MatDialog} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogModule} from '@angular/material/dialog';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {MatButtonModule} from '@angular/material/button';
@@ -16,14 +16,25 @@ import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
 import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
+import {PnjStatblockComponent} from '../statblock/pnj-statblock.component';
 import {startWith, switchMap} from 'rxjs';
-import {PnjCardComponent, pnjLanguagesText, pnjTypeLabel} from './pnj-card/pnj-card.component';
+import {PnjCardComponent, pnjImage, pnjLanguagesText, pnjTypeLabel} from './pnj-card/pnj-card.component';
 
 type PnjType = 'P' | 'C' | 'R';
 
 interface PnjTypeOption {
   readonly label: string;
   readonly value: PnjType | '';
+}
+
+@Component({
+  selector: 'pnj-statblock-dialog',
+  imports: [MatDialogModule, PnjStatblockComponent],
+  template: `<bol-pnj-statblock [pnj]="data.pnj" [imageSrc]="data.imageSrc" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class PnjStatblockDialogContent {
+  protected readonly data = inject<{pnj: BolHerosModel; imageSrc: string}>(MAT_DIALOG_DATA);
 }
 
 @Component({
@@ -123,6 +134,14 @@ export class PnjLibraryPageComponent {
     this.searchTerm.set('');
     this.searchType.set('');
     this.onlyCreations.set(false);
+  }
+
+  protected openStatblock(pnj: BolHerosModel): void {
+    this.dialog.open(PnjStatblockDialogContent, {
+      data: {pnj, imageSrc: pnjImage(pnj)},
+      maxWidth: 'min(760px, 92vw)',
+      panelClass: 'pnj-statblock-dialog',
+    });
   }
 
   private deletePnj(pnj: BolHerosModel): void {

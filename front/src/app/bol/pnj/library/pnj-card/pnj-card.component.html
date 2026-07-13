@@ -5,9 +5,11 @@
   [meta]="meta()"
   [badge]="badge()"
   [own]="!!pnj().user_id"
+  [clickablePortrait]="true"
   [actions]="actions()"
   [showDelete]="showDelete()"
   [gauges]="gauges()"
   [chips]="chips()"
+  (portraitClick)="statblockRequested.emit()"
   (deleteRequested)="deleteRequested.emit()"
 />
