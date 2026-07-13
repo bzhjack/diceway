@@ -62,7 +62,11 @@
       <div class="hero-grid-scroll">
         <div class="hero-grid">
           @for (hero of filteredHeroes(); track hero.id) {
-            <bol-hero-card [hero]="hero" (deleteRequested)="askDelete(hero)" />
+            <bol-hero-card
+              [hero]="hero"
+              (deleteRequested)="askDelete(hero)"
+              (statblockRequested)="openStatblock(hero)"
+            />
           } @empty {
             <p class="hero-grid__empty">Aucun héros ne correspond à cette recherche.</p>
           }

@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnInit, computed, inject, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
-import {MatDialog} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogModule} from '@angular/material/dialog';
 import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolHerosService} from '../../services/bol-heros.service';
@@ -14,7 +14,18 @@ import {MatCard} from '@angular/material/card';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
-import {HeroCardComponent, heroLanguagesText} from './hero-card/hero-card.component';
+import {HeroStatblockComponent} from '../statblock/hero-statblock.component';
+import {HeroCardComponent, heroImage, heroLanguagesText} from './hero-card/hero-card.component';
+
+@Component({
+  selector: 'hero-statblock-dialog',
+  imports: [MatDialogModule, HeroStatblockComponent],
+  template: `<bol-hero-statblock [hero]="data.hero" [imageSrc]="data.imageSrc" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class HeroStatblockDialogContent {
+  protected readonly data = inject<{hero: BolHerosModel; imageSrc: string}>(MAT_DIALOG_DATA);
+}
 
 @Component({
   selector: 'bol-hero-library-page',
@@ -99,6 +110,14 @@ export class HeroLibraryPageComponent implements OnInit {
   protected clearFilters(): void {
     this.searchTerm.set('');
     this.onlyPending.set(false);
+  }
+
+  protected openStatblock(hero: BolHerosModel): void {
+    this.dialog.open(HeroStatblockDialogContent, {
+      data: {hero, imageSrc: heroImage(hero)},
+      maxWidth: 'min(760px, 92vw)',
+      panelClass: 'hero-statblock-dialog',
+    });
   }
 
   private deleteHero(hero: BolHerosModel): void {

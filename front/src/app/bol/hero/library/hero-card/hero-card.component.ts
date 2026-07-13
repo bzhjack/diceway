@@ -21,6 +21,14 @@ export function heroLanguagesText(hero: BolHerosModel): string {
     .join(', ');
 }
 
+export function heroImage(hero: BolHerosModel): string {
+  return hero.origines.avatar || '/assets/bol/empty-avatar.jpg';
+}
+
+export function heroBadge(hero: BolHerosModel): EntityCardBadge | null {
+  return hero.active ? null : {label: 'En cours', variant: 'amber'};
+}
+
 @Component({
   selector: 'bol-hero-card',
   imports: [EntityCardComponent],
@@ -31,13 +39,14 @@ export function heroLanguagesText(hero: BolHerosModel): string {
 export class HeroCardComponent {
   readonly hero = input.required<BolHerosModel>();
   readonly deleteRequested = output<void>();
+  readonly statblockRequested = output<void>();
 
   protected image(): string {
-    return this.hero().origines.avatar || '/assets/bol/empty-avatar.jpg';
+    return heroImage(this.hero());
   }
 
   protected badge(): EntityCardBadge | null {
-    return this.hero().active ? null : {label: 'En cours', variant: 'amber'};
+    return heroBadge(this.hero());
   }
 
   protected meta(): string {

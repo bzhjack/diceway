@@ -4,8 +4,10 @@
   [name]="hero().origines.nom || 'Héros sans nom'"
   [meta]="meta()"
   [badge]="badge()"
+  [clickablePortrait]="true"
   [actions]="actions()"
   [gauges]="gauges()"
   [chips]="chips()"
+  (portraitClick)="statblockRequested.emit()"
   (deleteRequested)="deleteRequested.emit()"
 />
