@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, computed, inject} from '@angular/core';
 import {FormArray, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Observable, take} from 'rxjs';
+import {Observable} from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
@@ -8,7 +8,7 @@ import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolRegionModel} from '../../models/bol-region.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolHerosService} from '../../services/bol-heros.service';
-import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
+import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {ArmeAddMenuComponent} from '../../shared/arme/add-menu/arme-add-menu.component';
 import {ArmeEntry, ArmeListComponent} from '../../shared/arme/list/arme-list.component';
@@ -299,16 +299,12 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel> 
   }
 
   protected confirmActivation(): void {
-    const ref = this.dialog.open(DwConfirmDialogComponent, {
-      data: {
-        title: 'Activer le héros',
-        message: 'Voulez-vous activer ce héros ?',
-        confirmLabel: 'Oui, activer',
-        cancelLabel: 'Non',
-      },
-    });
-
-    ref.afterClosed().pipe(take(1)).subscribe((confirmed: boolean | undefined) => {
+    confirmDialog(this.dialog, {
+      title: 'Activer le héros',
+      message: 'Voulez-vous activer ce héros ?',
+      confirmLabel: 'Oui, activer',
+      cancelLabel: 'Non',
+    }).subscribe((confirmed) => {
       if (confirmed) {
         this.submit(true);
       }

@@ -3,12 +3,12 @@ import {Signal, computed, effect, inject, signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Observable, map, take} from 'rxjs';
+import {Observable, take} from 'rxjs';
 import {finalize} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {HasPendingChanges} from '../../../core/pending-changes.guard';
-import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
+import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {PictureComponent} from '../../../shared/picture/picture';
 
 /** Libellés spécifiques à l'entité pour les textes communs des pages de formulaire. */
@@ -161,16 +161,12 @@ export abstract class BolEntityFormPageBase<T> implements HasPendingChanges {
       return true;
     }
 
-    const ref = this.dialog.open(DwConfirmDialogComponent, {
-      data: {
-        title: 'Modifications non enregistrées',
-        message: this.labels.unsavedChanges,
-        confirmLabel: 'Quitter sans sauver',
-        cancelLabel: 'Annuler',
-      },
+    return confirmDialog(this.dialog, {
+      title: 'Modifications non enregistrées',
+      message: this.labels.unsavedChanges,
+      confirmLabel: 'Quitter sans sauver',
+      cancelLabel: 'Annuler',
     });
-
-    return ref.afterClosed().pipe(map((confirmed: boolean | undefined) => Boolean(confirmed)));
   }
 
   protected pickAvatar(): void {

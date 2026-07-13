@@ -1,12 +1,15 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
+import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
+import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
+import {matchesTerm, ownFirstThenLabel} from '../../../shared/list.utils';
+import {refreshableResource} from '../../../shared/refreshable-resource';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -17,9 +20,7 @@ import {MatCard} from '@angular/material/card';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
-import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
 import {PnjStatblockComponent} from '../statblock/pnj-statblock.component';
-import {startWith, switchMap} from 'rxjs';
 import {PnjCardComponent, pnjImage, pnjLanguagesText, pnjTypeLabel} from './pnj-card/pnj-card.component';
 
 type PnjType = 'P' | 'C' | 'R';
@@ -27,16 +28,6 @@ type PnjType = 'P' | 'C' | 'R';
 interface PnjTypeOption {
   readonly label: string;
   readonly value: PnjType | '';
-}
-
-@Component({
-  selector: 'pnj-statblock-dialog',
-  imports: [MatDialogModule, PnjStatblockComponent],
-  template: `<bol-pnj-statblock [pnj]="data.pnj" [imageSrc]="data.imageSrc" />`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class PnjStatblockDialogContent {
-  protected readonly data = inject<{pnj: BolHerosModel; imageSrc: string}>(MAT_DIALOG_DATA);
 }
 
 @Component({
@@ -64,14 +55,7 @@ export class PnjLibraryPageComponent {
   private readonly herosService = inject(BolHerosService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
-  private readonly refreshTrigger = signal(0);
-  private readonly pnjs = toSignal(
-    toObservable(this.refreshTrigger).pipe(
-      startWith(0),
-      switchMap(() => this.herosService.pnjs()),
-    ),
-    {initialValue: []},
-  );
+  private readonly pnjs = refreshableResource(() => this.herosService.pnjs());
 
   protected readonly typeOptions: PnjTypeOption[] = [
     {label: 'Tous les profils', value: ''},
@@ -84,53 +68,38 @@ export class PnjLibraryPageComponent {
   protected readonly onlyCreations = signal(false);
 
   protected readonly filteredPnjs = computed(() =>
-    [...this.pnjs()]
+    [...this.pnjs.data()]
       .filter((pnj) => (this.onlyCreations() ? Boolean(pnj.user_id) : true))
       .filter((pnj) => (this.searchType() ? pnj.type === this.searchType() : true))
-      .filter((pnj) => {
-        const term = this.searchTerm().trim().toLocaleLowerCase();
-        if (!term) {
-          return true;
-        }
-
-        const searchValues = [
+      .filter((pnj) =>
+        matchesTerm(
+          this.searchTerm(),
           pnj.origines.nom,
           pnj.origines.commentaire,
           pnj.origines.region?.region,
           pnjTypeLabel(pnj.type),
           pnjLanguagesText(pnj),
-        ];
-
-        return searchValues.some((value) => value?.toLocaleLowerCase().includes(term));
-      })
-      .sort((left, right) => {
-        const ownCompare = (left.user_id ? 0 : 1) - (right.user_id ? 0 : 1);
-        if (ownCompare !== 0) {
-          return ownCompare;
-        }
-
-        return (left.origines.nom ?? '').localeCompare(right.origines.nom ?? '');
-      }),
+        ),
+      )
+      .sort(ownFirstThenLabel((pnj) => Boolean(pnj.user_id), (pnj) => pnj.origines.nom ?? '')),
   );
   protected readonly pnjCount = computed(() => this.filteredPnjs().length);
-  protected readonly totalPnjCount = computed(() => this.pnjs().length);
+  protected readonly totalPnjCount = computed(() => this.pnjs.data().length);
 
   protected askDelete(pnj: BolHerosModel): void {
-    this.dialog
-      .open(DwConfirmDialogComponent, {
-        data: {
-          title: 'Supprimer le PNJ',
-          message: `Voulez-vous supprimer "${pnj.origines.nom ?? 'ce PNJ'}" ?`,
-          confirmLabel: 'Supprimer',
-        },
-        width: '380px',
-      })
-      .afterClosed()
-      .subscribe((confirmed) => {
-        if (confirmed) {
-          this.deletePnj(pnj);
-        }
-      });
+    confirmDialog(
+      this.dialog,
+      {
+        title: 'Supprimer le PNJ',
+        message: `Voulez-vous supprimer "${pnj.origines.nom ?? 'ce PNJ'}" ?`,
+        confirmLabel: 'Supprimer',
+      },
+      {width: '380px'},
+    ).subscribe((confirmed) => {
+      if (confirmed) {
+        this.deletePnj(pnj);
+      }
+    });
   }
 
   protected clearFilters(): void {
@@ -140,10 +109,9 @@ export class PnjLibraryPageComponent {
   }
 
   protected openStatblock(pnj: BolHerosModel): void {
-    this.dialog.open(PnjStatblockDialogContent, {
-      data: {pnj, imageSrc: pnjImage(pnj)},
-      maxWidth: 'min(760px, 92vw)',
-      panelClass: 'pnj-statblock-dialog',
+    openStatblockDialog(this.dialog, PnjStatblockComponent, {
+      pnj,
+      imageSrc: pnjImage(pnj),
     });
   }
 
@@ -153,7 +121,7 @@ export class PnjLibraryPageComponent {
     }
 
     this.herosService.quickDelete(pnj.id).subscribe({
-      next: () => this.refreshTrigger.update((value) => value + 1),
+      next: () => this.pnjs.refresh(),
       error: (error: unknown) => {
         this.snackBar.open(
           extractApiErrorMessage(error, 'La suppression du PNJ a échoué.'),

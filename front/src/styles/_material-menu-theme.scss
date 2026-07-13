@@ -23,10 +23,7 @@ html {
 }
 
 // Statblock créature/démon/pnj/héros — dialog sans chrome Material (fond transparent)
-.creature-statblock-dialog,
-.demon-statblock-dialog,
-.pnj-statblock-dialog,
-.hero-statblock-dialog {
+.dw-statblock-dialog {
   .mdc-dialog__surface {
     background: transparent !important;
     box-shadow: none !important;

@@ -1,10 +1,13 @@
-import {ChangeDetectionStrategy, Component, OnInit, computed, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
-import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
+import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
+import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
+import {matchesTerm} from '../../../shared/list.utils';
+import {refreshableResource} from '../../../shared/refreshable-resource';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {MatButtonModule} from '@angular/material/button';
@@ -18,16 +21,6 @@ import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-lib
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
 import {HeroStatblockComponent} from '../statblock/hero-statblock.component';
 import {HeroCardComponent, heroImage, heroLanguagesText} from './hero-card/hero-card.component';
-
-@Component({
-  selector: 'hero-statblock-dialog',
-  imports: [MatDialogModule, HeroStatblockComponent],
-  template: `<bol-hero-statblock [hero]="data.hero" [imageSrc]="data.imageSrc" />`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class HeroStatblockDialogContent {
-  protected readonly data = inject<{hero: BolHerosModel; imageSrc: string}>(MAT_DIALOG_DATA);
-}
 
 @Component({
   selector: 'bol-hero-library-page',
@@ -49,38 +42,28 @@ export class HeroStatblockDialogContent {
   styleUrl: './hero-library-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeroLibraryPageComponent implements OnInit {
+export class HeroLibraryPageComponent {
   private readonly herosService = inject(BolHerosService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
-  private readonly heroes = this.herosService.heroesList;
-
-  ngOnInit(): void {
-    this.herosService.loadHeroes();
-  }
+  private readonly heroes = refreshableResource(() => this.herosService.heroes());
 
   protected readonly searchTerm = signal('');
   protected readonly onlyPending = signal(false);
 
   protected readonly filteredHeroes = computed(() =>
-    [...this.heroes()]
+    [...this.heroes.data()]
       .filter((hero) => (this.onlyPending() ? !hero.active : true))
-      .filter((hero) => {
-        const term = this.searchTerm().trim().toLocaleLowerCase();
-        if (!term) {
-          return true;
-        }
-
-        const searchValues = [
+      .filter((hero) =>
+        matchesTerm(
+          this.searchTerm(),
           hero.origines.nom,
           hero.origines.joueur,
           hero.origines.commentaire,
           hero.origines.region?.region,
           heroLanguagesText(hero),
-        ];
-
-        return searchValues.some((value) => value?.toLocaleLowerCase().includes(term));
-      })
+        ),
+      )
       .sort((left, right) => {
         if (left.active !== right.active) {
           return left.active ? 1 : -1;
@@ -90,24 +73,22 @@ export class HeroLibraryPageComponent implements OnInit {
       }),
   );
   protected readonly heroCount = computed(() => this.filteredHeroes().length);
-  protected readonly totalHeroCount = computed(() => this.heroes().length);
+  protected readonly totalHeroCount = computed(() => this.heroes.data().length);
 
   protected askDelete(hero: BolHerosModel): void {
-    this.dialog
-      .open(DwConfirmDialogComponent, {
-        data: {
-          title: 'Supprimer le héros',
-          message: `Voulez-vous supprimer "${hero.origines.nom ?? 'ce héros'}" ?`,
-          confirmLabel: 'Supprimer',
-        },
-        width: '380px',
-      })
-      .afterClosed()
-      .subscribe((confirmed) => {
-        if (confirmed) {
-          this.deleteHero(hero);
-        }
-      });
+    confirmDialog(
+      this.dialog,
+      {
+        title: 'Supprimer le héros',
+        message: `Voulez-vous supprimer "${hero.origines.nom ?? 'ce héros'}" ?`,
+        confirmLabel: 'Supprimer',
+      },
+      {width: '380px'},
+    ).subscribe((confirmed) => {
+      if (confirmed) {
+        this.deleteHero(hero);
+      }
+    });
   }
 
   protected clearFilters(): void {
@@ -116,10 +97,9 @@ export class HeroLibraryPageComponent implements OnInit {
   }
 
   protected openStatblock(hero: BolHerosModel): void {
-    this.dialog.open(HeroStatblockDialogContent, {
-      data: {hero, imageSrc: heroImage(hero)},
-      maxWidth: 'min(760px, 92vw)',
-      panelClass: 'hero-statblock-dialog',
+    openStatblockDialog(this.dialog, HeroStatblockComponent, {
+      hero,
+      imageSrc: heroImage(hero),
     });
   }
 
@@ -129,7 +109,7 @@ export class HeroLibraryPageComponent implements OnInit {
     }
 
     this.herosService.deleteHeros(hero.id).subscribe({
-      next: () => this.herosService.loadHeroes(),
+      next: () => this.heroes.refresh(),
       error: (error: unknown) => {
         this.snackBar.open(
           extractApiErrorMessage(error, 'La suppression du héros a échoué.'),

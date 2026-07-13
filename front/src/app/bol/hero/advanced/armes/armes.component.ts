@@ -14,8 +14,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {toSignal} from '@angular/core/rxjs-interop';
-import {take} from 'rxjs';
-import {DwConfirmDialogComponent} from '../../../../shared/dw-confirm-dialog/dw-confirm-dialog';
+import {confirmDialog} from '../../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolArmeModel, BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolHerosStateService} from '../../../services/bol-heros-state.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
@@ -104,16 +103,12 @@ export class HeroAdvancedArmesComponent implements ControlValueAccessor {
   }
 
   protected deleteArme(armeId: number): void {
-    const ref = this.dialog.open(DwConfirmDialogComponent, {
-      data: {
-        title: 'Supprimer l’arme',
-        message: 'Voulez-vous supprimer cette arme ?',
-        confirmLabel: 'Oui',
-        cancelLabel: 'Non',
-      },
-    });
-
-    ref.afterClosed().pipe(take(1)).subscribe((confirmed: boolean | undefined) => {
+    confirmDialog(this.dialog, {
+      title: 'Supprimer l’arme',
+      message: 'Voulez-vous supprimer cette arme ?',
+      confirmLabel: 'Oui',
+      cancelLabel: 'Non',
+    }).subscribe((confirmed) => {
       if (!confirmed) {
         return;
       }

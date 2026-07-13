@@ -19,8 +19,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {toSignal} from '@angular/core/rxjs-interop';
-import {take} from 'rxjs';
-import {DwConfirmDialogComponent} from '../../../../shared/dw-confirm-dialog/dw-confirm-dialog';
+import {confirmDialog} from '../../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolCarriereModel, BolHerosCarriereModel} from '../../../models/bol-carriere.model';
 import {BolDesavantageModel} from '../../../models/bol-desavantage.model';
 import {BolHerosTraitsModel} from '../../../models/bol-trait.model';
@@ -160,16 +159,12 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
   }
 
   protected deleteCarriere(carriereId: number): void {
-    const ref = this.dialog.open(DwConfirmDialogComponent, {
-      data: {
-        title: 'Supprimer la carrière',
-        message: 'Voulez-vous supprimer cette carrière ?',
-        confirmLabel: 'Oui',
-        cancelLabel: 'Non',
-      },
-    });
-
-    ref.afterClosed().pipe(take(1)).subscribe((confirmed: boolean | undefined) => {
+    confirmDialog(this.dialog, {
+      title: 'Supprimer la carrière',
+      message: 'Voulez-vous supprimer cette carrière ?',
+      confirmLabel: 'Oui',
+      cancelLabel: 'Non',
+    }).subscribe((confirmed) => {
       if (!confirmed) {
         return;
       }

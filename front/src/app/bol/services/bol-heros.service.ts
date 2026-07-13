@@ -1,4 +1,4 @@
-import {Injectable, signal} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {BolApiMessage, BolApiSuccess} from "../models/bol-api.model";
@@ -142,15 +142,6 @@ export class BolHerosService {
 
   updateHerosAdvanced(hero: Record<string, unknown> | BolHerosModel): Observable<BolHerosModel> {
     return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/update/advanced`, hero);
-  }
-
-  private readonly _heroesList = signal<BolHerosModel[]>([]);
-  readonly heroesList = this._heroesList.asReadonly();
-
-  loadHeroes(): void {
-    this.http.get<BolHerosModel[]>(`${environment.apiBase}/api/bol/heros`).subscribe(
-      (data) => this._heroesList.set(data),
-    );
   }
 
   heroes(): Observable<BolHerosModel[]> {
