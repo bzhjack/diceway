@@ -1,0 +1,99 @@
+<article class="demon-statblock">
+  <header class="demon-statblock__header">
+    <div class="demon-statblock__avatar">
+      <img [src]="imageSrc()" [alt]="demon().nom" class="h-full w-full object-cover" />
+
+      @if (demon().user_id) {
+        <span class="demon-statblock__avatar-tag">Création</span>
+      }
+    </div>
+
+    <div class="demon-statblock__main">
+      <div class="demon-statblock__topline">
+        <div class="min-w-0 space-y-1">
+          <p class="demon-statblock__eyebrow">Statbloc BOL</p>
+          <h2 class="demon-statblock__title">{{ demon().nom }}</h2>
+        </div>
+
+        <div class="demon-statblock__actions">
+          <ng-content select="[statblock-actions]"></ng-content>
+        </div>
+      </div>
+
+      <div class="demon-statblock__chips">
+        <span class="demon-statblock__chip">{{ demon().categorie.categorie }}</span>
+      </div>
+
+      @if (demon().commentaire) {
+        <p class="demon-statblock__comment">
+          {{ demon().commentaire }}
+        </p>
+      }
+    </div>
+  </header>
+
+  <div class="demon-statblock__grid">
+    <section class="demon-statblock__panel">
+      <p class="demon-statblock__panel-title">Ressources</p>
+
+      <div class="demon-statblock__stats">
+        @for (entry of resourceEntries(); track entry.label) {
+          <div class="demon-statblock__stat-row">
+            <span class="demon-statblock__stat-label">{{ entry.label }}</span>
+            <span class="demon-statblock__stat-value">{{ entry.value }}</span>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="demon-statblock__panel">
+      <p class="demon-statblock__panel-title">Attributs</p>
+
+      <div class="demon-statblock__stats">
+        @for (entry of attributeEntries(); track entry.label) {
+          <div class="demon-statblock__stat-row">
+            <span class="demon-statblock__stat-label">{{ entry.label }}</span>
+            <span class="demon-statblock__stat-value">{{ entry.value }}</span>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="demon-statblock__panel">
+      <p class="demon-statblock__panel-title">Combat</p>
+
+      <div class="demon-statblock__stats">
+        @for (entry of combatEntries(); track entry.label) {
+          <div class="demon-statblock__stat-row">
+            <span class="demon-statblock__stat-label">{{ entry.label }}</span>
+            <span class="demon-statblock__stat-value">{{ entry.value }}</span>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="demon-statblock__panel demon-statblock__panel--abilities">
+      <p class="demon-statblock__panel-title">Pouvoirs infernaux</p>
+
+      @if (demon().pouvoirs.length) {
+        <div class="demon-statblock__abilities">
+          @for (entry of demon().pouvoirs; track entry.id) {
+            <div class="demon-statblock__ability">
+              <div class="demon-statblock__ability-head">
+                <p class="demon-statblock__ability-title">{{ entry.pouvoir.pouvoir }}</p>
+              </div>
+
+              @if (entry.detail || entry.pouvoir.description) {
+                <p class="demon-statblock__ability-detail">
+                  {{ entry.detail || entry.pouvoir.description }}
+                </p>
+              }
+            </div>
+          }
+        </div>
+      } @else {
+        <p class="demon-statblock__empty">Aucun pouvoir infernal renseigné.</p>
+      }
+    </section>
+  </div>
+</article>

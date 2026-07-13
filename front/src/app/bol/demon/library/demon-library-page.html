@@ -59,7 +59,11 @@
       <div class="demon-grid-scroll">
         <div class="demon-grid">
           @for (demon of filteredDemons(); track demon.id) {
-            <bol-demon-card [demon]="demon" (deleteRequested)="askDelete(demon)" />
+            <bol-demon-card
+              [demon]="demon"
+              (deleteRequested)="askDelete(demon)"
+              (statblockRequested)="openStatblock(demon)"
+            />
           } @empty {
             <p class="demon-grid__empty">Aucun démon ne correspond à cette recherche.</p>
           }

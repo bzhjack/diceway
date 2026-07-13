@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@ang
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
-import {MatDialog} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogModule} from '@angular/material/dialog';
 import {BolDemonModel} from '../../models/bol-demon.model';
 import {BolDemonStateService} from '../../services/bol-demon-state.service';
 import {BolDemonsService} from '../../services/bol-demons.service';
@@ -17,8 +17,19 @@ import {MatCard} from '@angular/material/card';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
+import {DemonStatblockComponent} from '../statblock/demon-statblock.component';
 import {startWith, switchMap} from 'rxjs';
-import {DemonCardComponent} from './demon-card/demon-card.component';
+import {DemonCardComponent, demonImage} from './demon-card/demon-card.component';
+
+@Component({
+  selector: 'demon-statblock-dialog',
+  imports: [MatDialogModule, DemonStatblockComponent],
+  template: `<bol-demon-statblock [demon]="data.demon" [imageSrc]="data.imageSrc" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class DemonStatblockDialogContent {
+  protected readonly data = inject<{demon: BolDemonModel; imageSrc: string}>(MAT_DIALOG_DATA);
+}
 
 @Component({
   selector: 'bol-demon-library-page',
@@ -112,6 +123,14 @@ export class DemonLibraryPageComponent {
     this.searchTerm.set('');
     this.searchCategorie.set('');
     this.onlyCreations.set(false);
+  }
+
+  protected openStatblock(demon: BolDemonModel): void {
+    this.dialog.open(DemonStatblockDialogContent, {
+      data: {demon, imageSrc: demonImage(demon)},
+      maxWidth: 'min(760px, 92vw)',
+      panelClass: 'demon-statblock-dialog',
+    });
   }
 
   private deleteDemon(demon: BolDemonModel): void {

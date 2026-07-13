@@ -26,6 +26,7 @@ export function demonImage(demon: BolDemonModel): string {
 export class DemonCardComponent {
   readonly demon = input.required<BolDemonModel>();
   readonly deleteRequested = output<void>();
+  readonly statblockRequested = output<void>();
 
   protected image(): string {
     return demonImage(this.demon());
