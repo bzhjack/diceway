@@ -1,9 +1,12 @@
 import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
-import {RouterLink} from '@angular/router';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
-import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosModel} from '../../../models/bol-heros.model';
+import {
+  EntityCardAction,
+  EntityCardBadge,
+  EntityCardChip,
+  EntityCardComponent,
+  EntityCardGauge,
+} from '../../../shared/entity-card/entity-card.component';
 
 interface PnjCareerEntry {
   readonly label: string;
@@ -41,7 +44,7 @@ export function pnjTypeLabel(type: string | null | undefined): string {
 
 @Component({
   selector: 'bol-pnj-card',
-  imports: [RouterLink, MatButtonModule, MatIconModule, MatTooltipModule],
+  imports: [EntityCardComponent],
   templateUrl: './pnj-card.component.html',
   styleUrl: './pnj-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,8 +57,20 @@ export class PnjCardComponent {
     return pnjImage(this.pnj());
   }
 
-  protected typeLabel(): string {
-    return pnjTypeLabel(this.pnj().type);
+  protected badge(): EntityCardBadge | null {
+    const label = pnjTypeLabel(this.pnj().type);
+    if (!label) {
+      return null;
+    }
+
+    switch (this.pnj().type) {
+      case 'C':
+        return {label, variant: 'amber'};
+      case 'R':
+        return {label, variant: 'rose'};
+      default:
+        return {label, variant: 'slate'};
+    }
   }
 
   protected meta(): string {
@@ -63,7 +78,39 @@ export class PnjCardComponent {
     return [pnj.origines.region?.region, pnjLanguagesText(pnj)].filter(Boolean).join(' · ');
   }
 
-  protected careerEntries(): readonly PnjCareerEntry[] {
+  protected actions(): readonly EntityCardAction[] {
+    if (!this.pnj().user_id) {
+      return [];
+    }
+
+    return [{icon: 'edit', tooltip: 'Modifier', routerLink: ['/create/pnj', this.pnj().id], state: {returnUrl: '/library/pnjs'}}];
+  }
+
+  protected showDelete(): boolean {
+    return Boolean(this.pnj().user_id);
+  }
+
+  protected gauges(): readonly EntityCardGauge[] {
+    const pnj = this.pnj();
+    const gauges: EntityCardGauge[] = [{icon: 'favorite', value: pnj.ressources.vitalite, label: 'Vitalité', accent: 'pv'}];
+
+    if (pnj.ressources.heroisme > 0) {
+      gauges.push({icon: 'star', value: pnj.ressources.heroisme, label: 'Héroïsme', accent: 'ph'});
+    }
+
+    return gauges;
+  }
+
+  protected chips(): readonly EntityCardChip[] {
+    return [
+      {icon: 'work', value: this.careerEntries().length, tooltip: 'Carrières'},
+      {icon: 'auto_awesome', value: this.traitCount(), tooltip: 'Traits'},
+      {icon: 'shield', value: this.armorCount(), tooltip: 'Armures'},
+      {icon: 'gavel', value: this.weaponCount(), tooltip: 'Armes'},
+    ];
+  }
+
+  private careerEntries(): readonly PnjCareerEntry[] {
     return this.pnj()
       .carrieres.map((carriere) => ({
         label: carriere.carriere?.carriere ?? '',
@@ -72,17 +119,17 @@ export class PnjCardComponent {
       .filter((entry) => entry.label);
   }
 
-  protected traitCount(): number {
+  private traitCount(): number {
     return this.pnj()
       .traits.map((trait) => (trait.type === 'D' ? this.desavantageLabel(trait.traitable) : this.avantageLabel(trait.traitable)))
       .filter(Boolean).length;
   }
 
-  protected armorCount(): number {
+  private armorCount(): number {
     return this.pnj().armures.filter((armure) => typeof armure === 'object').length;
   }
 
-  protected weaponCount(): number {
+  private weaponCount(): number {
     return this.pnj().armes.filter((arme) => typeof arme === 'object').length;
   }
 

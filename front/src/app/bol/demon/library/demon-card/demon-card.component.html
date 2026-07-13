@@ -1,56 +1,14 @@
-<article class="demon-card" [class.demon-card--own]="demon().user_id">
-  <div class="demon-card__portrait">
-    <img [src]="image()" [alt]="demon().nom" class="demon-card__img" />
-    <span
-      class="demon-card__badge"
-      [class.demon-card__badge--coriace]="demon().categorie.type === 'C'"
-      [class.demon-card__badge--rival]="demon().categorie.type === 'R'"
-      [class.demon-card__badge--pietaille]="demon().categorie.type === 'P'"
-    >{{ demon().categorie.categorie }}</span>
-  </div>
-
-  <div class="demon-card__body">
-    <div class="demon-card__head">
-      <div class="demon-card__title-row">
-        <h3 class="demon-card__name">{{ demon().nom }}</h3>
-        @if (demon().user_id) {
-          <div class="demon-card__actions">
-            <button
-              mat-icon-button
-              class="demon-card__action-btn"
-              matTooltip="Modifier"
-              [routerLink]="['/create/demon', demon().id]"
-              [state]="{ returnUrl: '/library/demons' }"
-            >
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              class="demon-card__action-btn demon-card__action-btn--danger"
-              matTooltip="Supprimer"
-              (click)="deleteRequested.emit()"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-        }
-      </div>
-    </div>
-
-    <div class="demon-card__gauges">
-      <div class="demon-gauge demon-gauge--pv">
-        <mat-icon>favorite</mat-icon>
-        <div class="demon-gauge__text">
-          <b>{{ demon().vitalite }}</b>
-          <span>Vitalité</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="demon-card__summary">
-      <span class="demon-count-chip" matTooltip="Pouvoirs infernaux">
-        <mat-icon>auto_awesome</mat-icon>{{ demon().pouvoirs.length }}
-      </span>
-    </div>
-  </div>
-</article>
+<bol-entity-card
+  [image]="image()"
+  [imageAlt]="demon().nom"
+  [name]="demon().nom"
+  [badge]="badge()"
+  [own]="!!demon().user_id"
+  [dark]="true"
+  [accent]="'rose'"
+  [actions]="actions()"
+  [showDelete]="showDelete()"
+  [gauges]="gauges()"
+  [chips]="chips()"
+  (deleteRequested)="deleteRequested.emit()"
+/>

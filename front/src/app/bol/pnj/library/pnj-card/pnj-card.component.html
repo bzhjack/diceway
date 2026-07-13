@@ -1,79 +1,13 @@
-<article class="pnj-card" [class.pnj-card--own]="pnj().user_id">
-  <div class="pnj-card__portrait">
-    <img [src]="image()" [alt]="pnj().origines.nom ?? 'PNJ'" class="pnj-card__img" />
-    @if (typeLabel()) {
-      <span
-        class="pnj-card__badge"
-        [class.pnj-card__badge--coriace]="pnj().type === 'C'"
-        [class.pnj-card__badge--rival]="pnj().type === 'R'"
-        [class.pnj-card__badge--pietaille]="pnj().type === 'P'"
-      >{{ typeLabel() }}</span>
-    }
-  </div>
-
-  <div class="pnj-card__body">
-    <div class="pnj-card__head">
-      <div class="pnj-card__title-row">
-        <h3 class="pnj-card__name">{{ pnj().origines.nom || 'PNJ sans nom' }}</h3>
-        @if (pnj().user_id) {
-          <div class="pnj-card__actions">
-            <button
-              mat-icon-button
-              class="pnj-card__action-btn"
-              matTooltip="Modifier"
-              [routerLink]="['/create/pnj', pnj().id]"
-              [state]="{ returnUrl: '/library/pnjs' }"
-            >
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              class="pnj-card__action-btn pnj-card__action-btn--danger"
-              matTooltip="Supprimer"
-              (click)="deleteRequested.emit()"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-        }
-      </div>
-      @if (meta()) {
-        <p class="pnj-card__meta">{{ meta() }}</p>
-      }
-    </div>
-
-    <div class="pnj-card__gauges">
-      <div class="pnj-gauge pnj-gauge--pv">
-        <mat-icon>favorite</mat-icon>
-        <div class="pnj-gauge__text">
-          <b>{{ pnj().ressources.vitalite }}</b>
-          <span>Vitalité</span>
-        </div>
-      </div>
-      @if (pnj().ressources.heroisme > 0) {
-        <div class="pnj-gauge pnj-gauge--ph">
-          <mat-icon>star</mat-icon>
-          <div class="pnj-gauge__text">
-            <b>{{ pnj().ressources.heroisme }}</b>
-            <span>Héroïsme</span>
-          </div>
-        </div>
-      }
-    </div>
-
-    <div class="pnj-card__summary">
-      <span class="pnj-count-chip" matTooltip="Carrières">
-        <mat-icon>work</mat-icon>{{ careerEntries().length }}
-      </span>
-      <span class="pnj-count-chip" matTooltip="Traits">
-        <mat-icon>auto_awesome</mat-icon>{{ traitCount() }}
-      </span>
-      <span class="pnj-count-chip" matTooltip="Armures">
-        <mat-icon>shield</mat-icon>{{ armorCount() }}
-      </span>
-      <span class="pnj-count-chip" matTooltip="Armes">
-        <mat-icon>gavel</mat-icon>{{ weaponCount() }}
-      </span>
-    </div>
-  </div>
-</article>
+<bol-entity-card
+  [image]="image()"
+  [imageAlt]="pnj().origines.nom || 'PNJ'"
+  [name]="pnj().origines.nom || 'PNJ sans nom'"
+  [meta]="meta()"
+  [badge]="badge()"
+  [own]="!!pnj().user_id"
+  [actions]="actions()"
+  [showDelete]="showDelete()"
+  [gauges]="gauges()"
+  [chips]="chips()"
+  (deleteRequested)="deleteRequested.emit()"
+/>

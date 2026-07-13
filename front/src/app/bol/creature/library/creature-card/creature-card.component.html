@@ -1,61 +1,15 @@
-<article class="creature-card" [class.creature-card--own]="creature().user_id">
-  <button
-    type="button"
-    class="creature-card__portrait"
-    (click)="statblockRequested.emit()"
-    [attr.aria-label]="'Ouvrir le statbloc de ' + creature().nom"
-  >
-    <img [src]="image()" [alt]="creature().nom" class="creature-card__img" />
-    <span
-      class="creature-card__badge"
-      [class.creature-card__badge--coriace]="creature().taille.type === 'C'"
-      [class.creature-card__badge--rival]="creature().taille.type === 'R'"
-      [class.creature-card__badge--pietaille]="creature().taille.type === 'P'"
-    >{{ creature().taille.taille }}</span>
-  </button>
-
-  <div class="creature-card__body">
-    <div class="creature-card__head">
-      <div class="creature-card__title-row">
-        <h3 class="creature-card__name">{{ creature().nom }}</h3>
-        @if (creature().user_id) {
-          <div class="creature-card__actions">
-            <button
-              mat-icon-button
-              class="creature-card__action-btn"
-              matTooltip="Modifier"
-              [routerLink]="['/create/creature', creature().id]"
-              [state]="{ returnUrl: '/library/creatures' }"
-            >
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              class="creature-card__action-btn creature-card__action-btn--danger"
-              matTooltip="Supprimer"
-              (click)="deleteRequested.emit()"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-        }
-      </div>
-    </div>
-
-    <div class="creature-card__gauges">
-      <div class="creature-gauge creature-gauge--pv">
-        <mat-icon>favorite</mat-icon>
-        <div class="creature-gauge__text">
-          <b>{{ creature().vitalite }}</b>
-          <span>Vitalité</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="creature-card__summary">
-      <span class="creature-count-chip" matTooltip="Capacités">
-        <mat-icon>auto_awesome</mat-icon>{{ creature().capacites.length }}
-      </span>
-    </div>
-  </div>
-</article>
+<bol-entity-card
+  [image]="image()"
+  [imageAlt]="creature().nom"
+  [name]="creature().nom"
+  [badge]="badge()"
+  [own]="!!creature().user_id"
+  [accent]="'amber'"
+  [clickablePortrait]="true"
+  [actions]="actions()"
+  [showDelete]="showDelete()"
+  [gauges]="gauges()"
+  [chips]="chips()"
+  (portraitClick)="statblockRequested.emit()"
+  (deleteRequested)="deleteRequested.emit()"
+/>
