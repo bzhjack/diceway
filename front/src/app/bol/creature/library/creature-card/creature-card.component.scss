@@ -17,12 +17,21 @@
 
 .creature-card__portrait {
   position: relative;
-  width: 92px;
+  aspect-ratio: 1 / 1;
+  align-self: stretch;
   flex-shrink: 0;
   padding: 0;
   border: none;
+  overflow: hidden;
   cursor: pointer;
   background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.92));
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, transparent 55%, rgba(15, 23, 42, 0.9) 100%);
+  }
 
   &:focus-visible {
     outline: 2px solid rgba(251, 191, 36, 0.55);
@@ -32,6 +41,8 @@
 
 .creature-card__img {
   display: block;
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -41,15 +52,16 @@
   position: absolute;
   bottom: 0.4rem;
   left: 0.4rem;
-  padding: 0.12rem 0.4rem;
+  padding: 0.15rem 0.5rem;
   border-radius: 999px;
   font-size: 0.58rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  background: rgba(251, 191, 36, 0.14);
+  background: rgba(15, 23, 42, 0.85);
   color: var(--dw-color-legendary);
-  border: 1px solid rgba(251, 191, 36, 0.3);
+  border: 1px solid var(--dw-color-legendary);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.6);
 }
 
 .creature-card__body {
@@ -76,6 +88,11 @@
 
 .creature-card__name {
   margin: 0;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 0.9rem;
   font-weight: 800;
   line-height: 1.2;
