@@ -1,0 +1,18 @@
+<div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+  <div class="flex items-center gap-2">
+    <p class="hap-section-eyebrow">
+      Armures
+    </p>
+    <dw-tag>{{ armures().length }} sélectionnée(s)</dw-tag>
+  </div>
+
+  <bol-add-menu
+    [options]="armureOptions()"
+    label="Armure"
+    triggerLabel="Ajouter une armure"
+    addLabel="Ajouter l'armure"
+    (added)="armureAdded.emit($event.id)"
+  />
+</div>
+
+<bol-armure-list [armures]="armures()" (removed)="armureRemoved.emit($event)" />

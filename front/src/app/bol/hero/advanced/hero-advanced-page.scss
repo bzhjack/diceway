@@ -76,24 +76,6 @@
   color: #6ee7b7;
 }
 
-.hap-section-eyebrow--muted {
-  margin: 0;
-  font-size: 0.72rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--dw-surface-500);
-}
-
-.hap-section-note {
-  margin: 0;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #fcd34d;
-}
-
 .hap-loading-detail {
   margin: 0;
   margin-top: 0.75rem;
@@ -122,83 +104,6 @@
   background: rgba(69, 26, 3, 0.15);
   font-size: 0.875rem;
   color: #fde68a;
-}
-
-.hap-region-box {
-  border-radius: 0.125rem;
-  border: 1px solid var(--dw-border);
-  background: rgba(15, 23, 42, 0.7);
-
-  .hap-region-eyebrow {
-    margin: 0;
-    font-size: 0.75rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    color: var(--dw-surface-400);
-  }
-
-  .hap-region-value {
-    margin: 0;
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
-    color: var(--dw-surface-800);
-  }
-}
-
-.hap-resource-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--dw-border);
-  background: rgba(15, 23, 42, 0.55);
-}
-
-.hap-resource-label {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--dw-surface-600);
-}
-
-.hap-resource-value {
-  font-size: 0.95rem;
-  font-weight: 900;
-  font-variant-numeric: tabular-nums;
-  color: var(--dw-surface-800);
-}
-
-.hap-table {
-  border-collapse: collapse;
-  font-size: 0.875rem;
-
-  th,
-  td {
-    padding: 0.5rem 0;
-    text-align: left;
-  }
-
-  th {
-    border-bottom: 1px solid var(--dw-border);
-    color: var(--dw-surface-500);
-  }
-
-  td {
-    border-bottom: 1px solid rgba(66, 75, 87, 0.5);
-  }
-}
-
-.hap-table-attr {
-  text-transform: capitalize;
-  color: var(--dw-surface-700);
-}
-
-.hap-table-value {
-  color: var(--dw-surface-800);
-}
-
-dw-tag {
-  --p-tag-font-size: 0.7rem;
 }
 
 // Modificateurs de mise en page sur .dw-section--form (classe globale partagée) :

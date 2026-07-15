@@ -1,0 +1,25 @@
+<div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+  <div class="flex items-center gap-2">
+    <p class="hap-section-eyebrow">
+      Armes
+    </p>
+    <dw-tag>{{ armes().length }} sélectionnée(s)</dw-tag>
+  </div>
+
+  <bol-add-menu
+    [options]="armeOptions()"
+    label="Arme"
+    triggerLabel="Ajouter une arme"
+    addLabel="Ajouter l'arme"
+    (added)="armeAdded.emit($event.id)"
+  />
+</div>
+
+@if (warnHeavy()) {
+  <div class="dw-field-warning mb-3 p-3">
+    Arme lourde (d6B) — Vigueur négative : le personnage subit un malus au combat. Vérifiez la
+    cohérence avec les règles.
+  </div>
+}
+
+<bol-arme-list [armes]="armes()" (removed)="armeRemoved.emit($event)" />

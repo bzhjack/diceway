@@ -10,7 +10,6 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
-import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {PictureComponent} from '../../../shared/picture/picture';
 import {AVANTAGE_MAGIE_DES_ROIS_SORCIERS_ID, AVANTAGE_POUVOIR_DU_NEANT_ID} from '../../bol-rules.constants';
 import {BolCarriereModel} from '../../models/bol-carriere.model';
@@ -18,20 +17,23 @@ import {BolHerosAttributs, BolHerosCombat, BolHerosModel, BolHerosOrigines, BolH
 import {BolHerosTraitsModel} from '../../models/bol-trait.model';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {BolHerosStateService, HeroCreationWarning} from '../../services/bol-heros-state.service';
-import {AddMenuComponent, addMenuOptions} from '../../shared/add-menu/add-menu.component';
-import {ArmeEntry, ArmeListComponent} from '../../shared/arme/list/arme-list.component';
-import {ArmureEntry, ArmureListComponent} from '../../shared/armure/list/armure-list.component';
-import {CarriereEntry, CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
+import {addMenuOptions} from '../../shared/add-menu/add-menu.component';
+import {ArmeEntry} from '../../shared/arme/list/arme-list.component';
+import {ArmureEntry} from '../../shared/armure/list/armure-list.component';
+import {CarriereEntry} from '../../shared/carriere/list/carriere-list.component';
 import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
 import {IdDraft, RankedDraft, availableCatalog, selectedEntries} from '../../shared/form/form-selection';
 import {controlValueSignal, formArrayValueSignal, formDirtySignal} from '../../shared/form/form-signals';
 import {LangueEntry} from '../../shared/langue/list/langue-list.component';
-import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
+import {StatGroup} from '../../shared/stats-grid/stats-grid.component';
 import {TraitAddEvent} from '../../shared/trait/add-menu/trait-add-menu.component';
 import {TraitEntry} from '../../shared/trait/list/trait-list.component';
 import {traitDetails} from '../../shared/trait/trait-entry.utils';
 import {traitIconType} from '../../shared/trait-icon';
 import {HeroSummaryRailComponent} from '../form/summary-rail/summary-rail.component';
+import {HeroAdvancedArmesPanelComponent} from './armes-panel/armes-panel.component';
+import {HeroAdvancedArmuresPanelComponent} from './armures-panel/armures-panel.component';
+import {HeroAdvancedCarrieresPanelComponent} from './carrieres-panel/carrieres-panel.component';
 import {automaticLanguageIdsForRegion, selectedLanguageTarget} from './create.rules';
 import {HeroAdvancedCreateTools} from './create.tools';
 import {
@@ -41,7 +43,11 @@ import {
   carrieresFormValidatorFn,
   combatFormValidatorFn,
 } from './create.validators';
+import {HeroAdvancedIdentiteComponent} from './identite/identite.component';
 import {HeroAdvancedRegionComponent, HeroAdvancedRegionDialogResult} from './region/region.component';
+import {HeroAdvancedRessourcesPanelComponent, ResourceEntry} from './ressources-panel/ressources-panel.component';
+import {SectionMessage} from './section-message';
+import {HeroAdvancedStatsPanelComponent} from './stats-panel/stats-panel.component';
 
 /** Brouillon de trait dans le FormArray : `id` est l'id du lien héros/trait côté serveur. */
 interface AdvancedTraitDraft {
@@ -51,17 +57,6 @@ interface AdvancedTraitDraft {
   detail: string | null;
   region_id: number | null;
   carriere: boolean;
-}
-
-interface SectionMessage {
-  control: string;
-  error: string;
-}
-
-interface ResourceEntry {
-  key: keyof BolHerosRessources;
-  label: string;
-  value: number;
 }
 
 const MAX_CREATION_AVANTAGES = 3;
@@ -121,13 +116,13 @@ const HERO_ADVANCED_LABELS: EntityFormLabels = {
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    DwTagComponent,
-    AddMenuComponent,
-    ArmeListComponent,
-    ArmureListComponent,
-    CarriereListComponent,
-    StatsGridComponent,
     HeroSummaryRailComponent,
+    HeroAdvancedIdentiteComponent,
+    HeroAdvancedCarrieresPanelComponent,
+    HeroAdvancedStatsPanelComponent,
+    HeroAdvancedRessourcesPanelComponent,
+    HeroAdvancedArmesPanelComponent,
+    HeroAdvancedArmuresPanelComponent,
   ],
   templateUrl: './hero-advanced-page.html',
   styleUrl: './hero-advanced-page.scss',
@@ -497,6 +492,10 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
     const prefix = this.herosStateService.isNonCombattant() ? '⚔ Non-combattant — ' : '';
     return [{step: 'Combat', warn: `${prefix}Il manque ${budget - sum} point(s) dans le combat (budget : ${budget}).`}];
   });
+
+  /** Panneau Attributs / Combat : fusion des deux jeux d'erreurs/avertissements pour l'affichage. */
+  protected readonly statsErrors = computed(() => [...this.attributErrors(), ...this.combatErrors()]);
+  protected readonly statsWarns = computed(() => [...this.attributWarns(), ...this.combatWarns()]);
 
   protected readonly carriereErrors = computed<SectionMessage[]>(() => {
     this.herosFormValue();

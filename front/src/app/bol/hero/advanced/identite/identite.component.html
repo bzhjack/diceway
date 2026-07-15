@@ -1,0 +1,59 @@
+<p class="hap-section-eyebrow">
+  Identité
+</p>
+
+<div class="mt-3 grid gap-2 md:grid-cols-2" [formGroup]="form()">
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Nom du joueur</mat-label>
+    <input matInput id="advanced-joueur" formControlName="joueur" />
+  </mat-form-field>
+
+  <mat-form-field subscriptSizing="dynamic">
+    <mat-label>Nom du héros</mat-label>
+    <input matInput id="advanced-nom" formControlName="nom" />
+  </mat-form-field>
+
+  <div class="grid gap-3 md:col-span-2 md:grid-cols-[minmax(0,1fr)_auto_auto] md:items-center">
+    <div class="hap-region-box min-w-0 px-4 py-3">
+      <p class="hap-region-eyebrow">Région</p>
+      <p class="hap-region-value">
+        {{ region()?.region || 'Aucune région sélectionnée' }}
+      </p>
+    </div>
+
+    <button mat-flat-button type="button" (click)="regionPick.emit()">
+      <mat-icon>map</mat-icon> Choisir
+    </button>
+
+    <button mat-stroked-button type="button" [disabled]="!region()" (click)="regionClear.emit()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="md:col-span-2">
+    <mat-form-field subscriptSizing="dynamic" class="w-full">
+      <mat-label>Commentaire</mat-label>
+      <textarea
+        matInput
+        id="advanced-commentaire"
+        formControlName="commentaire"
+        rows="3"
+        class="resize-none"
+      ></textarea>
+    </mat-form-field>
+  </div>
+</div>
+
+@if (errors().length) {
+  <div class="dw-field-error mt-3 p-3">
+    @for (error of errors(); track error.control + error.error) {
+      <p class="m-0">{{ error.error }}</p>
+    }
+  </div>
+} @else if (warns().length) {
+  <div class="dw-field-warning mt-3 p-3">
+    @for (warning of warns(); track warning.warn) {
+      <p class="m-0">{{ warning.warn }}</p>
+    }
+  </div>
+}

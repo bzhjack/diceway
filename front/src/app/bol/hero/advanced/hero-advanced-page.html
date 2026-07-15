@@ -3,6 +3,7 @@
     <mat-card appearance="outlined">
       <mat-card-content>
         @if (!editMode()) {
+          <!-- ===== BROUILLON (étape 1) ===== -->
           <form class="dw-creation-form flex flex-col gap-6" [formGroup]="draftForm" (ngSubmit)="startDraft()">
             <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div class="flex items-center gap-3">
@@ -60,8 +61,10 @@
               </div>
             }
           </form>
+          <!-- ===== FIN BROUILLON ===== -->
         } @else {
           <form class="dw-creation-form flex flex-col gap-6" [formGroup]="herosForm" (ngSubmit)="save()">
+            <!-- ===== EN-TÊTE ===== -->
             <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div class="flex items-center gap-3">
                 <div class="hap-icon">
@@ -107,6 +110,7 @@
                 }
               </div>
             </div>
+            <!-- ===== FIN EN-TÊTE ===== -->
 
             <div class="grid gap-4">
               @if (loading()) {
@@ -121,6 +125,7 @@
               }
 
               <div class="grid gap-4 xl:grid-cols-[260px_minmax(0,1fr)] xl:items-start">
+                <!-- ===== RAIL (avatar, traits, langues) ===== -->
                 <div class="dw-section--form hap-rail-panel">
                   <bol-hero-summary-rail
                     [avatarPreview]="avatarPreview()"
@@ -159,247 +164,86 @@
                     </div>
                   }
                 </div>
+                <!-- ===== FIN RAIL ===== -->
 
                 <div class="flex min-w-0 flex-col gap-4">
                   <div class="grid gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] xl:items-stretch">
+                    <!-- ===== IDENTITÉ ===== -->
                     <div class="dw-section--form hap-panel--stretch">
-                      <p class="hap-section-eyebrow">
-                        Identité
-                      </p>
-
-                      <div class="mt-3 grid gap-2 md:grid-cols-2">
-                        <mat-form-field subscriptSizing="dynamic">
-                          <mat-label>Nom du joueur</mat-label>
-                          <input matInput id="advanced-joueur" formControlName="joueur" />
-                        </mat-form-field>
-
-                        <mat-form-field subscriptSizing="dynamic">
-                          <mat-label>Nom du héros</mat-label>
-                          <input matInput id="advanced-nom" formControlName="nom" />
-                        </mat-form-field>
-
-                        <div class="grid gap-3 md:col-span-2 md:grid-cols-[minmax(0,1fr)_auto_auto] md:items-center">
-                          <div class="hap-region-box min-w-0 px-4 py-3">
-                            <p class="hap-region-eyebrow">Région</p>
-                            <p class="hap-region-value">
-                              {{ selectedRegion()?.region || 'Aucune région sélectionnée' }}
-                            </p>
-                          </div>
-
-                          <button mat-flat-button type="button" (click)="openRegionPicker()">
-                            <mat-icon>map</mat-icon> Choisir
-                          </button>
-
-                          <button
-                            mat-stroked-button
-                            type="button"
-                            [disabled]="!herosForm.controls.region_id.value"
-                            (click)="clearRegion()"
-                          >
-                            <mat-icon>close</mat-icon>
-                          </button>
-                        </div>
-
-                        <div class="md:col-span-2">
-                          <mat-form-field subscriptSizing="dynamic" class="w-full">
-                            <mat-label>Commentaire</mat-label>
-                            <textarea
-                              matInput
-                              id="advanced-commentaire"
-                              formControlName="commentaire"
-                              rows="3"
-                              class="resize-none"
-                            ></textarea>
-                          </mat-form-field>
-                        </div>
-                      </div>
-
-                      @if (originesErrors().length) {
-                        <div class="dw-field-error mt-3 p-3">
-                          @for (error of originesErrors(); track error.control + error.error) {
-                            <p class="m-0">{{ error.error }}</p>
-                          }
-                        </div>
-                      } @else if (originesWarns().length) {
-                        <div class="dw-field-warning mt-3 p-3">
-                          @for (warning of originesWarns(); track warning.warn) {
-                            <p class="m-0">{{ warning.warn }}</p>
-                          }
-                        </div>
-                      }
+                      <bol-hero-advanced-identite
+                        [form]="herosForm"
+                        [region]="selectedRegion()"
+                        [errors]="originesErrors()"
+                        [warns]="originesWarns()"
+                        (regionPick)="openRegionPicker()"
+                        (regionClear)="clearRegion()"
+                      />
                     </div>
+                    <!-- ===== FIN IDENTITÉ ===== -->
 
+                    <!-- ===== CARRIÈRES ===== -->
                     <div class="dw-section--form hap-panel--stretch">
-                      <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-                        <div class="flex items-center gap-2">
-                          <p class="hap-section-eyebrow">
-                            Carrières
-                          </p>
-                          <dw-tag>{{ selectedCarrieres().length }} sélectionnée(s)</dw-tag>
-                        </div>
-
-                        <bol-add-menu
-                          [options]="carriereOptions()"
-                          label="Carrière"
-                          triggerLabel="Ajouter une carrière"
-                          addLabel="Ajouter la carrière"
-                          (added)="addCarriereEntry($event.id)"
-                        />
-                      </div>
-
-                      @if (carriereDesavantageCount() > 0) {
-                        <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-                          <p class="hap-section-note">
-                            Désavantage de carrière requis
-                          </p>
-                          <bol-add-menu
-                            [options]="careerDesavantageOptions()"
-                            label="Désavantage"
-                            triggerLabel="Ajouter un désavantage de carrière"
-                            addLabel="Ajouter le désavantage"
-                            (added)="addCareerDisadvantage($event.id)"
-                          />
-                        </div>
-                      }
-
-                      <bol-carriere-list [carrieres]="selectedCarrieres()" (removed)="removeCarriereAt($event)" />
-
-                      @if (carriereErrors().length) {
-                        <div class="dw-field-error mt-3 p-3">
-                          @for (error of carriereErrors(); track error.control + error.error) {
-                            <p class="m-0">{{ error.control ? error.control + ' ' : '' }}{{ error.error }}</p>
-                          }
-                        </div>
-                      } @else if (carriereWarns().length) {
-                        <div class="dw-field-warning mt-3 p-3">
-                          @for (warning of carriereWarns(); track warning.warn) {
-                            <p class="m-0">{{ warning.warn }}</p>
-                          }
-                        </div>
-                      }
+                      <bol-hero-advanced-carrieres-panel
+                        [carrieres]="selectedCarrieres()"
+                        [carriereOptions]="carriereOptions()"
+                        [desavantageOptions]="careerDesavantageOptions()"
+                        [desavantageRequiredCount]="carriereDesavantageCount()"
+                        [errors]="carriereErrors()"
+                        [warns]="carriereWarns()"
+                        (carriereAdded)="addCarriereEntry($event)"
+                        (carriereRemoved)="removeCarriereAt($event)"
+                        (desavantageAdded)="addCareerDisadvantage($event)"
+                      />
                     </div>
+                    <!-- ===== FIN CARRIÈRES ===== -->
                   </div>
 
                   <div class="grid gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] xl:items-stretch">
+                    <!-- ===== ATTRIBUTS / COMBAT ===== -->
                     <div class="dw-section--form hap-panel--stretch">
-                      <bol-stats-grid [form]="herosForm" [groups]="heroStatGroups" />
-
-                      @if (attributErrors().length || combatErrors().length) {
-                        <div class="dw-field-error mt-3 p-3">
-                          @for (error of attributErrors(); track error.control + error.error) {
-                            <p class="m-0">{{ error.control ? error.control + ' ' : '' }}{{ error.error }}</p>
-                          }
-                          @for (error of combatErrors(); track error.control + error.error) {
-                            <p class="m-0">{{ error.control ? error.control + ' ' : '' }}{{ error.error }}</p>
-                          }
-                        </div>
-                      } @else if (attributWarns().length || combatWarns().length) {
-                        <div class="dw-field-warning mt-3 p-3">
-                          @for (warning of attributWarns(); track warning.warn) {
-                            <p class="m-0">{{ warning.warn }}</p>
-                          }
-                          @for (warning of combatWarns(); track warning.warn) {
-                            <p class="m-0">{{ warning.warn }}</p>
-                          }
-                        </div>
-                      }
+                      <bol-hero-advanced-stats-panel
+                        [form]="herosForm"
+                        [groups]="heroStatGroups"
+                        [errors]="statsErrors()"
+                        [warns]="statsWarns()"
+                      />
                     </div>
+                    <!-- ===== FIN ATTRIBUTS / COMBAT ===== -->
 
+                    <!-- ===== RESSOURCES ===== -->
                     <div class="dw-section--form hap-panel--stretch">
-                      <p class="hap-section-eyebrow--muted">
-                        Ressources après activation
-                      </p>
-
-                      <div class="mt-3 grid gap-2">
-                        @for (entry of displayResources(); track entry.key) {
-                          <div class="hap-resource-row">
-                            <span class="hap-resource-label">{{ entry.label }}</span>
-                            <span class="hap-resource-value">{{ entry.value }}</span>
-                          </div>
-                        }
-                      </div>
-
-                      @if (heroismCost() > 0) {
-                        <div class="dw-field-warning mt-3 p-3">
-                          Coût d'héroïsme en attente : {{ heroismCost() }}
-                        </div>
-                      }
-
-                      @if (modifiers().length) {
-                        <div class="mt-4">
-                          <p class="hap-section-eyebrow--muted">
-                            Modificateurs appliqués
-                          </p>
-                          <table class="hap-table mt-2 w-full">
-                            <thead>
-                              <tr>
-                                <th>Attribut</th>
-                                <th>Valeur</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              @for (modifier of modifiers(); track modifier.attr) {
-                                <tr>
-                                  <td class="hap-table-attr">{{ modifier.attr }}</td>
-                                  <td class="hap-table-value">{{ modifier.value }}</td>
-                                </tr>
-                              }
-                            </tbody>
-                          </table>
-                        </div>
-                      }
+                      <bol-hero-advanced-ressources-panel
+                        [resources]="displayResources()"
+                        [heroismCost]="heroismCost()"
+                        [modifiers]="modifiers()"
+                      />
                     </div>
+                    <!-- ===== FIN RESSOURCES ===== -->
                   </div>
 
                   <div class="grid gap-4 xl:grid-cols-2 xl:items-start">
+                    <!-- ===== ARMES ===== -->
                     <div class="dw-section--form">
-                      <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-                        <div class="flex items-center gap-2">
-                          <p class="hap-section-eyebrow">
-                            Armes
-                          </p>
-                          <dw-tag>{{ selectedArmes().length }} sélectionnée(s)</dw-tag>
-                        </div>
-
-                        <bol-add-menu
-                          [options]="armeOptions()"
-                          label="Arme"
-                          triggerLabel="Ajouter une arme"
-                          addLabel="Ajouter l'arme"
-                          (added)="addArmeEntry($event.id)"
-                        />
-                      </div>
-
-                      @if (warnHeavyArme()) {
-                        <div class="dw-field-warning mb-3 p-3">
-                          Arme lourde (d6B) — Vigueur négative : le personnage subit un malus au combat. Vérifiez la
-                          cohérence avec les règles.
-                        </div>
-                      }
-
-                      <bol-arme-list [armes]="selectedArmes()" (removed)="removeArmeAt($event)" />
+                      <bol-hero-advanced-armes-panel
+                        [armes]="selectedArmes()"
+                        [armeOptions]="armeOptions()"
+                        [warnHeavy]="warnHeavyArme()"
+                        (armeAdded)="addArmeEntry($event)"
+                        (armeRemoved)="removeArmeAt($event)"
+                      />
                     </div>
+                    <!-- ===== FIN ARMES ===== -->
 
+                    <!-- ===== ARMURES ===== -->
                     <div class="dw-section--form">
-                      <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-                        <div class="flex items-center gap-2">
-                          <p class="hap-section-eyebrow">
-                            Armures
-                          </p>
-                          <dw-tag>{{ selectedArmures().length }} sélectionnée(s)</dw-tag>
-                        </div>
-
-                        <bol-add-menu
-                          [options]="armureOptions()"
-                          label="Armure"
-                          triggerLabel="Ajouter une armure"
-                          addLabel="Ajouter l'armure"
-                          (added)="addArmureEntry($event.id)"
-                        />
-                      </div>
-
-                      <bol-armure-list [armures]="selectedArmures()" (removed)="removeArmureAt($event)" />
+                      <bol-hero-advanced-armures-panel
+                        [armures]="selectedArmures()"
+                        [armureOptions]="armureOptions()"
+                        (armureAdded)="addArmureEntry($event)"
+                        (armureRemoved)="removeArmureAt($event)"
+                      />
                     </div>
+                    <!-- ===== FIN ARMURES ===== -->
                   </div>
                 </div>
               </div>
@@ -411,6 +255,7 @@
               }
             </div>
           </form>
+          <!-- ===== FIN FORMULAIRE ÉDITION ===== -->
         }
       </mat-card-content>
     </mat-card>
