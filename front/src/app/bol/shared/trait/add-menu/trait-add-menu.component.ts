@@ -1,4 +1,5 @@
-import {ChangeDetectionStrategy, Component, input, output, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, input, output, signal} from '@angular/core';
+import {toSignal} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
@@ -38,6 +39,14 @@ export class TraitAddMenuComponent {
 
   protected readonly menuType = signal<'A' | 'D'>('A');
   protected readonly selectedId = new FormControl<number | null>(null);
+  private readonly selectedIdValue = toSignal(this.selectedId.valueChanges, {initialValue: null});
+  /** Option courante, pour afficher le badge régional dans le trigger fermé du select. */
+  protected readonly selectedAvantage = computed(
+    () => this.avantages().find((avantage) => avantage.id === this.selectedIdValue()) ?? null,
+  );
+  protected readonly selectedDesavantage = computed(
+    () => this.desavantages().find((desavantage) => desavantage.id === this.selectedIdValue()) ?? null,
+  );
 
   protected reset(): void {
     this.menuType.set('A');
