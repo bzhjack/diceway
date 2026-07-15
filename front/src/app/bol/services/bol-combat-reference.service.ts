@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {environment} from '../../../environments/environment';
+import {apiUrl} from '../../core/api-url';
 
 export interface BolCombatOptionModel {
   id: number;
@@ -33,14 +33,14 @@ export class BolCombatReferenceService {
   private readonly http = inject(HttpClient);
 
   getCombatOptions(): Observable<BolCombatOptionModel[]> {
-    return this.http.get<BolCombatOptionModel[]>(`${environment.apiBase}/api/bol/combat/options`);
+    return this.http.get<BolCombatOptionModel[]>(apiUrl('bol/combat/options'));
   }
 
   getHeroicOptions(): Observable<BolHeroicOptionModel[]> {
-    return this.http.get<BolHeroicOptionModel[]>(`${environment.apiBase}/api/bol/combat/heroic-options`);
+    return this.http.get<BolHeroicOptionModel[]>(apiUrl('bol/combat/heroic-options'));
   }
 
   getDifficultes(): Observable<BolDifficulteModel[]> {
-    return this.http.get<BolDifficulteModel[]>(`${environment.apiBase}/api/bol/combat/difficultes`);
+    return this.http.get<BolDifficulteModel[]>(apiUrl('bol/combat/difficultes'));
   }
 }

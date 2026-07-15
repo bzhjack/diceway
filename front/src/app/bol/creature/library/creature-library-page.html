@@ -53,153 +53,19 @@
         <dw-tag dwToolbarCount>{{ creatureCount() }} entrées</dw-tag>
       </dw-library-toolbar>
 
-      <!-- Table -->
-      <div class="creature-table-scroll">
-        <table class="bol-creature-table">
-          <thead>
-            <tr>
-              <th class="creature-col-avatar">Avatar</th>
-              <th style="width: 250px">Description</th>
-              <th class="creature-col-compact">Ressources</th>
-              <th class="creature-col-compact">Attributs</th>
-              <th class="creature-col-compact">Combat</th>
-              <th style="width: 18rem">Capacités</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (creature of filteredCreatures(); track creature.id; let i = $index) {
-              @if (showGroupHeader(i)) {
-                <tr class="creature-group-header">
-                  <td colspan="6">
-                    <div class="flex items-center gap-3 py-2">
-                      <span class="clp-group-eyebrow">Taille</span>
-                      <span class="clp-group-value">{{ creature.taille.taille }}</span>
-                    </div>
-                  </td>
-                </tr>
-              }
-              <tr>
-                <td class="creature-col-avatar">
-                  <button
-                    type="button"
-                    class="beast-avatar beast-avatar--trigger"
-                    (click)="openStatblock(creature)"
-                    [attr.aria-label]="'Ouvrir le statbloc de ' + creature.nom"
-                  >
-                    <img [src]="creatureImage(creature)" [alt]="creature.nom" class="h-full w-full object-cover" />
-                    @if (creature.user_id) {
-                      <span class="beast-avatar__tag">Création</span>
-                    }
-                  </button>
-                </td>
-
-                <td>
-                  <div class="creature-description-content flex min-h-24 flex-col justify-between gap-3">
-                    <div class="space-y-2">
-                      <div class="flex flex-wrap items-center gap-1">
-                        @if (creature.commentaire) {
-                          <mat-icon
-                            class="clp-info-icon cursor-pointer !h-4 !w-4 !text-base !leading-4"
-                            [matTooltip]="creature.commentaire"
-                          >info</mat-icon>
-                        }
-                        <p class="clp-name m-0 line-clamp-2">{{ creature.nom }}</p>
-                        @if (creature.user_id) {
-                          <button
-                            mat-icon-button
-                            class="creature-action-btn"
-                            matTooltip="Modifier"
-                            [routerLink]="['/create/creature', creature.id]"
-                            [state]="{ returnUrl: '/library/creatures' }"
-                          >
-                            <mat-icon>edit</mat-icon>
-                          </button>
-                          <button
-                            mat-icon-button
-                            class="creature-action-btn creature-btn-danger"
-                            matTooltip="Supprimer"
-                            (click)="askDelete(creature)"
-                          >
-                            <mat-icon>delete</mat-icon>
-                          </button>
-                        }
-                      </div>
-                      <p class="clp-meta m-0">{{ creature.taille.taille }}</p>
-                      @if (creature.commentaire) {
-                        <p class="clp-description m-0 line-clamp-2">
-                          {{ creature.commentaire }}
-                        </p>
-                      }
-                    </div>
-                  </div>
-                </td>
-
-                <td class="creature-col-compact">
-                  <div class="clp-cell grid gap-1">
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="clp-muted">Vitalité</span>
-                      <span class="clp-value--strong">{{ creature.vitalite }}</span>
-                    </div>
-                  </div>
-                </td>
-
-                <td class="creature-col-compact">
-                  <div class="clp-cell grid gap-1">
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="clp-muted">Vigueur</span>
-                      <span>{{ creature.vigueur }}</span>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="clp-muted">Agilité</span>
-                      <span>{{ creature.agilite }}</span>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="clp-muted">Esprit</span>
-                      <span>{{ creature.esprit }}</span>
-                    </div>
-                  </div>
-                </td>
-
-                <td class="creature-col-compact">
-                  <div class="clp-cell grid gap-1">
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="clp-muted">Attaque</span>
-                      <span>{{ creature.attaque }}</span>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="clp-muted">Défense</span>
-                      <span>{{ creature.defense }}</span>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="clp-muted">Dégâts</span>
-                      <span>{{ creature.degats }}</span>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="clp-muted">Protection</span>
-                      <span>{{ creature.protection }}</span>
-                    </div>
-                  </div>
-                </td>
-
-                <td>
-                  <div class="flex min-h-24 flex-col gap-1">
-                    @for (capacite of creature.capacites; track capacite.id) {
-                      <div class="clp-capacite-row flex items-center gap-1">
-                        {{ capacite.capacite.capacite }}
-                        @if (capacite.detail || capacite.capacite.description) {
-                          <mat-icon
-                            class="clp-info-icon cursor-pointer !h-4 !w-4 !text-base !leading-4"
-                            [matTooltip]="capacite.detail || capacite.capacite.description"
-                          >info</mat-icon>
-                        }
-                      </div>
-                    }
-                  </div>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+      <!-- Grille de cartes -->
+      <div class="creature-grid-scroll">
+        <div class="creature-grid">
+          @for (creature of filteredCreatures(); track creature.id) {
+            <bol-creature-card
+              [creature]="creature"
+              (deleteRequested)="askDelete(creature)"
+              (statblockRequested)="openStatblock(creature)"
+            />
+          } @empty {
+            <p class="creature-grid__empty">Aucune créature ne correspond à cette recherche.</p>
+          }
+        </div>
       </div>
     </mat-card>
 

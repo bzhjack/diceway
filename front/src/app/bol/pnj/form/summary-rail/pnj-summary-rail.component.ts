@@ -3,7 +3,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {BolAvantageModel} from '../../../models/bol-avantage.model';
 import {BolDesavantageModel} from '../../../models/bol-desavantage.model';
 import {BolLangueModel} from '../../../models/bol-langue.model';
-import {LangueAddMenuComponent} from '../../../shared/langue/add-menu/langue-add-menu.component';
+import {AddMenuComponent, addMenuOptions} from '../../../shared/add-menu/add-menu.component';
 import {LangueEntry, LangueListComponent} from '../../../shared/langue/list/langue-list.component';
 import {TraitAddEvent, TraitAddMenuComponent} from '../../../shared/trait/add-menu/trait-add-menu.component';
 import {TraitEntry, TraitListComponent} from '../../../shared/trait/list/trait-list.component';
@@ -12,7 +12,7 @@ import {TraitEntry, TraitListComponent} from '../../../shared/trait/list/trait-l
   selector: 'bol-pnj-summary-rail',
   imports: [
     MatIconModule,
-    LangueAddMenuComponent,
+    AddMenuComponent,
     LangueListComponent,
     TraitAddMenuComponent,
     TraitListComponent,
@@ -31,6 +31,8 @@ export class PnjSummaryRailComponent {
   readonly desavantagesDisponibles = input.required<readonly BolDesavantageModel[]>();
   readonly langues = input.required<readonly LangueEntry[]>();
   readonly languesDisponibles = input.required<readonly BolLangueModel[]>();
+
+  protected readonly langueOptions = addMenuOptions(this.languesDisponibles, (langue) => langue.langue);
 
   readonly avatarClick = output<void>();
   readonly traitAdded = output<TraitAddEvent>();

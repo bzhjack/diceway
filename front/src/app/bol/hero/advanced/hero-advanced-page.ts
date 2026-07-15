@@ -3,14 +3,15 @@ import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} fr
 import {toSignal} from '@angular/core/rxjs-interop';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import {startWith, take} from 'rxjs';
+import {startWith} from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatDialog} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
-import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
+import {extractApiErrorMessage} from '../../../core/api-error.utils';
+import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {
   BolHerosAttributs,
   BolHerosCombat,
@@ -166,7 +167,7 @@ export class HeroAdvancedPageComponent {
           this.loadingHero.set(false);
         },
         error: (error) => {
-          this.errorMessage.set(this.extractErrorMessage(error));
+          this.errorMessage.set(extractApiErrorMessage(error, 'Le chargement du héros a échoué.'));
           this.loadingHero.set(false);
         },
       });
@@ -197,7 +198,7 @@ export class HeroAdvancedPageComponent {
       },
       error: (error) => {
         this.creatingDraft.set(false);
-        this.errorMessage.set(this.extractErrorMessage(error));
+        this.errorMessage.set(extractApiErrorMessage(error, "Impossible d'enregistrer le héros pour le moment."));
       },
     });
   }
@@ -207,16 +208,12 @@ export class HeroAdvancedPageComponent {
   }
 
   protected confirmActivation(): void {
-    const ref = this.dialog.open(DwConfirmDialogComponent, {
-      data: {
-        title: 'Activer le héros',
-        message: 'Voulez-vous valider la création de ce héros ?',
-        confirmLabel: 'Oui',
-        cancelLabel: 'Non',
-      },
-    });
-
-    ref.afterClosed().pipe(take(1)).subscribe((confirmed: boolean | undefined) => {
+    confirmDialog(this.dialog, {
+      title: 'Activer le héros',
+      message: 'Voulez-vous valider la création de ce héros ?',
+      confirmLabel: 'Oui',
+      cancelLabel: 'Non',
+    }).subscribe((confirmed) => {
       if (confirmed) {
         this.submit(true);
       }
@@ -262,7 +259,7 @@ export class HeroAdvancedPageComponent {
       },
       error: (error) => {
         this.pending.set(false);
-        this.errorMessage.set(this.extractErrorMessage(error));
+        this.errorMessage.set(extractApiErrorMessage(error, "Impossible d'enregistrer le héros pour le moment."));
       },
     });
   }
@@ -412,14 +409,4 @@ export class HeroAdvancedPageComponent {
     return state?.returnUrl ?? null;
   }
 
-  private extractErrorMessage(error: unknown): string {
-    if (typeof error === 'object' && error !== null && 'error' in error) {
-      const errorPayload = (error as {error?: {message?: string}}).error;
-      if (errorPayload?.message) {
-        return errorPayload.message;
-      }
-    }
-
-    return "Impossible d'enregistrer le héros pour le moment.";
-  }
 }

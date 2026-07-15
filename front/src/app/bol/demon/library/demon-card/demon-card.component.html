@@ -1,0 +1,16 @@
+<bol-entity-card
+  [image]="image()"
+  [imageAlt]="demon().nom"
+  [name]="demon().nom"
+  [badge]="badge()"
+  [own]="!!demon().user_id"
+  [dark]="true"
+  [accent]="'rose'"
+  [clickablePortrait]="true"
+  [actions]="actions()"
+  [showDelete]="showDelete()"
+  [gauges]="gauges()"
+  [chips]="chips()"
+  (portraitClick)="statblockRequested.emit()"
+  (deleteRequested)="deleteRequested.emit()"
+/>

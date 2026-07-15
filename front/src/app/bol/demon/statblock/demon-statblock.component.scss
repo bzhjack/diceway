@@ -1,0 +1,212 @@
+:host {
+  display: block;
+}
+
+.demon-statblock {
+  border: 1px solid #3f3f46;
+  background:
+    radial-gradient(circle at top left, rgba(251, 113, 133, 0.12), transparent 28%),
+    linear-gradient(180deg, rgba(9, 9, 11, 0.96), rgba(24, 24, 27, 0.94));
+  padding: 0.75rem;
+}
+
+.demon-statblock__header {
+  display: grid;
+  gap: 1rem;
+}
+
+.demon-statblock__avatar {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #3f3f46;
+  background: rgba(9, 9, 11, 0.9);
+  aspect-ratio: 1;
+  width: 100%;
+  max-width: 6rem;
+}
+
+.demon-statblock__avatar-tag {
+  position: absolute;
+  right: 0.45rem;
+  bottom: 0.45rem;
+  border: 1px solid rgba(251, 113, 133, 0.35);
+  border-radius: 999px;
+  background: rgba(9, 9, 11, 0.88);
+  padding: 0.16rem 0.45rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fb7185;
+}
+
+.demon-statblock__main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.demon-statblock__topline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.demon-statblock__eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #fb7185;
+}
+
+.demon-statblock__title {
+  margin: 0;
+  font-family: 'Muse Display Harmony', 'Open Sans', sans-serif;
+  font-size: clamp(1.45rem, 1.6vw, 1.85rem);
+  line-height: 0.98;
+  color: var(--dw-color-text-bright);
+}
+
+.demon-statblock__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.demon-statblock__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.demon-statblock__chip {
+  border: 1px solid rgba(251, 113, 133, 0.28);
+  border-radius: 999px;
+  background: rgba(251, 113, 133, 0.08);
+  padding: 0.18rem 0.45rem;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fb7185;
+}
+
+.demon-statblock__comment {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--dw-surface-600);
+}
+
+.demon-statblock__grid {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.75rem;
+}
+
+.demon-statblock__panel {
+  border: 1px solid #3f3f46;
+  background: rgba(9, 9, 11, 0.52);
+  padding: 0.65rem;
+}
+
+.demon-statblock__panel--abilities {
+  min-width: 0;
+}
+
+.demon-statblock__panel-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+}
+
+.demon-statblock__stats {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.demon-statblock__stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.demon-statblock__stat-label {
+  font-size: 0.72rem;
+  color: var(--dw-surface-500);
+}
+
+.demon-statblock__stat-value {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--dw-color-text-bright);
+}
+
+.demon-statblock__abilities {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.demon-statblock__ability {
+  border-left: 2px solid rgba(251, 113, 133, 0.35);
+  padding-left: 0.5rem;
+}
+
+.demon-statblock__ability-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.demon-statblock__ability-title {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--dw-color-text-bright);
+}
+
+.demon-statblock__ability-detail {
+  margin: 0.2rem 0 0;
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: var(--dw-surface-600);
+}
+
+.demon-statblock__empty {
+  margin: 0;
+  font-size: 0.76rem;
+  color: var(--dw-surface-400);
+}
+
+@media (min-width: 768px) {
+  .demon-statblock__header {
+    grid-template-columns: 6rem minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .demon-statblock__topline {
+    flex-direction: row;
+    align-items: start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .demon-statblock__actions {
+    justify-content: flex-end;
+  }
+
+  .demon-statblock__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .demon-statblock__panel--abilities {
+    grid-column: 1 / -1;
+  }
+}

@@ -1,6 +1,4 @@
-import {HttpErrorResponse} from '@angular/common/http';
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {RouterLink} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
@@ -11,10 +9,12 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {startWith, switchMap} from 'rxjs';
 import {BolArmureModel} from '../../models/bol-armure.model';
-import {BolHerosService} from '../../services/bol-heros.service';
-import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
+import {BolCatalogService} from '../../services/bol-catalog.service';
+import {extractApiErrorMessage} from '../../../core/api-error.utils';
+import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
+import {matchesTerm} from '../../../shared/list.utils';
+import {refreshableResource} from '../../../shared/refreshable-resource';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {DwBadgeComponent} from '../../../shared/dw-badge/dw-badge';
 import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
@@ -45,16 +45,9 @@ import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-l
 })
 export class ArmureLibraryPageComponent {
   private readonly formBuilder = inject(FormBuilder);
-  private readonly herosService = inject(BolHerosService);
+  private readonly catalogService = inject(BolCatalogService);
   private readonly dialog = inject(MatDialog);
-  private readonly refreshTrigger = signal(0);
-  private readonly armors = toSignal(
-    toObservable(this.refreshTrigger).pipe(
-      startWith(0),
-      switchMap(() => this.herosService.armures()),
-    ),
-    {initialValue: [] as BolArmureModel[]},
-  );
+  private readonly armors = refreshableResource(() => this.catalogService.armures());
 
   protected readonly searchTerm = signal('');
   protected readonly onlyCreations = signal(false);
@@ -69,32 +62,24 @@ export class ArmureLibraryPageComponent {
     pts_de_pouvoir: ['', [Validators.maxLength(50)]],
   });
 
-  protected readonly filteredArmors = computed(() => {
-    const term = this.searchTerm().trim().toLocaleLowerCase();
-
-    return [...this.armors()]
+  protected readonly filteredArmors = computed(() =>
+    [...this.armors.data()]
       .filter((armor) => (this.onlyCreations() ? Boolean(armor.user_id) : true))
-      .filter((armor) => {
-        if (!term) {
-          return true;
-        }
-
-        return [armor.armure, armor.protection, armor.malus, armor.pts_de_pouvoir].some((value) =>
-          value?.toLocaleLowerCase().includes(term),
-        );
-      })
-      .sort((left, right) => left.armure.localeCompare(right.armure));
-  });
+      .filter((armor) =>
+        matchesTerm(this.searchTerm(), armor.armure, armor.protection, armor.malus, armor.pts_de_pouvoir),
+      )
+      .sort((left, right) => left.armure.localeCompare(right.armure)),
+  );
   protected readonly armorCount = computed(() => this.filteredArmors().length);
-  protected readonly totalArmorCount = computed(() => this.armors().length);
+  protected readonly totalArmorCount = computed(() => this.armors.data().length);
   protected readonly customArmorCount = computed(
-    () => this.armors().filter((armor) => Boolean(armor.user_id)).length,
+    () => this.armors.data().filter((armor) => Boolean(armor.user_id)).length,
   );
   protected readonly canonicalArmorCount = computed(
-    () => this.armors().filter((armor) => !armor.user_id).length,
+    () => this.armors.data().filter((armor) => !armor.user_id).length,
   );
   protected readonly shieldCount = computed(
-    () => this.armors().filter((armor) => armor.armure.toLocaleLowerCase().includes('bouclier')).length,
+    () => this.armors.data().filter((armor) => armor.armure.toLocaleLowerCase().includes('bouclier')).length,
   );
   protected readonly formTitle = computed(() =>
     this.editingArmorId() ? 'Modifier l’armure' : 'Nouvelle armure',
@@ -158,18 +143,18 @@ export class ArmureLibraryPageComponent {
     this.errorMessage.set('');
 
     const request$ = this.editingArmorId()
-      ? this.herosService.updateArmureCatalog(payload)
-      : this.herosService.createArmureCatalog(payload);
+      ? this.catalogService.updateArmure(payload)
+      : this.catalogService.createArmure(payload);
 
     request$.subscribe({
       next: () => {
         this.submitting.set(false);
-        this.refreshTrigger.update((value) => value + 1);
+        this.armors.refresh();
         this.cancelForm();
       },
       error: (error) => {
         this.submitting.set(false);
-        this.errorMessage.set(this.resolveErrorMessage(error, 'Impossible d’enregistrer cette armure.'));
+        this.errorMessage.set(extractApiErrorMessage(error, 'Impossible d’enregistrer cette armure.'));
       },
     });
   }
@@ -179,21 +164,19 @@ export class ArmureLibraryPageComponent {
       return;
     }
 
-    this.dialog
-      .open(DwConfirmDialogComponent, {
-        data: {
-          title: 'Supprimer l’armure',
-          message: `Supprimer "${armor.armure}" du catalogue ?`,
-          confirmLabel: 'Supprimer',
-        },
-        width: '380px',
-      })
-      .afterClosed()
-      .subscribe((confirmed) => {
-        if (confirmed) {
-          this.deleteArmor(armor);
-        }
-      });
+    confirmDialog(
+      this.dialog,
+      {
+        title: 'Supprimer l’armure',
+        message: `Supprimer "${armor.armure}" du catalogue ?`,
+        confirmLabel: 'Supprimer',
+      },
+      {width: '380px'},
+    ).subscribe((confirmed) => {
+      if (confirmed) {
+        this.deleteArmor(armor);
+      }
+    });
   }
 
   protected onError(controlName: keyof typeof this.armorForm.controls): boolean {
@@ -210,16 +193,16 @@ export class ArmureLibraryPageComponent {
       return;
     }
 
-    this.herosService.deleteArmureCatalog(armor.id).subscribe({
+    this.catalogService.deleteArmure(armor.id).subscribe({
       next: () => {
-        this.refreshTrigger.update((value) => value + 1);
+        this.armors.refresh();
 
         if (this.editingArmorId() === armor.id) {
           this.cancelForm();
         }
       },
       error: (error) => {
-        this.errorMessage.set(this.resolveErrorMessage(error, 'Impossible de supprimer cette armure.'));
+        this.errorMessage.set(extractApiErrorMessage(error, 'Impossible de supprimer cette armure.'));
       },
     });
   }
@@ -227,23 +210,5 @@ export class ArmureLibraryPageComponent {
   private nullableTrimmed(value: string): string | null {
     const trimmed = value.trim();
     return trimmed ? trimmed : null;
-  }
-
-  private resolveErrorMessage(error: unknown, fallback: string): string {
-    if (error instanceof HttpErrorResponse) {
-      if (typeof error.error?.message === 'string') {
-        return error.error.message;
-      }
-
-      const errors = error.error?.errors;
-      if (errors && typeof errors === 'object') {
-        const firstError = Object.values(errors)[0];
-        if (Array.isArray(firstError) && firstError.length > 0 && typeof firstError[0] === 'string') {
-          return firstError[0];
-        }
-      }
-    }
-
-    return fallback;
   }
 }

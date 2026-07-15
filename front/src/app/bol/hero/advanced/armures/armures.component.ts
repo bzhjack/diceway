@@ -14,8 +14,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {toSignal} from '@angular/core/rxjs-interop';
-import {take} from 'rxjs';
-import {DwConfirmDialogComponent} from '../../../../shared/dw-confirm-dialog/dw-confirm-dialog';
+import {confirmDialog} from '../../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolArmureModel, BolHerosArmureModel} from '../../../models/bol-armure.model';
 import {BolHerosStateService} from '../../../services/bol-heros-state.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
@@ -57,7 +56,7 @@ export class HeroAdvancedArmuresComponent implements ControlValueAccessor {
     ),
   );
   protected readonly selectedArmure = computed(
-    () => (this.armureList() ?? []).find((armure) => Number(armure.id) === Number(this.selectedArmureIdValue())) ?? null,
+    () => (this.armureList() ?? []).find((armure) => armure.id === this.selectedArmureIdValue()) ?? null,
   );
   protected readonly selectedArmureDetail = computed(() =>
     (this.armureList() ?? []).filter(
@@ -99,16 +98,12 @@ export class HeroAdvancedArmuresComponent implements ControlValueAccessor {
   }
 
   protected deleteArmure(armureId: number): void {
-    const ref = this.dialog.open(DwConfirmDialogComponent, {
-      data: {
-        title: 'Supprimer l’armure',
-        message: 'Voulez-vous supprimer cette armure ?',
-        confirmLabel: 'Oui',
-        cancelLabel: 'Non',
-      },
-    });
-
-    ref.afterClosed().pipe(take(1)).subscribe((confirmed: boolean | undefined) => {
+    confirmDialog(this.dialog, {
+      title: 'Supprimer l’armure',
+      message: 'Voulez-vous supprimer cette armure ?',
+      confirmLabel: 'Oui',
+      cancelLabel: 'Non',
+    }).subscribe((confirmed) => {
       if (!confirmed) {
         return;
       }

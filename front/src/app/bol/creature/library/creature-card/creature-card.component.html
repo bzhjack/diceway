@@ -1,0 +1,15 @@
+<bol-entity-card
+  [image]="image()"
+  [imageAlt]="creature().nom"
+  [name]="creature().nom"
+  [badge]="badge()"
+  [own]="!!creature().user_id"
+  [accent]="'amber'"
+  [clickablePortrait]="true"
+  [actions]="actions()"
+  [showDelete]="showDelete()"
+  [gauges]="gauges()"
+  [chips]="chips()"
+  (portraitClick)="statblockRequested.emit()"
+  (deleteRequested)="deleteRequested.emit()"
+/>

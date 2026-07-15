@@ -19,8 +19,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {toSignal} from '@angular/core/rxjs-interop';
-import {take} from 'rxjs';
-import {DwConfirmDialogComponent} from '../../../../shared/dw-confirm-dialog/dw-confirm-dialog';
+import {confirmDialog} from '../../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolCarriereModel, BolHerosCarriereModel} from '../../../models/bol-carriere.model';
 import {BolDesavantageModel} from '../../../models/bol-desavantage.model';
 import {BolHerosTraitsModel} from '../../../models/bol-trait.model';
@@ -84,7 +83,7 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
   protected readonly heroId = computed(() => this.herosStateService.currentHeros()?.id);
   protected readonly currentRegion = this.herosStateService.currentHerosRegion;
   protected readonly carrieresList = this.herosStateService.carriereList;
-  protected readonly carriereDesavangeCount = this.herosStateService.carriereDesavangeCount;
+  protected readonly carriereDesavantageCount = this.herosStateService.carriereDesavantageCount;
   protected readonly carriereBudget = this.herosStateService.carriereBudget;
   protected readonly desavantagesList = this.herosStateService.desavantagesList;
   protected readonly availableCarrieres = computed(() => {
@@ -94,19 +93,19 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
     );
   });
   protected readonly availableDesavantages = computed(() => {
-    const takenIds = this.herosStateService.allHerosDesavantages().map((trait) => Number(trait.traitable_id));
+    const takenIds = this.herosStateService.allHerosDesavantages().map((trait) => trait.traitable_id);
     return (this.desavantagesList() ?? []).filter((desavantage) => !takenIds.includes(Number(desavantage.id)));
   });
   protected readonly selectedCarriere = computed(
     () =>
       this.availableCarrieres().find(
-        (carriere: BolCarriereModel) => Number(carriere.id) === Number(this.selectedCarriereIdValue()),
+        (carriere: BolCarriereModel) => carriere.id === this.selectedCarriereIdValue(),
       ) ?? null,
   );
   protected readonly selectedTrait = computed(
     () =>
       this.availableDesavantages().find(
-        (desavantage: BolDesavantageModel) => Number(desavantage.id) === Number(this.selectedTraitIdValue()),
+        (desavantage: BolDesavantageModel) => desavantage.id === this.selectedTraitIdValue(),
       ) ?? null,
   );
 
@@ -160,16 +159,12 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
   }
 
   protected deleteCarriere(carriereId: number): void {
-    const ref = this.dialog.open(DwConfirmDialogComponent, {
-      data: {
-        title: 'Supprimer la carrière',
-        message: 'Voulez-vous supprimer cette carrière ?',
-        confirmLabel: 'Oui',
-        cancelLabel: 'Non',
-      },
-    });
-
-    ref.afterClosed().pipe(take(1)).subscribe((confirmed: boolean | undefined) => {
+    confirmDialog(this.dialog, {
+      title: 'Supprimer la carrière',
+      message: 'Voulez-vous supprimer cette carrière ?',
+      confirmLabel: 'Oui',
+      cancelLabel: 'Non',
+    }).subscribe((confirmed) => {
       if (!confirmed) {
         return;
       }
@@ -211,7 +206,7 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
 
   protected carriereFromId(id: number): BolCarriereModel | null {
     return (
-      (this.carrieresList() ?? []).find((carriere: BolCarriereModel) => Number(carriere.id) === Number(id)) ??
+      (this.carrieresList() ?? []).find((carriere: BolCarriereModel) => carriere.id === id) ??
       null
     );
   }
@@ -279,10 +274,10 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
         warnings.push({step: 'Carrières', warn: `Il manque ${budget - sum} point(s) dans les carrières (budget : ${budget}).`});
       }
 
-      if (this.carriereDesavangeCount()) {
+      if (this.carriereDesavantageCount()) {
         warnings.push({
           step: 'Traits',
-          warn: `Carrière dangereuse : il faut encore ${this.carriereDesavangeCount()} désavantage(s) supplémentaire(s).`,
+          warn: `Carrière dangereuse : il faut encore ${this.carriereDesavantageCount()} désavantage(s) supplémentaire(s).`,
         });
       }
 
@@ -313,7 +308,7 @@ export class HeroAdvancedCarrieresComponent implements ControlValueAccessor, Val
     }
 
     this.carriereWarns.set(warnings);
-    this.herosStateService.setwarnCarrieres(warnings);
+    this.herosStateService.setWarnCarrieres(warnings);
   }
 
   private removeCarriere(carriereId: number): void {

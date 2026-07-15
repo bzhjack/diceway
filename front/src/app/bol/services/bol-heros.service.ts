@@ -1,192 +1,97 @@
-import {Injectable, signal} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {BolHerosModel, BolHerosOrigines} from "../models/bol-heros.model";
-import {BolRegionModel} from "../models/bol-region.model";
-import {BolAvantageModel} from "../models/bol-avantage.model";
-import {BolDesavantageModel} from "../models/bol-desavantage.model";
-import {BolHerosCarriereModel} from "../models/bol-carriere.model";
-import {BolArmureModel, BolHerosArmureModel} from "../models/bol-armure.model";
-import {BolArmeModel, BolHerosArmeModel} from "../models/bol-arme.model";
-import {BolHerosTraitsModel} from "../models/bol-trait.model";
-import {BolHerosLangueModel, BolLangueModel} from "../models/bol-langue.model";
-import {environment} from '../../../environments/environment';
+import {inject, Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {apiUrl} from '../../core/api-url';
+import {BolApiMessage, BolApiSuccess} from '../models/bol-api.model';
+import {BolHerosModel, BolHerosOrigines} from '../models/bol-heros.model';
+import {BolHerosCarriereModel} from '../models/bol-carriere.model';
+import {BolHerosArmureModel} from '../models/bol-armure.model';
+import {BolHerosArmeModel} from '../models/bol-arme.model';
+import {BolHerosTraitsModel} from '../models/bol-trait.model';
+import {BolHerosLangueModel} from '../models/bol-langue.model';
 
+/** Héros : CRUD, création avancée et sous-ressources rattachées à un héros. */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BolHerosService {
-
-  constructor(private http: HttpClient) {
-
-  }
-
-
-  // Régions
-  regions(): Observable<BolRegionModel[]> {
-    return this.http.get<BolRegionModel[]>(`${environment.apiBase}/api/bol/region`);
-  }
-
-  region(id: number): Observable<BolRegionModel> {
-    return this.http.get<BolRegionModel>(`${environment.apiBase}/api/bol/region/` + id);
-  }
-
-  // Traits
-  avantages(): Observable<BolAvantageModel[]> {
-    return this.http.get<BolAvantageModel[]>(`${environment.apiBase}/api/bol/trait/avantages`);
-  }
-
-  desavantages(): Observable<BolDesavantageModel[]> {
-    return this.http.get<BolDesavantageModel[]>(`${environment.apiBase}/api/bol/trait/desavantages`);
-  }
-
-  createTrait(herosId: string | null | undefined, trait: BolHerosTraitsModel): Observable<any> {
-    return this.http.post<BolHerosTraitsModel>(`${environment.apiBase}/api/bol/heros/traits/create/${herosId}`, <BolHerosTraitsModel>trait);
-  }
-
-  deleteTrait(herosId: string | null | undefined, id: number): Observable<any> {
-    return this.http.delete<BolHerosTraitsModel>(`${environment.apiBase}/api/bol/heros/traits/delete/${herosId}/${id}`);
-  }
-
-
-  // Carrieres
-
-  carrieres(): Observable<any> {
-    return this.http.get<BolHerosCarriereModel[]>(`${environment.apiBase}/api/bol/carrieres`);
-  }
-
-  deleteCarriere(herosId: string | null, id: number): Observable<any> {
-    return this.http.delete<boolean>(`${environment.apiBase}/api/bol/heros/carrieres/delete/${herosId}/${id}`);
-  }
-
-  createCarriere(herosId: string | null, carriere: BolHerosCarriereModel): Observable<any> {
-    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/carrieres/create/${herosId}`, <BolHerosCarriereModel>carriere);
-  }
-
-  // Armures
-  armures(): Observable<BolArmureModel[]> {
-    return this.http.get<BolArmureModel[]>(`${environment.apiBase}/api/bol/armures`);
-  }
-
-  createArmureCatalog(armure: BolArmureModel): Observable<BolArmureModel> {
-    return this.http.post<BolArmureModel>(`${environment.apiBase}/api/bol/armures/create`, armure);
-  }
-
-  updateArmureCatalog(armure: BolArmureModel): Observable<BolArmureModel> {
-    return this.http.post<BolArmureModel>(`${environment.apiBase}/api/bol/armures/update`, armure);
-  }
-
-  deleteArmureCatalog(id: number): Observable<boolean> {
-    return this.http.delete<boolean>(`${environment.apiBase}/api/bol/armures/delete/${id}`);
-  }
-
-  createArmure(herosId: string | null | undefined, armure: BolHerosArmureModel): Observable<any> {
-    return this.http.post<BolHerosArmureModel>(`${environment.apiBase}/api/bol/heros/armures/create/${herosId}`, <BolHerosArmureModel>armure);
-  }
-
-  deleteArmure(herosId: string | null | undefined, id: number): Observable<any> {
-    return this.http.delete<boolean>(`${environment.apiBase}/api/bol/heros/armures/delete/${herosId}/${id}`);
-  }
-
-  // Armes
-  armes(): Observable<BolArmeModel[]> {
-    return this.http.get<BolArmeModel[]>(`${environment.apiBase}/api/bol/armes`);
-  }
-
-  createArmeCatalog(arme: BolArmeModel): Observable<BolArmeModel> {
-    return this.http.post<BolArmeModel>(`${environment.apiBase}/api/bol/armes/create`, arme);
-  }
-
-  updateArmeCatalog(arme: BolArmeModel): Observable<BolArmeModel> {
-    return this.http.post<BolArmeModel>(`${environment.apiBase}/api/bol/armes/update`, arme);
-  }
-
-  deleteArmeCatalog(id: number): Observable<boolean> {
-    return this.http.delete<boolean>(`${environment.apiBase}/api/bol/armes/delete/${id}`);
-  }
-
-  createArme(herosId: string | null | undefined, arme: BolHerosArmeModel): Observable<any> {
-    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/armes/create/${herosId}`, <BolHerosArmeModel>arme);
-  }
-
-  deleteArme(herosId: string | null | undefined, id: number): Observable<any> {
-    return this.http.delete<boolean>(`${environment.apiBase}/api/bol/heros/armes/delete/${herosId}/${id}`);
-  }
-
-  // Langues
-  langues(): Observable<any> {
-    return this.http.get<BolLangueModel[]>(`${environment.apiBase}/api/bol/langues`);
-  }
-
-  createLangue(herosId: string | null | undefined, langue: BolHerosLangueModel): Observable<any> {
-    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/langues/create/${herosId}`, <BolHerosLangueModel>langue);
-  }
-
-  deleteLangue(herosId: string | null | undefined, id: number): Observable<any> {
-    return this.http.delete<boolean>(`${environment.apiBase}/api/bol/heros/langues/delete/${herosId}/${id}`);
-  }
+  private readonly http = inject(HttpClient);
 
   // Héros
-  createHeros(hero: Record<string, unknown> | BolHerosModel): Observable<any> {
-    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/create`, hero);
-  }
-
-  updateHeros(hero: Record<string, unknown> | BolHerosModel): Observable<any> {
-    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/update`, hero);
-  }
-
-  createHerosAdvanced(hero: Record<string, unknown> | BolHerosModel): Observable<any> {
-    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/create/advanced`, hero);
-  }
-
-  updateHerosAdvanced(hero: Record<string, unknown> | BolHerosModel): Observable<any> {
-    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/update/advanced`, hero);
-  }
-
-  private readonly _heroesList = signal<BolHerosModel[]>([]);
-  readonly heroesList = this._heroesList.asReadonly();
-
-  loadHeroes(): void {
-    this.http.get<BolHerosModel[]>(`${environment.apiBase}/api/bol/heros`).subscribe(
-      (data) => this._heroesList.set(data),
-    );
-  }
-
   heroes(): Observable<BolHerosModel[]> {
-    return this.http.get<BolHerosModel[]>(`${environment.apiBase}/api/bol/heros`);
+    return this.http.get<BolHerosModel[]>(apiUrl('bol/heros'));
   }
 
   heros(id: string): Observable<BolHerosModel> {
-    return this.http.get<BolHerosModel>(`${environment.apiBase}/api/bol/heros/` + id);
+    return this.http.get<BolHerosModel>(apiUrl(`bol/heros/${id}`));
   }
 
-  deleteHeros(id: string): Observable<any> {
-    return this.http.delete<BolHerosModel>(`${environment.apiBase}/api/bol/heros/delete/` + id);
+  createHeros(hero: Record<string, unknown> | BolHerosModel): Observable<BolHerosModel> {
+    return this.http.post<BolHerosModel>(apiUrl('bol/heros/create'), hero);
   }
 
-  // Origines
-  updateOriginesHeros(herosId: string, origines: BolHerosOrigines): Observable<any> {
-    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/heros/origines/update/` + herosId, origines);
+  updateHeros(hero: Record<string, unknown> | BolHerosModel): Observable<BolHerosModel> {
+    return this.http.post<BolHerosModel>(apiUrl('bol/heros/update'), hero);
   }
 
-  // Pnj
-
-  pnjs(): Observable<BolHerosModel[]> {
-    return this.http.get<BolHerosModel[]>(`${environment.apiBase}/api/bol/pnj`);
-  }
-  pnj(id: string): Observable<BolHerosModel> {
-    return this.http.get<BolHerosModel>(`${environment.apiBase}/api/bol/pnj/` + id);
+  createHerosAdvanced(hero: Record<string, unknown> | BolHerosModel): Observable<BolHerosModel> {
+    return this.http.post<BolHerosModel>(apiUrl('bol/heros/create/advanced'), hero);
   }
 
-  quickCreate(pnj: Record<string, unknown>): Observable<any> {
-    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/pnj/create`, pnj);
+  updateHerosAdvanced(hero: Record<string, unknown> | BolHerosModel): Observable<BolHerosModel> {
+    return this.http.post<BolHerosModel>(apiUrl('bol/heros/update/advanced'), hero);
   }
 
-  quickUpdate(pnj: Record<string, unknown>): Observable<any> {
-    return this.http.post<BolHerosModel>(`${environment.apiBase}/api/bol/pnj/update`, pnj);
+  deleteHeros(id: string): Observable<BolApiMessage> {
+    return this.http.delete<BolApiMessage>(apiUrl(`bol/heros/delete/${id}`));
   }
 
-  quickDelete(id: string): Observable<any> {
-    return this.http.delete<BolHerosModel>(`${environment.apiBase}/api/bol/pnj/delete/` + id);
+  updateOriginesHeros(herosId: string, origines: BolHerosOrigines): Observable<BolHerosModel> {
+    return this.http.post<BolHerosModel>(apiUrl(`bol/heros/origines/update/${herosId}`), origines);
+  }
+
+  // Traits du héros
+  createTrait(herosId: string | null | undefined, trait: BolHerosTraitsModel): Observable<BolHerosTraitsModel> {
+    return this.http.post<BolHerosTraitsModel>(apiUrl(`bol/heros/traits/create/${herosId}`), trait);
+  }
+
+  deleteTrait(herosId: string | null | undefined, id: number): Observable<BolApiSuccess> {
+    return this.http.delete<BolApiSuccess>(apiUrl(`bol/heros/traits/delete/${herosId}/${id}`));
+  }
+
+  // Carrières du héros
+  createCarriere(herosId: string | null, carriere: BolHerosCarriereModel): Observable<BolApiSuccess<BolHerosCarriereModel>> {
+    return this.http.post<BolApiSuccess<BolHerosCarriereModel>>(apiUrl(`bol/heros/carrieres/create/${herosId}`), carriere);
+  }
+
+  deleteCarriere(herosId: string | null, id: number): Observable<BolApiSuccess> {
+    return this.http.delete<BolApiSuccess>(apiUrl(`bol/heros/carrieres/delete/${herosId}/${id}`));
+  }
+
+  // Armes du héros
+  createArme(herosId: string | null | undefined, arme: BolHerosArmeModel): Observable<BolApiSuccess<BolHerosArmeModel>> {
+    return this.http.post<BolApiSuccess<BolHerosArmeModel>>(apiUrl(`bol/heros/armes/create/${herosId}`), arme);
+  }
+
+  deleteArme(herosId: string | null | undefined, id: number): Observable<BolApiSuccess> {
+    return this.http.delete<BolApiSuccess>(apiUrl(`bol/heros/armes/delete/${herosId}/${id}`));
+  }
+
+  // Armures du héros
+  createArmure(herosId: string | null | undefined, armure: BolHerosArmureModel): Observable<BolApiSuccess<BolHerosArmureModel>> {
+    return this.http.post<BolApiSuccess<BolHerosArmureModel>>(apiUrl(`bol/heros/armures/create/${herosId}`), armure);
+  }
+
+  deleteArmure(herosId: string | null | undefined, id: number): Observable<BolApiSuccess> {
+    return this.http.delete<BolApiSuccess>(apiUrl(`bol/heros/armures/delete/${herosId}/${id}`));
+  }
+
+  // Langues du héros
+  createLangue(herosId: string | null | undefined, langue: BolHerosLangueModel): Observable<BolApiSuccess<BolHerosLangueModel>> {
+    return this.http.post<BolApiSuccess<BolHerosLangueModel>>(apiUrl(`bol/heros/langues/create/${herosId}`), langue);
+  }
+
+  deleteLangue(herosId: string | null | undefined, id: number): Observable<BolApiSuccess> {
+    return this.http.delete<BolApiSuccess>(apiUrl(`bol/heros/langues/delete/${herosId}/${id}`));
   }
 }

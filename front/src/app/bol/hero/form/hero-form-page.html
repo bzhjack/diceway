@@ -2,7 +2,7 @@
   <div class="mx-auto flex max-w-7xl flex-col gap-4">
     <mat-card appearance="outlined">
       <mat-card-content>
-        <form class="dw-creation-form flex flex-col gap-6" [formGroup]="heroForm" (ngSubmit)="saveHero()">
+        <form class="dw-creation-form flex flex-col gap-6" [formGroup]="heroForm" (ngSubmit)="save()">
           <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div class="space-y-3">
               <div class="flex items-center gap-3">
@@ -28,7 +28,7 @@
               <button
                 mat-flat-button
                 type="submit"
-                [disabled]="pending() || loadingHero() || heroForm.invalid"
+                [disabled]="pending() || loading() || heroForm.invalid"
               >
                 <mat-icon>save</mat-icon> {{ submitLabel() }}
                 @if (formDirty()) {
@@ -50,7 +50,7 @@
           </div>
 
           <div class="grid gap-4">
-            @if (loadingHero()) {
+            @if (loading()) {
               <div class="dw-section--loading">
                 <p class="hfp-section-eyebrow">
                   Chargement
@@ -103,7 +103,13 @@
                         <dw-tag>{{ selectedCarrieres().length }} sélectionnée(s)</dw-tag>
                       </div>
 
-                      <bol-carriere-add-menu [carrieres]="filteredCarrieres()" (added)="addCarriereEntry($event)" />
+                      <bol-add-menu
+                        [options]="carriereOptions()"
+                        label="Carrière"
+                        triggerLabel="Ajouter une carrière"
+                        addLabel="Ajouter la carrière"
+                        (added)="addCarriereEntry($event.id)"
+                      />
                     </div>
 
                     <bol-carriere-list [carrieres]="selectedCarrieres()" (removed)="removeItem(carrieres, $event)" />
@@ -124,7 +130,13 @@
                         <dw-tag>{{ selectedArmes().length }} sélectionnée(s)</dw-tag>
                       </div>
 
-                      <bol-arme-add-menu [armes]="filteredArmes()" (added)="addArmeEntry($event)" />
+                      <bol-add-menu
+                        [options]="armeOptions()"
+                        label="Arme"
+                        triggerLabel="Ajouter une arme"
+                        addLabel="Ajouter l'arme"
+                        (added)="addArmeEntry($event.id)"
+                      />
                     </div>
 
                     <bol-arme-list [armes]="selectedArmes()" (removed)="removeItem(armes, $event)" />
@@ -139,7 +151,13 @@
                         <dw-tag>{{ selectedArmures().length }} sélectionnée(s)</dw-tag>
                       </div>
 
-                      <bol-armure-add-menu [armures]="filteredArmures()" (added)="addArmureEntry($event)" />
+                      <bol-add-menu
+                        [options]="armureOptions()"
+                        label="Armure"
+                        triggerLabel="Ajouter une armure"
+                        addLabel="Ajouter l'armure"
+                        (added)="addArmureEntry($event.id)"
+                      />
                     </div>
 
                     <bol-armure-list [armures]="selectedArmures()" (removed)="removeItem(armures, $event)" />

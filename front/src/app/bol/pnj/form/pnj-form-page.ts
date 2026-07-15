@@ -1,64 +1,36 @@
-import {Location} from '@angular/common';
-import {ChangeDetectionStrategy, Component, Signal, computed, effect, inject, signal} from '@angular/core';
-import {toSignal} from '@angular/core/rxjs-interop';
-import {FormArray, FormBuilder, FormControl, PristineChangeEvent, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Observable, filter, map, startWith, take} from 'rxjs';
-import {finalize} from 'rxjs/operators';
+import {ChangeDetectionStrategy, Component, computed, inject} from '@angular/core';
+import {FormArray, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Observable} from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
-import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
-import {BolArmureModel} from '../../models/bol-armure.model';
-import {BolArmeModel} from '../../models/bol-arme.model';
-import {BolAvantageModel} from '../../models/bol-avantage.model';
-import {BolCarriereModel} from '../../models/bol-carriere.model';
-import {BolDesavantageModel} from '../../models/bol-desavantage.model';
 import {BolHerosModel} from '../../models/bol-heros.model';
-import {BolLangueModel} from '../../models/bol-langue.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
-import {BolHerosService} from '../../services/bol-heros.service';
-import {HasPendingChanges} from '../../../core/pending-changes.guard';
-import {DwConfirmDialogComponent} from '../../../shared/dw-confirm-dialog/dw-confirm-dialog';
+import {BolPnjService} from '../../services/bol-pnj.service';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
-import {PictureComponent} from '../../../shared/picture/picture';
-import {ArmeAddMenuComponent} from '../../shared/arme/add-menu/arme-add-menu.component';
+import {AddMenuComponent, addMenuOptions} from '../../shared/add-menu/add-menu.component';
 import {ArmeEntry, ArmeListComponent} from '../../shared/arme/list/arme-list.component';
-import {ArmureAddMenuComponent} from '../../shared/armure/add-menu/armure-add-menu.component';
 import {ArmureEntry, ArmureListComponent} from '../../shared/armure/list/armure-list.component';
-import {CarriereAddMenuComponent} from '../../shared/carriere/add-menu/carriere-add-menu.component';
 import {CarriereEntry, CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
+import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
+import {IdDraft, RankedDraft, availableCatalog, referencedIds, selectedEntries} from '../../shared/form/form-selection';
+import {controlValueSignal, formArrayValueSignal, formDirtySignal} from '../../shared/form/form-signals';
 import {LangueEntry} from '../../shared/langue/list/langue-list.component';
 import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
 import {TraitAddEvent} from '../../shared/trait/add-menu/trait-add-menu.component';
-import {TraitDetail, TraitEntry} from '../../shared/trait/list/trait-list.component';
-import {TraitIcon, traitIconType} from '../../shared/trait-icon';
+import {TraitDraft, traitEntriesSignal} from '../../shared/trait/trait-entry.utils';
 import {PnjGeneralComponent, PnjTypeOption} from './general/pnj-general.component';
 import {PnjSummaryRailComponent} from './summary-rail/pnj-summary-rail.component';
-
-interface PnjSimpleDraft {
-  id: number;
-}
-
-interface PnjCarriereDraft extends PnjSimpleDraft {
-  value: number;
-}
-
-interface PnjTraitDraft extends PnjSimpleDraft {
-  type: 'A' | 'D';
-}
-
-const PNJ_TYPE_OPTIONS: readonly PnjTypeOption[] = [
-  {label: 'Piétaille', value: 'P'},
-  {label: 'Coriace', value: 'C'},
-  {label: 'Rival', value: 'R'},
-];
 
 const PNJ_TYPE_LABELS: Readonly<Record<'P' | 'C' | 'R', string>> = {
   P: 'Piétaille',
   C: 'Coriace',
   R: 'Rival',
 };
+
+const PNJ_TYPE_OPTIONS: readonly PnjTypeOption[] = (
+  Object.entries(PNJ_TYPE_LABELS) as ['P' | 'C' | 'R', string][]
+).map(([value, label]) => ({label, value}));
 
 const PNJ_STAT_GROUPS: readonly StatGroup[] = [
   {
@@ -94,6 +66,20 @@ const PNJ_STAT_GROUPS: readonly StatGroup[] = [
   },
 ];
 
+const PNJ_FORM_LABELS: EntityFormLabels = {
+  createTitle: 'Nouveau PNJ',
+  editTitle: 'Modifier le PNJ',
+  createEyebrow: 'Galerie BOL',
+  editEyebrow: 'Édition galerie BOL',
+  createSubmitLabel: 'Enregistrer le PNJ',
+  editSubmitLabel: 'Mettre à jour le PNJ',
+  loadError: 'Le chargement du PNJ a échoué.',
+  createError: 'La création du PNJ a échoué.',
+  updateError: 'La mise à jour du PNJ a échoué.',
+  unsavedChanges: 'Ce PNJ a des changements non sauvegardés. Quitter sans enregistrer ?',
+  avatarDialogTitle: 'Avatar du PNJ',
+};
+
 @Component({
   selector: 'bol-pnj-form-page',
   imports: [
@@ -103,11 +89,9 @@ const PNJ_STAT_GROUPS: readonly StatGroup[] = [
     MatCardContent,
     MatIconModule,
     DwTagComponent,
-    ArmeAddMenuComponent,
+    AddMenuComponent,
     ArmeListComponent,
-    ArmureAddMenuComponent,
     ArmureListComponent,
-    CarriereAddMenuComponent,
     CarriereListComponent,
     PnjGeneralComponent,
     StatsGridComponent,
@@ -120,17 +104,9 @@ const PNJ_STAT_GROUPS: readonly StatGroup[] = [
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PnjFormPageComponent implements HasPendingChanges {
-  private readonly herosService = inject(BolHerosService);
+export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel> {
+  private readonly pnjService = inject(BolPnjService);
   private readonly herosStateService = inject(BolHerosStateService);
-  private readonly formBuilder = inject(FormBuilder);
-  private readonly route = inject(ActivatedRoute);
-  private readonly location = inject(Location);
-  private readonly router = inject(Router);
-  private readonly dialog = inject(MatDialog);
-  private readonly routeParamMap = toSignal(this.route.paramMap, {
-    initialValue: this.route.snapshot.paramMap,
-  });
 
   protected readonly armesList = this.herosStateService.armeList;
   protected readonly armuresList = this.herosStateService.armureList;
@@ -139,28 +115,9 @@ export class PnjFormPageComponent implements HasPendingChanges {
   protected readonly avantagesList = this.herosStateService.avantagesList;
   protected readonly desavantagesList = this.herosStateService.desavantagesList;
 
+  protected readonly labels = PNJ_FORM_LABELS;
   protected readonly typeOptions = PNJ_TYPE_OPTIONS;
   protected readonly pnjStatGroups = PNJ_STAT_GROUPS;
-
-  protected readonly errorMessage = signal<string | null>(null);
-  protected readonly pending = signal(false);
-  protected readonly loadingPnj = signal(false);
-  protected readonly returnUrl = signal<string | null>(this.readReturnUrl());
-  protected readonly pnjId = computed(() => this.routeParamMap().get('id'));
-  protected readonly editMode = computed(() => Boolean(this.pnjId()));
-  protected readonly pageTitle = computed(() =>
-    this.editMode() ? 'Modifier le PNJ' : 'Nouveau PNJ',
-  );
-  protected readonly pageEyebrow = computed(() =>
-    this.editMode() ? 'Édition galerie BOL' : 'Galerie BOL',
-  );
-  protected readonly submitLabel = computed(() => {
-    if (this.pending()) {
-      return 'Enregistrement...';
-    }
-
-    return this.editMode() ? 'Mettre à jour le PNJ' : 'Enregistrer le PNJ';
-  });
 
   protected readonly pnjForm = this.formBuilder.group({
     id: this.formBuilder.control<string | null>(null),
@@ -189,187 +146,94 @@ export class PnjFormPageComponent implements HasPendingChanges {
     traits: this.formBuilder.array([]),
   });
 
-  private controlValueSignal<T>(control: FormControl<T>): Signal<T> {
-    return toSignal(control.valueChanges.pipe(startWith(control.value)), {initialValue: control.value});
+  protected get entityForm() {
+    return this.pnjForm;
   }
 
-  protected readonly avatarPreview = this.controlValueSignal(this.pnjForm.controls.avatar);
-  protected readonly pnjNom = this.controlValueSignal(this.pnjForm.controls.nom);
-  protected readonly pnjType = this.controlValueSignal(this.pnjForm.controls.type);
-  protected readonly pnjVitalite = this.controlValueSignal(this.pnjForm.controls.vitalite);
+  protected readonly formDirty = formDirtySignal(this.pnjForm);
+
+  protected readonly avatarPreview = controlValueSignal(this.pnjForm.controls.avatar);
+  protected readonly pnjNom = controlValueSignal(this.pnjForm.controls.nom);
+  protected readonly pnjType = controlValueSignal(this.pnjForm.controls.type);
+  protected readonly pnjVitalite = controlValueSignal(this.pnjForm.controls.vitalite);
   protected readonly pnjTypeLabel = computed(() => PNJ_TYPE_LABELS[this.pnjType() ?? 'P']);
 
-  protected readonly formDirty = toSignal(
-    this.pnjForm.events.pipe(
-      filter((event): event is PristineChangeEvent => event instanceof PristineChangeEvent),
-      map((event) => !event.pristine),
-    ),
-    {initialValue: false},
+  protected readonly selectedArmesDraft = formArrayValueSignal<IdDraft>(this.armes);
+  protected readonly selectedArmuresDraft = formArrayValueSignal<IdDraft>(this.armures);
+  protected readonly selectedCarrieresDraft = formArrayValueSignal<RankedDraft>(this.carrieres);
+  protected readonly selectedLanguesDraft = formArrayValueSignal<IdDraft>(this.langues);
+  protected readonly selectedTraitsDraft = formArrayValueSignal<TraitDraft>(this.traits);
+
+  protected readonly filteredArmes = availableCatalog(this.armesList, this.selectedArmesDraft);
+  protected readonly filteredArmures = availableCatalog(this.armuresList, this.selectedArmuresDraft);
+  protected readonly filteredCarrieres = availableCatalog(this.carrieresList, this.selectedCarrieresDraft);
+  protected readonly filteredLangues = availableCatalog(this.languesList, this.selectedLanguesDraft);
+  protected readonly filteredAvantages = availableCatalog(this.avantagesList, () =>
+    this.selectedTraitsDraft().filter((trait) => trait.type === 'A'),
   );
-  protected readonly selectedArmesDraft = toSignal(
-    this.armes.valueChanges.pipe(startWith(this.armes.getRawValue())),
-    {initialValue: this.armes.getRawValue()},
-  );
-  protected readonly selectedArmuresDraft = toSignal(
-    this.armures.valueChanges.pipe(startWith(this.armures.getRawValue())),
-    {initialValue: this.armures.getRawValue()},
-  );
-  protected readonly selectedCarrieresDraft = toSignal(
-    this.carrieres.valueChanges.pipe(startWith(this.carrieres.getRawValue())),
-    {initialValue: this.carrieres.getRawValue()},
-  );
-  protected readonly selectedLanguesDraft = toSignal(
-    this.langues.valueChanges.pipe(startWith(this.langues.getRawValue())),
-    {initialValue: this.langues.getRawValue()},
-  );
-  protected readonly selectedTraitsDraft = toSignal(
-    this.traits.valueChanges.pipe(startWith(this.traits.getRawValue())),
-    {initialValue: this.traits.getRawValue()},
+  protected readonly filteredDesavantages = availableCatalog(this.desavantagesList, () =>
+    this.selectedTraitsDraft().filter((trait) => trait.type === 'D'),
   );
 
-  protected readonly filteredArmes = computed(() => {
-    const ids = new Set((this.selectedArmesDraft() ?? []).map((item: PnjSimpleDraft) => Number(item.id)));
-    return (this.armesList() ?? []).filter((arme: BolArmeModel) => !ids.has(Number(arme.id)));
-  });
-  protected readonly filteredArmures = computed(() => {
-    const ids = new Set((this.selectedArmuresDraft() ?? []).map((item: PnjSimpleDraft) => Number(item.id)));
-    return (this.armuresList() ?? []).filter((armure: BolArmureModel) => !ids.has(Number(armure.id)));
-  });
-  protected readonly filteredCarrieres = computed(() => {
-    const ids = new Set((this.selectedCarrieresDraft() ?? []).map((item: PnjCarriereDraft) => Number(item.id)));
-    return (this.carrieresList() ?? []).filter((carriere: BolCarriereModel) => !ids.has(Number(carriere.id)));
-  });
-  protected readonly filteredLangues = computed(() => {
-    const ids = new Set((this.selectedLanguesDraft() ?? []).map((item: PnjSimpleDraft) => Number(item.id)));
-    return (this.languesList() ?? []).filter((langue: BolLangueModel) => !ids.has(Number(langue.id)));
-  });
-  protected readonly filteredAvantages = computed(() => {
-    const ids = new Set(
-      (this.selectedTraitsDraft() ?? [])
-        .filter((item: PnjTraitDraft) => item.type === 'A')
-        .map((item: PnjTraitDraft) => Number(item.id)),
-    );
-    return (this.avantagesList() ?? []).filter((avantage: BolAvantageModel) => !ids.has(Number(avantage.id)));
-  });
-  protected readonly filteredDesavantages = computed(() => {
-    const ids = new Set(
-      (this.selectedTraitsDraft() ?? [])
-        .filter((item: PnjTraitDraft) => item.type === 'D')
-        .map((item: PnjTraitDraft) => Number(item.id)),
-    );
-    return (this.desavantagesList() ?? []).filter(
-      (desavantage: BolDesavantageModel) => !ids.has(Number(desavantage.id)),
-    );
-  });
-
-  protected readonly selectedArmes = computed(() =>
-    (this.selectedArmesDraft() ?? [])
-      .map((entry: PnjSimpleDraft) =>
-        (this.armesList() ?? []).find((arme: BolArmeModel) => Number(arme.id) === Number(entry.id)),
-      )
-      .filter((arme: BolArmeModel | undefined): arme is BolArmeModel => Boolean(arme))
-      .map((arme: BolArmeModel): ArmeEntry => ({
-        id: Number(arme.id),
-        label: arme.arme,
-        degats: arme.degats,
-        portee: arme.portee,
-        notes: arme.notes,
-      })),
+  protected readonly armeOptions = addMenuOptions(
+    this.filteredArmes,
+    (arme) => arme.arme,
+    (arme) => (arme.degats ? `· Dégâts ${arme.degats}` : null),
   );
-  protected readonly selectedArmures = computed(() =>
-    (this.selectedArmuresDraft() ?? [])
-      .map((entry: PnjSimpleDraft) =>
-        (this.armuresList() ?? []).find((armure: BolArmureModel) => Number(armure.id) === Number(entry.id)),
-      )
-      .filter((armure: BolArmureModel | undefined): armure is BolArmureModel => Boolean(armure))
-      .map((armure: BolArmureModel): ArmureEntry => ({
-        id: Number(armure.id),
-        label: armure.armure,
-        protection: armure.protection,
-        malus: armure.malus,
-        ptsDePouvoir: armure.pts_de_pouvoir,
-      })),
+  protected readonly armureOptions = addMenuOptions(
+    this.filteredArmures,
+    (armure) => armure.armure,
+    (armure) => (armure.protection ? `· Protection ${armure.protection}` : null),
   );
-  protected readonly selectedCarrieres = computed(() =>
-    (this.selectedCarrieresDraft() ?? [])
-      .map((entry: PnjCarriereDraft, index: number) => {
-        const definition = (this.carrieresList() ?? []).find(
-          (carriere: BolCarriereModel) => Number(carriere.id) === Number(entry.id),
-        );
+  protected readonly carriereOptions = addMenuOptions(this.filteredCarrieres, (carriere) => carriere.carriere);
 
-        if (!definition) {
-          return null;
-        }
-
-        return {
-          id: Number(entry.id),
-          label: definition.carriere,
-          description: definition.description || null,
-          rank: this.carrieres.at(index).get('value') as FormControl<number>,
-        };
-      })
-      .filter((entry: CarriereEntry | null): entry is CarriereEntry => entry !== null),
+  protected readonly selectedArmes = selectedEntries(
+    this.selectedArmesDraft,
+    this.armesList,
+    (arme, entry): ArmeEntry => ({
+      id: entry.id,
+      label: arme.arme,
+      degats: arme.degats,
+      portee: arme.portee,
+      notes: arme.notes,
+    }),
   );
-  protected readonly selectedLangues = computed(() =>
-    (this.selectedLanguesDraft() ?? [])
-      .map((entry: PnjSimpleDraft) =>
-        (this.languesList() ?? []).find((langue: BolLangueModel) => Number(langue.id) === Number(entry.id)),
-      )
-      .filter((langue: BolLangueModel | undefined): langue is BolLangueModel => Boolean(langue))
-      .map((langue: BolLangueModel): LangueEntry => ({
-        id: Number(langue.id),
-        label: langue.langue,
-        description: langue.description || null,
-        estLemurienne: Boolean(langue.est_lemurienne),
-      })),
+  protected readonly selectedArmures = selectedEntries(
+    this.selectedArmuresDraft,
+    this.armuresList,
+    (armure, entry): ArmureEntry => ({
+      id: entry.id,
+      label: armure.armure,
+      protection: armure.protection,
+      malus: armure.malus,
+      ptsDePouvoir: armure.pts_de_pouvoir,
+    }),
   );
-  protected readonly selectedTraitEntries = computed(() =>
-    (this.selectedTraitsDraft() ?? [])
-      .map((entry: PnjTraitDraft) => ({
-        ...entry,
-        label:
-          entry.type === 'A'
-            ? (this.avantagesList() ?? []).find(
-                (avantage: BolAvantageModel) => Number(avantage.id) === Number(entry.id),
-              )?.avantage
-            : (this.desavantagesList() ?? []).find(
-                (desavantage: BolDesavantageModel) => Number(desavantage.id) === Number(entry.id),
-              )?.desavantage,
-        details: this.traitDetails(entry),
-        icon: this.traitIcon(entry),
-      }))
-      .filter(
-        (
-          entry: PnjTraitDraft & {label?: string; details: readonly TraitDetail[]; icon: TraitIcon},
-        ): entry is TraitEntry => Boolean(entry.label),
-      ),
+  protected readonly selectedCarrieres = selectedEntries(
+    this.selectedCarrieresDraft,
+    this.carrieresList,
+    (definition, entry, index): CarriereEntry => ({
+      id: entry.id,
+      label: definition.carriere,
+      description: definition.description || null,
+      rank: this.carrieres.at(index).get('value') as FormControl<number>,
+    }),
   );
-
-  constructor() {
-    effect((onCleanup) => {
-      const pnjId = this.pnjId();
-      this.returnUrl.set(this.readReturnUrl());
-      this.errorMessage.set(null);
-
-      if (!pnjId) {
-        this.resetForm();
-        return;
-      }
-
-      this.loadingPnj.set(true);
-      const subscription = this.herosService
-        .pnj(pnjId)
-        .pipe(finalize(() => this.loadingPnj.set(false)))
-        .subscribe({
-          next: (pnj) => this.hydrateForm(pnj),
-          error: (error: unknown) => {
-            this.errorMessage.set(this.extractErrorMessage(error, true));
-          },
-        });
-
-      onCleanup(() => subscription.unsubscribe());
-    });
-  }
+  protected readonly selectedLangues = selectedEntries(
+    this.selectedLanguesDraft,
+    this.languesList,
+    (langue, entry): LangueEntry => ({
+      id: entry.id,
+      label: langue.langue,
+      description: langue.description || null,
+      estLemurienne: Boolean(langue.est_lemurienne),
+    }),
+  );
+  protected readonly selectedTraitEntries = traitEntriesSignal(
+    this.selectedTraitsDraft,
+    this.avantagesList,
+    this.desavantagesList,
+  );
 
   protected get armes(): FormArray {
     return this.pnjForm.controls.armes as FormArray;
@@ -391,48 +255,26 @@ export class PnjFormPageComponent implements HasPendingChanges {
     return this.pnjForm.controls.traits as FormArray;
   }
 
-  protected pickAvatar(): void {
-    const ref = this.dialog.open(PictureComponent, {
-      data: {title: 'Avatar du PNJ'},
-      width: 'min(960px, 92vw)',
-      disableClose: true,
-    });
-
-    ref.afterClosed().pipe(take(1)).subscribe((avatar: string | null) => {
-      if (avatar) {
-        this.pnjForm.controls.avatar.setValue(avatar);
-        this.pnjForm.controls.avatar.markAsDirty();
-      }
-    });
-  }
-
   protected addArmeEntry(id: number): void {
-    this.armes.push(this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}));
-    this.armes.markAsDirty();
+    this.addIdEntry(this.armes, id);
   }
 
   protected addArmureEntry(id: number): void {
-    this.armures.push(
-      this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}),
-    );
-    this.armures.markAsDirty();
+    this.addIdEntry(this.armures, id);
+  }
+
+  protected addLangueEntry(id: number): void {
+    this.addIdEntry(this.langues, id);
   }
 
   protected addCarriereEntry(id: number): void {
     this.carrieres.push(
       this.formBuilder.group({
-        id: this.formBuilder.control(Number(id), Validators.required),
+        id: this.formBuilder.control(id, Validators.required),
         value: this.formBuilder.control(0, Validators.required),
       }),
     );
     this.carrieres.markAsDirty();
-  }
-
-  protected addLangueEntry(id: number): void {
-    this.langues.push(
-      this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}),
-    );
-    this.langues.markAsDirty();
   }
 
   protected addTraitEntry(entry: TraitAddEvent): void {
@@ -445,74 +287,19 @@ export class PnjFormPageComponent implements HasPendingChanges {
     this.traits.markAsDirty();
   }
 
-  protected removeItem(items: FormArray, index: number): void {
-    items.removeAt(index);
-    items.markAsDirty();
+  protected loadEntity(id: string): Observable<BolHerosModel> {
+    return this.pnjService.pnj(id);
   }
 
-  protected savePnj(): void {
-    if (this.pending() || this.loadingPnj()) {
-      return;
-    }
-
-    if (this.pnjForm.invalid) {
-      this.pnjForm.markAllAsTouched();
-      return;
-    }
-
-    this.pending.set(true);
-    this.errorMessage.set(null);
-
-    const payload = this.buildPnjPayload();
-    const action$ = this.editMode()
-      ? this.herosService.quickUpdate(payload)
-      : this.herosService.quickCreate(payload);
-
-    action$
-      .pipe(finalize(() => this.pending.set(false)))
-      .subscribe({
-        next: () => {
-          this.pnjForm.markAsPristine();
-          this.navigateBack(true);
-        },
-        error: (error: unknown) => {
-          this.errorMessage.set(this.extractErrorMessage(error, false));
-        },
-      });
+  protected createEntity(payload: Record<string, unknown>): Observable<BolHerosModel> {
+    return this.pnjService.createPnj(payload);
   }
 
-  protected goBack(): void {
-    this.navigateBack(false);
+  protected updateEntity(payload: Record<string, unknown>): Observable<BolHerosModel> {
+    return this.pnjService.updatePnj(payload);
   }
 
-  protected onError(controlName: keyof typeof this.pnjForm.controls): boolean {
-    const control = this.pnjForm.controls[controlName];
-    return control.invalid && (control.dirty || control.touched);
-  }
-
-  canLeave(): boolean | Observable<boolean> {
-    if (!this.formDirty()) {
-      return true;
-    }
-
-    const ref = this.dialog.open(DwConfirmDialogComponent, {
-      data: {
-        title: 'Modifications non enregistrées',
-        message: 'Ce PNJ a des changements non sauvegardés. Quitter sans enregistrer ?',
-        confirmLabel: 'Quitter sans sauver',
-        cancelLabel: 'Annuler',
-      },
-    });
-
-    return ref.afterClosed().pipe(map((confirmed: boolean | undefined) => Boolean(confirmed)));
-  }
-
-  protected onSaveShortcut(event: Event): void {
-    event.preventDefault();
-    this.savePnj();
-  }
-
-  private resetForm(): void {
+  protected resetForm(): void {
     this.pnjForm.reset(
       {
         id: null,
@@ -542,59 +329,30 @@ export class PnjFormPageComponent implements HasPendingChanges {
     this.carrieres.clear({emitEvent: false});
     this.langues.clear({emitEvent: false});
     this.traits.clear({emitEvent: false});
-    this.syncSelectionArrays();
+    this.syncArrays(this.armes, this.armures, this.carrieres, this.langues, this.traits);
   }
 
-  private hydrateForm(pnj: BolHerosModel): void {
+  protected hydrateForm(pnj: BolHerosModel): void {
     this.resetForm();
 
-    for (const arme of pnj.armes) {
-      if (typeof arme === 'object') {
-        this.armes.push(
-          this.formBuilder.group({
-            id: this.formBuilder.control(Number(arme.arme_id), Validators.required),
-          }),
-          {emitEvent: false},
-        );
-      }
-    }
-
-    for (const armure of pnj.armures) {
-      if (typeof armure === 'object') {
-        this.armures.push(
-          this.formBuilder.group({
-            id: this.formBuilder.control(Number(armure.armure_id), Validators.required),
-          }),
-          {emitEvent: false},
-        );
-      }
-    }
+    this.pushIdGroups(this.armes, referencedIds(pnj.armes, (arme) => arme.arme_id));
+    this.pushIdGroups(this.armures, referencedIds(pnj.armures, (armure) => armure.armure_id));
+    this.pushIdGroups(this.langues, referencedIds(pnj.origines.langues, (langue) => langue.langue_id));
 
     for (const carriere of pnj.carrieres) {
       this.carrieres.push(
         this.formBuilder.group({
-          id: this.formBuilder.control(Number(carriere.carriere_id), Validators.required),
-          value: this.formBuilder.control(Number(carriere.value), Validators.required),
+          id: this.formBuilder.control(carriere.carriere_id ?? null, Validators.required),
+          value: this.formBuilder.control(carriere.value, Validators.required),
         }),
         {emitEvent: false},
       );
     }
 
-    for (const langue of pnj.origines.langues) {
-      if (typeof langue === 'object') {
-        this.langues.push(
-          this.formBuilder.group({
-            id: this.formBuilder.control(Number(langue.langue_id), Validators.required),
-          }),
-          {emitEvent: false},
-        );
-      }
-    }
-
     for (const trait of pnj.traits) {
       this.traits.push(
         this.formBuilder.group({
-          id: this.formBuilder.control(Number(trait.traitable_id), Validators.required),
+          id: this.formBuilder.control(trait.traitable_id, Validators.required),
           type: this.formBuilder.control<'A' | 'D'>(trait.type, Validators.required),
         }),
         {emitEvent: false},
@@ -625,10 +383,10 @@ export class PnjFormPageComponent implements HasPendingChanges {
       },
       {emitEvent: true},
     );
-    this.syncSelectionArrays();
+    this.syncArrays(this.armes, this.armures, this.carrieres, this.langues, this.traits);
   }
 
-  private buildPnjPayload(): Record<string, unknown> {
+  protected buildPayload(): Record<string, unknown> {
     const rawValue = this.pnjForm.getRawValue();
 
     return {
@@ -651,113 +409,17 @@ export class PnjFormPageComponent implements HasPendingChanges {
       foi: rawValue.foi,
       vilenie: rawValue.vilenie,
       creation: rawValue.creation,
-      armes: (rawValue.armes as PnjSimpleDraft[]).map((arme) => ({id: Number(arme.id)})),
-      armures: (rawValue.armures as PnjSimpleDraft[]).map((armure) => ({id: Number(armure.id)})),
-      carrieres: (rawValue.carrieres as PnjCarriereDraft[]).map((carriere) => ({
-        id: Number(carriere.id),
-        value: Number(carriere.value),
+      armes: (rawValue.armes as IdDraft[]).map((arme) => ({id: arme.id})),
+      armures: (rawValue.armures as IdDraft[]).map((armure) => ({id: armure.id})),
+      carrieres: (rawValue.carrieres as RankedDraft[]).map((carriere) => ({
+        id: carriere.id,
+        value: carriere.value,
       })),
-      langues: (rawValue.langues as PnjSimpleDraft[]).map((langue) => ({id: Number(langue.id)})),
-      traits: (rawValue.traits as PnjTraitDraft[]).map((trait) => ({
-        id: Number(trait.id),
+      langues: (rawValue.langues as IdDraft[]).map((langue) => ({id: langue.id})),
+      traits: (rawValue.traits as TraitDraft[]).map((trait) => ({
+        id: trait.id,
         type: trait.type,
       })),
     };
-  }
-
-  private navigateBack(afterSave: boolean): void {
-    const returnUrl = this.returnUrl();
-    if (returnUrl) {
-      void this.router.navigateByUrl(returnUrl);
-      return;
-    }
-
-    if (!afterSave && typeof history !== 'undefined' && history.length > 1) {
-      this.location.back();
-      return;
-    }
-
-    void this.router.navigateByUrl('/');
-  }
-
-  private readReturnUrl(): string | null {
-    if (typeof history === 'undefined') {
-      return null;
-    }
-
-    const state = history.state as Record<string, unknown> | null;
-    return typeof state?.['returnUrl'] === 'string' ? state['returnUrl'] : null;
-  }
-
-  private extractErrorMessage(error: unknown, loading: boolean): string {
-    if (typeof error === 'object' && error !== null) {
-      if ('error' in error && typeof error.error === 'object' && error.error !== null) {
-        const apiError = error.error as Record<string, unknown>;
-        if (typeof apiError['message'] === 'string') {
-          return apiError['message'];
-        }
-      }
-
-      if ('message' in error && typeof error.message === 'string') {
-        return error.message;
-      }
-    }
-
-    return loading
-      ? 'Le chargement du PNJ a échoué.'
-      : this.editMode()
-        ? 'La mise à jour du PNJ a échoué.'
-        : 'La création du PNJ a échoué.';
-  }
-
-  private traitSource(entry: PnjTraitDraft): BolAvantageModel | BolDesavantageModel | undefined {
-    return entry.type === 'A'
-      ? (this.avantagesList() ?? []).find(
-          (avantage: BolAvantageModel) => Number(avantage.id) === Number(entry.id),
-        )
-      : (this.desavantagesList() ?? []).find(
-          (desavantage: BolDesavantageModel) => Number(desavantage.id) === Number(entry.id),
-        );
-  }
-
-  private traitIcon(entry: PnjTraitDraft): TraitIcon {
-    return traitIconType(this.traitSource(entry));
-  }
-
-  private traitDetails(entry: PnjTraitDraft): readonly TraitDetail[] {
-    const source = this.traitSource(entry);
-
-    if (!source) {
-      return [];
-    }
-
-    const details: TraitDetail[] = [];
-    if ('de_bonus' in source && source.de_bonus) {
-      details.push({title: 'Dé bonus', description: source.de_bonus_domaine});
-    }
-    if ('de_malus' in source && source.de_malus) {
-      details.push({title: 'Dé malus', description: source.de_malus_domaine});
-    }
-    if (source.attribut) {
-      const attributeValue =
-        'attribut_bonus' in source ? source.attribut_bonus : 'attribut_malus' in source ? source.attribut_malus : null;
-      details.push({
-        title: 'Attribut',
-        description: `${source.attribut}${attributeValue !== null ? `(${attributeValue})` : ''}`,
-      });
-    }
-    if (source.description) {
-      details.push({title: 'Détails', description: source.description});
-    }
-
-    return details;
-  }
-
-  private syncSelectionArrays(): void {
-    this.armes.updateValueAndValidity({emitEvent: true});
-    this.armures.updateValueAndValidity({emitEvent: true});
-    this.carrieres.updateValueAndValidity({emitEvent: true});
-    this.langues.updateValueAndValidity({emitEvent: true});
-    this.traits.updateValueAndValidity({emitEvent: true});
   }
 }

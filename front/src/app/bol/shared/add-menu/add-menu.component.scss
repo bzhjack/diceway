@@ -1,0 +1,22 @@
+:host {
+  display: contents;
+}
+
+::ng-deep .dw-add-menu-panel.mat-mdc-menu-panel {
+  width: 300px;
+  max-width: 300px;
+}
+
+.dw-add-menu-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem;
+}
+
+.dw-add-menu-option-detail {
+  margin-left: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--dw-surface-500);
+}

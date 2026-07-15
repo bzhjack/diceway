@@ -45,7 +45,7 @@ export class HeroAdvancedCreateTools {
     if (avantage.attribut) {
       lines.push({
         title: 'Attribut',
-        description: `${avantage.attribut}(${Number(avantage.attribut_bonus ?? 0)})`,
+        description: `${avantage.attribut}(${avantage.attribut_bonus ?? 0})`,
       });
     }
     if (avantage.description) {
@@ -70,7 +70,7 @@ export class HeroAdvancedCreateTools {
     if (desavantage.attribut) {
       lines.push({
         title: 'Attribut',
-        description: `${desavantage.attribut}(${Number(desavantage.attribut_malus ?? 0)})`,
+        description: `${desavantage.attribut}(${desavantage.attribut_malus ?? 0})`,
       });
     }
     if (desavantage.description) {

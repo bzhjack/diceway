@@ -2,12 +2,12 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {BolScenarioModel} from '../models/bol-scenario.model';
-import {environment} from '../../../environments/environment';
+import {apiUrl} from '../../core/api-url';
 
 @Injectable({providedIn: 'root'})
 export class BolScenarioService {
   private readonly http = inject(HttpClient);
-  private readonly base = `${environment.apiBase}/api/bol/scenario`;
+  private readonly base = apiUrl('bol/scenario');
 
   scenarios(): Observable<BolScenarioModel[]> {
     return this.http.get<BolScenarioModel[]>(this.base);

@@ -22,8 +22,8 @@ html {
   ));
 }
 
-// Statblock créature — dialog sans chrome Material (fond transparent)
-.creature-statblock-dialog {
+// Statblock créature/démon/pnj/héros — dialog sans chrome Material (fond transparent)
+.dw-statblock-dialog {
   .mdc-dialog__surface {
     background: transparent !important;
     box-shadow: none !important;

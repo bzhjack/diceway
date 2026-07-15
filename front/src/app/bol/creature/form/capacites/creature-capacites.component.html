@@ -6,7 +6,14 @@
     <dw-tag>{{ capacites().length }} sélectionnée(s)</dw-tag>
   </div>
 
-  <bol-capacite-add-menu [capacites]="capacitesDisponibles()" (added)="added.emit($event)" />
+  <bol-add-menu
+    [options]="capaciteOptions()"
+    label="Capacité"
+    triggerLabel="Ajouter une capacité"
+    addLabel="Ajouter la capacité"
+    [withDetail]="true"
+    (added)="added.emit($event)"
+  />
 </div>
 
 <bol-capacite-list [capacites]="capacites()" (removed)="removed.emit($event)" />

@@ -10,171 +10,23 @@
   width: 14rem;
 }
 
-// ── Table scroll ──────────────────────────────────────────
-.creature-table-scroll {
-  overflow-x: auto;
+// ── Grid scroll wrapper ───────────────────────────────────
+.creature-grid-scroll {
   overflow-y: auto;
   max-height: calc(100vh - 19rem);
+  padding: 1rem;
 }
 
-// ── Native table ──────────────────────────────────────────
-.bol-creature-table {
-  width: 100%;
-  min-width: 76rem;
-  border-collapse: collapse;
-
-  th,
-  td {
-    padding: 0.6rem 1rem;
-    text-align: left;
-    vertical-align: top;
-    font-size: 0.875rem;
-    color: var(--dw-surface-100, #f1f5f9);
-    border-bottom: 1px solid var(--dw-border, rgba(255, 255, 255, 0.08));
-  }
-
-  th {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--dw-surface-400, #94a3b8);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    background-color: var(--mat-sys-surface-container-low);
-    border-bottom-width: 2px;
-    border-bottom-color: var(--dw-border, rgba(255, 255, 255, 0.12));
-  }
-
-  .creature-col-avatar {
-    width: 1%;
-    padding: 0.5rem;
-  }
-
-  .creature-col-compact {
-    width: 1%;
-    white-space: nowrap;
-  }
+.creature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 0.75rem;
 }
 
-// ── Group header row ──────────────────────────────────────
-.creature-group-header td {
-  background: linear-gradient(90deg, rgba(24, 54, 65, 0.98), rgba(15, 23, 42, 0.95));
-  border-color: var(--dw-surface-200);
-  padding: 0 1rem;
-}
-
-// ── Description ───────────────────────────────────────────
-.creature-description-content {
-  max-width: 250px;
-}
-
-// ── Avatar ────────────────────────────────────────────────
-.beast-avatar {
-  position: relative;
-  display: flex;
-  height: 5.5rem;
-  width: 5.5rem;
-  overflow: hidden;
-  border: 1px solid var(--dw-border);
-  border-radius: 0.75rem;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.92));
-}
-
-.beast-avatar--trigger {
-  cursor: pointer;
-  padding: 0;
-  transition:
-    border-color 160ms ease,
-    transform 160ms ease;
-
-  &:hover {
-    border-color: rgba(251, 191, 36, 0.55);
-    transform: translateY(-1px);
-  }
-
-  &:focus-visible {
-    outline: 3px solid rgba(251, 191, 36, 0.28);
-    outline-offset: 3px;
-  }
-}
-
-.beast-avatar__tag {
-  position: absolute;
-  right: 0.35rem;
-  bottom: 0.35rem;
-  border: 1px solid rgba(251, 191, 36, 0.35);
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.88);
-  padding: 0.12rem 0.42rem;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--dw-color-legendary);
-  text-transform: uppercase;
-}
-
-// ── Buttons ───────────────────────────────────────────────
-.creature-btn-danger {
-  color: var(--mat-sys-error);
-}
-
-// ── Cellules du tableau (tons de texte) ────────────────────
-.clp-group-eyebrow {
-  font-size: 0.75rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.24em;
-  color: #fcd34d;
-}
-
-.clp-group-value {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--dw-surface-900);
-}
-
-.clp-info-icon {
-  color: #fcd34d;
-}
-
-.clp-name {
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: var(--dw-surface-800);
-}
-
-.clp-meta {
+.creature-grid__empty {
+  grid-column: 1 / -1;
+  padding: 2rem 0;
+  text-align: center;
   font-size: 0.875rem;
   color: var(--dw-surface-500);
 }
-
-.clp-description {
-  font-size: 0.875rem;
-  line-height: 1.5rem;
-  color: var(--dw-surface-600);
-}
-
-.clp-cell {
-  font-size: 0.75rem;
-  color: var(--dw-surface-700);
-
-  @media (min-width: 768px) {
-    font-size: 0.875rem;
-  }
-}
-
-.clp-muted {
-  color: var(--dw-surface-500);
-}
-
-.clp-value--strong {
-  font-weight: 700;
-}
-
-.clp-capacite-row {
-  font-size: 0.875rem;
-  color: var(--dw-surface-700);
-}
-

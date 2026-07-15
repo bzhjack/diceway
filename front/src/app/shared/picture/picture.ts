@@ -16,10 +16,15 @@ export class PictureComponent {
   private readonly ref = inject(MatDialogRef<PictureComponent>);
   protected readonly title = inject<{title: string}>(MAT_DIALOG_DATA).title;
 
-  protected imageChangedEvent: any = null;
+  protected imageChangedEvent: Event | null = null;
+  protected imageFile: File | null = null;
   protected croppedImage = '';
   protected scale = 1;
   protected transform: ImageTransform = {};
+
+  protected get hasImage(): boolean {
+    return this.imageChangedEvent !== null || this.imageFile !== null;
+  }
 
   protected imageCropped(event: ImageCroppedEvent): void {
     this.croppedImage = event.base64 || '';
@@ -28,18 +33,21 @@ export class PictureComponent {
   protected fileChangeEvent(event: Event): void {
     const input = event.target as HTMLInputElement | null;
     if (input?.files?.length) {
+      this.imageFile = null;
       this.imageChangedEvent = event;
     }
   }
 
   protected dropFileEvent(files: File[]): void {
     if (files.length > 0) {
-      this.imageChangedEvent = { target: { files } };
+      this.imageChangedEvent = null;
+      this.imageFile = files[0];
     }
   }
 
   protected loadImageFailed(): void {
     this.imageChangedEvent = null;
+    this.imageFile = null;
     this.croppedImage = '';
   }
 

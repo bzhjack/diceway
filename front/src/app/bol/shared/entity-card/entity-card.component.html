@@ -1,0 +1,90 @@
+<article
+  class="entity-card"
+  [class.entity-card--own]="own()"
+  [class.entity-card--dark]="dark()"
+  [class.entity-card--accent-emerald]="accent() === 'emerald'"
+  [class.entity-card--accent-amber]="accent() === 'amber'"
+  [class.entity-card--accent-rose]="accent() === 'rose'"
+>
+  <button
+    type="button"
+    class="entity-card__portrait"
+    [disabled]="!clickablePortrait()"
+    [attr.aria-label]="clickablePortrait() ? 'Ouvrir le statbloc de ' + name() : null"
+    (click)="onPortraitClick()"
+  >
+    <img [src]="image()" [alt]="imageAlt() || name()" class="entity-card__img" />
+    @if (badge(); as b) {
+      <span
+        class="entity-card__badge"
+        [class.entity-card__badge--amber]="b.variant === 'amber'"
+        [class.entity-card__badge--rose]="b.variant === 'rose'"
+        [class.entity-card__badge--slate]="b.variant === 'slate'"
+      >{{ b.label }}</span>
+    }
+  </button>
+
+  <div class="entity-card__body">
+    <div class="entity-card__head">
+      <div class="entity-card__title-row">
+        <h3 class="entity-card__name">{{ name() }}</h3>
+        @if (actions().length || showDelete()) {
+          <div class="entity-card__actions">
+            @for (action of actions(); track action.icon) {
+              <button
+                mat-icon-button
+                class="entity-card__action-btn"
+                [matTooltip]="action.tooltip"
+                [routerLink]="action.routerLink"
+                [state]="action.state"
+              >
+                <mat-icon>{{ action.icon }}</mat-icon>
+              </button>
+            }
+            @if (showDelete()) {
+              <button
+                mat-icon-button
+                class="entity-card__action-btn entity-card__action-btn--danger"
+                matTooltip="Supprimer"
+                (click)="deleteRequested.emit()"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            }
+          </div>
+        }
+      </div>
+      @if (meta()) {
+        <p class="entity-card__meta">{{ meta() }}</p>
+      }
+    </div>
+
+    @if (gauges().length) {
+      <div class="entity-card__gauges">
+        @for (gauge of gauges(); track gauge.label) {
+          <div
+            class="entity-gauge"
+            [class.entity-gauge--pv]="gauge.accent === 'pv'"
+            [class.entity-gauge--ph]="gauge.accent === 'ph'"
+          >
+            <mat-icon>{{ gauge.icon }}</mat-icon>
+            <div class="entity-gauge__text">
+              <b>{{ gauge.value }}</b>
+              <span>{{ gauge.label }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    @if (chips().length) {
+      <div class="entity-card__summary">
+        @for (chip of chips(); track chip.tooltip) {
+          <span class="entity-count-chip" [matTooltip]="chip.tooltip">
+            <mat-icon>{{ chip.icon }}</mat-icon>{{ chip.value }}
+          </span>
+        }
+      </div>
+    }
+  </div>
+</article>
