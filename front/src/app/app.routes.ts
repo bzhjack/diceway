@@ -75,12 +75,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./bol/hero/advanced/hero-advanced-page').then((module) => module.HeroAdvancedPageComponent),
     canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'create/hero-advanced/:id',
     loadComponent: () =>
       import('./bol/hero/advanced/hero-advanced-page').then((module) => module.HeroAdvancedPageComponent),
     canActivate: [authGuard],
+    canDeactivate: [pendingChangesGuard],
   },
   {
     path: 'library/creatures',

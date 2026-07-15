@@ -1,10 +1,10 @@
 import {ChangeDetectionStrategy, Component, computed, input} from '@angular/core';
 import {MatMenuModule} from '@angular/material/menu';
-import {InlineSvgDirective} from '../../../../../../shared/inline-svg/inline-svg.directive';
-import {BolAvantageModel} from '../../../../../models/bol-avantage.model';
-import {BolDesavantageModel} from '../../../../../models/bol-desavantage.model';
-import {traitIconPath, traitIconType} from '../../../../../shared/trait-icon';
-import {HeroAdvancedCreateTools} from '../../../create.tools';
+import {InlineSvgDirective} from '../../../../../shared/inline-svg/inline-svg.directive';
+import {BolAvantageModel} from '../../../../models/bol-avantage.model';
+import {BolDesavantageModel} from '../../../../models/bol-desavantage.model';
+import {traitIconPath, traitIconType} from '../../../../shared/trait-icon';
+import {HeroAdvancedCreateTools} from '../../create.tools';
 
 @Component({
   selector: 'bol-hero-advanced-trait-row',

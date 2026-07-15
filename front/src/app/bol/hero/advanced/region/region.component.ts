@@ -2,9 +2,9 @@ import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} fr
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {DwTagComponent} from '../../../../../shared/dw-tag/dw-tag';
-import {BolNomModel, BolRegionModel} from '../../../../models/bol-region.model';
-import {BolHerosStateService} from '../../../../services/bol-heros-state.service';
+import {DwTagComponent} from '../../../../shared/dw-tag/dw-tag';
+import {BolNomModel, BolRegionModel} from '../../../models/bol-region.model';
+import {BolHerosStateService} from '../../../services/bol-heros-state.service';
 import {HeroAdvancedTraitRowComponent} from './trait-row/trait-row.component';
 
 export interface HeroAdvancedRegionDialogData {
