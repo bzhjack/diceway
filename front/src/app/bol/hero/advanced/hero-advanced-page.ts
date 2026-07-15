@@ -996,6 +996,7 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
   protected openRegionPicker(): void {
     const ref = this.dialog.open(HeroAdvancedRegionComponent, {
       width: 'min(1280px, 96vw)',
+      maxWidth: '96vw',
       data: {
         id_region: this.herosForm.controls.region_id.value ?? undefined,
         nom: this.herosForm.controls.nom.value,
