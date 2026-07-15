@@ -198,20 +198,47 @@
                     <!-- ===== FIN CARRIÈRES ===== -->
                   </div>
 
-                  <div class="grid gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] xl:items-stretch">
-                    <!-- ===== ATTRIBUTS / COMBAT ===== -->
-                    <div class="dw-section--form hap-panel--stretch">
-                      <bol-hero-advanced-stats-panel
-                        [form]="herosForm"
-                        [groups]="heroStatGroups"
-                        [errors]="statsErrors()"
-                        [warns]="statsWarns()"
-                      />
+                  <div class="grid gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] xl:items-start">
+                    <div class="flex min-w-0 flex-col gap-4">
+                      <!-- ===== ATTRIBUTS / COMBAT ===== -->
+                      <div class="dw-section--form">
+                        <bol-hero-advanced-stats-panel
+                          [form]="herosForm"
+                          [groups]="heroStatGroups"
+                          [errors]="statsErrors()"
+                          [warns]="statsWarns()"
+                        />
+                      </div>
+                      <!-- ===== FIN ATTRIBUTS / COMBAT ===== -->
+
+                      <div class="grid gap-4 sm:grid-cols-2">
+                        <!-- ===== ARMES ===== -->
+                        <div class="dw-section--form">
+                          <bol-hero-advanced-armes-panel
+                            [armes]="selectedArmes()"
+                            [armeOptions]="armeOptions()"
+                            [warnHeavy]="warnHeavyArme()"
+                            (armeAdded)="addArmeEntry($event)"
+                            (armeRemoved)="removeArmeAt($event)"
+                          />
+                        </div>
+                        <!-- ===== FIN ARMES ===== -->
+
+                        <!-- ===== ARMURES ===== -->
+                        <div class="dw-section--form">
+                          <bol-hero-advanced-armures-panel
+                            [armures]="selectedArmures()"
+                            [armureOptions]="armureOptions()"
+                            (armureAdded)="addArmureEntry($event)"
+                            (armureRemoved)="removeArmureAt($event)"
+                          />
+                        </div>
+                        <!-- ===== FIN ARMURES ===== -->
+                      </div>
                     </div>
-                    <!-- ===== FIN ATTRIBUTS / COMBAT ===== -->
 
                     <!-- ===== RESSOURCES ===== -->
-                    <div class="dw-section--form hap-panel--stretch">
+                    <div class="dw-section--form">
                       <bol-hero-advanced-ressources-panel
                         [resources]="displayResources()"
                         [heroismCost]="heroismCost()"
@@ -219,31 +246,6 @@
                       />
                     </div>
                     <!-- ===== FIN RESSOURCES ===== -->
-                  </div>
-
-                  <div class="grid gap-4 xl:grid-cols-2 xl:items-start">
-                    <!-- ===== ARMES ===== -->
-                    <div class="dw-section--form">
-                      <bol-hero-advanced-armes-panel
-                        [armes]="selectedArmes()"
-                        [armeOptions]="armeOptions()"
-                        [warnHeavy]="warnHeavyArme()"
-                        (armeAdded)="addArmeEntry($event)"
-                        (armeRemoved)="removeArmeAt($event)"
-                      />
-                    </div>
-                    <!-- ===== FIN ARMES ===== -->
-
-                    <!-- ===== ARMURES ===== -->
-                    <div class="dw-section--form">
-                      <bol-hero-advanced-armures-panel
-                        [armures]="selectedArmures()"
-                        [armureOptions]="armureOptions()"
-                        (armureAdded)="addArmureEntry($event)"
-                        (armureRemoved)="removeArmureAt($event)"
-                      />
-                    </div>
-                    <!-- ===== FIN ARMURES ===== -->
                   </div>
                 </div>
               </div>
