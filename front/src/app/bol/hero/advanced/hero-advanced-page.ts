@@ -294,9 +294,6 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       if (draft.detail) {
         details.unshift({title: 'Détail', description: draft.detail});
       }
-      if (draft.carriere) {
-        details.push({title: 'Origine', description: 'Désavantage de carrière'});
-      }
 
       return {
         id: Number(draft.id ?? draft.traitable_id),
@@ -308,6 +305,7 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
           : `Trait #${draft.traitable_id}`,
         details,
         icon: traitIconType(source),
+        badge: draft.carriere ? 'career' : (draft.region_id ?? 0) > 0 ? 'region' : null,
       };
     }),
   );
