@@ -1,0 +1,33 @@
+<div class="cpd-card" [class]="'cpd-card--' + entry().kind">
+  <div class="cpd-thumb" [class]="'cpd-thumb--' + entry().kind">
+    <img [src]="entry().avatar" [alt]="entry().nom" class="cpd-avatar" />
+  </div>
+  <div class="cpd-info">
+    <p class="cpd-name">{{ entry().nom }}</p>
+    <p class="cpd-kind">{{ kindLabels[entry().kind] }} · ❤ {{ entry().vitalite }}</p>
+  </div>
+
+  @if (selection.combatantFor(entry().catalogId); as combatant) {
+    @if (selection.isStackable(entry().kind)) {
+      <button
+        type="button"
+        class="cpd-add cpd-add--qty"
+        [attr.aria-label]="'Ajouter un exemplaire de ' + entry().nom"
+        (click)="add()"
+      >
+        {{ combatant.qty }} <mat-icon>add</mat-icon>
+      </button>
+    } @else {
+      <span class="cpd-added"><mat-icon>check</mat-icon></span>
+    }
+  } @else {
+    <button
+      type="button"
+      class="cpd-add dw-add-trigger"
+      [attr.aria-label]="'Ajouter ' + entry().nom"
+      (click)="add()"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  }
+</div>

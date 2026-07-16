@@ -3,23 +3,16 @@ import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {CombatantKind, CombatSelectionService} from '../../../services/combat-selection.service';
+import {CatalogCardComponent} from './catalog-card/catalog-card';
 
 type CatalogFilter = CombatantKind | 'all';
-
-const KIND_LABELS: Record<CombatantKind, string> = {
-  hero: 'Héros',
-  pnj: 'PNJ',
-  creature: 'Créature',
-  demon: 'Démon',
-};
 
 /** Dialog de sélection d'un combattant à ajouter à la fight-session en préparation. */
 @Component({
   selector: 'bol-combatant-picker-dialog',
-  imports: [FormsModule, MatButtonModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule],
+  imports: [FormsModule, MatButtonModule, MatDialogModule, MatFormFieldModule, MatInputModule, CatalogCardComponent],
   templateUrl: './combatant-picker-dialog.html',
   styleUrl: './combatant-picker-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,7 +23,6 @@ export class CombatantPickerDialogComponent {
 
   protected readonly activeType = signal<CatalogFilter>('all');
   protected readonly query = signal('');
-  protected readonly kindLabels = KIND_LABELS;
 
   protected readonly filteredCatalog = computed(() => {
     const type = this.activeType();
@@ -47,10 +39,6 @@ export class CombatantPickerDialogComponent {
 
   protected setType(type: CatalogFilter): void {
     this.activeType.set(type);
-  }
-
-  protected addEntry(catalogId: string): void {
-    this.selection.add(catalogId);
   }
 
   protected close(): void {
