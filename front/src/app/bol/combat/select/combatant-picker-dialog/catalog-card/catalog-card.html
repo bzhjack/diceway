@@ -1,7 +1,13 @@
 <div class="cpd-card" [class]="'cpd-card--' + entry().kind">
-  <div class="cpd-thumb" [class]="'cpd-thumb--' + entry().kind">
+  <button
+    type="button"
+    class="cpd-open cpd-thumb"
+    [class]="'cpd-thumb--' + entry().kind"
+    [attr.aria-label]="'Voir le statbloc de ' + entry().nom"
+    (click)="openStatblock()"
+  >
     <img [src]="entry().avatar" [alt]="entry().nom" class="cpd-avatar" />
-  </div>
+  </button>
   <div class="cpd-info">
     <p class="cpd-name">{{ entry().nom }}</p>
     <p class="cpd-kind">{{ kindLabels[entry().kind] }} · ❤ {{ entry().vitalite }}</p>

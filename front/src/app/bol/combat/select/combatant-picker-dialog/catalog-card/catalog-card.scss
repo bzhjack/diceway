@@ -44,6 +44,23 @@
   background: rgb(15 23 42 / 0.6);
 }
 
+// Seul l'avatar ouvre le statbloc — un vrai <button>, séparé du bouton ajouter.
+button.cpd-open {
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 0 0 2px var(--mat-sys-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
+}
+
 .cpd-thumb--hero {
   border-color: color-mix(in srgb, var(--dw-color-reussite) 55%, transparent);
 }

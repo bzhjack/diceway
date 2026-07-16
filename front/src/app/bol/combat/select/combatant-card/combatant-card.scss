@@ -36,35 +36,6 @@
   border-color: color-mix(in srgb, var(--dw-color-demon) 35%, var(--dw-border));
 }
 
-// Zone cliquable qui ouvre le statbloc — un vrai <button>, séparé des
-// contrôles (qty, retrait) plutôt qu'un handler de clic sur toute la carte,
-// pour éviter d'imbriquer des boutons et garder le clavier/focus corrects.
-.cc-open {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  flex: 1;
-  min-width: 0;
-  border: none;
-  background: transparent;
-  padding: 0;
-  margin: 0;
-  font: inherit;
-  text-align: left;
-  color: inherit;
-  cursor: pointer;
-  border-radius: 6px;
-
-  &:hover .cc-name {
-    color: var(--mat-sys-primary);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--mat-sys-primary);
-    outline-offset: 2px;
-  }
-}
-
 .cc-thumb {
   width: 2.6rem;
   height: 2.6rem;
@@ -73,6 +44,24 @@
   flex-shrink: 0;
   border: 1px solid var(--dw-border);
   background: rgb(15 23 42 / 0.6);
+}
+
+// Seul l'avatar ouvre le statbloc — un vrai <button>, séparé du nom et des
+// contrôles (qty, retrait) plutôt qu'un handler de clic sur toute la carte.
+button.cc-open {
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 0 0 2px var(--mat-sys-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
 }
 
 .cc-thumb--hero {

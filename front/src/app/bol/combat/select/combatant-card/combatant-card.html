@@ -1,14 +1,18 @@
 <div class="cc-card" [class]="'cc-card--' + entry().kind">
-  <button type="button" class="cc-open" [attr.aria-label]="'Voir le statbloc de ' + entry().nom" (click)="openStatblock()">
-    <div class="cc-thumb" [class]="'cc-thumb--' + entry().kind">
-      <img [src]="entry().avatar" [alt]="entry().nom" class="cc-avatar" />
-    </div>
-
-    <div class="cc-info">
-      <p class="cc-name">{{ entry().nom }}</p>
-      <p class="cc-gauge">❤ {{ entry().vitalite }}</p>
-    </div>
+  <button
+    type="button"
+    class="cc-open cc-thumb"
+    [class]="'cc-thumb--' + entry().kind"
+    [attr.aria-label]="'Voir le statbloc de ' + entry().nom"
+    (click)="openStatblock()"
+  >
+    <img [src]="entry().avatar" [alt]="entry().nom" class="cc-avatar" />
   </button>
+
+  <div class="cc-info">
+    <p class="cc-name">{{ entry().nom }}</p>
+    <p class="cc-gauge">❤ {{ entry().vitalite }}</p>
+  </div>
 
   @if (selection.isStackable(entry().kind)) {
     <div class="cc-qty">
