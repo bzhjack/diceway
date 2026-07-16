@@ -1,5 +1,9 @@
 import {Injectable, inject, signal} from '@angular/core';
 import {Observable, forkJoin} from 'rxjs';
+import {creatureImage} from '../creature/library/creature-card/creature-card.component';
+import {demonImage} from '../demon/library/demon-card/demon-card.component';
+import {heroImage} from '../hero/library/hero-card/hero-card.component';
+import {pnjImage} from '../pnj/library/pnj-card/pnj-card.component';
 import {BolCreaturesService} from './bol-creatures.service';
 import {BolDemonsService} from './bol-demons.service';
 import {BolFightSessionService} from './bol-fight-session.service';
@@ -15,6 +19,7 @@ export interface CombatCatalogEntry {
   readonly sourceId: string;
   readonly nom: string;
   readonly vitalite: number;
+  readonly avatar: string;
 }
 
 export interface SelectedCombatant {
@@ -67,6 +72,7 @@ export class CombatSelectionService {
             sourceId: h.id!,
             nom: h.origines.nom ?? 'Héros',
             vitalite: h.ressources.vitalite,
+            avatar: heroImage(h),
           })),
         ...pnjs
           .filter((p) => p.id)
@@ -76,6 +82,7 @@ export class CombatSelectionService {
             sourceId: p.id!,
             nom: p.origines.nom ?? 'PNJ',
             vitalite: p.ressources.vitalite,
+            avatar: pnjImage(p),
           })),
         ...creatures
           .filter((c) => c.id)
@@ -85,6 +92,7 @@ export class CombatSelectionService {
             sourceId: c.id!,
             nom: c.nom,
             vitalite: c.vitalite,
+            avatar: creatureImage(c),
           })),
         ...demons
           .filter((d) => d.id)
@@ -94,6 +102,7 @@ export class CombatSelectionService {
             sourceId: d.id!,
             nom: d.nom,
             vitalite: d.vitalite,
+            avatar: demonImage(d),
           })),
       ];
 

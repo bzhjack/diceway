@@ -1,13 +1,6 @@
-<div class="cc-card">
+<div class="cc-card" [class]="'cc-card--' + entry().kind">
   <div class="cc-thumb" [class]="'cc-thumb--' + entry().kind">
-    <mat-icon>
-      @switch (entry().kind) {
-        @case ('hero') { person }
-        @case ('pnj') { theater_comedy }
-        @case ('creature') { pets }
-        @default { bolt }
-      }
-    </mat-icon>
+    <img [src]="entry().avatar" [alt]="entry().nom" class="cc-avatar" />
   </div>
 
   <div class="cc-info">

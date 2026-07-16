@@ -1,41 +1,36 @@
 <h2 mat-dialog-title>Ajouter un combattant</h2>
 
 <mat-dialog-content>
-  <div class="cpd-tabs">
-    <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'all'" (click)="setType('all')">
-      Tous
-    </button>
-    <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'hero'" (click)="setType('hero')">
-      Héros
-    </button>
-    <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'pnj'" (click)="setType('pnj')">
-      PNJ
-    </button>
-    <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'creature'" (click)="setType('creature')">
-      Créatures
-    </button>
-    <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'demon'" (click)="setType('demon')">
-      Démons
-    </button>
-  </div>
+  <div class="cpd-filters">
+    <div class="cpd-tabs">
+      <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'all'" (click)="setType('all')">
+        Tous
+      </button>
+      <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'hero'" (click)="setType('hero')">
+        Héros
+      </button>
+      <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'pnj'" (click)="setType('pnj')">
+        PNJ
+      </button>
+      <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'creature'" (click)="setType('creature')">
+        Créatures
+      </button>
+      <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'demon'" (click)="setType('demon')">
+        Démons
+      </button>
+    </div>
 
-  <mat-form-field subscriptSizing="dynamic" class="cpd-search">
-    <mat-label>Rechercher</mat-label>
-    <input matInput [ngModel]="query()" (ngModelChange)="query.set($event)" placeholder="Nom du combattant…" />
-  </mat-form-field>
+    <mat-form-field subscriptSizing="dynamic" class="cpd-search">
+      <mat-label>Rechercher</mat-label>
+      <input matInput [ngModel]="query()" (ngModelChange)="query.set($event)" placeholder="Nom du combattant…" />
+    </mat-form-field>
+  </div>
 
   <div class="cpd-grid">
     @for (entry of filteredCatalog(); track entry.catalogId) {
-      <div class="cpd-card">
+      <div class="cpd-card" [class]="'cpd-card--' + entry.kind">
         <div class="cpd-thumb" [class]="'cpd-thumb--' + entry.kind">
-          <mat-icon>
-            @switch (entry.kind) {
-              @case ('hero') { person }
-              @case ('pnj') { theater_comedy }
-              @case ('creature') { pets }
-              @default { bolt }
-            }
-          </mat-icon>
+          <img [src]="entry.avatar" [alt]="entry.nom" class="cpd-avatar" />
         </div>
         <div class="cpd-info">
           <p class="cpd-name">{{ entry.nom }}</p>

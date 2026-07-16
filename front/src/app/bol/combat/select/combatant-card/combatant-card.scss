@@ -13,30 +13,60 @@
   margin-bottom: 0.5rem;
 }
 
-.cc-thumb {
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 6px;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  border: 1px solid var(--dw-border);
+// Un fond teinté par type (mêmes couleurs sémantiques que le reste de l'app :
+// --dw-color-reussite = PJ, --dw-color-pnj, --dw-color-creature, --dw-color-demon)
+// pour repérer d'un coup d'œil qui est qui dans la liste des combattants.
+.cc-card--hero {
+  background: color-mix(in srgb, var(--dw-color-reussite) 12%, transparent);
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 35%, var(--dw-border));
 }
 
-.cc-thumb--hero,
+.cc-card--pnj {
+  background: color-mix(in srgb, var(--dw-color-pnj) 12%, transparent);
+  border-color: color-mix(in srgb, var(--dw-color-pnj) 35%, var(--dw-border));
+}
+
+.cc-card--creature {
+  background: color-mix(in srgb, var(--dw-color-creature) 12%, transparent);
+  border-color: color-mix(in srgb, var(--dw-color-creature) 35%, var(--dw-border));
+}
+
+.cc-card--demon {
+  background: color-mix(in srgb, var(--dw-color-demon) 12%, transparent);
+  border-color: color-mix(in srgb, var(--dw-color-demon) 35%, var(--dw-border));
+}
+
+.cc-thumb {
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid var(--dw-border);
+  background: rgb(15 23 42 / 0.6);
+}
+
+.cc-thumb--hero {
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 55%, transparent);
+}
+
 .cc-thumb--pnj {
-  background: rgba(110, 231, 183, 0.12);
-  color: #6ee7b7;
+  border-color: color-mix(in srgb, var(--dw-color-pnj) 55%, transparent);
 }
 
 .cc-thumb--creature {
-  background: rgba(251, 191, 36, 0.12);
-  color: #fbbf24;
+  border-color: color-mix(in srgb, var(--dw-color-creature) 55%, transparent);
 }
 
 .cc-thumb--demon {
-  background: rgba(251, 113, 133, 0.12);
-  color: #fb7185;
+  border-color: color-mix(in srgb, var(--dw-color-demon) 55%, transparent);
+}
+
+.cc-avatar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .cc-info {
