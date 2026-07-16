@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, input, output, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {DwCollapsibleRowComponent} from '../../../../shared/dw-collapsible-row/dw-collapsible-row';
 import {InlineSvgDirective} from '../../../../shared/inline-svg/inline-svg.directive';
 import {TraitIcon, traitIconPath} from '../../../shared/trait-icon';
@@ -10,17 +11,21 @@ export interface TraitDetail {
   readonly description: string | null;
 }
 
+/** Origine du trait affichée en badge : régional, ou désavantage de carrière (création avancée uniquement). */
+export type TraitBadge = 'region' | 'career';
+
 export interface TraitEntry {
   readonly id: number;
   readonly type: 'A' | 'D';
   readonly label: string;
   readonly details: readonly TraitDetail[];
   readonly icon: TraitIcon;
+  readonly badge?: TraitBadge | null;
 }
 
 @Component({
   selector: 'bol-trait-list',
-  imports: [MatButtonModule, MatIconModule, DwCollapsibleRowComponent, InlineSvgDirective],
+  imports: [MatButtonModule, MatIconModule, MatTooltipModule, DwCollapsibleRowComponent, InlineSvgDirective],
   templateUrl: './trait-list.component.html',
   styleUrl: './trait-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

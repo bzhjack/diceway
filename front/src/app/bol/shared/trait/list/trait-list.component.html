@@ -8,6 +8,11 @@
     >
       <ng-container row-summary>
         <div class="tag_icon tl-trait-icon" [inlineSVG]="traitIconPath(trait.icon)"></div>
+        @if (trait.badge === 'career') {
+          <mat-icon class="tl-badge tl-badge--career" matTooltip="Désavantage de carrière">construction</mat-icon>
+        } @else if (trait.badge === 'region') {
+          <mat-icon class="tl-badge tl-badge--region" matTooltip="Trait régional">place</mat-icon>
+        }
         <span class="dw-entry-label">{{ trait.label }}</span>
       </ng-container>
 

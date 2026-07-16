@@ -1,0 +1,15 @@
+<bol-stats-grid [form]="form()" [groups]="groups()" />
+
+@if (errors().length) {
+  <div class="dw-field-error mt-3 p-3">
+    @for (error of errors(); track error.control + error.error) {
+      <p class="m-0">{{ error.control ? error.control + ' ' : '' }}{{ error.error }}</p>
+    }
+  </div>
+} @else if (warns().length) {
+  <div class="dw-field-warning mt-3 p-3">
+    @for (warning of warns(); track warning.warn) {
+      <p class="m-0">{{ warning.warn }}</p>
+    }
+  </div>
+}

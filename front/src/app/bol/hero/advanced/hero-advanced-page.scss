@@ -2,7 +2,20 @@
   display: block;
 }
 
+.hap-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 1px solid var(--dw-border);
+  background: #059669;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
 .hap-eyebrow {
+  margin: 0;
   font-size: 0.75rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -11,26 +24,14 @@
 }
 
 .hap-title {
+  margin: 0;
   font-family: 'Muse Display Harmony';
   font-size: 2.25rem;
   line-height: 1;
-
-  @media (min-width: 768px) {
-    font-size: 3rem;
-  }
-}
-
-.hap-description {
-  font-size: 0.875rem;
-  line-height: 1.75rem;
-  color: var(--dw-surface-600);
-
-  @media (min-width: 768px) {
-    font-size: 1rem;
-  }
 }
 
 .hap-warn-badge {
+  margin: 0;
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -43,14 +44,8 @@
   --mat-filled-button-label-text-color: #fff !important;
 }
 
-.dw-field-error {
-  border: 1px solid rgba(248, 113, 113, 0.35);
-  background: rgba(69, 10, 10, 0.2);
-  font-size: 0.875rem;
-  color: #fecaca;
-}
-
 .hap-step-eyebrow {
+  margin: 0;
   font-size: 0.75rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -59,18 +54,21 @@
 }
 
 .hap-step-title {
+  margin: 0;
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--dw-surface-800);
 }
 
 .hap-step-description {
+  margin: 0;
   font-size: 0.875rem;
   line-height: 1.75rem;
   color: var(--dw-surface-600);
 }
 
 .hap-section-eyebrow {
+  margin: 0;
   font-size: 0.72rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -78,45 +76,56 @@
   color: #6ee7b7;
 }
 
-.hap-section-eyebrow--muted {
-  font-size: 0.72rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--dw-surface-500);
-}
-
 .hap-loading-detail {
+  margin: 0;
+  margin-top: 0.75rem;
   font-size: 0.875rem;
   line-height: 1.75rem;
   color: var(--dw-surface-700);
 }
 
-.hap-table {
-  border-collapse: collapse;
+.hap-error-box {
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  background: rgba(244, 63, 94, 0.1);
   font-size: 0.875rem;
+  color: #fecdd3;
+}
 
-  th,
-  td {
-    padding: 0.5rem 0;
-    text-align: left;
-  }
+.dw-field-error {
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  background: rgba(69, 10, 10, 0.2);
+  font-size: 0.875rem;
+  color: #fecaca;
+}
 
-  th {
-    border-bottom: 1px solid var(--dw-border);
-    color: var(--dw-surface-500);
-  }
+.dw-field-warning {
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  background: rgba(69, 26, 3, 0.15);
+  font-size: 0.875rem;
+  color: #fde68a;
+}
 
-  td {
-    border-bottom: 1px solid rgba(66, 75, 87, 0.5);
+// Modificateurs de mise en page sur .dw-section--form (classe globale partagée) :
+// positionnement propre à cette page uniquement.
+.hap-rail-panel {
+  @media (min-width: 1280px) {
+    position: sticky;
+    top: 1rem;
   }
 }
 
-.hap-table-attr {
-  text-transform: capitalize;
-  color: var(--dw-surface-700);
+.hap-panel--stretch {
+  @media (min-width: 1280px) {
+    height: 100%;
+  }
 }
 
-.hap-table-value {
-  color: var(--dw-surface-800);
+// Puce « modifications non enregistrées » — inline après le libellé.
+.hap-dirty-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dw-color-legendary);
 }

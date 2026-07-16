@@ -1,0 +1,47 @@
+<div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+  <div class="flex items-center gap-2">
+    <p class="hap-section-eyebrow">
+      Carrières
+    </p>
+    <dw-tag>{{ carrieres().length }} sélectionnée(s)</dw-tag>
+  </div>
+
+  <bol-add-menu
+    [options]="carriereOptions()"
+    label="Carrière"
+    triggerLabel="Ajouter une carrière"
+    addLabel="Ajouter la carrière"
+    (added)="carriereAdded.emit($event.id)"
+  />
+</div>
+
+@if (desavantageRequiredCount() > 0) {
+  <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+    <p class="hap-section-note">
+      Désavantage de carrière requis
+    </p>
+    <bol-add-menu
+      [options]="desavantageOptions()"
+      label="Désavantage"
+      triggerLabel="Ajouter un désavantage de carrière"
+      addLabel="Ajouter le désavantage"
+      (added)="desavantageAdded.emit($event.id)"
+    />
+  </div>
+}
+
+<bol-carriere-list [carrieres]="carrieres()" (removed)="carriereRemoved.emit($event)" />
+
+@if (errors().length) {
+  <div class="dw-field-error mt-3 p-3">
+    @for (error of errors(); track error.control + error.error) {
+      <p class="m-0">{{ error.control ? error.control + ' ' : '' }}{{ error.error }}</p>
+    }
+  </div>
+} @else if (warns().length) {
+  <div class="dw-field-warning mt-3 p-3">
+    @for (warning of warns(); track warning.warn) {
+      <p class="m-0">{{ warning.warn }}</p>
+    }
+  </div>
+}

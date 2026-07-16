@@ -34,6 +34,10 @@ export class HeroSummaryRailComponent {
   readonly desavantagesDisponibles = input.required<readonly BolDesavantageModel[]>();
   readonly langues = input.required<readonly LangueEntry[]>();
   readonly languesDisponibles = input.required<readonly BolLangueModel[]>();
+  /** Langues acquises d'office (création avancée) — affichées en info sous le titre Langues. */
+  readonly languesAuto = input<readonly string[]>([]);
+  /** Indication du quota restant (création avancée), ex. « Encore 2 langue(s) à choisir ». */
+  readonly languesHint = input<string | null>(null);
 
   protected readonly langueOptions = addMenuOptions(this.languesDisponibles, (langue) => langue.langue);
 

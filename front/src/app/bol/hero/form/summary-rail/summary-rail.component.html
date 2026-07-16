@@ -64,5 +64,12 @@
     />
   </div>
 
+  @if (languesAuto().length) {
+    <p class="sr-langues-note">Automatiques : {{ languesAuto().join(', ') }}</p>
+  }
+  @if (languesHint(); as hint) {
+    <p class="sr-langues-note sr-langues-note--hint">{{ hint }}</p>
+  }
+
   <bol-langue-list [langues]="langues()" (removed)="langueRemoved.emit($event)" />
 </div>

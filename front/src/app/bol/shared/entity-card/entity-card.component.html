@@ -62,17 +62,15 @@
     @if (gauges().length) {
       <div class="entity-card__gauges">
         @for (gauge of gauges(); track gauge.label) {
-          <div
+          <span
             class="entity-gauge"
             [class.entity-gauge--pv]="gauge.accent === 'pv'"
             [class.entity-gauge--ph]="gauge.accent === 'ph'"
+            [matTooltip]="gauge.label + ' : ' + gauge.value"
+            [attr.aria-label]="gauge.label + ' : ' + gauge.value"
           >
-            <mat-icon>{{ gauge.icon }}</mat-icon>
-            <div class="entity-gauge__text">
-              <b>{{ gauge.value }}</b>
-              <span>{{ gauge.label }}</span>
-            </div>
-          </div>
+            <mat-icon aria-hidden="true">{{ gauge.icon }}</mat-icon>{{ gauge.value }}
+          </span>
         }
       </div>
     }

@@ -116,6 +116,16 @@
   margin-top: 1rem;
 }
 
+.sr-langues-note {
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+  color: var(--dw-surface-400);
+}
+
+.sr-langues-note--hint {
+  color: #fde68a;
+}
+
 .sr-life {
   display: flex;
   flex-direction: column;

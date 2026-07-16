@@ -1,0 +1,42 @@
+<p class="hap-section-eyebrow--muted">
+  Ressources après activation
+</p>
+
+<div class="mt-3 grid gap-2">
+  @for (entry of resources(); track entry.key) {
+    <div class="hap-resource-row">
+      <span class="hap-resource-label">{{ entry.label }}</span>
+      <span class="hap-resource-value">{{ entry.value }}</span>
+    </div>
+  }
+</div>
+
+@if (heroismCost() > 0) {
+  <div class="dw-field-warning mt-3 p-3">
+    Coût d'héroïsme en attente : {{ heroismCost() }}
+  </div>
+}
+
+@if (modifiers().length) {
+  <div class="mt-4">
+    <p class="hap-section-eyebrow--muted">
+      Modificateurs appliqués
+    </p>
+    <table class="hap-table mt-2 w-full">
+      <thead>
+        <tr>
+          <th>Attribut</th>
+          <th>Valeur</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (modifier of modifiers(); track modifier.attr) {
+          <tr>
+            <td class="hap-table-attr">{{ modifier.attr }}</td>
+            <td class="hap-table-value">{{ modifier.value }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

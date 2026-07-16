@@ -207,27 +207,33 @@
   gap: 0.35rem;
 }
 
+// Jauge = même habillage que .entity-count-chip (icône + valeur en ligne dans
+// une puce) ; seule l'icône reste colorée (cœur = vitalité, étoile = héroïsme),
+// le nombre fait office de label, plus besoin de texte à côté.
 .entity-gauge {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.2rem 0.45rem;
-  border-radius: 8px;
+  gap: 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--dw-surface-600);
+  padding: 0.18rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.5);
   border: 1px solid var(--dw-border);
-  background: rgba(2, 6, 23, 0.45);
+  font-variant-numeric: tabular-nums;
 
   .mat-icon {
-    font-size: 14px;
-    width: 14px;
-    height: 14px;
-    line-height: 14px;
-    flex-shrink: 0;
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
   }
 }
 
 .entity-card--dark .entity-gauge {
-  border-color: #3f3f46;
   background: rgba(9, 9, 11, 0.5);
+  border-color: #3f3f46;
 }
 
 .entity-gauge--pv .mat-icon {
@@ -236,25 +242,6 @@
 
 .entity-gauge--ph .mat-icon {
   color: var(--dw-color-legendary);
-}
-
-.entity-gauge__text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.05;
-
-  b {
-    font-size: 0.82rem;
-    font-variant-numeric: tabular-nums;
-    color: var(--dw-color-text-bright);
-  }
-
-  span {
-    font-size: 0.56rem;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: var(--dw-surface-500);
-  }
 }
 
 .entity-card__summary {

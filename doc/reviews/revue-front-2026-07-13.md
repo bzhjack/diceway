@@ -22,8 +22,8 @@ et une couverture de tests quasi nulle (2 fichiers spec).
 
 | Bloc dupliqué | Présent dans |
 |---|---|
-| `readReturnUrl()` / `navigateBack()` / `returnUrl` signal | les 4 + `hero-advanced-page.ts` |
-| `extractErrorMessage()` | les 4 + `hero-advanced-page.ts` |
+| `readReturnUrl()` / `navigateBack()` / `returnUrl` signal | les 4 (`hero-advanced-page.ts` migré le 2026-07-15, cf. chantier 9) |
+| `extractErrorMessage()` | les 4 (`hero-advanced-page.ts` migré le 2026-07-15, cf. chantier 9) |
 | `controlValueSignal()` (helper `toSignal` + `startWith`) | les 4 |
 | `formDirty` (pipe `PristineChangeEvent`) + `canLeave()` + dialog "modifications non enregistrées" | les 4 |
 | `onSaveShortcut()` + host binding `keydown.control.s` | les 4 |
@@ -214,6 +214,7 @@ Les meilleurs candidats à tester (logique pure, sans DOM) :
 | 6 | ✅ ~~Normalisation des ids à la frontière API (suppression des `Number()`)~~ (fait le 2026-07-13 : `apiIdNormalizerInterceptor` + 242→83 `Number()`, restants légitimes sur valeurs de FormControl non typées) | M | lisibilité globale |
 | 7 | ✅ ~~Découpage `BolHerosService` + constantes de règles BoL nommées~~ (fait le 2026-07-13 : `BolCatalogService`/`BolPnjService`/`BolHerosService`, `apiUrl()`, `bol-rules.constants.ts`) | M | maintenabilité |
 | 8 | ✅ ~~Tests sur la logique métier state service~~ (fait le 2026-07-13 : `bol-heros-state.service.spec.ts` — E11/E12, carrières dangereuses, heroismCost, traitsModifiers — + `list.utils.spec.ts`) | M | filet de sécurité |
+| 9 | ✅ ~~Refonte `hero-advanced-page` sur le socle commun~~ (fait le 2026-07-15 : `BolEntityFormPageBase`, rail/stats-grid/add-menu/list partagés avec `hero-form-page` ; 9 sous-composants dédiés supprimés) | L | −1400 lignes, page unique cohérente |
 
 > Conseil d'exécution : faire 3 et 4 **avant** d'ajouter la prochaine entité ou page — chaque
 > nouvelle entité copie aujourd'hui ~600 lignes de boilerplate.
