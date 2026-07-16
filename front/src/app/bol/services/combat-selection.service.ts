@@ -1,4 +1,4 @@
-import {Injectable, computed, inject, signal} from '@angular/core';
+import {Injectable, inject, signal} from '@angular/core';
 import {Observable, forkJoin} from 'rxjs';
 import {BolCreaturesService} from './bol-creatures.service';
 import {BolDemonsService} from './bol-demons.service';
@@ -19,8 +19,16 @@ export interface CombatCatalogEntry {
 
 export interface SelectedCombatant {
   readonly catalogId: string;
-  readonly camp: CombatCamp;
   readonly qty: number;
+}
+
+/**
+ * Notion de camp mise de côté côté IHM pour l'instant (une seule zone
+ * combattants) — le backend l'exige encore, donc on l'assigne par défaut
+ * selon le type (héros joueurs -> 'heros', tout le reste -> 'adversaires').
+ */
+function defaultCampFor(kind: CombatantKind): CombatCamp {
+  return kind === 'hero' ? 'heros' : 'adversaires';
 }
 
 const STACKABLE_KINDS: ReadonlySet<CombatantKind> = new Set(['creature', 'demon']);
@@ -37,9 +45,6 @@ export class CombatSelectionService {
   readonly catalog = signal<readonly CombatCatalogEntry[]>([]);
   readonly loading = signal(false);
   readonly combatants = signal<readonly SelectedCombatant[]>([]);
-
-  readonly herosCamp = computed(() => this.combatants().filter((c) => c.camp === 'heros'));
-  readonly adversairesCamp = computed(() => this.combatants().filter((c) => c.camp === 'adversaires'));
 
   loadCatalog(): void {
     if (this.catalog().length || this.loading()) {
@@ -109,7 +114,7 @@ export class CombatSelectionService {
     return STACKABLE_KINDS.has(kind);
   }
 
-  add(catalogId: string, camp: CombatCamp): void {
+  add(catalogId: string): void {
     const entry = this.entryFor(catalogId);
     if (!entry) {
       return;
@@ -123,11 +128,7 @@ export class CombatSelectionService {
       return;
     }
 
-    this.combatants.update((list) => [...list, {catalogId, camp, qty: 1}]);
-  }
-
-  setCamp(catalogId: string, camp: CombatCamp): void {
-    this.combatants.update((list) => list.map((c) => (c.catalogId === catalogId ? {...c, camp} : c)));
+    this.combatants.update((list) => [...list, {catalogId, qty: 1}]);
   }
 
   incQty(catalogId: string): void {
@@ -165,16 +166,16 @@ export class CombatSelectionService {
 
     return {
       titre: titre ?? null,
-      heros: byKind('hero').map((c) => ({heroId: this.entryFor(c.catalogId)!.sourceId, camp: c.camp})),
-      pnjs: byKind('pnj').map((c) => ({pnjId: this.entryFor(c.catalogId)!.sourceId, camp: c.camp})),
+      heros: byKind('hero').map((c) => ({heroId: this.entryFor(c.catalogId)!.sourceId, camp: defaultCampFor('hero')})),
+      pnjs: byKind('pnj').map((c) => ({pnjId: this.entryFor(c.catalogId)!.sourceId, camp: defaultCampFor('pnj')})),
       creatures: byKind('creature').map((c) => ({
         creatureId: this.entryFor(c.catalogId)!.sourceId,
-        camp: c.camp,
+        camp: defaultCampFor('creature'),
         qty: c.qty,
       })),
       demons: byKind('demon').map((c) => ({
         demonId: this.entryFor(c.catalogId)!.sourceId,
-        camp: c.camp,
+        camp: defaultCampFor('demon'),
         qty: c.qty,
       })),
     };

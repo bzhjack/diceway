@@ -1,5 +1,5 @@
 <section class="dw-page">
-  <div class="mx-auto flex max-w-7xl flex-col gap-4">
+  <div class="mx-auto flex max-w-3xl flex-col gap-4">
     <div class="dw-section--form csp-header">
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div class="flex items-center gap-3">
@@ -23,44 +23,23 @@
       </div>
     </div>
 
-    <div class="csp-battlefield">
-      <div class="dw-section--form csp-camp csp-camp--heros">
-        <div class="csp-camp-head">
-          <h2>Camp héros</h2>
-          <span class="csp-camp-total">{{ selection.herosCamp().length }}</span>
-        </div>
-
-        @for (combatant of selection.herosCamp(); track combatant.catalogId) {
-          @if (selection.entryFor(combatant.catalogId); as entry) {
-            <bol-combatant-card [entry]="entry" [combatant]="combatant" />
-          }
-        } @empty {
-          <p class="csp-empty">Aucun héros pour l'instant.</p>
-        }
-
-        <button type="button" class="csp-add-tile" (click)="openPicker('heros')">
-          <mat-icon>add</mat-icon> Ajouter un héros
-        </button>
+    <div class="dw-section--form csp-camp">
+      <div class="csp-camp-head">
+        <h2>Combattants</h2>
+        <span class="csp-camp-total">{{ totalCount() }}</span>
       </div>
 
-      <div class="dw-section--form csp-camp csp-camp--adversaires">
-        <div class="csp-camp-head">
-          <h2>Camp adversaires</h2>
-          <span class="csp-camp-total">{{ selection.adversairesCamp().length }}</span>
-        </div>
-
-        @for (combatant of selection.adversairesCamp(); track combatant.catalogId) {
-          @if (selection.entryFor(combatant.catalogId); as entry) {
-            <bol-combatant-card [entry]="entry" [combatant]="combatant" />
-          }
-        } @empty {
-          <p class="csp-empty">Aucun adversaire pour l'instant.</p>
+      @for (combatant of selection.combatants(); track combatant.catalogId) {
+        @if (selection.entryFor(combatant.catalogId); as entry) {
+          <bol-combatant-card [entry]="entry" [combatant]="combatant" />
         }
+      } @empty {
+        <p class="csp-empty">Aucun combattant pour l'instant.</p>
+      }
 
-        <button type="button" class="csp-add-tile" (click)="openPicker('adversaires')">
-          <mat-icon>add</mat-icon> Ajouter un adversaire
-        </button>
-      </div>
+      <button type="button" class="csp-add-tile" (click)="openPicker()">
+        <mat-icon>add</mat-icon> Ajouter un combattant
+      </button>
     </div>
   </div>
 </section>

@@ -87,35 +87,6 @@
   }
 }
 
-.cc-camp-toggle {
-  display: flex;
-  border: 1px solid var(--dw-border);
-  border-radius: 999px;
-  overflow: hidden;
-  flex-shrink: 0;
-
-  button {
-    border: none;
-    background: transparent;
-    color: var(--dw-surface-500);
-    font: inherit;
-    font-size: 0.66rem;
-    font-weight: 800;
-    padding: 0.2rem 0.5rem;
-    cursor: pointer;
-  }
-
-  button.a.is-active {
-    background: rgba(110, 231, 183, 0.18);
-    color: #6ee7b7;
-  }
-
-  button.e.is-active {
-    background: rgba(251, 113, 133, 0.18);
-    color: #fb7185;
-  }
-}
-
 .cc-remove {
   flex-shrink: 0;
   color: var(--dw-surface-400);

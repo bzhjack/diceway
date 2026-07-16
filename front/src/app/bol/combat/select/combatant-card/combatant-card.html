@@ -23,25 +23,6 @@
     </div>
   }
 
-  <div class="cc-camp-toggle">
-    <button
-      type="button"
-      class="a"
-      [class.is-active]="combatant().camp === 'heros'"
-      (click)="selection.setCamp(combatant().catalogId, 'heros')"
-    >
-      Hér.
-    </button>
-    <button
-      type="button"
-      class="e"
-      [class.is-active]="combatant().camp === 'adversaires'"
-      (click)="selection.setCamp(combatant().catalogId, 'adversaires')"
-    >
-      Adv.
-    </button>
-  </div>
-
   <button
     mat-icon-button
     type="button"

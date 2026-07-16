@@ -1,16 +1,11 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
-import {CombatCamp} from '../../../models/bol-fight-session.model';
 import {CombatantKind, CombatSelectionService} from '../../../services/combat-selection.service';
-
-export interface CombatantPickerDialogData {
-  readonly camp: CombatCamp;
-}
 
 type CatalogFilter = CombatantKind | 'all';
 
@@ -21,7 +16,7 @@ const KIND_LABELS: Record<CombatantKind, string> = {
   demon: 'Démon',
 };
 
-/** Dialog de sélection d'un combattant à ajouter à un camp (héros ou adversaires) de la fight-session en préparation. */
+/** Dialog de sélection d'un combattant à ajouter à la fight-session en préparation. */
 @Component({
   selector: 'bol-combatant-picker-dialog',
   imports: [FormsModule, MatButtonModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule],
@@ -30,12 +25,8 @@ const KIND_LABELS: Record<CombatantKind, string> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CombatantPickerDialogComponent {
-  private readonly data = inject<CombatantPickerDialogData>(MAT_DIALOG_DATA);
   protected readonly ref = inject(MatDialogRef<CombatantPickerDialogComponent>);
   protected readonly selection = inject(CombatSelectionService);
-
-  protected readonly camp = this.data.camp;
-  protected readonly campLabel = this.camp === 'heros' ? 'Héros' : 'Adversaires';
 
   protected readonly activeType = signal<CatalogFilter>('all');
   protected readonly query = signal('');
@@ -59,7 +50,7 @@ export class CombatantPickerDialogComponent {
   }
 
   protected addEntry(catalogId: string): void {
-    this.selection.add(catalogId, this.camp);
+    this.selection.add(catalogId);
   }
 
   protected close(): void {
