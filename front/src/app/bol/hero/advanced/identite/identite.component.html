@@ -13,22 +13,32 @@
     <input matInput id="advanced-nom" formControlName="nom" />
   </mat-form-field>
 
-  <div class="grid gap-3 md:col-span-2 md:grid-cols-[minmax(0,1fr)_auto_auto] md:items-center">
-    <div class="hap-region-box min-w-0 px-4 py-3">
-      <p class="hap-region-eyebrow">Région</p>
-      <p class="hap-region-value">
-        {{ region()?.region || 'Aucune région sélectionnée' }}
-      </p>
-    </div>
-
-    <button mat-flat-button type="button" (click)="regionPick.emit()">
-      <mat-icon>map</mat-icon> Choisir
-    </button>
-
-    <button mat-stroked-button type="button" [disabled]="!region()" (click)="regionClear.emit()">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
+  <mat-form-field subscriptSizing="dynamic" class="hap-region-field md:col-span-2">
+    <mat-label>Région</mat-label>
+    <mat-icon matPrefix class="hap-region-icon">map</mat-icon>
+    <input
+      matInput
+      readonly
+      class="hap-region-input"
+      [value]="region()?.region ?? ''"
+      placeholder="Choisir une région…"
+      aria-haspopup="dialog"
+      (click)="regionPick.emit()"
+      (keydown.enter)="$event.preventDefault(); regionPick.emit()"
+      (keydown.space)="$event.preventDefault(); regionPick.emit()"
+    />
+    @if (region()) {
+      <button
+        type="button"
+        mat-icon-button
+        matSuffix
+        aria-label="Retirer la région"
+        (click)="regionClear.emit()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </mat-form-field>
 
   <div class="md:col-span-2">
     <mat-form-field subscriptSizing="dynamic" class="w-full">

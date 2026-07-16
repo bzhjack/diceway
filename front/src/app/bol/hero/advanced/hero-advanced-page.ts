@@ -988,6 +988,7 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
     ref.afterClosed().pipe(take(1)).subscribe((avatar: string | null) => {
       if (avatar) {
         this.herosForm.controls.avatar.setValue(avatar);
+        this.herosForm.controls.avatar.markAsDirty();
         this.persistOrigines();
       }
     });
@@ -1009,8 +1010,10 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       }
 
       this.herosForm.controls.region_id.setValue(Number(data.region.id));
+      this.herosForm.controls.region_id.markAsDirty();
       if (data.nom) {
         this.herosForm.controls.nom.setValue(data.nom);
+        this.herosForm.controls.nom.markAsDirty();
       }
       this.persistOrigines();
     });
@@ -1018,6 +1021,7 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
 
   protected clearRegion(): void {
     this.herosForm.controls.region_id.setValue(null);
+    this.herosForm.controls.region_id.markAsDirty();
   }
 
   private persistOrigines(): void {

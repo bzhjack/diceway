@@ -11,26 +11,18 @@
   color: #6ee7b7;
 }
 
-.hap-region-box {
-  border-radius: 0.125rem;
-  border: 1px solid var(--dw-border);
-  background: rgba(15, 23, 42, 0.7);
+// Champ région : mat-form-field standard, en lecture seule — on ne peut pas y
+// taper, seulement cliquer pour ouvrir le sélecteur ou effacer via le suffixe.
+.hap-region-field {
+  width: 100%;
+}
 
-  .hap-region-eyebrow {
-    margin: 0;
-    font-size: 0.75rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    color: var(--dw-surface-400);
-  }
+.hap-region-input {
+  cursor: pointer;
+}
 
-  .hap-region-value {
-    margin: 0;
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
-    color: var(--dw-surface-800);
-  }
+.hap-region-icon {
+  color: var(--mat-sys-primary);
 }
 
 .dw-field-error {
