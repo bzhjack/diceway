@@ -27,6 +27,6 @@ export function openStatblockDialog(
     data: {component, inputs},
     maxWidth: 'min(760px, 92vw)',
     panelClass: 'dw-statblock-dialog',
-    position: {top: '5vh'},
+    position: {top: '10vh'},
   });
 }

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, input} from '@angular/core';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {DwBadgeColor} from '../dw-badge/dw-badge';
 
@@ -17,4 +17,13 @@ export class DwLibraryHeaderComponent {
   readonly description = input<string>('');
   readonly kicker = input<string>('Bibliothèque BOL');
   readonly color = input<DwBadgeColor>('amber');
+  /** Illustration de bannière optionnelle (même traitement que le header du dashboard). */
+  readonly image = input<string | null>(null);
+
+  protected readonly backgroundImage = computed(() => {
+    const src = this.image();
+    return src
+      ? `linear-gradient(to right, rgba(12, 10, 6, 0.55) 0%, rgba(12, 10, 6, 0.25) 45%, rgba(12, 10, 6, 0.15) 100%), url(${src})`
+      : null;
+  });
 }

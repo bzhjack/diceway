@@ -8,6 +8,14 @@
 :host.dw-lh-color-rose    { --dw-lh-eyebrow-color: #fda4af; }
 :host.dw-lh-color-neutral { --dw-lh-eyebrow-color: #cbd5e1; }
 
+// Bannière illustrée optionnelle — même traitement que workspace-header.
+.dw-lh-card--image {
+  background-color: #12100a;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top;
+}
+
 .dw-lh-eyebrow {
   font-size: 0.75rem;
   font-weight: 900;
