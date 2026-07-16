@@ -2,6 +2,17 @@
   display: block;
 }
 
+.ip-header-card {
+  background-color: #12100a;
+  background-image:
+    linear-gradient(to right, rgba(12, 10, 6, 0.55) 0%, rgba(12, 10, 6, 0.25) 45%, rgba(12, 10, 6, 0.15) 100%),
+    linear-gradient(to top, rgba(12, 10, 6, 0.75) 0%, rgba(12, 10, 6, 0) 35%),
+    url('/assets/bol/header-intendance.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top;
+}
+
 .ip-icon {
   border: 1px solid var(--dw-border);
   background: #b45309;
