@@ -23,7 +23,9 @@ export class DwLibraryHeaderComponent {
   protected readonly backgroundImage = computed(() => {
     const src = this.image();
     return src
-      ? `linear-gradient(to right, rgba(12, 10, 6, 0.55) 0%, rgba(12, 10, 6, 0.25) 45%, rgba(12, 10, 6, 0.15) 100%), url(${src})`
+      ? `linear-gradient(to right, rgba(12, 10, 6, 0.55) 0%, rgba(12, 10, 6, 0.25) 45%, rgba(12, 10, 6, 0.15) 100%), ` +
+        `linear-gradient(to top, rgba(12, 10, 6, 0.75) 0%, rgba(12, 10, 6, 0) 35%), ` +
+        `url(${src})`
       : null;
   });
 }
