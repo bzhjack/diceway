@@ -1,0 +1,163 @@
+:host {
+  display: contents;
+}
+
+.cpd-for-camp {
+  margin-left: 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  vertical-align: middle;
+}
+
+.cpd-for-camp--heros {
+  color: #6ee7b7;
+  background: rgba(110, 231, 183, 0.14);
+}
+
+.cpd-for-camp--adversaires {
+  color: #fb7185;
+  background: rgba(251, 113, 133, 0.14);
+}
+
+.cpd-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.9rem;
+}
+
+.cpd-tab {
+  border: 1px solid var(--dw-border);
+  background: transparent;
+  color: var(--dw-surface-400);
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.cpd-tab--active {
+  border-color: var(--mat-sys-primary);
+  color: var(--mat-sys-primary);
+  background: color-mix(in srgb, var(--mat-sys-primary) 16%, transparent);
+}
+
+.cpd-search {
+  width: 100%;
+  margin-bottom: 0.9rem;
+}
+
+.cpd-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.65rem;
+}
+
+.cpd-card {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  border: 1px solid var(--dw-border);
+  background: rgb(51 65 85 / 0.35);
+  border-radius: 6px;
+  padding: 0.6rem 0.65rem;
+}
+
+.cpd-thumb {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 5px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border: 1px solid var(--dw-border);
+}
+
+.cpd-thumb--hero,
+.cpd-thumb--pnj {
+  background: rgba(110, 231, 183, 0.12);
+  color: #6ee7b7;
+}
+
+.cpd-thumb--creature {
+  background: rgba(251, 191, 36, 0.12);
+  color: #fbbf24;
+}
+
+.cpd-thumb--demon {
+  background: rgba(251, 113, 133, 0.12);
+  color: #fb7185;
+}
+
+.cpd-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.cpd-name {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--dw-surface-800);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cpd-kind {
+  margin: 0.1rem 0 0;
+  font-size: 0.7rem;
+  color: var(--dw-surface-500);
+}
+
+.cpd-add {
+  flex-shrink: 0;
+}
+
+.cpd-add--qty {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--mat-sys-primary);
+  font: inherit;
+  font-weight: 800;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+  }
+}
+
+.cpd-added {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  color: var(--dw-surface-500);
+
+  .mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+  }
+}
+
+.cpd-empty {
+  grid-column: 1 / -1;
+  font-size: 0.82rem;
+  color: var(--dw-surface-500);
+  font-style: italic;
+}

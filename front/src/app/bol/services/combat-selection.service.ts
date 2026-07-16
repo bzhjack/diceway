@@ -1,0 +1,182 @@
+import {Injectable, computed, inject, signal} from '@angular/core';
+import {Observable, forkJoin} from 'rxjs';
+import {BolCreaturesService} from './bol-creatures.service';
+import {BolDemonsService} from './bol-demons.service';
+import {BolFightSessionService} from './bol-fight-session.service';
+import {BolHerosService} from './bol-heros.service';
+import {BolPnjService} from './bol-pnj.service';
+import {BolFightSessionCreatePayload, BolFightSessionModel, CombatCamp} from '../models/bol-fight-session.model';
+
+export type CombatantKind = 'hero' | 'pnj' | 'creature' | 'demon';
+
+export interface CombatCatalogEntry {
+  readonly catalogId: string;
+  readonly kind: CombatantKind;
+  readonly sourceId: string;
+  readonly nom: string;
+  readonly vitalite: number;
+}
+
+export interface SelectedCombatant {
+  readonly catalogId: string;
+  readonly camp: CombatCamp;
+  readonly qty: number;
+}
+
+const STACKABLE_KINDS: ReadonlySet<CombatantKind> = new Set(['creature', 'demon']);
+
+/** État de sélection des combattants (catalogue + brouillon) pour l'écran de préparation de combat. */
+@Injectable({providedIn: 'root'})
+export class CombatSelectionService {
+  private readonly herosService = inject(BolHerosService);
+  private readonly pnjService = inject(BolPnjService);
+  private readonly creaturesService = inject(BolCreaturesService);
+  private readonly demonsService = inject(BolDemonsService);
+  private readonly fightSessionService = inject(BolFightSessionService);
+
+  readonly catalog = signal<readonly CombatCatalogEntry[]>([]);
+  readonly loading = signal(false);
+  readonly combatants = signal<readonly SelectedCombatant[]>([]);
+
+  readonly herosCamp = computed(() => this.combatants().filter((c) => c.camp === 'heros'));
+  readonly adversairesCamp = computed(() => this.combatants().filter((c) => c.camp === 'adversaires'));
+
+  loadCatalog(): void {
+    if (this.catalog().length || this.loading()) {
+      return;
+    }
+
+    this.loading.set(true);
+    forkJoin({
+      heroes: this.herosService.heroes(),
+      pnjs: this.pnjService.pnjs(),
+      creatures: this.creaturesService.creatures(),
+      demons: this.demonsService.demons(),
+    }).subscribe(({heroes, pnjs, creatures, demons}) => {
+      const entries: CombatCatalogEntry[] = [
+        ...heroes
+          .filter((h) => h.id)
+          .map((h) => ({
+            catalogId: `hero:${h.id}`,
+            kind: 'hero' as const,
+            sourceId: h.id!,
+            nom: h.origines.nom ?? 'Héros',
+            vitalite: h.ressources.vitalite,
+          })),
+        ...pnjs
+          .filter((p) => p.id)
+          .map((p) => ({
+            catalogId: `pnj:${p.id}`,
+            kind: 'pnj' as const,
+            sourceId: p.id!,
+            nom: p.origines.nom ?? 'PNJ',
+            vitalite: p.ressources.vitalite,
+          })),
+        ...creatures
+          .filter((c) => c.id)
+          .map((c) => ({
+            catalogId: `creature:${c.id}`,
+            kind: 'creature' as const,
+            sourceId: c.id!,
+            nom: c.nom,
+            vitalite: c.vitalite,
+          })),
+        ...demons
+          .filter((d) => d.id)
+          .map((d) => ({
+            catalogId: `demon:${d.id}`,
+            kind: 'demon' as const,
+            sourceId: d.id!,
+            nom: d.nom,
+            vitalite: d.vitalite,
+          })),
+      ];
+
+      this.catalog.set(entries);
+      this.loading.set(false);
+    });
+  }
+
+  entryFor(catalogId: string): CombatCatalogEntry | undefined {
+    return this.catalog().find((entry) => entry.catalogId === catalogId);
+  }
+
+  combatantFor(catalogId: string): SelectedCombatant | undefined {
+    return this.combatants().find((c) => c.catalogId === catalogId);
+  }
+
+  isStackable(kind: CombatantKind): boolean {
+    return STACKABLE_KINDS.has(kind);
+  }
+
+  add(catalogId: string, camp: CombatCamp): void {
+    const entry = this.entryFor(catalogId);
+    if (!entry) {
+      return;
+    }
+
+    const existing = this.combatantFor(catalogId);
+    if (existing) {
+      if (this.isStackable(entry.kind)) {
+        this.incQty(catalogId);
+      }
+      return;
+    }
+
+    this.combatants.update((list) => [...list, {catalogId, camp, qty: 1}]);
+  }
+
+  setCamp(catalogId: string, camp: CombatCamp): void {
+    this.combatants.update((list) => list.map((c) => (c.catalogId === catalogId ? {...c, camp} : c)));
+  }
+
+  incQty(catalogId: string): void {
+    this.combatants.update((list) => list.map((c) => (c.catalogId === catalogId ? {...c, qty: c.qty + 1} : c)));
+  }
+
+  decQty(catalogId: string): void {
+    this.combatants.update((list) => {
+      const target = list.find((c) => c.catalogId === catalogId);
+      if (!target) {
+        return list;
+      }
+      if (target.qty <= 1) {
+        return list.filter((c) => c.catalogId !== catalogId);
+      }
+      return list.map((c) => (c.catalogId === catalogId ? {...c, qty: c.qty - 1} : c));
+    });
+  }
+
+  remove(catalogId: string): void {
+    this.combatants.update((list) => list.filter((c) => c.catalogId !== catalogId));
+  }
+
+  reset(): void {
+    this.combatants.set([]);
+  }
+
+  launch(titre?: string | null): Observable<BolFightSessionModel> {
+    return this.fightSessionService.create(this.buildCreatePayload(titre));
+  }
+
+  private buildCreatePayload(titre?: string | null): BolFightSessionCreatePayload {
+    const byKind = (kind: CombatantKind) =>
+      this.combatants().filter((c) => this.entryFor(c.catalogId)?.kind === kind);
+
+    return {
+      titre: titre ?? null,
+      heros: byKind('hero').map((c) => ({heroId: this.entryFor(c.catalogId)!.sourceId, camp: c.camp})),
+      pnjs: byKind('pnj').map((c) => ({pnjId: this.entryFor(c.catalogId)!.sourceId, camp: c.camp})),
+      creatures: byKind('creature').map((c) => ({
+        creatureId: this.entryFor(c.catalogId)!.sourceId,
+        camp: c.camp,
+        qty: c.qty,
+      })),
+      demons: byKind('demon').map((c) => ({
+        demonId: this.entryFor(c.catalogId)!.sourceId,
+        camp: c.camp,
+        qty: c.qty,
+      })),
+    };
+  }
+}

@@ -85,6 +85,12 @@ export const routes: Routes = [
     canDeactivate: [pendingChangesGuard],
   },
   {
+    path: 'combat/new',
+    loadComponent: () =>
+      import('./bol/combat/select/combat-select-page').then((module) => module.CombatSelectPageComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'library/creatures',
     loadComponent: () =>
       import('./bol/creature/library/creature-library-page').then(

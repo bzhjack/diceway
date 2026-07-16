@@ -1,0 +1,82 @@
+<h2 mat-dialog-title>
+  Ajouter un combattant
+  <span class="cpd-for-camp" [class.cpd-for-camp--heros]="camp === 'heros'" [class.cpd-for-camp--adversaires]="camp === 'adversaires'">
+    {{ campLabel }}
+  </span>
+</h2>
+
+<mat-dialog-content>
+  <div class="cpd-tabs">
+    <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'all'" (click)="setType('all')">
+      Tous
+    </button>
+    <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'hero'" (click)="setType('hero')">
+      Héros
+    </button>
+    <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'pnj'" (click)="setType('pnj')">
+      PNJ
+    </button>
+    <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'creature'" (click)="setType('creature')">
+      Créatures
+    </button>
+    <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'demon'" (click)="setType('demon')">
+      Démons
+    </button>
+  </div>
+
+  <mat-form-field subscriptSizing="dynamic" class="cpd-search">
+    <mat-label>Rechercher</mat-label>
+    <input matInput [ngModel]="query()" (ngModelChange)="query.set($event)" placeholder="Nom du combattant…" />
+  </mat-form-field>
+
+  <div class="cpd-grid">
+    @for (entry of filteredCatalog(); track entry.catalogId) {
+      <div class="cpd-card">
+        <div class="cpd-thumb" [class]="'cpd-thumb--' + entry.kind">
+          <mat-icon>
+            @switch (entry.kind) {
+              @case ('hero') { person }
+              @case ('pnj') { theater_comedy }
+              @case ('creature') { pets }
+              @default { bolt }
+            }
+          </mat-icon>
+        </div>
+        <div class="cpd-info">
+          <p class="cpd-name">{{ entry.nom }}</p>
+          <p class="cpd-kind">{{ kindLabels[entry.kind] }} · ❤ {{ entry.vitalite }}</p>
+        </div>
+
+        @if (selection.combatantFor(entry.catalogId); as combatant) {
+          @if (selection.isStackable(entry.kind)) {
+            <button
+              type="button"
+              class="cpd-add cpd-add--qty"
+              [attr.aria-label]="'Ajouter un exemplaire de ' + entry.nom"
+              (click)="addEntry(entry.catalogId)"
+            >
+              {{ combatant.qty }} <mat-icon>add</mat-icon>
+            </button>
+          } @else {
+            <span class="cpd-added"><mat-icon>check</mat-icon></span>
+          }
+        } @else {
+          <button
+            type="button"
+            class="cpd-add dw-add-trigger"
+            [attr.aria-label]="'Ajouter ' + entry.nom"
+            (click)="addEntry(entry.catalogId)"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        }
+      </div>
+    } @empty {
+      <p class="cpd-empty">Aucun résultat.</p>
+    }
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-flat-button type="button" (click)="close()">Fermer</button>
+</mat-dialog-actions>

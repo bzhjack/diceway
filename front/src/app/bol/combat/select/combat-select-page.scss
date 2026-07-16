@@ -1,0 +1,113 @@
+.csp-header {
+  padding: 1.1rem 1.25rem;
+}
+
+.csp-icon {
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 6px;
+  background: #e11d48;
+  color: #fff1f2;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.csp-eyebrow {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #6ee7b7;
+}
+
+.csp-title {
+  margin: 0.15rem 0 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--dw-surface-800);
+}
+
+.csp-battlefield {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .csp-battlefield {
+    grid-template-columns: 1fr;
+  }
+}
+
+.csp-camp {
+  min-height: 20rem;
+}
+
+.csp-camp--heros {
+  background: rgba(110, 231, 183, 0.05);
+  border-color: rgba(110, 231, 183, 0.3);
+}
+
+.csp-camp--adversaires {
+  background: rgba(251, 113, 133, 0.05);
+  border-color: rgba(251, 113, 133, 0.3);
+}
+
+.csp-camp-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.9rem;
+
+  h2 {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+}
+
+.csp-camp--heros .csp-camp-head h2 {
+  color: #6ee7b7;
+}
+
+.csp-camp--adversaires .csp-camp-head h2 {
+  color: #fb7185;
+}
+
+.csp-camp-total {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--dw-surface-500);
+}
+
+.csp-empty {
+  font-size: 0.82rem;
+  color: var(--dw-surface-500);
+  font-style: italic;
+}
+
+.csp-add-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+  border: 1px dashed var(--dw-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--dw-surface-500);
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.7rem;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--mat-sys-primary);
+    color: var(--mat-sys-primary);
+  }
+}

@@ -1,0 +1,54 @@
+<div class="cc-card">
+  <div class="cc-thumb" [class]="'cc-thumb--' + entry().kind">
+    <mat-icon>
+      @switch (entry().kind) {
+        @case ('hero') { person }
+        @case ('pnj') { theater_comedy }
+        @case ('creature') { pets }
+        @default { bolt }
+      }
+    </mat-icon>
+  </div>
+
+  <div class="cc-info">
+    <p class="cc-name">{{ entry().nom }}</p>
+    <p class="cc-gauge">❤ {{ entry().vitalite }}</p>
+  </div>
+
+  @if (selection.isStackable(entry().kind)) {
+    <div class="cc-qty">
+      <button type="button" (click)="selection.decQty(combatant().catalogId)" aria-label="Retirer un exemplaire">−</button>
+      <span>{{ combatant().qty }}</span>
+      <button type="button" (click)="selection.incQty(combatant().catalogId)" aria-label="Ajouter un exemplaire">+</button>
+    </div>
+  }
+
+  <div class="cc-camp-toggle">
+    <button
+      type="button"
+      class="a"
+      [class.is-active]="combatant().camp === 'heros'"
+      (click)="selection.setCamp(combatant().catalogId, 'heros')"
+    >
+      Hér.
+    </button>
+    <button
+      type="button"
+      class="e"
+      [class.is-active]="combatant().camp === 'adversaires'"
+      (click)="selection.setCamp(combatant().catalogId, 'adversaires')"
+    >
+      Adv.
+    </button>
+  </div>
+
+  <button
+    mat-icon-button
+    type="button"
+    class="cc-remove"
+    aria-label="Retirer ce combattant"
+    (click)="selection.remove(combatant().catalogId)"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
