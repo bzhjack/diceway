@@ -37,6 +37,15 @@
         <option [value]="opt.value" [selected]="resultat() === opt.value">{{ opt.label }}</option>
       }
     </select>
+
+    <button
+      type="button"
+      class="cc-help-trigger"
+      aria-label="Aide sur le jet de réaction"
+      (click)="openInitiativeHelp()"
+    >
+      <mat-icon>info</mat-icon>
+    </button>
   }
 
   @if (selection.isStackable(entry().kind)) {

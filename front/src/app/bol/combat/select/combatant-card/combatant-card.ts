@@ -4,6 +4,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {CombatCatalogEntry, CombatSelectionService, SelectedCombatant} from '../../../services/combat-selection.service';
+import {InitiativeHelpDialogComponent} from '../../initiative-help-dialog/initiative-help-dialog';
 import {INITIATIVE_RESULT_OPTIONS} from '../../initiative.util';
 import {combatantKindIcon, combatantKindIconIsSvg, combatantRankLabel, openCombatantStatblock} from '../combat-statblock.util';
 
@@ -32,6 +33,10 @@ export class CombatantCardComponent {
 
   protected openStatblock(): void {
     openCombatantStatblock(this.dialog, this.entry());
+  }
+
+  protected openInitiativeHelp(): void {
+    this.dialog.open(InitiativeHelpDialogComponent, {maxWidth: 'min(28rem, 92vw)'});
   }
 
   protected onInitiativeChange(value: string): void {
