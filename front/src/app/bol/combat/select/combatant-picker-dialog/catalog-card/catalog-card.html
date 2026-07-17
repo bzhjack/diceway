@@ -9,7 +9,10 @@
     <img [src]="entry().avatar" [alt]="entry().nom" class="cpd-avatar" />
   </button>
   <div class="cpd-info">
-    <p class="cpd-name">{{ entry().nom }}</p>
+    <p class="cpd-name">
+      <mat-icon [class]="'cpd-kind-icon cpd-kind-icon--' + entry().kind" [attr.aria-label]="rankLabel()">{{ kindIcon() }}</mat-icon>
+      {{ entry().nom }}
+    </p>
     <p class="cpd-kind">{{ rankLabel() }} · ❤ {{ entry().vitalite }}</p>
   </div>
 

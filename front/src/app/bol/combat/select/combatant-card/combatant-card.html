@@ -10,7 +10,10 @@
   </button>
 
   <div class="cc-info">
-    <p class="cc-name">{{ entry().nom }}</p>
+    <p class="cc-name">
+      <mat-icon [class]="'cc-kind-icon cc-kind-icon--' + entry().kind" [attr.aria-label]="rankLabel()">{{ kindIcon() }}</mat-icon>
+      {{ entry().nom }}
+    </p>
     <p class="cc-gauge"><span class="cc-rank">{{ rankLabel() }}</span> · ❤ {{ entry().vitalite }}</p>
   </div>
 

@@ -92,6 +92,9 @@ button.cpd-open {
 }
 
 .cpd-name {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
   margin: 0;
   font-size: 0.85rem;
   font-weight: 700;
@@ -99,6 +102,30 @@ button.cpd-open {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.cpd-kind-icon {
+  flex-shrink: 0;
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+  line-height: 1rem;
+}
+
+.cpd-kind-icon--hero {
+  color: var(--dw-color-reussite);
+}
+
+.cpd-kind-icon--pnj {
+  color: var(--dw-color-pnj);
+}
+
+.cpd-kind-icon--creature {
+  color: var(--dw-color-creature);
+}
+
+.cpd-kind-icon--demon {
+  color: var(--dw-color-demon);
 }
 
 .cpd-kind {

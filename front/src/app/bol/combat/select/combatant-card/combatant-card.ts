@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, computed, inject, input} from '@angu
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
-import {combatantRankLabel, openCombatantStatblock} from '../combat-statblock.util';
+import {combatantKindIcon, combatantRankLabel, openCombatantStatblock} from '../combat-statblock.util';
 import {CombatCatalogEntry, CombatSelectionService, SelectedCombatant} from '../../../services/combat-selection.service';
 
 /** Carte d'un combattant déjà ajouté : cliquer sur l'avatar ouvre son statbloc, quantité (créatures/démons) et retrait restent des actions séparées. */
@@ -25,4 +25,5 @@ export class CombatantCardComponent {
   }
 
   protected readonly rankLabel = computed(() => combatantRankLabel(this.entry()));
+  protected readonly kindIcon = computed(() => combatantKindIcon(this.entry().kind));
 }

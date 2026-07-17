@@ -7,7 +7,20 @@ import {PnjStatblockComponent} from '../../pnj/statblock/pnj-statblock.component
 import {BolCreatureModel} from '../../models/bol-creature.model';
 import {BolDemonModel} from '../../models/bol-demon.model';
 import {BolHerosModel} from '../../models/bol-heros.model';
-import {CombatCatalogEntry} from '../../services/combat-selection.service';
+import {CombatantKind, CombatCatalogEntry} from '../../services/combat-selection.service';
+
+/** Icône Material par type de combattant (même mapping que les liens de navigation entre bibliothèques). */
+const KIND_ICONS: Record<CombatantKind, string> = {
+  hero: 'group',
+  pnj: 'manage_accounts',
+  creature: 'pets',
+  demon: 'bolt',
+};
+
+/** Icône Material identifiant le type (héros/PNJ/créature/démon) d'une entrée du catalogue de combat. */
+export function combatantKindIcon(kind: CombatantKind): string {
+  return KIND_ICONS[kind];
+}
 
 /** Mapping rang BoL (cf. taille.type / categorie.type / BolHeros.type) → libellé affiché. */
 const TYPE_RANK_LABELS: Record<string, string> = {
