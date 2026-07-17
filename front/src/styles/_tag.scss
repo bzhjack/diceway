@@ -8,6 +8,13 @@
     height: 15px;
   }
 
+  // Spécificité renforcée (.tag_icon.mat-icon) pour gagner face aux styles internes de mat-icon,
+  // qui fixent width/height/font-size sur le même host que notre classe utilitaire.
+  &.mat-icon {
+    font-size: 15px;
+    line-height: 15px;
+  }
+
   &.malus {
     color: var(--dw-color-echec);
   }

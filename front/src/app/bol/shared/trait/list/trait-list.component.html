@@ -7,7 +7,11 @@
       (toggled)="toggle(trait)"
     >
       <ng-container row-summary>
-        <div class="tag_icon tl-trait-icon" [inlineSVG]="traitIconPath(trait.icon)"></div>
+        @if (traitIconIsSvg(trait.icon)) {
+          <mat-icon class="tag_icon tl-trait-icon" [svgIcon]="traitIconName(trait.icon)" />
+        } @else {
+          <mat-icon class="tag_icon tl-trait-icon">{{ traitIconName(trait.icon) }}</mat-icon>
+        }
         @if (trait.badge === 'career') {
           <mat-icon class="tl-badge tl-badge--career" matTooltip="Désavantage de carrière">construction</mat-icon>
         } @else if (trait.badge === 'region') {
