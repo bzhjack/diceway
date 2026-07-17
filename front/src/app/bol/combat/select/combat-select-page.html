@@ -89,6 +89,7 @@
                     [combatant]="combatant"
                     [resultat]="item.resultat"
                     [lockedRound1]="item.lockedRound1"
+                    [modifierTotal]="modifierTotal()"
                     (initiativeChange)="onInitiativeChange(item.key, $event)"
                   />
                 </div>

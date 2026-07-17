@@ -124,8 +124,9 @@ export class CombatSelectionService {
     });
   }
 
+  /** Recharge le catalogue à chaque visite de l'écran de sélection (les fiches ont pu changer entre-temps). */
   loadCatalog(): void {
-    if (this.catalog().length || this.loading()) {
+    if (this.loading()) {
       return;
     }
 

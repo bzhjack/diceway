@@ -144,9 +144,28 @@ button.cc-open {
   font-weight: 600;
 }
 
+.cc-reaction-stats {
+  color: var(--dw-surface-500);
+  font-weight: 600;
+}
+
 .cc-lock-tag {
   color: var(--dw-color-echec);
   font-weight: 800;
+}
+
+.cc-initiative-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
+  flex-shrink: 0;
+}
+
+.cc-initiative-row {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 .cc-initiative {
@@ -158,6 +177,13 @@ button.cc-open {
   font-size: 0.72rem;
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
+}
+
+.cc-roll-hint {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--dw-color-pnj);
+  margin-right: 1.85rem;
 }
 
 .cc-qty {

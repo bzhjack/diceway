@@ -3,6 +3,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
+import {BolHerosModel} from '../../../models/bol-heros.model';
 import {CombatCatalogEntry, CombatSelectionService, SelectedCombatant} from '../../../services/combat-selection.service';
 import {InitiativeHelpDialogComponent} from '../../initiative-help-dialog/initiative-help-dialog';
 import {INITIATIVE_RESULT_OPTIONS} from '../../initiative.util';
@@ -23,6 +24,8 @@ export class CombatantCardComponent {
   readonly resultat = input<InitiativeResultat | null>(null);
   /** true si ce PNJ/créature/démon (coriace/piétaille) ne joue pas au round 1. */
   readonly lockedRound1 = input(false);
+  /** Modificateur net (embuscade + initiative adverse) calculé par la page, identique pour tous les héros. */
+  readonly modifierTotal = input(0);
 
   readonly initiativeChange = output<InitiativeResultat | null>();
 
@@ -46,4 +49,25 @@ export class CombatantCardComponent {
   protected readonly rankLabel = computed(() => combatantRankLabel(this.entry()));
   protected readonly kindIcon = computed(() => combatantKindIcon(this.entry().kind));
   protected readonly kindIconIsSvg = computed(() => combatantKindIconIsSvg(this.entry().kind));
+
+  /** Esprit + initiative du héros — les deux valeurs du jet de réaction (2d6 + esprit + initiative). */
+  protected readonly reactionStats = computed(() => {
+    if (this.entry().kind !== 'hero') {
+      return null;
+    }
+
+    const hero = this.entry().raw as BolHerosModel;
+    return {esprit: hero.attributs.esprit, initiative: hero.combat.initiative};
+  });
+
+  /** Formule prête à annoncer au joueur : "2d6 + X" (ou "− X"), X = esprit + initiative + modificateurs. */
+  protected readonly rollFormula = computed(() => {
+    const stats = this.reactionStats();
+    if (!stats) {
+      return null;
+    }
+
+    const total = stats.esprit + stats.initiative + this.modifierTotal();
+    return total >= 0 ? `2d6 + ${total}` : `2d6 − ${Math.abs(total)}`;
+  });
 }
