@@ -11,8 +11,8 @@ import {CombatantKind, CombatCatalogEntry} from '../../services/combat-selection
 
 /** Icône Material par type de combattant (même mapping que les liens de navigation entre bibliothèques). */
 const KIND_ICONS: Record<CombatantKind, string> = {
-  hero: 'group',
-  pnj: 'manage_accounts',
+  hero: 'sword',
+  pnj: 'group',
   creature: 'pets',
   demon: 'bolt',
 };
@@ -20,6 +20,13 @@ const KIND_ICONS: Record<CombatantKind, string> = {
 /** Icône Material identifiant le type (héros/PNJ/créature/démon) d'une entrée du catalogue de combat. */
 export function combatantKindIcon(kind: CombatantKind): string {
   return KIND_ICONS[kind];
+}
+
+/** Icônes SVG enregistrées (MatIconRegistry) parmi KIND_ICONS — nécessitent `[svgIcon]` plutôt qu'une ligature en contenu. */
+const SVG_KIND_ICONS: ReadonlySet<string> = new Set(['sword']);
+
+export function combatantKindIconIsSvg(kind: CombatantKind): boolean {
+  return SVG_KIND_ICONS.has(KIND_ICONS[kind]);
 }
 
 /** Mapping rang BoL (cf. taille.type / categorie.type / BolHeros.type) → libellé affiché. */

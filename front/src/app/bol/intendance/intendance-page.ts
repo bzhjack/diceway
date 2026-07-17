@@ -18,6 +18,8 @@ interface IntendanceLibraryEntry {
   readonly route: string;
   readonly buttonLabel: string;
   readonly icon: string;
+  /** true si `icon` référence une icône SVG enregistrée (MatIconRegistry) plutôt qu'un ligature Material Icons. */
+  readonly svgIcon?: boolean;
   readonly accent: IntendanceAccent;
   readonly stats: readonly string[];
 }
@@ -54,7 +56,8 @@ export class IntendancePageComponent {
         'Catalogue offensif stabilisé avec types, dégâts, portée et notes. C’est le point d’entrée pour gérer le stock jouable de la table.',
       route: '/library/weapons',
       buttonLabel: 'Ouvrir l’arsenal',
-      icon: 'bolt',
+      icon: 'sword',
+      svgIcon: true,
       accent: 'amber',
       stats: [
         `${this.weapons().length} entrées`,

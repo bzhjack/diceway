@@ -60,7 +60,11 @@
                       class="ip-entry-icon flex h-12 w-12 items-center justify-center"
                       [class]="'ip-entry-icon--' + entry.accent"
                     >
-                      <mat-icon>{{ entry.icon }}</mat-icon>
+                      @if (entry.svgIcon) {
+                        <mat-icon [svgIcon]="entry.icon" />
+                      } @else {
+                        <mat-icon>{{ entry.icon }}</mat-icon>
+                      }
                     </div>
                     <div class="space-y-1">
                       <p class="ip-entry-kicker m-0">
