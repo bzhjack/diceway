@@ -21,7 +21,8 @@ import {MatCard} from '@angular/material/card';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
-import {CreatureStatblockComponent} from '../statblock/creature-statblock.component';
+import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
+import {creatureStatblockData} from '../../shared/statblock/bol-statblock.builders';
 import {CreatureCardComponent, creatureImage} from './creature-card/creature-card.component';
 
 @Component({
@@ -94,8 +95,8 @@ export class CreatureLibraryPageComponent {
   }
 
   protected openStatblock(creature: BolCreatureModel): void {
-    openStatblockDialog(this.dialog, CreatureStatblockComponent, {
-      creature,
+    openStatblockDialog(this.dialog, BolStatblockComponent, {
+      data: creatureStatblockData(creature),
       imageSrc: creatureImage(creature),
     });
   }

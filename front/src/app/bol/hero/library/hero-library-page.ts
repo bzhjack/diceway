@@ -19,7 +19,8 @@ import {MatCard} from '@angular/material/card';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
-import {HeroStatblockComponent} from '../statblock/hero-statblock.component';
+import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
+import {heroStatblockData} from '../../shared/statblock/bol-statblock.builders';
 import {HeroCardComponent, heroImage, heroLanguagesText} from './hero-card/hero-card.component';
 
 @Component({
@@ -97,8 +98,8 @@ export class HeroLibraryPageComponent {
   }
 
   protected openStatblock(hero: BolHerosModel): void {
-    openStatblockDialog(this.dialog, HeroStatblockComponent, {
-      hero,
+    openStatblockDialog(this.dialog, BolStatblockComponent, {
+      data: heroStatblockData(hero),
       imageSrc: heroImage(hero),
     });
   }

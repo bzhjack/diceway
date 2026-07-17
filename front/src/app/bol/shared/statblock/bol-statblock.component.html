@@ -1,0 +1,83 @@
+<article class="bol-statblock" [class]="'bol-statblock--' + data().accent">
+  <header class="bol-statblock__header">
+    <div class="bol-statblock__avatar">
+      <img [src]="imageSrc()" [alt]="data().title" class="h-full w-full object-cover" />
+
+      @if (data().isCreation) {
+        <span class="bol-statblock__avatar-tag">Création</span>
+      }
+    </div>
+
+    <div class="bol-statblock__main">
+      <div class="min-w-0 space-y-1">
+        <p class="bol-statblock__eyebrow">Statbloc BOL</p>
+        <h2 class="bol-statblock__title">{{ data().title }}</h2>
+      </div>
+
+      @if (data().chips.length) {
+        <div class="bol-statblock__chips">
+          @for (chip of data().chips; track chip.label) {
+            <span class="bol-statblock__chip" [class]="'bol-statblock__chip--' + chip.variant">
+              {{ chip.label }}
+            </span>
+          }
+        </div>
+      }
+
+      @if (data().comment) {
+        <p class="bol-statblock__comment">{{ data().comment }}</p>
+      }
+    </div>
+  </header>
+
+  <div class="bol-statblock__vitals">
+    @for (tile of data().vitals; track tile.label) {
+      <div class="bol-statblock__tile" [class]="tile.tone ? 'bol-statblock__tile--' + tile.tone : ''">
+        <span class="bol-statblock__tile-value" [class.bol-statblock__tile-value--dice]="tile.dice">
+          {{ tile.value }}
+        </span>
+        <span class="bol-statblock__tile-label">{{ tile.label }}</span>
+      </div>
+    }
+  </div>
+
+  <div class="bol-statblock__tiles" [class.bol-statblock__tiles--8]="data().wideTiles">
+    @for (tile of data().tiles; track tile.label) {
+      <div class="bol-statblock__tile bol-statblock__tile--stat">
+        <span class="bol-statblock__tile-value">{{ tile.value }}</span>
+        <span class="bol-statblock__tile-label">{{ tile.label }}</span>
+      </div>
+    }
+  </div>
+
+  <section class="bol-statblock__lists" [class.bol-statblock__lists--3]="data().sections.length > 1">
+    @for (section of data().sections; track section.title) {
+      <div>
+        <p class="bol-statblock__section-title">{{ section.title }}</p>
+
+        @if (section.entries.length) {
+          @for (entry of section.entries; track $index) {
+            <div class="bol-statblock__entry" [class.bol-statblock__entry--row]="entry.value !== undefined">
+              <p
+                class="bol-statblock__entry-title"
+                [class.bol-statblock__entry-title--hint]="section.compact && entry.detail"
+                [matTooltip]="section.compact ? (entry.detail ?? '') : ''"
+                matTooltipPosition="above"
+              >
+                {{ entry.label }}
+              </p>
+              @if (entry.value !== undefined) {
+                <span class="bol-statblock__entry-value">{{ entry.value }}</span>
+              }
+              @if (entry.detail && !section.compact) {
+                <p class="bol-statblock__entry-detail">{{ entry.detail }}</p>
+              }
+            </div>
+          }
+        } @else {
+          <p class="bol-statblock__empty">{{ section.emptyText }}</p>
+        }
+      </div>
+    }
+  </section>
+</article>

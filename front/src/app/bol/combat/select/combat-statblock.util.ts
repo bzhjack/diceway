@@ -1,9 +1,12 @@
 import {MatDialog} from '@angular/material/dialog';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
-import {CreatureStatblockComponent} from '../../creature/statblock/creature-statblock.component';
-import {DemonStatblockComponent} from '../../demon/statblock/demon-statblock.component';
-import {HeroStatblockComponent} from '../../hero/statblock/hero-statblock.component';
-import {PnjStatblockComponent} from '../../pnj/statblock/pnj-statblock.component';
+import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
+import {
+  creatureStatblockData,
+  demonStatblockData,
+  heroStatblockData,
+  pnjStatblockData,
+} from '../../shared/statblock/bol-statblock.builders';
 import {BolCreatureModel} from '../../models/bol-creature.model';
 import {BolDemonModel} from '../../models/bol-demon.model';
 import {BolHerosModel} from '../../models/bol-heros.model';
@@ -59,17 +62,18 @@ export function combatantRankLabel(entry: CombatCatalogEntry): string {
 
 /** Ouvre le statbloc (héros/PNJ/créature/démon) correspondant à une entrée du catalogue de combat. */
 export function openCombatantStatblock(dialog: MatDialog, entry: CombatCatalogEntry): void {
-  switch (entry.kind) {
-    case 'hero':
-      openStatblockDialog(dialog, HeroStatblockComponent, {hero: entry.raw, imageSrc: entry.avatar});
-      return;
-    case 'pnj':
-      openStatblockDialog(dialog, PnjStatblockComponent, {pnj: entry.raw, imageSrc: entry.avatar});
-      return;
-    case 'creature':
-      openStatblockDialog(dialog, CreatureStatblockComponent, {creature: entry.raw, imageSrc: entry.avatar});
-      return;
-    case 'demon':
-      openStatblockDialog(dialog, DemonStatblockComponent, {demon: entry.raw, imageSrc: entry.avatar});
-  }
+  const data = (() => {
+    switch (entry.kind) {
+      case 'hero':
+        return heroStatblockData(entry.raw as BolHerosModel);
+      case 'pnj':
+        return pnjStatblockData(entry.raw as BolHerosModel);
+      case 'creature':
+        return creatureStatblockData(entry.raw as BolCreatureModel);
+      case 'demon':
+        return demonStatblockData(entry.raw as BolDemonModel);
+    }
+  })();
+
+  openStatblockDialog(dialog, BolStatblockComponent, {data, imageSrc: entry.avatar});
 }
