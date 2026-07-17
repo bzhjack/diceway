@@ -94,8 +94,8 @@ export class CombatSelectPageComponent {
     this.selection.setHeroInitiative(catalogId, value);
   }
 
-  protected onAmbushToggle(state: Exclude<AmbushState, null>, checked: boolean): void {
-    this.selection.setAmbushState(checked ? state : null);
+  protected onAmbushToggle(state: AmbushState): void {
+    this.selection.setAmbushState(state);
   }
 
   protected openPicker(): void {

@@ -25,42 +25,44 @@
 
     @if (selection.combatants().length) {
       <div class="dw-section--form csp-mods">
-        <div class="csp-camp-head">
+        <div class="csp-mods-top">
           <h2>Modificateurs au jet de réaction</h2>
+          @if (modifierTotal() !== 0) {
+            <span class="csp-mods-net">Net à appliquer : {{ modifierTotal() > 0 ? '+' : '' }}{{ modifierTotal() }}</span>
+          }
         </div>
 
-        @if (adverseInitiative(); as adv) {
-          <div class="csp-mod-row">
-            <span class="csp-mod-label">Initiative adverse la plus haute</span>
-            <span class="csp-mod-value csp-mod-value--malus">−{{ adv.value }} <span class="csp-mod-hint">({{ adv.source }})</span></span>
+        <div class="csp-mods-row">
+          <div class="csp-mods-seg">
+            <button
+              type="button"
+              [class.is-active]="selection.ambushState() === null"
+              (click)="onAmbushToggle(null)"
+            >
+              Aucune
+            </button>
+            <button
+              type="button"
+              class="bonus"
+              [class.is-active]="selection.ambushState() === 'heroes_ambush'"
+              (click)="onAmbushToggle('heroes_ambush')"
+            >
+              Héros embusquent +2
+            </button>
+            <button
+              type="button"
+              class="malus"
+              [class.is-active]="selection.ambushState() === 'heroes_ambushed'"
+              (click)="onAmbushToggle('heroes_ambushed')"
+            >
+              Héros surpris −1
+            </button>
           </div>
-        }
 
-        <label class="csp-mod-check">
-          <input
-            type="checkbox"
-            [checked]="selection.ambushState() === 'heroes_ambush'"
-            (change)="onAmbushToggle('heroes_ambush', $any($event.target).checked)"
-          />
-          Les héros tendent une embuscade / surprennent l'ennemi
-          <span class="csp-mod-tag csp-mod-tag--bonus">+2</span>
-        </label>
-
-        <label class="csp-mod-check">
-          <input
-            type="checkbox"
-            [checked]="selection.ambushState() === 'heroes_ambushed'"
-            (change)="onAmbushToggle('heroes_ambushed', $any($event.target).checked)"
-          />
-          Les héros sont surpris / tombent dans une embuscade
-          <span class="csp-mod-tag csp-mod-tag--malus">−1</span>
-        </label>
-
-        @if (modifierTotal() !== 0) {
-          <p class="csp-mod-total">
-            Modificateur net à appliquer au jet de chaque héros : {{ modifierTotal() > 0 ? '+' : '' }}{{ modifierTotal() }}
-          </p>
-        }
+          @if (adverseInitiative(); as adv) {
+            <span class="csp-mods-adverse">Init. adverse <b>−{{ adv.value }}</b> ({{ adv.source }})</span>
+          }
+        </div>
       </div>
     }
 
