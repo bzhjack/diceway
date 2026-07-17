@@ -48,6 +48,9 @@ function defaultCampFor(kind: CombatantKind): CombatCamp {
 
 const STACKABLE_KINDS: ReadonlySet<CombatantKind> = new Set(['creature', 'demon']);
 
+/** Modificateur d'embuscade au jet de réaction (02-actions-combat.md) : +2 si les héros surprennent, −1 s'ils sont surpris. */
+export type AmbushState = 'heroes_ambush' | 'heroes_ambushed' | null;
+
 /** Brouillon de sélection persisté côté client (localStorage) pour survivre à un F5 ou une navigation. */
 const STORAGE_KEY = 'diceway-combat-selection';
 
@@ -55,10 +58,11 @@ interface PersistedDraft {
   readonly combatants: SelectedCombatant[];
   /** Résultat du jet de réaction choisi par héros (catalogId -> résultat), avant même le lancement du combat. */
   readonly heroInitiative: Record<string, InitiativeResultat>;
+  readonly ambushState: AmbushState;
 }
 
 function restoreDraft(): PersistedDraft {
-  const empty: PersistedDraft = {combatants: [], heroInitiative: {}};
+  const empty: PersistedDraft = {combatants: [], heroInitiative: {}, ambushState: null};
 
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -82,8 +86,9 @@ function restoreDraft(): PersistedDraft {
       : [];
     const heroInitiative =
       obj.heroInitiative && typeof obj.heroInitiative === 'object' ? obj.heroInitiative : {};
+    const ambushState = obj.ambushState === 'heroes_ambush' || obj.ambushState === 'heroes_ambushed' ? obj.ambushState : null;
 
-    return {combatants, heroInitiative};
+    return {combatants, heroInitiative, ambushState};
   } catch {
     return empty;
   }
@@ -106,12 +111,14 @@ export class CombatSelectionService {
   readonly heroInitiative = signal<ReadonlyMap<string, InitiativeResultat>>(
     new Map(Object.entries(this.initialDraft.heroInitiative) as [string, InitiativeResultat][]),
   );
+  readonly ambushState = signal<AmbushState>(this.initialDraft.ambushState);
 
   constructor() {
     effect(() => {
       const draft: PersistedDraft = {
         combatants: this.combatants() as SelectedCombatant[],
         heroInitiative: Object.fromEntries(this.heroInitiative()) as Record<string, InitiativeResultat>,
+        ambushState: this.ambushState(),
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
     });
@@ -249,9 +256,14 @@ export class CombatSelectionService {
     });
   }
 
+  setAmbushState(state: AmbushState): void {
+    this.ambushState.set(state);
+  }
+
   reset(): void {
     this.combatants.set([]);
     this.heroInitiative.set(new Map());
+    this.ambushState.set(null);
   }
 
   launch(titre?: string | null): Observable<BolFightSessionModel> {

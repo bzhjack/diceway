@@ -23,6 +23,47 @@
       </div>
     </div>
 
+    @if (selection.combatants().length) {
+      <div class="dw-section--form csp-mods">
+        <div class="csp-camp-head">
+          <h2>Modificateurs au jet de réaction</h2>
+        </div>
+
+        @if (adverseInitiative(); as adv) {
+          <div class="csp-mod-row">
+            <span class="csp-mod-label">Initiative adverse la plus haute</span>
+            <span class="csp-mod-value csp-mod-value--malus">−{{ adv.value }} <span class="csp-mod-hint">({{ adv.source }})</span></span>
+          </div>
+        }
+
+        <label class="csp-mod-check">
+          <input
+            type="checkbox"
+            [checked]="selection.ambushState() === 'heroes_ambush'"
+            (change)="onAmbushToggle('heroes_ambush', $any($event.target).checked)"
+          />
+          Les héros tendent une embuscade / surprennent l'ennemi
+          <span class="csp-mod-tag csp-mod-tag--bonus">+2</span>
+        </label>
+
+        <label class="csp-mod-check">
+          <input
+            type="checkbox"
+            [checked]="selection.ambushState() === 'heroes_ambushed'"
+            (change)="onAmbushToggle('heroes_ambushed', $any($event.target).checked)"
+          />
+          Les héros sont surpris / tombent dans une embuscade
+          <span class="csp-mod-tag csp-mod-tag--malus">−1</span>
+        </label>
+
+        @if (modifierTotal() !== 0) {
+          <p class="csp-mod-total">
+            Modificateur net à appliquer au jet de chaque héros : {{ modifierTotal() > 0 ? '+' : '' }}{{ modifierTotal() }}
+          </p>
+        }
+      </div>
+    }
+
     <div class="dw-section--form csp-camp">
       <div class="csp-camp-head">
         <h2>Combattants</h2>

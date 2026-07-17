@@ -61,6 +61,82 @@
   font-style: italic;
 }
 
+.csp-mods {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.csp-mod-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.82rem;
+}
+
+.csp-mod-label {
+  color: var(--dw-surface-600);
+}
+
+.csp-mod-value {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.csp-mod-value--malus {
+  color: var(--dw-color-echec);
+}
+
+.csp-mod-hint {
+  font-weight: 400;
+  font-size: 0.74rem;
+  color: var(--dw-surface-500);
+}
+
+.csp-mod-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--dw-surface-700);
+  cursor: pointer;
+
+  input {
+    accent-color: var(--mat-sys-primary);
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+}
+
+.csp-mod-tag {
+  margin-left: auto;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  border-radius: 999px;
+  padding: 0.05rem 0.5rem;
+  font-size: 0.72rem;
+}
+
+.csp-mod-tag--bonus {
+  color: var(--dw-color-reussite);
+  background: color-mix(in srgb, var(--dw-color-reussite) 12%, transparent);
+}
+
+.csp-mod-tag--malus {
+  color: var(--dw-color-echec);
+  background: color-mix(in srgb, var(--dw-color-echec) 12%, transparent);
+}
+
+.csp-mod-total {
+  margin: 0.2rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--dw-color-legendary-muted);
+}
+
 .csp-banner {
   display: flex;
   align-items: center;

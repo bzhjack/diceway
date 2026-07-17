@@ -6,11 +6,18 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
+import {BolHerosModel} from '../../models/bol-heros.model';
 import {InitiativeResultat} from '../../models/bol-fight-session.model';
-import {CombatSelectionService} from '../../services/combat-selection.service';
+import {AmbushState, CombatSelectionService} from '../../services/combat-selection.service';
 import {buildInitiativeOrderFromSelection} from '../initiative.util';
+import {combatantRankKey} from './combat-statblock.util';
 import {CombatantCardComponent} from './combatant-card/combatant-card';
 import {CombatantPickerDialogComponent} from './combatant-picker-dialog/combatant-picker-dialog';
+
+interface AdverseInitiative {
+  readonly value: number;
+  readonly source: string;
+}
 
 /** Écran de préparation d'un combat : une seule zone de combattants, alimentée depuis un dialog de sélection. */
 @Component({
@@ -39,12 +46,56 @@ export class CombatSelectPageComponent {
     ),
   );
 
+  /** Plus haute valeur d'initiative parmi les PNJ rivaux/coriaces adverses (02-actions-combat.md) — s'applique en malus aux héros. */
+  protected readonly adverseInitiative = computed<AdverseInitiative | null>(() => {
+    let best: AdverseInitiative | null = null;
+
+    for (const combatant of this.selection.combatants()) {
+      const entry = this.selection.entryFor(combatant.catalogId);
+      if (!entry || entry.kind !== 'pnj') {
+        continue;
+      }
+
+      const rank = combatantRankKey(entry);
+      if (rank !== 'rival' && rank !== 'coriace') {
+        continue;
+      }
+
+      const value = (entry.raw as BolHerosModel).combat.initiative;
+      if (value > 0 && (!best || value > best.value)) {
+        best = {value, source: entry.nom};
+      }
+    }
+
+    return best;
+  });
+
+  protected readonly modifierTotal = computed(() => {
+    let total = 0;
+    if (this.selection.ambushState() === 'heroes_ambush') {
+      total += 2;
+    } else if (this.selection.ambushState() === 'heroes_ambushed') {
+      total -= 1;
+    }
+
+    const adverse = this.adverseInitiative();
+    if (adverse) {
+      total -= adverse.value;
+    }
+
+    return total;
+  });
+
   constructor() {
     this.selection.loadCatalog();
   }
 
   protected onInitiativeChange(catalogId: string, value: InitiativeResultat | null): void {
     this.selection.setHeroInitiative(catalogId, value);
+  }
+
+  protected onAmbushToggle(state: Exclude<AmbushState, null>, checked: boolean): void {
+    this.selection.setAmbushState(checked ? state : null);
   }
 
   protected openPicker(): void {
