@@ -11,6 +11,8 @@
   // Spécificité renforcée (.tag_icon.mat-icon) pour gagner face aux styles internes de mat-icon,
   // qui fixent width/height/font-size sur le même host que notre classe utilitaire.
   &.mat-icon {
+    width: 15px;
+    height: 15px;
     font-size: 15px;
     line-height: 15px;
   }
