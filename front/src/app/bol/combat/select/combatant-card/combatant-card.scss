@@ -7,7 +7,8 @@
   align-items: center;
   gap: 0.6rem;
   border: 1px solid var(--dw-border);
-  background: rgb(51 65 85 / 0.45);
+  background: rgb(15 23 42 / 0.55);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
   border-radius: 8px;
   padding: 0.55rem 0.7rem;
   margin-bottom: 0.5rem;
@@ -15,25 +16,27 @@
 
 // Un fond teinté par type (mêmes couleurs sémantiques que le reste de l'app :
 // --dw-color-reussite = PJ, --dw-color-pnj, --dw-color-creature, --dw-color-demon)
-// pour repérer d'un coup d'œil qui est qui dans la liste des combattants.
+// pour repérer d'un coup d'œil qui est qui dans la liste des combattants. Fond
+// plus sombre que le conteneur (dw-section--form) et bordure fortement teintée
+// pour que la carte se détache nettement au lieu de se fondre dedans.
 .cc-card--hero {
-  background: color-mix(in srgb, var(--dw-color-reussite) 12%, transparent);
-  border-color: color-mix(in srgb, var(--dw-color-reussite) 35%, var(--dw-border));
+  background: color-mix(in srgb, var(--dw-color-reussite) 16%, rgb(15 23 42 / 0.55));
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 65%, var(--dw-border));
 }
 
 .cc-card--pnj {
-  background: color-mix(in srgb, var(--dw-color-pnj) 12%, transparent);
-  border-color: color-mix(in srgb, var(--dw-color-pnj) 35%, var(--dw-border));
+  background: color-mix(in srgb, var(--dw-color-pnj) 16%, rgb(15 23 42 / 0.55));
+  border-color: color-mix(in srgb, var(--dw-color-pnj) 65%, var(--dw-border));
 }
 
 .cc-card--creature {
-  background: color-mix(in srgb, var(--dw-color-creature) 12%, transparent);
-  border-color: color-mix(in srgb, var(--dw-color-creature) 35%, var(--dw-border));
+  background: color-mix(in srgb, var(--dw-color-creature) 16%, rgb(15 23 42 / 0.55));
+  border-color: color-mix(in srgb, var(--dw-color-creature) 65%, var(--dw-border));
 }
 
 .cc-card--demon {
-  background: color-mix(in srgb, var(--dw-color-demon) 12%, transparent);
-  border-color: color-mix(in srgb, var(--dw-color-demon) 35%, var(--dw-border));
+  background: color-mix(in srgb, var(--dw-color-demon) 16%, rgb(15 23 42 / 0.55));
+  border-color: color-mix(in srgb, var(--dw-color-demon) 65%, var(--dw-border));
 }
 
 .cc-thumb {

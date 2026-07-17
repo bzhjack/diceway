@@ -7,31 +7,33 @@
   align-items: center;
   gap: 0.65rem;
   border: 1px solid var(--dw-border);
-  background: rgb(51 65 85 / 0.35);
+  background: rgb(15 23 42 / 0.5);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
   border-radius: 6px;
   padding: 0.6rem 0.65rem;
 }
 
 // Même palette sémantique que la zone Combattants (--dw-color-reussite = PJ,
-// --dw-color-pnj, --dw-color-creature, --dw-color-demon).
+// --dw-color-pnj, --dw-color-creature, --dw-color-demon). Fond plus sombre que
+// le fond du dialogue et bordure fortement teintée pour détacher chaque carte.
 .cpd-card--hero {
-  background: color-mix(in srgb, var(--dw-color-reussite) 12%, transparent);
-  border-color: color-mix(in srgb, var(--dw-color-reussite) 35%, var(--dw-border));
+  background: color-mix(in srgb, var(--dw-color-reussite) 16%, rgb(15 23 42 / 0.5));
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 65%, var(--dw-border));
 }
 
 .cpd-card--pnj {
-  background: color-mix(in srgb, var(--dw-color-pnj) 12%, transparent);
-  border-color: color-mix(in srgb, var(--dw-color-pnj) 35%, var(--dw-border));
+  background: color-mix(in srgb, var(--dw-color-pnj) 16%, rgb(15 23 42 / 0.5));
+  border-color: color-mix(in srgb, var(--dw-color-pnj) 65%, var(--dw-border));
 }
 
 .cpd-card--creature {
-  background: color-mix(in srgb, var(--dw-color-creature) 12%, transparent);
-  border-color: color-mix(in srgb, var(--dw-color-creature) 35%, var(--dw-border));
+  background: color-mix(in srgb, var(--dw-color-creature) 16%, rgb(15 23 42 / 0.5));
+  border-color: color-mix(in srgb, var(--dw-color-creature) 65%, var(--dw-border));
 }
 
 .cpd-card--demon {
-  background: color-mix(in srgb, var(--dw-color-demon) 12%, transparent);
-  border-color: color-mix(in srgb, var(--dw-color-demon) 35%, var(--dw-border));
+  background: color-mix(in srgb, var(--dw-color-demon) 16%, rgb(15 23 42 / 0.5));
+  border-color: color-mix(in srgb, var(--dw-color-demon) 65%, var(--dw-border));
 }
 
 .cpd-thumb {
