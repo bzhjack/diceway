@@ -144,6 +144,22 @@ button.cc-open {
   font-weight: 600;
 }
 
+.cc-lock-tag {
+  color: var(--dw-color-echec);
+  font-weight: 800;
+}
+
+.cc-initiative {
+  flex-shrink: 0;
+  border: 1px solid var(--dw-border);
+  background: rgba(2, 6, 23, 0.5);
+  color: var(--dw-surface-700);
+  font: inherit;
+  font-size: 0.72rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
 .cc-qty {
   display: flex;
   align-items: center;

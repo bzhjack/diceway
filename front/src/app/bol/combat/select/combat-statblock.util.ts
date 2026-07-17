@@ -32,32 +32,57 @@ export function combatantKindIconIsSvg(kind: CombatantKind): boolean {
   return SVG_KIND_ICONS.has(KIND_ICONS[kind]);
 }
 
-/** Mapping rang BoL (cf. taille.type / categorie.type / BolHeros.type) → libellé affiché. */
-const TYPE_RANK_LABELS: Record<string, string> = {
-  P: 'Piétaille',
-  C: 'Coriace',
-  R: 'Rival',
+/** Rang BoL brut (utilisé pour trier l'initiative) — null pour un héros, qui n'a pas de rang fixe. */
+export type CombatantRankKey = 'pietaille' | 'coriace' | 'rival';
+
+/** Mapping rang BoL (cf. taille.type / categorie.type / BolHeros.type) → clé de rang / libellé affiché. */
+const TYPE_RANK_KEYS: Record<string, CombatantRankKey> = {
+  P: 'pietaille',
+  C: 'coriace',
+  R: 'rival',
+};
+
+const RANK_KEY_LABELS: Record<CombatantRankKey, string> = {
+  pietaille: 'Piétaille',
+  coriace: 'Coriace',
+  rival: 'Rival',
 };
 
 function capitalize(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-/** Libellé de rang affiché sur les cartes de combat : "Héros" pour un PJ, sinon rival/coriace/piétaille. */
-export function combatantRankLabel(entry: CombatCatalogEntry): string {
+/** Rang BoL brut (rival/coriace/pietaille) d'une entrée du catalogue de combat — null pour un héros. */
+export function combatantRankKey(entry: CombatCatalogEntry): CombatantRankKey | null {
   switch (entry.kind) {
     case 'hero':
-      return 'Héros';
+      return null;
     case 'creature': {
       const creature = entry.raw as BolCreatureModel;
-      return creature.rang ? capitalize(creature.rang) : (TYPE_RANK_LABELS[creature.type ?? ''] ?? 'Coriace');
+      return (creature.rang as CombatantRankKey | undefined) ?? TYPE_RANK_KEYS[creature.type ?? ''] ?? 'coriace';
     }
     case 'demon':
     case 'pnj': {
       const raw = entry.raw as BolDemonModel | BolHerosModel;
-      return TYPE_RANK_LABELS[raw.type ?? ''] ?? 'Coriace';
+      return TYPE_RANK_KEYS[raw.type ?? ''] ?? 'coriace';
     }
   }
+}
+
+/** Libellé de rang affiché sur les cartes de combat : "Héros" pour un PJ, sinon rival/coriace/piétaille. */
+export function combatantRankLabel(entry: CombatCatalogEntry): string {
+  if (entry.kind === 'hero') {
+    return 'Héros';
+  }
+
+  if (entry.kind === 'creature') {
+    const creature = entry.raw as BolCreatureModel;
+    if (creature.rang) {
+      return capitalize(creature.rang);
+    }
+  }
+
+  return RANK_KEY_LABELS[combatantRankKey(entry)!];
 }
 
 /** Ouvre le statbloc (héros/PNJ/créature/démon) correspondant à une entrée du catalogue de combat. */

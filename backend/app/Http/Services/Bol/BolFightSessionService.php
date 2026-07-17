@@ -41,6 +41,24 @@ class BolFightSessionService
             ->get();
     }
 
+    /** Résultat du jet de réaction d'un héros pour cette session (null pour effacer). */
+    public function updateHeroInitiative(string $sessionId, int $herosPivotId, string $userId, ?string $resultat): ?BolFightSessionHeros
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session) {
+            return null;
+        }
+
+        $pivot = BolFightSessionHeros::where('id', $herosPivotId)->where('fight_session_id', $sessionId)->first();
+        if (!$pivot) {
+            return null;
+        }
+
+        $pivot->update(['initiative_resultat' => $resultat]);
+
+        return $pivot->fresh('heros');
+    }
+
     public function deleteSession(string $id, string $userId): bool
     {
         return (bool) BolFightSession::where('id', $id)->where('user_id', $userId)->delete();
@@ -56,11 +74,19 @@ class BolFightSessionService
             }
 
             BolFightSessionHeros::create([
-                'fight_session_id' => $sessionId,
-                'heros_id'         => $hero->id,
-                'camp'             => $this->normalizeCamp($item['camp'] ?? null),
+                'fight_session_id'    => $sessionId,
+                'heros_id'            => $hero->id,
+                'camp'                => $this->normalizeCamp($item['camp'] ?? null),
+                'initiative_resultat' => $this->normalizeInitiativeResultat($item['resultat'] ?? null),
             ]);
         }
+    }
+
+    private function normalizeInitiativeResultat(?string $resultat): ?string
+    {
+        $valid = ['echec_critique', 'echec', 'reussite', 'heroique', 'legendaire'];
+
+        return in_array($resultat, $valid, true) ? $resultat : null;
     }
 
     private function syncCreatures(string $sessionId, array $list): void

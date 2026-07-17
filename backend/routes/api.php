@@ -160,5 +160,6 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::get('/bol/fight-session/{id}', [BolFightSessionController::class, 'getOne']);
     Route::post('/bol/fight-session/create', [BolFightSessionController::class, 'create']);
     Route::delete('/bol/fight-session/delete/{id}', [BolFightSessionController::class, 'delete']);
+    Route::patch('/bol/fight-session/{id}/heros/{herosPivotId}/initiative', [BolFightSessionController::class, 'updateHeroInitiative']);
 
 });

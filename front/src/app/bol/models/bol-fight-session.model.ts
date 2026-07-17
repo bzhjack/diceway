@@ -1,5 +1,8 @@
 export type CombatCamp = 'heros' | 'adversaires';
 
+/** Résultat du jet de réaction BoL (2d6 + esprit + initiative, 9+) — seuls les héros le lancent. */
+export type InitiativeResultat = 'echec_critique' | 'echec' | 'reussite' | 'heroique' | 'legendaire';
+
 export interface BolFightSessionModel {
   id: string | null;
   user_id?: string | null;
@@ -16,6 +19,7 @@ export interface BolFightSessionHerosModel {
   fight_session_id: string;
   heros_id: string;
   camp: CombatCamp;
+  initiative_resultat: InitiativeResultat | null;
   heros?: {
     id: string | null;
     origines: {nom: string | null; avatar: string | null; joueur: string | null};
@@ -110,7 +114,7 @@ export interface BolFightSessionPnjModel {
 /** Payload d'envoi pour créer une fight-session (les stats sont snapshotées côté back). */
 export interface BolFightSessionCreatePayload {
   titre?: string | null;
-  heros: {heroId: string; camp: CombatCamp}[];
+  heros: {heroId: string; camp: CombatCamp; resultat?: InitiativeResultat | null}[];
   pnjs: {pnjId: string; camp: CombatCamp}[];
   creatures: {creatureId: string; camp: CombatCamp; qty: number}[];
   demons: {demonId: string; camp: CombatCamp; qty: number}[];

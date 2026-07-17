@@ -61,6 +61,91 @@
   font-style: italic;
 }
 
+.csp-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.08);
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 0.9rem;
+  font-size: 0.8rem;
+  color: var(--dw-color-legendary-muted);
+
+  mat-icon {
+    color: var(--dw-color-legendary);
+    flex-shrink: 0;
+  }
+}
+
+// ── Rail vertical accroché à la liste des combattants : dégradé des paliers,
+// du plus rapide au plus lent, un point coloré par carte.
+.csp-rail {
+  position: relative;
+  padding-left: 1.1rem;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0.15rem;
+    top: 0.6rem;
+    bottom: 0.6rem;
+    width: 2px;
+    background: linear-gradient(
+      180deg,
+      var(--dw-color-legendary),
+      var(--dw-color-rival) 35%,
+      var(--dw-surface-400) 75%,
+      var(--dw-color-echec-forte)
+    );
+    opacity: 0.5;
+  }
+}
+
+.csp-rail-item {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: -1.1rem;
+    top: 1.15rem;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background: var(--dw-surface-400);
+  }
+
+  &--legendaire::before,
+  &--heroique::before {
+    background: var(--dw-color-legendary);
+  }
+
+  &--reussite::before {
+    background: var(--dw-color-reussite);
+  }
+
+  &--rival::before {
+    background: var(--dw-color-rival);
+  }
+
+  &--coriace::before {
+    background: var(--dw-color-creature);
+  }
+
+  &--echec::before {
+    background: var(--dw-color-echec);
+  }
+
+  &--pietaille::before {
+    background: var(--dw-surface-400);
+  }
+
+  &--echec_critique::before {
+    background: var(--dw-color-echec-forte);
+  }
+}
+
 .csp-add-tile {
   display: flex;
   align-items: center;

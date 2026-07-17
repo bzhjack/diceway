@@ -43,4 +43,20 @@ class BolFightSessionController extends Controller
         $this->fightSessionService->deleteSession($id, Auth::id());
         return response()->json(true);
     }
+
+    public function updateHeroInitiative(Request $request, string $id, int $herosPivotId)
+    {
+        $pivot = $this->fightSessionService->updateHeroInitiative(
+            $id,
+            $herosPivotId,
+            Auth::id(),
+            $request->input('resultat'),
+        );
+
+        if (!$pivot) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        return response()->json($pivot);
+    }
 }

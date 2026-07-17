@@ -12,7 +12,12 @@ import {BolDemonsService} from './bol-demons.service';
 import {BolFightSessionService} from './bol-fight-session.service';
 import {BolHerosService} from './bol-heros.service';
 import {BolPnjService} from './bol-pnj.service';
-import {BolFightSessionCreatePayload, BolFightSessionModel, CombatCamp} from '../models/bol-fight-session.model';
+import {
+  BolFightSessionCreatePayload,
+  BolFightSessionModel,
+  CombatCamp,
+  InitiativeResultat,
+} from '../models/bol-fight-session.model';
 
 export type CombatantKind = 'hero' | 'pnj' | 'creature' | 'demon';
 
@@ -46,22 +51,41 @@ const STACKABLE_KINDS: ReadonlySet<CombatantKind> = new Set(['creature', 'demon'
 /** Brouillon de sélection persisté côté client (localStorage) pour survivre à un F5 ou une navigation. */
 const STORAGE_KEY = 'diceway-combat-selection';
 
-function restoreCombatants(): SelectedCombatant[] {
+interface PersistedDraft {
+  readonly combatants: SelectedCombatant[];
+  /** Résultat du jet de réaction choisi par héros (catalogId -> résultat), avant même le lancement du combat. */
+  readonly heroInitiative: Record<string, InitiativeResultat>;
+}
+
+function restoreDraft(): PersistedDraft {
+  const empty: PersistedDraft = {combatants: [], heroInitiative: {}};
+
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
-      return [];
+      return empty;
     }
+
     const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed)) {
-      return [];
+    if (!parsed || typeof parsed !== 'object') {
+      return empty;
     }
-    return parsed.filter((c): c is SelectedCombatant => {
-      const entry = c as Partial<SelectedCombatant> | null;
-      return typeof entry === 'object' && entry !== null && typeof entry.catalogId === 'string' && typeof entry.qty === 'number';
-    });
+
+    const obj = parsed as Partial<PersistedDraft>;
+    const combatants = Array.isArray(obj.combatants)
+      ? obj.combatants.filter((c): c is SelectedCombatant => {
+          const entry = c as Partial<SelectedCombatant> | null;
+          return (
+            typeof entry === 'object' && entry !== null && typeof entry.catalogId === 'string' && typeof entry.qty === 'number'
+          );
+        })
+      : [];
+    const heroInitiative =
+      obj.heroInitiative && typeof obj.heroInitiative === 'object' ? obj.heroInitiative : {};
+
+    return {combatants, heroInitiative};
   } catch {
-    return [];
+    return empty;
   }
 }
 
@@ -76,11 +100,20 @@ export class CombatSelectionService {
 
   readonly catalog = signal<readonly CombatCatalogEntry[]>([]);
   readonly loading = signal(false);
-  readonly combatants = signal<readonly SelectedCombatant[]>(restoreCombatants());
+
+  private readonly initialDraft = restoreDraft();
+  readonly combatants = signal<readonly SelectedCombatant[]>(this.initialDraft.combatants);
+  readonly heroInitiative = signal<ReadonlyMap<string, InitiativeResultat>>(
+    new Map(Object.entries(this.initialDraft.heroInitiative) as [string, InitiativeResultat][]),
+  );
 
   constructor() {
     effect(() => {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.combatants()));
+      const draft: PersistedDraft = {
+        combatants: this.combatants() as SelectedCombatant[],
+        heroInitiative: Object.fromEntries(this.heroInitiative()) as Record<string, InitiativeResultat>,
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
     });
   }
 
@@ -196,10 +229,29 @@ export class CombatSelectionService {
 
   remove(catalogId: string): void {
     this.combatants.update((list) => list.filter((c) => c.catalogId !== catalogId));
+    this.setHeroInitiative(catalogId, null);
+  }
+
+  /** Résultat du jet de réaction choisi pour un héros, avant même le lancement du combat. */
+  setHeroInitiative(catalogId: string, resultat: InitiativeResultat | null): void {
+    this.heroInitiative.update((map) => {
+      if (!resultat && !map.has(catalogId)) {
+        return map;
+      }
+
+      const next = new Map(map);
+      if (resultat) {
+        next.set(catalogId, resultat);
+      } else {
+        next.delete(catalogId);
+      }
+      return next;
+    });
   }
 
   reset(): void {
     this.combatants.set([]);
+    this.heroInitiative.set(new Map());
   }
 
   launch(titre?: string | null): Observable<BolFightSessionModel> {
@@ -212,7 +264,11 @@ export class CombatSelectionService {
 
     return {
       titre: titre ?? null,
-      heros: byKind('hero').map((c) => ({heroId: this.entryFor(c.catalogId)!.sourceId, camp: defaultCampFor('hero')})),
+      heros: byKind('hero').map((c) => ({
+        heroId: this.entryFor(c.catalogId)!.sourceId,
+        camp: defaultCampFor('hero'),
+        resultat: this.heroInitiative().get(c.catalogId) ?? null,
+      })),
       pnjs: byKind('pnj').map((c) => ({pnjId: this.entryFor(c.catalogId)!.sourceId, camp: defaultCampFor('pnj')})),
       creatures: byKind('creature').map((c) => ({
         creatureId: this.entryFor(c.catalogId)!.sourceId,

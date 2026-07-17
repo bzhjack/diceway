@@ -29,11 +29,33 @@
         <span class="csp-camp-total">{{ totalCount() }}</span>
       </div>
 
-      @for (combatant of selection.combatants(); track combatant.catalogId) {
-        @if (selection.entryFor(combatant.catalogId); as entry) {
-          <bol-combatant-card [entry]="entry" [combatant]="combatant" />
-        }
-      } @empty {
+      @if (order().legendaryActive) {
+        <div class="csp-banner">
+          <mat-icon>military_tech</mat-icon>
+          Succès légendaire obtenu — +1 à tous les jets d'attaque pour toute la rencontre, coriaces
+          et piétailles adverses bloqués au round 1.
+        </div>
+      }
+
+      @if (selection.combatants().length) {
+        <div class="csp-rail">
+          @for (item of order().entries; track item.key) {
+            @if (selection.combatantFor(item.key); as combatant) {
+              @if (selection.entryFor(item.key); as entry) {
+                <div class="csp-rail-item" [class]="'csp-rail-item--' + (item.tier ?? 'none')">
+                  <bol-combatant-card
+                    [entry]="entry"
+                    [combatant]="combatant"
+                    [resultat]="item.resultat"
+                    [lockedRound1]="item.lockedRound1"
+                    (initiativeChange)="onInitiativeChange(item.key, $event)"
+                  />
+                </div>
+              }
+            }
+          }
+        </div>
+      } @else {
         <p class="csp-empty">Aucun combattant pour l'instant.</p>
       }
 

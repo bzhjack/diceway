@@ -6,7 +6,9 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
+import {InitiativeResultat} from '../../models/bol-fight-session.model';
 import {CombatSelectionService} from '../../services/combat-selection.service';
+import {buildInitiativeOrderFromSelection} from '../initiative.util';
 import {CombatantCardComponent} from './combatant-card/combatant-card';
 import {CombatantPickerDialogComponent} from './combatant-picker-dialog/combatant-picker-dialog';
 
@@ -29,8 +31,20 @@ export class CombatSelectPageComponent {
     this.selection.combatants().reduce((sum, c) => sum + c.qty, 0),
   );
 
+  protected readonly order = computed(() =>
+    buildInitiativeOrderFromSelection(
+      this.selection.combatants(),
+      (catalogId) => this.selection.entryFor(catalogId),
+      this.selection.heroInitiative(),
+    ),
+  );
+
   constructor() {
     this.selection.loadCatalog();
+  }
+
+  protected onInitiativeChange(catalogId: string, value: InitiativeResultat | null): void {
+    this.selection.setHeroInitiative(catalogId, value);
   }
 
   protected openPicker(): void {
@@ -50,11 +64,7 @@ export class CombatSelectPageComponent {
         next: () => {
           this.launching.set(false);
           this.selection.reset();
-          this.snackBar.open(
-            'Session de combat créée. Le tracker de combat arrive dans une prochaine étape.',
-            'OK',
-            {duration: 6000},
-          );
+          this.snackBar.open('Combat lancé.', 'OK', {duration: 4000});
         },
         error: (error: unknown) => {
           this.launching.set(false);
