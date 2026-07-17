@@ -5,10 +5,11 @@
       class="inline-flex h-5 w-5 items-center justify-center"
       [matMenuTriggerFor]="avPanel"
     >
-      <div
-        class="tag_icon bonus"
-        [inlineSVG]="traitIconPath(traitIconType(currentAvantage))"
-      ></div>
+      @if (traitIconIsSvg(avantageIcon())) {
+        <mat-icon class="tag_icon bonus" [svgIcon]="traitIconName(avantageIcon())" />
+      } @else {
+        <mat-icon class="tag_icon bonus">{{ traitIconName(avantageIcon()) }}</mat-icon>
+      }
     </button>
     <div class="htr-label" [class.opacity-50]="disabled()">
       {{ currentAvantage.avantage }}
@@ -37,10 +38,11 @@
       class="inline-flex h-5 w-5 items-center justify-center"
       [matMenuTriggerFor]="desPanel"
     >
-      <div
-        class="tag_icon malus"
-        [inlineSVG]="traitIconPath(traitIconType(currentDesavantage))"
-      ></div>
+      @if (traitIconIsSvg(desavantageIcon())) {
+        <mat-icon class="tag_icon malus" [svgIcon]="traitIconName(desavantageIcon())" />
+      } @else {
+        <mat-icon class="tag_icon malus">{{ traitIconName(desavantageIcon()) }}</mat-icon>
+      }
     </button>
     <div class="htr-label" [class.opacity-50]="disabled()">
       {{ currentDesavantage.desavantage }}

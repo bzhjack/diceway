@@ -2,8 +2,7 @@ import {ChangeDetectionStrategy, Component, input, output, signal} from '@angula
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {DwCollapsibleRowComponent, DwRowTone} from '../../../../shared/dw-collapsible-row/dw-collapsible-row';
-import {InlineSvgDirective} from '../../../../shared/inline-svg/inline-svg.directive';
-import {TraitIcon, traitIconPath} from '../../../shared/trait-icon';
+import {TraitIcon, traitIconIsSvg, traitIconName} from '../../../shared/trait-icon';
 
 export interface CapaciteEntry {
   readonly id: number;
@@ -16,7 +15,7 @@ export interface CapaciteEntry {
 
 @Component({
   selector: 'bol-capacite-list',
-  imports: [MatButtonModule, MatIconModule, DwCollapsibleRowComponent, InlineSvgDirective],
+  imports: [MatButtonModule, MatIconModule, DwCollapsibleRowComponent],
   templateUrl: './capacite-list.component.html',
   styleUrl: './capacite-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,7 +25,8 @@ export class CapaciteListComponent {
   readonly removed = output<number>();
 
   protected readonly expandedIds = signal<ReadonlySet<number>>(new Set());
-  protected readonly traitIconPath = traitIconPath;
+  protected readonly traitIconName = traitIconName;
+  protected readonly traitIconIsSvg = traitIconIsSvg;
 
   protected isExpanded(entry: CapaciteEntry): boolean {
     return this.expandedIds().has(entry.id);

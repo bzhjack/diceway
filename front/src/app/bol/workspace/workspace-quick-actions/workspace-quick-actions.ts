@@ -23,6 +23,13 @@ interface WorkspaceQuickAction {
 export class WorkspaceQuickActionsComponent {
   protected readonly quickActions: readonly WorkspaceQuickAction[] = [
     {
+      label: 'Nouveau combat',
+      detail: 'Choisir les combattants pour préparer une rencontre.',
+      icon: 'shield',
+      link: '/combat/new',
+      severity: 'secondary',
+    },
+    {
       label: 'Créer un héros',
       detail: 'Ajouter un héros jouable prêt pour la table.',
       icon: 'person_add',

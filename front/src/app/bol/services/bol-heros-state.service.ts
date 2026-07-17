@@ -1,5 +1,7 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
+import {BolArmeModel} from '../models/bol-arme.model';
+import {BolArmureModel} from '../models/bol-armure.model';
 import {
   AVANTAGE_MAGIE_DES_ROIS_SORCIERS_ID,
   AVANTAGE_POUVOIR_DU_NEANT_ID,
@@ -27,14 +29,26 @@ export interface AttributModifier {
 export class BolHerosStateService {
   #catalog = inject(BolCatalogService);
   langueList = toSignal(this.#catalog.langues());
-  armureList = toSignal(this.#catalog.armures());
-  armeList = toSignal(this.#catalog.armes());
   regionList = toSignal(this.#catalog.regions());
   carriereList = toSignal(this.#catalog.carrieres());
   currentHeros = signal<BolHerosModel | null>(null);
   avantagesList = toSignal(this.#catalog.avantages());
   desavantagesList = toSignal(this.#catalog.desavantages());
   currentHerosCarrieres = computed(() => this.currentHeros()?.carrieres ?? []);
+
+  /**
+   * Armes/armures sont éditables depuis l'intendance (bol-catalog-service.armes/armures ne cache rien) :
+   * contrairement aux référentiels ci-dessus (langues/régions/carrières/traits, non éditables dans l'app),
+   * ces deux listes doivent être rechargées à chaque formulaire héros/PNJ plutôt que figées une fois pour
+   * toutes à la création du singleton — d'où un signal réinscriptible + `refreshEquipmentCatalog()`.
+   */
+  armeList = signal<BolArmeModel[] | undefined>(undefined);
+  armureList = signal<BolArmureModel[] | undefined>(undefined);
+
+  refreshEquipmentCatalog(): void {
+    this.#catalog.armes().subscribe((list) => this.armeList.set(list));
+    this.#catalog.armures().subscribe((list) => this.armureList.set(list));
+  }
 
   // E11: Non-combattant modifie les budgets combat et carrières
   isNonCombattant = computed(() =>

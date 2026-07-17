@@ -1,0 +1,254 @@
+.csp-header {
+  padding: 1.1rem 1.25rem;
+}
+
+.csp-icon {
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 6px;
+  background: #e11d48;
+  color: #fff1f2;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.csp-eyebrow {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #6ee7b7;
+}
+
+.csp-title {
+  margin: 0.15rem 0 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--dw-surface-800);
+}
+
+.csp-camp {
+  min-height: 20rem;
+}
+
+.csp-camp-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.9rem;
+
+  h2 {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #6ee7b7;
+  }
+}
+
+.csp-camp-total {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--dw-surface-500);
+}
+
+.csp-empty {
+  font-size: 0.82rem;
+  color: var(--dw-surface-500);
+  font-style: italic;
+}
+
+.csp-mods {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.csp-mods-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+
+  h2 {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #6ee7b7;
+  }
+}
+
+.csp-mods-net {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--dw-color-legendary-muted);
+}
+
+.csp-mods-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.csp-mods-seg {
+  display: inline-flex;
+  border: 1px solid var(--dw-border);
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  button {
+    border: none;
+    border-right: 1px solid var(--dw-border);
+    background: transparent;
+    color: var(--dw-surface-500);
+    font: inherit;
+    font-size: 0.78rem;
+    padding: 0.4rem 0.75rem;
+    cursor: pointer;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    &.is-active {
+      font-weight: 700;
+      color: var(--dw-surface-800);
+      background: rgba(148, 163, 184, 0.14);
+    }
+
+    &.bonus.is-active {
+      color: var(--dw-color-reussite);
+      background: color-mix(in srgb, var(--dw-color-reussite) 14%, transparent);
+    }
+
+    &.malus.is-active {
+      color: var(--dw-color-echec);
+      background: color-mix(in srgb, var(--dw-color-echec) 14%, transparent);
+    }
+  }
+}
+
+.csp-mods-adverse {
+  font-size: 0.78rem;
+  color: var(--dw-surface-600);
+
+  b {
+    color: var(--dw-color-echec);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.csp-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.08);
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 0.9rem;
+  font-size: 0.8rem;
+  color: var(--dw-color-legendary-muted);
+
+  mat-icon {
+    color: var(--dw-color-legendary);
+    flex-shrink: 0;
+  }
+}
+
+// ── Rail vertical accroché à la liste des combattants : dégradé des paliers,
+// du plus rapide au plus lent, un point coloré par carte.
+.csp-rail {
+  position: relative;
+  padding-left: 1.1rem;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0.15rem;
+    top: 0.6rem;
+    bottom: 0.6rem;
+    width: 2px;
+    background: linear-gradient(
+      180deg,
+      var(--dw-color-legendary),
+      var(--dw-color-rival) 35%,
+      var(--dw-surface-400) 75%,
+      var(--dw-color-echec-forte)
+    );
+    opacity: 0.5;
+  }
+}
+
+.csp-rail-item {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: -1.16rem;
+    top: 1.15rem;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background: var(--dw-surface-400);
+  }
+
+  &--legendaire::before,
+  &--heroique::before {
+    background: var(--dw-color-legendary);
+  }
+
+  &--reussite::before {
+    background: var(--dw-color-reussite);
+  }
+
+  &--rival::before {
+    background: var(--dw-color-rival);
+  }
+
+  &--coriace::before {
+    background: var(--dw-color-creature);
+  }
+
+  &--echec::before {
+    background: var(--dw-color-echec);
+  }
+
+  &--pietaille::before {
+    background: var(--dw-surface-400);
+  }
+
+  &--echec_critique::before {
+    background: var(--dw-color-echec-forte);
+  }
+}
+
+.csp-add-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+  border: 1px dashed var(--dw-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--dw-surface-500);
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.7rem;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--mat-sys-primary);
+    color: var(--mat-sys-primary);
+  }
+}

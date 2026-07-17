@@ -1,0 +1,111 @@
+<section class="dw-page">
+  <div class="mx-auto flex max-w-3xl flex-col gap-4">
+    <div class="dw-section--form csp-header">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="csp-icon">
+            <mat-icon>shield</mat-icon>
+          </div>
+          <div>
+            <p class="csp-eyebrow">Nouveau combat</p>
+            <h1 class="csp-title">Sélection des combattants</h1>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+          <button mat-stroked-button type="button" routerLink="/">
+            <mat-icon>arrow_back</mat-icon> Retour au dashboard
+          </button>
+          <button mat-flat-button type="button" [disabled]="totalCount() === 0 || launching()" (click)="launchCombat()">
+            <mat-icon>play_arrow</mat-icon> Lancer le combat
+          </button>
+        </div>
+      </div>
+    </div>
+
+    @if (selection.combatants().length) {
+      <div class="dw-section--form csp-mods">
+        <div class="csp-mods-top">
+          <h2>Modificateurs au jet de réaction</h2>
+          @if (modifierTotal() !== 0) {
+            <span class="csp-mods-net">Net à appliquer : {{ modifierTotal() > 0 ? '+' : '' }}{{ modifierTotal() }}</span>
+          }
+        </div>
+
+        <div class="csp-mods-row">
+          <div class="csp-mods-seg">
+            <button
+              type="button"
+              [class.is-active]="selection.ambushState() === null"
+              (click)="onAmbushToggle(null)"
+            >
+              Aucune
+            </button>
+            <button
+              type="button"
+              class="bonus"
+              [class.is-active]="selection.ambushState() === 'heroes_ambush'"
+              (click)="onAmbushToggle('heroes_ambush')"
+            >
+              Héros embusquent +2
+            </button>
+            <button
+              type="button"
+              class="malus"
+              [class.is-active]="selection.ambushState() === 'heroes_ambushed'"
+              (click)="onAmbushToggle('heroes_ambushed')"
+            >
+              Héros surpris −1
+            </button>
+          </div>
+
+          @if (adverseInitiative(); as adv) {
+            <span class="csp-mods-adverse">Init. adverse <b>−{{ adv.value }}</b> ({{ adv.source }})</span>
+          }
+        </div>
+      </div>
+    }
+
+    <div class="dw-section--form csp-camp">
+      <div class="csp-camp-head">
+        <h2>Combattants</h2>
+        <span class="csp-camp-total">{{ totalCount() }}</span>
+      </div>
+
+      @if (order().legendaryActive) {
+        <div class="csp-banner">
+          <mat-icon>military_tech</mat-icon>
+          Succès légendaire obtenu — +1 à tous les jets d'attaque pour toute la rencontre, coriaces
+          et piétailles adverses bloqués au round 1.
+        </div>
+      }
+
+      @if (selection.combatants().length) {
+        <div class="csp-rail">
+          @for (item of order().entries; track item.key) {
+            @if (selection.combatantFor(item.key); as combatant) {
+              @if (selection.entryFor(item.key); as entry) {
+                <div class="csp-rail-item" [class]="'csp-rail-item--' + (item.tier ?? 'none')">
+                  <bol-combatant-card
+                    [entry]="entry"
+                    [combatant]="combatant"
+                    [resultat]="item.resultat"
+                    [lockedRound1]="item.lockedRound1"
+                    [modifierTotal]="modifierTotal()"
+                    (initiativeChange)="onInitiativeChange(item.key, $event)"
+                  />
+                </div>
+              }
+            }
+          }
+        </div>
+      } @else {
+        <p class="csp-empty">Aucun combattant pour l'instant.</p>
+      }
+
+      <button type="button" class="csp-add-tile" (click)="openPicker()">
+        <mat-icon>add</mat-icon> Ajouter un combattant
+      </button>
+    </div>
+  </div>
+</section>

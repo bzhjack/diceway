@@ -1,0 +1,56 @@
+:host {
+  display: contents;
+}
+
+// Le contenu du dialog est le seul scroller ; on y épingle les filtres en
+// haut (fond opaque pour masquer la grille qui défile dessous).
+.cpd-filters {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--dw-surface-100);
+  padding-top: 0.2rem;
+  padding-bottom: 0.7rem;
+}
+
+.cpd-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.9rem;
+}
+
+.cpd-tab {
+  border: 1px solid var(--dw-border);
+  background: transparent;
+  color: var(--dw-surface-400);
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.cpd-tab--active {
+  border-color: var(--mat-sys-primary);
+  color: var(--mat-sys-primary);
+  background: color-mix(in srgb, var(--mat-sys-primary) 16%, transparent);
+}
+
+.cpd-search {
+  width: 100%;
+  margin-bottom: 0.9rem;
+}
+
+.cpd-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.65rem;
+}
+
+.cpd-empty {
+  grid-column: 1 / -1;
+  font-size: 0.82rem;
+  color: var(--dw-surface-500);
+  font-style: italic;
+}

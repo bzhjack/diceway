@@ -7,7 +7,11 @@
       (toggled)="toggle(capacite)"
     >
       <ng-container row-summary>
-        <div class="tag_icon cl-capacite-icon" [inlineSVG]="traitIconPath(capacite.icon)"></div>
+        @if (traitIconIsSvg(capacite.icon)) {
+          <mat-icon class="tag_icon cl-capacite-icon" [svgIcon]="traitIconName(capacite.icon)" />
+        } @else {
+          <mat-icon class="tag_icon cl-capacite-icon">{{ traitIconName(capacite.icon) }}</mat-icon>
+        }
         <span class="dw-entry-label truncate">{{ capacite.label }}</span>
       </ng-container>
 

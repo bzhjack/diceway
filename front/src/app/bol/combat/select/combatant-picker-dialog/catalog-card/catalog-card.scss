@@ -1,0 +1,175 @@
+:host {
+  display: contents;
+}
+
+.cpd-card {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  border: 1px solid var(--dw-border);
+  background: rgb(15 23 42 / 0.5);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  border-radius: 6px;
+  padding: 0.6rem 0.65rem;
+}
+
+// Même palette sémantique que la zone Combattants (--dw-color-reussite = PJ,
+// --dw-color-pnj, --dw-color-creature, --dw-color-demon). Fond plus sombre que
+// le fond du dialogue et bordure fortement teintée pour détacher chaque carte.
+.cpd-card--hero {
+  background: color-mix(in srgb, var(--dw-color-reussite) 16%, rgb(15 23 42 / 0.5));
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 65%, var(--dw-border));
+}
+
+.cpd-card--pnj {
+  background: color-mix(in srgb, var(--dw-color-pnj) 16%, rgb(15 23 42 / 0.5));
+  border-color: color-mix(in srgb, var(--dw-color-pnj) 65%, var(--dw-border));
+}
+
+.cpd-card--creature {
+  background: color-mix(in srgb, var(--dw-color-creature) 16%, rgb(15 23 42 / 0.5));
+  border-color: color-mix(in srgb, var(--dw-color-creature) 65%, var(--dw-border));
+}
+
+.cpd-card--demon {
+  background: color-mix(in srgb, var(--dw-color-demon) 16%, rgb(15 23 42 / 0.5));
+  border-color: color-mix(in srgb, var(--dw-color-demon) 65%, var(--dw-border));
+}
+
+.cpd-thumb {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 5px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid var(--dw-border);
+  background: rgb(15 23 42 / 0.6);
+}
+
+// Seul l'avatar ouvre le statbloc — un vrai <button>, séparé du bouton ajouter.
+button.cpd-open {
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 0 0 2px var(--mat-sys-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
+}
+
+.cpd-thumb--hero {
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 55%, transparent);
+}
+
+.cpd-thumb--pnj {
+  border-color: color-mix(in srgb, var(--dw-color-pnj) 55%, transparent);
+}
+
+.cpd-thumb--creature {
+  border-color: color-mix(in srgb, var(--dw-color-creature) 55%, transparent);
+}
+
+.cpd-thumb--demon {
+  border-color: color-mix(in srgb, var(--dw-color-demon) 55%, transparent);
+}
+
+.cpd-avatar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cpd-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.cpd-name {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--dw-surface-800);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cpd-kind-icon {
+  flex-shrink: 0;
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+  line-height: 1rem;
+}
+
+.cpd-kind-icon--hero {
+  color: var(--dw-color-reussite);
+}
+
+.cpd-kind-icon--pnj {
+  color: var(--dw-color-pnj);
+}
+
+.cpd-kind-icon--creature {
+  color: var(--dw-color-creature);
+}
+
+.cpd-kind-icon--demon {
+  color: var(--dw-color-demon);
+}
+
+.cpd-kind {
+  margin: 0.1rem 0 0;
+  font-size: 0.7rem;
+  color: var(--dw-surface-500);
+}
+
+.cpd-add {
+  flex-shrink: 0;
+}
+
+.cpd-add--qty {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--mat-sys-primary);
+  font: inherit;
+  font-weight: 800;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+  }
+}
+
+.cpd-added {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  color: var(--dw-surface-500);
+
+  .mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+  }
+}

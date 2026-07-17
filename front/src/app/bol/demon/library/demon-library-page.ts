@@ -21,7 +21,8 @@ import {MatCard} from '@angular/material/card';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
-import {DemonStatblockComponent} from '../statblock/demon-statblock.component';
+import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
+import {demonStatblockData} from '../../shared/statblock/bol-statblock.builders';
 import {DemonCardComponent, demonImage} from './demon-card/demon-card.component';
 
 @Component({
@@ -94,8 +95,8 @@ export class DemonLibraryPageComponent {
   }
 
   protected openStatblock(demon: BolDemonModel): void {
-    openStatblockDialog(this.dialog, DemonStatblockComponent, {
-      demon,
+    openStatblockDialog(this.dialog, BolStatblockComponent, {
+      data: demonStatblockData(demon),
       imageSrc: demonImage(demon),
     });
   }

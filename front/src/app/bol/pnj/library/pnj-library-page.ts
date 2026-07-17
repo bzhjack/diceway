@@ -20,7 +20,8 @@ import {MatCard} from '@angular/material/card';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {DwLibraryHeaderComponent} from '../../../shared/dw-library-header/dw-library-header';
 import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-library-toolbar';
-import {PnjStatblockComponent} from '../statblock/pnj-statblock.component';
+import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
+import {pnjStatblockData} from '../../shared/statblock/bol-statblock.builders';
 import {PnjCardComponent, pnjImage, pnjLanguagesText, pnjTypeLabel} from './pnj-card/pnj-card.component';
 
 type PnjType = 'P' | 'C' | 'R';
@@ -109,8 +110,8 @@ export class PnjLibraryPageComponent {
   }
 
   protected openStatblock(pnj: BolHerosModel): void {
-    openStatblockDialog(this.dialog, PnjStatblockComponent, {
-      pnj,
+    openStatblockDialog(this.dialog, BolStatblockComponent, {
+      data: pnjStatblockData(pnj),
       imageSrc: pnjImage(pnj),
     });
   }

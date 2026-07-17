@@ -1,0 +1,88 @@
+<div class="cc-card" [class]="'cc-card--' + entry().kind">
+  <button
+    type="button"
+    class="cc-open cc-thumb"
+    [class]="'cc-thumb--' + entry().kind"
+    [attr.aria-label]="'Voir le statbloc de ' + entry().nom"
+    (click)="openStatblock()"
+  >
+    <img [src]="entry().avatar" [alt]="entry().nom" class="cc-avatar" />
+  </button>
+
+  <div class="cc-info">
+    <p class="cc-name">
+      @if (kindIconIsSvg()) {
+        <mat-icon [svgIcon]="kindIcon()" [class]="'cc-kind-icon cc-kind-icon--' + entry().kind" [attr.aria-label]="rankLabel()" />
+      } @else {
+        <mat-icon [class]="'cc-kind-icon cc-kind-icon--' + entry().kind" [attr.aria-label]="rankLabel()">{{ kindIcon() }}</mat-icon>
+      }
+      {{ entry().nom }}
+    </p>
+    <p class="cc-gauge">
+      <span class="cc-rank">{{ rankLabel() }}</span> · ❤ {{ entry().vitalite }}
+      @if (reactionStats(); as stats) {
+        <span class="cc-reaction-stats">· Esprit {{ stats.esprit }} · Init. {{ stats.initiative }}</span>
+      }
+      @if (lockedRound1()) {
+        <span class="cc-lock-tag">· bloqué R1</span>
+      }
+    </p>
+  </div>
+
+  @if (entry().kind === 'hero') {
+    <div class="cc-initiative-group">
+      <div class="cc-initiative-row">
+        <button
+          type="button"
+          class="cc-dice-trigger"
+          [attr.aria-label]="'Lancer le jet de réaction de ' + entry().nom"
+          (click)="openDiceDialog()"
+        >
+          <mat-icon svgIcon="d6" />
+        </button>
+
+        <select
+          class="cc-initiative"
+          [attr.aria-label]="'Résultat du jet de réaction de ' + entry().nom"
+          (change)="onInitiativeChange($any($event.target).value)"
+        >
+          <option value="" [selected]="!resultat()">— Résultat —</option>
+          @for (opt of resultOptions; track opt.value) {
+            <option [value]="opt.value" [selected]="resultat() === opt.value">{{ opt.label }}</option>
+          }
+        </select>
+
+        <button
+          type="button"
+          class="cc-help-trigger"
+          aria-label="Aide sur le jet de réaction"
+          (click)="openInitiativeHelp()"
+        >
+          <mat-icon>info</mat-icon>
+        </button>
+      </div>
+
+      @if (rollFormula(); as formula) {
+        <span class="cc-roll-hint">{{ formula }} > 9</span>
+      }
+    </div>
+  }
+
+  @if (selection.isStackable(entry().kind)) {
+    <div class="cc-qty">
+      <button type="button" (click)="selection.decQty(combatant().catalogId)" aria-label="Retirer un exemplaire">−</button>
+      <span>{{ combatant().qty }}</span>
+      <button type="button" (click)="selection.incQty(combatant().catalogId)" aria-label="Ajouter un exemplaire">+</button>
+    </div>
+  }
+
+  <button
+    mat-icon-button
+    type="button"
+    class="cc-remove"
+    aria-label="Retirer ce combattant"
+    (click)="selection.remove(combatant().catalogId)"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+</div>

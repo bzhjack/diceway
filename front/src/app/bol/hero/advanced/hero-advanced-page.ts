@@ -663,6 +663,9 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
   constructor() {
     super();
 
+    // Armes/armures sont éditables depuis l'intendance : recharger à chaque ouverture du formulaire.
+    this.herosStateService.refreshEquipmentCatalog();
+
     // Le service d'état alimente budgets, modificateurs et règles régionales.
     effect(() => {
       if (!this.editMode()) {

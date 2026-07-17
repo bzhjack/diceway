@@ -1,0 +1,257 @@
+:host {
+  display: block;
+}
+
+.cc-card {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid var(--dw-border);
+  background: rgb(15 23 42 / 0.55);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  border-radius: 8px;
+  padding: 0.55rem 0.7rem;
+  margin-bottom: 0.5rem;
+}
+
+// Un fond teinté par type (mêmes couleurs sémantiques que le reste de l'app :
+// --dw-color-reussite = PJ, --dw-color-pnj, --dw-color-creature, --dw-color-demon)
+// pour repérer d'un coup d'œil qui est qui dans la liste des combattants. Fond
+// plus sombre que le conteneur (dw-section--form) et bordure fortement teintée
+// pour que la carte se détache nettement au lieu de se fondre dedans.
+.cc-card--hero {
+  background: color-mix(in srgb, var(--dw-color-reussite) 16%, rgb(15 23 42 / 0.55));
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 65%, var(--dw-border));
+}
+
+.cc-card--pnj {
+  background: color-mix(in srgb, var(--dw-color-pnj) 16%, rgb(15 23 42 / 0.55));
+  border-color: color-mix(in srgb, var(--dw-color-pnj) 65%, var(--dw-border));
+}
+
+.cc-card--creature {
+  background: color-mix(in srgb, var(--dw-color-creature) 16%, rgb(15 23 42 / 0.55));
+  border-color: color-mix(in srgb, var(--dw-color-creature) 65%, var(--dw-border));
+}
+
+.cc-card--demon {
+  background: color-mix(in srgb, var(--dw-color-demon) 16%, rgb(15 23 42 / 0.55));
+  border-color: color-mix(in srgb, var(--dw-color-demon) 65%, var(--dw-border));
+}
+
+.cc-thumb {
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid var(--dw-border);
+  background: rgb(15 23 42 / 0.6);
+}
+
+// Seul l'avatar ouvre le statbloc — un vrai <button>, séparé du nom et des
+// contrôles (qty, retrait) plutôt qu'un handler de clic sur toute la carte.
+button.cc-open {
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 0 0 2px var(--mat-sys-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
+}
+
+.cc-thumb--hero {
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 55%, transparent);
+}
+
+.cc-thumb--pnj {
+  border-color: color-mix(in srgb, var(--dw-color-pnj) 55%, transparent);
+}
+
+.cc-thumb--creature {
+  border-color: color-mix(in srgb, var(--dw-color-creature) 55%, transparent);
+}
+
+.cc-thumb--demon {
+  border-color: color-mix(in srgb, var(--dw-color-demon) 55%, transparent);
+}
+
+.cc-avatar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cc-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.cc-name {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--dw-surface-800);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cc-kind-icon {
+  flex-shrink: 0;
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+  line-height: 1rem;
+}
+
+.cc-kind-icon--hero {
+  color: var(--dw-color-reussite);
+}
+
+.cc-kind-icon--pnj {
+  color: var(--dw-color-pnj);
+}
+
+.cc-kind-icon--creature {
+  color: var(--dw-color-creature);
+}
+
+.cc-kind-icon--demon {
+  color: var(--dw-color-demon);
+}
+
+.cc-gauge {
+  margin: 0.1rem 0 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #f43f5e;
+}
+
+.cc-rank {
+  color: var(--dw-surface-500);
+  font-weight: 600;
+}
+
+.cc-reaction-stats {
+  color: var(--dw-surface-500);
+  font-weight: 600;
+}
+
+.cc-lock-tag {
+  color: var(--dw-color-echec);
+  font-weight: 800;
+}
+
+.cc-initiative-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
+  flex-shrink: 0;
+}
+
+.cc-initiative-row {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.cc-initiative {
+  flex-shrink: 0;
+  border: 1px solid var(--dw-border);
+  background: rgba(2, 6, 23, 0.5);
+  color: var(--dw-surface-700);
+  font: inherit;
+  font-size: 0.72rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.cc-roll-hint {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--dw-color-pnj);
+  margin-right: 1.85rem;
+}
+
+.cc-qty {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  flex-shrink: 0;
+
+  button {
+    width: 1.3rem;
+    height: 1.3rem;
+    border-radius: 4px;
+    border: 1px solid var(--dw-border);
+    background: transparent;
+    color: var(--dw-surface-500);
+    font-size: 0.8rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  span {
+    min-width: 1.1rem;
+    text-align: center;
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.cc-remove {
+  flex-shrink: 0;
+  color: var(--dw-surface-400);
+
+  &:hover {
+    color: #fb7185;
+  }
+}
+
+.cc-help-trigger,
+.cc-dice-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  align-self: stretch;
+  width: 1.6rem;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  color: var(--dw-surface-400);
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    line-height: 1.1rem;
+  }
+
+  &:hover {
+    color: var(--dw-color-pnj);
+  }
+}
+
+.cc-dice-trigger {
+  color: var(--dw-color-legendary);
+
+  &:hover {
+    color: var(--dw-color-legendary-muted);
+  }
+}

@@ -1,0 +1,104 @@
+.ihd-content {
+  min-width: 20rem;
+  max-width: 26rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.ihd-formula {
+  margin: 0 0 0.4rem;
+  padding: 0.4rem;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--dw-surface-600);
+  border: 1px solid var(--dw-surface-400);
+}
+
+.ihd-section {
+  margin: 0.6rem 0 0.2rem;
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+}
+
+.ihd-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  font-size: 0.84rem;
+  line-height: 1.4;
+  color: var(--dw-surface-700);
+  margin: 0.25rem 0 0;
+
+  b {
+    color: var(--dw-surface-800);
+  }
+}
+
+.ihd-desc {
+  flex: 1;
+  min-width: 0;
+}
+
+.ihd-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  flex-shrink: 0;
+  transform: translateY(-0.1rem);
+  background: var(--dw-surface-400);
+}
+
+.ihd-dot--legendaire,
+.ihd-dot--heroique {
+  background: var(--dw-color-legendary);
+}
+
+.ihd-dot--reussite {
+  background: var(--dw-color-reussite);
+}
+
+.ihd-dot--echec {
+  background: var(--dw-color-echec);
+}
+
+.ihd-dot--critique {
+  background: var(--dw-color-echec-forte);
+}
+
+.ihd-mod {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  font-size: 0.84rem;
+  line-height: 1.4;
+  color: var(--dw-surface-700);
+  margin: 0.25rem 0 0;
+}
+
+.ihd-mod-value {
+  flex-shrink: 0;
+  min-width: 2.9rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.ihd-mod-value--bonus {
+  color: var(--dw-color-reussite);
+}
+
+.ihd-mod-value--malus {
+  color: var(--dw-color-echec);
+}
+
+.ihd-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: var(--dw-surface-500);
+  font-style: italic;
+}

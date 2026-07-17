@@ -1,4 +1,9 @@
-<mat-card appearance="outlined">
+<mat-card
+  appearance="outlined"
+  class="dw-lh-card"
+  [class.dw-lh-card--image]="!!image()"
+  [style.background-image]="backgroundImage()"
+>
   <mat-card-content>
     <div class="flex flex-col gap-4">
       <div class="space-y-2.5">
