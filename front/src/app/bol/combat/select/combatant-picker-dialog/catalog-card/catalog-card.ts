@@ -1,19 +1,8 @@
-import {ChangeDetectionStrategy, Component, inject, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, input} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
-import {openCombatantStatblock} from '../../combat-statblock.util';
-import {
-  CombatantKind,
-  CombatCatalogEntry,
-  CombatSelectionService,
-} from '../../../../services/combat-selection.service';
-
-const KIND_LABELS: Record<CombatantKind, string> = {
-  hero: 'Héros',
-  pnj: 'PNJ',
-  creature: 'Créature',
-  demon: 'Démon',
-};
+import {combatantRankLabel, openCombatantStatblock} from '../../combat-statblock.util';
+import {CombatCatalogEntry, CombatSelectionService} from '../../../../services/combat-selection.service';
 
 /** Carte d'une entrée de catalogue dans le dialog de sélection : l'avatar ouvre le statbloc, le bouton ajoute (ou incrémente). */
 @Component({
@@ -28,7 +17,7 @@ export class CatalogCardComponent {
 
   protected readonly selection = inject(CombatSelectionService);
   private readonly dialog = inject(MatDialog);
-  protected readonly kindLabels = KIND_LABELS;
+  protected readonly rankLabel = computed(() => combatantRankLabel(this.entry()));
 
   protected add(): void {
     this.selection.add(this.entry().catalogId);

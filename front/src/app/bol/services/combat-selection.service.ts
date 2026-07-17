@@ -1,4 +1,4 @@
-import {Injectable, inject, signal} from '@angular/core';
+import {effect, Injectable, inject, signal} from '@angular/core';
 import {Observable, forkJoin} from 'rxjs';
 import {creatureImage} from '../creature/library/creature-card/creature-card.component';
 import {demonImage} from '../demon/library/demon-card/demon-card.component';
@@ -43,6 +43,28 @@ function defaultCampFor(kind: CombatantKind): CombatCamp {
 
 const STACKABLE_KINDS: ReadonlySet<CombatantKind> = new Set(['creature', 'demon']);
 
+/** Brouillon de sélection persisté côté client (localStorage) pour survivre à un F5 ou une navigation. */
+const STORAGE_KEY = 'diceway-combat-selection';
+
+function restoreCombatants(): SelectedCombatant[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      return [];
+    }
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+    return parsed.filter((c): c is SelectedCombatant => {
+      const entry = c as Partial<SelectedCombatant> | null;
+      return typeof entry === 'object' && entry !== null && typeof entry.catalogId === 'string' && typeof entry.qty === 'number';
+    });
+  } catch {
+    return [];
+  }
+}
+
 /** État de sélection des combattants (catalogue + brouillon) pour l'écran de préparation de combat. */
 @Injectable({providedIn: 'root'})
 export class CombatSelectionService {
@@ -54,7 +76,13 @@ export class CombatSelectionService {
 
   readonly catalog = signal<readonly CombatCatalogEntry[]>([]);
   readonly loading = signal(false);
-  readonly combatants = signal<readonly SelectedCombatant[]>([]);
+  readonly combatants = signal<readonly SelectedCombatant[]>(restoreCombatants());
+
+  constructor() {
+    effect(() => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.combatants()));
+    });
+  }
 
   loadCatalog(): void {
     if (this.catalog().length || this.loading()) {

@@ -10,7 +10,7 @@
   </button>
   <div class="cpd-info">
     <p class="cpd-name">{{ entry().nom }}</p>
-    <p class="cpd-kind">{{ kindLabels[entry().kind] }} · ❤ {{ entry().vitalite }}</p>
+    <p class="cpd-kind">{{ rankLabel() }} · ❤ {{ entry().vitalite }}</p>
   </div>
 
   @if (selection.combatantFor(entry().catalogId); as combatant) {

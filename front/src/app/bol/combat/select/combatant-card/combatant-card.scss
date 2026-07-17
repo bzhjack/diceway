@@ -112,6 +112,11 @@ button.cc-open {
   color: #f43f5e;
 }
 
+.cc-rank {
+  color: var(--dw-surface-500);
+  font-weight: 600;
+}
+
 .cc-qty {
   display: flex;
   align-items: center;

@@ -11,7 +11,7 @@
 
   <div class="cc-info">
     <p class="cc-name">{{ entry().nom }}</p>
-    <p class="cc-gauge">❤ {{ entry().vitalite }}</p>
+    <p class="cc-gauge"><span class="cc-rank">{{ rankLabel() }}</span> · ❤ {{ entry().vitalite }}</p>
   </div>
 
   @if (selection.isStackable(entry().kind)) {
