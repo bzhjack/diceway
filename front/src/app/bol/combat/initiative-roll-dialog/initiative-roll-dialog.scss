@@ -1,0 +1,84 @@
+.ird-content {
+  min-width: 22rem;
+  max-width: 28rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.ird-formula {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--dw-surface-600);
+}
+
+.ird-box {
+  --dice-box-min-height: 14rem;
+  display: block;
+  border-radius: 8px;
+}
+
+.ird-roll-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+
+  button mat-icon {
+    margin-right: 0.3rem;
+  }
+}
+
+.ird-dice {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--dw-surface-800);
+  font-variant-numeric: tabular-nums;
+}
+
+.ird-total {
+  font-weight: 800;
+  color: var(--dw-color-pnj);
+}
+
+.ird-result {
+  border-top: 1px solid rgba(66, 75, 87, 0.6);
+  padding-top: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.ird-note {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--dw-color-legendary-muted);
+}
+
+.ird-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--dw-surface-700);
+  cursor: pointer;
+
+  input {
+    accent-color: var(--mat-sys-primary);
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+}
+
+.ird-suggested {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--dw-surface-700);
+
+  b {
+    color: var(--dw-color-text-bright);
+  }
+}

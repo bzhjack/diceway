@@ -6,6 +6,7 @@ import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {BolHerosModel} from '../../../models/bol-heros.model';
 import {CombatCatalogEntry, CombatSelectionService, SelectedCombatant} from '../../../services/combat-selection.service';
 import {InitiativeHelpDialogComponent} from '../../initiative-help-dialog/initiative-help-dialog';
+import {InitiativeRollDialogComponent} from '../../initiative-roll-dialog/initiative-roll-dialog';
 import {INITIATIVE_RESULT_OPTIONS} from '../../initiative.util';
 import {combatantKindIcon, combatantKindIconIsSvg, combatantRankLabel, openCombatantStatblock} from '../combat-statblock.util';
 
@@ -40,6 +41,28 @@ export class CombatantCardComponent {
 
   protected openInitiativeHelp(): void {
     this.dialog.open(InitiativeHelpDialogComponent, {maxWidth: 'min(28rem, 92vw)'});
+  }
+
+  protected openDiceDialog(): void {
+    const stats = this.reactionStats();
+    if (!stats) {
+      return;
+    }
+
+    this.dialog
+      .open(InitiativeRollDialogComponent, {
+        maxWidth: 'min(30rem, 92vw)',
+        data: {
+          heroNom: this.entry().nom,
+          modifierSum: stats.esprit + stats.initiative + this.modifierTotal(),
+        },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.initiativeChange.emit(result);
+        }
+      });
   }
 
   protected onInitiativeChange(value: string): void {

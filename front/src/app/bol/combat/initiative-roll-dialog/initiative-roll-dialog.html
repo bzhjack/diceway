@@ -1,0 +1,56 @@
+<h2 mat-dialog-title>Jet de réaction — {{ data.heroNom }}</h2>
+
+<mat-dialog-content class="ird-content">
+  <p class="ird-formula">2d6 + {{ data.modifierSum }}, réussite à 9+</p>
+
+  <app-dice-box-host class="ird-box" />
+
+  <div class="ird-roll-row">
+    <button mat-stroked-button type="button" (click)="roll()" [disabled]="rolling()">
+      <mat-icon svgIcon="d6" />
+      {{ dice() ? 'Relancer' : 'Lancer 2d6' }}
+    </button>
+
+    @if (dice(); as d) {
+      <p class="ird-dice">
+        {{ d[0] }} + {{ d[1] }} = {{ diceSum() }}
+        <span class="ird-total">→ total {{ total() }}</span>
+      </p>
+    }
+  </div>
+
+  @if (dice()) {
+    <div class="ird-result">
+      @if (isNatural2()) {
+        <p class="ird-note">2 naturel — règle absolue : échec automatique.</p>
+        <label class="ird-check">
+          <input
+            type="checkbox"
+            [checked]="critiqueChosen()"
+            (change)="critiqueChosen.set($any($event.target).checked)"
+          />
+          Le joueur choisit d'en faire un échec critique (1 point d'héroïsme)
+        </label>
+      } @else if (isNatural12()) {
+        <p class="ird-note">12 naturel — règle absolue : succès héroïque automatique.</p>
+        <label class="ird-check">
+          <input
+            type="checkbox"
+            [checked]="legendaryChosen()"
+            (change)="legendaryChosen.set($any($event.target).checked)"
+          />
+          Convertir en succès légendaire (1 point d'héroïsme)
+        </label>
+      }
+
+      <p class="ird-suggested">Résultat retenu : <b>{{ resultLabel(suggestedResult()) }}</b></p>
+    </div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button type="button" (click)="cancel()">Annuler</button>
+  <button mat-flat-button type="button" [disabled]="!suggestedResult()" (click)="validate()">
+    Valider {{ suggestedResult() ? '— ' + resultLabel(suggestedResult()) : '' }}
+  </button>
+</mat-dialog-actions>

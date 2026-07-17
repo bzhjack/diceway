@@ -32,6 +32,15 @@
   @if (entry().kind === 'hero') {
     <div class="cc-initiative-group">
       <div class="cc-initiative-row">
+        <button
+          type="button"
+          class="cc-dice-trigger"
+          [attr.aria-label]="'Lancer le jet de réaction de ' + entry().nom"
+          (click)="openDiceDialog()"
+        >
+          <mat-icon svgIcon="d6" />
+        </button>
+
         <select
           class="cc-initiative"
           [attr.aria-label]="'Résultat du jet de réaction de ' + entry().nom"

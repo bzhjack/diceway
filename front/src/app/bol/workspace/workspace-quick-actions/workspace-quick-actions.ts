@@ -24,7 +24,7 @@ export class WorkspaceQuickActionsComponent {
   protected readonly quickActions: readonly WorkspaceQuickAction[] = [
     {
       label: 'Nouveau combat',
-      detail: 'Choisir les combattants (héros, PNJ, créatures, démons) pour préparer une rencontre.',
+      detail: 'Choisir les combattants pour préparer une rencontre.',
       icon: 'shield',
       link: '/combat/new',
       severity: 'secondary',

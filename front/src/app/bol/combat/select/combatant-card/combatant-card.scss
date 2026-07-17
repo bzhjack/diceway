@@ -221,7 +221,8 @@ button.cc-open {
   }
 }
 
-.cc-help-trigger {
+.cc-help-trigger,
+.cc-dice-trigger {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -244,5 +245,13 @@ button.cc-open {
 
   &:hover {
     color: var(--dw-color-pnj);
+  }
+}
+
+.cc-dice-trigger {
+  color: var(--dw-color-legendary);
+
+  &:hover {
+    color: var(--dw-color-legendary-muted);
   }
 }
