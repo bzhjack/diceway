@@ -10,7 +10,11 @@
   </button>
   <div class="cpd-info">
     <p class="cpd-name">
-      <mat-icon [class]="'cpd-kind-icon cpd-kind-icon--' + entry().kind" [attr.aria-label]="rankLabel()">{{ kindIcon() }}</mat-icon>
+      @if (kindIconIsSvg()) {
+        <mat-icon [svgIcon]="kindIcon()" [class]="'cpd-kind-icon cpd-kind-icon--' + entry().kind" [attr.aria-label]="rankLabel()" />
+      } @else {
+        <mat-icon [class]="'cpd-kind-icon cpd-kind-icon--' + entry().kind" [attr.aria-label]="rankLabel()">{{ kindIcon() }}</mat-icon>
+      }
       {{ entry().nom }}
     </p>
     <p class="cpd-kind">{{ rankLabel() }} · ❤ {{ entry().vitalite }}</p>

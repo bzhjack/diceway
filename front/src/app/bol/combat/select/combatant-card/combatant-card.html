@@ -11,7 +11,11 @@
 
   <div class="cc-info">
     <p class="cc-name">
-      <mat-icon [class]="'cc-kind-icon cc-kind-icon--' + entry().kind" [attr.aria-label]="rankLabel()">{{ kindIcon() }}</mat-icon>
+      @if (kindIconIsSvg()) {
+        <mat-icon [svgIcon]="kindIcon()" [class]="'cc-kind-icon cc-kind-icon--' + entry().kind" [attr.aria-label]="rankLabel()" />
+      } @else {
+        <mat-icon [class]="'cc-kind-icon cc-kind-icon--' + entry().kind" [attr.aria-label]="rankLabel()">{{ kindIcon() }}</mat-icon>
+      }
       {{ entry().nom }}
     </p>
     <p class="cc-gauge"><span class="cc-rank">{{ rankLabel() }}</span> · ❤ {{ entry().vitalite }}</p>
