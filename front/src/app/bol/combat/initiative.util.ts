@@ -73,13 +73,19 @@ export function buildInitiativeOrderFrom(sources: readonly InitiativeSource[]): 
     .map((s): InitiativeEntry => {
       const tier: InitiativeTierKey | null = s.resultat ? HERO_RESULT_TIER[s.resultat] : s.rang;
 
+      // Un héros en échec critique est bloqué au round 1 sans condition (contrairement aux
+      // coriaces/piétaille adverses, bloqués seulement face à un héroïque/légendaire allié).
+      const lockedRound1 =
+        s.resultat === 'echec_critique' ||
+        (tier !== null && s.rang !== null && round1BlockActive && ROUND1_LOCKABLE_TIERS.has(tier));
+
       return {
         key: s.key,
         kind: s.kind,
         nom: s.nom,
         tier,
         resultat: s.resultat,
-        lockedRound1: tier !== null && s.rang !== null && round1BlockActive && ROUND1_LOCKABLE_TIERS.has(tier),
+        lockedRound1,
       };
     })
     .sort((a, b) => tierIndex(a.tier) - tierIndex(b.tier));

@@ -104,6 +104,12 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel> 
   private readonly herosService = inject(BolHerosService);
   private readonly herosStateService = inject(BolHerosStateService);
 
+  constructor() {
+    super();
+    // Armes/armures sont éditables depuis l'intendance : recharger à chaque ouverture du formulaire.
+    this.herosStateService.refreshEquipmentCatalog();
+  }
+
   protected readonly armesList = this.herosStateService.armeList;
   protected readonly armuresList = this.herosStateService.armureList;
   protected readonly carrieresList = this.herosStateService.carriereList;
