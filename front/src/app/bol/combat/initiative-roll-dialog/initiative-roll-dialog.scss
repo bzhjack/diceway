@@ -8,7 +8,9 @@
   // scroller en interne déclenche une scrollbar au moindre écart de sous-pixel (arrondi flex),
   // visible et mal découpée par le border-radius du panneau. On délègue le scroll — s'il devient
   // vraiment nécessaire — au panneau du dialog lui-même, dont le overflow suit ses coins arrondis.
-  overflow-y: visible;
+  // !important nécessaire : la règle structurelle Material (.mdc-dialog .mdc-dialog__content)
+  // a une spécificité supérieure à .ird-content seul.
+  overflow-y: visible !important;
 }
 
 .ird-formula {

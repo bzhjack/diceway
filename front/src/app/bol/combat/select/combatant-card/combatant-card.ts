@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, computed, inject, input, output} fro
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {BolHerosModel} from '../../../models/bol-heros.model';
 import {CombatCatalogEntry, CombatSelectionService, SelectedCombatant} from '../../../services/combat-selection.service';
@@ -13,7 +14,7 @@ import {combatantKindIcon, combatantKindIconIsSvg, combatantRankLabel, openComba
 /** Carte d'un combattant déjà ajouté : cliquer sur l'avatar ouvre son statbloc, quantité (créatures/démons) et retrait restent des actions séparées. */
 @Component({
   selector: 'bol-combatant-card',
-  imports: [MatButtonModule, MatIconModule],
+  imports: [MatButtonModule, MatIconModule, MatTooltipModule],
   templateUrl: './combatant-card.html',
   styleUrl: './combatant-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,8 +66,9 @@ export class CombatantCardComponent {
       });
   }
 
-  protected onInitiativeChange(value: string): void {
-    this.initiativeChange.emit((value || null) as InitiativeResultat | null);
+  /** Reclique sur le résultat déjà retenu = le désélectionner (retour à "aucun résultat"). */
+  protected selectResult(value: InitiativeResultat): void {
+    this.initiativeChange.emit(this.resultat() === value ? null : value);
   }
 
   protected readonly rankLabel = computed(() => combatantRankLabel(this.entry()));

@@ -46,16 +46,21 @@
           <mat-icon svgIcon="d6" />
         </button>
 
-        <select
-          class="cc-initiative"
-          [attr.aria-label]="'Résultat du jet de réaction de ' + entry().nom"
-          (change)="onInitiativeChange($any($event.target).value)"
-        >
-          <option value="" [selected]="!resultat()">— Résultat —</option>
+        <div class="cc-result-group" role="group" [attr.aria-label]="'Résultat du jet de réaction de ' + entry().nom">
           @for (opt of resultOptions; track opt.value) {
-            <option [value]="opt.value" [selected]="resultat() === opt.value">{{ opt.label }}</option>
+            <button
+              type="button"
+              class="cc-result-btn"
+              [class]="'cc-result-btn--' + opt.value"
+              [class.active]="resultat() === opt.value"
+              [attr.aria-pressed]="resultat() === opt.value"
+              [matTooltip]="opt.label"
+              (click)="selectResult(opt.value)"
+            >
+              {{ opt.short }}
+            </button>
           }
-        </select>
+        </div>
 
         <button
           type="button"

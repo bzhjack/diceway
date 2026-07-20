@@ -201,15 +201,56 @@ button.cc-open {
   gap: 0.3rem;
 }
 
-.cc-initiative {
+.cc-result-group {
+  display: flex;
   flex-shrink: 0;
+  gap: 0.2rem;
+}
+
+.cc-result-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: 1.35rem;
   border: 1px solid var(--dw-border);
   background: rgba(2, 6, 23, 0.5);
-  color: var(--dw-surface-700);
+  color: var(--dw-surface-500);
   font: inherit;
-  font-size: 0.72rem;
-  padding: 0.25rem 0.5rem;
+  font-size: 0.64rem;
+  font-weight: 700;
+  padding: 0 0.4rem;
   border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--dw-surface-700);
+  }
+}
+
+.cc-result-btn--echec_critique.active {
+  background: color-mix(in srgb, var(--dw-color-echec-forte) 30%, rgba(2, 6, 23, 0.5));
+  border-color: var(--dw-color-echec-forte);
+  color: var(--dw-surface-900);
+}
+
+.cc-result-btn--echec.active {
+  background: color-mix(in srgb, var(--dw-color-echec) 30%, rgba(2, 6, 23, 0.5));
+  border-color: var(--dw-color-echec);
+  color: var(--dw-surface-900);
+}
+
+.cc-result-btn--reussite.active {
+  background: color-mix(in srgb, var(--dw-color-reussite) 30%, rgba(2, 6, 23, 0.5));
+  border-color: var(--dw-color-reussite);
+  color: var(--dw-surface-900);
+}
+
+.cc-result-btn--heroique.active,
+.cc-result-btn--legendaire.active {
+  background: color-mix(in srgb, var(--dw-color-legendary) 30%, rgba(2, 6, 23, 0.5));
+  border-color: var(--dw-color-legendary);
+  color: var(--dw-surface-900);
 }
 
 .cc-roll-hint {
