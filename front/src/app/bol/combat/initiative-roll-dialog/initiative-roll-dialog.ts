@@ -35,6 +35,12 @@ export class InitiativeRollDialogComponent {
   protected readonly critiqueChosen = signal(false);
   protected readonly legendaryChosen = signal(false);
 
+  /** Formule prête à annoncer : "2d6 + X" (ou "− X") — corrige l'affichage "2d6 + -1" quand le modificateur est négatif. */
+  protected readonly formula = computed(() => {
+    const sum = this.data.modifierSum;
+    return sum >= 0 ? `2d6 + ${sum} > 9` : `2d6 − ${Math.abs(sum)} > 9`;
+  });
+
   protected readonly diceSum = computed(() => {
     const d = this.dice();
     return d ? d[0] + d[1] : null;
@@ -70,6 +76,20 @@ export class InitiativeRollDialogComponent {
     }
 
     return this.total()! >= 9 ? 'reussite' : 'echec';
+  });
+
+  /** Teinte du bandeau de verdict : reprend les couleurs de palier déjà utilisées ailleurs (rouge/vert/ambre). */
+  protected readonly bannerTone = computed<'echec' | 'reussite' | 'heroique' | null>(() => {
+    const result = this.suggestedResult();
+    if (!result) {
+      return null;
+    }
+
+    if (result === 'reussite') {
+      return 'reussite';
+    }
+
+    return result === 'heroique' || result === 'legendaire' ? 'heroique' : 'echec';
   });
 
   protected resultLabel(result: InitiativeResultat | null): string {

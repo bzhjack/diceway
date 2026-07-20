@@ -4,6 +4,11 @@
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
+  // Le contenu suffit rarement à dépasser la hauteur de la fenêtre ; laisser mat-dialog-content
+  // scroller en interne déclenche une scrollbar au moindre écart de sous-pixel (arrondi flex),
+  // visible et mal découpée par le border-radius du panneau. On délègue le scroll — s'il devient
+  // vraiment nécessaire — au panneau du dialog lui-même, dont le overflow suit ses coins arrondis.
+  overflow-y: visible;
 }
 
 .ird-formula {
@@ -13,7 +18,8 @@
 }
 
 .ird-box {
-  --dice-box-min-height: 14rem;
+  --dice-box-min-height: 18rem;
+  --dice-box-min-width: 18rem;
   display: block;
   border-radius: 8px;
 }
@@ -42,43 +48,65 @@
   color: var(--dw-color-pnj);
 }
 
-.ird-result {
-  border-top: 1px solid rgba(66, 75, 87, 0.6);
-  padding-top: 0.6rem;
+.ird-banner {
+  border: 1px solid;
+  border-radius: 8px;
+  padding: 0.65rem 0.75rem;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
 }
 
-.ird-note {
-  margin: 0;
-  font-size: 0.8rem;
-  color: var(--dw-color-legendary-muted);
+.ird-banner--echec {
+  background: color-mix(in srgb, var(--dw-color-echec) 14%, transparent);
+  border-color: color-mix(in srgb, var(--dw-color-echec) 45%, transparent);
 }
 
-.ird-check {
+.ird-banner--reussite {
+  background: color-mix(in srgb, var(--dw-color-reussite) 14%, transparent);
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 45%, transparent);
+}
+
+.ird-banner--heroique {
+  background: color-mix(in srgb, var(--dw-color-legendary) 14%, transparent);
+  border-color: color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);
+}
+
+.ird-banner-eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--dw-surface-600);
+}
+
+.ird-banner-result {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--dw-color-text-bright);
+}
+
+.ird-toggle {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.82rem;
-  color: var(--dw-surface-700);
-  cursor: pointer;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 999px;
+  overflow: hidden;
+  width: fit-content;
+  max-width: 100%;
 
-  input {
-    accent-color: var(--mat-sys-primary);
-    width: 1rem;
-    height: 1rem;
-    flex-shrink: 0;
+  button {
+    border: none;
+    background: transparent;
+    color: var(--dw-surface-600);
+    font: inherit;
+    font-size: 0.74rem;
+    font-weight: 700;
+    padding: 0.3rem 0.7rem;
     cursor: pointer;
-  }
-}
 
-.ird-suggested {
-  margin: 0;
-  font-size: 0.9rem;
-  color: var(--dw-surface-700);
-
-  b {
-    color: var(--dw-color-text-bright);
+    &.active {
+      background: var(--dw-color-legendary);
+      color: #1c1200;
+    }
   }
 }
