@@ -4,3 +4,12 @@
   line-height: 30px;
   letter-spacing: 0.05em;
 }
+
+// Tous les dialogs Material s'alignent en haut du viewport plutôt qu'au centre : un dialog dont
+// le contenu grandit (ex. jet de dés après un lancer) ne saute pas verticalement à chaque
+// changement de hauteur. CDK pose `align-items` en style inline (GlobalPositionStrategy) — il
+// faut !important pour le devancer.
+.cdk-global-overlay-wrapper {
+  align-items: flex-start !important;
+  padding-top: 5vh !important;
+}

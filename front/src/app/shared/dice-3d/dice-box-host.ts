@@ -5,6 +5,7 @@ import {
   DestroyRef,
   ElementRef,
   inject,
+  input,
   signal,
   viewChild,
   ViewEncapsulation,
@@ -25,6 +26,9 @@ export class DiceBoxHostComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly surfaceRef = viewChild.required<ElementRef<HTMLDivElement>>('surface');
   private readonly hostId = `dw-dice-box-host-${++nextDiceHostId}`;
+
+  /** Taille des dés relative au conteneur — plage usuelle de dice-box : 2 (petit) à 10 (grand). */
+  readonly scale = input(8);
 
   private box: DiceBox | null = null;
   private initPromise: Promise<void> | null = null;
@@ -81,7 +85,7 @@ export class DiceBoxHostComponent {
         assetPath: '/assets/dice-box/',
         theme: 'default',
         offscreen: true,
-        scale: 8,
+        scale: this.scale(),
         themeColor: '#60a5fa',
         id: `${this.hostId}-canvas`,
       });

@@ -1,5 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, inject, signal, viewChild} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
+import {ChangeDetectionStrategy, Component, computed, inject, signal, ViewEncapsulation, viewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {DiceBoxHostComponent} from '../../../shared/dice-3d/dice-box-host';
@@ -16,19 +15,36 @@ const RESULT_LABELS: Record<InitiativeResultat, string> = Object.fromEntries(
   INITIATIVE_RESULT_OPTIONS.map((opt) => [opt.value, opt.label]),
 ) as Record<InitiativeResultat, string>;
 
-/** Lance 2d6 (dice-box 3D) pour le jet de réaction et propose le résultat BoL correspondant (02-actions-combat.md). */
+const RESULT_ICONS: Record<'echec' | 'reussite' | 'heroique', string> = {
+  echec: 'cancel',
+  reussite: 'check_circle',
+  heroique: 'military_tech',
+};
+
+/** Seuil de réussite du jet de réaction BoL (02-actions-combat.md) — fixe, jamais modifié par les règles. */
+const THRESHOLD = 9;
+
+/**
+ * Lance 2d6 (dice-box 3D) pour le jet de réaction et propose le résultat BoL correspondant.
+ * Encapsulation désactivée à dessein : le panneau du dialog (`.mat-mdc-dialog-surface`) doit être
+ * restylé depuis ce composant (voir `panelClass: 'ird-panel'` côté appelant), un ancêtre hors de
+ * la vue Angular de ce composant — même pattern que DiceBoxHostComponent.
+ */
 @Component({
   selector: 'bol-initiative-roll-dialog',
-  imports: [MatButtonModule, MatDialogModule, MatIconModule, DiceBoxHostComponent],
+  imports: [MatDialogModule, MatIconModule, DiceBoxHostComponent],
   templateUrl: './initiative-roll-dialog.html',
   styleUrl: './initiative-roll-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class InitiativeRollDialogComponent {
   protected readonly data = inject<InitiativeRollDialogData>(MAT_DIALOG_DATA);
   protected readonly ref = inject(MatDialogRef<InitiativeRollDialogComponent, InitiativeResultat | undefined>);
 
   private readonly diceBox = viewChild.required(DiceBoxHostComponent);
+
+  protected readonly threshold = THRESHOLD;
 
   protected readonly rolling = signal(false);
   protected readonly dice = signal<readonly [number, number] | null>(null);
@@ -38,7 +54,12 @@ export class InitiativeRollDialogComponent {
   /** Formule prête à annoncer : "2d6 + X" (ou "− X") — corrige l'affichage "2d6 + -1" quand le modificateur est négatif. */
   protected readonly formula = computed(() => {
     const sum = this.data.modifierSum;
-    return sum >= 0 ? `2d6 + ${sum} > 9` : `2d6 − ${Math.abs(sum)} > 9`;
+    return sum >= 0 ? `2d6 + ${sum} > ${THRESHOLD}` : `2d6 − ${Math.abs(sum)} > ${THRESHOLD}`;
+  });
+
+  protected readonly signedModifier = computed(() => {
+    const sum = this.data.modifierSum;
+    return sum >= 0 ? `+${sum}` : `− ${Math.abs(sum)}`;
   });
 
   protected readonly diceSum = computed(() => {
@@ -49,6 +70,17 @@ export class InitiativeRollDialogComponent {
   protected readonly total = computed(() => {
     const sum = this.diceSum();
     return sum === null ? null : sum + this.data.modifierSum;
+  });
+
+  /** Écart au seuil : total − 9, affiché à côté du résultat pour visualiser la marge de réussite/échec. */
+  protected readonly margin = computed(() => {
+    const t = this.total();
+    if (t === null) {
+      return null;
+    }
+
+    const value = t - THRESHOLD;
+    return value >= 0 ? `+${value}` : `${value}`;
   });
 
   protected readonly isNatural2 = computed(() => {
@@ -75,10 +107,10 @@ export class InitiativeRollDialogComponent {
       return this.legendaryChosen() ? 'legendaire' : 'heroique';
     }
 
-    return this.total()! >= 9 ? 'reussite' : 'echec';
+    return this.total()! >= THRESHOLD ? 'reussite' : 'echec';
   });
 
-  /** Teinte du bandeau de verdict : reprend les couleurs de palier déjà utilisées ailleurs (rouge/vert/ambre). */
+  /** Teinte du résultat : reprend les couleurs de palier déjà utilisées ailleurs (rouge/vert/ambre). */
   protected readonly bannerTone = computed<'echec' | 'reussite' | 'heroique' | null>(() => {
     const result = this.suggestedResult();
     if (!result) {
@@ -90,6 +122,11 @@ export class InitiativeRollDialogComponent {
     }
 
     return result === 'heroique' || result === 'legendaire' ? 'heroique' : 'echec';
+  });
+
+  protected readonly bannerIcon = computed(() => {
+    const tone = this.bannerTone();
+    return tone ? RESULT_ICONS[tone] : 'help';
   });
 
   protected resultLabel(result: InitiativeResultat | null): string {

@@ -12,6 +12,12 @@
   border-radius: 8px;
   padding: 0.55rem 0.7rem;
   margin-bottom: 0.5rem;
+
+  // Un résultat cliqué change le palier => la carte change de position dans le rail trié ;
+  // ce liseré rend visible quelle carte reste "active" pendant qu'elle se déplace.
+  &:focus-within {
+    box-shadow: 0 0 0 2px var(--mat-sys-primary);
+  }
 }
 
 // Un fond teinté par type (mêmes couleurs sémantiques que le reste de l'app :

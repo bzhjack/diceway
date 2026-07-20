@@ -55,7 +55,7 @@
               [class.active]="resultat() === opt.value"
               [attr.aria-pressed]="resultat() === opt.value"
               [matTooltip]="opt.label"
-              (click)="selectResult(opt.value)"
+              (click)="selectResult(opt.value, $event)"
             >
               {{ opt.short }}
             </button>

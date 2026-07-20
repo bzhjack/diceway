@@ -1,35 +1,40 @@
-<h2 mat-dialog-title>Jet de réaction — {{ data.heroNom }}</h2>
-
-<mat-dialog-content class="ird-content">
-  <p class="ird-formula">{{ formula() }}</p>
-
-  <app-dice-box-host class="ird-box"/>
-
-  <div class="ird-roll-row">
-    <button mat-stroked-button type="button" (click)="roll()" [disabled]="rolling()">
-      <mat-icon svgIcon="d6"/>
-      {{ dice() ? 'Relancer' : 'Lancer 2d6' }}
+<div class="ird-shell">
+  <div class="ird-header">
+    <h2 mat-dialog-title class="ird-title">
+      <div class="ird-title-eyebrow">Jet de réaction</div>
+      <div class="ird-title-name">{{ data.heroNom }}</div>
+    </h2>
+    <button type="button" class="ird-close" aria-label="Fermer" (click)="cancel()">
+      <mat-icon>close</mat-icon>
     </button>
-
-    @if (dice(); as d) {
-      <p class="ird-dice">
-        {{ d[0] }} + {{ d[1] }} = {{ diceSum() }}
-        <span class="ird-total">→ total {{ total() }}</span>
-      </p>
-    }
   </div>
 
-  @if (dice()) {
-    <div class="ird-banner" [class]="'ird-banner--' + bannerTone()">
-      @if (isNatural2()) {
-        <p class="ird-banner-eyebrow">2 naturel — règle absolue : échec automatique</p>
-      } @else if (isNatural12()) {
-        <p class="ird-banner-eyebrow">12 naturel — règle absolue : succès héroïque automatique</p>
-      }
+  @if (dice(); as d) {
+    <div
+      class="ird-result"
+      [class.ird-result--reussite]="bannerTone() === 'reussite'"
+      [class.ird-result--echec]="bannerTone() === 'echec'"
+      [class.ird-result--heroique]="bannerTone() === 'heroique'"
+    >
+      <div class="ird-result-row">
+        <div class="ird-result-stat">
+          <span class="ird-result-stat-label">Difficulté</span>
+          <span class="ird-result-stat-value">{{ threshold }}</span>
+        </div>
+        <div class="ird-result-total">{{ total() }}</div>
+        <div class="ird-result-stat">
+          <span class="ird-result-stat-label">Marge</span>
+          <span class="ird-result-stat-value">{{ margin() }}</span>
+        </div>
+      </div>
 
-      <p class="ird-banner-result">{{ resultLabel(suggestedResult()) }}</p>
+      <div class="ird-result-badge">
+        <mat-icon>{{ bannerIcon() }}</mat-icon>
+        {{ resultLabel(suggestedResult()) }}
+      </div>
 
       @if (isNatural2()) {
+        <p class="ird-result-note">2 naturel — règle absolue : échec automatique</p>
         <div class="ird-toggle">
           <button type="button" [class.active]="!critiqueChosen()" (click)="critiqueChosen.set(false)">Échec</button>
           <button type="button" [class.active]="critiqueChosen()" (click)="critiqueChosen.set(true)">
@@ -37,21 +42,69 @@
           </button>
         </div>
       } @else if (isNatural12()) {
+        <p class="ird-result-note">12 naturel — règle absolue : succès héroïque automatique</p>
         <div class="ird-toggle">
-          <button type="button" [class.active]="!legendaryChosen()" (click)="legendaryChosen.set(false)">Héroïque
-          </button>
+          <button type="button" [class.active]="!legendaryChosen()" (click)="legendaryChosen.set(false)">Héroïque</button>
           <button type="button" [class.active]="legendaryChosen()" (click)="legendaryChosen.set(true)">
             Légendaire (1 point d'héroïsme)
           </button>
         </div>
       }
     </div>
+  } @else {
+    <div class="ird-result ird-result--idle">
+      <p>Lancez les dés pour connaître le résultat du jet.</p>
+    </div>
   }
-</mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-stroked-button type="button" (click)="cancel()">Annuler</button>
-  <button mat-flat-button type="button" [disabled]="!suggestedResult()" (click)="validate()">
-    Valider {{ suggestedResult() ? '— ' + resultLabel(suggestedResult()) : '' }}
+  <app-dice-box-host class="ird-box" [scale]="12" />
+
+  <p class="ird-formula">{{ formula() }}</p>
+
+  @if (dice(); as d) {
+    <div class="ird-calc">
+      <p class="ird-calc-title">Détail du calcul</p>
+
+      <div class="ird-calc-row">
+        <mat-icon class="ird-calc-icon" svgIcon="d6" />
+        <span class="ird-calc-label">Dés (2d6)</span>
+        <span class="ird-calc-detail">{{ d[0] }} + {{ d[1] }}</span>
+        <span class="ird-calc-value">{{ diceSum() }}</span>
+      </div>
+
+      <div class="ird-calc-row">
+        <mat-icon class="ird-calc-icon">add</mat-icon>
+        <span class="ird-calc-label">Bonus réaction</span>
+        <span class="ird-calc-detail"></span>
+        <span class="ird-calc-value">{{ signedModifier() }}</span>
+      </div>
+
+      <div class="ird-calc-row">
+        <mat-icon class="ird-calc-icon">track_changes</mat-icon>
+        <span class="ird-calc-label">Seuil</span>
+        <span class="ird-calc-detail">&gt; {{ threshold }}</span>
+        <span class="ird-calc-value"></span>
+      </div>
+    </div>
+  }
+
+  <button type="button" class="ird-reroll" [disabled]="rolling()" (click)="roll()">
+    <mat-icon>refresh</mat-icon>
+    {{ dice() ? 'Relancer' : 'Lancer 2d6' }}
   </button>
-</mat-dialog-actions>
+
+  <div class="ird-actions">
+    <button type="button" class="ird-btn ird-btn--ghost" (click)="cancel()">Annuler</button>
+    <button
+      type="button"
+      class="ird-btn ird-btn--primary"
+      [class.ird-btn--reussite]="bannerTone() === 'reussite'"
+      [class.ird-btn--echec]="bannerTone() === 'echec'"
+      [class.ird-btn--heroique]="bannerTone() === 'heroique'"
+      [disabled]="!suggestedResult()"
+      (click)="validate()"
+    >
+      Valider — {{ resultLabel(suggestedResult()) }}
+    </button>
+  </div>
+</div>

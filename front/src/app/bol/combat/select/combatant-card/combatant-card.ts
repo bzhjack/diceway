@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, inject, input, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, output} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
@@ -33,6 +33,7 @@ export class CombatantCardComponent {
 
   protected readonly selection = inject(CombatSelectionService);
   private readonly dialog = inject(MatDialog);
+  private readonly host = inject(ElementRef<HTMLElement>);
 
   protected readonly resultOptions = INITIATIVE_RESULT_OPTIONS;
 
@@ -53,6 +54,7 @@ export class CombatantCardComponent {
     this.dialog
       .open(InitiativeRollDialogComponent, {
         maxWidth: 'min(30rem, 92vw)',
+        panelClass: 'ird-panel',
         data: {
           heroNom: this.entry().nom,
           modifierSum: stats.esprit + stats.initiative + this.modifierTotal(),
@@ -62,13 +64,29 @@ export class CombatantCardComponent {
       .subscribe((result) => {
         if (result) {
           this.initiativeChange.emit(result);
+          this.keepCardInView();
         }
       });
   }
 
   /** Reclique sur le résultat déjà retenu = le désélectionner (retour à "aucun résultat"). */
-  protected selectResult(value: InitiativeResultat): void {
+  protected selectResult(value: InitiativeResultat, event: MouseEvent): void {
+    const button = event.currentTarget as HTMLButtonElement;
     this.initiativeChange.emit(this.resultat() === value ? null : value);
+    this.keepCardInView(button);
+  }
+
+  /**
+   * Un résultat change le palier => la carte change de position dans le rail trié. Angular déplace
+   * la vue existante (même clé de tracking) mais ce déplacement fait parfois perdre le focus
+   * clavier (retombe sur <body>) ; on le restaure explicitement plutôt que de compter sur le
+   * navigateur, et on garde la carte visible même si elle saute loin dans la liste.
+   */
+  private keepCardInView(focusTarget?: HTMLElement): void {
+    requestAnimationFrame(() => {
+      focusTarget?.focus({preventScroll: true});
+      this.host.nativeElement.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+    });
   }
 
   protected readonly rankLabel = computed(() => combatantRankLabel(this.entry()));

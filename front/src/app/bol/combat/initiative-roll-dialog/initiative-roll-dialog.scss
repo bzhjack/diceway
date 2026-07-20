@@ -1,91 +1,197 @@
-.ird-content {
-  min-width: 22rem;
-  max-width: 28rem;
+// Encapsulation désactivée sur le composant (voir .ts) : tout ici est global, donc systématiquement
+// scopé sous .ird-panel (panelClass passé à dialog.open côté combatant-card.ts) pour ne pas déteindre
+// sur les autres dialogs Material de l'appli.
+
+.ird-panel .mat-mdc-dialog-surface {
+  background: linear-gradient(180deg, #0c1220 0%, #05070d 100%);
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 40%, transparent);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  padding: 0;
+  max-height: calc(100vh - 10vh);
+  overflow-y: auto;
+}
+
+.ird-panel .mat-mdc-dialog-title {
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+.ird-shell {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
-  // Le contenu suffit rarement à dépasser la hauteur de la fenêtre ; laisser mat-dialog-content
-  // scroller en interne déclenche une scrollbar au moindre écart de sous-pixel (arrondi flex),
-  // visible et mal découpée par le border-radius du panneau. On délègue le scroll — s'il devient
-  // vraiment nécessaire — au panneau du dialog lui-même, dont le overflow suit ses coins arrondis.
-  // !important nécessaire : la règle structurelle Material (.mdc-dialog .mdc-dialog__content)
-  // a une spécificité supérieure à .ird-content seul.
-  overflow-y: visible !important;
+  width: 26rem;
+  max-width: 100%;
 }
 
-.ird-formula {
-  margin: 0;
-  font-size: 0.84rem;
-  color: var(--dw-surface-600);
+.ird-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.7rem 1.1rem 0.6rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--dw-color-legendary) 32%, transparent);
 }
 
-.ird-box {
-  --dice-box-min-height: 18rem;
-  --dice-box-min-width: 18rem;
-  display: block;
-  border-radius: 8px;
+.ird-title {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-weight: 400;
 }
 
-.ird-roll-row {
+.ird-title-eyebrow {
+  font-size: 0.92rem;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dw-surface-900);
+}
+
+.ird-title-name {
+  font-size: 0.92rem;
+  color: var(--dw-color-reussite);
+  line-height: 1;
+}
+
+.ird-close {
+  flex-shrink: 0;
+  width: 1.7rem;
+  height: 1.7rem;
   display: flex;
   align-items: center;
-  gap: 0.9rem;
-  flex-wrap: wrap;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 32%, transparent);
+  border-radius: 6px;
+  background: rgba(2, 6, 23, 0.4);
+  color: var(--dw-surface-500);
+  cursor: pointer;
 
-  button mat-icon {
-    margin-right: 0.3rem;
+  .mat-icon {
+    font-size: 1.05rem;
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  &:hover {
+    color: var(--dw-surface-800);
+    border-color: var(--dw-color-legendary);
   }
 }
 
-.ird-dice {
-  margin: 0;
-  font-size: 0.92rem;
+.ird-result {
+  margin: 0.7rem 1.1rem 0;
+  padding: 0.7rem 1rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--dw-border);
+  background: rgba(2, 6, 23, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-align: center;
+}
+
+.ird-result--idle {
+  color: var(--dw-surface-500);
+  font-size: 0.84rem;
+  padding: 0.9rem 1rem;
+}
+
+.ird-result--reussite {
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 45%, transparent);
+  background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-reussite) 22%, transparent) 0%, transparent 70%), rgba(2, 6, 23, 0.4);
+}
+
+.ird-result--echec {
+  border-color: color-mix(in srgb, var(--dw-color-echec) 45%, transparent);
+  background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-echec) 22%, transparent) 0%, transparent 70%), rgba(2, 6, 23, 0.4);
+}
+
+.ird-result--heroique {
+  border-color: color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);
+  background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-legendary) 22%, transparent) 0%, transparent 70%), rgba(2, 6, 23, 0.4);
+}
+
+.ird-result-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.3rem;
+}
+
+.ird-result-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  min-width: 3rem;
+}
+
+.ird-result-stat-label {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+}
+
+.ird-result-stat-value {
+  font-size: 1rem;
   font-weight: 700;
   color: var(--dw-surface-800);
   font-variant-numeric: tabular-nums;
 }
 
-.ird-total {
+.ird-result-total {
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--dw-surface-900);
+  font-variant-numeric: tabular-nums;
+}
+
+.ird-result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.84rem;
   font-weight: 800;
-  color: var(--dw-color-pnj);
-}
-
-.ird-banner {
-  border: 1px solid;
-  border-radius: 8px;
-  padding: 0.65rem 0.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.ird-banner--echec {
-  background: color-mix(in srgb, var(--dw-color-echec) 14%, transparent);
-  border-color: color-mix(in srgb, var(--dw-color-echec) 45%, transparent);
-}
-
-.ird-banner--reussite {
-  background: color-mix(in srgb, var(--dw-color-reussite) 14%, transparent);
-  border-color: color-mix(in srgb, var(--dw-color-reussite) 45%, transparent);
-}
-
-.ird-banner--heroique {
-  background: color-mix(in srgb, var(--dw-color-legendary) 14%, transparent);
-  border-color: color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);
-}
-
-.ird-banner-eyebrow {
-  margin: 0;
-  font-size: 0.72rem;
-  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 0.16rem 0.75rem;
+  border-radius: 999px;
   color: var(--dw-surface-600);
+
+  .mat-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
 }
 
-.ird-banner-result {
+.ird-result--reussite .ird-result-badge {
+  color: var(--dw-color-reussite);
+  background: color-mix(in srgb, var(--dw-color-reussite) 18%, transparent);
+}
+
+.ird-result--echec .ird-result-badge {
+  color: var(--dw-color-echec);
+  background: color-mix(in srgb, var(--dw-color-echec) 18%, transparent);
+}
+
+.ird-result--heroique .ird-result-badge {
+  color: var(--dw-color-legendary);
+  background: color-mix(in srgb, var(--dw-color-legendary) 18%, transparent);
+}
+
+.ird-result-note {
   margin: 0;
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: var(--dw-color-text-bright);
+  font-size: 0.74rem;
+  color: var(--dw-surface-500);
 }
 
 .ird-toggle {
@@ -111,4 +217,167 @@
       color: #1c1200;
     }
   }
+}
+
+.ird-box {
+  --dice-box-min-height: 11rem;
+  --dice-box-min-width: 11rem;
+  display: block;
+  margin: 0.7rem 1.1rem 0;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 28%, transparent);
+  overflow: hidden;
+}
+
+.ird-formula {
+  margin: 0.4rem 1.1rem 0;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--dw-surface-500);
+  font-variant-numeric: tabular-nums;
+}
+
+.ird-calc {
+  margin: 0.7rem 1.1rem 0;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 24%, transparent);
+  border-radius: 10px;
+  background: rgba(2, 6, 23, 0.35);
+}
+
+.ird-calc-title {
+  margin: 0 0 0.3rem;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dw-color-legendary);
+}
+
+.ird-calc-row {
+  display: grid;
+  grid-template-columns: 1.3rem 1fr auto auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.2rem 0;
+  font-size: 0.8rem;
+  color: var(--dw-surface-700);
+  border-top: 1px solid rgba(148, 163, 184, 0.12);
+
+  &:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+}
+
+.ird-calc-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+  color: var(--dw-surface-500);
+}
+
+.ird-calc-label {
+  text-align: left;
+}
+
+.ird-calc-detail {
+  color: var(--dw-surface-500);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.ird-calc-value {
+  min-width: 2.4rem;
+  text-align: right;
+  font-weight: 700;
+  color: var(--dw-surface-800);
+  font-variant-numeric: tabular-nums;
+}
+
+.ird-reroll {
+  margin: 0.7rem 1.1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);
+  background: color-mix(in srgb, var(--dw-color-legendary) 10%, transparent);
+  color: var(--dw-color-legendary);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--dw-color-legendary) 18%, transparent);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.ird-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding: 0.8rem 1.1rem 1rem;
+}
+
+.ird-btn {
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.86rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.ird-btn--ghost {
+  background: transparent;
+  border: 1px solid var(--dw-border);
+  color: var(--dw-surface-600);
+
+  &:hover {
+    border-color: var(--dw-surface-500);
+    color: var(--dw-surface-800);
+  }
+}
+
+.ird-btn--primary {
+  border: 1px solid var(--dw-border);
+  background: rgba(148, 163, 184, 0.1);
+  color: var(--dw-surface-500);
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+}
+
+.ird-btn--reussite:not(:disabled) {
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 55%, transparent);
+  background: color-mix(in srgb, var(--dw-color-reussite) 16%, transparent);
+  color: var(--dw-color-reussite);
+}
+
+.ird-btn--echec:not(:disabled) {
+  border-color: color-mix(in srgb, var(--dw-color-echec) 55%, transparent);
+  background: color-mix(in srgb, var(--dw-color-echec) 16%, transparent);
+  color: var(--dw-color-echec);
+}
+
+.ird-btn--heroique:not(:disabled) {
+  border-color: color-mix(in srgb, var(--dw-color-legendary) 55%, transparent);
+  background: color-mix(in srgb, var(--dw-color-legendary) 16%, transparent);
+  color: var(--dw-color-legendary);
 }
