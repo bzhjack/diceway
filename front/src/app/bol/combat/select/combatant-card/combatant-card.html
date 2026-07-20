@@ -18,18 +18,20 @@
       }
       {{ entry().nom }}
     </p>
-    <p class="cc-gauge">
-      <span class="cc-rank">{{ rankLabel() }}</span> · ❤ {{ entry().vitalite }}
+    <div class="cc-chips">
+      <span class="cc-chip cc-chip--rank">{{ rankLabel() }}</span>
+      <span class="cc-chip cc-chip--hp">❤ {{ entry().vitalite }}</span>
       @if (reactionStats(); as stats) {
-        <span class="cc-reaction-stats">· Esprit {{ stats.esprit }} · Init. {{ stats.initiative }}</span>
-        <span class="cc-heroism" [attr.aria-label]="stats.heroisme + ' point(s) d\'héroïsme'">
-          · <mat-icon class="cc-heroism-icon">star</mat-icon>{{ stats.heroisme }}
+        <span class="cc-chip">Esprit {{ stats.esprit }}</span>
+        <span class="cc-chip">Init. {{ stats.initiative }}</span>
+        <span class="cc-chip cc-chip--star" [attr.aria-label]="stats.heroisme + ' point(s) d\'héroïsme'">
+          <mat-icon class="cc-chip-star-icon">star</mat-icon>{{ stats.heroisme }}
         </span>
       }
       @if (lockedRound1()) {
-        <span class="cc-lock-tag">· bloqué R1</span>
+        <span class="cc-chip cc-chip--lock">Bloqué R1</span>
       }
-    </p>
+    </div>
   </div>
 
   @if (entry().kind === 'hero') {
