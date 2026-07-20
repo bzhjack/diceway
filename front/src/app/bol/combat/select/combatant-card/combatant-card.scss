@@ -149,6 +149,22 @@ button.cc-open {
   font-weight: 600;
 }
 
+.cc-heroism {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1rem;
+  color: var(--dw-surface-500);
+  font-weight: 600;
+}
+
+.cc-heroism-icon {
+  color: var(--dw-color-legendary);
+  font-size: 0.85rem;
+  width: 0.85rem;
+  height: 0.85rem;
+  line-height: 0.85rem;
+}
+
 .cc-lock-tag {
   color: var(--dw-color-echec);
   font-weight: 800;

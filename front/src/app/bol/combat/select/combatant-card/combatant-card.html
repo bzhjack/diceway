@@ -22,6 +22,9 @@
       <span class="cc-rank">{{ rankLabel() }}</span> · ❤ {{ entry().vitalite }}
       @if (reactionStats(); as stats) {
         <span class="cc-reaction-stats">· Esprit {{ stats.esprit }} · Init. {{ stats.initiative }}</span>
+        <span class="cc-heroism" [attr.aria-label]="stats.heroisme + ' point(s) d\'héroïsme'">
+          · <mat-icon class="cc-heroism-icon">star</mat-icon>{{ stats.heroisme }}
+        </span>
       }
       @if (lockedRound1()) {
         <span class="cc-lock-tag">· bloqué R1</span>

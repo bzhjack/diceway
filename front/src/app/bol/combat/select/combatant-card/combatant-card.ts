@@ -80,7 +80,7 @@ export class CombatantCardComponent {
     }
 
     const hero = this.entry().raw as BolHerosModel;
-    return {esprit: hero.attributs.esprit, initiative: hero.combat.initiative};
+    return {esprit: hero.attributs.esprit, initiative: hero.combat.initiative, heroisme: hero.ressources.heroisme};
   });
 
   /** Formule prête à annoncer au joueur : "2d6 + X" (ou "− X"), X = esprit + initiative + modificateurs. */
