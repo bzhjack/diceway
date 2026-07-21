@@ -40,4 +40,8 @@ export class BolFightSessionService {
   ): Observable<BolFightSessionModel> {
     return this.http.delete<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/${kind}/${pivotId}`);
   }
+
+  updateOrder(sessionId: string, ordre: readonly string[]): Observable<BolFightSessionModel> {
+    return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/ordre`, {ordre});
+  }
 }

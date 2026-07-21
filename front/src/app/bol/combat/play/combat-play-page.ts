@@ -34,10 +34,11 @@ function jitter(key: string): {jx: number; jy: number} {
 }
 
 /**
- * Écran plein page affiché après « Lancer le combat » : ruban d'initiative en haut, battlemap en
- * dessous où les jetons sont librement déplaçables (glisser-déposer, non persisté — repositionnés
- * par défaut à chaque rechargement). Un combattant peut être ajouté en cours de combat depuis le
- * ruban ; les PV restent en revanche non modifiables pour l'instant.
+ * Écran plein page affiché après « Lancer le combat » : ruban d'initiative en haut (réordonnable
+ * par glisser-déposer, persisté en base), battlemap en dessous où les jetons sont librement
+ * déplaçables (glisser-déposer, non persisté celui-ci — repositionnés par défaut à chaque
+ * rechargement). Un combattant peut être ajouté ou retiré en cours de combat depuis le ruban ; les
+ * PV restent en revanche non modifiables pour l'instant.
  */
 @Component({
   selector: 'bol-combat-play-page',
@@ -61,7 +62,7 @@ export class CombatPlayPageComponent {
     return session ? buildPlayBoard(session) : null;
   });
 
-  /** Réordonnancement manuel du ruban (glisser-déposer), non persisté — clés dans l'ordre voulu. */
+  /** Réordonnancement manuel du ruban (glisser-déposer), persisté en base — clés dans l'ordre voulu. */
   private readonly manualOrder = signal<readonly string[] | null>(null);
 
   /** Ordre d'initiative affiché : ordre calculé par défaut, sauf réordonnancement manuel ; les
@@ -163,15 +164,30 @@ export class CombatPlayPageComponent {
     });
   }
 
-  /** Glisser-déposer dans le ruban : réordonnancement manuel, non persisté (perdu au rechargement). */
+  /** Glisser-déposer dans le ruban : réordonnancement manuel, persisté en base. */
   protected onRailDrop(event: CdkDragDrop<PlayToken[]>): void {
     if (event.previousIndex === event.currentIndex) {
       return;
     }
 
+    const sessionId = this.session()?.id;
     const keys = this.orderedTokens().map((t) => t.key);
     moveItemInArray(keys, event.previousIndex, event.currentIndex);
     this.manualOrder.set(keys);
+
+    if (!sessionId) {
+      return;
+    }
+
+    this.fightSessionService.updateOrder(sessionId, keys).subscribe({
+      error: (error: unknown) => {
+        this.snackBar.open(
+          extractApiErrorMessage(error, "Impossible d'enregistrer ce nouvel ordre."),
+          'Fermer',
+          {duration: 5000},
+        );
+      },
+    });
   }
 
   private loadSession(id: string): void {
@@ -181,6 +197,7 @@ export class CombatPlayPageComponent {
       .subscribe({
         next: (session) => {
           this.session.set(session);
+          this.manualOrder.set(session.ordre_manuel ?? null);
           this.loading.set(false);
         },
         error: () => {

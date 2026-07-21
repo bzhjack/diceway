@@ -65,6 +65,19 @@ class BolFightSessionService
         return (bool) BolFightSession::where('id', $id)->where('user_id', $userId)->delete();
     }
 
+    /** Persiste l'ordre d'initiative réordonné manuellement (glisser-déposer du ruban). */
+    public function updateOrder(string $sessionId, string $userId, array $ordre): ?BolFightSession
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session) {
+            return null;
+        }
+
+        $session->update(['ordre_manuel' => array_values($ordre)]);
+
+        return $this->getSessionWithRelations($sessionId);
+    }
+
     /**
      * Ajoute un seul combattant à une session déjà lancée, sans toucher aux combattants déjà en
      * place. Un héros ou un PNJ donné (identité unique) ne peut pas être ajouté deux fois à la

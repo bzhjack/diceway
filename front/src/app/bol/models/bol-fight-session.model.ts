@@ -8,6 +8,8 @@ export interface BolFightSessionModel {
   user_id?: string | null;
   titre: string | null;
   statut: string;
+  /** Ordre d'initiative réordonné manuellement (glisser-déposer du ruban) — clés `PlayToken.key`, dans l'ordre voulu. */
+  ordre_manuel?: string[] | null;
   heros?: BolFightSessionHerosModel[];
   creatures?: BolFightSessionCreatureModel[];
   demons?: BolFightSessionDemonModel[];

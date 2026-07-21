@@ -15,8 +15,9 @@ class BolFightSession extends Model
     public $incrementing = false;
     protected $keyType = 'uuid';
 
-    protected $fillable = ['user_id', 'titre', 'statut'];
+    protected $fillable = ['user_id', 'titre', 'statut', 'ordre_manuel'];
     protected $hidden = ['created_at', 'updated_at'];
+    protected $casts = ['ordre_manuel' => 'array'];
 
     public function heros(): HasMany
     {
