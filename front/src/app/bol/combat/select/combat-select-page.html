@@ -16,11 +16,24 @@
           <button mat-stroked-button type="button" routerLink="/">
             <mat-icon>arrow_back</mat-icon> Retour au dashboard
           </button>
-          <button mat-flat-button type="button" [disabled]="totalCount() === 0 || launching()" (click)="launchCombat()">
+          <button
+            mat-flat-button
+            type="button"
+            [disabled]="!canLaunch() || launching()"
+            [attr.title]="heroesMissingInitiative() > 0 ? 'Il reste ' + heroesMissingInitiative() + ' héros sans jet d\'initiative' : null"
+            (click)="launchCombat()"
+          >
             <mat-icon>play_arrow</mat-icon> Lancer le combat
           </button>
         </div>
       </div>
+
+      @if (heroesMissingInitiative() > 0) {
+        <p class="csp-init-warning">
+          <mat-icon>info</mat-icon>
+          Il reste {{ heroesMissingInitiative() }} héros sans jet d'initiative — lancez leur réaction avant de démarrer le combat.
+        </p>
+      }
     </div>
 
     @if (selection.combatants().length) {

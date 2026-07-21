@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
-import {RouterLink} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
@@ -30,6 +30,7 @@ interface AdverseInitiative {
 export class CombatSelectPageComponent {
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly router = inject(Router);
   protected readonly selection = inject(CombatSelectionService);
 
   protected readonly launching = signal(false);
@@ -37,6 +38,17 @@ export class CombatSelectPageComponent {
   protected readonly totalCount = computed(() =>
     this.selection.combatants().reduce((sum, c) => sum + c.qty, 0),
   );
+
+  /** Héros sélectionnés qui n'ont pas encore de résultat de jet de réaction (initiative). */
+  protected readonly heroesMissingInitiative = computed(
+    () =>
+      this.selection
+        .combatants()
+        .filter((c) => this.selection.entryFor(c.catalogId)?.kind === 'hero' && !this.selection.heroInitiative().has(c.catalogId))
+        .length,
+  );
+
+  protected readonly canLaunch = computed(() => this.totalCount() > 0 && this.heroesMissingInitiative() === 0);
 
   protected readonly order = computed(() =>
     buildInitiativeOrderFromSelection(
@@ -112,10 +124,13 @@ export class CombatSelectPageComponent {
       .launch()
       .pipe(take(1))
       .subscribe({
-        next: () => {
+        next: (session) => {
           this.launching.set(false);
           this.selection.reset();
-          this.snackBar.open('Combat lancé.', 'OK', {duration: 4000});
+
+          if (session.id) {
+            void this.router.navigate(['/combat', session.id, 'play']);
+          }
         },
         error: (error: unknown) => {
           this.launching.set(false);

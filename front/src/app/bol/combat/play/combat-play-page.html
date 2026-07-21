@@ -1,0 +1,89 @@
+@if (loading()) {
+  <div class="cp-status">Chargement du combat…</div>
+} @else if (errorMessage()) {
+  <div class="cp-status cp-status--error">
+    <p>{{ errorMessage() }}</p>
+    <a routerLink="/">Retour au dashboard</a>
+  </div>
+} @else if (board(); as b) {
+  <div class="cp-page">
+    <header class="cp-header">
+      <a class="cp-back" routerLink="/" aria-label="Retour au dashboard">
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+
+      <div class="cp-header-title">
+        <span class="cp-eyebrow">Combat</span>
+        <h1>{{ session()?.titre || 'Combat en cours' }}</h1>
+      </div>
+
+      <button type="button" class="cp-add" disabled title="Bientôt disponible">
+        <mat-icon>person_add</mat-icon>
+        Ajouter un combattant
+      </button>
+    </header>
+
+    @if (b.legendaryActive) {
+      <div class="cp-banner">
+        <mat-icon>military_tech</mat-icon>
+        Succès légendaire obtenu — +1 à tous les jets d'attaque, coriaces et piétailles adverses bloqués au round 1.
+      </div>
+    }
+
+    <div class="cp-rail" role="list" aria-label="Ordre d'initiative">
+      @for (token of b.tokens; track token.key) {
+        <div class="cp-rail-item" [attr.title]="token.nom">
+          <div [class]="chipClass(token)">
+            <img [src]="token.avatar" [alt]="token.nom" />
+          </div>
+          <span class="cp-rail-name">{{ token.nom }}</span>
+        </div>
+        @if (!$last) {
+          <mat-icon class="cp-rail-arrow">chevron_right</mat-icon>
+        }
+      }
+    </div>
+
+    <div class="cp-board">
+      <div class="cp-legend">
+        <span>Héros</span>
+        <span>Adversaires</span>
+      </div>
+
+      <div class="cp-grid" [style.gridTemplateColumns]="'repeat(' + gridCols + ', 1fr)'" [style.gridTemplateRows]="'repeat(' + gridRows() + ', minmax(3.4rem, 1fr))'">
+        @for (cell of gridCells(); track cell) {
+          <div [class]="cellClass(cell)"></div>
+        }
+
+        @for (token of heroTokens(); track token.key; let i = $index) {
+          <ng-container *ngTemplateOutlet="tokenTpl; context: {token, i, camp: 'heros'}" />
+        }
+
+        @for (token of adversaireTokens(); track token.key; let i = $index) {
+          <ng-container *ngTemplateOutlet="tokenTpl; context: {token, i, camp: 'adversaires'}" />
+        }
+      </div>
+    </div>
+  </div>
+}
+
+<ng-template #tokenTpl let-token="token" let-i="i" let-camp="camp">
+  <div [class]="tokenClass(token)" [style]="tokenGridStyle(i, camp)">
+    <div class="cp-token-glow"></div>
+    @if (token.lockedRound1) {
+      <span class="cp-token-lock" title="Bloqué round 1"></span>
+    }
+    <div class="cp-token-portrait">
+      @if (kindIconIsSvg(token.kind)) {
+        <mat-icon [svgIcon]="kindIcon(token.kind)" />
+      } @else {
+        <mat-icon>{{ kindIcon(token.kind) }}</mat-icon>
+      }
+    </div>
+    <p class="cp-token-name">{{ token.nom }}</p>
+    @if (token.vitaliteMax !== null) {
+      <div class="cp-token-hpbar"><i [style.width.%]="hpPct(token)" [style.background]="hpColor(token)"></i></div>
+      <span class="cp-token-hpval">{{ token.vitaliteCourante }} / {{ token.vitaliteMax }}</span>
+    }
+  </div>
+</ng-template>

@@ -91,6 +91,12 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'combat/:id/play',
+    loadComponent: () =>
+      import('./bol/combat/play/combat-play-page').then((module) => module.CombatPlayPageComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'library/creatures',
     loadComponent: () =>
       import('./bol/creature/library/creature-library-page').then(

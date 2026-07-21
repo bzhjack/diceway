@@ -29,6 +29,23 @@
   color: var(--dw-surface-800);
 }
 
+.csp-init-warning {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.7rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--dw-color-echec);
+
+  .mat-icon {
+    font-size: 1.05rem;
+    width: 1.05rem;
+    height: 1.05rem;
+    flex-shrink: 0;
+  }
+}
+
 .csp-camp {
   min-height: 20rem;
 }
