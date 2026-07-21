@@ -25,41 +25,52 @@
       </div>
     }
 
-    <div class="cp-rail" role="list" aria-label="Ordre d'initiative">
-      @for (token of b.tokens; track token.key) {
-        <div class="cp-rail-item" [attr.title]="token.nom">
-          <div [class]="chipClass(token)">
-            <img [src]="token.avatar" [alt]="token.nom" />
-            <span [class]="'cp-rail-kind cp-rail-kind--' + token.kind">
-              @if (kindIconIsSvg(token.kind)) {
-                <mat-icon [svgIcon]="kindIcon(token.kind)" />
-              } @else {
-                <mat-icon>{{ kindIcon(token.kind) }}</mat-icon>
-              }
-            </span>
-            <button
-              type="button"
-              class="cp-rail-remove"
-              [attr.aria-label]="'Retirer ' + token.nom"
-              (click)="askRemoveCombatant(token, $event)"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
+    <div
+      class="cp-rail"
+      role="list"
+      aria-label="Ordre d'initiative — glisser-déposer pour réordonner"
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      (cdkDropListDropped)="onRailDrop($event)"
+    >
+      @for (token of orderedTokens(); track token.key; let last = $last) {
+        <div class="cp-rail-item-wrap" cdkDrag [attr.title]="token.nom">
+          <div class="cp-rail-item">
+            <div [class]="chipClass(token)">
+              <img [src]="token.avatar" [alt]="token.nom" />
+              <span [class]="'cp-rail-kind cp-rail-kind--' + token.kind">
+                @if (kindIconIsSvg(token.kind)) {
+                  <mat-icon [svgIcon]="kindIcon(token.kind)" />
+                } @else {
+                  <mat-icon>{{ kindIcon(token.kind) }}</mat-icon>
+                }
+              </span>
+              <button
+                type="button"
+                class="cp-rail-remove"
+                [attr.aria-label]="'Retirer ' + token.nom"
+                (click)="askRemoveCombatant(token, $event)"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+            <span class="cp-rail-name">{{ token.nom }}</span>
           </div>
-          <span class="cp-rail-name">{{ token.nom }}</span>
+          @if (!last) {
+            <mat-icon class="cp-rail-arrow">chevron_right</mat-icon>
+          }
         </div>
-        @if (!$last) {
-          <mat-icon class="cp-rail-arrow">chevron_right</mat-icon>
-        }
       }
 
-      <mat-icon class="cp-rail-arrow">chevron_right</mat-icon>
-      <button type="button" class="cp-rail-item cp-rail-add" (click)="openAddCombatantDialog()">
-        <span class="cp-rail-chip cp-rail-chip--add">
-          <mat-icon>add</mat-icon>
-        </span>
-        <span class="cp-rail-name">Ajouter</span>
-      </button>
+      <div class="cp-rail-item-wrap cp-rail-item-wrap--static">
+        <mat-icon class="cp-rail-arrow">chevron_right</mat-icon>
+        <button type="button" class="cp-rail-item cp-rail-add" (click)="openAddCombatantDialog()">
+          <span class="cp-rail-chip cp-rail-chip--add">
+            <mat-icon>add</mat-icon>
+          </span>
+          <span class="cp-rail-name">Ajouter</span>
+        </button>
+      </div>
     </div>
 
     <div class="cp-board">

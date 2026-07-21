@@ -1,5 +1,5 @@
 import {NgTemplateOutlet} from '@angular/common';
-import {DragDropModule} from '@angular/cdk/drag-drop';
+import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
@@ -61,13 +61,32 @@ export class CombatPlayPageComponent {
     return session ? buildPlayBoard(session) : null;
   });
 
+  /** Réordonnancement manuel du ruban (glisser-déposer), non persisté — clés dans l'ordre voulu. */
+  private readonly manualOrder = signal<readonly string[] | null>(null);
+
+  /** Ordre d'initiative affiché : ordre calculé par défaut, sauf réordonnancement manuel ; les
+   * nouveaux combattants (ajout en cours de combat) rejoignent la fin, ceux retirés disparaissent. */
+  protected readonly orderedTokens = computed(() => {
+    const tokens = this.board()?.tokens ?? [];
+    const order = this.manualOrder();
+    if (!order) {
+      return tokens;
+    }
+
+    const byKey = new Map(tokens.map((t) => [t.key, t]));
+    const reordered = order.map((key) => byKey.get(key)).filter((t): t is PlayToken => !!t);
+    const knownKeys = new Set(reordered.map((t) => t.key));
+    const missing = tokens.filter((t) => !knownKeys.has(t.key));
+    return [...reordered, ...missing];
+  });
+
   protected readonly heroTokens = computed(() => this.board()?.tokens.filter((t) => t.camp === 'heros') ?? []);
   protected readonly adversaireTokens = computed(
     () => this.board()?.tokens.filter((t) => t.camp === 'adversaires') ?? [],
   );
 
-  /** Premier de l'ordre d'initiative = combattant dont c'est le tour. */
-  protected readonly activeKey = computed(() => this.board()?.tokens[0]?.key ?? null);
+  /** Premier de l'ordre affiché (calculé ou réordonné) = combattant dont c'est le tour. */
+  protected readonly activeKey = computed(() => this.orderedTokens()[0]?.key ?? null);
 
   protected readonly kindIcon = combatantKindIcon;
   protected readonly kindIconIsSvg = combatantKindIconIsSvg;
@@ -142,6 +161,17 @@ export class CombatPlayPageComponent {
         },
       });
     });
+  }
+
+  /** Glisser-déposer dans le ruban : réordonnancement manuel, non persisté (perdu au rechargement). */
+  protected onRailDrop(event: CdkDragDrop<PlayToken[]>): void {
+    if (event.previousIndex === event.currentIndex) {
+      return;
+    }
+
+    const keys = this.orderedTokens().map((t) => t.key);
+    moveItemInArray(keys, event.previousIndex, event.currentIndex);
+    this.manualOrder.set(keys);
   }
 
   private loadSession(id: string): void {
