@@ -64,22 +64,57 @@ class BolFightSessionService
         return (bool) BolFightSession::where('id', $id)->where('user_id', $userId)->delete();
     }
 
+    /** Ajoute un seul combattant à une session déjà lancée, sans toucher aux combattants déjà en place. */
+    public function addCombatant(
+        string $sessionId,
+        string $userId,
+        string $kind,
+        string $sourceId,
+        string $camp,
+        int $qty = 1,
+    ): ?BolFightSession {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session) {
+            return null;
+        }
+
+        match ($kind) {
+            'hero'     => $this->createHeroRow($sessionId, $sourceId, $camp),
+            'pnj'      => $this->createPnjRow($sessionId, $sourceId, $camp),
+            'creature' => $this->createCreatureRow($sessionId, $sourceId, $camp, $this->normalizeQty($qty)),
+            'demon'    => $this->createDemonRow($sessionId, $sourceId, $camp, $this->normalizeQty($qty)),
+            default    => null,
+        };
+
+        return $this->getSessionWithRelations($sessionId);
+    }
+
     private function syncHeros(string $sessionId, array $list): void
     {
         BolFightSessionHeros::where('fight_session_id', $sessionId)->delete();
         foreach ($list as $item) {
-            $hero = BolHeros::find($item['heroId'] ?? null);
-            if (!$hero) {
-                continue;
-            }
-
-            BolFightSessionHeros::create([
-                'fight_session_id'    => $sessionId,
-                'heros_id'            => $hero->id,
-                'camp'                => $this->normalizeCamp($item['camp'] ?? null),
-                'initiative_resultat' => $this->normalizeInitiativeResultat($item['resultat'] ?? null),
-            ]);
+            $this->createHeroRow(
+                $sessionId,
+                (string) ($item['heroId'] ?? ''),
+                $item['camp'] ?? null,
+                $this->normalizeInitiativeResultat($item['resultat'] ?? null),
+            );
         }
+    }
+
+    private function createHeroRow(string $sessionId, string $heroId, ?string $camp, ?string $resultat = null): void
+    {
+        $hero = BolHeros::find($heroId);
+        if (!$hero) {
+            return;
+        }
+
+        BolFightSessionHeros::create([
+            'fight_session_id'    => $sessionId,
+            'heros_id'            => $hero->id,
+            'camp'                => $this->normalizeCamp($camp),
+            'initiative_resultat' => $resultat,
+        ]);
     }
 
     private function normalizeInitiativeResultat(?string $resultat): ?string
@@ -93,114 +128,146 @@ class BolFightSessionService
     {
         BolFightSessionCreature::where('fight_session_id', $sessionId)->delete();
         foreach ($list as $item) {
-            $creature = BolCreature::with('capacites.capacite')->find($item['creatureId'] ?? null);
-            if (!$creature) {
-                continue;
-            }
-
-            $capacites = collect($creature->capacites ?? [])->map(fn($c) => [
-                'capacite_id' => $c->capacite_id,
-                'capacite'    => $c->capacite?->capacite,
-                'de_bonus'    => $c->capacite?->de_bonus,
-                'de_malus'    => $c->capacite?->de_malus,
-                'detail'      => $c->detail,
-            ])->values()->toArray();
-
-            BolFightSessionCreature::create([
-                'fight_session_id'  => $sessionId,
-                'creature_id'       => $creature->id,
-                'camp'              => $this->normalizeCamp($item['camp'] ?? null),
-                'qty'               => $this->normalizeQty($item['qty'] ?? 1),
-                'surnom'            => $item['surnom'] ?? null,
-                'rang'              => $creature->rang ?? 'coriace',
-                'nom'               => $creature->nom,
-                'vigueur'           => $creature->vigueur,
-                'agilite'           => $creature->agilite,
-                'esprit'            => $creature->esprit,
-                'vitalite_max'      => $creature->vitalite,
-                'vitalite_courante' => $creature->vitalite,
-                'attaque'           => $creature->attaque,
-                'defense'           => $creature->defense,
-                'degats'            => $creature->degats,
-                'protection'        => $creature->protection,
-                'id_taille'         => $creature->id_taille,
-                'capacites'         => $capacites,
-            ]);
+            $this->createCreatureRow(
+                $sessionId,
+                (string) ($item['creatureId'] ?? ''),
+                $item['camp'] ?? null,
+                $this->normalizeQty($item['qty'] ?? 1),
+                $item['surnom'] ?? null,
+            );
         }
+    }
+
+    private function createCreatureRow(string $sessionId, string $creatureId, ?string $camp, int $qty, ?string $surnom = null): void
+    {
+        $creature = BolCreature::with('capacites.capacite')->find($creatureId);
+        if (!$creature) {
+            return;
+        }
+
+        $capacites = collect($creature->capacites ?? [])->map(fn($c) => [
+            'capacite_id' => $c->capacite_id,
+            'capacite'    => $c->capacite?->capacite,
+            'de_bonus'    => $c->capacite?->de_bonus,
+            'de_malus'    => $c->capacite?->de_malus,
+            'detail'      => $c->detail,
+        ])->values()->toArray();
+
+        BolFightSessionCreature::create([
+            'fight_session_id'  => $sessionId,
+            'creature_id'       => $creature->id,
+            'camp'              => $this->normalizeCamp($camp),
+            'qty'               => $qty,
+            'surnom'            => $surnom,
+            'rang'              => $creature->rang ?? 'coriace',
+            'nom'               => $creature->nom,
+            'vigueur'           => $creature->vigueur,
+            'agilite'           => $creature->agilite,
+            'esprit'            => $creature->esprit,
+            'vitalite_max'      => $creature->vitalite,
+            'vitalite_courante' => $creature->vitalite,
+            'attaque'           => $creature->attaque,
+            'defense'           => $creature->defense,
+            'degats'            => $creature->degats,
+            'protection'        => $creature->protection,
+            'id_taille'         => $creature->id_taille,
+            'capacites'         => $capacites,
+        ]);
     }
 
     private function syncDemons(string $sessionId, array $list): void
     {
         BolFightSessionDemon::where('fight_session_id', $sessionId)->delete();
         foreach ($list as $item) {
-            $demon = BolDemon::with('pouvoirs.pouvoir')->find($item['demonId'] ?? null);
-            if (!$demon) {
-                continue;
-            }
-
-            $pouvoirs = collect($demon->pouvoirs ?? [])->map(fn($p) => [
-                'pouvoir_id' => $p->pouvoir_id,
-                'pouvoir'    => $p->pouvoir?->pouvoir,
-                'detail'     => $p->detail,
-            ])->values()->toArray();
-
-            BolFightSessionDemon::create([
-                'fight_session_id'  => $sessionId,
-                'demon_id'          => $demon->id,
-                'camp'              => $this->normalizeCamp($item['camp'] ?? null),
-                'qty'               => $this->normalizeQty($item['qty'] ?? 1),
-                'surnom'            => $item['surnom'] ?? null,
-                'rang'              => $this->rangFromType($demon->type),
-                'nom'               => $demon->nom,
-                'vigueur'           => $demon->vigueur,
-                'agilite'           => $demon->agilite,
-                'esprit'            => $demon->esprit,
-                'aura'              => $demon->aura,
-                'melee'             => $demon->melee,
-                'tir'               => $demon->tir,
-                'defense'           => $demon->defense,
-                'vitalite_max'      => $demon->vitalite,
-                'vitalite_courante' => $demon->vitalite,
-                'degats'            => $demon->degats,
-                'pouvoirs'          => $pouvoirs,
-            ]);
+            $this->createDemonRow(
+                $sessionId,
+                (string) ($item['demonId'] ?? ''),
+                $item['camp'] ?? null,
+                $this->normalizeQty($item['qty'] ?? 1),
+                $item['surnom'] ?? null,
+            );
         }
+    }
+
+    private function createDemonRow(string $sessionId, string $demonId, ?string $camp, int $qty, ?string $surnom = null): void
+    {
+        $demon = BolDemon::with('pouvoirs.pouvoir')->find($demonId);
+        if (!$demon) {
+            return;
+        }
+
+        $pouvoirs = collect($demon->pouvoirs ?? [])->map(fn($p) => [
+            'pouvoir_id' => $p->pouvoir_id,
+            'pouvoir'    => $p->pouvoir?->pouvoir,
+            'detail'     => $p->detail,
+        ])->values()->toArray();
+
+        BolFightSessionDemon::create([
+            'fight_session_id'  => $sessionId,
+            'demon_id'          => $demon->id,
+            'camp'              => $this->normalizeCamp($camp),
+            'qty'               => $qty,
+            'surnom'            => $surnom,
+            'rang'              => $this->rangFromType($demon->type),
+            'nom'               => $demon->nom,
+            'vigueur'           => $demon->vigueur,
+            'agilite'           => $demon->agilite,
+            'esprit'            => $demon->esprit,
+            'aura'              => $demon->aura,
+            'melee'             => $demon->melee,
+            'tir'               => $demon->tir,
+            'defense'           => $demon->defense,
+            'vitalite_max'      => $demon->vitalite,
+            'vitalite_courante' => $demon->vitalite,
+            'degats'            => $demon->degats,
+            'pouvoirs'          => $pouvoirs,
+        ]);
     }
 
     private function syncPnjs(string $sessionId, array $list): void
     {
         BolFightSessionPnj::where('fight_session_id', $sessionId)->delete();
         foreach ($list as $item) {
-            $pnj = BolHeros::with('armes.arme')->find($item['pnjId'] ?? null);
-            if (!$pnj) {
-                continue;
-            }
-
-            $armes = collect($pnj->armes ?? [])->map(fn($ha) => [
-                'nom'    => $ha->arme?->arme,
-                'degats' => $ha->arme?->degats,
-                'type'   => $ha->arme?->type,
-            ])->values()->toArray();
-
-            BolFightSessionPnj::create([
-                'fight_session_id'  => $sessionId,
-                'pnj_id'            => $pnj->id,
-                'camp'              => $this->normalizeCamp($item['camp'] ?? null),
-                'surnom'            => $item['surnom'] ?? null,
-                'rang'              => $this->rangFromType($pnj->type),
-                'nom'               => $pnj->nom,
-                'vigueur'           => $pnj->vigueur,
-                'agilite'           => $pnj->agilite,
-                'esprit'            => $pnj->esprit,
-                'aura'              => $pnj->aura,
-                'melee'             => $pnj->melee,
-                'tir'               => $pnj->tir,
-                'defense'           => $pnj->defense,
-                'vitalite_max'      => $pnj->vitalite,
-                'vitalite_courante' => $pnj->vitalite,
-                'armes'             => $armes,
-            ]);
+            $this->createPnjRow(
+                $sessionId,
+                (string) ($item['pnjId'] ?? ''),
+                $item['camp'] ?? null,
+                $item['surnom'] ?? null,
+            );
         }
+    }
+
+    private function createPnjRow(string $sessionId, string $pnjId, ?string $camp, ?string $surnom = null): void
+    {
+        $pnj = BolHeros::with('armes.arme')->find($pnjId);
+        if (!$pnj) {
+            return;
+        }
+
+        $armes = collect($pnj->armes ?? [])->map(fn($ha) => [
+            'nom'    => $ha->arme?->arme,
+            'degats' => $ha->arme?->degats,
+            'type'   => $ha->arme?->type,
+        ])->values()->toArray();
+
+        BolFightSessionPnj::create([
+            'fight_session_id'  => $sessionId,
+            'pnj_id'            => $pnj->id,
+            'camp'              => $this->normalizeCamp($camp),
+            'surnom'            => $surnom,
+            'rang'              => $this->rangFromType($pnj->type),
+            'nom'               => $pnj->nom,
+            'vigueur'           => $pnj->vigueur,
+            'agilite'           => $pnj->agilite,
+            'esprit'            => $pnj->esprit,
+            'aura'              => $pnj->aura,
+            'melee'             => $pnj->melee,
+            'tir'               => $pnj->tir,
+            'defense'           => $pnj->defense,
+            'vitalite_max'      => $pnj->vitalite,
+            'vitalite_courante' => $pnj->vitalite,
+            'armes'             => $armes,
+        ]);
     }
 
     private function normalizeCamp(?string $camp): string

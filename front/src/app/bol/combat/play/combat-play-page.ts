@@ -1,5 +1,7 @@
 import {NgTemplateOutlet} from '@angular/common';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {take} from 'rxjs';
@@ -7,21 +9,36 @@ import {BolFightSessionModel, CombatCamp} from '../../models/bol-fight-session.m
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
 import {combatantKindIcon, combatantKindIconIsSvg} from '../select/combat-statblock.util';
 import {buildPlayBoard, PlayToken} from '../combat-play.util';
+import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
 
-/** Nombre de colonnes de la grille tactique ; les héros occupent les 3 premières, les adversaires les 3 dernières. */
-const GRID_COLS = 9;
-const HERO_COLS = [1, 2, 3];
-const ADVERSAIRE_COLS = [GRID_COLS - 2, GRID_COLS - 1, GRID_COLS];
+const COLS_PER_ZONE = 3;
+const HERO_ZONE = {xMin: 8, xMax: 32, yMin: 16, yMax: 84};
+const ADVERSAIRE_ZONE = {xMin: 68, xMax: 92, yMin: 16, yMax: 84};
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}
+
+/** Petit décalage déterministe (basé sur la clé du jeton) pour éviter un alignement trop rigide sur la carte. */
+function jitter(key: string): {jx: number; jy: number} {
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) {
+    hash = (hash * 31 + key.charCodeAt(i)) | 0;
+  }
+  const jx = ((hash % 1000) / 1000) * 2 - 1;
+  const jy = (((hash >> 8) % 1000) / 1000) * 2 - 1;
+  return {jx, jy};
+}
 
 /**
- * Écran plein page affiché après « Lancer le combat » : ruban d'initiative en haut, plateau
- * tactique en grille (les jetons occupent des cases, pas des positions libres). Lecture seule
- * pour l'instant (pas de PV modifiables ni d'ajout de combattant en cours de combat — ces actions
- * nécessitent de nouvelles routes backend, hors périmètre ici).
+ * Écran plein page affiché après « Lancer le combat » : ruban d'initiative en haut, battlemap en
+ * dessous où les jetons sont librement déplaçables (glisser-déposer, non persisté — repositionnés
+ * par défaut à chaque rechargement). Un combattant peut être ajouté en cours de combat depuis le
+ * ruban ; les PV restent en revanche non modifiables pour l'instant.
  */
 @Component({
   selector: 'bol-combat-play-page',
-  imports: [MatIconModule, NgTemplateOutlet, RouterLink],
+  imports: [MatIconModule, NgTemplateOutlet, RouterLink, DragDropModule],
   templateUrl: './combat-play-page.html',
   styleUrl: './combat-play-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,6 +46,7 @@ const ADVERSAIRE_COLS = [GRID_COLS - 2, GRID_COLS - 1, GRID_COLS];
 export class CombatPlayPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly fightSessionService = inject(BolFightSessionService);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
@@ -50,16 +68,6 @@ export class CombatPlayPageComponent {
   protected readonly kindIcon = combatantKindIcon;
   protected readonly kindIconIsSvg = combatantKindIconIsSvg;
 
-  protected readonly gridCols = GRID_COLS;
-
-  protected readonly gridRows = computed(() => {
-    const heroRows = Math.ceil(this.heroTokens().length / HERO_COLS.length);
-    const adversaireRows = Math.ceil(this.adversaireTokens().length / ADVERSAIRE_COLS.length);
-    return Math.max(heroRows, adversaireRows, 4);
-  });
-
-  protected readonly gridCells = computed(() => Array.from({length: this.gridCols * this.gridRows()}, (_, i) => i));
-
   constructor() {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
@@ -68,6 +76,31 @@ export class CombatPlayPageComponent {
       return;
     }
 
+    this.loadSession(id);
+  }
+
+  protected openAddCombatantDialog(): void {
+    const sessionId = this.session()?.id;
+    if (!sessionId) {
+      return;
+    }
+
+    this.dialog
+      .open(AddCombatantDialogComponent, {
+        width: 'min(760px, 94vw)',
+        maxWidth: '94vw',
+        maxHeight: '85vh',
+        data: {sessionId},
+      })
+      .afterClosed()
+      .subscribe((didAdd: boolean | undefined) => {
+        if (didAdd) {
+          this.loadSession(sessionId);
+        }
+      });
+  }
+
+  private loadSession(id: string): void {
     this.fightSessionService
       .fightSession(id)
       .pipe(take(1))
@@ -105,22 +138,23 @@ export class CombatPlayPageComponent {
     return `cp-token cp-token--${token.kind}${active}`;
   }
 
-  /** Place un jeton dans la grille : les héros occupent les colonnes de gauche, les adversaires celles de droite. */
-  protected tokenGridStyle(indexInCamp: number, camp: CombatCamp): Record<string, string> {
-    const cols = camp === 'heros' ? HERO_COLS : ADVERSAIRE_COLS;
-    const col = cols[indexInCamp % cols.length];
-    const row = Math.floor(indexInCamp / cols.length) + 1;
-    return {'--r': String(row), '--c': String(col)};
-  }
+  /** Position par défaut d'un jeton sur la battlemap (héros à gauche, adversaires à droite), avant tout glisser-déposer. */
+  protected tokenStyle(token: PlayToken, indexInCamp: number, camp: CombatCamp): Record<string, string> {
+    const zone = camp === 'heros' ? HERO_ZONE : ADVERSAIRE_ZONE;
+    const campCount = (camp === 'heros' ? this.heroTokens() : this.adversaireTokens()).length;
+    const rows = Math.max(1, Math.ceil(campCount / COLS_PER_ZONE));
 
-  protected cellClass(index: number): string {
-    const col = (index % this.gridCols) + 1;
-    if (col <= HERO_COLS.length) {
-      return 'cp-cell cp-cell--hero';
-    }
-    if (col > this.gridCols - ADVERSAIRE_COLS.length) {
-      return 'cp-cell cp-cell--adversaire';
-    }
-    return 'cp-cell';
+    const col = indexInCamp % COLS_PER_ZONE;
+    const row = Math.floor(indexInCamp / COLS_PER_ZONE);
+    const colWidth = (zone.xMax - zone.xMin) / COLS_PER_ZONE;
+    const rowHeight = (zone.yMax - zone.yMin) / rows;
+    const baseX = zone.xMin + colWidth * (col + 0.5);
+    const baseY = zone.yMin + rowHeight * (row + 0.5);
+
+    const {jx, jy} = jitter(token.key);
+    const x = clamp(baseX + jx * colWidth * 0.18, zone.xMin, zone.xMax);
+    const y = clamp(baseY + jy * rowHeight * 0.18, zone.yMin, zone.yMax);
+
+    return {left: `${x}%`, top: `${y}%`};
   }
 }

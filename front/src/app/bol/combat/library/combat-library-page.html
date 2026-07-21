@@ -1,0 +1,77 @@
+<section class="dw-page xl:px-8">
+  <div class="mx-auto flex max-w-[1000px] flex-col gap-4">
+
+    <!-- Header card -->
+    <dw-library-header
+      title="Mes combats"
+      description="Retrouvez les combats déjà lancés pour reprendre le suivi de l'initiative et des points de vie."
+      color="rose"
+    >
+      <ng-container dwHeaderTags>
+        <dw-tag>{{ totalCount() }} combat{{ totalCount() > 1 ? 's' : '' }}</dw-tag>
+        @if (visibleCount() !== totalCount()) {
+          <dw-tag>{{ visibleCount() }} visibles</dw-tag>
+        }
+      </ng-container>
+      <ng-container dwHeaderActions>
+        <div class="flex flex-wrap gap-1.5">
+          <button mat-flat-button size="small" routerLink="/combat/new">
+            <mat-icon>add</mat-icon> Nouveau combat
+          </button>
+        </div>
+        <button mat-stroked-button size="small" routerLink="/">
+          <mat-icon>arrow_back</mat-icon> Retour au dashboard
+        </button>
+      </ng-container>
+    </dw-library-header>
+
+    <!-- Content card -->
+    <mat-card appearance="outlined" class="cl-content-card">
+      <div class="cl-toolbar">
+        <mat-form-field subscriptSizing="dynamic" class="cl-search-field">
+          <mat-icon matPrefix>search</mat-icon>
+          <input
+            matInput
+            type="text"
+            [ngModel]="searchTerm()"
+            (ngModelChange)="searchTerm.set($event ?? '')"
+            placeholder="Rechercher un combat"
+          />
+        </mat-form-field>
+        <dw-tag>{{ visibleCount() }} entrées</dw-tag>
+      </div>
+
+      <div class="cl-list">
+        @for (item of filteredSummaries(); track item.session.id) {
+          <div class="cl-row">
+            <div class="cl-row-main">
+              <p class="cl-row-title">{{ item.session.titre || 'Combat sans titre' }}</p>
+              <p class="cl-row-meta">{{ item.heroesCount }} héros · {{ item.adversairesCount }} adversaires</p>
+            </div>
+            <div class="cl-row-actions">
+              <button mat-flat-button size="small" [routerLink]="['/combat', item.session.id, 'play']">
+                <mat-icon>play_arrow</mat-icon> Reprendre
+              </button>
+              <button
+                mat-icon-button
+                (click)="askDelete(item.session)"
+                [attr.aria-label]="'Supprimer ' + (item.session.titre || 'ce combat')"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        } @empty {
+          <p class="cl-empty">
+            @if (totalCount() === 0) {
+              Aucun combat pour l'instant — lancez-en un depuis « Nouveau combat ».
+            } @else {
+              Aucun combat ne correspond à cette recherche.
+            }
+          </p>
+        }
+      </div>
+    </mat-card>
+
+  </div>
+</section>

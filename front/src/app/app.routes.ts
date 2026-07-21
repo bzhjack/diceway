@@ -97,6 +97,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'library/combats',
+    loadComponent: () =>
+      import('./bol/combat/library/combat-library-page').then(
+        (module) => module.CombatLibraryPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: 'library/creatures',
     loadComponent: () =>
       import('./bol/creature/library/creature-library-page').then(

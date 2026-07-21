@@ -44,6 +44,24 @@ class BolFightSessionController extends Controller
         return response()->json(true);
     }
 
+    public function addCombatant(Request $request, string $id)
+    {
+        $session = $this->fightSessionService->addCombatant(
+            $id,
+            Auth::id(),
+            (string) $request->input('kind'),
+            (string) $request->input('sourceId'),
+            (string) $request->input('camp'),
+            (int) ($request->input('qty') ?? 1),
+        );
+
+        if (!$session) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        return response()->json($session);
+    }
+
     public function updateHeroInitiative(Request $request, string $id, int $herosPivotId)
     {
         $pivot = $this->fightSessionService->updateHeroInitiative(

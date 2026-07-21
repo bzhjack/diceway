@@ -119,3 +119,11 @@ export interface BolFightSessionCreatePayload {
   creatures: {creatureId: string; camp: CombatCamp; qty: number}[];
   demons: {demonId: string; camp: CombatCamp; qty: number}[];
 }
+
+/** Payload d'ajout d'un seul combattant à une session déjà lancée. */
+export interface BolFightSessionAddCombatantPayload {
+  kind: 'hero' | 'pnj' | 'creature' | 'demon';
+  sourceId: string;
+  camp: CombatCamp;
+  qty?: number;
+}

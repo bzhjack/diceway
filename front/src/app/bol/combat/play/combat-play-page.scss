@@ -83,28 +83,6 @@
   color: var(--dw-color-legendary);
 }
 
-.cp-add {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.45rem 0.8rem;
-  border-radius: 8px;
-  border: 1px solid var(--dw-border);
-  background: transparent;
-  color: var(--dw-surface-500);
-  font: inherit;
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: not-allowed;
-
-  .mat-icon {
-    font-size: 1.1rem;
-    width: 1.1rem;
-    height: 1.1rem;
-  }
-}
-
 .cp-banner {
   flex-shrink: 0;
   display: flex;
@@ -129,8 +107,8 @@
   flex-shrink: 0;
   display: flex;
   align-items: flex-start;
-  gap: 0.3rem;
-  padding: 0.6rem 1.1rem;
+  gap: 0.4rem;
+  padding: 1rem 1.1rem 1.1rem;
   border-bottom: 1px solid var(--dw-border);
   overflow-x: auto;
 }
@@ -140,26 +118,27 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
-  width: 3.4rem;
+  gap: 0.35rem;
+  width: 5.4rem;
 }
 
 .cp-rail-name {
   max-width: 100%;
-  font-size: 0.6rem;
+  font-size: 0.72rem;
   font-weight: 700;
   color: var(--dw-surface-600);
   text-align: center;
-  line-height: 1.1;
+  line-height: 1.15;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .cp-rail-chip {
+  position: relative;
   flex-shrink: 0;
-  width: 2rem;
-  height: 2rem;
+  width: 3.6rem;
+  height: 3.6rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -167,7 +146,6 @@
   border: 1px solid var(--dw-border);
   background: color-mix(in srgb, var(--dw-surface-0) 50%, transparent);
   color: var(--dw-surface-900);
-  overflow: hidden;
 
   img {
     width: 100%;
@@ -177,23 +155,73 @@
   }
 }
 
+.cp-rail-kind {
+  position: absolute;
+  bottom: -0.15rem;
+  right: -0.15rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 2px solid var(--dw-surface-0);
+  color: #04120a;
+
+  .mat-icon {
+    font-size: 0.92rem;
+    width: 0.92rem;
+    height: 0.92rem;
+  }
+}
+
+.cp-rail-kind--hero { background: var(--dw-color-reussite); }
+.cp-rail-kind--pnj { background: var(--dw-color-pnj); }
+.cp-rail-kind--creature { background: var(--dw-color-creature); }
+.cp-rail-kind--demon { background: var(--dw-color-demon); }
+
 .cp-rail-chip--hero { background: color-mix(in srgb, var(--dw-color-reussite) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); border-color: color-mix(in srgb, var(--dw-color-reussite) 55%, transparent); }
 .cp-rail-chip--pnj { background: color-mix(in srgb, var(--dw-color-pnj) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); border-color: color-mix(in srgb, var(--dw-color-pnj) 55%, transparent); }
 .cp-rail-chip--creature { background: color-mix(in srgb, var(--dw-color-creature) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); border-color: color-mix(in srgb, var(--dw-color-creature) 55%, transparent); }
 .cp-rail-chip--demon { background: color-mix(in srgb, var(--dw-color-demon) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); border-color: color-mix(in srgb, var(--dw-color-demon) 55%, transparent); }
 
 .cp-rail-chip--active {
-  border-width: 2px;
+  border-width: 3px;
   border-color: var(--dw-color-legendary);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--dw-color-legendary) 25%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--dw-color-legendary) 25%, transparent);
+}
+
+.cp-rail-add {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.cp-rail-chip--add {
+  border-style: dashed;
+  color: var(--dw-surface-500);
+
+  .mat-icon {
+    font-size: 1.6rem;
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+}
+
+.cp-rail-add:hover .cp-rail-chip--add {
+  color: var(--dw-surface-800);
+  border-color: var(--dw-surface-500);
 }
 
 .cp-rail-arrow {
   flex-shrink: 0;
-  margin-top: 0.55rem;
-  font-size: 0.9rem;
-  width: 0.9rem;
-  height: 0.9rem;
+  margin-top: 1.25rem;
+  font-size: 1.1rem;
+  width: 1.1rem;
+  height: 1.1rem;
   color: var(--dw-surface-400);
 }
 
@@ -204,7 +232,6 @@
   flex-direction: column;
   gap: 0.5rem;
   overflow: auto;
-  padding: 1.2rem;
 }
 
 .cp-legend {
@@ -219,51 +246,41 @@
   color: var(--dw-surface-500);
 }
 
-.cp-grid {
+.cp-map {
+  position: relative;
   flex: 1;
   min-width: 42rem;
   min-height: 20rem;
-  display: grid;
-  gap: 2px;
-  background: var(--dw-surface-0);
-  border: 1px solid var(--dw-border);
-  border-radius: 10px;
-  padding: 2px;
+  overflow: hidden;
+  background-color: var(--dw-surface-0);
+  background-image:
+    radial-gradient(ellipse 55% 70% at 12% 50%, color-mix(in srgb, var(--dw-color-reussite) 12%, transparent) 0%, transparent 70%),
+    radial-gradient(ellipse 55% 70% at 88% 50%, color-mix(in srgb, var(--dw-color-creature) 12%, transparent) 0%, transparent 70%),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--dw-surface-500) 7%, transparent) 0 1px, transparent 1px 2.4rem),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--dw-surface-500) 7%, transparent) 0 1px, transparent 1px 2.4rem),
+    radial-gradient(ellipse 100% 100% at 50% 50%, transparent 60%, rgba(0, 0, 0, 0.45) 100%);
 }
 
-.cp-cell {
-  background: color-mix(in srgb, var(--dw-surface-500) 3%, transparent);
-  border: 1px solid color-mix(in srgb, var(--dw-surface-500) 5%, transparent);
-  border-radius: 2px;
-}
+.cp-token-anchor {
+  position: absolute;
+  cursor: grab;
+  touch-action: none;
 
-.cp-cell--hero { background: color-mix(in srgb, var(--dw-color-reussite) 6%, transparent); }
-.cp-cell--adversaire { background: color-mix(in srgb, var(--dw-color-creature) 6%, transparent); }
+  &.cdk-drag-dragging {
+    cursor: grabbing;
+    z-index: 10;
+  }
+}
 
 .cp-token {
   position: relative;
-  grid-row: var(--r);
-  grid-column: var(--c);
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.2rem;
-  z-index: 1;
 }
-
-.cp-token-glow {
-  position: absolute;
-  inset: -0.3rem;
-  border-radius: 999px;
-  background: radial-gradient(circle, var(--glow-color, transparent) 0%, transparent 72%);
-  z-index: -1;
-}
-
-.cp-token--hero .cp-token-glow { --glow-color: color-mix(in srgb, var(--dw-color-reussite) 35%, transparent); }
-.cp-token--pnj .cp-token-glow { --glow-color: color-mix(in srgb, var(--dw-color-pnj) 35%, transparent); }
-.cp-token--creature .cp-token-glow { --glow-color: color-mix(in srgb, var(--dw-color-creature) 35%, transparent); }
-.cp-token--demon .cp-token-glow { --glow-color: color-mix(in srgb, var(--dw-color-demon) 35%, transparent); }
 
 .cp-token--active .cp-token-portrait {
   box-shadow: 0 0 0 2px var(--dw-color-legendary), 0 0 10px color-mix(in srgb, var(--dw-color-legendary) 70%, transparent);

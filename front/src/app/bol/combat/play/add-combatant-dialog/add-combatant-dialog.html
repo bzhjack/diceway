@@ -1,0 +1,74 @@
+<h2 mat-dialog-title>Ajouter un combattant</h2>
+
+<mat-dialog-content>
+  <div class="acd-camp-toggle">
+    <button type="button" [class.acd-camp--active]="camp() === 'heros'" (click)="setCamp('heros')">
+      Héros
+    </button>
+    <button type="button" [class.acd-camp--active]="camp() === 'adversaires'" (click)="setCamp('adversaires')">
+      Adversaires
+    </button>
+  </div>
+
+  <div class="acd-filters">
+    <div class="acd-tabs">
+      <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'all'" (click)="setType('all')">
+        Tous
+      </button>
+      <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'hero'" (click)="setType('hero')">
+        Héros
+      </button>
+      <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'pnj'" (click)="setType('pnj')">
+        PNJ
+      </button>
+      <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'creature'" (click)="setType('creature')">
+        Créatures
+      </button>
+      <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'demon'" (click)="setType('demon')">
+        Démons
+      </button>
+    </div>
+
+    <mat-form-field subscriptSizing="dynamic" class="acd-search">
+      <mat-label>Rechercher</mat-label>
+      <input matInput [ngModel]="query()" (ngModelChange)="query.set($event)" placeholder="Nom du combattant…" />
+    </mat-form-field>
+  </div>
+
+  <div class="acd-grid">
+    @for (entry of filteredCatalog(); track entry.catalogId) {
+      <div class="acd-card">
+        <img [src]="entry.avatar" [alt]="entry.nom" class="acd-avatar" />
+        <div class="acd-info">
+          <p class="acd-name">
+            @if (kindIconIsSvg(entry.kind)) {
+              <mat-icon [svgIcon]="kindIcon(entry.kind)" [class]="'acd-kind-icon acd-kind-icon--' + entry.kind" />
+            } @else {
+              <mat-icon [class]="'acd-kind-icon acd-kind-icon--' + entry.kind">{{ kindIcon(entry.kind) }}</mat-icon>
+            }
+            {{ entry.nom }}
+          </p>
+          <p class="acd-kind">{{ rankLabel(entry) }} · ❤ {{ entry.vitalite }}</p>
+        </div>
+        <button
+          type="button"
+          class="acd-add"
+          [disabled]="pendingCatalogId() === entry.catalogId"
+          [attr.aria-label]="'Ajouter ' + entry.nom"
+          (click)="add(entry)"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    } @empty {
+      <p class="acd-empty">Aucun résultat.</p>
+    }
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  @if (addedCount() > 0) {
+    <span class="acd-added-hint">{{ addedCount() }} ajouté{{ addedCount() > 1 ? 's' : '' }}</span>
+  }
+  <button mat-flat-button type="button" (click)="close()">Fermer</button>
+</mat-dialog-actions>
