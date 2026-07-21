@@ -32,4 +32,12 @@ export class BolFightSessionService {
   addCombatant(sessionId: string, payload: BolFightSessionAddCombatantPayload): Observable<BolFightSessionModel> {
     return this.http.post<BolFightSessionModel>(`${this.base}/${sessionId}/combatant`, payload);
   }
+
+  removeCombatant(
+    sessionId: string,
+    kind: BolFightSessionAddCombatantPayload['kind'],
+    pivotId: number,
+  ): Observable<BolFightSessionModel> {
+    return this.http.delete<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/${kind}/${pivotId}`);
+  }
 }

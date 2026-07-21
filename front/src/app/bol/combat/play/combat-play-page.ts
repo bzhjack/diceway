@@ -3,8 +3,11 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {take} from 'rxjs';
+import {extractApiErrorMessage} from '../../../core/api-error.utils';
+import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolFightSessionModel, CombatCamp} from '../../models/bol-fight-session.model';
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
 import {combatantKindIcon, combatantKindIconIsSvg} from '../select/combat-statblock.util';
@@ -47,6 +50,7 @@ export class CombatPlayPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
 
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
@@ -104,6 +108,40 @@ export class CombatPlayPageComponent {
           this.loadSession(sessionId);
         }
       });
+  }
+
+  protected askRemoveCombatant(token: PlayToken, event: Event): void {
+    event.stopPropagation();
+
+    const sessionId = this.session()?.id;
+    if (!sessionId) {
+      return;
+    }
+
+    confirmDialog(
+      this.dialog,
+      {
+        title: 'Retirer ce combattant',
+        message: `Voulez-vous retirer « ${token.nom} » de ce combat ?`,
+        confirmLabel: 'Retirer',
+      },
+      {width: '380px'},
+    ).subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+
+      this.fightSessionService.removeCombatant(sessionId, token.kind, token.pivotId).subscribe({
+        next: () => this.loadSession(sessionId),
+        error: (error: unknown) => {
+          this.snackBar.open(
+            extractApiErrorMessage(error, 'Impossible de retirer ce combattant.'),
+            'Fermer',
+            {duration: 5000},
+          );
+        },
+      });
+    });
   }
 
   private loadSession(id: string): void {

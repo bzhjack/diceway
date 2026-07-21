@@ -100,6 +100,41 @@ class BolFightSessionService
         return $this->getSessionWithRelations($sessionId);
     }
 
+    /**
+     * Retire un combattant d'une session déjà lancée. Pour les créatures/démons (gabarits avec
+     * quantité), retire une seule instance : décrémente qty, ou supprime la ligne si qty tombe à 0.
+     */
+    public function removeCombatant(string $sessionId, string $userId, string $kind, int $pivotId): ?BolFightSession
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session) {
+            return null;
+        }
+
+        match ($kind) {
+            'hero'     => BolFightSessionHeros::where('id', $pivotId)->where('fight_session_id', $sessionId)->delete(),
+            'pnj'      => BolFightSessionPnj::where('id', $pivotId)->where('fight_session_id', $sessionId)->delete(),
+            'creature' => $this->decrementOrDelete(BolFightSessionCreature::where('id', $pivotId)->where('fight_session_id', $sessionId)->first()),
+            'demon'    => $this->decrementOrDelete(BolFightSessionDemon::where('id', $pivotId)->where('fight_session_id', $sessionId)->first()),
+            default    => null,
+        };
+
+        return $this->getSessionWithRelations($sessionId);
+    }
+
+    private function decrementOrDelete(BolFightSessionCreature|BolFightSessionDemon|null $row): void
+    {
+        if (!$row) {
+            return;
+        }
+
+        if ($row->qty > 1) {
+            $row->update(['qty' => $row->qty - 1]);
+        } else {
+            $row->delete();
+        }
+    }
+
     private function hasCombatant(string $sessionId, string $kind, string $sourceId): bool
     {
         return match ($kind) {

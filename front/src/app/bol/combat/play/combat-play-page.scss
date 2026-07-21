@@ -180,6 +180,38 @@
 .cp-rail-kind--creature { background: var(--dw-color-creature); }
 .cp-rail-kind--demon { background: var(--dw-color-demon); }
 
+.cp-rail-remove {
+  position: absolute;
+  top: -0.15rem;
+  left: -0.15rem;
+  width: 1.35rem;
+  height: 1.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 2px solid var(--dw-surface-0);
+  background: var(--dw-color-echec-forte);
+  color: var(--dw-surface-900);
+  padding: 0;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+
+  .mat-icon {
+    font-size: 0.8rem;
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+}
+
+.cp-rail-item:hover .cp-rail-remove,
+.cp-rail-remove:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .cp-rail-chip--hero { background: color-mix(in srgb, var(--dw-color-reussite) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); border-color: color-mix(in srgb, var(--dw-color-reussite) 55%, transparent); }
 .cp-rail-chip--pnj { background: color-mix(in srgb, var(--dw-color-pnj) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); border-color: color-mix(in srgb, var(--dw-color-pnj) 55%, transparent); }
 .cp-rail-chip--creature { background: color-mix(in srgb, var(--dw-color-creature) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); border-color: color-mix(in srgb, var(--dw-color-creature) 55%, transparent); }

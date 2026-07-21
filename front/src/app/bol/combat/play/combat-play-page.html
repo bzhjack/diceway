@@ -37,6 +37,14 @@
                 <mat-icon>{{ kindIcon(token.kind) }}</mat-icon>
               }
             </span>
+            <button
+              type="button"
+              class="cp-rail-remove"
+              [attr.aria-label]="'Retirer ' + token.nom"
+              (click)="askRemoveCombatant(token, $event)"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
           </div>
           <span class="cp-rail-name">{{ token.nom }}</span>
         </div>

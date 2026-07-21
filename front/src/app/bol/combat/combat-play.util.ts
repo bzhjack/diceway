@@ -13,6 +13,8 @@ export interface PlayToken {
   readonly vitaliteCourante: number | null;
   readonly tier: InitiativeTierKey | null;
   readonly lockedRound1: boolean;
+  /** Id de la ligne fight-session (heros/pnj/creature/demon) — plusieurs jetons d'un même lot de créatures/démons partagent le même id. */
+  readonly pivotId: number;
 }
 
 export interface PlayBoard {
@@ -25,6 +27,7 @@ interface PlaySource extends InitiativeSource {
   readonly avatar: string;
   readonly vitaliteMax: number | null;
   readonly vitaliteCourante: number | null;
+  readonly pivotId: number;
 }
 
 /** Construit les jetons du plateau (triés par initiative) à partir du snapshot d'une session de combat lancée. */
@@ -43,6 +46,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       // Un héros n'a pas de PV "courant" distinct dans le snapshot : sa vitalité de référence sert des deux côtés.
       vitaliteMax: h.heros?.ressources?.vitalite ?? null,
       vitaliteCourante: h.heros?.ressources?.vitalite ?? null,
+      pivotId: h.id,
     });
   }
 
@@ -57,6 +61,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       camp: p.camp,
       vitaliteMax: p.vitalite_max,
       vitaliteCourante: p.vitalite_courante,
+      pivotId: p.id,
     });
   }
 
@@ -75,6 +80,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
         camp: c.camp,
         vitaliteMax: c.vitalite_max,
         vitaliteCourante: c.vitalite_courante,
+        pivotId: c.id,
       });
     }
   }
@@ -94,6 +100,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
         camp: d.camp,
         vitaliteMax: d.vitalite_max,
         vitaliteCourante: d.vitalite_courante,
+        pivotId: d.id,
       });
     }
   }
@@ -113,6 +120,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       vitaliteCourante: source.vitaliteCourante,
       tier: entry.tier,
       lockedRound1: entry.lockedRound1,
+      pivotId: source.pivotId,
     };
   });
 
