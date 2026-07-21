@@ -183,8 +183,6 @@
 .cp-rail-chip--demon { background: color-mix(in srgb, var(--dw-color-demon) 30%, rgba(2, 6, 23, 0.5)); border-color: color-mix(in srgb, var(--dw-color-demon) 55%, transparent); }
 
 .cp-rail-chip--active {
-  width: 2.4rem;
-  height: 2.4rem;
   border-width: 2px;
   border-color: var(--dw-color-legendary);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--dw-color-legendary) 25%, transparent);
