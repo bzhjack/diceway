@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  background: linear-gradient(180deg, #000000, #0f172a 45%, #000000);
+  background: linear-gradient(180deg, var(--dw-surface-0), var(--dw-surface-50) 45%, var(--dw-surface-0));
   color: var(--dw-surface-500);
   font-size: 0.92rem;
   text-align: center;
@@ -29,7 +29,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: linear-gradient(180deg, #000000, #0f172a 45%, #000000);
+  background: linear-gradient(180deg, var(--dw-surface-0), var(--dw-surface-50) 45%, var(--dw-surface-0));
 }
 
 .cp-header {
@@ -165,7 +165,7 @@
   justify-content: center;
   border-radius: 999px;
   border: 1px solid var(--dw-border);
-  background: rgba(2, 6, 23, 0.5);
+  background: color-mix(in srgb, var(--dw-surface-0) 50%, transparent);
   color: var(--dw-surface-900);
   overflow: hidden;
 
@@ -177,10 +177,10 @@
   }
 }
 
-.cp-rail-chip--hero { background: color-mix(in srgb, var(--dw-color-reussite) 30%, rgba(2, 6, 23, 0.5)); border-color: color-mix(in srgb, var(--dw-color-reussite) 55%, transparent); }
-.cp-rail-chip--pnj { background: color-mix(in srgb, var(--dw-color-pnj) 30%, rgba(2, 6, 23, 0.5)); border-color: color-mix(in srgb, var(--dw-color-pnj) 55%, transparent); }
-.cp-rail-chip--creature { background: color-mix(in srgb, var(--dw-color-creature) 30%, rgba(2, 6, 23, 0.5)); border-color: color-mix(in srgb, var(--dw-color-creature) 55%, transparent); }
-.cp-rail-chip--demon { background: color-mix(in srgb, var(--dw-color-demon) 30%, rgba(2, 6, 23, 0.5)); border-color: color-mix(in srgb, var(--dw-color-demon) 55%, transparent); }
+.cp-rail-chip--hero { background: color-mix(in srgb, var(--dw-color-reussite) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); border-color: color-mix(in srgb, var(--dw-color-reussite) 55%, transparent); }
+.cp-rail-chip--pnj { background: color-mix(in srgb, var(--dw-color-pnj) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); border-color: color-mix(in srgb, var(--dw-color-pnj) 55%, transparent); }
+.cp-rail-chip--creature { background: color-mix(in srgb, var(--dw-color-creature) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); border-color: color-mix(in srgb, var(--dw-color-creature) 55%, transparent); }
+.cp-rail-chip--demon { background: color-mix(in srgb, var(--dw-color-demon) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); border-color: color-mix(in srgb, var(--dw-color-demon) 55%, transparent); }
 
 .cp-rail-chip--active {
   border-width: 2px;
@@ -225,20 +225,20 @@
   min-height: 20rem;
   display: grid;
   gap: 2px;
-  background: #090d17;
+  background: var(--dw-surface-0);
   border: 1px solid var(--dw-border);
   border-radius: 10px;
   padding: 2px;
 }
 
 .cp-cell {
-  background: rgba(148, 163, 184, 0.03);
-  border: 1px solid rgba(148, 163, 184, 0.05);
+  background: color-mix(in srgb, var(--dw-surface-500) 3%, transparent);
+  border: 1px solid color-mix(in srgb, var(--dw-surface-500) 5%, transparent);
   border-radius: 2px;
 }
 
-.cp-cell--hero { background: rgba(34, 197, 94, 0.06); }
-.cp-cell--adversaire { background: rgba(245, 158, 11, 0.06); }
+.cp-cell--hero { background: color-mix(in srgb, var(--dw-color-reussite) 6%, transparent); }
+.cp-cell--adversaire { background: color-mix(in srgb, var(--dw-color-creature) 6%, transparent); }
 
 .cp-token {
   position: relative;
@@ -276,7 +276,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: rgba(2, 6, 23, 0.6);
+  background: color-mix(in srgb, var(--dw-surface-0) 60%, transparent);
   color: var(--dw-surface-900);
 
   .mat-icon {
@@ -286,10 +286,10 @@
   }
 }
 
-.cp-token--hero .cp-token-portrait { background: color-mix(in srgb, var(--dw-color-reussite) 30%, rgba(2, 6, 23, 0.5)); }
-.cp-token--pnj .cp-token-portrait { background: color-mix(in srgb, var(--dw-color-pnj) 30%, rgba(2, 6, 23, 0.5)); }
-.cp-token--creature .cp-token-portrait { background: color-mix(in srgb, var(--dw-color-creature) 30%, rgba(2, 6, 23, 0.5)); }
-.cp-token--demon .cp-token-portrait { background: color-mix(in srgb, var(--dw-color-demon) 30%, rgba(2, 6, 23, 0.5)); }
+.cp-token--hero .cp-token-portrait { background: color-mix(in srgb, var(--dw-color-reussite) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
+.cp-token--pnj .cp-token-portrait { background: color-mix(in srgb, var(--dw-color-pnj) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
+.cp-token--creature .cp-token-portrait { background: color-mix(in srgb, var(--dw-color-creature) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
+.cp-token--demon .cp-token-portrait { background: color-mix(in srgb, var(--dw-color-demon) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
 
 .cp-token-name {
   margin: 0;
@@ -302,7 +302,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 4.5rem;
-  background: rgba(2, 6, 23, 0.55);
+  background: color-mix(in srgb, var(--dw-surface-0) 55%, transparent);
   padding: 0.02rem 0.3rem;
   border-radius: 4px;
 }
@@ -311,7 +311,7 @@
   width: 1.8rem;
   height: 3px;
   border-radius: 2px;
-  background: #1b2434;
+  background: var(--dw-surface-100);
   overflow: hidden;
 
   i {

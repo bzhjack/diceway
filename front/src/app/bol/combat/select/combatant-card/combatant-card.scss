@@ -7,7 +7,7 @@
   align-items: center;
   gap: 0.6rem;
   border: 1px solid var(--dw-border);
-  background: rgb(15 23 42 / 0.55);
+  background: color-mix(in srgb, var(--dw-surface-50) 55%, transparent);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
   border-radius: 8px;
   padding: 0.55rem 0.7rem;
@@ -26,22 +26,22 @@
 // plus sombre que le conteneur (dw-section--form) et bordure fortement teintée
 // pour que la carte se détache nettement au lieu de se fondre dedans.
 .cc-card--hero {
-  background: color-mix(in srgb, var(--dw-color-reussite) 16%, rgb(15 23 42 / 0.55));
+  background: color-mix(in srgb, var(--dw-color-reussite) 16%, color-mix(in srgb, var(--dw-surface-50) 55%, transparent));
   border-color: color-mix(in srgb, var(--dw-color-reussite) 65%, var(--dw-border));
 }
 
 .cc-card--pnj {
-  background: color-mix(in srgb, var(--dw-color-pnj) 16%, rgb(15 23 42 / 0.55));
+  background: color-mix(in srgb, var(--dw-color-pnj) 16%, color-mix(in srgb, var(--dw-surface-50) 55%, transparent));
   border-color: color-mix(in srgb, var(--dw-color-pnj) 65%, var(--dw-border));
 }
 
 .cc-card--creature {
-  background: color-mix(in srgb, var(--dw-color-creature) 16%, rgb(15 23 42 / 0.55));
+  background: color-mix(in srgb, var(--dw-color-creature) 16%, color-mix(in srgb, var(--dw-surface-50) 55%, transparent));
   border-color: color-mix(in srgb, var(--dw-color-creature) 65%, var(--dw-border));
 }
 
 .cc-card--demon {
-  background: color-mix(in srgb, var(--dw-color-demon) 16%, rgb(15 23 42 / 0.55));
+  background: color-mix(in srgb, var(--dw-color-demon) 16%, color-mix(in srgb, var(--dw-surface-50) 55%, transparent));
   border-color: color-mix(in srgb, var(--dw-color-demon) 65%, var(--dw-border));
 }
 
@@ -52,7 +52,7 @@
   overflow: hidden;
   flex-shrink: 0;
   border: 1px solid var(--dw-border);
-  background: rgb(15 23 42 / 0.6);
+  background: color-mix(in srgb, var(--dw-surface-50) 60%, transparent);
 }
 
 // Seul l'avatar ouvre le statbloc — un vrai <button>, séparé du nom et des
@@ -154,8 +154,8 @@ button.cc-open {
   font-weight: 700;
   padding: 0.14rem 0.44rem;
   border-radius: 999px;
-  background: rgba(148, 163, 184, 0.12);
-  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: color-mix(in srgb, var(--dw-surface-500) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--dw-surface-500) 22%, transparent);
   color: var(--dw-surface-600);
   font-variant-numeric: tabular-nums;
 }
@@ -169,9 +169,9 @@ button.cc-open {
 }
 
 .cc-chip--hp {
-  color: #fda4af;
-  background: rgba(244, 63, 94, 0.1);
-  border-color: rgba(244, 63, 94, 0.3);
+  color: var(--dw-color-demon);
+  background: color-mix(in srgb, var(--dw-color-demon) 10%, transparent);
+  border-color: color-mix(in srgb, var(--dw-color-demon) 30%, transparent);
 }
 
 .cc-chip--star {
@@ -220,7 +220,7 @@ button.cc-open {
   flex-shrink: 0;
   height: 1.35rem;
   border: 1px solid var(--dw-border);
-  background: rgba(2, 6, 23, 0.5);
+  background: color-mix(in srgb, var(--dw-surface-0) 50%, transparent);
   color: var(--dw-surface-500);
   font: inherit;
   font-size: 0.64rem;
@@ -235,26 +235,26 @@ button.cc-open {
 }
 
 .cc-result-btn--echec_critique.active {
-  background: color-mix(in srgb, var(--dw-color-echec-forte) 30%, rgba(2, 6, 23, 0.5));
+  background: color-mix(in srgb, var(--dw-color-echec-forte) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent));
   border-color: var(--dw-color-echec-forte);
   color: var(--dw-surface-900);
 }
 
 .cc-result-btn--echec.active {
-  background: color-mix(in srgb, var(--dw-color-echec) 30%, rgba(2, 6, 23, 0.5));
+  background: color-mix(in srgb, var(--dw-color-echec) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent));
   border-color: var(--dw-color-echec);
   color: var(--dw-surface-900);
 }
 
 .cc-result-btn--reussite.active {
-  background: color-mix(in srgb, var(--dw-color-reussite) 30%, rgba(2, 6, 23, 0.5));
+  background: color-mix(in srgb, var(--dw-color-reussite) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent));
   border-color: var(--dw-color-reussite);
   color: var(--dw-surface-900);
 }
 
 .cc-result-btn--heroique.active,
 .cc-result-btn--legendaire.active {
-  background: color-mix(in srgb, var(--dw-color-legendary) 30%, rgba(2, 6, 23, 0.5));
+  background: color-mix(in srgb, var(--dw-color-legendary) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent));
   border-color: var(--dw-color-legendary);
   color: var(--dw-surface-900);
 }
@@ -297,7 +297,7 @@ button.cc-open {
   color: var(--dw-surface-400);
 
   &:hover {
-    color: #fb7185;
+    color: var(--dw-color-demon);
   }
 }
 
