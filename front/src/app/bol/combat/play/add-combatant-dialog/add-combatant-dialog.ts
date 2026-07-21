@@ -16,6 +16,13 @@ type CatalogFilter = CombatantKind | 'all';
 
 export interface AddCombatantDialogData {
   readonly sessionId: string;
+  /** Ids source (heros_id / pnj_id) déjà présents dans la session — un héros ou un PNJ ne peut y figurer qu'une fois. */
+  readonly existingHeroIds: ReadonlySet<string>;
+  readonly existingPnjIds: ReadonlySet<string>;
+}
+
+function duplicateKey(kind: CombatantKind, sourceId: string): string {
+  return `${kind}:${String(sourceId)}`;
 }
 
 /** Dialog d'ajout d'un combattant à une session déjà lancée (contrairement au picker de préparation, chaque clic ajoute immédiatement côté backend). */
@@ -38,6 +45,8 @@ export class AddCombatantDialogComponent {
   protected readonly camp = signal<CombatCamp>('adversaires');
   protected readonly addedCount = signal(0);
   protected readonly pendingCatalogId = signal<string | null>(null);
+  /** Héros/PNJ ajoutés depuis l'ouverture du dialog (le dialog reste ouvert entre deux ajouts). */
+  private readonly addedDuringSession = signal<ReadonlySet<string>>(new Set());
 
   protected readonly kindIcon = combatantKindIcon;
   protected readonly kindIconIsSvg = combatantKindIconIsSvg;
@@ -66,8 +75,20 @@ export class AddCombatantDialogComponent {
     this.camp.set(camp);
   }
 
+  /** Un héros ou un PNJ ne peut participer qu'une fois à un même combat (contrairement aux créatures/démons, ré-instanciables). */
+  protected isAlreadyAdded(entry: CombatCatalogEntry): boolean {
+    const sourceId = String(entry.sourceId);
+    if (entry.kind === 'hero') {
+      return this.data.existingHeroIds.has(sourceId) || this.addedDuringSession().has(duplicateKey('hero', sourceId));
+    }
+    if (entry.kind === 'pnj') {
+      return this.data.existingPnjIds.has(sourceId) || this.addedDuringSession().has(duplicateKey('pnj', sourceId));
+    }
+    return false;
+  }
+
   protected add(entry: CombatCatalogEntry): void {
-    if (this.pendingCatalogId()) {
+    if (this.pendingCatalogId() || this.isAlreadyAdded(entry)) {
       return;
     }
 
@@ -78,6 +99,9 @@ export class AddCombatantDialogComponent {
         next: () => {
           this.pendingCatalogId.set(null);
           this.addedCount.update((n) => n + 1);
+          if (entry.kind === 'hero' || entry.kind === 'pnj') {
+            this.addedDuringSession.update((set) => new Set(set).add(duplicateKey(entry.kind, entry.sourceId)));
+          }
           this.snackBar.open(`${entry.nom} ajouté.`, undefined, {duration: 2000});
         },
         error: (error: unknown) => {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Bol;
 
+use App\Exceptions\Bol\DuplicateCombatantException;
 use App\Http\Controllers\Controller;
 use App\Http\Services\Bol\BolFightSessionService;
 use Illuminate\Http\Request;
@@ -46,14 +47,18 @@ class BolFightSessionController extends Controller
 
     public function addCombatant(Request $request, string $id)
     {
-        $session = $this->fightSessionService->addCombatant(
-            $id,
-            Auth::id(),
-            (string) $request->input('kind'),
-            (string) $request->input('sourceId'),
-            (string) $request->input('camp'),
-            (int) ($request->input('qty') ?? 1),
-        );
+        try {
+            $session = $this->fightSessionService->addCombatant(
+                $id,
+                Auth::id(),
+                (string) $request->input('kind'),
+                (string) $request->input('sourceId'),
+                (string) $request->input('camp'),
+                (int) ($request->input('qty') ?? 1),
+            );
+        } catch (DuplicateCombatantException) {
+            return response()->json(['error' => 'Ce combattant participe déjà à ce combat.'], 422);
+        }
 
         if (!$session) {
             return response()->json(['error' => 'Not found'], 404);

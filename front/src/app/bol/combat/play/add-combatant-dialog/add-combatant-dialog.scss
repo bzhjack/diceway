@@ -166,3 +166,20 @@
   color: var(--dw-color-reussite);
   font-weight: 700;
 }
+
+.acd-added {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  color: var(--dw-color-reussite);
+
+  .mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+  }
+}

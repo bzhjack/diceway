@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Bol;
 
+use App\Exceptions\Bol\DuplicateCombatantException;
 use App\Models\Bol\BolCreature;
 use App\Models\Bol\BolDemon;
 use App\Models\Bol\BolFightSession;
@@ -64,7 +65,13 @@ class BolFightSessionService
         return (bool) BolFightSession::where('id', $id)->where('user_id', $userId)->delete();
     }
 
-    /** Ajoute un seul combattant à une session déjà lancée, sans toucher aux combattants déjà en place. */
+    /**
+     * Ajoute un seul combattant à une session déjà lancée, sans toucher aux combattants déjà en
+     * place. Un héros ou un PNJ donné (identité unique) ne peut pas être ajouté deux fois à la
+     * même session — contrairement aux créatures/démons, qui sont des gabarits ré-instanciables.
+     *
+     * @throws DuplicateCombatantException si ce héros/PNJ participe déjà à ce combat.
+     */
     public function addCombatant(
         string $sessionId,
         string $userId,
@@ -78,6 +85,10 @@ class BolFightSessionService
             return null;
         }
 
+        if (in_array($kind, ['hero', 'pnj'], true) && $this->hasCombatant($sessionId, $kind, $sourceId)) {
+            throw new DuplicateCombatantException();
+        }
+
         match ($kind) {
             'hero'     => $this->createHeroRow($sessionId, $sourceId, $camp),
             'pnj'      => $this->createPnjRow($sessionId, $sourceId, $camp),
@@ -87,6 +98,15 @@ class BolFightSessionService
         };
 
         return $this->getSessionWithRelations($sessionId);
+    }
+
+    private function hasCombatant(string $sessionId, string $kind, string $sourceId): bool
+    {
+        return match ($kind) {
+            'hero'  => BolFightSessionHeros::where('fight_session_id', $sessionId)->where('heros_id', $sourceId)->exists(),
+            'pnj'   => BolFightSessionPnj::where('fight_session_id', $sessionId)->where('pnj_id', $sourceId)->exists(),
+            default => false,
+        };
     }
 
     private function syncHeros(string $sessionId, array $list): void

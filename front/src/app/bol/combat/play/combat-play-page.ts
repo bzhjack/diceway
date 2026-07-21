@@ -80,17 +80,23 @@ export class CombatPlayPageComponent {
   }
 
   protected openAddCombatantDialog(): void {
-    const sessionId = this.session()?.id;
-    if (!sessionId) {
+    const session = this.session();
+    const sessionId = session?.id;
+    if (!session || !sessionId) {
       return;
     }
+
+    const existingHeroIds = new Set((session.heros ?? []).map((h) => String(h.heros_id)));
+    const existingPnjIds = new Set(
+      (session.pnjs ?? []).map((p) => p.pnj_id).filter((pnjId): pnjId is string => !!pnjId).map(String),
+    );
 
     this.dialog
       .open(AddCombatantDialogComponent, {
         width: 'min(760px, 94vw)',
         maxWidth: '94vw',
         maxHeight: '85vh',
-        data: {sessionId},
+        data: {sessionId, existingHeroIds, existingPnjIds},
       })
       .afterClosed()
       .subscribe((didAdd: boolean | undefined) => {

@@ -50,15 +50,21 @@
           </p>
           <p class="acd-kind">{{ rankLabel(entry) }} · ❤ {{ entry.vitalite }}</p>
         </div>
-        <button
-          type="button"
-          class="acd-add"
-          [disabled]="pendingCatalogId() === entry.catalogId"
-          [attr.aria-label]="'Ajouter ' + entry.nom"
-          (click)="add(entry)"
-        >
-          <mat-icon>add</mat-icon>
-        </button>
+        @if (isAlreadyAdded(entry)) {
+          <span class="acd-added" title="Participe déjà à ce combat">
+            <mat-icon>check</mat-icon>
+          </span>
+        } @else {
+          <button
+            type="button"
+            class="acd-add"
+            [disabled]="pendingCatalogId() === entry.catalogId"
+            [attr.aria-label]="'Ajouter ' + entry.nom"
+            (click)="add(entry)"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        }
       </div>
     } @empty {
       <p class="acd-empty">Aucun résultat.</p>
