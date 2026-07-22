@@ -12,6 +12,17 @@
 
 <mat-menu #menu="matMenu" class="am-panel">
   <div class="am-content" (click)="$event.stopPropagation()">
+    @if (stats().length > 0) {
+      <div class="am-stats">
+        @for (s of stats(); track s.label) {
+          <span class="am-stat">
+            <span class="am-stat-label">{{ s.label }}</span>
+            <span class="am-stat-value">{{ s.value }}</span>
+          </span>
+        }
+      </div>
+    }
+
     <span class="am-eyebrow">Arme</span>
     <div class="am-chips">
       @for (a of displayArmes(); track a.id) {

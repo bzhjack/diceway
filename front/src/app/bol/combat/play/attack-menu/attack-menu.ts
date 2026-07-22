@@ -15,6 +15,12 @@ const ARME_IMPROVISEE: BolHerosArmeModel = {
   arme: {id: null, arme: 'Arme improvisée', type: 'M', degats: 'd3', portee: null, notes: null},
 };
 
+/** Rappel d'un attribut de combat (agilité, vigueur, mêlée/tir, défense…) affiché au-dessus du choix d'arme. */
+export interface CombatReminderStat {
+  readonly label: string;
+  readonly value: number;
+}
+
 /**
  * Bouton épée d'un jeton de combat : ouvre un menu compact (choix d'arme) avant de laisser le
  * parent entrer en mode ciblage. Auto-contenu comme `bol-add-menu` (bouton + mat-menu dans le même
@@ -31,6 +37,8 @@ export class AttackMenuComponent {
   readonly attackerName = input.required<string>();
   /** Armes équipées du héros — tableau vide pour pnj/créature/démon ou tant que non chargé. */
   readonly armes = input<readonly BolHerosArmeModel[]>([]);
+  /** Rappel des attributs de combat de l'attaquant (agilité, vigueur, mêlée/tir, défense…). */
+  readonly stats = input<readonly CombatReminderStat[]>([]);
 
   /** Émis à l'ouverture du menu, pour laisser le parent charger les armes du héros à la demande. */
   readonly opened = output<void>();

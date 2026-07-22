@@ -109,6 +109,7 @@
           <bol-attack-menu
             [attackerName]="token.nom"
             [armes]="armesFor(token)"
+            [stats]="combatStatsFor(token)"
             (opened)="loadArmes(token)"
             (confirmed)="onAttackConfirmed(token, $event)"
           />

@@ -17,7 +17,7 @@ import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialo
 import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard, PlayToken} from '../combat-play.util';
 import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
-import {AttackMenuComponent} from './attack-menu/attack-menu';
+import {AttackMenuComponent, CombatReminderStat} from './attack-menu/attack-menu';
 
 const COLS_PER_ZONE = 3;
 const HERO_ZONE = {xMin: 8, xMax: 32, yMin: 16, yMax: 84};
@@ -25,6 +25,16 @@ const ADVERSAIRE_ZONE = {xMin: 68, xMax: 92, yMin: 16, yMax: 84};
 
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
+}
+
+/** Armes + attributs de combat d'un héros, chargés à la demande à l'ouverture du menu épée. */
+interface HeroMenuData {
+  readonly armes: readonly BolHerosArmeModel[];
+  readonly agilite: number;
+  readonly vigueur: number;
+  readonly melee: number;
+  readonly tir: number;
+  readonly defense: number;
 }
 
 /** Petit décalage déterministe (basé sur la clé du jeton) pour éviter un alignement trop rigide sur la carte. */
@@ -107,8 +117,8 @@ export class CombatPlayPageComponent {
   /** Dégâts de l'arme choisie dans le menu épée pour l'attaquant en cours de ciblage. */
   private readonly attackDegats = signal<string | null>(null);
 
-  /** Armes des héros déjà chargées à la demande (clé de jeton → armes), pour remplir le menu épée sans tout précharger. */
-  private readonly heroArmes = signal<ReadonlyMap<string, readonly BolHerosArmeModel[]>>(new Map());
+  /** Armes + attributs de combat des héros chargés à la demande (clé de jeton → données), pour remplir le menu épée sans tout précharger. */
+  private readonly heroMenuData = signal<ReadonlyMap<string, HeroMenuData>>(new Map());
 
   protected readonly kindIcon = combatantKindIcon;
   protected readonly kindIconIsSvg = combatantKindIconIsSvg;
@@ -185,9 +195,9 @@ export class CombatPlayPageComponent {
     });
   }
 
-  /** Menu épée ouvert sur un jeton : charge les armes du héros à la demande (pas de préchargement pour tout le plateau). */
+  /** Menu épée ouvert sur un jeton : charge les armes + attributs du héros à la demande (pas de préchargement pour tout le plateau). */
   protected loadArmes(token: PlayToken): void {
-    if (token.kind !== 'hero' || this.heroArmes().has(token.key)) {
+    if (token.kind !== 'hero' || this.heroMenuData().has(token.key)) {
       return;
     }
 
@@ -201,13 +211,54 @@ export class CombatPlayPageComponent {
       .pipe(take(1))
       .subscribe((hero) => {
         const armes = Array.isArray(hero.armes) && hero.armes.length > 0 && typeof hero.armes[0] !== 'number' ? (hero.armes as BolHerosArmeModel[]) : [];
-        this.heroArmes.update((map) => new Map(map).set(token.key, armes));
+        this.heroMenuData.update((map) =>
+          new Map(map).set(token.key, {
+            armes,
+            agilite: hero.attributs.agilite,
+            vigueur: hero.attributs.vigueur,
+            melee: hero.combat.melee,
+            tir: hero.combat.tir,
+            defense: hero.combat.defense,
+          }),
+        );
       });
   }
 
   /** Armes du héros pour le menu épée d'un jeton — tableau vide pour pnj/créature/démon ou tant que non chargé. */
   protected armesFor(token: PlayToken): readonly BolHerosArmeModel[] {
-    return this.heroArmes().get(token.key) ?? [];
+    return this.heroMenuData().get(token.key)?.armes ?? [];
+  }
+
+  /** Rappel d'attributs de combat affiché dans le menu épée — héros : chargés à la demande ; autres : déjà dans le snapshot. */
+  protected combatStatsFor(token: PlayToken): readonly CombatReminderStat[] {
+    if (token.kind === 'hero') {
+      const data = this.heroMenuData().get(token.key);
+      if (!data) {
+        return [];
+      }
+      return [
+        {label: 'Agilité', value: data.agilite},
+        {label: 'Vigueur', value: data.vigueur},
+        {label: 'Mêlée', value: data.melee},
+        {label: 'Tir', value: data.tir},
+        {label: 'Défense', value: data.defense},
+      ];
+    }
+
+    const c = token.combat;
+    const stats: CombatReminderStat[] = [
+      {label: 'Agilité', value: c.agilite ?? 0},
+      {label: 'Vigueur', value: c.vigueur ?? 0},
+    ];
+
+    if (c.attaque !== null) {
+      stats.push({label: 'Attaque', value: c.attaque});
+    } else {
+      stats.push({label: 'Mêlée', value: c.melee ?? 0}, {label: 'Tir', value: c.tir ?? 0});
+    }
+
+    stats.push({label: 'Défense', value: c.defense ?? 0});
+    return stats;
   }
 
   /** Menu épée confirmé (arme choisie) : entre en mode ciblage pour cet attaquant. */
