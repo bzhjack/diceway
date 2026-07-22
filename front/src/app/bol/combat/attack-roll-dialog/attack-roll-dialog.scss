@@ -13,10 +13,17 @@
   overflow-x: hidden;
 }
 
+// MDC insère un ::before invisible de 40px de haut sur .mdc-dialog__title (hack interne pour caler
+// la hauteur/baseline du titre) ; en passant le h2 en display:flex, ce pseudo-élément devient un
+// flex item à part entière et gonfle la boîte du titre — on le neutralise ici.
 .atd-panel .mat-mdc-dialog-title {
   margin: 0;
   padding: 0;
-  display: block;
+  display: flex;
+
+  &::before {
+    display: none;
+  }
 }
 
 .atd-shell {
@@ -28,10 +35,10 @@
 
 .atd-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.7rem 1.1rem 0.6rem;
+  padding: 0.4rem 0.9rem;
   border-bottom: 1px solid color-mix(in srgb, var(--dw-color-echec-forte) 32%, transparent);
 }
 
@@ -70,8 +77,8 @@
 
 .atd-close {
   flex-shrink: 0;
-  width: 1.7rem;
-  height: 1.7rem;
+  width: 1.5rem;
+  height: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -82,9 +89,9 @@
   cursor: pointer;
 
   .mat-icon {
-    font-size: 1.05rem;
-    width: 1.05rem;
-    height: 1.05rem;
+    font-size: 0.95rem;
+    width: 0.95rem;
+    height: 0.95rem;
   }
 
   &:hover {
@@ -286,20 +293,22 @@
   color: var(--dw-color-echec-forte);
 }
 
-.atd-calc-row {
-  display: grid;
-  grid-template-columns: 1.3rem 1fr auto auto;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.2rem 0;
-  font-size: 0.8rem;
-  color: var(--dw-surface-700);
-  border-top: 1px solid color-mix(in srgb, var(--dw-surface-500) 12%, transparent);
+.atd-calc-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
 
-  &:first-child {
-    border-top: none;
-    padding-top: 0;
-  }
+.atd-calc-col {
+  flex: 1 1 4.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.45rem 0.3rem;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--dw-surface-500) 7%, transparent);
+  text-align: center;
 }
 
 .atd-calc-icon {
@@ -310,20 +319,23 @@
 }
 
 .atd-calc-label {
-  text-align: left;
-}
-
-.atd-calc-detail {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   color: var(--dw-surface-500);
-  font-variant-numeric: tabular-nums;
-  text-align: right;
 }
 
 .atd-calc-value {
-  min-width: 2.4rem;
-  text-align: right;
-  font-weight: 700;
+  font-size: 1.05rem;
+  font-weight: 800;
   color: var(--dw-surface-800);
+  font-variant-numeric: tabular-nums;
+}
+
+.atd-calc-detail {
+  font-size: 0.62rem;
+  color: var(--dw-surface-500);
   font-variant-numeric: tabular-nums;
 }
 

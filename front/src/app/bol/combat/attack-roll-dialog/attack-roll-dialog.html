@@ -58,35 +58,34 @@
     <div class="atd-calc">
       <p class="atd-calc-title">Détail du calcul</p>
 
-      <div class="atd-calc-row">
-        <mat-icon class="atd-calc-icon" svgIcon="d6" />
-        <span class="atd-calc-label">Dés (2d6)</span>
-        <span class="atd-calc-detail">{{ d[0] }} + {{ d[1] }}</span>
-        <span class="atd-calc-value">{{ attackDiceSum() }}</span>
-      </div>
-
-      <div class="atd-calc-row">
-        <mat-icon class="atd-calc-icon">add</mat-icon>
-        <span class="atd-calc-label">Bonus attaquant</span>
-        <span class="atd-calc-detail"></span>
-        <span class="atd-calc-value">+{{ attackerBonus() }}</span>
-      </div>
-
-      <div class="atd-calc-row">
-        <mat-icon class="atd-calc-icon">remove</mat-icon>
-        <span class="atd-calc-label">Défense cible</span>
-        <span class="atd-calc-detail"></span>
-        <span class="atd-calc-value">−{{ targetDefense() }}</span>
-      </div>
-
-      @if (modifier() !== 0) {
-        <div class="atd-calc-row">
-          <mat-icon class="atd-calc-icon">tune</mat-icon>
-          <span class="atd-calc-label">Modificateur</span>
-          <span class="atd-calc-detail"></span>
-          <span class="atd-calc-value">{{ modifier() >= 0 ? '+' : '' }}{{ modifier() }}</span>
+      <div class="atd-calc-grid">
+        <div class="atd-calc-col">
+          <mat-icon class="atd-calc-icon" svgIcon="d6" />
+          <span class="atd-calc-label">Dés (2d6)</span>
+          <span class="atd-calc-value">{{ attackDiceSum() }}</span>
+          <span class="atd-calc-detail">{{ d[0] }} + {{ d[1] }}</span>
         </div>
-      }
+
+        <div class="atd-calc-col">
+          <mat-icon class="atd-calc-icon">add</mat-icon>
+          <span class="atd-calc-label">Bonus attaquant</span>
+          <span class="atd-calc-value">+{{ attackerBonus() }}</span>
+        </div>
+
+        <div class="atd-calc-col">
+          <mat-icon class="atd-calc-icon">remove</mat-icon>
+          <span class="atd-calc-label">Défense cible</span>
+          <span class="atd-calc-value">−{{ targetDefense() }}</span>
+        </div>
+
+        @if (modifier() !== 0) {
+          <div class="atd-calc-col">
+            <mat-icon class="atd-calc-icon">tune</mat-icon>
+            <span class="atd-calc-label">Modificateur</span>
+            <span class="atd-calc-value">{{ modifier() >= 0 ? '+' : '' }}{{ modifier() }}</span>
+          </div>
+        }
+      </div>
     </div>
   }
 
