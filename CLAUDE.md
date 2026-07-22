@@ -83,26 +83,26 @@ When a task touches game rules, character creation, equipment, careers, language
 - `providedIn: 'root'` for singleton services.
 - Single responsibility per service.
 
-### PrimeNG
-- For buttons, do not use `styleClass` — prefer component inputs (`size`, `severity`, `outlined`, `text`) and CSS on container wrappers.
+### UI toolkit
+- **Angular Material only** — the app has fully migrated off PrimeNG (no `primeng`/`primeicons` dependency, no `p-*` element anywhere in `front/src/app/`). Use `mat-flat-button`/`mat-stroked-button`/`mat-icon-button` etc., not PrimeNG component names or `pi-*` icons.
+- For buttons, prefer component inputs/attributes (`mat-flat-button`, `mat-stroked-button`, `size="small"`, `color`) and CSS on container wrappers over ad-hoc inline styling.
+- Small anchored popups (e.g. a menu triggered by an icon button) use `MatMenuModule` (`mat-menu` + `[matMenuTriggerFor]`) — see `bol/shared/add-menu/` for the reference pattern.
+- Custom cross-page primitives live under `front/src/app/shared/` (`dw-tag`, `dw-badge`, `dw-panel`, `dw-collapsible-row`, `dw-confirm-dialog`, `dw-statblock-dialog`, `dw-library-header`, `dw-library-toolbar`, …) — reuse these before inventing a new one.
 
 ### Theming
 - Angular Material theming (used for `front/src/styles/_material-theme.scss`) — reference guide: https://material.angular.dev/guide/theming
 - `MatFormField` app-wide defaults (`appearance: 'outline'`, `floatLabel: 'always'`) are set via `MAT_FORM_FIELD_DEFAULT_OPTIONS` in `front/src/app/app.config.ts` — don't re-set `appearance="outline"` on individual `<mat-form-field>` elements.
+- Visual/dark-fantasy tokens (`--dw-surface-0` … `--dw-surface-900`, `--dw-border`, `--dw-color-reussite`/`echec`/`echec-forte`/`legendary`/`pnj`/`creature`/`demon`) are defined in `front/src/styles/_tokens.scss` — single fixed dark palette, no light/dark toggle. Display font `'Muse Display Harmony'` and body font `'Muse Sans'` are self-hosted (`front/src/styles/_fonts.scss`, files in `front/src/assets/fonts/`).
 
 ### Library pages
 
 Every library page (list of entities) follows this structure:
 
-1. **Header card** — `<p-card class="dw-card--header">` containing:
-   - Eyebrow (`text-xs font-black uppercase tracking-[0.22em] text-amber-300`) + `<h1>` title
-   - Short description paragraph
-   - `<p-tag>` with the item count
-   - `<div class="library-header-actions flex flex-wrap items-center justify-between gap-1.5">`:
-     - Left side: navigation links + primary action wrapped in `<span class="library-header-actions__primary">` (`severity="warn"`, `size="small"`)
-     - Right side: `<p-button label="Retour au dashboard" icon="pi pi-arrow-left" [routerLink]="'/'" severity="secondary" [outlined]="true" size="small" />`
+1. **Header** — `<dw-library-header [title]="…" [description]="…" [color]="…" [image]="…">`:
+   - `dwHeaderTags` slot: `<dw-tag>` with the item count(s).
+   - `dwHeaderActions` slot: left side — navigation links + primary action as `mat-flat-button`/`mat-stroked-button` (`size="small"`); right side — `<button mat-stroked-button size="small" routerLink="/"><mat-icon>arrow_back</mat-icon> Retour au dashboard</button>`.
 
-2. **Content card** — `<p-card>` with search field and item list/table.
+2. **Content card** — `<mat-card appearance="outlined">` containing a `<dw-library-toolbar>` (search field via `[(searchTerm)]`, optional filter controls in the `dwToolbarFilter` slot, `<dw-tag dwToolbarCount>` for the filtered count) and the item grid/list/table below.
 
 See `creature-library-page.html` or `pnj-library-page.html` as reference.
 

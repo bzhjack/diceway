@@ -1,0 +1,55 @@
+<button
+  type="button"
+  class="am-trigger"
+  [attr.aria-label]="'Attaquer avec ' + attackerName()"
+  #trigger="matMenuTrigger"
+  [matMenuTriggerFor]="menu"
+  (click)="$event.stopPropagation()"
+  (menuOpened)="reset()"
+>
+  <mat-icon svgIcon="sword" />
+</button>
+
+<mat-menu #menu="matMenu" class="am-panel">
+  <div class="am-content" (click)="$event.stopPropagation()">
+    @if (armes().length > 0) {
+      <span class="am-eyebrow">Arme</span>
+      <div class="am-chips">
+        @for (a of armes(); track a.id) {
+          <button
+            type="button"
+            class="am-chip"
+            [class.am-chip--selected]="effectiveArme()?.id === a.id"
+            (click)="selectArme(a.id)"
+          >
+            {{ a.arme?.arme }}
+          </button>
+        }
+      </div>
+    }
+
+    <span class="am-eyebrow">Action</span>
+    <div class="am-chips">
+      @for (act of actions(); track act.id) {
+        <button
+          type="button"
+          class="am-chip"
+          [class.am-chip--selected]="selectedAction().id === act.id"
+          [attr.title]="act.description"
+          (click)="selectedAction.set(act)"
+        >
+          <mat-icon>{{ act.icon }}</mat-icon>
+          {{ act.label }}
+          @if (act.modLabel !== '—') {
+            <span class="am-chip-mod">{{ act.modLabel }}</span>
+          }
+        </button>
+      }
+    </div>
+
+    <button type="button" class="am-confirm" (click)="confirm(); trigger.closeMenu()">
+      <mat-icon>my_location</mat-icon>
+      Cibler
+    </button>
+  </div>
+</mat-menu>

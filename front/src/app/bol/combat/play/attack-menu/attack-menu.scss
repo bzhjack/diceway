@@ -1,0 +1,146 @@
+// `:host { display: contents; }` — même pattern que `bol-add-menu` : le bouton épée doit se
+// positionner par rapport à `.cp-token-portrait` (l'ancêtre réel), pas par rapport à ce composant.
+:host {
+  display: contents;
+}
+
+.am-trigger {
+  position: absolute;
+  top: -0.2rem;
+  right: -0.3rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 2px solid var(--dw-surface-0);
+  background: var(--dw-color-legendary);
+  color: #1c1200;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+  z-index: 2;
+
+  .mat-icon {
+    font-size: 0.7rem;
+    width: 0.7rem;
+    height: 0.7rem;
+  }
+}
+
+// `:host-context` : seul moyen de réagir au survol/état de `.cp-token` (ancêtre hors du template de
+// ce composant) depuis la propre feuille de style du composant — un sélecteur descendant écrit côté
+// `combat-play-page.scss` ne matcherait pas les éléments internes de `attack-menu.html`.
+:host-context(.cp-token:hover) .am-trigger,
+.am-trigger:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+// En mode ciblage (une épée déjà confirmée), aucun jeton ne doit réafficher son épée au survol.
+:host-context(.cp-token--targeting) .am-trigger {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+::ng-deep .am-panel.mat-mdc-menu-panel {
+  background: linear-gradient(180deg, var(--dw-surface-50), var(--dw-surface-0));
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 45%, var(--dw-border));
+  border-radius: 12px;
+  min-width: 15rem;
+  max-width: 22rem;
+}
+
+.am-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.6rem 0.7rem 0.65rem;
+}
+
+.am-eyebrow {
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dw-surface-400);
+}
+
+.am-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.am-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--dw-border);
+  background: color-mix(in srgb, var(--dw-surface-0) 45%, transparent);
+  color: var(--dw-surface-500);
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 0.85rem;
+    width: 0.85rem;
+    height: 0.85rem;
+  }
+
+  &:hover {
+    border-color: var(--dw-surface-500);
+    color: var(--dw-surface-800);
+  }
+}
+
+.am-chip--selected {
+  border-color: color-mix(in srgb, var(--dw-color-legendary) 60%, transparent);
+  background: var(--dw-color-legendary);
+  color: #1c1200;
+
+  &:hover {
+    color: #1c1200;
+    border-color: color-mix(in srgb, var(--dw-color-legendary) 60%, transparent);
+  }
+}
+
+.am-chip-mod {
+  font-size: 0.6rem;
+  opacity: 0.85;
+}
+
+.am-confirm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-top: 0.1rem;
+  padding: 0.4rem;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--dw-color-echec-forte) 55%, transparent);
+  background: color-mix(in srgb, var(--dw-color-echec-forte) 16%, transparent);
+  color: var(--dw-color-echec-forte);
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 0.9rem;
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--dw-color-echec-forte) 24%, transparent);
+  }
+}

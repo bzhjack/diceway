@@ -397,44 +397,8 @@
   }
 }
 
-.cp-token-attack {
-  position: absolute;
-  top: -0.2rem;
-  right: -0.3rem;
-  width: 1.15rem;
-  height: 1.15rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  border: 2px solid var(--dw-surface-0);
-  background: var(--dw-color-legendary);
-  color: #1c1200;
-  padding: 0;
-  cursor: pointer;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.12s ease;
-
-  .mat-icon {
-    font-size: 0.7rem;
-    width: 0.7rem;
-    height: 0.7rem;
-  }
-}
-
-.cp-token:hover .cp-token-attack,
-.cp-token-attack:focus-visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-// En mode ciblage (une épée déjà cliquée), aucun jeton ne doit réafficher son épée au survol —
-// on clique directement la cible pour valider, la ré-afficher prêterait à confusion.
-.cp-token--targeting .cp-token-attack {
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
+// Le bouton épée (survol/mode ciblage) est stylé dans `attack-menu.scss` (`bol-attack-menu`), via
+// `:host-context(.cp-token…)` — il ne peut plus être ciblé en descendant CSS depuis cette feuille.
 
 .cp-token-hint {
   position: absolute;

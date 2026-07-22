@@ -10,6 +10,8 @@ export interface AttackRollDialogData {
   readonly targetNom: string;
   readonly attacker: ResolvedCombatStats;
   readonly target: ResolvedCombatStats;
+  /** Modificateur préréglé depuis l'action de combat choisie dans le menu épée (posture, défaut de l'armure…). */
+  readonly initialModifier?: number;
 }
 
 type DegatsDiceKind = 'd3' | 'd6' | 'd6m' | 'd6b';
@@ -46,7 +48,7 @@ export class AttackRollDialogComponent {
   protected readonly useTir = signal(this.data.attacker.attaque === null && this.data.attacker.tir > this.data.attacker.melee);
   protected readonly attackerBonus = signal(this.initialAttackerBonus());
   protected readonly targetDefense = signal(this.data.target.defense);
-  protected readonly modifier = signal(0);
+  protected readonly modifier = signal(this.data.initialModifier ?? 0);
 
   protected readonly rollingAttack = signal(false);
   protected readonly attackDice = signal<readonly [number, number] | null>(null);

@@ -8,14 +8,17 @@ import {ActivatedRoute, RouterLink} from '@angular/router';
 import {forkJoin, take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
+import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {BolFightSessionModel, CombatCamp} from '../../models/bol-fight-session.model';
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {combatantKindIcon, combatantKindIconIsSvg} from '../select/combat-statblock.util';
+import {AttackChoice} from '../combat-action.util';
 import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialog';
 import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard, PlayToken} from '../combat-play.util';
 import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
+import {AttackMenuComponent} from './attack-menu/attack-menu';
 
 const COLS_PER_ZONE = 3;
 const HERO_ZONE = {xMin: 8, xMax: 32, yMin: 16, yMax: 84};
@@ -45,7 +48,7 @@ function jitter(key: string): {jx: number; jy: number} {
  */
 @Component({
   selector: 'bol-combat-play-page',
-  imports: [MatIconModule, NgTemplateOutlet, RouterLink, DragDropModule],
+  imports: [MatIconModule, NgTemplateOutlet, RouterLink, DragDropModule, AttackMenuComponent],
   templateUrl: './combat-play-page.html',
   styleUrl: './combat-play-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -96,11 +99,17 @@ export class CombatPlayPageComponent {
   /** Premier de l'ordre affiché (calculé ou réordonné) = combattant dont c'est le tour. */
   protected readonly activeKey = computed(() => this.orderedTokens()[0]?.key ?? null);
 
-  /** Jeton attaquant en cours de ciblage (survol épée cliqué) — null hors mode ciblage. */
+  /** Jeton attaquant en cours de ciblage (menu épée confirmé) — null hors mode ciblage. */
   protected readonly attackSourceKey = signal<string | null>(null);
   protected readonly attackSourceCamp = computed(
     () => this.orderedTokens().find((t) => t.key === this.attackSourceKey())?.camp ?? null,
   );
+
+  /** Arme + action du tour choisies dans le menu épée pour l'attaquant en cours de ciblage. */
+  private readonly attackChoice = signal<AttackChoice | null>(null);
+
+  /** Armes des héros déjà chargées à la demande (clé de jeton → armes), pour remplir le menu épée sans tout précharger. */
+  private readonly heroArmes = signal<ReadonlyMap<string, readonly BolHerosArmeModel[]>>(new Map());
 
   protected readonly kindIcon = combatantKindIcon;
   protected readonly kindIconIsSvg = combatantKindIconIsSvg;
@@ -177,14 +186,40 @@ export class CombatPlayPageComponent {
     });
   }
 
-  /** Épée survolée cliquée sur un jeton : entre ou sort du mode ciblage pour cet attaquant. */
-  protected startTargeting(token: PlayToken, event: Event): void {
-    event.stopPropagation();
-    this.attackSourceKey.update((current) => (current === token.key ? null : token.key));
+  /** Menu épée ouvert sur un jeton : charge les armes du héros à la demande (pas de préchargement pour tout le plateau). */
+  protected loadArmes(token: PlayToken): void {
+    if (token.kind !== 'hero' || this.heroArmes().has(token.key)) {
+      return;
+    }
+
+    const herosId = token.combat.sourceId;
+    if (!herosId) {
+      return;
+    }
+
+    this.herosService
+      .heros(herosId)
+      .pipe(take(1))
+      .subscribe((hero) => {
+        const armes = Array.isArray(hero.armes) && hero.armes.length > 0 && typeof hero.armes[0] !== 'number' ? (hero.armes as BolHerosArmeModel[]) : [];
+        this.heroArmes.update((map) => new Map(map).set(token.key, armes));
+      });
+  }
+
+  /** Armes du héros pour le menu épée d'un jeton — tableau vide pour pnj/créature/démon ou tant que non chargé. */
+  protected armesFor(token: PlayToken): readonly BolHerosArmeModel[] {
+    return this.heroArmes().get(token.key) ?? [];
+  }
+
+  /** Menu épée confirmé (arme + action choisies) : entre en mode ciblage pour cet attaquant. */
+  protected onAttackConfirmed(token: PlayToken, choice: AttackChoice): void {
+    this.attackChoice.set(choice);
+    this.attackSourceKey.set(token.key);
   }
 
   protected cancelTargeting(): void {
     this.attackSourceKey.set(null);
+    this.attackChoice.set(null);
   }
 
   /** Clic sur un jeton en mode ciblage : une cible adverse ouvre le dialog d'attaque, l'attaquant lui-même annule. */
@@ -206,11 +241,12 @@ export class CombatPlayPageComponent {
       return;
     }
 
+    const choice = this.attackChoice();
     this.cancelTargeting();
-    this.openAttackDialog(attacker, token);
+    this.openAttackDialog(attacker, token, choice);
   }
 
-  private openAttackDialog(attacker: PlayToken, target: PlayToken): void {
+  private openAttackDialog(attacker: PlayToken, target: PlayToken, choice: AttackChoice | null): void {
     const sessionId = this.session()?.id;
     if (!sessionId) {
       return;
@@ -220,6 +256,14 @@ export class CombatPlayPageComponent {
       attacker: resolveAttackStats(attacker, this.herosService),
       target: resolveAttackStats(target, this.herosService),
     }).subscribe(({attacker: attackerStats, target: targetStats}) => {
+      const action = choice?.action;
+      const isDefautArmure = action?.id === 'defaut-armure';
+
+      const finalAttacker = choice?.degats ? {...attackerStats, degats: choice.degats} : attackerStats;
+      // Prérempli à 0 seulement — l'utilisateur reste libre d'ajuster si l'attaque finit par manquer.
+      const finalTarget = isDefautArmure ? {...targetStats, protection: 0} : targetStats;
+      const initialModifier = (action?.atqMod ?? 0) + (isDefautArmure ? -targetStats.protection : 0);
+
       this.dialog
         .open(AttackRollDialogComponent, {
           maxWidth: 'min(32rem, 92vw)',
@@ -227,8 +271,9 @@ export class CombatPlayPageComponent {
           data: {
             attackerNom: attacker.nom,
             targetNom: target.nom,
-            attacker: attackerStats,
-            target: targetStats,
+            attacker: finalAttacker,
+            target: finalTarget,
+            initialModifier,
           },
         })
         .afterClosed()
