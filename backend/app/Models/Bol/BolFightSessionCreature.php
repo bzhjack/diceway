@@ -13,22 +13,23 @@ class BolFightSessionCreature extends Model
     protected $fillable = [
         'fight_session_id', 'creature_id', 'camp', 'qty', 'surnom', 'rang', 'nom',
         'vigueur', 'agilite', 'esprit',
-        'vitalite_max', 'vitalite_courante',
+        'vitalite_max', 'vitalite_courante', 'vitalite_instances',
         'attaque', 'defense', 'degats', 'protection', 'id_taille',
         'capacites',
     ];
 
     protected $casts = [
-        'qty'               => 'integer',
-        'vigueur'           => 'integer',
-        'agilite'           => 'integer',
-        'esprit'            => 'integer',
-        'vitalite_max'      => 'integer',
-        'vitalite_courante' => 'integer',
-        'attaque'           => 'integer',
-        'defense'           => 'integer',
-        'id_taille'         => 'integer',
-        'capacites'         => 'array',
+        'qty'                 => 'integer',
+        'vigueur'             => 'integer',
+        'agilite'             => 'integer',
+        'esprit'              => 'integer',
+        'vitalite_max'        => 'integer',
+        'vitalite_courante'   => 'integer',
+        'vitalite_instances'  => 'array',
+        'attaque'             => 'integer',
+        'defense'             => 'integer',
+        'id_taille'           => 'integer',
+        'capacites'           => 'array',
     ];
 
     public function creature(): BelongsTo

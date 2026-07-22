@@ -33,6 +33,8 @@ export interface PlayToken {
   readonly lockedRound1: boolean;
   /** Id de la ligne fight-session (heros/pnj/creature/demon) — plusieurs jetons d'un même lot de créatures/démons partagent le même id. */
   readonly pivotId: number;
+  /** Index de cette instance au sein du lot (creature/demon avec qty > 1) — null pour hero/pnj, toujours seuls dans leur ligne. */
+  readonly instanceIndex: number | null;
   readonly combat: PlayCombatStats;
 }
 
@@ -47,6 +49,7 @@ interface PlaySource extends InitiativeSource {
   readonly vitaliteMax: number | null;
   readonly vitaliteCourante: number | null;
   readonly pivotId: number;
+  readonly instanceIndex: number | null;
   readonly combat: PlayCombatStats;
 }
 
@@ -66,6 +69,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       vitaliteMax: h.heros?.ressources?.vitalite ?? null,
       vitaliteCourante: h.vitalite_courante ?? h.heros?.ressources?.vitalite ?? null,
       pivotId: h.id,
+      instanceIndex: null,
       combat: {
         sourceId: h.heros_id,
         vigueur: null,
@@ -92,6 +96,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       vitaliteMax: p.vitalite_max,
       vitaliteCourante: p.vitalite_courante,
       pivotId: p.id,
+      instanceIndex: null,
       combat: {
         sourceId: p.pnj_id,
         vigueur: p.vigueur,
@@ -120,8 +125,9 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
         resultat: null,
         camp: c.camp,
         vitaliteMax: c.vitalite_max,
-        vitaliteCourante: c.vitalite_courante,
+        vitaliteCourante: c.vitalite_instances?.[i] ?? c.vitalite_courante,
         pivotId: c.id,
+        instanceIndex: i,
         combat: {
           sourceId: c.creature_id,
           vigueur: c.vigueur,
@@ -151,8 +157,9 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
         resultat: null,
         camp: d.camp,
         vitaliteMax: d.vitalite_max,
-        vitaliteCourante: d.vitalite_courante,
+        vitaliteCourante: d.vitalite_instances?.[i] ?? d.vitalite_courante,
         pivotId: d.id,
+        instanceIndex: i,
         combat: {
           sourceId: d.demon_id,
           vigueur: d.vigueur,
@@ -184,6 +191,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       tier: entry.tier,
       lockedRound1: entry.lockedRound1,
       pivotId: source.pivotId,
+      instanceIndex: source.instanceIndex,
       combat: source.combat,
     };
   });

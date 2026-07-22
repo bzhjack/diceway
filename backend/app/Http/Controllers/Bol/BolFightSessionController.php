@@ -80,12 +80,15 @@ class BolFightSessionController extends Controller
 
     public function applyDamage(Request $request, string $id, string $kind, int $pivotId)
     {
+        $instanceIndex = $request->input('instanceIndex');
+
         $session = $this->fightSessionService->applyDamage(
             $id,
             Auth::id(),
             $kind,
             $pivotId,
             (int) $request->input('delta'),
+            $instanceIndex === null ? null : (int) $instanceIndex,
         );
 
         if (!$session) {

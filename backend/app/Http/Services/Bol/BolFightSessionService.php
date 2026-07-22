@@ -137,10 +137,17 @@ class BolFightSessionService
 
     /**
      * Applique une variation de vitalité (négative pour des dégâts, positive pour un soin) à un
-     * combattant, bornée entre 0 et son maximum.
+     * combattant, bornée entre 0 et son maximum. Pour une créature/démon en lot (qty > 1),
+     * `$instanceIndex` cible une seule instance du lot — les autres exemplaires ne sont pas affectés.
      */
-    public function applyDamage(string $sessionId, string $userId, string $kind, int $pivotId, int $delta): ?BolFightSession
-    {
+    public function applyDamage(
+        string $sessionId,
+        string $userId,
+        string $kind,
+        int $pivotId,
+        int $delta,
+        ?int $instanceIndex = null,
+    ): ?BolFightSession {
         $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
         if (!$session) {
             return null;
@@ -149,8 +156,8 @@ class BolFightSessionService
         match ($kind) {
             'hero'     => $this->applyHeroDamage($sessionId, $pivotId, $delta),
             'pnj'      => $this->applyMaxClampedDamage(BolFightSessionPnj::where('id', $pivotId)->where('fight_session_id', $sessionId)->first(), $delta),
-            'creature' => $this->applyMaxClampedDamage(BolFightSessionCreature::where('id', $pivotId)->where('fight_session_id', $sessionId)->first(), $delta),
-            'demon'    => $this->applyMaxClampedDamage(BolFightSessionDemon::where('id', $pivotId)->where('fight_session_id', $sessionId)->first(), $delta),
+            'creature' => $this->applyInstanceDamage(BolFightSessionCreature::where('id', $pivotId)->where('fight_session_id', $sessionId)->first(), $delta, $instanceIndex),
+            'demon'    => $this->applyInstanceDamage(BolFightSessionDemon::where('id', $pivotId)->where('fight_session_id', $sessionId)->first(), $delta, $instanceIndex),
             default    => null,
         };
 
@@ -169,7 +176,7 @@ class BolFightSessionService
         $pivot->update(['vitalite_courante' => max(0, min($max, $current + $delta))]);
     }
 
-    private function applyMaxClampedDamage(BolFightSessionPnj|BolFightSessionCreature|BolFightSessionDemon|null $row, int $delta): void
+    private function applyMaxClampedDamage(BolFightSessionPnj|null $row, int $delta): void
     {
         if (!$row) {
             return;
@@ -179,6 +186,27 @@ class BolFightSessionService
         $row->update(['vitalite_courante' => max(0, min($row->vitalite_max, $current + $delta))]);
     }
 
+    /**
+     * Un lot de créatures/démons (qty > 1) partage une ligne mais chaque instance a son propre
+     * compteur de PV dans `vitalite_instances` (un tableau, un élément par instance).
+     */
+    private function applyInstanceDamage(BolFightSessionCreature|BolFightSessionDemon|null $row, int $delta, ?int $instanceIndex): void
+    {
+        if (!$row) {
+            return;
+        }
+
+        $instances = $row->vitalite_instances ?? array_fill(0, max(1, $row->qty), $row->vitalite_courante ?? $row->vitalite_max);
+        $index = $instanceIndex !== null && isset($instances[$instanceIndex]) ? $instanceIndex : 0;
+
+        $instances[$index] = max(0, min($row->vitalite_max, ($instances[$index] ?? $row->vitalite_max) + $delta));
+
+        $row->update([
+            'vitalite_instances' => array_values($instances),
+            'vitalite_courante'  => $instances[$index],
+        ]);
+    }
+
     private function decrementOrDelete(BolFightSessionCreature|BolFightSessionDemon|null $row): void
     {
         if (!$row) {
@@ -186,7 +214,9 @@ class BolFightSessionService
         }
 
         if ($row->qty > 1) {
-            $row->update(['qty' => $row->qty - 1]);
+            $instances = $row->vitalite_instances ?? array_fill(0, $row->qty, $row->vitalite_courante ?? $row->vitalite_max);
+            array_pop($instances);
+            $row->update(['qty' => $row->qty - 1, 'vitalite_instances' => array_values($instances)]);
         } else {
             $row->delete();
         }
@@ -277,8 +307,9 @@ class BolFightSessionService
             'vigueur'           => $creature->vigueur,
             'agilite'           => $creature->agilite,
             'esprit'            => $creature->esprit,
-            'vitalite_max'      => $creature->vitalite,
-            'vitalite_courante' => $creature->vitalite,
+            'vitalite_max'       => $creature->vitalite,
+            'vitalite_courante'  => $creature->vitalite,
+            'vitalite_instances' => array_fill(0, $qty, $creature->vitalite),
             'attaque'           => $creature->attaque,
             'defense'           => $creature->defense,
             'degats'            => $creature->degats,
@@ -330,8 +361,9 @@ class BolFightSessionService
             'melee'             => $demon->melee,
             'tir'               => $demon->tir,
             'defense'           => $demon->defense,
-            'vitalite_max'      => $demon->vitalite,
-            'vitalite_courante' => $demon->vitalite,
+            'vitalite_max'       => $demon->vitalite,
+            'vitalite_courante'  => $demon->vitalite,
+            'vitalite_instances' => array_fill(0, $qty, $demon->vitalite),
             'degats'            => $demon->degats,
             'pouvoirs'          => $pouvoirs,
         ]);

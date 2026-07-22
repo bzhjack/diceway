@@ -14,25 +14,10 @@
       class="ird-result"
       [class.ird-result--reussite]="bannerTone() === 'reussite'"
       [class.ird-result--echec]="bannerTone() === 'echec'"
-      [class.ird-result--heroique]="bannerTone() === 'heroique'"
-    >
+      [class.ird-result--heroique]="bannerTone() === 'heroique'">
       <div class="ird-result-row">
-        <div class="ird-result-stat">
-          <span class="ird-result-stat-label">Difficulté</span>
-          <span class="ird-result-stat-value">{{ threshold }}</span>
-        </div>
         <div class="ird-result-total">{{ total() }}</div>
-        <div class="ird-result-stat">
-          <span class="ird-result-stat-label">Marge</span>
-          <span class="ird-result-stat-value">{{ margin() }}</span>
-        </div>
       </div>
-
-      <div class="ird-result-badge">
-        <mat-icon>{{ bannerIcon() }}</mat-icon>
-        {{ resultLabel(suggestedResult()) }}
-      </div>
-
       @if (isNatural2()) {
         <p class="ird-result-note">2 naturel — règle absolue : échec automatique</p>
         <div class="ird-toggle">
@@ -61,32 +46,44 @@
 
   <p class="ird-formula">{{ formula() }}</p>
 
-  @if (dice(); as d) {
-    <div class="ird-calc">
-      <p class="ird-calc-title">Détail du calcul</p>
+  <div class="ird-calc">
+    <p class="ird-calc-title">Détail du calcul</p>
 
-      <div class="ird-calc-row">
-        <mat-icon class="ird-calc-icon" svgIcon="d6" />
-        <span class="ird-calc-label">Dés (2d6)</span>
+    <div class="ird-calc-row">
+      <mat-icon class="ird-calc-icon" svgIcon="d6" />
+      <span class="ird-calc-label">Dés (2d6)</span>
+      @if (dice(); as d) {
         <span class="ird-calc-detail">{{ d[0] }} + {{ d[1] }}</span>
         <span class="ird-calc-value">{{ diceSum() }}</span>
-      </div>
-
-      <div class="ird-calc-row">
-        <mat-icon class="ird-calc-icon">add</mat-icon>
-        <span class="ird-calc-label">Bonus réaction</span>
-        <span class="ird-calc-detail"></span>
-        <span class="ird-calc-value">{{ signedModifier() }}</span>
-      </div>
-
-      <div class="ird-calc-row">
-        <mat-icon class="ird-calc-icon">track_changes</mat-icon>
-        <span class="ird-calc-label">Seuil</span>
-        <span class="ird-calc-detail">&gt; {{ threshold }}</span>
+      } @else {
+        <span class="ird-calc-detail">—</span>
         <span class="ird-calc-value"></span>
-      </div>
+      }
     </div>
-  }
+
+    <div class="ird-calc-row">
+      <mat-icon class="ird-calc-icon">psychology</mat-icon>
+      <span class="ird-calc-label">Esprit</span>
+      <span class="ird-calc-detail"></span>
+      <span class="ird-calc-value">{{ signed(data.esprit) }}</span>
+    </div>
+
+    <div class="ird-calc-row">
+      <mat-icon class="ird-calc-icon">bolt</mat-icon>
+      <span class="ird-calc-label">Initiative</span>
+      <span class="ird-calc-detail"></span>
+      <span class="ird-calc-value">{{ signed(data.initiative) }}</span>
+    </div>
+
+    @if (data.modifierTotal !== 0) {
+      <div class="ird-calc-row">
+        <mat-icon class="ird-calc-icon">tune</mat-icon>
+        <span class="ird-calc-label">Modificateurs</span>
+        <span class="ird-calc-detail"></span>
+        <span class="ird-calc-value">{{ signed(data.modifierTotal) }}</span>
+      </div>
+    }
+  </div>
 
   <button type="button" class="ird-reroll" [disabled]="rolling()" (click)="roll()">
     <mat-icon>refresh</mat-icon>

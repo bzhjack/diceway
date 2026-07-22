@@ -86,11 +86,12 @@
   margin: 0.7rem 1.1rem 0;
   padding: 0.7rem 1rem 0.75rem;
   border-radius: 10px;
+  height: 67px;
   border: 1px solid var(--dw-border);
   background: color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
   text-align: center;
 }

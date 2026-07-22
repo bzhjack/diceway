@@ -429,6 +429,13 @@
   pointer-events: auto;
 }
 
+// En mode ciblage (une épée déjà cliquée), aucun jeton ne doit réafficher son épée au survol —
+// on clique directement la cible pour valider, la ré-afficher prêterait à confusion.
+.cp-token--targeting .cp-token-attack {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 .cp-token-hint {
   position: absolute;
   top: -1.3rem;

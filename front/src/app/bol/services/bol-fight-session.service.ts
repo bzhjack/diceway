@@ -45,15 +45,21 @@ export class BolFightSessionService {
     return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/ordre`, {ordre});
   }
 
-  /** Applique une variation de vitalité (négative = dégâts, positive = soin), bornée à [0, max]. */
+  /**
+   * Applique une variation de vitalité (négative = dégâts, positive = soin), bornée à [0, max].
+   * `instanceIndex` cible une seule instance d'un lot de créatures/démons (qty > 1) — sans lui,
+   * toutes les instances du lot partageraient les mêmes PV.
+   */
   applyDamage(
     sessionId: string,
     kind: BolFightSessionAddCombatantPayload['kind'],
     pivotId: number,
     delta: number,
+    instanceIndex?: number | null,
   ): Observable<BolFightSessionModel> {
     return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/${kind}/${pivotId}/damage`, {
       delta,
+      instanceIndex: instanceIndex ?? null,
     });
   }
 }

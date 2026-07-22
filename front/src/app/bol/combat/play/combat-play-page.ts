@@ -237,7 +237,7 @@ export class CombatPlayPageComponent {
             return;
           }
 
-          this.fightSessionService.applyDamage(sessionId, target.kind, target.pivotId, delta).subscribe({
+          this.fightSessionService.applyDamage(sessionId, target.kind, target.pivotId, delta, target.instanceIndex).subscribe({
             next: () => this.loadSession(sessionId),
             error: (error: unknown) => {
               this.snackBar.open(extractApiErrorMessage(error, "Impossible d'appliquer les dégâts."), 'Fermer', {
@@ -315,7 +315,9 @@ export class CombatPlayPageComponent {
     const isSource = sourceKey && token.key === sourceKey ? ' cp-token--attack-source' : '';
     const isTargetable =
       sourceKey && token.key !== sourceKey && token.camp !== this.attackSourceCamp() ? ' cp-token--attack-target' : '';
-    return `cp-token cp-token--${token.kind}${active}${isSource}${isTargetable}`;
+    // En mode ciblage, aucun jeton ne doit révéler son épée au survol : on clique la cible directement.
+    const targeting = sourceKey ? ' cp-token--targeting' : '';
+    return `cp-token cp-token--${token.kind}${active}${isSource}${isTargetable}${targeting}`;
   }
 
   /** Position par défaut d'un jeton sur la battlemap (héros à gauche, adversaires à droite), avant tout glisser-déposer. */

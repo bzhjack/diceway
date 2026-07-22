@@ -7,8 +7,10 @@ import {INITIATIVE_RESULT_OPTIONS} from '../initiative.util';
 
 export interface InitiativeRollDialogData {
   readonly heroNom: string;
-  /** Esprit + initiative + modificateurs (embuscade/initiative adverse) — le X de "2d6 + X". */
-  readonly modifierSum: number;
+  readonly esprit: number;
+  readonly initiative: number;
+  /** Modificateurs additionnels (embuscade/initiative adverse). */
+  readonly modifierTotal: number;
 }
 
 const RESULT_LABELS: Record<InitiativeResultat, string> = Object.fromEntries(
@@ -44,22 +46,19 @@ export class InitiativeRollDialogComponent {
 
   private readonly diceBox = viewChild.required(DiceBoxHostComponent);
 
-  protected readonly threshold = THRESHOLD;
 
   protected readonly rolling = signal(false);
   protected readonly dice = signal<readonly [number, number] | null>(null);
   protected readonly critiqueChosen = signal(false);
   protected readonly legendaryChosen = signal(false);
 
+  /** Somme des trois composantes du modificateur (esprit + initiative + modificateurs), le X de "2d6 + X". */
+  protected readonly modifierSum = computed(() => this.data.esprit + this.data.initiative + this.data.modifierTotal);
+
   /** Formule prête à annoncer : "2d6 + X" (ou "− X") — corrige l'affichage "2d6 + -1" quand le modificateur est négatif. */
   protected readonly formula = computed(() => {
-    const sum = this.data.modifierSum;
+    const sum = this.modifierSum();
     return sum >= 0 ? `2d6 + ${sum} > ${THRESHOLD}` : `2d6 − ${Math.abs(sum)} > ${THRESHOLD}`;
-  });
-
-  protected readonly signedModifier = computed(() => {
-    const sum = this.data.modifierSum;
-    return sum >= 0 ? `+${sum}` : `− ${Math.abs(sum)}`;
   });
 
   protected readonly diceSum = computed(() => {
@@ -69,18 +68,7 @@ export class InitiativeRollDialogComponent {
 
   protected readonly total = computed(() => {
     const sum = this.diceSum();
-    return sum === null ? null : sum + this.data.modifierSum;
-  });
-
-  /** Écart au seuil : total − 9, affiché à côté du résultat pour visualiser la marge de réussite/échec. */
-  protected readonly margin = computed(() => {
-    const t = this.total();
-    if (t === null) {
-      return null;
-    }
-
-    const value = t - THRESHOLD;
-    return value >= 0 ? `+${value}` : `${value}`;
+    return sum === null ? null : sum + this.modifierSum();
   });
 
   protected readonly isNatural2 = computed(() => {
@@ -124,13 +112,12 @@ export class InitiativeRollDialogComponent {
     return result === 'heroique' || result === 'legendaire' ? 'heroique' : 'echec';
   });
 
-  protected readonly bannerIcon = computed(() => {
-    const tone = this.bannerTone();
-    return tone ? RESULT_ICONS[tone] : 'help';
-  });
-
   protected resultLabel(result: InitiativeResultat | null): string {
     return result ? RESULT_LABELS[result] : '';
+  }
+
+  protected signed(value: number): string {
+    return value >= 0 ? `+${value}` : `− ${Math.abs(value)}`;
   }
 
   protected async roll(): Promise<void> {
