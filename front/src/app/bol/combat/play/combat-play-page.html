@@ -105,12 +105,14 @@
         } @else {
           <mat-icon>{{ kindIcon(token.kind) }}</mat-icon>
         }
-        <bol-attack-menu
-          [attackerName]="token.nom"
-          [armes]="armesFor(token)"
-          (opened)="loadArmes(token)"
-          (confirmed)="onAttackConfirmed(token, $event)"
-        />
+        @if (token.key === activeKey()) {
+          <bol-attack-menu
+            [attackerName]="token.nom"
+            [armes]="armesFor(token)"
+            (opened)="loadArmes(token)"
+            (confirmed)="onAttackConfirmed(token, $event)"
+          />
+        }
       </div>
       <p class="cp-token-name">{{ token.nom }}</p>
       @if (token.vitaliteMax !== null) {

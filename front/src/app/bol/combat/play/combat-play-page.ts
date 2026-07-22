@@ -13,7 +13,6 @@ import {BolFightSessionModel, CombatCamp} from '../../models/bol-fight-session.m
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {combatantKindIcon, combatantKindIconIsSvg} from '../select/combat-statblock.util';
-import {AttackChoice} from '../combat-action.util';
 import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialog';
 import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard, PlayToken} from '../combat-play.util';
@@ -105,8 +104,8 @@ export class CombatPlayPageComponent {
     () => this.orderedTokens().find((t) => t.key === this.attackSourceKey())?.camp ?? null,
   );
 
-  /** Arme + action du tour choisies dans le menu épée pour l'attaquant en cours de ciblage. */
-  private readonly attackChoice = signal<AttackChoice | null>(null);
+  /** Dégâts de l'arme choisie dans le menu épée pour l'attaquant en cours de ciblage. */
+  private readonly attackDegats = signal<string | null>(null);
 
   /** Armes des héros déjà chargées à la demande (clé de jeton → armes), pour remplir le menu épée sans tout précharger. */
   private readonly heroArmes = signal<ReadonlyMap<string, readonly BolHerosArmeModel[]>>(new Map());
@@ -211,15 +210,15 @@ export class CombatPlayPageComponent {
     return this.heroArmes().get(token.key) ?? [];
   }
 
-  /** Menu épée confirmé (arme + action choisies) : entre en mode ciblage pour cet attaquant. */
-  protected onAttackConfirmed(token: PlayToken, choice: AttackChoice): void {
-    this.attackChoice.set(choice);
+  /** Menu épée confirmé (arme choisie) : entre en mode ciblage pour cet attaquant. */
+  protected onAttackConfirmed(token: PlayToken, degats: string | null): void {
+    this.attackDegats.set(degats);
     this.attackSourceKey.set(token.key);
   }
 
   protected cancelTargeting(): void {
     this.attackSourceKey.set(null);
-    this.attackChoice.set(null);
+    this.attackDegats.set(null);
   }
 
   /** Clic sur un jeton en mode ciblage : une cible adverse ouvre le dialog d'attaque, l'attaquant lui-même annule. */
@@ -241,12 +240,12 @@ export class CombatPlayPageComponent {
       return;
     }
 
-    const choice = this.attackChoice();
+    const degats = this.attackDegats();
     this.cancelTargeting();
-    this.openAttackDialog(attacker, token, choice);
+    this.openAttackDialog(attacker, token, degats);
   }
 
-  private openAttackDialog(attacker: PlayToken, target: PlayToken, choice: AttackChoice | null): void {
+  private openAttackDialog(attacker: PlayToken, target: PlayToken, degats: string | null): void {
     const sessionId = this.session()?.id;
     if (!sessionId) {
       return;
@@ -256,13 +255,7 @@ export class CombatPlayPageComponent {
       attacker: resolveAttackStats(attacker, this.herosService),
       target: resolveAttackStats(target, this.herosService),
     }).subscribe(({attacker: attackerStats, target: targetStats}) => {
-      const action = choice?.action;
-      const isDefautArmure = action?.id === 'defaut-armure';
-
-      const finalAttacker = choice?.degats ? {...attackerStats, degats: choice.degats} : attackerStats;
-      // Prérempli à 0 seulement — l'utilisateur reste libre d'ajuster si l'attaque finit par manquer.
-      const finalTarget = isDefautArmure ? {...targetStats, protection: 0} : targetStats;
-      const initialModifier = (action?.atqMod ?? 0) + (isDefautArmure ? -targetStats.protection : 0);
+      const finalAttacker = degats ? {...attackerStats, degats} : attackerStats;
 
       this.dialog
         .open(AttackRollDialogComponent, {
@@ -272,8 +265,7 @@ export class CombatPlayPageComponent {
             attackerNom: attacker.nom,
             targetNom: target.nom,
             attacker: finalAttacker,
-            target: finalTarget,
-            initialModifier,
+            target: targetStats,
           },
         })
         .afterClosed()

@@ -12,36 +12,18 @@
 
 <mat-menu #menu="matMenu" class="am-panel">
   <div class="am-content" (click)="$event.stopPropagation()">
-    @if (armes().length > 0) {
-      <span class="am-eyebrow">Arme</span>
-      <div class="am-chips">
-        @for (a of armes(); track a.id) {
-          <button
-            type="button"
-            class="am-chip"
-            [class.am-chip--selected]="effectiveArme()?.id === a.id"
-            (click)="selectArme(a.id)"
-          >
-            {{ a.arme?.arme }}
-          </button>
-        }
-      </div>
-    }
-
-    <span class="am-eyebrow">Action</span>
+    <span class="am-eyebrow">Arme</span>
     <div class="am-chips">
-      @for (act of actions(); track act.id) {
+      @for (a of displayArmes(); track a.id) {
         <button
           type="button"
           class="am-chip"
-          [class.am-chip--selected]="selectedAction().id === act.id"
-          [attr.title]="act.description"
-          (click)="selectedAction.set(act)"
+          [class.am-chip--selected]="effectiveArme()?.id === a.id"
+          (click)="selectArme(a.id)"
         >
-          <mat-icon>{{ act.icon }}</mat-icon>
-          {{ act.label }}
-          @if (act.modLabel !== '—') {
-            <span class="am-chip-mod">{{ act.modLabel }}</span>
+          {{ a.arme?.arme }}
+          @if (a.arme?.degats) {
+            <span class="am-chip-mod">{{ a.arme?.degats }}</span>
           }
         </button>
       }
