@@ -3,6 +3,24 @@ import {buildInitiativeOrderFrom, InitiativeKind, InitiativeSource, InitiativeTi
 
 const EMPTY_AVATAR = '/assets/bol/empty-avatar.jpg';
 
+/**
+ * Stats de combat d'un jeton. Pour un héros, rien n'est snapshoté côté session : ces champs
+ * restent `null` et les vraies valeurs doivent être récupérées en direct via `BolHerosService`
+ * (voir `sourceId`). Pour pnj/créature/démon, les valeurs viennent du snapshot de la session.
+ */
+export interface PlayCombatStats {
+  readonly sourceId: string | null;
+  readonly vigueur: number | null;
+  readonly agilite: number | null;
+  readonly melee: number | null;
+  readonly tir: number | null;
+  /** Bonus d'attaque combiné des créatures (remplace agilité+mêlée séparés). */
+  readonly attaque: number | null;
+  readonly defense: number | null;
+  readonly degats: string | null;
+  readonly protection: string | null;
+}
+
 export interface PlayToken {
   readonly key: string;
   readonly kind: InitiativeKind;
@@ -15,6 +33,7 @@ export interface PlayToken {
   readonly lockedRound1: boolean;
   /** Id de la ligne fight-session (heros/pnj/creature/demon) — plusieurs jetons d'un même lot de créatures/démons partagent le même id. */
   readonly pivotId: number;
+  readonly combat: PlayCombatStats;
 }
 
 export interface PlayBoard {
@@ -28,6 +47,7 @@ interface PlaySource extends InitiativeSource {
   readonly vitaliteMax: number | null;
   readonly vitaliteCourante: number | null;
   readonly pivotId: number;
+  readonly combat: PlayCombatStats;
 }
 
 /** Construit les jetons du plateau (triés par initiative) à partir du snapshot d'une session de combat lancée. */
@@ -43,10 +63,20 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       rang: null,
       resultat: h.initiative_resultat,
       camp: h.camp,
-      // Un héros n'a pas de PV "courant" distinct dans le snapshot : sa vitalité de référence sert des deux côtés.
       vitaliteMax: h.heros?.ressources?.vitalite ?? null,
-      vitaliteCourante: h.heros?.ressources?.vitalite ?? null,
+      vitaliteCourante: h.vitalite_courante ?? h.heros?.ressources?.vitalite ?? null,
       pivotId: h.id,
+      combat: {
+        sourceId: h.heros_id,
+        vigueur: null,
+        agilite: null,
+        melee: null,
+        tir: null,
+        attaque: null,
+        defense: null,
+        degats: null,
+        protection: null,
+      },
     });
   }
 
@@ -62,6 +92,17 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       vitaliteMax: p.vitalite_max,
       vitaliteCourante: p.vitalite_courante,
       pivotId: p.id,
+      combat: {
+        sourceId: p.pnj_id,
+        vigueur: p.vigueur,
+        agilite: p.agilite,
+        melee: p.melee,
+        tir: p.tir,
+        attaque: null,
+        defense: p.defense,
+        degats: p.armes?.[0]?.degats ?? null,
+        protection: null,
+      },
     });
   }
 
@@ -81,6 +122,17 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
         vitaliteMax: c.vitalite_max,
         vitaliteCourante: c.vitalite_courante,
         pivotId: c.id,
+        combat: {
+          sourceId: c.creature_id,
+          vigueur: c.vigueur,
+          agilite: c.agilite,
+          melee: null,
+          tir: null,
+          attaque: c.attaque,
+          defense: c.defense,
+          degats: c.degats,
+          protection: c.protection,
+        },
       });
     }
   }
@@ -101,6 +153,17 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
         vitaliteMax: d.vitalite_max,
         vitaliteCourante: d.vitalite_courante,
         pivotId: d.id,
+        combat: {
+          sourceId: d.demon_id,
+          vigueur: d.vigueur,
+          agilite: d.agilite,
+          melee: d.melee,
+          tir: d.tir,
+          attaque: null,
+          defense: d.defense,
+          degats: d.degats,
+          protection: null,
+        },
       });
     }
   }
@@ -121,6 +184,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       tier: entry.tier,
       lockedRound1: entry.lockedRound1,
       pivotId: source.pivotId,
+      combat: source.combat,
     };
   });
 

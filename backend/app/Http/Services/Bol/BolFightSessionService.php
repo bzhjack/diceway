@@ -135,6 +135,50 @@ class BolFightSessionService
         return $this->getSessionWithRelations($sessionId);
     }
 
+    /**
+     * Applique une variation de vitalité (négative pour des dégâts, positive pour un soin) à un
+     * combattant, bornée entre 0 et son maximum.
+     */
+    public function applyDamage(string $sessionId, string $userId, string $kind, int $pivotId, int $delta): ?BolFightSession
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session) {
+            return null;
+        }
+
+        match ($kind) {
+            'hero'     => $this->applyHeroDamage($sessionId, $pivotId, $delta),
+            'pnj'      => $this->applyMaxClampedDamage(BolFightSessionPnj::where('id', $pivotId)->where('fight_session_id', $sessionId)->first(), $delta),
+            'creature' => $this->applyMaxClampedDamage(BolFightSessionCreature::where('id', $pivotId)->where('fight_session_id', $sessionId)->first(), $delta),
+            'demon'    => $this->applyMaxClampedDamage(BolFightSessionDemon::where('id', $pivotId)->where('fight_session_id', $sessionId)->first(), $delta),
+            default    => null,
+        };
+
+        return $this->getSessionWithRelations($sessionId);
+    }
+
+    private function applyHeroDamage(string $sessionId, int $pivotId, int $delta): void
+    {
+        $pivot = BolFightSessionHeros::with('heros')->where('id', $pivotId)->where('fight_session_id', $sessionId)->first();
+        if (!$pivot || !$pivot->heros) {
+            return;
+        }
+
+        $max = $pivot->heros->vitalite;
+        $current = $pivot->vitalite_courante ?? $max;
+        $pivot->update(['vitalite_courante' => max(0, min($max, $current + $delta))]);
+    }
+
+    private function applyMaxClampedDamage(BolFightSessionPnj|BolFightSessionCreature|BolFightSessionDemon|null $row, int $delta): void
+    {
+        if (!$row) {
+            return;
+        }
+
+        $current = $row->vitalite_courante ?? $row->vitalite_max;
+        $row->update(['vitalite_courante' => max(0, min($row->vitalite_max, $current + $delta))]);
+    }
+
     private function decrementOrDelete(BolFightSessionCreature|BolFightSessionDemon|null $row): void
     {
         if (!$row) {
@@ -182,6 +226,7 @@ class BolFightSessionService
             'heros_id'            => $hero->id,
             'camp'                => $this->normalizeCamp($camp),
             'initiative_resultat' => $resultat,
+            'vitalite_courante'   => $hero->vitalite,
         ]);
     }
 

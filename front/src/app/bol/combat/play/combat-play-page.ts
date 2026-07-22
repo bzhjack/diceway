@@ -5,12 +5,15 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, RouterLink} from '@angular/router';
-import {take} from 'rxjs';
+import {forkJoin, take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolFightSessionModel, CombatCamp} from '../../models/bol-fight-session.model';
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
+import {BolHerosService} from '../../services/bol-heros.service';
 import {combatantKindIcon, combatantKindIconIsSvg} from '../select/combat-statblock.util';
+import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialog';
+import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard, PlayToken} from '../combat-play.util';
 import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
 
@@ -46,10 +49,14 @@ function jitter(key: string): {jx: number; jy: number} {
   templateUrl: './combat-play-page.html',
   styleUrl: './combat-play-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(document:keydown.escape)': 'cancelTargeting()',
+  },
 })
 export class CombatPlayPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly fightSessionService = inject(BolFightSessionService);
+  private readonly herosService = inject(BolHerosService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
 
@@ -88,6 +95,12 @@ export class CombatPlayPageComponent {
 
   /** Premier de l'ordre affiché (calculé ou réordonné) = combattant dont c'est le tour. */
   protected readonly activeKey = computed(() => this.orderedTokens()[0]?.key ?? null);
+
+  /** Jeton attaquant en cours de ciblage (survol épée cliqué) — null hors mode ciblage. */
+  protected readonly attackSourceKey = signal<string | null>(null);
+  protected readonly attackSourceCamp = computed(
+    () => this.orderedTokens().find((t) => t.key === this.attackSourceKey())?.camp ?? null,
+  );
 
   protected readonly kindIcon = combatantKindIcon;
   protected readonly kindIconIsSvg = combatantKindIconIsSvg;
@@ -164,6 +177,78 @@ export class CombatPlayPageComponent {
     });
   }
 
+  /** Épée survolée cliquée sur un jeton : entre ou sort du mode ciblage pour cet attaquant. */
+  protected startTargeting(token: PlayToken, event: Event): void {
+    event.stopPropagation();
+    this.attackSourceKey.update((current) => (current === token.key ? null : token.key));
+  }
+
+  protected cancelTargeting(): void {
+    this.attackSourceKey.set(null);
+  }
+
+  /** Clic sur un jeton en mode ciblage : une cible adverse ouvre le dialog d'attaque, l'attaquant lui-même annule. */
+  protected onTokenClick(token: PlayToken, event: Event): void {
+    const sourceKey = this.attackSourceKey();
+    if (!sourceKey) {
+      return;
+    }
+
+    event.stopPropagation();
+
+    if (token.key === sourceKey) {
+      this.cancelTargeting();
+      return;
+    }
+
+    const attacker = this.orderedTokens().find((t) => t.key === sourceKey);
+    if (!attacker || token.camp === attacker.camp) {
+      return;
+    }
+
+    this.cancelTargeting();
+    this.openAttackDialog(attacker, token);
+  }
+
+  private openAttackDialog(attacker: PlayToken, target: PlayToken): void {
+    const sessionId = this.session()?.id;
+    if (!sessionId) {
+      return;
+    }
+
+    forkJoin({
+      attacker: resolveAttackStats(attacker, this.herosService),
+      target: resolveAttackStats(target, this.herosService),
+    }).subscribe(({attacker: attackerStats, target: targetStats}) => {
+      this.dialog
+        .open(AttackRollDialogComponent, {
+          maxWidth: 'min(32rem, 92vw)',
+          panelClass: 'atd-panel',
+          data: {
+            attackerNom: attacker.nom,
+            targetNom: target.nom,
+            attacker: attackerStats,
+            target: targetStats,
+          },
+        })
+        .afterClosed()
+        .subscribe((delta: number | undefined) => {
+          if (delta === undefined) {
+            return;
+          }
+
+          this.fightSessionService.applyDamage(sessionId, target.kind, target.pivotId, delta).subscribe({
+            next: () => this.loadSession(sessionId),
+            error: (error: unknown) => {
+              this.snackBar.open(extractApiErrorMessage(error, "Impossible d'appliquer les dégâts."), 'Fermer', {
+                duration: 5000,
+              });
+            },
+          });
+        });
+    });
+  }
+
   /** Glisser-déposer dans le ruban : réordonnancement manuel, persisté en base. */
   protected onRailDrop(event: CdkDragDrop<PlayToken[]>): void {
     if (event.previousIndex === event.currentIndex) {
@@ -226,7 +311,11 @@ export class CombatPlayPageComponent {
 
   protected tokenClass(token: PlayToken): string {
     const active = token.key === this.activeKey() ? ' cp-token--active' : '';
-    return `cp-token cp-token--${token.kind}${active}`;
+    const sourceKey = this.attackSourceKey();
+    const isSource = sourceKey && token.key === sourceKey ? ' cp-token--attack-source' : '';
+    const isTargetable =
+      sourceKey && token.key !== sourceKey && token.camp !== this.attackSourceCamp() ? ' cp-token--attack-target' : '';
+    return `cp-token cp-token--${token.kind}${active}${isSource}${isTargetable}`;
   }
 
   /** Position par défaut d'un jeton sur la battlemap (héros à gauche, adversaires à droite), avant tout glisser-déposer. */

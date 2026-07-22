@@ -22,6 +22,7 @@ export interface BolFightSessionHerosModel {
   heros_id: string;
   camp: CombatCamp;
   initiative_resultat: InitiativeResultat | null;
+  vitalite_courante: number | null;
   heros?: {
     id: string | null;
     origines: {nom: string | null; avatar: string | null; joueur: string | null};

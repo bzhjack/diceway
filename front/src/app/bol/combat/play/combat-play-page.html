@@ -88,7 +88,13 @@
 }
 
 <ng-template #tokenTpl let-token="token" let-i="i" let-camp="camp">
-  <div class="cp-token-anchor" [style]="tokenStyle(token, i, camp)" cdkDrag cdkDragBoundary=".cp-map">
+  <div
+    class="cp-token-anchor"
+    [style]="tokenStyle(token, i, camp)"
+    cdkDrag
+    cdkDragBoundary=".cp-map"
+    (click)="onTokenClick(token, $event)"
+  >
     <div [class]="tokenClass(token)">
       @if (token.lockedRound1) {
         <span class="cp-token-lock" title="Bloqué round 1"></span>
@@ -99,11 +105,22 @@
         } @else {
           <mat-icon>{{ kindIcon(token.kind) }}</mat-icon>
         }
+        <button
+          type="button"
+          class="cp-token-attack"
+          [attr.aria-label]="'Attaquer avec ' + token.nom"
+          (click)="startTargeting(token, $event)"
+        >
+          <mat-icon svgIcon="sword" />
+        </button>
       </div>
       <p class="cp-token-name">{{ token.nom }}</p>
       @if (token.vitaliteMax !== null) {
         <div class="cp-token-hpbar"><i [style.width.%]="hpPct(token)" [style.background]="hpColor(token)"></i></div>
         <span class="cp-token-hpval">{{ token.vitaliteCourante }} / {{ token.vitaliteMax }}</span>
+      }
+      @if (attackSourceKey() === token.key) {
+        <span class="cp-token-hint">Choisir une cible…</span>
       }
     </div>
   </div>

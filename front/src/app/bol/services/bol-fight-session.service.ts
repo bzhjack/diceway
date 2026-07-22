@@ -44,4 +44,16 @@ export class BolFightSessionService {
   updateOrder(sessionId: string, ordre: readonly string[]): Observable<BolFightSessionModel> {
     return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/ordre`, {ordre});
   }
+
+  /** Applique une variation de vitalité (négative = dégâts, positive = soin), bornée à [0, max]. */
+  applyDamage(
+    sessionId: string,
+    kind: BolFightSessionAddCombatantPayload['kind'],
+    pivotId: number,
+    delta: number,
+  ): Observable<BolFightSessionModel> {
+    return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/${kind}/${pivotId}/damage`, {
+      delta,
+    });
+  }
 }

@@ -78,6 +78,23 @@ class BolFightSessionController extends Controller
         return response()->json($session);
     }
 
+    public function applyDamage(Request $request, string $id, string $kind, int $pivotId)
+    {
+        $session = $this->fightSessionService->applyDamage(
+            $id,
+            Auth::id(),
+            $kind,
+            $pivotId,
+            (int) $request->input('delta'),
+        );
+
+        if (!$session) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        return response()->json($session);
+    }
+
     public function updateOrder(Request $request, string $id)
     {
         $session = $this->fightSessionService->updateOrder($id, Auth::id(), $request->input('ordre', []));
