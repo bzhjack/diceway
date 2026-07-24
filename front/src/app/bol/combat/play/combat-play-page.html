@@ -94,6 +94,7 @@
     cdkDrag
     cdkDragBoundary=".cp-map"
     (click)="onTokenClick(token, $event)"
+    (dblclick)="openStatblock(token, $event)"
   >
     <div [class]="tokenClass(token)">
       @if (token.lockedRound1) {

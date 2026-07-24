@@ -11,8 +11,19 @@ import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.ut
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {BolFightSessionModel, CombatCamp} from '../../models/bol-fight-session.model';
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
+import {BolCreaturesService} from '../../services/bol-creatures.service';
+import {BolDemonsService} from '../../services/bol-demons.service';
 import {BolHerosService} from '../../services/bol-heros.service';
+import {BolPnjService} from '../../services/bol-pnj.service';
 import {combatantKindIcon, combatantKindIconIsSvg} from '../select/combat-statblock.util';
+import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
+import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
+import {
+  creatureStatblockData,
+  demonStatblockData,
+  heroStatblockData,
+  pnjStatblockData,
+} from '../../shared/statblock/bol-statblock.builders';
 import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialog';
 import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard, PlayToken} from '../combat-play.util';
@@ -69,6 +80,9 @@ export class CombatPlayPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly herosService = inject(BolHerosService);
+  private readonly pnjService = inject(BolPnjService);
+  private readonly creaturesService = inject(BolCreaturesService);
+  private readonly demonsService = inject(BolDemonsService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
 
@@ -335,6 +349,54 @@ export class CombatPlayPageComponent {
           });
         });
     });
+  }
+
+  /** Double-clic sur un jeton : consulte son statblock (récupéré en direct, seules les stats de combat sont snapshotées). */
+  protected openStatblock(token: PlayToken, event: Event): void {
+    event.stopPropagation();
+
+    const sourceId = token.combat.sourceId;
+    if (!sourceId) {
+      return;
+    }
+
+    switch (token.kind) {
+      case 'hero':
+        this.herosService
+          .heros(sourceId)
+          .pipe(take(1))
+          .subscribe((hero) =>
+            openStatblockDialog(this.dialog, BolStatblockComponent, {data: heroStatblockData(hero), imageSrc: token.avatar}),
+          );
+        break;
+      case 'pnj':
+        this.pnjService
+          .pnj(sourceId)
+          .pipe(take(1))
+          .subscribe((pnj) =>
+            openStatblockDialog(this.dialog, BolStatblockComponent, {data: pnjStatblockData(pnj), imageSrc: token.avatar}),
+          );
+        break;
+      case 'creature':
+        this.creaturesService
+          .creature(sourceId)
+          .pipe(take(1))
+          .subscribe((creature) =>
+            openStatblockDialog(this.dialog, BolStatblockComponent, {
+              data: creatureStatblockData(creature),
+              imageSrc: token.avatar,
+            }),
+          );
+        break;
+      case 'demon':
+        this.demonsService
+          .demon(sourceId)
+          .pipe(take(1))
+          .subscribe((demon) =>
+            openStatblockDialog(this.dialog, BolStatblockComponent, {data: demonStatblockData(demon), imageSrc: token.avatar}),
+          );
+        break;
+    }
   }
 
   /** Glisser-déposer dans le ruban : réordonnancement manuel, persisté en base. */

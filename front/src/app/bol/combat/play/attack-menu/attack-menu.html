@@ -13,12 +13,12 @@
 <mat-menu #menu="matMenu" class="am-panel">
   <div class="am-content" (click)="$event.stopPropagation()">
     @if (stats().length > 0) {
-      <div class="am-stats">
+      <div class="am-tiles">
         @for (s of stats(); track s.label) {
-          <span class="am-stat">
-            <span class="am-stat-label">{{ s.label }}</span>
-            <span class="am-stat-value">{{ s.value }}</span>
-          </span>
+          <div class="am-tile">
+            <span class="am-tile-value">{{ s.value }}</span>
+            <span class="am-tile-label">{{ s.label }}</span>
+          </div>
         }
       </div>
     }

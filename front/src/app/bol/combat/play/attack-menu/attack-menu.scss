@@ -61,33 +61,42 @@
   padding: 0.6rem 0.7rem 0.65rem;
 }
 
-.am-stats {
-  display: flex;
-  gap: 0.7rem;
+// Même langage visuel que les tuiles du statbloc (`bol-statblock.component.scss`), à échelle réduite
+// pour tenir dans ce menu compact.
+.am-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(2.4rem, 1fr));
+  gap: 0.3rem;
   padding-bottom: 0.4rem;
   border-bottom: 1px solid var(--dw-border);
 }
 
-.am-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.05rem;
+.am-tile {
+  border: 1px solid var(--dw-border);
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 6px;
+  padding: 0.3rem 0.2rem 0.25rem;
+  text-align: center;
+  min-width: 0;
 }
 
-.am-stat-label {
-  font-size: 0.55rem;
+.am-tile-value {
+  display: block;
+  font-family: 'Muse Display Harmony', 'Open Sans', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1;
+  color: var(--dw-color-text-bright);
+  font-variant-numeric: tabular-nums;
+}
+
+.am-tile-label {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.5rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--dw-surface-400);
-}
-
-.am-stat-value {
-  font-size: 0.88rem;
-  font-weight: 800;
-  color: var(--dw-surface-800);
-  font-variant-numeric: tabular-nums;
 }
 
 .am-eyebrow {
