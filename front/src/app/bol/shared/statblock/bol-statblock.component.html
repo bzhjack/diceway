@@ -1,5 +1,5 @@
 <article class="bol-statblock" [class]="'bol-statblock--' + data().accent">
-  <header class="bol-statblock__header">
+  <div class="bol-statblock__body">
     <div class="bol-statblock__avatar">
       <img [src]="imageSrc()" [alt]="data().title" class="h-full w-full object-cover" />
 
@@ -8,46 +8,48 @@
       }
     </div>
 
-    <div class="bol-statblock__main">
-      <div class="min-w-0 space-y-1">
-        <p class="bol-statblock__eyebrow">Statbloc BOL</p>
-        <h2 class="bol-statblock__title">{{ data().title }}</h2>
-      </div>
-
-      @if (data().chips.length) {
-        <div class="bol-statblock__chips">
-          @for (chip of data().chips; track chip.label) {
-            <span class="bol-statblock__chip" [class]="'bol-statblock__chip--' + chip.variant">
-              {{ chip.label }}
-            </span>
-          }
+    <div class="bol-statblock__content">
+      <div class="bol-statblock__main">
+        <div class="min-w-0 space-y-1">
+          <p class="bol-statblock__eyebrow">Statbloc BOL</p>
+          <h2 class="bol-statblock__title">{{ data().title }}</h2>
         </div>
-      }
 
-      @if (data().comment) {
-        <p class="bol-statblock__comment">{{ data().comment }}</p>
-      }
+        @if (data().chips.length) {
+          <div class="bol-statblock__chips">
+            @for (chip of data().chips; track chip.label) {
+              <span class="bol-statblock__chip" [class]="'bol-statblock__chip--' + chip.variant">
+                {{ chip.label }}
+              </span>
+            }
+          </div>
+        }
+
+        @if (data().comment) {
+          <p class="bol-statblock__comment">{{ data().comment }}</p>
+        }
+      </div>
+
+      <div class="bol-statblock__vitals">
+        @for (tile of data().vitals; track tile.label) {
+          <div class="bol-statblock__tile" [class]="tile.tone ? 'bol-statblock__tile--' + tile.tone : ''">
+            <span class="bol-statblock__tile-value" [class.bol-statblock__tile-value--dice]="tile.dice">
+              {{ tile.value }}
+            </span>
+            <span class="bol-statblock__tile-label">{{ tile.label }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="bol-statblock__tiles" [class.bol-statblock__tiles--8]="data().wideTiles">
+        @for (tile of data().tiles; track tile.label) {
+          <div class="bol-statblock__tile bol-statblock__tile--stat">
+            <span class="bol-statblock__tile-value">{{ tile.value }}</span>
+            <span class="bol-statblock__tile-label">{{ tile.label }}</span>
+          </div>
+        }
+      </div>
     </div>
-  </header>
-
-  <div class="bol-statblock__vitals">
-    @for (tile of data().vitals; track tile.label) {
-      <div class="bol-statblock__tile" [class]="tile.tone ? 'bol-statblock__tile--' + tile.tone : ''">
-        <span class="bol-statblock__tile-value" [class.bol-statblock__tile-value--dice]="tile.dice">
-          {{ tile.value }}
-        </span>
-        <span class="bol-statblock__tile-label">{{ tile.label }}</span>
-      </div>
-    }
-  </div>
-
-  <div class="bol-statblock__tiles" [class.bol-statblock__tiles--8]="data().wideTiles">
-    @for (tile of data().tiles; track tile.label) {
-      <div class="bol-statblock__tile bol-statblock__tile--stat">
-        <span class="bol-statblock__tile-value">{{ tile.value }}</span>
-        <span class="bol-statblock__tile-label">{{ tile.label }}</span>
-      </div>
-    }
   </div>
 
   <section class="bol-statblock__lists" [class.bol-statblock__lists--3]="data().sections.length > 1">
