@@ -1,6 +1,6 @@
 import {NgOptimizedImage} from '@angular/common';
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject} from '@angular/core';
-import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
+import {email, form, FormField, required} from '@angular/forms/signals';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {extractApiErrors} from '../../../core/api-error.utils';
 import {AuthService} from '../../../core/auth/auth.service';
@@ -23,7 +23,7 @@ import {
 @Component({
   selector: 'app-resend-page',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     RouterLink,
     NgOptimizedImage,
     MatFormFieldModule,
@@ -45,44 +45,49 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResendPageComponent {
-  private readonly cdr = inject(ChangeDetectorRef);
-  private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly route = inject(ActivatedRoute);
   private readonly state = this.route.snapshot.paramMap.get('state');
   private readonly presetEmail = this.route.snapshot.queryParamMap.get('email') ?? '';
 
-  protected pending = false;
-  protected successMessage = '';
-  protected messages: string[] = [];
-  protected forbidden = this.state === 'forbidden';
-  protected title = this.forbidden ? 'Adresse mail non vérifiée' : "Renvoyer l'email de confirmation";
-  protected readonly resendForm = this.formBuilder.nonNullable.group({
-    email: [this.presetEmail, [Validators.required, Validators.email]],
+  protected readonly pending = signal(false);
+  protected readonly successMessage = signal('');
+  protected readonly messages = signal<string[]>([]);
+  protected readonly forbidden = this.state === 'forbidden';
+  protected readonly title = this.forbidden ? 'Adresse mail non vérifiée' : "Renvoyer l'email de confirmation";
+
+  protected readonly resendModel = signal({email: this.presetEmail});
+  protected readonly resendForm = form(this.resendModel, (fieldPath) => {
+    required(fieldPath.email, {message: 'Adresse mail requise'});
+    email(fieldPath.email, {message: 'Adresse mail non valide'});
   });
 
+  protected onSubmit(event: Event): void {
+    event.preventDefault();
+    this.send();
+  }
+
   protected send(): void {
-    this.messages = [];
-    this.successMessage = '';
-    if (this.resendForm.invalid) {
-      this.resendForm.markAllAsTouched();
-      this.messages = ['Une adresse email valide est requise.'];
+    this.messages.set([]);
+    this.successMessage.set('');
+
+    if (this.resendForm().invalid()) {
+      this.resendForm().markAsTouched();
+      this.messages.set(['Une adresse email valide est requise.']);
       return;
     }
 
-    this.pending = true;
+    this.pending.set(true);
     this.authService
-      .sendMail(this.resendForm.controls.email.getRawValue())
+      .sendMail(this.resendModel().email)
       .subscribe({
         next: (response) => {
-          this.pending = false;
-          this.successMessage = response.message;
-          this.cdr.markForCheck();
+          this.pending.set(false);
+          this.successMessage.set(response.message);
         },
         error: (error: unknown) => {
-          this.pending = false;
-          this.messages = extractApiErrors(error, 'Envoi impossible.');
-          this.cdr.markForCheck();
+          this.pending.set(false);
+          this.messages.set(extractApiErrors(error, 'Envoi impossible.'));
         },
       });
   }
