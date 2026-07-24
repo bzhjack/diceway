@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component, computed, inject} from '@angular/core';
-import {FormArray, ReactiveFormsModule, Validators} from '@angular/forms';
+import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {applyEach, FieldTree, form, required} from '@angular/forms/signals';
 import {Observable} from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
@@ -8,13 +8,53 @@ import {BolDemonModel} from '../../models/bol-demon.model';
 import {BolDemonStateService} from '../../services/bol-demon-state.service';
 import {BolDemonsService} from '../../services/bol-demons.service';
 import {AddMenuEvent} from '../../shared/add-menu/add-menu.component';
-import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
+import {BolSignalEntityFormPageBase} from '../../shared/form/entity-form-page-signal.base';
+import {EntityFormLabels} from '../../shared/form/entity-form-page.base';
 import {DetailDraft, availableCatalog, selectedEntries} from '../../shared/form/form-selection';
-import {controlValueSignal, formArrayValueSignal, formDirtySignal} from '../../shared/form/form-signals';
 import {PouvoirEntry} from '../../shared/pouvoir/list/pouvoir-list.component';
-import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
+import {StatGroup, StatsGridFieldComponent} from '../../shared/stats-grid/stats-grid-field.component';
 import {DemonGeneralComponent} from './general/demon-general.component';
 import {DemonPouvoirsComponent} from './pouvoirs/demon-pouvoirs.component';
+
+/** Modèle de brouillon du formulaire démon (distinct de {@link BolDemonModel}, la forme persistée par l'API). */
+export interface DemonFormModel {
+  id: string | null;
+  nom: string;
+  id_categorie: number | null;
+  /** Chaîne vide plutôt que `null` : `[formField]` sur `<textarea>` exige `Field<string>`. */
+  commentaire: string;
+  vigueur: number;
+  agilite: number;
+  esprit: number;
+  aura: number;
+  vitalite: number;
+  melee: number;
+  tir: number;
+  defense: number;
+  degats: string;
+  avatar: string | null;
+  pouvoirs: DetailDraft[];
+}
+
+function demonFormDefaults(): DemonFormModel {
+  return {
+    id: null,
+    nom: '',
+    id_categorie: null,
+    commentaire: '',
+    vigueur: 0,
+    agilite: 0,
+    esprit: 0,
+    aura: 0,
+    vitalite: 0,
+    melee: 0,
+    tir: 0,
+    defense: 0,
+    degats: '0',
+    avatar: null,
+    pouvoirs: [],
+  };
+}
 
 const DEMON_STAT_GROUPS: readonly StatGroup[] = [
   {
@@ -63,14 +103,13 @@ const DEMON_FORM_LABELS: EntityFormLabels = {
 @Component({
   selector: 'bol-demon-form-page',
   imports: [
-    ReactiveFormsModule,
     MatCard,
     MatCardContent,
     MatButtonModule,
     MatIconModule,
     DemonGeneralComponent,
     DemonPouvoirsComponent,
-    StatsGridComponent,
+    StatsGridFieldComponent,
   ],
   templateUrl: './demon-form-page.html',
   styleUrl: './demon-form-page.scss',
@@ -79,7 +118,7 @@ const DEMON_FORM_LABELS: EntityFormLabels = {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DemonFormPageComponent extends BolEntityFormPageBase<BolDemonModel> {
+export class DemonFormPageComponent extends BolSignalEntityFormPageBase<BolDemonModel, DemonFormModel> {
   private readonly demonStateService = inject(BolDemonStateService);
   private readonly demonsService = inject(BolDemonsService);
 
@@ -89,36 +128,37 @@ export class DemonFormPageComponent extends BolEntityFormPageBase<BolDemonModel>
   protected readonly labels = DEMON_FORM_LABELS;
   protected readonly demonStatGroups = DEMON_STAT_GROUPS;
 
-  protected readonly demonForm = this.formBuilder.group({
-    id: this.formBuilder.control<string | null>(null),
-    nom: this.formBuilder.control('', Validators.required),
-    id_categorie: this.formBuilder.control<number | null>(null, Validators.required),
-    commentaire: this.formBuilder.control<string | null>(null),
-    vigueur: this.formBuilder.control(0, Validators.required),
-    agilite: this.formBuilder.control(0, Validators.required),
-    esprit: this.formBuilder.control(0, Validators.required),
-    aura: this.formBuilder.control(0, Validators.required),
-    vitalite: this.formBuilder.control(0, Validators.required),
-    melee: this.formBuilder.control(0, Validators.required),
-    tir: this.formBuilder.control(0, Validators.required),
-    defense: this.formBuilder.control(0, Validators.required),
-    degats: this.formBuilder.control('0', Validators.required),
-    avatar: this.formBuilder.control<string | null>(null),
-    pouvoirs: this.formBuilder.array([]),
+  protected readonly model = signal<DemonFormModel>(demonFormDefaults());
+  protected readonly demonForm = form(this.model, (fieldPath) => {
+    required(fieldPath.nom, {message: 'Nom requis'});
+    required(fieldPath.id_categorie, {message: 'Catégorie requise'});
+    required(fieldPath.vigueur);
+    required(fieldPath.agilite);
+    required(fieldPath.esprit);
+    required(fieldPath.aura);
+    required(fieldPath.vitalite);
+    required(fieldPath.melee);
+    required(fieldPath.tir);
+    required(fieldPath.defense);
+    required(fieldPath.degats);
+
+    applyEach(fieldPath.pouvoirs, (pouvoir) => {
+      required(pouvoir.id);
+    });
   });
 
   protected get entityForm() {
     return this.demonForm;
   }
 
-  protected readonly formDirty = formDirtySignal(this.demonForm);
+  /** Vue castée pour bol-stats-grid-field, qui n'accède qu'aux champs numériques. */
+  protected readonly statsForm = this.demonForm as unknown as FieldTree<Record<string, number>>;
 
-  protected readonly categorieId = controlValueSignal(this.demonForm.controls.id_categorie);
-  protected readonly avatarPreview = controlValueSignal(this.demonForm.controls.avatar);
+  protected readonly avatarPreview = computed(() => this.model().avatar);
 
-  protected readonly selectedPouvoirsDraft = formArrayValueSignal<DetailDraft>(this.pouvoirs);
+  protected readonly selectedPouvoirsDraft = computed(() => this.model().pouvoirs);
   protected readonly selectedCategorie = computed(() =>
-    (this.categories() ?? []).find((categorie) => categorie.id === this.categorieId()),
+    (this.categories() ?? []).find((categorie) => categorie.id === this.model().id_categorie),
   );
   protected readonly filteredPouvoirs = availableCatalog(this.pouvoirsList, this.selectedPouvoirsDraft);
   protected readonly selectedPouvoirEntries = selectedEntries(
@@ -130,6 +170,10 @@ export class DemonFormPageComponent extends BolEntityFormPageBase<BolDemonModel>
       description: definition.description || null,
       detail: entry.detail || null,
     }),
+  );
+
+  protected readonly showGeneralHint = computed(
+    () => this.fieldError(this.demonForm.nom) || this.fieldError(this.demonForm.id_categorie),
   );
 
   constructor() {
@@ -144,22 +188,23 @@ export class DemonFormPageComponent extends BolEntityFormPageBase<BolDemonModel>
     );
   }
 
-  protected get pouvoirs(): FormArray {
-    return this.demonForm.controls.pouvoirs as FormArray;
+  protected onFormSubmit(event: Event): void {
+    event.preventDefault();
+    this.save();
   }
 
   protected addPouvoirEntry(event: AddMenuEvent): void {
-    this.pouvoirs.push(
-      this.formBuilder.group({
-        id: this.formBuilder.control(event.id, Validators.required),
-        detail: this.formBuilder.control(event.detail),
-      }),
-    );
-    this.pouvoirs.markAsDirty();
+    this.model.update((current) => ({
+      ...current,
+      pouvoirs: [...current.pouvoirs, {id: event.id, detail: event.detail}],
+    }));
   }
 
   protected removePouvoir(index: number): void {
-    this.removeItem(this.pouvoirs, index);
+    this.model.update((current) => ({
+      ...current,
+      pouvoirs: current.pouvoirs.filter((_, i) => i !== index),
+    }));
   }
 
   protected loadEntity(id: string): Observable<BolDemonModel> {
@@ -176,87 +221,34 @@ export class DemonFormPageComponent extends BolEntityFormPageBase<BolDemonModel>
 
   protected resetForm(): void {
     this.hydratedReferenceId = null;
-    this.demonForm.reset(
-      {
-        id: null,
-        nom: '',
-        id_categorie: null,
-        commentaire: null,
-        vigueur: 0,
-        agilite: 0,
-        esprit: 0,
-        aura: 0,
-        vitalite: 0,
-        melee: 0,
-        tir: 0,
-        defense: 0,
-        degats: '0',
-        avatar: null,
-      },
-      {emitEvent: false},
-    );
-    this.pouvoirs.clear({emitEvent: false});
-    this.syncArrays(this.pouvoirs);
+    this.model.set(demonFormDefaults());
   }
 
   protected hydrateForm(demon: BolDemonModel): void {
     this.hydratedReferenceId = demon.id_categorie;
-    this.pouvoirs.clear({emitEvent: false});
-
-    for (const pouvoir of demon.pouvoirs) {
-      this.pouvoirs.push(
-        this.formBuilder.group({
-          id: this.formBuilder.control(pouvoir.pouvoir_id, Validators.required),
-          detail: this.formBuilder.control(pouvoir.detail || null),
-        }),
-        {emitEvent: false},
-      );
-    }
-
-    this.demonForm.patchValue(
-      {
-        id: demon.id,
-        nom: demon.nom,
-        id_categorie: demon.id_categorie,
-        commentaire: demon.commentaire,
-        vigueur: demon.vigueur,
-        agilite: demon.agilite,
-        esprit: demon.esprit,
-        aura: demon.aura,
-        vitalite: demon.vitalite,
-        melee: demon.melee,
-        tir: demon.tir,
-        defense: demon.defense,
-        degats: demon.degats,
-        avatar: demon.avatar,
-      },
-      {emitEvent: true},
-    );
-    this.syncArrays(this.pouvoirs);
+    this.model.set({
+      id: demon.id,
+      nom: demon.nom,
+      id_categorie: demon.id_categorie,
+      commentaire: demon.commentaire ?? '',
+      vigueur: demon.vigueur,
+      agilite: demon.agilite,
+      esprit: demon.esprit,
+      aura: demon.aura,
+      vitalite: demon.vitalite,
+      melee: demon.melee,
+      tir: demon.tir,
+      defense: demon.defense,
+      degats: demon.degats,
+      avatar: demon.avatar,
+      pouvoirs: demon.pouvoirs.map((pouvoir) => ({
+        id: pouvoir.pouvoir_id,
+        detail: pouvoir.detail || null,
+      })),
+    });
   }
 
   protected buildPayload(): Record<string, unknown> {
-    const rawValue = this.demonForm.getRawValue();
-
-    return {
-      id: rawValue.id,
-      nom: rawValue.nom,
-      id_categorie: rawValue.id_categorie,
-      commentaire: rawValue.commentaire,
-      vigueur: rawValue.vigueur,
-      agilite: rawValue.agilite,
-      esprit: rawValue.esprit,
-      aura: rawValue.aura,
-      vitalite: rawValue.vitalite,
-      melee: rawValue.melee,
-      tir: rawValue.tir,
-      defense: rawValue.defense,
-      degats: rawValue.degats,
-      avatar: rawValue.avatar,
-      pouvoirs: (rawValue.pouvoirs as DetailDraft[]).map((pouvoir) => ({
-        id: pouvoir.id,
-        detail: pouvoir.detail,
-      })),
-    };
+    return {...this.model(), commentaire: this.model().commentaire || null};
   }
 }

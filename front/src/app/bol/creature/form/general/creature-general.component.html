@@ -2,7 +2,7 @@
   Général
 </p>
 
-<div class="grid gap-4 md:grid-cols-[140px_minmax(0,1fr)]" [formGroup]="form()">
+<div class="grid gap-4 md:grid-cols-[140px_minmax(0,1fr)]">
   <div class="cfp-avatar" (click)="avatarClick.emit()">
     @if (avatarPreview()) {
       <img
@@ -25,12 +25,12 @@
   <div class="grid gap-3 md:grid-cols-2">
     <mat-form-field subscriptSizing="dynamic">
       <mat-label>Nom de la créature</mat-label>
-      <input matInput id="nom" formControlName="nom" />
+      <input matInput id="nom" [formField]="form().nom" />
     </mat-form-field>
 
     <mat-form-field subscriptSizing="dynamic">
       <mat-label>Taille</mat-label>
-      <mat-select inputId="id_taille" formControlName="id_taille" [compareWith]="compareById()">
+      <mat-select inputId="id_taille" [formField]="form().id_taille" [compareWith]="compareById()">
         @for (taille of tailles() ?? []; track taille.id) {
           <mat-option [value]="taille.id">{{ taille.taille }}</mat-option>
         }
@@ -39,12 +39,12 @@
 
     <mat-form-field subscriptSizing="dynamic">
       <mat-label>Dégâts</mat-label>
-      <input matInput id="degats" formControlName="degats" />
+      <input matInput id="degats" [formField]="form().degats" />
     </mat-form-field>
 
     <mat-form-field subscriptSizing="dynamic">
       <mat-label>Protection</mat-label>
-      <input matInput id="protection" formControlName="protection" />
+      <input matInput id="protection" [formField]="form().protection" />
     </mat-form-field>
 
     <div class="md:col-span-2">
@@ -53,7 +53,7 @@
         <textarea
           matInput
           id="commentaire"
-          formControlName="commentaire"
+          [formField]="form().commentaire"
           rows="2"
           class="resize-none"
         ></textarea>

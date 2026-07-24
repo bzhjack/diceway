@@ -2,7 +2,7 @@
   <div class="mx-auto flex max-w-6xl flex-col gap-4">
     <mat-card appearance="outlined">
       <mat-card-content>
-        <form class="dw-creation-form flex flex-col gap-6" [formGroup]="demonForm" (ngSubmit)="save()">
+        <form class="dw-creation-form flex flex-col gap-6" (submit)="onFormSubmit($event)">
           <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div class="space-y-3">
               <div class="flex items-center gap-3">
@@ -29,7 +29,7 @@
               <button
                 mat-flat-button
                 type="submit"
-                [disabled]="pending() || loading() || demonForm.invalid"
+                [disabled]="pending() || loading() || demonForm().invalid()"
               >
                 <mat-icon>save</mat-icon> {{ submitLabel() }}
                 @if (formDirty()) {
@@ -58,7 +58,7 @@
                   [categories]="categories()"
                   [compareById]="compareById"
                   [avatarPreview]="avatarPreview()"
-                  [showValidationHint]="onError('nom') || onError('id_categorie')"
+                  [showValidationHint]="showGeneralHint()"
                   (avatarClick)="pickAvatar()"
                 />
               </div>
@@ -74,7 +74,7 @@
             </div>
 
             <div class="dfp-section-card">
-              <bol-stats-grid [form]="demonForm" [groups]="demonStatGroups" />
+              <bol-stats-grid-field [form]="statsForm" [groups]="demonStatGroups" />
             </div>
 
             @if (errorMessage()) {

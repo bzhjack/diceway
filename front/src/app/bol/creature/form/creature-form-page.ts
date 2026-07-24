@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component, computed, inject} from '@angular/core';
-import {FormArray, ReactiveFormsModule, Validators} from '@angular/forms';
+import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {applyEach, FieldTree, form, required} from '@angular/forms/signals';
 import {Observable} from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
@@ -7,15 +7,53 @@ import {MatIconModule} from '@angular/material/icon';
 import {BolCreatureModel} from '../../models/bol-creature.model';
 import {BolCreatureStateService} from '../../services/bol-creature-state.service';
 import {BolCreaturesService} from '../../services/bol-creatures.service';
-import {AddMenuEvent} from '../../shared/add-menu/add-menu.component';
+import {AddMenuComponent, AddMenuEvent} from '../../shared/add-menu/add-menu.component';
 import {CapaciteEntry} from '../../shared/capacite/list/capacite-list.component';
-import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
+import {BolSignalEntityFormPageBase} from '../../shared/form/entity-form-page-signal.base';
+import {EntityFormLabels} from '../../shared/form/entity-form-page.base';
 import {DetailDraft, availableCatalog, selectedEntries} from '../../shared/form/form-selection';
-import {controlValueSignal, formArrayValueSignal, formDirtySignal} from '../../shared/form/form-signals';
-import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
+import {StatGroup, StatsGridFieldComponent} from '../../shared/stats-grid/stats-grid-field.component';
 import {traitIconType} from '../../shared/trait-icon';
 import {CreatureCapacitesComponent} from './capacites/creature-capacites.component';
 import {CreatureGeneralComponent} from './general/creature-general.component';
+
+/** Modèle de brouillon du formulaire créature (distinct de {@link BolCreatureModel}, la forme persistée par l'API). */
+export interface CreatureFormModel {
+  id: string | null;
+  nom: string;
+  id_taille: number | null;
+  /** Chaîne vide plutôt que `null` : `[formField]` sur `<textarea>` exige `Field<string>`. */
+  commentaire: string;
+  vigueur: number;
+  agilite: number;
+  esprit: number;
+  vitalite: number;
+  attaque: number;
+  defense: number;
+  degats: string;
+  protection: string;
+  avatar: string | null;
+  capacites: DetailDraft[];
+}
+
+function creatureFormDefaults(): CreatureFormModel {
+  return {
+    id: null,
+    nom: '',
+    id_taille: null,
+    commentaire: '',
+    vigueur: 0,
+    agilite: 0,
+    esprit: 0,
+    vitalite: 0,
+    attaque: 0,
+    defense: 0,
+    degats: '0',
+    protection: '0',
+    avatar: null,
+    capacites: [],
+  };
+}
 
 const CREATURE_STAT_GROUPS: readonly StatGroup[] = [
   {
@@ -62,14 +100,13 @@ const CREATURE_FORM_LABELS: EntityFormLabels = {
 @Component({
   selector: 'bol-creature-form-page',
   imports: [
-    ReactiveFormsModule,
     MatCard,
     MatCardContent,
     MatButtonModule,
     MatIconModule,
     CreatureGeneralComponent,
     CreatureCapacitesComponent,
-    StatsGridComponent,
+    StatsGridFieldComponent,
   ],
   templateUrl: './creature-form-page.html',
   styleUrl: './creature-form-page.scss',
@@ -78,7 +115,7 @@ const CREATURE_FORM_LABELS: EntityFormLabels = {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreatureFormPageComponent extends BolEntityFormPageBase<BolCreatureModel> {
+export class CreatureFormPageComponent extends BolSignalEntityFormPageBase<BolCreatureModel, CreatureFormModel> {
   private readonly creatureStateService = inject(BolCreatureStateService);
   private readonly creaturesService = inject(BolCreaturesService);
 
@@ -88,35 +125,36 @@ export class CreatureFormPageComponent extends BolEntityFormPageBase<BolCreature
   protected readonly labels = CREATURE_FORM_LABELS;
   protected readonly creatureStatGroups = CREATURE_STAT_GROUPS;
 
-  protected readonly creatureForm = this.formBuilder.group({
-    id: this.formBuilder.control<string | null>(null),
-    nom: this.formBuilder.control('', Validators.required),
-    id_taille: this.formBuilder.control<number | null>(null, Validators.required),
-    commentaire: this.formBuilder.control<string | null>(null),
-    vigueur: this.formBuilder.control(0, Validators.required),
-    agilite: this.formBuilder.control(0, Validators.required),
-    esprit: this.formBuilder.control(0, Validators.required),
-    vitalite: this.formBuilder.control(0, Validators.required),
-    attaque: this.formBuilder.control(0, Validators.required),
-    defense: this.formBuilder.control(0, Validators.required),
-    degats: this.formBuilder.control('0', Validators.required),
-    protection: this.formBuilder.control('0', Validators.required),
-    avatar: this.formBuilder.control<string | null>(null),
-    capacites: this.formBuilder.array([]),
+  protected readonly model = signal<CreatureFormModel>(creatureFormDefaults());
+  protected readonly creatureForm = form(this.model, (fieldPath) => {
+    required(fieldPath.nom, {message: 'Nom requis'});
+    required(fieldPath.id_taille, {message: 'Taille requise'});
+    required(fieldPath.vigueur);
+    required(fieldPath.agilite);
+    required(fieldPath.esprit);
+    required(fieldPath.vitalite);
+    required(fieldPath.attaque);
+    required(fieldPath.defense);
+    required(fieldPath.degats);
+    required(fieldPath.protection);
+
+    applyEach(fieldPath.capacites, (capacite) => {
+      required(capacite.id);
+    });
   });
 
   protected get entityForm() {
     return this.creatureForm;
   }
 
-  protected readonly formDirty = formDirtySignal(this.creatureForm);
+  /** Vue castée pour bol-stats-grid-field, qui n'accède qu'aux champs numériques. */
+  protected readonly statsForm = this.creatureForm as unknown as FieldTree<Record<string, number>>;
 
-  protected readonly tailleId = controlValueSignal(this.creatureForm.controls.id_taille);
-  protected readonly avatarPreview = controlValueSignal(this.creatureForm.controls.avatar);
+  protected readonly avatarPreview = computed(() => this.model().avatar);
 
-  protected readonly selectedCapacitesDraft = formArrayValueSignal<DetailDraft>(this.capacites);
+  protected readonly selectedCapacitesDraft = computed(() => this.model().capacites);
   protected readonly selectedTaille = computed(() =>
-    (this.tailles() ?? []).find((taille) => taille.id === this.tailleId()),
+    (this.tailles() ?? []).find((taille) => taille.id === this.model().id_taille),
   );
   protected readonly filteredCapacites = availableCatalog(this.capacitesList, this.selectedCapacitesDraft);
   protected readonly selectedCapaciteEntries = selectedEntries(
@@ -132,6 +170,10 @@ export class CreatureFormPageComponent extends BolEntityFormPageBase<BolCreature
     }),
   );
 
+  protected readonly showGeneralHint = computed(
+    () => this.fieldError(this.creatureForm.nom) || this.fieldError(this.creatureForm.id_taille),
+  );
+
   constructor() {
     super();
     this.setupReferenceDefaults(
@@ -145,22 +187,23 @@ export class CreatureFormPageComponent extends BolEntityFormPageBase<BolCreature
     );
   }
 
-  protected get capacites(): FormArray {
-    return this.creatureForm.controls.capacites as FormArray;
+  protected onFormSubmit(event: Event): void {
+    event.preventDefault();
+    this.save();
   }
 
   protected addCapaciteEntry(event: AddMenuEvent): void {
-    this.capacites.push(
-      this.formBuilder.group({
-        id: this.formBuilder.control(event.id, Validators.required),
-        detail: this.formBuilder.control(event.detail),
-      }),
-    );
-    this.capacites.markAsDirty();
+    this.model.update((current) => ({
+      ...current,
+      capacites: [...current.capacites, {id: event.id, detail: event.detail}],
+    }));
   }
 
   protected removeCapacite(index: number): void {
-    this.removeItem(this.capacites, index);
+    this.model.update((current) => ({
+      ...current,
+      capacites: current.capacites.filter((_, i) => i !== index),
+    }));
   }
 
   protected loadEntity(id: string): Observable<BolCreatureModel> {
@@ -177,84 +220,33 @@ export class CreatureFormPageComponent extends BolEntityFormPageBase<BolCreature
 
   protected resetForm(): void {
     this.hydratedReferenceId = null;
-    this.creatureForm.reset(
-      {
-        id: null,
-        nom: '',
-        id_taille: null,
-        commentaire: null,
-        vigueur: 0,
-        agilite: 0,
-        esprit: 0,
-        vitalite: 0,
-        attaque: 0,
-        defense: 0,
-        degats: '0',
-        protection: '0',
-        avatar: null,
-      },
-      {emitEvent: false},
-    );
-    this.capacites.clear({emitEvent: false});
-    this.syncArrays(this.capacites);
+    this.model.set(creatureFormDefaults());
   }
 
   protected hydrateForm(creature: BolCreatureModel): void {
     this.hydratedReferenceId = creature.id_taille;
-    this.capacites.clear({emitEvent: false});
-
-    for (const capacite of creature.capacites) {
-      this.capacites.push(
-        this.formBuilder.group({
-          id: this.formBuilder.control(capacite.capacite_id, Validators.required),
-          detail: this.formBuilder.control(capacite.detail || null),
-        }),
-        {emitEvent: false},
-      );
-    }
-
-    this.creatureForm.patchValue(
-      {
-        id: creature.id,
-        nom: creature.nom,
-        id_taille: creature.id_taille,
-        commentaire: creature.commentaire,
-        vigueur: creature.vigueur,
-        agilite: creature.agilite,
-        esprit: creature.esprit,
-        vitalite: creature.vitalite,
-        attaque: creature.attaque,
-        defense: creature.defense,
-        degats: creature.degats,
-        protection: creature.protection,
-        avatar: creature.avatar,
-      },
-      {emitEvent: true},
-    );
-    this.syncArrays(this.capacites);
+    this.model.set({
+      id: creature.id,
+      nom: creature.nom,
+      id_taille: creature.id_taille,
+      commentaire: creature.commentaire ?? '',
+      vigueur: creature.vigueur,
+      agilite: creature.agilite,
+      esprit: creature.esprit,
+      vitalite: creature.vitalite,
+      attaque: creature.attaque,
+      defense: creature.defense,
+      degats: creature.degats,
+      protection: creature.protection,
+      avatar: creature.avatar,
+      capacites: creature.capacites.map((capacite) => ({
+        id: capacite.capacite_id,
+        detail: capacite.detail || null,
+      })),
+    });
   }
 
   protected buildPayload(): Record<string, unknown> {
-    const rawValue = this.creatureForm.getRawValue();
-
-    return {
-      id: rawValue.id,
-      nom: rawValue.nom,
-      id_taille: rawValue.id_taille,
-      commentaire: rawValue.commentaire,
-      vigueur: rawValue.vigueur,
-      agilite: rawValue.agilite,
-      esprit: rawValue.esprit,
-      vitalite: rawValue.vitalite,
-      attaque: rawValue.attaque,
-      defense: rawValue.defense,
-      degats: rawValue.degats,
-      protection: rawValue.protection,
-      avatar: rawValue.avatar,
-      capacites: (rawValue.capacites as DetailDraft[]).map((capacite) => ({
-        id: capacite.id,
-        detail: capacite.detail,
-      })),
-    };
+    return {...this.model(), commentaire: this.model().commentaire || null};
   }
 }
