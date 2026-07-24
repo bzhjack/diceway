@@ -20,7 +20,7 @@ import {BolHerosStateService, HeroCreationWarning} from '../../services/bol-hero
 import {addMenuOptions} from '../../shared/add-menu/add-menu.component';
 import {ArmeEntry} from '../../shared/arme/list/arme-list.component';
 import {ArmureEntry} from '../../shared/armure/list/armure-list.component';
-import {CarriereEntry} from '../../shared/carriere/list/carriere-list.component';
+import {CarriereEntry} from '../../shared/carriere/list/carriere-list-legacy.component';
 import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
 import {IdDraft, RankedDraft, availableCatalog, selectedEntries} from '../../shared/form/form-selection';
 import {controlValueSignal, formArrayValueSignal, formDirtySignal} from '../../shared/form/form-signals';

@@ -2,20 +2,20 @@
   Identité
 </p>
 
-<div class="grid gap-2 md:grid-cols-3" [formGroup]="form()">
+<div class="grid gap-2 md:grid-cols-3">
   <mat-form-field subscriptSizing="dynamic">
     <mat-label>Nom du joueur</mat-label>
-    <input matInput id="joueur" formControlName="joueur" />
+    <input matInput id="joueur" [formField]="form().joueur" />
   </mat-form-field>
 
   <mat-form-field subscriptSizing="dynamic">
     <mat-label>Nom du héros</mat-label>
-    <input matInput id="nom" formControlName="nom" />
+    <input matInput id="nom" [formField]="form().nom" />
   </mat-form-field>
 
   <mat-form-field subscriptSizing="dynamic">
     <mat-label>Région</mat-label>
-    <mat-select inputId="region_id" formControlName="region_id" [compareWith]="compareById()">
+    <mat-select inputId="region_id" [formField]="form().region_id" [compareWith]="compareById()">
       @for (region of regionList() ?? []; track region.id) {
         <mat-option [value]="region.id">{{ region.region }}</mat-option>
       }
@@ -28,7 +28,7 @@
       <textarea
         matInput
         id="commentaire"
-        formControlName="commentaire"
+        [formField]="form().commentaire"
         rows="3"
         class="resize-none"
       ></textarea>

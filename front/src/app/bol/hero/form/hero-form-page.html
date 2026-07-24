@@ -2,7 +2,7 @@
   <div class="mx-auto flex max-w-7xl flex-col gap-4">
     <mat-card appearance="outlined">
       <mat-card-content>
-        <form class="dw-creation-form flex flex-col gap-6" [formGroup]="heroForm" (ngSubmit)="save()">
+        <form class="dw-creation-form flex flex-col gap-6" (submit)="onFormSubmit($event)">
           <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div class="space-y-3">
               <div class="flex items-center gap-3">
@@ -28,7 +28,7 @@
               <button
                 mat-flat-button
                 type="submit"
-                [disabled]="pending() || loading() || heroForm.invalid"
+                [disabled]="pending() || loading() || heroForm().invalid()"
               >
                 <mat-icon>save</mat-icon> {{ submitLabel() }}
                 @if (formDirty()) {
@@ -36,7 +36,7 @@
                 }
               </button>
 
-              @if (editMode() && !heroForm.controls.active.value) {
+              @if (editMode() && !model().active) {
                 <button
                   mat-flat-button
                   type="button"
@@ -77,9 +77,9 @@
                   [languesDisponibles]="filteredLangues()"
                   (avatarClick)="pickAvatar()"
                   (traitAdded)="addTraitEntry($event)"
-                  (traitRemoved)="removeItem(traits, $event)"
+                  (traitRemoved)="removeTrait($event)"
                   (langueAdded)="addLangueEntry($event)"
-                  (langueRemoved)="removeItem(langues, $event)"
+                  (langueRemoved)="removeLangue($event)"
                 />
               </div>
 
@@ -90,7 +90,7 @@
                       [form]="heroForm"
                       [regionList]="regionList()"
                       [compareById]="compareById"
-                      [showValidationHint]="onError('joueur') || onError('nom') || onError('region_id')"
+                      [showValidationHint]="showGeneralHint()"
                     />
                   </div>
 
@@ -112,12 +112,12 @@
                       />
                     </div>
 
-                    <bol-carriere-list [carrieres]="selectedCarrieres()" (removed)="removeItem(carrieres, $event)" />
+                    <bol-carriere-list [carrieres]="selectedCarrieres()" (removed)="removeCarriere($event)" />
                   </div>
                 </div>
 
                 <div class="dw-section--form">
-                  <bol-stats-grid [form]="heroForm" [groups]="heroStatGroups" />
+                  <bol-stats-grid-field [form]="statsForm" [groups]="heroStatGroups" />
                 </div>
 
                 <div class="grid gap-4 xl:grid-cols-2 xl:items-start">
@@ -139,7 +139,7 @@
                       />
                     </div>
 
-                    <bol-arme-list [armes]="selectedArmes()" (removed)="removeItem(armes, $event)" />
+                    <bol-arme-list [armes]="selectedArmes()" (removed)="removeArme($event)" />
                   </div>
 
                   <div class="dw-section--form">
@@ -160,7 +160,7 @@
                       />
                     </div>
 
-                    <bol-armure-list [armures]="selectedArmures()" (removed)="removeItem(armures, $event)" />
+                    <bol-armure-list [armures]="selectedArmures()" (removed)="removeArmure($event)" />
                   </div>
                 </div>
               </div>

@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component, computed, inject} from '@angular/core';
-import {FormArray, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {applyEach, FieldTree, form, required} from '@angular/forms/signals';
 import {Observable} from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
@@ -12,15 +12,73 @@ import {AddMenuComponent, addMenuOptions} from '../../shared/add-menu/add-menu.c
 import {ArmeEntry, ArmeListComponent} from '../../shared/arme/list/arme-list.component';
 import {ArmureEntry, ArmureListComponent} from '../../shared/armure/list/armure-list.component';
 import {CarriereEntry, CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
-import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
+import {BolSignalEntityFormPageBase} from '../../shared/form/entity-form-page-signal.base';
+import {EntityFormLabels} from '../../shared/form/entity-form-page.base';
 import {IdDraft, RankedDraft, availableCatalog, referencedIds, selectedEntries} from '../../shared/form/form-selection';
-import {controlValueSignal, formArrayValueSignal, formDirtySignal} from '../../shared/form/form-signals';
 import {LangueEntry} from '../../shared/langue/list/langue-list.component';
-import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
+import {StatGroup, StatsGridFieldComponent} from '../../shared/stats-grid/stats-grid-field.component';
 import {TraitAddEvent} from '../../shared/trait/add-menu/trait-add-menu.component';
 import {TraitDraft, traitEntriesSignal} from '../../shared/trait/trait-entry.utils';
 import {PnjGeneralComponent, PnjTypeOption} from './general/pnj-general.component';
 import {PnjSummaryRailComponent} from './summary-rail/pnj-summary-rail.component';
+
+/** Modèle de brouillon du formulaire PNJ (distinct de {@link BolHerosModel}, la forme persistée par l'API). */
+export interface PnjFormModel {
+  id: string | null;
+  nom: string;
+  type: 'P' | 'C' | 'R';
+  joueur: string;
+  /** Chaîne vide plutôt que `null` : `[formField]` sur `<textarea>` exige `Field<string>`. */
+  commentaire: string;
+  avatar: string | null;
+  vigueur: number;
+  agilite: number;
+  esprit: number;
+  aura: number;
+  initiative: number;
+  melee: number;
+  tir: number;
+  defense: number;
+  vitalite: number;
+  pouvoir: number;
+  foi: number;
+  vilenie: number;
+  creation: number;
+  armes: IdDraft[];
+  armures: IdDraft[];
+  carrieres: RankedDraft[];
+  langues: IdDraft[];
+  traits: TraitDraft[];
+}
+
+function pnjFormDefaults(): PnjFormModel {
+  return {
+    id: null,
+    nom: '',
+    type: 'P',
+    joueur: 'master',
+    commentaire: '',
+    avatar: null,
+    vigueur: 0,
+    agilite: 0,
+    esprit: 0,
+    aura: 0,
+    initiative: 0,
+    melee: 0,
+    tir: 0,
+    defense: 0,
+    vitalite: 0,
+    pouvoir: 0,
+    foi: 0,
+    vilenie: 0,
+    creation: 0,
+    armes: [],
+    armures: [],
+    carrieres: [],
+    langues: [],
+    traits: [],
+  };
+}
 
 const PNJ_TYPE_LABELS: Readonly<Record<'P' | 'C' | 'R', string>> = {
   P: 'Piétaille',
@@ -83,7 +141,6 @@ const PNJ_FORM_LABELS: EntityFormLabels = {
 @Component({
   selector: 'bol-pnj-form-page',
   imports: [
-    ReactiveFormsModule,
     MatButtonModule,
     MatCard,
     MatCardContent,
@@ -94,7 +151,7 @@ const PNJ_FORM_LABELS: EntityFormLabels = {
     ArmureListComponent,
     CarriereListComponent,
     PnjGeneralComponent,
-    StatsGridComponent,
+    StatsGridFieldComponent,
     PnjSummaryRailComponent,
   ],
   templateUrl: './pnj-form-page.html',
@@ -104,7 +161,7 @@ const PNJ_FORM_LABELS: EntityFormLabels = {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel> {
+export class PnjFormPageComponent extends BolSignalEntityFormPageBase<BolHerosModel, PnjFormModel> {
   private readonly pnjService = inject(BolPnjService);
   private readonly herosStateService = inject(BolHerosStateService);
 
@@ -125,50 +182,56 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel> {
   protected readonly typeOptions = PNJ_TYPE_OPTIONS;
   protected readonly pnjStatGroups = PNJ_STAT_GROUPS;
 
-  protected readonly pnjForm = this.formBuilder.group({
-    id: this.formBuilder.control<string | null>(null),
-    nom: this.formBuilder.control('', Validators.required),
-    type: this.formBuilder.control<'P' | 'C' | 'R'>('P', Validators.required),
-    joueur: this.formBuilder.control('master', Validators.required),
-    commentaire: this.formBuilder.control<string | null>(null),
-    avatar: this.formBuilder.control<string | null>(null),
-    vigueur: this.formBuilder.control(0, Validators.required),
-    agilite: this.formBuilder.control(0, Validators.required),
-    esprit: this.formBuilder.control(0, Validators.required),
-    aura: this.formBuilder.control(0, Validators.required),
-    initiative: this.formBuilder.control(0, Validators.required),
-    melee: this.formBuilder.control(0, Validators.required),
-    tir: this.formBuilder.control(0, Validators.required),
-    defense: this.formBuilder.control(0, Validators.required),
-    vitalite: this.formBuilder.control(0, Validators.required),
-    pouvoir: this.formBuilder.control(0, Validators.required),
-    foi: this.formBuilder.control(0, Validators.required),
-    vilenie: this.formBuilder.control(0, Validators.required),
-    creation: this.formBuilder.control(0, Validators.required),
-    armes: this.formBuilder.array([]),
-    armures: this.formBuilder.array([]),
-    carrieres: this.formBuilder.array([]),
-    langues: this.formBuilder.array([]),
-    traits: this.formBuilder.array([]),
+  protected readonly model = signal<PnjFormModel>(pnjFormDefaults());
+  protected readonly pnjForm = form(this.model, (fieldPath) => {
+    required(fieldPath.nom, {message: 'Nom requis'});
+    required(fieldPath.type, {message: 'Type requis'});
+    required(fieldPath.joueur);
+    required(fieldPath.vigueur);
+    required(fieldPath.agilite);
+    required(fieldPath.esprit);
+    required(fieldPath.aura);
+    required(fieldPath.initiative);
+    required(fieldPath.melee);
+    required(fieldPath.tir);
+    required(fieldPath.defense);
+    required(fieldPath.vitalite);
+    required(fieldPath.pouvoir);
+    required(fieldPath.foi);
+    required(fieldPath.vilenie);
+    required(fieldPath.creation);
+
+    applyEach(fieldPath.armes, (item) => required(item.id));
+    applyEach(fieldPath.armures, (item) => required(item.id));
+    applyEach(fieldPath.langues, (item) => required(item.id));
+    applyEach(fieldPath.carrieres, (item) => {
+      required(item.id);
+      required(item.value);
+    });
+    applyEach(fieldPath.traits, (item) => {
+      required(item.id);
+      required(item.type);
+    });
   });
 
   protected get entityForm() {
     return this.pnjForm;
   }
 
-  protected readonly formDirty = formDirtySignal(this.pnjForm);
+  /** Vue castée pour bol-stats-grid-field, qui n'accède qu'aux champs numériques. */
+  protected readonly statsForm = this.pnjForm as unknown as FieldTree<Record<string, number>>;
 
-  protected readonly avatarPreview = controlValueSignal(this.pnjForm.controls.avatar);
-  protected readonly pnjNom = controlValueSignal(this.pnjForm.controls.nom);
-  protected readonly pnjType = controlValueSignal(this.pnjForm.controls.type);
-  protected readonly pnjVitalite = controlValueSignal(this.pnjForm.controls.vitalite);
+  protected readonly avatarPreview = computed(() => this.model().avatar);
+  protected readonly pnjNom = computed(() => this.model().nom);
+  protected readonly pnjType = computed(() => this.model().type);
+  protected readonly pnjVitalite = computed(() => this.model().vitalite);
   protected readonly pnjTypeLabel = computed(() => PNJ_TYPE_LABELS[this.pnjType() ?? 'P']);
 
-  protected readonly selectedArmesDraft = formArrayValueSignal<IdDraft>(this.armes);
-  protected readonly selectedArmuresDraft = formArrayValueSignal<IdDraft>(this.armures);
-  protected readonly selectedCarrieresDraft = formArrayValueSignal<RankedDraft>(this.carrieres);
-  protected readonly selectedLanguesDraft = formArrayValueSignal<IdDraft>(this.langues);
-  protected readonly selectedTraitsDraft = formArrayValueSignal<TraitDraft>(this.traits);
+  protected readonly selectedArmesDraft = computed(() => this.model().armes);
+  protected readonly selectedArmuresDraft = computed(() => this.model().armures);
+  protected readonly selectedCarrieresDraft = computed(() => this.model().carrieres);
+  protected readonly selectedLanguesDraft = computed(() => this.model().langues);
+  protected readonly selectedTraitsDraft = computed(() => this.model().traits);
 
   protected readonly filteredArmes = availableCatalog(this.armesList, this.selectedArmesDraft);
   protected readonly filteredArmures = availableCatalog(this.armuresList, this.selectedArmuresDraft);
@@ -222,7 +285,7 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel> {
       id: entry.id,
       label: definition.carriere,
       description: definition.description || null,
-      rank: this.carrieres.at(index).get('value') as FormControl<number>,
+      rank: this.pnjForm.carrieres[index].value,
     }),
   );
   protected readonly selectedLangues = selectedEntries(
@@ -241,56 +304,53 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel> {
     this.desavantagesList,
   );
 
-  protected get armes(): FormArray {
-    return this.pnjForm.controls.armes as FormArray;
-  }
+  protected readonly showGeneralHint = computed(
+    () => this.fieldError(this.pnjForm.nom) || this.fieldError(this.pnjForm.type),
+  );
 
-  protected get armures(): FormArray {
-    return this.pnjForm.controls.armures as FormArray;
-  }
-
-  protected get carrieres(): FormArray {
-    return this.pnjForm.controls.carrieres as FormArray;
-  }
-
-  protected get langues(): FormArray {
-    return this.pnjForm.controls.langues as FormArray;
-  }
-
-  protected get traits(): FormArray {
-    return this.pnjForm.controls.traits as FormArray;
+  protected onFormSubmit(event: Event): void {
+    event.preventDefault();
+    this.save();
   }
 
   protected addArmeEntry(id: number): void {
-    this.addIdEntry(this.armes, id);
+    this.model.update((current) => ({...current, armes: [...current.armes, {id}]}));
+  }
+
+  protected removeArme(index: number): void {
+    this.model.update((current) => ({...current, armes: current.armes.filter((_, i) => i !== index)}));
   }
 
   protected addArmureEntry(id: number): void {
-    this.addIdEntry(this.armures, id);
+    this.model.update((current) => ({...current, armures: [...current.armures, {id}]}));
+  }
+
+  protected removeArmure(index: number): void {
+    this.model.update((current) => ({...current, armures: current.armures.filter((_, i) => i !== index)}));
   }
 
   protected addLangueEntry(id: number): void {
-    this.addIdEntry(this.langues, id);
+    this.model.update((current) => ({...current, langues: [...current.langues, {id}]}));
+  }
+
+  protected removeLangue(index: number): void {
+    this.model.update((current) => ({...current, langues: current.langues.filter((_, i) => i !== index)}));
   }
 
   protected addCarriereEntry(id: number): void {
-    this.carrieres.push(
-      this.formBuilder.group({
-        id: this.formBuilder.control(id, Validators.required),
-        value: this.formBuilder.control(0, Validators.required),
-      }),
-    );
-    this.carrieres.markAsDirty();
+    this.model.update((current) => ({...current, carrieres: [...current.carrieres, {id, value: 0}]}));
+  }
+
+  protected removeCarriere(index: number): void {
+    this.model.update((current) => ({...current, carrieres: current.carrieres.filter((_, i) => i !== index)}));
   }
 
   protected addTraitEntry(entry: TraitAddEvent): void {
-    this.traits.push(
-      this.formBuilder.group({
-        id: this.formBuilder.control(entry.id, Validators.required),
-        type: this.formBuilder.control<'A' | 'D'>(entry.type, Validators.required),
-      }),
-    );
-    this.traits.markAsDirty();
+    this.model.update((current) => ({...current, traits: [...current.traits, {id: entry.id, type: entry.type}]}));
+  }
+
+  protected removeTrait(index: number): void {
+    this.model.update((current) => ({...current, traits: current.traits.filter((_, i) => i !== index)}));
   }
 
   protected loadEntity(id: string): Observable<BolHerosModel> {
@@ -306,101 +366,53 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel> {
   }
 
   protected resetForm(): void {
-    this.pnjForm.reset(
-      {
-        id: null,
-        nom: '',
-        type: 'P',
-        joueur: 'master',
-        commentaire: null,
-        avatar: null,
-        vigueur: 0,
-        agilite: 0,
-        esprit: 0,
-        aura: 0,
-        initiative: 0,
-        melee: 0,
-        tir: 0,
-        defense: 0,
-        vitalite: 0,
-        pouvoir: 0,
-        foi: 0,
-        vilenie: 0,
-        creation: 0,
-      },
-      {emitEvent: false},
-    );
-    this.armes.clear({emitEvent: false});
-    this.armures.clear({emitEvent: false});
-    this.carrieres.clear({emitEvent: false});
-    this.langues.clear({emitEvent: false});
-    this.traits.clear({emitEvent: false});
-    this.syncArrays(this.armes, this.armures, this.carrieres, this.langues, this.traits);
+    this.model.set(pnjFormDefaults());
   }
 
   protected hydrateForm(pnj: BolHerosModel): void {
-    this.resetForm();
-
-    this.pushIdGroups(this.armes, referencedIds(pnj.armes, (arme) => arme.arme_id));
-    this.pushIdGroups(this.armures, referencedIds(pnj.armures, (armure) => armure.armure_id));
-    this.pushIdGroups(this.langues, referencedIds(pnj.origines.langues, (langue) => langue.langue_id));
-
-    for (const carriere of pnj.carrieres) {
-      this.carrieres.push(
-        this.formBuilder.group({
-          id: this.formBuilder.control(carriere.carriere_id ?? null, Validators.required),
-          value: this.formBuilder.control(carriere.value, Validators.required),
-        }),
-        {emitEvent: false},
-      );
-    }
-
-    for (const trait of pnj.traits) {
-      this.traits.push(
-        this.formBuilder.group({
-          id: this.formBuilder.control(trait.traitable_id, Validators.required),
-          type: this.formBuilder.control<'A' | 'D'>(trait.type, Validators.required),
-        }),
-        {emitEvent: false},
-      );
-    }
-
-    this.pnjForm.patchValue(
-      {
-        id: pnj.id,
-        nom: pnj.origines.nom ?? '',
-        type: (pnj.type as 'P' | 'C' | 'R') ?? 'P',
-        joueur: pnj.origines.joueur ?? 'master',
-        commentaire: pnj.origines.commentaire ?? null,
-        avatar: pnj.origines.avatar ?? null,
-        vigueur: pnj.attributs.vigueur,
-        agilite: pnj.attributs.agilite,
-        esprit: pnj.attributs.esprit,
-        aura: pnj.attributs.aura,
-        initiative: pnj.combat.initiative,
-        melee: pnj.combat.melee,
-        tir: pnj.combat.tir,
-        defense: pnj.combat.defense,
-        vitalite: pnj.ressources.vitalite,
-        pouvoir: pnj.ressources.pouvoir,
-        foi: pnj.ressources.foi,
-        vilenie: pnj.ressources.vilenie,
-        creation: pnj.ressources.creation,
-      },
-      {emitEvent: true},
-    );
-    this.syncArrays(this.armes, this.armures, this.carrieres, this.langues, this.traits);
+    this.model.set({
+      id: pnj.id,
+      nom: pnj.origines.nom ?? '',
+      type: (pnj.type as 'P' | 'C' | 'R') ?? 'P',
+      joueur: pnj.origines.joueur ?? 'master',
+      commentaire: pnj.origines.commentaire ?? '',
+      avatar: pnj.origines.avatar ?? null,
+      vigueur: pnj.attributs.vigueur,
+      agilite: pnj.attributs.agilite,
+      esprit: pnj.attributs.esprit,
+      aura: pnj.attributs.aura,
+      initiative: pnj.combat.initiative,
+      melee: pnj.combat.melee,
+      tir: pnj.combat.tir,
+      defense: pnj.combat.defense,
+      vitalite: pnj.ressources.vitalite,
+      pouvoir: pnj.ressources.pouvoir,
+      foi: pnj.ressources.foi,
+      vilenie: pnj.ressources.vilenie,
+      creation: pnj.ressources.creation,
+      armes: referencedIds(pnj.armes, (arme) => arme.arme_id).map((id) => ({id})),
+      armures: referencedIds(pnj.armures, (armure) => armure.armure_id).map((id) => ({id})),
+      langues: referencedIds(pnj.origines.langues, (langue) => langue.langue_id).map((id) => ({id})),
+      carrieres: pnj.carrieres.map((carriere) => ({
+        id: carriere.carriere_id ?? 0,
+        value: carriere.value,
+      })),
+      traits: pnj.traits.map((trait) => ({
+        id: trait.traitable_id,
+        type: trait.type,
+      })),
+    });
   }
 
   protected buildPayload(): Record<string, unknown> {
-    const rawValue = this.pnjForm.getRawValue();
+    const rawValue = this.model();
 
     return {
       id: rawValue.id,
       nom: rawValue.nom,
       type: rawValue.type,
       joueur: rawValue.joueur,
-      commentaire: rawValue.commentaire,
+      commentaire: rawValue.commentaire || null,
       avatar: rawValue.avatar,
       vigueur: rawValue.vigueur,
       agilite: rawValue.agilite,
@@ -415,14 +427,14 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel> {
       foi: rawValue.foi,
       vilenie: rawValue.vilenie,
       creation: rawValue.creation,
-      armes: (rawValue.armes as IdDraft[]).map((arme) => ({id: arme.id})),
-      armures: (rawValue.armures as IdDraft[]).map((armure) => ({id: armure.id})),
-      carrieres: (rawValue.carrieres as RankedDraft[]).map((carriere) => ({
+      armes: rawValue.armes.map((arme) => ({id: arme.id})),
+      armures: rawValue.armures.map((armure) => ({id: armure.id})),
+      carrieres: rawValue.carrieres.map((carriere) => ({
         id: carriere.id,
         value: carriere.value,
       })),
-      langues: (rawValue.langues as IdDraft[]).map((langue) => ({id: langue.id})),
-      traits: (rawValue.traits as TraitDraft[]).map((trait) => ({
+      langues: rawValue.langues.map((langue) => ({id: langue.id})),
+      traits: rawValue.traits.map((trait) => ({
         id: trait.id,
         type: trait.type,
       })),

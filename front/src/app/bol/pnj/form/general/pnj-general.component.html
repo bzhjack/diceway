@@ -2,15 +2,15 @@
   Identité
 </p>
 
-<div class="grid gap-2 md:grid-cols-2" [formGroup]="form()">
+<div class="grid gap-2 md:grid-cols-2">
   <mat-form-field subscriptSizing="dynamic">
     <mat-label>Nom du PNJ</mat-label>
-    <input matInput id="nom" formControlName="nom" />
+    <input matInput id="nom" [formField]="form().nom" />
   </mat-form-field>
 
   <mat-form-field subscriptSizing="dynamic">
     <mat-label>Type</mat-label>
-    <mat-select inputId="type" formControlName="type">
+    <mat-select inputId="type" [formField]="form().type">
       @for (opt of typeOptions(); track opt.value) {
         <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
       }
@@ -23,7 +23,7 @@
       <textarea
         matInput
         id="commentaire"
-        formControlName="commentaire"
+        [formField]="form().commentaire"
         rows="3"
         class="resize-none"
       ></textarea>
