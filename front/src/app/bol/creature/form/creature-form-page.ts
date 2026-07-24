@@ -9,10 +9,9 @@ import {BolCreatureStateService} from '../../services/bol-creature-state.service
 import {BolCreaturesService} from '../../services/bol-creatures.service';
 import {AddMenuComponent, AddMenuEvent} from '../../shared/add-menu/add-menu.component';
 import {CapaciteEntry} from '../../shared/capacite/list/capacite-list.component';
-import {BolSignalEntityFormPageBase} from '../../shared/form/entity-form-page-signal.base';
-import {EntityFormLabels} from '../../shared/form/entity-form-page.base';
+import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
 import {DetailDraft, availableCatalog, selectedEntries} from '../../shared/form/form-selection';
-import {StatGroup, StatsGridFieldComponent} from '../../shared/stats-grid/stats-grid-field.component';
+import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
 import {traitIconType} from '../../shared/trait-icon';
 import {CreatureCapacitesComponent} from './capacites/creature-capacites.component';
 import {CreatureGeneralComponent} from './general/creature-general.component';
@@ -106,7 +105,7 @@ const CREATURE_FORM_LABELS: EntityFormLabels = {
     MatIconModule,
     CreatureGeneralComponent,
     CreatureCapacitesComponent,
-    StatsGridFieldComponent,
+    StatsGridComponent,
   ],
   templateUrl: './creature-form-page.html',
   styleUrl: './creature-form-page.scss',
@@ -115,7 +114,7 @@ const CREATURE_FORM_LABELS: EntityFormLabels = {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreatureFormPageComponent extends BolSignalEntityFormPageBase<BolCreatureModel, CreatureFormModel> {
+export class CreatureFormPageComponent extends BolEntityFormPageBase<BolCreatureModel, CreatureFormModel> {
   private readonly creatureStateService = inject(BolCreatureStateService);
   private readonly creaturesService = inject(BolCreaturesService);
 
@@ -147,7 +146,7 @@ export class CreatureFormPageComponent extends BolSignalEntityFormPageBase<BolCr
     return this.creatureForm;
   }
 
-  /** Vue castée pour bol-stats-grid-field, qui n'accède qu'aux champs numériques. */
+  /** Vue castée pour bol-stats-grid, qui n'accède qu'aux champs numériques. */
   protected readonly statsForm = this.creatureForm as unknown as FieldTree<Record<string, number>>;
 
   protected readonly avatarPreview = computed(() => this.model().avatar);

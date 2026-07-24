@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {FieldTree} from '@angular/forms/signals';
 import {HeroCreationWarning} from '../../../services/bol-heros-state.service';
 import {StatGroup, StatsGridComponent} from '../../../shared/stats-grid/stats-grid.component';
 import {SectionMessage} from '../section-message';
@@ -13,7 +13,7 @@ import {SectionMessage} from '../section-message';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroAdvancedStatsPanelComponent {
-  readonly form = input.required<FormGroup>();
+  readonly form = input.required<FieldTree<Record<string, number>>>();
   readonly groups = input.required<readonly StatGroup[]>();
   readonly errors = input<readonly SectionMessage[]>([]);
   readonly warns = input<readonly HeroCreationWarning[]>([]);

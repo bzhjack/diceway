@@ -14,11 +14,10 @@ import {AddMenuComponent, addMenuOptions} from '../../shared/add-menu/add-menu.c
 import {ArmeEntry, ArmeListComponent} from '../../shared/arme/list/arme-list.component';
 import {ArmureEntry, ArmureListComponent} from '../../shared/armure/list/armure-list.component';
 import {CarriereEntry, CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
-import {BolSignalEntityFormPageBase} from '../../shared/form/entity-form-page-signal.base';
-import {EntityFormLabels} from '../../shared/form/entity-form-page.base';
+import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
 import {IdDraft, RankedDraft, availableCatalog, referencedIds, selectedEntries} from '../../shared/form/form-selection';
 import {LangueEntry} from '../../shared/langue/list/langue-list.component';
-import {StatGroup, StatsGridFieldComponent} from '../../shared/stats-grid/stats-grid-field.component';
+import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
 import {TraitAddEvent} from '../../shared/trait/add-menu/trait-add-menu.component';
 import {TraitDraft, traitEntriesSignal} from '../../shared/trait/trait-entry.utils';
 import {HeroGeneralComponent} from './general/general.component';
@@ -153,7 +152,7 @@ const HERO_FORM_LABELS: EntityFormLabels = {
     ArmureListComponent,
     CarriereListComponent,
     HeroGeneralComponent,
-    StatsGridFieldComponent,
+    StatsGridComponent,
     HeroSummaryRailComponent,
   ],
   templateUrl: './hero-form-page.html',
@@ -163,7 +162,7 @@ const HERO_FORM_LABELS: EntityFormLabels = {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeroFormPageComponent extends BolSignalEntityFormPageBase<BolHerosModel, HeroFormModel> {
+export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, HeroFormModel> {
   private readonly herosService = inject(BolHerosService);
   private readonly herosStateService = inject(BolHerosStateService);
 
@@ -221,7 +220,7 @@ export class HeroFormPageComponent extends BolSignalEntityFormPageBase<BolHerosM
     return this.heroForm;
   }
 
-  /** Vue castée pour bol-stats-grid-field, qui n'accède qu'aux champs numériques. */
+  /** Vue castée pour bol-stats-grid, qui n'accède qu'aux champs numériques. */
   protected readonly statsForm = this.heroForm as unknown as FieldTree<Record<string, number>>;
 
   protected readonly activateDisabled = computed(

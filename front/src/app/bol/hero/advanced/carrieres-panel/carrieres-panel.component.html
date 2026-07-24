@@ -30,7 +30,7 @@
   </div>
 }
 
-<bol-carriere-list-legacy [carrieres]="carrieres()" (removed)="carriereRemoved.emit($event)" />
+<bol-carriere-list [carrieres]="carrieres()" (removed)="carriereRemoved.emit($event)" />
 
 @if (errors().length) {
   <div class="dw-field-error mt-3 p-3">

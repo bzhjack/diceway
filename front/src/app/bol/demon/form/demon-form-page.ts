@@ -8,11 +8,10 @@ import {BolDemonModel} from '../../models/bol-demon.model';
 import {BolDemonStateService} from '../../services/bol-demon-state.service';
 import {BolDemonsService} from '../../services/bol-demons.service';
 import {AddMenuEvent} from '../../shared/add-menu/add-menu.component';
-import {BolSignalEntityFormPageBase} from '../../shared/form/entity-form-page-signal.base';
-import {EntityFormLabels} from '../../shared/form/entity-form-page.base';
+import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
 import {DetailDraft, availableCatalog, selectedEntries} from '../../shared/form/form-selection';
 import {PouvoirEntry} from '../../shared/pouvoir/list/pouvoir-list.component';
-import {StatGroup, StatsGridFieldComponent} from '../../shared/stats-grid/stats-grid-field.component';
+import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
 import {DemonGeneralComponent} from './general/demon-general.component';
 import {DemonPouvoirsComponent} from './pouvoirs/demon-pouvoirs.component';
 
@@ -109,7 +108,7 @@ const DEMON_FORM_LABELS: EntityFormLabels = {
     MatIconModule,
     DemonGeneralComponent,
     DemonPouvoirsComponent,
-    StatsGridFieldComponent,
+    StatsGridComponent,
   ],
   templateUrl: './demon-form-page.html',
   styleUrl: './demon-form-page.scss',
@@ -118,7 +117,7 @@ const DEMON_FORM_LABELS: EntityFormLabels = {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DemonFormPageComponent extends BolSignalEntityFormPageBase<BolDemonModel, DemonFormModel> {
+export class DemonFormPageComponent extends BolEntityFormPageBase<BolDemonModel, DemonFormModel> {
   private readonly demonStateService = inject(BolDemonStateService);
   private readonly demonsService = inject(BolDemonsService);
 
@@ -151,7 +150,7 @@ export class DemonFormPageComponent extends BolSignalEntityFormPageBase<BolDemon
     return this.demonForm;
   }
 
-  /** Vue castée pour bol-stats-grid-field, qui n'accède qu'aux champs numériques. */
+  /** Vue castée pour bol-stats-grid, qui n'accède qu'aux champs numériques. */
   protected readonly statsForm = this.demonForm as unknown as FieldTree<Record<string, number>>;
 
   protected readonly avatarPreview = computed(() => this.model().avatar);

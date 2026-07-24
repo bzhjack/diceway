@@ -1,10 +1,9 @@
-import {FormBuilder, FormControl} from '@angular/forms';
 import {
-  attributValidator,
-  attributsFormValidator,
-  carriereValidator,
-  carrieresFormValidatorFn,
-  combatFormValidatorFn,
+  attributRangeErrors,
+  attributsBudgetErrors,
+  carriereRangeErrors,
+  carrieresBudgetErrors,
+  combatBudgetErrors,
 } from './create.validators';
 import {
   automaticLanguageIdsForRegion,
@@ -18,31 +17,6 @@ import {BolHerosCarriereModel} from '../../models/bol-carriere.model';
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-const fb = new FormBuilder();
-
-function ctrl(value: unknown) {
-  return new FormControl(value);
-}
-
-function makeCombatForm(budget: number, init: number, melee: number, tir: number, defense: number) {
-  return fb.group(
-    {initiative: [init], melee: [melee], tir: [tir], defense: [defense]},
-    {validators: combatFormValidatorFn(budget)},
-  );
-}
-
-function makeCarrieresForm(budget: number, values: number[]) {
-  const carrieres = fb.array(values.map((v) => fb.group({carriere_id: [1], value: [v]})));
-  return fb.group({carrieres}, {validators: carrieresFormValidatorFn(budget)});
-}
-
-function makeAttributsForm(vigueur: number, agilite: number, aura: number, esprit: number) {
-  return fb.group(
-    {vigueur: [vigueur], agilite: [agilite], aura: [aura], esprit: [esprit]},
-    {validators: attributsFormValidator},
-  );
-}
 
 function langue(id: number, estLemurienne: boolean): BolLangueModel {
   return {id, langue: `L${id}`, est_lemurienne: estLemurienne} as BolLangueModel;
@@ -64,35 +38,35 @@ function carriereWithLangue(carriereId: number, value: number): BolHerosCarriere
 // R-ATTR-1 — Chaque attribut est compris entre -1 et 3
 // ===========================================================================
 
-describe('R-ATTR-1 — attributValidator : chaque attribut est compris entre -1 et 3', () => {
-  it('accepte 0 (valeur neutre)', () => expect(attributValidator(ctrl(0))).toBeNull());
-  it('accepte -1 (minimum autorisé)', () => expect(attributValidator(ctrl(-1))).toBeNull());
-  it('accepte 3 (maximum autorisé)', () => expect(attributValidator(ctrl(3))).toBeNull());
-  it('refuse -2 (en dessous du minimum)', () => expect(attributValidator(ctrl(-2))?.['tooSmallAttr']).toBeTruthy());
-  it('refuse 4 (au-dessus du maximum)', () => expect(attributValidator(ctrl(4))?.['tooBigAttr']).toBeTruthy());
-  it('refuse null (champ obligatoire)', () => expect(attributValidator(ctrl(null))?.['required']).toBeTruthy());
-  it('refuse undefined (champ obligatoire)', () => expect(attributValidator(ctrl(undefined))?.['required']).toBeTruthy());
+describe('R-ATTR-1 — attributRangeErrors : chaque attribut est compris entre -1 et 3', () => {
+  it('accepte 0 (valeur neutre)', () => expect(attributRangeErrors(0)).toBeNull());
+  it('accepte -1 (minimum autorisé)', () => expect(attributRangeErrors(-1)).toBeNull());
+  it('accepte 3 (maximum autorisé)', () => expect(attributRangeErrors(3)).toBeNull());
+  it('refuse -2 (en dessous du minimum)', () => expect(attributRangeErrors(-2)?.kind).toBe('tooSmallAttr'));
+  it('refuse 4 (au-dessus du maximum)', () => expect(attributRangeErrors(4)?.kind).toBe('tooBigAttr'));
 });
 
 // ===========================================================================
 // R-ATTR-2 — La somme des 4 attributs ne dépasse pas 4 points
 // ===========================================================================
 
-describe('R-ATTR-2 — attributsFormValidator : somme des attributs ≤ 4', () => {
+describe('R-ATTR-2 — attributsBudgetErrors : somme des attributs ≤ 4', () => {
   it('accepte une somme égale à 4 (budget utilisé en entier)', () => {
-    expect(makeAttributsForm(1, 1, 1, 1).errors).toBeNull();
+    expect(attributsBudgetErrors({vigueur: 1, agilite: 1, esprit: 1, aura: 1})).toEqual([]);
   });
 
   it('accepte une somme inférieure à 4', () => {
-    expect(makeAttributsForm(0, 0, 0, 0).errors).toBeNull();
+    expect(attributsBudgetErrors({vigueur: 0, agilite: 0, esprit: 0, aura: 0})).toEqual([]);
   });
 
   it('refuse une somme de 5 (dépassement de 1)', () => {
-    expect(makeAttributsForm(2, 1, 1, 1).errors?.['attrSumExceeded']).toBe(true);
+    const errors = attributsBudgetErrors({vigueur: 2, agilite: 1, esprit: 1, aura: 1});
+    expect(errors.some((error) => error.kind === 'attrSumExceeded')).toBe(true);
   });
 
   it('refuse une somme de 8 (dépassement maximum possible)', () => {
-    expect(makeAttributsForm(2, 2, 2, 2).errors?.['attrSumExceeded']).toBe(true);
+    const errors = attributsBudgetErrors({vigueur: 2, agilite: 2, esprit: 2, aura: 2});
+    expect(errors.some((error) => error.kind === 'attrSumExceeded')).toBe(true);
   });
 });
 
@@ -100,17 +74,19 @@ describe('R-ATTR-2 — attributsFormValidator : somme des attributs ≤ 4', () =
 // R-ATTR-3 — Un seul attribut peut descendre à -1
 // ===========================================================================
 
-describe('R-ATTR-3 — attributsFormValidator : un seul attribut peut être à -1', () => {
+describe('R-ATTR-3 — attributsBudgetErrors : un seul attribut peut être à -1', () => {
   it('accepte exactement un attribut à -1', () => {
-    expect(makeAttributsForm(-1, 1, 1, 1).errors).toBeNull();
+    expect(attributsBudgetErrors({vigueur: -1, agilite: 1, esprit: 1, aura: 1})).toEqual([]);
   });
 
   it('refuse deux attributs à -1', () => {
-    expect(makeAttributsForm(-1, -1, 0, 0).errors?.['attrTooManyNegative']).toBe(true);
+    const errors = attributsBudgetErrors({vigueur: -1, agilite: -1, esprit: 0, aura: 0});
+    expect(errors.some((error) => error.kind === 'attrTooManyNegative')).toBe(true);
   });
 
   it('refuse quatre attributs à -1', () => {
-    expect(makeAttributsForm(-1, -1, -1, -1).errors?.['attrTooManyNegative']).toBe(true);
+    const errors = attributsBudgetErrors({vigueur: -1, agilite: -1, esprit: -1, aura: -1});
+    expect(errors.some((error) => error.kind === 'attrTooManyNegative')).toBe(true);
   });
 });
 
@@ -118,42 +94,41 @@ describe('R-ATTR-3 — attributsFormValidator : un seul attribut peut être à -
 // R-CARR-1 — Chaque rang de carrière est compris entre 0 et 3
 // ===========================================================================
 
-describe('R-CARR-1 — carriereValidator : rang compris entre 0 et 3', () => {
-  it('accepte 0 (rang débutant)', () => expect(carriereValidator(ctrl(0))).toBeNull());
-  it('accepte 1', () => expect(carriereValidator(ctrl(1))).toBeNull());
-  it('accepte 3 (rang maximum)', () => expect(carriereValidator(ctrl(3))).toBeNull());
-  it('refuse -1 (rang négatif impossible)', () => expect(carriereValidator(ctrl(-1))?.['tooSmallAttr']).toBeTruthy());
-  it('refuse 4 (au-dessus du rang maximum)', () => expect(carriereValidator(ctrl(4))?.['tooBigAttr']).toBeTruthy());
-  it('refuse null (champ obligatoire)', () => expect(carriereValidator(ctrl(null))?.['required']).toBeTruthy());
+describe('R-CARR-1 — carriereRangeErrors : rang compris entre 0 et 3', () => {
+  it('accepte 0 (rang débutant)', () => expect(carriereRangeErrors(0)).toBeNull());
+  it('accepte 1', () => expect(carriereRangeErrors(1)).toBeNull());
+  it('accepte 3 (rang maximum)', () => expect(carriereRangeErrors(3)).toBeNull());
+  it('refuse -1 (rang négatif impossible)', () => expect(carriereRangeErrors(-1)?.kind).toBe('tooSmallAttr'));
+  it('refuse 4 (au-dessus du rang maximum)', () => expect(carriereRangeErrors(4)?.kind).toBe('tooBigAttr'));
 });
 
 // ===========================================================================
 // R-CARR-2 — La somme des rangs de carrières ne dépasse pas 4 (budget standard)
 // ===========================================================================
 
-describe('R-CARR-2 — carrieresFormValidatorFn : somme des carrières ≤ 4 (budget standard)', () => {
+describe('R-CARR-2 — carrieresBudgetErrors : somme des carrières ≤ 4 (budget standard)', () => {
   it('accepte une somme égale à 4 (budget utilisé en entier)', () => {
-    expect(makeCarrieresForm(4, [1, 1, 1, 1]).errors).toBeNull();
+    expect(carrieresBudgetErrors([1, 1, 1, 1], 4)).toEqual([]);
   });
 
   it('accepte une somme inférieure à 4', () => {
-    expect(makeCarrieresForm(4, [0, 0, 0, 0]).errors).toBeNull();
+    expect(carrieresBudgetErrors([0, 0, 0, 0], 4)).toEqual([]);
   });
 
   it('refuse une somme de 5', () => {
-    expect(makeCarrieresForm(4, [2, 1, 1, 1]).errors?.['carrSumExceeded']).toBe(true);
+    expect(carrieresBudgetErrors([2, 1, 1, 1], 4).some((error) => error.kind === 'carrSumExceeded')).toBe(true);
   });
 
   it('refuse une somme de 8 (rang 2 sur 4 carrières)', () => {
-    expect(makeCarrieresForm(4, [2, 2, 2, 2]).errors?.['carrSumExceeded']).toBe(true);
+    expect(carrieresBudgetErrors([2, 2, 2, 2], 4).some((error) => error.kind === 'carrSumExceeded')).toBe(true);
   });
 
   it('accepte sorcier rang 3 — la somme 3 reste dans le budget', () => {
-    expect(makeCarrieresForm(4, [3, 0, 0, 0]).errors).toBeNull();
+    expect(carrieresBudgetErrors([3, 0, 0, 0], 4)).toEqual([]);
   });
 
   it('accepte alchimiste rang 3 — la somme 3 reste dans le budget', () => {
-    expect(makeCarrieresForm(4, [3, 0, 0, 0]).errors).toBeNull();
+    expect(carrieresBudgetErrors([3, 0, 0, 0], 4)).toEqual([]);
   });
 });
 
@@ -161,21 +136,21 @@ describe('R-CARR-2 — carrieresFormValidatorFn : somme des carrières ≤ 4 (bu
 // R-CARR-3 — Non-combattant : budget carrières porté à 6
 // ===========================================================================
 
-describe('R-CARR-3 — carrieresFormValidatorFn : Non-combattant bénéficie de 6 points de carrières', () => {
+describe('R-CARR-3 — carrieresBudgetErrors : Non-combattant bénéficie de 6 points de carrières', () => {
   it('accepte une somme de 6 avec budget=6', () => {
-    expect(makeCarrieresForm(6, [3, 2, 1, 0]).errors).toBeNull();
+    expect(carrieresBudgetErrors([3, 2, 1, 0], 6)).toEqual([]);
   });
 
   it('accepte une somme de 4 avec budget=6', () => {
-    expect(makeCarrieresForm(6, [1, 1, 1, 1]).errors).toBeNull();
+    expect(carrieresBudgetErrors([1, 1, 1, 1], 6)).toEqual([]);
   });
 
   it('refuse une somme de 7 avec budget=6', () => {
-    expect(makeCarrieresForm(6, [3, 2, 1, 1]).errors?.['carrSumExceeded']).toBe(true);
+    expect(carrieresBudgetErrors([3, 2, 1, 1], 6).some((error) => error.kind === 'carrSumExceeded')).toBe(true);
   });
 
   it('refuse une somme de 5 avec budget standard=4', () => {
-    expect(makeCarrieresForm(4, [2, 2, 1, 0]).errors?.['carrSumExceeded']).toBe(true);
+    expect(carrieresBudgetErrors([2, 2, 1, 0], 4).some((error) => error.kind === 'carrSumExceeded')).toBe(true);
   });
 });
 
@@ -183,21 +158,23 @@ describe('R-CARR-3 — carrieresFormValidatorFn : Non-combattant bénéficie de 
 // R-COMBAT-1 — La somme des aptitudes de combat ne dépasse pas 4 (budget standard)
 // ===========================================================================
 
-describe('R-COMBAT-1 — combatFormValidatorFn : somme des aptitudes ≤ 4 (budget standard)', () => {
+describe('R-COMBAT-1 — combatBudgetErrors : somme des aptitudes ≤ 4 (budget standard)', () => {
   it('accepte une somme égale à 4', () => {
-    expect(makeCombatForm(4, 2, 1, 0, 1).errors).toBeNull();
+    expect(combatBudgetErrors({initiative: 2, melee: 1, tir: 0, defense: 1}, 4)).toEqual([]);
   });
 
   it('accepte une somme inférieure à 4', () => {
-    expect(makeCombatForm(4, 0, 0, 0, 0).errors).toBeNull();
+    expect(combatBudgetErrors({initiative: 0, melee: 0, tir: 0, defense: 0}, 4)).toEqual([]);
   });
 
   it('refuse une somme de 5', () => {
-    expect(makeCombatForm(4, 2, 1, 1, 1).errors?.['aptSumExceeded']).toBe(true);
+    const errors = combatBudgetErrors({initiative: 2, melee: 1, tir: 1, defense: 1}, 4);
+    expect(errors.some((error) => error.kind === 'aptSumExceeded')).toBe(true);
   });
 
   it('refuse une somme de 8 (tous à 2)', () => {
-    expect(makeCombatForm(4, 2, 2, 2, 2).errors?.['aptSumExceeded']).toBe(true);
+    const errors = combatBudgetErrors({initiative: 2, melee: 2, tir: 2, defense: 2}, 4);
+    expect(errors.some((error) => error.kind === 'aptSumExceeded')).toBe(true);
   });
 });
 
@@ -205,21 +182,23 @@ describe('R-COMBAT-1 — combatFormValidatorFn : somme des aptitudes ≤ 4 (budg
 // R-COMBAT-2 — Non-combattant : seulement 2 points d'aptitudes de combat
 // ===========================================================================
 
-describe('R-COMBAT-2 — combatFormValidatorFn : Non-combattant limité à 2 points d\'aptitudes de combat', () => {
+describe("R-COMBAT-2 — combatBudgetErrors : Non-combattant limité à 2 points d'aptitudes de combat", () => {
   it('accepte une somme de 2 avec budget=2', () => {
-    expect(makeCombatForm(2, 1, 0, 0, 1).errors).toBeNull();
+    expect(combatBudgetErrors({initiative: 1, melee: 0, tir: 0, defense: 1}, 2)).toEqual([]);
   });
 
   it('accepte une somme de 0 avec budget=2', () => {
-    expect(makeCombatForm(2, 0, 0, 0, 0).errors).toBeNull();
+    expect(combatBudgetErrors({initiative: 0, melee: 0, tir: 0, defense: 0}, 2)).toEqual([]);
   });
 
   it('refuse une somme de 3 avec budget=2', () => {
-    expect(makeCombatForm(2, 2, 1, 0, 0).errors?.['aptSumExceeded']).toBe(true);
+    const errors = combatBudgetErrors({initiative: 2, melee: 1, tir: 0, defense: 0}, 2);
+    expect(errors.some((error) => error.kind === 'aptSumExceeded')).toBe(true);
   });
 
   it('refuse une somme de 4 (budget standard) avec budget=2', () => {
-    expect(makeCombatForm(2, 1, 1, 1, 1).errors?.['aptSumExceeded']).toBe(true);
+    const errors = combatBudgetErrors({initiative: 1, melee: 1, tir: 1, defense: 1}, 2);
+    expect(errors.some((error) => error.kind === 'aptSumExceeded')).toBe(true);
   });
 });
 
@@ -227,17 +206,19 @@ describe('R-COMBAT-2 — combatFormValidatorFn : Non-combattant limité à 2 poi
 // R-COMBAT-3 — Une seule aptitude de combat peut descendre à -1
 // ===========================================================================
 
-describe('R-COMBAT-3 — combatFormValidatorFn : une seule aptitude peut être à -1', () => {
+describe('R-COMBAT-3 — combatBudgetErrors : une seule aptitude peut être à -1', () => {
   it('accepte exactement une aptitude à -1', () => {
-    expect(makeCombatForm(4, -1, 1, 1, 1).errors).toBeNull();
+    expect(combatBudgetErrors({initiative: -1, melee: 1, tir: 1, defense: 1}, 4)).toEqual([]);
   });
 
   it('refuse deux aptitudes à -1 (initiative et mêlée)', () => {
-    expect(makeCombatForm(4, -1, -1, 0, 0).errors?.['aptTooManyNegative']).toBe(true);
+    const errors = combatBudgetErrors({initiative: -1, melee: -1, tir: 0, defense: 0}, 4);
+    expect(errors.some((error) => error.kind === 'aptTooManyNegative')).toBe(true);
   });
 
   it('refuse trois aptitudes à -1', () => {
-    expect(makeCombatForm(4, -1, -1, -1, 0).errors?.['aptTooManyNegative']).toBe(true);
+    const errors = combatBudgetErrors({initiative: -1, melee: -1, tir: -1, defense: 0}, 4);
+    expect(errors.some((error) => error.kind === 'aptTooManyNegative')).toBe(true);
   });
 });
 
