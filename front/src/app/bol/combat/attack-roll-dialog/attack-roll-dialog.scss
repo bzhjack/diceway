@@ -43,36 +43,14 @@
 }
 
 .atd-title {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0.45rem;
+  margin: 0;
   font-family: 'Muse Display Harmony', 'Muse Sans', serif;
   font-weight: 400;
-}
-
-.atd-title-eyebrow {
   font-size: 0.92rem;
   line-height: 1;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--dw-surface-900);
-}
-
-.atd-title-name {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.92rem;
-  color: var(--dw-color-echec-forte);
-  line-height: 1;
-}
-
-.atd-title-arrow {
-  font-size: 0.9rem;
-  width: 0.9rem;
-  height: 0.9rem;
-  color: var(--dw-surface-500);
 }
 
 .atd-close {
@@ -98,6 +76,56 @@
     color: var(--dw-surface-800);
     border-color: var(--dw-color-echec-forte);
   }
+}
+
+.atd-versus {
+  margin: 0.7rem 1.1rem 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.85rem;
+}
+
+.atd-versus-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+  flex: 1 1 0;
+}
+
+.atd-versus-avatar {
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 2px solid color-mix(in srgb, var(--dw-color-echec-forte) 55%, transparent);
+  background: var(--dw-surface-100);
+}
+
+.atd-versus-side--target .atd-versus-avatar {
+  border-color: color-mix(in srgb, var(--dw-surface-500) 45%, transparent);
+}
+
+.atd-versus-name {
+  max-width: 100%;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--dw-surface-700);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.atd-versus-vs {
+  flex-shrink: 0;
+  margin-top: 0.7rem;
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 1.05rem;
+  color: var(--dw-color-echec-forte);
+  letter-spacing: 0.05em;
 }
 
 .atd-result {
@@ -129,71 +157,128 @@
   background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-echec) 22%, transparent) 0%, transparent 70%), color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
 }
 
-.atd-result-row {
+.atd-summary {
+  margin: 0.7rem 1.1rem 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--dw-border);
+  background: color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
+}
+
+.atd-summary--reussite {
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 45%, transparent);
+  background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-reussite) 18%, transparent) 0%, transparent 70%), color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
+}
+
+.atd-summary--echec {
+  border-color: color-mix(in srgb, var(--dw-color-echec) 45%, transparent);
+  background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-echec) 18%, transparent) 0%, transparent 70%), color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
+}
+
+.atd-summary--damage {
+  border-color: color-mix(in srgb, var(--dw-color-legendary) 40%, transparent);
+  background: color-mix(in srgb, var(--dw-color-legendary) 10%, transparent);
+}
+
+.atd-summary-top {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 1.3rem;
+  justify-content: space-between;
+  gap: 0.6rem;
 }
 
-.atd-result-stat {
+.atd-summary-main {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.1rem;
-  min-width: 3rem;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-width: 0;
 }
 
-.atd-result-stat-label {
-  font-size: 0.58rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--dw-surface-500);
-}
-
-.atd-result-stat-value {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--dw-surface-800);
-  font-variant-numeric: tabular-nums;
-}
-
-.atd-result-total {
+.atd-summary-total {
   font-family: 'Muse Display Harmony', serif;
-  font-size: 2.6rem;
+  font-size: 1.6rem;
   line-height: 1;
   color: var(--dw-surface-900);
   font-variant-numeric: tabular-nums;
 }
 
-.atd-result-badge {
+.atd-summary-total--damage {
+  color: var(--dw-color-legendary);
+}
+
+.atd-summary-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  font-size: 0.84rem;
+  gap: 0.25rem;
+  font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  padding: 0.16rem 0.75rem;
+  padding: 0.12rem 0.55rem;
   border-radius: 999px;
-  color: var(--dw-surface-600);
 
   .mat-icon {
-    font-size: 1rem;
-    width: 1rem;
-    height: 1rem;
+    font-size: 0.85rem;
+    width: 0.85rem;
+    height: 0.85rem;
   }
 }
 
-.atd-result--reussite .atd-result-badge {
+.atd-summary--reussite .atd-summary-badge {
   color: var(--dw-color-reussite);
   background: color-mix(in srgb, var(--dw-color-reussite) 18%, transparent);
 }
 
-.atd-result--echec .atd-result-badge {
+.atd-summary--echec .atd-summary-badge {
   color: var(--dw-color-echec);
   background: color-mix(in srgb, var(--dw-color-echec) 18%, transparent);
+}
+
+.atd-summary-label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+}
+
+.atd-summary-toggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--dw-surface-500);
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 0.9rem;
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
+  &:hover {
+    color: var(--dw-surface-800);
+    border-color: var(--dw-surface-500);
+  }
+}
+
+.atd-summary-toggle--damage:hover {
+  border-color: var(--dw-color-legendary);
+  color: var(--dw-color-legendary);
+}
+
+.atd-summary-formula {
+  margin: 0.35rem 0 0;
+  font-size: 0.7rem;
+  color: var(--dw-surface-500);
+  font-variant-numeric: tabular-nums;
 }
 
 .atd-box {
@@ -204,6 +289,11 @@
   border-radius: 10px;
   border: 1px solid color-mix(in srgb, var(--dw-color-echec-forte) 28%, transparent);
   overflow: hidden;
+  transition: min-height 0.2s ease;
+}
+
+.atd-box--compact {
+  --dice-box-min-height: 5.5rem;
 }
 
 .atd-toggle {
@@ -276,69 +366,6 @@
   }
 }
 
-.atd-calc {
-  margin: 0.7rem 1.1rem 0;
-  padding: 0.55rem 0.8rem;
-  border: 1px solid color-mix(in srgb, var(--dw-color-echec-forte) 24%, transparent);
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--dw-surface-0) 35%, transparent);
-}
-
-.atd-calc-title {
-  margin: 0 0 0.3rem;
-  font-size: 0.6rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--dw-color-echec-forte);
-}
-
-.atd-calc-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
-.atd-calc-col {
-  flex: 1 1 4.4rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.15rem;
-  padding: 0.45rem 0.3rem;
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--dw-surface-500) 7%, transparent);
-  text-align: center;
-}
-
-.atd-calc-icon {
-  font-size: 1rem;
-  width: 1rem;
-  height: 1rem;
-  color: var(--dw-surface-500);
-}
-
-.atd-calc-label {
-  font-size: 0.58rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--dw-surface-500);
-}
-
-.atd-calc-value {
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: var(--dw-surface-800);
-  font-variant-numeric: tabular-nums;
-}
-
-.atd-calc-detail {
-  font-size: 0.62rem;
-  color: var(--dw-surface-500);
-  font-variant-numeric: tabular-nums;
-}
-
 .atd-reroll {
   margin: 0.7rem 1.1rem 0;
   display: flex;
@@ -398,7 +425,8 @@
 
 .atd-damage .atd-toggle,
 .atd-damage .atd-fields,
-.atd-damage .atd-reroll {
+.atd-damage .atd-reroll,
+.atd-damage .atd-summary {
   margin-left: 0;
   margin-right: 0;
 }
@@ -415,22 +443,6 @@
 
   &:hover:not(:disabled) {
     background: color-mix(in srgb, var(--dw-color-legendary) 18%, transparent);
-  }
-}
-
-.atd-damage-total {
-  margin-top: 0.6rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--dw-surface-700);
-
-  strong {
-    font-size: 1.3rem;
-    color: var(--dw-color-legendary);
-    font-variant-numeric: tabular-nums;
   }
 }
 

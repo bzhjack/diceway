@@ -329,6 +329,8 @@ export class CombatPlayPageComponent {
           data: {
             attackerNom: attacker.nom,
             targetNom: target.nom,
+            attackerAvatar: attacker.avatar,
+            targetAvatar: target.avatar,
             attacker: finalAttacker,
             target: targetStats,
           },

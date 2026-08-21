@@ -8,6 +8,8 @@ import {ResolvedCombatStats} from '../combat-attack.util';
 export interface AttackRollDialogData {
   readonly attackerNom: string;
   readonly targetNom: string;
+  readonly attackerAvatar: string;
+  readonly targetAvatar: string;
   readonly attacker: ResolvedCombatStats;
   readonly target: ResolvedCombatStats;
 }
@@ -73,6 +75,48 @@ export class AttackRollDialogComponent {
   protected readonly attackSuccess = computed(() => {
     const t = this.attackTotal();
     return t !== null && t >= THRESHOLD;
+  });
+
+  // --- Étapes progressives : chaque section rolled se réduit à un résumé, dépliable au clic ---
+  private readonly expandAttackOverride = signal(false);
+  private readonly expandDamageOverride = signal(false);
+
+  protected readonly attackDetailVisible = computed(() => this.attackDice() === null || this.expandAttackOverride());
+  protected readonly damageDetailVisible = computed(() => this.damageDice() === null || this.expandDamageOverride());
+
+  /** Le canvas de dés (partagé attaque/dégâts) reste toujours monté ; il se réduit visuellement une fois le premier jet joué. */
+  protected readonly diceBoxCompact = computed(() => this.attackDice() !== null);
+
+  protected toggleAttackDetail(): void {
+    this.expandAttackOverride.update((v) => !v);
+  }
+
+  protected toggleDamageDetail(): void {
+    this.expandDamageOverride.update((v) => !v);
+  }
+
+  protected readonly attackFormula = computed(() => {
+    const d = this.attackDice();
+    if (!d) {
+      return '';
+    }
+    const bonus = this.attackerBonus();
+    const mod = this.modifier();
+    let formula = `2d6 (${d[0]}+${d[1]}) ${bonus >= 0 ? '+' : ''}${bonus} −${this.targetDefense()}`;
+    if (mod !== 0) {
+      formula += ` ${mod >= 0 ? '+' : ''}${mod}`;
+    }
+    return formula;
+  });
+
+  protected readonly damageFormula = computed(() => {
+    const values = this.damageDice();
+    if (!values) {
+      return '';
+    }
+    const kind = this.diceKind();
+    const diceLabel = kind === 'd6m' || kind === 'd6b' ? `2d6 (${values[0]},${values[1]})` : `${kind === 'd3' ? 'd3' : '1d6'} (${values[0]})`;
+    return `${diceLabel} +${this.vigueurBonus()} −${this.protection()}`;
   });
 
   // --- Jet de dégâts (uniquement après un jet d'attaque réussi) ---
@@ -151,6 +195,7 @@ export class AttackRollDialogComponent {
       const results = await this.diceBox().rollNotation('2d6');
       const [a, b] = results.map((r) => r.value);
       this.attackDice.set([a, b]);
+      this.expandAttackOverride.set(false);
     } finally {
       this.rollingAttack.set(false);
     }
@@ -165,6 +210,7 @@ export class AttackRollDialogComponent {
       const notation = kind === 'd6m' || kind === 'd6b' ? '2d6' : '1d6';
       const results = await this.diceBox().rollNotation(notation);
       this.damageDice.set(results.map((r) => r.value));
+      this.expandDamageOverride.set(false);
     } finally {
       this.rollingDamage.set(false);
     }
