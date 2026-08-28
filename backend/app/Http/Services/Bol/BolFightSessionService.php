@@ -87,6 +87,36 @@ class BolFightSessionService
         return $this->getSessionWithRelations($sessionId);
     }
 
+    /** Bascule une session `libre` en `combat` — les adversaires sont déjà en place via addCombatant(). */
+    public function startCombat(string $sessionId, string $userId): ?BolFightSession
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session || $session->statut !== 'libre') {
+            return null;
+        }
+
+        $session->update(['statut' => 'combat']);
+
+        return $this->getSessionWithRelations($sessionId);
+    }
+
+    /** Termine le combat : retire les adversaires, la session redevient `libre` avec les héros seuls. */
+    public function endCombat(string $sessionId, string $userId): ?BolFightSession
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session || $session->statut !== 'combat') {
+            return null;
+        }
+
+        BolFightSessionCreature::where('fight_session_id', $sessionId)->delete();
+        BolFightSessionDemon::where('fight_session_id', $sessionId)->delete();
+        BolFightSessionPnj::where('fight_session_id', $sessionId)->delete();
+
+        $session->update(['statut' => 'libre']);
+
+        return $this->getSessionWithRelations($sessionId);
+    }
+
     /**
      * Ajoute un seul combattant à une session déjà lancée, sans toucher aux combattants déjà en
      * place. Un héros ou un PNJ donné (identité unique) ne peut pas être ajouté deux fois à la

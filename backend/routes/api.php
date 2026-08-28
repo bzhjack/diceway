@@ -165,5 +165,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::delete('/bol/fight-session/{id}/combatant/{kind}/{pivotId}', [BolFightSessionController::class, 'removeCombatant']);
     Route::patch('/bol/fight-session/{id}/combatant/{kind}/{pivotId}/damage', [BolFightSessionController::class, 'applyDamage']);
     Route::patch('/bol/fight-session/{id}/ordre', [BolFightSessionController::class, 'updateOrder']);
+    Route::patch('/bol/fight-session/{id}/start-combat', [BolFightSessionController::class, 'startCombat']);
+    Route::patch('/bol/fight-session/{id}/end-combat', [BolFightSessionController::class, 'endCombat']);
 
 });
