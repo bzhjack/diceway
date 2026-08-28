@@ -3,6 +3,7 @@ import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-dr
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {forkJoin, take} from 'rxjs';
@@ -68,7 +69,7 @@ function jitter(key: string): {jx: number; jy: number} {
  */
 @Component({
   selector: 'bol-session-play-page',
-  imports: [MatIconModule, NgTemplateOutlet, RouterLink, DragDropModule, AttackMenuComponent],
+  imports: [MatIconModule, MatMenuModule, NgTemplateOutlet, RouterLink, DragDropModule, AttackMenuComponent],
   templateUrl: './session-play-page.html',
   styleUrl: './session-play-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -94,6 +95,9 @@ export class SessionPlayPageComponent {
     const session = this.session();
     return session ? buildPlayBoard(session) : null;
   });
+
+  /** Dérivé de `statut` — `'terminee'` n'a pas d'affichage dédié pour l'instant, traité comme `'libre'`. */
+  protected readonly mode = computed<'libre' | 'combat'>(() => (this.session()?.statut === 'combat' ? 'combat' : 'libre'));
 
   /** Réordonnancement manuel du ruban (glisser-déposer), persisté en base — clés dans l'ordre voulu. */
   private readonly manualOrder = signal<readonly string[] | null>(null);
@@ -173,6 +177,36 @@ export class SessionPlayPageComponent {
           this.loadSession(sessionId);
         }
       });
+  }
+
+  protected askEndCombat(): void {
+    const sessionId = this.session()?.id;
+    if (!sessionId) {
+      return;
+    }
+
+    confirmDialog(
+      this.dialog,
+      {
+        title: 'Terminer le combat',
+        message: 'Les adversaires seront retirés et la session repassera en mode libre. Continuer ?',
+        confirmLabel: 'Terminer',
+      },
+      {width: '380px'},
+    ).subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+
+      this.fightSessionService.endCombat(sessionId).subscribe({
+        next: () => this.loadSession(sessionId),
+        error: (error: unknown) => {
+          this.snackBar.open(extractApiErrorMessage(error, 'Impossible de terminer le combat.'), 'Fermer', {
+            duration: 5000,
+          });
+        },
+      });
+    });
   }
 
   protected askRemoveCombatant(token: PlayToken, event: Event): void {
