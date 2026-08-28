@@ -1,0 +1,67 @@
+<div class="skd-shell">
+  <div class="skd-header">
+    <h2 mat-dialog-title class="skd-title">
+      <div class="skd-title-eyebrow">Jet de compétence</div>
+      <div class="skd-title-name">{{ data.heroNom }}</div>
+    </h2>
+    <button type="button" class="skd-close" aria-label="Fermer" (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="skd-row">
+    <span class="skd-row-label">Attribut</span>
+    <div class="skd-toggle">
+      @for (attr of attributes; track attr) {
+        <button type="button" [class.active]="attribute() === attr" (click)="setAttribute(attr)">
+          {{ attributeLabels[attr] }} ({{ data[attr] >= 0 ? '+' : '' }}{{ data[attr] }})
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="skd-row">
+    <span class="skd-row-label">Difficulté</span>
+    <div class="skd-toggle">
+      @for (d of difficulties; track d.label) {
+        <button type="button" [class.active]="difficulty() === d" (click)="setDifficulty(d)">
+          {{ d.label }} ({{ d.modifier >= 0 ? '+' : '' }}{{ d.modifier }})
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="skd-row">
+    <span class="skd-row-label">Modificateur additionnel</span>
+    <div class="skd-stepper">
+      <button type="button" (click)="incrementModifier(-1)">−</button>
+      <span>{{ modifier() >= 0 ? '+' : '' }}{{ modifier() }}</span>
+      <button type="button" (click)="incrementModifier(1)">+</button>
+    </div>
+  </div>
+
+  @if (dice(); as d) {
+    <div
+      class="skd-result"
+      [class.skd-result--reussite]="bannerTone() === 'reussite'"
+      [class.skd-result--echec]="bannerTone() === 'echec'"
+      [class.skd-result--heroique]="bannerTone() === 'heroique'"
+    >
+      <div class="skd-result-total">{{ total() }}</div>
+      <p class="skd-result-label">{{ resultLabel() }}</p>
+    </div>
+  } @else {
+    <div class="skd-result skd-result--idle">
+      <p>Lancez les dés pour connaître le résultat du jet.</p>
+    </div>
+  }
+
+  <app-dice-box-host class="skd-box" [scale]="12" />
+
+  <p class="skd-formula">{{ formula() }}</p>
+
+  <button type="button" class="skd-reroll" [disabled]="rolling()" (click)="roll()">
+    <mat-icon>refresh</mat-icon>
+    {{ dice() ? 'Relancer' : 'Lancer 2d6' }}
+  </button>
+</div>
