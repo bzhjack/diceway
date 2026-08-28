@@ -30,6 +30,7 @@ import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard, PlayToken} from '../combat-play.util';
 import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
 import {AttackMenuComponent, CombatReminderStat} from './attack-menu/attack-menu';
+import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dialog';
 
 const COLS_PER_ZONE = 3;
 const HERO_ZONE = {xMin: 8, xMax: 32, yMin: 16, yMax: 84};
@@ -174,6 +175,27 @@ export class SessionPlayPageComponent {
       .afterClosed()
       .subscribe((didAdd: boolean | undefined) => {
         if (didAdd) {
+          this.loadSession(sessionId);
+        }
+      });
+  }
+
+  protected openStartCombatDialog(): void {
+    const sessionId = this.session()?.id;
+    if (!sessionId) {
+      return;
+    }
+
+    this.dialog
+      .open(StartCombatDialogComponent, {
+        width: 'min(760px, 94vw)',
+        maxWidth: '94vw',
+        maxHeight: '85vh',
+        data: {sessionId},
+      })
+      .afterClosed()
+      .subscribe((started: boolean | undefined) => {
+        if (started) {
           this.loadSession(sessionId);
         }
       });

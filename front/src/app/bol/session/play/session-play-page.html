@@ -21,7 +21,12 @@
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #sessionMenu="matMenu">
-        @if (mode() === 'combat') {
+        @if (mode() === 'libre') {
+          <button mat-menu-item type="button" (click)="openStartCombatDialog()">
+            <mat-icon>shield</mat-icon>
+            Démarrer un combat
+          </button>
+        } @else {
           <button mat-menu-item type="button" (click)="askEndCombat()">
             <mat-icon>flag</mat-icon>
             Terminer le combat
