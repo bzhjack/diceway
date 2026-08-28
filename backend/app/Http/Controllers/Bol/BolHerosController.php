@@ -159,6 +159,17 @@ class BolHerosController extends Controller
         return response($bolHeros);
     }
 
+    public function adjustHeroisme(Request $request, string $id)
+    {
+        $heros = $this->bolHerosService->adjustHeroisme($id, Auth::id(), (int) $request->input('delta'));
+
+        if (!$heros) {
+            return response()->json(['error' => 'Hero not found'], 404);
+        }
+
+        return response()->json($heros);
+    }
+
     private function syncHeroRelations(string $herosId, Request $request, bool $creating): void
     {
         $extractRelationId = static function ($item, string $primaryKey, string $fallbackKey = 'id'): int {

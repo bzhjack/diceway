@@ -32,4 +32,17 @@ class BolHerosService
             'region',
         ];
     }
+
+    /** Ajuste l'héroïsme d'un héros (delta positif ou négatif), borné à 0 minimum. */
+    public function adjustHeroisme(string $herosId, string $userId, int $delta): ?BolHeros
+    {
+        $heros = BolHeros::where('id', $herosId)->where('user_id', $userId)->first();
+        if (!$heros) {
+            return null;
+        }
+
+        $heros->update(['heroisme' => max(0, $heros->heroisme + $delta)]);
+
+        return $heros->fresh();
+    }
 }

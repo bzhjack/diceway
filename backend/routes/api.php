@@ -142,6 +142,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
 
     // Maj des origines
     Route::post('/bol/heros/origines/update/{herosId}', [BolHerosController::class, 'updateOrigines']);
+    Route::patch('/bol/heros/{id}/heroisme', [BolHerosController::class, 'adjustHeroisme']);
 
     // Traits régionaux
     Route::delete('/bol/heros/traits/delete/{id}', [BolTraitController::class, 'delete']);
