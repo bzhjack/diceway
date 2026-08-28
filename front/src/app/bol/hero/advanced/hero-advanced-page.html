@@ -4,7 +4,7 @@
       <mat-card-content>
         @if (!editMode()) {
           <!-- ===== BROUILLON (étape 1) ===== -->
-          <form class="dw-creation-form flex flex-col gap-6" [formGroup]="draftForm" (ngSubmit)="startDraft()">
+          <form class="dw-creation-form flex flex-col gap-6" (submit)="onDraftSubmit($event)">
             <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div class="flex items-center gap-3">
                 <div class="hap-icon">
@@ -39,17 +39,17 @@
               <div class="grid gap-4 md:grid-cols-2">
                 <mat-form-field subscriptSizing="dynamic">
                   <mat-label>Joueur</mat-label>
-                  <input matInput id="draft-joueur" formControlName="joueur" />
+                  <input matInput id="draft-joueur" [formField]="draftForm.joueur" />
                 </mat-form-field>
 
                 <mat-form-field subscriptSizing="dynamic">
                   <mat-label>Nom du héros</mat-label>
-                  <input matInput id="draft-nom" formControlName="nom" />
+                  <input matInput id="draft-nom" [formField]="draftForm.nom" />
                 </mat-form-field>
               </div>
 
               <div class="flex justify-end">
-                <button mat-flat-button type="submit" [disabled]="creatingDraft() || draftForm.invalid">
+                <button mat-flat-button type="submit" [disabled]="creatingDraft() || draftForm().invalid()">
                   {{ submitLabel() }} <mat-icon>arrow_forward</mat-icon>
                 </button>
               </div>
@@ -63,7 +63,7 @@
           </form>
           <!-- ===== FIN BROUILLON ===== -->
         } @else {
-          <form class="dw-creation-form flex flex-col gap-6" [formGroup]="herosForm" (ngSubmit)="save()">
+          <form class="dw-creation-form flex flex-col gap-6" (submit)="onFormSubmit($event)">
             <!-- ===== EN-TÊTE ===== -->
             <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div class="flex items-center gap-3">
@@ -171,7 +171,7 @@
                     <!-- ===== IDENTITÉ ===== -->
                     <div class="dw-section--form hap-panel--stretch">
                       <bol-hero-advanced-identite
-                        [form]="herosForm"
+                        [form]="heroForm"
                         [region]="selectedRegion()"
                         [errors]="originesErrors()"
                         [warns]="originesWarns()"
@@ -203,7 +203,7 @@
                       <!-- ===== ATTRIBUTS / COMBAT ===== -->
                       <div class="dw-section--form">
                         <bol-hero-advanced-stats-panel
-                          [form]="herosForm"
+                          [form]="statsForm"
                           [groups]="heroStatGroups"
                           [errors]="statsErrors()"
                           [warns]="statsWarns()"

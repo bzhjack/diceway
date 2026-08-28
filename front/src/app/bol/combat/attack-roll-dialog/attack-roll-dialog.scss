@@ -1,0 +1,486 @@
+// Encapsulation désactivée sur le composant (voir .ts) : tout ici est global, donc systématiquement
+// scopé sous .atd-panel (panelClass passé à dialog.open) pour ne pas déteindre sur les autres
+// dialogs Material de l'appli. Reprend le langage visuel de InitiativeRollDialogComponent (ird-*).
+
+.atd-panel .mat-mdc-dialog-surface {
+  background: linear-gradient(180deg, var(--dw-surface-50) 0%, var(--dw-surface-0) 100%);
+  border: 1px solid color-mix(in srgb, var(--dw-color-echec-forte) 40%, transparent);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  padding: 0;
+  max-height: calc(100vh - 10vh);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+// MDC insère un ::before invisible de 40px de haut sur .mdc-dialog__title (hack interne pour caler
+// la hauteur/baseline du titre) ; en passant le h2 en display:flex, ce pseudo-élément devient un
+// flex item à part entière et gonfle la boîte du titre — on le neutralise ici.
+.atd-panel .mat-mdc-dialog-title {
+  margin: 0;
+  padding: 0;
+  display: flex;
+
+  &::before {
+    display: none;
+  }
+}
+
+.atd-shell {
+  display: flex;
+  flex-direction: column;
+  width: 28rem;
+  max-width: 100%;
+}
+
+.atd-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.4rem 0.9rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--dw-color-echec-forte) 32%, transparent);
+}
+
+.atd-title {
+  margin: 0;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-weight: 400;
+  font-size: 0.92rem;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dw-surface-900);
+}
+
+.atd-close {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--dw-color-echec-forte) 32%, transparent);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
+  color: var(--dw-surface-500);
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 0.95rem;
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+
+  &:hover {
+    color: var(--dw-surface-800);
+    border-color: var(--dw-color-echec-forte);
+  }
+}
+
+.atd-versus {
+  margin: 0.7rem 1.1rem 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.85rem;
+}
+
+.atd-versus-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+  flex: 1 1 0;
+}
+
+.atd-versus-avatar {
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 2px solid color-mix(in srgb, var(--dw-color-echec-forte) 55%, transparent);
+  background: var(--dw-surface-100);
+}
+
+.atd-versus-side--target .atd-versus-avatar {
+  border-color: color-mix(in srgb, var(--dw-surface-500) 45%, transparent);
+}
+
+.atd-versus-name {
+  max-width: 100%;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--dw-surface-700);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.atd-versus-vs {
+  flex-shrink: 0;
+  margin-top: 0.7rem;
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 1.05rem;
+  color: var(--dw-color-echec-forte);
+  letter-spacing: 0.05em;
+}
+
+.atd-result {
+  margin: 0.7rem 1.1rem 0;
+  padding: 0.7rem 1rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--dw-border);
+  background: color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-align: center;
+}
+
+.atd-result--idle {
+  color: var(--dw-surface-500);
+  font-size: 0.84rem;
+  padding: 0.9rem 1rem;
+}
+
+.atd-result--reussite {
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 45%, transparent);
+  background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-reussite) 22%, transparent) 0%, transparent 70%), color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
+}
+
+.atd-result--echec {
+  border-color: color-mix(in srgb, var(--dw-color-echec) 45%, transparent);
+  background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-echec) 22%, transparent) 0%, transparent 70%), color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
+}
+
+.atd-summary {
+  margin: 0.7rem 1.1rem 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--dw-border);
+  background: color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
+}
+
+.atd-summary--reussite {
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 45%, transparent);
+  background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-reussite) 18%, transparent) 0%, transparent 70%), color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
+}
+
+.atd-summary--echec {
+  border-color: color-mix(in srgb, var(--dw-color-echec) 45%, transparent);
+  background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-echec) 18%, transparent) 0%, transparent 70%), color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
+}
+
+.atd-summary--damage {
+  border-color: color-mix(in srgb, var(--dw-color-legendary) 40%, transparent);
+  background: color-mix(in srgb, var(--dw-color-legendary) 10%, transparent);
+}
+
+.atd-summary-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.atd-summary-main {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.atd-summary-total {
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--dw-surface-900);
+  font-variant-numeric: tabular-nums;
+}
+
+.atd-summary-total--damage {
+  color: var(--dw-color-legendary);
+}
+
+.atd-summary-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 0.12rem 0.55rem;
+  border-radius: 999px;
+
+  .mat-icon {
+    font-size: 0.85rem;
+    width: 0.85rem;
+    height: 0.85rem;
+  }
+}
+
+.atd-summary--reussite .atd-summary-badge {
+  color: var(--dw-color-reussite);
+  background: color-mix(in srgb, var(--dw-color-reussite) 18%, transparent);
+}
+
+.atd-summary--echec .atd-summary-badge {
+  color: var(--dw-color-echec);
+  background: color-mix(in srgb, var(--dw-color-echec) 18%, transparent);
+}
+
+.atd-summary-label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+}
+
+.atd-summary-toggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--dw-surface-500);
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 0.9rem;
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
+  &:hover {
+    color: var(--dw-surface-800);
+    border-color: var(--dw-surface-500);
+  }
+}
+
+.atd-summary-toggle--damage:hover {
+  border-color: var(--dw-color-legendary);
+  color: var(--dw-color-legendary);
+}
+
+.atd-summary-formula {
+  margin: 0.35rem 0 0;
+  font-size: 0.7rem;
+  color: var(--dw-surface-500);
+  font-variant-numeric: tabular-nums;
+}
+
+.atd-box {
+  --dice-box-min-height: 15rem;
+  --dice-box-min-width: 10rem;
+  display: block;
+  margin: 0.7rem 1.1rem 0;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--dw-color-echec-forte) 28%, transparent);
+  overflow: hidden;
+}
+
+.atd-toggle {
+  margin: 0.7rem 1.1rem 0;
+  display: flex;
+  border: 1px solid color-mix(in srgb, var(--dw-surface-500) 30%, transparent);
+  border-radius: 999px;
+  overflow: hidden;
+  width: fit-content;
+  max-width: calc(100% - 2.2rem);
+
+  button {
+    border: none;
+    background: transparent;
+    color: var(--dw-surface-600);
+    font: inherit;
+    font-size: 0.74rem;
+    font-weight: 700;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+
+    &.active {
+      background: var(--dw-color-echec-forte);
+      color: #1c0400;
+    }
+  }
+}
+
+.atd-toggle--dice {
+  margin-top: 0;
+}
+
+.atd-fields {
+  margin: 0.7rem 1.1rem 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.atd-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+
+  input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: none;
+    color: var(--dw-surface-900);
+    padding: 0.35rem 0.5rem;
+    border-radius: 6px;
+    border: 1px solid var(--dw-border);
+    background: color-mix(in srgb, var(--dw-surface-0) 50%, transparent);
+    font-variant-numeric: tabular-nums;
+
+    &:focus {
+      outline: none;
+      border-color: var(--dw-color-echec-forte);
+    }
+  }
+}
+
+.atd-reroll {
+  margin: 0.7rem 1.1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--dw-color-echec-forte) 45%, transparent);
+  background: color-mix(in srgb, var(--dw-color-echec-forte) 10%, transparent);
+  color: var(--dw-color-echec-forte);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--dw-color-echec-forte) 18%, transparent);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.atd-damage {
+  margin: 0.9rem 1.1rem 0;
+  padding: 0.7rem 0.9rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 35%, transparent);
+  background: color-mix(in srgb, var(--dw-color-legendary) 8%, transparent);
+}
+
+.atd-damage-title {
+  margin: 0 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dw-color-legendary);
+
+  .mat-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.atd-damage .atd-toggle,
+.atd-damage .atd-fields,
+.atd-damage .atd-reroll,
+.atd-damage .atd-summary {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.atd-damage .atd-toggle button.active {
+  background: var(--dw-color-legendary);
+  color: #1c1200;
+}
+
+.atd-damage .atd-reroll {
+  border-color: color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);
+  background: color-mix(in srgb, var(--dw-color-legendary) 10%, transparent);
+  color: var(--dw-color-legendary);
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--dw-color-legendary) 18%, transparent);
+  }
+}
+
+.atd-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding: 0.8rem 1.1rem 1rem;
+}
+
+.atd-btn {
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.86rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.atd-btn--ghost {
+  background: transparent;
+  border: 1px solid var(--dw-border);
+  color: var(--dw-surface-600);
+
+  &:hover {
+    border-color: var(--dw-surface-500);
+    color: var(--dw-surface-800);
+  }
+}
+
+.atd-btn--primary {
+  border: 1px solid var(--dw-border);
+  background: color-mix(in srgb, var(--dw-surface-500) 10%, transparent);
+  color: var(--dw-surface-500);
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+}
+
+.atd-btn--reussite:not(:disabled) {
+  border-color: color-mix(in srgb, var(--dw-color-legendary) 55%, transparent);
+  background: color-mix(in srgb, var(--dw-color-legendary) 16%, transparent);
+  color: var(--dw-color-legendary);
+}

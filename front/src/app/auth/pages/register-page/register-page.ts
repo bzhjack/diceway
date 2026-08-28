@@ -1,6 +1,6 @@
 import {NgOptimizedImage} from '@angular/common';
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject} from '@angular/core';
-import {AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators} from '@angular/forms';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
+import {email, form, FormField, minLength, required, validate} from '@angular/forms/signals';
 import {Router, RouterLink} from '@angular/router';
 import {extractApiErrors} from '../../../core/api-error.utils';
 import {AuthService} from '../../../core/auth/auth.service';
@@ -23,7 +23,7 @@ import {
 @Component({
   selector: 'app-register-page',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     RouterLink,
     NgOptimizedImage,
     MatFormFieldModule,
@@ -43,55 +43,62 @@ import {
   templateUrl: './register-page.html',
   styleUrl: './register-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true
 })
 export class RegisterPageComponent {
-  private readonly cdr = inject(ChangeDetectorRef);
-  private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
-  protected pending = false;
-  protected messages: string[] = [];
-  protected readonly registerForm = this.formBuilder.nonNullable.group(
-    {
-      name: ['', [Validators.required, Validators.minLength(5)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      password_confirmation: ['', [Validators.required, Validators.minLength(8)]],
-    },
-    {validators: RegisterPageComponent.passwordMatch},
-  );
+  protected readonly pending = signal(false);
+  protected readonly messages = signal<string[]>([]);
 
-  static passwordMatch(group: AbstractControl): ValidationErrors | null {
-    const password = group.value.password;
-    const confirm = group.value.password_confirmation;
-    if (password !== confirm) {
-      group.get('password_confirmation')?.setErrors({notMatch: true});
-    }
-    return password === confirm ? null : {matchingError: true};
+  protected readonly registerModel = signal({
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+  });
+  protected readonly registerForm = form(this.registerModel, (fieldPath) => {
+    required(fieldPath.name, {message: 'Pseudonyme requis'});
+    minLength(fieldPath.name, 5, {message: 'Minimum 5 caractères'});
+
+    required(fieldPath.email, {message: 'Adresse mail requise'});
+    email(fieldPath.email, {message: 'Adresse mail non valide'});
+
+    required(fieldPath.password, {message: 'Mot de passe requis'});
+    minLength(fieldPath.password, 8, {message: 'Minimum 8 caractères'});
+
+    required(fieldPath.password_confirmation, {message: 'Confirmation requise'});
+    validate(fieldPath.password_confirmation, ({value, valueOf}) => {
+      if (value() !== valueOf(fieldPath.password)) {
+        return {kind: 'passwordMismatch', message: 'Les mots de passe ne correspondent pas'};
+      }
+      return null;
+    });
+  });
+
+  protected onSubmit(event: Event): void {
+    event.preventDefault();
+    this.register();
   }
 
   protected register(): void {
-    if (this.registerForm.invalid) {
-      this.registerForm.markAllAsTouched();
+    if (this.registerForm().invalid()) {
+      this.registerForm().markAsTouched();
       return;
     }
 
-    this.messages = [];
-    this.pending = true;
+    this.messages.set([]);
+    this.pending.set(true);
     this.authService
-      .register(this.registerForm.getRawValue())
+      .register(this.registerModel())
       .subscribe({
         next: () => {
-          this.pending = false;
-          this.cdr.markForCheck();
+          this.pending.set(false);
           void this.router.navigateByUrl('/notice');
         },
         error: (error: unknown) => {
-          this.pending = false;
-          this.messages = extractApiErrors(error, 'Inscription impossible.');
-          this.cdr.markForCheck();
+          this.pending.set(false);
+          this.messages.set(extractApiErrors(error, 'Inscription impossible.'));
         },
       });
   }

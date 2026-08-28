@@ -2,15 +2,15 @@
   Identité
 </p>
 
-<div class="mt-3 grid gap-2 md:grid-cols-2" [formGroup]="form()">
+<div class="mt-3 grid gap-2 md:grid-cols-2">
   <mat-form-field subscriptSizing="dynamic">
     <mat-label>Nom du joueur</mat-label>
-    <input matInput id="advanced-joueur" formControlName="joueur" />
+    <input matInput id="advanced-joueur" [formField]="form().joueur" />
   </mat-form-field>
 
   <mat-form-field subscriptSizing="dynamic">
     <mat-label>Nom du héros</mat-label>
-    <input matInput id="advanced-nom" formControlName="nom" />
+    <input matInput id="advanced-nom" [formField]="form().nom" />
   </mat-form-field>
 
   <mat-form-field subscriptSizing="dynamic" class="hap-region-field md:col-span-2">
@@ -46,7 +46,7 @@
       <textarea
         matInput
         id="advanced-commentaire"
-        formControlName="commentaire"
+        [formField]="form().commentaire"
         rows="3"
         class="resize-none"
       ></textarea>

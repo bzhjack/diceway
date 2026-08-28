@@ -1,9 +1,8 @@
 import {NgOptimizedImage} from '@angular/common';
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject} from '@angular/core';
-import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
+import {email, form, FormField, minLength, required, validate} from '@angular/forms/signals';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {extractApiErrors} from '../../../core/api-error.utils';
-import {passwordMatchValidator} from '../../../core/auth/auth-form.utils';
 import {AuthService} from '../../../core/auth/auth.service';
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -24,7 +23,7 @@ import {
 @Component({
   selector: 'app-reset-page',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     RouterLink,
     NgOptimizedImage,
     MatFormFieldModule,
@@ -46,8 +45,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetPageComponent {
-  private readonly cdr = inject(ChangeDetectorRef);
-  private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -57,45 +54,55 @@ export class ResetPageComponent {
     this.route.snapshot.paramMap.get('email') ??
     '';
 
-  protected pending = false;
-  protected messages: string[] = [];
-  protected readonly resetForm = this.formBuilder.nonNullable.group(
-    {
-      token: [this.token, [Validators.required]],
-      email: [this.email, [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      password_confirmation: ['', [Validators.required, Validators.minLength(8)]],
-    },
-    {validators: passwordMatchValidator},
-  );
+  protected readonly pending = signal(false);
+  protected readonly messages = signal<string[]>([]);
 
-  get showPasswordMismatch(): boolean {
-    return (
-      this.resetForm.hasError('passwordMismatch') &&
-      (this.resetForm.get('password_confirmation')?.touched ?? false)
-    );
+  protected readonly resetModel = signal({
+    token: this.token,
+    email: this.email,
+    password: '',
+    password_confirmation: '',
+  });
+  protected readonly resetForm = form(this.resetModel, (fieldPath) => {
+    required(fieldPath.token);
+    required(fieldPath.email);
+    email(fieldPath.email);
+
+    required(fieldPath.password, {message: 'Mot de passe requis'});
+    minLength(fieldPath.password, 8, {message: 'Minimum 8 caractères'});
+
+    required(fieldPath.password_confirmation, {message: 'Confirmation requise'});
+    validate(fieldPath.password_confirmation, ({value, valueOf}) => {
+      if (value() !== valueOf(fieldPath.password)) {
+        return {kind: 'passwordMismatch', message: 'Les mots de passe ne correspondent pas'};
+      }
+      return null;
+    });
+  });
+
+  protected onSubmit(event: Event): void {
+    event.preventDefault();
+    this.reset();
   }
 
   protected reset(): void {
-    if (this.resetForm.invalid) {
-      this.resetForm.markAllAsTouched();
-      this.messages = ['Le formulaire contient encore des erreurs.'];
+    if (this.resetForm().invalid()) {
+      this.resetForm().markAsTouched();
+      this.messages.set(['Le formulaire contient encore des erreurs.']);
       return;
     }
 
-    this.pending = true;
+    this.pending.set(true);
     this.authService
-      .resetPassord(this.resetForm.getRawValue())
+      .resetPassord(this.resetModel())
       .subscribe({
         next: () => {
-          this.pending = false;
-          this.cdr.markForCheck();
+          this.pending.set(false);
           void this.router.navigateByUrl('/welcome/success');
         },
         error: (error: unknown) => {
-          this.pending = false;
-          this.messages = extractApiErrors(error, 'Réinitialisation impossible.');
-          this.cdr.markForCheck();
+          this.pending.set(false);
+          this.messages.set(extractApiErrors(error, 'Réinitialisation impossible.'));
         },
       });
   }

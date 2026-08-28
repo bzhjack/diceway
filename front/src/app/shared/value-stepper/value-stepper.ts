@@ -18,8 +18,11 @@ import {ControlValueAccessor, NgControl} from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DwValueStepperComponent implements ControlValueAccessor, OnInit {
-  readonly min = input<number | null>(null);
-  readonly max = input<number | null>(null);
+  // Type `| undefined` (pas `| null`) pour matcher le contrat FormUiControl de Signal
+  // Forms, qui bind min/max en `NonNullable<TValue> | undefined` quand le champ a des
+  // validateurs min()/max().
+  readonly min = input<number | undefined>(undefined);
+  readonly max = input<number | undefined>(undefined);
   readonly step = input(1);
   readonly ariaLabel = input<string | null>(null);
 
@@ -28,11 +31,11 @@ export class DwValueStepperComponent implements ControlValueAccessor, OnInit {
 
   protected readonly isMin = computed(() => {
     const min = this.min();
-    return min !== null && this.value() <= min;
+    return min !== undefined && this.value() <= min;
   });
   protected readonly isMax = computed(() => {
     const max = this.max();
-    return max !== null && this.value() >= max;
+    return max !== undefined && this.value() >= max;
   });
 
   // Injecté puis câblé à la main (pas de NG_VALUE_ACCESSOR en provider) pour
@@ -50,9 +53,11 @@ export class DwValueStepperComponent implements ControlValueAccessor, OnInit {
     }
   }
 
+  // Signal Forms n'expose pas valueChanges sur son NgControl d'interop (writeValue()
+  // suffit à resynchroniser dans ce cas) : seul le chemin Reactive Forms passe ici.
   ngOnInit(): void {
     this.ngControl?.control?.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      ?.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((value: number | null) => this.value.set(Number(value) || 0));
   }
 
@@ -95,10 +100,10 @@ export class DwValueStepperComponent implements ControlValueAccessor, OnInit {
     const min = this.min();
     const max = this.max();
     let clamped = next;
-    if (min !== null) {
+    if (min !== undefined) {
       clamped = Math.max(min, clamped);
     }
-    if (max !== null) {
+    if (max !== undefined) {
       clamped = Math.min(max, clamped);
     }
 

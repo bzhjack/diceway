@@ -185,21 +185,25 @@ function herosLikeStatblockData(
     })
     .filter((entry) => entry.label);
 
-  const equipment: BolStatblockEntry[] = [
-    ...armors.map((armure) => ({
-      label: armure.armure?.armure ?? '',
-      detail: [armure.armure?.protection, armure.armure?.malus].filter(Boolean).join(' · ') || undefined,
-    })),
-    ...weapons.map((arme) => ({
+  const weaponEntries: BolStatblockEntry[] = weapons
+    .map((arme) => ({
       label: arme.arme?.arme ?? '',
       detail: [arme.arme?.degats, arme.arme?.portee].filter(Boolean).join(' · ') || undefined,
-    })),
-  ].filter((entry) => entry.label);
+    }))
+    .filter((entry) => entry.label);
+
+  const armorEntries: BolStatblockEntry[] = armors
+    .map((armure) => ({
+      label: armure.armure?.armure ?? '',
+      detail: [armure.armure?.protection, armure.armure?.malus].filter(Boolean).join(' · ') || undefined,
+    }))
+    .filter((entry) => entry.label);
 
   const sections: BolStatblockSection[] = [
     {title: 'Carrières', emptyText: 'Aucune carrière renseignée.', entries: careers},
     {title: 'Traits', emptyText: 'Aucun trait renseigné.', entries: traits},
-    {title: 'Équipement', emptyText: 'Aucun équipement renseigné.', entries: equipment, compact: true},
+    {title: 'Armes', emptyText: 'Aucune arme renseignée.', entries: weaponEntries, compact: true},
+    {title: 'Armures', emptyText: 'Aucune armure renseignée.', entries: armorEntries, compact: true},
   ];
 
   return {

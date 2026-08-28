@@ -3,7 +3,7 @@
 // sur les autres dialogs Material de l'appli.
 
 .ird-panel .mat-mdc-dialog-surface {
-  background: linear-gradient(180deg, #0c1220 0%, #05070d 100%);
+  background: linear-gradient(180deg, var(--dw-surface-50) 0%, var(--dw-surface-0) 100%);
   border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 40%, transparent);
   border-radius: 14px;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
@@ -12,10 +12,17 @@
   overflow-y: auto;
 }
 
+// MDC insère un ::before invisible de 40px de haut sur .mdc-dialog__title (hack interne pour caler
+// la hauteur/baseline du titre) ; en passant le h2 en display:flex, ce pseudo-élément devient un
+// flex item à part entière et gonfle la boîte du titre — on le neutralise ici.
 .ird-panel .mat-mdc-dialog-title {
   margin: 0;
   padding: 0;
-  display: block;
+  display: flex;
+
+  &::before {
+    display: none;
+  }
 }
 
 .ird-shell {
@@ -27,10 +34,10 @@
 
 .ird-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.7rem 1.1rem 0.6rem;
+  padding: 0.4rem 0.9rem;
   border-bottom: 1px solid color-mix(in srgb, var(--dw-color-legendary) 32%, transparent);
 }
 
@@ -59,21 +66,21 @@
 
 .ird-close {
   flex-shrink: 0;
-  width: 1.7rem;
-  height: 1.7rem;
+  width: 1.5rem;
+  height: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 32%, transparent);
   border-radius: 6px;
-  background: rgba(2, 6, 23, 0.4);
+  background: color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
   color: var(--dw-surface-500);
   cursor: pointer;
 
   .mat-icon {
-    font-size: 1.05rem;
-    width: 1.05rem;
-    height: 1.05rem;
+    font-size: 0.95rem;
+    width: 0.95rem;
+    height: 0.95rem;
   }
 
   &:hover {
@@ -86,11 +93,12 @@
   margin: 0.7rem 1.1rem 0;
   padding: 0.7rem 1rem 0.75rem;
   border-radius: 10px;
+  height: 67px;
   border: 1px solid var(--dw-border);
-  background: rgba(2, 6, 23, 0.4);
+  background: color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
   text-align: center;
 }
@@ -103,17 +111,17 @@
 
 .ird-result--reussite {
   border-color: color-mix(in srgb, var(--dw-color-reussite) 45%, transparent);
-  background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-reussite) 22%, transparent) 0%, transparent 70%), rgba(2, 6, 23, 0.4);
+  background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-reussite) 22%, transparent) 0%, transparent 70%), color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
 }
 
 .ird-result--echec {
   border-color: color-mix(in srgb, var(--dw-color-echec) 45%, transparent);
-  background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-echec) 22%, transparent) 0%, transparent 70%), rgba(2, 6, 23, 0.4);
+  background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-echec) 22%, transparent) 0%, transparent 70%), color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
 }
 
 .ird-result--heroique {
   border-color: color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);
-  background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-legendary) 22%, transparent) 0%, transparent 70%), rgba(2, 6, 23, 0.4);
+  background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-legendary) 22%, transparent) 0%, transparent 70%), color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
 }
 
 .ird-result-row {
@@ -196,7 +204,7 @@
 
 .ird-toggle {
   display: flex;
-  border: 1px solid rgba(148, 163, 184, 0.3);
+  border: 1px solid color-mix(in srgb, var(--dw-surface-500) 30%, transparent);
   border-radius: 999px;
   overflow: hidden;
   width: fit-content;
@@ -232,9 +240,12 @@
 .ird-formula {
   margin: 0.4rem 1.1rem 0;
   text-align: center;
-  font-size: 0.78rem;
-  color: var(--dw-surface-500);
+  font-size: 1.5rem;
+  color: var(--dw-surface-700);
   font-variant-numeric: tabular-nums;
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 24%, transparent);
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--dw-surface-0) 35%, transparent);
 }
 
 .ird-calc {
@@ -242,7 +253,7 @@
   padding: 0.55rem 0.8rem;
   border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 24%, transparent);
   border-radius: 10px;
-  background: rgba(2, 6, 23, 0.35);
+  background: color-mix(in srgb, var(--dw-surface-0) 35%, transparent);
 }
 
 .ird-calc-title {
@@ -254,20 +265,22 @@
   color: var(--dw-color-legendary);
 }
 
-.ird-calc-row {
-  display: grid;
-  grid-template-columns: 1.3rem 1fr auto auto;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.2rem 0;
-  font-size: 0.8rem;
-  color: var(--dw-surface-700);
-  border-top: 1px solid rgba(148, 163, 184, 0.12);
+.ird-calc-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
 
-  &:first-child {
-    border-top: none;
-    padding-top: 0;
-  }
+.ird-calc-col {
+  flex: 1 1 4.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.45rem 0.3rem;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--dw-surface-500) 7%, transparent);
+  text-align: center;
 }
 
 .ird-calc-icon {
@@ -278,20 +291,23 @@
 }
 
 .ird-calc-label {
-  text-align: left;
-}
-
-.ird-calc-detail {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   color: var(--dw-surface-500);
-  font-variant-numeric: tabular-nums;
-  text-align: right;
 }
 
 .ird-calc-value {
-  min-width: 2.4rem;
-  text-align: right;
-  font-weight: 700;
+  font-size: 1.05rem;
+  font-weight: 800;
   color: var(--dw-surface-800);
+  font-variant-numeric: tabular-nums;
+}
+
+.ird-calc-detail {
+  font-size: 0.62rem;
+  color: var(--dw-surface-500);
   font-variant-numeric: tabular-nums;
 }
 
@@ -355,7 +371,7 @@
 
 .ird-btn--primary {
   border: 1px solid var(--dw-border);
-  background: rgba(148, 163, 184, 0.1);
+  background: color-mix(in srgb, var(--dw-surface-500) 10%, transparent);
   color: var(--dw-surface-500);
 
   &:disabled {

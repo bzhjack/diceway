@@ -2,17 +2,17 @@
   position: relative;
   min-height: var(--dice-box-min-height, 18rem);
   min-width:  24rem;
-  border: 1px solid rgba(96, 165, 250, 0.22);
+  border: 1px solid color-mix(in srgb, var(--dw-color-dice-kicker) 22%, transparent);
   background:
-    radial-gradient(circle at top, rgba(96, 165, 250, 0.16), transparent 48%),
-    linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+    radial-gradient(circle at top, color-mix(in srgb, var(--dw-color-dice-kicker) 16%, transparent), transparent 48%),
+    linear-gradient(180deg, color-mix(in srgb, var(--dw-surface-50) 96%, transparent), color-mix(in srgb, var(--dw-surface-0) 98%, transparent));
   overflow: hidden;
 }
 
 .dw-dice-box-host__surface {
   position: absolute;
   inset: 0;
-}.cc-result-btn--echec_critique
+}
 
 .dw-dice-box-host__overlay {
   position: absolute;
@@ -20,7 +20,7 @@
   display: grid;
   place-items: center;
   padding: 1.5rem;
-  background: rgba(2, 6, 23, 0.45);
+  background: color-mix(in srgb, var(--dw-surface-0) 45%, transparent);
   color: var(--dw-surface-600);
   text-align: center;
 }
@@ -33,7 +33,7 @@
 }
 
 .dw-dice-box-host__overlay--error {
-  background: rgba(127, 29, 29, 0.46);
+  background: color-mix(in srgb, var(--dw-color-echec-forte) 46%, black);
   color: var(--dw-color-danger-muted);
 }
 

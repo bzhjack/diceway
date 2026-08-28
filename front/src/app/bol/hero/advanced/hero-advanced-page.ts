@@ -1,7 +1,6 @@
 import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} from '@angular/core';
-import {toSignal} from '@angular/core/rxjs-interop';
-import {FormArray, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Observable, startWith, take} from 'rxjs';
+import {applyEach, FieldTree, FormField, form, min, minLength, required, validate, validateTree} from '@angular/forms/signals';
+import {Observable, take} from 'rxjs';
 import {finalize} from 'rxjs/operators';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
@@ -23,7 +22,6 @@ import {ArmureEntry} from '../../shared/armure/list/armure-list.component';
 import {CarriereEntry} from '../../shared/carriere/list/carriere-list.component';
 import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
 import {IdDraft, RankedDraft, availableCatalog, selectedEntries} from '../../shared/form/form-selection';
-import {controlValueSignal, formArrayValueSignal, formDirtySignal} from '../../shared/form/form-signals';
 import {LangueEntry} from '../../shared/langue/list/langue-list.component';
 import {StatGroup} from '../../shared/stats-grid/stats-grid.component';
 import {TraitAddEvent} from '../../shared/trait/add-menu/trait-add-menu.component';
@@ -37,11 +35,11 @@ import {HeroAdvancedCarrieresPanelComponent} from './carrieres-panel/carrieres-p
 import {automaticLanguageIdsForRegion, selectedLanguageTarget} from './create.rules';
 import {HeroAdvancedCreateTools} from './create.tools';
 import {
-  attributValidator,
-  attributsFormValidator,
-  carriereValidator,
-  carrieresFormValidatorFn,
-  combatFormValidatorFn,
+  attributRangeErrors,
+  attributsBudgetErrors,
+  carriereRangeErrors,
+  carrieresBudgetErrors,
+  combatBudgetErrors,
 } from './create.validators';
 import {HeroAdvancedIdentiteComponent} from './identite/identite.component';
 import {HeroAdvancedRegionComponent, HeroAdvancedRegionDialogResult} from './region/region.component';
@@ -49,7 +47,7 @@ import {HeroAdvancedRessourcesPanelComponent, ResourceEntry} from './ressources-
 import {SectionMessage} from './section-message';
 import {HeroAdvancedStatsPanelComponent} from './stats-panel/stats-panel.component';
 
-/** Brouillon de trait dans le FormArray : `id` est l'id du lien héros/trait côté serveur. */
+/** Brouillon de trait dans le modèle : `id` est l'id du lien héros/trait côté serveur. */
 interface AdvancedTraitDraft {
   id: number | null;
   traitable_id: number;
@@ -57,6 +55,74 @@ interface AdvancedTraitDraft {
   detail: string | null;
   region_id: number | null;
   carriere: boolean;
+}
+
+/** Modèle de brouillon du formulaire héros (création avancée), distinct de {@link BolHerosModel}. */
+export interface HeroAdvancedFormModel {
+  id: string | null;
+  user_id: string | null;
+  active: boolean;
+  type: 'H';
+  nom: string;
+  joueur: string;
+  region_id: number | null;
+  /** Chaîne vide plutôt que `null` : `[formField]` sur `<textarea>` exige `Field<string>`. */
+  commentaire: string;
+  avatar: string | null;
+  vigueur: number;
+  agilite: number;
+  esprit: number;
+  aura: number;
+  initiative: number;
+  melee: number;
+  tir: number;
+  defense: number;
+  vitalite: number;
+  heroisme: number;
+  foi: number;
+  pouvoir: number;
+  creation: number;
+  experience: number;
+  vilenie: number;
+  armes: IdDraft[];
+  armures: IdDraft[];
+  langues: IdDraft[];
+  carrieres: RankedDraft[];
+  traits: AdvancedTraitDraft[];
+}
+
+function heroAdvancedFormDefaults(): HeroAdvancedFormModel {
+  return {
+    id: null,
+    user_id: null,
+    active: false,
+    type: 'H',
+    nom: '',
+    joueur: '',
+    region_id: null,
+    commentaire: '',
+    avatar: null,
+    vigueur: 0,
+    agilite: 0,
+    esprit: 0,
+    aura: 0,
+    initiative: 0,
+    melee: 0,
+    tir: 0,
+    defense: 0,
+    vitalite: 10,
+    heroisme: 5,
+    foi: 0,
+    pouvoir: 0,
+    creation: 0,
+    experience: 0,
+    vilenie: 0,
+    armes: [],
+    armures: [],
+    langues: [],
+    carrieres: [],
+    traits: [],
+  };
 }
 
 const MAX_CREATION_AVANTAGES = 3;
@@ -109,7 +175,7 @@ const HERO_ADVANCED_LABELS: EntityFormLabels = {
 @Component({
   selector: 'bol-hero-advanced-page',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     MatButtonModule,
     MatCard,
     MatCardContent,
@@ -131,7 +197,7 @@ const HERO_ADVANCED_LABELS: EntityFormLabels = {
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosModel> {
+export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosModel, HeroAdvancedFormModel> {
   private readonly herosService = inject(BolHerosService);
   private readonly herosStateService = inject(BolHerosStateService);
 
@@ -154,72 +220,84 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
   protected readonly carriereBudget = this.herosStateService.carriereBudget;
 
   // Étape 1 : brouillon minimal, la création avancée travaille sur un héros existant.
-  protected readonly draftForm = this.formBuilder.group({
-    joueur: this.formBuilder.control('', {nonNullable: true, validators: [Validators.required, Validators.minLength(3)]}),
-    nom: this.formBuilder.control('', {nonNullable: true, validators: [Validators.required, Validators.minLength(3)]}),
+  protected readonly draftModel = signal({joueur: '', nom: ''});
+  protected readonly draftForm = form(this.draftModel, (fieldPath) => {
+    required(fieldPath.joueur, {message: 'Nom du joueur requis'});
+    minLength(fieldPath.joueur, 3, {message: 'Minimum 3 caractères'});
+    required(fieldPath.nom, {message: 'Nom du héros requis'});
+    minLength(fieldPath.nom, 3, {message: 'Minimum 3 caractères'});
   });
   protected readonly creatingDraft = signal(false);
   /** Une mutation de sous-ressource (trait, carrière, arme…) est en cours côté API. */
   protected readonly mutating = signal(false);
 
-  protected readonly herosForm = this.formBuilder.group(
-    {
-      id: this.formBuilder.control<string | null>(null),
-      user_id: this.formBuilder.control<string | null>(null),
-      active: this.formBuilder.control(false, {nonNullable: true}),
-      type: this.formBuilder.control<'H'>('H', {nonNullable: true}),
-      nom: this.formBuilder.control('', {nonNullable: true, validators: [Validators.required]}),
-      joueur: this.formBuilder.control('', {nonNullable: true, validators: [Validators.required]}),
-      region_id: this.formBuilder.control<number | null>(null, [Validators.required, Validators.min(1)]),
-      commentaire: this.formBuilder.control<string | null>(null),
-      avatar: this.formBuilder.control<string | null>(null),
-      vigueur: this.formBuilder.control(0, {nonNullable: true, validators: [attributValidator]}),
-      agilite: this.formBuilder.control(0, {nonNullable: true, validators: [attributValidator]}),
-      esprit: this.formBuilder.control(0, {nonNullable: true, validators: [attributValidator]}),
-      aura: this.formBuilder.control(0, {nonNullable: true, validators: [attributValidator]}),
-      initiative: this.formBuilder.control(0, {nonNullable: true, validators: [attributValidator]}),
-      melee: this.formBuilder.control(0, {nonNullable: true, validators: [attributValidator]}),
-      tir: this.formBuilder.control(0, {nonNullable: true, validators: [attributValidator]}),
-      defense: this.formBuilder.control(0, {nonNullable: true, validators: [attributValidator]}),
-      vitalite: this.formBuilder.control(10, {nonNullable: true}),
-      heroisme: this.formBuilder.control(5, {nonNullable: true}),
-      foi: this.formBuilder.control(0, {nonNullable: true}),
-      pouvoir: this.formBuilder.control(0, {nonNullable: true}),
-      creation: this.formBuilder.control(0, {nonNullable: true}),
-      experience: this.formBuilder.control(0, {nonNullable: true}),
-      vilenie: this.formBuilder.control(0, {nonNullable: true}),
-      armes: this.formBuilder.array([]),
-      armures: this.formBuilder.array([]),
-      langues: this.formBuilder.array([]),
-      carrieres: this.formBuilder.array([]),
-      traits: this.formBuilder.array([]),
-    },
-    {validators: [attributsFormValidator, combatFormValidatorFn(4), carrieresFormValidatorFn(4)]},
-  );
+  protected readonly model = signal<HeroAdvancedFormModel>(heroAdvancedFormDefaults());
+  protected readonly heroForm = form(this.model, (fieldPath) => {
+    required(fieldPath.nom, {message: 'Nom du héros requis'});
+    required(fieldPath.joueur, {message: 'Nom du joueur requis'});
+    required(fieldPath.region_id, {message: 'Région requise'});
+    min(fieldPath.region_id, 1);
+
+    validate(fieldPath.vigueur, ({value}) => attributRangeErrors(value()));
+    validate(fieldPath.agilite, ({value}) => attributRangeErrors(value()));
+    validate(fieldPath.esprit, ({value}) => attributRangeErrors(value()));
+    validate(fieldPath.aura, ({value}) => attributRangeErrors(value()));
+    validate(fieldPath.initiative, ({value}) => attributRangeErrors(value()));
+    validate(fieldPath.melee, ({value}) => attributRangeErrors(value()));
+    validate(fieldPath.tir, ({value}) => attributRangeErrors(value()));
+    validate(fieldPath.defense, ({value}) => attributRangeErrors(value()));
+
+    applyEach(fieldPath.armes, (item) => required(item.id));
+    applyEach(fieldPath.armures, (item) => required(item.id));
+    applyEach(fieldPath.langues, (item) => required(item.id));
+    applyEach(fieldPath.carrieres, (item) => {
+      required(item.id);
+      validate(item.value, ({value}) => carriereRangeErrors(value()));
+    });
+    applyEach(fieldPath.traits, (item) => {
+      required(item.traitable_id);
+      required(item.type);
+    });
+
+    // Budgets dynamiques (E11 Non-combattant) : combatBudget()/carriereBudget() sont lus en
+    // direct dans le validateur, qui se réévalue automatiquement à chaque changement — pas
+    // besoin de ré-appliquer les validateurs manuellement comme en Reactive Forms.
+    validateTree(fieldPath, ({value}) => {
+      const errors = attributsBudgetErrors(value());
+      return errors.length ? errors : null;
+    });
+    validateTree(fieldPath, ({value}) => {
+      const errors = combatBudgetErrors(value(), this.combatBudget());
+      return errors.length ? errors : null;
+    });
+    validateTree(fieldPath, ({value}) => {
+      const errors = carrieresBudgetErrors(
+        value().carrieres.map((carriere) => carriere.value),
+        this.carriereBudget(),
+      );
+      return errors.length ? errors : null;
+    });
+  });
 
   protected get entityForm() {
-    return this.herosForm;
+    return this.heroForm;
   }
 
-  protected readonly formDirty = formDirtySignal(this.herosForm);
+  /** Vue castée pour bol-stats-grid, qui n'accède qu'aux champs numériques. */
+  protected readonly statsForm = this.heroForm as unknown as FieldTree<Record<string, number>>;
 
-  private readonly herosFormValue = toSignal(
-    this.herosForm.valueChanges.pipe(startWith(this.herosForm.getRawValue())),
-    {initialValue: this.herosForm.getRawValue()},
-  );
+  protected readonly avatarPreview = computed(() => this.model().avatar);
+  protected readonly heroNom = computed(() => this.model().nom);
+  protected readonly heroJoueur = computed(() => this.model().joueur);
+  protected readonly activeValue = computed(() => this.model().active);
+  private readonly regionIdValue = computed(() => this.model().region_id);
+  private readonly vigueurValue = computed(() => this.model().vigueur);
 
-  protected readonly avatarPreview = controlValueSignal(this.herosForm.controls.avatar);
-  protected readonly heroNom = controlValueSignal(this.herosForm.controls.nom);
-  protected readonly heroJoueur = controlValueSignal(this.herosForm.controls.joueur);
-  protected readonly activeValue = controlValueSignal(this.herosForm.controls.active);
-  private readonly regionIdValue = controlValueSignal(this.herosForm.controls.region_id);
-  private readonly vigueurValue = controlValueSignal(this.herosForm.controls.vigueur);
-
-  protected readonly selectedArmesDraft = formArrayValueSignal<IdDraft>(this.armes);
-  protected readonly selectedArmuresDraft = formArrayValueSignal<IdDraft>(this.armures);
-  protected readonly selectedLanguesDraft = formArrayValueSignal<IdDraft>(this.langues);
-  protected readonly selectedCarrieresDraft = formArrayValueSignal<RankedDraft>(this.carrieres);
-  protected readonly selectedTraitsDraft = formArrayValueSignal<AdvancedTraitDraft>(this.traits);
+  protected readonly selectedArmesDraft = computed(() => this.model().armes);
+  protected readonly selectedArmuresDraft = computed(() => this.model().armures);
+  protected readonly selectedLanguesDraft = computed(() => this.model().langues);
+  protected readonly selectedCarrieresDraft = computed(() => this.model().carrieres);
+  protected readonly selectedTraitsDraft = computed(() => this.model().traits);
 
   protected readonly selectedRegion = computed(() => {
     const regionId = this.regionIdValue();
@@ -231,10 +309,7 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
   });
 
   /** Héros courant reconstruit depuis le formulaire, pour le BolHerosStateService. */
-  private readonly currentHero = computed(() => {
-    this.herosFormValue();
-    return this.buildHero();
-  });
+  private readonly currentHero = computed(() => this.buildHero());
 
   // Traits : catalogues généraux fusionnés avec les variantes régionales (même id → la régionale gagne).
   protected readonly mergedAvantages = computed(() =>
@@ -315,7 +390,7 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       id: entry.id,
       label: definition.carriere,
       description: definition.description || null,
-      rank: this.carrieres.at(index).get('value') as FormControl<number>,
+      rank: this.heroForm.carrieres[index].value,
     }),
   );
   protected readonly careerDesavantageOptions = addMenuOptions(
@@ -390,7 +465,7 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
   private readonly langueTarget = computed(() =>
     selectedLanguageTarget(
       this.selectedRegion(),
-      Number(this.herosFormValue().esprit ?? 0),
+      Number(this.model().esprit ?? 0),
       this.carrieresForRules(),
       this.languesList(),
     ),
@@ -420,15 +495,15 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
 
   // Erreurs et avertissements par section (affichés dans les panneaux, agrégés dans le service).
   protected readonly originesErrors = computed<SectionMessage[]>(() => {
-    this.herosFormValue();
+    const model = this.model();
     const errors: SectionMessage[] = [];
-    if (this.herosForm.controls.joueur.invalid) {
+    if (!model.joueur) {
       errors.push({control: 'Joueur', error: 'Le nom du joueur est requis.'});
     }
-    if (this.herosForm.controls.nom.invalid) {
+    if (!model.nom) {
       errors.push({control: 'Nom', error: 'Le nom du héros est requis.'});
     }
-    if (this.herosForm.controls.region_id.invalid) {
+    if (!model.region_id) {
       errors.push({control: 'Région', error: 'Une région doit être choisie.'});
     }
 
@@ -443,13 +518,15 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
   });
 
   protected readonly attributErrors = computed<SectionMessage[]>(() => {
-    this.herosFormValue();
-    const errors = this.controlErrors(['vigueur', 'agilite', 'esprit', 'aura']);
-    if (this.herosForm.errors?.['attrTooManyNegative']) {
-      errors.push({control: '', error: 'Un seul attribut peut descendre à -1.'});
-    }
-    if (this.herosForm.errors?.['attrSumExceeded']) {
-      errors.push({control: '', error: 'La somme des attributs ne doit pas dépasser 4.'});
+    const model = this.model();
+    const errors = this.rangeErrors([
+      ['vigueur', model.vigueur],
+      ['agilite', model.agilite],
+      ['esprit', model.esprit],
+      ['aura', model.aura],
+    ]);
+    for (const issue of attributsBudgetErrors(model)) {
+      errors.push({control: '', error: issue.message});
     }
 
     return errors;
@@ -459,19 +536,21 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       return [];
     }
 
-    const raw = this.herosFormValue();
-    const sum = Number(raw.vigueur ?? 0) + Number(raw.agilite ?? 0) + Number(raw.esprit ?? 0) + Number(raw.aura ?? 0);
+    const raw = this.model();
+    const sum = Number(raw.vigueur) + Number(raw.agilite) + Number(raw.esprit) + Number(raw.aura);
     return sum < 4 ? [{step: 'Attributs', warn: `Il manque ${4 - sum} point(s) dans les attributs.`}] : [];
   });
 
   protected readonly combatErrors = computed<SectionMessage[]>(() => {
-    this.herosFormValue();
-    const errors = this.controlErrors(['initiative', 'melee', 'tir', 'defense']);
-    if (this.herosForm.errors?.['aptTooManyNegative']) {
-      errors.push({control: '', error: 'Une seule aptitude de combat peut descendre à -1.'});
-    }
-    if (this.herosForm.errors?.['aptSumExceeded']) {
-      errors.push({control: '', error: `La somme des aptitudes de combat ne doit pas dépasser ${this.combatBudget()}.`});
+    const model = this.model();
+    const errors = this.rangeErrors([
+      ['initiative', model.initiative],
+      ['melee', model.melee],
+      ['tir', model.tir],
+      ['defense', model.defense],
+    ]);
+    for (const issue of combatBudgetErrors(model, this.combatBudget())) {
+      errors.push({control: '', error: issue.message});
     }
 
     return errors;
@@ -481,10 +560,9 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       return [];
     }
 
-    const raw = this.herosFormValue();
+    const raw = this.model();
     const budget = this.combatBudget();
-    const sum =
-      Number(raw.initiative ?? 0) + Number(raw.melee ?? 0) + Number(raw.tir ?? 0) + Number(raw.defense ?? 0);
+    const sum = Number(raw.initiative) + Number(raw.melee) + Number(raw.tir) + Number(raw.defense);
     if (sum >= budget) {
       return [];
     }
@@ -498,18 +576,21 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
   protected readonly statsWarns = computed(() => [...this.attributWarns(), ...this.combatWarns()]);
 
   protected readonly carriereErrors = computed<SectionMessage[]>(() => {
-    this.herosFormValue();
     const errors: SectionMessage[] = [];
-    for (const control of this.carrieres.controls) {
-      const definition = this.carriereFromId(Number(control.get('id')?.value ?? 0));
-      const valueErrors = control.get('value')?.errors ?? {};
-      for (const errorKey of Object.keys(valueErrors)) {
-        errors.push({control: definition?.carriere ?? '', error: HeroAdvancedCreateTools.translate(errorKey)});
+    for (const draft of this.selectedCarrieresDraft()) {
+      const issue = carriereRangeErrors(draft.value);
+      if (issue) {
+        const definition = this.carriereFromId(draft.id);
+        errors.push({control: definition?.carriere ?? '', error: issue.message});
       }
     }
 
-    if (this.herosForm.errors?.['carrSumExceeded']) {
-      errors.push({control: '', error: `La somme des carrières ne doit pas dépasser ${this.carriereBudget()}.`});
+    const budget = this.carriereBudget();
+    for (const issue of carrieresBudgetErrors(
+      this.selectedCarrieresDraft().map((draft) => draft.value),
+      budget,
+    )) {
+      errors.push({control: '', error: issue.message});
     }
 
     return errors;
@@ -652,10 +733,9 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
     () => this.displayResources().find((entry) => entry.key === 'heroisme')?.value ?? 5,
   );
 
-  protected readonly submitDisabled = computed(() => {
-    this.herosFormValue();
-    return this.pending() || this.loading() || this.herosForm.invalid || this.langueErrors().length > 0;
-  });
+  protected readonly submitDisabled = computed(
+    () => this.pending() || this.loading() || this.heroForm().invalid() || this.langueErrors().length > 0,
+  );
   protected readonly activateDisabled = computed(
     () => this.submitDisabled() || this.warnCount() > 0 || this.activeValue(),
   );
@@ -679,18 +759,6 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       }
     });
 
-    // E11 : Non-combattant fait varier les budgets combat et carrières.
-    effect(() => {
-      const combatBudget = this.combatBudget();
-      const carriereBudget = this.carriereBudget();
-      this.herosForm.setValidators([
-        attributsFormValidator,
-        combatFormValidatorFn(combatBudget),
-        carrieresFormValidatorFn(carriereBudget),
-      ]);
-      this.herosForm.updateValueAndValidity();
-    });
-
     effect(() => {
       if (!this.editMode()) {
         this.herosStateService.clearWarnings();
@@ -706,38 +774,35 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
     });
   }
 
-  protected get armes(): FormArray {
-    return this.herosForm.controls.armes as FormArray;
-  }
+  private rangeErrors(fields: ReadonlyArray<readonly [string, number]>): SectionMessage[] {
+    const errors: SectionMessage[] = [];
+    for (const [name, value] of fields) {
+      const issue = attributRangeErrors(value);
+      if (issue) {
+        errors.push({control: HeroAdvancedCreateTools.translate(name), error: issue.message});
+      }
+    }
 
-  protected get armures(): FormArray {
-    return this.herosForm.controls.armures as FormArray;
-  }
-
-  protected get langues(): FormArray {
-    return this.herosForm.controls.langues as FormArray;
-  }
-
-  protected get carrieres(): FormArray {
-    return this.herosForm.controls.carrieres as FormArray;
-  }
-
-  protected get traits(): FormArray {
-    return this.herosForm.controls.traits as FormArray;
+    return errors;
   }
 
   // --- Étape 1 : brouillon ---
 
+  protected onDraftSubmit(event: Event): void {
+    event.preventDefault();
+    this.startDraft();
+  }
+
   protected startDraft(): void {
-    if (this.creatingDraft() || this.draftForm.invalid) {
+    if (this.creatingDraft() || this.draftForm().invalid()) {
       return;
     }
 
     this.creatingDraft.set(true);
     this.herosService
       .createHerosAdvanced({
-        joueur: this.draftForm.controls.joueur.value,
-        nom: this.draftForm.controls.nom.value,
+        joueur: this.draftModel().joueur,
+        nom: this.draftModel().nom,
         type: 'H',
         active: false,
       })
@@ -756,6 +821,11 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
 
   protected override save(): void {
     this.submit(false);
+  }
+
+  protected onFormSubmit(event: Event): void {
+    event.preventDefault();
+    this.save();
   }
 
   protected confirmActivation(): void {
@@ -836,8 +906,8 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
   }
 
   private buildHero(): BolHerosModel {
-    const raw = this.herosForm.getRawValue();
-    const langues = (raw.langues as IdDraft[]).map((langue) => Number(langue.id));
+    const raw = this.model();
+    const langues = raw.langues.map((langue) => Number(langue.id));
 
     return {
       id: raw.id,
@@ -850,7 +920,7 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
         region_id: raw.region_id,
         joueur: raw.joueur || null,
         langues,
-        commentaire: raw.commentaire,
+        commentaire: raw.commentaire || null,
       },
       ressources: {
         vitalite: raw.vitalite,
@@ -873,7 +943,7 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
         esprit: raw.esprit,
         aura: raw.aura,
       },
-      traits: (raw.traits as AdvancedTraitDraft[]).map((trait) => ({
+      traits: raw.traits.map((trait) => ({
         id: trait.id ?? undefined,
         traitable_id: trait.traitable_id,
         type: trait.type,
@@ -881,36 +951,31 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
         region_id: trait.region_id,
         carriere: trait.carriere,
       })),
-      carrieres: (raw.carrieres as RankedDraft[]).map((carriere) => ({
+      carrieres: raw.carrieres.map((carriere) => ({
         carriere_id: Number(carriere.id),
         value: Number(carriere.value ?? 0),
       })),
       langues,
-      armes: (raw.armes as IdDraft[]).map((arme) => Number(arme.id)),
-      armures: (raw.armures as IdDraft[]).map((armure) => Number(armure.id)),
+      armes: raw.armes.map((arme) => Number(arme.id)),
+      armures: raw.armures.map((armure) => Number(armure.id)),
     };
   }
 
   protected hydrateForm(hero: BolHerosModel): void {
-    this.resetForm();
+    const armes = (hero.armes ?? []).map((arme) => ({id: Number(typeof arme === 'number' ? arme : arme.arme_id)}));
+    const armures = (hero.armures ?? []).map((armure) => ({
+      id: Number(typeof armure === 'number' ? armure : armure.armure_id),
+    }));
+    const langues = (hero.langues ?? hero.origines.langues ?? []).map((langue) => ({
+      id: Number(typeof langue === 'number' ? langue : langue.langue_id),
+    }));
+    const carrieres = (hero.carrieres ?? []).map((carriere) => ({
+      id: Number(carriere.carriere_id),
+      value: Number(carriere.value ?? 0),
+    }));
+    const traits = (hero.traits ?? []).map((trait) => this.toTraitDraft(trait));
 
-    for (const arme of hero.armes ?? []) {
-      this.pushIdGroup(this.armes, typeof arme === 'number' ? arme : arme.arme_id, false);
-    }
-    for (const armure of hero.armures ?? []) {
-      this.pushIdGroup(this.armures, typeof armure === 'number' ? armure : armure.armure_id, false);
-    }
-    for (const langue of hero.langues ?? hero.origines.langues ?? []) {
-      this.pushIdGroup(this.langues, typeof langue === 'number' ? langue : langue.langue_id, false);
-    }
-    for (const carriere of hero.carrieres ?? []) {
-      this.pushCarriereGroup(Number(carriere.carriere_id), Number(carriere.value ?? 0), false);
-    }
-    for (const trait of hero.traits ?? []) {
-      this.pushTraitGroup(trait, false);
-    }
-
-    this.herosForm.patchValue({
+    this.model.set({
       id: hero.id,
       user_id: hero.user_id,
       active: hero.active,
@@ -918,7 +983,7 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       nom: hero.origines.nom ?? '',
       joueur: hero.origines.joueur ?? '',
       region_id: hero.origines.region_id ? Number(hero.origines.region_id) : null,
-      commentaire: hero.origines.commentaire ?? null,
+      commentaire: hero.origines.commentaire ?? '',
       avatar: hero.origines.avatar ?? null,
       vigueur: Number(hero.attributs.vigueur),
       agilite: Number(hero.attributs.agilite),
@@ -937,46 +1002,16 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       creation: Number(hero.ressources.creation ?? 0),
       experience: Number(hero.ressources.experience ?? 0),
       vilenie: Number(hero.ressources.vilenie ?? 0),
+      armes,
+      armures,
+      langues,
+      carrieres,
+      traits,
     });
-    this.syncArrays(this.armes, this.armures, this.langues, this.carrieres, this.traits);
   }
 
   protected resetForm(): void {
-    this.herosForm.reset(
-      {
-        id: null,
-        user_id: null,
-        active: false,
-        type: 'H',
-        nom: '',
-        joueur: '',
-        region_id: null,
-        commentaire: null,
-        avatar: null,
-        vigueur: 0,
-        agilite: 0,
-        esprit: 0,
-        aura: 0,
-        initiative: 0,
-        melee: 0,
-        tir: 0,
-        defense: 0,
-        vitalite: 10,
-        heroisme: 5,
-        foi: 0,
-        pouvoir: 0,
-        creation: 0,
-        experience: 0,
-        vilenie: 0,
-      },
-      {emitEvent: false},
-    );
-    this.armes.clear({emitEvent: false});
-    this.armures.clear({emitEvent: false});
-    this.langues.clear({emitEvent: false});
-    this.carrieres.clear({emitEvent: false});
-    this.traits.clear({emitEvent: false});
-    this.syncArrays(this.armes, this.armures, this.langues, this.carrieres, this.traits);
+    this.model.set(heroAdvancedFormDefaults());
   }
 
   // --- Origines (avatar et région persistés immédiatement) ---
@@ -990,8 +1025,8 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
 
     ref.afterClosed().pipe(take(1)).subscribe((avatar: string | null) => {
       if (avatar) {
-        this.herosForm.controls.avatar.setValue(avatar);
-        this.herosForm.controls.avatar.markAsDirty();
+        this.model.update((current) => ({...current, avatar}));
+        this.heroForm().markAsDirty();
         this.persistOrigines();
       }
     });
@@ -1002,8 +1037,8 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       width: 'min(1280px, 96vw)',
       maxWidth: '96vw',
       data: {
-        id_region: this.herosForm.controls.region_id.value ?? undefined,
-        nom: this.herosForm.controls.nom.value,
+        id_region: this.model().region_id ?? undefined,
+        nom: this.model().nom,
       },
     });
 
@@ -1012,19 +1047,19 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
         return;
       }
 
-      this.herosForm.controls.region_id.setValue(Number(data.region.id));
-      this.herosForm.controls.region_id.markAsDirty();
-      if (data.nom) {
-        this.herosForm.controls.nom.setValue(data.nom);
-        this.herosForm.controls.nom.markAsDirty();
-      }
+      this.model.update((current) => ({
+        ...current,
+        region_id: Number(data.region.id),
+        nom: data.nom || current.nom,
+      }));
+      this.heroForm().markAsDirty();
       this.persistOrigines();
     });
   }
 
   protected clearRegion(): void {
-    this.herosForm.controls.region_id.setValue(null);
-    this.herosForm.controls.region_id.markAsDirty();
+    this.model.update((current) => ({...current, region_id: null}));
+    this.heroForm().markAsDirty();
   }
 
   private persistOrigines(): void {
@@ -1033,14 +1068,14 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       return;
     }
 
-    const raw = this.herosForm.getRawValue();
+    const raw = this.model();
     const origines: BolHerosOrigines = {
       avatar: raw.avatar,
       nom: raw.nom || null,
       joueur: raw.joueur || null,
       region_id: raw.region_id,
-      commentaire: raw.commentaire,
-      langues: (raw.langues as IdDraft[]).map((langue) => Number(langue.id)),
+      commentaire: raw.commentaire || null,
+      langues: raw.langues.map((langue) => Number(langue.id)),
     };
 
     this.herosService.updateOriginesHeros(heroId, origines).subscribe({
@@ -1082,7 +1117,7 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
   private createTrait(trait: BolHerosTraitsModel): void {
     this.persistCreate(
       (heroId) => this.herosService.createTrait(heroId, trait),
-      (created) => this.pushTraitGroup({...trait, ...created}),
+      (created) => this.pushTraitEntry({...trait, ...created}),
       "L'ajout du trait a échoué.",
     );
   }
@@ -1095,13 +1130,13 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
 
     this.persistDelete('Supprimer le trait', 'Voulez-vous supprimer ce trait ?', (heroId) =>
       this.herosService.deleteTrait(heroId, entry.id),
-    ).subscribe(() => this.removeDraftById(this.traits, 'id', entry.id));
+    ).subscribe(() => this.removeEntryById('traits', entry.id));
   }
 
   protected addCarriereEntry(id: number): void {
     this.persistCreate(
       (heroId) => this.herosService.createCarriere(heroId, {carriere_id: id, value: 0}),
-      () => this.pushCarriereGroup(id, 0),
+      () => this.pushCarriereEntry(id, 0),
       "L'ajout de la carrière a échoué.",
     );
   }
@@ -1114,13 +1149,13 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
 
     this.persistDelete('Supprimer la carrière', 'Voulez-vous supprimer cette carrière ?', (heroId) =>
       this.herosService.deleteCarriere(heroId, entry.id),
-    ).subscribe(() => this.removeDraftById(this.carrieres, 'id', entry.id));
+    ).subscribe(() => this.removeEntryById('carrieres', entry.id));
   }
 
   protected addArmeEntry(id: number): void {
     this.persistCreate(
       (heroId) => this.herosService.createArme(heroId, {arme_id: id}),
-      () => this.pushIdGroup(this.armes, id),
+      () => this.pushIdEntry('armes', id),
       "L'ajout de l'arme a échoué.",
     );
   }
@@ -1133,13 +1168,13 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
 
     this.persistDelete('Supprimer l’arme', 'Voulez-vous supprimer cette arme ?', (heroId) =>
       this.herosService.deleteArme(heroId, entry.id),
-    ).subscribe(() => this.removeDraftById(this.armes, 'id', entry.id));
+    ).subscribe(() => this.removeEntryById('armes', entry.id));
   }
 
   protected addArmureEntry(id: number): void {
     this.persistCreate(
       (heroId) => this.herosService.createArmure(heroId, {armure_id: id}),
-      () => this.pushIdGroup(this.armures, id),
+      () => this.pushIdEntry('armures', id),
       "L'ajout de l'armure a échoué.",
     );
   }
@@ -1152,13 +1187,13 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
 
     this.persistDelete('Supprimer l’armure', 'Voulez-vous supprimer cette armure ?', (heroId) =>
       this.herosService.deleteArmure(heroId, entry.id),
-    ).subscribe(() => this.removeDraftById(this.armures, 'id', entry.id));
+    ).subscribe(() => this.removeEntryById('armures', entry.id));
   }
 
   protected addLangueEntry(id: number): void {
     this.persistCreate(
       (heroId) => this.herosService.createLangue(heroId, {langue_id: id}),
-      () => this.pushIdGroup(this.langues, id),
+      () => this.pushIdEntry('langues', id),
       "L'ajout de la langue a échoué.",
     );
   }
@@ -1171,7 +1206,7 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
 
     this.persistDelete('Supprimer la langue', 'Voulez-vous supprimer cette langue ?', (heroId) =>
       this.herosService.deleteLangue(heroId, entry.id),
-    ).subscribe(() => this.removeDraftById(this.langues, 'id', entry.id));
+    ).subscribe(() => this.removeEntryById('langues', entry.id));
   }
 
   /** Crée une sous-ressource côté API puis reflète l'ajout dans le formulaire. */
@@ -1225,61 +1260,39 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
     });
   }
 
-  private pushIdGroup(array: FormArray, id: number, emitEvent = true): void {
-    array.push(
-      this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}),
-      {emitEvent},
-    );
+  private pushIdEntry(key: 'armes' | 'armures' | 'langues', id: number): void {
+    this.model.update((current) => ({...current, [key]: [...current[key], {id: Number(id)}]}));
   }
 
-  private pushCarriereGroup(id: number, value: number, emitEvent = true): void {
-    this.carrieres.push(
-      this.formBuilder.group({
-        id: this.formBuilder.control(Number(id), Validators.required),
-        value: this.formBuilder.control(Number(value), carriereValidator),
-      }),
-      {emitEvent},
-    );
+  private pushCarriereEntry(id: number, value: number): void {
+    this.model.update((current) => ({
+      ...current,
+      carrieres: [...current.carrieres, {id: Number(id), value: Number(value)}],
+    }));
   }
 
-  private pushTraitGroup(trait: BolHerosTraitsModel, emitEvent = true): void {
-    this.traits.push(
-      this.formBuilder.group({
-        id: this.formBuilder.control(trait.id ?? null),
-        traitable_id: this.formBuilder.control(Number(trait.traitable_id), Validators.required),
-        type: this.formBuilder.control<'A' | 'D'>(trait.type, Validators.required),
-        detail: this.formBuilder.control(trait.detail ?? null),
-        region_id: this.formBuilder.control(trait.region_id ?? null),
-        carriere: this.formBuilder.control(Boolean(trait.carriere)),
-      }),
-      {emitEvent},
-    );
+  private pushTraitEntry(trait: BolHerosTraitsModel): void {
+    this.model.update((current) => ({...current, traits: [...current.traits, this.toTraitDraft(trait)]}));
   }
 
-  private removeDraftById(array: FormArray, key: string, id: number): void {
-    const index = array.controls.findIndex((control) => Number(control.get(key)?.value) === Number(id));
-    if (index >= 0) {
-      array.removeAt(index);
-    }
+  private toTraitDraft(trait: BolHerosTraitsModel): AdvancedTraitDraft {
+    return {
+      id: trait.id ?? null,
+      traitable_id: Number(trait.traitable_id),
+      type: trait.type,
+      detail: trait.detail ?? null,
+      region_id: trait.region_id ?? null,
+      carriere: Boolean(trait.carriere),
+    };
   }
 
-  private controlErrors(keys: readonly string[]): SectionMessage[] {
-    const errors: SectionMessage[] = [];
-    for (const key of keys) {
-      const controlErrors = this.herosForm.get(key)?.errors;
-      if (!controlErrors) {
-        continue;
-      }
-
-      for (const errorKey of Object.keys(controlErrors)) {
-        errors.push({
-          control: HeroAdvancedCreateTools.translate(key),
-          error: HeroAdvancedCreateTools.translate(errorKey),
-        });
-      }
-    }
-
-    return errors;
+  private removeEntryById(key: 'armes' | 'armures' | 'langues' | 'carrieres' | 'traits', id: number): void {
+    this.model.update((current) => ({
+      ...current,
+      [key]: (current[key] as ReadonlyArray<{id: number | null}>).filter(
+        (entry) => Number(entry.id) !== Number(id),
+      ),
+    }));
   }
 
   private carriereFromId(id: number): BolCarriereModel | null {

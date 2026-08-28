@@ -2,7 +2,7 @@
   Général
 </p>
 
-<div class="grid gap-4 md:grid-cols-[140px_minmax(0,1fr)]" [formGroup]="form()">
+<div class="grid gap-4 md:grid-cols-[140px_minmax(0,1fr)]">
   <div class="dfp-avatar" (click)="avatarClick.emit()">
     @if (avatarPreview()) {
       <img
@@ -25,12 +25,12 @@
   <div class="grid gap-3 md:grid-cols-2">
     <mat-form-field subscriptSizing="dynamic">
       <mat-label>Nom du démon</mat-label>
-      <input matInput id="nom" formControlName="nom" />
+      <input matInput id="nom" [formField]="form().nom" />
     </mat-form-field>
 
     <mat-form-field subscriptSizing="dynamic">
       <mat-label>Catégorie</mat-label>
-      <mat-select inputId="id_categorie" formControlName="id_categorie" [compareWith]="compareById()">
+      <mat-select inputId="id_categorie" [formField]="form().id_categorie" [compareWith]="compareById()">
         @for (categorie of categories() ?? []; track categorie.id) {
           <mat-option [value]="categorie.id">{{ categorie.categorie }}</mat-option>
         }
@@ -39,7 +39,7 @@
 
     <mat-form-field subscriptSizing="dynamic">
       <mat-label>Dégâts</mat-label>
-      <input matInput id="degats" formControlName="degats" />
+      <input matInput id="degats" [formField]="form().degats" />
     </mat-form-field>
 
     <div class="md:col-span-2">
@@ -48,7 +48,7 @@
         <textarea
           matInput
           id="commentaire"
-          formControlName="commentaire"
+          [formField]="form().commentaire"
           rows="2"
           class="resize-none"
         ></textarea>

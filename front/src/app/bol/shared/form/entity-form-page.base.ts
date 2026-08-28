@@ -1,7 +1,7 @@
 import {Location} from '@angular/common';
-import {Signal, computed, effect, inject, signal} from '@angular/core';
+import {Signal, WritableSignal, computed, effect, inject, signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Field, FieldTree} from '@angular/forms/signals';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Observable, take} from 'rxjs';
 import {finalize} from 'rxjs/operators';
@@ -31,11 +31,12 @@ export interface EntityFormLabels {
  * chargement par paramètre de route, cycle de sauvegarde, navigation retour,
  * garde "modifications non enregistrées", raccourci Ctrl+S et sélection d'avatar.
  *
- * La sous-classe fournit le formulaire, les libellés et les opérations spécifiques
- * (chargement, hydratation, payload, création/mise à jour).
+ * La sous-classe fournit le formulaire (Signal Forms), les libellés et les opérations
+ * spécifiques (chargement, hydratation, payload, création/mise à jour).
  */
-export abstract class BolEntityFormPageBase<T> implements HasPendingChanges {
-  protected readonly formBuilder = inject(FormBuilder);
+export abstract class BolEntityFormPageBase<TEntity, TFormModel extends {avatar: string | null}>
+  implements HasPendingChanges
+{
   protected readonly route = inject(ActivatedRoute);
   protected readonly location = inject(Location);
   protected readonly router = inject(Router);
@@ -72,15 +73,17 @@ export abstract class BolEntityFormPageBase<T> implements HasPendingChanges {
   protected hydratedReferenceId: number | null = null;
 
   protected abstract readonly labels: EntityFormLabels;
-  protected abstract readonly entityForm: FormGroup;
-  protected abstract readonly formDirty: Signal<boolean>;
+  protected abstract readonly model: WritableSignal<TFormModel>;
+  protected abstract readonly entityForm: FieldTree<TFormModel>;
 
-  protected abstract loadEntity(id: string): Observable<T>;
-  protected abstract createEntity(payload: Record<string, unknown>): Observable<T>;
-  protected abstract updateEntity(payload: Record<string, unknown>): Observable<T>;
+  protected abstract loadEntity(id: string): Observable<TEntity>;
+  protected abstract createEntity(payload: Record<string, unknown>): Observable<TEntity>;
+  protected abstract updateEntity(payload: Record<string, unknown>): Observable<TEntity>;
   protected abstract buildPayload(): Record<string, unknown>;
-  protected abstract hydrateForm(entity: T): void;
+  protected abstract hydrateForm(entity: TEntity): void;
   protected abstract resetForm(): void;
+
+  protected readonly formDirty = computed(() => this.entityForm().dirty());
 
   constructor() {
     effect((onCleanup) => {
@@ -112,13 +115,13 @@ export abstract class BolEntityFormPageBase<T> implements HasPendingChanges {
   }
 
   /** Cycle de sauvegarde commun : gardes, appel create/update selon le mode, erreurs. */
-  protected performSave(payload: Record<string, unknown>, onSaved: (entity: T) => void): void {
+  protected performSave(payload: Record<string, unknown>, onSaved: (entity: TEntity) => void): void {
     if (this.pending() || this.loading()) {
       return;
     }
 
-    if (this.entityForm.invalid) {
-      this.entityForm.markAllAsTouched();
+    if (this.entityForm().invalid()) {
+      this.entityForm().markAsTouched();
       return;
     }
 
@@ -131,7 +134,7 @@ export abstract class BolEntityFormPageBase<T> implements HasPendingChanges {
       .pipe(finalize(() => this.pending.set(false)))
       .subscribe({
         next: (entity) => {
-          this.entityForm.markAsPristine();
+          this.entityForm().reset();
           onSaved(entity);
         },
         error: (error: unknown) => {
@@ -151,9 +154,9 @@ export abstract class BolEntityFormPageBase<T> implements HasPendingChanges {
     this.save();
   }
 
-  protected onError(controlName: string): boolean {
-    const control = this.entityForm.get(controlName);
-    return Boolean(control && control.invalid && (control.dirty || control.touched));
+  protected fieldError(field: Field<unknown>): boolean {
+    const state = field();
+    return state.invalid() && (state.dirty() || state.touched());
   }
 
   canLeave(): boolean | Observable<boolean> {
@@ -178,39 +181,10 @@ export abstract class BolEntityFormPageBase<T> implements HasPendingChanges {
 
     ref.afterClosed().pipe(take(1)).subscribe((avatar: string | null) => {
       if (avatar) {
-        const control = this.entityForm.get('avatar');
-        control?.setValue(avatar);
-        control?.markAsDirty();
+        this.entityForm.avatar().value.set(avatar);
+        this.entityForm.avatar().markAsDirty();
       }
     });
-  }
-
-  /** Ajoute une entrée {id} à un FormArray de sélection. */
-  protected addIdEntry(array: FormArray, id: number): void {
-    array.push(this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}));
-    array.markAsDirty();
-  }
-
-  protected removeItem(items: FormArray, index: number): void {
-    items.removeAt(index);
-    items.markAsDirty();
-  }
-
-  /** Hydratation : pousse des groupes {id} sans émettre d'événements. */
-  protected pushIdGroups(array: FormArray, ids: readonly (number | string)[]): void {
-    for (const id of ids) {
-      array.push(
-        this.formBuilder.group({id: this.formBuilder.control(Number(id), Validators.required)}),
-        {emitEvent: false},
-      );
-    }
-  }
-
-  /** Resynchronise les FormArray de sélection après un reset/hydratation silencieux. */
-  protected syncArrays(...arrays: FormArray[]): void {
-    for (const array of arrays) {
-      array.updateValueAndValidity({emitEvent: true});
-    }
   }
 
   /**
@@ -221,7 +195,7 @@ export abstract class BolEntityFormPageBase<T> implements HasPendingChanges {
   protected setupReferenceDefaults<R>(
     selected: Signal<R | undefined>,
     referenceId: (reference: R) => number,
-    patch: (reference: R) => Record<string, unknown>,
+    patch: (reference: R) => Partial<TFormModel>,
   ): void {
     effect(() => {
       const reference = selected();
@@ -234,7 +208,7 @@ export abstract class BolEntityFormPageBase<T> implements HasPendingChanges {
         return;
       }
 
-      this.entityForm.patchValue(patch(reference), {emitEvent: false});
+      this.model.update((current) => ({...current, ...patch(reference)}));
     });
   }
 

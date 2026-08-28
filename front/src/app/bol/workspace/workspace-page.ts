@@ -4,6 +4,7 @@ import {AuthService} from '../../core/auth/auth.service';
 import {BolCreaturesService} from '../services/bol-creatures.service';
 import {BolDemonsService} from '../services/bol-demons.service';
 import {BolCatalogService} from '../services/bol-catalog.service';
+import {BolFightSessionService} from '../services/bol-fight-session.service';
 import {BolHerosService} from '../services/bol-heros.service';
 import {BolPnjService} from '../services/bol-pnj.service';
 import {BolScenarioService} from '../services/bol-scenario.service';
@@ -30,6 +31,7 @@ export class WorkspacePageComponent {
   private readonly pnjService = inject(BolPnjService);
   private readonly catalogService = inject(BolCatalogService);
   private readonly bolScenarioService = inject(BolScenarioService);
+  private readonly fightSessionService = inject(BolFightSessionService);
   private readonly creatures = toSignal(this.bolCreaturesService.creatures(), { initialValue: [] });
   private readonly demons = toSignal(this.bolDemonsService.demons(), { initialValue: [] });
   private readonly heroes = toSignal(this.bolHerosService.heroes(), { initialValue: [] });
@@ -37,6 +39,7 @@ export class WorkspacePageComponent {
   private readonly armes = toSignal(this.catalogService.armes(), { initialValue: [] });
   private readonly armures = toSignal(this.catalogService.armures(), { initialValue: [] });
   private readonly scenariosCount = toSignal(this.bolScenarioService.scenarios(), {initialValue: []});
+  private readonly fightSessions = toSignal(this.fightSessionService.fightSessions(), {initialValue: []});
 
   protected readonly userName = computed(() => this.authService.user()?.name ?? 'Utilisateur');
   protected readonly metrics = computed<readonly WorkspaceMetric[]>(() => [
@@ -79,6 +82,14 @@ export class WorkspacePageComponent {
       icon: 'work',
       color: 'violet',
       link: '/intendance',
+    },
+    {
+      label: 'Combats',
+      value: String(this.fightSessions().length),
+      detail: 'Combats lancés, à reprendre pour continuer le suivi d’initiative et des PV.',
+      icon: 'shield',
+      color: 'rose',
+      link: '/library/combats',
     },
   ]);
   protected logout(): void {

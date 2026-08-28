@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, computed, input} from '@angular/core';
-import {FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {Field, FieldTree, FormField} from '@angular/forms/signals';
 import {DwValueStepperComponent} from '../../../shared/value-stepper/value-stepper';
 
 export interface StatCell {
@@ -17,13 +17,13 @@ export interface StatGroup {
 
 @Component({
   selector: 'bol-stats-grid',
-  imports: [ReactiveFormsModule, DwValueStepperComponent],
+  imports: [FormField, DwValueStepperComponent],
   templateUrl: './stats-grid.component.html',
   styleUrl: './stats-grid.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatsGridComponent {
-  readonly form = input.required<FormGroup>();
+  readonly form = input.required<FieldTree<Record<string, number>>>();
   readonly groups = input.required<readonly StatGroup[]>();
 
   // Largeur de chaque bloc proportionnelle à son nombre de colonnes de cellules
@@ -31,4 +31,8 @@ export class StatsGridComponent {
   protected readonly blocksTemplate = computed(() =>
     this.groups().map((group) => `${group.columns}fr`).join(' '),
   );
+
+  protected fieldFor(control: string): Field<number> {
+    return (this.form() as unknown as Record<string, Field<number>>)[control];
+  }
 }

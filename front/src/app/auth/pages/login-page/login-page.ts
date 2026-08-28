@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {NgOptimizedImage} from '@angular/common';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {email, form, FormField, minLength, required} from '@angular/forms/signals';
 import {Router, RouterLink} from '@angular/router';
 import {finalize} from 'rxjs/operators';
 import {extractApiErrors} from '../../../core/api-error.utils';
@@ -24,7 +24,7 @@ import {
 @Component({
   selector: 'app-login-page',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     RouterLink,
     NgOptimizedImage,
     MatFormFieldModule,
@@ -46,40 +46,43 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginPageComponent {
-  private readonly cdr = inject(ChangeDetectorRef);
-  private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
-  protected pending = false;
-  protected messages: string[] = [];
-  protected readonly loginForm: FormGroup = this.formBuilder.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
+  protected readonly pending = signal(false);
+  protected readonly messages = signal<string[]>([]);
+
+  protected readonly loginModel = signal({email: '', password: ''});
+  protected readonly loginForm = form(this.loginModel, (fieldPath) => {
+    required(fieldPath.email, {message: 'Adresse mail requise'});
+    email(fieldPath.email, {message: 'Adresse mail non valide'});
+    required(fieldPath.password, {message: 'Mot de passe requis'});
+    minLength(fieldPath.password, 8, {message: 'Minimum 8 caractères'});
   });
 
+  protected onSubmit(event: Event): void {
+    event.preventDefault();
+    this.login();
+  }
+
   protected login(): void {
-    if (this.pending) {
+    if (this.pending()) {
       return;
     }
 
-    this.messages = [];
+    this.messages.set([]);
 
-    if (this.loginForm.invalid) {
-      Object.values(this.loginForm.controls).forEach((control) => control.markAsDirty());
-      this.messages = ['Veuillez corriger les erreurs du formulaire.'];
+    if (this.loginForm().invalid()) {
+      this.loginForm().markAsTouched();
+      this.messages.set(['Veuillez corriger les erreurs du formulaire.']);
       return;
     }
 
-    this.pending = true;
+    this.pending.set(true);
+    const credentials = this.loginModel();
     this.authService
-      .loginWithCredentials(this.loginForm.getRawValue() as { email: string; password: string })
-      .pipe(
-        finalize(() => {
-          this.pending = false;
-          this.cdr.markForCheck();
-        }),
-      )
+      .loginWithCredentials(credentials)
+      .pipe(finalize(() => this.pending.set(false)))
       .subscribe({
         next: () => {
           void this.router.navigateByUrl('/');
@@ -91,28 +94,24 @@ export class LoginPageComponent {
               : 0;
 
           if (status === 403) {
-            const email = this.loginForm.controls['email']?.getRawValue();
-            this.cdr.markForCheck();
             void this.router.navigate(['/resend', 'forbidden'], {
-              queryParams: { email },
+              queryParams: { email: credentials.email },
             });
             return;
           }
 
           if (status === 401) {
-            this.messages = ['Identifiants invalides.'];
-            this.cdr.markForCheck();
+            this.messages.set(['Identifiants invalides.']);
             return;
           }
 
-          this.messages = extractApiErrors(error, 'Connexion impossible.');
-          this.cdr.markForCheck();
+          this.messages.set(extractApiErrors(error, 'Connexion impossible.'));
         },
       });
   }
 
   protected loginWithGoogle(): void {
-    this.messages = [];
+    this.messages.set([]);
     this.authService.loginWithGoogle();
   }
 }

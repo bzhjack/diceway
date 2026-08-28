@@ -1,0 +1,143 @@
+<div class="atd-shell">
+  <div class="atd-header">
+    <h2 mat-dialog-title class="atd-title">Jet d'attaque</h2>
+    <button type="button" class="atd-close" aria-label="Fermer" (click)="cancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="atd-versus">
+    <div class="atd-versus-side">
+      <img [src]="data.attackerAvatar" [alt]="data.attackerNom" class="atd-versus-avatar" />
+      <span class="atd-versus-name">{{ data.attackerNom }}</span>
+    </div>
+    <span class="atd-versus-vs">VS</span>
+    <div class="atd-versus-side atd-versus-side--target">
+      <img [src]="data.targetAvatar" [alt]="data.targetNom" class="atd-versus-avatar" />
+      <span class="atd-versus-name">{{ data.targetNom }}</span>
+    </div>
+  </div>
+
+  @if (attackDice()) {
+    <div
+      class="atd-summary"
+      [class.atd-summary--reussite]="attackSuccess()"
+      [class.atd-summary--echec]="!attackSuccess()"
+    >
+      <div class="atd-summary-top">
+        <div class="atd-summary-main">
+          <span class="atd-summary-total">{{ attackTotal() }}</span>
+          <span class="atd-summary-badge">
+            <mat-icon>{{ attackSuccess() ? 'check_circle' : 'cancel' }}</mat-icon>
+            {{ attackSuccess() ? 'Touché' : 'Manqué' }}
+          </span>
+        </div>
+        <button type="button" class="atd-summary-toggle" (click)="toggleAttackDetail()">
+          {{ attackDetailVisible() ? 'Réduire' : 'Détail' }}
+          <mat-icon>{{ attackDetailVisible() ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </button>
+      </div>
+      <p class="atd-summary-formula">{{ attackFormula() }}</p>
+    </div>
+  } @else {
+    <div class="atd-result atd-result--idle">
+      <p>Lancez les dés pour tenter de toucher {{ data.targetNom }}.</p>
+    </div>
+  }
+
+  <app-dice-box-host class="atd-box" [scale]="12" />
+
+  @if (attackDetailVisible()) {
+    @if (data.attacker.attaque === null) {
+      <div class="atd-toggle">
+        <button type="button" [class.active]="!useTir()" (click)="toggleUseTir(false)">Mêlée</button>
+        <button type="button" [class.active]="useTir()" (click)="toggleUseTir(true)">Tir</button>
+      </div>
+    }
+
+    <div class="atd-fields">
+      <label class="atd-field">
+        <span>Bonus attaquant</span>
+        <input type="number" [(ngModel)]="attackerBonus" />
+      </label>
+      <label class="atd-field">
+        <span>Défense cible</span>
+        <input type="number" [(ngModel)]="targetDefense" />
+      </label>
+      <label class="atd-field">
+        <span>Modificateur</span>
+        <input type="number" [(ngModel)]="modifier" />
+      </label>
+    </div>
+
+    <button type="button" class="atd-reroll" [disabled]="rollingAttack()" (click)="rollAttack()">
+      <mat-icon>refresh</mat-icon>
+      {{ attackDice() ? 'Relancer' : 'Lancer 2d6' }}
+    </button>
+  }
+
+  @if (attackSuccess()) {
+    <div class="atd-damage">
+      <p class="atd-damage-title">
+        <mat-icon>local_fire_department</mat-icon>
+        Dégâts
+      </p>
+
+      @if (damageDice()) {
+        <div class="atd-summary atd-summary--damage">
+          <div class="atd-summary-top">
+            <div class="atd-summary-main">
+              <span class="atd-summary-total atd-summary-total--damage">{{ finalDamage() }}</span>
+              <span class="atd-summary-label">Dégâts infligés</span>
+            </div>
+            <button type="button" class="atd-summary-toggle atd-summary-toggle--damage" (click)="toggleDamageDetail()">
+              {{ damageDetailVisible() ? 'Réduire' : 'Détail' }}
+              <mat-icon>{{ damageDetailVisible() ? 'expand_less' : 'expand_more' }}</mat-icon>
+            </button>
+          </div>
+          <p class="atd-summary-formula">{{ damageFormula() }}</p>
+        </div>
+      }
+
+      @if (damageDetailVisible()) {
+        <div class="atd-toggle atd-toggle--dice">
+          @for (kind of diceKinds; track kind) {
+            <button type="button" [class.active]="diceKind() === kind" (click)="diceKind.set(kind)">
+              {{ diceLabel(kind) }}
+            </button>
+          }
+        </div>
+
+        <div class="atd-fields">
+          <label class="atd-field">
+            <span>Bonus vigueur</span>
+            <input type="number" [(ngModel)]="vigueurBonus" />
+          </label>
+          <label class="atd-field">
+            <span>Protection cible</span>
+            <input type="number" [(ngModel)]="protection" />
+          </label>
+        </div>
+
+        <button type="button" class="atd-reroll" [disabled]="rollingDamage()" (click)="rollDamage()">
+          <mat-icon>refresh</mat-icon>
+          {{ damageDice() ? 'Relancer les dégâts' : 'Lancer les dégâts' }}
+        </button>
+      }
+    </div>
+  }
+
+  <div class="atd-actions">
+    <button type="button" class="atd-btn atd-btn--ghost" (click)="cancel()">{{ attackDice() ? 'Fermer' : 'Annuler' }}</button>
+    @if (attackSuccess()) {
+      <button
+        type="button"
+        class="atd-btn atd-btn--primary atd-btn--reussite"
+        [disabled]="damageDice() === null"
+        (click)="applyDamage()"
+      >
+        Appliquer les dégâts
+      </button>
+    }
+  </div>
+</div>

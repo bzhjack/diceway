@@ -8,6 +8,8 @@ export interface BolFightSessionModel {
   user_id?: string | null;
   titre: string | null;
   statut: string;
+  /** Ordre d'initiative réordonné manuellement (glisser-déposer du ruban) — clés `PlayToken.key`, dans l'ordre voulu. */
+  ordre_manuel?: string[] | null;
   heros?: BolFightSessionHerosModel[];
   creatures?: BolFightSessionCreatureModel[];
   demons?: BolFightSessionDemonModel[];
@@ -20,6 +22,7 @@ export interface BolFightSessionHerosModel {
   heros_id: string;
   camp: CombatCamp;
   initiative_resultat: InitiativeResultat | null;
+  vitalite_courante: number | null;
   heros?: {
     id: string | null;
     origines: {nom: string | null; avatar: string | null; joueur: string | null};
@@ -49,6 +52,8 @@ export interface BolFightSessionCreatureModel {
   esprit: number;
   vitalite_max: number;
   vitalite_courante: number;
+  /** PV courants par instance du lot (qty > 1) — un élément par exemplaire, chacun indépendant. */
+  vitalite_instances: number[] | null;
   attaque: number;
   defense: number;
   degats: string | null;
@@ -81,6 +86,8 @@ export interface BolFightSessionDemonModel {
   defense: number;
   vitalite_max: number;
   vitalite_courante: number;
+  /** PV courants par instance du lot (qty > 1) — un élément par exemplaire, chacun indépendant. */
+  vitalite_instances: number[] | null;
   degats: string | null;
   pouvoirs: BolFightSessionPouvoirModel[] | null;
 }
@@ -118,4 +125,12 @@ export interface BolFightSessionCreatePayload {
   pnjs: {pnjId: string; camp: CombatCamp}[];
   creatures: {creatureId: string; camp: CombatCamp; qty: number}[];
   demons: {demonId: string; camp: CombatCamp; qty: number}[];
+}
+
+/** Payload d'ajout d'un seul combattant à une session déjà lancée. */
+export interface BolFightSessionAddCombatantPayload {
+  kind: 'hero' | 'pnj' | 'creature' | 'demon';
+  sourceId: string;
+  camp: CombatCamp;
+  qty?: number;
 }

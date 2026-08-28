@@ -57,7 +57,9 @@ export class CombatantCardComponent {
         panelClass: 'ird-panel',
         data: {
           heroNom: this.entry().nom,
-          modifierSum: stats.esprit + stats.initiative + this.modifierTotal(),
+          esprit: stats.esprit,
+          initiative: stats.initiative,
+          modifierTotal: this.modifierTotal(),
         },
       })
       .afterClosed()

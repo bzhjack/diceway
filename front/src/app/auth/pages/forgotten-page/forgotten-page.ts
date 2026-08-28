@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {NgOptimizedImage} from '@angular/common';
-import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {email, form, FormField, required} from '@angular/forms/signals';
 import {Router, RouterLink} from '@angular/router';
 import {extractApiErrors} from '../../../core/api-error.utils';
 import {AuthService} from '../../../core/auth/auth.service';
@@ -23,7 +23,7 @@ import {
 @Component({
   selector: 'app-forgotten-page',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     RouterLink,
     NgOptimizedImage,
     MatFormFieldModule,
@@ -45,38 +45,43 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ForgottenPageComponent {
-  private readonly cdr = inject(ChangeDetectorRef);
-  private readonly formBuilder = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
-  protected pending = false;
-  protected messages: string[] = [];
-  protected readonly forgotForm = this.formBuilder.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
+  protected readonly pending = signal(false);
+  protected readonly messages = signal<string[]>([]);
+
+  protected readonly forgotModel = signal({email: ''});
+  protected readonly forgotForm = form(this.forgotModel, (fieldPath) => {
+    required(fieldPath.email, {message: 'Adresse mail requise'});
+    email(fieldPath.email, {message: 'Adresse mail non valide'});
   });
 
+  protected onSubmit(event: Event): void {
+    event.preventDefault();
+    this.send();
+  }
+
   protected send(): void {
-    this.messages = [];
-    if (this.forgotForm.invalid) {
-      this.forgotForm.markAllAsTouched();
-      this.messages = ['Une adresse email valide est requise.'];
+    this.messages.set([]);
+
+    if (this.forgotForm().invalid()) {
+      this.forgotForm().markAsTouched();
+      this.messages.set(['Une adresse email valide est requise.']);
       return;
     }
 
-    this.pending = true;
+    this.pending.set(true);
     this.authService
-      .forgottenPassword(this.forgotForm.controls.email.getRawValue())
+      .forgottenPassword(this.forgotModel().email)
       .subscribe({
         next: () => {
-          this.pending = false;
-          this.cdr.markForCheck();
+          this.pending.set(false);
           void this.router.navigateByUrl('/notice/reset');
         },
         error: (error: unknown) => {
-          this.pending = false;
-          this.messages = extractApiErrors(error, 'Envoi impossible.');
-          this.cdr.markForCheck();
+          this.pending.set(false);
+          this.messages.set(extractApiErrors(error, 'Envoi impossible.'));
         },
       });
   }

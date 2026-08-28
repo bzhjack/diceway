@@ -10,7 +10,7 @@ class BolFightSessionHeros extends Model
     protected $table = 'bol_fight_session_heros';
     public $timestamps = false;
 
-    protected $fillable = ['fight_session_id', 'heros_id', 'camp', 'initiative_resultat'];
+    protected $fillable = ['fight_session_id', 'heros_id', 'camp', 'initiative_resultat', 'vitalite_courante'];
 
     public function heros(): BelongsTo
     {

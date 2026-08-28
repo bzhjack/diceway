@@ -14,23 +14,24 @@ class BolFightSessionDemon extends Model
         'fight_session_id', 'demon_id', 'camp', 'qty', 'surnom', 'rang', 'nom',
         'vigueur', 'agilite', 'esprit', 'aura',
         'melee', 'tir', 'defense',
-        'vitalite_max', 'vitalite_courante',
+        'vitalite_max', 'vitalite_courante', 'vitalite_instances',
         'degats',
         'pouvoirs',
     ];
 
     protected $casts = [
-        'qty'               => 'integer',
-        'vigueur'           => 'integer',
-        'agilite'           => 'integer',
-        'esprit'            => 'integer',
-        'aura'              => 'integer',
-        'melee'             => 'integer',
-        'tir'               => 'integer',
-        'defense'           => 'integer',
-        'vitalite_max'      => 'integer',
-        'vitalite_courante' => 'integer',
-        'pouvoirs'          => 'array',
+        'qty'                 => 'integer',
+        'vigueur'             => 'integer',
+        'agilite'             => 'integer',
+        'esprit'              => 'integer',
+        'aura'                => 'integer',
+        'melee'               => 'integer',
+        'tir'                 => 'integer',
+        'defense'             => 'integer',
+        'vitalite_max'        => 'integer',
+        'vitalite_courante'   => 'integer',
+        'vitalite_instances'  => 'array',
+        'pouvoirs'            => 'array',
     ];
 
     public function demon(): BelongsTo

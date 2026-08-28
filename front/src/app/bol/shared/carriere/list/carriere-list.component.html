@@ -5,7 +5,7 @@
       [ariaLabel]="'Carrière : ' + carriere.label"
       [label]="carriere.label"
       [labelGrows]="true"
-      [stat]="'Rang ' + carriere.rank.value"
+      [stat]="'Rang ' + carriere.rank().value()"
       (toggled)="toggle(carriere)"
     >
       <ng-container row-body>
@@ -15,7 +15,7 @@
 
         <div class="cl-rank-row">
           <span class="dw-entry-detail-title">Rang de carrière</span>
-          <dw-value-stepper [formControl]="carriere.rank" [min]="0" ariaLabel="Rang de carrière" />
+          <dw-value-stepper [formField]="carriere.rank" [min]="0" ariaLabel="Rang de carrière" />
         </div>
 
         <button mat-button type="button" class="dw-entry-delete-btn" (click)="removed.emit(index)">

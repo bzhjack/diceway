@@ -25,7 +25,7 @@ export function openStatblockDialog(
 ): void {
   dialog.open(DwStatblockDialogComponent, {
     data: {component, inputs},
-    maxWidth: 'min(760px, 92vw)',
+    maxWidth: 'min(900px, 94vw)',
     panelClass: 'dw-statblock-dialog',
     position: {top: '10vh'},
   });

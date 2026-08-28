@@ -91,6 +91,20 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'combat/:id/play',
+    loadComponent: () =>
+      import('./bol/combat/play/combat-play-page').then((module) => module.CombatPlayPageComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'library/combats',
+    loadComponent: () =>
+      import('./bol/combat/library/combat-library-page').then(
+        (module) => module.CombatLibraryPageComponent,
+      ),
+    canActivate: [authGuard],
+  },
+  {
     path: 'library/creatures',
     loadComponent: () =>
       import('./bol/creature/library/creature-library-page').then(
