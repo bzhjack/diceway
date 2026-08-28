@@ -18,6 +18,7 @@
 - `php artisan test` — run the closest test to validate any backend change; `npm run build` — run to validate any frontend change; `npm test` for Vitest unit tests.
 - **No DB-backed test infrastructure exists for the Bol domain today** (no factories, no sqlite test DB configured, zero `Feature` tests under `backend/tests/Feature` beyond the Laravel example, and the already-shipped combat feature has no automated tests either). This plan does not introduce that infrastructure as a side effect — it stays consistent with the existing project state. Backend tasks therefore use a mix of pure-logic PHPUnit `Unit` tests (no DB) where the logic can be extracted, and explicit manual verification steps (exact `php artisan tinker` snippets / curl commands with expected output) for anything DB-dependent. Frontend tasks use Vitest for pure utilities and `npm run build` + manual browser verification (skill `run`) for component wiring.
 - Every new/changed backend route lives under the existing `sanctum` auth group in `backend/routes/api.php`, next to the other `bol/fight-session` or `bol/heros` routes.
+- **Task ordering matters in this plan**: each task is written to build and (where applicable) pass its tests in isolation, given every earlier task is done. Do not skip ahead — a later task's code references classes/methods only earlier tasks create.
 
 ---
 
@@ -145,13 +146,13 @@ Expected: PASS (5 tests)
 
 - [ ] **Step 5: Manual verification against the running API**
 
-Start the backend (`php artisan serve`, port 8080) and, authenticated (Sanctum token from a logged-in session, or via `php artisan tinker`):
+Start the backend (`php artisan serve`, port 8080) and, via `php artisan tinker`:
 
 ```php
-// php artisan tinker
 $service = app(\App\Http\Services\Bol\BolFightSessionService::class);
-$session = $service->createSession(\App\Models\Bol\BolHeros::first()->user_id, [
-    'heros' => [['heroId' => \App\Models\Bol\BolHeros::where('type', 'H')->first()->id]],
+$hero = \App\Models\Bol\BolHeros::where('type', 'H')->first();
+$session = $service->createSession($hero->user_id, [
+    'heros' => [['heroId' => $hero->id]],
 ]);
 $session->statut; // expect "libre"
 ```
@@ -410,7 +411,7 @@ git commit -m "feat(backend): add heroisme adjustment endpoint"
 
 **Files:** all 34 files under `front/src/app/bol/combat/**`, plus `front/src/app/app.routes.ts`.
 
-This task is a pure structural move: no new behavior. The two pages that get a new name (`combat-select-page` → `session-new-page`, `combat-play-page` → `session-play-page`) are moved here as **empty shells with the old content** — their behavioral rewrite happens in Tasks 6–9. `combat-library-page` is renamed to `session-library-page` with its content unchanged (only class/selector names change).
+This task is a pure structural move: no new behavior. The two pages that get a new name (`combat-select-page` → `session-new-page`, `combat-play-page` → `session-play-page`) are moved here as shells with the old content unchanged besides the rename — their behavioral rewrite happens in later tasks. `combat-library-page` is renamed to `session-library-page` with its content unchanged (only class/selector names change).
 
 - [ ] **Step 1: Move the files**
 
@@ -575,9 +576,38 @@ and
   },
 ```
 
-- [ ] **Step 5: Fix the remaining navigation reference**
+- [ ] **Step 5: Fix the remaining navigation references**
+
+These are string route literals, not imports — the TypeScript compiler will not catch a stale one, so fix them explicitly:
 
 In `front/src/app/bol/session/new/session-new-page.ts`, the `launchCombat()` method navigates with `void this.router.navigate(['/combat', session.id, 'play']);` — change to `void this.router.navigate(['/session', session.id, 'play']);`.
+
+In `front/src/app/bol/session/library/session-library-page.html`, change:
+```html
+          <button mat-flat-button size="small" routerLink="/combat/new">
+```
+to:
+```html
+          <button mat-flat-button size="small" routerLink="/session/new">
+```
+and change:
+```html
+              <button mat-flat-button size="small" [routerLink]="['/combat', item.session.id, 'play']">
+```
+to:
+```html
+              <button mat-flat-button size="small" [routerLink]="['/session', item.session.id, 'play']">
+```
+
+In `front/src/app/bol/workspace/workspace-page.ts`, in the `metrics()` array, change the `Combats` entry's link:
+```ts
+      link: '/library/combats',
+```
+to:
+```ts
+      link: '/library/sessions',
+```
+(the label/detail wording for this entry and the remaining "combat" copy inside `session-library-page.html` are updated for terminology consistency in Task 15 — this step only fixes what would otherwise be a dead link.)
 
 - [ ] **Step 6: Build and let the compiler catch anything missed**
 
@@ -626,7 +656,7 @@ export interface BolFightSessionModel {
 
 - [ ] **Step 2: Add the fight-session service methods**
 
-In `front/src/app/bol/services/bol-fight-session.service.ts`, add (the class already imports `BolFightSessionModel`; add `BolFightSessionHerosModel` and `InitiativeResultat` to the existing model import, and add the methods after `updateOrder`):
+In `front/src/app/bol/services/bol-fight-session.service.ts`, change the model import to:
 
 ```ts
 import {
@@ -638,6 +668,8 @@ import {
 } from '../models/bol-fight-session.model';
 ```
 
+and add, after `updateOrder`:
+
 ```ts
   startCombat(sessionId: string): Observable<BolFightSessionModel> {
     return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/start-combat`, {});
@@ -647,7 +679,7 @@ import {
     return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/end-combat`, {});
   }
 
-  /** Résultat du jet de réaction d'un héros déjà présent dans la session (existait côté backend, jamais câblé côté front jusqu'ici). */
+  /** Résultat du jet de réaction d'un héros déjà présent dans la session (endpoint backend existant, jamais câblé côté front jusqu'ici). */
   updateHeroInitiative(
     sessionId: string,
     herosPivotId: number,
@@ -688,16 +720,16 @@ git commit -m "feat(frontend): add start-combat/end-combat/heroisme service meth
 **Files:**
 - Modify: `front/src/app/bol/session/new/session-new-page.ts`
 - Modify: `front/src/app/bol/session/new/session-new-page.html`
+- Modify: `front/src/app/bol/session/new/session-new-page.scss`
 - Modify: `front/src/app/bol/session/new/combatant-picker-dialog/combatant-picker-dialog.ts`
 - Modify: `front/src/app/bol/session/new/combatant-picker-dialog/combatant-picker-dialog.html`
-- Delete: `front/src/app/bol/session/select` remnants already removed in Task 5 — this task deletes the now-unused `combatant-card` usage from `session-new-page.ts` only (the directory itself was already `git rm`'d in Task 5).
 
 **Interfaces:**
 - Consumes: `CombatSelectionService` (existing, unchanged), `CombatantPickerDialogComponent` (extended here with an optional `lockKind`).
 
 - [ ] **Step 1: Add `lockKind` to the combatant picker dialog**
 
-In `front/src/app/bol/session/new/combatant-picker-dialog/combatant-picker-dialog.ts`, replace the full file with:
+Replace the full content of `front/src/app/bol/session/new/combatant-picker-dialog/combatant-picker-dialog.ts` with:
 
 ```ts
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
@@ -920,9 +952,126 @@ Replace the full file with:
 </section>
 ```
 
-- [ ] **Step 5: Adapt the stylesheet**
+- [ ] **Step 5: Rewrite the stylesheet**
 
-`session-new-page.scss` currently has `.csp-*` class names inherited from `combat-select-page.scss` for markup that no longer exists (mods/rail/banner). Replace the full file's content by renaming every `.csp-` prefix that still has a matching class in the new HTML (`csp-header`→`snp-header`, `csp-icon`→`snp-icon`, `csp-eyebrow`→`snp-eyebrow`, `csp-title`→`snp-title`, `csp-camp`→`snp-heroes` becomes `snp-heroes`, `csp-camp-head`→`snp-heroes-head`, `csp-camp-total`→`snp-heroes-total`, `csp-empty`→`snp-empty`, `csp-add-tile`→`snp-add-tile`) and delete the rules for classes that no longer exist (`csp-init-warning`, `csp-mods*`, `csp-banner`, `csp-rail*`). Add new rules for `.snp-hero-list` (flex-wrap row of chips) and `.snp-hero-chip`/`.snp-hero-name`/`.snp-hero-remove` (a small pill: avatar thumbnail, name, close button) following the visual style of `.cp-rail-item`/`.cp-rail-chip` in `session-play-page.scss` (same dark-fantasy tokens: `var(--dw-surface-*)`, `var(--dw-border)`).
+Replace the full content of `session-new-page.scss` (currently `.csp-*` rules inherited from `combat-select-page.scss`, including rules for markup that no longer exists — mods/rail/banner) with:
+
+```scss
+.snp-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.snp-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.6rem;
+  background: var(--dw-surface-700);
+}
+
+.snp-eyebrow {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--dw-surface-300);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.snp-title {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.snp-heroes-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1rem;
+  }
+}
+
+.snp-heroes-total {
+  border-radius: 999px;
+  background: var(--dw-surface-700);
+  padding: 0.1rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+.snp-empty {
+  color: var(--dw-surface-300);
+  font-size: 0.9rem;
+}
+
+.snp-hero-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.snp-hero-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--dw-border);
+  background: var(--dw-surface-800);
+  border-radius: 999px;
+  padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+
+  img {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 999px;
+    object-fit: cover;
+  }
+}
+
+.snp-hero-name {
+  font-size: 0.9rem;
+}
+
+.snp-hero-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+
+  mat-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+.snp-add-tile {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px dashed var(--dw-border);
+  background: transparent;
+  color: inherit;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--dw-surface-800);
+  }
+}
+```
 
 - [ ] **Step 6: Build**
 
@@ -931,7 +1080,7 @@ Expected: succeeds, no reference to `CombatantCardComponent` or `combatant-card`
 
 - [ ] **Step 7: Manual verification (skill `run`)**
 
-Start the app, log in, go to "Nouvelle session" from the dashboard (still linked as `/combat/new` until Task 12 — navigate directly to `/session/new` for this check), add two heroes via the picker (only the "Héros" catalog should be visible, no tabs), remove one, add it back, click "Créer la session" — expect navigation to `/session/<id>/play` and no console errors.
+Start the app, log in, navigate to `/session/new`, add two heroes via the picker (only the "Héros" catalog should be visible, no tabs), remove one, add it back, click "Créer la session" — expect navigation to `/session/<id>/play` and no console errors.
 
 - [ ] **Step 8: Commit**
 
@@ -942,18 +1091,19 @@ git commit -m "feat(frontend): rewrite session-new-page as heroes-only session c
 
 ---
 
-## Task 8: Frontend — `session-play-page` mode awareness
+## Task 8: Frontend — `session-play-page` mode awareness (rail/attack-menu gating + end combat)
 
 **Files:**
 - Modify: `front/src/app/bol/session/play/session-play-page.ts`
 - Modify: `front/src/app/bol/session/play/session-play-page.html`
-- Modify: `front/src/app/bol/session/play/session-play-page.scss`
 
 **Interfaces:**
-- Consumes: `session().statut` (`'libre' | 'combat' | 'terminee'`, Task 6), `BolFightSessionService.startCombat/endCombat` (Task 6).
-- Produces: `protected readonly mode = computed<'libre' | 'combat'>(...)` — read by Task 9 (hero action menu) and Task 10 (start-combat dialog trigger).
+- Consumes: `session().statut` (`'libre' | 'combat' | 'terminee'`, Task 6), `BolFightSessionService.endCombat` (Task 6).
+- Produces: `protected readonly mode = computed<'libre' | 'combat'>(...)` — consumed by Tasks 10 and 14.
 
-- [ ] **Step 1: Add the `mode` computed and menu handlers**
+This task deliberately does **not** wire "Démarrer un combat" yet (that dialog is built in Task 9) — it only adds the mode-aware rendering and the "Terminer le combat" action, both of which only need what Task 6 already provides. `npm run build` must pass at the end of this task on its own.
+
+- [ ] **Step 1: Add the `mode` computed and `askEndCombat`**
 
 In `front/src/app/bol/session/play/session-play-page.ts`, add near the other `computed` declarations (after `board`):
 
@@ -962,30 +1112,9 @@ In `front/src/app/bol/session/play/session-play-page.ts`, add near the other `co
   protected readonly mode = computed<'libre' | 'combat'>(() => (this.session()?.statut === 'combat' ? 'combat' : 'libre'));
 ```
 
-Add these methods near `openAddCombatantDialog`:
+Add this method near `openAddCombatantDialog`:
 
 ```ts
-  protected openStartCombatDialog(): void {
-    const sessionId = this.session()?.id;
-    if (!sessionId) {
-      return;
-    }
-
-    this.dialog
-      .open(StartCombatDialogComponent, {
-        width: 'min(760px, 94vw)',
-        maxWidth: '94vw',
-        maxHeight: '85vh',
-        data: {sessionId},
-      })
-      .afterClosed()
-      .subscribe((started: boolean | undefined) => {
-        if (started) {
-          this.loadSession(sessionId);
-        }
-      });
-  }
-
   protected askEndCombat(): void {
     const sessionId = this.session()?.id;
     if (!sessionId) {
@@ -1017,15 +1146,7 @@ Add these methods near `openAddCombatantDialog`:
   }
 ```
 
-Add the import:
-
-```ts
-import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dialog';
-```
-
-(`StartCombatDialogComponent` is created in Task 10 — this task's build will fail until Task 10 lands; both tasks are meant to be reviewed together, or stub the import by creating an empty placeholder-free minimal component first. To keep this task independently buildable, create the file in Task 10 immediately after this one, before running `npm run build` here.)
-
-- [ ] **Step 2: Add the header menu**
+- [ ] **Step 2: Add the header menu (end-combat only for now)**
 
 In `front/src/app/bol/session/play/session-play-page.html`, replace the `<header class="cp-header">` block:
 
@@ -1044,12 +1165,7 @@ In `front/src/app/bol/session/play/session-play-page.html`, replace the `<header
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #sessionMenu="matMenu">
-        @if (mode() === 'libre') {
-          <button mat-menu-item type="button" (click)="openStartCombatDialog()">
-            <mat-icon>swords</mat-icon>
-            Démarrer un combat
-          </button>
-        } @else {
+        @if (mode() === 'combat') {
           <button mat-menu-item type="button" (click)="askEndCombat()">
             <mat-icon>flag</mat-icon>
             Terminer le combat
@@ -1063,13 +1179,13 @@ In `front/src/app/bol/session/play/session-play-page.html`, replace the `<header
     </header>
 ```
 
-Add `MatMenuModule` to the component's `imports` array in `session-play-page.ts`.
+Add `MatMenuModule` to the `imports` array of `SessionPlayPageComponent` in `session-play-page.ts`.
 
 - [ ] **Step 3: Hide the initiative rail outside combat**
 
-In `session-play-page.html`, wrap the existing `<div class="cp-rail" ...>` block (and the `@if (b.legendaryActive)` banner right above it) in `@if (mode() === 'combat') { ... }`.
+In `session-play-page.html`, wrap the existing `@if (b.legendaryActive) { ... }` banner and the `<div class="cp-rail" ...>` block that follows it in a single `@if (mode() === 'combat') { ... }`.
 
-- [ ] **Step 4: Restrict the attack menu / targeting to combat mode**
+- [ ] **Step 4: Restrict the attack menu to combat mode**
 
 In `session-play-page.html`'s `#tokenTpl`, change:
 ```html
@@ -1082,264 +1198,36 @@ to:
           <bol-attack-menu
 ```
 
-In `session-play-page.ts`, guard `onTokenClick` so attack-targeting logic is a no-op outside combat (it already returns early when `attackSourceKey()` is null, which can only be set via the attack menu that now only renders in combat mode — no code change needed here, this step is a verification note, not an edit).
-
 - [ ] **Step 5: Build**
 
-Run: `cd front && npm run build` (after Task 10's `StartCombatDialogComponent` file exists — see Step 1 note above; if doing Task 8 and 10 in strict order, come back to this build step once Task 10 Step 1 is done).
+Run: `cd front && npm run build`
+Expected: succeeds.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 6: Manual verification (skill `run`)**
 
-```bash
-git add front/src/app/bol/session/play/session-play-page.ts front/src/app/bol/session/play/session-play-page.html front/src/app/bol/session/play/session-play-page.scss
-git commit -m "feat(frontend): make session-play-page mode-aware (libre/combat)"
-```
-
----
-
-## Task 9: Frontend — `bol-hero-action-menu` (generic action menu, libre mode)
-
-**Files:**
-- Create: `front/src/app/bol/session/play/hero-action-menu/hero-action-menu.ts`
-- Create: `front/src/app/bol/session/play/hero-action-menu/hero-action-menu.html`
-- Create: `front/src/app/bol/session/play/hero-action-menu/hero-action-menu.scss`
-- Modify: `front/src/app/bol/session/play/session-play-page.ts`
-- Modify: `front/src/app/bol/session/play/session-play-page.html`
-
-**Interfaces:**
-- Produces: `HeroActionMenuComponent` with `input.required<string>() heroName`, `output<void>() opened`, `output<void>() skillCheck`, `output<void>() adjustStats`, `output<void>() viewSheet`.
-- Consumes: `HeroMenuData` (existing interface in `session-play-page.ts`, extended with `esprit`), `SkillCheckDialogComponent` (Task 10... actually Task 11) and `AdjustHeroStatsDialogComponent` (Task 12) — see note below on task ordering.
-
-- [ ] **Step 1: Create the component**
-
-`front/src/app/bol/session/play/hero-action-menu/hero-action-menu.ts`:
-
-```ts
-import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
-import {MatIconModule} from '@angular/material/icon';
-import {MatMenuModule} from '@angular/material/menu';
-
-/**
- * Menu d'action générique sur l'avatar d'un héros en mode libre (hors combat) : jet de compétence,
- * ajustement rapide des stats, accès à la fiche. Auto-contenu comme `bol-attack-menu` (bouton +
- * mat-menu dans le même composant) — la logique métier (dialogs) reste côté page parente.
- */
-@Component({
-  selector: 'bol-hero-action-menu',
-  imports: [MatIconModule, MatMenuModule],
-  templateUrl: './hero-action-menu.html',
-  styleUrl: './hero-action-menu.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class HeroActionMenuComponent {
-  readonly heroName = input.required<string>();
-
-  /** Émis à l'ouverture du menu, pour laisser le parent charger les attributs du héros à la demande. */
-  readonly opened = output<void>();
-  readonly skillCheck = output<void>();
-  readonly adjustStats = output<void>();
-  readonly viewSheet = output<void>();
-}
-```
-
-- [ ] **Step 2: Create the template**
-
-`front/src/app/bol/session/play/hero-action-menu/hero-action-menu.html`:
-
-```html
-<button
-  type="button"
-  class="ham-trigger"
-  [attr.aria-label]="'Actions pour ' + heroName()"
-  [matMenuTriggerFor]="menu"
-  (click)="$event.stopPropagation()"
-  (menuOpened)="opened.emit()"
->
-  <mat-icon>more_vert</mat-icon>
-</button>
-
-<mat-menu #menu="matMenu">
-  <button mat-menu-item type="button" (click)="skillCheck.emit()">
-    <mat-icon>casino</mat-icon>
-    Jet de compétence
-  </button>
-  <button mat-menu-item type="button" (click)="adjustStats.emit()">
-    <mat-icon>tune</mat-icon>
-    Ajuster les stats
-  </button>
-  <button mat-menu-item type="button" (click)="viewSheet.emit()">
-    <mat-icon>badge</mat-icon>
-    Voir la fiche
-  </button>
-</mat-menu>
-```
-
-- [ ] **Step 3: Create the stylesheet**
-
-`front/src/app/bol/session/play/hero-action-menu/hero-action-menu.scss` — mirror `attack-menu.scss`'s `.am-trigger` rule for `.ham-trigger` (same size/position: a small circular icon button overlaid on the token portrait, top-right corner), reusing the same `var(--dw-surface-*)`/`var(--dw-border)` tokens:
-
-```scss
-.ham-trigger {
-  position: absolute;
-  top: -0.4rem;
-  right: -0.4rem;
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: 999px;
-  border: 1px solid var(--dw-border);
-  background: var(--dw-surface-700);
-  color: inherit;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-
-  mat-icon {
-    font-size: 1.1rem;
-    width: 1.1rem;
-    height: 1.1rem;
-  }
-
-  &:hover {
-    background: var(--dw-surface-600);
-  }
-}
-```
-
-- [ ] **Step 4: Extend `HeroMenuData` with `esprit`**
-
-In `front/src/app/bol/session/play/session-play-page.ts`, change the interface:
-
-```ts
-interface HeroMenuData {
-  readonly armes: readonly BolHerosArmeModel[];
-  readonly agilite: number;
-  readonly vigueur: number;
-  readonly esprit: number;
-  readonly melee: number;
-  readonly tir: number;
-  readonly defense: number;
-}
-```
-
-and in `loadArmes`, add `esprit: hero.attributs.esprit,` to the object passed to `heroMenuData.update`.
-
-- [ ] **Step 5: Wire the menu into the token template**
-
-In `session-play-page.html`'s `#tokenTpl`, right after the `bol-attack-menu` block from Task 8 Step 4, add the libre-mode branch:
-
-```html
-        @if (mode() === 'combat' && token.key === activeKey()) {
-          <bol-attack-menu
-            [attackerName]="token.nom"
-            [armes]="armesFor(token)"
-            [stats]="combatStatsFor(token)"
-            (opened)="loadArmes(token)"
-            (confirmed)="onAttackConfirmed(token, $event)"
-          />
-        } @else if (mode() === 'libre' && token.kind === 'hero') {
-          <bol-hero-action-menu
-            [heroName]="token.nom"
-            (opened)="loadArmes(token)"
-            (skillCheck)="onSkillCheck(token)"
-            (adjustStats)="onAdjustStats(token)"
-            (viewSheet)="openStatblock(token, $event)"
-          />
-        }
-```
-
-Note: `openStatblock(token, $event)` expects an `Event` — `viewSheet` is a `void` output, so change the handler wiring to `(viewSheet)="openStatblockFor(token)"` and add a small wrapper in `session-play-page.ts`:
-
-```ts
-  protected openStatblockFor(token: PlayToken): void {
-    this.openStatblock(token, new Event('click'));
-  }
-```
-
-(`openStatblock`'s only use of the event is `event.stopPropagation()`, harmless on a synthetic event here.)
-
-Add `HeroActionMenuComponent` to the component's `imports` array.
-
-- [ ] **Step 6: Add the `onSkillCheck` / `onAdjustStats` handlers**
-
-Add to `session-play-page.ts` (bodies filled in Tasks 11 and 12 — for this task, add them as thin methods that will be completed there; write them now with their final Task-11/12 signatures so the file is complete after this task lands only once those tasks are also done):
-
-```ts
-  protected onSkillCheck(token: PlayToken): void {
-    const data = this.heroMenuData().get(token.key);
-    if (!data) {
-      return;
-    }
-
-    this.dialog.open(SkillCheckDialogComponent, {
-      maxWidth: 'min(30rem, 92vw)',
-      panelClass: 'skd-panel',
-      data: {heroNom: token.nom, agilite: data.agilite, vigueur: data.vigueur, esprit: data.esprit},
-    });
-  }
-
-  protected onAdjustStats(token: PlayToken): void {
-    const sessionId = this.session()?.id;
-    const herosId = token.combat.sourceId;
-    if (!sessionId || !herosId) {
-      return;
-    }
-
-    this.herosService
-      .heros(herosId)
-      .pipe(take(1))
-      .subscribe((hero) => {
-        this.dialog
-          .open(AdjustHeroStatsDialogComponent, {
-            maxWidth: 'min(26rem, 92vw)',
-            data: {
-              herosId,
-              sessionId,
-              pivotId: token.pivotId,
-              heroNom: token.nom,
-              vitaliteCourante: token.vitaliteCourante ?? hero.ressources.vitalite,
-              vitaliteMax: hero.ressources.vitalite,
-              heroisme: hero.ressources.heroisme,
-            },
-          })
-          .afterClosed()
-          .subscribe((changed: boolean | undefined) => {
-            if (changed) {
-              this.loadSession(sessionId);
-            }
-          });
-      });
-  }
-```
-
-Add the imports (files created in Tasks 11/12):
-
-```ts
-import {SkillCheckDialogComponent} from './skill-check-dialog/skill-check-dialog';
-import {AdjustHeroStatsDialogComponent} from './adjust-hero-stats-dialog/adjust-hero-stats-dialog';
-```
-
-This task will not build in isolation until Tasks 10, 11 and 12 also land — that is expected; land Tasks 9–12 together before running `npm run build` / manual verification.
+Open an existing `combat`-mode session (or flip one via the Task 2 curl command): confirm the rail and attack menus render, and "Terminer le combat" appears in the header menu and works (session returns to libre, rail disappears, adversaries gone). Open a `libre`-mode session: confirm no rail, no attack menu on any token.
 
 - [ ] **Step 7: Commit**
 
 ```bash
-git add front/src/app/bol/session/play/hero-action-menu front/src/app/bol/session/play/session-play-page.ts front/src/app/bol/session/play/session-play-page.html
-git commit -m "feat(frontend): add generic hero action menu for libre-mode tokens"
+git add front/src/app/bol/session/play/session-play-page.ts front/src/app/bol/session/play/session-play-page.html
+git commit -m "feat(frontend): make session-play-page mode-aware (libre/combat), wire end-combat"
 ```
 
 ---
 
-## Task 10: Frontend — `StartCombatDialogComponent`
+## Task 9: Frontend — `StartCombatDialogComponent`
 
 **Files:**
 - Create: `front/src/app/bol/session/play/start-combat-dialog/start-combat-dialog.ts`
 - Create: `front/src/app/bol/session/play/start-combat-dialog/start-combat-dialog.html`
 - Create: `front/src/app/bol/session/play/start-combat-dialog/start-combat-dialog.scss`
 
+This is a standalone new component — it is not yet referenced from `session-play-page` (that wiring is Task 10), so it builds independently.
+
 **Interfaces:**
 - Consumes: `BolFightSessionService.fightSession/updateHeroInitiative/startCombat` (Task 6), `AddCombatantDialogComponent` (existing, moved in Task 5), `InitiativeRollDialogComponent` (existing, moved in Task 5), `BolHerosService.heros` (existing).
-- Produces: dialog closes with `true` (combat started, caller should reload) or `undefined`.
+- Produces: `StartCombatDialogComponent`, `StartCombatDialogData {sessionId: string}`. Closes with `true` (combat started) or `undefined`.
 
 - [ ] **Step 1: Create the component**
 
@@ -1348,7 +1236,7 @@ git commit -m "feat(frontend): add generic hero action menu for libre-mode token
 ```ts
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {take} from 'rxjs';
@@ -1371,7 +1259,7 @@ interface HeroRow {
   readonly pivotId: number;
   readonly herosId: string;
   readonly nom: string;
-  resultat: InitiativeResultat | null;
+  readonly resultat: InitiativeResultat | null;
 }
 
 /** Ajoute les adversaires (dialog existant, réutilisé) puis fait rouler l'initiative de chaque héros avant de démarrer le combat. */
@@ -1385,7 +1273,7 @@ interface HeroRow {
 export class StartCombatDialogComponent {
   protected readonly ref = inject(MatDialogRef<StartCombatDialogComponent, boolean>);
   private readonly data = inject<StartCombatDialogData>(MAT_DIALOG_DATA);
-  private readonly dialog = inject(MatDialogRef<StartCombatDialogComponent>)['_ref'] ?? null; // unused placeholder removed below
+  private readonly dialog = inject(MatDialog);
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly herosService = inject(BolHerosService);
   private readonly snackBar = inject(MatSnackBar);
@@ -1436,7 +1324,7 @@ export class StartCombatDialogComponent {
 
   protected openAddAdversary(): void {
     this.dialog
-      ?.open(AddCombatantDialogComponent, {
+      .open(AddCombatantDialogComponent, {
         width: 'min(760px, 94vw)',
         maxWidth: '94vw',
         maxHeight: '85vh',
@@ -1456,7 +1344,7 @@ export class StartCombatDialogComponent {
       .pipe(take(1))
       .subscribe((h) => {
         this.dialog
-          ?.open(InitiativeRollDialogComponent, {
+          .open(InitiativeRollDialogComponent, {
             maxWidth: 'min(30rem, 92vw)',
             panelClass: 'ird-panel',
             data: {
@@ -1511,14 +1399,6 @@ export class StartCombatDialogComponent {
   }
 }
 ```
-
-Remove the erroneous `private readonly dialog = inject(MatDialogRef<StartCombatDialogComponent>)['_ref'] ?? null;` line written above by mistake — replace it with a proper `MatDialog` injection:
-
-```ts
-  private readonly dialog = inject(MatDialog);
-```
-
-and add `import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';` (merging with the existing dialog import line).
 
 - [ ] **Step 2: Create the template**
 
@@ -1621,13 +1501,100 @@ and add `import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from
 
 - [ ] **Step 4: Build**
 
-Run: `cd front && npm run build` — this is the point where Tasks 8, 9 and 10 together should compile (Task 9 references `SkillCheckDialogComponent`/`AdjustHeroStatsDialogComponent` from Tasks 11/12 — if building before those land, temporarily comment those two lines out and their handler bodies, or land Tasks 11–12 first; the recommended execution order is 8, 10, 11, 12, 9 so every intermediate build succeeds).
+Run: `cd front && npm run build`
+Expected: succeeds (the component is standalone and not yet imported anywhere, so this only checks it compiles in isolation).
 
 - [ ] **Step 5: Commit**
 
 ```bash
 git add front/src/app/bol/session/play/start-combat-dialog
 git commit -m "feat(frontend): add start-combat dialog (adversaries + hero initiative rolls)"
+```
+
+---
+
+## Task 10: Frontend — wire "Démarrer un combat" into `session-play-page`
+
+**Files:**
+- Modify: `front/src/app/bol/session/play/session-play-page.ts`
+- Modify: `front/src/app/bol/session/play/session-play-page.html`
+
+**Interfaces:**
+- Consumes: `StartCombatDialogComponent` (Task 9).
+
+- [ ] **Step 1: Add the import and handler**
+
+In `front/src/app/bol/session/play/session-play-page.ts`, add the import:
+
+```ts
+import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dialog';
+```
+
+and add this method near `askEndCombat`:
+
+```ts
+  protected openStartCombatDialog(): void {
+    const sessionId = this.session()?.id;
+    if (!sessionId) {
+      return;
+    }
+
+    this.dialog
+      .open(StartCombatDialogComponent, {
+        width: 'min(760px, 94vw)',
+        maxWidth: '94vw',
+        maxHeight: '85vh',
+        data: {sessionId},
+      })
+      .afterClosed()
+      .subscribe((started: boolean | undefined) => {
+        if (started) {
+          this.loadSession(sessionId);
+        }
+      });
+  }
+```
+
+- [ ] **Step 2: Add the menu item**
+
+In `session-play-page.html`, in the `#sessionMenu` from Task 8, add the `libre`-mode branch:
+
+```html
+      <mat-menu #sessionMenu="matMenu">
+        @if (mode() === 'libre') {
+          <button mat-menu-item type="button" (click)="openStartCombatDialog()">
+            <mat-icon>shield</mat-icon>
+            Démarrer un combat
+          </button>
+        } @else {
+          <button mat-menu-item type="button" (click)="askEndCombat()">
+            <mat-icon>flag</mat-icon>
+            Terminer le combat
+          </button>
+        }
+        <button mat-menu-item type="button" (click)="openAddCombatantDialog()">
+          <mat-icon>person_add</mat-icon>
+          Ajouter un héros à la session
+        </button>
+      </mat-menu>
+```
+
+(this replaces the `@if (mode() === 'combat') { ... }`-only block from Task 8 Step 2 with the full `@if/@else`.)
+
+- [ ] **Step 3: Build**
+
+Run: `cd front && npm run build`
+Expected: succeeds.
+
+- [ ] **Step 4: Manual verification (skill `run`)**
+
+Open a `libre` session, header menu → "Démarrer un combat" → dialog opens, add an adversary, roll initiative for every hero, confirm "Démarrer le combat" is disabled until all heroes have rolled, then enabled and working — the page reloads in `combat` mode with the rail visible.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add front/src/app/bol/session/play/session-play-page.ts front/src/app/bol/session/play/session-play-page.html
+git commit -m "feat(frontend): wire start-combat dialog into session-play-page header menu"
 ```
 
 ---
@@ -1640,12 +1607,14 @@ git commit -m "feat(frontend): add start-combat dialog (adversaries + hero initi
 - Create: `front/src/app/bol/session/play/skill-check-dialog/skill-check-dialog.scss`
 - Test: `front/src/app/bol/session/play/skill-check-dialog/skill-check-dialog.spec.ts`
 
+This is a standalone new component, not yet referenced anywhere — it builds and tests independently.
+
 **Interfaces:**
-- Produces: `SkillCheckDialogComponent`, `SkillCheckDialogData {heroNom, agilite, vigueur, esprit}`, `SkillAttribute = 'agilite' | 'vigueur' | 'esprit'`, exported `SKILL_DIFFICULTIES` (used by the test and the template).
+- Produces: `SkillCheckDialogComponent`, `SkillCheckDialogData {heroNom, agilite, vigueur, esprit}`, `SkillAttribute = 'agilite' | 'vigueur' | 'esprit'`, `suggestedSkillResult(dice, modifierSum, threshold)`, `SKILL_DIFFICULTIES`, `SKILL_ATTRIBUTE_LABELS`.
 
 - [ ] **Step 1: Write a failing pure-logic test**
 
-Since the dialog needs `MatDialog`/`DiceBoxHostComponent` to render, test the pure result-computation logic directly as exported functions rather than through `TestBed`. Create `front/src/app/bol/session/play/skill-check-dialog/skill-check-dialog.spec.ts`:
+Since the dialog needs `MatDialog`/`DiceBoxHostComponent` to render, test the pure result-computation logic directly as an exported function rather than through `TestBed`. Create `front/src/app/bol/session/play/skill-check-dialog/skill-check-dialog.spec.ts`:
 
 ```ts
 import {describe, expect, it} from 'vitest';
@@ -1673,7 +1642,7 @@ describe('suggestedSkillResult', () => {
 - [ ] **Step 2: Run it to verify it fails**
 
 Run: `cd front && npx vitest run src/app/bol/session/play/skill-check-dialog/skill-check-dialog.spec.ts`
-Expected: FAIL — module `./skill-check-dialog` has no export `suggestedSkillResult`.
+Expected: FAIL — module `./skill-check-dialog` does not exist yet.
 
 - [ ] **Step 3: Implement the component**
 
@@ -1708,7 +1677,11 @@ export const SKILL_DIFFICULTIES: readonly {value: number; label: string}[] = [
 ];
 
 /** Résultat suggéré d'un jet de compétence : 2/12 naturels priment sur le seuil (même règle absolue que l'initiative). */
-export function suggestedSkillResult(dice: readonly [number, number], modifierSum: number, threshold: number): InitiativeResultat {
+export function suggestedSkillResult(
+  dice: readonly [number, number],
+  modifierSum: number,
+  threshold: number,
+): InitiativeResultat {
   const [a, b] = dice;
   if (a === 1 && b === 1) {
     return 'echec';
@@ -1742,6 +1715,7 @@ export class SkillCheckDialogComponent {
 
   private readonly diceBox = viewChild.required(DiceBoxHostComponent);
 
+  protected readonly attributes: readonly SkillAttribute[] = ['agilite', 'vigueur', 'esprit'];
   protected readonly attributeLabels = SKILL_ATTRIBUTE_LABELS;
   protected readonly difficulties = SKILL_DIFFICULTIES;
 
@@ -1842,7 +1816,7 @@ Expected: PASS (4 tests)
   <div class="skd-row">
     <span class="skd-row-label">Attribut</span>
     <div class="skd-toggle">
-      @for (attr of ['agilite', 'vigueur', 'esprit']; track attr) {
+      @for (attr of attributes; track attr) {
         <button type="button" [class.active]="attribute() === attr" (click)="setAttribute(attr)">
           {{ attributeLabels[attr] }} ({{ data[attr] >= 0 ? '+' : '' }}{{ data[attr] }})
         </button>
@@ -1899,7 +1873,7 @@ Expected: PASS (4 tests)
 
 - [ ] **Step 6: Create the stylesheet**
 
-`front/src/app/bol/session/play/skill-check-dialog/skill-check-dialog.scss` — copy `initiative-roll-dialog.scss` verbatim and rename every `.ird-` class prefix to `.skd-`, plus add rules for the two new controls:
+`front/src/app/bol/session/play/skill-check-dialog/skill-check-dialog.scss` — copy `../../initiative-roll-dialog/initiative-roll-dialog.scss` verbatim and rename every `.ird-` class prefix to `.skd-` (this covers `.skd-shell`, `.skd-header`, `.skd-title*`, `.skd-close`, `.skd-result*`, `.skd-box`, `.skd-formula`, `.skd-reroll`), then append these new rules for the attribute/difficulty/modifier controls:
 
 ```scss
 .skd-row {
@@ -1950,7 +1924,6 @@ Expected: PASS (4 tests)
   }
 }
 ```
-(the remaining `.skd-shell`/`.skd-header`/`.skd-title*`/`.skd-close`/`.skd-result*`/`.skd-box`/`.skd-formula`/`.skd-reroll` rules are the `.ird-*` rules from `initiative-roll-dialog.scss` with the prefix renamed.)
 
 - [ ] **Step 7: Build**
 
@@ -1972,9 +1945,11 @@ git commit -m "feat(frontend): add generic skill-check dialog"
 - Create: `front/src/app/bol/session/play/adjust-hero-stats-dialog/adjust-hero-stats-dialog.html`
 - Create: `front/src/app/bol/session/play/adjust-hero-stats-dialog/adjust-hero-stats-dialog.scss`
 
+This is a standalone new component, not yet referenced anywhere — it builds independently.
+
 **Interfaces:**
 - Consumes: `DwValueStepperComponent` (`front/src/app/shared/value-stepper/value-stepper.ts`, existing), `BolFightSessionService.applyDamage` (existing), `BolHerosService.adjustHeroisme` (Task 6).
-- Produces: dialog closes with `true` if anything changed, else `undefined`.
+- Produces: `AdjustHeroStatsDialogComponent`, `AdjustHeroStatsDialogData {sessionId, herosId, pivotId, heroNom, vitaliteCourante, vitaliteMax, heroisme}`. Closes with `true` if anything changed, else `undefined`.
 
 - [ ] **Step 1: Create the component**
 
@@ -2040,7 +2015,7 @@ export class AdjustHeroStatsDialogComponent {
         this.changed.set(true);
       },
       error: (error: unknown) => {
-        this.snackBar.open(extractApiErrorMessage(error, "Impossible de mettre à jour la vitalité."), 'Fermer', {
+        this.snackBar.open(extractApiErrorMessage(error, 'Impossible de mettre à jour la vitalité.'), 'Fermer', {
           duration: 5000,
         });
         this.vitaliteControl.setValue(this.lastVitalite, {emitEvent: false});
@@ -2119,13 +2094,8 @@ export class AdjustHeroStatsDialogComponent {
 - [ ] **Step 4: Build**
 
 Run: `cd front && npm run build`
-Expected: succeeds — this is the point where Tasks 9, 10, 11, 12 should all compile together (see the ordering note in Task 10 Step 4).
 
-- [ ] **Step 5: Manual verification (skill `run`)**
-
-Log in, open an existing `libre` session (or create one via `/session/new`), click a hero's action-menu icon: verify "Jet de compétence" opens the dice dialog with the right attribute values, rolling shows a result; "Ajuster les stats" opens the stepper dialog, incrementing vitality/heroism persists (reload the page and confirm the value stuck); "Voir la fiche" opens the statblock. Then use the header menu "Démarrer un combat", add an adversary, roll each hero's initiative, confirm "Démarrer le combat" becomes enabled only once every hero has rolled, start it, verify the rail and attack menu now appear and the generic action menu is gone from hero tokens. Use "Terminer le combat" and verify the session returns to libre mode with heroes intact and adversaries gone.
-
-- [ ] **Step 6: Commit**
+- [ ] **Step 5: Commit**
 
 ```bash
 git add front/src/app/bol/session/play/adjust-hero-stats-dialog
@@ -2134,7 +2104,268 @@ git commit -m "feat(frontend): add adjust-hero-stats dialog (vitality + heroism)
 
 ---
 
-## Task 13: Frontend — dashboard entry point
+## Task 13: Frontend — `HeroActionMenuComponent`
+
+**Files:**
+- Create: `front/src/app/bol/session/play/hero-action-menu/hero-action-menu.ts`
+- Create: `front/src/app/bol/session/play/hero-action-menu/hero-action-menu.html`
+- Create: `front/src/app/bol/session/play/hero-action-menu/hero-action-menu.scss`
+
+A dumb, self-contained menu component (mirrors `attack-menu`'s pattern) — no dialogs opened here, so it has no dependency on Tasks 9/11/12 and builds independently.
+
+**Interfaces:**
+- Produces: `HeroActionMenuComponent` with `input.required<string>() heroName`, `output<void>() opened`, `output<void>() skillCheck`, `output<void>() adjustStats`, `output<void>() viewSheet`.
+
+- [ ] **Step 1: Create the component**
+
+`front/src/app/bol/session/play/hero-action-menu/hero-action-menu.ts`:
+
+```ts
+import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+
+/**
+ * Menu d'action générique sur l'avatar d'un héros en mode libre (hors combat) : jet de compétence,
+ * ajustement rapide des stats, accès à la fiche. Auto-contenu comme `bol-attack-menu` (bouton +
+ * mat-menu dans le même composant) — la logique métier (dialogs) reste côté page parente.
+ */
+@Component({
+  selector: 'bol-hero-action-menu',
+  imports: [MatIconModule, MatMenuModule],
+  templateUrl: './hero-action-menu.html',
+  styleUrl: './hero-action-menu.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class HeroActionMenuComponent {
+  readonly heroName = input.required<string>();
+
+  /** Émis à l'ouverture du menu, pour laisser le parent charger les attributs du héros à la demande. */
+  readonly opened = output<void>();
+  readonly skillCheck = output<void>();
+  readonly adjustStats = output<void>();
+  readonly viewSheet = output<void>();
+}
+```
+
+- [ ] **Step 2: Create the template**
+
+`front/src/app/bol/session/play/hero-action-menu/hero-action-menu.html`:
+
+```html
+<button
+  type="button"
+  class="ham-trigger"
+  [attr.aria-label]="'Actions pour ' + heroName()"
+  [matMenuTriggerFor]="menu"
+  (click)="$event.stopPropagation()"
+  (menuOpened)="opened.emit()"
+>
+  <mat-icon>more_vert</mat-icon>
+</button>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item type="button" (click)="skillCheck.emit()">
+    <mat-icon>casino</mat-icon>
+    Jet de compétence
+  </button>
+  <button mat-menu-item type="button" (click)="adjustStats.emit()">
+    <mat-icon>tune</mat-icon>
+    Ajuster les stats
+  </button>
+  <button mat-menu-item type="button" (click)="viewSheet.emit()">
+    <mat-icon>badge</mat-icon>
+    Voir la fiche
+  </button>
+</mat-menu>
+```
+
+- [ ] **Step 3: Create the stylesheet**
+
+`front/src/app/bol/session/play/hero-action-menu/hero-action-menu.scss` (mirrors `../attack-menu/attack-menu.scss`'s `.am-trigger` rule — a small circular icon button overlaid on the token portrait's top-right corner):
+
+```scss
+.ham-trigger {
+  position: absolute;
+  top: -0.4rem;
+  right: -0.4rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--dw-border);
+  background: var(--dw-surface-700);
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  mat-icon {
+    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  &:hover {
+    background: var(--dw-surface-600);
+  }
+}
+```
+
+- [ ] **Step 4: Build**
+
+Run: `cd front && npm run build`
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add front/src/app/bol/session/play/hero-action-menu
+git commit -m "feat(frontend): add generic hero-action-menu component"
+```
+
+---
+
+## Task 14: Frontend — wire the generic action menu into `session-play-page`
+
+**Files:**
+- Modify: `front/src/app/bol/session/play/session-play-page.ts`
+- Modify: `front/src/app/bol/session/play/session-play-page.html`
+
+**Interfaces:**
+- Consumes: `HeroActionMenuComponent` (Task 13), `SkillCheckDialogComponent` (Task 11), `AdjustHeroStatsDialogComponent` (Task 12).
+
+- [ ] **Step 1: Extend `HeroMenuData` with `esprit`**
+
+In `front/src/app/bol/session/play/session-play-page.ts`, change the interface:
+
+```ts
+interface HeroMenuData {
+  readonly armes: readonly BolHerosArmeModel[];
+  readonly agilite: number;
+  readonly vigueur: number;
+  readonly esprit: number;
+  readonly melee: number;
+  readonly tir: number;
+  readonly defense: number;
+}
+```
+
+and in `loadArmes`, add `esprit: hero.attributs.esprit,` to the object passed to `heroMenuData.update`.
+
+- [ ] **Step 2: Add the imports and handlers**
+
+Add the imports:
+
+```ts
+import {HeroActionMenuComponent} from './hero-action-menu/hero-action-menu';
+import {SkillCheckDialogComponent} from './skill-check-dialog/skill-check-dialog';
+import {AdjustHeroStatsDialogComponent} from './adjust-hero-stats-dialog/adjust-hero-stats-dialog';
+```
+
+Add `HeroActionMenuComponent` to the component's `imports` array.
+
+Add these methods near `openStatblock`:
+
+```ts
+  protected onSkillCheck(token: PlayToken): void {
+    const data = this.heroMenuData().get(token.key);
+    if (!data) {
+      return;
+    }
+
+    this.dialog.open(SkillCheckDialogComponent, {
+      maxWidth: 'min(30rem, 92vw)',
+      panelClass: 'skd-panel',
+      data: {heroNom: token.nom, agilite: data.agilite, vigueur: data.vigueur, esprit: data.esprit},
+    });
+  }
+
+  protected onAdjustStats(token: PlayToken): void {
+    const sessionId = this.session()?.id;
+    const herosId = token.combat.sourceId;
+    if (!sessionId || !herosId) {
+      return;
+    }
+
+    this.herosService
+      .heros(herosId)
+      .pipe(take(1))
+      .subscribe((hero) => {
+        this.dialog
+          .open(AdjustHeroStatsDialogComponent, {
+            maxWidth: 'min(26rem, 92vw)',
+            data: {
+              herosId,
+              sessionId,
+              pivotId: token.pivotId,
+              heroNom: token.nom,
+              vitaliteCourante: token.vitaliteCourante ?? hero.ressources.vitalite,
+              vitaliteMax: hero.ressources.vitalite,
+              heroisme: hero.ressources.heroisme,
+            },
+          })
+          .afterClosed()
+          .subscribe((changed: boolean | undefined) => {
+            if (changed) {
+              this.loadSession(sessionId);
+            }
+          });
+      });
+  }
+
+  protected openStatblockFor(token: PlayToken): void {
+    this.openStatblock(token, new Event('click'));
+  }
+```
+
+(`openStatblock`'s only use of its `Event` argument is `event.stopPropagation()`, harmless on a synthetic event here — this wrapper exists because `viewSheet` is a `void` output while `openStatblock` expects an `Event`.)
+
+- [ ] **Step 3: Wire the menu into the token template**
+
+In `session-play-page.html`'s `#tokenTpl`, right after the `bol-attack-menu` block, add the libre-mode branch:
+
+```html
+        @if (mode() === 'combat' && token.key === activeKey()) {
+          <bol-attack-menu
+            [attackerName]="token.nom"
+            [armes]="armesFor(token)"
+            [stats]="combatStatsFor(token)"
+            (opened)="loadArmes(token)"
+            (confirmed)="onAttackConfirmed(token, $event)"
+          />
+        } @else if (mode() === 'libre' && token.kind === 'hero') {
+          <bol-hero-action-menu
+            [heroName]="token.nom"
+            (opened)="loadArmes(token)"
+            (skillCheck)="onSkillCheck(token)"
+            (adjustStats)="onAdjustStats(token)"
+            (viewSheet)="openStatblockFor(token)"
+          />
+        }
+```
+
+- [ ] **Step 4: Build**
+
+Run: `cd front && npm run build`
+Expected: succeeds.
+
+- [ ] **Step 5: Manual verification (skill `run`)**
+
+Open a `libre`-mode session, click a hero token's action menu icon:
+- "Jet de compétence" opens the dice dialog with correct attribute values; rolling shows a result.
+- "Ajuster les stats" opens the stepper dialog; incrementing vitality/heroism persists (reload the page and confirm the values stuck).
+- "Voir la fiche" opens the statblock with correct data.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add front/src/app/bol/session/play/session-play-page.ts front/src/app/bol/session/play/session-play-page.html
+git commit -m "feat(frontend): wire generic hero action menu into session-play-page"
+```
+
+---
+
+## Task 15: Frontend — dashboard entry point
 
 **Files:**
 - Modify: `front/src/app/bol/workspace/workspace-quick-actions/workspace-quick-actions.ts`
@@ -2262,24 +2493,53 @@ to:
         @for (action of quickActions(); track action.label) {
 ```
 
-- [ ] **Step 3: Build**
+- [ ] **Step 3: Rename the "Combats" dashboard metric to "Sessions"**
+
+In `front/src/app/bol/workspace/workspace-page.ts`, in the `metrics()` array, change:
+```ts
+    {
+      label: 'Combats',
+      value: String(this.fightSessions().length),
+      detail: 'Combats lancés, à reprendre pour continuer le suivi d’initiative et des PV.',
+      icon: 'shield',
+      color: 'rose',
+      link: '/library/sessions',
+    },
+```
+to:
+```ts
+    {
+      label: 'Sessions',
+      value: String(this.fightSessions().length),
+      detail: 'Sessions ouvertes, à reprendre pour continuer une soirée de jeu ou un combat.',
+      icon: 'groups',
+      color: 'rose',
+      link: '/library/sessions',
+    },
+```
+
+- [ ] **Step 4: Update the session-library-page copy**
+
+In `front/src/app/bol/session/library/session-library-page.html`, replace the remaining "combat" wording with "session" wording: `title="Mes combats"` → `title="Mes sessions"`; the description mentioning "les combats déjà lancés" → "les sessions déjà lancées, en combat ou non"; `Nouveau combat` (both the button label and the empty-state hint referencing it) → `Nouvelle session`; `placeholder="Rechercher un combat"` → `placeholder="Rechercher une session"`; `{{ totalCount() }} combat...` tag and the two "Aucun combat..." empty-state messages → the equivalent "session" wording. Keep the surrounding structure and bindings unchanged — this is a text-only pass.
+
+- [ ] **Step 5: Build**
 
 Run: `cd front && npm run build`
 
-- [ ] **Step 4: Manual verification (skill `run`)**
+- [ ] **Step 6: Manual verification (skill `run`)**
 
-Log in with no open session: dashboard shows "Nouvelle session" linking to `/session/new`. Create one, go back to `/`: dashboard now shows "Reprendre la session" linking to the created session's play page.
+Log in with no open session: dashboard shows "Nouvelle session" linking to `/session/new`, and the "Sessions" metric card links to `/library/sessions`. Create one, go back to `/`: dashboard now shows "Reprendre la session" linking to the created session's play page.
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
-git add front/src/app/bol/workspace/workspace-quick-actions/workspace-quick-actions.ts front/src/app/bol/workspace/workspace-quick-actions/workspace-quick-actions.html
-git commit -m "feat(frontend): dashboard entry point for session create/resume"
+git add front/src/app/bol/workspace/workspace-quick-actions/workspace-quick-actions.ts front/src/app/bol/workspace/workspace-quick-actions/workspace-quick-actions.html front/src/app/bol/workspace/workspace-page.ts front/src/app/bol/session/library/session-library-page.html
+git commit -m "feat(frontend): dashboard entry point for session create/resume, rename session-library copy"
 ```
 
 ---
 
-## Task 14: Full end-to-end verification
+## Task 16: Full end-to-end verification
 
 **Files:** none (verification-only task).
 
