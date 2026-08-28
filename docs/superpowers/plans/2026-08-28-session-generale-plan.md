@@ -1610,7 +1610,9 @@ git commit -m "feat(frontend): wire start-combat dialog into session-play-page h
 This is a standalone new component, not yet referenced anywhere — it builds and tests independently.
 
 **Interfaces:**
-- Produces: `SkillCheckDialogComponent`, `SkillCheckDialogData {heroNom, agilite, vigueur, esprit}`, `SkillAttribute = 'agilite' | 'vigueur' | 'esprit'`, `suggestedSkillResult(dice, modifierSum, threshold)`, `SKILL_DIFFICULTIES`, `SKILL_ATTRIBUTE_LABELS`.
+- Produces: `SkillCheckDialogComponent`, `SkillCheckDialogData {heroNom, agilite, vigueur, esprit}`, `SkillAttribute = 'agilite' | 'vigueur' | 'esprit'`, `suggestedSkillResult(dice, modifierSum, threshold)`, `SkillDifficulty {label, modifier}`, `SKILL_DIFFICULTIES`, `SKILL_CHECK_THRESHOLD`, `SKILL_ATTRIBUTE_LABELS`.
+
+**Difficulty scale**: per `doc/plans/plan-ux-conduite-de-partie.md` (M2 · Jet en un clic), this uses the official BoL difficulty modifiers applied to a fixed threshold of 9 — not an ad-hoc variable threshold: Très facile +2 · Facile +1 · Moyenne 0 · Ardue −1 · Difficile −2 · Très difficile −4 · Impossible −6 · Héroïque −8. The bonus/malus-dice suggestion from that same plan item (reading `de_bonus_domaine`/`de_malus_domaine`) is out of scope here — it needs a notion of which "domaine" the check belongs to, which this generic dialog doesn't model; leave it for a future pass.
 
 - [ ] **Step 1: Write a failing pure-logic test**
 
@@ -1670,10 +1672,24 @@ export const SKILL_ATTRIBUTE_LABELS: Record<SkillAttribute, string> = {
   esprit: 'Esprit',
 };
 
-export const SKILL_DIFFICULTIES: readonly {value: number; label: string}[] = [
-  {value: 6, label: 'Facile (6)'},
-  {value: 9, label: 'Normal (9)'},
-  {value: 12, label: 'Difficile (12)'},
+export interface SkillDifficulty {
+  readonly label: string;
+  readonly modifier: number;
+}
+
+/** Seuil fixe de réussite d'un jet de compétence BoL (02-actions-combat.md) — la difficulté agit en modificateur, jamais sur le seuil. */
+export const SKILL_CHECK_THRESHOLD = 9;
+
+/** Échelle de difficulté officielle BoL (02-actions-combat.md), appliquée en modificateur au jet. */
+export const SKILL_DIFFICULTIES: readonly SkillDifficulty[] = [
+  {label: 'Très facile', modifier: 2},
+  {label: 'Facile', modifier: 1},
+  {label: 'Moyenne', modifier: 0},
+  {label: 'Ardue', modifier: -1},
+  {label: 'Difficile', modifier: -2},
+  {label: 'Très difficile', modifier: -4},
+  {label: 'Impossible', modifier: -6},
+  {label: 'Héroïque', modifier: -8},
 ];
 
 /** Résultat suggéré d'un jet de compétence : 2/12 naturels priment sur le seuil (même règle absolue que l'initiative). */
@@ -1720,18 +1736,20 @@ export class SkillCheckDialogComponent {
   protected readonly difficulties = SKILL_DIFFICULTIES;
 
   protected readonly attribute = signal<SkillAttribute>('agilite');
-  protected readonly difficulty = signal(9);
+  protected readonly difficulty = signal<SkillDifficulty>(SKILL_DIFFICULTIES[2]); // Moyenne, par défaut
   protected readonly modifier = signal(0);
 
   protected readonly rolling = signal(false);
   protected readonly dice = signal<readonly [number, number] | null>(null);
 
-  protected readonly modifierSum = computed(() => this.data[this.attribute()] + this.modifier());
+  protected readonly modifierSum = computed(
+    () => this.data[this.attribute()] + this.difficulty().modifier + this.modifier(),
+  );
 
   protected readonly formula = computed(() => {
     const sum = this.modifierSum();
     const base = sum >= 0 ? `2d6 + ${sum}` : `2d6 − ${Math.abs(sum)}`;
-    return `${base} > ${this.difficulty()}`;
+    return `${base} > ${SKILL_CHECK_THRESHOLD}`;
   });
 
   protected readonly diceSum = computed(() => {
@@ -1746,7 +1764,7 @@ export class SkillCheckDialogComponent {
 
   protected readonly suggestedResult = computed<InitiativeResultat | null>(() => {
     const d = this.dice();
-    return d ? suggestedSkillResult(d, this.modifierSum(), this.difficulty()) : null;
+    return d ? suggestedSkillResult(d, this.modifierSum(), SKILL_CHECK_THRESHOLD) : null;
   });
 
   protected readonly resultLabel = computed(() => {
@@ -1766,8 +1784,8 @@ export class SkillCheckDialogComponent {
     this.attribute.set(attribute);
   }
 
-  protected setDifficulty(value: number): void {
-    this.difficulty.set(value);
+  protected setDifficulty(difficulty: SkillDifficulty): void {
+    this.difficulty.set(difficulty);
   }
 
   protected incrementModifier(delta: number): void {
@@ -1827,16 +1845,16 @@ Expected: PASS (4 tests)
   <div class="skd-row">
     <span class="skd-row-label">Difficulté</span>
     <div class="skd-toggle">
-      @for (d of difficulties; track d.value) {
-        <button type="button" [class.active]="difficulty() === d.value" (click)="setDifficulty(d.value)">
-          {{ d.label }}
+      @for (d of difficulties; track d.label) {
+        <button type="button" [class.active]="difficulty() === d" (click)="setDifficulty(d)">
+          {{ d.label }} ({{ d.modifier >= 0 ? '+' : '' }}{{ d.modifier }})
         </button>
       }
     </div>
   </div>
 
   <div class="skd-row">
-    <span class="skd-row-label">Modificateur</span>
+    <span class="skd-row-label">Modificateur additionnel</span>
     <div class="skd-stepper">
       <button type="button" (click)="incrementModifier(-1)">−</button>
       <span>{{ modifier() >= 0 ? '+' : '' }}{{ modifier() }}</span>
