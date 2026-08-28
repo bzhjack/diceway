@@ -2,23 +2,25 @@
 
 <mat-dialog-content>
   <div class="cpd-filters">
-    <div class="cpd-tabs">
-      <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'all'" (click)="setType('all')">
-        Tous
-      </button>
-      <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'hero'" (click)="setType('hero')">
-        Héros
-      </button>
-      <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'pnj'" (click)="setType('pnj')">
-        PNJ
-      </button>
-      <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'creature'" (click)="setType('creature')">
-        Créatures
-      </button>
-      <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'demon'" (click)="setType('demon')">
-        Démons
-      </button>
-    </div>
+    @if (!lockKind) {
+      <div class="cpd-tabs">
+        <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'all'" (click)="setType('all')">
+          Tous
+        </button>
+        <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'hero'" (click)="setType('hero')">
+          Héros
+        </button>
+        <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'pnj'" (click)="setType('pnj')">
+          PNJ
+        </button>
+        <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'creature'" (click)="setType('creature')">
+          Créatures
+        </button>
+        <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'demon'" (click)="setType('demon')">
+          Démons
+        </button>
+      </div>
+    }
 
     <mat-form-field subscriptSizing="dynamic" class="cpd-search">
       <mat-label>Rechercher</mat-label>

@@ -6,23 +6,13 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
-import {BolHerosModel} from '../../models/bol-heros.model';
-import {InitiativeResultat} from '../../models/bol-fight-session.model';
-import {AmbushState, CombatSelectionService} from '../../services/combat-selection.service';
-import {buildInitiativeOrderFromSelection} from '../initiative.util';
-import {combatantRankKey} from '../combat-statblock.util';
-import {CombatantCardComponent} from './combatant-card/combatant-card';
+import {CombatSelectionService} from '../../services/combat-selection.service';
 import {CombatantPickerDialogComponent} from './combatant-picker-dialog/combatant-picker-dialog';
 
-interface AdverseInitiative {
-  readonly value: number;
-  readonly source: string;
-}
-
-/** Écran de préparation d'un combat : une seule zone de combattants, alimentée depuis un dialog de sélection. */
+/** Écran de création d'une session : choix des héros présents à table, sans adversaire ni initiative (mode libre). */
 @Component({
   selector: 'bol-session-new-page',
-  imports: [RouterLink, MatButtonModule, MatIconModule, CombatantCardComponent],
+  imports: [RouterLink, MatButtonModule, MatIconModule],
   templateUrl: './session-new-page.html',
   styleUrl: './session-new-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,80 +24,10 @@ export class SessionNewPageComponent {
   protected readonly selection = inject(CombatSelectionService);
 
   protected readonly launching = signal(false);
-
-  protected readonly totalCount = computed(() =>
-    this.selection.combatants().reduce((sum, c) => sum + c.qty, 0),
-  );
-
-  /** Héros sélectionnés qui n'ont pas encore de résultat de jet de réaction (initiative). */
-  protected readonly heroesMissingInitiative = computed(
-    () =>
-      this.selection
-        .combatants()
-        .filter((c) => this.selection.entryFor(c.catalogId)?.kind === 'hero' && !this.selection.heroInitiative().has(c.catalogId))
-        .length,
-  );
-
-  protected readonly canLaunch = computed(() => this.totalCount() > 0 && this.heroesMissingInitiative() === 0);
-
-  protected readonly order = computed(() =>
-    buildInitiativeOrderFromSelection(
-      this.selection.combatants(),
-      (catalogId) => this.selection.entryFor(catalogId),
-      this.selection.heroInitiative(),
-    ),
-  );
-
-  /** Plus haute valeur d'initiative parmi les PNJ rivaux/coriaces adverses (02-actions-combat.md) — s'applique en malus aux héros. */
-  protected readonly adverseInitiative = computed<AdverseInitiative | null>(() => {
-    let best: AdverseInitiative | null = null;
-
-    for (const combatant of this.selection.combatants()) {
-      const entry = this.selection.entryFor(combatant.catalogId);
-      if (!entry || entry.kind !== 'pnj') {
-        continue;
-      }
-
-      const rank = combatantRankKey(entry);
-      if (rank !== 'rival' && rank !== 'coriace') {
-        continue;
-      }
-
-      const value = (entry.raw as BolHerosModel).combat.initiative;
-      if (value > 0 && (!best || value > best.value)) {
-        best = {value, source: entry.nom};
-      }
-    }
-
-    return best;
-  });
-
-  protected readonly modifierTotal = computed(() => {
-    let total = 0;
-    if (this.selection.ambushState() === 'heroes_ambush') {
-      total += 2;
-    } else if (this.selection.ambushState() === 'heroes_ambushed') {
-      total -= 1;
-    }
-
-    const adverse = this.adverseInitiative();
-    if (adverse) {
-      total -= adverse.value;
-    }
-
-    return total;
-  });
+  protected readonly canLaunch = computed(() => this.selection.combatants().length > 0);
 
   constructor() {
     this.selection.loadCatalog();
-  }
-
-  protected onInitiativeChange(catalogId: string, value: InitiativeResultat | null): void {
-    this.selection.setHeroInitiative(catalogId, value);
-  }
-
-  protected onAmbushToggle(state: AmbushState): void {
-    this.selection.setAmbushState(state);
   }
 
   protected openPicker(): void {
@@ -115,10 +35,11 @@ export class SessionNewPageComponent {
       width: 'min(1024px, 94vw)',
       maxWidth: '94vw',
       position: {top: '5vh'},
+      data: {lockKind: 'hero'},
     });
   }
 
-  protected launchCombat(): void {
+  protected launchSession(): void {
     this.launching.set(true);
     this.selection
       .launch()
@@ -134,11 +55,9 @@ export class SessionNewPageComponent {
         },
         error: (error: unknown) => {
           this.launching.set(false);
-          this.snackBar.open(
-            extractApiErrorMessage(error, 'Impossible de créer la session de combat.'),
-            'OK',
-            {duration: 6000},
-          );
+          this.snackBar.open(extractApiErrorMessage(error, 'Impossible de créer la session.'), 'OK', {
+            duration: 6000,
+          });
         },
       });
   }
