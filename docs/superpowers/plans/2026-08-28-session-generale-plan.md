@@ -723,9 +723,12 @@ git commit -m "feat(frontend): add start-combat/end-combat/heroisme service meth
 - Modify: `front/src/app/bol/session/new/session-new-page.scss`
 - Modify: `front/src/app/bol/session/new/combatant-picker-dialog/combatant-picker-dialog.ts`
 - Modify: `front/src/app/bol/session/new/combatant-picker-dialog/combatant-picker-dialog.html`
+- Delete: `front/src/app/bol/session/new/combatant-card/` (its only consumer, the old `session-new-page.html`, is fully rewritten in this task — this directory becomes dead code once that happens)
 
 **Interfaces:**
 - Consumes: `CombatSelectionService` (existing, unchanged), `CombatantPickerDialogComponent` (extended here with an optional `lockKind`).
+
+**Note on Task 5's outcome:** Task 5 preserved `CombatantCardComponent` at `front/src/app/bol/session/new/combatant-card/` instead of deleting it (moved, not removed) — it was still in active use by the not-yet-rewritten `session-new-page.html` shell at that point, so deleting it there would have broken working UI. This task is what actually makes it unused (Step 4 rewrites the template to no longer render `<bol-combatant-card>`), so deleting it belongs here.
 
 - [ ] **Step 1: Add `lockKind` to the combatant picker dialog**
 
@@ -1073,16 +1076,26 @@ Replace the full content of `session-new-page.scss` (currently `.csp-*` rules in
 }
 ```
 
-- [ ] **Step 6: Build**
+- [ ] **Step 6: Delete the now-unused `combatant-card` component**
+
+Step 4's rewrite of `session-new-page.html` no longer renders `<bol-combatant-card>` — it's replaced by the inline `.snp-hero-chip` list. Confirm nothing else imports it, then remove it:
+
+```bash
+grep -rn "CombatantCardComponent\|bol-combatant-card" front/src/app
+# expect zero matches outside the directory you're about to delete
+git rm -r front/src/app/bol/session/new/combatant-card
+```
+
+- [ ] **Step 7: Build**
 
 Run: `cd front && npm run build`
 Expected: succeeds, no reference to `CombatantCardComponent` or `combatant-card` remains.
 
-- [ ] **Step 7: Manual verification (skill `run`)**
+- [ ] **Step 8: Manual verification (skill `run`)**
 
 Start the app, log in, navigate to `/session/new`, add two heroes via the picker (only the "Héros" catalog should be visible, no tabs), remove one, add it back, click "Créer la session" — expect navigation to `/session/<id>/play` and no console errors.
 
-- [ ] **Step 8: Commit**
+- [ ] **Step 9: Commit**
 
 ```bash
 git add front/src/app/bol/session/new
