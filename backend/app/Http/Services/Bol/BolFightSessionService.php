@@ -19,6 +19,7 @@ class BolFightSessionService
         $session = BolFightSession::create([
             'user_id' => $userId,
             'titre'   => $data['titre'] ?? null,
+            'statut'  => $this->determineInitialStatut($data),
         ]);
 
         $this->syncHeros($session->id, $data['heros'] ?? []);
@@ -27,6 +28,14 @@ class BolFightSessionService
         $this->syncPnjs($session->id, $data['pnjs'] ?? []);
 
         return $this->getSessionWithRelations($session->id);
+    }
+
+    /** Une session créée sans adversaire démarre "libre" (héros seuls, hors combat) ; sinon "combat". */
+    public function determineInitialStatut(array $data): string
+    {
+        $hasAdversaries = !empty($data['creatures']) || !empty($data['demons']) || !empty($data['pnjs']);
+
+        return $hasAdversaries ? 'combat' : 'libre';
     }
 
     public function getSessionWithRelations(string $id): ?BolFightSession
