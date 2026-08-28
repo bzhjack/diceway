@@ -5,7 +5,9 @@ import {apiUrl} from '../../core/api-url';
 import {
   BolFightSessionAddCombatantPayload,
   BolFightSessionCreatePayload,
+  BolFightSessionHerosModel,
   BolFightSessionModel,
+  InitiativeResultat,
 } from '../models/bol-fight-session.model';
 
 @Injectable({providedIn: 'root'})
@@ -43,6 +45,25 @@ export class BolFightSessionService {
 
   updateOrder(sessionId: string, ordre: readonly string[]): Observable<BolFightSessionModel> {
     return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/ordre`, {ordre});
+  }
+
+  startCombat(sessionId: string): Observable<BolFightSessionModel> {
+    return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/start-combat`, {});
+  }
+
+  endCombat(sessionId: string): Observable<BolFightSessionModel> {
+    return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/end-combat`, {});
+  }
+
+  /** Résultat du jet de réaction d'un héros déjà présent dans la session (endpoint backend existant, jamais câblé côté front jusqu'ici). */
+  updateHeroInitiative(
+    sessionId: string,
+    herosPivotId: number,
+    resultat: InitiativeResultat | null,
+  ): Observable<BolFightSessionHerosModel> {
+    return this.http.patch<BolFightSessionHerosModel>(`${this.base}/${sessionId}/heros/${herosPivotId}/initiative`, {
+      resultat,
+    });
   }
 
   /**

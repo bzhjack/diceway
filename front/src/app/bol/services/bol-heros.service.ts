@@ -94,4 +94,8 @@ export class BolHerosService {
   deleteLangue(herosId: string | null | undefined, id: number): Observable<BolApiSuccess> {
     return this.http.delete<BolApiSuccess>(apiUrl(`bol/heros/langues/delete/${herosId}/${id}`));
   }
+
+  adjustHeroisme(id: string, delta: number): Observable<BolHerosModel> {
+    return this.http.patch<BolHerosModel>(apiUrl(`bol/heros/${id}/heroisme`), {delta});
+  }
 }

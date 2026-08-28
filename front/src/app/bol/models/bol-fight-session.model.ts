@@ -3,11 +3,13 @@ export type CombatCamp = 'heros' | 'adversaires';
 /** Résultat du jet de réaction BoL (2d6 + esprit + initiative, 9+) — seuls les héros le lancent. */
 export type InitiativeResultat = 'echec_critique' | 'echec' | 'reussite' | 'heroique' | 'legendaire';
 
+export type BolFightSessionStatut = 'libre' | 'combat' | 'terminee';
+
 export interface BolFightSessionModel {
   id: string | null;
   user_id?: string | null;
   titre: string | null;
-  statut: string;
+  statut: BolFightSessionStatut;
   /** Ordre d'initiative réordonné manuellement (glisser-déposer du ruban) — clés `PlayToken.key`, dans l'ordre voulu. */
   ordre_manuel?: string[] | null;
   heros?: BolFightSessionHerosModel[];
