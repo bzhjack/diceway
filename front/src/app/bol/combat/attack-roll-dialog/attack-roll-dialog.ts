@@ -84,9 +84,6 @@ export class AttackRollDialogComponent {
   protected readonly attackDetailVisible = computed(() => this.attackDice() === null || this.expandAttackOverride());
   protected readonly damageDetailVisible = computed(() => this.damageDice() === null || this.expandDamageOverride());
 
-  /** Le canvas de dés (partagé attaque/dégâts) reste toujours monté ; il se réduit visuellement une fois le premier jet joué. */
-  protected readonly diceBoxCompact = computed(() => this.attackDice() !== null);
-
   protected toggleAttackDetail(): void {
     this.expandAttackOverride.update((v) => !v);
   }

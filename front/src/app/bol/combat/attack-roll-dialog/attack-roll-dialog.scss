@@ -282,18 +282,13 @@
 }
 
 .atd-box {
-  --dice-box-min-height: 10rem;
+  --dice-box-min-height: 15rem;
   --dice-box-min-width: 10rem;
   display: block;
   margin: 0.7rem 1.1rem 0;
   border-radius: 10px;
   border: 1px solid color-mix(in srgb, var(--dw-color-echec-forte) 28%, transparent);
   overflow: hidden;
-  transition: min-height 0.2s ease;
-}
-
-.atd-box--compact {
-  --dice-box-min-height: 5.5rem;
 }
 
 .atd-toggle {
