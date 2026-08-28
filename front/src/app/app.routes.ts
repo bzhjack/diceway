@@ -85,22 +85,22 @@ export const routes: Routes = [
     canDeactivate: [pendingChangesGuard],
   },
   {
-    path: 'combat/new',
+    path: 'session/new',
     loadComponent: () =>
-      import('./bol/combat/select/combat-select-page').then((module) => module.CombatSelectPageComponent),
+      import('./bol/session/new/session-new-page').then((module) => module.SessionNewPageComponent),
     canActivate: [authGuard],
   },
   {
-    path: 'combat/:id/play',
+    path: 'session/:id/play',
     loadComponent: () =>
-      import('./bol/combat/play/combat-play-page').then((module) => module.CombatPlayPageComponent),
+      import('./bol/session/play/session-play-page').then((module) => module.SessionPlayPageComponent),
     canActivate: [authGuard],
   },
   {
-    path: 'library/combats',
+    path: 'library/sessions',
     loadComponent: () =>
-      import('./bol/combat/library/combat-library-page').then(
-        (module) => module.CombatLibraryPageComponent,
+      import('./bol/session/library/session-library-page').then(
+        (module) => module.SessionLibraryPageComponent,
       ),
     canActivate: [authGuard],
   },

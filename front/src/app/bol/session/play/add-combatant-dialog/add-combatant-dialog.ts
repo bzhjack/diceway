@@ -10,7 +10,7 @@ import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {CombatCamp} from '../../../models/bol-fight-session.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {CombatCatalogEntry, CombatantKind, CombatSelectionService} from '../../../services/combat-selection.service';
-import {combatantKindIcon, combatantKindIconIsSvg, combatantRankLabel} from '../../select/combat-statblock.util';
+import {combatantKindIcon, combatantKindIconIsSvg, combatantRankLabel} from '../../combat-statblock.util';
 
 type CatalogFilter = CombatantKind | 'all';
 

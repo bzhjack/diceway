@@ -26,7 +26,7 @@ interface CombatSummary {
 
 /** Liste des combats lancés par l'utilisateur, avec accès pour reprendre ou supprimer chacun. */
 @Component({
-  selector: 'bol-combat-library-page',
+  selector: 'bol-session-library-page',
   imports: [
     FormsModule,
     RouterLink,
@@ -38,11 +38,11 @@ interface CombatSummary {
     DwLibraryHeaderComponent,
     DwTagComponent,
   ],
-  templateUrl: './combat-library-page.html',
-  styleUrl: './combat-library-page.scss',
+  templateUrl: './session-library-page.html',
+  styleUrl: './session-library-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CombatLibraryPageComponent {
+export class SessionLibraryPageComponent {
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);

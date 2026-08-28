@@ -15,7 +15,7 @@ import {BolCreaturesService} from '../../services/bol-creatures.service';
 import {BolDemonsService} from '../../services/bol-demons.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {BolPnjService} from '../../services/bol-pnj.service';
-import {combatantKindIcon, combatantKindIconIsSvg} from '../select/combat-statblock.util';
+import {combatantKindIcon, combatantKindIconIsSvg} from '../combat-statblock.util';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
 import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
 import {
@@ -67,16 +67,16 @@ function jitter(key: string): {jx: number; jy: number} {
  * PV restent en revanche non modifiables pour l'instant.
  */
 @Component({
-  selector: 'bol-combat-play-page',
+  selector: 'bol-session-play-page',
   imports: [MatIconModule, NgTemplateOutlet, RouterLink, DragDropModule, AttackMenuComponent],
-  templateUrl: './combat-play-page.html',
-  styleUrl: './combat-play-page.scss',
+  templateUrl: './session-play-page.html',
+  styleUrl: './session-play-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(document:keydown.escape)': 'cancelTargeting()',
   },
 })
-export class CombatPlayPageComponent {
+export class SessionPlayPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly herosService = inject(BolHerosService);

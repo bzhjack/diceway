@@ -9,7 +9,7 @@ import {CombatCatalogEntry, CombatSelectionService, SelectedCombatant} from '../
 import {InitiativeHelpDialogComponent} from '../../initiative-help-dialog/initiative-help-dialog';
 import {InitiativeRollDialogComponent} from '../../initiative-roll-dialog/initiative-roll-dialog';
 import {INITIATIVE_RESULT_OPTIONS} from '../../initiative.util';
-import {combatantKindIcon, combatantKindIconIsSvg, combatantRankLabel, openCombatantStatblock} from '../combat-statblock.util';
+import {combatantKindIcon, combatantKindIconIsSvg, combatantRankLabel, openCombatantStatblock} from '../../combat-statblock.util';
 
 /** Carte d'un combattant déjà ajouté : cliquer sur l'avatar ouvre son statbloc, quantité (créatures/démons) et retrait restent des actions séparées. */
 @Component({

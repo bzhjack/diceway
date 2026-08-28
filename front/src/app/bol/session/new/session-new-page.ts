@@ -10,7 +10,7 @@ import {BolHerosModel} from '../../models/bol-heros.model';
 import {InitiativeResultat} from '../../models/bol-fight-session.model';
 import {AmbushState, CombatSelectionService} from '../../services/combat-selection.service';
 import {buildInitiativeOrderFromSelection} from '../initiative.util';
-import {combatantRankKey} from './combat-statblock.util';
+import {combatantRankKey} from '../combat-statblock.util';
 import {CombatantCardComponent} from './combatant-card/combatant-card';
 import {CombatantPickerDialogComponent} from './combatant-picker-dialog/combatant-picker-dialog';
 
@@ -21,13 +21,13 @@ interface AdverseInitiative {
 
 /** Écran de préparation d'un combat : une seule zone de combattants, alimentée depuis un dialog de sélection. */
 @Component({
-  selector: 'bol-combat-select-page',
+  selector: 'bol-session-new-page',
   imports: [RouterLink, MatButtonModule, MatIconModule, CombatantCardComponent],
-  templateUrl: './combat-select-page.html',
-  styleUrl: './combat-select-page.scss',
+  templateUrl: './session-new-page.html',
+  styleUrl: './session-new-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CombatSelectPageComponent {
+export class SessionNewPageComponent {
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
@@ -129,7 +129,7 @@ export class CombatSelectPageComponent {
           this.selection.reset();
 
           if (session.id) {
-            void this.router.navigate(['/combat', session.id, 'play']);
+            void this.router.navigate(['/session', session.id, 'play']);
           }
         },
         error: (error: unknown) => {

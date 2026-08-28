@@ -1,5 +1,5 @@
 import {InitiativeResultat} from '../models/bol-fight-session.model';
-import {combatantRankKey} from './select/combat-statblock.util';
+import {combatantRankKey} from './combat-statblock.util';
 import {CombatCatalogEntry, SelectedCombatant} from '../services/combat-selection.service';
 
 export type InitiativeKind = 'hero' | 'pnj' | 'creature' | 'demon';
