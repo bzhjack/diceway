@@ -15,7 +15,7 @@
       </ng-container>
       <ng-container dwHeaderActions>
         <div class="flex flex-wrap gap-1.5">
-          <button mat-flat-button size="small" routerLink="/combat/new">
+          <button mat-flat-button size="small" routerLink="/session/new">
             <mat-icon>add</mat-icon> Nouveau combat
           </button>
         </div>
@@ -49,7 +49,7 @@
               <p class="cl-row-meta">{{ item.heroesCount }} héros · {{ item.adversairesCount }} adversaires</p>
             </div>
             <div class="cl-row-actions">
-              <button mat-flat-button size="small" [routerLink]="['/combat', item.session.id, 'play']">
+              <button mat-flat-button size="small" [routerLink]="['/session', item.session.id, 'play']">
                 <mat-icon>play_arrow</mat-icon> Reprendre
               </button>
               <button

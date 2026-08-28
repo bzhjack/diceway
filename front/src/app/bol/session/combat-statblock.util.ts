@@ -1,16 +1,16 @@
 import {MatDialog} from '@angular/material/dialog';
-import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
-import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
+import {openStatblockDialog} from '../../shared/dw-statblock-dialog/dw-statblock-dialog';
+import {BolStatblockComponent} from '../shared/statblock/bol-statblock.component';
 import {
   creatureStatblockData,
   demonStatblockData,
   heroStatblockData,
   pnjStatblockData,
-} from '../../shared/statblock/bol-statblock.builders';
-import {BolCreatureModel} from '../../models/bol-creature.model';
-import {BolDemonModel} from '../../models/bol-demon.model';
-import {BolHerosModel} from '../../models/bol-heros.model';
-import {CombatantKind, CombatCatalogEntry} from '../../services/combat-selection.service';
+} from '../shared/statblock/bol-statblock.builders';
+import {BolCreatureModel} from '../models/bol-creature.model';
+import {BolDemonModel} from '../models/bol-demon.model';
+import {BolHerosModel} from '../models/bol-heros.model';
+import {CombatantKind, CombatCatalogEntry} from '../services/combat-selection.service';
 
 /** Icône Material par type de combattant (même mapping que les liens de navigation entre bibliothèques). */
 const KIND_ICONS: Record<CombatantKind, string> = {

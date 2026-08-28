@@ -89,7 +89,7 @@ export class WorkspacePageComponent {
       detail: 'Combats lancés, à reprendre pour continuer le suivi d’initiative et des PV.',
       icon: 'shield',
       color: 'rose',
-      link: '/library/combats',
+      link: '/library/sessions',
     },
   ]);
   protected logout(): void {

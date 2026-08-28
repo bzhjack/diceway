@@ -26,7 +26,7 @@ export class WorkspaceQuickActionsComponent {
       label: 'Nouveau combat',
       detail: 'Choisir les combattants pour préparer une rencontre.',
       icon: 'shield',
-      link: '/combat/new',
+      link: '/session/new',
       severity: 'secondary',
     },
     {
