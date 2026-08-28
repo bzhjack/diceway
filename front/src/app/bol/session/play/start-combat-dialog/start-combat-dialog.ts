@@ -62,27 +62,35 @@ export class StartCombatDialogComponent {
     this.fightSessionService
       .fightSession(this.data.sessionId)
       .pipe(take(1))
-      .subscribe((session) => {
-        this.adversaries.set([
-          ...(session.pnjs ?? []).map((p) => ({nom: p.surnom ?? p.nom})),
-          ...(session.creatures ?? []).map((c) => ({nom: c.surnom ?? c.nom})),
-          ...(session.demons ?? []).map((d) => ({nom: d.surnom ?? d.nom})),
-        ]);
-        this.existingHeroIds.set(new Set((session.heros ?? []).map((h) => String(h.heros_id))));
-        this.existingPnjIds.set(
-          new Set((session.pnjs ?? []).map((p) => p.pnj_id).filter((id): id is string => !!id).map(String)),
-        );
+      .subscribe({
+        next: (session) => {
+          this.adversaries.set([
+            ...(session.pnjs ?? []).map((p) => ({nom: p.surnom ?? p.nom})),
+            ...(session.creatures ?? []).map((c) => ({nom: c.surnom ?? c.nom})),
+            ...(session.demons ?? []).map((d) => ({nom: d.surnom ?? d.nom})),
+          ]);
+          this.existingHeroIds.set(new Set((session.heros ?? []).map((h) => String(h.heros_id))));
+          this.existingPnjIds.set(
+            new Set((session.pnjs ?? []).map((p) => p.pnj_id).filter((id): id is string => !!id).map(String)),
+          );
 
-        const previousResultats = new Map(this.heroes().map((h) => [h.pivotId, h.resultat]));
-        this.heroes.set(
-          (session.heros ?? []).map((h) => ({
-            pivotId: h.id,
-            herosId: h.heros_id,
-            nom: h.heros?.origines.nom ?? 'Héros',
-            resultat: previousResultats.get(h.id) ?? h.initiative_resultat,
-          })),
-        );
-        this.loading.set(false);
+          const previousResultats = new Map(this.heroes().map((h) => [h.pivotId, h.resultat]));
+          this.heroes.set(
+            (session.heros ?? []).map((h) => ({
+              pivotId: h.id,
+              herosId: h.heros_id,
+              nom: h.heros?.origines.nom ?? 'Héros',
+              resultat: previousResultats.get(h.id) ?? h.initiative_resultat,
+            })),
+          );
+          this.loading.set(false);
+        },
+        error: (error: unknown) => {
+          this.loading.set(false);
+          this.snackBar.open(extractApiErrorMessage(error, 'Impossible de charger la session.'), 'Fermer', {
+            duration: 5000,
+          });
+        },
       });
   }
 
