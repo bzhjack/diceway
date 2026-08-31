@@ -30,8 +30,6 @@
   flex-direction: column;
   width: 26rem;
   max-width: 100%;
-  padding: 0.9rem 1.1rem 1.1rem;
-  gap: 0.8rem;
 }
 
 .skd-header {
@@ -39,9 +37,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding-bottom: 0.6rem;
+  padding: 0.4rem 0.9rem;
   border-bottom: 1px solid color-mix(in srgb, var(--dw-color-legendary) 32%, transparent);
-  margin-bottom: 0.4rem;
 }
 
 .skd-title {
@@ -94,6 +91,7 @@
 }
 
 .skd-result {
+  margin: 0.7rem 1.1rem 0;
   padding: 1rem;
   border-radius: 10px;
   border: 1px solid var(--dw-border);
@@ -152,13 +150,14 @@
   --dice-box-min-height: 11rem;
   --dice-box-min-width: 11rem;
   display: block;
+  margin: 0.7rem 1.1rem 0;
   border-radius: 10px;
   border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 28%, transparent);
   overflow: hidden;
 }
 
 .skd-formula {
-  margin: 0;
+  margin: 0.4rem 1.1rem 0;
   text-align: center;
   font-size: 1.5rem;
   color: var(--dw-surface-700);
@@ -170,6 +169,7 @@
 }
 
 .skd-reroll {
+  margin: 0.7rem 1.1rem 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -205,7 +205,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 0.75rem;
+  margin: 0.7rem 1.1rem 0;
 }
 
 .skd-row-label {
