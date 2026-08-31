@@ -11,6 +11,7 @@ use App\Models\Bol\BolHerosArmure;
 use App\Models\Bol\BolHerosCarriere;
 use App\Models\Bol\BolHerosLangue;
 use App\Models\Bol\BolHerosTrait;
+use App\Http\Services\Bol\BolEquipmentEffectService;
 use App\Http\Services\Bol\BolHerosService;
 use App\Http\Requests\Bol\BolHerosRequest;
 use Illuminate\Http\Request;
@@ -247,8 +248,13 @@ class BolHerosController extends Controller
             if ($armureId === 0) {
                 continue;
             }
-            BolHerosArmure::updateOrCreate(['heros_id' => $herosId, 'armure_id' => $armureId], []);
+            $equipee = is_array($armure) ? (bool) ($armure['equipee'] ?? false) : false;
+            BolHerosArmure::updateOrCreate(
+                ['heros_id' => $herosId, 'armure_id' => $armureId],
+                ['equipee' => $equipee]
+            );
         }
+        (new BolEquipmentEffectService())->normalizeArmureEquipmentForHeros($herosId);
 
         $langues = $request->input('langues');
         $origines = $request->input('origines');
