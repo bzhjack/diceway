@@ -22,7 +22,7 @@ class BolHeros extends Model
         'vigueur', 'agilite', 'esprit', 'aura',
         'nom', 'avatar', 'region_id', 'region', 'joueur', 'langues', 'commentaire'
     ];
-    protected $appends = ['combat', 'attributs', 'origines', 'ressources', 'type_order', 'agilite_effective', 'initiative_effective', 'defense_effective', 'equipement_effectif'];
+    protected $appends = ['combat', 'attributs', 'origines', 'ressources', 'type_order', 'equipement_effectif'];
     protected $fillable = [
         'user_id',
         'type',
@@ -94,9 +94,11 @@ class BolHeros extends Model
     {
         return [
             'initiative' => $this->initiative,
+            'initiative_effective' => $this->initiative_effective,
             'melee' => $this->melee,
             'tir' => $this->tir,
             'defense' => $this->defense,
+            'defense_effective' => $this->defense_effective,
         ];
     }
 
@@ -105,6 +107,7 @@ class BolHeros extends Model
         return [
             'vigueur' => $this->vigueur,
             'agilite' => $this->agilite,
+            'agilite_effective' => $this->agilite_effective,
             'esprit' => $this->esprit,
             'aura' => $this->aura,
         ];
