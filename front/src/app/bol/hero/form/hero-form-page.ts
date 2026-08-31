@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
+import {BolHerosArmureModel} from '../../models/bol-armure.model';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolRegionModel} from '../../models/bol-region.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
@@ -15,7 +16,15 @@ import {ArmeEntry, ArmeListComponent} from '../../shared/arme/list/arme-list.com
 import {ArmureEntry, ArmureListComponent} from '../../shared/armure/list/armure-list.component';
 import {CarriereEntry, CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
 import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
-import {IdDraft, RankedDraft, availableCatalog, referencedIds, selectedEntries} from '../../shared/form/form-selection';
+import {
+  ArmureDraft,
+  IdDraft,
+  RankedDraft,
+  applyArmureEquipToggle,
+  availableCatalog,
+  referencedIds,
+  selectedEntries,
+} from '../../shared/form/form-selection';
 import {LangueEntry} from '../../shared/langue/list/langue-list.component';
 import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
 import {TraitAddEvent} from '../../shared/trait/add-menu/trait-add-menu.component';
@@ -49,7 +58,7 @@ export interface HeroFormModel {
   foi: number;
   creation: number;
   armes: IdDraft[];
-  armures: IdDraft[];
+  armures: ArmureDraft[];
   carrieres: RankedDraft[];
   langues: IdDraft[];
   traits: TraitDraft[];
@@ -282,8 +291,25 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
       protection: armure.protection,
       malus: armure.malus,
       ptsDePouvoir: armure.pts_de_pouvoir,
+      categorie: armure.categorie,
+      equipee: entry.equipee,
+      malusAgilite: armure.malus_agilite,
+      malusInitiative: armure.malus_initiative,
     }),
   );
+
+  protected readonly agiliteMalusTotal = computed(() =>
+    this.selectedArmures()
+      .filter((armure) => armure.equipee)
+      .reduce((sum, armure) => sum + armure.malusAgilite, 0),
+  );
+
+  protected readonly initiativeMalusTotal = computed(() =>
+    this.selectedArmures()
+      .filter((armure) => armure.equipee)
+      .reduce((sum, armure) => sum + armure.malusInitiative, 0),
+  );
+
   protected readonly selectedCarrieres = selectedEntries(
     this.selectedCarrieresDraft,
     this.carrieresList,
@@ -340,11 +366,19 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
   }
 
   protected addArmureEntry(id: number): void {
-    this.model.update((current) => ({...current, armures: [...current.armures, {id}]}));
+    this.model.update((current) => ({...current, armures: [...current.armures, {id, equipee: false}]}));
   }
 
   protected removeArmure(index: number): void {
     this.model.update((current) => ({...current, armures: current.armures.filter((_, i) => i !== index)}));
+  }
+
+  protected toggleArmureEquipped(index: number): void {
+    const catalog = this.armuresList() ?? [];
+    this.model.update((current) => ({
+      ...current,
+      armures: applyArmureEquipToggle(current.armures, index, (id) => catalog.find((a) => a.id === id)?.categorie ?? null),
+    }));
   }
 
   protected addLangueEntry(id: number): void {
@@ -443,7 +477,9 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
       foi: hero.ressources.foi,
       creation: hero.ressources.creation,
       armes: referencedIds(hero.armes, (arme) => arme.arme_id).map((id) => ({id})),
-      armures: referencedIds(hero.armures, (armure) => armure.armure_id).map((id) => ({id})),
+      armures: (hero.armures as (BolHerosArmureModel | number)[])
+        .filter((armure): armure is BolHerosArmureModel => typeof armure === 'object')
+        .map((armure) => ({id: armure.armure_id, equipee: Boolean(armure.equipee)})),
       langues: referencedIds(hero.origines.langues, (langue) => langue.langue_id).map((id) => ({id})),
       carrieres: hero.carrieres.map((carriere) => ({
         id: carriere.carriere_id ?? 0,
@@ -510,6 +546,7 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
     const armures = rawValue.armures.map((armure) => ({
       id: armure.id,
       armure_id: armure.id,
+      equipee: armure.equipee,
     }));
     const langues = rawValue.langues.map((langue) => ({
       id: langue.id,

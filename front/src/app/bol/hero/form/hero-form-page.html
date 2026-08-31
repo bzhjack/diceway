@@ -118,6 +118,16 @@
 
                 <div class="dw-section--form">
                   <bol-stats-grid [form]="statsForm" [groups]="heroStatGroups" />
+                  @if (agiliteMalusTotal() > 0 || initiativeMalusTotal() > 0) {
+                    <p class="hfp-effective-hint">
+                      @if (agiliteMalusTotal() > 0) {
+                        <span>Agilité effective : {{ model().agilite - agiliteMalusTotal() }} (équipement −{{ agiliteMalusTotal() }})</span>
+                      }
+                      @if (initiativeMalusTotal() > 0) {
+                        <span>Initiative effective : {{ model().initiative - initiativeMalusTotal() }} (équipement −{{ initiativeMalusTotal() }})</span>
+                      }
+                    </p>
+                  }
                 </div>
 
                 <div class="grid gap-4 xl:grid-cols-2 xl:items-start">
@@ -160,7 +170,11 @@
                       />
                     </div>
 
-                    <bol-armure-list [armures]="selectedArmures()" (removed)="removeArmure($event)" />
+                    <bol-armure-list
+                      [armures]="selectedArmures()"
+                      (removed)="removeArmure($event)"
+                      (equippedToggled)="toggleArmureEquipped($event)"
+                    />
                   </div>
                 </div>
               </div>
