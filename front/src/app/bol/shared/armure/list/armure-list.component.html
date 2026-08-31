@@ -8,6 +8,10 @@
       (toggled)="toggle(armure)"
     >
       <ng-container row-body>
+        <p class="dw-entry-meta">
+          <span class="dw-entry-detail-title">Catégorie :</span>
+          {{ categorieLabel(armure.categorie) }}
+        </p>
         @if (armure.protection) {
           <p class="dw-entry-meta">
             <span class="dw-entry-detail-title">Protection :</span>
@@ -26,6 +30,10 @@
             {{ armure.ptsDePouvoir }}
           </p>
         }
+
+        <mat-slide-toggle [checked]="armure.equipee" (change)="equippedToggled.emit(index)">
+          Équipé·e
+        </mat-slide-toggle>
 
         <button mat-button type="button" class="dw-entry-delete-btn" (click)="removed.emit(index)">
           <mat-icon>delete</mat-icon> Supprimer
