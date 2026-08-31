@@ -10,14 +10,16 @@ export interface SkillCheckDialogData {
   readonly agilite: number;
   readonly vigueur: number;
   readonly esprit: number;
+  readonly aura: number;
 }
 
-export type SkillAttribute = 'agilite' | 'vigueur' | 'esprit';
+export type SkillAttribute = 'agilite' | 'vigueur' | 'esprit' | 'aura';
 
 export const SKILL_ATTRIBUTE_LABELS: Record<SkillAttribute, string> = {
   agilite: 'Agilité',
   vigueur: 'Vigueur',
   esprit: 'Esprit',
+  aura: 'Aura',
 };
 
 export interface SkillDifficulty {
@@ -56,8 +58,6 @@ export function suggestedSkillResult(
   return a + b + modifierSum >= threshold ? 'reussite' : 'echec';
 }
 
-export type SkillRollInputMode = 'virtuel' | 'manuel';
-
 /** Reconstruit une paire de dés valide à partir d'un total 2d6 saisi à la main — un total de 2 ou 12
  * n'est atteignable que par (1,1) ou (6,6), donc la règle absolue (2/12 naturel) reste correcte sans
  * demander les deux faces séparément ; les autres totaux n'ont pas besoin d'une paire fidèle au jet réel. */
@@ -89,7 +89,7 @@ export class SkillCheckDialogComponent {
 
   private readonly diceBox = viewChild.required(DiceBoxHostComponent);
 
-  protected readonly attributes: readonly SkillAttribute[] = ['agilite', 'vigueur', 'esprit'];
+  protected readonly attributes: readonly SkillAttribute[] = ['agilite', 'vigueur', 'esprit', 'aura'];
   protected readonly attributeLabels = SKILL_ATTRIBUTE_LABELS;
   protected readonly difficulties = SKILL_DIFFICULTIES;
   // 8 paliers ne tiennent pas sur une seule barre segmentée à la largeur du dialog — deux barres
@@ -105,8 +105,8 @@ export class SkillCheckDialogComponent {
   protected readonly rolling = signal(false);
   protected readonly dice = signal<readonly [number, number] | null>(null);
 
-  /** Dés virtuels (boîte 3D) ou résultat saisi à la main (dés physiques lancés à table). */
-  protected readonly inputMode = signal<SkillRollInputMode>('virtuel');
+  /** Saisie manuelle du total (dés physiques lancés à table) — toujours disponible à côté du bouton
+   * de lancer virtuel, pas derrière un bascule de mode : le MJ choisit l'un ou l'autre sans clic préalable. */
   protected readonly manualTotal = signal<number | null>(null);
   protected readonly manualTotalValid = computed(() => {
     const t = this.manualTotal();
@@ -176,16 +176,6 @@ export class SkillCheckDialogComponent {
     } finally {
       this.rolling.set(false);
     }
-  }
-
-  protected setInputMode(change: MatButtonToggleChange): void {
-    const mode = change.value as SkillRollInputMode;
-    if (mode === this.inputMode()) {
-      return;
-    }
-    this.inputMode.set(mode);
-    this.dice.set(null);
-    this.manualTotal.set(null);
   }
 
   protected onManualTotalInput(value: string): void {

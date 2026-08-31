@@ -507,6 +507,7 @@ export class SessionPlayPageComponent {
             agilite: hero.attributs.agilite,
             vigueur: hero.attributs.vigueur,
             esprit: hero.attributs.esprit,
+            aura: hero.attributs.aura,
           },
         });
       });

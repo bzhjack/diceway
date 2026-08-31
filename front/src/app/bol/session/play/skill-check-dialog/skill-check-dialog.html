@@ -1,7 +1,7 @@
 <div class="skd-shell">
   <div class="skd-header">
     <h2 mat-dialog-title class="skd-title">
-      <div class="skd-title-eyebrow">Jet de compétence</div>
+      <div class="skd-title-eyebrow">Jet d'action</div>
       <div class="skd-title-name">{{ data.heroNom }}</div>
     </h2>
     <button type="button" class="skd-close" aria-label="Fermer" (click)="close()">
@@ -65,41 +65,34 @@
     </div>
   }
 
-  <div class="skd-row">
-    <span class="skd-row-label">Dés</span>
-    <mat-button-toggle-group class="skd-toggle" [value]="inputMode()" [hideSingleSelectionIndicator]="true" (change)="setInputMode($event)">
-      <mat-button-toggle value="virtuel">Virtuels</mat-button-toggle>
-      <mat-button-toggle value="manuel">Lancés à table</mat-button-toggle>
-    </mat-button-toggle-group>
-  </div>
+  <app-dice-box-host class="skd-box" [scale]="12" />
 
-  @if (inputMode() === 'virtuel') {
-    <app-dice-box-host class="skd-box" [scale]="12" />
+  <p class="skd-formula">{{ formula() }}</p>
 
-    <p class="skd-formula">{{ formula() }}</p>
-
+  <div class="skd-roll-row">
+    <input
+      type="number"
+      min="2"
+      max="12"
+      step="1"
+      placeholder="Total des 2d6 (2-12)"
+      aria-label="Total des deux dés lancés à table"
+      [value]="manualTotal() ?? ''"
+      (input)="onManualTotalInput($any($event.target).value)"
+      (keydown.enter)="submitManualTotal()"
+    />
+    <button
+      type="button"
+      class="skd-manual-confirm"
+      aria-label="Valider le total saisi"
+      [disabled]="!manualTotalValid()"
+      (click)="submitManualTotal()"
+    >
+      <mat-icon>check</mat-icon>
+    </button>
     <button type="button" class="skd-reroll" [disabled]="rolling()" (click)="roll()">
       <mat-icon>refresh</mat-icon>
       {{ dice() ? 'Relancer' : 'Lancer 2d6' }}
     </button>
-  } @else {
-    <p class="skd-formula">{{ formula() }}</p>
-
-    <div class="skd-manual">
-      <input
-        type="number"
-        min="2"
-        max="12"
-        step="1"
-        placeholder="Total des 2d6 (2-12)"
-        aria-label="Total des deux dés lancés à table"
-        [value]="manualTotal() ?? ''"
-        (input)="onManualTotalInput($any($event.target).value)"
-      />
-      <button type="button" [disabled]="!manualTotalValid()" (click)="submitManualTotal()">
-        <mat-icon>check</mat-icon>
-        Valider
-      </button>
-    </div>
-  }
+  </div>
 </div>
