@@ -27,7 +27,7 @@ import {
 } from '../../shared/statblock/bol-statblock.builders';
 import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialog';
 import {resolveAttackStats} from '../combat-attack.util';
-import {buildPlayBoard, PlayToken} from '../combat-play.util';
+import {buildPlayBoard, EMPTY_AVATAR, PlayToken} from '../combat-play.util';
 import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
 import {AdjustHeroStatsDialogComponent} from './adjust-hero-stats-dialog/adjust-hero-stats-dialog';
 import {AttackMenuComponent, CombatReminderStat} from './attack-menu/attack-menu';
@@ -153,6 +153,18 @@ export class SessionPlayPageComponent {
 
   protected readonly kindIcon = combatantKindIcon;
   protected readonly kindIconIsSvg = combatantKindIconIsSvg;
+
+  /** Jetons (clé) dont l'avatar a échoué au chargement (404 sur un chemin conventionnel sans fichier réel) — retombe sur l'icône de type plutôt qu'une image cassée. */
+  private readonly brokenAvatars = signal<ReadonlySet<string>>(new Set());
+
+  /** true si ce jeton a un portrait réel à afficher (ni le placeholder générique, ni un avatar dont le chargement a échoué). */
+  protected hasAvatar(token: PlayToken): boolean {
+    return token.avatar !== EMPTY_AVATAR && !this.brokenAvatars().has(token.key);
+  }
+
+  protected onAvatarError(token: PlayToken): void {
+    this.brokenAvatars.update((set) => new Set(set).add(token.key));
+  }
 
   constructor() {
     const id = this.route.snapshot.paramMap.get('id');

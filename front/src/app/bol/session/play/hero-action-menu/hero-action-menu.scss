@@ -1,25 +1,37 @@
+// `:host { display: contents; }` — même pattern que `bol-attack-menu` : le bouton doit se positionner
+// par rapport à `.cp-token-portrait` (l'ancêtre réel), pas par rapport à ce composant.
+:host {
+  display: contents;
+}
+
+// Même langage visuel que `.am-trigger` (bouton épée du menu d'attaque) : accent or, anneau de
+// découpe sur le fond du plateau. Toujours visible (contrairement à `.am-trigger` qui n'apparaît
+// qu'au survol) car ce menu est le point d'action principal d'un héros en mode libre — le jeu se
+// joue aussi sur tablette à table, où le survol n'existe pas.
 .ham-trigger {
   position: absolute;
-  top: -0.4rem;
+  top: -0.35rem;
   right: -0.4rem;
-  width: 1.75rem;
-  height: 1.75rem;
+  width: 1.9rem;
+  height: 1.9rem;
   border-radius: 999px;
-  border: 1px solid var(--dw-border);
-  background: var(--dw-surface-700);
-  color: inherit;
+  border: 2px solid var(--dw-surface-0);
+  background: var(--dw-color-legendary);
+  color: #1c1200;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
   cursor: pointer;
+  z-index: 3;
 
   mat-icon {
-    font-size: 1.1rem;
-    width: 1.1rem;
-    height: 1.1rem;
+    font-size: 1.05rem;
+    width: 1.05rem;
+    height: 1.05rem;
   }
 
   &:hover {
-    background: var(--dw-surface-600);
+    background: color-mix(in srgb, var(--dw-color-legendary) 85%, white);
   }
 }

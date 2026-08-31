@@ -6,10 +6,10 @@
 
 .am-trigger {
   position: absolute;
-  top: -0.2rem;
-  right: -0.3rem;
-  width: 1.15rem;
-  height: 1.15rem;
+  top: -0.35rem;
+  right: -0.4rem;
+  width: 1.9rem;
+  height: 1.9rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,12 +22,12 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.12s ease;
-  z-index: 2;
+  z-index: 3;
 
   .mat-icon {
-    font-size: 0.7rem;
-    width: 0.7rem;
-    height: 0.7rem;
+    font-size: 1.05rem;
+    width: 1.05rem;
+    height: 1.05rem;
   }
 }
 

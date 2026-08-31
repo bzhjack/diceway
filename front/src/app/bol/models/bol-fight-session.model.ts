@@ -62,6 +62,7 @@ export interface BolFightSessionCreatureModel {
   protection: string | null;
   id_taille: number;
   capacites: BolFightSessionCapaciteModel[] | null;
+  creature?: {avatar: string | null};
 }
 
 export interface BolFightSessionPouvoirModel {
@@ -92,6 +93,7 @@ export interface BolFightSessionDemonModel {
   vitalite_instances: number[] | null;
   degats: string | null;
   pouvoirs: BolFightSessionPouvoirModel[] | null;
+  demon?: {avatar: string | null};
 }
 
 export interface BolFightSessionArmeModel {
@@ -118,6 +120,7 @@ export interface BolFightSessionPnjModel {
   vitalite_max: number;
   vitalite_courante: number;
   armes: BolFightSessionArmeModel[] | null;
+  pnj?: {origines: {avatar: string | null}};
 }
 
 /** Payload d'envoi pour créer une fight-session (les stats sont snapshotées côté back). */

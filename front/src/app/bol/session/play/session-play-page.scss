@@ -381,21 +381,67 @@
 
 .cp-token-portrait {
   position: relative;
-  width: 2.3rem;
-  height: 2.3rem;
+  width: 4.5rem;
+  height: 4.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--dw-surface-0) 60%, transparent);
+  border: 1px solid var(--dw-border);
+  background: color-mix(in srgb, var(--dw-surface-0) 55%, transparent);
   color: var(--dw-surface-900);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
 
+.cp-token-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 999px;
+}
+
+// Pas de portrait réel (avatar non renseigné ou en échec de chargement) : on retombe sur une grande
+// icône de type centrée, plutôt que d'agrandir le placeholder générique « image cassée ».
+.cp-token-portrait--fallback {
   .mat-icon {
-    font-size: 1.15rem;
-    width: 1.15rem;
-    height: 1.15rem;
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
   }
 }
+
+.cp-token-portrait--hero { background: color-mix(in srgb, var(--dw-color-reussite) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
+.cp-token-portrait--pnj { background: color-mix(in srgb, var(--dw-color-pnj) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
+.cp-token-portrait--creature { background: color-mix(in srgb, var(--dw-color-creature) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
+.cp-token-portrait--demon { background: color-mix(in srgb, var(--dw-color-demon) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
+
+// Même langage visuel que `.cp-rail-kind` (badge de type sur la puce de la frise d'initiative),
+// à échelle plus grande puisque le portrait de plateau est nettement plus grand que la puce de frise.
+.cp-token-kind {
+  position: absolute;
+  bottom: -0.2rem;
+  right: -0.2rem;
+  width: 1.9rem;
+  height: 1.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 2px solid var(--dw-surface-0);
+  color: #04120a;
+  z-index: 1;
+
+  .mat-icon {
+    font-size: 1.05rem;
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+}
+
+.cp-token-kind--hero { background: var(--dw-color-reussite); }
+.cp-token-kind--pnj { background: var(--dw-color-pnj); }
+.cp-token-kind--creature { background: var(--dw-color-creature); }
+.cp-token-kind--demon { background: var(--dw-color-demon); }
 
 // Le bouton épée (survol/mode ciblage) est stylé dans `attack-menu.scss` (`bol-attack-menu`), via
 // `:host-context(.cp-token…)` — il ne peut plus être ciblé en descendant CSS depuis cette feuille.
@@ -415,14 +461,9 @@
   color: #1c1200;
 }
 
-.cp-token--hero .cp-token-portrait { background: color-mix(in srgb, var(--dw-color-reussite) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
-.cp-token--pnj .cp-token-portrait { background: color-mix(in srgb, var(--dw-color-pnj) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
-.cp-token--creature .cp-token-portrait { background: color-mix(in srgb, var(--dw-color-creature) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
-.cp-token--demon .cp-token-portrait { background: color-mix(in srgb, var(--dw-color-demon) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
-
 .cp-token-name {
   margin: 0;
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   font-weight: 700;
   color: var(--dw-surface-700);
   text-align: center;
@@ -430,15 +471,15 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 4.5rem;
+  max-width: 6rem;
   background: color-mix(in srgb, var(--dw-surface-0) 55%, transparent);
-  padding: 0.02rem 0.3rem;
+  padding: 0.05rem 0.4rem;
   border-radius: 4px;
 }
 
 .cp-token-hpbar {
-  width: 1.8rem;
-  height: 3px;
+  width: 3rem;
+  height: 4px;
   border-radius: 2px;
   background: var(--dw-surface-100);
   overflow: hidden;
@@ -451,17 +492,17 @@
 }
 
 .cp-token-hpval {
-  font-size: 0.56rem;
+  font-size: 0.62rem;
   color: var(--dw-surface-500);
   font-variant-numeric: tabular-nums;
 }
 
 .cp-token-lock {
   position: absolute;
-  top: -0.3rem;
-  right: -0.35rem;
-  width: 0.7rem;
-  height: 0.7rem;
+  top: -0.35rem;
+  right: -0.4rem;
+  width: 0.85rem;
+  height: 0.85rem;
   border-radius: 999px;
   background: var(--dw-color-echec-forte);
   border: 2px solid var(--dw-surface-0);

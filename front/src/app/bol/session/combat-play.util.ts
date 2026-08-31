@@ -1,7 +1,7 @@
 import {BolFightSessionModel, CombatCamp} from '../models/bol-fight-session.model';
 import {buildInitiativeOrderFrom, InitiativeKind, InitiativeSource, InitiativeTierKey} from './initiative.util';
 
-const EMPTY_AVATAR = '/assets/bol/empty-avatar.jpg';
+export const EMPTY_AVATAR = '/assets/bol/empty-avatar.jpg';
 
 /**
  * Stats de combat d'un jeton. Pour un héros, rien n'est snapshoté côté session : ces champs
@@ -89,7 +89,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       key: `pnj-${p.id}`,
       kind: 'pnj',
       nom: p.surnom ?? p.nom,
-      avatar: p.pnj_id ? `/assets/bol/pnj/${p.pnj_id}.jpg` : EMPTY_AVATAR,
+      avatar: p.pnj?.origines.avatar || (p.pnj_id ? `/assets/bol/pnj/${p.pnj_id}.jpg` : null) || EMPTY_AVATAR,
       rang: p.rang,
       resultat: null,
       camp: p.camp,
@@ -114,7 +114,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
   for (const c of session.creatures ?? []) {
     const qty = Math.max(1, c.qty);
     const nom = c.surnom ?? c.nom;
-    const avatar = c.creature_id ? `/assets/bol/bestiary/${c.creature_id}.jpg` : EMPTY_AVATAR;
+    const avatar = c.creature?.avatar || (c.creature_id ? `/assets/bol/bestiary/${c.creature_id}.jpg` : null) || EMPTY_AVATAR;
     for (let i = 0; i < qty; i++) {
       sources.push({
         key: `creature-${c.id}-${i}`,
@@ -146,7 +146,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
   for (const d of session.demons ?? []) {
     const qty = Math.max(1, d.qty);
     const nom = d.surnom ?? d.nom;
-    const avatar = d.demon_id ? `/assets/bol/demon/${d.demon_id}.jpg` : EMPTY_AVATAR;
+    const avatar = d.demon?.avatar || (d.demon_id ? `/assets/bol/demon/${d.demon_id}.jpg` : null) || EMPTY_AVATAR;
     for (let i = 0; i < qty; i++) {
       sources.push({
         key: `demon-${d.id}-${i}`,
