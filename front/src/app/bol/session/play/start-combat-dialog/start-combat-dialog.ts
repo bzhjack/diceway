@@ -16,6 +16,7 @@ export interface StartCombatDialogData {
 }
 
 interface AdversaryRow {
+  readonly pivotId: number;
   readonly nom: string;
 }
 
@@ -65,9 +66,9 @@ export class StartCombatDialogComponent {
       .subscribe({
         next: (session) => {
           this.adversaries.set([
-            ...(session.pnjs ?? []).map((p) => ({nom: p.surnom ?? p.nom})),
-            ...(session.creatures ?? []).map((c) => ({nom: c.surnom ?? c.nom})),
-            ...(session.demons ?? []).map((d) => ({nom: d.surnom ?? d.nom})),
+            ...(session.pnjs ?? []).map((p) => ({pivotId: p.id, nom: p.surnom ?? p.nom})),
+            ...(session.creatures ?? []).map((c) => ({pivotId: c.id, nom: c.surnom ?? c.nom})),
+            ...(session.demons ?? []).map((d) => ({pivotId: d.id, nom: d.surnom ?? d.nom})),
           ]);
           this.existingHeroIds.set(new Set((session.heros ?? []).map((h) => String(h.heros_id))));
           this.existingPnjIds.set(

@@ -182,7 +182,7 @@ export class SessionPlayPageComponent {
         width: 'min(760px, 94vw)',
         maxWidth: '94vw',
         maxHeight: '85vh',
-        data: {sessionId, existingHeroIds, existingPnjIds},
+        data: {sessionId, existingHeroIds, existingPnjIds, lockKind: this.mode() === 'libre' ? 'hero' : undefined},
       })
       .afterClosed()
       .subscribe((didAdd: boolean | undefined) => {
@@ -291,19 +291,26 @@ export class SessionPlayPageComponent {
     this.herosService
       .heros(herosId)
       .pipe(take(1))
-      .subscribe((hero) => {
-        const armes = Array.isArray(hero.armes) && hero.armes.length > 0 && typeof hero.armes[0] !== 'number' ? (hero.armes as BolHerosArmeModel[]) : [];
-        this.heroMenuData.update((map) =>
-          new Map(map).set(token.key, {
-            armes,
-            agilite: hero.attributs.agilite,
-            vigueur: hero.attributs.vigueur,
-            esprit: hero.attributs.esprit,
-            melee: hero.combat.melee,
-            tir: hero.combat.tir,
-            defense: hero.combat.defense,
-          }),
-        );
+      .subscribe({
+        next: (hero) => {
+          const armes = Array.isArray(hero.armes) && hero.armes.length > 0 && typeof hero.armes[0] !== 'number' ? (hero.armes as BolHerosArmeModel[]) : [];
+          this.heroMenuData.update((map) =>
+            new Map(map).set(token.key, {
+              armes,
+              agilite: hero.attributs.agilite,
+              vigueur: hero.attributs.vigueur,
+              esprit: hero.attributs.esprit,
+              melee: hero.combat.melee,
+              tir: hero.combat.tir,
+              defense: hero.combat.defense,
+            }),
+          );
+        },
+        error: (error: unknown) => {
+          this.snackBar.open(extractApiErrorMessage(error, 'Impossible de charger les armes de ce héros.'), 'Fermer', {
+            duration: 5000,
+          });
+        },
       });
   }
 
@@ -471,16 +478,26 @@ export class SessionPlayPageComponent {
   }
 
   protected onSkillCheck(token: PlayToken): void {
-    const data = this.heroMenuData().get(token.key);
-    if (!data) {
+    const herosId = token.combat.sourceId;
+    if (!herosId) {
       return;
     }
 
-    this.dialog.open(SkillCheckDialogComponent, {
-      maxWidth: 'min(30rem, 92vw)',
-      panelClass: 'skd-panel',
-      data: {heroNom: token.nom, agilite: data.agilite, vigueur: data.vigueur, esprit: data.esprit},
-    });
+    this.herosService
+      .heros(herosId)
+      .pipe(take(1))
+      .subscribe((hero) => {
+        this.dialog.open(SkillCheckDialogComponent, {
+          maxWidth: 'min(30rem, 92vw)',
+          panelClass: 'skd-panel',
+          data: {
+            heroNom: token.nom,
+            agilite: hero.attributs.agilite,
+            vigueur: hero.attributs.vigueur,
+            esprit: hero.attributs.esprit,
+          },
+        });
+      });
   }
 
   protected onAdjustStats(token: PlayToken): void {

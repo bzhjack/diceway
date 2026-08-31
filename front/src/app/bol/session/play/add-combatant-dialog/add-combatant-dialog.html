@@ -1,33 +1,37 @@
 <h2 mat-dialog-title>Ajouter un combattant</h2>
 
 <mat-dialog-content>
-  <div class="acd-camp-toggle">
-    <button type="button" [class.acd-camp--active]="camp() === 'heros'" (click)="setCamp('heros')">
-      Héros
-    </button>
-    <button type="button" [class.acd-camp--active]="camp() === 'adversaires'" (click)="setCamp('adversaires')">
-      Adversaires
-    </button>
-  </div>
-
-  <div class="acd-filters">
-    <div class="acd-tabs">
-      <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'all'" (click)="setType('all')">
-        Tous
-      </button>
-      <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'hero'" (click)="setType('hero')">
+  @if (!lockKind) {
+    <div class="acd-camp-toggle">
+      <button type="button" [class.acd-camp--active]="camp() === 'heros'" (click)="setCamp('heros')">
         Héros
       </button>
-      <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'pnj'" (click)="setType('pnj')">
-        PNJ
-      </button>
-      <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'creature'" (click)="setType('creature')">
-        Créatures
-      </button>
-      <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'demon'" (click)="setType('demon')">
-        Démons
+      <button type="button" [class.acd-camp--active]="camp() === 'adversaires'" (click)="setCamp('adversaires')">
+        Adversaires
       </button>
     </div>
+  }
+
+  <div class="acd-filters">
+    @if (!lockKind) {
+      <div class="acd-tabs">
+        <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'all'" (click)="setType('all')">
+          Tous
+        </button>
+        <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'hero'" (click)="setType('hero')">
+          Héros
+        </button>
+        <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'pnj'" (click)="setType('pnj')">
+          PNJ
+        </button>
+        <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'creature'" (click)="setType('creature')">
+          Créatures
+        </button>
+        <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'demon'" (click)="setType('demon')">
+          Démons
+        </button>
+      </div>
+    }
 
     <mat-form-field subscriptSizing="dynamic" class="acd-search">
       <mat-label>Rechercher</mat-label>

@@ -14,7 +14,7 @@
 
       @if (adversaries().length) {
         <ul class="scd-list">
-          @for (a of adversaries(); track a.nom) {
+          @for (a of adversaries(); track a.pivotId) {
             <li>{{ a.nom }}</li>
           }
         </ul>

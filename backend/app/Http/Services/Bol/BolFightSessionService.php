@@ -111,8 +111,9 @@ class BolFightSessionService
         BolFightSessionCreature::where('fight_session_id', $sessionId)->delete();
         BolFightSessionDemon::where('fight_session_id', $sessionId)->delete();
         BolFightSessionPnj::where('fight_session_id', $sessionId)->delete();
+        BolFightSessionHeros::where('fight_session_id', $sessionId)->update(['initiative_resultat' => null]);
 
-        $session->update(['statut' => 'libre']);
+        $session->update(['statut' => 'libre', 'ordre_manuel' => null]);
 
         return $this->getSessionWithRelations($sessionId);
     }

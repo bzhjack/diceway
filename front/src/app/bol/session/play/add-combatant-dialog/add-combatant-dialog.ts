@@ -19,6 +19,8 @@ export interface AddCombatantDialogData {
   /** Ids source (heros_id / pnj_id) déjà présents dans la session — un héros ou un PNJ ne peut y figurer qu'une fois. */
   readonly existingHeroIds: ReadonlySet<string>;
   readonly existingPnjIds: ReadonlySet<string>;
+  /** Restreint le catalogue à un seul type (héros seuls en mode libre) et masque le toggle de camp + les onglets de filtre. */
+  readonly lockKind?: CombatantKind;
 }
 
 function duplicateKey(kind: CombatantKind, sourceId: string): string {
@@ -40,9 +42,10 @@ export class AddCombatantDialogComponent {
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly snackBar = inject(MatSnackBar);
 
-  protected readonly activeType = signal<CatalogFilter>('all');
+  protected readonly lockKind = this.data.lockKind ?? null;
+  protected readonly activeType = signal<CatalogFilter>(this.lockKind ?? 'all');
   protected readonly query = signal('');
-  protected readonly camp = signal<CombatCamp>('adversaires');
+  protected readonly camp = signal<CombatCamp>(this.lockKind === 'hero' ? 'heros' : 'adversaires');
   protected readonly addedCount = signal(0);
   protected readonly pendingCatalogId = signal<string | null>(null);
   /** Héros/PNJ ajoutés depuis l'ouverture du dialog (le dialog reste ouvert entre deux ajouts). */
@@ -53,7 +56,7 @@ export class AddCombatantDialogComponent {
   protected readonly rankLabel = combatantRankLabel;
 
   protected readonly filteredCatalog = computed(() => {
-    const type = this.activeType();
+    const type = this.lockKind ?? this.activeType();
     const query = this.query().trim().toLowerCase();
 
     return this.selection

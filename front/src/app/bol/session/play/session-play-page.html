@@ -120,7 +120,7 @@
     (dblclick)="openStatblock(token, $event)"
   >
     <div [class]="tokenClass(token)">
-      @if (token.lockedRound1) {
+      @if (mode() === 'combat' && token.lockedRound1) {
         <span class="cp-token-lock" title="Bloqué round 1"></span>
       }
       <div class="cp-token-portrait">

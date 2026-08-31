@@ -75,27 +75,42 @@ export class WorkspaceQuickActionsComponent {
     this.sessions.data().find((s) => s.statut === 'libre' || s.statut === 'combat'),
   );
 
-  private readonly sessionAction = computed<WorkspaceQuickAction>(() => {
+  /** Session ouverte : deux cartes (reprendre + nouvelle) puisque rien ne clôt jamais une session « libre »/« combat » côté app.
+   *  Aucune session ouverte : une seule carte « Nouvelle session », en primaire. */
+  private readonly sessionActions = computed<readonly WorkspaceQuickAction[]>(() => {
     const open = this.openSession();
-    return open?.id
-      ? {
-          label: 'Reprendre la session',
-          detail: open.titre ?? 'Continuer la session en cours.',
-          icon: 'groups',
-          link: `/session/${open.id}/play`,
-          severity: 'primary',
-        }
-      : {
+    if (!open?.id) {
+      return [
+        {
           label: 'Nouvelle session',
           detail: 'Ouvrir une session avec les héros présents à table.',
           icon: 'groups',
           link: '/session/new',
           severity: 'primary',
-        };
+        },
+      ];
+    }
+
+    return [
+      {
+        label: 'Reprendre la session',
+        detail: open.titre ?? 'Continuer la session en cours.',
+        icon: 'groups',
+        link: `/session/${open.id}/play`,
+        severity: 'primary',
+      },
+      {
+        label: 'Nouvelle session',
+        detail: 'Ouvrir une session avec les héros présents à table.',
+        icon: 'groups',
+        link: '/session/new',
+        severity: 'secondary',
+      },
+    ];
   });
 
   protected readonly quickActions = computed<readonly WorkspaceQuickAction[]>(() => [
-    this.sessionAction(),
+    ...this.sessionActions(),
     ...STATIC_ACTIONS,
   ]);
 }
