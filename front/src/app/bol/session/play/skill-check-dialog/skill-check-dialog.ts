@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal, ViewEncapsulation, viewChild} from '@angular/core';
+import {MatButtonToggleChange, MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
@@ -55,6 +56,16 @@ export function suggestedSkillResult(
   return a + b + modifierSum >= threshold ? 'reussite' : 'echec';
 }
 
+export type SkillRollInputMode = 'virtuel' | 'manuel';
+
+/** Reconstruit une paire de dés valide à partir d'un total 2d6 saisi à la main — un total de 2 ou 12
+ * n'est atteignable que par (1,1) ou (6,6), donc la règle absolue (2/12 naturel) reste correcte sans
+ * demander les deux faces séparément ; les autres totaux n'ont pas besoin d'une paire fidèle au jet réel. */
+export function diceFromTotal(total: number): readonly [number, number] {
+  const a = Math.max(1, Math.min(6, total - 6));
+  return [a, total - a];
+}
+
 const RESULT_LABELS: Record<InitiativeResultat, string> = {
   echec_critique: 'Échec critique',
   echec: 'Échec',
@@ -66,7 +77,7 @@ const RESULT_LABELS: Record<InitiativeResultat, string> = {
 /** Jet de compétence générique (hors combat) : 2d6 + attribut + modificateur libre, comparé à un seuil choisi. */
 @Component({
   selector: 'bol-skill-check-dialog',
-  imports: [MatDialogModule, MatIconModule, DiceBoxHostComponent],
+  imports: [MatButtonToggleModule, MatDialogModule, MatIconModule, DiceBoxHostComponent],
   templateUrl: './skill-check-dialog.html',
   styleUrl: './skill-check-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -81,6 +92,11 @@ export class SkillCheckDialogComponent {
   protected readonly attributes: readonly SkillAttribute[] = ['agilite', 'vigueur', 'esprit'];
   protected readonly attributeLabels = SKILL_ATTRIBUTE_LABELS;
   protected readonly difficulties = SKILL_DIFFICULTIES;
+  // 8 paliers ne tiennent pas sur une seule barre segmentée à la largeur du dialog — deux barres
+  // complètes de 4 (facile → difficile) plutôt qu'une grille qui reviendrait à la ligne, pour garder
+  // le rail segmenté d'un seul tenant sur chaque ligne (cf. piste B).
+  protected readonly difficultiesRow1 = SKILL_DIFFICULTIES.slice(0, 4);
+  protected readonly difficultiesRow2 = SKILL_DIFFICULTIES.slice(4);
 
   protected readonly attribute = signal<SkillAttribute>('agilite');
   protected readonly difficulty = signal<SkillDifficulty>(SKILL_DIFFICULTIES[2]); // Moyenne, par défaut
@@ -88,6 +104,14 @@ export class SkillCheckDialogComponent {
 
   protected readonly rolling = signal(false);
   protected readonly dice = signal<readonly [number, number] | null>(null);
+
+  /** Dés virtuels (boîte 3D) ou résultat saisi à la main (dés physiques lancés à table). */
+  protected readonly inputMode = signal<SkillRollInputMode>('virtuel');
+  protected readonly manualTotal = signal<number | null>(null);
+  protected readonly manualTotalValid = computed(() => {
+    const t = this.manualTotal();
+    return t !== null && Number.isInteger(t) && t >= 2 && t <= 12;
+  });
 
   protected readonly modifierSum = computed(
     () => this.data[this.attribute()] + this.difficulty().modifier + this.modifier(),
@@ -127,12 +151,15 @@ export class SkillCheckDialogComponent {
     return result === 'reussite' ? 'reussite' : result === 'heroique' ? 'heroique' : 'echec';
   });
 
-  protected setAttribute(attribute: SkillAttribute): void {
-    this.attribute.set(attribute);
+  protected setAttribute(change: MatButtonToggleChange): void {
+    this.attribute.set(change.value as SkillAttribute);
   }
 
-  protected setDifficulty(difficulty: SkillDifficulty): void {
-    this.difficulty.set(difficulty);
+  protected setDifficulty(change: MatButtonToggleChange): void {
+    const difficulty = this.difficulties.find((d) => d.label === change.value);
+    if (difficulty) {
+      this.difficulty.set(difficulty);
+    }
   }
 
   protected incrementModifier(delta: number): void {
@@ -149,6 +176,29 @@ export class SkillCheckDialogComponent {
     } finally {
       this.rolling.set(false);
     }
+  }
+
+  protected setInputMode(change: MatButtonToggleChange): void {
+    const mode = change.value as SkillRollInputMode;
+    if (mode === this.inputMode()) {
+      return;
+    }
+    this.inputMode.set(mode);
+    this.dice.set(null);
+    this.manualTotal.set(null);
+  }
+
+  protected onManualTotalInput(value: string): void {
+    const parsed = value === '' ? null : Number(value);
+    this.manualTotal.set(parsed === null || Number.isNaN(parsed) ? null : parsed);
+  }
+
+  protected submitManualTotal(): void {
+    const total = this.manualTotal();
+    if (total === null || !this.manualTotalValid()) {
+      return;
+    }
+    this.dice.set(diceFromTotal(total));
   }
 
   protected close(): void {

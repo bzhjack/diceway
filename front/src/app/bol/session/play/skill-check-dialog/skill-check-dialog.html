@@ -11,23 +11,32 @@
 
   <div class="skd-row">
     <span class="skd-row-label">Attribut</span>
-    <div class="skd-toggle">
+    <mat-button-toggle-group class="skd-toggle" [value]="attribute()" [hideSingleSelectionIndicator]="true" (change)="setAttribute($event)">
       @for (attr of attributes; track attr) {
-        <button type="button" [class.active]="attribute() === attr" (click)="setAttribute(attr)">
+        <mat-button-toggle [value]="attr">
           {{ attributeLabels[attr] }} ({{ data[attr] >= 0 ? '+' : '' }}{{ data[attr] }})
-        </button>
+        </mat-button-toggle>
       }
-    </div>
+    </mat-button-toggle-group>
   </div>
 
   <div class="skd-row">
     <span class="skd-row-label">Difficulté</span>
-    <div class="skd-toggle">
-      @for (d of difficulties; track d.label) {
-        <button type="button" [class.active]="difficulty() === d" (click)="setDifficulty(d)">
-          {{ d.label }} ({{ d.modifier >= 0 ? '+' : '' }}{{ d.modifier }})
-        </button>
-      }
+    <div class="skd-toggle-stack">
+      <mat-button-toggle-group class="skd-toggle" [value]="difficulty().label" [hideSingleSelectionIndicator]="true" (change)="setDifficulty($event)">
+        @for (d of difficultiesRow1; track d.label) {
+          <mat-button-toggle [value]="d.label">
+            {{ d.label }} ({{ d.modifier >= 0 ? '+' : '' }}{{ d.modifier }})
+          </mat-button-toggle>
+        }
+      </mat-button-toggle-group>
+      <mat-button-toggle-group class="skd-toggle" [value]="difficulty().label" [hideSingleSelectionIndicator]="true" (change)="setDifficulty($event)">
+        @for (d of difficultiesRow2; track d.label) {
+          <mat-button-toggle [value]="d.label">
+            {{ d.label }} ({{ d.modifier >= 0 ? '+' : '' }}{{ d.modifier }})
+          </mat-button-toggle>
+        }
+      </mat-button-toggle-group>
     </div>
   </div>
 
@@ -56,12 +65,41 @@
     </div>
   }
 
-  <app-dice-box-host class="skd-box" [scale]="12" />
+  <div class="skd-row">
+    <span class="skd-row-label">Dés</span>
+    <mat-button-toggle-group class="skd-toggle" [value]="inputMode()" [hideSingleSelectionIndicator]="true" (change)="setInputMode($event)">
+      <mat-button-toggle value="virtuel">Virtuels</mat-button-toggle>
+      <mat-button-toggle value="manuel">Lancés à table</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
 
-  <p class="skd-formula">{{ formula() }}</p>
+  @if (inputMode() === 'virtuel') {
+    <app-dice-box-host class="skd-box" [scale]="12" />
 
-  <button type="button" class="skd-reroll" [disabled]="rolling()" (click)="roll()">
-    <mat-icon>refresh</mat-icon>
-    {{ dice() ? 'Relancer' : 'Lancer 2d6' }}
-  </button>
+    <p class="skd-formula">{{ formula() }}</p>
+
+    <button type="button" class="skd-reroll" [disabled]="rolling()" (click)="roll()">
+      <mat-icon>refresh</mat-icon>
+      {{ dice() ? 'Relancer' : 'Lancer 2d6' }}
+    </button>
+  } @else {
+    <p class="skd-formula">{{ formula() }}</p>
+
+    <div class="skd-manual">
+      <input
+        type="number"
+        min="2"
+        max="12"
+        step="1"
+        placeholder="Total des 2d6 (2-12)"
+        aria-label="Total des deux dés lancés à table"
+        [value]="manualTotal() ?? ''"
+        (input)="onManualTotalInput($any($event.target).value)"
+      />
+      <button type="button" [disabled]="!manualTotalValid()" (click)="submitManualTotal()">
+        <mat-icon>check</mat-icon>
+        Valider
+      </button>
+    </div>
+  }
 </div>
