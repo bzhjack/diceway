@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Ajuster {{ data.heroNom }}</h2>
+
+<mat-dialog-content>
+  <div class="ahs-field">
+    <label id="ahs-vitalite-label">Vitalité ({{ vitaliteControl.value }} / {{ data.vitaliteMax }})</label>
+    <dw-value-stepper [formControl]="vitaliteControl" [min]="0" [max]="data.vitaliteMax" [ariaLabel]="'Vitalité'" />
+  </div>
+
+  <div class="ahs-field">
+    <label id="ahs-heroisme-label">Héroïsme ({{ heroismeControl.value }})</label>
+    <dw-value-stepper [formControl]="heroismeControl" [min]="0" [ariaLabel]="'Héroïsme'" />
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-flat-button type="button" (click)="close()">Fermer</button>
+</mat-dialog-actions>
