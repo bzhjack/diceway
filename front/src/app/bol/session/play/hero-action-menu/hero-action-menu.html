@@ -1,0 +1,25 @@
+<button
+  type="button"
+  class="ham-trigger"
+  [attr.aria-label]="'Actions pour ' + heroName()"
+  [matMenuTriggerFor]="menu"
+  (click)="$event.stopPropagation()"
+  (menuOpened)="opened.emit()"
+>
+  <mat-icon>more_vert</mat-icon>
+</button>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item type="button" (click)="skillCheck.emit()">
+    <mat-icon>casino</mat-icon>
+    Jet de compétence
+  </button>
+  <button mat-menu-item type="button" (click)="adjustStats.emit()">
+    <mat-icon>tune</mat-icon>
+    Ajuster les stats
+  </button>
+  <button mat-menu-item type="button" (click)="viewSheet.emit()">
+    <mat-icon>badge</mat-icon>
+    Voir la fiche
+  </button>
+</mat-menu>
