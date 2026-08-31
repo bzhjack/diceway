@@ -13,6 +13,10 @@ export interface ResolvedCombatStats {
   readonly defense: number;
   readonly degats: string;
   readonly protection: number;
+  /** Malus du petit bouclier ("-1 à une attaque subie par round") — 0 si absent ou déjà replié
+   * dans `defense` (cas du grand bouclier, portée "toutes"). Consommé manuellement par le dialog
+   * d'attaque, l'app ne suivant pas de round. */
+  readonly bouclierMalusUneAttaque: number;
 }
 
 /** Extrait le type de dé de dégâts d'une chaîne d'arme/créature BoL ("d6M", "d6B", "d3", "d6"). */
@@ -69,19 +73,33 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
   if (token.kind === 'hero') {
     const herosId = c.sourceId;
     if (!herosId) {
-      return of({agilite: 0, vigueur: 0, melee: 0, tir: 0, attaque: null, defense: 0, degats: 'd3', protection: 0});
+      return of({
+        agilite: 0,
+        vigueur: 0,
+        melee: 0,
+        tir: 0,
+        attaque: null,
+        defense: 0,
+        degats: 'd3',
+        protection: 0,
+        bouclierMalusUneAttaque: 0,
+      });
     }
 
     return herosService.heros(herosId).pipe(
       map((hero) => ({
-        agilite: hero.attributs.agilite,
+        agilite: hero.attributs.agilite_effective,
         vigueur: hero.attributs.vigueur,
         melee: hero.combat.melee,
         tir: hero.combat.tir,
         attaque: null,
-        defense: hero.combat.defense,
+        defense: hero.combat.defense_effective,
         degats: firstWeaponDegats(hero.armes) ?? 'd3',
         protection: parseProtectionValue(firstArmureProtection(hero.armures)),
+        bouclierMalusUneAttaque:
+          hero.equipement_effectif.bouclier_malus_attaque_subie_portee === 'une'
+            ? hero.equipement_effectif.bouclier_malus_attaque_subie
+            : 0,
       })),
     );
   }
@@ -95,5 +113,6 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
     defense: c.defense ?? 0,
     degats: c.degats ?? 'd3',
     protection: parseProtectionValue(c.protection),
+    bouclierMalusUneAttaque: 0,
   });
 }
