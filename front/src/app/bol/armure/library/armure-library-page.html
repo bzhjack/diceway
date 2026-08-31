@@ -81,6 +81,39 @@
               </mat-form-field>
 
               <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Catégorie</mat-label>
+                <mat-select formControlName="categorie">
+                  <mat-option value="armure">Armure</mat-option>
+                  <mat-option value="bouclier">Bouclier</mat-option>
+                  <mat-option value="casque">Casque</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Malus Agilité</mat-label>
+                <input matInput type="number" min="0" formControlName="malus_agilite" />
+              </mat-form-field>
+
+              <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Malus Initiative</mat-label>
+                <input matInput type="number" min="0" formControlName="malus_initiative" />
+              </mat-form-field>
+
+              <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Malus attaque subie</mat-label>
+                <input matInput type="number" min="0" formControlName="malus_attaque_subie" />
+              </mat-form-field>
+
+              <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Portée du malus (bouclier)</mat-label>
+                <mat-select formControlName="malus_attaque_subie_portee">
+                  <mat-option [value]="null">Aucune</mat-option>
+                  <mat-option value="une">Une attaque par round</mat-option>
+                  <mat-option value="toutes">Toutes les attaques du round</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field subscriptSizing="dynamic">
                 <mat-label>Pts de pouvoir</mat-label>
                 <input matInput formControlName="pts_de_pouvoir" />
               </mat-form-field>
@@ -113,6 +146,7 @@
           <thead>
             <tr>
               <th>Équipement</th>
+              <th>Catégorie</th>
               <th>Protection</th>
               <th>Malus</th>
               <th class="armor-col-compact">Pts de pouvoir</th>
@@ -130,6 +164,7 @@
                     }
                   </div>
                 </td>
+                <td class="arlp-muted-cell">{{ categorieLabel(armor.categorie) }}</td>
                 <td class="arlp-muted-cell">{{ armor.protection || '-' }}</td>
                 <td class="arlp-muted-cell">{{ armor.malus || '-' }}</td>
                 <td class="armor-col-compact arlp-muted-cell">{{ armor.pts_de_pouvoir || '-' }}</td>
