@@ -21,7 +21,7 @@ import {ArmeEntry} from '../../shared/arme/list/arme-list.component';
 import {ArmureEntry} from '../../shared/armure/list/armure-list.component';
 import {CarriereEntry} from '../../shared/carriere/list/carriere-list.component';
 import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
-import {IdDraft, RankedDraft, availableCatalog, selectedEntries} from '../../shared/form/form-selection';
+import {ArmureDraft, IdDraft, RankedDraft, availableCatalog, selectedEntries} from '../../shared/form/form-selection';
 import {LangueEntry} from '../../shared/langue/list/langue-list.component';
 import {StatGroup} from '../../shared/stats-grid/stats-grid.component';
 import {TraitAddEvent} from '../../shared/trait/add-menu/trait-add-menu.component';
@@ -85,7 +85,7 @@ export interface HeroAdvancedFormModel {
   experience: number;
   vilenie: number;
   armes: IdDraft[];
-  armures: IdDraft[];
+  armures: ArmureDraft[];
   langues: IdDraft[];
   carrieres: RankedDraft[];
   traits: AdvancedTraitDraft[];
@@ -436,7 +436,23 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       protection: armure.protection,
       malus: armure.malus,
       ptsDePouvoir: armure.pts_de_pouvoir,
+      categorie: armure.categorie,
+      equipee: entry.equipee,
+      malusAgilite: armure.malus_agilite,
+      malusInitiative: armure.malus_initiative,
     }),
+  );
+
+  private readonly agiliteMalusTotal = computed(() =>
+    this.selectedArmures()
+      .filter((armure) => armure.equipee)
+      .reduce((sum, armure) => sum + armure.malusAgilite, 0),
+  );
+
+  private readonly initiativeMalusTotal = computed(() =>
+    this.selectedArmures()
+      .filter((armure) => armure.equipee)
+      .reduce((sum, armure) => sum + armure.malusInitiative, 0),
   );
 
   // E13 : arme lourde (d6B) avec vigueur négative.
@@ -933,16 +949,20 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       },
       combat: {
         initiative: raw.initiative,
+        initiative_effective: raw.initiative - this.initiativeMalusTotal(),
         melee: raw.melee,
         tir: raw.tir,
         defense: raw.defense,
+        defense_effective: raw.defense,
       },
       attributs: {
         vigueur: raw.vigueur,
         agilite: raw.agilite,
+        agilite_effective: raw.agilite - this.agiliteMalusTotal(),
         esprit: raw.esprit,
         aura: raw.aura,
       },
+      equipement_effectif: {bouclier_malus_attaque_subie: 0, bouclier_malus_attaque_subie_portee: null},
       traits: raw.traits.map((trait) => ({
         id: trait.id ?? undefined,
         traitable_id: trait.traitable_id,
@@ -965,6 +985,7 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
     const armes = (hero.armes ?? []).map((arme) => ({id: Number(typeof arme === 'number' ? arme : arme.arme_id)}));
     const armures = (hero.armures ?? []).map((armure) => ({
       id: Number(typeof armure === 'number' ? armure : armure.armure_id),
+      equipee: typeof armure === 'number' ? false : Boolean(armure.equipee),
     }));
     const langues = (hero.langues ?? hero.origines.langues ?? []).map((langue) => ({
       id: Number(typeof langue === 'number' ? langue : langue.langue_id),
@@ -1173,8 +1194,8 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
 
   protected addArmureEntry(id: number): void {
     this.persistCreate(
-      (heroId) => this.herosService.createArmure(heroId, {armure_id: id}),
-      () => this.pushIdEntry('armures', id),
+      (heroId) => this.herosService.createArmure(heroId, {armure_id: id, equipee: false}),
+      () => this.pushArmureEntry(id),
       "L'ajout de l'armure a échoué.",
     );
   }
@@ -1260,8 +1281,12 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
     });
   }
 
-  private pushIdEntry(key: 'armes' | 'armures' | 'langues', id: number): void {
+  private pushIdEntry(key: 'armes' | 'langues', id: number): void {
     this.model.update((current) => ({...current, [key]: [...current[key], {id: Number(id)}]}));
+  }
+
+  private pushArmureEntry(id: number): void {
+    this.model.update((current) => ({...current, armures: [...current.armures, {id: Number(id), equipee: false}]}));
   }
 
   private pushCarriereEntry(id: number, value: number): void {
