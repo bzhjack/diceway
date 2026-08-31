@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
+import {BolHerosArmureModel} from '../../models/bol-armure.model';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolPnjService} from '../../services/bol-pnj.service';
@@ -13,7 +14,7 @@ import {ArmeEntry, ArmeListComponent} from '../../shared/arme/list/arme-list.com
 import {ArmureEntry, ArmureListComponent} from '../../shared/armure/list/armure-list.component';
 import {CarriereEntry, CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
 import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
-import {IdDraft, RankedDraft, availableCatalog, referencedIds, selectedEntries} from '../../shared/form/form-selection';
+import {ArmureDraft, IdDraft, RankedDraft, applyArmureEquipToggle, availableCatalog, referencedIds, selectedEntries} from '../../shared/form/form-selection';
 import {LangueEntry} from '../../shared/langue/list/langue-list.component';
 import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
 import {TraitAddEvent} from '../../shared/trait/add-menu/trait-add-menu.component';
@@ -44,7 +45,7 @@ export interface PnjFormModel {
   vilenie: number;
   creation: number;
   armes: IdDraft[];
-  armures: IdDraft[];
+  armures: ArmureDraft[];
   carrieres: RankedDraft[];
   langues: IdDraft[];
   traits: TraitDraft[];
@@ -275,6 +276,10 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel, P
       protection: armure.protection,
       malus: armure.malus,
       ptsDePouvoir: armure.pts_de_pouvoir,
+      categorie: armure.categorie,
+      equipee: entry.equipee,
+      malusAgilite: armure.malus_agilite,
+      malusInitiative: armure.malus_initiative,
     }),
   );
   protected readonly selectedCarrieres = selectedEntries(
@@ -321,11 +326,19 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel, P
   }
 
   protected addArmureEntry(id: number): void {
-    this.model.update((current) => ({...current, armures: [...current.armures, {id}]}));
+    this.model.update((current) => ({...current, armures: [...current.armures, {id, equipee: false}]}));
   }
 
   protected removeArmure(index: number): void {
     this.model.update((current) => ({...current, armures: current.armures.filter((_, i) => i !== index)}));
+  }
+
+  protected toggleArmureEquipped(index: number): void {
+    const catalog = this.armuresList() ?? [];
+    this.model.update((current) => ({
+      ...current,
+      armures: applyArmureEquipToggle(current.armures, index, (id) => catalog.find((a) => a.id === id)?.categorie ?? null),
+    }));
   }
 
   protected addLangueEntry(id: number): void {
@@ -390,7 +403,9 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel, P
       vilenie: pnj.ressources.vilenie,
       creation: pnj.ressources.creation,
       armes: referencedIds(pnj.armes, (arme) => arme.arme_id).map((id) => ({id})),
-      armures: referencedIds(pnj.armures, (armure) => armure.armure_id).map((id) => ({id})),
+      armures: (pnj.armures as (BolHerosArmureModel | number)[])
+        .filter((armure): armure is BolHerosArmureModel => typeof armure === 'object')
+        .map((armure) => ({id: armure.armure_id, equipee: Boolean(armure.equipee)})),
       langues: referencedIds(pnj.origines.langues, (langue) => langue.langue_id).map((id) => ({id})),
       carrieres: pnj.carrieres.map((carriere) => ({
         id: carriere.carriere_id ?? 0,
@@ -427,7 +442,7 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel, P
       vilenie: rawValue.vilenie,
       creation: rawValue.creation,
       armes: rawValue.armes.map((arme) => ({id: arme.id})),
-      armures: rawValue.armures.map((armure) => ({id: armure.id})),
+      armures: rawValue.armures.map((armure) => ({id: armure.id, equipee: armure.equipee})),
       carrieres: rawValue.carrieres.map((carriere) => ({
         id: carriere.id,
         value: carriere.value,
