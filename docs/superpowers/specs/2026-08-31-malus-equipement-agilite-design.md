@@ -1,7 +1,28 @@
 # Malus d'équipement (armure/bouclier/casque) sur les jets d'action
 
 Date : 2026-08-31
-Statut : validé, en attente de plan d'implémentation
+Statut : validé, plan d'implémentation écrit (`docs/superpowers/plans/2026-08-31-malus-equipement-agilite.md`)
+
+## Correction post-recherche (pendant l'écriture du plan)
+
+Le périmètre "héros uniquement" décidé ci-dessous partait d'une hypothèse
+factuelle inexacte : la recherche menée pendant l'écriture du plan a montré
+que le "PNJ" de la bibliothèque `/pnj` (`front/src/app/bol/pnj/`,
+`BolPnjController`) **est en réalité un `BolHeros`** avec `type` = `'C'`,
+`'R'` ou `'P'` — même table, même relation `armures()` que les héros. Les
+entités réellement à stats figées, sans relation armure structurée, sont
+`BolScenarioPnj` et `BolFightSessionPnj` (le PNJ tel qu'il apparaît dans un
+scénario ou une session de combat), pas le PNJ de bibliothèque.
+
+Conséquence : les accesseurs `agilite_effective`/`initiative_effective`/
+`defense_effective`/`equipement_effectif` sur `BolHeros` (section Backend)
+s'appliquent automatiquement à ce PNJ de bibliothèque, sans travail
+supplémentaire côté lecture. Pour rester cohérent (pas de fonctionnalité
+à moitié câblée), le plan étend donc aussi la persistance du flag `equipee`
+et le formulaire d'équipement à `BolPnjController`/`pnj-form-page` — même
+mécanisme que pour les héros, alimenté par le même modèle. Le PNJ de
+scénario/session de combat (`BolScenarioPnj`/`BolFightSessionPnj`) reste
+hors périmètre, comme prévu ci-dessous.
 
 ## Contexte
 
