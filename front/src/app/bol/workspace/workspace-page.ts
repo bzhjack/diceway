@@ -84,10 +84,10 @@ export class WorkspacePageComponent {
       link: '/intendance',
     },
     {
-      label: 'Combats',
+      label: 'Sessions',
       value: String(this.fightSessions().length),
-      detail: 'Combats lancés, à reprendre pour continuer le suivi d’initiative et des PV.',
-      icon: 'shield',
+      detail: 'Sessions ouvertes, à reprendre pour continuer une soirée de jeu ou un combat.',
+      icon: 'groups',
       color: 'rose',
       link: '/library/sessions',
     },

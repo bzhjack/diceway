@@ -3,12 +3,12 @@
 
     <!-- Header card -->
     <dw-library-header
-      title="Mes combats"
-      description="Retrouvez les combats déjà lancés pour reprendre le suivi de l'initiative et des points de vie."
+      title="Mes sessions"
+      description="Retrouvez les sessions déjà lancées, en combat ou non, pour reprendre le suivi de l'initiative et des points de vie."
       color="rose"
     >
       <ng-container dwHeaderTags>
-        <dw-tag>{{ totalCount() }} combat{{ totalCount() > 1 ? 's' : '' }}</dw-tag>
+        <dw-tag>{{ totalCount() }} session{{ totalCount() > 1 ? 's' : '' }}</dw-tag>
         @if (visibleCount() !== totalCount()) {
           <dw-tag>{{ visibleCount() }} visibles</dw-tag>
         }
@@ -16,7 +16,7 @@
       <ng-container dwHeaderActions>
         <div class="flex flex-wrap gap-1.5">
           <button mat-flat-button size="small" routerLink="/session/new">
-            <mat-icon>add</mat-icon> Nouveau combat
+            <mat-icon>add</mat-icon> Nouvelle session
           </button>
         </div>
         <button mat-stroked-button size="small" routerLink="/">
@@ -35,7 +35,7 @@
             type="text"
             [ngModel]="searchTerm()"
             (ngModelChange)="searchTerm.set($event ?? '')"
-            placeholder="Rechercher un combat"
+            placeholder="Rechercher une session"
           />
         </mat-form-field>
         <dw-tag>{{ visibleCount() }} entrées</dw-tag>
@@ -45,7 +45,7 @@
         @for (item of filteredSummaries(); track item.session.id) {
           <div class="cl-row">
             <div class="cl-row-main">
-              <p class="cl-row-title">{{ item.session.titre || 'Combat sans titre' }}</p>
+              <p class="cl-row-title">{{ item.session.titre || 'Session sans titre' }}</p>
               <p class="cl-row-meta">{{ item.heroesCount }} héros · {{ item.adversairesCount }} adversaires</p>
             </div>
             <div class="cl-row-actions">
@@ -55,7 +55,7 @@
               <button
                 mat-icon-button
                 (click)="askDelete(item.session)"
-                [attr.aria-label]="'Supprimer ' + (item.session.titre || 'ce combat')"
+                [attr.aria-label]="'Supprimer ' + (item.session.titre || 'cette session')"
               >
                 <mat-icon>delete</mat-icon>
               </button>
@@ -64,9 +64,9 @@
         } @empty {
           <p class="cl-empty">
             @if (totalCount() === 0) {
-              Aucun combat pour l'instant — lancez-en un depuis « Nouveau combat ».
+              Aucune session pour l'instant — lancez-en une depuis « Nouvelle session ».
             } @else {
-              Aucun combat ne correspond à cette recherche.
+              Aucune session ne correspond à cette recherche.
             }
           </p>
         }
