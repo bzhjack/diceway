@@ -10,6 +10,11 @@ export interface RankedDraft extends IdDraft {
   value: number;
 }
 
+/** Entrée d'armure avec son état "équipé" (armure/bouclier/casque actif vs juste en inventaire). */
+export interface ArmureDraft extends IdDraft {
+  equipee: boolean;
+}
+
 /** Entrée avec détail libre (pouvoirs, capacités). */
 export interface DetailDraft extends IdDraft {
   detail: string | null;
@@ -52,4 +57,34 @@ export function selectedEntries<TDraft extends IdDraft, TModel extends WithId, T
       })
       .filter((entry): entry is NonNullable<typeof entry> => entry !== null),
   );
+}
+
+/**
+ * Applique l'exclusivité "un seul équipé par catégorie" dans un brouillon local : équiper un
+ * élément déséquipe les autres de la même catégorie. Le backend applique la même règle en
+ * persistance (BolEquipmentEffectService::normalizeArmureEquipmentForHeros) — cette fonction ne
+ * fait qu'éviter un aller-retour serveur pour le retour visuel immédiat.
+ */
+export function applyArmureEquipToggle<T extends {id: number; equipee: boolean}>(
+  armures: readonly T[],
+  index: number,
+  categorieOf: (id: number) => string | null,
+): T[] {
+  const target = armures[index];
+  if (!target) {
+    return [...armures];
+  }
+
+  const nextEquipee = !target.equipee;
+  const categorie = nextEquipee ? categorieOf(target.id) : null;
+
+  return armures.map((armure, i) => {
+    if (i === index) {
+      return {...armure, equipee: nextEquipee};
+    }
+    if (categorie && categorieOf(armure.id) === categorie) {
+      return {...armure, equipee: false};
+    }
+    return armure;
+  });
 }
