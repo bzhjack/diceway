@@ -21,6 +21,17 @@ const DICE_LABELS: Record<DegatsDiceKind, string> = {d3: 'd3', d6: 'd6', d6m: 'd
 /** Seuil de réussite du jet d'attaque BoL (02-actions-combat.md) — fixe, jamais modifié par les règles. */
 const THRESHOLD = 9;
 
+/** Total du jet d'attaque : 2d6 + bonus attaquant − défense cible + modificateur − malus de petit bouclier consommé. */
+export function computeAttackTotal(
+  diceSum: number,
+  attackerBonus: number,
+  targetDefense: number,
+  modifier: number,
+  shieldMalus: number,
+): number {
+  return diceSum + attackerBonus - targetDefense + modifier - shieldMalus;
+}
+
 /**
  * Lance le jet d'attaque (2d6 + bonus attaquant − défense cible, seuil 9+) puis, en cas de succès,
  * le jet de dégâts (dé d'arme + bonus de vigueur − protection). Encapsulation désactivée à dessein,
@@ -49,6 +60,7 @@ export class AttackRollDialogComponent {
   protected readonly attackerBonus = signal(this.initialAttackerBonus());
   protected readonly targetDefense = signal(this.data.target.defense);
   protected readonly modifier = signal(0);
+  protected readonly shieldBonusAvailable = signal(this.data.target.bouclierMalusUneAttaque > 0);
 
   protected readonly rollingAttack = signal(false);
   protected readonly attackDice = signal<readonly [number, number] | null>(null);
@@ -60,7 +72,11 @@ export class AttackRollDialogComponent {
 
   protected readonly attackTotal = computed(() => {
     const sum = this.attackDiceSum();
-    return sum === null ? null : sum + this.attackerBonus() - this.targetDefense() + this.modifier();
+    if (sum === null) {
+      return null;
+    }
+    const shieldMalus = this.shieldBonusAvailable() ? this.data.target.bouclierMalusUneAttaque : 0;
+    return computeAttackTotal(sum, this.attackerBonus(), this.targetDefense(), this.modifier(), shieldMalus);
   });
 
   protected readonly margin = computed(() => {
@@ -99,9 +115,13 @@ export class AttackRollDialogComponent {
     }
     const bonus = this.attackerBonus();
     const mod = this.modifier();
+    const shieldMalus = this.shieldBonusAvailable() ? this.data.target.bouclierMalusUneAttaque : 0;
     let formula = `2d6 (${d[0]}+${d[1]}) ${bonus >= 0 ? '+' : ''}${bonus} −${this.targetDefense()}`;
     if (mod !== 0) {
       formula += ` ${mod >= 0 ? '+' : ''}${mod}`;
+    }
+    if (shieldMalus !== 0) {
+      formula += ` −${shieldMalus} (bouclier)`;
     }
     return formula;
   });

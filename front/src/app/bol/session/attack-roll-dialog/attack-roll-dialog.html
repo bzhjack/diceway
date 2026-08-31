@@ -68,6 +68,12 @@
         <span>Modificateur</span>
         <input type="number" [(ngModel)]="modifier" />
       </label>
+      @if (data.target.bouclierMalusUneAttaque > 0) {
+        <label class="atd-field atd-field--checkbox">
+          <input type="checkbox" [(ngModel)]="shieldBonusAvailable" />
+          <span>Bonus de petit bouclier disponible (−{{ data.target.bouclierMalusUneAttaque }})</span>
+        </label>
+      }
     </div>
 
     <button type="button" class="atd-reroll" [disabled]="rollingAttack()" (click)="rollAttack()">
