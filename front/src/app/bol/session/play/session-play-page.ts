@@ -309,12 +309,12 @@ export class SessionPlayPageComponent {
           this.heroMenuData.update((map) =>
             new Map(map).set(token.key, {
               armes,
-              agilite: hero.attributs.agilite,
+              agilite: hero.attributs.agilite_effective,
               vigueur: hero.attributs.vigueur,
               esprit: hero.attributs.esprit,
               melee: hero.combat.melee,
               tir: hero.combat.tir,
-              defense: hero.combat.defense,
+              defense: hero.combat.defense_effective,
             }),
           );
         },

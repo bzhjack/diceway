@@ -478,10 +478,10 @@ class BolFightSessionService
     private function relations(): array
     {
         return [
-            'heros.heros',
+            'heros.heros.armures.armure',
             'creatures.creature',
             'demons.demon',
-            'pnjs.pnj',
+            'pnjs.pnj.armures.armure',
         ];
     }
 }

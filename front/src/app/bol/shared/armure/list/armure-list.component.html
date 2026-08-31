@@ -31,7 +31,11 @@
           </p>
         }
 
-        <mat-slide-toggle [checked]="armure.equipee" (change)="equippedToggled.emit(index)">
+        <mat-slide-toggle
+          [checked]="armure.equipee"
+          [disabled]="!equipToggleEnabled()"
+          (change)="equippedToggled.emit(index)"
+        >
           Équipé·e
         </mat-slide-toggle>
 

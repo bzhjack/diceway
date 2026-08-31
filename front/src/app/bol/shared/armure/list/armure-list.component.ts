@@ -32,6 +32,8 @@ const CATEGORIE_LABELS: Record<BolArmureCategorie, string> = {
 })
 export class ArmureListComponent {
   readonly armures = input.required<readonly ArmureEntry[]>();
+  /** Set to false on pages with no backend support for persisting the equip toggle. */
+  readonly equipToggleEnabled = input(true);
   readonly removed = output<number>();
   readonly equippedToggled = output<number>();
 
