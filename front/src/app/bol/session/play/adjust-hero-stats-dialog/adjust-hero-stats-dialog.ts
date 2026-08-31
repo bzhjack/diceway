@@ -41,6 +41,14 @@ export class AdjustHeroStatsDialogComponent {
   protected readonly changed = signal(false);
 
   constructor() {
+    this.ref.disableClose = true;
+    this.ref.backdropClick().subscribe(() => this.close());
+    this.ref.keydownEvents().subscribe((event) => {
+      if (event.key === 'Escape') {
+        this.close();
+      }
+    });
+
     this.vitaliteControl.valueChanges.subscribe((value) => this.onVitaliteChange(value));
     this.heroismeControl.valueChanges.subscribe((value) => this.onHeroismeChange(value));
   }
