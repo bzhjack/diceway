@@ -29,7 +29,10 @@ import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialo
 import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard, PlayToken} from '../combat-play.util';
 import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
+import {AdjustHeroStatsDialogComponent} from './adjust-hero-stats-dialog/adjust-hero-stats-dialog';
 import {AttackMenuComponent, CombatReminderStat} from './attack-menu/attack-menu';
+import {HeroActionMenuComponent} from './hero-action-menu/hero-action-menu';
+import {SkillCheckDialogComponent} from './skill-check-dialog/skill-check-dialog';
 import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dialog';
 
 const COLS_PER_ZONE = 3;
@@ -45,6 +48,7 @@ interface HeroMenuData {
   readonly armes: readonly BolHerosArmeModel[];
   readonly agilite: number;
   readonly vigueur: number;
+  readonly esprit: number;
   readonly melee: number;
   readonly tir: number;
   readonly defense: number;
@@ -70,7 +74,15 @@ function jitter(key: string): {jx: number; jy: number} {
  */
 @Component({
   selector: 'bol-session-play-page',
-  imports: [MatIconModule, MatMenuModule, NgTemplateOutlet, RouterLink, DragDropModule, AttackMenuComponent],
+  imports: [
+    MatIconModule,
+    MatMenuModule,
+    NgTemplateOutlet,
+    RouterLink,
+    DragDropModule,
+    AttackMenuComponent,
+    HeroActionMenuComponent,
+  ],
   templateUrl: './session-play-page.html',
   styleUrl: './session-play-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -286,6 +298,7 @@ export class SessionPlayPageComponent {
             armes,
             agilite: hero.attributs.agilite,
             vigueur: hero.attributs.vigueur,
+            esprit: hero.attributs.esprit,
             melee: hero.combat.melee,
             tir: hero.combat.tir,
             defense: hero.combat.defense,
@@ -455,6 +468,56 @@ export class SessionPlayPageComponent {
           );
         break;
     }
+  }
+
+  protected onSkillCheck(token: PlayToken): void {
+    const data = this.heroMenuData().get(token.key);
+    if (!data) {
+      return;
+    }
+
+    this.dialog.open(SkillCheckDialogComponent, {
+      maxWidth: 'min(30rem, 92vw)',
+      panelClass: 'skd-panel',
+      data: {heroNom: token.nom, agilite: data.agilite, vigueur: data.vigueur, esprit: data.esprit},
+    });
+  }
+
+  protected onAdjustStats(token: PlayToken): void {
+    const sessionId = this.session()?.id;
+    const herosId = token.combat.sourceId;
+    if (!sessionId || !herosId) {
+      return;
+    }
+
+    this.herosService
+      .heros(herosId)
+      .pipe(take(1))
+      .subscribe((hero) => {
+        this.dialog
+          .open(AdjustHeroStatsDialogComponent, {
+            maxWidth: 'min(26rem, 92vw)',
+            data: {
+              herosId,
+              sessionId,
+              pivotId: token.pivotId,
+              heroNom: token.nom,
+              vitaliteCourante: token.vitaliteCourante ?? hero.ressources.vitalite,
+              vitaliteMax: hero.ressources.vitalite,
+              heroisme: hero.ressources.heroisme,
+            },
+          })
+          .afterClosed()
+          .subscribe((changed: boolean | undefined) => {
+            if (changed) {
+              this.loadSession(sessionId);
+            }
+          });
+      });
+  }
+
+  protected openStatblockFor(token: PlayToken): void {
+    this.openStatblock(token, new Event('click'));
   }
 
   /** Glisser-déposer dans le ruban : réordonnancement manuel, persisté en base. */

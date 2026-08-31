@@ -137,6 +137,14 @@
             (opened)="loadArmes(token)"
             (confirmed)="onAttackConfirmed(token, $event)"
           />
+        } @else if (mode() === 'libre' && token.kind === 'hero') {
+          <bol-hero-action-menu
+            [heroName]="token.nom"
+            (opened)="loadArmes(token)"
+            (skillCheck)="onSkillCheck(token)"
+            (adjustStats)="onAdjustStats(token)"
+            (viewSheet)="openStatblockFor(token)"
+          />
         }
       </div>
       <p class="cp-token-name">{{ token.nom }}</p>
