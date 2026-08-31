@@ -504,7 +504,7 @@ export class SessionPlayPageComponent {
           panelClass: 'skd-panel',
           data: {
             heroNom: token.nom,
-            agilite: hero.attributs.agilite,
+            agilite: hero.attributs.agilite_effective,
             vigueur: hero.attributs.vigueur,
             esprit: hero.attributs.esprit,
             aura: hero.attributs.aura,

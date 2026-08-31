@@ -123,7 +123,7 @@ export class StartCombatDialogComponent {
             data: {
               heroNom: hero.nom,
               esprit: h.attributs.esprit,
-              initiative: h.combat.initiative,
+              initiative: h.combat.initiative_effective,
               modifierTotal: 0,
             },
           })
