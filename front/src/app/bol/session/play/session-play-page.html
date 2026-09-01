@@ -153,14 +153,17 @@
             (confirmed)="onAttackConfirmed(token, $event)"
           />
         } @else if (mode() === 'libre' && token.kind === 'hero') {
-          <bol-hero-action-menu
-            [heroName]="token.nom"
-            (opened)="loadArmes(token)"
-            (actionRoll)="onActionRoll(token)"
-            (adjustStats)="onAdjustStats(token)"
-            (viewSheet)="openStatblockFor(token)"
-          />
+          <bol-hero-action-menu [heroName]="token.nom" (actionRoll)="onActionRoll(token)" (adjustStats)="onAdjustStats(token)" />
         }
+
+        <button
+          type="button"
+          class="cp-token-card-btn"
+          [attr.aria-label]="'Voir le statbloc de ' + token.nom"
+          (click)="$event.stopPropagation(); openStatblockFor(token)"
+        >
+          <mat-icon>badge</mat-icon>
+        </button>
       </div>
       <p class="cp-token-name">{{ token.nom }}</p>
       @if (token.vitaliteMax !== null) {

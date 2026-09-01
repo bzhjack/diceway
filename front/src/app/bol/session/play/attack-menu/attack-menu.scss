@@ -4,10 +4,12 @@
   display: contents;
 }
 
+// Colonne d'actions à gauche du portrait (cf. `.cp-token-card-btn`/`.ham-btn` pour le détail des 3
+// emplacements) : slot 1 (haut), l'action principale du mode (épée ici, dé jet d'action en libre).
 .am-trigger {
   position: absolute;
-  top: -0.35rem;
-  right: -0.4rem;
+  top: -0.9rem;
+  left: -2.3rem;
   width: 1.9rem;
   height: 1.9rem;
   display: flex;

@@ -446,6 +446,74 @@
 // Le bouton épée (survol/mode ciblage) est stylé dans `attack-menu.scss` (`bol-attack-menu`), via
 // `:host-context(.cp-token…)` — il ne peut plus être ciblé en descendant CSS depuis cette feuille.
 
+// Raccourci "Carte" (statbloc) — même langage visuel que `.am-trigger`/`.ham-btn` mais générique à
+// tous les types de jeton et aux deux modes (contrairement à ces deux-là, mutuellement exclusifs
+// selon le mode). Slot 2 (milieu) de la colonne d'actions à gauche du portrait.
+.cp-token-card-btn {
+  position: absolute;
+  top: 1.3rem;
+  left: -2.3rem;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 999px;
+  border: 2px solid var(--dw-surface-0);
+  background: var(--dw-surface-700);
+  color: var(--dw-surface-900);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  z-index: 3;
+
+  .mat-icon {
+    font-size: 1.05rem;
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--dw-surface-700) 85%, white);
+  }
+}
+
+// Mode ciblage : masqué comme `.am-trigger`, pour ne pas distraire du clic de ciblage sur le jeton.
+.cp-token--targeting .cp-token-card-btn {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cp-token-card-btn {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.12s ease;
+  }
+
+  .cp-token:hover .cp-token-card-btn,
+  .cp-token-card-btn:focus-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  // Pont invisible comblant tout l'espace entre le portrait et la colonne de boutons à gauche
+  // (les 3 emplacements de `.am-trigger`/`.ham-btn`/`.cp-token-card-btn`). Sans lui, la souris
+  // "sort" du token en traversant ce vide — rien n'y est hoverable tant que les boutons sont
+  // encore invisibles (`pointer-events: none`) — ce qui les referme avant qu'on ait pu les
+  // atteindre. `pointer-events` par défaut (auto) : lui seul maintient `.cp-token:hover` pendant
+  // la traversée ; les boutons, une fois visibles, restent au-dessus (z-index 3 > 1) et reçoivent
+  // le clic normalement.
+  .cp-token-portrait::before {
+    content: '';
+    position: absolute;
+    top: -0.9rem;
+    left: -2.3rem;
+    width: 1.9rem;
+    height: 6.3rem;
+    z-index: 1;
+  }
+}
+
 .cp-token-hint {
   position: absolute;
   top: -1.3rem;

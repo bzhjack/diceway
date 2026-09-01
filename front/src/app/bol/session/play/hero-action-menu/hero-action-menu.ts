@@ -1,15 +1,15 @@
 import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
-import {MatMenuModule} from '@angular/material/menu';
 
 /**
- * Menu d'action générique sur l'avatar d'un héros en mode libre (hors combat) : jet d'action,
- * ajustement rapide des stats, accès à la fiche. Auto-contenu comme `bol-attack-menu` (bouton +
- * mat-menu dans le même composant) — la logique métier (dialogs) reste côté page parente.
+ * Actions rapides sur l'avatar d'un héros en mode libre (hors combat) : jet d'action, ajustement
+ * rapide des stats — un clic direct chacune (survol/focus sur souris, toujours visibles sur tactile,
+ * cf. `hero-action-menu.scss`). La fiche (statbloc) est couverte par le bouton "Carte" générique de
+ * `session-play-page` (tous types de jetons), donc pas dupliquée ici.
  */
 @Component({
   selector: 'bol-hero-action-menu',
-  imports: [MatIconModule, MatMenuModule],
+  imports: [MatIconModule],
   templateUrl: './hero-action-menu.html',
   styleUrl: './hero-action-menu.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,9 +17,6 @@ import {MatMenuModule} from '@angular/material/menu';
 export class HeroActionMenuComponent {
   readonly heroName = input.required<string>();
 
-  /** Émis à l'ouverture du menu, pour laisser le parent charger les attributs du héros à la demande. */
-  readonly opened = output<void>();
   readonly actionRoll = output<void>();
   readonly adjustStats = output<void>();
-  readonly viewSheet = output<void>();
 }

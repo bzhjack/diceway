@@ -1,17 +1,11 @@
-// `:host { display: contents; }` — même pattern que `bol-attack-menu` : le bouton doit se positionner
-// par rapport à `.cp-token-portrait` (l'ancêtre réel), pas par rapport à ce composant.
+// `:host { display: contents; }` — même pattern que `bol-attack-menu` : les boutons doivent se
+// positionner par rapport à `.cp-token-portrait` (l'ancêtre réel), pas par rapport à ce composant.
 :host {
   display: contents;
 }
 
-// Même langage visuel que `.am-trigger` (bouton épée du menu d'attaque) : accent or, anneau de
-// découpe sur le fond du plateau. Toujours visible (contrairement à `.am-trigger` qui n'apparaît
-// qu'au survol) car ce menu est le point d'action principal d'un héros en mode libre — le jeu se
-// joue aussi sur tablette à table, où le survol n'existe pas.
-.ham-trigger {
+.ham-btn {
   position: absolute;
-  top: -0.35rem;
-  right: -0.4rem;
   width: 1.9rem;
   height: 1.9rem;
   border-radius: 999px;
@@ -33,5 +27,40 @@
 
   &:hover {
     background: color-mix(in srgb, var(--dw-color-legendary) 85%, white);
+  }
+}
+
+// Colonne d'actions à gauche du portrait, alignée verticalement, avec une marge (`left: -2.3rem`,
+// bouton 1.9rem + 0.4rem d'écart) pour ne jamais chevaucher l'image. 3 emplacements possibles (slot 1
+// haut / 2 milieu / 3 bas), centrés sur la hauteur du portrait (4.5rem) — slot 1 = action principale
+// du mode (partagé avec `.am-trigger`, mutuellement exclusifs), slot 2 = `.cp-token-card-btn`
+// (générique, tous jetons), slot 3 = ajuster les stats (héros uniquement).
+.ham-btn--roll {
+  top: -0.9rem;
+  left: -2.3rem;
+}
+
+.ham-btn--stats {
+  top: 3.5rem;
+  left: -2.3rem;
+}
+
+// Un seul clic pour agir : sur souris/trackpad, les boutons ne s'affichent qu'au survol du jeton (ou
+// au focus clavier) — comme `.am-trigger` du menu d'attaque — pour ne pas surcharger visuellement le
+// plateau. Sur tactile (`pointer: coarse`, pas de survol), ils restent toujours visibles : la partie
+// se joue aussi sur tablette à table, où le survol n'existe pas.
+@media (hover: hover) and (pointer: fine) {
+  .ham-btn {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.12s ease;
+  }
+
+  // `:host-context` : seul moyen de réagir au survol de `.cp-token` (ancêtre hors du template de ce
+  // composant) depuis sa propre feuille de style.
+  :host-context(.cp-token:hover) .ham-btn,
+  .ham-btn:focus-visible {
+    opacity: 1;
+    pointer-events: auto;
   }
 }

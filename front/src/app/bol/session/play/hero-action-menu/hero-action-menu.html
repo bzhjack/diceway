@@ -1,25 +1,17 @@
 <button
   type="button"
-  class="ham-trigger"
-  [attr.aria-label]="'Actions pour ' + heroName()"
-  [matMenuTriggerFor]="menu"
-  (click)="$event.stopPropagation()"
-  (menuOpened)="opened.emit()"
+  class="ham-btn ham-btn--roll"
+  [attr.aria-label]="'Jet d\'action pour ' + heroName()"
+  (click)="$event.stopPropagation(); actionRoll.emit()"
 >
-  <mat-icon>auto_awesome</mat-icon>
+  <mat-icon>casino</mat-icon>
 </button>
 
-<mat-menu #menu="matMenu">
-  <button mat-menu-item type="button" (click)="actionRoll.emit()">
-    <mat-icon>casino</mat-icon>
-    Jet d'action
-  </button>
-  <button mat-menu-item type="button" (click)="adjustStats.emit()">
-    <mat-icon>tune</mat-icon>
-    Ajuster les stats
-  </button>
-  <button mat-menu-item type="button" (click)="viewSheet.emit()">
-    <mat-icon>badge</mat-icon>
-    Voir la fiche
-  </button>
-</mat-menu>
+<button
+  type="button"
+  class="ham-btn ham-btn--stats"
+  [attr.aria-label]="'Ajuster les stats de ' + heroName()"
+  (click)="$event.stopPropagation(); adjustStats.emit()"
+>
+  <mat-icon>tune</mat-icon>
+</button>
