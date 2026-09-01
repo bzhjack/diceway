@@ -503,12 +503,16 @@
   // atteindre. `pointer-events` par défaut (auto) : lui seul maintient `.cp-token:hover` pendant
   // la traversée ; les boutons, une fois visibles, restent au-dessus (z-index 3 > 1) et reçoivent
   // le clic normalement.
+  // Largeur 2.4rem (pas 1.9rem, la largeur des boutons) : le pont doit aussi couvrir la marge
+  // visuelle de 0.4rem entre les boutons et le portrait (+ 0.1rem de recouvrement dans le portrait
+  // par sécurité) — sinon cette marge reste elle-même un trou non hoverable, d'où le scintillement
+  // au passage (le survol se coupe une fraction de seconde le temps de la traverser).
   .cp-token-portrait::before {
     content: '';
     position: absolute;
     top: -0.9rem;
     left: -2.3rem;
-    width: 1.9rem;
+    width: 2.4rem;
     height: 6.3rem;
     z-index: 1;
   }
