@@ -1,8 +1,8 @@
 // Encapsulation désactivée sur le composant (voir .ts) : tout ici est global, donc systématiquement
-// scopé sous .skd-panel (panelClass passé à dialog.open) pour ne pas déteindre
+// scopé sous .ard-panel (panelClass passé à dialog.open) pour ne pas déteindre
 // sur les autres dialogs Material de l'appli.
 
-.skd-panel .mat-mdc-dialog-surface {
+.ard-panel .mat-mdc-dialog-surface {
   background: linear-gradient(180deg, var(--dw-surface-50) 0%, var(--dw-surface-0) 100%);
   border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 40%, transparent);
   border-radius: 14px;
@@ -15,7 +15,7 @@
 // MDC insère un ::before invisible de 40px de haut sur .mdc-dialog__title (hack interne pour caler
 // la hauteur/baseline du titre) ; en passant le h2 en display:flex, ce pseudo-élément devient un
 // flex item à part entière et gonfle la boîte du titre — on le neutralise ici.
-.skd-panel .mat-mdc-dialog-title {
+.ard-panel .mat-mdc-dialog-title {
   margin: 0;
   padding: 0;
   display: flex;
@@ -25,14 +25,14 @@
   }
 }
 
-.skd-shell {
+.ard-shell {
   display: flex;
   flex-direction: column;
   width: 26rem;
   max-width: 100%;
 }
 
-.skd-header {
+.ard-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -41,7 +41,7 @@
   border-bottom: 1px solid color-mix(in srgb, var(--dw-color-legendary) 32%, transparent);
 }
 
-.skd-title {
+.ard-title {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
@@ -51,7 +51,7 @@
   margin: 0;
 }
 
-.skd-title-eyebrow {
+.ard-title-eyebrow {
   font-size: 0.92rem;
   line-height: 1;
   letter-spacing: 0.1em;
@@ -59,13 +59,13 @@
   color: var(--dw-surface-900);
 }
 
-.skd-title-name {
+.ard-title-name {
   font-size: 0.92rem;
   color: var(--dw-color-reussite);
   line-height: 1;
 }
 
-.skd-close {
+.ard-close {
   flex-shrink: 0;
   width: 1.5rem;
   height: 1.5rem;
@@ -90,7 +90,7 @@
   }
 }
 
-.skd-result {
+.ard-result {
   margin: 0.7rem 1.1rem 0;
   padding: 1rem;
   border-radius: 10px;
@@ -105,7 +105,7 @@
   min-height: 6rem;
 }
 
-.skd-result--idle {
+.ard-result--idle {
   color: var(--dw-surface-500);
   font-size: 0.84rem;
   padding: 1.2rem 1rem;
@@ -115,22 +115,22 @@
   }
 }
 
-.skd-result--reussite {
+.ard-result--reussite {
   border-color: color-mix(in srgb, var(--dw-color-reussite) 45%, transparent);
   background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-reussite) 22%, transparent) 0%, transparent 70%), color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
 }
 
-.skd-result--echec {
+.ard-result--echec {
   border-color: color-mix(in srgb, var(--dw-color-echec) 45%, transparent);
   background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-echec) 22%, transparent) 0%, transparent 70%), color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
 }
 
-.skd-result--heroique {
+.ard-result--heroique {
   border-color: color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);
   background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--dw-color-legendary) 22%, transparent) 0%, transparent 70%), color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
 }
 
-.skd-result-total {
+.ard-result-total {
   font-family: 'Muse Display Harmony', serif;
   font-size: 2.6rem;
   line-height: 1;
@@ -138,7 +138,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-.skd-result-label {
+.ard-result-label {
   margin: 0;
   font-size: 0.84rem;
   font-weight: 800;
@@ -146,7 +146,7 @@
   text-transform: uppercase;
 }
 
-.skd-box {
+.ard-box {
   --dice-box-min-height: 11rem;
   --dice-box-min-width: 11rem;
   display: block;
@@ -156,7 +156,7 @@
   overflow: hidden;
 }
 
-.skd-formula {
+.ard-formula {
   margin: 0.4rem 1.1rem 0;
   text-align: center;
   font-size: 1.5rem;
@@ -170,7 +170,7 @@
 
 // Ligne combinée saisie manuelle + lancer virtuel : les deux sont toujours actifs côte à côte, pas
 // derrière un bascule de mode — le MJ tape un total (Entrée ou coche) ou clique sur le dé, au choix.
-.skd-roll-row {
+.ard-roll-row {
   margin: 0.7rem 1.1rem 1rem;
   display: flex;
   gap: 0.5rem;
@@ -199,8 +199,8 @@
   }
 }
 
-.skd-manual-confirm,
-.skd-reroll {
+.ard-manual-confirm,
+.ard-reroll {
   flex-shrink: 0;
   height: 2.6rem;
   display: flex;
@@ -233,7 +233,7 @@
   }
 }
 
-.skd-manual-confirm {
+.ard-manual-confirm {
   width: 2.6rem;
   padding: 0;
 }
@@ -242,7 +242,7 @@
 // Empilé (étiquette au-dessus, contrôle en pleine largeur en dessous) plutôt que côte-à-côte : le
 // rail segmenté a besoin de toute la largeur pour rester lisible, et peut passer sur 2 lignes
 // (ligne Difficulté, 8 cases) sans se retrouver écrasé contre l'étiquette.
-.skd-row {
+.ard-row {
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -250,7 +250,7 @@
   margin: 0.7rem 1.1rem 0;
 }
 
-.skd-row-label {
+.ard-row-label {
   font-size: 0.85rem;
   color: var(--dw-surface-500);
   flex-shrink: 0;
@@ -261,8 +261,8 @@
 // — pas des puces séparées par des espaces. Le fond ne bascule jamais vers un ton clair de la palette
 // (contrairement à l'ancien traitement), donc le contraste ne peut pas se casser quel que soit l'état.
 // Chaque groupe reste sur une seule ligne (pas de wrap) : la ligne Difficulté (8 options) utilise deux
-// bandeaux complets de 4 empilés (`.skd-toggle-stack`) plutôt qu'une grille qui casserait ce rendu.
-.skd-toggle.mat-button-toggle-group {
+// bandeaux complets de 4 empilés (`.ard-toggle-stack`) plutôt qu'une grille qui casserait ce rendu.
+.ard-toggle.mat-button-toggle-group {
   display: flex;
   width: 100%;
   border: 1px solid var(--dw-border);
@@ -310,13 +310,13 @@
   }
 }
 
-.skd-toggle-stack {
+.ard-toggle-stack {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
 }
 
-.skd-stepper {
+.ard-stepper {
   display: flex;
   align-items: stretch;
   border: 1px solid var(--dw-border);

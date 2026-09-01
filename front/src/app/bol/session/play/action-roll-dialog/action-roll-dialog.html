@@ -1,17 +1,17 @@
-<div class="skd-shell">
-  <div class="skd-header">
-    <h2 mat-dialog-title class="skd-title">
-      <div class="skd-title-eyebrow">Jet d'action</div>
-      <div class="skd-title-name">{{ data.heroNom }}</div>
+<div class="ard-shell">
+  <div class="ard-header">
+    <h2 mat-dialog-title class="ard-title">
+      <div class="ard-title-eyebrow">Jet d'action</div>
+      <div class="ard-title-name">{{ data.heroNom }}</div>
     </h2>
-    <button type="button" class="skd-close" aria-label="Fermer" (click)="close()">
+    <button type="button" class="ard-close" aria-label="Fermer" (click)="close()">
       <mat-icon>close</mat-icon>
     </button>
   </div>
 
-  <div class="skd-row">
-    <span class="skd-row-label">Attribut</span>
-    <mat-button-toggle-group class="skd-toggle" [value]="attribute()" [hideSingleSelectionIndicator]="true" (change)="setAttribute($event)">
+  <div class="ard-row">
+    <span class="ard-row-label">Attribut</span>
+    <mat-button-toggle-group class="ard-toggle" [value]="attribute()" [hideSingleSelectionIndicator]="true" (change)="setAttribute($event)">
       @for (attr of attributes; track attr) {
         <mat-button-toggle [value]="attr">
           {{ attributeLabels[attr] }} ({{ data[attr] >= 0 ? '+' : '' }}{{ data[attr] }})
@@ -20,17 +20,17 @@
     </mat-button-toggle-group>
   </div>
 
-  <div class="skd-row">
-    <span class="skd-row-label">Difficulté</span>
-    <div class="skd-toggle-stack">
-      <mat-button-toggle-group class="skd-toggle" [value]="difficulty().label" [hideSingleSelectionIndicator]="true" (change)="setDifficulty($event)">
+  <div class="ard-row">
+    <span class="ard-row-label">Difficulté</span>
+    <div class="ard-toggle-stack">
+      <mat-button-toggle-group class="ard-toggle" [value]="difficulty().label" [hideSingleSelectionIndicator]="true" (change)="setDifficulty($event)">
         @for (d of difficultiesRow1; track d.label) {
           <mat-button-toggle [value]="d.label">
             {{ d.label }} ({{ d.modifier >= 0 ? '+' : '' }}{{ d.modifier }})
           </mat-button-toggle>
         }
       </mat-button-toggle-group>
-      <mat-button-toggle-group class="skd-toggle" [value]="difficulty().label" [hideSingleSelectionIndicator]="true" (change)="setDifficulty($event)">
+      <mat-button-toggle-group class="ard-toggle" [value]="difficulty().label" [hideSingleSelectionIndicator]="true" (change)="setDifficulty($event)">
         @for (d of difficultiesRow2; track d.label) {
           <mat-button-toggle [value]="d.label">
             {{ d.label }} ({{ d.modifier >= 0 ? '+' : '' }}{{ d.modifier }})
@@ -40,9 +40,9 @@
     </div>
   </div>
 
-  <div class="skd-row">
-    <span class="skd-row-label">Modificateur additionnel</span>
-    <div class="skd-stepper">
+  <div class="ard-row">
+    <span class="ard-row-label">Modificateur additionnel</span>
+    <div class="ard-stepper">
       <button type="button" (click)="incrementModifier(-1)">−</button>
       <span>{{ modifier() >= 0 ? '+' : '' }}{{ modifier() }}</span>
       <button type="button" (click)="incrementModifier(1)">+</button>
@@ -51,25 +51,25 @@
 
   @if (dice(); as d) {
     <div
-      class="skd-result"
-      [class.skd-result--reussite]="bannerTone() === 'reussite'"
-      [class.skd-result--echec]="bannerTone() === 'echec'"
-      [class.skd-result--heroique]="bannerTone() === 'heroique'"
+      class="ard-result"
+      [class.ard-result--reussite]="bannerTone() === 'reussite'"
+      [class.ard-result--echec]="bannerTone() === 'echec'"
+      [class.ard-result--heroique]="bannerTone() === 'heroique'"
     >
-      <div class="skd-result-total">{{ total() }}</div>
-      <p class="skd-result-label">{{ resultLabel() }}</p>
+      <div class="ard-result-total">{{ total() }}</div>
+      <p class="ard-result-label">{{ resultLabel() }}</p>
     </div>
   } @else {
-    <div class="skd-result skd-result--idle">
+    <div class="ard-result ard-result--idle">
       <p>Lancez les dés pour connaître le résultat du jet.</p>
     </div>
   }
 
-  <app-dice-box-host class="skd-box" [scale]="12" />
+  <app-dice-box-host class="ard-box" [scale]="12" />
 
-  <p class="skd-formula">{{ formula() }}</p>
+  <p class="ard-formula">{{ formula() }}</p>
 
-  <div class="skd-roll-row">
+  <div class="ard-roll-row">
     <input
       type="number"
       min="2"
@@ -83,14 +83,14 @@
     />
     <button
       type="button"
-      class="skd-manual-confirm"
+      class="ard-manual-confirm"
       aria-label="Valider le total saisi"
       [disabled]="!manualTotalValid()"
       (click)="submitManualTotal()"
     >
       <mat-icon>check</mat-icon>
     </button>
-    <button type="button" class="skd-reroll" [disabled]="rolling()" (click)="roll()">
+    <button type="button" class="ard-reroll" [disabled]="rolling()" (click)="roll()">
       <mat-icon>refresh</mat-icon>
       {{ dice() ? 'Relancer' : 'Lancer 2d6' }}
     </button>

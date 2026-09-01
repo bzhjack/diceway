@@ -28,11 +28,11 @@ import {
 import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialog';
 import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard, EMPTY_AVATAR, PlayToken} from '../combat-play.util';
+import {ActionRollDialogComponent} from './action-roll-dialog/action-roll-dialog';
 import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
 import {AdjustHeroStatsDialogComponent} from './adjust-hero-stats-dialog/adjust-hero-stats-dialog';
 import {AttackMenuComponent, CombatReminderStat} from './attack-menu/attack-menu';
 import {HeroActionMenuComponent} from './hero-action-menu/hero-action-menu';
-import {SkillCheckDialogComponent} from './skill-check-dialog/skill-check-dialog';
 import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dialog';
 
 const COLS_PER_ZONE = 3;
@@ -489,7 +489,7 @@ export class SessionPlayPageComponent {
     }
   }
 
-  protected onSkillCheck(token: PlayToken): void {
+  protected onActionRoll(token: PlayToken): void {
     const herosId = token.combat.sourceId;
     if (!herosId) {
       return;
@@ -499,9 +499,9 @@ export class SessionPlayPageComponent {
       .heros(herosId)
       .pipe(take(1))
       .subscribe((hero) => {
-        this.dialog.open(SkillCheckDialogComponent, {
+        this.dialog.open(ActionRollDialogComponent, {
           maxWidth: 'min(30rem, 92vw)',
-          panelClass: 'skd-panel',
+          panelClass: 'ard-panel',
           data: {
             heroNom: token.nom,
             agilite: hero.attributs.agilite_effective,
