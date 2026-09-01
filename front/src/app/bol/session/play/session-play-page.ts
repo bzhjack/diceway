@@ -29,7 +29,7 @@ import {
 import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialog';
 import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard, EMPTY_AVATAR, PlayToken} from '../combat-play.util';
-import {ActionRollDialogComponent} from './action-roll-dialog/action-roll-dialog';
+import {ActionRollDiceTrait, ActionRollDialogComponent} from './action-roll-dialog/action-roll-dialog';
 import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
 import {AdjustHeroStatsDialogComponent} from './adjust-hero-stats-dialog/adjust-hero-stats-dialog';
 import {AttackMenuComponent, CombatReminderStat} from './attack-menu/attack-menu';
@@ -513,6 +513,21 @@ export class SessionPlayPageComponent {
             carrieres: hero.carrieres
               .map((c) => ({label: c.carriere?.carriere ?? '', value: c.value}))
               .filter((c) => c.label),
+            diceTraits: hero.traits
+              .map((trait): ActionRollDiceTrait | null => {
+                const traitable = trait.traitable;
+                if (!traitable) {
+                  return null;
+                }
+                if (trait.type === 'A' && 'de_bonus' in traitable && traitable.de_bonus) {
+                  return {label: traitable.avantage, domaine: traitable.de_bonus_domaine, kind: 'avantage'};
+                }
+                if (trait.type === 'D' && 'de_malus' in traitable && traitable.de_malus) {
+                  return {label: traitable.desavantage, domaine: traitable.de_malus_domaine, kind: 'desavantage'};
+                }
+                return null;
+              })
+              .filter((t): t is ActionRollDiceTrait => t !== null),
           },
         });
       });

@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {diceFromTotal, suggestedActionResult} from './action-roll-dialog';
+import {diceFromTotal, keepBestOrWorstTwo, suggestedActionResult} from './action-roll-dialog';
 
 describe('suggestedActionResult', () => {
   it('returns echec on a natural 2, regardless of total', () => {
@@ -35,5 +35,27 @@ describe('diceFromTotal', () => {
     expect(a).toBeLessThanOrEqual(6);
     expect(b).toBeGreaterThanOrEqual(1);
     expect(b).toBeLessThanOrEqual(6);
+  });
+});
+
+describe('keepBestOrWorstTwo', () => {
+  it('returns the pair as-is for a normal 2d6 roll (net 0)', () => {
+    expect(keepBestOrWorstTwo([3, 5], 0)).toEqual([3, 5]);
+  });
+
+  it('keeps the 2 best of 3 for a single avantage (net 1)', () => {
+    expect(keepBestOrWorstTwo([1, 4, 6], 1)).toEqual([4, 6]);
+  });
+
+  it('keeps the 2 best of 4 for two avantages (net 2)', () => {
+    expect(keepBestOrWorstTwo([1, 2, 5, 6], 2)).toEqual([5, 6]);
+  });
+
+  it('keeps the 2 worst of 3 for a single désavantage (net -1)', () => {
+    expect(keepBestOrWorstTwo([1, 4, 6], -1)).toEqual([1, 4]);
+  });
+
+  it('keeps the 2 worst of 4 for two désavantages (net -2)', () => {
+    expect(keepBestOrWorstTwo([1, 2, 5, 6], -2)).toEqual([1, 2]);
   });
 });

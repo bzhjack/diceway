@@ -57,6 +57,39 @@
     </div>
   </div>
 
+  @if (avantageTraits.length || desavantageTraits.length) {
+    <div class="ard-row">
+      <span class="ard-row-label">Avantages / désavantages applicables</span>
+      <div class="ard-trait-chips">
+        @for (t of avantageTraits; track t.label) {
+          <button
+            type="button"
+            class="ard-trait-chip ard-trait-chip--avantage"
+            [class.ard-trait-chip--selected]="selectedDiceTraits().has(t.label)"
+            [matTooltip]="t.domaine ?? ''"
+            (click)="toggleDiceTrait(t.label)"
+          >
+            {{ t.label }}
+          </button>
+        }
+        @for (t of desavantageTraits; track t.label) {
+          <button
+            type="button"
+            class="ard-trait-chip ard-trait-chip--desavantage"
+            [class.ard-trait-chip--selected]="selectedDiceTraits().has(t.label)"
+            [matTooltip]="t.domaine ?? ''"
+            (click)="toggleDiceTrait(t.label)"
+          >
+            {{ t.label }}
+          </button>
+        }
+      </div>
+      @if (diceCountLabel(); as label) {
+        <span class="ard-trait-summary">{{ label }}</span>
+      }
+    </div>
+  }
+
   <div class="ard-row">
     <span class="ard-row-label">Modificateur additionnel</span>
     <div class="ard-modifier-row">
@@ -89,6 +122,10 @@
 
   <app-dice-box-host class="ard-box" [scale]="12" />
 
+  @if (diceBreakdown(); as breakdown) {
+    <p class="ard-dice-breakdown">{{ breakdown }}</p>
+  }
+
   <p class="ard-formula">{{ formula() }}</p>
 
   <div class="ard-roll-row">
@@ -114,7 +151,7 @@
     </button>
     <button type="button" class="ard-reroll" [disabled]="rolling()" (click)="roll()">
       <mat-icon>refresh</mat-icon>
-      {{ dice() ? 'Relancer' : 'Lancer 2d6' }}
+      {{ dice() ? 'Relancer' : rollButtonLabel() }}
     </button>
   </div>
 </div>

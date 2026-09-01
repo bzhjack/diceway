@@ -156,6 +156,14 @@
   overflow: hidden;
 }
 
+.ard-dice-breakdown {
+  margin: 0.4rem 1.1rem 0;
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--dw-surface-500);
+  font-variant-numeric: tabular-nums;
+}
+
 .ard-formula {
   margin: 0.4rem 1.1rem 0;
   text-align: center;
@@ -326,6 +334,50 @@
   font-size: 0.78rem;
   font-weight: 700;
   color: var(--dw-color-echec);
+}
+
+// Puces avantage/désavantage à dé de bonus/malus — sélection manuelle (domaine en tooltip), même
+// langage visuel que `.am-chip` (menu d'attaque) : neutre au repos, teinté une fois sélectionné.
+.ard-trait-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.ard-trait-chip {
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--dw-border);
+  background: color-mix(in srgb, var(--dw-surface-0) 45%, transparent);
+  color: var(--dw-surface-500);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--dw-surface-500);
+    color: var(--dw-surface-800);
+  }
+}
+
+.ard-trait-chip--avantage.ard-trait-chip--selected {
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 60%, transparent);
+  background: var(--dw-color-reussite);
+  color: #041a0d;
+}
+
+.ard-trait-chip--desavantage.ard-trait-chip--selected {
+  border-color: color-mix(in srgb, var(--dw-color-echec) 60%, transparent);
+  background: var(--dw-color-echec);
+  color: #2a0505;
+}
+
+.ard-trait-summary {
+  align-self: flex-start;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--dw-surface-500);
 }
 
 .ard-stepper {
