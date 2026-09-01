@@ -504,10 +504,11 @@ export class SessionPlayPageComponent {
           panelClass: 'ard-panel',
           data: {
             heroNom: token.nom,
-            agilite: hero.attributs.agilite_effective,
+            agilite: hero.attributs.agilite,
             vigueur: hero.attributs.vigueur,
             esprit: hero.attributs.esprit,
             aura: hero.attributs.aura,
+            equipementAgilite: hero.attributs.agilite_effective - hero.attributs.agilite,
           },
         });
       });

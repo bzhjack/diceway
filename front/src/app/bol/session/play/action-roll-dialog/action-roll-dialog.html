@@ -42,10 +42,15 @@
 
   <div class="ard-row">
     <span class="ard-row-label">Modificateur additionnel</span>
-    <div class="ard-stepper">
-      <button type="button" (click)="incrementModifier(-1)">−</button>
-      <span>{{ modifier() >= 0 ? '+' : '' }}{{ modifier() }}</span>
-      <button type="button" (click)="incrementModifier(1)">+</button>
+    <div class="ard-modifier-row">
+      <div class="ard-stepper">
+        <button type="button" (click)="incrementModifier(-1)">−</button>
+        <span>{{ modifier() >= 0 ? '+' : '' }}{{ modifier() }}</span>
+        <button type="button" (click)="incrementModifier(1)">+</button>
+      </div>
+      @if (equipmentModifier() !== 0) {
+        <span class="ard-equip-chip">Équipement {{ equipmentModifier() >= 0 ? '+' : '' }}{{ equipmentModifier() }}</span>
+      }
     </div>
   </div>
 

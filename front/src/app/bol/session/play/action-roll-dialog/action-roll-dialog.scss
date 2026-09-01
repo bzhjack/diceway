@@ -316,12 +316,26 @@
   gap: 0.35rem;
 }
 
+.ard-modifier-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ard-equip-chip {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--dw-color-echec);
+}
+
 .ard-stepper {
   display: flex;
   align-items: stretch;
+  align-self: flex-start;
   border: 1px solid var(--dw-border);
   border-radius: 8px;
   overflow: hidden;
+  flex-shrink: 0;
 
   button {
     width: 2rem;

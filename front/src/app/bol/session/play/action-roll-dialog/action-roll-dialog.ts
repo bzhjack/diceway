@@ -11,6 +11,8 @@ export interface ActionRollDialogData {
   readonly vigueur: number;
   readonly esprit: number;
   readonly aura: number;
+  /** Malus d'équipement (armure/casque) sur l'agilité — affiché et appliqué automatiquement quand cet attribut est sélectionné, en plus de la vraie valeur d'agilité. */
+  readonly equipementAgilite: number;
 }
 
 export type ActionAttribute = 'agilite' | 'vigueur' | 'esprit' | 'aura';
@@ -113,8 +115,13 @@ export class ActionRollDialogComponent {
     return t !== null && Number.isInteger(t) && t >= 2 && t <= 12;
   });
 
+  /** Modificateur calculé (non éditable) pour l'attribut sélectionné — équipement porté, etc. */
+  protected readonly equipmentModifier = computed(() =>
+    this.attribute() === 'agilite' ? this.data.equipementAgilite : 0,
+  );
+
   protected readonly modifierSum = computed(
-    () => this.data[this.attribute()] + this.difficulty().modifier + this.modifier(),
+    () => this.data[this.attribute()] + this.difficulty().modifier + this.equipmentModifier() + this.modifier(),
   );
 
   protected readonly formula = computed(() => {
