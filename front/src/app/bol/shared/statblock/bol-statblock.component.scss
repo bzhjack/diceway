@@ -273,6 +273,14 @@
   margin-top: 0.4rem;
 }
 
+.bol-statblock__entry--equipped {
+  border-left-color: var(--dw-color-reussite);
+
+  .bol-statblock__entry-title {
+    color: var(--dw-color-reussite);
+  }
+}
+
 .bol-statblock__entry--row {
   display: flex;
   justify-content: space-between;
