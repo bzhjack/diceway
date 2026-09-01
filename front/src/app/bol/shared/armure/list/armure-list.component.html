@@ -3,10 +3,22 @@
     <dw-collapsible-row
       [expanded]="isExpanded(armure)"
       [ariaLabel]="'Armure : ' + armure.label"
-      [label]="armure.label"
       [stat]="armure.protection"
       (toggled)="toggle(armure)"
     >
+      <ng-container row-summary>
+        <mat-checkbox
+          class="al-row-checkbox"
+          [checked]="armure.equipee"
+          [disabled]="!equipToggleEnabled()"
+          [matTooltip]="armure.equipee ? 'Déséquiper' : 'Équiper'"
+          [attr.aria-label]="(armure.equipee ? 'Déséquiper ' : 'Équiper ') + armure.label"
+          (click)="$event.stopPropagation()"
+          (change)="equippedToggled.emit(index)"
+        />
+        <span class="dw-entry-label">{{ armure.label }}</span>
+      </ng-container>
+
       <ng-container row-body>
         <p class="dw-entry-meta">
           <span class="dw-entry-detail-title">Catégorie :</span>
@@ -30,14 +42,6 @@
             {{ armure.ptsDePouvoir }}
           </p>
         }
-
-        <mat-slide-toggle
-          [checked]="armure.equipee"
-          [disabled]="!equipToggleEnabled()"
-          (change)="equippedToggled.emit(index)"
-        >
-          Équipé·e
-        </mat-slide-toggle>
 
         <button mat-button type="button" class="dw-entry-delete-btn" (click)="removed.emit(index)">
           <mat-icon>delete</mat-icon> Supprimer

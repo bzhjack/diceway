@@ -1,7 +1,8 @@
 import {ChangeDetectionStrategy, Component, input, output, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatIconModule} from '@angular/material/icon';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {DwCollapsibleRowComponent} from '../../../../shared/dw-collapsible-row/dw-collapsible-row';
 import {BolArmureCategorie} from '../../../models/bol-armure.model';
 
@@ -25,7 +26,7 @@ const CATEGORIE_LABELS: Record<BolArmureCategorie, string> = {
 
 @Component({
   selector: 'bol-armure-list',
-  imports: [MatButtonModule, MatIconModule, MatSlideToggleModule, DwCollapsibleRowComponent],
+  imports: [MatButtonModule, MatCheckboxModule, MatIconModule, MatTooltipModule, DwCollapsibleRowComponent],
   templateUrl: './armure-list.component.html',
   styleUrl: './armure-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
