@@ -5,6 +5,11 @@ import {MatIconModule} from '@angular/material/icon';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 
+export interface ActionRollCarriere {
+  readonly label: string;
+  readonly value: number;
+}
+
 export interface ActionRollDialogData {
   readonly heroNom: string;
   readonly agilite: number;
@@ -13,6 +18,8 @@ export interface ActionRollDialogData {
   readonly aura: number;
   /** Malus d'équipement (armure/casque) sur l'agilité — affiché et appliqué automatiquement quand cet attribut est sélectionné, en plus de la vraie valeur d'agilité. */
   readonly equipementAgilite: number;
+  /** Carrières du héros — `2d6 + attribut + carrière appropriée` (02-actions-combat.md), sélection manuelle car seul le joueur/MJ sait laquelle s'applique. */
+  readonly carrieres: readonly ActionRollCarriere[];
 }
 
 export type ActionAttribute = 'agilite' | 'vigueur' | 'esprit' | 'aura';
@@ -76,7 +83,7 @@ const RESULT_LABELS: Record<InitiativeResultat, string> = {
   legendaire: 'Légendaire',
 };
 
-/** Jet d'action générique (hors combat) : 2d6 + attribut + modificateur libre, comparé à un seuil choisi. */
+/** Jet d'action générique (hors combat) : 2d6 + attribut + carrière + modificateur libre, comparé à un seuil choisi. */
 @Component({
   selector: 'bol-action-roll-dialog',
   imports: [MatButtonToggleModule, MatDialogModule, MatIconModule, DiceBoxHostComponent],
@@ -102,6 +109,8 @@ export class ActionRollDialogComponent {
 
   protected readonly attribute = signal<ActionAttribute>('agilite');
   protected readonly difficulty = signal<ActionDifficulty>(ACTION_DIFFICULTIES[2]); // Moyenne, par défaut
+  protected readonly carrieres = this.data.carrieres;
+  protected readonly carriere = signal<ActionRollCarriere | null>(null);
   protected readonly modifier = signal(0);
 
   protected readonly rolling = signal(false);
@@ -121,7 +130,12 @@ export class ActionRollDialogComponent {
   );
 
   protected readonly modifierSum = computed(
-    () => this.data[this.attribute()] + this.difficulty().modifier + this.equipmentModifier() + this.modifier(),
+    () =>
+      this.data[this.attribute()] +
+      this.difficulty().modifier +
+      this.equipmentModifier() +
+      (this.carriere()?.value ?? 0) +
+      this.modifier(),
   );
 
   protected readonly formula = computed(() => {
@@ -167,6 +181,10 @@ export class ActionRollDialogComponent {
     if (difficulty) {
       this.difficulty.set(difficulty);
     }
+  }
+
+  protected setCarriere(change: MatButtonToggleChange): void {
+    this.carriere.set(this.carrieres.find((c) => c.label === change.value) ?? null);
   }
 
   protected incrementModifier(delta: number): void {

@@ -20,6 +20,23 @@
     </mat-button-toggle-group>
   </div>
 
+  @if (carrieres.length) {
+    <div class="ard-row">
+      <span class="ard-row-label">Carrière</span>
+      <mat-button-toggle-group
+        class="ard-toggle"
+        [value]="carriere()?.label ?? 'aucune'"
+        [hideSingleSelectionIndicator]="true"
+        (change)="setCarriere($event)"
+      >
+        <mat-button-toggle value="aucune">Aucune</mat-button-toggle>
+        @for (c of carrieres; track c.label) {
+          <mat-button-toggle [value]="c.label">{{ c.label }} ({{ c.value >= 0 ? '+' : '' }}{{ c.value }})</mat-button-toggle>
+        }
+      </mat-button-toggle-group>
+    </div>
+  }
+
   <div class="ard-row">
     <span class="ard-row-label">Difficulté</span>
     <div class="ard-toggle-stack">

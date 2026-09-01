@@ -510,6 +510,9 @@ export class SessionPlayPageComponent {
             esprit: hero.attributs.esprit,
             aura: hero.attributs.aura,
             equipementAgilite: hero.attributs.agilite_effective - hero.attributs.agilite,
+            carrieres: hero.carrieres
+              .map((c) => ({label: c.carriere?.carriere ?? '', value: c.value}))
+              .filter((c) => c.label),
           },
         });
       });
