@@ -10,6 +10,13 @@
     <label id="ahs-heroisme-label">Héroïsme ({{ heroismeControl.value }})</label>
     <dw-value-stepper [formControl]="heroismeControl" [min]="0" [ariaLabel]="'Héroïsme'" />
   </div>
+
+  @if (armureEntries().length) {
+    <div class="ahs-field">
+      <label>Équipement</label>
+      <bol-armure-list [armures]="armureEntries()" [removeEnabled]="false" (equippedToggled)="toggleArmureEquipped($event)" />
+    </div>
+  }
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

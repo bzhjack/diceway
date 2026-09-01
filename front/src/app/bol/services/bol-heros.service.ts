@@ -86,6 +86,11 @@ export class BolHerosService {
     return this.http.delete<BolApiSuccess>(apiUrl(`bol/heros/armures/delete/${herosId}/${id}`));
   }
 
+  /** Bascule l'équipement d'une armure ; le backend n'en laisse qu'une équipée par catégorie. */
+  equipArmure(herosId: string | null | undefined, id: number): Observable<BolApiSuccess<{equipee: boolean}>> {
+    return this.http.patch<BolApiSuccess<{equipee: boolean}>>(apiUrl(`bol/heros/armures/equip/${herosId}/${id}`), {});
+  }
+
   // Langues du héros
   createLangue(herosId: string | null | undefined, langue: BolHerosLangueModel): Observable<BolApiSuccess<BolHerosLangueModel>> {
     return this.http.post<BolApiSuccess<BolHerosLangueModel>>(apiUrl(`bol/heros/langues/create/${herosId}`), langue);

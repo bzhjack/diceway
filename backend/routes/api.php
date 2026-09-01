@@ -104,6 +104,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::delete('/bol/armures/delete/{id}', [BolArmureController::class, 'deleteCatalog']);
     Route::post('/bol/heros/armures/create/{herosId}', [BolArmureController::class, 'create']);
     Route::delete('/bol/heros/armures/delete/{herosId}/{id}', [BolArmureController::class, 'delete']);
+    Route::patch('/bol/heros/armures/equip/{herosId}/{id}', [BolArmureController::class, 'equip']);
 
     // Gestion des créatures
     Route::get('/bol/creature/tailles', [BolCreatureController::class, 'getAllTailles']);

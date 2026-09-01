@@ -10,6 +10,7 @@ import {forkJoin, take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
+import {BolHerosArmureModel} from '../../models/bol-armure.model';
 import {BolFightSessionModel, CombatCamp} from '../../models/bol-fight-session.model';
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
 import {BolCreaturesService} from '../../services/bol-creatures.service';
@@ -536,6 +537,9 @@ export class SessionPlayPageComponent {
               vitaliteCourante: token.vitaliteCourante ?? hero.ressources.vitalite,
               vitaliteMax: hero.ressources.vitalite,
               heroisme: hero.ressources.heroisme,
+              armures: (hero.armures as (BolHerosArmureModel | number)[]).filter(
+                (armure): armure is BolHerosArmureModel => typeof armure === 'object',
+              ),
             },
           })
           .afterClosed()

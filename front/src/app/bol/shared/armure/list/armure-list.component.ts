@@ -35,6 +35,8 @@ export class ArmureListComponent {
   readonly armures = input.required<readonly ArmureEntry[]>();
   /** Set to false on pages with no backend support for persisting the equip toggle. */
   readonly equipToggleEnabled = input(true);
+  /** Set to false to hide the "Supprimer" action — e.g. quick session-time equip toggling, where removing gear from inventory isn't the point. */
+  readonly removeEnabled = input(true);
   readonly removed = output<number>();
   readonly equippedToggled = output<number>();
 

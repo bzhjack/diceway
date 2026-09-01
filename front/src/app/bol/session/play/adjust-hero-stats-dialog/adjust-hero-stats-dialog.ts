@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -7,6 +7,9 @@ import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
+import {BolArmureModel, BolHerosArmureModel} from '../../../models/bol-armure.model';
+import {applyArmureEquipToggle} from '../../../shared/form/form-selection';
+import {ArmureEntry, ArmureListComponent} from '../../../shared/armure/list/armure-list.component';
 
 export interface AdjustHeroStatsDialogData {
   readonly sessionId: string;
@@ -16,12 +19,20 @@ export interface AdjustHeroStatsDialogData {
   readonly vitaliteCourante: number;
   readonly vitaliteMax: number;
   readonly heroisme: number;
+  readonly armures: readonly BolHerosArmureModel[];
 }
 
-/** Ajustement rapide de la vitalité (scoped à la session) et de l'héroïsme (ressource globale du héros). */
+/** Armure de héros dont le catalogue (`armure`) est garanti chargé — pour l'équipement en séance. */
+interface EquippableArmure {
+  readonly id: number;
+  readonly equipee: boolean;
+  readonly armure: BolArmureModel;
+}
+
+/** Ajustement rapide de la vitalité (scoped à la session), de l'héroïsme et de l'équipement porté (héros global). */
 @Component({
   selector: 'bol-adjust-hero-stats-dialog',
-  imports: [ReactiveFormsModule, MatButtonModule, MatDialogModule, DwValueStepperComponent],
+  imports: [ReactiveFormsModule, MatButtonModule, MatDialogModule, DwValueStepperComponent, ArmureListComponent],
   templateUrl: './adjust-hero-stats-dialog.html',
   styleUrl: './adjust-hero-stats-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,6 +50,26 @@ export class AdjustHeroStatsDialogComponent {
   private lastVitalite = this.data.vitaliteCourante;
   private lastHeroisme = this.data.heroisme;
   protected readonly changed = signal(false);
+
+  protected readonly armures = signal<readonly EquippableArmure[]>(
+    this.data.armures
+      .filter((entry): entry is BolHerosArmureModel & {armure: BolArmureModel} => Boolean(entry.armure))
+      .map((entry) => ({id: entry.armure_id, equipee: entry.equipee, armure: entry.armure})),
+  );
+
+  protected readonly armureEntries = computed<readonly ArmureEntry[]>(() =>
+    this.armures().map((entry) => ({
+      id: entry.id,
+      label: entry.armure.armure,
+      protection: entry.armure.protection,
+      malus: entry.armure.malus,
+      ptsDePouvoir: entry.armure.pts_de_pouvoir,
+      categorie: entry.armure.categorie,
+      equipee: entry.equipee,
+      malusAgilite: entry.armure.malus_agilite,
+      malusInitiative: entry.armure.malus_initiative,
+    })),
+  );
 
   constructor() {
     this.ref.disableClose = true;
@@ -89,6 +120,29 @@ export class AdjustHeroStatsDialogComponent {
           duration: 5000,
         });
         this.heroismeControl.setValue(this.lastHeroisme, {emitEvent: false});
+      },
+    });
+  }
+
+  /** Bascule locale immédiate (exclusivité par catégorie) puis persistance ; reverte en cas d'échec. */
+  protected toggleArmureEquipped(index: number): void {
+    const previous = this.armures();
+    const target = previous[index];
+    if (!target) {
+      return;
+    }
+
+    this.armures.set(
+      applyArmureEquipToggle(previous, index, (id) => previous.find((a) => a.id === id)?.armure.categorie ?? null),
+    );
+
+    this.herosService.equipArmure(this.data.herosId, target.id).subscribe({
+      next: () => this.changed.set(true),
+      error: (error: unknown) => {
+        this.snackBar.open(extractApiErrorMessage(error, "Impossible de mettre à jour l'équipement."), 'Fermer', {
+          duration: 5000,
+        });
+        this.armures.set(previous);
       },
     });
   }

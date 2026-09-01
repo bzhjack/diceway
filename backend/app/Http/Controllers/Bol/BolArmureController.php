@@ -129,6 +129,29 @@ class BolArmureController extends Controller
         return response()->json(['success' => true]);
     }
 
+    /** Bascule l'équipement d'une armure de héros/PNJ ; n'en laisse qu'une équipée par catégorie (armure/bouclier/casque). */
+    public function equip($herosId, $id)
+    {
+        $pivot = BolHerosArmure::with('armure')->where('heros_id', $herosId)->where('armure_id', $id)->first();
+        if (!$pivot) {
+            return response()->json(['message' => 'Armure non trouvée'], 404);
+        }
+
+        $equipee = !$pivot->equipee;
+
+        if ($equipee && $pivot->armure) {
+            BolHerosArmure::where('heros_id', $herosId)
+                ->where('armure_id', '!=', $id)
+                ->whereHas('armure', fn ($query) => $query->where('categorie', $pivot->armure->categorie))
+                ->update(['equipee' => false]);
+        }
+
+        $pivot->equipee = $equipee;
+        $pivot->save();
+
+        return response()->json(['success' => true, 'equipee' => $equipee]);
+    }
+
     private function validatedPayload(Request $request, ?int $ignoreId = null): array
     {
         $request->merge([
