@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Diceway** is a role-playing game companion app for **Barbarians of Lemuria (BoL)**. It supports character creation, creature/demon/NPC management, and live game sessions.
 
-- **Frontend**: Angular 21 app in `/front/`
+- **Frontend**: Angular 22 app in `/front/`
 - **Backend**: Laravel 12 REST API in `/backend/`
 - Game rules reference: `/doc/rules/` and `/doc/resources/` (Markdown)
 
