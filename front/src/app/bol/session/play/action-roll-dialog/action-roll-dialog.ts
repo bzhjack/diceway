@@ -364,6 +364,18 @@ export class ActionRollDialogComponent {
     }
   }
 
+  /** Dégage visuellement les dés 3D encore posés sur la table (le résultat en cours — `dice()`,
+   * `total()`, etc. — n'est pas touché) : un clic n'importe où dans le dialog les fait disparaître,
+   * pour ne pas rester gênant devant les contrôles en dessous jusqu'au prochain lancer. Ignoré tant
+   * qu'un lancer est en cours (`rolling()`) — sinon ce clear() entre en course avec celui, interne,
+   * de `roll()` et corrompt l'état de la librairie de dés (résultat jamais appliqué, erreurs console). */
+  protected dismissDice(): void {
+    if (this.rolling()) {
+      return;
+    }
+    void this.diceBox().clear();
+  }
+
   protected onManualTotalInput(value: string): void {
     const parsed = value === '' ? null : Number(value);
     this.manualTotal.set(parsed === null || Number.isNaN(parsed) ? null : parsed);
