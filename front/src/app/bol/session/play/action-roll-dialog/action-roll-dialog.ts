@@ -283,6 +283,12 @@ export class ActionRollDialogComponent {
     return base === 'reussite' && this.heroicUpgradeChosen() ? 'heroique' : base;
   });
 
+  /** Faveur divine n'a de sens que pour retenter un échec — inutile de la proposer sur une réussite. */
+  protected readonly isFailure = computed(() => {
+    const result = this.suggestedResult();
+    return result === 'echec' || result === 'echec_critique';
+  });
+
   protected readonly resultLabel = computed(() => {
     const result = this.suggestedResult();
     return result ? RESULT_LABELS[result] : '';

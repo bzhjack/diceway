@@ -89,7 +89,7 @@
       {{ attackDice() ? 'Relancer' : 'Lancer 2d6' }}
     </button>
 
-    @if (attackDice() && data.attacker.herosId) {
+    @if (attackDice() && data.attacker.herosId && !attackSuccess()) {
       <button
         type="button"
         class="atd-divine-favor"
