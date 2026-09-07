@@ -607,20 +607,13 @@
 // un seul de ces boutons peut être visible à la fois (2 naturel, 12 naturel, réussite normale
 // s'excluent mutuellement). Le vert (critique = octroi de PH) et l'ambre (dépense de PH) distinguent
 // visuellement les deux sens du mouvement d'héroïsme.
-// Emplacement toujours réservé (hauteur fixe) pour les boutons de la ligne — Faveur divine et
-// palier volontaire n'apparaissent que selon le résultat du jet, mais l'espace reste occupé même
-// vide (`min-height`) : sinon leur apparition/disparition fait sauter la hauteur du dialog.
-.ard-action-slot {
-  min-height: 2.4rem;
-  margin: 0.6rem 0 0;
-}
-
 .ard-tier-toggle {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
   width: 100%;
+  margin: 0.6rem 0 0;
   padding: 0.55rem 0.9rem;
   border-radius: 8px;
   border: 1px dashed var(--dw-border);
@@ -665,6 +658,7 @@
 .ard-divine-favor {
   @include shared.divine-favor-button;
   width: 100%;
+  margin: 0.6rem 0 0;
   padding: 0.5rem 0.9rem;
   font-size: 0.88rem;
   background: color-mix(in srgb, var(--dw-surface-0) 55%, transparent);

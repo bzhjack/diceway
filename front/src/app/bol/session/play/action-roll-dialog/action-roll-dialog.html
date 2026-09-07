@@ -202,53 +202,47 @@
           </div>
         </div>
 
-        <!-- Emplacements toujours réservés (hauteur fixe), même quand aucun bouton n'est applicable —
-             sinon leur apparition/disparition selon le résultat du jet fait sauter la hauteur du dialog. -->
-        <div class="ard-action-slot">
-          @if (isFailure()) {
-            <button
-              type="button"
-              class="ard-divine-favor"
-              [disabled]="rolling() || heroisme() <= 0"
-              [matTooltip]="'Relance tous les dés, conserve le second résultat (02-actions-combat.md)'"
-              (click)="rollWithDivineFavor()"
-            >
-              <mat-icon>auto_awesome</mat-icon>
-              Faveur divine (−1 PH)
-            </button>
-          }
-        </div>
+        @if (isFailure()) {
+          <button
+            type="button"
+            class="ard-divine-favor"
+            [disabled]="rolling() || heroisme() <= 0"
+            [matTooltip]="'Relance tous les dés, conserve le second résultat (02-actions-combat.md)'"
+            (click)="rollWithDivineFavor()"
+          >
+            <mat-icon>auto_awesome</mat-icon>
+            Faveur divine (−1 PH)
+          </button>
+        }
 
-        <div class="ard-action-slot">
-          @if (isNatural2()) {
-            <button type="button" class="ard-tier-toggle ard-tier-toggle--critique" [class.active]="critiqueChosen()" (click)="toggleCritique()">
-              <mat-icon>{{ critiqueChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
-              Échec critique (+1 PH)
-            </button>
-          } @else if (isNatural12()) {
-            <button
-              type="button"
-              class="ard-tier-toggle ard-tier-toggle--upgrade"
-              [class.active]="legendaryChosen()"
-              [disabled]="!legendaryChosen() && heroisme() <= 0"
-              (click)="toggleLegendaire()"
-            >
-              <mat-icon>{{ legendaryChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
-              Succès légendaire (−1 PH)
-            </button>
-          } @else if (canUpgradeToHeroique()) {
-            <button
-              type="button"
-              class="ard-tier-toggle ard-tier-toggle--upgrade"
-              [class.active]="heroicUpgradeChosen()"
-              [disabled]="!heroicUpgradeChosen() && heroisme() <= 0"
-              (click)="toggleHeroicUpgrade()"
-            >
-              <mat-icon>{{ heroicUpgradeChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
-              Convertir en succès héroïque (−1 PH)
-            </button>
-          }
-        </div>
+        @if (isNatural2()) {
+          <button type="button" class="ard-tier-toggle ard-tier-toggle--critique" [class.active]="critiqueChosen()" (click)="toggleCritique()">
+            <mat-icon>{{ critiqueChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+            Échec critique (+1 PH)
+          </button>
+        } @else if (isNatural12()) {
+          <button
+            type="button"
+            class="ard-tier-toggle ard-tier-toggle--upgrade"
+            [class.active]="legendaryChosen()"
+            [disabled]="!legendaryChosen() && heroisme() <= 0"
+            (click)="toggleLegendaire()"
+          >
+            <mat-icon>{{ legendaryChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+            Succès légendaire (−1 PH)
+          </button>
+        } @else if (canUpgradeToHeroique()) {
+          <button
+            type="button"
+            class="ard-tier-toggle ard-tier-toggle--upgrade"
+            [class.active]="heroicUpgradeChosen()"
+            [disabled]="!heroicUpgradeChosen() && heroisme() <= 0"
+            (click)="toggleHeroicUpgrade()"
+          >
+            <mat-icon>{{ heroicUpgradeChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+            Convertir en succès héroïque (−1 PH)
+          </button>
+        }
       </div>
     </div>
   </div>
