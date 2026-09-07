@@ -178,17 +178,6 @@ export class ActionRollDialogComponent {
 
   protected readonly rollButtonLabel = computed(() => `Lancer ${2 + Math.abs(this.netDiceModifier())}d6`);
 
-  /** Détail du pool de dés lancé quand un avantage/désavantage à dé s'applique (plus de 2 dés) — pour
-   * que le joueur voie lesquels ont été gardés, pas juste le total final. */
-  protected readonly diceBreakdown = computed(() => {
-    const all = this.rolledDice();
-    const kept = this.dice();
-    if (!all || !kept || all.length <= 2) {
-      return null;
-    }
-    return `${all.length}d6 : ${all.join(', ')} → gardé ${kept[0]} + ${kept[1]}`;
-  });
-
   protected readonly rolling = signal(false);
   /** Tous les dés physiquement lancés (2 à 4) — `dice` n'en garde que les 2 qui comptent. */
   protected readonly rolledDice = signal<readonly number[] | null>(null);
@@ -220,6 +209,14 @@ export class ActionRollDialogComponent {
     const sum = this.modifierSum();
     const base = sum >= 0 ? `2d6 + ${sum}` : `2d6 − ${Math.abs(sum)}`;
     return `${base} > ${ACTION_ROLL_THRESHOLD}`;
+  });
+
+  /** Fin de la formule une fois les dés lancés — le "2d6" littéral est alors remplacé par les 2 dés
+   * gardés eux-mêmes (voir ard-formula dans le template), donc ce calcul ne redit que le reste. */
+  protected readonly formulaTail = computed(() => {
+    const sum = this.modifierSum();
+    const tail = sum >= 0 ? `+ ${sum}` : `− ${Math.abs(sum)}`;
+    return `${tail} > ${ACTION_ROLL_THRESHOLD}`;
   });
 
   protected readonly diceSum = computed(() => {

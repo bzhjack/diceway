@@ -1,7 +1,7 @@
 .dw-dice-box-host {
   position: relative;
   min-height: var(--dice-box-min-height, 18rem);
-  min-width:  24rem;
+  min-width: var(--dice-box-min-width, 24rem);
   border: 1px solid color-mix(in srgb, var(--dw-color-dice-kicker) 22%, transparent);
   background:
     radial-gradient(circle at top, color-mix(in srgb, var(--dw-color-dice-kicker) 16%, transparent), transparent 48%),

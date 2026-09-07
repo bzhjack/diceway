@@ -501,7 +501,7 @@ export class SessionPlayPageComponent {
       .pipe(take(1))
       .subscribe((hero) => {
         this.dialog.open(ActionRollDialogComponent, {
-          maxWidth: 'min(30rem, 92vw)',
+          maxWidth: 'min(56rem, 94vw)',
           panelClass: 'ard-panel',
           data: {
             heroNom: token.nom,
