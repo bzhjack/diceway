@@ -632,9 +632,12 @@ export class SessionPlayPageComponent {
       return;
     }
 
+    // `.cp-token-anchor` est positionné par `left`/`top`, et son enfant `.cp-token` se recentre
+    // dessus via `transform: translate(-50%, -50%)` : le coin (left, top) de l'ancre EST donc déjà
+    // le centre visuel du jeton — pas besoin (et surtout pas correct) d'y rajouter la demi-taille.
     const anchorRect = event.source.element.nativeElement.getBoundingClientRect();
-    const x = clamp(((anchorRect.left + anchorRect.width / 2 - mapRect.left) / mapRect.width) * 100, 0, 100);
-    const y = clamp(((anchorRect.top + anchorRect.height / 2 - mapRect.top) / mapRect.height) * 100, 0, 100);
+    const x = clamp(((anchorRect.left - mapRect.left) / mapRect.width) * 100, 0, 100);
+    const y = clamp(((anchorRect.top - mapRect.top) / mapRect.height) * 100, 0, 100);
     event.source.reset();
 
     const positions = {...this.tokenPositions(), [token.key]: {x, y}};
