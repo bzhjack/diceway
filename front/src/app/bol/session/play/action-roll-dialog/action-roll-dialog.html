@@ -4,9 +4,15 @@
       <div class="ard-title-eyebrow">Jet d'action</div>
       <div class="ard-title-name">{{ data.heroNom }}</div>
     </h2>
-    <button type="button" class="ard-close" aria-label="Fermer" (click)="close()">
-      <mat-icon>close</mat-icon>
-    </button>
+    <div class="ard-header-actions">
+      <span class="ard-heroisme-badge" [matTooltip]="'Points d’héroïsme'">
+        <mat-icon>military_tech</mat-icon>
+        {{ heroisme() }}
+      </span>
+      <button type="button" class="ard-close" aria-label="Fermer" (click)="close()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
   </div>
 
   <div class="ard-columns">
@@ -127,6 +133,37 @@
         </div>
       }
 
+      @if (isNatural2()) {
+        <button type="button" class="ard-tier-toggle ard-tier-toggle--critique" [class.active]="critiqueChosen()" (click)="toggleCritique()">
+          <mat-icon>{{ critiqueChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+          Échec critique (+1 PH)
+        </button>
+      }
+      @if (isNatural12()) {
+        <button
+          type="button"
+          class="ard-tier-toggle ard-tier-toggle--upgrade"
+          [class.active]="legendaryChosen()"
+          [disabled]="!legendaryChosen() && heroisme() <= 0"
+          (click)="toggleLegendaire()"
+        >
+          <mat-icon>{{ legendaryChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+          Succès légendaire (−1 PH)
+        </button>
+      }
+      @if (canUpgradeToHeroique()) {
+        <button
+          type="button"
+          class="ard-tier-toggle ard-tier-toggle--upgrade"
+          [class.active]="heroicUpgradeChosen()"
+          [disabled]="!heroicUpgradeChosen() && heroisme() <= 0"
+          (click)="toggleHeroicUpgrade()"
+        >
+          <mat-icon>{{ heroicUpgradeChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+          Convertir en succès héroïque (−1 PH)
+        </button>
+      }
+
       <app-dice-box-host class="ard-box" [scale]="6" />
 
       <div class="ard-formula">
@@ -170,6 +207,19 @@
           {{ dice() ? 'Relancer' : rollButtonLabel() }}
         </button>
       </div>
+
+      @if (dice()) {
+        <button
+          type="button"
+          class="ard-divine-favor"
+          [disabled]="rolling() || heroisme() <= 0"
+          [matTooltip]="'Relance tous les dés, conserve le second résultat (02-actions-combat.md)'"
+          (click)="rollWithDivineFavor()"
+        >
+          <mat-icon>auto_awesome</mat-icon>
+          Faveur divine (−1 PH)
+        </button>
+      }
     </div>
   </div>
 </div>

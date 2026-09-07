@@ -3,7 +3,7 @@
 <mat-dialog-content>
   <div class="ahs-field">
     <label id="ahs-vitalite-label">Vitalité ({{ vitaliteControl.value }} / {{ data.vitaliteMax }})</label>
-    <dw-value-stepper [formControl]="vitaliteControl" [min]="0" [max]="data.vitaliteMax" [ariaLabel]="'Vitalité'" />
+    <dw-value-stepper [formControl]="vitaliteControl" [min]="-20" [max]="data.vitaliteMax" [ariaLabel]="'Vitalité'" />
   </div>
 
   <div class="ahs-field">

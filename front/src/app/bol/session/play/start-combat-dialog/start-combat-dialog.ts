@@ -122,6 +122,8 @@ export class StartCombatDialogComponent {
             panelClass: 'ird-panel',
             data: {
               heroNom: hero.nom,
+              herosId: hero.herosId,
+              heroisme: h.ressources.heroisme,
               esprit: h.attributs.esprit,
               initiative: h.combat.initiative_effective,
               modifierTotal: 0,

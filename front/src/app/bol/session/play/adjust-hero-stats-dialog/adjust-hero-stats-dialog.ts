@@ -1,7 +1,7 @@
-import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, inject, signal} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
@@ -10,6 +10,7 @@ import {BolHerosService} from '../../../services/bol-heros.service';
 import {BolArmureModel, BolHerosArmureModel} from '../../../models/bol-armure.model';
 import {applyArmureEquipToggle} from '../../../shared/form/form-selection';
 import {ArmureEntry, ArmureListComponent} from '../../../shared/armure/list/armure-list.component';
+import {maybePromptDefierLaMort} from '../defier-la-mort-dialog/defier-la-mort.util';
 
 export interface AdjustHeroStatsDialogData {
   readonly sessionId: string;
@@ -43,6 +44,8 @@ export class AdjustHeroStatsDialogComponent {
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly herosService = inject(BolHerosService);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   protected readonly vitaliteControl = new FormControl(this.data.vitaliteCourante, {nonNullable: true});
   protected readonly heroismeControl = new FormControl(this.data.heroisme, {nonNullable: true});
@@ -94,6 +97,33 @@ export class AdjustHeroStatsDialogComponent {
       next: () => {
         this.lastVitalite = value;
         this.changed.set(true);
+
+        if (value < 0) {
+          maybePromptDefierLaMort({
+            dialog: this.dialog,
+            fightSessionService: this.fightSessionService,
+            herosService: this.herosService,
+            sessionId: this.data.sessionId,
+            herosId: this.data.herosId,
+            pivotId: this.data.pivotId,
+            heroNom: this.data.heroNom,
+            vitaliteCourante: value,
+            heroisme: this.lastHeroisme,
+            // Ce callback vient de la fermeture d'un dialog imbriqué (defier-la-mort), pas d'un
+            // événement du template de CE composant OnPush — sans markForCheck(), les lectures
+            // directes de FormControl.value dans le template (ex. le label "Héroïsme (N)") restent
+            // périmées même si le stepper lui-même (signal interne) se met à jour correctement.
+            onApplied: () => {
+              if (value >= -5) {
+                this.lastVitalite = 0;
+                this.vitaliteControl.setValue(0, {emitEvent: false});
+              }
+              this.lastHeroisme -= 1;
+              this.heroismeControl.setValue(this.lastHeroisme, {emitEvent: false});
+              this.changeDetectorRef.markForCheck();
+            },
+          });
+        }
       },
       error: (error: unknown) => {
         this.snackBar.open(extractApiErrorMessage(error, 'Impossible de mettre à jour la vitalité.'), 'Fermer', {

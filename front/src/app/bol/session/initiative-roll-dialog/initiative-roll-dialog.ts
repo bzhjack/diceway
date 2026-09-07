@@ -1,12 +1,18 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal, ViewEncapsulation, viewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {DiceBoxHostComponent} from '../../../shared/dice-3d/dice-box-host';
 import {InitiativeResultat} from '../../models/bol-fight-session.model';
+import {BolHerosService} from '../../services/bol-heros.service';
 import {INITIATIVE_RESULT_OPTIONS} from '../initiative.util';
 
 export interface InitiativeRollDialogData {
   readonly heroNom: string;
+  readonly herosId: string;
+  /** Héroïsme courant du héros — l'octroi (échec critique) ou la dépense (légendaire) est persisté en direct dans ce dialog. */
+  readonly heroisme: number;
   readonly esprit: number;
   readonly initiative: number;
   /** Modificateurs additionnels (embuscade/initiative adverse). */
@@ -43,9 +49,13 @@ const THRESHOLD = 9;
 export class InitiativeRollDialogComponent {
   protected readonly data = inject<InitiativeRollDialogData>(MAT_DIALOG_DATA);
   protected readonly ref = inject(MatDialogRef<InitiativeRollDialogComponent, InitiativeResultat | undefined>);
+  private readonly herosService = inject(BolHerosService);
+  private readonly snackBar = inject(MatSnackBar);
 
   private readonly diceBox = viewChild.required(DiceBoxHostComponent);
 
+  /** Héroïsme courant, mis à jour en direct au fil des octrois/dépenses de ce dialog. */
+  protected readonly heroisme = signal(this.data.heroisme);
 
   protected readonly rolling = signal(false);
   protected readonly dice = signal<readonly [number, number] | null>(null);
@@ -111,6 +121,48 @@ export class InitiativeRollDialogComponent {
 
     return result === 'heroique' || result === 'legendaire' ? 'heroique' : 'echec';
   });
+
+  /** Échec critique (2 naturel) : choisir OCTROIE 1 PH (02-actions-combat.md : "peut justifier
+   * l'octroi d'1 point d'héroïsme") ; revenir sur "Échec" le reprend. */
+  protected chooseCritique(chosen: boolean): void {
+    if (chosen === this.critiqueChosen()) {
+      return;
+    }
+    const delta = chosen ? 1 : -1;
+    this.critiqueChosen.set(chosen);
+    this.heroisme.update((h) => h + delta);
+    this.herosService.adjustHeroisme(this.data.herosId, delta).subscribe({
+      error: (error: unknown) => {
+        this.critiqueChosen.set(!chosen);
+        this.heroisme.update((h) => h - delta);
+        this.snackBar.open(extractApiErrorMessage(error, "Impossible de mettre à jour l'héroïsme."), 'Fermer', {
+          duration: 5000,
+        });
+      },
+    });
+  }
+
+  /** Succès légendaire (12 naturel) : choisir DÉPENSE 1 PH ; revenir sur "Héroïque" la rembourse. */
+  protected chooseLegendaire(chosen: boolean): void {
+    if (chosen === this.legendaryChosen()) {
+      return;
+    }
+    if (chosen && this.heroisme() <= 0) {
+      return;
+    }
+    const delta = chosen ? -1 : 1;
+    this.legendaryChosen.set(chosen);
+    this.heroisme.update((h) => h + delta);
+    this.herosService.adjustHeroisme(this.data.herosId, delta).subscribe({
+      error: (error: unknown) => {
+        this.legendaryChosen.set(!chosen);
+        this.heroisme.update((h) => h - delta);
+        this.snackBar.open(extractApiErrorMessage(error, "Impossible de mettre à jour l'héroïsme."), 'Fermer', {
+          duration: 5000,
+        });
+      },
+    });
+  }
 
   protected resultLabel(result: InitiativeResultat | null): string {
     return result ? RESULT_LABELS[result] : '';

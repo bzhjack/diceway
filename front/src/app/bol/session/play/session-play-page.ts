@@ -33,6 +33,7 @@ import {ActionRollDiceTrait, ActionRollDialogComponent} from './action-roll-dial
 import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
 import {AdjustHeroStatsDialogComponent} from './adjust-hero-stats-dialog/adjust-hero-stats-dialog';
 import {AttackMenuComponent, CombatReminderStat} from './attack-menu/attack-menu';
+import {maybePromptDefierLaMort} from './defier-la-mort-dialog/defier-la-mort.util';
 import {HeroActionMenuComponent} from './hero-action-menu/hero-action-menu';
 import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dialog';
 
@@ -431,7 +432,25 @@ export class SessionPlayPageComponent {
           }
 
           this.fightSessionService.applyDamage(sessionId, target.kind, target.pivotId, delta, target.instanceIndex).subscribe({
-            next: () => this.loadSession(sessionId),
+            next: () => {
+              this.loadSession(sessionId);
+
+              const newVitalite = (target.vitaliteCourante ?? 0) + delta;
+              if (targetStats.herosId && newVitalite < 0) {
+                maybePromptDefierLaMort({
+                  dialog: this.dialog,
+                  fightSessionService: this.fightSessionService,
+                  herosService: this.herosService,
+                  sessionId,
+                  herosId: targetStats.herosId,
+                  pivotId: target.pivotId,
+                  heroNom: target.nom,
+                  vitaliteCourante: newVitalite,
+                  heroisme: targetStats.heroisme ?? 0,
+                  onApplied: () => this.loadSession(sessionId),
+                });
+              }
+            },
             error: (error: unknown) => {
               this.snackBar.open(extractApiErrorMessage(error, "Impossible d'appliquer les dégâts."), 'Fermer', {
                 duration: 5000,
@@ -505,6 +524,8 @@ export class SessionPlayPageComponent {
           panelClass: 'ard-panel',
           data: {
             heroNom: token.nom,
+            herosId,
+            heroisme: hero.ressources.heroisme,
             agilite: hero.attributs.agilite,
             vigueur: hero.attributs.vigueur,
             esprit: hero.attributs.esprit,

@@ -1,0 +1,29 @@
+<h2 mat-dialog-title class="dlm-title">
+  <mat-icon>warning</mat-icon>
+  {{ data.heroNom }} — vitalité {{ data.vitaliteCourante }}
+</h2>
+
+<mat-dialog-content class="dlm-content">
+  @if (severe) {
+    <p>
+      En dessous de -5, {{ data.heroNom }} peut se stabiliser en dépensant <strong>1 point d'héroïsme</strong> :
+      il reste inconscient mais ne meurt pas, et se remettra sur pied après quelques jours de repos.
+    </p>
+  } @else {
+    <p>
+      Entre -1 et -5, {{ data.heroNom }} peut défier la mort en dépensant <strong>1 point d'héroïsme</strong> :
+      sa vitalité remonte immédiatement à 0 (vivant mais inconscient).
+    </p>
+  }
+
+  @if (!canConfirm) {
+    <p class="dlm-warning">Aucun point d'héroïsme disponible.</p>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button type="button" (click)="dismiss()">Laisser tel quel</button>
+  <button mat-flat-button type="button" [disabled]="!canConfirm" (click)="confirm()">
+    {{ severe ? 'Se stabiliser' : 'Défier la mort' }} (−1 PH)
+  </button>
+</mat-dialog-actions>

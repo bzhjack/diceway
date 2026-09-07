@@ -2,9 +2,12 @@ import {ChangeDetectionStrategy, Component, computed, inject, signal, ViewEncaps
 import {MatButtonToggleChange, MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
+import {BolHerosService} from '../../../services/bol-heros.service';
 
 export interface ActionRollCarriere {
   readonly label: string;
@@ -21,6 +24,9 @@ export interface ActionRollDiceTrait {
 
 export interface ActionRollDialogData {
   readonly heroNom: string;
+  readonly herosId: string;
+  /** Héroïsme courant du héros — la dépense/l'octroi (critique, conversions héroïque/légendaire, Faveur divine) est persisté en direct dans ce dialog. */
+  readonly heroisme: number;
   readonly agilite: number;
   readonly vigueur: number;
   readonly esprit: number;
@@ -121,8 +127,13 @@ const RESULT_LABELS: Record<InitiativeResultat, string> = {
 export class ActionRollDialogComponent {
   protected readonly data = inject<ActionRollDialogData>(MAT_DIALOG_DATA);
   protected readonly ref = inject(MatDialogRef<ActionRollDialogComponent>);
+  private readonly herosService = inject(BolHerosService);
+  private readonly snackBar = inject(MatSnackBar);
 
   private readonly diceBox = viewChild.required(DiceBoxHostComponent);
+
+  /** Héroïsme courant, mis à jour en direct au fil des dépenses/octrois de ce dialog. */
+  protected readonly heroisme = signal(this.data.heroisme);
 
   protected readonly attributes: readonly ActionAttribute[] = ['agilite', 'vigueur', 'esprit', 'aura'];
   protected readonly attributeLabels = ACTION_ATTRIBUTE_LABELS;
@@ -229,9 +240,47 @@ export class ActionRollDialogComponent {
     return sum === null ? null : sum + this.modifierSum();
   });
 
+  protected readonly isNatural2 = computed(() => {
+    const d = this.dice();
+    return !!d && d[0] === 1 && d[1] === 1;
+  });
+
+  protected readonly isNatural12 = computed(() => {
+    const d = this.dice();
+    return !!d && d[0] === 6 && d[1] === 6;
+  });
+
+  /** Réussite normale (ni 2 ni 12 naturel) — seul ce cas peut être converti en succès héroïque
+   * par dépense de PH (02-actions-combat.md : on ne peut pas ensuite convertir en légendaire). */
+  protected readonly canUpgradeToHeroique = computed(() => {
+    const d = this.dice();
+    if (!d || this.isNatural2() || this.isNatural12()) {
+      return false;
+    }
+    return suggestedActionResult(d, this.modifierSum(), ACTION_ROLL_THRESHOLD) === 'reussite';
+  });
+
+  /** Échec critique (2 naturel) — un choix volontaire qui OCTROIE 1 PH, ne le dépense pas
+   * (02-actions-combat.md : "peut justifier l'octroi d'1 point d'héroïsme"). */
+  protected readonly critiqueChosen = signal(false);
+  /** Succès légendaire (2e dépense sur un 12 naturel) — dépense 1 PH. */
+  protected readonly legendaryChosen = signal(false);
+  /** Conversion d'une réussite normale en succès héroïque — dépense 1 PH. */
+  protected readonly heroicUpgradeChosen = signal(false);
+
   protected readonly suggestedResult = computed<InitiativeResultat | null>(() => {
     const d = this.dice();
-    return d ? suggestedActionResult(d, this.modifierSum(), ACTION_ROLL_THRESHOLD) : null;
+    if (!d) {
+      return null;
+    }
+    if (this.isNatural2()) {
+      return this.critiqueChosen() ? 'echec_critique' : 'echec';
+    }
+    if (this.isNatural12()) {
+      return this.legendaryChosen() ? 'legendaire' : 'heroique';
+    }
+    const base = suggestedActionResult(d, this.modifierSum(), ACTION_ROLL_THRESHOLD);
+    return base === 'reussite' && this.heroicUpgradeChosen() ? 'heroique' : base;
   });
 
   protected readonly resultLabel = computed(() => {
@@ -290,6 +339,7 @@ export class ActionRollDialogComponent {
       await this.diceBox().clear();
       const results = await this.diceBox().rollNotation(`${count}d6`);
       const values = results.map((r) => r.value);
+      this.resetTierChoices();
       this.manualEntry.set(false);
       this.manualTotal.set(null);
       this.rolledDice.set(values);
@@ -309,9 +359,96 @@ export class ActionRollDialogComponent {
     if (total === null || !this.manualTotalValid()) {
       return;
     }
+    this.resetTierChoices();
     this.manualEntry.set(true);
     this.rolledDice.set(null);
     this.dice.set(diceFromTotal(total));
+  }
+
+  /** Faveur divine (02-actions-combat.md) : dépense 1 PH, relance tous les dés (y compris les dés
+   * de bonus/malus), conserve le résultat du second jet — utilisable même après un 2 naturel. */
+  protected async rollWithDivineFavor(): Promise<void> {
+    if (this.heroisme() <= 0) {
+      return;
+    }
+
+    this.heroisme.update((h) => h - 1);
+    this.herosService.adjustHeroisme(this.data.herosId, -1).subscribe({
+      error: (error: unknown) => {
+        this.heroisme.update((h) => h + 1);
+        this.snackBar.open(extractApiErrorMessage(error, "Impossible de dépenser l'héroïsme."), 'Fermer', {
+          duration: 5000,
+        });
+      },
+    });
+
+    await this.roll();
+  }
+
+  private resetTierChoices(): void {
+    this.critiqueChosen.set(false);
+    this.legendaryChosen.set(false);
+    this.heroicUpgradeChosen.set(false);
+  }
+
+  /** Échec critique (2 naturel) : choisir OCTROIE 1 PH ; revenir en arrière le reprend. */
+  protected toggleCritique(): void {
+    const wasChosen = this.critiqueChosen();
+    const nextChosen = !wasChosen;
+    const delta = nextChosen ? 1 : -1;
+    this.critiqueChosen.set(nextChosen);
+    this.heroisme.update((h) => h + delta);
+    this.herosService.adjustHeroisme(this.data.herosId, delta).subscribe({
+      error: (error: unknown) => {
+        this.critiqueChosen.set(wasChosen);
+        this.heroisme.update((h) => h - delta);
+        this.snackBar.open(extractApiErrorMessage(error, "Impossible de mettre à jour l'héroïsme."), 'Fermer', {
+          duration: 5000,
+        });
+      },
+    });
+  }
+
+  /** Succès légendaire (12 naturel) : choisir DÉPENSE 1 PH ; revenir en arrière la rembourse. */
+  protected toggleLegendaire(): void {
+    if (!this.legendaryChosen() && this.heroisme() <= 0) {
+      return;
+    }
+    const wasChosen = this.legendaryChosen();
+    const nextChosen = !wasChosen;
+    const delta = nextChosen ? -1 : 1;
+    this.legendaryChosen.set(nextChosen);
+    this.heroisme.update((h) => h + delta);
+    this.herosService.adjustHeroisme(this.data.herosId, delta).subscribe({
+      error: (error: unknown) => {
+        this.legendaryChosen.set(wasChosen);
+        this.heroisme.update((h) => h - delta);
+        this.snackBar.open(extractApiErrorMessage(error, "Impossible de mettre à jour l'héroïsme."), 'Fermer', {
+          duration: 5000,
+        });
+      },
+    });
+  }
+
+  /** Conversion réussite normale → succès héroïque : choisir DÉPENSE 1 PH ; revenir en arrière la rembourse. */
+  protected toggleHeroicUpgrade(): void {
+    if (!this.heroicUpgradeChosen() && this.heroisme() <= 0) {
+      return;
+    }
+    const wasChosen = this.heroicUpgradeChosen();
+    const nextChosen = !wasChosen;
+    const delta = nextChosen ? -1 : 1;
+    this.heroicUpgradeChosen.set(nextChosen);
+    this.heroisme.update((h) => h + delta);
+    this.herosService.adjustHeroisme(this.data.herosId, delta).subscribe({
+      error: (error: unknown) => {
+        this.heroicUpgradeChosen.set(wasChosen);
+        this.heroisme.update((h) => h - delta);
+        this.snackBar.open(extractApiErrorMessage(error, "Impossible de mettre à jour l'héroïsme."), 'Fermer', {
+          duration: 5000,
+        });
+      },
+    });
   }
 
   protected close(): void {

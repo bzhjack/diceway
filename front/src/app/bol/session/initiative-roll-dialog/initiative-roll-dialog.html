@@ -4,9 +4,15 @@
       <div class="ird-title-eyebrow">Jet de réaction</div>
       <div class="ird-title-name">{{ data.heroNom }}</div>
     </h2>
-    <button type="button" class="ird-close" aria-label="Fermer" (click)="cancel()">
-      <mat-icon>close</mat-icon>
-    </button>
+    <div class="ird-header-actions">
+      <span class="ird-heroisme-badge">
+        <mat-icon>military_tech</mat-icon>
+        {{ heroisme() }}
+      </span>
+      <button type="button" class="ird-close" aria-label="Fermer" (click)="cancel()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
   </div>
 
   @if (dice(); as d) {
@@ -21,17 +27,22 @@
       @if (isNatural2()) {
         <p class="ird-result-note">2 naturel — règle absolue : échec automatique</p>
         <div class="ird-toggle">
-          <button type="button" [class.active]="!critiqueChosen()" (click)="critiqueChosen.set(false)">Échec</button>
-          <button type="button" [class.active]="critiqueChosen()" (click)="critiqueChosen.set(true)">
-            Échec critique (1 point d'héroïsme)
+          <button type="button" [class.active]="!critiqueChosen()" (click)="chooseCritique(false)">Échec</button>
+          <button type="button" [class.active]="critiqueChosen()" (click)="chooseCritique(true)">
+            Échec critique (+1 point d'héroïsme)
           </button>
         </div>
       } @else if (isNatural12()) {
         <p class="ird-result-note">12 naturel — règle absolue : succès héroïque automatique</p>
         <div class="ird-toggle">
-          <button type="button" [class.active]="!legendaryChosen()" (click)="legendaryChosen.set(false)">Héroïque</button>
-          <button type="button" [class.active]="legendaryChosen()" (click)="legendaryChosen.set(true)">
-            Légendaire (1 point d'héroïsme)
+          <button type="button" [class.active]="!legendaryChosen()" (click)="chooseLegendaire(false)">Héroïque</button>
+          <button
+            type="button"
+            [class.active]="legendaryChosen()"
+            [disabled]="!legendaryChosen() && heroisme() <= 0"
+            (click)="chooseLegendaire(true)"
+          >
+            Légendaire (−1 point d'héroïsme)
           </button>
         </div>
       }

@@ -2,7 +2,11 @@ import {ChangeDetectionStrategy, Component, computed, inject, signal, ViewEncaps
 import {FormsModule} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {DiceBoxHostComponent} from '../../../shared/dice-3d/dice-box-host';
+import {BolHerosService} from '../../services/bol-heros.service';
 import {ResolvedCombatStats} from '../combat-attack.util';
 
 export interface AttackRollDialogData {
@@ -39,7 +43,7 @@ export function computeAttackTotal(
  */
 @Component({
   selector: 'bol-attack-roll-dialog',
-  imports: [MatDialogModule, MatIconModule, FormsModule, DiceBoxHostComponent],
+  imports: [MatDialogModule, MatIconModule, MatTooltipModule, FormsModule, DiceBoxHostComponent],
   templateUrl: './attack-roll-dialog.html',
   styleUrl: './attack-roll-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,8 +52,13 @@ export function computeAttackTotal(
 export class AttackRollDialogComponent {
   protected readonly data = inject<AttackRollDialogData>(MAT_DIALOG_DATA);
   protected readonly ref = inject(MatDialogRef<AttackRollDialogComponent, number | undefined>);
+  private readonly herosService = inject(BolHerosService);
+  private readonly snackBar = inject(MatSnackBar);
 
   private readonly diceBox = viewChild.required(DiceBoxHostComponent);
+
+  /** Héroïsme courant de l'attaquant — null si l'attaquant n'est pas un héros (pas de Faveur divine). */
+  protected readonly heroisme = signal(this.data.attacker.heroisme ?? 0);
 
   protected readonly threshold = THRESHOLD;
   protected readonly diceKinds: DegatsDiceKind[] = ['d3', 'd6', 'd6m', 'd6b'];
@@ -216,6 +225,28 @@ export class AttackRollDialogComponent {
     } finally {
       this.rollingAttack.set(false);
     }
+  }
+
+  /** Faveur divine (02-actions-combat.md) : dépense 1 PH, relance le jet d'attaque, conserve le
+   * résultat du second jet — utilisable même après un 2 naturel. Ne s'applique qu'au jet d'attaque
+   * (pas au jet de dégâts, qui n'est pas "un jet d'action"). */
+  protected async rollAttackWithDivineFavor(): Promise<void> {
+    const herosId = this.data.attacker.herosId;
+    if (!herosId || this.heroisme() <= 0) {
+      return;
+    }
+
+    this.heroisme.update((h) => h - 1);
+    this.herosService.adjustHeroisme(herosId, -1).subscribe({
+      error: (error: unknown) => {
+        this.heroisme.update((h) => h + 1);
+        this.snackBar.open(extractApiErrorMessage(error, "Impossible de dépenser l'héroïsme."), 'Fermer', {
+          duration: 5000,
+        });
+      },
+    });
+
+    await this.rollAttack();
   }
 
   protected async rollDamage(): Promise<void> {

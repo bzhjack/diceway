@@ -213,7 +213,9 @@ class BolFightSessionService
 
         $max = $pivot->heros->vitalite;
         $current = $pivot->vitalite_courante ?? $max;
-        $pivot->update(['vitalite_courante' => max(0, min($max, $current + $delta))]);
+        // Un héros peut tomber sous 0 (vitalité négative = "Défier la mort", 02-actions-combat.md) —
+        // seuls pnj/créature/démon restent plafonnés à 0, faute de mécanique de mort différée pour eux.
+        $pivot->update(['vitalite_courante' => max(-20, min($max, $current + $delta))]);
     }
 
     private function applyMaxClampedDamage(BolFightSessionPnj|null $row, int $delta): void

@@ -17,6 +17,9 @@ export interface ResolvedCombatStats {
    * dans `defense` (cas du grand bouclier, portée "toutes"). Consommé manuellement par le dialog
    * d'attaque, l'app ne suivant pas de round. */
   readonly bouclierMalusUneAttaque: number;
+  /** null pour pnj/créature/démon — l'héroïsme (Faveur divine, options héroïques) n'existe que pour un héros. */
+  readonly herosId: string | null;
+  readonly heroisme: number | null;
 }
 
 /** Extrait le type de dé de dégâts d'une chaîne d'arme/créature BoL ("d6M", "d6B", "d3", "d6"). */
@@ -83,6 +86,8 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
         degats: 'd3',
         protection: 0,
         bouclierMalusUneAttaque: 0,
+        herosId: null,
+        heroisme: null,
       });
     }
 
@@ -100,6 +105,8 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
           hero.equipement_effectif.bouclier_malus_attaque_subie_portee === 'une'
             ? hero.equipement_effectif.bouclier_malus_attaque_subie
             : 0,
+        herosId,
+        heroisme: hero.ressources.heroisme,
       })),
     );
   }
@@ -114,5 +121,7 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
     degats: c.degats ?? 'd3',
     protection: parseProtectionValue(c.protection),
     bouclierMalusUneAttaque: 0,
+    herosId: null,
+    heroisme: null,
   });
 }
