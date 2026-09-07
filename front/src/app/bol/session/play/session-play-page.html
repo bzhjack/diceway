@@ -154,7 +154,7 @@
             (confirmed)="onAttackConfirmed(token, $event)"
           />
         } @else if (mode() === 'libre' && token.kind === 'hero') {
-          <bol-hero-action-menu [heroName]="token.nom" (actionRoll)="onActionRoll(token)" (adjustStats)="onAdjustStats(token)" />
+          <bol-hero-action-menu [heroName]="token.nom" (actionRoll)="onActionRoll(token)" />
         }
 
         <button

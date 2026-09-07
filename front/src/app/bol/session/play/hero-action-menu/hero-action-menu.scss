@@ -31,17 +31,12 @@
 }
 
 // Colonne d'actions à gauche du portrait, alignée verticalement, avec une marge (`left: -2.3rem`,
-// bouton 1.9rem + 0.4rem d'écart) pour ne jamais chevaucher l'image. 3 emplacements possibles (slot 1
-// haut / 2 milieu / 3 bas), centrés sur la hauteur du portrait (4.5rem) — slot 1 = action principale
-// du mode (partagé avec `.am-trigger`, mutuellement exclusifs), slot 2 = `.cp-token-card-btn`
-// (générique, tous jetons), slot 3 = ajuster les stats (héros uniquement).
+// bouton 1.9rem + 0.4rem d'écart) pour ne jamais chevaucher l'image. 2 emplacements possibles (slot 1
+// haut / 2 milieu), centrés sur la hauteur du portrait (4.5rem) — slot 1 = action principale du mode
+// (partagé avec `.am-trigger`, mutuellement exclusifs), slot 2 = `.cp-token-card-btn` (générique,
+// tous jetons — fiche + ajustement pour un héros).
 .ham-btn--roll {
   top: -0.9rem;
-  left: -2.3rem;
-}
-
-.ham-btn--stats {
-  top: 3.5rem;
   left: -2.3rem;
 }
 

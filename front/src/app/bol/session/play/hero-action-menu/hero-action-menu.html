@@ -6,12 +6,3 @@
 >
   <mat-icon>casino</mat-icon>
 </button>
-
-<button
-  type="button"
-  class="ham-btn ham-btn--stats"
-  [attr.aria-label]="'Ajuster les stats de ' + heroName()"
-  (click)="$event.stopPropagation(); adjustStats.emit()"
->
-  <mat-icon>tune</mat-icon>
-</button>

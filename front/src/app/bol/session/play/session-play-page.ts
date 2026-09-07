@@ -31,10 +31,10 @@ import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard, EMPTY_AVATAR, PlayToken} from '../combat-play.util';
 import {ActionRollDiceTrait, ActionRollDialogComponent} from './action-roll-dialog/action-roll-dialog';
 import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
-import {AdjustHeroStatsDialogComponent} from './adjust-hero-stats-dialog/adjust-hero-stats-dialog';
 import {AttackMenuComponent, CombatReminderStat} from './attack-menu/attack-menu';
 import {maybePromptDefierLaMort} from './defier-la-mort-dialog/defier-la-mort.util';
 import {HeroActionMenuComponent} from './hero-action-menu/hero-action-menu';
+import {HeroStatblockDialogComponent} from './hero-statblock-dialog/hero-statblock-dialog';
 import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dialog';
 
 const COLS_PER_ZONE = 3;
@@ -476,14 +476,45 @@ export class SessionPlayPageComponent {
     }
 
     switch (token.kind) {
-      case 'hero':
+      case 'hero': {
+        const sessionId = this.session()?.id;
+        if (!sessionId) {
+          return;
+        }
+
         this.herosService
           .heros(sourceId)
           .pipe(take(1))
-          .subscribe((hero) =>
-            openStatblockDialog(this.dialog, BolStatblockComponent, {data: heroStatblockData(hero), imageSrc: token.avatar}),
-          );
+          .subscribe((hero) => {
+            this.dialog
+              .open(HeroStatblockDialogComponent, {
+                maxWidth: 'min(900px, 94vw)',
+                panelClass: 'dw-statblock-dialog',
+                position: {top: '10vh'},
+                data: {
+                  sessionId,
+                  herosId: sourceId,
+                  pivotId: token.pivotId,
+                  heroNom: token.nom,
+                  avatar: token.avatar,
+                  statblock: heroStatblockData(hero),
+                  vitaliteCourante: token.vitaliteCourante ?? hero.ressources.vitalite,
+                  vitaliteMax: hero.ressources.vitalite,
+                  heroisme: hero.ressources.heroisme,
+                  armures: (hero.armures as (BolHerosArmureModel | number)[]).filter(
+                    (armure): armure is BolHerosArmureModel => typeof armure === 'object',
+                  ),
+                },
+              })
+              .afterClosed()
+              .subscribe((changed: boolean | undefined) => {
+                if (changed) {
+                  this.loadSession(sessionId);
+                }
+              });
+          });
         break;
+      }
       case 'pnj':
         this.pnjService
           .pnj(sourceId)
@@ -556,42 +587,6 @@ export class SessionPlayPageComponent {
               .filter((t): t is ActionRollDiceTrait => t !== null),
           },
         });
-      });
-  }
-
-  protected onAdjustStats(token: PlayToken): void {
-    const sessionId = this.session()?.id;
-    const herosId = token.combat.sourceId;
-    if (!sessionId || !herosId) {
-      return;
-    }
-
-    this.herosService
-      .heros(herosId)
-      .pipe(take(1))
-      .subscribe((hero) => {
-        this.dialog
-          .open(AdjustHeroStatsDialogComponent, {
-            maxWidth: 'min(26rem, 92vw)',
-            data: {
-              herosId,
-              sessionId,
-              pivotId: token.pivotId,
-              heroNom: token.nom,
-              vitaliteCourante: token.vitaliteCourante ?? hero.ressources.vitalite,
-              vitaliteMax: hero.ressources.vitalite,
-              heroisme: hero.ressources.heroisme,
-              armures: (hero.armures as (BolHerosArmureModel | number)[]).filter(
-                (armure): armure is BolHerosArmureModel => typeof armure === 'object',
-              ),
-            },
-          })
-          .afterClosed()
-          .subscribe((changed: boolean | undefined) => {
-            if (changed) {
-              this.loadSession(sessionId);
-            }
-          });
       });
   }
 

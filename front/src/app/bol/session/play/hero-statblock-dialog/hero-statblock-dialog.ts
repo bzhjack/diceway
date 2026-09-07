@@ -1,7 +1,9 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, inject, signal} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MatMenuModule} from '@angular/material/menu';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
@@ -10,13 +12,16 @@ import {BolHerosService} from '../../../services/bol-heros.service';
 import {BolArmureModel, BolHerosArmureModel} from '../../../models/bol-armure.model';
 import {applyArmureEquipToggle} from '../../../shared/form/form-selection';
 import {ArmureEntry, ArmureListComponent} from '../../../shared/armure/list/armure-list.component';
+import {BolStatblockComponent, BolStatblockData} from '../../../shared/statblock/bol-statblock.component';
 import {maybePromptDefierLaMort} from '../defier-la-mort-dialog/defier-la-mort.util';
 
-export interface AdjustHeroStatsDialogData {
+export interface HeroStatblockDialogData {
   readonly sessionId: string;
   readonly herosId: string;
   readonly pivotId: number;
   readonly heroNom: string;
+  readonly avatar: string;
+  readonly statblock: BolStatblockData;
   readonly vitaliteCourante: number;
   readonly vitaliteMax: number;
   readonly heroisme: number;
@@ -30,17 +35,29 @@ interface EquippableArmure {
   readonly armure: BolArmureModel;
 }
 
-/** Ajustement rapide de la vitalité (scoped à la session), de l'héroïsme et de l'équipement porté (héros global). */
+/**
+ * Fiche d'un héros en séance : statbloc en lecture (fiche complète), avec un bouton « Modifier »
+ * qui ouvre en popover les réglages rapides scopés à la session (vitalité, héroïsme, équipement) —
+ * un seul dialog au lieu de deux, pour n'avoir qu'un point d'entrée par jeton héros (bouton « Carte »).
+ */
 @Component({
-  selector: 'bol-adjust-hero-stats-dialog',
-  imports: [ReactiveFormsModule, MatButtonModule, MatDialogModule, DwValueStepperComponent, ArmureListComponent],
-  templateUrl: './adjust-hero-stats-dialog.html',
-  styleUrl: './adjust-hero-stats-dialog.scss',
+  selector: 'bol-hero-statblock-dialog',
+  imports: [
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    DwValueStepperComponent,
+    ArmureListComponent,
+    BolStatblockComponent,
+  ],
+  templateUrl: './hero-statblock-dialog.html',
+  styleUrl: './hero-statblock-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdjustHeroStatsDialogComponent {
-  protected readonly data = inject<AdjustHeroStatsDialogData>(MAT_DIALOG_DATA);
-  protected readonly ref = inject(MatDialogRef<AdjustHeroStatsDialogComponent, boolean>);
+export class HeroStatblockDialogComponent {
+  protected readonly data = inject<HeroStatblockDialogData>(MAT_DIALOG_DATA);
+  protected readonly ref = inject(MatDialogRef<HeroStatblockDialogComponent, boolean>);
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly herosService = inject(BolHerosService);
   private readonly snackBar = inject(MatSnackBar);

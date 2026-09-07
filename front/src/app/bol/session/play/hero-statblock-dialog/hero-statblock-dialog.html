@@ -1,0 +1,34 @@
+<div class="hsd-toolbar">
+  <button mat-stroked-button type="button" class="hsd-modify-trigger" [matMenuTriggerFor]="editMenu">
+    <mat-icon>tune</mat-icon> Modifier
+  </button>
+
+  <button mat-icon-button type="button" class="hsd-close" (click)="close()" aria-label="Fermer">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-menu #editMenu="matMenu" class="hsd-edit-menu-panel">
+  <div class="hsd-edit-menu-content" (click)="$event.stopPropagation()">
+    <div class="ahs-field">
+      <label id="hsd-vitalite-label">Vitalité ({{ vitaliteControl.value }} / {{ data.vitaliteMax }})</label>
+      <dw-value-stepper [formControl]="vitaliteControl" [min]="-20" [max]="data.vitaliteMax" [ariaLabel]="'Vitalité'" />
+    </div>
+
+    <div class="ahs-field">
+      <label id="hsd-heroisme-label">Héroïsme ({{ heroismeControl.value }})</label>
+      <dw-value-stepper [formControl]="heroismeControl" [min]="0" [ariaLabel]="'Héroïsme'" />
+    </div>
+
+    @if (armureEntries().length) {
+      <div class="ahs-field">
+        <label>Équipement</label>
+        <bol-armure-list [armures]="armureEntries()" [removeEnabled]="false" (equippedToggled)="toggleArmureEquipped($event)" />
+      </div>
+    }
+  </div>
+</mat-menu>
+
+<div class="hsd-content">
+  <bol-statblock [data]="data.statblock" [imageSrc]="data.avatar" />
+</div>
