@@ -338,11 +338,17 @@
   gap: 0.5rem;
 }
 
+// Cartes à icônes (même langage visuel qu'`action-roll-dialog` piste B) : chaque champ devient une
+// petite carte bordée avec une puce icône colorée devant le libellé, plutôt qu'un simple texte.
 .atd-field {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 0.3rem;
   min-width: 0;
+  padding: 0.4rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--dw-border);
+  background: color-mix(in srgb, var(--dw-surface-0) 45%, transparent);
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -369,6 +375,43 @@
       border-color: var(--dw-color-echec-forte);
     }
   }
+}
+
+.atd-field-head {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.atd-field-icon {
+  flex-shrink: 0;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .mat-icon {
+    font-size: 0.8rem;
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+}
+
+.atd-field-icon--amber {
+  background: color-mix(in srgb, var(--dw-color-legendary) 20%, transparent);
+  color: var(--dw-color-legendary);
+}
+
+.atd-field-icon--blue {
+  background: color-mix(in srgb, var(--dw-color-dice-kicker) 20%, transparent);
+  color: var(--dw-color-dice-kicker);
+}
+
+.atd-field-icon--slate {
+  background: color-mix(in srgb, var(--dw-surface-500) 20%, transparent);
+  color: var(--dw-surface-500);
 }
 
 .atd-reroll {

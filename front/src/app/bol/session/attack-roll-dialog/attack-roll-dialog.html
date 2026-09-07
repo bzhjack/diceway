@@ -65,21 +65,33 @@
 
     <div class="atd-fields">
       <label class="atd-field">
-        <span>Bonus attaquant</span>
+        <span class="atd-field-head">
+          <span class="atd-field-icon atd-field-icon--amber"><mat-icon>bolt</mat-icon></span>
+          <span>Bonus attaquant</span>
+        </span>
         <input type="number" [(ngModel)]="attackerBonus" />
       </label>
       <label class="atd-field">
-        <span>Défense cible</span>
+        <span class="atd-field-head">
+          <span class="atd-field-icon atd-field-icon--blue"><mat-icon>shield</mat-icon></span>
+          <span>Défense cible</span>
+        </span>
         <input type="number" [(ngModel)]="targetDefense" />
       </label>
       <label class="atd-field">
-        <span>Modificateur</span>
+        <span class="atd-field-head">
+          <span class="atd-field-icon atd-field-icon--amber"><mat-icon>tune</mat-icon></span>
+          <span>Modificateur</span>
+        </span>
         <input type="number" [(ngModel)]="modifier" />
       </label>
       @if (data.target.bouclierMalusUneAttaque > 0) {
         <label class="atd-field atd-field--checkbox">
           <input type="checkbox" [(ngModel)]="shieldBonusAvailable" />
-          <span>Bonus de petit bouclier disponible (−{{ data.target.bouclierMalusUneAttaque }})</span>
+          <span class="atd-field-head">
+            <span class="atd-field-icon atd-field-icon--slate"><mat-icon>shield</mat-icon></span>
+            <span>Bonus de petit bouclier disponible (−{{ data.target.bouclierMalusUneAttaque }})</span>
+          </span>
         </label>
       }
     </div>

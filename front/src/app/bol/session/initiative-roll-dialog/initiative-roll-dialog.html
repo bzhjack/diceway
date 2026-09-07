@@ -62,7 +62,7 @@
 
     <div class="ird-calc-grid">
       <div class="ird-calc-col">
-        <mat-icon class="ird-calc-icon" svgIcon="d6" />
+        <span class="ird-calc-icon-chip ird-calc-icon-chip--blue"><mat-icon class="ird-calc-icon" svgIcon="d6" /></span>
         <span class="ird-calc-label">Dés (2d6)</span>
         @if (dice(); as d) {
           <span class="ird-calc-value">{{ diceSum() }}</span>
@@ -73,20 +73,20 @@
       </div>
 
       <div class="ird-calc-col">
-        <mat-icon class="ird-calc-icon">psychology</mat-icon>
+        <span class="ird-calc-icon-chip ird-calc-icon-chip--slate"><mat-icon class="ird-calc-icon">psychology</mat-icon></span>
         <span class="ird-calc-label">Esprit</span>
         <span class="ird-calc-value">{{ signed(data.esprit) }}</span>
       </div>
 
       <div class="ird-calc-col">
-        <mat-icon class="ird-calc-icon">bolt</mat-icon>
+        <span class="ird-calc-icon-chip ird-calc-icon-chip--amber"><mat-icon class="ird-calc-icon">bolt</mat-icon></span>
         <span class="ird-calc-label">Initiative</span>
         <span class="ird-calc-value">{{ signed(data.initiative) }}</span>
       </div>
 
       @if (data.modifierTotal !== 0) {
         <div class="ird-calc-col">
-          <mat-icon class="ird-calc-icon">tune</mat-icon>
+          <span class="ird-calc-icon-chip ird-calc-icon-chip--amber"><mat-icon class="ird-calc-icon">tune</mat-icon></span>
           <span class="ird-calc-label">Modificateurs</span>
           <span class="ird-calc-value">{{ signed(data.modifierTotal) }}</span>
         </div>
