@@ -112,6 +112,7 @@
 }
 
 .ard-result {
+  position: relative;
   margin: 0.7rem 0 0;
   padding: 1rem;
   border-radius: 10px;
@@ -151,6 +152,24 @@
   p {
     margin: 0;
   }
+}
+
+// Signale que le total vient d'une saisie manuelle, pas d'un jet virtuel — les valeurs individuelles
+// des 2 dés ne sont alors pas connues (voir `manualEntry` dans le composant). Positionné en tag dans
+// le coin plutôt qu'empilé avec le total : `.ard-result` a une hauteur fixe, un 3e élément dans le
+// flux vertical la ferait déborder.
+.ard-manual-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+  border: 1px dashed var(--dw-border);
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
 }
 
 .ard-result--reussite {

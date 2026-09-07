@@ -278,6 +278,10 @@ export class ActionRollDialogComponent {
     this.modifier.update((m) => m + delta);
   }
 
+  /** true quand le résultat vient d'un total saisi à la main — les 2 valeurs de `dice()` sont alors
+   * reconstruites arbitrairement (`diceFromTotal`), pas les vraies valeurs individuelles lancées. */
+  protected readonly manualEntry = signal(false);
+
   protected async roll(): Promise<void> {
     this.rolling.set(true);
     try {
@@ -286,6 +290,8 @@ export class ActionRollDialogComponent {
       await this.diceBox().clear();
       const results = await this.diceBox().rollNotation(`${count}d6`);
       const values = results.map((r) => r.value);
+      this.manualEntry.set(false);
+      this.manualTotal.set(null);
       this.rolledDice.set(values);
       this.dice.set(keepBestOrWorstTwo(values, net));
     } finally {
@@ -303,6 +309,7 @@ export class ActionRollDialogComponent {
     if (total === null || !this.manualTotalValid()) {
       return;
     }
+    this.manualEntry.set(true);
     this.rolledDice.set(null);
     this.dice.set(diceFromTotal(total));
   }

@@ -117,6 +117,9 @@
         >
           <div class="ard-result-total">{{ total() }}</div>
           <p class="ard-result-label">{{ resultLabel() }}</p>
+          @if (manualEntry()) {
+            <span class="ard-manual-badge">Saisie manuelle</span>
+          }
         </div>
       } @else {
         <div class="ard-result ard-result--idle">
@@ -128,10 +131,14 @@
 
       <div class="ard-formula">
         @if (dice(); as d) {
-          <span class="ard-die ard-die--formula">{{ d[0] }}</span>
-          <span>+</span>
-          <span class="ard-die ard-die--formula">{{ d[1] }}</span>
-          <span>{{ formulaTail() }}</span>
+          @if (manualEntry()) {
+            <span>{{ formula() }}</span>
+          } @else {
+            <span class="ard-die ard-die--formula">{{ d[0] }}</span>
+            <span>+</span>
+            <span class="ard-die ard-die--formula">{{ d[1] }}</span>
+            <span>{{ formulaTail() }}</span>
+          }
         } @else {
           <span>{{ formula() }}</span>
         }
