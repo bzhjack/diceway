@@ -448,10 +448,11 @@
 
 // Raccourci "Carte" (statbloc) — même langage visuel que `.am-trigger`/`.ham-btn` mais générique à
 // tous les types de jeton et aux deux modes (contrairement à ces deux-là, mutuellement exclusifs
-// selon le mode). Slot 2 (milieu) de la colonne d'actions à gauche du portrait.
+// selon le mode). Slot 2 (bas) de la colonne de 2 boutons à gauche du portrait, centrée verticalement
+// sur sa hauteur (4.5rem) — cf. `hero-action-menu.scss` pour le calcul du décalage.
 .cp-token-card-btn {
   position: absolute;
-  top: 1.3rem;
+  top: 2.45rem;
   left: -2.3rem;
   width: 1.9rem;
   height: 1.9rem;
@@ -476,10 +477,6 @@
     font-size: 1.05rem;
     width: 1.05rem;
     height: 1.05rem;
-  }
-
-  &:hover {
-    background: color-mix(in srgb, var(--dw-surface-700) 85%, white);
   }
 }
 

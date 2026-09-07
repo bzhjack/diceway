@@ -133,6 +133,46 @@
         </div>
       }
 
+      <div class="ard-roll-row">
+        <input
+          type="number"
+          min="2"
+          max="12"
+          step="1"
+          placeholder="Total des 2d6 (2-12)"
+          aria-label="Total des deux dés lancés à table"
+          [value]="manualTotal() ?? ''"
+          (input)="onManualTotalInput($any($event.target).value)"
+          (keydown.enter)="submitManualTotal()"
+        />
+        <button
+          type="button"
+          class="ard-manual-confirm"
+          aria-label="Valider le total saisi"
+          [disabled]="!manualTotalValid()"
+          (click)="submitManualTotal()"
+        >
+          <mat-icon>check</mat-icon>
+        </button>
+        <button type="button" class="ard-reroll" [disabled]="rolling()" (click)="roll()">
+          <mat-icon>refresh</mat-icon>
+          {{ dice() ? 'Relancer' : rollButtonLabel() }}
+        </button>
+      </div>
+
+      @if (isFailure()) {
+        <button
+          type="button"
+          class="ard-divine-favor"
+          [disabled]="rolling() || heroisme() <= 0"
+          [matTooltip]="'Relance tous les dés, conserve le second résultat (02-actions-combat.md)'"
+          (click)="rollWithDivineFavor()"
+        >
+          <mat-icon>auto_awesome</mat-icon>
+          Faveur divine (−1 PH)
+        </button>
+      }
+
       @if (isNatural2()) {
         <button type="button" class="ard-tier-toggle ard-tier-toggle--critique" [class.active]="critiqueChosen()" (click)="toggleCritique()">
           <mat-icon>{{ critiqueChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
@@ -180,46 +220,6 @@
           <span>{{ formula() }}</span>
         }
       </div>
-
-      <div class="ard-roll-row">
-        <input
-          type="number"
-          min="2"
-          max="12"
-          step="1"
-          placeholder="Total des 2d6 (2-12)"
-          aria-label="Total des deux dés lancés à table"
-          [value]="manualTotal() ?? ''"
-          (input)="onManualTotalInput($any($event.target).value)"
-          (keydown.enter)="submitManualTotal()"
-        />
-        <button
-          type="button"
-          class="ard-manual-confirm"
-          aria-label="Valider le total saisi"
-          [disabled]="!manualTotalValid()"
-          (click)="submitManualTotal()"
-        >
-          <mat-icon>check</mat-icon>
-        </button>
-        <button type="button" class="ard-reroll" [disabled]="rolling()" (click)="roll()">
-          <mat-icon>refresh</mat-icon>
-          {{ dice() ? 'Relancer' : rollButtonLabel() }}
-        </button>
-      </div>
-
-      @if (isFailure()) {
-        <button
-          type="button"
-          class="ard-divine-favor"
-          [disabled]="rolling() || heroisme() <= 0"
-          [matTooltip]="'Relance tous les dés, conserve le second résultat (02-actions-combat.md)'"
-          (click)="rollWithDivineFavor()"
-        >
-          <mat-icon>auto_awesome</mat-icon>
-          Faveur divine (−1 PH)
-        </button>
-      }
     </div>
   </div>
 </div>
