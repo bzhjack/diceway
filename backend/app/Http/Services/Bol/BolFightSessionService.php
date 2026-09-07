@@ -87,6 +87,19 @@ class BolFightSessionService
         return $this->getSessionWithRelations($sessionId);
     }
 
+    /** Persiste les positions des jetons sur la battlemap (glisser-déposer libre) — clé `PlayToken.key` => {x, y} en pourcentage. */
+    public function updatePositions(string $sessionId, string $userId, array $positions): ?BolFightSession
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session) {
+            return null;
+        }
+
+        $session->update(['positions_jetons' => $positions]);
+
+        return $this->getSessionWithRelations($sessionId);
+    }
+
     /** Bascule une session `libre` en `combat` — les adversaires sont déjà en place via addCombatant(). */
     public function startCombat(string $sessionId, string $userId): ?BolFightSession
     {

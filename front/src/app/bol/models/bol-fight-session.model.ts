@@ -12,6 +12,8 @@ export interface BolFightSessionModel {
   statut: BolFightSessionStatut;
   /** Ordre d'initiative réordonné manuellement (glisser-déposer du ruban) — clés `PlayToken.key`, dans l'ordre voulu. */
   ordre_manuel?: string[] | null;
+  /** Position des jetons sur la battlemap (glisser-déposer libre) — clé `PlayToken.key` → {x, y} en pourcentage. */
+  positions_jetons?: Record<string, {x: number; y: number}> | null;
   heros?: BolFightSessionHerosModel[];
   creatures?: BolFightSessionCreatureModel[];
   demons?: BolFightSessionDemonModel[];

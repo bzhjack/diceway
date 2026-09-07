@@ -109,6 +109,17 @@ class BolFightSessionController extends Controller
         return response()->json($session);
     }
 
+    public function updatePositions(Request $request, string $id)
+    {
+        $session = $this->fightSessionService->updatePositions($id, Auth::id(), $request->input('positions', []));
+
+        if (!$session) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        return response()->json($session);
+    }
+
     public function startCombat(string $id)
     {
         $session = $this->fightSessionService->startCombat($id, Auth::id());

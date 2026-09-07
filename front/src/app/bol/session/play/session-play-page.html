@@ -97,7 +97,7 @@
     }
 
     <div class="cp-board">
-      <div class="cp-map">
+      <div class="cp-map" #mapEl>
         @for (token of heroTokens(); track token.key; let i = $index) {
           <ng-container *ngTemplateOutlet="tokenTpl; context: {token, i, camp: 'heros'}" />
         }
@@ -116,6 +116,7 @@
     [style]="tokenStyle(token, i, camp)"
     cdkDrag
     cdkDragBoundary=".cp-map"
+    (cdkDragEnded)="onTokenDragEnded(token, $event)"
     (click)="onTokenClick(token, $event)"
     (dblclick)="openStatblock(token, $event)"
   >

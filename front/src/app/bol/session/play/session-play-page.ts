@@ -1,6 +1,6 @@
 import {NgTemplateOutlet} from '@angular/common';
-import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
-import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {CdkDragDrop, CdkDragEnd, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
+import {ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
@@ -70,9 +70,9 @@ function jitter(key: string): {jx: number; jy: number} {
 /**
  * Écran plein page affiché après « Lancer le combat » : ruban d'initiative en haut (réordonnable
  * par glisser-déposer, persisté en base), battlemap en dessous où les jetons sont librement
- * déplaçables (glisser-déposer, non persisté celui-ci — repositionnés par défaut à chaque
- * rechargement). Un combattant peut être ajouté ou retiré en cours de combat depuis le ruban ; les
- * PV restent en revanche non modifiables pour l'instant.
+ * déplaçables (glisser-déposer, position persistée en base — sinon repositionnement par défaut).
+ * Un combattant peut être ajouté ou retiré en cours de combat depuis le ruban ; les PV restent en
+ * revanche non modifiables pour l'instant.
  */
 @Component({
   selector: 'bol-session-play-page',
@@ -105,6 +105,11 @@ export class SessionPlayPageComponent {
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly session = signal<BolFightSessionModel | null>(null);
+
+  private readonly mapEl = viewChild<ElementRef<HTMLDivElement>>('mapEl');
+
+  /** Positions des jetons sur la battlemap (glisser-déposer libre), persistées en base — clé `PlayToken.key` → {x, y} en pourcentage. */
+  private readonly tokenPositions = signal<Readonly<Record<string, {x: number; y: number}>>>({});
 
   protected readonly board = computed(() => {
     const session = this.session();
@@ -620,6 +625,35 @@ export class SessionPlayPageComponent {
     });
   }
 
+  /** Glisser-déposer d'un jeton sur la battlemap : recalcule sa position en % de la carte et la persiste en base. */
+  protected onTokenDragEnded(token: PlayToken, event: CdkDragEnd): void {
+    const mapRect = this.mapEl()?.nativeElement.getBoundingClientRect();
+    if (!mapRect) {
+      return;
+    }
+
+    const anchorRect = event.source.element.nativeElement.getBoundingClientRect();
+    const x = clamp(((anchorRect.left + anchorRect.width / 2 - mapRect.left) / mapRect.width) * 100, 0, 100);
+    const y = clamp(((anchorRect.top + anchorRect.height / 2 - mapRect.top) / mapRect.height) * 100, 0, 100);
+    event.source.reset();
+
+    const positions = {...this.tokenPositions(), [token.key]: {x, y}};
+    this.tokenPositions.set(positions);
+
+    const sessionId = this.session()?.id;
+    if (!sessionId) {
+      return;
+    }
+
+    this.fightSessionService.updatePositions(sessionId, positions).subscribe({
+      error: (error: unknown) => {
+        this.snackBar.open(extractApiErrorMessage(error, "Impossible d'enregistrer la position du jeton."), 'Fermer', {
+          duration: 5000,
+        });
+      },
+    });
+  }
+
   private loadSession(id: string): void {
     this.fightSessionService
       .fightSession(id)
@@ -628,6 +662,7 @@ export class SessionPlayPageComponent {
         next: (session) => {
           this.session.set(session);
           this.manualOrder.set(session.ordre_manuel ?? null);
+          this.tokenPositions.set(session.positions_jetons ?? {});
           this.loading.set(false);
         },
         error: () => {
@@ -665,8 +700,16 @@ export class SessionPlayPageComponent {
     return `cp-token cp-token--${token.kind}${active}${isSource}${isTargetable}${targeting}`;
   }
 
-  /** Position par défaut d'un jeton sur la battlemap (héros à gauche, adversaires à droite), avant tout glisser-déposer. */
+  /**
+   * Position d'un jeton sur la battlemap : celle enregistrée après un glisser-déposer si elle
+   * existe, sinon une position par défaut (héros à gauche, adversaires à droite).
+   */
   protected tokenStyle(token: PlayToken, indexInCamp: number, camp: CombatCamp): Record<string, string> {
+    const stored = this.tokenPositions()[token.key];
+    if (stored) {
+      return {left: `${stored.x}%`, top: `${stored.y}%`};
+    }
+
     const zone = camp === 'heros' ? HERO_ZONE : ADVERSAIRE_ZONE;
     const campCount = (camp === 'heros' ? this.heroTokens() : this.adversaireTokens()).length;
     const rows = Math.max(1, Math.ceil(campCount / COLS_PER_ZONE));

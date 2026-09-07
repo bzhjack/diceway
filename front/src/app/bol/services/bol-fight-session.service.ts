@@ -47,6 +47,13 @@ export class BolFightSessionService {
     return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/ordre`, {ordre});
   }
 
+  updatePositions(
+    sessionId: string,
+    positions: Readonly<Record<string, {x: number; y: number}>>,
+  ): Observable<BolFightSessionModel> {
+    return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/positions`, {positions});
+  }
+
   startCombat(sessionId: string): Observable<BolFightSessionModel> {
     return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/start-combat`, {});
   }
