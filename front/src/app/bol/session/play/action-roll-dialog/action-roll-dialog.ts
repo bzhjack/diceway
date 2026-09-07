@@ -1,13 +1,22 @@
-import {ChangeDetectionStrategy, Component, computed, inject, signal, ViewEncapsulation, viewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+  ViewEncapsulation,
+  viewChild,
+  WritableSignal,
+} from '@angular/core';
 import {MatButtonToggleChange, MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {BolHerosService} from '../../../services/bol-heros.service';
+import {applyHeroismeDelta} from '../../heroisme-spend.util';
 
 export interface ActionRollCarriere {
   readonly label: string;
@@ -378,16 +387,7 @@ export class ActionRollDialogComponent {
       return;
     }
 
-    this.heroisme.update((h) => h - 1);
-    this.herosService.adjustHeroisme(this.data.herosId, -1).subscribe({
-      error: (error: unknown) => {
-        this.heroisme.update((h) => h + 1);
-        this.snackBar.open(extractApiErrorMessage(error, "Impossible de dépenser l'héroïsme."), 'Fermer', {
-          duration: 5000,
-        });
-      },
-    });
-
+    applyHeroismeDelta(this.herosService, this.snackBar, this.data.herosId, this.heroisme, -1);
     await this.roll();
   }
 
@@ -399,62 +399,34 @@ export class ActionRollDialogComponent {
 
   /** Échec critique (2 naturel) : choisir OCTROIE 1 PH ; revenir en arrière le reprend. */
   protected toggleCritique(): void {
-    const wasChosen = this.critiqueChosen();
-    const nextChosen = !wasChosen;
-    const delta = nextChosen ? 1 : -1;
-    this.critiqueChosen.set(nextChosen);
-    this.heroisme.update((h) => h + delta);
-    this.herosService.adjustHeroisme(this.data.herosId, delta).subscribe({
-      error: (error: unknown) => {
-        this.critiqueChosen.set(wasChosen);
-        this.heroisme.update((h) => h - delta);
-        this.snackBar.open(extractApiErrorMessage(error, "Impossible de mettre à jour l'héroïsme."), 'Fermer', {
-          duration: 5000,
-        });
-      },
-    });
+    this.toggleTierChoice(this.critiqueChosen, {spendOnChoose: false});
   }
 
   /** Succès légendaire (12 naturel) : choisir DÉPENSE 1 PH ; revenir en arrière la rembourse. */
   protected toggleLegendaire(): void {
-    if (!this.legendaryChosen() && this.heroisme() <= 0) {
-      return;
-    }
-    const wasChosen = this.legendaryChosen();
-    const nextChosen = !wasChosen;
-    const delta = nextChosen ? -1 : 1;
-    this.legendaryChosen.set(nextChosen);
-    this.heroisme.update((h) => h + delta);
-    this.herosService.adjustHeroisme(this.data.herosId, delta).subscribe({
-      error: (error: unknown) => {
-        this.legendaryChosen.set(wasChosen);
-        this.heroisme.update((h) => h - delta);
-        this.snackBar.open(extractApiErrorMessage(error, "Impossible de mettre à jour l'héroïsme."), 'Fermer', {
-          duration: 5000,
-        });
-      },
-    });
+    this.toggleTierChoice(this.legendaryChosen, {spendOnChoose: true});
   }
 
   /** Conversion réussite normale → succès héroïque : choisir DÉPENSE 1 PH ; revenir en arrière la rembourse. */
   protected toggleHeroicUpgrade(): void {
-    if (!this.heroicUpgradeChosen() && this.heroisme() <= 0) {
+    this.toggleTierChoice(this.heroicUpgradeChosen, {spendOnChoose: true});
+  }
+
+  /** Bascule un choix de palier (critique/légendaire/héroïque) et son effet en héroïsme — octroi ou
+   * dépense selon `spendOnChoose`, dans les deux sens (choisir / revenir en arrière). */
+  private toggleTierChoice(chosen: WritableSignal<boolean>, {spendOnChoose}: {spendOnChoose: boolean}): void {
+    const wasChosen = chosen();
+    const nextChosen = !wasChosen;
+    if (spendOnChoose && nextChosen && this.heroisme() <= 0) {
       return;
     }
-    const wasChosen = this.heroicUpgradeChosen();
-    const nextChosen = !wasChosen;
-    const delta = nextChosen ? -1 : 1;
-    this.heroicUpgradeChosen.set(nextChosen);
-    this.heroisme.update((h) => h + delta);
-    this.herosService.adjustHeroisme(this.data.herosId, delta).subscribe({
-      error: (error: unknown) => {
-        this.heroicUpgradeChosen.set(wasChosen);
-        this.heroisme.update((h) => h - delta);
-        this.snackBar.open(extractApiErrorMessage(error, "Impossible de mettre à jour l'héroïsme."), 'Fermer', {
-          duration: 5000,
-        });
-      },
-    });
+
+    const sign = spendOnChoose ? -1 : 1;
+    const delta = nextChosen ? sign : -sign;
+    chosen.set(nextChosen);
+    applyHeroismeDelta(this.herosService, this.snackBar, this.data.herosId, this.heroisme, delta, () =>
+      chosen.set(wasChosen),
+    );
   }
 
   protected close(): void {

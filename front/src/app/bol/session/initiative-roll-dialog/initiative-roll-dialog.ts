@@ -2,10 +2,10 @@ import {ChangeDetectionStrategy, Component, computed, inject, signal, ViewEncaps
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {DiceBoxHostComponent} from '../../../shared/dice-3d/dice-box-host';
 import {InitiativeResultat} from '../../models/bol-fight-session.model';
 import {BolHerosService} from '../../services/bol-heros.service';
+import {applyHeroismeDelta} from '../heroisme-spend.util';
 import {INITIATIVE_RESULT_OPTIONS} from '../initiative.util';
 
 export interface InitiativeRollDialogData {
@@ -128,40 +128,21 @@ export class InitiativeRollDialogComponent {
     if (chosen === this.critiqueChosen()) {
       return;
     }
-    const delta = chosen ? 1 : -1;
     this.critiqueChosen.set(chosen);
-    this.heroisme.update((h) => h + delta);
-    this.herosService.adjustHeroisme(this.data.herosId, delta).subscribe({
-      error: (error: unknown) => {
-        this.critiqueChosen.set(!chosen);
-        this.heroisme.update((h) => h - delta);
-        this.snackBar.open(extractApiErrorMessage(error, "Impossible de mettre à jour l'héroïsme."), 'Fermer', {
-          duration: 5000,
-        });
-      },
-    });
+    applyHeroismeDelta(this.herosService, this.snackBar, this.data.herosId, this.heroisme, chosen ? 1 : -1, () =>
+      this.critiqueChosen.set(!chosen),
+    );
   }
 
   /** Succès légendaire (12 naturel) : choisir DÉPENSE 1 PH ; revenir sur "Héroïque" la rembourse. */
   protected chooseLegendaire(chosen: boolean): void {
-    if (chosen === this.legendaryChosen()) {
+    if (chosen === this.legendaryChosen() || (chosen && this.heroisme() <= 0)) {
       return;
     }
-    if (chosen && this.heroisme() <= 0) {
-      return;
-    }
-    const delta = chosen ? -1 : 1;
     this.legendaryChosen.set(chosen);
-    this.heroisme.update((h) => h + delta);
-    this.herosService.adjustHeroisme(this.data.herosId, delta).subscribe({
-      error: (error: unknown) => {
-        this.legendaryChosen.set(!chosen);
-        this.heroisme.update((h) => h - delta);
-        this.snackBar.open(extractApiErrorMessage(error, "Impossible de mettre à jour l'héroïsme."), 'Fermer', {
-          duration: 5000,
-        });
-      },
-    });
+    applyHeroismeDelta(this.herosService, this.snackBar, this.data.herosId, this.heroisme, chosen ? -1 : 1, () =>
+      this.legendaryChosen.set(!chosen),
+    );
   }
 
   protected resultLabel(result: InitiativeResultat | null): string {

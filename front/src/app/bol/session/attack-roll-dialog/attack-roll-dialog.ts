@@ -4,10 +4,10 @@ import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {DiceBoxHostComponent} from '../../../shared/dice-3d/dice-box-host';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {ResolvedCombatStats} from '../combat-attack.util';
+import {applyHeroismeDelta} from '../heroisme-spend.util';
 
 export interface AttackRollDialogData {
   readonly attackerNom: string;
@@ -236,16 +236,7 @@ export class AttackRollDialogComponent {
       return;
     }
 
-    this.heroisme.update((h) => h - 1);
-    this.herosService.adjustHeroisme(herosId, -1).subscribe({
-      error: (error: unknown) => {
-        this.heroisme.update((h) => h + 1);
-        this.snackBar.open(extractApiErrorMessage(error, "Impossible de dépenser l'héroïsme."), 'Fermer', {
-          duration: 5000,
-        });
-      },
-    });
-
+    applyHeroismeDelta(this.herosService, this.snackBar, herosId, this.heroisme, -1);
     await this.rollAttack();
   }
 
