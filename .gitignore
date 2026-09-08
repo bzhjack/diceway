@@ -2,3 +2,4 @@
 /front/proxy.conf.json
 /doc/*.pdf
 /.claude/
+/.worktrees/

@@ -146,7 +146,11 @@
                       />
                     </div>
 
-                    <bol-armure-list [armures]="selectedArmures()" (removed)="removeArmure($event)" />
+                    <bol-armure-list
+                      [armures]="selectedArmures()"
+                      (removed)="removeArmure($event)"
+                      (equippedToggled)="toggleArmureEquipped($event)"
+                    />
                   </div>
                 </div>
               </div>

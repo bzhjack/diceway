@@ -8,8 +8,9 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {BolArmureModel} from '../../models/bol-armure.model';
+import {BolArmureCategorie, BolArmureModel} from '../../models/bol-armure.model';
 import {BolCatalogService} from '../../services/bol-catalog.service';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
@@ -33,6 +34,7 @@ import {DwLibraryToolbarComponent} from '../../../shared/dw-library-toolbar/dw-l
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    MatSelectModule,
     MatTooltipModule,
     DwTagComponent,
     DwBadgeComponent,
@@ -60,6 +62,11 @@ export class ArmureLibraryPageComponent {
     protection: ['', [Validators.required, Validators.maxLength(255)]],
     malus: ['', [Validators.maxLength(255)]],
     pts_de_pouvoir: ['', [Validators.maxLength(50)]],
+    categorie: this.formBuilder.nonNullable.control<BolArmureCategorie>('armure', [Validators.required]),
+    malus_agilite: [0, [Validators.required, Validators.min(0)]],
+    malus_initiative: [0, [Validators.required, Validators.min(0)]],
+    malus_attaque_subie: [0, [Validators.required, Validators.min(0)]],
+    malus_attaque_subie_portee: this.formBuilder.control<'une' | 'toutes' | null>(null),
   });
 
   protected readonly filteredArmors = computed(() =>
@@ -79,12 +86,15 @@ export class ArmureLibraryPageComponent {
     () => this.armors.data().filter((armor) => !armor.user_id).length,
   );
   protected readonly shieldCount = computed(
-    () => this.armors.data().filter((armor) => armor.armure.toLocaleLowerCase().includes('bouclier')).length,
+    () => this.armors.data().filter((armor) => armor.categorie === 'bouclier').length,
   );
   protected readonly formTitle = computed(() =>
     this.editingArmorId() ? 'Modifier l’armure' : 'Nouvelle armure',
   );
   protected readonly submitLabel = computed(() => (this.editingArmorId() ? 'Enregistrer' : 'Créer'));
+
+  protected readonly categorieLabel = (categorie: BolArmureCategorie): string =>
+    ({armure: 'Armure', bouclier: 'Bouclier', casque: 'Casque'})[categorie];
 
   protected clearFilters(): void {
     this.searchTerm.set('');
@@ -95,7 +105,17 @@ export class ArmureLibraryPageComponent {
     this.editingArmorId.set(null);
     this.formVisible.set(true);
     this.errorMessage.set('');
-    this.armorForm.reset({armure: '', protection: '', malus: '', pts_de_pouvoir: ''});
+    this.armorForm.reset({
+      armure: '',
+      protection: '',
+      malus: '',
+      pts_de_pouvoir: '',
+      categorie: 'armure',
+      malus_agilite: 0,
+      malus_initiative: 0,
+      malus_attaque_subie: 0,
+      malus_attaque_subie_portee: null,
+    });
   }
 
   protected startEdit(armor: BolArmureModel): void {
@@ -111,6 +131,11 @@ export class ArmureLibraryPageComponent {
       protection: armor.protection ?? '',
       malus: armor.malus ?? '',
       pts_de_pouvoir: armor.pts_de_pouvoir ?? '',
+      categorie: armor.categorie,
+      malus_agilite: armor.malus_agilite,
+      malus_initiative: armor.malus_initiative,
+      malus_attaque_subie: armor.malus_attaque_subie,
+      malus_attaque_subie_portee: armor.malus_attaque_subie_portee,
     });
   }
 
@@ -118,7 +143,17 @@ export class ArmureLibraryPageComponent {
     this.formVisible.set(false);
     this.editingArmorId.set(null);
     this.errorMessage.set('');
-    this.armorForm.reset({armure: '', protection: '', malus: '', pts_de_pouvoir: ''});
+    this.armorForm.reset({
+      armure: '',
+      protection: '',
+      malus: '',
+      pts_de_pouvoir: '',
+      categorie: 'armure',
+      malus_agilite: 0,
+      malus_initiative: 0,
+      malus_attaque_subie: 0,
+      malus_attaque_subie_portee: null,
+    });
   }
 
   protected submitForm(): void {
@@ -137,6 +172,11 @@ export class ArmureLibraryPageComponent {
       protection: this.armorForm.controls.protection.getRawValue().trim(),
       malus: this.nullableTrimmed(this.armorForm.controls.malus.getRawValue()),
       pts_de_pouvoir: this.nullableTrimmed(this.armorForm.controls.pts_de_pouvoir.getRawValue()),
+      categorie: this.armorForm.controls.categorie.getRawValue(),
+      malus_agilite: this.armorForm.controls.malus_agilite.getRawValue(),
+      malus_initiative: this.armorForm.controls.malus_initiative.getRawValue(),
+      malus_attaque_subie: this.armorForm.controls.malus_attaque_subie.getRawValue(),
+      malus_attaque_subie_portee: this.armorForm.controls.malus_attaque_subie_portee.getRawValue(),
     };
 
     this.submitting.set(true);

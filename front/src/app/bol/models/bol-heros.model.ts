@@ -15,6 +15,7 @@ export interface BolHerosModel {
   attributs: BolHerosAttributs;
   origines: BolHerosOrigines;
   ressources: BolHerosRessources;
+  equipement_effectif: BolEquipementEffectifModel;
   traits: BolHerosTraitsModel[];
   carrieres: BolHerosCarriereModel[];
   langues?: BolHerosLangueModel[] | number[];
@@ -24,16 +25,26 @@ export interface BolHerosModel {
 
 export interface BolHerosCombat {
   initiative: number;
+  initiative_effective: number;
   melee: number;
   tir: number;
   defense: number;
+  defense_effective: number;
 }
 
 export interface BolHerosAttributs {
   vigueur: number;
   agilite: number;
+  agilite_effective: number;
   esprit: number;
   aura: number;
+}
+
+/** Malus défensif du petit bouclier ("-1 à une attaque subie par round") — le grand bouclier est
+ * déjà replié dans `combat.defense_effective`, il n'apparaît pas ici. */
+export interface BolEquipementEffectifModel {
+  bouclier_malus_attaque_subie: number;
+  bouclier_malus_attaque_subie_portee: 'une' | 'toutes' | null;
 }
 
 export interface BolHerosOrigines {

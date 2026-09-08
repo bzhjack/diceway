@@ -11,6 +11,7 @@ use App\Models\Bol\BolHerosArmure;
 use App\Models\Bol\BolHerosCarriere;
 use App\Models\Bol\BolHerosLangue;
 use App\Models\Bol\BolHerosTrait;
+use App\Http\Services\Bol\BolEquipmentEffectService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -65,10 +66,13 @@ class BolPnjController extends Controller
         }
         $armures = $request->input('armures');
         foreach ($armures as $armure) {
-            $newarmure['heros_id'] = $pnj['id'];
-            $newarmure['armure_id'] = $armure['id'];
-            BolHerosArmure::create($newarmure);
+            BolHerosArmure::create([
+                'heros_id' => $pnj['id'],
+                'armure_id' => $armure['id'],
+                'equipee' => (bool) ($armure['equipee'] ?? false),
+            ]);
         }
+        (new BolEquipmentEffectService())->normalizeArmureEquipmentForHeros($pnj['id']);
         $carrieres = $request->input('carrieres');
         foreach ($carrieres as $carriere) {
             $newcarriere['heros_id'] = $pnj['id'];
@@ -133,8 +137,12 @@ class BolPnjController extends Controller
         $ids_armures = array_column($armures, 'id');
         BolHerosArmure::whereNotIn('armure_id', $ids_armures)->where('heros_id', $pnjId)->delete();
         foreach ($armures as $item) {
-            BolHerosArmure::updateOrCreate(['heros_id' => $pnjId, 'armure_id' => $item['id']], []);
+            BolHerosArmure::updateOrCreate(
+                ['heros_id' => $pnjId, 'armure_id' => $item['id']],
+                ['equipee' => (bool) ($item['equipee'] ?? false)]
+            );
         }
+        (new BolEquipmentEffectService())->normalizeArmureEquipmentForHeros($pnjId);
 
 
         $traits = $request->input('traits');

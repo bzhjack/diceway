@@ -1,0 +1,60 @@
+<section class="dw-page">
+  <div class="mx-auto flex max-w-3xl flex-col gap-4">
+    <div class="dw-section--form snp-header">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="snp-icon">
+            <mat-icon>groups</mat-icon>
+          </div>
+          <div>
+            <p class="snp-eyebrow">Nouvelle session</p>
+            <h1 class="snp-title">Héros présents à table</h1>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+          <button mat-stroked-button type="button" routerLink="/">
+            <mat-icon>arrow_back</mat-icon> Retour au dashboard
+          </button>
+          <button mat-flat-button type="button" [disabled]="!canLaunch() || launching()" (click)="launchSession()">
+            <mat-icon>play_arrow</mat-icon> Créer la session
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="dw-section--form snp-heroes">
+      <div class="snp-heroes-head">
+        <h2>Héros</h2>
+        <span class="snp-heroes-total">{{ selection.combatants().length }}</span>
+      </div>
+
+      @if (selection.combatants().length) {
+        <div class="snp-hero-list">
+          @for (combatant of selection.combatants(); track combatant.catalogId) {
+            @if (selection.entryFor(combatant.catalogId); as entry) {
+              <div class="snp-hero-chip">
+                <img [src]="entry.avatar" [alt]="entry.nom" />
+                <span class="snp-hero-name">{{ entry.nom }}</span>
+                <button
+                  type="button"
+                  class="snp-hero-remove"
+                  [attr.aria-label]="'Retirer ' + entry.nom"
+                  (click)="selection.remove(combatant.catalogId)"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            }
+          }
+        </div>
+      } @else {
+        <p class="snp-empty">Aucun héros pour l'instant.</p>
+      }
+
+      <button type="button" class="snp-add-tile" (click)="openPicker()">
+        <mat-icon>add</mat-icon> Ajouter un héros
+      </button>
+    </div>
+  </div>
+</section>

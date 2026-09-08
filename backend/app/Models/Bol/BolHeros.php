@@ -2,6 +2,7 @@
 
 namespace App\Models\Bol;
 
+use App\Http\Services\Bol\BolEquipmentEffectService;
 use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +22,7 @@ class BolHeros extends Model
         'vigueur', 'agilite', 'esprit', 'aura',
         'nom', 'avatar', 'region_id', 'region', 'joueur', 'langues', 'commentaire'
     ];
-    protected $appends = ['combat', 'attributs', 'origines', 'ressources', 'type_order'];
+    protected $appends = ['combat', 'attributs', 'origines', 'ressources', 'type_order', 'equipement_effectif'];
     protected $fillable = [
         'user_id',
         'type',
@@ -93,9 +94,11 @@ class BolHeros extends Model
     {
         return [
             'initiative' => $this->initiative,
+            'initiative_effective' => $this->initiative_effective,
             'melee' => $this->melee,
             'tir' => $this->tir,
             'defense' => $this->defense,
+            'defense_effective' => $this->defense_effective,
         ];
     }
 
@@ -104,9 +107,45 @@ class BolHeros extends Model
         return [
             'vigueur' => $this->vigueur,
             'agilite' => $this->agilite,
+            'agilite_effective' => $this->agilite_effective,
             'esprit' => $this->esprit,
             'aura' => $this->aura,
         ];
+    }
+
+    public function getAgiliteEffectiveAttribute()
+    {
+        return (new BolEquipmentEffectService())->agiliteEffective($this->agilite, $this->equippedArmuresData());
+    }
+
+    public function getInitiativeEffectiveAttribute()
+    {
+        return (new BolEquipmentEffectService())->initiativeEffective($this->initiative, $this->equippedArmuresData());
+    }
+
+    public function getDefenseEffectiveAttribute()
+    {
+        return (new BolEquipmentEffectService())->defenseEffective($this->defense, $this->equippedArmuresData());
+    }
+
+    public function getEquipementEffectifAttribute()
+    {
+        return (new BolEquipmentEffectService())->equipementEffectif($this->equippedArmuresData());
+    }
+
+    private function equippedArmuresData(): array
+    {
+        return $this->armures
+            ->filter(fn (BolHerosArmure $item) => $item->equipee && $item->armure !== null)
+            ->map(fn (BolHerosArmure $item) => [
+                'categorie' => $item->armure->categorie,
+                'malus_agilite' => $item->armure->malus_agilite,
+                'malus_initiative' => $item->armure->malus_initiative,
+                'malus_attaque_subie' => $item->armure->malus_attaque_subie,
+                'malus_attaque_subie_portee' => $item->armure->malus_attaque_subie_portee,
+            ])
+            ->values()
+            ->all();
     }
 
     public function getOriginesAttribute()

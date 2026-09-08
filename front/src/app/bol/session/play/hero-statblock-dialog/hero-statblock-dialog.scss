@@ -1,0 +1,48 @@
+:host {
+  display: block;
+}
+
+.hsd-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.hsd-modify-trigger {
+  color: var(--dw-color-legendary);
+  border-color: var(--dw-color-legendary);
+
+  mat-icon {
+    margin-right: 0.15rem;
+  }
+}
+
+.hsd-close {
+  color: var(--dw-surface-700);
+  background: var(--dw-surface-100);
+}
+
+::ng-deep .hsd-edit-menu-panel.mat-mdc-menu-panel {
+  width: 320px;
+  max-width: 92vw;
+}
+
+.hsd-edit-menu-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0.75rem 1rem;
+}
+
+.ahs-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+
+  label {
+    font-size: 0.85rem;
+    color: var(--dw-surface-500);
+  }
+}

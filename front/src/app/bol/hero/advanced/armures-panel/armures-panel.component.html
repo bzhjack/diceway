@@ -15,4 +15,4 @@
   />
 </div>
 
-<bol-armure-list [armures]="armures()" (removed)="armureRemoved.emit($event)" />
+<bol-armure-list [armures]="armures()" [equipToggleEnabled]="false" (removed)="armureRemoved.emit($event)" />

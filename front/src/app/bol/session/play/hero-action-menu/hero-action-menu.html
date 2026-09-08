@@ -1,0 +1,8 @@
+<button
+  type="button"
+  class="ham-btn ham-btn--roll"
+  [attr.aria-label]="'Jet d\'action pour ' + heroName()"
+  (click)="$event.stopPropagation(); actionRoll.emit()"
+>
+  <mat-icon>casino</mat-icon>
+</button>

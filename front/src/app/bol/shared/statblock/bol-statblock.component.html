@@ -59,7 +59,11 @@
 
         @if (section.entries.length) {
           @for (entry of section.entries; track $index) {
-            <div class="bol-statblock__entry" [class.bol-statblock__entry--row]="entry.value !== undefined">
+            <div
+              class="bol-statblock__entry"
+              [class.bol-statblock__entry--row]="entry.value !== undefined"
+              [class.bol-statblock__entry--equipped]="entry.equipped"
+            >
               <p
                 class="bol-statblock__entry-title"
                 [class.bol-statblock__entry-title--hint]="section.compact && entry.detail"

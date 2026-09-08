@@ -30,6 +30,12 @@ export class DiceBoxHostComponent {
   /** Taille des dés relative au conteneur — plage usuelle de dice-box : 2 (petit) à 10 (grand). */
   readonly scale = input(8);
 
+  /** Couleur des dés (hex) — même bleu partout par défaut, personnalisable par dialog. */
+  readonly themeColor = input('#60a5fa');
+
+  /** Thème (dossier sous `assets/dice-box/themes/`) — matériau/mesh des dés, personnalisable par dialog. */
+  readonly theme = input('default');
+
   private box: DiceBox | null = null;
   private initPromise: Promise<void> | null = null;
 
@@ -83,10 +89,10 @@ export class DiceBoxHostComponent {
       const box = new DiceBox({
         container: `#${this.hostId}`,
         assetPath: '/assets/dice-box/',
-        theme: 'default',
+        theme: this.theme(),
         offscreen: true,
         scale: this.scale(),
-        themeColor: '#60a5fa',
+        themeColor: this.themeColor(),
         id: `${this.hostId}-canvas`,
       });
 

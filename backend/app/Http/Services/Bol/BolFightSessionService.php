@@ -19,6 +19,7 @@ class BolFightSessionService
         $session = BolFightSession::create([
             'user_id' => $userId,
             'titre'   => $data['titre'] ?? null,
+            'statut'  => $this->determineInitialStatut($data),
         ]);
 
         $this->syncHeros($session->id, $data['heros'] ?? []);
@@ -27,6 +28,14 @@ class BolFightSessionService
         $this->syncPnjs($session->id, $data['pnjs'] ?? []);
 
         return $this->getSessionWithRelations($session->id);
+    }
+
+    /** Une session créée sans adversaire démarre "libre" (héros seuls, hors combat) ; sinon "combat". */
+    public function determineInitialStatut(array $data): string
+    {
+        $hasAdversaries = !empty($data['creatures']) || !empty($data['demons']) || !empty($data['pnjs']);
+
+        return $hasAdversaries ? 'combat' : 'libre';
     }
 
     public function getSessionWithRelations(string $id): ?BolFightSession
@@ -74,6 +83,50 @@ class BolFightSessionService
         }
 
         $session->update(['ordre_manuel' => array_values($ordre)]);
+
+        return $this->getSessionWithRelations($sessionId);
+    }
+
+    /** Persiste les positions des jetons sur la battlemap (glisser-déposer libre) — clé `PlayToken.key` => {x, y} en pourcentage. */
+    public function updatePositions(string $sessionId, string $userId, array $positions): ?BolFightSession
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session) {
+            return null;
+        }
+
+        $session->update(['positions_jetons' => $positions]);
+
+        return $this->getSessionWithRelations($sessionId);
+    }
+
+    /** Bascule une session `libre` en `combat` — les adversaires sont déjà en place via addCombatant(). */
+    public function startCombat(string $sessionId, string $userId): ?BolFightSession
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session || $session->statut !== 'libre') {
+            return null;
+        }
+
+        $session->update(['statut' => 'combat']);
+
+        return $this->getSessionWithRelations($sessionId);
+    }
+
+    /** Termine le combat : retire les adversaires, la session redevient `libre` avec les héros seuls. */
+    public function endCombat(string $sessionId, string $userId): ?BolFightSession
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session || $session->statut !== 'combat') {
+            return null;
+        }
+
+        BolFightSessionCreature::where('fight_session_id', $sessionId)->delete();
+        BolFightSessionDemon::where('fight_session_id', $sessionId)->delete();
+        BolFightSessionPnj::where('fight_session_id', $sessionId)->delete();
+        BolFightSessionHeros::where('fight_session_id', $sessionId)->update(['initiative_resultat' => null]);
+
+        $session->update(['statut' => 'libre', 'ordre_manuel' => null]);
 
         return $this->getSessionWithRelations($sessionId);
     }
@@ -173,7 +226,9 @@ class BolFightSessionService
 
         $max = $pivot->heros->vitalite;
         $current = $pivot->vitalite_courante ?? $max;
-        $pivot->update(['vitalite_courante' => max(0, min($max, $current + $delta))]);
+        // Un héros peut tomber sous 0 (vitalité négative = "Défier la mort", 02-actions-combat.md) —
+        // seuls pnj/créature/démon restent plafonnés à 0, faute de mécanique de mort différée pour eux.
+        $pivot->update(['vitalite_courante' => max(-20, min($max, $current + $delta))]);
     }
 
     private function applyMaxClampedDamage(BolFightSessionPnj|null $row, int $delta): void
@@ -438,10 +493,10 @@ class BolFightSessionService
     private function relations(): array
     {
         return [
-            'heros.heros',
+            'heros.heros.armures.armure',
             'creatures.creature',
             'demons.demon',
-            'pnjs.pnj',
+            'pnjs.pnj.armures.armure',
         ];
     }
 }

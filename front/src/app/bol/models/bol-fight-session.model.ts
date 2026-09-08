@@ -3,13 +3,17 @@ export type CombatCamp = 'heros' | 'adversaires';
 /** Résultat du jet de réaction BoL (2d6 + esprit + initiative, 9+) — seuls les héros le lancent. */
 export type InitiativeResultat = 'echec_critique' | 'echec' | 'reussite' | 'heroique' | 'legendaire';
 
+export type BolFightSessionStatut = 'libre' | 'combat' | 'terminee';
+
 export interface BolFightSessionModel {
   id: string | null;
   user_id?: string | null;
   titre: string | null;
-  statut: string;
+  statut: BolFightSessionStatut;
   /** Ordre d'initiative réordonné manuellement (glisser-déposer du ruban) — clés `PlayToken.key`, dans l'ordre voulu. */
   ordre_manuel?: string[] | null;
+  /** Position des jetons sur la battlemap (glisser-déposer libre) — clé `PlayToken.key` → {x, y} en pourcentage. */
+  positions_jetons?: Record<string, {x: number; y: number}> | null;
   heros?: BolFightSessionHerosModel[];
   creatures?: BolFightSessionCreatureModel[];
   demons?: BolFightSessionDemonModel[];
@@ -60,6 +64,7 @@ export interface BolFightSessionCreatureModel {
   protection: string | null;
   id_taille: number;
   capacites: BolFightSessionCapaciteModel[] | null;
+  creature?: {avatar: string | null};
 }
 
 export interface BolFightSessionPouvoirModel {
@@ -90,6 +95,7 @@ export interface BolFightSessionDemonModel {
   vitalite_instances: number[] | null;
   degats: string | null;
   pouvoirs: BolFightSessionPouvoirModel[] | null;
+  demon?: {avatar: string | null};
 }
 
 export interface BolFightSessionArmeModel {
@@ -116,6 +122,7 @@ export interface BolFightSessionPnjModel {
   vitalite_max: number;
   vitalite_courante: number;
   armes: BolFightSessionArmeModel[] | null;
+  pnj?: {origines: {avatar: string | null}};
 }
 
 /** Payload d'envoi pour créer une fight-session (les stats sont snapshotées côté back). */

@@ -104,6 +104,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::delete('/bol/armures/delete/{id}', [BolArmureController::class, 'deleteCatalog']);
     Route::post('/bol/heros/armures/create/{herosId}', [BolArmureController::class, 'create']);
     Route::delete('/bol/heros/armures/delete/{herosId}/{id}', [BolArmureController::class, 'delete']);
+    Route::patch('/bol/heros/armures/equip/{herosId}/{id}', [BolArmureController::class, 'equip']);
 
     // Gestion des créatures
     Route::get('/bol/creature/tailles', [BolCreatureController::class, 'getAllTailles']);
@@ -142,6 +143,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
 
     // Maj des origines
     Route::post('/bol/heros/origines/update/{herosId}', [BolHerosController::class, 'updateOrigines']);
+    Route::patch('/bol/heros/{id}/heroisme', [BolHerosController::class, 'adjustHeroisme']);
 
     // Traits régionaux
     Route::delete('/bol/heros/traits/delete/{id}', [BolTraitController::class, 'delete']);
@@ -165,5 +167,8 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::delete('/bol/fight-session/{id}/combatant/{kind}/{pivotId}', [BolFightSessionController::class, 'removeCombatant']);
     Route::patch('/bol/fight-session/{id}/combatant/{kind}/{pivotId}/damage', [BolFightSessionController::class, 'applyDamage']);
     Route::patch('/bol/fight-session/{id}/ordre', [BolFightSessionController::class, 'updateOrder']);
+    Route::patch('/bol/fight-session/{id}/positions', [BolFightSessionController::class, 'updatePositions']);
+    Route::patch('/bol/fight-session/{id}/start-combat', [BolFightSessionController::class, 'startCombat']);
+    Route::patch('/bol/fight-session/{id}/end-combat', [BolFightSessionController::class, 'endCombat']);
 
 });

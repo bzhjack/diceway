@@ -1,0 +1,61 @@
+// `:host { display: contents; }` — même pattern que `bol-attack-menu` : les boutons doivent se
+// positionner par rapport à `.cp-token-portrait` (l'ancêtre réel), pas par rapport à ce composant.
+:host {
+  display: contents;
+}
+
+.ham-btn {
+  position: absolute;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 999px;
+  border: 2px solid var(--dw-surface-0);
+  background: var(--dw-color-legendary);
+  color: #1c1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  z-index: 3;
+
+  mat-icon {
+    font-size: 1.05rem;
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--dw-color-legendary) 85%, white);
+  }
+}
+
+// Colonne de 2 boutons à gauche du portrait, centrée verticalement sur sa hauteur (4.5rem) : la paire
+// (1.9rem chacun + 0.4rem d'écart = 4.2rem) est donc décalée de (4.5 - 4.2) / 2 = 0.15rem depuis le
+// haut. `left: -2.3rem` (bouton 1.9rem + 0.4rem d'écart) pour ne jamais chevaucher l'image. Slot 1 =
+// action principale du mode (partagé avec `.am-trigger`, mutuellement exclusifs), slot 2 =
+// `.cp-token-card-btn` (générique, tous jetons — fiche + ajustement pour un héros).
+.ham-btn--roll {
+  top: 0.15rem;
+  left: -2.3rem;
+}
+
+// Un seul clic pour agir : sur souris/trackpad, les boutons ne s'affichent qu'au survol du jeton (ou
+// au focus clavier) — comme `.am-trigger` du menu d'attaque — pour ne pas surcharger visuellement le
+// plateau. Sur tactile (`pointer: coarse`, pas de survol), ils restent toujours visibles : la partie
+// se joue aussi sur tablette à table, où le survol n'existe pas.
+@media (hover: hover) and (pointer: fine) {
+  .ham-btn {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.12s ease;
+  }
+
+  // `:host-context` : seul moyen de réagir au survol de `.cp-token` (ancêtre hors du template de ce
+  // composant) depuis sa propre feuille de style.
+  :host-context(.cp-token:hover) .ham-btn,
+  .ham-btn:focus-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}

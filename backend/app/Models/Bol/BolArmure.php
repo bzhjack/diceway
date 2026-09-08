@@ -17,8 +17,16 @@ class BolArmure extends Model
         'protection',
         'malus',
         'pts_de_pouvoir',
+        'categorie',
+        'malus_agilite',
+        'malus_initiative',
+        'malus_attaque_subie',
+        'malus_attaque_subie_portee',
     ];
     protected $casts = [
         'id' => 'integer',
+        'malus_agilite' => 'integer',
+        'malus_initiative' => 'integer',
+        'malus_attaque_subie' => 'integer',
     ];
 }

@@ -196,6 +196,7 @@ function herosLikeStatblockData(
     .map((armure) => ({
       label: armure.armure?.armure ?? '',
       detail: [armure.armure?.protection, armure.armure?.malus].filter(Boolean).join(' · ') || undefined,
+      equipped: armure.equipee,
     }))
     .filter((entry) => entry.label);
 
@@ -215,13 +216,13 @@ function herosLikeStatblockData(
     vitals,
     tiles: [
       {label: 'Vig', value: heros.attributs.vigueur},
-      {label: 'Agi', value: heros.attributs.agilite},
+      {label: 'Agi', value: heros.attributs.agilite_effective},
       {label: 'Esp', value: heros.attributs.esprit},
       {label: 'Aura', value: heros.attributs.aura},
-      {label: 'Init', value: heros.combat.initiative},
+      {label: 'Init', value: heros.combat.initiative_effective},
       {label: 'Mêlée', value: heros.combat.melee},
       {label: 'Tir', value: heros.combat.tir},
-      {label: 'Déf', value: heros.combat.defense},
+      {label: 'Déf', value: heros.combat.defense_effective},
     ],
     wideTiles: true,
     sections,

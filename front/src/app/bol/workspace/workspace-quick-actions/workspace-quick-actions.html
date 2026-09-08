@@ -11,7 +11,7 @@
       </div>
 
       <div class="grid gap-2 md:grid-cols-2 xl:grid-cols-4">
-        @for (action of quickActions; track action.label) {
+        @for (action of quickActions(); track action.label) {
           <bol-workspace-action-card
             [label]="action.label"
             [detail]="action.detail"

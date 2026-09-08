@@ -40,6 +40,11 @@ class BolArmureController extends Controller
         $armure->protection = $payload['protection'];
         $armure->malus = $payload['malus'];
         $armure->pts_de_pouvoir = $payload['pts_de_pouvoir'];
+        $armure->categorie = $payload['categorie'];
+        $armure->malus_agilite = $payload['malus_agilite'];
+        $armure->malus_initiative = $payload['malus_initiative'];
+        $armure->malus_attaque_subie = $payload['malus_attaque_subie'];
+        $armure->malus_attaque_subie_portee = $payload['malus_attaque_subie_portee'];
         $armure->save();
 
         $this->flushCache();
@@ -66,6 +71,11 @@ class BolArmureController extends Controller
         $armure->protection = $payload['protection'];
         $armure->malus = $payload['malus'];
         $armure->pts_de_pouvoir = $payload['pts_de_pouvoir'];
+        $armure->categorie = $payload['categorie'];
+        $armure->malus_agilite = $payload['malus_agilite'];
+        $armure->malus_initiative = $payload['malus_initiative'];
+        $armure->malus_attaque_subie = $payload['malus_attaque_subie'];
+        $armure->malus_attaque_subie_portee = $payload['malus_attaque_subie_portee'];
         $armure->save();
 
         $this->flushCache();
@@ -119,6 +129,29 @@ class BolArmureController extends Controller
         return response()->json(['success' => true]);
     }
 
+    /** Bascule l'équipement d'une armure de héros/PNJ ; n'en laisse qu'une équipée par catégorie (armure/bouclier/casque). */
+    public function equip($herosId, $id)
+    {
+        $pivot = BolHerosArmure::with('armure')->where('heros_id', $herosId)->where('armure_id', $id)->first();
+        if (!$pivot) {
+            return response()->json(['message' => 'Armure non trouvée'], 404);
+        }
+
+        $equipee = !$pivot->equipee;
+
+        if ($equipee && $pivot->armure) {
+            BolHerosArmure::where('heros_id', $herosId)
+                ->where('armure_id', '!=', $id)
+                ->whereHas('armure', fn ($query) => $query->where('categorie', $pivot->armure->categorie))
+                ->update(['equipee' => false]);
+        }
+
+        $pivot->equipee = $equipee;
+        $pivot->save();
+
+        return response()->json(['success' => true, 'equipee' => $equipee]);
+    }
+
     private function validatedPayload(Request $request, ?int $ignoreId = null): array
     {
         $request->merge([
@@ -135,12 +168,21 @@ class BolArmureController extends Controller
             'protection' => ['required', 'string', 'max:255'],
             'malus' => ['nullable', 'string', 'max:255'],
             'pts_de_pouvoir' => ['nullable', 'string', 'max:50'],
+            'categorie' => ['required', Rule::in(['armure', 'bouclier', 'casque'])],
+            'malus_agilite' => ['nullable', 'integer', 'min:0'],
+            'malus_initiative' => ['nullable', 'integer', 'min:0'],
+            'malus_attaque_subie' => ['nullable', 'integer', 'min:0'],
+            'malus_attaque_subie_portee' => ['nullable', Rule::in(['une', 'toutes'])],
         ]);
 
         $validated['malus'] = isset($validated['malus']) && $validated['malus'] !== '' ? $validated['malus'] : null;
         $validated['pts_de_pouvoir'] = isset($validated['pts_de_pouvoir']) && $validated['pts_de_pouvoir'] !== ''
             ? $validated['pts_de_pouvoir']
             : null;
+        $validated['malus_agilite'] = (int) ($validated['malus_agilite'] ?? 0);
+        $validated['malus_initiative'] = (int) ($validated['malus_initiative'] ?? 0);
+        $validated['malus_attaque_subie'] = (int) ($validated['malus_attaque_subie'] ?? 0);
+        $validated['malus_attaque_subie_portee'] = $validated['malus_attaque_subie_portee'] ?? null;
 
         return $validated;
     }
