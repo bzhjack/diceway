@@ -7,174 +7,35 @@
   </div>
 } @else if (board(); as b) {
   <div class="cp-page">
-    <header class="cp-header">
-      <a class="cp-back" routerLink="/" aria-label="Retour au dashboard">
-        <mat-icon>arrow_back</mat-icon>
-      </a>
-
-      <div class="cp-header-title">
-        <span class="cp-eyebrow">{{ mode() === 'combat' ? 'Combat' : 'Session' }}</span>
-        <h1>{{ session()?.titre || (mode() === 'combat' ? 'Combat en cours' : 'Session en cours') }}</h1>
-      </div>
-
-      <button type="button" class="cp-menu-trigger" [matMenuTriggerFor]="sessionMenu" aria-label="Actions de la session">
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      <mat-menu #sessionMenu="matMenu">
-        @if (mode() === 'libre') {
-          <button mat-menu-item type="button" (click)="openStartCombatDialog()">
-            <mat-icon>shield</mat-icon>
-            Démarrer un combat
-          </button>
-        } @else {
-          <button mat-menu-item type="button" (click)="askEndCombat()">
-            <mat-icon>flag</mat-icon>
-            Terminer le combat
-          </button>
-        }
-        <button mat-menu-item type="button" (click)="openAddCombatantDialog()">
-          <mat-icon>person_add</mat-icon>
-          Ajouter un héros à la session
-        </button>
-      </mat-menu>
-    </header>
+    <bol-session-header
+      [mode]="mode()"
+      [titre]="session()?.titre ?? null"
+      [legendaryActive]="b.legendaryActive"
+      (startCombat)="openStartCombatDialog()"
+      (endCombat)="askEndCombat()"
+      (addHero)="openAddCombatantDialog()"
+    />
 
     @if (mode() === 'combat') {
-      @if (b.legendaryActive) {
-        <div class="cp-banner">
-          <mat-icon>military_tech</mat-icon>
-          Succès légendaire obtenu — +1 à ses jets d'attaque pour toute la rencontre, coriaces et piétailles adverses bloqués au round 1.
-        </div>
-      }
-
-      <div
-        class="cp-rail"
-        role="list"
-        aria-label="Ordre d'initiative — glisser-déposer pour réordonner"
-        cdkDropList
-        cdkDropListOrientation="horizontal"
-        (cdkDropListDropped)="onRailDrop($event)"
-      >
-        @for (token of orderedTokens(); track token.key; let last = $last) {
-          <div class="cp-rail-item-wrap" cdkDrag [attr.title]="token.nom">
-            <div class="cp-rail-item">
-              <div [class]="chipClass(token)">
-                <img [src]="token.avatar" [alt]="token.nom" />
-                <span [class]="'cp-rail-kind cp-rail-kind--' + token.kind">
-                  @if (kindIconIsSvg(token.kind)) {
-                    <mat-icon [svgIcon]="kindIcon(token.kind)" />
-                  } @else {
-                    <mat-icon>{{ kindIcon(token.kind) }}</mat-icon>
-                  }
-                </span>
-                <button
-                  type="button"
-                  class="cp-rail-remove"
-                  [attr.aria-label]="'Retirer ' + token.nom"
-                  (click)="askRemoveCombatant(token, $event)"
-                >
-                  <mat-icon>close</mat-icon>
-                </button>
-              </div>
-              <span class="cp-rail-name">{{ token.nom }}</span>
-            </div>
-            @if (!last) {
-              <mat-icon class="cp-rail-arrow">chevron_right</mat-icon>
-            }
-          </div>
-        }
-
-        <div class="cp-rail-item-wrap cp-rail-item-wrap--static">
-          <mat-icon class="cp-rail-arrow">chevron_right</mat-icon>
-          <button type="button" class="cp-rail-item cp-rail-add" (click)="openAddCombatantDialog()">
-            <span class="cp-rail-chip cp-rail-chip--add">
-              <mat-icon>add</mat-icon>
-            </span>
-            <span class="cp-rail-name">Ajouter</span>
-          </button>
-        </div>
-      </div>
+      <bol-initiative-rail
+        [tokens]="orderedTokens()"
+        [activeKey]="activeKey()"
+        (reordered)="onRailReordered($event)"
+        (addCombatant)="openAddCombatantDialog()"
+        (removeCombatant)="askRemoveCombatant($event)"
+      />
     }
 
-    <div class="cp-board">
-      <div class="cp-map" #mapEl>
-        @for (token of heroTokens(); track token.key; let i = $index) {
-          <ng-container *ngTemplateOutlet="tokenTpl; context: {token, i, camp: 'heros'}" />
-        }
-
-        @for (token of adversaireTokens(); track token.key; let i = $index) {
-          <ng-container *ngTemplateOutlet="tokenTpl; context: {token, i, camp: 'adversaires'}" />
-        }
-      </div>
-    </div>
+    <bol-battlemap
+      [mode]="mode()"
+      [heroTokens]="heroTokens()"
+      [adversaireTokens]="adversaireTokens()"
+      [activeKey]="activeKey()"
+      [tokenPositions]="tokenPositions()"
+      (attackRequested)="onAttackRequested($event)"
+      (statblockRequested)="openStatblockFor($event)"
+      (actionRollRequested)="onActionRoll($event)"
+      (positionChanged)="onPositionChanged($event)"
+    />
   </div>
 }
-
-<ng-template #tokenTpl let-token="token" let-i="i" let-camp="camp">
-  <div
-    class="cp-token-anchor"
-    [style]="tokenStyle(token, i, camp)"
-    cdkDrag
-    cdkDragBoundary=".cp-map"
-    (cdkDragEnded)="onTokenDragEnded(token, $event)"
-    (click)="onTokenClick(token, $event)"
-    (dblclick)="openStatblock(token, $event)"
-  >
-    <div [class]="tokenClass(token)">
-      @if (mode() === 'combat' && token.lockedRound1) {
-        <span class="cp-token-lock" title="Bloqué round 1"></span>
-      }
-      <div [class]="'cp-token-portrait' + (hasAvatar(token) ? '' : ' cp-token-portrait--fallback cp-token-portrait--' + token.kind)">
-        @if (hasAvatar(token)) {
-          <img [src]="token.avatar" [alt]="token.nom" class="cp-token-avatar" (error)="onAvatarError(token)" />
-          @if (mode() === 'combat') {
-            <span [class]="'cp-token-kind cp-token-kind--' + token.kind">
-              @if (kindIconIsSvg(token.kind)) {
-                <mat-icon [svgIcon]="kindIcon(token.kind)" />
-              } @else {
-                <mat-icon>{{ kindIcon(token.kind) }}</mat-icon>
-              }
-            </span>
-          }
-        } @else if (mode() === 'combat') {
-          @if (kindIconIsSvg(token.kind)) {
-            <mat-icon [svgIcon]="kindIcon(token.kind)" />
-          } @else {
-            <mat-icon>{{ kindIcon(token.kind) }}</mat-icon>
-          }
-        } @else {
-          <mat-icon>person</mat-icon>
-        }
-        @if (mode() === 'combat' && token.key === activeKey()) {
-          <bol-attack-menu
-            [attackerName]="token.nom"
-            [armes]="armesFor(token)"
-            [stats]="combatStatsFor(token)"
-            [combatOptions]="attackMenuCombatOptions()"
-            (opened)="loadArmes(token)"
-            (confirmed)="onAttackConfirmed(token, $event)"
-          />
-        } @else if (mode() === 'libre' && token.kind === 'hero') {
-          <bol-hero-action-menu [heroName]="token.nom" (actionRoll)="onActionRoll(token)" />
-        }
-
-        <button
-          type="button"
-          class="cp-token-card-btn"
-          [attr.aria-label]="'Voir le statbloc de ' + token.nom"
-          (click)="$event.stopPropagation(); openStatblockFor(token)"
-        >
-          <mat-icon>badge</mat-icon>
-        </button>
-      </div>
-      <p class="cp-token-name">{{ token.nom }}</p>
-      @if (token.vitaliteMax !== null) {
-        <div class="cp-token-hpbar"><i [style.width.%]="hpPct(token)" [style.background]="hpColor(token)"></i></div>
-        <span class="cp-token-hpval">{{ token.vitaliteCourante }} / {{ token.vitaliteMax }}</span>
-      }
-      @if (attackSourceKey() === token.key) {
-        <span class="cp-token-hint">Choisir une cible…</span>
-      }
-    </div>
-  </div>
-</ng-template>

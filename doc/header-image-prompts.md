@@ -44,6 +44,10 @@ BD (façon Frazetta/Boris Vallejo/pulp fantasy des années 80), pas de cadre.
 
 > Bannière illustrée ultra-large (format cinéma ~21:9), style pulp sword & sorcery peint et encré (BD fantasy années 80). Une forge d'armurier en pierre : un forgeron torse nu martèle une lame incandescente sur une enclume, gerbes d'étincelles, mur du fond couvert d'épées, haches et lances déjà forgées suspendues en rang. Dominante chromatique orangé/ambre intense (lueur de la forge), contrastée par des ombres charbonneuses. Contre-plongée dramatique sur le forgeron. Aucun texte, logo ni watermark.
 
+## Combat (session en cours)
+
+> Bannière illustrée ultra-large (format cinéma ~21:9), style pulp sword & sorcery peint et encré (BD fantasy années 80, façon Frank Frazetta/Boris Vallejo), fort contraste, ombres profondes. Une mêlée en plein combat : un guerrier héroïque dévie de son épée le coup d'une créature humanoïde monstrueuse (peau écailleuse, crocs, armure de cuir sombre), étincelles au contact des lames, poussière et débris soulevés au sol, deux ou trois silhouettes de combattants secondaires floutées en arrière-plan dans la fumée. Décor de ruines antiques envahies par la jungle, colonnes brisées. Dominante chromatique rouge/orangé profond avec des reflets d'acier froid sur les lames, lumière dramatique rasante. Contre-plongée, composition dynamique et diagonale (pas de pose statique). Aucun texte, logo ni watermark dans l'image.
+
 ## Armures
 
 > Bannière illustrée ultra-large (format cinéma ~21:9), style pulp sword & sorcery peint et encré (BD fantasy années 80). Une armure de plates ornée est trempée dans un bac d'eau par un armurier, vapeur s'élevant dans l'air, rangée d'autres armures et boucliers exposés sur des présentoirs en arrière-plan dans une salle de pierre. Dominante chromatique bleu acier / gris froid, contrastée par la lueur orangée d'une forge en fond de scène. Contre-plongée légère. Aucun texte, logo ni watermark.

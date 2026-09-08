@@ -1,0 +1,91 @@
+<div class="cp-board">
+  <div class="cp-map" #mapEl [style.--cp-terrain-image]="terrainImage()">
+    <button type="button" class="cp-terrain-trigger" [matMenuTriggerFor]="terrainMenu" aria-label="Fond de la battlemap">
+      <mat-icon>layers</mat-icon>
+    </button>
+    <mat-menu #terrainMenu="matMenu">
+      @for (option of terrainOptions; track option.value) {
+        <button mat-menu-item type="button" [class.cp-terrain-option--active]="terrain() === option.value" (click)="setTerrain(option.value)">
+          {{ option.label }}
+        </button>
+      }
+    </mat-menu>
+
+    @for (token of heroTokens(); track token.key; let i = $index) {
+      <ng-container *ngTemplateOutlet="tokenTpl; context: {token, i, camp: 'heros'}" />
+    }
+
+    @for (token of adversaireTokens(); track token.key; let i = $index) {
+      <ng-container *ngTemplateOutlet="tokenTpl; context: {token, i, camp: 'adversaires'}" />
+    }
+  </div>
+</div>
+
+<ng-template #tokenTpl let-token="token" let-i="i" let-camp="camp">
+  <div
+    class="cp-token-anchor"
+    [style]="tokenStyle(token, i, camp)"
+    cdkDrag
+    cdkDragBoundary=".cp-map"
+    (cdkDragEnded)="onTokenDragEnded(token, $event)"
+    (click)="onTokenClick(token, $event)"
+    (dblclick)="openStatblock(token, $event)"
+  >
+    <div [class]="tokenClass(token)">
+      @if (mode() === 'combat' && token.lockedRound1) {
+        <span class="cp-token-lock" title="Bloqué round 1"></span>
+      }
+      <div [class]="'cp-token-portrait' + (hasAvatar(token) ? '' : ' cp-token-portrait--fallback cp-token-portrait--' + token.kind)">
+        @if (hasAvatar(token)) {
+          <img [src]="token.avatar" [alt]="token.nom" class="cp-token-avatar" (error)="onAvatarError(token)" />
+          @if (mode() === 'combat') {
+            <span [class]="'cp-token-kind cp-token-kind--' + token.kind">
+              @if (kindIconIsSvg(token.kind)) {
+                <mat-icon [svgIcon]="kindIcon(token.kind)" />
+              } @else {
+                <mat-icon>{{ kindIcon(token.kind) }}</mat-icon>
+              }
+            </span>
+          }
+        } @else if (mode() === 'combat') {
+          @if (kindIconIsSvg(token.kind)) {
+            <mat-icon [svgIcon]="kindIcon(token.kind)" />
+          } @else {
+            <mat-icon>{{ kindIcon(token.kind) }}</mat-icon>
+          }
+        } @else {
+          <mat-icon>person</mat-icon>
+        }
+        @if (mode() === 'combat' && token.key === activeKey()) {
+          <bol-attack-menu
+            [attackerName]="token.nom"
+            [armes]="armesFor(token)"
+            [stats]="combatStatsFor(token)"
+            [combatOptions]="attackMenuCombatOptions()"
+            (opened)="loadArmes(token)"
+            (confirmed)="onAttackConfirmed(token, $event)"
+          />
+        } @else if (mode() === 'libre' && token.kind === 'hero') {
+          <bol-hero-action-menu [heroName]="token.nom" (actionRoll)="onActionRoll(token)" />
+        }
+
+        <button
+          type="button"
+          class="cp-token-card-btn"
+          [attr.aria-label]="'Voir le statbloc de ' + token.nom"
+          (click)="openStatblock(token, $event)"
+        >
+          <mat-icon>badge</mat-icon>
+        </button>
+      </div>
+      <p class="cp-token-name">{{ token.nom }}</p>
+      @if (token.vitaliteMax !== null) {
+        <div class="cp-token-hpbar"><i [style.width.%]="hpPct(token)" [style.background]="hpColor(token)"></i></div>
+        <span class="cp-token-hpval">{{ token.vitaliteCourante }} / {{ token.vitaliteMax }}</span>
+      }
+      @if (attackSourceKey() === token.key) {
+        <span class="cp-token-hint">Choisir une cible…</span>
+      }
+    </div>
+  </div>
+</ng-template>

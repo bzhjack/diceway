@@ -1,0 +1,121 @@
+:host {
+  display: block;
+  flex-shrink: 0;
+}
+
+.cp-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.7rem 1.1rem;
+  border-bottom: 1px solid var(--dw-border);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--dw-surface-0) 88%, transparent) 0%, color-mix(in srgb, var(--dw-surface-0) 55%, transparent) 45%, color-mix(in srgb, var(--dw-surface-0) 88%, transparent) 100%),
+    url('/assets/bol/header-combat.png') center / cover no-repeat;
+}
+
+.cp-back {
+  flex-shrink: 0;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--dw-border);
+  border-radius: 8px;
+  color: var(--dw-surface-500);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--dw-surface-800);
+    border-color: var(--dw-surface-500);
+  }
+}
+
+.cp-header-title {
+  flex: 1;
+  min-width: 0;
+
+  h1 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--dw-surface-900);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.cp-header-actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cp-header-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.42rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 1.05rem;
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  &:hover {
+    background: color-mix(in srgb, currentColor 16%, transparent);
+  }
+}
+
+.cp-header-action--gold {
+  color: var(--dw-color-legendary);
+  border-color: color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);
+  background: color-mix(in srgb, var(--dw-color-legendary) 10%, transparent);
+}
+
+.cp-header-action--green {
+  color: var(--dw-color-reussite);
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 45%, transparent);
+  background: color-mix(in srgb, var(--dw-color-reussite) 10%, transparent);
+}
+
+.cp-eyebrow {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dw-color-legendary);
+}
+
+.cp-banner {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.1rem;
+  background: color-mix(in srgb, var(--dw-color-legendary) 14%, transparent);
+  color: var(--dw-color-legendary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-bottom: 1px solid color-mix(in srgb, var(--dw-color-legendary) 30%, transparent);
+
+  .mat-icon {
+    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    flex-shrink: 0;
+  }
+}
