@@ -146,6 +146,7 @@ export class SessionPlayPageComponent {
         width: 'min(760px, 94vw)',
         maxWidth: '94vw',
         maxHeight: '85vh',
+        panelClass: 'scd-panel',
         data: {sessionId},
       })
       .afterClosed()

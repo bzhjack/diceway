@@ -96,7 +96,7 @@ export function suggestedAttackResult(
 /**
  * Lance le jet d'attaque (2d6 + bonus attaquant − défense cible, seuil 9+) puis, en cas de succès,
  * le jet de dégâts (dé d'arme + bonus de vigueur − protection). Encapsulation désactivée à dessein,
- * même pattern que `InitiativeRollDialogComponent` (voir `panelClass: 'atd-panel'` côté appelant).
+ * même pattern que `ActionRollDialogComponent` (voir `panelClass: 'atd-panel'` côté appelant).
  */
 @Component({
   selector: 'bol-attack-roll-dialog',
