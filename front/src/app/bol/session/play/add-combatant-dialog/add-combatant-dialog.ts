@@ -27,6 +27,11 @@ function duplicateKey(kind: CombatantKind, sourceId: string): string {
   return `${kind}:${String(sourceId)}`;
 }
 
+/** Un héros ne peut jamais être un adversaire : le toggle de camp du dialog ne s'applique qu'aux pnj/créatures/démons. */
+export function resolveAddCombatantCamp(kind: CombatantKind, toggleCamp: CombatCamp): CombatCamp {
+  return kind === 'hero' ? 'heros' : toggleCamp;
+}
+
 /** Dialog d'ajout d'un combattant à une session déjà lancée (contrairement au picker de préparation, chaque clic ajoute immédiatement côté backend). */
 @Component({
   selector: 'bol-add-combatant-dialog',
@@ -97,7 +102,11 @@ export class AddCombatantDialogComponent {
 
     this.pendingCatalogId.set(entry.catalogId);
     this.fightSessionService
-      .addCombatant(this.data.sessionId, {kind: entry.kind, sourceId: entry.sourceId, camp: this.camp()})
+      .addCombatant(this.data.sessionId, {
+        kind: entry.kind,
+        sourceId: entry.sourceId,
+        camp: resolveAddCombatantCamp(entry.kind, this.camp()),
+      })
       .subscribe({
         next: () => {
           this.pendingCatalogId.set(null);

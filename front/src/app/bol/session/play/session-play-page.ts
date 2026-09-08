@@ -28,7 +28,7 @@ import {
 } from '../../shared/statblock/bol-statblock.builders';
 import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialog';
 import {resolveAttackStats} from '../combat-attack.util';
-import {buildPlayBoard, EMPTY_AVATAR, PlayToken} from '../combat-play.util';
+import {buildPlayBoard, canTarget, EMPTY_AVATAR, PlayToken} from '../combat-play.util';
 import {ActionRollDiceTrait, ActionRollDialogComponent} from './action-roll-dialog/action-roll-dialog';
 import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
 import {AttackMenuComponent, CombatReminderStat} from './attack-menu/attack-menu';
@@ -148,9 +148,6 @@ export class SessionPlayPageComponent {
 
   /** Jeton attaquant en cours de ciblage (menu épée confirmé) — null hors mode ciblage. */
   protected readonly attackSourceKey = signal<string | null>(null);
-  protected readonly attackSourceCamp = computed(
-    () => this.orderedTokens().find((t) => t.key === this.attackSourceKey())?.camp ?? null,
-  );
 
   /** Dégâts de l'arme choisie dans le menu épée pour l'attaquant en cours de ciblage. */
   private readonly attackDegats = signal<string | null>(null);
@@ -396,7 +393,7 @@ export class SessionPlayPageComponent {
     }
 
     const attacker = this.orderedTokens().find((t) => t.key === sourceKey);
-    if (!attacker || token.camp === attacker.camp) {
+    if (!attacker || !canTarget(token, sourceKey)) {
       return;
     }
 
@@ -428,6 +425,7 @@ export class SessionPlayPageComponent {
             targetAvatar: target.avatar,
             attacker: finalAttacker,
             target: targetStats,
+            legendaryBonusActive: attacker.tier === 'legendaire',
           },
         })
         .afterClosed()
@@ -691,8 +689,7 @@ export class SessionPlayPageComponent {
     const active = token.key === this.activeKey() ? ' cp-token--active' : '';
     const sourceKey = this.attackSourceKey();
     const isSource = sourceKey && token.key === sourceKey ? ' cp-token--attack-source' : '';
-    const isTargetable =
-      sourceKey && token.key !== sourceKey && token.camp !== this.attackSourceCamp() ? ' cp-token--attack-target' : '';
+    const isTargetable = canTarget(token, sourceKey) ? ' cp-token--attack-target' : '';
     // En mode ciblage, aucun jeton ne doit révéler son épée au survol : on clique la cible directement.
     const targeting = sourceKey ? ' cp-token--targeting' : '';
     return `cp-token cp-token--${token.kind}${active}${isSource}${isTargetable}${targeting}`;

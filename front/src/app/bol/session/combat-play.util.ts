@@ -198,3 +198,8 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
 
   return {tokens, legendaryActive: order.legendaryActive};
 }
+
+/** Un attaquant peut cibler n'importe quel autre combattant, y compris de son propre camp — seul se cibler soi-même est exclu. */
+export function canTarget(token: PlayToken, sourceKey: string | null): boolean {
+  return sourceKey !== null && token.key !== sourceKey;
+}

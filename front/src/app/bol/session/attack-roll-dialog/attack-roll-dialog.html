@@ -38,6 +38,13 @@
           <span class="atd-summary-badge">
             <mat-icon>{{ attackSuccess() ? 'check_circle' : 'cancel' }}</mat-icon>
             {{ attackSuccess() ? 'Touché' : 'Manqué' }}
+            @if (attackResult() === 'heroique') {
+              · Héroïque
+            } @else if (attackResult() === 'legendaire') {
+              · Légendaire
+            } @else if (attackResult() === 'echec_critique') {
+              · Critique
+            }
           </span>
         </div>
         <button type="button" class="atd-summary-toggle" (click)="toggleAttackDetail()">
@@ -101,17 +108,53 @@
       {{ attackDice() ? 'Relancer' : 'Lancer 2d6' }}
     </button>
 
-    @if (attackDice() && data.attacker.herosId && !attackSuccess()) {
-      <button
-        type="button"
-        class="atd-divine-favor"
-        [disabled]="rollingAttack() || heroisme() <= 0"
-        [matTooltip]="'Relance le jet d’attaque, conserve le second résultat (02-actions-combat.md)'"
-        (click)="rollAttackWithDivineFavor()"
-      >
-        <mat-icon>auto_awesome</mat-icon>
-        Faveur divine (−1 PH)
-      </button>
+    @if (attackDice() && data.attacker.herosId) {
+      @if (!attackSuccess()) {
+        <button
+          type="button"
+          class="atd-divine-favor"
+          [disabled]="rollingAttack() || heroisme() <= 0"
+          [matTooltip]="'Relance le jet d’attaque, conserve le second résultat (02-actions-combat.md)'"
+          (click)="rollAttackWithDivineFavor()"
+        >
+          <mat-icon>auto_awesome</mat-icon>
+          Faveur divine (−1 PH)
+        </button>
+      }
+
+      @if (isNatural2()) {
+        <button
+          type="button"
+          class="atd-tier-toggle atd-tier-toggle--critique"
+          [class.active]="critiqueChosen()"
+          (click)="toggleCritique()"
+        >
+          <mat-icon>{{ critiqueChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+          Échec critique (+1 PH)
+        </button>
+      } @else if (isNatural12()) {
+        <button
+          type="button"
+          class="atd-tier-toggle atd-tier-toggle--upgrade"
+          [class.active]="legendaryChosen()"
+          [disabled]="!legendaryChosen() && heroisme() <= 0"
+          (click)="toggleLegendaire()"
+        >
+          <mat-icon>{{ legendaryChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+          Succès légendaire (−1 PH)
+        </button>
+      } @else if (canUpgradeToHeroique()) {
+        <button
+          type="button"
+          class="atd-tier-toggle atd-tier-toggle--upgrade"
+          [class.active]="heroicUpgradeChosen()"
+          [disabled]="!heroicUpgradeChosen() && heroisme() <= 0"
+          (click)="toggleHeroicUpgrade()"
+        >
+          <mat-icon>{{ heroicUpgradeChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+          Convertir en succès héroïque (−1 PH)
+        </button>
+      }
     }
   }
 

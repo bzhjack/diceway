@@ -1,10 +1,20 @@
-import {ChangeDetectionStrategy, Component, computed, inject, signal, ViewEncapsulation, viewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+  ViewEncapsulation,
+  viewChild,
+  WritableSignal,
+} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {DiceBoxHostComponent} from '../../../shared/dice-3d/dice-box-host';
+import {InitiativeResultat} from '../../models/bol-fight-session.model';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {ResolvedCombatStats} from '../combat-attack.util';
 import {applyHeroismeDelta} from '../heroisme-spend.util';
@@ -16,6 +26,10 @@ export interface AttackRollDialogData {
   readonly targetAvatar: string;
   readonly attacker: ResolvedCombatStats;
   readonly target: ResolvedCombatStats;
+  /** true si l'attaquant a obtenu un succès légendaire au jet de réaction de cette rencontre
+   * (`PlayToken.tier`) : +1 personnel à tous ses jets d'attaque durant toute la rencontre
+   * (02-actions-combat.md). */
+  readonly legendaryBonusActive: boolean;
 }
 
 type DegatsDiceKind = 'd3' | 'd6' | 'd6m' | 'd6b';
@@ -25,15 +39,34 @@ const DICE_LABELS: Record<DegatsDiceKind, string> = {d3: 'd3', d6: 'd6', d6m: 'd
 /** Seuil de réussite du jet d'attaque BoL (02-actions-combat.md) — fixe, jamais modifié par les règles. */
 const THRESHOLD = 9;
 
-/** Total du jet d'attaque : 2d6 + bonus attaquant − défense cible + modificateur − malus de petit bouclier consommé. */
+/** Total du jet d'attaque : 2d6 + bonus attaquant − défense cible + modificateur − malus de petit
+ * bouclier consommé + bonus +1 légendaire personnel (si actif pour la rencontre). */
 export function computeAttackTotal(
   diceSum: number,
   attackerBonus: number,
   targetDefense: number,
   modifier: number,
   shieldMalus: number,
+  legendaryBonus: number,
 ): number {
-  return diceSum + attackerBonus - targetDefense + modifier - shieldMalus;
+  return diceSum + attackerBonus - targetDefense + modifier - shieldMalus + legendaryBonus;
+}
+
+/** Résultat suggéré d'un jet d'attaque : 2/12 naturels priment sur le seuil (même règle absolue que
+ * pour tout jet d'action, 02-actions-combat.md) — `total` est déjà le résultat de `computeAttackTotal`. */
+export function suggestedAttackResult(
+  dice: readonly [number, number],
+  total: number,
+  threshold: number,
+): InitiativeResultat {
+  const [a, b] = dice;
+  if (a === 1 && b === 1) {
+    return 'echec';
+  }
+  if (a === 6 && b === 6) {
+    return 'heroique';
+  }
+  return total >= threshold ? 'reussite' : 'echec';
 }
 
 /**
@@ -79,13 +112,22 @@ export class AttackRollDialogComponent {
     return d ? d[0] + d[1] : null;
   });
 
+  protected readonly legendaryBonus = computed(() => (this.data.legendaryBonusActive ? 1 : 0));
+
   protected readonly attackTotal = computed(() => {
     const sum = this.attackDiceSum();
     if (sum === null) {
       return null;
     }
     const shieldMalus = this.shieldBonusAvailable() ? this.data.target.bouclierMalusUneAttaque : 0;
-    return computeAttackTotal(sum, this.attackerBonus(), this.targetDefense(), this.modifier(), shieldMalus);
+    return computeAttackTotal(
+      sum,
+      this.attackerBonus(),
+      this.targetDefense(),
+      this.modifier(),
+      shieldMalus,
+      this.legendaryBonus(),
+    );
   });
 
   protected readonly margin = computed(() => {
@@ -97,9 +139,53 @@ export class AttackRollDialogComponent {
     return value >= 0 ? `+${value}` : `${value}`;
   });
 
-  protected readonly attackSuccess = computed(() => {
+  protected readonly isNatural2 = computed(() => {
+    const d = this.attackDice();
+    return !!d && d[0] === 1 && d[1] === 1;
+  });
+
+  protected readonly isNatural12 = computed(() => {
+    const d = this.attackDice();
+    return !!d && d[0] === 6 && d[1] === 6;
+  });
+
+  /** Réussite normale (ni 2 ni 12 naturel) — seul ce cas peut être converti en succès héroïque
+   * par dépense de PH (02-actions-combat.md : on ne peut pas ensuite convertir en légendaire). */
+  protected readonly canUpgradeToHeroique = computed(() => {
+    const d = this.attackDice();
     const t = this.attackTotal();
-    return t !== null && t >= THRESHOLD;
+    if (!d || t === null || this.isNatural2() || this.isNatural12()) {
+      return false;
+    }
+    return suggestedAttackResult(d, t, THRESHOLD) === 'reussite';
+  });
+
+  /** Échec critique (2 naturel) — choix volontaire qui OCTROIE 1 PH. */
+  protected readonly critiqueChosen = signal(false);
+  /** Succès légendaire (12 naturel) — choix volontaire qui DÉPENSE 1 PH. */
+  protected readonly legendaryChosen = signal(false);
+  /** Conversion réussite normale → succès héroïque — choix volontaire qui DÉPENSE 1 PH. */
+  protected readonly heroicUpgradeChosen = signal(false);
+
+  protected readonly attackResult = computed<InitiativeResultat | null>(() => {
+    const d = this.attackDice();
+    const t = this.attackTotal();
+    if (!d || t === null) {
+      return null;
+    }
+    if (this.isNatural2()) {
+      return this.critiqueChosen() ? 'echec_critique' : 'echec';
+    }
+    if (this.isNatural12()) {
+      return this.legendaryChosen() ? 'legendaire' : 'heroique';
+    }
+    const base = suggestedAttackResult(d, t, THRESHOLD);
+    return base === 'reussite' && this.heroicUpgradeChosen() ? 'heroique' : base;
+  });
+
+  protected readonly attackSuccess = computed(() => {
+    const result = this.attackResult();
+    return result === 'reussite' || result === 'heroique' || result === 'legendaire';
   });
 
   // --- Étapes progressives : chaque section rolled se réduit à un résumé, dépliable au clic ---
@@ -131,6 +217,9 @@ export class AttackRollDialogComponent {
     }
     if (shieldMalus !== 0) {
       formula += ` −${shieldMalus} (bouclier)`;
+    }
+    if (this.legendaryBonus() !== 0) {
+      formula += ` +${this.legendaryBonus()} (légendaire)`;
     }
     return formula;
   });
@@ -220,6 +309,7 @@ export class AttackRollDialogComponent {
       await this.diceBox().clear();
       const results = await this.diceBox().rollNotation('2d6');
       const [a, b] = results.map((r) => r.value);
+      this.resetTierChoices();
       this.attackDice.set([a, b]);
       this.expandAttackOverride.set(false);
     } finally {
@@ -238,6 +328,48 @@ export class AttackRollDialogComponent {
 
     applyHeroismeDelta(this.herosService, this.snackBar, herosId, this.heroisme, -1);
     await this.rollAttack();
+  }
+
+  private resetTierChoices(): void {
+    this.critiqueChosen.set(false);
+    this.legendaryChosen.set(false);
+    this.heroicUpgradeChosen.set(false);
+  }
+
+  /** Échec critique (2 naturel) : choisir OCTROIE 1 PH ; revenir en arrière le reprend. */
+  protected toggleCritique(): void {
+    this.toggleTierChoice(this.critiqueChosen, {spendOnChoose: false});
+  }
+
+  /** Succès légendaire (12 naturel) : choisir DÉPENSE 1 PH ; revenir en arrière la rembourse. */
+  protected toggleLegendaire(): void {
+    this.toggleTierChoice(this.legendaryChosen, {spendOnChoose: true});
+  }
+
+  /** Conversion réussite normale → succès héroïque : choisir DÉPENSE 1 PH ; revenir en arrière la rembourse. */
+  protected toggleHeroicUpgrade(): void {
+    this.toggleTierChoice(this.heroicUpgradeChosen, {spendOnChoose: true});
+  }
+
+  /** Bascule un choix de palier (critique/légendaire/héroïque) et son effet en héroïsme — octroi ou
+   * dépense selon `spendOnChoose`, dans les deux sens (choisir / revenir en arrière). Aucun héros
+   * attaquant (pnj/créature/démon) : `herosId` est null, ces bascules ne sont jamais affichées. */
+  private toggleTierChoice(chosen: WritableSignal<boolean>, {spendOnChoose}: {spendOnChoose: boolean}): void {
+    const herosId = this.data.attacker.herosId;
+    if (!herosId) {
+      return;
+    }
+
+    const wasChosen = chosen();
+    const nextChosen = !wasChosen;
+    if (spendOnChoose && nextChosen && this.heroisme() <= 0) {
+      return;
+    }
+
+    const sign = spendOnChoose ? -1 : 1;
+    const delta = nextChosen ? sign : -sign;
+    chosen.set(nextChosen);
+    applyHeroismeDelta(this.herosService, this.snackBar, herosId, this.heroisme, delta, () => chosen.set(wasChosen));
   }
 
   protected async rollDamage(): Promise<void> {
