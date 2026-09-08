@@ -57,6 +57,40 @@
   gap: 0.5rem;
 }
 
+.cp-header-libraries {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding-right: 0.6rem;
+  margin-right: 0.35rem;
+  border-right: 1px solid color-mix(in srgb, var(--dw-surface-500) 40%, transparent);
+}
+
+.cp-header-lib-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: 1px solid var(--dw-border);
+  background: color-mix(in srgb, var(--dw-surface-0) 55%, transparent);
+  color: var(--dw-surface-500);
+  text-decoration: none;
+
+  .mat-icon {
+    font-size: 1.15rem;
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+
+  &:hover {
+    color: var(--dw-surface-900);
+    border-color: var(--dw-surface-500);
+  }
+}
+
 .cp-header-action {
   display: inline-flex;
   align-items: center;
