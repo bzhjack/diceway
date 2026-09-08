@@ -294,17 +294,16 @@ export class SessionPlayPageComponent {
   /** Consultation du statbloc d'un jeton (récupéré en direct, seules les stats de combat sont snapshotées). */
   protected openStatblockFor(token: PlayToken): void {
     const sourceId = token.combat.sourceId;
-    if (!sourceId) {
+    const sessionId = this.session()?.id;
+    if (!sourceId || !sessionId) {
       return;
     }
 
+    /** Lien "Modifier la fiche" (bol-statblock) : revenir sur cette session de combat après édition. */
+    const returnUrl = `/session/${sessionId}/play`;
+
     switch (token.kind) {
       case 'hero': {
-        const sessionId = this.session()?.id;
-        if (!sessionId) {
-          return;
-        }
-
         this.herosService
           .heros(sourceId)
           .pipe(take(1))
@@ -327,6 +326,7 @@ export class SessionPlayPageComponent {
                   armures: (hero.armures as (BolHerosArmureModel | number)[]).filter(
                     (armure): armure is BolHerosArmureModel => typeof armure === 'object',
                   ),
+                  returnUrl,
                 },
               })
               .afterClosed()
@@ -343,7 +343,11 @@ export class SessionPlayPageComponent {
           .pnj(sourceId)
           .pipe(take(1))
           .subscribe((pnj) =>
-            openStatblockDialog(this.dialog, BolStatblockComponent, {data: pnjStatblockData(pnj), imageSrc: token.avatar}),
+            openStatblockDialog(this.dialog, BolStatblockComponent, {
+              data: pnjStatblockData(pnj),
+              imageSrc: token.avatar,
+              returnUrl,
+            }),
           );
         break;
       case 'creature':
@@ -354,6 +358,7 @@ export class SessionPlayPageComponent {
             openStatblockDialog(this.dialog, BolStatblockComponent, {
               data: creatureStatblockData(creature),
               imageSrc: token.avatar,
+              returnUrl,
             }),
           );
         break;
@@ -362,7 +367,11 @@ export class SessionPlayPageComponent {
           .demon(sourceId)
           .pipe(take(1))
           .subscribe((demon) =>
-            openStatblockDialog(this.dialog, BolStatblockComponent, {data: demonStatblockData(demon), imageSrc: token.avatar}),
+            openStatblockDialog(this.dialog, BolStatblockComponent, {
+              data: demonStatblockData(demon),
+              imageSrc: token.avatar,
+              returnUrl,
+            }),
           );
         break;
     }

@@ -15,6 +15,21 @@
           <h2 class="bol-statblock__title">{{ data().title }}</h2>
         </div>
 
+        @if (data().editRoute) {
+          <div class="bol-statblock__edit-links">
+            <a [routerLink]="data().editRoute" [state]="navigationState()" class="bol-statblock__edit-link">
+              <mat-icon>edit</mat-icon>
+              Modifier la fiche
+            </a>
+            @if (data().advancedEditRoute) {
+              <a [routerLink]="data().advancedEditRoute" [state]="navigationState()" class="bol-statblock__edit-link">
+                <mat-icon>settings</mat-icon>
+                Édition avancée
+              </a>
+            }
+          </div>
+        }
+
         @if (data().chips.length) {
           <div class="bol-statblock__chips">
             @for (chip of data().chips; track chip.label) {

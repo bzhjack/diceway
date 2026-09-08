@@ -282,6 +282,43 @@
   font-variant-numeric: tabular-nums;
 }
 
+.cp-token-totaldef {
+  position: absolute;
+  top: -0.4rem;
+  left: -0.4rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 2px solid var(--dw-surface-0);
+  background: color-mix(in srgb, var(--dw-surface-0) 70%, transparent);
+  color: var(--dw-surface-500);
+  padding: 0;
+  cursor: pointer;
+  z-index: 2;
+
+  .mat-icon {
+    font-size: 0.7rem;
+    width: 0.7rem;
+    height: 0.7rem;
+  }
+
+  &:hover {
+    color: var(--dw-surface-800);
+  }
+}
+
+.cp-token-totaldef--active {
+  background: var(--dw-color-dice-kicker);
+  color: #041225;
+
+  &:hover {
+    color: #041225;
+  }
+}
+
 .cp-token-lock {
   position: absolute;
   top: -0.35rem;

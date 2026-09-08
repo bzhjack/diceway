@@ -4,15 +4,37 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolCombatOptionModel} from '../../../services/bol-combat-reference.service';
+import {dualStrikeDegats, isDualWieldEligible} from '../../combat-attack.util';
 
-/** Postures gérées par ce menu : un simple modificateur au jet d'attaque de l'attaquant
- * (doc/rules/02-actions-combat.md, "Options de combat"). Le combat à deux armes (parade/double
- * frappe) est exclu : il nécessite le choix d'une arme secondaire, pas géré ici. */
-const IN_SCOPE_POSTURE_SLUGS: ReadonlySet<string> = new Set(['none', 'offensive', 'intrepid', 'defensive', 'armor-chink']);
+/** Postures gérées par ce menu (doc/rules/02-actions-combat.md, "Options de combat") — "Défense
+ * totale" en est exclue : elle empêche d'attaquer, donc n'a pas sa place dans le flow épée→ciblage
+ * (voir le bouton dédié sur le jeton, `bol-battlemap`). */
+const IN_SCOPE_POSTURE_SLUGS: ReadonlySet<string> = new Set([
+  'none',
+  'offensive',
+  'intrepid',
+  'defensive',
+  'armor-chink',
+  'dual-parry',
+  'dual-strike',
+]);
+
+const DUAL_WIELD_SLUGS: ReadonlySet<string> = new Set(['dual-parry', 'dual-strike']);
 
 /** Options de combat affichées dans ce menu, triées par ordre d'affichage — "Aucune" en premier. */
 export function filterAttackMenuCombatOptions(options: readonly BolCombatOptionModel[]): readonly BolCombatOptionModel[] {
   return options.filter((o) => IN_SCOPE_POSTURE_SLUGS.has(o.slug)).sort((a, b) => a.ordre - b.ordre);
+}
+
+/** Masque les postures de combat à deux armes tant qu'elles ne sont pas jouables : l'arme principale
+ * ET au moins une autre arme doivent toutes deux être légères ou moyennes (02-actions-combat.md). */
+export function filterVisiblePostures(
+  options: readonly BolCombatOptionModel[],
+  mainDegats: string | null,
+  otherArmesDegats: readonly (string | null)[],
+): readonly BolCombatOptionModel[] {
+  const dualWieldPlayable = isDualWieldEligible(mainDegats) && otherArmesDegats.some((d) => isDualWieldEligible(d));
+  return dualWieldPlayable ? options : options.filter((o) => !DUAL_WIELD_SLUGS.has(o.slug));
 }
 
 /** Options toujours disponibles en plus des armes équipées (doc/rules/02-actions-combat.md, table des dégâts). */
@@ -67,10 +89,10 @@ export class AttackMenuComponent {
 
   /** Armes équipées + options toujours disponibles (mains nues, arme improvisée). */
   protected readonly displayArmes = computed(() => [...this.armes(), MAINS_NUES, ARME_IMPROVISEE]);
-  protected readonly displayOptions = computed(() => filterAttackMenuCombatOptions(this.combatOptions()));
 
   private readonly selectedArmeId = signal<number | null>(null);
   private readonly selectedOptionSlug = signal<string | null>(null);
+  private readonly selectedOffHandId = signal<number | null>(null);
 
   protected readonly effectiveArme = computed(() => {
     const list = this.displayArmes();
@@ -78,15 +100,40 @@ export class AttackMenuComponent {
     return list.find((a) => a.id === id) ?? list[0];
   });
 
+  /** Postures visibles pour l'arme principale actuellement choisie — masque le combat à deux armes
+   * tant qu'aucune autre arme légère/moyenne n'est disponible en second. */
+  protected readonly visibleOptions = computed(() => {
+    const otherDegats = this.eligibleOffHandArmes().map((a) => a.arme?.degats ?? null);
+    return filterVisiblePostures(filterAttackMenuCombatOptions(this.combatOptions()), this.effectiveArme()?.arme?.degats ?? null, otherDegats);
+  });
+
   protected readonly effectiveOption = computed(() => {
-    const list = this.displayOptions();
+    const list = this.visibleOptions();
     const slug = this.selectedOptionSlug();
     return list.find((o) => o.slug === slug) ?? list[0] ?? null;
   });
 
+  protected readonly isDualWieldSelected = computed(() => DUAL_WIELD_SLUGS.has(this.effectiveOption()?.slug ?? ''));
+
+  /** Armes éligibles en second (légères/moyennes, hors l'arme principale actuellement choisie). */
+  protected readonly eligibleOffHandArmes = computed(() => {
+    const mainId = this.effectiveArme()?.id;
+    return this.displayArmes().filter((a) => a.id !== mainId && isDualWieldEligible(a.arme?.degats));
+  });
+
+  protected readonly effectiveOffHand = computed(() => {
+    const list = this.eligibleOffHandArmes();
+    const id = this.selectedOffHandId();
+    return list.find((a) => a.id === id) ?? list[0] ?? null;
+  });
+
+  /** "Cibler" reste désactivé si une posture à deux armes est choisie sans arme secondaire jouable. */
+  protected readonly canConfirm = computed(() => !this.isDualWieldSelected() || !!this.effectiveOffHand());
+
   protected reset(): void {
     this.selectedArmeId.set(null);
     this.selectedOptionSlug.set(null);
+    this.selectedOffHandId.set(null);
     this.opened.emit();
   }
 
@@ -96,12 +143,27 @@ export class AttackMenuComponent {
 
   protected selectOption(slug: string): void {
     this.selectedOptionSlug.set(slug);
+    if (!DUAL_WIELD_SLUGS.has(slug)) {
+      this.selectedOffHandId.set(null);
+    }
+  }
+
+  protected selectOffHand(id: number | undefined): void {
+    this.selectedOffHandId.set(id ?? null);
   }
 
   protected confirm(): void {
+    if (!this.canConfirm()) {
+      return;
+    }
+
     const option = this.effectiveOption();
+    const mainDegats = this.effectiveArme()?.arme?.degats ?? null;
+    const offHand = this.effectiveOffHand();
+    const degats = option?.slug === 'dual-strike' && offHand ? dualStrikeDegats(mainDegats, offHand.arme?.degats) : mainDegats;
+
     this.confirmed.emit({
-      degats: this.effectiveArme()?.arme?.degats ?? null,
+      degats,
       posture: option && option.slug !== 'none' ? option : null,
     });
   }

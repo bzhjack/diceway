@@ -26,6 +26,8 @@ export interface HeroStatblockDialogData {
   readonly vitaliteMax: number;
   readonly heroisme: number;
   readonly armures: readonly BolHerosArmureModel[];
+  /** Page à laquelle revenir après édition depuis le lien "Modifier la fiche" (bol-statblock). */
+  readonly returnUrl: string | null;
 }
 
 /** Armure de héros dont le catalogue (`armure`) est garanti chargé — pour l'équipement en séance. */

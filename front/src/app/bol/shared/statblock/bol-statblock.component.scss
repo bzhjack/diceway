@@ -113,6 +113,37 @@
   color: var(--dw-color-text-bright);
 }
 
+.bol-statblock__edit-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.bol-statblock__edit-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid var(--dw-border);
+  background: color-mix(in srgb, var(--dw-surface-0) 45%, transparent);
+  color: var(--dw-surface-600);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-decoration: none;
+
+  .mat-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &:hover {
+    color: var(--dw-surface-900);
+    border-color: var(--dw-surface-500);
+  }
+}
+
 .bol-statblock__chips {
   display: flex;
   flex-wrap: wrap;

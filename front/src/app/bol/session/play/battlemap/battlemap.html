@@ -24,6 +24,18 @@
       @if (mode() === 'combat' && token.lockedRound1) {
         <span class="cp-token-lock" title="Bloqué round 1"></span>
       }
+      @if (mode() === 'combat' && token.kind === 'hero') {
+        <button
+          type="button"
+          class="cp-token-totaldef"
+          [class.cp-token-totaldef--active]="hasTotalDefense(token)"
+          [attr.aria-label]="'Défense totale pour ' + token.nom"
+          [matTooltip]="'Défense totale : +2 en défense ce round, pas d’attaque — à ajouter à la main sur Défense cible au prochain jet subi'"
+          (click)="toggleTotalDefense(token, $event)"
+        >
+          <mat-icon>shield</mat-icon>
+        </button>
+      }
       <div [class]="'cp-token-portrait' + (hasAvatar(token) ? '' : ' cp-token-portrait--fallback cp-token-portrait--' + token.kind)">
         @if (hasAvatar(token)) {
           <img [src]="token.avatar" [alt]="token.nom" class="cp-token-avatar" (error)="onAvatarError(token)" />

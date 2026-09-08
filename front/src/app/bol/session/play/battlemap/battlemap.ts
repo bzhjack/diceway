@@ -2,6 +2,7 @@ import {CdkDragEnd, DragDropModule} from '@angular/cdk/drag-drop';
 import {NgTemplateOutlet} from '@angular/common';
 import {ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, output, signal, viewChild} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {take} from 'rxjs';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {CombatCamp} from '../../../models/bol-fight-session.model';
@@ -62,7 +63,7 @@ export interface TokenPositionChange {
  */
 @Component({
   selector: 'bol-battlemap',
-  imports: [MatIconModule, DragDropModule, NgTemplateOutlet, AttackMenuComponent, HeroActionMenuComponent],
+  imports: [MatIconModule, MatTooltipModule, DragDropModule, NgTemplateOutlet, AttackMenuComponent, HeroActionMenuComponent],
   templateUrl: './battlemap.html',
   styleUrl: './battlemap.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -108,6 +109,12 @@ export class BattlemapComponent {
 
   private readonly allTokens = computed(() => [...this.heroTokens(), ...this.adversaireTokens()]);
 
+  /** "Défense totale" (02-actions-combat.md) : +2 en défense, pas d'attaque ce round — n'a pas sa
+   * place dans le menu épée (qui suppose une attaque). Purement un pense-bête visuel pour le MJ, qui
+   * ajuste "Défense cible" à la main au prochain jet d'attaque subi (même limitation que le volet
+   * défensif des postures : pas de persistance d'état de round côté session). */
+  protected readonly totalDefenseKeys = signal<ReadonlySet<string>>(new Set());
+
   constructor() {
     this.combatReferenceService.getCombatOptions().pipe(take(1)).subscribe((options) => this.combatOptions.set(options));
   }
@@ -118,6 +125,23 @@ export class BattlemapComponent {
 
   protected onAvatarError(token: PlayToken): void {
     this.brokenAvatars.update((set) => new Set(set).add(token.key));
+  }
+
+  protected hasTotalDefense(token: PlayToken): boolean {
+    return this.totalDefenseKeys().has(token.key);
+  }
+
+  protected toggleTotalDefense(token: PlayToken, event: Event): void {
+    event.stopPropagation();
+    this.totalDefenseKeys.update((set) => {
+      const next = new Set(set);
+      if (next.has(token.key)) {
+        next.delete(token.key);
+      } else {
+        next.add(token.key);
+      }
+      return next;
+    });
   }
 
   /** Menu épée ouvert sur un jeton : charge les armes + attributs du héros à la demande (pas de préchargement pour tout le plateau). */

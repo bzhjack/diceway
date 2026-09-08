@@ -52,6 +52,8 @@ export function creatureStatblockData(creature: BolCreatureModel): BolStatblockD
       {label: 'Déplacement', value: creature.taille.deplacement || '—'},
     ],
     wideTiles: false,
+    editRoute: ['/create/creature', String(creature.id)],
+    advancedEditRoute: null,
     sections: [
       {
         title: 'Capacités',
@@ -89,6 +91,8 @@ export function demonStatblockData(demon: BolDemonModel): BolStatblockData {
       {label: 'Tir', value: demon.tir},
     ],
     wideTiles: false,
+    editRoute: ['/create/demon', String(demon.id)],
+    advancedEditRoute: null,
     sections: [
       {
         title: 'Pouvoirs infernaux',
@@ -117,7 +121,15 @@ export function heroStatblockData(hero: BolHerosModel): BolStatblockData {
   }
 
   // Un héros appartient toujours à l'utilisateur : pas de tag « Création ».
-  return herosLikeStatblockData(hero, hero.origines.nom || 'Héros sans nom', chips, false);
+  const advancedEditRoute: readonly [string, string] | null = hero.active ? null : ['/create/hero-advanced', String(hero.id)];
+  return herosLikeStatblockData(
+    hero,
+    hero.origines.nom || 'Héros sans nom',
+    chips,
+    false,
+    ['/create/hero', String(hero.id)],
+    advancedEditRoute,
+  );
 }
 
 export function pnjStatblockData(pnj: BolHerosModel): BolStatblockData {
@@ -131,7 +143,14 @@ export function pnjStatblockData(pnj: BolHerosModel): BolStatblockData {
     chips.push({label: pnj.origines.region.region, variant: 'muted'});
   }
 
-  return herosLikeStatblockData(pnj, pnj.origines.nom || 'PNJ sans nom', chips, Boolean(pnj.user_id));
+  return herosLikeStatblockData(
+    pnj,
+    pnj.origines.nom || 'PNJ sans nom',
+    chips,
+    Boolean(pnj.user_id),
+    ['/create/pnj', String(pnj.id)],
+    null,
+  );
 }
 
 /** Base commune héros/PNJ (même modèle BolHeros) : bande vitale dérivée de l'équipement + 3 listes. */
@@ -140,6 +159,8 @@ function herosLikeStatblockData(
   title: string,
   chips: readonly BolStatblockChip[],
   isCreation: boolean,
+  editRoute: readonly [string, string],
+  advancedEditRoute: readonly [string, string] | null,
 ): BolStatblockData {
   const weapons = (heros.armes as (BolHerosArmeModel | number)[]).filter(
     (arme): arme is BolHerosArmeModel => typeof arme === 'object' && Boolean(arme.arme),
@@ -225,6 +246,8 @@ function herosLikeStatblockData(
       {label: 'Déf', value: heros.combat.defense_effective},
     ],
     wideTiles: true,
+    editRoute,
+    advancedEditRoute,
     sections,
   };
 }

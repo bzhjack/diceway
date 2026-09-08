@@ -40,10 +40,10 @@
       }
     </div>
 
-    @if (displayOptions().length > 1) {
+    @if (visibleOptions().length > 1) {
       <span class="am-eyebrow">Posture</span>
       <div class="am-chips">
-        @for (o of displayOptions(); track o.slug) {
+        @for (o of visibleOptions(); track o.slug) {
           <button
             type="button"
             class="am-chip"
@@ -57,7 +57,32 @@
       </div>
     }
 
-    <button type="button" class="am-confirm" (click)="confirm(); trigger.closeMenu()">
+    @if (isDualWieldSelected()) {
+      <span class="am-eyebrow">Arme secondaire</span>
+      <div class="am-chips">
+        @for (a of eligibleOffHandArmes(); track a.id) {
+          <button
+            type="button"
+            class="am-chip"
+            [class.am-chip--selected]="effectiveOffHand()?.id === a.id"
+            (click)="selectOffHand(a.id)"
+          >
+            {{ a.arme?.arme }}
+            @if (a.arme?.degats) {
+              <span class="am-chip-mod">{{ a.arme?.degats }}</span>
+            }
+          </button>
+        }
+      </div>
+    }
+
+    <button
+      type="button"
+      class="am-confirm"
+      [disabled]="!canConfirm()"
+      [matTooltip]="canConfirm() ? '' : 'Choisissez une arme secondaire légère ou moyenne'"
+      (click)="confirm(); trigger.closeMenu()"
+    >
       <mat-icon>my_location</mat-icon>
       Cibler
     </button>
