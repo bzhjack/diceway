@@ -40,6 +40,23 @@
       }
     </div>
 
+    @if (displayOptions().length > 1) {
+      <span class="am-eyebrow">Posture</span>
+      <div class="am-chips">
+        @for (o of displayOptions(); track o.slug) {
+          <button
+            type="button"
+            class="am-chip"
+            [class.am-chip--selected]="effectiveOption()?.slug === o.slug"
+            [matTooltip]="o.note"
+            (click)="selectOption(o.slug)"
+          >
+            {{ o.label }}
+          </button>
+        }
+      </div>
+    }
+
     <button type="button" class="am-confirm" (click)="confirm(); trigger.closeMenu()">
       <mat-icon>my_location</mat-icon>
       Cibler

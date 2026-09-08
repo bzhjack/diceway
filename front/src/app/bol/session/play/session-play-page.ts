@@ -13,6 +13,7 @@ import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {BolHerosArmureModel} from '../../models/bol-armure.model';
 import {BolFightSessionModel, CombatCamp} from '../../models/bol-fight-session.model';
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
+import {BolCombatOptionModel, BolCombatReferenceService} from '../../services/bol-combat-reference.service';
 import {BolCreaturesService} from '../../services/bol-creatures.service';
 import {BolDemonsService} from '../../services/bol-demons.service';
 import {BolHerosService} from '../../services/bol-heros.service';
@@ -31,7 +32,7 @@ import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard, canTarget, EMPTY_AVATAR, PlayToken} from '../combat-play.util';
 import {ActionRollDiceTrait, ActionRollDialogComponent} from './action-roll-dialog/action-roll-dialog';
 import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
-import {AttackMenuComponent, CombatReminderStat} from './attack-menu/attack-menu';
+import {AttackMenuComponent, AttackMenuConfirmation, CombatReminderStat, filterAttackMenuCombatOptions} from './attack-menu/attack-menu';
 import {maybePromptDefierLaMort} from './defier-la-mort-dialog/defier-la-mort.util';
 import {HeroActionMenuComponent} from './hero-action-menu/hero-action-menu';
 import {HeroStatblockDialogComponent} from './hero-statblock-dialog/hero-statblock-dialog';
@@ -101,6 +102,7 @@ export class SessionPlayPageComponent {
   private readonly demonsService = inject(BolDemonsService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly combatReferenceService = inject(BolCombatReferenceService);
 
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
@@ -151,6 +153,12 @@ export class SessionPlayPageComponent {
 
   /** Dégâts de l'arme choisie dans le menu épée pour l'attaquant en cours de ciblage. */
   private readonly attackDegats = signal<string | null>(null);
+  /** Posture de combat choisie dans le menu épée pour l'attaquant en cours de ciblage (`null` = "Aucune"). */
+  private readonly attackPosture = signal<BolCombatOptionModel | null>(null);
+
+  /** Options de combat (postures) — référence statique chargée une fois, filtrée pour le menu épée. */
+  private readonly combatOptions = signal<readonly BolCombatOptionModel[]>([]);
+  protected readonly attackMenuCombatOptions = computed(() => filterAttackMenuCombatOptions(this.combatOptions()));
 
   /** Armes + attributs de combat des héros chargés à la demande (clé de jeton → données), pour remplir le menu épée sans tout précharger. */
   private readonly heroMenuData = signal<ReadonlyMap<string, HeroMenuData>>(new Map());
@@ -171,6 +179,8 @@ export class SessionPlayPageComponent {
   }
 
   constructor() {
+    this.combatReferenceService.getCombatOptions().pipe(take(1)).subscribe((options) => this.combatOptions.set(options));
+
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
       this.errorMessage.set('Combat introuvable.');
@@ -367,15 +377,17 @@ export class SessionPlayPageComponent {
     return stats;
   }
 
-  /** Menu épée confirmé (arme choisie) : entre en mode ciblage pour cet attaquant. */
-  protected onAttackConfirmed(token: PlayToken, degats: string | null): void {
+  /** Menu épée confirmé (arme + posture choisies) : entre en mode ciblage pour cet attaquant. */
+  protected onAttackConfirmed(token: PlayToken, {degats, posture}: AttackMenuConfirmation): void {
     this.attackDegats.set(degats);
+    this.attackPosture.set(posture);
     this.attackSourceKey.set(token.key);
   }
 
   protected cancelTargeting(): void {
     this.attackSourceKey.set(null);
     this.attackDegats.set(null);
+    this.attackPosture.set(null);
   }
 
   /** Clic sur un jeton en mode ciblage : une cible adverse ouvre le dialog d'attaque, l'attaquant lui-même annule. */
@@ -398,11 +410,17 @@ export class SessionPlayPageComponent {
     }
 
     const degats = this.attackDegats();
+    const posture = this.attackPosture();
     this.cancelTargeting();
-    this.openAttackDialog(attacker, token, degats);
+    this.openAttackDialog(attacker, token, degats, posture);
   }
 
-  private openAttackDialog(attacker: PlayToken, target: PlayToken, degats: string | null): void {
+  private openAttackDialog(
+    attacker: PlayToken,
+    target: PlayToken,
+    degats: string | null,
+    posture: BolCombatOptionModel | null,
+  ): void {
     const sessionId = this.session()?.id;
     if (!sessionId) {
       return;
@@ -426,6 +444,7 @@ export class SessionPlayPageComponent {
             attacker: finalAttacker,
             target: targetStats,
             legendaryBonusActive: attacker.tier === 'legendaire',
+            posture: posture ? {label: posture.label, slug: posture.slug, modificateur: posture.modificateur} : null,
           },
         })
         .afterClosed()

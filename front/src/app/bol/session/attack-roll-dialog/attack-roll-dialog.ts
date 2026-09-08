@@ -19,6 +19,17 @@ import {BolHerosService} from '../../services/bol-heros.service';
 import {ResolvedCombatStats} from '../combat-attack.util';
 import {applyHeroismeDelta} from '../heroisme-spend.util';
 
+/** Posture/option de combat choisie dans le menu épée (bol_combat_option) — seul le sous-ensemble
+ * "modificateur simple au jet d'attaque" est géré ici (doc/rules/02-actions-combat.md, "Options de
+ * combat") : offensive/intrépide/défensive/défaut de l'armure. Le volet défensif de ces postures
+ * ("pour tout le round") n'est pas persisté côté session dans cette passe — seul l'attaquant en
+ * bénéficie, sur son propre jet d'attaque. */
+export interface AttackRollDialogPosture {
+  readonly label: string;
+  readonly slug: string;
+  readonly modificateur: number;
+}
+
 export interface AttackRollDialogData {
   readonly attackerNom: string;
   readonly targetNom: string;
@@ -30,6 +41,17 @@ export interface AttackRollDialogData {
    * (`PlayToken.tier`) : +1 personnel à tous ses jets d'attaque durant toute la rencontre
    * (02-actions-combat.md). */
   readonly legendaryBonusActive: boolean;
+  readonly posture: AttackRollDialogPosture | null;
+}
+
+/** Résout le modificateur d'attaque réellement appliqué par la posture choisie. "Attaque au défaut
+ * de l'armure" n'a pas de malus fixe en base (`modificateur_armor: true`) : son malus est la valeur
+ * de protection fixe de la cible (−1/−2/−3 légère/moyenne/lourde, doc/rules/02-actions-combat.md). */
+export function resolvePostureAttackModifier(posture: AttackRollDialogPosture | null, targetProtection: number): number {
+  if (!posture) {
+    return 0;
+  }
+  return posture.slug === 'armor-chink' ? -targetProtection : posture.modificateur;
 }
 
 type DegatsDiceKind = 'd3' | 'd6' | 'd6m' | 'd6b';
@@ -40,7 +62,8 @@ const DICE_LABELS: Record<DegatsDiceKind, string> = {d3: 'd3', d6: 'd6', d6m: 'd
 const THRESHOLD = 9;
 
 /** Total du jet d'attaque : 2d6 + bonus attaquant − défense cible + modificateur − malus de petit
- * bouclier consommé + bonus +1 légendaire personnel (si actif pour la rencontre). */
+ * bouclier consommé + bonus +1 légendaire personnel (si actif pour la rencontre) + modificateur de
+ * posture (offensive/intrépide/défensive/défaut de l'armure). */
 export function computeAttackTotal(
   diceSum: number,
   attackerBonus: number,
@@ -48,8 +71,9 @@ export function computeAttackTotal(
   modifier: number,
   shieldMalus: number,
   legendaryBonus: number,
+  postureModifier: number,
 ): number {
-  return diceSum + attackerBonus - targetDefense + modifier - shieldMalus + legendaryBonus;
+  return diceSum + attackerBonus - targetDefense + modifier - shieldMalus + legendaryBonus + postureModifier;
 }
 
 /** Résultat suggéré d'un jet d'attaque : 2/12 naturels priment sur le seuil (même règle absolue que
@@ -113,6 +137,9 @@ export class AttackRollDialogComponent {
   });
 
   protected readonly legendaryBonus = computed(() => (this.data.legendaryBonusActive ? 1 : 0));
+  protected readonly postureModifier = computed(() =>
+    resolvePostureAttackModifier(this.data.posture, this.data.target.protection),
+  );
 
   protected readonly attackTotal = computed(() => {
     const sum = this.attackDiceSum();
@@ -127,6 +154,7 @@ export class AttackRollDialogComponent {
       this.modifier(),
       shieldMalus,
       this.legendaryBonus(),
+      this.postureModifier(),
     );
   });
 
@@ -218,6 +246,10 @@ export class AttackRollDialogComponent {
     if (shieldMalus !== 0) {
       formula += ` −${shieldMalus} (bouclier)`;
     }
+    const posture = this.postureModifier();
+    if (posture !== 0) {
+      formula += ` ${posture >= 0 ? '+' : ''}${posture} (${this.data.posture?.label.toLowerCase()})`;
+    }
     if (this.legendaryBonus() !== 0) {
       formula += ` +${this.legendaryBonus()} (légendaire)`;
     }
@@ -237,7 +269,9 @@ export class AttackRollDialogComponent {
   // --- Jet de dégâts (uniquement après un jet d'attaque réussi) ---
   protected readonly diceKind = signal<DegatsDiceKind>(this.parseDiceKind(this.data.attacker.degats));
   protected readonly vigueurBonus = signal(this.data.attacker.vigueur);
-  protected readonly protection = signal(this.data.target.protection);
+  /** "Attaque au défaut de l'armure" (02-actions-combat.md) : si l'attaque touche, les dégâts
+   * ignorent entièrement la protection de la cible. */
+  protected readonly protection = signal(this.data.posture?.slug === 'armor-chink' ? 0 : this.data.target.protection);
 
   protected readonly rollingDamage = signal(false);
   protected readonly damageDice = signal<readonly number[] | null>(null);

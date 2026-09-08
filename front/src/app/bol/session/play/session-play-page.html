@@ -150,6 +150,7 @@
             [attackerName]="token.nom"
             [armes]="armesFor(token)"
             [stats]="combatStatsFor(token)"
+            [combatOptions]="attackMenuCombatOptions()"
             (opened)="loadArmes(token)"
             (confirmed)="onAttackConfirmed(token, $event)"
           />
