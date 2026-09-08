@@ -48,6 +48,18 @@ BD (façon Frazetta/Boris Vallejo/pulp fantasy des années 80), pas de cadre.
 
 > Bannière illustrée ultra-large (format cinéma ~21:9), style pulp sword & sorcery peint et encré (BD fantasy années 80, façon Frank Frazetta/Boris Vallejo), fort contraste, ombres profondes. Une mêlée en plein combat : un guerrier héroïque dévie de son épée le coup d'une créature humanoïde monstrueuse (peau écailleuse, crocs, armure de cuir sombre), étincelles au contact des lames, poussière et débris soulevés au sol, deux ou trois silhouettes de combattants secondaires floutées en arrière-plan dans la fumée. Décor de ruines antiques envahies par la jungle, colonnes brisées. Dominante chromatique rouge/orangé profond avec des reflets d'acier froid sur les lames, lumière dramatique rasante. Contre-plongée, composition dynamique et diagonale (pas de pose statique). Aucun texte, logo ni watermark dans l'image.
 
+## Fond de battlemap (texture tuilable)
+
+Contrairement aux bannières ci-dessus, ces textures sont vues du dessus (plan
+zénithal, pas de perspective dramatique) et doivent se répéter sans coupure
+visible — utilisées en `background-repeat: repeat` sur `.cp-map`
+(`front/src/app/bol/session/play/battlemap/`), tuile de 8rem. Fichiers
+attendus dans `front/src/assets/bol/` : `herbe.jpg` (déjà en place),
+`skins/dalles.jpg` (déjà en place), `skins/terre.png` (actuellement vide,
+à régénérer).
+
+> Texture de sol vue du dessus (caméra droit au-dessus, plan zénithal strict, aucune perspective), format carré, conçue pour être répétée en mosaïque sans coupure visible : motif continu, sans direction ni ombre portée marquée, bords parfaitement raccords d'un côté à l'autre. Champ de bataille après un affrontement : herbe piétinée et terre retournée, touffes clairsemées, quelques traces de combat discrètes (éclats de bois, taches sombres, légères empreintes), dans le même style peint et encré façon comics fantasy des années 80 (Frank Frazetta/Boris Vallejo) que le reste des illustrations du jeu. Palette vert olive et brun terreux désaturée, lumière plate et diffuse (pas de soleil directionnel, pas d'ombres longues). Aucun texte, logo ni watermark.
+
 ## Armures
 
 > Bannière illustrée ultra-large (format cinéma ~21:9), style pulp sword & sorcery peint et encré (BD fantasy années 80). Une armure de plates ornée est trempée dans un bac d'eau par un armurier, vapeur s'élevant dans l'air, rangée d'autres armures et boucliers exposés sur des présentoirs en arrière-plan dans une salle de pierre. Dominante chromatique bleu acier / gris froid, contrastée par la lueur orangée d'une forge en fond de scène. Contre-plongée légère. Aucun texte, logo ni watermark.

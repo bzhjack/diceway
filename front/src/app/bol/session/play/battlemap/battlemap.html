@@ -1,16 +1,5 @@
 <div class="cp-board">
-  <div class="cp-map" #mapEl [style.--cp-terrain-image]="terrainImage()">
-    <button type="button" class="cp-terrain-trigger" [matMenuTriggerFor]="terrainMenu" aria-label="Fond de la battlemap">
-      <mat-icon>layers</mat-icon>
-    </button>
-    <mat-menu #terrainMenu="matMenu">
-      @for (option of terrainOptions; track option.value) {
-        <button mat-menu-item type="button" [class.cp-terrain-option--active]="terrain() === option.value" (click)="setTerrain(option.value)">
-          {{ option.label }}
-        </button>
-      }
-    </mat-menu>
-
+  <div class="cp-map" #mapEl>
     @for (token of heroTokens(); track token.key; let i = $index) {
       <ng-container *ngTemplateOutlet="tokenTpl; context: {token, i, camp: 'heros'}" />
     }

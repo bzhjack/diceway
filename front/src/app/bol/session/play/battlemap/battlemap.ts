@@ -2,7 +2,6 @@ import {CdkDragEnd, DragDropModule} from '@angular/cdk/drag-drop';
 import {NgTemplateOutlet} from '@angular/common';
 import {ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, output, signal, viewChild} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
-import {MatMenuModule} from '@angular/material/menu';
 import {take} from 'rxjs';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {CombatCamp} from '../../../models/bol-fight-session.model';
@@ -30,23 +29,6 @@ function jitter(key: string): {jx: number; jy: number} {
   const jx = ((hash % 1000) / 1000) * 2 - 1;
   const jy = (((hash >> 8) % 1000) / 1000) * 2 - 1;
   return {jx, jy};
-}
-
-export type BattlemapTerrain = 'herbe' | 'dalles' | 'terre';
-
-/** Textures de sol disponibles pour la battlemap (vue du dessus, tuilées) — choix purement
- * cosmétique, mémorisé par navigateur (pas de portée de jeu, pas de persistance côté session). */
-export const BATTLEMAP_TERRAINS: Record<BattlemapTerrain, {readonly label: string; readonly url: string}> = {
-  herbe: {label: 'Herbe', url: '/assets/bol/herbe.jpg'},
-  dalles: {label: 'Dalles', url: '/assets/bol/skins/dalles.jpg'},
-  terre: {label: 'Terre battue', url: '/assets/bol/skins/terre.png'},
-};
-
-const TERRAIN_STORAGE_KEY = 'diceway-battlemap-terrain';
-
-/** Valide une valeur lue en localStorage — retombe sur "herbe" si absente ou corrompue. */
-export function parseBattlemapTerrain(value: string | null): BattlemapTerrain {
-  return value === 'herbe' || value === 'dalles' || value === 'terre' ? value : 'herbe';
 }
 
 /** Armes + attributs de combat d'un héros, chargés à la demande à l'ouverture du menu épée. */
@@ -80,7 +62,7 @@ export interface TokenPositionChange {
  */
 @Component({
   selector: 'bol-battlemap',
-  imports: [MatIconModule, MatMenuModule, DragDropModule, NgTemplateOutlet, AttackMenuComponent, HeroActionMenuComponent],
+  imports: [MatIconModule, DragDropModule, NgTemplateOutlet, AttackMenuComponent, HeroActionMenuComponent],
   templateUrl: './battlemap.html',
   styleUrl: './battlemap.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -111,18 +93,6 @@ export class BattlemapComponent {
 
   /** Jetons (clé) dont l'avatar a échoué au chargement (404 sur un chemin conventionnel sans fichier réel) — retombe sur l'icône de type plutôt qu'une image cassée. */
   private readonly brokenAvatars = signal<ReadonlySet<string>>(new Set());
-
-  protected readonly terrainOptions = Object.entries(BATTLEMAP_TERRAINS).map(([value, {label}]) => ({
-    value: value as BattlemapTerrain,
-    label,
-  }));
-  protected readonly terrain = signal<BattlemapTerrain>(parseBattlemapTerrain(localStorage.getItem(TERRAIN_STORAGE_KEY)));
-  protected readonly terrainImage = computed(() => `url('${BATTLEMAP_TERRAINS[this.terrain()].url}')`);
-
-  protected setTerrain(value: BattlemapTerrain): void {
-    this.terrain.set(value);
-    localStorage.setItem(TERRAIN_STORAGE_KEY, value);
-  }
 
   /** Options de combat (postures) — référence statique chargée une fois, filtrée pour le menu épée. */
   private readonly combatOptions = signal<readonly BolCombatOptionModel[]>([]);

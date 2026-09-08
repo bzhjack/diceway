@@ -29,38 +29,6 @@
   }
 }
 
-.cp-terrain-trigger {
-  position: absolute;
-  top: 0.7rem;
-  right: 0.7rem;
-  z-index: 5;
-  width: 2.1rem;
-  height: 2.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  border: 1px solid var(--dw-border);
-  background: color-mix(in srgb, var(--dw-surface-0) 65%, transparent);
-  color: var(--dw-surface-500);
-
-  &:hover {
-    color: var(--dw-surface-800);
-    border-color: var(--dw-surface-500);
-  }
-
-  .mat-icon {
-    font-size: 1.15rem;
-    width: 1.15rem;
-    height: 1.15rem;
-  }
-}
-
-.cp-terrain-option--active {
-  color: var(--dw-color-legendary);
-  font-weight: 700;
-}
-
 .cp-map {
   position: relative;
   flex: 1;
@@ -69,17 +37,15 @@
   overflow: hidden;
   background-color: var(--dw-surface-0);
   background-image:
-    radial-gradient(ellipse 100% 100% at 50% 50%, transparent 60%, rgba(0, 0, 0, 0.45) 100%),
-    repeating-linear-gradient(0deg, color-mix(in srgb, var(--dw-surface-500) 7%, transparent) 0 1px, transparent 1px 2.4rem),
-    repeating-linear-gradient(90deg, color-mix(in srgb, var(--dw-surface-500) 7%, transparent) 0 1px, transparent 1px 2.4rem),
-    radial-gradient(ellipse 55% 70% at 12% 50%, color-mix(in srgb, var(--dw-color-reussite) 14%, transparent) 0%, transparent 70%),
-    radial-gradient(ellipse 55% 70% at 88% 50%, color-mix(in srgb, var(--dw-color-creature) 14%, transparent) 0%, transparent 70%),
-    /* Assombrit la texture de sol pour rester cohérent avec la palette sombre de l'app. */
-    linear-gradient(rgba(2, 6, 23, 0.6), rgba(2, 6, 23, 0.6)),
-    /* Terrain vu du dessus, tuilé (choix du MJ via le sélecteur — voir --cp-terrain-image). */
-    var(--cp-terrain-image);
-  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat;
-  background-size: auto, auto, auto, auto, auto, auto, 8rem 8rem;
+    radial-gradient(ellipse 100% 100% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.6) 100%),
+    radial-gradient(ellipse 55% 70% at 12% 50%, color-mix(in srgb, var(--dw-color-reussite) 20%, transparent) 0%, transparent 70%),
+    radial-gradient(ellipse 55% 70% at 88% 50%, color-mix(in srgb, var(--dw-color-creature) 20%, transparent) 0%, transparent 70%),
+    /* Assombrit la texture de sol pour faire ressortir les halos de camp et la vignette. */
+    linear-gradient(rgba(2, 6, 23, 0.48), rgba(2, 6, 23, 0.48)),
+    /* Terrain vu du dessus, tuilé (texture 512×512 conçue pour se répéter sans coupure). */
+    url('/assets/bol/skins/dalles.jpg');
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+  background-size: auto, auto, auto, auto, 18rem 18rem;
 }
 
 .cp-token-anchor {

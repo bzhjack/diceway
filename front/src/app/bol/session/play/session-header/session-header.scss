@@ -7,23 +7,24 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  padding: 0.7rem 1.1rem;
+  gap: 1rem;
+  padding: 1.3rem 1.3rem;
   border-bottom: 1px solid var(--dw-border);
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--dw-surface-0) 88%, transparent) 0%, color-mix(in srgb, var(--dw-surface-0) 55%, transparent) 45%, color-mix(in srgb, var(--dw-surface-0) 88%, transparent) 100%),
+    linear-gradient(90deg, color-mix(in srgb, var(--dw-surface-0) 60%, transparent) 0%, color-mix(in srgb, var(--dw-surface-0) 22%, transparent) 45%, color-mix(in srgb, var(--dw-surface-0) 60%, transparent) 100%),
     url('/assets/bol/header-combat.png') center / cover no-repeat;
 }
 
 .cp-back {
   flex-shrink: 0;
-  width: 2.2rem;
-  height: 2.2rem;
+  width: 2.6rem;
+  height: 2.6rem;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid var(--dw-border);
   border-radius: 8px;
+  background: color-mix(in srgb, var(--dw-surface-0) 55%, transparent);
   color: var(--dw-surface-500);
   text-decoration: none;
 
@@ -39,9 +40,10 @@
 
   h1 {
     margin: 0;
-    font-size: 1.05rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--dw-surface-900);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -58,20 +60,20 @@
 .cp-header-action {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.42rem 0.8rem;
+  gap: 0.45rem;
+  padding: 0.6rem 1.1rem;
   border-radius: 999px;
   border: 1px solid transparent;
   font: inherit;
-  font-size: 0.78rem;
+  font-size: 0.9rem;
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
 
   .mat-icon {
-    font-size: 1.05rem;
-    width: 1.05rem;
-    height: 1.05rem;
+    font-size: 1.2rem;
+    width: 1.2rem;
+    height: 1.2rem;
   }
 
   &:hover {
@@ -93,11 +95,13 @@
 
 .cp-eyebrow {
   display: block;
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.18em;
+  margin-bottom: 0.15rem;
   text-transform: uppercase;
   color: var(--dw-color-legendary);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
 }
 
 .cp-banner {
