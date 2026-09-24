@@ -18,82 +18,13 @@
       </div>
     </div>
 
-    <div class="ard-slate">
-      <span class="ard-slate-term">{{ attributeLabels[attribute()] }} <b>{{ data[attribute()] >= 0 ? '+' : '' }}{{ data[attribute()] }}</b></span>
-      @if (carriere(); as c) {
-        <span class="ard-slate-sep">·</span>
-        <span class="ard-slate-term">{{ c.label }} <b>{{ c.value >= 0 ? '+' : '' }}{{ c.value }}</b></span>
-      }
-      @if (equipmentModifier() !== 0) {
-        <span class="ard-slate-sep">·</span>
-        <span class="ard-slate-term">Équipement <b>{{ equipmentModifier() >= 0 ? '+' : '' }}{{ equipmentModifier() }}</b></span>
-      }
-      <span class="ard-slate-sep">·</span>
-      <span class="ard-slate-term">Difficulté <b>{{ difficulty().modifier >= 0 ? '+' : '' }}{{ difficulty().modifier }}</b></span>
-      <span class="ard-slate-sep">·</span>
-      <span class="ard-slate-term">Modificateur <b>{{ modifier() >= 0 ? '+' : '' }}{{ modifier() }}</b></span>
-      <span class="ard-slate-eq">
-        @if (dice(); as d) {
-          @if (manualEntry()) {
-            {{ formula() }}
-          } @else {
-            <span class="ard-die ard-die--formula">{{ d[0] }}</span> + <span class="ard-die ard-die--formula">{{ d[1] }}</span> {{ formulaTail() }}
-          }
-        } @else {
-          {{ formula() }}
-        }
-      </span>
-    </div>
-
-    <div
-      class="ard-ticket"
-      [class.ard-ticket--reussite]="bannerTone() === 'reussite'"
-      [class.ard-ticket--echec]="bannerTone() === 'echec'"
-      [class.ard-ticket--heroique]="bannerTone() === 'heroique'"
-    >
-      <div class="ard-ticket-score">
-        <div class="ard-ticket-total">{{ dice() ? total() : '—' }}</div>
-        <p class="ard-ticket-label">{{ dice() ? resultLabel() : 'En attente' }}</p>
-        @if (manualEntry()) {
-          <span class="ard-manual-badge">Saisie manuelle</span>
-        }
-      </div>
-      <div class="ard-ticket-sep"></div>
-      <div class="ard-ticket-actions">
-        <input
-          type="number"
-          min="2"
-          max="12"
-          step="1"
-          placeholder="Total 2d6 (2-12)"
-          aria-label="Total des deux dés lancés à table"
-          [value]="manualTotal() ?? ''"
-          (input)="onManualTotalInput($any($event.target).value)"
-          (keydown.enter)="submitManualTotal()"
-        />
-        <button
-          type="button"
-          class="ard-manual-confirm"
-          aria-label="Valider le total saisi"
-          [disabled]="!manualTotalValid()"
-          (click)="submitManualTotal()"
-        >
-          <mat-icon>check</mat-icon>
-        </button>
-        <button type="button" class="ard-reroll" [disabled]="rolling()" (click)="roll()">
-          <mat-icon>refresh</mat-icon>
-          {{ dice() ? 'Relancer' : rollButtonLabel() }}
-        </button>
-      </div>
-    </div>
-
-
-    <div class="ard-cols2">
-      <div class="ard-col-a">
-        <div class="ard-row">
-          <div class="ard-row-head">
-            <span class="ard-row-icon ard-row-icon--amber"><mat-icon>bolt</mat-icon></span>
-            <span class="ard-row-label">Attribut</span>
+    <div class="ard-body">
+      <div class="ard-steps">
+        <div class="ard-step">
+          <div class="ard-step-head">
+            <span class="ard-step-num">1</span>
+            <span class="ard-step-title">Attribut</span>
+            <span class="ard-step-hint">Quelle caractéristique porte l'action ?</span>
           </div>
           <mat-button-toggle-group class="ard-toggle" [value]="attribute()" [hideSingleSelectionIndicator]="true" (change)="setAttribute($event)">
             @for (attr of attributes; track attr) {
@@ -102,33 +33,32 @@
               </mat-button-toggle>
             }
           </mat-button-toggle-group>
+
+          @if (carrieres.length) {
+            <div class="ard-substep">
+              <span class="ard-substep-label">Carrière</span>
+              <mat-button-toggle-group
+                class="ard-toggle"
+                [value]="carriere()?.label ?? 'aucune'"
+                [hideSingleSelectionIndicator]="true"
+                (change)="setCarriere($event)"
+              >
+                <mat-button-toggle value="aucune">Aucune</mat-button-toggle>
+                @for (c of carrieres; track c.label) {
+                  <mat-button-toggle [value]="c.label">{{ c.label }} ({{ c.value >= 0 ? '+' : '' }}{{ c.value }})</mat-button-toggle>
+                }
+              </mat-button-toggle-group>
+            </div>
+          }
         </div>
 
-        @if (carrieres.length) {
-          <div class="ard-row">
-            <div class="ard-row-head">
-              <span class="ard-row-icon ard-row-icon--amber"><mat-icon>work</mat-icon></span>
-              <span class="ard-row-label">Carrière</span>
-            </div>
-            <mat-button-toggle-group
-              class="ard-toggle"
-              [value]="carriere()?.label ?? 'aucune'"
-              [hideSingleSelectionIndicator]="true"
-              (change)="setCarriere($event)"
-            >
-              <mat-button-toggle value="aucune">Aucune</mat-button-toggle>
-              @for (c of carrieres; track c.label) {
-                <mat-button-toggle [value]="c.label">{{ c.label }} ({{ c.value >= 0 ? '+' : '' }}{{ c.value }})</mat-button-toggle>
-              }
-            </mat-button-toggle-group>
+        <div class="ard-step">
+          <div class="ard-step-head">
+            <span class="ard-step-num">2</span>
+            <span class="ard-step-title">Difficulté</span>
+            <span class="ard-step-hint">À quel point est-ce risqué ?</span>
           </div>
-        }
-
-        <div class="ard-row">
-          <div class="ard-row-head">
-            <span class="ard-row-icon ard-row-icon--blue"><mat-icon>trending_up</mat-icon></span>
-            <span class="ard-row-label">Difficulté</span>
-          </div>
+          <div class="ard-diff-rail"></div>
           <div class="ard-toggle-stack">
             <mat-button-toggle-group class="ard-toggle" [value]="difficulty().label" [hideSingleSelectionIndicator]="true" (change)="setDifficulty($event)">
               @for (d of difficultiesRow1; track d.label) {
@@ -146,60 +76,143 @@
             </mat-button-toggle-group>
           </div>
         </div>
+
+        <div class="ard-step">
+          <div class="ard-step-head">
+            <span class="ard-step-num">3</span>
+            <span class="ard-step-title">Ajustements</span>
+            <span class="ard-step-hint">Ce qui pousse le jet dans un sens ou l'autre</span>
+          </div>
+
+          @if (avantageTraits.length || desavantageTraits.length) {
+            <div class="ard-substep">
+              <span class="ard-substep-label">Avantages / désavantages</span>
+              <div class="ard-trait-chips">
+                @for (t of avantageTraits; track t.label) {
+                  <button
+                    type="button"
+                    class="ard-trait-chip ard-trait-chip--avantage"
+                    [class.ard-trait-chip--selected]="selectedDiceTraits().has(t.label)"
+                    [matTooltip]="t.domaine ?? ''"
+                    (click)="toggleDiceTrait(t.label)"
+                  >
+                    {{ t.label }}
+                  </button>
+                }
+                @for (t of desavantageTraits; track t.label) {
+                  <button
+                    type="button"
+                    class="ard-trait-chip ard-trait-chip--desavantage"
+                    [class.ard-trait-chip--selected]="selectedDiceTraits().has(t.label)"
+                    [matTooltip]="t.domaine ?? ''"
+                    (click)="toggleDiceTrait(t.label)"
+                  >
+                    {{ t.label }}
+                  </button>
+                }
+              </div>
+              @if (diceCountLabel(); as label) {
+                <span class="ard-trait-summary">{{ label }}</span>
+              }
+            </div>
+          }
+
+          <div class="ard-substep">
+            <span class="ard-substep-label">Modificateur additionnel</span>
+            <div class="ard-modifier-row">
+              <div class="ard-stepper">
+                <button type="button" (click)="incrementModifier(-1)">−</button>
+                <span>{{ modifier() >= 0 ? '+' : '' }}{{ modifier() }}</span>
+                <button type="button" (click)="incrementModifier(1)">+</button>
+              </div>
+              @if (equipmentModifier() !== 0) {
+                <span class="ard-equip-chip">Équipement {{ equipmentModifier() >= 0 ? '+' : '' }}{{ equipmentModifier() }}</span>
+              }
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="ard-col-b">
-        @if (avantageTraits.length || desavantageTraits.length) {
-          <div class="ard-row">
-            <div class="ard-row-head">
-              <span class="ard-row-icon ard-row-icon--slate"><mat-icon>stars</mat-icon></span>
-              <span class="ard-row-label">Avantages / désavantages</span>
-            </div>
-            <div class="ard-trait-chips">
-              @for (t of avantageTraits; track t.label) {
-                <button
-                  type="button"
-                  class="ard-trait-chip ard-trait-chip--avantage"
-                  [class.ard-trait-chip--selected]="selectedDiceTraits().has(t.label)"
-                  [matTooltip]="t.domaine ?? ''"
-                  (click)="toggleDiceTrait(t.label)"
-                >
-                  {{ t.label }}
-                </button>
-              }
-              @for (t of desavantageTraits; track t.label) {
-                <button
-                  type="button"
-                  class="ard-trait-chip ard-trait-chip--desavantage"
-                  [class.ard-trait-chip--selected]="selectedDiceTraits().has(t.label)"
-                  [matTooltip]="t.domaine ?? ''"
-                  (click)="toggleDiceTrait(t.label)"
-                >
-                  {{ t.label }}
-                </button>
-              }
-            </div>
-            @if (diceCountLabel(); as label) {
-              <span class="ard-trait-summary">{{ label }}</span>
-            }
+      <div class="ard-ledger">
+        <div class="ard-ledger-title">Le jet — {{ data.heroNom }}</div>
+
+        <div class="ard-ledger-line">
+          <span>{{ attributeLabels[attribute()] }}</span>
+          <b>{{ data[attribute()] >= 0 ? '+' : '' }}{{ data[attribute()] }}</b>
+        </div>
+        @if (carriere(); as c) {
+          <div class="ard-ledger-line">
+            <span>{{ c.label }}</span>
+            <b>{{ c.value >= 0 ? '+' : '' }}{{ c.value }}</b>
           </div>
         }
+        @if (equipmentModifier() !== 0) {
+          <div class="ard-ledger-line">
+            <span>Équipement</span>
+            <b>{{ equipmentModifier() >= 0 ? '+' : '' }}{{ equipmentModifier() }}</b>
+          </div>
+        }
+        <div class="ard-ledger-line">
+          <span>{{ difficulty().label }}</span>
+          <b>{{ difficulty().modifier >= 0 ? '+' : '' }}{{ difficulty().modifier }}</b>
+        </div>
+        <div class="ard-ledger-line">
+          <span>Modificateur</span>
+          <b>{{ modifier() >= 0 ? '+' : '' }}{{ modifier() }}</b>
+        </div>
 
-        <div class="ard-row">
-          <div class="ard-row-head">
-            <span class="ard-row-icon ard-row-icon--amber"><mat-icon>tune</mat-icon></span>
-            <span class="ard-row-label">Modificateur additionnel</span>
-          </div>
-          <div class="ard-modifier-row">
-            <div class="ard-stepper">
-              <button type="button" (click)="incrementModifier(-1)">−</button>
-              <span>{{ modifier() >= 0 ? '+' : '' }}{{ modifier() }}</span>
-              <button type="button" (click)="incrementModifier(1)">+</button>
-            </div>
-            @if (equipmentModifier() !== 0) {
-              <span class="ard-equip-chip">Équipement {{ equipmentModifier() >= 0 ? '+' : '' }}{{ equipmentModifier() }}</span>
+        <div class="ard-ledger-formula">
+          @if (dice(); as d) {
+            @if (manualEntry()) {
+              {{ formula() }}
+            } @else {
+              <span class="ard-die ard-die--formula">{{ d[0] }}</span> + <span class="ard-die ard-die--formula">{{ d[1] }}</span> {{ formulaTail() }}
             }
-          </div>
+          } @else {
+            {{ formula() }}
+          }
+        </div>
+
+        <div
+          class="ard-ticket"
+          [class.ard-ticket--reussite]="bannerTone() === 'reussite'"
+          [class.ard-ticket--echec]="bannerTone() === 'echec'"
+          [class.ard-ticket--heroique]="bannerTone() === 'heroique'"
+        >
+          <div class="ard-ticket-total">{{ dice() ? total() : '—' }}</div>
+          <p class="ard-ticket-label">{{ dice() ? resultLabel() : 'En attente' }}</p>
+          @if (manualEntry()) {
+            <span class="ard-manual-badge">Saisie manuelle</span>
+          }
+        </div>
+
+        <button type="button" class="ard-reroll" [disabled]="rolling()" (click)="roll()">
+          <mat-icon>refresh</mat-icon>
+          {{ dice() ? 'Relancer' : rollButtonLabel() }}
+        </button>
+
+        <div class="ard-manual">
+          <span class="ard-manual-hint">ou table&nbsp;:</span>
+          <input
+            type="number"
+            min="2"
+            max="12"
+            step="1"
+            placeholder="2-12"
+            aria-label="Total des deux dés lancés à table"
+            [value]="manualTotal() ?? ''"
+            (input)="onManualTotalInput($any($event.target).value)"
+            (keydown.enter)="submitManualTotal()"
+          />
+          <button
+            type="button"
+            class="ard-manual-confirm"
+            aria-label="Valider le total saisi"
+            [disabled]="!manualTotalValid()"
+            (click)="submitManualTotal()"
+          >
+            <mat-icon>check</mat-icon>
+          </button>
         </div>
 
         @if (isFailure()) {
