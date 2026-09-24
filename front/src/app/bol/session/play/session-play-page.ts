@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@ang
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, RouterLink} from '@angular/router';
-import {forkJoin, take} from 'rxjs';
+import {forkJoin, Observable, of, take, tap} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolHerosArmureModel} from '../../models/bol-armure.model';
@@ -23,7 +23,7 @@ import {
 } from '../../shared/statblock/bol-statblock.builders';
 import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialog';
 import {resolveAttackStats} from '../combat-attack.util';
-import {buildPlayBoard, PlayToken} from '../combat-play.util';
+import {buildPlayBoard, PlayToken, postCombatRecoveryAmount} from '../combat-play.util';
 import {ActionRollDiceTrait, ActionRollDialogComponent} from './action-roll-dialog/action-roll-dialog';
 import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
 import {AttackRequest, BattlemapComponent, TokenPositionChange} from './battlemap/battlemap';
@@ -176,15 +176,39 @@ export class SessionPlayPageComponent {
         return;
       }
 
-      this.fightSessionService.endCombat(sessionId).subscribe({
-        next: () => this.loadSession(sessionId),
-        error: (error: unknown) => {
-          this.snackBar.open(extractApiErrorMessage(error, 'Impossible de terminer le combat.'), 'Fermer', {
-            duration: 5000,
-          });
-        },
+      this.applyPostCombatRecovery(sessionId).subscribe(() => {
+        this.fightSessionService.endCombat(sessionId).subscribe({
+          next: () => this.loadSession(sessionId),
+          error: (error: unknown) => {
+            this.snackBar.open(extractApiErrorMessage(error, 'Impossible de terminer le combat.'), 'Fermer', {
+              duration: 5000,
+            });
+          },
+        });
       });
     });
+  }
+
+  /** Récupération post-combat (02-actions-combat.md, "Récupération") : chaque héros à vitalité ≥ 0
+   * regagne la moitié des points perdus (arrondie au supérieur) avant que le combat ne se termine —
+   * en dessous de 0 (mourant), aucune récupération automatique (relève de "Secourir un mourant"). */
+  private applyPostCombatRecovery(sessionId: string): Observable<unknown> {
+    const recoveries = this.heroTokens()
+      .map((token) => ({token, amount: postCombatRecoveryAmount(token.vitaliteCourante, token.vitaliteMax)}))
+      .filter(({amount}) => amount > 0);
+
+    if (recoveries.length === 0) {
+      return of(null);
+    }
+
+    return forkJoin(
+      recoveries.map(({token, amount}) => this.fightSessionService.applyDamage(sessionId, 'hero', token.pivotId, amount)),
+    ).pipe(
+      tap(() => {
+        const summary = recoveries.map(({token, amount}) => `${token.nom} +${amount}`).join(', ');
+        this.snackBar.open(`Récupération post-combat — ${summary}`, undefined, {duration: 4500});
+      }),
+    );
   }
 
   protected askRemoveCombatant(token: PlayToken): void {

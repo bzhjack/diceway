@@ -30,7 +30,7 @@
       [mode]="mode()"
       [heroTokens]="heroTokens()"
       [adversaireTokens]="adversaireTokens()"
-      [activeKey]="activeKey()"
+      [activeKey]="mode() === 'combat' ? activeKey() : null"
       [tokenPositions]="tokenPositions()"
       (attackRequested)="onAttackRequested($event)"
       (statblockRequested)="openStatblockFor($event)"

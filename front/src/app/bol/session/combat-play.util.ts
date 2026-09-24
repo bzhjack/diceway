@@ -203,3 +203,15 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
 export function canTarget(token: PlayToken, sourceKey: string | null): boolean {
   return sourceKey !== null && token.key !== sourceKey;
 }
+
+/** Récupération post-combat (02-actions-combat.md, "Récupération") : à `> 0` ou exactement `0` (on
+ * suppose un repos de 10-15 min possible juste après le combat), la moitié des points de vitalité
+ * perdus est récupérée, arrondie au supérieur. En dessous de 0 (mourant), aucune récupération
+ * automatique — la stabilisation relève de "Secourir un mourant", pas de cette fonction. */
+export function postCombatRecoveryAmount(vitaliteCourante: number | null, vitaliteMax: number | null): number {
+  if (vitaliteCourante === null || vitaliteMax === null || vitaliteCourante < 0) {
+    return 0;
+  }
+
+  return Math.ceil((vitaliteMax - vitaliteCourante) / 2);
+}
