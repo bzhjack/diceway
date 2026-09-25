@@ -35,19 +35,35 @@
   padding: 0.75rem 1rem;
 }
 
-.ahs-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  margin-bottom: 1rem;
-
-  label {
-    font-size: 0.85rem;
-    color: var(--dw-surface-500);
-  }
-}
-
 .hsd-content {
   flex: 1;
   overflow-y: auto;
+}
+
+// Projeté dans l'en-tête de `bol-statblock` (slot `[statblockHeaderExtra]`), à droite du nom — les
+// réglages rapides de séance (vitalité/héroïsme) restent ainsi visibles en permanence plutôt que
+// cachés derrière un bouton "Modifier" — cf. décision du 2026-09-25.
+.hsd-header-steppers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-left: auto;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.hsd-stepper-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+
+  label {
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--dw-surface-500);
+    white-space: nowrap;
+  }
 }

@@ -1,30 +1,29 @@
-<div class="hsd-toolbar">
-  <button mat-stroked-button type="button" class="hsd-modify-trigger" [matMenuTriggerFor]="editMenu">
-    <mat-icon>tune</mat-icon> Modifier
-  </button>
-</div>
-
-<mat-menu #editMenu="matMenu" class="hsd-edit-menu-panel">
-  <div class="hsd-edit-menu-content" (click)="$event.stopPropagation()">
-    <div class="ahs-field">
-      <label id="hsd-vitalite-label">Vitalité ({{ vitaliteControl.value }} / {{ data().vitaliteMax }})</label>
-      <dw-value-stepper [formControl]="vitaliteControl" [min]="-20" [max]="data().vitaliteMax" [ariaLabel]="'Vitalité'" />
-    </div>
-
-    <div class="ahs-field">
-      <label id="hsd-heroisme-label">Héroïsme ({{ heroismeControl.value }})</label>
-      <dw-value-stepper [formControl]="heroismeControl" [min]="0" [ariaLabel]="'Héroïsme'" />
-    </div>
-
-    @if (armureEntries().length) {
-      <div class="ahs-field">
-        <label>Équipement</label>
-        <bol-armure-list [armures]="armureEntries()" [removeEnabled]="false" (equippedToggled)="toggleArmureEquipped($event)" />
-      </div>
-    }
+@if (armureEntries().length) {
+  <div class="hsd-toolbar">
+    <button mat-stroked-button type="button" class="hsd-modify-trigger" [matMenuTriggerFor]="editMenu">
+      <mat-icon>checkroom</mat-icon> Équipement
+    </button>
   </div>
-</mat-menu>
+
+  <mat-menu #editMenu="matMenu" class="hsd-edit-menu-panel">
+    <div class="hsd-edit-menu-content" (click)="$event.stopPropagation()">
+      <bol-armure-list [armures]="armureEntries()" [removeEnabled]="false" (equippedToggled)="toggleArmureEquipped($event)" />
+    </div>
+  </mat-menu>
+}
 
 <div class="hsd-content">
-  <bol-statblock [data]="data().statblock" [imageSrc]="data().avatar" [returnUrl]="data().returnUrl" />
+  <bol-statblock [data]="data().statblock" [imageSrc]="data().avatar" [returnUrl]="data().returnUrl">
+    <div statblockHeaderExtra class="hsd-header-steppers">
+      <div class="hsd-stepper-field">
+        <label id="hsd-vitalite-label">Vitalité ({{ vitaliteControl.value }} / {{ data().vitaliteMax }})</label>
+        <dw-value-stepper [formControl]="vitaliteControl" [min]="-20" [max]="data().vitaliteMax" [ariaLabel]="'Vitalité'" />
+      </div>
+
+      <div class="hsd-stepper-field">
+        <label id="hsd-heroisme-label">Héroïsme ({{ heroismeControl.value }})</label>
+        <dw-value-stepper [formControl]="heroismeControl" [min]="0" [ariaLabel]="'Héroïsme'" />
+      </div>
+    </div>
+  </bol-statblock>
 </div>

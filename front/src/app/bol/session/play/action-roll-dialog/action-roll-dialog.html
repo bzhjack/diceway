@@ -163,23 +163,25 @@
           }
         </div>
 
-        <div
-          class="ard-ticket"
-          [class.ard-ticket--reussite]="bannerTone() === 'reussite'"
-          [class.ard-ticket--echec]="bannerTone() === 'echec'"
-          [class.ard-ticket--heroique]="bannerTone() === 'heroique'"
-        >
-          <div class="ard-ticket-total">{{ dice() ? total() : '—' }}</div>
-          <p class="ard-ticket-label">{{ dice() ? resultLabel() : 'En attente' }}</p>
-          @if (manualEntry()) {
-            <span class="ard-manual-badge">Saisie manuelle</span>
-          }
-        </div>
+        <div class="ard-result-row">
+          <div
+            class="ard-ticket"
+            [class.ard-ticket--reussite]="bannerTone() === 'reussite'"
+            [class.ard-ticket--echec]="bannerTone() === 'echec'"
+            [class.ard-ticket--heroique]="bannerTone() === 'heroique'"
+          >
+            <div class="ard-ticket-total">{{ dice() ? total() : '—' }}</div>
+            <p class="ard-ticket-label">{{ dice() ? resultLabel() : 'En attente' }}</p>
+            @if (manualEntry()) {
+              <span class="ard-manual-badge">Saisie manuelle</span>
+            }
+          </div>
 
-        <button type="button" class="ard-reroll" [disabled]="rolling()" (click)="roll()">
-          <mat-icon>refresh</mat-icon>
-          {{ dice() ? 'Relancer' : rollButtonLabel() }}
-        </button>
+          <button type="button" class="ard-reroll" [disabled]="rolling()" (click)="roll()">
+            <mat-icon>refresh</mat-icon>
+            {{ dice() ? 'Relancer' : rollButtonLabel() }}
+          </button>
+        </div>
 
         <div class="ard-manual">
           <span class="ard-manual-hint">ou table&nbsp;:</span>

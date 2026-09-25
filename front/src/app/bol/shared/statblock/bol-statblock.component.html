@@ -1,14 +1,14 @@
 <article class="bol-statblock" [class]="'bol-statblock--' + data().accent">
   <div class="bol-statblock__body">
-    <div class="bol-statblock__avatar">
-      <img [src]="imageSrc()" [alt]="data().title" class="h-full w-full object-cover" />
+    <div class="bol-statblock__header">
+      <div class="bol-statblock__avatar">
+        <img [src]="imageSrc()" [alt]="data().title" class="h-full w-full object-cover" />
 
-      @if (data().isCreation) {
-        <span class="bol-statblock__avatar-tag">Création</span>
-      }
-    </div>
+        @if (data().isCreation) {
+          <span class="bol-statblock__avatar-tag">Création</span>
+        }
+      </div>
 
-    <div class="bol-statblock__content">
       <div class="bol-statblock__main">
         <div class="min-w-0 space-y-1">
           <p class="bol-statblock__eyebrow">Statbloc BOL</p>
@@ -45,25 +45,29 @@
         }
       </div>
 
-      <div class="bol-statblock__vitals">
-        @for (tile of data().vitals; track tile.label) {
-          <div class="bol-statblock__tile" [class]="tile.tone ? 'bol-statblock__tile--' + tile.tone : ''">
-            <span class="bol-statblock__tile-value" [class.bol-statblock__tile-value--dice]="tile.dice">
-              {{ tile.value }}
-            </span>
-            <span class="bol-statblock__tile-label">{{ tile.label }}</span>
-          </div>
-        }
-      </div>
+      <!-- Réglages rapides scopés à l'appelant (ex. vitalité/héroïsme en séance) — vide et sans
+           emprise sur la mise en page pour les usages en lecture seule (bibliothèques, dialogs statiques). -->
+      <ng-content select="[statblockHeaderExtra]" />
+    </div>
 
-      <div class="bol-statblock__tiles" [class.bol-statblock__tiles--8]="data().wideTiles">
-        @for (tile of data().tiles; track tile.label) {
-          <div class="bol-statblock__tile bol-statblock__tile--stat">
-            <span class="bol-statblock__tile-value">{{ tile.value }}</span>
-            <span class="bol-statblock__tile-label">{{ tile.label }}</span>
-          </div>
-        }
-      </div>
+    <div class="bol-statblock__vitals">
+      @for (tile of data().vitals; track tile.label) {
+        <div class="bol-statblock__tile" [class]="tile.tone ? 'bol-statblock__tile--' + tile.tone : ''">
+          <span class="bol-statblock__tile-value" [class.bol-statblock__tile-value--dice]="tile.dice">
+            {{ tile.value }}
+          </span>
+          <span class="bol-statblock__tile-label">{{ tile.label }}</span>
+        </div>
+      }
+    </div>
+
+    <div class="bol-statblock__tiles" [class.bol-statblock__tiles--8]="data().wideTiles">
+      @for (tile of data().tiles; track tile.label) {
+        <div class="bol-statblock__tile bol-statblock__tile--stat">
+          <span class="bol-statblock__tile-value">{{ tile.value }}</span>
+          <span class="bol-statblock__tile-label">{{ tile.label }}</span>
+        </div>
+      }
     </div>
   </div>
 
