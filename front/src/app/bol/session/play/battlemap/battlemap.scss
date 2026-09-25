@@ -120,13 +120,25 @@
   }
 }
 
-.cp-token-portrait--hero { background: color-mix(in srgb, var(--dw-color-reussite) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
-.cp-token-portrait--pnj { background: color-mix(in srgb, var(--dw-color-pnj) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
-.cp-token-portrait--creature { background: color-mix(in srgb, var(--dw-color-creature) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
-.cp-token-portrait--demon { background: color-mix(in srgb, var(--dw-color-demon) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
+// Anneau de nature toujours visible (héros/PNJ/créature/démon), avatar réel ou pas — avant, seule la
+// teinte de fond du repli sans avatar le distinguait, et le badge n'apparaissait qu'en combat : en
+// mode libre, tous les jetons se ressemblaient. `.cp-token--active`/`--attack-source`/`--attack-target`
+// (plus haut, plus spécifiques) prennent le pas dessus quand ils s'appliquent — cf. décision du 2026-09-25.
+.cp-token-portrait--hero { box-shadow: 0 0 0 2px color-mix(in srgb, var(--dw-color-reussite) 70%, transparent); }
+.cp-token-portrait--pnj { box-shadow: 0 0 0 2px color-mix(in srgb, var(--dw-color-pnj) 70%, transparent); }
+.cp-token-portrait--creature { box-shadow: 0 0 0 2px color-mix(in srgb, var(--dw-color-creature) 70%, transparent); }
+.cp-token-portrait--demon { box-shadow: 0 0 0 2px color-mix(in srgb, var(--dw-color-demon) 70%, transparent); }
+
+// Repli sans avatar (avatar non renseigné ou en échec de chargement) : la même couleur de nature
+// teinte aussi le fond, invisible derrière un avatar réel (image opaque).
+.cp-token-portrait--fallback.cp-token-portrait--hero { background: color-mix(in srgb, var(--dw-color-reussite) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
+.cp-token-portrait--fallback.cp-token-portrait--pnj { background: color-mix(in srgb, var(--dw-color-pnj) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
+.cp-token-portrait--fallback.cp-token-portrait--creature { background: color-mix(in srgb, var(--dw-color-creature) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
+.cp-token-portrait--fallback.cp-token-portrait--demon { background: color-mix(in srgb, var(--dw-color-demon) 30%, color-mix(in srgb, var(--dw-surface-0) 50%, transparent)); }
 
 // Même langage visuel que `.cp-rail-kind` (badge de type sur la puce de la frise d'initiative),
 // à échelle plus grande puisque le portrait de plateau est nettement plus grand que la puce de frise.
+// Toujours visible (avant : combat uniquement) — cf. décision du 2026-09-25.
 .cp-token-kind {
   position: absolute;
   bottom: -0.2rem;

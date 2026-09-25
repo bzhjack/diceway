@@ -36,27 +36,23 @@
           <mat-icon>shield</mat-icon>
         </button>
       }
-      <div [class]="'cp-token-portrait' + (hasAvatar(token) ? '' : ' cp-token-portrait--fallback cp-token-portrait--' + token.kind)">
+      <div [class]="'cp-token-portrait cp-token-portrait--' + token.kind + (hasAvatar(token) ? '' : ' cp-token-portrait--fallback')">
         @if (hasAvatar(token)) {
           <img [src]="token.avatar" [alt]="token.nom" class="cp-token-avatar" (error)="onAvatarError(token)" />
-          @if (mode() === 'combat') {
-            <span [class]="'cp-token-kind cp-token-kind--' + token.kind">
-              @if (kindIconIsSvg(token.kind)) {
-                <mat-icon [svgIcon]="kindIcon(token.kind)" />
-              } @else {
-                <mat-icon>{{ kindIcon(token.kind) }}</mat-icon>
-              }
-            </span>
-          }
-        } @else if (mode() === 'combat') {
+        } @else {
           @if (kindIconIsSvg(token.kind)) {
             <mat-icon [svgIcon]="kindIcon(token.kind)" />
           } @else {
             <mat-icon>{{ kindIcon(token.kind) }}</mat-icon>
           }
-        } @else {
-          <mat-icon>person</mat-icon>
         }
+        <span [class]="'cp-token-kind cp-token-kind--' + token.kind">
+          @if (kindIconIsSvg(token.kind)) {
+            <mat-icon [svgIcon]="kindIcon(token.kind)" />
+          } @else {
+            <mat-icon>{{ kindIcon(token.kind) }}</mat-icon>
+          }
+        </span>
         @if (mode() === 'combat' && token.key === activeKey()) {
           <bol-attack-menu
             [attackerName]="token.nom"
