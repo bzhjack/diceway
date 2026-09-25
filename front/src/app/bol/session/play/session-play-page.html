@@ -37,5 +37,11 @@
       (actionRollRequested)="onActionRoll($event)"
       (positionChanged)="onPositionChanged($event)"
     />
+
+    @if (actionRollData(); as data) {
+      <aside class="spp-action-roll-panel">
+        <bol-action-roll-dialog [data]="data" (closed)="closeActionRollPanel()" />
+      </aside>
+    }
   </div>
 }

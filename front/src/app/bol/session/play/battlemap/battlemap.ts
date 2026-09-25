@@ -11,7 +11,6 @@ import {BolHerosService} from '../../../services/bol-heros.service';
 import {combatantKindIcon, combatantKindIconIsSvg} from '../../combat-statblock.util';
 import {canTarget, EMPTY_AVATAR, PlayToken} from '../../combat-play.util';
 import {AttackMenuComponent, AttackMenuConfirmation, CombatReminderStat, filterAttackMenuCombatOptions} from '../attack-menu/attack-menu';
-import {HeroActionMenuComponent} from '../hero-action-menu/hero-action-menu';
 
 const COLS_PER_ZONE = 3;
 const HERO_ZONE = {xMin: 8, xMax: 32, yMin: 16, yMax: 84};
@@ -58,12 +57,13 @@ export interface TokenPositionChange {
 
 /**
  * Battlemap : jetons librement déplaçables (glisser-déposer, position remontée au parent pour
- * persistance), menu épée (ciblage d'attaque) et menu d'action héros, consultation du statbloc.
+ * persistance), menu épée (ciblage d'attaque), consultation du statbloc (bouton "carte" ou
+ * double-clic) et jet d'action (double-clic sur un héros en mode libre, cf. `onTokenDblClick`).
  * Ne persiste rien elle-même — toutes les mutations de session remontent au parent par événement.
  */
 @Component({
   selector: 'bol-battlemap',
-  imports: [MatIconModule, MatTooltipModule, DragDropModule, NgTemplateOutlet, AttackMenuComponent, HeroActionMenuComponent],
+  imports: [MatIconModule, MatTooltipModule, DragDropModule, NgTemplateOutlet, AttackMenuComponent],
   templateUrl: './battlemap.html',
   styleUrl: './battlemap.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -257,8 +257,17 @@ export class BattlemapComponent {
     this.statblockRequested.emit(token);
   }
 
-  protected onActionRoll(token: PlayToken): void {
-    this.actionRollRequested.emit(token);
+  /** Double-clic sur un jeton : jet d'action pour un héros en mode libre, statbloc sinon (combat,
+   * PNJ/créature/démon) — le bouton épée dédié a disparu, le double-clic est désormais l'entrée
+   * directe vers le jet d'action. */
+  protected onTokenDblClick(token: PlayToken, event: Event): void {
+    if (this.mode() === 'libre' && token.kind === 'hero') {
+      event.stopPropagation();
+      this.actionRollRequested.emit(token);
+      return;
+    }
+
+    this.openStatblock(token, event);
   }
 
   /** Glisser-déposer d'un jeton sur la battlemap : recalcule sa position en % de la carte, remontée au parent pour persistance. */

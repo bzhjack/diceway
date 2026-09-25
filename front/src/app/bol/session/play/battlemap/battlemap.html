@@ -18,7 +18,7 @@
     cdkDragBoundary=".cp-map"
     (cdkDragEnded)="onTokenDragEnded(token, $event)"
     (click)="onTokenClick(token, $event)"
-    (dblclick)="openStatblock(token, $event)"
+    (dblclick)="onTokenDblClick(token, $event)"
   >
     <div [class]="tokenClass(token)">
       @if (mode() === 'combat' && token.lockedRound1) {
@@ -66,8 +66,6 @@
             (opened)="loadArmes(token)"
             (confirmed)="onAttackConfirmed(token, $event)"
           />
-        } @else if (mode() === 'libre' && token.kind === 'hero') {
-          <bol-hero-action-menu [heroName]="token.nom" (actionRoll)="onActionRoll(token)" />
         }
 
         <button

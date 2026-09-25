@@ -156,10 +156,10 @@
 // Le bouton épée (survol/mode ciblage) est stylé dans `attack-menu.scss` (`bol-attack-menu`), via
 // `:host-context(.cp-token…)` — il ne peut plus être ciblé en descendant CSS depuis cette feuille.
 
-// Raccourci "Carte" (statbloc) — même langage visuel que `.am-trigger`/`.ham-btn` mais générique à
-// tous les types de jeton et aux deux modes (contrairement à ces deux-là, mutuellement exclusifs
-// selon le mode). Slot 2 (bas) de la colonne de 2 boutons à gauche du portrait, centrée verticalement
-// sur sa hauteur (4.5rem) — cf. `hero-action-menu.scss` pour le calcul du décalage.
+// Raccourci "Carte" (statbloc) — même langage visuel que `.am-trigger` (menu épée) mais générique à
+// tous les types de jeton et aux deux modes (contrairement à lui, visible seulement en combat sur le
+// jeton actif). Seul bouton restant à gauche du portrait depuis le retrait du bouton épée dédié au
+// jet d'action (désormais un double-clic sur le jeton, cf. `battlemap.ts` `onTokenDblClick`).
 .cp-token-card-btn {
   position: absolute;
   top: 2.45rem;
@@ -210,7 +210,7 @@
   }
 
   // Pont invisible comblant tout l'espace entre le portrait et la colonne de boutons à gauche
-  // (les 3 emplacements de `.am-trigger`/`.ham-btn`/`.cp-token-card-btn`). Sans lui, la souris
+  // (`.am-trigger`/`.cp-token-card-btn`). Sans lui, la souris
   // "sort" du token en traversant ce vide — rien n'y est hoverable tant que les boutons sont
   // encore invisibles (`pointer-events: none`) — ce qui les referme avant qu'on ait pu les
   // atteindre. `pointer-events` par défaut (auto) : lui seul maintient `.cp-token:hover` pendant

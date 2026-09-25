@@ -3,13 +3,15 @@ import {
   Component,
   computed,
   inject,
+  input,
+  OnInit,
+  output,
   signal,
   ViewEncapsulation,
   viewChild,
   WritableSignal,
 } from '@angular/core';
 import {MatButtonToggleChange, MatButtonToggleModule} from '@angular/material/button-toggle';
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -124,25 +126,33 @@ const RESULT_LABELS: Record<InitiativeResultat, string> = {
   legendaire: 'Légendaire',
 };
 
-/** Jet d'action générique (hors combat) : 2d6 + attribut + carrière + modificateur libre, comparé à un seuil choisi. */
+/** Jet d'action générique (hors combat) : 2d6 + attribut + carrière + modificateur libre, comparé à
+ * un seuil choisi. Embarqué dans le panneau latéral de `session-play-page` (plus un dialog) — un
+ * double-clic sur un héros en mode libre en fournit les données, `closed` signale le renoncement. */
 @Component({
   selector: 'bol-action-roll-dialog',
-  imports: [MatButtonToggleModule, MatDialogModule, MatIconModule, MatTooltipModule, DiceBoxHostComponent],
+  imports: [MatButtonToggleModule, MatIconModule, MatTooltipModule, DiceBoxHostComponent],
   templateUrl: './action-roll-dialog.html',
   styleUrl: './action-roll-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class ActionRollDialogComponent {
-  protected readonly data = inject<ActionRollDialogData>(MAT_DIALOG_DATA);
-  protected readonly ref = inject(MatDialogRef<ActionRollDialogComponent>);
+export class ActionRollDialogComponent implements OnInit {
+  readonly data = input.required<ActionRollDialogData>();
+  readonly closed = output<void>();
   private readonly herosService = inject(BolHerosService);
   private readonly snackBar = inject(MatSnackBar);
 
   private readonly diceBox = viewChild.required(DiceBoxHostComponent);
 
-  /** Héroïsme courant, mis à jour en direct au fil des dépenses/octrois de ce dialog. */
-  protected readonly heroisme = signal(this.data.heroisme);
+  /** Héroïsme courant, mis à jour en direct au fil des dépenses/octrois de ce dialog. Initialisé
+   * dans `ngOnInit` (pas un champ dérivé) : un input required n'a pas encore de valeur au moment où
+   * les initialiseurs de champ s'exécutent (NG8118). */
+  protected readonly heroisme = signal(0);
+
+  ngOnInit(): void {
+    this.heroisme.set(this.data().heroisme);
+  }
 
   protected readonly attributes: readonly ActionAttribute[] = ['agilite', 'vigueur', 'esprit', 'aura'];
   protected readonly attributeLabels = ACTION_ATTRIBUTE_LABELS;
@@ -155,18 +165,20 @@ export class ActionRollDialogComponent {
 
   protected readonly attribute = signal<ActionAttribute>('agilite');
   protected readonly difficulty = signal<ActionDifficulty>(ACTION_DIFFICULTIES[2]); // Moyenne, par défaut
-  protected readonly carrieres = this.data.carrieres;
+  // computed (pas un champ dérivé une fois pour toutes) : un input required n'a pas encore de valeur
+  // au moment où les initialiseurs de champ s'exécutent (NG8118) — computed() diffère la lecture.
+  protected readonly carrieres = computed(() => this.data().carrieres);
   protected readonly carriere = signal<ActionRollCarriere | null>(null);
   protected readonly modifier = signal(0);
 
-  protected readonly avantageTraits = this.data.diceTraits.filter((t) => t.kind === 'avantage');
-  protected readonly desavantageTraits = this.data.diceTraits.filter((t) => t.kind === 'desavantage');
+  protected readonly avantageTraits = computed(() => this.data().diceTraits.filter((t) => t.kind === 'avantage'));
+  protected readonly desavantageTraits = computed(() => this.data().diceTraits.filter((t) => t.kind === 'desavantage'));
   protected readonly selectedDiceTraits = signal<ReadonlySet<string>>(new Set());
 
   protected readonly selectedDiceTraitCounts = computed(() => {
     let avantages = 0;
     let desavantages = 0;
-    for (const trait of this.data.diceTraits) {
+    for (const trait of this.data().diceTraits) {
       if (!this.selectedDiceTraits().has(trait.label)) {
         continue;
       }
@@ -213,12 +225,12 @@ export class ActionRollDialogComponent {
 
   /** Modificateur calculé (non éditable) pour l'attribut sélectionné — équipement porté, etc. */
   protected readonly equipmentModifier = computed(() =>
-    this.attribute() === 'agilite' ? this.data.equipementAgilite : 0,
+    this.attribute() === 'agilite' ? this.data().equipementAgilite : 0,
   );
 
   protected readonly modifierSum = computed(
     () =>
-      this.data[this.attribute()] +
+      this.data()[this.attribute()] +
       this.difficulty().modifier +
       this.equipmentModifier() +
       (this.carriere()?.value ?? 0) +
@@ -323,7 +335,7 @@ export class ActionRollDialogComponent {
   }
 
   protected setCarriere(change: MatButtonToggleChange): void {
-    this.carriere.set(this.carrieres.find((c) => c.label === change.value) ?? null);
+    this.carriere.set(this.carrieres().find((c) => c.label === change.value) ?? null);
   }
 
   protected toggleDiceTrait(label: string): void {
@@ -399,7 +411,7 @@ export class ActionRollDialogComponent {
       return;
     }
 
-    applyHeroismeDelta(this.herosService, this.snackBar, this.data.herosId, this.heroisme, -1);
+    applyHeroismeDelta(this.herosService, this.snackBar, this.data().herosId, this.heroisme, -1);
     await this.roll();
   }
 
@@ -436,7 +448,7 @@ export class ActionRollDialogComponent {
     const sign = spendOnChoose ? -1 : 1;
     const delta = nextChosen ? sign : -sign;
     chosen.set(nextChosen);
-    applyHeroismeDelta(this.herosService, this.snackBar, this.data.herosId, this.heroisme, delta, () =>
+    applyHeroismeDelta(this.herosService, this.snackBar, this.data().herosId, this.heroisme, delta, () =>
       chosen.set(wasChosen),
     );
   }
@@ -447,6 +459,6 @@ export class ActionRollDialogComponent {
   }
 
   protected close(): void {
-    this.ref.close();
+    this.closed.emit();
   }
 }

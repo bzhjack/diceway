@@ -25,9 +25,34 @@
 }
 
 .cp-page {
+  position: relative;
   height: 100dvh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   background: linear-gradient(180deg, var(--dw-surface-0), var(--dw-surface-50) 45%, var(--dw-surface-0));
+}
+
+// Panneau latéral du jet d'action (double-clic sur un héros en mode libre) — flotte au-dessus du
+// plateau sans backdrop (pas un dialog modal : on peut continuer à déplacer les jetons dessous),
+// glisse depuis le bord droit à l'ouverture.
+.spp-action-roll-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(30rem, 100vw);
+  z-index: 20;
+  box-shadow: -12px 0 32px rgba(0, 0, 0, 0.45);
+  border-left: 1px solid var(--dw-border);
+  animation: spp-panel-slide-in 0.18s ease-out;
+}
+
+@keyframes spp-panel-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }

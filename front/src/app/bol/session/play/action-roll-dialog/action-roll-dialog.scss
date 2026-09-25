@@ -1,45 +1,26 @@
-// Encapsulation désactivée sur le composant (voir .ts) : tout ici est global, donc systématiquement
-// scopé sous .ard-panel (panelClass passé à dialog.open) pour ne pas déteindre
-// sur les autres dialogs Material de l'appli.
+// Encapsulation désactivée sur le composant (voir .ts) pour pouvoir styler le DOM interne de
+// `mat-button-toggle-group` (`.mat-button-toggle-label-content`, etc.) — tout ici est donc global,
+// mais les classes `ard-*` sont propres à ce composant (pas besoin d'un scope supplémentaire).
 
 @use '../../roll-dialog-shared' as shared;
 
-.ard-panel .mat-mdc-dialog-surface {
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  border-radius: 14px;
-  padding: 0;
-  max-height: calc(100vh - 10vh);
-  overflow-y: auto;
-}
-
-// MDC insère un ::before invisible de 40px de haut sur .mdc-dialog__title (hack interne pour caler
-// la hauteur/baseline du titre) ; en passant le h2 en display:flex, ce pseudo-élément devient un
-// flex item à part entière et gonfle la boîte du titre — on le neutralise ici.
-.ard-panel .mat-mdc-dialog-title {
-  margin: 0;
-  padding: 0;
-  display: flex;
-
-  &::before {
-    display: none;
-  }
+:host {
+  display: block;
+  height: 100%;
 }
 
 // Le canvas de dés 3D occupe tout le panneau en fond (.ard-dice-layer), les contrôles flottent
 // par-dessus (.ard-fg) avec un fond semi-opaque chacun pour rester lisibles quels que soient les dés
 // en dessous — cf. décision du 2026-09-07 (on fait rouler les dés sur l'ensemble du composant plutôt
-// que dans un canvas dédié).
+// que dans un canvas dédié). Embarqué dans le panneau latéral de `session-play-page` (plus un
+// dialog) : remplit le panneau (qui porte déjà sa propre bordure/ombre), plus de coins arrondis
+// pleine hauteur ni de bordure propre — redondant avec celle du panneau.
 .ard-shell {
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 54rem;
-  max-width: 100%;
-  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 40%, transparent);
-  border-radius: 14px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   background: linear-gradient(180deg, var(--dw-surface-50) 0%, var(--dw-surface-0) 100%);
 }
@@ -73,6 +54,7 @@
   display: flex;
   flex-direction: column;
   padding: 0 1.1rem 1rem;
+  overflow-y: auto;
 }
 
 .ard-header {
@@ -149,15 +131,14 @@
 // gauche) qui alimentent un livre de compte toujours visible (col. droite, cf. .ard-ledger) — chaque
 // choix devient sa propre ligne au lieu d'une phrase dense, pour que la formule/le total se déduisent
 // visuellement des réglages plutôt que d'être pris sur parole.
+// Une seule colonne, toujours : le panneau latéral (~30rem) n'a jamais la largeur d'un dialog
+// centré, et `@media` réagit à la largeur du viewport, pas à celle du panneau — une media query ne
+// détecterait donc jamais cet espace étroit sur un écran large (cf. le bug constaté en piste A).
 .ard-body {
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
   gap: 1.1rem;
   margin-top: 0.9rem;
-
-  @media (max-width: 640px) {
-    flex-direction: column;
-  }
 }
 
 .ard-steps {

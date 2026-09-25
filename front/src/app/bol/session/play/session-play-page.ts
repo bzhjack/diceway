@@ -24,7 +24,7 @@ import {
 import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialog';
 import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard, PlayToken, postCombatRecoveryAmount} from '../combat-play.util';
-import {ActionRollDiceTrait, ActionRollDialogComponent} from './action-roll-dialog/action-roll-dialog';
+import {ActionRollDiceTrait, ActionRollDialogComponent, ActionRollDialogData} from './action-roll-dialog/action-roll-dialog';
 import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
 import {AttackRequest, BattlemapComponent, TokenPositionChange} from './battlemap/battlemap';
 import {maybePromptDefierLaMort} from './defier-la-mort-dialog/defier-la-mort.util';
@@ -40,10 +40,13 @@ import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dia
  */
 @Component({
   selector: 'bol-session-play-page',
-  imports: [RouterLink, SessionHeaderComponent, InitiativeRailComponent, BattlemapComponent],
+  imports: [RouterLink, SessionHeaderComponent, InitiativeRailComponent, BattlemapComponent, ActionRollDialogComponent],
   templateUrl: './session-play-page.html',
   styleUrl: './session-play-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(document:keydown.escape)': 'closeActionRollPanel()',
+  },
 })
 export class SessionPlayPageComponent {
   private readonly route = inject(ActivatedRoute);
@@ -401,49 +404,56 @@ export class SessionPlayPageComponent {
     }
   }
 
+  /** Jet d'action ouvert dans le panneau latéral (plus un dialog) — `null` = panneau fermé. Vidé
+   * avant le chargement du héros suivant pour forcer la recréation de `bol-action-roll-dialog`
+   * (sinon son état interne, attribut/difficulté choisis, etc., resterait celui du héros précédent). */
+  protected readonly actionRollData = signal<ActionRollDialogData | null>(null);
+
   protected onActionRoll(token: PlayToken): void {
     const herosId = token.combat.sourceId;
     if (!herosId) {
       return;
     }
 
+    this.actionRollData.set(null);
+
     this.herosService
       .heros(herosId)
       .pipe(take(1))
       .subscribe((hero) => {
-        this.dialog.open(ActionRollDialogComponent, {
-          maxWidth: 'min(56rem, 94vw)',
-          panelClass: 'ard-panel',
-          data: {
-            heroNom: token.nom,
-            herosId,
-            heroisme: hero.ressources.heroisme,
-            agilite: hero.attributs.agilite,
-            vigueur: hero.attributs.vigueur,
-            esprit: hero.attributs.esprit,
-            aura: hero.attributs.aura,
-            equipementAgilite: hero.attributs.agilite_effective - hero.attributs.agilite,
-            carrieres: hero.carrieres
-              .map((c) => ({label: c.carriere?.carriere ?? '', value: c.value}))
-              .filter((c) => c.label),
-            diceTraits: hero.traits
-              .map((trait): ActionRollDiceTrait | null => {
-                const traitable = trait.traitable;
-                if (!traitable) {
-                  return null;
-                }
-                if (trait.type === 'A' && 'de_bonus' in traitable && traitable.de_bonus) {
-                  return {label: traitable.avantage, domaine: traitable.de_bonus_domaine, kind: 'avantage'};
-                }
-                if (trait.type === 'D' && 'de_malus' in traitable && traitable.de_malus) {
-                  return {label: traitable.desavantage, domaine: traitable.de_malus_domaine, kind: 'desavantage'};
-                }
+        this.actionRollData.set({
+          heroNom: token.nom,
+          herosId,
+          heroisme: hero.ressources.heroisme,
+          agilite: hero.attributs.agilite,
+          vigueur: hero.attributs.vigueur,
+          esprit: hero.attributs.esprit,
+          aura: hero.attributs.aura,
+          equipementAgilite: hero.attributs.agilite_effective - hero.attributs.agilite,
+          carrieres: hero.carrieres
+            .map((c) => ({label: c.carriere?.carriere ?? '', value: c.value}))
+            .filter((c) => c.label),
+          diceTraits: hero.traits
+            .map((trait): ActionRollDiceTrait | null => {
+              const traitable = trait.traitable;
+              if (!traitable) {
                 return null;
-              })
-              .filter((t): t is ActionRollDiceTrait => t !== null),
-          },
+              }
+              if (trait.type === 'A' && 'de_bonus' in traitable && traitable.de_bonus) {
+                return {label: traitable.avantage, domaine: traitable.de_bonus_domaine, kind: 'avantage'};
+              }
+              if (trait.type === 'D' && 'de_malus' in traitable && traitable.de_malus) {
+                return {label: traitable.desavantage, domaine: traitable.de_malus_domaine, kind: 'desavantage'};
+              }
+              return null;
+            })
+            .filter((t): t is ActionRollDiceTrait => t !== null),
         });
       });
+  }
+
+  protected closeActionRollPanel(): void {
+    this.actionRollData.set(null);
   }
 
   /** Réordonnancement du ruban d'initiative (glisser-déposer dans `bol-initiative-rail`), persisté en base. */
