@@ -7,6 +7,7 @@ import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolHerosArmureModel} from '../../models/bol-armure.model';
 import {BolFightSessionModel} from '../../models/bol-fight-session.model';
+import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
 import {BolCombatOptionModel} from '../../services/bol-combat-reference.service';
 import {BolCreaturesService} from '../../services/bol-creatures.service';
@@ -24,11 +25,13 @@ import {
 import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialog';
 import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard, PlayToken, postCombatRecoveryAmount} from '../combat-play.util';
-import {ActionRollDiceTrait, ActionRollDialogComponent, ActionRollDialogData} from './action-roll-dialog/action-roll-dialog';
+import {ActionRollDiceTrait, ActionRollDialogData} from './action-roll-dialog/action-roll-dialog';
 import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
 import {AttackRequest, BattlemapComponent, TokenPositionChange} from './battlemap/battlemap';
 import {maybePromptDefierLaMort} from './defier-la-mort-dialog/defier-la-mort.util';
-import {HeroStatblockDialogComponent} from './hero-statblock-dialog/hero-statblock-dialog';
+import {HeroActionPanelComponent, HeroActionPanelData, HeroActionPanelTab} from './hero-action-panel/hero-action-panel';
+import {HeroStatblockDialogData} from './hero-statblock-dialog/hero-statblock-dialog';
+import {HeroStatblockPopupComponent} from './hero-statblock-popup/hero-statblock-popup';
 import {InitiativeRailComponent} from './initiative-rail/initiative-rail';
 import {SessionHeaderComponent} from './session-header/session-header';
 import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dialog';
@@ -40,12 +43,12 @@ import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dia
  */
 @Component({
   selector: 'bol-session-play-page',
-  imports: [RouterLink, SessionHeaderComponent, InitiativeRailComponent, BattlemapComponent, ActionRollDialogComponent],
+  imports: [RouterLink, SessionHeaderComponent, InitiativeRailComponent, BattlemapComponent, HeroActionPanelComponent],
   templateUrl: './session-play-page.html',
   styleUrl: './session-play-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '(document:keydown.escape)': 'closeActionRollPanel()',
+    '(document:keydown.escape)': 'closeHeroActionPanel()',
   },
 })
 export class SessionPlayPageComponent {
@@ -318,11 +321,18 @@ export class SessionPlayPageComponent {
     });
   }
 
-  /** Consultation du statbloc d'un jeton (récupéré en direct, seules les stats de combat sont snapshotées). */
+  /** Consultation du statbloc d'un jeton (récupéré en direct, seules les stats de combat sont
+   * snapshotées) — héros en mode libre : panneau fusionné fiche/jet (cf. `heroActionPanelData`),
+   * onglet Fiche ; tout le reste (PNJ/créature/démon, ou héros en combat) garde son dialog dédié. */
   protected openStatblockFor(token: PlayToken): void {
     const sourceId = token.combat.sourceId;
     const sessionId = this.session()?.id;
     if (!sourceId || !sessionId) {
+      return;
+    }
+
+    if (token.kind === 'hero' && this.mode() === 'libre') {
+      this.openHeroActionPanel(token, sourceId, sessionId, 'fiche');
       return;
     }
 
@@ -336,25 +346,11 @@ export class SessionPlayPageComponent {
           .pipe(take(1))
           .subscribe((hero) => {
             this.dialog
-              .open(HeroStatblockDialogComponent, {
+              .open(HeroStatblockPopupComponent, {
                 maxWidth: 'min(900px, 94vw)',
                 panelClass: 'dw-statblock-dialog',
                 position: {top: '10vh'},
-                data: {
-                  sessionId,
-                  herosId: sourceId,
-                  pivotId: token.pivotId,
-                  heroNom: token.nom,
-                  avatar: token.avatar,
-                  statblock: heroStatblockData(hero),
-                  vitaliteCourante: token.vitaliteCourante ?? hero.ressources.vitalite,
-                  vitaliteMax: hero.ressources.vitalite,
-                  heroisme: hero.ressources.heroisme,
-                  armures: (hero.armures as (BolHerosArmureModel | number)[]).filter(
-                    (armure): armure is BolHerosArmureModel => typeof armure === 'object',
-                  ),
-                  returnUrl,
-                },
+                data: this.buildHeroStatblockData(token, hero, sourceId, sessionId, returnUrl),
               })
               .afterClosed()
               .subscribe((changed: boolean | undefined) => {
@@ -404,56 +400,101 @@ export class SessionPlayPageComponent {
     }
   }
 
-  /** Jet d'action ouvert dans le panneau latéral (plus un dialog) — `null` = panneau fermé. Vidé
-   * avant le chargement du héros suivant pour forcer la recréation de `bol-action-roll-dialog`
-   * (sinon son état interne, attribut/difficulté choisis, etc., resterait celui du héros précédent). */
-  protected readonly actionRollData = signal<ActionRollDialogData | null>(null);
+  /** Panneau fusionné fiche/jet d'action d'un héros en mode libre — `null` = panneau fermé. Vidé
+   * avant le chargement du héros suivant pour forcer la recréation de `bol-hero-action-panel`
+   * (sinon son état interne, onglet actif, attribut/difficulté choisis, etc., resterait celui du
+   * héros précédent). */
+  protected readonly heroActionPanelData = signal<HeroActionPanelData | null>(null);
+  protected readonly heroActionPanelTab = signal<HeroActionPanelTab>('jet');
 
   protected onActionRoll(token: PlayToken): void {
     const herosId = token.combat.sourceId;
-    if (!herosId) {
+    const sessionId = this.session()?.id;
+    if (!herosId || !sessionId) {
       return;
     }
 
-    this.actionRollData.set(null);
+    this.openHeroActionPanel(token, herosId, sessionId, 'jet');
+  }
+
+  private openHeroActionPanel(token: PlayToken, herosId: string, sessionId: string, tab: HeroActionPanelTab): void {
+    const returnUrl = `/session/${sessionId}/play`;
+    this.heroActionPanelData.set(null);
 
     this.herosService
       .heros(herosId)
       .pipe(take(1))
       .subscribe((hero) => {
-        this.actionRollData.set({
+        this.heroActionPanelTab.set(tab);
+        this.heroActionPanelData.set({
           heroNom: token.nom,
-          herosId,
-          heroisme: hero.ressources.heroisme,
-          agilite: hero.attributs.agilite,
-          vigueur: hero.attributs.vigueur,
-          esprit: hero.attributs.esprit,
-          aura: hero.attributs.aura,
-          equipementAgilite: hero.attributs.agilite_effective - hero.attributs.agilite,
-          carrieres: hero.carrieres
-            .map((c) => ({label: c.carriere?.carriere ?? '', value: c.value}))
-            .filter((c) => c.label),
-          diceTraits: hero.traits
-            .map((trait): ActionRollDiceTrait | null => {
-              const traitable = trait.traitable;
-              if (!traitable) {
+          statblock: this.buildHeroStatblockData(token, hero, herosId, sessionId, returnUrl),
+          actionRoll: {
+            heroNom: token.nom,
+            herosId,
+            heroisme: hero.ressources.heroisme,
+            agilite: hero.attributs.agilite,
+            vigueur: hero.attributs.vigueur,
+            esprit: hero.attributs.esprit,
+            aura: hero.attributs.aura,
+            equipementAgilite: hero.attributs.agilite_effective - hero.attributs.agilite,
+            carrieres: hero.carrieres
+              .map((c) => ({label: c.carriere?.carriere ?? '', value: c.value}))
+              .filter((c) => c.label),
+            diceTraits: hero.traits
+              .map((trait): ActionRollDiceTrait | null => {
+                const traitable = trait.traitable;
+                if (!traitable) {
+                  return null;
+                }
+                if (trait.type === 'A' && 'de_bonus' in traitable && traitable.de_bonus) {
+                  return {label: traitable.avantage, domaine: traitable.de_bonus_domaine, kind: 'avantage'};
+                }
+                if (trait.type === 'D' && 'de_malus' in traitable && traitable.de_malus) {
+                  return {label: traitable.desavantage, domaine: traitable.de_malus_domaine, kind: 'desavantage'};
+                }
                 return null;
-              }
-              if (trait.type === 'A' && 'de_bonus' in traitable && traitable.de_bonus) {
-                return {label: traitable.avantage, domaine: traitable.de_bonus_domaine, kind: 'avantage'};
-              }
-              if (trait.type === 'D' && 'de_malus' in traitable && traitable.de_malus) {
-                return {label: traitable.desavantage, domaine: traitable.de_malus_domaine, kind: 'desavantage'};
-              }
-              return null;
-            })
-            .filter((t): t is ActionRollDiceTrait => t !== null),
+              })
+              .filter((t): t is ActionRollDiceTrait => t !== null),
+          },
         });
       });
   }
 
-  protected closeActionRollPanel(): void {
-    this.actionRollData.set(null);
+  private buildHeroStatblockData(
+    token: PlayToken,
+    hero: BolHerosModel,
+    herosId: string,
+    sessionId: string,
+    returnUrl: string,
+  ): HeroStatblockDialogData {
+    return {
+      sessionId,
+      herosId,
+      pivotId: token.pivotId,
+      heroNom: token.nom,
+      avatar: token.avatar,
+      statblock: heroStatblockData(hero),
+      vitaliteCourante: token.vitaliteCourante ?? hero.ressources.vitalite,
+      vitaliteMax: hero.ressources.vitalite,
+      heroisme: hero.ressources.heroisme,
+      armures: (hero.armures as (BolHerosArmureModel | number)[]).filter(
+        (armure): armure is BolHerosArmureModel => typeof armure === 'object',
+      ),
+      returnUrl,
+    };
+  }
+
+  protected closeHeroActionPanel(): void {
+    this.heroActionPanelData.set(null);
+  }
+
+  /** `changed` de `bol-hero-statblock-dialog` (vitalité/héroïsme/équipement persistés) : recharge la session. */
+  protected onHeroActionPanelChanged(): void {
+    const sessionId = this.session()?.id;
+    if (sessionId) {
+      this.loadSession(sessionId);
+    }
   }
 
   /** Réordonnancement du ruban d'initiative (glisser-déposer dans `bol-initiative-rail`), persisté en base. */

@@ -5,7 +5,6 @@ import {
   inject,
   input,
   OnInit,
-  output,
   signal,
   ViewEncapsulation,
   viewChild,
@@ -127,8 +126,8 @@ const RESULT_LABELS: Record<InitiativeResultat, string> = {
 };
 
 /** Jet d'action générique (hors combat) : 2d6 + attribut + carrière + modificateur libre, comparé à
- * un seuil choisi. Embarqué dans le panneau latéral de `session-play-page` (plus un dialog) — un
- * double-clic sur un héros en mode libre en fournit les données, `closed` signale le renoncement. */
+ * un seuil choisi. Un des deux onglets de `bol-hero-action-panel` (l'autre étant la fiche) — pas de
+ * fermeture propre, l'en-tête/la croix appartiennent au panneau qui l'embarque. */
 @Component({
   selector: 'bol-action-roll-dialog',
   imports: [MatButtonToggleModule, MatIconModule, MatTooltipModule, DiceBoxHostComponent],
@@ -139,7 +138,6 @@ const RESULT_LABELS: Record<InitiativeResultat, string> = {
 })
 export class ActionRollDialogComponent implements OnInit {
   readonly data = input.required<ActionRollDialogData>();
-  readonly closed = output<void>();
   private readonly herosService = inject(BolHerosService);
   private readonly snackBar = inject(MatSnackBar);
 
@@ -456,9 +454,5 @@ export class ActionRollDialogComponent implements OnInit {
   /** Formate un modificateur avec son signe — jamais de "+0" (zéro n'est ni un bonus ni un malus). */
   protected signed(value: number): string {
     return value > 0 ? `+${value}` : `${value}`;
-  }
-
-  protected close(): void {
-    this.closed.emit();
   }
 }

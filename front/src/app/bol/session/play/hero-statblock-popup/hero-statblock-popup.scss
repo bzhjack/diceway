@@ -1,0 +1,14 @@
+:host {
+  display: block;
+}
+
+.hsp-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+}
+
+.hsp-close {
+  color: var(--dw-surface-700);
+  background: var(--dw-surface-100);
+}

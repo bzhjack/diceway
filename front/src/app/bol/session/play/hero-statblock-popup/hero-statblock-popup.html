@@ -1,0 +1,7 @@
+<div class="hsp-toolbar">
+  <button type="button" mat-icon-button class="hsp-close" aria-label="Fermer" (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<bol-hero-statblock-dialog [data]="data" (changed)="onChanged()" />

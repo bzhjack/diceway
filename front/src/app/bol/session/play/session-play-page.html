@@ -38,9 +38,14 @@
       (positionChanged)="onPositionChanged($event)"
     />
 
-    @if (actionRollData(); as data) {
-      <aside class="spp-action-roll-panel">
-        <bol-action-roll-dialog [data]="data" (closed)="closeActionRollPanel()" />
+    @if (heroActionPanelData(); as data) {
+      <aside class="spp-hero-action-panel">
+        <bol-hero-action-panel
+          [data]="data"
+          [initialTab]="heroActionPanelTab()"
+          (closed)="closeHeroActionPanel()"
+          (changed)="onHeroActionPanelChanged()"
+        />
       </aside>
     }
   </div>

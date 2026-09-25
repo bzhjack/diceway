@@ -1,0 +1,27 @@
+<div class="hap-shell">
+  <div class="hap-header">
+    <span class="hap-title-name">{{ data().heroNom }}</span>
+    <button type="button" class="hap-close" aria-label="Fermer" (click)="closed.emit()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="hap-tabs">
+    <button type="button" class="hap-tab" [class.hap-tab--active]="activeTab() === 'fiche'" (click)="showFiche()">
+      <mat-icon>badge</mat-icon>
+      Fiche
+    </button>
+    <button type="button" class="hap-tab" [class.hap-tab--active]="activeTab() === 'jet'" (click)="showJet()">
+      <mat-icon>casino</mat-icon>
+      Jet d'action
+    </button>
+  </div>
+
+  <div class="hap-body">
+    @if (activeTab() === 'fiche') {
+      <bol-hero-statblock-dialog [data]="data().statblock" (changed)="changed.emit()" />
+    } @else {
+      <bol-action-roll-dialog [data]="data().actionRoll" />
+    }
+  </div>
+</div>

@@ -57,76 +57,6 @@
   overflow-y: auto;
 }
 
-.ard-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin: 0 -1.1rem;
-  padding: 0.4rem 1.1rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--dw-color-legendary) 32%, transparent);
-  background: color-mix(in srgb, var(--dw-surface-0) 55%, transparent);
-}
-
-.ard-title {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-weight: 400;
-  margin: 0;
-}
-
-.ard-header-actions {
-  @include shared.header-actions;
-}
-
-.ard-heroisme-badge {
-  @include shared.heroisme-badge($font-size: 0.92rem, $icon-size: 1.05rem);
-}
-
-.ard-title-eyebrow {
-  font-size: 1.05rem;
-  line-height: 1;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--dw-surface-900);
-  text-shadow: 0 1px 3px rgba(2, 6, 23, 0.9);
-}
-
-.ard-title-name {
-  font-size: 1.05rem;
-  color: var(--dw-color-reussite);
-  line-height: 1;
-  text-shadow: 0 1px 3px rgba(2, 6, 23, 0.9);
-}
-
-.ard-close {
-  flex-shrink: 0;
-  width: 1.65rem;
-  height: 1.65rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 32%, transparent);
-  border-radius: 6px;
-  background: color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
-  color: var(--dw-surface-500);
-  cursor: pointer;
-
-  .mat-icon {
-    font-size: 1.05rem;
-    width: 1.05rem;
-    height: 1.05rem;
-  }
-
-  &:hover {
-    color: var(--dw-surface-800);
-    border-color: var(--dw-color-legendary);
-  }
-}
-
 // Piste A ("ardoise vivante") : le dialog se lit comme une composition en 3 étapes numérotées (col.
 // gauche) qui alimentent un livre de compte toujours visible (col. droite, cf. .ard-ledger) — chaque
 // choix devient sa propre ligne au lieu d'une phrase dense, pour que la formule/le total se déduisent
@@ -232,12 +162,25 @@
 }
 
 .ard-ledger-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--dw-color-legendary);
   margin-bottom: 0.5rem;
+}
+
+// Repris de l'ancien en-tête du dialog (`.ard-header`, supprimé — le panneau qui embarque ce
+// composant a désormais son propre en-tête partagé) : reste visible pendant le jet, là où il compte
+// (dépense sur Faveur divine / conversions de palier).
+.ard-heroisme-badge {
+  @include shared.heroisme-badge($font-size: 0.8rem, $icon-size: 0.95rem);
+  text-transform: none;
+  letter-spacing: normal;
 }
 
 .ard-ledger-line {

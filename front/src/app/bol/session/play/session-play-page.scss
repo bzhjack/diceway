@@ -33,15 +33,16 @@
   background: linear-gradient(180deg, var(--dw-surface-0), var(--dw-surface-50) 45%, var(--dw-surface-0));
 }
 
-// Panneau latéral du jet d'action (double-clic sur un héros en mode libre) — flotte au-dessus du
-// plateau sans backdrop (pas un dialog modal : on peut continuer à déplacer les jetons dessous),
-// glisse depuis le bord droit à l'ouverture.
-.spp-action-roll-panel {
+// Panneau latéral fiche + jet d'action d'un héros en mode libre (bouton "Carte" ou double-clic) —
+// flotte au-dessus du plateau sans backdrop (pas un dialog modal : on peut continuer à déplacer les
+// jetons dessous), glisse depuis le bord droit à l'ouverture. Élargi par rapport à l'ancien panneau
+// jet-seul pour laisser respirer la grille de tuiles de la fiche (8 colonnes).
+.spp-hero-action-panel {
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
-  width: min(30rem, 100vw);
+  width: min(34rem, 100vw);
   z-index: 20;
   box-shadow: -12px 0 32px rgba(0, 0, 0, 0.45);
   border-left: 1px solid var(--dw-border);

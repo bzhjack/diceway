@@ -2,17 +2,13 @@
   <button mat-stroked-button type="button" class="hsd-modify-trigger" [matMenuTriggerFor]="editMenu">
     <mat-icon>tune</mat-icon> Modifier
   </button>
-
-  <button mat-icon-button type="button" class="hsd-close" (click)="close()" aria-label="Fermer">
-    <mat-icon>close</mat-icon>
-  </button>
 </div>
 
 <mat-menu #editMenu="matMenu" class="hsd-edit-menu-panel">
   <div class="hsd-edit-menu-content" (click)="$event.stopPropagation()">
     <div class="ahs-field">
-      <label id="hsd-vitalite-label">Vitalité ({{ vitaliteControl.value }} / {{ data.vitaliteMax }})</label>
-      <dw-value-stepper [formControl]="vitaliteControl" [min]="-20" [max]="data.vitaliteMax" [ariaLabel]="'Vitalité'" />
+      <label id="hsd-vitalite-label">Vitalité ({{ vitaliteControl.value }} / {{ data().vitaliteMax }})</label>
+      <dw-value-stepper [formControl]="vitaliteControl" [min]="-20" [max]="data().vitaliteMax" [ariaLabel]="'Vitalité'" />
     </div>
 
     <div class="ahs-field">
@@ -30,5 +26,5 @@
 </mat-menu>
 
 <div class="hsd-content">
-  <bol-statblock [data]="data.statblock" [imageSrc]="data.avatar" [returnUrl]="data.returnUrl" />
+  <bol-statblock [data]="data().statblock" [imageSrc]="data().avatar" [returnUrl]="data().returnUrl" />
 </div>

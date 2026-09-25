@@ -2,7 +2,12 @@
   display: block;
 }
 
+// `container-type` : le seuil "desktop" ci-dessous doit réagir à la largeur réellement disponible
+// pour CE composant, pas à celle du viewport — une `@media` se déclenchait déjà (fenêtre large) même
+// quand le statbloc n'a que ~470px dans le panneau latéral de session-play-page, écrasant les tuiles
+// vitales/attributs les unes sur les autres (constaté le 2026-09-25).
 .bol-statblock {
+  container-type: inline-size;
   border: 1px solid var(--dw-border);
   padding: 0.75rem;
 }
@@ -354,7 +359,7 @@
   font-style: italic;
 }
 
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .bol-statblock__body {
     grid-template-columns: 14rem minmax(0, 1fr);
     align-items: start;

@@ -2,22 +2,6 @@
   <app-dice-box-host class="ard-dice-layer" [scale]="4" [theme]="'wooden-red'" [themeColor]="'#ef4444'" />
 
   <div class="ard-fg" (click)="dismissDice()">
-    <div class="ard-header">
-      <h2 class="ard-title">
-        <div class="ard-title-eyebrow">Jet d'action</div>
-        <div class="ard-title-name">{{ data().heroNom }}</div>
-      </h2>
-      <div class="ard-header-actions">
-        <span class="ard-heroisme-badge" [matTooltip]="'Points d’héroïsme'">
-          <mat-icon>military_tech</mat-icon>
-          {{ heroisme() }}
-        </span>
-        <button type="button" class="ard-close" aria-label="Fermer" (click)="close()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-    </div>
-
     <div class="ard-body">
       <div class="ard-steps">
         <div class="ard-step">
@@ -134,7 +118,13 @@
       </div>
 
       <div class="ard-ledger">
-        <div class="ard-ledger-title">Le jet — {{ data().heroNom }}</div>
+        <div class="ard-ledger-title">
+          <span>Le jet — {{ data().heroNom }}</span>
+          <span class="ard-heroisme-badge" [matTooltip]="'Points d’héroïsme'">
+            <mat-icon>military_tech</mat-icon>
+            {{ heroisme() }}
+          </span>
+        </div>
 
         <div class="ard-ledger-line">
           <span>{{ attributeLabels[attribute()] }}</span>

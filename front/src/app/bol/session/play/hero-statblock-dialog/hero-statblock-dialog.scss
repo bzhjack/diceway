@@ -1,5 +1,9 @@
+// Un des deux onglets de `bol-hero-action-panel` (l'autre étant le jet d'action) : remplit le
+// panneau et scrolle son propre contenu, comme `action-roll-dialog.scss` le fait pour son onglet.
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .hsd-toolbar {
@@ -7,6 +11,7 @@
   justify-content: flex-end;
   gap: 0.4rem;
   margin-bottom: 0.5rem;
+  flex-shrink: 0;
 }
 
 .hsd-modify-trigger {
@@ -16,11 +21,6 @@
   mat-icon {
     margin-right: 0.15rem;
   }
-}
-
-.hsd-close {
-  color: var(--dw-surface-700);
-  background: var(--dw-surface-100);
 }
 
 ::ng-deep .hsd-edit-menu-panel.mat-mdc-menu-panel {
@@ -45,4 +45,9 @@
     font-size: 0.85rem;
     color: var(--dw-surface-500);
   }
+}
+
+.hsd-content {
+  flex: 1;
+  overflow-y: auto;
 }

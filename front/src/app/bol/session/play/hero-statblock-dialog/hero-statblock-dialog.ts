@@ -1,8 +1,8 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, inject, input, OnInit, output, signal} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
@@ -39,8 +39,10 @@ interface EquippableArmure {
 
 /**
  * Fiche d'un héros en séance : statbloc en lecture (fiche complète), avec un bouton « Modifier »
- * qui ouvre en popover les réglages rapides scopés à la session (vitalité, héroïsme, équipement) —
- * un seul dialog au lieu de deux, pour n'avoir qu'un point d'entrée par jeton héros (bouton « Carte »).
+ * qui ouvre en popover les réglages rapides scopés à la session (vitalité, héroïsme, équipement).
+ * Un des deux onglets de `bol-hero-action-panel` — pas de fermeture propre, l'en-tête/la croix
+ * appartiennent au panneau qui l'embarque ; `changed` signale au parent qu'il doit recharger la
+ * session après une modification persistée.
  */
 @Component({
   selector: 'bol-hero-statblock-dialog',
@@ -57,27 +59,24 @@ interface EquippableArmure {
   styleUrl: './hero-statblock-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeroStatblockDialogComponent {
-  protected readonly data = inject<HeroStatblockDialogData>(MAT_DIALOG_DATA);
-  protected readonly ref = inject(MatDialogRef<HeroStatblockDialogComponent, boolean>);
+export class HeroStatblockDialogComponent implements OnInit {
+  readonly data = input.required<HeroStatblockDialogData>();
+  readonly changed = output<void>();
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly herosService = inject(BolHerosService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
-  protected readonly vitaliteControl = new FormControl(this.data.vitaliteCourante, {nonNullable: true});
-  protected readonly heroismeControl = new FormControl(this.data.heroisme, {nonNullable: true});
+  // Valeurs réelles posées dans `ngOnInit` (pas ici) : un input required n'a pas encore de valeur au
+  // moment où les initialiseurs de champ s'exécutent (NG8118) — cf. même correctif sur
+  // `action-roll-dialog.ts`.
+  protected readonly vitaliteControl = new FormControl(0, {nonNullable: true});
+  protected readonly heroismeControl = new FormControl(0, {nonNullable: true});
+  protected readonly armures = signal<readonly EquippableArmure[]>([]);
 
-  private lastVitalite = this.data.vitaliteCourante;
-  private lastHeroisme = this.data.heroisme;
-  protected readonly changed = signal(false);
-
-  protected readonly armures = signal<readonly EquippableArmure[]>(
-    this.data.armures
-      .filter((entry): entry is BolHerosArmureModel & {armure: BolArmureModel} => Boolean(entry.armure))
-      .map((entry) => ({id: entry.armure_id, equipee: entry.equipee, armure: entry.armure})),
-  );
+  private lastVitalite = 0;
+  private lastHeroisme = 0;
 
   protected readonly armureEntries = computed<readonly ArmureEntry[]>(() =>
     this.armures().map((entry) => ({
@@ -93,14 +92,17 @@ export class HeroStatblockDialogComponent {
     })),
   );
 
-  constructor() {
-    this.ref.disableClose = true;
-    this.ref.backdropClick().subscribe(() => this.close());
-    this.ref.keydownEvents().subscribe((event) => {
-      if (event.key === 'Escape') {
-        this.close();
-      }
-    });
+  ngOnInit(): void {
+    const data = this.data();
+    this.lastVitalite = data.vitaliteCourante;
+    this.lastHeroisme = data.heroisme;
+    this.vitaliteControl.setValue(data.vitaliteCourante, {emitEvent: false});
+    this.heroismeControl.setValue(data.heroisme, {emitEvent: false});
+    this.armures.set(
+      data.armures
+        .filter((entry): entry is BolHerosArmureModel & {armure: BolArmureModel} => Boolean(entry.armure))
+        .map((entry) => ({id: entry.armure_id, equipee: entry.equipee, armure: entry.armure})),
+    );
 
     this.vitaliteControl.valueChanges.subscribe((value) => this.onVitaliteChange(value));
     this.heroismeControl.valueChanges.subscribe((value) => this.onHeroismeChange(value));
@@ -112,20 +114,21 @@ export class HeroStatblockDialogComponent {
       return;
     }
 
-    this.fightSessionService.applyDamage(this.data.sessionId, 'hero', this.data.pivotId, delta).subscribe({
+    const data = this.data();
+    this.fightSessionService.applyDamage(data.sessionId, 'hero', data.pivotId, delta).subscribe({
       next: () => {
         this.lastVitalite = value;
-        this.changed.set(true);
+        this.changed.emit();
 
         if (value < 0) {
           maybePromptDefierLaMort({
             dialog: this.dialog,
             fightSessionService: this.fightSessionService,
             herosService: this.herosService,
-            sessionId: this.data.sessionId,
-            herosId: this.data.herosId,
-            pivotId: this.data.pivotId,
-            heroNom: this.data.heroNom,
+            sessionId: data.sessionId,
+            herosId: data.herosId,
+            pivotId: data.pivotId,
+            heroNom: data.heroNom,
             vitaliteCourante: value,
             heroisme: this.lastHeroisme,
             // Ce callback vient de la fermeture d'un dialog imbriqué (defier-la-mort), pas d'un
@@ -159,10 +162,10 @@ export class HeroStatblockDialogComponent {
       return;
     }
 
-    this.herosService.adjustHeroisme(this.data.herosId, delta).subscribe({
+    this.herosService.adjustHeroisme(this.data().herosId, delta).subscribe({
       next: () => {
         this.lastHeroisme = value;
-        this.changed.set(true);
+        this.changed.emit();
       },
       error: (error: unknown) => {
         this.snackBar.open(extractApiErrorMessage(error, "Impossible de mettre à jour l'héroïsme."), 'Fermer', {
@@ -185,8 +188,8 @@ export class HeroStatblockDialogComponent {
       applyArmureEquipToggle(previous, index, (id) => previous.find((a) => a.id === id)?.armure.categorie ?? null),
     );
 
-    this.herosService.equipArmure(this.data.herosId, target.id).subscribe({
-      next: () => this.changed.set(true),
+    this.herosService.equipArmure(this.data().herosId, target.id).subscribe({
+      next: () => this.changed.emit(),
       error: (error: unknown) => {
         this.snackBar.open(extractApiErrorMessage(error, "Impossible de mettre à jour l'équipement."), 'Fermer', {
           duration: 5000,
@@ -194,9 +197,5 @@ export class HeroStatblockDialogComponent {
         this.armures.set(previous);
       },
     });
-  }
-
-  protected close(): void {
-    this.ref.close(this.changed());
   }
 }
