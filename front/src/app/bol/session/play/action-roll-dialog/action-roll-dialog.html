@@ -29,7 +29,7 @@
           <mat-button-toggle-group class="ard-toggle" [value]="attribute()" [hideSingleSelectionIndicator]="true" (change)="setAttribute($event)">
             @for (attr of attributes; track attr) {
               <mat-button-toggle [value]="attr">
-                {{ attributeLabels[attr] }} ({{ data[attr] >= 0 ? '+' : '' }}{{ data[attr] }})
+                {{ attributeLabels[attr] }} ({{ signed(data[attr]) }})
               </mat-button-toggle>
             }
           </mat-button-toggle-group>
@@ -45,7 +45,7 @@
               >
                 <mat-button-toggle value="aucune">Aucune</mat-button-toggle>
                 @for (c of carrieres; track c.label) {
-                  <mat-button-toggle [value]="c.label">{{ c.label }} ({{ c.value >= 0 ? '+' : '' }}{{ c.value }})</mat-button-toggle>
+                  <mat-button-toggle [value]="c.label">{{ c.label }} ({{ signed(c.value) }})</mat-button-toggle>
                 }
               </mat-button-toggle-group>
             </div>
@@ -63,14 +63,14 @@
             <mat-button-toggle-group class="ard-toggle" [value]="difficulty().label" [hideSingleSelectionIndicator]="true" (change)="setDifficulty($event)">
               @for (d of difficultiesRow1; track d.label) {
                 <mat-button-toggle [value]="d.label">
-                  {{ d.label }} ({{ d.modifier >= 0 ? '+' : '' }}{{ d.modifier }})
+                  {{ d.label }} ({{ signed(d.modifier) }})
                 </mat-button-toggle>
               }
             </mat-button-toggle-group>
             <mat-button-toggle-group class="ard-toggle" [value]="difficulty().label" [hideSingleSelectionIndicator]="true" (change)="setDifficulty($event)">
               @for (d of difficultiesRow2; track d.label) {
                 <mat-button-toggle [value]="d.label">
-                  {{ d.label }} ({{ d.modifier >= 0 ? '+' : '' }}{{ d.modifier }})
+                  {{ d.label }} ({{ signed(d.modifier) }})
                 </mat-button-toggle>
               }
             </mat-button-toggle-group>
@@ -122,11 +122,11 @@
             <div class="ard-modifier-row">
               <div class="ard-stepper">
                 <button type="button" (click)="incrementModifier(-1)">−</button>
-                <span>{{ modifier() >= 0 ? '+' : '' }}{{ modifier() }}</span>
+                <span>{{ signed(modifier()) }}</span>
                 <button type="button" (click)="incrementModifier(1)">+</button>
               </div>
               @if (equipmentModifier() !== 0) {
-                <span class="ard-equip-chip">Équipement {{ equipmentModifier() >= 0 ? '+' : '' }}{{ equipmentModifier() }}</span>
+                <span class="ard-equip-chip">Équipement {{ signed(equipmentModifier()) }}</span>
               }
             </div>
           </div>
@@ -138,27 +138,27 @@
 
         <div class="ard-ledger-line">
           <span>{{ attributeLabels[attribute()] }}</span>
-          <b>{{ data[attribute()] >= 0 ? '+' : '' }}{{ data[attribute()] }}</b>
+          <b>{{ signed(data[attribute()]) }}</b>
         </div>
         @if (carriere(); as c) {
           <div class="ard-ledger-line">
             <span>{{ c.label }}</span>
-            <b>{{ c.value >= 0 ? '+' : '' }}{{ c.value }}</b>
+            <b>{{ signed(c.value) }}</b>
           </div>
         }
         @if (equipmentModifier() !== 0) {
           <div class="ard-ledger-line">
             <span>Équipement</span>
-            <b>{{ equipmentModifier() >= 0 ? '+' : '' }}{{ equipmentModifier() }}</b>
+            <b>{{ signed(equipmentModifier()) }}</b>
           </div>
         }
         <div class="ard-ledger-line">
           <span>{{ difficulty().label }}</span>
-          <b>{{ difficulty().modifier >= 0 ? '+' : '' }}{{ difficulty().modifier }}</b>
+          <b>{{ signed(difficulty().modifier) }}</b>
         </div>
         <div class="ard-ledger-line">
           <span>Modificateur</span>
-          <b>{{ modifier() >= 0 ? '+' : '' }}{{ modifier() }}</b>
+          <b>{{ signed(modifier()) }}</b>
         </div>
 
         <div class="ard-ledger-formula">

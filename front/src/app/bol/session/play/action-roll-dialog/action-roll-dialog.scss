@@ -275,10 +275,17 @@
   }
 }
 
+// `flex` + `align-items: baseline` : la formule mélange du texte brut ("+", "> 9") et des puces
+// `.ard-die` (inline-flex elles-mêmes, centrées sur leur propre boîte) — sans conteneur flex dédié à
+// la ligne de base, les puces se calent sur leur propre boîte de 1.4rem plutôt que sur la ligne de
+// base du texte autour (cf. ancienne `.ard-slate-eq`, même bug déjà corrigé une fois ici).
 .ard-ledger-formula {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.25rem;
   margin-top: 0.6rem;
   padding-top: 0.6rem;
-  text-align: center;
   font-family: 'Muse Display Harmony', serif;
   font-size: 1.05rem;
   color: var(--dw-color-legendary);

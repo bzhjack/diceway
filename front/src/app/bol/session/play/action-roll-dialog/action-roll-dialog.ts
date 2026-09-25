@@ -441,6 +441,11 @@ export class ActionRollDialogComponent {
     );
   }
 
+  /** Formate un modificateur avec son signe — jamais de "+0" (zéro n'est ni un bonus ni un malus). */
+  protected signed(value: number): string {
+    return value > 0 ? `+${value}` : `${value}`;
+  }
+
   protected close(): void {
     this.ref.close();
   }
