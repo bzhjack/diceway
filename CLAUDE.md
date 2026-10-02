@@ -100,7 +100,7 @@ Every library page (list of entities) follows this structure:
 
 1. **Header** — `<dw-library-header [title]="…" [description]="…" [color]="…" [image]="…">`:
    - `dwHeaderTags` slot: `<dw-tag>` with the item count(s).
-   - `dwHeaderActions` slot: left side — navigation links + primary action as `mat-flat-button`/`mat-stroked-button` (`size="small"`); right side — `<button mat-stroked-button size="small" routerLink="/"><mat-icon>arrow_back</mat-icon> Retour au dashboard</button>`.
+   - `dwHeaderActions` slot: left side — navigation links + primary action as `mat-flat-button`/`mat-stroked-button` (`size="small"`); right side — `<button mat-stroked-button size="small" routerLink="/"><mat-icon>arrow_back</mat-icon> Retour à la table</button>` (`/` redirige vers la session ouverte, ou affiche le seuil s'il n'y en a pas).
 
 2. **Content card** — `<mat-card appearance="outlined">` containing a `<dw-library-toolbar>` (search field via `[(searchTerm)]`, optional filter controls in the `dwToolbarFilter` slot, `<dw-tag dwToolbarCount>` for the filtered count) and the item grid/list/table below.
 

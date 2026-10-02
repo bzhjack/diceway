@@ -4,25 +4,41 @@
 
 @use '../../roll-dialog-shared' as shared;
 
-:host {
+// Embarqué dans la fiche du jeton (`bol-token-inspector`), qui scrolle elle-même : ce composant
+// prend la hauteur de son contenu, les dés roulent sur toute sa surface.
+bol-action-roll-panel {
   display: block;
-  height: 100%;
 }
 
-// Le canvas de dés 3D occupe tout le panneau en fond (.ard-dice-layer), les contrôles flottent
-// par-dessus (.ard-fg) avec un fond semi-opaque chacun pour rester lisibles quels que soient les dés
-// en dessous — cf. décision du 2026-09-07 (on fait rouler les dés sur l'ensemble du composant plutôt
-// que dans un canvas dédié). Embarqué dans le panneau latéral de `session-play-page` (plus un
-// dialog) : remplit le panneau (qui porte déjà sa propre bordure/ombre), plus de coins arrondis
-// pleine hauteur ni de bordure propre — redondant avec celle du panneau.
 .ard-shell {
   position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 35%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--dw-color-legendary) 6%, var(--dw-surface-0) 94%);
+}
+
+.ard-fg {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: linear-gradient(180deg, var(--dw-surface-50) 0%, var(--dw-surface-0) 100%);
+  gap: 0.75rem;
+  padding: 0.85rem 0.9rem 1rem;
+}
+
+// Formule en clair + rappel de l'héroïsme disponible, sur une même ligne.
+.ard-ledger-formula {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed color-mix(in srgb, var(--dw-border) 80%, transparent);
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--dw-color-legendary);
 }
 
 // Au-dessus du contenu (z-index 2), pas en dessous : posé derrière les panneaux, les dés se
@@ -48,132 +64,6 @@
   }
 }
 
-.ard-fg {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 0 1.1rem 1rem;
-  overflow-y: auto;
-}
-
-// Piste A ("ardoise vivante") : le dialog se lit comme une composition en 3 étapes numérotées (col.
-// gauche) qui alimentent un livre de compte toujours visible (col. droite, cf. .ard-ledger) — chaque
-// choix devient sa propre ligne au lieu d'une phrase dense, pour que la formule/le total se déduisent
-// visuellement des réglages plutôt que d'être pris sur parole.
-// Une seule colonne, toujours : le panneau latéral (~30rem) n'a jamais la largeur d'un dialog
-// centré, et `@media` réagit à la largeur du viewport, pas à celle du panneau — une media query ne
-// détecterait donc jamais cet espace étroit sur un écran large (cf. le bug constaté en piste A).
-.ard-body {
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-  margin-top: 0.9rem;
-}
-
-.ard-steps {
-  flex: 1.5;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.ard-step {
-  border: 1px solid var(--dw-border);
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--dw-surface-0) 45%, transparent);
-  padding: 0.7rem 0.85rem 0.8rem;
-}
-
-.ard-step-head {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  margin-bottom: 0.55rem;
-  flex-wrap: wrap;
-}
-
-.ard-step-num {
-  flex-shrink: 0;
-  width: 1.4rem;
-  height: 1.4rem;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--dw-color-legendary) 18%, transparent);
-  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);
-  color: var(--dw-color-legendary);
-  font-family: 'Muse Display Harmony', serif;
-  font-weight: 700;
-  font-size: 0.78rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.ard-step-title {
-  font-size: 0.9rem;
-  font-weight: 800;
-  color: var(--dw-surface-800);
-  text-shadow: 0 1px 3px rgba(2, 6, 23, 0.9);
-}
-
-.ard-step-hint {
-  font-size: 0.72rem;
-  color: var(--dw-surface-500);
-}
-
-.ard-substep {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  margin-top: 0.65rem;
-}
-
-.ard-substep-label {
-  font-size: 0.74rem;
-  font-weight: 700;
-  color: var(--dw-surface-500);
-  text-shadow: 0 1px 3px rgba(2, 6, 23, 0.9);
-}
-
-// Bandeau dégradé purement indicatif (facile → héroïque) posé au-dessus des deux rails segmentés de
-// la difficulté : signale que ces 8 options forment une échelle continue, pas une liste de choix
-// équivalents.
-.ard-diff-rail {
-  height: 3px;
-  border-radius: 999px;
-  margin: 0 0.2rem 0.5rem;
-  background: linear-gradient(90deg, var(--dw-color-reussite), var(--dw-color-dice-kicker) 40%, var(--dw-color-echec) 72%, var(--dw-color-legendary));
-  opacity: 0.6;
-}
-
-// Livre de compte : persistant à droite des 3 étapes, il matérialise chaque choix actif en ligne
-// (au lieu de l'ancienne phrase compacte façon ardoise) et regroupe résultat + lancer + actions
-// conditionnelles — la seule chose qu'on doit "lire" pour comprendre le jet en cours.
-.ard-ledger {
-  flex: 1;
-  min-width: 15rem;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 35%, transparent);
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--dw-color-legendary) 6%, var(--dw-surface-0) 94%);
-  padding: 0.85rem 0.95rem 1rem;
-}
-
-.ard-ledger-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--dw-color-legendary);
-  margin-bottom: 0.5rem;
-}
-
 // Repris de l'ancien en-tête du dialog (`.ard-header`, supprimé — le panneau qui embarque ce
 // composant a désormais son propre en-tête partagé) : reste visible pendant le jet, là où il compte
 // (dépense sur Faveur divine / conversions de palier).
@@ -181,39 +71,6 @@
   @include shared.heroisme-badge($font-size: 0.8rem, $icon-size: 0.95rem);
   text-transform: none;
   letter-spacing: normal;
-}
-
-.ard-ledger-line {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.5rem;
-  padding: 0.24rem 0;
-  font-size: 0.8rem;
-  color: var(--dw-surface-500);
-  border-bottom: 1px dashed color-mix(in srgb, var(--dw-border) 80%, transparent);
-
-  b {
-    color: var(--dw-surface-900);
-    font-variant-numeric: tabular-nums;
-  }
-}
-
-// `flex` + `align-items: baseline` : la formule mélange du texte brut ("+", "> 9") et des puces
-// `.ard-die` (inline-flex elles-mêmes, centrées sur leur propre boîte) — sans conteneur flex dédié à
-// la ligne de base, les puces se calent sur leur propre boîte de 1.4rem plutôt que sur la ligne de
-// base du texte autour (cf. ancienne `.ard-slate-eq`, même bug déjà corrigé une fois ici).
-.ard-ledger-formula {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 0.25rem;
-  margin-top: 0.6rem;
-  padding-top: 0.6rem;
-  font-family: 'Muse Display Harmony', serif;
-  font-size: 1.05rem;
-  color: var(--dw-color-legendary);
-  text-shadow: 0 1px 3px rgba(2, 6, 23, 0.9);
 }
 
 // Résultat : plus de bande horizontale résultat+saisie+lancer réunis (ancienne piste C) — le lancer
@@ -225,7 +82,6 @@
   display: flex;
   align-items: stretch;
   gap: 0.6rem;
-  margin-top: 0.65rem;
 }
 
 .ard-ticket {
@@ -332,7 +188,6 @@
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  margin-top: 0.5rem;
 }
 
 .ard-manual-hint {
@@ -393,22 +248,6 @@
   }
 }
 
-.ard-die {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.4rem;
-  height: 1.4rem;
-  border-radius: 5px;
-  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);
-  background: color-mix(in srgb, var(--dw-surface-0) 70%, transparent);
-  color: var(--dw-surface-900);
-  font-weight: 800;
-  font-size: 0.8rem;
-  font-variant-numeric: tabular-nums;
-  vertical-align: -0.15em;
-}
-
 // Rail segmenté sur `mat-button-toggle-group` : un seul bandeau d'un seul tenant (bordure
 // + coins arrondis portés par le groupe, pas par chaque case) divisé par de simples liserés internes
 // — pas des puces séparées par des espaces. Chaque groupe reste sur une seule ligne (pas de wrap) :
@@ -459,18 +298,6 @@
       color: #1c1200;
     }
   }
-}
-
-.ard-toggle-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.ard-modifier-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
 .ard-equip-chip {
@@ -579,8 +406,41 @@
 .ard-divine-favor {
   @include shared.divine-favor-button;
   width: 100%;
-  margin: 0.6rem 0 0;
+  margin: 0;
   padding: 0.5rem 0.9rem;
   font-size: 0.88rem;
   background: color-mix(in srgb, var(--dw-surface-0) 55%, transparent);
+}
+
+// Rangée compacte : un libellé au-dessus de son contrôle. Remplace les trois étapes numérotées.
+.ard-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.ard-row-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+
+  b {
+    color: var(--dw-color-legendary);
+  }
+}
+
+// Réglette de difficulté : huit segments d'un seul tenant, seul le modificateur est écrit dans la
+// case (le libellé complet est dans l'infobulle, l'aria-label et le titre de la rangée).
+.ard-toggle--scale.mat-button-toggle-group .mat-button-toggle-label-content {
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.ard-adjust {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
 }

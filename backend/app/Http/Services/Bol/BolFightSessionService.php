@@ -113,7 +113,8 @@ class BolFightSessionService
         return $this->getSessionWithRelations($sessionId);
     }
 
-    /** Termine le combat : retire les adversaires, la session redevient `libre` avec les héros seuls. */
+    /** Termine le combat : la session redevient `libre`. Les PNJ, créatures et démons restent sur la
+     * table (ils ont pu y être posés en mode libre) — le MJ retire les vaincus à la main. */
     public function endCombat(string $sessionId, string $userId): ?BolFightSession
     {
         $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
@@ -121,9 +122,6 @@ class BolFightSessionService
             return null;
         }
 
-        BolFightSessionCreature::where('fight_session_id', $sessionId)->delete();
-        BolFightSessionDemon::where('fight_session_id', $sessionId)->delete();
-        BolFightSessionPnj::where('fight_session_id', $sessionId)->delete();
         BolFightSessionHeros::where('fight_session_id', $sessionId)->update(['initiative_resultat' => null]);
 
         $session->update(['statut' => 'libre', 'ordre_manuel' => null]);

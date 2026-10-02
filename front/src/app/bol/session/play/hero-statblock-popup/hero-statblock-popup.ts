@@ -6,7 +6,7 @@ import {HeroStatblockDialogComponent, HeroStatblockDialogData} from '../hero-sta
 /**
  * Enveloppe `MatDialog` de `bol-hero-statblock-dialog` (contenu embarquable, prend ses données en
  * `input()` — cf. son propre commentaire) : seul contexte qui l'ouvre encore en dialog plutôt que
- * dans le panneau fusionné `bol-hero-action-panel` — un héros en mode combat, où le double-clic
+ * dans le panneau fusionné `bol-token-inspector` — un héros en mode combat, où le double-clic
  * garde son rôle de ciblage d'attaque plutôt que d'ouvrir le jet d'action.
  */
 @Component({

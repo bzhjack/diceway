@@ -14,16 +14,12 @@
 
 <div class="hsd-content">
   <bol-statblock [data]="data().statblock" [imageSrc]="data().avatar" [returnUrl]="data().returnUrl">
-    <div statblockHeaderExtra class="hsd-header-steppers">
-      <div class="hsd-stepper-field">
-        <label id="hsd-vitalite-label">Vitalité ({{ vitaliteControl.value }} / {{ data().vitaliteMax }})</label>
-        <dw-value-stepper [formControl]="vitaliteControl" [min]="-20" [max]="data().vitaliteMax" [ariaLabel]="'Vitalité'" />
-      </div>
-
-      <div class="hsd-stepper-field">
-        <label id="hsd-heroisme-label">Héroïsme ({{ heroismeControl.value }})</label>
-        <dw-value-stepper [formControl]="heroismeControl" [min]="0" [ariaLabel]="'Héroïsme'" />
-      </div>
-    </div>
+    <bol-hero-resources
+      statblockHeaderExtra
+      class="hsd-header-steppers"
+      [data]="data()"
+      [(heroisme)]="heroisme"
+      (changed)="changed.emit()"
+    />
   </bol-statblock>
 </div>

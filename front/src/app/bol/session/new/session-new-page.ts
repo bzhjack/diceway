@@ -7,12 +7,14 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {CombatSelectionService} from '../../services/combat-selection.service';
+import {AccountMenuComponent} from '../../shared/account-menu/account-menu';
 import {CombatantPickerDialogComponent} from './combatant-picker-dialog/combatant-picker-dialog';
 
-/** Écran de création d'une session : choix des héros présents à table, sans adversaire ni initiative (mode libre). */
+/** Seuil : affiché sur `/` quand aucune session n'est ouverte, et sur `/session/new`. Le MJ choisit
+ * les héros présents et ouvre la table (session en mode libre). */
 @Component({
   selector: 'bol-session-new-page',
-  imports: [RouterLink, MatButtonModule, MatIconModule],
+  imports: [RouterLink, MatButtonModule, MatIconModule, AccountMenuComponent],
   templateUrl: './session-new-page.html',
   styleUrl: './session-new-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,6 +27,10 @@ export class SessionNewPageComponent {
 
   protected readonly launching = signal(false);
   protected readonly canLaunch = computed(() => this.selection.combatants().length > 0);
+
+  /** Revenir sur le seuil après la création d'un héros (et non sur `/`, qui redirigerait vers une
+   * session ouverte s'il en existe une). */
+  protected readonly createHeroState = {returnUrl: '/session/new'};
 
   constructor() {
     this.selection.loadCatalog();

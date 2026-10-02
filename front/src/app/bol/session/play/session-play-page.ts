@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {forkJoin, Observable, of, take, tap} from 'rxjs';
@@ -15,7 +16,7 @@ import {BolDemonsService} from '../../services/bol-demons.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {BolPnjService} from '../../services/bol-pnj.service';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
-import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
+import {BolStatblockComponent, BolStatblockData} from '../../shared/statblock/bol-statblock.component';
 import {
   creatureStatblockData,
   demonStatblockData,
@@ -25,30 +26,47 @@ import {
 import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialog';
 import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard, PlayToken, postCombatRecoveryAmount} from '../combat-play.util';
-import {ActionRollDiceTrait, ActionRollDialogData} from './action-roll-dialog/action-roll-dialog';
+import {ActionRollDiceTrait, LastRoll} from '../action-roll.util';
 import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
 import {AttackRequest, BattlemapComponent, TokenPositionChange} from './battlemap/battlemap';
 import {maybePromptDefierLaMort} from './defier-la-mort-dialog/defier-la-mort.util';
-import {HeroActionPanelComponent, HeroActionPanelData, HeroActionPanelTab} from './hero-action-panel/hero-action-panel';
 import {HeroStatblockDialogData} from './hero-statblock-dialog/hero-statblock-dialog';
 import {HeroStatblockPopupComponent} from './hero-statblock-popup/hero-statblock-popup';
 import {InitiativeRailComponent} from './initiative-rail/initiative-rail';
 import {SessionHeaderComponent} from './session-header/session-header';
+import {ReserveComponent} from './reserve/reserve';
 import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dialog';
+import {
+  browserStorage,
+  findSelectedToken,
+  readPanelOpen,
+  RESERVE_PANEL_KEY,
+  writePanelOpen,
+} from './table-state.util';
+import {TokenInspectorComponent, TokenInspectorHeroData} from './token-inspector/token-inspector';
 
 /**
- * Écran plein page affiché après « Lancer le combat » : orchestre le chargement/la persistance de
- * la session et l'ouverture des dialogs — l'affichage est délégué à `bol-session-header` (titre,
- * actions), `bol-initiative-rail` (ruban réordonnable) et `bol-battlemap` (jetons, ciblage, menus).
+ * La table : page d'accueil d'une session. Orchestre le chargement/la persistance de la session et
+ * l'ouverture des dialogs — l'affichage est délégué à `bol-session-header`, `bol-reserve` (poser des
+ * personnages, mode libre), `bol-battlemap` (jetons), `bol-token-inspector` (fiche du jeton, mode
+ * libre) et `bol-initiative-rail` (mode combat).
  */
 @Component({
   selector: 'bol-session-play-page',
-  imports: [RouterLink, SessionHeaderComponent, InitiativeRailComponent, BattlemapComponent, HeroActionPanelComponent],
+  imports: [
+    RouterLink,
+    MatIconModule,
+    SessionHeaderComponent,
+    InitiativeRailComponent,
+    BattlemapComponent,
+    ReserveComponent,
+    TokenInspectorComponent,
+  ],
   templateUrl: './session-play-page.html',
   styleUrl: './session-play-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '(document:keydown.escape)': 'closeHeroActionPanel()',
+    '(document:keydown.escape)': 'closeInspector()',
   },
 })
 export class SessionPlayPageComponent {
@@ -103,10 +121,44 @@ export class SessionPlayPageComponent {
   /** Premier de l'ordre affiché (calculé ou réordonné) = combattant dont c'est le tour. */
   protected readonly activeKey = computed(() => this.orderedTokens()[0]?.key ?? null);
 
+  protected readonly sessionId = computed(() => this.session()?.id ?? null);
+
+  /** Page à laquelle revenir depuis un formulaire ou une bibliothèque ouverts depuis la table. */
+  protected readonly returnUrl = computed(() => {
+    const id = this.sessionId();
+    return id ? `/session/${id}/play` : null;
+  });
+
+  protected readonly existingHeroIds = computed<ReadonlySet<string>>(
+    () => new Set((this.session()?.heros ?? []).map((h) => String(h.heros_id))),
+  );
+  protected readonly existingPnjIds = computed<ReadonlySet<string>>(
+    () =>
+      new Set(
+        (this.session()?.pnjs ?? [])
+          .map((p) => p.pnj_id)
+          .filter((pnjId): pnjId is string => !!pnjId)
+          .map(String),
+      ),
+  );
+
+  protected readonly reserveOpen = signal(readPanelOpen(browserStorage(), RESERVE_PANEL_KEY, true));
+
+  /** Clé du jeton dont la fiche est ouverte (mode libre). */
+  private readonly selectedKey = signal<string | null>(null);
+  protected readonly selectedToken = computed(() =>
+    findSelectedToken(this.board()?.tokens ?? [], this.selectedKey(), this.mode()),
+  );
+  /** Données de la fiche, chargées à la sélection — `null` pendant le chargement. */
+  protected readonly inspectorHero = signal<TokenInspectorHeroData | null>(null);
+  protected readonly inspectorStatblock = signal<BolStatblockData | null>(null);
+
+  protected readonly lastRoll = signal<LastRoll | null>(null);
+
   constructor() {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
-      this.errorMessage.set('Combat introuvable.');
+      this.errorMessage.set('Session introuvable.');
       this.loading.set(false);
       return;
     }
@@ -115,23 +167,21 @@ export class SessionPlayPageComponent {
   }
 
   protected openAddCombatantDialog(): void {
-    const session = this.session();
-    const sessionId = session?.id;
-    if (!session || !sessionId) {
+    const sessionId = this.sessionId();
+    if (!sessionId) {
       return;
     }
-
-    const existingHeroIds = new Set((session.heros ?? []).map((h) => String(h.heros_id)));
-    const existingPnjIds = new Set(
-      (session.pnjs ?? []).map((p) => p.pnj_id).filter((pnjId): pnjId is string => !!pnjId).map(String),
-    );
 
     this.dialog
       .open(AddCombatantDialogComponent, {
         width: 'min(760px, 94vw)',
         maxWidth: '94vw',
         maxHeight: '85vh',
-        data: {sessionId, existingHeroIds, existingPnjIds, lockKind: this.mode() === 'libre' ? 'hero' : undefined},
+        data: {
+          sessionId,
+          existingHeroIds: this.existingHeroIds(),
+          existingPnjIds: this.existingPnjIds(),
+        },
       })
       .afterClosed()
       .subscribe((didAdd: boolean | undefined) => {
@@ -173,7 +223,7 @@ export class SessionPlayPageComponent {
       this.dialog,
       {
         title: 'Terminer le combat',
-        message: 'Les adversaires seront retirés et la session repassera en mode libre. Continuer ?',
+        message: 'La session repassera en mode libre. Les personnages restent sur la table. Continuer ?',
         confirmLabel: 'Terminer',
       },
       {width: '380px'},
@@ -227,7 +277,7 @@ export class SessionPlayPageComponent {
       this.dialog,
       {
         title: 'Retirer ce combattant',
-        message: `Voulez-vous retirer « ${token.nom} » de ce combat ?`,
+        message: `Voulez-vous retirer « ${token.nom} » de la table ?`,
         confirmLabel: 'Retirer',
       },
       {width: '380px'},
@@ -237,7 +287,12 @@ export class SessionPlayPageComponent {
       }
 
       this.fightSessionService.removeCombatant(sessionId, token.kind, token.pivotId).subscribe({
-        next: () => this.loadSession(sessionId),
+        next: () => {
+          if (this.selectedKey() === token.key) {
+            this.selectedKey.set(null);
+          }
+          this.loadSession(sessionId);
+        },
         error: (error: unknown) => {
           this.snackBar.open(
             extractApiErrorMessage(error, 'Impossible de retirer ce combattant.'),
@@ -321,46 +376,27 @@ export class SessionPlayPageComponent {
     });
   }
 
-  /** Consultation du statbloc d'un jeton (récupéré en direct, seules les stats de combat sont
-   * snapshotées) — héros en mode libre : panneau fusionné fiche/jet (cf. `heroActionPanelData`),
-   * onglet Fiche ; tout le reste (PNJ/créature/démon, ou héros en combat) garde son dialog dédié. */
+  /** Bouton « carte » ou double-clic sur un jeton. Mode libre : sélectionne le jeton (fiche du jeton).
+   * Mode combat : dialog de statbloc dédié, comme avant. */
   protected openStatblockFor(token: PlayToken): void {
+    if (this.mode() === 'libre') {
+      this.onTokenSelected(token);
+      return;
+    }
+
     const sourceId = token.combat.sourceId;
-    const sessionId = this.session()?.id;
+    const sessionId = this.sessionId();
     if (!sourceId || !sessionId) {
       return;
     }
 
-    if (token.kind === 'hero' && this.mode() === 'libre') {
-      this.openHeroActionPanel(token, sourceId, sessionId, 'fiche');
-      return;
-    }
-
-    /** Lien "Modifier la fiche" (bol-statblock) : revenir sur cette session de combat après édition. */
+    /** Lien "Modifier la fiche" (bol-statblock) : revenir sur cette table après édition. */
     const returnUrl = `/session/${sessionId}/play`;
 
     switch (token.kind) {
-      case 'hero': {
-        this.herosService
-          .heros(sourceId)
-          .pipe(take(1))
-          .subscribe((hero) => {
-            this.dialog
-              .open(HeroStatblockPopupComponent, {
-                maxWidth: 'min(900px, 94vw)',
-                panelClass: 'dw-statblock-dialog',
-                position: {top: '10vh'},
-                data: this.buildHeroStatblockData(token, hero, sourceId, sessionId, returnUrl),
-              })
-              .afterClosed()
-              .subscribe((changed: boolean | undefined) => {
-                if (changed) {
-                  this.loadSession(sessionId);
-                }
-              });
-          });
+      case 'hero':
+        this.openHeroPopup(token, sourceId, sessionId);
         break;
-      }
       case 'pnj':
         this.pnjService
           .pnj(sourceId)
@@ -400,64 +436,170 @@ export class SessionPlayPageComponent {
     }
   }
 
-  /** Panneau fusionné fiche/jet d'action d'un héros en mode libre — `null` = panneau fermé. Vidé
-   * avant le chargement du héros suivant pour forcer la recréation de `bol-hero-action-panel`
-   * (sinon son état interne, onglet actif, attribut/difficulté choisis, etc., resterait celui du
-   * héros précédent). */
-  protected readonly heroActionPanelData = signal<HeroActionPanelData | null>(null);
-  protected readonly heroActionPanelTab = signal<HeroActionPanelTab>('jet');
+  protected toggleReserve(): void {
+    const next = !this.reserveOpen();
+    this.reserveOpen.set(next);
+    writePanelOpen(browserStorage(), RESERVE_PANEL_KEY, next);
+  }
 
-  protected onActionRoll(token: PlayToken): void {
-    const herosId = token.combat.sourceId;
-    const sessionId = this.session()?.id;
-    if (!herosId || !sessionId) {
+  /** Clic sur un jeton : ouvre sa fiche (mode libre). Recliquer le même jeton ne recharge rien, pour
+   * ne pas perdre un jet en cours. */
+  protected onTokenSelected(token: PlayToken): void {
+    if (this.mode() !== 'libre' || this.selectedKey() === token.key) {
       return;
     }
 
-    this.openHeroActionPanel(token, herosId, sessionId, 'jet');
+    this.selectedKey.set(token.key);
+    this.loadInspector(token);
   }
 
-  private openHeroActionPanel(token: PlayToken, herosId: string, sessionId: string, tab: HeroActionPanelTab): void {
-    const returnUrl = `/session/${sessionId}/play`;
-    this.heroActionPanelData.set(null);
+  protected closeInspector(): void {
+    this.selectedKey.set(null);
+  }
 
+  protected reloadSession(): void {
+    const sessionId = this.sessionId();
+    if (sessionId) {
+      this.loadSession(sessionId);
+    }
+  }
+
+  /** Charge les données de la fiche du jeton. Chaque réponse est ignorée si un autre jeton a été
+   * sélectionné entre-temps (réponses arrivées dans le désordre). */
+  private loadInspector(token: PlayToken): void {
+    this.inspectorHero.set(null);
+    this.inspectorStatblock.set(null);
+
+    const sourceId = token.combat.sourceId;
+    const sessionId = this.sessionId();
+    if (!sourceId || !sessionId) {
+      return;
+    }
+
+    const stillSelected = (): boolean => this.selectedKey() === token.key;
+
+    switch (token.kind) {
+      case 'hero':
+        this.herosService
+          .heros(sourceId)
+          .pipe(take(1))
+          .subscribe((hero) => {
+            if (stillSelected()) {
+              this.inspectorHero.set(this.buildInspectorHero(token, hero, sourceId, sessionId));
+            }
+          });
+        break;
+      case 'pnj':
+        this.pnjService
+          .pnj(sourceId)
+          .pipe(take(1))
+          .subscribe((pnj) => {
+            if (stillSelected()) {
+              this.inspectorStatblock.set(pnjStatblockData(pnj));
+            }
+          });
+        break;
+      case 'creature':
+        this.creaturesService
+          .creature(sourceId)
+          .pipe(take(1))
+          .subscribe((creature) => {
+            if (stillSelected()) {
+              this.inspectorStatblock.set(creatureStatblockData(creature));
+            }
+          });
+        break;
+      case 'demon':
+        this.demonsService
+          .demon(sourceId)
+          .pipe(take(1))
+          .subscribe((demon) => {
+            if (stillSelected()) {
+              this.inspectorStatblock.set(demonStatblockData(demon));
+            }
+          });
+        break;
+    }
+  }
+
+  private buildInspectorHero(
+    token: PlayToken,
+    hero: BolHerosModel,
+    herosId: string,
+    sessionId: string,
+  ): TokenInspectorHeroData {
+    return {
+      resources: {
+        sessionId,
+        herosId,
+        pivotId: token.pivotId,
+        heroNom: token.nom,
+        vitaliteCourante: token.vitaliteCourante ?? hero.ressources.vitalite,
+        vitaliteMax: hero.ressources.vitalite,
+      },
+      actionRoll: {
+        heroNom: token.nom,
+        herosId,
+        heroisme: hero.ressources.heroisme,
+        agilite: hero.attributs.agilite,
+        vigueur: hero.attributs.vigueur,
+        esprit: hero.attributs.esprit,
+        aura: hero.attributs.aura,
+        equipementAgilite: hero.attributs.agilite_effective - hero.attributs.agilite,
+        carrieres: hero.carrieres
+          .map((c) => ({label: c.carriere?.carriere ?? '', value: c.value}))
+          .filter((c) => c.label),
+        diceTraits: hero.traits
+          .map((trait): ActionRollDiceTrait | null => {
+            const traitable = trait.traitable;
+            if (!traitable) {
+              return null;
+            }
+            if (trait.type === 'A' && 'de_bonus' in traitable && traitable.de_bonus) {
+              return {label: traitable.avantage, domaine: traitable.de_bonus_domaine, kind: 'avantage'};
+            }
+            if (trait.type === 'D' && 'de_malus' in traitable && traitable.de_malus) {
+              return {label: traitable.desavantage, domaine: traitable.de_malus_domaine, kind: 'desavantage'};
+            }
+            return null;
+          })
+          .filter((t): t is ActionRollDiceTrait => t !== null),
+      },
+    };
+  }
+
+  /** « Fiche complète » depuis la fiche du jeton : statbloc du héros en dialog. À la fermeture, si
+   * quelque chose a changé (vitalité, héroïsme, équipement), la session et la fiche sont rechargées. */
+  protected openFullSheet(token: PlayToken): void {
+    const sourceId = token.combat.sourceId;
+    const sessionId = this.sessionId();
+    if (!sourceId || !sessionId) {
+      return;
+    }
+
+    this.openHeroPopup(token, sourceId, sessionId, () => this.loadInspector(token));
+  }
+
+  private openHeroPopup(token: PlayToken, herosId: string, sessionId: string, onChanged?: () => void): void {
+    const returnUrl = `/session/${sessionId}/play`;
     this.herosService
       .heros(herosId)
       .pipe(take(1))
       .subscribe((hero) => {
-        this.heroActionPanelTab.set(tab);
-        this.heroActionPanelData.set({
-          heroNom: token.nom,
-          statblock: this.buildHeroStatblockData(token, hero, herosId, sessionId, returnUrl),
-          actionRoll: {
-            heroNom: token.nom,
-            herosId,
-            heroisme: hero.ressources.heroisme,
-            agilite: hero.attributs.agilite,
-            vigueur: hero.attributs.vigueur,
-            esprit: hero.attributs.esprit,
-            aura: hero.attributs.aura,
-            equipementAgilite: hero.attributs.agilite_effective - hero.attributs.agilite,
-            carrieres: hero.carrieres
-              .map((c) => ({label: c.carriere?.carriere ?? '', value: c.value}))
-              .filter((c) => c.label),
-            diceTraits: hero.traits
-              .map((trait): ActionRollDiceTrait | null => {
-                const traitable = trait.traitable;
-                if (!traitable) {
-                  return null;
-                }
-                if (trait.type === 'A' && 'de_bonus' in traitable && traitable.de_bonus) {
-                  return {label: traitable.avantage, domaine: traitable.de_bonus_domaine, kind: 'avantage'};
-                }
-                if (trait.type === 'D' && 'de_malus' in traitable && traitable.de_malus) {
-                  return {label: traitable.desavantage, domaine: traitable.de_malus_domaine, kind: 'desavantage'};
-                }
-                return null;
-              })
-              .filter((t): t is ActionRollDiceTrait => t !== null),
-          },
-        });
+        this.dialog
+          .open(HeroStatblockPopupComponent, {
+            maxWidth: 'min(900px, 94vw)',
+            panelClass: 'dw-statblock-dialog',
+            position: {top: '10vh'},
+            data: this.buildHeroStatblockData(token, hero, herosId, sessionId, returnUrl),
+          })
+          .afterClosed()
+          .subscribe((changed: boolean | undefined) => {
+            if (changed) {
+              this.loadSession(sessionId);
+              onChanged?.();
+            }
+          });
       });
   }
 
@@ -483,18 +625,6 @@ export class SessionPlayPageComponent {
       ),
       returnUrl,
     };
-  }
-
-  protected closeHeroActionPanel(): void {
-    this.heroActionPanelData.set(null);
-  }
-
-  /** `changed` de `bol-hero-statblock-dialog` (vitalité/héroïsme/équipement persistés) : recharge la session. */
-  protected onHeroActionPanelChanged(): void {
-    const sessionId = this.session()?.id;
-    if (sessionId) {
-      this.loadSession(sessionId);
-    }
   }
 
   /** Réordonnancement du ruban d'initiative (glisser-déposer dans `bol-initiative-rail`), persisté en base. */
@@ -548,7 +678,7 @@ export class SessionPlayPageComponent {
           this.loading.set(false);
         },
         error: () => {
-          this.errorMessage.set('Impossible de charger ce combat.');
+          this.errorMessage.set('Impossible de charger cette session.');
           this.loading.set(false);
         },
       });

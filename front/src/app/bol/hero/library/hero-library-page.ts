@@ -52,7 +52,7 @@ export class HeroLibraryPageComponent {
 
   protected readonly searchTerm = signal('');
   protected readonly onlyPending = signal(false);
-  /** Revenir à la session de combat d'origine plutôt qu'au dashboard, si on y accède via ses raccourcis bibliothèque. */
+  /** Revenir à la session de combat d'origine plutôt qu'à la table, si on y accède via ses raccourcis bibliothèque. */
   protected readonly returnUrl = signal(readReturnUrl());
 
   protected readonly filteredHeroes = computed(() =>

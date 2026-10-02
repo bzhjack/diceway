@@ -1,0 +1,103 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.rsv-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  height: 100%;
+  padding: 0.8rem 0.7rem;
+}
+
+.rsv-title {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+}
+
+.rsv-tabs {
+  display: flex;
+  flex-shrink: 0;
+
+  .mat-button-toggle {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  // Quatre onglets dans 17rem : libellés resserrés pour que « Créatures » tienne sans être coupé.
+  ::ng-deep .mat-button-toggle-label-content {
+    padding: 0 0.3rem;
+    font-size: 0.76rem;
+    line-height: 2.1rem;
+  }
+}
+
+.rsv-search {
+  flex-shrink: 0;
+}
+
+.rsv-list {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dw-border) transparent;
+}
+
+.rsv-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.4rem;
+  padding: 0.2rem 0.1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--dw-border) 60%, transparent);
+}
+
+.rsv-dot {
+  flex-shrink: 0;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 999px;
+}
+
+.rsv-dot--hero { background: var(--dw-color-reussite); }
+.rsv-dot--pnj { background: var(--dw-color-pnj); }
+.rsv-dot--creature { background: var(--dw-color-creature); }
+.rsv-dot--demon { background: var(--dw-color-demon); }
+
+.rsv-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.88rem;
+  color: var(--dw-surface-700);
+}
+
+.rsv-state {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  color: var(--dw-surface-500);
+}
+
+.rsv-empty {
+  padding: 1rem 0.2rem;
+  font-size: 0.85rem;
+  color: var(--dw-surface-500);
+}
+
+.rsv-footer {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}

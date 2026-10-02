@@ -1,6 +1,18 @@
 import {CdkDragEnd, DragDropModule} from '@angular/cdk/drag-drop';
 import {NgTemplateOutlet} from '@angular/common';
-import {ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, output, signal, viewChild} from '@angular/core';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  ElementRef,
+  inject,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {take} from 'rxjs';
@@ -10,25 +22,11 @@ import {BolCombatOptionModel, BolCombatReferenceService} from '../../../services
 import {BolHerosService} from '../../../services/bol-heros.service';
 import {combatantKindIcon, combatantKindIconIsSvg} from '../../combat-statblock.util';
 import {canTarget, EMPTY_AVATAR, PlayToken} from '../../combat-play.util';
+import {defaultTokenPosition} from './token-layout.util';
 import {AttackMenuComponent, AttackMenuConfirmation, CombatReminderStat, filterAttackMenuCombatOptions} from '../attack-menu/attack-menu';
-
-const COLS_PER_ZONE = 3;
-const HERO_ZONE = {xMin: 8, xMax: 32, yMin: 16, yMax: 84};
-const ADVERSAIRE_ZONE = {xMin: 68, xMax: 92, yMin: 16, yMax: 84};
 
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
-}
-
-/** Petit décalage déterministe (basé sur la clé du jeton) pour éviter un alignement trop rigide sur la carte. */
-function jitter(key: string): {jx: number; jy: number} {
-  let hash = 0;
-  for (let i = 0; i < key.length; i++) {
-    hash = (hash * 31 + key.charCodeAt(i)) | 0;
-  }
-  const jx = ((hash % 1000) / 1000) * 2 - 1;
-  const jy = (((hash >> 8) % 1000) / 1000) * 2 - 1;
-  return {jx, jy};
 }
 
 /** Armes + attributs de combat d'un héros, chargés à la demande à l'ouverture du menu épée. */
@@ -79,15 +77,22 @@ export class BattlemapComponent {
   readonly heroTokens = input.required<readonly PlayToken[]>();
   readonly adversaireTokens = input.required<readonly PlayToken[]>();
   readonly activeKey = input<string | null>(null);
+  /** Jeton sélectionné (fiche du jeton ouverte, mode libre) — anneau doré. */
+  readonly selectedKey = input<string | null>(null);
   /** Positions enregistrées (glisser-déposer précédent), persistées par le parent — clé de jeton → {x, y} en pourcentage. */
   readonly tokenPositions = input<Readonly<Record<string, {x: number; y: number}>>>({});
 
   readonly attackRequested = output<AttackRequest>();
   readonly statblockRequested = output<PlayToken>();
+  /** Clic simple sur un jeton hors mode ciblage. */
+  readonly tokenSelected = output<PlayToken>();
   readonly actionRollRequested = output<PlayToken>();
   readonly positionChanged = output<TokenPositionChange>();
 
   private readonly mapEl = viewChild<ElementRef<HTMLDivElement>>('mapEl');
+  /** Largeur de la carte en px, suivie par ResizeObserver : le placement par défaut des jetons s'y
+   * adapte (la carte rétrécit quand la réserve ou la fiche du jeton sont ouvertes). 0 = pas encore mesurée. */
+  private readonly mapWidth = signal(0);
 
   protected readonly kindIcon = combatantKindIcon;
   protected readonly kindIconIsSvg = combatantKindIconIsSvg;
@@ -116,6 +121,17 @@ export class BattlemapComponent {
   protected readonly totalDefenseKeys = signal<ReadonlySet<string>>(new Set());
 
   constructor() {
+    const destroyRef = inject(DestroyRef);
+    afterNextRender(() => {
+      const map = this.mapEl()?.nativeElement;
+      if (!map || typeof ResizeObserver === 'undefined') {
+        return;
+      }
+      const observer = new ResizeObserver(() => this.mapWidth.set(map.clientWidth));
+      observer.observe(map);
+      destroyRef.onDestroy(() => observer.disconnect());
+    });
+
     this.combatReferenceService.getCombatOptions().pipe(take(1)).subscribe((options) => this.combatOptions.set(options));
   }
 
@@ -231,6 +247,7 @@ export class BattlemapComponent {
   protected onTokenClick(token: PlayToken, event: Event): void {
     const sourceKey = this.attackSourceKey();
     if (!sourceKey) {
+      this.tokenSelected.emit(token);
       return;
     }
 
@@ -307,12 +324,13 @@ export class BattlemapComponent {
     const isTargetable = canTarget(token, sourceKey) ? ' cp-token--attack-target' : '';
     // En mode ciblage, aucun jeton ne doit révéler son épée au survol : on clique la cible directement.
     const targeting = sourceKey ? ' cp-token--targeting' : '';
-    return `cp-token cp-token--${token.kind}${active}${isSource}${isTargetable}${targeting}`;
+    const selected = token.key === this.selectedKey() ? ' cp-token--selected' : '';
+    return `cp-token cp-token--${token.kind}${active}${selected}${isSource}${isTargetable}${targeting}`;
   }
 
   /**
    * Position d'un jeton sur la battlemap : celle enregistrée après un glisser-déposer si elle
-   * existe, sinon une position par défaut (héros à gauche, adversaires à droite).
+   * existe, sinon une position par défaut (héros à gauche, adversaires à droite, cf. `defaultTokenPosition`).
    */
   protected tokenStyle(token: PlayToken, indexInCamp: number, camp: CombatCamp): Record<string, string> {
     const stored = this.tokenPositions()[token.key];
@@ -320,20 +338,8 @@ export class BattlemapComponent {
       return {left: `${stored.x}%`, top: `${stored.y}%`};
     }
 
-    const zone = camp === 'heros' ? HERO_ZONE : ADVERSAIRE_ZONE;
     const campCount = (camp === 'heros' ? this.heroTokens() : this.adversaireTokens()).length;
-    const rows = Math.max(1, Math.ceil(campCount / COLS_PER_ZONE));
-
-    const col = indexInCamp % COLS_PER_ZONE;
-    const row = Math.floor(indexInCamp / COLS_PER_ZONE);
-    const colWidth = (zone.xMax - zone.xMin) / COLS_PER_ZONE;
-    const rowHeight = (zone.yMax - zone.yMin) / rows;
-    const baseX = zone.xMin + colWidth * (col + 0.5);
-    const baseY = zone.yMin + rowHeight * (row + 0.5);
-
-    const {jx, jy} = jitter(token.key);
-    const x = clamp(baseX + jx * colWidth * 0.18, zone.xMin, zone.xMax);
-    const y = clamp(baseY + jy * rowHeight * 0.18, zone.yMin, zone.yMax);
+    const {x, y} = defaultTokenPosition(indexInCamp, campCount, camp, token.key, this.mapWidth());
 
     return {left: `${x}%`, top: `${y}%`};
   }

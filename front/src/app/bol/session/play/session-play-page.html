@@ -1,9 +1,9 @@
 @if (loading()) {
-  <div class="cp-status">Chargement du combat…</div>
+  <div class="cp-status">Chargement de la table…</div>
 } @else if (errorMessage()) {
   <div class="cp-status cp-status--error">
     <p>{{ errorMessage() }}</p>
-    <a routerLink="/">Retour au dashboard</a>
+    <a routerLink="/library/sessions">Voir mes sessions</a>
   </div>
 } @else if (board(); as b) {
   <div class="cp-page">
@@ -13,7 +13,6 @@
       [legendaryActive]="b.legendaryActive"
       (startCombat)="openStartCombatDialog()"
       (endCombat)="askEndCombat()"
-      (addHero)="openAddCombatantDialog()"
     />
 
     @if (mode() === 'combat') {
@@ -26,27 +25,74 @@
       />
     }
 
-    <bol-battlemap
-      [mode]="mode()"
-      [heroTokens]="heroTokens()"
-      [adversaireTokens]="adversaireTokens()"
-      [activeKey]="mode() === 'combat' ? activeKey() : null"
-      [tokenPositions]="tokenPositions()"
-      (attackRequested)="onAttackRequested($event)"
-      (statblockRequested)="openStatblockFor($event)"
-      (actionRollRequested)="onActionRoll($event)"
-      (positionChanged)="onPositionChanged($event)"
-    />
+    <div class="spp-table">
+      @if (mode() === 'libre') {
+        @if (sessionId(); as sid) {
+          @if (reserveOpen()) {
+            <aside id="spp-reserve" class="spp-reserve" aria-label="Réserve">
+              <bol-reserve
+                [sessionId]="sid"
+                [existingHeroIds]="existingHeroIds()"
+                [existingPnjIds]="existingPnjIds()"
+                (placed)="reloadSession()"
+              />
+            </aside>
+          }
+          <button
+            type="button"
+            class="spp-reserve-toggle"
+            aria-controls="spp-reserve"
+            [attr.aria-expanded]="reserveOpen()"
+            [attr.aria-label]="reserveOpen() ? 'Replier la réserve' : 'Déplier la réserve'"
+            (click)="toggleReserve()"
+          >
+            <mat-icon>{{ reserveOpen() ? 'chevron_left' : 'chevron_right' }}</mat-icon>
+          </button>
+        }
+      }
 
-    @if (heroActionPanelData(); as data) {
-      <aside class="spp-hero-action-panel">
-        <bol-hero-action-panel
-          [data]="data"
-          [initialTab]="heroActionPanelTab()"
-          (closed)="closeHeroActionPanel()"
-          (changed)="onHeroActionPanelChanged()"
+      <div class="spp-center">
+        <bol-battlemap
+          [mode]="mode()"
+          [heroTokens]="heroTokens()"
+          [adversaireTokens]="adversaireTokens()"
+          [activeKey]="mode() === 'combat' ? activeKey() : null"
+          [selectedKey]="selectedToken()?.key ?? null"
+          [tokenPositions]="tokenPositions()"
+          (attackRequested)="onAttackRequested($event)"
+          (tokenSelected)="onTokenSelected($event)"
+          (statblockRequested)="openStatblockFor($event)"
+          (actionRollRequested)="onTokenSelected($event)"
+          (positionChanged)="onPositionChanged($event)"
         />
-      </aside>
-    }
+
+        <div class="spp-last-roll" aria-live="polite" [class.spp-last-roll--empty]="!lastRoll()">
+          @if (lastRoll(); as roll) {
+            <span class="spp-last-roll-label">Dernier jet</span>
+            <span class="spp-last-roll-formula">{{ roll.nom }} · {{ roll.formula }} → {{ roll.total }}</span>
+            <strong [class]="'spp-last-roll-result spp-last-roll-result--' + roll.tone">{{ roll.label }}</strong>
+          }
+        </div>
+      </div>
+
+      @if (selectedToken(); as token) {
+        @if (sessionId(); as sid) {
+          <aside class="spp-inspector" aria-label="Fiche du jeton">
+            <bol-token-inspector
+              [token]="token"
+              [sessionId]="sid"
+              [hero]="inspectorHero()"
+              [statblock]="inspectorStatblock()"
+              [returnUrl]="returnUrl()"
+              (closed)="closeInspector()"
+              (changed)="reloadSession()"
+              (rolled)="lastRoll.set($event)"
+              (removeRequested)="askRemoveCombatant($event)"
+              (fullSheetRequested)="openFullSheet($event)"
+            />
+          </aside>
+        }
+      }
+    </div>
   </div>
 }

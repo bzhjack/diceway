@@ -1,7 +1,7 @@
 # Poste de table — la session comme page d'accueil
 
 Date : 2026-10-02
-Statut : design validé en conversation, en attente de relecture de cette spec
+Statut : validé, plan d'implémentation dans `docs/superpowers/plans/2026-10-02-poste-de-table.md`
 Dossier de réflexion (trois pistes maquettées) : https://claude.ai/artifact/7nbLd4f7krxzhZVQ7VpkWX
 
 ## Contexte
@@ -62,7 +62,7 @@ Ce chantier est le premier de trois. Les deux suivants auront leur propre spec :
 
 ### Route `/`
 
-`/` charge un composant d'aiguillage qui lit les sessions
+`/` est protégée par un guard qui lit les sessions
 (`BolFightSessionService.fightSessions()`, triées par date décroissante côté
 backend) :
 
@@ -77,19 +77,25 @@ Une page courte, sans carte d'en-tête ni métriques :
 - sélection des héros présents (réutilise `CombatSelectionService` et le
   `combatant-picker-dialog` verrouillé sur les héros) ;
 - bouton primaire « Ouvrir la table » → crée la session, navigue vers la table ;
-- en dessous, la liste des sessions existantes (reprendre, supprimer), reprise
-  de `session-library-page`.
+- liens « Créer un héros » et « Mes sessions », et le menu compte.
 
-`session/new` redirige vers `/`. `library/sessions` est conservée et sert aussi
-de cible à « Changer de session ».
+Le seuil est la page `session-new-page` existante, retravaillée. Rien ne clôt
+jamais une session côté application : dès qu'une session existe, `/` y
+redirige. La route `session/new` est donc conservée comme accès direct au
+seuil, sans redirection, pour ouvrir une nouvelle session alors qu'une autre
+est en cours. La liste des sessions n'est pas dupliquée sur le seuil :
+`library/sessions` est conservée et sert de cible à « Mes sessions » et à
+« Changer de session ».
 
 ### Barre du haut de la table
 
-`session-header` est simplifié :
+`session-header` est simplifié, et un composant `bol-account-menu` est partagé
+entre la table et le seuil :
 
 - gauche : titre de la session (plus de flèche « retour au dashboard ») ;
 - droite : « Démarrer un combat » / « Terminer le combat » (inchangé), puis un
-  menu compte (`MatMenu`) : Changer de session, Intendance, Déconnexion.
+  menu compte (`MatMenu`) : Changer de session, Nouvelle session, les quatre
+  bibliothèques, Intendance, Déconnexion.
 - les raccourcis de bibliothèque et le bouton « Ajouter un héros » sont retirés
   (la réserve les remplace).
 
@@ -103,9 +109,11 @@ de cible à « Changer de session ».
 
 ## La table en trois zones
 
-`session-play-page` passe d'un empilement vertical à un `MatSidenavContainer`
-à deux tiroirs latéraux en mode `side`, repliables. L'état ouvert/replié de
-chaque tiroir est mémorisé dans `localStorage`.
+`session-play-page` passe d'un empilement vertical à une rangée de trois zones
+(mise en page flex, sans `MatSidenav` : aucun des deux panneaux n'est modal).
+La réserve se replie par un bouton ; son état ouvert/replié est mémorisé dans
+`localStorage`. La fiche du jeton s'ouvre à la sélection d'un jeton et se ferme
+par sa croix ou Échap : elle n'a pas d'état à mémoriser.
 
 ### Réserve (gauche) — nouveau composant `bol-reserve`
 
@@ -141,7 +149,9 @@ par la page ; le jeton sélectionné reçoit un anneau doré.
 ### Fiche du jeton (droite) — nouveau composant `bol-token-inspector`
 
 Remplace `hero-action-panel` (onglets Fiche / Jet) et, en mode libre, les
-dialogues de statbloc des non-héros.
+dialogues de statbloc des non-héros. Les steppers vitalité / héroïsme du héros
+sont extraits de `hero-statblock-dialog` dans un composant `bol-hero-resources`
+utilisé aux deux endroits.
 
 Contenu pour un **héros** :
 
@@ -150,16 +160,17 @@ Contenu pour un **héros** :
    (mêmes écritures qu'aujourd'hui : pivot de session pour la vitalité,
    `BolHeros.ressources.heroisme` pour l'héroïsme).
 3. Jet d'action (voir section suivante).
-4. « Fiche complète » : ouvre le statbloc existant (`hero-statblock-dialog`).
+4. « Fiche complète » : ouvre le statbloc existant en dialogue
+   (`hero-statblock-popup`).
 
 Contenu pour un **PNJ, une créature ou un démon** :
 
-1. Nom, rang.
+1. Nom, type (le rang figure dans le statbloc).
 2. Vitalité en stepper (par exemplaire pour un lot `qty > 1`).
 3. Statbloc existant (`bol-statblock`) intégré dans le panneau.
 4. « Retirer de la table » (avec confirmation `dw-confirm-dialog`).
 
-Aucun jeton sélectionné : le panneau est replié.
+Aucun jeton sélectionné : le panneau n'est pas affiché.
 
 En mode `combat`, le comportement actuel des jetons (menu d'attaque, dialogues
 de statbloc) n'est pas modifié ; la fiche du jeton ne s'ouvre qu'en mode libre.
@@ -172,23 +183,26 @@ bandeau n'est pas affiché).
 
 ## Jet d'action en une surface
 
-Nouveau composant `bol-action-roll-panel`, affiché dans la fiche du jeton. Il
-remplace la présentation en trois étapes de `action-roll-dialog`.
+Composant `bol-action-roll-panel`, affiché dans la fiche du jeton. C'est
+`action-roll-dialog` renommé, avec une présentation en une seule surface à la
+place des trois étapes.
 
 - La logique de calcul existante (attribut, carrière, difficulté, dés
   bonus/malus par trait, modificateur, malus d'équipement, héroïsme) est
-  extraite de `action-roll-dialog.ts` dans un fichier utilitaire pur, testé
-  seul, puis consommée par le nouveau composant. `action-roll-dialog` est
-  supprimé une fois le nouveau composant en place.
+  extraite de `action-roll-dialog.ts` dans un fichier utilitaire pur
+  (`session/action-roll.util.ts`), testé seul. La saisie manuelle du total
+  (dés physiques) est conservée.
 - Présentation :
   - attribut : quatre puces (Vigueur, Agilité, Esprit, Aura) avec leur valeur ;
   - carrière : puces « Aucune » + carrières du héros ;
   - difficulté : une réglette unique des huit niveaux, **Moyenne par défaut** ;
+    chaque segment affiche son modificateur, le libellé du niveau choisi est
+    rappelé dans le titre de la rangée ;
   - dés et ajustements : puces de traits (dé bonus / dé malus, domaine en
     infobulle), modificateur ±, malus d'équipement affiché automatiquement ;
   - pied : formule en clair (`2d6 + 2 + 1 − 1 ≥ 9`) et bouton « Lancer ».
-- Les dés 3D (`shared/dice-3d`) sont conservés. Le résultat alimente le bandeau
-  « Dernier jet ».
+- Les dés 3D (`shared/dice-3d`) sont conservés et roulent sur la surface du
+  jet, comme aujourd'hui. Le résultat alimente le bandeau « Dernier jet ».
 - Les options d'héroïsme proposées après le jet restent celles d'aujourd'hui.
 - Changer de jeton sélectionné réinitialise la surface (attribut, carrière,
   difficulté, ajustements), comme le fait aujourd'hui la recréation du panneau.
@@ -225,12 +239,17 @@ Aucun nouvel endpoint, aucune migration.
 - **Vitest** :
   - utilitaire de calcul du jet : formule, valeurs par défaut, dés bonus/malus,
     malus d'équipement (reprend et étend `action-roll-dialog.spec.ts`) ;
-  - `bol-reserve` : filtre par onglet et par recherche, état « à table » pour
-    héros et PNJ déjà présents, émission de la pose ;
-  - aiguillage de `/` : session ouverte → redirection, sinon seuil.
-- **PHPUnit** : test de `endCombat` (les pivots non-héros sont conservés, le
-  statut repasse à `libre`). Il n'existe pas encore de test de fight-session ;
-  ce sera le premier.
+  - réserve : filtre par onglet et par recherche (insensible aux accents),
+    état « à table » pour héros et PNJ déjà présents ;
+  - aiguillage de `/` : session ouverte → redirection, sinon seuil ;
+  - état de la table : mémorisation du repli de la réserve, jeton sélectionné
+    disparu ; suivi des deltas de vitalité lors de clics rapides.
+- **Backend** : pas de test automatisé pour `endCombat`. Le dépôt n'a pas
+  d'infrastructure de test avec base de données (`phpunit.xml` a
+  `DB_CONNECTION` commenté) et `endCombat` ne fait que des écritures en base ;
+  en introduire une est hors périmètre. Le comportement est vérifié à la main.
+- Le front ne teste que des fonctions pures (pratique du dépôt) : chaque
+  comportement à tester est extrait dans un fichier `*.util.ts`.
 - **Visuel** (skill `run`, Playwright, utilisateur de test) : table avec les
   deux tiroirs ouverts, repliés, et à largeur 1280 px.
 - `npm run build` côté front pour valider.

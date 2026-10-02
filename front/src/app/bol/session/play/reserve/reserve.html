@@ -1,0 +1,70 @@
+<div class="rsv-shell">
+  <h2 class="rsv-title">Réserve</h2>
+
+  <mat-button-toggle-group
+    class="rsv-tabs"
+    aria-label="Type de personnage"
+    [value]="activeKind()"
+    [hideSingleSelectionIndicator]="true"
+    (change)="setKind($event)"
+  >
+    @for (tab of tabs; track tab.kind) {
+      <mat-button-toggle [value]="tab.kind">{{ tab.label }}</mat-button-toggle>
+    }
+  </mat-button-toggle-group>
+
+  <mat-form-field subscriptSizing="dynamic" class="rsv-search">
+    <mat-icon matPrefix>search</mat-icon>
+    <input
+      id="rsv-search-input"
+      matInput
+      type="search"
+      placeholder="Rechercher"
+      aria-label="Rechercher dans la réserve"
+      [value]="query()"
+      (input)="setQuery($any($event.target).value)"
+    />
+  </mat-form-field>
+
+  <ul class="rsv-list">
+    @for (row of rows(); track row.entry.catalogId) {
+      <li class="rsv-row">
+        <span [class]="'rsv-dot rsv-dot--' + row.entry.kind"></span>
+        <span class="rsv-name">{{ row.entry.nom }}</span>
+        @if (row.onTable) {
+          <span class="rsv-state">à table</span>
+        } @else {
+          <button
+            mat-stroked-button
+            size="small"
+            type="button"
+            [disabled]="pendingCatalogId() !== null"
+            [attr.aria-label]="'Poser ' + row.entry.nom + ' sur la table'"
+            (click)="place(row.entry)"
+          >
+            Poser
+          </button>
+        }
+      </li>
+    } @empty {
+      <li class="rsv-empty">
+        @if (loading()) {
+          Chargement…
+        } @else if (query()) {
+          Aucun résultat pour cette recherche.
+        } @else {
+          Rien ici pour l'instant.
+        }
+      </li>
+    }
+  </ul>
+
+  <div class="rsv-footer">
+    <a mat-flat-button size="small" [routerLink]="activeTab().createLink" [state]="navState()">
+      <mat-icon>add</mat-icon> {{ activeTab().createLabel }}
+    </a>
+    <a mat-stroked-button size="small" [routerLink]="activeTab().libraryLink" [state]="navState()">
+      Gérer la bibliothèque
+    </a>
+  </div>
+</div>

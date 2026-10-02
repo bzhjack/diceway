@@ -73,6 +73,10 @@
   box-shadow: 0 0 0 2px var(--dw-color-legendary), 0 0 10px color-mix(in srgb, var(--dw-color-legendary) 70%, transparent);
 }
 
+.cp-token--selected .cp-token-portrait {
+  box-shadow: 0 0 0 3px var(--dw-surface-0), 0 0 0 5px var(--dw-color-legendary);
+}
+
 .cp-token--attack-source .cp-token-portrait {
   box-shadow: 0 0 0 3px var(--dw-color-legendary), 0 0 14px color-mix(in srgb, var(--dw-color-legendary) 80%, transparent);
 }

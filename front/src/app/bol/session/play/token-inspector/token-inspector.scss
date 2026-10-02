@@ -1,0 +1,85 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.tki-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: linear-gradient(180deg, var(--dw-surface-50) 0%, var(--dw-surface-0) 100%);
+}
+
+.tki-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.7rem 0.6rem 0.6rem 1rem;
+  border-bottom: 1px solid var(--dw-border);
+}
+
+.tki-title {
+  min-width: 0;
+}
+
+.tki-name {
+  margin: 0;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tki-name--hero { color: var(--dw-color-reussite); }
+.tki-name--pnj { color: var(--dw-color-pnj); }
+.tki-name--creature { color: var(--dw-color-creature); }
+.tki-name--demon { color: var(--dw-color-demon); }
+
+.tki-sub {
+  margin: 0.1rem 0 0;
+  font-size: 0.8rem;
+  color: var(--dw-surface-500);
+}
+
+.tki-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 0.9rem 1rem 1.1rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dw-border) transparent;
+}
+
+.tki-loading {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--dw-surface-500);
+}
+
+.tki-vitalite {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.tki-vitalite-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+}
+
+.tki-remove {
+  align-self: flex-start;
+  color: var(--dw-color-danger-muted);
+  border-color: var(--dw-border-remove);
+}
