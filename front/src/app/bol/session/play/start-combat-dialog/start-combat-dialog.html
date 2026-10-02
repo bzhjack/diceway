@@ -1,48 +1,149 @@
-<h2 mat-dialog-title>Démarrer un combat</h2>
-
-<mat-dialog-content>
-  @if (loading()) {
-    <p>Chargement…</p>
-  } @else {
-    <section class="scd-section">
-      <div class="scd-section-head">
-        <h3>Adversaires</h3>
-        <button mat-stroked-button type="button" (click)="openAddAdversary()">
-          <mat-icon>add</mat-icon> Ajouter
-        </button>
-      </div>
-
-      @if (adversaries().length) {
-        <ul class="scd-list">
-          @for (a of adversaries(); track a.pivotId) {
-            <li>{{ a.nom }}</li>
-          }
-        </ul>
-      } @else {
-        <p class="scd-empty">Aucun adversaire pour l'instant.</p>
-      }
-    </section>
-
-    <section class="scd-section">
-      <h3>Initiative des héros</h3>
-      <ul class="scd-list scd-list--heroes">
-        @for (hero of heroes(); track hero.pivotId) {
-          <li class="scd-hero-row">
-            <span>{{ hero.nom }}</span>
-            <button mat-stroked-button type="button" (click)="rollInitiative(hero)">
-              <mat-icon>casino</mat-icon>
-              {{ hero.resultat ? 'Relancer' : "Lancer l'initiative" }}
-            </button>
-          </li>
-        }
-      </ul>
-    </section>
+<div class="scd-shell">
+  <!-- Le canvas de dés mesure son conteneur à la création : ne l'instancier qu'une fois le panneau
+       à sa taille finale (liste des héros chargée), sinon il se fige sur une résolution minuscule
+       (résolution par défaut du canvas HTML, 300×150) qui déforme les dés une fois étirée en CSS. -->
+  @if (!loading()) {
+    <app-dice-box-host class="scd-dice-layer" [scale]="6" [theme]="'wooden-red'" [themeColor]="'#ef4444'" />
   }
-</mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-stroked-button type="button" (click)="close()">Annuler</button>
-  <button mat-flat-button type="button" [disabled]="!canStart() || starting()" (click)="start()">
-    <mat-icon>play_arrow</mat-icon> Démarrer le combat
-  </button>
-</mat-dialog-actions>
+  <div class="scd-fg">
+    <h2 mat-dialog-title class="scd-title">Démarrer un combat</h2>
+
+    <mat-dialog-content>
+      @if (loading()) {
+        <p>Chargement…</p>
+      } @else {
+        <section class="scd-section">
+          <div class="scd-section-head">
+            <h3>Adversaires</h3>
+            <button mat-stroked-button type="button" (click)="openAddAdversary()">
+              <mat-icon>add</mat-icon> Ajouter
+            </button>
+          </div>
+
+          @if (adversaries().length) {
+            <ul class="scd-list">
+              @for (a of adversaries(); track a.pivotId) {
+                <li>{{ a.nom }}</li>
+              }
+            </ul>
+          } @else {
+            <p class="scd-empty">Aucun adversaire pour l'instant.</p>
+          }
+        </section>
+
+        <section class="scd-section">
+          <h3>Initiative des héros</h3>
+
+          <div class="scd-modifiers">
+            <div class="scd-modifiers-group">
+              <span class="scd-modifiers-label">Embuscade</span>
+              <div class="scd-toggle">
+                <button type="button" [class.active]="ambushState() === null" (click)="setAmbush(null)">Aucune</button>
+                <button type="button" [class.active]="ambushState() === 'heroes_ambush'" (click)="setAmbush('heroes_ambush')">
+                  Tendue (+2)
+                </button>
+                <button type="button" [class.active]="ambushState() === 'heroes_ambushed'" (click)="setAmbush('heroes_ambushed')">
+                  Subie (−1)
+                </button>
+              </div>
+            </div>
+            <label class="scd-modifiers-group">
+              <span class="scd-modifiers-label">Initiative adverse la plus haute (coriace/rival)</span>
+              <input
+                class="scd-input"
+                type="number"
+                min="0"
+                [value]="adversaryInitiativeMalus()"
+                (change)="setAdversaryMalus($any($event.target).value)"
+              />
+            </label>
+          </div>
+
+          <ul class="scd-list scd-list--heroes">
+            @for (hero of heroes(); track hero.pivotId) {
+              <li class="scd-hero-row" [class.scd-hero-row--active]="activePivotId() === hero.pivotId">
+                <span class="scd-hero-identity">
+                  <span class="scd-hero-name">{{ hero.nom }}</span>
+                  <span class="scd-hero-stats">Esprit {{ signed(hero.esprit) }} · Initiative {{ signed(hero.initiative) }}</span>
+                </span>
+                <input
+                  class="scd-input"
+                  type="number"
+                  min="2"
+                  max="12"
+                  placeholder="—"
+                  [value]="diceTotalFor(hero.pivotId)"
+                  [disabled]="rolling()"
+                  [attr.aria-label]="'Total des dés pour ' + hero.nom"
+                  (change)="onManualTotal(hero, $any($event.target).value)"
+                />
+                @if (hero.resultat) {
+                  <span
+                    class="scd-pill"
+                    [class.scd-pill--reussite]="hero.resultat === 'reussite'"
+                    [class.scd-pill--heroique]="hero.resultat === 'heroique' || hero.resultat === 'legendaire'"
+                    [class.scd-pill--echec]="hero.resultat === 'echec' || hero.resultat === 'echec_critique'"
+                  >
+                    {{ resultLabel(hero.resultat) }}
+                  </span>
+                }
+                <button type="button" class="scd-dice-btn" [disabled]="rolling()" (click)="rollFor(hero)">
+                  <mat-icon>casino</mat-icon>
+                  {{ hero.resultat ? 'Relancer' : 'Lancer' }}
+                </button>
+              </li>
+            }
+          </ul>
+
+          @if (heroes().length) {
+            <div class="scd-active-info">
+              @if (activeHero(); as hero) {
+                <p class="scd-active-line">
+                  Jet en cours — <strong>{{ hero.nom }}</strong>
+                  @if (dice(); as d) {
+                    · {{ d[0] }} + {{ d[1] }} + esprit ({{ signed(hero.esprit) }}) + initiative ({{ signed(hero.initiative) }})
+                    @if (modifierTotal() !== 0) {
+                      + modificateurs ({{ signed(modifierTotal()) }})
+                    }
+                    = <strong>{{ activeTotal() }}</strong>
+                  }
+                </p>
+
+                @if (isNatural2()) {
+                  <div class="scd-toggle">
+                    <button type="button" [class.active]="!critiqueChosen()" (click)="chooseCritique(false)">Échec</button>
+                    <button type="button" [class.active]="critiqueChosen()" (click)="chooseCritique(true)">
+                      Échec critique (+1 PH)
+                    </button>
+                  </div>
+                } @else if (isNatural12()) {
+                  <div class="scd-toggle">
+                    <button type="button" [class.active]="!legendaryChosen()" (click)="chooseLegendaire(false)">Héroïque</button>
+                    <button
+                      type="button"
+                      [class.active]="legendaryChosen()"
+                      [disabled]="!legendaryChosen() && heroismeSignal(hero.pivotId)() <= 0"
+                      (click)="chooseLegendaire(true)"
+                    >
+                      Légendaire (−1 PH)
+                    </button>
+                  </div>
+                }
+              } @else {
+                <p class="scd-active-line scd-active-line--idle">Cliquez « Lancer » sur une ligne, ou saisissez un total à la main.</p>
+              }
+            </div>
+          }
+        </section>
+      }
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-stroked-button type="button" (click)="close()">Annuler</button>
+      <button mat-flat-button type="button" [disabled]="!canStart() || starting()" (click)="start()">
+        <mat-icon>play_arrow</mat-icon> Démarrer le combat
+      </button>
+    </mat-dialog-actions>
+  </div>
+</div>

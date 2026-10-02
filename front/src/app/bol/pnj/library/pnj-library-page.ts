@@ -6,6 +6,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolPnjService} from '../../services/bol-pnj.service';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
+import {readReturnUrl} from '../../../core/return-url.util';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
 import {matchesTerm, ownFirstThenLabel} from '../../../shared/list.utils';
@@ -65,6 +66,8 @@ export class PnjLibraryPageComponent {
     {label: 'Pietaille', value: 'P'},
   ];
   protected readonly searchTerm = signal('');
+  /** Revenir à la session de combat d'origine plutôt qu'au dashboard, si on y accède via ses raccourcis bibliothèque. */
+  protected readonly returnUrl = signal(readReturnUrl());
   protected readonly searchType = signal<PnjType | ''>('');
   protected readonly onlyCreations = signal(false);
 

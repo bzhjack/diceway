@@ -37,6 +37,24 @@ export function parseDegatsDice(degats: string | null | undefined): 'd3' | 'd6' 
   return 'd6';
 }
 
+/** Combat à deux armes (02-actions-combat.md) : uniquement avec des armes légères ou moyennes —
+ * mains nues/arme improvisée (d3) comptent comme légères, une arme lourde (d6B) n'est jamais éligible. */
+export function isDualWieldEligible(degats: string | null | undefined): boolean {
+  return !!degats && parseDegatsDice(degats) !== 'd6b';
+}
+
+/** Poids d'une arme pour la table de montée en catégorie du mode "double frappe" — mains nues /
+ * arme improvisée (d3) comptent comme légères (poids 1), moyenne (d6) pèse 2. */
+function dualWieldWeight(degats: string | null | undefined): number {
+  return parseDegatsDice(degats) === 'd6' ? 2 : 1;
+}
+
+/** Dégâts résultants du mode "double frappe" (02-actions-combat.md) : 2 armes légères → dégâts
+ * d'arme moyenne ; 1 moyenne + 1 légère, ou 2 moyennes → dégâts d'arme lourde. */
+export function dualStrikeDegats(mainDegats: string | null | undefined, offDegats: string | null | undefined): string {
+  return dualWieldWeight(mainDegats) + dualWieldWeight(offDegats) >= 3 ? 'd6B' : 'd6';
+}
+
 /** Extrait la valeur fixe entre parenthèses d'une chaîne de protection BoL ("d6-3 (1)" -> 1). */
 export function parseProtectionValue(protection: string | null | undefined): number {
   const match = (protection ?? '').match(/\((-?\d+)\)/);

@@ -1,0 +1,108 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.hap-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: linear-gradient(180deg, var(--dw-surface-50) 0%, var(--dw-surface-0) 100%);
+}
+
+.hap-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 1.1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--dw-color-legendary) 32%, transparent);
+  background: color-mix(in srgb, var(--dw-surface-0) 55%, transparent);
+  flex-shrink: 0;
+}
+
+.hap-title-name {
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.05rem;
+  color: var(--dw-color-reussite);
+  text-shadow: 0 1px 3px rgba(2, 6, 23, 0.9);
+}
+
+.hap-close {
+  flex-shrink: 0;
+  width: 1.65rem;
+  height: 1.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 32%, transparent);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--dw-surface-0) 40%, transparent);
+  color: var(--dw-surface-500);
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 1.05rem;
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  &:hover {
+    color: var(--dw-surface-800);
+    border-color: var(--dw-color-legendary);
+  }
+}
+
+.hap-tabs {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.6rem 1.1rem 0;
+  border-bottom: 1px solid var(--dw-border);
+  flex-shrink: 0;
+}
+
+.hap-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--dw-surface-500);
+  font: inherit;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  &:hover {
+    color: var(--dw-surface-800);
+  }
+}
+
+.hap-tab--active {
+  color: var(--dw-color-legendary);
+  border-bottom-color: var(--dw-color-legendary);
+}
+
+.hap-body {
+  flex: 1;
+  min-height: 0;
+  padding: 0 1.1rem 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.hap-body bol-hero-statblock-dialog,
+.hap-body bol-action-roll-dialog {
+  flex: 1;
+  min-height: 0;
+}

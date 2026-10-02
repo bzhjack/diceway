@@ -4,6 +4,7 @@ import {RouterLink} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
+import {readReturnUrl} from '../../../core/return-url.util';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
 import {matchesTerm} from '../../../shared/list.utils';
@@ -51,6 +52,8 @@ export class HeroLibraryPageComponent {
 
   protected readonly searchTerm = signal('');
   protected readonly onlyPending = signal(false);
+  /** Revenir à la session de combat d'origine plutôt qu'au dashboard, si on y accède via ses raccourcis bibliothèque. */
+  protected readonly returnUrl = signal(readReturnUrl());
 
   protected readonly filteredHeroes = computed(() =>
     [...this.heroes.data()]

@@ -181,7 +181,12 @@
     height: 0.9rem;
   }
 
-  &:hover {
+  &:hover:not(:disabled) {
     background: color-mix(in srgb, var(--dw-color-echec-forte) 24%, transparent);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
   }
 }

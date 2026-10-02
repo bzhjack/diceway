@@ -31,8 +31,8 @@
             <mat-icon>bolt</mat-icon> Voir les démons
           </button>
         </div>
-        <button mat-stroked-button size="small" routerLink="/">
-          <mat-icon>arrow_back</mat-icon> Retour au dashboard
+        <button mat-stroked-button size="small" [routerLink]="returnUrl() ?? '/'">
+          <mat-icon>arrow_back</mat-icon> {{ returnUrl() ? 'Retour à la session' : 'Retour au dashboard' }}
         </button>
       </ng-container>
     </dw-library-header>

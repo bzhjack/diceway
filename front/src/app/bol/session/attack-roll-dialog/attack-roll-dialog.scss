@@ -452,6 +452,22 @@
   font-size: 0.86rem;
 }
 
+.atd-tier-toggle {
+  @include shared.tier-toggle;
+  width: auto;
+  margin: 0.5rem 1.1rem 0;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.86rem;
+}
+
+.atd-tier-toggle--critique.active {
+  @include shared.tier-toggle-critique-active;
+}
+
+.atd-tier-toggle--upgrade.active {
+  @include shared.tier-toggle-upgrade-active;
+}
+
 .atd-damage {
   margin: 0.9rem 1.1rem 0;
   padding: 0.7rem 0.9rem 0.9rem;

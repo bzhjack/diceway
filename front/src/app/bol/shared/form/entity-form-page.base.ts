@@ -8,6 +8,7 @@ import {finalize} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {HasPendingChanges} from '../../../core/pending-changes.guard';
+import {readReturnUrl} from '../../../core/return-url.util';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {PictureComponent} from '../../../shared/picture/picture';
 
@@ -49,7 +50,7 @@ export abstract class BolEntityFormPageBase<TEntity, TFormModel extends {avatar:
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly pending = signal(false);
   protected readonly loading = signal(false);
-  protected readonly returnUrl = signal<string | null>(this.readReturnUrl());
+  protected readonly returnUrl = signal<string | null>(readReturnUrl());
   protected readonly entityId = computed(() => this.routeParamMap().get('id'));
   protected readonly editMode = computed(() => Boolean(this.entityId()));
   protected readonly pageTitle = computed(() =>
@@ -88,7 +89,7 @@ export abstract class BolEntityFormPageBase<TEntity, TFormModel extends {avatar:
   constructor() {
     effect((onCleanup) => {
       const entityId = this.entityId();
-      this.returnUrl.set(this.readReturnUrl());
+      this.returnUrl.set(readReturnUrl());
       this.errorMessage.set(null);
 
       if (!entityId) {
@@ -225,14 +226,5 @@ export abstract class BolEntityFormPageBase<TEntity, TFormModel extends {avatar:
     }
 
     void this.router.navigateByUrl('/');
-  }
-
-  private readReturnUrl(): string | null {
-    if (typeof history === 'undefined') {
-      return null;
-    }
-
-    const state = history.state as Record<string, unknown> | null;
-    return typeof state?.['returnUrl'] === 'string' ? state['returnUrl'] : null;
   }
 }

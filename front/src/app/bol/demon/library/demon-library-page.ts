@@ -7,6 +7,7 @@ import {BolDemonModel} from '../../models/bol-demon.model';
 import {BolDemonStateService} from '../../services/bol-demon-state.service';
 import {BolDemonsService} from '../../services/bol-demons.service';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
+import {readReturnUrl} from '../../../core/return-url.util';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
 import {matchesTerm, ownFirstThenLabel} from '../../../shared/list.utils';
@@ -55,6 +56,8 @@ export class DemonLibraryPageComponent {
 
   protected readonly categories = this.demonStateService.categorieList;
   protected readonly searchTerm = signal('');
+  /** Revenir à la session de combat d'origine plutôt qu'au dashboard, si on y accède via ses raccourcis bibliothèque. */
+  protected readonly returnUrl = signal(readReturnUrl());
   protected readonly searchCategorie = signal<number | ''>('');
   protected readonly onlyCreations = signal(false);
 

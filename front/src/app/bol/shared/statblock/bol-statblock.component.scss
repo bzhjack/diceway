@@ -2,7 +2,12 @@
   display: block;
 }
 
+// `container-type` : le seuil "desktop" ci-dessous doit réagir à la largeur réellement disponible
+// pour CE composant, pas à celle du viewport — une `@media` se déclenchait déjà (fenêtre large) même
+// quand le statbloc n'a que ~470px dans le panneau latéral de session-play-page, écrasant les tuiles
+// vitales/attributs les unes sur les autres (constaté le 2026-09-25).
 .bol-statblock {
+  container-type: inline-size;
   border: 1px solid var(--dw-border);
   padding: 0.75rem;
 }
@@ -54,19 +59,29 @@
 }
 
 .bol-statblock__body {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+// Avatar + identité toujours sur la même ligne (quelle que soit la largeur du conteneur) — les
+// tuiles vitales/attributs en dessous ont chacune leur propre ligne pleine largeur, plutôt que de
+// partager la largeur avec une colonne avatar comme avant (cause du chevauchement constaté dans un
+// panneau étroit, cf. commit précédent) — cf. décision du 2026-09-25.
+.bol-statblock__header {
+  display: flex;
+  align-items: flex-start;
   gap: 1rem;
 }
 
 .bol-statblock__avatar {
   position: relative;
   overflow: hidden;
+  flex-shrink: 0;
   border: 1px solid var(--dw-border);
   background: rgba(15, 23, 42, 0.9);
   aspect-ratio: 1;
-  width: 100%;
-  max-width: 10rem;
-  margin-inline: auto;
+  width: 7.5rem;
 }
 
 .bol-statblock__avatar-tag {
@@ -83,14 +98,8 @@
   text-transform: uppercase;
 }
 
-.bol-statblock__content {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
 .bol-statblock__main {
+  flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -111,6 +120,37 @@
   font-size: clamp(1.45rem, 1.6vw, 1.85rem);
   line-height: 0.98;
   color: var(--dw-color-text-bright);
+}
+
+.bol-statblock__edit-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.bol-statblock__edit-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid var(--dw-border);
+  background: color-mix(in srgb, var(--dw-surface-0) 45%, transparent);
+  color: var(--dw-surface-600);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-decoration: none;
+
+  .mat-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &:hover {
+    color: var(--dw-surface-900);
+    border-color: var(--dw-surface-500);
+  }
 }
 
 .bol-statblock__chips {
@@ -323,16 +363,7 @@
   font-style: italic;
 }
 
-@media (min-width: 768px) {
-  .bol-statblock__body {
-    grid-template-columns: 14rem minmax(0, 1fr);
-    align-items: start;
-  }
-
-  .bol-statblock__avatar {
-    max-width: none;
-  }
-
+@container (min-width: 768px) {
   .bol-statblock__tiles {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }

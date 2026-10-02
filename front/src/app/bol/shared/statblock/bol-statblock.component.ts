@@ -1,5 +1,7 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
+import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {RouterLink} from '@angular/router';
 
 /** Accent visuel du statbloc : ambre (créature), émeraude (héros/PNJ), rose (démon). */
 export type BolStatblockAccent = 'amber' | 'emerald' | 'rose';
@@ -48,12 +50,17 @@ export interface BolStatblockData {
   /** true = 8 tuiles sur une ligne (héros/PNJ), false = 6 (créature/démon). */
   readonly wideTiles: boolean;
   readonly sections: readonly BolStatblockSection[];
+  /** Route vers la fiche d'édition complète (même lien que le bouton "Modifier" des cartes de
+   * bibliothèque) — `null` si l'entité n'a pas de fiche éditable dans ce contexte. */
+  readonly editRoute: readonly [string, string] | null;
+  /** Édition avancée (héros/PNJ non "active", cf. `hero-card.component.ts`) — `null` sinon. */
+  readonly advancedEditRoute: readonly [string, string] | null;
 }
 
 /** Statbloc générique BoL : bande vitale colorée → tuiles neutres → listes. */
 @Component({
   selector: 'bol-statblock',
-  imports: [MatTooltipModule],
+  imports: [MatIconModule, MatTooltipModule, RouterLink],
   templateUrl: './bol-statblock.component.html',
   styleUrl: './bol-statblock.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -61,4 +68,11 @@ export interface BolStatblockData {
 export class BolStatblockComponent {
   readonly data = input.required<BolStatblockData>();
   readonly imageSrc = input.required<string>();
+  /** Page à laquelle revenir après édition (ex. la session de combat en cours) — `null` si sans objet. */
+  readonly returnUrl = input<string | null>(null);
+
+  protected navigationState(): Record<string, string> | undefined {
+    const returnUrl = this.returnUrl();
+    return returnUrl ? {returnUrl} : undefined;
+  }
 }

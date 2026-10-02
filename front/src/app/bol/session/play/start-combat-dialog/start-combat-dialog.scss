@@ -1,9 +1,76 @@
+// Encapsulation désactivée sur le composant (voir .ts) : tout ici est global, donc systématiquement
+// scopé sous .scd-panel (panelClass passé à dialog.open côté session-play-page.ts) — même pattern
+// que action-roll-dialog (`.ard-panel`/`.ard-shell`/`.ard-dice-layer`/`.ard-fg`) : les dés roulent en
+// couche de fond sur tout le panneau plutôt que dans un canvas dédié (cf. décision du 2026-09-07).
+
+.scd-panel .mat-mdc-dialog-surface {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 14px;
+  padding: 0;
+  max-height: calc(100vh - 10vh);
+  overflow-y: auto;
+}
+
+.scd-shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 32rem;
+  max-width: 100%;
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 40%, transparent);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--dw-surface-50) 0%, var(--dw-surface-0) 100%);
+}
+
+// Au-dessus du contenu (z-index 2) : posé derrière les panneaux, les dés se retrouveraient à moitié
+// masqués. `pointer-events: none` laisse les clics traverser jusqu'aux vrais contrôles en dessous.
+.scd-dice-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+
+  // Le fond/bordure propres à `dw-dice-box-host` sont neutralisés : c'est le fond du `.scd-shell`
+  // lui-même qui sert de "table" derrière les dés (sélecteur global valide : les deux composants
+  // sont en `ViewEncapsulation.None`).
+  .dw-dice-box-host {
+    position: absolute;
+    inset: 0;
+    min-width: 0;
+    min-height: 0;
+    border: none;
+    background: transparent;
+  }
+}
+
+.scd-fg {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.scd-title {
+  margin: 0;
+  padding: 0.9rem 1.1rem 0.7rem;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--dw-surface-900);
+  border-bottom: 1px solid color-mix(in srgb, var(--dw-color-legendary) 32%, transparent);
+}
+
 .scd-section {
   margin-bottom: 1.25rem;
 
   h3 {
     margin: 0 0 0.5rem;
     font-size: 0.95rem;
+    color: var(--dw-surface-800);
   }
 }
 
@@ -21,17 +88,204 @@
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  color: var(--dw-surface-700);
+}
+
+.scd-empty {
+  color: var(--dw-surface-500);
+  font-size: 0.9rem;
 }
 
 .scd-hero-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.35rem 0;
+  gap: 0.6rem;
+  padding: 0.45rem 0.3rem;
+  border-radius: 8px;
   border-bottom: 1px solid var(--dw-border);
 }
 
-.scd-empty {
-  color: var(--dw-surface-300);
-  font-size: 0.9rem;
+.scd-hero-row--active {
+  background: color-mix(in srgb, var(--dw-color-legendary) 10%, transparent);
+}
+
+.scd-hero-identity {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.scd-hero-name {
+  font-weight: 700;
+  color: var(--dw-surface-800);
+}
+
+.scd-hero-stats {
+  font-size: 0.68rem;
+  color: var(--dw-surface-500);
+}
+
+.scd-modifiers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 0.7rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid var(--dw-border);
+  background: color-mix(in srgb, var(--dw-surface-0) 45%, transparent);
+}
+
+.scd-modifiers-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.scd-modifiers-label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+}
+
+.scd-input {
+  width: 3.6rem;
+  padding: 0.35rem 0.4rem;
+  text-align: center;
+  font: inherit;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--dw-surface-900);
+  background: color-mix(in srgb, var(--dw-surface-0) 70%, transparent);
+  border: 1px solid var(--dw-border);
+  border-radius: 6px;
+
+  &::placeholder {
+    color: var(--dw-surface-400);
+    font-weight: 500;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--dw-color-legendary);
+  }
+}
+
+.scd-pill {
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 0.14rem 0.55rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  color: var(--dw-surface-600);
+  background: color-mix(in srgb, var(--dw-surface-0) 70%, color-mix(in srgb, var(--dw-surface-500) 16%, transparent));
+}
+
+.scd-pill--reussite {
+  color: var(--dw-color-reussite);
+  background: color-mix(in srgb, var(--dw-surface-0) 60%, color-mix(in srgb, var(--dw-color-reussite) 18%, transparent));
+}
+
+.scd-pill--heroique {
+  color: var(--dw-color-legendary);
+  background: color-mix(in srgb, var(--dw-surface-0) 60%, color-mix(in srgb, var(--dw-color-legendary) 18%, transparent));
+}
+
+.scd-pill--echec {
+  color: var(--dw-color-echec);
+  background: color-mix(in srgb, var(--dw-surface-0) 60%, color-mix(in srgb, var(--dw-color-echec) 18%, transparent));
+}
+
+.scd-dice-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);
+  background: color-mix(in srgb, var(--dw-surface-0) 55%, color-mix(in srgb, var(--dw-color-legendary) 14%, transparent));
+  color: var(--dw-color-legendary);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+
+  .mat-icon {
+    font-size: 1.05rem;
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--dw-surface-0) 40%, color-mix(in srgb, var(--dw-color-legendary) 22%, transparent));
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.scd-active-info {
+  margin-top: 0.7rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 10px;
+  border: 1px dashed color-mix(in srgb, var(--dw-color-legendary) 30%, transparent);
+  background: color-mix(in srgb, var(--dw-surface-0) 55%, transparent);
+}
+
+.scd-active-line {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--dw-surface-700);
+  font-variant-numeric: tabular-nums;
+
+  strong {
+    color: var(--dw-surface-900);
+  }
+}
+
+.scd-active-line--idle {
+  color: var(--dw-surface-500);
+}
+
+.scd-toggle {
+  display: flex;
+  margin-top: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--dw-surface-500) 30%, transparent);
+  border-radius: 999px;
+  overflow: hidden;
+  width: fit-content;
+  max-width: 100%;
+  background: color-mix(in srgb, var(--dw-surface-0) 55%, transparent);
+
+  button {
+    border: none;
+    background: transparent;
+    color: var(--dw-surface-600);
+    font: inherit;
+    font-size: 0.74rem;
+    font-weight: 700;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+
+    &.active {
+      background: var(--dw-color-legendary);
+      color: #1c1200;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+  }
 }

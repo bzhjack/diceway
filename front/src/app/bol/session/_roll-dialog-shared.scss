@@ -57,3 +57,55 @@
     cursor: default;
   }
 }
+
+// Choix de palier volontaire (échec critique / conversion héroïque / légendaire) — checkbox stylée,
+// un seul de ces boutons peut être visible à la fois (2 naturel, 12 naturel, réussite normale
+// s'excluent mutuellement). Le vert (critique = octroi de PH) et l'ambre (dépense de PH) distinguent
+// visuellement les deux sens du mouvement d'héroïsme.
+@mixin tier-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  margin: 0.6rem 0 0;
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  border: 1px dashed var(--dw-border);
+  background: color-mix(in srgb, var(--dw-surface-0) 65%, transparent);
+  color: var(--dw-surface-600);
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--dw-surface-500);
+    color: var(--dw-surface-900);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+@mixin tier-toggle-critique-active {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 55%, transparent);
+  background: color-mix(in srgb, var(--dw-color-reussite) 18%, transparent);
+  color: var(--dw-color-reussite);
+}
+
+@mixin tier-toggle-upgrade-active {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--dw-color-legendary) 55%, transparent);
+  background: color-mix(in srgb, var(--dw-color-legendary) 18%, transparent);
+  color: var(--dw-color-legendary);
+}

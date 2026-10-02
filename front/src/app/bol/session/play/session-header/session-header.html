@@ -1,0 +1,53 @@
+<header class="cp-header">
+  <a class="cp-back" routerLink="/" aria-label="Retour au dashboard">
+    <mat-icon>arrow_back</mat-icon>
+  </a>
+
+  <div class="cp-header-title">
+    <span class="cp-eyebrow">{{ mode() === 'combat' ? 'Combat' : 'Session' }}</span>
+    <h1>{{ titre() || (mode() === 'combat' ? 'Combat en cours' : 'Session en cours') }}</h1>
+  </div>
+
+  <div class="cp-header-actions">
+    <div class="cp-header-libraries">
+      @for (shortcut of libraryShortcuts; track shortcut.link) {
+        <a
+          class="cp-header-lib-btn"
+          [routerLink]="shortcut.link"
+          [state]="libraryShortcutState()"
+          [attr.aria-label]="'Bibliothèque ' + shortcut.label"
+          [matTooltip]="shortcut.label"
+        >
+          @if (shortcut.iconIsSvg) {
+            <mat-icon [svgIcon]="shortcut.icon" />
+          } @else {
+            <mat-icon>{{ shortcut.icon }}</mat-icon>
+          }
+        </a>
+      }
+    </div>
+
+    @if (mode() === 'libre') {
+      <button type="button" class="cp-header-action cp-header-action--gold" (click)="startCombat.emit()">
+        <mat-icon>shield</mat-icon>
+        Démarrer un combat
+      </button>
+    } @else {
+      <button type="button" class="cp-header-action cp-header-action--gold" (click)="endCombat.emit()">
+        <mat-icon>flag</mat-icon>
+        Terminer le combat
+      </button>
+    }
+    <button type="button" class="cp-header-action cp-header-action--green" (click)="addHero.emit()">
+      <mat-icon>person_add</mat-icon>
+      Ajouter un héros
+    </button>
+  </div>
+</header>
+
+@if (mode() === 'combat' && legendaryActive()) {
+  <div class="cp-banner">
+    <mat-icon>military_tech</mat-icon>
+    Succès légendaire obtenu — +1 à ses jets d'attaque pour toute la rencontre, coriaces et piétailles adverses bloqués au round 1.
+  </div>
+}

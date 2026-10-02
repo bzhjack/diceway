@@ -1,23 +1,19 @@
-import {NgTemplateOutlet} from '@angular/common';
-import {CdkDragDrop, CdkDragEnd, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
-import {ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {MatIconModule} from '@angular/material/icon';
-import {MatMenuModule} from '@angular/material/menu';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, RouterLink} from '@angular/router';
-import {forkJoin, take} from 'rxjs';
+import {forkJoin, Observable, of, take, tap} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
-import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {BolHerosArmureModel} from '../../models/bol-armure.model';
-import {BolFightSessionModel, CombatCamp} from '../../models/bol-fight-session.model';
+import {BolFightSessionModel} from '../../models/bol-fight-session.model';
+import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
+import {BolCombatOptionModel} from '../../services/bol-combat-reference.service';
 import {BolCreaturesService} from '../../services/bol-creatures.service';
 import {BolDemonsService} from '../../services/bol-demons.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {BolPnjService} from '../../services/bol-pnj.service';
-import {combatantKindIcon, combatantKindIconIsSvg} from '../combat-statblock.util';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
 import {BolStatblockComponent} from '../../shared/statblock/bol-statblock.component';
 import {
@@ -28,68 +24,31 @@ import {
 } from '../../shared/statblock/bol-statblock.builders';
 import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialog';
 import {resolveAttackStats} from '../combat-attack.util';
-import {buildPlayBoard, EMPTY_AVATAR, PlayToken} from '../combat-play.util';
-import {ActionRollDiceTrait, ActionRollDialogComponent} from './action-roll-dialog/action-roll-dialog';
+import {buildPlayBoard, PlayToken, postCombatRecoveryAmount} from '../combat-play.util';
+import {ActionRollDiceTrait, ActionRollDialogData} from './action-roll-dialog/action-roll-dialog';
 import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
-import {AttackMenuComponent, CombatReminderStat} from './attack-menu/attack-menu';
+import {AttackRequest, BattlemapComponent, TokenPositionChange} from './battlemap/battlemap';
 import {maybePromptDefierLaMort} from './defier-la-mort-dialog/defier-la-mort.util';
-import {HeroActionMenuComponent} from './hero-action-menu/hero-action-menu';
-import {HeroStatblockDialogComponent} from './hero-statblock-dialog/hero-statblock-dialog';
+import {HeroActionPanelComponent, HeroActionPanelData, HeroActionPanelTab} from './hero-action-panel/hero-action-panel';
+import {HeroStatblockDialogData} from './hero-statblock-dialog/hero-statblock-dialog';
+import {HeroStatblockPopupComponent} from './hero-statblock-popup/hero-statblock-popup';
+import {InitiativeRailComponent} from './initiative-rail/initiative-rail';
+import {SessionHeaderComponent} from './session-header/session-header';
 import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dialog';
 
-const COLS_PER_ZONE = 3;
-const HERO_ZONE = {xMin: 8, xMax: 32, yMin: 16, yMax: 84};
-const ADVERSAIRE_ZONE = {xMin: 68, xMax: 92, yMin: 16, yMax: 84};
-
-function clamp(value: number, min: number, max: number): number {
-  return Math.max(min, Math.min(max, value));
-}
-
-/** Armes + attributs de combat d'un héros, chargés à la demande à l'ouverture du menu épée. */
-interface HeroMenuData {
-  readonly armes: readonly BolHerosArmeModel[];
-  readonly agilite: number;
-  readonly vigueur: number;
-  readonly esprit: number;
-  readonly melee: number;
-  readonly tir: number;
-  readonly defense: number;
-}
-
-/** Petit décalage déterministe (basé sur la clé du jeton) pour éviter un alignement trop rigide sur la carte. */
-function jitter(key: string): {jx: number; jy: number} {
-  let hash = 0;
-  for (let i = 0; i < key.length; i++) {
-    hash = (hash * 31 + key.charCodeAt(i)) | 0;
-  }
-  const jx = ((hash % 1000) / 1000) * 2 - 1;
-  const jy = (((hash >> 8) % 1000) / 1000) * 2 - 1;
-  return {jx, jy};
-}
-
 /**
- * Écran plein page affiché après « Lancer le combat » : ruban d'initiative en haut (réordonnable
- * par glisser-déposer, persisté en base), battlemap en dessous où les jetons sont librement
- * déplaçables (glisser-déposer, position persistée en base — sinon repositionnement par défaut).
- * Un combattant peut être ajouté ou retiré en cours de combat depuis le ruban ; les PV restent en
- * revanche non modifiables pour l'instant.
+ * Écran plein page affiché après « Lancer le combat » : orchestre le chargement/la persistance de
+ * la session et l'ouverture des dialogs — l'affichage est délégué à `bol-session-header` (titre,
+ * actions), `bol-initiative-rail` (ruban réordonnable) et `bol-battlemap` (jetons, ciblage, menus).
  */
 @Component({
   selector: 'bol-session-play-page',
-  imports: [
-    MatIconModule,
-    MatMenuModule,
-    NgTemplateOutlet,
-    RouterLink,
-    DragDropModule,
-    AttackMenuComponent,
-    HeroActionMenuComponent,
-  ],
+  imports: [RouterLink, SessionHeaderComponent, InitiativeRailComponent, BattlemapComponent, HeroActionPanelComponent],
   templateUrl: './session-play-page.html',
   styleUrl: './session-play-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '(document:keydown.escape)': 'cancelTargeting()',
+    '(document:keydown.escape)': 'closeHeroActionPanel()',
   },
 })
 export class SessionPlayPageComponent {
@@ -106,10 +65,8 @@ export class SessionPlayPageComponent {
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly session = signal<BolFightSessionModel | null>(null);
 
-  private readonly mapEl = viewChild<ElementRef<HTMLDivElement>>('mapEl');
-
   /** Positions des jetons sur la battlemap (glisser-déposer libre), persistées en base — clé `PlayToken.key` → {x, y} en pourcentage. */
-  private readonly tokenPositions = signal<Readonly<Record<string, {x: number; y: number}>>>({});
+  protected readonly tokenPositions = signal<Readonly<Record<string, {x: number; y: number}>>>({});
 
   protected readonly board = computed(() => {
     const session = this.session();
@@ -145,33 +102,6 @@ export class SessionPlayPageComponent {
 
   /** Premier de l'ordre affiché (calculé ou réordonné) = combattant dont c'est le tour. */
   protected readonly activeKey = computed(() => this.orderedTokens()[0]?.key ?? null);
-
-  /** Jeton attaquant en cours de ciblage (menu épée confirmé) — null hors mode ciblage. */
-  protected readonly attackSourceKey = signal<string | null>(null);
-  protected readonly attackSourceCamp = computed(
-    () => this.orderedTokens().find((t) => t.key === this.attackSourceKey())?.camp ?? null,
-  );
-
-  /** Dégâts de l'arme choisie dans le menu épée pour l'attaquant en cours de ciblage. */
-  private readonly attackDegats = signal<string | null>(null);
-
-  /** Armes + attributs de combat des héros chargés à la demande (clé de jeton → données), pour remplir le menu épée sans tout précharger. */
-  private readonly heroMenuData = signal<ReadonlyMap<string, HeroMenuData>>(new Map());
-
-  protected readonly kindIcon = combatantKindIcon;
-  protected readonly kindIconIsSvg = combatantKindIconIsSvg;
-
-  /** Jetons (clé) dont l'avatar a échoué au chargement (404 sur un chemin conventionnel sans fichier réel) — retombe sur l'icône de type plutôt qu'une image cassée. */
-  private readonly brokenAvatars = signal<ReadonlySet<string>>(new Set());
-
-  /** true si ce jeton a un portrait réel à afficher (ni le placeholder générique, ni un avatar dont le chargement a échoué). */
-  protected hasAvatar(token: PlayToken): boolean {
-    return token.avatar !== EMPTY_AVATAR && !this.brokenAvatars().has(token.key);
-  }
-
-  protected onAvatarError(token: PlayToken): void {
-    this.brokenAvatars.update((set) => new Set(set).add(token.key));
-  }
 
   constructor() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -222,6 +152,7 @@ export class SessionPlayPageComponent {
         width: 'min(760px, 94vw)',
         maxWidth: '94vw',
         maxHeight: '85vh',
+        panelClass: 'scd-panel',
         data: {sessionId},
       })
       .afterClosed()
@@ -251,20 +182,42 @@ export class SessionPlayPageComponent {
         return;
       }
 
-      this.fightSessionService.endCombat(sessionId).subscribe({
-        next: () => this.loadSession(sessionId),
-        error: (error: unknown) => {
-          this.snackBar.open(extractApiErrorMessage(error, 'Impossible de terminer le combat.'), 'Fermer', {
-            duration: 5000,
-          });
-        },
+      this.applyPostCombatRecovery(sessionId).subscribe(() => {
+        this.fightSessionService.endCombat(sessionId).subscribe({
+          next: () => this.loadSession(sessionId),
+          error: (error: unknown) => {
+            this.snackBar.open(extractApiErrorMessage(error, 'Impossible de terminer le combat.'), 'Fermer', {
+              duration: 5000,
+            });
+          },
+        });
       });
     });
   }
 
-  protected askRemoveCombatant(token: PlayToken, event: Event): void {
-    event.stopPropagation();
+  /** Récupération post-combat (02-actions-combat.md, "Récupération") : chaque héros à vitalité ≥ 0
+   * regagne la moitié des points perdus (arrondie au supérieur) avant que le combat ne se termine —
+   * en dessous de 0 (mourant), aucune récupération automatique (relève de "Secourir un mourant"). */
+  private applyPostCombatRecovery(sessionId: string): Observable<unknown> {
+    const recoveries = this.heroTokens()
+      .map((token) => ({token, amount: postCombatRecoveryAmount(token.vitaliteCourante, token.vitaliteMax)}))
+      .filter(({amount}) => amount > 0);
 
+    if (recoveries.length === 0) {
+      return of(null);
+    }
+
+    return forkJoin(
+      recoveries.map(({token, amount}) => this.fightSessionService.applyDamage(sessionId, 'hero', token.pivotId, amount)),
+    ).pipe(
+      tap(() => {
+        const summary = recoveries.map(({token, amount}) => `${token.nom} +${amount}`).join(', ');
+        this.snackBar.open(`Récupération post-combat — ${summary}`, undefined, {duration: 4500});
+      }),
+    );
+  }
+
+  protected askRemoveCombatant(token: PlayToken): void {
     const sessionId = this.session()?.id;
     if (!sessionId) {
       return;
@@ -296,116 +249,16 @@ export class SessionPlayPageComponent {
     });
   }
 
-  /** Menu épée ouvert sur un jeton : charge les armes + attributs du héros à la demande (pas de préchargement pour tout le plateau). */
-  protected loadArmes(token: PlayToken): void {
-    if (token.kind !== 'hero' || this.heroMenuData().has(token.key)) {
-      return;
-    }
-
-    const herosId = token.combat.sourceId;
-    if (!herosId) {
-      return;
-    }
-
-    this.herosService
-      .heros(herosId)
-      .pipe(take(1))
-      .subscribe({
-        next: (hero) => {
-          const armes = Array.isArray(hero.armes) && hero.armes.length > 0 && typeof hero.armes[0] !== 'number' ? (hero.armes as BolHerosArmeModel[]) : [];
-          this.heroMenuData.update((map) =>
-            new Map(map).set(token.key, {
-              armes,
-              agilite: hero.attributs.agilite_effective,
-              vigueur: hero.attributs.vigueur,
-              esprit: hero.attributs.esprit,
-              melee: hero.combat.melee,
-              tir: hero.combat.tir,
-              defense: hero.combat.defense_effective,
-            }),
-          );
-        },
-        error: (error: unknown) => {
-          this.snackBar.open(extractApiErrorMessage(error, 'Impossible de charger les armes de ce héros.'), 'Fermer', {
-            duration: 5000,
-          });
-        },
-      });
+  protected onAttackRequested({attacker, target, degats, posture}: AttackRequest): void {
+    this.openAttackDialog(attacker, target, degats, posture);
   }
 
-  /** Armes du héros pour le menu épée d'un jeton — tableau vide pour pnj/créature/démon ou tant que non chargé. */
-  protected armesFor(token: PlayToken): readonly BolHerosArmeModel[] {
-    return this.heroMenuData().get(token.key)?.armes ?? [];
-  }
-
-  /** Rappel d'attributs de combat affiché dans le menu épée — héros : chargés à la demande ; autres : déjà dans le snapshot. */
-  protected combatStatsFor(token: PlayToken): readonly CombatReminderStat[] {
-    if (token.kind === 'hero') {
-      const data = this.heroMenuData().get(token.key);
-      if (!data) {
-        return [];
-      }
-      return [
-        {label: 'Agilité', value: data.agilite},
-        {label: 'Vigueur', value: data.vigueur},
-        {label: 'Mêlée', value: data.melee},
-        {label: 'Tir', value: data.tir},
-        {label: 'Défense', value: data.defense},
-      ];
-    }
-
-    const c = token.combat;
-    const stats: CombatReminderStat[] = [
-      {label: 'Agilité', value: c.agilite ?? 0},
-      {label: 'Vigueur', value: c.vigueur ?? 0},
-    ];
-
-    if (c.attaque !== null) {
-      stats.push({label: 'Attaque', value: c.attaque});
-    } else {
-      stats.push({label: 'Mêlée', value: c.melee ?? 0}, {label: 'Tir', value: c.tir ?? 0});
-    }
-
-    stats.push({label: 'Défense', value: c.defense ?? 0});
-    return stats;
-  }
-
-  /** Menu épée confirmé (arme choisie) : entre en mode ciblage pour cet attaquant. */
-  protected onAttackConfirmed(token: PlayToken, degats: string | null): void {
-    this.attackDegats.set(degats);
-    this.attackSourceKey.set(token.key);
-  }
-
-  protected cancelTargeting(): void {
-    this.attackSourceKey.set(null);
-    this.attackDegats.set(null);
-  }
-
-  /** Clic sur un jeton en mode ciblage : une cible adverse ouvre le dialog d'attaque, l'attaquant lui-même annule. */
-  protected onTokenClick(token: PlayToken, event: Event): void {
-    const sourceKey = this.attackSourceKey();
-    if (!sourceKey) {
-      return;
-    }
-
-    event.stopPropagation();
-
-    if (token.key === sourceKey) {
-      this.cancelTargeting();
-      return;
-    }
-
-    const attacker = this.orderedTokens().find((t) => t.key === sourceKey);
-    if (!attacker || token.camp === attacker.camp) {
-      return;
-    }
-
-    const degats = this.attackDegats();
-    this.cancelTargeting();
-    this.openAttackDialog(attacker, token, degats);
-  }
-
-  private openAttackDialog(attacker: PlayToken, target: PlayToken, degats: string | null): void {
+  private openAttackDialog(
+    attacker: PlayToken,
+    target: PlayToken,
+    degats: string | null,
+    posture: BolCombatOptionModel | null,
+  ): void {
     const sessionId = this.session()?.id;
     if (!sessionId) {
       return;
@@ -428,6 +281,8 @@ export class SessionPlayPageComponent {
             targetAvatar: target.avatar,
             attacker: finalAttacker,
             target: targetStats,
+            legendaryBonusActive: attacker.tier === 'legendaire',
+            posture: posture ? {label: posture.label, slug: posture.slug, modificateur: posture.modificateur} : null,
           },
         })
         .afterClosed()
@@ -466,45 +321,36 @@ export class SessionPlayPageComponent {
     });
   }
 
-  /** Double-clic sur un jeton : consulte son statblock (récupéré en direct, seules les stats de combat sont snapshotées). */
-  protected openStatblock(token: PlayToken, event: Event): void {
-    event.stopPropagation();
-
+  /** Consultation du statbloc d'un jeton (récupéré en direct, seules les stats de combat sont
+   * snapshotées) — héros en mode libre : panneau fusionné fiche/jet (cf. `heroActionPanelData`),
+   * onglet Fiche ; tout le reste (PNJ/créature/démon, ou héros en combat) garde son dialog dédié. */
+  protected openStatblockFor(token: PlayToken): void {
     const sourceId = token.combat.sourceId;
-    if (!sourceId) {
+    const sessionId = this.session()?.id;
+    if (!sourceId || !sessionId) {
       return;
     }
 
+    if (token.kind === 'hero' && this.mode() === 'libre') {
+      this.openHeroActionPanel(token, sourceId, sessionId, 'fiche');
+      return;
+    }
+
+    /** Lien "Modifier la fiche" (bol-statblock) : revenir sur cette session de combat après édition. */
+    const returnUrl = `/session/${sessionId}/play`;
+
     switch (token.kind) {
       case 'hero': {
-        const sessionId = this.session()?.id;
-        if (!sessionId) {
-          return;
-        }
-
         this.herosService
           .heros(sourceId)
           .pipe(take(1))
           .subscribe((hero) => {
             this.dialog
-              .open(HeroStatblockDialogComponent, {
+              .open(HeroStatblockPopupComponent, {
                 maxWidth: 'min(900px, 94vw)',
                 panelClass: 'dw-statblock-dialog',
                 position: {top: '10vh'},
-                data: {
-                  sessionId,
-                  herosId: sourceId,
-                  pivotId: token.pivotId,
-                  heroNom: token.nom,
-                  avatar: token.avatar,
-                  statblock: heroStatblockData(hero),
-                  vitaliteCourante: token.vitaliteCourante ?? hero.ressources.vitalite,
-                  vitaliteMax: hero.ressources.vitalite,
-                  heroisme: hero.ressources.heroisme,
-                  armures: (hero.armures as (BolHerosArmureModel | number)[]).filter(
-                    (armure): armure is BolHerosArmureModel => typeof armure === 'object',
-                  ),
-                },
+                data: this.buildHeroStatblockData(token, hero, sourceId, sessionId, returnUrl),
               })
               .afterClosed()
               .subscribe((changed: boolean | undefined) => {
@@ -520,7 +366,11 @@ export class SessionPlayPageComponent {
           .pnj(sourceId)
           .pipe(take(1))
           .subscribe((pnj) =>
-            openStatblockDialog(this.dialog, BolStatblockComponent, {data: pnjStatblockData(pnj), imageSrc: token.avatar}),
+            openStatblockDialog(this.dialog, BolStatblockComponent, {
+              data: pnjStatblockData(pnj),
+              imageSrc: token.avatar,
+              returnUrl,
+            }),
           );
         break;
       case 'creature':
@@ -531,6 +381,7 @@ export class SessionPlayPageComponent {
             openStatblockDialog(this.dialog, BolStatblockComponent, {
               data: creatureStatblockData(creature),
               imageSrc: token.avatar,
+              returnUrl,
             }),
           );
         break;
@@ -539,26 +390,46 @@ export class SessionPlayPageComponent {
           .demon(sourceId)
           .pipe(take(1))
           .subscribe((demon) =>
-            openStatblockDialog(this.dialog, BolStatblockComponent, {data: demonStatblockData(demon), imageSrc: token.avatar}),
+            openStatblockDialog(this.dialog, BolStatblockComponent, {
+              data: demonStatblockData(demon),
+              imageSrc: token.avatar,
+              returnUrl,
+            }),
           );
         break;
     }
   }
 
+  /** Panneau fusionné fiche/jet d'action d'un héros en mode libre — `null` = panneau fermé. Vidé
+   * avant le chargement du héros suivant pour forcer la recréation de `bol-hero-action-panel`
+   * (sinon son état interne, onglet actif, attribut/difficulté choisis, etc., resterait celui du
+   * héros précédent). */
+  protected readonly heroActionPanelData = signal<HeroActionPanelData | null>(null);
+  protected readonly heroActionPanelTab = signal<HeroActionPanelTab>('jet');
+
   protected onActionRoll(token: PlayToken): void {
     const herosId = token.combat.sourceId;
-    if (!herosId) {
+    const sessionId = this.session()?.id;
+    if (!herosId || !sessionId) {
       return;
     }
+
+    this.openHeroActionPanel(token, herosId, sessionId, 'jet');
+  }
+
+  private openHeroActionPanel(token: PlayToken, herosId: string, sessionId: string, tab: HeroActionPanelTab): void {
+    const returnUrl = `/session/${sessionId}/play`;
+    this.heroActionPanelData.set(null);
 
     this.herosService
       .heros(herosId)
       .pipe(take(1))
       .subscribe((hero) => {
-        this.dialog.open(ActionRollDialogComponent, {
-          maxWidth: 'min(56rem, 94vw)',
-          panelClass: 'ard-panel',
-          data: {
+        this.heroActionPanelTab.set(tab);
+        this.heroActionPanelData.set({
+          heroNom: token.nom,
+          statblock: this.buildHeroStatblockData(token, hero, herosId, sessionId, returnUrl),
+          actionRoll: {
             heroNom: token.nom,
             herosId,
             heroisme: hero.ressources.heroisme,
@@ -590,21 +461,47 @@ export class SessionPlayPageComponent {
       });
   }
 
-  protected openStatblockFor(token: PlayToken): void {
-    this.openStatblock(token, new Event('click'));
+  private buildHeroStatblockData(
+    token: PlayToken,
+    hero: BolHerosModel,
+    herosId: string,
+    sessionId: string,
+    returnUrl: string,
+  ): HeroStatblockDialogData {
+    return {
+      sessionId,
+      herosId,
+      pivotId: token.pivotId,
+      heroNom: token.nom,
+      avatar: token.avatar,
+      statblock: heroStatblockData(hero),
+      vitaliteCourante: token.vitaliteCourante ?? hero.ressources.vitalite,
+      vitaliteMax: hero.ressources.vitalite,
+      heroisme: hero.ressources.heroisme,
+      armures: (hero.armures as (BolHerosArmureModel | number)[]).filter(
+        (armure): armure is BolHerosArmureModel => typeof armure === 'object',
+      ),
+      returnUrl,
+    };
   }
 
-  /** Glisser-déposer dans le ruban : réordonnancement manuel, persisté en base. */
-  protected onRailDrop(event: CdkDragDrop<PlayToken[]>): void {
-    if (event.previousIndex === event.currentIndex) {
-      return;
-    }
+  protected closeHeroActionPanel(): void {
+    this.heroActionPanelData.set(null);
+  }
 
+  /** `changed` de `bol-hero-statblock-dialog` (vitalité/héroïsme/équipement persistés) : recharge la session. */
+  protected onHeroActionPanelChanged(): void {
     const sessionId = this.session()?.id;
-    const keys = this.orderedTokens().map((t) => t.key);
-    moveItemInArray(keys, event.previousIndex, event.currentIndex);
+    if (sessionId) {
+      this.loadSession(sessionId);
+    }
+  }
+
+  /** Réordonnancement du ruban d'initiative (glisser-déposer dans `bol-initiative-rail`), persisté en base. */
+  protected onRailReordered(keys: readonly string[]): void {
     this.manualOrder.set(keys);
 
+    const sessionId = this.session()?.id;
     if (!sessionId) {
       return;
     }
@@ -620,22 +517,9 @@ export class SessionPlayPageComponent {
     });
   }
 
-  /** Glisser-déposer d'un jeton sur la battlemap : recalcule sa position en % de la carte et la persiste en base. */
-  protected onTokenDragEnded(token: PlayToken, event: CdkDragEnd): void {
-    const mapRect = this.mapEl()?.nativeElement.getBoundingClientRect();
-    if (!mapRect) {
-      return;
-    }
-
-    // `.cp-token-anchor` est positionné par `left`/`top`, et son enfant `.cp-token` se recentre
-    // dessus via `transform: translate(-50%, -50%)` : le coin (left, top) de l'ancre EST donc déjà
-    // le centre visuel du jeton — pas besoin (et surtout pas correct) d'y rajouter la demi-taille.
-    const anchorRect = event.source.element.nativeElement.getBoundingClientRect();
-    const x = clamp(((anchorRect.left - mapRect.left) / mapRect.width) * 100, 0, 100);
-    const y = clamp(((anchorRect.top - mapRect.top) / mapRect.height) * 100, 0, 100);
-    event.source.reset();
-
-    const positions = {...this.tokenPositions(), [token.key]: {x, y}};
+  /** Glisser-déposer d'un jeton sur la battlemap (`bol-battlemap`) : position recalculée en % de la carte, persistée en base. */
+  protected onPositionChanged({key, x, y}: TokenPositionChange): void {
+    const positions = {...this.tokenPositions(), [key]: {x, y}};
     this.tokenPositions.set(positions);
 
     const sessionId = this.session()?.id;
@@ -668,61 +552,5 @@ export class SessionPlayPageComponent {
           this.loading.set(false);
         },
       });
-  }
-
-  protected hpPct(token: PlayToken): number {
-    if (token.vitaliteMax === null || token.vitaliteMax <= 0 || token.vitaliteCourante === null) {
-      return 100;
-    }
-
-    return Math.max(0, Math.min(100, (token.vitaliteCourante / token.vitaliteMax) * 100));
-  }
-
-  protected hpColor(token: PlayToken): string {
-    return this.hpPct(token) <= 50 ? 'var(--dw-color-echec)' : 'var(--dw-color-reussite)';
-  }
-
-  protected chipClass(token: PlayToken): string {
-    const active = token.key === this.activeKey() ? ' cp-rail-chip--active' : '';
-    return `cp-rail-chip cp-rail-chip--${token.kind}${active}`;
-  }
-
-  protected tokenClass(token: PlayToken): string {
-    const active = token.key === this.activeKey() ? ' cp-token--active' : '';
-    const sourceKey = this.attackSourceKey();
-    const isSource = sourceKey && token.key === sourceKey ? ' cp-token--attack-source' : '';
-    const isTargetable =
-      sourceKey && token.key !== sourceKey && token.camp !== this.attackSourceCamp() ? ' cp-token--attack-target' : '';
-    // En mode ciblage, aucun jeton ne doit révéler son épée au survol : on clique la cible directement.
-    const targeting = sourceKey ? ' cp-token--targeting' : '';
-    return `cp-token cp-token--${token.kind}${active}${isSource}${isTargetable}${targeting}`;
-  }
-
-  /**
-   * Position d'un jeton sur la battlemap : celle enregistrée après un glisser-déposer si elle
-   * existe, sinon une position par défaut (héros à gauche, adversaires à droite).
-   */
-  protected tokenStyle(token: PlayToken, indexInCamp: number, camp: CombatCamp): Record<string, string> {
-    const stored = this.tokenPositions()[token.key];
-    if (stored) {
-      return {left: `${stored.x}%`, top: `${stored.y}%`};
-    }
-
-    const zone = camp === 'heros' ? HERO_ZONE : ADVERSAIRE_ZONE;
-    const campCount = (camp === 'heros' ? this.heroTokens() : this.adversaireTokens()).length;
-    const rows = Math.max(1, Math.ceil(campCount / COLS_PER_ZONE));
-
-    const col = indexInCamp % COLS_PER_ZONE;
-    const row = Math.floor(indexInCamp / COLS_PER_ZONE);
-    const colWidth = (zone.xMax - zone.xMin) / COLS_PER_ZONE;
-    const rowHeight = (zone.yMax - zone.yMin) / rows;
-    const baseX = zone.xMin + colWidth * (col + 0.5);
-    const baseY = zone.yMin + rowHeight * (row + 0.5);
-
-    const {jx, jy} = jitter(token.key);
-    const x = clamp(baseX + jx * colWidth * 0.18, zone.xMin, zone.xMax);
-    const y = clamp(baseY + jy * rowHeight * 0.18, zone.yMin, zone.yMax);
-
-    return {left: `${x}%`, top: `${y}%`};
   }
 }
