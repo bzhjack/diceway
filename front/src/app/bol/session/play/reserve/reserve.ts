@@ -10,6 +10,7 @@ import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {CombatCatalogEntry, CombatantKind, CombatSelectionService} from '../../../services/combat-selection.service';
 import {resolveAddCombatantCamp} from '../add-combatant-dialog/add-combatant-dialog';
+import {SceneListComponent} from '../scene-list/scene-list';
 import {filterReserve, isOnTable, RESERVE_TABS, reserveTab} from './reserve.util';
 
 interface ReserveRow {
@@ -17,11 +18,14 @@ interface ReserveRow {
   readonly onTable: boolean;
 }
 
+/** Onglet affiché : un des quatre types de personnages, ou les scènes. */
+type ReserveView = CombatantKind | 'scene';
+
 /** Réserve de la table (mode libre) : les quatre bibliothèques en onglets, avec recherche. « Poser »
  * ajoute le personnage à la session ; la page recharge la session sur `placed`. */
 @Component({
   selector: 'bol-reserve',
-  imports: [RouterLink, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatIconModule, MatInputModule],
+  imports: [RouterLink, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatIconModule, MatInputModule, SceneListComponent],
   templateUrl: './reserve.html',
   styleUrl: './reserve.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,9 +40,19 @@ export class ReserveComponent {
   readonly existingHeroIds = input.required<ReadonlySet<string>>();
   readonly existingPnjIds = input.required<ReadonlySet<string>>();
   readonly placed = output<void>();
+  /** Scène courante de la session et nombre de non-héros sur la table, relayés à `bol-scene-list`. */
+  readonly currentSceneId = input<string | null>(null);
+  readonly nonHeroCount = input(0);
+  /** Une opération sur les scènes a modifié la session : la page la recharge. */
+  readonly sceneChanged = output<void>();
 
   protected readonly tabs = RESERVE_TABS;
-  protected readonly activeKind = signal<CombatantKind>('hero');
+  protected readonly view = signal<ReserveView>('hero');
+  /** Type de personnage listé — sans objet quand l'onglet Scènes est affiché (la liste est masquée). */
+  protected readonly activeKind = computed<CombatantKind>(() => {
+    const view = this.view();
+    return view === 'scene' ? 'hero' : view;
+  });
   protected readonly activeTab = computed(() => reserveTab(this.activeKind()));
   protected readonly query = signal('');
   protected readonly loading = this.selection.loading;
@@ -59,8 +73,8 @@ export class ReserveComponent {
     this.selection.loadCatalog();
   }
 
-  protected setKind(change: MatButtonToggleChange): void {
-    this.activeKind.set(change.value as CombatantKind);
+  protected setView(change: MatButtonToggleChange): void {
+    this.view.set(change.value as ReserveView);
   }
 
   protected setQuery(value: string): void {

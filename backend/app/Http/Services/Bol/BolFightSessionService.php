@@ -334,11 +334,11 @@ class BolFightSessionService
         }
     }
 
-    private function createCreatureRow(string $sessionId, string $creatureId, ?string $camp, int $qty, ?string $surnom = null): void
+    public function createCreatureRow(string $sessionId, string $creatureId, ?string $camp, int $qty, ?string $surnom = null): ?BolFightSessionCreature
     {
         $creature = BolCreature::with('capacites.capacite')->find($creatureId);
         if (!$creature) {
-            return;
+            return null;
         }
 
         $capacites = collect($creature->capacites ?? [])->map(fn($c) => [
@@ -349,7 +349,7 @@ class BolFightSessionService
             'detail'      => $c->detail,
         ])->values()->toArray();
 
-        BolFightSessionCreature::create([
+        return BolFightSessionCreature::create([
             'fight_session_id'  => $sessionId,
             'creature_id'       => $creature->id,
             'camp'              => $this->normalizeCamp($camp),
@@ -386,11 +386,11 @@ class BolFightSessionService
         }
     }
 
-    private function createDemonRow(string $sessionId, string $demonId, ?string $camp, int $qty, ?string $surnom = null): void
+    public function createDemonRow(string $sessionId, string $demonId, ?string $camp, int $qty, ?string $surnom = null): ?BolFightSessionDemon
     {
         $demon = BolDemon::with('pouvoirs.pouvoir')->find($demonId);
         if (!$demon) {
-            return;
+            return null;
         }
 
         $pouvoirs = collect($demon->pouvoirs ?? [])->map(fn($p) => [
@@ -399,7 +399,7 @@ class BolFightSessionService
             'detail'     => $p->detail,
         ])->values()->toArray();
 
-        BolFightSessionDemon::create([
+        return BolFightSessionDemon::create([
             'fight_session_id'  => $sessionId,
             'demon_id'          => $demon->id,
             'camp'              => $this->normalizeCamp($camp),
@@ -435,11 +435,11 @@ class BolFightSessionService
         }
     }
 
-    private function createPnjRow(string $sessionId, string $pnjId, ?string $camp, ?string $surnom = null): void
+    public function createPnjRow(string $sessionId, string $pnjId, ?string $camp, ?string $surnom = null): ?BolFightSessionPnj
     {
         $pnj = BolHeros::with('armes.arme')->find($pnjId);
         if (!$pnj) {
-            return;
+            return null;
         }
 
         $armes = collect($pnj->armes ?? [])->map(fn($ha) => [
@@ -448,7 +448,7 @@ class BolFightSessionService
             'type'   => $ha->arme?->type,
         ])->values()->toArray();
 
-        BolFightSessionPnj::create([
+        return BolFightSessionPnj::create([
             'fight_session_id'  => $sessionId,
             'pnj_id'            => $pnj->id,
             'camp'              => $this->normalizeCamp($camp),
@@ -495,6 +495,7 @@ class BolFightSessionService
             'creatures.creature',
             'demons.demon',
             'pnjs.pnj.armures.armure',
+            'scene.scenario',
         ];
     }
 }

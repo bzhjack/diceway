@@ -33,6 +33,7 @@ import {maybePromptDefierLaMort} from './defier-la-mort-dialog/defier-la-mort.ut
 import {HeroStatblockDialogData} from './hero-statblock-dialog/hero-statblock-dialog';
 import {HeroStatblockPopupComponent} from './hero-statblock-popup/hero-statblock-popup';
 import {InitiativeRailComponent} from './initiative-rail/initiative-rail';
+import {tableTitle} from './scene-list/scene.util';
 import {SessionHeaderComponent} from './session-header/session-header';
 import {ReserveComponent} from './reserve/reserve';
 import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dialog';
@@ -154,6 +155,12 @@ export class SessionPlayPageComponent {
   protected readonly inspectorStatblock = signal<BolStatblockData | null>(null);
 
   protected readonly lastRoll = signal<LastRoll | null>(null);
+
+  /** PNJ / créatures / démons sur la table — décide si charger une scène demande « Remplacer ou Ajouter ». */
+  protected readonly nonHeroCount = computed(() => (this.board()?.tokens ?? []).filter((t) => t.kind !== 'hero').length);
+
+  /** Titre de la barre du haut : « Scénario · Scène » quand la session a une scène courante. */
+  protected readonly headerTitle = computed(() => tableTitle(this.session()?.titre ?? null, this.session()?.scene));
 
   constructor() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -462,6 +469,13 @@ export class SessionPlayPageComponent {
     if (sessionId) {
       this.loadSession(sessionId);
     }
+  }
+
+  /** Une scène a été chargée, enregistrée, renommée ou supprimée : la table a pu changer du tout au
+   * tout, la fiche du jeton est fermée avant de recharger la session. */
+  protected onSceneChanged(): void {
+    this.closeInspector();
+    this.reloadSession();
   }
 
   /** Charge les données de la fiche du jeton. Chaque réponse est ignorée si un autre jeton a été

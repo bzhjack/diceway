@@ -19,6 +19,7 @@ use App\Http\Controllers\Bol\BolPnjController;
 use App\Http\Controllers\Bol\BolDemonController;
 use App\Http\Controllers\Bol\BolDashboardController;
 use App\Http\Controllers\Bol\BolScenarioController;
+use App\Http\Controllers\Bol\BolSceneController;
 use App\Http\Controllers\Bol\BolCombatReferenceController;
 use App\Http\Controllers\Bol\BolFightSessionController;
 use Illuminate\Support\Facades\Route;
@@ -170,5 +171,14 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::patch('/bol/fight-session/{id}/positions', [BolFightSessionController::class, 'updatePositions']);
     Route::patch('/bol/fight-session/{id}/start-combat', [BolFightSessionController::class, 'startCombat']);
     Route::patch('/bol/fight-session/{id}/end-combat', [BolFightSessionController::class, 'endCombat']);
+    Route::post('/bol/fight-session/{id}/load-scene', [BolSceneController::class, 'load']);
+
+    // Scènes
+    Route::get('/bol/scene', [BolSceneController::class, 'getAll']);
+    Route::post('/bol/scene/create', [BolSceneController::class, 'create']);
+    Route::post('/bol/scene/update', [BolSceneController::class, 'update']);
+    Route::patch('/bol/scene/ordre', [BolSceneController::class, 'reorder']);
+    Route::patch('/bol/scene/{id}/distribution', [BolSceneController::class, 'replaceDistribution']);
+    Route::delete('/bol/scene/delete/{id}', [BolSceneController::class, 'delete']);
 
 });

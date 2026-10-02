@@ -29,10 +29,10 @@
     min-width: 0;
   }
 
-  // Quatre onglets dans 17rem : libellés resserrés pour que « Créatures » tienne sans être coupé.
+  // Cinq onglets : libellés resserrés pour que « Créatures » tienne sans être coupé.
   ::ng-deep .mat-button-toggle-label-content {
-    padding: 0 0.3rem;
-    font-size: 0.76rem;
+    padding: 0 0.2rem;
+    font-size: 0.72rem;
     line-height: 2.1rem;
   }
 }

@@ -9,7 +9,7 @@
   <div class="cp-page">
     <bol-session-header
       [mode]="mode()"
-      [titre]="session()?.titre ?? null"
+      [titre]="headerTitle()"
       [legendaryActive]="b.legendaryActive"
       (startCombat)="openStartCombatDialog()"
       (endCombat)="askEndCombat()"
@@ -34,6 +34,9 @@
                 [sessionId]="sid"
                 [existingHeroIds]="existingHeroIds()"
                 [existingPnjIds]="existingPnjIds()"
+                [currentSceneId]="session()?.scene_id ?? null"
+                [nonHeroCount]="nonHeroCount()"
+                (sceneChanged)="onSceneChanged()"
                 (placed)="reloadSession()"
               />
             </aside>

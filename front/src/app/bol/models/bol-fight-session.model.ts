@@ -5,6 +5,13 @@ export type InitiativeResultat = 'echec_critique' | 'echec' | 'reussite' | 'hero
 
 export type BolFightSessionStatut = 'libre' | 'combat' | 'terminee';
 
+/** Scène courante d'une session, telle que sérialisée avec la session (titres pour la barre du haut). */
+export interface BolSessionSceneRef {
+  id: string;
+  titre: string;
+  scenario?: {id: string; titre: string} | null;
+}
+
 export interface BolFightSessionModel {
   id: string | null;
   user_id?: string | null;
@@ -14,6 +21,9 @@ export interface BolFightSessionModel {
   ordre_manuel?: string[] | null;
   /** Position des jetons sur la battlemap (glisser-déposer libre) — clé `PlayToken.key` → {x, y} en pourcentage. */
   positions_jetons?: Record<string, {x: number; y: number}> | null;
+  /** Dernière scène chargée ou enregistrée sur cette table — null si aucune. */
+  scene_id?: string | null;
+  scene?: BolSessionSceneRef | null;
   heros?: BolFightSessionHerosModel[];
   creatures?: BolFightSessionCreatureModel[];
   demons?: BolFightSessionDemonModel[];
