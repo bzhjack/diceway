@@ -2,12 +2,13 @@ import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@ang
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {ActivatedRoute, RouterLink} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {forkJoin, Observable, of, take, tap} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolHerosArmureModel} from '../../models/bol-armure.model';
 import {BolFightSessionModel} from '../../models/bol-fight-session.model';
+import {BolSceneModel} from '../../models/bol-scene.model';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
 import {BolCombatOptionModel} from '../../services/bol-combat-reference.service';
@@ -15,6 +16,8 @@ import {BolCreaturesService} from '../../services/bol-creatures.service';
 import {BolDemonsService} from '../../services/bol-demons.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {BolPnjService} from '../../services/bol-pnj.service';
+import {BolSceneService} from '../../services/bol-scene.service';
+import {CombatantKind, CombatSelectionService} from '../../services/combat-selection.service';
 import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
 import {BolStatblockComponent, BolStatblockData} from '../../shared/statblock/bol-statblock.component';
 import {
@@ -27,7 +30,12 @@ import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialo
 import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard, PlayToken, postCombatRecoveryAmount} from '../combat-play.util';
 import {ActionRollDiceTrait, LastRoll} from '../action-roll.util';
-import {AddCombatantDialogComponent} from './add-combatant-dialog/add-combatant-dialog';
+import {SceneActionsService} from '../scene-actions.service';
+import {AddCombatantDialogComponent, resolveAddCombatantCamp} from './add-combatant-dialog/add-combatant-dialog';
+import {openCommandPalette} from './command-palette/command-palette';
+import {PaletteActionId, PaletteCommand, PaletteContext} from './command-palette/command-palette.util';
+import {isPaletteShortcut} from './command-palette/shortcut.util';
+import {reserveTab} from './reserve/reserve.util';
 import {AttackRequest, BattlemapComponent, TokenPositionChange} from './battlemap/battlemap';
 import {maybePromptDefierLaMort} from './defier-la-mort-dialog/defier-la-mort.util';
 import {HeroStatblockDialogData} from './hero-statblock-dialog/hero-statblock-dialog';
@@ -68,6 +76,7 @@ import {TokenInspectorComponent, TokenInspectorHeroData} from './token-inspector
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(document:keydown.escape)': 'closeInspector()',
+    '(document:keydown)': 'onKeydown($event)',
   },
 })
 export class SessionPlayPageComponent {
@@ -79,6 +88,10 @@ export class SessionPlayPageComponent {
   private readonly demonsService = inject(BolDemonsService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly router = inject(Router);
+  private readonly selection = inject(CombatSelectionService);
+  private readonly sceneService = inject(BolSceneService);
+  private readonly sceneActions = inject(SceneActionsService);
 
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
@@ -161,6 +174,21 @@ export class SessionPlayPageComponent {
 
   /** Titre de la barre du haut : « Scénario · Scène » quand la session a une scène courante. */
   protected readonly headerTitle = computed(() => tableTitle(this.session()?.titre ?? null, this.session()?.scene));
+
+  /** Scènes de l'utilisateur, chargées à chaque ouverture de la barre de commande. */
+  private readonly paletteScenes = signal<readonly BolSceneModel[]>([]);
+
+  /** État de la table vu par la barre de commande — un signal, pour que ses résultats se complètent
+   * quand la bibliothèque et les scènes finissent de charger. */
+  private readonly paletteContext = computed<PaletteContext>(() => ({
+    mode: this.mode(),
+    tokens: (this.board()?.tokens ?? []).map((token) => ({key: token.key, nom: token.nom, kind: token.kind})),
+    catalog: this.selection.catalog(),
+    heroIds: this.existingHeroIds(),
+    pnjIds: this.existingPnjIds(),
+    scenes: this.paletteScenes(),
+    reserveOpen: this.reserveOpen(),
+  }));
 
   constructor() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -476,6 +504,144 @@ export class SessionPlayPageComponent {
   protected onSceneChanged(): void {
     this.closeInspector();
     this.reloadSession();
+  }
+
+  /** `/` ou `Ctrl+K` : ouvre la barre de commande, sauf si un dialogue est déjà ouvert. */
+  protected onKeydown(event: KeyboardEvent): void {
+    if (!isPaletteShortcut(event, event.target as HTMLElement | null) || this.dialog.openDialogs.length > 0) {
+      return;
+    }
+    event.preventDefault();
+    this.openPalette();
+  }
+
+  protected openPalette(): void {
+    if (!this.sessionId() || this.dialog.openDialogs.length > 0) {
+      return;
+    }
+
+    // La barre s'ouvre tout de suite ; bibliothèque et scènes complètent ses résultats à leur arrivée.
+    // En combat la réserve n'est pas affichée : la bibliothèque peut ne jamais avoir été chargée.
+    if (this.selection.catalog().length === 0) {
+      this.selection.loadCatalog();
+    }
+    this.sceneService.scenes().subscribe({
+      next: (scenes) => this.paletteScenes.set(scenes),
+      error: () => this.paletteScenes.set([]),
+    });
+
+    openCommandPalette(this.dialog, {context: this.paletteContext}).subscribe((command) => {
+      if (command) {
+        this.executePaletteCommand(command);
+      }
+    });
+  }
+
+  /** Exécute la commande choisie dans la barre, par les mêmes chemins que les panneaux. */
+  private executePaletteCommand(command: PaletteCommand): void {
+    const sessionId = this.sessionId();
+    if (!sessionId) {
+      return;
+    }
+
+    switch (command.type) {
+      case 'select': {
+        const token = this.board()?.tokens.find((t) => t.key === command.key);
+        if (token) {
+          this.onTokenSelected(token);
+        }
+        break;
+      }
+      case 'place':
+        this.fightSessionService
+          .addCombatant(sessionId, {
+            kind: command.kind,
+            sourceId: command.sourceId,
+            camp: resolveAddCombatantCamp(command.kind, 'adversaires'),
+            qty: command.qty,
+          })
+          .subscribe({
+            next: () => {
+              const message =
+                command.qty > 1
+                  ? `${command.qty} × ${command.nom} posés sur la table.`
+                  : `${command.nom} posé sur la table.`;
+              this.snackBar.open(message, undefined, {duration: 2000});
+              this.loadSession(sessionId);
+            },
+            error: (error: unknown) => this.paletteError(error, 'Impossible de poser ce personnage.'),
+          });
+        break;
+      case 'loadScene':
+        this.sceneActions.load(sessionId, command.scene, this.nonHeroCount()).subscribe({
+          next: (result) => {
+            if (result) {
+              this.onSceneChanged();
+            }
+          },
+          error: (error: unknown) => this.paletteError(error, 'Impossible de charger la scène.'),
+        });
+        break;
+      case 'action':
+        this.runPaletteAction(command.id, sessionId);
+        break;
+    }
+  }
+
+  private runPaletteAction(id: PaletteActionId, sessionId: string): void {
+    switch (id) {
+      case 'startCombat':
+        this.openStartCombatDialog();
+        break;
+      case 'endCombat':
+        this.askEndCombat();
+        break;
+      case 'saveScene':
+        // Rangée dans le scénario de la scène courante, sinon dans « Sans scénario ».
+        this.sceneActions.saveTable(sessionId, this.session()?.scene?.scenario?.id ?? null).subscribe({
+          next: (scene) => {
+            if (scene) {
+              this.onSceneChanged();
+            }
+          },
+          error: (error: unknown) => this.paletteError(error, "Impossible d'enregistrer la scène."),
+        });
+        break;
+      case 'toggleReserve':
+        this.toggleReserve();
+        break;
+      case 'createHero':
+        this.openCreateForm('hero');
+        break;
+      case 'createPnj':
+        this.openCreateForm('pnj');
+        break;
+      case 'createCreature':
+        this.openCreateForm('creature');
+        break;
+      case 'createDemon':
+        this.openCreateForm('demon');
+        break;
+      case 'sessions':
+        void this.router.navigateByUrl('/library/sessions');
+        break;
+      case 'newSession':
+        void this.router.navigateByUrl('/session/new');
+        break;
+      case 'intendance':
+        void this.router.navigateByUrl('/intendance');
+        break;
+    }
+  }
+
+  /** Formulaire de création, avec retour à cette table après enregistrement (même état de
+   * navigation que les liens « Créer » de la réserve). */
+  private openCreateForm(kind: CombatantKind): void {
+    void this.router.navigateByUrl(reserveTab(kind).createLink, {state: {returnUrl: this.returnUrl()}});
+  }
+
+  private paletteError(error: unknown, fallback: string): void {
+    this.snackBar.open(extractApiErrorMessage(error, fallback), 'Fermer', {duration: 5000});
   }
 
   /** Charge les données de la fiche du jeton. Chaque réponse est ignorée si un autre jeton a été

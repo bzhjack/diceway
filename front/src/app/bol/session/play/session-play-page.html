@@ -13,6 +13,7 @@
       [legendaryActive]="b.legendaryActive"
       (startCombat)="openStartCombatDialog()"
       (endCombat)="askEndCombat()"
+      (search)="openPalette()"
     />
 
     @if (mode() === 'combat') {

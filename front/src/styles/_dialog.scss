@@ -13,3 +13,9 @@
   align-items: flex-start !important;
   padding-top: 5vh !important;
 }
+
+// Barre de commande (`bol-command-palette`) : le contenu remplit le panneau du dialogue, sans marge.
+.pal-panel .mat-mdc-dialog-surface {
+  overflow: hidden;
+  border: 1px solid var(--dw-border);
+}

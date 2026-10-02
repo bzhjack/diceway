@@ -27,8 +27,9 @@ export function reserveTab(kind: CombatantKind): ReserveTab {
   return RESERVE_TABS.find((tab) => tab.kind === kind) ?? RESERVE_TABS[0];
 }
 
-/** Minuscules sans diacritiques : « Prêtre » et « pretre » se valent pour la recherche. */
-function normalize(value: string): string {
+/** Minuscules sans diacritiques : « Prêtre » et « pretre » se valent pour la recherche. Partagé avec
+ * la barre de commande. */
+export function normalizeSearch(value: string): string {
   return value
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
@@ -42,9 +43,9 @@ export function filterReserve(
   kind: CombatantKind,
   query: string,
 ): CombatCatalogEntry[] {
-  const term = normalize(query);
+  const term = normalizeSearch(query);
   return catalog
-    .filter((entry) => entry.kind === kind && (!term || normalize(entry.nom).includes(term)))
+    .filter((entry) => entry.kind === kind && (!term || normalizeSearch(entry.nom).includes(term)))
     .sort((left, right) => left.nom.localeCompare(right.nom, 'fr'));
 }
 

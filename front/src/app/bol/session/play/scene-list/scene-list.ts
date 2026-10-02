@@ -1,5 +1,5 @@
 import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
-import {ChangeDetectionStrategy, Component, computed, inject, input, output, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -12,16 +12,13 @@ import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {DwCollapsibleRowComponent} from '../../../../shared/dw-collapsible-row/dw-collapsible-row';
 import {confirmDialog} from '../../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {promptDialog} from '../../../../shared/dw-prompt-dialog/dw-prompt-dialog';
-import {BolSceneModel, BolSceneScenarioRef, SceneLoadMode} from '../../../models/bol-scene.model';
-import {BolFightSessionService} from '../../../services/bol-fight-session.service';
+import {BolSceneModel, BolSceneScenarioRef} from '../../../models/bol-scene.model';
 import {BolScenarioService} from '../../../services/bol-scenario.service';
 import {BolSceneService} from '../../../services/bol-scene.service';
-import {SceneLoadDialogComponent, SceneLoadDialogData} from './scene-load-dialog';
+import {SceneActionsService} from '../../scene-actions.service';
 import {
   distributionSummary,
-  loadMessage,
   moveScene,
-  needsLoadChoice,
   NO_SCENARIO,
   normalizeTitre,
   SCENE_TITLE_MAX,
@@ -49,7 +46,7 @@ import {
 export class SceneListComponent {
   private readonly sceneService = inject(BolSceneService);
   private readonly scenarioService = inject(BolScenarioService);
-  private readonly fightSessionService = inject(BolFightSessionService);
+  private readonly sceneActions = inject(SceneActionsService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
 
@@ -102,6 +99,20 @@ export class SceneListComponent {
         this.fail(error, 'Impossible de charger les scènes.');
       },
     });
+
+    // La scène courante de la session peut avoir été créée hors de cette liste (barre de commande) :
+    // si elle n'y figure pas, la liste est rechargée.
+    effect(() => {
+      const currentId = this.currentSceneId();
+      if (currentId && !this.loading() && !this.scenes().some((scene) => scene.id === currentId)) {
+        this.sceneService.scenes().subscribe((scenes) => {
+          // Évite une boucle si la scène n'existe vraiment plus : on ne remplace que si elle est revenue.
+          if (scenes.some((scene) => scene.id === currentId)) {
+            this.scenes.set(scenes);
+          }
+        });
+      }
+    });
   }
 
   protected summary(scene: BolSceneModel): string {
@@ -143,52 +154,26 @@ export class SceneListComponent {
   /** « Enregistrer la table comme scène » : la scène est créée dans le scénario sélectionné et
    * devient la scène courante de la session. */
   protected saveTable(): void {
-    promptDialog(this.dialog, {
-      title: 'Enregistrer la table comme scène',
-      label: 'Titre de la scène',
-      maxLength: SCENE_TITLE_MAX,
-      confirmLabel: 'Enregistrer',
-    }).subscribe((raw) => {
-      const titre = normalizeTitre(raw);
-      if (!titre) {
-        return;
-      }
-      this.run(
-        this.sceneService.create(titre, this.selectedScenario(), this.sessionId()),
-        "Impossible d'enregistrer la scène.",
-        (scene) => {
+    this.run(
+      this.sceneActions.saveTable(this.sessionId(), this.selectedScenario()),
+      "Impossible d'enregistrer la scène.",
+      (scene) => {
+        if (scene) {
           this.scenes.update((list) => [...list, scene]);
-          this.snackBar.open(`Scène « ${scene.titre} » enregistrée.`, undefined, {duration: 2500});
           this.changed.emit();
-        },
-      );
-    });
+        }
+      },
+    );
   }
 
   protected load(scene: BolSceneModel): void {
-    if (!needsLoadChoice(this.nonHeroCount())) {
-      this.doLoad(scene, 'replace');
-      return;
-    }
-
-    const data: SceneLoadDialogData = {titre: scene.titre, nonHeroCount: this.nonHeroCount()};
-    this.dialog
-      .open(SceneLoadDialogComponent, {data, width: '420px'})
-      .afterClosed()
-      .subscribe((mode: SceneLoadMode | undefined) => {
-        if (mode) {
-          this.doLoad(scene, mode);
-        }
-      });
-  }
-
-  private doLoad(scene: BolSceneModel, mode: SceneLoadMode): void {
     this.run(
-      this.fightSessionService.loadScene(this.sessionId(), scene.id, mode),
+      this.sceneActions.load(this.sessionId(), scene, this.nonHeroCount()),
       'Impossible de charger la scène.',
       (result) => {
-        this.snackBar.open(loadMessage(scene.titre, result.ignored), undefined, {duration: 4000});
-        this.changed.emit();
+        if (result) {
+          this.changed.emit();
+        }
       },
     );
   }

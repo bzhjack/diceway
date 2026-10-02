@@ -5,6 +5,16 @@
   </div>
 
   <div class="cp-header-actions">
+    <button
+      mat-icon-button
+      type="button"
+      class="cp-header-search"
+      aria-label="Rechercher ou lancer une action ( / )"
+      matTooltip="Rechercher ou lancer une action ( / )"
+      (click)="search.emit()"
+    >
+      <mat-icon>search</mat-icon>
+    </button>
     @if (mode() === 'libre') {
       <button type="button" class="cp-header-action cp-header-action--gold" (click)="startCombat.emit()">
         <mat-icon>shield</mat-icon>
