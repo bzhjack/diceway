@@ -75,7 +75,7 @@ import {TokenInspectorComponent, TokenInspectorHeroData} from './token-inspector
   styleUrl: './session-play-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '(document:keydown.escape)': 'closeInspector()',
+    '(document:keydown.escape)': 'onEscape()',
     '(document:keydown)': 'onKeydown($event)',
   },
 })
@@ -488,6 +488,14 @@ export class SessionPlayPageComponent {
     this.loadInspector(token);
   }
 
+  /** Échap ferme la fiche du jeton, sauf si un dialogue est ouvert : Échap ne ferme alors que lui
+   * (annuler la barre de commande ne doit pas faire perdre la fiche ni un jet en cours). */
+  protected onEscape(): void {
+    if (this.dialog.openDialogs.length === 0) {
+      this.closeInspector();
+    }
+  }
+
   protected closeInspector(): void {
     this.selectedKey.set(null);
   }
@@ -520,11 +528,9 @@ export class SessionPlayPageComponent {
       return;
     }
 
-    // La barre s'ouvre tout de suite ; bibliothèque et scènes complètent ses résultats à leur arrivée.
-    // En combat la réserve n'est pas affichée : la bibliothèque peut ne jamais avoir été chargée.
-    if (this.selection.catalog().length === 0) {
-      this.selection.loadCatalog();
-    }
+    // La barre s'ouvre tout de suite ; bibliothèque et scènes sont rechargées à chaque ouverture (une
+    // fiche a pu être créée, renommée ou supprimée depuis) et complètent ses résultats à leur arrivée.
+    this.selection.loadCatalog();
     this.sceneService.scenes().subscribe({
       next: (scenes) => this.paletteScenes.set(scenes),
       error: () => this.paletteScenes.set([]),
