@@ -7,12 +7,15 @@ import {
   input,
   linkedSignal,
   output,
+  signal,
   viewChild,
 } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {BolStatblockComponent, BolStatblockData} from '../../../shared/statblock/bol-statblock.component';
 import {ActionRollData, LastRoll} from '../../action-roll.util';
+import {EMPTY_AVATAR} from '../../combat-play.util';
+import {combatantKindIcon, combatantKindIconIsSvg} from '../../combat-statblock.util';
 import {ActionRollPanelComponent} from '../action-roll-panel/action-roll-panel';
 import {HeroResourcesComponent, HeroResourcesData} from '../hero-resources/hero-resources';
 import {InstanceVitaliteComponent} from './instance-vitalite';
@@ -30,9 +33,9 @@ const KIND_LABELS: Record<TapisKind, string> = {
   demon: 'Démon',
 };
 
-/** Carte du tapis dépliée sur place. Héros : ressources, jet d'action, accès à la fiche complète.
- * PNJ / créature / démon : vitalité (par exemplaire pour un lot), statbloc, changement de camp,
- * retrait. Ne recharge rien elle-même : toute modification remonte à la page par événement. */
+/** Carte du tapis dépliée sur place. Un bandeau commun (portrait carré, nom, vitalité) ouvre toutes les
+ * cartes. Héros : héroïsme, jet d'action sur trois colonnes, accès à la fiche complète. PNJ / créature /
+ * démon : vitalité par exemplaire pour un lot, statbloc, changement de camp, retrait. Ne recharge rien elle-même : toute modification remonte à la page par événement. */
 @Component({
   selector: 'bol-expanded-card',
   imports: [
@@ -86,6 +89,22 @@ export class ExpandedCardComponent {
   });
 
   protected readonly steppers = computed(() => vitaliteSteppers(this.card()));
+
+  /** Portrait carré du bandeau : l'avatar de la carte, ou l'icône du type s'il manque ou ne charge pas. */
+  private readonly avatarFailed = signal(false);
+  protected readonly hasAvatar = computed(() => this.card().avatar !== EMPTY_AVATAR && !this.avatarFailed());
+  protected readonly kindIcon = computed(() => combatantKindIcon(this.card().kind));
+  protected readonly kindIconIsSvg = computed(() => combatantKindIconIsSvg(this.card().kind));
+
+  protected onAvatarError(): void {
+    this.avatarFailed.set(true);
+  }
+
+  /** Corps de la carte : le jet d'action d'un héros en mode libre, le statbloc et les actions d'un
+   * autre personnage, ou « Attaquer cette carte ». Vide, il n'est pas affiché. */
+  protected readonly hasBody = computed(
+    () => this.canAttack() || this.card().kind !== 'hero' || (this.mode() === 'libre' && this.hero() !== null),
+  );
   protected readonly campLabel = computed(() => campActionLabel(this.card()));
   protected readonly removeLabel = computed(() => removeActionLabel(this.card()));
 

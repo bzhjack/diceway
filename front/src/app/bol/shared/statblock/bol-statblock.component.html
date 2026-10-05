@@ -1,19 +1,23 @@
 <article class="bol-statblock" [class]="'bol-statblock--' + data().accent">
   <div class="bol-statblock__body">
     <div class="bol-statblock__header">
-      <div class="bol-statblock__avatar">
-        <img [src]="imageSrc()" [alt]="data().title" class="h-full w-full object-cover" />
+      @if (!hideIdentity()) {
+        <div class="bol-statblock__avatar">
+          <img [src]="imageSrc()" [alt]="data().title" class="h-full w-full object-cover" />
 
-        @if (data().isCreation) {
-          <span class="bol-statblock__avatar-tag">Création</span>
-        }
-      </div>
+          @if (data().isCreation) {
+            <span class="bol-statblock__avatar-tag">Création</span>
+          }
+        </div>
+      }
 
       <div class="bol-statblock__main">
-        <div class="min-w-0 space-y-1">
-          <p class="bol-statblock__eyebrow">Statbloc BOL</p>
-          <h2 class="bol-statblock__title">{{ data().title }}</h2>
-        </div>
+        @if (!hideIdentity()) {
+          <div class="min-w-0 space-y-1">
+            <p class="bol-statblock__eyebrow">Statbloc BOL</p>
+            <h2 class="bol-statblock__title">{{ data().title }}</h2>
+          </div>
+        }
 
         @if (data().editRoute) {
           <div class="bol-statblock__edit-links">

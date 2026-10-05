@@ -50,6 +50,16 @@ export interface HeroResourcesData {
       gap: 0.2rem;
     }
 
+    // Disposition en ligne : le libellé à gauche de son stepper, pour gagner de la hauteur.
+    :host(.hrs--inline) {
+      gap: 0.4rem 1.4rem;
+    }
+
+    :host(.hrs--inline) .hrs-field {
+      flex-direction: row;
+      gap: 0.5rem;
+    }
+
     .hrs-label {
       font-size: 0.62rem;
       font-weight: 800;
@@ -59,11 +69,14 @@ export interface HeroResourcesData {
       white-space: nowrap;
     }
   `,
+  host: {'[class.hrs--inline]': "layout() === 'inline'"},
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroResourcesComponent implements OnInit {
   readonly data = input.required<HeroResourcesData>();
   readonly heroisme = model.required<number>();
+  /** `inline` : libellé à gauche du stepper (carte dépliée) ; `stacked` : libellé au-dessus. */
+  readonly layout = input<'stacked' | 'inline'>('stacked');
   /** Une valeur a été persistée : le parent recharge la session. */
   readonly changed = output<void>();
 

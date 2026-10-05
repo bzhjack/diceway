@@ -2,10 +2,11 @@
   <app-dice-box-host class="ard-dice-layer" [scale]="10" [theme]="'wooden-red'" [themeColor]="'#ef4444'" />
 
   <div class="ard-fg" (click)="dismissDice()">
+    <div class="ard-col">
     <div class="ard-row">
       <span class="ard-row-label" id="ard-attr-label">Attribut</span>
       <mat-button-toggle-group
-        class="ard-toggle"
+        class="ard-toggle ard-toggle--tiles ard-toggle--cols2"
         aria-labelledby="ard-attr-label"
         [value]="attribute()"
         [hideSingleSelectionIndicator]="true"
@@ -21,7 +22,7 @@
       <div class="ard-row">
         <span class="ard-row-label" id="ard-carriere-label">Carrière</span>
         <mat-button-toggle-group
-          class="ard-toggle"
+          class="ard-toggle ard-toggle--tiles ard-toggle--careers"
           aria-labelledby="ard-carriere-label"
           [value]="carriere()?.label ?? 'aucune'"
           [hideSingleSelectionIndicator]="true"
@@ -34,13 +35,15 @@
         </mat-button-toggle-group>
       </div>
     }
+    </div>
 
+    <div class="ard-col">
     <div class="ard-row">
       <span class="ard-row-label" id="ard-diff-label">
         Difficulté · <b>{{ difficulty().label }}</b>
       </span>
       <mat-button-toggle-group
-        class="ard-toggle ard-toggle--scale"
+        class="ard-toggle ard-toggle--tiles ard-toggle--scale"
         aria-labelledby="ard-diff-label"
         [value]="difficulty().label"
         [hideSingleSelectionIndicator]="true"
@@ -95,6 +98,9 @@
       }
     </div>
 
+    </div>
+
+    <div class="ard-col ard-col--result">
     <div class="ard-ledger-formula">
       <span>{{ formula() }}</span>
       <span class="ard-heroisme-badge" [matTooltip]="'Points d’héroïsme'">
@@ -189,5 +195,6 @@
         Convertir en succès héroïque (−1 PH)
       </button>
     }
+    </div>
   </div>
 </div>

@@ -70,6 +70,8 @@ export class BolStatblockComponent {
   readonly imageSrc = input.required<string>();
   /** Page à laquelle revenir après édition (ex. la session de combat en cours) — `null` si sans objet. */
   readonly returnUrl = input<string | null>(null);
+  /** Sans l'avatar ni le titre : quand le statbloc est posé sous un bandeau qui les porte déjà (carte dépliée du tapis). */
+  readonly hideIdentity = input(false);
 
   protected navigationState(): Record<string, string> | undefined {
     const returnUrl = this.returnUrl();

@@ -1,65 +1,88 @@
 <div #root [class]="'exc exc--' + card().kind" role="group" tabindex="-1" [attr.aria-label]="'Carte de ' + card().nom">
-  <header class="exc-header">
-    <div class="exc-title">
-      <h3 class="exc-name">{{ card().nom }}</h3>
-      <p class="exc-sub">{{ subtitle() }}</p>
-    </div>
-    <button mat-icon-button type="button" aria-label="Replier la carte" (click)="closed.emit()">
-      <mat-icon>close</mat-icon>
-    </button>
-  </header>
-
-  <div class="exc-body">
-    @if (card().kind === 'hero') {
-      @if (hero(); as h) {
-        <bol-hero-resources [data]="h.resources" [(heroisme)]="heroisme" (changed)="changed.emit()" />
-        @if (mode() === 'libre') {
-          <bol-action-roll-panel [data]="h.actionRoll" [(heroisme)]="heroisme" (rolled)="rolled.emit($event)" />
-        }
-        <button mat-stroked-button size="small" type="button" (click)="fullSheetRequested.emit(card())">
-          <mat-icon>badge</mat-icon> Fiche complète
-        </button>
+  <header class="exc-banner">
+    <div class="exc-portrait">
+      @if (hasAvatar()) {
+        <img class="exc-portrait-img" [src]="card().avatar" alt="" (error)="onAvatarError()" />
+      } @else if (kindIconIsSvg()) {
+        <mat-icon [svgIcon]="kindIcon()" />
       } @else {
-        <p class="exc-loading">Chargement de la fiche…</p>
+        <mat-icon>{{ kindIcon() }}</mat-icon>
       }
-    } @else {
-      <div class="exc-vitalite">
-        @for (stepper of steppers(); track stepper.label) {
-          <bol-instance-vitalite
-            [sessionId]="sessionId()"
-            [kind]="card().kind"
-            [pivotId]="card().pivotId"
-            [instanceIndex]="stepper.index"
-            [label]="stepper.label"
-            [value]="stepper.value"
-            [max]="card().vitaliteMax"
-            [nom]="card().nom"
-            (changed)="changed.emit()"
-          />
+    </div>
+
+    <div class="exc-id">
+      <div class="exc-line">
+        <div class="exc-title">
+          <h3 class="exc-name">{{ card().nom }}</h3>
+          <p class="exc-sub">{{ subtitle() }}</p>
+        </div>
+        @if (card().kind === 'hero' && hero()) {
+          <button mat-stroked-button size="small" type="button" (click)="fullSheetRequested.emit(card())">
+            <mat-icon>badge</mat-icon> Fiche complète
+          </button>
         }
+        <button mat-icon-button type="button" aria-label="Replier la carte" (click)="closed.emit()">
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
 
-      @if (statblock(); as sb) {
-        <bol-statblock [data]="sb" [imageSrc]="card().avatar" [returnUrl]="returnUrl()" />
-      }
-
-      <div class="exc-actions">
-        @if (mode() === 'libre') {
-          @if (campLabel(); as label) {
-            <button mat-stroked-button size="small" type="button" (click)="campToggleRequested.emit(card())">
-              <mat-icon>swap_vert</mat-icon> {{ label }}
-            </button>
+      <div class="exc-resources">
+        @if (card().kind === 'hero') {
+          @if (hero(); as h) {
+            <bol-hero-resources [data]="h.resources" layout="inline" [(heroisme)]="heroisme" (changed)="changed.emit()" />
+          } @else {
+            <p class="exc-loading">Chargement de la fiche…</p>
+          }
+        } @else {
+          @for (stepper of steppers(); track stepper.label) {
+            <bol-instance-vitalite
+              [sessionId]="sessionId()"
+              [kind]="card().kind"
+              [pivotId]="card().pivotId"
+              [instanceIndex]="stepper.index"
+              [label]="stepper.label"
+              [value]="stepper.value"
+              [max]="card().vitaliteMax"
+              [nom]="card().nom"
+              (changed)="changed.emit()"
+            />
           }
         }
-        <button mat-stroked-button size="small" type="button" class="exc-remove" (click)="removeRequested.emit(card())">
-          <mat-icon>person_remove</mat-icon> {{ removeLabel() }}
-        </button>
       </div>
-    }
-    @if (canAttack()) {
-      <button mat-flat-button size="small" type="button" class="exc-attack" (click)="attackRequested.emit(card())">
-        <mat-icon svgIcon="sword" /> Attaquer cette carte
-      </button>
-    }
-  </div>
+    </div>
+  </header>
+
+  @if (hasBody()) {
+    <div class="exc-body">
+      @if (card().kind === 'hero') {
+        @if (mode() === 'libre') {
+          @if (hero(); as h) {
+            <bol-action-roll-panel [data]="h.actionRoll" [(heroisme)]="heroisme" (rolled)="rolled.emit($event)" />
+          }
+        }
+      } @else {
+        @if (statblock(); as sb) {
+          <bol-statblock [data]="sb" [imageSrc]="card().avatar" [returnUrl]="returnUrl()" [hideIdentity]="true" />
+        }
+
+        <div class="exc-actions">
+          @if (mode() === 'libre') {
+            @if (campLabel(); as label) {
+              <button mat-stroked-button size="small" type="button" (click)="campToggleRequested.emit(card())">
+                <mat-icon>swap_vert</mat-icon> {{ label }}
+              </button>
+            }
+          }
+          <button mat-stroked-button size="small" type="button" class="exc-remove" (click)="removeRequested.emit(card())">
+            <mat-icon>person_remove</mat-icon> {{ removeLabel() }}
+          </button>
+        </div>
+      }
+      @if (canAttack()) {
+        <button mat-flat-button size="small" type="button" class="exc-attack" (click)="attackRequested.emit(card())">
+          <mat-icon svgIcon="sword" /> Attaquer cette carte
+        </button>
+      }
+    </div>
+  }
 </div>

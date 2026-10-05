@@ -445,33 +445,97 @@ bol-action-roll-panel {
   gap: 0.35rem;
 }
 
-// Dans un conteneur large (carte de héros dépliée sur le tapis), le jet passe sur deux colonnes :
-// les réglages à gauche, la formule et le résultat à droite. Mise en page multi-colonnes plutôt
-// qu'une grille : chaque colonne garde ses propres hauteurs, rien ne s'étire pour s'aligner.
+// Colonnes du jet : les choix, la difficulté et les dés, puis la formule et le résultat. Empilées
+// dans un conteneur étroit, côte à côte dans un conteneur large (carte de héros dépliée sur le tapis).
+.ard-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
 .ard-shell {
   container-type: inline-size;
 }
 
 @container (min-width: 36rem) {
   .ard-fg {
-    display: block;
-    columns: 2;
-    column-gap: 1.2rem;
-
-    > * {
-      break-inside: avoid;
-      margin-bottom: 0.75rem;
-    }
-
-    > :last-child {
-      margin-bottom: 0;
-    }
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.15fr) minmax(0, 0.95fr);
+    gap: 1rem;
+    align-items: start;
   }
 
-  // La formule ouvre la colonne de droite : plus de filet de séparation au-dessus d'elle.
-  .ard-ledger-formula {
-    break-before: column;
+  // La formule ouvre sa colonne : plus de filet de séparation au-dessus d'elle.
+  .ard-col--result .ard-ledger-formula {
     padding-top: 0;
     border-top: none;
   }
+
+  // Le résultat et « Relancer » se partagent la largeur de la colonne.
+  .ard-col--result {
+    .ard-ticket {
+      padding: 0.45rem 0.5rem;
+    }
+
+    .ard-ticket-total {
+      font-size: 1.9rem;
+    }
+
+    .ard-reroll {
+      flex: 1 1 0;
+      min-width: 0;
+      gap: 0.25rem;
+      padding: 0.4rem 0.3rem;
+      font-size: 0.9rem;
+
+      .mat-icon {
+        font-size: 1.5rem;
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+    }
+  }
+}
+
+// Choix en tuiles séparées (attribut, carrière, difficulté) plutôt qu'en rail segmenté : elles
+// passent à la ligne en grille, ce qui permet de les répartir en colonnes étroites.
+.ard-toggle--tiles.mat-button-toggle-group {
+  display: grid;
+  gap: 4px;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+
+  .mat-button-toggle,
+  .mat-button-toggle:last-child {
+    border: 1px solid var(--dw-border);
+    border-radius: 6px;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--dw-surface-0) 65%, transparent);
+  }
+
+  // La tuile cochée garde son fond doré : cette règle passe après le fond commun des tuiles.
+  .mat-button-toggle.mat-button-toggle-checked,
+  .mat-button-toggle.mat-button-toggle-checked:last-child {
+    border-color: var(--dw-color-legendary);
+    background: var(--dw-color-legendary);
+  }
+
+  .mat-button-toggle-button {
+    min-height: 1.9rem;
+  }
+}
+
+.ard-toggle--cols2.mat-button-toggle-group {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ard-toggle--careers.mat-button-toggle-group {
+  grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr));
+}
+
+.ard-toggle--scale.mat-button-toggle-group {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
