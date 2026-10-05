@@ -1,4 +1,7 @@
+import {BolHerosArmureModel} from '../../../models/bol-armure.model';
+import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolFightSessionModel, CombatCamp} from '../../../models/bol-fight-session.model';
+import {BolHerosModel} from '../../../models/bol-heros.model';
 import {EMPTY_AVATAR} from '../../combat-play.util';
 
 export type TapisKind = 'hero' | 'pnj' | 'creature' | 'demon';
@@ -264,4 +267,86 @@ export function revealDelta(itemStart: number, itemEnd: number, viewStart: numbe
     return itemStart - viewStart - margin;
   }
   return Math.max(0, itemEnd - (viewEnd - margin));
+}
+
+/** Une statistique de combat de l'en-tête de la carte d'un héros dépliée. */
+export interface HeroHeaderStat {
+  readonly label: string;
+  readonly value: string;
+}
+
+/** Statistiques de combat d'un héros pour l'en-tête de sa carte : initiative et défense effectives (équipement
+ * compris), mêlée, tir, protection de l'armure équipée et dégâts de la première arme qui en a. */
+export function heroHeaderStats(hero: BolHerosModel): HeroHeaderStat[] {
+  const armor = (hero.armures as readonly (BolHerosArmureModel | number)[]).find(
+    (entry): entry is BolHerosArmureModel =>
+      typeof entry === 'object' && entry.equipee && entry.armure?.categorie === 'armure',
+  );
+  const weapon = (hero.armes as readonly (BolHerosArmeModel | number)[]).find(
+    (entry): entry is BolHerosArmeModel => typeof entry === 'object' && Boolean(entry.arme?.degats),
+  );
+  const {combat} = hero;
+  return [
+    {label: 'Init.', value: String(combat.initiative_effective ?? combat.initiative)},
+    {label: 'Mêlée', value: String(combat.melee)},
+    {label: 'Tir', value: String(combat.tir)},
+    {label: 'Déf.', value: String(combat.defense_effective ?? combat.defense)},
+    {label: 'Prot.', value: armor?.armure?.protection || NO_VALUE},
+    {label: 'Dég.', value: weapon?.arme?.degats || NO_VALUE},
+  ];
+}
+
+export interface HeroDetailCarriere {
+  readonly label: string;
+  readonly value: number;
+}
+
+export interface HeroDetailArme {
+  readonly label: string;
+  readonly degats: string | null;
+  readonly portee: string | null;
+}
+
+export interface HeroDetailArmure {
+  readonly label: string;
+  readonly protection: string | null;
+  readonly malus: string | null;
+  readonly categorie: string;
+  readonly equipee: boolean;
+}
+
+/** Le détail de l'équipement et des carrières d'un héros, pour les popovers de l'en-tête de sa carte. */
+export interface HeroDetails {
+  readonly carrieres: readonly HeroDetailCarriere[];
+  readonly armes: readonly HeroDetailArme[];
+  readonly armures: readonly HeroDetailArmure[];
+}
+
+/** Carrières, armes et armures d'un héros, prêtes à afficher. Les entrées dont le catalogue n'est pas chargé
+ * (un simple id) sont ignorées ; les armures équipées passent en premier. */
+export function heroDetails(hero: BolHerosModel): HeroDetails {
+  const carrieres = hero.carrieres
+    .map((entry) => ({label: entry.carriere?.carriere ?? '', value: entry.value}))
+    .filter((entry) => entry.label);
+
+  const armes = (hero.armes as readonly (BolHerosArmeModel | number)[])
+    .filter((entry): entry is BolHerosArmeModel => typeof entry === 'object' && Boolean(entry.arme))
+    .map((entry) => ({label: entry.arme!.arme, degats: entry.arme!.degats, portee: entry.arme!.portee}));
+
+  const armures = (hero.armures as readonly (BolHerosArmureModel | number)[])
+    .filter((entry): entry is BolHerosArmureModel => typeof entry === 'object' && Boolean(entry.armure))
+    .map((entry) => ({
+      label: entry.armure!.armure,
+      protection: entry.armure!.protection,
+      malus: entry.armure!.malus,
+      categorie: entry.armure!.categorie,
+      equipee: entry.equipee,
+    }));
+
+  return {
+    carrieres,
+    armes,
+    // Tri stable : les équipées d'abord, l'ordre d'origine sinon.
+    armures: [...armures.filter((a) => a.equipee), ...armures.filter((a) => !a.equipee)],
+  };
 }

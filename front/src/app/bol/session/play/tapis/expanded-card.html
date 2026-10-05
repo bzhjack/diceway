@@ -14,8 +14,24 @@
       <div class="exc-line">
         <div class="exc-title">
           <h3 class="exc-name">{{ card().nom }}</h3>
-          <p class="exc-sub">{{ subtitle() }}</p>
+          @if (card().kind === 'hero' && hero(); as h) {
+            <bol-hero-details class="exc-details" [details]="h.details" />
+          } @else {
+            <p class="exc-sub">{{ subtitle() }}</p>
+          }
         </div>
+        @if (card().kind === 'hero') {
+          @if (hero(); as h) {
+            <dl class="exc-stats" aria-label="Statistiques de combat">
+              @for (stat of h.stats; track stat.label) {
+                <div class="exc-stat">
+                  <dt>{{ stat.label }}</dt>
+                  <dd>{{ stat.value }}</dd>
+                </div>
+              }
+            </dl>
+          }
+        }
         @if (card().kind === 'hero' && hero()) {
           <button mat-stroked-button size="small" type="button" (click)="fullSheetRequested.emit(card())">
             <mat-icon>badge</mat-icon> Fiche complète

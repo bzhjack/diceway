@@ -19,9 +19,22 @@ import {combatantKindIcon, combatantKindIconIsSvg} from '../../combat-statblock.
 import {ActionRollPanelComponent} from '../action-roll-panel/action-roll-panel';
 import {HeroResourcesComponent, HeroResourcesData} from '../hero-resources/hero-resources';
 import {InstanceVitaliteComponent} from './instance-vitalite';
-import {campActionLabel, removeActionLabel, TapisCard, TapisKind, vitaliteSteppers} from './tapis.util';
+import {
+  campActionLabel,
+  HeroDetails,
+  HeroHeaderStat,
+  removeActionLabel,
+  TapisCard,
+  TapisKind,
+  vitaliteSteppers,
+} from './tapis.util';
+import {HeroDetailsComponent} from './hero-details';
 
 export interface ExpandedHeroData {
+  /** Carrières, armes et armures, pour les popovers de détail de l'en-tête. */
+  readonly details: HeroDetails;
+  /** Statistiques de combat de l'en-tête (initiative, mêlée, tir, défense, protection, dégâts). */
+  readonly stats: readonly HeroHeaderStat[];
   readonly resources: HeroResourcesData;
   readonly actionRoll: ActionRollData;
 }
@@ -42,6 +55,7 @@ const KIND_LABELS: Record<TapisKind, string> = {
     MatButtonModule,
     MatIconModule,
     BolStatblockComponent,
+    HeroDetailsComponent,
     ActionRollPanelComponent,
     HeroResourcesComponent,
     InstanceVitaliteComponent,

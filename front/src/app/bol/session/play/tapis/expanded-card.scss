@@ -110,6 +110,43 @@
   min-width: 0;
 }
 
+// Statistiques de combat d'un héros, entre son identité et le bouton « Fiche complète » : de petites
+// tuiles libellé / valeur, les mêmes que sur la face des cartes.
+.exc-stats {
+  flex-shrink: 0;
+  display: flex;
+  gap: 0.3rem;
+  margin: 0;
+}
+
+.exc-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 2.7rem;
+  padding: 0.2rem 0.4rem 0.25rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 6px;
+  background: var(--dw-surface-100);
+
+  dt {
+    font-size: 0.56rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dw-surface-500);
+  }
+
+  dd {
+    margin: 0;
+    font-size: 0.92rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    color: var(--dw-surface-900);
+  }
+}
+
 .exc-name {
   margin: 0;
   font-family: 'Muse Display Harmony', 'Muse Sans', serif;
@@ -119,6 +156,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.exc-details {
+  margin-top: 0.25rem;
 }
 
 .exc-sub {

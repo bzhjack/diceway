@@ -1,5 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {BolFightSessionModel} from '../../../models/bol-fight-session.model';
+import {BolHerosModel} from '../../../models/bol-heros.model';
 import {buildTapisCards,
   campActionLabel,
   cardAriaLabel,
@@ -11,7 +12,7 @@ import {buildTapisCards,
   TapisCard,
   vitalitePercent,
   vitaliteSteppers,
-  vitaliteText, revealDelta} from './tapis.util';
+  vitaliteText, revealDelta, heroHeaderStats, heroDetails} from './tapis.util';
 
 function hero(id: number, nom: string, extra: Record<string, unknown> = {}): NonNullable<BolFightSessionModel['heros']>[number] {
   return {
@@ -246,5 +247,111 @@ describe('revealDelta', () => {
 
   it('keeps an item that touches the edge inside the margin', () => {
     expect(reveal(200, 495)).toBe(7);
+  });
+});
+
+describe('heroHeaderStats', () => {
+  const hero = (overrides: Record<string, unknown> = {}): BolHerosModel =>
+    ({
+      combat: {initiative: 2, initiative_effective: 1, melee: 4, tir: 2, defense: 1, defense_effective: 2},
+      armes: [{arme: {arme: 'Épée', degats: 'd6B'}}],
+      armures: [
+        {armure_id: 1, equipee: false, armure: {categorie: 'armure', protection: 'd6-2 (1)'}},
+        {armure_id: 2, equipee: true, armure: {categorie: 'armure', protection: 'd6-3 (1)'}},
+      ],
+      ...overrides,
+    }) as unknown as BolHerosModel;
+
+  const values = (stats: ReturnType<typeof heroHeaderStats>) => Object.fromEntries(stats.map((stat) => [stat.label, stat.value]));
+
+  it('lists initiative, melee, shot, defence, protection and damage, in that order', () => {
+    expect(heroHeaderStats(hero()).map((stat) => stat.label)).toEqual(['Init.', 'Mêlée', 'Tir', 'Déf.', 'Prot.', 'Dég.']);
+  });
+
+  it('uses the effective initiative and defence, which include the equipment', () => {
+    expect(values(heroHeaderStats(hero()))).toMatchObject({'Init.': '1', Mêlée: '4', Tir: '2', 'Déf.': '2'});
+  });
+
+  it('shows the protection of the equipped armour, not the first one owned', () => {
+    expect(values(heroHeaderStats(hero()))['Prot.']).toBe('d6-3 (1)');
+  });
+
+  it('shows the damage of the first weapon that has any', () => {
+    const armes = [{arme: {arme: 'Bâton', degats: null}}, {arme: {arme: 'Épée', degats: 'd6B'}}];
+    expect(values(heroHeaderStats(hero({armes})))['Dég.']).toBe('d6B');
+  });
+
+  it('shows a dash when there is no equipped armour, no weapon, or only unloaded ids', () => {
+    const none = values(heroHeaderStats(hero({armures: [{armure_id: 1, equipee: false, armure: {categorie: 'armure', protection: 'd6'}}], armes: []})));
+    expect(none['Prot.']).toBe('—');
+    expect(none['Dég.']).toBe('—');
+    const ids = values(heroHeaderStats(hero({armures: [3, 4], armes: [5]})));
+    expect(ids['Prot.']).toBe('—');
+    expect(ids['Dég.']).toBe('—');
+  });
+
+  it('ignores an equipped shield or helmet when looking for the body armour protection', () => {
+    const armures = [{armure_id: 7, equipee: true, armure: {categorie: 'bouclier', protection: null}}];
+    expect(values(heroHeaderStats(hero({armures})))['Prot.']).toBe('—');
+  });
+});
+
+describe('heroDetails', () => {
+  const hero = (overrides: Record<string, unknown> = {}): BolHerosModel =>
+    ({
+      carrieres: [
+        {carriere: {carriere: 'Barbare'}, value: 3},
+        {carriere: {carriere: 'Assassin'}, value: 2},
+        {carriere: null, value: 9},
+      ],
+      armes: [
+        {arme: {arme: 'Épée', degats: 'd6B', portee: null}},
+        {arme: {arme: 'Arc', degats: 'd6', portee: 'Longue'}},
+        7,
+      ],
+      armures: [
+        {armure_id: 1, equipee: false, armure: {armure: 'Armure légère', categorie: 'armure', protection: 'd6-3(1)', malus: null}},
+        {armure_id: 2, equipee: true, armure: {armure: 'Petit bouclier', categorie: 'bouclier', protection: 'Malus de -1', malus: null}},
+        {armure_id: 3, equipee: false, armure: {armure: 'Casque', categorie: 'casque', protection: '+1', malus: 'Vue réduite'}},
+        9,
+      ],
+      ...overrides,
+    }) as unknown as BolHerosModel;
+
+  it('lists the careers by name with their value, and skips a career whose catalogue entry is missing', () => {
+    expect(heroDetails(hero()).carrieres).toEqual([
+      {label: 'Barbare', value: 3},
+      {label: 'Assassin', value: 2},
+    ]);
+  });
+
+  it('lists the weapons with damage and range, and skips ids that were not loaded', () => {
+    expect(heroDetails(hero()).armes).toEqual([
+      {label: 'Épée', degats: 'd6B', portee: null},
+      {label: 'Arc', degats: 'd6', portee: 'Longue'},
+    ]);
+  });
+
+  it('lists the armours with the equipped ones first, keeping the order otherwise', () => {
+    const labels = heroDetails(hero()).armures.map((a) => [a.label, a.equipee]);
+    expect(labels).toEqual([
+      ['Petit bouclier', true],
+      ['Armure légère', false],
+      ['Casque', false],
+    ]);
+  });
+
+  it('keeps the protection, the malus and the category of each armour', () => {
+    expect(heroDetails(hero()).armures[2]).toEqual({
+      label: 'Casque',
+      protection: '+1',
+      malus: 'Vue réduite',
+      categorie: 'casque',
+      equipee: false,
+    });
+  });
+
+  it('returns empty lists for a hero with no gear', () => {
+    expect(heroDetails(hero({carrieres: [], armes: [], armures: []}))).toEqual({carrieres: [], armes: [], armures: []});
   });
 });

@@ -64,7 +64,7 @@ import {
 } from './tapis/combat-turn.util';
 import {TurnOrderComponent, TurnOrderEntry} from './tapis/turn-order';
 import {TapisComponent} from './tapis/tapis';
-import {buildTapisCards, cardLabel, findCard, removeActionLabel, TapisCard} from './tapis/tapis.util';
+import {buildTapisCards, cardLabel, findCard, heroDetails, heroHeaderStats, removeActionLabel, TapisCard} from './tapis/tapis.util';
 
 /**
  * La table : page d'accueil d'une session. Orchestre le chargement/la persistance de la session et
@@ -79,7 +79,7 @@ import {buildTapisCards, cardLabel, findCard, removeActionLabel, TapisCard} from
   styleUrl: './session-play-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '(document:keydown.escape)': 'onEscape()',
+    '(document:keydown.escape)': 'onEscape($event)',
     '(document:keydown)': 'onKeydown($event)',
   },
 })
@@ -359,8 +359,12 @@ export class SessionPlayPageComponent {
     writePanelOpen(browserStorage(), RESERVE_PANEL_KEY, next);
   }
 
-  /** Échap replie la carte dépliée, sauf si un dialogue est ouvert : Échap ne ferme alors que lui. */
-  protected onEscape(): void {
+  /** Échap replie la carte dépliée, sauf si un dialogue est ouvert, ou si un menu ou un popover vient de le
+   * traiter (il marque alors l'événement `defaultPrevented`) : Échap ne ferme alors que lui. */
+  protected onEscape(event: Event): void {
+    if (event.defaultPrevented) {
+      return;
+    }
     if (this.dialog.openDialogs.length === 0) {
       this.foldCard();
     }
@@ -453,6 +457,8 @@ export class SessionPlayPageComponent {
 
   private buildExpandedHero(card: TapisCard, hero: BolHerosModel, herosId: string, sessionId: string): ExpandedHeroData {
     return {
+      stats: heroHeaderStats(hero),
+      details: heroDetails(hero),
       resources: {
         sessionId,
         herosId,
