@@ -11,8 +11,8 @@ import {CardCombatState} from './combat-turn.util';
 import {ExpandedCardComponent, ExpandedHeroData} from './expanded-card';
 import {splitRows, TapisCard} from './tapis.util';
 
-/** Le tapis : deux rangs de cartes rangées automatiquement. Mode libre : « Présents dans la scène »
- * et « Héros et alliés », avec le bandeau « Dernier jet » entre les deux. Mode combat : « Adversaires »
+/** Le tapis : deux rangs de cartes rangées automatiquement. Mode libre : « Héros et alliés » en haut
+ * et « Présents dans la scène » en bas, avec le bandeau « Dernier jet » entre les deux. Mode combat : « Adversaires »
  * et « Héros et alliés », avec la barre d'action de la carte active ; un clic sur une carte
  * désignable demande une attaque. La carte dépliée prend la place de sa face. Ne parle à aucun service. */
 @Component({
@@ -54,7 +54,10 @@ export class TapisComponent {
   readonly endTurnRequested = output<void>();
 
   protected readonly rows = computed(() => splitRows(this.cards()));
-  protected readonly topLabel = computed(() => (this.mode() === 'combat' ? 'Adversaires' : 'Présents dans la scène'));
+  protected readonly presentsLabel = computed(() => (this.mode() === 'combat' ? 'Adversaires' : 'Présents dans la scène'));
+  /** Mode libre : héros en haut (leur carte dépliée est haute, elle serait coupée en bas de l'écran).
+   * Mode combat : adversaires en haut, héros en bas, face à face. */
+  protected readonly herosFirst = computed(() => this.mode() === 'libre');
 
   /** Dernière carte dépliée, pour rendre le focus à sa face quand elle se replie. */
   private previousKey: string | null = null;
@@ -66,6 +69,10 @@ export class TapisComponent {
         document.getElementById(`chc-${this.previousKey}`)?.focus();
       }
       this.previousKey = key;
+      if (key !== null) {
+        // La carte dépliée est haute : elle est ramenée dans la zone visible du tapis.
+        document.querySelector('bol-expanded-card')?.scrollIntoView({block: 'nearest', behavior: 'smooth'});
+      }
     });
   }
 

@@ -1,6 +1,20 @@
 <div class="tps">
+  <!-- Mode libre : les héros en haut. Leur carte dépliée (jet d'action compris) est haute, et en bas de
+       l'écran elle serait coupée par la réserve. Mode combat : les adversaires en haut, face aux héros. -->
+  @if (herosFirst()) {
+    <ng-container *ngTemplateOutlet="herosTpl" />
+    <ng-container *ngTemplateOutlet="middleTpl" />
+    <ng-container *ngTemplateOutlet="presentsTpl" />
+  } @else {
+    <ng-container *ngTemplateOutlet="presentsTpl" />
+    <ng-container *ngTemplateOutlet="middleTpl" />
+    <ng-container *ngTemplateOutlet="herosTpl" />
+  }
+</div>
+
+<ng-template #presentsTpl>
   <section class="tps-row" aria-labelledby="tps-presents-label">
-    <h2 class="tps-row-label" id="tps-presents-label">{{ topLabel() }}</h2>
+    <h2 class="tps-row-label" id="tps-presents-label">{{ presentsLabel() }}</h2>
     <ng-container
       *ngTemplateOutlet="
         rowTpl;
@@ -8,7 +22,23 @@
       "
     />
   </section>
+</ng-template>
 
+<ng-template #herosTpl>
+  <section class="tps-row tps-row--heros" aria-labelledby="tps-heros-label">
+    @if (herosFirst()) {
+      <h2 class="tps-row-label" id="tps-heros-label">Héros et alliés</h2>
+    }
+    <ng-container
+      *ngTemplateOutlet="rowTpl; context: {cards: rows().heros, labelId: 'tps-heros-label', empty: 'Aucun héros à table.'}"
+    />
+    @if (!herosFirst()) {
+      <h2 class="tps-row-label" id="tps-heros-label">Héros et alliés</h2>
+    }
+  </section>
+</ng-template>
+
+<ng-template #middleTpl>
   @if (mode() === 'combat') {
     @if (activeCard(); as active) {
       <bol-action-bar
@@ -31,14 +61,7 @@
       }
     </div>
   }
-
-  <section class="tps-row tps-row--heros" aria-labelledby="tps-heros-label">
-    <ng-container
-      *ngTemplateOutlet="rowTpl; context: {cards: rows().heros, labelId: 'tps-heros-label', empty: 'Aucun héros à table.'}"
-    />
-    <h2 class="tps-row-label" id="tps-heros-label">Héros et alliés</h2>
-  </section>
-</div>
+</ng-template>
 
 <ng-template #rowTpl let-cards="cards" let-labelId="labelId" let-empty="empty">
   <ul class="tps-cards" role="list" [attr.aria-labelledby]="labelId">
