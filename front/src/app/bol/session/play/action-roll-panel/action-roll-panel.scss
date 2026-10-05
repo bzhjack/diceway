@@ -186,20 +186,22 @@ bol-action-roll-panel {
 .ard-manual {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.4rem;
 }
 
+// Contraste sur le fond du panneau : libellé 12,7:1 ; bordure et texte d'aide 7,3:1 (WCAG AA : 4,5:1
+// pour le texte, 3:1 pour une bordure de champ).
 .ard-manual-hint {
-  font-size: 0.68rem;
-  color: var(--dw-surface-400);
+  font-size: 0.74rem;
+  color: var(--dw-surface-600);
 }
 
 .ard-manual input {
   width: 4.4rem;
   height: 1.9rem;
   border-radius: 7px;
-  border: 1px solid var(--dw-border);
+  border: 1px solid var(--dw-surface-500);
   background: color-mix(in srgb, var(--dw-surface-0) 55%, transparent);
   color: var(--dw-surface-900);
   font: inherit;
@@ -208,7 +210,7 @@ bol-action-roll-panel {
   text-align: center;
 
   &::placeholder {
-    color: var(--dw-surface-400);
+    color: var(--dw-surface-500);
   }
 
   &:focus-visible {
@@ -226,9 +228,9 @@ bol-action-roll-panel {
   justify-content: center;
   padding: 0;
   border-radius: 7px;
-  border: 1px solid var(--dw-border);
+  border: 1px solid var(--dw-surface-500);
   background: transparent;
-  color: var(--dw-surface-500);
+  color: var(--dw-surface-600);
   cursor: pointer;
 
   .mat-icon {
@@ -239,7 +241,7 @@ bol-action-roll-panel {
 
   &:hover:not(:disabled) {
     color: var(--dw-surface-900);
-    border-color: var(--dw-surface-500);
+    border-color: var(--dw-surface-700);
   }
 
   &:disabled {
