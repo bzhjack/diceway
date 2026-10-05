@@ -1,7 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {BolFightSessionModel} from '../../../models/bol-fight-session.model';
-import {
-  buildTapisCards,
+import {buildTapisCards,
   campActionLabel,
   cardAriaLabel,
   cardLabel,
@@ -12,8 +11,7 @@ import {
   TapisCard,
   vitalitePercent,
   vitaliteSteppers,
-  vitaliteText,
-} from './tapis.util';
+  vitaliteText, revealDelta} from './tapis.util';
 
 function hero(id: number, nom: string, extra: Record<string, unknown> = {}): NonNullable<BolFightSessionModel['heros']>[number] {
   return {
@@ -222,5 +220,31 @@ describe('vitalite helpers', () => {
   it('gives a single stepper otherwise, with instance 0 for a creature or demon and none for a PNJ', () => {
     expect(vitaliteSteppers(card('demon-9'))).toEqual([{index: 0, label: 'Vitalité', value: 20}]);
     expect(vitaliteSteppers(card('pnj-7'))).toEqual([{index: null, label: 'Vitalité', value: 2}]);
+  });
+});
+
+describe('revealDelta', () => {
+  // Zone visible de 100 à 500, marge de 12.
+  const reveal = (start: number, end: number) => revealDelta(start, end, 100, 500, 12);
+
+  it('does not move when the item is already fully visible', () => {
+    expect(reveal(150, 450)).toBe(0);
+  });
+
+  it('moves forward just enough to show an item cut off at the end', () => {
+    expect(reveal(300, 620)).toBe(132);
+  });
+
+  it('moves back just enough to show an item cut off at the start', () => {
+    expect(reveal(40, 300)).toBe(-72);
+  });
+
+  it('aligns the start of an item wider than the visible area', () => {
+    expect(reveal(300, 900)).toBe(188);
+    expect(reveal(20, 700)).toBe(-92);
+  });
+
+  it('keeps an item that touches the edge inside the margin', () => {
+    expect(reveal(200, 495)).toBe(7);
   });
 });

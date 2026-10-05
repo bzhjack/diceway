@@ -116,6 +116,8 @@ export class ExpandedCardComponent {
 
   constructor() {
     // À l'ouverture, le focus entre dans la carte : le clavier et les lecteurs d'écran suivent.
-    afterNextRender(() => this.root().nativeElement.focus());
+    // `preventScroll` : le tapis ramène lui-même la carte dans la zone visible (cf. `TapisComponent`) ; le
+    // focus, lui, ferait défiler tous les parents, y compris la page dont le débordement est masqué.
+    afterNextRender(() => this.root().nativeElement.focus({preventScroll: true}));
   }
 }

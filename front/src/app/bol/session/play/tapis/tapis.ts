@@ -10,7 +10,10 @@ import {CharacterCardComponent} from './character-card';
 import {CardCombatState} from './combat-turn.util';
 import {ExpandedCardComponent, ExpandedHeroData} from './expanded-card';
 import {DwScrollerComponent} from '../../../../shared/dw-scroller/dw-scroller';
-import {splitRows, TapisCard} from './tapis.util';
+import {revealDelta, splitRows, TapisCard} from './tapis.util';
+
+/** Marge (px) laissée autour de la carte dépliée quand on la ramène dans la zone visible. */
+const REVEAL_MARGIN = 12;
 
 /** Le tapis : deux rangs de cartes rangées automatiquement, les héros et alliés en bas, face aux autres
  * personnages en haut (« Présents dans la scène » en mode libre, « Adversaires » en combat). Au milieu :
@@ -69,10 +72,36 @@ export class TapisComponent {
       }
       this.previousKey = key;
       if (key !== null) {
-        // La carte dépliée est haute : elle est ramenée dans la zone visible du tapis.
-        document.querySelector('bol-expanded-card')?.scrollIntoView({block: 'nearest', behavior: 'smooth'});
+        this.revealExpandedCard();
       }
     });
+  }
+
+  /** Ramène la carte dépliée dans la zone visible : d'abord dans la piste de son rang (le dernier élément
+   * d'un rang qui défile se déplierait sinon coupé), puis dans le tapis lui-même (carte haute).
+   * Pas de `scrollIntoView` : il ferait aussi défiler la page entière, dont le débordement est masqué. */
+  private revealExpandedCard(): void {
+    const card = document.querySelector('bol-expanded-card');
+    if (!card) {
+      return;
+    }
+    const item = card.getBoundingClientRect();
+    const track = card.closest<HTMLElement>('.dws-track');
+    if (track) {
+      const view = track.getBoundingClientRect();
+      const delta = revealDelta(item.left, item.right, view.left, view.right, REVEAL_MARGIN);
+      if (delta !== 0) {
+        track.scrollTo({left: track.scrollLeft + delta, behavior: 'instant'});
+      }
+    }
+    const tapis = card.closest<HTMLElement>('.tps');
+    if (tapis) {
+      const view = tapis.getBoundingClientRect();
+      const delta = revealDelta(item.top, item.bottom, view.top, view.bottom, REVEAL_MARGIN);
+      if (delta !== 0) {
+        tapis.scrollTo({top: tapis.scrollTop + delta, behavior: 'instant'});
+      }
+    }
   }
 
   protected stateOf(card: TapisCard): CardCombatState | null {

@@ -363,7 +363,12 @@ bol-action-roll-panel {
 }
 
 .ard-trait-summary {
-  align-self: flex-start;
+  align-self: center;
+  flex: 1;
+  min-width: 0;
+  margin-left: 0.3rem;
+  line-height: 1.2;
+  text-align: left;
   font-size: 0.72rem;
   font-weight: 700;
   color: var(--dw-surface-500);
@@ -494,11 +499,16 @@ bol-action-roll-panel {
 
   // Le résultat et « Relancer » se partagent la largeur de la colonne.
   .ard-col--result {
+    // Colonne dense : jusqu'à six blocs empilés (formule, résultat, résumé des dés, saisie, faveur
+    // divine, échec critique) dans une carte de hauteur fixe — espacement et boutons resserrés.
+    gap: 0.4rem;
+
     .ard-divine-favor,
     .ard-tier-toggle {
       justify-content: flex-start;
       white-space: nowrap;
       font-size: 0.85rem;
+      padding-block: 0.3rem;
     }
 
     .ard-ticket {

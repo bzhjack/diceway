@@ -255,3 +255,13 @@ export function vitaliteSteppers(card: TapisCard): VitaliteStepper[] {
   }
   return [{index: card.kind === 'pnj' ? null : 0, label: 'Vitalité', value: card.vitaliteCourante ?? 0}];
 }
+
+/** De combien faire défiler une zone pour qu'un élément y soit entièrement visible, avec une marge. Positions
+ * dans le même repère (ex. l'écran). Un élément plus large que la zone s'aligne sur son début. */
+export function revealDelta(itemStart: number, itemEnd: number, viewStart: number, viewEnd: number, margin: number): number {
+  const tooLarge = itemEnd - itemStart > viewEnd - viewStart - 2 * margin;
+  if (tooLarge || itemStart < viewStart + margin) {
+    return itemStart - viewStart - margin;
+  }
+  return Math.max(0, itemEnd - (viewEnd - margin));
+}

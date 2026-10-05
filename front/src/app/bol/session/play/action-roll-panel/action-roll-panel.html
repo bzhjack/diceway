@@ -93,9 +93,6 @@
           <span class="ard-equip-chip">Équipement {{ signed(equipmentModifier()) }}</span>
         }
       </div>
-      @if (diceCountLabel(); as label) {
-        <span class="ard-trait-summary">{{ label }}</span>
-      }
     </div>
 
     </div>
@@ -152,6 +149,9 @@
       >
         <mat-icon>check</mat-icon>
       </button>
+      @if (diceCountLabel(); as label) {
+        <span class="ard-trait-summary">{{ label }}</span>
+      }
     </div>
 
     @if (isFailure()) {
