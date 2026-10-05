@@ -22,10 +22,12 @@
 .exc--creature { --exc-kind: var(--dw-color-creature); }
 .exc--demon { --exc-kind: var(--dw-color-demon); }
 
-// Héros : la carte s'élargit pour que le jet d'action tienne sur deux colonnes (cf. la requête de
-// conteneur de `action-roll-panel.scss`) — empilé, il poussait le reste du tapis hors de l'écran.
+// Héros : la carte s'élargit pour que le jet d'action tienne sur trois colonnes (cf. la requête de
+// conteneur de `action-roll-panel.scss`) — empilé, il poussait le reste du tapis hors de l'écran. La
+// colonne de résultat porte des boutons à libellé long (« Convertir en succès héroïque (−1 PH) ») qui
+// doivent tenir sur une ligne.
 .exc--hero {
-  width: min(44rem, 94vw);
+  width: min(58rem, 96vw);
 }
 
 // Bandeau commun à toutes les cartes dépliées : portrait carré à gauche, identité et vitalité à droite.

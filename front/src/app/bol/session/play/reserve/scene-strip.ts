@@ -56,7 +56,7 @@ import {SceneManagerDialogComponent, SceneManagerDialogData} from './scene-manag
         <mat-icon>save</mat-icon> Enregistrer la table
       </button>
       <button mat-stroked-button size="small" type="button" [disabled]="loading()" (click)="manage()">
-        Gérer les scènes
+        <mat-icon>tune</mat-icon> Gérer les scènes
       </button>
     </div>
   `,
