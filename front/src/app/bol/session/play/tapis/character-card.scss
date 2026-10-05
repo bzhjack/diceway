@@ -82,7 +82,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 4rem;
+  // Photo carrée (1 × 1), comme le portrait de la carte dépliée.
+  aspect-ratio: 1 / 1;
   background: linear-gradient(160deg, var(--dw-surface-200), var(--dw-surface-50));
   color: var(--chc-kind);
 
