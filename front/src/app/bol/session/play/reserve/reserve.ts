@@ -10,7 +10,6 @@ import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {CombatCatalogEntry, CombatantKind, CombatSelectionService} from '../../../services/combat-selection.service';
 import {resolveAddCombatantCamp} from '../add-combatant-dialog/add-combatant-dialog';
-import {DwScrollerComponent} from '../../../../shared/dw-scroller/dw-scroller';
 import {SceneStripComponent} from './scene-strip';
 import {filterReserve, isOnTable, RESERVE_TABS, reserveTab} from './reserve.util';
 
@@ -27,7 +26,7 @@ type ReserveView = CombatantKind | 'scene';
  * recharge la session sur `placed`. */
 @Component({
   selector: 'bol-reserve',
-  imports: [RouterLink, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatIconModule, MatInputModule, SceneStripComponent, DwScrollerComponent],
+  imports: [RouterLink, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatIconModule, MatInputModule, SceneStripComponent],
   templateUrl: './reserve.html',
   styleUrl: './reserve.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

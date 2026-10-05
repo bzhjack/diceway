@@ -1,14 +1,18 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
 }
 
-// Bandeau horizontal : onglets à gauche, puis le contenu de l'onglet sur une ligne.
+// Colonne verticale : titre et onglets, recherche, puis la « main » qui défile, et les liens en bas.
 .rsv-band {
+  flex: 1;
+  min-height: 0;
   display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  min-height: 6.4rem;
-  padding: 0.5rem 0.9rem;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0.8rem;
 }
 
 .rsv-side {
@@ -28,41 +32,42 @@
 }
 
 .rsv-tabs {
-  // Cinq onglets côte à côte : libellés resserrés pour laisser la largeur aux cartes.
+  // Cinq onglets sur deux lignes (3 + 2) : la colonne est étroite.
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
   ::ng-deep .mat-button-toggle-label-content {
-    padding: 0 0.55rem;
-    font-size: 0.76rem;
-    line-height: 2.1rem;
+    padding: 0 0.3rem;
+    font-size: 0.74rem;
+    line-height: 2rem;
   }
 }
 
 .rsv-search {
-  flex: 0 0 11rem;
+  flex-shrink: 0;
 }
 
-// La « main » : cartes réduites sur une ligne ; `dw-scroller` la fait défiler avec ses chevrons.
-.rsv-scroller {
-  flex: 1;
-  min-width: 0;
-}
-
+// La « main » : cartes réduites en grille, défilement vertical.
 .rsv-hand {
-  width: max-content;
-  min-width: 100%;
-  display: flex;
-  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5.4rem, 1fr));
+  align-content: start;
   gap: 0.5rem;
   margin: 0;
-  padding: 0.3rem 0.1rem;
+  padding: 0.1rem;
   list-style: none;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dw-border) transparent;
 }
 
 .rsv-mini {
   --rsv-kind: var(--dw-color-reussite);
   display: flex;
   flex-direction: column;
-  width: 5.4rem;
-  height: 100%;
+  width: 100%;
   padding: 0;
   border: 1px solid var(--dw-border);
   border-top: 3px solid var(--rsv-kind);
@@ -102,7 +107,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 2.4rem;
+  aspect-ratio: 1 / 1;
   background: linear-gradient(160deg, var(--dw-surface-200), var(--dw-surface-50));
   color: var(--rsv-kind);
   font-family: 'Muse Display Harmony', 'Muse Sans', serif;
@@ -134,10 +139,9 @@
 }
 
 .rsv-empty {
-  align-self: center;
+  grid-column: 1 / -1;
   font-size: 0.85rem;
   color: var(--dw-surface-500);
-  white-space: nowrap;
 }
 
 .rsv-links {

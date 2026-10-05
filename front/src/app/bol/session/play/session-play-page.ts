@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {forkJoin, Observable, of, take, tap} from 'rxjs';
@@ -73,7 +74,7 @@ import {buildTapisCards, cardLabel, findCard, removeActionLabel, TapisCard} from
  */
 @Component({
   selector: 'bol-session-play-page',
-  imports: [RouterLink, MatIconModule, SessionHeaderComponent, ReserveComponent, TapisComponent, TurnOrderComponent],
+  imports: [RouterLink, MatIconModule, MatTooltipModule, SessionHeaderComponent, ReserveComponent, TapisComponent, TurnOrderComponent],
   templateUrl: './session-play-page.html',
   styleUrl: './session-play-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

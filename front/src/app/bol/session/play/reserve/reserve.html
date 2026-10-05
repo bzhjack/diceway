@@ -36,7 +36,6 @@
       />
     </mat-form-field>
 
-    <dw-scroller class="rsv-scroller" label="Réserve">
     <ul class="rsv-hand" role="list" [attr.aria-label]="activeTab().label + ' de la réserve'">
       @for (row of rows(); track row.entry.catalogId) {
         <li>
@@ -73,7 +72,6 @@
         </li>
       }
     </ul>
-    </dw-scroller>
 
     <div class="rsv-links">
       <a mat-flat-button size="small" [routerLink]="activeTab().createLink" [state]="navState()">

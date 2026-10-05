@@ -63,26 +63,27 @@ import {SceneManagerDialogComponent, SceneManagerDialogData} from './scene-manag
   styles: `
     :host {
       flex: 1;
-      min-width: 0;
+      min-height: 0;
       display: flex;
-      align-items: center;
-      gap: 0.8rem;
+      flex-direction: column;
+      gap: 0.7rem;
     }
 
     .scs-scenario {
-      flex: 0 0 13rem;
+      flex-shrink: 0;
     }
 
     .scs-scenes {
       flex: 1;
-      min-width: 0;
+      min-height: 0;
       display: flex;
-      align-items: center;
+      flex-direction: column;
+      align-items: stretch;
       gap: 0.4rem;
       margin: 0;
-      padding: 0.3rem 0;
+      padding: 0.1rem;
       list-style: none;
-      overflow-x: auto;
+      overflow-y: auto;
       scrollbar-width: thin;
       scrollbar-color: var(--dw-border) transparent;
     }
@@ -90,12 +91,13 @@ import {SceneManagerDialogComponent, SceneManagerDialogData} from './scene-manag
     .scs-chip {
       padding: 0.35rem 0.75rem;
       border: 1px solid var(--dw-border);
-      border-radius: 999px;
+      width: 100%;
+      border-radius: 8px;
       background: var(--dw-surface-100);
       color: var(--dw-surface-700);
       font: inherit;
       font-size: 0.82rem;
-      white-space: nowrap;
+      text-align: left;
       cursor: pointer;
 
       &:hover:not(:disabled) {
@@ -123,13 +125,13 @@ import {SceneManagerDialogComponent, SceneManagerDialogData} from './scene-manag
     .scs-empty {
       font-size: 0.85rem;
       color: var(--dw-surface-500);
-      white-space: nowrap;
     }
 
     .scs-actions {
       flex-shrink: 0;
       display: flex;
-      gap: 0.4rem;
+      flex-direction: column;
+      gap: 0.35rem;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

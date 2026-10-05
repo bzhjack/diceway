@@ -33,26 +33,52 @@
   background: linear-gradient(180deg, var(--dw-surface-0), var(--dw-surface-50) 45%, var(--dw-surface-0));
 }
 
-// Mode libre : le tapis (`bol-tapis`, qui s'étire), puis la réserve en bandeau, repliable.
+// Sous l'en-tête : la réserve à gauche (mode libre seulement), sa languette de repli, puis la colonne
+// principale — l'ordre de jeu en combat et le tapis, qui s'étire.
+.spp-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.spp-main {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.spp-reserve {
+  flex: 0 0 19rem;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--dw-border);
+  background: var(--dw-surface-0);
+}
+
+// Languette verticale entre la réserve et le tapis : replie ou déplie la réserve.
 .spp-reserve-toggle {
   flex-shrink: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.3rem;
-  padding: 0.15rem 0;
+  gap: 0.6rem;
+  width: 1.5rem;
+  padding: 0;
   border: none;
-  border-top: 1px solid var(--dw-border);
+  border-right: 1px solid var(--dw-border);
   background: var(--dw-surface-50);
   color: var(--dw-surface-500);
   font: inherit;
-  font-size: 0.72rem;
   cursor: pointer;
 
   .mat-icon {
-    font-size: 1.1rem;
-    width: 1.1rem;
-    height: 1.1rem;
+    font-size: 1.2rem;
+    width: 1.2rem;
+    height: 1.2rem;
   }
 
   &:hover {
@@ -66,8 +92,10 @@
   }
 }
 
-.spp-reserve {
-  flex-shrink: 0;
-  border-top: 1px solid var(--dw-border);
-  background: var(--dw-surface-0);
+.spp-reserve-toggle-label {
+  writing-mode: vertical-rl;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
