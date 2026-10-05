@@ -110,10 +110,16 @@
   min-width: 0;
 }
 
-// Statistiques de combat d'un héros, entre son identité et le bouton « Fiche complète » : de petites
-// tuiles libellé / valeur, les mêmes que sur la face des cartes.
-.exc-stats {
+// Chiffres d'un héros, entre son identité et les boutons : ses statistiques de combat en petites tuiles
+// libellé / valeur, et dessous sa vitalité et son héroïsme, en tuiles du même style mais modifiables.
+.exc-figures {
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.exc-stats {
   display: flex;
   gap: 0.3rem;
   margin: 0;

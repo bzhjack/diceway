@@ -335,9 +335,8 @@ export interface HeroDetailArmure {
 export interface HeroDetails {
   readonly traits: readonly HeroDetailTrait[];
   readonly infos: HeroDetailInfos;
-  /** Pages d'édition de la fiche — null pour un héros sans id. */
+  /** Page d'édition de la fiche — null pour un héros sans id. */
   readonly editRoute: readonly [string, string] | null;
-  readonly advancedEditRoute: readonly [string, string] | null;
   readonly carrieres: readonly HeroDetailCarriere[];
   readonly armes: readonly HeroDetailArme[];
   readonly armures: readonly HeroDetailArmure[];
@@ -388,7 +387,6 @@ export function heroDetails(hero: BolHerosModel): HeroDetails {
       enCours: !hero.active,
     },
     editRoute: id ? ['/create/hero', id] : null,
-    advancedEditRoute: id && !hero.active ? ['/create/hero-advanced', id] : null,
     carrieres,
     armes,
     // Tri stable : les équipées d'abord, l'ordre d'origine sinon.

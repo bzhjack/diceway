@@ -20,8 +20,8 @@
             <p class="exc-sub">{{ subtitle() }}</p>
           }
         </div>
-        @if (card().kind === 'hero') {
-          @if (hero(); as h) {
+        @if (card().kind === 'hero' && hero(); as h) {
+          <div class="exc-figures">
             <dl class="exc-stats" aria-label="Statistiques de combat">
               @for (stat of h.stats; track stat.label) {
                 <div class="exc-stat">
@@ -30,23 +30,20 @@
                 </div>
               }
             </dl>
-          }
+            <bol-hero-resources [data]="h.resources" [(heroisme)]="heroisme" (changed)="changed.emit()" />
+          </div>
         }
         @if (card().kind === 'hero' && hero(); as h) {
           @if (h.details.editRoute; as editRoute) {
-            <button mat-icon-button type="button" aria-label="Modifier ce héros" [matMenuTriggerFor]="editMenu">
+            <a
+              mat-icon-button
+              aria-label="Modifier la fiche du héros"
+              matTooltip="Modifier la fiche"
+              [routerLink]="editRoute"
+              [state]="navigationState()"
+            >
               <mat-icon>edit</mat-icon>
-            </button>
-            <mat-menu #editMenu="matMenu">
-              <a mat-menu-item [routerLink]="editRoute" [state]="navigationState()">
-                <mat-icon>edit</mat-icon> Modifier la fiche
-              </a>
-              @if (h.details.advancedEditRoute; as advancedRoute) {
-                <a mat-menu-item [routerLink]="advancedRoute" [state]="navigationState()">
-                  <mat-icon>settings</mat-icon> Édition avancée
-                </a>
-              }
-            </mat-menu>
+            </a>
           }
         }
         <button mat-icon-button type="button" aria-label="Replier la carte" (click)="closed.emit()">
@@ -54,14 +51,8 @@
         </button>
       </div>
 
-      <div class="exc-resources">
-        @if (card().kind === 'hero') {
-          @if (hero(); as h) {
-            <bol-hero-resources [data]="h.resources" layout="inline" [(heroisme)]="heroisme" (changed)="changed.emit()" />
-          } @else {
-            <p class="exc-loading">Chargement de la fiche…</p>
-          }
-        } @else {
+      @if (card().kind !== 'hero') {
+        <div class="exc-resources">
           @for (stepper of steppers(); track stepper.label) {
             <bol-instance-vitalite
               [sessionId]="sessionId()"
@@ -75,8 +66,10 @@
               (changed)="changed.emit()"
             />
           }
-        }
-      </div>
+        </div>
+      } @else if (!hero()) {
+        <p class="exc-loading">Chargement de la fiche…</p>
+      }
     </div>
   </header>
 

@@ -27,55 +27,47 @@ export interface HeroResourcesData {
   imports: [ReactiveFormsModule, DwValueStepperComponent],
   template: `
     <div class="hrs-field">
-      <span class="hrs-label">Vitalité ({{ vitalite() }} / {{ data().vitaliteMax }})</span>
+      <span class="hrs-label">Vitalité · max {{ data().vitaliteMax }}</span>
       <dw-value-stepper [formControl]="vitaliteControl" [min]="-20" [max]="data().vitaliteMax" [ariaLabel]="'Vitalité'" />
     </div>
     <div class="hrs-field">
-      <span class="hrs-label">Héroïsme ({{ heroisme() }})</span>
+      <span class="hrs-label">Héroïsme</span>
       <dw-value-stepper [formControl]="heroismeControl" [min]="0" [ariaLabel]="'Héroïsme'" />
     </div>
   `,
   styles: `
+    // Deux tuiles, du même style que les statistiques de combat de la carte : le libellé au-dessus, le stepper
+    // dessous. Contrairement à elles, ces valeurs se modifient.
     :host {
       display: flex;
-      flex-wrap: wrap;
-      gap: 0.9rem;
+      gap: 0.3rem;
     }
 
     .hrs-field {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.2rem;
-    }
-
-    // Disposition en ligne : le libellé à gauche de son stepper, pour gagner de la hauteur.
-    :host(.hrs--inline) {
-      gap: 0.4rem 1.4rem;
-    }
-
-    :host(.hrs--inline) .hrs-field {
-      flex-direction: row;
-      gap: 0.5rem;
+      gap: 0.1rem;
+      padding: 0.2rem 0.4rem 0.25rem;
+      border: 1px solid var(--dw-border);
+      border-radius: 6px;
+      background: var(--dw-surface-100);
     }
 
     .hrs-label {
-      font-size: 0.62rem;
+      font-size: 0.56rem;
       font-weight: 800;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--dw-surface-500);
       white-space: nowrap;
     }
   `,
-  host: {'[class.hrs--inline]': "layout() === 'inline'"},
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroResourcesComponent implements OnInit {
   readonly data = input.required<HeroResourcesData>();
   readonly heroisme = model.required<number>();
-  /** `inline` : libellé à gauche du stepper (carte dépliée) ; `stacked` : libellé au-dessus. */
-  readonly layout = input<'stacked' | 'inline'>('stacked');
   /** Une valeur a été persistée : le parent recharge la session. */
   readonly changed = output<void>();
 

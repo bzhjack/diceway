@@ -373,16 +373,9 @@ describe('heroDetails', () => {
     expect(draft.infos).toEqual({joueur: null, region: null, commentaire: null, enCours: true});
   });
 
-  it('gives the edit routes, the advanced one only while the hero is being created', () => {
+  it('gives the edit route of the hero sheet, and none for a hero without id', () => {
     expect(heroDetails(hero()).editRoute).toEqual(['/create/hero', 'abc']);
-    expect(heroDetails(hero()).advancedEditRoute).toBeNull();
-    expect(heroDetails(hero({active: false})).advancedEditRoute).toEqual(['/create/hero-advanced', 'abc']);
-  });
-
-  it('has no edit route for a hero without id', () => {
-    const none = heroDetails(hero({id: null}));
-    expect(none.editRoute).toBeNull();
-    expect(none.advancedEditRoute).toBeNull();
+    expect(heroDetails(hero({id: null})).editRoute).toBeNull();
   });
 
   it('returns empty lists for a hero with no gear', () => {
