@@ -1,0 +1,257 @@
+import {BolFightSessionModel, CombatCamp} from '../../../models/bol-fight-session.model';
+import {EMPTY_AVATAR} from '../../combat-play.util';
+
+export type TapisKind = 'hero' | 'pnj' | 'creature' | 'demon';
+
+/** Une carte du tapis : une ligne de session (héros, PNJ, créature ou démon), avec sa face déjà
+ * calculée. Un lot (`qty > 1`) est une seule carte, avec la vitalité de chaque exemplaire. */
+export interface TapisCard {
+  /** `{kind}-{pivotId}`, sans index d'exemplaire. */
+  readonly key: string;
+  readonly kind: TapisKind;
+  readonly camp: CombatCamp;
+  readonly pivotId: number;
+  /** Id de la fiche en bibliothèque — null si elle a été supprimée depuis. */
+  readonly sourceId: string | null;
+  readonly nom: string;
+  readonly avatar: string;
+  /** Étiquette de la face : « ×N », « Allié », le rang, ou rien pour un héros. */
+  readonly badge: string | null;
+  /** Rang en clair (« Coriace »…) — null pour un héros. */
+  readonly rang: string | null;
+  readonly degats: string;
+  readonly defense: string;
+  readonly vitaliteCourante: number | null;
+  readonly vitaliteMax: number | null;
+  /** Vitalité de chaque exemplaire d'un lot — null hors lot. */
+  readonly instances: readonly number[] | null;
+  readonly qty: number;
+}
+
+export interface TapisRows {
+  /** Rang du haut, « Présents dans la scène ». */
+  readonly presents: TapisCard[];
+  /** Rang du bas, « Héros et alliés ». */
+  readonly heros: TapisCard[];
+}
+
+export interface VitaliteStepper {
+  /** Index d'exemplaire à passer à l'API — null pour un PNJ. */
+  readonly index: number | null;
+  readonly label: string;
+  readonly value: number;
+}
+
+const NO_VALUE = '—';
+
+const KIND_LABELS: Record<TapisKind, string> = {
+  hero: 'Héros',
+  pnj: 'PNJ',
+  creature: 'Créature',
+  demon: 'Démon',
+};
+
+const RANK_LABELS: Record<string, string> = {
+  rival: 'Rival',
+  coriace: 'Coriace',
+  pietaille: 'Piétaille',
+};
+
+const KIND_ORDER: Record<TapisKind, number> = {hero: 0, pnj: 1, creature: 2, demon: 3};
+
+function rankLabel(rang: string | null | undefined): string {
+  return RANK_LABELS[rang ?? ''] ?? 'Coriace';
+}
+
+function badgeFor(camp: CombatCamp, rang: string, qty: number): string {
+  if (qty > 1) {
+    return `×${qty}`;
+  }
+  return camp === 'heros' ? 'Allié' : rang;
+}
+
+/** Vitalité de chaque exemplaire d'un lot ; un exemplaire sans valeur enregistrée (anciennes
+ * sessions) reprend la vitalité courante de la ligne. */
+function batchInstances(qty: number, stored: readonly number[] | null | undefined, fallback: number): number[] {
+  return Array.from({length: qty}, (_, index) => stored?.[index] ?? fallback);
+}
+
+/** Les cartes du tapis, une par ligne de session : héros, puis PNJ, créatures et démons. */
+export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
+  const cards: TapisCard[] = [];
+
+  for (const h of session.heros ?? []) {
+    const defense = h.heros?.combat?.defense_effective ?? h.heros?.combat?.defense;
+    cards.push({
+      key: `hero-${h.id}`,
+      kind: 'hero',
+      camp: 'heros',
+      pivotId: h.id,
+      sourceId: h.heros_id,
+      nom: h.heros?.origines.nom ?? 'Héros',
+      avatar: h.heros?.origines.avatar || EMPTY_AVATAR,
+      badge: null,
+      rang: null,
+      degats: h.heros?.armes?.find((a) => a.arme?.degats)?.arme?.degats ?? NO_VALUE,
+      defense: defense === undefined ? NO_VALUE : String(defense),
+      vitaliteCourante: h.vitalite_courante ?? h.heros?.ressources?.vitalite ?? null,
+      vitaliteMax: h.heros?.ressources?.vitalite ?? null,
+      instances: null,
+      qty: 1,
+    });
+  }
+
+  for (const p of session.pnjs ?? []) {
+    const rang = rankLabel(p.rang);
+    cards.push({
+      key: `pnj-${p.id}`,
+      kind: 'pnj',
+      camp: p.camp,
+      pivotId: p.id,
+      sourceId: p.pnj_id,
+      nom: p.surnom ?? p.nom,
+      avatar: p.pnj?.origines.avatar || (p.pnj_id ? `/assets/bol/pnj/${p.pnj_id}.jpg` : null) || EMPTY_AVATAR,
+      badge: badgeFor(p.camp, rang, 1),
+      rang,
+      degats: p.armes?.find((a) => a.degats)?.degats ?? NO_VALUE,
+      defense: String(p.defense),
+      vitaliteCourante: p.vitalite_courante,
+      vitaliteMax: p.vitalite_max,
+      instances: null,
+      qty: 1,
+    });
+  }
+
+  for (const c of session.creatures ?? []) {
+    const qty = Math.max(1, c.qty);
+    const rang = rankLabel(c.rang);
+    cards.push({
+      key: `creature-${c.id}`,
+      kind: 'creature',
+      camp: c.camp,
+      pivotId: c.id,
+      sourceId: c.creature_id,
+      nom: c.surnom ?? c.nom,
+      avatar: c.creature?.avatar || (c.creature_id ? `/assets/bol/bestiary/${c.creature_id}.jpg` : null) || EMPTY_AVATAR,
+      badge: badgeFor(c.camp, rang, qty),
+      rang,
+      degats: c.degats ?? NO_VALUE,
+      defense: String(c.defense),
+      vitaliteCourante: c.vitalite_instances?.[0] ?? c.vitalite_courante,
+      vitaliteMax: c.vitalite_max,
+      instances: qty > 1 ? batchInstances(qty, c.vitalite_instances, c.vitalite_courante) : null,
+      qty,
+    });
+  }
+
+  for (const d of session.demons ?? []) {
+    const qty = Math.max(1, d.qty);
+    const rang = rankLabel(d.rang);
+    cards.push({
+      key: `demon-${d.id}`,
+      kind: 'demon',
+      camp: d.camp,
+      pivotId: d.id,
+      sourceId: d.demon_id,
+      nom: d.surnom ?? d.nom,
+      avatar: d.demon?.avatar || (d.demon_id ? `/assets/bol/demon/${d.demon_id}.jpg` : null) || EMPTY_AVATAR,
+      badge: badgeFor(d.camp, rang, qty),
+      rang,
+      degats: d.degats ?? NO_VALUE,
+      defense: String(d.defense),
+      vitaliteCourante: d.vitalite_instances?.[0] ?? d.vitalite_courante,
+      vitaliteMax: d.vitalite_max,
+      instances: qty > 1 ? batchInstances(qty, d.vitalite_instances, d.vitalite_courante) : null,
+      qty,
+    });
+  }
+
+  return cards;
+}
+
+function byKindThenArrival(left: TapisCard, right: TapisCard): number {
+  return KIND_ORDER[left.kind] - KIND_ORDER[right.kind] || left.pivotId - right.pivotId;
+}
+
+/** Répartit les cartes sur les deux rangs, dans l'ordre d'affichage : par type, puis par ordre
+ * d'arrivée. Dans le rang du bas, les héros passent avant les alliés. */
+export function splitRows(cards: readonly TapisCard[]): TapisRows {
+  return {
+    presents: cards.filter((card) => card.camp === 'adversaires').sort(byKindThenArrival),
+    heros: cards.filter((card) => card.camp === 'heros').sort(byKindThenArrival),
+  };
+}
+
+/** Carte dépliée : celle dont la clé est donnée, ou `null` si elle n'est plus sur la table. */
+export function findCard(cards: readonly TapisCard[], key: string | null): TapisCard | null {
+  return key ? (cards.find((card) => card.key === key) ?? null) : null;
+}
+
+/** Nom d'une carte tel qu'on la désigne dans une liste : « Hippocampe ×3 » pour un lot. */
+export function cardLabel(card: TapisCard): string {
+  return card.qty > 1 ? `${card.nom} ×${card.qty}` : card.nom;
+}
+
+/** Chiffre « Vit. » de la face : `courante/max`, ou le maximum seul pour un lot (ses jauges portent
+ * le courant de chaque exemplaire). */
+export function vitaliteText(card: TapisCard): string {
+  if (card.instances) {
+    return card.vitaliteMax === null ? NO_VALUE : String(card.vitaliteMax);
+  }
+  if (card.vitaliteCourante === null || card.vitaliteMax === null) {
+    return NO_VALUE;
+  }
+  return `${card.vitaliteCourante}/${card.vitaliteMax}`;
+}
+
+/** Remplissage d'une barre de vitalité, de 0 à 100. Sans valeur exploitable, la barre est pleine. */
+export function vitalitePercent(courante: number | null, max: number | null): number {
+  if (courante === null || max === null || max <= 0) {
+    return 100;
+  }
+  return Math.max(0, Math.min(100, (courante / max) * 100));
+}
+
+/** Vitalité à la moitié du maximum ou en dessous : la barre passe au rouge. */
+export function isLowVitalite(courante: number | null, max: number | null): boolean {
+  return courante !== null && max !== null && max > 0 && courante <= max / 2;
+}
+
+/** Libellé accessible de la face d'une carte : nom, type, étiquette et les trois chiffres. */
+export function cardAriaLabel(card: TapisCard): string {
+  const parts = [card.nom, KIND_LABELS[card.kind]];
+  if (card.qty > 1) {
+    parts.push(`lot de ${card.qty}`);
+  } else if (card.badge) {
+    parts.push(card.badge);
+  }
+  parts.push(`dégâts ${card.degats}`, `défense ${card.defense}`);
+  parts.push(
+    card.instances
+      ? `vitalité ${card.vitaliteMax ?? NO_VALUE} par exemplaire`
+      : `vitalité ${card.vitaliteCourante ?? NO_VALUE} sur ${card.vitaliteMax ?? NO_VALUE}`,
+  );
+  return parts.join(', ');
+}
+
+/** Libellé de l'action de changement de camp — `null` pour un héros, qui ne change pas de camp. */
+export function campActionLabel(card: TapisCard): string | null {
+  if (card.kind === 'hero') {
+    return null;
+  }
+  return card.camp === 'heros' ? 'Remettre avec les présents' : 'Passer du côté des héros';
+}
+
+/** Libellé du retrait : sur un lot, l'API retire un seul exemplaire (le dernier). */
+export function removeActionLabel(card: TapisCard): string {
+  return card.qty > 1 ? 'Retirer un exemplaire' : 'Retirer de la table';
+}
+
+/** Steppers de vitalité d'une carte non-héros dépliée : un par exemplaire pour un lot, un seul
+ * sinon. L'index est celui que l'API attend (`null` pour un PNJ, qui n'a pas d'exemplaires). */
+export function vitaliteSteppers(card: TapisCard): VitaliteStepper[] {
+  if (card.instances) {
+    return card.instances.map((value, index) => ({index, label: `#${index + 1}`, value}));
+  }
+  return [{index: card.kind === 'pnj' ? null : 0, label: 'Vitalité', value: card.vitaliteCourante ?? 0}];
+}

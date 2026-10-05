@@ -1,4 +1,4 @@
-import {BolFightSessionModel} from './bol-fight-session.model';
+import {BolFightSessionModel, CombatCamp} from './bol-fight-session.model';
 
 export type SceneEntryKind = 'pnj' | 'creature' | 'demon';
 
@@ -8,6 +8,8 @@ export interface BolSceneEntry {
   kind: SceneEntryKind;
   source_id: string;
   qty: number;
+  /** Camp au chargement : `heros` pour un allié. Absent sur les scènes anciennes (= `adversaires`). */
+  camp?: CombatCamp;
   positions: ({x: number; y: number} | null)[];
 }
 

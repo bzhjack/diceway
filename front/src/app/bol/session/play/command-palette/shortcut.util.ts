@@ -4,6 +4,8 @@ export interface ShortcutEvent {
   readonly ctrlKey: boolean;
   readonly metaKey: boolean;
   readonly altKey: boolean;
+  /** Répétition automatique d'une touche maintenue enfoncée. */
+  readonly repeat?: boolean;
 }
 
 /** Ce qu'il faut de la cible de l'événement (un `HTMLElement` convient). */
@@ -28,4 +30,14 @@ export function isPaletteShortcut(event: ShortcutEvent, target: ShortcutTarget |
     return event.key.toLowerCase() === 'k';
   }
   return event.key === '/' && !isEditable(target);
+}
+
+/** Cet événement clavier doit-il terminer le tour en combat ? `F` seul, hors d'un champ de saisie —
+ * avec un modificateur, la touche garde son rôle habituel (Ctrl+F cherche dans la page). La répétition
+ * d'une touche maintenue est ignorée : un appui termine un tour, pas plusieurs. */
+export function isEndTurnShortcut(event: ShortcutEvent, target: ShortcutTarget | null): boolean {
+  if (event.repeat || event.altKey || event.ctrlKey || event.metaKey) {
+    return false;
+  }
+  return event.key.toLowerCase() === 'f' && !isEditable(target);
 }

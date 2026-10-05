@@ -1,5 +1,3 @@
-import {PlayToken} from '../combat-play.util';
-
 export const RESERVE_PANEL_KEY = 'diceway-table-reserve-open';
 
 /** `localStorage`, ou `null` s'il est inaccessible (navigation privée, stockage bloqué). */
@@ -34,17 +32,4 @@ export function writePanelOpen(storage: Storage | null, key: string, open: boole
   } catch {
     // Préférence d'affichage : la perdre n'empêche pas de jouer.
   }
-}
-
-/** Jeton affiché dans la fiche : celui dont la clé est sélectionnée, en mode libre uniquement. `null`
- * dès qu'il n'est plus sur la table (retiré) ou que la session passe en combat. */
-export function findSelectedToken(
-  tokens: readonly PlayToken[],
-  key: string | null,
-  mode: 'libre' | 'combat',
-): PlayToken | null {
-  if (mode !== 'libre' || !key) {
-    return null;
-  }
-  return tokens.find((token) => token.key === key) ?? null;
 }

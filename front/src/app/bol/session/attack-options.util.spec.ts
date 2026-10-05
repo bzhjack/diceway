@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
-import {BolCombatOptionModel} from '../../../services/bol-combat-reference.service';
-import {filterAttackMenuCombatOptions, filterVisiblePostures} from './attack-menu';
+import {BolCombatOptionModel} from '../services/bol-combat-reference.service';
+import {filterAttackMenuCombatOptions, filterVisiblePostures} from './attack-options.util';
 
 function option(slug: string, ordre: number): BolCombatOptionModel {
   return {id: ordre, label: slug, slug, modificateur: 0, modificateur_armor: false, note: '', ordre};

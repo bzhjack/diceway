@@ -1,0 +1,108 @@
+:host {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.tps {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.9rem;
+  padding: 1rem 1.2rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dw-border) transparent;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 50%, color-mix(in srgb, var(--dw-surface-100) 70%, transparent) 0%, transparent 75%),
+    var(--dw-surface-0);
+}
+
+.tps-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tps-row-label {
+  margin: 0;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+}
+
+// Un rang trop long passe à la ligne ; les cartes sont alignées par le haut, pour que les voisines
+// d'une carte dépliée, plus haute, restent visibles à côté d'elle.
+.tps-cards {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tps-empty {
+  padding: 1.2rem 0.5rem;
+  font-size: 0.88rem;
+  color: var(--dw-surface-500);
+}
+
+// Bandeau d'une ligne entre les deux rangs. Toujours présent dans le DOM (région aria-live), sans
+// hauteur tant qu'aucun jet n'a été lancé.
+.tps-last-roll {
+  align-self: center;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 100%;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 8px;
+  background: var(--dw-surface-0);
+  font-size: 0.85rem;
+  color: var(--dw-surface-600);
+}
+
+.tps-last-roll--empty {
+  padding: 0;
+  border: none;
+}
+
+.tps-last-roll-label {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+}
+
+.tps-last-roll-formula {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.tps-last-roll-result--reussite { color: var(--dw-color-reussite); }
+.tps-last-roll-result--echec { color: var(--dw-color-echec); }
+.tps-last-roll-result--heroique { color: var(--dw-color-legendary); }
+
+.tps-nobody {
+  align-self: center;
+  margin: 0;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 8px;
+  background: var(--dw-surface-0);
+  font-size: 0.9rem;
+  color: var(--dw-surface-500);
+}

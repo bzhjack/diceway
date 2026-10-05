@@ -33,30 +33,20 @@
   background: linear-gradient(180deg, var(--dw-surface-0), var(--dw-surface-50) 45%, var(--dw-surface-0));
 }
 
-// Trois zones : réserve (repliable, mode libre) · carte · fiche du jeton (ouverte à la sélection).
-.spp-table {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-}
-
-.spp-reserve {
-  flex: 0 0 19rem;
-  min-width: 0;
-  border-right: 1px solid var(--dw-border);
-  background: var(--dw-surface-0);
-}
-
+// Mode libre : le tapis (`bol-tapis`, qui s'étire), puis la réserve en bandeau, repliable.
 .spp-reserve-toggle {
-  flex: 0 0 1.4rem;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
+  gap: 0.3rem;
+  padding: 0.15rem 0;
   border: none;
-  border-right: 1px solid var(--dw-border);
+  border-top: 1px solid var(--dw-border);
   background: var(--dw-surface-50);
   color: var(--dw-surface-500);
+  font: inherit;
+  font-size: 0.72rem;
   cursor: pointer;
 
   .mat-icon {
@@ -76,56 +66,8 @@
   }
 }
 
-.spp-center {
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.spp-inspector {
-  flex: 0 0 min(23rem, 38vw);
-  min-width: 0;
-  border-left: 1px solid var(--dw-border);
-}
-
-// Bandeau d'une ligne sous la carte. Toujours présent dans le DOM (région aria-live), sans hauteur
-// tant qu'aucun jet n'a été lancé.
-.spp-last-roll {
+.spp-reserve {
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 1rem;
   border-top: 1px solid var(--dw-border);
   background: var(--dw-surface-0);
-  font-size: 0.85rem;
-  color: var(--dw-surface-600);
 }
-
-.spp-last-roll--empty {
-  padding: 0;
-  border-top: none;
-}
-
-.spp-last-roll-label {
-  font-size: 0.66rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--dw-surface-500);
-}
-
-.spp-last-roll-formula {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-
-.spp-last-roll-result--reussite { color: var(--dw-color-reussite); }
-.spp-last-roll-result--echec { color: var(--dw-color-echec); }
-.spp-last-roll-result--heroique { color: var(--dw-color-legendary); }

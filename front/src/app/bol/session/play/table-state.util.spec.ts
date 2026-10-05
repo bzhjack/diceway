@@ -1,6 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {PlayToken} from '../combat-play.util';
-import {findSelectedToken, readPanelOpen, writePanelOpen} from './table-state.util';
+import {readPanelOpen, writePanelOpen} from './table-state.util';
 
 function fakeStorage(initial: Record<string, string> = {}): Storage {
   const data = new Map(Object.entries(initial));
@@ -49,25 +48,5 @@ describe('writePanelOpen', () => {
   it('does not throw when storage is unavailable or throws', () => {
     expect(() => writePanelOpen(null, 'k', true)).not.toThrow();
     expect(() => writePanelOpen(throwingStorage, 'k', true)).not.toThrow();
-  });
-});
-
-describe('findSelectedToken', () => {
-  const tokens = [{key: 'hero-1'}, {key: 'pnj-2'}] as PlayToken[];
-
-  it('returns the token matching the selected key in free mode', () => {
-    expect(findSelectedToken(tokens, 'pnj-2', 'libre')?.key).toBe('pnj-2');
-  });
-
-  it('returns null when the selected token is no longer on the table', () => {
-    expect(findSelectedToken(tokens, 'creature-9-0', 'libre')).toBeNull();
-  });
-
-  it('returns null in combat mode, where the inspector is not shown', () => {
-    expect(findSelectedToken(tokens, 'hero-1', 'combat')).toBeNull();
-  });
-
-  it('returns null when nothing is selected', () => {
-    expect(findSelectedToken(tokens, null, 'libre')).toBeNull();
   });
 });

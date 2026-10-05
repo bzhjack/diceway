@@ -4,7 +4,7 @@
 
 @use '../../roll-dialog-shared' as shared;
 
-// Embarqué dans la fiche du jeton (`bol-token-inspector`), qui scrolle elle-même : ce composant
+// Embarqué dans la fiche du jeton (`bol-expanded-card`), qui scrolle elle-même : ce composant
 // prend la hauteur de son contenu, les dés roulent sur toute sa surface.
 bol-action-roll-panel {
   display: block;
@@ -443,4 +443,35 @@ bol-action-roll-panel {
   flex-wrap: wrap;
   align-items: center;
   gap: 0.35rem;
+}
+
+// Dans un conteneur large (carte de héros dépliée sur le tapis), le jet passe sur deux colonnes :
+// les réglages à gauche, la formule et le résultat à droite. Mise en page multi-colonnes plutôt
+// qu'une grille : chaque colonne garde ses propres hauteurs, rien ne s'étire pour s'aligner.
+.ard-shell {
+  container-type: inline-size;
+}
+
+@container (min-width: 36rem) {
+  .ard-fg {
+    display: block;
+    columns: 2;
+    column-gap: 1.2rem;
+
+    > * {
+      break-inside: avoid;
+      margin-bottom: 0.75rem;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  // La formule ouvre la colonne de droite : plus de filet de séparation au-dessus d'elle.
+  .ard-ledger-formula {
+    break-before: column;
+    padding-top: 0;
+    border-top: none;
+  }
 }

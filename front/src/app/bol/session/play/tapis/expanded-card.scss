@@ -1,0 +1,93 @@
+:host {
+  display: block;
+}
+
+.exc {
+  --exc-kind: var(--dw-color-reussite);
+  width: min(23rem, 92vw);
+  border: 1px solid var(--dw-color-legendary);
+  border-top: 3px solid var(--exc-kind);
+  border-radius: 8px;
+  background: var(--dw-surface-50);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+
+  // Le focus y entre à l'ouverture (tabindex -1) : pas d'anneau sur le conteneur lui-même, la
+  // bordure dorée dit déjà quelle carte est ouverte.
+  &:focus {
+    outline: none;
+  }
+}
+
+.exc--pnj { --exc-kind: var(--dw-color-pnj); }
+.exc--creature { --exc-kind: var(--dw-color-creature); }
+.exc--demon { --exc-kind: var(--dw-color-demon); }
+
+// Héros : la carte s'élargit pour que le jet d'action tienne sur deux colonnes (cf. la requête de
+// conteneur de `action-roll-panel.scss`) — empilé, il poussait le reste du tapis hors de l'écran.
+.exc--hero {
+  width: min(44rem, 94vw);
+}
+
+.exc-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0.4rem 0.5rem 0.9rem;
+  border-bottom: 1px solid var(--dw-border);
+}
+
+.exc-title {
+  min-width: 0;
+}
+
+.exc-name {
+  margin: 0;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--exc-kind);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.exc-sub {
+  margin: 0.1rem 0 0;
+  font-size: 0.8rem;
+  color: var(--dw-surface-500);
+}
+
+.exc-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 0.8rem 0.9rem 1rem;
+}
+
+.exc-loading {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--dw-surface-500);
+}
+
+.exc-vitalite {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.exc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.exc-remove {
+  color: var(--dw-color-danger-muted);
+  border-color: var(--dw-border-remove);
+}
+
+.exc-attack {
+  align-self: flex-start;
+}

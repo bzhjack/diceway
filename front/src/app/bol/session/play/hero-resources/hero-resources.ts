@@ -20,7 +20,7 @@ export interface HeroResourcesData {
 }
 
 /** Vitalité de session et héroïsme d'un héros, ajustables par stepper et persistés à chaque pas.
- * Utilisé en tête de la fiche du jeton (`bol-token-inspector`) et dans l'en-tête du statbloc héros
+ * Utilisé en tête de la fiche du jeton (`bol-expanded-card`) et dans l'en-tête du statbloc héros
  * (`bol-hero-statblock-dialog`). L'héroïsme est un `model` : le parent peut le partager avec le jet
  * d'action, qui en dépense. */
 @Component({

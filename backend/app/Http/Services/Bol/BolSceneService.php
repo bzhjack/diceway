@@ -156,14 +156,15 @@ class BolSceneService
                 $kind = (string) ($entry['kind'] ?? '');
                 $sourceId = (string) ($entry['source_id'] ?? '');
                 $qty = max(1, (int) ($entry['qty'] ?? 1));
+                $camp = BolSceneDistribution::entryCamp($entry);
 
                 $alreadyThere = $kind === 'pnj'
                     && BolFightSessionPnj::where('fight_session_id', $sessionId)->where('pnj_id', $sourceId)->exists();
 
                 $row = $alreadyThere ? null : match ($kind) {
-                    'pnj'      => $this->fightSessionService->createPnjRow($sessionId, $sourceId, 'adversaires'),
-                    'creature' => $this->fightSessionService->createCreatureRow($sessionId, $sourceId, 'adversaires', $qty),
-                    'demon'    => $this->fightSessionService->createDemonRow($sessionId, $sourceId, 'adversaires', $qty),
+                    'pnj'      => $this->fightSessionService->createPnjRow($sessionId, $sourceId, $camp),
+                    'creature' => $this->fightSessionService->createCreatureRow($sessionId, $sourceId, $camp, $qty),
+                    'demon'    => $this->fightSessionService->createDemonRow($sessionId, $sourceId, $camp, $qty),
                     default    => null,
                 };
 
@@ -193,9 +194,9 @@ class BolSceneService
         $sessionId = $session->id;
 
         return BolSceneDistribution::fromSession(
-            BolFightSessionPnj::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'pnj_id'])->toArray(),
-            BolFightSessionCreature::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'creature_id', 'qty'])->toArray(),
-            BolFightSessionDemon::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'demon_id', 'qty'])->toArray(),
+            BolFightSessionPnj::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'pnj_id', 'camp'])->toArray(),
+            BolFightSessionCreature::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'creature_id', 'qty', 'camp'])->toArray(),
+            BolFightSessionDemon::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'demon_id', 'qty', 'camp'])->toArray(),
             $session->positions_jetons,
         );
     }

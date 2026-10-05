@@ -1,21 +1,22 @@
-<div class="rsv-shell">
-  <h2 class="rsv-title">Réserve</h2>
-
-  <mat-button-toggle-group
-    class="rsv-tabs"
-    aria-label="Contenu de la réserve"
-    [value]="view()"
-    [hideSingleSelectionIndicator]="true"
-    (change)="setView($event)"
-  >
-    @for (tab of tabs; track tab.kind) {
-      <mat-button-toggle [value]="tab.kind">{{ tab.label }}</mat-button-toggle>
-    }
-    <mat-button-toggle value="scene">Scènes</mat-button-toggle>
-  </mat-button-toggle-group>
+<div class="rsv-band">
+  <div class="rsv-side">
+    <h2 class="rsv-title">Réserve</h2>
+    <mat-button-toggle-group
+      class="rsv-tabs"
+      aria-label="Contenu de la réserve"
+      [value]="view()"
+      [hideSingleSelectionIndicator]="true"
+      (change)="setView($event)"
+    >
+      @for (tab of tabs; track tab.kind) {
+        <mat-button-toggle [value]="tab.kind">{{ tab.label }}</mat-button-toggle>
+      }
+      <mat-button-toggle value="scene">Scènes</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
 
   @if (view() === 'scene') {
-    <bol-scene-list
+    <bol-scene-strip
       [sessionId]="sessionId()"
       [currentSceneId]="currentSceneId()"
       [nonHeroCount]="nonHeroCount()"
@@ -35,25 +36,29 @@
       />
     </mat-form-field>
 
-    <ul class="rsv-list">
+    <ul class="rsv-hand" role="list" [attr.aria-label]="activeTab().label + ' de la réserve'">
       @for (row of rows(); track row.entry.catalogId) {
-        <li class="rsv-row">
-          <span [class]="'rsv-dot rsv-dot--' + row.entry.kind"></span>
-          <span class="rsv-name">{{ row.entry.nom }}</span>
-          @if (row.onTable) {
-            <span class="rsv-state">à table</span>
-          } @else {
-            <button
-              mat-stroked-button
-              size="small"
-              type="button"
-              [disabled]="pendingCatalogId() !== null"
-              [attr.aria-label]="'Poser ' + row.entry.nom + ' sur la table'"
-              (click)="place(row.entry)"
-            >
-              Poser
-            </button>
-          }
+        <li>
+          <button
+            type="button"
+            [class]="'rsv-mini rsv-mini--' + row.entry.kind"
+            [class.rsv-mini--on-table]="row.onTable"
+            [disabled]="row.onTable || pendingCatalogId() !== null"
+            [attr.aria-label]="miniLabel(row)"
+            (click)="place(row.entry)"
+          >
+            <span class="rsv-mini-art">
+              @if (hasAvatar(row.entry)) {
+                <img class="rsv-mini-avatar" [src]="row.entry.avatar" alt="" (error)="onAvatarError(row.entry)" />
+              } @else {
+                {{ initial(row.entry) }}
+              }
+            </span>
+            <span class="rsv-mini-name">{{ row.entry.nom }}</span>
+            @if (row.onTable) {
+              <span class="rsv-mini-state">à table</span>
+            }
+          </button>
         </li>
       } @empty {
         <li class="rsv-empty">
@@ -68,7 +73,7 @@
       }
     </ul>
 
-    <div class="rsv-footer">
+    <div class="rsv-links">
       <a mat-flat-button size="small" [routerLink]="activeTab().createLink" [state]="navState()">
         <mat-icon>add</mat-icon> {{ activeTab().createLabel }}
       </a>

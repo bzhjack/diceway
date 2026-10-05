@@ -10,7 +10,7 @@ import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {CombatCatalogEntry, CombatantKind, CombatSelectionService} from '../../../services/combat-selection.service';
 import {resolveAddCombatantCamp} from '../add-combatant-dialog/add-combatant-dialog';
-import {SceneListComponent} from '../scene-list/scene-list';
+import {SceneStripComponent} from './scene-strip';
 import {filterReserve, isOnTable, RESERVE_TABS, reserveTab} from './reserve.util';
 
 interface ReserveRow {
@@ -21,11 +21,12 @@ interface ReserveRow {
 /** Onglet affiché : un des quatre types de personnages, ou les scènes. */
 type ReserveView = CombatantKind | 'scene';
 
-/** Réserve de la table (mode libre) : les quatre bibliothèques en onglets, avec recherche. « Poser »
- * ajoute le personnage à la session ; la page recharge la session sur `placed`. */
+/** Réserve de la table (mode libre), en bandeau au bas de l'écran comme une main de cartes : les
+ * quatre bibliothèques et les scènes en onglets. Un clic sur un personnage le pose ; la page
+ * recharge la session sur `placed`. */
 @Component({
   selector: 'bol-reserve',
-  imports: [RouterLink, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatIconModule, MatInputModule, SceneListComponent],
+  imports: [RouterLink, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatIconModule, MatInputModule, SceneStripComponent],
   templateUrl: './reserve.html',
   styleUrl: './reserve.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,6 +59,8 @@ export class ReserveComponent {
   protected readonly loading = this.selection.loading;
   /** Entrée en cours de pose : désactive tous les boutons « Poser » le temps de la requête. */
   protected readonly pendingCatalogId = signal<string | null>(null);
+  /** Entrées dont l'avatar a échoué au chargement : repli sur l'initiale du nom. */
+  private readonly brokenAvatars = signal<ReadonlySet<string>>(new Set());
 
   protected readonly rows = computed<readonly ReserveRow[]>(() =>
     filterReserve(this.selection.catalog(), this.activeKind(), this.query()).map((entry) => ({
@@ -79,6 +82,22 @@ export class ReserveComponent {
 
   protected setQuery(value: string): void {
     this.query.set(value);
+  }
+
+  protected hasAvatar(entry: CombatCatalogEntry): boolean {
+    return !!entry.avatar && !this.brokenAvatars().has(entry.catalogId);
+  }
+
+  protected onAvatarError(entry: CombatCatalogEntry): void {
+    this.brokenAvatars.update((set) => new Set(set).add(entry.catalogId));
+  }
+
+  protected initial(entry: CombatCatalogEntry): string {
+    return entry.nom.trim().charAt(0).toUpperCase();
+  }
+
+  protected miniLabel(row: ReserveRow): string {
+    return row.onTable ? `${row.entry.nom}, déjà à table` : `Poser ${row.entry.nom} sur la table`;
   }
 
   protected place(entry: CombatCatalogEntry): void {

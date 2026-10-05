@@ -108,7 +108,7 @@ class BolFightSessionService
             return null;
         }
 
-        $session->update(['statut' => 'combat']);
+        $session->update(['statut' => 'combat', 'etat_combat' => BolCombatState::INITIAL]);
 
         return $this->getSessionWithRelations($sessionId);
     }
@@ -124,7 +124,25 @@ class BolFightSessionService
 
         BolFightSessionHeros::where('fight_session_id', $sessionId)->update(['initiative_resultat' => null]);
 
-        $session->update(['statut' => 'libre', 'ordre_manuel' => null]);
+        $session->update(['statut' => 'libre', 'ordre_manuel' => null, 'etat_combat' => null]);
+
+        return $this->getSessionWithRelations($sessionId);
+    }
+
+    /**
+     * Enregistre l'état du combat (round, cartes qui ont joué, cartes en défense totale). Renvoie
+     * null si la session est introuvable ou n'est pas en combat.
+     *
+     * @param array<string, mixed> $etat
+     */
+    public function updateCombatState(string $sessionId, string $userId, array $etat): ?BolFightSession
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session || $session->statut !== 'combat') {
+            return null;
+        }
+
+        $session->update(['etat_combat' => BolCombatState::normalize($etat)]);
 
         return $this->getSessionWithRelations($sessionId);
     }
@@ -182,6 +200,34 @@ class BolFightSessionService
             'demon'    => $this->decrementOrDelete(BolFightSessionDemon::where('id', $pivotId)->where('fight_session_id', $sessionId)->first()),
             default    => null,
         };
+
+        return $this->getSessionWithRelations($sessionId);
+    }
+
+    /**
+     * Change le camp d'un PNJ, d'une créature ou d'un démon : `heros` pour un allié qui accompagne
+     * les héros, `adversaires` sinon. Renvoie null si la session ou la ligne est introuvable, ou si
+     * `$kind` n'est pas l'un des trois types (un héros ne change pas de camp).
+     */
+    public function setCamp(string $sessionId, string $userId, string $kind, int $pivotId, string $camp): ?BolFightSession
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session) {
+            return null;
+        }
+
+        $model = match ($kind) {
+            'pnj'      => BolFightSessionPnj::class,
+            'creature' => BolFightSessionCreature::class,
+            'demon'    => BolFightSessionDemon::class,
+            default    => null,
+        };
+        $row = $model ? $model::where('id', $pivotId)->where('fight_session_id', $sessionId)->first() : null;
+        if (!$row) {
+            return null;
+        }
+
+        $row->update(['camp' => $this->normalizeCamp($camp)]);
 
         return $this->getSessionWithRelations($sessionId);
     }
@@ -492,6 +538,7 @@ class BolFightSessionService
     {
         return [
             'heros.heros.armures.armure',
+            'heros.heros.armes.arme',
             'creatures.creature',
             'demons.demon',
             'pnjs.pnj.armures.armure',

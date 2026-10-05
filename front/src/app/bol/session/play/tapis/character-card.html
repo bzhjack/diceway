@@ -1,0 +1,68 @@
+<div class="chc-wrap">
+  <button
+    type="button"
+    [id]="'chc-' + card().key"
+    [class]="'chc chc--' + card().kind"
+    [class.chc--active]="combat()?.status === 'active'"
+    [class.chc--played]="combat()?.status === 'played'"
+    [class.chc--targetable]="combat()?.targetable"
+    [class.chc--out]="combat()?.out"
+    aria-expanded="false"
+    [attr.aria-label]="ariaLabel()"
+    (click)="toggled.emit()"
+  >
+    @if (card().badge; as badge) {
+      <span class="chc-badge">{{ badge }}</span>
+    }
+    <span class="chc-name">{{ card().nom }}</span>
+
+    <span class="chc-art">
+      @if (hasAvatar()) {
+        <img class="chc-avatar" [src]="card().avatar" alt="" (error)="onAvatarError()" />
+      } @else if (kindIconIsSvg()) {
+        <mat-icon [svgIcon]="kindIcon()" />
+      } @else {
+        <mat-icon>{{ kindIcon() }}</mat-icon>
+      }
+      @if (combat()?.defenseTotale) {
+        <mat-icon class="chc-marker chc-marker--defense" aria-hidden="true">shield</mat-icon>
+      }
+      @if (combat()?.locked) {
+        <mat-icon class="chc-marker chc-marker--locked" aria-hidden="true">lock</mat-icon>
+      }
+    </span>
+
+    <span class="chc-stats">
+      <span class="chc-stat"><small>Dég.</small>{{ card().degats }}</span>
+      <span class="chc-stat"><small>Déf.</small>{{ card().defense }}</span>
+      <span class="chc-stat"><small>Vit.</small>{{ vitalite() }}</span>
+    </span>
+
+    @if (card().instances; as instances) {
+      <span class="chc-pips">
+        @for (value of instances; track $index) {
+          <i
+            class="chc-pip"
+            role="img"
+            [class.chc-pip--low]="value > 0 && instanceLow(value)"
+            [class.chc-pip--out]="value <= 0"
+            [attr.aria-label]="instanceLabel($index, value)"
+          ></i>
+        }
+      </span>
+    } @else {
+      <span class="chc-bar"><i [class.chc-bar-fill--low]="low()" class="chc-bar-fill" [style.width.%]="percent()"></i></span>
+    }
+  </button>
+
+  @if (combat()) {
+    <button
+      type="button"
+      class="chc-expand"
+      [attr.aria-label]="'Déplier la carte de ' + card().nom"
+      (click)="expandRequested.emit()"
+    >
+      <mat-icon>open_in_full</mat-icon>
+    </button>
+  }
+</div>

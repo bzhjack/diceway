@@ -44,7 +44,7 @@ import {
 } from '../../action-roll.util';
 import {applyHeroismeDelta} from '../../heroisme-spend.util';
 
-/** Jet d'action d'un héros en une seule surface (fiche du jeton, `bol-token-inspector`) : attribut,
+/** Jet d'action d'un héros en une seule surface (fiche du jeton, `bol-expanded-card`) : attribut,
  * carrière, difficulté, dés de bonus/malus et ajustements sur des rangées compactes, puis la formule
  * en clair et le résultat. Le calcul est dans `action-roll.util.ts`. */
 @Component({

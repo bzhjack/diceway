@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -11,15 +11,14 @@ import {BolFightSessionModel} from '../../models/bol-fight-session.model';
 import {BolSceneModel} from '../../models/bol-scene.model';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
-import {BolCombatOptionModel} from '../../services/bol-combat-reference.service';
+import {BolCombatOptionModel, BolCombatReferenceService} from '../../services/bol-combat-reference.service';
 import {BolCreaturesService} from '../../services/bol-creatures.service';
 import {BolDemonsService} from '../../services/bol-demons.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {BolPnjService} from '../../services/bol-pnj.service';
 import {BolSceneService} from '../../services/bol-scene.service';
 import {CombatantKind, CombatSelectionService} from '../../services/combat-selection.service';
-import {openStatblockDialog} from '../../../shared/dw-statblock-dialog/dw-statblock-dialog';
-import {BolStatblockComponent, BolStatblockData} from '../../shared/statblock/bol-statblock.component';
+import {BolStatblockData} from '../../shared/statblock/bol-statblock.component';
 import {
   creatureStatblockData,
   demonStatblockData,
@@ -34,43 +33,47 @@ import {SceneActionsService} from '../scene-actions.service';
 import {AddCombatantDialogComponent, resolveAddCombatantCamp} from './add-combatant-dialog/add-combatant-dialog';
 import {openCommandPalette} from './command-palette/command-palette';
 import {PaletteActionId, PaletteCommand, PaletteContext} from './command-palette/command-palette.util';
-import {isPaletteShortcut} from './command-palette/shortcut.util';
+import {isEndTurnShortcut, isPaletteShortcut} from './command-palette/shortcut.util';
 import {reserveTab} from './reserve/reserve.util';
-import {AttackRequest, BattlemapComponent, TokenPositionChange} from './battlemap/battlemap';
 import {maybePromptDefierLaMort} from './defier-la-mort-dialog/defier-la-mort.util';
 import {HeroStatblockDialogData} from './hero-statblock-dialog/hero-statblock-dialog';
 import {HeroStatblockPopupComponent} from './hero-statblock-popup/hero-statblock-popup';
-import {InitiativeRailComponent} from './initiative-rail/initiative-rail';
 import {tableTitle} from './scene-list/scene.util';
 import {SessionHeaderComponent} from './session-header/session-header';
 import {ReserveComponent} from './reserve/reserve';
 import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dialog';
+import {browserStorage, readPanelOpen, RESERVE_PANEL_KEY, writePanelOpen} from './table-state.util';
+import {ExpandedHeroData} from './tapis/expanded-card';
+import {BolHerosArmeModel} from '../../models/bol-arme.model';
+import {AttackChoice} from '../attack-options.util';
 import {
-  browserStorage,
-  findSelectedToken,
-  readPanelOpen,
-  RESERVE_PANEL_KEY,
-  writePanelOpen,
-} from './table-state.util';
-import {TokenInspectorComponent, TokenInspectorHeroData} from './token-inspector/token-inspector';
+  buildCombatStates,
+  CardCombatState,
+  endTurn,
+  EtatCombat,
+  firstStandingInstance,
+  giveBackTurn,
+  normalizeEtat,
+  orderCards,
+  targetLabel,
+  tokenForCard,
+  totalDefense,
+  turnAnnouncement,
+  turnState,
+} from './tapis/combat-turn.util';
+import {TurnOrderComponent, TurnOrderEntry} from './tapis/turn-order';
+import {TapisComponent} from './tapis/tapis';
+import {buildTapisCards, cardLabel, findCard, removeActionLabel, TapisCard} from './tapis/tapis.util';
 
 /**
  * La table : page d'accueil d'une session. Orchestre le chargement/la persistance de la session et
- * l'ouverture des dialogs — l'affichage est délégué à `bol-session-header`, `bol-reserve` (poser des
- * personnages, mode libre), `bol-battlemap` (jetons), `bol-token-inspector` (fiche du jeton, mode
- * libre) et `bol-initiative-rail` (mode combat).
+ * l'ouverture des dialogs. `bol-tapis` (cartes de personnage sur deux rangs) sert aux deux modes.
+ * Mode libre : `bol-reserve` en bandeau. Mode combat : `bol-turn-order` (ordre de jeu) ; le tour est
+ * calculé par `combat-turn.util.ts` à partir de l'état gardé dans la session.
  */
 @Component({
   selector: 'bol-session-play-page',
-  imports: [
-    RouterLink,
-    MatIconModule,
-    SessionHeaderComponent,
-    InitiativeRailComponent,
-    BattlemapComponent,
-    ReserveComponent,
-    TokenInspectorComponent,
-  ],
+  imports: [RouterLink, MatIconModule, SessionHeaderComponent, ReserveComponent, TapisComponent, TurnOrderComponent],
   templateUrl: './session-play-page.html',
   styleUrl: './session-play-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -92,13 +95,11 @@ export class SessionPlayPageComponent {
   private readonly selection = inject(CombatSelectionService);
   private readonly sceneService = inject(BolSceneService);
   private readonly sceneActions = inject(SceneActionsService);
+  private readonly combatReference = inject(BolCombatReferenceService);
 
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly session = signal<BolFightSessionModel | null>(null);
-
-  /** Positions des jetons sur la battlemap (glisser-déposer libre), persistées en base — clé `PlayToken.key` → {x, y} en pourcentage. */
-  protected readonly tokenPositions = signal<Readonly<Record<string, {x: number; y: number}>>>({});
 
   protected readonly board = computed(() => {
     const session = this.session();
@@ -111,30 +112,7 @@ export class SessionPlayPageComponent {
   /** Réordonnancement manuel du ruban (glisser-déposer), persisté en base — clés dans l'ordre voulu. */
   private readonly manualOrder = signal<readonly string[] | null>(null);
 
-  /** Ordre d'initiative affiché : ordre calculé par défaut, sauf réordonnancement manuel ; les
-   * nouveaux combattants (ajout en cours de combat) rejoignent la fin, ceux retirés disparaissent. */
-  protected readonly orderedTokens = computed(() => {
-    const tokens = this.board()?.tokens ?? [];
-    const order = this.manualOrder();
-    if (!order) {
-      return tokens;
-    }
-
-    const byKey = new Map(tokens.map((t) => [t.key, t]));
-    const reordered = order.map((key) => byKey.get(key)).filter((t): t is PlayToken => !!t);
-    const knownKeys = new Set(reordered.map((t) => t.key));
-    const missing = tokens.filter((t) => !knownKeys.has(t.key));
-    return [...reordered, ...missing];
-  });
-
   protected readonly heroTokens = computed(() => this.board()?.tokens.filter((t) => t.camp === 'heros') ?? []);
-  protected readonly adversaireTokens = computed(
-    () => this.board()?.tokens.filter((t) => t.camp === 'adversaires') ?? [],
-  );
-
-  /** Premier de l'ordre affiché (calculé ou réordonné) = combattant dont c'est le tour. */
-  protected readonly activeKey = computed(() => this.orderedTokens()[0]?.key ?? null);
-
   protected readonly sessionId = computed(() => this.session()?.id ?? null);
 
   /** Page à laquelle revenir depuis un formulaire ou une bibliothèque ouverts depuis la table. */
@@ -158,14 +136,60 @@ export class SessionPlayPageComponent {
 
   protected readonly reserveOpen = signal(readPanelOpen(browserStorage(), RESERVE_PANEL_KEY, true));
 
-  /** Clé du jeton dont la fiche est ouverte (mode libre). */
-  private readonly selectedKey = signal<string | null>(null);
-  protected readonly selectedToken = computed(() =>
-    findSelectedToken(this.board()?.tokens ?? [], this.selectedKey(), this.mode()),
+  /** Cartes du tapis (mode libre), une par ligne de session. */
+  protected readonly cards = computed(() => {
+    const session = this.session();
+    return session ? buildTapisCards(session) : [];
+  });
+
+  /** Clé de la carte dépliée. La carte elle-même est retrouvée à chaque rechargement : si elle a
+   * quitté la table (retirée, scène chargée en remplacement), plus rien n'est déplié. */
+  private readonly expandedKey = signal<string | null>(null);
+  protected readonly expandedCard = computed(() => findCard(this.cards(), this.expandedKey()));
+  /** Données de la carte dépliée, chargées au dépliage — `null` pendant le chargement. */
+  protected readonly expandedHero = signal<ExpandedHeroData | null>(null);
+  protected readonly expandedStatblock = signal<BolStatblockData | null>(null);
+
+  /** Options de combat (postures) — référence statique, chargée une fois. */
+  protected readonly combatOptions = signal<readonly BolCombatOptionModel[]>([]);
+
+  /** État du combat gardé dans la session (round, cartes qui ont joué, défense totale). */
+  protected readonly etat = computed<EtatCombat>(() => normalizeEtat(this.session()?.etat_combat));
+
+  /** Cartes dans l'ordre de jeu : initiative BoL des jetons, puis ordre manuel du MJ. */
+  private readonly orderedCards = computed(() => orderCards(this.cards(), this.board()?.tokens ?? [], this.manualOrder()));
+
+  private readonly turn = computed(() => turnState(this.orderedCards(), this.etat()));
+
+  /** Carte dont c'est le tour — `null` hors combat, ou quand plus personne ne peut jouer. */
+  protected readonly activeCard = computed(() => (this.mode() === 'combat' ? findCard(this.cards(), this.turn().activeKey) : null));
+
+  protected readonly combatStates = computed<ReadonlyMap<string, CardCombatState> | null>(() =>
+    this.mode() === 'combat' ? buildCombatStates(this.orderedCards(), this.etat()) : null,
   );
-  /** Données de la fiche, chargées à la sélection — `null` pendant le chargement. */
-  protected readonly inspectorHero = signal<TokenInspectorHeroData | null>(null);
-  protected readonly inspectorStatblock = signal<BolStatblockData | null>(null);
+
+  protected readonly turnEntries = computed<readonly TurnOrderEntry[]>(() => {
+    const statuses = this.turn().statuses;
+    return this.orderedCards().map(({card}) => ({
+      key: card.key,
+      nom: cardLabel(card),
+      kind: card.kind,
+      status: statuses.get(card.key) ?? 'upcoming',
+    }));
+  });
+
+  protected readonly turnAnnouncement = computed(() => turnAnnouncement(this.orderedCards(), this.etat()));
+
+  /** Id du héros actif — les armes ne sont rechargées que lorsqu'il change, pas à chaque
+   * rechargement de la session. */
+  private readonly activeHeroId = computed(() => {
+    const active = this.activeCard();
+    return active?.kind === 'hero' ? active.sourceId : null;
+  });
+  protected readonly activeArmes = signal<readonly BolHerosArmeModel[]>([]);
+
+  /** Arme et posture choisies dans la barre d'action — `null` si le choix n'est pas jouable. */
+  protected readonly attackChoice = signal<AttackChoice | null>({degats: null, posture: null});
 
   protected readonly lastRoll = signal<LastRoll | null>(null);
 
@@ -182,7 +206,7 @@ export class SessionPlayPageComponent {
    * quand la bibliothèque et les scènes finissent de charger. */
   private readonly paletteContext = computed<PaletteContext>(() => ({
     mode: this.mode(),
-    tokens: (this.board()?.tokens ?? []).map((token) => ({key: token.key, nom: token.nom, kind: token.kind})),
+    tokens: this.cards().map((card) => ({key: card.key, nom: cardLabel(card), kind: card.kind})),
     catalog: this.selection.catalog(),
     heroIds: this.existingHeroIds(),
     pnjIds: this.existingPnjIds(),
@@ -199,6 +223,32 @@ export class SessionPlayPageComponent {
     }
 
     this.loadSession(id);
+    this.combatReference
+      .getCombatOptions()
+      .pipe(take(1))
+      .subscribe((options) => this.combatOptions.set(options));
+
+    // Armes du héros dont c'est le tour, pour la barre d'action.
+    effect(() => {
+      const herosId = this.activeHeroId();
+      this.activeArmes.set([]);
+      if (!herosId) {
+        return;
+      }
+      this.herosService
+        .heros(herosId)
+        .pipe(take(1))
+        .subscribe((hero) => {
+          if (this.activeHeroId() !== herosId) {
+            return;
+          }
+          const armes =
+            Array.isArray(hero.armes) && hero.armes.length > 0 && typeof hero.armes[0] !== 'number'
+              ? (hero.armes as BolHerosArmeModel[])
+              : [];
+          this.activeArmes.set(armes);
+        });
+    });
   }
 
   protected openAddCombatantDialog(): void {
@@ -302,17 +352,161 @@ export class SessionPlayPageComponent {
     );
   }
 
-  protected askRemoveCombatant(token: PlayToken): void {
-    const sessionId = this.session()?.id;
+  protected toggleReserve(): void {
+    const next = !this.reserveOpen();
+    this.reserveOpen.set(next);
+    writePanelOpen(browserStorage(), RESERVE_PANEL_KEY, next);
+  }
+
+  /** Échap replie la carte dépliée, sauf si un dialogue est ouvert : Échap ne ferme alors que lui. */
+  protected onEscape(): void {
+    if (this.dialog.openDialogs.length === 0) {
+      this.foldCard();
+    }
+  }
+
+  protected reloadSession(): void {
+    const sessionId = this.sessionId();
+    if (sessionId) {
+      this.loadSession(sessionId);
+    }
+  }
+
+  /** Une scène a été chargée, enregistrée, renommée ou supprimée : la table a pu changer du tout au
+   * tout, la carte dépliée est repliée avant de recharger la session. */
+  protected onSceneChanged(): void {
+    this.foldCard();
+    this.reloadSession();
+  }
+
+  /** Clic sur la face d'une carte : la déplie (une seule carte dépliée à la fois). */
+  protected onCardToggled(card: TapisCard): void {
+    if (this.expandedKey() === card.key) {
+      return;
+    }
+    this.expandedKey.set(card.key);
+    this.loadExpanded(card);
+  }
+
+  protected foldCard(): void {
+    this.expandedKey.set(null);
+  }
+
+  /** Charge les données de la carte dépliée. Chaque réponse est ignorée si une autre carte a été
+   * dépliée entre-temps (réponses arrivées dans le désordre). */
+  private loadExpanded(card: TapisCard): void {
+    this.expandedHero.set(null);
+    this.expandedStatblock.set(null);
+
+    const sourceId = card.sourceId;
+    const sessionId = this.sessionId();
+    if (!sourceId || !sessionId) {
+      return;
+    }
+
+    const stillExpanded = (): boolean => this.expandedKey() === card.key;
+
+    switch (card.kind) {
+      case 'hero':
+        this.herosService
+          .heros(sourceId)
+          .pipe(take(1))
+          .subscribe((hero) => {
+            if (stillExpanded()) {
+              this.expandedHero.set(this.buildExpandedHero(card, hero, sourceId, sessionId));
+            }
+          });
+        break;
+      case 'pnj':
+        this.pnjService
+          .pnj(sourceId)
+          .pipe(take(1))
+          .subscribe((pnj) => {
+            if (stillExpanded()) {
+              this.expandedStatblock.set(pnjStatblockData(pnj));
+            }
+          });
+        break;
+      case 'creature':
+        this.creaturesService
+          .creature(sourceId)
+          .pipe(take(1))
+          .subscribe((creature) => {
+            if (stillExpanded()) {
+              this.expandedStatblock.set(creatureStatblockData(creature));
+            }
+          });
+        break;
+      case 'demon':
+        this.demonsService
+          .demon(sourceId)
+          .pipe(take(1))
+          .subscribe((demon) => {
+            if (stillExpanded()) {
+              this.expandedStatblock.set(demonStatblockData(demon));
+            }
+          });
+        break;
+    }
+  }
+
+  private buildExpandedHero(card: TapisCard, hero: BolHerosModel, herosId: string, sessionId: string): ExpandedHeroData {
+    return {
+      resources: {
+        sessionId,
+        herosId,
+        pivotId: card.pivotId,
+        heroNom: card.nom,
+        vitaliteCourante: card.vitaliteCourante ?? hero.ressources.vitalite,
+        vitaliteMax: hero.ressources.vitalite,
+      },
+      actionRoll: {
+        heroNom: card.nom,
+        herosId,
+        heroisme: hero.ressources.heroisme,
+        agilite: hero.attributs.agilite,
+        vigueur: hero.attributs.vigueur,
+        esprit: hero.attributs.esprit,
+        aura: hero.attributs.aura,
+        equipementAgilite: hero.attributs.agilite_effective - hero.attributs.agilite,
+        carrieres: hero.carrieres
+          .map((c) => ({label: c.carriere?.carriere ?? '', value: c.value}))
+          .filter((c) => c.label),
+        diceTraits: hero.traits
+          .map((trait): ActionRollDiceTrait | null => {
+            const traitable = trait.traitable;
+            if (!traitable) {
+              return null;
+            }
+            if (trait.type === 'A' && 'de_bonus' in traitable && traitable.de_bonus) {
+              return {label: traitable.avantage, domaine: traitable.de_bonus_domaine, kind: 'avantage'};
+            }
+            if (trait.type === 'D' && 'de_malus' in traitable && traitable.de_malus) {
+              return {label: traitable.desavantage, domaine: traitable.de_malus_domaine, kind: 'desavantage'};
+            }
+            return null;
+          })
+          .filter((t): t is ActionRollDiceTrait => t !== null),
+      },
+    };
+  }
+
+  /** « Retirer de la table » (ou « Retirer un exemplaire » pour un lot) depuis la carte dépliée. */
+  protected askRemoveCard(card: TapisCard): void {
+    const sessionId = this.sessionId();
     if (!sessionId) {
       return;
     }
 
+    const label = removeActionLabel(card);
     confirmDialog(
       this.dialog,
       {
-        title: 'Retirer ce combattant',
-        message: `Voulez-vous retirer « ${token.nom} » de la table ?`,
+        title: label,
+        message:
+          card.qty > 1
+            ? `Voulez-vous retirer un exemplaire de « ${card.nom} » ? Il en restera ${card.qty - 1}.`
+            : `Voulez-vous retirer « ${card.nom} » de la table ?`,
         confirmLabel: 'Retirer',
       },
       {width: '380px'},
@@ -321,44 +515,152 @@ export class SessionPlayPageComponent {
         return;
       }
 
-      this.fightSessionService.removeCombatant(sessionId, token.kind, token.pivotId).subscribe({
-        next: () => {
-          if (this.selectedKey() === token.key) {
-            this.selectedKey.set(null);
-          }
-          this.loadSession(sessionId);
-        },
-        error: (error: unknown) => {
-          this.snackBar.open(
-            extractApiErrorMessage(error, 'Impossible de retirer ce combattant.'),
-            'Fermer',
-            {duration: 5000},
-          );
-        },
+      this.fightSessionService.removeCombatant(sessionId, card.kind, card.pivotId).subscribe({
+        next: () => this.loadSession(sessionId),
+        error: (error: unknown) => this.tableError(error, 'Impossible de retirer ce personnage.'),
       });
     });
   }
 
-  protected onAttackRequested({attacker, target, degats, posture}: AttackRequest): void {
-    this.openAttackDialog(attacker, target, degats, posture);
+  /** Passe la carte du côté des héros (allié) ou la remet avec les présents. */
+  protected toggleCamp(card: TapisCard): void {
+    const sessionId = this.sessionId();
+    if (!sessionId || card.kind === 'hero') {
+      return;
+    }
+
+    this.fightSessionService
+      .setCamp(sessionId, card.kind, card.pivotId, card.camp === 'heros' ? 'adversaires' : 'heros')
+      .subscribe({
+        next: () => this.loadSession(sessionId),
+        error: (error: unknown) => this.tableError(error, 'Impossible de changer ce personnage de camp.'),
+      });
   }
 
-  private openAttackDialog(
-    attacker: PlayToken,
-    target: PlayToken,
-    degats: string | null,
-    posture: BolCombatOptionModel | null,
-  ): void {
-    const sessionId = this.session()?.id;
+  /** « Fiche complète » depuis la carte dépliée d'un héros : statbloc en dialog. À la fermeture, si
+   * quelque chose a changé (vitalité, héroïsme, équipement), la session et la carte sont rechargées. */
+  protected openFullSheet(card: TapisCard): void {
+    const sessionId = this.sessionId();
+    // Un héros a la même clé comme carte et comme jeton (`hero-{id}`) : le jeton porte ce dont le
+    // dialog de statbloc a besoin.
+    const token = this.board()?.tokens.find((t) => t.key === card.key);
+    if (!sessionId || !card.sourceId || !token) {
+      return;
+    }
+
+    this.openHeroPopup(token, card.sourceId, sessionId, () => this.loadExpanded(card));
+  }
+
+  private tableError(error: unknown, fallback: string): void {
+    this.snackBar.open(extractApiErrorMessage(error, fallback), 'Fermer', {duration: 5000});
+  }
+
+  /** Un enregistrement de l'état du combat est en cours : les actions de tour suivantes sont
+   * ignorées tant que la base n'a pas répondu, sinon elles partiraient d'un état périmé. */
+  private savingEtat = false;
+
+  /** Enregistre l'état du combat, puis recharge la session : l'affichage suit toujours la base. Ne
+   * fait rien si l'état ne change pas (plus personne ne peut jouer) ou si un enregistrement est en
+   * cours. */
+  private saveEtat(next: EtatCombat): void {
+    const sessionId = this.sessionId();
+    if (!sessionId || this.mode() !== 'combat' || this.savingEtat || next === this.etat()) {
+      return;
+    }
+
+    this.savingEtat = true;
+    this.fightSessionService
+      .updateCombatState(sessionId, {round: next.round, joues: [...next.joues], defense_totale: [...next.defense_totale]})
+      .subscribe({
+        next: () => {
+          this.savingEtat = false;
+          this.loadSession(sessionId);
+        },
+        error: (error: unknown) => {
+          this.savingEtat = false;
+          this.tableError(error, "Impossible d'enregistrer le tour.");
+        },
+      });
+  }
+
+  protected onEndTurn(): void {
+    this.saveEtat(endTurn(this.orderedCards(), this.etat()));
+  }
+
+  protected onTotalDefense(): void {
+    this.saveEtat(totalDefense(this.orderedCards(), this.etat()));
+  }
+
+  protected onGiveBackTurn(key: string): void {
+    this.saveEtat(giveBackTurn(this.etat(), key));
+  }
+
+  /** Enregistrements d'ordre manuel en cours : tant qu'il y en a, un rechargement de session ne
+   * remplace pas l'ordre affiché (sa réponse a pu être lue avant que le nouvel ordre soit écrit). */
+  private pendingOrderSaves = 0;
+
+  /** Réordonnancement de la bande d'ordre (glisser-déposer), persisté en base — clés de carte. */
+  protected onTurnReordered(keys: readonly string[]): void {
+    this.manualOrder.set(keys);
+
+    const sessionId = this.sessionId();
     if (!sessionId) {
       return;
     }
 
+    this.pendingOrderSaves++;
+    this.fightSessionService.updateOrder(sessionId, keys).subscribe({
+      next: () => {
+        this.pendingOrderSaves--;
+        this.loadSession(sessionId);
+      },
+      error: (error: unknown) => {
+        this.pendingOrderSaves--;
+        this.tableError(error, "Impossible d'enregistrer ce nouvel ordre.");
+        this.loadSession(sessionId);
+      },
+    });
+  }
+
+  /** La carte active attaque `target` : clic sur une carte désignable, ou « Attaquer cette carte ». */
+  protected onAttackCard(target: TapisCard): void {
+    const attacker = this.activeCard();
+    if (!attacker || attacker.key === target.key) {
+      return;
+    }
+
+    const choice = this.attackChoice();
+    if (!choice) {
+      this.snackBar.open('Choisis une arme secondaire légère ou moyenne pour cette posture.', 'Fermer', {duration: 5000});
+      return;
+    }
+
+    this.openAttackDialog(attacker, target, choice);
+  }
+
+  /** Ouvre le dialogue d'attaque existant, prérempli. Les stats sont résolues à partir des jetons
+   * (`PlayToken`) correspondant aux deux cartes ; pour un lot pris pour cible, c'est le premier
+   * exemplaire encore debout qui est visé et qui prend les dégâts. */
+  private openAttackDialog(attacker: TapisCard, target: TapisCard, choice: AttackChoice): void {
+    const sessionId = this.sessionId();
+    const tokens = this.board()?.tokens ?? [];
+    const targetIndex = firstStandingInstance(target);
+    const attackerToken = tokenForCard(tokens, attacker, firstStandingInstance(attacker));
+    const targetToken = tokenForCard(tokens, target, targetIndex);
+    if (!sessionId || !attackerToken || !targetToken) {
+      return;
+    }
+
+    const targetInTotalDefense = this.etat().defense_totale.includes(target.key);
+
     forkJoin({
-      attacker: resolveAttackStats(attacker, this.herosService),
-      target: resolveAttackStats(target, this.herosService),
+      attacker: resolveAttackStats(attackerToken, this.herosService),
+      target: resolveAttackStats(targetToken, this.herosService),
     }).subscribe(({attacker: attackerStats, target: targetStats}) => {
-      const finalAttacker = degats ? {...attackerStats, degats} : attackerStats;
+      const finalAttacker = choice.degats ? {...attackerStats, degats: choice.degats} : attackerStats;
+      // Défense totale (02-actions-combat.md) : +2 en défense jusqu'au prochain tour de la cible.
+      const finalTarget = targetInTotalDefense ? {...targetStats, defense: targetStats.defense + 2} : targetStats;
+      const posture = choice.posture;
 
       this.dialog
         .open(AttackRollDialogComponent, {
@@ -366,12 +668,12 @@ export class SessionPlayPageComponent {
           panelClass: 'atd-panel',
           data: {
             attackerNom: attacker.nom,
-            targetNom: target.nom,
+            targetNom: targetLabel(target),
             attackerAvatar: attacker.avatar,
             targetAvatar: target.avatar,
             attacker: finalAttacker,
-            target: targetStats,
-            legendaryBonusActive: attacker.tier === 'legendaire',
+            target: finalTarget,
+            legendaryBonusActive: attackerToken.tier === 'legendaire',
             posture: posture ? {label: posture.label, slug: posture.slug, modificateur: posture.modificateur} : null,
           },
         })
@@ -381,11 +683,11 @@ export class SessionPlayPageComponent {
             return;
           }
 
-          this.fightSessionService.applyDamage(sessionId, target.kind, target.pivotId, delta, target.instanceIndex).subscribe({
+          this.fightSessionService.applyDamage(sessionId, target.kind, target.pivotId, delta, targetIndex).subscribe({
             next: () => {
               this.loadSession(sessionId);
 
-              const newVitalite = (target.vitaliteCourante ?? 0) + delta;
+              const newVitalite = (targetToken.vitaliteCourante ?? 0) + delta;
               if (targetStats.herosId && newVitalite < 0) {
                 maybePromptDefierLaMort({
                   dialog: this.dialog,
@@ -401,126 +703,27 @@ export class SessionPlayPageComponent {
                 });
               }
             },
-            error: (error: unknown) => {
-              this.snackBar.open(extractApiErrorMessage(error, "Impossible d'appliquer les dégâts."), 'Fermer', {
-                duration: 5000,
-              });
-            },
+            error: (error: unknown) => this.tableError(error, "Impossible d'appliquer les dégâts."),
           });
         });
     });
   }
 
-  /** Bouton « carte » ou double-clic sur un jeton. Mode libre : sélectionne le jeton (fiche du jeton).
-   * Mode combat : dialog de statbloc dédié, comme avant. */
-  protected openStatblockFor(token: PlayToken): void {
-    if (this.mode() === 'libre') {
-      this.onTokenSelected(token);
-      return;
-    }
-
-    const sourceId = token.combat.sourceId;
-    const sessionId = this.sessionId();
-    if (!sourceId || !sessionId) {
-      return;
-    }
-
-    /** Lien "Modifier la fiche" (bol-statblock) : revenir sur cette table après édition. */
-    const returnUrl = `/session/${sessionId}/play`;
-
-    switch (token.kind) {
-      case 'hero':
-        this.openHeroPopup(token, sourceId, sessionId);
-        break;
-      case 'pnj':
-        this.pnjService
-          .pnj(sourceId)
-          .pipe(take(1))
-          .subscribe((pnj) =>
-            openStatblockDialog(this.dialog, BolStatblockComponent, {
-              data: pnjStatblockData(pnj),
-              imageSrc: token.avatar,
-              returnUrl,
-            }),
-          );
-        break;
-      case 'creature':
-        this.creaturesService
-          .creature(sourceId)
-          .pipe(take(1))
-          .subscribe((creature) =>
-            openStatblockDialog(this.dialog, BolStatblockComponent, {
-              data: creatureStatblockData(creature),
-              imageSrc: token.avatar,
-              returnUrl,
-            }),
-          );
-        break;
-      case 'demon':
-        this.demonsService
-          .demon(sourceId)
-          .pipe(take(1))
-          .subscribe((demon) =>
-            openStatblockDialog(this.dialog, BolStatblockComponent, {
-              data: demonStatblockData(demon),
-              imageSrc: token.avatar,
-              returnUrl,
-            }),
-          );
-        break;
-    }
-  }
-
-  protected toggleReserve(): void {
-    const next = !this.reserveOpen();
-    this.reserveOpen.set(next);
-    writePanelOpen(browserStorage(), RESERVE_PANEL_KEY, next);
-  }
-
-  /** Clic sur un jeton : ouvre sa fiche (mode libre). Recliquer le même jeton ne recharge rien, pour
-   * ne pas perdre un jet en cours. */
-  protected onTokenSelected(token: PlayToken): void {
-    if (this.mode() !== 'libre' || this.selectedKey() === token.key) {
-      return;
-    }
-
-    this.selectedKey.set(token.key);
-    this.loadInspector(token);
-  }
-
-  /** Échap ferme la fiche du jeton, sauf si un dialogue est ouvert : Échap ne ferme alors que lui
-   * (annuler la barre de commande ne doit pas faire perdre la fiche ni un jet en cours). */
-  protected onEscape(): void {
-    if (this.dialog.openDialogs.length === 0) {
-      this.closeInspector();
-    }
-  }
-
-  protected closeInspector(): void {
-    this.selectedKey.set(null);
-  }
-
-  protected reloadSession(): void {
-    const sessionId = this.sessionId();
-    if (sessionId) {
-      this.loadSession(sessionId);
-    }
-  }
-
-  /** Une scène a été chargée, enregistrée, renommée ou supprimée : la table a pu changer du tout au
-   * tout, la fiche du jeton est fermée avant de recharger la session. */
-  protected onSceneChanged(): void {
-    this.closeInspector();
-    this.reloadSession();
-  }
-
-  /** `/` ou `Ctrl+K` : ouvre la barre de commande, sauf si un dialogue est déjà ouvert. */
+  /** `/` ou `Ctrl+K` ouvre la barre de commande ; `F` termine le tour en combat. Rien de tout cela
+   * quand un dialogue est ouvert. */
   protected onKeydown(event: KeyboardEvent): void {
-    if (!isPaletteShortcut(event, event.target as HTMLElement | null) || this.dialog.openDialogs.length > 0) {
+    if (this.dialog.openDialogs.length > 0) {
       return;
     }
-    event.preventDefault();
-    this.openPalette();
+
+    const target = event.target as HTMLElement | null;
+    if (isPaletteShortcut(event, target)) {
+      event.preventDefault();
+      this.openPalette();
+    } else if (this.mode() === 'combat' && isEndTurnShortcut(event, target)) {
+      event.preventDefault();
+      this.onEndTurn();
+    }
   }
 
   protected openPalette(): void {
@@ -552,9 +755,9 @@ export class SessionPlayPageComponent {
 
     switch (command.type) {
       case 'select': {
-        const token = this.board()?.tokens.find((t) => t.key === command.key);
-        if (token) {
-          this.onTokenSelected(token);
+        const card = findCard(this.cards(), command.key);
+        if (card) {
+          this.onCardToggled(card);
         }
         break;
       }
@@ -650,122 +853,6 @@ export class SessionPlayPageComponent {
     this.snackBar.open(extractApiErrorMessage(error, fallback), 'Fermer', {duration: 5000});
   }
 
-  /** Charge les données de la fiche du jeton. Chaque réponse est ignorée si un autre jeton a été
-   * sélectionné entre-temps (réponses arrivées dans le désordre). */
-  private loadInspector(token: PlayToken): void {
-    this.inspectorHero.set(null);
-    this.inspectorStatblock.set(null);
-
-    const sourceId = token.combat.sourceId;
-    const sessionId = this.sessionId();
-    if (!sourceId || !sessionId) {
-      return;
-    }
-
-    const stillSelected = (): boolean => this.selectedKey() === token.key;
-
-    switch (token.kind) {
-      case 'hero':
-        this.herosService
-          .heros(sourceId)
-          .pipe(take(1))
-          .subscribe((hero) => {
-            if (stillSelected()) {
-              this.inspectorHero.set(this.buildInspectorHero(token, hero, sourceId, sessionId));
-            }
-          });
-        break;
-      case 'pnj':
-        this.pnjService
-          .pnj(sourceId)
-          .pipe(take(1))
-          .subscribe((pnj) => {
-            if (stillSelected()) {
-              this.inspectorStatblock.set(pnjStatblockData(pnj));
-            }
-          });
-        break;
-      case 'creature':
-        this.creaturesService
-          .creature(sourceId)
-          .pipe(take(1))
-          .subscribe((creature) => {
-            if (stillSelected()) {
-              this.inspectorStatblock.set(creatureStatblockData(creature));
-            }
-          });
-        break;
-      case 'demon':
-        this.demonsService
-          .demon(sourceId)
-          .pipe(take(1))
-          .subscribe((demon) => {
-            if (stillSelected()) {
-              this.inspectorStatblock.set(demonStatblockData(demon));
-            }
-          });
-        break;
-    }
-  }
-
-  private buildInspectorHero(
-    token: PlayToken,
-    hero: BolHerosModel,
-    herosId: string,
-    sessionId: string,
-  ): TokenInspectorHeroData {
-    return {
-      resources: {
-        sessionId,
-        herosId,
-        pivotId: token.pivotId,
-        heroNom: token.nom,
-        vitaliteCourante: token.vitaliteCourante ?? hero.ressources.vitalite,
-        vitaliteMax: hero.ressources.vitalite,
-      },
-      actionRoll: {
-        heroNom: token.nom,
-        herosId,
-        heroisme: hero.ressources.heroisme,
-        agilite: hero.attributs.agilite,
-        vigueur: hero.attributs.vigueur,
-        esprit: hero.attributs.esprit,
-        aura: hero.attributs.aura,
-        equipementAgilite: hero.attributs.agilite_effective - hero.attributs.agilite,
-        carrieres: hero.carrieres
-          .map((c) => ({label: c.carriere?.carriere ?? '', value: c.value}))
-          .filter((c) => c.label),
-        diceTraits: hero.traits
-          .map((trait): ActionRollDiceTrait | null => {
-            const traitable = trait.traitable;
-            if (!traitable) {
-              return null;
-            }
-            if (trait.type === 'A' && 'de_bonus' in traitable && traitable.de_bonus) {
-              return {label: traitable.avantage, domaine: traitable.de_bonus_domaine, kind: 'avantage'};
-            }
-            if (trait.type === 'D' && 'de_malus' in traitable && traitable.de_malus) {
-              return {label: traitable.desavantage, domaine: traitable.de_malus_domaine, kind: 'desavantage'};
-            }
-            return null;
-          })
-          .filter((t): t is ActionRollDiceTrait => t !== null),
-      },
-    };
-  }
-
-  /** « Fiche complète » depuis la fiche du jeton : statbloc du héros en dialog. À la fermeture, si
-   * quelque chose a changé (vitalité, héroïsme, équipement), la session et la fiche sont rechargées. */
-  protected openFullSheet(token: PlayToken): void {
-    const sourceId = token.combat.sourceId;
-    const sessionId = this.sessionId();
-    if (!sourceId || !sessionId) {
-      return;
-    }
-
-    this.openHeroPopup(token, sourceId, sessionId, () => this.loadInspector(token));
-  }
-
   private openHeroPopup(token: PlayToken, herosId: string, sessionId: string, onChanged?: () => void): void {
     const returnUrl = `/session/${sessionId}/play`;
     this.herosService
@@ -813,45 +900,6 @@ export class SessionPlayPageComponent {
     };
   }
 
-  /** Réordonnancement du ruban d'initiative (glisser-déposer dans `bol-initiative-rail`), persisté en base. */
-  protected onRailReordered(keys: readonly string[]): void {
-    this.manualOrder.set(keys);
-
-    const sessionId = this.session()?.id;
-    if (!sessionId) {
-      return;
-    }
-
-    this.fightSessionService.updateOrder(sessionId, keys).subscribe({
-      error: (error: unknown) => {
-        this.snackBar.open(
-          extractApiErrorMessage(error, "Impossible d'enregistrer ce nouvel ordre."),
-          'Fermer',
-          {duration: 5000},
-        );
-      },
-    });
-  }
-
-  /** Glisser-déposer d'un jeton sur la battlemap (`bol-battlemap`) : position recalculée en % de la carte, persistée en base. */
-  protected onPositionChanged({key, x, y}: TokenPositionChange): void {
-    const positions = {...this.tokenPositions(), [key]: {x, y}};
-    this.tokenPositions.set(positions);
-
-    const sessionId = this.session()?.id;
-    if (!sessionId) {
-      return;
-    }
-
-    this.fightSessionService.updatePositions(sessionId, positions).subscribe({
-      error: (error: unknown) => {
-        this.snackBar.open(extractApiErrorMessage(error, "Impossible d'enregistrer la position du jeton."), 'Fermer', {
-          duration: 5000,
-        });
-      },
-    });
-  }
-
   private loadSession(id: string): void {
     this.fightSessionService
       .fightSession(id)
@@ -859,8 +907,9 @@ export class SessionPlayPageComponent {
       .subscribe({
         next: (session) => {
           this.session.set(session);
-          this.manualOrder.set(session.ordre_manuel ?? null);
-          this.tokenPositions.set(session.positions_jetons ?? {});
+          if (this.pendingOrderSaves === 0) {
+            this.manualOrder.set(session.ordre_manuel ?? null);
+          }
           this.loading.set(false);
         },
         error: () => {

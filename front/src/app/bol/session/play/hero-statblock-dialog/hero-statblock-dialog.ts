@@ -36,7 +36,7 @@ interface EquippableArmure {
 /**
  * Fiche d'un héros en séance : statbloc en lecture (fiche complète), avec un bouton « Modifier »
  * qui ouvre en popover les réglages rapides scopés à la session (vitalité, héroïsme, équipement).
- * Un des deux onglets de `bol-token-inspector` — pas de fermeture propre, l'en-tête/la croix
+ * Un des deux onglets de `bol-expanded-card` — pas de fermeture propre, l'en-tête/la croix
  * appartiennent au panneau qui l'embarque ; `changed` signale au parent qu'il doit recharger la
  * session après une modification persistée.
  */

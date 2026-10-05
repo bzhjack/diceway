@@ -5,6 +5,13 @@ export type InitiativeResultat = 'echec_critique' | 'echec' | 'reussite' | 'hero
 
 export type BolFightSessionStatut = 'libre' | 'combat' | 'terminee';
 
+/** État d'un combat en cours tel que gardé en base (cf. `combat-turn.util.ts`). */
+export interface EtatCombatDto {
+  round: number;
+  joues: string[];
+  defense_totale: string[];
+}
+
 /** Scène courante d'une session, telle que sérialisée avec la session (titres pour la barre du haut). */
 export interface BolSessionSceneRef {
   id: string;
@@ -19,11 +26,13 @@ export interface BolFightSessionModel {
   statut: BolFightSessionStatut;
   /** Ordre d'initiative réordonné manuellement (glisser-déposer du ruban) — clés `PlayToken.key`, dans l'ordre voulu. */
   ordre_manuel?: string[] | null;
-  /** Position des jetons sur la battlemap (glisser-déposer libre) — clé `PlayToken.key` → {x, y} en pourcentage. */
+  /** Position des jetons de l'ancien battlefield (plus utilisée depuis le tapis) — clé `PlayToken.key` → {x, y} en pourcentage. */
   positions_jetons?: Record<string, {x: number; y: number}> | null;
   /** Dernière scène chargée ou enregistrée sur cette table — null si aucune. */
   scene_id?: string | null;
   scene?: BolSessionSceneRef | null;
+  /** Round, cartes qui ont joué et cartes en défense totale — null hors combat. */
+  etat_combat?: EtatCombatDto | null;
   heros?: BolFightSessionHerosModel[];
   creatures?: BolFightSessionCreatureModel[];
   demons?: BolFightSessionDemonModel[];
@@ -41,6 +50,10 @@ export interface BolFightSessionHerosModel {
     id: string | null;
     origines: {nom: string | null; avatar: string | null; joueur: string | null};
     ressources?: {vitalite: number; heroisme: number};
+    /** Défense du héros ; `defense_effective` tient compte de l'équipement porté. */
+    combat?: {defense: number; defense_effective: number};
+    /** Armes du héros (chargées avec la session pour afficher ses dégâts sur sa carte). */
+    armes?: {arme?: {arme: string; degats: string | null} | null}[];
   };
 }
 

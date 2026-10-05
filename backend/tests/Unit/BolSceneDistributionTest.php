@@ -110,4 +110,28 @@ class BolSceneDistributionTest extends TestCase
     {
         $this->assertSame([], BolSceneDistribution::heroPositionsOnly(null));
     }
+
+    public function test_records_the_camp_of_each_row(): void
+    {
+        $entries = BolSceneDistribution::fromSession(
+            [['id' => 7, 'pnj_id' => 'p', 'camp' => 'heros']],
+            [['id' => 3, 'creature_id' => 'c', 'qty' => 1, 'camp' => 'adversaires']],
+            [['id' => 9, 'demon_id' => 'd', 'qty' => 1]],
+            [],
+        );
+
+        $this->assertSame(['heros', 'adversaires', 'adversaires'], array_column($entries, 'camp'));
+    }
+
+    public function test_entry_camp_defaults_to_adversaires_for_scenes_saved_before_camps_existed(): void
+    {
+        $this->assertSame('adversaires', BolSceneDistribution::entryCamp(['kind' => 'pnj', 'source_id' => 'p', 'qty' => 1]));
+        $this->assertSame('adversaires', BolSceneDistribution::entryCamp(['camp' => 'n-importe-quoi']));
+        $this->assertSame('adversaires', BolSceneDistribution::entryCamp(['camp' => null]));
+    }
+
+    public function test_entry_camp_keeps_an_ally_with_the_heroes(): void
+    {
+        $this->assertSame('heros', BolSceneDistribution::entryCamp(['camp' => 'heros']));
+    }
 }

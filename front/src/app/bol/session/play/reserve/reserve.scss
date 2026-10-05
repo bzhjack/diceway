@@ -1,14 +1,21 @@
 :host {
   display: block;
-  height: 100%;
 }
 
-.rsv-shell {
+// Bandeau horizontal : onglets à gauche, puis le contenu de l'onglet sur une ligne.
+.rsv-band {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-height: 6.4rem;
+  padding: 0.5rem 0.9rem;
+}
+
+.rsv-side {
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  height: 100%;
-  padding: 0.8rem 0.7rem;
+  gap: 0.35rem;
 }
 
 .rsv-title {
@@ -21,83 +28,119 @@
 }
 
 .rsv-tabs {
-  display: flex;
-  flex-shrink: 0;
-
-  .mat-button-toggle {
-    flex: 1 1 0;
-    min-width: 0;
-  }
-
-  // Cinq onglets : libellés resserrés pour que « Créatures » tienne sans être coupé.
+  // Cinq onglets côte à côte : libellés resserrés pour laisser la largeur aux cartes.
   ::ng-deep .mat-button-toggle-label-content {
-    padding: 0 0.2rem;
-    font-size: 0.72rem;
+    padding: 0 0.55rem;
+    font-size: 0.76rem;
     line-height: 2.1rem;
   }
 }
 
 .rsv-search {
-  flex-shrink: 0;
+  flex: 0 0 11rem;
 }
 
-.rsv-list {
+// La « main » : cartes réduites sur une ligne, défilement horizontal.
+.rsv-hand {
   flex: 1;
-  min-height: 0;
+  min-width: 0;
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
   margin: 0;
-  padding: 0;
+  padding: 0.3rem 0.1rem;
   list-style: none;
-  overflow-y: auto;
+  overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--dw-border) transparent;
 }
 
-.rsv-row {
+.rsv-mini {
+  --rsv-kind: var(--dw-color-reussite);
+  display: flex;
+  flex-direction: column;
+  width: 5.4rem;
+  height: 100%;
+  padding: 0;
+  border: 1px solid var(--dw-border);
+  border-top: 3px solid var(--rsv-kind);
+  border-radius: 6px;
+  background: var(--dw-surface-100);
+  color: var(--dw-surface-700);
+  font: inherit;
+  text-align: left;
+  overflow: hidden;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    border-color: var(--dw-surface-500);
+    border-top-color: var(--rsv-kind);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+.rsv-mini--pnj { --rsv-kind: var(--dw-color-pnj); }
+.rsv-mini--creature { --rsv-kind: var(--dw-color-creature); }
+.rsv-mini--demon { --rsv-kind: var(--dw-color-demon); }
+
+// Déjà à table : estompée, non cliquable.
+.rsv-mini--on-table {
+  opacity: 0.45;
+}
+
+.rsv-mini-art {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  min-height: 2.4rem;
-  padding: 0.2rem 0.1rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--dw-border) 60%, transparent);
+  justify-content: center;
+  height: 2.4rem;
+  background: linear-gradient(160deg, var(--dw-surface-200), var(--dw-surface-50));
+  color: var(--rsv-kind);
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.1rem;
 }
 
-.rsv-dot {
-  flex-shrink: 0;
-  width: 0.7rem;
-  height: 0.7rem;
-  border-radius: 999px;
+.rsv-mini-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.rsv-dot--hero { background: var(--dw-color-reussite); }
-.rsv-dot--pnj { background: var(--dw-color-pnj); }
-.rsv-dot--creature { background: var(--dw-color-creature); }
-.rsv-dot--demon { background: var(--dw-color-demon); }
-
-.rsv-name {
-  flex: 1;
-  min-width: 0;
+.rsv-mini-name {
+  padding: 0.25rem 0.35rem 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.15;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 0.88rem;
-  color: var(--dw-surface-700);
+  color: var(--dw-surface-900);
 }
 
-.rsv-state {
-  flex-shrink: 0;
-  font-size: 0.75rem;
+.rsv-mini-state {
+  padding: 0 0.35rem 0.25rem;
+  font-size: 0.62rem;
   color: var(--dw-surface-500);
 }
 
 .rsv-empty {
-  padding: 1rem 0.2rem;
+  align-self: center;
   font-size: 0.85rem;
   color: var(--dw-surface-500);
+  white-space: nowrap;
 }
 
-.rsv-footer {
+.rsv-links {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }

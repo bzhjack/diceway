@@ -17,7 +17,7 @@ class BolSceneDistribution
      * @param array<int, array<string, mixed>> $creatures lignes avec `id`, `creature_id`, `qty`
      * @param array<int, array<string, mixed>> $demons    lignes avec `id`, `demon_id`, `qty`
      * @param array<string, mixed>|null        $positions `positions_jetons` de la session
-     * @return array<int, array{kind: string, source_id: string, qty: int, positions: array<int, array{x: float, y: float}|null>}>
+     * @return array<int, array{kind: string, source_id: string, qty: int, camp: string, positions: array<int, array{x: float, y: float}|null>}>
      */
     public static function fromSession(array $pnjs, array $creatures, array $demons, ?array $positions): array
     {
@@ -33,6 +33,7 @@ class BolSceneDistribution
                 'kind'      => 'pnj',
                 'source_id' => $sourceId,
                 'qty'       => 1,
+                'camp'      => self::entryCamp($row),
                 'positions' => [self::position($positions['pnj-' . $row['id']] ?? null)],
             ];
         }
@@ -52,6 +53,7 @@ class BolSceneDistribution
                     'kind'      => $kind,
                     'source_id' => $sourceId,
                     'qty'       => $qty,
+                    'camp'      => self::entryCamp($row),
                     'positions' => $instancePositions,
                 ];
             }
@@ -99,6 +101,18 @@ class BolSceneDistribution
             fn ($key) => str_starts_with((string) $key, 'hero-'),
             ARRAY_FILTER_USE_KEY,
         );
+    }
+
+    /**
+     * Camp d'une entrée de distribution (ou d'une ligne de session) : `heros` pour un allié,
+     * `adversaires` dans tous les autres cas — y compris les scènes enregistrées avant que le camp
+     * n'existe, dont les entrées n'ont pas ce champ.
+     *
+     * @param array<string, mixed> $entry
+     */
+    public static function entryCamp(array $entry): string
+    {
+        return ($entry['camp'] ?? null) === 'heros' ? 'heros' : 'adversaires';
     }
 
     private static function sourceId(mixed $raw): ?string
