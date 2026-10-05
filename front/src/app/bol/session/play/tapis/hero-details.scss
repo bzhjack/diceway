@@ -122,6 +122,67 @@
   color: var(--dw-surface-500);
 }
 
+.hd-row--button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--dw-surface-100);
+  }
+
+  &.hd-row--on:hover {
+    background: color-mix(in srgb, var(--dw-color-reussite) 20%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+  }
+}
+
+.hd-kind {
+  align-self: center;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dw-color-reussite);
+}
+
+.hd-kind--bad {
+  color: var(--dw-color-echec);
+}
+
+.hd-infos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+
+  dt {
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dw-surface-500);
+  }
+
+  dd {
+    margin: 0.1rem 0 0;
+    font-size: 0.86rem;
+    color: var(--dw-surface-800);
+  }
+}
+
+.hd-hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.72rem;
+  color: var(--dw-surface-500);
+}
+
 .hd-empty {
   padding: 0.3rem 0.4rem;
   font-size: 0.84rem;

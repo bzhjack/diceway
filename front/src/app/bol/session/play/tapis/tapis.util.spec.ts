@@ -299,6 +299,14 @@ describe('heroHeaderStats', () => {
 describe('heroDetails', () => {
   const hero = (overrides: Record<string, unknown> = {}): BolHerosModel =>
     ({
+      id: 'abc',
+      active: true,
+      origines: {joueur: 'Léa', region: {region: 'Nord'}, commentaire: 'Prudente.'},
+      traits: [
+        {type: 'A', detail: 'Au Nord', traitable: {avantage: 'Ami des bêtes'}},
+        {type: 'D', detail: null, traitable: {desavantage: 'Arrogant'}},
+        {type: 'A', detail: null},
+      ],
       carrieres: [
         {carriere: {carriere: 'Barbare'}, value: 3},
         {carriere: {carriere: 'Assassin'}, value: 2},
@@ -343,6 +351,7 @@ describe('heroDetails', () => {
 
   it('keeps the protection, the malus and the category of each armour', () => {
     expect(heroDetails(hero()).armures[2]).toEqual({
+      id: 3,
       label: 'Casque',
       protection: '+1',
       malus: 'Vue réduite',
@@ -351,7 +360,33 @@ describe('heroDetails', () => {
     });
   });
 
+  it('lists the advantages and disadvantages with their detail, and skips a trait without catalogue entry', () => {
+    expect(heroDetails(hero()).traits).toEqual([
+      {label: 'Ami des bêtes', detail: 'Au Nord', kind: 'avantage'},
+      {label: 'Arrogant', detail: null, kind: 'desavantage'},
+    ]);
+  });
+
+  it('gathers the player, the region and the comment, and says whether the hero is still being created', () => {
+    expect(heroDetails(hero()).infos).toEqual({joueur: 'Léa', region: 'Nord', commentaire: 'Prudente.', enCours: false});
+    const draft = heroDetails(hero({active: false, origines: {joueur: null, region: null}}));
+    expect(draft.infos).toEqual({joueur: null, region: null, commentaire: null, enCours: true});
+  });
+
+  it('gives the edit routes, the advanced one only while the hero is being created', () => {
+    expect(heroDetails(hero()).editRoute).toEqual(['/create/hero', 'abc']);
+    expect(heroDetails(hero()).advancedEditRoute).toBeNull();
+    expect(heroDetails(hero({active: false})).advancedEditRoute).toEqual(['/create/hero-advanced', 'abc']);
+  });
+
+  it('has no edit route for a hero without id', () => {
+    const none = heroDetails(hero({id: null}));
+    expect(none.editRoute).toBeNull();
+    expect(none.advancedEditRoute).toBeNull();
+  });
+
   it('returns empty lists for a hero with no gear', () => {
-    expect(heroDetails(hero({carrieres: [], armes: [], armures: []}))).toEqual({carrieres: [], armes: [], armures: []});
+    const empty = heroDetails(hero({carrieres: [], armes: [], armures: [], traits: []}));
+    expect([empty.carrieres, empty.armes, empty.armures, empty.traits]).toEqual([[], [], [], []]);
   });
 });

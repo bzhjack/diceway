@@ -1,13 +1,14 @@
-import {ChangeDetectionStrategy, Component, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, input, output} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {HeroDetails} from './tapis.util';
 
-/** Trois boutons sous le nom d'un héros — carrières, armes, armures — qui ouvrent chacun un popover avec le
- * détail. Un bouton ne montre que son icône et le nombre (nom en infobulle) : la liste peut être longue
- * (sept armures…) et la place manque à côté des statistiques. Les armures équipées
- * sont marquées. Ne modifie rien : l'équipement se change dans la fiche complète. */
+/** Les boutons sous le nom d'un héros — carrières, traits, armes, armures, informations — ouvrent chacun un
+ * popover avec le détail. Un bouton ne montre que son icône et le nombre (nom en infobulle) : la liste peut
+ * être longue (sept armures…) et la place manque à côté des statistiques. Dans le popover des armures, un clic
+ * équipe ou déséquipe (le backend n'en garde qu'une par catégorie) : le composant le signale, c'est la page
+ * qui enregistre. */
 @Component({
   selector: 'bol-hero-details',
   imports: [MatIconModule, MatMenuModule, MatTooltipModule],
@@ -20,6 +21,16 @@ import {HeroDetails} from './tapis.util';
       [attr.aria-label]="'Carrières, ' + details().carrieres.length + ' : afficher le détail'"
     >
       <mat-icon>military_tech</mat-icon> <b>{{ details().carrieres.length }}</b>
+      <mat-icon class="hd-caret">arrow_drop_down</mat-icon>
+    </button>
+    <button
+      type="button"
+      class="hd-chip"
+      [matMenuTriggerFor]="traitsMenu"
+      matTooltip="Traits"
+      [attr.aria-label]="'Traits, ' + details().traits.length + ' : afficher le détail'"
+    >
+      <mat-icon>auto_awesome</mat-icon> <b>{{ details().traits.length }}</b>
       <mat-icon class="hd-caret">arrow_drop_down</mat-icon>
     </button>
     <button
@@ -43,6 +54,19 @@ import {HeroDetails} from './tapis.util';
       <mat-icon class="hd-caret">arrow_drop_down</mat-icon>
     </button>
 
+    @if (hasInfos()) {
+      <button
+        type="button"
+        class="hd-chip"
+        [matMenuTriggerFor]="infosMenu"
+        matTooltip="Informations"
+        aria-label="Informations sur le joueur et le personnage : afficher le détail"
+      >
+        <mat-icon>info</mat-icon>
+        <mat-icon class="hd-caret">arrow_drop_down</mat-icon>
+      </button>
+    }
+
     <mat-menu #carrieresMenu="matMenu" class="hd-menu">
       <div class="hd-panel" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" tabindex="-1">
         <h4 class="hd-title">Carrières</h4>
@@ -56,6 +80,47 @@ import {HeroDetails} from './tapis.util';
             <li class="hd-empty">Aucune carrière.</li>
           }
         </ul>
+      </div>
+    </mat-menu>
+
+    <mat-menu #traitsMenu="matMenu" class="hd-menu">
+      <div class="hd-panel" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" tabindex="-1">
+        <h4 class="hd-title">Traits</h4>
+        <ul class="hd-list">
+          @for (trait of details().traits; track trait.label) {
+            <li class="hd-row">
+              <span class="hd-name">{{ trait.label }}</span>
+              <span class="hd-kind" [class.hd-kind--bad]="trait.kind === 'desavantage'">
+                {{ trait.kind === 'avantage' ? 'Avantage' : 'Désavantage' }}
+              </span>
+              @if (trait.detail) {
+                <span class="hd-note">{{ trait.detail }}</span>
+              }
+            </li>
+          } @empty {
+            <li class="hd-empty">Aucun trait.</li>
+          }
+        </ul>
+      </div>
+    </mat-menu>
+
+    <mat-menu #infosMenu="matMenu" class="hd-menu">
+      <div class="hd-panel" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" tabindex="-1">
+        <h4 class="hd-title">Informations</h4>
+        <dl class="hd-infos">
+          @if (details().infos.enCours) {
+            <div><dt>Fiche</dt><dd>En cours de création</dd></div>
+          }
+          @if (details().infos.joueur; as joueur) {
+            <div><dt>Joueur</dt><dd>{{ joueur }}</dd></div>
+          }
+          @if (details().infos.region; as region) {
+            <div><dt>Région</dt><dd>{{ region }}</dd></div>
+          }
+          @if (details().infos.commentaire; as commentaire) {
+            <div><dt>Commentaire</dt><dd>{{ commentaire }}</dd></div>
+          }
+        </dl>
       </div>
     </mat-menu>
 
@@ -83,7 +148,15 @@ import {HeroDetails} from './tapis.util';
         <h4 class="hd-title">Armures</h4>
         <ul class="hd-list">
           @for (armure of details().armures; track armure.label) {
-            <li class="hd-row" [class.hd-row--on]="armure.equipee">
+            <li>
+            <button
+              type="button"
+              class="hd-row hd-row--button"
+              [class.hd-row--on]="armure.equipee"
+              [attr.aria-pressed]="armure.equipee"
+              [attr.aria-label]="(armure.equipee ? 'Déséquiper ' : 'Équiper ') + armure.label"
+              (click)="armureToggled.emit(armure.id)"
+            >
               <span class="hd-name">
                 @if (armure.equipee) {
                   <mat-icon class="hd-on" aria-label="Équipée">check_circle</mat-icon>
@@ -102,11 +175,15 @@ import {HeroDetails} from './tapis.util';
               @if (armure.malus) {
                 <span class="hd-note">{{ armure.malus }}</span>
               }
+            </button>
             </li>
           } @empty {
             <li class="hd-empty">Aucune armure.</li>
           }
         </ul>
+        @if (details().armures.length) {
+          <p class="hd-hint">Un clic équipe ou déséquipe une armure.</p>
+        }
       </div>
     </mat-menu>
   `,
@@ -115,4 +192,11 @@ import {HeroDetails} from './tapis.util';
 })
 export class HeroDetailsComponent {
   readonly details = input.required<HeroDetails>();
+  /** Un clic sur une armure du popover : l'id de l'armure à équiper ou déséquiper. */
+  readonly armureToggled = output<number>();
+
+  protected readonly hasInfos = computed(() => {
+    const infos = this.details().infos;
+    return infos.enCours || Boolean(infos.joueur || infos.region || infos.commentaire);
+  });
 }

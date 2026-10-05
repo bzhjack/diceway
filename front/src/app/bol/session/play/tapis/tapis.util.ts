@@ -307,7 +307,23 @@ export interface HeroDetailArme {
   readonly portee: string | null;
 }
 
+export interface HeroDetailTrait {
+  readonly label: string;
+  readonly detail: string | null;
+  readonly kind: 'avantage' | 'desavantage';
+}
+
+export interface HeroDetailInfos {
+  readonly joueur: string | null;
+  readonly region: string | null;
+  readonly commentaire: string | null;
+  /** Fiche encore en cours de création (« En cours »). */
+  readonly enCours: boolean;
+}
+
 export interface HeroDetailArmure {
+  /** Id de l'armure au catalogue, pour l'équiper. */
+  readonly id: number;
   readonly label: string;
   readonly protection: string | null;
   readonly malus: string | null;
@@ -317,12 +333,17 @@ export interface HeroDetailArmure {
 
 /** Le détail de l'équipement et des carrières d'un héros, pour les popovers de l'en-tête de sa carte. */
 export interface HeroDetails {
+  readonly traits: readonly HeroDetailTrait[];
+  readonly infos: HeroDetailInfos;
+  /** Pages d'édition de la fiche — null pour un héros sans id. */
+  readonly editRoute: readonly [string, string] | null;
+  readonly advancedEditRoute: readonly [string, string] | null;
   readonly carrieres: readonly HeroDetailCarriere[];
   readonly armes: readonly HeroDetailArme[];
   readonly armures: readonly HeroDetailArmure[];
 }
 
-/** Carrières, armes et armures d'un héros, prêtes à afficher. Les entrées dont le catalogue n'est pas chargé
+/** Carrières, traits, armes, armures et informations d'un héros, prêtes à afficher. Les entrées dont le catalogue n'est pas chargé
  * (un simple id) sont ignorées ; les armures équipées passent en premier. */
 export function heroDetails(hero: BolHerosModel): HeroDetails {
   const carrieres = hero.carrieres
@@ -336,6 +357,7 @@ export function heroDetails(hero: BolHerosModel): HeroDetails {
   const armures = (hero.armures as readonly (BolHerosArmureModel | number)[])
     .filter((entry): entry is BolHerosArmureModel => typeof entry === 'object' && Boolean(entry.armure))
     .map((entry) => ({
+      id: entry.armure_id,
       label: entry.armure!.armure,
       protection: entry.armure!.protection,
       malus: entry.armure!.malus,
@@ -343,7 +365,30 @@ export function heroDetails(hero: BolHerosModel): HeroDetails {
       equipee: entry.equipee,
     }));
 
+  const traits = hero.traits
+    .map((trait): HeroDetailTrait | null => {
+      const traitable = trait.traitable;
+      if (traitable && 'avantage' in traitable) {
+        return {label: traitable.avantage, detail: trait.detail || null, kind: 'avantage'};
+      }
+      if (traitable && 'desavantage' in traitable) {
+        return {label: traitable.desavantage, detail: trait.detail || null, kind: 'desavantage'};
+      }
+      return null;
+    })
+    .filter((trait): trait is HeroDetailTrait => trait !== null);
+
+  const id = hero.id;
   return {
+    traits,
+    infos: {
+      joueur: hero.origines.joueur || null,
+      region: hero.origines.region?.region || null,
+      commentaire: hero.origines.commentaire || null,
+      enCours: !hero.active,
+    },
+    editRoute: id ? ['/create/hero', id] : null,
+    advancedEditRoute: id && !hero.active ? ['/create/hero-advanced', id] : null,
     carrieres,
     armes,
     // Tri stable : les équipées d'abord, l'ordre d'origine sinon.

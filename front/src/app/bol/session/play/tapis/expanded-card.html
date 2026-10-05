@@ -15,7 +15,7 @@
         <div class="exc-title">
           <h3 class="exc-name">{{ card().nom }}</h3>
           @if (card().kind === 'hero' && hero(); as h) {
-            <bol-hero-details class="exc-details" [details]="h.details" />
+            <bol-hero-details class="exc-details" [details]="h.details" (armureToggled)="armureToggled.emit($event)" />
           } @else {
             <p class="exc-sub">{{ subtitle() }}</p>
           }
@@ -32,10 +32,22 @@
             </dl>
           }
         }
-        @if (card().kind === 'hero' && hero()) {
-          <button mat-stroked-button size="small" type="button" (click)="fullSheetRequested.emit(card())">
-            <mat-icon>badge</mat-icon> Fiche complète
-          </button>
+        @if (card().kind === 'hero' && hero(); as h) {
+          @if (h.details.editRoute; as editRoute) {
+            <button mat-icon-button type="button" aria-label="Modifier ce héros" [matMenuTriggerFor]="editMenu">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <mat-menu #editMenu="matMenu">
+              <a mat-menu-item [routerLink]="editRoute" [state]="navigationState()">
+                <mat-icon>edit</mat-icon> Modifier la fiche
+              </a>
+              @if (h.details.advancedEditRoute; as advancedRoute) {
+                <a mat-menu-item [routerLink]="advancedRoute" [state]="navigationState()">
+                  <mat-icon>settings</mat-icon> Édition avancée
+                </a>
+              }
+            </mat-menu>
+          }
         }
         <button mat-icon-button type="button" aria-label="Replier la carte" (click)="closed.emit()">
           <mat-icon>close</mat-icon>

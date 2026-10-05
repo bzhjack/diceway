@@ -7,7 +7,6 @@ import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {forkJoin, Observable, of, take, tap} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
-import {BolHerosArmureModel} from '../../models/bol-armure.model';
 import {BolFightSessionModel} from '../../models/bol-fight-session.model';
 import {BolSceneModel} from '../../models/bol-scene.model';
 import {BolHerosModel} from '../../models/bol-heros.model';
@@ -23,12 +22,11 @@ import {BolStatblockData} from '../../shared/statblock/bol-statblock.component';
 import {
   creatureStatblockData,
   demonStatblockData,
-  heroStatblockData,
   pnjStatblockData,
 } from '../../shared/statblock/bol-statblock.builders';
 import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialog';
 import {resolveAttackStats} from '../combat-attack.util';
-import {buildPlayBoard, PlayToken, postCombatRecoveryAmount} from '../combat-play.util';
+import {buildPlayBoard, postCombatRecoveryAmount} from '../combat-play.util';
 import {ActionRollDiceTrait, LastRoll} from '../action-roll.util';
 import {SceneActionsService} from '../scene-actions.service';
 import {AddCombatantDialogComponent, resolveAddCombatantCamp} from './add-combatant-dialog/add-combatant-dialog';
@@ -37,8 +35,6 @@ import {PaletteActionId, PaletteCommand, PaletteContext} from './command-palette
 import {isEndTurnShortcut, isPaletteShortcut} from './command-palette/shortcut.util';
 import {reserveTab} from './reserve/reserve.util';
 import {maybePromptDefierLaMort} from './defier-la-mort-dialog/defier-la-mort.util';
-import {HeroStatblockDialogData} from './hero-statblock-dialog/hero-statblock-dialog';
-import {HeroStatblockPopupComponent} from './hero-statblock-popup/hero-statblock-popup';
 import {tableTitle} from './scene-list/scene.util';
 import {SessionHeaderComponent} from './session-header/session-header';
 import {ReserveComponent} from './reserve/reserve';
@@ -544,18 +540,30 @@ export class SessionPlayPageComponent {
       });
   }
 
-  /** « Fiche complète » depuis la carte dépliée d'un héros : statbloc en dialog. À la fermeture, si
-   * quelque chose a changé (vitalité, héroïsme, équipement), la session et la carte sont rechargées. */
-  protected openFullSheet(card: TapisCard): void {
+  /** Un clic sur une armure dans le popover d'un héros : l'équipe ou la déséquipe (le backend n'en garde qu'une
+   * par catégorie), puis rafraîchit les données de la carte sur place — sans la recharger, sinon le popover
+   * se fermerait — et la session, dont la défense et l'initiative changent avec l'équipement. */
+  protected onArmureToggled(event: {card: TapisCard; armureId: number}): void {
+    const {card, armureId} = event;
     const sessionId = this.sessionId();
-    // Un héros a la même clé comme carte et comme jeton (`hero-{id}`) : le jeton porte ce dont le
-    // dialog de statbloc a besoin.
-    const token = this.board()?.tokens.find((t) => t.key === card.key);
-    if (!sessionId || !card.sourceId || !token) {
+    if (!card.sourceId || !sessionId) {
       return;
     }
-
-    this.openHeroPopup(token, card.sourceId, sessionId, () => this.loadExpanded(card));
+    const herosId = card.sourceId;
+    this.herosService.equipArmure(herosId, armureId).subscribe({
+      next: () => {
+        this.herosService
+          .heros(herosId)
+          .pipe(take(1))
+          .subscribe((hero) => {
+            if (this.expandedKey() === card.key) {
+              this.expandedHero.set(this.buildExpandedHero(card, hero, herosId, sessionId));
+            }
+          });
+        this.loadSession(sessionId);
+      },
+      error: (error: unknown) => this.tableError(error, "Impossible de changer l'équipement."),
+    });
   }
 
   private tableError(error: unknown, fallback: string): void {
@@ -858,53 +866,6 @@ export class SessionPlayPageComponent {
 
   private paletteError(error: unknown, fallback: string): void {
     this.snackBar.open(extractApiErrorMessage(error, fallback), 'Fermer', {duration: 5000});
-  }
-
-  private openHeroPopup(token: PlayToken, herosId: string, sessionId: string, onChanged?: () => void): void {
-    const returnUrl = `/session/${sessionId}/play`;
-    this.herosService
-      .heros(herosId)
-      .pipe(take(1))
-      .subscribe((hero) => {
-        this.dialog
-          .open(HeroStatblockPopupComponent, {
-            maxWidth: 'min(900px, 94vw)',
-            panelClass: 'dw-statblock-dialog',
-            position: {top: '10vh'},
-            data: this.buildHeroStatblockData(token, hero, herosId, sessionId, returnUrl),
-          })
-          .afterClosed()
-          .subscribe((changed: boolean | undefined) => {
-            if (changed) {
-              this.loadSession(sessionId);
-              onChanged?.();
-            }
-          });
-      });
-  }
-
-  private buildHeroStatblockData(
-    token: PlayToken,
-    hero: BolHerosModel,
-    herosId: string,
-    sessionId: string,
-    returnUrl: string,
-  ): HeroStatblockDialogData {
-    return {
-      sessionId,
-      herosId,
-      pivotId: token.pivotId,
-      heroNom: token.nom,
-      avatar: token.avatar,
-      statblock: heroStatblockData(hero),
-      vitaliteCourante: token.vitaliteCourante ?? hero.ressources.vitalite,
-      vitaliteMax: hero.ressources.vitalite,
-      heroisme: hero.ressources.heroisme,
-      armures: (hero.armures as (BolHerosArmureModel | number)[]).filter(
-        (armure): armure is BolHerosArmureModel => typeof armure === 'object',
-      ),
-      returnUrl,
-    };
   }
 
   private loadSession(id: string): void {

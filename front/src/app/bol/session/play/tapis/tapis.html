@@ -69,7 +69,7 @@
             (rolled)="rolled.emit($event)"
             (removeRequested)="removeRequested.emit($event)"
             (campToggleRequested)="campToggleRequested.emit($event)"
-            (fullSheetRequested)="fullSheetRequested.emit($event)"
+            (armureToggled)="armureToggled.emit({card, armureId: $event})"
             (attackRequested)="attackRequested.emit($event)"
           />
         } @else {

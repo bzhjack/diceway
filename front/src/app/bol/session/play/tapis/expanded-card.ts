@@ -12,6 +12,8 @@ import {
 } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import {RouterLink} from '@angular/router';
 import {BolStatblockComponent, BolStatblockData} from '../../../shared/statblock/bol-statblock.component';
 import {ActionRollData, LastRoll} from '../../action-roll.util';
 import {EMPTY_AVATAR} from '../../combat-play.util';
@@ -47,13 +49,15 @@ const KIND_LABELS: Record<TapisKind, string> = {
 };
 
 /** Carte du tapis dépliée sur place. Un bandeau commun (portrait carré, nom, vitalité) ouvre toutes les
- * cartes. Héros : héroïsme, jet d'action sur trois colonnes, accès à la fiche complète. PNJ / créature /
+ * cartes. Héros : héroïsme, jet d'action sur trois colonnes, détails (carrières, traits, armes, armures) en popovers, accès à l'édition. PNJ / créature /
  * démon : vitalité par exemplaire pour un lot, statbloc, changement de camp, retrait. Ne recharge rien elle-même : toute modification remonte à la page par événement. */
 @Component({
   selector: 'bol-expanded-card',
   imports: [
     MatButtonModule,
     MatIconModule,
+    MatMenuModule,
+    RouterLink,
     BolStatblockComponent,
     HeroDetailsComponent,
     ActionRollPanelComponent,
@@ -82,7 +86,8 @@ export class ExpandedCardComponent {
   readonly rolled = output<LastRoll>();
   readonly removeRequested = output<TapisCard>();
   readonly campToggleRequested = output<TapisCard>();
-  readonly fullSheetRequested = output<TapisCard>();
+  /** Un clic sur une armure du popover : l'id de l'armure à équiper ou déséquiper. */
+  readonly armureToggled = output<number>();
   /** « Attaquer cette carte » : le moyen de viser une carte de son propre camp. */
   readonly attackRequested = output<TapisCard>();
 
@@ -103,6 +108,12 @@ export class ExpandedCardComponent {
   });
 
   protected readonly steppers = computed(() => vitaliteSteppers(this.card()));
+
+  /** État de navigation vers l'édition : au retour, la table se rouvre. */
+  protected navigationState(): Record<string, string> | undefined {
+    const returnUrl = this.returnUrl();
+    return returnUrl ? {returnUrl} : undefined;
+  }
 
   /** Portrait carré du bandeau : l'avatar de la carte, ou l'icône du type s'il manque ou ne charge pas. */
   private readonly avatarFailed = signal(false);
