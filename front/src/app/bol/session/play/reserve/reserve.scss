@@ -40,19 +40,21 @@
   flex: 0 0 11rem;
 }
 
-// La « main » : cartes réduites sur une ligne, défilement horizontal.
-.rsv-hand {
+// La « main » : cartes réduites sur une ligne ; `dw-scroller` la fait défiler avec ses chevrons.
+.rsv-scroller {
   flex: 1;
   min-width: 0;
+}
+
+.rsv-hand {
+  width: max-content;
+  min-width: 100%;
   display: flex;
   align-items: stretch;
   gap: 0.5rem;
   margin: 0;
   padding: 0.3rem 0.1rem;
   list-style: none;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--dw-border) transparent;
 }
 
 .rsv-mini {

@@ -23,18 +23,21 @@
   font-variant-numeric: tabular-nums;
 }
 
-.tor-list {
+.tor-scroller {
   flex: 1;
   min-width: 0;
+}
+
+// `dw-scroller` fait défiler la liste avec ses chevrons.
+.tor-list {
+  width: max-content;
+  min-width: 100%;
   display: flex;
   align-items: center;
   gap: 0.35rem;
   margin: 0;
   padding: 0.15rem 0;
   list-style: none;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--dw-border) transparent;
 }
 
 .tor-chip {

@@ -36,16 +36,24 @@
   color: var(--dw-surface-500);
 }
 
-// Un rang trop long passe à la ligne ; les cartes sont alignées par le haut, pour que les voisines
-// d'une carte dépliée, plus haute, restent visibles à côté d'elle.
+// Un rang tient sur une seule ligne : trop long, il défile avec les chevrons de `dw-scroller` (centré
+// tant qu'il tient). Les cartes sont alignées par le haut, pour que les voisines d'une carte dépliée,
+// plus haute, restent visibles à côté d'elle. Le padding laisse la place à l'ombre de la carte dépliée,
+// que la piste, qui défile, rognerait sinon.
+.tps-scroller {
+  align-self: stretch;
+}
+
 .tps-cards {
+  width: max-content;
+  min-width: 100%;
+  box-sizing: border-box;
   display: flex;
-  flex-wrap: wrap;
   align-items: flex-start;
   justify-content: center;
   gap: 0.8rem;
   margin: 0;
-  padding: 0;
+  padding: 0.3rem 0.5rem 0.9rem;
   list-style: none;
 }
 

@@ -9,6 +9,7 @@ import {ActionBarComponent} from './action-bar';
 import {CharacterCardComponent} from './character-card';
 import {CardCombatState} from './combat-turn.util';
 import {ExpandedCardComponent, ExpandedHeroData} from './expanded-card';
+import {DwScrollerComponent} from '../../../../shared/dw-scroller/dw-scroller';
 import {splitRows, TapisCard} from './tapis.util';
 
 /** Le tapis : deux rangs de cartes rangées automatiquement, les héros et alliés en bas, face aux autres
@@ -18,7 +19,7 @@ import {splitRows, TapisCard} from './tapis.util';
  * du bas elle grandit vers le haut. Ne parle à aucun service. */
 @Component({
   selector: 'bol-tapis',
-  imports: [NgTemplateOutlet, CharacterCardComponent, ExpandedCardComponent, ActionBarComponent],
+  imports: [NgTemplateOutlet, CharacterCardComponent, ExpandedCardComponent, ActionBarComponent, DwScrollerComponent],
   templateUrl: './tapis.html',
   styleUrl: './tapis.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

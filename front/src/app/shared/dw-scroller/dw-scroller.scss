@@ -1,0 +1,59 @@
+:host {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+// La piste défile sans barre : les chevrons la remplacent.
+.dws-track {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.dws-chevron {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--dw-color-legendary);
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 1.6rem;
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--dw-surface-200);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+  }
+
+  // Extrémité atteinte : le chevron reste en place (pas de saut de mise en page) mais s'efface.
+  &:disabled {
+    color: var(--dw-surface-500);
+    opacity: 0.35;
+    cursor: default;
+  }
+}
+
+// Rien à faire défiler : on garde la place pour que la mise en page ne bouge pas quand le contenu change.
+.dws-chevron--hidden {
+  visibility: hidden;
+}

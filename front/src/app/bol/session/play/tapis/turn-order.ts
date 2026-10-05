@@ -4,6 +4,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {TurnStatus} from './combat-turn.util';
+import {DwScrollerComponent} from '../../../../shared/dw-scroller/dw-scroller';
 import {TapisKind} from './tapis.util';
 
 export interface TurnOrderEntry {
@@ -24,7 +25,7 @@ const STATUS_LABELS: Record<TurnStatus, string> = {
  * glisser-déposer (persisté par la page) ; une carte qui a joué peut reprendre la main. */
 @Component({
   selector: 'bol-turn-order',
-  imports: [DragDropModule, MatButtonModule, MatIconModule, MatTooltipModule],
+  imports: [DragDropModule, MatButtonModule, MatIconModule, MatTooltipModule, DwScrollerComponent],
   templateUrl: './turn-order.html',
   styleUrl: './turn-order.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

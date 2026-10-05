@@ -1,6 +1,7 @@
 <div class="tor">
   <span class="tor-round">Round {{ round() }}</span>
 
+  <dw-scroller class="tor-scroller" label="Ordre de jeu">
   <ol
     class="tor-list"
     aria-label="Ordre de jeu — glisser-déposer pour réordonner"
@@ -31,6 +32,7 @@
       </li>
     }
   </ol>
+  </dw-scroller>
 
   <button mat-stroked-button size="small" type="button" class="tor-add" (click)="addRequested.emit()">
     <mat-icon>add</mat-icon> Ajouter

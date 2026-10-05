@@ -10,7 +10,7 @@
     <ng-container
       *ngTemplateOutlet="
         rowTpl;
-        context: {cards: rows().presents, labelId: 'tps-presents-label', empty: 'Personne ici pour l’instant. Pose des personnages depuis la réserve.'}
+        context: {cards: rows().presents, labelId: 'tps-presents-label', scrollerLabel: presentsLabel(), empty: 'Personne ici pour l’instant. Pose des personnages depuis la réserve.'}
       "
     />
   </section>
@@ -19,7 +19,7 @@
 <ng-template #herosTpl>
   <section class="tps-row tps-row--heros" aria-labelledby="tps-heros-label">
     <ng-container
-      *ngTemplateOutlet="rowTpl; context: {cards: rows().heros, labelId: 'tps-heros-label', empty: 'Aucun héros à table.'}"
+      *ngTemplateOutlet="rowTpl; context: {cards: rows().heros, labelId: 'tps-heros-label', scrollerLabel: 'Héros et alliés', empty: 'Aucun héros à table.'}"
     />
     <h2 class="tps-row-label" id="tps-heros-label">Héros et alliés</h2>
   </section>
@@ -50,7 +50,8 @@
   }
 </ng-template>
 
-<ng-template #rowTpl let-cards="cards" let-labelId="labelId" let-empty="empty">
+<ng-template #rowTpl let-cards="cards" let-labelId="labelId" let-empty="empty" let-scrollerLabel="scrollerLabel">
+  <dw-scroller class="tps-scroller" [label]="scrollerLabel">
   <ul class="tps-cards" role="list" [attr.aria-labelledby]="labelId">
     @for (card of cards; track card.key) {
       <li class="tps-slot">
@@ -84,4 +85,5 @@
       <li class="tps-empty">{{ empty }}</li>
     }
   </ul>
+  </dw-scroller>
 </ng-template>
