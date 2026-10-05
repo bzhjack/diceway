@@ -100,6 +100,12 @@ export class ExpandedCardComponent {
     this.avatarFailed.set(true);
   }
 
+  /** Hauteur fixe : la carte a un contenu qui change de taille — le jet d'action d'un héros en mode libre,
+   * le statbloc d'un autre personnage. Un héros en combat n'a que le bandeau (et « Attaquer ») : hauteur naturelle. */
+  protected readonly fixedHeight = computed(
+    () => this.card().kind !== 'hero' || (this.mode() === 'libre' && this.hero() !== null),
+  );
+
   /** Corps de la carte : le jet d'action d'un héros en mode libre, le statbloc et les actions d'un
    * autre personnage, ou « Attaquer cette carte ». Vide, il n'est pas affiché. */
   protected readonly hasBody = computed(

@@ -1,4 +1,4 @@
-<div #root [class]="'exc exc--' + card().kind" role="group" tabindex="-1" [attr.aria-label]="'Carte de ' + card().nom">
+<div #root [class]="'exc exc--' + card().kind" [class.exc--fixed]="fixedHeight()" role="group" tabindex="-1" [attr.aria-label]="'Carte de ' + card().nom">
   <header class="exc-banner">
     <div class="exc-portrait">
       @if (hasAvatar()) {

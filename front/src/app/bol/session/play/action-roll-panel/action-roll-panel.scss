@@ -7,10 +7,15 @@
 // Embarqué dans la fiche du jeton (`bol-expanded-card`), qui scrolle elle-même : ce composant
 // prend la hauteur de son contenu, les dés roulent sur toute sa surface.
 bol-action-roll-panel {
-  display: block;
+  display: flex;
+  flex-direction: column;
 }
 
 .ard-shell {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   position: relative;
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 35%, transparent);
@@ -19,12 +24,17 @@ bol-action-roll-panel {
 }
 
 .ard-fg {
+  flex: 1;
+  min-height: 0;
+  // Dans une carte de hauteur fixe, un jet plus haut que sa place défile au lieu de déborder.
+  overflow-y: auto;
+  scrollbar-width: thin;
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding: 0.85rem 0.9rem 1rem;
+  padding: 0.85rem 0.9rem 0.8rem;
 }
 
 // Formule en clair + rappel de l'héroïsme disponible, sur une même ligne.
@@ -302,11 +312,17 @@ bol-action-roll-panel {
   }
 }
 
+// Malus d'équipement : même gabarit que les puces de dé bonus/malus, mais toujours appliqué (pas un
+// bouton) — teinte discrète du malus plutôt que le remplissage plein d'une puce sélectionnée.
 .ard-equip-chip {
-  font-size: 0.78rem;
-  font-weight: 700;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--dw-color-echec) 60%, transparent);
+  background: color-mix(in srgb, var(--dw-color-echec) 14%, transparent);
   color: var(--dw-color-echec);
-  text-shadow: 0 1px 3px rgba(2, 6, 23, 0.9);
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 // Puces avantage/désavantage à dé de bonus/malus — sélection manuelle (domaine en tooltip), même

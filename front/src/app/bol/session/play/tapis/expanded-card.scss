@@ -30,6 +30,29 @@
   width: min(58rem, 96vw);
 }
 
+// Hauteur fixe quand le contenu varie (jet d'un héros, statbloc d'un PNJ) : la carte ne bouge plus quand
+// le jet change d'état (faveur divine, échec critique) et la zone de jeu des dés garde la même taille. Le
+// corps occupe le reste sous le bandeau ; trop long (statbloc d'un PNJ), il défile. Un héros en combat,
+// réduit au bandeau, garde sa hauteur naturelle.
+.exc--fixed {
+  height: 460px;
+  display: flex;
+  flex-direction: column;
+
+  .exc-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--dw-border) transparent;
+  }
+
+  bol-action-roll-panel {
+    flex: 1;
+    min-height: 0;
+  }
+}
+
 // Bandeau commun à toutes les cartes dépliées : portrait carré à gauche, identité et vitalité à droite.
 .exc-banner {
   display: flex;
