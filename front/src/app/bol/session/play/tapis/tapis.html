@@ -1,15 +1,7 @@
 <div class="tps">
-  <!-- Mode libre : les héros en haut. Leur carte dépliée (jet d'action compris) est haute, et en bas de
-       l'écran elle serait coupée par la réserve. Mode combat : les adversaires en haut, face aux héros. -->
-  @if (herosFirst()) {
-    <ng-container *ngTemplateOutlet="herosTpl" />
-    <ng-container *ngTemplateOutlet="middleTpl" />
-    <ng-container *ngTemplateOutlet="presentsTpl" />
-  } @else {
-    <ng-container *ngTemplateOutlet="presentsTpl" />
-    <ng-container *ngTemplateOutlet="middleTpl" />
-    <ng-container *ngTemplateOutlet="herosTpl" />
-  }
+  <ng-container *ngTemplateOutlet="presentsTpl" />
+  <ng-container *ngTemplateOutlet="middleTpl" />
+  <ng-container *ngTemplateOutlet="herosTpl" />
 </div>
 
 <ng-template #presentsTpl>
@@ -26,15 +18,10 @@
 
 <ng-template #herosTpl>
   <section class="tps-row tps-row--heros" aria-labelledby="tps-heros-label">
-    @if (herosFirst()) {
-      <h2 class="tps-row-label" id="tps-heros-label">Héros et alliés</h2>
-    }
     <ng-container
       *ngTemplateOutlet="rowTpl; context: {cards: rows().heros, labelId: 'tps-heros-label', empty: 'Aucun héros à table.'}"
     />
-    @if (!herosFirst()) {
-      <h2 class="tps-row-label" id="tps-heros-label">Héros et alliés</h2>
-    }
+    <h2 class="tps-row-label" id="tps-heros-label">Héros et alliés</h2>
   </section>
 </ng-template>
 

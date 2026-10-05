@@ -11,10 +11,11 @@ import {CardCombatState} from './combat-turn.util';
 import {ExpandedCardComponent, ExpandedHeroData} from './expanded-card';
 import {splitRows, TapisCard} from './tapis.util';
 
-/** Le tapis : deux rangs de cartes rangées automatiquement. Mode libre : « Héros et alliés » en haut
- * et « Présents dans la scène » en bas, avec le bandeau « Dernier jet » entre les deux. Mode combat : « Adversaires »
- * et « Héros et alliés », avec la barre d'action de la carte active ; un clic sur une carte
- * désignable demande une attaque. La carte dépliée prend la place de sa face. Ne parle à aucun service. */
+/** Le tapis : deux rangs de cartes rangées automatiquement, les héros et alliés en bas, face aux autres
+ * personnages en haut (« Présents dans la scène » en mode libre, « Adversaires » en combat). Au milieu :
+ * le bandeau « Dernier jet » en mode libre, la barre d'action de la carte active en combat — où un clic
+ * sur une carte désignable demande une attaque. La carte dépliée prend la place de sa face ; dans le rang
+ * du bas elle grandit vers le haut. Ne parle à aucun service. */
 @Component({
   selector: 'bol-tapis',
   imports: [NgTemplateOutlet, CharacterCardComponent, ExpandedCardComponent, ActionBarComponent],
@@ -55,9 +56,6 @@ export class TapisComponent {
 
   protected readonly rows = computed(() => splitRows(this.cards()));
   protected readonly presentsLabel = computed(() => (this.mode() === 'combat' ? 'Adversaires' : 'Présents dans la scène'));
-  /** Mode libre : héros en haut (leur carte dépliée est haute, elle serait coupée en bas de l'écran).
-   * Mode combat : adversaires en haut, héros en bas, face à face. */
-  protected readonly herosFirst = computed(() => this.mode() === 'libre');
 
   /** Dernière carte dépliée, pour rendre le focus à sa face quand elle se replie. */
   private previousKey: string | null = null;

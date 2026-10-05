@@ -106,3 +106,9 @@
   font-size: 0.9rem;
   color: var(--dw-surface-500);
 }
+
+// Rang des héros, en bas : les faces restent collées en bas du rang et seule la carte dépliée
+// grandit, vers le haut — elle consomme d'abord l'espace libre entre les deux rangs.
+.tps-row--heros .tps-cards {
+  align-items: flex-end;
+}
