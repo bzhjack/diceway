@@ -42,6 +42,7 @@ import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dia
 import {browserStorage, readPanelOpen, RESERVE_PANEL_KEY, writePanelOpen} from './table-state.util';
 import {ExpandedHeroData} from './tapis/expanded-card';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
+import {equippedArmes} from '../../shared/arme/arme-equipee';
 import {AttackChoice} from '../attack-options.util';
 import {
   buildCombatStates,
@@ -61,6 +62,13 @@ import {
 import {TurnOrderComponent, TurnOrderEntry} from './tapis/turn-order';
 import {TapisComponent} from './tapis/tapis';
 import {buildTapisCards, cardLabel, findCard, heroDetails, heroHeaderStats, removeActionLabel, TapisCard} from './tapis/tapis.util';
+
+/** Les armes d'un héros dont le catalogue est chargé — vide si elles ne le sont pas (de simples ids). */
+function loadedArmes(hero: BolHerosModel): BolHerosArmeModel[] {
+  return Array.isArray(hero.armes) && hero.armes.length > 0 && typeof hero.armes[0] !== 'number'
+    ? (hero.armes as BolHerosArmeModel[])
+    : [];
+}
 
 /**
  * La table : page d'accueil d'une session. Orchestre le chargement/la persistance de la session et
@@ -238,11 +246,7 @@ export class SessionPlayPageComponent {
           if (this.activeHeroId() !== herosId) {
             return;
           }
-          const armes =
-            Array.isArray(hero.armes) && hero.armes.length > 0 && typeof hero.armes[0] !== 'number'
-              ? (hero.armes as BolHerosArmeModel[])
-              : [];
-          this.activeArmes.set(armes);
+          this.activeArmes.set(equippedArmes(loadedArmes(hero)));
         });
     });
   }
@@ -540,16 +544,26 @@ export class SessionPlayPageComponent {
   }
 
   /** Un clic sur une armure dans le popover d'un héros : l'équipe ou la déséquipe (le backend n'en garde qu'une
-   * par catégorie), puis rafraîchit les données de la carte sur place — sans la recharger, sinon le popover
-   * se fermerait — et la session, dont la défense et l'initiative changent avec l'équipement. */
+   * par catégorie). */
   protected onArmureToggled(event: {card: TapisCard; armureId: number}): void {
-    const {card, armureId} = event;
+    this.toggleEquipment(event.card, (herosId) => this.herosService.equipArmure(herosId, event.armureId));
+  }
+
+  /** Un clic sur une arme dans le popover d'un héros : l'équipe ou la déséquipe (plusieurs armes possibles). */
+  protected onArmeToggled(event: {card: TapisCard; armeId: number}): void {
+    this.toggleEquipment(event.card, (herosId) => this.herosService.equipArme(herosId, event.armeId));
+  }
+
+  /** Enregistre un changement d'équipement, puis rafraîchit les données de la carte sur place — sans la
+   * recharger, sinon le popover se fermerait —, les armes proposées à l'attaque si c'est le héros dont c'est
+   * le tour, et la session, dont la défense et l'initiative changent avec l'équipement. */
+  private toggleEquipment(card: TapisCard, equip: (herosId: string) => Observable<unknown>): void {
     const sessionId = this.sessionId();
     if (!card.sourceId || !sessionId) {
       return;
     }
     const herosId = card.sourceId;
-    this.herosService.equipArmure(herosId, armureId).subscribe({
+    equip(herosId).subscribe({
       next: () => {
         this.herosService
           .heros(herosId)
@@ -557,6 +571,9 @@ export class SessionPlayPageComponent {
           .subscribe((hero) => {
             if (this.expandedKey() === card.key) {
               this.expandedHero.set(this.buildExpandedHero(card, hero, herosId, sessionId));
+            }
+            if (this.activeHeroId() === herosId) {
+              this.activeArmes.set(equippedArmes(loadedArmes(hero)));
             }
           });
         this.loadSession(sessionId);

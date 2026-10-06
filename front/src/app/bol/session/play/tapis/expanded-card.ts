@@ -88,6 +88,8 @@ export class ExpandedCardComponent {
   readonly campToggleRequested = output<TapisCard>();
   /** Un clic sur une armure du popover : l'id de l'armure à équiper ou déséquiper. */
   readonly armureToggled = output<number>();
+  /** Un clic sur une arme du popover : l'id de l'arme à équiper ou déséquiper. */
+  readonly armeToggled = output<number>();
   /** « Attaquer cette carte » : le moyen de viser une carte de son propre camp. */
   readonly attackRequested = output<TapisCard>();
 

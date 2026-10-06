@@ -53,7 +53,7 @@ export interface BolFightSessionHerosModel {
     /** Défense du héros ; `defense_effective` tient compte de l'équipement porté. */
     combat?: {defense: number; defense_effective: number};
     /** Armes du héros (chargées avec la session pour afficher ses dégâts sur sa carte). */
-    armes?: {arme?: {arme: string; degats: string | null} | null}[];
+    armes?: {equipee?: boolean; arme?: {arme: string; degats: string | null} | null}[];
   };
 }
 

@@ -51,6 +51,8 @@ export class TapisComponent {
   readonly campToggleRequested = output<TapisCard>();
   /** Un clic sur une armure du popover d'un héros : la carte et l'id de l'armure à équiper ou déséquiper. */
   readonly armureToggled = output<{card: TapisCard; armureId: number}>();
+  /** Un clic sur une arme du popover d'un héros : la carte et l'id de l'arme à équiper ou déséquiper. */
+  readonly armeToggled = output<{card: TapisCard; armeId: number}>();
   readonly attackRequested = output<TapisCard>();
   readonly choiceChanged = output<AttackChoice | null>();
   readonly totalDefenseRequested = output<void>();

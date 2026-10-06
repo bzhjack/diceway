@@ -11,5 +11,7 @@ export interface BolArmeModel {
 export interface BolHerosArmeModel {
   id?: number;
   arme_id: number;
+  /** Arme équipée — absent pour une arme sans notion d'équipement (mains nues…), qui compte comme équipée. */
+  equipee?: boolean;
   arme?: BolArmeModel;
 }

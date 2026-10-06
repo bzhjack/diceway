@@ -1,5 +1,6 @@
 import {map, Observable, of} from 'rxjs';
 import {BolHerosService} from '../services/bol-heros.service';
+import {firstEquippedDegats} from '../shared/arme/arme-equipee';
 import {PlayToken} from './combat-play.util';
 
 /** Stats de combat entièrement résolues (héros récupéré en direct si besoin), prêtes à préremplir le dialog d'attaque. */
@@ -61,22 +62,12 @@ export function parseProtectionValue(protection: string | null | undefined): num
   return match ? parseInt(match[1], 10) : 0;
 }
 
-function firstWeaponDegats(armes: BolHerosArmeLike[] | number[] | undefined): string | null {
-  if (!armes || armes.length === 0 || typeof armes[0] === 'number') {
-    return null;
-  }
-  return (armes as BolHerosArmeLike[])[0]?.arme?.degats ?? null;
-}
 
 function firstArmureProtection(armures: BolHerosArmureLike[] | number[] | undefined): string | null {
   if (!armures || armures.length === 0 || typeof armures[0] === 'number') {
     return null;
   }
   return (armures as BolHerosArmureLike[])[0]?.armure?.protection ?? null;
-}
-
-interface BolHerosArmeLike {
-  arme?: {degats: string | null};
 }
 
 interface BolHerosArmureLike {
@@ -117,7 +108,7 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
         tir: hero.combat.tir,
         attaque: null,
         defense: hero.combat.defense_effective,
-        degats: firstWeaponDegats(hero.armes) ?? 'd3',
+        degats: firstEquippedDegats(hero.armes) ?? 'd3',
         protection: parseProtectionValue(firstArmureProtection(hero.armures)),
         bouclierMalusUneAttaque:
           hero.equipement_effectif.bouclier_malus_attaque_subie_portee === 'une'

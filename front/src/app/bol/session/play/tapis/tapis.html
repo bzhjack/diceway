@@ -61,6 +61,7 @@
             (removeRequested)="removeRequested.emit($event)"
             (campToggleRequested)="campToggleRequested.emit($event)"
             (armureToggled)="armureToggled.emit({card, armureId: $event})"
+            (armeToggled)="armeToggled.emit({card, armeId: $event})"
             (attackRequested)="attackRequested.emit($event)"
           />
         } @else {

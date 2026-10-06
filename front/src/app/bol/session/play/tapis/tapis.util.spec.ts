@@ -83,6 +83,8 @@ describe('buildTapisCards', () => {
     const none = session({heros: [hero(1, 'Kalena', {heros: {...hero(1, 'Kalena').heros, armes: []}})]});
     const missing = session({heros: [hero(1, 'Kalena', {heros: {...hero(1, 'Kalena').heros, armes: undefined}})]});
     const noDamage = session({heros: [hero(1, 'Kalena', {heros: {...hero(1, 'Kalena').heros, armes: [{arme: {arme: 'Filet', degats: null}}]}})]});
+    const unequipped = session({heros: [hero(1, 'Kalena', {heros: {...hero(1, 'Kalena').heros, armes: [{arme: {arme: 'Épée', degats: 'd6B'}, equipee: false}]}})]});
+    expect(buildTapisCards(unequipped)[0].degats).toBe('—');
     expect(card('hero-1', none).degats).toBe('—');
     expect(card('hero-1', missing).degats).toBe('—');
     expect(card('hero-1', noDamage).degats).toBe('—');
@@ -281,6 +283,13 @@ describe('heroHeaderStats', () => {
     expect(values(heroHeaderStats(hero({armes})))['Dég.']).toBe('d6B');
   });
 
+  it('takes the damage from an equipped weapon only, and shows a dash when none is equipped', () => {
+    const armes = [{arme: {arme: 'Épée', degats: 'd6B'}, equipee: false}, {arme: {arme: 'Dague', degats: 'd6M'}, equipee: true}];
+    expect(values(heroHeaderStats(hero({armes})))['Dég.']).toBe('d6M');
+    const unequipped = [{arme: {arme: 'Épée', degats: 'd6B'}, equipee: false}];
+    expect(values(heroHeaderStats(hero({armes: unequipped})))['Dég.']).toBe('—');
+  });
+
   it('shows a dash when there is no equipped armour, no weapon, or only unloaded ids', () => {
     const none = values(heroHeaderStats(hero({armures: [{armure_id: 1, equipee: false, armure: {categorie: 'armure', protection: 'd6'}}], armes: []})));
     expect(none['Prot.']).toBe('—');
@@ -313,8 +322,8 @@ describe('heroDetails', () => {
         {carriere: null, value: 9},
       ],
       armes: [
-        {arme: {arme: 'Épée', degats: 'd6B', portee: null}},
-        {arme: {arme: 'Arc', degats: 'd6', portee: 'Longue'}},
+        {arme_id: 10, equipee: false, arme: {arme: 'Épée', degats: 'd6B', portee: null}},
+        {arme_id: 11, equipee: true, arme: {arme: 'Arc', degats: 'd6', portee: 'Longue'}},
         7,
       ],
       armures: [
@@ -333,11 +342,16 @@ describe('heroDetails', () => {
     ]);
   });
 
-  it('lists the weapons with damage and range, and skips ids that were not loaded', () => {
+  it('lists the weapons with damage and range, equipped ones first, and skips ids that were not loaded', () => {
     expect(heroDetails(hero()).armes).toEqual([
-      {label: 'Épée', degats: 'd6B', portee: null},
-      {label: 'Arc', degats: 'd6', portee: 'Longue'},
+      {id: 11, label: 'Arc', degats: 'd6', portee: 'Longue', equipee: true},
+      {id: 10, label: 'Épée', degats: 'd6B', portee: null, equipee: false},
     ]);
+  });
+
+  it('counts a weapon without the flag as equipped', () => {
+    const armes = [{arme_id: 12, arme: {arme: 'Dague', degats: 'd6M', portee: null}}];
+    expect(heroDetails(hero({armes})).armes[0].equipee).toBe(true);
   });
 
   it('lists the armours with the equipped ones first, keeping the order otherwise', () => {

@@ -2,6 +2,7 @@ import {BolHerosArmureModel} from '../../../models/bol-armure.model';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolFightSessionModel, CombatCamp} from '../../../models/bol-fight-session.model';
 import {BolHerosModel} from '../../../models/bol-heros.model';
+import {firstEquippedDegats, isArmeEquipee} from '../../../shared/arme/arme-equipee';
 import {EMPTY_AVATAR} from '../../combat-play.util';
 
 export type TapisKind = 'hero' | 'pnj' | 'creature' | 'demon';
@@ -95,7 +96,7 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       avatar: h.heros?.origines.avatar || EMPTY_AVATAR,
       badge: null,
       rang: null,
-      degats: h.heros?.armes?.find((a) => a.arme?.degats)?.arme?.degats ?? NO_VALUE,
+      degats: firstEquippedDegats(h.heros?.armes) ?? NO_VALUE,
       defense: defense === undefined ? NO_VALUE : String(defense),
       vitaliteCourante: h.vitalite_courante ?? h.heros?.ressources?.vitalite ?? null,
       vitaliteMax: h.heros?.ressources?.vitalite ?? null,
@@ -282,9 +283,6 @@ export function heroHeaderStats(hero: BolHerosModel): HeroHeaderStat[] {
     (entry): entry is BolHerosArmureModel =>
       typeof entry === 'object' && entry.equipee && entry.armure?.categorie === 'armure',
   );
-  const weapon = (hero.armes as readonly (BolHerosArmeModel | number)[]).find(
-    (entry): entry is BolHerosArmeModel => typeof entry === 'object' && Boolean(entry.arme?.degats),
-  );
   const {combat} = hero;
   return [
     {label: 'Init.', value: String(combat.initiative_effective ?? combat.initiative)},
@@ -292,7 +290,7 @@ export function heroHeaderStats(hero: BolHerosModel): HeroHeaderStat[] {
     {label: 'Tir', value: String(combat.tir)},
     {label: 'Déf.', value: String(combat.defense_effective ?? combat.defense)},
     {label: 'Prot.', value: armor?.armure?.protection || NO_VALUE},
-    {label: 'Dég.', value: weapon?.arme?.degats || NO_VALUE},
+    {label: 'Dég.', value: firstEquippedDegats(hero.armes) ?? NO_VALUE},
   ];
 }
 
@@ -302,9 +300,12 @@ export interface HeroDetailCarriere {
 }
 
 export interface HeroDetailArme {
+  /** Id de l'arme au catalogue, pour l'équiper. */
+  readonly id: number;
   readonly label: string;
   readonly degats: string | null;
   readonly portee: string | null;
+  readonly equipee: boolean;
 }
 
 export interface HeroDetailTrait {
@@ -351,7 +352,13 @@ export function heroDetails(hero: BolHerosModel): HeroDetails {
 
   const armes = (hero.armes as readonly (BolHerosArmeModel | number)[])
     .filter((entry): entry is BolHerosArmeModel => typeof entry === 'object' && Boolean(entry.arme))
-    .map((entry) => ({label: entry.arme!.arme, degats: entry.arme!.degats, portee: entry.arme!.portee}));
+    .map((entry) => ({
+      id: entry.arme_id,
+      label: entry.arme!.arme,
+      degats: entry.arme!.degats,
+      portee: entry.arme!.portee,
+      equipee: isArmeEquipee(entry),
+    }));
 
   const armures = (hero.armures as readonly (BolHerosArmureModel | number)[])
     .filter((entry): entry is BolHerosArmureModel => typeof entry === 'object' && Boolean(entry.armure))
@@ -388,7 +395,8 @@ export function heroDetails(hero: BolHerosModel): HeroDetails {
     },
     editRoute: id ? ['/create/hero', id] : null,
     carrieres,
-    armes,
+    // Tri stable : les équipées d'abord, l'ordre d'origine sinon.
+    armes: [...armes.filter((a) => a.equipee), ...armes.filter((a) => !a.equipee)],
     // Tri stable : les équipées d'abord, l'ordre d'origine sinon.
     armures: [...armures.filter((a) => a.equipee), ...armures.filter((a) => !a.equipee)],
   };

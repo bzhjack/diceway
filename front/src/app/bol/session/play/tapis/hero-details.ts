@@ -6,9 +6,9 @@ import {HeroDetails} from './tapis.util';
 
 /** Les boutons sous le nom d'un héros — carrières, traits, armes, armures, informations — ouvrent chacun un
  * popover avec le détail. Un bouton ne montre que son icône et le nombre (nom en infobulle) : la liste peut
- * être longue (sept armures…) et la place manque à côté des statistiques. Dans le popover des armures, un clic
- * équipe ou déséquipe (le backend n'en garde qu'une par catégorie) : le composant le signale, c'est la page
- * qui enregistre. */
+ * être longue (sept armures…) et la place manque à côté des statistiques. Dans les popovers des armes et des
+ * armures, un clic équipe ou déséquipe (une seule armure par catégorie, plusieurs armes possibles) : le
+ * composant le signale, c'est la page qui enregistre. */
 @Component({
   selector: 'bol-hero-details',
   imports: [MatIconModule, MatMenuModule, MatTooltipModule],
@@ -122,18 +122,35 @@ import {HeroDetails} from './tapis.util';
       <div class="hd-panel" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" tabindex="-1">
         <h4 class="hd-title">Armes</h4>
         <ul class="hd-list">
-          @for (arme of details().armes; track arme.label) {
-            <li class="hd-row">
-              <span class="hd-name">{{ arme.label }}</span>
-              <span class="hd-value">{{ arme.degats || '—' }}</span>
-              @if (arme.portee) {
-                <span class="hd-note">{{ arme.portee }}</span>
-              }
+          @for (arme of details().armes; track arme.id) {
+            <li>
+              <button
+                type="button"
+                class="hd-row hd-row--button"
+                [class.hd-row--on]="arme.equipee"
+                [attr.aria-pressed]="arme.equipee"
+                [attr.aria-label]="(arme.equipee ? 'Déséquiper ' : 'Équiper ') + arme.label"
+                (click)="armeToggled.emit(arme.id)"
+              >
+                <span class="hd-name">
+                  @if (arme.equipee) {
+                    <mat-icon class="hd-on" aria-label="Équipée">check_circle</mat-icon>
+                  }
+                  {{ arme.label }}
+                </span>
+                <span class="hd-value">{{ arme.degats || '—' }}</span>
+                @if (arme.portee) {
+                  <span class="hd-note">{{ arme.portee }}</span>
+                }
+              </button>
             </li>
           } @empty {
             <li class="hd-empty">Aucune arme.</li>
           }
         </ul>
+        @if (details().armes.length) {
+          <p class="hd-hint">Un clic équipe ou déséquipe une arme. Seules les armes équipées sont proposées à l'attaque.</p>
+        }
       </div>
     </mat-menu>
 
@@ -188,6 +205,8 @@ export class HeroDetailsComponent {
   readonly details = input.required<HeroDetails>();
   /** Un clic sur une armure du popover : l'id de l'armure à équiper ou déséquiper. */
   readonly armureToggled = output<number>();
+  /** Un clic sur une arme du popover : l'id de l'arme à équiper ou déséquiper. */
+  readonly armeToggled = output<number>();
 
   protected readonly hasInfos = computed(() => {
     const infos = this.details().infos;

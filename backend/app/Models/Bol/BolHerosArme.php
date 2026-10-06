@@ -15,10 +15,12 @@ class BolHerosArme extends Model
     protected $fillable = [
         "heros_id",
         "arme_id",
+        "equipee",
     ];
     protected $casts = [
         'id' => 'integer',
-        'arme_id' => 'integer'
+        'arme_id' => 'integer',
+        'equipee' => 'boolean',
     ];
 
     public function arme(): HasOne
