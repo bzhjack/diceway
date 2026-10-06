@@ -15,6 +15,11 @@ export interface ArmureDraft extends IdDraft {
   equipee: boolean;
 }
 
+/** Entrée d'arme avec son état "équipée" (en main vs juste en inventaire). */
+export interface ArmeDraft extends IdDraft {
+  equipee: boolean;
+}
+
 /** Entrée avec détail libre (pouvoirs, capacités). */
 export interface DetailDraft extends IdDraft {
   detail: string | null;
@@ -87,4 +92,10 @@ export function applyArmureEquipToggle<T extends {id: number; equipee: boolean}>
     }
     return armure;
   });
+}
+
+/** Bascule l'état "équipé" d'une entrée dans un brouillon local. Pas d'exclusivité (contrairement aux armures) :
+ * plusieurs armes peuvent être équipées, pour le combat à deux armes. */
+export function toggleEquipee<T extends {equipee: boolean}>(entries: readonly T[], index: number): T[] {
+  return entries.map((entry, i) => (i === index ? {...entry, equipee: !entry.equipee} : entry));
 }

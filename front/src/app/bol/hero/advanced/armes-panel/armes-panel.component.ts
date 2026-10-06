@@ -18,4 +18,6 @@ export class HeroAdvancedArmesPanelComponent {
 
   readonly armeAdded = output<number>();
   readonly armeRemoved = output<number>();
+  /** Un clic sur la case « équipée » d'une arme : son index dans la liste. */
+  readonly armeEquippedToggled = output<number>();
 }

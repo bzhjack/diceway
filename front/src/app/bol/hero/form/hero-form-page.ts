@@ -5,6 +5,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {BolHerosArmureModel} from '../../models/bol-armure.model';
+import {BolHerosArmeModel} from '../../models/bol-arme.model';
+import {isArmeEquipee} from '../../shared/arme/arme-equipee';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolRegionModel} from '../../models/bol-region.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
@@ -17,6 +19,7 @@ import {ArmureEntry, ArmureListComponent} from '../../shared/armure/list/armure-
 import {CarriereEntry, CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
 import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
 import {
+  ArmeDraft,
   ArmureDraft,
   IdDraft,
   RankedDraft,
@@ -24,6 +27,7 @@ import {
   availableCatalog,
   referencedIds,
   selectedEntries,
+  toggleEquipee,
 } from '../../shared/form/form-selection';
 import {LangueEntry} from '../../shared/langue/list/langue-list.component';
 import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
@@ -57,7 +61,7 @@ export interface HeroFormModel {
   pouvoir: number;
   foi: number;
   creation: number;
-  armes: IdDraft[];
+  armes: ArmeDraft[];
   armures: ArmureDraft[];
   carrieres: RankedDraft[];
   langues: IdDraft[];
@@ -280,6 +284,7 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
       degats: arme.degats,
       portee: arme.portee,
       notes: arme.notes,
+      equipee: entry.equipee,
     }),
   );
   protected readonly selectedArmures = selectedEntries(
@@ -358,11 +363,15 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
   }
 
   protected addArmeEntry(id: number): void {
-    this.model.update((current) => ({...current, armes: [...current.armes, {id}]}));
+    this.model.update((current) => ({...current, armes: [...current.armes, {id, equipee: true}]}));
   }
 
   protected removeArme(index: number): void {
     this.model.update((current) => ({...current, armes: current.armes.filter((_, i) => i !== index)}));
+  }
+
+  protected toggleArmeEquipped(index: number): void {
+    this.model.update((current) => ({...current, armes: toggleEquipee(current.armes, index)}));
   }
 
   protected addArmureEntry(id: number): void {
@@ -476,7 +485,9 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
       pouvoir: hero.ressources.pouvoir,
       foi: hero.ressources.foi,
       creation: hero.ressources.creation,
-      armes: referencedIds(hero.armes, (arme) => arme.arme_id).map((id) => ({id})),
+      armes: (hero.armes as (BolHerosArmeModel | number)[])
+        .filter((arme): arme is BolHerosArmeModel => typeof arme === 'object')
+        .map((arme) => ({id: arme.arme_id, equipee: isArmeEquipee(arme)})),
       armures: (hero.armures as (BolHerosArmureModel | number)[])
         .filter((armure): armure is BolHerosArmureModel => typeof armure === 'object')
         .map((armure) => ({id: armure.armure_id, equipee: Boolean(armure.equipee)})),
@@ -542,6 +553,7 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
     const armes = rawValue.armes.map((arme) => ({
       id: arme.id,
       arme_id: arme.id,
+      equipee: arme.equipee,
     }));
     const armures = rawValue.armures.map((armure) => ({
       id: armure.id,
