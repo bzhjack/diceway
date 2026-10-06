@@ -2,8 +2,9 @@ import {ChangeDetectionStrategy, Component, computed, input, output, signal} fro
 import {MatIconModule} from '@angular/material/icon';
 import {EMPTY_AVATAR} from '../../combat-play.util';
 import {combatantKindIcon, combatantKindIconIsSvg} from '../../combat-statblock.util';
-import {CardCombatState} from './combat-turn.util';
-import {cardAriaLabel, isLowVitalite, TapisCard, vitalitePercent, vitaliteText} from './tapis.util';
+import {CardCombatState} from '../../models/combat-turn.model';
+import {cardAriaLabel, isLowVitalite, vitalitePercent, vitaliteText} from './tapis.util';
+import {TapisCard} from '../../models/tapis.model';
 
 /** Face d'une carte du tapis : nom, étiquette, avatar et les trois chiffres du combat (dégâts,
  * défense, vitalité), aux mêmes endroits pour tous les types. Présentation seule : un clic demande

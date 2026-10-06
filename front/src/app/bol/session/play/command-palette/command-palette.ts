@@ -2,8 +2,8 @@ import {afterRenderEffect, ChangeDetectionStrategy, Component, computed, inject,
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {map, Observable, take} from 'rxjs';
-import {buildResults, flattenResults, nextIndex, PaletteCommand, PaletteResult} from './command-palette.util';
-import {CommandPaletteData} from '../../models/command-palette.model';
+import {buildResults, flattenResults, nextIndex} from './command-palette.util';
+import {PaletteCommand, PaletteResult, CommandPaletteData} from '../../models/command-palette.model';
 
 /** Barre de commande de la table : un champ, des résultats groupés, navigation au clavier. Ne parle à
  * aucun service — se ferme avec la commande choisie, que `session-play-page` exécute. */

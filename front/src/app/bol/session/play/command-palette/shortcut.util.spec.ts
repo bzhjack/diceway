@@ -1,5 +1,6 @@
 import {describe, expect, it} from 'vitest';
-import {isEndTurnShortcut, isPaletteShortcut, ShortcutEvent} from './shortcut.util';
+import {isEndTurnShortcut, isPaletteShortcut} from './shortcut.util';
+import {ShortcutEvent} from '../../models/shortcut.model';
 
 function key(k: string, mods: Partial<ShortcutEvent> = {}): ShortcutEvent {
   return {key: k, ctrlKey: false, metaKey: false, altKey: false, ...mods};

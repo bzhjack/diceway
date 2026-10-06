@@ -3,14 +3,15 @@ import {afterRenderEffect, ChangeDetectionStrategy, Component, computed, input, 
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {BolStatblockData} from '../../../shared/models/bol-statblock.model';
-import {AttackChoice} from '../../attack-options.util';
+import {AttackChoice} from '../../models/attack-options.model';
 import {ActionBarComponent} from './action-bar';
 import {CharacterCardComponent} from './character-card';
-import {CardCombatState} from './combat-turn.util';
+import {CardCombatState} from '../../models/combat-turn.model';
 import {ExpandedCardComponent} from './expanded-card';
 import {ExpandedHeroData} from '../../models/expanded-card.model';
 import {DwScrollerComponent} from '../../../../shared/dw-scroller/dw-scroller';
-import {revealDelta, splitRows, TapisCard} from './tapis.util';
+import {revealDelta, splitRows} from './tapis.util';
+import {TapisCard} from '../../models/tapis.model';
 
 /** Marge (px) laissée autour de la carte dépliée quand on la ramène dans la zone visible. */
 const REVEAL_MARGIN = 12;

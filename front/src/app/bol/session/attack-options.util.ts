@@ -44,9 +44,3 @@ export const ARME_IMPROVISEE: BolHerosArmeModel = {
   arme: {id: null, arme: 'Arme improvisée', type: 'M', degats: 'd3', portee: null, notes: null},
 };
 
-/** Ce avec quoi la carte active attaque : les dégâts de l'arme choisie (`null` = ceux de la carte,
- * pour un PNJ, une créature ou un démon) et la posture (`null` = aucune). */
-export interface AttackChoice {
-  readonly degats: string | null;
-  readonly posture: BolCombatOptionModel | null;
-}

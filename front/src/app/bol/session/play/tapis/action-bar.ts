@@ -4,16 +4,10 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
-import {
-  ARME_IMPROVISEE,
-  AttackChoice,
-  DUAL_WIELD_SLUGS,
-  filterAttackMenuCombatOptions,
-  filterVisiblePostures,
-  MAINS_NUES,
-} from '../../attack-options.util';
+import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, MAINS_NUES} from '../../attack-options.util';
+import {AttackChoice} from '../../models/attack-options.model';
 import {dualStrikeDegats, isDualWieldEligible} from '../../combat-attack.util';
-import {TapisCard} from './tapis.util';
+import {TapisCard} from '../../models/tapis.model';
 
 /** Barre d'action de la carte active, entre les deux rangs du tapis en combat : arme, posture, arme
  * secondaire, « Défense totale » et « Fin du tour ». Elle ne lance pas l'attaque — c'est le clic sur

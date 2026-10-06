@@ -1,12 +1,7 @@
+import {ScrollState} from '../models/dw-scroller.model';
+
 /** Tolérance (px) sur les positions de défilement : les navigateurs arrondissent `scrollLeft` et `scrollWidth`. */
 const EDGE_TOLERANCE = 1;
-
-export interface ScrollState {
-  /** Le contenu dépasse la zone visible : les chevrons sont utiles. */
-  overflow: boolean;
-  canBack: boolean;
-  canForward: boolean;
-}
 
 /** État des chevrons d'une piste qui défile à l'horizontale. */
 export function scrollState(scrollLeft: number, scrollWidth: number, clientWidth: number): ScrollState {

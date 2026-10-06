@@ -7,25 +7,11 @@ import {Observable, take} from 'rxjs';
 import {finalize} from 'rxjs/operators';
 import {MatDialog} from '@angular/material/dialog';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
-import {HasPendingChanges} from '../../../core/pending-changes.guard';
+import {HasPendingChanges} from '../../../core/models/pending-changes-guard.model';
 import {readReturnUrl} from '../../../core/return-url.util';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {PictureComponent} from '../../../shared/picture/picture';
-
-/** Libellés spécifiques à l'entité pour les textes communs des pages de formulaire. */
-export interface EntityFormLabels {
-  createTitle: string;
-  editTitle: string;
-  createEyebrow: string;
-  editEyebrow: string;
-  createSubmitLabel: string;
-  editSubmitLabel: string;
-  loadError: string;
-  createError: string;
-  updateError: string;
-  unsavedChanges: string;
-  avatarDialogTitle: string;
-}
+import {EntityFormLabels} from '../models/entity-form-page.model';
 
 /**
  * Socle commun des pages de formulaire d'entité (héros, PNJ, créature, démon) :

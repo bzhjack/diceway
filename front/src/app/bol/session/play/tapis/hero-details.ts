@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, computed, input, output} from '@angu
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {HeroDetails} from './tapis.util';
+import {HeroDetails} from '../../models/tapis.model';
 
 /** Les boutons sous le nom d'un héros — carrières, traits, armes, armures, informations — ouvrent chacun un
  * popover avec le détail. Un bouton ne montre que son icône et le nombre (nom en infobulle) : la liste peut

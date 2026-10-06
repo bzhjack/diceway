@@ -1,7 +1,6 @@
 import {BolAvantageModel} from '../../models/bol-avantage.model';
 import {BolDesavantageModel} from '../../models/bol-desavantage.model';
-
-export type AdvancedTranslations = Record<string, string>;
+import {AdvancedTranslations, TraitDescriptionLine} from '../models/create-tools.model';
 
 const translations: AdvancedTranslations = {
   nom: 'Nom',
@@ -21,11 +20,6 @@ const translations: AdvancedTranslations = {
   required: 'ne doit pas etre vide.',
   numeric: "n'a pas une valeur correcte.",
 };
-
-export interface TraitDescriptionLine {
-  readonly title: string;
-  readonly description: string | null;
-}
 
 export class HeroAdvancedCreateTools {
   static translate(key: string): string {

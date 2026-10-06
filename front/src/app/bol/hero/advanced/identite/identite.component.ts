@@ -7,7 +7,7 @@ import {MatInputModule} from '@angular/material/input';
 import {BolRegionModel} from '../../../models/bol-region.model';
 import {HeroCreationWarning} from '../../../models/bol-heros-state.model';
 import type {HeroAdvancedFormModel} from '../../models/hero-advanced-page.model';
-import {SectionMessage} from '../section-message';
+import {SectionMessage} from '../../models/section-message.model';
 
 /** Panneau Identité de la création avancée : joueur/nom/commentaire + choix de la région. */
 @Component({

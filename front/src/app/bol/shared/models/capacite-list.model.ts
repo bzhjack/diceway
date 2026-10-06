@@ -1,0 +1,11 @@
+import {DwRowTone} from '../../../shared/models/dw-collapsible-row.model';
+import {TraitIcon} from './trait-icon.model';
+
+export interface CapaciteEntry {
+  readonly id: number;
+  readonly label: string;
+  readonly description: string | null;
+  readonly detail: string | null;
+  readonly icon: TraitIcon;
+  readonly tone: DwRowTone;
+}

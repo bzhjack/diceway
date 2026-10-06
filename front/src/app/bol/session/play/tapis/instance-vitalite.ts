@@ -6,7 +6,7 @@ import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {ValueTracker} from '../../value-tracker';
-import {TapisKind} from './tapis.util';
+import {TapisKind} from '../../models/tapis.model';
 
 /** Vitalité d'un PNJ, d'une créature ou d'un démon — ou d'un seul exemplaire d'un lot — ajustable
  * par stepper et persistée à chaque pas. La valeur affichée suit chaque rechargement de la session. */

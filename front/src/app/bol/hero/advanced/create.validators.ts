@@ -1,8 +1,5 @@
-/** Erreur de validation, indépendante du framework de formulaire (testable sans Signal Forms). */
-export interface ValidationIssue {
-  readonly kind: string;
-  readonly message: string;
-}
+import {ValidationIssue, AttributsValues, CombatValues} from '../models/create-validators.model';
+
 
 /** R-ATTR-1 : un attribut est compris entre -1 et 3. */
 export function attributRangeErrors(value: number): ValidationIssue | null {
@@ -26,13 +23,6 @@ export function carriereRangeErrors(value: number): ValidationIssue | null {
   return null;
 }
 
-export interface AttributsValues {
-  readonly vigueur: number;
-  readonly agilite: number;
-  readonly esprit: number;
-  readonly aura: number;
-}
-
 /** R-ATTR-2/3 : somme des 4 attributs ≤ 4, un seul peut descendre à -1. */
 export function attributsBudgetErrors(values: AttributsValues): readonly ValidationIssue[] {
   const numbers = [values.vigueur, values.agilite, values.esprit, values.aura];
@@ -46,13 +36,6 @@ export function attributsBudgetErrors(values: AttributsValues): readonly Validat
   }
 
   return errors;
-}
-
-export interface CombatValues {
-  readonly initiative: number;
-  readonly melee: number;
-  readonly tir: number;
-  readonly defense: number;
 }
 
 /** R-COMBAT-1/2/3 : somme des aptitudes de combat ≤ budget, une seule peut descendre à -1. */

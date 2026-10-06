@@ -1,4 +1,5 @@
-export type TraitIcon = 'info' | 'attr' | 'd6';
+import {TraitIcon} from './models/trait-icon.model';
+
 
 interface TraitIconSource {
   readonly de_bonus?: boolean | null;

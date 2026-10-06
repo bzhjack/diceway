@@ -11,6 +11,7 @@ import {BolCreatureModel} from '../models/bol-creature.model';
 import {BolDemonModel} from '../models/bol-demon.model';
 import {BolHerosModel} from '../models/bol-heros.model';
 import {CombatantKind, CombatCatalogEntry} from '../models/combat-selection.model';
+import {CombatantRankKey} from './models/combat-statblock.model';
 
 /** Icône Material par type de combattant (même mapping que les liens de navigation entre bibliothèques). */
 const KIND_ICONS: Record<CombatantKind, string> = {
@@ -31,9 +32,6 @@ const SVG_KIND_ICONS: ReadonlySet<string> = new Set(['sword']);
 export function combatantKindIconIsSvg(kind: CombatantKind): boolean {
   return SVG_KIND_ICONS.has(KIND_ICONS[kind]);
 }
-
-/** Rang BoL brut (utilisé pour trier l'initiative) — null pour un héros, qui n'a pas de rang fixe. */
-export type CombatantRankKey = 'pietaille' | 'coriace' | 'rival';
 
 /** Mapping rang BoL (cf. taille.type / categorie.type / BolHeros.type) → clé de rang / libellé affiché. */
 const TYPE_RANK_KEYS: Record<string, CombatantRankKey> = {

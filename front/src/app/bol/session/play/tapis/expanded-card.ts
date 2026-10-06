@@ -21,7 +21,8 @@ import {combatantKindIcon, combatantKindIconIsSvg} from '../../combat-statblock.
 import {ActionRollPanelComponent} from '../action-roll-panel/action-roll-panel';
 import {HeroResourcesComponent} from '../hero-resources/hero-resources';
 import {InstanceVitaliteComponent} from './instance-vitalite';
-import {campActionLabel, heroIdentityLine, removeActionLabel, TapisCard, TapisKind, vitaliteSteppers} from './tapis.util';
+import {campActionLabel, heroIdentityLine, removeActionLabel, vitaliteSteppers} from './tapis.util';
+import {TapisCard, TapisKind} from '../../models/tapis.model';
 import {HeroDetailsComponent} from './hero-details';
 import {ExpandedHeroData} from '../../models/expanded-card.model';
 

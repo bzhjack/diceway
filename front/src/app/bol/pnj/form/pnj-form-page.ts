@@ -18,7 +18,8 @@ import {ArmureListComponent} from '../../shared/armure/list/armure-list.componen
 import {ArmureEntry} from '../../shared/models/armure-list.model';
 import {CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
 import {CarriereEntry} from '../../shared/models/carriere-list.model';
-import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
+import {BolEntityFormPageBase} from '../../shared/form/entity-form-page.base';
+import {EntityFormLabels} from '../../shared/models/entity-form-page.model';
 import {applyArmureEquipToggle, availableCatalog, referencedIds, selectedEntries, toggleEquipee} from '../../shared/form/form-selection';
 import {LangueEntry} from '../../shared/models/langue-list.model';
 import {StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';

@@ -1,18 +1,8 @@
 import {describe, expect, it} from 'vitest';
 import {BolFightSessionModel} from '../../../models/bol-fight-session.model';
 import {BolHerosModel} from '../../../models/bol-heros.model';
-import {buildTapisCards,
-  campActionLabel,
-  cardAriaLabel,
-  cardLabel,
-  findCard,
-  isLowVitalite,
-  removeActionLabel,
-  splitRows,
-  TapisCard,
-  vitalitePercent,
-  vitaliteSteppers,
-  vitaliteText, revealDelta, heroHeaderStats, heroDetails, heroIdentityLine} from './tapis.util';
+import {buildTapisCards, campActionLabel, cardAriaLabel, cardLabel, findCard, isLowVitalite, removeActionLabel, splitRows, vitalitePercent, vitaliteSteppers, vitaliteText, revealDelta, heroHeaderStats, heroDetails, heroIdentityLine} from './tapis.util';
+import {TapisCard} from '../../models/tapis.model';
 
 function hero(id: number, nom: string, extra: Record<string, unknown> = {}): NonNullable<BolFightSessionModel['heros']>[number] {
   return {

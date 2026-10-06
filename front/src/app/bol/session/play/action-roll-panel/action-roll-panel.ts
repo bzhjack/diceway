@@ -17,28 +17,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {BolHerosService} from '../../../services/bol-heros.service';
-import {
-  ACTION_ATTRIBUTE_LABELS,
-  ACTION_ATTRIBUTES,
-  ACTION_DIFFICULTIES,
-  ACTION_RESULT_LABELS,
-  ACTION_ROLL_THRESHOLD,
-  ActionAttribute,
-  ActionDifficulty,
-  actionModifierSum,
-  actionResultTone,
-  ActionRollCarriere,
-  ActionRollData,
-  ActionRollParts,
-  DEFAULT_ACTION_DIFFICULTY,
-  diceCountLabel,
-  diceFromTotal,
-  formatActionFormula,
-  keepBestOrWorstTwo,
-  netDiceModifier,
-  signedModifier,
-  suggestedActionResult,
-} from '../../action-roll.util';
+import {ACTION_ATTRIBUTE_LABELS, ACTION_ATTRIBUTES, ACTION_DIFFICULTIES, ACTION_RESULT_LABELS, ACTION_ROLL_THRESHOLD, actionModifierSum, actionResultTone, DEFAULT_ACTION_DIFFICULTY, diceCountLabel, diceFromTotal, formatActionFormula, keepBestOrWorstTwo, netDiceModifier, signedModifier, suggestedActionResult} from '../../action-roll.util';
+import {ActionAttribute, ActionDifficulty, ActionRollCarriere, ActionRollData, ActionRollParts} from '../../models/action-roll.model';
 import {applyHeroismeDelta} from '../../heroisme-spend.util';
 
 /** Jet d'action d'un héros en une seule surface (fiche du jeton, `bol-expanded-card`) : attribut,

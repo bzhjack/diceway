@@ -1,24 +1,7 @@
 import {describe, expect, it} from 'vitest';
-import {
-  buildCombatStates,
-  endTurn,
-  EtatCombat,
-  firstStandingInstance,
-  giveBackTurn,
-  INITIAL_ETAT,
-  isOut,
-  normalizeEtat,
-  orderCards,
-  OrderedCard,
-  targetableKeys,
-  targetLabel,
-  tokenForCard,
-  totalDefense,
-  turnAnnouncement,
-  turnState,
-  TurnToken,
-} from './combat-turn.util';
-import {TapisCard, TapisKind} from './tapis.util';
+import {buildCombatStates, endTurn, firstStandingInstance, giveBackTurn, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, targetLabel, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
+import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model';
+import {TapisCard, TapisKind} from '../../models/tapis.model';
 
 function card(kind: TapisKind, pivotId: number, extra: Partial<TapisCard> = {}): TapisCard {
   return {

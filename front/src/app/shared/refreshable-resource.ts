@@ -1,11 +1,7 @@
-import {Signal, signal} from '@angular/core';
+import {signal} from '@angular/core';
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {Observable, startWith, switchMap} from 'rxjs';
-
-export interface RefreshableResource<T> {
-  readonly data: Signal<T[]>;
-  refresh(): void;
-}
+import {RefreshableResource} from './models/refreshable-resource.model';
 
 /**
  * Liste chargée depuis l'API avec rechargement à la demande (après une suppression, etc.).

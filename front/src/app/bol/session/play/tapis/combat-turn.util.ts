@@ -1,44 +1,8 @@
-import {PlayToken} from '../../combat-play.util';
-import {InitiativeTierKey} from '../../initiative.util';
-import {TapisCard} from './tapis.util';
-
-/** État d'un combat : le round, les cartes qui ont joué ce round, celles en défense totale. Gardé
- * dans la session (`etat_combat`) ; les clés sont celles des cartes (`{kind}-{pivotId}`). */
-export interface EtatCombat {
-  readonly round: number;
-  readonly joues: readonly string[];
-  readonly defense_totale: readonly string[];
-}
+import {PlayToken} from '../../models/combat-play.model';
+import {TapisCard} from '../../models/tapis.model';
+import {EtatCombat, TurnStatus, OrderedCard, TurnState, CardCombatState, TurnToken} from '../../models/combat-turn.model';
 
 export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], defense_totale: []};
-
-/** Où en est une carte dans le round : c'est à elle, elle a joué, elle est sautée (hors combat ou
- * bloquée au round 1), ou son tour viendra. */
-export type TurnStatus = 'active' | 'played' | 'skipped' | 'upcoming';
-
-export interface OrderedCard {
-  readonly card: TapisCard;
-  readonly tier: InitiativeTierKey | null;
-  /** Bloquée au round 1 (règle BoL calculée par `buildInitiativeOrderFrom`). */
-  readonly lockedRound1: boolean;
-}
-
-export interface TurnState {
-  readonly round: number;
-  readonly activeKey: string | null;
-  readonly statuses: ReadonlyMap<string, TurnStatus>;
-}
-
-/** Ce qu'une carte affiche de l'état du combat. */
-export interface CardCombatState {
-  readonly status: TurnStatus;
-  readonly targetable: boolean;
-  readonly defenseTotale: boolean;
-  readonly out: boolean;
-  readonly locked: boolean;
-}
-
-export type TurnToken = Pick<PlayToken, 'kind' | 'pivotId' | 'tier' | 'lockedRound1'>;
 
 function uniqueKeys(raw: unknown): string[] {
   if (!Array.isArray(raw)) {

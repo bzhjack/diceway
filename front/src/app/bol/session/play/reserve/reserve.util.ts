@@ -1,12 +1,5 @@
 import {CombatCatalogEntry, CombatantKind} from '../../../models/combat-selection.model';
-
-export interface ReserveTab {
-  readonly kind: CombatantKind;
-  readonly label: string;
-  readonly createLabel: string;
-  readonly createLink: string;
-  readonly libraryLink: string;
-}
+import {ReserveTab} from '../../models/reserve.model';
 
 /** Onglets de la réserve, dans l'ordre d'affichage. Une donnée (pas du template) pour qu'un onglet
  * « Scènes » s'ajoute plus tard sans refonte. */

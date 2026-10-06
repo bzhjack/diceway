@@ -22,7 +22,8 @@ import {isArmeEquipee} from '../../shared/arme/arme-equipee';
 import {ArmeEntry} from '../../shared/models/arme-list.model';
 import {ArmureEntry} from '../../shared/models/armure-list.model';
 import {CarriereEntry} from '../../shared/models/carriere-list.model';
-import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
+import {BolEntityFormPageBase} from '../../shared/form/entity-form-page.base';
+import {EntityFormLabels} from '../../shared/models/entity-form-page.model';
 import {availableCatalog, selectedEntries, toggleEquipee} from '../../shared/form/form-selection';
 import {LangueEntry} from '../../shared/models/langue-list.model';
 import {StatGroup} from '../../shared/models/stats-grid.model';
@@ -48,7 +49,7 @@ import {HeroAdvancedRegionComponent} from './region/region.component';
 import {HeroAdvancedRegionDialogResult} from '../models/hero-advanced-region.model';
 import {HeroAdvancedRessourcesPanelComponent} from './ressources-panel/ressources-panel.component';
 import {ResourceEntry} from '../models/ressources-panel.model';
-import {SectionMessage} from './section-message';
+import {SectionMessage} from '../models/section-message.model';
 import {HeroAdvancedStatsPanelComponent} from './stats-panel/stats-panel.component';
 import {AdvancedTraitDraft, HeroAdvancedFormModel} from '../models/hero-advanced-page.model';
 

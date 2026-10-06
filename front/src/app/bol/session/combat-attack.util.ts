@@ -1,27 +1,8 @@
 import {map, Observable, of} from 'rxjs';
 import {BolHerosService} from '../services/bol-heros.service';
 import {firstEquippedDegats} from '../shared/arme/arme-equipee';
-import {PlayToken} from './combat-play.util';
-
-/** Stats de combat entièrement résolues (héros récupéré en direct si besoin), prêtes à préremplir le dialog d'attaque. */
-export interface ResolvedCombatStats {
-  readonly agilite: number;
-  readonly vigueur: number;
-  readonly melee: number;
-  readonly tir: number;
-  /** Bonus d'attaque combiné des créatures (remplace agilité+mêlée). */
-  readonly attaque: number | null;
-  readonly defense: number;
-  readonly degats: string;
-  readonly protection: number;
-  /** Malus du petit bouclier ("-1 à une attaque subie par round") — 0 si absent ou déjà replié
-   * dans `defense` (cas du grand bouclier, portée "toutes"). Consommé manuellement par le dialog
-   * d'attaque, l'app ne suivant pas de round. */
-  readonly bouclierMalusUneAttaque: number;
-  /** null pour pnj/créature/démon — l'héroïsme (Faveur divine, options héroïques) n'existe que pour un héros. */
-  readonly herosId: string | null;
-  readonly heroisme: number | null;
-}
+import {PlayToken} from './models/combat-play.model';
+import {ResolvedCombatStats} from './models/combat-attack.model';
 
 /** Extrait le type de dé de dégâts d'une chaîne d'arme/créature BoL ("d6M", "d6B", "d3", "d6"). */
 export function parseDegatsDice(degats: string | null | undefined): 'd3' | 'd6' | 'd6m' | 'd6b' {
@@ -61,7 +42,6 @@ export function parseProtectionValue(protection: string | null | undefined): num
   const match = (protection ?? '').match(/\((-?\d+)\)/);
   return match ? parseInt(match[1], 10) : 0;
 }
-
 
 function firstArmureProtection(armures: BolHerosArmureLike[] | number[] | undefined): string | null {
   if (!armures || armures.length === 0 || typeof armures[0] === 'number') {

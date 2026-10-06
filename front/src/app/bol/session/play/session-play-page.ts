@@ -29,11 +29,11 @@ import {
 import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialog';
 import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard, postCombatRecoveryAmount} from '../combat-play.util';
-import {ActionRollDiceTrait} from '../action-roll.util';
+import {ActionRollDiceTrait} from '../models/action-roll.model';
 import {SceneActionsService} from '../scene-actions.service';
 import {AddCombatantDialogComponent, resolveAddCombatantCamp} from './add-combatant-dialog/add-combatant-dialog';
 import {openCommandPalette} from './command-palette/command-palette';
-import {PaletteActionId, PaletteCommand, PaletteContext} from './command-palette/command-palette.util';
+import {PaletteActionId, PaletteCommand, PaletteContext} from '../models/command-palette.model';
 import {isEndTurnShortcut, isPaletteShortcut} from './command-palette/shortcut.util';
 import {reserveTab} from './reserve/reserve.util';
 import {maybePromptDefierLaMort} from './defier-la-mort-dialog/defier-la-mort.util';
@@ -45,26 +45,14 @@ import {browserStorage, readPanelOpen, RESERVE_PANEL_KEY, writePanelOpen} from '
 import {ExpandedHeroData} from '../models/expanded-card.model';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {equippedArmes} from '../../shared/arme/arme-equipee';
-import {AttackChoice} from '../attack-options.util';
-import {
-  buildCombatStates,
-  CardCombatState,
-  endTurn,
-  EtatCombat,
-  firstStandingInstance,
-  giveBackTurn,
-  normalizeEtat,
-  orderCards,
-  targetLabel,
-  tokenForCard,
-  totalDefense,
-  turnAnnouncement,
-  turnState,
-} from './tapis/combat-turn.util';
+import {AttackChoice} from '../models/attack-options.model';
+import {buildCombatStates, endTurn, firstStandingInstance, giveBackTurn, normalizeEtat, orderCards, targetLabel, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
+import {CardCombatState, EtatCombat} from '../models/combat-turn.model';
 import {TurnOrderComponent} from './tapis/turn-order';
 import {TurnOrderEntry} from '../models/turn-order.model';
 import {TapisComponent} from './tapis/tapis';
-import {buildTapisCards, cardLabel, findCard, heroDetails, heroHeaderStats, removeActionLabel, TapisCard} from './tapis/tapis.util';
+import {buildTapisCards, cardLabel, findCard, heroDetails, heroHeaderStats, removeActionLabel} from './tapis/tapis.util';
+import {TapisCard} from '../models/tapis.model';
 
 /** Les armes d'un héros dont le catalogue est chargé — vide si elles ne le sont pas (de simples ids). */
 function loadedArmes(hero: BolHerosModel): BolHerosArmeModel[] {

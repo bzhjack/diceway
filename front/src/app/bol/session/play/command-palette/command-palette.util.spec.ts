@@ -1,15 +1,8 @@
 import {describe, expect, it} from 'vitest';
 import {BolSceneModel} from '../../../models/bol-scene.model';
 import {CombatCatalogEntry, CombatantKind} from '../../../models/combat-selection.model';
-import {
-  buildResults,
-  flattenResults,
-  nextIndex,
-  PALETTE_MAX_RESULTS,
-  PaletteGroupId,
-  PaletteInput,
-  parseQuery,
-} from './command-palette.util';
+import {buildResults, flattenResults, nextIndex, PALETTE_MAX_RESULTS, parseQuery} from './command-palette.util';
+import {PaletteGroupId, PaletteInput} from '../../models/command-palette.model';
 
 function entry(kind: CombatantKind, sourceId: string, nom: string): CombatCatalogEntry {
   return {catalogId: `${kind}:${sourceId}`, kind, sourceId, nom, vitalite: 10, avatar: ''} as CombatCatalogEntry;
