@@ -2,6 +2,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 
+/** Ce dont la logique « Défier la mort » a besoin pour ouvrir son dialogue et enregistrer le résultat. */
 export interface DefierLaMortContext {
   readonly dialog: MatDialog;
   readonly fightSessionService: BolFightSessionService;

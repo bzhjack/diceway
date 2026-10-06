@@ -5,6 +5,8 @@ import {BolHerosTraitsModel} from "./bol-trait.model";
 import {BolHerosLangueModel} from "./bol-langue.model";
 import {BolRegionModel} from "./bol-region.model";
 
+/** Une fiche de personnage telle que l'API la renvoie : un héros ou un PNJ (même modèle, distingués par
+ * `type`), avec ses attributs, son combat, ses ressources, son équipement, ses traits et ses carrières. */
 export interface BolHerosModel {
   id: string | null;
   user_id: string | null;
@@ -23,6 +25,7 @@ export interface BolHerosModel {
   armes: BolHerosArmeModel[] | number[];
 }
 
+/** Valeurs de combat d'un personnage ; les valeurs `*_effective` incluent les malus de l'équipement. */
 export interface BolHerosCombat {
   initiative: number;
   initiative_effective: number;
@@ -32,6 +35,7 @@ export interface BolHerosCombat {
   defense_effective: number;
 }
 
+/** Les quatre attributs d'un personnage ; `agilite_effective` inclut le malus des armures. */
 export interface BolHerosAttributs {
   vigueur: number;
   agilite: number;
@@ -47,6 +51,7 @@ export interface BolEquipementEffectifModel {
   bouclier_malus_attaque_subie_portee: 'une' | 'toutes' | null;
 }
 
+/** Identité d'un personnage : nom, joueur, région d'origine, avatar et langues. */
 export interface BolHerosOrigines {
   nom: string | null;
   joueur: string | null;
@@ -57,6 +62,8 @@ export interface BolHerosOrigines {
   langues: BolHerosLangueModel[] | number[];
 }
 
+/** Compteurs d'un personnage : vitalité, héroïsme, foi, pouvoir, vilenie, points de création et
+ * d'expérience. */
 export interface BolHerosRessources {
   vitalite: number;
   heroisme: number;

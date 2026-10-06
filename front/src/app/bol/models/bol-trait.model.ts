@@ -1,6 +1,8 @@
 import {BolAvantageModel} from "./bol-avantage.model";
 import {BolDesavantageModel} from "./bol-desavantage.model";
 
+/** Un trait d'un personnage — avantage (`A`) ou désavantage (`D`) —, avec son détail libre et sa fiche du
+ * catalogue. */
 export interface BolHerosTraitsModel {
   id?: number;
   traitable_id: number;

@@ -14,6 +14,7 @@ export interface EtatCombat {
  * bloquée au round 1), ou son tour viendra. */
 export type TurnStatus = 'active' | 'played' | 'skipped' | 'upcoming';
 
+/** Une carte à sa place dans l'ordre de jeu : son palier d'initiative et son éventuel blocage au round 1. */
 export interface OrderedCard {
   readonly card: TapisCard;
   readonly tier: InitiativeTierKey | null;
@@ -21,6 +22,7 @@ export interface OrderedCard {
   readonly lockedRound1: boolean;
 }
 
+/** Où en est le tour : le round, la carte active et le statut de chaque carte. */
 export interface TurnState {
   readonly round: number;
   readonly activeKey: string | null;
@@ -36,4 +38,5 @@ export interface CardCombatState {
   readonly locked: boolean;
 }
 
+/** Ce qu'il faut savoir d'un combattant pour l'ordonner dans le tour. */
 export type TurnToken = Pick<PlayToken, 'kind' | 'pivotId' | 'tier' | 'lockedRound1'>;

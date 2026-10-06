@@ -1,3 +1,5 @@
+/** Un avantage du catalogue : bonus d'attribut ou dé de bonus sur un domaine ; `pivot` porte le détail
+ * propre à une région. */
 export interface BolAvantageModel {
   id: number | null;
   avantage: string;

@@ -11,6 +11,8 @@ export interface AttackRollDialogPosture {
   readonly modificateur: number;
 }
 
+/** Données du dialogue d'attaque : l'attaquant, la cible, leurs statistiques résolues et la posture
+ * choisie. */
 export interface AttackRollDialogData {
   readonly attackerNom: string;
   readonly targetNom: string;

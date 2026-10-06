@@ -19,6 +19,7 @@ export interface PlayCombatStats {
   readonly protection: string | null;
 }
 
+/** Un combattant de la table, avec ce qu'il faut pour l'ordonner, l'afficher et le faire attaquer. */
 export interface PlayToken {
   readonly key: string;
   readonly kind: InitiativeKind;
@@ -36,6 +37,7 @@ export interface PlayToken {
   readonly combat: PlayCombatStats;
 }
 
+/** L'ensemble des combattants de la table, et le bonus légendaire de la rencontre. */
 export interface PlayBoard {
   readonly tokens: readonly PlayToken[];
   readonly legendaryActive: boolean;

@@ -1,3 +1,4 @@
+/** Une créature du bestiaire : attributs, vitalité, attaque, taille et capacités. */
 export interface BolCreatureModel {
   id: string | null;
   user_id: string | null;
@@ -25,6 +26,7 @@ export interface BolCreatureModel {
   rang?: 'rival' | 'coriace' | 'pietaille';
 }
 
+/** Capacité spéciale d'une créature, avec ses éventuels dés de bonus ou de malus. */
 export interface BolCreatureCapaciteModel {
   id: number;
   capacite: string;
@@ -34,6 +36,7 @@ export interface BolCreatureCapaciteModel {
   detail?: string;
 }
 
+/** Taille d'une créature (référentiel) : vigueur, vitalité, dégâts et déplacement de base. */
 export interface BolCreatureTailleModel {
   id: number;
   taille: string;

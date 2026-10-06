@@ -1,5 +1,6 @@
 import {CombatCamp} from '../../models/bol-fight-session.model';
 
+/** Le type de personnage d'une carte du tapis. */
 export type TapisKind = 'hero' | 'pnj' | 'creature' | 'demon';
 
 /** Une carte du tapis : une ligne de session (héros, PNJ, créature ou démon), avec sa face déjà
@@ -27,6 +28,7 @@ export interface TapisCard {
   readonly qty: number;
 }
 
+/** Les cartes du tapis rangées en deux rangs : les présents du haut, les héros et alliés du bas. */
 export interface TapisRows {
   /** Rang du haut, « Présents dans la scène ». */
   readonly presents: TapisCard[];
@@ -34,6 +36,7 @@ export interface TapisRows {
   readonly heros: TapisCard[];
 }
 
+/** Un réglage de vitalité sur une carte dépliée : un par exemplaire pour un lot. */
 export interface VitaliteStepper {
   /** Index d'exemplaire à passer à l'API — null pour un PNJ. */
   readonly index: number | null;
@@ -47,11 +50,13 @@ export interface HeroHeaderStat {
   readonly value: string;
 }
 
+/** Une carrière d'un héros et son rang, pour le popover des carrières. */
 export interface HeroDetailCarriere {
   readonly label: string;
   readonly value: number;
 }
 
+/** Une arme d'un héros pour le popover des armes ; `equipee` dit si elle est proposée à l'attaque. */
 export interface HeroDetailArme {
   /** Id de l'arme au catalogue, pour l'équiper. */
   readonly id: number;
@@ -61,12 +66,15 @@ export interface HeroDetailArme {
   readonly equipee: boolean;
 }
 
+/** Un trait d'un héros avec son détail, pour le popover des traits. */
 export interface HeroDetailTrait {
   readonly label: string;
   readonly detail: string | null;
   readonly kind: 'avantage' | 'desavantage';
 }
 
+/** Informations sur le héros : joueur, région, commentaire, fiche en cours — pour la ligne sous son nom et
+ * le popover d'informations. */
 export interface HeroDetailInfos {
   readonly joueur: string | null;
   readonly region: string | null;
@@ -75,6 +83,7 @@ export interface HeroDetailInfos {
   readonly enCours: boolean;
 }
 
+/** Une armure d'un héros pour le popover des armures ; `equipee` dit si elle est portée. */
 export interface HeroDetailArmure {
   /** Id de l'armure au catalogue, pour l'équiper. */
   readonly id: number;

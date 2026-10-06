@@ -1,3 +1,5 @@
+/** Un scénario préparé en bibliothèque : son pitch et les personnages prévus (héros, PNJ, créatures,
+ * démons). */
 export interface BolScenarioModel {
   id: string | null;
   user_id?: string | null;
@@ -9,6 +11,7 @@ export interface BolScenarioModel {
   pnjs?: BolScenarioPnjModel[];
 }
 
+/** Capacité d'une créature du scénario, avec ses éventuels dés de bonus ou de malus. */
 export interface BolScenarioCapaciteModel {
   capacite_id: number;
   capacite: string | null;
@@ -17,6 +20,7 @@ export interface BolScenarioCapaciteModel {
   detail: string | null;
 }
 
+/** Une créature prévue au scénario, avec ses statistiques copiées de sa fiche. */
 export interface BolScenarioCreatureModel {
   id: number;
   scenario_id: string;
@@ -41,6 +45,8 @@ export interface BolScenarioCreatureModel {
   } | null;
 }
 
+/** Pouvoir d'un démon du scénario, avec ses effets de jeu (avantage d'attaque, dégâts supérieurs,
+ * régénération…). */
 export interface BolScenarioPouvoirModel {
   pouvoir_id: number;
   pouvoir: string | null;
@@ -53,6 +59,7 @@ export interface BolScenarioPouvoirModel {
   avertissement_combat: boolean;
 }
 
+/** Un démon prévu au scénario, avec ses statistiques copiées de sa fiche. */
 export interface BolScenarioDemonModel {
   id: number;
   scenario_id: string;
@@ -77,12 +84,14 @@ export interface BolScenarioDemonModel {
   } | null;
 }
 
+/** Arme d'un PNJ du scénario : nom, dégâts et type (`M` mêlée, `T` tir). */
 export interface BolScenarioPnjArmeModel {
   nom: string | null;
   degats: string | null;
   type: 'M' | 'T' | null;
 }
 
+/** Un PNJ prévu au scénario, avec ses statistiques et ses armes copiées de sa fiche. */
 export interface BolScenarioPnjModel {
   id: number;
   scenario_id: string;
@@ -109,6 +118,7 @@ export interface BolScenarioPnjModel {
   } | null;
 }
 
+/** Un héros joueur prévu au scénario : référence à sa fiche et résumé de ses valeurs. */
 export interface BolScenarioPjModel {
   id: number;
   scenario_id: string;

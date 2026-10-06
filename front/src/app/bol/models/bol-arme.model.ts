@@ -1,3 +1,4 @@
+/** Une arme du catalogue : dégâts, portée et type (`M` mêlée, `T` tir). */
 export interface BolArmeModel {
   id: number | null;
   user_id?: string | null;
@@ -8,6 +9,7 @@ export interface BolArmeModel {
   notes: string | null;
 }
 
+/** Une arme possédée par un personnage, et si elle est équipée. */
 export interface BolHerosArmeModel {
   id?: number;
   arme_id: number;

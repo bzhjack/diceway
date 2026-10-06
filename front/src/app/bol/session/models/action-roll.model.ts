@@ -1,3 +1,4 @@
+/** Une carrière du héros, proposée comme bonus de son jet d'action. */
 export interface ActionRollCarriere {
   readonly label: string;
   readonly value: number;
@@ -11,6 +12,8 @@ export interface ActionRollDiceTrait {
   readonly kind: 'avantage' | 'desavantage';
 }
 
+/** Tout ce dont le panneau de jet d'action a besoin pour un héros : attributs, carrières, traits à dé et
+ * héroïsme. */
 export interface ActionRollData {
   readonly heroNom: string;
   readonly herosId: string;
@@ -29,8 +32,10 @@ export interface ActionRollData {
   readonly diceTraits: readonly ActionRollDiceTrait[];
 }
 
+/** Les quatre attributs qu'on peut choisir pour un jet d'action. */
 export type ActionAttribute = 'agilite' | 'vigueur' | 'esprit' | 'aura';
 
+/** Un niveau de difficulté d'un jet d'action et son modificateur. */
 export interface ActionDifficulty {
   readonly label: string;
   readonly modifier: number;
@@ -45,4 +50,5 @@ export interface ActionRollParts {
   readonly modifier: number;
 }
 
+/** Couleur du résultat d'un jet : échec, réussite ou héroïque (héroïque et légendaire). */
 export type ActionRollTone = 'echec' | 'reussite' | 'heroique';

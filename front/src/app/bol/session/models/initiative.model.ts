@@ -1,5 +1,6 @@
 import {InitiativeResultat} from '../../models/bol-fight-session.model';
 
+/** Les types de personnages pris en compte dans l'ordre d'initiative. */
 export type InitiativeKind = 'hero' | 'pnj' | 'creature' | 'demon';
 
 /** Les 8 paliers d'ordre de réaction BoL (02-actions-combat.md), du premier au dernier à agir. */
@@ -13,6 +14,8 @@ export type InitiativeTierKey =
   | 'pietaille'
   | 'echec_critique';
 
+/** Un combattant à sa place dans l'ordre d'initiative : son palier, son résultat de réaction et son
+ * éventuel blocage au round 1. */
 export interface InitiativeEntry {
   readonly key: string;
   readonly kind: InitiativeKind;
@@ -23,6 +26,7 @@ export interface InitiativeEntry {
   readonly lockedRound1: boolean;
 }
 
+/** L'ordre d'initiative calculé, et le bonus légendaire de la rencontre. */
 export interface InitiativeOrder {
   readonly entries: readonly InitiativeEntry[];
   /** true si un héros a obtenu un succès légendaire : +1 à tous les jets d'attaque toute la rencontre. */

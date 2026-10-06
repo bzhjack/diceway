@@ -1,3 +1,4 @@
+/** Un démon : attributs, vitalité, dégâts et pouvoirs. */
 export interface BolDemonModel {
   id: string | null;
   user_id: string | null;
@@ -30,6 +31,7 @@ export interface BolDemonModel {
   type?: 'P' | 'C' | 'R'
 }
 
+/** Pouvoir d'un démon. */
 export interface BolDemonPouvoirModel {
   id: number;
   pouvoir: string;
@@ -37,6 +39,7 @@ export interface BolDemonPouvoirModel {
   detail?: string;
 }
 
+/** Catégorie de démon (référentiel) : rang, nombre de pouvoirs, vitalité et dégâts. */
 export interface BolDemonCategorieModel {
   id: number;
   categorie: string;

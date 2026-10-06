@@ -1,9 +1,11 @@
+/** Une case de la grille de caractéristiques : son champ de formulaire et son libellé. */
 export interface StatCell {
   readonly control: string;
   readonly label: string;
   readonly highlight?: boolean;
 }
 
+/** Un groupe de cases de la grille — attributs, combat ou ressources — et son nombre de colonnes. */
 export interface StatGroup {
   readonly key: 'attr' | 'combat' | 'res';
   readonly label: string;

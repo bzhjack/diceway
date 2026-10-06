@@ -1,3 +1,5 @@
+/** Un désavantage du catalogue : malus d'attribut ou dé de malus sur un domaine ; `pivot` porte le détail
+ * propre à une région. */
 export interface BolDesavantageModel {
   id: number | null;
   desavantage: string;

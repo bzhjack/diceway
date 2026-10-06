@@ -3,6 +3,7 @@ import {BolCarriereModel} from "./bol-carriere.model";
 import {BolDesavantageModel} from "./bol-desavantage.model";
 import {BolLangueModel} from "./bol-langue.model";
 
+/** Une région d'origine : ses noms usuels, ses avantages et désavantages propres, sa langue native. */
 export interface BolRegionModel {
   id: number;
   region: string;
@@ -19,6 +20,7 @@ export interface BolRegionModel {
   premiere_carriere?: BolCarriereModel | null;
 }
 
+/** Un nom, féminin ou masculin, typique d'une région. */
 export interface BolNomModel {
   id: number;
   nom: string;

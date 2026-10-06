@@ -1,3 +1,4 @@
+/** Posture de combat du référentiel (offensive, défensive…) et son modificateur au jet d'attaque. */
 export interface BolCombatOptionModel {
   id: number;
   label: string;
@@ -8,6 +9,7 @@ export interface BolCombatOptionModel {
   ordre: number;
 }
 
+/** Effet héroïque du référentiel de combat, avec sa description. */
 export interface BolHeroicOptionModel {
   id: number;
   label: string;
@@ -16,6 +18,7 @@ export interface BolHeroicOptionModel {
   ordre: number;
 }
 
+/** Niveau de difficulté d'un jet (moyenne, etc.) et son modificateur. */
 export interface BolDifficulteModel {
   id: number;
   label: string;

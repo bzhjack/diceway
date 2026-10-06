@@ -1,5 +1,6 @@
 import {BolArmureCategorie} from '../../models/bol-armure.model';
 
+/** Une armure à afficher dans la liste, avec son état équipé et ses malus d'agilité et d'initiative. */
 export interface ArmureEntry {
   readonly id: number;
   readonly label: string;

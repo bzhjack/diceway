@@ -1,5 +1,7 @@
+/** Catégorie d'équipement défensif : une seule pièce peut être équipée par catégorie. */
 export type BolArmureCategorie = 'armure' | 'bouclier' | 'casque';
 
+/** Une armure, un bouclier ou un casque du catalogue, avec sa protection et ses malus. */
 export interface BolArmureModel {
   id: number | null;
   user_id?: string | null;
@@ -14,6 +16,7 @@ export interface BolArmureModel {
   malus_attaque_subie_portee: 'une' | 'toutes' | null;
 }
 
+/** Une armure possédée par un personnage, et si elle est équipée. */
 export interface BolHerosArmureModel {
   id?: number;
   armure_id: number;

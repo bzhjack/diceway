@@ -1,8 +1,10 @@
+/** Camp d'un combattant à la table : les héros et leurs alliés (`heros`), ou les adversaires. */
 export type CombatCamp = 'heros' | 'adversaires';
 
 /** Résultat du jet de réaction BoL (2d6 + esprit + initiative, 9+) — seuls les héros le lancent. */
 export type InitiativeResultat = 'echec_critique' | 'echec' | 'reussite' | 'heroique' | 'legendaire';
 
+/** Où en est la session : `libre` (table sans combat), `combat` (rounds en cours) ou `terminee`. */
 export type BolFightSessionStatut = 'libre' | 'combat' | 'terminee';
 
 /** État d'un combat en cours tel que gardé en base (cf. `combat-turn.util.ts`). */
@@ -19,6 +21,8 @@ export interface BolSessionSceneRef {
   scenario?: {id: string; titre: string} | null;
 }
 
+/** Une session de jeu telle que l'API la renvoie : sa table (héros, PNJ, créatures, démons), l'état de son
+ * combat et sa scène courante. */
 export interface BolFightSessionModel {
   id: string | null;
   user_id?: string | null;
@@ -39,6 +43,8 @@ export interface BolFightSessionModel {
   pnjs?: BolFightSessionPnjModel[];
 }
 
+/** Un héros posé à la table (ligne de liaison avec la session) : son camp, son jet de réaction, sa vitalité
+ * de session et sa fiche. */
 export interface BolFightSessionHerosModel {
   id: number;
   fight_session_id: string;
@@ -57,6 +63,7 @@ export interface BolFightSessionHerosModel {
   };
 }
 
+/** Capacité d'une créature posée à la table, avec ses éventuels dés de bonus ou de malus. */
 export interface BolFightSessionCapaciteModel {
   capacite_id: number;
   capacite: string | null;
@@ -65,6 +72,8 @@ export interface BolFightSessionCapaciteModel {
   detail: string | null;
 }
 
+/** Une créature (ou un lot) posée à la table : copie de ses statistiques au moment de l'ajout, quantité et
+ * vitalité de chaque exemplaire. */
 export interface BolFightSessionCreatureModel {
   id: number;
   fight_session_id: string;
@@ -90,12 +99,15 @@ export interface BolFightSessionCreatureModel {
   creature?: {avatar: string | null};
 }
 
+/** Pouvoir d'un démon posé à la table. */
 export interface BolFightSessionPouvoirModel {
   pouvoir_id: number;
   pouvoir: string | null;
   detail: string | null;
 }
 
+/** Un démon (ou un lot) posé à la table : copie de ses statistiques au moment de l'ajout, comme pour une
+ * créature. */
 export interface BolFightSessionDemonModel {
   id: number;
   fight_session_id: string;
@@ -121,12 +133,14 @@ export interface BolFightSessionDemonModel {
   demon?: {avatar: string | null};
 }
 
+/** Arme d'un PNJ posé à la table : nom, dégâts et type (`M` mêlée, `T` tir). */
 export interface BolFightSessionArmeModel {
   nom: string | null;
   degats: string | null;
   type: 'M' | 'T' | null;
 }
 
+/** Un PNJ posé à la table : copie de ses statistiques et de ses armes au moment de l'ajout. */
 export interface BolFightSessionPnjModel {
   id: number;
   fight_session_id: string;

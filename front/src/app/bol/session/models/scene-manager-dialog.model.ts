@@ -1,5 +1,6 @@
 import {Signal} from '@angular/core';
 
+/** Données du gestionnaire de scènes : la session et l'état de la table qu'il doit suivre. */
 export interface SceneManagerDialogData {
   readonly sessionId: string;
   /** Signaux, pas des valeurs figées à l'ouverture : charger une scène depuis le dialogue change la

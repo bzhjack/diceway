@@ -1,3 +1,4 @@
+/** Une arme à afficher dans la liste, avec son état équipé. */
 export interface ArmeEntry {
   readonly id: number;
   readonly label: string;

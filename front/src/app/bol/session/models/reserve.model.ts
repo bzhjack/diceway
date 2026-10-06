@@ -1,5 +1,6 @@
 import {CombatantKind} from '../../models/combat-selection.model';
 
+/** Un onglet de la réserve : un type de personnage et les liens de création et de bibliothèque associés. */
 export interface ReserveTab {
   readonly kind: CombatantKind;
   readonly label: string;
