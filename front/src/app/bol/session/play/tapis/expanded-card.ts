@@ -15,7 +15,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterLink} from '@angular/router';
 import {BolStatblockComponent, BolStatblockData} from '../../../shared/statblock/bol-statblock.component';
-import {ActionRollData, LastRoll} from '../../action-roll.util';
+import {ActionRollData} from '../../action-roll.util';
 import {EMPTY_AVATAR} from '../../combat-play.util';
 import {combatantKindIcon, combatantKindIconIsSvg} from '../../combat-statblock.util';
 import {ActionRollPanelComponent} from '../action-roll-panel/action-roll-panel';
@@ -25,6 +25,7 @@ import {
   campActionLabel,
   HeroDetails,
   HeroHeaderStat,
+  heroIdentityLine,
   removeActionLabel,
   TapisCard,
   TapisKind,
@@ -83,7 +84,6 @@ export class ExpandedCardComponent {
 
   readonly closed = output<void>();
   readonly changed = output<void>();
-  readonly rolled = output<LastRoll>();
   readonly removeRequested = output<TapisCard>();
   readonly campToggleRequested = output<TapisCard>();
   /** Un clic sur une armure du popover : l'id de l'armure à équiper ou déséquiper. */
@@ -100,8 +100,7 @@ export class ExpandedCardComponent {
     const card = this.card();
     const hero = this.hero();
     if (card.kind === 'hero') {
-      const carrieres = hero?.actionRoll.carrieres.map((c) => `${c.label} ${c.value}`).join(' · ');
-      return carrieres || KIND_LABELS.hero;
+      return hero ? heroIdentityLine(hero.details.infos) : '';
     }
     const lot = card.qty > 1 ? ` · lot de ${card.qty}` : '';
     return `${KIND_LABELS[card.kind]} · ${card.rang ?? ''}${lot}`;

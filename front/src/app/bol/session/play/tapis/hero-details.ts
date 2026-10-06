@@ -60,7 +60,7 @@ import {HeroDetails} from './tapis.util';
         class="hd-chip"
         [matMenuTriggerFor]="infosMenu"
         matTooltip="Informations"
-        aria-label="Informations sur le joueur et le personnage : afficher le détail"
+        aria-label="Informations sur le personnage : afficher le détail"
       >
         <mat-icon>info</mat-icon>
         <mat-icon class="hd-caret">arrow_drop_down</mat-icon>
@@ -110,12 +110,6 @@ import {HeroDetails} from './tapis.util';
         <dl class="hd-infos">
           @if (details().infos.enCours) {
             <div><dt>Fiche</dt><dd>En cours de création</dd></div>
-          }
-          @if (details().infos.joueur; as joueur) {
-            <div><dt>Joueur</dt><dd>{{ joueur }}</dd></div>
-          }
-          @if (details().infos.region; as region) {
-            <div><dt>Région</dt><dd>{{ region }}</dd></div>
           }
           @if (details().infos.commentaire; as commentaire) {
             <div><dt>Commentaire</dt><dd>{{ commentaire }}</dd></div>
@@ -197,6 +191,6 @@ export class HeroDetailsComponent {
 
   protected readonly hasInfos = computed(() => {
     const infos = this.details().infos;
-    return infos.enCours || Boolean(infos.joueur || infos.region || infos.commentaire);
+    return infos.enCours || Boolean(infos.commentaire);
   });
 }

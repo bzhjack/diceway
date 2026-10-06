@@ -14,10 +14,11 @@
       <div class="exc-line">
         <div class="exc-title">
           <h3 class="exc-name">{{ card().nom }}</h3>
+          @if (subtitle(); as subtitle) {
+            <p class="exc-sub">{{ subtitle }}</p>
+          }
           @if (card().kind === 'hero' && hero(); as h) {
             <bol-hero-details class="exc-details" [details]="h.details" (armureToggled)="armureToggled.emit($event)" />
-          } @else {
-            <p class="exc-sub">{{ subtitle() }}</p>
           }
         </div>
         @if (card().kind === 'hero' && hero(); as h) {
@@ -78,7 +79,7 @@
       @if (card().kind === 'hero') {
         @if (mode() === 'libre') {
           @if (hero(); as h) {
-            <bol-action-roll-panel [data]="h.actionRoll" [(heroisme)]="heroisme" (rolled)="rolled.emit($event)" />
+            <bol-action-roll-panel [data]="h.actionRoll" [(heroisme)]="heroisme" />
           }
         }
       } @else {

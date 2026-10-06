@@ -156,12 +156,14 @@
 .exc-name {
   margin: 0;
   font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 1.15rem;
+  font-size: 1.5rem;
   font-weight: 400;
   color: var(--exc-kind);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  // Une capitale à l'initiale de chaque mot : « bogomit » → « Bogomit ».
+  text-transform: capitalize;
 }
 
 .exc-details {

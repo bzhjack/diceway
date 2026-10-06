@@ -7244,7 +7244,7 @@
                 "console",
                 "dev",
                 "error",
-                "handling",
+                "handling",exc-name,
                 "laravel",
                 "laravel-zero",
                 "php",

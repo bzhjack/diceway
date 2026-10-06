@@ -39,14 +39,6 @@
     } @else {
       <p class="tps-nobody">Plus personne ne peut jouer.</p>
     }
-  } @else {
-    <div class="tps-last-roll" aria-live="polite" [class.tps-last-roll--empty]="!lastRoll()">
-      @if (lastRoll(); as roll) {
-        <span class="tps-last-roll-label">Dernier jet</span>
-        <span class="tps-last-roll-formula">{{ roll.nom }} · {{ roll.formula }} → {{ roll.total }}</span>
-        <strong [class]="'tps-last-roll-result tps-last-roll-result--' + roll.tone">{{ roll.label }}</strong>
-      }
-    </div>
   }
 </ng-template>
 
@@ -66,7 +58,6 @@
             [canAttack]="canAttack(card)"
             (closed)="closed.emit()"
             (changed)="changed.emit()"
-            (rolled)="rolled.emit($event)"
             (removeRequested)="removeRequested.emit($event)"
             (campToggleRequested)="campToggleRequested.emit($event)"
             (armureToggled)="armureToggled.emit({card, armureId: $event})"

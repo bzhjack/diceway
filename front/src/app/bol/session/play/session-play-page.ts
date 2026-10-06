@@ -27,7 +27,7 @@ import {
 import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialog';
 import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard, postCombatRecoveryAmount} from '../combat-play.util';
-import {ActionRollDiceTrait, LastRoll} from '../action-roll.util';
+import {ActionRollDiceTrait} from '../action-roll.util';
 import {SceneActionsService} from '../scene-actions.service';
 import {AddCombatantDialogComponent, resolveAddCombatantCamp} from './add-combatant-dialog/add-combatant-dialog';
 import {openCommandPalette} from './command-palette/command-palette';
@@ -188,7 +188,6 @@ export class SessionPlayPageComponent {
   /** Arme et posture choisies dans la barre d'action — `null` si le choix n'est pas jouable. */
   protected readonly attackChoice = signal<AttackChoice | null>({degats: null, posture: null});
 
-  protected readonly lastRoll = signal<LastRoll | null>(null);
 
   /** PNJ / créatures / démons sur la table — décide si charger une scène demande « Remplacer ou Ajouter ». */
   protected readonly nonHeroCount = computed(() => (this.board()?.tokens ?? []).filter((t) => t.kind !== 'hero').length);

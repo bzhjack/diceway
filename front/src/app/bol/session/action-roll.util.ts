@@ -158,11 +158,3 @@ export function actionResultTone(result: InitiativeResultat): ActionRollTone {
   return result === 'heroique' || result === 'legendaire' ? 'heroique' : 'echec';
 }
 
-/** Dernier jet affiché dans le bandeau sous la carte (`session-play-page`). */
-export interface LastRoll {
-  readonly nom: string;
-  readonly formula: string;
-  readonly total: number;
-  readonly label: string;
-  readonly tone: ActionRollTone;
-}

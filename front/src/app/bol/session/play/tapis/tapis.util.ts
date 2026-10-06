@@ -393,3 +393,8 @@ export function heroDetails(hero: BolHerosModel): HeroDetails {
     armures: [...armures.filter((a) => a.equipee), ...armures.filter((a) => !a.equipee)],
   };
 }
+
+/** « Joueur · Région » : la ligne sous le nom d'un héros. Vide si ni l'un ni l'autre n'est connu. */
+export function heroIdentityLine(infos: HeroDetailInfos): string {
+  return [infos.joueur, infos.region].filter(Boolean).join(' · ');
+}

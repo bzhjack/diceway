@@ -3,7 +3,6 @@ import {afterRenderEffect, ChangeDetectionStrategy, Component, computed, input, 
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolCombatOptionModel} from '../../../services/bol-combat-reference.service';
 import {BolStatblockData} from '../../../shared/statblock/bol-statblock.component';
-import {LastRoll} from '../../action-roll.util';
 import {AttackChoice} from '../../attack-options.util';
 import {ActionBarComponent} from './action-bar';
 import {CharacterCardComponent} from './character-card';
@@ -35,7 +34,6 @@ export class TapisComponent {
   readonly hero = input<ExpandedHeroData | null>(null);
   readonly statblock = input<BolStatblockData | null>(null);
   readonly returnUrl = input<string | null>(null);
-  readonly lastRoll = input<LastRoll | null>(null);
 
   readonly mode = input<'libre' | 'combat'>('libre');
   /** État de chaque carte dans le combat — `null` en mode libre. */
@@ -49,7 +47,6 @@ export class TapisComponent {
   readonly cardToggled = output<TapisCard>();
   readonly closed = output<void>();
   readonly changed = output<void>();
-  readonly rolled = output<LastRoll>();
   readonly removeRequested = output<TapisCard>();
   readonly campToggleRequested = output<TapisCard>();
   /** Un clic sur une armure du popover d'un héros : la carte et l'id de l'armure à équiper ou déséquiper. */

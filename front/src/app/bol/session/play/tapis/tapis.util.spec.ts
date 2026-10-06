@@ -12,7 +12,7 @@ import {buildTapisCards,
   TapisCard,
   vitalitePercent,
   vitaliteSteppers,
-  vitaliteText, revealDelta, heroHeaderStats, heroDetails} from './tapis.util';
+  vitaliteText, revealDelta, heroHeaderStats, heroDetails, heroIdentityLine} from './tapis.util';
 
 function hero(id: number, nom: string, extra: Record<string, unknown> = {}): NonNullable<BolFightSessionModel['heros']>[number] {
   return {
@@ -381,5 +381,22 @@ describe('heroDetails', () => {
   it('returns empty lists for a hero with no gear', () => {
     const empty = heroDetails(hero({carrieres: [], armes: [], armures: [], traits: []}));
     expect([empty.carrieres, empty.armes, empty.armures, empty.traits]).toEqual([[], [], [], []]);
+  });
+});
+
+describe('heroIdentityLine', () => {
+  const infos = (joueur: string | null, region: string | null) => ({joueur, region, commentaire: null, enCours: false});
+
+  it('puts the player first, then the region', () => {
+    expect(heroIdentityLine(infos('Alice', 'Côte de Feu'))).toBe('Alice · Côte de Feu');
+  });
+
+  it('shows only what is known', () => {
+    expect(heroIdentityLine(infos('Alice', null))).toBe('Alice');
+    expect(heroIdentityLine(infos(null, 'Côte de Feu'))).toBe('Côte de Feu');
+  });
+
+  it('is empty when nothing is known', () => {
+    expect(heroIdentityLine(infos(null, null))).toBe('');
   });
 });

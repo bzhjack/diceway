@@ -2,11 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
   input,
   model,
-  output,
   signal,
   ViewEncapsulation,
   viewChild,
@@ -37,7 +35,6 @@ import {
   diceFromTotal,
   formatActionFormula,
   keepBestOrWorstTwo,
-  LastRoll,
   netDiceModifier,
   signedModifier,
   suggestedActionResult,
@@ -60,7 +57,6 @@ export class ActionRollPanelComponent {
   /** Héroïsme courant du héros, partagé avec `bol-hero-resources` : une dépense ici met à jour le
    * stepper d'à côté, et inversement. */
   readonly heroisme = model.required<number>();
-  readonly rolled = output<LastRoll>();
 
   private readonly herosService = inject(BolHerosService);
   private readonly snackBar = inject(MatSnackBar);
@@ -205,25 +201,6 @@ export class ActionRollPanelComponent {
     const result = this.suggestedResult();
     return result ? actionResultTone(result) : null;
   });
-
-  constructor() {
-    // Remonte chaque résultat affiché (lancer, saisie manuelle, changement de palier ou de réglage
-    // après coup) pour le bandeau « Dernier jet » de la page.
-    effect(() => {
-      const result = this.suggestedResult();
-      const total = this.total();
-      if (result === null || total === null) {
-        return;
-      }
-      this.rolled.emit({
-        nom: this.data().heroNom,
-        formula: this.formula(),
-        total,
-        label: ACTION_RESULT_LABELS[result],
-        tone: actionResultTone(result),
-      });
-    });
-  }
 
   protected setAttribute(change: MatButtonToggleChange): void {
     this.attribute.set(change.value as ActionAttribute);
