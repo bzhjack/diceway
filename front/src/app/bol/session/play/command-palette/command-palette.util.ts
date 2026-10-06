@@ -1,5 +1,5 @@
 import {BolSceneModel} from '../../../models/bol-scene.model';
-import {CombatCatalogEntry, CombatantKind} from '../../../services/combat-selection.service';
+import {CombatCatalogEntry, CombatantKind} from '../../../models/combat-selection.model';
 import {isOnTable, normalizeSearch} from '../reserve/reserve.util';
 
 export const PALETTE_MAX_RESULTS = 12;

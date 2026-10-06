@@ -83,6 +83,12 @@ When a task touches game rules, character creation, equipment, careers, language
 - `providedIn: 'root'` for singleton services.
 - Single responsibility per service.
 
+### Models (types)
+- Never declare an exported `interface` / `type` / `enum` in a component, dialog, directive or service file: put it in a `models/` folder, in a file named `<component>.model.ts` (without `.component` / `.service`).
+- API data and the types of a service: `front/src/app/bol/models/` (`bol-*.model.ts`).
+- Types of a UI feature area: `front/src/app/bol/<area>/models/` — `<area>` is `shared`, `session`, `hero`, `pnj`, `creature` or `demon`; `front/src/app/shared/models/` for the primitives of `front/src/app/shared/`.
+- `*.util.ts` files may keep the types of the functions they hold.
+
 ### UI toolkit
 - **Angular Material only** — the app has fully migrated off PrimeNG (no `primeng`/`primeicons` dependency, no `p-*` element anywhere in `front/src/app/`). Use `mat-flat-button`/`mat-stroked-button`/`mat-icon-button` etc., not PrimeNG component names or `pi-*` icons.
 - For buttons, prefer component inputs/attributes (`mat-flat-button`, `mat-stroked-button`, `size="small"`, `color`) and CSS on container wrappers over ad-hoc inline styling.

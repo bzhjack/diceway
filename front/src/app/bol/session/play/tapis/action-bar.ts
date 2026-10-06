@@ -3,7 +3,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
-import {BolCombatOptionModel} from '../../../services/bol-combat-reference.service';
+import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {
   ARME_IMPROVISEE,
   AttackChoice,

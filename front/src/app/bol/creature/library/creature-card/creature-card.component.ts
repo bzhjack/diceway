@@ -1,12 +1,7 @@
 import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
 import {BolCreatureModel} from '../../../models/bol-creature.model';
-import {
-  EntityCardAction,
-  EntityCardBadge,
-  EntityCardChip,
-  EntityCardComponent,
-  EntityCardGauge,
-} from '../../../shared/entity-card/entity-card.component';
+import {EntityCardComponent} from '../../../shared/entity-card/entity-card.component';
+import {EntityCardAction, EntityCardBadge, EntityCardChip, EntityCardGauge} from '../../../shared/models/entity-card.model';
 
 export function creatureImage(creature: BolCreatureModel): string {
   if (!creature.user_id) {

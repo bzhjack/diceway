@@ -1,19 +1,7 @@
 import {ChangeDetectionStrategy, Component, computed, input} from '@angular/core';
 import {Field, FieldTree, FormField} from '@angular/forms/signals';
 import {DwValueStepperComponent} from '../../../shared/value-stepper/value-stepper';
-
-export interface StatCell {
-  readonly control: string;
-  readonly label: string;
-  readonly highlight?: boolean;
-}
-
-export interface StatGroup {
-  readonly key: 'attr' | 'combat' | 'res';
-  readonly label: string;
-  readonly columns: 1 | 2 | 3 | 4;
-  readonly cells: readonly StatCell[];
-}
+import {StatGroup} from '../models/stats-grid.model';
 
 @Component({
   selector: 'bol-stats-grid',

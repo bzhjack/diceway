@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {CombatCatalogEntry, CombatantKind} from '../../../services/combat-selection.service';
+import {CombatCatalogEntry, CombatantKind} from '../../../models/combat-selection.model';
 import {filterReserve, isOnTable, RESERVE_TABS, reserveTab} from './reserve.util';
 
 function entry(kind: CombatantKind, sourceId: string, nom: string): CombatCatalogEntry {

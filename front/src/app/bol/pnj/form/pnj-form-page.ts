@@ -12,56 +12,23 @@ import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolPnjService} from '../../services/bol-pnj.service';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {AddMenuComponent, addMenuOptions} from '../../shared/add-menu/add-menu.component';
-import {ArmeEntry, ArmeListComponent} from '../../shared/arme/list/arme-list.component';
-import {ArmureEntry, ArmureListComponent} from '../../shared/armure/list/armure-list.component';
-import {CarriereEntry, CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
+import {ArmeListComponent} from '../../shared/arme/list/arme-list.component';
+import {ArmeEntry} from '../../shared/models/arme-list.model';
+import {ArmureListComponent} from '../../shared/armure/list/armure-list.component';
+import {ArmureEntry} from '../../shared/models/armure-list.model';
+import {CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
+import {CarriereEntry} from '../../shared/models/carriere-list.model';
 import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
-import {
-  ArmeDraft,
-  ArmureDraft,
-  IdDraft,
-  RankedDraft,
-  applyArmureEquipToggle,
-  availableCatalog,
-  referencedIds,
-  selectedEntries,
-  toggleEquipee,
-} from '../../shared/form/form-selection';
-import {LangueEntry} from '../../shared/langue/list/langue-list.component';
-import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
-import {TraitAddEvent} from '../../shared/trait/add-menu/trait-add-menu.component';
-import {TraitDraft, traitEntriesSignal} from '../../shared/trait/trait-entry.utils';
-import {PnjGeneralComponent, PnjTypeOption} from './general/pnj-general.component';
+import {applyArmureEquipToggle, availableCatalog, referencedIds, selectedEntries, toggleEquipee} from '../../shared/form/form-selection';
+import {LangueEntry} from '../../shared/models/langue-list.model';
+import {StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
+import {StatGroup} from '../../shared/models/stats-grid.model';
+import {TraitAddEvent} from '../../shared/models/trait-add-menu.model';
+import {traitEntriesSignal} from '../../shared/trait/trait-entry.utils';
+import {PnjGeneralComponent} from './general/pnj-general.component';
+import {PnjTypeOption} from '../models/pnj-general.model';
 import {PnjSummaryRailComponent} from './summary-rail/pnj-summary-rail.component';
-
-/** Modèle de brouillon du formulaire PNJ (distinct de {@link BolHerosModel}, la forme persistée par l'API). */
-export interface PnjFormModel {
-  id: string | null;
-  nom: string;
-  type: 'P' | 'C' | 'R';
-  joueur: string;
-  /** Chaîne vide plutôt que `null` : `[formField]` sur `<textarea>` exige `Field<string>`. */
-  commentaire: string;
-  avatar: string | null;
-  vigueur: number;
-  agilite: number;
-  esprit: number;
-  aura: number;
-  initiative: number;
-  melee: number;
-  tir: number;
-  defense: number;
-  vitalite: number;
-  pouvoir: number;
-  foi: number;
-  vilenie: number;
-  creation: number;
-  armes: ArmeDraft[];
-  armures: ArmureDraft[];
-  carrieres: RankedDraft[];
-  langues: IdDraft[];
-  traits: TraitDraft[];
-}
+import {PnjFormModel} from '../models/pnj-form-page.model';
 
 function pnjFormDefaults(): PnjFormModel {
   return {

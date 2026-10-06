@@ -11,14 +11,16 @@ import {BolFightSessionModel} from '../../models/bol-fight-session.model';
 import {BolSceneModel} from '../../models/bol-scene.model';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
-import {BolCombatOptionModel, BolCombatReferenceService} from '../../services/bol-combat-reference.service';
+import {BolCombatReferenceService} from '../../services/bol-combat-reference.service';
+import {BolCombatOptionModel} from '../../models/bol-combat-reference.model';
 import {BolCreaturesService} from '../../services/bol-creatures.service';
 import {BolDemonsService} from '../../services/bol-demons.service';
 import {BolHerosService} from '../../services/bol-heros.service';
 import {BolPnjService} from '../../services/bol-pnj.service';
 import {BolSceneService} from '../../services/bol-scene.service';
-import {CombatantKind, CombatSelectionService} from '../../services/combat-selection.service';
-import {BolStatblockData} from '../../shared/statblock/bol-statblock.component';
+import {CombatSelectionService} from '../../services/combat-selection.service';
+import {CombatantKind} from '../../models/combat-selection.model';
+import {BolStatblockData} from '../../shared/models/bol-statblock.model';
 import {
   creatureStatblockData,
   demonStatblockData,
@@ -40,7 +42,7 @@ import {SessionHeaderComponent} from './session-header/session-header';
 import {ReserveComponent} from './reserve/reserve';
 import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dialog';
 import {browserStorage, readPanelOpen, RESERVE_PANEL_KEY, writePanelOpen} from './table-state.util';
-import {ExpandedHeroData} from './tapis/expanded-card';
+import {ExpandedHeroData} from '../models/expanded-card.model';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {equippedArmes} from '../../shared/arme/arme-equipee';
 import {AttackChoice} from '../attack-options.util';
@@ -59,7 +61,8 @@ import {
   turnAnnouncement,
   turnState,
 } from './tapis/combat-turn.util';
-import {TurnOrderComponent, TurnOrderEntry} from './tapis/turn-order';
+import {TurnOrderComponent} from './tapis/turn-order';
+import {TurnOrderEntry} from '../models/turn-order.model';
 import {TapisComponent} from './tapis/tapis';
 import {buildTapisCards, cardLabel, findCard, heroDetails, heroHeaderStats, removeActionLabel, TapisCard} from './tapis/tapis.util';
 

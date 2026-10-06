@@ -5,18 +5,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {DwCollapsibleRowComponent} from '../../../../shared/dw-collapsible-row/dw-collapsible-row';
 import {BolArmureCategorie} from '../../../models/bol-armure.model';
-
-export interface ArmureEntry {
-  readonly id: number;
-  readonly label: string;
-  readonly protection: string | null;
-  readonly malus: string | null;
-  readonly ptsDePouvoir: string | null;
-  readonly categorie: BolArmureCategorie;
-  readonly equipee: boolean;
-  readonly malusAgilite: number;
-  readonly malusInitiative: number;
-}
+import {ArmureEntry} from '../../models/armure-list.model';
 
 const CATEGORIE_LABELS: Record<BolArmureCategorie, string> = {
   armure: 'Armure',

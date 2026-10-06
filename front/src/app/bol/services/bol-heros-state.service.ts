@@ -12,16 +12,7 @@ import {
 } from '../bol-rules.constants';
 import {BolHerosModel} from '../models/bol-heros.model';
 import {BolCatalogService} from './bol-catalog.service';
-
-export interface HeroCreationWarning {
-  step: string;
-  warn: string;
-}
-
-export interface AttributModifier {
-  attr: string;
-  value: number;
-}
+import {HeroCreationWarning, AttributModifier} from '../models/bol-heros-state.model';
 
 @Injectable({
   providedIn: 'root',

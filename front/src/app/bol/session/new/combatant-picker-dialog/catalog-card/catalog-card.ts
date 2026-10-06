@@ -2,7 +2,8 @@ import {ChangeDetectionStrategy, Component, computed, inject, input} from '@angu
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {combatantKindIcon, combatantKindIconIsSvg, combatantRankLabel, openCombatantStatblock} from '../../../combat-statblock.util';
-import {CombatCatalogEntry, CombatSelectionService} from '../../../../services/combat-selection.service';
+import {CombatSelectionService} from '../../../../services/combat-selection.service';
+import {CombatCatalogEntry} from '../../../../models/combat-selection.model';
 
 /** Carte d'une entrée de catalogue dans le dialog de sélection : l'avatar ouvre le statbloc, le bouton ajoute (ou incrémente). */
 @Component({

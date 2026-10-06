@@ -3,34 +3,7 @@ import {RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
-
-export type EntityCardAccent = 'emerald' | 'amber' | 'rose';
-export type EntityCardBadgeVariant = 'amber' | 'rose' | 'slate';
-
-export interface EntityCardBadge {
-  readonly label: string;
-  readonly variant: EntityCardBadgeVariant;
-}
-
-export interface EntityCardAction {
-  readonly icon: string;
-  readonly tooltip: string;
-  readonly routerLink: readonly unknown[];
-  readonly state?: Record<string, unknown>;
-}
-
-export interface EntityCardGauge {
-  readonly icon: string;
-  readonly value: number;
-  readonly label: string;
-  readonly accent: 'pv' | 'ph';
-}
-
-export interface EntityCardChip {
-  readonly icon: string;
-  readonly value: number;
-  readonly tooltip: string;
-}
+import {EntityCardAccent, EntityCardBadge, EntityCardAction, EntityCardGauge, EntityCardChip} from '../models/entity-card.model';
 
 @Component({
   selector: 'bol-entity-card',

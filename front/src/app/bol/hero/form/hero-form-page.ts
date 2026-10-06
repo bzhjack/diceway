@@ -14,59 +14,22 @@ import {BolHerosService} from '../../services/bol-heros.service';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {AddMenuComponent, addMenuOptions} from '../../shared/add-menu/add-menu.component';
-import {ArmeEntry, ArmeListComponent} from '../../shared/arme/list/arme-list.component';
-import {ArmureEntry, ArmureListComponent} from '../../shared/armure/list/armure-list.component';
-import {CarriereEntry, CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
+import {ArmeListComponent} from '../../shared/arme/list/arme-list.component';
+import {ArmeEntry} from '../../shared/models/arme-list.model';
+import {ArmureListComponent} from '../../shared/armure/list/armure-list.component';
+import {ArmureEntry} from '../../shared/models/armure-list.model';
+import {CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
+import {CarriereEntry} from '../../shared/models/carriere-list.model';
 import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
-import {
-  ArmeDraft,
-  ArmureDraft,
-  IdDraft,
-  RankedDraft,
-  applyArmureEquipToggle,
-  availableCatalog,
-  referencedIds,
-  selectedEntries,
-  toggleEquipee,
-} from '../../shared/form/form-selection';
-import {LangueEntry} from '../../shared/langue/list/langue-list.component';
-import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
-import {TraitAddEvent} from '../../shared/trait/add-menu/trait-add-menu.component';
-import {TraitDraft, traitEntriesSignal} from '../../shared/trait/trait-entry.utils';
+import {applyArmureEquipToggle, availableCatalog, referencedIds, selectedEntries, toggleEquipee} from '../../shared/form/form-selection';
+import {LangueEntry} from '../../shared/models/langue-list.model';
+import {StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
+import {StatGroup} from '../../shared/models/stats-grid.model';
+import {TraitAddEvent} from '../../shared/models/trait-add-menu.model';
+import {traitEntriesSignal} from '../../shared/trait/trait-entry.utils';
 import {HeroGeneralComponent} from './general/general.component';
 import {HeroSummaryRailComponent} from './summary-rail/summary-rail.component';
-
-/** Modèle de brouillon du formulaire héros (distinct de {@link BolHerosModel}, la forme persistée par l'API). */
-export interface HeroFormModel {
-  id: string | null;
-  active: boolean;
-  type: 'H';
-  nom: string;
-  joueur: string;
-  region_id: number | null;
-  /** Chaîne vide plutôt que `null` : `[formField]` sur `<textarea>` exige `Field<string>`. */
-  commentaire: string;
-  avatar: string | null;
-  vigueur: number;
-  agilite: number;
-  esprit: number;
-  aura: number;
-  initiative: number;
-  melee: number;
-  tir: number;
-  defense: number;
-  vitalite: number;
-  heroisme: number;
-  experience: number;
-  pouvoir: number;
-  foi: number;
-  creation: number;
-  armes: ArmeDraft[];
-  armures: ArmureDraft[];
-  carrieres: RankedDraft[];
-  langues: IdDraft[];
-  traits: TraitDraft[];
-}
+import {HeroFormModel} from '../models/hero-form-page.model';
 
 function heroFormDefaults(): HeroFormModel {
   return {

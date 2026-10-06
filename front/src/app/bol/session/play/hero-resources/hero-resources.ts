@@ -9,15 +9,7 @@ import {BolFightSessionService} from '../../../services/bol-fight-session.servic
 import {BolHerosService} from '../../../services/bol-heros.service';
 import {ValueTracker} from '../../value-tracker';
 import {maybePromptDefierLaMort} from '../defier-la-mort-dialog/defier-la-mort.util';
-
-export interface HeroResourcesData {
-  readonly sessionId: string;
-  readonly herosId: string;
-  readonly pivotId: number;
-  readonly heroNom: string;
-  readonly vitaliteCourante: number;
-  readonly vitaliteMax: number;
-}
+import {HeroResourcesData} from '../../models/hero-resources.model';
 
 /** Vitalité de session et héroïsme d'un héros, ajustables par stepper et persistés à chaque pas.
  * Utilisé dans l'en-tête de la carte dépliée d'un héros (`bol-expanded-card`). L'héroïsme est un `model` :

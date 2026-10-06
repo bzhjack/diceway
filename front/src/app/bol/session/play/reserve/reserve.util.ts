@@ -1,4 +1,4 @@
-import {CombatCatalogEntry, CombatantKind} from '../../../services/combat-selection.service';
+import {CombatCatalogEntry, CombatantKind} from '../../../models/combat-selection.model';
 
 export interface ReserveTab {
   readonly kind: CombatantKind;

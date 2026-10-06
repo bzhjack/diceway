@@ -1,13 +1,14 @@
 import {NgTemplateOutlet} from '@angular/common';
 import {afterRenderEffect, ChangeDetectionStrategy, Component, computed, input, output} from '@angular/core';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
-import {BolCombatOptionModel} from '../../../services/bol-combat-reference.service';
-import {BolStatblockData} from '../../../shared/statblock/bol-statblock.component';
+import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
+import {BolStatblockData} from '../../../shared/models/bol-statblock.model';
 import {AttackChoice} from '../../attack-options.util';
 import {ActionBarComponent} from './action-bar';
 import {CharacterCardComponent} from './character-card';
 import {CardCombatState} from './combat-turn.util';
-import {ExpandedCardComponent, ExpandedHeroData} from './expanded-card';
+import {ExpandedCardComponent} from './expanded-card';
+import {ExpandedHeroData} from '../../models/expanded-card.model';
 import {DwScrollerComponent} from '../../../../shared/dw-scroller/dw-scroller';
 import {revealDelta, splitRows, TapisCard} from './tapis.util';
 

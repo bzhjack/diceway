@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {BolCombatOptionModel} from '../services/bol-combat-reference.service';
+import {BolCombatOptionModel} from '../models/bol-combat-reference.model';
 import {filterAttackMenuCombatOptions, filterVisiblePostures} from './attack-options.util';
 
 function option(slug: string, ordre: number): BolCombatOptionModel {

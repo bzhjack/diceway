@@ -1,5 +1,5 @@
 import {BolHerosArmeModel} from '../models/bol-arme.model';
-import {BolCombatOptionModel} from '../services/bol-combat-reference.service';
+import {BolCombatOptionModel} from '../models/bol-combat-reference.model';
 import {isDualWieldEligible} from './combat-attack.util';
 
 /** Postures proposées à l'attaquant (doc/rules/02-actions-combat.md, "Options de combat") — "Défense

@@ -1,7 +1,6 @@
 import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
-
-export type DwRowTone = 'neutral' | 'positive' | 'negative';
+import {DwRowTone} from '../models/dw-collapsible-row.model';
 
 @Component({
   selector: 'dw-collapsible-row',

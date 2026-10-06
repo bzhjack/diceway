@@ -1,8 +1,10 @@
 import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
 import {BolDemonPouvoirModel} from '../../../models/bol-demon.model';
 import {DwTagComponent} from '../../../../shared/dw-tag/dw-tag';
-import {AddMenuComponent, AddMenuEvent, addMenuOptions} from '../../../shared/add-menu/add-menu.component';
-import {PouvoirEntry, PouvoirListComponent} from '../../../shared/pouvoir/list/pouvoir-list.component';
+import {AddMenuComponent, addMenuOptions} from '../../../shared/add-menu/add-menu.component';
+import {AddMenuEvent} from '../../../shared/models/add-menu.model';
+import {PouvoirListComponent} from '../../../shared/pouvoir/list/pouvoir-list.component';
+import {PouvoirEntry} from '../../../shared/models/pouvoir-list.model';
 
 @Component({
   selector: 'bol-demon-pouvoirs',

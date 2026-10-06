@@ -5,13 +5,7 @@ import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {BolHerosArmureModel} from '../../models/bol-armure.model';
 import {heroBadge} from '../../hero/library/hero-card/hero-card.component';
 import {pnjBadge} from '../../pnj/library/pnj-card/pnj-card.component';
-import {
-  BolStatblockChip,
-  BolStatblockData,
-  BolStatblockEntry,
-  BolStatblockSection,
-  BolStatblockTile,
-} from './bol-statblock.component';
+import {BolStatblockChip, BolStatblockData, BolStatblockEntry, BolStatblockSection, BolStatblockTile} from '../models/bol-statblock.model';
 
 /** Mapping type BoL ('P'/'C'/'R') → libellé de rang. */
 const RANK_LABELS: Record<string, string> = {

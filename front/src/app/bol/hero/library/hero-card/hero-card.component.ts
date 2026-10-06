@@ -1,12 +1,7 @@
 import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
 import {BolHerosModel} from '../../../models/bol-heros.model';
-import {
-  EntityCardAction,
-  EntityCardBadge,
-  EntityCardChip,
-  EntityCardComponent,
-  EntityCardGauge,
-} from '../../../shared/entity-card/entity-card.component';
+import {EntityCardComponent} from '../../../shared/entity-card/entity-card.component';
+import {EntityCardAction, EntityCardBadge, EntityCardChip, EntityCardGauge} from '../../../shared/models/entity-card.model';
 
 interface HeroCareerEntry {
   readonly label: string;

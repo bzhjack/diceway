@@ -14,33 +14,16 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterLink} from '@angular/router';
-import {BolStatblockComponent, BolStatblockData} from '../../../shared/statblock/bol-statblock.component';
-import {ActionRollData} from '../../action-roll.util';
+import {BolStatblockComponent} from '../../../shared/statblock/bol-statblock.component';
+import {BolStatblockData} from '../../../shared/models/bol-statblock.model';
 import {EMPTY_AVATAR} from '../../combat-play.util';
 import {combatantKindIcon, combatantKindIconIsSvg} from '../../combat-statblock.util';
 import {ActionRollPanelComponent} from '../action-roll-panel/action-roll-panel';
-import {HeroResourcesComponent, HeroResourcesData} from '../hero-resources/hero-resources';
+import {HeroResourcesComponent} from '../hero-resources/hero-resources';
 import {InstanceVitaliteComponent} from './instance-vitalite';
-import {
-  campActionLabel,
-  HeroDetails,
-  HeroHeaderStat,
-  heroIdentityLine,
-  removeActionLabel,
-  TapisCard,
-  TapisKind,
-  vitaliteSteppers,
-} from './tapis.util';
+import {campActionLabel, heroIdentityLine, removeActionLabel, TapisCard, TapisKind, vitaliteSteppers} from './tapis.util';
 import {HeroDetailsComponent} from './hero-details';
-
-export interface ExpandedHeroData {
-  /** Carrières, armes et armures, pour les popovers de détail de l'en-tête. */
-  readonly details: HeroDetails;
-  /** Statistiques de combat de l'en-tête (initiative, mêlée, tir, défense, protection, dégâts). */
-  readonly stats: readonly HeroHeaderStat[];
-  readonly resources: HeroResourcesData;
-  readonly actionRoll: ActionRollData;
-}
+import {ExpandedHeroData} from '../../models/expanded-card.model';
 
 const KIND_LABELS: Record<TapisKind, string> = {
   hero: 'Héros',

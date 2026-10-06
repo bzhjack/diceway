@@ -12,7 +12,8 @@ import {BolScenarioService} from '../../../services/bol-scenario.service';
 import {BolSceneService} from '../../../services/bol-scene.service';
 import {SceneActionsService} from '../../scene-actions.service';
 import {NO_SCENARIO, scenesOf} from '../scene-list/scene.util';
-import {SceneManagerDialogComponent, SceneManagerDialogData} from './scene-manager-dialog';
+import {SceneManagerDialogComponent} from './scene-manager-dialog';
+import {SceneManagerDialogData} from '../../models/scene-manager-dialog.model';
 
 /** Onglet « Scènes » du bandeau de réserve : le scénario, ses scènes en puces (un clic charge), et
  * l'accès à « Enregistrer la table » et « Gérer les scènes ». Signale à la page (`changed`) chaque

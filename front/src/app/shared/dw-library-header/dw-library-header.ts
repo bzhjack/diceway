@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, computed, input} from '@angular/core';
 import {MatCard, MatCardContent} from '@angular/material/card';
-import {DwBadgeColor} from '../dw-badge/dw-badge';
+import {DwBadgeColor} from '../models/dw-badge.model';
 
 @Component({
   selector: 'dw-library-header',

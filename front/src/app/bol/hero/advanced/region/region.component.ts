@@ -14,16 +14,7 @@ import {BolNomModel, BolRegionModel} from '../../../models/bol-region.model';
 import {BolHerosStateService} from '../../../services/bol-heros-state.service';
 import {REGION_MAP_COORDINATES} from './region-map-coordinates';
 import {HeroAdvancedTraitRowComponent} from './trait-row/trait-row.component';
-
-export interface HeroAdvancedRegionDialogData {
-  id_region?: number;
-  nom?: string;
-}
-
-export interface HeroAdvancedRegionDialogResult {
-  region: BolRegionModel;
-  nom?: string;
-}
+import {HeroAdvancedRegionDialogData, HeroAdvancedRegionDialogResult} from '../../models/hero-advanced-region.model';
 
 /** Point cliquable sur la carte, positionné en % via {@link REGION_MAP_COORDINATES}. */
 interface RegionPin {

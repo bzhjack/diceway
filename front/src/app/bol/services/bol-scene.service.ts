@@ -2,13 +2,7 @@ import {HttpClient} from '@angular/common/http';
 import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {apiUrl} from '../../core/api-url';
-import {BolSceneModel} from '../models/bol-scene.model';
-
-export interface BolSceneChanges {
-  titre?: string;
-  notes?: string | null;
-  scenario_id?: string | null;
-}
+import {BolSceneModel, BolSceneChanges} from '../models/bol-scene.model';
 
 @Injectable({providedIn: 'root'})
 export class BolSceneService {

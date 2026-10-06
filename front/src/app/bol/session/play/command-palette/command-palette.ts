@@ -1,29 +1,9 @@
-import {
-  afterRenderEffect,
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  linkedSignal,
-  Signal,
-  signal,
-} from '@angular/core';
+import {afterRenderEffect, ChangeDetectionStrategy, Component, computed, inject, linkedSignal, signal} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {map, Observable, take} from 'rxjs';
-import {
-  buildResults,
-  flattenResults,
-  nextIndex,
-  PaletteCommand,
-  PaletteContext,
-  PaletteResult,
-} from './command-palette.util';
-
-export interface CommandPaletteData {
-  /** État de la table, en signal : les résultats suivent l'arrivée de la bibliothèque et des scènes. */
-  readonly context: Signal<PaletteContext>;
-}
+import {buildResults, flattenResults, nextIndex, PaletteCommand, PaletteResult} from './command-palette.util';
+import {CommandPaletteData} from '../../models/command-palette.model';
 
 /** Barre de commande de la table : un champ, des résultats groupés, navigation au clavier. Ne parle à
  * aucun service — se ferme avec la commande choisie, que `session-play-page` exécute. */

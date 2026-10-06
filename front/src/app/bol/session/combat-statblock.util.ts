@@ -10,7 +10,7 @@ import {
 import {BolCreatureModel} from '../models/bol-creature.model';
 import {BolDemonModel} from '../models/bol-demon.model';
 import {BolHerosModel} from '../models/bol-heros.model';
-import {CombatantKind, CombatCatalogEntry} from '../services/combat-selection.service';
+import {CombatantKind, CombatCatalogEntry} from '../models/combat-selection.model';
 
 /** Icône Material par type de combattant (même mapping que les liens de navigation entre bibliothèques). */
 const KIND_ICONS: Record<CombatantKind, string> = {

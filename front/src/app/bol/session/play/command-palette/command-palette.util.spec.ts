@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {BolSceneModel} from '../../../models/bol-scene.model';
-import {CombatCatalogEntry, CombatantKind} from '../../../services/combat-selection.service';
+import {CombatCatalogEntry, CombatantKind} from '../../../models/combat-selection.model';
 import {
   buildResults,
   flattenResults,

@@ -6,14 +6,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angula
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {map, Observable, take} from 'rxjs';
-
-export interface DwPromptDialogData {
-  title: string;
-  label: string;
-  value?: string;
-  maxLength?: number;
-  confirmLabel?: string;
-}
+import {DwPromptDialogData} from '../models/dw-prompt-dialog.model';
 
 /** Dialogue à un seul champ texte obligatoire (nommer ou renommer quelque chose). */
 @Component({

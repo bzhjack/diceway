@@ -4,9 +4,12 @@ import {BolAvantageModel} from '../../../models/bol-avantage.model';
 import {BolDesavantageModel} from '../../../models/bol-desavantage.model';
 import {BolLangueModel} from '../../../models/bol-langue.model';
 import {AddMenuComponent, addMenuOptions} from '../../../shared/add-menu/add-menu.component';
-import {LangueEntry, LangueListComponent} from '../../../shared/langue/list/langue-list.component';
-import {TraitAddEvent, TraitAddMenuComponent} from '../../../shared/trait/add-menu/trait-add-menu.component';
-import {TraitEntry, TraitListComponent} from '../../../shared/trait/list/trait-list.component';
+import {LangueListComponent} from '../../../shared/langue/list/langue-list.component';
+import {LangueEntry} from '../../../shared/models/langue-list.model';
+import {TraitAddMenuComponent} from '../../../shared/trait/add-menu/trait-add-menu.component';
+import {TraitAddEvent} from '../../../shared/models/trait-add-menu.model';
+import {TraitListComponent} from '../../../shared/trait/list/trait-list.component';
+import {TraitEntry} from '../../../shared/models/trait-list.model';
 
 @Component({
   selector: 'bol-pnj-summary-rail',

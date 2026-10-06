@@ -6,7 +6,8 @@ import {promptDialog} from '../../shared/dw-prompt-dialog/dw-prompt-dialog';
 import {BolSceneLoadResult, BolSceneModel, SceneLoadMode} from '../models/bol-scene.model';
 import {BolFightSessionService} from '../services/bol-fight-session.service';
 import {BolSceneService} from '../services/bol-scene.service';
-import {SceneLoadDialogComponent, SceneLoadDialogData} from './play/scene-list/scene-load-dialog';
+import {SceneLoadDialogComponent} from './play/scene-list/scene-load-dialog';
+import {SceneLoadDialogData} from './models/scene-load-dialog.model';
 import {loadMessage, needsLoadChoice, normalizeTitre, SCENE_TITLE_MAX} from './play/scene-list/scene.util';
 
 /** Les deux gestes sur les scènes qui touchent la table, partagés par l'onglet Scènes et la barre de

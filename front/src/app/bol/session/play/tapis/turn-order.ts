@@ -5,14 +5,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {TurnStatus} from './combat-turn.util';
 import {DwScrollerComponent} from '../../../../shared/dw-scroller/dw-scroller';
-import {TapisKind} from './tapis.util';
-
-export interface TurnOrderEntry {
-  readonly key: string;
-  readonly nom: string;
-  readonly kind: TapisKind;
-  readonly status: TurnStatus;
-}
+import {TurnOrderEntry} from '../../models/turn-order.model';
 
 const STATUS_LABELS: Record<TurnStatus, string> = {
   active: 'à elle de jouer',

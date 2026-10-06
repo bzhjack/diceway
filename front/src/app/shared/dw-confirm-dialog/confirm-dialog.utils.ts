@@ -1,6 +1,7 @@
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {Observable, map, take} from 'rxjs';
-import {DwConfirmDialogComponent, DwConfirmDialogData} from './dw-confirm-dialog';
+import {DwConfirmDialogComponent} from './dw-confirm-dialog';
+import {DwConfirmDialogData} from '../models/dw-confirm-dialog.model';
 
 /** Ouvre le dialog de confirmation et émet une seule fois true (confirmé) ou false (annulé/fermé). */
 export function confirmDialog(

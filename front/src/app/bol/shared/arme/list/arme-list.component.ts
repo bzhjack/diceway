@@ -4,15 +4,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {DwCollapsibleRowComponent} from '../../../../shared/dw-collapsible-row/dw-collapsible-row';
-
-export interface ArmeEntry {
-  readonly id: number;
-  readonly label: string;
-  readonly degats: string | null;
-  readonly portee: string | null;
-  readonly notes: string | null;
-  readonly equipee: boolean;
-}
+import {ArmeEntry} from '../../models/arme-list.model';
 
 @Component({
   selector: 'bol-arme-list',

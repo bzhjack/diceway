@@ -1,17 +1,9 @@
 import {ChangeDetectionStrategy, Component, input, output, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {DwCollapsibleRowComponent, DwRowTone} from '../../../../shared/dw-collapsible-row/dw-collapsible-row';
-import {TraitIcon, traitIconIsSvg, traitIconName} from '../../../shared/trait-icon';
-
-export interface CapaciteEntry {
-  readonly id: number;
-  readonly label: string;
-  readonly description: string | null;
-  readonly detail: string | null;
-  readonly icon: TraitIcon;
-  readonly tone: DwRowTone;
-}
+import {DwCollapsibleRowComponent} from '../../../../shared/dw-collapsible-row/dw-collapsible-row';
+import {traitIconIsSvg, traitIconName} from '../../../shared/trait-icon';
+import {CapaciteEntry} from '../../models/capacite-list.model';
 
 @Component({
   selector: 'bol-capacite-list',

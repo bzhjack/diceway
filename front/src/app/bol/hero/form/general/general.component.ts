@@ -4,7 +4,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {BolRegionModel} from '../../../models/bol-region.model';
-import type {HeroFormModel} from '../hero-form-page';
+import type {HeroFormModel} from '../../models/hero-form-page.model';
 
 @Component({
   selector: 'bol-hero-general',

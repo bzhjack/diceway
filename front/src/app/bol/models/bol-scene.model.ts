@@ -36,3 +36,9 @@ export interface BolSceneLoadResult {
   /** Entrées de la scène non chargées (fiche source supprimée, ou PNJ déjà présent). */
   ignored: number;
 }
+
+export interface BolSceneChanges {
+  titre?: string;
+  notes?: string | null;
+  scenario_id?: string | null;
+}

@@ -15,18 +15,19 @@ import {BolCarriereModel} from '../../models/bol-carriere.model';
 import {BolHerosAttributs, BolHerosCombat, BolHerosModel, BolHerosOrigines, BolHerosRessources} from '../../models/bol-heros.model';
 import {BolHerosTraitsModel} from '../../models/bol-trait.model';
 import {BolHerosService} from '../../services/bol-heros.service';
-import {BolHerosStateService, HeroCreationWarning} from '../../services/bol-heros-state.service';
+import {BolHerosStateService} from '../../services/bol-heros-state.service';
+import {HeroCreationWarning} from '../../models/bol-heros-state.model';
 import {addMenuOptions} from '../../shared/add-menu/add-menu.component';
 import {isArmeEquipee} from '../../shared/arme/arme-equipee';
-import {ArmeEntry} from '../../shared/arme/list/arme-list.component';
-import {ArmureEntry} from '../../shared/armure/list/armure-list.component';
-import {CarriereEntry} from '../../shared/carriere/list/carriere-list.component';
+import {ArmeEntry} from '../../shared/models/arme-list.model';
+import {ArmureEntry} from '../../shared/models/armure-list.model';
+import {CarriereEntry} from '../../shared/models/carriere-list.model';
 import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
-import {ArmeDraft, ArmureDraft, IdDraft, RankedDraft, availableCatalog, selectedEntries, toggleEquipee} from '../../shared/form/form-selection';
-import {LangueEntry} from '../../shared/langue/list/langue-list.component';
-import {StatGroup} from '../../shared/stats-grid/stats-grid.component';
-import {TraitAddEvent} from '../../shared/trait/add-menu/trait-add-menu.component';
-import {TraitEntry} from '../../shared/trait/list/trait-list.component';
+import {availableCatalog, selectedEntries, toggleEquipee} from '../../shared/form/form-selection';
+import {LangueEntry} from '../../shared/models/langue-list.model';
+import {StatGroup} from '../../shared/models/stats-grid.model';
+import {TraitAddEvent} from '../../shared/models/trait-add-menu.model';
+import {TraitEntry} from '../../shared/models/trait-list.model';
 import {traitDetails} from '../../shared/trait/trait-entry.utils';
 import {traitIconType} from '../../shared/trait-icon';
 import {HeroSummaryRailComponent} from '../form/summary-rail/summary-rail.component';
@@ -43,54 +44,13 @@ import {
   combatBudgetErrors,
 } from './create.validators';
 import {HeroAdvancedIdentiteComponent} from './identite/identite.component';
-import {HeroAdvancedRegionComponent, HeroAdvancedRegionDialogResult} from './region/region.component';
-import {HeroAdvancedRessourcesPanelComponent, ResourceEntry} from './ressources-panel/ressources-panel.component';
+import {HeroAdvancedRegionComponent} from './region/region.component';
+import {HeroAdvancedRegionDialogResult} from '../models/hero-advanced-region.model';
+import {HeroAdvancedRessourcesPanelComponent} from './ressources-panel/ressources-panel.component';
+import {ResourceEntry} from '../models/ressources-panel.model';
 import {SectionMessage} from './section-message';
 import {HeroAdvancedStatsPanelComponent} from './stats-panel/stats-panel.component';
-
-/** Brouillon de trait dans le modèle : `id` est l'id du lien héros/trait côté serveur. */
-interface AdvancedTraitDraft {
-  id: number | null;
-  traitable_id: number;
-  type: 'A' | 'D';
-  detail: string | null;
-  region_id: number | null;
-  carriere: boolean;
-}
-
-/** Modèle de brouillon du formulaire héros (création avancée), distinct de {@link BolHerosModel}. */
-export interface HeroAdvancedFormModel {
-  id: string | null;
-  user_id: string | null;
-  active: boolean;
-  type: 'H';
-  nom: string;
-  joueur: string;
-  region_id: number | null;
-  /** Chaîne vide plutôt que `null` : `[formField]` sur `<textarea>` exige `Field<string>`. */
-  commentaire: string;
-  avatar: string | null;
-  vigueur: number;
-  agilite: number;
-  esprit: number;
-  aura: number;
-  initiative: number;
-  melee: number;
-  tir: number;
-  defense: number;
-  vitalite: number;
-  heroisme: number;
-  foi: number;
-  pouvoir: number;
-  creation: number;
-  experience: number;
-  vilenie: number;
-  armes: ArmeDraft[];
-  armures: ArmureDraft[];
-  langues: IdDraft[];
-  carrieres: RankedDraft[];
-  traits: AdvancedTraitDraft[];
-}
+import {AdvancedTraitDraft, HeroAdvancedFormModel} from '../models/hero-advanced-page.model';
 
 function heroAdvancedFormDefaults(): HeroAdvancedFormModel {
   return {

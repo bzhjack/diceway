@@ -3,12 +3,8 @@ import {FieldTree, FormField} from '@angular/forms/signals';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
-import type {PnjFormModel} from '../pnj-form-page';
-
-export interface PnjTypeOption {
-  readonly label: string;
-  readonly value: 'P' | 'C' | 'R';
-}
+import type {PnjFormModel} from '../../models/pnj-form-page.model';
+import {PnjTypeOption} from '../../models/pnj-general.model';
 
 @Component({
   selector: 'bol-pnj-general',

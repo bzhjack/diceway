@@ -2,12 +2,7 @@ import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule} from '@angular/material/dialog';
 import {SceneLoadMode} from '../../../models/bol-scene.model';
-
-export interface SceneLoadDialogData {
-  readonly titre: string;
-  /** Nombre de PNJ / créatures / démons actuellement sur la table. */
-  readonly nonHeroCount: number;
-}
+import {SceneLoadDialogData} from '../../models/scene-load-dialog.model';
 
 /** Chargement d'une scène sur une table qui porte déjà d'autres personnages que les héros : remplacer
  * ceux-ci, ou ajouter la scène par-dessus. Se ferme avec le mode choisi, ou `undefined` si annulé. */
