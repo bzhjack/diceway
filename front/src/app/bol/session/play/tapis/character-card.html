@@ -2,7 +2,7 @@
   <button
     type="button"
     [id]="'chc-' + card().key"
-    [class]="'chc chc--' + card().kind"
+    [class]="'chc chc--medaillon chc--' + card().kind"
     [class.chc--active]="combat()?.status === 'active'"
     [class.chc--played]="combat()?.status === 'played'"
     [class.chc--targetable]="combat()?.targetable"
@@ -35,7 +35,7 @@
     <span class="chc-stats">
       <span class="chc-stat chc-stat--degats"><small>Dég.</small>{{ card().degats }}</span>
       <span class="chc-stat chc-stat--defense"><small>Déf.</small>{{ card().defense }}</span>
-      <span class="chc-stat chc-stat--vitalite"><small>Vit.</small>{{ vitalite() }}</span>
+      <span class="chc-stat chc-stat--vitalite" [class.chc-stat--long]="vitalite().length > 5"><small>Vit.</small>{{ vitalite() }}</span>
     </span>
 
     <span class="chc-bar"><i [class.chc-bar-fill--low]="low()" class="chc-bar-fill" [style.width.%]="percent()"></i></span>

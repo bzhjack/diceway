@@ -4,8 +4,12 @@
 
 .exc {
   --exc-kind: var(--dw-color-reussite);
+  // Métal de l'anneau et du cadre, selon le type : clair → moyen → sombre (mêmes que la face repliée).
+  --exc-metal-1: var(--bar-pj-1, #f1e3b4);
+  --exc-metal-2: var(--bar-pj-2, var(--dw-color-legendary));
+  --exc-metal-3: var(--bar-pj-3, #92620a);
   width: min(21rem, 92vw);
-  border: 1px solid var(--dw-color-legendary);
+  border: 1px solid var(--exc-metal-2);
   border-radius: 8px;
   background: var(--dw-surface-50);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
@@ -17,9 +21,24 @@
   }
 }
 
-.exc--pnj { --exc-kind: var(--dw-color-pnj); }
-.exc--creature { --exc-kind: var(--dw-color-creature); }
-.exc--demon { --exc-kind: var(--dw-color-demon); }
+.exc--pnj {
+  --exc-kind: var(--dw-color-pnj);
+  --exc-metal-1: var(--bar-pnj-1, #e2e8f0);
+  --exc-metal-2: var(--bar-pnj-2, #94a3b8);
+  --exc-metal-3: var(--bar-pnj-3, #475569);
+}
+.exc--creature {
+  --exc-kind: var(--dw-color-creature);
+  --exc-metal-1: var(--bar-creature-1, #fed7aa);
+  --exc-metal-2: var(--bar-creature-2, #d97706);
+  --exc-metal-3: var(--bar-creature-3, #78350f);
+}
+.exc--demon {
+  --exc-kind: var(--dw-color-demon);
+  --exc-metal-1: var(--bar-demon-1, #fecdd3);
+  --exc-metal-2: var(--bar-demon-2, #be123c);
+  --exc-metal-3: var(--bar-demon-3, #4c0519);
+}
 
 // Héros : la carte s'élargit pour que le jet d'action tienne sur trois colonnes (cf. la requête de
 // conteneur de `action-roll-panel.scss`) — empilé, il poussait le reste du tapis hors de l'écran. La
@@ -69,11 +88,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 4.8rem;
+  box-sizing: border-box;
+  width: 5.2rem;
   aspect-ratio: 1 / 1;
-  border: 1px solid var(--dw-border);
-  border-radius: 8px;
-  background: linear-gradient(155deg, var(--dw-surface-200), var(--dw-surface-50));
+  // Médaillon : portrait rond dans un anneau métallique de la couleur du type.
+  border: 5px solid transparent;
+  border-radius: 50%;
+  background:
+    radial-gradient(90% 80% at 50% 25%, color-mix(in srgb, var(--exc-kind) 40%, var(--dw-surface-200)), var(--dw-surface-0)) padding-box,
+    conic-gradient(from 210deg, var(--exc-metal-1), var(--exc-metal-2), var(--exc-metal-3), var(--exc-metal-2), var(--exc-metal-1)) border-box;
+  box-shadow: 0 0 0 2px var(--dw-surface-0), 0 6px 10px rgba(0, 0, 0, 0.55);
   color: var(--exc-kind);
   overflow: hidden;
 
@@ -87,6 +111,7 @@
 .exc-portrait-img {
   width: 100%;
   height: 100%;
+  border-radius: 50%;
   object-fit: cover;
 }
 

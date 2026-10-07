@@ -332,3 +332,134 @@
   right: 1.7rem;
   color: var(--dw-surface-500);
 }
+
+// ── Variante « médaillon » (`chc--medaillon`) ──────────────────────────────────────────────────────
+// Portrait rond dans un anneau métallique ; les chiffres sont des pastilles posées sur l'anneau : défense
+// en écusson en haut à droite, dégâts en pièce en bas à gauche, vitalité en cœur en bas à droite. Le nom
+// est sur un bandeau qui chevauche le bas. Retirer la classe dans le gabarit rend l'arche.
+.chc--medaillon {
+  --chc-ring-w: 7rem;
+  --chc-ring-h: calc(var(--chc-ring-w) * 1.25);
+
+  .chc-art {
+    width: var(--chc-ring-w);
+    border-width: 5px;
+    border-radius: 50%;
+    background:
+      radial-gradient(90% 80% at 50% 25%, color-mix(in srgb, var(--chc-kind) 40%, var(--dw-surface-200)), var(--dw-surface-0)) padding-box,
+      conic-gradient(from 210deg, var(--chc-metal-1), var(--chc-metal-2), var(--chc-metal-3), var(--chc-metal-2), var(--chc-metal-1)) border-box;
+
+    &::after {
+      border-radius: 50%;
+    }
+  }
+
+  .chc-name {
+    width: 100%;
+    margin-top: -0.9rem;
+    border-block: 0;
+    clip-path: polygon(6% 0, 94% 0, 100% 50%, 94% 100%, 6% 100%, 0 50%);
+    box-shadow: inset 0 0 0 1px var(--chc-metal-3);
+  }
+
+  // Les pastilles sont positionnées par rapport à l'anneau : la boîte des stats a sa taille et sa place.
+  .chc-stats {
+    position: absolute;
+    top: 0.5rem;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: block;
+    height: var(--chc-ring-h);
+    margin: 0;
+    pointer-events: none;
+  }
+
+  .chc-stat {
+    position: absolute;
+    flex: none;
+    min-width: 0;
+    padding-inline: 0.25rem;
+    clip-path: none;
+    font-size: 0.68rem;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.6);
+
+    small {
+      display: none;
+    }
+  }
+
+  .chc-stat--degats {
+    left: 0.1rem;
+    bottom: 0.5rem;
+    min-width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--chc-metal-3), 0 3px 5px rgba(0, 0, 0, 0.6);
+  }
+
+  .chc-stat--defense {
+    right: 0.35rem;
+    top: 0.7rem;
+    min-width: 1.9rem;
+    height: 2.1rem;
+    padding-bottom: 0.15rem;
+    font-size: 0.8rem;
+    clip-path: polygon(0 0, 100% 0, 100% 60%, 50% 100%, 0 60%);
+    box-shadow: none;
+  }
+
+  // Vitalité : un cœur en fond. Le cœur est un masque sur un pseudo-élément, pour que le texte, lui, ne soit
+  // jamais rogné par la forme.
+  .chc-stat--vitalite {
+    right: -0.4rem;
+    bottom: 0.3rem;
+    isolation: isolate;
+    min-width: 2.6rem;
+    height: 2.3rem;
+    padding: 0 0.55rem 0.25rem;
+    font-size: 0.6rem;
+    background: none;
+    clip-path: none;
+    box-shadow: none;
+    filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.65));
+
+    // « 100/100 » : plus de marge de chaque côté, pour rester dans les lobes du cœur.
+    &.chc-stat--long {
+      padding-inline: 0.75rem;
+      font-size: 0.55rem;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(160deg, var(--bar-v-1, #fca5a5), var(--bar-v-2, #ef4444) 55%, var(--bar-v-3, #7f1d1d));
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 29'%3E%3Cpath d='M16 28S2 18.5 2 9.5C2 5 5.5 2 9.5 2c3 0 5.5 1.8 6.5 4.5C17 3.8 19.5 2 22.5 2 26.5 2 30 5 30 9.5 30 18.5 16 28 16 28z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+    }
+  }
+
+  .chc-bar {
+    margin-top: 0.4rem;
+  }
+
+  .chc-marker {
+    bottom: 0.8rem;
+  }
+
+  .chc-marker--defense {
+    right: auto;
+    left: calc(50% - 1.3rem);
+  }
+
+  .chc-marker--locked {
+    right: auto;
+    left: calc(50% + 0.1rem);
+  }
+}
+
+.chc-wrap:has(.chc--medaillon) .chc-expand {
+  left: 0.5rem;
+  top: 3.2rem;
+}

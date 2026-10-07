@@ -20,7 +20,7 @@ import {HeroResourcesData} from '../../models/hero-resources.model';
   template: `
     <div class="hrs-field">
       <span class="hrs-label">Vitalité · max {{ data().vitaliteMax }}</span>
-      <dw-value-stepper [formControl]="vitaliteControl" [min]="-20" [max]="data().vitaliteMax" [ariaLabel]="'Vitalité'" />
+      <dw-value-stepper [formControl]="vitaliteControl" [min]="-20" [max]="data().vitaliteMax" [ariaLabel]="'Vitalité'" [heart]="true" />
     </div>
     <div class="hrs-field">
       <span class="hrs-label">Héroïsme</span>
@@ -44,6 +44,13 @@ import {HeroResourcesData} from '../../models/hero-resources.model';
       border: 1px solid var(--dw-border);
       border-radius: 6px;
       background: var(--dw-surface-100);
+    }
+
+    // Cœur de la vitalité, plus petit que sur le reste de l'app : les tuiles de cet en-tête sont serrées.
+    dw-value-stepper {
+      --vs-heart-width: 2.1rem;
+      --vs-heart-height: 1.9rem;
+      --vs-heart-font: 0.8rem;
     }
 
     .hrs-label {

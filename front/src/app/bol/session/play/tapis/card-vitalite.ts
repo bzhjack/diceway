@@ -20,6 +20,7 @@ import {TapisKind} from '../../models/tapis.model';
       [min]="0"
       [max]="max() ?? undefined"
       [ariaLabel]="'Vitalité de ' + nom() + ' ' + label()"
+      [heart]="true"
     />
   `,
   styles: `
