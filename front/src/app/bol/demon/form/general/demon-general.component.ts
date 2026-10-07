@@ -5,7 +5,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {BolDemonCategorieModel} from '../../../models/bol-demon.model';
-import type {DemonFormModel} from '../demon-form-page';
+import type {DemonFormModel} from '../../models/demon-form-page.model';
 
 @Component({
   selector: 'bol-demon-general',

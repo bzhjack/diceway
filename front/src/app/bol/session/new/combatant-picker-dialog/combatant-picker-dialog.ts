@@ -4,15 +4,12 @@ import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import {CombatantKind, CombatSelectionService} from '../../../services/combat-selection.service';
+import {CombatSelectionService} from '../../../services/combat-selection.service';
+import {CombatantKind} from '../../../models/combat-selection.model';
 import {CatalogCardComponent} from './catalog-card/catalog-card';
+import {CombatantPickerDialogData} from '../../models/combatant-picker-dialog.model';
 
 type CatalogFilter = CombatantKind | 'all';
-
-export interface CombatantPickerDialogData {
-  /** Restreint le catalogue à un seul type (héros pour la création de session) et masque les onglets de filtre. */
-  readonly lockKind?: CombatantKind;
-}
 
 /** Dialog de sélection d'un combattant à ajouter à la fight-session en préparation. */
 @Component({

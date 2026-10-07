@@ -2,13 +2,15 @@ import {Routes} from '@angular/router';
 import {authGuard} from './core/auth/auth.guard';
 import {pendingChangesGuard} from './core/pending-changes.guard';
 import {publicOnlyGuard} from './core/auth/public-only.guard';
+import {homeRedirectGuard} from './bol/session/home-redirect.guard';
 
 export const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
     loadComponent: () =>
-      import('./bol/workspace/workspace-page').then((module) => module.WorkspacePageComponent),
-    canActivate: [authGuard],
+      import('./bol/session/new/session-new-page').then((module) => module.SessionNewPageComponent),
+    canActivate: [authGuard, homeRedirectGuard],
   },
   {
     path: 'create/creature',

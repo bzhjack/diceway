@@ -33,27 +33,69 @@
   background: linear-gradient(180deg, var(--dw-surface-0), var(--dw-surface-50) 45%, var(--dw-surface-0));
 }
 
-// Panneau latéral fiche + jet d'action d'un héros en mode libre (bouton "Carte" ou double-clic) —
-// flotte au-dessus du plateau sans backdrop (pas un dialog modal : on peut continuer à déplacer les
-// jetons dessous), glisse depuis le bord droit à l'ouverture. Élargi par rapport à l'ancien panneau
-// jet-seul pour laisser respirer la grille de tuiles de la fiche (8 colonnes).
-.spp-hero-action-panel {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: min(34rem, 100vw);
-  z-index: 20;
-  box-shadow: -12px 0 32px rgba(0, 0, 0, 0.45);
-  border-left: 1px solid var(--dw-border);
-  animation: spp-panel-slide-in 0.18s ease-out;
+// Sous l'en-tête : la réserve à gauche (mode libre seulement), sa languette de repli, puis la colonne
+// principale — l'ordre de jeu en combat et le tapis, qui s'étire.
+.spp-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
 }
 
-@keyframes spp-panel-slide-in {
-  from {
-    transform: translateX(100%);
+.spp-main {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.spp-reserve {
+  flex: 0 0 19rem;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--dw-border);
+  background: var(--dw-surface-0);
+}
+
+// Languette verticale entre la réserve et le tapis : replie ou déplie la réserve.
+.spp-reserve-toggle {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 1.5rem;
+  padding: 0;
+  border: none;
+  border-right: 1px solid var(--dw-border);
+  background: var(--dw-surface-50);
+  color: var(--dw-surface-500);
+  font: inherit;
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 1.2rem;
+    width: 1.2rem;
+    height: 1.2rem;
   }
-  to {
-    transform: translateX(0);
+
+  &:hover {
+    color: var(--dw-surface-900);
+    background: var(--dw-surface-100);
   }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: -2px;
+  }
+}
+
+.spp-reserve-toggle-label {
+  writing-mode: vertical-rl;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }

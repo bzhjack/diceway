@@ -22,4 +22,4 @@
   </div>
 }
 
-<bol-arme-list [armes]="armes()" (removed)="armeRemoved.emit($event)" />
+<bol-arme-list [armes]="armes()" (removed)="armeRemoved.emit($event)" (equippedToggled)="armeEquippedToggled.emit($event)" />

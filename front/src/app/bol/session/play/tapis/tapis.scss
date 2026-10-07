@@ -1,0 +1,81 @@
+:host {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.tps {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.9rem;
+  padding: 1rem 1.2rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dw-border) transparent;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 50%, color-mix(in srgb, var(--dw-surface-100) 70%, transparent) 0%, transparent 75%),
+    var(--dw-surface-0);
+}
+
+.tps-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tps-row-label {
+  margin: 0;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+}
+
+// Un rang tient sur une seule ligne : trop long, il défile avec les chevrons de `dw-scroller` (centré
+// tant qu'il tient). Les cartes sont alignées par le haut, pour que les voisines d'une carte dépliée,
+// plus haute, restent visibles à côté d'elle. Le padding laisse la place à l'ombre de la carte dépliée,
+// que la piste, qui défile, rognerait sinon.
+.tps-scroller {
+  align-self: stretch;
+}
+
+.tps-cards {
+  width: max-content;
+  min-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0.3rem 0.5rem 0.9rem;
+  list-style: none;
+}
+
+.tps-empty {
+  padding: 1.2rem 0.5rem;
+  font-size: 0.88rem;
+  color: var(--dw-surface-500);
+}
+
+.tps-nobody {
+  align-self: center;
+  margin: 0;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 8px;
+  background: var(--dw-surface-0);
+  font-size: 0.9rem;
+  color: var(--dw-surface-500);
+}
+
+// Rang des héros, en bas : les faces restent collées en bas du rang et seule la carte dépliée
+// grandit, vers le haut — elle consomme d'abord l'espace libre entre les deux rangs.
+.tps-row--heros .tps-cards {
+  align-items: flex-end;
+}

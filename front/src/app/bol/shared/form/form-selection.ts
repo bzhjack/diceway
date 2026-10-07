@@ -1,24 +1,5 @@
 import {Signal, computed} from '@angular/core';
-
-/** Entrée de FormArray référençant un élément de catalogue par id. */
-export interface IdDraft {
-  id: number;
-}
-
-/** Entrée avec rang (carrières). */
-export interface RankedDraft extends IdDraft {
-  value: number;
-}
-
-/** Entrée d'armure avec son état "équipé" (armure/bouclier/casque actif vs juste en inventaire). */
-export interface ArmureDraft extends IdDraft {
-  equipee: boolean;
-}
-
-/** Entrée avec détail libre (pouvoirs, capacités). */
-export interface DetailDraft extends IdDraft {
-  detail: string | null;
-}
+import {IdDraft} from '../models/form-selection.model';
 
 interface WithId {
   id?: number | string | null;
@@ -87,4 +68,10 @@ export function applyArmureEquipToggle<T extends {id: number; equipee: boolean}>
     }
     return armure;
   });
+}
+
+/** Bascule l'état "équipé" d'une entrée dans un brouillon local. Pas d'exclusivité (contrairement aux armures) :
+ * plusieurs armes peuvent être équipées, pour le combat à deux armes. */
+export function toggleEquipee<T extends {equipee: boolean}>(entries: readonly T[], index: number): T[] {
+  return entries.map((entry, i) => (i === index ? {...entry, equipee: !entry.equipee} : entry));
 }

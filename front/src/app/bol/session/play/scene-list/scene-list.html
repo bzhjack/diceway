@@ -1,0 +1,103 @@
+<div class="scl-shell">
+  <mat-form-field subscriptSizing="dynamic" class="scl-scenario">
+    <mat-label>Scénario</mat-label>
+    <mat-select
+      id="scl-scenario-select"
+      [value]="selectedScenario() ?? noScenario"
+      (selectionChange)="selectScenario($event)"
+    >
+      <mat-option [value]="noScenario">Sans scénario</mat-option>
+      @for (scenario of sortedScenarios(); track scenario.id) {
+        <mat-option [value]="scenario.id">{{ scenario.titre }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-stroked-button size="small" type="button" class="scl-new-scenario" [disabled]="busy()" (click)="newScenario()">
+    <mat-icon>add</mat-icon> Nouveau scénario
+  </button>
+
+  <div class="scl-list" cdkDropList [cdkDropListDisabled]="busy()" (cdkDropListDropped)="onDrop($event)">
+    @for (scene of visibleScenes(); track scene.id; let first = $first; let last = $last) {
+      <dw-collapsible-row
+        cdkDrag
+        [cdkDragDisabled]="expandedId() === scene.id"
+        class="scl-row"
+        [class.scl-row--current]="scene.id === currentSceneId()"
+        [label]="scene.titre"
+        [labelGrows]="true"
+        [stat]="scene.id === currentSceneId() ? 'en cours' : null"
+        [expanded]="expandedId() === scene.id"
+        [ariaLabel]="'Scène ' + scene.titre"
+        (toggled)="toggle(scene)"
+      >
+        <div row-body class="scl-body">
+          <p class="scl-summary">{{ summary(scene) }}</p>
+
+          <mat-form-field subscriptSizing="dynamic" class="scl-notes">
+            <mat-label>Notes du MJ</mat-label>
+            <textarea
+              matInput
+              rows="4"
+              [id]="'scl-notes-' + scene.id"
+              [value]="scene.notes ?? ''"
+              (blur)="saveNotes(scene, $any($event.target).value)"
+            ></textarea>
+          </mat-form-field>
+
+          <div class="scl-actions">
+            <button mat-flat-button size="small" type="button" [disabled]="busy()" (click)="load(scene)">
+              <mat-icon>play_arrow</mat-icon> Charger
+            </button>
+            <button mat-stroked-button size="small" type="button" [disabled]="busy()" (click)="rename(scene)">
+              Renommer
+            </button>
+            <button mat-stroked-button size="small" type="button" [disabled]="busy()" (click)="updateFromTable(scene)">
+              Mettre à jour avec la table
+            </button>
+            <button
+              mat-icon-button
+              type="button"
+              [disabled]="busy() || first"
+              [attr.aria-label]="'Monter ' + scene.titre"
+              (click)="move(scene, -1)"
+            >
+              <mat-icon>arrow_upward</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              type="button"
+              [disabled]="busy() || last"
+              [attr.aria-label]="'Descendre ' + scene.titre"
+              (click)="move(scene, 1)"
+            >
+              <mat-icon>arrow_downward</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              type="button"
+              class="scl-delete"
+              [disabled]="busy()"
+              [attr.aria-label]="'Supprimer ' + scene.titre"
+              (click)="remove(scene)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </dw-collapsible-row>
+    } @empty {
+      <p class="scl-empty">
+        @if (loading()) {
+          Chargement…
+        } @else {
+          Aucune scène ici. Pose tes personnages sur la carte, puis enregistre la table comme scène.
+        }
+      </p>
+    }
+  </div>
+
+  <button mat-flat-button size="small" type="button" class="scl-save" [disabled]="busy() || loading()" (click)="saveTable()">
+    <mat-icon>save</mat-icon> Enregistrer la table comme scène
+  </button>
+</div>

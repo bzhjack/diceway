@@ -1,9 +1,11 @@
 import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
-import {HeroCreationWarning} from '../../../services/bol-heros-state.service';
-import {AddMenuComponent, AddMenuOption} from '../../../shared/add-menu/add-menu.component';
-import {CarriereEntry, CarriereListComponent} from '../../../shared/carriere/list/carriere-list.component';
+import {HeroCreationWarning} from '../../../models/bol-heros-state.model';
+import {AddMenuComponent} from '../../../shared/add-menu/add-menu.component';
+import {AddMenuOption} from '../../../shared/models/add-menu.model';
+import {CarriereListComponent} from '../../../shared/carriere/list/carriere-list.component';
+import {CarriereEntry} from '../../../shared/models/carriere-list.model';
 import {DwTagComponent} from '../../../../shared/dw-tag/dw-tag';
-import {SectionMessage} from '../section-message';
+import {SectionMessage} from '../../models/section-message.model';
 
 /** Panneau Carrières de la création avancée : sélection, désavantage de carrière requis, budget. */
 @Component({

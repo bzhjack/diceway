@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
-
-export type DwBadgeColor = 'amber' | 'sky' | 'rose' | 'emerald' | 'neutral';
+import {DwBadgeColor} from '../models/dw-badge.model';
 
 @Component({
   selector: 'dw-badge',

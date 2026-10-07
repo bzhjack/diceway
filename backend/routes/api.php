@@ -19,6 +19,7 @@ use App\Http\Controllers\Bol\BolPnjController;
 use App\Http\Controllers\Bol\BolDemonController;
 use App\Http\Controllers\Bol\BolDashboardController;
 use App\Http\Controllers\Bol\BolScenarioController;
+use App\Http\Controllers\Bol\BolSceneController;
 use App\Http\Controllers\Bol\BolCombatReferenceController;
 use App\Http\Controllers\Bol\BolFightSessionController;
 use Illuminate\Support\Facades\Route;
@@ -40,10 +41,6 @@ use Illuminate\Http\Request;
  * Api publiques
  */
 Route::middleware([RequestAcceptJson::class])->group(function () {
-    // Route publique de test
-    Route::get('/hello', function () {
-        return response()->json(['message' => 'hello']);
-    });
     Route::post('auth/login', [LoginController::class, 'login'])->name('login'); // Authentification
     Route::post('auth/logout', [LoginController::class, 'logout']); // déconnection
     Route::post('auth/register', [RegisterController::class, 'register']); // Création de compte
@@ -96,6 +93,7 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::delete('/bol/armes/delete/{id}', [BolArmeController::class, 'deleteCatalog']);
     Route::post('/bol/heros/armes/create/{herosId}', [BolArmeController::class, 'create']);
     Route::delete('/bol/heros/armes/delete/{herosId}/{id}', [BolArmeController::class, 'delete']);
+    Route::patch('/bol/heros/armes/equip/{herosId}/{id}', [BolArmeController::class, 'equip']);
 
     // Gestion des armures
     Route::get('/bol/armures', [BolArmureController::class, 'getAll']);
@@ -166,9 +164,20 @@ Route::middleware(['auth:sanctum', RequestAcceptJson::class])->group(function ()
     Route::post('/bol/fight-session/{id}/combatant', [BolFightSessionController::class, 'addCombatant']);
     Route::delete('/bol/fight-session/{id}/combatant/{kind}/{pivotId}', [BolFightSessionController::class, 'removeCombatant']);
     Route::patch('/bol/fight-session/{id}/combatant/{kind}/{pivotId}/damage', [BolFightSessionController::class, 'applyDamage']);
+    Route::patch('/bol/fight-session/{id}/combatant/{kind}/{pivotId}/camp', [BolFightSessionController::class, 'setCamp']);
     Route::patch('/bol/fight-session/{id}/ordre', [BolFightSessionController::class, 'updateOrder']);
     Route::patch('/bol/fight-session/{id}/positions', [BolFightSessionController::class, 'updatePositions']);
     Route::patch('/bol/fight-session/{id}/start-combat', [BolFightSessionController::class, 'startCombat']);
     Route::patch('/bol/fight-session/{id}/end-combat', [BolFightSessionController::class, 'endCombat']);
+    Route::patch('/bol/fight-session/{id}/etat-combat', [BolFightSessionController::class, 'updateCombatState']);
+    Route::post('/bol/fight-session/{id}/load-scene', [BolSceneController::class, 'load']);
+
+    // Scènes
+    Route::get('/bol/scene', [BolSceneController::class, 'getAll']);
+    Route::post('/bol/scene/create', [BolSceneController::class, 'create']);
+    Route::post('/bol/scene/update', [BolSceneController::class, 'update']);
+    Route::patch('/bol/scene/ordre', [BolSceneController::class, 'reorder']);
+    Route::patch('/bol/scene/{id}/distribution', [BolSceneController::class, 'replaceDistribution']);
+    Route::delete('/bol/scene/delete/{id}', [BolSceneController::class, 'delete']);
 
 });

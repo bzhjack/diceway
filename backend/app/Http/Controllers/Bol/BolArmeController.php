@@ -112,6 +112,21 @@ class BolArmeController extends Controller
         return response()->json(['success' => $newArme]);
     }
 
+    /** Équipe ou déséquipe une arme du héros. Contrairement aux armures, pas d'exclusivité : plusieurs armes
+     * peuvent être équipées (combat à deux armes). */
+    public function equip($herosId, $id)
+    {
+        $pivot = BolHerosArme::where('heros_id', $herosId)->where('arme_id', $id)->first();
+        if (!$pivot) {
+            return response()->json(['message' => 'Arme non trouvée'], 404);
+        }
+
+        $pivot->equipee = !$pivot->equipee;
+        $pivot->save();
+
+        return response()->json(['success' => true, 'equipee' => $pivot->equipee]);
+    }
+
     public static function delete($herosId, $id)
     {
         $armure = BolHerosArme::where('heros_id', $herosId)->where('arme_id', $id)->first();

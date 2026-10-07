@@ -1,0 +1,152 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+// Colonne verticale : titre et onglets, recherche, puis la « main » qui défile, et les liens en bas.
+.rsv-band {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0.8rem;
+}
+
+.rsv-side {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.rsv-title {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+}
+
+.rsv-tabs {
+  // Cinq onglets sur deux lignes (3 + 2) : la colonne est étroite.
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  ::ng-deep .mat-button-toggle-label-content {
+    padding: 0 0.3rem;
+    font-size: 0.74rem;
+    line-height: 2rem;
+  }
+}
+
+.rsv-search {
+  flex-shrink: 0;
+}
+
+// La « main » : cartes réduites en grille, défilement vertical.
+.rsv-hand {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5.4rem, 1fr));
+  align-content: start;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.1rem;
+  list-style: none;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dw-border) transparent;
+}
+
+.rsv-mini {
+  --rsv-kind: var(--dw-color-reussite);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
+  border: 1px solid var(--dw-border);
+  border-top: 3px solid var(--rsv-kind);
+  border-radius: 6px;
+  background: var(--dw-surface-100);
+  color: var(--dw-surface-700);
+  font: inherit;
+  text-align: left;
+  overflow: hidden;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    border-color: var(--dw-surface-500);
+    border-top-color: var(--rsv-kind);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+.rsv-mini--pnj { --rsv-kind: var(--dw-color-pnj); }
+.rsv-mini--creature { --rsv-kind: var(--dw-color-creature); }
+.rsv-mini--demon { --rsv-kind: var(--dw-color-demon); }
+
+// Déjà à table : estompée, non cliquable.
+.rsv-mini--on-table {
+  opacity: 0.45;
+}
+
+.rsv-mini-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(160deg, var(--dw-surface-200), var(--dw-surface-50));
+  color: var(--rsv-kind);
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.1rem;
+}
+
+.rsv-mini-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rsv-mini-name {
+  padding: 0.25rem 0.35rem 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.15;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  color: var(--dw-surface-900);
+}
+
+.rsv-mini-state {
+  padding: 0 0.35rem 0.25rem;
+  font-size: 0.62rem;
+  color: var(--dw-surface-500);
+}
+
+.rsv-empty {
+  grid-column: 1 / -1;
+  font-size: 0.85rem;
+  color: var(--dw-surface-500);
+}
+
+.rsv-links {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}

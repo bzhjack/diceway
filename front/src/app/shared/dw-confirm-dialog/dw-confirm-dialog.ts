@@ -1,13 +1,7 @@
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule} from '@angular/material/dialog';
-
-export interface DwConfirmDialogData {
-  title: string;
-  message: string;
-  confirmLabel?: string;
-  cancelLabel?: string;
-}
+import {DwConfirmDialogData} from '../models/dw-confirm-dialog.model';
 
 @Component({
   selector: 'dw-confirm-dialog',

@@ -1,12 +1,7 @@
 import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
 import {BolDemonModel} from '../../../models/bol-demon.model';
-import {
-  EntityCardAction,
-  EntityCardBadge,
-  EntityCardChip,
-  EntityCardComponent,
-  EntityCardGauge,
-} from '../../../shared/entity-card/entity-card.component';
+import {EntityCardComponent} from '../../../shared/entity-card/entity-card.component';
+import {EntityCardAction, EntityCardBadge, EntityCardChip, EntityCardGauge} from '../../../shared/models/entity-card.model';
 
 export function demonImage(demon: BolDemonModel): string {
   if (!demon.user_id) {

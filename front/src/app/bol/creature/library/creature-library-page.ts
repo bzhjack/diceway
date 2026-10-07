@@ -56,7 +56,7 @@ export class CreatureLibraryPageComponent {
 
   protected readonly tailles = this.creatureStateService.tailleList;
   protected readonly searchTerm = signal('');
-  /** Revenir à la session de combat d'origine plutôt qu'au dashboard, si on y accède via ses raccourcis bibliothèque. */
+  /** Revenir à la session de combat d'origine plutôt qu'à la table, si on y accède via ses raccourcis bibliothèque. */
   protected readonly returnUrl = signal(readReturnUrl());
   protected readonly searchTaille = signal<number | ''>('');
   protected readonly onlyCreations = signal(false);

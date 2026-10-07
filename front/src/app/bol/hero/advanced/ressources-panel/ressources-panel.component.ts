@@ -1,11 +1,6 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
-import {AttributModifier} from '../../../services/bol-heros-state.service';
-
-export interface ResourceEntry {
-  readonly key: string;
-  readonly label: string;
-  readonly value: number;
-}
+import {AttributModifier} from '../../../models/bol-heros-state.model';
+import {ResourceEntry} from '../../models/ressources-panel.model';
 
 /** Panneau Ressources de la création avancée : valeurs après activation + modificateurs appliqués. */
 @Component({

@@ -10,14 +10,11 @@ import {BolFightSessionService} from '../../../services/bol-fight-session.servic
 import {BolHerosService} from '../../../services/bol-heros.service';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {applyHeroismeDelta} from '../../heroisme-spend.util';
-import {diceFromTotal} from '../action-roll-dialog/action-roll-dialog';
+import {diceFromTotal} from '../../action-roll.util';
 import {AddCombatantDialogComponent} from '../add-combatant-dialog/add-combatant-dialog';
-import {AmbushState} from '../../../services/combat-selection.service';
+import {AmbushState} from '../../../models/combat-selection.model';
 import {INITIATIVE_RESULT_OPTIONS} from '../../initiative.util';
-
-export interface StartCombatDialogData {
-  readonly sessionId: string;
-}
+import {StartCombatDialogData} from '../../models/start-combat-dialog.model';
 
 interface AdversaryRow {
   readonly pivotId: number;

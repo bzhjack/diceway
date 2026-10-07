@@ -38,6 +38,7 @@ export class DiceBoxHostComponent {
 
   private box: DiceBox | null = null;
   private initPromise: Promise<void> | null = null;
+  private resizeObserver: ResizeObserver | null = null;
 
   protected readonly ready = signal(false);
   protected readonly failed = signal(false);
@@ -98,6 +99,7 @@ export class DiceBoxHostComponent {
 
       await box.init();
 
+      this.watchSize(surface);
       this.box = box;
       this.ready.set(true);
       this.failed.set(false);
@@ -108,7 +110,29 @@ export class DiceBoxHostComponent {
     }
   }
 
+  /** dice-box ne recalcule sa zone de jeu (murs, caméra, canvas) que sur un `resize` de la fenêtre. Quand le
+   * conteneur change de taille tout seul — le panneau de jet grandit après un échec, par exemple — les dés
+   * sont étirés et rebondissent sur des murs qui ne correspondent plus : on lui rejoue donc cet événement. */
+  private watchSize(surface: HTMLElement): void {
+    let width = surface.clientWidth;
+    let height = surface.clientHeight;
+    let frame = 0;
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = new ResizeObserver(() => {
+      if (surface.clientWidth === width && surface.clientHeight === height) {
+        return;
+      }
+      width = surface.clientWidth;
+      height = surface.clientHeight;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
+    });
+    this.resizeObserver.observe(surface);
+  }
+
   private resetHost(): void {
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = null;
     this.box?.clear();
     this.box = null;
     this.initPromise = null;

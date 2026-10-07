@@ -1,0 +1,231 @@
+:host {
+  display: block;
+}
+
+.exc {
+  --exc-kind: var(--dw-color-reussite);
+  width: min(23rem, 92vw);
+  border: 1px solid var(--dw-color-legendary);
+  border-top: 3px solid var(--exc-kind);
+  border-radius: 8px;
+  background: var(--dw-surface-50);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+
+  // Le focus y entre à l'ouverture (tabindex -1) : pas d'anneau sur le conteneur lui-même, la
+  // bordure dorée dit déjà quelle carte est ouverte.
+  &:focus {
+    outline: none;
+  }
+}
+
+.exc--pnj { --exc-kind: var(--dw-color-pnj); }
+.exc--creature { --exc-kind: var(--dw-color-creature); }
+.exc--demon { --exc-kind: var(--dw-color-demon); }
+
+// Héros : la carte s'élargit pour que le jet d'action tienne sur trois colonnes (cf. la requête de
+// conteneur de `action-roll-panel.scss`) — empilé, il poussait le reste du tapis hors de l'écran. La
+// colonne de résultat porte des boutons à libellé long (« Convertir en succès héroïque (−1 PH) ») qui
+// doivent tenir sur une ligne.
+.exc--hero {
+  width: min(58rem, 96vw);
+}
+
+// Hauteur fixe quand le contenu varie (jet d'un héros, statbloc d'un PNJ) : la carte ne bouge plus quand
+// le jet change d'état (faveur divine, échec critique) et la zone de jeu des dés garde la même taille. Le
+// corps occupe le reste sous le bandeau ; trop long (statbloc d'un PNJ), il défile. Un héros en combat,
+// réduit au bandeau, garde sa hauteur naturelle.
+.exc--fixed {
+  height: 460px;
+  display: flex;
+  flex-direction: column;
+
+  .exc-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--dw-border) transparent;
+  }
+
+  bol-action-roll-panel {
+    flex: 1;
+    min-height: 0;
+  }
+}
+
+// Bandeau commun à toutes les cartes dépliées : portrait carré à gauche, identité et vitalité à droite.
+.exc-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 0.8rem 0.6rem 0.8rem 0.8rem;
+}
+
+.exc-portrait {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 6rem;
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--dw-border);
+  border-radius: 8px;
+  background: linear-gradient(155deg, var(--dw-surface-200), var(--dw-surface-50));
+  color: var(--exc-kind);
+  overflow: hidden;
+
+  .mat-icon {
+    font-size: 2.6rem;
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+}
+
+.exc-portrait-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.exc-id {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.exc-line {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.6rem;
+
+  > .exc-title {
+    flex: 1;
+  }
+}
+
+.exc-title {
+  min-width: 0;
+}
+
+// Chiffres d'un héros, entre son identité et les boutons : ses statistiques de combat en petites tuiles
+// libellé / valeur, et dessous sa vitalité et son héroïsme, en tuiles du même style mais modifiables.
+.exc-figures {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.exc-stats {
+  display: flex;
+  gap: 0.3rem;
+  margin: 0;
+}
+
+.exc-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 2.7rem;
+  padding: 0.2rem 0.4rem 0.25rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 6px;
+  background: var(--dw-surface-100);
+
+  dt {
+    font-size: 0.56rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dw-surface-500);
+  }
+
+  dd {
+    margin: 0;
+    font-size: 0.92rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    color: var(--dw-surface-900);
+  }
+}
+
+.exc-name {
+  margin: 0;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--exc-kind);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  // Une capitale à l'initiale de chaque mot : « bogomit » → « Bogomit ».
+  text-transform: capitalize;
+}
+
+.exc-details {
+  margin-top: 0.25rem;
+}
+
+.exc-sub {
+  margin: 0.1rem 0 0;
+  font-size: 0.8rem;
+  color: var(--dw-surface-500);
+}
+
+// Vitalité (par exemplaire pour un lot) et héroïsme sur une ligne qui passe à la suivante au besoin.
+.exc-resources {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 1.2rem;
+
+  bol-instance-vitalite {
+    justify-content: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+.exc-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 0.7rem 0.9rem 0.9rem;
+  border-top: 1px solid var(--dw-border);
+}
+
+.exc-loading {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--dw-surface-500);
+}
+
+.exc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.exc-remove {
+  color: var(--dw-color-danger-muted);
+  border-color: var(--dw-border-remove);
+}
+
+.exc-attack {
+  align-self: flex-start;
+}
+
+.exc-icon-btn {
+  --mat-icon-button-icon-color: var(--dw-surface-700);
+  --mat-icon-button-state-layer-color: var(--dw-surface-900);
+  background: var(--dw-surface-200);
+  border-radius: 8px;
+
+  &:hover {
+    --mat-icon-button-icon-color: var(--dw-surface-900);
+    background: var(--dw-surface-300);
+  }
+}

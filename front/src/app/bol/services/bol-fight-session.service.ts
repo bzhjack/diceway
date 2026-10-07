@@ -7,8 +7,11 @@ import {
   BolFightSessionCreatePayload,
   BolFightSessionHerosModel,
   BolFightSessionModel,
+  CombatCamp,
+  EtatCombatDto,
   InitiativeResultat,
 } from '../models/bol-fight-session.model';
+import {BolSceneLoadResult, SceneLoadMode} from '../models/bol-scene.model';
 
 @Injectable({providedIn: 'root'})
 export class BolFightSessionService {
@@ -43,6 +46,16 @@ export class BolFightSessionService {
     return this.http.delete<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/${kind}/${pivotId}`);
   }
 
+  /** Passe un PNJ, une créature ou un démon du côté des héros (allié) ou le remet avec les présents. */
+  setCamp(
+    sessionId: string,
+    kind: BolFightSessionAddCombatantPayload['kind'],
+    pivotId: number,
+    camp: CombatCamp,
+  ): Observable<BolFightSessionModel> {
+    return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/${kind}/${pivotId}/camp`, {camp});
+  }
+
   updateOrder(sessionId: string, ordre: readonly string[]): Observable<BolFightSessionModel> {
     return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/ordre`, {ordre});
   }
@@ -60,6 +73,16 @@ export class BolFightSessionService {
 
   endCombat(sessionId: string): Observable<BolFightSessionModel> {
     return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/end-combat`, {});
+  }
+
+  /** Enregistre l'état du combat (round, cartes qui ont joué, cartes en défense totale). */
+  updateCombatState(sessionId: string, etat: EtatCombatDto): Observable<BolFightSessionModel> {
+    return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/etat-combat`, etat);
+  }
+
+  /** Charge une scène sur la table (opération serveur unique) — cf. `BolSceneService` côté backend. */
+  loadScene(sessionId: string, sceneId: string, mode: SceneLoadMode): Observable<BolSceneLoadResult> {
+    return this.http.post<BolSceneLoadResult>(`${this.base}/${sessionId}/load-scene`, {scene_id: sceneId, mode});
   }
 
   /** Résultat du jet de réaction d'un héros déjà présent dans la session (endpoint backend existant, jamais câblé côté front jusqu'ici). */

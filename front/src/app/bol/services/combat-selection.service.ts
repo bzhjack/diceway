@@ -4,9 +4,6 @@ import {creatureImage} from '../creature/library/creature-card/creature-card.com
 import {demonImage} from '../demon/library/demon-card/demon-card.component';
 import {heroImage} from '../hero/library/hero-card/hero-card.component';
 import {pnjImage} from '../pnj/library/pnj-card/pnj-card.component';
-import {BolCreatureModel} from '../models/bol-creature.model';
-import {BolDemonModel} from '../models/bol-demon.model';
-import {BolHerosModel} from '../models/bol-heros.model';
 import {BolCreaturesService} from './bol-creatures.service';
 import {BolDemonsService} from './bol-demons.service';
 import {BolFightSessionService} from './bol-fight-session.service';
@@ -18,24 +15,7 @@ import {
   CombatCamp,
   InitiativeResultat,
 } from '../models/bol-fight-session.model';
-
-export type CombatantKind = 'hero' | 'pnj' | 'creature' | 'demon';
-
-export interface CombatCatalogEntry {
-  readonly catalogId: string;
-  readonly kind: CombatantKind;
-  readonly sourceId: string;
-  readonly nom: string;
-  readonly vitalite: number;
-  readonly avatar: string;
-  /** Modèle complet, conservé pour alimenter le statbloc sans le recharger. */
-  readonly raw: BolHerosModel | BolCreatureModel | BolDemonModel;
-}
-
-export interface SelectedCombatant {
-  readonly catalogId: string;
-  readonly qty: number;
-}
+import {CombatantKind, CombatCatalogEntry, SelectedCombatant, AmbushState} from '../models/combat-selection.model';
 
 /**
  * Notion de camp mise de côté côté IHM pour l'instant (une seule zone
@@ -47,9 +27,6 @@ function defaultCampFor(kind: CombatantKind): CombatCamp {
 }
 
 const STACKABLE_KINDS: ReadonlySet<CombatantKind> = new Set(['creature', 'demon']);
-
-/** Modificateur d'embuscade au jet de réaction (02-actions-combat.md) : +2 si les héros surprennent, −1 s'ils sont surpris. */
-export type AmbushState = 'heroes_ambush' | 'heroes_ambushed' | null;
 
 /** Brouillon de sélection persisté côté client (localStorage) pour survivre à un F5 ou une navigation. */
 const STORAGE_KEY = 'diceway-combat-selection';

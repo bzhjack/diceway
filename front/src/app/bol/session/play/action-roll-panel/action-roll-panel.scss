@@ -1,0 +1,578 @@
+// Encapsulation désactivée sur le composant (voir .ts) pour pouvoir styler le DOM interne de
+// `mat-button-toggle-group` (`.mat-button-toggle-label-content`, etc.) — tout ici est donc global,
+// mais les classes `ard-*` sont propres à ce composant (pas besoin d'un scope supplémentaire).
+
+@use '../../roll-dialog-shared' as shared;
+
+// Embarqué dans la fiche du jeton (`bol-expanded-card`), qui scrolle elle-même : ce composant
+// prend la hauteur de son contenu, les dés roulent sur toute sa surface.
+bol-action-roll-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.ard-shell {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 35%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--dw-color-legendary) 6%, var(--dw-surface-0) 94%);
+}
+
+.ard-fg {
+  flex: 1;
+  min-height: 0;
+  // Dans une carte de hauteur fixe, un jet plus haut que sa place défile au lieu de déborder.
+  overflow-y: auto;
+  scrollbar-width: thin;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.85rem 0.9rem 0.8rem;
+}
+
+// Formule en clair + rappel de l'héroïsme disponible, sur une même ligne.
+.ard-ledger-formula {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed color-mix(in srgb, var(--dw-border) 80%, transparent);
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--dw-color-legendary);
+}
+
+// Au-dessus du contenu (z-index 2), pas en dessous : posé derrière les panneaux, les dés se
+// retrouvaient à moitié masqués (coupés par les bords des cartes) plutôt que visibles en train de
+// rouler. `pointer-events: none` laisse les clics traverser jusqu'aux vrais contrôles en dessous —
+// le canvas est purement visuel, rien n'y est cliquable.
+.ard-dice-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+
+  // Le fond/bordure propres à `dw-dice-box-host` (habituellement un panneau dédié) sont neutralisés
+  // ici : c'est le fond du `.ard-shell` lui-même qui sert de "table" derrière les dés. Sélecteur
+  // global valide sans `::ng-deep` : les deux composants sont en `ViewEncapsulation.None`.
+  .dw-dice-box-host {
+    position: absolute;
+    inset: 0;
+    min-width: 0;
+    min-height: 0;
+    border: none;
+    background: transparent;
+  }
+}
+
+// Repris de l'ancien en-tête du dialog (`.ard-header`, supprimé — le panneau qui embarque ce
+// composant a désormais son propre en-tête partagé) : reste visible pendant le jet, là où il compte
+// (dépense sur Faveur divine / conversions de palier).
+.ard-heroisme-badge {
+  @include shared.heroisme-badge($font-size: 0.8rem, $icon-size: 0.95rem);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+// Résultat : plus de bande horizontale résultat+saisie+lancer réunis (ancienne piste C) — le lancer
+// devient l'action principale pleine largeur, la saisie manuelle une option secondaire discrète
+// juste en dessous (cf. .ard-reroll / .ard-manual) au lieu de rivaliser visuellement avec elle.
+// Résultat + lancer côte à côte : le bouton reste grand (c'est l'action principale du jet) sans
+// pour autant s'étendre sur toute la largeur du panneau — cf. décision du 2026-09-25.
+.ard-result-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0.6rem;
+}
+
+.ard-ticket {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid var(--dw-border);
+  background: color-mix(in srgb, var(--dw-surface-0) 62%, transparent);
+}
+
+.ard-ticket--reussite {
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 55%, transparent);
+  background: radial-gradient(ellipse at 0% 0%, color-mix(in srgb, var(--dw-color-reussite) 24%, transparent) 0%, transparent 65%), color-mix(in srgb, var(--dw-surface-0) 55%, transparent);
+}
+
+.ard-ticket--echec {
+  border-color: color-mix(in srgb, var(--dw-color-echec) 55%, transparent);
+  background: radial-gradient(ellipse at 0% 0%, color-mix(in srgb, var(--dw-color-echec) 24%, transparent) 0%, transparent 65%), color-mix(in srgb, var(--dw-surface-0) 55%, transparent);
+}
+
+.ard-ticket--heroique {
+  border-color: color-mix(in srgb, var(--dw-color-legendary) 55%, transparent);
+  background: radial-gradient(ellipse at 0% 0%, color-mix(in srgb, var(--dw-color-legendary) 24%, transparent) 0%, transparent 65%), color-mix(in srgb, var(--dw-surface-0) 55%, transparent);
+}
+
+.ard-ticket-total {
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 2.3rem;
+  line-height: 1;
+  color: var(--dw-surface-900);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 3px rgba(2, 6, 23, 0.9);
+}
+
+.ard-ticket-label {
+  margin: 0.15rem 0 0;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 3px rgba(2, 6, 23, 0.9);
+}
+
+.ard-manual-badge {
+  margin-top: 0.2rem;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+  border: 1px dashed var(--dw-border);
+  border-radius: 999px;
+  padding: 0.1rem 0.4rem;
+  background: color-mix(in srgb, var(--dw-surface-0) 70%, transparent);
+}
+
+// Action principale (lancer) : à côté du résultat plutôt qu'en dessous, en plus grand (icône +
+// libellé), seule à porter la couleur "légendaire" pleine — la saisie manuelle juste en dessous
+// (.ard-manual) reste volontairement plus discrète pour ne pas rivaliser avec elle.
+.ard-reroll {
+  flex: 0 0 7.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);
+  background: color-mix(in srgb, var(--dw-color-legendary) 14%, transparent);
+  color: var(--dw-color-legendary);
+  font: inherit;
+  font-weight: 800;
+  font-size: 1rem;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 1.9rem;
+    width: 1.9rem;
+    height: 1.9rem;
+  }
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--dw-color-legendary) 22%, transparent);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.ard-manual {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.4rem;
+}
+
+// Contraste sur le fond du panneau : libellé 12,7:1 ; bordure et texte d'aide 7,3:1 (WCAG AA : 4,5:1
+// pour le texte, 3:1 pour une bordure de champ).
+.ard-manual-hint {
+  font-size: 0.74rem;
+  color: var(--dw-surface-600);
+}
+
+.ard-manual input {
+  width: 4.4rem;
+  height: 1.9rem;
+  border-radius: 7px;
+  border: 1px solid var(--dw-surface-500);
+  background: color-mix(in srgb, var(--dw-surface-0) 55%, transparent);
+  color: var(--dw-surface-900);
+  font: inherit;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+
+  &::placeholder {
+    color: var(--dw-surface-500);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 1px;
+  }
+}
+
+.ard-manual-confirm {
+  flex-shrink: 0;
+  width: 1.9rem;
+  height: 1.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 7px;
+  border: 1px solid var(--dw-surface-500);
+  background: transparent;
+  color: var(--dw-surface-600);
+  cursor: pointer;
+
+  .mat-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &:hover:not(:disabled) {
+    color: var(--dw-surface-900);
+    border-color: var(--dw-surface-700);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+// Rail segmenté sur `mat-button-toggle-group` : un seul bandeau d'un seul tenant (bordure
+// + coins arrondis portés par le groupe, pas par chaque case) divisé par de simples liserés internes
+// — pas des puces séparées par des espaces. Chaque groupe reste sur une seule ligne (pas de wrap) :
+// la ligne Difficulté (8 options) utilise deux bandeaux complets de 4 empilés (`.ard-toggle-stack`).
+.ard-toggle.mat-button-toggle-group {
+  display: flex;
+  width: 100%;
+  border: 1px solid var(--dw-border);
+  border-radius: 7px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--dw-surface-0) 65%, transparent);
+
+  .mat-button-toggle {
+    flex: 1 1 0;
+    min-width: 0;
+    border-right: 1px solid var(--dw-border);
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  // La coche est masquée via [hideSingleSelectionIndicator]="true" (API officielle) plutôt qu'en CSS —
+  // la sélection se lit par le remplissage or.
+  .mat-button-toggle-button {
+    min-height: 2.15rem;
+    padding: 0.25rem 0.3rem;
+  }
+
+  .mat-button-toggle-label-content {
+    display: block;
+    padding: 0 !important;
+    line-height: 1.15;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--dw-surface-500);
+    white-space: normal;
+  }
+
+  .mat-button-toggle:hover .mat-button-toggle-label-content {
+    color: var(--dw-surface-800);
+  }
+
+  .mat-button-toggle-checked {
+    background: var(--dw-color-legendary);
+
+    .mat-button-toggle-label-content {
+      color: #1c1200;
+    }
+  }
+}
+
+// Malus d'équipement : même gabarit que les puces de dé bonus/malus, mais toujours appliqué (pas un
+// bouton) — teinte discrète du malus plutôt que le remplissage plein d'une puce sélectionnée.
+.ard-equip-chip {
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--dw-color-echec) 60%, transparent);
+  background: color-mix(in srgb, var(--dw-color-echec) 14%, transparent);
+  color: var(--dw-color-echec);
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+// Puces avantage/désavantage à dé de bonus/malus — sélection manuelle (domaine en tooltip), même
+// langage visuel que `.am-chip` (menu d'attaque) : neutre au repos, teinté une fois sélectionné.
+.ard-trait-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.ard-trait-chip {
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--dw-border);
+  background: color-mix(in srgb, var(--dw-surface-0) 65%, transparent);
+  color: var(--dw-surface-500);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--dw-surface-500);
+    color: var(--dw-surface-800);
+  }
+}
+
+.ard-trait-chip--avantage.ard-trait-chip--selected {
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 60%, transparent);
+  background: var(--dw-color-reussite);
+  color: #041a0d;
+}
+
+.ard-trait-chip--desavantage.ard-trait-chip--selected {
+  border-color: color-mix(in srgb, var(--dw-color-echec) 60%, transparent);
+  background: var(--dw-color-echec);
+  color: #2a0505;
+}
+
+.ard-trait-summary {
+  align-self: center;
+  flex: 1;
+  min-width: 0;
+  margin-left: 0.3rem;
+  line-height: 1.2;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--dw-surface-500);
+  text-shadow: 0 1px 3px rgba(2, 6, 23, 0.9);
+}
+
+.ard-stepper {
+  display: flex;
+  align-items: stretch;
+  align-self: flex-start;
+  border: 1px solid var(--dw-border);
+  border-radius: 7px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: color-mix(in srgb, var(--dw-surface-0) 65%, transparent);
+
+  button {
+    width: 1.7rem;
+    border: none;
+    background: transparent;
+    color: var(--dw-color-legendary);
+    font: inherit;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+
+    &:hover {
+      background: color-mix(in srgb, var(--dw-color-legendary) 16%, transparent);
+    }
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.1rem;
+    color: var(--dw-surface-900);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border-left: 1px solid var(--dw-border);
+    border-right: 1px solid var(--dw-border);
+  }
+}
+
+.ard-tier-toggle {
+  @include shared.tier-toggle;
+}
+
+.ard-tier-toggle--critique.active {
+  @include shared.tier-toggle-critique-active;
+}
+
+.ard-tier-toggle--upgrade.active {
+  @include shared.tier-toggle-upgrade-active;
+}
+
+.ard-divine-favor {
+  @include shared.divine-favor-button;
+  width: 100%;
+  margin: 0;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.88rem;
+  background: color-mix(in srgb, var(--dw-surface-0) 55%, transparent);
+}
+
+// Rangée compacte : un libellé au-dessus de son contrôle. Remplace les trois étapes numérotées.
+.ard-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.ard-row-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+
+  b {
+    color: var(--dw-color-legendary);
+  }
+}
+
+// Réglette de difficulté : huit segments d'un seul tenant, seul le modificateur est écrit dans la
+// case (le libellé complet est dans l'infobulle, l'aria-label et le titre de la rangée).
+.ard-toggle--scale.mat-button-toggle-group .mat-button-toggle-label-content {
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.ard-adjust {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+// Colonnes du jet : les choix, la difficulté et les dés, puis la formule et le résultat. Empilées
+// dans un conteneur étroit, côte à côte dans un conteneur large (carte de héros dépliée sur le tapis).
+.ard-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.ard-shell {
+  container-type: inline-size;
+}
+
+@container (min-width: 36rem) {
+  .ard-fg {
+    display: grid;
+    // Colonne de résultat de largeur fixe : ses boutons (faveur divine, succès héroïque…) ont des
+    // libellés longs qui doivent tenir sur une ligne.
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) 22rem;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  // La formule ouvre sa colonne : plus de filet de séparation au-dessus d'elle.
+  .ard-col--result .ard-ledger-formula {
+    padding-top: 0;
+    border-top: none;
+  }
+
+  // Le résultat et « Relancer » se partagent la largeur de la colonne.
+  .ard-col--result {
+    // Colonne dense : jusqu'à six blocs empilés (formule, résultat, résumé des dés, saisie, faveur
+    // divine, échec critique) dans une carte de hauteur fixe — espacement et boutons resserrés.
+    gap: 0.4rem;
+
+    .ard-divine-favor,
+    .ard-tier-toggle {
+      justify-content: flex-start;
+      white-space: nowrap;
+      font-size: 0.85rem;
+      padding-block: 0.3rem;
+    }
+
+    .ard-ticket {
+      padding: 0.45rem 0.5rem;
+    }
+
+    .ard-ticket-total {
+      font-size: 1.9rem;
+    }
+
+    .ard-reroll {
+      flex: 1 1 0;
+      min-width: 0;
+      gap: 0.25rem;
+      padding: 0.4rem 0.3rem;
+      font-size: 0.9rem;
+
+      .mat-icon {
+        font-size: 1.5rem;
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+    }
+  }
+}
+
+// Choix en tuiles séparées (attribut, carrière, difficulté) plutôt qu'en rail segmenté : elles
+// passent à la ligne en grille, ce qui permet de les répartir en colonnes étroites.
+.ard-toggle--tiles.mat-button-toggle-group {
+  display: grid;
+  gap: 4px;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+
+  .mat-button-toggle,
+  .mat-button-toggle:last-child {
+    border: 1px solid var(--dw-border);
+    border-radius: 6px;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--dw-surface-0) 65%, transparent);
+  }
+
+  // La tuile cochée garde son fond doré : cette règle passe après le fond commun des tuiles.
+  .mat-button-toggle.mat-button-toggle-checked,
+  .mat-button-toggle.mat-button-toggle-checked:last-child {
+    border-color: var(--dw-color-legendary);
+    background: var(--dw-color-legendary);
+  }
+
+  .mat-button-toggle-button {
+    min-height: 1.9rem;
+  }
+}
+
+.ard-toggle--cols2.mat-button-toggle-group {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ard-toggle--careers.mat-button-toggle-group {
+  grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr));
+}
+
+.ard-toggle--scale.mat-button-toggle-group {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}

@@ -1,0 +1,59 @@
+<div class="pal-shell">
+  <div class="pal-field">
+    <mat-icon aria-hidden="true">search</mat-icon>
+    <input
+      id="pal-input"
+      class="pal-input"
+      type="text"
+      role="combobox"
+      autocomplete="off"
+      spellcheck="false"
+      cdkFocusInitial
+      placeholder="Un personnage, une scène, une action…"
+      aria-label="Rechercher ou lancer une action"
+      aria-autocomplete="list"
+      aria-controls="pal-list"
+      [attr.aria-expanded]="count() > 0"
+      [attr.aria-activedescendant]="activeId()"
+      [value]="query()"
+      (input)="setQuery($any($event.target).value)"
+      (keydown.arrowdown)="move(1, $event)"
+      (keydown.arrowup)="move(-1, $event)"
+      (keydown.enter)="runActive($event)"
+    />
+  </div>
+
+  <div id="pal-list" class="pal-list" role="listbox" aria-label="Résultats">
+    @for (group of groups(); track group.id) {
+      <div class="pal-group" role="group" [attr.aria-labelledby]="'pal-group-' + group.id">
+        <div class="pal-group-label" [id]="'pal-group-' + group.id">{{ group.label }}</div>
+        @for (result of group.results; track result.id) {
+          <div
+            class="pal-option"
+            role="option"
+            [id]="result.id"
+            [class.pal-option--active]="result.id === activeId()"
+            [attr.aria-selected]="result.id === activeId()"
+            (click)="run(result)"
+            (mousemove)="activate(result)"
+          >
+            <span [class]="'pal-dot pal-dot--' + result.kind"></span>
+            <span class="pal-label">{{ result.label }}</span>
+            <span class="pal-hint">{{ result.hint }}</span>
+          </div>
+        }
+      </div>
+    } @empty {
+      <p class="pal-empty">{{ emptyMessage() }}</p>
+    }
+  </div>
+
+  <p class="pal-status" aria-live="polite">{{ status() }}</p>
+
+  <p class="pal-footer" aria-hidden="true">
+    <span>↑ ↓ parcourir</span>
+    <span>↵ exécuter</span>
+    <span>Échap fermer</span>
+    <span>« 3 loup » pose un lot de trois</span>
+  </p>
+</div>

@@ -1,0 +1,82 @@
+:host {
+  display: block;
+  flex: 1;
+  min-height: 0;
+}
+
+.scl-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  height: 100%;
+}
+
+.scl-scenario,
+.scl-new-scenario,
+.scl-save {
+  flex-shrink: 0;
+}
+
+.scl-list {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dw-border) transparent;
+}
+
+.scl-row {
+  cursor: grab;
+}
+
+.scl-row--current {
+  border-color: color-mix(in srgb, var(--dw-color-legendary) 55%, transparent);
+}
+
+// Aperçu et emplacement d'arrivée pendant un glisser-déposer (classes posées par le CDK).
+.scl-row.cdk-drag-preview {
+  background: var(--dw-surface-100);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.scl-row.cdk-drag-placeholder {
+  opacity: 0.35;
+}
+
+.scl-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  cursor: default;
+}
+
+.scl-summary {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--dw-surface-500);
+}
+
+.scl-notes {
+  width: 100%;
+}
+
+.scl-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.scl-delete {
+  color: var(--dw-color-danger-muted);
+}
+
+.scl-empty {
+  margin: 0;
+  padding: 0.8rem 0.2rem;
+  font-size: 0.85rem;
+  color: var(--dw-surface-500);
+}

@@ -5,6 +5,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {BolHerosArmureModel} from '../../models/bol-armure.model';
+import {BolHerosArmeModel} from '../../models/bol-arme.model';
+import {isArmeEquipee} from '../../shared/arme/arme-equipee';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolRegionModel} from '../../models/bol-region.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
@@ -12,57 +14,23 @@ import {BolHerosService} from '../../services/bol-heros.service';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {AddMenuComponent, addMenuOptions} from '../../shared/add-menu/add-menu.component';
-import {ArmeEntry, ArmeListComponent} from '../../shared/arme/list/arme-list.component';
-import {ArmureEntry, ArmureListComponent} from '../../shared/armure/list/armure-list.component';
-import {CarriereEntry, CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
-import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
-import {
-  ArmureDraft,
-  IdDraft,
-  RankedDraft,
-  applyArmureEquipToggle,
-  availableCatalog,
-  referencedIds,
-  selectedEntries,
-} from '../../shared/form/form-selection';
-import {LangueEntry} from '../../shared/langue/list/langue-list.component';
-import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
-import {TraitAddEvent} from '../../shared/trait/add-menu/trait-add-menu.component';
-import {TraitDraft, traitEntriesSignal} from '../../shared/trait/trait-entry.utils';
+import {ArmeListComponent} from '../../shared/arme/list/arme-list.component';
+import {ArmeEntry} from '../../shared/models/arme-list.model';
+import {ArmureListComponent} from '../../shared/armure/list/armure-list.component';
+import {ArmureEntry} from '../../shared/models/armure-list.model';
+import {CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
+import {CarriereEntry} from '../../shared/models/carriere-list.model';
+import {BolEntityFormPageBase} from '../../shared/form/entity-form-page.base';
+import {EntityFormLabels} from '../../shared/models/entity-form-page.model';
+import {applyArmureEquipToggle, availableCatalog, referencedIds, selectedEntries, toggleEquipee} from '../../shared/form/form-selection';
+import {LangueEntry} from '../../shared/models/langue-list.model';
+import {StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
+import {StatGroup} from '../../shared/models/stats-grid.model';
+import {TraitAddEvent} from '../../shared/models/trait-add-menu.model';
+import {traitEntriesSignal} from '../../shared/trait/trait-entry.utils';
 import {HeroGeneralComponent} from './general/general.component';
 import {HeroSummaryRailComponent} from './summary-rail/summary-rail.component';
-
-/** Modèle de brouillon du formulaire héros (distinct de {@link BolHerosModel}, la forme persistée par l'API). */
-export interface HeroFormModel {
-  id: string | null;
-  active: boolean;
-  type: 'H';
-  nom: string;
-  joueur: string;
-  region_id: number | null;
-  /** Chaîne vide plutôt que `null` : `[formField]` sur `<textarea>` exige `Field<string>`. */
-  commentaire: string;
-  avatar: string | null;
-  vigueur: number;
-  agilite: number;
-  esprit: number;
-  aura: number;
-  initiative: number;
-  melee: number;
-  tir: number;
-  defense: number;
-  vitalite: number;
-  heroisme: number;
-  experience: number;
-  pouvoir: number;
-  foi: number;
-  creation: number;
-  armes: IdDraft[];
-  armures: ArmureDraft[];
-  carrieres: RankedDraft[];
-  langues: IdDraft[];
-  traits: TraitDraft[];
-}
+import {HeroFormModel} from '../models/hero-form-page.model';
 
 function heroFormDefaults(): HeroFormModel {
   return {
@@ -280,6 +248,7 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
       degats: arme.degats,
       portee: arme.portee,
       notes: arme.notes,
+      equipee: entry.equipee,
     }),
   );
   protected readonly selectedArmures = selectedEntries(
@@ -358,11 +327,15 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
   }
 
   protected addArmeEntry(id: number): void {
-    this.model.update((current) => ({...current, armes: [...current.armes, {id}]}));
+    this.model.update((current) => ({...current, armes: [...current.armes, {id, equipee: true}]}));
   }
 
   protected removeArme(index: number): void {
     this.model.update((current) => ({...current, armes: current.armes.filter((_, i) => i !== index)}));
+  }
+
+  protected toggleArmeEquipped(index: number): void {
+    this.model.update((current) => ({...current, armes: toggleEquipee(current.armes, index)}));
   }
 
   protected addArmureEntry(id: number): void {
@@ -476,7 +449,9 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
       pouvoir: hero.ressources.pouvoir,
       foi: hero.ressources.foi,
       creation: hero.ressources.creation,
-      armes: referencedIds(hero.armes, (arme) => arme.arme_id).map((id) => ({id})),
+      armes: (hero.armes as (BolHerosArmeModel | number)[])
+        .filter((arme): arme is BolHerosArmeModel => typeof arme === 'object')
+        .map((arme) => ({id: arme.arme_id, equipee: isArmeEquipee(arme)})),
       armures: (hero.armures as (BolHerosArmureModel | number)[])
         .filter((armure): armure is BolHerosArmureModel => typeof armure === 'object')
         .map((armure) => ({id: armure.armure_id, equipee: Boolean(armure.equipee)})),
@@ -542,6 +517,7 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
     const armes = rawValue.armes.map((arme) => ({
       id: arme.id,
       arme_id: arme.id,
+      equipee: arme.equipee,
     }));
     const armures = rawValue.armures.map((armure) => ({
       id: armure.id,

@@ -2,15 +2,10 @@ import {Signal, computed} from '@angular/core';
 import {BolAvantageModel} from '../../models/bol-avantage.model';
 import {BolDesavantageModel} from '../../models/bol-desavantage.model';
 import {traitIconType} from '../trait-icon';
-import {TraitDetail, TraitEntry} from './list/trait-list.component';
+import {TraitDetail, TraitEntry} from '../models/trait-list.model';
+import {TraitDraft} from '../models/trait-entry.model';
 
-/** Entrée de FormArray référençant un avantage ('A') ou un désavantage ('D'). */
-export interface TraitDraft {
-  id: number;
-  type: 'A' | 'D';
-}
-
-export function traitSource(
+function traitSource(
   entry: TraitDraft,
   avantages: readonly BolAvantageModel[],
   desavantages: readonly BolDesavantageModel[],

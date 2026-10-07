@@ -2,13 +2,7 @@ import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
-
-export interface DefierLaMortDialogData {
-  readonly heroNom: string;
-  /** Toujours négative — c'est ce qui déclenche l'ouverture de ce dialog. */
-  readonly vitaliteCourante: number;
-  readonly heroisme: number;
-}
+import {DefierLaMortDialogData} from '../../models/defier-la-mort-dialog.model';
 
 /**
  * Vitalité négative (02-actions-combat.md, Points d'héroïsme) : entre -1 et -5, dépenser 1 PH

@@ -10,11 +10,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolAvantageModel} from '../../../models/bol-avantage.model';
 import {BolDesavantageModel} from '../../../models/bol-desavantage.model';
-
-export interface TraitAddEvent {
-  readonly id: number;
-  readonly type: 'A' | 'D';
-}
+import {TraitAddEvent} from '../../models/trait-add-menu.model';
 
 @Component({
   selector: 'bol-trait-add-menu',

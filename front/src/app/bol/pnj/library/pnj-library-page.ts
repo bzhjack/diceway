@@ -66,7 +66,7 @@ export class PnjLibraryPageComponent {
     {label: 'Pietaille', value: 'P'},
   ];
   protected readonly searchTerm = signal('');
-  /** Revenir à la session de combat d'origine plutôt qu'au dashboard, si on y accède via ses raccourcis bibliothèque. */
+  /** Revenir à la session de combat d'origine plutôt qu'à la table, si on y accède via ses raccourcis bibliothèque. */
   protected readonly returnUrl = signal(readReturnUrl());
   protected readonly searchType = signal<PnjType | ''>('');
   protected readonly onlyCreations = signal(false);

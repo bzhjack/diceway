@@ -1,52 +1,93 @@
 @if (loading()) {
-  <div class="cp-status">Chargement du combat…</div>
+  <div class="cp-status">Chargement de la table…</div>
 } @else if (errorMessage()) {
   <div class="cp-status cp-status--error">
     <p>{{ errorMessage() }}</p>
-    <a routerLink="/">Retour au dashboard</a>
+    <a routerLink="/library/sessions">Voir mes sessions</a>
   </div>
 } @else if (board(); as b) {
   <div class="cp-page">
     <bol-session-header
       [mode]="mode()"
-      [titre]="session()?.titre ?? null"
+      [titre]="headerTitle()"
       [legendaryActive]="b.legendaryActive"
       (startCombat)="openStartCombatDialog()"
       (endCombat)="askEndCombat()"
-      (addHero)="openAddCombatantDialog()"
+      (search)="openPalette()"
     />
 
-    @if (mode() === 'combat') {
-      <bol-initiative-rail
-        [tokens]="orderedTokens()"
-        [activeKey]="activeKey()"
-        (reordered)="onRailReordered($event)"
-        (addCombatant)="openAddCombatantDialog()"
-        (removeCombatant)="askRemoveCombatant($event)"
-      />
-    }
+    @if (sessionId(); as sid) {
+      <div class="spp-body">
+        @if (mode() === 'libre') {
+          @if (reserveOpen()) {
+            <aside id="spp-reserve" class="spp-reserve" aria-label="Réserve">
+              <bol-reserve
+                [sessionId]="sid"
+                [existingHeroIds]="existingHeroIds()"
+                [existingPnjIds]="existingPnjIds()"
+                [currentSceneId]="session()?.scene_id ?? null"
+                [nonHeroCount]="nonHeroCount()"
+                (sceneChanged)="onSceneChanged()"
+                (placed)="reloadSession()"
+              />
+            </aside>
+          }
 
-    <bol-battlemap
-      [mode]="mode()"
-      [heroTokens]="heroTokens()"
-      [adversaireTokens]="adversaireTokens()"
-      [activeKey]="mode() === 'combat' ? activeKey() : null"
-      [tokenPositions]="tokenPositions()"
-      (attackRequested)="onAttackRequested($event)"
-      (statblockRequested)="openStatblockFor($event)"
-      (actionRollRequested)="onActionRoll($event)"
-      (positionChanged)="onPositionChanged($event)"
-    />
+          <button
+            type="button"
+            class="spp-reserve-toggle"
+            aria-controls="spp-reserve"
+            [attr.aria-expanded]="reserveOpen()"
+            [attr.aria-label]="reserveOpen() ? 'Replier la réserve' : 'Déplier la réserve'"
+            [matTooltip]="reserveOpen() ? 'Replier la réserve' : 'Déplier la réserve'"
+            matTooltipPosition="right"
+            (click)="toggleReserve()"
+          >
+            <mat-icon>{{ reserveOpen() ? 'chevron_left' : 'chevron_right' }}</mat-icon>
+            @if (!reserveOpen()) {
+              <span class="spp-reserve-toggle-label">Réserve</span>
+            }
+          </button>
+        }
 
-    @if (heroActionPanelData(); as data) {
-      <aside class="spp-hero-action-panel">
-        <bol-hero-action-panel
-          [data]="data"
-          [initialTab]="heroActionPanelTab()"
-          (closed)="closeHeroActionPanel()"
-          (changed)="onHeroActionPanelChanged()"
-        />
-      </aside>
+        <div class="spp-main">
+          @if (mode() === 'combat') {
+            <bol-turn-order
+              [entries]="turnEntries()"
+              [round]="etat().round"
+              [announcement]="turnAnnouncement()"
+              (reordered)="onTurnReordered($event)"
+              (gaveBack)="onGiveBackTurn($event)"
+              (addRequested)="openAddCombatantDialog()"
+            />
+          }
+
+          <bol-tapis
+            [cards]="cards()"
+            [sessionId]="sid"
+            [expandedKey]="expandedCard()?.key ?? null"
+            [hero]="expandedHero()"
+            [statblock]="expandedStatblock()"
+            [returnUrl]="returnUrl()"
+            [mode]="mode()"
+            [combatStates]="combatStates()"
+            [activeCard]="activeCard()"
+            [armes]="activeArmes()"
+            [combatOptions]="combatOptions()"
+            (cardToggled)="onCardToggled($event)"
+            (closed)="foldCard()"
+            (changed)="reloadSession()"
+            (removeRequested)="askRemoveCard($event)"
+            (campToggleRequested)="toggleCamp($event)"
+            (armureToggled)="onArmureToggled($event)"
+            (armeToggled)="onArmeToggled($event)"
+            (attackRequested)="onAttackCard($event)"
+            (choiceChanged)="attackChoice.set($event)"
+            (totalDefenseRequested)="onTotalDefense()"
+            (endTurnRequested)="onEndTurn()"
+          />
+        </div>
+      </div>
     }
   </div>
 }

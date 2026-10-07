@@ -1,0 +1,42 @@
+<div class="tor">
+  <span class="tor-round">Round {{ round() }}</span>
+
+  <dw-scroller class="tor-scroller" label="Ordre de jeu">
+  <ol
+    class="tor-list"
+    aria-label="Ordre de jeu — glisser-déposer pour réordonner"
+    cdkDropList
+    cdkDropListOrientation="horizontal"
+    (cdkDropListDropped)="onDrop($event)"
+  >
+    @for (entry of entries(); track entry.key) {
+      <li
+        cdkDrag
+        [class]="'tor-chip tor-chip--' + entry.kind + ' tor-chip--' + entry.status"
+        [attr.aria-current]="entry.status === 'active' ? 'true' : null"
+      >
+        <span class="tor-dot"></span>
+        <span class="tor-name">{{ entry.nom }}</span>
+        <span class="tor-status">{{ statusLabel(entry.status) }}</span>
+        @if (entry.status === 'played') {
+          <button
+            type="button"
+            class="tor-back"
+            [attr.aria-label]="'Rendre la main à ' + entry.nom"
+            matTooltip="Rendre la main"
+            (click)="gaveBack.emit(entry.key)"
+          >
+            <mat-icon>undo</mat-icon>
+          </button>
+        }
+      </li>
+    }
+  </ol>
+  </dw-scroller>
+
+  <button mat-stroked-button size="small" type="button" class="tor-add" (click)="addRequested.emit()">
+    <mat-icon>add</mat-icon> Ajouter
+  </button>
+
+  <p class="tor-live" aria-live="polite">{{ announcement() }}</p>
+</div>

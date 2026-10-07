@@ -7,33 +7,16 @@ import {MatIconModule} from '@angular/material/icon';
 import {BolDemonModel} from '../../models/bol-demon.model';
 import {BolDemonStateService} from '../../services/bol-demon-state.service';
 import {BolDemonsService} from '../../services/bol-demons.service';
-import {AddMenuEvent} from '../../shared/add-menu/add-menu.component';
-import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
-import {DetailDraft, availableCatalog, selectedEntries} from '../../shared/form/form-selection';
-import {PouvoirEntry} from '../../shared/pouvoir/list/pouvoir-list.component';
-import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
+import {AddMenuEvent} from '../../shared/models/add-menu.model';
+import {BolEntityFormPageBase} from '../../shared/form/entity-form-page.base';
+import {EntityFormLabels} from '../../shared/models/entity-form-page.model';
+import {availableCatalog, selectedEntries} from '../../shared/form/form-selection';
+import {PouvoirEntry} from '../../shared/models/pouvoir-list.model';
+import {StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
+import {StatGroup} from '../../shared/models/stats-grid.model';
 import {DemonGeneralComponent} from './general/demon-general.component';
 import {DemonPouvoirsComponent} from './pouvoirs/demon-pouvoirs.component';
-
-/** Modèle de brouillon du formulaire démon (distinct de {@link BolDemonModel}, la forme persistée par l'API). */
-export interface DemonFormModel {
-  id: string | null;
-  nom: string;
-  id_categorie: number | null;
-  /** Chaîne vide plutôt que `null` : `[formField]` sur `<textarea>` exige `Field<string>`. */
-  commentaire: string;
-  vigueur: number;
-  agilite: number;
-  esprit: number;
-  aura: number;
-  vitalite: number;
-  melee: number;
-  tir: number;
-  defense: number;
-  degats: string;
-  avatar: string | null;
-  pouvoirs: DetailDraft[];
-}
+import {DemonFormModel} from '../models/demon-form-page.model';
 
 function demonFormDefaults(): DemonFormModel {
   return {

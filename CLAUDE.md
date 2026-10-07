@@ -83,6 +83,12 @@ When a task touches game rules, character creation, equipment, careers, language
 - `providedIn: 'root'` for singleton services.
 - Single responsibility per service.
 
+### Models (types)
+- Never declare an exported `interface` / `type` / `enum` in a component, dialog, directive, service or `*.util.ts` file: put it in a `models/` folder, in a file named `<name>.model.ts` (without the `.component` / `.service` / `.util` suffix — a component and its util share the same model file).
+- API data and the types of a service: `front/src/app/bol/models/` (`bol-*.model.ts`).
+- Types of a UI feature area: `front/src/app/bol/<area>/models/` — `<area>` is `shared`, `session`, `hero`, `pnj`, `creature` or `demon`; `front/src/app/shared/models/` for the primitives of `front/src/app/shared/`; `front/src/app/core/models/` for `core/`.
+- Non-exported helper types used by one file only may stay in that file.
+
 ### UI toolkit
 - **Angular Material only** — the app has fully migrated off PrimeNG (no `primeng`/`primeicons` dependency, no `p-*` element anywhere in `front/src/app/`). Use `mat-flat-button`/`mat-stroked-button`/`mat-icon-button` etc., not PrimeNG component names or `pi-*` icons.
 - For buttons, prefer component inputs/attributes (`mat-flat-button`, `mat-stroked-button`, `size="small"`, `color`) and CSS on container wrappers over ad-hoc inline styling.
@@ -100,7 +106,7 @@ Every library page (list of entities) follows this structure:
 
 1. **Header** — `<dw-library-header [title]="…" [description]="…" [color]="…" [image]="…">`:
    - `dwHeaderTags` slot: `<dw-tag>` with the item count(s).
-   - `dwHeaderActions` slot: left side — navigation links + primary action as `mat-flat-button`/`mat-stroked-button` (`size="small"`); right side — `<button mat-stroked-button size="small" routerLink="/"><mat-icon>arrow_back</mat-icon> Retour au dashboard</button>`.
+   - `dwHeaderActions` slot: left side — navigation links + primary action as `mat-flat-button`/`mat-stroked-button` (`size="small"`); right side — `<button mat-stroked-button size="small" routerLink="/"><mat-icon>arrow_back</mat-icon> Retour à la table</button>` (`/` redirige vers la session ouverte, ou affiche le seuil s'il n'y en a pas).
 
 2. **Content card** — `<mat-card appearance="outlined">` containing a `<dw-library-toolbar>` (search field via `[(searchTerm)]`, optional filter controls in the `dwToolbarFilter` slot, `<dw-tag dwToolbarCount>` for the filtered count) and the item grid/list/table below.
 

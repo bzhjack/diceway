@@ -5,6 +5,7 @@ namespace App\Models\Bol;
 use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BolFightSession extends Model
@@ -15,9 +16,9 @@ class BolFightSession extends Model
     public $incrementing = false;
     protected $keyType = 'uuid';
 
-    protected $fillable = ['user_id', 'titre', 'statut', 'ordre_manuel', 'positions_jetons'];
+    protected $fillable = ['user_id', 'titre', 'statut', 'ordre_manuel', 'positions_jetons', 'scene_id', 'etat_combat'];
     protected $hidden = ['created_at', 'updated_at'];
-    protected $casts = ['ordre_manuel' => 'array', 'positions_jetons' => 'array'];
+    protected $casts = ['ordre_manuel' => 'array', 'positions_jetons' => 'array', 'etat_combat' => 'array'];
 
     public function heros(): HasMany
     {
@@ -37,5 +38,11 @@ class BolFightSession extends Model
     public function pnjs(): HasMany
     {
         return $this->hasMany(BolFightSessionPnj::class, 'fight_session_id', 'id');
+    }
+
+    /** Scène courante de la session (dernière scène chargée ou enregistrée) — null si aucune. */
+    public function scene(): BelongsTo
+    {
+        return $this->belongsTo(BolScene::class, 'scene_id', 'id');
     }
 }

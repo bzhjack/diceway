@@ -3,10 +3,22 @@
     <dw-collapsible-row
       [expanded]="isExpanded(arme)"
       [ariaLabel]="'Arme : ' + arme.label"
-      [label]="arme.label"
       [stat]="arme.degats"
       (toggled)="toggle(arme)"
     >
+      <ng-container row-summary>
+        <mat-checkbox
+          class="al-row-checkbox"
+          [checked]="arme.equipee"
+          [disabled]="!equipToggleEnabled()"
+          [matTooltip]="arme.equipee ? 'Déséquiper' : 'Équiper'"
+          [attr.aria-label]="(arme.equipee ? 'Déséquiper ' : 'Équiper ') + arme.label"
+          (click)="$event.stopPropagation()"
+          (change)="equippedToggled.emit(index)"
+        />
+        <span class="dw-entry-label">{{ arme.label }}</span>
+      </ng-container>
+
       <ng-container row-body>
         @if (arme.degats) {
           <p class="dw-entry-meta">

@@ -5,51 +5,31 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {BolHerosArmureModel} from '../../models/bol-armure.model';
+import {BolHerosArmeModel} from '../../models/bol-arme.model';
+import {isArmeEquipee} from '../../shared/arme/arme-equipee';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolPnjService} from '../../services/bol-pnj.service';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {AddMenuComponent, addMenuOptions} from '../../shared/add-menu/add-menu.component';
-import {ArmeEntry, ArmeListComponent} from '../../shared/arme/list/arme-list.component';
-import {ArmureEntry, ArmureListComponent} from '../../shared/armure/list/armure-list.component';
-import {CarriereEntry, CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
-import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
-import {ArmureDraft, IdDraft, RankedDraft, applyArmureEquipToggle, availableCatalog, referencedIds, selectedEntries} from '../../shared/form/form-selection';
-import {LangueEntry} from '../../shared/langue/list/langue-list.component';
-import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
-import {TraitAddEvent} from '../../shared/trait/add-menu/trait-add-menu.component';
-import {TraitDraft, traitEntriesSignal} from '../../shared/trait/trait-entry.utils';
-import {PnjGeneralComponent, PnjTypeOption} from './general/pnj-general.component';
+import {ArmeListComponent} from '../../shared/arme/list/arme-list.component';
+import {ArmeEntry} from '../../shared/models/arme-list.model';
+import {ArmureListComponent} from '../../shared/armure/list/armure-list.component';
+import {ArmureEntry} from '../../shared/models/armure-list.model';
+import {CarriereListComponent} from '../../shared/carriere/list/carriere-list.component';
+import {CarriereEntry} from '../../shared/models/carriere-list.model';
+import {BolEntityFormPageBase} from '../../shared/form/entity-form-page.base';
+import {EntityFormLabels} from '../../shared/models/entity-form-page.model';
+import {applyArmureEquipToggle, availableCatalog, referencedIds, selectedEntries, toggleEquipee} from '../../shared/form/form-selection';
+import {LangueEntry} from '../../shared/models/langue-list.model';
+import {StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
+import {StatGroup} from '../../shared/models/stats-grid.model';
+import {TraitAddEvent} from '../../shared/models/trait-add-menu.model';
+import {traitEntriesSignal} from '../../shared/trait/trait-entry.utils';
+import {PnjGeneralComponent} from './general/pnj-general.component';
+import {PnjTypeOption} from '../models/pnj-general.model';
 import {PnjSummaryRailComponent} from './summary-rail/pnj-summary-rail.component';
-
-/** Modèle de brouillon du formulaire PNJ (distinct de {@link BolHerosModel}, la forme persistée par l'API). */
-export interface PnjFormModel {
-  id: string | null;
-  nom: string;
-  type: 'P' | 'C' | 'R';
-  joueur: string;
-  /** Chaîne vide plutôt que `null` : `[formField]` sur `<textarea>` exige `Field<string>`. */
-  commentaire: string;
-  avatar: string | null;
-  vigueur: number;
-  agilite: number;
-  esprit: number;
-  aura: number;
-  initiative: number;
-  melee: number;
-  tir: number;
-  defense: number;
-  vitalite: number;
-  pouvoir: number;
-  foi: number;
-  vilenie: number;
-  creation: number;
-  armes: IdDraft[];
-  armures: ArmureDraft[];
-  carrieres: RankedDraft[];
-  langues: IdDraft[];
-  traits: TraitDraft[];
-}
+import {PnjFormModel} from '../models/pnj-form-page.model';
 
 function pnjFormDefaults(): PnjFormModel {
   return {
@@ -265,6 +245,7 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel, P
       degats: arme.degats,
       portee: arme.portee,
       notes: arme.notes,
+      equipee: entry.equipee,
     }),
   );
   protected readonly selectedArmures = selectedEntries(
@@ -318,11 +299,15 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel, P
   }
 
   protected addArmeEntry(id: number): void {
-    this.model.update((current) => ({...current, armes: [...current.armes, {id}]}));
+    this.model.update((current) => ({...current, armes: [...current.armes, {id, equipee: true}]}));
   }
 
   protected removeArme(index: number): void {
     this.model.update((current) => ({...current, armes: current.armes.filter((_, i) => i !== index)}));
+  }
+
+  protected toggleArmeEquipped(index: number): void {
+    this.model.update((current) => ({...current, armes: toggleEquipee(current.armes, index)}));
   }
 
   protected addArmureEntry(id: number): void {
@@ -402,7 +387,9 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel, P
       foi: pnj.ressources.foi,
       vilenie: pnj.ressources.vilenie,
       creation: pnj.ressources.creation,
-      armes: referencedIds(pnj.armes, (arme) => arme.arme_id).map((id) => ({id})),
+      armes: (pnj.armes as (BolHerosArmeModel | number)[])
+        .filter((arme): arme is BolHerosArmeModel => typeof arme === 'object')
+        .map((arme) => ({id: arme.arme_id, equipee: isArmeEquipee(arme)})),
       armures: (pnj.armures as (BolHerosArmureModel | number)[])
         .filter((armure): armure is BolHerosArmureModel => typeof armure === 'object')
         .map((armure) => ({id: armure.armure_id, equipee: Boolean(armure.equipee)})),
@@ -441,7 +428,7 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel, P
       foi: rawValue.foi,
       vilenie: rawValue.vilenie,
       creation: rawValue.creation,
-      armes: rawValue.armes.map((arme) => ({id: arme.id})),
+      armes: rawValue.armes.map((arme) => ({id: arme.id, equipee: arme.equipee})),
       armures: rawValue.armures.map((armure) => ({id: armure.id, equipee: armure.equipee})),
       carrieres: rawValue.carrieres.map((carriere) => ({
         id: carriere.id,

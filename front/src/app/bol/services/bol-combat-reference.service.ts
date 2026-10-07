@@ -2,31 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {apiUrl} from '../../core/api-url';
-
-export interface BolCombatOptionModel {
-  id: number;
-  label: string;
-  slug: string;
-  modificateur: number;
-  modificateur_armor: boolean;
-  note: string;
-  ordre: number;
-}
-
-export interface BolHeroicOptionModel {
-  id: number;
-  label: string;
-  slug: string;
-  description: string;
-  ordre: number;
-}
-
-export interface BolDifficulteModel {
-  id: number;
-  label: string;
-  modificateur: number;
-  ordre: number;
-}
+import {BolCombatOptionModel, BolHeroicOptionModel, BolDifficulteModel} from '../models/bol-combat-reference.model';
 
 @Injectable({providedIn: 'root'})
 export class BolCombatReferenceService {

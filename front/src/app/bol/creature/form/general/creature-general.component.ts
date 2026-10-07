@@ -5,7 +5,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {BolCreatureTailleModel} from '../../../models/bol-creature.model';
-import type {CreatureFormModel} from '../creature-form-page';
+import type {CreatureFormModel} from '../../models/creature-form-page.model';
 
 @Component({
   selector: 'bol-creature-general',

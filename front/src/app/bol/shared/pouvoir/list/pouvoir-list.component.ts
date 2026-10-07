@@ -2,13 +2,7 @@ import {ChangeDetectionStrategy, Component, input, output, signal} from '@angula
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {DwCollapsibleRowComponent} from '../../../../shared/dw-collapsible-row/dw-collapsible-row';
-
-export interface PouvoirEntry {
-  readonly id: number;
-  readonly label: string;
-  readonly description: string | null;
-  readonly detail: string | null;
-}
+import {PouvoirEntry} from '../../models/pouvoir-list.model';
 
 @Component({
   selector: 'bol-pouvoir-list',

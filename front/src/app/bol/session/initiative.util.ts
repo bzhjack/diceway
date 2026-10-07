@@ -1,19 +1,7 @@
 import {InitiativeResultat} from '../models/bol-fight-session.model';
 import {combatantRankKey} from './combat-statblock.util';
-import {CombatCatalogEntry, SelectedCombatant} from '../services/combat-selection.service';
-
-export type InitiativeKind = 'hero' | 'pnj' | 'creature' | 'demon';
-
-/** Les 8 paliers d'ordre de réaction BoL (02-actions-combat.md), du premier au dernier à agir. */
-export type InitiativeTierKey =
-  | 'legendaire'
-  | 'heroique'
-  | 'reussite'
-  | 'rival'
-  | 'coriace'
-  | 'echec'
-  | 'pietaille'
-  | 'echec_critique';
+import {CombatCatalogEntry, SelectedCombatant} from '../models/combat-selection.model';
+import {InitiativeTierKey, InitiativeEntry, InitiativeOrder, InitiativeSource} from './models/initiative.model';
 
 const TIER_ORDER: readonly InitiativeTierKey[] = [
   'legendaire',
@@ -36,33 +24,6 @@ const HERO_RESULT_TIER: Record<InitiativeResultat, InitiativeTierKey> = {
 
 /** Coriaces et piétaille adverses ne jouent pas au round 1 si un héros a obtenu héroïque/légendaire. */
 const ROUND1_LOCKABLE_TIERS: ReadonlySet<InitiativeTierKey> = new Set(['coriace', 'pietaille']);
-
-export interface InitiativeEntry {
-  readonly key: string;
-  readonly kind: InitiativeKind;
-  readonly nom: string;
-  /** null = héros dont le résultat n'a pas encore été saisi. */
-  readonly tier: InitiativeTierKey | null;
-  readonly resultat: InitiativeResultat | null;
-  readonly lockedRound1: boolean;
-}
-
-export interface InitiativeOrder {
-  readonly entries: readonly InitiativeEntry[];
-  /** true si un héros a obtenu un succès légendaire : +1 à tous les jets d'attaque toute la rencontre. */
-  readonly legendaryActive: boolean;
-}
-
-/** Combattant générique, indépendant de sa source. */
-export interface InitiativeSource {
-  readonly key: string;
-  readonly kind: InitiativeKind;
-  readonly nom: string;
-  /** Rang BoL fixe (rival/coriace/pietaille) — uniquement pour pnj/creature/demon. */
-  readonly rang: 'rival' | 'coriace' | 'pietaille' | null;
-  /** Résultat du jet de réaction — uniquement pour un héros. */
-  readonly resultat: InitiativeResultat | null;
-}
 
 /** Construit l'ordre d'action combiné à partir de sources génériques (héros + PNJ + créatures + démons). */
 export function buildInitiativeOrderFrom(sources: readonly InitiativeSource[]): InitiativeOrder {
@@ -91,32 +52,6 @@ export function buildInitiativeOrderFrom(sources: readonly InitiativeSource[]): 
     .sort((a, b) => tierIndex(a.tier) - tierIndex(b.tier));
 
   return {entries, legendaryActive};
-}
-
-/** Adaptateur : construit les sources à partir du brouillon de sélection (avant lancement du combat). */
-export function buildInitiativeOrderFromSelection(
-  combatants: readonly SelectedCombatant[],
-  entryFor: (catalogId: string) => CombatCatalogEntry | undefined,
-  heroInitiative: ReadonlyMap<string, InitiativeResultat>,
-): InitiativeOrder {
-  const sources: InitiativeSource[] = combatants.flatMap((c): InitiativeSource[] => {
-    const entry = entryFor(c.catalogId);
-    if (!entry) {
-      return [];
-    }
-
-    return [
-      {
-        key: c.catalogId,
-        kind: entry.kind,
-        nom: entry.nom,
-        rang: combatantRankKey(entry),
-        resultat: entry.kind === 'hero' ? (heroInitiative.get(c.catalogId) ?? null) : null,
-      },
-    ];
-  });
-
-  return buildInitiativeOrderFrom(sources);
 }
 
 /** Un combattant sans résultat/rang connu passe en toute fin de liste, en attendant la saisie du MJ. */

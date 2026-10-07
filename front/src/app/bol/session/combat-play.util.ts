@@ -1,47 +1,9 @@
 import {BolFightSessionModel, CombatCamp} from '../models/bol-fight-session.model';
-import {buildInitiativeOrderFrom, InitiativeKind, InitiativeSource, InitiativeTierKey} from './initiative.util';
+import {buildInitiativeOrderFrom} from './initiative.util';
+import {InitiativeSource} from './models/initiative.model';
+import {PlayCombatStats, PlayToken, PlayBoard} from './models/combat-play.model';
 
 export const EMPTY_AVATAR = '/assets/bol/empty-avatar.jpg';
-
-/**
- * Stats de combat d'un jeton. Pour un héros, rien n'est snapshoté côté session : ces champs
- * restent `null` et les vraies valeurs doivent être récupérées en direct via `BolHerosService`
- * (voir `sourceId`). Pour pnj/créature/démon, les valeurs viennent du snapshot de la session.
- */
-export interface PlayCombatStats {
-  readonly sourceId: string | null;
-  readonly vigueur: number | null;
-  readonly agilite: number | null;
-  readonly melee: number | null;
-  readonly tir: number | null;
-  /** Bonus d'attaque combiné des créatures (remplace agilité+mêlée séparés). */
-  readonly attaque: number | null;
-  readonly defense: number | null;
-  readonly degats: string | null;
-  readonly protection: string | null;
-}
-
-export interface PlayToken {
-  readonly key: string;
-  readonly kind: InitiativeKind;
-  readonly nom: string;
-  readonly avatar: string;
-  readonly camp: CombatCamp;
-  readonly vitaliteMax: number | null;
-  readonly vitaliteCourante: number | null;
-  readonly tier: InitiativeTierKey | null;
-  readonly lockedRound1: boolean;
-  /** Id de la ligne fight-session (heros/pnj/creature/demon) — plusieurs jetons d'un même lot de créatures/démons partagent le même id. */
-  readonly pivotId: number;
-  /** Index de cette instance au sein du lot (creature/demon avec qty > 1) — null pour hero/pnj, toujours seuls dans leur ligne. */
-  readonly instanceIndex: number | null;
-  readonly combat: PlayCombatStats;
-}
-
-export interface PlayBoard {
-  readonly tokens: readonly PlayToken[];
-  readonly legendaryActive: boolean;
-}
 
 interface PlaySource extends InitiativeSource {
   readonly camp: CombatCamp;
@@ -197,11 +159,6 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
   });
 
   return {tokens, legendaryActive: order.legendaryActive};
-}
-
-/** Un attaquant peut cibler n'importe quel autre combattant, y compris de son propre camp — seul se cibler soi-même est exclu. */
-export function canTarget(token: PlayToken, sourceKey: string | null): boolean {
-  return sourceKey !== null && token.key !== sourceKey;
 }
 
 /** Récupération post-combat (02-actions-combat.md, "Récupération") : à `> 0` ou exactement `0` (on

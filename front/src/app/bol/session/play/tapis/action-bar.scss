@@ -1,0 +1,115 @@
+:host {
+  display: block;
+  align-self: center;
+  max-width: 100%;
+}
+
+.acb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.2rem;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--dw-color-legendary);
+  border-radius: 8px;
+  background: var(--dw-surface-0);
+}
+
+.acb-who {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.acb-eyebrow {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+}
+
+.acb-name {
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: var(--dw-color-legendary);
+}
+
+.acb-hint {
+  font-size: 0.76rem;
+  color: var(--dw-surface-500);
+}
+
+.acb-choices {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.1rem;
+}
+
+.acb-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.acb-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.acb-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 999px;
+  background: var(--dw-surface-100);
+  color: var(--dw-surface-700);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--dw-surface-500);
+    color: var(--dw-surface-900);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+}
+
+.acb-chip--selected {
+  border-color: var(--dw-color-legendary);
+  background: var(--dw-color-legendary);
+  color: #1c1200;
+
+  &:hover {
+    color: #1c1200;
+  }
+}
+
+.acb-chip-mod {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.8;
+}
+
+.acb-fixed {
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--dw-surface-900);
+}
+
+.acb-actions {
+  flex-shrink: 0;
+  display: flex;
+  gap: 0.4rem;
+}

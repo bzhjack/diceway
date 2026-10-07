@@ -16,33 +16,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {DiceBoxHostComponent} from '../../../shared/dice-3d/dice-box-host';
 import {InitiativeResultat} from '../../models/bol-fight-session.model';
 import {BolHerosService} from '../../services/bol-heros.service';
-import {ResolvedCombatStats} from '../combat-attack.util';
 import {applyHeroismeDelta} from '../heroisme-spend.util';
-
-/** Posture/option de combat choisie dans le menu épée (bol_combat_option) — seul le sous-ensemble
- * "modificateur simple au jet d'attaque" est géré ici (doc/rules/02-actions-combat.md, "Options de
- * combat") : offensive/intrépide/défensive/défaut de l'armure. Le volet défensif de ces postures
- * ("pour tout le round") n'est pas persisté côté session dans cette passe — seul l'attaquant en
- * bénéficie, sur son propre jet d'attaque. */
-export interface AttackRollDialogPosture {
-  readonly label: string;
-  readonly slug: string;
-  readonly modificateur: number;
-}
-
-export interface AttackRollDialogData {
-  readonly attackerNom: string;
-  readonly targetNom: string;
-  readonly attackerAvatar: string;
-  readonly targetAvatar: string;
-  readonly attacker: ResolvedCombatStats;
-  readonly target: ResolvedCombatStats;
-  /** true si l'attaquant a obtenu un succès légendaire au jet de réaction de cette rencontre
-   * (`PlayToken.tier`) : +1 personnel à tous ses jets d'attaque durant toute la rencontre
-   * (02-actions-combat.md). */
-  readonly legendaryBonusActive: boolean;
-  readonly posture: AttackRollDialogPosture | null;
-}
+import {AttackRollDialogPosture, AttackRollDialogData} from '../models/attack-roll-dialog.model';
 
 /** Résout le modificateur d'attaque réellement appliqué par la posture choisie. "Attaque au défaut
  * de l'armure" n'a pas de malus fixe en base (`modificateur_armor: true`) : son malus est la valeur

@@ -227,7 +227,10 @@ class BolHerosController extends Controller
             if ($armeId === 0) {
                 continue;
             }
-            BolHerosArme::updateOrCreate(['heros_id' => $herosId, 'arme_id' => $armeId], []);
+            // L'état « équipée » n'est écrit que s'il est envoyé : un client qui n'envoie que des ids (formulaire
+            // avancé) laisse l'état des armes déjà possédées inchangé.
+            $attributes = is_array($arme) && array_key_exists('equipee', $arme) ? ['equipee' => (bool) $arme['equipee']] : [];
+            BolHerosArme::updateOrCreate(['heros_id' => $herosId, 'arme_id' => $armeId], $attributes);
         }
 
         $armures = $request->input('armures', []);

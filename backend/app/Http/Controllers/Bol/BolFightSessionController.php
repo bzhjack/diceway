@@ -78,6 +78,23 @@ class BolFightSessionController extends Controller
         return response()->json($session);
     }
 
+    public function setCamp(Request $request, string $id, string $kind, int $pivotId)
+    {
+        $data = $request->validate(['camp' => 'required|in:heros,adversaires']);
+
+        if ($kind === 'hero') {
+            return response()->json(['error' => 'Un héros reste dans le camp des héros.'], 422);
+        }
+
+        $session = $this->fightSessionService->setCamp($id, Auth::id(), $kind, $pivotId, $data['camp']);
+
+        if (!$session) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        return response()->json($session);
+    }
+
     public function applyDamage(Request $request, string $id, string $kind, int $pivotId)
     {
         $instanceIndex = $request->input('instanceIndex');
@@ -156,5 +173,24 @@ class BolFightSessionController extends Controller
         }
 
         return response()->json($pivot);
+    }
+
+    public function updateCombatState(Request $request, string $id)
+    {
+        $data = $request->validate([
+            'round'            => 'required|integer|min:1',
+            'joues'            => 'present|array',
+            'joues.*'          => 'string',
+            'defense_totale'   => 'present|array',
+            'defense_totale.*' => 'string',
+        ]);
+
+        $session = $this->fightSessionService->updateCombatState($id, Auth::id(), $data);
+
+        if (!$session) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        return response()->json($session);
     }
 }

@@ -15,17 +15,20 @@ import {BolCarriereModel} from '../../models/bol-carriere.model';
 import {BolHerosAttributs, BolHerosCombat, BolHerosModel, BolHerosOrigines, BolHerosRessources} from '../../models/bol-heros.model';
 import {BolHerosTraitsModel} from '../../models/bol-trait.model';
 import {BolHerosService} from '../../services/bol-heros.service';
-import {BolHerosStateService, HeroCreationWarning} from '../../services/bol-heros-state.service';
+import {BolHerosStateService} from '../../services/bol-heros-state.service';
+import {HeroCreationWarning} from '../../models/bol-heros-state.model';
 import {addMenuOptions} from '../../shared/add-menu/add-menu.component';
-import {ArmeEntry} from '../../shared/arme/list/arme-list.component';
-import {ArmureEntry} from '../../shared/armure/list/armure-list.component';
-import {CarriereEntry} from '../../shared/carriere/list/carriere-list.component';
-import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
-import {ArmureDraft, IdDraft, RankedDraft, availableCatalog, selectedEntries} from '../../shared/form/form-selection';
-import {LangueEntry} from '../../shared/langue/list/langue-list.component';
-import {StatGroup} from '../../shared/stats-grid/stats-grid.component';
-import {TraitAddEvent} from '../../shared/trait/add-menu/trait-add-menu.component';
-import {TraitEntry} from '../../shared/trait/list/trait-list.component';
+import {isArmeEquipee} from '../../shared/arme/arme-equipee';
+import {ArmeEntry} from '../../shared/models/arme-list.model';
+import {ArmureEntry} from '../../shared/models/armure-list.model';
+import {CarriereEntry} from '../../shared/models/carriere-list.model';
+import {BolEntityFormPageBase} from '../../shared/form/entity-form-page.base';
+import {EntityFormLabels} from '../../shared/models/entity-form-page.model';
+import {availableCatalog, selectedEntries, toggleEquipee} from '../../shared/form/form-selection';
+import {LangueEntry} from '../../shared/models/langue-list.model';
+import {StatGroup} from '../../shared/models/stats-grid.model';
+import {TraitAddEvent} from '../../shared/models/trait-add-menu.model';
+import {TraitEntry} from '../../shared/models/trait-list.model';
 import {traitDetails} from '../../shared/trait/trait-entry.utils';
 import {traitIconType} from '../../shared/trait-icon';
 import {HeroSummaryRailComponent} from '../form/summary-rail/summary-rail.component';
@@ -42,54 +45,13 @@ import {
   combatBudgetErrors,
 } from './create.validators';
 import {HeroAdvancedIdentiteComponent} from './identite/identite.component';
-import {HeroAdvancedRegionComponent, HeroAdvancedRegionDialogResult} from './region/region.component';
-import {HeroAdvancedRessourcesPanelComponent, ResourceEntry} from './ressources-panel/ressources-panel.component';
-import {SectionMessage} from './section-message';
+import {HeroAdvancedRegionComponent} from './region/region.component';
+import {HeroAdvancedRegionDialogResult} from '../models/hero-advanced-region.model';
+import {HeroAdvancedRessourcesPanelComponent} from './ressources-panel/ressources-panel.component';
+import {ResourceEntry} from '../models/ressources-panel.model';
+import {SectionMessage} from '../models/section-message.model';
 import {HeroAdvancedStatsPanelComponent} from './stats-panel/stats-panel.component';
-
-/** Brouillon de trait dans le modèle : `id` est l'id du lien héros/trait côté serveur. */
-interface AdvancedTraitDraft {
-  id: number | null;
-  traitable_id: number;
-  type: 'A' | 'D';
-  detail: string | null;
-  region_id: number | null;
-  carriere: boolean;
-}
-
-/** Modèle de brouillon du formulaire héros (création avancée), distinct de {@link BolHerosModel}. */
-export interface HeroAdvancedFormModel {
-  id: string | null;
-  user_id: string | null;
-  active: boolean;
-  type: 'H';
-  nom: string;
-  joueur: string;
-  region_id: number | null;
-  /** Chaîne vide plutôt que `null` : `[formField]` sur `<textarea>` exige `Field<string>`. */
-  commentaire: string;
-  avatar: string | null;
-  vigueur: number;
-  agilite: number;
-  esprit: number;
-  aura: number;
-  initiative: number;
-  melee: number;
-  tir: number;
-  defense: number;
-  vitalite: number;
-  heroisme: number;
-  foi: number;
-  pouvoir: number;
-  creation: number;
-  experience: number;
-  vilenie: number;
-  armes: IdDraft[];
-  armures: ArmureDraft[];
-  langues: IdDraft[];
-  carrieres: RankedDraft[];
-  traits: AdvancedTraitDraft[];
-}
+import {AdvancedTraitDraft, HeroAdvancedFormModel} from '../models/hero-advanced-page.model';
 
 function heroAdvancedFormDefaults(): HeroAdvancedFormModel {
   return {
@@ -425,6 +387,7 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       degats: arme.degats,
       portee: arme.portee,
       notes: arme.notes,
+      equipee: entry.equipee,
     }),
   );
   protected readonly selectedArmures = selectedEntries(
@@ -982,7 +945,10 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
   }
 
   protected hydrateForm(hero: BolHerosModel): void {
-    const armes = (hero.armes ?? []).map((arme) => ({id: Number(typeof arme === 'number' ? arme : arme.arme_id)}));
+    const armes = (hero.armes ?? []).map((arme) => ({
+      id: Number(typeof arme === 'number' ? arme : arme.arme_id),
+      equipee: typeof arme === 'number' ? true : isArmeEquipee(arme),
+    }));
     const armures = (hero.armures ?? []).map((armure) => ({
       id: Number(typeof armure === 'number' ? armure : armure.armure_id),
       equipee: typeof armure === 'number' ? false : Boolean(armure.equipee),
@@ -1176,8 +1142,22 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
   protected addArmeEntry(id: number): void {
     this.persistCreate(
       (heroId) => this.herosService.createArme(heroId, {arme_id: id}),
-      () => this.pushIdEntry('armes', id),
+      () => this.pushArmeEntry(id),
       "L'ajout de l'arme a échoué.",
+    );
+  }
+
+  /** Équipe ou déséquipe une arme : enregistré tout de suite, comme les autres sous-ressources de cette page. */
+  protected toggleArmeEquipped(index: number): void {
+    const entry = this.selectedArmes()[index];
+    if (!entry) {
+      return;
+    }
+
+    this.persistCreate(
+      (heroId) => this.herosService.equipArme(heroId, entry.id),
+      () => this.model.update((current) => ({...current, armes: toggleEquipee(current.armes, index)})),
+      "Le changement d'équipement a échoué.",
     );
   }
 
@@ -1281,8 +1261,12 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
     });
   }
 
-  private pushIdEntry(key: 'armes' | 'langues', id: number): void {
+  private pushIdEntry(key: 'langues', id: number): void {
     this.model.update((current) => ({...current, [key]: [...current[key], {id: Number(id)}]}));
+  }
+
+  private pushArmeEntry(id: number): void {
+    this.model.update((current) => ({...current, armes: [...current.armes, {id: Number(id), equipee: true}]}));
   }
 
   private pushArmureEntry(id: number): void {

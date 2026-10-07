@@ -62,6 +62,7 @@ class BolPnjController extends Controller
         foreach ($armes as $arme) {
             $newarme['heros_id'] = $pnj['id'];
             $newarme['arme_id'] = $arme['id'];
+            $newarme['equipee'] = (bool) ($arme['equipee'] ?? true);
             BolHerosArme::create($newarme);
         }
         $armures = $request->input('armures');
@@ -121,7 +122,9 @@ class BolPnjController extends Controller
         $ids_armes = array_column($armes, 'id');
         BolHerosArme::whereNotIn('arme_id', $ids_armes)->where('heros_id', $pnjId)->delete();
         foreach ($armes as $item) {
-            BolHerosArme::updateOrCreate(['heros_id' => $pnjId, 'arme_id' => $item['id']], []);
+            // L'état « équipée » n'est écrit que s'il est envoyé : un client qui n'envoie que des ids le laisse inchangé.
+            $attributes = array_key_exists('equipee', $item) ? ['equipee' => (bool) $item['equipee']] : [];
+            BolHerosArme::updateOrCreate(['heros_id' => $pnjId, 'arme_id' => $item['id']], $attributes);
         }
 
         $langues = $request->input('langues');

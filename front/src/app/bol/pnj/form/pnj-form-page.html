@@ -125,7 +125,11 @@
                       />
                     </div>
 
-                    <bol-arme-list [armes]="selectedArmes()" (removed)="removeArme($event)" />
+                    <bol-arme-list
+                      [armes]="selectedArmes()"
+                      (removed)="removeArme($event)"
+                      (equippedToggled)="toggleArmeEquipped($event)"
+                    />
                   </div>
 
                   <div class="dw-section--form">

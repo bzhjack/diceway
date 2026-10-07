@@ -56,7 +56,7 @@ export class DemonLibraryPageComponent {
 
   protected readonly categories = this.demonStateService.categorieList;
   protected readonly searchTerm = signal('');
-  /** Revenir à la session de combat d'origine plutôt qu'au dashboard, si on y accède via ses raccourcis bibliothèque. */
+  /** Revenir à la session de combat d'origine plutôt qu'à la table, si on y accède via ses raccourcis bibliothèque. */
   protected readonly returnUrl = signal(readReturnUrl());
   protected readonly searchCategorie = signal<number | ''>('');
   protected readonly onlyCreations = signal(false);

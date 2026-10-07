@@ -7,33 +7,18 @@ import {MatIconModule} from '@angular/material/icon';
 import {BolCreatureModel} from '../../models/bol-creature.model';
 import {BolCreatureStateService} from '../../services/bol-creature-state.service';
 import {BolCreaturesService} from '../../services/bol-creatures.service';
-import {AddMenuComponent, AddMenuEvent} from '../../shared/add-menu/add-menu.component';
-import {CapaciteEntry} from '../../shared/capacite/list/capacite-list.component';
-import {BolEntityFormPageBase, EntityFormLabels} from '../../shared/form/entity-form-page.base';
-import {DetailDraft, availableCatalog, selectedEntries} from '../../shared/form/form-selection';
-import {StatGroup, StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
+import {AddMenuComponent} from '../../shared/add-menu/add-menu.component';
+import {AddMenuEvent} from '../../shared/models/add-menu.model';
+import {CapaciteEntry} from '../../shared/models/capacite-list.model';
+import {BolEntityFormPageBase} from '../../shared/form/entity-form-page.base';
+import {EntityFormLabels} from '../../shared/models/entity-form-page.model';
+import {availableCatalog, selectedEntries} from '../../shared/form/form-selection';
+import {StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
+import {StatGroup} from '../../shared/models/stats-grid.model';
 import {traitIconType} from '../../shared/trait-icon';
 import {CreatureCapacitesComponent} from './capacites/creature-capacites.component';
 import {CreatureGeneralComponent} from './general/creature-general.component';
-
-/** Modèle de brouillon du formulaire créature (distinct de {@link BolCreatureModel}, la forme persistée par l'API). */
-export interface CreatureFormModel {
-  id: string | null;
-  nom: string;
-  id_taille: number | null;
-  /** Chaîne vide plutôt que `null` : `[formField]` sur `<textarea>` exige `Field<string>`. */
-  commentaire: string;
-  vigueur: number;
-  agilite: number;
-  esprit: number;
-  vitalite: number;
-  attaque: number;
-  defense: number;
-  degats: string;
-  protection: string;
-  avatar: string | null;
-  capacites: DetailDraft[];
-}
+import {CreatureFormModel} from '../models/creature-form-page.model';
 
 function creatureFormDefaults(): CreatureFormModel {
   return {

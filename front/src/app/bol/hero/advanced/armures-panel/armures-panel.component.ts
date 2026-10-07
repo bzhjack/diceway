@@ -1,6 +1,8 @@
 import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
-import {AddMenuComponent, AddMenuOption} from '../../../shared/add-menu/add-menu.component';
-import {ArmureEntry, ArmureListComponent} from '../../../shared/armure/list/armure-list.component';
+import {AddMenuComponent} from '../../../shared/add-menu/add-menu.component';
+import {AddMenuOption} from '../../../shared/models/add-menu.model';
+import {ArmureListComponent} from '../../../shared/armure/list/armure-list.component';
+import {ArmureEntry} from '../../../shared/models/armure-list.model';
 import {DwTagComponent} from '../../../../shared/dw-tag/dw-tag';
 
 /** Panneau Armures de la création avancée. */
