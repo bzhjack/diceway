@@ -30,8 +30,8 @@ import {DwBadgeColor} from '../models/dw-badge.model';
     }
 
     :host.dw-badge--sky {
-      --dw-badge-border: rgba(56, 189, 248, 0.3);
-      --dw-badge-bg: rgba(56, 189, 248, 0.1);
+      --dw-badge-border: rgba(217, 164, 65, 0.3);
+      --dw-badge-bg: rgba(217, 164, 65, 0.1);
       --dw-badge-color: #bae6fd;
     }
 
@@ -48,9 +48,9 @@ import {DwBadgeColor} from '../models/dw-badge.model';
     }
 
     :host.dw-badge--neutral {
-      --dw-badge-border: rgba(148, 163, 184, 0.3);
-      --dw-badge-bg: rgba(148, 163, 184, 0.1);
-      --dw-badge-color: #cbd5e1;
+      --dw-badge-border: rgba(156, 135, 99, 0.3);
+      --dw-badge-bg: rgba(156, 135, 99, 0.1);
+      --dw-badge-color: #b59d78;
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,

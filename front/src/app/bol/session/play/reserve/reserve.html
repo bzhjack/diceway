@@ -36,29 +36,67 @@
       />
     </mat-form-field>
 
-    <ul class="rsv-hand" role="list" [attr.aria-label]="activeTab().label + ' de la réserve'">
+    <ul
+      class="rsv-list"
+      cdkDropList
+      [cdkDropListSortingDisabled]="true"
+      [cdkDropListEnterPredicate]="rejectDrop"
+      role="list"
+      [attr.aria-label]="activeTab().label + ' de la réserve'"
+    >
       @for (row of rows(); track row.entry.catalogId) {
-        <li>
-          <button
-            type="button"
-            [class]="'rsv-mini rsv-mini--' + row.entry.kind"
-            [class.rsv-mini--on-table]="row.onTable"
-            [disabled]="row.onTable || pendingCatalogId() !== null"
-            [attr.aria-label]="miniLabel(row)"
-            (click)="place(row.entry)"
+        <li class="rsv-slot">
+          <div
+            cdkDrag
+            cdkDragPreviewContainer="parent"
+            [cdkDragDisabled]="row.onTable"
+            [class]="'rsv-row rsv-row--' + row.entry.kind"
+            [class.rsv-row--on-table]="row.onTable"
+            [attr.id]="'rsv-' + row.entry.catalogId"
+            [attr.tabindex]="row.onTable ? -1 : 0"
+            [attr.aria-label]="rowLabel(row)"
+            (dblclick)="add(row)"
+            (keydown)="onRowKey($event, row)"
+            (cdkDragStarted)="onDragStarted(row)"
+            (cdkDragMoved)="onDragMoved($event)"
+            (cdkDragEnded)="onDragEnded($event, row)"
           >
-            <span class="rsv-mini-art">
+            <span class="rsv-avatar">
               @if (hasAvatar(row.entry)) {
-                <img class="rsv-mini-avatar" [src]="row.entry.avatar" alt="" (error)="onAvatarError(row.entry)" />
+                <img class="rsv-avatar-img" [src]="row.entry.avatar" alt="" draggable="false" (error)="onAvatarError(row.entry)" />
               } @else {
                 {{ initial(row.entry) }}
               }
             </span>
-            <span class="rsv-mini-name">{{ row.entry.nom }}</span>
-            @if (row.onTable) {
-              <span class="rsv-mini-state">à table</span>
+            <span class="rsv-text">
+              <b class="rsv-name">{{ row.entry.nom }}</b>
+              <span class="rsv-meta">{{ kindLabel(row.entry) }} · Vit {{ row.entry.vitalite }}@if (row.onTable) { · à table }</span>
+            </span>
+            @if (!row.onTable) {
+              <button
+                type="button"
+                mat-stroked-button
+                class="rsv-add"
+                [disabled]="pending()"
+                [attr.aria-label]="'Ajouter ' + row.entry.nom + ' à la table'"
+                (click)="add(row)"
+                (dblclick)="$event.stopPropagation()"
+              >
+                <mat-icon>add</mat-icon> Ajouter
+              </button>
             }
-          </button>
+
+            <div *cdkDragPreview class="rsv-ghost">
+              <span [class]="'rsv-ghost-art rsv-row--' + row.entry.kind">
+                @if (hasAvatar(row.entry)) {
+                  <img class="rsv-avatar-img" [src]="row.entry.avatar" alt="" draggable="false" />
+                } @else {
+                  {{ initial(row.entry) }}
+                }
+              </span>
+              <span class="rsv-ghost-name">{{ row.entry.nom }}</span>
+            </div>
+          </div>
         </li>
       } @empty {
         <li class="rsv-empty">
@@ -72,6 +110,8 @@
         </li>
       }
     </ul>
+
+    <p class="rsv-hint">Glisse un personnage sur le tapis, ou double-clique pour le poser.</p>
 
     <div class="rsv-links">
       <a mat-flat-button size="small" [routerLink]="activeTab().createLink" [state]="navState()">

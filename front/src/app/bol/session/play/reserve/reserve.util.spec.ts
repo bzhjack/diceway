@@ -33,26 +33,24 @@ describe('filterReserve', () => {
 
 describe('isOnTable', () => {
   const heroIds = new Set(['h1']);
-  const pnjIds = new Set(['p1']);
 
-  it('is true for a hero or a PNJ already in the session', () => {
-    expect(isOnTable(entry('hero', 'h1', 'Kalena'), heroIds, pnjIds)).toBe(true);
-    expect(isOnTable(entry('pnj', 'p1', 'Prêtre'), heroIds, pnjIds)).toBe(true);
+  it('is true for a hero already in the session', () => {
+    expect(isOnTable(entry('hero', 'h1', 'Kalena'), heroIds)).toBe(true);
   });
 
-  it('is false for a hero or a PNJ not yet in the session', () => {
-    expect(isOnTable(entry('hero', 'h2', 'Rork'), heroIds, pnjIds)).toBe(false);
-    expect(isOnTable(entry('pnj', 'p2', 'Surdral'), heroIds, pnjIds)).toBe(false);
+  it('is false for a hero not yet in the session', () => {
+    expect(isOnTable(entry('hero', 'h2', 'Rork'), heroIds)).toBe(false);
   });
 
-  it('is always false for creatures and demons, which can be placed several times', () => {
-    expect(isOnTable(entry('creature', 'h1', 'Hippocampe'), heroIds, pnjIds)).toBe(false);
-    expect(isOnTable(entry('demon', 'p1', 'Démon'), heroIds, pnjIds)).toBe(false);
+  it('is always false for PNJs, creatures and demons, which can be placed several times', () => {
+    expect(isOnTable(entry('pnj', 'h1', 'Prêtre'), heroIds)).toBe(false);
+    expect(isOnTable(entry('creature', 'h1', 'Hippocampe'), heroIds)).toBe(false);
+    expect(isOnTable(entry('demon', 'h1', 'Démon'), heroIds)).toBe(false);
   });
 
   it('compares ids as strings (the API mixes integer and UUID ids)', () => {
     const numeric = {...entry('hero', '7', 'Thaïs'), sourceId: 7 as unknown as string};
-    expect(isOnTable(numeric, new Set(['7']), new Set())).toBe(true);
+    expect(isOnTable(numeric, new Set(['7']))).toBe(true);
   });
 });
 

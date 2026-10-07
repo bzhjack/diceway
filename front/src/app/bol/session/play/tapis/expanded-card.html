@@ -1,111 +1,127 @@
 <div #root [class]="'exc exc--' + card().kind" [class.exc--fixed]="fixedHeight()" role="group" tabindex="-1" [attr.aria-label]="'Carte de ' + card().nom">
-  <header class="exc-banner">
-    <div class="exc-portrait">
-      @if (hasAvatar()) {
-        <img class="exc-portrait-img" [src]="card().avatar" alt="" (error)="onAvatarError()" />
-      } @else if (kindIconIsSvg()) {
-        <mat-icon [svgIcon]="kindIcon()" />
-      } @else {
-        <mat-icon>{{ kindIcon() }}</mat-icon>
-      }
-    </div>
-
-    <div class="exc-id">
-      <div class="exc-line">
-        <div class="exc-title">
-          <h3 class="exc-name">{{ card().nom }}</h3>
+  @if (card().kind === 'hero') {
+    <!-- Héros : la même entrée de bestiaire. À gauche l'identité, les détails (trophées, armes…), la vitalité et
+         l'héroïsme ; à droite les statistiques de combat, puis le jet d'action en mode libre. -->
+    <div class="exc-entry">
+      <aside class="exc-entry-side">
+        <div class="exc-portrait exc-portrait--big">
+          @if (hasAvatar()) {
+            <img class="exc-portrait-img" [src]="card().avatar" alt="" (error)="onAvatarError()" />
+          } @else if (kindIconIsSvg()) {
+            <mat-icon [svgIcon]="kindIcon()" />
+          } @else {
+            <mat-icon>{{ kindIcon() }}</mat-icon>
+          }
+        </div>
+        <div>
+          <h3 class="exc-name exc-name--wrap">{{ card().nom }}</h3>
           @if (subtitle(); as subtitle) {
             <p class="exc-sub">{{ subtitle }}</p>
           }
-          @if (card().kind === 'hero' && hero(); as h) {
-            <bol-hero-details class="exc-details" [details]="h.details" (armureToggled)="armureToggled.emit($event)" (armeToggled)="armeToggled.emit($event)" />
-          }
         </div>
-        @if (card().kind === 'hero' && hero(); as h) {
-          <div class="exc-figures">
-            <dl class="exc-stats" aria-label="Statistiques de combat">
+        @if (hero(); as h) {
+          <bol-hero-details class="exc-details exc-details--side" [details]="h.details" (armureToggled)="armureToggled.emit($event)" (armeToggled)="armeToggled.emit($event)" />
+          <bol-hero-resources class="exc-entry-resources" [data]="h.resources" [(heroisme)]="heroisme" (changed)="changed.emit()" />
+        } @else {
+          <p class="exc-loading">Chargement de la fiche…</p>
+        }
+      </aside>
+
+      <div class="exc-entry-main">
+        <div class="exc-entry-bar">
+          @if (hero()?.details?.editRoute; as editRoute) {
+            <a mat-stroked-button size="small" class="exc-edit" [routerLink]="editRoute" [state]="navigationState()">
+              <mat-icon>edit</mat-icon> Modifier la fiche
+            </a>
+          }
+          <span class="exc-entry-spacer"></span>
+          <button
+            mat-icon-button
+            class="exc-icon-btn exc-icon-btn--danger"
+            type="button"
+            [attr.aria-label]="removeLabel"
+            [matTooltip]="removeLabel"
+            (click)="removeRequested.emit(card())"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button class="exc-icon-btn" type="button" aria-label="Replier la carte" (click)="closed.emit()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        @if (hero(); as h) {
+          <section>
+            <dl class="exc-tiles" aria-label="Statistiques de combat">
               @for (stat of h.stats; track stat.label) {
-                <div class="exc-stat">
-                  <dt>{{ stat.label }}</dt>
+                <div class="exc-tile" [class.exc-tile--hot]="stat.label.startsWith('Dég')">
                   <dd>{{ stat.value }}</dd>
+                  <dt>{{ stat.label }}</dt>
                 </div>
               }
             </dl>
-            <bol-hero-resources [data]="h.resources" [(heroisme)]="heroisme" (changed)="changed.emit()" />
-          </div>
-        }
-        @if (card().kind === 'hero' && hero(); as h) {
-          @if (h.details.editRoute; as editRoute) {
-            <a
-              mat-icon-button
-              class="exc-icon-btn"
-              aria-label="Modifier la fiche du héros"
-              matTooltip="Modifier la fiche"
-              [routerLink]="editRoute"
-              [state]="navigationState()"
-            >
-              <mat-icon>edit</mat-icon>
-            </a>
-          }
-        }
-        <button mat-icon-button class="exc-icon-btn" type="button" aria-label="Replier la carte" (click)="closed.emit()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
+          </section>
 
-      @if (card().kind !== 'hero') {
-        <div class="exc-resources">
-          @for (stepper of steppers(); track stepper.label) {
-            <bol-instance-vitalite
-              [sessionId]="sessionId()"
-              [kind]="card().kind"
-              [pivotId]="card().pivotId"
-              [instanceIndex]="stepper.index"
-              [label]="stepper.label"
-              [value]="stepper.value"
-              [max]="card().vitaliteMax"
-              [nom]="card().nom"
-              (changed)="changed.emit()"
-            />
-          }
-        </div>
-      } @else if (!hero()) {
-        <p class="exc-loading">Chargement de la fiche…</p>
-      }
-    </div>
-  </header>
-
-  @if (hasBody()) {
-    <div class="exc-body">
-      @if (card().kind === 'hero') {
-        @if (mode() === 'libre') {
-          @if (hero(); as h) {
+          @if (mode() === 'libre') {
             <bol-action-roll-panel [data]="h.actionRoll" [(heroisme)]="heroisme" />
           }
         }
-      } @else {
-        @if (statblock(); as sb) {
-          <bol-statblock [data]="sb" [imageSrc]="card().avatar" [returnUrl]="returnUrl()" [hideIdentity]="true" />
-        }
-
-        <div class="exc-actions">
-          @if (mode() === 'libre') {
-            @if (campLabel(); as label) {
-              <button mat-stroked-button size="small" type="button" (click)="campToggleRequested.emit(card())">
-                <mat-icon>swap_vert</mat-icon> {{ label }}
-              </button>
-            }
-          }
-          <button mat-stroked-button size="small" type="button" class="exc-remove" (click)="removeRequested.emit(card())">
-            <mat-icon>person_remove</mat-icon> {{ removeLabel() }}
+        @if (canAttack()) {
+          <button mat-flat-button size="small" type="button" class="exc-attack" (click)="attackRequested.emit(card())">
+            <mat-icon svgIcon="sword" /> Attaquer cette carte
           </button>
-        </div>
-      }
-      @if (canAttack()) {
-        <button mat-flat-button size="small" type="button" class="exc-attack" (click)="attackRequested.emit(card())">
-          <mat-icon svgIcon="sword" /> Attaquer cette carte
-        </button>
-      }
+        }
+      </div>
     </div>
+  } @else {
+    <!-- PNJ, créature, démon : la fiche partagée avec les bibliothèques, qui reçoit ici le stepper de vitalité, le changement de
+         camp, les boutons et « Attaquer ». La carte a la hauteur de son contenu. -->
+    @if (statblock(); as sb) {
+      <bol-statblock
+        [data]="sb"
+        [imageSrc]="card().avatar"
+        [name]="card().nom"
+        [kind]="card().kind"
+        [subtitle]="subtitle()"
+        [returnUrl]="returnUrl()"
+        [showVitality]="false"
+        [showClose]="false"
+        [bare]="true"
+      >
+        <bol-card-vitalite
+          sheetSide
+          class="exc-entry-vit"
+          [sessionId]="sessionId()"
+          [kind]="card().kind"
+          [pivotId]="card().pivotId"
+          label="Vitalité"
+          [value]="card().vitaliteCourante ?? 0"
+          [max]="card().vitaliteMax"
+          [nom]="card().nom"
+          (changed)="changed.emit()"
+        />
+        <button
+          sheetActions
+          mat-icon-button
+          class="exc-icon-btn exc-icon-btn--danger"
+          type="button"
+          [attr.aria-label]="removeLabel"
+          [matTooltip]="removeLabel"
+          (click)="removeRequested.emit(card())"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button sheetActions mat-icon-button class="exc-icon-btn" type="button" aria-label="Replier la carte" (click)="closed.emit()">
+          <mat-icon>close</mat-icon>
+        </button>
+        @if (canAttack()) {
+          <button sheetFooter mat-flat-button size="small" type="button" class="exc-attack" (click)="attackRequested.emit(card())">
+            <mat-icon svgIcon="sword" /> Attaquer cette carte
+          </button>
+        }
+      </bol-statblock>
+    } @else {
+      <p class="exc-loading exc-loading--pad">Chargement de la fiche…</p>
+    }
   }
 </div>

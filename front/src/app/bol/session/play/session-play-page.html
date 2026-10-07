@@ -6,7 +6,8 @@
     <a routerLink="/library/sessions">Voir mes sessions</a>
   </div>
 } @else if (board(); as b) {
-  <div class="cp-page">
+  <div class="cp-page cp-page--barbare">
+    <div class="cp-table">
     <bol-session-header
       [mode]="mode()"
       [titre]="headerTitle()"
@@ -24,7 +25,6 @@
               <bol-reserve
                 [sessionId]="sid"
                 [existingHeroIds]="existingHeroIds()"
-                [existingPnjIds]="existingPnjIds()"
                 [currentSceneId]="session()?.scene_id ?? null"
                 [nonHeroCount]="nonHeroCount()"
                 (sceneChanged)="onSceneChanged()"
@@ -65,22 +65,15 @@
           <bol-tapis
             [cards]="cards()"
             [sessionId]="sid"
-            [expandedKey]="expandedCard()?.key ?? null"
-            [hero]="expandedHero()"
-            [statblock]="expandedStatblock()"
-            [returnUrl]="returnUrl()"
             [mode]="mode()"
             [combatStates]="combatStates()"
             [activeCard]="activeCard()"
             [armes]="activeArmes()"
             [combatOptions]="combatOptions()"
+            [selectedKeys]="selectedKeys()"
+            (selectToggled)="toggleSelected($event)"
             (cardToggled)="onCardToggled($event)"
-            (closed)="foldCard()"
-            (changed)="reloadSession()"
-            (removeRequested)="askRemoveCard($event)"
             (campToggleRequested)="toggleCamp($event)"
-            (armureToggled)="onArmureToggled($event)"
-            (armeToggled)="onArmeToggled($event)"
             (attackRequested)="onAttackCard($event)"
             (choiceChanged)="attackChoice.set($event)"
             (totalDefenseRequested)="onTotalDefense()"
@@ -89,5 +82,6 @@
         </div>
       </div>
     }
+    </div>
   </div>
 }

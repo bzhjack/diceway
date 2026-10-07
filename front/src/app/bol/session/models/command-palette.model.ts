@@ -73,7 +73,6 @@ export interface PaletteContext {
   readonly catalog: readonly CombatCatalogEntry[];
   /** Ids source (heros_id / pnj_id) déjà présents dans la session. */
   readonly heroIds: ReadonlySet<string>;
-  readonly pnjIds: ReadonlySet<string>;
   readonly scenes: readonly BolSceneModel[];
   readonly reserveOpen: boolean;
 }

@@ -6,10 +6,11 @@
   margin: 0;
   margin-bottom: 0.5rem;
   font-size: 0.72rem;
-  font-weight: 900;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: #fda4af;
+  letter-spacing: 0.14em;
+  color: var(--dw-color-legendary);
 }
 
 .dfp-avatar {
@@ -23,7 +24,7 @@
   cursor: pointer;
   border: 1px solid #52414b;
   border-radius: 8px;
-  background: #09090b;
+  background: #0b0705;
   transition: border-color 0.15s ease;
 
   &:hover {
@@ -45,7 +46,7 @@
 
 .dfp-avatar-hint {
   font-size: 0.68rem;
-  color: var(--dw-surface-400);
+  color: var(--dw-surface-500);
 }
 
 .dfp-avatar-overlay {

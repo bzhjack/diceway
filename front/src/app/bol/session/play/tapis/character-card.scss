@@ -3,32 +3,34 @@
 }
 
 .chc {
+  // Métal du cadre, selon le type : clair → moyen → sombre.
   --chc-kind: var(--dw-color-reussite);
+  --chc-metal-1: var(--bar-pj-1, #f1e3b4);
+  --chc-metal-2: var(--bar-pj-2, var(--dw-color-legendary));
+  --chc-metal-3: var(--bar-pj-3, #92620a);
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 8.25rem;
-  padding: 0;
-  border: 1px solid var(--dw-border);
-  border-top: 3px solid var(--chc-kind);
-  border-radius: 8px;
-  background: var(--dw-surface-100);
+  align-items: center;
+  width: 8rem;
+  // Place pour l'étiquette qui dépasse du cadre, que le rang (qui défile) rognerait sinon.
+  padding: 0.5rem 0 0;
+  border: 0;
+  background: none;
   color: var(--dw-surface-700);
   font: inherit;
   text-align: left;
-  overflow: hidden;
   cursor: pointer;
-  transition: transform 0.12s ease-out, border-color 0.12s ease-out;
+  transition: transform 0.12s ease-out;
 
   &:hover {
-    transform: translateY(-3px);
-    border-color: var(--dw-surface-500);
-    border-top-color: var(--chc-kind);
+    transform: translateY(-4px);
   }
 
   &:focus-visible {
     outline: 2px solid var(--dw-color-legendary);
-    outline-offset: 2px;
+    outline-offset: 4px;
+    border-radius: 12px;
   }
 }
 
@@ -42,51 +44,67 @@
   }
 }
 
-.chc--pnj { --chc-kind: var(--dw-color-pnj); }
-.chc--creature { --chc-kind: var(--dw-color-creature); }
-.chc--demon { --chc-kind: var(--dw-color-demon); }
+.chc--pnj {
+  --chc-kind: var(--dw-color-pnj);
+  --chc-metal-1: var(--bar-pnj-1, #d6c3a0);
+  --chc-metal-2: var(--bar-pnj-2, #9c8763);
+  --chc-metal-3: var(--bar-pnj-3, #3d2b1c);
+}
+.chc--creature {
+  --chc-kind: var(--dw-color-creature);
+  --chc-metal-1: var(--bar-creature-1, #fed7aa);
+  --chc-metal-2: var(--bar-creature-2, #d97706);
+  --chc-metal-3: var(--bar-creature-3, #78350f);
+}
+.chc--demon {
+  --chc-kind: var(--dw-color-demon);
+  --chc-metal-1: var(--bar-demon-1, #fecdd3);
+  --chc-metal-2: var(--bar-demon-2, #be123c);
+  --chc-metal-3: var(--bar-demon-3, #4c0519);
+}
 
 .chc-badge {
   position: absolute;
-  top: 0.3rem;
-  right: 0.3rem;
-  padding: 0.1rem 0.35rem;
-  border-radius: 4px;
+  top: 0;
+  left: -0.3rem;
+  z-index: 3;
+  padding: 0.05rem 0.4rem;
+  border-radius: 3px;
   background: var(--dw-surface-0);
+  box-shadow: 0 0 0 1px var(--chc-metal-3);
   color: var(--chc-kind);
-  font-size: 0.62rem;
+  font-size: 0.66rem;
   font-weight: 800;
   letter-spacing: 0.03em;
 }
 
-.chc-name {
-  padding: 0.35rem 0.5rem 0.3rem;
-  // Deux lignes au plus, toujours la même hauteur : les faces restent alignées dans un rang.
-  min-height: 2.35rem;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  font-size: 0.8rem;
-  font-weight: 700;
-  line-height: 1.15;
-  color: var(--dw-surface-900);
-  text-transform: capitalize;
-}
-
-// Laisse la place à l'étiquette en haut à droite quand il y en a une.
-.chc-badge + .chc-name {
-  padding-right: 3.4rem;
-}
-
+// Arche métallique : le cadre est le dégradé, la face (`.chc-art`) est inscrite dedans.
 .chc-art {
+  position: relative;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  // Photo carrée (1 × 1), comme le portrait de la carte dépliée.
-  aspect-ratio: 1 / 1;
-  background: linear-gradient(160deg, var(--dw-surface-200), var(--dw-surface-50));
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border: 5px solid transparent;
+  border-radius: 48% 48% 10px 10px / 34% 34% 10px 10px;
+  background:
+    linear-gradient(160deg, var(--dw-surface-200), var(--dw-surface-50)) padding-box,
+    linear-gradient(170deg, var(--chc-metal-1), var(--chc-metal-2) 28%, var(--chc-metal-3) 85%) border-box;
+  box-shadow: 0 0 0 2px var(--dw-surface-0), 0 8px 14px rgba(0, 0, 0, 0.55);
   color: var(--chc-kind);
+  overflow: hidden;
+  transition: box-shadow 0.12s ease-out;
+
+  // Reflet en biais, comme sur un portrait de héros.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, rgba(255, 255, 255, 0.2) 0 18%, transparent 34%);
+    pointer-events: none;
+  }
 
   .mat-icon {
     font-size: 2rem;
@@ -101,39 +119,96 @@
   object-fit: cover;
 }
 
-.chc-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid var(--dw-border);
+// Cartouche du nom : déborde de l'arche, deux lignes au plus, toujours la même hauteur.
+.chc-name {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 108%;
+  height: 2.1rem;
+  margin-top: -0.9rem;
+  padding: 0.2rem 0.5rem;
+  background: linear-gradient(var(--dw-surface-200), var(--dw-surface-50));
+  border-block: 2px solid var(--chc-metal-3);
+  color: var(--dw-surface-900);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.12;
+  text-align: center;
+  text-transform: capitalize;
+  text-shadow: 0 1px 2px #000;
 }
 
-.chc-stat {
+.chc-name-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.chc-stats {
   display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  width: 100%;
+  margin-top: 0.35rem;
+}
+
+// Hexagone allongé : chaque pastille grandit avec sa valeur (« d6Bx2 », « 50/50 »), sans jamais la rogner.
+.chc-stat {
+  box-sizing: border-box;
+  display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   align-items: center;
-  padding: 0.25rem 0;
-  font-size: 0.8rem;
-  font-weight: 700;
+  justify-content: center;
+  min-width: 1.7rem;
+  height: 2.05rem;
+  padding-inline: 0.3rem;
+  clip-path: polygon(14% 0, 86% 0, 100% 50%, 86% 100%, 14% 100%, 0 50%);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
   font-variant-numeric: tabular-nums;
-  color: var(--dw-surface-900);
-
-  & + & {
-    border-left: 1px solid var(--dw-border);
-  }
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 
   small {
-    font-size: 0.55rem;
+    font-size: 0.45rem;
     font-weight: 800;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--dw-surface-500);
+    text-shadow: none;
+    color: #fff;
+    opacity: 0.9;
   }
+}
+
+.chc-stat--degats {
+  background: linear-gradient(160deg, var(--bar-d-1, #fde68a), var(--bar-d-2, #d99a06) 60%, var(--bar-d-3, #7a4f04));
+}
+
+.chc-stat--defense {
+  background: linear-gradient(160deg, var(--bar-f-1, #d6c3a0), var(--bar-f-2, #5a4630) 60%, var(--bar-f-3, #2a1c12));
+}
+
+.chc-stat--vitalite {
+  background: linear-gradient(160deg, var(--bar-v-1, #fca5a5), var(--bar-v-2, #ef4444) 55%, var(--bar-v-3, #7f1d1d));
 }
 
 .chc-bar {
   display: block;
+  width: 86%;
   height: 4px;
+  margin-top: 0.35rem;
+  border-radius: 2px;
   background: var(--dw-surface-200);
+  box-shadow: 0 0 0 1px #000;
+  overflow: hidden;
 }
 
 .chc-bar-fill {
@@ -146,28 +221,6 @@
   background: var(--dw-color-echec);
 }
 
-.chc-pips {
-  display: flex;
-  gap: 2px;
-  padding: 0.25rem 0.4rem;
-  border-top: 1px solid var(--dw-border);
-}
-
-.chc-pip {
-  flex: 1;
-  height: 5px;
-  border-radius: 2px;
-  background: var(--dw-color-health);
-}
-
-.chc-pip--low {
-  background: var(--dw-color-echec);
-}
-
-.chc-pip--out {
-  background: var(--dw-surface-200);
-}
-
 // En combat, la face est un bouton d'action (attaquer) et un second bouton, posé dessus, la déplie :
 // deux boutons frères, jamais imbriqués.
 .chc-wrap {
@@ -177,9 +230,9 @@
 .chc-expand {
   position: absolute;
   // Dans le coin haut gauche de l'illustration : ancré par le haut, pour ne jamais recouvrir les
-  // chiffres, quelle que soit la hauteur du bas de la carte (barre de vitalité ou jauges d'un lot).
-  left: 0.3rem;
-  top: 2.9rem;
+  // chiffres, quelle que soit la hauteur du bas de la carte (barre de vitalité).
+  left: 0.6rem;
+  top: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -209,15 +262,19 @@
   }
 }
 
-// Carte active : soulevée, cerclée d'or.
+// Carte active : soulevée, halo vert comme un serviteur prêt à jouer.
 .chc--active {
   transform: translateY(-8px);
-  border-color: var(--dw-color-legendary);
-  box-shadow: 0 0 0 2px var(--dw-color-legendary), 0 10px 22px rgba(0, 0, 0, 0.5);
+
+  .chc-art {
+    box-shadow:
+      0 0 0 3px var(--bar-ember, var(--dw-color-reussite)),
+      0 0 16px 3px color-mix(in srgb, var(--bar-ember, var(--dw-color-reussite)) 70%, transparent),
+      0 8px 14px rgba(0, 0, 0, 0.55);
+  }
 
   &:hover {
     transform: translateY(-8px);
-    border-color: var(--dw-color-legendary);
   }
 }
 
@@ -226,14 +283,18 @@
   opacity: 0.5;
 }
 
-// Désignable : liseré rouge au survol et au focus.
+// Désignable : halo rouge au survol et au focus.
 .chc--targetable {
   cursor: crosshair;
 
-  &:hover,
+  &:hover .chc-art,
+  &:focus-visible .chc-art {
+    box-shadow:
+      0 0 0 3px var(--dw-color-echec-forte),
+      0 0 14px 3px color-mix(in srgb, var(--dw-color-echec-forte) 70%, transparent);
+  }
+
   &:focus-visible {
-    border-color: var(--dw-color-echec-forte);
-    box-shadow: 0 0 0 2px var(--dw-color-echec-forte);
     outline: none;
   }
 }
@@ -249,10 +310,6 @@
   .chc--active:hover {
     transform: none;
   }
-}
-
-.chc-art {
-  position: relative;
 }
 
 .chc-marker {
@@ -274,4 +331,147 @@
 .chc-marker--locked {
   right: 1.7rem;
   color: var(--dw-surface-500);
+}
+
+// ── Variante « médaillon » (`chc--medaillon`) ──────────────────────────────────────────────────────
+// Portrait rond dans un anneau métallique ; les chiffres sont des pastilles posées sur l'anneau : défense
+// en écusson en haut à droite, dégâts en pièce en bas à gauche, vitalité en cœur en bas à droite. Le nom
+// est sur un bandeau qui chevauche le bas. Retirer la classe dans le gabarit rend l'arche.
+.chc--medaillon {
+  --chc-ring-w: 7rem;
+  --chc-ring-h: calc(var(--chc-ring-w) * 1.25);
+
+  .chc-art {
+    width: var(--chc-ring-w);
+    border-width: 5px;
+    border-radius: 50%;
+    background:
+      radial-gradient(90% 80% at 50% 25%, color-mix(in srgb, var(--chc-kind) 40%, var(--dw-surface-200)), var(--dw-surface-0)) padding-box,
+      conic-gradient(from 210deg, var(--chc-metal-1), var(--chc-metal-2), var(--chc-metal-3), var(--chc-metal-2), var(--chc-metal-1)) border-box;
+
+    &::after {
+      border-radius: 50%;
+    }
+  }
+
+  .chc-name {
+    width: 100%;
+    margin-top: -0.9rem;
+    border-block: 0;
+    clip-path: polygon(6% 0, 94% 0, 100% 50%, 94% 100%, 6% 100%, 0 50%);
+    box-shadow: inset 0 0 0 1px var(--chc-metal-3);
+  }
+
+  // Les pastilles sont positionnées par rapport à l'anneau : la boîte des stats a sa taille et sa place.
+  .chc-stats {
+    position: absolute;
+    top: 0.5rem;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: block;
+    height: var(--chc-ring-h);
+    margin: 0;
+    pointer-events: none;
+  }
+
+  .chc-stat {
+    position: absolute;
+    flex: none;
+    min-width: 0;
+    padding-inline: 0.25rem;
+    clip-path: none;
+    font-size: 0.68rem;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.6);
+
+    small {
+      display: none;
+    }
+  }
+
+  .chc-stat--degats {
+    left: 0.1rem;
+    bottom: 0.5rem;
+    min-width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--chc-metal-3), 0 3px 5px rgba(0, 0, 0, 0.6);
+  }
+
+  .chc-stat--defense {
+    right: 0.35rem;
+    top: 0.7rem;
+    min-width: 1.9rem;
+    height: 2.1rem;
+    padding-bottom: 0.15rem;
+    font-size: 0.8rem;
+    clip-path: polygon(0 0, 100% 0, 100% 60%, 50% 100%, 0 60%);
+    box-shadow: none;
+  }
+
+  // Vitalité : un cœur en fond. Le cœur est un masque sur un pseudo-élément, pour que le texte, lui, ne soit
+  // jamais rogné par la forme.
+  .chc-stat--vitalite {
+    right: -0.4rem;
+    bottom: 0.3rem;
+    isolation: isolate;
+    min-width: 2.6rem;
+    height: 2.3rem;
+    padding: 0 0.55rem 0.25rem;
+    font-size: 0.6rem;
+    background: none;
+    clip-path: none;
+    box-shadow: none;
+    filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.65));
+
+    // « 100/100 » : plus de marge de chaque côté, pour rester dans les lobes du cœur.
+    &.chc-stat--long {
+      padding-inline: 0.75rem;
+      font-size: 0.55rem;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(160deg, var(--bar-v-1, #fca5a5), var(--bar-v-2, #ef4444) 55%, var(--bar-v-3, #7f1d1d));
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 29'%3E%3Cpath d='M16 28S2 18.5 2 9.5C2 5 5.5 2 9.5 2c3 0 5.5 1.8 6.5 4.5C17 3.8 19.5 2 22.5 2 26.5 2 30 5 30 9.5 30 18.5 16 28 16 28z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+    }
+  }
+
+  .chc-bar {
+    margin-top: 0.4rem;
+  }
+
+  .chc-marker {
+    bottom: 0.8rem;
+  }
+
+  .chc-marker--defense {
+    right: auto;
+    left: calc(50% - 1.3rem);
+  }
+
+  .chc-marker--locked {
+    right: auto;
+    left: calc(50% + 0.1rem);
+  }
+}
+
+.chc-wrap:has(.chc--medaillon) .chc-expand {
+  left: 0.5rem;
+  top: 3.2rem;
+}
+
+// Sélectionnée (Ctrl + clic) : anneau de braise.
+.chc--selected {
+  transform: translateY(-4px);
+
+  .chc-art {
+    box-shadow:
+      0 0 0 3px var(--bar-ember, var(--dw-color-legendary)),
+      0 0 18px 5px color-mix(in srgb, var(--bar-ember, var(--dw-color-legendary)) 75%, transparent),
+      0 8px 14px rgba(0, 0, 0, 0.55);
+  }
 }

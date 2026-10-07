@@ -8,3 +8,9 @@ export interface ReserveTab {
   readonly createLink: string;
   readonly libraryLink: string;
 }
+
+/** Ligne de liaison créée par une pose : de quoi la retirer si on annule. */
+export interface ReservePlacedRow {
+  readonly kind: CombatantKind;
+  readonly pivotId: number;
+}

@@ -6,7 +6,7 @@
   display: flex;
   border: 1px solid var(--dw-border);
   border-radius: 10px;
-  background: rgb(51 65 85 / 0.35);
+  background: rgb(42 28 18 / 0.35);
   overflow: hidden;
   transition: border-color 0.15s ease;
 }
@@ -24,12 +24,12 @@
 }
 
 .entity-card--dark {
-  background: rgba(24, 24, 27, 0.82);
-  border-color: #3f3f46;
+  background: rgba(29, 21, 15, 0.82);
+  border-color: #4f3b27;
 }
 
 .entity-card--own {
-  background: linear-gradient(135deg, rgba(167, 139, 250, 0.16), rgb(51 65 85 / 0.35) 60%);
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.16), rgb(42 28 18 / 0.35) 60%);
   border-color: rgba(167, 139, 250, 0.4);
 
   &:hover {
@@ -38,7 +38,7 @@
 }
 
 .entity-card--dark.entity-card--own {
-  background: linear-gradient(135deg, rgba(167, 139, 250, 0.18), rgba(24, 24, 27, 0.82) 60%);
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.18), rgba(29, 21, 15, 0.82) 60%);
 }
 
 .entity-card__portrait {
@@ -49,7 +49,7 @@
   padding: 0;
   border: none;
   overflow: hidden;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.92));
+  background: linear-gradient(180deg, rgba(21, 14, 9, 0.92), rgba(29, 21, 15, 0.92));
 
   &:not(:disabled) {
     cursor: pointer;
@@ -68,15 +68,15 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to right, transparent 55%, rgba(15, 23, 42, 0.9) 100%);
+    background: linear-gradient(to right, transparent 55%, rgba(21, 14, 9, 0.9) 100%);
   }
 }
 
 .entity-card--dark .entity-card__portrait {
-  background: linear-gradient(180deg, rgba(9, 9, 11, 0.96), rgba(39, 39, 42, 0.94));
+  background: linear-gradient(180deg, rgba(11, 7, 5, 0.96), rgba(42, 28, 18, 0.94));
 
   &::after {
-    background: linear-gradient(to right, transparent 55%, rgba(9, 9, 11, 0.92) 100%);
+    background: linear-gradient(to right, transparent 55%, rgba(11, 7, 5, 0.92) 100%);
   }
 }
 
@@ -99,7 +99,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(21, 14, 9, 0.85);
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.6);
 
   &--amber {
@@ -113,13 +113,13 @@
   }
 
   &--slate {
-    color: #94a3b8;
-    border: 1px solid #94a3b8;
+    color: #9c8763;
+    border: 1px solid #9c8763;
   }
 }
 
 .entity-card--dark .entity-card__badge {
-  background: rgba(9, 9, 11, 0.9);
+  background: rgba(11, 7, 5, 0.9);
 }
 
 .entity-card__body {
@@ -219,7 +219,7 @@
   color: var(--dw-surface-600);
   padding: 0.18rem 0.5rem;
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(21, 14, 9, 0.5);
   border: 1px solid var(--dw-border);
   font-variant-numeric: tabular-nums;
 
@@ -232,8 +232,8 @@
 }
 
 .entity-card--dark .entity-gauge {
-  background: rgba(9, 9, 11, 0.5);
-  border-color: #3f3f46;
+  background: rgba(11, 7, 5, 0.5);
+  border-color: #4f3b27;
 }
 
 .entity-gauge--pv .mat-icon {
@@ -259,7 +259,7 @@
   color: var(--dw-surface-600);
   padding: 0.18rem 0.45rem;
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(21, 14, 9, 0.5);
   border: 1px solid var(--dw-border);
 
   .mat-icon {
@@ -272,6 +272,65 @@
 }
 
 .entity-card--dark .entity-count-chip {
-  background: rgba(9, 9, 11, 0.5);
-  border-color: #3f3f46;
+  background: rgba(11, 7, 5, 0.5);
+  border-color: #4f3b27;
+}
+
+// ── Portrait en médaillon ──────────────────────────────────────────────────────────────────────────
+// Portrait rond dans un anneau métallique dont la couleur suit l'accent de la carte : bronze (héros, PNJ),
+// rouille (créature), rouge sang (démon). L'étiquette (taille, rang) chevauche le bas de l'anneau.
+.entity-card {
+  --ec-metal-1: var(--bar-pj-1, #e0c48a);
+  --ec-metal-2: var(--bar-pj-2, #a8762a);
+  --ec-metal-3: var(--bar-pj-3, #4a2f0f);
+}
+
+.entity-card--accent-amber {
+  --ec-metal-1: var(--bar-creature-1, #e8a57a);
+  --ec-metal-2: var(--bar-creature-2, #a04a1c);
+  --ec-metal-3: var(--bar-creature-3, #3d1608);
+}
+
+.entity-card--accent-rose {
+  --ec-metal-1: var(--bar-demon-1, #e08a8a);
+  --ec-metal-2: var(--bar-demon-2, #8f1d1d);
+  --ec-metal-3: var(--bar-demon-3, #2e0707);
+}
+
+.entity-card__portrait {
+  box-sizing: border-box;
+  width: 6.2rem;
+  height: 6.2rem;
+  align-self: center;
+  margin: 0.55rem 0 0.55rem 0.6rem;
+  aspect-ratio: auto;
+  border: 4px solid transparent;
+  border-radius: 50%;
+  overflow: visible;
+  background:
+    radial-gradient(90% 80% at 50% 25%, var(--dw-surface-200), var(--dw-surface-0)) padding-box,
+    conic-gradient(from 210deg, var(--ec-metal-1), var(--ec-metal-2), var(--ec-metal-3), var(--ec-metal-2), var(--ec-metal-1)) border-box;
+  box-shadow: 0 0 0 2px var(--dw-surface-0), 0 6px 10px rgba(0, 0, 0, 0.55);
+
+  // Plus de fondu vers la droite : l'anneau suffit.
+  &::after {
+    display: none;
+  }
+}
+
+.entity-card--dark .entity-card__portrait {
+  background:
+    radial-gradient(90% 80% at 50% 25%, var(--dw-surface-200), var(--dw-surface-0)) padding-box,
+    conic-gradient(from 210deg, var(--ec-metal-1), var(--ec-metal-2), var(--ec-metal-3), var(--ec-metal-2), var(--ec-metal-1)) border-box;
+}
+
+.entity-card__img {
+  border-radius: 50%;
+}
+
+.entity-card__badge {
+  bottom: -0.45rem;
+  left: 50%;
+  translate: -50% 0;
+  white-space: nowrap;
 }

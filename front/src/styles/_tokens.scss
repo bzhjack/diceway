@@ -1,19 +1,19 @@
 :root {
-  // ── Palette surface sombre (échelle slate inversée, dark UI) ─────────────
-  --dw-surface-0:   #020617; // slate-950
-  --dw-surface-50:  #0f172a; // slate-900
-  --dw-surface-100: #1e293b; // slate-800
-  --dw-surface-200: #334155; // slate-700
-  --dw-surface-300: #475569; // slate-600
-  --dw-surface-400: #64748b; // slate-500
-  --dw-surface-500: #94a3b8; // slate-400
-  --dw-surface-600: #cbd5e1; // slate-300
-  --dw-surface-700: #e2e8f0; // slate-200
-  --dw-surface-800: #f1f5f9; // slate-100
-  --dw-surface-900: #f8fafc; // slate-50
+  // ── Palette surface sombre : cuir et fer noirci (thème barbare) ──────────
+  --dw-surface-0:   #0b0705;
+  --dw-surface-50:  #150e09;
+  --dw-surface-100: #1d150f;
+  --dw-surface-200: #2a1c12;
+  --dw-surface-300: #3d2b1c;
+  --dw-surface-400: #5a4630;
+  --dw-surface-500: #9c8763;
+  --dw-surface-600: #b59d78;
+  --dw-surface-700: #d6c3a0;
+  --dw-surface-800: #e8dcc3;
+  --dw-surface-900: #f1e6d0;
 
   // ── Palette sémantique BoL ────────────────────────────────────────────────
-  --dw-color-legendary:       #fbbf24; // légendaire, héroïque, kicker accent
+  --dw-color-legendary:       #d9a441; // légendaire, héroïque, kicker accent
   --dw-color-legendary-muted: #fde68a; // amber clair — chips créature
   --dw-color-rival:           #fb923c; // rival
   --dw-color-reussite:        #22c55e; // réussite, type PJ
@@ -26,12 +26,12 @@
   --dw-color-danger-muted:    #fecaca; // rouge pâle — erreurs, suppression
   --dw-color-bonus:           #4ade80; // vert clair — tags bonus
   --dw-color-warn:            #f97316; // orange — tags avertissement
-  --dw-color-dice-kicker:     #93c5fd; // bleu-300 — kicker panneau dés
-  --dw-color-dice-muted:      #dbeafe; // bleu-100 — badges/actifs dés
-  --dw-color-text-bright:     #f8fafc; // quasi-blanc — titres, valeurs fortes
+  --dw-color-dice-kicker:     #e8c06a; // or clair — kicker panneau dés
+  --dw-color-dice-muted:      #f1e6d0; // parchemin — badges/actifs dés
+  --dw-color-text-bright:     #f1e6d0; // quasi-blanc — titres, valeurs fortes
 
   // ── Bordures UI ───────────────────────────────────────────────────────────
-  --dw-border:        #424b57; // bordure sombre standard
+  --dw-border:        #4f3b27; // bordure sombre standard
   --dw-border-remove: #5b2a2a; // bordeaux — bouton suppression
 
   color-scheme: light;

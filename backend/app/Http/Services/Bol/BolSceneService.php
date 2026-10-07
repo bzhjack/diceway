@@ -158,22 +158,26 @@ class BolSceneService
                 $qty = max(1, (int) ($entry['qty'] ?? 1));
                 $camp = BolSceneDistribution::entryCamp($entry);
 
-                $alreadyThere = $kind === 'pnj'
-                    && BolFightSessionPnj::where('fight_session_id', $sessionId)->where('pnj_id', $sourceId)->exists();
-
-                $row = $alreadyThere ? null : match ($kind) {
-                    'pnj'      => $this->fightSessionService->createPnjRow($sessionId, $sourceId, $camp),
-                    'creature' => $this->fightSessionService->createCreatureRow($sessionId, $sourceId, $camp, $qty),
-                    'demon'    => $this->fightSessionService->createDemonRow($sessionId, $sourceId, $camp, $qty),
-                    default    => null,
+                $rows = match ($kind) {
+                    'pnj'      => array_filter([$this->fightSessionService->createPnjRow($sessionId, $sourceId, $camp)]),
+                    'creature' => $this->fightSessionService->createCreatureRows($sessionId, $sourceId, $camp, $qty),
+                    'demon'    => $this->fightSessionService->createDemonRows($sessionId, $sourceId, $camp, $qty),
+                    default    => [],
                 };
 
-                if (!$row) {
+                if ($rows === []) {
                     $ignored++;
                     continue;
                 }
 
-                $positions = array_merge($positions, BolSceneDistribution::tokenPositions($kind, (int) $row->id, $entry));
+                // Une scène enregistre un exemplaire par position ; chaque exemplaire est maintenant sa propre ligne.
+                $stored = array_values(is_array($entry['positions'] ?? null) ? $entry['positions'] : []);
+                foreach (array_values($rows) as $i => $row) {
+                    $positions = array_merge($positions, BolSceneDistribution::tokenPositions($kind, (int) $row->id, [
+                        'qty'       => 1,
+                        'positions' => [$stored[$i] ?? null],
+                    ]));
+                }
             }
 
             $session->update([

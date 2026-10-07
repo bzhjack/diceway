@@ -72,14 +72,12 @@ interface BolFightSessionCapaciteModel {
   detail: string | null;
 }
 
-/** Une créature (ou un lot) posée à la table : copie de ses statistiques au moment de l'ajout, quantité et
- * vitalité de chaque exemplaire. */
+/** Une créature posée à la table : copie de ses statistiques au moment de l'ajout et sa vitalité. */
 interface BolFightSessionCreatureModel {
   id: number;
   fight_session_id: string;
   creature_id: string | null;
   camp: CombatCamp;
-  qty: number;
   surnom: string | null;
   rang: 'rival' | 'coriace' | 'pietaille';
   nom: string;
@@ -88,8 +86,6 @@ interface BolFightSessionCreatureModel {
   esprit: number;
   vitalite_max: number;
   vitalite_courante: number;
-  /** PV courants par instance du lot (qty > 1) — un élément par exemplaire, chacun indépendant. */
-  vitalite_instances: number[] | null;
   attaque: number;
   defense: number;
   degats: string | null;
@@ -106,14 +102,13 @@ interface BolFightSessionPouvoirModel {
   detail: string | null;
 }
 
-/** Un démon (ou un lot) posé à la table : copie de ses statistiques au moment de l'ajout, comme pour une
+/** Un démon posé à la table : copie de ses statistiques au moment de l'ajout, comme pour une
  * créature. */
 interface BolFightSessionDemonModel {
   id: number;
   fight_session_id: string;
   demon_id: string | null;
   camp: CombatCamp;
-  qty: number;
   surnom: string | null;
   rang: 'rival' | 'coriace' | 'pietaille';
   nom: string;
@@ -126,8 +121,6 @@ interface BolFightSessionDemonModel {
   defense: number;
   vitalite_max: number;
   vitalite_courante: number;
-  /** PV courants par instance du lot (qty > 1) — un élément par exemplaire, chacun indépendant. */
-  vitalite_instances: number[] | null;
   degats: string | null;
   pouvoirs: BolFightSessionPouvoirModel[] | null;
   demon?: {avatar: string | null};

@@ -53,10 +53,12 @@ const CREATURE_STAT_GROUPS: readonly StatGroup[] = [
   {
     key: 'combat',
     label: 'Combat',
-    columns: 2,
+    columns: 4,
     cells: [
       {control: 'attaque', label: 'Attaque'},
       {control: 'defense', label: 'Défense'},
+      {control: 'degats', label: 'Dégâts', text: true},
+      {control: 'protection', label: 'Protection', text: true},
     ],
   },
   {

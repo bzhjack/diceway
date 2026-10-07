@@ -2,20 +2,20 @@
   <button
     type="button"
     [id]="'chc-' + card().key"
-    [class]="'chc chc--' + card().kind"
+    [class]="'chc chc--medaillon chc--' + card().kind"
     [class.chc--active]="combat()?.status === 'active'"
     [class.chc--played]="combat()?.status === 'played'"
     [class.chc--targetable]="combat()?.targetable"
     [class.chc--out]="combat()?.out"
+    [class.chc--selected]="selected()"
+    [attr.aria-pressed]="selected() ? 'true' : null"
     aria-expanded="false"
     [attr.aria-label]="ariaLabel()"
-    (click)="toggled.emit()"
+    (click)="toggled.emit($event)"
   >
     @if (card().badge; as badge) {
       <span class="chc-badge">{{ badge }}</span>
     }
-    <span class="chc-name">{{ card().nom }}</span>
-
     <span class="chc-art">
       @if (hasAvatar()) {
         <img class="chc-avatar" [src]="card().avatar" alt="" (error)="onAvatarError()" />
@@ -32,27 +32,15 @@
       }
     </span>
 
+    <span class="chc-name"><span class="chc-name-text">{{ card().nom }}</span></span>
+
     <span class="chc-stats">
-      <span class="chc-stat"><small>Dég.</small>{{ card().degats }}</span>
-      <span class="chc-stat"><small>Déf.</small>{{ card().defense }}</span>
-      <span class="chc-stat"><small>Vit.</small>{{ vitalite() }}</span>
+      <span class="chc-stat chc-stat--degats"><small>Dég.</small>{{ card().degats }}</span>
+      <span class="chc-stat chc-stat--defense"><small>Déf.</small>{{ card().defense }}</span>
+      <span class="chc-stat chc-stat--vitalite" [class.chc-stat--long]="vitalite().length > 5"><small>Vit.</small>{{ vitalite() }}</span>
     </span>
 
-    @if (card().instances; as instances) {
-      <span class="chc-pips">
-        @for (value of instances; track $index) {
-          <i
-            class="chc-pip"
-            role="img"
-            [class.chc-pip--low]="value > 0 && instanceLow(value)"
-            [class.chc-pip--out]="value <= 0"
-            [attr.aria-label]="instanceLabel($index, value)"
-          ></i>
-        }
-      </span>
-    } @else {
-      <span class="chc-bar"><i [class.chc-bar-fill--low]="low()" class="chc-bar-fill" [style.width.%]="percent()"></i></span>
-    }
+    <span class="chc-bar"><i [class.chc-bar-fill--low]="low()" class="chc-bar-fill" [style.width.%]="percent()"></i></span>
   </button>
 
   @if (combat()) {

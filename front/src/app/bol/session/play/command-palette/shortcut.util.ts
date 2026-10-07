@@ -4,7 +4,7 @@ import {ShortcutEvent, ShortcutTarget} from '../../models/shortcut.model';
 
 const EDITABLE_TAGS: ReadonlySet<string> = new Set(['INPUT', 'TEXTAREA', 'SELECT']);
 
-function isEditable(target: ShortcutTarget | null): boolean {
+export function isEditable(target: ShortcutTarget | null): boolean {
   return !!target && (target.isContentEditable === true || EDITABLE_TAGS.has((target.tagName ?? '').toUpperCase()));
 }
 

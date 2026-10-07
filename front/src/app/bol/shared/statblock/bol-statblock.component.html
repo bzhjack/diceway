@@ -1,112 +1,104 @@
-<article class="bol-statblock" [class]="'bol-statblock--' + data().accent">
-  <div class="bol-statblock__body">
-    <div class="bol-statblock__header">
-      @if (!hideIdentity()) {
-        <div class="bol-statblock__avatar">
-          <img [src]="imageSrc()" [alt]="data().title" class="h-full w-full object-cover" />
-
-          @if (data().isCreation) {
-            <span class="bol-statblock__avatar-tag">Création</span>
-          }
-        </div>
+<div class="bs">
+  <aside class="bs-side">
+    <div class="bs-portrait">
+      @if (hasAvatar()) {
+        <img class="bs-portrait-img" [src]="imageSrc()" alt="" (error)="onAvatarError()" />
+      } @else {
+        <mat-icon>{{ kindIcon() }}</mat-icon>
       }
+    </div>
+    <div>
+      <h3 class="bs-name">{{ displayName() }}</h3>
+      @if (displaySubtitle(); as subtitle) {
+        <p class="bs-sub">{{ subtitle }}</p>
+      }
+    </div>
 
-      <div class="bol-statblock__main">
-        @if (!hideIdentity()) {
-          <div class="min-w-0 space-y-1">
-            <p class="bol-statblock__eyebrow">Statbloc BOL</p>
-            <h2 class="bol-statblock__title">{{ data().title }}</h2>
-          </div>
-        }
-
-        @if (data().editRoute) {
-          <div class="bol-statblock__edit-links">
-            <a [routerLink]="data().editRoute" [state]="navigationState()" class="bol-statblock__edit-link">
-              <mat-icon>edit</mat-icon>
-              Modifier la fiche
-            </a>
-            @if (data().advancedEditRoute) {
-              <a [routerLink]="data().advancedEditRoute" [state]="navigationState()" class="bol-statblock__edit-link">
-                <mat-icon>settings</mat-icon>
-                Édition avancée
-              </a>
-            }
-          </div>
-        }
-
-        @if (data().chips.length) {
-          <div class="bol-statblock__chips">
-            @for (chip of data().chips; track chip.label) {
-              <span class="bol-statblock__chip" [class]="'bol-statblock__chip--' + chip.variant">
-                {{ chip.label }}
-              </span>
-            }
-          </div>
-        }
-
-        @if (data().comment) {
-          <p class="bol-statblock__comment">{{ data().comment }}</p>
-        }
+    @if (showVitality() && vitality(); as vit) {
+      <div class="bs-vit">
+        <span class="bs-vit-label">Vitalité</span>
+        <span class="bs-heart">{{ vit.value }}</span>
       </div>
+    }
+    <ng-content select="[sheetSide]" />
 
-      <!-- Réglages rapides scopés à l'appelant (ex. vitalité/héroïsme en séance) — vide et sans
-           emprise sur la mise en page pour les usages en lecture seule (bibliothèques, dialogs statiques). -->
-      <ng-content select="[statblockHeaderExtra]" />
-    </div>
-
-    <div class="bol-statblock__vitals">
-      @for (tile of data().vitals; track tile.label) {
-        <div class="bol-statblock__tile" [class]="tile.tone ? 'bol-statblock__tile--' + tile.tone : ''">
-          <span class="bol-statblock__tile-value" [class.bol-statblock__tile-value--dice]="tile.dice">
-            {{ tile.value }}
-          </span>
-          <span class="bol-statblock__tile-label">{{ tile.label }}</span>
-        </div>
-      }
-    </div>
-
-    <div class="bol-statblock__tiles" [class.bol-statblock__tiles--8]="data().wideTiles">
-      @for (tile of data().tiles; track tile.label) {
-        <div class="bol-statblock__tile bol-statblock__tile--stat">
-          <span class="bol-statblock__tile-value">{{ tile.value }}</span>
-          <span class="bol-statblock__tile-label">{{ tile.label }}</span>
-        </div>
-      }
-    </div>
-  </div>
-
-  <section class="bol-statblock__lists" [class.bol-statblock__lists--3]="data().sections.length > 1">
-    @for (section of data().sections; track section.title) {
-      <div>
-        <p class="bol-statblock__section-title">{{ section.title }}</p>
-
-        @if (section.entries.length) {
-          @for (entry of section.entries; track $index) {
-            <div
-              class="bol-statblock__entry"
-              [class.bol-statblock__entry--row]="entry.value !== undefined"
-              [class.bol-statblock__entry--equipped]="entry.equipped"
-            >
-              <p
-                class="bol-statblock__entry-title"
-                [class.bol-statblock__entry-title--hint]="section.compact && entry.detail"
-                [matTooltip]="section.compact ? (entry.detail ?? '') : ''"
-                matTooltipPosition="above"
-              >
-                {{ entry.label }}
-              </p>
-              @if (entry.value !== undefined) {
-                <span class="bol-statblock__entry-value">{{ entry.value }}</span>
-              }
-              @if (entry.detail && !section.compact) {
-                <p class="bol-statblock__entry-detail">{{ entry.detail }}</p>
-              }
-            </div>
-          }
-        } @else {
-          <p class="bol-statblock__empty">{{ section.emptyText }}</p>
+    @if (data().chips.length) {
+      <div class="bs-chips">
+        @for (chip of data().chips; track chip.label) {
+          <span class="bs-chip">{{ chip.label }}</span>
         }
       </div>
     }
-  </section>
-</article>
+  </aside>
+
+  <div class="bs-main">
+    <div class="bs-bar">
+      @if (data().editRoute) {
+        <a mat-stroked-button size="small" class="bs-edit" [routerLink]="data().editRoute" [state]="navigationState()">
+          <mat-icon>edit</mat-icon> Modifier la fiche
+        </a>
+        @if (data().advancedEditRoute) {
+          <a mat-stroked-button size="small" class="bs-edit" [routerLink]="data().advancedEditRoute" [state]="navigationState()">
+            <mat-icon>settings</mat-icon> Édition avancée
+          </a>
+        }
+      }
+      <span class="bs-spacer"></span>
+      <ng-content select="[sheetActions]" />
+      @if (showClose() && dialogRef) {
+        <button mat-icon-button class="bs-icon-btn" type="button" aria-label="Fermer" (click)="dialogRef.close()">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </div>
+
+    <div class="bs-cols">
+      <section>
+        <h4 class="bs-sec">Attributs</h4>
+        <dl class="bs-leaders" aria-label="Attributs">
+          @for (tile of attributTiles(); track tile.label) {
+            <div><dt>{{ tile.label }}</dt><dd>{{ tile.value }}</dd></div>
+          }
+        </dl>
+      </section>
+      <section>
+        <h4 class="bs-sec">Combat</h4>
+        <dl class="bs-leaders" aria-label="Combat">
+          @for (tile of combatTiles(); track tile.label) {
+            <div [class.bs-leaders--hot]="tile.tone === 'damage'"><dt>{{ tile.label }}</dt><dd>{{ tile.value }}</dd></div>
+          }
+        </dl>
+      </section>
+    </div>
+
+    <div class="bs-cols">
+      @for (section of data().sections; track section.title) {
+        <section>
+          <h4 class="bs-sec">{{ section.title }}</h4>
+          @if (section.entries.length) {
+            <dl class="bs-leaders">
+              @for (entry of section.entries; track $index) {
+                <div [class.bs-leaders--note]="entry.value === undefined" [class.bs-leaders--equipped]="entry.equipped">
+                  <dt>{{ entry.label }}</dt>
+                  @if (entry.value !== undefined) {
+                    <dd>{{ entry.value }}</dd>
+                  }
+                  @if (entry.detail) {
+                    <dd class="bs-leaders-detail">{{ entry.detail }}</dd>
+                  }
+                </div>
+              }
+            </dl>
+          } @else {
+            <p class="bs-empty">{{ section.emptyText }}</p>
+          }
+        </section>
+      }
+    </div>
+
+    @if (data().comment) {
+      <p class="bs-comment">{{ data().comment }}</p>
+    }
+    <ng-content select="[sheetFooter]" />
+  </div>
+</div>

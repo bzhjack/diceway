@@ -5,7 +5,13 @@
 </div>
 
 <ng-template #presentsTpl>
-  <section class="tps-row" aria-labelledby="tps-presents-label">
+  <section
+    class="tps-row"
+    data-drop-camp="adversaires"
+    [class.tps-row--droppable]="adversairesDroppable()"
+    [class.tps-row--hot]="hotCamp() === 'adversaires'"
+    aria-labelledby="tps-presents-label"
+  >
     <h2 class="tps-row-label" id="tps-presents-label">{{ presentsLabel() }}</h2>
     <ng-container
       *ngTemplateOutlet="
@@ -17,7 +23,13 @@
 </ng-template>
 
 <ng-template #herosTpl>
-  <section class="tps-row tps-row--heros" aria-labelledby="tps-heros-label">
+  <section
+    class="tps-row tps-row--heros"
+    data-drop-camp="heros"
+    [class.tps-row--droppable]="herosDroppable()"
+    [class.tps-row--hot]="hotCamp() === 'heros'"
+    aria-labelledby="tps-heros-label"
+  >
     <ng-container
       *ngTemplateOutlet="rowTpl; context: {cards: rows().heros, labelId: 'tps-heros-label', scrollerLabel: 'Héros et alliés', empty: 'Aucun héros à table.'}"
     />
@@ -44,38 +56,40 @@
 
 <ng-template #rowTpl let-cards="cards" let-labelId="labelId" let-empty="empty" let-scrollerLabel="scrollerLabel">
   <dw-scroller class="tps-scroller" [label]="scrollerLabel">
-  <ul class="tps-cards" role="list" [attr.aria-labelledby]="labelId">
+  <ul
+    class="tps-cards"
+    role="list"
+    cdkDropList
+    [cdkDropListSortingDisabled]="true"
+    [cdkDropListEnterPredicate]="rejectDrop"
+    [attr.aria-labelledby]="labelId"
+  >
     @for (card of cards; track card.key) {
-      <li class="tps-slot">
-        @if (card.key === expandedKey()) {
-          <bol-expanded-card
-            [card]="card"
-            [sessionId]="sessionId()"
-            [hero]="hero()"
-            [statblock]="statblock()"
-            [returnUrl]="returnUrl()"
-            [mode]="mode()"
-            [canAttack]="canAttack(card)"
-            (closed)="closed.emit()"
-            (changed)="changed.emit()"
-            (removeRequested)="removeRequested.emit($event)"
-            (campToggleRequested)="campToggleRequested.emit($event)"
-            (armureToggled)="armureToggled.emit({card, armureId: $event})"
-            (armeToggled)="armeToggled.emit({card, armeId: $event})"
-            (attackRequested)="attackRequested.emit($event)"
-          />
-        } @else {
-          <bol-character-card
-            [card]="card"
-            [combat]="stateOf(card)"
-            (toggled)="onFaceClick(card)"
-            (expandRequested)="cardToggled.emit(card)"
-          />
-        }
+      <li
+        class="tps-slot"
+        cdkDrag
+        cdkDragPreviewContainer="parent"
+        [cdkDragDisabled]="!canChangeCamp(card)"
+        (cdkDragStarted)="onCardDragStarted(card)"
+        (cdkDragMoved)="onCardDragMoved($event)"
+        (cdkDragEnded)="onCardDragEnded($event, card)"
+      >
+        <bol-character-card
+          [card]="card"
+          [combat]="stateOf(card)"
+          [selected]="selectedKeys().has(card.key)"
+          (toggled)="onFaceClick(card, $event)"
+          (expandRequested)="cardToggled.emit(card)"
+        />
+        <div *cdkDragPreview class="tps-ghost">
+          <img class="tps-ghost-art" [src]="card.avatar" alt="" draggable="false" />
+          <span class="tps-ghost-name">{{ card.nom }}</span>
+        </div>
       </li>
     } @empty {
       <li class="tps-empty">{{ empty }}</li>
     }
   </ul>
   </dw-scroller>
+
 </ng-template>

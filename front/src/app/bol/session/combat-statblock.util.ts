@@ -98,5 +98,5 @@ export function openCombatantStatblock(dialog: MatDialog, entry: CombatCatalogEn
     }
   })();
 
-  openStatblockDialog(dialog, BolStatblockComponent, {data, imageSrc: entry.avatar});
+  openStatblockDialog(dialog, BolStatblockComponent, {data, imageSrc: entry.avatar, kind: entry.kind});
 }

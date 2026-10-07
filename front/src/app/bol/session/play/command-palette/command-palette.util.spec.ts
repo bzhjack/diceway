@@ -41,7 +41,6 @@ function input(query: string, overrides: Partial<PaletteInput> = {}): PaletteInp
     ],
     catalog: CATALOG,
     heroIds: new Set(['h1']),
-    pnjIds: new Set(['p1']),
     scenes: [scene('s-a', 'Le temple', 'La Perle'), scene('s-b', 'Taverne de Marsus')],
     reserveOpen: true,
     ...overrides,
@@ -114,9 +113,9 @@ describe('buildResults', () => {
     expect(new Set(place.results.map((r) => r.id)).size).toBe(2);
   });
 
-  it('never offers to place a hero or a PNJ already on the table', () => {
+  it('never offers to place a hero already on the table, but still offers a PNJ again', () => {
     expect(labels('kalena').place).toBeUndefined();
-    expect(labels('garde').place).toBeUndefined();
+    expect(labels('garde').place).toEqual(['Garde du port']);
     expect(labels('rork').place).toEqual(['Rork']);
   });
 
@@ -139,9 +138,13 @@ describe('buildResults', () => {
     expect(groups[0].results[0].hint).toContain('×3');
   });
 
-  it('offers nothing when a quantity is put in front of a hero or a PNJ', () => {
-    expect(buildResults(input('3 pretre'))).toEqual([]);
+  it('offers nothing when a quantity is put in front of a hero', () => {
     expect(buildResults(input('2 rork'))).toEqual([]);
+  });
+
+  it('accepts a quantity in front of a PNJ, which can be placed several times', () => {
+    const place = flattenResults(buildResults(input('3 garde')))[0];
+    expect(place.command).toMatchObject({type: 'place', kind: 'pnj', qty: 3});
   });
 
   it('offers nothing for a quantity without text', () => {

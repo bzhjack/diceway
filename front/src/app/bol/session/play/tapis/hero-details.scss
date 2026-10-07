@@ -101,14 +101,6 @@
   font-weight: 600;
 }
 
-.hd-on {
-  flex-shrink: 0;
-  font-size: 1rem;
-  width: 1rem;
-  height: 1rem;
-  color: var(--dw-color-reussite);
-}
-
 .hd-value {
   font-variant-numeric: tabular-nums;
   font-weight: 700;
@@ -122,26 +114,6 @@
   color: var(--dw-surface-500);
 }
 
-.hd-row--button {
-  width: 100%;
-  border: none;
-  background: transparent;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-
-  &:hover {
-    background: var(--dw-surface-100);
-  }
-
-  &.hd-row--on:hover {
-    background: color-mix(in srgb, var(--dw-color-reussite) 20%, transparent);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-color-legendary);
-  }
-}
 
 .hd-kind {
   align-self: center;
@@ -187,4 +159,12 @@
   padding: 0.3rem 0.4rem;
   font-size: 0.84rem;
   color: var(--dw-surface-500);
+}
+
+// Case « équipé » : compacte, le libellé de l'arme ou de l'armure est son texte.
+.hd-name .mat-mdc-checkbox {
+  --mat-checkbox-state-layer-size: 2rem;
+  --mat-checkbox-label-text-size: 0.84rem;
+  --mat-checkbox-label-text-weight: 600;
+  margin-left: -0.5rem;
 }

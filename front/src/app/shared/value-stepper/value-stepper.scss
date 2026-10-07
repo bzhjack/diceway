@@ -56,4 +56,39 @@
       border-radius: 4px;
     }
   }
+
+  // Valeur sur un cœur : le cœur est un masque sur un pseudo-élément, pour que le chiffre ne soit jamais
+  // rogné par la forme.
+  &__field {
+    display: inline-flex;
+
+    &--heart {
+      position: relative;
+      isolation: isolate;
+      // Taille réglable par le parent (`--vs-heart-*`), pour un cœur plus petit dans un espace serré.
+      width: var(--vs-heart-width, 2.8rem);
+      height: var(--vs-heart-height, 2.5rem);
+      justify-content: center;
+      align-items: center;
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.6));
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: linear-gradient(160deg, var(--bar-v-1, #fca5a5), var(--bar-v-2, #ef4444) 55%, var(--bar-v-3, #7f1d1d));
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 29'%3E%3Cpath d='M16 28S2 18.5 2 9.5C2 5 5.5 2 9.5 2c3 0 5.5 1.8 6.5 4.5C17 3.8 19.5 2 22.5 2 26.5 2 30 5 30 9.5 30 18.5 16 28 16 28z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+      }
+
+      .vs__value {
+        width: calc(var(--vs-heart-width, 2.8rem) - 0.4rem);
+        height: 1.6rem;
+        margin-bottom: 0.2rem;
+        font-size: var(--vs-heart-font, 1rem);
+        color: #fff;
+        text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+      }
+    }
+  }
 }

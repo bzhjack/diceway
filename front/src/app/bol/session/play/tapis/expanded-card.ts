@@ -14,14 +14,14 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterLink} from '@angular/router';
-import {BolStatblockComponent} from '../../../shared/statblock/bol-statblock.component';
 import {BolStatblockData} from '../../../shared/models/bol-statblock.model';
+import {BolStatblockComponent} from '../../../shared/statblock/bol-statblock.component';
 import {EMPTY_AVATAR} from '../../combat-play.util';
 import {combatantKindIcon, combatantKindIconIsSvg} from '../../combat-statblock.util';
 import {ActionRollPanelComponent} from '../action-roll-panel/action-roll-panel';
 import {HeroResourcesComponent} from '../hero-resources/hero-resources';
-import {InstanceVitaliteComponent} from './instance-vitalite';
-import {campActionLabel, heroIdentityLine, removeActionLabel, vitaliteSteppers} from './tapis.util';
+import {CardVitaliteComponent} from './card-vitalite';
+import {heroIdentityLine, REMOVE_ACTION_LABEL} from './tapis.util';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
 import {HeroDetailsComponent} from './hero-details';
 import {ExpandedHeroData} from '../../models/expanded-card.model';
@@ -35,7 +35,7 @@ const KIND_LABELS: Record<TapisKind, string> = {
 
 /** Carte du tapis dépliée sur place. Un bandeau commun (portrait carré, nom, vitalité) ouvre toutes les
  * cartes. Héros : héroïsme, jet d'action sur trois colonnes, détails (carrières, traits, armes, armures) en popovers, lien vers sa fiche d'édition. PNJ / créature /
- * démon : vitalité par exemplaire pour un lot, statbloc, changement de camp, retrait. Ne recharge rien elle-même : toute modification remonte à la page par événement. */
+ * démon : vitalité, statbloc, changement de camp. Corbeille (retrait) à côté du bouton de fermeture, pour tous les types. Affichée dans un dialogue (`bol-expanded-card-dialog`). Ne recharge rien elle-même : toute modification remonte à la page par événement. */
 @Component({
   selector: 'bol-expanded-card',
   imports: [
@@ -43,11 +43,11 @@ const KIND_LABELS: Record<TapisKind, string> = {
     MatIconModule,
     MatTooltipModule,
     RouterLink,
-    BolStatblockComponent,
     HeroDetailsComponent,
     ActionRollPanelComponent,
     HeroResourcesComponent,
-    InstanceVitaliteComponent,
+    CardVitaliteComponent,
+    BolStatblockComponent,
   ],
   templateUrl: './expanded-card.html',
   styleUrl: './expanded-card.scss',
@@ -69,7 +69,6 @@ export class ExpandedCardComponent {
   readonly closed = output<void>();
   readonly changed = output<void>();
   readonly removeRequested = output<TapisCard>();
-  readonly campToggleRequested = output<TapisCard>();
   /** Un clic sur une armure du popover : l'id de l'armure à équiper ou déséquiper. */
   readonly armureToggled = output<number>();
   /** Un clic sur une arme du popover : l'id de l'arme à équiper ou déséquiper. */
@@ -88,11 +87,8 @@ export class ExpandedCardComponent {
     if (card.kind === 'hero') {
       return hero ? heroIdentityLine(hero.details.infos) : '';
     }
-    const lot = card.qty > 1 ? ` · lot de ${card.qty}` : '';
-    return `${KIND_LABELS[card.kind]} · ${card.rang ?? ''}${lot}`;
+    return `${KIND_LABELS[card.kind]} · ${card.rang ?? ''}`;
   });
-
-  protected readonly steppers = computed(() => vitaliteSteppers(this.card()));
 
   /** État de navigation vers l'édition : au retour, la table se rouvre. */
   protected navigationState(): Record<string, string> | undefined {
@@ -110,19 +106,13 @@ export class ExpandedCardComponent {
     this.avatarFailed.set(true);
   }
 
-  /** Hauteur fixe : la carte a un contenu qui change de taille — le jet d'action d'un héros en mode libre,
-   * le statbloc d'un autre personnage. Un héros en combat n'a que le bandeau (et « Attaquer ») : hauteur naturelle. */
-  protected readonly fixedHeight = computed(
-    () => this.card().kind !== 'hero' || (this.mode() === 'libre' && this.hero() !== null),
-  );
+  /** Hauteur fixe pour un héros en mode libre : son jet d'action change d'état (faveur divine, échec critique) et
+   * la zone des dés garde une taille confortable. Les autres personnages, et un héros en combat réduit au
+   * bandeau, ont la hauteur de leur contenu. */
+  protected readonly fixedHeight = computed(() => this.card().kind === 'hero' && this.mode() === 'libre' && this.hero() !== null);
 
-  /** Corps de la carte : le jet d'action d'un héros en mode libre, le statbloc et les actions d'un
-   * autre personnage, ou « Attaquer cette carte ». Vide, il n'est pas affiché. */
-  protected readonly hasBody = computed(
-    () => this.canAttack() || this.card().kind !== 'hero' || (this.mode() === 'libre' && this.hero() !== null),
-  );
-  protected readonly campLabel = computed(() => campActionLabel(this.card()));
-  protected readonly removeLabel = computed(() => removeActionLabel(this.card()));
+
+  protected readonly removeLabel = REMOVE_ACTION_LABEL;
 
   constructor() {
     // À l'ouverture, le focus entre dans la carte : le clavier et les lecteurs d'écran suivent.

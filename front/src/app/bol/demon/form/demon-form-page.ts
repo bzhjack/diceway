@@ -53,11 +53,12 @@ const DEMON_STAT_GROUPS: readonly StatGroup[] = [
   {
     key: 'combat',
     label: 'Combat',
-    columns: 3,
+    columns: 4,
     cells: [
       {control: 'melee', label: 'Mêlée'},
       {control: 'tir', label: 'Tir'},
       {control: 'defense', label: 'Défense'},
+      {control: 'degats', label: 'Dégâts', text: true},
     ],
   },
   {

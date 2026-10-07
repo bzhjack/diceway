@@ -33,6 +33,44 @@
   background: linear-gradient(180deg, var(--dw-surface-0), var(--dw-surface-50) 45%, var(--dw-surface-0));
 }
 
+.cp-table {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+// Thème « barbare » (libre et combat) : fer noirci, cuir, bronze et lueur de torche. Ses variables
+// (surfaces brunes, métaux `--bar-*`, jetons Material) sont dans `styles/_barbare.scss`, partagées avec les
+// dialogues et messages, qui sont rendus hors de la page. Ici, les fonds de la table.
+.cp-page--barbare {
+  // Place pour le cadre de fer de l'app (`body::before` dans `styles/_barbare.scss`).
+  padding: 10px;
+
+  .spp-reserve {
+    border-right: 2px solid #6b4a16;
+    background: linear-gradient(90deg, #0f0a06, #1a120b);
+    box-shadow: inset -8px 0 14px -8px rgba(0, 0, 0, 0.8);
+  }
+
+  .spp-reserve-toggle {
+    border-right-color: #6b4a16;
+    background: #150e09;
+  }
+
+  .cp-table {
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 2px #0b0705, inset 0 0 70px #000;
+    background:
+      radial-gradient(45% 35% at 0% 0%, rgba(232, 135, 58, 0.2), transparent 70%),
+      radial-gradient(45% 35% at 100% 0%, rgba(232, 135, 58, 0.2), transparent 70%),
+      radial-gradient(50% 40% at 50% 55%, #4a3523, transparent 75%),
+      linear-gradient(#241a12, #130d08);
+  }
+}
+
 // Sous l'en-tête : la réserve à gauche (mode libre seulement), sa languette de repli, puis la colonne
 // principale — l'ordre de jeu en combat et le tapis, qui s'étire.
 .spp-body {

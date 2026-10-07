@@ -1,10 +1,10 @@
 import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {forkJoin, Observable, of, take, tap} from 'rxjs';
+import {concatMap, forkJoin, from, Observable, of, take, tap, toArray} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolFightSessionModel} from '../../models/bol-fight-session.model';
@@ -34,7 +34,7 @@ import {SceneActionsService} from '../scene-actions.service';
 import {AddCombatantDialogComponent, resolveAddCombatantCamp} from './add-combatant-dialog/add-combatant-dialog';
 import {openCommandPalette} from './command-palette/command-palette';
 import {PaletteActionId, PaletteCommand, PaletteContext} from '../models/command-palette.model';
-import {isEndTurnShortcut, isPaletteShortcut} from './command-palette/shortcut.util';
+import {isEditable, isEndTurnShortcut, isPaletteShortcut} from './command-palette/shortcut.util';
 import {reserveTab} from './reserve/reserve.util';
 import {maybePromptDefierLaMort} from './defier-la-mort-dialog/defier-la-mort.util';
 import {tableTitle} from './scene-list/scene.util';
@@ -43,15 +43,17 @@ import {ReserveComponent} from './reserve/reserve';
 import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dialog';
 import {browserStorage, readPanelOpen, RESERVE_PANEL_KEY, writePanelOpen} from './table-state.util';
 import {ExpandedHeroData} from '../models/expanded-card.model';
+import {ExpandedCardDialogData} from '../models/expanded-card-dialog.model';
+import {ExpandedCardDialogComponent} from './tapis/expanded-card-dialog';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {equippedArmes} from '../../shared/arme/arme-equipee';
 import {AttackChoice} from '../models/attack-options.model';
-import {buildCombatStates, endTurn, firstStandingInstance, giveBackTurn, normalizeEtat, orderCards, targetLabel, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
+import {buildCombatStates, endTurn, giveBackTurn, normalizeEtat, orderCards, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
 import {CardCombatState, EtatCombat} from '../models/combat-turn.model';
 import {TurnOrderComponent} from './tapis/turn-order';
 import {TurnOrderEntry} from '../models/turn-order.model';
 import {TapisComponent} from './tapis/tapis';
-import {buildTapisCards, cardLabel, findCard, heroDetails, heroHeaderStats, removeActionLabel} from './tapis/tapis.util';
+import {buildTapisCards, findCard, heroDetails, heroHeaderStats, REMOVE_ACTION_LABEL} from './tapis/tapis.util';
 import {TapisCard} from '../models/tapis.model';
 
 /** Les armes d'un héros dont le catalogue est chargé — vide si elles ne le sont pas (de simples ids). */
@@ -120,15 +122,6 @@ export class SessionPlayPageComponent {
   protected readonly existingHeroIds = computed<ReadonlySet<string>>(
     () => new Set((this.session()?.heros ?? []).map((h) => String(h.heros_id))),
   );
-  protected readonly existingPnjIds = computed<ReadonlySet<string>>(
-    () =>
-      new Set(
-        (this.session()?.pnjs ?? [])
-          .map((p) => p.pnj_id)
-          .filter((pnjId): pnjId is string => !!pnjId)
-          .map(String),
-      ),
-  );
 
   protected readonly reserveOpen = signal(readPanelOpen(browserStorage(), RESERVE_PANEL_KEY, true));
 
@@ -168,7 +161,7 @@ export class SessionPlayPageComponent {
     const statuses = this.turn().statuses;
     return this.orderedCards().map(({card}) => ({
       key: card.key,
-      nom: cardLabel(card),
+      nom: card.nom,
       kind: card.kind,
       status: statuses.get(card.key) ?? 'upcoming',
     }));
@@ -201,10 +194,9 @@ export class SessionPlayPageComponent {
    * quand la bibliothèque et les scènes finissent de charger. */
   private readonly paletteContext = computed<PaletteContext>(() => ({
     mode: this.mode(),
-    tokens: this.cards().map((card) => ({key: card.key, nom: cardLabel(card), kind: card.kind})),
+    tokens: this.cards().map((card) => ({key: card.key, nom: card.nom, kind: card.kind})),
     catalog: this.selection.catalog(),
     heroIds: this.existingHeroIds(),
-    pnjIds: this.existingPnjIds(),
     scenes: this.paletteScenes(),
     reserveOpen: this.reserveOpen(),
   }));
@@ -256,7 +248,6 @@ export class SessionPlayPageComponent {
         data: {
           sessionId,
           existingHeroIds: this.existingHeroIds(),
-          existingPnjIds: this.existingPnjIds(),
         },
       })
       .afterClosed()
@@ -356,6 +347,7 @@ export class SessionPlayPageComponent {
       return;
     }
     if (this.dialog.openDialogs.length === 0) {
+      this.selectedKeys.set(new Set());
       this.foldCard();
     }
   }
@@ -374,17 +366,118 @@ export class SessionPlayPageComponent {
     this.reloadSession();
   }
 
-  /** Clic sur la face d'une carte : la déplie (une seule carte dépliée à la fois). */
+  /** Clic sur la face d'une carte : ouvre sa carte en dialogue (une seule à la fois). */
   protected onCardToggled(card: TapisCard): void {
+    this.selectedKeys.set(new Set());
     if (this.expandedKey() === card.key) {
       return;
     }
     this.expandedKey.set(card.key);
     this.loadExpanded(card);
+    this.openCardDialog();
+  }
+
+  /** Ferme la carte ouverte. */
+  /** Cartes sélectionnées par Ctrl + clic : suppr les retire de la table. */
+  protected readonly selectedKeys = signal<ReadonlySet<string>>(new Set());
+
+  protected toggleSelected(card: TapisCard): void {
+    this.selectedKeys.update((keys) => {
+      const next = new Set(keys);
+      if (!next.delete(card.key)) {
+        next.add(card.key);
+      }
+      return next;
+    });
+  }
+
+  /** Suppr : retire de la table les cartes sélectionnées, après confirmation. Hors combat seulement. */
+  private askRemoveSelection(): void {
+    const sessionId = this.sessionId();
+    const cards = this.cards().filter((card) => this.selectedKeys().has(card.key));
+    if (!sessionId || !cards.length) {
+      return;
+    }
+
+    const names = cards.map((card) => `« ${card.nom} »`).join(', ');
+    confirmDialog(
+      this.dialog,
+      {
+        title: cards.length > 1 ? `Retirer ${cards.length} personnages` : REMOVE_ACTION_LABEL,
+        message: `Voulez-vous retirer ${names} de la table ?`,
+        confirmLabel: 'Retirer',
+      },
+      {width: '420px'},
+    ).subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+
+      from(cards)
+        .pipe(
+          concatMap((card) => this.fightSessionService.removeCombatant(sessionId, card.kind, card.pivotId)),
+          toArray(),
+        )
+        .subscribe({
+          next: () => {
+            this.selectedKeys.set(new Set());
+            this.loadSession(sessionId);
+          },
+          error: (error: unknown) => {
+            this.loadSession(sessionId);
+            this.tableError(error, 'Impossible de retirer ces personnages.');
+          },
+        });
+    });
   }
 
   protected foldCard(): void {
+    this.cardDialog?.close();
     this.expandedKey.set(null);
+  }
+
+  private cardDialog: MatDialogRef<ExpandedCardDialogComponent> | null = null;
+
+  /** « Attaquer cette carte » sur la carte ouverte : en combat, pour toute carte qui n'est ni la carte active ni
+   * hors combat. */
+  private readonly expandedCanAttack = computed(() => {
+    const card = this.expandedCard();
+    const active = this.activeCard();
+    return this.mode() === 'combat' && card !== null && active !== null && active.key !== card.key && !this.combatStates()?.get(card.key)?.out;
+  });
+
+  private openCardDialog(): void {
+    const sessionId = this.sessionId();
+    if (this.cardDialog || !sessionId) {
+      return;
+    }
+
+    const data: ExpandedCardDialogData = {
+      sessionId,
+      card: this.expandedCard,
+      hero: this.expandedHero,
+      statblock: this.expandedStatblock,
+      returnUrl: this.returnUrl,
+      mode: this.mode,
+      canAttack: this.expandedCanAttack,
+      changed: () => this.reloadSession(),
+      remove: (card) => this.askRemoveCard(card),
+      toggleArmure: (event) => this.onArmureToggled(event),
+      toggleArme: (event) => this.onArmeToggled(event),
+      attack: (card) => this.onAttackCard(card),
+    };
+    // Le corps de la carte donne le focus à sa racine : pas de focus automatique du dialogue.
+    const ref = this.dialog.open(ExpandedCardDialogComponent, {
+      data,
+      autoFocus: false,
+      panelClass: 'exc-dialog',
+      maxWidth: '96vw',
+    });
+    this.cardDialog = ref;
+    ref.afterClosed().subscribe(() => {
+      this.cardDialog = null;
+      this.expandedKey.set(null);
+    });
   }
 
   /** Charge les données de la carte dépliée. Chaque réponse est ignorée si une autre carte a été
@@ -488,22 +581,18 @@ export class SessionPlayPageComponent {
     };
   }
 
-  /** « Retirer de la table » (ou « Retirer un exemplaire » pour un lot) depuis la carte dépliée. */
+  /** « Retirer de la table » depuis la carte dépliée. */
   protected askRemoveCard(card: TapisCard): void {
     const sessionId = this.sessionId();
     if (!sessionId) {
       return;
     }
 
-    const label = removeActionLabel(card);
     confirmDialog(
       this.dialog,
       {
-        title: label,
-        message:
-          card.qty > 1
-            ? `Voulez-vous retirer un exemplaire de « ${card.nom} » ? Il en restera ${card.qty - 1}.`
-            : `Voulez-vous retirer « ${card.nom} » de la table ?`,
+        title: REMOVE_ACTION_LABEL,
+        message: `Voulez-vous retirer « ${card.nom} » de la table ?`,
         confirmLabel: 'Retirer',
       },
       {width: '380px'},
@@ -661,14 +750,12 @@ export class SessionPlayPageComponent {
   }
 
   /** Ouvre le dialogue d'attaque existant, prérempli. Les stats sont résolues à partir des jetons
-   * (`PlayToken`) correspondant aux deux cartes ; pour un lot pris pour cible, c'est le premier
-   * exemplaire encore debout qui est visé et qui prend les dégâts. */
+   * (`PlayToken`) correspondant aux deux cartes. */
   private openAttackDialog(attacker: TapisCard, target: TapisCard, choice: AttackChoice): void {
     const sessionId = this.sessionId();
     const tokens = this.board()?.tokens ?? [];
-    const targetIndex = firstStandingInstance(target);
-    const attackerToken = tokenForCard(tokens, attacker, firstStandingInstance(attacker));
-    const targetToken = tokenForCard(tokens, target, targetIndex);
+    const attackerToken = tokenForCard(tokens, attacker);
+    const targetToken = tokenForCard(tokens, target);
     if (!sessionId || !attackerToken || !targetToken) {
       return;
     }
@@ -690,7 +777,7 @@ export class SessionPlayPageComponent {
           panelClass: 'atd-panel',
           data: {
             attackerNom: attacker.nom,
-            targetNom: targetLabel(target),
+            targetNom: target.nom,
             attackerAvatar: attacker.avatar,
             targetAvatar: target.avatar,
             attacker: finalAttacker,
@@ -705,7 +792,7 @@ export class SessionPlayPageComponent {
             return;
           }
 
-          this.fightSessionService.applyDamage(sessionId, target.kind, target.pivotId, delta, targetIndex).subscribe({
+          this.fightSessionService.applyDamage(sessionId, target.kind, target.pivotId, delta).subscribe({
             next: () => {
               this.loadSession(sessionId);
 
@@ -739,6 +826,11 @@ export class SessionPlayPageComponent {
     }
 
     const target = event.target as HTMLElement | null;
+    if (event.key === 'Delete' && this.mode() === 'libre' && this.selectedKeys().size && !isEditable(target)) {
+      event.preventDefault();
+      this.askRemoveSelection();
+      return;
+    }
     if (isPaletteShortcut(event, target)) {
       event.preventDefault();
       this.openPalette();

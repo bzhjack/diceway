@@ -5,7 +5,7 @@
   min-height: 0;
 }
 
-// Colonne verticale : titre et onglets, recherche, puis la « main » qui défile, et les liens en bas.
+// Colonne verticale : titre et onglets, recherche, puis la liste qui défile, la barre de sélection et les liens en bas.
 .rsv-band {
   flex: 1;
   min-height: 0;
@@ -22,39 +22,94 @@
   gap: 0.35rem;
 }
 
+// Titre en plaque, avec un filet de bronze qui se perd vers la droite.
 .rsv-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
   margin: 0;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--dw-surface-500);
+  color: var(--dw-color-legendary);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+
+  &::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, var(--bar-bronze, var(--dw-border)), transparent);
+  }
 }
 
+// Onglets : plaques de bronze séparées, l'actif est en métal.
 .rsv-tabs {
   // Cinq onglets sur deux lignes (3 + 2) : la colonne est étroite.
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  gap: 0.3rem;
+  border: 0;
+  border-radius: 0;
+  background: none;
+
+  ::ng-deep .mat-button-toggle {
+    border: 1px solid var(--dw-border);
+    border-radius: 6px;
+    background: var(--dw-surface-100);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transition: border-color 0.12s ease-out, background 0.12s ease-out;
+  }
+
+  ::ng-deep .mat-button-toggle + .mat-button-toggle {
+    border-left: 1px solid var(--dw-border);
+  }
+
+  ::ng-deep .mat-button-toggle:hover {
+    border-color: var(--bar-bronze, var(--dw-surface-500));
+  }
+
+  ::ng-deep .mat-button-toggle-checked {
+    border-color: var(--bar-bronze, var(--dw-color-legendary));
+    background: linear-gradient(180deg, #5a3a1d, #2a1c12);
+    box-shadow: inset 0 0 0 1px rgba(232, 135, 58, 0.25), 0 0 10px rgba(232, 135, 58, 0.15);
+  }
+
+  ::ng-deep .mat-button-toggle-checked .mat-button-toggle-label-content {
+    color: var(--bar-ember, var(--dw-color-legendary));
+    font-weight: 800;
+  }
 
   ::ng-deep .mat-button-toggle-label-content {
     padding: 0 0.3rem;
     font-size: 0.74rem;
     line-height: 2rem;
+    letter-spacing: 0.03em;
   }
 }
 
+// Champ de recherche : cuir sombre cerclé de bronze.
 .rsv-search {
   flex-shrink: 0;
+  --mat-form-field-outlined-outline-color: var(--dw-border);
+  --mat-form-field-outlined-hover-outline-color: var(--bar-bronze, var(--dw-surface-500));
+  --mat-form-field-outlined-focus-outline-color: var(--bar-ember, var(--dw-color-legendary));
+  --mat-form-field-outlined-label-text-color: var(--dw-surface-500);
+
+  ::ng-deep .mdc-text-field--outlined {
+    background: var(--dw-surface-0);
+    border-radius: 8px;
+  }
 }
 
-// La « main » : cartes réduites en grille, défilement vertical.
-.rsv-hand {
+// La liste : une ligne par personnage, qui défile verticalement.
+.rsv-list {
   flex: 1;
   min-height: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(5.4rem, 1fr));
-  align-content: start;
-  gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
   margin: 0;
   padding: 0.1rem;
   list-style: none;
@@ -63,25 +118,35 @@
   scrollbar-color: var(--dw-border) transparent;
 }
 
-.rsv-mini {
+// La ligne reste réservée quand la rangée est arrachée de la liste par le glisser.
+.rsv-slot {
+  flex-shrink: 0;
+  min-height: 3.2rem;
+}
+
+.rsv-row {
   --rsv-kind: var(--dw-color-reussite);
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 0;
+  --rsv-metal-1: var(--bar-pj-1, #f1e3b4);
+  --rsv-metal-2: var(--bar-pj-2, var(--dw-color-legendary));
+  --rsv-metal-3: var(--bar-pj-3, #92620a);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.3rem 0.5rem 0.3rem 0.4rem;
   border: 1px solid var(--dw-border);
-  border-top: 3px solid var(--rsv-kind);
-  border-radius: 6px;
+  border-radius: 9px;
   background: var(--dw-surface-100);
   color: var(--dw-surface-700);
-  font: inherit;
-  text-align: left;
-  overflow: hidden;
-  cursor: pointer;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-drag: none;
+  touch-action: none;
+  transition: border-color 0.12s ease-out, background 0.12s ease-out;
 
-  &:hover:not(:disabled) {
-    border-color: var(--dw-surface-500);
-    border-top-color: var(--rsv-kind);
+  &:hover:not(.rsv-row--on-table) {
+    border-color: var(--bar-bronze, var(--dw-surface-500));
+    background: var(--dw-surface-200);
   }
 
   &:focus-visible {
@@ -89,52 +154,123 @@
     outline-offset: 2px;
   }
 
-  &:disabled {
-    cursor: default;
+  &:active:not(.rsv-row--on-table) {
+    cursor: grabbing;
   }
 }
 
-.rsv-mini--pnj { --rsv-kind: var(--dw-color-pnj); }
-.rsv-mini--creature { --rsv-kind: var(--dw-color-creature); }
-.rsv-mini--demon { --rsv-kind: var(--dw-color-demon); }
-
-// Déjà à table : estompée, non cliquable.
-.rsv-mini--on-table {
-  opacity: 0.45;
+.rsv-row--pnj {
+  --rsv-kind: var(--dw-color-pnj);
+  --rsv-metal-1: var(--bar-pnj-1, #d6c3a0);
+  --rsv-metal-2: var(--bar-pnj-2, #9c8763);
+  --rsv-metal-3: var(--bar-pnj-3, #3d2b1c);
+}
+.rsv-row--creature {
+  --rsv-kind: var(--dw-color-creature);
+  --rsv-metal-1: var(--bar-creature-1, #fed7aa);
+  --rsv-metal-2: var(--bar-creature-2, #d97706);
+  --rsv-metal-3: var(--bar-creature-3, #78350f);
+}
+.rsv-row--demon {
+  --rsv-kind: var(--dw-color-demon);
+  --rsv-metal-1: var(--bar-demon-1, #fecdd3);
+  --rsv-metal-2: var(--bar-demon-2, #be123c);
+  --rsv-metal-3: var(--bar-demon-3, #4c0519);
 }
 
-.rsv-mini-art {
+// Déjà à table : grisée et non glissable.
+.rsv-row--on-table {
+  opacity: 0.45;
+  filter: grayscale(0.7);
+  cursor: default;
+}
+
+// Portrait rond dans un anneau métallique.
+.rsv-avatar {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  aspect-ratio: 1 / 1;
-  background: linear-gradient(160deg, var(--dw-surface-200), var(--dw-surface-50));
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  background:
+    radial-gradient(90% 80% at 50% 25%, color-mix(in srgb, var(--rsv-kind) 40%, var(--dw-surface-200)), var(--dw-surface-0)) padding-box,
+    conic-gradient(from 210deg, var(--rsv-metal-1), var(--rsv-metal-2), var(--rsv-metal-3), var(--rsv-metal-2), var(--rsv-metal-1)) border-box;
   color: var(--rsv-kind);
   font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  overflow: hidden;
 }
 
-.rsv-mini-avatar {
+.rsv-avatar-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
+  pointer-events: none;
 }
 
-.rsv-mini-name {
-  padding: 0.25rem 0.35rem 0;
-  font-size: 0.7rem;
-  font-weight: 700;
+.rsv-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.rsv-name {
+  font-size: 0.82rem;
   line-height: 1.15;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
   color: var(--dw-surface-900);
+  overflow-wrap: anywhere;
 }
 
-.rsv-mini-state {
-  padding: 0 0.35rem 0.25rem;
-  font-size: 0.62rem;
+.rsv-meta {
+  font-size: 0.68rem;
+  color: var(--dw-surface-500);
+}
+
+// Ce qui suit le pointeur pendant le glisser : un médaillon et son nom.
+.rsv-ghost {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.8rem 0.3rem 0.3rem;
+  border: 1px solid var(--bar-bronze, var(--dw-color-legendary));
+  border-radius: 999px;
+  background: var(--dw-surface-0);
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.7);
+  color: var(--dw-surface-900);
+  font-size: 0.82rem;
+  font-weight: 800;
+  pointer-events: none;
+}
+
+.rsv-ghost-art {
+  --rsv-kind: var(--dw-color-reussite);
+  --rsv-metal-1: var(--bar-pj-1, #f1e3b4);
+  --rsv-metal-2: var(--bar-pj-2, var(--dw-color-legendary));
+  --rsv-metal-3: var(--bar-pj-3, #92620a);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  background:
+    radial-gradient(90% 80% at 50% 25%, color-mix(in srgb, var(--rsv-kind) 40%, var(--dw-surface-200)), var(--dw-surface-0)) padding-box,
+    conic-gradient(from 210deg, var(--rsv-metal-1), var(--rsv-metal-2), var(--rsv-metal-3), var(--rsv-metal-2), var(--rsv-metal-1)) border-box;
+  color: var(--rsv-kind);
+  overflow: hidden;
+}
+
+.rsv-hint {
+  flex-shrink: 0;
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.35;
   color: var(--dw-surface-500);
 }
 
@@ -149,4 +285,16 @@
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--dw-border);
+}
+
+// « Ajouter » : pose le personnage dans son camp par défaut.
+.rsv-add {
+  --mdc-outlined-button-container-height: 1.9rem;
+  --mat-button-outlined-container-height: 1.9rem;
+  padding-inline: 0.6rem;
+  font-size: 0.74rem;
+  font-weight: 800;
+  white-space: nowrap;
 }

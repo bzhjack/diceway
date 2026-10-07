@@ -42,19 +42,16 @@ export function filterReserve(
     .sort((left, right) => left.nom.localeCompare(right.nom, 'fr'));
 }
 
-/** Un héros ou un PNJ ne figure qu'une fois dans une session ; créatures et démons sont des gabarits
+/** Un héros ne figure qu'une fois dans une session ; PNJ, créatures et démons sont des archétypes
  * ré-instanciables, jamais « déjà à table ». */
-export function isOnTable(
-  entry: CombatCatalogEntry,
-  heroIds: ReadonlySet<string>,
-  pnjIds: ReadonlySet<string>,
-): boolean {
-  const sourceId = String(entry.sourceId);
-  if (entry.kind === 'hero') {
-    return heroIds.has(sourceId);
-  }
-  if (entry.kind === 'pnj') {
-    return pnjIds.has(sourceId);
-  }
-  return false;
+export function isOnTable(entry: CombatCatalogEntry, heroIds: ReadonlySet<string>): boolean {
+  return entry.kind === 'hero' && heroIds.has(String(entry.sourceId));
 }
+
+/** Nom du type d'un personnage, au singulier, pour la ligne de la réserve. */
+export const KIND_LABEL: Record<CombatantKind, string> = {
+  hero: 'Héros',
+  pnj: 'PNJ',
+  creature: 'Créature',
+  demon: 'Démon',
+};

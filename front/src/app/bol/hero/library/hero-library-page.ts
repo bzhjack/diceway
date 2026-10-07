@@ -104,6 +104,7 @@ export class HeroLibraryPageComponent {
     openStatblockDialog(this.dialog, BolStatblockComponent, {
       data: heroStatblockData(hero),
       imageSrc: heroImage(hero),
+      kind: 'hero',
     });
   }
 

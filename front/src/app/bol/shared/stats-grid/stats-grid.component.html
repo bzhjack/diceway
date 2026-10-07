@@ -6,7 +6,11 @@
         @for (cell of group.cells; track cell.control) {
           <div class="hs-cell" [class.hs-cell--key]="cell.highlight">
             <span class="hs-lbl">{{ cell.label }}</span>
-            <dw-value-stepper [formField]="fieldFor(cell.control)" [ariaLabel]="cell.label" />
+            @if (cell.text) {
+              <input class="hs-text" type="text" [formField]="textFieldFor(cell.control)" [attr.aria-label]="cell.label" />
+            } @else {
+              <dw-value-stepper [formField]="fieldFor(cell.control)" [ariaLabel]="cell.label" />
+            }
           </div>
         }
       </div>

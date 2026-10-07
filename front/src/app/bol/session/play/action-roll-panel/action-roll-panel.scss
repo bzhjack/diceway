@@ -130,7 +130,7 @@ bol-action-roll-panel {
   line-height: 1;
   color: var(--dw-surface-900);
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 1px 3px rgba(2, 6, 23, 0.9);
+  text-shadow: 0 1px 3px rgba(11, 7, 5, 0.9);
 }
 
 .ard-ticket-label {
@@ -139,7 +139,7 @@ bol-action-roll-panel {
   font-weight: 800;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  text-shadow: 0 1px 3px rgba(2, 6, 23, 0.9);
+  text-shadow: 0 1px 3px rgba(11, 7, 5, 0.9);
 }
 
 .ard-manual-badge {
@@ -372,7 +372,7 @@ bol-action-roll-panel {
   font-size: 0.72rem;
   font-weight: 700;
   color: var(--dw-surface-500);
-  text-shadow: 0 1px 3px rgba(2, 6, 23, 0.9);
+  text-shadow: 0 1px 3px rgba(11, 7, 5, 0.9);
 }
 
 .ard-stepper {
@@ -484,11 +484,12 @@ bol-action-roll-panel {
 @container (min-width: 36rem) {
   .ard-fg {
     display: grid;
-    // Colonne de résultat de largeur fixe : ses boutons (faveur divine, succès héroïque…) ont des
-    // libellés longs qui doivent tenir sur une ligne.
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) 22rem;
-    gap: 1rem;
-    align-items: start;
+    // Trois étapes de même largeur : attribut et carrière, difficulté et ajustements, lancer.
+    // La dernière colonne porte des boutons à libellé long (« Convertir en succès héroïque (−1 PH) ») qui doivent
+    // tenir sur une seule ligne.
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(17rem, 1.3fr);
+    gap: 0.75rem;
+    align-items: stretch;
   }
 
   // La formule ouvre sa colonne : plus de filet de séparation au-dessus d'elle.
@@ -507,24 +508,33 @@ bol-action-roll-panel {
     .ard-tier-toggle {
       justify-content: flex-start;
       white-space: nowrap;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       padding-block: 0.3rem;
     }
 
+    // L'étape du lancer a de la place : résultat et bouton en grand.
+    .ard-result-row {
+      flex-direction: column;
+    }
+
     .ard-ticket {
-      padding: 0.45rem 0.5rem;
+      padding: 0.9rem 0.6rem;
     }
 
     .ard-ticket-total {
-      font-size: 1.9rem;
+      font-size: 3rem;
+    }
+
+    .ard-ticket-label {
+      font-size: 0.8rem;
     }
 
     .ard-reroll {
-      flex: 1 1 0;
+      flex: none;
       min-width: 0;
-      gap: 0.25rem;
-      padding: 0.4rem 0.3rem;
-      font-size: 0.9rem;
+      gap: 0.4rem;
+      padding: 0.8rem 0.5rem;
+      font-size: 1.1rem;
 
       .mat-icon {
         font-size: 1.5rem;
@@ -570,9 +580,82 @@ bol-action-roll-panel {
 }
 
 .ard-toggle--careers.mat-button-toggle-group {
-  grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .ard-toggle--scale.mat-button-toggle-group {
   grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+// ── Assistant en trois étapes : chaque colonne est une carte numérotée ──────────────────────────────
+.ard-col {
+  padding: 0.75rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 10px;
+  background: var(--dw-surface-100);
+}
+
+// Dernière étape, celle du lancer : mise en valeur en doré.
+.ard-col--result {
+  border-color: var(--dw-color-legendary);
+  background: linear-gradient(var(--dw-surface-100), color-mix(in srgb, var(--dw-color-legendary) 12%, var(--dw-surface-50)));
+}
+
+.ard-step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dw-surface-900);
+
+  span {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: var(--dw-color-legendary);
+    color: var(--dw-surface-0);
+    font-family: 'Muse Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 800;
+  }
+
+  b {
+    color: var(--dw-color-legendary);
+  }
+}
+
+// Le titre de l'étape remplace le libellé de la ligne, que les lecteurs d'écran gardent.
+.ard-row-label--hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+// Commandes plus grandes et plus lisibles : toutes les tuiles ont la même hauteur, sur une seule ligne.
+.ard-toggle--tiles.mat-button-toggle-group {
+  .mat-button-toggle-button {
+    height: 100%;
+    min-height: 2.3rem;
+  }
+
+  .mat-button-toggle-label-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.3rem;
+    padding: 0 0.35rem;
+    font-size: 0.85rem;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
 }

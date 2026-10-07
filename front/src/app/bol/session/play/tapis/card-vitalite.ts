@@ -8,10 +8,10 @@ import {BolFightSessionService} from '../../../services/bol-fight-session.servic
 import {ValueTracker} from '../../value-tracker';
 import {TapisKind} from '../../models/tapis.model';
 
-/** Vitalité d'un PNJ, d'une créature ou d'un démon — ou d'un seul exemplaire d'un lot — ajustable
- * par stepper et persistée à chaque pas. La valeur affichée suit chaque rechargement de la session. */
+/** Vitalité d'un PNJ, d'une créature ou d'un démon, ajustable par stepper et persistée à chaque pas. La
+ * valeur affichée suit chaque rechargement de la session. */
 @Component({
-  selector: 'bol-instance-vitalite',
+  selector: 'bol-card-vitalite',
   imports: [ReactiveFormsModule, DwValueStepperComponent],
   template: `
     <span class="ivt-label">{{ label() }} ({{ value() }} / {{ max() ?? '—' }})</span>
@@ -20,6 +20,7 @@ import {TapisKind} from '../../models/tapis.model';
       [min]="0"
       [max]="max() ?? undefined"
       [ariaLabel]="'Vitalité de ' + nom() + ' ' + label()"
+      [heart]="true"
     />
   `,
   styles: `
@@ -40,12 +41,10 @@ import {TapisKind} from '../../models/tapis.model';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InstanceVitaliteComponent {
+export class CardVitaliteComponent {
   readonly sessionId = input.required<string>();
   readonly kind = input.required<TapisKind>();
   readonly pivotId = input.required<number>();
-  /** Exemplaire visé dans un lot — null pour un PNJ. */
-  readonly instanceIndex = input.required<number | null>();
   readonly label = input.required<string>();
   readonly value = input.required<number>();
   readonly max = input.required<number | null>();
@@ -79,7 +78,7 @@ export class InstanceVitaliteComponent {
     }
 
     this.fightSessionService
-      .applyDamage(this.sessionId(), this.kind(), this.pivotId(), delta, this.instanceIndex())
+      .applyDamage(this.sessionId(), this.kind(), this.pivotId(), delta)
       .subscribe({
         next: () => this.changed.emit(),
         error: (error: unknown) => {

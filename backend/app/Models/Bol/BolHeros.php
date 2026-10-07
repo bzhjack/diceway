@@ -115,17 +115,17 @@ class BolHeros extends Model
 
     public function getAgiliteEffectiveAttribute()
     {
-        return (new BolEquipmentEffectService())->agiliteEffective($this->agilite, $this->equippedArmuresData());
+        return (new BolEquipmentEffectService())->agiliteEffective((int) $this->agilite, $this->equippedArmuresData());
     }
 
     public function getInitiativeEffectiveAttribute()
     {
-        return (new BolEquipmentEffectService())->initiativeEffective($this->initiative, $this->equippedArmuresData());
+        return (new BolEquipmentEffectService())->initiativeEffective((int) $this->initiative, $this->equippedArmuresData());
     }
 
     public function getDefenseEffectiveAttribute()
     {
-        return (new BolEquipmentEffectService())->defenseEffective($this->defense, $this->equippedArmuresData());
+        return (new BolEquipmentEffectService())->defenseEffective((int) $this->defense, $this->equippedArmuresData());
     }
 
     public function getEquipementEffectifAttribute()

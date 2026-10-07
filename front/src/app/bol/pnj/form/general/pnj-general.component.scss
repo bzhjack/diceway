@@ -6,10 +6,11 @@
   margin: 0;
   margin-bottom: 0.5rem;
   font-size: 0.72rem;
-  font-weight: 900;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: #6ee7b7;
+  letter-spacing: 0.14em;
+  color: var(--dw-color-legendary);
 }
 
 .pfp-field-hint {

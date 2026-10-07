@@ -3,6 +3,8 @@ interface StatCell {
   readonly control: string;
   readonly label: string;
   readonly highlight?: boolean;
+  /** Champ texte (notation de dés, « d6B ») au lieu d'un stepper numérique. */
+  readonly text?: boolean;
 }
 
 /** Un groupe de cases de la grille — attributs, combat ou ressources — et son nombre de colonnes. */

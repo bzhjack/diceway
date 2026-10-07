@@ -113,7 +113,7 @@ export function buildResults(input: PaletteInput): PaletteGroup[] {
   if (searchable) {
     const placeable = input.catalog.filter(
       (entry) =>
-        !isOnTable(entry, input.heroIds, input.pnjIds) && (!batch || entry.kind === 'creature' || entry.kind === 'demon'),
+        !isOnTable(entry, input.heroIds) && (!batch || entry.kind !== 'hero'),
     );
     groups.push({
       id: 'place',

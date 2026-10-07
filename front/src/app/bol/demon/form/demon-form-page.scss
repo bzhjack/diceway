@@ -20,7 +20,7 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.22em;
-  color: #fda4af;
+  color: var(--dw-color-legendary);
 }
 
 .dfp-title {
@@ -33,16 +33,17 @@
 .dfp-section-eyebrow {
   margin: 0;
   font-size: 0.72rem;
-  font-weight: 900;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: #fda4af;
+  letter-spacing: 0.14em;
+  color: var(--dw-color-legendary);
 }
 
 .dfp-loading-box {
   padding: 1.25rem;
   border: 1px solid #52414b;
-  background: rgba(17, 24, 39, 0.8);
+  background: rgba(21, 14, 9, 0.8);
 }
 
 .dfp-loading-detail {
@@ -58,7 +59,7 @@
 .dfp-section-card {
   padding: 1.25rem;
   border: 1px solid #52414b;
-  background: rgba(39, 39, 42, 0.75);
+  background: rgba(42, 28, 18, 0.75);
 }
 
 .dfp-error-box {

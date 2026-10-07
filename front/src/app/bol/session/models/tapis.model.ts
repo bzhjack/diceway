@@ -4,9 +4,9 @@ import {CombatCamp} from '../../models/bol-fight-session.model';
 export type TapisKind = 'hero' | 'pnj' | 'creature' | 'demon';
 
 /** Une carte du tapis : une ligne de session (héros, PNJ, créature ou démon), avec sa face déjà
- * calculée. Un lot (`qty > 1`) est une seule carte, avec la vitalité de chaque exemplaire. */
+ * calculée. Chaque créature ou démon est sa propre ligne, donc sa propre carte. */
 export interface TapisCard {
-  /** `{kind}-{pivotId}`, sans index d'exemplaire. */
+  /** `{kind}-{pivotId}`. */
   readonly key: string;
   readonly kind: TapisKind;
   readonly camp: CombatCamp;
@@ -15,7 +15,7 @@ export interface TapisCard {
   readonly sourceId: string | null;
   readonly nom: string;
   readonly avatar: string;
-  /** Étiquette de la face : « ×N », « Allié », le rang, ou rien pour un héros. */
+  /** Étiquette de la face : « Allié », le rang, ou rien pour un héros. */
   readonly badge: string | null;
   /** Rang en clair (« Coriace »…) — null pour un héros. */
   readonly rang: string | null;
@@ -23,9 +23,6 @@ export interface TapisCard {
   readonly defense: string;
   readonly vitaliteCourante: number | null;
   readonly vitaliteMax: number | null;
-  /** Vitalité de chaque exemplaire d'un lot — null hors lot. */
-  readonly instances: readonly number[] | null;
-  readonly qty: number;
 }
 
 /** Les cartes du tapis rangées en deux rangs : les présents du haut, les héros et alliés du bas. */
@@ -34,14 +31,6 @@ export interface TapisRows {
   readonly presents: TapisCard[];
   /** Rang du bas, « Héros et alliés ». */
   readonly heros: TapisCard[];
-}
-
-/** Un réglage de vitalité sur une carte dépliée : un par exemplaire pour un lot. */
-export interface VitaliteStepper {
-  /** Index d'exemplaire à passer à l'API — null pour un PNJ. */
-  readonly index: number | null;
-  readonly label: string;
-  readonly value: number;
 }
 
 /** Une statistique de combat de l'en-tête de la carte d'un héros dépliée. */

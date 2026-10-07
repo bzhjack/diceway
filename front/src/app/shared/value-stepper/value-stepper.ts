@@ -25,6 +25,8 @@ export class DwValueStepperComponent implements ControlValueAccessor, OnInit {
   readonly max = input<number | undefined>(undefined);
   readonly step = input(1);
   readonly ariaLabel = input<string | null>(null);
+  /** Pose un cœur derrière la valeur (vitalité). */
+  readonly heart = input(false);
 
   protected readonly value = signal(0);
   protected readonly disabled = signal(false);

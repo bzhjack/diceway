@@ -11,7 +11,6 @@ interface PlaySource extends InitiativeSource {
   readonly vitaliteMax: number | null;
   readonly vitaliteCourante: number | null;
   readonly pivotId: number;
-  readonly instanceIndex: number | null;
   readonly combat: PlayCombatStats;
 }
 
@@ -31,7 +30,6 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       vitaliteMax: h.heros?.ressources?.vitalite ?? null,
       vitaliteCourante: h.vitalite_courante ?? h.heros?.ressources?.vitalite ?? null,
       pivotId: h.id,
-      instanceIndex: null,
       combat: {
         sourceId: h.heros_id,
         vigueur: null,
@@ -58,7 +56,6 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       vitaliteMax: p.vitalite_max,
       vitaliteCourante: p.vitalite_courante,
       pivotId: p.id,
-      instanceIndex: null,
       combat: {
         sourceId: p.pnj_id,
         vigueur: p.vigueur,
@@ -74,67 +71,55 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
   }
 
   for (const c of session.creatures ?? []) {
-    const qty = Math.max(1, c.qty);
-    const nom = c.surnom ?? c.nom;
-    const avatar = c.creature?.avatar || (c.creature_id ? `/assets/bol/bestiary/${c.creature_id}.jpg` : null) || EMPTY_AVATAR;
-    for (let i = 0; i < qty; i++) {
-      sources.push({
-        key: `creature-${c.id}-${i}`,
-        kind: 'creature',
-        nom: qty > 1 ? `${nom} #${i + 1}` : nom,
-        avatar,
-        rang: c.rang,
-        resultat: null,
-        camp: c.camp,
-        vitaliteMax: c.vitalite_max,
-        vitaliteCourante: c.vitalite_instances?.[i] ?? c.vitalite_courante,
-        pivotId: c.id,
-        instanceIndex: i,
-        combat: {
-          sourceId: c.creature_id,
-          vigueur: c.vigueur,
-          agilite: c.agilite,
-          melee: null,
-          tir: null,
-          attaque: c.attaque,
-          defense: c.defense,
-          degats: c.degats,
-          protection: c.protection,
-        },
-      });
-    }
+    sources.push({
+      key: `creature-${c.id}`,
+      kind: 'creature',
+      nom: c.surnom ?? c.nom,
+      avatar: c.creature?.avatar || (c.creature_id ? `/assets/bol/bestiary/${c.creature_id}.jpg` : null) || EMPTY_AVATAR,
+      rang: c.rang,
+      resultat: null,
+      camp: c.camp,
+      vitaliteMax: c.vitalite_max,
+      vitaliteCourante: c.vitalite_courante,
+      pivotId: c.id,
+      combat: {
+        sourceId: c.creature_id,
+        vigueur: c.vigueur,
+        agilite: c.agilite,
+        melee: null,
+        tir: null,
+        attaque: c.attaque,
+        defense: c.defense,
+        degats: c.degats,
+        protection: c.protection,
+      },
+    });
   }
 
   for (const d of session.demons ?? []) {
-    const qty = Math.max(1, d.qty);
-    const nom = d.surnom ?? d.nom;
-    const avatar = d.demon?.avatar || (d.demon_id ? `/assets/bol/demon/${d.demon_id}.jpg` : null) || EMPTY_AVATAR;
-    for (let i = 0; i < qty; i++) {
-      sources.push({
-        key: `demon-${d.id}-${i}`,
-        kind: 'demon',
-        nom: qty > 1 ? `${nom} #${i + 1}` : nom,
-        avatar,
-        rang: d.rang,
-        resultat: null,
-        camp: d.camp,
-        vitaliteMax: d.vitalite_max,
-        vitaliteCourante: d.vitalite_instances?.[i] ?? d.vitalite_courante,
-        pivotId: d.id,
-        instanceIndex: i,
-        combat: {
-          sourceId: d.demon_id,
-          vigueur: d.vigueur,
-          agilite: d.agilite,
-          melee: d.melee,
-          tir: d.tir,
-          attaque: null,
-          defense: d.defense,
-          degats: d.degats,
-          protection: null,
-        },
-      });
-    }
+    sources.push({
+      key: `demon-${d.id}`,
+      kind: 'demon',
+      nom: d.surnom ?? d.nom,
+      avatar: d.demon?.avatar || (d.demon_id ? `/assets/bol/demon/${d.demon_id}.jpg` : null) || EMPTY_AVATAR,
+      rang: d.rang,
+      resultat: null,
+      camp: d.camp,
+      vitaliteMax: d.vitalite_max,
+      vitaliteCourante: d.vitalite_courante,
+      pivotId: d.id,
+      combat: {
+        sourceId: d.demon_id,
+        vigueur: d.vigueur,
+        agilite: d.agilite,
+        melee: d.melee,
+        tir: d.tir,
+        attaque: null,
+        defense: d.defense,
+        degats: d.degats,
+        protection: null,
+      },
+    });
   }
 
   const order = buildInitiativeOrderFrom(sources);
@@ -153,7 +138,6 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       tier: entry.tier,
       lockedRound1: entry.lockedRound1,
       pivotId: source.pivotId,
-      instanceIndex: source.instanceIndex,
       combat: source.combat,
     };
   });
