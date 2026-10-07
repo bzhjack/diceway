@@ -5,7 +5,7 @@ import {traitIconType} from '../trait-icon';
 import {TraitDetail, TraitEntry} from '../models/trait-list.model';
 import {TraitDraft} from '../models/trait-entry.model';
 
-export function traitSource(
+function traitSource(
   entry: TraitDraft,
   avantages: readonly BolAvantageModel[],
   desavantages: readonly BolDesavantageModel[],

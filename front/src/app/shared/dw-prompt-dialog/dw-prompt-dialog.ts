@@ -42,7 +42,7 @@ import {DwPromptDialogData} from '../models/dw-prompt-dialog.model';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DwPromptDialogComponent {
+class DwPromptDialogComponent {
   protected readonly data = inject<DwPromptDialogData>(MAT_DIALOG_DATA);
   private readonly ref = inject(MatDialogRef<DwPromptDialogComponent, string>);
 

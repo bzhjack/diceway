@@ -2,7 +2,7 @@
 export type EntityCardAccent = 'emerald' | 'amber' | 'rose';
 
 /** Couleur d'une pastille de carte d'entité. */
-export type EntityCardBadgeVariant = 'amber' | 'rose' | 'slate';
+type EntityCardBadgeVariant = 'amber' | 'rose' | 'slate';
 
 /** Pastille d'état sur une carte d'entité (par exemple « En cours »). */
 export interface EntityCardBadge {

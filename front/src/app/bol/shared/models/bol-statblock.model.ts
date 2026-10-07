@@ -1,8 +1,8 @@
 /** Accent visuel du statbloc : ambre (créature), émeraude (héros/PNJ), rose (démon). */
-export type BolStatblockAccent = 'amber' | 'emerald' | 'rose';
+type BolStatblockAccent = 'amber' | 'emerald' | 'rose';
 
 /** Couleur d'une pastille du statbloc. */
-export type BolStatblockChipVariant = 'amber' | 'rose' | 'emerald' | 'slate' | 'muted';
+type BolStatblockChipVariant = 'amber' | 'rose' | 'emerald' | 'slate' | 'muted';
 
 /** Pastille d'en-tête du statbloc (rang, joueur, région…). */
 export interface BolStatblockChip {

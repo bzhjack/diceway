@@ -14,7 +14,7 @@ import {PaletteCommand, PaletteResult, CommandPaletteData} from '../../models/co
   styleUrl: './command-palette.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommandPaletteComponent {
+class CommandPaletteComponent {
   private readonly data = inject<CommandPaletteData>(MAT_DIALOG_DATA);
   private readonly ref = inject(MatDialogRef<CommandPaletteComponent, PaletteCommand>);
 

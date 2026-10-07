@@ -54,32 +54,6 @@ export function buildInitiativeOrderFrom(sources: readonly InitiativeSource[]): 
   return {entries, legendaryActive};
 }
 
-/** Adaptateur : construit les sources à partir du brouillon de sélection (avant lancement du combat). */
-export function buildInitiativeOrderFromSelection(
-  combatants: readonly SelectedCombatant[],
-  entryFor: (catalogId: string) => CombatCatalogEntry | undefined,
-  heroInitiative: ReadonlyMap<string, InitiativeResultat>,
-): InitiativeOrder {
-  const sources: InitiativeSource[] = combatants.flatMap((c): InitiativeSource[] => {
-    const entry = entryFor(c.catalogId);
-    if (!entry) {
-      return [];
-    }
-
-    return [
-      {
-        key: c.catalogId,
-        kind: entry.kind,
-        nom: entry.nom,
-        rang: combatantRankKey(entry),
-        resultat: entry.kind === 'hero' ? (heroInitiative.get(c.catalogId) ?? null) : null,
-      },
-    ];
-  });
-
-  return buildInitiativeOrderFrom(sources);
-}
-
 /** Un combattant sans résultat/rang connu passe en toute fin de liste, en attendant la saisie du MJ. */
 function tierIndex(tier: InitiativeTierKey | null): number {
   return tier ? TIER_ORDER.indexOf(tier) : TIER_ORDER.length;

@@ -14,7 +14,7 @@ interface StatblockDialogData {
   template: `<ng-container *ngComponentOutlet="data.component; inputs: data.inputs" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DwStatblockDialogComponent {
+class DwStatblockDialogComponent {
   protected readonly data = inject<StatblockDialogData>(MAT_DIALOG_DATA);
 }
 

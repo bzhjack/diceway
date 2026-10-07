@@ -1,5 +1,5 @@
 /** Une case de la grille de caractéristiques : son champ de formulaire et son libellé. */
-export interface StatCell {
+interface StatCell {
   readonly control: string;
   readonly label: string;
   readonly highlight?: boolean;

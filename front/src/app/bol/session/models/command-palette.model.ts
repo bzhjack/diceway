@@ -60,7 +60,7 @@ export interface PaletteGroup {
 }
 
 /** Un personnage déjà à table, tel que la palette le connaît pour pouvoir le sélectionner. */
-export interface PaletteToken {
+interface PaletteToken {
   readonly key: string;
   readonly nom: string;
   readonly kind: CombatantKind;

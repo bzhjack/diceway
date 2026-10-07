@@ -46,7 +46,7 @@ export interface BolHerosAttributs {
 
 /** Malus défensif du petit bouclier ("-1 à une attaque subie par round") — le grand bouclier est
  * déjà replié dans `combat.defense_effective`, il n'apparaît pas ici. */
-export interface BolEquipementEffectifModel {
+interface BolEquipementEffectifModel {
   bouclier_malus_attaque_subie: number;
   bouclier_malus_attaque_subie_portee: 'une' | 'toutes' | null;
 }

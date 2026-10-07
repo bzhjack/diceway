@@ -3,8 +3,8 @@ import {isOnTable, normalizeSearch} from '../reserve/reserve.util';
 import {PaletteMode, PaletteActionId, PaletteGroupId, PaletteResult, PaletteGroup, PaletteInput} from '../../models/command-palette.model';
 
 export const PALETTE_MAX_RESULTS = 12;
-export const PALETTE_GROUP_LIMIT = 5;
-export const PALETTE_MAX_QUANTITY = 20;
+const PALETTE_GROUP_LIMIT = 5;
+const PALETTE_MAX_QUANTITY = 20;
 
 /** Texte saisi → quantité + terme. Un entier en tête suivi d'un espace est une quantité (« 3 loup »),
  * bornée de 1 à 20 ; « 3loups » ou « 3 » seul restent du texte. */

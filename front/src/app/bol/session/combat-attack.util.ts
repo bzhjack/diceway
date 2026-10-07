@@ -5,7 +5,7 @@ import {PlayToken} from './models/combat-play.model';
 import {ResolvedCombatStats} from './models/combat-attack.model';
 
 /** Extrait le type de dé de dégâts d'une chaîne d'arme/créature BoL ("d6M", "d6B", "d3", "d6"). */
-export function parseDegatsDice(degats: string | null | undefined): 'd3' | 'd6' | 'd6m' | 'd6b' {
+function parseDegatsDice(degats: string | null | undefined): 'd3' | 'd6' | 'd6m' | 'd6b' {
   const s = (degats ?? '').toLowerCase();
   if (s.includes('d3')) {
     return 'd3';
@@ -38,7 +38,7 @@ export function dualStrikeDegats(mainDegats: string | null | undefined, offDegat
 }
 
 /** Extrait la valeur fixe entre parenthèses d'une chaîne de protection BoL ("d6-3 (1)" -> 1). */
-export function parseProtectionValue(protection: string | null | undefined): number {
+function parseProtectionValue(protection: string | null | undefined): number {
   const match = (protection ?? '').match(/\((-?\d+)\)/);
   return match ? parseInt(match[1], 10) : 0;
 }

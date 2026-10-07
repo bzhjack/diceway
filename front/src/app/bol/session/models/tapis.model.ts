@@ -51,13 +51,13 @@ export interface HeroHeaderStat {
 }
 
 /** Une carrière d'un héros et son rang, pour le popover des carrières. */
-export interface HeroDetailCarriere {
+interface HeroDetailCarriere {
   readonly label: string;
   readonly value: number;
 }
 
 /** Une arme d'un héros pour le popover des armes ; `equipee` dit si elle est proposée à l'attaque. */
-export interface HeroDetailArme {
+interface HeroDetailArme {
   /** Id de l'arme au catalogue, pour l'équiper. */
   readonly id: number;
   readonly label: string;
@@ -84,7 +84,7 @@ export interface HeroDetailInfos {
 }
 
 /** Une armure d'un héros pour le popover des armures ; `equipee` dit si elle est portée. */
-export interface HeroDetailArmure {
+interface HeroDetailArmure {
   /** Id de l'armure au catalogue, pour l'équiper. */
   readonly id: number;
   readonly label: string;

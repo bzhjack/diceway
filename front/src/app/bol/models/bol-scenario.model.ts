@@ -12,7 +12,7 @@ export interface BolScenarioModel {
 }
 
 /** Capacité d'une créature du scénario, avec ses éventuels dés de bonus ou de malus. */
-export interface BolScenarioCapaciteModel {
+interface BolScenarioCapaciteModel {
   capacite_id: number;
   capacite: string | null;
   de_bonus: boolean;
@@ -21,7 +21,7 @@ export interface BolScenarioCapaciteModel {
 }
 
 /** Une créature prévue au scénario, avec ses statistiques copiées de sa fiche. */
-export interface BolScenarioCreatureModel {
+interface BolScenarioCreatureModel {
   id: number;
   scenario_id: string;
   creature_id: string | null;
@@ -47,7 +47,7 @@ export interface BolScenarioCreatureModel {
 
 /** Pouvoir d'un démon du scénario, avec ses effets de jeu (avantage d'attaque, dégâts supérieurs,
  * régénération…). */
-export interface BolScenarioPouvoirModel {
+interface BolScenarioPouvoirModel {
   pouvoir_id: number;
   pouvoir: string | null;
   detail: string | null;
@@ -60,7 +60,7 @@ export interface BolScenarioPouvoirModel {
 }
 
 /** Un démon prévu au scénario, avec ses statistiques copiées de sa fiche. */
-export interface BolScenarioDemonModel {
+interface BolScenarioDemonModel {
   id: number;
   scenario_id: string;
   demon_id: string | null;
@@ -85,14 +85,14 @@ export interface BolScenarioDemonModel {
 }
 
 /** Arme d'un PNJ du scénario : nom, dégâts et type (`M` mêlée, `T` tir). */
-export interface BolScenarioPnjArmeModel {
+interface BolScenarioPnjArmeModel {
   nom: string | null;
   degats: string | null;
   type: 'M' | 'T' | null;
 }
 
 /** Un PNJ prévu au scénario, avec ses statistiques et ses armes copiées de sa fiche. */
-export interface BolScenarioPnjModel {
+interface BolScenarioPnjModel {
   id: number;
   scenario_id: string;
   pnj_id: string | null;
@@ -119,7 +119,7 @@ export interface BolScenarioPnjModel {
 }
 
 /** Un héros joueur prévu au scénario : référence à sa fiche et résumé de ses valeurs. */
-export interface BolScenarioPjModel {
+interface BolScenarioPjModel {
   id: number;
   scenario_id: string;
   heros_id: string;

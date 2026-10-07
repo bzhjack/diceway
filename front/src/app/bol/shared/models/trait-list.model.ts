@@ -7,7 +7,7 @@ export interface TraitDetail {
 }
 
 /** Origine du trait affichée en badge : régional, ou désavantage de carrière (création avancée uniquement). */
-export type TraitBadge = 'region' | 'career';
+type TraitBadge = 'region' | 'career';
 
 /** Un trait à afficher dans la liste : avantage (`A`) ou désavantage (`D`), ses détails et son icône. */
 export interface TraitEntry {

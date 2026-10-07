@@ -41,10 +41,6 @@ use Illuminate\Http\Request;
  * Api publiques
  */
 Route::middleware([RequestAcceptJson::class])->group(function () {
-    // Route publique de test
-    Route::get('/hello', function () {
-        return response()->json(['message' => 'hello']);
-    });
     Route::post('auth/login', [LoginController::class, 'login'])->name('login'); // Authentification
     Route::post('auth/logout', [LoginController::class, 'logout']); // déconnection
     Route::post('auth/register', [RegisterController::class, 'register']); // Création de compte
