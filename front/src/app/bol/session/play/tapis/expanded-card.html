@@ -38,6 +38,7 @@
           @if (h.details.editRoute; as editRoute) {
             <a
               mat-icon-button
+              class="exc-icon-btn"
               aria-label="Modifier la fiche du héros"
               matTooltip="Modifier la fiche"
               [routerLink]="editRoute"
@@ -47,7 +48,7 @@
             </a>
           }
         }
-        <button mat-icon-button type="button" aria-label="Replier la carte" (click)="closed.emit()">
+        <button mat-icon-button class="exc-icon-btn" type="button" aria-label="Replier la carte" (click)="closed.emit()">
           <mat-icon>close</mat-icon>
         </button>
       </div>

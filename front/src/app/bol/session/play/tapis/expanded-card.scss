@@ -217,3 +217,15 @@
 .exc-attack {
   align-self: flex-start;
 }
+
+.exc-icon-btn {
+  --mat-icon-button-icon-color: var(--dw-surface-700);
+  --mat-icon-button-state-layer-color: var(--dw-surface-900);
+  background: var(--dw-surface-200);
+  border-radius: 8px;
+
+  &:hover {
+    --mat-icon-button-icon-color: var(--dw-surface-900);
+    background: var(--dw-surface-300);
+  }
+}
