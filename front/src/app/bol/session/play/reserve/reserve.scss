@@ -5,7 +5,7 @@
   min-height: 0;
 }
 
-// Colonne verticale : titre et onglets, recherche, puis la « main » qui défile, et les liens en bas.
+// Colonne verticale : titre et onglets, recherche, puis la liste qui défile, la barre de sélection et les liens en bas.
 .rsv-band {
   flex: 1;
   min-height: 0;
@@ -103,145 +103,276 @@
   }
 }
 
-// La « collection » : médaillons en grille, défilement vertical.
-.rsv-hand {
+// La liste : une ligne par personnage, qui défile verticalement.
+.rsv-list {
   flex: 1;
   min-height: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(5.2rem, 1fr));
-  align-content: start;
-  gap: 0.9rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
   margin: 0;
-  padding: 0.4rem 0.2rem 0.6rem;
+  padding: 0.1rem;
   list-style: none;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--dw-border) transparent;
 }
 
-// Médaillon : portrait rond dans un anneau métallique, nom sur une plaque qui chevauche le bas.
-.rsv-mini {
+// La ligne reste réservée quand la rangée est arrachée de la liste par le glisser.
+.rsv-slot {
+  flex-shrink: 0;
+  min-height: 3.2rem;
+}
+
+.rsv-row {
   --rsv-kind: var(--dw-color-reussite);
   --rsv-metal-1: var(--bar-pj-1, #f1e3b4);
   --rsv-metal-2: var(--bar-pj-2, var(--dw-color-legendary));
   --rsv-metal-3: var(--bar-pj-3, #92620a);
-  position: relative;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
   align-items: center;
-  width: 100%;
-  padding: 0;
-  border: 0;
-  background: none;
+  gap: 0.55rem;
+  padding: 0.3rem 0.5rem 0.3rem 0.4rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 9px;
+  background: var(--dw-surface-100);
   color: var(--dw-surface-700);
-  font: inherit;
-  text-align: center;
-  cursor: pointer;
-  transition: transform 0.12s ease-out;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-drag: none;
+  touch-action: none;
+  transition: border-color 0.12s ease-out, background 0.12s ease-out;
 
-  &:hover:not(:disabled) {
-    transform: translateY(-3px);
-
-    .rsv-mini-art {
-      box-shadow: 0 0 0 2px var(--dw-surface-0), 0 0 14px 2px color-mix(in srgb, var(--rsv-metal-2) 70%, transparent), 0 6px 10px rgba(0, 0, 0, 0.6);
-    }
+  &:hover:not(.rsv-row--on-table) {
+    border-color: var(--bar-bronze, var(--dw-surface-500));
+    background: var(--dw-surface-200);
   }
 
   &:focus-visible {
     outline: 2px solid var(--dw-color-legendary);
-    outline-offset: 3px;
-    border-radius: 10px;
+    outline-offset: 2px;
   }
 
-  &:disabled {
-    cursor: default;
+  &:active:not(.rsv-row--on-table) {
+    cursor: grabbing;
   }
 }
 
-.rsv-mini--pnj {
+.rsv-row--pnj {
   --rsv-kind: var(--dw-color-pnj);
   --rsv-metal-1: var(--bar-pnj-1, #e2e8f0);
   --rsv-metal-2: var(--bar-pnj-2, #94a3b8);
   --rsv-metal-3: var(--bar-pnj-3, #475569);
 }
-.rsv-mini--creature {
+.rsv-row--creature {
   --rsv-kind: var(--dw-color-creature);
   --rsv-metal-1: var(--bar-creature-1, #fed7aa);
   --rsv-metal-2: var(--bar-creature-2, #d97706);
   --rsv-metal-3: var(--bar-creature-3, #78350f);
 }
-.rsv-mini--demon {
+.rsv-row--demon {
   --rsv-kind: var(--dw-color-demon);
   --rsv-metal-1: var(--bar-demon-1, #fecdd3);
   --rsv-metal-2: var(--bar-demon-2, #be123c);
   --rsv-metal-3: var(--bar-demon-3, #4c0519);
 }
 
-// Déjà à table : grisée, non cliquable.
-.rsv-mini--on-table {
-  opacity: 0.5;
-  filter: grayscale(0.7);
+.rsv-row--selected {
+  border-color: var(--bar-ember, var(--dw-color-legendary));
+  background: linear-gradient(90deg, color-mix(in srgb, var(--bar-ember, var(--dw-color-legendary)) 18%, transparent), var(--dw-surface-100));
 }
 
-.rsv-mini-art {
+// Déjà à table : grisée, ni cochable ni glissable.
+.rsv-row--on-table {
+  opacity: 0.45;
+  filter: grayscale(0.7);
+  cursor: default;
+}
+
+.rsv-check {
+  display: grid;
+  place-items: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 1.5px solid var(--bar-bronze, var(--dw-surface-500));
+  border-radius: 4px;
+  background: var(--dw-surface-0);
+  color: var(--dw-surface-0);
+
+  .mat-icon {
+    width: 0.85rem;
+    height: 0.85rem;
+    font-size: 0.85rem;
+  }
+}
+
+.rsv-row--selected .rsv-check {
+  border-color: var(--bar-ember, var(--dw-color-legendary));
+  background: var(--bar-ember, var(--dw-color-legendary));
+}
+
+// Portrait rond dans un anneau métallique.
+.rsv-avatar {
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border: 4px solid transparent;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 3px solid transparent;
   border-radius: 50%;
   background:
     radial-gradient(90% 80% at 50% 25%, color-mix(in srgb, var(--rsv-kind) 40%, var(--dw-surface-200)), var(--dw-surface-0)) padding-box,
     conic-gradient(from 210deg, var(--rsv-metal-1), var(--rsv-metal-2), var(--rsv-metal-3), var(--rsv-metal-2), var(--rsv-metal-1)) border-box;
-  box-shadow: 0 0 0 2px var(--dw-surface-0), 0 6px 10px rgba(0, 0, 0, 0.55);
   color: var(--rsv-kind);
   font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 1.4rem;
+  font-size: 1rem;
   overflow: hidden;
-  transition: box-shadow 0.12s ease-out;
 }
 
-.rsv-mini-avatar {
+.rsv-avatar-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
+  pointer-events: none;
 }
 
-.rsv-mini-name {
-  position: relative;
+.rsv-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.rsv-name {
+  font-size: 0.82rem;
+  line-height: 1.15;
+  color: var(--dw-surface-900);
+  overflow-wrap: anywhere;
+}
+
+.rsv-meta {
+  font-size: 0.68rem;
+  color: var(--dw-surface-500);
+}
+
+.rsv-qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--dw-border);
+  border-radius: 8px;
+  background: var(--dw-surface-50);
+  overflow: hidden;
+  cursor: default;
+}
+
+.rsv-qty-btn {
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--dw-surface-900);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: var(--dw-surface-300);
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: -2px;
+  }
+}
+
+.rsv-qty-value {
+  min-width: 1.4rem;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--bar-ember, var(--dw-color-legendary));
+  font-variant-numeric: tabular-nums;
+}
+
+// Ce qui suit le pointeur pendant le glisser : un médaillon et son nom.
+.rsv-ghost {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.8rem 0.3rem 0.3rem;
+  border: 1px solid var(--bar-bronze, var(--dw-color-legendary));
+  border-radius: 999px;
+  background: var(--dw-surface-0);
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.7);
+  color: var(--dw-surface-900);
+  font-size: 0.82rem;
+  font-weight: 800;
+  pointer-events: none;
+}
+
+.rsv-ghost-art {
+  --rsv-kind: var(--dw-color-reussite);
+  --rsv-metal-1: var(--bar-pj-1, #f1e3b4);
+  --rsv-metal-2: var(--bar-pj-2, var(--dw-color-legendary));
+  --rsv-metal-3: var(--bar-pj-3, #92620a);
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 108%;
-  min-height: 1.9rem;
-  margin-top: -0.6rem;
-  padding: 0.15rem 0.35rem;
-  background: linear-gradient(var(--dw-surface-300), var(--dw-surface-50));
-  border-block: 1px solid var(--rsv-metal-3);
-  font-size: 0.7rem;
-  font-weight: 800;
-  line-height: 1.1;
-  color: var(--dw-surface-900);
-  text-shadow: 0 1px 2px #000;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  background:
+    radial-gradient(90% 80% at 50% 25%, color-mix(in srgb, var(--rsv-kind) 40%, var(--dw-surface-200)), var(--dw-surface-0)) padding-box,
+    conic-gradient(from 210deg, var(--rsv-metal-1), var(--rsv-metal-2), var(--rsv-metal-3), var(--rsv-metal-2), var(--rsv-metal-1)) border-box;
+  color: var(--rsv-kind);
+  overflow: hidden;
 }
 
-.rsv-mini-state {
-  position: absolute;
-  top: 0;
-  right: -0.1rem;
-  padding: 0.05rem 0.35rem;
-  border-radius: 3px;
-  background: var(--dw-surface-0);
-  box-shadow: 0 0 0 1px var(--rsv-metal-3);
-  font-size: 0.58rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--dw-surface-600);
+// Barre de sélection : placer le lot d'un coup.
+.rsv-selbar {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  border: 1px solid var(--bar-ember, var(--dw-color-legendary));
+  border-radius: 10px;
+  background: var(--dw-surface-50);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--bar-ember, var(--dw-color-legendary)) 22%, transparent);
+}
+
+.rsv-selbar-count {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--dw-surface-900);
+
+  b {
+    color: var(--bar-ember, var(--dw-color-legendary));
+  }
+}
+
+.rsv-selbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.rsv-hint {
+  flex-shrink: 0;
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: var(--dw-surface-500);
 }
 
 .rsv-empty {

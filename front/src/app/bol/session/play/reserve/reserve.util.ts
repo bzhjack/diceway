@@ -58,3 +58,11 @@ export function isOnTable(
   }
   return false;
 }
+
+/** Nom du type d'un personnage, au singulier, pour la ligne de la réserve. */
+export const KIND_LABEL: Record<CombatantKind, string> = {
+  hero: 'Héros',
+  pnj: 'PNJ',
+  creature: 'Créature',
+  demon: 'Démon',
+};

@@ -25,6 +25,24 @@
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+  border: 2px dashed transparent;
+  border-radius: 14px;
+  transition: border-color 0.12s ease-out, background 0.12s ease-out, box-shadow 0.12s ease-out;
+}
+
+// Pendant un glisser depuis la réserve : les deux rangs deviennent des zones de dépôt, celle visée s'allume.
+.tps-row--droppable {
+  min-height: 9rem;
+  padding-block: 0.6rem;
+  border-color: color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);
+  background: color-mix(in srgb, var(--dw-color-legendary) 6%, transparent);
+}
+
+.tps-row--hot {
+  border-style: solid;
+  border-color: var(--dw-color-legendary);
+  background: color-mix(in srgb, var(--dw-color-legendary) 14%, transparent);
+  box-shadow: inset 0 0 28px color-mix(in srgb, var(--dw-color-legendary) 30%, transparent);
 }
 
 .tps-row-label {

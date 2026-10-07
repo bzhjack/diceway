@@ -5,7 +5,13 @@
 </div>
 
 <ng-template #presentsTpl>
-  <section class="tps-row" aria-labelledby="tps-presents-label">
+  <section
+    class="tps-row"
+    data-drop-camp="adversaires"
+    [class.tps-row--droppable]="dropActive()"
+    [class.tps-row--hot]="hotCamp() === 'adversaires'"
+    aria-labelledby="tps-presents-label"
+  >
     <h2 class="tps-row-label" id="tps-presents-label">{{ presentsLabel() }}</h2>
     <ng-container
       *ngTemplateOutlet="
@@ -17,7 +23,13 @@
 </ng-template>
 
 <ng-template #herosTpl>
-  <section class="tps-row tps-row--heros" aria-labelledby="tps-heros-label">
+  <section
+    class="tps-row tps-row--heros"
+    data-drop-camp="heros"
+    [class.tps-row--droppable]="dropActive()"
+    [class.tps-row--hot]="hotCamp() === 'heros'"
+    aria-labelledby="tps-heros-label"
+  >
     <ng-container
       *ngTemplateOutlet="rowTpl; context: {cards: rows().heros, labelId: 'tps-heros-label', scrollerLabel: 'Héros et alliés', empty: 'Aucun héros à table.'}"
     />

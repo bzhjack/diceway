@@ -36,29 +36,69 @@
       />
     </mat-form-field>
 
-    <ul class="rsv-hand" role="list" [attr.aria-label]="activeTab().label + ' de la réserve'">
+    <ul
+      class="rsv-list"
+      cdkDropList
+      [cdkDropListSortingDisabled]="true"
+      [cdkDropListEnterPredicate]="rejectDrop"
+      role="listbox" aria-multiselectable="true" [attr.aria-label]="activeTab().label + ' de la réserve'">
       @for (row of rows(); track row.entry.catalogId) {
-        <li>
-          <button
-            type="button"
-            [class]="'rsv-mini rsv-mini--' + row.entry.kind"
-            [class.rsv-mini--on-table]="row.onTable"
-            [disabled]="row.onTable || pendingCatalogId() !== null"
-            [attr.aria-label]="miniLabel(row)"
-            (click)="place(row.entry)"
+        <li class="rsv-slot">
+          <div
+            cdkDrag
+            cdkDragPreviewContainer="parent"
+            [cdkDragDisabled]="row.onTable"
+            [class]="'rsv-row rsv-row--' + row.entry.kind"
+            [class.rsv-row--selected]="isSelected(row)"
+            [class.rsv-row--on-table]="row.onTable"
+            role="option"
+            [attr.id]="'rsv-' + row.entry.catalogId"
+            [attr.tabindex]="row.onTable ? -1 : 0"
+            [attr.aria-selected]="isSelected(row)"
+            [attr.aria-disabled]="row.onTable"
+            [attr.aria-label]="rowLabel(row)"
+            (click)="toggle(row)"
+            (dblclick)="placeOne(row)"
+            (keydown)="onRowKey($event, row)"
+            (cdkDragStarted)="onDragStarted()"
+            (cdkDragMoved)="onDragMoved($event)"
+            (cdkDragEnded)="onDragEnded($event, row)"
           >
-            <span class="rsv-mini-art">
+            <span class="rsv-check" aria-hidden="true">
+              @if (isSelected(row)) {
+                <mat-icon>check</mat-icon>
+              }
+            </span>
+            <span class="rsv-avatar">
               @if (hasAvatar(row.entry)) {
-                <img class="rsv-mini-avatar" [src]="row.entry.avatar" alt="" (error)="onAvatarError(row.entry)" />
+                <img class="rsv-avatar-img" [src]="row.entry.avatar" alt="" draggable="false" (error)="onAvatarError(row.entry)" />
               } @else {
                 {{ initial(row.entry) }}
               }
             </span>
-            <span class="rsv-mini-name">{{ row.entry.nom }}</span>
-            @if (row.onTable) {
-              <span class="rsv-mini-state">à table</span>
+            <span class="rsv-text">
+              <b class="rsv-name">{{ row.entry.nom }}</b>
+              <span class="rsv-meta">{{ kindLabel(row.entry) }} · Vit {{ row.entry.vitalite }}@if (row.onTable) { · à table }</span>
+            </span>
+            @if (!row.onTable && hasQuantity(row.entry)) {
+              <span class="rsv-qty" role="group" [attr.aria-label]="'Quantité de ' + row.entry.nom" (click)="$event.stopPropagation()" (dblclick)="$event.stopPropagation()">
+                <button type="button" class="rsv-qty-btn" aria-label="Moins" [disabled]="quantity(row) <= 1" (click)="changeQuantity(row, -1)">−</button>
+                <output class="rsv-qty-value">{{ quantity(row) }}</output>
+                <button type="button" class="rsv-qty-btn" aria-label="Plus" [disabled]="quantity(row) >= maxQty" (click)="changeQuantity(row, 1)">+</button>
+              </span>
             }
-          </button>
+
+            <div *cdkDragPreview class="rsv-ghost">
+              <span [class]="'rsv-ghost-art rsv-row--' + row.entry.kind">
+                @if (hasAvatar(row.entry)) {
+                  <img class="rsv-avatar-img" [src]="row.entry.avatar" alt="" draggable="false" />
+                } @else {
+                  {{ initial(row.entry) }}
+                }
+              </span>
+              <span class="rsv-ghost-name">{{ ghostLabel(row) }}</span>
+            </div>
+          </div>
         </li>
       } @empty {
         <li class="rsv-empty">
@@ -72,6 +112,21 @@
         </li>
       }
     </ul>
+
+    @if (selectedItems().length) {
+      <div class="rsv-selbar" role="region" aria-label="Sélection">
+        <span class="rsv-selbar-count">
+          <b>{{ selectedItems().length }}</b> sélectionné{{ selectedItems().length > 1 ? 's' : '' }} · {{ selectedTotal() }} carte{{ selectedTotal() > 1 ? 's' : '' }}
+        </span>
+        <div class="rsv-selbar-actions">
+          <button type="button" mat-flat-button size="small" [disabled]="pending()" (click)="placeSelection('adversaires')">Dans la scène</button>
+          <button type="button" mat-stroked-button size="small" [disabled]="pending()" (click)="placeSelection('heros')">Chez les héros</button>
+          <button type="button" mat-button size="small" (click)="clearSelection()">Vider</button>
+        </div>
+      </div>
+    } @else {
+      <p class="rsv-hint">Clique pour sélectionner, double-clique pour poser, ou glisse vers le tapis.</p>
+    }
 
     <div class="rsv-links">
       <a mat-flat-button size="small" [routerLink]="activeTab().createLink" [state]="navState()">

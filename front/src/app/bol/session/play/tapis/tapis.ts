@@ -1,5 +1,5 @@
 import {NgTemplateOutlet} from '@angular/common';
-import {afterRenderEffect, ChangeDetectionStrategy, Component, computed, input, output} from '@angular/core';
+import {afterRenderEffect, ChangeDetectionStrategy, Component, computed, inject, input, output} from '@angular/core';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {BolStatblockData} from '../../../shared/models/bol-statblock.model';
@@ -10,6 +10,7 @@ import {CardCombatState} from '../../models/combat-turn.model';
 import {ExpandedCardComponent} from './expanded-card';
 import {ExpandedHeroData} from '../../models/expanded-card.model';
 import {DwScrollerComponent} from '../../../../shared/dw-scroller/dw-scroller';
+import {ReservePlacementService} from '../../reserve-placement.service';
 import {revealDelta, splitRows} from './tapis.util';
 import {TapisCard} from '../../models/tapis.model';
 
@@ -20,7 +21,8 @@ const REVEAL_MARGIN = 12;
  * personnages en haut (« Présents dans la scène » en mode libre, « Adversaires » en combat). Au milieu :
  * le bandeau « Dernier jet » en mode libre, la barre d'action de la carte active en combat — où un clic
  * sur une carte désignable demande une attaque. La carte dépliée prend la place de sa face ; dans le rang
- * du bas elle grandit vers le haut. Ne parle à aucun service. */
+ * du bas elle grandit vers le haut. Ne parle à aucun service : il lit seulement l'état du glisser de la
+ * réserve (`dragging`, `hoverCamp`) pour dessiner ses zones de dépôt, repérées par `data-drop-camp`. */
 @Component({
   selector: 'bol-tapis',
   imports: [NgTemplateOutlet, CharacterCardComponent, ExpandedCardComponent, ActionBarComponent, DwScrollerComponent],
@@ -29,6 +31,8 @@ const REVEAL_MARGIN = 12;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TapisComponent {
+  private readonly placement = inject(ReservePlacementService);
+
   readonly cards = input.required<readonly TapisCard[]>();
   readonly sessionId = input.required<string>();
   /** Clé de la carte dépliée — une seule à la fois. */
@@ -60,6 +64,8 @@ export class TapisComponent {
   readonly totalDefenseRequested = output<void>();
   readonly endTurnRequested = output<void>();
 
+  protected readonly dropActive = this.placement.dragging;
+  protected readonly hotCamp = this.placement.hoverCamp;
   protected readonly rows = computed(() => splitRows(this.cards()));
   protected readonly presentsLabel = computed(() => (this.mode() === 'combat' ? 'Adversaires' : 'Présents dans la scène'));
 
