@@ -3,32 +3,33 @@
 }
 
 .chc {
+  // Métal du cadre, selon le type : clair → moyen → sombre.
   --chc-kind: var(--dw-color-reussite);
+  --chc-metal-1: #f1e3b4;
+  --chc-metal-2: var(--dw-color-legendary);
+  --chc-metal-3: #92620a;
   position: relative;
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: 8.25rem;
   padding: 0;
-  border: 1px solid var(--dw-border);
-  border-top: 3px solid var(--chc-kind);
-  border-radius: 8px;
-  background: var(--dw-surface-100);
+  border: 0;
+  background: none;
   color: var(--dw-surface-700);
   font: inherit;
   text-align: left;
-  overflow: hidden;
   cursor: pointer;
-  transition: transform 0.12s ease-out, border-color 0.12s ease-out;
+  transition: transform 0.12s ease-out;
 
   &:hover {
-    transform: translateY(-3px);
-    border-color: var(--dw-surface-500);
-    border-top-color: var(--chc-kind);
+    transform: translateY(-4px);
   }
 
   &:focus-visible {
     outline: 2px solid var(--dw-color-legendary);
-    outline-offset: 2px;
+    outline-offset: 4px;
+    border-radius: 12px;
   }
 }
 
@@ -42,56 +43,72 @@
   }
 }
 
-.chc--pnj { --chc-kind: var(--dw-color-pnj); }
-.chc--creature { --chc-kind: var(--dw-color-creature); }
-.chc--demon { --chc-kind: var(--dw-color-demon); }
+.chc--pnj {
+  --chc-kind: var(--dw-color-pnj);
+  --chc-metal-1: #e2e8f0;
+  --chc-metal-2: #94a3b8;
+  --chc-metal-3: #475569;
+}
+.chc--creature {
+  --chc-kind: var(--dw-color-creature);
+  --chc-metal-1: #fed7aa;
+  --chc-metal-2: #d97706;
+  --chc-metal-3: #78350f;
+}
+.chc--demon {
+  --chc-kind: var(--dw-color-demon);
+  --chc-metal-1: #fecdd3;
+  --chc-metal-2: #be123c;
+  --chc-metal-3: #4c0519;
+}
 
 .chc-badge {
   position: absolute;
-  top: 0.3rem;
-  right: 0.3rem;
-  padding: 0.1rem 0.35rem;
-  border-radius: 4px;
+  top: -0.35rem;
+  left: -0.3rem;
+  z-index: 3;
+  padding: 0.05rem 0.4rem;
+  border-radius: 3px;
   background: var(--dw-surface-0);
+  box-shadow: 0 0 0 1px var(--chc-metal-3);
   color: var(--chc-kind);
-  font-size: 0.62rem;
+  font-size: 0.66rem;
   font-weight: 800;
   letter-spacing: 0.03em;
 }
 
-.chc-name {
-  padding: 0.35rem 0.5rem 0.3rem;
-  // Deux lignes au plus, toujours la même hauteur : les faces restent alignées dans un rang.
-  min-height: 2.35rem;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  font-size: 0.8rem;
-  font-weight: 700;
-  line-height: 1.15;
-  color: var(--dw-surface-900);
-  text-transform: capitalize;
-}
-
-// Laisse la place à l'étiquette en haut à droite quand il y en a une.
-.chc-badge + .chc-name {
-  padding-right: 3.4rem;
-}
-
+// Arche métallique : le cadre est le dégradé, la face (`.chc-art`) est inscrite dedans.
 .chc-art {
+  position: relative;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  // Photo carrée (1 × 1), comme le portrait de la carte dépliée.
-  aspect-ratio: 1 / 1;
-  background: linear-gradient(160deg, var(--dw-surface-200), var(--dw-surface-50));
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border: 5px solid transparent;
+  border-radius: 48% 48% 10px 10px / 34% 34% 10px 10px;
+  background:
+    linear-gradient(160deg, var(--dw-surface-200), var(--dw-surface-50)) padding-box,
+    linear-gradient(170deg, var(--chc-metal-1), var(--chc-metal-2) 28%, var(--chc-metal-3) 85%) border-box;
+  box-shadow: 0 0 0 2px var(--dw-surface-0), 0 8px 14px rgba(0, 0, 0, 0.55);
   color: var(--chc-kind);
+  overflow: hidden;
+  transition: box-shadow 0.12s ease-out;
+
+  // Reflet en biais, comme sur un portrait de héros.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, rgba(255, 255, 255, 0.2) 0 18%, transparent 34%);
+    pointer-events: none;
+  }
 
   .mat-icon {
-    font-size: 2rem;
-    width: 2rem;
-    height: 2rem;
+    font-size: 2.4rem;
+    width: 2.4rem;
+    height: 2.4rem;
   }
 }
 
@@ -101,39 +118,96 @@
   object-fit: cover;
 }
 
-.chc-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid var(--dw-border);
+// Cartouche du nom : déborde de l'arche, deux lignes au plus, toujours la même hauteur.
+.chc-name {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 108%;
+  height: 2.4rem;
+  margin-top: -1rem;
+  padding: 0.2rem 0.5rem;
+  background: linear-gradient(var(--dw-surface-200), var(--dw-surface-50));
+  border-block: 2px solid var(--chc-metal-3);
+  color: var(--dw-surface-900);
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1.15;
+  text-align: center;
+  text-transform: capitalize;
+  text-shadow: 0 1px 2px #000;
 }
 
+// Deux lignes au plus : les faces restent alignées dans un rang.
+.chc-name-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.chc-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.15rem;
+  width: 100%;
+  margin-top: 0.35rem;
+}
+
+// Hexagone allongé : s'adapte à « 12/15 » comme à « 7 ».
 .chc-stat {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.25rem 0;
-  font-size: 0.8rem;
-  font-weight: 700;
+  justify-content: center;
+  min-width: 2.2rem;
+  height: 2.3rem;
+  padding-inline: 0.45rem;
+  clip-path: polygon(14% 0, 86% 0, 100% 50%, 86% 100%, 14% 100%, 0 50%);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
-  color: var(--dw-surface-900);
-
-  & + & {
-    border-left: 1px solid var(--dw-border);
-  }
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 
   small {
-    font-size: 0.55rem;
+    font-size: 0.5rem;
     font-weight: 800;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--dw-surface-500);
+    text-shadow: none;
+    color: #fff;
+    opacity: 0.9;
   }
+}
+
+.chc-stat--degats {
+  background: linear-gradient(160deg, #fde68a, #d99a06 60%, #7a4f04);
+}
+
+.chc-stat--defense {
+  background: linear-gradient(160deg, #e2e8f0, #64748b 60%, #334155);
+}
+
+.chc-stat--vitalite {
+  flex: 1;
+  background: linear-gradient(160deg, #fca5a5, #ef4444 55%, #7f1d1d);
 }
 
 .chc-bar {
   display: block;
+  width: 86%;
   height: 4px;
+  margin-top: 0.35rem;
+  border-radius: 2px;
   background: var(--dw-surface-200);
+  box-shadow: 0 0 0 1px #000;
+  overflow: hidden;
 }
 
 .chc-bar-fill {
@@ -149,8 +223,8 @@
 .chc-pips {
   display: flex;
   gap: 2px;
-  padding: 0.25rem 0.4rem;
-  border-top: 1px solid var(--dw-border);
+  width: 86%;
+  margin-top: 0.35rem;
 }
 
 .chc-pip {
@@ -158,6 +232,7 @@
   height: 5px;
   border-radius: 2px;
   background: var(--dw-color-health);
+  box-shadow: 0 0 0 1px #000;
 }
 
 .chc-pip--low {
@@ -178,8 +253,8 @@
   position: absolute;
   // Dans le coin haut gauche de l'illustration : ancré par le haut, pour ne jamais recouvrir les
   // chiffres, quelle que soit la hauteur du bas de la carte (barre de vitalité ou jauges d'un lot).
-  left: 0.3rem;
-  top: 2.9rem;
+  left: 0.6rem;
+  top: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -209,15 +284,19 @@
   }
 }
 
-// Carte active : soulevée, cerclée d'or.
+// Carte active : soulevée, halo vert comme un serviteur prêt à jouer.
 .chc--active {
   transform: translateY(-8px);
-  border-color: var(--dw-color-legendary);
-  box-shadow: 0 0 0 2px var(--dw-color-legendary), 0 10px 22px rgba(0, 0, 0, 0.5);
+
+  .chc-art {
+    box-shadow:
+      0 0 0 3px var(--dw-color-reussite),
+      0 0 22px 6px color-mix(in srgb, var(--dw-color-reussite) 70%, transparent),
+      0 8px 14px rgba(0, 0, 0, 0.55);
+  }
 
   &:hover {
     transform: translateY(-8px);
-    border-color: var(--dw-color-legendary);
   }
 }
 
@@ -226,14 +305,18 @@
   opacity: 0.5;
 }
 
-// Désignable : liseré rouge au survol et au focus.
+// Désignable : halo rouge au survol et au focus.
 .chc--targetable {
   cursor: crosshair;
 
-  &:hover,
+  &:hover .chc-art,
+  &:focus-visible .chc-art {
+    box-shadow:
+      0 0 0 3px var(--dw-color-echec-forte),
+      0 0 18px 4px color-mix(in srgb, var(--dw-color-echec-forte) 70%, transparent);
+  }
+
   &:focus-visible {
-    border-color: var(--dw-color-echec-forte);
-    box-shadow: 0 0 0 2px var(--dw-color-echec-forte);
     outline: none;
   }
 }
@@ -249,10 +332,6 @@
   .chc--active:hover {
     transform: none;
   }
-}
-
-.chc-art {
-  position: relative;
 }
 
 .chc-marker {
