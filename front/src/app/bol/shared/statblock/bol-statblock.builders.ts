@@ -46,7 +46,8 @@ export function creatureStatblockData(creature: BolCreatureModel): BolStatblockD
       {label: 'Déplacement', value: creature.taille.deplacement || '—'},
     ],
     wideTiles: false,
-    editRoute: ['/create/creature', String(creature.id)],
+    // Les créatures du catalogue (sans propriétaire) sont communes à tous : pas modifiables.
+    editRoute: creature.user_id ? ['/create/creature', String(creature.id)] : null,
     advancedEditRoute: null,
     sections: [
       {
@@ -85,7 +86,7 @@ export function demonStatblockData(demon: BolDemonModel): BolStatblockData {
       {label: 'Tir', value: demon.tir},
     ],
     wideTiles: false,
-    editRoute: ['/create/demon', String(demon.id)],
+    editRoute: demon.user_id ? ['/create/demon', String(demon.id)] : null,
     advancedEditRoute: null,
     sections: [
       {
