@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -202,10 +202,6 @@ export class SessionPlayPageComponent {
   }));
 
   constructor() {
-    // Les dialogues et messages sont rendus hors de la page : cette classe leur donne le thème barbare tant que la table est ouverte.
-    document.body.classList.add('dw-barbare');
-    inject(DestroyRef).onDestroy(() => document.body.classList.remove('dw-barbare'));
-
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
       this.errorMessage.set('Session introuvable.');

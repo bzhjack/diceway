@@ -188,14 +188,14 @@
 }
 
 .bol-statblock__chip--slate {
-  border-color: rgba(148, 163, 184, 0.28);
-  background: rgba(148, 163, 184, 0.08);
+  border-color: rgba(156, 135, 99, 0.28);
+  background: rgba(156, 135, 99, 0.08);
   color: var(--dw-surface-500);
 }
 
 .bol-statblock__chip--muted {
-  border-color: rgba(148, 163, 184, 0.22);
-  background: rgba(148, 163, 184, 0.08);
+  border-color: rgba(156, 135, 99, 0.22);
+  background: rgba(156, 135, 99, 0.08);
   color: var(--dw-surface-600);
 }
 
@@ -338,7 +338,7 @@
 .bol-statblock__entry-title--hint {
   cursor: default;
   width: fit-content;
-  text-decoration: underline dotted rgba(148, 163, 184, 0.55);
+  text-decoration: underline dotted rgba(156, 135, 99, 0.55);
   text-underline-offset: 0.2em;
 }
 

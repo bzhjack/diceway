@@ -1,21 +1,6 @@
-// Thème « barbare » : fer noirci, cuir, bronze et lueur de torche. Les variables s'appliquent à la page de
-// session (`.cp-page--barbare`) et, tant qu'elle est ouverte (`body.dw-barbare`, posé par la page), aux
-// dialogues et messages, que CDK rend dans `.cdk-overlay-container` hors de la page.
-.cp-page--barbare,
-.dw-barbare .cdk-overlay-container {
-  --dw-surface-0: #0b0705;
-  --dw-surface-50: #150e09;
-  --dw-surface-100: #1d150f;
-  --dw-surface-200: #2a1c12;
-  --dw-surface-300: #3d2b1c;
-  --dw-surface-400: #5a4630;
-  --dw-surface-500: #9c8763;
-  --dw-surface-600: #b59d78;
-  --dw-surface-700: #d6c3a0;
-  --dw-surface-800: #e8dcc3;
-  --dw-surface-900: #f1e6d0;
-  --dw-border: #4f3b27;
-  --dw-color-legendary: #d9a441;
+// Thème « barbare » : fer noirci, cuir, bronze et lueur de torche. La palette de surfaces est dans `_tokens.scss` ;
+// ici, les métaux des cartes (`--bar-*`) et les jetons Material (boutons, onglets, dialogues, messages), pour toute l'app.
+:root {
   // Material : le cyan du thème devient bronze (boutons principaux, onglets, sélection).
   --mat-sys-primary: #d9a441;
   --mat-sys-on-primary: #1a1203;
@@ -71,11 +56,11 @@
 }
 
 // Panneaux de dialogue : un filet de bronze et une ombre profonde, comme le cadre de la table.
-.dw-barbare .mat-mdc-dialog-surface {
+.mat-mdc-dialog-surface {
   border: 1px solid #6b4a16;
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.8), inset 0 0 0 1px rgba(0, 0, 0, 0.6);
 }
 
-.dw-barbare .mat-mdc-snack-bar-container .mdc-snackbar__surface {
+.mat-mdc-snack-bar-container .mdc-snackbar__surface {
   border: 1px solid #6b4a16;
 }

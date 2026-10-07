@@ -31,7 +31,7 @@ export class DiceBoxHostComponent {
   readonly scale = input(8);
 
   /** Couleur des dés (hex) — même bleu partout par défaut, personnalisable par dialog. */
-  readonly themeColor = input('#60a5fa');
+  readonly themeColor = input('#d9a441');
 
   /** Thème (dossier sous `assets/dice-box/themes/`) — matériau/mesh des dés, personnalisable par dialog. */
   readonly theme = input('default');

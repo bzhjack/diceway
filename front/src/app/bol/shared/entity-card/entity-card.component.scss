@@ -6,7 +6,7 @@
   display: flex;
   border: 1px solid var(--dw-border);
   border-radius: 10px;
-  background: rgb(51 65 85 / 0.35);
+  background: rgb(42 28 18 / 0.35);
   overflow: hidden;
   transition: border-color 0.15s ease;
 }
@@ -29,7 +29,7 @@
 }
 
 .entity-card--own {
-  background: linear-gradient(135deg, rgba(167, 139, 250, 0.16), rgb(51 65 85 / 0.35) 60%);
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.16), rgb(42 28 18 / 0.35) 60%);
   border-color: rgba(167, 139, 250, 0.4);
 
   &:hover {
@@ -49,7 +49,7 @@
   padding: 0;
   border: none;
   overflow: hidden;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.92));
+  background: linear-gradient(180deg, rgba(21, 14, 9, 0.92), rgba(29, 21, 15, 0.92));
 
   &:not(:disabled) {
     cursor: pointer;
@@ -68,7 +68,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to right, transparent 55%, rgba(15, 23, 42, 0.9) 100%);
+    background: linear-gradient(to right, transparent 55%, rgba(21, 14, 9, 0.9) 100%);
   }
 }
 
@@ -99,7 +99,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(21, 14, 9, 0.85);
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.6);
 
   &--amber {
@@ -113,8 +113,8 @@
   }
 
   &--slate {
-    color: #94a3b8;
-    border: 1px solid #94a3b8;
+    color: #9c8763;
+    border: 1px solid #9c8763;
   }
 }
 
@@ -219,7 +219,7 @@
   color: var(--dw-surface-600);
   padding: 0.18rem 0.5rem;
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(21, 14, 9, 0.5);
   border: 1px solid var(--dw-border);
   font-variant-numeric: tabular-nums;
 
@@ -259,7 +259,7 @@
   color: var(--dw-surface-600);
   padding: 0.18rem 0.45rem;
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(21, 14, 9, 0.5);
   border: 1px solid var(--dw-border);
 
   .mat-icon {

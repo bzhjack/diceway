@@ -46,9 +46,9 @@
 
 .chc--pnj {
   --chc-kind: var(--dw-color-pnj);
-  --chc-metal-1: var(--bar-pnj-1, #e2e8f0);
-  --chc-metal-2: var(--bar-pnj-2, #94a3b8);
-  --chc-metal-3: var(--bar-pnj-3, #475569);
+  --chc-metal-1: var(--bar-pnj-1, #d6c3a0);
+  --chc-metal-2: var(--bar-pnj-2, #9c8763);
+  --chc-metal-3: var(--bar-pnj-3, #3d2b1c);
 }
 .chc--creature {
   --chc-kind: var(--dw-color-creature);
@@ -193,7 +193,7 @@
 }
 
 .chc-stat--defense {
-  background: linear-gradient(160deg, var(--bar-f-1, #e2e8f0), var(--bar-f-2, #64748b) 60%, var(--bar-f-3, #334155));
+  background: linear-gradient(160deg, var(--bar-f-1, #d6c3a0), var(--bar-f-2, #5a4630) 60%, var(--bar-f-3, #2a1c12));
 }
 
 .chc-stat--vitalite {

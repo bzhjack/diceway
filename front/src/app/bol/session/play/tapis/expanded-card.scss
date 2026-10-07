@@ -23,9 +23,9 @@
 
 .exc--pnj {
   --exc-kind: var(--dw-color-pnj);
-  --exc-metal-1: var(--bar-pnj-1, #e2e8f0);
-  --exc-metal-2: var(--bar-pnj-2, #94a3b8);
-  --exc-metal-3: var(--bar-pnj-3, #475569);
+  --exc-metal-1: var(--bar-pnj-1, #d6c3a0);
+  --exc-metal-2: var(--bar-pnj-2, #9c8763);
+  --exc-metal-3: var(--bar-pnj-3, #3d2b1c);
 }
 .exc--creature {
   --exc-kind: var(--dw-color-creature);
@@ -48,10 +48,10 @@
   width: min(54rem, 96vw);
 }
 
-// Hauteur fixe quand le contenu varie (jet d'un héros, statbloc d'un PNJ) : la carte ne bouge plus quand
-// le jet change d'état (faveur divine, échec critique) et la zone de jeu des dés garde la même taille. Le
-// corps occupe le reste sous le bandeau ; trop long (statbloc d'un PNJ), il défile. Un héros en combat,
-// réduit au bandeau, garde sa hauteur naturelle.
+// Hauteur fixe quand le contenu varie (jet d'un héros, statbloc d'un PNJ) : la carte ne bouge plus quand le jet
+// change d'état (faveur divine, échec critique) et la zone de jeu des dés garde une taille confortable. Le corps
+// occupe le reste sous le bandeau ; trop long (statbloc d'un PNJ), il défile. Un héros en combat, réduit au
+// bandeau, garde sa hauteur naturelle.
 .exc--fixed {
   height: min(400px, 88dvh);
   display: flex;
