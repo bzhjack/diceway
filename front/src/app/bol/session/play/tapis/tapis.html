@@ -8,7 +8,7 @@
   <section
     class="tps-row"
     data-drop-camp="adversaires"
-    [class.tps-row--droppable]="dropActive() && adversairesDroppable()"
+    [class.tps-row--droppable]="adversairesDroppable()"
     [class.tps-row--hot]="hotCamp() === 'adversaires'"
     aria-labelledby="tps-presents-label"
   >
@@ -26,7 +26,7 @@
   <section
     class="tps-row tps-row--heros"
     data-drop-camp="heros"
-    [class.tps-row--droppable]="dropActive()"
+    [class.tps-row--droppable]="herosDroppable()"
     [class.tps-row--hot]="hotCamp() === 'heros'"
     aria-labelledby="tps-heros-label"
   >
@@ -56,9 +56,24 @@
 
 <ng-template #rowTpl let-cards="cards" let-labelId="labelId" let-empty="empty" let-scrollerLabel="scrollerLabel">
   <dw-scroller class="tps-scroller" [label]="scrollerLabel">
-  <ul class="tps-cards" role="list" [attr.aria-labelledby]="labelId">
+  <ul
+    class="tps-cards"
+    role="list"
+    cdkDropList
+    [cdkDropListSortingDisabled]="true"
+    [cdkDropListEnterPredicate]="rejectDrop"
+    [attr.aria-labelledby]="labelId"
+  >
     @for (card of cards; track card.key) {
-      <li class="tps-slot">
+      <li
+        class="tps-slot"
+        cdkDrag
+        cdkDragPreviewContainer="parent"
+        [cdkDragDisabled]="!canChangeCamp(card)"
+        (cdkDragStarted)="onCardDragStarted(card)"
+        (cdkDragMoved)="onCardDragMoved($event)"
+        (cdkDragEnded)="onCardDragEnded($event, card)"
+      >
         @if (card.key === expandedKey()) {
           <bol-expanded-card
             [card]="card"
@@ -84,6 +99,10 @@
             (expandRequested)="cardToggled.emit(card)"
           />
         }
+        <div *cdkDragPreview class="tps-ghost">
+          <img class="tps-ghost-art" [src]="card.avatar" alt="" draggable="false" />
+          <span class="tps-ghost-name">{{ card.nom }}</span>
+        </div>
       </li>
     } @empty {
       <li class="tps-empty">{{ empty }}</li>

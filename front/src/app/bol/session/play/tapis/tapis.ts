@@ -1,3 +1,4 @@
+import {CdkDrag, CdkDragEnd, CdkDragMove, CdkDragPreview, CdkDropList} from '@angular/cdk/drag-drop';
 import {NgTemplateOutlet} from '@angular/common';
 import {afterRenderEffect, ChangeDetectionStrategy, Component, computed, inject, input, output} from '@angular/core';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
@@ -25,7 +26,7 @@ const REVEAL_MARGIN = 12;
  * réserve (`dragging`, `hoverCamp`) pour dessiner ses zones de dépôt, repérées par `data-drop-camp`. */
 @Component({
   selector: 'bol-tapis',
-  imports: [NgTemplateOutlet, CharacterCardComponent, ExpandedCardComponent, ActionBarComponent, DwScrollerComponent],
+  imports: [CdkDrag, CdkDragPreview, CdkDropList, NgTemplateOutlet, CharacterCardComponent, ExpandedCardComponent, ActionBarComponent, DwScrollerComponent],
   templateUrl: './tapis.html',
   styleUrl: './tapis.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,8 +65,12 @@ export class TapisComponent {
   readonly totalDefenseRequested = output<void>();
   readonly endTurnRequested = output<void>();
 
-  protected readonly dropActive = this.placement.dragging;
-  protected readonly adversairesDroppable = this.placement.adversairesDroppable;
+  /** Les zones de dépôt qui s'allument pendant un glisser : pas celle d'où part une carte, ni celle des adversaires
+   * pour un héros. */
+  protected readonly adversairesDroppable = computed(
+    () => this.placement.dragging() && this.placement.originCamp() !== 'adversaires' && this.placement.adversairesDroppable(),
+  );
+  protected readonly herosDroppable = computed(() => this.placement.dragging() && this.placement.originCamp() !== 'heros');
   protected readonly hotCamp = this.placement.hoverCamp;
   protected readonly rows = computed(() => splitRows(this.cards()));
   protected readonly presentsLabel = computed(() => (this.mode() === 'combat' ? 'Adversaires' : 'Présents dans la scène'));
@@ -110,6 +115,32 @@ export class TapisComponent {
       if (delta !== 0) {
         tapis.scrollTo({top: tapis.scrollTop + delta, behavior: 'instant'});
       }
+    }
+  }
+
+  /** Seules les cartes d'un PNJ, d'une créature ou d'un démon changent de camp, hors combat et repliées. */
+  protected canChangeCamp(card: TapisCard): boolean {
+    return this.mode() === 'libre' && card.kind !== 'hero' && card.key !== this.expandedKey();
+  }
+
+  /** Aucune liste ne reçoit de carte : CDK n'est là que pour l'aperçu et la place gardée pendant le glisser. */
+  protected readonly rejectDrop = (): boolean => false;
+
+  protected onCardDragStarted(card: TapisCard): void {
+    this.placement.startDrag([card.kind], card.camp);
+  }
+
+  protected onCardDragMoved(event: CdkDragMove): void {
+    this.placement.hoverCamp.set(this.placement.campAt(event.pointerPosition.x, event.pointerPosition.y));
+  }
+
+  /** Déposée dans l'autre zone, la carte change de camp. */
+  protected onCardDragEnded(event: CdkDragEnd, card: TapisCard): void {
+    const camp = this.placement.campAt(event.dropPoint.x, event.dropPoint.y);
+    this.placement.endDrag();
+    event.source.reset();
+    if (camp !== null && camp !== card.camp) {
+      this.campToggleRequested.emit(card);
     }
   }
 

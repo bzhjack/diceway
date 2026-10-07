@@ -102,9 +102,7 @@ export class ReserveComponent {
     });
     inject(DestroyRef).onDestroy(() => {
       this.placement.clearSelection();
-      this.placement.dragging.set(false);
-      this.placement.hoverCamp.set(null);
-      this.placement.draggedKinds.set(new Set());
+      this.placement.endDrag();
     });
   }
 
@@ -210,30 +208,20 @@ export class ReserveComponent {
   }
 
   protected onDragStarted(row: ReserveRow): void {
-    this.placement.draggedKinds.set(new Set(this.itemsFor(row).map((item) => item.entry.kind)));
-    this.placement.dragging.set(true);
+    this.placement.startDrag(this.itemsFor(row).map((item) => item.entry.kind), null);
   }
 
   protected onDragMoved(event: CdkDragMove): void {
-    this.placement.hoverCamp.set(this.campAt(event.pointerPosition.x, event.pointerPosition.y));
+    this.placement.hoverCamp.set(this.placement.campAt(event.pointerPosition.x, event.pointerPosition.y));
   }
 
   protected onDragEnded(event: CdkDragEnd, row: ReserveRow): void {
-    const camp = this.campAt(event.dropPoint.x, event.dropPoint.y);
-    this.placement.dragging.set(false);
-    this.placement.hoverCamp.set(null);
-    this.placement.draggedKinds.set(new Set());
+    const camp = this.placement.campAt(event.dropPoint.x, event.dropPoint.y);
+    this.placement.endDrag();
     event.source.reset();
     if (camp) {
       this.placeFrom(row, camp);
     }
-  }
-
-  /** Camp de la zone du tapis sous un point de l'écran, ou `null` hors des zones de dépôt. */
-  private campAt(x: number, y: number): CombatCamp | null {
-    const zone = document.elementFromPoint(x, y)?.closest<HTMLElement>('[data-drop-camp]');
-    const camp = (zone?.dataset['dropCamp'] as CombatCamp | undefined) ?? null;
-    return camp === 'adversaires' && !this.placement.adversairesDroppable() ? null : camp;
   }
 
   private run(items: readonly ReserveItem[], camp: CombatCamp | 'auto'): void {
