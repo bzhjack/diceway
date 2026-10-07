@@ -10,14 +10,16 @@
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: 0.6rem;
-  background: var(--dw-surface-700);
+  border-radius: 50%;
+  border: 2px solid var(--bar-bronze, var(--dw-border));
+  background: var(--dw-surface-200);
+  color: var(--dw-color-legendary);
 }
 
 .snp-eyebrow {
   margin: 0;
   font-size: 0.8rem;
-  color: var(--dw-surface-300);
+  color: var(--dw-surface-600);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -41,13 +43,15 @@
 
 .snp-heroes-total {
   border-radius: 999px;
-  background: var(--dw-surface-700);
+  border: 1px solid var(--bar-bronze, var(--dw-border));
+  background: var(--dw-surface-200);
+  color: var(--dw-color-legendary);
   padding: 0.1rem 0.6rem;
   font-size: 0.85rem;
 }
 
 .snp-empty {
-  color: var(--dw-surface-300);
+  color: var(--dw-surface-600);
   font-size: 0.9rem;
 }
 

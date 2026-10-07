@@ -24,8 +24,8 @@
 }
 
 .entity-card--dark {
-  background: rgba(24, 24, 27, 0.82);
-  border-color: #3f3f46;
+  background: rgba(29, 21, 15, 0.82);
+  border-color: #4f3b27;
 }
 
 .entity-card--own {
@@ -38,7 +38,7 @@
 }
 
 .entity-card--dark.entity-card--own {
-  background: linear-gradient(135deg, rgba(167, 139, 250, 0.18), rgba(24, 24, 27, 0.82) 60%);
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.18), rgba(29, 21, 15, 0.82) 60%);
 }
 
 .entity-card__portrait {
@@ -73,10 +73,10 @@
 }
 
 .entity-card--dark .entity-card__portrait {
-  background: linear-gradient(180deg, rgba(9, 9, 11, 0.96), rgba(39, 39, 42, 0.94));
+  background: linear-gradient(180deg, rgba(11, 7, 5, 0.96), rgba(42, 28, 18, 0.94));
 
   &::after {
-    background: linear-gradient(to right, transparent 55%, rgba(9, 9, 11, 0.92) 100%);
+    background: linear-gradient(to right, transparent 55%, rgba(11, 7, 5, 0.92) 100%);
   }
 }
 
@@ -119,7 +119,7 @@
 }
 
 .entity-card--dark .entity-card__badge {
-  background: rgba(9, 9, 11, 0.9);
+  background: rgba(11, 7, 5, 0.9);
 }
 
 .entity-card__body {
@@ -232,8 +232,8 @@
 }
 
 .entity-card--dark .entity-gauge {
-  background: rgba(9, 9, 11, 0.5);
-  border-color: #3f3f46;
+  background: rgba(11, 7, 5, 0.5);
+  border-color: #4f3b27;
 }
 
 .entity-gauge--pv .mat-icon {
@@ -272,8 +272,8 @@
 }
 
 .entity-card--dark .entity-count-chip {
-  background: rgba(9, 9, 11, 0.5);
-  border-color: #3f3f46;
+  background: rgba(11, 7, 5, 0.5);
+  border-color: #4f3b27;
 }
 
 // ── Portrait en médaillon ──────────────────────────────────────────────────────────────────────────

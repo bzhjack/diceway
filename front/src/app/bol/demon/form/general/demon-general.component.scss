@@ -24,7 +24,7 @@
   cursor: pointer;
   border: 1px solid #52414b;
   border-radius: 8px;
-  background: #09090b;
+  background: #0b0705;
   transition: border-color 0.15s ease;
 
   &:hover {
@@ -46,7 +46,7 @@
 
 .dfp-avatar-hint {
   font-size: 0.68rem;
-  color: var(--dw-surface-400);
+  color: var(--dw-surface-500);
 }
 
 .dfp-avatar-overlay {
