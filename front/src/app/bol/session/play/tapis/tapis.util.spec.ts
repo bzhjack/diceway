@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest';
 import {BolFightSessionModel} from '../../../models/bol-fight-session.model';
 import {BolHerosModel} from '../../../models/bol-heros.model';
-import {buildTapisCards, campActionLabel, cardAriaLabel, findCard, isLowVitalite, REMOVE_ACTION_LABEL, splitRows, vitalitePercent, vitaliteText, revealDelta, heroHeaderStats, heroDetails, heroIdentityLine} from './tapis.util';
+import {buildTapisCards, campActionLabel, cardAriaLabel, findCard, isLowVitalite, REMOVE_ACTION_LABEL, splitRows, vitalitePercent, vitaliteText, heroHeaderStats, heroDetails, heroIdentityLine} from './tapis.util';
 import {TapisCard} from '../../models/tapis.model';
 
 function hero(id: number, nom: string, extra: Record<string, unknown> = {}): NonNullable<BolFightSessionModel['heros']>[number] {
@@ -197,31 +197,6 @@ describe('vitalite helpers', () => {
   });
 });
 
-describe('revealDelta', () => {
-  // Zone visible de 100 à 500, marge de 12.
-  const reveal = (start: number, end: number) => revealDelta(start, end, 100, 500, 12);
-
-  it('does not move when the item is already fully visible', () => {
-    expect(reveal(150, 450)).toBe(0);
-  });
-
-  it('moves forward just enough to show an item cut off at the end', () => {
-    expect(reveal(300, 620)).toBe(132);
-  });
-
-  it('moves back just enough to show an item cut off at the start', () => {
-    expect(reveal(40, 300)).toBe(-72);
-  });
-
-  it('aligns the start of an item wider than the visible area', () => {
-    expect(reveal(300, 900)).toBe(188);
-    expect(reveal(20, 700)).toBe(-92);
-  });
-
-  it('keeps an item that touches the edge inside the margin', () => {
-    expect(reveal(200, 495)).toBe(7);
-  });
-});
 
 describe('heroHeaderStats', () => {
   const hero = (overrides: Record<string, unknown> = {}): BolHerosModel =>

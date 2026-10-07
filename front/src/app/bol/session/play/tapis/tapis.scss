@@ -12,10 +12,9 @@
   justify-content: space-between;
   gap: 0.9rem;
   padding: 1rem 1.2rem;
-  // Si la table dépasse de l'écran, le tapis défile (la carte dépliée est ramenée dans la vue par
-  // `TapisComponent`) mais sans barre : elle apparaissait à chaque dépli.
   overflow-y: auto;
-  scrollbar-width: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dw-border) transparent;
   background:
     radial-gradient(ellipse 80% 60% at 50% 50%, color-mix(in srgb, var(--dw-surface-100) 70%, transparent) 0%, transparent 75%),
     var(--dw-surface-0);

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -43,6 +43,8 @@ import {ReserveComponent} from './reserve/reserve';
 import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dialog';
 import {browserStorage, readPanelOpen, RESERVE_PANEL_KEY, writePanelOpen} from './table-state.util';
 import {ExpandedHeroData} from '../models/expanded-card.model';
+import {ExpandedCardDialogData} from '../models/expanded-card-dialog.model';
+import {ExpandedCardDialogComponent} from './tapis/expanded-card-dialog';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {equippedArmes} from '../../shared/arme/arme-equipee';
 import {AttackChoice} from '../models/attack-options.model';
@@ -367,17 +369,65 @@ export class SessionPlayPageComponent {
     this.reloadSession();
   }
 
-  /** Clic sur la face d'une carte : la déplie (une seule carte dépliée à la fois). */
+  /** Clic sur la face d'une carte : ouvre sa carte en dialogue (une seule à la fois). */
   protected onCardToggled(card: TapisCard): void {
     if (this.expandedKey() === card.key) {
       return;
     }
     this.expandedKey.set(card.key);
     this.loadExpanded(card);
+    this.openCardDialog();
   }
 
+  /** Ferme la carte ouverte. */
   protected foldCard(): void {
+    this.cardDialog?.close();
     this.expandedKey.set(null);
+  }
+
+  private cardDialog: MatDialogRef<ExpandedCardDialogComponent> | null = null;
+
+  /** « Attaquer cette carte » sur la carte ouverte : en combat, pour toute carte qui n'est ni la carte active ni
+   * hors combat. */
+  private readonly expandedCanAttack = computed(() => {
+    const card = this.expandedCard();
+    const active = this.activeCard();
+    return this.mode() === 'combat' && card !== null && active !== null && active.key !== card.key && !this.combatStates()?.get(card.key)?.out;
+  });
+
+  private openCardDialog(): void {
+    const sessionId = this.sessionId();
+    if (this.cardDialog || !sessionId) {
+      return;
+    }
+
+    const data: ExpandedCardDialogData = {
+      sessionId,
+      card: this.expandedCard,
+      hero: this.expandedHero,
+      statblock: this.expandedStatblock,
+      returnUrl: this.returnUrl,
+      mode: this.mode,
+      canAttack: this.expandedCanAttack,
+      changed: () => this.reloadSession(),
+      remove: (card) => this.askRemoveCard(card),
+      toggleCamp: (card) => this.toggleCamp(card),
+      toggleArmure: (event) => this.onArmureToggled(event),
+      toggleArme: (event) => this.onArmeToggled(event),
+      attack: (card) => this.onAttackCard(card),
+    };
+    // Le corps de la carte donne le focus à sa racine : pas de focus automatique du dialogue.
+    const ref = this.dialog.open(ExpandedCardDialogComponent, {
+      data,
+      autoFocus: false,
+      panelClass: 'exc-dialog',
+      maxWidth: '96vw',
+    });
+    this.cardDialog = ref;
+    ref.afterClosed().subscribe(() => {
+      this.cardDialog = null;
+      this.expandedKey.set(null);
+    });
   }
 
   /** Charge les données de la carte dépliée. Chaque réponse est ignorée si une autre carte a été

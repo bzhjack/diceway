@@ -53,12 +53,12 @@
 // corps occupe le reste sous le bandeau ; trop long (statbloc d'un PNJ), il défile. Un héros en combat,
 // réduit au bandeau, garde sa hauteur naturelle.
 .exc--fixed {
-  height: 400px;
+  height: min(400px, 88dvh);
   display: flex;
   flex-direction: column;
 
   &.exc--hero {
-    height: 460px;
+    height: min(460px, 88dvh);
   }
 
   .exc-body {

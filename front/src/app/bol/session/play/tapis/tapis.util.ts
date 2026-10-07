@@ -196,16 +196,6 @@ export function campActionLabel(card: TapisCard): string | null {
 /** Libellé du retrait d'une carte de la table. */
 export const REMOVE_ACTION_LABEL = 'Retirer de la table';
 
-/** De combien faire défiler une zone pour qu'un élément y soit entièrement visible, avec une marge. Positions
- * dans le même repère (ex. l'écran). Un élément plus large que la zone s'aligne sur son début. */
-export function revealDelta(itemStart: number, itemEnd: number, viewStart: number, viewEnd: number, margin: number): number {
-  const tooLarge = itemEnd - itemStart > viewEnd - viewStart - 2 * margin;
-  if (tooLarge || itemStart < viewStart + margin) {
-    return itemStart - viewStart - margin;
-  }
-  return Math.max(0, itemEnd - (viewEnd - margin));
-}
-
 /** Statistiques de combat d'un héros pour l'en-tête de sa carte : initiative et défense effectives (équipement
  * compris), mêlée, tir, protection de l'armure équipée et dégâts de la première arme qui en a. */
 export function heroHeaderStats(hero: BolHerosModel): HeroHeaderStat[] {

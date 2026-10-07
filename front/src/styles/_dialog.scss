@@ -19,3 +19,11 @@
   overflow: hidden;
   border: 1px solid var(--dw-border);
 }
+
+// Carte d'un personnage ouverte en dialogue : la carte porte déjà son cadre, le panneau du dialogue s'efface.
+body .exc-dialog .mat-mdc-dialog-surface {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 8px;
+  overflow: visible;
+}
