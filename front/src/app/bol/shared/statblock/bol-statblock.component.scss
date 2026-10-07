@@ -16,7 +16,7 @@
 .bol-statblock--amber {
   background:
     radial-gradient(circle at top left, rgba(250, 204, 21, 0.12), transparent 28%),
-    linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.94));
+    linear-gradient(180deg, color-mix(in srgb, var(--dw-surface-50) 96%, transparent), color-mix(in srgb, var(--dw-surface-100) 94%, transparent));
 
   .bol-statblock__eyebrow {
     color: var(--dw-color-legendary);
@@ -31,7 +31,7 @@
 .bol-statblock--emerald {
   background:
     radial-gradient(circle at top left, rgba(110, 231, 183, 0.12), transparent 28%),
-    linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.94));
+    linear-gradient(180deg, color-mix(in srgb, var(--dw-surface-50) 96%, transparent), color-mix(in srgb, var(--dw-surface-100) 94%, transparent));
 
   .bol-statblock__eyebrow {
     color: var(--dw-color-pnj);
@@ -46,7 +46,7 @@
 .bol-statblock--rose {
   background:
     radial-gradient(circle at top left, rgba(251, 113, 133, 0.12), transparent 28%),
-    linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.94));
+    linear-gradient(180deg, color-mix(in srgb, var(--dw-surface-50) 96%, transparent), color-mix(in srgb, var(--dw-surface-100) 94%, transparent));
 
   .bol-statblock__eyebrow {
     color: #fb7185;
@@ -79,7 +79,7 @@
   overflow: hidden;
   flex-shrink: 0;
   border: 1px solid var(--dw-border);
-  background: rgba(15, 23, 42, 0.9);
+  background: color-mix(in srgb, var(--dw-surface-50) 90%, transparent);
   aspect-ratio: 1;
   width: 7.5rem;
 }
@@ -90,7 +90,7 @@
   bottom: 0.45rem;
   border: 1px solid;
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.88);
+  background: color-mix(in srgb, var(--dw-surface-50) 88%, transparent);
   padding: 0.16rem 0.45rem;
   font-size: 0.65rem;
   font-weight: 700;
@@ -226,7 +226,7 @@
 
 .bol-statblock__tile {
   border: 1px solid var(--dw-border);
-  background: rgba(15, 23, 42, 0.6);
+  background: color-mix(in srgb, var(--dw-surface-50) 60%, transparent);
   padding: 0.55rem 0.4rem 0.5rem;
   text-align: center;
   min-width: 0;
@@ -294,7 +294,7 @@
   display: grid;
   gap: 1rem;
   margin-top: 0.8rem;
-  border-top: 1px solid rgba(66, 75, 87, 0.6);
+  border-top: 1px solid color-mix(in srgb, var(--dw-border) 60%, transparent);
   padding-top: 0.65rem;
 }
 

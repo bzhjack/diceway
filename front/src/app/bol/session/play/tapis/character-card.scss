@@ -268,8 +268,8 @@
 
   .chc-art {
     box-shadow:
-      0 0 0 3px var(--dw-color-reussite),
-      0 0 16px 3px color-mix(in srgb, var(--dw-color-reussite) 70%, transparent),
+      0 0 0 3px var(--bar-ember, var(--dw-color-reussite)),
+      0 0 16px 3px color-mix(in srgb, var(--bar-ember, var(--dw-color-reussite)) 70%, transparent),
       0 8px 14px rgba(0, 0, 0, 0.55);
   }
 

@@ -40,60 +40,10 @@
   flex-direction: column;
 }
 
-// Thème « barbare » (hors combat) : fer noirci, cuir, bronze et lueur de torche. Les surfaces slate du
-// design system sont redéfinies par un brun chaud sur toute la table (réserve, tapis, carte dépliée,
-// statbloc) ; les cartes lisent les métaux `--bar-*`.
+// Thème « barbare » (libre et combat) : fer noirci, cuir, bronze et lueur de torche. Ses variables
+// (surfaces brunes, métaux `--bar-*`, jetons Material) sont dans `styles/_barbare.scss`, partagées avec les
+// dialogues et messages, qui sont rendus hors de la page. Ici, le cadre et les fonds.
 .cp-page--barbare {
-  --dw-surface-0: #0b0705;
-  --dw-surface-50: #150e09;
-  --dw-surface-100: #1d150f;
-  --dw-surface-200: #2a1c12;
-  --dw-surface-300: #3d2b1c;
-  --dw-surface-400: #5a4630;
-  --dw-surface-500: #9c8763;
-  --dw-surface-600: #b59d78;
-  --dw-surface-700: #d6c3a0;
-  --dw-surface-800: #e8dcc3;
-  --dw-surface-900: #f1e6d0;
-  --dw-border: #4f3b27;
-  --dw-color-legendary: #d9a441;
-  // Material : le cyan du thème devient bronze (boutons principaux, onglets, sélection).
-  --mat-sys-primary: #d9a441;
-  --mat-sys-on-primary: #1a1203;
-  --mat-sys-primary-container: #4a2f0f;
-  --mat-sys-on-primary-container: #f1e6d0;
-  --mat-sys-secondary-container: #4a2f0f;
-  --mat-sys-on-secondary-container: #f1e6d0;
-  // Les jetons des composants sont résolus sur `html` : on les redéfinit ici pour qu'ils suivent la table.
-  --mat-button-toggle-selected-state-background-color: #4a2f0f;
-  --mat-button-toggle-selected-state-text-color: #f1e6d0;
-  --mat-button-outlined-label-text-color: #d9a441;
-  --mat-button-outlined-outline-color: #6b4a16;
-  --mat-button-text-label-text-color: #d9a441;
-  --bar-bronze: #8c6a2f;
-  --bar-ember: #e8873a;
-  --bar-pj-1: #e0c48a;
-  --bar-pj-2: #a8762a;
-  --bar-pj-3: #4a2f0f;
-  --bar-pnj-1: #d8dde3;
-  --bar-pnj-2: #8b949e;
-  --bar-pnj-3: #3a4047;
-  --bar-creature-1: #e8a57a;
-  --bar-creature-2: #a04a1c;
-  --bar-creature-3: #3d1608;
-  --bar-demon-1: #e08a8a;
-  --bar-demon-2: #8f1d1d;
-  --bar-demon-3: #2e0707;
-  --bar-d-1: #e0c48a;
-  --bar-d-2: #a8762a;
-  --bar-d-3: #4a2f0f;
-  --bar-f-1: #cfd5db;
-  --bar-f-2: #6b737c;
-  --bar-f-3: #2c3238;
-  --bar-v-1: #e06a5a;
-  --bar-v-2: #9b1c1c;
-  --bar-v-3: #3d0808;
-
   // Cadre de fer noirci, strié, avec un filet de bronze et un rivet à chaque coin.
   padding: 10px;
   background:

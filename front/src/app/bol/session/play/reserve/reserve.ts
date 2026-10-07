@@ -9,8 +9,7 @@ import {CdkDrag, CdkDragEnd, CdkDragMove, CdkDragPreview, CdkDropList} from '@an
 import {CombatCamp} from '../../../models/bol-fight-session.model';
 import {CombatSelectionService} from '../../../services/combat-selection.service';
 import {CombatCatalogEntry, CombatantKind} from '../../../models/combat-selection.model';
-import {RESERVE_MAX_QTY, ReservePlacementService} from '../../reserve-placement.service';
-import {ReserveItem} from '../../models/reserve.model';
+import {ReservePlacementService} from '../../reserve-placement.service';
 import {SceneStripComponent} from './scene-strip';
 import {filterReserve, isOnTable, KIND_LABEL, RESERVE_TABS, reserveTab} from './reserve.util';
 
@@ -22,10 +21,9 @@ interface ReserveRow {
 /** Onglet affiché : un des quatre types de personnages, ou les scènes. */
 type ReserveView = CombatantKind | 'scene';
 
-/** Réserve de la table (mode libre), en bandeau au bas de l'écran comme une main de cartes : les
- * quatre bibliothèques et les scènes en onglets, en liste. Un clic coche un personnage ; on le pose par
- * double-clic ou Entrée (camp par défaut), en le glissant sur une zone du tapis (camp de la zone), ou
- * avec la barre de sélection pour plusieurs à la fois. La page recharge la session sur `placed`. */
+/** Réserve de la table (mode libre) : les quatre bibliothèques et les scènes en onglets, en liste. Un
+ * personnage se pose avec son bouton « Ajouter », par double-clic ou Entrée (camp par défaut), ou en le
+ * glissant sur une zone du tapis (camp de la zone). La page recharge la session sur `placed`. */
 @Component({
   selector: 'bol-reserve',
   imports: [CdkDrag, CdkDragPreview, CdkDropList, RouterLink, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatIconModule, MatInputModule, SceneStripComponent],
@@ -68,21 +66,10 @@ export class ReserveComponent {
     })),
   );
 
-  protected readonly maxQty = RESERVE_MAX_QTY;
-
   /** La liste ne reçoit rien : elle n'existe que pour que CDK dessine l'aperçu et garde la place de la ligne
    * pendant un glisser. Le dépôt est géré par `onDragEnded`, qui cherche la zone du tapis sous le pointeur. */
   protected readonly rejectDrop = (): boolean => false;
 
-  /** Personnages cochés encore posables, avec leur quantité — d'un onglet comme de l'autre. */
-  protected readonly selectedItems = computed<readonly ReserveItem[]>(() => {
-    const selected = this.placement.selectedIds();
-    return this.selection
-      .catalog()
-      .filter((entry) => selected.has(entry.catalogId) && !isOnTable(entry, this.existingHeroIds(), this.existingPnjIds()))
-      .map((entry) => ({entry, qty: this.itemQty(entry)}));
-  });
-  protected readonly selectedTotal = computed(() => this.selectedItems().reduce((sum, item) => sum + item.qty, 0));
   protected readonly pending = signal(false);
 
   /** État de navigation des liens « Créer » / « Gérer » : revenir sur cette table après coup. */
@@ -100,14 +87,10 @@ export class ReserveComponent {
         this.placed.emit();
       }
     });
-    inject(DestroyRef).onDestroy(() => {
-      this.placement.clearSelection();
-      this.placement.endDrag();
-    });
+    inject(DestroyRef).onDestroy(() => this.placement.endDrag());
   }
 
   protected setView(change: MatButtonToggleChange): void {
-    this.placement.clearSelection();
     this.view.set(change.value as ReserveView);
   }
 
@@ -135,80 +118,23 @@ export class ReserveComponent {
     return row.onTable ? `${row.entry.nom}, déjà à table` : `${row.entry.nom}, ${this.kindLabel(row.entry)}`;
   }
 
-  /** Seules les créatures et les démons se posent en plusieurs exemplaires. */
-  protected hasQuantity(entry: CombatCatalogEntry): boolean {
-    return entry.kind === 'creature' || entry.kind === 'demon';
-  }
-
-  protected quantity(row: ReserveRow): number {
-    return this.placement.quantityOf(row.entry.catalogId);
-  }
-
-  protected changeQuantity(row: ReserveRow, delta: number): void {
-    this.placement.setQuantity(row.entry.catalogId, this.quantity(row) + delta);
-  }
-
-  protected isSelected(row: ReserveRow): boolean {
-    return this.placement.selectedIds().has(row.entry.catalogId);
-  }
-
-  /** Clic : coche ou décoche. Rien ne se pose sans geste explicite (double-clic, Entrée, glisser, barre). */
-  protected toggle(row: ReserveRow): void {
-    if (!row.onTable) {
-      this.placement.select(row.entry.catalogId, !this.isSelected(row));
-    }
-  }
-
-  protected clearSelection(): void {
-    this.placement.clearSelection();
-  }
-
+  /** Entrée : pose le personnage dans son camp par défaut. */
   protected onRowKey(event: KeyboardEvent, row: ReserveRow): void {
-    if (event.target !== event.currentTarget || row.onTable) {
-      return;
-    }
-    if (event.key === ' ') {
+    if (event.key === 'Enter' && event.target === event.currentTarget && !row.onTable) {
       event.preventDefault();
-      this.toggle(row);
-    } else if (event.key === 'Enter') {
-      event.preventDefault();
-      this.placeFrom(row, 'auto');
+      this.add(row);
     }
   }
 
-  /** Double-clic : pose ce personnage dans son camp par défaut. */
-  protected placeOne(row: ReserveRow): void {
+  /** Bouton « Ajouter » ou double-clic : pose le personnage dans son camp par défaut. */
+  protected add(row: ReserveRow): void {
     if (!row.onTable) {
-      this.placement.deselect(row.entry.catalogId);
-      this.run([{entry: row.entry, qty: this.itemQty(row.entry)}], 'auto');
+      this.run([row.entry], 'auto');
     }
-  }
-
-  protected placeSelection(camp: CombatCamp): void {
-    this.run(this.selectedItems(), camp);
-  }
-
-  /** Ce qu'on emporte en glissant ou en validant : toute la sélection si la ligne en fait partie, sinon elle seule. */
-  private itemsFor(row: ReserveRow): readonly ReserveItem[] {
-    const selected = this.selectedItems();
-    return this.isSelected(row) && selected.length > 1 ? selected : [{entry: row.entry, qty: this.itemQty(row.entry)}];
-  }
-
-  private placeFrom(row: ReserveRow, camp: CombatCamp | 'auto'): void {
-    this.run(this.itemsFor(row), camp);
-  }
-
-  private itemQty(entry: CombatCatalogEntry): number {
-    return this.hasQuantity(entry) ? this.placement.quantityOf(entry.catalogId) : 1;
-  }
-
-  protected ghostLabel(row: ReserveRow): string {
-    const items = this.itemsFor(row);
-    return items.length > 1 ? `${items.length} personnages` : this.itemQty(row.entry) > 1 ? `${row.entry.nom} ×${this.itemQty(row.entry)}` : row.entry.nom;
   }
 
   protected onDragStarted(row: ReserveRow): void {
-    this.placement.startDrag(this.itemsFor(row).map((item) => item.entry.kind), null);
+    this.placement.startDrag([row.entry.kind], null);
   }
 
   protected onDragMoved(event: CdkDragMove): void {
@@ -220,17 +146,17 @@ export class ReserveComponent {
     this.placement.endDrag();
     event.source.reset();
     if (camp) {
-      this.placeFrom(row, camp);
+      this.run([row.entry], camp);
     }
   }
 
-  private run(items: readonly ReserveItem[], camp: CombatCamp | 'auto'): void {
-    if (this.pending() || !items.length) {
+  private run(entries: readonly CombatCatalogEntry[], camp: CombatCamp | 'auto'): void {
+    if (this.pending()) {
       return;
     }
 
     this.pending.set(true);
-    this.placement.place(this.sessionId(), items, camp).subscribe((placed) => {
+    this.placement.place(this.sessionId(), entries, camp).subscribe((placed) => {
       this.pending.set(false);
       if (placed) {
         this.placed.emit();

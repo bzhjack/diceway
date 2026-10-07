@@ -130,7 +130,7 @@
   --rsv-metal-2: var(--bar-pj-2, var(--dw-color-legendary));
   --rsv-metal-3: var(--bar-pj-3, #92620a);
   display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.55rem;
   padding: 0.3rem 0.5rem 0.3rem 0.4rem;
@@ -178,38 +178,11 @@
   --rsv-metal-3: var(--bar-demon-3, #4c0519);
 }
 
-.rsv-row--selected {
-  border-color: var(--bar-ember, var(--dw-color-legendary));
-  background: linear-gradient(90deg, color-mix(in srgb, var(--bar-ember, var(--dw-color-legendary)) 18%, transparent), var(--dw-surface-100));
-}
-
-// Déjà à table : grisée, ni cochable ni glissable.
+// Déjà à table : grisée et non glissable.
 .rsv-row--on-table {
   opacity: 0.45;
   filter: grayscale(0.7);
   cursor: default;
-}
-
-.rsv-check {
-  display: grid;
-  place-items: center;
-  width: 1.1rem;
-  height: 1.1rem;
-  border: 1.5px solid var(--bar-bronze, var(--dw-surface-500));
-  border-radius: 4px;
-  background: var(--dw-surface-0);
-  color: var(--dw-surface-0);
-
-  .mat-icon {
-    width: 0.85rem;
-    height: 0.85rem;
-    font-size: 0.85rem;
-  }
-}
-
-.rsv-row--selected .rsv-check {
-  border-color: var(--bar-ember, var(--dw-color-legendary));
-  background: var(--bar-ember, var(--dw-color-legendary));
 }
 
 // Portrait rond dans un anneau métallique.
@@ -257,51 +230,6 @@
   color: var(--dw-surface-500);
 }
 
-.rsv-qty {
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid var(--dw-border);
-  border-radius: 8px;
-  background: var(--dw-surface-50);
-  overflow: hidden;
-  cursor: default;
-}
-
-.rsv-qty-btn {
-  width: 1.5rem;
-  height: 1.5rem;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--dw-surface-900);
-  font: inherit;
-  font-weight: 800;
-  cursor: pointer;
-
-  &:hover:not(:disabled) {
-    background: var(--dw-surface-300);
-  }
-
-  &:disabled {
-    opacity: 0.35;
-    cursor: default;
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-color-legendary);
-    outline-offset: -2px;
-  }
-}
-
-.rsv-qty-value {
-  min-width: 1.4rem;
-  text-align: center;
-  font-size: 0.8rem;
-  font-weight: 800;
-  color: var(--bar-ember, var(--dw-color-legendary));
-  font-variant-numeric: tabular-nums;
-}
-
 // Ce qui suit le pointeur pendant le glisser : un médaillon et son nom.
 .rsv-ghost {
   display: flex;
@@ -338,35 +266,6 @@
   overflow: hidden;
 }
 
-// Barre de sélection : placer plusieurs personnages d'un coup.
-.rsv-selbar {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.6rem;
-  border: 1px solid var(--bar-ember, var(--dw-color-legendary));
-  border-radius: 10px;
-  background: var(--dw-surface-50);
-  box-shadow: 0 0 14px color-mix(in srgb, var(--bar-ember, var(--dw-color-legendary)) 22%, transparent);
-}
-
-.rsv-selbar-count {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--dw-surface-900);
-
-  b {
-    color: var(--bar-ember, var(--dw-color-legendary));
-  }
-}
-
-.rsv-selbar-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-}
-
 .rsv-hint {
   flex-shrink: 0;
   margin: 0;
@@ -388,4 +287,14 @@
   gap: 0.35rem;
   padding-top: 0.7rem;
   border-top: 1px solid var(--dw-border);
+}
+
+// « Ajouter » : pose le personnage dans son camp par défaut.
+.rsv-add {
+  --mdc-outlined-button-container-height: 1.9rem;
+  --mat-button-outlined-container-height: 1.9rem;
+  padding-inline: 0.6rem;
+  font-size: 0.74rem;
+  font-weight: 800;
+  white-space: nowrap;
 }

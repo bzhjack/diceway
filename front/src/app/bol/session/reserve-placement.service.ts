@@ -3,13 +3,10 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {catchError, concatMap, EMPTY, from, last, map, Observable, of, tap} from 'rxjs';
 import {extractApiErrorMessage} from '../../core/api-error.utils';
 import {BolFightSessionModel, CombatCamp} from '../models/bol-fight-session.model';
-import {CombatantKind} from '../models/combat-selection.model';
+import {CombatCatalogEntry, CombatantKind} from '../models/combat-selection.model';
 import {BolFightSessionService} from '../services/bol-fight-session.service';
 import {resolveAddCombatantCamp} from './play/add-combatant-dialog/add-combatant-dialog';
-import {ReserveItem, ReservePlacedRow} from './models/reserve.model';
-
-/** Quantité maximale posée d'un coup pour une créature ou un démon. */
-export const RESERVE_MAX_QTY = 9;
+import {ReservePlacedRow} from './models/reserve.model';
 
 const CAMP_LABEL: Record<CombatCamp, string> = {
   adversaires: 'dans la scène',
@@ -36,18 +33,14 @@ function newestPivotId(session: BolFightSessionModel, kind: CombatantKind): numb
   return ids.length ? Math.max(...ids) : null;
 }
 
-/** La pose d'un ou plusieurs personnages de la réserve sur la table, et l'état partagé entre la réserve
- * (sélection, quantités, glisser en cours) et le tapis (zones de dépôt). Chaque pose affiche un message
+/** La pose d'un personnage de la réserve sur la table, et l'état du glisser partagé entre la réserve et le
+ * tapis (zones de dépôt). Chaque pose affiche un message
  * avec « Annuler », qui retire ce que la pose vient d'ajouter. */
 @Injectable({providedIn: 'root'})
 export class ReservePlacementService {
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly snackBar = inject(MatSnackBar);
 
-  /** Identifiants de catalogue cochés dans la réserve. */
-  readonly selectedIds = signal<ReadonlySet<string>>(new Set());
-  /** Quantité choisie par entrée (1 par défaut). */
-  readonly quantities = signal<ReadonlyMap<string, number>>(new Map());
   /** Un glisser depuis la réserve est en cours : le tapis dessine ses zones de dépôt. */
   readonly dragging = signal(false);
   /** Types de personnages emportés par le glisser en cours. */
@@ -92,33 +85,31 @@ export class ReservePlacementService {
 
   /** Pose les personnages l'un après l'autre. Émet une fois, à la fin, `true` si au moins un a été posé :
    * l'appelant recharge alors la session. */
-  place(sessionId: string, items: readonly ReserveItem[], camp: CombatCamp | 'auto'): Observable<boolean> {
+  place(sessionId: string, entries: readonly CombatCatalogEntry[], camp: CombatCamp | 'auto'): Observable<boolean> {
     const placed: ReservePlacedRow[] = [];
     const names: string[] = [];
     const campsUsed = new Set<CombatCamp>();
 
-    return from(items).pipe(
-      concatMap((item) => {
-        const target = camp === 'auto' ? defaultCamp(item.entry.kind) : resolveAddCombatantCamp(item.entry.kind, camp);
+    return from(entries).pipe(
+      concatMap((entry) => {
+        const target = camp === 'auto' ? defaultCamp(entry.kind) : resolveAddCombatantCamp(entry.kind, camp);
         return this.fightSessionService
           .addCombatant(sessionId, {
-            kind: item.entry.kind,
-            sourceId: item.entry.sourceId,
+            kind: entry.kind,
+            sourceId: entry.sourceId,
             camp: target,
-            qty: item.entry.kind === 'creature' || item.entry.kind === 'demon' ? item.qty : undefined,
           })
           .pipe(
             tap((session) => {
-              const pivotId = newestPivotId(session, item.entry.kind);
+              const pivotId = newestPivotId(session, entry.kind);
               if (pivotId !== null) {
-                placed.push({kind: item.entry.kind, pivotId});
+                placed.push({kind: entry.kind, pivotId});
               }
-              names.push(item.qty > 1 ? `${item.entry.nom} ×${item.qty}` : item.entry.nom);
+              names.push(entry.nom);
               campsUsed.add(target);
-              this.deselect(item.entry.catalogId);
             }),
             catchError((error: unknown) => {
-              this.snackBar.open(extractApiErrorMessage(error, `Impossible de poser ${item.entry.nom}.`), 'Fermer', {
+              this.snackBar.open(extractApiErrorMessage(error, `Impossible de poser ${entry.nom}.`), 'Fermer', {
                 duration: 5000,
               });
               return EMPTY;
@@ -134,35 +125,6 @@ export class ReservePlacementService {
         return true;
       }),
     );
-  }
-
-  select(catalogId: string, selected: boolean): void {
-    this.selectedIds.update((set) => {
-      const next = new Set(set);
-      if (selected) {
-        next.add(catalogId);
-      } else {
-        next.delete(catalogId);
-      }
-      return next;
-    });
-  }
-
-  deselect(catalogId: string): void {
-    this.select(catalogId, false);
-  }
-
-  clearSelection(): void {
-    this.selectedIds.set(new Set());
-  }
-
-  quantityOf(catalogId: string): number {
-    return this.quantities().get(catalogId) ?? 1;
-  }
-
-  setQuantity(catalogId: string, qty: number): void {
-    const clamped = Math.max(1, Math.min(RESERVE_MAX_QTY, qty));
-    this.quantities.update((map) => new Map(map).set(catalogId, clamped));
   }
 
   private announce(sessionId: string, names: string[], camps: ReadonlySet<CombatCamp>, placed: ReservePlacedRow[]): void {

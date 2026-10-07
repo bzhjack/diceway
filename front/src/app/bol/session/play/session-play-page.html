@@ -6,7 +6,7 @@
     <a routerLink="/library/sessions">Voir mes sessions</a>
   </div>
 } @else if (board(); as b) {
-  <div class="cp-page" [class.cp-page--barbare]="mode() === 'libre'">
+  <div class="cp-page cp-page--barbare">
     <div class="cp-table">
     <bol-session-header
       [mode]="mode()"
