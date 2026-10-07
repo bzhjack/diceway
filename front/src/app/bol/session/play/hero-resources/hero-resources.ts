@@ -48,9 +48,9 @@ import {HeroResourcesData} from '../../models/hero-resources.model';
 
     // Cœur de la vitalité, plus petit que sur le reste de l'app : les tuiles de cet en-tête sont serrées.
     dw-value-stepper {
-      --vs-heart-width: 2.1rem;
-      --vs-heart-height: 1.9rem;
-      --vs-heart-font: 0.8rem;
+      --vs-heart-width: var(--hrs-heart-width, 2.1rem);
+      --vs-heart-height: var(--hrs-heart-height, 1.9rem);
+      --vs-heart-font: var(--hrs-heart-font, 0.8rem);
     }
 
     .hrs-label {

@@ -45,7 +45,19 @@
 // colonne de résultat porte des boutons à libellé long (« Convertir en succès héroïque (−1 PH) ») qui
 // doivent tenir sur une ligne.
 .exc--hero {
-  width: min(54rem, 96vw);
+  width: min(56rem, 96vw);
+}
+
+// PNJ, créature, démon : entrée de bestiaire en deux colonnes, à la hauteur de son contenu (limitée à l'écran,
+// au-delà elle défile).
+.exc--pnj,
+.exc--creature,
+.exc--demon {
+  width: min(41rem, 94vw);
+  max-height: 90dvh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dw-border) transparent;
 }
 
 // Hauteur fixe quand le contenu varie (jet d'un héros, statbloc d'un PNJ) : la carte ne bouge plus quand le jet
@@ -58,7 +70,7 @@
   flex-direction: column;
 
   &.exc--hero {
-    height: min(460px, 88dvh);
+    height: min(560px, 90dvh);
   }
 
   .exc-body {
@@ -256,4 +268,252 @@
 .exc-icon-btn--danger:hover {
   --mat-icon-button-icon-color: #fff;
   background: var(--dw-color-echec-forte);
+}
+
+// ── Entrée de bestiaire (PNJ, créature, démon) ───────────────────────────────────────────────────────
+.exc-entry {
+  display: grid;
+  grid-template-columns: 13rem minmax(0, 1fr);
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Colonne de gauche : le grand médaillon, le nom en entier, le cœur de vitalité et le rang.
+.exc-entry-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1.1rem 0.9rem;
+  border-right: 1px solid var(--dw-border);
+  background: linear-gradient(var(--dw-surface-100), var(--dw-surface-50));
+  text-align: center;
+
+  @media (max-width: 640px) {
+    border-right: 0;
+    border-bottom: 1px solid var(--dw-border);
+  }
+}
+
+.exc-portrait--big {
+  width: 9rem;
+
+  .mat-icon {
+    font-size: 3.4rem;
+    width: 3.4rem;
+    height: 3.4rem;
+  }
+}
+
+.exc-name--wrap {
+  font-size: 1.3rem;
+  line-height: 1.15;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.exc-entry-side .exc-sub {
+  margin-top: 0.2rem;
+  font-size: 0.95rem;
+  color: var(--dw-surface-700);
+}
+
+// Vitalité : libellé, grand cœur et stepper, empilés et centrés.
+.exc-entry-vit {
+  --vs-heart-width: 4.8rem;
+  --vs-heart-height: 4.4rem;
+  --vs-heart-font: 1.9rem;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.exc-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.exc-chip {
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--exc-metal-2);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--exc-metal-3) 35%, var(--dw-surface-0));
+  color: var(--dw-surface-800);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.exc-camp {
+  max-width: 100%;
+  white-space: normal;
+  height: auto;
+  min-height: 2rem;
+  padding-block: 0.25rem;
+  line-height: 1.2;
+}
+
+// Colonne de droite : barre d'actions, puis les rubriques en lignes « libellé ……… valeur ».
+.exc-entry-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+  padding: 0.8rem 1.1rem 1.1rem;
+}
+
+.exc-entry-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.exc-entry-spacer {
+  flex: 1;
+}
+
+.exc-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.exc-cols--sections {
+  align-items: start;
+  row-gap: 1rem;
+}
+
+.exc-sec {
+  margin: 0 0 0.45rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--dw-border);
+  color: var(--dw-color-legendary);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.exc-leaders {
+  display: grid;
+  gap: 0.1rem;
+  margin: 0;
+
+  > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.15rem 0;
+    font-size: 1rem;
+  }
+
+  dt {
+    order: 1;
+    color: var(--dw-surface-700);
+  }
+
+  // Les points de conduite entre le libellé et la valeur.
+  > div:not(.exc-leaders--note)::after {
+    content: '';
+    order: 2;
+    flex: 1;
+    min-width: 1rem;
+    border-bottom: 2px dotted color-mix(in srgb, var(--bar-bronze, var(--dw-border)) 75%, transparent);
+    transform: translateY(-0.25rem);
+  }
+
+  dd {
+    order: 3;
+    margin: 0;
+    color: var(--dw-surface-900);
+    font-weight: 800;
+    font-size: 1.1rem;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.exc-leaders--hot dd {
+  color: var(--dw-color-echec);
+}
+
+// Entrée sans valeur (capacité, pouvoir) : titre, puis son détail sur toute la largeur.
+.exc-leaders--note {
+  display: block !important;
+
+  dt {
+    font-weight: 800;
+    color: var(--dw-surface-900);
+  }
+
+  .exc-leaders-detail {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--dw-surface-700);
+  }
+}
+
+.exc-empty,
+.exc-comment {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--dw-surface-600);
+}
+
+.exc-edit {
+  white-space: nowrap;
+}
+
+// Héros : la colonne de gauche porte aussi les détails et les ressources ; la colonne de droite se remplit de ses
+// statistiques puis du jet d'action, qui occupe le reste de la hauteur fixe.
+.exc--hero .exc-entry {
+  height: 100%;
+  min-height: 0;
+}
+
+.exc--hero .exc-entry-side {
+  justify-content: flex-start;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.exc-details--side {
+  justify-content: center;
+  margin-top: 0;
+}
+
+// Vitalité (cœur) et héroïsme : l'un sous l'autre, pleine largeur, avec un grand cœur.
+.exc-entry-resources {
+  --hrs-heart-width: 4.2rem;
+  --hrs-heart-height: 3.8rem;
+  --hrs-heart-font: 1.6rem;
+  width: 100%;
+  flex-direction: column;
+}
+
+.exc--hero .exc-entry-main {
+  min-height: 0;
+}
+
+.exc--hero bol-action-roll-panel {
+  flex: 1;
+  min-height: 0;
+}
+
+.exc-leaders--cols {
+  grid-template-columns: 1fr 1fr;
+  column-gap: 1.4rem;
 }

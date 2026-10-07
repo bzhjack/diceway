@@ -14,7 +14,6 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterLink} from '@angular/router';
-import {BolStatblockComponent} from '../../../shared/statblock/bol-statblock.component';
 import {BolStatblockData} from '../../../shared/models/bol-statblock.model';
 import {EMPTY_AVATAR} from '../../combat-play.util';
 import {combatantKindIcon, combatantKindIconIsSvg} from '../../combat-statblock.util';
@@ -43,7 +42,6 @@ const KIND_LABELS: Record<TapisKind, string> = {
     MatIconModule,
     MatTooltipModule,
     RouterLink,
-    BolStatblockComponent,
     HeroDetailsComponent,
     ActionRollPanelComponent,
     HeroResourcesComponent,
@@ -107,17 +105,23 @@ export class ExpandedCardComponent {
     this.avatarFailed.set(true);
   }
 
-  /** Hauteur fixe : la carte a un contenu qui change de taille — le jet d'action d'un héros en mode libre,
-   * le statbloc d'un autre personnage. Un héros en combat n'a que le bandeau (et « Attaquer ») : hauteur naturelle. */
-  protected readonly fixedHeight = computed(
-    () => this.card().kind !== 'hero' || (this.mode() === 'libre' && this.hero() !== null),
-  );
+  /** Hauteur fixe pour un héros en mode libre : son jet d'action change d'état (faveur divine, échec critique) et
+   * la zone des dés garde une taille confortable. Les autres personnages, et un héros en combat réduit au
+   * bandeau, ont la hauteur de leur contenu. */
+  protected readonly fixedHeight = computed(() => this.card().kind === 'hero' && this.mode() === 'libre' && this.hero() !== null);
 
-  /** Corps de la carte : le jet d'action d'un héros en mode libre, le statbloc et les actions d'un
-   * autre personnage, ou « Attaquer cette carte ». Vide, il n'est pas affiché. */
-  protected readonly hasBody = computed(
-    () => this.canAttack() || this.card().kind !== 'hero' || (this.mode() === 'libre' && this.hero() !== null),
-  );
+
+  /** Les tuiles du statbloc se partagent en deux moitiés : les attributs, puis les statistiques de combat. */
+  protected readonly attributTiles = computed(() => {
+    const tiles = this.statblock()?.tiles ?? [];
+    return tiles.slice(0, Math.ceil(tiles.length / 2));
+  });
+  protected readonly combatTiles = computed(() => {
+    const tiles = this.statblock()?.tiles ?? [];
+    return tiles.slice(Math.ceil(tiles.length / 2));
+  });
+  /** Protection et dégâts : la bande vitale moins la vitalité, que le cœur porte déjà. */
+  protected readonly protectionLines = computed(() => (this.statblock()?.vitals ?? []).filter((tile) => tile.tone !== 'health'));
   protected readonly campLabel = computed(() => campActionLabel(this.card()));
   protected readonly removeLabel = REMOVE_ACTION_LABEL;
 
