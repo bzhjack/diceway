@@ -106,7 +106,6 @@ import {HeroDetails} from '../../models/tapis.model';
 
     <mat-menu #infosMenu="matMenu" class="hd-menu">
       <div class="hd-panel" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" tabindex="-1">
-        <h4 class="hd-title">Informations</h4>
         <dl class="hd-infos">
           @if (details().infos.enCours) {
             <div><dt>Fiche</dt><dd>En cours de création</dd></div>
