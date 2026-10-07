@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest';
 import {BolFightSessionModel} from '../../../models/bol-fight-session.model';
 import {BolHerosModel} from '../../../models/bol-heros.model';
-import {buildTapisCards, campActionLabel, cardAriaLabel, cardLabel, findCard, isLowVitalite, removeActionLabel, splitRows, vitalitePercent, vitaliteSteppers, vitaliteText, revealDelta, heroHeaderStats, heroDetails, heroIdentityLine} from './tapis.util';
+import {buildTapisCards, campActionLabel, cardAriaLabel, findCard, isLowVitalite, REMOVE_ACTION_LABEL, splitRows, vitalitePercent, vitaliteText, revealDelta, heroHeaderStats, heroDetails, heroIdentityLine} from './tapis.util';
 import {TapisCard} from '../../models/tapis.model';
 
 function hero(id: number, nom: string, extra: Record<string, unknown> = {}): NonNullable<BolFightSessionModel['heros']>[number] {
@@ -30,8 +30,8 @@ const PNJ = {
 };
 
 const CREATURE = {
-  id: 3, fight_session_id: 's', creature_id: '48', camp: 'adversaires', qty: 3, surnom: null, rang: 'pietaille', nom: 'Hippocampe',
-  vigueur: 1, agilite: 1, esprit: 0, vitalite_max: 5, vitalite_courante: 5, vitalite_instances: [5, 1, 0],
+  id: 3, fight_session_id: 's', creature_id: '48', camp: 'adversaires', qty: 1, surnom: null, rang: 'pietaille', nom: 'Hippocampe',
+  vigueur: 1, agilite: 1, esprit: 0, vitalite_max: 5, vitalite_courante: 5, vitalite_instances: [5],
   attaque: 1, defense: 1, degats: 'd6', protection: null, id_taille: 1, capacites: null,
 };
 
@@ -65,7 +65,7 @@ describe('buildTapisCards', () => {
 
   it('puts damage, effective defense and session vitality on a hero face', () => {
     expect(card('hero-1')).toMatchObject({
-      nom: 'Kalena', degats: 'd6B', defense: '0', vitaliteCourante: 9, vitaliteMax: 11, badge: null, rang: null, qty: 1,
+      nom: 'Kalena', degats: 'd6B', defense: '0', vitaliteCourante: 9, vitaliteMax: 11, badge: null, rang: null,
     });
   });
 
@@ -95,19 +95,19 @@ describe('buildTapisCards', () => {
     expect(card('pnj-7', s).rang).toBe('Coriace');
   });
 
-  it('builds a single card for a batch, with one gauge per instance and a ×N badge', () => {
-    expect(card('creature-3')).toMatchObject({qty: 3, badge: '×3', rang: 'Piétaille', instances: [5, 1, 0], degats: 'd6', defense: '1', vitaliteMax: 5});
+  it('builds a card for a creature, labelled with its rank', () => {
+    expect(card('creature-3')).toMatchObject({badge: 'Piétaille', rang: 'Piétaille', degats: 'd6', defense: '1', vitaliteCourante: 5, vitaliteMax: 5});
   });
 
-  it('fills the missing gauges of a batch from its current vitality', () => {
-    const nullInstances = session({creatures: [{...CREATURE, vitalite_instances: null}] as BolFightSessionModel['creatures']});
-    const shortInstances = session({creatures: [{...CREATURE, vitalite_instances: [2]}] as BolFightSessionModel['creatures']});
-    expect(card('creature-3', nullInstances).instances).toEqual([5, 5, 5]);
-    expect(card('creature-3', shortInstances).instances).toEqual([2, 5, 5]);
+  it('uses the nickname of a demon', () => {
+    expect(card('demon-9')).toMatchObject({nom: 'Le Voilé', badge: 'Rival', vitaliteCourante: 20});
   });
 
-  it('has no gauges for a single creature or demon, and uses its nickname', () => {
-    expect(card('demon-9')).toMatchObject({nom: 'Le Voilé', instances: null, badge: 'Rival', vitaliteCourante: 20, qty: 1});
+  it('numbers identical creatures in order of arrival, and leaves a lone one as is', () => {
+    const s = session({creatures: [CREATURE, {...CREATURE, id: 4}, {...CREATURE, id: 5, nom: 'Loup'}] as BolFightSessionModel['creatures']});
+    const names = buildTapisCards(s).map((c) => c.nom);
+    expect(names).toEqual(expect.arrayContaining(['Hippocampe #1', 'Hippocampe #2', 'Loup']));
+    expect(card('creature-3')?.nom).toBe('Hippocampe');
   });
 
   it('still builds the card when the library source was deleted', () => {
@@ -157,20 +157,15 @@ describe('findCard', () => {
 });
 
 describe('labels', () => {
-  it('names a batch with its count', () => {
-    expect(cardLabel(card('creature-3'))).toBe('Hippocampe ×3');
-    expect(cardLabel(card('pnj-7'))).toBe('Prêtre de Shazzadion');
-  });
-
   it('writes the vitality of a face', () => {
     expect(vitaliteText(card('pnj-7'))).toBe('2/6');
-    expect(vitaliteText(card('creature-3'))).toBe('5');
+    expect(vitaliteText(card('creature-3'))).toBe('5/5');
   });
 
   it('describes a card for screen readers', () => {
     expect(cardAriaLabel(card('pnj-7'))).toBe('Prêtre de Shazzadion, PNJ, Coriace, dégâts d6B, défense 0, vitalité 2 sur 6');
     expect(cardAriaLabel(card('hero-1'))).toBe('Kalena, Héros, dégâts d6B, défense 0, vitalité 9 sur 11');
-    expect(cardAriaLabel(card('creature-3'))).toBe('Hippocampe, Créature, lot de 3, dégâts d6, défense 1, vitalité 5 par exemplaire');
+    expect(cardAriaLabel(card('creature-3'))).toBe('Hippocampe, Créature, Piétaille, dégâts d6, défense 1, vitalité 5 sur 5');
   });
 
   it('offers to change camp, except for a hero', () => {
@@ -180,9 +175,8 @@ describe('labels', () => {
     expect(campActionLabel(card('pnj-7', ally))).toBe('Remettre avec les présents');
   });
 
-  it('names the removal after what it removes', () => {
-    expect(removeActionLabel(card('pnj-7'))).toBe('Retirer de la table');
-    expect(removeActionLabel(card('creature-3'))).toBe('Retirer un exemplaire');
+  it('words the removal as taking a card off the table', () => {
+    expect(REMOVE_ACTION_LABEL).toBe('Retirer de la table');
   });
 });
 
@@ -200,19 +194,6 @@ describe('vitalite helpers', () => {
     expect(isLowVitalite(4, 6)).toBe(false);
     expect(isLowVitalite(-3, 11)).toBe(true);
     expect(isLowVitalite(null, 6)).toBe(false);
-  });
-
-  it('gives one stepper per instance of a batch, numbered from 1', () => {
-    expect(vitaliteSteppers(card('creature-3'))).toEqual([
-      {index: 0, label: '#1', value: 5},
-      {index: 1, label: '#2', value: 1},
-      {index: 2, label: '#3', value: 0},
-    ]);
-  });
-
-  it('gives a single stepper otherwise, with instance 0 for a creature or demon and none for a PNJ', () => {
-    expect(vitaliteSteppers(card('demon-9'))).toEqual([{index: 0, label: 'Vitalité', value: 20}]);
-    expect(vitaliteSteppers(card('pnj-7'))).toEqual([{index: null, label: 'Vitalité', value: 2}]);
   });
 });
 

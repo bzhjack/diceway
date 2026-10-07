@@ -4,7 +4,7 @@ import {BolFightSessionModel, CombatCamp} from '../../../models/bol-fight-sessio
 import {BolHerosModel} from '../../../models/bol-heros.model';
 import {firstEquippedDegats, isArmeEquipee} from '../../../shared/arme/arme-equipee';
 import {EMPTY_AVATAR} from '../../combat-play.util';
-import {TapisKind, TapisCard, TapisRows, VitaliteStepper, HeroHeaderStat, HeroDetailTrait, HeroDetailInfos, HeroDetails} from '../../models/tapis.model';
+import {TapisKind, TapisCard, TapisRows, HeroHeaderStat, HeroDetailTrait, HeroDetailInfos, HeroDetails} from '../../models/tapis.model';
 
 const NO_VALUE = '—';
 
@@ -27,17 +27,8 @@ function rankLabel(rang: string | null | undefined): string {
   return RANK_LABELS[rang ?? ''] ?? 'Coriace';
 }
 
-function badgeFor(camp: CombatCamp, rang: string, qty: number): string {
-  if (qty > 1) {
-    return `×${qty}`;
-  }
+function badgeFor(camp: CombatCamp, rang: string): string {
   return camp === 'heros' ? 'Allié' : rang;
-}
-
-/** Vitalité de chaque exemplaire d'un lot ; un exemplaire sans valeur enregistrée (anciennes
- * sessions) reprend la vitalité courante de la ligne. */
-function batchInstances(qty: number, stored: readonly number[] | null | undefined, fallback: number): number[] {
-  return Array.from({length: qty}, (_, index) => stored?.[index] ?? fallback);
 }
 
 /** Les cartes du tapis, une par ligne de session : héros, puis PNJ, créatures et démons. */
@@ -60,8 +51,6 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       defense: defense === undefined ? NO_VALUE : String(defense),
       vitaliteCourante: h.vitalite_courante ?? h.heros?.ressources?.vitalite ?? null,
       vitaliteMax: h.heros?.ressources?.vitalite ?? null,
-      instances: null,
-      qty: 1,
     });
   }
 
@@ -75,19 +64,16 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       sourceId: p.pnj_id,
       nom: p.surnom ?? p.nom,
       avatar: p.pnj?.origines.avatar || (p.pnj_id ? `/assets/bol/pnj/${p.pnj_id}.jpg` : null) || EMPTY_AVATAR,
-      badge: badgeFor(p.camp, rang, 1),
+      badge: badgeFor(p.camp, rang),
       rang,
       degats: p.armes?.find((a) => a.degats)?.degats ?? NO_VALUE,
       defense: String(p.defense),
       vitaliteCourante: p.vitalite_courante,
       vitaliteMax: p.vitalite_max,
-      instances: null,
-      qty: 1,
     });
   }
 
   for (const c of session.creatures ?? []) {
-    const qty = Math.max(1, c.qty);
     const rang = rankLabel(c.rang);
     cards.push({
       key: `creature-${c.id}`,
@@ -97,19 +83,16 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       sourceId: c.creature_id,
       nom: c.surnom ?? c.nom,
       avatar: c.creature?.avatar || (c.creature_id ? `/assets/bol/bestiary/${c.creature_id}.jpg` : null) || EMPTY_AVATAR,
-      badge: badgeFor(c.camp, rang, qty),
+      badge: badgeFor(c.camp, rang),
       rang,
       degats: c.degats ?? NO_VALUE,
       defense: String(c.defense),
-      vitaliteCourante: c.vitalite_instances?.[0] ?? c.vitalite_courante,
+      vitaliteCourante: c.vitalite_courante,
       vitaliteMax: c.vitalite_max,
-      instances: qty > 1 ? batchInstances(qty, c.vitalite_instances, c.vitalite_courante) : null,
-      qty,
     });
   }
 
   for (const d of session.demons ?? []) {
-    const qty = Math.max(1, d.qty);
     const rang = rankLabel(d.rang);
     cards.push({
       key: `demon-${d.id}`,
@@ -119,18 +102,37 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       sourceId: d.demon_id,
       nom: d.surnom ?? d.nom,
       avatar: d.demon?.avatar || (d.demon_id ? `/assets/bol/demon/${d.demon_id}.jpg` : null) || EMPTY_AVATAR,
-      badge: badgeFor(d.camp, rang, qty),
+      badge: badgeFor(d.camp, rang),
       rang,
       degats: d.degats ?? NO_VALUE,
       defense: String(d.defense),
-      vitaliteCourante: d.vitalite_instances?.[0] ?? d.vitalite_courante,
+      vitaliteCourante: d.vitalite_courante,
       vitaliteMax: d.vitalite_max,
-      instances: qty > 1 ? batchInstances(qty, d.vitalite_instances, d.vitalite_courante) : null,
-      qty,
     });
   }
 
-  return cards;
+  return numberDuplicates(cards);
+}
+
+/** Plusieurs créatures ou démons identiques à la table : « Loup géant #1 », « Loup géant #2 »… dans l'ordre
+ * d'arrivée, pour pouvoir les distinguer. Un exemplaire seul garde son nom. */
+function numberDuplicates(cards: TapisCard[]): TapisCard[] {
+  const isMultiple = (card: TapisCard): boolean => card.kind === 'creature' || card.kind === 'demon';
+  const groupOf = (card: TapisCard): string => `${card.kind}|${card.nom}`;
+  const totals = new Map<string, number>();
+  for (const card of cards.filter(isMultiple)) {
+    totals.set(groupOf(card), (totals.get(groupOf(card)) ?? 0) + 1);
+  }
+
+  const seen = new Map<string, number>();
+  return cards.map((card) => {
+    if (!isMultiple(card) || (totals.get(groupOf(card)) ?? 0) < 2) {
+      return card;
+    }
+    const rank = (seen.get(groupOf(card)) ?? 0) + 1;
+    seen.set(groupOf(card), rank);
+    return {...card, nom: `${card.nom} #${rank}`};
+  });
 }
 
 function byKindThenArrival(left: TapisCard, right: TapisCard): number {
@@ -151,17 +153,8 @@ export function findCard(cards: readonly TapisCard[], key: string | null): Tapis
   return key ? (cards.find((card) => card.key === key) ?? null) : null;
 }
 
-/** Nom d'une carte tel qu'on la désigne dans une liste : « Hippocampe ×3 » pour un lot. */
-export function cardLabel(card: TapisCard): string {
-  return card.qty > 1 ? `${card.nom} ×${card.qty}` : card.nom;
-}
-
-/** Chiffre « Vit. » de la face : `courante/max`, ou le maximum seul pour un lot (ses jauges portent
- * le courant de chaque exemplaire). */
+/** Chiffre « Vit. » de la face : `courante/max`. */
 export function vitaliteText(card: TapisCard): string {
-  if (card.instances) {
-    return card.vitaliteMax === null ? NO_VALUE : String(card.vitaliteMax);
-  }
   if (card.vitaliteCourante === null || card.vitaliteMax === null) {
     return NO_VALUE;
   }
@@ -184,17 +177,11 @@ export function isLowVitalite(courante: number | null, max: number | null): bool
 /** Libellé accessible de la face d'une carte : nom, type, étiquette et les trois chiffres. */
 export function cardAriaLabel(card: TapisCard): string {
   const parts = [card.nom, KIND_LABELS[card.kind]];
-  if (card.qty > 1) {
-    parts.push(`lot de ${card.qty}`);
-  } else if (card.badge) {
+  if (card.badge) {
     parts.push(card.badge);
   }
   parts.push(`dégâts ${card.degats}`, `défense ${card.defense}`);
-  parts.push(
-    card.instances
-      ? `vitalité ${card.vitaliteMax ?? NO_VALUE} par exemplaire`
-      : `vitalité ${card.vitaliteCourante ?? NO_VALUE} sur ${card.vitaliteMax ?? NO_VALUE}`,
-  );
+  parts.push(`vitalité ${card.vitaliteCourante ?? NO_VALUE} sur ${card.vitaliteMax ?? NO_VALUE}`);
   return parts.join(', ');
 }
 
@@ -206,19 +193,8 @@ export function campActionLabel(card: TapisCard): string | null {
   return card.camp === 'heros' ? 'Remettre avec les présents' : 'Passer du côté des héros';
 }
 
-/** Libellé du retrait : sur un lot, l'API retire un seul exemplaire (le dernier). */
-export function removeActionLabel(card: TapisCard): string {
-  return card.qty > 1 ? 'Retirer un exemplaire' : 'Retirer de la table';
-}
-
-/** Steppers de vitalité d'une carte non-héros dépliée : un par exemplaire pour un lot, un seul
- * sinon. L'index est celui que l'API attend (`null` pour un PNJ, qui n'a pas d'exemplaires). */
-export function vitaliteSteppers(card: TapisCard): VitaliteStepper[] {
-  if (card.instances) {
-    return card.instances.map((value, index) => ({index, label: `#${index + 1}`, value}));
-  }
-  return [{index: card.kind === 'pnj' ? null : 0, label: 'Vitalité', value: card.vitaliteCourante ?? 0}];
-}
+/** Libellé du retrait d'une carte de la table. */
+export const REMOVE_ACTION_LABEL = 'Retirer de la table';
 
 /** De combien faire défiler une zone pour qu'un élément y soit entièrement visible, avec une marge. Positions
  * dans le même repère (ex. l'écran). Un élément plus large que la zone s'aligne sur son début. */

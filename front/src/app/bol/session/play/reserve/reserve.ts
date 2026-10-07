@@ -25,7 +25,7 @@ type ReserveView = CombatantKind | 'scene';
 /** Réserve de la table (mode libre), en bandeau au bas de l'écran comme une main de cartes : les
  * quatre bibliothèques et les scènes en onglets, en liste. Un clic coche un personnage ; on le pose par
  * double-clic ou Entrée (camp par défaut), en le glissant sur une zone du tapis (camp de la zone), ou
- * avec la barre de sélection pour un lot. La page recharge la session sur `placed`. */
+ * avec la barre de sélection pour plusieurs à la fois. La page recharge la session sur `placed`. */
 @Component({
   selector: 'bol-reserve',
   imports: [CdkDrag, CdkDragPreview, CdkDropList, RouterLink, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatIconModule, MatInputModule, SceneStripComponent],

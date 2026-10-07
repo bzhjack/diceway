@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {buildCombatStates, endTurn, firstStandingInstance, giveBackTurn, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, targetLabel, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
+import {buildCombatStates, endTurn, giveBackTurn, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
 import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
 
@@ -18,8 +18,6 @@ function card(kind: TapisKind, pivotId: number, extra: Partial<TapisCard> = {}):
     defense: '0',
     vitaliteCourante: 10,
     vitaliteMax: 10,
-    instances: null,
-    qty: 1,
     ...extra,
   };
 }
@@ -35,7 +33,7 @@ function etat(round: number, joues: string[] = [], defense: string[] = []): Etat
 const KALENA = card('hero', 1);
 const RORK = card('hero', 2);
 const PRETRE = card('pnj', 7);
-const LOT = card('creature', 3, {qty: 3, instances: [5, 1, 0], vitaliteMax: 5, vitaliteCourante: 5});
+const CREATURE = card('creature', 3, {vitaliteMax: 5, vitaliteCourante: 5});
 
 describe('normalizeEtat', () => {
   it('starts at round 1 with nobody played when there is no state', () => {
@@ -63,7 +61,7 @@ describe('orderCards', () => {
     {kind: 'creature', pivotId: 3, tier: 'pietaille', lockedRound1: true},
     {kind: 'hero', pivotId: 2, tier: 'echec_critique', lockedRound1: true},
   ];
-  const cards = [RORK, LOT, KALENA, PRETRE];
+  const cards = [RORK, CREATURE, KALENA, PRETRE];
 
   it('follows the initiative order of the tokens, a batch counting once', () => {
     expect(orderCards(cards, tokens, null).map((o) => o.card.key)).toEqual(['hero-1', 'pnj-7', 'creature-3', 'hero-2']);
@@ -109,9 +107,9 @@ describe('isOut', () => {
     expect(isOut(card('pnj', 7, {vitaliteCourante: 0}))).toBe(true);
   });
 
-  it('puts a batch out only when every instance is down', () => {
-    expect(isOut(LOT)).toBe(false);
-    expect(isOut(card('creature', 3, {qty: 2, instances: [0, 0], vitaliteMax: 5}))).toBe(true);
+  it('puts a creature out at zero', () => {
+    expect(isOut(CREATURE)).toBe(false);
+    expect(isOut(card('creature', 3, {vitaliteCourante: 0, vitaliteMax: 5}))).toBe(true);
   });
 
   it('never puts out a character without a tracked vitality', () => {
@@ -235,7 +233,7 @@ describe('giveBackTurn', () => {
 describe('targetableKeys', () => {
   const ally = card('pnj', 8, {camp: 'heros'});
   const out = card('pnj', 9, {vitaliteCourante: 0});
-  const order = ordered(KALENA, RORK, ally, PRETRE, LOT, out);
+  const order = ordered(KALENA, RORK, ally, PRETRE, CREATURE, out);
 
   it('offers the opposite camp of the active card, minus cards out of combat', () => {
     expect([...targetableKeys(order, 'hero-1')].sort()).toEqual(['creature-3', 'pnj-7']);
@@ -265,46 +263,20 @@ describe('buildCombatStates', () => {
   });
 });
 
-describe('targets in a batch', () => {
-  it('aims at the first instance still standing', () => {
-    expect(firstStandingInstance(LOT)).toBe(0);
-    expect(firstStandingInstance(card('creature', 3, {qty: 3, instances: [0, 0, 4]}))).toBe(2);
-  });
-
-  it('falls back on the first instance when the whole batch is down', () => {
-    expect(firstStandingInstance(card('creature', 3, {qty: 2, instances: [0, 0]}))).toBe(0);
-  });
-
-  it('uses instance 0 for a single creature or demon, and none for a hero or a PNJ', () => {
-    expect(firstStandingInstance(card('demon', 9))).toBe(0);
-    expect(firstStandingInstance(PRETRE)).toBeNull();
-    expect(firstStandingInstance(KALENA)).toBeNull();
-  });
-
-  it('names the targeted instance of a batch', () => {
-    expect(targetLabel(card('creature', 3, {nom: 'Hippocampe', qty: 3, instances: [0, 2, 5]}))).toBe('Hippocampe #2');
-    expect(targetLabel(card('pnj', 7, {nom: 'Prêtre'}))).toBe('Prêtre');
-  });
-});
-
 describe('tokenForCard', () => {
   const tokens = [
-    {kind: 'hero' as const, pivotId: 1, instanceIndex: null},
-    {kind: 'creature' as const, pivotId: 3, instanceIndex: 0},
-    {kind: 'creature' as const, pivotId: 3, instanceIndex: 1},
+    {kind: 'hero' as const, pivotId: 1},
+    {kind: 'creature' as const, pivotId: 3},
+    {kind: 'creature' as const, pivotId: 4},
   ];
 
-  it('finds the token of a hero or a PNJ', () => {
-    expect(tokenForCard(tokens, KALENA, null)).toBe(tokens[0]);
-  });
-
-  it('finds the token of one instance of a batch', () => {
-    expect(tokenForCard(tokens, LOT, 1)).toBe(tokens[2]);
+  it('finds the token of a card by kind and line id', () => {
+    expect(tokenForCard(tokens, KALENA)).toBe(tokens[0]);
+    expect(tokenForCard(tokens, CREATURE)).toBe(tokens[1]);
   });
 
   it('returns null when the card has no token', () => {
-    expect(tokenForCard(tokens, PRETRE, null)).toBeNull();
-    expect(tokenForCard(tokens, LOT, 5)).toBeNull();
+    expect(tokenForCard(tokens, PRETRE)).toBeNull();
   });
 });
 

@@ -46,12 +46,12 @@ import {ExpandedHeroData} from '../models/expanded-card.model';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {equippedArmes} from '../../shared/arme/arme-equipee';
 import {AttackChoice} from '../models/attack-options.model';
-import {buildCombatStates, endTurn, firstStandingInstance, giveBackTurn, normalizeEtat, orderCards, targetLabel, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
+import {buildCombatStates, endTurn, giveBackTurn, normalizeEtat, orderCards, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
 import {CardCombatState, EtatCombat} from '../models/combat-turn.model';
 import {TurnOrderComponent} from './tapis/turn-order';
 import {TurnOrderEntry} from '../models/turn-order.model';
 import {TapisComponent} from './tapis/tapis';
-import {buildTapisCards, cardLabel, findCard, heroDetails, heroHeaderStats, removeActionLabel} from './tapis/tapis.util';
+import {buildTapisCards, findCard, heroDetails, heroHeaderStats, REMOVE_ACTION_LABEL} from './tapis/tapis.util';
 import {TapisCard} from '../models/tapis.model';
 
 /** Les armes d'un héros dont le catalogue est chargé — vide si elles ne le sont pas (de simples ids). */
@@ -168,7 +168,7 @@ export class SessionPlayPageComponent {
     const statuses = this.turn().statuses;
     return this.orderedCards().map(({card}) => ({
       key: card.key,
-      nom: cardLabel(card),
+      nom: card.nom,
       kind: card.kind,
       status: statuses.get(card.key) ?? 'upcoming',
     }));
@@ -201,7 +201,7 @@ export class SessionPlayPageComponent {
    * quand la bibliothèque et les scènes finissent de charger. */
   private readonly paletteContext = computed<PaletteContext>(() => ({
     mode: this.mode(),
-    tokens: this.cards().map((card) => ({key: card.key, nom: cardLabel(card), kind: card.kind})),
+    tokens: this.cards().map((card) => ({key: card.key, nom: card.nom, kind: card.kind})),
     catalog: this.selection.catalog(),
     heroIds: this.existingHeroIds(),
     pnjIds: this.existingPnjIds(),
@@ -488,22 +488,18 @@ export class SessionPlayPageComponent {
     };
   }
 
-  /** « Retirer de la table » (ou « Retirer un exemplaire » pour un lot) depuis la carte dépliée. */
+  /** « Retirer de la table » depuis la carte dépliée. */
   protected askRemoveCard(card: TapisCard): void {
     const sessionId = this.sessionId();
     if (!sessionId) {
       return;
     }
 
-    const label = removeActionLabel(card);
     confirmDialog(
       this.dialog,
       {
-        title: label,
-        message:
-          card.qty > 1
-            ? `Voulez-vous retirer un exemplaire de « ${card.nom} » ? Il en restera ${card.qty - 1}.`
-            : `Voulez-vous retirer « ${card.nom} » de la table ?`,
+        title: REMOVE_ACTION_LABEL,
+        message: `Voulez-vous retirer « ${card.nom} » de la table ?`,
         confirmLabel: 'Retirer',
       },
       {width: '380px'},
@@ -661,14 +657,12 @@ export class SessionPlayPageComponent {
   }
 
   /** Ouvre le dialogue d'attaque existant, prérempli. Les stats sont résolues à partir des jetons
-   * (`PlayToken`) correspondant aux deux cartes ; pour un lot pris pour cible, c'est le premier
-   * exemplaire encore debout qui est visé et qui prend les dégâts. */
+   * (`PlayToken`) correspondant aux deux cartes. */
   private openAttackDialog(attacker: TapisCard, target: TapisCard, choice: AttackChoice): void {
     const sessionId = this.sessionId();
     const tokens = this.board()?.tokens ?? [];
-    const targetIndex = firstStandingInstance(target);
-    const attackerToken = tokenForCard(tokens, attacker, firstStandingInstance(attacker));
-    const targetToken = tokenForCard(tokens, target, targetIndex);
+    const attackerToken = tokenForCard(tokens, attacker);
+    const targetToken = tokenForCard(tokens, target);
     if (!sessionId || !attackerToken || !targetToken) {
       return;
     }
@@ -690,7 +684,7 @@ export class SessionPlayPageComponent {
           panelClass: 'atd-panel',
           data: {
             attackerNom: attacker.nom,
-            targetNom: targetLabel(target),
+            targetNom: target.nom,
             attackerAvatar: attacker.avatar,
             targetAvatar: target.avatar,
             attacker: finalAttacker,
@@ -705,7 +699,7 @@ export class SessionPlayPageComponent {
             return;
           }
 
-          this.fightSessionService.applyDamage(sessionId, target.kind, target.pivotId, delta, targetIndex).subscribe({
+          this.fightSessionService.applyDamage(sessionId, target.kind, target.pivotId, delta).subscribe({
             next: () => {
               this.loadSession(sessionId);
 

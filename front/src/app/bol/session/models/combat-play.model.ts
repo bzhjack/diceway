@@ -30,10 +30,8 @@ export interface PlayToken {
   readonly vitaliteCourante: number | null;
   readonly tier: InitiativeTierKey | null;
   readonly lockedRound1: boolean;
-  /** Id de la ligne fight-session (heros/pnj/creature/demon) — plusieurs jetons d'un même lot de créatures/démons partagent le même id. */
+  /** Id de la ligne fight-session (heros/pnj/creature/demon). */
   readonly pivotId: number;
-  /** Index de cette instance au sein du lot (creature/demon avec qty > 1) — null pour hero/pnj, toujours seuls dans leur ligne. */
-  readonly instanceIndex: number | null;
   readonly combat: PlayCombatStats;
 }
 

@@ -52,8 +52,8 @@
           mat-icon-button
           class="exc-icon-btn exc-icon-btn--danger"
           type="button"
-          [attr.aria-label]="removeLabel()"
-          [matTooltip]="removeLabel()"
+          [attr.aria-label]="removeLabel"
+          [matTooltip]="removeLabel"
           (click)="removeRequested.emit(card())"
         >
           <mat-icon>delete</mat-icon>
@@ -65,19 +65,16 @@
 
       @if (card().kind !== 'hero') {
         <div class="exc-resources">
-          @for (stepper of steppers(); track stepper.label) {
-            <bol-instance-vitalite
-              [sessionId]="sessionId()"
-              [kind]="card().kind"
-              [pivotId]="card().pivotId"
-              [instanceIndex]="stepper.index"
-              [label]="stepper.label"
-              [value]="stepper.value"
-              [max]="card().vitaliteMax"
-              [nom]="card().nom"
-              (changed)="changed.emit()"
-            />
-          }
+          <bol-card-vitalite
+            [sessionId]="sessionId()"
+            [kind]="card().kind"
+            [pivotId]="card().pivotId"
+            label="Vitalité"
+            [value]="card().vitaliteCourante ?? 0"
+            [max]="card().vitaliteMax"
+            [nom]="card().nom"
+            (changed)="changed.emit()"
+          />
         </div>
       } @else if (!hero()) {
         <p class="exc-loading">Chargement de la fiche…</p>

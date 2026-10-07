@@ -20,8 +20,8 @@ import {EMPTY_AVATAR} from '../../combat-play.util';
 import {combatantKindIcon, combatantKindIconIsSvg} from '../../combat-statblock.util';
 import {ActionRollPanelComponent} from '../action-roll-panel/action-roll-panel';
 import {HeroResourcesComponent} from '../hero-resources/hero-resources';
-import {InstanceVitaliteComponent} from './instance-vitalite';
-import {campActionLabel, heroIdentityLine, removeActionLabel, vitaliteSteppers} from './tapis.util';
+import {CardVitaliteComponent} from './card-vitalite';
+import {campActionLabel, heroIdentityLine, REMOVE_ACTION_LABEL} from './tapis.util';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
 import {HeroDetailsComponent} from './hero-details';
 import {ExpandedHeroData} from '../../models/expanded-card.model';
@@ -39,7 +39,7 @@ const KIND_LABELS: Record<TapisKind, string> = {
 
 /** Carte du tapis dépliée sur place. Un bandeau commun (portrait carré, nom, vitalité) ouvre toutes les
  * cartes. Héros : héroïsme, jet d'action sur trois colonnes, détails (carrières, traits, armes, armures) en popovers, lien vers sa fiche d'édition. PNJ / créature /
- * démon : vitalité par exemplaire pour un lot, statbloc, changement de camp. Corbeille (retrait) à côté du bouton de fermeture, pour tous les types ; un clic hors de la carte la replie. Ne recharge rien elle-même : toute modification remonte à la page par événement. */
+ * démon : vitalité, statbloc, changement de camp. Corbeille (retrait) à côté du bouton de fermeture, pour tous les types ; un clic hors de la carte la replie. Ne recharge rien elle-même : toute modification remonte à la page par événement. */
 @Component({
   selector: 'bol-expanded-card',
   imports: [
@@ -51,7 +51,7 @@ const KIND_LABELS: Record<TapisKind, string> = {
     HeroDetailsComponent,
     ActionRollPanelComponent,
     HeroResourcesComponent,
-    InstanceVitaliteComponent,
+    CardVitaliteComponent,
   ],
   templateUrl: './expanded-card.html',
   styleUrl: './expanded-card.scss',
@@ -95,11 +95,8 @@ export class ExpandedCardComponent {
     if (card.kind === 'hero') {
       return hero ? heroIdentityLine(hero.details.infos) : '';
     }
-    const lot = card.qty > 1 ? ` · lot de ${card.qty}` : '';
-    return `${KIND_LABELS[card.kind]} · ${card.rang ?? ''}${lot}`;
+    return `${KIND_LABELS[card.kind]} · ${card.rang ?? ''}`;
   });
-
-  protected readonly steppers = computed(() => vitaliteSteppers(this.card()));
 
   /** État de navigation vers l'édition : au retour, la table se rouvre. */
   protected navigationState(): Record<string, string> | undefined {
@@ -140,7 +137,7 @@ export class ExpandedCardComponent {
     () => this.canAttack() || this.card().kind !== 'hero' || (this.mode() === 'libre' && this.hero() !== null),
   );
   protected readonly campLabel = computed(() => campActionLabel(this.card()));
-  protected readonly removeLabel = computed(() => removeActionLabel(this.card()));
+  protected readonly removeLabel = REMOVE_ACTION_LABEL;
 
   constructor() {
     // À l'ouverture, le focus entre dans la carte : le clavier et les lecteurs d'écran suivent.

@@ -32,7 +32,7 @@ function cardKeyOf(token: Pick<PlayToken, 'kind' | 'pivotId'>): string {
 }
 
 /** Les cartes dans l'ordre de jeu. Par défaut, l'ordre d'initiative des jetons (déjà trié par
- * paliers), un lot ne comptant qu'une fois. L'ordre manuel du MJ passe devant ; ses clés inconnues
+ * paliers). L'ordre manuel du MJ passe devant ; ses clés inconnues
  * ou en double sont ignorées, et les cartes qu'il ne cite pas suivent dans l'ordre d'initiative. */
 export function orderCards(
   cards: readonly TapisCard[],
@@ -72,15 +72,11 @@ export function orderCards(
   return result;
 }
 
-/** Hors combat : un héros en vitalité négative (mourant) ; un PNJ, une créature ou un démon à 0 —
- * tous ses exemplaires pour un lot. Un personnage sans vitalité suivie (maximum nul ou inconnu)
+/** Hors combat : un héros en vitalité négative (mourant) ; un PNJ, une créature ou un démon à 0. Un personnage sans vitalité suivie (maximum nul ou inconnu)
  * n'est jamais hors combat. */
 export function isOut(card: TapisCard): boolean {
   if (card.vitaliteMax === null || card.vitaliteMax <= 0) {
     return false;
-  }
-  if (card.instances) {
-    return card.instances.every((value) => value <= 0);
   }
   if (card.vitaliteCourante === null) {
     return false;
@@ -214,36 +210,9 @@ export function buildCombatStates(ordered: readonly OrderedCard[], etat: EtatCom
   );
 }
 
-/** Exemplaire qui prend les dégâts quand une carte est prise pour cible : le premier encore debout
- * d'un lot (le premier tout court si tous sont tombés) ; 0 pour une créature ou un démon seul ;
- * `null` pour un héros ou un PNJ, qui n'ont pas d'exemplaires. */
-export function firstStandingInstance(card: TapisCard): number | null {
-  if (card.instances) {
-    const standing = card.instances.findIndex((value) => value > 0);
-    return standing >= 0 ? standing : 0;
-  }
-  return card.kind === 'creature' || card.kind === 'demon' ? 0 : null;
-}
-
-/** Nom de la cible dans le dialogue d'attaque : « Hippocampe #2 » pour l'exemplaire visé d'un lot. */
-export function targetLabel(card: TapisCard): string {
-  const index = firstStandingInstance(card);
-  return card.instances && index !== null ? `${card.nom} #${index + 1}` : card.nom;
-}
-
-/** Jeton (`PlayToken`) correspondant à une carte, pour en résoudre les stats de combat : celui du
- * héros ou du PNJ, ou celui d'un exemplaire donné pour une créature ou un démon. */
-export function tokenForCard<T extends Pick<PlayToken, 'kind' | 'pivotId' | 'instanceIndex'>>(
-  tokens: readonly T[],
-  card: TapisCard,
-  instanceIndex: number | null,
-): T | null {
-  return (
-    tokens.find(
-      (token) =>
-        token.kind === card.kind && token.pivotId === card.pivotId && (token.instanceIndex ?? null) === instanceIndex,
-    ) ?? null
-  );
+/** Jeton (`PlayToken`) correspondant à une carte, pour en résoudre les stats de combat. */
+export function tokenForCard<T extends Pick<PlayToken, 'kind' | 'pivotId'>>(tokens: readonly T[], card: TapisCard): T | null {
+  return tokens.find((token) => token.kind === card.kind && token.pivotId === card.pivotId) ?? null;
 }
 
 /** Annonce du tour pour les lecteurs d'écran. */

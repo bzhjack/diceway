@@ -174,8 +174,8 @@ class BolFightSessionService
         match ($kind) {
             'hero'     => $this->createHeroRow($sessionId, $sourceId, $camp),
             'pnj'      => $this->createPnjRow($sessionId, $sourceId, $camp),
-            'creature' => $this->createCreatureRow($sessionId, $sourceId, $camp, $this->normalizeQty($qty)),
-            'demon'    => $this->createDemonRow($sessionId, $sourceId, $camp, $this->normalizeQty($qty)),
+            'creature' => $this->createCreatureRows($sessionId, $sourceId, $camp, $this->normalizeQty($qty)),
+            'demon'    => $this->createDemonRows($sessionId, $sourceId, $camp, $this->normalizeQty($qty)),
             default    => null,
         };
 
@@ -183,8 +183,8 @@ class BolFightSessionService
     }
 
     /**
-     * Retire un combattant d'une session déjà lancée. Pour les créatures/démons (gabarits avec
-     * quantité), retire une seule instance : décrémente qty, ou supprime la ligne si qty tombe à 0.
+     * Retire un combattant d'une session déjà lancée : chaque créature ou démon est sa propre ligne,
+     * donc on supprime simplement celle-ci.
      */
     public function removeCombatant(string $sessionId, string $userId, string $kind, int $pivotId): ?BolFightSession
     {
@@ -196,8 +196,8 @@ class BolFightSessionService
         match ($kind) {
             'hero'     => BolFightSessionHeros::where('id', $pivotId)->where('fight_session_id', $sessionId)->delete(),
             'pnj'      => BolFightSessionPnj::where('id', $pivotId)->where('fight_session_id', $sessionId)->delete(),
-            'creature' => $this->decrementOrDelete(BolFightSessionCreature::where('id', $pivotId)->where('fight_session_id', $sessionId)->first()),
-            'demon'    => $this->decrementOrDelete(BolFightSessionDemon::where('id', $pivotId)->where('fight_session_id', $sessionId)->first()),
+            'creature' => BolFightSessionCreature::where('id', $pivotId)->where('fight_session_id', $sessionId)->delete(),
+            'demon'    => BolFightSessionDemon::where('id', $pivotId)->where('fight_session_id', $sessionId)->delete(),
             default    => null,
         };
 
@@ -234,8 +234,8 @@ class BolFightSessionService
 
     /**
      * Applique une variation de vitalité (négative pour des dégâts, positive pour un soin) à un
-     * combattant, bornée entre 0 et son maximum. Pour une créature/démon en lot (qty > 1),
-     * `$instanceIndex` cible une seule instance du lot — les autres exemplaires ne sont pas affectés.
+     * combattant, bornée entre 0 et son maximum. `$instanceIndex` est ignoré : il subsiste dans l'API
+     * pour les clients qui l'envoient encore, mais chaque créature ou démon est sa propre ligne.
      */
     public function applyDamage(
         string $sessionId,
@@ -253,8 +253,8 @@ class BolFightSessionService
         match ($kind) {
             'hero'     => $this->applyHeroDamage($sessionId, $pivotId, $delta),
             'pnj'      => $this->applyMaxClampedDamage(BolFightSessionPnj::where('id', $pivotId)->where('fight_session_id', $sessionId)->first(), $delta),
-            'creature' => $this->applyInstanceDamage(BolFightSessionCreature::where('id', $pivotId)->where('fight_session_id', $sessionId)->first(), $delta, $instanceIndex),
-            'demon'    => $this->applyInstanceDamage(BolFightSessionDemon::where('id', $pivotId)->where('fight_session_id', $sessionId)->first(), $delta, $instanceIndex),
+            'creature' => $this->applyInstanceDamage(BolFightSessionCreature::where('id', $pivotId)->where('fight_session_id', $sessionId)->first(), $delta),
+            'demon'    => $this->applyInstanceDamage(BolFightSessionDemon::where('id', $pivotId)->where('fight_session_id', $sessionId)->first(), $delta),
             default    => null,
         };
 
@@ -285,40 +285,20 @@ class BolFightSessionService
         $row->update(['vitalite_courante' => max(0, min($row->vitalite_max, $current + $delta))]);
     }
 
-    /**
-     * Un lot de créatures/démons (qty > 1) partage une ligne mais chaque instance a son propre
-     * compteur de PV dans `vitalite_instances` (un tableau, un élément par instance).
-     */
-    private function applyInstanceDamage(BolFightSessionCreature|BolFightSessionDemon|null $row, int $delta, ?int $instanceIndex): void
+    /** Vitalité d'une créature ou d'un démon : un seul compteur, sur sa ligne (`vitalite_instances` en garde un reflet). */
+    private function applyInstanceDamage(BolFightSessionCreature|BolFightSessionDemon|null $row, int $delta): void
     {
         if (!$row) {
             return;
         }
 
-        $instances = $row->vitalite_instances ?? array_fill(0, max(1, $row->qty), $row->vitalite_courante ?? $row->vitalite_max);
-        $index = $instanceIndex !== null && isset($instances[$instanceIndex]) ? $instanceIndex : 0;
-
-        $instances[$index] = max(0, min($row->vitalite_max, ($instances[$index] ?? $row->vitalite_max) + $delta));
+        $current = $row->vitalite_courante ?? $row->vitalite_max;
+        $next = max(0, min($row->vitalite_max, $current + $delta));
 
         $row->update([
-            'vitalite_instances' => array_values($instances),
-            'vitalite_courante'  => $instances[$index],
+            'vitalite_courante'  => $next,
+            'vitalite_instances' => [$next],
         ]);
-    }
-
-    private function decrementOrDelete(BolFightSessionCreature|BolFightSessionDemon|null $row): void
-    {
-        if (!$row) {
-            return;
-        }
-
-        if ($row->qty > 1) {
-            $instances = $row->vitalite_instances ?? array_fill(0, $row->qty, $row->vitalite_courante ?? $row->vitalite_max);
-            array_pop($instances);
-            $row->update(['qty' => $row->qty - 1, 'vitalite_instances' => array_values($instances)]);
-        } else {
-            $row->delete();
-        }
     }
 
     private function hasCombatant(string $sessionId, string $kind, string $sourceId): bool
@@ -370,7 +350,7 @@ class BolFightSessionService
     {
         BolFightSessionCreature::where('fight_session_id', $sessionId)->delete();
         foreach ($list as $item) {
-            $this->createCreatureRow(
+            $this->createCreatureRows(
                 $sessionId,
                 (string) ($item['creatureId'] ?? ''),
                 $item['camp'] ?? null,
@@ -380,7 +360,26 @@ class BolFightSessionService
         }
     }
 
-    public function createCreatureRow(string $sessionId, string $creatureId, ?string $camp, int $qty, ?string $surnom = null): ?BolFightSessionCreature
+    /**
+     * Pose `$count` exemplaires d'une créature : une ligne, donc une carte, par exemplaire.
+     *
+     * @return array<int, BolFightSessionCreature>
+     */
+    public function createCreatureRows(string $sessionId, string $creatureId, ?string $camp, int $count, ?string $surnom = null): array
+    {
+        $rows = [];
+        for ($i = 0; $i < max(1, $count); $i++) {
+            $row = $this->createCreatureRow($sessionId, $creatureId, $camp, $surnom);
+            if (!$row) {
+                break;
+            }
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    public function createCreatureRow(string $sessionId, string $creatureId, ?string $camp, ?string $surnom = null): ?BolFightSessionCreature
     {
         $creature = BolCreature::with('capacites.capacite')->find($creatureId);
         if (!$creature) {
@@ -399,7 +398,7 @@ class BolFightSessionService
             'fight_session_id'  => $sessionId,
             'creature_id'       => $creature->id,
             'camp'              => $this->normalizeCamp($camp),
-            'qty'               => $qty,
+            'qty'               => 1,
             'surnom'            => $surnom,
             'rang'              => $creature->rang ?? 'coriace',
             'nom'               => $creature->nom,
@@ -408,7 +407,7 @@ class BolFightSessionService
             'esprit'            => $creature->esprit,
             'vitalite_max'       => $creature->vitalite,
             'vitalite_courante'  => $creature->vitalite,
-            'vitalite_instances' => array_fill(0, $qty, $creature->vitalite),
+            'vitalite_instances' => [$creature->vitalite],
             'attaque'           => $creature->attaque,
             'defense'           => $creature->defense,
             'degats'            => $creature->degats,
@@ -422,7 +421,7 @@ class BolFightSessionService
     {
         BolFightSessionDemon::where('fight_session_id', $sessionId)->delete();
         foreach ($list as $item) {
-            $this->createDemonRow(
+            $this->createDemonRows(
                 $sessionId,
                 (string) ($item['demonId'] ?? ''),
                 $item['camp'] ?? null,
@@ -432,7 +431,26 @@ class BolFightSessionService
         }
     }
 
-    public function createDemonRow(string $sessionId, string $demonId, ?string $camp, int $qty, ?string $surnom = null): ?BolFightSessionDemon
+    /**
+     * Pose `$count` exemplaires d'un démon : une ligne, donc une carte, par exemplaire.
+     *
+     * @return array<int, BolFightSessionDemon>
+     */
+    public function createDemonRows(string $sessionId, string $demonId, ?string $camp, int $count, ?string $surnom = null): array
+    {
+        $rows = [];
+        for ($i = 0; $i < max(1, $count); $i++) {
+            $row = $this->createDemonRow($sessionId, $demonId, $camp, $surnom);
+            if (!$row) {
+                break;
+            }
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    public function createDemonRow(string $sessionId, string $demonId, ?string $camp, ?string $surnom = null): ?BolFightSessionDemon
     {
         $demon = BolDemon::with('pouvoirs.pouvoir')->find($demonId);
         if (!$demon) {
@@ -449,7 +467,7 @@ class BolFightSessionService
             'fight_session_id'  => $sessionId,
             'demon_id'          => $demon->id,
             'camp'              => $this->normalizeCamp($camp),
-            'qty'               => $qty,
+            'qty'               => 1,
             'surnom'            => $surnom,
             'rang'              => $this->rangFromType($demon->type),
             'nom'               => $demon->nom,
@@ -462,7 +480,7 @@ class BolFightSessionService
             'defense'           => $demon->defense,
             'vitalite_max'       => $demon->vitalite,
             'vitalite_courante'  => $demon->vitalite,
-            'vitalite_instances' => array_fill(0, $qty, $demon->vitalite),
+            'vitalite_instances' => [$demon->vitalite],
             'degats'            => $demon->degats,
             'pouvoirs'          => $pouvoirs,
         ]);

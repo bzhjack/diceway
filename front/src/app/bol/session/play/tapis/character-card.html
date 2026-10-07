@@ -38,21 +38,7 @@
       <span class="chc-stat chc-stat--vitalite"><small>Vit.</small>{{ vitalite() }}</span>
     </span>
 
-    @if (card().instances; as instances) {
-      <span class="chc-pips">
-        @for (value of instances; track $index) {
-          <i
-            class="chc-pip"
-            role="img"
-            [class.chc-pip--low]="value > 0 && instanceLow(value)"
-            [class.chc-pip--out]="value <= 0"
-            [attr.aria-label]="instanceLabel($index, value)"
-          ></i>
-        }
-      </span>
-    } @else {
-      <span class="chc-bar"><i [class.chc-bar-fill--low]="low()" class="chc-bar-fill" [style.width.%]="percent()"></i></span>
-    }
+    <span class="chc-bar"><i [class.chc-bar-fill--low]="low()" class="chc-bar-fill" [style.width.%]="percent()"></i></span>
   </button>
 
   @if (combat()) {

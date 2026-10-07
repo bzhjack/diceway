@@ -57,12 +57,4 @@ export class CharacterCardComponent {
   protected onAvatarError(): void {
     this.avatarFailed.set(true);
   }
-
-  protected instanceLow(value: number): boolean {
-    return isLowVitalite(value, this.card().vitaliteMax);
-  }
-
-  protected instanceLabel(index: number, value: number): string {
-    return `exemplaire ${index + 1} : ${value} sur ${this.card().vitaliteMax ?? '—'}`;
-  }
 }

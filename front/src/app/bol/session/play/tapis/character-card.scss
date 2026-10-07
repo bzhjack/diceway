@@ -221,29 +221,6 @@
   background: var(--dw-color-echec);
 }
 
-.chc-pips {
-  display: flex;
-  gap: 2px;
-  width: 86%;
-  margin-top: 0.35rem;
-}
-
-.chc-pip {
-  flex: 1;
-  height: 5px;
-  border-radius: 2px;
-  background: var(--dw-color-health);
-  box-shadow: 0 0 0 1px #000;
-}
-
-.chc-pip--low {
-  background: var(--dw-color-echec);
-}
-
-.chc-pip--out {
-  background: var(--dw-surface-200);
-}
-
 // En combat, la face est un bouton d'action (attaquer) et un second bouton, posé dessus, la déplie :
 // deux boutons frères, jamais imbriqués.
 .chc-wrap {
@@ -253,7 +230,7 @@
 .chc-expand {
   position: absolute;
   // Dans le coin haut gauche de l'illustration : ancré par le haut, pour ne jamais recouvrir les
-  // chiffres, quelle que soit la hauteur du bas de la carte (barre de vitalité ou jauges d'un lot).
+  // chiffres, quelle que soit la hauteur du bas de la carte (barre de vitalité).
   left: 0.6rem;
   top: 1.5rem;
   display: flex;
