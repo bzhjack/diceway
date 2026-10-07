@@ -21,10 +21,13 @@
 }
 
 .tps-row {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+  // Place pour le titre de la zone, posé dans son coin haut gauche.
+  padding-top: 1.6rem;
   border: 2px dashed transparent;
   border-radius: 14px;
   transition: border-color 0.12s ease-out, background 0.12s ease-out, box-shadow 0.12s ease-out;
@@ -33,7 +36,7 @@
 // Pendant un glisser depuis la réserve : les deux rangs deviennent des zones de dépôt, celle visée s'allume.
 .tps-row--droppable {
   min-height: 9rem;
-  padding-block: 0.6rem;
+  padding-bottom: 0.6rem;
   border-color: color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);
   background: color-mix(in srgb, var(--dw-color-legendary) 6%, transparent);
 }
@@ -46,6 +49,9 @@
 }
 
 .tps-row-label {
+  position: absolute;
+  top: 0.7rem;
+  left: 1rem;
   margin: 0;
   font-size: 0.66rem;
   font-weight: 800;
