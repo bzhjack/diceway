@@ -42,18 +42,10 @@
 
 // Thème « barbare » (libre et combat) : fer noirci, cuir, bronze et lueur de torche. Ses variables
 // (surfaces brunes, métaux `--bar-*`, jetons Material) sont dans `styles/_barbare.scss`, partagées avec les
-// dialogues et messages, qui sont rendus hors de la page. Ici, le cadre et les fonds.
+// dialogues et messages, qui sont rendus hors de la page. Ici, les fonds de la table.
 .cp-page--barbare {
-  // Cadre de fer noirci, strié, avec un filet de bronze et un rivet à chaque coin.
+  // Place pour le cadre de fer de l'app (`body::before` dans `styles/_barbare.scss`).
   padding: 10px;
-  background:
-    radial-gradient(circle at 35% 30%, #c9b79a, #6b6258 45%, #1d1a17) 3px 3px / 14px 14px no-repeat,
-    radial-gradient(circle at 35% 30%, #c9b79a, #6b6258 45%, #1d1a17) calc(100% - 3px) 3px / 14px 14px no-repeat,
-    radial-gradient(circle at 35% 30%, #c9b79a, #6b6258 45%, #1d1a17) 3px calc(100% - 3px) / 14px 14px no-repeat,
-    radial-gradient(circle at 35% 30%, #c9b79a, #6b6258 45%, #1d1a17) calc(100% - 3px) calc(100% - 3px) / 14px 14px no-repeat,
-    repeating-linear-gradient(0deg, transparent 0 22px, rgba(0, 0, 0, 0.33) 22px 23px),
-    linear-gradient(160deg, #6a655d, #3b3733 40%, #1d1a17);
-  box-shadow: inset 0 0 0 2px var(--bar-bronze), inset 0 0 0 4px #14110f;
 
   .spp-reserve {
     border-right: 2px solid #6b4a16;

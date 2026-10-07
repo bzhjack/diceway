@@ -5,7 +5,8 @@
 .dw-page {
   min-height: 100dvh;
   padding: 1.5rem 1rem;
-  background: linear-gradient(180deg, #000000, #150e09 45%, #000000);
+  // Le fond (cuir et torches) est celui de `body`, dans `_barbare.scss`.
+  background: transparent;
 
   @media (min-width: 768px) {
     padding-left: 1.5rem;

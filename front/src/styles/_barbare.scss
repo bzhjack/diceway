@@ -64,3 +64,49 @@
 .mat-mdc-snack-bar-container .mdc-snackbar__surface {
   border: 1px solid #6b4a16;
 }
+
+// ── Fond et cadre de toute l'app ────────────────────────────────────────────────────────────────────
+// Cuir sombre éclairé par deux torches dans les angles du haut, fixe derrière les pages.
+html {
+  background-color: #0b0705 !important;
+}
+
+body {
+  background:
+    radial-gradient(45% 35% at 0 0, rgba(232, 135, 58, 0.2), transparent 70%) fixed,
+    radial-gradient(45% 35% at 100% 0, rgba(232, 135, 58, 0.2), transparent 70%) fixed,
+    radial-gradient(50% 40% at 50% 55%, #4a3523, transparent 75%) fixed,
+    linear-gradient(#241a12, #130d08) fixed;
+}
+
+// Cadre de fer noirci, strié, qui entoure l'écran, avec un rivet à chaque coin et un filet de bronze à l'intérieur.
+// Le calque est fixe et ne capte aucun clic ; il reste sous les dialogues et les menus (z-index des overlays : 1000).
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  pointer-events: none;
+  z-index: 900;
+}
+
+body::before {
+  inset: 0;
+  padding: 10px;
+  background:
+    radial-gradient(circle at 35% 30%, #c9b79a, #6b6258 45%, #1d1a17) 1px 1px / 9px 9px no-repeat,
+    radial-gradient(circle at 35% 30%, #c9b79a, #6b6258 45%, #1d1a17) calc(100% - 1px) 1px / 9px 9px no-repeat,
+    radial-gradient(circle at 35% 30%, #c9b79a, #6b6258 45%, #1d1a17) 1px calc(100% - 1px) / 9px 9px no-repeat,
+    radial-gradient(circle at 35% 30%, #c9b79a, #6b6258 45%, #1d1a17) calc(100% - 1px) calc(100% - 1px) / 9px 9px no-repeat,
+    repeating-linear-gradient(0deg, transparent 0 22px, rgba(0, 0, 0, 0.33) 22px 23px),
+    linear-gradient(160deg, #6a655d, #3b3733 40%, #1d1a17);
+  // Seul l'anneau de 10 px est dessiné : le centre est évidé par le masque.
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+
+body::after {
+  inset: 10px;
+  border: 2px solid #8c6a2f;
+  box-shadow: 0 0 0 2px #14110f, inset 0 0 70px rgba(0, 0, 0, 0.55);
+}

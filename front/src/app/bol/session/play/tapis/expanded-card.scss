@@ -45,7 +45,7 @@
 // colonne de résultat porte des boutons à libellé long (« Convertir en succès héroïque (−1 PH) ») qui
 // doivent tenir sur une ligne.
 .exc--hero {
-  width: min(56rem, 96vw);
+  width: min(70rem, 96vw);
 }
 
 // PNJ, créature, démon : entrée de bestiaire en deux colonnes, à la hauteur de son contenu (limitée à l'écran,
@@ -70,7 +70,7 @@
   flex-direction: column;
 
   &.exc--hero {
-    height: min(560px, 90dvh);
+    height: min(620px, 92dvh);
   }
 
   .exc-body {
@@ -516,4 +516,48 @@
 .exc-leaders--cols {
   grid-template-columns: 1fr 1fr;
   column-gap: 1.4rem;
+}
+
+// Héros : colonne d'identité un peu plus large, et les six statistiques de combat en tuiles au-dessus du jet.
+.exc--hero .exc-entry {
+  grid-template-columns: 15rem minmax(0, 1fr);
+}
+
+.exc-tiles {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin: 0;
+}
+
+.exc-tile {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  padding: 0.45rem 0.2rem;
+  border: 1px solid var(--bar-bronze, var(--dw-border));
+  border-radius: 8px;
+  background: var(--dw-surface-100);
+  text-align: center;
+
+  dd {
+    margin: 0;
+    font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+    font-size: 1.25rem;
+    line-height: 1.1;
+    color: var(--dw-surface-900);
+    white-space: nowrap;
+  }
+
+  dt {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dw-surface-700);
+  }
+}
+
+.exc-tile--hot dd {
+  color: var(--dw-color-echec);
 }

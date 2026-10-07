@@ -52,10 +52,12 @@
 
         @if (hero(); as h) {
           <section>
-            <h4 class="exc-sec">Combat</h4>
-            <dl class="exc-leaders exc-leaders--cols">
+            <dl class="exc-tiles" aria-label="Statistiques de combat">
               @for (stat of h.stats; track stat.label) {
-                <div><dt>{{ stat.label }}</dt><dd>{{ stat.value }}</dd></div>
+                <div class="exc-tile" [class.exc-tile--hot]="stat.label.startsWith('Dég')">
+                  <dd>{{ stat.value }}</dd>
+                  <dt>{{ stat.label }}</dt>
+                </div>
               }
             </dl>
           </section>
