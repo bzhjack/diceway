@@ -26,6 +26,10 @@ import {TapisCard, TapisKind} from '../../models/tapis.model';
 import {HeroDetailsComponent} from './hero-details';
 import {ExpandedHeroData} from '../../models/expanded-card.model';
 
+/** Clics hors de la carte qui ne la referment pas : popovers et dialogues (superposés au reste), autres
+ * cartes (qui se déplient d'elles-mêmes) et barre d'action de combat (on y règle son attaque, carte ouverte). */
+const KEEP_OPEN_SELECTOR = '.cdk-overlay-container, bol-character-card, bol-action-bar';
+
 const KIND_LABELS: Record<TapisKind, string> = {
   hero: 'Héros',
   pnj: 'PNJ',
@@ -35,7 +39,7 @@ const KIND_LABELS: Record<TapisKind, string> = {
 
 /** Carte du tapis dépliée sur place. Un bandeau commun (portrait carré, nom, vitalité) ouvre toutes les
  * cartes. Héros : héroïsme, jet d'action sur trois colonnes, détails (carrières, traits, armes, armures) en popovers, lien vers sa fiche d'édition. PNJ / créature /
- * démon : vitalité par exemplaire pour un lot, statbloc, changement de camp, retrait. Ne recharge rien elle-même : toute modification remonte à la page par événement. */
+ * démon : vitalité par exemplaire pour un lot, statbloc, changement de camp. Corbeille (retrait) à côté du bouton de fermeture, pour tous les types ; un clic hors de la carte la replie. Ne recharge rien elle-même : toute modification remonte à la page par événement. */
 @Component({
   selector: 'bol-expanded-card',
   imports: [
@@ -52,6 +56,7 @@ const KIND_LABELS: Record<TapisKind, string> = {
   templateUrl: './expanded-card.html',
   styleUrl: './expanded-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {'(document:click)': 'onDocumentClick($event)'},
 })
 export class ExpandedCardComponent {
   readonly card = input.required<TapisCard>();
@@ -78,6 +83,8 @@ export class ExpandedCardComponent {
   readonly attackRequested = output<TapisCard>();
 
   private readonly root = viewChild.required<ElementRef<HTMLElement>>('root');
+  /** Instant de création : un clic antérieur est celui qui vient de déplier la carte, pas un clic extérieur. */
+  private readonly openedAt = performance.now();
 
   /** Héroïsme vivant du héros affiché, partagé entre les ressources et le jet d'action. */
   protected readonly heroisme = linkedSignal(() => this.hero()?.actionRoll.heroisme ?? 0);
@@ -105,6 +112,17 @@ export class ExpandedCardComponent {
   protected readonly hasAvatar = computed(() => this.card().avatar !== EMPTY_AVATAR && !this.avatarFailed());
   protected readonly kindIcon = computed(() => combatantKindIcon(this.card().kind));
   protected readonly kindIconIsSvg = computed(() => combatantKindIconIsSvg(this.card().kind));
+
+  /** Un clic en dehors de la carte la replie. */
+  protected onDocumentClick(event: MouseEvent): void {
+    const target = event.target;
+    if (event.timeStamp <= this.openedAt || !(target instanceof Element) || !target.isConnected) {
+      return;
+    }
+    if (!this.root().nativeElement.contains(target) && !target.closest(KEEP_OPEN_SELECTOR)) {
+      this.closed.emit();
+    }
+  }
 
   protected onAvatarError(): void {
     this.avatarFailed.set(true);

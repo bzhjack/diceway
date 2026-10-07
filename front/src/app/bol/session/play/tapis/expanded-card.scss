@@ -208,11 +208,6 @@
   gap: 0.4rem;
 }
 
-.exc-remove {
-  color: var(--dw-color-danger-muted);
-  border-color: var(--dw-border-remove);
-}
-
 .exc-attack {
   align-self: flex-start;
 }
@@ -227,4 +222,9 @@
     --mat-icon-button-icon-color: var(--dw-surface-900);
     background: var(--dw-surface-300);
   }
+}
+
+.exc-icon-btn--danger:hover {
+  --mat-icon-button-icon-color: #fff;
+  background: var(--dw-color-echec-forte);
 }

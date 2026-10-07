@@ -48,6 +48,16 @@
             </a>
           }
         }
+        <button
+          mat-icon-button
+          class="exc-icon-btn exc-icon-btn--danger"
+          type="button"
+          [attr.aria-label]="removeLabel()"
+          [matTooltip]="removeLabel()"
+          (click)="removeRequested.emit(card())"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
         <button mat-icon-button class="exc-icon-btn" type="button" aria-label="Replier la carte" (click)="closed.emit()">
           <mat-icon>close</mat-icon>
         </button>
@@ -88,18 +98,13 @@
           <bol-statblock [data]="sb" [imageSrc]="card().avatar" [returnUrl]="returnUrl()" [hideIdentity]="true" />
         }
 
-        <div class="exc-actions">
-          @if (mode() === 'libre') {
-            @if (campLabel(); as label) {
-              <button mat-stroked-button size="small" type="button" (click)="campToggleRequested.emit(card())">
-                <mat-icon>swap_vert</mat-icon> {{ label }}
-              </button>
-            }
-          }
-          <button mat-stroked-button size="small" type="button" class="exc-remove" (click)="removeRequested.emit(card())">
-            <mat-icon>person_remove</mat-icon> {{ removeLabel() }}
-          </button>
-        </div>
+        @if (mode() === 'libre' && campLabel(); as label) {
+          <div class="exc-actions">
+            <button mat-stroked-button size="small" type="button" (click)="campToggleRequested.emit(card())">
+              <mat-icon>swap_vert</mat-icon> {{ label }}
+            </button>
+          </div>
+        }
       }
       @if (canAttack()) {
         <button mat-flat-button size="small" type="button" class="exc-attack" (click)="attackRequested.emit(card())">
