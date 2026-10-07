@@ -8,7 +8,7 @@
   <section
     class="tps-row"
     data-drop-camp="adversaires"
-    [class.tps-row--droppable]="dropActive()"
+    [class.tps-row--droppable]="dropActive() && adversairesDroppable()"
     [class.tps-row--hot]="hotCamp() === 'adversaires'"
     aria-labelledby="tps-presents-label"
   >

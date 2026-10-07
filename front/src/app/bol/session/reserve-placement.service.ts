@@ -1,4 +1,4 @@
-import {inject, Injectable, signal} from '@angular/core';
+import {computed, inject, Injectable, signal} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {catchError, concatMap, EMPTY, from, last, map, Observable, of, tap} from 'rxjs';
 import {extractApiErrorMessage} from '../../core/api-error.utils';
@@ -50,6 +50,13 @@ export class ReservePlacementService {
   readonly quantities = signal<ReadonlyMap<string, number>>(new Map());
   /** Un glisser depuis la réserve est en cours : le tapis dessine ses zones de dépôt. */
   readonly dragging = signal(false);
+  /** Types de personnages emportés par le glisser en cours. */
+  readonly draggedKinds = signal<ReadonlySet<CombatantKind>>(new Set());
+  /** La zone des adversaires reçoit le glisser : pas quand il n'emporte que des héros, qui ne sont jamais adversaires. */
+  readonly adversairesDroppable = computed(() => {
+    const kinds = this.draggedKinds();
+    return kinds.size === 0 || [...kinds].some((kind) => kind !== 'hero');
+  });
   /** Camp de la zone sous le pointeur pendant un glisser. */
   readonly hoverCamp = signal<CombatCamp | null>(null);
   /** Compteur incrémenté quand une pose vient d'être annulée : la page recharge alors la session. */

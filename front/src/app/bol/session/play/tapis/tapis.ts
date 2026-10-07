@@ -65,6 +65,7 @@ export class TapisComponent {
   readonly endTurnRequested = output<void>();
 
   protected readonly dropActive = this.placement.dragging;
+  protected readonly adversairesDroppable = this.placement.adversairesDroppable;
   protected readonly hotCamp = this.placement.hoverCamp;
   protected readonly rows = computed(() => splitRows(this.cards()));
   protected readonly presentsLabel = computed(() => (this.mode() === 'combat' ? 'Adversaires' : 'Présents dans la scène'));

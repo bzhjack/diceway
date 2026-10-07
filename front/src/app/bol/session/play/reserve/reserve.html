@@ -60,7 +60,7 @@
             (click)="toggle(row)"
             (dblclick)="placeOne(row)"
             (keydown)="onRowKey($event, row)"
-            (cdkDragStarted)="onDragStarted()"
+            (cdkDragStarted)="onDragStarted(row)"
             (cdkDragMoved)="onDragMoved($event)"
             (cdkDragEnded)="onDragEnded($event, row)"
           >
