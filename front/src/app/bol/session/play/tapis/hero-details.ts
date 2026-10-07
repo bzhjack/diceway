@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, Component, computed, input, output} from '@angular/core';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -7,11 +8,11 @@ import {HeroDetails} from '../../models/tapis.model';
 /** Les boutons sous le nom d'un héros — carrières, traits, armes, armures, informations — ouvrent chacun un
  * popover avec le détail. Un bouton ne montre que son icône et le nombre (nom en infobulle) : la liste peut
  * être longue (sept armures…) et la place manque à côté des statistiques. Dans les popovers des armes et des
- * armures, un clic équipe ou déséquipe (une seule armure par catégorie, plusieurs armes possibles) : le
+ * armures, une case à cocher équipe ou déséquipe (une seule armure par catégorie, plusieurs armes possibles) : le
  * composant le signale, c'est la page qui enregistre. */
 @Component({
   selector: 'bol-hero-details',
-  imports: [MatIconModule, MatMenuModule, MatTooltipModule],
+  imports: [MatCheckboxModule, MatIconModule, MatMenuModule, MatTooltipModule],
   template: `
     <button
       type="button"
@@ -123,32 +124,26 @@ import {HeroDetails} from '../../models/tapis.model';
         <ul class="hd-list">
           @for (arme of details().armes; track arme.id) {
             <li>
-              <button
-                type="button"
-                class="hd-row hd-row--button"
-                [class.hd-row--on]="arme.equipee"
-                [attr.aria-pressed]="arme.equipee"
-                [attr.aria-label]="(arme.equipee ? 'Déséquiper ' : 'Équiper ') + arme.label"
-                (click)="armeToggled.emit(arme.id)"
-              >
+              <div class="hd-row" [class.hd-row--on]="arme.equipee">
                 <span class="hd-name">
-                  @if (arme.equipee) {
-                    <mat-icon class="hd-on" aria-label="Équipée">check_circle</mat-icon>
-                  }
-                  {{ arme.label }}
+                  <mat-checkbox
+                    [checked]="arme.equipee"
+                    [attr.aria-label]="(arme.equipee ? 'Déséquiper ' : 'Équiper ') + arme.label"
+                    (change)="armeToggled.emit(arme.id)"
+                  >{{ arme.label }}</mat-checkbox>
                 </span>
                 <span class="hd-value">{{ arme.degats || '—' }}</span>
                 @if (arme.portee) {
                   <span class="hd-note">{{ arme.portee }}</span>
                 }
-              </button>
+              </div>
             </li>
           } @empty {
             <li class="hd-empty">Aucune arme.</li>
           }
         </ul>
         @if (details().armes.length) {
-          <p class="hd-hint">Un clic équipe ou déséquipe une arme. Seules les armes équipées sont proposées à l'attaque.</p>
+          <p class="hd-hint">Coche pour équiper une arme, décoche pour la déséquiper. Seules les armes équipées sont proposées à l'attaque.</p>
         }
       </div>
     </mat-menu>
@@ -159,19 +154,13 @@ import {HeroDetails} from '../../models/tapis.model';
         <ul class="hd-list">
           @for (armure of details().armures; track armure.label) {
             <li>
-            <button
-              type="button"
-              class="hd-row hd-row--button"
-              [class.hd-row--on]="armure.equipee"
-              [attr.aria-pressed]="armure.equipee"
-              [attr.aria-label]="(armure.equipee ? 'Déséquiper ' : 'Équiper ') + armure.label"
-              (click)="armureToggled.emit(armure.id)"
-            >
+            <div class="hd-row" [class.hd-row--on]="armure.equipee">
               <span class="hd-name">
-                @if (armure.equipee) {
-                  <mat-icon class="hd-on" aria-label="Équipée">check_circle</mat-icon>
-                }
-                {{ armure.label }}
+                <mat-checkbox
+                  [checked]="armure.equipee"
+                  [attr.aria-label]="(armure.equipee ? 'Déséquiper ' : 'Équiper ') + armure.label"
+                  (change)="armureToggled.emit(armure.id)"
+                >{{ armure.label }}</mat-checkbox>
               </span>
               @if (armure.categorie === 'bouclier') {
                 <!-- La « protection » d'un bouclier est une règle en toutes lettres, pas une valeur de dés. -->
@@ -185,14 +174,14 @@ import {HeroDetails} from '../../models/tapis.model';
               @if (armure.malus) {
                 <span class="hd-note">{{ armure.malus }}</span>
               }
-            </button>
+            </div>
             </li>
           } @empty {
             <li class="hd-empty">Aucune armure.</li>
           }
         </ul>
         @if (details().armures.length) {
-          <p class="hd-hint">Un clic équipe ou déséquipe une armure.</p>
+          <p class="hd-hint">Coche pour équiper une armure, décoche pour la déséquiper.</p>
         }
       </div>
     </mat-menu>
