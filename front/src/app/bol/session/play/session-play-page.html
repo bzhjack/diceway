@@ -6,7 +6,8 @@
     <a routerLink="/library/sessions">Voir mes sessions</a>
   </div>
 } @else if (board(); as b) {
-  <div class="cp-page">
+  <div class="cp-page" [class.cp-page--barbare]="mode() === 'libre'">
+    <div class="cp-table">
     <bol-session-header
       [mode]="mode()"
       [titre]="headerTitle()"
@@ -89,5 +90,6 @@
         </div>
       </div>
     }
+    </div>
   </div>
 }

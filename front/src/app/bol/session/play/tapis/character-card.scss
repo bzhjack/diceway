@@ -5,9 +5,9 @@
 .chc {
   // Métal du cadre, selon le type : clair → moyen → sombre.
   --chc-kind: var(--dw-color-reussite);
-  --chc-metal-1: #f1e3b4;
-  --chc-metal-2: var(--dw-color-legendary);
-  --chc-metal-3: #92620a;
+  --chc-metal-1: var(--bar-pj-1, #f1e3b4);
+  --chc-metal-2: var(--bar-pj-2, var(--dw-color-legendary));
+  --chc-metal-3: var(--bar-pj-3, #92620a);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -46,21 +46,21 @@
 
 .chc--pnj {
   --chc-kind: var(--dw-color-pnj);
-  --chc-metal-1: #e2e8f0;
-  --chc-metal-2: #94a3b8;
-  --chc-metal-3: #475569;
+  --chc-metal-1: var(--bar-pnj-1, #e2e8f0);
+  --chc-metal-2: var(--bar-pnj-2, #94a3b8);
+  --chc-metal-3: var(--bar-pnj-3, #475569);
 }
 .chc--creature {
   --chc-kind: var(--dw-color-creature);
-  --chc-metal-1: #fed7aa;
-  --chc-metal-2: #d97706;
-  --chc-metal-3: #78350f;
+  --chc-metal-1: var(--bar-creature-1, #fed7aa);
+  --chc-metal-2: var(--bar-creature-2, #d97706);
+  --chc-metal-3: var(--bar-creature-3, #78350f);
 }
 .chc--demon {
   --chc-kind: var(--dw-color-demon);
-  --chc-metal-1: #fecdd3;
-  --chc-metal-2: #be123c;
-  --chc-metal-3: #4c0519;
+  --chc-metal-1: var(--bar-demon-1, #fecdd3);
+  --chc-metal-2: var(--bar-demon-2, #be123c);
+  --chc-metal-3: var(--bar-demon-3, #4c0519);
 }
 
 .chc-badge {
@@ -189,15 +189,15 @@
 }
 
 .chc-stat--degats {
-  background: linear-gradient(160deg, #fde68a, #d99a06 60%, #7a4f04);
+  background: linear-gradient(160deg, var(--bar-d-1, #fde68a), var(--bar-d-2, #d99a06) 60%, var(--bar-d-3, #7a4f04));
 }
 
 .chc-stat--defense {
-  background: linear-gradient(160deg, #e2e8f0, #64748b 60%, #334155);
+  background: linear-gradient(160deg, var(--bar-f-1, #e2e8f0), var(--bar-f-2, #64748b) 60%, var(--bar-f-3, #334155));
 }
 
 .chc-stat--vitalite {
-  background: linear-gradient(160deg, #fca5a5, #ef4444 55%, #7f1d1d);
+  background: linear-gradient(160deg, var(--bar-v-1, #fca5a5), var(--bar-v-2, #ef4444) 55%, var(--bar-v-3, #7f1d1d));
 }
 
 .chc-bar {

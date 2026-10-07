@@ -33,6 +33,102 @@
   background: linear-gradient(180deg, var(--dw-surface-0), var(--dw-surface-50) 45%, var(--dw-surface-0));
 }
 
+.cp-table {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+// Thème « barbare » (hors combat) : fer noirci, cuir, bronze et lueur de torche. Les surfaces slate du
+// design system sont redéfinies par un brun chaud sur toute la table (réserve, tapis, carte dépliée,
+// statbloc) ; les cartes lisent les métaux `--bar-*`.
+.cp-page--barbare {
+  --dw-surface-0: #0b0705;
+  --dw-surface-50: #150e09;
+  --dw-surface-100: #1d150f;
+  --dw-surface-200: #2a1c12;
+  --dw-surface-300: #3d2b1c;
+  --dw-surface-400: #5a4630;
+  --dw-surface-500: #9c8763;
+  --dw-surface-600: #b59d78;
+  --dw-surface-700: #d6c3a0;
+  --dw-surface-800: #e8dcc3;
+  --dw-surface-900: #f1e6d0;
+  --dw-border: #4f3b27;
+  --dw-color-legendary: #d9a441;
+  // Material : le cyan du thème devient bronze (boutons principaux, onglets, sélection).
+  --mat-sys-primary: #d9a441;
+  --mat-sys-on-primary: #1a1203;
+  --mat-sys-primary-container: #4a2f0f;
+  --mat-sys-on-primary-container: #f1e6d0;
+  --mat-sys-secondary-container: #4a2f0f;
+  --mat-sys-on-secondary-container: #f1e6d0;
+  // Les jetons des composants sont résolus sur `html` : on les redéfinit ici pour qu'ils suivent la table.
+  --mat-button-toggle-selected-state-background-color: #4a2f0f;
+  --mat-button-toggle-selected-state-text-color: #f1e6d0;
+  --mat-button-outlined-label-text-color: #d9a441;
+  --mat-button-outlined-outline-color: #6b4a16;
+  --mat-button-text-label-text-color: #d9a441;
+  --bar-bronze: #8c6a2f;
+  --bar-ember: #e8873a;
+  --bar-pj-1: #e0c48a;
+  --bar-pj-2: #a8762a;
+  --bar-pj-3: #4a2f0f;
+  --bar-pnj-1: #d8dde3;
+  --bar-pnj-2: #8b949e;
+  --bar-pnj-3: #3a4047;
+  --bar-creature-1: #e8a57a;
+  --bar-creature-2: #a04a1c;
+  --bar-creature-3: #3d1608;
+  --bar-demon-1: #e08a8a;
+  --bar-demon-2: #8f1d1d;
+  --bar-demon-3: #2e0707;
+  --bar-d-1: #e0c48a;
+  --bar-d-2: #a8762a;
+  --bar-d-3: #4a2f0f;
+  --bar-f-1: #cfd5db;
+  --bar-f-2: #6b737c;
+  --bar-f-3: #2c3238;
+  --bar-v-1: #e06a5a;
+  --bar-v-2: #9b1c1c;
+  --bar-v-3: #3d0808;
+
+  // Cadre de fer noirci, strié, avec un filet de bronze et un rivet à chaque coin.
+  padding: 10px;
+  background:
+    radial-gradient(circle at 35% 30%, #c9b79a, #6b6258 45%, #1d1a17) 3px 3px / 14px 14px no-repeat,
+    radial-gradient(circle at 35% 30%, #c9b79a, #6b6258 45%, #1d1a17) calc(100% - 3px) 3px / 14px 14px no-repeat,
+    radial-gradient(circle at 35% 30%, #c9b79a, #6b6258 45%, #1d1a17) 3px calc(100% - 3px) / 14px 14px no-repeat,
+    radial-gradient(circle at 35% 30%, #c9b79a, #6b6258 45%, #1d1a17) calc(100% - 3px) calc(100% - 3px) / 14px 14px no-repeat,
+    repeating-linear-gradient(0deg, transparent 0 22px, rgba(0, 0, 0, 0.33) 22px 23px),
+    linear-gradient(160deg, #6a655d, #3b3733 40%, #1d1a17);
+  box-shadow: inset 0 0 0 2px var(--bar-bronze), inset 0 0 0 4px #14110f;
+
+  .spp-reserve {
+    border-right: 2px solid #6b4a16;
+    background: linear-gradient(90deg, #0f0a06, #1a120b);
+    box-shadow: inset -8px 0 14px -8px rgba(0, 0, 0, 0.8);
+  }
+
+  .spp-reserve-toggle {
+    border-right-color: #6b4a16;
+    background: #150e09;
+  }
+
+  .cp-table {
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 2px #0b0705, inset 0 0 70px #000;
+    background:
+      radial-gradient(45% 35% at 0% 0%, rgba(232, 135, 58, 0.2), transparent 70%),
+      radial-gradient(45% 35% at 100% 0%, rgba(232, 135, 58, 0.2), transparent 70%),
+      radial-gradient(50% 40% at 50% 55%, #4a3523, transparent 75%),
+      linear-gradient(#241a12, #130d08);
+  }
+}
+
 // Sous l'en-tête : la réserve à gauche (mode libre seulement), sa languette de repli, puis la colonne
 // principale — l'ordre de jeu en combat et le tapis, qui s'étire.
 .spp-body {
