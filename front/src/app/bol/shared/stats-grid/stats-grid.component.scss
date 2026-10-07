@@ -114,3 +114,22 @@
 .hs-cell--key {
   background: rgba(147, 197, 253, 0.12);
 }
+
+// Case texte (dégâts : « d6B », « d6M »…) : même place qu'un stepper, valeur centrée.
+.hs-text {
+  width: 5.5rem;
+  height: 1.7rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 6px;
+  background: var(--dw-surface-0);
+  color: var(--dw-color-legendary);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 800;
+  text-align: center;
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 1px;
+  }
+}

@@ -20,6 +20,10 @@ export class StatsGridComponent {
     this.groups().map((group) => `${group.columns}fr`).join(' '),
   );
 
+  protected textFieldFor(control: string): Field<string> {
+    return (this.form() as unknown as Record<string, Field<string>>)[control];
+  }
+
   protected fieldFor(control: string): Field<number> {
     return (this.form() as unknown as Record<string, Field<number>>)[control];
   }
