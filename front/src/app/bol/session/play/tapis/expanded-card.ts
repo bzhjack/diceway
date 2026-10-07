@@ -15,6 +15,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterLink} from '@angular/router';
 import {BolStatblockData} from '../../../shared/models/bol-statblock.model';
+import {BolStatblockComponent} from '../../../shared/statblock/bol-statblock.component';
 import {EMPTY_AVATAR} from '../../combat-play.util';
 import {combatantKindIcon, combatantKindIconIsSvg} from '../../combat-statblock.util';
 import {ActionRollPanelComponent} from '../action-roll-panel/action-roll-panel';
@@ -46,6 +47,7 @@ const KIND_LABELS: Record<TapisKind, string> = {
     ActionRollPanelComponent,
     HeroResourcesComponent,
     CardVitaliteComponent,
+    BolStatblockComponent,
   ],
   templateUrl: './expanded-card.html',
   styleUrl: './expanded-card.scss',
@@ -111,17 +113,6 @@ export class ExpandedCardComponent {
   protected readonly fixedHeight = computed(() => this.card().kind === 'hero' && this.mode() === 'libre' && this.hero() !== null);
 
 
-  /** Les tuiles du statbloc se partagent en deux moitiés : les attributs, puis les statistiques de combat. */
-  protected readonly attributTiles = computed(() => {
-    const tiles = this.statblock()?.tiles ?? [];
-    return tiles.slice(0, Math.ceil(tiles.length / 2));
-  });
-  protected readonly combatTiles = computed(() => {
-    const tiles = this.statblock()?.tiles ?? [];
-    return tiles.slice(Math.ceil(tiles.length / 2));
-  });
-  /** Protection et dégâts : la bande vitale moins la vitalité, que le cœur porte déjà. */
-  protected readonly protectionLines = computed(() => (this.statblock()?.vitals ?? []).filter((tile) => tile.tone !== 'health'));
   protected readonly campLabel = computed(() => campActionLabel(this.card()));
   protected readonly removeLabel = REMOVE_ACTION_LABEL;
 

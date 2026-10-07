@@ -53,7 +53,7 @@
 .exc--pnj,
 .exc--creature,
 .exc--demon {
-  width: min(41rem, 94vw);
+  width: min(46rem, 94vw);
   max-height: 90dvh;
   overflow-y: auto;
   scrollbar-width: thin;
@@ -330,24 +330,7 @@
   gap: 0.2rem;
 }
 
-.exc-chips {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.35rem;
-}
 
-.exc-chip {
-  padding: 0.2rem 0.65rem;
-  border: 1px solid var(--exc-metal-2);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--exc-metal-3) 35%, var(--dw-surface-0));
-  color: var(--dw-surface-800);
-  font-size: 0.74rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
 
 .exc-camp {
   max-width: 100%;
@@ -377,101 +360,12 @@
   flex: 1;
 }
 
-.exc-cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.4rem;
 
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
-  }
-}
 
-.exc-cols--sections {
-  align-items: start;
-  row-gap: 1rem;
-}
 
-.exc-sec {
-  margin: 0 0 0.45rem;
-  padding-bottom: 0.3rem;
-  border-bottom: 1px solid var(--dw-border);
-  color: var(--dw-color-legendary);
-  font-size: 0.8rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
 
-.exc-leaders {
-  display: grid;
-  gap: 0.1rem;
-  margin: 0;
 
-  > div {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.5rem;
-    padding: 0.15rem 0;
-    font-size: 1rem;
-  }
 
-  dt {
-    order: 1;
-    color: var(--dw-surface-700);
-  }
-
-  // Les points de conduite entre le libellé et la valeur.
-  > div:not(.exc-leaders--note)::after {
-    content: '';
-    order: 2;
-    flex: 1;
-    min-width: 1rem;
-    border-bottom: 2px dotted color-mix(in srgb, var(--bar-bronze, var(--dw-border)) 75%, transparent);
-    transform: translateY(-0.25rem);
-  }
-
-  dd {
-    order: 3;
-    margin: 0;
-    color: var(--dw-surface-900);
-    font-weight: 800;
-    font-size: 1.1rem;
-    font-variant-numeric: tabular-nums;
-  }
-}
-
-.exc-leaders--hot dd {
-  color: var(--dw-color-echec);
-}
-
-// Entrée sans valeur (capacité, pouvoir) : titre, puis son détail sur toute la largeur.
-.exc-leaders--note {
-  display: block !important;
-
-  dt {
-    font-weight: 800;
-    color: var(--dw-surface-900);
-  }
-
-  .exc-leaders-detail {
-    display: block;
-    margin-top: 0.15rem;
-    font-size: 0.9rem;
-    font-weight: 400;
-    line-height: 1.4;
-    color: var(--dw-surface-700);
-  }
-}
-
-.exc-empty,
-.exc-comment {
-  margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.4;
-  color: var(--dw-surface-600);
-}
 
 .exc-edit {
   white-space: nowrap;
@@ -513,10 +407,6 @@
   min-height: 0;
 }
 
-.exc-leaders--cols {
-  grid-template-columns: 1fr 1fr;
-  column-gap: 1.4rem;
-}
 
 // Héros : colonne d'identité un peu plus large, et les six statistiques de combat en tuiles au-dessus du jet.
 .exc--hero .exc-entry {
@@ -561,3 +451,12 @@
 .exc-tile--hot dd {
   color: var(--dw-color-echec);
 }
+
+// Fiches des autres personnages : mêmes cartes que le jet du héros — chaque rubrique est une carte à bordure, ses
+// chiffres en tuiles. La colonne d'identité a la même largeur que celle du héros.
+.exc-entry {
+  grid-template-columns: 15rem minmax(0, 1fr);
+}
+
+
+

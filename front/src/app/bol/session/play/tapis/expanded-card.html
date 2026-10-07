@@ -74,26 +74,22 @@
       </div>
     </div>
   } @else {
-    <!-- PNJ, créature, démon : une entrée de bestiaire en deux colonnes. À gauche l'identité, le cœur de vitalité et le
-         rang ; à droite les statistiques en lignes « libellé ……… valeur ». La carte a la hauteur de son contenu. -->
-    <div class="exc-entry">
-      <aside class="exc-entry-side">
-        <div class="exc-portrait exc-portrait--big">
-          @if (hasAvatar()) {
-            <img class="exc-portrait-img" [src]="card().avatar" alt="" (error)="onAvatarError()" />
-          } @else if (kindIconIsSvg()) {
-            <mat-icon [svgIcon]="kindIcon()" />
-          } @else {
-            <mat-icon>{{ kindIcon() }}</mat-icon>
-          }
-        </div>
-        <div>
-          <h3 class="exc-name exc-name--wrap">{{ card().nom }}</h3>
-          @if (subtitle(); as subtitle) {
-            <p class="exc-sub">{{ subtitle }}</p>
-          }
-        </div>
+    <!-- PNJ, créature, démon : la fiche partagée avec les bibliothèques, qui reçoit ici le stepper de vitalité, le changement de
+         camp, les boutons et « Attaquer ». La carte a la hauteur de son contenu. -->
+    @if (statblock(); as sb) {
+      <bol-statblock
+        [data]="sb"
+        [imageSrc]="card().avatar"
+        [name]="card().nom"
+        [kind]="card().kind"
+        [subtitle]="subtitle()"
+        [returnUrl]="returnUrl()"
+        [showVitality]="false"
+        [showClose]="false"
+        [bare]="true"
+      >
         <bol-card-vitalite
+          sheetSide
           class="exc-entry-vit"
           [sessionId]="sessionId()"
           [kind]="card().kind"
@@ -104,112 +100,33 @@
           [nom]="card().nom"
           (changed)="changed.emit()"
         />
-        @if (statblock(); as sb) {
-          <div class="exc-chips">
-            @for (chip of sb.chips; track chip.label) {
-              <span class="exc-chip">{{ chip.label }}</span>
-            }
-          </div>
-        }
         @if (mode() === 'libre' && campLabel(); as label) {
-          <button mat-stroked-button size="small" type="button" class="exc-camp" (click)="campToggleRequested.emit(card())">
+          <button sheetSide mat-stroked-button size="small" type="button" class="exc-camp" (click)="campToggleRequested.emit(card())">
             <mat-icon>swap_vert</mat-icon> {{ label }}
           </button>
         }
-      </aside>
-
-      <div class="exc-entry-main">
-        <div class="exc-entry-bar">
-          @if (statblock()?.editRoute; as editRoute) {
-            <a mat-stroked-button size="small" class="exc-edit" [routerLink]="editRoute" [state]="navigationState()">
-              <mat-icon>edit</mat-icon> Modifier la fiche
-            </a>
-          }
-          <span class="exc-entry-spacer"></span>
-          <button
-            mat-icon-button
-            class="exc-icon-btn exc-icon-btn--danger"
-            type="button"
-            [attr.aria-label]="removeLabel"
-            [matTooltip]="removeLabel"
-            (click)="removeRequested.emit(card())"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-          <button mat-icon-button class="exc-icon-btn" type="button" aria-label="Replier la carte" (click)="closed.emit()">
-            <mat-icon>close</mat-icon>
-          </button>
-        </div>
-
-        @if (statblock(); as sb) {
-          <div class="exc-cols">
-            <section>
-              <h4 class="exc-sec">Attributs</h4>
-              <dl class="exc-leaders">
-                @for (tile of attributTiles(); track tile.label) {
-                  <div><dt>{{ tile.label }}</dt><dd>{{ tile.value }}</dd></div>
-                }
-              </dl>
-            </section>
-            <section>
-              <h4 class="exc-sec">Combat</h4>
-              <dl class="exc-leaders">
-                @for (tile of combatTiles(); track tile.label) {
-                  <div><dt>{{ tile.label }}</dt><dd>{{ tile.value }}</dd></div>
-                }
-              </dl>
-            </section>
-          </div>
-
-          <!-- Un PNJ a déjà ses armes et armures plus bas : pas de rubrique de protection en double. -->
-          @if (card().kind !== 'pnj' && protectionLines().length) {
-            <section>
-              <h4 class="exc-sec">Armes et protection</h4>
-              <dl class="exc-leaders">
-                @for (tile of protectionLines(); track tile.label) {
-                  <div [class.exc-leaders--hot]="tile.tone === 'damage'"><dt>{{ tile.label }}</dt><dd>{{ tile.value }}</dd></div>
-                }
-              </dl>
-            </section>
-          }
-
-          <div class="exc-cols exc-cols--sections">
-            @for (section of sb.sections; track section.title) {
-              <section>
-                <h4 class="exc-sec">{{ section.title }}</h4>
-                @if (section.entries.length) {
-                  <dl class="exc-leaders">
-                    @for (entry of section.entries; track $index) {
-                      <div [class.exc-leaders--note]="entry.value === undefined">
-                        <dt>{{ entry.label }}</dt>
-                        @if (entry.value !== undefined) {
-                          <dd>{{ entry.value }}</dd>
-                        }
-                        @if (entry.detail) {
-                          <dd class="exc-leaders-detail">{{ entry.detail }}</dd>
-                        }
-                      </div>
-                    }
-                  </dl>
-                } @else {
-                  <p class="exc-empty">{{ section.emptyText }}</p>
-                }
-              </section>
-            }
-          </div>
-          @if (sb.comment) {
-            <p class="exc-comment">{{ sb.comment }}</p>
-          }
-        } @else {
-          <p class="exc-loading">Chargement de la fiche…</p>
-        }
-
+        <button
+          sheetActions
+          mat-icon-button
+          class="exc-icon-btn exc-icon-btn--danger"
+          type="button"
+          [attr.aria-label]="removeLabel"
+          [matTooltip]="removeLabel"
+          (click)="removeRequested.emit(card())"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button sheetActions mat-icon-button class="exc-icon-btn" type="button" aria-label="Replier la carte" (click)="closed.emit()">
+          <mat-icon>close</mat-icon>
+        </button>
         @if (canAttack()) {
-          <button mat-flat-button size="small" type="button" class="exc-attack" (click)="attackRequested.emit(card())">
+          <button sheetFooter mat-flat-button size="small" type="button" class="exc-attack" (click)="attackRequested.emit(card())">
             <mat-icon svgIcon="sword" /> Attaquer cette carte
           </button>
         }
-      </div>
-    </div>
+      </bol-statblock>
+    } @else {
+      <p class="exc-loading exc-loading--pad">Chargement de la fiche…</p>
+    }
   }
 </div>
