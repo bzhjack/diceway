@@ -77,7 +77,8 @@
         <bol-character-card
           [card]="card"
           [combat]="stateOf(card)"
-          (toggled)="onFaceClick(card)"
+          [selected]="selectedKeys().has(card.key)"
+          (toggled)="onFaceClick(card, $event)"
           (expandRequested)="cardToggled.emit(card)"
         />
         <div *cdkDragPreview class="tps-ghost">

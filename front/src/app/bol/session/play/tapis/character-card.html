@@ -7,9 +7,11 @@
     [class.chc--played]="combat()?.status === 'played'"
     [class.chc--targetable]="combat()?.targetable"
     [class.chc--out]="combat()?.out"
+    [class.chc--selected]="selected()"
+    [attr.aria-pressed]="selected() ? 'true' : null"
     aria-expanded="false"
     [attr.aria-label]="ariaLabel()"
-    (click)="toggled.emit()"
+    (click)="toggled.emit($event)"
   >
     @if (card().badge; as badge) {
       <span class="chc-badge">{{ badge }}</span>

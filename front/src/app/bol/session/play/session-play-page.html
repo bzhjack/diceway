@@ -70,6 +70,8 @@
             [activeCard]="activeCard()"
             [armes]="activeArmes()"
             [combatOptions]="combatOptions()"
+            [selectedKeys]="selectedKeys()"
+            (selectToggled)="toggleSelected($event)"
             (cardToggled)="onCardToggled($event)"
             (campToggleRequested)="toggleCamp($event)"
             (attackRequested)="onAttackCard($event)"

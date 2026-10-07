@@ -4,7 +4,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {forkJoin, Observable, of, take, tap} from 'rxjs';
+import {concatMap, forkJoin, from, Observable, of, take, tap, toArray} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolFightSessionModel} from '../../models/bol-fight-session.model';
@@ -34,7 +34,7 @@ import {SceneActionsService} from '../scene-actions.service';
 import {AddCombatantDialogComponent, resolveAddCombatantCamp} from './add-combatant-dialog/add-combatant-dialog';
 import {openCommandPalette} from './command-palette/command-palette';
 import {PaletteActionId, PaletteCommand, PaletteContext} from '../models/command-palette.model';
-import {isEndTurnShortcut, isPaletteShortcut} from './command-palette/shortcut.util';
+import {isEditable, isEndTurnShortcut, isPaletteShortcut} from './command-palette/shortcut.util';
 import {reserveTab} from './reserve/reserve.util';
 import {maybePromptDefierLaMort} from './defier-la-mort-dialog/defier-la-mort.util';
 import {tableTitle} from './scene-list/scene.util';
@@ -347,6 +347,7 @@ export class SessionPlayPageComponent {
       return;
     }
     if (this.dialog.openDialogs.length === 0) {
+      this.selectedKeys.set(new Set());
       this.foldCard();
     }
   }
@@ -367,6 +368,7 @@ export class SessionPlayPageComponent {
 
   /** Clic sur la face d'une carte : ouvre sa carte en dialogue (une seule à la fois). */
   protected onCardToggled(card: TapisCard): void {
+    this.selectedKeys.set(new Set());
     if (this.expandedKey() === card.key) {
       return;
     }
@@ -376,6 +378,59 @@ export class SessionPlayPageComponent {
   }
 
   /** Ferme la carte ouverte. */
+  /** Cartes sélectionnées par Ctrl + clic : suppr les retire de la table. */
+  protected readonly selectedKeys = signal<ReadonlySet<string>>(new Set());
+
+  protected toggleSelected(card: TapisCard): void {
+    this.selectedKeys.update((keys) => {
+      const next = new Set(keys);
+      if (!next.delete(card.key)) {
+        next.add(card.key);
+      }
+      return next;
+    });
+  }
+
+  /** Suppr : retire de la table les cartes sélectionnées, après confirmation. Hors combat seulement. */
+  private askRemoveSelection(): void {
+    const sessionId = this.sessionId();
+    const cards = this.cards().filter((card) => this.selectedKeys().has(card.key));
+    if (!sessionId || !cards.length) {
+      return;
+    }
+
+    const names = cards.map((card) => `« ${card.nom} »`).join(', ');
+    confirmDialog(
+      this.dialog,
+      {
+        title: cards.length > 1 ? `Retirer ${cards.length} personnages` : REMOVE_ACTION_LABEL,
+        message: `Voulez-vous retirer ${names} de la table ?`,
+        confirmLabel: 'Retirer',
+      },
+      {width: '420px'},
+    ).subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+
+      from(cards)
+        .pipe(
+          concatMap((card) => this.fightSessionService.removeCombatant(sessionId, card.kind, card.pivotId)),
+          toArray(),
+        )
+        .subscribe({
+          next: () => {
+            this.selectedKeys.set(new Set());
+            this.loadSession(sessionId);
+          },
+          error: (error: unknown) => {
+            this.loadSession(sessionId);
+            this.tableError(error, 'Impossible de retirer ces personnages.');
+          },
+        });
+    });
+  }
+
   protected foldCard(): void {
     this.cardDialog?.close();
     this.expandedKey.set(null);
@@ -771,6 +826,11 @@ export class SessionPlayPageComponent {
     }
 
     const target = event.target as HTMLElement | null;
+    if (event.key === 'Delete' && this.mode() === 'libre' && this.selectedKeys().size && !isEditable(target)) {
+      event.preventDefault();
+      this.askRemoveSelection();
+      return;
+    }
     if (isPaletteShortcut(event, target)) {
       event.preventDefault();
       this.openPalette();

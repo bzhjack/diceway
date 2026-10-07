@@ -39,7 +39,11 @@ export class TapisComponent {
   readonly armes = input<readonly BolHerosArmeModel[]>([]);
   readonly combatOptions = input<readonly BolCombatOptionModel[]>([]);
 
+  /** Cartes sélectionnées par Ctrl + clic. */
+  readonly selectedKeys = input<ReadonlySet<string>>(new Set());
   readonly cardToggled = output<TapisCard>();
+  /** Ctrl ou Cmd + clic sur une face : ajoute ou retire la carte de la sélection. */
+  readonly selectToggled = output<TapisCard>();
   readonly campToggleRequested = output<TapisCard>();
   readonly attackRequested = output<TapisCard>();
   readonly choiceChanged = output<AttackChoice | null>();
@@ -87,8 +91,10 @@ export class TapisComponent {
   }
 
   /** Clic sur la face : en combat, une carte désignable est attaquée ; toute autre carte se déplie. */
-  protected onFaceClick(card: TapisCard): void {
-    if (this.stateOf(card)?.targetable) {
+  protected onFaceClick(card: TapisCard, event: MouseEvent): void {
+    if (event.ctrlKey || event.metaKey) {
+      this.selectToggled.emit(card);
+    } else if (this.stateOf(card)?.targetable) {
       this.attackRequested.emit(card);
     } else {
       this.cardToggled.emit(card);

@@ -1,5 +1,8 @@
 import {ChangeDetectionStrategy, Component, effect, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {NavigationStart, Router} from '@angular/router';
+import {filter} from 'rxjs';
 import {ExpandedCardDialogData} from '../../models/expanded-card-dialog.model';
 import {ExpandedCardComponent} from './expanded-card';
 
@@ -35,6 +38,13 @@ export class ExpandedCardDialogComponent {
   protected readonly ref = inject(MatDialogRef<ExpandedCardDialogComponent>);
 
   constructor() {
+    // « Modifier la fiche » (ou tout autre lien de la carte) quitte la page : le dialogue se ferme avec elle.
+    inject(Router)
+      .events.pipe(
+        filter((event) => event instanceof NavigationStart),
+        takeUntilDestroyed(),
+      )
+      .subscribe(() => this.ref.close());
     effect(() => {
       if (this.data.card() === null) {
         this.ref.close();

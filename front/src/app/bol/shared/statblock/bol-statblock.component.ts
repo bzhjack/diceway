@@ -1,9 +1,11 @@
 import {ChangeDetectionStrategy, Component, computed, inject, input, signal} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {RouterLink} from '@angular/router';
+import {NavigationStart, Router, RouterLink} from '@angular/router';
+import {filter} from 'rxjs';
 import {BolStatblockData, BolStatblockTile} from '../models/bol-statblock.model';
 
 type SheetKind = 'hero' | 'pnj' | 'creature' | 'demon';
@@ -43,6 +45,18 @@ export class BolStatblockComponent {
 
   protected readonly dialogRef = inject(MatDialogRef, {optional: true});
   private readonly avatarFailed = signal(false);
+
+  constructor() {
+    // Posée dans un dialogue (bibliothèques), la fiche le ferme quand un de ses liens (« Modifier la fiche ») navigue.
+    if (this.dialogRef) {
+      inject(Router)
+        .events.pipe(
+          filter((event) => event instanceof NavigationStart),
+          takeUntilDestroyed(),
+        )
+        .subscribe(() => this.dialogRef?.close());
+    }
+  }
 
   protected readonly sheetKind = computed<SheetKind>(() => {
     const kind = this.kind();

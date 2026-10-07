@@ -18,7 +18,10 @@ import {TapisCard} from '../../models/tapis.model';
 })
 export class CharacterCardComponent {
   readonly card = input.required<TapisCard>();
-  readonly toggled = output<void>();
+  /** Le clic sur la face, avec l'événement : Ctrl ou Cmd + clic sélectionne au lieu d'ouvrir. */
+  readonly toggled = output<MouseEvent>();
+  /** La carte fait partie de la sélection (Ctrl + clic) : un suppr les retire de la table. */
+  readonly selected = input(false);
   /** État de la carte dans le combat — `null` en mode libre. */
   readonly combat = input<CardCombatState | null>(null);
   /** Bouton « déplier » de la face, affiché en combat (le clic sur la face y sert à attaquer). */
