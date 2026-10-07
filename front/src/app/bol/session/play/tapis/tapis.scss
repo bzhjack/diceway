@@ -12,9 +12,10 @@
   justify-content: space-between;
   gap: 0.9rem;
   padding: 1rem 1.2rem;
+  // Si la table dépasse de l'écran, le tapis défile (la carte dépliée est ramenée dans la vue par
+  // `TapisComponent`) mais sans barre : elle apparaissait à chaque dépli.
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--dw-border) transparent;
+  scrollbar-width: none;
   background:
     radial-gradient(ellipse 80% 60% at 50% 50%, color-mix(in srgb, var(--dw-surface-100) 70%, transparent) 0%, transparent 75%),
     var(--dw-surface-0);
@@ -27,7 +28,7 @@
   align-items: center;
   gap: 0.5rem;
   // Place pour le titre de la zone, posé dans son coin haut gauche.
-  padding-top: 1.6rem;
+  padding-top: 1.4rem;
   border: 2px dashed transparent;
   border-radius: 14px;
   transition: border-color 0.12s ease-out, background 0.12s ease-out, box-shadow 0.12s ease-out;
@@ -78,7 +79,7 @@
   gap: 1.2rem;
   margin: 0;
   // Le haut laisse la place au soulèvement et au halo des cartes (actif, désignable), que la piste rognerait sinon.
-  padding: 1.2rem 0.5rem 0.9rem;
+  padding: 0.9rem 0.5rem 0.6rem;
   list-style: none;
 }
 

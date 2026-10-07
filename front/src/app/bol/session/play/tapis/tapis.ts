@@ -81,6 +81,8 @@ export class TapisComponent {
   constructor() {
     afterRenderEffect(() => {
       const key = this.expandedKey();
+      // La fiche d'un héros arrive après l'ouverture et allonge la carte : on la ramène dans la vue à ce moment aussi.
+      this.hero();
       if (key === null && this.previousKey !== null) {
         document.getElementById(`chc-${this.previousKey}`)?.focus();
       }
