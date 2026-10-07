@@ -86,12 +86,15 @@ class BolDemonSeeder extends Seeder
 
         ];
 
-        BolDemon::whereNull('user_id')->delete();
-        // Insérer les données dans la table des régions
+        // Ids stables : un re-seed met à jour sans supprimer, pour ne pas casser (ON DELETE SET NULL)
+        // les liens des scénarios et des combats. Seuls les démons système retirés de la liste sont supprimés.
+        BolDemon::whereNull('user_id')->whereNotIn('id', array_column($demons, 'id'))->delete();
         foreach ($demons as $demon) {
             $pouvoirs = $demon['pouvoirs'] ?? [];
             unset($demon['pouvoirs']);
-            $newDemon = BolDemon::create($demon);
+            $newDemon = BolDemon::updateOrCreate(['id' => $demon['id']], $demon);
+            // Les pouvoirs n'ont pas d'id fixe : on les remplace en bloc.
+            BolDemonPouvoir::where('demon_id', $newDemon->id)->delete();
             foreach ($pouvoirs as $pouvoir) {
                 $pouvoir['demon_id'] = $newDemon->id;
                 BolDemonPouvoir::create($pouvoir);

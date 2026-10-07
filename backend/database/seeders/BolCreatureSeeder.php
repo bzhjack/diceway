@@ -677,10 +677,11 @@ class BolCreatureSeeder extends Seeder
             ]
         ];
 
-        BolCreature::whereNull('user_id')->delete();
-        // Insérer les données dans la table des régions
+        // Ids stables : un re-seed met à jour sans supprimer, pour ne pas casser (ON DELETE SET NULL)
+        // les liens des scénarios et des combats. Seules les créatures système retirées de la liste sont supprimées.
+        BolCreature::whereNull('user_id')->whereNotIn('id', array_column($creatures, 'id'))->delete();
         foreach ($creatures as $creature) {
-            BolCreature::create($creature);
+            BolCreature::updateOrCreate(['id' => $creature['id']], $creature);
         }
 
         $capacites = [
@@ -873,7 +874,7 @@ class BolCreatureSeeder extends Seeder
             ],
         ];
         foreach ($capacites as $capacite) {
-            BolCreatureCapacite::create($capacite);
+            BolCreatureCapacite::updateOrCreate(['id' => $capacite['id']], $capacite);
         }
     }
 }

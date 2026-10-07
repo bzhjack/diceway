@@ -53,7 +53,8 @@
   justify-content: center;
   gap: 0.8rem;
   margin: 0;
-  padding: 0.3rem 0.5rem 0.9rem;
+  // Le haut laisse la place au soulèvement et au halo des cartes (actif, désignable), que la piste rognerait sinon.
+  padding: 1.2rem 0.5rem 0.9rem;
   list-style: none;
 }
 
