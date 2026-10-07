@@ -158,10 +158,7 @@ class BolSceneService
                 $qty = max(1, (int) ($entry['qty'] ?? 1));
                 $camp = BolSceneDistribution::entryCamp($entry);
 
-                $alreadyThere = $kind === 'pnj'
-                    && BolFightSessionPnj::where('fight_session_id', $sessionId)->where('pnj_id', $sourceId)->exists();
-
-                $rows = $alreadyThere ? [] : match ($kind) {
+                $rows = match ($kind) {
                     'pnj'      => array_filter([$this->fightSessionService->createPnjRow($sessionId, $sourceId, $camp)]),
                     'creature' => $this->fightSessionService->createCreatureRows($sessionId, $sourceId, $camp, $qty),
                     'demon'    => $this->fightSessionService->createDemonRows($sessionId, $sourceId, $camp, $qty),

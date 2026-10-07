@@ -76,14 +76,11 @@ export class AddCombatantDialogComponent {
     this.camp.set(camp);
   }
 
-  /** Un héros ou un PNJ ne peut participer qu'une fois à un même combat (contrairement aux créatures/démons, ré-instanciables). */
+  /** Un héros ne peut participer qu'une fois à un même combat (contrairement aux PNJ, créatures et démons, ré-instanciables). */
   protected isAlreadyAdded(entry: CombatCatalogEntry): boolean {
     const sourceId = String(entry.sourceId);
     if (entry.kind === 'hero') {
       return this.data.existingHeroIds.has(sourceId) || this.addedDuringSession().has(duplicateKey('hero', sourceId));
-    }
-    if (entry.kind === 'pnj') {
-      return this.data.existingPnjIds.has(sourceId) || this.addedDuringSession().has(duplicateKey('pnj', sourceId));
     }
     return false;
   }
@@ -104,7 +101,7 @@ export class AddCombatantDialogComponent {
         next: () => {
           this.pendingCatalogId.set(null);
           this.addedCount.update((n) => n + 1);
-          if (entry.kind === 'hero' || entry.kind === 'pnj') {
+          if (entry.kind === 'hero') {
             this.addedDuringSession.update((set) => new Set(set).add(duplicateKey(entry.kind, entry.sourceId)));
           }
           this.snackBar.open(`${entry.nom} ajouté.`, undefined, {duration: 2000});

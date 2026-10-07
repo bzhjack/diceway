@@ -114,10 +114,10 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
   return numberDuplicates(cards);
 }
 
-/** Plusieurs créatures ou démons identiques à la table : « Loup géant #1 », « Loup géant #2 »… dans l'ordre
+/** Plusieurs PNJ, créatures ou démons identiques à la table : « Loup géant #1 », « Loup géant #2 »… dans l'ordre
  * d'arrivée, pour pouvoir les distinguer. Un exemplaire seul garde son nom. */
 function numberDuplicates(cards: TapisCard[]): TapisCard[] {
-  const isMultiple = (card: TapisCard): boolean => card.kind === 'creature' || card.kind === 'demon';
+  const isMultiple = (card: TapisCard): boolean => card.kind !== 'hero';
   const groupOf = (card: TapisCard): string => `${card.kind}|${card.nom}`;
   const totals = new Map<string, number>();
   for (const card of cards.filter(isMultiple)) {

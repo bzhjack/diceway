@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, effect, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -120,15 +120,6 @@ export class SessionPlayPageComponent {
   protected readonly existingHeroIds = computed<ReadonlySet<string>>(
     () => new Set((this.session()?.heros ?? []).map((h) => String(h.heros_id))),
   );
-  protected readonly existingPnjIds = computed<ReadonlySet<string>>(
-    () =>
-      new Set(
-        (this.session()?.pnjs ?? [])
-          .map((p) => p.pnj_id)
-          .filter((pnjId): pnjId is string => !!pnjId)
-          .map(String),
-      ),
-  );
 
   protected readonly reserveOpen = signal(readPanelOpen(browserStorage(), RESERVE_PANEL_KEY, true));
 
@@ -204,12 +195,15 @@ export class SessionPlayPageComponent {
     tokens: this.cards().map((card) => ({key: card.key, nom: card.nom, kind: card.kind})),
     catalog: this.selection.catalog(),
     heroIds: this.existingHeroIds(),
-    pnjIds: this.existingPnjIds(),
     scenes: this.paletteScenes(),
     reserveOpen: this.reserveOpen(),
   }));
 
   constructor() {
+    // Les dialogues et messages sont rendus hors de la page : cette classe leur donne le thème barbare tant que la table est ouverte.
+    document.body.classList.add('dw-barbare');
+    inject(DestroyRef).onDestroy(() => document.body.classList.remove('dw-barbare'));
+
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
       this.errorMessage.set('Session introuvable.');
@@ -256,7 +250,6 @@ export class SessionPlayPageComponent {
         data: {
           sessionId,
           existingHeroIds: this.existingHeroIds(),
-          existingPnjIds: this.existingPnjIds(),
         },
       })
       .afterClosed()

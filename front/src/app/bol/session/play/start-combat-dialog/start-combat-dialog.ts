@@ -68,7 +68,6 @@ export class StartCombatDialogComponent {
   protected readonly adversaries = signal<readonly AdversaryRow[]>([]);
   protected readonly heroes = signal<readonly HeroRow[]>([]);
   protected readonly existingHeroIds = signal<ReadonlySet<string>>(new Set());
-  protected readonly existingPnjIds = signal<ReadonlySet<string>>(new Set());
 
   /** Héroïsme courant par héros (clé pivotId) — signal dédié car `applyHeroismeDelta` le mute en place. */
   private readonly heroismeByPivot = new Map<number, WritableSignal<number>>();
@@ -157,9 +156,6 @@ export class StartCombatDialogComponent {
             ...(session.demons ?? []).map((d) => ({pivotId: d.id, nom: d.surnom ?? d.nom})),
           ]);
           this.existingHeroIds.set(new Set((session.heros ?? []).map((h) => String(h.heros_id))));
-          this.existingPnjIds.set(
-            new Set((session.pnjs ?? []).map((p) => p.pnj_id).filter((id): id is string => !!id).map(String)),
-          );
 
           const heroEntries = session.heros ?? [];
           if (heroEntries.length === 0) {
@@ -243,7 +239,6 @@ export class StartCombatDialogComponent {
         data: {
           sessionId: this.data.sessionId,
           existingHeroIds: this.existingHeroIds(),
-          existingPnjIds: this.existingPnjIds(),
         },
       })
       .afterClosed()

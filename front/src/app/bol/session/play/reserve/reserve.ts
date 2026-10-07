@@ -38,7 +38,6 @@ export class ReserveComponent {
   readonly sessionId = input.required<string>();
   /** Ids source (heros_id / pnj_id) déjà présents dans la session. */
   readonly existingHeroIds = input.required<ReadonlySet<string>>();
-  readonly existingPnjIds = input.required<ReadonlySet<string>>();
   readonly placed = output<void>();
   /** Scène courante de la session et nombre de non-héros sur la table, relayés à `bol-scene-list`. */
   readonly currentSceneId = input<string | null>(null);
@@ -62,7 +61,7 @@ export class ReserveComponent {
   protected readonly rows = computed<readonly ReserveRow[]>(() =>
     filterReserve(this.selection.catalog(), this.activeKind(), this.query()).map((entry) => ({
       entry,
-      onTable: isOnTable(entry, this.existingHeroIds(), this.existingPnjIds()),
+      onTable: isOnTable(entry, this.existingHeroIds()),
     })),
   );
 

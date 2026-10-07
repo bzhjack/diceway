@@ -152,7 +152,8 @@ class BolFightSessionService
      * place. Un héros ou un PNJ donné (identité unique) ne peut pas être ajouté deux fois à la
      * même session — contrairement aux créatures/démons, qui sont des gabarits ré-instanciables.
      *
-     * @throws DuplicateCombatantException si ce héros/PNJ participe déjà à ce combat.
+     * @throws DuplicateCombatantException si ce héros participe déjà à ce combat (PNJ, créatures et démons sont
+     *                                     des archétypes : on peut en poser autant qu'on veut).
      */
     public function addCombatant(
         string $sessionId,
@@ -167,13 +168,13 @@ class BolFightSessionService
             return null;
         }
 
-        if (in_array($kind, ['hero', 'pnj'], true) && $this->hasCombatant($sessionId, $kind, $sourceId)) {
+        if ($kind === 'hero' && $this->hasHero($sessionId, $sourceId)) {
             throw new DuplicateCombatantException();
         }
 
         match ($kind) {
             'hero'     => $this->createHeroRow($sessionId, $sourceId, $camp),
-            'pnj'      => $this->createPnjRow($sessionId, $sourceId, $camp),
+            'pnj'      => $this->createPnjRows($sessionId, $sourceId, $camp, $this->normalizeQty($qty)),
             'creature' => $this->createCreatureRows($sessionId, $sourceId, $camp, $this->normalizeQty($qty)),
             'demon'    => $this->createDemonRows($sessionId, $sourceId, $camp, $this->normalizeQty($qty)),
             default    => null,
@@ -301,13 +302,9 @@ class BolFightSessionService
         ]);
     }
 
-    private function hasCombatant(string $sessionId, string $kind, string $sourceId): bool
+    private function hasHero(string $sessionId, string $heroId): bool
     {
-        return match ($kind) {
-            'hero'  => BolFightSessionHeros::where('fight_session_id', $sessionId)->where('heros_id', $sourceId)->exists(),
-            'pnj'   => BolFightSessionPnj::where('fight_session_id', $sessionId)->where('pnj_id', $sourceId)->exists(),
-            default => false,
-        };
+        return BolFightSessionHeros::where('fight_session_id', $sessionId)->where('heros_id', $heroId)->exists();
     }
 
     private function syncHeros(string $sessionId, array $list): void
@@ -484,6 +481,25 @@ class BolFightSessionService
             'degats'            => $demon->degats,
             'pouvoirs'          => $pouvoirs,
         ]);
+    }
+
+    /**
+     * Pose `$count` exemplaires d'un PNJ : une ligne, donc une carte, par exemplaire.
+     *
+     * @return array<int, BolFightSessionPnj>
+     */
+    public function createPnjRows(string $sessionId, string $pnjId, ?string $camp, int $count, ?string $surnom = null): array
+    {
+        $rows = [];
+        for ($i = 0; $i < max(1, $count); $i++) {
+            $row = $this->createPnjRow($sessionId, $pnjId, $camp, $surnom);
+            if (!$row) {
+                break;
+            }
+            $rows[] = $row;
+        }
+
+        return $rows;
     }
 
     private function syncPnjs(string $sessionId, array $list): void
