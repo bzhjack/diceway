@@ -45,7 +45,7 @@
 
 .bs {
   display: grid;
-  grid-template-columns: 15rem minmax(0, 1fr);
+  grid-template-columns: 13rem minmax(0, 1fr);
 
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
@@ -179,7 +179,7 @@
 .bs-main {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
   min-width: 0;
   padding: 0.8rem 1.1rem 1.1rem;
 }
@@ -204,13 +204,6 @@
   border-radius: 8px;
 }
 
-.bs-card {
-  padding: 0.75rem;
-  border: 1px solid var(--dw-border);
-  border-radius: 10px;
-  background: var(--dw-surface-100);
-}
-
 .bs-sec {
   margin: 0 0 0.45rem;
   padding-bottom: 0.3rem;
@@ -222,50 +215,11 @@
   text-transform: uppercase;
 }
 
-.bs-tiles {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(5.2rem, 1fr));
-  gap: 0.4rem;
-  margin: 0;
-}
-
-.bs-tile {
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: center;
-  padding: 0.45rem 0.2rem;
-  border: 1px solid var(--bar-bronze, var(--dw-border));
-  border-radius: 8px;
-  background: var(--dw-surface-100);
-  text-align: center;
-
-  dd {
-    margin: 0;
-    font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-    font-size: 1.25rem;
-    line-height: 1.1;
-    color: var(--dw-surface-900);
-    white-space: nowrap;
-  }
-
-  dt {
-    font-size: 0.7rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--dw-surface-700);
-  }
-}
-
-.bs-tile--hot dd {
-  color: var(--dw-color-echec);
-}
-
 .bs-cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-  align-items: stretch;
+  gap: 1.4rem;
+  align-items: start;
 
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
@@ -328,6 +282,11 @@
     line-height: 1.4;
     color: var(--dw-surface-700);
   }
+}
+
+// Dégâts en rouge.
+.bs-leaders--hot dd {
+  color: var(--dw-color-echec);
 }
 
 // Armure actuellement équipée : mise en évidence en vert.

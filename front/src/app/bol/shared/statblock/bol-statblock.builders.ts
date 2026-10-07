@@ -143,7 +143,8 @@ export function pnjStatblockData(pnj: BolHerosModel): BolStatblockData {
     pnj.origines.nom || 'PNJ sans nom',
     chips,
     Boolean(pnj.user_id),
-    ['/create/pnj', String(pnj.id)],
+    // Les PNJ du catalogue (sans propriétaire) sont communs à tous : pas modifiables.
+    pnj.user_id ? ['/create/pnj', String(pnj.id)] : null,
     null,
   );
 }
@@ -154,7 +155,7 @@ function herosLikeStatblockData(
   title: string,
   chips: readonly BolStatblockChip[],
   isCreation: boolean,
-  editRoute: readonly [string, string],
+  editRoute: readonly [string, string] | null,
   advancedEditRoute: readonly [string, string] | null,
 ): BolStatblockData {
   const weapons = (heros.armes as (BolHerosArmeModel | number)[]).filter(

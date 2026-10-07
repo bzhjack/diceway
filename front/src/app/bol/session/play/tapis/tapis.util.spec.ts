@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest';
 import {BolFightSessionModel} from '../../../models/bol-fight-session.model';
 import {BolHerosModel} from '../../../models/bol-heros.model';
-import {buildTapisCards, campActionLabel, cardAriaLabel, findCard, isLowVitalite, REMOVE_ACTION_LABEL, splitRows, vitalitePercent, vitaliteText, heroHeaderStats, heroDetails, heroIdentityLine} from './tapis.util';
+import {buildTapisCards, cardAriaLabel, findCard, isLowVitalite, REMOVE_ACTION_LABEL, splitRows, vitalitePercent, vitaliteText, heroHeaderStats, heroDetails, heroIdentityLine} from './tapis.util';
 import {TapisCard} from '../../models/tapis.model';
 
 function hero(id: number, nom: string, extra: Record<string, unknown> = {}): NonNullable<BolFightSessionModel['heros']>[number] {
@@ -168,12 +168,6 @@ describe('labels', () => {
     expect(cardAriaLabel(card('creature-3'))).toBe('Hippocampe, Créature, Piétaille, dégâts d6, défense 1, vitalité 5 sur 5');
   });
 
-  it('offers to change camp, except for a hero', () => {
-    expect(campActionLabel(card('hero-1'))).toBeNull();
-    expect(campActionLabel(card('pnj-7'))).toBe('Passer du côté des héros');
-    const ally = session({pnjs: [{...PNJ, camp: 'heros'}] as BolFightSessionModel['pnjs']});
-    expect(campActionLabel(card('pnj-7', ally))).toBe('Remettre avec les présents');
-  });
 
   it('words the removal as taking a card off the table', () => {
     expect(REMOVE_ACTION_LABEL).toBe('Retirer de la table');

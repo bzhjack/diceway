@@ -21,7 +21,7 @@ import {combatantKindIcon, combatantKindIconIsSvg} from '../../combat-statblock.
 import {ActionRollPanelComponent} from '../action-roll-panel/action-roll-panel';
 import {HeroResourcesComponent} from '../hero-resources/hero-resources';
 import {CardVitaliteComponent} from './card-vitalite';
-import {campActionLabel, heroIdentityLine, REMOVE_ACTION_LABEL} from './tapis.util';
+import {heroIdentityLine, REMOVE_ACTION_LABEL} from './tapis.util';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
 import {HeroDetailsComponent} from './hero-details';
 import {ExpandedHeroData} from '../../models/expanded-card.model';
@@ -69,7 +69,6 @@ export class ExpandedCardComponent {
   readonly closed = output<void>();
   readonly changed = output<void>();
   readonly removeRequested = output<TapisCard>();
-  readonly campToggleRequested = output<TapisCard>();
   /** Un clic sur une armure du popover : l'id de l'armure à équiper ou déséquiper. */
   readonly armureToggled = output<number>();
   /** Un clic sur une arme du popover : l'id de l'arme à équiper ou déséquiper. */
@@ -113,7 +112,6 @@ export class ExpandedCardComponent {
   protected readonly fixedHeight = computed(() => this.card().kind === 'hero' && this.mode() === 'libre' && this.hero() !== null);
 
 
-  protected readonly campLabel = computed(() => campActionLabel(this.card()));
   protected readonly removeLabel = REMOVE_ACTION_LABEL;
 
   constructor() {

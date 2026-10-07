@@ -52,27 +52,28 @@
       }
     </div>
 
-    <section class="bs-card">
-      <h4 class="bs-sec">Attributs</h4>
-      <dl class="bs-tiles" aria-label="Attributs">
-        @for (tile of attributTiles(); track tile.label) {
-          <div class="bs-tile"><dd>{{ tile.value }}</dd><dt>{{ tile.label }}</dt></div>
-        }
-      </dl>
-    </section>
-
-    <section class="bs-card">
-      <h4 class="bs-sec">Combat</h4>
-      <dl class="bs-tiles" aria-label="Combat">
-        @for (tile of combatTiles(); track tile.label) {
-          <div class="bs-tile" [class.bs-tile--hot]="tile.tone === 'damage'"><dd>{{ tile.value }}</dd><dt>{{ tile.label }}</dt></div>
-        }
-      </dl>
-    </section>
+    <div class="bs-cols">
+      <section>
+        <h4 class="bs-sec">Attributs</h4>
+        <dl class="bs-leaders" aria-label="Attributs">
+          @for (tile of attributTiles(); track tile.label) {
+            <div><dt>{{ tile.label }}</dt><dd>{{ tile.value }}</dd></div>
+          }
+        </dl>
+      </section>
+      <section>
+        <h4 class="bs-sec">Combat</h4>
+        <dl class="bs-leaders" aria-label="Combat">
+          @for (tile of combatTiles(); track tile.label) {
+            <div [class.bs-leaders--hot]="tile.tone === 'damage'"><dt>{{ tile.label }}</dt><dd>{{ tile.value }}</dd></div>
+          }
+        </dl>
+      </section>
+    </div>
 
     <div class="bs-cols">
       @for (section of data().sections; track section.title) {
-        <section class="bs-card">
+        <section>
           <h4 class="bs-sec">{{ section.title }}</h4>
           @if (section.entries.length) {
             <dl class="bs-leaders">

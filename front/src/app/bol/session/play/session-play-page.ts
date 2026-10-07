@@ -407,7 +407,6 @@ export class SessionPlayPageComponent {
       canAttack: this.expandedCanAttack,
       changed: () => this.reloadSession(),
       remove: (card) => this.askRemoveCard(card),
-      toggleCamp: (card) => this.toggleCamp(card),
       toggleArmure: (event) => this.onArmureToggled(event),
       toggleArme: (event) => this.onArmeToggled(event),
       attack: (card) => this.onAttackCard(card),

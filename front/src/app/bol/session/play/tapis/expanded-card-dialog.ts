@@ -22,7 +22,6 @@ import {ExpandedCardComponent} from './expanded-card';
         (closed)="ref.close()"
         (changed)="data.changed()"
         (removeRequested)="data.remove($event)"
-        (campToggleRequested)="data.toggleCamp($event)"
         (armureToggled)="data.toggleArmure({card, armureId: $event})"
         (armeToggled)="data.toggleArme({card, armeId: $event})"
         (attackRequested)="ref.close(); data.attack($event)"

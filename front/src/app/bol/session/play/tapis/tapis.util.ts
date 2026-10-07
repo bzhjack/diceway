@@ -185,14 +185,6 @@ export function cardAriaLabel(card: TapisCard): string {
   return parts.join(', ');
 }
 
-/** Libellé de l'action de changement de camp — `null` pour un héros, qui ne change pas de camp. */
-export function campActionLabel(card: TapisCard): string | null {
-  if (card.kind === 'hero') {
-    return null;
-  }
-  return card.camp === 'heros' ? 'Remettre avec les présents' : 'Passer du côté des héros';
-}
-
 /** Libellé du retrait d'une carte de la table. */
 export const REMOVE_ACTION_LABEL = 'Retirer de la table';
 

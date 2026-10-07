@@ -100,11 +100,6 @@
           [nom]="card().nom"
           (changed)="changed.emit()"
         />
-        @if (mode() === 'libre' && campLabel(); as label) {
-          <button sheetSide mat-stroked-button size="small" type="button" class="exc-camp" (click)="campToggleRequested.emit(card())">
-            <mat-icon>swap_vert</mat-icon> {{ label }}
-          </button>
-        }
         <button
           sheetActions
           mat-icon-button
