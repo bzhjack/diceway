@@ -50,5 +50,9 @@ export interface ActionRollParts {
   readonly modifier: number;
 }
 
+/** Le nom de chaque terme de la formule, entre parenthèses derrière sa valeur : « + 1 (agi) ». Un terme sans nom
+ * s'affiche seul. */
+export type ActionRollLabels = Partial<Record<keyof ActionRollParts, string>>;
+
 /** Couleur du résultat d'un jet : échec, réussite ou héroïque (héroïque et légendaire). */
 export type ActionRollTone = 'echec' | 'reussite' | 'heroique';

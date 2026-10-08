@@ -17,7 +17,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {BolHerosService} from '../../../services/bol-heros.service';
-import {ACTION_ATTRIBUTE_LABELS, ACTION_ATTRIBUTES, ACTION_DIFFICULTIES, ACTION_RESULT_LABELS, ACTION_ROLL_THRESHOLD, actionModifierSum, actionResultTone, DEFAULT_ACTION_DIFFICULTY, diceCountLabel, diceFromTotal, formatActionFormula, keepBestOrWorstTwo, netDiceModifier, signedModifier, suggestedActionResult} from '../../action-roll.util';
+import {ACTION_ATTRIBUTE_LABELS, ACTION_ATTRIBUTE_SHORT, ACTION_ATTRIBUTES, ACTION_DIFFICULTIES, ACTION_RESULT_LABELS, ACTION_ROLL_THRESHOLD, actionModifierSum, actionResultTone, DEFAULT_ACTION_DIFFICULTY, diceCountLabel, diceFromTotal, formatActionFormula, keepBestOrWorstTwo, netDiceModifier, signedModifier, suggestedActionResult} from '../../action-roll.util';
 import {ActionAttribute, ActionDifficulty, ActionRollCarriere, ActionRollData, ActionRollParts} from '../../models/action-roll.model';
 import {applyHeroismeDelta} from '../../heroisme-spend.util';
 
@@ -116,7 +116,13 @@ export class ActionRollPanelComponent {
   /** Avant le jet : `2d6 + …`. Après un lancer virtuel : les deux dés gardés. Après une saisie
    * manuelle : `2d6 + …` (les faces individuelles ne sont pas connues). */
   protected readonly formula = computed(() =>
-    formatActionFormula(this.parts(), this.manualEntry() ? null : this.dice()),
+    formatActionFormula(this.parts(), this.manualEntry() ? null : this.dice(), {
+      attribute: ACTION_ATTRIBUTE_SHORT[this.attribute()],
+      carriere: this.carriere()?.label.toLowerCase(),
+      equipment: 'équipement',
+      difficulty: this.difficulty().label.toLowerCase(),
+      modifier: 'modificateur',
+    }),
   );
 
   protected readonly total = computed(() => {

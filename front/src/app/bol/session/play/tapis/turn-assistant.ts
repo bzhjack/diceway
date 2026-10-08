@@ -137,8 +137,13 @@ export class TurnAssistantComponent {
     if (!a || !t) {
       return '';
     }
-    const parts = [`2d6 + ${attackBonus(a, this.useTir())}`];
-    parts.push(`− ${t.defense}`);
+    const parts = ['2d6'];
+    if (a.attaque !== null) {
+      parts.push(`+ ${a.attaque} (attaque)`);
+    } else {
+      parts.push(`+ ${a.agilite} (agi)`, `+ ${this.useTir() ? a.tir : a.melee} (${this.useTir() ? 'tir' : 'mêlée'})`);
+    }
+    parts.push(`− ${t.defense} (défense)`);
     const posture = this.postureModifier();
     if (posture !== 0) {
       parts.push(`${posture > 0 ? '+' : '−'} ${Math.abs(posture)} (posture)`);
