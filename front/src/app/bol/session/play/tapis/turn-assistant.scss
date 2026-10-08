@@ -43,32 +43,6 @@
   }
 }
 
-// Action, cible et jet côte à côte ; dégâts dessous, sur toute la largeur.
-.tas-steps {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.7rem;
-  align-items: start;
-
-  @media (max-width: 1300px) {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-.tas-eyebrow,
-.tas-label {
-  font-size: 0.66rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--dw-color-legendary);
-}
-
-.tas-label {
-  margin: 0;
-  color: var(--dw-surface-500);
-}
-
 .tas-name {
   font-family: 'Muse Display Harmony', 'Muse Sans', serif;
   font-size: 1.2rem;
@@ -79,6 +53,18 @@
 .tas-sub {
   font-size: 0.78rem;
   color: var(--dw-surface-600);
+}
+
+// Action, cible et jet côte à côte ; dégâts dessous, sur toute la largeur.
+.tas-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+  align-items: start;
+
+  @media (max-width: 1300px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .tas-step {
@@ -121,10 +107,87 @@
   background: linear-gradient(var(--dw-surface-100), color-mix(in srgb, var(--dw-color-legendary) 10%, var(--dw-surface-50)));
 }
 
-.tas-group {
+.tas-targets {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+}
+
+.tas-target {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 9px;
+  background: var(--dw-surface-50);
+  color: var(--dw-surface-900);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  b {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.85rem;
+  }
+
+  &[aria-pressed='true'] {
+    border-color: var(--dw-color-echec-forte);
+    background: color-mix(in srgb, var(--dw-color-echec-forte) 14%, var(--dw-surface-50));
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+}
+
+.tas-bar--low i {
+  background: var(--dw-color-echec);
+}
+
+.tas-dice {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.tas-die {
+  display: grid;
+  place-items: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 10px;
+  background: linear-gradient(160deg, #fff, #cbbfa5);
+  color: #1a1203;
+  font: 800 1.6rem 'Muse Display Harmony', serif;
+  box-shadow: 0 4px 0 #6b5a3a, 0 8px 12px rgba(0, 0, 0, 0.6);
+}
+
+.tas-die--empty {
+  opacity: 0.35;
+}
+
+.tas-total {
+  margin: 0;
+  text-align: center;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 2.4rem;
+  line-height: 1;
+  color: var(--dw-surface-900);
+}
+
+.tas-total--dmg {
+  color: var(--dw-color-echec);
+}
+.tas-label {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
 }
 
 .tas-chips {
@@ -177,68 +240,6 @@
   color: var(--dw-surface-600);
 }
 
-.tas-targets {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.tas-target {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  width: 100%;
-  padding: 0.4rem 0.55rem;
-  border: 1px solid var(--dw-border);
-  border-radius: 9px;
-  background: var(--dw-surface-50);
-  color: var(--dw-surface-900);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-
-  b {
-    flex: 1;
-    min-width: 0;
-    font-size: 0.85rem;
-  }
-
-  &[aria-pressed='true'] {
-    border-color: var(--dw-color-echec-forte);
-    background: color-mix(in srgb, var(--dw-color-echec-forte) 14%, var(--dw-surface-50));
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-color-legendary);
-    outline-offset: 2px;
-  }
-}
-
-.tas-bar {
-  width: 4rem;
-  height: 6px;
-  border-radius: 3px;
-  background: var(--dw-surface-200);
-  overflow: hidden;
-
-  i {
-    display: block;
-    height: 100%;
-    background: var(--dw-color-health);
-  }
-}
-
-.tas-bar--low i {
-  background: var(--dw-color-echec);
-}
-
-.tas-num {
-  min-width: 2.6rem;
-  text-align: right;
-  font-size: 0.8rem;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-}
 
 .tas-formula {
   margin: 0;
@@ -246,65 +247,6 @@
   font-size: 0.82rem;
   font-weight: 700;
   color: var(--dw-surface-700);
-}
-
-.tas-dice {
-  display: flex;
-  justify-content: center;
-  gap: 0.6rem;
-}
-
-.tas-die {
-  display: grid;
-  place-items: center;
-  width: 3.2rem;
-  height: 3.2rem;
-  border-radius: 10px;
-  background: linear-gradient(160deg, #fff, #cbbfa5);
-  color: #1a1203;
-  font: 800 1.6rem 'Muse Display Harmony', serif;
-  box-shadow: 0 4px 0 #6b5a3a, 0 8px 12px rgba(0, 0, 0, 0.6);
-}
-
-.tas-die--empty {
-  opacity: 0.35;
-}
-
-.tas-total {
-  margin: 0;
-  text-align: center;
-  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 2.4rem;
-  line-height: 1;
-  color: var(--dw-surface-900);
-}
-
-.tas-total--dmg {
-  color: var(--dw-color-echec);
-}
-
-.tas-verdict {
-  margin: 0;
-  text-align: center;
-  font-size: 0.85rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.tas-verdict--hit {
-  color: var(--dw-color-reussite);
-}
-
-.tas-verdict--miss {
-  color: var(--dw-color-echec);
-}
-
-.tas-roll {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
 }
 
 .tas-manual {
@@ -325,6 +267,7 @@
     text-align: center;
   }
 }
+
 
 .tas-heroic {
   display: flex;
@@ -367,4 +310,58 @@
   white-space: normal;
   height: auto;
   padding-block: 0.5rem;
+}
+
+.tas-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.tas-bar {
+  width: 4rem;
+  height: 6px;
+  border-radius: 4px;
+  background: var(--dw-surface-200);
+  overflow: hidden;
+
+  i {
+    display: block;
+    height: 100%;
+    background: var(--dw-color-health);
+  }
+}
+
+.tas-num {
+  min-width: 2.6rem;
+  text-align: right;
+  font-size: 0.8rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+
+.tas-verdict {
+  margin: 0;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tas-verdict--hit {
+  color: var(--dw-color-reussite);
+}
+
+.tas-verdict--miss {
+  color: var(--dw-color-echec);
+}
+
+
+.tas-roll {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
 }

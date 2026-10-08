@@ -22,7 +22,12 @@ import {
 } from '../../combat-resolution.util';
 import {AttackChoice} from '../../models/attack-options.model';
 import {ResolvedCombatStats} from '../../models/combat-attack.model';
+import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {TapisCard} from '../../models/tapis.model';
+import {isLowVitalite, vitalitePercent} from './tapis.util';
+
+/** Délai maximal d'un lancer 3D avant de tirer les dés sans animation. */
+const DICE_TIMEOUT_MS = 12000;
 
 /** Un coup porté, une fois ses dégâts appliqués : de quoi l'écrire au journal. */
 export interface AppliedHit {
@@ -54,6 +59,8 @@ export class TurnAssistantComponent {
   readonly targetStats = input<ResolvedCombatStats | null>(null);
   /** Un héros a obtenu un succès légendaire : +1 aux jets d'attaque de l'attaquant s'il est du camp des héros. */
   readonly legendaryBonus = input(false);
+  /** Plateau de dés 3D de l'écran de combat : les dés roulent par-dessus tout l'écran. Sans lui, les dés sont tirés sans animation. */
+  readonly diceBox = input<DiceBoxHostComponent | null>(null);
 
   readonly choiceChanged = output<AttackChoice | null>();
   readonly targetSelected = output<TapisCard>();
@@ -124,6 +131,7 @@ export class TurnAssistantComponent {
     computation: (a) => !!a && a.attaque === null && a.tir > a.melee,
   });
   protected readonly dice = signal<readonly [number, number] | null>(null);
+  protected readonly rolling = signal(false);
   protected readonly manualTotal = signal<number | null>(null);
   protected readonly heroic = signal<string | null>(null);
 
@@ -258,11 +266,38 @@ export class TurnAssistantComponent {
     this.selectedOffHandId.set(id ?? null);
   }
 
-  protected roll(): void {
+  protected async roll(): Promise<void> {
+    if (this.rolling()) {
+      return;
+    }
     this.manualTotal.set(null);
     this.heroic.set(null);
     this.damageValues.set(null);
-    this.dice.set([rollD6(), rollD6()]);
+    this.dice.set(null);
+    const values = await this.throwDice('2d6', 2);
+    this.dice.set([values[0], values[1]]);
+  }
+
+  /** Lance `count` d6 sur le plateau 3D (ou au hasard s'il est absent ou échoue) et renvoie leurs valeurs. */
+  private async throwDice(notation: string, count: number): Promise<number[]> {
+    const box = this.diceBox();
+    if (!box) {
+      return Array.from({length: count}, () => rollD6());
+    }
+    this.rolling.set(true);
+    try {
+      await box.clear();
+      // Garde-fou : si le moteur 3D ne répond pas, le tirage se fait sans animation plutôt que de bloquer le tour.
+      const results = await Promise.race([
+        box.rollNotation(notation),
+        new Promise<never>((_, reject) => setTimeout(() => reject(new Error('dice timeout')), DICE_TIMEOUT_MS)),
+      ]);
+      return results.map((r) => r.value);
+    } catch {
+      return Array.from({length: count}, () => rollD6());
+    } finally {
+      this.rolling.set(false);
+    }
   }
 
   protected setManual(raw: string): void {
@@ -273,8 +308,20 @@ export class TurnAssistantComponent {
     this.manualTotal.set(Number.isInteger(value) && value >= 2 && value <= 12 ? value : null);
   }
 
-  protected rollDamage(): void {
-    this.damageValues.set(Array.from({length: damageDiceCount(this.die())}, () => rollD6()));
+  protected async rollDamage(): Promise<void> {
+    if (this.rolling()) {
+      return;
+    }
+    const count = damageDiceCount(this.die());
+    this.damageValues.set(await this.throwDice(`${count}d6`, count));
+  }
+
+  protected percent(card: TapisCard): number {
+    return vitalitePercent(card.vitaliteCourante, card.vitaliteMax);
+  }
+
+  protected isLow(card: TapisCard): boolean {
+    return isLowVitalite(card.vitaliteCourante, card.vitaliteMax);
   }
 
   protected setHeroic(slug: string): void {

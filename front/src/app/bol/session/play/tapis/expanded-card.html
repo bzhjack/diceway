@@ -62,7 +62,10 @@
             </dl>
           </section>
 
-          <bol-action-roll-panel [data]="h.actionRoll" [(heroisme)]="heroisme" />
+          <section class="exc-roll" aria-labelledby="exc-roll-title">
+            <h3 class="exc-roll-title" id="exc-roll-title">Jet d'action</h3>
+            <bol-action-roll-panel [data]="h.actionRoll" [(heroisme)]="heroisme" />
+          </section>
         }
       </div>
     </div>

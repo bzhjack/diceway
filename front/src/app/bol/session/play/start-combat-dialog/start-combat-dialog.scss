@@ -403,7 +403,19 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.4rem;
+  height: 1.9rem;
+  flex: none;
   font-size: 0.84rem;
+}
+
+// Au plus 5 combattants visibles par bloc ; au-delà, la liste défile dans le bloc.
+.scd-group-lines {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(5 * 1.9rem);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dw-border) transparent;
 }
 
 // Retirer un combattant de la table : discret, rouge au survol.

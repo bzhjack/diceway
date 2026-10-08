@@ -14,142 +14,139 @@
   </header>
 
   <div class="tas-steps">
-
-  <section class="tas-step">
-    <h3><span aria-hidden="true">1</span> Action</h3>
-    <div class="tas-chips" role="group" aria-label="Action">
-      <button type="button" class="tas-chip" aria-pressed="true">Attaque</button>
-      <button type="button" class="tas-chip" aria-pressed="false" matTooltip="+2 en défense, pas d'attaque ce round. Termine le tour." (click)="totalDefenseRequested.emit()">Défense totale</button>
-    </div>
-    @if (displayArmes().length > 0) {
-      <div class="tas-group" role="group" aria-label="Arme">
-        <span class="tas-label">Arme</span>
-        <div class="tas-chips">
-          @for (a of displayArmes(); track a.id) {
-            <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveArme()?.id === a.id" (click)="selectArme(a.id)">
-              {{ a.arme?.arme }}
-              @if (a.arme?.degats) {
-                <em>{{ a.arme?.degats }}</em>
-              }
-            </button>
-          }
-        </div>
+    <section class="tas-step">
+      <h3><span aria-hidden="true">1</span> Action</h3>
+      <div class="tas-chips" role="group" aria-label="Action">
+        <button type="button" class="tas-chip" aria-pressed="true">Attaque</button>
+        <button type="button" class="tas-chip" aria-pressed="false" matTooltip="+2 en défense, pas d'attaque ce round. Termine le tour." (click)="totalDefenseRequested.emit()">Défense totale</button>
       </div>
-    } @else {
-      <div class="tas-group">
-        <span class="tas-label">Dégâts</span>
-        <span class="tas-fixed">{{ card().degats }}</span>
-      </div>
-    }
-
-    @if (visibleOptions().length > 1) {
-      <div class="tas-group" role="group" aria-label="Posture">
-        <span class="tas-label">Posture</span>
-        <div class="tas-chips">
-          @for (o of visibleOptions(); track o.slug) {
-            <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveOption()?.slug === o.slug" [matTooltip]="o.note" (click)="selectOption(o.slug)">
-              {{ o.label }}
-            </button>
-          }
-        </div>
-      </div>
-    }
-
-    @if (isDualWieldSelected()) {
-      <div class="tas-group" role="group" aria-label="Arme secondaire">
-        <span class="tas-label">Arme secondaire</span>
-        <div class="tas-chips">
-          @for (a of eligibleOffHandArmes(); track a.id) {
-            <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveOffHand()?.id === a.id" (click)="selectOffHand(a.id)">
-              {{ a.arme?.arme }}
-              @if (a.arme?.degats) {
-                <em>{{ a.arme?.degats }}</em>
-              }
-            </button>
-          } @empty {
-            <span class="tas-note">Aucune arme secondaire légère ou moyenne.</span>
-          }
-        </div>
-      </div>
-    }
-
-    @if (attacker(); as a) {
-      @if (a.attaque === null) {
-        <div class="tas-group" role="group" aria-label="Distance">
-          <span class="tas-label">Distance</span>
+      @if (displayArmes().length > 0) {
+        <div class="tas-group" role="group" aria-label="Arme">
+          <span class="tas-label">Arme</span>
           <div class="tas-chips">
-            <button type="button" class="tas-chip" [attr.aria-pressed]="!useTir()" (click)="useTir.set(false)">Mêlée</button>
-            <button type="button" class="tas-chip" [attr.aria-pressed]="useTir()" (click)="useTir.set(true)">Tir</button>
+            @for (a of displayArmes(); track a.id) {
+              <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveArme()?.id === a.id" (click)="selectArme(a.id)">
+                {{ a.arme?.arme }}
+                @if (a.arme?.degats) {
+                  <em>{{ a.arme?.degats }}</em>
+                }
+              </button>
+            }
+          </div>
+        </div>
+      } @else {
+        <div class="tas-group">
+          <span class="tas-label">Dégâts</span>
+          <span class="tas-fixed">{{ card().degats }}</span>
+        </div>
+      }
+
+      @if (visibleOptions().length > 1) {
+        <div class="tas-group" role="group" aria-label="Posture">
+          <span class="tas-label">Posture</span>
+          <div class="tas-chips">
+            @for (o of visibleOptions(); track o.slug) {
+              <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveOption()?.slug === o.slug" [matTooltip]="o.note" (click)="selectOption(o.slug)">
+                {{ o.label }}
+              </button>
+            }
           </div>
         </div>
       }
-    }
-  </section>
 
-  <section class="tas-step">
-    <h3><span aria-hidden="true">2</span> Cible</h3>
-    <div class="tas-targets" role="group" aria-label="Cible">
-      @for (t of targets(); track t.key) {
-        <button type="button" class="tas-target" [attr.aria-pressed]="target()?.key === t.key" (click)="targetSelected.emit(t)">
-          <b>{{ t.nom }}</b>
-          <span class="tas-bar" [class.tas-bar--low]="(t.vitaliteCourante ?? 0) <= (t.vitaliteMax ?? 0) / 2"
-            ><i [style.width.%]="t.vitaliteMax ? (100 * (t.vitaliteCourante ?? 0)) / t.vitaliteMax : 100"></i></span>
-          <span class="tas-num">{{ t.vitaliteCourante ?? '—' }}/{{ t.vitaliteMax ?? '—' }}</span>
-        </button>
-      } @empty {
-        <span class="tas-note">Personne à viser.</span>
+      @if (isDualWieldSelected()) {
+        <div class="tas-group" role="group" aria-label="Arme secondaire">
+          <span class="tas-label">Arme secondaire</span>
+          <div class="tas-chips">
+            @for (a of eligibleOffHandArmes(); track a.id) {
+              <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveOffHand()?.id === a.id" (click)="selectOffHand(a.id)">
+                {{ a.arme?.arme }}
+                @if (a.arme?.degats) {
+                  <em>{{ a.arme?.degats }}</em>
+                }
+              </button>
+            } @empty {
+              <span class="tas-note">Aucune arme secondaire légère ou moyenne.</span>
+            }
+          </div>
+        </div>
       }
-    </div>
-    @if (!target()) {
-      <p class="tas-note">Choisis une cible ici, ou clique sa carte sur le tapis.</p>
-    }
-  </section>
 
-  <section class="tas-step tas-step--roll">
-    <h3><span aria-hidden="true">3</span> Jet</h3>
-    @if (target() && attacker() && targetStats()) {
-      <p class="tas-formula">{{ formula() }}</p>
-      <div class="tas-dice" aria-live="polite">
-        @if (dice(); as d) {
-          <span class="tas-die">{{ d[0] }}</span>
-          <span class="tas-die">{{ d[1] }}</span>
-        } @else {
-          <span class="tas-die tas-die--empty">—</span>
-          <span class="tas-die tas-die--empty">—</span>
-        }
-      </div>
-      @if (total(); as t) {
-        <p class="tas-total">{{ t }}</p>
-        @if (verdict(); as v) {
-          <p class="tas-verdict" [class.tas-verdict--hit]="v.hit" [class.tas-verdict--miss]="!v.hit">
-            {{ heroicAllowed() && (v.result === 'legendaire' || v.result === 'heroique') ? 'Succès héroïque' : v.hit ? 'Touché' : 'Raté' }}
-          </p>
+      @if (attacker(); as a) {
+        @if (a.attaque === null) {
+          <div class="tas-group" role="group" aria-label="Distance">
+            <span class="tas-label">Distance</span>
+            <div class="tas-chips">
+              <button type="button" class="tas-chip" [attr.aria-pressed]="!useTir()" (click)="useTir.set(false)">Mêlée</button>
+              <button type="button" class="tas-chip" [attr.aria-pressed]="useTir()" (click)="useTir.set(true)">Tir</button>
+            </div>
+          </div>
         }
       }
-      <div class="tas-roll">
-        <button mat-flat-button type="button" (click)="roll()"><mat-icon>casino</mat-icon> {{ dice() ? 'Relancer 2d6' : 'Lancer 2d6' }}</button>
-        <label class="tas-manual">
-          <span>ou à table</span>
-          <input type="number" min="2" max="12" placeholder="2-12" aria-label="Total des deux dés lancés à table" [value]="manualTotal() ?? ''" (change)="setManual($any($event.target).value)" />
-        </label>
-      </div>
+    </section>
 
-      @if (isNatural12()) {
-        <fieldset class="tas-heroic">
-          <legend>Succès héroïque : une option</legend>
-          @for (o of heroicOptions; track o.slug) {
-            <label class="tas-opt">
-              <input type="radio" name="heroic" [checked]="heroic() === o.slug" (click)="setHeroic(o.slug)" />
-              <span><b>{{ o.label }}</b> — {{ o.effect }}</span>
-            </label>
+    <section class="tas-step">
+      <h3><span aria-hidden="true">2</span> Cible</h3>
+      <div class="tas-targets" role="group" aria-label="Cible">
+        @for (t of targets(); track t.key) {
+          <button type="button" class="tas-target" [attr.aria-pressed]="target()?.key === t.key" (click)="targetSelected.emit(t)">
+            <b>{{ t.nom }}</b>
+            <span class="tas-bar" [class.tas-bar--low]="isLow(t)"><i [style.width.%]="percent(t)"></i></span>
+            <span class="tas-num">{{ t.vitaliteCourante ?? '—' }}/{{ t.vitaliteMax ?? '—' }}</span>
+          </button>
+        } @empty {
+          <span class="tas-note">Personne à viser.</span>
+        }
+      </div>
+      @if (!target()) {
+        <p class="tas-note">Choisis une cible ici.</p>
+      }
+    </section>
+
+    <section class="tas-step tas-step--roll">
+      <h3><span aria-hidden="true">3</span> Jet</h3>
+      @if (target() && attacker() && targetStats()) {
+        <p class="tas-formula">{{ formula() }}</p>
+        <div class="tas-dice" aria-live="polite">
+          @if (dice(); as d) {
+            <span class="tas-die">{{ d[0] }}</span>
+            <span class="tas-die">{{ d[1] }}</span>
+          } @else {
+            <span class="tas-die tas-die--empty">—</span>
+            <span class="tas-die tas-die--empty">—</span>
           }
-        </fieldset>
-      }
-    } @else {
-      <p class="tas-note">Choisis une cible pour calculer le jet.</p>
-    }
-  </section>
+        </div>
+        @if (total(); as t) {
+          <p class="tas-total">{{ t }}</p>
+          @if (verdict(); as v) {
+            <p class="tas-verdict" [class.tas-verdict--hit]="v.hit" [class.tas-verdict--miss]="!v.hit">
+              {{ heroicAllowed() && (v.result === 'legendaire' || v.result === 'heroique') ? 'Succès héroïque' : v.hit ? 'Touché' : 'Raté' }}
+            </p>
+          }
+        }
+        <div class="tas-roll">
+          <button mat-flat-button type="button" [disabled]="rolling()" (click)="roll()"><mat-icon>casino</mat-icon> {{ dice() ? 'Relancer 2d6' : 'Lancer 2d6' }}</button>
+          <label class="tas-manual">
+            <span>ou à table</span>
+            <input type="number" min="2" max="12" placeholder="2-12" aria-label="Total des deux dés lancés à table" [disabled]="rolling()" [value]="manualTotal() ?? ''" (change)="setManual($any($event.target).value)" />
+          </label>
+        </div>
 
+        @if (isNatural12()) {
+          <fieldset class="tas-heroic">
+            <legend>Succès héroïque : une option</legend>
+            @for (o of heroicOptions; track o.slug) {
+              <label class="tas-opt">
+                <input type="radio" name="heroic" [checked]="heroic() === o.slug" (click)="setHeroic(o.slug)" />
+                <span><b>{{ o.label }}</b> — {{ o.effect }}</span>
+              </label>
+            }
+          </fieldset>
+        }
+      } @else {
+        <p class="tas-note">Choisis une cible pour calculer le jet.</p>
+      }
+    </section>
   </div>
 
   @if (hasDamageStep()) {
@@ -160,7 +157,7 @@
         <p class="tas-total tas-total--dmg">{{ damage() }}</p>
         <button mat-flat-button type="button" class="tas-apply" (click)="apply()">Appliquer {{ damage() }} à {{ target()?.nom }}</button>
       } @else {
-        <button mat-stroked-button type="button" (click)="rollDamage()"><mat-icon>casino</mat-icon> Lancer les dégâts</button>
+        <button mat-stroked-button type="button" [disabled]="rolling()" (click)="rollDamage()"><mat-icon>casino</mat-icon> Lancer les dégâts</button>
       }
     </section>
   } @else {

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, input, output, viewChild} from '@angular/core';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {AttackChoice} from '../../models/attack-options.model';
@@ -6,6 +6,7 @@ import {ResolvedCombatStats} from '../../models/combat-attack.model';
 import {TapisCard} from '../../models/tapis.model';
 import {TurnOrderEntry} from '../../models/turn-order.model';
 import {CombatSideComponent} from '../side/combat-side';
+import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {AppliedHit, TurnAssistantComponent} from '../tapis/turn-assistant';
 import {TurnOrderComponent} from '../tapis/turn-order';
 
@@ -13,12 +14,15 @@ import {TurnOrderComponent} from '../tapis/turn-order';
  * héros avec le journal à droite. Il ne porte aucun état : la page lui donne tout et reçoit chaque action. */
 @Component({
   selector: 'bol-combat-board',
-  imports: [TurnOrderComponent, TurnAssistantComponent, CombatSideComponent],
+  imports: [TurnOrderComponent, TurnAssistantComponent, CombatSideComponent, DiceBoxHostComponent],
   templateUrl: './combat-board.html',
   styleUrl: './combat-board.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CombatBoardComponent {
+  /** Plateau de dés 3D qui couvre tout l'écran de combat ; l'assistant y lance ses jets. */
+  protected readonly diceBox = viewChild(DiceBoxHostComponent);
+
   // Frise
   readonly entries = input.required<readonly TurnOrderEntry[]>();
   readonly round = input.required<number>();

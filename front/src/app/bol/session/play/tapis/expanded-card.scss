@@ -448,3 +448,19 @@
 
 
 
+
+// Titre de la zone de jet d'action, au-dessus du panneau.
+.exc-roll {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.exc-roll-title {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dw-color-legendary);
+}

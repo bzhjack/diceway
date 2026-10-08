@@ -1,3 +1,8 @@
+<!-- Couche des dés : au-dessus de tout l'écran (frise, assistant, colonne de droite), sans bloquer les clics. -->
+<div class="cb-dice" aria-hidden="true">
+  <app-dice-box-host [scale]="6" [theme]="'wooden-red'" [themeColor]="'#ef4444'" />
+</div>
+
 <div class="cb-main">
   <bol-turn-order
     [entries]="entries()"
@@ -25,6 +30,7 @@
           [attacker]="attacker()"
           [targetStats]="targetStats()"
           [legendaryBonus]="legendaryBonus()"
+          [diceBox]="diceBox() ?? null"
           (choiceChanged)="choiceChanged.emit($event)"
           (targetSelected)="targetSelected.emit($event)"
           (damageApplied)="damageApplied.emit($event)"

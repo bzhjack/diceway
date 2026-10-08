@@ -121,20 +121,22 @@
             @for (group of visiblePreview(); track group.id) {
               <div class="scd-group" [class.scd-group--blocked]="group.blocked">
                 <span class="scd-group-title">{{ group.title }}@if (group.blocked) { <em>bloqués au round 1</em> }</span>
-                @for (line of group.lines; track line.kind + line.pivotId) {
-                  <span class="scd-group-line" [class.scd-group-line--excluded]="line.excluded">
-                    {{ line.label }}
-                    <button
-                      type="button"
-                      class="scd-remove scd-remove--small"
-                      [attr.aria-label]="(line.excluded ? 'Réintégrer ' : 'Exclure ') + line.label + ' de ce combat'"
-                      [matTooltip]="line.excluded ? 'Réintégrer dans le combat' : 'Exclure de ce combat (reste sur la table)'"
-                      (click)="toggleExcluded(line.kind, line.pivotId)"
-                    >
-                      <mat-icon>{{ line.excluded ? 'undo' : 'person_off' }}</mat-icon>
-                    </button>
-                  </span>
-                }
+                <div class="scd-group-lines">
+                  @for (line of group.lines; track line.kind + line.pivotId) {
+                    <span class="scd-group-line" [class.scd-group-line--excluded]="line.excluded">
+                      {{ line.label }}
+                      <button
+                        type="button"
+                        class="scd-remove scd-remove--small"
+                        [attr.aria-label]="(line.excluded ? 'Réintégrer ' : 'Exclure ') + line.label + ' de ce combat'"
+                        [matTooltip]="line.excluded ? 'Réintégrer dans le combat' : 'Exclure de ce combat (reste sur la table)'"
+                        (click)="toggleExcluded(line.kind, line.pivotId)"
+                      >
+                        <mat-icon>{{ line.excluded ? 'undo' : 'person_off' }}</mat-icon>
+                      </button>
+                    </span>
+                  }
+                </div>
               </div>
             }
             @if (previewNote()) {
