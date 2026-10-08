@@ -19,7 +19,19 @@ import {StartCombatDialogData} from '../../models/start-combat-dialog.model';
 interface AdversaryRow {
   readonly pivotId: number;
   readonly nom: string;
+  /** Rang BoL fixe : les PNJ, créatures et démons n'ont pas de jet de réaction, ce rang les place dans l'ordre. */
+  readonly rang: 'rival' | 'coriace' | 'pietaille';
 }
+
+/** Un bloc de l'aperçu de la frise : ses combattants, et s'il est bloqué au round 1. */
+export interface PreviewGroup {
+  readonly id: string;
+  readonly title: string;
+  readonly lines: readonly string[];
+  readonly blocked: boolean;
+}
+
+const HERO_RANK_SYMBOL: Partial<Record<InitiativeResultat, string>> = {legendaire: '①', heroique: '②', reussite: '③', echec: '⑥', echec_critique: '⑧'};
 
 interface HeroRow {
   readonly pivotId: number;
@@ -139,6 +151,42 @@ export class StartCombatDialogComponent {
     return total !== null && total >= THRESHOLD ? 'reussite' : 'echec';
   });
 
+  /** Un héros a obtenu un succès héroïque ou mieux : au round 1, coriaces et piétaille sont bloqués. */
+  protected readonly roundOneLocked = computed(() =>
+    this.heroes().some((h) => h.resultat === 'heroique' || h.resultat === 'legendaire'),
+  );
+
+  /** Aperçu de la frise : les héros d'après leur jet, les autres d'après leur rang. */
+  protected readonly preview = computed<readonly PreviewGroup[]>(() => {
+    const heroes = this.heroes();
+    const advs = this.adversaries();
+    const locked = this.roundOneLocked();
+    const heroLines = (results: readonly InitiativeResultat[]): string[] =>
+      heroes.filter((h) => h.resultat && results.includes(h.resultat)).map((h) => `${h.nom} ${HERO_RANK_SYMBOL[h.resultat!]}`);
+    const names = (rang: AdversaryRow['rang']): string[] => advs.filter((a) => a.rang === rang).map((a) => a.nom);
+    return [
+      {id: 'heros', title: 'Héros ①②③', lines: heroLines(['legendaire', 'heroique', 'reussite']), blocked: false},
+      {id: 'rival', title: 'Rivaux ④', lines: names('rival'), blocked: false},
+      {id: 'coriace', title: 'Coriaces ⑤', lines: names('coriace'), blocked: locked},
+      {id: 'echec', title: 'Héros en échec ⑥', lines: heroLines(['echec']), blocked: false},
+      {id: 'pietaille', title: 'Piétaille ⑦', lines: names('pietaille'), blocked: locked},
+      {id: 'echec_critique', title: 'Échec critique ⑧', lines: heroLines(['echec_critique']), blocked: false},
+    ];
+  });
+
+  /** Ce que la table doit savoir avant de commencer : jets manquants, égalités entre héros, succès légendaire. */
+  protected readonly previewNote = computed(() => {
+    const heroes = this.heroes();
+    if (heroes.some((h) => h.resultat === null)) {
+      return 'Chaque héros doit avoir un résultat.';
+    }
+    const results = heroes.map((h) => h.resultat);
+    if (results.some((r, i) => results.indexOf(r) !== i)) {
+      return "Égalité entre deux héros : ils décident entre eux, sinon l'agilité la plus haute agit d'abord.";
+    }
+    return results.includes('legendaire') ? "Succès légendaire : +1 à tous les jets d'attaque pendant la rencontre." : '';
+  });
+
   constructor() {
     this.reload();
   }
@@ -151,9 +199,9 @@ export class StartCombatDialogComponent {
       .subscribe({
         next: (session) => {
           this.adversaries.set([
-            ...(session.pnjs ?? []).map((p) => ({pivotId: p.id, nom: p.surnom ?? p.nom})),
-            ...(session.creatures ?? []).map((c) => ({pivotId: c.id, nom: c.surnom ?? c.nom})),
-            ...(session.demons ?? []).map((d) => ({pivotId: d.id, nom: d.surnom ?? d.nom})),
+            ...(session.pnjs ?? []).map((p) => ({pivotId: p.id, nom: p.surnom ?? p.nom, rang: p.rang})),
+            ...(session.creatures ?? []).map((c) => ({pivotId: c.id, nom: c.surnom ?? c.nom, rang: c.rang})),
+            ...(session.demons ?? []).map((d) => ({pivotId: d.id, nom: d.surnom ?? d.nom, rang: d.rang})),
           ]);
           this.existingHeroIds.set(new Set((session.heros ?? []).map((h) => String(h.heros_id))));
 
@@ -289,6 +337,17 @@ export class StartCombatDialogComponent {
     this.dice.set(diceFromTotal(total));
     this.diceTotalByPivot.update((map) => new Map(map).set(hero.pivotId, total));
     this.persistSuggested(hero);
+  }
+
+  /** Lance le jet de chaque héros qui n'en a pas encore, l'un après l'autre (un seul plateau de dés). */
+  protected async rollAll(): Promise<void> {
+    for (const hero of this.heroes().filter((h) => h.resultat === null)) {
+      await this.rollFor(hero);
+    }
+  }
+
+  protected initial(nom: string): string {
+    return nom.trim().charAt(0).toUpperCase();
   }
 
   /** Échec critique (2 naturel) : choisir OCTROIE 1 PH ; revenir sur "Échec" le reprend. */

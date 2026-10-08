@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'vitest';
-import {buildCombatStates, endTurn, giveBackTurn, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
+import {buildCombatStates, endTurn, groupByTier, giveBackTurn, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
 import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model';
+import {TurnOrderEntry} from '../../models/turn-order.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
 
 function card(kind: TapisKind, pivotId: number, extra: Partial<TapisCard> = {}): TapisCard {
@@ -287,5 +288,29 @@ describe('turnAnnouncement', () => {
 
   it('says when nobody can play', () => {
     expect(turnAnnouncement([], etat(1))).toBe('Round 1. Plus personne ne peut jouer.');
+  });
+});
+
+describe('groupByTier', () => {
+  const entry = (key: string, tier: TurnOrderEntry['tier'], locked = false): TurnOrderEntry => ({
+    key, nom: key, kind: 'hero', avatar: '', status: 'upcoming', tier, locked,
+  });
+
+  it('groups the combatants by reaction rank, in rulebook order', () => {
+    const groups = groupByTier([entry('p1', 'pietaille'), entry('h1', 'reussite'), entry('r1', 'rival'), entry('h2', 'legendaire'), entry('c1', 'coriace'), entry('e1', 'echec')]);
+    expect(groups.map((g) => g.id)).toEqual(['heros', 'rival', 'coriace', 'echec', 'pietaille', 'echec_critique']);
+    expect(groups[0].entries.map((e) => e.key)).toEqual(['h1', 'h2']);
+    expect(groups[5].entries).toEqual([]);
+  });
+
+  it('puts a hero without a known roll with the successful heroes', () => {
+    expect(groupByTier([entry('h1', null)])[0].entries).toHaveLength(1);
+  });
+
+  it('marks a group as blocked only when everyone in it is locked', () => {
+    const groups = groupByTier([entry('c1', 'coriace', true), entry('p1', 'pietaille', true), entry('p2', 'pietaille', false)]);
+    expect(groups[2].blocked).toBe(true);
+    expect(groups[4].blocked).toBe(false);
+    expect(groups[1].blocked).toBe(false);
   });
 });

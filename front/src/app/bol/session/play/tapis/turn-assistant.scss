@@ -1,0 +1,351 @@
+:host {
+  display: block;
+}
+
+.tas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0.8rem;
+}
+
+.tas-who {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+}
+
+.tas-eyebrow,
+.tas-label {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dw-color-legendary);
+}
+
+.tas-label {
+  margin: 0;
+  color: var(--dw-surface-500);
+}
+
+.tas-name {
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: var(--dw-color-reussite);
+}
+
+.tas-sub {
+  font-size: 0.78rem;
+  color: var(--dw-surface-600);
+}
+
+.tas-step {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.7rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 10px;
+  background: var(--dw-surface-100);
+
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+    font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dw-surface-900);
+
+    span {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 1.45rem;
+      height: 1.45rem;
+      border-radius: 50%;
+      background: var(--dw-color-legendary);
+      color: var(--dw-surface-0);
+      font: 800 0.78rem 'Muse Sans', sans-serif;
+    }
+  }
+}
+
+.tas-step--roll {
+  border-color: var(--dw-color-legendary);
+  background: linear-gradient(var(--dw-surface-100), color-mix(in srgb, var(--dw-color-legendary) 10%, var(--dw-surface-50)));
+}
+
+.tas-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.tas-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.tas-chip {
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 8px;
+  background: var(--dw-surface-200);
+  color: var(--dw-surface-900);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: pointer;
+
+  em {
+    margin-left: 0.3rem;
+    font-style: normal;
+    font-weight: 700;
+    opacity: 0.75;
+  }
+
+  &[aria-pressed='true'] {
+    border-color: color-mix(in srgb, var(--bar-bronze, #3a2810) 60%, #000);
+    background: linear-gradient(#e6b64e, #b8832a);
+    color: #1a1203;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+}
+
+.tas-fixed {
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.1rem;
+  color: var(--dw-surface-900);
+}
+
+.tas-note {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--dw-surface-600);
+}
+
+.tas-targets {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.tas-target {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 9px;
+  background: var(--dw-surface-50);
+  color: var(--dw-surface-900);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  b {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.85rem;
+  }
+
+  &[aria-pressed='true'] {
+    border-color: var(--dw-color-echec-forte);
+    background: color-mix(in srgb, var(--dw-color-echec-forte) 14%, var(--dw-surface-50));
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+}
+
+.tas-bar {
+  width: 4rem;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--dw-surface-200);
+  overflow: hidden;
+
+  i {
+    display: block;
+    height: 100%;
+    background: var(--dw-color-health);
+  }
+}
+
+.tas-bar--low i {
+  background: var(--dw-color-echec);
+}
+
+.tas-num {
+  min-width: 2.6rem;
+  text-align: right;
+  font-size: 0.8rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.tas-formula {
+  margin: 0;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--dw-surface-700);
+}
+
+.tas-dice {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.tas-die {
+  display: grid;
+  place-items: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 10px;
+  background: linear-gradient(160deg, #fff, #cbbfa5);
+  color: #1a1203;
+  font: 800 1.6rem 'Muse Display Harmony', serif;
+  box-shadow: 0 4px 0 #6b5a3a, 0 8px 12px rgba(0, 0, 0, 0.6);
+}
+
+.tas-die--empty {
+  opacity: 0.35;
+}
+
+.tas-total {
+  margin: 0;
+  text-align: center;
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 2.4rem;
+  line-height: 1;
+  color: var(--dw-surface-900);
+}
+
+.tas-total--dmg {
+  color: var(--dw-color-echec);
+}
+
+.tas-verdict {
+  margin: 0;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tas-verdict--hit {
+  color: var(--dw-color-reussite);
+}
+
+.tas-verdict--miss {
+  color: var(--dw-color-echec);
+}
+
+.tas-roll {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tas-manual {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.76rem;
+  color: var(--dw-surface-600);
+
+  input {
+    width: 4.2rem;
+    padding: 0.3rem 0.4rem;
+    border: 1px solid var(--dw-border);
+    border-radius: 6px;
+    background: var(--dw-surface-0);
+    color: var(--dw-surface-900);
+    font: inherit;
+    text-align: center;
+  }
+}
+
+.tas-heroic {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  legend {
+    margin-bottom: 0.3rem;
+    padding: 0;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dw-color-legendary);
+  }
+}
+
+.tas-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 8px;
+  background: var(--dw-surface-50);
+  font-size: 0.78rem;
+  line-height: 1.3;
+  cursor: pointer;
+
+  input {
+    margin-top: 0.15rem;
+    accent-color: var(--dw-color-legendary);
+  }
+}
+
+.tas-apply {
+  white-space: normal;
+  height: auto;
+  padding-block: 0.5rem;
+}
+
+.tas-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tas-log {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  p {
+    margin: 0;
+    padding: 0.3rem 0.5rem;
+    border-radius: 6px;
+    background: var(--dw-surface-50);
+    font-size: 0.78rem;
+    color: var(--dw-surface-700);
+  }
+}

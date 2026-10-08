@@ -1,10 +1,6 @@
 import {CdkDrag, CdkDragEnd, CdkDragMove, CdkDragPreview, CdkDropList} from '@angular/cdk/drag-drop';
 import {NgTemplateOutlet} from '@angular/common';
 import {ChangeDetectionStrategy, Component, computed, inject, input, output} from '@angular/core';
-import {BolHerosArmeModel} from '../../../models/bol-arme.model';
-import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
-import {AttackChoice} from '../../models/attack-options.model';
-import {ActionBarComponent} from './action-bar';
 import {CharacterCardComponent} from './character-card';
 import {CardCombatState} from '../../models/combat-turn.model';
 import {DwScrollerComponent} from '../../../../shared/dw-scroller/dw-scroller';
@@ -20,7 +16,7 @@ import {TapisCard} from '../../models/tapis.model';
  * réserve (`dragging`, `hoverCamp`) pour dessiner ses zones de dépôt, repérées par `data-drop-camp`. */
 @Component({
   selector: 'bol-tapis',
-  imports: [CdkDrag, CdkDragPreview, CdkDropList, NgTemplateOutlet, CharacterCardComponent, ActionBarComponent, DwScrollerComponent],
+  imports: [CdkDrag, CdkDragPreview, CdkDropList, NgTemplateOutlet, CharacterCardComponent, DwScrollerComponent],
   templateUrl: './tapis.html',
   styleUrl: './tapis.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,11 +29,6 @@ export class TapisComponent {
   readonly mode = input<'libre' | 'combat'>('libre');
   /** État de chaque carte dans le combat — `null` en mode libre. */
   readonly combatStates = input<ReadonlyMap<string, CardCombatState> | null>(null);
-  /** Carte dont c'est le tour — `null` en mode libre ou quand plus personne ne peut jouer. */
-  readonly activeCard = input<TapisCard | null>(null);
-  /** Armes du héros actif, pour la barre d'action. */
-  readonly armes = input<readonly BolHerosArmeModel[]>([]);
-  readonly combatOptions = input<readonly BolCombatOptionModel[]>([]);
 
   /** Cartes sélectionnées par Ctrl + clic. */
   readonly selectedKeys = input<ReadonlySet<string>>(new Set());
@@ -45,10 +36,8 @@ export class TapisComponent {
   /** Ctrl ou Cmd + clic sur une face : ajoute ou retire la carte de la sélection. */
   readonly selectToggled = output<TapisCard>();
   readonly campToggleRequested = output<TapisCard>();
+  /** Clic sur une carte désignable en combat : elle devient la cible de la carte active. */
   readonly attackRequested = output<TapisCard>();
-  readonly choiceChanged = output<AttackChoice | null>();
-  readonly totalDefenseRequested = output<void>();
-  readonly endTurnRequested = output<void>();
 
   /** Les zones de dépôt qui s'allument pendant un glisser : pas celle d'où part une carte, ni celle des adversaires
    * pour un héros. */

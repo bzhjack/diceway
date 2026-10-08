@@ -51,6 +51,8 @@ import {AttackChoice} from '../models/attack-options.model';
 import {buildCombatStates, endTurn, giveBackTurn, normalizeEtat, orderCards, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
 import {CardCombatState, EtatCombat} from '../models/combat-turn.model';
 import {TurnOrderComponent} from './tapis/turn-order';
+import {AppliedHit, TurnAssistantComponent} from './tapis/turn-assistant';
+import {ResolvedCombatStats} from '../models/combat-attack.model';
 import {TurnOrderEntry} from '../models/turn-order.model';
 import {TapisComponent} from './tapis/tapis';
 import {buildTapisCards, findCard, heroDetails, heroHeaderStats, REMOVE_ACTION_LABEL} from './tapis/tapis.util';
@@ -71,7 +73,7 @@ function loadedArmes(hero: BolHerosModel): BolHerosArmeModel[] {
  */
 @Component({
   selector: 'bol-session-play-page',
-  imports: [RouterLink, MatIconModule, MatTooltipModule, SessionHeaderComponent, ReserveComponent, TapisComponent, TurnOrderComponent],
+  imports: [RouterLink, MatIconModule, MatTooltipModule, SessionHeaderComponent, ReserveComponent, TapisComponent, TurnOrderComponent, TurnAssistantComponent],
   templateUrl: './session-play-page.html',
   styleUrl: './session-play-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -107,8 +109,6 @@ export class SessionPlayPageComponent {
   /** Dérivé de `statut` — `'terminee'` n'a pas d'affichage dédié pour l'instant, traité comme `'libre'`. */
   protected readonly mode = computed<'libre' | 'combat'>(() => (this.session()?.statut === 'combat' ? 'combat' : 'libre'));
 
-  /** Réordonnancement manuel du ruban (glisser-déposer), persisté en base — clés dans l'ordre voulu. */
-  private readonly manualOrder = signal<readonly string[] | null>(null);
 
   protected readonly heroTokens = computed(() => this.board()?.tokens.filter((t) => t.camp === 'heros') ?? []);
   protected readonly sessionId = computed(() => this.session()?.id ?? null);
@@ -146,7 +146,7 @@ export class SessionPlayPageComponent {
   protected readonly etat = computed<EtatCombat>(() => normalizeEtat(this.session()?.etat_combat));
 
   /** Cartes dans l'ordre de jeu : initiative BoL des jetons, puis ordre manuel du MJ. */
-  private readonly orderedCards = computed(() => orderCards(this.cards(), this.board()?.tokens ?? [], this.manualOrder()));
+  private readonly orderedCards = computed(() => orderCards(this.cards(), this.board()?.tokens ?? [], null));
 
   private readonly turn = computed(() => turnState(this.orderedCards(), this.etat()));
 
@@ -159,11 +159,14 @@ export class SessionPlayPageComponent {
 
   protected readonly turnEntries = computed<readonly TurnOrderEntry[]>(() => {
     const statuses = this.turn().statuses;
-    return this.orderedCards().map(({card}) => ({
+    return this.orderedCards().map(({card, tier, lockedRound1}) => ({
       key: card.key,
       nom: card.nom,
       kind: card.kind,
+      avatar: card.avatar,
       status: statuses.get(card.key) ?? 'upcoming',
+      tier: tier,
+      locked: lockedRound1,
     }));
   });
 
@@ -179,6 +182,31 @@ export class SessionPlayPageComponent {
 
   /** Arme et posture choisies dans la barre d'action — `null` si le choix n'est pas jouable. */
   protected readonly attackChoice = signal<AttackChoice | null>({degats: null, posture: null});
+
+  /** Cible visée par la carte active (choisie dans l'assistant ou d'un clic sur sa carte). */
+  private readonly targetKey = signal<string | null>(null);
+
+  /** Cartes que la carte active peut viser : le camp d'en face, hors combat exclu. */
+  protected readonly targets = computed(() => {
+    const states = this.combatStates();
+    return this.cards().filter((card) => states?.get(card.key)?.targetable);
+  });
+  protected readonly selectedTarget = computed(() => this.targets().find((card) => card.key === this.targetKey()) ?? null);
+
+  /** Statistiques résolues de l'attaquant et de la cible — la défense totale de la cible (+2) est déjà ajoutée. */
+  protected readonly attackerStats = signal<ResolvedCombatStats | null>(null);
+  protected readonly targetStats = signal<ResolvedCombatStats | null>(null);
+  private statsRun = 0;
+
+  /** L'attaquant actif a obtenu un succès légendaire à la réaction : +1 à ses jets d'attaque. */
+  protected readonly legendaryForActive = computed(() => {
+    const active = this.activeCard();
+    const token = active ? tokenForCard(this.board()?.tokens ?? [], active) : null;
+    return token?.tier === 'legendaire';
+  });
+
+  /** Coups portés pendant ce combat, du plus récent au plus ancien. */
+  protected readonly combatLog = signal<readonly string[]>([]);
 
 
   /** PNJ / créatures / démons sur la table — décide si charger une scène demande « Remplacer ou Ajouter ». */
@@ -215,7 +243,39 @@ export class SessionPlayPageComponent {
       .pipe(take(1))
       .subscribe((options) => this.combatOptions.set(options));
 
-    // Armes du héros dont c'est le tour, pour la barre d'action.
+    // Statistiques de l'attaquant et de la cible, relues à chaque changement de carte active, de cible ou de table.
+    effect(() => {
+      const attacker = this.activeCard();
+      const target = this.selectedTarget();
+      const tokens = this.board()?.tokens ?? [];
+      const defenseTotale = this.etat().defense_totale;
+      const run = ++this.statsRun;
+      const attackerToken = attacker ? tokenForCard(tokens, attacker) : null;
+      const targetToken = target ? tokenForCard(tokens, target) : null;
+      if (!attackerToken) {
+        this.attackerStats.set(null);
+        this.targetStats.set(null);
+        return;
+      }
+      forkJoin({
+        attacker: resolveAttackStats(attackerToken, this.herosService),
+        target: targetToken && target ? resolveAttackStats(targetToken, this.herosService) : of(null),
+      })
+        .pipe(take(1))
+        .subscribe(({attacker: attackerStats, target: targetStats}) => {
+          if (run !== this.statsRun) {
+            return;
+          }
+          this.attackerStats.set(attackerStats);
+          this.targetStats.set(
+            targetStats && target && defenseTotale.includes(target.key)
+              ? {...targetStats, defense: targetStats.defense + 2}
+              : targetStats,
+          );
+        });
+    });
+
+    // Armes du héros dont c'est le tour, pour l'assistant de tour.
     effect(() => {
       const herosId = this.activeHeroId();
       this.activeArmes.set([]);
@@ -266,9 +326,9 @@ export class SessionPlayPageComponent {
 
     this.dialog
       .open(StartCombatDialogComponent, {
-        width: 'min(760px, 94vw)',
-        maxWidth: '94vw',
-        maxHeight: '85vh',
+        width: 'min(1000px, 96vw)',
+        maxWidth: '96vw',
+        maxHeight: '90vh',
         panelClass: 'scd-panel',
         data: {sessionId},
       })
@@ -695,10 +755,12 @@ export class SessionPlayPageComponent {
   }
 
   protected onEndTurn(): void {
+    this.targetKey.set(null);
     this.saveEtat(endTurn(this.orderedCards(), this.etat()));
   }
 
   protected onTotalDefense(): void {
+    this.targetKey.set(null);
     this.saveEtat(totalDefense(this.orderedCards(), this.etat()));
   }
 
@@ -706,37 +768,20 @@ export class SessionPlayPageComponent {
     this.saveEtat(giveBackTurn(this.etat(), key));
   }
 
-  /** Enregistrements d'ordre manuel en cours : tant qu'il y en a, un rechargement de session ne
-   * remplace pas l'ordre affiché (sa réponse a pu être lue avant que le nouvel ordre soit écrit). */
-  private pendingOrderSaves = 0;
-
-  /** Réordonnancement de la bande d'ordre (glisser-déposer), persisté en base — clés de carte. */
-  protected onTurnReordered(keys: readonly string[]): void {
-    this.manualOrder.set(keys);
-
-    const sessionId = this.sessionId();
-    if (!sessionId) {
-      return;
-    }
-
-    this.pendingOrderSaves++;
-    this.fightSessionService.updateOrder(sessionId, keys).subscribe({
-      next: () => {
-        this.pendingOrderSaves--;
-        this.loadSession(sessionId);
-      },
-      error: (error: unknown) => {
-        this.pendingOrderSaves--;
-        this.tableError(error, "Impossible d'enregistrer ce nouvel ordre.");
-        this.loadSession(sessionId);
-      },
-    });
-  }
-
-  /** La carte active attaque `target` : clic sur une carte désignable, ou « Attaquer cette carte ». */
+  /** Clic sur une carte désignable (ou « Attaquer cette carte ») : elle devient la cible de la carte active. */
   protected onAttackCard(target: TapisCard): void {
     const attacker = this.activeCard();
-    if (!attacker || attacker.key === target.key) {
+    if (attacker && attacker.key !== target.key) {
+      this.targetKey.set(target.key);
+    }
+  }
+
+  /** « Jet détaillé » : le dialogue d'attaque complet (faveur divine, conversions de succès, dés de bonus). */
+  protected onDetailedAttack(): void {
+    const attacker = this.activeCard();
+    const target = this.selectedTarget();
+    if (!attacker || !target) {
+      this.snackBar.open("Choisis d'abord une cible.", 'Fermer', {duration: 4000});
       return;
     }
 
@@ -747,6 +792,17 @@ export class SessionPlayPageComponent {
     }
 
     this.openAttackDialog(attacker, target, choice);
+  }
+
+  /** Dégâts calculés par l'assistant : enregistrés sur la cible, puis écrits au journal. */
+  protected onHitApplied(hit: AppliedHit): void {
+    const attacker = this.activeCard();
+    const delta = -hit.damage;
+    const line = `Round ${this.etat().round} · ${attacker?.nom ?? '—'} → ${hit.target.nom} : ${hit.damage > 0 ? `−${hit.damage}` : 'aucun dégât'}`;
+    this.combatLog.update((log) => [line, ...log].slice(0, 12));
+    if (delta !== 0) {
+      this.applyDamageTo(hit.target, delta, this.targetStats());
+    }
   }
 
   /** Ouvre le dialogue d'attaque existant, prérempli. Les stats sont résolues à partir des jetons
@@ -792,29 +848,40 @@ export class SessionPlayPageComponent {
             return;
           }
 
-          this.fightSessionService.applyDamage(sessionId, target.kind, target.pivotId, delta).subscribe({
-            next: () => {
-              this.loadSession(sessionId);
-
-              const newVitalite = (targetToken.vitaliteCourante ?? 0) + delta;
-              if (targetStats.herosId && newVitalite < 0) {
-                maybePromptDefierLaMort({
-                  dialog: this.dialog,
-                  fightSessionService: this.fightSessionService,
-                  herosService: this.herosService,
-                  sessionId,
-                  herosId: targetStats.herosId,
-                  pivotId: target.pivotId,
-                  heroNom: target.nom,
-                  vitaliteCourante: newVitalite,
-                  heroisme: targetStats.heroisme ?? 0,
-                  onApplied: () => this.loadSession(sessionId),
-                });
-              }
-            },
-            error: (error: unknown) => this.tableError(error, "Impossible d'appliquer les dégâts."),
-          });
+          this.applyDamageTo(target, delta, targetStats);
         });
+    });
+  }
+
+  /** Enregistre une variation de vitalité sur une carte (dégâts négatifs) ; un héros qui tombe sous 0 se voit
+   * proposer « Défier la mort ». */
+  private applyDamageTo(target: TapisCard, delta: number, targetStats: ResolvedCombatStats | null): void {
+    const sessionId = this.sessionId();
+    if (!sessionId) {
+      return;
+    }
+
+    this.fightSessionService.applyDamage(sessionId, target.kind, target.pivotId, delta).subscribe({
+      next: () => {
+        this.loadSession(sessionId);
+
+        const newVitalite = (target.vitaliteCourante ?? 0) + delta;
+        if (targetStats?.herosId && newVitalite < 0) {
+          maybePromptDefierLaMort({
+            dialog: this.dialog,
+            fightSessionService: this.fightSessionService,
+            herosService: this.herosService,
+            sessionId,
+            herosId: targetStats.herosId,
+            pivotId: target.pivotId,
+            heroNom: target.nom,
+            vitaliteCourante: newVitalite,
+            heroisme: targetStats.heroisme ?? 0,
+            onApplied: () => this.loadSession(sessionId),
+          });
+        }
+      },
+      error: (error: unknown) => this.tableError(error, "Impossible d'appliquer les dégâts."),
     });
   }
 
@@ -974,9 +1041,6 @@ export class SessionPlayPageComponent {
       .subscribe({
         next: (session) => {
           this.session.set(session);
-          if (this.pendingOrderSaves === 0) {
-            this.manualOrder.set(session.ordre_manuel ?? null);
-          }
           this.loading.set(false);
         },
         error: () => {

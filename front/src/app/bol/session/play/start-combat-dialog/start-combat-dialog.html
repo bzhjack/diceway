@@ -1,148 +1,161 @@
 <div class="scd-shell">
   <!-- Le canvas de dés mesure son conteneur à la création : ne l'instancier qu'une fois le panneau
        à sa taille finale (liste des héros chargée), sinon il se fige sur une résolution minuscule
-       (résolution par défaut du canvas HTML, 300×150) qui déforme les dés une fois étirée en CSS. -->
+       et déforme les dés une fois étiré en CSS. -->
   @if (!loading()) {
     <app-dice-box-host class="scd-dice-layer" [scale]="6" [theme]="'wooden-red'" [themeColor]="'#ef4444'" />
   }
 
   <div class="scd-fg">
-    <h2 mat-dialog-title class="scd-title">Démarrer un combat</h2>
+    <header class="scd-bar">
+      <span class="scd-round" aria-hidden="true"><b>0</b><small>Réaction</small></span>
+      <div>
+        <h2 mat-dialog-title class="scd-title">Démarrer le combat</h2>
+        <p class="scd-lead">
+          Chaque héros lance 2d6 + esprit + initiative (9+). Les PNJ, créatures et démons n'ont pas de jet : ils se rangent d'après leur rang.
+        </p>
+      </div>
+    </header>
 
-    <mat-dialog-content>
+    <mat-dialog-content class="scd-content">
       @if (loading()) {
-        <p>Chargement…</p>
+        <p class="scd-empty">Chargement…</p>
       } @else {
-        <section class="scd-section">
-          <div class="scd-section-head">
-            <h3>Adversaires</h3>
-            <button mat-stroked-button type="button" (click)="openAddAdversary()">
-              <mat-icon>add</mat-icon> Ajouter
-            </button>
-          </div>
-
-          @if (adversaries().length) {
-            <ul class="scd-list">
-              @for (a of adversaries(); track a.pivotId) {
-                <li>{{ a.nom }}</li>
-              }
-            </ul>
-          } @else {
-            <p class="scd-empty">Aucun adversaire pour l'instant.</p>
-          }
-        </section>
-
-        <section class="scd-section">
-          <h3>Initiative des héros</h3>
-
-          <div class="scd-modifiers">
-            <div class="scd-modifiers-group">
-              <span class="scd-modifiers-label">Embuscade</span>
-              <div class="scd-toggle">
-                <button type="button" [class.active]="ambushState() === null" (click)="setAmbush(null)">Aucune</button>
-                <button type="button" [class.active]="ambushState() === 'heroes_ambush'" (click)="setAmbush('heroes_ambush')">
-                  Tendue (+2)
-                </button>
-                <button type="button" [class.active]="ambushState() === 'heroes_ambushed'" (click)="setAmbush('heroes_ambushed')">
-                  Subie (−1)
-                </button>
+        <div class="scd-grid">
+          <div class="scd-left">
+            <section class="scd-block scd-modifiers" aria-label="Modificateurs de la table">
+              <span class="scd-kicker">Modificateurs de la table</span>
+              <div class="scd-modifiers-group">
+                <span class="scd-modifiers-label">Embuscade</span>
+                <div class="scd-toggle">
+                  <button type="button" [class.active]="ambushState() === null" (click)="setAmbush(null)">Aucune</button>
+                  <button type="button" [class.active]="ambushState() === 'heroes_ambush'" (click)="setAmbush('heroes_ambush')">Tendue (+2)</button>
+                  <button type="button" [class.active]="ambushState() === 'heroes_ambushed'" (click)="setAmbush('heroes_ambushed')">Subie (−1)</button>
+                </div>
               </div>
-            </div>
-            <label class="scd-modifiers-group">
-              <span class="scd-modifiers-label">Initiative adverse la plus haute (coriace/rival)</span>
-              <input
-                class="scd-input"
-                type="number"
-                min="0"
-                [value]="adversaryInitiativeMalus()"
-                (change)="setAdversaryMalus($any($event.target).value)"
-              />
-            </label>
-          </div>
-
-          <ul class="scd-list scd-list--heroes">
-            @for (hero of heroes(); track hero.pivotId) {
-              <li class="scd-hero-row" [class.scd-hero-row--active]="activePivotId() === hero.pivotId">
-                <span class="scd-hero-identity">
-                  <span class="scd-hero-name">{{ hero.nom }}</span>
-                  <span class="scd-hero-stats">Esprit {{ signed(hero.esprit) }} · Initiative {{ signed(hero.initiative) }}</span>
+              <label class="scd-modifiers-group">
+                <span class="scd-modifiers-label">Initiative adverse</span>
+                <span class="scd-inline">
+                  <input class="scd-input" type="number" min="0" [value]="adversaryInitiativeMalus()" (change)="setAdversaryMalus($any($event.target).value)" />
+                  <span class="scd-hint">plus haute valeur d'un rival ou d'un coriace ennemi : malus aux héros</span>
                 </span>
-                <input
-                  class="scd-input"
-                  type="number"
-                  min="2"
-                  max="12"
-                  placeholder="—"
-                  [value]="diceTotalFor(hero.pivotId)"
-                  [disabled]="rolling()"
-                  [attr.aria-label]="'Total des dés pour ' + hero.nom"
-                  (change)="onManualTotal(hero, $any($event.target).value)"
-                />
-                @if (hero.resultat) {
-                  <span
-                    class="scd-pill"
-                    [class.scd-pill--reussite]="hero.resultat === 'reussite'"
-                    [class.scd-pill--heroique]="hero.resultat === 'heroique' || hero.resultat === 'legendaire'"
-                    [class.scd-pill--echec]="hero.resultat === 'echec' || hero.resultat === 'echec_critique'"
-                  >
-                    {{ resultLabel(hero.resultat) }}
-                  </span>
+              </label>
+            </section>
+
+            <section class="scd-block" aria-label="Jets de réaction des héros">
+              <span class="scd-kicker">Jets de réaction</span>
+              <ul class="scd-heroes">
+                @for (hero of heroes(); track hero.pivotId) {
+                  <li class="scd-hero" [class.scd-hero--active]="activePivotId() === hero.pivotId">
+                    <span class="scd-med" aria-hidden="true">{{ initial(hero.nom) }}</span>
+                    <span class="scd-hero-identity">
+                      <span class="scd-hero-name">{{ hero.nom }}</span>
+                      <span class="scd-hero-stats">Esprit {{ signed(hero.esprit) }} · Initiative {{ signed(hero.initiative) }}</span>
+                    </span>
+                    <span class="scd-formula">
+                      2d6 {{ signed(hero.esprit + hero.initiative + modifierTotal()) }} ≥ 9
+                      @if (diceTotalFor(hero.pivotId) !== null) {
+                        <span class="scd-arrow">→</span>
+                        <b>{{ diceTotalFor(hero.pivotId)! + hero.esprit + hero.initiative + modifierTotal() }}</b>
+                      }
+                    </span>
+                    <span class="scd-result">
+                      @if (hero.resultat) {
+                        <span
+                          class="scd-pill"
+                          [class.scd-pill--reussite]="hero.resultat === 'reussite'"
+                          [class.scd-pill--heroique]="hero.resultat === 'heroique' || hero.resultat === 'legendaire'"
+                          [class.scd-pill--echec]="hero.resultat === 'echec' || hero.resultat === 'echec_critique'"
+                        >
+                          {{ resultLabel(hero.resultat) }}
+                        </span>
+                      }
+                      <button type="button" class="scd-dice-btn" [disabled]="rolling()" (click)="rollFor(hero)">
+                        <mat-icon>casino</mat-icon>
+                        {{ hero.resultat ? 'Relancer' : 'Lancer' }}
+                      </button>
+                      <input
+                        class="scd-input scd-input--manual"
+                        type="number"
+                        min="2"
+                        max="12"
+                        placeholder="2-12"
+                        [value]="diceTotalFor(hero.pivotId)"
+                        [disabled]="rolling()"
+                        [attr.aria-label]="'Total des dés lancés à table pour ' + hero.nom"
+                        (change)="onManualTotal(hero, $any($event.target).value)"
+                      />
+                    </span>
+                  </li>
+                } @empty {
+                  <li class="scd-empty">Aucun héros à table.</li>
                 }
-                <button type="button" class="scd-dice-btn" [disabled]="rolling()" (click)="rollFor(hero)">
-                  <mat-icon>casino</mat-icon>
-                  {{ hero.resultat ? 'Relancer' : 'Lancer' }}
-                </button>
-              </li>
-            }
-          </ul>
+              </ul>
 
-          @if (heroes().length) {
-            <div class="scd-active-info">
               @if (activeHero(); as hero) {
-                <p class="scd-active-line">
-                  Jet en cours — <strong>{{ hero.nom }}</strong>
-                  @if (dice(); as d) {
-                    · {{ d[0] }} + {{ d[1] }} + esprit ({{ signed(hero.esprit) }}) + initiative ({{ signed(hero.initiative) }})
-                    @if (modifierTotal() !== 0) {
-                      + modificateurs ({{ signed(modifierTotal()) }})
-                    }
-                    = <strong>{{ activeTotal() }}</strong>
-                  }
-                </p>
-
                 @if (isNatural2()) {
-                  <div class="scd-toggle">
+                  <div class="scd-toggle scd-toggle--note">
+                    <span>{{ hero.nom }} : 2 naturel</span>
                     <button type="button" [class.active]="!critiqueChosen()" (click)="chooseCritique(false)">Échec</button>
-                    <button type="button" [class.active]="critiqueChosen()" (click)="chooseCritique(true)">
-                      Échec critique (+1 PH)
-                    </button>
+                    <button type="button" [class.active]="critiqueChosen()" (click)="chooseCritique(true)">Échec critique (+1 PH)</button>
                   </div>
                 } @else if (isNatural12()) {
-                  <div class="scd-toggle">
+                  <div class="scd-toggle scd-toggle--note">
+                    <span>{{ hero.nom }} : 12 naturel</span>
                     <button type="button" [class.active]="!legendaryChosen()" (click)="chooseLegendaire(false)">Héroïque</button>
-                    <button
-                      type="button"
-                      [class.active]="legendaryChosen()"
-                      [disabled]="!legendaryChosen() && heroismeSignal(hero.pivotId)() <= 0"
-                      (click)="chooseLegendaire(true)"
-                    >
+                    <button type="button" [class.active]="legendaryChosen()" [disabled]="!legendaryChosen() && heroismeSignal(hero.pivotId)() <= 0" (click)="chooseLegendaire(true)">
                       Légendaire (−1 PH)
                     </button>
                   </div>
                 }
-              } @else {
-                <p class="scd-active-line scd-active-line--idle">Cliquez « Lancer » sur une ligne, ou saisissez un total à la main.</p>
               }
-            </div>
-          }
-        </section>
+            </section>
+
+            <section class="scd-block" aria-label="Adversaires">
+              <div class="scd-head">
+                <span class="scd-kicker">Sans jet : rangés d'après leur rang</span>
+                <button mat-stroked-button type="button" (click)="openAddAdversary()"><mat-icon>add</mat-icon> Ajouter</button>
+              </div>
+              @if (adversaries().length) {
+                <div class="scd-advs">
+                  @for (a of adversaries(); track a.pivotId) {
+                    <span class="scd-adv">{{ a.nom }} <em>{{ a.rang === 'rival' ? '④' : a.rang === 'coriace' ? '⑤' : '⑦' }}</em></span>
+                  }
+                </div>
+              } @else {
+                <p class="scd-empty">Aucun adversaire pour l'instant : ajoutes-en pour pouvoir démarrer.</p>
+              }
+            </section>
+          </div>
+
+          <aside class="scd-side" aria-label="Aperçu de la frise">
+            <span class="scd-kicker">Aperçu de la frise</span>
+            @for (group of preview(); track group.id) {
+              <div class="scd-group" [class.scd-group--blocked]="group.blocked">
+                <span class="scd-group-title">{{ group.title }}@if (group.blocked) { <em>bloqués au round 1</em> }</span>
+                @for (line of group.lines; track line) {
+                  <span class="scd-group-line">{{ line }}</span>
+                } @empty {
+                  <span class="scd-group-line scd-group-line--none">—</span>
+                }
+              </div>
+            }
+            @if (previewNote()) {
+              <p class="scd-note">{{ previewNote() }}</p>
+            }
+          </aside>
+        </div>
       }
     </mat-dialog-content>
 
-    <mat-dialog-actions align="end">
+    <mat-dialog-actions class="scd-actions">
       <button mat-stroked-button type="button" (click)="close()">Annuler</button>
+      <span class="scd-spacer"></span>
+      <button mat-stroked-button type="button" [disabled]="loading() || rolling() || !heroes().length" (click)="rollAll()">
+        <mat-icon>casino</mat-icon> Lancer pour tous
+      </button>
       <button mat-flat-button type="button" [disabled]="!canStart() || starting()" (click)="start()">
-        <mat-icon>play_arrow</mat-icon> Démarrer le combat
+        <mat-icon>play_arrow</mat-icon> Commencer le combat
       </button>
     </mat-dialog-actions>
   </div>

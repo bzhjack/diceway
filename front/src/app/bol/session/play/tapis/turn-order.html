@@ -1,42 +1,55 @@
 <div class="tor">
-  <span class="tor-round">Round {{ round() }}</span>
+  <div class="tor-head">
+    <span class="tor-round" aria-label="Round {{ round() }}"><b>{{ round() }}</b><small>Round</small></span>
+    <span class="tor-title">Ordre d'action</span>
+    @if (legendaryActive()) {
+      <span class="tor-pill">★ Succès légendaire : +1 aux attaques</span>
+    }
+    @if (roundOneLock()) {
+      <span class="tor-pill tor-pill--lock">Succès héroïque : coriaces et piétaille bloqués au round 1</span>
+    }
+    <span class="tor-spacer"></span>
+    <button mat-stroked-button size="small" type="button" (click)="addRequested.emit()">
+      <mat-icon>add</mat-icon> Ajouter
+    </button>
+  </div>
 
-  <dw-scroller class="tor-scroller" label="Ordre de jeu">
-  <ol
-    class="tor-list"
-    aria-label="Ordre de jeu — glisser-déposer pour réordonner"
-    cdkDropList
-    cdkDropListOrientation="horizontal"
-    (cdkDropListDropped)="onDrop($event)"
-  >
-    @for (entry of entries(); track entry.key) {
-      <li
-        cdkDrag
-        [class]="'tor-chip tor-chip--' + entry.kind + ' tor-chip--' + entry.status"
-        [attr.aria-current]="entry.status === 'active' ? 'true' : null"
-      >
-        <span class="tor-dot"></span>
-        <span class="tor-name">{{ entry.nom }}</span>
-        <span class="tor-status">{{ statusLabel(entry.status) }}</span>
-        @if (entry.status === 'played') {
-          <button
-            type="button"
-            class="tor-back"
-            [attr.aria-label]="'Rendre la main à ' + entry.nom"
-            matTooltip="Rendre la main"
-            (click)="gaveBack.emit(entry.key)"
-          >
-            <mat-icon>undo</mat-icon>
-          </button>
-        }
+  <ol class="tor-groups" aria-label="Ordre d'action par rang de réaction">
+    @for (group of groups(); track group.id) {
+      <li class="tor-group" [class.tor-group--blocked]="group.blocked">
+        <h3 class="tor-group-title">
+          <span>{{ group.title }}</span>
+          @if (group.entries.length) {
+            <em>{{ group.entries.length }}</em>
+          }
+        </h3>
+        <ul class="tor-chips">
+          @for (entry of group.entries; track entry.key) {
+            <li>
+              <button
+                type="button"
+                [class]="'tor-med tor-med--' + entry.kind + ' tor-med--' + entry.status"
+                [class.tor-med--locked]="entry.locked"
+                [attr.aria-current]="entry.status === 'active' ? 'true' : null"
+                [attr.aria-label]="label(entry)"
+                [matTooltip]="entry.nom + (entry.status === 'played' ? ' — cliquer pour lui rendre la main' : '')"
+                [disabled]="entry.status !== 'played'"
+                (click)="gaveBack.emit(entry.key)"
+              >
+                @if (entry.avatar) {
+                  <img class="tor-img" [src]="entry.avatar" alt="" />
+                } @else {
+                  {{ initial(entry) }}
+                }
+              </button>
+            </li>
+          } @empty {
+            <li class="tor-none">—</li>
+          }
+        </ul>
       </li>
     }
   </ol>
-  </dw-scroller>
-
-  <button mat-stroked-button size="small" type="button" class="tor-add" (click)="addRequested.emit()">
-    <mat-icon>add</mat-icon> Ajouter
-  </button>
 
   <p class="tor-live" aria-live="polite">{{ announcement() }}</p>
 </div>

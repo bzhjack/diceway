@@ -55,8 +55,8 @@
             <bol-turn-order
               [entries]="turnEntries()"
               [round]="etat().round"
+              [legendaryActive]="b.legendaryActive"
               [announcement]="turnAnnouncement()"
-              (reordered)="onTurnReordered($event)"
               (gaveBack)="onGiveBackTurn($event)"
               (addRequested)="openAddCombatantDialog()"
             />
@@ -67,19 +67,39 @@
             [sessionId]="sid"
             [mode]="mode()"
             [combatStates]="combatStates()"
-            [activeCard]="activeCard()"
-            [armes]="activeArmes()"
-            [combatOptions]="combatOptions()"
             [selectedKeys]="selectedKeys()"
             (selectToggled)="toggleSelected($event)"
             (cardToggled)="onCardToggled($event)"
             (campToggleRequested)="toggleCamp($event)"
             (attackRequested)="onAttackCard($event)"
-            (choiceChanged)="attackChoice.set($event)"
-            (totalDefenseRequested)="onTotalDefense()"
-            (endTurnRequested)="onEndTurn()"
           />
         </div>
+
+        @if (mode() === 'combat') {
+          <aside class="spp-assistant" aria-label="Assistant de tour">
+            @if (activeCard(); as active) {
+              <bol-turn-assistant
+                [card]="active"
+                [armes]="activeArmes()"
+                [combatOptions]="combatOptions()"
+                [targets]="targets()"
+                [target]="selectedTarget()"
+                [attacker]="attackerStats()"
+                [targetStats]="targetStats()"
+                [legendaryBonus]="legendaryForActive()"
+                [log]="combatLog()"
+                (choiceChanged)="attackChoice.set($event)"
+                (targetSelected)="onAttackCard($event)"
+                (damageApplied)="onHitApplied($event)"
+                (detailedRequested)="onDetailedAttack()"
+                (totalDefenseRequested)="onTotalDefense()"
+                (endTurnRequested)="onEndTurn()"
+              />
+            } @else {
+              <p class="spp-nobody">Plus personne ne peut jouer.</p>
+            }
+          </aside>
+        }
       </div>
     }
     </div>

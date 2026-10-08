@@ -1,5 +1,7 @@
 import {PlayToken} from '../../models/combat-play.model';
 import {TapisCard} from '../../models/tapis.model';
+import {InitiativeTierKey} from '../../models/initiative.model';
+import {TurnOrderEntry, TurnOrderGroup} from '../../models/turn-order.model';
 import {EtatCombat, TurnStatus, OrderedCard, TurnState, CardCombatState, TurnToken} from '../../models/combat-turn.model';
 
 export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], defense_totale: []};
@@ -220,4 +222,23 @@ export function turnAnnouncement(ordered: readonly OrderedCard[], etat: EtatComb
   const activeKey = turnState(ordered, etat).activeKey;
   const active = ordered.find((entry) => entry.card.key === activeKey)?.card;
   return active ? `Round ${etat.round}. À ${active.nom} de jouer.` : `Round ${etat.round}. Plus personne ne peut jouer.`;
+}
+
+const FRISE_GROUPS: readonly {id: string; title: string; tiers: readonly (InitiativeTierKey | null)[]}[] = [
+  {id: 'heros', title: 'Héros ①②③', tiers: ['legendaire', 'heroique', 'reussite', null]},
+  {id: 'rival', title: 'Rivaux ④', tiers: ['rival']},
+  {id: 'coriace', title: 'Coriaces ⑤', tiers: ['coriace']},
+  {id: 'echec', title: 'Héros en échec ⑥', tiers: ['echec']},
+  {id: 'pietaille', title: 'Piétaille ⑦', tiers: ['pietaille']},
+  {id: 'echec_critique', title: 'Échec critique ⑧', tiers: ['echec_critique']},
+];
+
+/** Regroupe les combattants par rang de réaction, dans l'ordre de BoL (02-actions-combat.md) : héros ayant
+ * réussi, rivaux, coriaces, héros en échec, piétaille, échec critique. Un bloc dont tous les membres sont
+ * bloqués au round 1 est marqué comme tel. */
+export function groupByTier(entries: readonly TurnOrderEntry[]): TurnOrderGroup[] {
+  return FRISE_GROUPS.map(({id, title, tiers}) => {
+    const members = entries.filter((entry) => tiers.includes(entry.tier));
+    return {id, title, entries: members, blocked: members.length > 0 && members.every((entry) => entry.locked)};
+  });
 }

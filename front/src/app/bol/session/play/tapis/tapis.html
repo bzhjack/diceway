@@ -1,6 +1,5 @@
 <div class="tps">
   <ng-container *ngTemplateOutlet="presentsTpl" />
-  <ng-container *ngTemplateOutlet="middleTpl" />
   <ng-container *ngTemplateOutlet="herosTpl" />
 </div>
 
@@ -35,23 +34,6 @@
     />
     <h2 class="tps-row-label" id="tps-heros-label">Héros et alliés</h2>
   </section>
-</ng-template>
-
-<ng-template #middleTpl>
-  @if (mode() === 'combat') {
-    @if (activeCard(); as active) {
-      <bol-action-bar
-        [card]="active"
-        [armes]="armes()"
-        [combatOptions]="combatOptions()"
-        (choiceChanged)="choiceChanged.emit($event)"
-        (totalDefenseRequested)="totalDefenseRequested.emit()"
-        (endTurnRequested)="endTurnRequested.emit()"
-      />
-    } @else {
-      <p class="tps-nobody">Plus personne ne peut jouer.</p>
-    }
-  }
 </ng-template>
 
 <ng-template #rowTpl let-cards="cards" let-labelId="labelId" let-empty="empty" let-scrollerLabel="scrollerLabel">
