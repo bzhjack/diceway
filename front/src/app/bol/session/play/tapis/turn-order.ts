@@ -41,7 +41,8 @@ export class TurnOrderComponent {
   readonly rerollRequested = output<void>();
   readonly endTurnRequested = output<void>();
 
-  protected readonly groups = computed(() => groupByTier(this.entries()));
+  /** Seuls les blocs qui ont au moins un combattant sont affichés. */
+  protected readonly groups = computed(() => groupByTier(this.entries()).filter((group) => group.entries.length > 0));
   /** Au round 1, un succès héroïque bloque coriaces et piétaille : la frise le dit. */
   protected readonly roundOneLock = computed(() => this.round() === 1 && this.entries().some((entry) => entry.locked));
 

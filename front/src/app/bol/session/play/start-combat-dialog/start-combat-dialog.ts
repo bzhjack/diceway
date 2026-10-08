@@ -4,8 +4,9 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angula
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {forkJoin, take} from 'rxjs';
+import {firstValueFrom, forkJoin, take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
+import {confirmDialog} from '../../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
@@ -203,6 +204,9 @@ export class StartCombatDialogComponent {
   );
 
   /** Aperçu de la frise : les héros d'après leur jet, les autres d'après leur rang. */
+  /** Seuls les blocs qui ont au moins un combattant sont affichés. */
+  protected readonly visiblePreview = computed(() => this.preview().filter((group) => group.lines.length > 0));
+
   protected readonly preview = computed<readonly PreviewGroup[]>(() => {
     const heroes = this.heroes();
     const advs = this.adversaries();
@@ -405,6 +409,8 @@ export class StartCombatDialogComponent {
       this.dice.set([a, b]);
       this.diceTotalByPivot.update((map) => new Map(map).set(hero.pivotId, a + b));
       this.persistSuggested(hero);
+      this.rolling.set(false);
+      await this.askNaturalChoice(hero, a + b);
     } finally {
       this.rolling.set(false);
     }
@@ -426,6 +432,36 @@ export class StartCombatDialogComponent {
     this.dice.set(diceFromTotal(total));
     this.diceTotalByPivot.update((map) => new Map(map).set(hero.pivotId, total));
     this.persistSuggested(hero);
+    void this.askNaturalChoice(hero, total);
+  }
+
+  /** Un 2 ou un 12 naturel laisse un choix au joueur : on le lui demande dans un dialogue (le résultat par défaut est déjà enregistré). */
+  private async askNaturalChoice(hero: HeroRow, total: number): Promise<void> {
+    if (total === 2) {
+      const critique = await firstValueFrom(
+        confirmDialog(this.dialog, {
+          title: 'Échec critique',
+          message: `${hero.nom} a obtenu un 2 naturel. Prendre l'échec critique ? Il gagne 1 point d'héroïsme, mais agit en dernier et reste interdit au premier round.`,
+          confirmLabel: 'Échec critique (+1 PH)',
+          cancelLabel: 'Simple échec',
+        }),
+      );
+      if (critique) {
+        this.chooseCritique(true);
+      }
+    } else if (total === 12 && this.heroismeSignal(hero.pivotId)() > 0) {
+      const legendaire = await firstValueFrom(
+        confirmDialog(this.dialog, {
+          title: 'Succès légendaire',
+          message: `${hero.nom} a obtenu un 12 naturel : succès héroïque. Dépenser 1 point d'héroïsme pour un succès légendaire ? Il donne +1 à toutes les attaques des héros pendant la rencontre.`,
+          confirmLabel: 'Légendaire (−1 PH)',
+          cancelLabel: 'Rester héroïque',
+        }),
+      );
+      if (legendaire) {
+        this.chooseLegendaire(true);
+      }
+    }
   }
 
   /** Efface côté serveur les résultats d'un jet précédent, pour que la table n'en garde aucun. */

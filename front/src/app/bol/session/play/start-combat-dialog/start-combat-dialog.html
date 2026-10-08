@@ -113,30 +113,12 @@
                   <li class="scd-empty">Aucun héros à table.</li>
                 }
               </ul>
-
-              @if (activeHero(); as hero) {
-                @if (isNatural2()) {
-                  <div class="scd-toggle scd-toggle--note">
-                    <span>{{ hero.nom }} : 2 naturel</span>
-                    <button type="button" [class.active]="!critiqueChosen()" (click)="chooseCritique(false)">Échec</button>
-                    <button type="button" [class.active]="critiqueChosen()" (click)="chooseCritique(true)">Échec critique (+1 PH)</button>
-                  </div>
-                } @else if (isNatural12()) {
-                  <div class="scd-toggle scd-toggle--note">
-                    <span>{{ hero.nom }} : 12 naturel</span>
-                    <button type="button" [class.active]="!legendaryChosen()" (click)="chooseLegendaire(false)">Héroïque</button>
-                    <button type="button" [class.active]="legendaryChosen()" [disabled]="!legendaryChosen() && heroismeSignal(hero.pivotId)() <= 0" (click)="chooseLegendaire(true)">
-                      Légendaire (−1 PH)
-                    </button>
-                  </div>
-                }
-              }
             </section>
           </div>
 
           <aside class="scd-side" aria-label="Aperçu de la frise">
             <span class="scd-kicker">Aperçu de la frise</span>
-            @for (group of preview(); track group.id) {
+            @for (group of visiblePreview(); track group.id) {
               <div class="scd-group" [class.scd-group--blocked]="group.blocked">
                 <span class="scd-group-title">{{ group.title }}@if (group.blocked) { <em>bloqués au round 1</em> }</span>
                 @for (line of group.lines; track line.kind + line.pivotId) {
@@ -152,8 +134,6 @@
                       <mat-icon>{{ line.excluded ? 'undo' : 'person_off' }}</mat-icon>
                     </button>
                   </span>
-                } @empty {
-                  <span class="scd-group-line scd-group-line--none">—</span>
                 }
               </div>
             }
