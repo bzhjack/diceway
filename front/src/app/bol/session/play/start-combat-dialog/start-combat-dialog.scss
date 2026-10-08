@@ -57,34 +57,6 @@
   background: linear-gradient(var(--dw-surface-200), var(--dw-surface-50));
 }
 
-.scd-round {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #77716a, #3b3733 60%, #14110f);
-  box-shadow: 0 0 0 2px var(--bar-bronze, var(--dw-border));
-  color: var(--bar-ember, var(--dw-color-legendary));
-  line-height: 1;
-  text-align: center;
-
-  b {
-    font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-    font-size: 1.2rem;
-    font-weight: 400;
-  }
-
-  small {
-    font-size: 0.42rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--dw-surface-500);
-  }
-}
-
 .scd-title {
   margin: 0;
   padding: 0;

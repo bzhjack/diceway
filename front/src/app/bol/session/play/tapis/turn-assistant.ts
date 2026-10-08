@@ -135,6 +135,12 @@ export class TurnAssistantComponent {
   });
   protected readonly dice = signal<readonly [number, number] | null>(null);
   protected readonly rolling = signal(false);
+  /** Total saisi à table, avant validation. */
+  protected readonly manualDraft = signal('');
+  protected readonly manualDraftValid = computed(() => {
+    const value = Number(this.manualDraft());
+    return Number.isInteger(value) && value >= 2 && value <= 12;
+  });
   protected readonly manualTotal = signal<number | null>(null);
   protected readonly heroic = signal<string | null>(null);
 
@@ -222,6 +228,31 @@ export class TurnAssistantComponent {
     return {result, hit: result === 'reussite' || result === 'heroique' || result === 'legendaire'};
   });
 
+  /** Ton du résultat : réussite, échec ou succès héroïque (réservé aux héros et alliés). */
+  protected readonly tone = computed<'reussite' | 'echec' | 'heroique' | null>(() => {
+    const v = this.verdict();
+    if (!v || this.total() === null) {
+      return null;
+    }
+    if (!v.hit) {
+      return 'echec';
+    }
+    return this.heroicAllowed() && (v.result === 'heroique' || v.result === 'legendaire') ? 'heroique' : 'reussite';
+  });
+
+  protected readonly verdictLabel = computed(() => {
+    switch (this.tone()) {
+      case 'heroique':
+        return 'Succès héroïque';
+      case 'reussite':
+        return 'Touché';
+      case 'echec':
+        return 'Raté';
+      default:
+        return 'En attente';
+    }
+  });
+
   // ── Étape 4 : les dégâts ──
   protected readonly damageValues = signal<readonly number[] | null>(null);
   protected readonly die = computed(() => damageDie(this.degats()));
@@ -303,6 +334,12 @@ export class TurnAssistantComponent {
     }
   }
 
+  protected submitManual(): void {
+    if (this.manualDraftValid()) {
+      this.setManual(this.manualDraft());
+    }
+  }
+
   protected setManual(raw: string): void {
     const value = Number(raw);
     this.dice.set(null);
@@ -346,6 +383,7 @@ export class TurnAssistantComponent {
   }
 
   private resetRoll(): void {
+    this.manualDraft.set('');
     this.dice.set(null);
     this.manualTotal.set(null);
     this.heroic.set(null);

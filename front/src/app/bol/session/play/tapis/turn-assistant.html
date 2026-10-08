@@ -104,25 +104,26 @@
     </section>
 
     <section class="tas-step tas-step--roll">
-      <h3><span aria-hidden="true">3</span> Jet</h3>
+      <h3><span aria-hidden="true">3</span> Jet d'attaque</h3>
       @if (target() && attacker() && targetStats()) {
         <p class="tas-formula">{{ formula() }}</p>
-        <div class="tas-result" aria-live="polite">
-          @if (total(); as t) {
-            <p class="tas-total">{{ t }}</p>
-            @if (verdict(); as v) {
-              <p class="tas-verdict" [class.tas-verdict--hit]="v.hit" [class.tas-verdict--miss]="!v.hit">
-                {{ heroicAllowed() && (v.result === 'legendaire' || v.result === 'heroique') ? 'Succès héroïque' : v.hit ? 'Touché' : 'Raté' }}
-              </p>
-            }
-          }
+
+        <div class="tas-ticket" [class.tas-ticket--reussite]="tone() === 'reussite'" [class.tas-ticket--echec]="tone() === 'echec'" [class.tas-ticket--heroique]="tone() === 'heroique'" aria-live="polite">
+          <div class="tas-ticket-total">{{ rolling() ? '…' : (total() ?? '—') }}</div>
+          <p class="tas-ticket-label">{{ rolling() ? 'Les dés roulent' : verdictLabel() }}</p>
         </div>
-        <div class="tas-roll">
-          <button mat-flat-button type="button" [disabled]="rolling()" (click)="roll()"><mat-icon>casino</mat-icon> {{ dice() ? 'Relancer 2d6' : 'Lancer 2d6' }}</button>
-          <label class="tas-manual">
-            <span>ou à table</span>
-            <input type="number" min="2" max="12" placeholder="2-12" aria-label="Total des deux dés lancés à table" [disabled]="rolling()" [value]="manualTotal() ?? ''" (change)="setManual($any($event.target).value)" />
-          </label>
+
+        <button type="button" class="tas-rollbtn" [disabled]="rolling()" (click)="roll()">
+          <mat-icon>casino</mat-icon>
+          {{ dice() || manualTotal() ? 'Relancer' : 'Lancer 2d6' }}
+        </button>
+
+        <div class="tas-manual">
+          <span class="tas-manual-hint">ou table&nbsp;:</span>
+          <input type="number" min="2" max="12" step="1" placeholder="2-12" aria-label="Total des deux dés lancés à table" [disabled]="rolling()" [value]="manualDraft()" (input)="manualDraft.set($any($event.target).value)" (keydown.enter)="submitManual()" />
+          <button type="button" class="tas-manual-confirm" aria-label="Valider le total saisi" [disabled]="!manualDraftValid() || rolling()" (click)="submitManual()">
+            <mat-icon>check</mat-icon>
+          </button>
         </div>
 
         @if (isNatural12()) {
@@ -141,22 +142,28 @@
       }
     </section>
 
-    @if (hasDamageStep()) {
-      <section class="tas-step">
-        <h3><span aria-hidden="true">4</span> Dégâts</h3>
+    <section class="tas-step">
+      <h3><span aria-hidden="true">4</span> Jet de dégâts</h3>
+      @if (hasDamageStep()) {
         <p class="tas-formula">{{ degats() }} {{ signed(vigueur()) }} (vigueur){{ devastating() ? ' + 6 (dévastateur)' : '' }} − {{ protection() }} (protection)</p>
+        <div class="tas-ticket" [class.tas-ticket--echec]="damage() !== null" aria-live="polite">
+          <div class="tas-ticket-total">{{ rolling() ? '…' : (damage() ?? '—') }}</div>
+          <p class="tas-ticket-label">{{ rolling() ? 'Les dés roulent' : damage() !== null ? 'Dégâts' : 'En attente' }}</p>
+        </div>
+        <button type="button" class="tas-rollbtn" [disabled]="rolling()" (click)="rollDamage()">
+          <mat-icon>casino</mat-icon>
+          {{ damage() !== null ? 'Relancer' : 'Lancer les dégâts' }}
+        </button>
         @if (damage() !== null) {
-          <p class="tas-total tas-total--dmg">{{ damage() }}</p>
           <button mat-flat-button type="button" class="tas-apply" (click)="apply()">Appliquer {{ damage() }} à {{ target()?.nom }}</button>
-        } @else {
-          <button mat-stroked-button type="button" [disabled]="rolling()" (click)="rollDamage()"><mat-icon>casino</mat-icon> Lancer les dégâts</button>
         }
-      </section>
-    } @else {
-      <section class="tas-step">
-        <h3><span aria-hidden="true">4</span> Dégâts</h3>
-        <p class="tas-note">Lance le jet pour calculer les dégâts.</p>
-      </section>
-    }
+      } @else {
+        <div class="tas-ticket">
+          <div class="tas-ticket-total">—</div>
+          <p class="tas-ticket-label">En attente</p>
+        </div>
+        <p class="tas-note">Lance le jet d'attaque pour calculer les dégâts.</p>
+      }
+    </section>
   </div>
 </div>

@@ -20,27 +20,36 @@
 }
 
 .tor-round {
-  display: grid;
-  place-items: center;
-  width: 2.8rem;
-  height: 2.8rem;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #77716a, #3b3733 60%, #14110f);
-  box-shadow: 0 0 0 2px var(--bar-bronze, var(--dw-border)), 0 0 10px rgba(232, 135, 58, 0.35);
-  color: var(--bar-ember, var(--dw-color-legendary));
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0.8rem 0.35rem 0.5rem;
+  border: 2px solid var(--bar-bronze, var(--dw-border));
+  border-radius: 6px;
+  background: repeating-linear-gradient(135deg, #2c2118 0 6px, #251b13 6px 12px);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.55), 0 2px 0 #000;
   line-height: 1;
-  text-align: center;
 
+  // Case gravée qui porte le numéro du round.
   b {
+    display: grid;
+    place-items: center;
+    min-width: 2.3rem;
+    height: 2.3rem;
+    padding-inline: 0.3rem;
+    border-radius: 4px;
+    background: #0f0a06;
+    box-shadow: inset 0 0 8px #000;
+    color: var(--bar-ember, var(--dw-color-legendary));
     font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-    font-size: 1.15rem;
+    font-size: 1.5rem;
     font-weight: 400;
   }
 
-  small {
-    font-size: 0.45rem;
+  span {
+    font-size: 0.62rem;
     font-weight: 800;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--dw-surface-500);
   }
