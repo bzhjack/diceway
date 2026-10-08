@@ -87,28 +87,19 @@
   flex-direction: column;
 }
 
+// Mode combat (distinct du mode libre) : assistant de tour à gauche, héros et journal à droite.
 .spp-play {
   flex: 1;
   min-height: 0;
   display: flex;
 }
 
-// Colonne centrale : le tapis en mode libre (il s'étire), l'assistant de tour en combat.
-.spp-center {
+.spp-assistant {
   flex: 1;
   min-width: 0;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--dw-border) transparent;
-
-}
-
-.spp-assistant {
-  flex: none;
-  border-bottom: 2px solid var(--bar-bronze, var(--dw-border));
   background: linear-gradient(#1a120b, #130d08);
 }
 

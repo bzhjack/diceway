@@ -18,8 +18,9 @@
     />
 
     @if (sessionId(); as sid) {
-      <div class="spp-body">
-        @if (mode() === 'libre') {
+      @if (mode() === 'libre') {
+        <!-- Mode libre : la réserve et le tapis. -->
+        <div class="spp-body">
           @if (reserveOpen()) {
             <aside id="spp-reserve" class="spp-reserve" aria-label="Réserve">
               <bol-reserve
@@ -48,10 +49,25 @@
               <span class="spp-reserve-toggle-label">Réserve</span>
             }
           </button>
-        }
 
-        <div class="spp-main">
-          @if (mode() === 'combat') {
+          <div class="spp-main">
+            <bol-tapis
+              [cards]="cards()"
+              [sessionId]="sid"
+              [mode]="mode()"
+              [combatStates]="combatStates()"
+              [selectedKeys]="selectedKeys()"
+              (selectToggled)="toggleSelected($event)"
+              (cardToggled)="onCardToggled($event)"
+              (campToggleRequested)="toggleCamp($event)"
+              (attackRequested)="onAttackCard($event)"
+            />
+          </div>
+        </div>
+      } @else {
+        <!-- Mode combat : frise, assistant de tour et colonne de droite, sans tapis. -->
+        <div class="spp-body spp-body--combat">
+          <div class="spp-main">
             <bol-turn-order
               [entries]="turnEntries()"
               [round]="etat().round"
@@ -65,57 +81,37 @@
               (rerollRequested)="openStartCombatDialog(true)"
               (endTurnRequested)="onEndTurn()"
             />
-          }
 
-          <div class="spp-play">
-            <div class="spp-center">
-              @if (mode() === 'combat') {
-                <section class="spp-assistant" aria-label="Assistant de tour">
-                  @if (activeCard(); as active) {
-                    <bol-turn-assistant
-                      [card]="active"
-                      [armes]="activeArmes()"
-                      [combatOptions]="combatOptions()"
-                      [targets]="targets()"
-                      [target]="selectedTarget()"
-                      [attacker]="attackerStats()"
-                      [targetStats]="targetStats()"
-                      [legendaryBonus]="legendaryForActive()"
-                      (choiceChanged)="attackChoice.set($event)"
-                      (targetSelected)="onAttackCard($event)"
-                      (damageApplied)="onHitApplied($event)"
-                      (detailedRequested)="onDetailedAttack()"
-                      (totalDefenseRequested)="onTotalDefense()"
-                    />
-                  } @else {
-                    <p class="spp-nobody">Plus personne ne peut jouer.</p>
-                  }
-                </section>
-              }
+            <div class="spp-play">
+              <section class="spp-assistant" aria-label="Assistant de tour">
+                @if (activeCard(); as active) {
+                  <bol-turn-assistant
+                    [card]="active"
+                    [armes]="activeArmes()"
+                    [combatOptions]="combatOptions()"
+                    [targets]="targets()"
+                    [target]="selectedTarget()"
+                    [attacker]="attackerStats()"
+                    [targetStats]="targetStats()"
+                    [legendaryBonus]="legendaryForActive()"
+                    (choiceChanged)="attackChoice.set($event)"
+                    (targetSelected)="onAttackCard($event)"
+                    (damageApplied)="onHitApplied($event)"
+                    (detailedRequested)="onDetailedAttack()"
+                    (totalDefenseRequested)="onTotalDefense()"
+                  />
+                } @else {
+                  <p class="spp-nobody">Plus personne ne peut jouer.</p>
+                }
+              </section>
 
-              @if (mode() === 'libre') {
-                <bol-tapis
-                  [cards]="cards()"
-                  [sessionId]="sid"
-                  [mode]="mode()"
-                  [combatStates]="combatStates()"
-                  [selectedKeys]="selectedKeys()"
-                  (selectToggled)="toggleSelected($event)"
-                  (cardToggled)="onCardToggled($event)"
-                  (campToggleRequested)="toggleCamp($event)"
-                  (attackRequested)="onAttackCard($event)"
-                />
-              }
-            </div>
-
-            @if (mode() === 'combat') {
               <aside class="spp-side" aria-label="Héros et journal">
                 <bol-combat-side [heroes]="sideHeroes()" [log]="combatLog()" />
               </aside>
-            }
+            </div>
           </div>
         </div>
-      </div>
+      }
     }
     </div>
   </div>
