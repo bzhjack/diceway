@@ -1,16 +1,28 @@
 <div class="tor">
   <div class="tor-head">
     <span class="tor-round" aria-label="Round {{ round() }}"><b>{{ round() }}</b><small>Round</small></span>
-    <span class="tor-title">Ordre d'action</span>
-    @if (legendaryActive()) {
-      <span class="tor-pill">★ Succès légendaire : +1 aux attaques</span>
-    }
-    @if (roundOneLock()) {
-      <span class="tor-pill tor-pill--lock">Succès héroïque : coriaces et piétaille bloqués au round 1</span>
-    }
+    <div class="tor-titles">
+      <span class="tor-title">{{ title() }}</span>
+      @if (legendaryActive()) {
+        <span class="tor-pill">★ Succès légendaire : +1 aux attaques</span>
+      } @else if (roundOneLock()) {
+        <span class="tor-pill tor-pill--lock">Succès héroïque : coriaces et piétaille bloqués au round 1</span>
+      } @else {
+        <span class="tor-pill tor-pill--none">Aucun succès légendaire</span>
+      }
+    </div>
     <span class="tor-spacer"></span>
     <button mat-stroked-button size="small" type="button" (click)="addRequested.emit()">
       <mat-icon>add</mat-icon> Ajouter
+    </button>
+    <button mat-stroked-button size="small" type="button" [disabled]="!canAct()" matTooltip="Passe son tour en fin de round" (click)="delayRequested.emit()">
+      Retarder
+    </button>
+    <button mat-stroked-button size="small" type="button" matTooltip="Relancer la réaction des héros" (click)="rerollRequested.emit()">
+      Nouveau jet de réaction
+    </button>
+    <button mat-flat-button size="small" type="button" [disabled]="!canAct()" (click)="endTurnRequested.emit()">
+      Fin du tour
     </button>
   </div>
 

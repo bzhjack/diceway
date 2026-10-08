@@ -10,7 +10,7 @@
     <header class="scd-bar">
       <span class="scd-round" aria-hidden="true"><b>0</b><small>Réaction</small></span>
       <div>
-        <h2 mat-dialog-title class="scd-title">Démarrer le combat</h2>
+        <h2 mat-dialog-title class="scd-title">{{ data.reroll ? 'Nouveau jet de réaction' : 'Démarrer le combat' }}</h2>
         <p class="scd-lead">
           Chaque héros lance 2d6 + esprit + initiative (9+). Les PNJ, créatures et démons n'ont pas de jet : ils se rangent d'après leur rang.
         </p>
@@ -164,7 +164,7 @@
         <mat-icon>casino</mat-icon> Lancer pour tous
       </button>
       <button mat-flat-button type="button" [disabled]="!canStart() || starting()" (click)="start()">
-        <mat-icon>play_arrow</mat-icon> Commencer le combat
+        <mat-icon>play_arrow</mat-icon> {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
       </button>
     </mat-dialog-actions>
   </div>

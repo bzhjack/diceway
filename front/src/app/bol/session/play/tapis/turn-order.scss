@@ -46,6 +46,19 @@
   }
 }
 
+// Surtitre (rencontre) au-dessus de la pastille d'état.
+.tor-titles {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+.tor-pill--none {
+  border-color: var(--dw-border);
+  color: var(--dw-surface-900);
+}
+
 .tor-title {
   font-size: 0.72rem;
   font-weight: 800;

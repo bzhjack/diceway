@@ -28,7 +28,7 @@ export interface AppliedHit {
   readonly damage: number;
 }
 
-/** L'assistant de tour, dans la colonne de droite en combat : il suit le déroulé d'un tour de la carte active
+/** L'assistant de tour, sous la frise en combat : il suit le déroulé d'un tour de la carte active
  * en quatre étapes — action, cible, jet, dégâts. Il calcule le jet d'attaque (2d6 + bonus − défense, 9+), la
  * protection et les dégâts, et propose les options de succès héroïque. Il ne parle à aucun service : il
  * signale à la page ce qui doit être enregistré (dégâts, fin de tour, défense totale). */
@@ -52,13 +52,11 @@ export class TurnAssistantComponent {
   readonly targetStats = input<ResolvedCombatStats | null>(null);
   /** Un héros a obtenu un succès légendaire : +1 aux jets d'attaque de l'attaquant s'il est du camp des héros. */
   readonly legendaryBonus = input(false);
-  readonly log = input<readonly string[]>([]);
 
   readonly choiceChanged = output<AttackChoice | null>();
   readonly targetSelected = output<TapisCard>();
   readonly damageApplied = output<AppliedHit>();
   readonly totalDefenseRequested = output<void>();
-  readonly endTurnRequested = output<void>();
   readonly detailedRequested = output<void>();
 
   protected readonly heroicOptions = HEROIC_OPTIONS;

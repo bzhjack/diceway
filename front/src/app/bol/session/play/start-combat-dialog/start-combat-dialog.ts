@@ -78,7 +78,7 @@ const RESULT_LABELS: Record<InitiativeResultat, string> = Object.fromEntries(
 })
 export class StartCombatDialogComponent {
   protected readonly ref = inject(MatDialogRef<StartCombatDialogComponent, boolean>);
-  private readonly data = inject<StartCombatDialogData>(MAT_DIALOG_DATA);
+  protected readonly data = inject<StartCombatDialogData>(MAT_DIALOG_DATA);
   private readonly dialog = inject(MatDialog);
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly herosService = inject(BolHerosService);

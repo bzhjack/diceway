@@ -51,6 +51,7 @@ import {AttackChoice} from '../models/attack-options.model';
 import {buildCombatStates, endTurn, giveBackTurn, normalizeEtat, orderCards, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
 import {CardCombatState, EtatCombat} from '../models/combat-turn.model';
 import {TurnOrderComponent} from './tapis/turn-order';
+import {CombatSideComponent} from './side/combat-side';
 import {AppliedHit, TurnAssistantComponent} from './tapis/turn-assistant';
 import {ResolvedCombatStats} from '../models/combat-attack.model';
 import {TurnOrderEntry} from '../models/turn-order.model';
@@ -73,7 +74,7 @@ function loadedArmes(hero: BolHerosModel): BolHerosArmeModel[] {
  */
 @Component({
   selector: 'bol-session-play-page',
-  imports: [RouterLink, MatIconModule, MatTooltipModule, SessionHeaderComponent, ReserveComponent, TapisComponent, TurnOrderComponent, TurnAssistantComponent],
+  imports: [RouterLink, MatIconModule, MatTooltipModule, SessionHeaderComponent, ReserveComponent, TapisComponent, TurnOrderComponent, TurnAssistantComponent, CombatSideComponent],
   templateUrl: './session-play-page.html',
   styleUrl: './session-play-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -146,7 +147,17 @@ export class SessionPlayPageComponent {
   protected readonly etat = computed<EtatCombat>(() => normalizeEtat(this.session()?.etat_combat));
 
   /** Cartes dans l'ordre de jeu : initiative BoL des jetons, puis ordre manuel du MJ. */
-  private readonly orderedCards = computed(() => orderCards(this.cards(), this.board()?.tokens ?? [], null));
+  /** Cartes retardées ce round : elles passent après tous les autres. Valable pour un seul round. */
+  private readonly delayed = signal<{readonly round: number; readonly keys: readonly string[]}>({round: 0, keys: []});
+
+  private readonly orderedCards = computed(() => {
+    const base = orderCards(this.cards(), this.board()?.tokens ?? [], null);
+    const delayedKeys = this.delayed().round === this.etat().round ? this.delayed().keys : [];
+    return [...base.filter((e) => !delayedKeys.includes(e.card.key)), ...delayedKeys.flatMap((k) => base.filter((e) => e.card.key === k))];
+  });
+
+  /** Les héros du camp des héros, avec leur vitalité, pour la colonne de droite. */
+  protected readonly sideHeroes = computed(() => this.cards().filter((card) => card.kind === 'hero'));
 
   private readonly turn = computed(() => turnState(this.orderedCards(), this.etat()));
 
@@ -318,7 +329,7 @@ export class SessionPlayPageComponent {
       });
   }
 
-  protected openStartCombatDialog(): void {
+  protected openStartCombatDialog(reroll = false): void {
     const sessionId = this.session()?.id;
     if (!sessionId) {
       return;
@@ -330,7 +341,7 @@ export class SessionPlayPageComponent {
         maxWidth: '96vw',
         maxHeight: '90vh',
         panelClass: 'scd-panel',
-        data: {sessionId},
+        data: {sessionId, reroll},
       })
       .afterClosed()
       .subscribe((started: boolean | undefined) => {
@@ -752,6 +763,17 @@ export class SessionPlayPageComponent {
           this.tableError(error, "Impossible d'enregistrer le tour.");
         },
       });
+  }
+
+  /** « Retarder » : la carte active joue en dernier ce round. */
+  protected onDelay(): void {
+    const active = this.activeCard();
+    if (!active) {
+      return;
+    }
+    const round = this.etat().round;
+    this.targetKey.set(null);
+    this.delayed.update((d) => ({round, keys: [...(d.round === round ? d.keys : []).filter((k) => k !== active.key), active.key]}));
   }
 
   protected onEndTurn(): void {

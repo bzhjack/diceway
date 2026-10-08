@@ -30,9 +30,16 @@ export class TurnOrderComponent {
   readonly legendaryActive = input(false);
   /** Texte annoncé aux lecteurs d'écran à chaque changement de tour ou de round. */
   readonly announcement = input('');
+  /** Titre de la rencontre, affiché en surtitre de la barre. */
+  readonly title = input('');
+  /** Il y a quelqu'un dont c'est le tour : « Retarder » et « Fin du tour » ont un sens. */
+  readonly canAct = input(false);
 
   readonly gaveBack = output<string>();
   readonly addRequested = output<void>();
+  readonly delayRequested = output<void>();
+  readonly rerollRequested = output<void>();
+  readonly endTurnRequested = output<void>();
 
   protected readonly groups = computed(() => groupByTier(this.entries()));
   /** Au round 1, un succès héroïque bloque coriaces et piétaille : la frise le dit. */

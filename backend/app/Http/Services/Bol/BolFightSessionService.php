@@ -101,18 +101,21 @@ class BolFightSessionService
     }
 
     /**
-     * Bascule une session `libre` en `combat` — les adversaires sont déjà en place via addCombatant().
+     * Bascule une session `libre` en `combat` (ou, déjà en combat, enregistre un nouveau jet de réaction) — les adversaires sont déjà en place via addCombatant().
      *
      * @param array<int, string> $exclus clés de carte (`{kind}-{pivotId}`) laissées sur la table mais hors de ce combat
      */
     public function startCombat(string $sessionId, string $userId, array $exclus = []): ?BolFightSession
     {
         $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
-        if (!$session || $session->statut !== 'libre') {
+        if (!$session || !in_array($session->statut, ['libre', 'combat'], true)) {
             return null;
         }
 
-        $session->update(['statut' => 'combat', 'etat_combat' => BolCombatState::normalize(['exclus' => $exclus])]);
+        // Nouveau jet de réaction en plein combat : le round en cours est gardé, personne n'a encore joué.
+        $round = $session->statut === 'combat' ? BolCombatState::normalize($session->etat_combat)['round'] : 1;
+
+        $session->update(['statut' => 'combat', 'etat_combat' => BolCombatState::normalize(['round' => $round, 'exclus' => $exclus])]);
 
         return $this->getSessionWithRelations($sessionId);
     }

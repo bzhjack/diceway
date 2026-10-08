@@ -55,51 +55,66 @@
             <bol-turn-order
               [entries]="turnEntries()"
               [round]="etat().round"
+              [title]="headerTitle() ?? ''"
+              [canAct]="activeCard() !== null"
               [legendaryActive]="b.legendaryActive"
               [announcement]="turnAnnouncement()"
               (gaveBack)="onGiveBackTurn($event)"
               (addRequested)="openAddCombatantDialog()"
+              (delayRequested)="onDelay()"
+              (rerollRequested)="openStartCombatDialog(true)"
+              (endTurnRequested)="onEndTurn()"
             />
           }
 
-          <bol-tapis
-            [cards]="cards()"
-            [sessionId]="sid"
-            [mode]="mode()"
-            [combatStates]="combatStates()"
-            [selectedKeys]="selectedKeys()"
-            (selectToggled)="toggleSelected($event)"
-            (cardToggled)="onCardToggled($event)"
-            (campToggleRequested)="toggleCamp($event)"
-            (attackRequested)="onAttackCard($event)"
-          />
-        </div>
+          <div class="spp-play">
+            <div class="spp-center">
+              @if (mode() === 'combat') {
+                <section class="spp-assistant" aria-label="Assistant de tour">
+                  @if (activeCard(); as active) {
+                    <bol-turn-assistant
+                      [card]="active"
+                      [armes]="activeArmes()"
+                      [combatOptions]="combatOptions()"
+                      [targets]="targets()"
+                      [target]="selectedTarget()"
+                      [attacker]="attackerStats()"
+                      [targetStats]="targetStats()"
+                      [legendaryBonus]="legendaryForActive()"
+                      (choiceChanged)="attackChoice.set($event)"
+                      (targetSelected)="onAttackCard($event)"
+                      (damageApplied)="onHitApplied($event)"
+                      (detailedRequested)="onDetailedAttack()"
+                      (totalDefenseRequested)="onTotalDefense()"
+                    />
+                  } @else {
+                    <p class="spp-nobody">Plus personne ne peut jouer.</p>
+                  }
+                </section>
+              }
 
-        @if (mode() === 'combat') {
-          <aside class="spp-assistant" aria-label="Assistant de tour">
-            @if (activeCard(); as active) {
-              <bol-turn-assistant
-                [card]="active"
-                [armes]="activeArmes()"
-                [combatOptions]="combatOptions()"
-                [targets]="targets()"
-                [target]="selectedTarget()"
-                [attacker]="attackerStats()"
-                [targetStats]="targetStats()"
-                [legendaryBonus]="legendaryForActive()"
-                [log]="combatLog()"
-                (choiceChanged)="attackChoice.set($event)"
-                (targetSelected)="onAttackCard($event)"
-                (damageApplied)="onHitApplied($event)"
-                (detailedRequested)="onDetailedAttack()"
-                (totalDefenseRequested)="onTotalDefense()"
-                (endTurnRequested)="onEndTurn()"
-              />
-            } @else {
-              <p class="spp-nobody">Plus personne ne peut jouer.</p>
+              @if (mode() === 'libre') {
+                <bol-tapis
+                  [cards]="cards()"
+                  [sessionId]="sid"
+                  [mode]="mode()"
+                  [combatStates]="combatStates()"
+                  [selectedKeys]="selectedKeys()"
+                  (selectToggled)="toggleSelected($event)"
+                  (cardToggled)="onCardToggled($event)"
+                  (campToggleRequested)="toggleCamp($event)"
+                  (attackRequested)="onAttackCard($event)"
+                />
+              }
+            </div>
+
+            @if (mode() === 'combat') {
+              <aside class="spp-side" aria-label="Héros et journal">
+                <bol-combat-side [heroes]="sideHeroes()" [log]="combatLog()" />
+              </aside>
             }
-          </aside>
-        }
+          </div>
+        </div>
       </div>
     }
     </div>
