@@ -66,7 +66,7 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       avatar: p.pnj?.origines.avatar || (p.pnj_id ? `/assets/bol/pnj/${p.pnj_id}.jpg` : null) || EMPTY_AVATAR,
       badge: badgeFor(p.camp, rang),
       rang,
-      degats: p.armes?.find((a) => a.degats)?.degats ?? NO_VALUE,
+      degats: (p.armes?.find((a) => a.degats && a.equipee !== false) ?? p.armes?.find((a) => a.degats))?.degats ?? NO_VALUE,
       defense: String(p.defense),
       vitaliteCourante: p.vitalite_courante,
       vitaliteMax: p.vitalite_max,

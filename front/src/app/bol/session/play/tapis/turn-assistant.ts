@@ -64,7 +64,8 @@ export class TurnAssistantComponent {
   protected readonly isHero = computed(() => this.card().kind === 'hero');
 
   // ── Étape 1 : arme, posture, arme secondaire — repartent de zéro à chaque nouvelle carte active ──
-  protected readonly displayArmes = computed(() => (this.isHero() ? [...this.armes(), MAINS_NUES, ARME_IMPROVISEE] : []));
+  /** Un héros attaque avec ses armes équipées, les mains nues ou une arme improvisée ; un PNJ avec n'importe laquelle de ses armes. */
+  protected readonly displayArmes = computed(() => (this.isHero() ? [...this.armes(), MAINS_NUES, ARME_IMPROVISEE] : this.armes()));
   private readonly selectedArmeId = linkedSignal<string, number | null>({source: () => this.card().key, computation: () => null});
   private readonly selectedOptionSlug = linkedSignal<string, string | null>({source: () => this.card().key, computation: () => null});
   private readonly selectedOffHandId = linkedSignal<string, number | null>({source: () => this.card().key, computation: () => null});
@@ -107,7 +108,7 @@ export class TurnAssistantComponent {
     }
 
     const option = this.effectiveOption();
-    const mainDegats = this.isHero() ? (this.effectiveArme()?.arme?.degats ?? null) : null;
+    const mainDegats = this.effectiveArme()?.arme?.degats ?? null;
     const offHand = this.effectiveOffHand();
     const degats = option?.slug === 'dual-strike' && offHand ? dualStrikeDegats(mainDegats, offHand.arme?.degats) : mainDegats;
 

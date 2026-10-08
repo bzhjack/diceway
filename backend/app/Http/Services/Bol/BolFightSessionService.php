@@ -536,6 +536,7 @@ class BolFightSessionService
             'nom'    => $ha->arme?->arme,
             'degats' => $ha->arme?->degats,
             'type'   => $ha->arme?->type,
+            'equipee' => (bool) $ha->equipee,
         ])->values()->toArray();
 
         return BolFightSessionPnj::create([

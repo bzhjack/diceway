@@ -78,7 +78,8 @@
           @if (section.entries.length) {
             <dl class="bs-leaders">
               @for (entry of section.entries; track $index) {
-                <div [class.bs-leaders--note]="entry.value === undefined" [class.bs-leaders--equipped]="entry.equipped">
+                <div [class.bs-leaders--note]="entry.value === undefined" [class.bs-leaders--equipped]="entry.equipped"
+                     [class.bs-leaders--idle]="entry.equipped === false">
                   <dt>{{ entry.label }}</dt>
                   @if (entry.value !== undefined) {
                     <dd>{{ entry.value }}</dd>

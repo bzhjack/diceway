@@ -289,9 +289,13 @@
   color: var(--dw-color-echec);
 }
 
-// Armure actuellement équipée : mise en évidence en vert.
+// Arme ou armure équipée : mise en évidence en vert ; non équipée : atténuée.
 .bs-leaders--equipped dt {
   color: var(--dw-color-reussite);
+}
+
+.bs-leaders--idle {
+  opacity: 0.6;
 }
 
 .bs-empty,

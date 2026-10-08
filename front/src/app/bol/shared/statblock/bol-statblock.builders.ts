@@ -206,6 +206,7 @@ function herosLikeStatblockData(
     .map((arme) => ({
       label: arme.arme?.arme ?? '',
       detail: [arme.arme?.degats, arme.arme?.portee].filter(Boolean).join(' · ') || undefined,
+      equipped: arme.equipee,
     }))
     .filter((entry) => entry.label);
 

@@ -133,6 +133,8 @@ interface BolFightSessionArmeModel {
   nom: string | null;
   degats: string | null;
   type: 'M' | 'T' | null;
+  /** Équipée sur la fiche du PNJ à la pose — absent des lignes posées avant cette information. */
+  equipee?: boolean;
 }
 
 /** Un PNJ posé à la table : copie de ses statistiques et de ses armes au moment de l'ajout. */
