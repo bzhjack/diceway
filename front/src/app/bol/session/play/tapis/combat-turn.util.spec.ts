@@ -28,7 +28,7 @@ function ordered(...cards: TapisCard[]): OrderedCard[] {
 }
 
 function etat(round: number, joues: string[] = [], defense: string[] = []): EtatCombat {
-  return {round, joues, defense_totale: defense};
+  return {round, joues, defense_totale: defense, exclus: []};
 }
 
 const KALENA = card('hero', 1);
@@ -312,5 +312,31 @@ describe('groupByTier', () => {
     expect(groups[2].blocked).toBe(true);
     expect(groups[4].blocked).toBe(false);
     expect(groups[1].blocked).toBe(false);
+  });
+});
+
+describe('excluded cards', () => {
+  const excluding = (...keys: string[]): EtatCombat => ({round: 1, joues: [], defense_totale: [], exclus: keys});
+
+  it('skips an excluded card, which never becomes active', () => {
+    const turn = turnState(ordered(KALENA, RORK), excluding('hero-1'));
+    expect(turn.statuses.get('hero-1')).toBe('skipped');
+    expect(turn.activeKey).toBe('hero-2');
+  });
+
+  it('shows an excluded card as out of the fight and not targetable', () => {
+    const order = ordered(KALENA, PRETRE, card('pnj', 8));
+    const states = buildCombatStates(order, excluding('pnj-8'));
+    expect(states.get('pnj-8')).toMatchObject({out: true, targetable: false});
+    expect(states.get('pnj-7')?.targetable).toBe(true);
+  });
+
+  it('keeps the exclusions when a turn ends', () => {
+    const next = endTurn(ordered(KALENA, RORK), excluding('pnj-7'));
+    expect(next.exclus).toEqual(['pnj-7']);
+  });
+
+  it('reads them from the API state', () => {
+    expect(normalizeEtat({round: 2, exclus: ['pnj-7', 'pnj-7', '']}).exclus).toEqual(['pnj-7']);
   });
 });

@@ -4,7 +4,7 @@ import {InitiativeTierKey} from '../../models/initiative.model';
 import {TurnOrderEntry, TurnOrderGroup} from '../../models/turn-order.model';
 import {EtatCombat, TurnStatus, OrderedCard, TurnState, CardCombatState, TurnToken} from '../../models/combat-turn.model';
 
-export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], defense_totale: []};
+export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], defense_totale: [], exclus: []};
 
 function uniqueKeys(raw: unknown): string[] {
   if (!Array.isArray(raw)) {
@@ -26,6 +26,7 @@ export function normalizeEtat(raw: unknown): EtatCombat {
     round: Math.max(1, round),
     joues: uniqueKeys(source['joues']),
     defense_totale: uniqueKeys(source['defense_totale']),
+    exclus: uniqueKeys(source['exclus']),
   };
 }
 
@@ -86,8 +87,8 @@ export function isOut(card: TapisCard): boolean {
   return card.kind === 'hero' ? card.vitaliteCourante < 0 : card.vitaliteCourante <= 0;
 }
 
-function isSkipped(entry: OrderedCard, round: number): boolean {
-  return isOut(entry.card) || (round === 1 && entry.lockedRound1);
+function isSkipped(entry: OrderedCard, etat: EtatCombat): boolean {
+  return isOut(entry.card) || etat.exclus.includes(entry.card.key) || (etat.round === 1 && entry.lockedRound1);
 }
 
 /** Qui joue, et où en est chaque carte : la carte active est la première de l'ordre qui n'a pas
@@ -99,7 +100,7 @@ export function turnState(ordered: readonly OrderedCard[], etat: EtatCombat): Tu
 
   for (const entry of ordered) {
     const key = entry.card.key;
-    if (isSkipped(entry, etat.round)) {
+    if (isSkipped(entry, etat)) {
       statuses.set(key, 'skipped');
     } else if (played.has(key)) {
       statuses.set(key, 'played');
@@ -177,8 +178,12 @@ export function giveBackTurn(etat: EtatCombat, key: string): EtatCombat {
   };
 }
 
-/** Cartes que la carte active peut désigner d'un clic : le camp d'en face, hors cartes hors combat. */
-export function targetableKeys(ordered: readonly OrderedCard[], activeKey: string | null): ReadonlySet<string> {
+/** Cartes que la carte active peut désigner d'un clic : le camp d'en face, hors cartes hors combat ou exclues. */
+export function targetableKeys(
+  ordered: readonly OrderedCard[],
+  activeKey: string | null,
+  exclus: readonly string[] = [],
+): ReadonlySet<string> {
   const active = ordered.find((entry) => entry.card.key === activeKey)?.card;
   if (!active) {
     return new Set();
@@ -186,7 +191,7 @@ export function targetableKeys(ordered: readonly OrderedCard[], activeKey: strin
   return new Set(
     ordered
       .map((entry) => entry.card)
-      .filter((card) => card.camp !== active.camp && !isOut(card))
+      .filter((card) => card.camp !== active.camp && !isOut(card) && !exclus.includes(card.key))
       .map((card) => card.key),
   );
 }
@@ -194,7 +199,7 @@ export function targetableKeys(ordered: readonly OrderedCard[], activeKey: strin
 /** Ce que chaque carte affiche du combat. */
 export function buildCombatStates(ordered: readonly OrderedCard[], etat: EtatCombat): ReadonlyMap<string, CardCombatState> {
   const turn = turnState(ordered, etat);
-  const targetable = targetableKeys(ordered, turn.activeKey);
+  const targetable = targetableKeys(ordered, turn.activeKey, etat.exclus);
   const defense = new Set(etat.defense_totale);
 
   return new Map(
@@ -205,7 +210,7 @@ export function buildCombatStates(ordered: readonly OrderedCard[], etat: EtatCom
         targetable: targetable.has(entry.card.key),
         // La carte active n'est plus en défense totale : son marqueur tombe à son tour.
         defenseTotale: defense.has(entry.card.key) && entry.card.key !== turn.activeKey,
-        out: isOut(entry.card),
+        out: isOut(entry.card) || etat.exclus.includes(entry.card.key),
         locked: etat.round === 1 && entry.lockedRound1,
       },
     ]),

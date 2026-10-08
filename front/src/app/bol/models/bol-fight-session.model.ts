@@ -12,6 +12,8 @@ export interface EtatCombatDto {
   round: number;
   joues: string[];
   defense_totale: string[];
+  /** Cartes laissées sur la table mais exclues du combat. */
+  exclus?: string[];
 }
 
 /** Scène courante d'une session, telle que sérialisée avec la session (titres pour la barre du haut). */

@@ -3,6 +3,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {forkJoin, take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
@@ -18,16 +19,26 @@ import {StartCombatDialogData} from '../../models/start-combat-dialog.model';
 
 interface AdversaryRow {
   readonly pivotId: number;
+  readonly kind: 'pnj' | 'creature' | 'demon';
   readonly nom: string;
   /** Rang BoL fixe : les PNJ, créatures et démons n'ont pas de jet de réaction, ce rang les place dans l'ordre. */
   readonly rang: 'rival' | 'coriace' | 'pietaille';
 }
 
 /** Un bloc de l'aperçu de la frise : ses combattants, et s'il est bloqué au round 1. */
+/** Une ligne de l'aperçu : un combattant, que l'on peut retirer de la table. */
+export interface PreviewLine {
+  readonly label: string;
+  /** Exclu de ce combat : il reste sur la table, mais ne joue pas. */
+  readonly excluded: boolean;
+  readonly kind: 'hero' | 'pnj' | 'creature' | 'demon';
+  readonly pivotId: number;
+}
+
 export interface PreviewGroup {
   readonly id: string;
   readonly title: string;
-  readonly lines: readonly string[];
+  readonly lines: readonly PreviewLine[];
   readonly blocked: boolean;
 }
 
@@ -59,7 +70,7 @@ const RESULT_LABELS: Record<InitiativeResultat, string> = Object.fromEntries(
  */
 @Component({
   selector: 'bol-start-combat-dialog',
-  imports: [MatButtonModule, MatDialogModule, MatIconModule, DiceBoxHostComponent],
+  imports: [MatButtonModule, MatDialogModule, MatIconModule, MatTooltipModule, DiceBoxHostComponent],
   templateUrl: './start-combat-dialog.html',
   styleUrl: './start-combat-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -112,7 +123,7 @@ export class StartCombatDialogComponent {
   });
 
   protected readonly canStart = computed(
-    () => this.adversaries().length > 0 && this.heroes().every((h) => h.resultat !== null),
+    () => this.activeAdversaries().length > 0 && this.activeHeroes().every((h) => h.resultat !== null),
   );
 
   protected readonly isNatural2 = computed(() => {
@@ -151,9 +162,32 @@ export class StartCombatDialogComponent {
     return total !== null && total >= THRESHOLD ? 'reussite' : 'echec';
   });
 
+  /** Cartes (`{kind}-{pivotId}`) exclues de ce combat : elles restent sur la table et reviennent à la fin du combat. */
+  protected readonly excluded = signal<ReadonlySet<string>>(new Set());
+
+  protected isExcluded(kind: PreviewLine['kind'], pivotId: number): boolean {
+    return this.excluded().has(`${kind}-${pivotId}`);
+  }
+
+  /** Exclut un héros ou un adversaire de ce combat — ou le réintègre. Rien n'est retiré de la table. */
+  protected toggleExcluded(kind: PreviewLine['kind'], pivotId: number): void {
+    const key = `${kind}-${pivotId}`;
+    this.excluded.update((set) => {
+      const next = new Set(set);
+      if (!next.delete(key)) {
+        next.add(key);
+      }
+      return next;
+    });
+  }
+
+  /** Les héros et adversaires qui participent à ce combat. */
+  private readonly activeHeroes = computed(() => this.heroes().filter((h) => !this.isExcluded('hero', h.pivotId)));
+  private readonly activeAdversaries = computed(() => this.adversaries().filter((a) => !this.isExcluded(a.kind, a.pivotId)));
+
   /** Un héros a obtenu un succès héroïque ou mieux : au round 1, coriaces et piétaille sont bloqués. */
   protected readonly roundOneLocked = computed(() =>
-    this.heroes().some((h) => h.resultat === 'heroique' || h.resultat === 'legendaire'),
+    this.activeHeroes().some((h) => h.resultat === 'heroique' || h.resultat === 'legendaire'),
   );
 
   /** Aperçu de la frise : les héros d'après leur jet, les autres d'après leur rang. */
@@ -161,9 +195,14 @@ export class StartCombatDialogComponent {
     const heroes = this.heroes();
     const advs = this.adversaries();
     const locked = this.roundOneLocked();
-    const heroLines = (results: readonly InitiativeResultat[]): string[] =>
-      heroes.filter((h) => h.resultat && results.includes(h.resultat)).map((h) => `${h.nom} ${HERO_RANK_SYMBOL[h.resultat!]}`);
-    const names = (rang: AdversaryRow['rang']): string[] => advs.filter((a) => a.rang === rang).map((a) => a.nom);
+    const heroLines = (results: readonly InitiativeResultat[]): PreviewLine[] =>
+      heroes
+        .filter((h) => h.resultat && results.includes(h.resultat))
+        .map((h) => ({label: `${h.nom} ${HERO_RANK_SYMBOL[h.resultat!]}`, excluded: this.isExcluded('hero', h.pivotId), kind: 'hero', pivotId: h.pivotId}));
+    const names = (rang: AdversaryRow['rang']): PreviewLine[] =>
+      advs
+        .filter((a) => a.rang === rang)
+        .map((a) => ({label: a.nom, excluded: this.isExcluded(a.kind, a.pivotId), kind: a.kind, pivotId: a.pivotId}));
     return [
       {id: 'heros', title: 'Héros ①②③', lines: heroLines(['legendaire', 'heroique', 'reussite']), blocked: false},
       {id: 'rival', title: 'Rivaux ④', lines: names('rival'), blocked: false},
@@ -176,7 +215,10 @@ export class StartCombatDialogComponent {
 
   /** Ce que la table doit savoir avant de commencer : jets manquants, égalités entre héros, succès légendaire. */
   protected readonly previewNote = computed(() => {
-    const heroes = this.heroes();
+    const heroes = this.activeHeroes();
+    if (this.activeAdversaries().length === 0) {
+      return 'Aucun adversaire : ajoutes-en pour pouvoir démarrer.';
+    }
     if (heroes.some((h) => h.resultat === null)) {
       return 'Chaque héros doit avoir un résultat.';
     }
@@ -186,6 +228,9 @@ export class StartCombatDialogComponent {
     }
     return results.includes('legendaire') ? "Succès légendaire : +1 à tous les jets d'attaque pendant la rencontre." : '';
   });
+
+  /** Vrai tant que la liste n'a pas été chargée une première fois : les jets des combats précédents sont alors effacés. */
+  private freshOpen = true;
 
   constructor() {
     this.reload();
@@ -199,14 +244,15 @@ export class StartCombatDialogComponent {
       .subscribe({
         next: (session) => {
           this.adversaries.set([
-            ...(session.pnjs ?? []).map((p) => ({pivotId: p.id, nom: p.surnom ?? p.nom, rang: p.rang})),
-            ...(session.creatures ?? []).map((c) => ({pivotId: c.id, nom: c.surnom ?? c.nom, rang: c.rang})),
-            ...(session.demons ?? []).map((d) => ({pivotId: d.id, nom: d.surnom ?? d.nom, rang: d.rang})),
+            ...(session.pnjs ?? []).map((p) => ({pivotId: p.id, kind: 'pnj' as const, nom: p.surnom ?? p.nom, rang: p.rang})),
+            ...(session.creatures ?? []).map((c) => ({pivotId: c.id, kind: 'creature' as const, nom: c.surnom ?? c.nom, rang: c.rang})),
+            ...(session.demons ?? []).map((d) => ({pivotId: d.id, kind: 'demon' as const, nom: d.surnom ?? d.nom, rang: d.rang})),
           ]);
           this.existingHeroIds.set(new Set((session.heros ?? []).map((h) => String(h.heros_id))));
 
           const heroEntries = session.heros ?? [];
           if (heroEntries.length === 0) {
+            this.freshOpen = false;
             this.heroes.set([]);
             this.loading.set(false);
             return;
@@ -222,12 +268,18 @@ export class StartCombatDialogComponent {
                     pivotId: h.id,
                     herosId: h.heros_id,
                     nom: hero.origines.nom ?? 'Héros',
-                    resultat: h.initiative_resultat,
+                    // Un nouveau combat réclame un nouveau jet de réaction (02-actions-combat.md) : à l'ouverture,
+                    // les résultats d'un jet précédent (dialogue annulé, combat interrompu) ne sont pas repris.
+                    resultat: this.freshOpen ? null : h.initiative_resultat,
                     esprit: hero.attributs.esprit,
                     initiative: hero.combat.initiative_effective,
                   };
                 }),
               );
+              if (this.freshOpen) {
+                this.clearStoredResults(heroEntries.filter((h) => h.initiative_resultat !== null).map((h) => h.id));
+                this.freshOpen = false;
+              }
               this.loading.set(false);
             },
             error: (error: unknown) => {
@@ -339,11 +391,39 @@ export class StartCombatDialogComponent {
     this.persistSuggested(hero);
   }
 
+  /** Efface côté serveur les résultats d'un jet précédent, pour que la table n'en garde aucun. */
+  private clearStoredResults(pivotIds: readonly number[]): void {
+    for (const pivotId of pivotIds) {
+      this.fightSessionService.updateHeroInitiative(this.data.sessionId, pivotId, null).subscribe({
+        error: (error: unknown) =>
+          this.snackBar.open(extractApiErrorMessage(error, "Impossible d'effacer un jet d'initiative précédent."), 'Fermer', {duration: 5000}),
+      });
+    }
+  }
+
   /** Lance le jet de chaque héros qui n'en a pas encore, l'un après l'autre (un seul plateau de dés). */
   protected async rollAll(): Promise<void> {
-    for (const hero of this.heroes().filter((h) => h.resultat === null)) {
+    for (const hero of this.activeHeroes().filter((h) => h.resultat === null)) {
       await this.rollFor(hero);
     }
+  }
+
+  /** Formule d'un jet de réaction, chaque terme nommé : « 2d6 (9) + 2 (initiative) − 1 (embuscade) ≥ 9 ». Les termes nuls
+   * sont omis ; le total des dés n'apparaît qu'une fois le jet fait. */
+  protected formulaFor(hero: HeroRow): string {
+    const total = this.diceTotalFor(hero.pivotId);
+    const ambush = this.ambushState() === 'heroes_ambush' ? 2 : this.ambushState() === 'heroes_ambushed' ? -1 : 0;
+    const terms: [number, string][] = [
+      [hero.esprit, 'esprit'],
+      [hero.initiative, 'initiative'],
+      [ambush, 'embuscade'],
+      [-this.adversaryInitiativeMalus(), 'initiative adverse'],
+    ];
+    const tail = terms
+      .filter(([value]) => value !== 0)
+      .map(([value, label]) => ` ${value > 0 ? '+' : '−'} ${Math.abs(value)} (${label})`)
+      .join('');
+    return `2d6${total === null ? '' : ` (${total})`}${tail} ≥ ${THRESHOLD}`;
   }
 
   protected initial(nom: string): string {
@@ -396,7 +476,7 @@ export class StartCombatDialogComponent {
 
   protected start(): void {
     this.starting.set(true);
-    this.fightSessionService.startCombat(this.data.sessionId).subscribe({
+    this.fightSessionService.startCombat(this.data.sessionId, [...this.excluded()]).subscribe({
       next: () => {
         this.starting.set(false);
         this.ref.close(true);

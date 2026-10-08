@@ -100,15 +100,19 @@ class BolFightSessionService
         return $this->getSessionWithRelations($sessionId);
     }
 
-    /** Bascule une session `libre` en `combat` — les adversaires sont déjà en place via addCombatant(). */
-    public function startCombat(string $sessionId, string $userId): ?BolFightSession
+    /**
+     * Bascule une session `libre` en `combat` — les adversaires sont déjà en place via addCombatant().
+     *
+     * @param array<int, string> $exclus clés de carte (`{kind}-{pivotId}`) laissées sur la table mais hors de ce combat
+     */
+    public function startCombat(string $sessionId, string $userId, array $exclus = []): ?BolFightSession
     {
         $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
         if (!$session || $session->statut !== 'libre') {
             return null;
         }
 
-        $session->update(['statut' => 'combat', 'etat_combat' => BolCombatState::INITIAL]);
+        $session->update(['statut' => 'combat', 'etat_combat' => BolCombatState::normalize(['exclus' => $exclus])]);
 
         return $this->getSessionWithRelations($sessionId);
     }
@@ -141,6 +145,9 @@ class BolFightSessionService
         if (!$session || $session->statut !== 'combat') {
             return null;
         }
+
+        // Les cartes exclues sont fixées au démarrage : un état envoyé sans `exclus` ne les efface pas.
+        $etat['exclus'] ??= BolCombatState::normalize($session->etat_combat)['exclus'];
 
         $session->update(['etat_combat' => BolCombatState::normalize($etat)]);
 

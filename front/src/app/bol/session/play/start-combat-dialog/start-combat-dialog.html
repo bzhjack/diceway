@@ -46,17 +46,21 @@
               <span class="scd-kicker">Jets de réaction</span>
               <ul class="scd-heroes">
                 @for (hero of heroes(); track hero.pivotId) {
-                  <li class="scd-hero" [class.scd-hero--active]="activePivotId() === hero.pivotId">
+                  <li class="scd-hero" [class.scd-hero--active]="activePivotId() === hero.pivotId" [class.scd-hero--excluded]="isExcluded('hero', hero.pivotId)">
                     <span class="scd-med" aria-hidden="true">{{ initial(hero.nom) }}</span>
                     <span class="scd-hero-identity">
                       <span class="scd-hero-name">{{ hero.nom }}</span>
                       <span class="scd-hero-stats">Esprit {{ signed(hero.esprit) }} · Initiative {{ signed(hero.initiative) }}</span>
                     </span>
                     <span class="scd-formula">
-                      2d6 {{ signed(hero.esprit + hero.initiative + modifierTotal()) }} ≥ 9
+                      @if (isExcluded('hero', hero.pivotId)) {
+                        Hors de ce combat
+                      } @else {
+                      {{ formulaFor(hero) }}
                       @if (diceTotalFor(hero.pivotId) !== null) {
                         <span class="scd-arrow">→</span>
                         <b>{{ diceTotalFor(hero.pivotId)! + hero.esprit + hero.initiative + modifierTotal() }}</b>
+                      }
                       }
                     </span>
                     <span class="scd-result">
@@ -70,9 +74,18 @@
                           {{ resultLabel(hero.resultat) }}
                         </span>
                       }
-                      <button type="button" class="scd-dice-btn" [disabled]="rolling()" (click)="rollFor(hero)">
+                      <button type="button" class="scd-dice-btn" [disabled]="rolling() || isExcluded('hero', hero.pivotId)" (click)="rollFor(hero)">
                         <mat-icon>casino</mat-icon>
                         {{ hero.resultat ? 'Relancer' : 'Lancer' }}
+                      </button>
+                      <button
+                        type="button"
+                        class="scd-remove"
+                        [attr.aria-label]="(isExcluded('hero', hero.pivotId) ? 'Réintégrer ' : 'Exclure ') + hero.nom + ' de ce combat'"
+                        [matTooltip]="isExcluded('hero', hero.pivotId) ? 'Réintégrer dans le combat' : 'Exclure de ce combat (reste sur la table)'"
+                        (click)="toggleExcluded('hero', hero.pivotId)"
+                      >
+                        <mat-icon>{{ isExcluded('hero', hero.pivotId) ? 'undo' : 'person_off' }}</mat-icon>
                       </button>
                       <input
                         class="scd-input scd-input--manual"
@@ -81,7 +94,7 @@
                         max="12"
                         placeholder="2-12"
                         [value]="diceTotalFor(hero.pivotId)"
-                        [disabled]="rolling()"
+                        [disabled]="rolling() || isExcluded('hero', hero.pivotId)"
                         [attr.aria-label]="'Total des dés lancés à table pour ' + hero.nom"
                         (change)="onManualTotal(hero, $any($event.target).value)"
                       />
@@ -110,22 +123,6 @@
                 }
               }
             </section>
-
-            <section class="scd-block" aria-label="Adversaires">
-              <div class="scd-head">
-                <span class="scd-kicker">Sans jet : rangés d'après leur rang</span>
-                <button mat-stroked-button type="button" (click)="openAddAdversary()"><mat-icon>add</mat-icon> Ajouter</button>
-              </div>
-              @if (adversaries().length) {
-                <div class="scd-advs">
-                  @for (a of adversaries(); track a.pivotId) {
-                    <span class="scd-adv">{{ a.nom }} <em>{{ a.rang === 'rival' ? '④' : a.rang === 'coriace' ? '⑤' : '⑦' }}</em></span>
-                  }
-                </div>
-              } @else {
-                <p class="scd-empty">Aucun adversaire pour l'instant : ajoutes-en pour pouvoir démarrer.</p>
-              }
-            </section>
           </div>
 
           <aside class="scd-side" aria-label="Aperçu de la frise">
@@ -133,8 +130,19 @@
             @for (group of preview(); track group.id) {
               <div class="scd-group" [class.scd-group--blocked]="group.blocked">
                 <span class="scd-group-title">{{ group.title }}@if (group.blocked) { <em>bloqués au round 1</em> }</span>
-                @for (line of group.lines; track line) {
-                  <span class="scd-group-line">{{ line }}</span>
+                @for (line of group.lines; track line.kind + line.pivotId) {
+                  <span class="scd-group-line" [class.scd-group-line--excluded]="line.excluded">
+                    {{ line.label }}
+                    <button
+                      type="button"
+                      class="scd-remove scd-remove--small"
+                      [attr.aria-label]="(line.excluded ? 'Réintégrer ' : 'Exclure ') + line.label + ' de ce combat'"
+                      [matTooltip]="line.excluded ? 'Réintégrer dans le combat' : 'Exclure de ce combat (reste sur la table)'"
+                      (click)="toggleExcluded(line.kind, line.pivotId)"
+                    >
+                      <mat-icon>{{ line.excluded ? 'undo' : 'close' }}</mat-icon>
+                    </button>
+                  </span>
                 } @empty {
                   <span class="scd-group-line scd-group-line--none">—</span>
                 }
@@ -150,6 +158,7 @@
 
     <mat-dialog-actions class="scd-actions">
       <button mat-stroked-button type="button" (click)="close()">Annuler</button>
+      <button mat-stroked-button type="button" [disabled]="loading()" (click)="openAddAdversary()"><mat-icon>add</mat-icon> Ajouter un adversaire</button>
       <span class="scd-spacer"></span>
       <button mat-stroked-button type="button" [disabled]="loading() || rolling() || !heroes().length" (click)="rollAll()">
         <mat-icon>casino</mat-icon> Lancer pour tous

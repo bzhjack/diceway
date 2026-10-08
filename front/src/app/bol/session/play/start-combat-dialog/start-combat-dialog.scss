@@ -141,13 +141,6 @@
   color: var(--dw-color-legendary);
 }
 
-.scd-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.6rem;
-}
-
 .scd-modifiers-group {
   display: flex;
   flex-wrap: wrap;
@@ -287,6 +280,7 @@
   font-weight: 700;
   color: var(--dw-surface-700);
   white-space: nowrap;
+  text-align: right;
 
   b {
     color: var(--dw-surface-900);
@@ -359,27 +353,6 @@
   }
 }
 
-.scd-advs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
-.scd-adv {
-  padding: 0.25rem 0.7rem;
-  border: 1px solid var(--dw-border);
-  border-radius: 999px;
-  background: var(--dw-surface-100);
-  font-size: 0.8rem;
-  font-weight: 700;
-
-  em {
-    margin-left: 0.2rem;
-    font-style: normal;
-    color: var(--dw-color-legendary);
-  }
-}
-
 .scd-empty {
   margin: 0;
   color: var(--dw-surface-500);
@@ -431,7 +404,55 @@
 }
 
 .scd-group-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
   font-size: 0.84rem;
+}
+
+// Retirer un combattant de la table : discret, rouge au survol.
+.scd-remove {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid var(--dw-border);
+  border-radius: 8px;
+  background: var(--dw-surface-200);
+  color: var(--dw-surface-600);
+  cursor: pointer;
+
+  .mat-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    font-size: 1.1rem;
+  }
+
+  &:hover {
+    border-color: var(--dw-color-echec-forte);
+    background: var(--dw-color-echec-forte);
+    color: #fff;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+}
+
+.scd-remove--small {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+
+  .mat-icon {
+    width: 0.85rem;
+    height: 0.85rem;
+    font-size: 0.85rem;
+  }
 }
 
 .scd-group-line--none {
@@ -456,4 +477,14 @@
 
 .scd-spacer {
   flex: 1;
+}
+
+// Exclu de ce combat : il reste sur la table, grisé ici, et réintègre la scène à la fin du combat.
+.scd-hero--excluded {
+  opacity: 0.55;
+}
+
+.scd-group-line--excluded {
+  text-decoration: line-through;
+  color: var(--dw-surface-500);
 }

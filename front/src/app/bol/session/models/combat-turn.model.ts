@@ -2,12 +2,14 @@ import {PlayToken} from './combat-play.model';
 import {InitiativeTierKey} from './initiative.model';
 import {TapisCard} from './tapis.model';
 
-/** État d'un combat : le round, les cartes qui ont joué ce round, celles en défense totale. Gardé
+/** État d'un combat : le round, les cartes qui ont joué ce round, celles en défense totale, celles exclues. Gardé
  * dans la session (`etat_combat`) ; les clés sont celles des cartes (`{kind}-{pivotId}`). */
 export interface EtatCombat {
   readonly round: number;
   readonly joues: readonly string[];
   readonly defense_totale: readonly string[];
+  /** Cartes restées sur la table mais exclues de ce combat : elles ne jouent pas et ne sont pas visables. */
+  readonly exclus: readonly string[];
 }
 
 /** Où en est une carte dans le round : c'est à elle, elle a joué, elle est sautée (hors combat ou

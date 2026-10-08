@@ -326,7 +326,7 @@ export class SessionPlayPageComponent {
 
     this.dialog
       .open(StartCombatDialogComponent, {
-        width: 'min(1000px, 96vw)',
+        width: 'min(1240px, 96vw)',
         maxWidth: '96vw',
         maxHeight: '90vh',
         panelClass: 'scd-panel',
@@ -741,7 +741,7 @@ export class SessionPlayPageComponent {
 
     this.savingEtat = true;
     this.fightSessionService
-      .updateCombatState(sessionId, {round: next.round, joues: [...next.joues], defense_totale: [...next.defense_totale]})
+      .updateCombatState(sessionId, {round: next.round, joues: [...next.joues], defense_totale: [...next.defense_totale], exclus: [...next.exclus]})
       .subscribe({
         next: () => {
           this.savingEtat = false;
