@@ -11,11 +11,11 @@
     [class.tps-row--hot]="hotCamp() === 'adversaires'"
     aria-labelledby="tps-presents-label"
   >
-    <h2 class="tps-row-label" id="tps-presents-label">{{ presentsLabel() }}</h2>
+    <h2 class="tps-row-label" id="tps-presents-label">Présents dans la scène</h2>
     <ng-container
       *ngTemplateOutlet="
         rowTpl;
-        context: {cards: rows().presents, labelId: 'tps-presents-label', scrollerLabel: presentsLabel(), empty: 'Personne ici pour l’instant. Pose des personnages depuis la réserve.'}
+        context: {cards: rows().presents, labelId: 'tps-presents-label', scrollerLabel: 'Présents dans la scène', empty: 'Personne ici pour l’instant. Pose des personnages depuis la réserve.'}
       "
     />
   </section>
@@ -58,10 +58,8 @@
       >
         <bol-character-card
           [card]="card"
-          [combat]="stateOf(card)"
           [selected]="selectedKeys().has(card.key)"
           (toggled)="onFaceClick(card, $event)"
-          (expandRequested)="cardToggled.emit(card)"
         />
         <div *cdkDragPreview class="tps-ghost">
           <img class="tps-ghost-art" [src]="card.avatar" alt="" draggable="false" />

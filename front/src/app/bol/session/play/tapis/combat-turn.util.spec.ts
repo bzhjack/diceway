@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {buildCombatStates, endTurn, groupByTier, giveBackTurn, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
+import {endTurn, groupByTier, giveBackTurn, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
 import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model';
 import {TurnOrderEntry} from '../../models/turn-order.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
@@ -216,7 +216,6 @@ describe('total defense leaves with the turn', () => {
     // été retirée de la table : il joue, puis son marqueur doit avoir disparu.
     const order = ordered(PRETRE, KALENA);
     const stale = etat(2, [], ['pnj-7']);
-    expect(buildCombatStates(order, stale).get('pnj-7')?.defenseTotale).toBe(false);
     expect(endTurn(order, stale)).toEqual(etat(2, ['pnj-7'], []));
   });
 });
@@ -246,21 +245,6 @@ describe('targetableKeys', () => {
 
   it('offers nothing when nobody is active', () => {
     expect(targetableKeys(order, null).size).toBe(0);
-  });
-});
-
-describe('buildCombatStates', () => {
-  it('describes every card: turn status, targetable, total defense, out, locked', () => {
-    const order: OrderedCard[] = [...ordered(KALENA, RORK), {card: PRETRE, tier: 'coriace', lockedRound1: true}];
-    const states = buildCombatStates(order, etat(1, [], ['hero-2']));
-    expect(states.get('hero-1')).toEqual({status: 'active', targetable: false, defenseTotale: false, out: false, locked: false});
-    expect(states.get('hero-2')).toEqual({status: 'upcoming', targetable: false, defenseTotale: true, out: false, locked: false});
-    expect(states.get('pnj-7')).toEqual({status: 'skipped', targetable: true, defenseTotale: false, out: false, locked: true});
-  });
-
-  it('no longer flags the round-1 lock after round 1', () => {
-    const order: OrderedCard[] = [{card: PRETRE, tier: 'coriace', lockedRound1: true}];
-    expect(buildCombatStates(order, etat(2)).get('pnj-7')?.locked).toBe(false);
   });
 });
 
@@ -324,11 +308,11 @@ describe('excluded cards', () => {
     expect(turn.activeKey).toBe('hero-2');
   });
 
-  it('shows an excluded card as out of the fight and not targetable', () => {
+  it('does not let an excluded card be targeted', () => {
     const order = ordered(KALENA, PRETRE, card('pnj', 8));
-    const states = buildCombatStates(order, excluding('pnj-8'));
-    expect(states.get('pnj-8')).toMatchObject({out: true, targetable: false});
-    expect(states.get('pnj-7')?.targetable).toBe(true);
+    const targetable = targetableKeys(order, 'hero-1', ['pnj-8']);
+    expect(targetable.has('pnj-8')).toBe(false);
+    expect(targetable.has('pnj-7')).toBe(true);
   });
 
   it('keeps the exclusions when a turn ends', () => {

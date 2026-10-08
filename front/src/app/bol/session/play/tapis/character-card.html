@@ -3,10 +3,6 @@
     type="button"
     [id]="'chc-' + card().key"
     [class]="'chc chc--medaillon chc--' + card().kind"
-    [class.chc--active]="combat()?.status === 'active'"
-    [class.chc--played]="combat()?.status === 'played'"
-    [class.chc--targetable]="combat()?.targetable"
-    [class.chc--out]="combat()?.out"
     [class.chc--selected]="selected()"
     [attr.aria-pressed]="selected() ? 'true' : null"
     aria-expanded="false"
@@ -24,12 +20,6 @@
       } @else {
         <mat-icon>{{ kindIcon() }}</mat-icon>
       }
-      @if (combat()?.defenseTotale) {
-        <mat-icon class="chc-marker chc-marker--defense" aria-hidden="true">shield</mat-icon>
-      }
-      @if (combat()?.locked) {
-        <mat-icon class="chc-marker chc-marker--locked" aria-hidden="true">lock</mat-icon>
-      }
     </span>
 
     <span class="chc-name"><span class="chc-name-text">{{ card().nom }}</span></span>
@@ -43,14 +33,4 @@
     <span class="chc-bar"><i [class.chc-bar-fill--low]="low()" class="chc-bar-fill" [style.width.%]="percent()"></i></span>
   </button>
 
-  @if (combat()) {
-    <button
-      type="button"
-      class="chc-expand"
-      [attr.aria-label]="'Déplier la carte de ' + card().nom"
-      (click)="expandRequested.emit()"
-    >
-      <mat-icon>open_in_full</mat-icon>
-    </button>
-  }
 </div>

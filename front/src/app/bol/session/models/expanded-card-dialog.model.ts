@@ -12,11 +12,8 @@ export interface ExpandedCardDialogData {
   readonly hero: Signal<ExpandedHeroData | null>;
   readonly statblock: Signal<BolStatblockData | null>;
   readonly returnUrl: Signal<string | null>;
-  readonly mode: Signal<'libre' | 'combat'>;
-  readonly canAttack: Signal<boolean>;
   readonly changed: () => void;
   readonly remove: (card: TapisCard) => void;
   readonly toggleArmure: (event: {card: TapisCard; armureId: number}) => void;
   readonly toggleArme: (event: {card: TapisCard; armeId: number}) => void;
-  readonly attack: (card: TapisCard) => void;
 }

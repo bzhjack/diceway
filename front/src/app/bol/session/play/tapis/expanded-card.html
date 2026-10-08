@@ -62,20 +62,13 @@
             </dl>
           </section>
 
-          @if (mode() === 'libre') {
-            <bol-action-roll-panel [data]="h.actionRoll" [(heroisme)]="heroisme" />
-          }
-        }
-        @if (canAttack()) {
-          <button mat-flat-button size="small" type="button" class="exc-attack" (click)="attackRequested.emit(card())">
-            <mat-icon svgIcon="sword" /> Attaquer cette carte
-          </button>
+          <bol-action-roll-panel [data]="h.actionRoll" [(heroisme)]="heroisme" />
         }
       </div>
     </div>
   } @else {
     <!-- PNJ, créature, démon : la fiche partagée avec les bibliothèques, qui reçoit ici le stepper de vitalité, le changement de
-         camp, les boutons et « Attaquer ». La carte a la hauteur de son contenu. -->
+         camp et les boutons. La carte a la hauteur de son contenu. -->
     @if (statblock(); as sb) {
       <bol-statblock
         [data]="sb"
@@ -114,11 +107,6 @@
         <button sheetActions mat-icon-button class="exc-icon-btn" type="button" aria-label="Replier la carte" (click)="closed.emit()">
           <mat-icon>close</mat-icon>
         </button>
-        @if (canAttack()) {
-          <button sheetFooter mat-flat-button size="small" type="button" class="exc-attack" (click)="attackRequested.emit(card())">
-            <mat-icon svgIcon="sword" /> Attaquer cette carte
-          </button>
-        }
       </bol-statblock>
     } @else {
       <p class="exc-loading exc-loading--pad">Chargement de la fiche…</p>

@@ -54,13 +54,10 @@
             <bol-tapis
               [cards]="cards()"
               [sessionId]="sid"
-              [mode]="mode()"
-              [combatStates]="combatStates()"
               [selectedKeys]="selectedKeys()"
               (selectToggled)="toggleSelected($event)"
               (cardToggled)="onCardToggled($event)"
               (campToggleRequested)="toggleCamp($event)"
-              (attackRequested)="onAttackCard($event)"
             />
           </div>
         </div>

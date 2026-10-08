@@ -21,7 +21,7 @@
     <button mat-stroked-button size="small" type="button" matTooltip="Relancer la réaction des héros" (click)="rerollRequested.emit()">
       Nouveau jet de réaction
     </button>
-    <button mat-flat-button size="small" type="button" [disabled]="!canAct()" (click)="endTurnRequested.emit()">
+    <button mat-flat-button size="small" type="button" [disabled]="!canAct()" matTooltip="Raccourci : F" (click)="endTurnRequested.emit()">
       Fin du tour
     </button>
   </div>

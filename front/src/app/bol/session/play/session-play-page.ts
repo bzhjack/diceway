@@ -48,8 +48,8 @@ import {ExpandedCardDialogComponent} from './tapis/expanded-card-dialog';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {equippedArmes} from '../../shared/arme/arme-equipee';
 import {AttackChoice} from '../models/attack-options.model';
-import {buildCombatStates, endTurn, giveBackTurn, normalizeEtat, orderCards, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
-import {CardCombatState, EtatCombat} from '../models/combat-turn.model';
+import {endTurn, giveBackTurn, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
+import {EtatCombat} from '../models/combat-turn.model';
 import {TurnOrderComponent} from './tapis/turn-order';
 import {CombatSideComponent} from './side/combat-side';
 import {AppliedHit, TurnAssistantComponent} from './tapis/turn-assistant';
@@ -164,10 +164,6 @@ export class SessionPlayPageComponent {
   /** Carte dont c'est le tour — `null` hors combat, ou quand plus personne ne peut jouer. */
   protected readonly activeCard = computed(() => (this.mode() === 'combat' ? findCard(this.cards(), this.turn().activeKey) : null));
 
-  protected readonly combatStates = computed<ReadonlyMap<string, CardCombatState> | null>(() =>
-    this.mode() === 'combat' ? buildCombatStates(this.orderedCards(), this.etat()) : null,
-  );
-
   protected readonly turnEntries = computed<readonly TurnOrderEntry[]>(() => {
     const statuses = this.turn().statuses;
     return this.orderedCards().map(({card, tier, lockedRound1}) => ({
@@ -199,8 +195,8 @@ export class SessionPlayPageComponent {
 
   /** Cartes que la carte active peut viser : le camp d'en face, hors combat exclu. */
   protected readonly targets = computed(() => {
-    const states = this.combatStates();
-    return this.cards().filter((card) => states?.get(card.key)?.targetable);
+    const targetable = this.mode() === 'combat' ? targetableKeys(this.orderedCards(), this.turn().activeKey, this.etat().exclus) : new Set<string>();
+    return this.cards().filter((card) => targetable.has(card.key));
   });
   protected readonly selectedTarget = computed(() => this.targets().find((card) => card.key === this.targetKey()) ?? null);
 
@@ -448,7 +444,6 @@ export class SessionPlayPageComponent {
     this.openCardDialog();
   }
 
-  /** Ferme la carte ouverte. */
   /** Cartes sélectionnées par Ctrl + clic : suppr les retire de la table. */
   protected readonly selectedKeys = signal<ReadonlySet<string>>(new Set());
 
@@ -511,12 +506,6 @@ export class SessionPlayPageComponent {
 
   /** « Attaquer cette carte » sur la carte ouverte : en combat, pour toute carte qui n'est ni la carte active ni
    * hors combat. */
-  private readonly expandedCanAttack = computed(() => {
-    const card = this.expandedCard();
-    const active = this.activeCard();
-    return this.mode() === 'combat' && card !== null && active !== null && active.key !== card.key && !this.combatStates()?.get(card.key)?.out;
-  });
-
   private openCardDialog(): void {
     const sessionId = this.sessionId();
     if (this.cardDialog || !sessionId) {
@@ -529,13 +518,10 @@ export class SessionPlayPageComponent {
       hero: this.expandedHero,
       statblock: this.expandedStatblock,
       returnUrl: this.returnUrl,
-      mode: this.mode,
-      canAttack: this.expandedCanAttack,
       changed: () => this.reloadSession(),
       remove: (card) => this.askRemoveCard(card),
       toggleArmure: (event) => this.onArmureToggled(event),
       toggleArme: (event) => this.onArmeToggled(event),
-      attack: (card) => this.onAttackCard(card),
     };
     // Le corps de la carte donne le focus à sa racine : pas de focus automatique du dialogue.
     const ref = this.dialog.open(ExpandedCardDialogComponent, {

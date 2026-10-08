@@ -2,7 +2,7 @@ import {PlayToken} from '../../models/combat-play.model';
 import {TapisCard} from '../../models/tapis.model';
 import {InitiativeTierKey} from '../../models/initiative.model';
 import {TurnOrderEntry, TurnOrderGroup} from '../../models/turn-order.model';
-import {EtatCombat, TurnStatus, OrderedCard, TurnState, CardCombatState, TurnToken} from '../../models/combat-turn.model';
+import {EtatCombat, TurnStatus, OrderedCard, TurnState, TurnToken} from '../../models/combat-turn.model';
 
 export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], defense_totale: [], exclus: []};
 
@@ -193,27 +193,6 @@ export function targetableKeys(
       .map((entry) => entry.card)
       .filter((card) => card.camp !== active.camp && !isOut(card) && !exclus.includes(card.key))
       .map((card) => card.key),
-  );
-}
-
-/** Ce que chaque carte affiche du combat. */
-export function buildCombatStates(ordered: readonly OrderedCard[], etat: EtatCombat): ReadonlyMap<string, CardCombatState> {
-  const turn = turnState(ordered, etat);
-  const targetable = targetableKeys(ordered, turn.activeKey, etat.exclus);
-  const defense = new Set(etat.defense_totale);
-
-  return new Map(
-    ordered.map((entry) => [
-      entry.card.key,
-      {
-        status: turn.statuses.get(entry.card.key) ?? 'upcoming',
-        targetable: targetable.has(entry.card.key),
-        // La carte active n'est plus en défense totale : son marqueur tombe à son tour.
-        defenseTotale: defense.has(entry.card.key) && entry.card.key !== turn.activeKey,
-        out: isOut(entry.card) || etat.exclus.includes(entry.card.key),
-        locked: etat.round === 1 && entry.lockedRound1,
-      },
-    ]),
   );
 }
 

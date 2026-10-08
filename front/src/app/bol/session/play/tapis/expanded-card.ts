@@ -61,10 +61,6 @@ export class ExpandedCardComponent {
   /** Statbloc d'un PNJ / créature / démon, `null` tant qu'il charge ou si la fiche a disparu. */
   readonly statblock = input<BolStatblockData | null>(null);
   readonly returnUrl = input<string | null>(null);
-  /** En combat : pas de jet d'action ni de changement de camp. */
-  readonly mode = input<'libre' | 'combat'>('libre');
-  /** En combat, la carte active peut attaquer cette carte (qui n'est pas elle-même). */
-  readonly canAttack = input(false);
 
   readonly closed = output<void>();
   readonly changed = output<void>();
@@ -73,8 +69,6 @@ export class ExpandedCardComponent {
   readonly armureToggled = output<number>();
   /** Un clic sur une arme du popover : l'id de l'arme à équiper ou déséquiper. */
   readonly armeToggled = output<number>();
-  /** « Attaquer cette carte » : le moyen de viser une carte de son propre camp. */
-  readonly attackRequested = output<TapisCard>();
 
   private readonly root = viewChild.required<ElementRef<HTMLElement>>('root');
 
@@ -109,7 +103,7 @@ export class ExpandedCardComponent {
   /** Hauteur fixe pour un héros en mode libre : son jet d'action change d'état (faveur divine, échec critique) et
    * la zone des dés garde une taille confortable. Les autres personnages, et un héros en combat réduit au
    * bandeau, ont la hauteur de leur contenu. */
-  protected readonly fixedHeight = computed(() => this.card().kind === 'hero' && this.mode() === 'libre' && this.hero() !== null);
+  protected readonly fixedHeight = computed(() => this.card().kind === 'hero' && this.hero() !== null);
 
 
   protected readonly removeLabel = REMOVE_ACTION_LABEL;

@@ -31,14 +31,5 @@ export interface TurnState {
   readonly statuses: ReadonlyMap<string, TurnStatus>;
 }
 
-/** Ce qu'une carte affiche de l'état du combat. */
-export interface CardCombatState {
-  readonly status: TurnStatus;
-  readonly targetable: boolean;
-  readonly defenseTotale: boolean;
-  readonly out: boolean;
-  readonly locked: boolean;
-}
-
 /** Ce qu'il faut savoir d'un combattant pour l'ordonner dans le tour. */
 export type TurnToken = Pick<PlayToken, 'kind' | 'pivotId' | 'tier' | 'lockedRound1'>;

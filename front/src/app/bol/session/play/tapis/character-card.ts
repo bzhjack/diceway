@@ -2,7 +2,6 @@ import {ChangeDetectionStrategy, Component, computed, input, output, signal} fro
 import {MatIconModule} from '@angular/material/icon';
 import {EMPTY_AVATAR} from '../../combat-play.util';
 import {combatantKindIcon, combatantKindIconIsSvg} from '../../combat-statblock.util';
-import {CardCombatState} from '../../models/combat-turn.model';
 import {cardAriaLabel, isLowVitalite, vitalitePercent, vitaliteText} from './tapis.util';
 import {TapisCard} from '../../models/tapis.model';
 
@@ -22,34 +21,12 @@ export class CharacterCardComponent {
   readonly toggled = output<MouseEvent>();
   /** La carte fait partie de la sélection (Ctrl + clic) : un suppr les retire de la table. */
   readonly selected = input(false);
-  /** État de la carte dans le combat — `null` en mode libre. */
-  readonly combat = input<CardCombatState | null>(null);
-  /** Bouton « déplier » de la face, affiché en combat (le clic sur la face y sert à attaquer). */
-  readonly expandRequested = output<void>();
 
   /** L'avatar a échoué au chargement (chemin conventionnel sans fichier) : repli sur l'icône du type. */
   private readonly avatarFailed = signal(false);
   protected readonly hasAvatar = computed(() => this.card().avatar !== EMPTY_AVATAR && !this.avatarFailed());
 
-  /** Libellé accessible : en combat, une carte désignable s'annonce comme une cible, et l'état de la
-   * carte dans le round est dit. */
-  protected readonly ariaLabel = computed(() => {
-    const base = cardAriaLabel(this.card());
-    const combat = this.combat();
-    if (!combat) {
-      return base;
-    }
-
-    const states = [
-      combat.out ? 'hors combat' : null,
-      combat.status === 'active' ? 'à elle de jouer' : null,
-      combat.status === 'played' ? 'a joué' : null,
-      combat.locked ? 'bloquée ce round' : null,
-      combat.defenseTotale ? 'en défense totale' : null,
-    ].filter((state): state is string => state !== null);
-    const described = states.length ? `${base}, ${states.join(', ')}` : base;
-    return combat.targetable ? `Attaquer ${described}` : described;
-  });
+  protected readonly ariaLabel = computed(() => cardAriaLabel(this.card()));
   protected readonly vitalite = computed(() => vitaliteText(this.card()));
   protected readonly percent = computed(() => vitalitePercent(this.card().vitaliteCourante, this.card().vitaliteMax));
   protected readonly low = computed(() => isLowVitalite(this.card().vitaliteCourante, this.card().vitaliteMax));

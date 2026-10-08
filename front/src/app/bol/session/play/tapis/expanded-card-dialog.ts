@@ -20,14 +20,11 @@ import {ExpandedCardComponent} from './expanded-card';
         [hero]="data.hero()"
         [statblock]="data.statblock()"
         [returnUrl]="data.returnUrl()"
-        [mode]="data.mode()"
-        [canAttack]="data.canAttack()"
         (closed)="ref.close()"
         (changed)="data.changed()"
         (removeRequested)="data.remove($event)"
         (armureToggled)="data.toggleArmure({card, armureId: $event})"
         (armeToggled)="data.toggleArme({card, armeId: $event})"
-        (attackRequested)="ref.close(); data.attack($event)"
       />
     }
   `,
