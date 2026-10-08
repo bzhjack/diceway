@@ -11,16 +11,15 @@ class BolFightSessionDemon extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'fight_session_id', 'demon_id', 'camp', 'qty', 'surnom', 'rang', 'nom',
+        'fight_session_id', 'demon_id', 'camp', 'surnom', 'rang', 'nom',
         'vigueur', 'agilite', 'esprit', 'aura',
         'melee', 'tir', 'defense',
-        'vitalite_max', 'vitalite_courante', 'vitalite_instances',
+        'vitalite_max', 'vitalite_courante',
         'degats',
         'pouvoirs',
     ];
 
     protected $casts = [
-        'qty'                 => 'integer',
         'vigueur'             => 'integer',
         'agilite'             => 'integer',
         'esprit'              => 'integer',
@@ -30,7 +29,6 @@ class BolFightSessionDemon extends Model
         'defense'             => 'integer',
         'vitalite_max'        => 'integer',
         'vitalite_courante'   => 'integer',
-        'vitalite_instances'  => 'array',
         'pouvoirs'            => 'array',
     ];
 

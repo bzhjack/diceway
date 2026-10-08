@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, Component, effect, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DestroyRef, effect, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {NavigationStart, Router} from '@angular/router';
 import {filter} from 'rxjs';
 import {ExpandedCardDialogData} from '../../models/expanded-card-dialog.model';
@@ -35,6 +35,16 @@ export class ExpandedCardDialogComponent {
   protected readonly ref = inject(MatDialogRef<ExpandedCardDialogComponent>);
 
   constructor() {
+    // Un tooltip ouvert (souris posée sur un bouton) garde le premier Échap pour lui seul : il l'intercepte avant le
+    // dialogue. On écoute donc Échap en phase de capture, pour que la carte se ferme du premier coup où que soit la souris.
+    const dialogs = inject(MatDialog);
+    const onEscape = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape' && dialogs.openDialogs.at(-1) === this.ref) {
+        this.ref.close();
+      }
+    };
+    document.addEventListener('keydown', onEscape, true);
+    inject(DestroyRef).onDestroy(() => document.removeEventListener('keydown', onEscape, true));
     // « Modifier la fiche » (ou tout autre lien de la carte) quitte la page : le dialogue se ferme avec elle.
     inject(Router)
       .events.pipe(

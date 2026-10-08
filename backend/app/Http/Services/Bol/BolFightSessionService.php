@@ -296,7 +296,7 @@ class BolFightSessionService
         $row->update(['vitalite_courante' => max(0, min($row->vitalite_max, $current + $delta))]);
     }
 
-    /** Vitalité d'une créature ou d'un démon : un seul compteur, sur sa ligne (`vitalite_instances` en garde un reflet). */
+    /** Vitalité d'une créature ou d'un démon : un seul compteur, sur sa ligne. */
     private function applyInstanceDamage(BolFightSessionCreature|BolFightSessionDemon|null $row, int $delta): void
     {
         if (!$row) {
@@ -306,10 +306,7 @@ class BolFightSessionService
         $current = $row->vitalite_courante ?? $row->vitalite_max;
         $next = max(0, min($row->vitalite_max, $current + $delta));
 
-        $row->update([
-            'vitalite_courante'  => $next,
-            'vitalite_instances' => [$next],
-        ]);
+        $row->update(['vitalite_courante' => $next]);
     }
 
     private function hasHero(string $sessionId, string $heroId): bool
@@ -397,10 +394,8 @@ class BolFightSessionService
             'fight_session_id'   => $sessionId,
             'creature_id'        => $creature->id,
             'camp'               => $this->normalizeCamp($camp),
-            'qty'                => 1,
             'surnom'             => $surnom,
             'vitalite_courante'  => $creature->vitalite,
-            'vitalite_instances' => [$creature->vitalite],
         ] + $this->creatureSnapshot($creature));
     }
 
@@ -442,7 +437,7 @@ class BolFightSessionService
 
         foreach ($rows as $row) {
             $courante = min((int) ($row->vitalite_courante ?? $creature->vitalite), (int) $creature->vitalite);
-            $row->update($this->creatureSnapshot($creature) + ['vitalite_courante' => $courante, 'vitalite_instances' => [$courante]]);
+            $row->update($this->creatureSnapshot($creature) + ['vitalite_courante' => $courante]);
         }
     }
 
@@ -490,10 +485,8 @@ class BolFightSessionService
             'fight_session_id'   => $sessionId,
             'demon_id'           => $demon->id,
             'camp'               => $this->normalizeCamp($camp),
-            'qty'                => 1,
             'surnom'             => $surnom,
             'vitalite_courante'  => $demon->vitalite,
-            'vitalite_instances' => [$demon->vitalite],
         ] + $this->demonSnapshot($demon));
     }
 
@@ -533,7 +526,7 @@ class BolFightSessionService
 
         foreach ($rows as $row) {
             $courante = min((int) ($row->vitalite_courante ?? $demon->vitalite), (int) $demon->vitalite);
-            $row->update($this->demonSnapshot($demon) + ['vitalite_courante' => $courante, 'vitalite_instances' => [$courante]]);
+            $row->update($this->demonSnapshot($demon) + ['vitalite_courante' => $courante]);
         }
     }
 

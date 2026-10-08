@@ -199,8 +199,8 @@ class BolSceneService
 
         return BolSceneDistribution::fromSession(
             BolFightSessionPnj::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'pnj_id', 'camp'])->toArray(),
-            BolFightSessionCreature::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'creature_id', 'qty', 'camp'])->toArray(),
-            BolFightSessionDemon::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'demon_id', 'qty', 'camp'])->toArray(),
+            BolFightSessionCreature::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'creature_id', 'camp'])->toArray(),
+            BolFightSessionDemon::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'demon_id', 'camp'])->toArray(),
             $session->positions_jetons,
         );
     }

@@ -68,7 +68,6 @@ export class TurnAssistantComponent {
   readonly totalDefenseRequested = output<void>();
 
   protected readonly heroicOptions = HEROIC_OPTIONS;
-  protected readonly threshold = ATTACK_THRESHOLD;
   protected readonly isHero = computed(() => this.card().kind === 'hero');
   /** Les options de succès héroïque (dont « Massacrer la piétaille ») sont celles des héros : leurs alliés y ont droit, pas leurs adversaires. */
   protected readonly heroicAllowed = computed(() => this.card().camp === 'heros');

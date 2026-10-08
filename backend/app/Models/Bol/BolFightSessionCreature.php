@@ -11,21 +11,19 @@ class BolFightSessionCreature extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'fight_session_id', 'creature_id', 'camp', 'qty', 'surnom', 'rang', 'nom',
+        'fight_session_id', 'creature_id', 'camp', 'surnom', 'rang', 'nom',
         'vigueur', 'agilite', 'esprit',
-        'vitalite_max', 'vitalite_courante', 'vitalite_instances',
+        'vitalite_max', 'vitalite_courante',
         'attaque', 'defense', 'degats', 'protection', 'id_taille',
         'capacites',
     ];
 
     protected $casts = [
-        'qty'                 => 'integer',
         'vigueur'             => 'integer',
         'agilite'             => 'integer',
         'esprit'              => 'integer',
         'vitalite_max'        => 'integer',
         'vitalite_courante'   => 'integer',
-        'vitalite_instances'  => 'array',
         'attaque'             => 'integer',
         'defense'             => 'integer',
         'id_taille'           => 'integer',
