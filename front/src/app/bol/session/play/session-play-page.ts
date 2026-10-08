@@ -26,7 +26,6 @@ import {
   demonStatblockData,
   pnjStatblockData,
 } from '../../shared/statblock/bol-statblock.builders';
-import {AttackRollDialogComponent} from '../attack-roll-dialog/attack-roll-dialog';
 import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard, postCombatRecoveryAmount} from '../combat-play.util';
 import {ActionRollDiceTrait} from '../models/action-roll.model';
@@ -801,24 +800,6 @@ export class SessionPlayPageComponent {
     }
   }
 
-  /** « Jet détaillé » : le dialogue d'attaque complet (faveur divine, conversions de succès, dés de bonus). */
-  protected onDetailedAttack(): void {
-    const attacker = this.activeCard();
-    const target = this.selectedTarget();
-    if (!attacker || !target) {
-      this.snackBar.open("Choisis d'abord une cible.", 'Fermer', {duration: 4000});
-      return;
-    }
-
-    const choice = this.attackChoice();
-    if (!choice) {
-      this.snackBar.open('Choisis une arme secondaire légère ou moyenne pour cette posture.', 'Fermer', {duration: 5000});
-      return;
-    }
-
-    this.openAttackDialog(attacker, target, choice);
-  }
-
   /** Dégâts calculés par l'assistant : enregistrés sur la cible, puis écrits au journal. */
   protected onHitApplied(hit: AppliedHit): void {
     const attacker = this.activeCard();
@@ -828,54 +809,6 @@ export class SessionPlayPageComponent {
     if (delta !== 0) {
       this.applyDamageTo(hit.target, delta, this.targetStats());
     }
-  }
-
-  /** Ouvre le dialogue d'attaque existant, prérempli. Les stats sont résolues à partir des jetons
-   * (`PlayToken`) correspondant aux deux cartes. */
-  private openAttackDialog(attacker: TapisCard, target: TapisCard, choice: AttackChoice): void {
-    const sessionId = this.sessionId();
-    const tokens = this.board()?.tokens ?? [];
-    const attackerToken = tokenForCard(tokens, attacker);
-    const targetToken = tokenForCard(tokens, target);
-    if (!sessionId || !attackerToken || !targetToken) {
-      return;
-    }
-
-    const targetInTotalDefense = this.etat().defense_totale.includes(target.key);
-
-    forkJoin({
-      attacker: resolveAttackStats(attackerToken, this.herosService),
-      target: resolveAttackStats(targetToken, this.herosService),
-    }).subscribe(({attacker: attackerStats, target: targetStats}) => {
-      const finalAttacker = choice.degats ? {...attackerStats, degats: choice.degats} : attackerStats;
-      // Défense totale (02-actions-combat.md) : +2 en défense jusqu'au prochain tour de la cible.
-      const finalTarget = targetInTotalDefense ? {...targetStats, defense: targetStats.defense + 2} : targetStats;
-      const posture = choice.posture;
-
-      this.dialog
-        .open(AttackRollDialogComponent, {
-          maxWidth: 'min(32rem, 92vw)',
-          panelClass: 'atd-panel',
-          data: {
-            attackerNom: attacker.nom,
-            targetNom: target.nom,
-            attackerAvatar: attacker.avatar,
-            targetAvatar: target.avatar,
-            attacker: finalAttacker,
-            target: finalTarget,
-            legendaryBonusActive: attackerToken.tier === 'legendaire',
-            posture: posture ? {label: posture.label, slug: posture.slug, modificateur: posture.modificateur} : null,
-          },
-        })
-        .afterClosed()
-        .subscribe((delta: number | undefined) => {
-          if (delta === undefined) {
-            return;
-          }
-
-          this.applyDamageTo(target, delta, targetStats);
-        });
-    });
   }
 
   /** Enregistre une variation de vitalité sur une carte (dégâts négatifs) ; un héros qui tombe sous 0 se voit

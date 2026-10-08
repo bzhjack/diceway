@@ -1,3 +1,4 @@
+import {InitiativeResultat} from '../models/bol-fight-session.model';
 import {ResolvedCombatStats} from './models/combat-attack.model';
 
 /** Dé de dégâts d'une arme ou d'une créature : d3, d6, d6 de malus (garder le moins bon de 2d6) ou de bonus. */
@@ -74,4 +75,46 @@ export function finalDamage(raw: number, vigueur: number, protection: number, de
 /** Un d6 aléatoire. */
 export function rollD6(): number {
   return 1 + Math.floor(Math.random() * 6);
+}
+
+/** Résout le modificateur d'attaque réellement appliqué par la posture choisie. "Attaque au défaut
+ * de l'armure" n'a pas de malus fixe en base (`modificateur_armor: true`) : son malus est la valeur
+ * de protection fixe de la cible (−1/−2/−3 légère/moyenne/lourde, doc/rules/02-actions-combat.md). */
+export function resolvePostureAttackModifier(posture: {readonly slug: string; readonly modificateur: number} | null, targetProtection: number): number {
+  if (!posture) {
+    return 0;
+  }
+  return posture.slug === 'armor-chink' ? -targetProtection : posture.modificateur;
+}
+
+/** Total du jet d'attaque : 2d6 + bonus attaquant − défense cible + modificateur − malus de petit
+ * bouclier consommé + bonus +1 légendaire personnel (si actif pour la rencontre) + modificateur de
+ * posture (offensive/intrépide/défensive/défaut de l'armure). */
+export function computeAttackTotal(
+  diceSum: number,
+  attackerBonus: number,
+  targetDefense: number,
+  modifier: number,
+  shieldMalus: number,
+  legendaryBonus: number,
+  postureModifier: number,
+): number {
+  return diceSum + attackerBonus - targetDefense + modifier - shieldMalus + legendaryBonus + postureModifier;
+}
+
+/** Résultat suggéré d'un jet d'attaque : 2/12 naturels priment sur le seuil (même règle absolue que
+ * pour tout jet d'action, 02-actions-combat.md) — `total` est déjà le résultat de `computeAttackTotal`. */
+export function suggestedAttackResult(
+  dice: readonly [number, number],
+  total: number,
+  threshold: number,
+): InitiativeResultat {
+  const [a, b] = dice;
+  if (a === 1 && b === 1) {
+    return 'echec';
+  }
+  if (a === 6 && b === 6) {
+    return 'heroique';
+  }
+  return total >= threshold ? 'reussite' : 'echec';
 }

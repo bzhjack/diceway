@@ -4,18 +4,20 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
-import {computeAttackTotal, resolvePostureAttackModifier, suggestedAttackResult} from '../../attack-roll-dialog/attack-roll-dialog';
 import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, MAINS_NUES} from '../../attack-options.util';
 import {dualStrikeDegats, isDualWieldEligible} from '../../combat-attack.util';
 import {
   ATTACK_THRESHOLD,
   attackBonus,
+  computeAttackTotal,
   damageDiceCount,
   damageDie,
   finalDamage,
   HEROIC_OPTIONS,
   rawDamage,
+  resolvePostureAttackModifier,
   rollD6,
+  suggestedAttackResult,
   vigueurBonus,
 } from '../../combat-resolution.util';
 import {AttackChoice} from '../../models/attack-options.model';
@@ -57,11 +59,12 @@ export class TurnAssistantComponent {
   readonly targetSelected = output<TapisCard>();
   readonly damageApplied = output<AppliedHit>();
   readonly totalDefenseRequested = output<void>();
-  readonly detailedRequested = output<void>();
 
   protected readonly heroicOptions = HEROIC_OPTIONS;
   protected readonly threshold = ATTACK_THRESHOLD;
   protected readonly isHero = computed(() => this.card().kind === 'hero');
+  /** Les options de succès héroïque (dont « Massacrer la piétaille ») sont celles des héros : leurs alliés y ont droit, pas leurs adversaires. */
+  protected readonly heroicAllowed = computed(() => this.card().camp === 'heros');
 
   // ── Étape 1 : arme, posture, arme secondaire — repartent de zéro à chaque nouvelle carte active ──
   /** Un héros attaque avec ses armes équipées, les mains nues ou une arme improvisée ; un PNJ avec n'importe laquelle de ses armes. */
@@ -195,7 +198,7 @@ export class TurnAssistantComponent {
 
   protected readonly isNatural12 = computed(() => {
     const d = this.naturalDice();
-    return !!d && d[0] === 6 && d[1] === 6;
+    return this.heroicAllowed() && !!d && d[0] === 6 && d[1] === 6;
   });
 
   protected readonly verdict = computed(() => {

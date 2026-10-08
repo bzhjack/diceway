@@ -122,7 +122,7 @@
         <p class="tas-total">{{ t }}</p>
         @if (verdict(); as v) {
           <p class="tas-verdict" [class.tas-verdict--hit]="v.hit" [class.tas-verdict--miss]="!v.hit">
-            {{ v.result === 'legendaire' || v.result === 'heroique' ? 'Succès héroïque' : v.hit ? 'Touché' : 'Raté' }}
+            {{ heroicAllowed() && (v.result === 'legendaire' || v.result === 'heroique') ? 'Succès héroïque' : v.hit ? 'Touché' : 'Raté' }}
           </p>
         }
       }
@@ -169,10 +169,4 @@
       <p class="tas-note">Lance le jet pour calculer les dégâts.</p>
     </section>
   }
-
-  <div class="tas-actions">
-    <button mat-stroked-button size="small" type="button" matTooltip="Faveur divine, conversions de succès, dés de bonus…" (click)="detailedRequested.emit()">
-      <mat-icon>tune</mat-icon> Jet détaillé
-    </button>
-  </div>
 </div>
