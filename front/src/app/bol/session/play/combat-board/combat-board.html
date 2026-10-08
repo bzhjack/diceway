@@ -1,0 +1,43 @@
+<div class="cb-main">
+  <bol-turn-order
+    [entries]="entries()"
+    [round]="round()"
+    [title]="title()"
+    [canAct]="activeCard() !== null"
+    [legendaryActive]="legendaryActive()"
+    [announcement]="announcement()"
+    (gaveBack)="gaveBack.emit($event)"
+    (addRequested)="addRequested.emit()"
+    (delayRequested)="delayRequested.emit()"
+    (rerollRequested)="rerollRequested.emit()"
+    (endTurnRequested)="endTurnRequested.emit()"
+  />
+
+  <div class="cb-play">
+    <section class="cb-assistant" aria-label="Assistant de tour">
+      @if (activeCard(); as active) {
+        <bol-turn-assistant
+          [card]="active"
+          [armes]="armes()"
+          [combatOptions]="combatOptions()"
+          [targets]="targets()"
+          [target]="target()"
+          [attacker]="attacker()"
+          [targetStats]="targetStats()"
+          [legendaryBonus]="legendaryBonus()"
+          (choiceChanged)="choiceChanged.emit($event)"
+          (targetSelected)="targetSelected.emit($event)"
+          (damageApplied)="damageApplied.emit($event)"
+          (detailedRequested)="detailedRequested.emit()"
+          (totalDefenseRequested)="totalDefenseRequested.emit()"
+        />
+      } @else {
+        <p class="cb-nobody">Plus personne ne peut jouer.</p>
+      }
+    </section>
+
+    <aside class="cb-side" aria-label="Héros et journal">
+      <bol-combat-side [heroes]="heroes()" [log]="log()" />
+    </aside>
+  </div>
+</div>

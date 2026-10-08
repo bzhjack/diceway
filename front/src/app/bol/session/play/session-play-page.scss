@@ -87,43 +87,6 @@
   flex-direction: column;
 }
 
-// Mode combat (distinct du mode libre) : assistant de tour à gauche, héros et journal à droite.
-.spp-play {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-}
-
-.spp-assistant {
-  flex: 1;
-  min-width: 0;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--dw-border) transparent;
-  background: linear-gradient(#1a120b, #130d08);
-}
-
-.spp-side {
-  flex: 0 0 17rem;
-  min-height: 0;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--dw-border) transparent;
-  border-left: 1px solid var(--dw-border);
-  background: linear-gradient(270deg, #0f0a06, #1a120b);
-
-  @media (max-width: 1100px) {
-    flex-basis: 14rem;
-  }
-}
-
-.spp-nobody {
-  margin: 0;
-  padding: 1rem;
-  color: var(--dw-surface-500);
-  font-size: 0.9rem;
-}
-
 .spp-reserve {
   flex: 0 0 19rem;
   min-height: 0;

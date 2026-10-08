@@ -62,52 +62,34 @@
           </div>
         </div>
       } @else {
-        <!-- Mode combat : frise, assistant de tour et colonne de droite, sans tapis. -->
-        <div class="spp-body spp-body--combat">
-          <div class="spp-main">
-            <bol-turn-order
-              [entries]="turnEntries()"
-              [round]="etat().round"
-              [title]="headerTitle() ?? ''"
-              [canAct]="activeCard() !== null"
-              [legendaryActive]="b.legendaryActive"
-              [announcement]="turnAnnouncement()"
-              (gaveBack)="onGiveBackTurn($event)"
-              (addRequested)="openAddCombatantDialog()"
-              (delayRequested)="onDelay()"
-              (rerollRequested)="openStartCombatDialog(true)"
-              (endTurnRequested)="onEndTurn()"
-            />
-
-            <div class="spp-play">
-              <section class="spp-assistant" aria-label="Assistant de tour">
-                @if (activeCard(); as active) {
-                  <bol-turn-assistant
-                    [card]="active"
-                    [armes]="activeArmes()"
-                    [combatOptions]="combatOptions()"
-                    [targets]="targets()"
-                    [target]="selectedTarget()"
-                    [attacker]="attackerStats()"
-                    [targetStats]="targetStats()"
-                    [legendaryBonus]="legendaryForActive()"
-                    (choiceChanged)="attackChoice.set($event)"
-                    (targetSelected)="onAttackCard($event)"
-                    (damageApplied)="onHitApplied($event)"
-                    (detailedRequested)="onDetailedAttack()"
-                    (totalDefenseRequested)="onTotalDefense()"
-                  />
-                } @else {
-                  <p class="spp-nobody">Plus personne ne peut jouer.</p>
-                }
-              </section>
-
-              <aside class="spp-side" aria-label="Héros et journal">
-                <bol-combat-side [heroes]="sideHeroes()" [log]="combatLog()" />
-              </aside>
-            </div>
-          </div>
-        </div>
+        <!-- Mode combat : l'écran de combat, sans réserve ni tapis. -->
+        <bol-combat-board
+          [entries]="turnEntries()"
+          [round]="etat().round"
+          [title]="headerTitle() ?? ''"
+          [legendaryActive]="b.legendaryActive"
+          [announcement]="turnAnnouncement()"
+          [activeCard]="activeCard()"
+          [armes]="activeArmes()"
+          [combatOptions]="combatOptions()"
+          [targets]="targets()"
+          [target]="selectedTarget()"
+          [attacker]="attackerStats()"
+          [targetStats]="targetStats()"
+          [legendaryBonus]="legendaryForActive()"
+          [heroes]="sideHeroes()"
+          [log]="combatLog()"
+          (gaveBack)="onGiveBackTurn($event)"
+          (addRequested)="openAddCombatantDialog()"
+          (delayRequested)="onDelay()"
+          (rerollRequested)="openStartCombatDialog(true)"
+          (endTurnRequested)="onEndTurn()"
+          (choiceChanged)="attackChoice.set($event)"
+          (targetSelected)="onAttackCard($event)"
+          (damageApplied)="onHitApplied($event)"
+          (detailedRequested)="onDetailedAttack()"
+          (totalDefenseRequested)="onTotalDefense()"
+        />
       }
     }
     </div>

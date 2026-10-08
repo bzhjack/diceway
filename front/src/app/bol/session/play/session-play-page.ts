@@ -50,9 +50,8 @@ import {equippedArmes} from '../../shared/arme/arme-equipee';
 import {AttackChoice} from '../models/attack-options.model';
 import {endTurn, giveBackTurn, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
 import {EtatCombat} from '../models/combat-turn.model';
-import {TurnOrderComponent} from './tapis/turn-order';
-import {CombatSideComponent} from './side/combat-side';
-import {AppliedHit, TurnAssistantComponent} from './tapis/turn-assistant';
+import {CombatBoardComponent} from './combat-board/combat-board';
+import {AppliedHit} from './tapis/turn-assistant';
 import {ResolvedCombatStats} from '../models/combat-attack.model';
 import {TurnOrderEntry} from '../models/turn-order.model';
 import {TapisComponent} from './tapis/tapis';
@@ -74,7 +73,7 @@ function loadedArmes(hero: BolHerosModel): BolHerosArmeModel[] {
  */
 @Component({
   selector: 'bol-session-play-page',
-  imports: [RouterLink, MatIconModule, MatTooltipModule, SessionHeaderComponent, ReserveComponent, TapisComponent, TurnOrderComponent, TurnAssistantComponent, CombatSideComponent],
+  imports: [RouterLink, MatIconModule, MatTooltipModule, SessionHeaderComponent, ReserveComponent, TapisComponent, CombatBoardComponent],
   templateUrl: './session-play-page.html',
   styleUrl: './session-play-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
