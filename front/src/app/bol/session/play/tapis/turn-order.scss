@@ -193,6 +193,11 @@
   box-shadow: 0 0 0 3px var(--bar-ember, var(--dw-color-legendary)), 0 0 14px 3px rgba(232, 135, 58, 0.6);
 }
 
+.tor-med--target {
+  border-color: var(--dw-color-echec-forte);
+  box-shadow: 0 0 0 3px var(--dw-color-echec-forte), 0 0 14px 3px rgba(208, 42, 42, 0.6);
+}
+
 .tor-med--played {
   opacity: 0.5;
 }

@@ -154,9 +154,6 @@ export class SessionPlayPageComponent {
     return [...base.filter((e) => !delayedKeys.includes(e.card.key)), ...delayedKeys.flatMap((k) => base.filter((e) => e.card.key === k))];
   });
 
-  /** Les héros du camp des héros, avec leur vitalité, pour la colonne de droite. */
-  protected readonly sideHeroes = computed(() => this.cards().filter((card) => card.kind === 'hero'));
-
   private readonly turn = computed(() => turnState(this.orderedCards(), this.etat()));
 
   /** Carte dont c'est le tour — `null` hors combat, ou quand plus personne ne peut jouer. */
@@ -227,9 +224,6 @@ export class SessionPlayPageComponent {
     const token = active ? tokenForCard(this.board()?.tokens ?? [], active) : null;
     return token?.tier === 'legendaire';
   });
-
-  /** Coups portés pendant ce combat, du plus récent au plus ancien. */
-  protected readonly combatLog = signal<readonly string[]>([]);
 
 
   /** PNJ / créatures / démons sur la table — décide si charger une scène demande « Remplacer ou Ajouter ». */
@@ -800,14 +794,10 @@ export class SessionPlayPageComponent {
     }
   }
 
-  /** Dégâts calculés par l'assistant : enregistrés sur la cible, puis écrits au journal. */
+  /** Dégâts calculés par l'assistant : enregistrés sur la cible. */
   protected onHitApplied(hit: AppliedHit): void {
-    const attacker = this.activeCard();
-    const delta = -hit.damage;
-    const line = `Round ${this.etat().round} · ${attacker?.nom ?? '—'} → ${hit.target.nom} : ${hit.damage > 0 ? `−${hit.damage}` : 'aucun dégât'}`;
-    this.combatLog.update((log) => [line, ...log].slice(0, 12));
-    if (delta !== 0) {
-      this.applyDamageTo(hit.target, delta, this.targetStats());
+    if (hit.damage !== 0) {
+      this.applyDamageTo(hit.target, -hit.damage, this.targetStats());
     }
   }
 

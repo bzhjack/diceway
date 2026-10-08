@@ -34,6 +34,8 @@ export class TurnOrderComponent {
   readonly title = input('');
   /** Il y a quelqu'un dont c'est le tour : « Retarder » et « Fin du tour » ont un sens. */
   readonly canAct = input(false);
+  /** Clé du combattant visé par le tour en cours : son médaillon est cerclé de rouge. */
+  readonly targetKey = input<string | null>(null);
 
   readonly gaveBack = output<string>();
   readonly addRequested = output<void>();

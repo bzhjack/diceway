@@ -107,23 +107,16 @@
       <h3><span aria-hidden="true">3</span> Jet</h3>
       @if (target() && attacker() && targetStats()) {
         <p class="tas-formula">{{ formula() }}</p>
-        <div class="tas-dice" aria-live="polite">
-          @if (dice(); as d) {
-            <span class="tas-die">{{ d[0] }}</span>
-            <span class="tas-die">{{ d[1] }}</span>
-          } @else {
-            <span class="tas-die tas-die--empty">—</span>
-            <span class="tas-die tas-die--empty">—</span>
+        <div class="tas-result" aria-live="polite">
+          @if (total(); as t) {
+            <p class="tas-total">{{ t }}</p>
+            @if (verdict(); as v) {
+              <p class="tas-verdict" [class.tas-verdict--hit]="v.hit" [class.tas-verdict--miss]="!v.hit">
+                {{ heroicAllowed() && (v.result === 'legendaire' || v.result === 'heroique') ? 'Succès héroïque' : v.hit ? 'Touché' : 'Raté' }}
+              </p>
+            }
           }
         </div>
-        @if (total(); as t) {
-          <p class="tas-total">{{ t }}</p>
-          @if (verdict(); as v) {
-            <p class="tas-verdict" [class.tas-verdict--hit]="v.hit" [class.tas-verdict--miss]="!v.hit">
-              {{ heroicAllowed() && (v.result === 'legendaire' || v.result === 'heroique') ? 'Succès héroïque' : v.hit ? 'Touché' : 'Raté' }}
-            </p>
-          }
-        }
         <div class="tas-roll">
           <button mat-flat-button type="button" [disabled]="rolling()" (click)="roll()"><mat-icon>casino</mat-icon> {{ dice() ? 'Relancer 2d6' : 'Lancer 2d6' }}</button>
           <label class="tas-manual">
@@ -147,23 +140,23 @@
         <p class="tas-note">Choisis une cible pour calculer le jet.</p>
       }
     </section>
-  </div>
 
-  @if (hasDamageStep()) {
-    <section class="tas-step">
-      <h3><span aria-hidden="true">4</span> Dégâts</h3>
-      <p class="tas-formula">{{ degats() }} {{ signed(vigueur()) }} (vigueur){{ devastating() ? ' + 6 (dévastateur)' : '' }} − {{ protection() }} (protection)</p>
-      @if (damage() !== null) {
-        <p class="tas-total tas-total--dmg">{{ damage() }}</p>
-        <button mat-flat-button type="button" class="tas-apply" (click)="apply()">Appliquer {{ damage() }} à {{ target()?.nom }}</button>
-      } @else {
-        <button mat-stroked-button type="button" [disabled]="rolling()" (click)="rollDamage()"><mat-icon>casino</mat-icon> Lancer les dégâts</button>
-      }
-    </section>
-  } @else {
-    <section class="tas-step">
-      <h3><span aria-hidden="true">4</span> Dégâts</h3>
-      <p class="tas-note">Lance le jet pour calculer les dégâts.</p>
-    </section>
-  }
+    @if (hasDamageStep()) {
+      <section class="tas-step">
+        <h3><span aria-hidden="true">4</span> Dégâts</h3>
+        <p class="tas-formula">{{ degats() }} {{ signed(vigueur()) }} (vigueur){{ devastating() ? ' + 6 (dévastateur)' : '' }} − {{ protection() }} (protection)</p>
+        @if (damage() !== null) {
+          <p class="tas-total tas-total--dmg">{{ damage() }}</p>
+          <button mat-flat-button type="button" class="tas-apply" (click)="apply()">Appliquer {{ damage() }} à {{ target()?.nom }}</button>
+        } @else {
+          <button mat-stroked-button type="button" [disabled]="rolling()" (click)="rollDamage()"><mat-icon>casino</mat-icon> Lancer les dégâts</button>
+        }
+      </section>
+    } @else {
+      <section class="tas-step">
+        <h3><span aria-hidden="true">4</span> Dégâts</h3>
+        <p class="tas-note">Lance le jet pour calculer les dégâts.</p>
+      </section>
+    }
+  </div>
 </div>

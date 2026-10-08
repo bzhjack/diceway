@@ -9,6 +9,7 @@
     [round]="round()"
     [title]="title()"
     [canAct]="activeCard() !== null"
+    [targetKey]="target()?.key ?? null"
     [legendaryActive]="legendaryActive()"
     [announcement]="announcement()"
     (gaveBack)="gaveBack.emit($event)"
@@ -41,8 +42,5 @@
       }
     </section>
 
-    <aside class="cb-side" aria-label="Héros et journal">
-      <bol-combat-side [heroes]="heroes()" [log]="log()" />
-    </aside>
   </div>
 </div>

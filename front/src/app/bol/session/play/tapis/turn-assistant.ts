@@ -90,6 +90,10 @@ export class TurnAssistantComponent {
   });
 
   protected readonly visibleOptions = computed(() => {
+    // Les options de combat sont facultatives (02-actions-combat.md) : créatures et démons, qui n'ont qu'une attaque, n'en ont pas.
+    if (this.card().kind === 'creature' || this.card().kind === 'demon') {
+      return [];
+    }
     const options = filterAttackMenuCombatOptions(this.combatOptions());
     if (!this.isHero()) {
       return options.filter((o) => !DUAL_WIELD_SLUGS.has(o.slug));
