@@ -230,7 +230,7 @@
 
 .scd-hero {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-columns: auto 150px minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.7rem;
   padding: 0.45rem 0.6rem;
@@ -239,7 +239,7 @@
   background: var(--dw-surface-100);
 
   @media (max-width: 800px) {
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto 150px;
   }
 }
 
@@ -262,6 +262,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  width: 150px;
 }
 
 .scd-hero-name {
@@ -276,11 +277,11 @@
 }
 
 .scd-formula {
-  font-size: 1rem;
+  font-size: 0.7rem;
   font-weight: 700;
   color: var(--dw-surface-700);
   white-space: nowrap;
-  text-align: right;
+  text-align: left;
 
   b {
     color: var(--dw-surface-900);
@@ -487,4 +488,25 @@
 .scd-group-line--excluded {
   text-decoration: line-through;
   color: var(--dw-surface-500);
+}
+
+// Icône d'aide à droite d'un champ : le détail est dans son tooltip.
+.scd-info {
+  flex: none;
+  width: 1.2rem;
+  height: 1.2rem;
+  font-size: 1.2rem;
+  color: var(--dw-surface-500);
+  cursor: help;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--dw-color-legendary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+    border-radius: 50%;
+  }
 }

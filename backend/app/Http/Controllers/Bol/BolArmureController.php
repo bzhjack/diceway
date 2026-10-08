@@ -149,6 +149,8 @@ class BolArmureController extends Controller
         $pivot->equipee = $equipee;
         $pivot->save();
 
+        app(\App\Http\Services\Bol\BolFightSessionService::class)->refreshPnjSnapshots((string) $herosId);
+
         return response()->json(['success' => true, 'equipee' => $equipee]);
     }
 

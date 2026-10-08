@@ -38,7 +38,14 @@
                   <span class="scd-modifiers-label">Initiative ennemie</span>
                   <span class="scd-inline">
                     <input class="scd-input" type="number" min="0" [value]="adversaryInitiativeMalus()" (change)="setAdversaryMalus($any($event.target).value)" />
-                    <span class="scd-hint">la plus haute initiative des rivaux et coriaces ennemis (lue sur leurs fiches, modifiable) ; elle est retranchée au jet de chaque héros</span>
+                    <mat-icon
+                      class="scd-info"
+                      tabindex="0"
+                      role="img"
+                      aria-label="Aide : initiative ennemie"
+                      matTooltip="La plus haute initiative des rivaux et coriaces ennemis ; elle est retranchée au jet de chaque héros."
+                      >info</mat-icon
+                    >
                   </span>
                 </label>
               }

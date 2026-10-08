@@ -94,6 +94,10 @@ class BolDemonController extends Controller
             ->where('user_id', Auth::id())
             ->where('id', $demonId)->get()->first();
 
+        if ($demon === null) {
+            return response()->json(['error' => 'Demon not found'], 404);
+        }
+
         // Le nouveau tableau de capacités venant de la requête
         $tableau2 = $request->input('pouvoirs');
         $ids_tableau2 = array_column($tableau2, 'id');
@@ -118,6 +122,7 @@ class BolDemonController extends Controller
 
         // Mettre à jour les autres champs de la créature
         $demon->update($updatedDemon);
+        app(\App\Http\Services\Bol\BolFightSessionService::class)->refreshDemonSnapshots((string) $demonId);
         return response($this->bolDemonService->getDemonWithRelations($demonId));
     }
 

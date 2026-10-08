@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, inject, signal, ViewEncapsulation, viewChild, WritableSignal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, effect, inject, signal, untracked, ViewEncapsulation, viewChild, WritableSignal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
@@ -246,6 +246,31 @@ export class StartCombatDialogComponent {
 
   constructor() {
     this.reload();
+
+    // Un modificateur de la table (embuscade, initiative ennemie) change : les jets déjà faits sont recalculés avec leurs dés.
+    effect(() => {
+      const modifier = this.modifierTotal();
+      untracked(() => this.rescoreRolledHeroes(modifier));
+    });
+  }
+
+  /** Recalcule le résultat des héros qui ont déjà lancé. Un 2 ou un 12 naturel prime sur les modificateurs : leur résultat ne bouge pas. */
+  private rescoreRolledHeroes(modifier: number): void {
+    for (const hero of this.heroes()) {
+      const dice = this.diceTotalFor(hero.pivotId);
+      if (dice === null || dice === 2 || dice === 12 || hero.resultat === null) {
+        continue;
+      }
+      const resultat: InitiativeResultat = dice + hero.esprit + hero.initiative + modifier >= THRESHOLD ? 'reussite' : 'echec';
+      if (resultat === hero.resultat) {
+        continue;
+      }
+      this.fightSessionService.updateHeroInitiative(this.data.sessionId, hero.pivotId, resultat).subscribe({
+        next: () => this.heroes.update((list) => list.map((h) => (h.pivotId === hero.pivotId ? {...h, resultat} : h))),
+        error: (error: unknown) =>
+          this.snackBar.open(extractApiErrorMessage(error, 'Impossible de mettre à jour un jet de réaction.'), 'Fermer', {duration: 5000}),
+      });
+    }
   }
 
   private reload(): void {
