@@ -151,6 +151,8 @@ interface BolFightSessionPnjModel {
   melee: number;
   tir: number;
   defense: number;
+  /** Initiative du PNJ à la pose : malus au jet de réaction des héros s'il est rival ou coriace. */
+  initiative: number;
   vitalite_max: number;
   vitalite_courante: number;
   armes: BolFightSessionArmeModel[] | null;

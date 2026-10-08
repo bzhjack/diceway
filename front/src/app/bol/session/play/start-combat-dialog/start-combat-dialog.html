@@ -29,17 +29,19 @@
                 <span class="scd-modifiers-label">Embuscade</span>
                 <div class="scd-toggle">
                   <button type="button" [class.active]="ambushState() === null" (click)="setAmbush(null)">Aucune</button>
-                  <button type="button" [class.active]="ambushState() === 'heroes_ambush'" (click)="setAmbush('heroes_ambush')">Tendue (+2)</button>
-                  <button type="button" [class.active]="ambushState() === 'heroes_ambushed'" (click)="setAmbush('heroes_ambushed')">Subie (−1)</button>
+                  <button type="button" [class.active]="ambushState() === 'heroes_ambush'" (click)="setAmbush('heroes_ambush')">Embuscade tendue (+2)</button>
+                  <button type="button" [class.active]="ambushState() === 'heroes_ambushed'" (click)="setAmbush('heroes_ambushed')">Surpris ou piégé (−1)</button>
                 </div>
               </div>
-              <label class="scd-modifiers-group">
-                <span class="scd-modifiers-label">Initiative adverse</span>
-                <span class="scd-inline">
-                  <input class="scd-input" type="number" min="0" [value]="adversaryInitiativeMalus()" (change)="setAdversaryMalus($any($event.target).value)" />
-                  <span class="scd-hint">plus haute valeur d'un rival ou d'un coriace ennemi : malus aux héros</span>
-                </span>
-              </label>
+              @if (hasInitiativeAdversary()) {
+                <label class="scd-modifiers-group">
+                  <span class="scd-modifiers-label">Initiative ennemie</span>
+                  <span class="scd-inline">
+                    <input class="scd-input" type="number" min="0" [value]="adversaryInitiativeMalus()" (change)="setAdversaryMalus($any($event.target).value)" />
+                    <span class="scd-hint">la plus haute initiative des rivaux et coriaces ennemis (lue sur leurs fiches, modifiable) ; elle est retranchée au jet de chaque héros</span>
+                  </span>
+                </label>
+              }
             </section>
 
             <section class="scd-block" aria-label="Jets de réaction des héros">
@@ -140,7 +142,7 @@
                       [matTooltip]="line.excluded ? 'Réintégrer dans le combat' : 'Exclure de ce combat (reste sur la table)'"
                       (click)="toggleExcluded(line.kind, line.pivotId)"
                     >
-                      <mat-icon>{{ line.excluded ? 'undo' : 'close' }}</mat-icon>
+                      <mat-icon>{{ line.excluded ? 'undo' : 'person_off' }}</mat-icon>
                     </button>
                   </span>
                 } @empty {

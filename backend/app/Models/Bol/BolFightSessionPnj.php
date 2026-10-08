@@ -13,7 +13,7 @@ class BolFightSessionPnj extends Model
     protected $fillable = [
         'fight_session_id', 'pnj_id', 'camp', 'surnom', 'rang', 'nom',
         'vigueur', 'agilite', 'esprit', 'aura',
-        'melee', 'tir', 'defense',
+        'melee', 'tir', 'defense', 'initiative',
         'vitalite_max', 'vitalite_courante',
         'armes',
     ];
@@ -23,6 +23,7 @@ class BolFightSessionPnj extends Model
         'agilite'           => 'integer',
         'esprit'            => 'integer',
         'aura'              => 'integer',
+        'initiative'        => 'integer',
         'melee'             => 'integer',
         'tir'               => 'integer',
         'defense'           => 'integer',

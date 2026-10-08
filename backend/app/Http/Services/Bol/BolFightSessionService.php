@@ -552,6 +552,7 @@ class BolFightSessionService
             'melee'             => $pnj->melee,
             'tir'               => $pnj->tir,
             'defense'           => $pnj->defense,
+            'initiative'        => $pnj->initiative_effective,
             'vitalite_max'      => $pnj->vitalite,
             'vitalite_courante' => $pnj->vitalite,
             'armes'             => $armes,

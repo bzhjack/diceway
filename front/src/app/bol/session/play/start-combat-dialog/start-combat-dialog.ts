@@ -23,6 +23,10 @@ interface AdversaryRow {
   readonly nom: string;
   /** Rang BoL fixe : les PNJ, créatures et démons n'ont pas de jet de réaction, ce rang les place dans l'ordre. */
   readonly rang: 'rival' | 'coriace' | 'pietaille';
+  /** Initiative : celle d'un PNJ ; les créatures et démons n'en ont pas (0). */
+  readonly initiative: number;
+  /** Un allié des héros ne leur oppose pas son initiative. */
+  readonly ally: boolean;
 }
 
 /** Un bloc de l'aperçu de la frise : ses combattants, et s'il est bloqué au round 1. */
@@ -111,11 +115,19 @@ export class StartCombatDialogComponent {
    * surprendre l'ennemi donne +2 (Très facile), être surpris ou pris en embuscade donne −1 (Ardue).
    * Fait commun à toute la rencontre, pas par héros. */
   protected readonly ambushState = signal<AmbushState>(null);
-  /** Idem : "si un coriace ou un rival ennemi possède de l'initiative, appliquer la plus haute valeur
-   * d'initiative adverse en malus au jet de réaction des héros" — saisie manuelle par le MJ (rare,
-   * propre à certaines créatures du bestiaire ; aucune fiche pnj/créature/démon de l'app n'a
-   * aujourd'hui d'attribut "initiative" à proprement parler). */
-  protected readonly adversaryInitiativeMalus = signal(0);
+  /** Idem : « si un coriace ou un rival possède une valeur d'initiative, prenez la plus haute valeur d'initiative
+   * parmi les adversaires des héros, et appliquez-la en malus au jet de réaction des héros ». Calculée d'après les
+   * PNJ présents (seuls ils ont une initiative) ; le MJ peut la corriger à la main. */
+  protected readonly hasInitiativeAdversary = computed(() =>
+    this.activeAdversaries().some((a) => !a.ally && (a.rang === 'rival' || a.rang === 'coriace')),
+  );
+  protected readonly detectedInitiative = computed(() =>
+    Math.max(0, ...this.activeAdversaries().filter((a) => !a.ally && (a.rang === 'rival' || a.rang === 'coriace')).map((a) => a.initiative)),
+  );
+  private readonly initiativeOverride = signal<number | null>(null);
+  protected readonly adversaryInitiativeMalus = computed(() =>
+    this.hasInitiativeAdversary() ? (this.initiativeOverride() ?? this.detectedInitiative()) : 0,
+  );
 
   protected readonly modifierTotal = computed(() => {
     const ambush = this.ambushState() === 'heroes_ambush' ? 2 : this.ambushState() === 'heroes_ambushed' ? -1 : 0;
@@ -244,9 +256,9 @@ export class StartCombatDialogComponent {
       .subscribe({
         next: (session) => {
           this.adversaries.set([
-            ...(session.pnjs ?? []).map((p) => ({pivotId: p.id, kind: 'pnj' as const, nom: p.surnom ?? p.nom, rang: p.rang})),
-            ...(session.creatures ?? []).map((c) => ({pivotId: c.id, kind: 'creature' as const, nom: c.surnom ?? c.nom, rang: c.rang})),
-            ...(session.demons ?? []).map((d) => ({pivotId: d.id, kind: 'demon' as const, nom: d.surnom ?? d.nom, rang: d.rang})),
+            ...(session.pnjs ?? []).map((p) => ({pivotId: p.id, kind: 'pnj' as const, nom: p.surnom ?? p.nom, rang: p.rang, initiative: p.initiative ?? 0, ally: p.camp === 'heros'})),
+            ...(session.creatures ?? []).map((c) => ({pivotId: c.id, kind: 'creature' as const, nom: c.surnom ?? c.nom, rang: c.rang, initiative: 0, ally: c.camp === 'heros'})),
+            ...(session.demons ?? []).map((d) => ({pivotId: d.id, kind: 'demon' as const, nom: d.surnom ?? d.nom, rang: d.rang, initiative: 0, ally: d.camp === 'heros'})),
           ]);
           this.existingHeroIds.set(new Set((session.heros ?? []).map((h) => String(h.heros_id))));
 
@@ -327,7 +339,7 @@ export class StartCombatDialogComponent {
 
   protected setAdversaryMalus(rawValue: string): void {
     const value = Math.trunc(Number(rawValue));
-    this.adversaryInitiativeMalus.set(Number.isFinite(value) && value >= 0 ? value : 0);
+    this.initiativeOverride.set(Number.isFinite(value) && value >= 0 && value !== this.detectedInitiative() ? value : null);
   }
 
   protected openAddAdversary(): void {
@@ -417,7 +429,7 @@ export class StartCombatDialogComponent {
       [hero.esprit, 'esprit'],
       [hero.initiative, 'initiative'],
       [ambush, 'embuscade'],
-      [-this.adversaryInitiativeMalus(), 'initiative adverse'],
+      [-this.adversaryInitiativeMalus(), 'initiative ennemie'],
     ];
     const tail = terms
       .filter(([value]) => value !== 0)
