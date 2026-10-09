@@ -524,20 +524,20 @@
   display: grid;
   justify-items: center;
   gap: 0.05rem;
-  padding: 0.3rem 0.2rem;
+  padding: 0.4rem 0.2rem;
   border: 1px solid var(--dw-border);
   border-radius: 8px;
   background: var(--dw-surface-50);
 
   b {
-    font: 400 1.05rem 'Muse Display Harmony', 'Muse Sans', serif;
+    font: 400 1.55rem 'Muse Display Harmony', 'Muse Sans', serif;
     color: var(--dw-surface-900);
   }
 
   span {
-    font-size: 0.56rem;
+    font-size: 0.75rem;
     font-weight: 800;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
     color: var(--dw-surface-500);
   }
@@ -622,6 +622,14 @@
 .tas-tile--hp {
   position: relative;
   z-index: 0;
+
+  // Le libellé « Vitalité /10 » reste sur une ligne : la tuile garde la hauteur des autres.
+  span {
+    font-size: 0.66rem;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+
   padding-block: 0.15rem;
 
   b {
@@ -629,9 +637,9 @@
     z-index: 1;
     display: grid;
     place-items: center;
-    width: 2.1rem;
-    height: 1.8rem;
-    font-size: 0.95rem;
+    width: 2.7rem;
+    height: 2.4rem;
+    font-size: 1.2rem;
     color: #fff;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
 
