@@ -203,16 +203,16 @@
 
 .scd-hero {
   display: grid;
-  grid-template-columns: auto 150px minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 0.7rem;
+  gap: 0.4rem 0.7rem;
   padding: 0.45rem 0.6rem;
   border: 1px solid var(--dw-border);
   border-radius: 10px;
   background: var(--dw-surface-100);
 
   @media (max-width: 800px) {
-    grid-template-columns: auto 150px;
+    grid-template-columns: auto minmax(0, 1fr);
   }
 }
 
@@ -221,6 +221,7 @@
 }
 
 .scd-med {
+  grid-row: 1 / span 2;
   display: grid;
   place-items: center;
   width: 2.6rem;
@@ -235,7 +236,6 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  width: 150px;
 }
 
 .scd-hero-name {
@@ -249,21 +249,49 @@
   color: var(--dw-surface-500);
 }
 
-.scd-formula {
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--dw-surface-700);
-  white-space: nowrap;
-  text-align: left;
-
-  b {
-    color: var(--dw-surface-900);
-    font-size: 1rem;
-  }
+// Détail du jet sur sa propre ligne, une puce par terme : en vert ce qui aide, en rouge ce qui pénalise.
+.scd-terms {
+  grid-column: 2 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
 }
 
-.scd-arrow {
-  margin: 0 0.3rem;
+.scd-term {
+  padding: 0.12rem 0.5rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 6px;
+  background: var(--dw-surface-200);
+  color: var(--dw-surface-700);
+  font-size: 0.76rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.scd-term--dice {
+  background: var(--dw-surface-300);
+  color: var(--dw-surface-900);
+}
+
+.scd-term--plus {
+  color: var(--dw-color-reussite);
+}
+
+.scd-term--minus {
+  color: var(--dw-color-danger-muted);
+}
+
+.scd-term--total {
+  border-color: var(--dw-color-legendary);
+  color: var(--dw-surface-900);
+  font-size: 0.9rem;
+}
+
+.scd-eq {
+  color: var(--dw-surface-500);
+  font-size: 0.78rem;
+  font-weight: 800;
 }
 
 .scd-result {

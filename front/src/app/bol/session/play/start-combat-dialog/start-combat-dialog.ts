@@ -61,6 +61,12 @@ interface HeroRow {
 /** Seuil de réussite du jet de réaction BoL (02-actions-combat.md) — fixe, jamais modifié par les règles. */
 const THRESHOLD = 9;
 
+/** Un terme du jet de réaction affiché en puce : les dés, un bonus (vert) ou un malus (rouge). */
+interface ReactionTerm {
+  readonly label: string;
+  readonly tone: 'dice' | 'plus' | 'minus';
+}
+
 const RESULT_LABELS: Record<InitiativeResultat, string> = Object.fromEntries(
   INITIATIVE_RESULT_OPTIONS.map((opt) => [opt.value, opt.label]),
 ) as Record<InitiativeResultat, string>;
@@ -358,6 +364,8 @@ export class StartCombatDialogComponent {
     return result ? RESULT_LABELS[result] : '';
   }
 
+  protected readonly threshold = THRESHOLD;
+
   protected signed(value: number): string {
     return value >= 0 ? `+${value}` : `− ${Math.abs(value)}`;
   }
@@ -481,22 +489,29 @@ export class StartCombatDialogComponent {
     }
   }
 
-  /** Formule d'un jet de réaction, chaque terme nommé : « 2d6 (9) + 2 (initiative) − 1 (embuscade) ≥ 9 ». Les termes nuls
-   * sont omis ; le total des dés n'apparaît qu'une fois le jet fait. */
-  protected formulaFor(hero: HeroRow): string {
-    const total = this.diceTotalFor(hero.pivotId);
+  /** Les termes du jet de réaction d'un héros, un par puce : « 2d6 (9) », « + 2 initiative », « − 3 initiative ennemie »…
+   * Les termes nuls sont omis ; le total des dés n'apparaît qu'une fois le jet fait. */
+  protected termsFor(hero: HeroRow): readonly ReactionTerm[] {
+    const dice = this.diceTotalFor(hero.pivotId);
     const ambush = this.ambushState() === 'heroes_ambush' ? 2 : this.ambushState() === 'heroes_ambushed' ? -1 : 0;
-    const terms: [number, string][] = [
+    const modifiers: [number, string][] = [
       [hero.esprit, 'esprit'],
       [hero.initiative, 'initiative'],
       [ambush, 'embuscade'],
       [-this.adversaryInitiativeMalus(), 'initiative ennemie'],
     ];
-    const tail = terms
-      .filter(([value]) => value !== 0)
-      .map(([value, label]) => ` ${value > 0 ? '+' : '−'} ${Math.abs(value)} (${label})`)
-      .join('');
-    return `2d6${total === null ? '' : ` (${total})`}${tail} ≥ ${THRESHOLD}`;
+    return [
+      {label: `2d6${dice === null ? '' : ` (${dice})`}`, tone: 'dice'},
+      ...modifiers
+        .filter(([value]) => value !== 0)
+        .map(([value, label]): ReactionTerm => ({label: `${value > 0 ? '+' : '−'} ${Math.abs(value)} ${label}`, tone: value > 0 ? 'plus' : 'minus'})),
+    ];
+  }
+
+  /** Total d'un jet de réaction : dés + esprit + initiative + modificateurs de la table — `null` tant que le héros n'a pas lancé. */
+  protected totalFor(hero: HeroRow): number | null {
+    const dice = this.diceTotalFor(hero.pivotId);
+    return dice === null ? null : dice + hero.esprit + hero.initiative + this.modifierTotal();
   }
 
   protected initial(nom: string): string {

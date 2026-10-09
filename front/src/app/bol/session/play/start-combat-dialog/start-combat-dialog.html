@@ -60,17 +60,6 @@
                       <span class="scd-hero-name">{{ hero.nom }}</span>
                       <span class="scd-hero-stats">Esprit {{ signed(hero.esprit) }} · Initiative {{ signed(hero.initiative) }}</span>
                     </span>
-                    <span class="scd-formula">
-                      @if (isExcluded('hero', hero.pivotId)) {
-                        Hors de ce combat
-                      } @else {
-                      {{ formulaFor(hero) }}
-                      @if (diceTotalFor(hero.pivotId) !== null) {
-                        <span class="scd-arrow">→</span>
-                        <b>{{ diceTotalFor(hero.pivotId)! + hero.esprit + hero.initiative + modifierTotal() }}</b>
-                      }
-                      }
-                    </span>
                     <span class="scd-result">
                       @if (hero.resultat) {
                         <span
@@ -106,6 +95,20 @@
                         [attr.aria-label]="'Total des dés lancés à table pour ' + hero.nom"
                         (change)="onManualTotal(hero, $any($event.target).value)"
                       />
+                    </span>
+                    <span class="scd-terms">
+                      @if (isExcluded('hero', hero.pivotId)) {
+                        <span class="scd-term">Hors de ce combat</span>
+                      } @else {
+                        @for (term of termsFor(hero); track term.label) {
+                          <span class="scd-term" [class.scd-term--dice]="term.tone === 'dice'" [class.scd-term--plus]="term.tone === 'plus'" [class.scd-term--minus]="term.tone === 'minus'">{{ term.label }}</span>
+                        }
+                        <span class="scd-eq">≥ {{ threshold }}</span>
+                        @if (totalFor(hero) !== null) {
+                          <span class="scd-eq">→</span>
+                          <span class="scd-term scd-term--total">{{ totalFor(hero) }}</span>
+                        }
+                      }
                     </span>
                   </li>
                 } @empty {
