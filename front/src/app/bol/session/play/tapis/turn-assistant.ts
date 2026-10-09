@@ -34,6 +34,9 @@ interface StatTile {
   readonly label: string;
   readonly value: string;
   readonly hot?: boolean;
+  /** Vitalité : le chiffre est posé dans un cœur, avec le maximum en petit. */
+  readonly heart?: boolean;
+  readonly max?: string;
 }
 
 /** Un coup porté, une fois ses dégâts appliqués : de quoi l'écrire au journal. */
@@ -165,7 +168,7 @@ export class TurnAssistantComponent {
       {label: 'Dégâts', value: degats, hot: true},
       {label: 'Prot.', value: String(stats.protection)},
       {label: 'Vigueur', value: this.signed(vigueurBonus(stats, useTir))},
-      {label: 'Vitalité', value: String(card.vitaliteCourante ?? '—')},
+      {label: 'Vitalité', value: String(card.vitaliteCourante ?? '—'), max: String(card.vitaliteMax ?? '—'), heart: true},
     ];
   }
   /** Total saisi à table, avant validation. */
@@ -388,6 +391,27 @@ export class TurnAssistantComponent {
     this.manualTotal.set(Number.isInteger(value) && value >= 2 && value <= 12 ? value : null);
   }
 
+  /** Plus grand résultat que peut afficher le dé de dégâts : 3 pour un d3, 6 sinon. */
+  protected readonly damageMax = computed(() => (this.die() === 'd3' ? 3 : 6));
+  /** Résultat du dé de dégâts saisi à table, avant validation. */
+  protected readonly damageDraft = signal('');
+  protected readonly damageDraftValid = computed(() => {
+    const value = Number(this.damageDraft());
+    return this.damageDraft() !== '' && Number.isInteger(value) && value >= 1 && value <= this.damageMax();
+  });
+
+  /** Dégâts bruts lus sur le dé lancé à table : un d6 de malus ou de bonus garde le dé retenu (on saisit celui-là), un d3 se lit tel quel. */
+  protected submitManualDamage(): void {
+    if (!this.damageDraftValid()) {
+      return;
+    }
+    const value = Number(this.damageDraft());
+    const count = damageDiceCount(this.die());
+    // `rawDamage` lit un d3 comme un d6 divisé par deux : 2n − 1 redonne n.
+    const face = this.die() === 'd3' ? 2 * value - 1 : value;
+    this.damageValues.set(Array.from({length: count}, () => face));
+  }
+
   protected async rollDamage(): Promise<void> {
     if (this.rolling()) {
       return;
@@ -424,6 +448,7 @@ export class TurnAssistantComponent {
 
   private resetRoll(): void {
     this.manualDraft.set('');
+    this.damageDraft.set('');
     this.dice.set(null);
     this.manualTotal.set(null);
     this.heroic.set(null);

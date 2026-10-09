@@ -2,24 +2,28 @@
   <!-- Attaquant -->
   <section class="tas-fighter" aria-label="Attaquant">
     <span class="tas-kicker">Attaquant</span>
-    <span class="tas-med tas-med--active" aria-hidden="true">
-      @if (card().avatar) {
-        <img [src]="card().avatar" alt="" />
-      } @else {
-        {{ card().nom.charAt(0).toUpperCase() }}
-      }
-    </span>
-    <strong class="tas-name tas-name--active">{{ card().nom }}</strong>
-    <span class="tas-tag">{{ card().rang ?? 'Héros' }}</span>
-    <span class="tas-life" [class.tas-life--low]="isLow(card())">
-      <span class="tas-heart" aria-hidden="true">♥</span>
-      <span class="tas-bar"><i [style.width.%]="percent(card())"></i></span>
-      <span class="tas-num">{{ card().vitaliteCourante ?? '—' }}/{{ card().vitaliteMax ?? '—' }}</span>
-    </span>
-    <div class="tas-tiles">
-      @for (tile of attackerTiles(); track tile.label) {
-        <div class="tas-tile" [class.tas-tile--hot]="tile.hot"><b>{{ tile.value }}</b><span>{{ tile.label }}</span></div>
-      }
+    <div class="tas-head">
+      <span class="tas-med tas-med--active" aria-hidden="true">
+        @if (card().avatar) {
+          <img [src]="card().avatar" alt="" />
+        } @else {
+          {{ card().nom.charAt(0).toUpperCase() }}
+        }
+      </span>
+      <div class="tas-id">
+        <div class="tas-idline">
+          <strong class="tas-name tas-name--active">{{ card().nom }}</strong>
+          <span class="tas-tag">{{ card().rang ?? 'Héros' }}</span>
+        </div>
+        <div class="tas-tiles">
+          @for (tile of attackerTiles(); track tile.label) {
+            <div class="tas-tile" [class.tas-tile--hot]="tile.hot" [class.tas-tile--hp]="tile.heart">
+              <b>{{ tile.value }}</b>
+              <span>{{ tile.label }}@if (tile.max) { /{{ tile.max }} }</span>
+            </div>
+          }
+        </div>
+      </div>
     </div>
 
     <div class="tas-opts">
@@ -154,11 +158,18 @@
             <mat-icon>casino</mat-icon>
             {{ damage() !== null ? 'Relancer' : 'Lancer les dégâts' }}
           </button>
-          @if (damage() !== null) {
-            <button mat-flat-button type="button" class="tas-apply" (click)="apply()">Appliquer {{ damage() }} à {{ target()?.nom }}</button>
-          }
+          <div class="tas-manual">
+            <span class="tas-manual-hint">ou table&nbsp;:</span>
+            <input type="number" min="1" [max]="damageMax()" step="1" [placeholder]="'1-' + damageMax()" [attr.aria-label]="'Résultat du dé de dégâts lancé à table, de 1 à ' + damageMax()" [disabled]="rolling()" [value]="damageDraft()" (input)="damageDraft.set($any($event.target).value)" (keydown.enter)="submitManualDamage()" />
+            <button type="button" class="tas-manual-confirm" aria-label="Valider le dé de dégâts saisi" [disabled]="!damageDraftValid() || rolling()" (click)="submitManualDamage()">
+              <mat-icon>check</mat-icon>
+            </button>
+          </div>
           </div>
         </div>
+        @if (damage() !== null) {
+          <button mat-flat-button type="button" class="tas-apply" (click)="apply()">Appliquer {{ damage() }} à {{ target()?.nom }}</button>
+        }
       } @else {
         <div class="tas-ticket">
           <div class="tas-ticket-total">—</div>
@@ -173,27 +184,31 @@
   <section class="tas-fighter" aria-label="Cible">
     @if (target(); as t) {
       <div class="tas-switch">
+        <span class="tas-kicker">Cible</span>
         <button type="button" class="tas-ghost" (click)="targetSelected.emit(null)">↺ Changer d'adversaire</button>
       </div>
-      <span class="tas-kicker">Cible</span>
-      <span class="tas-med tas-med--target" aria-hidden="true">
-        @if (t.avatar) {
-          <img [src]="t.avatar" alt="" />
-        } @else {
-          {{ t.nom.charAt(0).toUpperCase() }}
-        }
-      </span>
-      <strong class="tas-name">{{ t.nom }}</strong>
-      <span class="tas-tag">{{ t.rang ?? 'Héros' }}</span>
-      <span class="tas-life" [class.tas-life--low]="isLow(t)">
-        <span class="tas-heart" aria-hidden="true">♥</span>
-        <span class="tas-bar"><i [style.width.%]="percent(t)"></i></span>
-        <span class="tas-num">{{ t.vitaliteCourante ?? '—' }}/{{ t.vitaliteMax ?? '—' }}</span>
-      </span>
-      <div class="tas-tiles">
-        @for (tile of targetTiles(); track tile.label) {
-          <div class="tas-tile" [class.tas-tile--hot]="tile.hot"><b>{{ tile.value }}</b><span>{{ tile.label }}</span></div>
-        }
+      <div class="tas-head">
+        <span class="tas-med tas-med--target" aria-hidden="true">
+          @if (t.avatar) {
+            <img [src]="t.avatar" alt="" />
+          } @else {
+            {{ t.nom.charAt(0).toUpperCase() }}
+          }
+        </span>
+        <div class="tas-id">
+          <div class="tas-idline">
+            <strong class="tas-name">{{ t.nom }}</strong>
+            <span class="tas-tag">{{ t.rang ?? 'Héros' }}</span>
+          </div>
+          <div class="tas-tiles">
+            @for (tile of targetTiles(); track tile.label) {
+              <div class="tas-tile" [class.tas-tile--hot]="tile.hot" [class.tas-tile--hp]="tile.heart">
+                <b>{{ tile.value }}</b>
+                <span>{{ tile.label }}@if (tile.max) { /{{ tile.max }} }</span>
+              </div>
+            }
+          </div>
+        </div>
       </div>
     } @else {
       <span class="tas-kicker">Choisis une cible</span>

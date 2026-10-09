@@ -9,7 +9,7 @@
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1.4fr);
   gap: 0.9rem;
   padding: 0.9rem 1rem;
 
@@ -18,9 +18,7 @@
   }
 }
 
-
 // Médaillon du combattant actif, cerclé de braise.
-
 
 // Action, cible et jet côte à côte ; dégâts dessous, sur toute la largeur.
 // Les quatre étapes (action, cible, jet, dégâts) côte à côte, de même hauteur : elles remplissent la place restante de
@@ -110,7 +108,6 @@
 .tas-bar--low i {
   background: var(--dw-color-echec);
 }
-
 
 .tas-label {
   font-size: 0.66rem;
@@ -249,12 +246,11 @@
   font-variant-numeric: tabular-nums;
 }
 
-
-
 // Résultat, bouton de lancer et saisie à table : repris du panneau « Jet d'action » de la carte dépliée.
 .tas-line {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  // Colonne des boutons de largeur fixe : la case de résultat a la même taille pour l'attaque et pour les dégâts.
+  grid-template-columns: minmax(0, 1fr) 13rem;
   gap: 0.6rem;
   align-items: stretch;
 }
@@ -264,7 +260,7 @@
   flex-direction: column;
   justify-content: center;
   gap: 0.4rem;
-  min-width: 8.5rem;
+  min-width: 0;
 }
 
 .tas-ticket {
@@ -419,17 +415,16 @@
 .tas-fighter {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
+  align-items: stretch;
+  gap: 0.6rem;
   min-height: 0;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--dw-border) transparent;
-  padding: 0.8rem;
+  padding: 0.7rem 0.8rem;
   border: 1px solid var(--dw-border);
   border-radius: 12px;
   background: var(--dw-surface-100);
-  text-align: center;
 }
 
 .tas-kicker {
@@ -444,15 +439,15 @@
   display: grid;
   place-items: center;
   flex: none;
-  width: 6.5rem;
-  height: 6.5rem;
-  border: 5px solid var(--bar-pj-2, #a8762a);
+  width: 4.4rem;
+  height: 4.4rem;
+  border: 4px solid var(--bar-pj-2, #a8762a);
   border-radius: 50%;
   background: var(--dw-surface-200);
   color: var(--dw-surface-900);
-  font: 400 2rem 'Muse Display Harmony', 'Muse Sans', serif;
+  font: 400 1.6rem 'Muse Display Harmony', 'Muse Sans', serif;
   overflow: hidden;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55);
 
   img {
     width: 100%;
@@ -462,17 +457,17 @@
 }
 
 .tas-med--active {
-  box-shadow: 0 0 0 4px var(--bar-ember, var(--dw-color-legendary)), 0 0 22px 4px rgba(232, 135, 58, 0.6);
+  box-shadow: 0 0 0 3px var(--bar-ember, var(--dw-color-legendary)), 0 0 16px 3px rgba(232, 135, 58, 0.6);
 }
 
 .tas-med--target {
   border-color: var(--dw-color-echec-forte);
-  box-shadow: 0 0 0 4px var(--dw-color-echec-forte), 0 0 22px 4px rgba(208, 42, 42, 0.55);
+  box-shadow: 0 0 0 3px var(--dw-color-echec-forte), 0 0 16px 3px rgba(208, 42, 42, 0.55);
 }
 
 .tas-name {
   font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 400;
   color: var(--dw-surface-900);
 }
@@ -492,33 +487,36 @@
   color: var(--dw-surface-600);
 }
 
-.tas-life {
+// Médaillon, puis le nom avec son rang dessous, puis les attributs de combat à droite du nom : la fiche reste basse.
+.tas-head {
   display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  width: 100%;
+  align-items: flex-start;
+  gap: 0.8rem;
 }
 
-.tas-heart {
-  color: var(--dw-color-echec);
-  font-size: 1.1rem;
-  line-height: 1;
-}
-
-.tas-life .tas-bar {
+.tas-id {
   flex: 1;
-  width: auto;
-  height: 7px;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
 }
 
-.tas-life--low .tas-bar i {
-  background: var(--dw-color-echec);
+.tas-idline {
+  flex: none;
+  width: 7.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
 }
 
 .tas-tiles {
+  flex: 1;
+  min-width: 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.4rem;
+  gap: 0.3rem;
   width: 100%;
 }
 
@@ -526,20 +524,20 @@
   display: grid;
   justify-items: center;
   gap: 0.05rem;
-  padding: 0.4rem 0.2rem;
+  padding: 0.3rem 0.2rem;
   border: 1px solid var(--dw-border);
   border-radius: 8px;
   background: var(--dw-surface-50);
 
   b {
-    font: 400 1.1rem 'Muse Display Harmony', 'Muse Sans', serif;
+    font: 400 1.05rem 'Muse Display Harmony', 'Muse Sans', serif;
     color: var(--dw-surface-900);
   }
 
   span {
-    font-size: 0.55rem;
+    font-size: 0.56rem;
     font-weight: 800;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--dw-surface-500);
   }
@@ -550,8 +548,10 @@
 }
 
 .tas-switch {
-  align-self: stretch;
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
 }
 
 .tas-ghost {
@@ -600,7 +600,7 @@
   flex-direction: column;
   gap: 0.6rem;
   align-self: stretch;
-  padding-top: 0.7rem;
+  padding-top: 0.5rem;
   border-top: 1px solid var(--dw-border);
   text-align: left;
 
@@ -616,4 +616,33 @@
 
 .tas-center .tas-ticket-total {
   font-size: 3.2rem;
+}
+
+// Tuile de vitalité : le chiffre est dans un cœur, le maximum en petit dessous.
+.tas-tile--hp {
+  position: relative;
+  z-index: 0;
+  padding-block: 0.15rem;
+
+  b {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 1.8rem;
+    font-size: 0.95rem;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(160deg, var(--bar-v-1, #fca5a5), var(--bar-v-2, #ef4444) 55%, var(--bar-v-3, #7f1d1d));
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 29'%3E%3Cpath d='M16 28S2 18.5 2 9.5C2 5 5.5 2 9.5 2c3 0 5.5 1.8 6.5 4.5C17 3.8 19.5 2 22.5 2 26.5 2 30 5 30 9.5 30 18.5 16 28 16 28z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+    }
+  }
+
 }
