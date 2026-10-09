@@ -71,6 +71,12 @@ export class ExpandedCardComponent {
   readonly armeToggled = output<number>();
 
   private readonly root = viewChild.required<ElementRef<HTMLElement>>('root');
+  private readonly actionRoll = viewChild(ActionRollPanelComponent);
+
+  /** Un clic n'importe où sur la carte retire les dés restés sur la table (jamais pendant un lancer). */
+  protected dismissDice(): void {
+    this.actionRoll()?.dismissDice();
+  }
 
   /** Héroïsme vivant du héros affiché, partagé entre les ressources et le jet d'action. */
   protected readonly heroisme = linkedSignal(() => this.hero()?.actionRoll.heroisme ?? 0);

@@ -312,6 +312,13 @@ export class TurnAssistantComponent {
     this.dice.set([values[0], values[1]]);
   }
 
+  /** Retire les dés restés sur la table une fois le lancer terminé (un clic n'importe où sur l'écran de combat). */
+  dismissDice(): void {
+    if (!this.rolling()) {
+      void this.diceBox()?.clear();
+    }
+  }
+
   /** Lance `count` d6 sur le plateau 3D (ou au hasard s'il est absent ou échoue) et renvoie leurs valeurs. */
   private async throwDice(notation: string, count: number): Promise<number[]> {
     const box = this.diceBox();

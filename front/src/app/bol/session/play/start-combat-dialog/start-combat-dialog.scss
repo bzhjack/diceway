@@ -8,8 +8,8 @@
   box-shadow: none;
   border-radius: 12px;
   padding: 0;
-  max-height: 90vh;
-  overflow-y: auto;
+  max-height: 90dvh;
+  overflow: hidden;
 }
 
 .scd-shell {
@@ -21,6 +21,8 @@
   border-radius: 12px;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
   overflow: hidden;
+  // La hauteur suit la fenêtre : l'en-tête et les boutons restent visibles, seul le contenu défile.
+  max-height: 90dvh;
   background: linear-gradient(#241a12, #130d08);
 }
 
@@ -46,6 +48,8 @@
   z-index: 1;
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .scd-bar {
@@ -78,8 +82,16 @@
 }
 
 .scd-content.mat-mdc-dialog-content {
+  flex: 1 1 auto;
+  min-height: 0;
   max-height: none;
+  overflow-y: auto;
   padding: 0;
+}
+
+.scd-bar,
+.scd-actions {
+  flex: none;
 }
 
 .scd-grid {

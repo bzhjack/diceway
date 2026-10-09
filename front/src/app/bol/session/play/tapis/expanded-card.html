@@ -1,4 +1,4 @@
-<div #root [class]="'exc exc--' + card().kind" [class.exc--fixed]="fixedHeight()" role="group" tabindex="-1" [attr.aria-label]="'Carte de ' + card().nom">
+<div #root (click)="dismissDice()" [class]="'exc exc--' + card().kind" [class.exc--fixed]="fixedHeight()" role="group" tabindex="-1" [attr.aria-label]="'Carte de ' + card().nom">
   @if (card().kind === 'hero') {
     <!-- Héros : la même entrée de bestiaire. À gauche l'identité, les détails (trophées, armes…), la vitalité et
          l'héroïsme ; à droite les statistiques de combat, puis le jet d'action en mode libre. -->

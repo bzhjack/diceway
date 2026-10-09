@@ -3,7 +3,7 @@
   <app-dice-box-host [scale]="6" [theme]="'wooden-red'" [themeColor]="'#ef4444'" />
 </div>
 
-<div class="cb-main">
+<div class="cb-main" (click)="assistant()?.dismissDice()">
   <bol-turn-order
     [entries]="entries()"
     [round]="round()"

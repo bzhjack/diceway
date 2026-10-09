@@ -21,6 +21,7 @@ import {TurnOrderComponent} from '../tapis/turn-order';
 export class CombatBoardComponent {
   /** Plateau de dés 3D qui couvre tout l'écran de combat ; l'assistant y lance ses jets. */
   protected readonly diceBox = viewChild(DiceBoxHostComponent);
+  protected readonly assistant = viewChild(TurnAssistantComponent);
 
   // Frise
   readonly entries = input.required<readonly TurnOrderEntry[]>();

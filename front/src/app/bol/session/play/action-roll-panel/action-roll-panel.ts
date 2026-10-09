@@ -242,7 +242,7 @@ export class ActionRollPanelComponent {
 
   /** Dégage les dés 3D encore posés (le résultat n'est pas touché). Ignoré pendant un lancer : ce
    * clear() entrerait en course avec celui de `roll()` et corromprait l'état de la librairie de dés. */
-  protected dismissDice(): void {
+  dismissDice(): void {
     if (this.rolling()) {
       return;
     }
