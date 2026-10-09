@@ -659,3 +659,17 @@ bol-action-roll-panel {
     white-space: nowrap;
   }
 }
+
+// Réserve la place de deux boutons (faveur divine, conversion de palier) pour que la hauteur du panneau reste la même avant
+// et après le jet.
+.ard-extras {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 6rem;
+}
+
+// Toujours dans la mise en page (masqué hors saisie manuelle) : le résultat n'agrandit pas le panneau.
+.ard-manual-badge--hidden {
+  visibility: hidden;
+}
