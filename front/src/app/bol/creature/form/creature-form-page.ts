@@ -7,7 +7,6 @@ import {MatIconModule} from '@angular/material/icon';
 import {BolCreatureModel} from '../../models/bol-creature.model';
 import {BolCreatureStateService} from '../../services/bol-creature-state.service';
 import {BolCreaturesService} from '../../services/bol-creatures.service';
-import {AddMenuComponent} from '../../shared/add-menu/add-menu.component';
 import {AddMenuEvent} from '../../shared/models/add-menu.model';
 import {CapaciteEntry} from '../../shared/models/capacite-list.model';
 import {BolEntityFormPageBase} from '../../shared/form/entity-form-page.base';

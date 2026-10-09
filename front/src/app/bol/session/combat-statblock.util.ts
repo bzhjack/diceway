@@ -51,7 +51,7 @@ function capitalize(value: string): string {
 }
 
 /** Rang BoL brut (rival/coriace/pietaille) d'une entrée du catalogue de combat — null pour un héros. */
-export function combatantRankKey(entry: CombatCatalogEntry): CombatantRankKey | null {
+function combatantRankKey(entry: CombatCatalogEntry): CombatantRankKey | null {
   switch (entry.kind) {
     case 'hero':
       return null;
