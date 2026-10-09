@@ -787,9 +787,11 @@ export class SessionPlayPageComponent {
   }
 
   /** Clic sur une carte désignable (ou « Attaquer cette carte ») : elle devient la cible de la carte active. */
-  protected onAttackCard(target: TapisCard): void {
+  protected onAttackCard(target: TapisCard | null): void {
     const attacker = this.activeCard();
-    if (attacker && attacker.key !== target.key) {
+    if (target === null) {
+      this.targetKey.set(null);
+    } else if (attacker && attacker.key !== target.key) {
       this.targetKey.set(target.key);
     }
   }

@@ -45,7 +45,7 @@ export class CombatBoardComponent {
   readonly rerollRequested = output<void>();
   readonly endTurnRequested = output<void>();
   readonly choiceChanged = output<AttackChoice | null>();
-  readonly targetSelected = output<TapisCard>();
+  readonly targetSelected = output<TapisCard | null>();
   readonly damageApplied = output<AppliedHit>();
   readonly totalDefenseRequested = output<void>();
 }

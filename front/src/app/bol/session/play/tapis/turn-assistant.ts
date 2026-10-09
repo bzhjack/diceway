@@ -29,6 +29,13 @@ import {isLowVitalite, vitalitePercent} from './tapis.util';
 /** Délai maximal d'un lancer 3D avant de tirer les dés sans animation. */
 const DICE_TIMEOUT_MS = 12000;
 
+/** Une tuile de la fiche d'un combattant : un chiffre de combat et son libellé. */
+interface StatTile {
+  readonly label: string;
+  readonly value: string;
+  readonly hot?: boolean;
+}
+
 /** Un coup porté, une fois ses dégâts appliqués : de quoi l'écrire au journal. */
 export interface AppliedHit {
   readonly target: TapisCard;
@@ -63,7 +70,8 @@ export class TurnAssistantComponent {
   readonly diceBox = input<DiceBoxHostComponent | null>(null);
 
   readonly choiceChanged = output<AttackChoice | null>();
-  readonly targetSelected = output<TapisCard>();
+  /** La carte choisie comme cible, ou `null` pour « Changer d'adversaire ». */
+  readonly targetSelected = output<TapisCard | null>();
   readonly damageApplied = output<AppliedHit>();
   readonly totalDefenseRequested = output<void>();
 
@@ -135,6 +143,31 @@ export class TurnAssistantComponent {
   });
   protected readonly dice = signal<readonly [number, number] | null>(null);
   protected readonly rolling = signal(false);
+
+  /** Fiche de l'attaquant : attaque, défense, dégâts (de l'arme choisie), protection, vigueur et vitalité. */
+  protected readonly attackerTiles = computed<readonly StatTile[]>(() =>
+    this.tilesOf(this.attacker(), this.card(), this.useTir(), this.degats()),
+  );
+
+  /** Fiche de la cible choisie, avec les mêmes tuiles. */
+  protected readonly targetTiles = computed<readonly StatTile[]>(() => {
+    const target = this.target();
+    return target ? this.tilesOf(this.targetStats(), target, false, target.degats) : [];
+  });
+
+  private tilesOf(stats: ResolvedCombatStats | null, card: TapisCard, useTir: boolean, degats: string): readonly StatTile[] {
+    if (!stats) {
+      return [];
+    }
+    return [
+      {label: 'Attaque', value: this.signed(attackBonus(stats, useTir))},
+      {label: 'Défense', value: String(stats.defense)},
+      {label: 'Dégâts', value: degats, hot: true},
+      {label: 'Prot.', value: String(stats.protection)},
+      {label: 'Vigueur', value: this.signed(vigueurBonus(stats, useTir))},
+      {label: 'Vitalité', value: String(card.vitaliteCourante ?? '—')},
+    ];
+  }
   /** Total saisi à table, avant validation. */
   protected readonly manualDraft = signal('');
   protected readonly manualDraftValid = computed(() => {

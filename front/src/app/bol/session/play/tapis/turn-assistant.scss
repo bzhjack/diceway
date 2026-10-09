@@ -6,74 +6,25 @@
 }
 
 .tas {
-  display: flex;
-  flex-direction: column;
   flex: 1;
   min-height: 0;
-  gap: 0.8rem;
-  padding: 0.9rem 1rem;
-}
-
-.tas-who {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-}
-
-.tas-who-text {
-  display: flex;
-  flex-direction: column;
-  gap: 0.05rem;
-}
-
-// Médaillon du combattant actif, cerclé de braise.
-.tas-med {
   display: grid;
-  place-items: center;
-  flex: none;
-  width: 3rem;
-  height: 3rem;
-  border: 4px solid var(--bar-pj-2, #a8762a);
-  border-radius: 50%;
-  background: var(--dw-surface-200);
-  color: var(--dw-surface-900);
-  font-weight: 800;
-  overflow: hidden;
-  box-shadow: 0 0 0 3px var(--bar-ember, var(--dw-color-legendary)), 0 0 14px 3px rgba(232, 135, 58, 0.6);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 0.9rem;
+  padding: 0.9rem 1rem;
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  @media (max-width: 1100px) {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
-.tas-name {
-  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 1.2rem;
-  font-weight: 400;
-  color: var(--dw-color-reussite);
-}
 
-.tas-sub {
-  font-size: 0.78rem;
-  color: var(--dw-surface-600);
-}
+// Médaillon du combattant actif, cerclé de braise.
+
 
 // Action, cible et jet côte à côte ; dégâts dessous, sur toute la largeur.
 // Les quatre étapes (action, cible, jet, dégâts) côte à côte, de même hauteur : elles remplissent la place restante de
 // l'écran de combat et défilent chacune de leur côté quand leur contenu déborde.
-.tas-steps {
-  flex: 1;
-  min-height: 18rem;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.7rem;
-
-  @media (max-width: 1300px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
 
 .tas-step {
   display: flex;
@@ -159,7 +110,6 @@
 .tas-bar--low i {
   background: var(--dw-color-echec);
 }
-
 
 
 .tas-label {
@@ -301,15 +251,29 @@
 
 
 
-
 // Résultat, bouton de lancer et saisie à table : repris du panneau « Jet d'action » de la carte dépliée.
+.tas-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.6rem;
+  align-items: stretch;
+}
+
+.tas-ctl {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.4rem;
+  min-width: 8.5rem;
+}
+
 .tas-ticket {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.1rem;
-  padding: 1rem 0.9rem;
+  padding: 0.7rem 0.9rem;
   border-radius: 10px;
   border: 1px solid var(--dw-border);
   background: color-mix(in srgb, var(--dw-surface-0) 62%, transparent);
@@ -332,7 +296,7 @@
 
 .tas-ticket-total {
   font-family: 'Muse Display Harmony', serif;
-  font-size: 3rem;
+  font-size: 2.4rem;
   line-height: 1;
   color: var(--dw-surface-900);
   font-variant-numeric: tabular-nums;
@@ -354,7 +318,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.3rem;
-  padding: 0.9rem 0.5rem;
+  padding: 0.6rem 0.5rem;
   border-radius: 10px;
   border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 45%, transparent);
   background: color-mix(in srgb, var(--dw-color-legendary) 14%, transparent);
@@ -449,4 +413,207 @@
     opacity: 0.5;
     cursor: default;
   }
+}
+
+// Duel : l'attaquant à gauche, la cible à droite, chacun sur sa fiche ; les trois étapes empilées au centre.
+.tas-fighter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dw-border) transparent;
+  padding: 0.8rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 12px;
+  background: var(--dw-surface-100);
+  text-align: center;
+}
+
+.tas-kicker {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dw-color-legendary);
+}
+
+.tas-med {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 6.5rem;
+  height: 6.5rem;
+  border: 5px solid var(--bar-pj-2, #a8762a);
+  border-radius: 50%;
+  background: var(--dw-surface-200);
+  color: var(--dw-surface-900);
+  font: 400 2rem 'Muse Display Harmony', 'Muse Sans', serif;
+  overflow: hidden;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.55);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.tas-med--active {
+  box-shadow: 0 0 0 4px var(--bar-ember, var(--dw-color-legendary)), 0 0 22px 4px rgba(232, 135, 58, 0.6);
+}
+
+.tas-med--target {
+  border-color: var(--dw-color-echec-forte);
+  box-shadow: 0 0 0 4px var(--dw-color-echec-forte), 0 0 22px 4px rgba(208, 42, 42, 0.55);
+}
+
+.tas-name {
+  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--dw-surface-900);
+}
+
+.tas-name--active {
+  color: var(--dw-color-reussite);
+}
+
+.tas-tag {
+  padding: 0.12rem 0.55rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dw-surface-600);
+}
+
+.tas-life {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.tas-heart {
+  color: var(--dw-color-echec);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.tas-life .tas-bar {
+  flex: 1;
+  width: auto;
+  height: 7px;
+}
+
+.tas-life--low .tas-bar i {
+  background: var(--dw-color-echec);
+}
+
+.tas-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.tas-tile {
+  display: grid;
+  justify-items: center;
+  gap: 0.05rem;
+  padding: 0.4rem 0.2rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 8px;
+  background: var(--dw-surface-50);
+
+  b {
+    font: 400 1.1rem 'Muse Display Harmony', 'Muse Sans', serif;
+    color: var(--dw-surface-900);
+  }
+
+  span {
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dw-surface-500);
+  }
+}
+
+.tas-tile--hot b {
+  color: var(--dw-color-echec);
+}
+
+.tas-switch {
+  align-self: stretch;
+  display: flex;
+}
+
+.tas-ghost {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 8px;
+  background: var(--dw-surface-200);
+  color: var(--dw-surface-700);
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 800;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--dw-surface-900);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+}
+
+.tas-center {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dw-border) transparent;
+}
+
+.tas-center .tas-step {
+  overflow: visible;
+  flex: none;
+}
+
+.tas-fighter .tas-targets {
+  width: 100%;
+}
+
+// Action, arme, posture et distance : sous les tuiles de l'attaquant, là où il y a de la place.
+.tas-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  align-self: stretch;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--dw-border);
+  text-align: left;
+
+  .tas-group {
+    align-items: flex-start;
+  }
+}
+
+// Les deux jets occupent tout le centre : résultat plus grand.
+.tas-center .tas-ticket {
+  padding: 1.2rem 0.9rem;
+}
+
+.tas-center .tas-ticket-total {
+  font-size: 3.2rem;
 }
