@@ -1,4 +1,4 @@
-import {map, Observable, of} from 'rxjs';
+import {catchError, map, Observable, of} from 'rxjs';
 import {BolHerosService} from '../services/bol-heros.service';
 import {firstEquippedDegats} from '../shared/arme/arme-equipee';
 import {PlayToken} from './models/combat-play.model';
@@ -113,7 +113,7 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
     );
   }
 
-  return of({
+  const snapshot: ResolvedCombatStats = {
     agilite: c.agilite ?? 0,
     vigueur: c.vigueur ?? 0,
     melee: c.melee ?? 0,
@@ -126,5 +126,18 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
     bouclierMalusUneAttaque: 0,
     herosId: null,
     heroisme: null,
-  });
+  };
+
+  // Un PNJ est une fiche de héros : l'armure qu'il porte n'est pas copiée à la table, on la lit sur sa fiche.
+  if (token.kind === 'pnj' && c.sourceId) {
+    return herosService.heros(c.sourceId).pipe(
+      map((pnj) => {
+        const protection = equippedProtection(pnj.armures);
+        return {...snapshot, protection: protection.value, protectionText: protection.text};
+      }),
+      catchError(() => of(snapshot)),
+    );
+  }
+
+  return of(snapshot);
 }

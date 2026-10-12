@@ -392,7 +392,23 @@ export class TurnAssistantComponent {
   // ── Étape 4 : les dégâts ──
   protected readonly damageValues = signal<readonly number[] | null>(null);
   protected readonly die = computed(() => damageDie(this.degats()));
-  protected readonly protection = computed(() => (this.choice()?.posture?.slug === 'armor-chink' ? 0 : (this.targetStats()?.protection ?? 0)));
+  /** Le dé de protection de la cible, lu sur son armure (« d6-1(3) » → un d6 moins 1), avec le +1 d'un casque ; `null` sans dé. */
+  protected readonly protectionDie = computed<{readonly malus: number; readonly bonus: number} | null>(() => {
+    const text = this.targetStats()?.protectionText ?? '';
+    // « d6-1 (3) » : un d6 moins 1 ; « d6 (4) » : un d6 sans retrait (certaines créatures).
+    const match = text.match(/d6\s*(?:-\s*(\d+))?/i);
+    return match ? {malus: Number(match[1] ?? 0), bonus: /\)\s*\+1/.test(text) ? 1 : 0} : null;
+  });
+  /** Face du dé de protection lancé à la place de la valeur fixe (le livre laisse le choix au MJ) ; `null` : valeur fixe. */
+  protected readonly protectionFace = signal<number | null>(null);
+  protected readonly protection = computed(() => {
+    if (this.choice()?.posture?.slug === 'armor-chink') {
+      return 0;
+    }
+    const die = this.protectionDie();
+    const face = this.protectionFace();
+    return die && face !== null ? Math.max(0, face - die.malus) + die.bonus : (this.targetStats()?.protection ?? 0);
+  });
   protected readonly vigueur = computed(() => {
     const a = this.attacker();
     return a ? vigueurBonus(a, this.isTir()) : 0;
@@ -512,6 +528,15 @@ export class TurnAssistantComponent {
     this.damageValues.set(Array.from({length: count}, () => face));
   }
 
+  /** Lance le dé de protection de la cible : son résultat remplace la valeur fixe pour ce coup. */
+  protected async rollProtection(): Promise<void> {
+    if (this.rolling() || !this.protectionDie()) {
+      return;
+    }
+    const [face] = await this.throwDice('1d6', 1);
+    this.protectionFace.set(face);
+  }
+
   protected async rollDamage(): Promise<void> {
     if (this.rolling()) {
       return;
@@ -549,6 +574,7 @@ export class TurnAssistantComponent {
   private resetRoll(): void {
     this.manualDraft.set('');
     this.damageDraft.set('');
+    this.protectionFace.set(null);
     this.dice.set(null);
     this.manualTotal.set(null);
     this.heroic.set(null);

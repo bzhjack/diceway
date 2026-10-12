@@ -182,7 +182,19 @@
     <section class="tas-step">
       <h3><span aria-hidden="true">2</span> Jet de dégâts</h3>
       @if (hasDamageStep()) {
-        <p class="tas-formula">{{ degats() }} {{ signed(vigueur()) }} (vigueur){{ devastating() ? ' + 6 (dévastateur)' : '' }} − {{ protection() }} (protection)</p>
+        <p class="tas-formula tas-formula--dmg">
+          <span>{{ degats() }} {{ signed(vigueur()) }} (vigueur){{ devastating() ? ' + 6 (dévastateur)' : '' }} − {{ protection() }} (protection{{ protectionFace() !== null ? ', dé ' + protectionFace() : '' }})</span>
+          @if (protectionDie()) {
+            <button type="button" class="tas-die-btn" [disabled]="rolling()" matTooltip="Lancer le dé de protection au lieu de la valeur fixe" aria-label="Lancer le dé de protection de la cible" (click)="rollProtection()">
+              <mat-icon>casino</mat-icon>
+            </button>
+            @if (protectionFace() !== null) {
+              <button type="button" class="tas-die-btn" matTooltip="Revenir à la protection fixe" aria-label="Revenir à la protection fixe" (click)="protectionFace.set(null)">
+                <mat-icon>undo</mat-icon>
+              </button>
+            }
+          }
+        </p>
         <div class="tas-line">
           <div class="tas-ticket" [class.tas-ticket--echec]="damage() !== null" aria-live="polite">
             <div class="tas-ticket-total">{{ rolling() ? '…' : (damage() ?? '—') }}</div>
