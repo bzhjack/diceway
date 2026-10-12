@@ -5,7 +5,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {RollTerm} from '../../models/action-roll.model';
 import {CombatEffect, ModifierTerm, NewEffect} from '../../models/combat-effect.model';
-import {libelleDuree, libelleEffet, modificateursPour, POSTURE_DEFENSE, sommeModificateurs} from './combat-effects.util';
+import {descriptionEffet, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
 import {EffectsListComponent} from './effects-list';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, MAINS_NUES} from '../../attack-options.util';
@@ -331,6 +331,12 @@ export class TurnAssistantComponent {
 
   protected readonly threshold = ATTACK_THRESHOLD;
 
+  /** Clé → nom des deux duellistes : une puce dit à qui est l'effet. */
+  private readonly noms = computed<Readonly<Record<string, string>>>(() => {
+    const target = this.target();
+    return {[this.card().key]: this.card().nom, ...(target ? {[target.key]: target.nom} : {})};
+  });
+
   /** Les deux duellistes, pour nommer à qui appartient un effet et à qui l'ajouter. */
   protected readonly duelistes = computed(() => {
     const target = this.target();
@@ -341,7 +347,7 @@ export class TurnAssistantComponent {
     return key
       ? this.effets()
           .filter((effet) => effet.porteur === key && effet.valeur !== 0)
-          .map((effet) => `${effet.valeur > 0 ? '+' : '−'} ${Math.abs(effet.valeur)} ${libelleEffet(effet)} · ${libelleDuree(effet.duree)}`)
+          .map((effet) => `${descriptionEffet(effet)} · ${libelleDuree(effet.duree)}`)
       : [];
   }
   protected readonly attackerBadges = computed(() => this.badgesDe(this.card().key));
@@ -380,7 +386,9 @@ export class TurnAssistantComponent {
   private readonly liveTerms = computed<readonly ModifierTerm[]>(() => {
     const t = this.targetStats();
     const target = this.target();
-    return target ? modificateursPour(this.effets(), {jet: 'attaque', attaquant: this.card().key, cible: target.key, bouclier: t?.bouclierMalusUneAttaque ?? 0}) : [];
+    return target
+      ? modificateursPour(this.effets(), {jet: 'attaque', attaquant: this.card().key, cible: target.key, bouclier: t?.bouclierMalusUneAttaque ?? 0, bouclierToutes: t?.bouclierDefenseToutes ?? 0, noms: this.noms()})
+      : [];
   });
 
   /** Modificateurs figés au premier jet de cette attaque : la cible est ensuite marquée « attaquée » (son bouclier tombe du registre), mais un
@@ -392,7 +400,7 @@ export class TurnAssistantComponent {
    * l'attaque : un effet à usage limité consommé par le jet d'attaque compte encore pour ses dégâts. */
   private readonly liveDamageTerms = computed<readonly ModifierTerm[]>(() => {
     const target = this.target();
-    return target ? modificateursPour(this.effets(), {jet: 'degats', attaquant: this.card().key, cible: target.key, bouclier: 0}) : [];
+    return target ? modificateursPour(this.effets(), {jet: 'degats', attaquant: this.card().key, cible: target.key, bouclier: 0, bouclierToutes: 0, noms: this.noms()}) : [];
   });
   private readonly frozenDamageTerms = signal<readonly ModifierTerm[] | null>(null);
   private readonly damageEffectTerms = computed(() => this.frozenDamageTerms() ?? this.liveDamageTerms());
@@ -605,6 +613,13 @@ export class TurnAssistantComponent {
     if (this.manualTotal() !== null) {
       this.markAttacked();
     }
+  }
+
+  /** Le MJ retire un effet : le registre l'oublie, et le jet déjà fait (modificateurs figés) perd sa puce et recalcule son total. */
+  protected removeEffect(id: string): void {
+    this.frozenTerms.update((termes) => (termes ? sansTerme(termes, id) : termes));
+    this.frozenDamageTerms.update((termes) => (termes ? sansTerme(termes, id) : termes));
+    this.effectRemoved.emit(id);
   }
 
   /** Premier jet contre cette cible : fige les modificateurs et signale l'attaque au registre. */

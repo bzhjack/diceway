@@ -37,6 +37,12 @@ describe('EtatSaver', () => {
     expect(saved).toEqual([{...base, joues: ['hero-1']}]);
   });
 
+  it('says whether an update was taken into account', () => {
+    const {saver} = setup();
+    expect(saver.apply(jouer('hero-1'), {ignoreIfBusy: true})).toBe(true);
+    expect(saver.apply(jouer('hero-1'), {ignoreIfBusy: true})).toBe(false);
+  });
+
   it('does not save when the update changes nothing', () => {
     const {saver, saved} = setup();
     saver.apply((etat) => etat);

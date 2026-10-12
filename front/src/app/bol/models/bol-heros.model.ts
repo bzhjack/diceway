@@ -49,6 +49,8 @@ export interface BolHerosAttributs {
 interface BolEquipementEffectifModel {
   bouclier_malus_attaque_subie: number;
   bouclier_malus_attaque_subie_portee: 'une' | 'toutes' | null;
+  /** Ce qu'un grand bouclier ajoute déjà à la défense effective. */
+  bouclier_defense_toutes: number;
 }
 
 /** Identité d'un personnage : nom, joueur, région d'origine, avatar et langues. */

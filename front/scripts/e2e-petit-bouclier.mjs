@@ -3,14 +3,17 @@
 // Lancer son propre `npx ng serve --port 4400` d'abord ; ne jamais utiliser le port 4200 (serveur IntelliJ de Lionel).
 import {chromium} from 'playwright';
 
-const base = 'http://localhost:4400';
+const base = process.env.DICEWAY_BASE_URL ?? 'http://localhost:4400';
+// Compte de test (voir la mémoire du projet) ; surchargeable par l'environnement.
+const email = process.env.DICEWAY_TEST_EMAIL ?? 'claude-test@example.com';
+const password = process.env.DICEWAY_TEST_PASSWORD ?? 'ClaudeTest123!';
 const browser = await chromium.launch({args: ['--no-sandbox']});
 const page = await (await browser.newContext({viewport: {width: 1700, height: 1000}})).newPage();
 
 await page.goto(base + '/login', {waitUntil: 'domcontentloaded'});
-const {id} = await page.evaluate(async () => {
+const {id} = await page.evaluate(async ({email, password}) => {
   const json = (r) => r.json();
-  const login = await fetch('/api/auth/login', {method: 'POST', headers: {'Content-Type': 'application/json', Accept: 'application/json'}, body: JSON.stringify({email: 'claude-test@example.com', password: 'ClaudeTest123!'})}).then(json);
+  const login = await fetch('/api/auth/login', {method: 'POST', headers: {'Content-Type': 'application/json', Accept: 'application/json'}, body: JSON.stringify({email, password})}).then(json);
   const token = login.token ?? login.access_token;
   sessionStorage.setItem('diceway-session', JSON.stringify({token, user: login.user ?? login}));
   const headers = {'Content-Type': 'application/json', Accept: 'application/json', Authorization: 'Bearer ' + token};
@@ -19,7 +22,7 @@ const {id} = await page.evaluate(async () => {
   const session = await fetch('/api/bol/fight-session/create', {method: 'POST', headers, body: JSON.stringify({titre: 'TMP bouclier', heros: [{heroId: list[0].id, camp: 'heros'}]})}).then(json);
   await fetch(`/api/bol/fight-session/${session.id}/combatant`, {method: 'POST', headers, body: JSON.stringify({kind: 'pnj', sourceId: '2', camp: 'adversaires', qty: 1})});
   return {id: session.id};
-});
+}, {email, password});
 
 // Le PNJ porte un petit bouclier : −1 à une attaque subie par round.
 await page.route(/\/api\/bol\/heros\/[^/?]+$/, async (route) => {

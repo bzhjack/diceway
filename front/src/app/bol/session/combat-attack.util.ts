@@ -90,6 +90,7 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
         protection: 0,
         protectionText: null,
         bouclierMalusUneAttaque: 0,
+        bouclierDefenseToutes: 0,
         herosId: null,
         heroisme: null,
       });
@@ -109,6 +110,7 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
         protection: protection.value,
         protectionText: protection.text,
         bouclierMalusUneAttaque: shieldMalusOnOneAttack(hero),
+        bouclierDefenseToutes: hero.equipement_effectif.bouclier_defense_toutes ?? 0,
         herosId,
         heroisme: hero.ressources.heroisme,
         };
@@ -127,6 +129,7 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
     protection: parseProtectionValue(c.protection),
     protectionText: c.protection || null,
     bouclierMalusUneAttaque: 0,
+    bouclierDefenseToutes: 0,
     herosId: null,
     heroisme: null,
   };
@@ -136,7 +139,7 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
     return herosService.heros(c.sourceId).pipe(
       map((pnj) => {
         const protection = equippedProtection(pnj.armures);
-        return {...snapshot, protection: protection.value, protectionText: protection.text, bouclierMalusUneAttaque: shieldMalusOnOneAttack(pnj)};
+        return {...snapshot, protection: protection.value, protectionText: protection.text, bouclierMalusUneAttaque: shieldMalusOnOneAttack(pnj), bouclierDefenseToutes: pnj.equipement_effectif.bouclier_defense_toutes ?? 0};
       }),
       catchError(() => of(snapshot)),
     );

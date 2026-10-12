@@ -2,9 +2,9 @@ import {PlayToken} from '../../models/combat-play.model';
 import {TapisCard} from '../../models/tapis.model';
 import {InitiativeTierKey} from '../../models/initiative.model';
 import {TurnOrderEntry, TurnOrderGroup} from '../../models/turn-order.model';
-import {NewEffect} from '../../models/combat-effect.model';
+import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
 import {EtatCombat, TurnStatus, OrderedCard, TurnState, TurnToken} from '../../models/combat-turn.model';
-import {appliquerEvenement, effetsDeLAncienFormat, effetsDeTour, normalizeEffets} from './combat-effects.util';
+import {appliquerEvenement, EffectIdGenerator, effetsDeLAncienFormat, effetsDeTour, nextEffectId, normalizeEffets, SANS_BOUCLIER} from './combat-effects.util';
 
 export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], effets: [], exclus: []};
 
@@ -120,7 +120,7 @@ export function turnState(ordered: readonly OrderedCard[], etat: EtatCombat): Tu
 /** « Fin du tour » : la carte active a joué, et ses effets durables naissent (`crees`). S'il ne reste personne à jouer ce round, le suivant
  * commence — sauf si personne ne pourrait y jouer non plus (tout le monde est hors combat). La carte qui devient active voit tomber
  * ses effets « jusqu'à son prochain tour ». */
-export function endTurn(ordered: readonly OrderedCard[], etat: EtatCombat, crees: readonly NewEffect[] = []): EtatCombat {
+export function endTurn(ordered: readonly OrderedCard[], etat: EtatCombat, crees: readonly NewEffect[] = [], genererId: EffectIdGenerator = nextEffectId): EtatCombat {
   const activeKey = turnState(ordered, etat).activeKey;
   if (activeKey === null) {
     return etat;
@@ -130,7 +130,7 @@ export function endTurn(ordered: readonly OrderedCard[], etat: EtatCombat, crees
   let next: EtatCombat = {
     ...etat,
     joues: [...etat.joues.filter((key) => onTable.has(key)), activeKey],
-    effets: appliquerEvenement(etat.effets, {type: 'fin-tour', carte: activeKey, crees}),
+    effets: appliquerEvenement(etat.effets, {type: 'fin-tour', carte: activeKey, crees}, genererId),
   };
 
   if (turnState(ordered, next).activeKey === null) {
@@ -141,16 +141,31 @@ export function endTurn(ordered: readonly OrderedCard[], etat: EtatCombat, crees
   }
 
   const nowActive = turnState(ordered, next).activeKey;
-  return nowActive === null ? next : {...next, effets: appliquerEvenement(next.effets, {type: 'debut-tour', carte: nowActive})};
+  return nowActive === null ? next : debutDeTour(next, nowActive);
+}
+
+/** Le tour d'une carte commence : ses effets « jusqu'à son prochain tour » tombent. Rend le même état s'il n'y en a aucun, pour que rien ne soit
+ * enregistré pour rien. */
+export function debutDeTour(etat: EtatCombat, carte: string): EtatCombat {
+  const effets = appliquerEvenement(etat.effets, {type: 'debut-tour', carte});
+  return effets.length === etat.effets.length ? etat : {...etat, effets};
+}
+
+/** Effets qui ne se stockent pas mais se déduisent de l'état : la perte du bouclier d'un héros en échec critique au premier round. Leur
+ * identifiant commence par `derive-` : ils s'affichent, sans croix pour les retirer. */
+export function effetsDerives(ordered: readonly OrderedCard[], round: number): CombatEffect[] {
+  return ordered
+    .filter((entry) => bouclierPerduRound1(round, entry.tier))
+    .map((entry) => ({id: `derive-${entry.card.key}`, origine: SANS_BOUCLIER, porteur: entry.card.key, stat: 'defense', valeur: 0, quand: 'subie', duree: {type: 'fin-round'}, manuel: false}));
 }
 
 /** « Défense totale » : la carte active termine son tour avec +2 en défense, jusqu'à ce qu'elle redevienne active. */
-export function totalDefense(ordered: readonly OrderedCard[], etat: EtatCombat): EtatCombat {
+export function totalDefense(ordered: readonly OrderedCard[], etat: EtatCombat, genererId: EffectIdGenerator = nextEffectId): EtatCombat {
   const activeKey = turnState(ordered, etat).activeKey;
   if (activeKey === null) {
     return etat;
   }
-  return endTurn(ordered, etat, effetsDeTour(activeKey, {posture: null, defenseTotale: true}));
+  return endTurn(ordered, etat, effetsDeTour(activeKey, {posture: null, defenseTotale: true}), genererId);
 }
 
 /** « Rendre la main » : une carte qui a joué redevient jouable ce round. Ce que son tour avait fait naître (défense totale, posture) est
@@ -162,7 +177,7 @@ export function giveBackTurn(etat: EtatCombat, key: string): EtatCombat {
   return {
     ...etat,
     joues: etat.joues.filter((played) => played !== key),
-    effets: etat.effets.filter((effet) => !(effet.porteur === key && effet.duree.type === 'debut-tour-porteur')),
+    effets: etat.effets.filter((effet) => !(effet.porteur === key && (effet.duree.type === 'debut-tour-porteur' || (effet.duree.type === 'usages' && effet.duree.expireAuTour === true)))),
   };
 }
 

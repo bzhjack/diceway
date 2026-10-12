@@ -21,11 +21,19 @@ const ORIGINE_LIBELLE: Readonly<Record<string, string>> = {
   'posture-offensive': 'posture offensive',
   'attaque-intrepide': 'attaque intrépide',
   parade: 'parade',
+  [BOUCLIER_DEPENSE]: 'bouclier dépensé',
+  [SANS_BOUCLIER]: 'sans bouclier',
 };
 
 /** Libellé affiché d'un effet : celui saisi à la main, sinon celui de son origine. */
 export function libelleEffet(effet: Pick<CombatEffect, 'origine' | 'libelle'>): string {
   return effet.libelle ?? ORIGINE_LIBELLE[effet.origine] ?? effet.origine;
+}
+
+/** Un effet en toutes lettres : « + 1 posture défensive » ; une trace (valeur 0) n'a que son libellé (« bouclier dépensé »). */
+export function descriptionEffet(effet: CombatEffect): string {
+  // Un effet d'action (dé de malus, action perdue) ne se chiffre pas : son libellé se suffit.
+  return effet.valeur === 0 || effet.stat === 'action' ? libelleEffet(effet) : `${effet.valeur > 0 ? '+' : '−'} ${Math.abs(effet.valeur)} ${libelleEffet(effet)}`;
 }
 
 function puce(contribution: number, nom: string): string {
@@ -41,10 +49,17 @@ export function nextEffectId(effets: readonly CombatEffect[]): string {
   return `e-${max + 1}`;
 }
 
-function ajouter(effets: readonly CombatEffect[], crees: readonly NewEffect[]): CombatEffect[] {
+/** Produit l'identifiant d'un effet à créer, vu la liste déjà là. */
+export type EffectIdGenerator = (effets: readonly CombatEffect[]) => string;
+
+/** Identifiant jamais réutilisé, même quand l'effet qui portait le plus grand numéro a été consommé ou retiré : une croix restée à l'écran
+ * ne peut alors pas retirer un autre effet. */
+export const idAleatoire: EffectIdGenerator = () => `e-${crypto.randomUUID().slice(0, 8)}`;
+
+function ajouter(effets: readonly CombatEffect[], crees: readonly NewEffect[], genererId: EffectIdGenerator): CombatEffect[] {
   const resultat = [...effets];
   for (const cree of crees) {
-    resultat.push({...cree, id: nextEffectId(resultat)});
+    resultat.push({...cree, id: genererId(resultat)});
   }
   return resultat;
 }
@@ -72,14 +87,23 @@ export function modificateursPour(effets: readonly CombatEffect[], contexte: Rol
     }
     // Un bonus de défense ou de protection de la cible pèse contre l'attaquant.
     const contribution = subiParLaCible ? -effet.valeur : effet.valeur;
-    termes.push({effetId: effet.id, label: puce(contribution, libelleEffet(effet)), valeur: contribution, tone: contribution > 0 ? 'plus' : 'minus'});
+    const nom = contexte.noms?.[effet.porteur];
+    termes.push({effetId: effet.id, label: puce(contribution, nom ? `${libelleEffet(effet)} (${nom})` : libelleEffet(effet)), valeur: contribution, tone: contribution > 0 ? 'plus' : 'minus'});
   }
 
   const bouclierPerdu = effets.some((effet) => effet.porteur === cible && (effet.origine === BOUCLIER_DEPENSE || effet.origine === SANS_BOUCLIER));
   if (jet === 'attaque' && contexte.bouclier > 0 && !bouclierPerdu) {
     termes.push({effetId: null, label: puce(-contexte.bouclier, 'bouclier'), valeur: -contexte.bouclier, tone: 'minus'});
   }
+  if (jet === 'attaque' && contexte.bouclierToutes > 0 && bouclierPerdu) {
+    termes.push({effetId: null, label: puce(contexte.bouclierToutes, 'grand bouclier perdu'), valeur: contexte.bouclierToutes, tone: 'plus'});
+  }
   return termes;
+}
+
+/** Les puces d'un jet sans celle d'un effet retiré : un jet déjà fait recalcule son total tout de suite. */
+export function sansTerme(termes: readonly ModifierTerm[], effetId: string): readonly ModifierTerm[] {
+  return termes.filter((terme) => terme.effetId !== effetId);
 }
 
 /** Total des contributions des puces. */
@@ -88,7 +112,7 @@ export function sommeModificateurs(termes: readonly ModifierTerm[]): number {
 }
 
 /** Fait évoluer le registre. Fonction pure : l'entrée n'est jamais modifiée. */
-export function appliquerEvenement(effets: readonly CombatEffect[], evenement: EffectEvent): readonly CombatEffect[] {
+export function appliquerEvenement(effets: readonly CombatEffect[], evenement: EffectEvent, genererId: EffectIdGenerator = nextEffectId): readonly CombatEffect[] {
   switch (evenement.type) {
     case 'debut-tour':
       return effets.filter(
@@ -104,12 +128,14 @@ export function appliquerEvenement(effets: readonly CombatEffect[], evenement: E
           !(effet.porteur === evenement.carte && (effet.duree.type === 'debut-tour-porteur' || effet.duree.type === 'action-porteur')) &&
           !evenement.crees.some((cree) => cree.origine === effet.origine && cree.porteur === effet.porteur),
       );
-      return ajouter(restants, evenement.crees);
+      return ajouter(restants, evenement.crees, genererId);
     }
 
     case 'jet-attaque': {
       const apresUsage = effets.flatMap((effet): CombatEffect[] => {
-        if (effet.porteur !== evenement.cible || effet.duree.type !== 'usages') {
+        // Seuls les effets de défense de la cible qui valent contre cet attaquant se consomment.
+        const concerne = effet.quand === 'subie' && effet.stat === 'defense' && (effet.cible === undefined || effet.cible === evenement.attaquant);
+        if (effet.porteur !== evenement.cible || effet.duree.type !== 'usages' || !concerne) {
           return [effet];
         }
         return effet.duree.restants > 1 ? [{...effet, duree: {...effet.duree, restants: effet.duree.restants - 1}}] : [];
@@ -117,14 +143,14 @@ export function appliquerEvenement(effets: readonly CombatEffect[], evenement: E
       const dejaDepense = apresUsage.some((effet) => effet.porteur === evenement.cible && effet.origine === BOUCLIER_DEPENSE);
       return dejaDepense
         ? apresUsage
-        : ajouter(apresUsage, [{origine: BOUCLIER_DEPENSE, porteur: evenement.cible, stat: 'defense', valeur: 0, quand: 'subie', duree: {type: 'fin-round'}, manuel: false}]);
+        : ajouter(apresUsage, [{origine: BOUCLIER_DEPENSE, porteur: evenement.cible, stat: 'defense', valeur: 0, quand: 'subie', duree: {type: 'fin-round'}, manuel: false}], genererId);
     }
 
     case 'nouveau-round':
       return effets.filter((effet) => effet.duree.type !== 'fin-round');
 
     case 'ajout-manuel':
-      return ajouter(effets, [{...evenement.effet, manuel: true}]);
+      return ajouter(effets, [{...evenement.effet, manuel: true}], genererId);
 
     case 'retrait-manuel':
       return effets.filter((effet) => effet.id !== evenement.id);

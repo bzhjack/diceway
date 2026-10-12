@@ -3,7 +3,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
-import {EFFETS_MODELES, libelleDuree, libelleEffet} from './combat-effects.util';
+import {descriptionEffet, EFFETS_MODELES, libelleDuree} from './combat-effects.util';
 
 /** Une carte nommée, pour afficher à qui appartient un effet et à qui l'ajouter. */
 interface CarteEffets {
@@ -17,6 +17,8 @@ interface EffetAffiche {
   readonly porteur: string;
   readonly texte: string;
   readonly duree: string;
+  /** Un effet déduit de l'état (identifiant `derive-…`) n'est pas stocké : rien à retirer. */
+  readonly retirable: boolean;
 }
 
 /** Les effets en cours sur les deux duellistes, chacun retirable, et le menu pour en ajouter un à la main. */
@@ -27,7 +29,7 @@ interface EffetAffiche {
   template: `
     <section class="efl" aria-label="Effets en cours">
       <header class="efl-head">
-        <h3 class="efl-title">Effets en cours</h3>
+        <p class="efl-title">Effets en cours</p>
         <button type="button" mat-stroked-button size="small" [matMenuTriggerFor]="addMenu" [disabled]="cartes().length === 0">
           <mat-icon>add</mat-icon> Effet
         </button>
@@ -36,9 +38,11 @@ interface EffetAffiche {
       @for (effet of affiches(); track effet.id) {
         <div class="efl-row">
           <span class="efl-text"><b>{{ effet.porteur }}</b> · {{ effet.texte }} <i>{{ effet.duree }}</i></span>
-          <button type="button" class="efl-remove" [attr.aria-label]="'Retirer l’effet ' + effet.texte + ' de ' + effet.porteur" (click)="retire.emit(effet.id)">
-            <mat-icon>close</mat-icon>
-          </button>
+          @if (effet.retirable) {
+            <button type="button" class="efl-remove" [attr.aria-label]="'Retirer l’effet ' + effet.texte + ' de ' + effet.porteur" (click)="retire.emit(effet.id)">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
         </div>
       } @empty {
         <p class="efl-empty">Aucun effet en cours.</p>
@@ -78,12 +82,13 @@ export class EffectsListComponent {
   protected readonly affiches = computed<readonly EffetAffiche[]>(() => {
     const noms = new Map(this.cartes().map((carte) => [carte.key, carte.nom]));
     return this.effets()
-      .filter((effet) => effet.valeur !== 0 && noms.has(effet.porteur))
+      .filter((effet) => noms.has(effet.porteur))
       .map((effet) => ({
         id: effet.id,
         porteur: noms.get(effet.porteur) ?? effet.porteur,
-        texte: `${effet.valeur > 0 ? '+' : '−'} ${Math.abs(effet.valeur)} ${libelleEffet(effet)}`,
+        texte: descriptionEffet(effet),
         duree: libelleDuree(effet.duree),
+        retirable: !effet.id.startsWith('derive-'),
       }));
   });
 }

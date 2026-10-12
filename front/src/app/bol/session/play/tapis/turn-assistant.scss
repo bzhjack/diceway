@@ -98,11 +98,6 @@
     border-color: var(--dw-color-echec-forte);
     background: color-mix(in srgb, var(--dw-color-echec-forte) 14%, var(--dw-surface-50));
   }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-color-legendary);
-    outline-offset: 2px;
-  }
 }
 
 .tas-bar--low i {
@@ -146,11 +141,6 @@
     border-color: color-mix(in srgb, var(--bar-bronze, #3a2810) 60%, #000);
     background: linear-gradient(#e6b64e, #b8832a);
     color: #1a1203;
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-color-legendary);
-    outline-offset: 2px;
   }
 }
 
@@ -326,11 +316,6 @@
 
   &:hover:not(:disabled) {
     background: color-mix(in srgb, var(--dw-color-legendary) 22%, transparent);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-color-legendary);
-    outline-offset: 2px;
   }
 
   &:disabled {
@@ -535,11 +520,6 @@
   &:hover {
     color: var(--dw-surface-900);
   }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-color-legendary);
-    outline-offset: 2px;
-  }
 }
 
 .tas-fighter .tas-targets {
@@ -654,11 +634,6 @@
       color: var(--dw-surface-800);
     }
   }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-color-legendary);
-    outline-offset: 2px;
-  }
 }
 
 // Récapitulatif : ce que la posture choisie change à ce tour.
@@ -730,11 +705,6 @@
   &:disabled {
     opacity: 0.5;
     cursor: default;
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-color-legendary);
-    outline-offset: 2px;
   }
 }
 
@@ -939,11 +909,6 @@
   &:hover {
     border-color: var(--dw-color-legendary);
   }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-color-legendary);
-    outline-offset: 2px;
-  }
 }
 
 .tas-term-input {
@@ -973,11 +938,19 @@
 }
 
 .tas-term-remove {
-  padding: 0 0.2rem;
+  // Cible de 24 px au moins (WCAG 2.5.8), avec un focus visible.
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  padding: 0;
   border: 0;
   background: transparent;
   color: var(--dw-color-echec);
   cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 1px;
+  }
 }
 
 .tas-options,
@@ -986,4 +959,11 @@
 .tas-fighter .tas-targets {
   scrollbar-width: thin;
   scrollbar-color: var(--dw-border) transparent;
+}
+
+// Focus visible commun à tous les boutons et champs de l'assistant.
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--dw-color-legendary);
+  outline-offset: 2px;
 }

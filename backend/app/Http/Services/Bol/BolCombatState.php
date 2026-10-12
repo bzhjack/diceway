@@ -14,6 +14,8 @@ class BolCombatState
     public const INITIAL = ['round' => 1, 'joues' => [], 'effets' => [], 'exclus' => []];
 
     private const MAX_EFFETS = 200;
+    private const MAX_ID = 40;
+    private const MAX_CARTE = 60;
     private const STATS = ['attaque', 'defense', 'degats', 'protection', 'action'];
     private const QUAND = ['attaque', 'subie'];
     private const DUREES = ['usages', 'fin-round', 'debut-tour-porteur', 'action-porteur', 'combat'];
@@ -37,6 +39,22 @@ class BolCombatState
             'effets' => array_key_exists('effets', $raw) ? self::effets($raw['effets']) : self::effetsDeLAncienFormat($raw),
             'exclus' => self::keys($raw['exclus'] ?? null),
         ];
+    }
+
+    /**
+     * Un état envoyé par le front, complété par ce qui est déjà gardé : les cartes exclues sont fixées au démarrage et les effets ne sont pas
+     * réécrits par un état envoyé sans eux.
+     *
+     * @param array<string, mixed> $envoye
+     * @return array{round: int, joues: array<int, string>, effets: array<int, array<string, mixed>>, exclus: array<int, string>}
+     */
+    public static function merge(array $envoye, mixed $existant): array
+    {
+        $garde = self::normalize($existant);
+        $envoye['exclus'] ??= $garde['exclus'];
+        $envoye['effets'] ??= $garde['effets'];
+
+        return self::normalize($envoye);
     }
 
     /** @return array<int, string> clés de carte uniques, dans leur ordre d'apparition */
@@ -81,10 +99,13 @@ class BolCombatState
         if (!is_array($raw)) {
             return null;
         }
-        foreach (['id', 'origine', 'porteur'] as $champ) {
-            if (!is_string($raw[$champ] ?? null) || $raw[$champ] === '') {
+        foreach (['id' => self::MAX_ID, 'origine' => self::MAX_ID, 'porteur' => self::MAX_CARTE] as $champ => $max) {
+            if (!is_string($raw[$champ] ?? null) || $raw[$champ] === '' || mb_strlen($raw[$champ]) > $max) {
                 return null;
             }
+        }
+        if (isset($raw['cible']) && (!is_string($raw['cible']) || mb_strlen($raw['cible']) > self::MAX_CARTE)) {
+            return null;
         }
         $valeur = $raw['valeur'] ?? null;
         if (!is_int($valeur) || $valeur < -20 || $valeur > 20) {

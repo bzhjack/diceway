@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {bouclierPerduRound1, endTurn, groupByTier, giveBackTurn, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
+import {bouclierPerduRound1, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
 import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model';
 import {TurnOrderEntry} from '../../models/turn-order.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
@@ -251,6 +251,19 @@ describe('total defense leaves with the turn', () => {
   });
 });
 
+describe('giveBackTurn et parade', () => {
+  it('cancels a parade (one use, until the next turn) together with the turn it came from', () => {
+    const parade: CombatEffect = {id: 'e-1', origine: 'parade', porteur: 'hero-1', stat: 'defense', valeur: 1, quand: 'subie', duree: {type: 'usages', restants: 1, expireAuTour: true}, manuel: false};
+    expect(giveBackTurn(etat(1, ['hero-1'], [parade]), 'hero-1')).toEqual(etat(1));
+  });
+
+  it('keeps the effects of other cards and the manual ones of the same card', () => {
+    const manuel: CombatEffect = {id: 'e-2', origine: 'manuel', porteur: 'hero-1', stat: 'attaque', valeur: -1, quand: 'attaque', duree: {type: 'fin-round'}, manuel: true};
+    const autre = defended('pnj-7', 'e-3');
+    expect(giveBackTurn(etat(1, ['hero-1'], [manuel, autre]), 'hero-1').effets).toEqual([manuel, autre]);
+  });
+});
+
 describe('giveBackTurn', () => {
   it('lets a card that has played play again this round', () => {
     expect(giveBackTurn(etat(2, ['hero-1', 'pnj-7']), 'hero-1')).toEqual(etat(2, ['pnj-7']));
@@ -364,7 +377,7 @@ describe('excluded cards', () => {
 
 describe('posture et parade sur un tour complet', () => {
   const order = ordered(KALENA, PRETRE);
-  const contre = {jet: 'attaque', attaquant: 'pnj-7', cible: 'hero-1', bouclier: 0} as const;
+  const contre = {jet: 'attaque', attaquant: 'pnj-7', cible: 'hero-1', bouclier: 0, bouclierToutes: 0} as const;
 
   it('lets the defender of a posture count its bonus against the next attacker, then drops it on its next turn', () => {
     // Kalena prend la posture défensive et termine son tour : le prêtre l'attaque avec +1 en défense contre lui.
@@ -397,5 +410,37 @@ describe('bouclierPerduRound1', () => {
     expect(bouclierPerduRound1(2, 'echec_critique')).toBe(false);
     expect(bouclierPerduRound1(1, 'echec')).toBe(false);
     expect(bouclierPerduRound1(1, null)).toBe(false);
+  });
+});
+
+describe('debutDeTour', () => {
+  it('ends what lasts until the card plays again, for that card only', () => {
+    const posture: CombatEffect = {id: 'e-1', origine: 'posture-defensive', porteur: 'hero-1', stat: 'defense', valeur: 1, quand: 'subie', duree: {type: 'debut-tour-porteur'}, manuel: false};
+    const autre = defended('pnj-7', 'e-2');
+    expect(debutDeTour(etat(1, [], [posture, autre]), 'hero-1').effets).toEqual([autre]);
+  });
+
+  it('returns the very same state when nothing expires, so nothing is saved for nothing', () => {
+    const state = etat(1, [], [defended('pnj-7')]);
+    expect(debutDeTour(state, 'hero-1')).toBe(state);
+  });
+});
+
+describe('effetsDerives', () => {
+  const order: OrderedCard[] = [
+    {card: KALENA, tier: 'echec_critique', lockedRound1: false},
+    {card: RORK, tier: 'reussite', lockedRound1: false},
+    {card: PRETRE, tier: 'coriace', lockedRound1: false},
+  ];
+
+  it('removes the shield of a critical failure during the first round, with a trace that is not stored', () => {
+    const derives = effetsDerives(order, 1);
+    expect(derives).toHaveLength(1);
+    expect(derives[0]).toMatchObject({origine: 'sans-bouclier', porteur: 'hero-1', valeur: 0, duree: {type: 'fin-round'}});
+    expect(derives[0].id.startsWith('derive-')).toBe(true);
+  });
+
+  it('gives nothing after the first round', () => {
+    expect(effetsDerives(order, 2)).toEqual([]);
   });
 });

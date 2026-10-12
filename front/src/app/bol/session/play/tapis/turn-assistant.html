@@ -92,7 +92,7 @@
         }
       </div>
 
-      <bol-effects-list [effets]="effets()" [cartes]="duelistes()" (retire)="effectRemoved.emit($event)" (ajoute)="effectAdded.emit($event)" />
+      <bol-effects-list [effets]="effets()" [cartes]="duelistes()" (retire)="removeEffect($event)" (ajoute)="effectAdded.emit($event)" />
 
       @if (visibleOptions().length > 1) {
         <div class="tas-recap">
@@ -134,7 +134,7 @@
           </div>
           @if (attackerBadges().length > 0) {
             <ul class="tas-pills tas-badges" aria-label="Effets sur l’attaquant">
-              @for (badge of attackerBadges(); track badge) {
+              @for (badge of attackerBadges(); track $index) {
                 <li class="tas-pill">{{ badge }}</li>
               }
             </ul>
@@ -172,7 +172,7 @@
             </div>
             @if (targetBadges().length > 0) {
               <ul class="tas-pills tas-badges" aria-label="Effets sur la cible">
-                @for (badge of targetBadges(); track badge) {
+                @for (badge of targetBadges(); track $index) {
                   <li class="tas-pill">{{ badge }}</li>
                 }
               </ul>
@@ -207,10 +207,10 @@
       <h3><span aria-hidden="true">1</span> Jet d'attaque</h3>
       @if (target() && attacker() && targetStats()) {
         <div class="tas-terms">
-          @for (term of formulaTerms(); track term.label) {
+          @for (term of formulaTerms(); track $index) {
             <span class="tas-term" [class.tas-term--dice]="term.tone === 'dice'" [class.tas-term--plus]="term.tone === 'plus'" [class.tas-term--minus]="term.tone === 'minus'">{{ term.label }}</span>
             @if (term.effetId) {
-              <button type="button" class="tas-term-remove" [attr.aria-label]="'Retirer l’effet ' + term.label" matTooltip="Retirer cet effet" (click)="effectRemoved.emit(term.effetId)">×</button>
+              <button type="button" class="tas-term-remove" [attr.aria-label]="'Retirer l’effet ' + term.label" matTooltip="Retirer cet effet" (click)="removeEffect(term.effetId)">×</button>
             }
           }
           <span class="tas-eq">≥ {{ threshold }}</span>
@@ -257,7 +257,7 @@
       <h3><span aria-hidden="true">2</span> Jet de dégâts</h3>
       @if (hasDamageStep()) {
         <div class="tas-terms">
-          @for (term of damageTerms(); track term.editable ? 'protection' : term.label) {
+          @for (term of damageTerms(); track $index) {
             @if (term.editable && editingProtection()) {
               <input #protectionInput class="tas-term-input" type="number" min="0" step="1" aria-label="Protection de la cible, valeur numérique" [value]="protectionDraft()" (input)="protectionDraft.set($any($event.target).value)" (keydown.enter)="commitProtection()" (keydown.escape)="editingProtection.set(false)" (blur)="editingProtection.set(false)" />
             } @else if (term.editable) {
@@ -265,7 +265,7 @@
             } @else {
               <span class="tas-term" [class.tas-term--dice]="term.tone === 'dice'" [class.tas-term--plus]="term.tone === 'plus'" [class.tas-term--minus]="term.tone === 'minus'">{{ term.label }}</span>
               @if (term.effetId) {
-                <button type="button" class="tas-term-remove" [attr.aria-label]="'Retirer l’effet ' + term.label" matTooltip="Retirer cet effet" (click)="effectRemoved.emit(term.effetId)">×</button>
+                <button type="button" class="tas-term-remove" [attr.aria-label]="'Retirer l’effet ' + term.label" matTooltip="Retirer cet effet" (click)="removeEffect(term.effetId)">×</button>
               }
             }
           }

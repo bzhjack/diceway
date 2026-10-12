@@ -183,7 +183,7 @@ class BolFightSessionController extends Controller
             'round'            => 'required|integer|min:1',
             'joues'            => 'present|array',
             'joues.*'          => 'string',
-            'effets'           => 'sometimes|array|max:200',
+            'effets'           => 'sometimes|array',
             'effets.*'         => 'array',
             'exclus'           => 'sometimes|array',
             'exclus.*'         => 'string',

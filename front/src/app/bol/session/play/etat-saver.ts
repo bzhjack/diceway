@@ -17,12 +17,14 @@ export class EtatSaver {
     private readonly onError: (error: unknown) => void,
   ) {}
 
-  apply(update: EtatUpdate, options: {readonly ignoreIfBusy?: boolean} = {}): void {
+  /** Rend `false` si la mise à jour est ignorée (action de l'utilisateur pendant un enregistrement), `true` sinon. */
+  apply(update: EtatUpdate, options: {readonly ignoreIfBusy?: boolean} = {}): boolean {
     if (this.busy && options.ignoreIfBusy) {
-      return;
+      return false;
     }
     this.queue.push(update);
     this.flush();
+    return true;
   }
 
   private flush(): void {

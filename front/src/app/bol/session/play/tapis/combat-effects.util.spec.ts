@@ -1,13 +1,13 @@
 import {describe, expect, it} from 'vitest';
 import {CombatEffect, RollContext} from '../../models/combat-effect.model';
-import {appliquerEvenement, BOUCLIER_DEPENSE, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, nextEffectId, normalizeEffets, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
+import {appliquerEvenement, BOUCLIER_DEPENSE, descriptionEffet, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
 
 function effet(over: Partial<CombatEffect> = {}): CombatEffect {
   return {id: 'e-1', origine: 'posture-defensive', porteur: 'hero-1', stat: 'defense', valeur: 1, quand: 'subie', duree: {type: 'debut-tour-porteur'}, manuel: false, ...over};
 }
 
 function ctx(over: Partial<RollContext> = {}): RollContext {
-  return {jet: 'attaque', attaquant: 'pnj-7', cible: 'hero-1', bouclier: 0, ...over};
+  return {jet: 'attaque', attaquant: 'pnj-7', cible: 'hero-1', bouclier: 0, bouclierToutes: 0, ...over};
 }
 
 describe('nextEffectId', () => {
@@ -74,6 +74,25 @@ describe('modificateursPour', () => {
   });
 });
 
+describe('modificateursPour : grand bouclier, noms, effets d’action', () => {
+  it('gives back the defence a grand shield adds, once its bearer has lost the benefit of the shield', () => {
+    const perdu = effet({origine: SANS_BOUCLIER, valeur: 0});
+    expect(modificateursPour([perdu], ctx({bouclierToutes: 1}))).toEqual([{effetId: null, label: '+ 1 grand bouclier perdu', valeur: 1, tone: 'plus'}]);
+    expect(modificateursPour([], ctx({bouclierToutes: 1}))).toEqual([]);
+    expect(modificateursPour([perdu], ctx({bouclierToutes: 1, jet: 'degats'}))).toEqual([]);
+  });
+
+  it('names the bearer of an effect when the names are known', () => {
+    const terms = modificateursPour([effet({valeur: 1})], ctx({noms: {'hero-1': 'Dogon'}}));
+    expect(terms[0].label).toBe('− 1 posture défensive (Dogon)');
+  });
+
+  it('does not count an action effect in a roll total', () => {
+    const malus = effet({origine: 'renversement', stat: 'action', quand: 'attaque', valeur: -1, porteur: 'pnj-7'});
+    expect(modificateursPour([malus], ctx())).toEqual([]);
+  });
+});
+
 describe('appliquerEvenement', () => {
   it('debut-tour: ends the effects that last until the bearer next turn, for that card only', () => {
     const effets = [effet({id: 'e-1'}), effet({id: 'e-2', porteur: 'pnj-7'}), effet({id: 'e-3', duree: {type: 'combat'}})];
@@ -115,6 +134,14 @@ describe('appliquerEvenement', () => {
     expect(afterOne.find((e) => e.origine === 'parade')?.duree).toEqual({type: 'usages', restants: 1});
     const afterTwo = appliquerEvenement(afterOne, {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1'});
     expect(afterTwo.find((e) => e.origine === 'parade')).toBeUndefined();
+  });
+
+  it('jet-attaque: only uses up the defence effects that concern this attacker', () => {
+    const contreUnAutre = effet({id: 'e-1', origine: 'parade', cible: 'pnj-8', duree: {type: 'usages', restants: 1}});
+    const contreTous = effet({id: 'e-2', origine: 'parade', duree: {type: 'usages', restants: 1}});
+    const protection = effet({id: 'e-3', origine: 'x', stat: 'protection', duree: {type: 'usages', restants: 1}});
+    const apres = appliquerEvenement([contreUnAutre, contreTous, protection], {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1'});
+    expect(apres.map((e) => e.id).sort()).toEqual(['e-1', 'e-3', 'e-4']);
   });
 
   it('jet-attaque: leaves the effects of other targets alone', () => {
@@ -236,5 +263,41 @@ describe('EFFETS_MODELES', () => {
       expect(cree.manuel).toBe(true);
     }
     expect(EFFETS_MODELES.map((m) => m.id)).toEqual(['defense-round', 'de-malus-action', 'malus-attaque-round', 'action-perdue']);
+  });
+});
+
+describe('descriptionEffet', () => {
+  it('writes a modifier with its sign, and a trace with its label only', () => {
+    expect(descriptionEffet(effet({valeur: 1}))).toBe('+ 1 posture défensive');
+    expect(descriptionEffet(effet({valeur: -2, origine: 'attaque-intrepide'}))).toBe('− 2 attaque intrépide');
+    expect(descriptionEffet(effet({origine: BOUCLIER_DEPENSE, valeur: 0}))).toBe('bouclier dépensé');
+    expect(descriptionEffet(effet({origine: SANS_BOUCLIER, valeur: 0}))).toBe('sans bouclier');
+    expect(descriptionEffet(effet({origine: 'renversement', libelle: 'dé de malus à la prochaine action', stat: 'action', valeur: -1}))).toBe('dé de malus à la prochaine action');
+  });
+});
+
+describe('identifiants des effets créés', () => {
+  it('uses the generator it is given, so an id is never reused after an effect is consumed', () => {
+    const parade = effet({id: 'e-1', origine: 'parade', duree: {type: 'usages', restants: 1}});
+    const apres = appliquerEvenement([parade], {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1'}, () => 'e-unique');
+    expect(apres.map((e) => e.id)).toEqual(['e-unique']);
+    expect(apres.some((e) => e.id === 'e-1')).toBe(false);
+  });
+});
+
+describe('sansTerme', () => {
+  const termes = [
+    {effetId: 'e-1', label: '− 1 posture défensive', valeur: -1, tone: 'minus'},
+    {effetId: null, label: '− 1 bouclier', valeur: -1, tone: 'minus'},
+    {effetId: 'e-2', label: '+ 1 malus', valeur: 1, tone: 'plus'},
+  ] as const;
+
+  it('drops the term of a removed effect, so a frozen roll recomputes at once', () => {
+    expect(sansTerme(termes, 'e-1').map((t) => t.effetId)).toEqual([null, 'e-2']);
+    expect(sommeModificateurs(sansTerme(termes, 'e-1'))).toBe(0);
+  });
+
+  it('keeps everything for an unknown id, and never touches the shield of the sheet', () => {
+    expect(sansTerme(termes, 'e-9')).toEqual(termes);
   });
 });

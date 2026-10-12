@@ -18,7 +18,7 @@
                   [class]="'tor-med tor-med--' + entry.kind + ' tor-med--' + entry.status"
                   [class.tor-med--locked]="entry.locked"
                   [class.tor-med--ally]="entry.ally"
-                [class.tor-med--effects]="entry.effets.length > 0"
+                  [class.tor-med--effects]="entry.effets.length > 0"
                   [class.tor-med--target]="entry.key === targetKey()"
                   [attr.aria-current]="entry.status === 'active' ? 'true' : null"
                   [attr.aria-label]="label(entry) + (entry.key === targetKey() ? ', visé' : '')"
