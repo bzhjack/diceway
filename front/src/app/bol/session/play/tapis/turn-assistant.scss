@@ -554,7 +554,16 @@
   gap: 0.5rem;
 }
 
+.tas-switch-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
 .tas-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
   padding: 0.35rem 0.6rem;
   border: 1px solid var(--dw-border);
   border-radius: 8px;
@@ -564,6 +573,12 @@
   font-size: 0.74rem;
   font-weight: 800;
   cursor: pointer;
+
+  .mat-icon {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+  }
 
   &:hover {
     color: var(--dw-surface-900);

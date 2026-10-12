@@ -85,6 +85,7 @@
           (endTurnRequested)="onEndTurn()"
           (choiceChanged)="attackChoice.set($event)"
           (targetSelected)="onAttackCard($event)"
+          (sheetRequested)="onCardToggled($event)"
           (damageApplied)="onHitApplied($event)"
           (totalDefenseRequested)="onTotalDefense()"
         />

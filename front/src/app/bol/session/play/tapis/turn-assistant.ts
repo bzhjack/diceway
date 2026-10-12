@@ -96,6 +96,8 @@ export class TurnAssistantComponent {
   readonly choiceChanged = output<AttackChoice | null>();
   /** La carte choisie comme cible, ou `null` pour « Changer d'adversaire ». */
   readonly targetSelected = output<TapisCard | null>();
+  /** Ouvrir la fiche complète (statbloc) d'un des deux duellistes. */
+  readonly sheetRequested = output<TapisCard>();
   readonly damageApplied = output<AppliedHit>();
   readonly totalDefenseRequested = output<void>();
 

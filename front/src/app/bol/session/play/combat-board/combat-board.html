@@ -35,6 +35,7 @@
           [diceBox]="diceBox() ?? null"
           (choiceChanged)="choiceChanged.emit($event)"
           (targetSelected)="targetSelected.emit($event)"
+          (sheetRequested)="sheetRequested.emit($event)"
           (damageApplied)="damageApplied.emit($event)"
           (totalDefenseRequested)="totalDefenseRequested.emit()"
         />

@@ -1,7 +1,12 @@
 <div class="tas" role="group" [attr.aria-label]="'Tour de ' + card().nom">
   <!-- Attaquant -->
   <section class="tas-fighter" aria-label="Attaquant">
-    <span class="tas-kicker">Attaquant</span>
+    <div class="tas-switch">
+      <span class="tas-kicker">Attaquant</span>
+      <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + card().nom" (click)="sheetRequested.emit(card())">
+        <mat-icon>badge</mat-icon> Fiche
+      </button>
+    </div>
     <div class="tas-head">
       <span class="tas-med tas-med--active" aria-hidden="true">
         @if (card().avatar) {
@@ -215,7 +220,12 @@
     @if (target(); as t) {
       <div class="tas-switch">
         <span class="tas-kicker">Cible</span>
-        <button type="button" class="tas-ghost" (click)="targetSelected.emit(null)">↺ Changer d'adversaire</button>
+        <div class="tas-switch-actions">
+          <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + t.nom" (click)="sheetRequested.emit(t)">
+            <mat-icon>badge</mat-icon> Fiche
+          </button>
+          <button type="button" class="tas-ghost" (click)="targetSelected.emit(null)">↺ Changer d'adversaire</button>
+        </div>
       </div>
       <div class="tas-head">
         <span class="tas-med tas-med--target" aria-hidden="true">
