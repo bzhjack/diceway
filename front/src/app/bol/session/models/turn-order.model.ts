@@ -13,6 +13,8 @@ export interface TurnOrderEntry {
   readonly tier: InitiativeTierKey | null;
   /** Bloqué au round 1 (un héros a obtenu un succès héroïque ou mieux). */
   readonly locked: boolean;
+  /** Un PNJ, une créature ou un démon passé du côté des héros : il ne se cible pas et ne vise pas les héros. */
+  readonly ally: boolean;
 }
 
 /** Un bloc de la frise : un ou plusieurs rangs de réaction regroupés sous un titre. */

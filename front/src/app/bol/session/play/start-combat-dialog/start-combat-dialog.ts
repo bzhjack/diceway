@@ -225,7 +225,7 @@ export class StartCombatDialogComponent {
     const names = (rang: AdversaryRow['rang']): PreviewLine[] =>
       advs
         .filter((a) => a.rang === rang)
-        .map((a) => ({label: a.nom, excluded: this.isExcluded(a.kind, a.pivotId), kind: a.kind, pivotId: a.pivotId}));
+        .map((a) => ({label: a.ally ? `${a.nom} · allié` : a.nom, excluded: this.isExcluded(a.kind, a.pivotId), kind: a.kind, pivotId: a.pivotId}));
     return [
       {id: 'heros', title: 'Héros', lines: heroLines(['legendaire', 'heroique', 'reussite']), blocked: false},
       {id: 'rival', title: 'Rivaux', lines: names('rival'), blocked: false},

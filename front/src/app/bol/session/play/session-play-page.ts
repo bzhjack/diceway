@@ -170,6 +170,7 @@ export class SessionPlayPageComponent {
       status: statuses.get(card.key) ?? 'upcoming',
       tier: tier,
       locked: lockedRound1,
+      ally: card.kind !== 'hero' && card.camp === 'heros',
     }));
   });
 

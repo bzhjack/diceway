@@ -277,7 +277,7 @@ describe('turnAnnouncement', () => {
 
 describe('groupByTier', () => {
   const entry = (key: string, tier: TurnOrderEntry['tier'], locked = false): TurnOrderEntry => ({
-    key, nom: key, kind: 'hero', avatar: '', status: 'upcoming', tier, locked,
+    key, nom: key, kind: 'hero', avatar: '', status: 'upcoming', tier, locked, ally: false,
   });
 
   it('groups the combatants by reaction rank, in rulebook order', () => {

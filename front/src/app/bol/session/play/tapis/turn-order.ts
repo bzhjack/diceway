@@ -57,6 +57,6 @@ export class TurnOrderComponent {
   }
 
   protected label(entry: TurnOrderEntry): string {
-    return `${entry.nom}, ${this.statusLabel(entry.status)}${entry.locked ? ', bloqué ce round' : ''}`;
+    return `${entry.nom}${entry.ally ? ' (allié)' : ''}, ${this.statusLabel(entry.status)}${entry.locked ? ', bloqué ce round' : ''}`;
   }
 }
