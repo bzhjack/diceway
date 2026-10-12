@@ -76,16 +76,13 @@
         }
       </div>
 
-      <button type="button" class="ard-go" [disabled]="rolling()" (click)="roll()">{{ dice() ? 'Relancer' : 'Lancer' }} {{ diceCount() }}d6</button>
-
-      <div class="ard-terms">
-        @for (term of formulaTerms(); track $index) {
-          <span class="ard-term" [class.ard-term--dice]="term.tone === 'dice'" [class.ard-term--plus]="term.tone === 'plus'" [class.ard-term--minus]="term.tone === 'minus'">{{ term.label }}</span>
+      <div class="ard-sum" [class.ard-sum--pending]="total() === null">
+        @for (term of sumTerms(); track $index) {
+          <div class="ard-sum-term" [class.ard-sum-term--plus]="term.tone === 'plus'" [class.ard-sum-term--minus]="term.tone === 'minus'" [class.ard-sum-term--total]="term.tone === 'total'">
+            <b>{{ term.value }}</b>
+            <small>{{ term.caption }}</small>
+          </div>
         }
-        @if (total() !== null) {
-          <span class="ard-total">= {{ total() }}</span>
-        }
-        <span class="ard-eq">≥ {{ threshold }}</span>
       </div>
 
       <!-- Place réservée aux options d'héroïsme, qui apparaissent après le jet : la hauteur du plateau ne bouge pas. -->
@@ -104,13 +101,7 @@
         }
 
         @if (isNatural2()) {
-          <button
-            type="button"
-            class="ard-act"
-            [attr.aria-pressed]="critiqueChosen()"
-            aria-label="Échec critique : gagner 1 point d’héroïsme"
-            (click)="toggleCritique()"
-          >
+          <button type="button" class="ard-act ard-act--gain" [attr.aria-pressed]="critiqueChosen()" aria-label="Échec critique : gagner 1 point d’héroïsme" (click)="toggleCritique()">
             <span class="ard-gem" aria-hidden="true"></span> Échec critique (+1)
           </button>
         } @else if (isNatural12()) {
@@ -138,10 +129,12 @@
         }
       </div>
 
-      <div class="ard-manual">
-        <label class="ard-manual-hint" for="ard-manual-total">Dés lancés à table</label>
+      <div class="ard-launch">
+        <button type="button" class="ard-go" [disabled]="rolling()" (click)="roll()">{{ dice() ? 'Relancer' : 'Lancer' }} {{ diceCount() }}d6</button>
+        <label class="ard-manual-hint" for="ard-manual-total">ou table</label>
         <input
           id="ard-manual-total"
+          class="ard-manual-input"
           type="number"
           min="2"
           max="12"
@@ -151,7 +144,7 @@
           (input)="onManualTotalInput($any($event.target).value)"
           (keydown.enter)="submitManualTotal()"
         />
-        <button type="button" class="ard-manual-confirm" aria-label="Valider le total saisi" [disabled]="!manualTotalValid()" (click)="submitManualTotal()">
+        <button type="button" class="ard-manual-btn" aria-label="Valider le total des dés lancés à table" [disabled]="!manualTotalValid()" (click)="submitManualTotal()">
           <mat-icon>check</mat-icon>
         </button>
       </div>

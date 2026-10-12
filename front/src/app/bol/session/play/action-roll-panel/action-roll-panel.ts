@@ -16,8 +16,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {BolHerosService} from '../../../services/bol-heros.service';
-import {ACTION_ATTRIBUTE_LABELS, ACTION_ATTRIBUTE_SHORT, ACTION_ATTRIBUTES, ACTION_DIFFICULTIES, ACTION_ROLL_THRESHOLD, actionDiceTarget, actionModifierSum, actionResultTone, actionSuccessChance, actionVerdict, DEFAULT_ACTION_DIFFICULTY, diceCountLabel, diceFromTotal, keptDiceIndexes, netDiceModifier, signedModifier, suggestedActionResult} from '../../action-roll.util';
-import {ActionAttribute, ActionDifficulty, ActionRollCarriere, ActionRollData, ActionRollParts, RollTerm} from '../../models/action-roll.model';
+import {ACTION_ATTRIBUTE_LABELS, ACTION_ATTRIBUTE_SHORT, ACTION_ATTRIBUTES, ACTION_DIFFICULTIES, ACTION_ROLL_THRESHOLD, actionDiceTarget, actionModifierSum, actionResultTone, actionSuccessChance, actionVerdict, DEFAULT_ACTION_DIFFICULTY, diceFromTotal, keptDiceIndexes, netDiceModifier, signedModifier, suggestedActionResult} from '../../action-roll.util';
+import {ActionAttribute, ActionDifficulty, ActionRollCarriere, ActionRollData, ActionRollParts} from '../../models/action-roll.model';
 import {applyHeroismeDelta} from '../../heroisme-spend.util';
 
 /** Icône de chaque attribut sur son médaillon. */
@@ -25,6 +25,13 @@ const ATTRIBUTE_ICONS: Record<ActionAttribute, string> = {agilite: 'bolt', vigue
 
 /** Circonférence de l'anneau des chances (rayon 27 dans une vue de 64). */
 const RING_LENGTH = 2 * Math.PI * 27;
+
+/** Un terme de l'addition du plateau : sa valeur, son nom dessous, et sa teinte (dés, bonus, malus, total). */
+interface SumTerm {
+  readonly value: string;
+  readonly caption: string;
+  readonly tone: 'dice' | 'plus' | 'minus' | 'total';
+}
 
 /** Un dé lancé, tel qu'il s'affiche sur le plateau : sa face, et s'il est gardé (un dé de bonus ou de malus en écarte). */
 interface RolledDie {
@@ -146,32 +153,32 @@ export class ActionRollPanelComponent {
   /** Longueur de l'arc doré de l'anneau des chances. */
   protected readonly ringDash = computed(() => `${((this.chancePercent() / 100) * RING_LENGTH).toFixed(1)} ${RING_LENGTH.toFixed(1)}`);
 
-  /** Les termes du jet, un par puce : `2d6`, `+ 2 agi`, `− 1 ardue`… Les termes nuls sont omis. Après un lancer virtuel,
-   * les deux dés gardés apparaissent entre parenthèses ; après une saisie manuelle, les faces ne sont pas connues. */
-  protected readonly formulaTerms = computed<readonly RollTerm[]>(() => {
+  /** L'addition du jet, sur une ligne : un nombre par terme, son nom dessous. Les termes nuls sont omis. Avant le jet, le premier terme
+   * est le nombre de dés à lancer et le dernier le seuil ; après, le total des dés gardés et le total du jet. */
+  protected readonly sumTerms = computed<readonly SumTerm[]>(() => {
     const parts = this.parts();
-    const dice = this.manualEntry() ? null : this.dice();
+    const net = this.netDice();
+    const sum = this.diceSum();
     const names: Record<'attribute' | 'carriere' | 'equipment' | 'difficulty' | 'modifier', string> = {
       attribute: ACTION_ATTRIBUTE_SHORT[this.attribute()],
       carriere: this.carriere()?.label.toLowerCase() ?? 'carrière',
       equipment: 'équipement',
       difficulty: this.difficulty().label.toLowerCase(),
-      modifier: 'modificateur',
+      modifier: 'modif.',
     };
-    const {avantages, desavantages} = this.selectedDiceTraitCounts();
-    // « 3d6, garde les 2 meilleurs » avec un dé de bonus ; « 2d6 » sinon.
-    const thrown = this.netDice() === 0 ? '2d6' : diceCountLabel(avantages, desavantages);
-    const terms: RollTerm[] = [{label: dice ? `${thrown} (${dice[0]} + ${dice[1]})` : thrown, tone: 'dice'}];
+    const kept = net > 0 ? '2 meilleurs' : net < 0 ? '2 moins bons' : 'dés';
+    const terms: SumTerm[] = [{value: sum === null ? `${this.diceCount()}d6` : `${sum}`, caption: kept, tone: 'dice'}];
     for (const key of ['attribute', 'carriere', 'equipment', 'difficulty', 'modifier'] as const) {
       const value = parts[key];
       if (value !== 0) {
-        terms.push({label: `${value > 0 ? '+' : '−'} ${Math.abs(value)} ${names[key]}`, tone: value > 0 ? 'plus' : 'minus'});
+        terms.push({value: `${value > 0 ? '+' : '−'}${Math.abs(value)}`, caption: names[key], tone: value > 0 ? 'plus' : 'minus'});
       }
     }
+    const total = this.total();
+    terms.push(total === null ? {value: `≥ ${ACTION_ROLL_THRESHOLD}`, caption: 'seuil', tone: 'total'} : {value: `= ${total}`, caption: `pour ${ACTION_ROLL_THRESHOLD}`, tone: 'total'});
     return terms;
   });
 
-  protected readonly threshold = ACTION_ROLL_THRESHOLD;
 
   protected readonly total = computed(() => {
     const d = this.dice();

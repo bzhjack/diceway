@@ -111,7 +111,7 @@ export function actionDiceTarget(modifierSum: number, threshold: number): Action
   return {kind: value <= 3 ? 'tout' : value >= 12 ? 'double-six' : 'seuil', value};
 }
 
-/** Le verdict en clair. `result` est le résultat retenu (après les choix d'héroïsme), `dice` les deux dés gardés. */
+/** Le verdict en clair : le titre, puis l'écart au seuil (le total se lit dans l'addition du plateau). `result` est le résultat retenu (après les choix d'héroïsme), `dice` les deux dés gardés. */
 export function actionVerdict(result: InitiativeResultat, dice: readonly [number, number], total: number, threshold: number): ActionVerdict {
   const natural12 = dice[0] === 6 && dice[1] === 6;
   switch (result) {
@@ -125,11 +125,11 @@ export function actionVerdict(result: InitiativeResultat, dice: readonly [number
         detail: natural12 ? 'Double 6 : réussite automatique, avec un effet supérieur.' : 'Réussite transformée pour 1 point d’héroïsme.',
       };
     case 'reussite':
-      return {title: 'Réussite', detail: `${total} pour ${threshold} demandés : ${total > threshold ? `réussi de ${total - threshold}.` : 'tout juste.'}`};
+      return {title: 'Réussite', detail: total > threshold ? `réussi de ${total - threshold}` : 'tout juste'};
     case 'echec':
       return dice[0] === 1 && dice[1] === 1
         ? {title: 'Échec automatique', detail: 'Double 1 : c’est raté, quel que soit le bonus.'}
-        : {title: 'Échec', detail: `${total} pour ${threshold} demandés : il manquait ${threshold - total}.`};
+        : {title: 'Échec', detail: `il manquait ${threshold - total}`};
   }
 }
 

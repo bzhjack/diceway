@@ -249,9 +249,9 @@ describe('keptDiceIndexes', () => {
 
 describe('actionVerdict', () => {
   it('tells by how much a roll succeeds or fails', () => {
-    expect(actionVerdict('reussite', [6, 4], 12, 9)).toEqual({title: 'Réussite', detail: '12 pour 9 demandés : réussi de 3.'});
-    expect(actionVerdict('reussite', [4, 5], 9, 9)).toEqual({title: 'Réussite', detail: '9 pour 9 demandés : tout juste.'});
-    expect(actionVerdict('echec', [3, 2], 7, 9)).toEqual({title: 'Échec', detail: '7 pour 9 demandés : il manquait 2.'});
+    expect(actionVerdict('reussite', [6, 4], 12, 9)).toEqual({title: 'Réussite', detail: 'réussi de 3'});
+    expect(actionVerdict('reussite', [4, 5], 9, 9)).toEqual({title: 'Réussite', detail: 'tout juste'});
+    expect(actionVerdict('echec', [3, 2], 7, 9)).toEqual({title: 'Échec', detail: 'il manquait 2'});
   });
 
   it('names the automatic failure of a double 1, whatever the total', () => {

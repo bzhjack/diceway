@@ -45,7 +45,7 @@
 // colonne de résultat porte des boutons à libellé long (« Convertir en succès héroïque (−1 PH) ») qui
 // doivent tenir sur une ligne.
 .exc--hero {
-  width: min(70rem, 96vw);
+  width: min(84rem, 96vw);
 }
 
 // PNJ, créature, démon : entrée de bestiaire en deux colonnes, à la hauteur de son contenu (limitée à l'écran,
@@ -70,7 +70,7 @@
   flex-direction: column;
 
   &.exc--hero {
-    height: min(585px, 92dvh);
+    height: min(752px, 92dvh);
   }
 
   .exc-body {
@@ -407,7 +407,47 @@
 
 // Héros : colonne d'identité un peu plus large, et les six statistiques de combat en tuiles au-dessus du jet.
 .exc--hero .exc-entry {
-  grid-template-columns: 15rem minmax(0, 1fr);
+  grid-template-columns: 17rem minmax(0, 1fr);
+}
+
+// La carte du héros est grande : son contenu grossit avec elle, pour se lire de loin à la table.
+.exc--hero .exc-portrait--big {
+  width: 11rem;
+}
+
+.exc--hero .exc-name--wrap {
+  font-size: 1.7rem;
+}
+
+.exc--hero .exc-entry-side .exc-sub {
+  font-size: 1.05rem;
+}
+
+// Détails et ressources (composants à part) : agrandis d'un bloc.
+.exc--hero bol-hero-details,
+.exc--hero bol-hero-resources {
+  zoom: 1.2;
+}
+
+.exc--hero .exc-entry-main {
+  gap: 0.9rem;
+  padding: 1.1rem 1.4rem 1.4rem;
+}
+
+.exc--hero .exc-tile {
+  padding: 0.5rem 0.25rem;
+
+  dd {
+    font-size: 1.6rem;
+  }
+
+  dt {
+    font-size: 0.82rem;
+  }
+}
+
+.exc--hero .exc-roll-title {
+  font-size: 0.82rem;
 }
 
 .exc-tiles {
