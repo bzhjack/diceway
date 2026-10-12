@@ -209,7 +209,7 @@
           </button>
 
           <div class="tas-manual">
-            <span class="tas-manual-hint">ou table&nbsp;:</span>
+            <span class="tas-manual-hint">table</span>
             <input type="number" min="2" max="12" step="1" placeholder="2-12" aria-label="Total des deux dés lancés à table" [disabled]="rolling()" [value]="manualDraft()" (input)="manualDraft.set($any($event.target).value)" (keydown.enter)="submitManual()" />
             <button type="button" class="tas-manual-confirm" aria-label="Valider le total saisi" [disabled]="!manualDraftValid() || rolling()" (click)="submitManual()">
               <mat-icon>check</mat-icon>
@@ -266,7 +266,7 @@
             {{ damage() !== null ? 'Relancer' : 'Lancer les dégâts' }}
           </button>
           <div class="tas-manual">
-            <span class="tas-manual-hint">ou table&nbsp;:</span>
+            <span class="tas-manual-hint">table</span>
             <input type="number" min="1" [max]="damageMax()" step="1" [placeholder]="'1-' + damageMax()" [attr.aria-label]="'Résultat du dé de dégâts lancé à table, de 1 à ' + damageMax()" [disabled]="rolling()" [value]="damageDraft()" (input)="damageDraft.set($any($event.target).value)" (keydown.enter)="submitManualDamage()" />
             <button type="button" class="tas-manual-confirm" aria-label="Valider le dé de dégâts saisi" [disabled]="!damageDraftValid() || rolling()" (click)="submitManualDamage()">
               <mat-icon>check</mat-icon>

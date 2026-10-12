@@ -887,6 +887,38 @@
     padding: 0.7rem 0.6rem;
   }
 
+  .tas-terms {
+    justify-content: flex-start;
+  }
+
+  .tas-step h3 {
+    font-family: 'Muse Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .tas-ctl {
+    justify-content: flex-start;
+    gap: 0.5rem;
+  }
+
+  // Bouton de lancer sur une seule ligne, sans icône : le résultat garde la place.
+  .tas-rollbtn {
+    flex-direction: row;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.95rem;
+
+    .mat-icon {
+      display: none;
+    }
+  }
+
+  .tas-manual {
+    justify-content: flex-start;
+  }
+
   .tas-manual-hint {
     white-space: nowrap;
   }
