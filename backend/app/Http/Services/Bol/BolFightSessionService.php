@@ -149,9 +149,10 @@ class BolFightSessionService
             return null;
         }
 
-        // Les cartes exclues sont fixées au démarrage : un état envoyé sans `exclus` ne les efface pas.
-        $etat['exclus'] ??= BolCombatState::normalize($session->etat_combat)['exclus'];
-        $etat['attaquees'] ??= BolCombatState::normalize($session->etat_combat)['attaquees'];
+        // Les cartes exclues sont fixées au démarrage, et les effets ne sont pas réécrits par un état envoyé sans eux.
+        $existant = BolCombatState::normalize($session->etat_combat);
+        $etat['exclus'] ??= $existant['exclus'];
+        $etat['effets'] ??= $existant['effets'];
 
         $session->update(['etat_combat' => BolCombatState::normalize($etat)]);
 

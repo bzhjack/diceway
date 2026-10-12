@@ -4,6 +4,9 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {RollTerm} from '../../models/action-roll.model';
+import {CombatEffect, ModifierTerm, NewEffect} from '../../models/combat-effect.model';
+import {libelleDuree, libelleEffet, modificateursPour, POSTURE_DEFENSE, sommeModificateurs} from './combat-effects.util';
+import {EffectsListComponent} from './effects-list';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, MAINS_NUES} from '../../attack-options.util';
 import {dualStrikeDegats} from '../../combat-attack.util';
@@ -32,9 +35,6 @@ const DICE_TIMEOUT_MS = 12000;
 
 /** Les postures de l'échelle, de la plus prudente à la plus audacieuse ; les autres sont des options spéciales. */
 const SCALE_SLUGS: readonly string[] = ['defensive', 'none', 'offensive', 'intrepid'];
-
-/** Effet d'une posture sur la défense (le bonus d'attaque vient du référentiel). */
-const POSTURE_DEFENSE: Readonly<Record<string, number>> = {defensive: 1, offensive: -1, intrepid: -2, 'dual-parry': 1};
 
 /** Effet d'une posture qui ne se chiffre pas en bonus ou malus. */
 const POSTURE_EXTRA: Readonly<Record<string, string>> = {
@@ -71,7 +71,7 @@ export interface AppliedHit {
  * signale à la page ce qui doit être enregistré (dégâts, fin de tour, défense totale). */
 @Component({
   selector: 'bol-turn-assistant',
-  imports: [MatButtonModule, MatIconModule, MatTooltipModule],
+  imports: [EffectsListComponent, MatButtonModule, MatIconModule, MatTooltipModule],
   templateUrl: './turn-assistant.html',
   styleUrl: './turn-assistant.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -91,6 +91,8 @@ export class TurnAssistantComponent {
   readonly targetStats = input<ResolvedCombatStats | null>(null);
   /** Un héros a obtenu un succès légendaire : +1 aux jets d'attaque de l'attaquant s'il est du camp des héros. */
   readonly legendaryBonus = input(false);
+  /** Les effets en cours (registre du combat) : leurs modificateurs entrent dans les jets. */
+  readonly effets = input<readonly CombatEffect[]>([]);
   /** Plateau de dés 3D de l'écran de combat : les dés roulent par-dessus tout l'écran. Sans lui, les dés sont tirés sans animation. */
   readonly diceBox = input<DiceBoxHostComponent | null>(null);
 
@@ -100,6 +102,8 @@ export class TurnAssistantComponent {
   /** Ouvrir la fiche complète (statbloc) d'un des deux duellistes. */
   readonly sheetRequested = output<TapisCard>();
   readonly attackRolled = output<TapisCard>();
+  readonly effectRemoved = output<string>();
+  readonly effectAdded = output<NewEffect>();
   readonly damageApplied = output<AppliedHit>();
   readonly totalDefenseRequested = output<void>();
 
@@ -319,11 +323,29 @@ export class TurnAssistantComponent {
     add(-t.defense, 'défense');
     add(this.postureModifier(), 'posture');
     add(this.legendaryBonus() ? 1 : 0, 'légendaire');
-    add(-this.shield(), 'bouclier');
+    for (const term of this.effectTerms()) {
+      terms.push({label: term.label, tone: term.tone, ...(term.effetId ? {effetId: term.effetId} : {})});
+    }
     return terms;
   });
 
   protected readonly threshold = ATTACK_THRESHOLD;
+
+  /** Les deux duellistes, pour nommer à qui appartient un effet et à qui l'ajouter. */
+  protected readonly duelistes = computed(() => {
+    const target = this.target();
+    return [{key: this.card().key, nom: this.card().nom}, ...(target ? [{key: target.key, nom: target.nom}] : [])];
+  });
+
+  private badgesDe(key: string | undefined): readonly string[] {
+    return key
+      ? this.effets()
+          .filter((effet) => effet.porteur === key && effet.valeur !== 0)
+          .map((effet) => `${effet.valeur > 0 ? '+' : '−'} ${Math.abs(effet.valeur)} ${libelleEffet(effet)} · ${libelleDuree(effet.duree)}`)
+      : [];
+  }
+  protected readonly attackerBadges = computed(() => this.badgesDe(this.card().key));
+  protected readonly targetBadges = computed(() => this.badgesDe(this.target()?.key));
 
   /** Les termes du jet de dégâts : le dé de l'arme, la vigueur, le coup dévastateur et la protection de la cible. */
   protected readonly damageTerms = computed<readonly RollTerm[]>(() => {
@@ -339,6 +361,9 @@ export class TurnAssistantComponent {
     const source = this.protectionManual() !== null ? ' (saisie)' : this.protectionFace() !== null ? ` (dé ${this.protectionFace()})` : '';
     // Toujours affichée, même à 0 : c'est elle qu'on clique pour saisir une valeur.
     terms.push({label: `− ${protection} protection${source}`, tone: 'minus', editable: true});
+    for (const term of this.damageEffectTerms()) {
+      terms.push({label: term.label, tone: term.tone, ...(term.effetId ? {effetId: term.effetId} : {})});
+    }
     return terms;
   });
 
@@ -351,10 +376,26 @@ export class TurnAssistantComponent {
     return this.manualTotal();
   });
 
-  /** Malus du bouclier figé au premier jet de cette attaque : la cible est ensuite marquée « attaquée » et son malus tombe, mais un
-   * jet relancé garde le sien. */
-  private readonly shieldLock = signal<number | null>(null);
-  private readonly shield = computed(() => this.shieldLock() ?? this.targetStats()?.bouclierMalusUneAttaque ?? 0);
+  /** Les modificateurs du registre pour ce jet, tels qu'ils sont au moment où on les lit. */
+  private readonly liveTerms = computed<readonly ModifierTerm[]>(() => {
+    const t = this.targetStats();
+    const target = this.target();
+    return target ? modificateursPour(this.effets(), {jet: 'attaque', attaquant: this.card().key, cible: target.key, bouclier: t?.bouclierMalusUneAttaque ?? 0}) : [];
+  });
+
+  /** Modificateurs figés au premier jet de cette attaque : la cible est ensuite marquée « attaquée » (son bouclier tombe du registre), mais un
+   * jet relancé garde les siens. */
+  private readonly frozenTerms = signal<readonly ModifierTerm[] | null>(null);
+  protected readonly effectTerms = computed(() => this.frozenTerms() ?? this.liveTerms());
+
+  /** Les modificateurs du registre pour le jet de dégâts (effets de dégâts de l'attaquant, protection de la cible), figés comme ceux de
+   * l'attaque : un effet à usage limité consommé par le jet d'attaque compte encore pour ses dégâts. */
+  private readonly liveDamageTerms = computed<readonly ModifierTerm[]>(() => {
+    const target = this.target();
+    return target ? modificateursPour(this.effets(), {jet: 'degats', attaquant: this.card().key, cible: target.key, bouclier: 0}) : [];
+  });
+  private readonly frozenDamageTerms = signal<readonly ModifierTerm[] | null>(null);
+  private readonly damageEffectTerms = computed(() => this.frozenDamageTerms() ?? this.liveDamageTerms());
 
   protected readonly total = computed(() => {
     const sum = this.diceSum();
@@ -367,8 +408,7 @@ export class TurnAssistantComponent {
       sum,
       attackBonus(a, this.isTir()),
       t.defense,
-      0,
-      this.shield(),
+      sommeModificateurs(this.effectTerms()),
       this.legendaryBonus() ? 1 : 0,
       this.postureModifier(),
     );
@@ -475,7 +515,8 @@ export class TurnAssistantComponent {
   });
   protected readonly damage = computed(() => {
     const raw = this.raw();
-    return raw === null ? null : finalDamage(raw, this.vigueur(), this.protection(), this.devastating());
+    // Un modificateur positif des effets ajoute aux dégâts : il se retranche de la protection.
+    return raw === null ? null : finalDamage(raw, this.vigueur(), this.protection() - sommeModificateurs(this.damageEffectTerms()), this.devastating());
   });
   protected readonly hasDamageStep = computed(() => !!this.verdict()?.hit && this.heroic() !== 'desarmement');
 
@@ -566,13 +607,14 @@ export class TurnAssistantComponent {
     }
   }
 
-  /** Premier jet contre cette cible : fige son malus de bouclier et la signale comme attaquée ce round. */
+  /** Premier jet contre cette cible : fige les modificateurs et signale l'attaque au registre. */
   private markAttacked(): void {
     const target = this.target();
-    if (!target || this.shieldLock() !== null) {
+    if (!target || this.frozenTerms() !== null) {
       return;
     }
-    this.shieldLock.set(this.targetStats()?.bouclierMalusUneAttaque ?? 0);
+    this.frozenTerms.set(this.liveTerms());
+    this.frozenDamageTerms.set(this.liveDamageTerms());
     this.attackRolled.emit(target);
   }
 
@@ -676,7 +718,8 @@ export class TurnAssistantComponent {
     this.protectionFace.set(null);
     this.protectionManual.set(null);
     this.editingProtection.set(false);
-    this.shieldLock.set(null);
+    this.frozenTerms.set(null);
+    this.frozenDamageTerms.set(null);
     this.dice.set(null);
     this.manualTotal.set(null);
     this.heroic.set(null);

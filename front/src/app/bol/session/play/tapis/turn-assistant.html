@@ -92,9 +92,11 @@
         }
       </div>
 
+      <bol-effects-list [effets]="effets()" [cartes]="duelistes()" (retire)="effectRemoved.emit($event)" (ajoute)="effectAdded.emit($event)" />
+
       @if (visibleOptions().length > 1) {
         <div class="tas-recap">
-          <span class="tas-label">Effet sur ce tour</span>
+          <span class="tas-label">Ce jet</span>
           <div class="tas-pills">
             @for (pill of effectPills(); track pill.label) {
               <span class="tas-pill" [class.tas-pill--plus]="pill.tone === 'plus'" [class.tas-pill--minus]="pill.tone === 'minus'">{{ pill.label }}</span>
@@ -130,6 +132,13 @@
               </div>
             }
           </div>
+          @if (attackerBadges().length > 0) {
+            <ul class="tas-pills tas-badges" aria-label="Effets sur l’attaquant">
+              @for (badge of attackerBadges(); track badge) {
+                <li class="tas-pill">{{ badge }}</li>
+              }
+            </ul>
+          }
         </div>
         <div class="tas-actions">
           <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + card().nom" (click)="sheetRequested.emit(card())">Fiche</button>
@@ -161,6 +170,13 @@
                 </div>
               }
             </div>
+            @if (targetBadges().length > 0) {
+              <ul class="tas-pills tas-badges" aria-label="Effets sur la cible">
+                @for (badge of targetBadges(); track badge) {
+                  <li class="tas-pill">{{ badge }}</li>
+                }
+              </ul>
+            }
           </div>
         <div class="tas-actions">
           <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + t.nom" (click)="sheetRequested.emit(t)">Fiche</button>
@@ -193,6 +209,9 @@
         <div class="tas-terms">
           @for (term of formulaTerms(); track term.label) {
             <span class="tas-term" [class.tas-term--dice]="term.tone === 'dice'" [class.tas-term--plus]="term.tone === 'plus'" [class.tas-term--minus]="term.tone === 'minus'">{{ term.label }}</span>
+            @if (term.effetId) {
+              <button type="button" class="tas-term-remove" [attr.aria-label]="'Retirer l’effet ' + term.label" matTooltip="Retirer cet effet" (click)="effectRemoved.emit(term.effetId)">×</button>
+            }
           }
           <span class="tas-eq">≥ {{ threshold }}</span>
         </div>
@@ -245,6 +264,9 @@
               <button type="button" class="tas-term tas-term--minus tas-term--edit" matTooltip="Cliquer pour saisir la protection" aria-label="Modifier la protection de la cible" (click)="startEditProtection()">{{ term.label }}</button>
             } @else {
               <span class="tas-term" [class.tas-term--dice]="term.tone === 'dice'" [class.tas-term--plus]="term.tone === 'plus'" [class.tas-term--minus]="term.tone === 'minus'">{{ term.label }}</span>
+              @if (term.effetId) {
+                <button type="button" class="tas-term-remove" [attr.aria-label]="'Retirer l’effet ' + term.label" matTooltip="Retirer cet effet" (click)="effectRemoved.emit(term.effetId)">×</button>
+              }
             }
           }
           @if (protectionDie()) {

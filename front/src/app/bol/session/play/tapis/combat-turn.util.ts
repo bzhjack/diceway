@@ -2,9 +2,11 @@ import {PlayToken} from '../../models/combat-play.model';
 import {TapisCard} from '../../models/tapis.model';
 import {InitiativeTierKey} from '../../models/initiative.model';
 import {TurnOrderEntry, TurnOrderGroup} from '../../models/turn-order.model';
+import {NewEffect} from '../../models/combat-effect.model';
 import {EtatCombat, TurnStatus, OrderedCard, TurnState, TurnToken} from '../../models/combat-turn.model';
+import {appliquerEvenement, effetsDeLAncienFormat, effetsDeTour, normalizeEffets} from './combat-effects.util';
 
-export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], defense_totale: [], attaquees: [], exclus: []};
+export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], effets: [], exclus: []};
 
 function uniqueKeys(raw: unknown): string[] {
   if (!Array.isArray(raw)) {
@@ -25,8 +27,7 @@ export function normalizeEtat(raw: unknown): EtatCombat {
   return {
     round: Math.max(1, round),
     joues: uniqueKeys(source['joues']),
-    defense_totale: uniqueKeys(source['defense_totale']),
-    attaquees: uniqueKeys(source['attaquees']),
+    effets: 'effets' in source ? normalizeEffets(source['effets']) : effetsDeLAncienFormat(source),
     exclus: uniqueKeys(source['exclus']),
   };
 }
@@ -116,18 +117,10 @@ export function turnState(ordered: readonly OrderedCard[], etat: EtatCombat): Tu
   return {round: etat.round, activeKey, statuses};
 }
 
-/** Retire le marqueur de défense totale de la carte qui devient active : il a tenu jusqu'à son tour. */
-function liftDefenseOfActive(ordered: readonly OrderedCard[], etat: EtatCombat): EtatCombat {
-  const activeKey = turnState(ordered, etat).activeKey;
-  if (activeKey === null || !etat.defense_totale.includes(activeKey)) {
-    return etat;
-  }
-  return {...etat, defense_totale: etat.defense_totale.filter((key) => key !== activeKey)};
-}
-
-/** « Fin du tour » : la carte active a joué. S'il ne reste personne à jouer ce round, le suivant
- * commence — sauf si personne ne pourrait y jouer non plus (tout le monde est hors combat). */
-export function endTurn(ordered: readonly OrderedCard[], etat: EtatCombat): EtatCombat {
+/** « Fin du tour » : la carte active a joué, et ses effets durables naissent (`crees`). S'il ne reste personne à jouer ce round, le suivant
+ * commence — sauf si personne ne pourrait y jouer non plus (tout le monde est hors combat). La carte qui devient active voit tomber
+ * ses effets « jusqu'à son prochain tour ». */
+export function endTurn(ordered: readonly OrderedCard[], etat: EtatCombat, crees: readonly NewEffect[] = []): EtatCombat {
   const activeKey = turnState(ordered, etat).activeKey;
   if (activeKey === null) {
     return etat;
@@ -137,37 +130,31 @@ export function endTurn(ordered: readonly OrderedCard[], etat: EtatCombat): Etat
   let next: EtatCombat = {
     ...etat,
     joues: [...etat.joues.filter((key) => onTable.has(key)), activeKey],
-    // Une carte qui termine son tour n'emporte pas un marqueur hérité : elle a pu devenir active
-    // sans passer par une fin de tour (carte précédente retirée ou tombée), donc sans qu'il soit levé.
-    defense_totale: etat.defense_totale.filter((key) => key !== activeKey),
+    effets: appliquerEvenement(etat.effets, {type: 'fin-tour', carte: activeKey, crees}),
   };
 
   if (turnState(ordered, next).activeKey === null) {
-    const nextRound: EtatCombat = {...next, round: etat.round + 1, joues: [], attaquees: []};
+    const nextRound: EtatCombat = {...next, round: etat.round + 1, joues: [], effets: appliquerEvenement(next.effets, {type: 'nouveau-round'})};
     if (turnState(ordered, nextRound).activeKey !== null) {
       next = nextRound;
     }
   }
 
-  return liftDefenseOfActive(ordered, next);
+  const nowActive = turnState(ordered, next).activeKey;
+  return nowActive === null ? next : {...next, effets: appliquerEvenement(next.effets, {type: 'debut-tour', carte: nowActive})};
 }
 
-/** « Défense totale » : la carte active est marquée, et son tour se termine. Le marqueur tombe
- * quand elle redevient active. */
+/** « Défense totale » : la carte active termine son tour avec +2 en défense, jusqu'à ce qu'elle redevienne active. */
 export function totalDefense(ordered: readonly OrderedCard[], etat: EtatCombat): EtatCombat {
   const activeKey = turnState(ordered, etat).activeKey;
   if (activeKey === null) {
     return etat;
   }
-
-  // Le tour se termine d'abord (ce qui lève tout marqueur hérité), puis le marqueur est posé : il
-  // tient jusqu'à ce que la carte redevienne active.
-  const ended = endTurn(ordered, etat);
-  return {...ended, defense_totale: [...ended.defense_totale.filter((key) => key !== activeKey), activeKey]};
+  return endTurn(ordered, etat, effetsDeTour(activeKey, {posture: null, defenseTotale: true}));
 }
 
-/** « Rendre la main » : une carte qui a joué redevient jouable ce round. Son éventuelle défense
- * totale est annulée avec son tour — sinon elle pourrait attaquer en gardant le +2. */
+/** « Rendre la main » : une carte qui a joué redevient jouable ce round. Ce que son tour avait fait naître (défense totale, posture) est
+ * annulé avec lui — sinon elle pourrait attaquer en gardant le +2. */
 export function giveBackTurn(etat: EtatCombat, key: string): EtatCombat {
   if (!etat.joues.includes(key)) {
     return etat;
@@ -175,7 +162,7 @@ export function giveBackTurn(etat: EtatCombat, key: string): EtatCombat {
   return {
     ...etat,
     joues: etat.joues.filter((played) => played !== key),
-    defense_totale: etat.defense_totale.filter((defended) => defended !== key),
+    effets: etat.effets.filter((effet) => !(effet.porteur === key && effet.duree.type === 'debut-tour-porteur')),
   };
 }
 
@@ -195,6 +182,12 @@ export function targetableKeys(
       .filter((card) => card.camp !== active.camp && !isOut(card) && !exclus.includes(card.key))
       .map((card) => card.key),
   );
+}
+
+/** Règle de réaction : un héros en échec critique ne bénéficie pas de son bouclier en défense pendant le premier round
+ * (02-actions-combat.md). Dérivée du palier de réaction et du round, sans effet stocké : aucun événement n'existe au démarrage du combat. */
+export function bouclierPerduRound1(round: number, tier: InitiativeTierKey | null): boolean {
+  return round === 1 && tier === 'echec_critique';
 }
 
 /** Jeton (`PlayToken`) correspondant à une carte, pour en résoudre les stats de combat. */

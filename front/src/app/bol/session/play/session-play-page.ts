@@ -4,7 +4,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {concatMap, forkJoin, from, Observable, of, take, tap, toArray} from 'rxjs';
+import {concatMap, EMPTY, forkJoin, from, Observable, of, switchMap, take, tap, toArray} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolFightSessionModel} from '../../models/bol-fight-session.model';
@@ -48,7 +48,10 @@ import {ExpandedCardDialogComponent} from './tapis/expanded-card-dialog';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {equippedArmes} from '../../shared/arme/arme-equipee';
 import {AttackChoice} from '../models/attack-options.model';
-import {endTurn, giveBackTurn, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
+import {bouclierPerduRound1, endTurn, giveBackTurn, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
+import {NewEffect} from '../models/combat-effect.model';
+import {EtatSaver} from './etat-saver';
+import {appliquerEvenement, effetsDeTour, libelleDuree, libelleEffet} from './tapis/combat-effects.util';
 import {EtatCombat} from '../models/combat-turn.model';
 import {CombatBoardComponent} from './combat-board/combat-board';
 import {AppliedHit} from './tapis/turn-assistant';
@@ -171,6 +174,9 @@ export class SessionPlayPageComponent {
       tier: tier,
       locked: lockedRound1,
       ally: card.kind !== 'hero' && card.camp === 'heros',
+      effets: this.etat()
+        .effets.filter((e) => e.porteur === card.key && e.valeur !== 0)
+        .map((e) => `${libelleEffet(e)} · ${libelleDuree(e.duree)}`),
     }));
   });
 
@@ -269,8 +275,8 @@ export class SessionPlayPageComponent {
       const attacker = this.activeCard();
       const target = this.selectedTarget();
       const tokens = this.board()?.tokens ?? [];
-      const defenseTotale = this.etat().defense_totale;
-      const attaquees = this.etat().attaquees;
+      const round = this.etat().round;
+      const ordered = this.orderedCards();
       const run = ++this.statsRun;
       const attackerToken = attacker ? tokenForCard(tokens, attacker) : null;
       const targetToken = target ? tokenForCard(tokens, target) : null;
@@ -289,16 +295,9 @@ export class SessionPlayPageComponent {
             return;
           }
           this.attackerStats.set(attackerStats);
-          this.targetStats.set(
-            targetStats && target
-              ? {
-                  ...targetStats,
-                  defense: targetStats.defense + (defenseTotale.includes(target.key) ? 2 : 0),
-                  // Le petit bouclier ne pèse que sur la première attaque subie du round.
-                  bouclierMalusUneAttaque: attaquees.includes(target.key) ? 0 : targetStats.bouclierMalusUneAttaque,
-                }
-              : targetStats,
-          );
+          // Un héros en échec critique n'a pas son bouclier au round 1.
+          const tier = ordered.find((entry) => entry.card.key === target?.key)?.tier ?? null;
+          this.targetStats.set(targetStats && bouclierPerduRound1(round, tier) ? {...targetStats, bouclierMalusUneAttaque: 0} : targetStats);
         });
     });
 
@@ -749,32 +748,27 @@ export class SessionPlayPageComponent {
     this.snackBar.open(extractApiErrorMessage(error, fallback), 'Fermer', {duration: 5000});
   }
 
-  /** Un enregistrement de l'état du combat est en cours : les actions de tour suivantes sont
-   * ignorées tant que la base n'a pas répondu, sinon elles partiraient d'un état périmé. */
-  private savingEtat = false;
+  /** Enregistre l'état du combat en série (cf. `EtatSaver`), puis recharge la session : l'affichage suit toujours la base. */
+  private readonly etatSaver = new EtatSaver(
+    () => this.etat(),
+    (next) => {
+      const sessionId = this.sessionId();
+      if (!sessionId || this.mode() !== 'combat') {
+        return EMPTY;
+      }
+      return this.fightSessionService
+        .updateCombatState(sessionId, {round: next.round, joues: [...next.joues], effets: [...next.effets], exclus: [...next.exclus]})
+        .pipe(
+          switchMap(() => this.fightSessionService.fightSession(sessionId)),
+          tap((session) => this.session.set(session)),
+          take(1),
+        );
+    },
+    (error) => this.tableError(error, "Impossible d'enregistrer le tour."),
+  );
 
-  /** Enregistre l'état du combat, puis recharge la session : l'affichage suit toujours la base. Ne
-   * fait rien si l'état ne change pas (plus personne ne peut jouer) ou si un enregistrement est en
-   * cours. */
-  private saveEtat(next: EtatCombat): void {
-    const sessionId = this.sessionId();
-    if (!sessionId || this.mode() !== 'combat' || this.savingEtat || next === this.etat()) {
-      return;
-    }
-
-    this.savingEtat = true;
-    this.fightSessionService
-      .updateCombatState(sessionId, {round: next.round, joues: [...next.joues], defense_totale: [...next.defense_totale], attaquees: [...next.attaquees], exclus: [...next.exclus]})
-      .subscribe({
-        next: () => {
-          this.savingEtat = false;
-          this.loadSession(sessionId);
-        },
-        error: (error: unknown) => {
-          this.savingEtat = false;
-          this.tableError(error, "Impossible d'enregistrer le tour.");
-        },
-      });
+  private saveEtat(update: (etat: EtatCombat) => EtatCombat, options?: {readonly ignoreIfBusy?: boolean}): void {
+    this.etatSaver.apply(update, options);
   }
 
   /** « Retarder » : la carte active joue en dernier ce round. */
@@ -789,17 +783,20 @@ export class SessionPlayPageComponent {
   }
 
   protected onEndTurn(): void {
+    const active = this.activeCard();
+    // La posture choisie pour ce tour dure : son bonus ou malus de défense pèse sur les attaques suivantes contre cette carte.
+    const crees = active ? effetsDeTour(active.key, {posture: this.attackChoice()?.posture?.slug ?? null, defenseTotale: false}) : [];
     this.targetKey.set(null);
-    this.saveEtat(endTurn(this.orderedCards(), this.etat()));
+    this.saveEtat((etat) => endTurn(this.orderedCards(), etat, crees), {ignoreIfBusy: true});
   }
 
   protected onTotalDefense(): void {
     this.targetKey.set(null);
-    this.saveEtat(totalDefense(this.orderedCards(), this.etat()));
+    this.saveEtat((etat) => totalDefense(this.orderedCards(), etat), {ignoreIfBusy: true});
   }
 
   protected onGiveBackTurn(key: string): void {
-    this.saveEtat(giveBackTurn(this.etat(), key));
+    this.saveEtat((etat) => giveBackTurn(etat, key), {ignoreIfBusy: true});
   }
 
   /** Clic sur une carte désignable (ou « Attaquer cette carte ») : elle devient la cible de la carte active. */
@@ -812,12 +809,23 @@ export class SessionPlayPageComponent {
     }
   }
 
-  /** Un jet d'attaque vient d'être fait contre cette cible : elle a subi son attaque du round, son petit bouclier ne compte plus. */
+  /** Un jet d'attaque vient d'être fait contre cette cible : le registre le sait (le petit bouclier est dépensé pour ce round). */
   protected onAttackRolled(target: TapisCard): void {
-    const etat = this.etat();
-    if (!etat.attaquees.includes(target.key)) {
-      this.saveEtat({...etat, attaquees: [...etat.attaquees, target.key]});
+    const attaquant = this.activeCard()?.key;
+    if (!attaquant) {
+      return;
     }
+    this.saveEtat((etat) => ({...etat, effets: [...appliquerEvenement(etat.effets, {type: 'jet-attaque', attaquant, cible: target.key})]}));
+  }
+
+  /** Le MJ retire un effet (croix d'une puce ou du bloc « Effets en cours »). */
+  protected onEffectRemoved(id: string): void {
+    this.saveEtat((etat) => ({...etat, effets: [...appliquerEvenement(etat.effets, {type: 'retrait-manuel', id})]}));
+  }
+
+  /** Le MJ ajoute un effet depuis le menu « + Effet ». */
+  protected onEffectAdded(effet: NewEffect): void {
+    this.saveEtat((etat) => ({...etat, effets: [...appliquerEvenement(etat.effets, {type: 'ajout-manuel', effet})]}));
   }
 
   /** Dégâts calculés par l'assistant : enregistrés sur la cible. */

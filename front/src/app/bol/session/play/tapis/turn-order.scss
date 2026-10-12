@@ -184,6 +184,25 @@
   box-shadow: 0 0 0 3px var(--dw-color-echec-forte), 0 0 14px 3px rgba(208, 42, 42, 0.6);
 }
 
+// Une carte qui porte des effets : un point doré au coin haut du médaillon.
+.tor-med--effects {
+  overflow: visible;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -0.2rem;
+    right: -0.2rem;
+    z-index: 1;
+    width: 0.6rem;
+    height: 0.6rem;
+    border: 2px solid var(--dw-surface-0);
+    border-radius: 50%;
+    background: var(--dw-color-legendary);
+  }
+}
+
 .tor-med--ally {
   // Allié des héros : une pastille verte au coin du médaillon.
   overflow: visible;

@@ -63,4 +63,6 @@ export interface RollTerm {
   readonly tone: 'dice' | 'plus' | 'minus';
   /** La puce se clique pour saisir la valeur à la main (protection de la cible). */
   readonly editable?: boolean;
+  /** Effet du registre dont la puce vient : sa croix le retire. */
+  readonly effetId?: string;
 }
