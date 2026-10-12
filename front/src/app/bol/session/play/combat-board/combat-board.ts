@@ -26,7 +26,6 @@ export class CombatBoardComponent {
   // Frise
   readonly entries = input.required<readonly TurnOrderEntry[]>();
   readonly round = input.required<number>();
-  readonly title = input('');
   readonly legendaryActive = input(false);
   readonly announcement = input('');
   // Assistant de tour : `null` quand plus personne ne peut jouer

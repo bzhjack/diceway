@@ -6,8 +6,8 @@
 .tor {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  padding: 0.6rem 0.9rem 0.7rem;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
   border-bottom: 1px solid var(--dw-border);
   background: var(--dw-surface-50);
 }
@@ -23,7 +23,7 @@
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.35rem 0.8rem 0.35rem 0.5rem;
+  padding: 0.2rem 0.6rem 0.2rem 0.4rem;
   border: 2px solid var(--bar-bronze, var(--dw-border));
   border-radius: 6px;
   background: repeating-linear-gradient(135deg, #2c2118 0 6px, #251b13 6px 12px);
@@ -34,8 +34,8 @@
   b {
     display: grid;
     place-items: center;
-    min-width: 2.3rem;
-    height: 2.3rem;
+    min-width: 2rem;
+    height: 2rem;
     padding-inline: 0.3rem;
     border-radius: 4px;
     background: #0f0a06;
@@ -55,22 +55,6 @@
   }
 }
 
-// Surtitre (rencontre) au-dessus de la pastille d'état.
-.tor-titles {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.25rem;
-}
-
-.tor-title {
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--dw-color-legendary);
-}
-
 .tor-pill {
   padding: 0.2rem 0.65rem;
   border: 1px solid var(--dw-color-legendary);
@@ -85,15 +69,13 @@
   color: var(--dw-color-danger-muted);
 }
 
-.tor-spacer {
-  flex: 1;
-}
-
 // Un bloc par rang (ou famille de rangs) de réaction qui a des combattants ; ils se partagent la largeur.
 .tor-groups {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
-  gap: 0.45rem;
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -101,10 +83,10 @@
 
 .tor-group {
   display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
+  align-items: center;
+  gap: 0.5rem;
   min-width: 0;
-  padding: 0.4rem 0.5rem 0.55rem;
+  padding: 0.25rem 0.5rem;
   border: 1px solid var(--dw-border);
   border-radius: 10px;
   background: var(--dw-surface-0);
@@ -118,6 +100,7 @@
 .tor-group-title {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
   gap: 0.3rem;
   margin: 0;
   font-size: 0.64rem;
@@ -141,9 +124,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  min-height: 2.4rem;
   margin: 0;
-  padding: 0.15rem 0 0;
+  padding: 0;
   list-style: none;
 }
 
@@ -152,8 +134,8 @@
   --tor-metal: var(--bar-pj-2, #a8762a);
   display: grid;
   place-items: center;
-  width: 2.4rem;
-  height: 2.4rem;
+  width: 2rem;
+  height: 2rem;
   padding: 0;
   border: 3px solid var(--tor-metal);
   border-radius: 50%;
@@ -194,7 +176,6 @@
 }
 
 .tor-med--active {
-  transform: translateY(-3px);
   box-shadow: 0 0 0 3px var(--bar-ember, var(--dw-color-legendary)), 0 0 14px 3px rgba(232, 135, 58, 0.6);
 }
 

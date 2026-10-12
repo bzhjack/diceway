@@ -1,36 +1,6 @@
 <div class="tas" role="group" [attr.aria-label]="'Tour de ' + card().nom">
-  <!-- Attaquant -->
-  <section class="tas-fighter" aria-label="Attaquant">
-    <div class="tas-switch">
-      <span class="tas-kicker">Attaquant</span>
-      <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + card().nom" (click)="sheetRequested.emit(card())">
-        <mat-icon>badge</mat-icon> Fiche
-      </button>
-    </div>
-    <div class="tas-head">
-      <span class="tas-med tas-med--active" aria-hidden="true">
-        @if (card().avatar) {
-          <img [src]="card().avatar" alt="" />
-        } @else {
-          {{ card().nom.charAt(0).toUpperCase() }}
-        }
-      </span>
-      <div class="tas-id">
-        <div class="tas-idline">
-          <strong class="tas-name tas-name--active">{{ card().nom }}</strong>
-          <span class="tas-tag">{{ card().rang ?? 'Héros' }}</span>
-        </div>
-        <div class="tas-tiles">
-          @for (tile of attackerTiles(); track tile.label) {
-            <div class="tas-tile" [class.tas-tile--hot]="tile.hot" [class.tas-tile--hp]="tile.heart" [class.tas-tile--long]="tile.value.length > 5">
-              <b>{{ tile.value }}</b>
-              <span>{{ tile.label }}@if (tile.max) { /{{ tile.max }} }</span>
-            </div>
-          }
-        </div>
-      </div>
-    </div>
-
+  <!-- Options de l'attaque : action, arme, posture, distance, effet -->
+  <aside class="tas-options" aria-label="Options de l'attaque">
     <div class="tas-opts">
       <div class="tas-group" role="group" aria-label="Action">
         <span class="tas-label">Action</span>
@@ -133,10 +103,98 @@
         </div>
       }
     </div>
-  </section>
+  </aside>
 
-  <!-- Centre : les deux jets, en grand -->
-  <div class="tas-center">
+  <div class="tas-main">
+    <!-- Duel : l'attaquant et la cible face à face -->
+    <div class="tas-vs">
+  <section class="tas-fighter" aria-label="Attaquant">
+      <div class="tas-switch">
+        <span class="tas-kicker">Attaquant</span>
+        <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + card().nom" (click)="sheetRequested.emit(card())">
+          <mat-icon>badge</mat-icon> Fiche
+        </button>
+      </div>
+      <div class="tas-head">
+        <span class="tas-med tas-med--active" aria-hidden="true">
+          @if (card().avatar) {
+            <img [src]="card().avatar" alt="" />
+          } @else {
+            {{ card().nom.charAt(0).toUpperCase() }}
+          }
+        </span>
+        <div class="tas-id">
+          <div class="tas-idline">
+            <strong class="tas-name tas-name--active">{{ card().nom }}</strong>
+            <span class="tas-tag">{{ card().rang ?? 'Héros' }}</span>
+          </div>
+          <div class="tas-tiles">
+            @for (tile of attackerTiles(); track tile.label) {
+              <div class="tas-tile" [class.tas-tile--hot]="tile.hot" [class.tas-tile--hp]="tile.heart" [class.tas-tile--long]="tile.value.length > 5">
+                <b>{{ tile.value }}</b>
+                <span>{{ tile.label }}@if (tile.max) { /{{ tile.max }} }</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+  
+    </section>
+  <span class="tas-versus" aria-hidden="true">VS</span>
+  <section class="tas-fighter" aria-label="Cible">
+      @if (target(); as t) {
+        <div class="tas-switch">
+          <span class="tas-kicker">Cible</span>
+          <div class="tas-switch-actions">
+            <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + t.nom" (click)="sheetRequested.emit(t)">
+              <mat-icon>badge</mat-icon> Fiche
+            </button>
+            <button type="button" class="tas-ghost" (click)="targetSelected.emit(null)">↺ Changer d'adversaire</button>
+          </div>
+        </div>
+        <div class="tas-head">
+          <span class="tas-med tas-med--target" aria-hidden="true">
+            @if (t.avatar) {
+              <img [src]="t.avatar" alt="" />
+            } @else {
+              {{ t.nom.charAt(0).toUpperCase() }}
+            }
+          </span>
+          <div class="tas-id">
+            <div class="tas-idline">
+              <strong class="tas-name">{{ t.nom }}</strong>
+              <span class="tas-tag">{{ t.rang ?? 'Héros' }}</span>
+            </div>
+            <div class="tas-tiles">
+              @for (tile of targetTiles(); track tile.label) {
+                <div class="tas-tile" [class.tas-tile--hot]="tile.hot" [class.tas-tile--hp]="tile.heart" [class.tas-tile--long]="tile.value.length > 5">
+                  <b>{{ tile.value }}</b>
+                  <span>{{ tile.label }}@if (tile.max) { /{{ tile.max }} }</span>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      } @else {
+        <span class="tas-kicker">Choisis une cible</span>
+        <div class="tas-targets" role="group" aria-label="Cible">
+          @for (t of targets(); track t.key) {
+            <button type="button" class="tas-target" (click)="targetSelected.emit(t)">
+              <b>{{ t.nom }}</b>
+              <span class="tas-bar" [class.tas-bar--low]="isLow(t)"><i [style.width.%]="percent(t)"></i></span>
+              <span class="tas-num">{{ t.vitaliteCourante ?? '—' }}/{{ t.vitaliteMax ?? '—' }}</span>
+            </button>
+          } @empty {
+            <span class="tas-note">Personne à viser.</span>
+          }
+        </div>
+        <p class="tas-note">La fiche de l'adversaire s'affiche ici dès que tu en choisis un.</p>
+      }
+    </section>
+  </div>
+
+    <!-- Les deux jets côte à côte -->
+    <div class="tas-rolls">
     <section class="tas-step tas-step--roll">
       <h3><span aria-hidden="true">1</span> Jet d'attaque</h3>
       @if (target() && attacker() && targetStats()) {
@@ -235,57 +293,6 @@
         <p class="tas-note">Lance le jet d'attaque pour calculer les dégâts.</p>
       }
     </section>
+    </div>
   </div>
-
-  <!-- Cible : la liste, puis la fiche de l'adversaire choisi -->
-  <section class="tas-fighter" aria-label="Cible">
-    @if (target(); as t) {
-      <div class="tas-switch">
-        <span class="tas-kicker">Cible</span>
-        <div class="tas-switch-actions">
-          <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + t.nom" (click)="sheetRequested.emit(t)">
-            <mat-icon>badge</mat-icon> Fiche
-          </button>
-          <button type="button" class="tas-ghost" (click)="targetSelected.emit(null)">↺ Changer d'adversaire</button>
-        </div>
-      </div>
-      <div class="tas-head">
-        <span class="tas-med tas-med--target" aria-hidden="true">
-          @if (t.avatar) {
-            <img [src]="t.avatar" alt="" />
-          } @else {
-            {{ t.nom.charAt(0).toUpperCase() }}
-          }
-        </span>
-        <div class="tas-id">
-          <div class="tas-idline">
-            <strong class="tas-name">{{ t.nom }}</strong>
-            <span class="tas-tag">{{ t.rang ?? 'Héros' }}</span>
-          </div>
-          <div class="tas-tiles">
-            @for (tile of targetTiles(); track tile.label) {
-              <div class="tas-tile" [class.tas-tile--hot]="tile.hot" [class.tas-tile--hp]="tile.heart" [class.tas-tile--long]="tile.value.length > 5">
-                <b>{{ tile.value }}</b>
-                <span>{{ tile.label }}@if (tile.max) { /{{ tile.max }} }</span>
-              </div>
-            }
-          </div>
-        </div>
-      </div>
-    } @else {
-      <span class="tas-kicker">Choisis une cible</span>
-      <div class="tas-targets" role="group" aria-label="Cible">
-        @for (t of targets(); track t.key) {
-          <button type="button" class="tas-target" (click)="targetSelected.emit(t)">
-            <b>{{ t.nom }}</b>
-            <span class="tas-bar" [class.tas-bar--low]="isLow(t)"><i [style.width.%]="percent(t)"></i></span>
-            <span class="tas-num">{{ t.vitaliteCourante ?? '—' }}/{{ t.vitaliteMax ?? '—' }}</span>
-          </button>
-        } @empty {
-          <span class="tas-note">Personne à viser.</span>
-        }
-      </div>
-      <p class="tas-note">La fiche de l'adversaire s'affiche ici dès que tu en choisis un.</p>
-    }
-  </section>
 </div>

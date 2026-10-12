@@ -9,9 +9,9 @@
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1.4fr);
-  gap: 0.9rem;
-  padding: 0.9rem 1rem;
+  grid-template-columns: 27rem minmax(0, 1fr);
+  gap: 0.7rem;
+  padding: 0.7rem 0.8rem;
 
   @media (max-width: 1100px) {
     grid-template-columns: minmax(0, 1fr);
@@ -588,23 +588,13 @@
   }
 }
 
-.tas-center {
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-  min-height: 0;
+.tas-fighter .tas-targets {
+  width: 100%;
+  // Trois adversaires visibles, les suivants défilent.
+  max-height: calc(3 * 2.2rem + 2 * 0.3rem);
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--dw-border) transparent;
-}
-
-.tas-center .tas-step {
-  overflow: visible;
-  flex: none;
-}
-
-.tas-fighter .tas-targets {
-  width: 100%;
 }
 
 // Action, arme, posture et distance : sous les tuiles de l'attaquant, là où il y a de la place.
@@ -613,22 +603,11 @@
   flex-direction: column;
   gap: 0.6rem;
   align-self: stretch;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--dw-border);
   text-align: left;
 
   .tas-group {
     align-items: flex-start;
   }
-}
-
-// Les deux jets occupent tout le centre : résultat plus grand.
-.tas-center .tas-ticket {
-  padding: 1.2rem 0.9rem;
-}
-
-.tas-center .tas-ticket-total {
-  font-size: 3.2rem;
 }
 
 // Tuile de vitalité : le chiffre est dans un cœur, le maximum en petit dessous.
@@ -852,4 +831,173 @@
   color: var(--dw-surface-500);
   font-size: 0.78rem;
   font-weight: 800;
+}
+
+// ── Disposition B : options à gauche, duel et jets à droite ─────────────────────────────────────────
+.tas-options {
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dw-border) transparent;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 12px;
+  background: var(--dw-surface-100);
+}
+
+.tas-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dw-border) transparent;
+}
+
+.tas-vs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.tas-versus {
+  font: 400 1.5rem 'Muse Display Harmony', 'Muse Sans', serif;
+  letter-spacing: 0.06em;
+  color: var(--dw-color-legendary);
+}
+
+.tas-rolls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  align-items: start;
+
+  .tas-step {
+    overflow: visible;
+  }
+
+  .tas-line {
+    grid-template-columns: minmax(0, 1fr) 11.5rem;
+  }
+
+  .tas-ticket {
+    padding: 0.7rem 0.6rem;
+  }
+
+  .tas-manual-hint {
+    white-space: nowrap;
+  }
+
+  .tas-manual input {
+    width: 3.8rem;
+  }
+
+  .tas-ticket-total {
+    font-size: 2.6rem;
+  }
+}
+
+// Fiche d'un duelliste, en bandeau : médaillon, nom et les six statistiques sur une seule ligne.
+.tas-vs .tas-fighter {
+  align-self: stretch;
+  gap: 0.4rem;
+  padding: 0.5rem 0.6rem;
+}
+
+.tas-vs .tas-head {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.4rem;
+}
+
+.tas-vs .tas-id {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.4rem;
+}
+
+.tas-vs .tas-idline {
+  width: auto;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.15rem;
+}
+
+.tas-vs .tas-name {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.tas-vs .tas-tag {
+  padding: 0.05rem 0.45rem;
+  font-size: 0.58rem;
+}
+
+.tas-vs .tas-med {
+  width: 3.2rem;
+  height: 3.2rem;
+  border-width: 3px;
+  font-size: 1.1rem;
+}
+
+.tas-vs .tas-head {
+  position: relative;
+}
+
+.tas-vs .tas-head .tas-med {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.tas-vs .tas-idline {
+  min-height: 3.2rem;
+  padding-left: 3.8rem;
+}
+
+.tas-vs .tas-tiles {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.2rem;
+}
+
+.tas-vs .tas-tile {
+  padding: 0.2rem 0.1rem;
+
+  b {
+    font-size: 1.15rem;
+  }
+
+  span {
+    font-size: 0.58rem;
+    letter-spacing: 0.03em;
+  }
+}
+
+.tas-vs .tas-tile--long b {
+  font-size: 0.8rem;
+}
+
+.tas-vs .tas-tile--hp {
+  padding-block: 0.1rem;
+
+  b {
+    width: 1.9rem;
+    height: 1.7rem;
+    font-size: 0.95rem;
+  }
+
+  span {
+    font-size: 0.55rem;
+  }
+}
+
+@media (max-width: 1100px) {
+  .tas-vs,
+  .tas-rolls {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
