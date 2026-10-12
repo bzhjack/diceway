@@ -8,6 +8,8 @@ export interface EtatCombat {
   readonly round: number;
   readonly joues: readonly string[];
   readonly defense_totale: readonly string[];
+  /** Cartes déjà attaquées ce round : le petit bouclier ne pèse que sur la première attaque subie. */
+  readonly attaquees: readonly string[];
   /** Cartes restées sur la table mais exclues de ce combat : elles ne jouent pas et ne sont pas visables. */
   readonly exclus: readonly string[];
 }

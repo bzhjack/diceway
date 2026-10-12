@@ -85,6 +85,7 @@
           (choiceChanged)="attackChoice.set($event)"
           (targetSelected)="onAttackCard($event)"
           (sheetRequested)="onCardToggled($event)"
+          (attackRolled)="onAttackRolled($event)"
           (damageApplied)="onHitApplied($event)"
           (totalDefenseRequested)="onTotalDefense()"
         />

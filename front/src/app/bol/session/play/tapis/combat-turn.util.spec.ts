@@ -28,7 +28,7 @@ function ordered(...cards: TapisCard[]): OrderedCard[] {
 }
 
 function etat(round: number, joues: string[] = [], defense: string[] = []): EtatCombat {
-  return {round, joues, defense_totale: defense, exclus: []};
+  return {round, joues, defense_totale: defense, attaquees: [], exclus: []};
 }
 
 const KALENA = card('hero', 1);
@@ -166,6 +166,13 @@ describe('endTurn', () => {
     expect(endTurn(order, etat(1, ['hero-1']))).toEqual(etat(2));
   });
 
+  it('forgets who was attacked when a new round starts, and keeps it within the round', () => {
+    const attacked: EtatCombat = {...etat(1), attaquees: ['pnj-7']};
+
+    expect(endTurn(order, attacked).attaquees).toEqual(['pnj-7']);
+    expect(endTurn(order, {...attacked, joues: ['hero-1']}).attaquees).toEqual([]);
+  });
+
   it('moves to round 2 when only round-1-locked cards are left, so they get to play', () => {
     const locked: OrderedCard[] = [...ordered(KALENA), {card: PRETRE, tier: 'coriace', lockedRound1: true}];
     const next = endTurn(locked, etat(1));
@@ -300,7 +307,7 @@ describe('groupByTier', () => {
 });
 
 describe('excluded cards', () => {
-  const excluding = (...keys: string[]): EtatCombat => ({round: 1, joues: [], defense_totale: [], exclus: keys});
+  const excluding = (...keys: string[]): EtatCombat => ({round: 1, joues: [], defense_totale: [], attaquees: [], exclus: keys});
 
   it('skips an excluded card, which never becomes active', () => {
     const turn = turnState(ordered(KALENA, RORK), excluding('hero-1'));
@@ -322,5 +329,6 @@ describe('excluded cards', () => {
 
   it('reads them from the API state', () => {
     expect(normalizeEtat({round: 2, exclus: ['pnj-7', 'pnj-7', '']}).exclus).toEqual(['pnj-7']);
+    expect(normalizeEtat({round: 2, attaquees: ['hero-1', 'hero-1', 3]}).attaquees).toEqual(['hero-1']);
   });
 });

@@ -99,6 +99,7 @@ export class TurnAssistantComponent {
   readonly targetSelected = output<TapisCard | null>();
   /** Ouvrir la fiche complète (statbloc) d'un des deux duellistes. */
   readonly sheetRequested = output<TapisCard>();
+  readonly attackRolled = output<TapisCard>();
   readonly damageApplied = output<AppliedHit>();
   readonly totalDefenseRequested = output<void>();
 
@@ -214,6 +215,14 @@ export class TurnAssistantComponent {
     return {degats, posture: option && option.slug !== 'none' ? option : null};
   });
 
+  // Les clés, pas les objets : la table rechargée repasse des cartes identiques mais neuves, qui ne doivent pas effacer le jet en cours.
+  private readonly cardKey = computed(() => this.card().key);
+  private readonly targetKey = computed(() => this.target()?.key ?? null);
+  private readonly choiceKey = computed(() => {
+    const choice = this.choice();
+    return choice ? `${this.effectiveArme()?.id ?? ''}|${this.effectiveOffHand()?.id ?? ''}|${choice.degats}|${choice.posture?.slug ?? ''}` : '';
+  });
+
   // ── Étape 3 : le jet d'attaque ──
   protected readonly useTir = linkedSignal<ResolvedCombatStats | null, boolean>({
     source: () => this.attacker(),
@@ -310,7 +319,7 @@ export class TurnAssistantComponent {
     add(-t.defense, 'défense');
     add(this.postureModifier(), 'posture');
     add(this.legendaryBonus() ? 1 : 0, 'légendaire');
-    add(-t.bouclierMalusUneAttaque, 'bouclier');
+    add(-this.shield(), 'bouclier');
     return terms;
   });
 
@@ -342,6 +351,11 @@ export class TurnAssistantComponent {
     return this.manualTotal();
   });
 
+  /** Malus du bouclier figé au premier jet de cette attaque : la cible est ensuite marquée « attaquée » et son malus tombe, mais un
+   * jet relancé garde le sien. */
+  private readonly shieldLock = signal<number | null>(null);
+  private readonly shield = computed(() => this.shieldLock() ?? this.targetStats()?.bouclierMalusUneAttaque ?? 0);
+
   protected readonly total = computed(() => {
     const sum = this.diceSum();
     const a = this.attacker();
@@ -354,7 +368,7 @@ export class TurnAssistantComponent {
       attackBonus(a, this.isTir()),
       t.defense,
       0,
-      t.bouclierMalusUneAttaque,
+      this.shield(),
       this.legendaryBonus() ? 1 : 0,
       this.postureModifier(),
     );
@@ -468,11 +482,12 @@ export class TurnAssistantComponent {
   constructor() {
     effect(() => this.choiceChanged.emit(this.choice()));
 
-    // Un autre attaquant, une autre cible ou un autre choix : le jet précédent ne vaut plus.
+    // Un autre attaquant, une autre cible ou un autre choix : le jet précédent ne vaut plus. Le choix est comparé par sa valeur : la table
+    // rechargée (enregistrement de l'état du combat) en refait un objet identique, qui ne doit pas effacer le jet en cours.
     effect(() => {
-      this.card().key;
-      this.target()?.key;
-      this.choice();
+      this.cardKey();
+      this.targetKey();
+      this.choiceKey();
       untracked(() => this.resetRoll());
     });
   }
@@ -500,6 +515,7 @@ export class TurnAssistantComponent {
     this.heroic.set(null);
     this.damageValues.set(null);
     this.dice.set(null);
+    this.markAttacked();
     const values = await this.throwDice('2d6', 2);
     this.dice.set([values[0], values[1]]);
   }
@@ -545,6 +561,19 @@ export class TurnAssistantComponent {
     this.heroic.set(null);
     this.damageValues.set(null);
     this.manualTotal.set(Number.isInteger(value) && value >= 2 && value <= 12 ? value : null);
+    if (this.manualTotal() !== null) {
+      this.markAttacked();
+    }
+  }
+
+  /** Premier jet contre cette cible : fige son malus de bouclier et la signale comme attaquée ce round. */
+  private markAttacked(): void {
+    const target = this.target();
+    if (!target || this.shieldLock() !== null) {
+      return;
+    }
+    this.shieldLock.set(this.targetStats()?.bouclierMalusUneAttaque ?? 0);
+    this.attackRolled.emit(target);
   }
 
   /** Plus grand résultat que peut afficher le dé de dégâts : 3 pour un d3, 6 sinon. */
@@ -647,6 +676,7 @@ export class TurnAssistantComponent {
     this.protectionFace.set(null);
     this.protectionManual.set(null);
     this.editingProtection.set(false);
+    this.shieldLock.set(null);
     this.dice.set(null);
     this.manualTotal.set(null);
     this.heroic.set(null);

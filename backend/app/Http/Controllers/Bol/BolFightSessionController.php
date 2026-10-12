@@ -185,6 +185,8 @@ class BolFightSessionController extends Controller
             'joues.*'          => 'string',
             'defense_totale'   => 'present|array',
             'defense_totale.*' => 'string',
+            'attaquees'        => 'sometimes|array',
+            'attaquees.*'      => 'string',
             'exclus'           => 'sometimes|array',
             'exclus.*'         => 'string',
         ]);

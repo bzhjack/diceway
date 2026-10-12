@@ -12,6 +12,8 @@ export interface EtatCombatDto {
   round: number;
   joues: string[];
   defense_totale: string[];
+  /** Cartes déjà attaquées ce round. */
+  attaquees?: string[];
   /** Cartes laissées sur la table mais exclues du combat. */
   exclus?: string[];
 }

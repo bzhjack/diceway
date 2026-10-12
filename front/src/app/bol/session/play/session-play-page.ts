@@ -270,6 +270,7 @@ export class SessionPlayPageComponent {
       const target = this.selectedTarget();
       const tokens = this.board()?.tokens ?? [];
       const defenseTotale = this.etat().defense_totale;
+      const attaquees = this.etat().attaquees;
       const run = ++this.statsRun;
       const attackerToken = attacker ? tokenForCard(tokens, attacker) : null;
       const targetToken = target ? tokenForCard(tokens, target) : null;
@@ -289,8 +290,13 @@ export class SessionPlayPageComponent {
           }
           this.attackerStats.set(attackerStats);
           this.targetStats.set(
-            targetStats && target && defenseTotale.includes(target.key)
-              ? {...targetStats, defense: targetStats.defense + 2}
+            targetStats && target
+              ? {
+                  ...targetStats,
+                  defense: targetStats.defense + (defenseTotale.includes(target.key) ? 2 : 0),
+                  // Le petit bouclier ne pèse que sur la première attaque subie du round.
+                  bouclierMalusUneAttaque: attaquees.includes(target.key) ? 0 : targetStats.bouclierMalusUneAttaque,
+                }
               : targetStats,
           );
         });
@@ -758,7 +764,7 @@ export class SessionPlayPageComponent {
 
     this.savingEtat = true;
     this.fightSessionService
-      .updateCombatState(sessionId, {round: next.round, joues: [...next.joues], defense_totale: [...next.defense_totale], exclus: [...next.exclus]})
+      .updateCombatState(sessionId, {round: next.round, joues: [...next.joues], defense_totale: [...next.defense_totale], attaquees: [...next.attaquees], exclus: [...next.exclus]})
       .subscribe({
         next: () => {
           this.savingEtat = false;
@@ -803,6 +809,14 @@ export class SessionPlayPageComponent {
       this.targetKey.set(null);
     } else if (attacker && attacker.key !== target.key) {
       this.targetKey.set(target.key);
+    }
+  }
+
+  /** Un jet d'attaque vient d'être fait contre cette cible : elle a subi son attaque du round, son petit bouclier ne compte plus. */
+  protected onAttackRolled(target: TapisCard): void {
+    const etat = this.etat();
+    if (!etat.attaquees.includes(target.key)) {
+      this.saveEtat({...etat, attaquees: [...etat.attaquees, target.key]});
     }
   }
 

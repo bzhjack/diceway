@@ -4,7 +4,7 @@ import {InitiativeTierKey} from '../../models/initiative.model';
 import {TurnOrderEntry, TurnOrderGroup} from '../../models/turn-order.model';
 import {EtatCombat, TurnStatus, OrderedCard, TurnState, TurnToken} from '../../models/combat-turn.model';
 
-export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], defense_totale: [], exclus: []};
+export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], defense_totale: [], attaquees: [], exclus: []};
 
 function uniqueKeys(raw: unknown): string[] {
   if (!Array.isArray(raw)) {
@@ -26,6 +26,7 @@ export function normalizeEtat(raw: unknown): EtatCombat {
     round: Math.max(1, round),
     joues: uniqueKeys(source['joues']),
     defense_totale: uniqueKeys(source['defense_totale']),
+    attaquees: uniqueKeys(source['attaquees']),
     exclus: uniqueKeys(source['exclus']),
   };
 }
@@ -142,7 +143,7 @@ export function endTurn(ordered: readonly OrderedCard[], etat: EtatCombat): Etat
   };
 
   if (turnState(ordered, next).activeKey === null) {
-    const nextRound: EtatCombat = {...next, round: etat.round + 1, joues: []};
+    const nextRound: EtatCombat = {...next, round: etat.round + 1, joues: [], attaquees: []};
     if (turnState(ordered, nextRound).activeKey !== null) {
       next = nextRound;
     }
