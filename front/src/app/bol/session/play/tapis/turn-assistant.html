@@ -110,7 +110,7 @@
         }
 
         @if (attacker(); as a) {
-          @if (a.attaque === null) {
+          @if (a.attaque === null && distanceModes().length > 1) {
             <div class="tas-group" role="group" aria-label="Distance">
               <span class="tas-label">Distance</span>
               <div class="tas-chips">

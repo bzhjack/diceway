@@ -218,12 +218,38 @@ export class TurnAssistantComponent {
     source: () => this.attacker(),
     computation: (a) => !!a && a.attaque === null && a.tir > a.melee,
   });
+  /** Façons d'utiliser l'arme choisie : mêlée seulement (épée, mains nues), tir seulement (arc, javelot) ou les deux (arme qui se lance :
+   * dague, hache, lance, arme improvisée) — la distance ne se choisit que dans ce dernier cas. */
+  protected readonly distanceModes = computed<readonly ('melee' | 'tir')[]>(() => {
+    const arme = this.effectiveArme();
+    if (!arme) {
+      return ['melee', 'tir'];
+    }
+    if (arme.id === MAINS_NUES.id) {
+      return ['melee'];
+    }
+    if (arme.id === ARME_IMPROVISEE.id) {
+      return ['melee', 'tir'];
+    }
+    if (arme.arme?.type === 'T') {
+      return ['tir'];
+    }
+    const portee = arme.arme?.portee?.trim();
+    return portee && portee !== '-' ? ['melee', 'tir'] : ['melee'];
+  });
+
+  /** L'attaque se fait à distance : imposée par l'arme quand elle n'a qu'un mode, sinon choisie dans l'assistant. */
+  protected readonly isTir = computed(() => {
+    const modes = this.distanceModes();
+    return modes.length === 1 ? modes[0] === 'tir' : this.useTir();
+  });
+
   protected readonly dice = signal<readonly [number, number] | null>(null);
   protected readonly rolling = signal(false);
 
   /** Fiche de l'attaquant : attaque, défense, dégâts (de l'arme choisie), protection, vigueur et vitalité. */
   protected readonly attackerTiles = computed<readonly StatTile[]>(() =>
-    this.tilesOf(this.attacker(), this.card(), this.useTir(), this.degats()),
+    this.tilesOf(this.attacker(), this.card(), this.isTir(), this.degats()),
   );
 
   /** Fiche de la cible choisie, avec les mêmes tuiles. */
@@ -270,7 +296,7 @@ export class TurnAssistantComponent {
     if (a.attaque !== null) {
       parts.push(`+ ${a.attaque} (attaque)`);
     } else {
-      parts.push(`+ ${a.agilite} (agi)`, `+ ${this.useTir() ? a.tir : a.melee} (${this.useTir() ? 'tir' : 'mêlée'})`);
+      parts.push(`+ ${a.agilite} (agi)`, `+ ${this.isTir() ? a.tir : a.melee} (${this.isTir() ? 'tir' : 'mêlée'})`);
     }
     parts.push(`− ${t.defense} (défense)`);
     const posture = this.postureModifier();
@@ -304,7 +330,7 @@ export class TurnAssistantComponent {
     }
     return computeAttackTotal(
       sum,
-      attackBonus(a, this.useTir()),
+      attackBonus(a, this.isTir()),
       t.defense,
       0,
       t.bouclierMalusUneAttaque,
@@ -369,7 +395,7 @@ export class TurnAssistantComponent {
   protected readonly protection = computed(() => (this.choice()?.posture?.slug === 'armor-chink' ? 0 : (this.targetStats()?.protection ?? 0)));
   protected readonly vigueur = computed(() => {
     const a = this.attacker();
-    return a ? vigueurBonus(a, this.useTir()) : 0;
+    return a ? vigueurBonus(a, this.isTir()) : 0;
   });
   protected readonly devastating = computed(() => this.heroic() === 'devastateur');
 
