@@ -103,23 +103,21 @@
           <button type="button" class="ard-act ard-act--gain" [attr.aria-pressed]="critiqueChosen()" aria-label="Échec critique : gagner 1 point d’héroïsme" (click)="toggleCritique()">
             <mat-icon aria-hidden="true">{{ critiqueChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Échec critique <span class="ard-cost">+1 <span class="ard-gem" aria-hidden="true"></span></span>
           </button>
-        } @else if (isNatural12()) {
+        } @else if (isNatural12() && (legendaryChosen() || heroisme() > 0)) {
           <button
             type="button"
             class="ard-act"
             [attr.aria-pressed]="legendaryChosen()"
-            [disabled]="!legendaryChosen() && heroisme() <= 0"
             aria-label="Succès légendaire, pour 1 point d’héroïsme"
             (click)="toggleLegendaire()"
           >
             <mat-icon aria-hidden="true">{{ legendaryChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Succès légendaire <span class="ard-cost">−1 <span class="ard-gem" aria-hidden="true"></span></span>
           </button>
-        } @else if (canUpgradeToHeroique()) {
+        } @else if (canUpgradeToHeroique() && (heroicUpgradeChosen() || heroisme() > 0)) {
           <button
             type="button"
             class="ard-act"
             [attr.aria-pressed]="heroicUpgradeChosen()"
-            [disabled]="!heroicUpgradeChosen() && heroisme() <= 0"
             aria-label="Convertir en succès héroïque, pour 1 point d’héroïsme"
             (click)="toggleHeroicUpgrade()"
           >
