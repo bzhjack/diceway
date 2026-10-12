@@ -362,12 +362,6 @@ bol-action-roll-panel {
   font: 400 2.2rem/1 'Muse Display Harmony', 'Muse Sans', serif;
 }
 
-.ard-dice-note {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--dw-surface-500);
-}
-
 .ard-verdict {
   display: grid;
   justify-items: center;
@@ -520,7 +514,25 @@ bol-action-roll-panel {
     background: var(--dw-color-legendary);
     color: #1c1200;
 
-    // Une option qui rapporte un point d'héroïsme (échec critique) : gemme et liseré verts, pour la distinguer de celles qui en coûtent un.
+    // À gauche, l'icône dit ce que fait le bouton : une flèche pour celui qui relance les dés, une case pour ceux qui se cochent et se
+// décochent. À droite, le prix en points d'héroïsme.
+.ard-act .mat-icon {
+  flex: none;
+  width: 1.2rem;
+  height: 1.2rem;
+  font-size: 1.2rem;
+}
+
+.ard-cost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: auto;
+  padding-left: 0.6rem;
+  font-variant-numeric: tabular-nums;
+}
+
+// Une option qui rapporte un point d'héroïsme (échec critique) : gemme et liseré verts, pour la distinguer de celles qui en coûtent un.
 .ard-act--gain {
   border-color: color-mix(in srgb, var(--dw-color-reussite) 60%, transparent);
   background: color-mix(in srgb, var(--dw-color-reussite) 8%, transparent);

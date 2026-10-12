@@ -57,7 +57,6 @@
           }
         } @else if (!rolling() && manualEntry() && diceSum() !== null) {
           <span class="ard-die ard-die--total">{{ diceSum() }}</span>
-          <span class="ard-dice-note">saisi à table</span>
         } @else {
           @for (ghost of ghosts(); track ghost) {
             <span class="ard-die ard-die--ghost"></span>
@@ -87,22 +86,22 @@
 
       <!-- Place réservée aux options d'héroïsme, qui apparaissent après le jet : la hauteur du plateau ne bouge pas. -->
       <div class="ard-acts">
-        @if (isFailure()) {
+        @if (isFailure() && heroisme() > 0) {
           <button
             type="button"
             class="ard-act"
-            [disabled]="rolling() || heroisme() <= 0"
+            [disabled]="rolling()"
             matTooltip="Relance tous les dés et garde le second résultat"
             aria-label="Faveur divine : relancer les dés pour 1 point d’héroïsme"
             (click)="rollWithDivineFavor()"
           >
-            <span class="ard-gem" aria-hidden="true"></span> Faveur divine : relancer (−1)
+            <mat-icon aria-hidden="true">replay</mat-icon> Faveur divine : relancer <span class="ard-cost">−1 <span class="ard-gem" aria-hidden="true"></span></span>
           </button>
         }
 
         @if (isNatural2()) {
           <button type="button" class="ard-act ard-act--gain" [attr.aria-pressed]="critiqueChosen()" aria-label="Échec critique : gagner 1 point d’héroïsme" (click)="toggleCritique()">
-            <span class="ard-gem" aria-hidden="true"></span> Échec critique (+1)
+            <mat-icon aria-hidden="true">{{ critiqueChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Échec critique <span class="ard-cost">+1 <span class="ard-gem" aria-hidden="true"></span></span>
           </button>
         } @else if (isNatural12()) {
           <button
@@ -113,7 +112,7 @@
             aria-label="Succès légendaire, pour 1 point d’héroïsme"
             (click)="toggleLegendaire()"
           >
-            <span class="ard-gem" aria-hidden="true"></span> Succès légendaire (−1)
+            <mat-icon aria-hidden="true">{{ legendaryChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Succès légendaire <span class="ard-cost">−1 <span class="ard-gem" aria-hidden="true"></span></span>
           </button>
         } @else if (canUpgradeToHeroique()) {
           <button
@@ -124,7 +123,7 @@
             aria-label="Convertir en succès héroïque, pour 1 point d’héroïsme"
             (click)="toggleHeroicUpgrade()"
           >
-            <span class="ard-gem" aria-hidden="true"></span> Succès héroïque (−1)
+            <mat-icon aria-hidden="true">{{ heroicUpgradeChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Succès héroïque <span class="ard-cost">−1 <span class="ard-gem" aria-hidden="true"></span></span>
           </button>
         }
       </div>
