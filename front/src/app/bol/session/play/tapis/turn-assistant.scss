@@ -543,6 +543,12 @@
   }
 }
 
+.tas-tile--long b {
+  // « d6-1 (3) » : une valeur longue se réduit pour tenir dans la tuile.
+  font-size: 1.05rem;
+  white-space: nowrap;
+}
+
 .tas-tile--hot b {
   color: var(--dw-color-echec);
 }

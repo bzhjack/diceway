@@ -3,7 +3,7 @@ import {attackBonus, damageDie, damageDiceCount, finalDamage, rawDamage, vigueur
 import {ResolvedCombatStats} from './models/combat-attack.model';
 
 const STATS: ResolvedCombatStats = {
-  agilite: 2, vigueur: 3, melee: 1, tir: 2, attaque: null, defense: 0, degats: 'd6', protection: 0, bouclierMalusUneAttaque: 0, herosId: null, heroisme: null,
+  agilite: 2, vigueur: 3, melee: 1, tir: 2, attaque: null, defense: 0, degats: 'd6', protection: 0, protectionText: null, bouclierMalusUneAttaque: 0, herosId: null, heroisme: null,
 };
 
 describe('damageDie', () => {

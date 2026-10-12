@@ -266,7 +266,7 @@ export class TurnAssistantComponent {
       {label: 'Attaque', value: this.signed(attackBonus(stats, useTir))},
       {label: 'Défense', value: String(stats.defense)},
       {label: 'Dégâts', value: degats, hot: true},
-      {label: 'Prot.', value: String(stats.protection)},
+      {label: 'Prot.', value: stats.protectionText ?? String(stats.protection)},
       {label: 'Vigueur', value: this.signed(vigueurBonus(stats, useTir))},
       {label: 'Vitalité', value: String(card.vitaliteCourante ?? '—'), max: String(card.vitaliteMax ?? '—'), heart: true},
     ];

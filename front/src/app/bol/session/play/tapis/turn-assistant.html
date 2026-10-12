@@ -22,7 +22,7 @@
         </div>
         <div class="tas-tiles">
           @for (tile of attackerTiles(); track tile.label) {
-            <div class="tas-tile" [class.tas-tile--hot]="tile.hot" [class.tas-tile--hp]="tile.heart">
+            <div class="tas-tile" [class.tas-tile--hot]="tile.hot" [class.tas-tile--hp]="tile.heart" [class.tas-tile--long]="tile.value.length > 5">
               <b>{{ tile.value }}</b>
               <span>{{ tile.label }}@if (tile.max) { /{{ tile.max }} }</span>
             </div>
@@ -242,7 +242,7 @@
           </div>
           <div class="tas-tiles">
             @for (tile of targetTiles(); track tile.label) {
-              <div class="tas-tile" [class.tas-tile--hot]="tile.hot" [class.tas-tile--hp]="tile.heart">
+              <div class="tas-tile" [class.tas-tile--hot]="tile.hot" [class.tas-tile--hp]="tile.heart" [class.tas-tile--long]="tile.value.length > 5">
                 <b>{{ tile.value }}</b>
                 <span>{{ tile.label }}@if (tile.max) { /{{ tile.max }} }</span>
               </div>
