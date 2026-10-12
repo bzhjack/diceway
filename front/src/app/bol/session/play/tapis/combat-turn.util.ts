@@ -209,12 +209,12 @@ export function turnAnnouncement(ordered: readonly OrderedCard[], etat: EtatComb
 }
 
 const FRISE_GROUPS: readonly {id: string; title: string; tiers: readonly (InitiativeTierKey | null)[]}[] = [
-  {id: 'heros', title: 'Héros ①②③', tiers: ['legendaire', 'heroique', 'reussite', null]},
-  {id: 'rival', title: 'Rivaux ④', tiers: ['rival']},
-  {id: 'coriace', title: 'Coriaces ⑤', tiers: ['coriace']},
-  {id: 'echec', title: 'Héros en échec ⑥', tiers: ['echec']},
-  {id: 'pietaille', title: 'Piétaille ⑦', tiers: ['pietaille']},
-  {id: 'echec_critique', title: 'Échec critique ⑧', tiers: ['echec_critique']},
+  {id: 'heros', title: 'Héros', tiers: ['legendaire', 'heroique', 'reussite', null]},
+  {id: 'rival', title: 'Rivaux', tiers: ['rival']},
+  {id: 'coriace', title: 'Coriaces', tiers: ['coriace']},
+  {id: 'echec', title: 'Héros en échec', tiers: ['echec']},
+  {id: 'pietaille', title: 'Piétaille', tiers: ['pietaille']},
+  {id: 'echec_critique', title: 'Échec critique', tiers: ['echec_critique']},
 ];
 
 /** Regroupe les combattants par rang de réaction, dans l'ordre de BoL (02-actions-combat.md) : héros ayant

@@ -47,7 +47,8 @@ export interface PreviewGroup {
   readonly blocked: boolean;
 }
 
-const HERO_RANK_SYMBOL: Partial<Record<InitiativeResultat, string>> = {legendaire: '①', heroique: '②', reussite: '③', echec: '⑥', echec_critique: '⑧'};
+/** Précision ajoutée au nom d'un héros du premier bloc, qui regroupe trois résultats ; les autres blocs n'en ont pas besoin. */
+const HERO_RANK_WORD: Partial<Record<InitiativeResultat, string>> = {legendaire: 'légendaire', heroique: 'héroïque', reussite: 'succès'};
 
 interface HeroRow {
   readonly pivotId: number;
@@ -209,10 +210,10 @@ export class StartCombatDialogComponent {
     this.activeHeroes().some((h) => h.resultat === 'heroique' || h.resultat === 'legendaire'),
   );
 
-  /** Aperçu de la frise : les héros d'après leur jet, les autres d'après leur rang. */
   /** Seuls les blocs qui ont au moins un combattant sont affichés. */
   protected readonly visiblePreview = computed(() => this.preview().filter((group) => group.lines.length > 0));
 
+  /** Aperçu de la frise : les héros d'après leur jet, les autres d'après leur rang. */
   protected readonly preview = computed<readonly PreviewGroup[]>(() => {
     const heroes = this.heroes();
     const advs = this.adversaries();
@@ -220,18 +221,18 @@ export class StartCombatDialogComponent {
     const heroLines = (results: readonly InitiativeResultat[]): PreviewLine[] =>
       heroes
         .filter((h) => h.resultat && results.includes(h.resultat))
-        .map((h) => ({label: `${h.nom} ${HERO_RANK_SYMBOL[h.resultat!]}`, excluded: this.isExcluded('hero', h.pivotId), kind: 'hero', pivotId: h.pivotId}));
+        .map((h) => ({label: HERO_RANK_WORD[h.resultat!] ? `${h.nom} · ${HERO_RANK_WORD[h.resultat!]}` : h.nom, excluded: this.isExcluded('hero', h.pivotId), kind: 'hero', pivotId: h.pivotId}));
     const names = (rang: AdversaryRow['rang']): PreviewLine[] =>
       advs
         .filter((a) => a.rang === rang)
         .map((a) => ({label: a.nom, excluded: this.isExcluded(a.kind, a.pivotId), kind: a.kind, pivotId: a.pivotId}));
     return [
-      {id: 'heros', title: 'Héros ①②③', lines: heroLines(['legendaire', 'heroique', 'reussite']), blocked: false},
-      {id: 'rival', title: 'Rivaux ④', lines: names('rival'), blocked: false},
-      {id: 'coriace', title: 'Coriaces ⑤', lines: names('coriace'), blocked: locked},
-      {id: 'echec', title: 'Héros en échec ⑥', lines: heroLines(['echec']), blocked: false},
-      {id: 'pietaille', title: 'Piétaille ⑦', lines: names('pietaille'), blocked: locked},
-      {id: 'echec_critique', title: 'Échec critique ⑧', lines: heroLines(['echec_critique']), blocked: false},
+      {id: 'heros', title: 'Héros', lines: heroLines(['legendaire', 'heroique', 'reussite']), blocked: false},
+      {id: 'rival', title: 'Rivaux', lines: names('rival'), blocked: false},
+      {id: 'coriace', title: 'Coriaces', lines: names('coriace'), blocked: locked},
+      {id: 'echec', title: 'Héros en échec', lines: heroLines(['echec']), blocked: false},
+      {id: 'pietaille', title: 'Piétaille', lines: names('pietaille'), blocked: locked},
+      {id: 'echec_critique', title: 'Échec critique', lines: heroLines(['echec_critique']), blocked: false},
     ];
   });
 
