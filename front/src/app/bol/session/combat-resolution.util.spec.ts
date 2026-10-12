@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {attackBonus, damageDie, damageDiceCount, finalDamage, rawDamage, vigueurBonus, computeAttackTotal, resolvePostureAttackModifier, suggestedAttackResult} from './combat-resolution.util';
+import {attackBonus, damageDie, damageDiceCount, finalDamage, rawDamage, vigueurBonus, computeAttackTotal, resolvePostureAttackModifier, suggestedAttackResult, shouldPromptDefierLaMort} from './combat-resolution.util';
 import {ResolvedCombatStats} from './models/combat-attack.model';
 
 const STATS: ResolvedCombatStats = {
@@ -111,5 +111,26 @@ describe('suggestedAttackResult', () => {
 
   it('is echec when the total is below the threshold', () => {
     expect(suggestedAttackResult([2, 3], 8, 9)).toBe('echec');
+  });
+});
+
+describe('shouldPromptDefierLaMort', () => {
+  it('proposes it when a hit makes the hero fall below 0', () => {
+    expect(shouldPromptDefierLaMort(3, -2)).toBe(true);
+    expect(shouldPromptDefierLaMort(0, -1)).toBe(true);
+  });
+
+  it('proposes it again when a hit takes the hero below −5', () => {
+    expect(shouldPromptDefierLaMort(-3, -7)).toBe(true);
+  });
+
+  it('does not repeat it for a hero who is already dying and stays in the same band', () => {
+    expect(shouldPromptDefierLaMort(-2, -4)).toBe(false);
+    expect(shouldPromptDefierLaMort(-7, -9)).toBe(false);
+  });
+
+  it('does nothing while the hero stays at 0 or above', () => {
+    expect(shouldPromptDefierLaMort(5, 0)).toBe(false);
+    expect(shouldPromptDefierLaMort(4, 2)).toBe(false);
   });
 });

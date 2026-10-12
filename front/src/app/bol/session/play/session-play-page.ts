@@ -36,6 +36,7 @@ import {PaletteActionId, PaletteCommand, PaletteContext} from '../models/command
 import {isEditable, isEndTurnShortcut, isPaletteShortcut} from './command-palette/shortcut.util';
 import {reserveTab} from './reserve/reserve.util';
 import {maybePromptDefierLaMort} from './defier-la-mort-dialog/defier-la-mort.util';
+import {shouldPromptDefierLaMort} from '../combat-resolution.util';
 import {tableTitle} from './scene-list/scene.util';
 import {SessionHeaderComponent} from './session-header/session-header';
 import {ReserveComponent} from './reserve/reserve';
@@ -815,8 +816,9 @@ export class SessionPlayPageComponent {
       next: () => {
         this.loadSession(sessionId);
 
-        const newVitalite = (target.vitaliteCourante ?? 0) + delta;
-        if (targetStats?.herosId && newVitalite < 0) {
+        const before = target.vitaliteCourante ?? 0;
+        const newVitalite = before + delta;
+        if (targetStats?.herosId && shouldPromptDefierLaMort(before, newVitalite)) {
           maybePromptDefierLaMort({
             dialog: this.dialog,
             fightSessionService: this.fightSessionService,

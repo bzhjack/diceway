@@ -118,3 +118,9 @@ export function suggestedAttackResult(
   }
   return total >= threshold ? 'reussite' : 'echec';
 }
+
+/** « Défier la mort » se propose quand un coup fait franchir un seuil : la vitalité passe sous 0 (le héros est mourant) ou sous −5
+ * (il n'est plus seulement inconscient). Un héros déjà mourant qui encaisse un nouveau coup sans changer de seuil n'est pas relancé. */
+export function shouldPromptDefierLaMort(before: number, after: number): boolean {
+  return (before >= 0 && after < 0) || (before >= -5 && after < -5);
+}

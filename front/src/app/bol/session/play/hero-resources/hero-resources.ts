@@ -1,14 +1,12 @@
 import {ChangeDetectionStrategy, Component, effect, inject, input, model, OnInit, output, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
 import {ValueTracker} from '../../value-tracker';
-import {maybePromptDefierLaMort} from '../defier-la-mort-dialog/defier-la-mort.util';
 import {HeroResourcesData} from '../../models/hero-resources.model';
 
 /** Vitalité de session et héroïsme d'un héros, ajustables par stepper et persistés à chaque pas.
@@ -73,7 +71,6 @@ export class HeroResourcesComponent implements OnInit {
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly herosService = inject(BolHerosService);
   private readonly snackBar = inject(MatSnackBar);
-  private readonly dialog = inject(MatDialog);
 
   protected readonly vitaliteControl = new FormControl(0, {nonNullable: true});
   protected readonly heroismeControl = new FormControl(0, {nonNullable: true});
@@ -119,27 +116,8 @@ export class HeroResourcesComponent implements OnInit {
     const data = this.data();
     this.fightSessionService.applyDamage(data.sessionId, 'hero', data.pivotId, delta).subscribe({
       next: () => {
+        // Un ajustement à la main ne propose jamais « Défier la mort » : seuls les dégâts reçus au combat le font.
         this.changed.emit();
-
-        if (value < 0) {
-          maybePromptDefierLaMort({
-            dialog: this.dialog,
-            fightSessionService: this.fightSessionService,
-            herosService: this.herosService,
-            sessionId: data.sessionId,
-            herosId: data.herosId,
-            pivotId: data.pivotId,
-            heroNom: data.heroNom,
-            vitaliteCourante: value,
-            heroisme: this.heroisme(),
-            onApplied: () => {
-              if (value >= -5) {
-                this.setVitalite(0);
-              }
-              this.heroisme.update((h) => h - 1);
-            },
-          });
-        }
       },
       error: (error: unknown) => {
         this.snackBar.open(extractApiErrorMessage(error, 'Impossible de mettre à jour la vitalité.'), 'Fermer', {
