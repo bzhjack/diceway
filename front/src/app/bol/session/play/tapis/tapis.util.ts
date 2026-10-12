@@ -265,6 +265,22 @@ export function heroDetails(hero: BolHerosModel): HeroDetails {
   };
 }
 
+/** Garde l'ordre des armes et des armures de `previous` : cocher « équipée » dans un popover ouvert ne fait pas sauter les lignes sous le
+ * curseur. Une entrée absente de `previous` (ajoutée entre-temps) passe à la fin. */
+export function keepDetailsOrder(next: HeroDetails, previous: HeroDetails | null): HeroDetails {
+  if (!previous) {
+    return next;
+  }
+  const sameOrder = <T extends {id: number}>(entries: readonly T[], before: readonly {id: number}[]): T[] => {
+    const rank = (id: number): number => {
+      const index = before.findIndex((entry) => entry.id === id);
+      return index === -1 ? before.length : index;
+    };
+    return [...entries].sort((a, b) => rank(a.id) - rank(b.id));
+  };
+  return {...next, armes: sameOrder(next.armes, previous.armes), armures: sameOrder(next.armures, previous.armures)};
+}
+
 /** « Joueur · Région » : la ligne sous le nom d'un héros. Vide si ni l'un ni l'autre n'est connu. */
 export function heroIdentityLine(infos: HeroDetailInfos): string {
   return [infos.joueur, infos.region].filter(Boolean).join(' · ');

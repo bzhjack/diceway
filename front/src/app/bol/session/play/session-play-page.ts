@@ -55,7 +55,7 @@ import {AppliedHit} from './tapis/turn-assistant';
 import {ResolvedCombatStats} from '../models/combat-attack.model';
 import {TurnOrderEntry} from '../models/turn-order.model';
 import {TapisComponent} from './tapis/tapis';
-import {buildTapisCards, findCard, heroDetails, heroHeaderStats, REMOVE_ACTION_LABEL} from './tapis/tapis.util';
+import {buildTapisCards, findCard, heroDetails, heroHeaderStats, keepDetailsOrder, REMOVE_ACTION_LABEL} from './tapis/tapis.util';
 import {TapisCard} from '../models/tapis.model';
 
 /** Les armes d'un héros dont le catalogue est chargé — vide si elles ne le sont pas (de simples ids). */
@@ -722,7 +722,10 @@ export class SessionPlayPageComponent {
           .pipe(take(1))
           .subscribe((hero) => {
             if (this.expandedKey() === card.key) {
-              this.expandedHero.set(this.buildExpandedHero(card, hero, herosId, sessionId));
+              // Les lignes des popovers ne changent pas de place quand on coche : le tri « équipées d'abord » se fait à l'ouverture.
+              const previous = this.expandedHero()?.details ?? null;
+              const next = this.buildExpandedHero(card, hero, herosId, sessionId);
+              this.expandedHero.set({...next, details: keepDetailsOrder(next.details, previous)});
             }
             if (this.activeHeroId() === herosId) {
               this.activeArmes.set(equippedArmes(loadedArmes(hero)));
