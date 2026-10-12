@@ -654,3 +654,108 @@
   }
 
 }
+
+// Posture : une échelle de la prudence à l'audace, puis les options spéciales qui se cochent.
+.tas-group--wide {
+  align-self: stretch;
+}
+
+.tas-gauge {
+  display: block;
+  align-self: stretch;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #4a8fe8, #6b5a44 33%, #e8873a 66%, #d02a2a);
+}
+
+.tas-scale {
+  display: grid;
+  // Une seule ligne : autant de colonnes égales que de boutons (quatre postures, ou les options spéciales disponibles).
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 0.3rem;
+  width: 100%;
+}
+
+.tas-step-btn {
+  display: grid;
+  justify-items: center;
+  gap: 0.1rem;
+  padding: 0.4rem 0.2rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 10px;
+  background: var(--dw-surface-200);
+  color: var(--dw-surface-900);
+  font: inherit;
+  cursor: pointer;
+
+  b {
+    font-size: 0.8rem;
+    text-align: center;
+  }
+
+  i {
+    font-style: normal;
+    font-size: 0.64rem;
+    text-align: center;
+    color: var(--dw-surface-600);
+  }
+
+  &[aria-pressed='true'] {
+    border-color: var(--dw-color-legendary);
+    background: linear-gradient(#2e220c, #1d150f);
+
+    i {
+      color: var(--dw-surface-800);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+}
+
+// Récapitulatif : ce que la posture choisie change à ce tour.
+.tas-recap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px dashed var(--bar-bronze, var(--dw-border));
+  border-radius: 10px;
+  background: var(--dw-surface-50);
+}
+
+.tas-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.tas-pill {
+  padding: 0.1rem 0.45rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--dw-surface-700);
+}
+
+.tas-pill--plus {
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 60%, transparent);
+  color: var(--dw-color-reussite);
+}
+
+.tas-pill--minus {
+  border-color: color-mix(in srgb, var(--dw-color-echec) 60%, transparent);
+  color: var(--dw-color-danger-muted);
+}
+
+// Arme secondaire et distance côte à côte ; elles passent à la ligne si la place manque.
+.tas-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.6rem 1.4rem;
+}

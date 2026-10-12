@@ -29,6 +29,25 @@ import {isLowVitalite, vitalitePercent} from './tapis.util';
 /** Délai maximal d'un lancer 3D avant de tirer les dés sans animation. */
 const DICE_TIMEOUT_MS = 12000;
 
+/** Les postures de l'échelle, de la plus prudente à la plus audacieuse ; les autres sont des options spéciales. */
+const SCALE_SLUGS: readonly string[] = ['defensive', 'none', 'offensive', 'intrepid'];
+
+/** Effet d'une posture sur la défense (le bonus d'attaque vient du référentiel). */
+const POSTURE_DEFENSE: Readonly<Record<string, number>> = {defensive: 1, offensive: -1, intrepid: -2, 'dual-parry': 1};
+
+/** Effet d'une posture qui ne se chiffre pas en bonus ou malus. */
+const POSTURE_EXTRA: Readonly<Record<string, string>> = {
+  intrepid: 'perd le bouclier',
+  'dual-strike': 'dégâts +1 catégorie',
+  'armor-chink': "ignore l'armure si touché",
+};
+
+/** Un effet affiché en pastille dans le récapitulatif du tour. */
+interface EffectPill {
+  readonly label: string;
+  readonly tone: 'plus' | 'minus' | 'neutral';
+}
+
 /** Une tuile de la fiche d'un combattant : un chiffre de combat et son libellé. */
 interface StatTile {
   readonly label: string;
@@ -116,6 +135,52 @@ export class TurnAssistantComponent {
   protected readonly effectiveOption = computed(() => {
     const list = this.visibleOptions();
     return list.find((o) => o.slug === this.selectedOptionSlug()) ?? list[0] ?? null;
+  });
+
+  /** Les trois postures simples plus « Aucune », dans l'ordre de l'échelle. */
+  protected readonly scalePostures = computed(() =>
+    SCALE_SLUGS.map((slug) => this.visibleOptions().find((o) => o.slug === slug)).filter((o): o is BolCombatOptionModel => !!o),
+  );
+
+  /** Combat à deux armes, attaque au défaut de l'armure : des options qui se cochent, en plus de la posture. */
+  protected readonly specialPostures = computed(() => this.visibleOptions().filter((o) => !SCALE_SLUGS.includes(o.slug)));
+
+  /** « Posture offensive » → « Offensive », « Attaque intrépide » → « Intrépide ». */
+  protected scaleName(option: BolCombatOptionModel): string {
+    const short = option.label.replace(/^(Posture|Attaque) /, '');
+    return short.charAt(0).toUpperCase() + short.slice(1);
+  }
+
+  /** « att +1 · déf −1 » : le bonus d'attaque du référentiel et l'effet connu sur la défense. */
+  protected scaleEffect(option: BolCombatOptionModel): string {
+    return `att ${this.signed(option.modificateur)} · déf ${this.signed(POSTURE_DEFENSE[option.slug] ?? 0)}`;
+  }
+
+  /** Une option spéciale se coche et se décoche ; décochée, on revient à « Aucune ». */
+  protected toggleSpecial(slug: string): void {
+    this.selectOption(this.effectiveOption()?.slug === slug ? 'none' : slug);
+  }
+
+  /** Ce que la posture choisie change à ce tour : attaque, défense et effets particuliers. */
+  protected readonly effectPills = computed<readonly EffectPill[]>(() => {
+    const option = this.effectiveOption();
+    if (!option || option.slug === 'none') {
+      return [{label: 'aucun modificateur', tone: 'neutral'}];
+    }
+    const pills: EffectPill[] = [];
+    const attack = this.postureModifier();
+    if (attack !== 0) {
+      pills.push({label: `attaque ${this.signed(attack)}`, tone: attack > 0 ? 'plus' : 'minus'});
+    }
+    const defense = POSTURE_DEFENSE[option.slug] ?? 0;
+    if (defense !== 0) {
+      pills.push({label: `défense ${this.signed(defense)}`, tone: defense > 0 ? 'plus' : 'minus'});
+    }
+    const extra = POSTURE_EXTRA[option.slug];
+    if (extra) {
+      pills.push({label: extra, tone: 'neutral'});
+    }
+    return pills;
   });
 
   protected readonly isDualWieldSelected = computed(() => DUAL_WIELD_SLUGS.has(this.effectiveOption()?.slug ?? ''));

@@ -56,46 +56,76 @@
       }
 
       @if (visibleOptions().length > 1) {
-        <div class="tas-group" role="group" aria-label="Posture">
-          <span class="tas-label">Posture</span>
-          <div class="tas-chips">
-            @for (o of visibleOptions(); track o.slug) {
-              <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveOption()?.slug === o.slug" [matTooltip]="o.note" (click)="selectOption(o.slug)">
-                {{ o.label }}
+        <div class="tas-group tas-group--wide" role="group" aria-label="Posture">
+          <span class="tas-label">Posture : de la prudence à l'audace</span>
+          <span class="tas-gauge" aria-hidden="true"></span>
+          <div class="tas-scale">
+            @for (o of scalePostures(); track o.slug) {
+              <button type="button" class="tas-step-btn" [attr.aria-pressed]="effectiveOption()?.slug === o.slug" [matTooltip]="o.note" (click)="selectOption(o.slug)">
+                <b>{{ scaleName(o) }}</b>
+                <i>{{ scaleEffect(o) }}</i>
               </button>
             }
           </div>
         </div>
-      }
 
-      @if (isDualWieldSelected()) {
-        <div class="tas-group" role="group" aria-label="Arme secondaire">
-          <span class="tas-label">Arme secondaire</span>
-          <div class="tas-chips">
-            @for (a of eligibleOffHandArmes(); track a.id) {
-              <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveOffHand()?.id === a.id" (click)="selectOffHand(a.id)">
-                {{ a.arme?.arme }}
-                @if (a.arme?.degats) {
-                  <em>{{ a.arme?.degats }}</em>
-                }
-              </button>
-            } @empty {
-              <span class="tas-note">Aucune arme secondaire légère ou moyenne.</span>
-            }
-          </div>
-        </div>
-      }
-
-      @if (attacker(); as a) {
-        @if (a.attaque === null) {
-          <div class="tas-group" role="group" aria-label="Distance">
-            <span class="tas-label">Distance</span>
-            <div class="tas-chips">
-              <button type="button" class="tas-chip" [attr.aria-pressed]="!useTir()" (click)="useTir.set(false)">Mêlée</button>
-              <button type="button" class="tas-chip" [attr.aria-pressed]="useTir()" (click)="useTir.set(true)">Tir</button>
+        @if (specialPostures().length > 0) {
+          <div class="tas-group tas-group--wide" role="group" aria-label="Options spéciales">
+            <span class="tas-label">Options spéciales</span>
+            <div class="tas-scale">
+              @for (o of specialPostures(); track o.slug) {
+                <button type="button" class="tas-step-btn" [attr.aria-pressed]="effectiveOption()?.slug === o.slug" (click)="toggleSpecial(o.slug)">
+                  <b>{{ o.label }}</b>
+                  <i>{{ o.note }}</i>
+                </button>
+              }
             </div>
           </div>
         }
+      }
+
+      <!-- Arme secondaire (si la posture la demande) et distance : sur la même ligne -->
+      <div class="tas-inline">
+        @if (isDualWieldSelected()) {
+          <div class="tas-group" role="group" aria-label="Arme secondaire">
+            <span class="tas-label">Arme secondaire</span>
+            <div class="tas-chips">
+              @for (a of eligibleOffHandArmes(); track a.id) {
+                <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveOffHand()?.id === a.id" (click)="selectOffHand(a.id)">
+                  {{ a.arme?.arme }}
+                  @if (a.arme?.degats) {
+                    <em>{{ a.arme?.degats }}</em>
+                  }
+                </button>
+              } @empty {
+                <span class="tas-note">Aucune arme secondaire légère ou moyenne.</span>
+              }
+            </div>
+          </div>
+        }
+
+        @if (attacker(); as a) {
+          @if (a.attaque === null) {
+            <div class="tas-group" role="group" aria-label="Distance">
+              <span class="tas-label">Distance</span>
+              <div class="tas-chips">
+                <button type="button" class="tas-chip" [attr.aria-pressed]="!useTir()" (click)="useTir.set(false)">Mêlée</button>
+                <button type="button" class="tas-chip" [attr.aria-pressed]="useTir()" (click)="useTir.set(true)">Tir</button>
+              </div>
+            </div>
+          }
+        }
+      </div>
+
+      @if (visibleOptions().length > 1) {
+        <div class="tas-recap">
+          <span class="tas-label">Effet sur ce tour</span>
+          <div class="tas-pills">
+            @for (pill of effectPills(); track pill.label) {
+              <span class="tas-pill" [class.tas-pill--plus]="pill.tone === 'plus'" [class.tas-pill--minus]="pill.tone === 'minus'">{{ pill.label }}</span>
+            }
+          </div>
+        </div>
       }
     </div>
   </section>
