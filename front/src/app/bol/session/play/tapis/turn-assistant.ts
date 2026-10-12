@@ -3,6 +3,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
+import {RollTerm} from '../../models/action-roll.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, MAINS_NUES} from '../../attack-options.util';
 import {dualStrikeDegats} from '../../combat-attack.util';
@@ -285,31 +286,48 @@ export class TurnAssistantComponent {
     resolvePostureAttackModifier(this.choice()?.posture ?? null, this.targetStats()?.protection ?? 0),
   );
 
-  /** Détail de la formule, en clair : « 2d6 + 3 − 0 + 1 (posture) ». */
-  protected readonly formula = computed(() => {
+  /** Les termes du jet d'attaque, un par puce : « 2d6 », « + 2 agi », « + 2 mêlée », « − 1 défense »… Les termes nuls sont omis ; le total des
+   * dés apparaît entre parenthèses une fois le jet fait. */
+  protected readonly formulaTerms = computed<readonly RollTerm[]>(() => {
     const a = this.attacker();
     const t = this.targetStats();
     if (!a || !t) {
-      return '';
+      return [];
     }
-    const parts = ['2d6'];
+    const dice = this.diceSum();
+    const terms: RollTerm[] = [{label: `2d6${dice === null ? '' : ` (${dice})`}`, tone: 'dice'}];
+    const add = (value: number, name: string): void => {
+      if (value !== 0) {
+        terms.push({label: `${value > 0 ? '+' : '−'} ${Math.abs(value)} ${name}`, tone: value > 0 ? 'plus' : 'minus'});
+      }
+    };
     if (a.attaque !== null) {
-      parts.push(`+ ${a.attaque} (attaque)`);
+      add(a.attaque, 'attaque');
     } else {
-      parts.push(`+ ${a.agilite} (agi)`, `+ ${this.isTir() ? a.tir : a.melee} (${this.isTir() ? 'tir' : 'mêlée'})`);
+      add(a.agilite, 'agi');
+      add(this.isTir() ? a.tir : a.melee, this.isTir() ? 'tir' : 'mêlée');
     }
-    parts.push(`− ${t.defense} (défense)`);
-    const posture = this.postureModifier();
-    if (posture !== 0) {
-      parts.push(`${posture > 0 ? '+' : '−'} ${Math.abs(posture)} (posture)`);
-    }
-    if (this.legendaryBonus()) {
-      parts.push('+ 1 (légendaire)');
-    }
-    if (t.bouclierMalusUneAttaque > 0) {
-      parts.push(`− ${t.bouclierMalusUneAttaque} (bouclier)`);
-    }
-    return `${parts.join(' ')} ≥ ${ATTACK_THRESHOLD}`;
+    add(-t.defense, 'défense');
+    add(this.postureModifier(), 'posture');
+    add(this.legendaryBonus() ? 1 : 0, 'légendaire');
+    add(-t.bouclierMalusUneAttaque, 'bouclier');
+    return terms;
+  });
+
+  protected readonly threshold = ATTACK_THRESHOLD;
+
+  /** Les termes du jet de dégâts : le dé de l'arme, la vigueur, le coup dévastateur et la protection de la cible. */
+  protected readonly damageTerms = computed<readonly RollTerm[]>(() => {
+    const terms: RollTerm[] = [{label: this.degats(), tone: 'dice'}];
+    const add = (value: number, name: string): void => {
+      if (value !== 0) {
+        terms.push({label: `${value > 0 ? '+' : '−'} ${Math.abs(value)} ${name}`, tone: value > 0 ? 'plus' : 'minus'});
+      }
+    };
+    add(this.vigueur(), 'vigueur');
+    add(this.devastating() ? 6 : 0, 'dévastateur');
+    add(-this.protection(), this.protectionFace() !== null ? `protection (dé ${this.protectionFace()})` : 'protection');
+    return terms;
   });
 
   /** Total des dés : lancés ici, ou saisis à la main (total à table, de 2 à 12). */
@@ -418,6 +436,15 @@ export class TurnAssistantComponent {
   protected readonly raw = computed(() => {
     const values = this.damageValues();
     return values ? rawDamage(this.die(), values) : null;
+  });
+  /** Ce que les dés ont donné quand l'arme en lance deux : « 1 et 4 → 1 retenu (le moins bon) ». Vide pour un dé unique ou une saisie à table. */
+  protected readonly damageDetail = computed(() => {
+    const values = this.damageValues();
+    const die = this.die();
+    if (!values || values.length < 2 || (die !== 'd6m' && die !== 'd6b')) {
+      return '';
+    }
+    return `${values.join(' et ')} → ${this.raw()} retenu (${die === 'd6m' ? 'le moins bon' : 'le meilleur'})`;
   });
   protected readonly damage = computed(() => {
     const raw = this.raw();

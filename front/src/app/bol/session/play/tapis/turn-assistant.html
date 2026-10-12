@@ -140,7 +140,12 @@
     <section class="tas-step tas-step--roll">
       <h3><span aria-hidden="true">1</span> Jet d'attaque</h3>
       @if (target() && attacker() && targetStats()) {
-        <p class="tas-formula">{{ formula() }}</p>
+        <div class="tas-terms">
+          @for (term of formulaTerms(); track term.label) {
+            <span class="tas-term" [class.tas-term--dice]="term.tone === 'dice'" [class.tas-term--plus]="term.tone === 'plus'" [class.tas-term--minus]="term.tone === 'minus'">{{ term.label }}</span>
+          }
+          <span class="tas-eq">≥ {{ threshold }}</span>
+        </div>
 
         <div class="tas-line">
           <div class="tas-ticket" [class.tas-ticket--reussite]="tone() === 'reussite'" [class.tas-ticket--echec]="tone() === 'echec'" [class.tas-ticket--heroique]="tone() === 'heroique'" aria-live="polite">
@@ -182,8 +187,10 @@
     <section class="tas-step">
       <h3><span aria-hidden="true">2</span> Jet de dégâts</h3>
       @if (hasDamageStep()) {
-        <p class="tas-formula tas-formula--dmg">
-          <span>{{ degats() }} {{ signed(vigueur()) }} (vigueur){{ devastating() ? ' + 6 (dévastateur)' : '' }} − {{ protection() }} (protection{{ protectionFace() !== null ? ', dé ' + protectionFace() : '' }})</span>
+        <div class="tas-terms">
+          @for (term of damageTerms(); track term.label) {
+            <span class="tas-term" [class.tas-term--dice]="term.tone === 'dice'" [class.tas-term--plus]="term.tone === 'plus'" [class.tas-term--minus]="term.tone === 'minus'">{{ term.label }}</span>
+          }
           @if (protectionDie()) {
             <button type="button" class="tas-die-btn" [disabled]="rolling()" matTooltip="Lancer le dé de protection au lieu de la valeur fixe" aria-label="Lancer le dé de protection de la cible" (click)="rollProtection()">
               <mat-icon>casino</mat-icon>
@@ -194,11 +201,14 @@
               </button>
             }
           }
-        </p>
+        </div>
         <div class="tas-line">
           <div class="tas-ticket" [class.tas-ticket--echec]="damage() !== null" aria-live="polite">
             <div class="tas-ticket-total">{{ rolling() ? '…' : (damage() ?? '—') }}</div>
             <p class="tas-ticket-label">{{ rolling() ? 'Les dés roulent' : damage() !== null ? 'Dégâts' : 'En attente' }}</p>
+            @if (damageDetail() && !rolling()) {
+              <p class="tas-ticket-detail">{{ damageDetail() }}</p>
+            }
           </div>
           <div class="tas-ctl">
           <button type="button" class="tas-rollbtn" [disabled]="rolling()" (click)="rollDamage()">

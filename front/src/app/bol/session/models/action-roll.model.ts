@@ -56,3 +56,9 @@ export type ActionRollLabels = Partial<Record<keyof ActionRollParts, string>>;
 
 /** Couleur du résultat d'un jet : échec, réussite ou héroïque (héroïque et légendaire). */
 export type ActionRollTone = 'echec' | 'reussite' | 'heroique';
+
+/** Un terme d'un jet affiché en puce : les dés, un bonus (vert) ou un malus (rouge). */
+export interface RollTerm {
+  readonly label: string;
+  readonly tone: 'dice' | 'plus' | 'minus';
+}

@@ -167,14 +167,6 @@
   color: var(--dw-surface-600);
 }
 
-.tas-formula {
-  margin: 0;
-  text-align: center;
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--dw-surface-700);
-}
-
 .tas-heroic {
   display: flex;
   flex-direction: column;
@@ -781,15 +773,6 @@
   gap: 0.6rem 1.4rem;
 }
 
-// Formule des dégâts avec le petit dé de protection à sa droite.
-.tas-formula--dmg {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-}
-
 .tas-die-btn {
   display: inline-grid;
   place-items: center;
@@ -821,4 +804,52 @@
     outline: 2px solid var(--dw-color-legendary);
     outline-offset: 2px;
   }
+}
+
+// Détail des dés de dégâts sous le résultat : quel dé est retenu pour un dé de malus ou de bonus.
+.tas-ticket-detail {
+  margin: 0.15rem 0 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--dw-surface-600);
+  text-align: center;
+}
+
+// Les termes d'un jet en puces : en vert ce qui aide, en rouge ce qui pénalise, comme dans le dialogue des jets de réaction.
+.tas-terms {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.tas-term {
+  padding: 0.12rem 0.5rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 6px;
+  background: var(--dw-surface-200);
+  color: var(--dw-surface-700);
+  font-size: 0.76rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tas-term--dice {
+  background: var(--dw-surface-300);
+  color: var(--dw-surface-900);
+}
+
+.tas-term--plus {
+  color: var(--dw-color-reussite);
+}
+
+.tas-term--minus {
+  color: var(--dw-color-danger-muted);
+}
+
+.tas-eq {
+  color: var(--dw-surface-500);
+  font-size: 0.78rem;
+  font-weight: 800;
 }

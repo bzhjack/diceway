@@ -83,17 +83,6 @@ bol-action-roll-panel {
   letter-spacing: normal;
 }
 
-// Résultat : plus de bande horizontale résultat+saisie+lancer réunis (ancienne piste C) — le lancer
-// devient l'action principale pleine largeur, la saisie manuelle une option secondaire discrète
-// juste en dessous (cf. .ard-reroll / .ard-manual) au lieu de rivaliser visuellement avec elle.
-// Résultat + lancer côte à côte : le bouton reste grand (c'est l'action principale du jet) sans
-// pour autant s'étendre sur toute la largeur du panneau — cf. décision du 2026-09-25.
-.ard-result-row {
-  display: flex;
-  align-items: stretch;
-  gap: 0.6rem;
-}
-
 .ard-ticket {
   position: relative;
   flex: 1;
@@ -468,81 +457,8 @@ bol-action-roll-panel {
   gap: 0.35rem;
 }
 
-// Colonnes du jet : les choix, la difficulté et les dés, puis la formule et le résultat. Empilées
-// dans un conteneur étroit, côte à côte dans un conteneur large (carte de héros dépliée sur le tapis).
-.ard-col {
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-  min-width: 0;
-}
-
 .ard-shell {
   container-type: inline-size;
-}
-
-@container (min-width: 36rem) {
-  .ard-fg {
-    display: grid;
-    // Trois étapes de même largeur : attribut et carrière, difficulté et ajustements, lancer.
-    // La dernière colonne porte des boutons à libellé long (« Convertir en succès héroïque (−1 PH) ») qui doivent
-    // tenir sur une seule ligne.
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(17rem, 1.3fr);
-    gap: 0.75rem;
-    align-items: stretch;
-  }
-
-  // La formule ouvre sa colonne : plus de filet de séparation au-dessus d'elle.
-  .ard-col--result .ard-ledger-formula {
-    padding-top: 0;
-    border-top: none;
-  }
-
-  // Le résultat et « Relancer » se partagent la largeur de la colonne.
-  .ard-col--result {
-    // Colonne dense : jusqu'à six blocs empilés (formule, résultat, résumé des dés, saisie, faveur
-    // divine, échec critique) dans une carte de hauteur fixe — espacement et boutons resserrés.
-    gap: 0.4rem;
-
-    .ard-divine-favor,
-    .ard-tier-toggle {
-      justify-content: flex-start;
-      white-space: nowrap;
-      font-size: 0.8rem;
-      padding-block: 0.3rem;
-    }
-
-    // L'étape du lancer a de la place : résultat et bouton en grand.
-    .ard-result-row {
-      flex-direction: column;
-    }
-
-    .ard-ticket {
-      padding: 0.9rem 0.6rem;
-    }
-
-    .ard-ticket-total {
-      font-size: 3rem;
-    }
-
-    .ard-ticket-label {
-      font-size: 0.8rem;
-    }
-
-    .ard-reroll {
-      flex: none;
-      min-width: 0;
-      gap: 0.4rem;
-      padding: 0.8rem 0.5rem;
-      font-size: 1.1rem;
-
-      .mat-icon {
-        font-size: 1.5rem;
-        width: 1.5rem;
-        height: 1.5rem;
-      }
-    }
-  }
 }
 
 // Choix en tuiles séparées (attribut, carrière, difficulté) plutôt qu'en rail segmenté : elles
@@ -573,72 +489,6 @@ bol-action-roll-panel {
   .mat-button-toggle-button {
     min-height: 1.9rem;
   }
-}
-
-.ard-toggle--cols2.mat-button-toggle-group {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.ard-toggle--careers.mat-button-toggle-group {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.ard-toggle--scale.mat-button-toggle-group {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-// ── Assistant en trois étapes : chaque colonne est une carte numérotée ──────────────────────────────
-.ard-col {
-  padding: 0.75rem;
-  border: 1px solid var(--dw-border);
-  border-radius: 10px;
-  background: var(--dw-surface-100);
-}
-
-// Dernière étape, celle du lancer : mise en valeur en doré.
-.ard-col--result {
-  border-color: var(--dw-color-legendary);
-  background: linear-gradient(var(--dw-surface-100), color-mix(in srgb, var(--dw-color-legendary) 12%, var(--dw-surface-50)));
-}
-
-.ard-step {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 0;
-  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 0.95rem;
-  font-weight: 400;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--dw-surface-900);
-
-  span {
-    display: grid;
-    place-items: center;
-    flex: none;
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 50%;
-    background: var(--dw-color-legendary);
-    color: var(--dw-surface-0);
-    font-family: 'Muse Sans', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 800;
-  }
-
-  b {
-    color: var(--dw-color-legendary);
-  }
-}
-
-// Le titre de l'étape remplace le libellé de la ligne, que les lecteurs d'écran gardent.
-.ard-row-label--hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
 }
 
 // Commandes plus grandes et plus lisibles : toutes les tuiles ont la même hauteur, sur une seule ligne.
@@ -672,4 +522,152 @@ bol-action-roll-panel {
 // Toujours dans la mise en page (masqué hors saisie manuelle) : le résultat n'agrandit pas le panneau.
 .ard-manual-badge--hidden {
   visibility: hidden;
+}
+
+// Les termes du jet en puces : vert ce qui aide, rouge ce qui pénalise (comme le jet d'attaque du duel).
+.ard-terms {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.ard-term {
+  padding: 0.12rem 0.5rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 6px;
+  background: var(--dw-surface-200);
+  color: var(--dw-surface-700);
+  font-family: 'Muse Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ard-term--dice {
+  background: var(--dw-surface-300);
+  color: var(--dw-surface-900);
+}
+
+.ard-term--plus {
+  color: var(--dw-color-reussite);
+}
+
+.ard-term--minus {
+  color: var(--dw-color-danger-muted);
+}
+
+.ard-eq {
+  color: var(--dw-surface-500);
+  font-family: 'Muse Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+// ── Jet en bandes : un libellé à gauche, ses choix sur une seule ligne, puis un pied avec formule, résultat et lancer ──
+.ard-fg {
+  gap: 0.5rem;
+}
+
+.ard-band {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.2rem 0.6rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed var(--dw-border);
+}
+
+.ard-band-main {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.ard-diff-name {
+  flex: none;
+  min-width: 4.5rem;
+  color: var(--dw-color-legendary);
+  font-size: 0.8rem;
+}
+
+.ard-toggle--attrs.mat-button-toggle-group {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.ard-toggle--careers.mat-button-toggle-group {
+  grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+}
+
+.ard-toggle--scale.mat-button-toggle-group {
+  flex: 1;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+}
+
+.ard-toggle--tiles.mat-button-toggle-group .mat-button-toggle-button,
+.ard-toggle--tiles.mat-button-toggle-group .mat-button-toggle-label-content {
+  min-height: 1.9rem;
+}
+
+.ard-foot {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 9rem 7.5rem;
+  gap: 0.6rem;
+  align-items: stretch;
+}
+
+.ard-foot-formula {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.ard-foot .ard-ledger-formula {
+  padding-top: 0;
+  border-top: none;
+}
+
+.ard-foot .ard-ticket {
+  padding: 0.4rem 0.6rem;
+}
+
+.ard-foot .ard-ticket-total {
+  font-size: 2.4rem;
+}
+
+.ard-foot .ard-reroll {
+  flex: none;
+  min-width: 0;
+  gap: 0.25rem;
+  font-size: 1rem;
+}
+
+// Les options de palier (faveur divine, échec critique…) tiennent côte à côte sous le pied.
+.ard-fg .ard-extras {
+  flex-direction: row;
+  flex-wrap: wrap;
+  min-height: 2.2rem;
+}
+
+.ard-fg .ard-extras > * {
+  flex: 0 1 auto;
+  width: auto;
+}
+
+// Conteneur étroit : le libellé passe au-dessus de ses choix, le pied s'empile.
+@container (max-width: 34rem) {
+  .ard-band {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ard-foot {
+    grid-template-columns: minmax(0, 1fr) 7.5rem;
+  }
+
+  .ard-foot-formula {
+    grid-column: 1 / -1;
+  }
 }
