@@ -908,58 +908,59 @@
 }
 
 .tas-vs .tas-head {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.4rem;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    'med id actions'
+    'tiles tiles tiles';
+  align-items: center;
+  gap: 0.4rem 0.6rem;
 }
 
 .tas-vs .tas-id {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.4rem;
-}
-
-.tas-vs .tas-idline {
-  width: auto;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 0.15rem;
-}
-
-.tas-vs .tas-name {
-  font-size: 1.6rem;
-  line-height: 1;
-}
-
-.tas-vs .tas-tag {
-  padding: 0.05rem 0.45rem;
-  font-size: 0.58rem;
+  display: contents;
 }
 
 .tas-vs .tas-med {
+  grid-area: med;
   width: 3.2rem;
   height: 3.2rem;
   border-width: 3px;
   font-size: 1.1rem;
 }
 
-.tas-vs .tas-head {
-  position: relative;
-}
-
-.tas-vs .tas-head .tas-med {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
 .tas-vs .tas-idline {
-  min-height: 3.2rem;
-  padding-left: 3.8rem;
+  grid-area: id;
+  width: auto;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.tas-vs .tas-name {
+  font-size: 1.6rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+// Rang et rôle sous le nom : du texte, plus une pastille.
+.tas-vs .tas-tag {
+  padding: 0;
+  border: 0;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+}
+
+.tas-actions {
+  grid-area: actions;
+  display: flex;
+  gap: 0.4rem;
 }
 
 .tas-vs .tas-tiles {
+  grid-area: tiles;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 0.2rem;
 }

@@ -109,12 +109,6 @@
     <!-- Duel : l'attaquant et la cible face à face -->
     <div class="tas-vs">
   <section class="tas-fighter" aria-label="Attaquant">
-      <div class="tas-switch">
-        <span class="tas-kicker">Attaquant</span>
-        <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + card().nom" (click)="sheetRequested.emit(card())">
-          <mat-icon>badge</mat-icon> Fiche
-        </button>
-      </div>
       <div class="tas-head">
         <span class="tas-med tas-med--active" aria-hidden="true">
           @if (card().avatar) {
@@ -126,7 +120,7 @@
         <div class="tas-id">
           <div class="tas-idline">
             <strong class="tas-name tas-name--active">{{ card().nom }}</strong>
-            <span class="tas-tag">{{ card().rang ?? 'Héros' }}</span>
+            <span class="tas-tag">{{ card().rang ?? 'Héros' }} · attaquant</span>
           </div>
           <div class="tas-tiles">
             @for (tile of attackerTiles(); track tile.label) {
@@ -137,21 +131,15 @@
             }
           </div>
         </div>
+        <div class="tas-actions">
+          <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + card().nom" (click)="sheetRequested.emit(card())">Fiche</button>
+        </div>
       </div>
   
     </section>
   <span class="tas-versus" aria-hidden="true">VS</span>
   <section class="tas-fighter" aria-label="Cible">
       @if (target(); as t) {
-        <div class="tas-switch">
-          <span class="tas-kicker">Cible</span>
-          <div class="tas-switch-actions">
-            <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + t.nom" (click)="sheetRequested.emit(t)">
-              <mat-icon>badge</mat-icon> Fiche
-            </button>
-            <button type="button" class="tas-ghost" (click)="targetSelected.emit(null)">↺ Changer d'adversaire</button>
-          </div>
-        </div>
         <div class="tas-head">
           <span class="tas-med tas-med--target" aria-hidden="true">
             @if (t.avatar) {
@@ -163,7 +151,7 @@
           <div class="tas-id">
             <div class="tas-idline">
               <strong class="tas-name">{{ t.nom }}</strong>
-              <span class="tas-tag">{{ t.rang ?? 'Héros' }}</span>
+              <span class="tas-tag">{{ t.rang ?? 'Héros' }} · cible</span>
             </div>
             <div class="tas-tiles">
               @for (tile of targetTiles(); track tile.label) {
@@ -174,6 +162,10 @@
               }
             </div>
           </div>
+        <div class="tas-actions">
+          <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + t.nom" (click)="sheetRequested.emit(t)">Fiche</button>
+          <button type="button" class="tas-ghost" aria-label="Changer d'adversaire" matTooltip="Changer d'adversaire" (click)="targetSelected.emit(null)">↺</button>
+        </div>
         </div>
       } @else {
         <span class="tas-kicker">Choisis une cible</span>
