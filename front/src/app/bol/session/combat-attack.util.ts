@@ -19,8 +19,8 @@ function parseDegatsDice(degats: string | null | undefined): 'd3' | 'd6' | 'd6m'
   return 'd6';
 }
 
-/** Combat à deux armes (02-actions-combat.md) : uniquement avec des armes légères ou moyennes —
- * mains nues/arme improvisée (d3) comptent comme légères, une arme lourde (d6B) n'est jamais éligible. */
+/** Combat à deux armes (02-actions-combat.md) : uniquement avec des armes légères ou moyennes ; une arme lourde (d6B) n'est jamais
+ * éligible. Les mains nues et l'arme improvisée sont écartées plus haut (`isDualWieldWeapon`), ce ne sont pas des armes du héros. */
 export function isDualWieldEligible(degats: string | null | undefined): boolean {
   return !!degats && parseDegatsDice(degats) !== 'd6b';
 }

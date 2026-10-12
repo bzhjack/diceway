@@ -32,6 +32,7 @@ export class CombatBoardComponent {
   // Assistant de tour : `null` quand plus personne ne peut jouer
   readonly activeCard = input<TapisCard | null>(null);
   readonly armes = input<readonly BolHerosArmeModel[]>([]);
+  readonly ownedArmes = input<readonly BolHerosArmeModel[]>([]);
   readonly combatOptions = input<readonly BolCombatOptionModel[]>([]);
   readonly targets = input<readonly TapisCard[]>([]);
   readonly target = input<TapisCard | null>(null);

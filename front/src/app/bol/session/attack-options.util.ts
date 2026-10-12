@@ -32,6 +32,17 @@ export function filterVisiblePostures(
   return dualWieldPlayable ? options : options.filter((o) => !DUAL_WIELD_SLUGS.has(o.slug));
 }
 
+/** Une vraie arme du héros (pas les mains nues ni l'arme improvisée) : le livre réserve le combat à deux armes aux armes légères ou
+ * moyennes, il ne parle ni de mains nues ni d'arme improvisée. */
+function isRealWeapon(arme: BolHerosArmeModel): boolean {
+  return arme.id !== MAINS_NUES.id && arme.id !== ARME_IMPROVISEE.id;
+}
+
+/** Une arme jouable en combat à deux armes, en principale ou en secondaire : une vraie arme, légère ou moyenne. */
+export function isDualWieldWeapon(arme: BolHerosArmeModel): boolean {
+  return isRealWeapon(arme) && isDualWieldEligible(arme.arme?.degats);
+}
+
 /** Options toujours disponibles à un héros en plus de ses armes (table des dégâts de BoL). */
 export const MAINS_NUES: BolHerosArmeModel = {
   id: -1,

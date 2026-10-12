@@ -4,8 +4,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
-import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, MAINS_NUES} from '../../attack-options.util';
-import {dualStrikeDegats, isDualWieldEligible} from '../../combat-attack.util';
+import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, MAINS_NUES} from '../../attack-options.util';
+import {dualStrikeDegats} from '../../combat-attack.util';
 import {
   ATTACK_THRESHOLD,
   attackBonus,
@@ -79,6 +79,8 @@ export class TurnAssistantComponent {
   readonly card = input.required<TapisCard>();
   /** Armes du héros actif — vide pour un PNJ, une créature ou un démon, ou tant qu'elles chargent. */
   readonly armes = input<readonly BolHerosArmeModel[]>([]);
+  /** Toutes les armes du héros, équipées ou non : l'arme secondaire du combat à deux armes se choisit parmi elles. */
+  readonly ownedArmes = input<readonly BolHerosArmeModel[]>([]);
   readonly combatOptions = input<readonly BolCombatOptionModel[]>([]);
   /** Cartes que la carte active peut viser : le camp d'en face, hors combat exclu. */
   readonly targets = input<readonly TapisCard[]>([]);
@@ -114,9 +116,12 @@ export class TurnAssistantComponent {
     return list.find((a) => a.id === this.selectedArmeId()) ?? list[0] ?? null;
   });
 
+  /** L'arme secondaire d'un héros se prend parmi toutes ses armes légères ou moyennes, équipées ou non : « équipée » dit
+   * seulement ce que le héros propose à l'attaque, pas ce qu'il a en main pour parer ou frapper à deux armes. */
   protected readonly eligibleOffHandArmes = computed(() => {
     const mainId = this.effectiveArme()?.id;
-    return this.displayArmes().filter((a) => a.id !== mainId && isDualWieldEligible(a.arme?.degats));
+    const candidates = this.isHero() ? this.ownedArmes() : this.displayArmes();
+    return candidates.filter((a) => a.id !== mainId && isDualWieldWeapon(a));
   });
 
   protected readonly visibleOptions = computed(() => {
@@ -129,7 +134,9 @@ export class TurnAssistantComponent {
       return options.filter((o) => !DUAL_WIELD_SLUGS.has(o.slug));
     }
     const otherDegats = this.eligibleOffHandArmes().map((a) => a.arme?.degats ?? null);
-    return filterVisiblePostures(options, this.effectiveArme()?.arme?.degats ?? null, otherDegats);
+    // L'arme principale doit elle aussi être une vraie arme légère ou moyenne : mains nues et arme improvisée ne comptent pas.
+    const main = this.effectiveArme();
+    return filterVisiblePostures(options, main && isDualWieldWeapon(main) ? (main.arme?.degats ?? null) : null, otherDegats);
   });
 
   protected readonly effectiveOption = computed(() => {

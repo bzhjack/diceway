@@ -182,6 +182,8 @@ export class SessionPlayPageComponent {
     return active?.kind === 'hero' ? active.sourceId : null;
   });
   protected readonly activeArmes = signal<readonly BolHerosArmeModel[]>([]);
+  /** Toutes les armes du héros actif, équipées ou non — pour l'arme secondaire du combat à deux armes. */
+  protected readonly activeOwnedArmes = signal<readonly BolHerosArmeModel[]>([]);
 
   /** Armes proposées à l'assistant : celles du héros actif ; pour un PNJ, toutes ses armes (l'équipée en premier), pour en changer en combat. */
   protected readonly assistantArmes = computed<readonly BolHerosArmeModel[]>(() => {
@@ -297,6 +299,7 @@ export class SessionPlayPageComponent {
     effect(() => {
       const herosId = this.activeHeroId();
       this.activeArmes.set([]);
+      this.activeOwnedArmes.set([]);
       if (!herosId) {
         return;
       }
@@ -308,6 +311,7 @@ export class SessionPlayPageComponent {
             return;
           }
           this.activeArmes.set(equippedArmes(loadedArmes(hero)));
+          this.activeOwnedArmes.set(loadedArmes(hero));
         });
     });
   }
@@ -722,6 +726,7 @@ export class SessionPlayPageComponent {
             }
             if (this.activeHeroId() === herosId) {
               this.activeArmes.set(equippedArmes(loadedArmes(hero)));
+              this.activeOwnedArmes.set(loadedArmes(hero));
             }
           });
         this.loadSession(sessionId);
