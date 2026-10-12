@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, effect, inject, input, model, OnInit, output, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, input, model, OnInit, output, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -6,12 +6,13 @@ import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
+import {heroismeGems} from '../../heroisme-spend.util';
 import {ValueTracker} from '../../value-tracker';
 import {HeroResourcesData} from '../../models/hero-resources.model';
 
-/** Vitalité de session et héroïsme d'un héros, ajustables par stepper et persistés à chaque pas.
- * Utilisé dans l'en-tête de la carte dépliée d'un héros (`bol-expanded-card`). L'héroïsme est un `model` :
- * le parent peut le partager avec le jet d'action, qui en dépense. */
+/** Vitalité de session et héroïsme d'un héros, ajustables pas à pas et persistés à chaque pas : un cœur et sa jauge pour la vitalité,
+ * une rangée de gemmes pour l'héroïsme. Utilisé dans la colonne de gauche de la carte dépliée d'un héros (`bol-expanded-card`).
+ * L'héroïsme est un `model` : le parent le partage avec le jet d'action, qui en dépense. */
 @Component({
   selector: 'bol-hero-resources',
   imports: [ReactiveFormsModule, DwValueStepperComponent],
@@ -19,10 +20,19 @@ import {HeroResourcesData} from '../../models/hero-resources.model';
     <div class="hrs-field">
       <span class="hrs-label">Vitalité · max {{ data().vitaliteMax }}</span>
       <dw-value-stepper [formControl]="vitaliteControl" [min]="-20" [max]="data().vitaliteMax" [ariaLabel]="'Vitalité'" [heart]="true" />
+      <span class="hrs-bar" aria-hidden="true"><i [style.width.%]="vitalitePercent()"></i></span>
     </div>
     <div class="hrs-field">
       <span class="hrs-label">Héroïsme</span>
-      <dw-value-stepper [formControl]="heroismeControl" [min]="0" [ariaLabel]="'Héroïsme'" />
+      <div class="hrs-heroisme" role="group" aria-label="Héroïsme">
+        <button type="button" class="hrs-step" aria-label="Retirer un point d’héroïsme" [disabled]="heroisme() <= 0" (click)="stepHeroisme(-1)">−</button>
+        <span class="hrs-gems" role="img" [attr.aria-label]="heroisme() + ' points d’héroïsme'">
+          @for (lit of gems(); track $index) {
+            <i class="hrs-gem" [class.hrs-gem--on]="lit"></i>
+          }
+        </span>
+        <button type="button" class="hrs-step" aria-label="Ajouter un point d’héroïsme" (click)="stepHeroisme(1)">+</button>
+      </div>
     </div>
   `,
   styles: `
@@ -51,6 +61,78 @@ import {HeroResourcesData} from '../../models/hero-resources.model';
       --vs-heart-font: var(--hrs-heart-font, 0.8rem);
     }
 
+    // Jauge de vitalité sous le cœur : du rouge au vert, à la mesure de ce qu'il reste.
+    .hrs-bar {
+      align-self: stretch;
+      height: 5px;
+      margin-top: 0.15rem;
+      border-radius: 3px;
+      background: var(--dw-surface-300);
+      overflow: hidden;
+
+      i {
+        display: block;
+        height: 100%;
+        border-radius: 3px;
+        background: linear-gradient(90deg, var(--dw-color-echec-forte), var(--dw-color-reussite));
+      }
+    }
+
+    // Héroïsme : une gemme par point, allumée s'il reste à dépenser.
+    .hrs-heroisme {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .hrs-gems {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.25rem;
+    }
+
+    .hrs-gem {
+      width: 0.85rem;
+      height: 1.1rem;
+      background: var(--dw-surface-300);
+      clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
+    }
+
+    .hrs-gem--on {
+      background: linear-gradient(160deg, #fde68a, var(--dw-color-legendary) 55%, #8a5a12);
+    }
+
+    .hrs-step {
+      flex: none;
+      width: 1.5rem;
+      height: 1.5rem;
+      padding: 0;
+      border: 1px solid var(--dw-border);
+      border-radius: 4px;
+      background: transparent;
+      color: var(--dw-surface-500);
+      font: inherit;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+
+      &:hover:not(:disabled) {
+        border-color: var(--dw-color-legendary);
+        color: var(--dw-color-legendary);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--dw-color-legendary);
+        outline-offset: 1px;
+      }
+
+      &:disabled {
+        opacity: 0.35;
+        cursor: default;
+      }
+    }
+
     .hrs-label {
       font-size: 0.56rem;
       font-weight: 800;
@@ -73,24 +155,21 @@ export class HeroResourcesComponent implements OnInit {
   private readonly snackBar = inject(MatSnackBar);
 
   protected readonly vitaliteControl = new FormControl(0, {nonNullable: true});
-  protected readonly heroismeControl = new FormControl(0, {nonNullable: true});
   /** Miroir en signal de la vitalité affichée dans le libellé (un `FormControl.value` lu dans un
    * template OnPush ne se rafraîchit pas après un `setValue` venu d'un callback asynchrone). */
   protected readonly vitalite = signal(0);
+  /** Part de vitalité restante, de 0 à 100, pour la jauge sous le cœur. */
+  protected readonly vitalitePercent = computed(() => {
+    const max = this.data().vitaliteMax;
+    return max > 0 ? Math.max(0, Math.min(100, (this.vitalite() / max) * 100)) : 0;
+  });
+  /** Une gemme par point d'héroïsme, allumée s'il reste à dépenser. */
+  protected readonly gems = computed(() => heroismeGems(this.heroisme()));
 
   private readonly vitaliteTracker = new ValueTracker();
 
   constructor() {
-    // L'héroïsme peut changer hors de ce composant (dépense dans le jet d'action) : le stepper suit.
-    effect(() => {
-      const heroisme = this.heroisme();
-      if (heroisme !== this.heroismeControl.value) {
-        this.heroismeControl.setValue(heroisme, {emitEvent: false});
-      }
-    });
-
     this.vitaliteControl.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => this.onVitaliteChange(value));
-    this.heroismeControl.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => this.onHeroismeChange(value));
   }
 
   // Valeurs initiales posées ici (pas en initialiseur de champ) : un input required n'a pas encore
@@ -128,15 +207,16 @@ export class HeroResourcesComponent implements OnInit {
     });
   }
 
-  private onHeroismeChange(value: number): void {
+  /** Un point d'héroïsme de plus ou de moins, jamais sous zéro. */
+  protected stepHeroisme(delta: number): void {
     const previous = this.heroisme();
-    const delta = value - previous;
-    if (delta === 0) {
+    const value = Math.max(0, previous + delta);
+    if (value === previous) {
       return;
     }
 
     this.heroisme.set(value);
-    this.herosService.adjustHeroisme(this.data().herosId, delta).subscribe({
+    this.herosService.adjustHeroisme(this.data().herosId, value - previous).subscribe({
       next: () => this.changed.emit(),
       error: (error: unknown) => {
         this.snackBar.open(extractApiErrorMessage(error, "Impossible de mettre à jour l'héroïsme."), 'Fermer', {

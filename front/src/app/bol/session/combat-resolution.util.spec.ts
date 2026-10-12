@@ -3,7 +3,7 @@ import {attackBonus, damageDie, damageDiceCount, finalDamage, rawDamage, vigueur
 import {ResolvedCombatStats} from './models/combat-attack.model';
 
 const STATS: ResolvedCombatStats = {
-  agilite: 2, vigueur: 3, melee: 1, tir: 2, attaque: null, defense: 0, degats: 'd6', protection: 0, protectionText: null, bouclierMalusUneAttaque: 0, herosId: null, heroisme: null,
+  agilite: 2, vigueur: 3, melee: 1, tir: 2, attaque: null, defense: 0, degats: 'd6', protection: 0, protectionText: null, bouclierMalusUneAttaque: 0, bouclierDefenseToutes: 0, herosId: null, heroisme: null,
 };
 
 describe('damageDie', () => {
@@ -57,27 +57,24 @@ describe('finalDamage', () => {
 
 describe('computeAttackTotal', () => {
   it('sums dice, attacker bonus and modifier, then subtracts target defense', () => {
-    expect(computeAttackTotal(7, 5, 8, 0, 0, 0, 0)).toBe(4);
+    expect(computeAttackTotal(7, 5, 8, 0, 0, 0)).toBe(4);
   });
 
-  it('subtracts the petit bouclier malus when consumed', () => {
-    expect(computeAttackTotal(7, 5, 8, 0, 1, 0, 0)).toBe(3);
-  });
-
-  it('ignores the shield malus when not consumed (caller passes 0)', () => {
-    expect(computeAttackTotal(7, 5, 8, 2, 0, 0, 0)).toBe(6);
+  it('adds the modifiers of the effects (a shield malus arrives as a negative modifier)', () => {
+    expect(computeAttackTotal(7, 5, 8, -1, 0, 0)).toBe(3);
+    expect(computeAttackTotal(7, 5, 8, 2, 0, 0)).toBe(6);
   });
 
   it('adds the legendary +1 bonus when the attacker got a legendary initiative this encounter', () => {
-    expect(computeAttackTotal(7, 5, 8, 0, 0, 1, 0)).toBe(5);
+    expect(computeAttackTotal(7, 5, 8, 0, 1, 0)).toBe(5);
   });
 
   it('adds the posture attack modifier (positive for offensive/intrepid)', () => {
-    expect(computeAttackTotal(7, 5, 8, 0, 0, 0, 1)).toBe(5);
+    expect(computeAttackTotal(7, 5, 8, 0, 0, 1)).toBe(5);
   });
 
   it('subtracts the posture attack modifier (negative for defensive/armor-chink)', () => {
-    expect(computeAttackTotal(7, 5, 8, 0, 0, 0, -2)).toBe(2);
+    expect(computeAttackTotal(7, 5, 8, 0, 0, -2)).toBe(2);
   });
 });
 

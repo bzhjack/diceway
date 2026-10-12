@@ -67,6 +67,7 @@
           [entries]="turnEntries()"
           [round]="etat().round"
           [legendaryActive]="b.legendaryActive"
+          [effets]="effetsAffiches()"
           [announcement]="turnAnnouncement()"
           [activeCard]="activeCard()"
           [armes]="assistantArmes()"
@@ -85,6 +86,9 @@
           (choiceChanged)="attackChoice.set($event)"
           (targetSelected)="onAttackCard($event)"
           (sheetRequested)="onCardToggled($event)"
+          (attackRolled)="onAttackRolled($event)"
+          (effectRemoved)="onEffectRemoved($event)"
+          (effectAdded)="onEffectAdded($event)"
           (damageApplied)="onHitApplied($event)"
           (totalDefenseRequested)="onTotalDefense()"
         />

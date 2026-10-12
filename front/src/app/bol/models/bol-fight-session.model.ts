@@ -11,7 +11,8 @@ type BolFightSessionStatut = 'libre' | 'combat' | 'terminee';
 export interface EtatCombatDto {
   round: number;
   joues: string[];
-  defense_totale: string[];
+  /** Effets en cours, validés par le front (cf. `normalizeEffets`). */
+  effets?: unknown[];
   /** Cartes laissées sur la table mais exclues du combat. */
   exclus?: string[];
 }

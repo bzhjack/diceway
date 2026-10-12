@@ -97,7 +97,7 @@ function hero(overrides: {
     attributs: {vigueur: overrides.vigueur ?? 0, agilite: 0, agilite_effective: 0, esprit: 0, aura: 0},
     origines: {nom: 'Testa', joueur: 'lionel', region_id: null, avatar: null, langues: []},
     ressources: {vitalite: 10, heroisme: 5, foi: 0, pouvoir: 0, vilenie: 0, creation: 0, experience: 0},
-    equipement_effectif: {bouclier_malus_attaque_subie: 0, bouclier_malus_attaque_subie_portee: null},
+    equipement_effectif: {bouclier_malus_attaque_subie: 0, bouclier_malus_attaque_subie_portee: null, bouclier_defense_toutes: 0},
     traits: overrides.traits ?? [],
     carrieres: overrides.carrieres ?? [],
     armures: [],

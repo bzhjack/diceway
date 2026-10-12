@@ -2,12 +2,17 @@ import {describe, expect, it} from 'vitest';
 import {
   ACTION_DIFFICULTIES,
   DEFAULT_ACTION_DIFFICULTY,
+  actionDiceTarget,
   actionModifierSum,
   actionResultTone,
+  actionSuccessChance,
+  actionVerdict,
   diceCountLabel,
   diceFromTotal,
   formatActionFormula,
   keepBestOrWorstTwo,
+  keptDiceDistribution,
+  keptDiceIndexes,
   netDiceModifier,
   signedModifier,
   suggestedActionResult,
@@ -149,5 +154,114 @@ describe('ACTION_DIFFICULTIES', () => {
   it('has eight levels and defaults to Moyenne (0)', () => {
     expect(ACTION_DIFFICULTIES).toHaveLength(8);
     expect(DEFAULT_ACTION_DIFFICULTY).toEqual({label: 'Moyenne', modifier: 0});
+  });
+});
+
+describe('keptDiceDistribution', () => {
+  const sum = (p: readonly number[]) => p.reduce((a, b) => a + b, 0);
+
+  it('is the 2d6 curve without bonus or malus die', () => {
+    const p = keptDiceDistribution(0);
+    expect(p[2]).toBeCloseTo(1 / 36);
+    expect(p[7]).toBeCloseTo(6 / 36);
+    expect(p[12]).toBeCloseTo(1 / 36);
+    expect(sum(p)).toBeCloseTo(1);
+  });
+
+  it('shifts towards high totals with a bonus die (3d6, keep the two best)', () => {
+    const p = keptDiceDistribution(1);
+    expect(p[12]).toBeCloseTo(16 / 216);
+    expect(p[2]).toBeCloseTo(1 / 216);
+    expect(sum(p)).toBeCloseTo(1);
+  });
+
+  it('mirrors it with a malus die (3d6, keep the two worst)', () => {
+    const p = keptDiceDistribution(-1);
+    expect(p[2]).toBeCloseTo(16 / 216);
+    expect(p[12]).toBeCloseTo(1 / 216);
+  });
+
+  it('still sums to 1 with two bonus or two malus dice', () => {
+    expect(sum(keptDiceDistribution(2))).toBeCloseTo(1);
+    expect(sum(keptDiceDistribution(-2))).toBeCloseTo(1);
+  });
+});
+
+describe('actionSuccessChance', () => {
+  it('is the chance of 9 or more on 2d6 without modifier', () => {
+    expect(actionSuccessChance(0, 0, 9)).toBeCloseTo(10 / 36);
+  });
+
+  it('counts the modifiers: +3 means 6 or more on the dice', () => {
+    expect(actionSuccessChance(0, 3, 9)).toBeCloseTo(26 / 36);
+  });
+
+  it('never reaches 100 %: a double 1 always fails', () => {
+    expect(actionSuccessChance(0, 7, 9)).toBeCloseTo(35 / 36);
+    expect(actionSuccessChance(0, 20, 9)).toBeCloseTo(35 / 36);
+  });
+
+  it('never reaches 0 %: a double 6 always succeeds', () => {
+    expect(actionSuccessChance(0, -3, 9)).toBeCloseTo(1 / 36);
+    expect(actionSuccessChance(0, -20, 9)).toBeCloseTo(1 / 36);
+  });
+
+  it('rises with a bonus die and drops with a malus die', () => {
+    expect(actionSuccessChance(1, 0, 9)).toBeGreaterThan(actionSuccessChance(0, 0, 9));
+    expect(actionSuccessChance(-1, 0, 9)).toBeLessThan(actionSuccessChance(0, 0, 9));
+  });
+});
+
+describe('actionDiceTarget', () => {
+  it('is the threshold minus the modifiers', () => {
+    expect(actionDiceTarget(0, 9)).toEqual({kind: 'seuil', value: 9});
+    expect(actionDiceTarget(3, 9)).toEqual({kind: 'seuil', value: 6});
+    expect(actionDiceTarget(-2, 9)).toEqual({kind: 'seuil', value: 11});
+  });
+
+  it('says that everything succeeds but the double 1 when 3 or less is enough', () => {
+    expect(actionDiceTarget(6, 9).kind).toBe('tout');
+    expect(actionDiceTarget(12, 9).kind).toBe('tout');
+  });
+
+  it('says that only the double 6 succeeds when 12 or more is needed', () => {
+    expect(actionDiceTarget(-3, 9).kind).toBe('double-six');
+    expect(actionDiceTarget(-8, 9).kind).toBe('double-six');
+  });
+});
+
+describe('keptDiceIndexes', () => {
+  it('keeps both dice of a plain roll', () => {
+    expect(keptDiceIndexes([3, 5], 0)).toEqual([0, 1]);
+  });
+
+  it('keeps the two best with a bonus die, the two worst with a malus die', () => {
+    expect(keptDiceIndexes([2, 6, 4], 1)).toEqual([1, 2]);
+    expect(keptDiceIndexes([2, 6, 4], -1)).toEqual([0, 2]);
+    expect(keptDiceIndexes([6, 1, 3, 5], 2)).toEqual([0, 3]);
+  });
+
+  it('keeps two distinct dice when values are tied', () => {
+    const kept = keptDiceIndexes([5, 5, 5], 1);
+    expect(kept[0]).not.toBe(kept[1]);
+  });
+});
+
+describe('actionVerdict', () => {
+  it('tells by how much a roll succeeds or fails', () => {
+    expect(actionVerdict('reussite', [6, 4], 12, 9)).toEqual({title: 'Réussite', detail: 'réussi de 3'});
+    expect(actionVerdict('reussite', [4, 5], 9, 9)).toEqual({title: 'Réussite', detail: 'tout juste'});
+    expect(actionVerdict('echec', [3, 2], 7, 9)).toEqual({title: 'Échec', detail: 'il manquait 2'});
+  });
+
+  it('names the automatic failure of a double 1, whatever the total', () => {
+    expect(actionVerdict('echec', [1, 1], 14, 9)).toEqual({title: 'Échec automatique', detail: 'Double 1 : c’est raté, quel que soit le bonus.'});
+    expect(actionVerdict('echec_critique', [1, 1], 14, 9).title).toBe('Échec critique');
+  });
+
+  it('tells a heroic success from a double 6 apart from a bought one', () => {
+    expect(actionVerdict('heroique', [6, 6], 14, 9).detail).toBe('Double 6 : réussite automatique, avec un effet supérieur.');
+    expect(actionVerdict('heroique', [5, 4], 11, 9).detail).toBe('Réussite transformée pour 1 point d’héroïsme.');
+    expect(actionVerdict('legendaire', [6, 6], 14, 9).title).toBe('Succès légendaire');
   });
 });

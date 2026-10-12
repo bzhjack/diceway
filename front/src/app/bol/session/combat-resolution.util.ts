@@ -87,19 +87,17 @@ export function resolvePostureAttackModifier(posture: {readonly slug: string; re
   return posture.slug === 'armor-chink' ? -targetProtection : posture.modificateur;
 }
 
-/** Total du jet d'attaque : 2d6 + bonus attaquant − défense cible + modificateur − malus de petit
- * bouclier consommé + bonus +1 légendaire personnel (si actif pour la rencontre) + modificateur de
- * posture (offensive/intrépide/défensive/défaut de l'armure). */
+/** Total du jet d'attaque : 2d6 + bonus attaquant − défense cible + modificateurs (effets en cours : bouclier, postures, défense totale…) +
+ * bonus +1 légendaire personnel (si actif pour la rencontre) + modificateur de posture (offensive/intrépide/défensive/défaut de l'armure). */
 export function computeAttackTotal(
   diceSum: number,
   attackerBonus: number,
   targetDefense: number,
   modifier: number,
-  shieldMalus: number,
   legendaryBonus: number,
   postureModifier: number,
 ): number {
-  return diceSum + attackerBonus - targetDefense + modifier - shieldMalus + legendaryBonus + postureModifier;
+  return diceSum + attackerBonus - targetDefense + modifier + legendaryBonus + postureModifier;
 }
 
 /** Résultat suggéré d'un jet d'attaque : 2/12 naturels priment sur le seuil (même règle absolue que

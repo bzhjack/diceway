@@ -925,7 +925,7 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
         esprit: raw.esprit,
         aura: raw.aura,
       },
-      equipement_effectif: {bouclier_malus_attaque_subie: 0, bouclier_malus_attaque_subie_portee: null},
+      equipement_effectif: {bouclier_malus_attaque_subie: 0, bouclier_malus_attaque_subie_portee: null, bouclier_defense_toutes: 0},
       traits: raw.traits.map((trait) => ({
         id: trait.id ?? undefined,
         traitable_id: trait.traitable_id,

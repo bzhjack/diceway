@@ -15,6 +15,8 @@ export interface ResolvedCombatStats {
    * dans `defense` (cas du grand bouclier, portée "toutes"). Consommé manuellement par le dialog
    * d'attaque, l'app ne suivant pas de round. */
   readonly bouclierMalusUneAttaque: number;
+  /** Ce qu'un grand bouclier ajoute déjà à `defense` : retranché quand la carte perd le bénéfice de son bouclier. */
+  readonly bouclierDefenseToutes: number;
   /** null pour pnj/créature/démon — l'héroïsme (Faveur divine, options héroïques) n'existe que pour un héros. */
   readonly herosId: string | null;
   readonly heroisme: number | null;

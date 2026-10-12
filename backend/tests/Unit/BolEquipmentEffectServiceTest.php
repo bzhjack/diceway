@@ -65,7 +65,17 @@ class BolEquipmentEffectServiceTest extends TestCase
         $service = new BolEquipmentEffectService();
         $equipped = [$this->armure('bouclier', malusAttaqueSubie: 1, portee: 'une')];
         $this->assertSame(
-            ['bouclier_malus_attaque_subie' => 1, 'bouclier_malus_attaque_subie_portee' => 'une'],
+            ['bouclier_malus_attaque_subie' => 1, 'bouclier_malus_attaque_subie_portee' => 'une', 'bouclier_defense_toutes' => 0],
+            $service->equipementEffectif($equipped),
+        );
+    }
+
+    public function test_equipement_effectif_exposes_the_defence_a_grand_bouclier_already_adds(): void
+    {
+        $service = new BolEquipmentEffectService();
+        $equipped = [$this->armure('bouclier', malusAgilite: 1, malusAttaqueSubie: 1, portee: 'toutes')];
+        $this->assertSame(
+            ['bouclier_malus_attaque_subie' => 0, 'bouclier_malus_attaque_subie_portee' => null, 'bouclier_defense_toutes' => 1],
             $service->equipementEffectif($equipped),
         );
     }
@@ -74,7 +84,7 @@ class BolEquipmentEffectServiceTest extends TestCase
     {
         $service = new BolEquipmentEffectService();
         $this->assertSame(
-            ['bouclier_malus_attaque_subie' => 0, 'bouclier_malus_attaque_subie_portee' => null],
+            ['bouclier_malus_attaque_subie' => 0, 'bouclier_malus_attaque_subie_portee' => null, 'bouclier_defense_toutes' => 0],
             $service->equipementEffectif([]),
         );
     }

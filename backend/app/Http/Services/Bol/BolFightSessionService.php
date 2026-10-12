@@ -137,7 +137,7 @@ class BolFightSessionService
     }
 
     /**
-     * Enregistre l'état du combat (round, cartes qui ont joué, cartes en défense totale). Renvoie
+     * Enregistre l'état du combat (round, cartes qui ont joué, effets en cours). Renvoie
      * null si la session est introuvable ou n'est pas en combat.
      *
      * @param array<string, mixed> $etat
@@ -149,10 +149,7 @@ class BolFightSessionService
             return null;
         }
 
-        // Les cartes exclues sont fixées au démarrage : un état envoyé sans `exclus` ne les efface pas.
-        $etat['exclus'] ??= BolCombatState::normalize($session->etat_combat)['exclus'];
-
-        $session->update(['etat_combat' => BolCombatState::normalize($etat)]);
+        $session->update(['etat_combat' => BolCombatState::merge($etat, $session->etat_combat)]);
 
         return $this->getSessionWithRelations($sessionId);
     }

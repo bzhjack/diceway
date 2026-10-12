@@ -53,20 +53,29 @@ class BolEquipmentEffectService
      * propose une case à cocher manuelle.
      *
      * @param array<int, array{categorie: string, malus_agilite: int, malus_initiative: int, malus_attaque_subie: int, malus_attaque_subie_portee: ?string}> $equippedArmures
-     * @return array{bouclier_malus_attaque_subie: int, bouclier_malus_attaque_subie_portee: ?string}
+     * `bouclier_defense_toutes` : ce qu'un grand bouclier (« toutes les attaques ») ajoute déjà à la défense effective. Le front le retranche quand
+     * le porteur perd le bénéfice de son bouclier (attaque intrépide, échec critique au round 1).
+     *
+     * @return array{bouclier_malus_attaque_subie: int, bouclier_malus_attaque_subie_portee: ?string, bouclier_defense_toutes: int}
      */
     public function equipementEffectif(array $equippedArmures): array
     {
+        $toutes = array_sum(array_map(
+            fn ($a) => $a['malus_attaque_subie_portee'] === 'toutes' ? $a['malus_attaque_subie'] : 0,
+            $equippedArmures,
+        ));
+
         foreach ($equippedArmures as $armure) {
             if ($armure['malus_attaque_subie_portee'] === 'une') {
                 return [
                     'bouclier_malus_attaque_subie' => $armure['malus_attaque_subie'],
                     'bouclier_malus_attaque_subie_portee' => 'une',
+                    'bouclier_defense_toutes' => $toutes,
                 ];
             }
         }
 
-        return ['bouclier_malus_attaque_subie' => 0, 'bouclier_malus_attaque_subie_portee' => null];
+        return ['bouclier_malus_attaque_subie' => 0, 'bouclier_malus_attaque_subie_portee' => null, 'bouclier_defense_toutes' => $toutes];
     }
 
     /**

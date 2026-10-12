@@ -54,6 +54,19 @@ export interface ActionRollParts {
  * s'affiche seul. */
 export type ActionRollLabels = Partial<Record<keyof ActionRollParts, string>>;
 
+/** Ce qu'il faut obtenir aux dés pour réussir : un total minimal (`seuil`), « tout sauf le double 1 » (`tout`) ou « seul le
+ * double 6 » (`double-six`). `value` est le total demandé, même quand il sort de l'intervalle 2-12. */
+export interface ActionDiceTarget {
+  readonly kind: 'tout' | 'seuil' | 'double-six';
+  readonly value: number;
+}
+
+/** Le verdict d'un jet en clair : un titre, et une phrase qui dit de combien c'est réussi ou raté. */
+export interface ActionVerdict {
+  readonly title: string;
+  readonly detail: string;
+}
+
 /** Couleur du résultat d'un jet : échec, réussite ou héroïque (héroïque et légendaire). */
 export type ActionRollTone = 'echec' | 'reussite' | 'heroique';
 
@@ -61,4 +74,8 @@ export type ActionRollTone = 'echec' | 'reussite' | 'heroique';
 export interface RollTerm {
   readonly label: string;
   readonly tone: 'dice' | 'plus' | 'minus';
+  /** La puce se clique pour saisir la valeur à la main (protection de la cible). */
+  readonly editable?: boolean;
+  /** Effet du registre dont la puce vient : sa croix le retire. */
+  readonly effetId?: string;
 }
