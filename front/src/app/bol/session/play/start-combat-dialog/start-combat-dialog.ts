@@ -1,10 +1,12 @@
-import {ChangeDetectionStrategy, Component, computed, inject, signal, ViewEncapsulation, viewChild, WritableSignal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, effect, inject, signal, untracked, ViewEncapsulation, viewChild, WritableSignal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {forkJoin, take} from 'rxjs';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {firstValueFrom, forkJoin, take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
+import {confirmDialog} from '../../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
@@ -18,8 +20,35 @@ import {StartCombatDialogData} from '../../models/start-combat-dialog.model';
 
 interface AdversaryRow {
   readonly pivotId: number;
+  readonly kind: 'pnj' | 'creature' | 'demon';
   readonly nom: string;
+  /** Rang BoL fixe : les PNJ, créatures et démons n'ont pas de jet de réaction, ce rang les place dans l'ordre. */
+  readonly rang: 'rival' | 'coriace' | 'pietaille';
+  /** Initiative : celle d'un PNJ ; les créatures et démons n'en ont pas (0). */
+  readonly initiative: number;
+  /** Un allié des héros ne leur oppose pas son initiative. */
+  readonly ally: boolean;
 }
+
+/** Un bloc de l'aperçu de la frise : ses combattants, et s'il est bloqué au round 1. */
+/** Une ligne de l'aperçu : un combattant, que l'on peut retirer de la table. */
+export interface PreviewLine {
+  readonly label: string;
+  /** Exclu de ce combat : il reste sur la table, mais ne joue pas. */
+  readonly excluded: boolean;
+  readonly kind: 'hero' | 'pnj' | 'creature' | 'demon';
+  readonly pivotId: number;
+}
+
+export interface PreviewGroup {
+  readonly id: string;
+  readonly title: string;
+  readonly lines: readonly PreviewLine[];
+  readonly blocked: boolean;
+}
+
+/** Précision ajoutée au nom d'un héros du premier bloc, qui regroupe trois résultats ; les autres blocs n'en ont pas besoin. */
+const HERO_RANK_WORD: Partial<Record<InitiativeResultat, string>> = {legendaire: 'légendaire', heroique: 'héroïque', reussite: 'succès'};
 
 interface HeroRow {
   readonly pivotId: number;
@@ -32,6 +61,12 @@ interface HeroRow {
 
 /** Seuil de réussite du jet de réaction BoL (02-actions-combat.md) — fixe, jamais modifié par les règles. */
 const THRESHOLD = 9;
+
+/** Un terme du jet de réaction affiché en puce : les dés, un bonus (vert) ou un malus (rouge). */
+interface ReactionTerm {
+  readonly label: string;
+  readonly tone: 'dice' | 'plus' | 'minus';
+}
 
 const RESULT_LABELS: Record<InitiativeResultat, string> = Object.fromEntries(
   INITIATIVE_RESULT_OPTIONS.map((opt) => [opt.value, opt.label]),
@@ -47,7 +82,7 @@ const RESULT_LABELS: Record<InitiativeResultat, string> = Object.fromEntries(
  */
 @Component({
   selector: 'bol-start-combat-dialog',
-  imports: [MatButtonModule, MatDialogModule, MatIconModule, DiceBoxHostComponent],
+  imports: [MatButtonModule, MatDialogModule, MatIconModule, MatTooltipModule, DiceBoxHostComponent],
   templateUrl: './start-combat-dialog.html',
   styleUrl: './start-combat-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,7 +90,7 @@ const RESULT_LABELS: Record<InitiativeResultat, string> = Object.fromEntries(
 })
 export class StartCombatDialogComponent {
   protected readonly ref = inject(MatDialogRef<StartCombatDialogComponent, boolean>);
-  private readonly data = inject<StartCombatDialogData>(MAT_DIALOG_DATA);
+  protected readonly data = inject<StartCombatDialogData>(MAT_DIALOG_DATA);
   private readonly dialog = inject(MatDialog);
   private readonly fightSessionService = inject(BolFightSessionService);
   private readonly herosService = inject(BolHerosService);
@@ -88,11 +123,19 @@ export class StartCombatDialogComponent {
    * surprendre l'ennemi donne +2 (Très facile), être surpris ou pris en embuscade donne −1 (Ardue).
    * Fait commun à toute la rencontre, pas par héros. */
   protected readonly ambushState = signal<AmbushState>(null);
-  /** Idem : "si un coriace ou un rival ennemi possède de l'initiative, appliquer la plus haute valeur
-   * d'initiative adverse en malus au jet de réaction des héros" — saisie manuelle par le MJ (rare,
-   * propre à certaines créatures du bestiaire ; aucune fiche pnj/créature/démon de l'app n'a
-   * aujourd'hui d'attribut "initiative" à proprement parler). */
-  protected readonly adversaryInitiativeMalus = signal(0);
+  /** Idem : « si un coriace ou un rival possède une valeur d'initiative, prenez la plus haute valeur d'initiative
+   * parmi les adversaires des héros, et appliquez-la en malus au jet de réaction des héros ». Calculée d'après les
+   * PNJ présents (seuls ils ont une initiative) ; le MJ peut la corriger à la main. */
+  protected readonly hasInitiativeAdversary = computed(() =>
+    this.activeAdversaries().some((a) => !a.ally && (a.rang === 'rival' || a.rang === 'coriace')),
+  );
+  protected readonly detectedInitiative = computed(() =>
+    Math.max(0, ...this.activeAdversaries().filter((a) => !a.ally && (a.rang === 'rival' || a.rang === 'coriace')).map((a) => a.initiative)),
+  );
+  private readonly initiativeOverride = signal<number | null>(null);
+  protected readonly adversaryInitiativeMalus = computed(() =>
+    this.hasInitiativeAdversary() ? (this.initiativeOverride() ?? this.detectedInitiative()) : 0,
+  );
 
   protected readonly modifierTotal = computed(() => {
     const ambush = this.ambushState() === 'heroes_ambush' ? 2 : this.ambushState() === 'heroes_ambushed' ? -1 : 0;
@@ -100,7 +143,7 @@ export class StartCombatDialogComponent {
   });
 
   protected readonly canStart = computed(
-    () => this.adversaries().length > 0 && this.heroes().every((h) => h.resultat !== null),
+    () => this.activeAdversaries().length > 0 && this.activeHeroes().every((h) => h.resultat !== null),
   );
 
   protected readonly isNatural2 = computed(() => {
@@ -139,8 +182,106 @@ export class StartCombatDialogComponent {
     return total !== null && total >= THRESHOLD ? 'reussite' : 'echec';
   });
 
+  /** Cartes (`{kind}-{pivotId}`) exclues de ce combat : elles restent sur la table et reviennent à la fin du combat. */
+  protected readonly excluded = signal<ReadonlySet<string>>(new Set());
+
+  protected isExcluded(kind: PreviewLine['kind'], pivotId: number): boolean {
+    return this.excluded().has(`${kind}-${pivotId}`);
+  }
+
+  /** Exclut un héros ou un adversaire de ce combat — ou le réintègre. Rien n'est retiré de la table. */
+  protected toggleExcluded(kind: PreviewLine['kind'], pivotId: number): void {
+    const key = `${kind}-${pivotId}`;
+    this.excluded.update((set) => {
+      const next = new Set(set);
+      if (!next.delete(key)) {
+        next.add(key);
+      }
+      return next;
+    });
+  }
+
+  /** Les héros et adversaires qui participent à ce combat. */
+  private readonly activeHeroes = computed(() => this.heroes().filter((h) => !this.isExcluded('hero', h.pivotId)));
+  private readonly activeAdversaries = computed(() => this.adversaries().filter((a) => !this.isExcluded(a.kind, a.pivotId)));
+
+  /** Un héros a obtenu un succès héroïque ou mieux : au round 1, coriaces et piétaille sont bloqués. */
+  protected readonly roundOneLocked = computed(() =>
+    this.activeHeroes().some((h) => h.resultat === 'heroique' || h.resultat === 'legendaire'),
+  );
+
+  /** Seuls les blocs qui ont au moins un combattant sont affichés. */
+  protected readonly visiblePreview = computed(() => this.preview().filter((group) => group.lines.length > 0));
+
+  /** Aperçu de la frise : les héros d'après leur jet, les autres d'après leur rang. */
+  protected readonly preview = computed<readonly PreviewGroup[]>(() => {
+    const heroes = this.heroes();
+    const advs = this.adversaries();
+    const locked = this.roundOneLocked();
+    const heroLines = (results: readonly InitiativeResultat[]): PreviewLine[] =>
+      heroes
+        .filter((h) => h.resultat && results.includes(h.resultat))
+        .map((h) => ({label: HERO_RANK_WORD[h.resultat!] ? `${h.nom} · ${HERO_RANK_WORD[h.resultat!]}` : h.nom, excluded: this.isExcluded('hero', h.pivotId), kind: 'hero', pivotId: h.pivotId}));
+    const names = (rang: AdversaryRow['rang']): PreviewLine[] =>
+      advs
+        .filter((a) => a.rang === rang)
+        .map((a) => ({label: a.ally ? `${a.nom} · allié` : a.nom, excluded: this.isExcluded(a.kind, a.pivotId), kind: a.kind, pivotId: a.pivotId}));
+    return [
+      {id: 'heros', title: 'Héros', lines: heroLines(['legendaire', 'heroique', 'reussite']), blocked: false},
+      {id: 'rival', title: 'Rivaux', lines: names('rival'), blocked: false},
+      {id: 'coriace', title: 'Coriaces', lines: names('coriace'), blocked: locked},
+      {id: 'echec', title: 'Héros en échec', lines: heroLines(['echec']), blocked: false},
+      {id: 'pietaille', title: 'Piétaille', lines: names('pietaille'), blocked: locked},
+      {id: 'echec_critique', title: 'Échec critique', lines: heroLines(['echec_critique']), blocked: false},
+    ];
+  });
+
+  /** Ce que la table doit savoir avant de commencer : jets manquants, égalités entre héros, succès légendaire. */
+  protected readonly previewNote = computed(() => {
+    const heroes = this.activeHeroes();
+    if (this.activeAdversaries().length === 0) {
+      return 'Aucun adversaire : ajoutes-en pour pouvoir démarrer.';
+    }
+    if (heroes.some((h) => h.resultat === null)) {
+      return 'Chaque héros doit avoir un résultat.';
+    }
+    const results = heroes.map((h) => h.resultat);
+    if (results.some((r, i) => results.indexOf(r) !== i)) {
+      return "Égalité entre deux héros : ils décident entre eux, sinon l'agilité la plus haute agit d'abord.";
+    }
+    return results.includes('legendaire') ? "Succès légendaire : +1 à tous les jets d'attaque pendant la rencontre." : '';
+  });
+
+  /** Vrai tant que la liste n'a pas été chargée une première fois : les jets des combats précédents sont alors effacés. */
+  private freshOpen = true;
+
   constructor() {
     this.reload();
+
+    // Un modificateur de la table (embuscade, initiative ennemie) change : les jets déjà faits sont recalculés avec leurs dés.
+    effect(() => {
+      const modifier = this.modifierTotal();
+      untracked(() => this.rescoreRolledHeroes(modifier));
+    });
+  }
+
+  /** Recalcule le résultat des héros qui ont déjà lancé. Un 2 ou un 12 naturel prime sur les modificateurs : leur résultat ne bouge pas. */
+  private rescoreRolledHeroes(modifier: number): void {
+    for (const hero of this.heroes()) {
+      const dice = this.diceTotalFor(hero.pivotId);
+      if (dice === null || dice === 2 || dice === 12 || hero.resultat === null) {
+        continue;
+      }
+      const resultat: InitiativeResultat = dice + hero.esprit + hero.initiative + modifier >= THRESHOLD ? 'reussite' : 'echec';
+      if (resultat === hero.resultat) {
+        continue;
+      }
+      this.fightSessionService.updateHeroInitiative(this.data.sessionId, hero.pivotId, resultat).subscribe({
+        next: () => this.heroes.update((list) => list.map((h) => (h.pivotId === hero.pivotId ? {...h, resultat} : h))),
+        error: (error: unknown) =>
+          this.snackBar.open(extractApiErrorMessage(error, 'Impossible de mettre à jour un jet de réaction.'), 'Fermer', {duration: 5000}),
+      });
+    }
   }
 
   private reload(): void {
@@ -151,14 +292,15 @@ export class StartCombatDialogComponent {
       .subscribe({
         next: (session) => {
           this.adversaries.set([
-            ...(session.pnjs ?? []).map((p) => ({pivotId: p.id, nom: p.surnom ?? p.nom})),
-            ...(session.creatures ?? []).map((c) => ({pivotId: c.id, nom: c.surnom ?? c.nom})),
-            ...(session.demons ?? []).map((d) => ({pivotId: d.id, nom: d.surnom ?? d.nom})),
+            ...(session.pnjs ?? []).map((p) => ({pivotId: p.id, kind: 'pnj' as const, nom: p.surnom ?? p.nom, rang: p.rang, initiative: p.initiative ?? 0, ally: p.camp === 'heros'})),
+            ...(session.creatures ?? []).map((c) => ({pivotId: c.id, kind: 'creature' as const, nom: c.surnom ?? c.nom, rang: c.rang, initiative: 0, ally: c.camp === 'heros'})),
+            ...(session.demons ?? []).map((d) => ({pivotId: d.id, kind: 'demon' as const, nom: d.surnom ?? d.nom, rang: d.rang, initiative: 0, ally: d.camp === 'heros'})),
           ]);
           this.existingHeroIds.set(new Set((session.heros ?? []).map((h) => String(h.heros_id))));
 
           const heroEntries = session.heros ?? [];
           if (heroEntries.length === 0) {
+            this.freshOpen = false;
             this.heroes.set([]);
             this.loading.set(false);
             return;
@@ -174,12 +316,18 @@ export class StartCombatDialogComponent {
                     pivotId: h.id,
                     herosId: h.heros_id,
                     nom: hero.origines.nom ?? 'Héros',
-                    resultat: h.initiative_resultat,
+                    // Un nouveau combat réclame un nouveau jet de réaction (02-actions-combat.md) : à l'ouverture,
+                    // les résultats d'un jet précédent (dialogue annulé, combat interrompu) ne sont pas repris.
+                    resultat: this.freshOpen ? null : h.initiative_resultat,
                     esprit: hero.attributs.esprit,
                     initiative: hero.combat.initiative_effective,
                   };
                 }),
               );
+              if (this.freshOpen) {
+                this.clearStoredResults(heroEntries.filter((h) => h.initiative_resultat !== null).map((h) => h.id));
+                this.freshOpen = false;
+              }
               this.loading.set(false);
             },
             error: (error: unknown) => {
@@ -217,6 +365,8 @@ export class StartCombatDialogComponent {
     return result ? RESULT_LABELS[result] : '';
   }
 
+  protected readonly threshold = THRESHOLD;
+
   protected signed(value: number): string {
     return value >= 0 ? `+${value}` : `− ${Math.abs(value)}`;
   }
@@ -227,7 +377,7 @@ export class StartCombatDialogComponent {
 
   protected setAdversaryMalus(rawValue: string): void {
     const value = Math.trunc(Number(rawValue));
-    this.adversaryInitiativeMalus.set(Number.isFinite(value) && value >= 0 ? value : 0);
+    this.initiativeOverride.set(Number.isFinite(value) && value >= 0 && value !== this.detectedInitiative() ? value : null);
   }
 
   protected openAddAdversary(): void {
@@ -268,6 +418,8 @@ export class StartCombatDialogComponent {
       this.dice.set([a, b]);
       this.diceTotalByPivot.update((map) => new Map(map).set(hero.pivotId, a + b));
       this.persistSuggested(hero);
+      this.rolling.set(false);
+      await this.askNaturalChoice(hero, a + b);
     } finally {
       this.rolling.set(false);
     }
@@ -289,6 +441,82 @@ export class StartCombatDialogComponent {
     this.dice.set(diceFromTotal(total));
     this.diceTotalByPivot.update((map) => new Map(map).set(hero.pivotId, total));
     this.persistSuggested(hero);
+    void this.askNaturalChoice(hero, total);
+  }
+
+  /** Un 2 ou un 12 naturel laisse un choix au joueur : on le lui demande dans un dialogue (le résultat par défaut est déjà enregistré). */
+  private async askNaturalChoice(hero: HeroRow, total: number): Promise<void> {
+    if (total === 2) {
+      const critique = await firstValueFrom(
+        confirmDialog(this.dialog, {
+          title: 'Échec critique',
+          message: `${hero.nom} a obtenu un 2 naturel. Prendre l'échec critique ? Il gagne 1 point d'héroïsme, mais agit en dernier et reste interdit au premier round.`,
+          confirmLabel: 'Échec critique (+1 PH)',
+          cancelLabel: 'Simple échec',
+        }),
+      );
+      if (critique) {
+        this.chooseCritique(true);
+      }
+    } else if (total === 12 && this.heroismeSignal(hero.pivotId)() > 0) {
+      const legendaire = await firstValueFrom(
+        confirmDialog(this.dialog, {
+          title: 'Succès légendaire',
+          message: `${hero.nom} a obtenu un 12 naturel : succès héroïque. Dépenser 1 point d'héroïsme pour un succès légendaire ? Il donne +1 à toutes les attaques des héros pendant la rencontre.`,
+          confirmLabel: 'Légendaire (−1 PH)',
+          cancelLabel: 'Rester héroïque',
+        }),
+      );
+      if (legendaire) {
+        this.chooseLegendaire(true);
+      }
+    }
+  }
+
+  /** Efface côté serveur les résultats d'un jet précédent, pour que la table n'en garde aucun. */
+  private clearStoredResults(pivotIds: readonly number[]): void {
+    for (const pivotId of pivotIds) {
+      this.fightSessionService.updateHeroInitiative(this.data.sessionId, pivotId, null).subscribe({
+        error: (error: unknown) =>
+          this.snackBar.open(extractApiErrorMessage(error, "Impossible d'effacer un jet d'initiative précédent."), 'Fermer', {duration: 5000}),
+      });
+    }
+  }
+
+  /** Lance le jet de chaque héros qui n'en a pas encore, l'un après l'autre (un seul plateau de dés). */
+  protected async rollAll(): Promise<void> {
+    for (const hero of this.activeHeroes().filter((h) => h.resultat === null)) {
+      await this.rollFor(hero);
+    }
+  }
+
+  /** Les termes du jet de réaction d'un héros, un par puce : « 2d6 (9) », « + 2 initiative », « − 3 initiative ennemie »…
+   * Les termes nuls sont omis ; le total des dés n'apparaît qu'une fois le jet fait. */
+  protected termsFor(hero: HeroRow): readonly ReactionTerm[] {
+    const dice = this.diceTotalFor(hero.pivotId);
+    const ambush = this.ambushState() === 'heroes_ambush' ? 2 : this.ambushState() === 'heroes_ambushed' ? -1 : 0;
+    const modifiers: [number, string][] = [
+      [hero.esprit, 'esprit'],
+      [hero.initiative, 'initiative'],
+      [ambush, 'embuscade'],
+      [-this.adversaryInitiativeMalus(), 'initiative ennemie'],
+    ];
+    return [
+      {label: `2d6${dice === null ? '' : ` (${dice})`}`, tone: 'dice'},
+      ...modifiers
+        .filter(([value]) => value !== 0)
+        .map(([value, label]): ReactionTerm => ({label: `${value > 0 ? '+' : '−'} ${Math.abs(value)} ${label}`, tone: value > 0 ? 'plus' : 'minus'})),
+    ];
+  }
+
+  /** Total d'un jet de réaction : dés + esprit + initiative + modificateurs de la table — `null` tant que le héros n'a pas lancé. */
+  protected totalFor(hero: HeroRow): number | null {
+    const dice = this.diceTotalFor(hero.pivotId);
+    return dice === null ? null : dice + hero.esprit + hero.initiative + this.modifierTotal();
+  }
+
+  protected initial(nom: string): string {
+    return nom.trim().charAt(0).toUpperCase();
   }
 
   /** Échec critique (2 naturel) : choisir OCTROIE 1 PH ; revenir sur "Échec" le reprend. */
@@ -337,7 +565,7 @@ export class StartCombatDialogComponent {
 
   protected start(): void {
     this.starting.set(true);
-    this.fightSessionService.startCombat(this.data.sessionId).subscribe({
+    this.fightSessionService.startCombat(this.data.sessionId, [...this.excluded()]).subscribe({
       next: () => {
         this.starting.set(false);
         this.ref.close(true);

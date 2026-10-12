@@ -88,16 +88,6 @@
   color: var(--dw-surface-500);
 }
 
-.tps-nobody {
-  align-self: center;
-  margin: 0;
-  padding: 0.5rem 0.9rem;
-  border: 1px solid var(--dw-border);
-  border-radius: 8px;
-  background: var(--dw-surface-0);
-  font-size: 0.9rem;
-  color: var(--dw-surface-500);
-}
 
 // Rang des héros, en bas : les faces restent collées en bas du rang et seule la carte dépliée
 // grandit, vers le haut — elle consomme d'abord l'espace libre entre les deux rangs.

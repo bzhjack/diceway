@@ -66,7 +66,7 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       avatar: p.pnj?.origines.avatar || (p.pnj_id ? `/assets/bol/pnj/${p.pnj_id}.jpg` : null) || EMPTY_AVATAR,
       badge: badgeFor(p.camp, rang),
       rang,
-      degats: p.armes?.find((a) => a.degats)?.degats ?? NO_VALUE,
+      degats: (p.armes?.find((a) => a.degats && a.equipee !== false) ?? p.armes?.find((a) => a.degats))?.degats ?? NO_VALUE,
       defense: String(p.defense),
       vitaliteCourante: p.vitalite_courante,
       vitaliteMax: p.vitalite_max,
@@ -263,6 +263,22 @@ export function heroDetails(hero: BolHerosModel): HeroDetails {
     // Tri stable : les équipées d'abord, l'ordre d'origine sinon.
     armures: [...armures.filter((a) => a.equipee), ...armures.filter((a) => !a.equipee)],
   };
+}
+
+/** Garde l'ordre des armes et des armures de `previous` : cocher « équipée » dans un popover ouvert ne fait pas sauter les lignes sous le
+ * curseur. Une entrée absente de `previous` (ajoutée entre-temps) passe à la fin. */
+export function keepDetailsOrder(next: HeroDetails, previous: HeroDetails | null): HeroDetails {
+  if (!previous) {
+    return next;
+  }
+  const sameOrder = <T extends {id: number}>(entries: readonly T[], before: readonly {id: number}[]): T[] => {
+    const rank = (id: number): number => {
+      const index = before.findIndex((entry) => entry.id === id);
+      return index === -1 ? before.length : index;
+    };
+    return [...entries].sort((a, b) => rank(a.id) - rank(b.id));
+  };
+  return {...next, armes: sameOrder(next.armes, previous.armes), armures: sameOrder(next.armures, previous.armures)};
 }
 
 /** « Joueur · Région » : la ligne sous le nom d'un héros. Vide si ni l'un ni l'autre n'est connu. */

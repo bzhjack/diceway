@@ -17,8 +17,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {BolHerosService} from '../../../services/bol-heros.service';
-import {ACTION_ATTRIBUTE_LABELS, ACTION_ATTRIBUTES, ACTION_DIFFICULTIES, ACTION_RESULT_LABELS, ACTION_ROLL_THRESHOLD, actionModifierSum, actionResultTone, DEFAULT_ACTION_DIFFICULTY, diceCountLabel, diceFromTotal, formatActionFormula, keepBestOrWorstTwo, netDiceModifier, signedModifier, suggestedActionResult} from '../../action-roll.util';
-import {ActionAttribute, ActionDifficulty, ActionRollCarriere, ActionRollData, ActionRollParts} from '../../models/action-roll.model';
+import {ACTION_ATTRIBUTE_LABELS, ACTION_ATTRIBUTE_SHORT, ACTION_ATTRIBUTES, ACTION_DIFFICULTIES, ACTION_RESULT_LABELS, ACTION_ROLL_THRESHOLD, actionModifierSum, actionResultTone, DEFAULT_ACTION_DIFFICULTY, diceCountLabel, diceFromTotal, keepBestOrWorstTwo, netDiceModifier, signedModifier, suggestedActionResult} from '../../action-roll.util';
+import {ActionAttribute, ActionDifficulty, ActionRollCarriere, ActionRollData, ActionRollParts, RollTerm} from '../../models/action-roll.model';
 import {applyHeroismeDelta} from '../../heroisme-spend.util';
 
 /** Jet d'action d'un héros en une seule surface (fiche du jeton, `bol-expanded-card`) : attribut,
@@ -113,11 +113,29 @@ export class ActionRollPanelComponent {
 
   private readonly modifierSum = computed(() => actionModifierSum(this.parts()));
 
-  /** Avant le jet : `2d6 + …`. Après un lancer virtuel : les deux dés gardés. Après une saisie
-   * manuelle : `2d6 + …` (les faces individuelles ne sont pas connues). */
-  protected readonly formula = computed(() =>
-    formatActionFormula(this.parts(), this.manualEntry() ? null : this.dice()),
-  );
+  /** Les termes du jet, un par puce : `2d6`, `+ 2 agi`, `− 1 ardue`… Les termes nuls sont omis. Après un lancer virtuel,
+   * les deux dés gardés apparaissent entre parenthèses ; après une saisie manuelle, les faces ne sont pas connues. */
+  protected readonly formulaTerms = computed<readonly RollTerm[]>(() => {
+    const parts = this.parts();
+    const dice = this.manualEntry() ? null : this.dice();
+    const names: Record<'attribute' | 'carriere' | 'equipment' | 'difficulty' | 'modifier', string> = {
+      attribute: ACTION_ATTRIBUTE_SHORT[this.attribute()],
+      carriere: this.carriere()?.label.toLowerCase() ?? 'carrière',
+      equipment: 'équipement',
+      difficulty: this.difficulty().label.toLowerCase(),
+      modifier: 'modificateur',
+    };
+    const terms: RollTerm[] = [{label: dice ? `2d6 (${dice[0]} + ${dice[1]})` : '2d6', tone: 'dice'}];
+    for (const key of ['attribute', 'carriere', 'equipment', 'difficulty', 'modifier'] as const) {
+      const value = parts[key];
+      if (value !== 0) {
+        terms.push({label: `${value > 0 ? '+' : '−'} ${Math.abs(value)} ${names[key]}`, tone: value > 0 ? 'plus' : 'minus'});
+      }
+    }
+    return terms;
+  });
+
+  protected readonly threshold = ACTION_ROLL_THRESHOLD;
 
   protected readonly total = computed(() => {
     const d = this.dice();
@@ -236,7 +254,7 @@ export class ActionRollPanelComponent {
 
   /** Dégage les dés 3D encore posés (le résultat n'est pas touché). Ignoré pendant un lancer : ce
    * clear() entrerait en course avec celui de `roll()` et corromprait l'état de la librairie de dés. */
-  protected dismissDice(): void {
+  dismissDice(): void {
     if (this.rolling()) {
       return;
     }

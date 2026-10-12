@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'vitest';
-import {buildCombatStates, endTurn, giveBackTurn, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
+import {endTurn, groupByTier, giveBackTurn, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
 import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model';
+import {TurnOrderEntry} from '../../models/turn-order.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
 
 function card(kind: TapisKind, pivotId: number, extra: Partial<TapisCard> = {}): TapisCard {
@@ -27,7 +28,7 @@ function ordered(...cards: TapisCard[]): OrderedCard[] {
 }
 
 function etat(round: number, joues: string[] = [], defense: string[] = []): EtatCombat {
-  return {round, joues, defense_totale: defense};
+  return {round, joues, defense_totale: defense, exclus: []};
 }
 
 const KALENA = card('hero', 1);
@@ -215,7 +216,6 @@ describe('total defense leaves with the turn', () => {
     // été retirée de la table : il joue, puis son marqueur doit avoir disparu.
     const order = ordered(PRETRE, KALENA);
     const stale = etat(2, [], ['pnj-7']);
-    expect(buildCombatStates(order, stale).get('pnj-7')?.defenseTotale).toBe(false);
     expect(endTurn(order, stale)).toEqual(etat(2, ['pnj-7'], []));
   });
 });
@@ -248,21 +248,6 @@ describe('targetableKeys', () => {
   });
 });
 
-describe('buildCombatStates', () => {
-  it('describes every card: turn status, targetable, total defense, out, locked', () => {
-    const order: OrderedCard[] = [...ordered(KALENA, RORK), {card: PRETRE, tier: 'coriace', lockedRound1: true}];
-    const states = buildCombatStates(order, etat(1, [], ['hero-2']));
-    expect(states.get('hero-1')).toEqual({status: 'active', targetable: false, defenseTotale: false, out: false, locked: false});
-    expect(states.get('hero-2')).toEqual({status: 'upcoming', targetable: false, defenseTotale: true, out: false, locked: false});
-    expect(states.get('pnj-7')).toEqual({status: 'skipped', targetable: true, defenseTotale: false, out: false, locked: true});
-  });
-
-  it('no longer flags the round-1 lock after round 1', () => {
-    const order: OrderedCard[] = [{card: PRETRE, tier: 'coriace', lockedRound1: true}];
-    expect(buildCombatStates(order, etat(2)).get('pnj-7')?.locked).toBe(false);
-  });
-});
-
 describe('tokenForCard', () => {
   const tokens = [
     {kind: 'hero' as const, pivotId: 1},
@@ -287,5 +272,55 @@ describe('turnAnnouncement', () => {
 
   it('says when nobody can play', () => {
     expect(turnAnnouncement([], etat(1))).toBe('Round 1. Plus personne ne peut jouer.');
+  });
+});
+
+describe('groupByTier', () => {
+  const entry = (key: string, tier: TurnOrderEntry['tier'], locked = false): TurnOrderEntry => ({
+    key, nom: key, kind: 'hero', avatar: '', status: 'upcoming', tier, locked, ally: false,
+  });
+
+  it('groups the combatants by reaction rank, in rulebook order', () => {
+    const groups = groupByTier([entry('p1', 'pietaille'), entry('h1', 'reussite'), entry('r1', 'rival'), entry('h2', 'legendaire'), entry('c1', 'coriace'), entry('e1', 'echec')]);
+    expect(groups.map((g) => g.id)).toEqual(['heros', 'rival', 'coriace', 'echec', 'pietaille', 'echec_critique']);
+    expect(groups[0].entries.map((e) => e.key)).toEqual(['h1', 'h2']);
+    expect(groups[5].entries).toEqual([]);
+  });
+
+  it('puts a hero without a known roll with the successful heroes', () => {
+    expect(groupByTier([entry('h1', null)])[0].entries).toHaveLength(1);
+  });
+
+  it('marks a group as blocked only when everyone in it is locked', () => {
+    const groups = groupByTier([entry('c1', 'coriace', true), entry('p1', 'pietaille', true), entry('p2', 'pietaille', false)]);
+    expect(groups[2].blocked).toBe(true);
+    expect(groups[4].blocked).toBe(false);
+    expect(groups[1].blocked).toBe(false);
+  });
+});
+
+describe('excluded cards', () => {
+  const excluding = (...keys: string[]): EtatCombat => ({round: 1, joues: [], defense_totale: [], exclus: keys});
+
+  it('skips an excluded card, which never becomes active', () => {
+    const turn = turnState(ordered(KALENA, RORK), excluding('hero-1'));
+    expect(turn.statuses.get('hero-1')).toBe('skipped');
+    expect(turn.activeKey).toBe('hero-2');
+  });
+
+  it('does not let an excluded card be targeted', () => {
+    const order = ordered(KALENA, PRETRE, card('pnj', 8));
+    const targetable = targetableKeys(order, 'hero-1', ['pnj-8']);
+    expect(targetable.has('pnj-8')).toBe(false);
+    expect(targetable.has('pnj-7')).toBe(true);
+  });
+
+  it('keeps the exclusions when a turn ends', () => {
+    const next = endTurn(ordered(KALENA, RORK), excluding('pnj-7'));
+    expect(next.exclus).toEqual(['pnj-7']);
+  });
+
+  it('reads them from the API state', () => {
+    expect(normalizeEtat({round: 2, exclus: ['pnj-7', 'pnj-7', '']}).exclus).toEqual(['pnj-7']);
   });
 });

@@ -96,6 +96,10 @@ class BolCreatureController extends Controller
             ->where('user_id', Auth::id())
             ->where('id', $creatureId)->get()->first();
 
+        if ($creature === null) {
+            return response()->json(['error' => 'Creature not found'], 404);
+        }
+
         // Le nouveau tableau de capacités venant de la requête
         $tableau2 = $request->input('capacites');
         $ids_tableau2 = array_column($tableau2, 'id');
@@ -120,6 +124,7 @@ class BolCreatureController extends Controller
 
         // Mettre à jour les autres champs de la créature
         $creature->update($updatedCreature);
+        app(\App\Http\Services\Bol\BolFightSessionService::class)->refreshCreatureSnapshots((string) $creatureId);
         return response($this->bolCreatureService->getCreatureWithRelations($creatureId));
     }
 

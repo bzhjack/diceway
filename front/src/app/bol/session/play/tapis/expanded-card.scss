@@ -70,7 +70,7 @@
   flex-direction: column;
 
   &.exc--hero {
-    height: min(620px, 92dvh);
+    height: min(585px, 92dvh);
   }
 
   .exc-body {
@@ -249,10 +249,6 @@
   gap: 0.4rem;
 }
 
-.exc-attack {
-  align-self: flex-start;
-}
-
 .exc-icon-btn {
   --mat-icon-button-icon-color: var(--dw-surface-700);
   --mat-icon-button-state-layer-color: var(--dw-surface-900);
@@ -371,6 +367,8 @@
 }
 
 .exc--hero .exc-entry-side {
+  // Suit les coins arrondis de la carte (le fond carré de la colonne mordait sur la bordure).
+  border-radius: 7px 0 0 7px;
   justify-content: flex-start;
   overflow-y: auto;
   scrollbar-width: thin;
@@ -452,3 +450,19 @@
 
 
 
+
+// Titre de la zone de jet d'action, au-dessus du panneau.
+.exc-roll {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.exc-roll-title {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dw-color-legendary);
+}

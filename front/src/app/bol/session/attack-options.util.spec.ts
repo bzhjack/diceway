@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {BolCombatOptionModel} from '../models/bol-combat-reference.model';
-import {filterAttackMenuCombatOptions, filterVisiblePostures} from './attack-options.util';
+import {ARME_IMPROVISEE, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, MAINS_NUES} from './attack-options.util';
 
 function option(slug: string, ordre: number): BolCombatOptionModel {
   return {id: ordre, label: slug, slug, modificateur: 0, modificateur_armor: false, note: '', ordre};
@@ -50,5 +50,23 @@ describe('filterVisiblePostures', () => {
   it('keeps every non-dual-wield posture untouched regardless of weapon', () => {
     const slugs = filterVisiblePostures(ALL_OPTIONS, 'd6B', []).map((o) => o.slug);
     expect(slugs).toEqual(['none', 'offensive', 'intrepid', 'defensive', 'armor-chink']);
+  });
+});
+
+describe('isDualWieldWeapon', () => {
+  const real = (degats: string) => ({id: 5, arme_id: 5, arme: {id: 5, arme: 'Épée', type: 'M' as const, degats, portee: null, notes: null}});
+
+  it('accepts a real light or medium weapon', () => {
+    expect(isDualWieldWeapon(real('d6M'))).toBe(true);
+    expect(isDualWieldWeapon(real('d6'))).toBe(true);
+  });
+
+  it('refuses a heavy weapon', () => {
+    expect(isDualWieldWeapon(real('d6B'))).toBe(false);
+  });
+
+  it('refuses bare hands and the improvised weapon, which are not weapons of the hero', () => {
+    expect(isDualWieldWeapon(MAINS_NUES)).toBe(false);
+    expect(isDualWieldWeapon(ARME_IMPROVISEE)).toBe(false);
   });
 });

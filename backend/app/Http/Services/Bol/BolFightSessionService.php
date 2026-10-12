@@ -100,15 +100,22 @@ class BolFightSessionService
         return $this->getSessionWithRelations($sessionId);
     }
 
-    /** Bascule une session `libre` en `combat` — les adversaires sont déjà en place via addCombatant(). */
-    public function startCombat(string $sessionId, string $userId): ?BolFightSession
+    /**
+     * Bascule une session `libre` en `combat` (ou, déjà en combat, enregistre un nouveau jet de réaction) — les adversaires sont déjà en place via addCombatant().
+     *
+     * @param array<int, string> $exclus clés de carte (`{kind}-{pivotId}`) laissées sur la table mais hors de ce combat
+     */
+    public function startCombat(string $sessionId, string $userId, array $exclus = []): ?BolFightSession
     {
         $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
-        if (!$session || $session->statut !== 'libre') {
+        if (!$session || !in_array($session->statut, ['libre', 'combat'], true)) {
             return null;
         }
 
-        $session->update(['statut' => 'combat', 'etat_combat' => BolCombatState::INITIAL]);
+        // Nouveau jet de réaction en plein combat : le round en cours est gardé, personne n'a encore joué.
+        $round = $session->statut === 'combat' ? BolCombatState::normalize($session->etat_combat)['round'] : 1;
+
+        $session->update(['statut' => 'combat', 'etat_combat' => BolCombatState::normalize(['round' => $round, 'exclus' => $exclus])]);
 
         return $this->getSessionWithRelations($sessionId);
     }
@@ -141,6 +148,9 @@ class BolFightSessionService
         if (!$session || $session->statut !== 'combat') {
             return null;
         }
+
+        // Les cartes exclues sont fixées au démarrage : un état envoyé sans `exclus` ne les efface pas.
+        $etat['exclus'] ??= BolCombatState::normalize($session->etat_combat)['exclus'];
 
         $session->update(['etat_combat' => BolCombatState::normalize($etat)]);
 
@@ -286,7 +296,7 @@ class BolFightSessionService
         $row->update(['vitalite_courante' => max(0, min($row->vitalite_max, $current + $delta))]);
     }
 
-    /** Vitalité d'une créature ou d'un démon : un seul compteur, sur sa ligne (`vitalite_instances` en garde un reflet). */
+    /** Vitalité d'une créature ou d'un démon : un seul compteur, sur sa ligne. */
     private function applyInstanceDamage(BolFightSessionCreature|BolFightSessionDemon|null $row, int $delta): void
     {
         if (!$row) {
@@ -296,10 +306,7 @@ class BolFightSessionService
         $current = $row->vitalite_courante ?? $row->vitalite_max;
         $next = max(0, min($row->vitalite_max, $current + $delta));
 
-        $row->update([
-            'vitalite_courante'  => $next,
-            'vitalite_instances' => [$next],
-        ]);
+        $row->update(['vitalite_courante' => $next]);
     }
 
     private function hasHero(string $sessionId, string $heroId): bool
@@ -383,6 +390,18 @@ class BolFightSessionService
             return null;
         }
 
+        return BolFightSessionCreature::create([
+            'fight_session_id'   => $sessionId,
+            'creature_id'        => $creature->id,
+            'camp'               => $this->normalizeCamp($camp),
+            'surnom'             => $surnom,
+            'vitalite_courante'  => $creature->vitalite,
+        ] + $this->creatureSnapshot($creature));
+    }
+
+    /** Statistiques et capacités d'une créature telles qu'elles sont copiées à la table (hors camp, surnom et vitalité courante). */
+    private function creatureSnapshot(BolCreature $creature): array
+    {
         $capacites = collect($creature->capacites ?? [])->map(fn($c) => [
             'capacite_id' => $c->capacite_id,
             'capacite'    => $c->capacite?->capacite,
@@ -391,27 +410,35 @@ class BolFightSessionService
             'detail'      => $c->detail,
         ])->values()->toArray();
 
-        return BolFightSessionCreature::create([
-            'fight_session_id'  => $sessionId,
-            'creature_id'       => $creature->id,
-            'camp'              => $this->normalizeCamp($camp),
-            'qty'               => 1,
-            'surnom'            => $surnom,
-            'rang'              => $creature->rang ?? 'coriace',
-            'nom'               => $creature->nom,
-            'vigueur'           => $creature->vigueur,
-            'agilite'           => $creature->agilite,
-            'esprit'            => $creature->esprit,
-            'vitalite_max'       => $creature->vitalite,
-            'vitalite_courante'  => $creature->vitalite,
-            'vitalite_instances' => [$creature->vitalite],
-            'attaque'           => $creature->attaque,
-            'defense'           => $creature->defense,
-            'degats'            => $creature->degats,
-            'protection'        => $creature->protection,
-            'id_taille'         => $creature->id_taille,
-            'capacites'         => $capacites,
-        ]);
+        return [
+            'rang'         => $creature->rang ?? 'coriace',
+            'nom'          => $creature->nom,
+            'vigueur'      => $creature->vigueur,
+            'agilite'      => $creature->agilite,
+            'esprit'       => $creature->esprit,
+            'vitalite_max' => $creature->vitalite,
+            'attaque'      => $creature->attaque,
+            'defense'      => $creature->defense,
+            'degats'       => $creature->degats,
+            'protection'   => $creature->protection,
+            'id_taille'    => $creature->id_taille,
+            'capacites'    => $capacites,
+        ];
+    }
+
+    /** Répercute sur les tables un changement de la fiche d'une créature (la vitalité courante est seulement ramenée au nouveau maximum). */
+    public function refreshCreatureSnapshots(string $creatureId): void
+    {
+        $rows = BolFightSessionCreature::where('creature_id', $creatureId)->get();
+        $creature = $rows->isEmpty() ? null : BolCreature::with('capacites.capacite')->whereNotNull('user_id')->find($creatureId);
+        if (!$creature) {
+            return;
+        }
+
+        foreach ($rows as $row) {
+            $courante = min((int) ($row->vitalite_courante ?? $creature->vitalite), (int) $creature->vitalite);
+            $row->update($this->creatureSnapshot($creature) + ['vitalite_courante' => $courante]);
+        }
     }
 
     private function syncDemons(string $sessionId, array $list): void
@@ -454,33 +481,53 @@ class BolFightSessionService
             return null;
         }
 
+        return BolFightSessionDemon::create([
+            'fight_session_id'   => $sessionId,
+            'demon_id'           => $demon->id,
+            'camp'               => $this->normalizeCamp($camp),
+            'surnom'             => $surnom,
+            'vitalite_courante'  => $demon->vitalite,
+        ] + $this->demonSnapshot($demon));
+    }
+
+    /** Statistiques et pouvoirs d'un démon tels qu'ils sont copiés à la table (hors camp, surnom et vitalité courante). */
+    private function demonSnapshot(BolDemon $demon): array
+    {
         $pouvoirs = collect($demon->pouvoirs ?? [])->map(fn($p) => [
             'pouvoir_id' => $p->pouvoir_id,
             'pouvoir'    => $p->pouvoir?->pouvoir,
             'detail'     => $p->detail,
         ])->values()->toArray();
 
-        return BolFightSessionDemon::create([
-            'fight_session_id'  => $sessionId,
-            'demon_id'          => $demon->id,
-            'camp'              => $this->normalizeCamp($camp),
-            'qty'               => 1,
-            'surnom'            => $surnom,
-            'rang'              => $this->rangFromType($demon->type),
-            'nom'               => $demon->nom,
-            'vigueur'           => $demon->vigueur,
-            'agilite'           => $demon->agilite,
-            'esprit'            => $demon->esprit,
-            'aura'              => $demon->aura,
-            'melee'             => $demon->melee,
-            'tir'               => $demon->tir,
-            'defense'           => $demon->defense,
-            'vitalite_max'       => $demon->vitalite,
-            'vitalite_courante'  => $demon->vitalite,
-            'vitalite_instances' => [$demon->vitalite],
-            'degats'            => $demon->degats,
-            'pouvoirs'          => $pouvoirs,
-        ]);
+        return [
+            'rang'         => $this->rangFromType($demon->type),
+            'nom'          => $demon->nom,
+            'vigueur'      => $demon->vigueur,
+            'agilite'      => $demon->agilite,
+            'esprit'       => $demon->esprit,
+            'aura'         => $demon->aura,
+            'melee'        => $demon->melee,
+            'tir'          => $demon->tir,
+            'defense'      => $demon->defense,
+            'vitalite_max' => $demon->vitalite,
+            'degats'       => $demon->degats,
+            'pouvoirs'     => $pouvoirs,
+        ];
+    }
+
+    /** Répercute sur les tables un changement de la fiche d'un démon (la vitalité courante est seulement ramenée au nouveau maximum). */
+    public function refreshDemonSnapshots(string $demonId): void
+    {
+        $rows = BolFightSessionDemon::where('demon_id', $demonId)->get();
+        $demon = $rows->isEmpty() ? null : BolDemon::with('pouvoirs.pouvoir')->whereNotNull('user_id')->find($demonId);
+        if (!$demon) {
+            return;
+        }
+
+        foreach ($rows as $row) {
+            $courante = min((int) ($row->vitalite_courante ?? $demon->vitalite), (int) $demon->vitalite);
+            $row->update($this->demonSnapshot($demon) + ['vitalite_courante' => $courante]);
+        }
     }
 
     /**
@@ -522,30 +569,63 @@ class BolFightSessionService
             return null;
         }
 
-        $armes = collect($pnj->armes ?? [])->map(fn($ha) => [
-            'nom'    => $ha->arme?->arme,
-            'degats' => $ha->arme?->degats,
-            'type'   => $ha->arme?->type,
-        ])->values()->toArray();
-
         return BolFightSessionPnj::create([
             'fight_session_id'  => $sessionId,
             'pnj_id'            => $pnj->id,
             'camp'              => $this->normalizeCamp($camp),
             'surnom'            => $surnom,
             'rang'              => $this->rangFromType($pnj->type),
-            'nom'               => $pnj->nom,
-            'vigueur'           => $pnj->vigueur,
-            'agilite'           => $pnj->agilite,
-            'esprit'            => $pnj->esprit,
-            'aura'              => $pnj->aura,
-            'melee'             => $pnj->melee,
-            'tir'               => $pnj->tir,
-            'defense'           => $pnj->defense,
-            'vitalite_max'      => $pnj->vitalite,
             'vitalite_courante' => $pnj->vitalite,
-            'armes'             => $armes,
-        ]);
+        ] + $this->pnjSnapshot($pnj));
+    }
+
+    /** Statistiques et armes d'un PNJ telles qu'elles sont copiées à la table (tout sauf le camp, le surnom, le rang et la vitalité courante). */
+    private function pnjSnapshot(BolHeros $pnj): array
+    {
+        $armes = collect($pnj->armes ?? [])->map(fn($ha) => [
+            'nom'     => $ha->arme?->arme,
+            'degats'  => $ha->arme?->degats,
+            'type'    => $ha->arme?->type,
+            'equipee' => (bool) $ha->equipee,
+        ])->values()->toArray();
+
+        return [
+            'nom'          => $pnj->nom,
+            'vigueur'      => $pnj->vigueur,
+            'agilite'      => $pnj->agilite,
+            'esprit'       => $pnj->esprit,
+            'aura'         => $pnj->aura,
+            'melee'        => $pnj->melee,
+            'tir'          => $pnj->tir,
+            'defense'      => $pnj->defense,
+            'initiative'   => $pnj->initiative_effective,
+            'vitalite_max' => $pnj->vitalite,
+            'armes'        => $armes,
+        ];
+    }
+
+    /**
+     * Répercute sur les tables un changement de la fiche d'un PNJ : ses statistiques, son initiative et ses armes sont
+     * recopiées dans chaque ligne où il est posé, avec son rang. Le camp, le surnom et la vitalité courante ne bougent pas
+     * (la vitalité est seulement ramenée au nouveau maximum si elle le dépasse).
+     */
+    public function refreshPnjSnapshots(string $pnjId): void
+    {
+        $rows = BolFightSessionPnj::where('pnj_id', $pnjId)->get();
+        if ($rows->isEmpty()) {
+            return;
+        }
+
+        // Une fiche du catalogue (user_id nul) n'est jamais modifiée : seules celles créées par un utilisateur sont répercutées.
+        $pnj = BolHeros::with('armes.arme')->whereNotNull('user_id')->find($pnjId);
+        if (!$pnj) {
+            return;
+        }
+
+        $snapshot = $this->pnjSnapshot($pnj);
+        foreach ($rows as $row) {
+            $row->update($snapshot + ['rang' => $this->rangFromType($pnj->type), 'vitalite_courante' => min((int) $row->vitalite_courante, (int) $pnj->vitalite)]);
+        }
     }
 
     private function normalizeCamp(?string $camp): string

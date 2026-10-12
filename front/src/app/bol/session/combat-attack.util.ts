@@ -1,4 +1,4 @@
-import {map, Observable, of} from 'rxjs';
+import {catchError, map, Observable, of} from 'rxjs';
 import {BolHerosService} from '../services/bol-heros.service';
 import {firstEquippedDegats} from '../shared/arme/arme-equipee';
 import {PlayToken} from './models/combat-play.model';
@@ -19,8 +19,8 @@ function parseDegatsDice(degats: string | null | undefined): 'd3' | 'd6' | 'd6m'
   return 'd6';
 }
 
-/** Combat à deux armes (02-actions-combat.md) : uniquement avec des armes légères ou moyennes —
- * mains nues/arme improvisée (d3) comptent comme légères, une arme lourde (d6B) n'est jamais éligible. */
+/** Combat à deux armes (02-actions-combat.md) : uniquement avec des armes légères ou moyennes ; une arme lourde (d6B) n'est jamais
+ * éligible. Les mains nues et l'arme improvisée sont écartées plus haut (`isDualWieldWeapon`), ce ne sont pas des armes du héros. */
 export function isDualWieldEligible(degats: string | null | undefined): boolean {
   return !!degats && parseDegatsDice(degats) !== 'd6b';
 }
@@ -43,15 +43,23 @@ function parseProtectionValue(protection: string | null | undefined): number {
   return match ? parseInt(match[1], 10) : 0;
 }
 
-function firstArmureProtection(armures: BolHerosArmureLike[] | number[] | undefined): string | null {
-  if (!armures || armures.length === 0 || typeof armures[0] === 'number') {
-    return null;
-  }
-  return (armures as BolHerosArmureLike[])[0]?.armure?.protection ?? null;
+interface BolHerosArmureLike {
+  readonly equipee?: boolean;
+  readonly armure?: {readonly protection: string | null; readonly categorie?: string | null};
 }
 
-interface BolHerosArmureLike {
-  armure?: {protection: string | null};
+/** Protection du héros d'après ce qu'il porte : l'armure équipée (légère, moyenne, lourde) et, s'il y en a un d'équipé, le casque qui
+ * ajoute +1. `text` est la forme écrite du livre (« d6-1 (3) +1 »), `value` la valeur fixe retenue pour les dégâts. */
+export function equippedProtection(armures: readonly (BolHerosArmureLike | number)[] | undefined): {text: string | null; value: number} {
+  const worn = (armures ?? []).filter((a): a is BolHerosArmureLike => typeof a === 'object' && a.equipee !== false);
+  const body = worn.find((a) => a.armure?.categorie === 'armure')?.armure?.protection ?? null;
+  const helmet = worn.some((a) => a.armure?.categorie === 'casque');
+  const bonus = helmet ? 1 : 0;
+  const value = parseProtectionValue(body) + bonus;
+  if (body === null && !helmet) {
+    return {text: null, value: 0};
+  }
+  return {text: body === null ? String(bonus) : `${body}${helmet ? ' +1' : ''}`, value};
 }
 
 /**
@@ -74,6 +82,7 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
         defense: 0,
         degats: 'd3',
         protection: 0,
+        protectionText: null,
         bouclierMalusUneAttaque: 0,
         herosId: null,
         heroisme: null,
@@ -81,7 +90,9 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
     }
 
     return herosService.heros(herosId).pipe(
-      map((hero) => ({
+      map((hero) => {
+        const protection = equippedProtection(hero.armures);
+        return {
         agilite: hero.attributs.agilite_effective,
         vigueur: hero.attributs.vigueur,
         melee: hero.combat.melee,
@@ -89,18 +100,20 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
         attaque: null,
         defense: hero.combat.defense_effective,
         degats: firstEquippedDegats(hero.armes) ?? 'd3',
-        protection: parseProtectionValue(firstArmureProtection(hero.armures)),
+        protection: protection.value,
+        protectionText: protection.text,
         bouclierMalusUneAttaque:
           hero.equipement_effectif.bouclier_malus_attaque_subie_portee === 'une'
             ? hero.equipement_effectif.bouclier_malus_attaque_subie
             : 0,
         herosId,
         heroisme: hero.ressources.heroisme,
-      })),
+        };
+      }),
     );
   }
 
-  return of({
+  const snapshot: ResolvedCombatStats = {
     agilite: c.agilite ?? 0,
     vigueur: c.vigueur ?? 0,
     melee: c.melee ?? 0,
@@ -109,8 +122,22 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
     defense: c.defense ?? 0,
     degats: c.degats ?? 'd3',
     protection: parseProtectionValue(c.protection),
+    protectionText: c.protection || null,
     bouclierMalusUneAttaque: 0,
     herosId: null,
     heroisme: null,
-  });
+  };
+
+  // Un PNJ est une fiche de héros : l'armure qu'il porte n'est pas copiée à la table, on la lit sur sa fiche.
+  if (token.kind === 'pnj' && c.sourceId) {
+    return herosService.heros(c.sourceId).pipe(
+      map((pnj) => {
+        const protection = equippedProtection(pnj.armures);
+        return {...snapshot, protection: protection.value, protectionText: protection.text};
+      }),
+      catchError(() => of(snapshot)),
+    );
+  }
+
+  return of(snapshot);
 }

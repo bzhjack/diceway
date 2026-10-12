@@ -1,6 +1,4 @@
 import {InitiativeResultat} from '../models/bol-fight-session.model';
-import {combatantRankKey} from './combat-statblock.util';
-import {CombatCatalogEntry, SelectedCombatant} from '../models/combat-selection.model';
 import {InitiativeTierKey, InitiativeEntry, InitiativeOrder, InitiativeSource} from './models/initiative.model';
 
 const TIER_ORDER: readonly InitiativeTierKey[] = [

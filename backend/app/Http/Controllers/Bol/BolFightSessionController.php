@@ -137,9 +137,11 @@ class BolFightSessionController extends Controller
         return response()->json($session);
     }
 
-    public function startCombat(string $id)
+    public function startCombat(Request $request, string $id)
     {
-        $session = $this->fightSessionService->startCombat($id, Auth::id());
+        $data = $request->validate(['exclus' => 'sometimes|array', 'exclus.*' => 'string']);
+
+        $session = $this->fightSessionService->startCombat($id, Auth::id(), $data['exclus'] ?? []);
 
         if (!$session) {
             return response()->json(['error' => 'Not found'], 404);
@@ -183,6 +185,8 @@ class BolFightSessionController extends Controller
             'joues.*'          => 'string',
             'defense_totale'   => 'present|array',
             'defense_totale.*' => 'string',
+            'exclus'           => 'sometimes|array',
+            'exclus.*'         => 'string',
         ]);
 
         $session = $this->fightSessionService->updateCombatState($id, Auth::id(), $data);

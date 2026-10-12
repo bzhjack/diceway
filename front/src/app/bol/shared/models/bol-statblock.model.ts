@@ -23,7 +23,7 @@ export interface BolStatblockEntry {
   readonly label: string;
   readonly value?: string | number;
   readonly detail?: string;
-  /** true : l'entrée est mise en évidence en vert (armure actuellement équipée). */
+  /** true : l'entrée est mise en évidence en vert (arme ou armure équipée ; `false` : atténuée). */
   readonly equipped?: boolean;
 }
 

@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest';
 import {BolFightSessionModel} from '../../../models/bol-fight-session.model';
 import {BolHerosModel} from '../../../models/bol-heros.model';
-import {buildTapisCards, cardAriaLabel, findCard, isLowVitalite, REMOVE_ACTION_LABEL, splitRows, vitalitePercent, vitaliteText, heroHeaderStats, heroDetails, heroIdentityLine} from './tapis.util';
+import {buildTapisCards, cardAriaLabel, findCard, isLowVitalite, REMOVE_ACTION_LABEL, splitRows, vitalitePercent, vitaliteText, heroHeaderStats, heroDetails, heroIdentityLine, keepDetailsOrder} from './tapis.util';
 import {TapisCard} from '../../models/tapis.model';
 
 function hero(id: number, nom: string, extra: Record<string, unknown> = {}): NonNullable<BolFightSessionModel['heros']>[number] {
@@ -352,5 +352,25 @@ describe('heroIdentityLine', () => {
 
   it('is empty when nothing is known', () => {
     expect(heroIdentityLine(infos(null, null))).toBe('');
+  });
+});
+
+describe('keepDetailsOrder', () => {
+  const details = (armes: number[]) =>
+    ({traits: [], infos: {}, editRoute: null, carrieres: [], armes: armes.map((id) => ({id, label: String(id), degats: null, portee: null, equipee: true})), armures: []}) as unknown as Parameters<typeof keepDetailsOrder>[0];
+
+  it('keeps the previous order of weapons even if the new list is sorted differently', () => {
+    const result = keepDetailsOrder(details([2, 1, 3]), details([1, 2, 3]));
+    expect(result.armes.map((a) => a.id)).toEqual([1, 2, 3]);
+  });
+
+  it('puts an entry unknown to the previous list at the end', () => {
+    const result = keepDetailsOrder(details([4, 1, 2]), details([1, 2]));
+    expect(result.armes.map((a) => a.id)).toEqual([1, 2, 4]);
+  });
+
+  it('returns the new details as they are when there is no previous list', () => {
+    const next = details([2, 1]);
+    expect(keepDetailsOrder(next, null)).toBe(next);
   });
 });

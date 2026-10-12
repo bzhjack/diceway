@@ -1,7 +1,15 @@
 import {InitiativeResultat} from '../models/bol-fight-session.model';
-import {ActionAttribute, ActionDifficulty, ActionRollParts, ActionRollTone} from './models/action-roll.model';
+import {ActionAttribute, ActionDifficulty, ActionRollLabels, ActionRollParts, ActionRollTone} from './models/action-roll.model';
 
 export const ACTION_ATTRIBUTES: readonly ActionAttribute[] = ['agilite', 'vigueur', 'esprit', 'aura'];
+
+/** Nom court d'un attribut, pour le détail de la formule : « + 1 (agi) ». */
+export const ACTION_ATTRIBUTE_SHORT: Record<ActionAttribute, string> = {
+  agilite: 'agi',
+  vigueur: 'vig',
+  esprit: 'esp',
+  aura: 'aura',
+};
 
 export const ACTION_ATTRIBUTE_LABELS: Record<ActionAttribute, string> = {
   agilite: 'Agilité',
@@ -92,13 +100,22 @@ export function actionModifierSum(parts: ActionRollParts): number {
   return parts.attribute + parts.carriere + parts.equipment + parts.difficulty + parts.modifier;
 }
 
-/** Formule en clair : `2d6 + 2 + 1 − 1 ≥ 9`. Les termes nuls sont omis ; une fois les dés lancés,
- * `2d6` est remplacé par les deux dés gardés. */
-export function formatActionFormula(parts: ActionRollParts, dice: readonly [number, number] | null): string {
+const FORMULA_TERMS = ['attribute', 'carriere', 'equipment', 'difficulty', 'modifier'] as const;
+
+/** Formule en clair : `2d6 + 2 (agi) + 1 (chasseur) − 1 (ardue) ≥ 9`. Les termes nuls sont omis ; une fois les dés
+ * lancés, `2d6` est remplacé par les deux dés gardés. `labels` donne le nom de chaque terme, entre parenthèses. */
+export function formatActionFormula(
+  parts: ActionRollParts,
+  dice: readonly [number, number] | null,
+  labels: ActionRollLabels = {},
+): string {
   const head = dice ? `${dice[0]} + ${dice[1]}` : '2d6';
-  const terms = [parts.attribute, parts.carriere, parts.equipment, parts.difficulty, parts.modifier]
-    .filter((value) => value !== 0)
-    .map((value) => (value > 0 ? ` + ${value}` : ` − ${Math.abs(value)}`))
+  const terms = FORMULA_TERMS.filter((term) => parts[term] !== 0)
+    .map((term) => {
+      const value = parts[term];
+      const label = labels[term] ? ` (${labels[term]})` : '';
+      return `${value > 0 ? ' + ' : ' − '}${Math.abs(value)}${label}`;
+    })
     .join('');
   return `${head}${terms} ≥ ${ACTION_ROLL_THRESHOLD}`;
 }

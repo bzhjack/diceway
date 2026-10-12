@@ -12,6 +12,7 @@ use App\Models\Bol\BolHerosCarriere;
 use App\Models\Bol\BolHerosLangue;
 use App\Models\Bol\BolHerosTrait;
 use App\Http\Services\Bol\BolEquipmentEffectService;
+use App\Http\Services\Bol\BolFightSessionService;
 use App\Http\Services\Bol\BolHerosService;
 use App\Http\Requests\Bol\BolHerosRequest;
 use Illuminate\Http\Request;
@@ -119,6 +120,7 @@ class BolHerosController extends Controller
         }
         BolHeros::where('id', $herosId)->update($heros);
         $this->syncHeroRelations($herosId, $request, false);
+        app(BolFightSessionService::class)->refreshPnjSnapshots($herosId);
 
         $result = $this->bolHerosService->getHeroWithRelations($herosId);
         return response($result);

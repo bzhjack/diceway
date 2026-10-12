@@ -1,0 +1,56 @@
+:host {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+// Au-dessus du contenu (z-index 5), sinon les dés passent derrière les panneaux.
+.cb-dice {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+
+  ::ng-deep .dw-dice-box-host {
+    position: absolute;
+    inset: 0;
+    min-width: 0;
+    min-height: 0;
+    border: none;
+    background: transparent;
+  }
+}
+
+.cb-main {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cb-play {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.cb-assistant {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dw-border) transparent;
+  background: linear-gradient(#1a120b, #130d08);
+}
+
+
+.cb-nobody {
+  margin: 0;
+  padding: 1rem;
+  color: var(--dw-surface-500);
+  font-size: 0.9rem;
+}

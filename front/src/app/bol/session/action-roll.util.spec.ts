@@ -114,6 +114,14 @@ describe('formatActionFormula', () => {
     );
   });
 
+  it('names each term in parentheses when labels are given', () => {
+    expect(
+      formatActionFormula({attribute: 1, carriere: 2, difficulty: -4, equipment: 0, modifier: 1}, null, {
+        attribute: 'agi', carriere: 'chasseur', difficulty: 'très difficile', modifier: 'modificateur',
+      }),
+    ).toBe('2d6 + 1 (agi) + 2 (chasseur) − 4 (très difficile) + 1 (modificateur) ≥ 9');
+  });
+
   it('shows only 2d6 when every modifier is zero', () => {
     expect(formatActionFormula({attribute: 0, carriere: 0, difficulty: 0, equipment: 0, modifier: 0}, null)).toBe(
       '2d6 ≥ 9',

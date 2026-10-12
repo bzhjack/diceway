@@ -1,0 +1,47 @@
+<!-- Couche des dés : au-dessus de tout l'écran (frise, assistant, colonne de droite), sans bloquer les clics. -->
+<div class="cb-dice" aria-hidden="true">
+  <app-dice-box-host [scale]="6" [theme]="'wooden-red'" [themeColor]="'#ef4444'" />
+</div>
+
+<div class="cb-main" (click)="assistant()?.dismissDice()">
+  <bol-turn-order
+    [entries]="entries()"
+    [round]="round()"
+    [canAct]="activeCard() !== null"
+    [targetKey]="target()?.key ?? null"
+    [legendaryActive]="legendaryActive()"
+    [announcement]="announcement()"
+    (gaveBack)="gaveBack.emit($event)"
+    (addRequested)="addRequested.emit()"
+    (delayRequested)="delayRequested.emit()"
+    (rerollRequested)="rerollRequested.emit()"
+    (endTurnRequested)="endTurnRequested.emit()"
+  />
+
+  <div class="cb-play">
+    <section class="cb-assistant" aria-label="Assistant de tour">
+      @if (activeCard(); as active) {
+        <bol-turn-assistant
+          [card]="active"
+          [armes]="armes()"
+          [ownedArmes]="ownedArmes()"
+          [combatOptions]="combatOptions()"
+          [targets]="targets()"
+          [target]="target()"
+          [attacker]="attacker()"
+          [targetStats]="targetStats()"
+          [legendaryBonus]="legendaryBonus()"
+          [diceBox]="diceBox() ?? null"
+          (choiceChanged)="choiceChanged.emit($event)"
+          (targetSelected)="targetSelected.emit($event)"
+          (sheetRequested)="sheetRequested.emit($event)"
+          (damageApplied)="damageApplied.emit($event)"
+          (totalDefenseRequested)="totalDefenseRequested.emit()"
+        />
+      } @else {
+        <p class="cb-nobody">Plus personne ne peut jouer.</p>
+      }
+    </section>
+
+  </div>
+</div>
