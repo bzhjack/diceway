@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, effect, input, linkedSignal, output, signal, untracked} from '@angular/core';
+import {afterNextRender, ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, Injector, input, linkedSignal, output, signal, untracked, viewChild} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -326,7 +326,10 @@ export class TurnAssistantComponent {
     };
     add(this.vigueur(), 'vigueur');
     add(this.devastating() ? 6 : 0, 'dévastateur');
-    add(-this.protection(), this.protectionFace() !== null ? `protection (dé ${this.protectionFace()})` : 'protection');
+    const protection = this.protection();
+    const source = this.protectionManual() !== null ? ' (saisie)' : this.protectionFace() !== null ? ` (dé ${this.protectionFace()})` : '';
+    // Toujours affichée, même à 0 : c'est elle qu'on clique pour saisir une valeur.
+    terms.push({label: `− ${protection} protection${source}`, tone: 'minus', editable: true});
     return terms;
   });
 
@@ -419,9 +422,19 @@ export class TurnAssistantComponent {
   });
   /** Face du dé de protection lancé à la place de la valeur fixe (le livre laisse le choix au MJ) ; `null` : valeur fixe. */
   protected readonly protectionFace = signal<number | null>(null);
+  /** Valeur de protection saisie à la main (clic sur la puce) ; prime sur le dé et sur la valeur fixe. */
+  protected readonly protectionManual = signal<number | null>(null);
+  protected readonly editingProtection = signal(false);
+  protected readonly protectionDraft = signal('');
+  private readonly protectionInput = viewChild<ElementRef<HTMLInputElement>>('protectionInput');
+  private readonly injector = inject(Injector);
   protected readonly protection = computed(() => {
     if (this.choice()?.posture?.slug === 'armor-chink') {
       return 0;
+    }
+    const manual = this.protectionManual();
+    if (manual !== null) {
+      return manual;
     }
     const die = this.protectionDie();
     const face = this.protectionFace();
@@ -555,6 +568,35 @@ export class TurnAssistantComponent {
     this.damageValues.set(Array.from({length: count}, () => face));
   }
 
+  /** Ouvre la saisie de la protection : le champ remplace la puce, prérempli avec la valeur courante. */
+  protected startEditProtection(): void {
+    this.protectionDraft.set(String(this.protection()));
+    this.editingProtection.set(true);
+    afterNextRender(
+      () => {
+        const input = this.protectionInput()?.nativeElement;
+        input?.focus();
+        input?.select();
+      },
+      {injector: this.injector},
+    );
+  }
+
+  /** Entrée : valide un entier positif ou nul ; une saisie invalide referme le champ sans rien changer. */
+  protected commitProtection(): void {
+    const value = Number(this.protectionDraft());
+    if (this.protectionDraft().trim() !== '' && Number.isInteger(value) && value >= 0) {
+      this.protectionManual.set(value);
+      this.protectionFace.set(null);
+    }
+    this.editingProtection.set(false);
+  }
+
+  protected resetProtection(): void {
+    this.protectionManual.set(null);
+    this.protectionFace.set(null);
+  }
+
   /** Lance le dé de protection de la cible : son résultat remplace la valeur fixe pour ce coup. */
   protected async rollProtection(): Promise<void> {
     if (this.rolling() || !this.protectionDie()) {
@@ -562,6 +604,7 @@ export class TurnAssistantComponent {
     }
     const [face] = await this.throwDice('1d6', 1);
     this.protectionFace.set(face);
+    this.protectionManual.set(null);
   }
 
   protected async rollDamage(): Promise<void> {
@@ -602,6 +645,8 @@ export class TurnAssistantComponent {
     this.manualDraft.set('');
     this.damageDraft.set('');
     this.protectionFace.set(null);
+    this.protectionManual.set(null);
+    this.editingProtection.set(false);
     this.dice.set(null);
     this.manualTotal.set(null);
     this.heroic.set(null);

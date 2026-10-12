@@ -61,4 +61,6 @@ export type ActionRollTone = 'echec' | 'reussite' | 'heroique';
 export interface RollTerm {
   readonly label: string;
   readonly tone: 'dice' | 'plus' | 'minus';
+  /** La puce se clique pour saisir la valeur à la main (protection de la cible). */
+  readonly editable?: boolean;
 }
