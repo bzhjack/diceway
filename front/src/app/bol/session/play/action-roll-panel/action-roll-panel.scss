@@ -554,7 +554,7 @@ bol-action-roll-panel {
 }
 
 .ard-term--minus {
-  color: var(--dw-color-danger-muted);
+  color: var(--dw-color-echec);
 }
 
 .ard-eq {
@@ -655,6 +655,12 @@ bol-action-roll-panel {
 .ard-fg .ard-extras > * {
   flex: 0 1 auto;
   width: auto;
+  height: 2.2rem;
+  margin: 0;
+  padding: 0 0.9rem;
+  font-size: 0.85rem;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 // Conteneur étroit : le libellé passe au-dessus de ses choix, le pied s'empile.

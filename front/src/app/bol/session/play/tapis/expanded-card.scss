@@ -367,6 +367,8 @@
 }
 
 .exc--hero .exc-entry-side {
+  // Suit les coins arrondis de la carte (le fond carré de la colonne mordait sur la bordure).
+  border-radius: 7px 0 0 7px;
   justify-content: flex-start;
   overflow-y: auto;
   scrollbar-width: thin;
