@@ -16,22 +16,12 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {BolHerosService} from '../../../services/bol-heros.service';
-import {ACTION_ATTRIBUTE_LABELS, ACTION_ATTRIBUTE_SHORT, ACTION_ATTRIBUTES, ACTION_DIFFICULTIES, ACTION_ROLL_THRESHOLD, actionDiceTarget, actionModifierSum, actionResultTone, actionSuccessChance, actionVerdict, DEFAULT_ACTION_DIFFICULTY, diceFromTotal, keptDiceIndexes, netDiceModifier, signedModifier, suggestedActionResult} from '../../action-roll.util';
-import {ActionAttribute, ActionDifficulty, ActionRollCarriere, ActionRollData, ActionRollParts} from '../../models/action-roll.model';
+import {ACTION_ATTRIBUTE_LABELS, ACTION_ATTRIBUTE_SHORT, ACTION_ATTRIBUTES, ACTION_DIFFICULTIES, ACTION_ROLL_THRESHOLD, actionDiceTarget, actionDiceTargetLabel, actionModifierSum, actionResultTone, actionSuccessChance, actionVerdict, chanceRingDash, DEFAULT_ACTION_DIFFICULTY, diceFromTotal, keptDiceIndexes, netDiceModifier, signedModifier, suggestedActionResult} from '../../action-roll.util';
+import {ActionAttribute, ActionDifficulty, ActionRollCarriere, ActionRollData, ActionRollParts, RollSumTerm} from '../../models/action-roll.model';
 import {applyHeroismeDelta} from '../../heroisme-spend.util';
 
 /** Icône de chaque attribut sur son médaillon. */
 const ATTRIBUTE_ICONS: Record<ActionAttribute, string> = {agilite: 'bolt', vigueur: 'fitness_center', esprit: 'visibility', aura: 'star'};
-
-/** Circonférence de l'anneau des chances (rayon 27 dans une vue de 64). */
-const RING_LENGTH = 2 * Math.PI * 27;
-
-/** Un terme de l'addition du plateau : sa valeur, son nom dessous, et sa teinte (dés, bonus, malus, total). */
-interface SumTerm {
-  readonly value: string;
-  readonly caption: string;
-  readonly tone: 'dice' | 'plus' | 'minus' | 'total';
-}
 
 /** Un dé lancé, tel qu'il s'affiche sur le plateau : sa face, et s'il est gardé (un dé de bonus ou de malus en écarte). */
 interface RolledDie {
@@ -140,22 +130,16 @@ export class ActionRollPanelComponent {
   private readonly modifierSum = computed(() => actionModifierSum(this.parts()));
 
   /** Ce qu'il faut obtenir aux dés, en gros et en petit : « 7+ aux dés », « Tout sauf le double 1 », « 6·6 seul le double 6 ». */
-  protected readonly target = computed(() => {
-    const target = actionDiceTarget(this.modifierSum(), ACTION_ROLL_THRESHOLD);
-    if (target.kind === 'tout') {
-      return {big: 'Tout', small: 'sauf le double 1'};
-    }
-    return target.kind === 'double-six' ? {big: '6·6', small: 'seul le double 6'} : {big: `${target.value}+`, small: 'aux dés'};
-  });
+  protected readonly target = computed(() => actionDiceTargetLabel(actionDiceTarget(this.modifierSum(), ACTION_ROLL_THRESHOLD)));
 
   /** Chances de réussir, en pourcentage entier, avec les dés de bonus ou de malus retenus. */
   protected readonly chancePercent = computed(() => Math.round(actionSuccessChance(this.netDice(), this.modifierSum(), ACTION_ROLL_THRESHOLD) * 100));
   /** Longueur de l'arc doré de l'anneau des chances. */
-  protected readonly ringDash = computed(() => `${((this.chancePercent() / 100) * RING_LENGTH).toFixed(1)} ${RING_LENGTH.toFixed(1)}`);
+  protected readonly ringDash = computed(() => chanceRingDash(this.chancePercent()));
 
   /** L'addition du jet, sur une ligne : un nombre par terme, son nom dessous. Les termes nuls sont omis. Avant le jet, le premier terme
    * est le nombre de dés à lancer et le dernier le seuil ; après, le total des dés gardés et le total du jet. */
-  protected readonly sumTerms = computed<readonly SumTerm[]>(() => {
+  protected readonly sumTerms = computed<readonly RollSumTerm[]>(() => {
     const parts = this.parts();
     const net = this.netDice();
     const sum = this.diceSum();
@@ -167,7 +151,7 @@ export class ActionRollPanelComponent {
       modifier: 'modif.',
     };
     const kept = net > 0 ? '2 meilleurs' : net < 0 ? '2 moins bons' : 'dés';
-    const terms: SumTerm[] = [{value: sum === null ? `${this.diceCount()}d6` : `${sum}`, caption: kept, tone: 'dice'}];
+    const terms: RollSumTerm[] = [{value: sum === null ? `${this.diceCount()}d6` : `${sum}`, caption: kept, tone: 'dice'}];
     for (const key of ['attribute', 'carriere', 'equipment', 'difficulty', 'modifier'] as const) {
       const value = parts[key];
       if (value !== 0) {

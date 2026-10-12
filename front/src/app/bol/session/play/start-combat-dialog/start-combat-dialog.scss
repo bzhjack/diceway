@@ -1,6 +1,6 @@
 // Encapsulation désactivée sur le composant (voir .ts) : tout ici est global, donc systématiquement
-// scopé sous .scd-panel (panelClass passé à dialog.open côté session-play-page.ts). Les dés roulent
-// en couche de fond sur tout le panneau (même pattern que le jet d'action).
+// scopé sous .scd-panel (panelClass passé à dialog.open côté session-play-page.ts) ou porté par des classes `scd-*`
+// propres à ce dialogue. Les dés roulent en couche de fond sur tout le panneau (même pattern que le jet d'action).
 
 .scd-panel .mat-mdc-dialog-surface {
   background: transparent;
@@ -54,8 +54,10 @@
 
 .scd-bar {
   display: flex;
-  align-items: center;
-  gap: 0.9rem;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.1rem 1rem;
   padding: 0.7rem 1.1rem;
   border-bottom: 3px solid var(--bar-bronze, var(--dw-border));
   background: linear-gradient(var(--dw-surface-200), var(--dw-surface-50));
@@ -75,284 +77,21 @@
 }
 
 .scd-lead {
-  margin: 0.15rem 0 0;
+  margin: 0;
   font-size: 0.82rem;
   line-height: 1.4;
   color: var(--dw-surface-600);
 }
 
 .scd-content.mat-mdc-dialog-content {
+  display: flex;
   flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.8rem;
   min-height: 0;
   max-height: none;
   overflow-y: auto;
-  padding: 0;
-}
-
-.scd-bar,
-.scd-actions {
-  flex: none;
-}
-
-.scd-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 17rem;
-
-  @media (max-width: 800px) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.scd-left {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.scd-block {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  padding: 0.8rem 1.1rem;
-  border-bottom: 1px solid var(--dw-border);
-}
-
-.scd-kicker {
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--dw-color-legendary);
-}
-
-.scd-modifiers-group {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 0.8rem;
-}
-
-.scd-modifiers-label {
-  min-width: 7.5rem;
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--dw-surface-700);
-}
-
-.scd-inline {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.scd-input {
-  width: 4rem;
-  padding: 0.3rem 0.4rem;
-  border: 1px solid var(--dw-border);
-  border-radius: 6px;
-  background: var(--dw-surface-50);
-  color: var(--dw-surface-900);
-  font: inherit;
-  text-align: center;
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-color-legendary);
-    outline-offset: 1px;
-  }
-}
-
-.scd-toggle {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-
-  button {
-    padding: 0.35rem 0.7rem;
-    border: 1px solid var(--dw-border);
-    border-radius: 8px;
-    background: var(--dw-surface-200);
-    color: var(--dw-surface-900);
-    font: inherit;
-    font-size: 0.8rem;
-    font-weight: 800;
-    cursor: pointer;
-
-    &.active {
-      border-color: color-mix(in srgb, var(--bar-bronze, #3a2810) 60%, #000);
-      background: linear-gradient(#e6b64e, #b8832a);
-      color: #1a1203;
-    }
-
-    &:disabled {
-      opacity: 0.4;
-      cursor: default;
-    }
-  }
-}
-
-// Une ligne par héros : médaillon, identité, formule, résultat et boutons.
-.scd-heroes {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.scd-hero {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 0.4rem 0.7rem;
-  padding: 0.45rem 0.6rem;
-  border: 1px solid var(--dw-border);
-  border-radius: 10px;
-  background: var(--dw-surface-100);
-
-  @media (max-width: 800px) {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
-}
-
-.scd-hero--active {
-  border-color: var(--bar-ember, var(--dw-color-legendary));
-}
-
-.scd-med {
-  grid-row: 1 / span 2;
-  display: grid;
-  place-items: center;
-  width: 2.6rem;
-  height: 2.6rem;
-  border: 4px solid var(--bar-pj-2, #a8762a);
-  border-radius: 50%;
-  background: var(--dw-surface-200);
-  font-weight: 800;
-}
-
-.scd-hero-identity {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.scd-hero-name {
-  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 1.05rem;
-  color: var(--dw-color-reussite);
-}
-
-.scd-hero-stats {
-  font-size: 0.74rem;
-  color: var(--dw-surface-500);
-}
-
-// Détail du jet sur sa propre ligne, une puce par terme : en vert ce qui aide, en rouge ce qui pénalise.
-.scd-terms {
-  grid-column: 2 / -1;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.scd-term {
-  padding: 0.12rem 0.5rem;
-  border: 1px solid var(--dw-border);
-  border-radius: 6px;
-  background: var(--dw-surface-200);
-  color: var(--dw-surface-700);
-  font-size: 0.76rem;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.scd-term--dice {
-  background: var(--dw-surface-300);
-  color: var(--dw-surface-900);
-}
-
-.scd-term--plus {
-  color: var(--dw-color-reussite);
-}
-
-.scd-term--minus {
-  color: var(--dw-color-danger-muted);
-}
-
-.scd-term--total {
-  border-color: var(--dw-color-legendary);
-  color: var(--dw-surface-900);
-  font-size: 0.9rem;
-}
-
-.scd-eq {
-  color: var(--dw-surface-500);
-  font-size: 1rem;
-  font-weight: 800;
-}
-
-.scd-result {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.4rem;
-}
-
-.scd-input--manual {
-  width: 4.4rem;
-}
-
-.scd-pill {
-  padding: 0.2rem 0.65rem;
-  border: 1px solid var(--dw-border);
-  border-radius: 999px;
-  font-size: 0.76rem;
-  font-weight: 800;
-}
-
-.scd-pill--reussite {
-  border-color: var(--dw-color-reussite);
-  color: var(--dw-color-reussite);
-}
-
-.scd-pill--heroique {
-  border-color: var(--dw-color-legendary);
-  color: var(--dw-color-legendary);
-}
-
-.scd-pill--echec {
-  border-color: var(--dw-color-echec-forte);
-  color: var(--dw-color-danger-muted);
-}
-
-.scd-dice-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.4rem 0.8rem;
-  border: 1px solid color-mix(in srgb, var(--bar-bronze, #3a2810) 60%, #000);
-  border-radius: 8px;
-  background: linear-gradient(#e6b64e, #b8832a);
-  color: #1a1203;
-  font: inherit;
-  font-size: 0.82rem;
-  font-weight: 800;
-  cursor: pointer;
-
-  .mat-icon {
-    width: 1.1rem;
-    height: 1.1rem;
-    font-size: 1.1rem;
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: default;
-  }
+  padding: 0.8rem 1.1rem 0.9rem;
 }
 
 .scd-empty {
@@ -361,83 +100,229 @@
   font-size: 1rem;
 }
 
-// Aperçu de la frise, à droite : se remplit à mesure des jets.
-.scd-side {
+// ── Les modificateurs de la rencontre ────────────────────────────────────────────────────────────
+.scd-mods,
+.scd-mod {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.8rem 1rem;
-  border-left: 1px solid var(--dw-border);
-  background: var(--dw-surface-50);
-
-  @media (max-width: 800px) {
-    border-left: 0;
-    border-top: 1px solid var(--dw-border);
-  }
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.6rem;
 }
 
-.scd-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-  padding: 0.4rem 0.6rem;
-  border: 1px solid var(--dw-border);
-  border-radius: 10px;
-  background: var(--dw-surface-0);
+.scd-mods {
+  column-gap: 1.8rem;
 }
 
-.scd-group--blocked {
-  border-style: dashed;
-  opacity: 0.65;
-}
-
-.scd-group-title {
-  font-size: 0.66rem;
+.scd-label {
+  font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  white-space: nowrap;
   color: var(--dw-surface-500);
+}
 
-  em {
-    display: block;
-    font-style: normal;
-    color: var(--dw-color-danger-muted);
+.scd-label--gold {
+  color: var(--dw-color-legendary);
+}
+
+.scd-hint {
+  font-size: 0.8rem;
+  color: var(--dw-surface-500);
+}
+
+.scd-seg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+
+  button {
+    padding: 0.3rem 0.8rem;
+    border: 1px solid var(--dw-border);
+    border-radius: 999px;
+    background: var(--dw-surface-0);
+    color: var(--dw-surface-700);
+    font: inherit;
+    font-size: 0.84rem;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+
+    b {
+      color: var(--dw-surface-900);
+    }
+
+    &[aria-pressed='true'] {
+      border-color: var(--dw-color-legendary);
+      background: var(--dw-color-legendary);
+
+      &,
+      b {
+        color: #1c1200;
+      }
+    }
   }
 }
 
-.scd-group-line {
+.scd-stepper {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--dw-border);
+  border-radius: 7px;
+  overflow: hidden;
+  background: var(--dw-surface-0);
+
+  button {
+    width: 1.9rem;
+    border: none;
+    background: transparent;
+    color: var(--dw-color-legendary);
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background: color-mix(in srgb, var(--dw-color-legendary) 16%, transparent);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+  }
+
+  span {
+    display: grid;
+    place-items: center;
+    min-width: 2.2rem;
+    padding: 0.2rem 0;
+    border-inline: 1px solid var(--dw-border);
+    color: var(--dw-surface-900);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// ── Une carte par héros ──────────────────────────────────────────────────────────────────────────
+// Quatre cartes tiennent sur une rangée ; au-delà elles passent à la ligne, centrées.
+.scd-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.scd-card {
+  display: flex;
+  flex: 1 1 15.5rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+  max-width: 21rem;
+  padding: 0.7rem 0.75rem 0.75rem;
+  border: 2px solid var(--bar-bronze, #6b4a22);
+  border-radius: 14px;
+  background: radial-gradient(ellipse at 50% 30%, var(--dw-surface-300), var(--dw-surface-50) 75%);
+  box-shadow: inset 0 0 36px rgba(0, 0, 0, 0.7);
+}
+
+// Le liseré de la carte prend la couleur de son verdict.
+.scd-card--reussite {
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 65%, #000);
+}
+
+.scd-card--echec {
+  border-color: color-mix(in srgb, var(--dw-color-echec) 65%, #000);
+}
+
+.scd-card--heroique {
+  border-color: var(--dw-color-legendary);
+  box-shadow:
+    inset 0 0 36px rgba(0, 0, 0, 0.7),
+    0 0 16px color-mix(in srgb, var(--dw-color-legendary) 35%, transparent);
+}
+
+// Exclu de ce combat : il reste sur la table, sa carte se replie.
+.scd-card--excluded {
+  border-style: dashed;
+  background: none;
+  box-shadow: none;
+  opacity: 0.6;
+}
+
+.scd-who {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.4rem;
-  height: 1.9rem;
-  flex: none;
-  font-size: 0.84rem;
+  align-self: stretch;
+  gap: 0.6rem;
 }
 
-// Au plus 5 combattants visibles par bloc ; au-delà, la liste défile dans le bloc.
-.scd-group-lines {
-  display: flex;
-  flex-direction: column;
-  max-height: calc(5 * 1.9rem);
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--dw-border) transparent;
-}
-
-// Retirer un combattant de la table : discret, rouge au survol.
-.scd-remove {
+.scd-med,
+.scd-token-med {
   display: grid;
   place-items: center;
   flex: none;
-  width: 2rem;
-  height: 2rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 3px solid var(--bar-pj-2, #a8762a);
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--dw-surface-200);
+  color: var(--dw-surface-900);
+  font-weight: 800;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.scd-identity {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+
+  b {
+    overflow: hidden;
+    font: 400 1.15rem/1.15 'Muse Display Harmony', 'Muse Sans', serif;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--dw-color-reussite);
+  }
+
+  span {
+    font-size: 0.76rem;
+    color: var(--dw-surface-600);
+  }
+}
+
+// Exclure ou réintégrer un héros : discret, rouge au survol.
+.scd-icon-btn,
+.scd-dice-btn {
+  display: grid;
+  place-items: center;
+  flex: none;
   padding: 0;
   border: 1px solid var(--dw-border);
-  border-radius: 8px;
-  background: var(--dw-surface-200);
+  background: rgba(0, 0, 0, 0.3);
   color: var(--dw-surface-600);
   cursor: pointer;
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+}
+
+.scd-icon-btn {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 8px;
 
   .mat-icon {
     width: 1.1rem;
@@ -450,34 +335,415 @@
     background: var(--dw-color-echec-forte);
     color: #fff;
   }
+}
 
-  &:focus-visible {
-    outline: 2px solid var(--dw-color-legendary);
-    outline-offset: 2px;
+.scd-goal {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.scd-need {
+  display: grid;
+  justify-items: center;
+  line-height: 1;
+
+  span {
+    font-size: 0.64rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dw-surface-500);
+  }
+
+  b {
+    font: 400 2.6rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+    color: var(--dw-surface-900);
+  }
+
+  i {
+    font-style: normal;
+    font-size: 0.76rem;
+    color: var(--dw-surface-600);
   }
 }
 
-.scd-remove--small {
-  width: 1.4rem;
-  height: 1.4rem;
-  border-radius: 50%;
+.scd-ring {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 4.1rem;
+  height: 4.1rem;
+
+  svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+
+  b {
+    position: relative;
+    font: 400 1.2rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+    color: var(--dw-surface-900);
+  }
+}
+
+.scd-ring-bg,
+.scd-ring-fg {
+  fill: none;
+  stroke-width: 6;
+}
+
+.scd-ring-bg {
+  stroke: var(--dw-surface-300);
+}
+
+.scd-ring-fg {
+  stroke: var(--dw-color-legendary);
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.25s;
+}
+
+// La case du total des deux dés lancés à table, et le bouton qui les lance à l'écran.
+.scd-entry {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.scd-total {
+  width: 5.8rem;
+  height: 2.9rem;
+  padding: 0;
+  border: 2px solid color-mix(in srgb, var(--dw-color-legendary) 55%, transparent);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--dw-surface-900);
+  font: 400 1.7rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+  text-align: center;
+
+  // Case vide : la police du champ lui-même passe à celle de l'invite, qui reste ainsi centrée en hauteur.
+  &:placeholder-shown {
+    font: 600 0.85rem 'Muse Sans', sans-serif;
+  }
+
+  &::placeholder {
+    color: var(--dw-surface-500);
+  }
+
+  &:focus {
+    border-color: var(--dw-color-legendary);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+
+.scd-dice-btn {
+  width: 2.9rem;
+  height: 2.9rem;
+  border-radius: 10px;
+
+  &:hover:not(:disabled) {
+    border-color: var(--dw-color-legendary);
+    color: var(--dw-color-legendary);
+  }
+}
+
+// Le verdict et ce qu'il change au combat. Hauteur réservée : la carte ne bouge pas quand le jet tombe.
+.scd-verdict {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0.1rem;
+  min-height: 3.7rem;
+  text-align: center;
+
+  span {
+    font-size: 0.8rem;
+    line-height: 1.3;
+    color: var(--dw-surface-600);
+  }
+
+  .scd-verdict-wait {
+    color: var(--dw-surface-500);
+  }
+}
+
+.scd-verdict-title {
+  font: 400 1.5rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.scd-verdict-title--reussite {
+  color: var(--dw-color-reussite);
+}
+
+.scd-verdict-title--echec {
+  color: var(--dw-color-echec);
+}
+
+.scd-verdict-title--heroique {
+  color: var(--dw-color-legendary);
+}
+
+// L'addition du jet, sur une seule ligne : un nombre par terme, son nom dessous ; le total à droite, derrière un filet.
+.scd-sum {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.45rem;
+  max-width: 100%;
+}
+
+.scd-sum-term {
+  display: grid;
+  justify-items: center;
+  min-width: 1.5rem;
+
+  b {
+    font: 400 1.25rem/1.1 'Muse Display Harmony', 'Muse Sans', serif;
+    white-space: nowrap;
+    color: var(--dw-surface-900);
+  }
+
+  small {
+    font-size: 0.62rem;
+    font-weight: 700;
+    white-space: nowrap;
+    color: var(--dw-surface-500);
+  }
+}
+
+.scd-sum-term--plus b {
+  color: var(--dw-color-reussite);
+}
+
+.scd-sum-term--minus b {
+  color: var(--dw-color-danger-muted);
+}
+
+.scd-sum-term--total {
+  padding-left: 0.55rem;
+  border-left: 1px solid var(--dw-border);
+
+  b {
+    font-size: 1.45rem;
+    color: var(--dw-color-legendary);
+  }
+}
+
+// Avant le jet, l'addition annonce les termes en plus pâle.
+.scd-sum--pending .scd-sum-term b {
+  opacity: 0.7;
+}
+
+// L'option d'héroïsme d'un double 1 ou d'un double 6 : une case à cocher, son prix en points d'héroïsme à droite.
+.scd-opt {
+  align-self: stretch;
+  min-height: 2.2rem;
+}
+
+.scd-act {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  height: 2.2rem;
+  padding: 0 0.7rem;
+  border: 1px dashed color-mix(in srgb, var(--dw-color-legendary) 60%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--dw-color-legendary) 8%, transparent);
+  color: var(--dw-color-legendary);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
 
   .mat-icon {
-    width: 1rem;
-    height: 1rem;
-    font-size: 1rem;
+    flex: none;
+    width: 1.15rem;
+    height: 1.15rem;
+    font-size: 1.15rem;
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--dw-color-legendary) 18%, transparent);
+  }
+
+  &[aria-pressed='true'] {
+    border-style: solid;
+    background: var(--dw-color-legendary);
+    color: #1c1200;
+
+    .scd-gem {
+      background: currentColor;
+    }
   }
 }
 
-.scd-note {
-  margin: 0;
-  font-size: 0.78rem;
-  line-height: 1.4;
-  color: var(--dw-surface-600);
+.scd-cost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
 }
 
+.scd-gem {
+  flex: none;
+  width: 0.7rem;
+  height: 0.95rem;
+  background: linear-gradient(160deg, #fde68a, var(--dw-color-legendary) 55%, #8a5a12);
+  clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
+}
+
+// L'échec critique rapporte un point d'héroïsme : vert, pour le distinguer du succès légendaire qui en coûte un.
+.scd-act--gain {
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 60%, transparent);
+  background: color-mix(in srgb, var(--dw-color-reussite) 8%, transparent);
+  color: var(--dw-color-reussite);
+
+  .scd-gem {
+    background: linear-gradient(160deg, #bbf7d0, var(--dw-color-reussite) 55%, #14532d);
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--dw-color-reussite) 18%, transparent);
+  }
+
+  &[aria-pressed='true'] {
+    background: var(--dw-color-reussite);
+    color: #041a0d;
+  }
+}
+
+// ── L'ordre d'action ─────────────────────────────────────────────────────────────────────────────
+.scd-order {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.55rem 0.75rem 0.7rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 12px;
+  background: var(--dw-surface-100);
+}
+
+.scd-lanes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.scd-lane {
+  display: flex;
+  flex: 1 1 9.5rem;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+  padding: 0.4rem 0.55rem 0.5rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 10px;
+  background: var(--dw-surface-0);
+}
+
+// Les héros qui n'ont pas encore lancé, et les blocs qui ne jouent pas au round 1.
+.scd-lane--wait,
+.scd-lane--blocked {
+  border-style: dashed;
+}
+
+.scd-lane--wait {
+  background: none;
+}
+
+.scd-lane--blocked .scd-tokens {
+  opacity: 0.6;
+}
+
+.scd-lane-title {
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+
+  em {
+    margin-left: 0.3rem;
+    font-style: normal;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--dw-color-danger-muted);
+  }
+}
+
+// Au-delà de quelques rangées de jetons, le bloc défile.
+.scd-tokens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.7rem;
+  max-height: 7.2rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dw-border) transparent;
+}
+
+.scd-token {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  padding: 0.1rem;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--dw-surface-900);
+  font: inherit;
+  font-size: 0.84rem;
+  text-align: left;
+}
+
+.scd-token-med {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-width: 2px;
+  font-size: 0.8rem;
+}
+
+.scd-token-name small {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--dw-color-legendary);
+}
+
+.scd-token--adv {
+  cursor: pointer;
+
+  .scd-token-med {
+    border-color: var(--dw-surface-500);
+  }
+
+  &:hover .scd-token-med {
+    border-color: var(--dw-color-echec-forte);
+  }
+}
+
+// Exclu de ce combat : il reste sur la table, barré ici ; un clic le réintègre.
+.scd-token--excluded {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+// ── Le pied : ce qui manque, puis les actions ────────────────────────────────────────────────────
 .scd-actions.mat-mdc-dialog-actions {
   display: flex;
+  flex: none;
   align-items: center;
   gap: 0.5rem;
   padding: 0.7rem 1.1rem;
@@ -485,37 +751,24 @@
   background: linear-gradient(var(--dw-surface-50), var(--dw-surface-0));
 }
 
-.scd-spacer {
+.scd-note {
   flex: 1;
+  min-width: 0;
+  font-size: 0.82rem;
+  line-height: 1.3;
+  text-align: right;
+  color: var(--dw-surface-600);
 }
 
-// Exclu de ce combat : il reste sur la table, grisé ici, et réintègre la scène à la fin du combat.
-.scd-hero--excluded {
-  opacity: 0.55;
+// Focus visible commun aux boutons et aux champs du contenu (les boutons Material du pied ont le leur).
+.scd-content button:focus-visible,
+.scd-content input:focus-visible {
+  outline: 2px solid var(--dw-color-legendary);
+  outline-offset: 2px;
 }
 
-.scd-group-line--excluded {
-  text-decoration: line-through;
-  color: var(--dw-surface-500);
-}
-
-// Icône d'aide à droite d'un champ : le détail est dans son tooltip.
-.scd-info {
-  flex: none;
-  width: 1.2rem;
-  height: 1.2rem;
-  font-size: 1.2rem;
-  color: var(--dw-surface-500);
-  cursor: help;
-
-  &:hover,
-  &:focus-visible {
-    color: var(--dw-color-legendary);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-color-legendary);
-    outline-offset: 2px;
-    border-radius: 50%;
+@media (prefers-reduced-motion: reduce) {
+  .scd-ring-fg {
+    transition: none;
   }
 }

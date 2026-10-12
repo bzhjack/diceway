@@ -3,10 +3,12 @@ import {
   ACTION_DIFFICULTIES,
   DEFAULT_ACTION_DIFFICULTY,
   actionDiceTarget,
+  actionDiceTargetLabel,
   actionModifierSum,
   actionResultTone,
   actionSuccessChance,
   actionVerdict,
+  chanceRingDash,
   diceCountLabel,
   diceFromTotal,
   formatActionFormula,
@@ -227,6 +229,22 @@ describe('actionDiceTarget', () => {
   it('says that only the double 6 succeeds when 12 or more is needed', () => {
     expect(actionDiceTarget(-3, 9).kind).toBe('double-six');
     expect(actionDiceTarget(-8, 9).kind).toBe('double-six');
+  });
+});
+
+describe('actionDiceTargetLabel', () => {
+  it('spells out what the dice must show', () => {
+    expect(actionDiceTargetLabel(actionDiceTarget(2, 9))).toEqual({big: '7+', small: 'aux dés'});
+    expect(actionDiceTargetLabel(actionDiceTarget(8, 9))).toEqual({big: 'Tout', small: 'sauf le double 1'});
+    expect(actionDiceTargetLabel(actionDiceTarget(-5, 9))).toEqual({big: '6·6', small: 'seul le double 6'});
+  });
+});
+
+describe('chanceRingDash', () => {
+  it('draws an arc proportional to the chance, over the whole ring', () => {
+    expect(chanceRingDash(0)).toBe('0.0 169.6');
+    expect(chanceRingDash(50)).toBe('84.8 169.6');
+    expect(chanceRingDash(100)).toBe('169.6 169.6');
   });
 });
 

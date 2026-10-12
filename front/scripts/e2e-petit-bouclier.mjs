@@ -43,9 +43,7 @@ const total = async () => page.locator('.tas-rolls .tas-step').first().locator('
 await page.goto(`${base}/session/${id}/play`, {waitUntil: 'networkidle'});
 await page.getByRole('button', {name: /Démarrer un combat/}).click();
 await page.waitForTimeout(1500);
-const reaction = page.locator('.scd-input--manual').first();
-await reaction.fill('10');
-await reaction.dispatchEvent('change');
+await page.locator('.scd-total').first().fill('10');
 await page.getByRole('button', {name: /Commencer le combat/}).click();
 await page.waitForTimeout(2500);
 await page.locator('.tas-fighter .tas-target').first().click();

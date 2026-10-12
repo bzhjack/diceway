@@ -56,11 +56,3 @@ export function buildInitiativeOrderFrom(sources: readonly InitiativeSource[]): 
 function tierIndex(tier: InitiativeTierKey | null): number {
   return tier ? TIER_ORDER.indexOf(tier) : TIER_ORDER.length;
 }
-
-export const INITIATIVE_RESULT_OPTIONS: readonly {value: InitiativeResultat; label: string; short: string}[] = [
-  {value: 'echec_critique', label: 'Échec critique', short: 'Crit.'},
-  {value: 'echec', label: 'Échec', short: 'Éch.'},
-  {value: 'reussite', label: 'Réussite', short: 'Réu.'},
-  {value: 'heroique', label: 'Succès héroïque', short: 'Hér.'},
-  {value: 'legendaire', label: 'Succès légendaire', short: 'Lég.'},
-];

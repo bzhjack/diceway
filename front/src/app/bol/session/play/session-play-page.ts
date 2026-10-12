@@ -365,6 +365,8 @@ export class SessionPlayPageComponent {
         maxWidth: '96vw',
         maxHeight: '90vh',
         panelClass: 'scd-panel',
+        // Le dialogue donne lui-même la main à la case du premier héros une fois chargé : le focus initial reste sur le panneau.
+        autoFocus: 'dialog',
         data: {sessionId, reroll},
       })
       .afterClosed()

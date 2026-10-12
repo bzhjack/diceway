@@ -1,5 +1,5 @@
 import {InitiativeResultat} from '../models/bol-fight-session.model';
-import {ActionAttribute, ActionDiceTarget, ActionDifficulty, ActionRollLabels, ActionRollParts, ActionRollTone, ActionVerdict} from './models/action-roll.model';
+import {ActionAttribute, ActionDiceTarget, ActionDiceTargetLabel, ActionDifficulty, ActionRollLabels, ActionRollParts, ActionRollTone, ActionVerdict} from './models/action-roll.model';
 
 export const ACTION_ATTRIBUTES: readonly ActionAttribute[] = ['agilite', 'vigueur', 'esprit', 'aura'];
 
@@ -109,6 +109,22 @@ export function actionSuccessChance(net: number, modifierSum: number, threshold:
 export function actionDiceTarget(modifierSum: number, threshold: number): ActionDiceTarget {
   const value = threshold - modifierSum;
   return {kind: value <= 3 ? 'tout' : value >= 12 ? 'double-six' : 'seuil', value};
+}
+
+/** Ce qu'il faut obtenir aux dés, en clair : « 7+ aux dés », « Tout sauf le double 1 », « 6·6 seul le double 6 ». */
+export function actionDiceTargetLabel(target: ActionDiceTarget): ActionDiceTargetLabel {
+  if (target.kind === 'tout') {
+    return {big: 'Tout', small: 'sauf le double 1'};
+  }
+  return target.kind === 'double-six' ? {big: '6·6', small: 'seul le double 6'} : {big: `${target.value}+`, small: 'aux dés'};
+}
+
+/** Circonférence de l'anneau des chances (rayon 27 dans une vue de 64). */
+const RING_LENGTH = 2 * Math.PI * 27;
+
+/** Tracé de l'arc doré de l'anneau des chances (`stroke-dasharray`) pour un pourcentage de 0 à 100. */
+export function chanceRingDash(percent: number): string {
+  return `${((percent / 100) * RING_LENGTH).toFixed(1)} ${RING_LENGTH.toFixed(1)}`;
 }
 
 /** Le verdict en clair : le titre, puis l'écart au seuil (le total se lit dans l'addition du plateau). `result` est le résultat retenu (après les choix d'héroïsme), `dice` les deux dés gardés. */
