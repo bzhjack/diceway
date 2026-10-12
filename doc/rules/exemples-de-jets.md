@@ -80,12 +80,12 @@ Source : ch. 3 « Exemples de jets de réaction », p. 61.
 Source : ch. 3 « Exemple de succès légendaire », p. 61.
 
 - **Héros** : Krongar (esprit 0, initiative 1) et Rork.
-- **Adversaires** : un scorpion-araignée géant (rival), 3 scorpions-araignées (coriaces), 6 jeunes (piétaille). Les héros ne sont pas surpris.
+- **Adversaires** : un scorpion-araignée géant (rival), 3 scorpions-araignées (coriaces), 6 jeunes (piétaille). Ce sont des créatures, sans valeur d'initiative. Les héros ne sont pas surpris.
 - **Rork** : total de **9** après modificateurs.
 - **Krongar** : double 6 = 12, + 0 (esprit) + 1 (initiative) = **13**. Réussite, et **succès héroïque** (double 6). Le livre n'applique pas ici de malus d'initiative ennemie.
 - **Suite** : Krongar et Rork agissent un round avant les petits scorpions-araignées. Le joueur de Krongar dépense **1 point d'héroïsme** pour transformer le succès héroïque en **succès légendaire** : bonus de **+1 aux jets d'attaque pour toute la rencontre**.
 - **À vérifier** : un 12 naturel propose le succès légendaire (−1 PH), et le bonus +1 d'attaque est pris en compte dans les jets d'attaque du combat.
-- **Note** : le malus d'initiative adverse d'un rival (ici le scorpion-araignée géant) n'apparaît pas dans le calcul de Krongar (13 = 12 + 0 + 1). À rapprocher de la règle appliquée par l'application (le plus haut des rivaux et coriaces).
+- **Note (vérifiée dans le livre)** : la règle (ch. 3, p. 60, « Modificateurs aux jets de réaction ») dit : « Si un coriace ou un rival **possède une valeur d'initiative**, prenez la plus haute valeur d'initiative parmi les adversaires des héros, et appliquez-la en malus au jet de réaction des héros. » Dans R1 le chef coriace a une initiative de 1, d'où le −1. Dans R2 les adversaires sont des scorpions-araignées (des créatures) : le livre ne leur donne aucune valeur d'initiative, donc aucun malus (13 = 12 + 0 + 1). L'application suit cette règle : le malus ne vient que des rivaux et coriaces qui ont une initiative (PNJ), jamais des créatures ni des démons.
 
 ---
 
