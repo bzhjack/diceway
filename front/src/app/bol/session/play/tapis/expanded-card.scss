@@ -392,6 +392,13 @@
   min-height: 0;
 }
 
+// Le jet d'action remplit le reste de la carte : sa hauteur ne dépend pas de son contenu, donc le plateau des dés 3D ne se
+// redimensionne pas quand le résultat arrive (un redimensionnement efface les dés posés).
+.exc--hero .exc-roll {
+  flex: 1;
+  min-height: 0;
+}
+
 .exc--hero bol-action-roll-panel {
   flex: 1;
   min-height: 0;

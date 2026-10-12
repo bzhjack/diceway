@@ -29,3 +29,13 @@ export function applyHeroismeDelta(
     },
   });
 }
+
+/** Limite habituelle des points d'héroïsme d'un héros (02-actions-combat.md) ; un échec critique accepté peut la dépasser. */
+const HEROISME_HABITUEL = 5;
+
+/** Les gemmes d'héroïsme d'un héros : une par point, allumée s'il reste à dépenser. On en montre toujours cinq (la limite habituelle),
+ * davantage si le héros en a gagné au-delà. */
+export function heroismeGems(heroisme: number): readonly boolean[] {
+  const points = Math.max(0, Math.floor(heroisme));
+  return Array.from({length: Math.max(HEROISME_HABITUEL, points)}, (_, index) => index < points);
+}

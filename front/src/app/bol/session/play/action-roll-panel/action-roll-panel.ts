@@ -10,23 +10,35 @@ import {
   viewChild,
   WritableSignal,
 } from '@angular/core';
-import {MatButtonToggleChange, MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {BolHerosService} from '../../../services/bol-heros.service';
-import {ACTION_ATTRIBUTE_LABELS, ACTION_ATTRIBUTE_SHORT, ACTION_ATTRIBUTES, ACTION_DIFFICULTIES, ACTION_RESULT_LABELS, ACTION_ROLL_THRESHOLD, actionModifierSum, actionResultTone, DEFAULT_ACTION_DIFFICULTY, diceCountLabel, diceFromTotal, keepBestOrWorstTwo, netDiceModifier, signedModifier, suggestedActionResult} from '../../action-roll.util';
+import {ACTION_ATTRIBUTE_LABELS, ACTION_ATTRIBUTE_SHORT, ACTION_ATTRIBUTES, ACTION_DIFFICULTIES, ACTION_ROLL_THRESHOLD, actionDiceTarget, actionModifierSum, actionResultTone, actionSuccessChance, actionVerdict, DEFAULT_ACTION_DIFFICULTY, diceCountLabel, diceFromTotal, keptDiceIndexes, netDiceModifier, signedModifier, suggestedActionResult} from '../../action-roll.util';
 import {ActionAttribute, ActionDifficulty, ActionRollCarriere, ActionRollData, ActionRollParts, RollTerm} from '../../models/action-roll.model';
 import {applyHeroismeDelta} from '../../heroisme-spend.util';
 
-/** Jet d'action d'un héros en une seule surface (fiche du jeton, `bol-expanded-card`) : attribut,
- * carrière, difficulté, dés de bonus/malus et ajustements sur des rangées compactes, puis la formule
- * en clair et le résultat. Le calcul est dans `action-roll.util.ts`. */
+/** Icône de chaque attribut sur son médaillon. */
+const ATTRIBUTE_ICONS: Record<ActionAttribute, string> = {agilite: 'bolt', vigueur: 'fitness_center', esprit: 'visibility', aura: 'star'};
+
+/** Circonférence de l'anneau des chances (rayon 27 dans une vue de 64). */
+const RING_LENGTH = 2 * Math.PI * 27;
+
+/** Un dé lancé, tel qu'il s'affiche sur le plateau : sa face, et s'il est gardé (un dé de bonus ou de malus en écarte). */
+interface RolledDie {
+  readonly value: number;
+  readonly kept: boolean;
+}
+
+/** Jet d'action d'un héros (fiche du jeton, `bol-expanded-card`), comme une table de jeu : à gauche avec quoi on agit
+ * (attribut en médaillon, métier), au centre le plateau (ce qu'il faut obtenir, les chances, les dés, le verdict, l'héroïsme),
+ * à droite la difficulté sur son échelle et les coups de pouce (dés de bonus/malus, modificateur). Le calcul est dans
+ * `action-roll.util.ts`. */
 @Component({
   selector: 'bol-action-roll-panel',
-  imports: [MatButtonToggleModule, MatIconModule, MatTooltipModule, DiceBoxHostComponent],
+  imports: [MatIconModule, MatTooltipModule, DiceBoxHostComponent],
   templateUrl: './action-roll-panel.html',
   styleUrl: './action-roll-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,6 +56,7 @@ export class ActionRollPanelComponent {
 
   protected readonly attributes = ACTION_ATTRIBUTES;
   protected readonly attributeLabels = ACTION_ATTRIBUTE_LABELS;
+  protected readonly attributeIcons = ATTRIBUTE_ICONS;
   protected readonly difficulties = ACTION_DIFFICULTIES;
   protected readonly signed = signedModifier;
 
@@ -78,15 +91,21 @@ export class ActionRollPanelComponent {
     return netDiceModifier(avantages, desavantages);
   });
 
-  protected readonly diceCountLabel = computed(() => {
-    const {avantages, desavantages} = this.selectedDiceTraitCounts();
-    return diceCountLabel(avantages, desavantages);
-  });
-
-  protected readonly rollButtonLabel = computed(() => `Lancer ${2 + Math.abs(this.netDice())}d6`);
+  /** Nombre de dés lancés : deux, plus un par dé de bonus ou de malus retenu. */
+  protected readonly diceCount = computed(() => 2 + Math.abs(this.netDice()));
+  /** Emplacements vides du plateau avant le lancer, un par dé. */
+  protected readonly ghosts = computed(() => Array.from({length: this.diceCount()}, (_, index) => index));
+  /** Les neuf points possibles d'une face de dé. */
+  protected readonly pips = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   protected readonly rolling = signal(false);
   protected readonly dice = signal<readonly [number, number] | null>(null);
+  /** Tous les dés du dernier lancer virtuel, gardés ou écartés ; `null` avant le lancer ou après une saisie à table. */
+  protected readonly rolled = signal<readonly RolledDie[] | null>(null);
+  protected readonly diceSum = computed(() => {
+    const d = this.dice();
+    return d ? d[0] + d[1] : null;
+  });
 
   /** Saisie manuelle du total (dés physiques lancés à table) — toujours disponible à côté du lancer virtuel. */
   protected readonly manualTotal = signal<number | null>(null);
@@ -113,6 +132,20 @@ export class ActionRollPanelComponent {
 
   private readonly modifierSum = computed(() => actionModifierSum(this.parts()));
 
+  /** Ce qu'il faut obtenir aux dés, en gros et en petit : « 7+ aux dés », « Tout sauf le double 1 », « 6·6 seul le double 6 ». */
+  protected readonly target = computed(() => {
+    const target = actionDiceTarget(this.modifierSum(), ACTION_ROLL_THRESHOLD);
+    if (target.kind === 'tout') {
+      return {big: 'Tout', small: 'sauf le double 1'};
+    }
+    return target.kind === 'double-six' ? {big: '6·6', small: 'seul le double 6'} : {big: `${target.value}+`, small: 'aux dés'};
+  });
+
+  /** Chances de réussir, en pourcentage entier, avec les dés de bonus ou de malus retenus. */
+  protected readonly chancePercent = computed(() => Math.round(actionSuccessChance(this.netDice(), this.modifierSum(), ACTION_ROLL_THRESHOLD) * 100));
+  /** Longueur de l'arc doré de l'anneau des chances. */
+  protected readonly ringDash = computed(() => `${((this.chancePercent() / 100) * RING_LENGTH).toFixed(1)} ${RING_LENGTH.toFixed(1)}`);
+
   /** Les termes du jet, un par puce : `2d6`, `+ 2 agi`, `− 1 ardue`… Les termes nuls sont omis. Après un lancer virtuel,
    * les deux dés gardés apparaissent entre parenthèses ; après une saisie manuelle, les faces ne sont pas connues. */
   protected readonly formulaTerms = computed<readonly RollTerm[]>(() => {
@@ -125,7 +158,10 @@ export class ActionRollPanelComponent {
       difficulty: this.difficulty().label.toLowerCase(),
       modifier: 'modificateur',
     };
-    const terms: RollTerm[] = [{label: dice ? `2d6 (${dice[0]} + ${dice[1]})` : '2d6', tone: 'dice'}];
+    const {avantages, desavantages} = this.selectedDiceTraitCounts();
+    // « 3d6, garde les 2 meilleurs » avec un dé de bonus ; « 2d6 » sinon.
+    const thrown = this.netDice() === 0 ? '2d6' : diceCountLabel(avantages, desavantages);
+    const terms: RollTerm[] = [{label: dice ? `${thrown} (${dice[0]} + ${dice[1]})` : thrown, tone: 'dice'}];
     for (const key of ['attribute', 'carriere', 'equipment', 'difficulty', 'modifier'] as const) {
       const value = parts[key];
       if (value !== 0) {
@@ -190,30 +226,18 @@ export class ActionRollPanelComponent {
     return result === 'echec' || result === 'echec_critique';
   });
 
-  protected readonly resultLabel = computed(() => {
+  /** Le verdict en clair : son titre et de combien c'est réussi ou raté. */
+  protected readonly verdict = computed(() => {
     const result = this.suggestedResult();
-    return result ? ACTION_RESULT_LABELS[result] : '';
+    const d = this.dice();
+    const total = this.total();
+    return result && d && total !== null ? actionVerdict(result, d, total, ACTION_ROLL_THRESHOLD) : null;
   });
 
   protected readonly tone = computed(() => {
     const result = this.suggestedResult();
     return result ? actionResultTone(result) : null;
   });
-
-  protected setAttribute(change: MatButtonToggleChange): void {
-    this.attribute.set(change.value as ActionAttribute);
-  }
-
-  protected setDifficulty(change: MatButtonToggleChange): void {
-    const difficulty = this.difficulties.find((d) => d.label === change.value);
-    if (difficulty) {
-      this.difficulty.set(difficulty);
-    }
-  }
-
-  protected setCarriere(change: MatButtonToggleChange): void {
-    this.carriere.set(this.carrieres().find((c) => c.label === change.value) ?? null);
-  }
 
   protected isTraitSelected(label: string): boolean {
     return this.selectedDiceTraits().has(label);
@@ -243,10 +267,12 @@ export class ActionRollPanelComponent {
       await this.diceBox().clear();
       const results = await this.diceBox().rollNotation(`${count}d6`);
       const values = results.map((r) => r.value);
+      const kept = keptDiceIndexes(values, net);
       this.resetTierChoices();
       this.manualEntry.set(false);
       this.manualTotal.set(null);
-      this.dice.set(keepBestOrWorstTwo(values, net));
+      this.rolled.set(values.map((value, index) => ({value, kept: kept.includes(index)})));
+      this.dice.set([values[kept[0]], values[kept[1]]]);
     } finally {
       this.rolling.set(false);
     }
@@ -273,6 +299,7 @@ export class ActionRollPanelComponent {
     }
     this.resetTierChoices();
     this.manualEntry.set(true);
+    this.rolled.set(null);
     this.dice.set(diceFromTotal(total));
   }
 

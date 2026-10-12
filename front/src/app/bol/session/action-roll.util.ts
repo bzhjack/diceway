@@ -1,5 +1,5 @@
 import {InitiativeResultat} from '../models/bol-fight-session.model';
-import {ActionAttribute, ActionDifficulty, ActionRollLabels, ActionRollParts, ActionRollTone} from './models/action-roll.model';
+import {ActionAttribute, ActionDiceTarget, ActionDifficulty, ActionRollLabels, ActionRollParts, ActionRollTone, ActionVerdict} from './models/action-roll.model';
 
 export const ACTION_ATTRIBUTES: readonly ActionAttribute[] = ['agilite', 'vigueur', 'esprit', 'aura'];
 
@@ -35,14 +35,6 @@ export const ACTION_DIFFICULTIES: readonly ActionDifficulty[] = [
 
 export const DEFAULT_ACTION_DIFFICULTY: ActionDifficulty = ACTION_DIFFICULTIES[2];
 
-export const ACTION_RESULT_LABELS: Record<InitiativeResultat, string> = {
-  echec_critique: 'Échec critique',
-  echec: 'Échec',
-  reussite: 'Réussite',
-  heroique: 'Héroïque',
-  legendaire: 'Légendaire',
-};
-
 /** Résultat suggéré d'un jet d'action : 2/12 naturels priment sur le seuil (même règle absolue que l'initiative). */
 export function suggestedActionResult(
   dice: readonly [number, number],
@@ -67,6 +59,78 @@ export function keepBestOrWorstTwo(values: readonly number[], net: number): read
   }
   const sorted = [...values].sort((a, b) => a - b);
   return net < 0 ? [sorted[0], sorted[1]] : [sorted[sorted.length - 2], sorted[sorted.length - 1]];
+}
+
+/** Indices des deux dés gardés parmi ceux lancés (les deux meilleurs pour un dé de bonus, les deux moins bons pour un dé de malus),
+ * dans l'ordre du lancer : les autres dés s'affichent écartés. */
+export function keptDiceIndexes(values: readonly number[], net: number): readonly [number, number] {
+  if (values.length <= 2) {
+    return [0, 1];
+  }
+  const byValue = values.map((_, index) => index).sort((a, b) => values[a] - values[b]);
+  const kept = net < 0 ? byValue.slice(0, 2) : byValue.slice(-2);
+  return [Math.min(kept[0], kept[1]), Math.max(kept[0], kept[1])];
+}
+
+/** Probabilité de chaque total des deux dés gardés (l'indice est le total, de 2 à 12) pour 2 dés plus `net` dés de bonus
+ * (positif) ou de malus (négatif) : toutes les combinaisons sont comptées, le résultat est exact. */
+export function keptDiceDistribution(net: number): readonly number[] {
+  const count = 2 + Math.abs(net);
+  const combinations = 6 ** count;
+  const distribution = new Array<number>(13).fill(0);
+  for (let combination = 0; combination < combinations; combination++) {
+    const values: number[] = [];
+    let rest = combination;
+    for (let die = 0; die < count; die++) {
+      values.push((rest % 6) + 1);
+      rest = Math.floor(rest / 6);
+    }
+    const [a, b] = keepBestOrWorstTwo(values, net);
+    distribution[a + b] += 1 / combinations;
+  }
+  return distribution;
+}
+
+/** Chance de réussir un jet, entre 0 et 1 : le double 6 réussit toujours, le double 1 échoue toujours, et entre les deux il faut
+ * que total + modificateurs atteigne le seuil (02-actions-combat.md). */
+export function actionSuccessChance(net: number, modifierSum: number, threshold: number): number {
+  const distribution = keptDiceDistribution(net);
+  let chance = distribution[12];
+  for (let total = 3; total <= 11; total++) {
+    if (total + modifierSum >= threshold) {
+      chance += distribution[total];
+    }
+  }
+  return chance;
+}
+
+/** Ce qu'il faut obtenir aux dés pour réussir : le seuil moins les modificateurs. À 3 ou moins tout réussit sauf le double 1 ; à 12 ou
+ * plus, seul le double 6 réussit. */
+export function actionDiceTarget(modifierSum: number, threshold: number): ActionDiceTarget {
+  const value = threshold - modifierSum;
+  return {kind: value <= 3 ? 'tout' : value >= 12 ? 'double-six' : 'seuil', value};
+}
+
+/** Le verdict en clair. `result` est le résultat retenu (après les choix d'héroïsme), `dice` les deux dés gardés. */
+export function actionVerdict(result: InitiativeResultat, dice: readonly [number, number], total: number, threshold: number): ActionVerdict {
+  const natural12 = dice[0] === 6 && dice[1] === 6;
+  switch (result) {
+    case 'echec_critique':
+      return {title: 'Échec critique', detail: 'Tu décris une issue franchement défavorable, et tu gagnes 1 point d’héroïsme.'};
+    case 'legendaire':
+      return {title: 'Succès légendaire', detail: 'Double 6, et 1 point d’héroïsme dépensé.'};
+    case 'heroique':
+      return {
+        title: 'Succès héroïque',
+        detail: natural12 ? 'Double 6 : réussite automatique, avec un effet supérieur.' : 'Réussite transformée pour 1 point d’héroïsme.',
+      };
+    case 'reussite':
+      return {title: 'Réussite', detail: `${total} pour ${threshold} demandés : ${total > threshold ? `réussi de ${total - threshold}.` : 'tout juste.'}`};
+    case 'echec':
+      return dice[0] === 1 && dice[1] === 1
+        ? {title: 'Échec automatique', detail: 'Double 1 : c’est raté, quel que soit le bonus.'}
+        : {title: 'Échec', detail: `${total} pour ${threshold} demandés : il manquait ${threshold - total}.`};
+  }
 }
 
 /** Reconstruit une paire de dés valide à partir d'un total 2d6 saisi à la main — un total de 2 ou 12
