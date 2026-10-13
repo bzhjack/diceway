@@ -256,6 +256,19 @@
   }
 }
 
+// Le dé du MJ : vert pour le dé de bonus, rouge pour le dé de malus.
+.tas-chip--bonus[aria-pressed='true'] {
+  border-color: var(--dw-color-reussite);
+  background: var(--dw-color-reussite);
+  color: #041a0d;
+}
+
+.tas-chip--malus[aria-pressed='true'] {
+  border-color: var(--dw-color-echec);
+  background: var(--dw-color-echec);
+  color: #2a0505;
+}
+
 // Options du succès héroïque : en pointillés dorés tant qu'aucune n'est choisie.
 .tas-chip--heroic:not([aria-pressed='true']) {
   border: 1px dashed color-mix(in srgb, var(--dw-color-legendary) 60%, transparent);

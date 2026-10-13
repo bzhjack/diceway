@@ -107,6 +107,29 @@
         <!-- Créatures et démons n'ont qu'une attaque : pas d'option de combat -->
         <span class="tas-note">Pas d’option de combat pour cette carte.</span>
       }
+
+      <!-- Le dé que le MJ accorde ou impose selon les circonstances : 3d6 à l'attaque, on garde les deux meilleurs ou les deux moins bons -->
+      <span class="tas-label" id="tas-de-mj">Dé du MJ</span>
+      <div class="tas-chips" role="group" aria-labelledby="tas-de-mj">
+        <button
+          type="button"
+          class="tas-chip tas-chip--bonus"
+          [attr.aria-pressed]="gmDie() === 'bonus'"
+          matTooltip="Accordé par le MJ quand les circonstances aident : 3d6 à l'attaque, on garde les deux meilleurs"
+          (click)="toggleGmDie('bonus')"
+        >
+          Dé bonus MJ
+        </button>
+        <button
+          type="button"
+          class="tas-chip tas-chip--malus"
+          [attr.aria-pressed]="gmDie() === 'malus'"
+          matTooltip="Imposé par le MJ quand les circonstances gênent (ivresse, obscurité…) : 3d6 à l'attaque, on garde les deux moins bons"
+          (click)="toggleGmDie('malus')"
+        >
+          Dé malus MJ
+        </button>
+      </div>
     </section>
   </div>
 
@@ -219,17 +242,20 @@
             maxlength="2"
             autocomplete="off"
             placeholder="total"
-            aria-label="Total des deux dés d’attaque lancés à table"
+            [attr.aria-label]="gmDie() ? 'Total des deux dés d’attaque gardés, lancés à table' : 'Total des deux dés d’attaque lancés à table'"
             [value]="diceSum() ?? ''"
             [disabled]="rolling()"
             (focus)="attackInput.select()"
             (input)="onAttackInput(attackInput.value)"
             (blur)="restoreInput(attackInput, diceSum())"
           />
-          <button type="button" class="tas-dice-btn" [disabled]="rolling()" aria-label="Lancer 2d6 à l’écran" matTooltip="Lancer 2d6 à l’écran" (click)="roll()">
+          <button type="button" class="tas-dice-btn" [disabled]="rolling()" [attr.aria-label]="'Lancer ' + diceCount() + 'd6 à l’écran'" [matTooltip]="'Lancer ' + diceCount() + 'd6 à l’écran'" (click)="roll()">
             <mat-icon>casino</mat-icon>
           </button>
         </div>
+        @if (attackDetail() && !rolling()) {
+          <small class="tas-die-note">{{ attackDetail() }}</small>
+        }
 
         <div class="tas-verdict" aria-live="polite">
           @if (rolling()) {

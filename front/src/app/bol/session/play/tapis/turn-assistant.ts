@@ -5,7 +5,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {ActionDiceTargetLabel, ActionRollTone, RollSumTerm} from '../../models/action-roll.model';
 import {CombatEffect, ModifierTerm, NewEffect} from '../../models/combat-effect.model';
-import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, chanceRingDash, parseDiceTotal} from '../../action-roll.util';
+import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, chanceRingDash, keepBestOrWorstTwo, parseDiceTotal} from '../../action-roll.util';
 import {descriptionEffet, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
 import {EffectsListComponent} from './effects-list';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
@@ -280,7 +280,19 @@ export class TurnAssistantComponent {
     return modes.length === 1 ? modes[0] === 'tir' : this.useTir();
   });
 
+  /** Dé de bonus ou de malus accordé par le MJ pour cette attaque, selon les circonstances (attaquant ivre, adversaire à terre, arme
+   * favorite…) : le jet se fait à 3d6, dont on garde les deux meilleurs ou les deux moins bons (02-actions-combat.md). L'un exclut
+   * l'autre ; il repart de zéro à chaque nouvelle carte active. */
+  protected readonly gmDie = linkedSignal<string, 'bonus' | 'malus' | null>({source: () => this.cardKey(), computation: () => null});
+  /** +1 avec un dé de bonus, −1 avec un dé de malus, 0 pour un jet à deux dés. */
+  private readonly netDice = computed(() => (this.gmDie() === 'bonus' ? 1 : this.gmDie() === 'malus' ? -1 : 0));
+  /** Nombre de dés du jet d'attaque : deux, ou trois avec le dé du MJ. */
+  protected readonly diceCount = computed(() => 2 + Math.abs(this.netDice()));
+
+  /** Les deux dés qui comptent : ceux du lancer, ou les deux gardés quand le MJ a accordé un dé. */
   protected readonly dice = signal<readonly [number, number] | null>(null);
+  /** Tous les dés d'un lancer à l'écran à trois dés, pour dire lesquels sont gardés ; `null` sinon. */
+  private readonly rolledDice = signal<readonly number[] | null>(null);
   protected readonly rolling = signal(false);
 
   /** Les chiffres de l'attaquant, en tuiles : attaque, défense, vigueur et vitalité. La défense montre déjà ce que la posture
@@ -338,9 +350,29 @@ export class TurnAssistantComponent {
   });
 
   private goalFor(modifier: number): AttackGoal {
-    const chance = Math.round(actionSuccessChance(0, modifier, ATTACK_THRESHOLD) * 100);
-    return {...actionDiceTargetLabel(actionDiceTarget(modifier, ATTACK_THRESHOLD)), chance, ringDash: chanceRingDash(chance)};
+    const net = this.netDice();
+    const chance = Math.round(actionSuccessChance(net, modifier, ATTACK_THRESHOLD) * 100);
+    const label = actionDiceTargetLabel(actionDiceTarget(modifier, ATTACK_THRESHOLD));
+    // Avec le dé du MJ, le total à atteindre se lit sur les deux dés gardés.
+    const small = net !== 0 && label.small === 'aux dés' ? this.keptCaption() : label.small;
+    return {big: label.big, small, chance, ringDash: chanceRingDash(chance)};
   }
+
+  /** Lesquels des trois dés comptent : « 2 meilleurs » ou « 2 moins bons » ; « dés » pour un jet à deux dés. */
+  private keptCaption(): string {
+    const net = this.netDice();
+    return net > 0 ? '2 meilleurs' : net < 0 ? '2 moins bons' : 'dés';
+  }
+
+  /** Ce que les trois dés d'un lancer à l'écran ont donné : « 1, 5 et 2 → 5 et 2 gardés ». Vide pour deux dés ou une saisie à table. */
+  protected readonly attackDetail = computed(() => {
+    const values = this.rolledDice();
+    const kept = this.dice();
+    if (!values || values.length < 3 || !kept) {
+      return '';
+    }
+    return `${values.slice(0, -1).join(', ')} et ${values[values.length - 1]} → ${kept[0]} et ${kept[1]} gardés`;
+  });
 
   /** Sur le jeton de chaque carte visable, ce qu'il faut pour la toucher avec l'arme et la posture choisies : « 6+ · 72 % ». Absent tant
    * que ses statistiques ne sont pas connues. */
@@ -384,7 +416,7 @@ export class TurnAssistantComponent {
       return [];
     }
     const dice = this.diceSum();
-    const terms: TraySumTerm[] = [{value: dice === null ? '2d6' : `${dice}`, caption: 'dés', tone: 'dice'}];
+    const terms: TraySumTerm[] = [{value: dice === null ? `${this.diceCount()}d6` : `${dice}`, caption: this.keptCaption(), tone: 'dice'}];
     const add = (value: number, caption: string): void => {
       if (value !== 0) {
         terms.push({value: signedTerm(value), caption, tone: value > 0 ? 'plus' : 'minus'});
@@ -658,7 +690,7 @@ export class TurnAssistantComponent {
     if (!verdict) {
       return this.lastHit()
         ? {step: '', text: 'Dégâts appliqués. Il ne reste qu’à finir le tour, ou à lancer une nouvelle attaque.'}
-        : {step: '2', text: 'Tape le total des deux dés d’attaque, ou lance-les à l’écran.'};
+        : {step: '2', text: this.gmDie() ? `Tape le total des deux dés gardés (les ${this.keptCaption()} de 3d6), ou lance-les à l’écran.` : 'Tape le total des deux dés d’attaque, ou lance-les à l’écran.'};
     }
     if (!this.hasDamageStep()) {
       return {step: '', text: `${verdict.tone === 'echec' ? 'Raté' : 'Désarmement'}. Il ne reste qu’à finir le tour.`};
@@ -680,12 +712,13 @@ export class TurnAssistantComponent {
   constructor() {
     effect(() => this.choiceChanged.emit(this.choice()));
 
-    // Un autre attaquant, une autre cible ou un autre choix : le jet précédent ne vaut plus. Le choix est comparé par sa valeur : la table
+    // Un autre attaquant, une autre cible, un autre choix ou un dé du MJ accordé ou retiré : le jet précédent ne vaut plus. Le choix est comparé par sa valeur : la table
     // rechargée (enregistrement de l'état du combat) en refait un objet identique, qui ne doit pas effacer le jet en cours.
     effect(() => {
       this.cardKey();
       this.targetKey();
       this.choiceKey();
+      this.gmDie();
       untracked(() => this.resetRoll());
     });
 
@@ -709,6 +742,11 @@ export class TurnAssistantComponent {
   /** Donne la main à un élément du plateau une fois l'écran à jour (il n'existe parfois qu'après le rendu). */
   private focusAfterRender(element: () => ElementRef<HTMLElement> | undefined): void {
     afterNextRender(() => element()?.nativeElement.focus(), {injector: this.injector});
+  }
+
+  /** Accorde le dé de bonus ou de malus du MJ pour cette attaque ; un second clic sur le même le retire. */
+  protected toggleGmDie(kind: 'bonus' | 'malus'): void {
+    this.gmDie.update((current) => (current === kind ? null : kind));
   }
 
   protected selectArme(id: number | undefined): void {
@@ -736,8 +774,11 @@ export class TurnAssistantComponent {
     this.dice.set(null);
     this.lastHit.set(null);
     this.markAttacked();
-    const values = await this.throwDice('2d6', 2);
-    this.dice.set([values[0], values[1]]);
+    const net = this.netDice();
+    const count = this.diceCount();
+    const values = await this.throwDice(`${count}d6`, count);
+    this.rolledDice.set(count > 2 ? values : null);
+    this.dice.set(keepBestOrWorstTwo(values, net));
     this.focusAfterRender(() => (this.hasDamageStep() ? this.damageInput() : this.endButton()));
   }
 
@@ -787,6 +828,7 @@ export class TurnAssistantComponent {
       return;
     }
     this.dice.set(null);
+    this.rolledDice.set(null);
     this.heroic.set(null);
     this.damageValues.set(null);
     this.lastHit.set(null);
@@ -920,6 +962,7 @@ export class TurnAssistantComponent {
     this.frozenTerms.set(null);
     this.frozenDamageTerms.set(null);
     this.dice.set(null);
+    this.rolledDice.set(null);
     this.manualTotal.set(null);
     this.heroic.set(null);
     this.damageValues.set(null);
