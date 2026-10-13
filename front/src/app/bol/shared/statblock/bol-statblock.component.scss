@@ -334,6 +334,35 @@
   color: var(--dw-surface-600);
 }
 
+// Équipement : chaque ligne tient sur une ligne. Un nom trop long est coupé, et le détail est dans l'infobulle — un soulignement
+// en pointillés dit qu'il y en a un.
+.bs-row--compact {
+  border-radius: 4px;
+
+  .bs-row-name {
+    min-width: 0;
+  }
+
+  .bs-row-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+}
+
+.bs-row--more {
+  .bs-row-label {
+    text-decoration: underline dotted var(--dw-surface-500);
+    text-underline-offset: 0.2em;
+  }
+}
+
 // Sous une ligne à pastille, le détail s'aligne sur le nom.
 .bs-row--marked .bs-row-detail {
   padding-left: 1.35rem;

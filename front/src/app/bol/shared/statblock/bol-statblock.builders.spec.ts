@@ -67,6 +67,11 @@ describe('heroStatblockData', () => {
     ]);
   });
 
+  it('keeps the equipment lists on one line per item, their detail in a tooltip', () => {
+    const compact = heroStatblockData(hero()).sections.filter((s) => s.compact).map((s) => s.title);
+    expect(compact).toEqual(['Armes', 'Armures et boucliers']);
+  });
+
   it('marks an avantage with a plus and a désavantage with a minus', () => {
     expect(section(heroStatblockData(hero()), 'Traits')).toEqual([
       {label: 'Artiste', detail: undefined, sign: 'plus'},

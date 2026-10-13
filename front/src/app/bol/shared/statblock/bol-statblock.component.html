@@ -74,7 +74,8 @@
     }
   </div>
 
-  <!-- Les listes, en colonnes : une ligne par élément, sa valeur à droite, son détail dessous -->
+  <!-- Les listes, en colonnes : une ligne par élément, sa valeur à droite, son détail dessous — ou en infobulle pour l'équipement,
+       dont chaque ligne tient sur une seule ligne ; celles qui ont un détail se parcourent au clavier -->
   @if (data().sections.length) {
     <div class="bs-lists" [style.--bs-cols]="data().sections.length">
       @for (section of data().sections; track section.title) {
@@ -83,7 +84,15 @@
           @if (section.entries.length) {
             <ul class="bs-rows">
               @for (entry of section.entries; track $index) {
-                <li class="bs-row" [class.bs-row--idle]="entry.equipped === false" [class.bs-row--marked]="entry.sign !== undefined || entry.equipped !== undefined">
+                <li
+                  class="bs-row"
+                  [class.bs-row--idle]="entry.equipped === false"
+                  [class.bs-row--marked]="entry.sign !== undefined || entry.equipped !== undefined"
+                  [class.bs-row--compact]="section.compact"
+                  [class.bs-row--more]="section.compact && !!entry.detail"
+                  [attr.tabindex]="section.compact && entry.detail ? 0 : null"
+                  [matTooltip]="section.compact ? rowTooltip(entry) : ''"
+                >
                   <span class="bs-row-name">
                     @if (entry.sign) {
                       <span [class]="'bs-mark bs-mark--' + entry.sign" aria-hidden="true">{{ entry.sign === 'plus' ? '+' : '−' }}</span>
@@ -91,7 +100,7 @@
                     } @else if (entry.equipped !== undefined) {
                       <span class="bs-mark" [class.bs-mark--on]="entry.equipped" [class.bs-mark--off]="!entry.equipped" aria-hidden="true"></span>
                     }
-                    {{ entry.label }}
+                    <span class="bs-row-label">{{ entry.label }}</span>
                     @if (entry.equipped === false) {
                       <span class="bs-sr">(dans le sac)</span>
                     }
@@ -99,7 +108,7 @@
                   @if (entry.value !== undefined) {
                     <span class="bs-row-value">{{ entry.value }}</span>
                   }
-                  @if (entry.detail) {
+                  @if (entry.detail && !section.compact) {
                     <span class="bs-row-detail">{{ entry.detail }}</span>
                   }
                 </li>

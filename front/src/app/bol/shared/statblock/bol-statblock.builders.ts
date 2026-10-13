@@ -245,8 +245,8 @@ function herosLikeStatblockData(
   const sections: BolStatblockSection[] = [
     {title: 'Carrières', emptyText: 'Aucune carrière renseignée.', entries: careers},
     {title: 'Traits', emptyText: 'Aucun trait renseigné.', entries: traits},
-    {title: 'Armes', emptyText: 'Aucune arme renseignée.', entries: weaponEntries},
-    {title: 'Armures et boucliers', emptyText: 'Aucune armure renseignée.', entries: armorEntries},
+    {title: 'Armes', emptyText: 'Aucune arme renseignée.', entries: weaponEntries, compact: true},
+    {title: 'Armures et boucliers', emptyText: 'Aucune armure renseignée.', entries: armorEntries, compact: true},
   ];
 
   return {

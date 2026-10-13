@@ -35,6 +35,8 @@ export interface BolStatblockSection {
   readonly title: string;
   readonly emptyText: string;
   readonly entries: readonly BolStatblockEntry[];
+  /** Liste d'équipement : une ligne par élément — un nom trop long est coupé — et le détail passe en infobulle. */
+  readonly compact?: boolean;
 }
 
 /** View-model complet d'un statbloc — construit par les builders de `bol-statblock.builders.ts`. */

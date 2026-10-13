@@ -6,7 +6,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {NavigationStart, Router, RouterLink} from '@angular/router';
 import {filter} from 'rxjs';
-import {BolStatblockData, BolStatblockTile} from '../models/bol-statblock.model';
+import {BolStatblockData, BolStatblockEntry, BolStatblockTile} from '../models/bol-statblock.model';
 
 type SheetKind = 'hero' | 'pnj' | 'creature' | 'demon';
 
@@ -112,6 +112,11 @@ export class BolStatblockComponent {
     const entries = this.data().sections.flatMap((section) => section.entries);
     return {equipment: entries.some((entry) => entry.equipped !== undefined), traits: entries.some((entry) => entry.sign !== undefined)};
   });
+
+  /** L'infobulle d'une ligne d'équipement : son nom en entier (il peut être coupé à l'écran), puis son détail. */
+  protected rowTooltip(entry: BolStatblockEntry): string {
+    return entry.detail ? `${entry.label} : ${entry.detail}` : entry.label;
+  }
 
   protected navigationState(): Record<string, string> | undefined {
     const returnUrl = this.returnUrl();
