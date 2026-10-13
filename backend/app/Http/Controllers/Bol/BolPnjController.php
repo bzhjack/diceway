@@ -11,7 +11,6 @@ use App\Models\Bol\BolHerosArmure;
 use App\Models\Bol\BolHerosCarriere;
 use App\Models\Bol\BolHerosLangue;
 use App\Models\Bol\BolHerosTrait;
-use App\Http\Services\Bol\BolEquipmentEffectService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -62,7 +61,8 @@ class BolPnjController extends Controller
         foreach ($armes as $arme) {
             $newarme['heros_id'] = $pnj['id'];
             $newarme['arme_id'] = $arme['id'];
-            $newarme['equipee'] = (bool) ($arme['equipee'] ?? true);
+            // Un PNJ porte tout ce qu'il possède : ses armes sont en main, ses armures sur le dos, quoi qu'envoie le client.
+            $newarme['equipee'] = true;
             BolHerosArme::create($newarme);
         }
         $armures = $request->input('armures');
@@ -70,10 +70,9 @@ class BolPnjController extends Controller
             BolHerosArmure::create([
                 'heros_id' => $pnj['id'],
                 'armure_id' => $armure['id'],
-                'equipee' => (bool) ($armure['equipee'] ?? false),
+                'equipee' => true,
             ]);
         }
-        (new BolEquipmentEffectService())->normalizeArmureEquipmentForHeros($pnj['id']);
         $carrieres = $request->input('carrieres');
         foreach ($carrieres as $carriere) {
             $newcarriere['heros_id'] = $pnj['id'];
@@ -122,9 +121,8 @@ class BolPnjController extends Controller
         $ids_armes = array_column($armes, 'id');
         BolHerosArme::whereNotIn('arme_id', $ids_armes)->where('heros_id', $pnjId)->delete();
         foreach ($armes as $item) {
-            // L'état « équipée » n'est écrit que s'il est envoyé : un client qui n'envoie que des ids le laisse inchangé.
-            $attributes = array_key_exists('equipee', $item) ? ['equipee' => (bool) $item['equipee']] : [];
-            BolHerosArme::updateOrCreate(['heros_id' => $pnjId, 'arme_id' => $item['id']], $attributes);
+            // Un PNJ porte tout ce qu'il possède : ses armes sont en main, ses armures sur le dos, quoi qu'envoie le client.
+            BolHerosArme::updateOrCreate(['heros_id' => $pnjId, 'arme_id' => $item['id']], ['equipee' => true]);
         }
 
         $langues = $request->input('langues');
@@ -142,10 +140,9 @@ class BolPnjController extends Controller
         foreach ($armures as $item) {
             BolHerosArmure::updateOrCreate(
                 ['heros_id' => $pnjId, 'armure_id' => $item['id']],
-                ['equipee' => (bool) ($item['equipee'] ?? false)]
+                ['equipee' => true]
             );
         }
-        (new BolEquipmentEffectService())->normalizeArmureEquipmentForHeros($pnjId);
 
 
         $traits = $request->input('traits');

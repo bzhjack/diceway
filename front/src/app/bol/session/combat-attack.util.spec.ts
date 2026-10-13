@@ -1,5 +1,9 @@
 import {describe, expect, it} from 'vitest';
-import {dualStrikeDegats, equippedProtection, isDualWieldEligible} from './combat-attack.util';
+import {firstValueFrom, of} from 'rxjs';
+import {BolHerosModel} from '../models/bol-heros.model';
+import {BolHerosService} from '../services/bol-heros.service';
+import {dualStrikeDegats, equippedProtection, isDualWieldEligible, resolveAttackStats} from './combat-attack.util';
+import {PlayToken} from './models/combat-play.model';
 
 describe('isDualWieldEligible', () => {
   it('accepts light weapons (d6M)', () => {
@@ -68,5 +72,36 @@ describe('equippedProtection', () => {
     expect(equippedProtection([])).toEqual({text: null, value: 0});
     expect(equippedProtection([3, 4])).toEqual({text: null, value: 0});
     expect(equippedProtection(undefined)).toEqual({text: null, value: 0});
+  });
+});
+
+describe('resolveAttackStats — un PNJ porte tout ce qu’il possède', () => {
+  // Le Champion gladiateur du livre : « Agilité 1 (0*) », armure moyenne d6-2 (2), bouclier. En base, ses armures sont « non équipées ».
+  const fiche = {
+    attributs: {agilite: 1, agilite_effective: 0},
+    combat: {defense: 1, defense_effective: 1},
+    armures: [
+      {equipee: false, armure: {protection: 'd6-2(2)', categorie: 'armure'}},
+      {equipee: false, armure: {protection: 'Impose un malus de -1 à une attaque subie par round', categorie: 'bouclier'}},
+    ],
+    equipement_effectif: {bouclier_malus_attaque_subie: 1, bouclier_malus_attaque_subie_portee: 'une', bouclier_defense_toutes: 0},
+  } as unknown as BolHerosModel;
+  const service = {heros: () => of(fiche)} as unknown as BolHerosService;
+  const token = {
+    kind: 'pnj',
+    combat: {sourceId: 'pnj-4', agilite: 1, vigueur: 2, melee: 1, tir: -1, attaque: null, defense: 1, degats: 'd6', protection: null},
+  } as unknown as PlayToken;
+
+  it('counts its armour even when it is stored as not worn', async () => {
+    const stats = await firstValueFrom(resolveAttackStats(token, service));
+    expect(stats.protection).toBe(2);
+    expect(stats.protectionText).toBe('d6-2(2)');
+  });
+
+  it('takes its agility and defence with all its equipment, and its shield', async () => {
+    const stats = await firstValueFrom(resolveAttackStats(token, service));
+    expect(stats.agilite).toBe(0);
+    expect(stats.defense).toBe(1);
+    expect(stats.bouclierMalusUneAttaque).toBe(1);
   });
 });

@@ -6,7 +6,6 @@ import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {BolHerosArmureModel} from '../../models/bol-armure.model';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
-import {isArmeEquipee} from '../../shared/arme/arme-equipee';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {BolPnjService} from '../../services/bol-pnj.service';
@@ -20,7 +19,7 @@ import {CarriereListComponent} from '../../shared/carriere/list/carriere-list.co
 import {CarriereEntry} from '../../shared/models/carriere-list.model';
 import {BolEntityFormPageBase} from '../../shared/form/entity-form-page.base';
 import {EntityFormLabels} from '../../shared/models/entity-form-page.model';
-import {applyArmureEquipToggle, availableCatalog, referencedIds, selectedEntries, toggleEquipee} from '../../shared/form/form-selection';
+import {availableCatalog, referencedIds, selectedEntries} from '../../shared/form/form-selection';
 import {LangueEntry} from '../../shared/models/langue-list.model';
 import {StatsGridComponent} from '../../shared/stats-grid/stats-grid.component';
 import {StatGroup} from '../../shared/models/stats-grid.model';
@@ -306,24 +305,13 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel, P
     this.model.update((current) => ({...current, armes: current.armes.filter((_, i) => i !== index)}));
   }
 
-  protected toggleArmeEquipped(index: number): void {
-    this.model.update((current) => ({...current, armes: toggleEquipee(current.armes, index)}));
-  }
-
   protected addArmureEntry(id: number): void {
-    this.model.update((current) => ({...current, armures: [...current.armures, {id, equipee: false}]}));
+    // Un PNJ porte tout ce qu'il possède.
+    this.model.update((current) => ({...current, armures: [...current.armures, {id, equipee: true}]}));
   }
 
   protected removeArmure(index: number): void {
     this.model.update((current) => ({...current, armures: current.armures.filter((_, i) => i !== index)}));
-  }
-
-  protected toggleArmureEquipped(index: number): void {
-    const catalog = this.armuresList() ?? [];
-    this.model.update((current) => ({
-      ...current,
-      armures: applyArmureEquipToggle(current.armures, index, (id) => catalog.find((a) => a.id === id)?.categorie ?? null),
-    }));
   }
 
   protected addLangueEntry(id: number): void {
@@ -389,10 +377,10 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel, P
       creation: pnj.ressources.creation,
       armes: (pnj.armes as (BolHerosArmeModel | number)[])
         .filter((arme): arme is BolHerosArmeModel => typeof arme === 'object')
-        .map((arme) => ({id: arme.arme_id, equipee: isArmeEquipee(arme)})),
+        .map((arme) => ({id: arme.arme_id, equipee: true})),
       armures: (pnj.armures as (BolHerosArmureModel | number)[])
         .filter((armure): armure is BolHerosArmureModel => typeof armure === 'object')
-        .map((armure) => ({id: armure.armure_id, equipee: Boolean(armure.equipee)})),
+        .map((armure) => ({id: armure.armure_id, equipee: true})),
       langues: referencedIds(pnj.origines.langues, (langue) => langue.langue_id).map((id) => ({id})),
       carrieres: pnj.carrieres.map((carriere) => ({
         id: carriere.carriere_id ?? 0,

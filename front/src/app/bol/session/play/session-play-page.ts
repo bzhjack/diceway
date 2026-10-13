@@ -195,22 +195,21 @@ export class SessionPlayPageComponent {
   /** Toutes les armes du héros actif, équipées ou non — pour l'arme secondaire du combat à deux armes. */
   protected readonly activeOwnedArmes = signal<readonly BolHerosArmeModel[]>([]);
 
-  /** Armes proposées à l'assistant : celles du héros actif ; pour un PNJ, toutes ses armes (l'équipée en premier), pour en changer en combat. */
+  /** Armes proposées à l'assistant : celles du héros actif ; pour un PNJ, toutes ses armes — il les a toutes en main. */
   protected readonly assistantArmes = computed<readonly BolHerosArmeModel[]>(() => {
     const active = this.activeCard();
     if (active?.kind !== 'pnj') {
       return this.activeArmes();
     }
     const armes = this.session()?.pnjs?.find((p) => p.id === active.pivotId)?.armes ?? [];
-    const models = armes
+    return armes
       .filter((a) => a.nom)
       .map((a, index) => ({
         id: 1000 + index,
         arme_id: 1000 + index,
-        equipee: a.equipee !== false,
+        equipee: true,
         arme: {id: null, arme: a.nom ?? '', type: a.type ?? 'M', degats: a.degats, portee: null, notes: null},
       }));
-    return [...models.filter((m) => m.equipee), ...models.filter((m) => !m.equipee)];
   });
 
   /** Arme et posture choisies dans la barre d'action — `null` si le choix n'est pas jouable. */

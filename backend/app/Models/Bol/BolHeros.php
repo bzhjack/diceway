@@ -133,10 +133,25 @@ class BolHeros extends Model
         return (new BolEquipmentEffectService())->equipementEffectif($this->equippedArmuresData());
     }
 
+    /**
+     * Un PNJ (piétaille, coriace, rival) plutôt qu'un héros. Les deux partagent ce modèle, distingués par `type`.
+     */
+    public function isPnj(): bool
+    {
+        return in_array($this->type, ['P', 'C', 'R'], true);
+    }
+
+    /**
+     * Les armures dont les effets comptent : celles qu'un héros a équipées. Un PNJ porte tout ce qu'il possède — les
+     * profils du livre donnent ses valeurs « avec armure » (« Agilité 1 (0*) », « * modificateur d'armure ») — donc
+     * l'état « équipée » ne joue pas pour lui.
+     */
     private function equippedArmuresData(): array
     {
+        $wearsEverything = $this->isPnj();
+
         return $this->armures
-            ->filter(fn (BolHerosArmure $item) => $item->equipee && $item->armure !== null)
+            ->filter(fn (BolHerosArmure $item) => ($wearsEverything || $item->equipee) && $item->armure !== null)
             ->map(fn (BolHerosArmure $item) => [
                 'categorie' => $item->armure->categorie,
                 'malus_agilite' => $item->armure->malus_agilite,

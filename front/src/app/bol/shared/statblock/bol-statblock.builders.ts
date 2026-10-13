@@ -146,6 +146,7 @@ export function pnjStatblockData(pnj: BolHerosModel): BolStatblockData {
     // Les PNJ du catalogue (sans propriétaire) sont communs à tous : pas modifiables.
     pnj.user_id ? ['/create/pnj', String(pnj.id)] : null,
     null,
+    true,
   );
 }
 
@@ -158,7 +159,9 @@ function weaponRange(arme: BolHerosArmeModel): string | undefined {
   return arme.arme?.type === 'T' ? `Portée ${portee}` : `Se lance à ${portee}`;
 }
 
-/** Base commune héros/PNJ (même modèle BolHeros) : bande vitale dérivée de l'équipement + 3 listes. */
+/** Base commune héros/PNJ (même modèle BolHeros) : bande vitale dérivée de l'équipement + 3 listes. `wearsEverything` : un PNJ porte
+ * tout ce qu'il possède — armes en main, armures sur le dos — quel que soit l'état « équipée » enregistré ; ses listes n'ont donc
+ * pas de pastille « porté / dans le sac ». */
 function herosLikeStatblockData(
   heros: BolHerosModel,
   title: string,
@@ -166,6 +169,7 @@ function herosLikeStatblockData(
   isCreation: boolean,
   editRoute: readonly [string, string] | null,
   advancedEditRoute: readonly [string, string] | null,
+  wearsEverything = false,
 ): BolStatblockData {
   const weapons = (heros.armes as (BolHerosArmeModel | number)[]).filter(
     (arme): arme is BolHerosArmeModel => typeof arme === 'object' && Boolean(arme.arme),
@@ -176,8 +180,8 @@ function herosLikeStatblockData(
 
   // Ce qu'il a en main et sur le dos : la première arme équipée, et la protection de l'armure portée (casque compris). Un bouclier
   // ne protège pas des dégâts : il reste dans la liste des armures.
-  const mainWeapon = weapons.find((arme) => isArmeEquipee(arme) && arme.arme?.degats)?.arme ?? null;
-  const protection = equippedProtection(armors).text;
+  const mainWeapon = weapons.find((arme) => (wearsEverything || isArmeEquipee(arme)) && arme.arme?.degats)?.arme ?? null;
+  const protection = equippedProtection(wearsEverything ? armors.map((armure) => ({...armure, equipee: true})) : armors).text;
 
   const vitals: BolStatblockTile[] = [
     {label: 'Vitalité', value: heros.ressources.vitalite, tone: 'health'},
@@ -219,7 +223,7 @@ function herosLikeStatblockData(
       label: arme.arme?.arme ?? '',
       value: arme.arme?.degats ?? undefined,
       detail: weaponRange(arme),
-      equipped: isArmeEquipee(arme),
+      ...(wearsEverything ? {} : {equipped: isArmeEquipee(arme)}),
     }))
     .filter((entry) => entry.label);
 
@@ -233,7 +237,7 @@ function herosLikeStatblockData(
         value: isDie ? (protectionText ?? undefined) : undefined,
         // « Impose un malus de -1 à une attaque subie par round » : le début n'apprend rien, on garde « -1 à une attaque… ».
         detail: [isDie ? null : protectionText?.replace(/^Impose un malus de /, ''), armure.armure?.malus].filter((part) => part && part !== '-').join(' · ') || undefined,
-        equipped: armure.equipee,
+        ...(wearsEverything ? {} : {equipped: armure.equipee}),
       };
     })
     .filter((entry) => entry.label);

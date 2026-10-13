@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {BolHerosModel} from '../../models/bol-heros.model';
-import {heroStatblockData} from './bol-statblock.builders';
+import {heroStatblockData, pnjStatblockData} from './bol-statblock.builders';
 
 const arme = (nom: string, degats: string, equipee: boolean, portee: string | null = '-', type: 'M' | 'T' = 'M') => ({arme_id: 1, equipee, arme: {id: 1, arme: nom, type, degats, portee, notes: null}});
 const armure = (nom: string, categorie: string, protection: string, malus: string | null, equipee: boolean) => ({armure_id: 1, equipee, armure: {id: 1, armure: nom, categorie, protection, malus}});
@@ -79,5 +79,27 @@ describe('heroStatblockData', () => {
     expect(vital(data, 'Vitalité')).toMatchObject({value: 10, tone: 'health'});
     expect(vital(data, 'Héroïsme')).toMatchObject({value: 1, tone: 'heroism'});
     expect(data.chips.map((chip) => chip.label)).toEqual(['Lionel', 'Marais de Kasht']);
+  });
+});
+
+describe('pnjStatblockData — un PNJ porte tout ce qu’il possède', () => {
+  // En base, les armures d'un PNJ du catalogue sont « non équipées » : elles comptent quand même.
+  const pnj = hero({
+    type: 'C',
+    user_id: null,
+    armes: [arme('Épée', 'd6', false)],
+    armures: [armure('Armure moyenne', 'armure', 'd6-2(2)', 'Social / Agilité -1', false), armure('Petit bouclier', 'bouclier', 'Impose un malus de -1 à une attaque subie par round', null, false)],
+  });
+
+  it('shows the protection of its armour and the damage of its weapon', () => {
+    const data = pnjStatblockData(pnj);
+    expect(vital(data, 'Protection')?.value).toBe('d6-2(2)');
+    expect(vital(data, 'Dégâts')).toMatchObject({label: 'Dégâts · Épée', value: 'd6'});
+  });
+
+  it('marks nothing as « dans le sac »: its lists carry no equipment state', () => {
+    const data = pnjStatblockData(pnj);
+    expect(section(data, 'Armes')).toEqual([{label: 'Épée', value: 'd6', detail: undefined}]);
+    expect(section(data, 'Armures et boucliers').every((entry) => !('equipped' in entry))).toBe(true);
   });
 });
