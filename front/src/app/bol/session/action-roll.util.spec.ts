@@ -26,8 +26,14 @@ describe('suggestedActionResult', () => {
     expect(suggestedActionResult([1, 1], 20, 6)).toBe('echec');
   });
 
-  it('returns heroique on a natural 12, regardless of total', () => {
-    expect(suggestedActionResult([6, 6], -20, 12)).toBe('heroique');
+  it('returns heroique on a natural 12 when lesser dice could have succeeded', () => {
+    expect(suggestedActionResult([6, 6], 0, 9)).toBe('heroique');
+    expect(suggestedActionResult([6, 6], -2, 9)).toBe('heroique');
+  });
+
+  it('returns a plain reussite on a natural 12 when only the double 6 could succeed', () => {
+    expect(suggestedActionResult([6, 6], -3, 9)).toBe('reussite');
+    expect(suggestedActionResult([6, 6], -8, 9)).toBe('reussite');
   });
 
   it('returns reussite when the total meets the threshold', () => {
@@ -282,6 +288,11 @@ describe('actionVerdict', () => {
     expect(actionVerdict('heroique', [6, 6], 14, 9).detail).toBe('Double 6 : réussite automatique, avec un effet supérieur.');
     expect(actionVerdict('heroique', [5, 4], 11, 9).detail).toBe('Réussite transformée pour 1 point d’héroïsme.');
     expect(actionVerdict('legendaire', [6, 6], 14, 9).title).toBe('Succès légendaire');
+  });
+
+  it('tells a double 6 that was the only way to succeed is a plain success', () => {
+    expect(actionVerdict('reussite', [6, 6], 6, 9)).toEqual({title: 'Réussite', detail: 'Double 6 : seul lui pouvait réussir, c’est une réussite normale.'});
+    expect(actionVerdict('heroique', [6, 6], 6, 9).detail).toBe('Réussite transformée pour 1 point d’héroïsme.');
   });
 });
 

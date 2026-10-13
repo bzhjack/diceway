@@ -103,7 +103,7 @@
           <button type="button" class="ard-act ard-act--gain" [attr.aria-pressed]="critiqueChosen()" aria-label="Échec critique : gagner 1 point d’héroïsme" (click)="toggleCritique()">
             <mat-icon aria-hidden="true">{{ critiqueChosen() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Échec critique <span class="ard-cost">+1 <span class="ard-gem" aria-hidden="true"></span></span>
           </button>
-        } @else if (isNatural12() && (legendaryChosen() || heroisme() > 0)) {
+        } @else if (isHeroic12() && (legendaryChosen() || heroisme() > 0)) {
           <button
             type="button"
             class="ard-act"

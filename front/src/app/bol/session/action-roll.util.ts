@@ -35,7 +35,8 @@ export const ACTION_DIFFICULTIES: readonly ActionDifficulty[] = [
 
 export const DEFAULT_ACTION_DIFFICULTY: ActionDifficulty = ACTION_DIFFICULTIES[2];
 
-/** Résultat suggéré d'un jet d'action : 2/12 naturels priment sur le seuil (même règle absolue que l'initiative). */
+/** Résultat suggéré d'un jet d'action : 2/12 naturels priment sur le seuil (même règle absolue que l'initiative). Le double 6 est un
+ * succès héroïque, sauf si l'action ne pouvait réussir qu'avec lui : elle réussit alors normalement (livre p. 56). */
 export function suggestedActionResult(
   dice: readonly [number, number],
   modifierSum: number,
@@ -46,7 +47,7 @@ export function suggestedActionResult(
     return 'echec';
   }
   if (a === 6 && b === 6) {
-    return 'heroique';
+    return actionDiceTarget(modifierSum, threshold).kind === 'double-six' ? 'reussite' : 'heroique';
   }
   return a + b + modifierSum >= threshold ? 'reussite' : 'echec';
 }
@@ -130,6 +131,8 @@ export function chanceRingDash(percent: number): string {
 /** Le verdict en clair : le titre, puis l'écart au seuil (le total se lit dans l'addition du plateau). `result` est le résultat retenu (après les choix d'héroïsme), `dice` les deux dés gardés. */
 export function actionVerdict(result: InitiativeResultat, dice: readonly [number, number], total: number, threshold: number): ActionVerdict {
   const natural12 = dice[0] === 6 && dice[1] === 6;
+  /** Double 6 sur une action qui ne pouvait réussir qu'avec lui : une réussite normale. */
+  const lucky12 = natural12 && total <= threshold;
   switch (result) {
     case 'echec_critique':
       return {title: 'Échec critique', detail: 'Tu décris une issue franchement défavorable, et tu gagnes 1 point d’héroïsme.'};
@@ -138,10 +141,12 @@ export function actionVerdict(result: InitiativeResultat, dice: readonly [number
     case 'heroique':
       return {
         title: 'Succès héroïque',
-        detail: natural12 ? 'Double 6 : réussite automatique, avec un effet supérieur.' : 'Réussite transformée pour 1 point d’héroïsme.',
+        detail: natural12 && !lucky12 ? 'Double 6 : réussite automatique, avec un effet supérieur.' : 'Réussite transformée pour 1 point d’héroïsme.',
       };
     case 'reussite':
-      return {title: 'Réussite', detail: total > threshold ? `réussi de ${total - threshold}` : 'tout juste'};
+      return lucky12
+        ? {title: 'Réussite', detail: 'Double 6 : seul lui pouvait réussir, c’est une réussite normale.'}
+        : {title: 'Réussite', detail: total > threshold ? `réussi de ${total - threshold}` : 'tout juste'};
     case 'echec':
       return dice[0] === 1 && dice[1] === 1
         ? {title: 'Échec automatique', detail: 'Double 1 : c’est raté, quel que soit le bonus.'}

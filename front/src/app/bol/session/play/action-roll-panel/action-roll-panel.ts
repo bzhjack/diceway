@@ -183,15 +183,18 @@ export class ActionRollPanelComponent {
     return !!d && d[0] === 6 && d[1] === 6;
   });
 
-  /** Réussite normale (ni 2 ni 12 naturel) — seul ce cas peut être converti en succès héroïque
-   * par dépense de PH (02-actions-combat.md). */
-  protected readonly canUpgradeToHeroique = computed(() => {
+  /** Résultat des dés avant tout choix d'héroïsme. */
+  private readonly baseResult = computed(() => {
     const d = this.dice();
-    if (!d || this.isNatural2() || this.isNatural12()) {
-      return false;
-    }
-    return suggestedActionResult(d, this.modifierSum(), ACTION_ROLL_THRESHOLD) === 'reussite';
+    return d ? suggestedActionResult(d, this.modifierSum(), ACTION_ROLL_THRESHOLD) : null;
   });
+
+  /** Double 6 qui vaut succès héroïque — pas celui d'une action qui ne pouvait réussir qu'avec lui, simple réussite. Seul ce cas ouvre
+   * le succès légendaire. */
+  protected readonly isHeroic12 = computed(() => this.isNatural12() && this.baseResult() === 'heroique');
+
+  /** Réussite normale — seul ce cas peut être converti en succès héroïque par dépense de PH (02-actions-combat.md). */
+  protected readonly canUpgradeToHeroique = computed(() => this.baseResult() === 'reussite');
 
   /** Échec critique (2 naturel) — un choix volontaire qui OCTROIE 1 PH. */
   protected readonly critiqueChosen = signal(false);
@@ -201,25 +204,21 @@ export class ActionRollPanelComponent {
   protected readonly heroicUpgradeChosen = signal(false);
 
   protected readonly suggestedResult = computed<InitiativeResultat | null>(() => {
-    const d = this.dice();
-    if (!d) {
+    const base = this.baseResult();
+    if (base === null) {
       return null;
     }
     if (this.isNatural2()) {
       return this.critiqueChosen() ? 'echec_critique' : 'echec';
     }
-    if (this.isNatural12()) {
+    if (this.isHeroic12()) {
       return this.legendaryChosen() ? 'legendaire' : 'heroique';
     }
-    const base = suggestedActionResult(d, this.modifierSum(), ACTION_ROLL_THRESHOLD);
     return base === 'reussite' && this.heroicUpgradeChosen() ? 'heroique' : base;
   });
 
-  /** Faveur divine n'a de sens que pour retenter un échec. */
-  protected readonly isFailure = computed(() => {
-    const result = this.suggestedResult();
-    return result === 'echec' || result === 'echec_critique';
-  });
+  /** Faveur divine n'a de sens que pour retenter un échec — plus une fois l'échec critique accepté (son point d'héroïsme est gagné). */
+  protected readonly isFailure = computed(() => this.suggestedResult() === 'echec');
 
   /** Le verdict en clair : son titre et de combien c'est réussi ou raté. */
   protected readonly verdict = computed(() => {
