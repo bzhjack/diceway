@@ -242,6 +242,13 @@
   border-color: color-mix(in srgb, var(--dw-color-echec) 65%, #000);
 }
 
+.scd-card--legendaire {
+  border-color: var(--dw-color-succes-legendaire);
+  box-shadow:
+    inset 0 0 36px rgba(0, 0, 0, 0.7),
+    0 0 16px color-mix(in srgb, var(--dw-color-succes-legendaire) 35%, transparent);
+}
+
 .scd-card--heroique {
   border-color: var(--dw-color-legendary);
   box-shadow:
@@ -496,6 +503,10 @@
 
 .scd-verdict-title--heroique {
   color: var(--dw-color-legendary);
+}
+
+.scd-verdict-title--legendaire {
+  color: var(--dw-color-succes-legendaire);
 }
 
 // L'addition du jet, sur une seule ligne : un nombre par terme, son nom dessous ; le total à droite, derrière un filet.

@@ -216,6 +216,7 @@ export function actionResultTone(result: InitiativeResultat): ActionRollTone {
   if (result === 'reussite') {
     return 'reussite';
   }
-  return result === 'heroique' || result === 'legendaire' ? 'heroique' : 'echec';
+  // Le succès héroïque s'annonce en doré, le succès légendaire en cramoisi.
+  return result === 'heroique' || result === 'legendaire' ? result : 'echec';
 }
 

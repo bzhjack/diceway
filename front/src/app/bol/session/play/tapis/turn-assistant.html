@@ -315,7 +315,7 @@
 
         @if (picksMax() > 0) {
           <div class="tas-heroic" role="group" [attr.aria-label]="picksMax() > 1 ? 'Options du succès légendaire' : 'Option du succès héroïque'">
-            <span class="tas-label tas-label--gold">{{ picksMax() > 1 ? 'Son coup légendaire · deux options' : 'Son coup héroïque · une option' }}</span>
+            <span class="tas-label" [class.tas-label--gold]="picksMax() === 1" [class.tas-label--red]="picksMax() > 1">{{ picksMax() > 1 ? 'Son coup légendaire · deux options' : 'Son coup héroïque · une option' }}</span>
             <div class="tas-chips">
               @for (o of heroicOptions; track o.slug) {
                 @let count = pickCounts()[o.slug] ?? 0;

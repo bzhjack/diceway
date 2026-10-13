@@ -81,4 +81,4 @@ export interface ActionVerdict {
 }
 
 /** Couleur du résultat d'un jet : échec, réussite ou héroïque (héroïque et légendaire). */
-export type ActionRollTone = 'echec' | 'reussite' | 'heroique';
+export type ActionRollTone = 'echec' | 'reussite' | 'heroique' | 'legendaire';

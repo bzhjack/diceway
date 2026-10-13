@@ -652,7 +652,7 @@ export class TurnAssistantComponent {
     }
     switch (result) {
       case 'legendaire':
-        return {title: 'Succès légendaire', detail: 'Double 6 et 1 point d’héroïsme : deux options au choix.', tone: 'heroique'};
+        return {title: 'Succès légendaire', detail: 'Double 6 et 1 point d’héroïsme : deux options au choix.', tone: 'legendaire'};
       case 'heroique':
         return {
           title: 'Succès héroïque',

@@ -155,7 +155,7 @@ describe('actionResultTone', () => {
     expect(actionResultTone('echec_critique')).toBe('echec');
     expect(actionResultTone('reussite')).toBe('reussite');
     expect(actionResultTone('heroique')).toBe('heroique');
-    expect(actionResultTone('legendaire')).toBe('heroique');
+    expect(actionResultTone('legendaire')).toBe('legendaire');
   });
 });
 

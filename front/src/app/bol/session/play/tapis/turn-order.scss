@@ -74,9 +74,10 @@
   font-weight: 800;
 }
 
+// Cramoisi pour un succès légendaire ; la pastille reste dorée pour un succès héroïque.
 .tor-pill--lock {
-  border-color: var(--dw-color-echec-forte);
-  color: var(--dw-color-danger-muted);
+  border-color: var(--dw-color-succes-legendaire);
+  color: var(--dw-color-succes-legendaire);
 }
 
 // L'ordre d'action, sur une seule ligne : un bloc par rang (ou famille de rangs) de réaction qui a des combattants. Quand la place

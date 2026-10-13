@@ -137,8 +137,13 @@
   color: var(--dw-surface-500);
 }
 
+// Doré pour un succès héroïque, cramoisi pour un succès légendaire.
 .tas-label--gold {
   color: var(--dw-color-legendary);
+}
+
+.tas-label--red {
+  color: var(--dw-color-succes-legendaire);
 }
 
 .tas-ghost {
@@ -616,6 +621,10 @@
   color: var(--dw-color-legendary);
 }
 
+.tas-verdict-title--legendaire {
+  color: var(--dw-color-succes-legendaire);
+}
+
 // L'addition d'un jet, sur une ligne : un nombre par terme, son nom dessous ; le total à droite, derrière un filet.
 .tas-sum {
   display: flex;
@@ -735,10 +744,9 @@
 .tas-legend {
   justify-self: start;
   padding: 0.05rem 0.45rem;
-  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 60%, transparent);
+  border: 1px solid var(--dw-color-succes-legendaire);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--dw-color-legendary) 10%, transparent);
-  color: var(--dw-color-legendary);
+  color: var(--dw-color-succes-legendaire);
   font-size: 0.74rem;
   font-weight: 700;
   white-space: nowrap;
