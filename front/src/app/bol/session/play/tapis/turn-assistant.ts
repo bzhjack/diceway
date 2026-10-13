@@ -57,7 +57,9 @@ interface StatTile {
   readonly value: string;
   /** La posture choisie améliore (`up`) ou dégrade (`down`) ce chiffre. */
   readonly tone?: 'up' | 'down';
-  /** Vitalité : le maximum suit en petit. */
+  /** Vitalité : un cœur précède le chiffre. */
+  readonly heart?: boolean;
+  /** Vitalité : le maximum suit le libellé (« Vitalité /10 »). */
   readonly max?: string;
 }
 
@@ -308,7 +310,7 @@ export class TurnAssistantComponent {
       {label: 'Attaque', value: this.signed(attackBonus(stats, this.isTir()))},
       {label: 'Défense', value: String(stats.defense + posture), ...(posture !== 0 ? {tone: posture > 0 ? ('up' as const) : ('down' as const)} : {})},
       {label: 'Vigueur', value: this.signed(vigueurBonus(stats, this.isTir()))},
-      {label: 'Vitalité', value: String(card.vitaliteCourante ?? '—'), max: String(card.vitaliteMax ?? '—')},
+      {label: 'Vitalité', value: String(card.vitaliteCourante ?? '—'), max: String(card.vitaliteMax ?? '—'), heart: true},
     ];
   });
 

@@ -26,8 +26,8 @@
       <div class="tas-tiles tas-tiles--start">
         @for (tile of attackerTiles(); track tile.label) {
           <div class="tas-tile" [class.tas-tile--up]="tile.tone === 'up'" [class.tas-tile--down]="tile.tone === 'down'">
-            <b>{{ tile.value }}@if (tile.max) {<small>/{{ tile.max }}</small>}</b>
-            <span>{{ tile.label }}</span>
+            <b>@if (tile.heart) {<span aria-hidden="true">♥ </span>}{{ tile.value }}</b>
+            <span>{{ tile.label }}@if (tile.max) { /{{ tile.max }} }</span>
           </div>
         }
       </div>

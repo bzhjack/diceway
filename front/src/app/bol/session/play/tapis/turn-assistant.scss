@@ -197,9 +197,11 @@
     white-space: nowrap;
     color: var(--dw-surface-900);
 
-    small {
-      font-size: 0.8rem;
-      color: var(--dw-surface-500);
+    // Le cœur de la vitalité, dans une police qui a le glyphe.
+    span {
+      font: 400 1rem/1 'Muse Sans', sans-serif;
+      letter-spacing: 0;
+      color: inherit;
     }
   }
 
