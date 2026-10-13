@@ -871,7 +871,10 @@ export class SessionPlayPageComponent {
     if (!attaquant) {
       return;
     }
-    this.saveEtat((etat) => ({...etat, effets: [...appliquerEvenement(etat.effets, {type: 'jet-attaque', attaquant, cible: target.key}, idAleatoire)]}));
+    // Le petit bouclier de la cible, s'il en porte un, est dépensé pour ce round.
+    const stats = this.selectedTarget()?.key === target.key ? this.targetStats() : (this.targetsStats().get(target.key) ?? null);
+    const petitBouclier = (stats?.bouclierMalusUneAttaque ?? 0) > 0;
+    this.saveEtat((etat) => ({...etat, effets: [...appliquerEvenement(etat.effets, {type: 'jet-attaque', attaquant, cible: target.key, petitBouclier}, idAleatoire)]}));
   }
 
   /** Le MJ retire un effet (croix d'une puce ou du bloc « Effets en cours »). */

@@ -393,7 +393,7 @@ describe('posture et parade sur un tour complet', () => {
   it('gives the parade for one attack only', () => {
     const apres = endTurn(order, etat(1), effetsDeTour('hero-1', {posture: 'dual-parry', defenseTotale: false}));
     expect(modificateursPour(apres.effets, contre).map((t) => t.valeur)).toEqual([-1]);
-    const apresAttaque = appliquerEvenement(apres.effets, {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1'});
+    const apresAttaque = appliquerEvenement(apres.effets, {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1', petitBouclier: false});
     expect(modificateursPour(apresAttaque, contre)).toEqual([]);
   });
 

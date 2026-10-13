@@ -6,7 +6,7 @@ import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {ActionDiceTargetLabel, ActionRollTone, RollSumTerm} from '../../models/action-roll.model';
 import {CombatEffect, ModifierTerm, NewEffect} from '../../models/combat-effect.model';
 import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, chanceRingDash, keepBestOrWorstTwo, parseDiceTotal} from '../../action-roll.util';
-import {descriptionEffet, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
+import {descriptionEffet, doitUnDeDeMalus, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
 import {EffectsListComponent} from './effects-list';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, MAINS_NUES} from '../../attack-options.util';
@@ -282,10 +282,16 @@ export class TurnAssistantComponent {
     return modes.length === 1 ? modes[0] === 'tir' : this.useTir();
   });
 
+  /** L'attaquant porte l'effet « dé de malus à sa prochaine action » (posé à la main après un renversement, un coup précis…). */
+  private readonly malusDieOwed = computed(() => doitUnDeDeMalus(this.effets(), this.card().key));
   /** Dé de bonus ou de malus accordé par le MJ pour cette attaque, selon les circonstances (attaquant ivre, adversaire à terre, arme
    * favorite…) : le jet se fait à 3d6, dont on garde les deux meilleurs ou les deux moins bons (02-actions-combat.md). L'un exclut
-   * l'autre ; il repart de zéro à chaque nouvelle carte active. */
-  protected readonly gmDie = linkedSignal<string, 'bonus' | 'malus' | null>({source: () => this.cardKey(), computation: () => null});
+   * l'autre. À chaque nouvelle carte active il repart de zéro — ou du dé de malus, si la carte en doit un à sa prochaine action ; il
+   * suit aussi cet effet quand on le pose ou qu'on le retire en cours de tour. */
+  protected readonly gmDie = linkedSignal<{readonly key: string; readonly malus: boolean}, 'bonus' | 'malus' | null>({
+    source: () => ({key: this.cardKey(), malus: this.malusDieOwed()}),
+    computation: (source) => (source.malus ? 'malus' : null),
+  });
   /** +1 avec un dé de bonus, −1 avec un dé de malus, 0 pour un jet à deux dés. */
   private readonly netDice = computed(() => (this.gmDie() === 'bonus' ? 1 : this.gmDie() === 'malus' ? -1 : 0));
   /** Nombre de dés du jet d'attaque : deux, ou trois avec le dé du MJ. */

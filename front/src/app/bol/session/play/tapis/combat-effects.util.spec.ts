@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {CombatEffect, RollContext} from '../../models/combat-effect.model';
-import {appliquerEvenement, BOUCLIER_DEPENSE, descriptionEffet, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
+import {appliquerEvenement, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
 
 function effet(over: Partial<CombatEffect> = {}): CombatEffect {
   return {id: 'e-1', origine: 'posture-defensive', porteur: 'hero-1', stat: 'defense', valeur: 1, quand: 'subie', duree: {type: 'debut-tour-porteur'}, manuel: false, ...over};
@@ -82,6 +82,11 @@ describe('modificateursPour : grand bouclier, noms, effets d’action', () => {
     expect(modificateursPour([perdu], ctx({bouclierToutes: 1, jet: 'degats'}))).toEqual([]);
   });
 
+  it('keeps the large shield against every attack of the round: a spent small shield does not take it away', () => {
+    const depense = effet({origine: BOUCLIER_DEPENSE, valeur: 0, duree: {type: 'fin-round'}});
+    expect(modificateursPour([depense], ctx({bouclierToutes: 1}))).toEqual([]);
+  });
+
   it('names the bearer of an effect when the names are known', () => {
     const terms = modificateursPour([effet({valeur: 1})], ctx({noms: {'hero-1': 'Dogon'}}));
     expect(terms[0].label).toBe('− 1 posture défensive (Dogon)');
@@ -122,17 +127,21 @@ describe('appliquerEvenement', () => {
     expect(appliquerEvenement([renverse], {type: 'fin-tour', carte: 'hero-1', crees: []})).toEqual([]);
   });
 
-  it('jet-attaque: spends the shield of the target once, without doubling the trace', () => {
-    const once = appliquerEvenement([], {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1'});
+  it('jet-attaque: spends the small shield of the target once, without doubling the trace', () => {
+    const once = appliquerEvenement([], {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1', petitBouclier: true});
     expect(once).toEqual([effet({id: 'e-1', origine: BOUCLIER_DEPENSE, valeur: 0, duree: {type: 'fin-round'}})]);
-    expect(appliquerEvenement(once, {type: 'jet-attaque', attaquant: 'pnj-8', cible: 'hero-1'})).toHaveLength(1);
+    expect(appliquerEvenement(once, {type: 'jet-attaque', attaquant: 'pnj-8', cible: 'hero-1', petitBouclier: true})).toHaveLength(1);
+  });
+
+  it('jet-attaque: leaves no trace on a target without a small shield', () => {
+    expect(appliquerEvenement([], {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1', petitBouclier: false})).toEqual([]);
   });
 
   it('jet-attaque: uses up one use of a limited effect of the target, then removes it', () => {
     const parade = effet({origine: 'parade', duree: {type: 'usages', restants: 2}});
-    const afterOne = appliquerEvenement([parade], {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1'});
+    const afterOne = appliquerEvenement([parade], {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1', petitBouclier: false});
     expect(afterOne.find((e) => e.origine === 'parade')?.duree).toEqual({type: 'usages', restants: 1});
-    const afterTwo = appliquerEvenement(afterOne, {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1'});
+    const afterTwo = appliquerEvenement(afterOne, {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1', petitBouclier: false});
     expect(afterTwo.find((e) => e.origine === 'parade')).toBeUndefined();
   });
 
@@ -140,13 +149,13 @@ describe('appliquerEvenement', () => {
     const contreUnAutre = effet({id: 'e-1', origine: 'parade', cible: 'pnj-8', duree: {type: 'usages', restants: 1}});
     const contreTous = effet({id: 'e-2', origine: 'parade', duree: {type: 'usages', restants: 1}});
     const protection = effet({id: 'e-3', origine: 'x', stat: 'protection', duree: {type: 'usages', restants: 1}});
-    const apres = appliquerEvenement([contreUnAutre, contreTous, protection], {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1'});
+    const apres = appliquerEvenement([contreUnAutre, contreTous, protection], {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1', petitBouclier: true});
     expect(apres.map((e) => e.id).sort()).toEqual(['e-1', 'e-3', 'e-4']);
   });
 
   it('jet-attaque: leaves the effects of other targets alone', () => {
     const other = effet({porteur: 'hero-2', duree: {type: 'usages', restants: 1}});
-    const apres = appliquerEvenement([other], {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1'});
+    const apres = appliquerEvenement([other], {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1', petitBouclier: false});
     expect(apres.find((e) => e.id === 'e-1')?.duree).toEqual({type: 'usages', restants: 1});
   });
 
@@ -266,6 +275,22 @@ describe('EFFETS_MODELES', () => {
   });
 });
 
+describe('doitUnDeDeMalus', () => {
+  const deMalus = EFFETS_MODELES.find((m) => m.id === 'de-malus-action')!;
+  const actionPerdue = EFFETS_MODELES.find((m) => m.id === 'action-perdue')!;
+
+  it('is true for the card that carries « dé de malus à sa prochaine action »', () => {
+    const effets = [{...deMalus.creer('hero-1'), id: 'e-1'}];
+    expect(doitUnDeDeMalus(effets, 'hero-1')).toBe(true);
+    expect(doitUnDeDeMalus(effets, 'pnj-7')).toBe(false);
+  });
+
+  it('is false for the other effects, even those on the next action', () => {
+    expect(doitUnDeDeMalus([{...actionPerdue.creer('hero-1'), id: 'e-1'}, effet({id: 'e-2', valeur: -1, stat: 'attaque'})], 'hero-1')).toBe(false);
+    expect(doitUnDeDeMalus([], 'hero-1')).toBe(false);
+  });
+});
+
 describe('descriptionEffet', () => {
   it('writes a modifier with its sign, and a trace with its label only', () => {
     expect(descriptionEffet(effet({valeur: 1}))).toBe('+ 1 posture défensive');
@@ -279,7 +304,7 @@ describe('descriptionEffet', () => {
 describe('identifiants des effets créés', () => {
   it('uses the generator it is given, so an id is never reused after an effect is consumed', () => {
     const parade = effet({id: 'e-1', origine: 'parade', duree: {type: 'usages', restants: 1}});
-    const apres = appliquerEvenement([parade], {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1'}, () => 'e-unique');
+    const apres = appliquerEvenement([parade], {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1', petitBouclier: true}, () => 'e-unique');
     expect(apres.map((e) => e.id)).toEqual(['e-unique']);
     expect(apres.some((e) => e.id === 'e-1')).toBe(false);
   });
