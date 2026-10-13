@@ -1,5 +1,4 @@
 import {ChangeDetectionStrategy, Component, computed, input, output} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
@@ -24,7 +23,7 @@ interface EffetAffiche {
 /** Les effets en cours sur les deux duellistes, en pastilles sur une ligne, chacun retirable, et le menu pour en ajouter un à la main. */
 @Component({
   selector: 'bol-effects-list',
-  imports: [MatButtonModule, MatIconModule, MatMenuModule],
+  imports: [MatIconModule, MatMenuModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="efl" aria-label="Effets en cours">
@@ -41,8 +40,8 @@ interface EffetAffiche {
         <p class="efl-empty">Aucun</p>
       }
 
-      <button type="button" mat-stroked-button size="small" [matMenuTriggerFor]="addMenu" [disabled]="cartes().length === 0">
-        <mat-icon>add</mat-icon> Effet
+      <button type="button" class="efl-add" [matMenuTriggerFor]="addMenu" [disabled]="cartes().length === 0">
+        <mat-icon aria-hidden="true">add</mat-icon> Effet
       </button>
 
       <mat-menu #addMenu="matMenu">
@@ -64,6 +63,12 @@ interface EffetAffiche {
     .efl-remove:focus-visible { outline: 2px solid var(--dw-color-legendary); outline-offset: 1px; }
     .efl-remove .mat-icon { width: 1rem; height: 1rem; font-size: 1rem; }
     .efl-empty { margin: 0; font-size: 0.8rem; color: var(--dw-surface-500); }
+    /* Le bouton qui ajoute un effet : de la taille des boutons « Fiche » et « Défense totale » de l'assistant. */
+    .efl-add { display: inline-flex; align-items: center; gap: 0.2rem; padding: 0.3rem 0.65rem 0.3rem 0.45rem; border: 1px solid var(--dw-border); border-radius: 8px; background: var(--dw-surface-50); color: var(--dw-surface-700); font: inherit; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
+    .efl-add:hover:not(:disabled) { border-color: var(--dw-surface-500); color: var(--dw-surface-900); }
+    .efl-add:disabled { opacity: 0.45; cursor: default; }
+    .efl-add:focus-visible { outline: 2px solid var(--dw-color-legendary); outline-offset: 2px; }
+    .efl-add .mat-icon { width: 1rem; height: 1rem; font-size: 1rem; }
   `,
 })
 export class EffectsListComponent {

@@ -7,7 +7,7 @@
         <div class="tas-card-actions">
           <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + card().nom" (click)="sheetRequested.emit(card())">Fiche</button>
           <button type="button" class="tas-ghost" matTooltip="+2 en défense, pas d'attaque ce round. Termine le tour." (click)="totalDefenseRequested.emit()">Défense totale</button>
-          <button mat-flat-button size="small" type="button" matTooltip="Raccourci : F" (click)="endTurnRequested.emit()">Fin du tour</button>
+          <button type="button" class="tas-ghost tas-ghost--primary" matTooltip="Raccourci : F" (click)="endTurnRequested.emit()">Fin du tour</button>
         </div>
       </div>
       <div class="tas-me">

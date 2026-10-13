@@ -158,6 +158,19 @@
   }
 }
 
+// « Fin du tour » : le même bouton que ses voisins, sur fond doré.
+.tas-ghost--primary {
+  border-color: var(--dw-color-legendary);
+  background: var(--dw-color-legendary);
+  color: #1c1200;
+
+  &:hover {
+    border-color: var(--dw-color-legendary);
+    background: color-mix(in srgb, var(--dw-color-legendary) 85%, #fff);
+    color: #1c1200;
+  }
+}
+
 .tas-tiles {
   display: flex;
   flex-wrap: wrap;
