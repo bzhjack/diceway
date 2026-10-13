@@ -26,7 +26,7 @@ const STATUS_LABELS: Record<TurnStatus, string> = {
 export class TurnOrderComponent {
   readonly entries = input.required<readonly TurnOrderEntry[]>();
   readonly round = input.required<number>();
-  /** Un héros a obtenu un succès légendaire : +1 à tous les jets d'attaque de la rencontre. */
+  /** Un héros a obtenu un succès légendaire : le bandeau de l'en-tête l'annonce déjà, la frise n'ajoute rien. */
   readonly legendaryActive = input(false);
   /** Texte annoncé aux lecteurs d'écran à chaque changement de tour ou de round. */
   readonly announcement = input('');

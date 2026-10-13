@@ -731,6 +731,19 @@
   clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
 }
 
+// Le héros a obtenu un succès légendaire au jet de réaction : son +1 aux attaques, rappelé sous son nom.
+.tas-legend {
+  justify-self: start;
+  padding: 0.05rem 0.45rem;
+  border: 1px solid color-mix(in srgb, var(--dw-color-legendary) 60%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--dw-color-legendary) 10%, transparent);
+  color: var(--dw-color-legendary);
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .tas-ph {
   display: inline-flex;
   align-items: center;

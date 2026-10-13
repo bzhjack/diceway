@@ -25,7 +25,7 @@ Ce que le résultat change ensuite :
 | Résultat | Effet dans l'application |
 | --- | --- |
 | Succès héroïque ou légendaire | Coriaces et piétaille sont bloqués au round 1. |
-| Succès légendaire | +1 aux jets d'attaque du camp des héros pour toute la rencontre. |
+| Succès légendaire | +1 aux jets d'attaque de ce héros, et de lui seul, pour toute la rencontre. |
 | Échec critique | Le héros agit en dernier, et perd le bénéfice de son bouclier au round 1. |
 
 ## 3. Le jet d'attaque

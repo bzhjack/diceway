@@ -21,6 +21,9 @@
         <span class="tas-me-id">
           <strong class="tas-name tas-name--active">{{ card().nom }}</strong>
           <span class="tas-tag">{{ card().rang ?? 'Héros' }} · attaquant</span>
+          @if (legendaryBonus()) {
+            <span class="tas-legend" matTooltip="Succès légendaire au jet de réaction : +1 à tous ses jets d’attaque pour toute la rencontre">Légendaire · +1 aux attaques</span>
+          }
         </span>
         @if (heroisme() !== null) {
           @let points = heroisme() ?? 0;

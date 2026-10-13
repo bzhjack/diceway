@@ -2,9 +2,7 @@
   <!-- Le round et les commandes du tour -->
   <div class="tor-head">
     <span class="tor-round" aria-label="Round {{ round() }}"><b>{{ round() }}</b><span>Round</span></span>
-    @if (legendaryActive()) {
-      <span class="tor-pill">★ Succès légendaire : +1 aux attaques</span>
-    } @else if (roundOneLock()) {
+    @if (roundOneLock() && !legendaryActive()) {
       <span class="tor-pill tor-pill--lock">Succès héroïque : coriaces et piétaille bloqués au round 1</span>
     }
     <div class="tor-actions">
