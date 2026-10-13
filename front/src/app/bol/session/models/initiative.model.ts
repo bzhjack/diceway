@@ -42,4 +42,6 @@ export interface InitiativeSource {
   readonly rang: 'rival' | 'coriace' | 'pietaille' | null;
   /** Résultat du jet de réaction — uniquement pour un héros. */
   readonly resultat: InitiativeResultat | null;
+  /** Agilité d'un héros : elle départage ceux qui ont obtenu le même résultat. `null` ou absente si elle n'est pas connue. */
+  readonly agilite?: number | null;
 }

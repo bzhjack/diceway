@@ -51,13 +51,13 @@ export interface ReactionAdversary {
   readonly excluded: boolean;
 }
 
-/** Un jeton de l'ordre d'action. */
+/** Un jeton de l'ordre d'action : un médaillon, dont l'infobulle donne le nom et le détail. */
 export interface ReactionToken {
   readonly kind: InitiativeKind;
   readonly pivotId: number;
   readonly nom: string;
   readonly avatar: string | null;
-  /** Précision sous le nom : le total d'un héros, « allié » pour un allié des héros. Vide sinon. */
+  /** Précision derrière le nom : « total 14 · légendaire » pour un héros qui a lancé, « allié » pour un allié des héros. Vide sinon. */
   readonly detail: string;
   readonly excluded: boolean;
 }

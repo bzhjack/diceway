@@ -81,7 +81,7 @@ export function reactionLanes(heroes: readonly ReactionHero[], adversaries: read
   const locked = heroes.some((h) => h.resultat === 'heroique' || h.resultat === 'legendaire');
   const heroToken = (h: ReactionHero): ReactionToken => {
     const word = h.resultat ? HERO_RANK_WORD[h.resultat] : undefined;
-    const total = h.total === null ? '' : `${h.total}`;
+    const total = h.total === null ? '' : `total ${h.total}`;
     return {kind: 'hero', pivotId: h.pivotId, nom: h.nom, avatar: h.avatar, detail: word && total ? `${total} · ${word}` : (word ?? total), excluded: false};
   };
   const rank = (h: ReactionHero): number => (h.resultat ? HERO_RANK[h.resultat] : undefined) ?? 0;

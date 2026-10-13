@@ -109,7 +109,7 @@ describe('reactionLanes', () => {
 
   it('sorts the first lane: legendary, heroic, then plain success', () => {
     const lanes = reactionLanes([hero(1, 'reussite', 11), hero(2, 'legendaire', 14), hero(3, 'heroique', 13)], [adversary(1, 'rival')]);
-    expect(lanes[0].tokens.map((token) => token.detail)).toEqual(['14 · légendaire', '13 · héroïque', '11']);
+    expect(lanes[0].tokens.map((token) => token.detail)).toEqual(['total 14 · légendaire', 'total 13 · héroïque', 'total 11']);
   });
 
   it('blocks coriaces and rabble on round 1 as soon as a hero is heroic or legendary', () => {

@@ -30,7 +30,7 @@ import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, chanceRing
 import {applyHeroismeDelta} from '../../heroisme-spend.util';
 import {ActionDiceTargetLabel, RollSumTerm} from '../../models/action-roll.model';
 import {InitiativeKind} from '../../models/initiative.model';
-import {ReactionAdversary, ReactionParts, ReactionVerdict, StartCombatDialogData} from '../../models/start-combat-dialog.model';
+import {ReactionAdversary, ReactionParts, ReactionToken, ReactionVerdict, StartCombatDialogData} from '../../models/start-combat-dialog.model';
 import {REACTION_ROLL_THRESHOLD, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from '../../reaction-roll.util';
 import {AddCombatantDialogComponent} from '../add-combatant-dialog/add-combatant-dialog';
 
@@ -49,6 +49,8 @@ interface HeroRow {
   readonly resultat: InitiativeResultat | null;
   readonly esprit: number;
   readonly initiative: number;
+  /** Agilité (armure comprise) : elle n'entre pas dans le jet, elle départage les héros de même résultat. */
+  readonly agilite: number;
 }
 
 /** La carte d'un héros, prête à afficher : ce qu'il lui faut aux dés, ses chances, son jet et son verdict. */
@@ -198,7 +200,8 @@ export class StartCombatDialogComponent {
   protected readonly pendingHeroes = computed(() => this.activeHeroes().filter((h) => h.resultat === null));
   protected readonly canStart = computed(() => this.activeAdversaries().length > 0 && this.pendingHeroes().length === 0);
 
-  /** Ce que la table doit savoir avant de commencer : ce qui manque, puis les égalités entre héros. */
+  /** Ce que la table doit savoir avant de commencer : ce qui manque, puis les égalités entre héros. L'ordre des cartes est déjà celui
+   * du livre pour les départager : par agilité décroissante. */
   protected readonly note = computed(() => {
     if (this.activeAdversaries().length === 0) {
       return 'Aucun adversaire : ajoutes-en un pour pouvoir démarrer.';
@@ -207,8 +210,13 @@ export class StartCombatDialogComponent {
     if (missing > 0) {
       return missing === 1 ? 'Il manque 1 jet.' : `Il manque ${missing} jets.`;
     }
-    const results = this.activeHeroes().map((h) => h.resultat);
-    return results.some((r, i) => results.indexOf(r) !== i) ? "Égalité entre héros : ils décident entre eux, sinon l'agilité la plus haute agit d'abord." : '';
+    const heroes = this.activeHeroes();
+    const tied = heroes.filter((h) => heroes.some((other) => other !== h && other.resultat === h.resultat));
+    if (tied.length === 0) {
+      return '';
+    }
+    const sameAgility = tied.some((h) => tied.some((other) => other !== h && other.resultat === h.resultat && other.agilite === h.agilite));
+    return `Égalité entre héros : l'agilité la plus haute agit d'abord, sauf s'ils en décident autrement${sameAgility ? ' ; à agilité égale, ils agissent en même temps' : ''}.`;
   });
 
   constructor() {
@@ -267,21 +275,23 @@ export class StartCombatDialogComponent {
               // Un nouveau combat réclame un nouveau jet de réaction (02-actions-combat.md) : seuls comptent les jets faits dans ce
               // dialogue. Un résultat resté en base d'un combat précédent ou d'un dialogue annulé n'est pas repris, et il est effacé.
               const rolledHere = new Map(this.heroes().map((h) => [h.pivotId, h.resultat]));
-              this.heroes.set(
-                heroEntries.map((h, i) => {
-                  const hero = fullHeroes[i];
-                  this.heroismeSignal(h.id).set(hero.ressources.heroisme);
-                  return {
-                    pivotId: h.id,
-                    herosId: h.heros_id,
-                    nom: hero.origines.nom ?? 'Héros',
-                    avatar: hero.origines.avatar,
-                    resultat: rolledHere.get(h.id) ?? null,
-                    esprit: hero.attributs.esprit,
-                    initiative: hero.combat.initiative_effective,
-                  };
-                }),
-              );
+              const rows = heroEntries.map((h, i): HeroRow => {
+                const hero = fullHeroes[i];
+                this.heroismeSignal(h.id).set(hero.ressources.heroisme);
+                return {
+                  pivotId: h.id,
+                  herosId: h.heros_id,
+                  nom: hero.origines.nom ?? 'Héros',
+                  avatar: hero.origines.avatar,
+                  resultat: rolledHere.get(h.id) ?? null,
+                  esprit: hero.attributs.esprit,
+                  initiative: hero.combat.initiative_effective,
+                  agilite: hero.attributs.agilite_effective,
+                };
+              });
+              // Par agilité décroissante : entre héros de même résultat, c'est l'ordre dans lequel ils agiront par défaut
+              // (02-actions-combat.md). À agilité égale, l'ordre de la table est gardé.
+              this.heroes.set(rows.sort((a, b) => b.agilite - a.agilite));
               this.fitWidth(heroEntries.length);
               for (const h of heroEntries) {
                 if (h.initiative_resultat !== null && !rolledHere.get(h.id)) {
@@ -358,6 +368,11 @@ export class StartCombatDialogComponent {
 
   protected initial(nom: string): string {
     return nom.trim().charAt(0).toUpperCase();
+  }
+
+  /** L'infobulle d'un jeton de l'ordre d'action : son nom, puis son détail (« total 14 · légendaire », « allié »). */
+  protected tokenInfo(token: ReactionToken): string {
+    return token.detail ? `${token.nom} · ${token.detail}` : token.nom;
   }
 
   protected totalInputId(pivotId: number): string {

@@ -45,7 +45,7 @@
           }
         </section>
 
-        <!-- Une carte par héros : ce qu'il lui faut, ses chances, la case de son total, son verdict -->
+        <!-- Une carte par héros, par agilité décroissante : ce qu'il lui faut, ses chances, la case de son total, son verdict -->
         <ul class="scd-cards" aria-label="Jets de réaction des héros">
           @for (card of heroCards(); track card.hero.pivotId) {
             <li
@@ -68,7 +68,7 @@
                   @if (card.excluded) {
                     <span>Hors de ce combat</span>
                   } @else {
-                    <span>Esprit {{ signed(card.hero.esprit) }} · Initiative {{ signed(card.hero.initiative) }}</span>
+                    <span>Esprit {{ signed(card.hero.esprit) }} · Init. {{ signed(card.hero.initiative) }} · Agi. {{ signed(card.hero.agilite) }}</span>
                   }
                 </span>
                 <button
@@ -170,7 +170,8 @@
           }
         </ul>
 
-        <!-- L'ordre d'action, qui se remplit à mesure des jets. Un clic sur un adversaire l'exclut de ce combat. -->
+        <!-- L'ordre d'action, qui se remplit à mesure des jets : un médaillon par combattant, son nom et son détail en infobulle.
+             Un clic sur un adversaire l'exclut de ce combat. -->
         <section class="scd-order" aria-labelledby="scd-order-label">
           <span class="scd-label scd-label--gold" id="scd-order-label">Ordre d’action</span>
           <div class="scd-lanes">
@@ -185,20 +186,12 @@
                 <div class="scd-tokens">
                   @for (token of lane.tokens; track token.kind + token.pivotId) {
                     @if (token.kind === 'hero') {
-                      <span class="scd-token">
-                        <span class="scd-token-med" aria-hidden="true">
-                          @if (token.avatar; as avatar) {
-                            <img [src]="avatar" alt="" (error)="onAvatarError(avatar)" />
-                          } @else {
-                            {{ initial(token.nom) }}
-                          }
-                        </span>
-                        <span class="scd-token-name">
-                          {{ token.nom }}
-                          @if (token.detail) {
-                            <small>{{ token.detail }}</small>
-                          }
-                        </span>
+                      <span class="scd-token" role="img" tabindex="0" [attr.aria-label]="tokenInfo(token)" [matTooltip]="tokenInfo(token)">
+                        @if (token.avatar; as avatar) {
+                          <img [src]="avatar" alt="" (error)="onAvatarError(avatar)" />
+                        } @else {
+                          {{ initial(token.nom) }}
+                        }
                       </span>
                     } @else {
                       <button
@@ -206,22 +199,14 @@
                         class="scd-token scd-token--adv"
                         [class.scd-token--excluded]="token.excluded"
                         [attr.aria-label]="(token.excluded ? 'Réintégrer ' : 'Exclure ') + token.nom + ' de ce combat'"
-                        [matTooltip]="token.excluded ? 'Réintégrer dans le combat' : 'Exclure de ce combat (reste sur la table)'"
+                        [matTooltip]="tokenInfo(token) + (token.excluded ? ' — exclu de ce combat, un clic le réintègre' : ' — un clic l’exclut de ce combat')"
                         (click)="toggleExcluded(token.kind, token.pivotId)"
                       >
-                        <span class="scd-token-med" aria-hidden="true">
-                          @if (token.avatar; as avatar) {
-                            <img [src]="avatar" alt="" (error)="onAvatarError(avatar)" />
-                          } @else {
-                            {{ initial(token.nom) }}
-                          }
-                        </span>
-                        <span class="scd-token-name">
-                          {{ token.nom }}
-                          @if (token.detail) {
-                            <small>{{ token.detail }}</small>
-                          }
-                        </span>
+                        @if (token.avatar; as avatar) {
+                          <img [src]="avatar" alt="" (error)="onAvatarError(avatar)" />
+                        } @else {
+                          {{ initial(token.nom) }}
+                        }
                       </button>
                     }
                   }
@@ -239,9 +224,12 @@
       <button mat-stroked-button type="button" (click)="close()">Annuler</button>
       <button mat-stroked-button type="button" [disabled]="loading()" (click)="openAddAdversary()"><mat-icon>add</mat-icon> Ajouter un adversaire</button>
       <span class="scd-note" aria-live="polite">{{ note() }}</span>
-      <button mat-stroked-button type="button" [disabled]="loading() || rolling() || pendingHeroes().length === 0" (click)="rollAll()">
-        <mat-icon>casino</mat-icon> Lancer pour tous
-      </button>
+      <!-- Proposé tant qu'un héros n'a pas lancé : une fois tous les jets faits, il n'a plus rien à lancer. -->
+      @if (pendingHeroes().length > 0) {
+        <button mat-stroked-button type="button" [disabled]="loading() || rolling()" (click)="rollAll()">
+          <mat-icon>casino</mat-icon> Lancer pour tous
+        </button>
+      }
       <button #startButton mat-flat-button type="button" [disabled]="!canStart() || starting()" (click)="start()">
         <mat-icon>play_arrow</mat-icon> {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
       </button>
