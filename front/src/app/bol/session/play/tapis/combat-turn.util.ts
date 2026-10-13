@@ -89,8 +89,14 @@ export function isOut(card: TapisCard): boolean {
   return card.kind === 'hero' ? card.vitaliteCourante < 0 : card.vitaliteCourante <= 0;
 }
 
+/** La règle du premier round (coriaces et piétaille face à un succès héroïque, héros en échec critique) ne bloque qu'au round 1 :
+ * à partir du round 2, ces cartes jouent comme les autres, et la frise ne doit plus les montrer bloquées. */
+export function bloqueeCeRound(lockedRound1: boolean, round: number): boolean {
+  return round === 1 && lockedRound1;
+}
+
 function isSkipped(entry: OrderedCard, etat: EtatCombat): boolean {
-  return isOut(entry.card) || etat.exclus.includes(entry.card.key) || (etat.round === 1 && entry.lockedRound1);
+  return isOut(entry.card) || etat.exclus.includes(entry.card.key) || bloqueeCeRound(entry.lockedRound1, etat.round);
 }
 
 /** Qui joue, et où en est chaque carte : la carte active est la première de l'ordre qui n'a pas

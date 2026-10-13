@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {bouclierPerduRound1, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
+import {bloqueeCeRound, bouclierPerduRound1, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
 import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model';
 import {TurnOrderEntry} from '../../models/turn-order.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
@@ -316,6 +316,19 @@ describe('turnAnnouncement', () => {
 
   it('says when nobody can play', () => {
     expect(turnAnnouncement([], etat(1))).toBe('Round 1. Plus personne ne peut jouer.');
+  });
+});
+
+describe('bloqueeCeRound', () => {
+  it('blocks a card locked by the reaction roll during round 1 only', () => {
+    expect(bloqueeCeRound(true, 1)).toBe(true);
+    expect(bloqueeCeRound(true, 2)).toBe(false);
+    expect(bloqueeCeRound(true, 5)).toBe(false);
+  });
+
+  it('never blocks a card that is not locked', () => {
+    expect(bloqueeCeRound(false, 1)).toBe(false);
+    expect(bloqueeCeRound(false, 2)).toBe(false);
   });
 });
 

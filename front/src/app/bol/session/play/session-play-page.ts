@@ -48,7 +48,7 @@ import {ExpandedCardDialogComponent} from './tapis/expanded-card-dialog';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {equippedArmes} from '../../shared/arme/arme-equipee';
 import {AttackChoice} from '../models/attack-options.model';
-import {debutDeTour, effetsDerives, endTurn, giveBackTurn, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
+import {bloqueeCeRound, debutDeTour, effetsDerives, endTurn, giveBackTurn, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
 import {NewEffect} from '../models/combat-effect.model';
 import {EtatSaver} from './etat-saver';
 import {appliquerEvenement, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from './tapis/combat-effects.util';
@@ -164,6 +164,7 @@ export class SessionPlayPageComponent {
 
   protected readonly turnEntries = computed<readonly TurnOrderEntry[]>(() => {
     const statuses = this.turn().statuses;
+    const round = this.etat().round;
     return this.orderedCards().map(({card, tier, lockedRound1}) => ({
       key: card.key,
       nom: card.nom,
@@ -171,7 +172,7 @@ export class SessionPlayPageComponent {
       avatar: card.avatar,
       status: statuses.get(card.key) ?? 'upcoming',
       tier: tier,
-      locked: lockedRound1,
+      locked: bloqueeCeRound(lockedRound1, round),
       ally: card.kind !== 'hero' && card.camp === 'heros',
       effets: this.etat()
         .effets.filter((e) => e.porteur === card.key && e.valeur !== 0)
