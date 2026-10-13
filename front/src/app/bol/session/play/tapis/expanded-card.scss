@@ -53,7 +53,7 @@
 .exc--pnj,
 .exc--creature,
 .exc--demon {
-  width: min(46rem, 94vw);
+  width: min(55rem, 94vw);
   max-height: 90dvh;
   overflow-y: auto;
   scrollbar-width: thin;
@@ -318,12 +318,13 @@
 }
 
 // Vitalité : libellé, grand cœur et stepper, empilés et centrés.
+// Le stepper de vitalité, dans le bandeau du statbloc : sur une ligne, avec un petit cœur.
 .exc-entry-vit {
-  --vs-heart-width: 4.8rem;
-  --vs-heart-height: 4.4rem;
-  --vs-heart-font: 1.9rem;
-  flex-direction: column;
-  gap: 0.2rem;
+  --vs-heart-width: 2.6rem;
+  --vs-heart-height: 2.35rem;
+  --vs-heart-font: 1.2rem;
+  justify-content: flex-start;
+  gap: 0.6rem;
 }
 
 

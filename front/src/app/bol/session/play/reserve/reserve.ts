@@ -1,14 +1,17 @@
 import {ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleChange, MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatDialog} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {RouterLink} from '@angular/router';
 import {CdkDrag, CdkDragEnd, CdkDragMove, CdkDragPreview, CdkDropList} from '@angular/cdk/drag-drop';
 import {CombatCamp} from '../../../models/bol-fight-session.model';
 import {CombatSelectionService} from '../../../services/combat-selection.service';
 import {CombatCatalogEntry, CombatantKind} from '../../../models/combat-selection.model';
+import {openCombatantStatblock} from '../../combat-statblock.util';
 import {ReservePlacementService} from '../../reserve-placement.service';
 import {SceneStripComponent} from './scene-strip';
 import {filterReserve, isOnTable, KIND_LABEL, RESERVE_TABS, reserveTab} from './reserve.util';
@@ -21,12 +24,17 @@ interface ReserveRow {
 /** Onglet affiché : un des quatre types de personnages, ou les scènes. */
 type ReserveView = CombatantKind | 'scene';
 
+/** Délai avant d'ouvrir le statbloc sur un clic d'avatar : le temps de voir si c'est le premier clic d'un double-clic, qui pose le
+ * personnage au lieu d'ouvrir sa fiche. */
+const AVATAR_CLICK_DELAY_MS = 220;
+
 /** Réserve de la table (mode libre) : les quatre bibliothèques et les scènes en onglets, en liste. Un
  * personnage se pose avec son bouton « Ajouter », par double-clic ou Entrée (camp par défaut), ou en le
- * glissant sur une zone du tapis (camp de la zone). La page recharge la session sur `placed`. */
+ * glissant sur une zone du tapis (camp de la zone). Un clic sur son avatar ouvre son statbloc. La page recharge la
+ * session sur `placed`. */
 @Component({
   selector: 'bol-reserve',
-  imports: [CdkDrag, CdkDragPreview, CdkDropList, RouterLink, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatIconModule, MatInputModule, SceneStripComponent],
+  imports: [CdkDrag, CdkDragPreview, CdkDropList, RouterLink, MatButtonModule, MatButtonToggleModule, MatFormFieldModule, MatIconModule, MatInputModule, MatTooltipModule, SceneStripComponent],
   templateUrl: './reserve.html',
   styleUrl: './reserve.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,6 +42,7 @@ type ReserveView = CombatantKind | 'scene';
 export class ReserveComponent {
   private readonly selection = inject(CombatSelectionService);
   private readonly placement = inject(ReservePlacementService);
+  private readonly dialog = inject(MatDialog);
 
   readonly sessionId = input.required<string>();
   /** Ids source (heros_id / pnj_id) déjà présents dans la session. */
@@ -77,6 +86,9 @@ export class ReserveComponent {
   /** Annulations déjà prises en compte : une nouvelle valeur du service demande de recharger la session. */
   private seenUndo = this.placement.undone();
 
+  /** Ouverture de statbloc en attente après un clic sur un avatar (voir `AVATAR_CLICK_DELAY_MS`). */
+  private statblockTimer: ReturnType<typeof setTimeout> | null = null;
+
   constructor() {
     this.selection.loadCatalog();
     effect(() => {
@@ -86,7 +98,10 @@ export class ReserveComponent {
         this.placed.emit();
       }
     });
-    inject(DestroyRef).onDestroy(() => this.placement.endDrag());
+    inject(DestroyRef).onDestroy(() => {
+      this.placement.endDrag();
+      this.cancelStatblock();
+    });
   }
 
   protected setView(change: MatButtonToggleChange): void {
@@ -125,10 +140,28 @@ export class ReserveComponent {
     }
   }
 
-  /** Bouton « Ajouter » ou double-clic : pose le personnage dans son camp par défaut. */
+  /** Bouton « Ajouter » ou double-clic : pose le personnage dans son camp par défaut. Un double-clic parti de l'avatar pose lui aussi
+   * le personnage : l'ouverture du statbloc que son premier clic avait lancée est annulée. */
   protected add(row: ReserveRow): void {
     if (!row.onTable) {
+      this.cancelStatblock();
       this.run([row.entry], 'auto');
+    }
+  }
+
+  /** Clic sur l'avatar : ouvre le statbloc du personnage, qu'il soit déjà à table ou non. */
+  protected openStatblock(row: ReserveRow): void {
+    this.cancelStatblock();
+    this.statblockTimer = setTimeout(() => {
+      this.statblockTimer = null;
+      openCombatantStatblock(this.dialog, row.entry);
+    }, AVATAR_CLICK_DELAY_MS);
+  }
+
+  private cancelStatblock(): void {
+    if (this.statblockTimer !== null) {
+      clearTimeout(this.statblockTimer);
+      this.statblockTimer = null;
     }
   }
 

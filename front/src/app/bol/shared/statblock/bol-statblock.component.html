@@ -1,5 +1,6 @@
 <div class="bs">
-  <aside class="bs-side">
+  <!-- Bandeau d'identité : le médaillon, le nom, ce qu'il est, sa vie -->
+  <header class="bs-head">
     <div class="bs-portrait">
       @if (hasAvatar()) {
         <img class="bs-portrait-img" [src]="imageSrc()" alt="" (error)="onAvatarError()" />
@@ -7,32 +8,36 @@
         <mat-icon>{{ kindIcon() }}</mat-icon>
       }
     </div>
-    <div>
+
+    <div class="bs-id">
       <h3 class="bs-name">{{ displayName() }}</h3>
-      @if (displaySubtitle(); as subtitle) {
-        <p class="bs-sub">{{ subtitle }}</p>
-      }
-    </div>
-
-    @if (showVitality() && vitality(); as vit) {
-      <div class="bs-vit">
-        <span class="bs-vit-label">Vitalité</span>
-        <span class="bs-heart">{{ vit.value }}</span>
-      </div>
-    }
-    <ng-content select="[sheetSide]" />
-
-    @if (data().chips.length) {
-      <div class="bs-chips">
-        @for (chip of data().chips; track chip.label) {
-          <span class="bs-chip">{{ chip.label }}</span>
+      <p class="bs-meta">
+        @if (displaySubtitle(); as subtitle) {
+          <span>{{ subtitle }}</span>
+        }
+        @for (chip of metaChips(); track chip.label) {
+          <span [class.bs-meta-strong]="chip.variant !== 'muted'">{{ chip.label }}</span>
+        }
+      </p>
+      <div class="bs-vitals">
+        @if (showVitality() && vitality(); as vit) {
+          <span class="bs-vit"><b class="bs-heart">{{ vit.value }}</b> Vitalité</span>
+        }
+        <ng-content select="[sheetSide]" />
+        @if (heroism(); as h) {
+          <span class="bs-vit">
+            <span class="bs-gems" aria-hidden="true">
+              @for (lit of h.gems; track $index) {
+                <i [class.bs-gem--on]="lit"></i>
+              }
+            </span>
+            Héroïsme {{ h.points }}
+          </span>
         }
       </div>
-    }
-  </aside>
+    </div>
 
-  <div class="bs-main">
-    <div class="bs-bar">
+    <div class="bs-actions">
       @if (data().editRoute) {
         <a mat-stroked-button size="small" class="bs-edit" [routerLink]="data().editRoute" [state]="navigationState()">
           <mat-icon>edit</mat-icon> Modifier la fiche
@@ -43,7 +48,6 @@
           </a>
         }
       }
-      <span class="bs-spacer"></span>
       <ng-content select="[sheetActions]" />
       @if (showClose() && dialogRef) {
         <button mat-icon-button class="bs-icon-btn" type="button" aria-label="Fermer" (click)="dialogRef.close()">
@@ -51,55 +55,78 @@
         </button>
       }
     </div>
+  </header>
 
-    <div class="bs-cols">
-      <section>
-        <h4 class="bs-sec">Attributs</h4>
-        <dl class="bs-leaders" aria-label="Attributs">
-          @for (tile of attributTiles(); track tile.label) {
-            <div><dt>{{ tile.label }}</dt><dd>{{ tile.value }}</dd></div>
+  <!-- Les chiffres, en tuiles rangées par famille -->
+  <div class="bs-stats">
+    @for (group of groups(); track group.label) {
+      <section class="bs-group" [attr.aria-label]="group.label">
+        <h4 class="bs-sec">{{ group.label }}</h4>
+        <dl class="bs-tiles">
+          @for (tile of group.tiles; track tile.label) {
+            <div class="bs-tile" [class.bs-tile--hot]="tile.tone === 'damage'" [class.bs-tile--dice]="tile.dice">
+              <dt>{{ tile.label }}</dt>
+              <dd>{{ tile.value }}</dd>
+            </div>
           }
         </dl>
       </section>
-      <section>
-        <h4 class="bs-sec">Combat</h4>
-        <dl class="bs-leaders" aria-label="Combat">
-          @for (tile of combatTiles(); track tile.label) {
-            <div [class.bs-leaders--hot]="tile.tone === 'damage'"><dt>{{ tile.label }}</dt><dd>{{ tile.value }}</dd></div>
-          }
-        </dl>
-      </section>
-    </div>
+    }
+  </div>
 
-    <div class="bs-cols">
+  <!-- Les listes, en colonnes : une ligne par élément, sa valeur à droite, son détail dessous -->
+  @if (data().sections.length) {
+    <div class="bs-lists" [style.--bs-cols]="data().sections.length">
       @for (section of data().sections; track section.title) {
-        <section>
+        <section class="bs-list">
           <h4 class="bs-sec">{{ section.title }}</h4>
           @if (section.entries.length) {
-            <dl class="bs-leaders">
+            <ul class="bs-rows">
               @for (entry of section.entries; track $index) {
-                <div [class.bs-leaders--note]="entry.value === undefined" [class.bs-leaders--equipped]="entry.equipped"
-                     [class.bs-leaders--idle]="entry.equipped === false">
-                  <dt>{{ entry.label }}</dt>
+                <li class="bs-row" [class.bs-row--idle]="entry.equipped === false" [class.bs-row--marked]="entry.sign !== undefined || entry.equipped !== undefined">
+                  <span class="bs-row-name">
+                    @if (entry.sign) {
+                      <span [class]="'bs-mark bs-mark--' + entry.sign" aria-hidden="true">{{ entry.sign === 'plus' ? '+' : '−' }}</span>
+                      <span class="bs-sr">{{ entry.sign === 'plus' ? 'Avantage :' : 'Désavantage :' }}</span>
+                    } @else if (entry.equipped !== undefined) {
+                      <span class="bs-mark" [class.bs-mark--on]="entry.equipped" [class.bs-mark--off]="!entry.equipped" aria-hidden="true"></span>
+                    }
+                    {{ entry.label }}
+                    @if (entry.equipped === false) {
+                      <span class="bs-sr">(dans le sac)</span>
+                    }
+                  </span>
                   @if (entry.value !== undefined) {
-                    <dd>{{ entry.value }}</dd>
+                    <span class="bs-row-value">{{ entry.value }}</span>
                   }
                   @if (entry.detail) {
-                    <dd class="bs-leaders-detail">{{ entry.detail }}</dd>
+                    <span class="bs-row-detail">{{ entry.detail }}</span>
                   }
-                </div>
+                </li>
               }
-            </dl>
+            </ul>
           } @else {
             <p class="bs-empty">{{ section.emptyText }}</p>
           }
         </section>
       }
     </div>
+  }
 
-    @if (data().comment) {
-      <p class="bs-comment">{{ data().comment }}</p>
-    }
-    <ng-content select="[sheetFooter]" />
-  </div>
+  @if (data().comment) {
+    <p class="bs-comment">{{ data().comment }}</p>
+  }
+
+  @if (legend().equipment || legend().traits) {
+    <p class="bs-legend">
+      @if (legend().equipment) {
+        <span><i class="bs-mark bs-mark--on"></i> porté ou en main</span>
+        <span><i class="bs-mark bs-mark--off"></i> dans le sac</span>
+      }
+      @if (legend().traits) {
+        <span>+ avantage · − désavantage</span>
+      }
+    </p>
+  }
+  <ng-content select="[sheetFooter]" />
 </div>

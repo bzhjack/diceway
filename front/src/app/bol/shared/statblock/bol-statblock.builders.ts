@@ -4,6 +4,8 @@ import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {BolHerosArmureModel} from '../../models/bol-armure.model';
 import {heroBadge} from '../../hero/library/hero-card/hero-card.component';
+import {equippedProtection} from '../../session/combat-attack.util';
+import {isArmeEquipee} from '../arme/arme-equipee';
 import {pnjBadge} from '../../pnj/library/pnj-card/pnj-card.component';
 import {BolStatblockChip, BolStatblockData, BolStatblockEntry, BolStatblockSection, BolStatblockTile} from '../models/bol-statblock.model';
 
@@ -45,7 +47,6 @@ export function creatureStatblockData(creature: BolCreatureModel): BolStatblockD
       {label: 'Défense', value: creature.defense},
       {label: 'Déplacement', value: creature.taille.deplacement || '—'},
     ],
-    wideTiles: false,
     // Les créatures du catalogue (sans propriétaire) sont communes à tous : pas modifiables.
     editRoute: creature.user_id ? ['/create/creature', String(creature.id)] : null,
     advancedEditRoute: null,
@@ -85,7 +86,6 @@ export function demonStatblockData(demon: BolDemonModel): BolStatblockData {
       {label: 'Mêlée', value: demon.melee},
       {label: 'Tir', value: demon.tir},
     ],
-    wideTiles: false,
     editRoute: demon.user_id ? ['/create/demon', String(demon.id)] : null,
     advancedEditRoute: null,
     sections: [
@@ -149,6 +149,15 @@ export function pnjStatblockData(pnj: BolHerosModel): BolStatblockData {
   );
 }
 
+/** La portée d'une arme, en clair : « Portée 22 m » pour une arme de tir, « Se lance à 3 m » pour une arme de mêlée qui se lance. */
+function weaponRange(arme: BolHerosArmeModel): string | undefined {
+  const portee = arme.arme?.portee?.trim();
+  if (!portee || portee === '-') {
+    return undefined;
+  }
+  return arme.arme?.type === 'T' ? `Portée ${portee}` : `Se lance à ${portee}`;
+}
+
 /** Base commune héros/PNJ (même modèle BolHeros) : bande vitale dérivée de l'équipement + 3 listes. */
 function herosLikeStatblockData(
   heros: BolHerosModel,
@@ -165,8 +174,10 @@ function herosLikeStatblockData(
     (armure): armure is BolHerosArmureModel => typeof armure === 'object' && Boolean(armure.armure),
   );
 
-  const mainWeapon = weapons[0]?.arme ?? null;
-  const mainArmor = armors[0]?.armure ?? null;
+  // Ce qu'il a en main et sur le dos : la première arme équipée, et la protection de l'armure portée (casque compris). Un bouclier
+  // ne protège pas des dégâts : il reste dans la liste des armures.
+  const mainWeapon = weapons.find((arme) => isArmeEquipee(arme) && arme.arme?.degats)?.arme ?? null;
+  const protection = equippedProtection(armors).text;
 
   const vitals: BolStatblockTile[] = [
     {label: 'Vitalité', value: heros.ressources.vitalite, tone: 'health'},
@@ -175,13 +186,13 @@ function herosLikeStatblockData(
     vitals.push({label: 'Héroïsme', value: heros.ressources.heroisme, tone: 'heroism'});
   }
   vitals.push(
-    {label: 'Protection', value: mainArmor?.protection || '—', dice: true},
     {
       label: mainWeapon ? `Dégâts · ${mainWeapon.arme}` : 'Dégâts',
       value: mainWeapon?.degats || '—',
       tone: 'damage',
       dice: true,
     },
+    {label: 'Protection', value: protection ?? '—', dice: true},
   );
 
   const careers: BolStatblockEntry[] = heros.carrieres
@@ -198,31 +209,40 @@ function herosLikeStatblockData(
             ? traitable.desavantage
             : '';
 
-      return {label, detail: trait.detail || undefined};
+      const sign = traitable && 'avantage' in traitable ? ('plus' as const) : traitable && 'desavantage' in traitable ? ('minus' as const) : undefined;
+      return {label, detail: trait.detail || undefined, ...(sign ? {sign} : {})};
     })
     .filter((entry) => entry.label);
 
   const weaponEntries: BolStatblockEntry[] = weapons
     .map((arme) => ({
       label: arme.arme?.arme ?? '',
-      detail: [arme.arme?.degats, arme.arme?.portee].filter(Boolean).join(' · ') || undefined,
-      equipped: arme.equipee,
+      value: arme.arme?.degats ?? undefined,
+      detail: weaponRange(arme),
+      equipped: isArmeEquipee(arme),
     }))
     .filter((entry) => entry.label);
 
   const armorEntries: BolStatblockEntry[] = armors
-    .map((armure) => ({
-      label: armure.armure?.armure ?? '',
-      detail: [armure.armure?.protection, armure.armure?.malus].filter(Boolean).join(' · ') || undefined,
-      equipped: armure.equipee,
-    }))
+    .map((armure) => {
+      // Une armure s'écrit par son dé de protection (« d6-2 (2) »), à droite ; un bouclier ou un casque par une phrase, dessous.
+      const protectionText = armure.armure?.protection ?? null;
+      const isDie = !!protectionText && /^d\d/i.test(protectionText);
+      return {
+        label: armure.armure?.armure ?? '',
+        value: isDie ? (protectionText ?? undefined) : undefined,
+        // « Impose un malus de -1 à une attaque subie par round » : le début n'apprend rien, on garde « -1 à une attaque… ».
+        detail: [isDie ? null : protectionText?.replace(/^Impose un malus de /, ''), armure.armure?.malus].filter((part) => part && part !== '-').join(' · ') || undefined,
+        equipped: armure.equipee,
+      };
+    })
     .filter((entry) => entry.label);
 
   const sections: BolStatblockSection[] = [
     {title: 'Carrières', emptyText: 'Aucune carrière renseignée.', entries: careers},
     {title: 'Traits', emptyText: 'Aucun trait renseigné.', entries: traits},
-    {title: 'Armes', emptyText: 'Aucune arme renseignée.', entries: weaponEntries, compact: true},
-    {title: 'Armures', emptyText: 'Aucune armure renseignée.', entries: armorEntries, compact: true},
+    {title: 'Armes', emptyText: 'Aucune arme renseignée.', entries: weaponEntries},
+    {title: 'Armures et boucliers', emptyText: 'Aucune armure renseignée.', entries: armorEntries},
   ];
 
   return {
@@ -242,7 +262,6 @@ function herosLikeStatblockData(
       {label: 'Tir', value: heros.combat.tir},
       {label: 'Déf', value: heros.combat.defense_effective},
     ],
-    wideTiles: true,
     editRoute,
     advancedEditRoute,
     sections,
