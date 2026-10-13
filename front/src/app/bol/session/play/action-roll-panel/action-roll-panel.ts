@@ -1,8 +1,11 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
   inject,
+  Injector,
   input,
   model,
   signal,
@@ -50,6 +53,8 @@ export class ActionRollPanelComponent {
   private readonly herosService = inject(BolHerosService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly diceBox = viewChild.required(DiceBoxHostComponent);
+  private readonly manualInput = viewChild<ElementRef<HTMLInputElement>>('manualInput');
+  private readonly injector = inject(Injector);
 
   protected readonly attributes = ACTION_ATTRIBUTES;
   protected readonly attributeLabels = ACTION_ATTRIBUTE_LABELS;
@@ -117,6 +122,8 @@ export class ActionRollPanelComponent {
   /** true quand le résultat vient d'un total saisi à la main — les deux valeurs de `dice()` sont
    * alors reconstruites (`diceFromTotal`), pas les vraies faces lancées. */
   protected readonly manualEntry = signal(false);
+  /** Faveur divine dépensée sur des dés lancés à table : ils sont à relancer, et le nouveau total à saisir. */
+  protected readonly favorPending = signal(false);
 
   /** Malus d'équipement, appliqué automatiquement quand l'agilité est sélectionnée. */
   protected readonly equipmentModifier = computed(() =>
@@ -268,6 +275,7 @@ export class ActionRollPanelComponent {
       const values = results.map((r) => r.value);
       const kept = keptDiceIndexes(values, net);
       this.resetTierChoices();
+      this.favorPending.set(false);
       this.manualEntry.set(false);
       this.manualTotal.set(null);
       this.rolled.set(values.map((value, index) => ({value, kept: kept.includes(index)})));
@@ -297,19 +305,29 @@ export class ActionRollPanelComponent {
       return;
     }
     this.resetTierChoices();
+    this.favorPending.set(false);
     this.manualEntry.set(true);
     this.rolled.set(null);
     this.dice.set(diceFromTotal(total));
   }
 
-  /** Faveur divine (02-actions-combat.md) : dépense 1 PH, relance tous les dés, conserve le second jet. */
+  /** Faveur divine (02-actions-combat.md) : dépense 1 PH, relance tous les dés, conserve le second jet. Des dés lancés à l'écran se
+   * relancent à l'écran ; un total saisi (dés lancés à table) s'efface, et la case attend le total du second jet. */
   protected async rollWithDivineFavor(): Promise<void> {
     if (this.heroisme() <= 0) {
       return;
     }
 
     applyHeroismeDelta(this.herosService, this.snackBar, this.data().herosId, this.heroisme, -1);
-    await this.roll();
+    if (!this.manualEntry()) {
+      await this.roll();
+      return;
+    }
+    this.resetTierChoices();
+    this.favorPending.set(true);
+    this.dice.set(null);
+    this.manualTotal.set(null);
+    afterNextRender(() => this.manualInput()?.nativeElement.focus(), {injector: this.injector});
   }
 
   private resetTierChoices(): void {

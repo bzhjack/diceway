@@ -70,6 +70,8 @@
         } @else if (verdict(); as v) {
           <b [class]="'ard-verdict-title ard-verdict-title--' + tone()">{{ v.title }}</b>
           <span>{{ v.detail }}</span>
+        } @else if (favorPending()) {
+          <span class="ard-verdict-wait">Faveur divine : relance tous les dés à table et saisis le nouveau total.</span>
         } @else {
           <span class="ard-verdict-wait">Les dés attendent.</span>
         }
@@ -91,7 +93,7 @@
             type="button"
             class="ard-act"
             [disabled]="rolling()"
-            matTooltip="Relance tous les dés et garde le second résultat"
+            [matTooltip]="manualEntry() ? 'Relance tous les dés à table, puis saisis le second résultat' : 'Relance tous les dés et garde le second résultat'"
             aria-label="Faveur divine : relancer les dés pour 1 point d’héroïsme"
             (click)="rollWithDivineFavor()"
           >
@@ -130,6 +132,7 @@
         <button type="button" class="ard-go" [disabled]="rolling()" (click)="roll()">{{ dice() ? 'Relancer' : 'Lancer' }} {{ diceCount() }}d6</button>
         <label class="ard-manual-hint" for="ard-manual-total">ou table</label>
         <input
+          #manualInput
           id="ard-manual-total"
           class="ard-manual-input"
           type="number"
