@@ -899,21 +899,12 @@
   scrollbar-color: var(--dw-border) transparent;
 }
 
-// À droite de chaque adversaire, l'accès à sa fiche — avant même de le viser.
-.tas-target-row {
-  display: flex;
-  align-items: center;
-  flex: none;
-  gap: 0.35rem;
-}
-
 .tas-target {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.15rem 0.6rem;
-  flex: 1;
-  min-width: 0;
+  flex: none;
   padding: 0.3rem 0.6rem 0.3rem 0.4rem;
   border: 1px solid var(--dw-border);
   border-radius: 10px;
