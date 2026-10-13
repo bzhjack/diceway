@@ -54,7 +54,7 @@ import {EtatSaver} from './etat-saver';
 import {appliquerEvenement, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from './tapis/combat-effects.util';
 import {EtatCombat} from '../models/combat-turn.model';
 import {CombatBoardComponent} from './combat-board/combat-board';
-import {AppliedHit, ResolvedCombatStats} from '../models/combat-attack.model';
+import {AppliedHit, ResolvedCombatStats, VitaliteChange} from '../models/combat-attack.model';
 import {TurnOrderEntry} from '../models/turn-order.model';
 import {TapisComponent} from './tapis/tapis';
 import {buildTapisCards, findCard, heroDetails, heroHeaderStats, keepDetailsOrder, REMOVE_ACTION_LABEL} from './tapis/tapis.util';
@@ -903,6 +903,12 @@ export class SessionPlayPageComponent {
         this.tableError(error, "Impossible de mettre à jour l'héroïsme.");
       },
     });
+  }
+
+  /** La vitalité de la carte active ou de sa cible corrigée à la main sur son cœur : enregistrée comme des dégâts (ou des soins). */
+  protected onVitaliteAdjusted(change: VitaliteChange): void {
+    const stats = change.card.key === this.activeCard()?.key ? this.attackerStats() : this.targetStats();
+    this.applyDamageTo(change.card, change.delta, stats);
   }
 
   /** Dégâts calculés par l'assistant : enregistrés sur la cible. */

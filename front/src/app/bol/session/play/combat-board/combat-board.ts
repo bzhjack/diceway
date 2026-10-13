@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, input, output, viewChild} from '@ang
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {AttackChoice} from '../../models/attack-options.model';
-import {AppliedHit, ResolvedCombatStats} from '../../models/combat-attack.model';
+import {AppliedHit, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
 import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
 import {TapisCard} from '../../models/tapis.model';
 import {TurnOrderEntry} from '../../models/turn-order.model';
@@ -57,4 +57,6 @@ export class CombatBoardComponent {
   readonly totalDefenseRequested = output<void>();
   /** Points d'héroïsme dépensés ou gagnés par la carte active sur son jet d'attaque. */
   readonly heroismeAdjusted = output<number>();
+  /** Vitalité de la carte active ou de sa cible corrigée à la main sur son cœur. */
+  readonly vitaliteAdjusted = output<VitaliteChange>();
 }

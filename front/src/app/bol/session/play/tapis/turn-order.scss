@@ -9,9 +9,11 @@
   gap: 0.4rem;
   padding: 0.5rem 0.9rem;
   border-bottom: 1px solid var(--dw-border);
-  // La suite de l'image de l'en-tête (`session-header.scss`), calée sur la fenêtre comme elle, et qui s'éteint vers le bas.
+  // La suite de l'image de l'en-tête (`session-header.scss`), calée sur la fenêtre comme elle, sous les mêmes voiles : celui qui
+  // assombrit les bords, et celui qui descend — repris à 45 %, là où l'en-tête le laisse, jusqu'à éteindre l'image en bas.
   background:
-    linear-gradient(color-mix(in srgb, var(--dw-surface-0) 62%, transparent), color-mix(in srgb, var(--dw-surface-50) 96%, transparent)),
+    linear-gradient(color-mix(in srgb, var(--dw-surface-0) 45%, transparent), color-mix(in srgb, var(--dw-surface-0) 80%, transparent) 55%, var(--dw-surface-50)),
+    linear-gradient(90deg, color-mix(in srgb, var(--dw-surface-0) 60%, transparent) 0%, color-mix(in srgb, var(--dw-surface-0) 22%, transparent) 45%, color-mix(in srgb, var(--dw-surface-0) 60%, transparent) 100%),
     url('/assets/bol/header-combat.png') top center / max(100vw, 165rem) auto no-repeat fixed,
     var(--dw-surface-50);
 }

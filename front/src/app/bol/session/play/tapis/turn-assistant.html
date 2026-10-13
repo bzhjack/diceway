@@ -1,7 +1,7 @@
 <div class="tas" role="group" [attr.aria-label]="'Tour de ' + card().nom">
   <!-- Les réglages, en trois cartes posées sur la même grille que les trois cases : qui attaque, avec quoi, comment -->
   <div class="tas-cards">
-    <section class="tas-card" aria-labelledby="tas-qui">
+    <section class="tas-card tas-card--who" [class.tas-card--foe]="side().foe" aria-labelledby="tas-qui">
       <div class="tas-card-head">
         <h3 id="tas-qui">Qui attaque</h3>
         <div class="tas-card-actions">
@@ -20,7 +20,12 @@
         </span>
         <span class="tas-me-id">
           <strong class="tas-name tas-name--active">{{ card().nom }}</strong>
-          <span class="tas-tag">{{ card().rang ?? 'Héros' }} · attaquant</span>
+          <span class="tas-side">
+            <b class="tas-side-chip">{{ side().label }}</b>
+            @if (side().detail) {
+              <span class="tas-tag">{{ side().detail }}</span>
+            }
+          </span>
           @if (legendaryBonus()) {
             <span class="tas-legend" matTooltip="Succès légendaire au jet de réaction : +1 à tous ses jets d’attaque pour toute la rencontre">Légendaire · +1 aux attaques</span>
           }
@@ -33,10 +38,15 @@
       <div class="tas-tiles tas-tiles--start">
         @for (tile of attackerTiles(); track tile.label) {
           <div class="tas-tile" [class.tas-tile--up]="tile.tone === 'up'" [class.tas-tile--down]="tile.tone === 'down'">
-            <b>@if (tile.heart) {<span aria-hidden="true">♥ </span>}{{ tile.value }}</b>
-            <span>{{ tile.label }}@if (tile.max) { /{{ tile.max }} }</span>
+            <b>{{ tile.value }}</b>
+            <span>{{ tile.label }}</span>
           </div>
         }
+        <!-- La vitalité, sur son cœur : elle se corrige ici, un point à la fois ou en tapant sa valeur -->
+        <div class="tas-vit">
+          <dw-value-stepper [formControl]="vitaliteControl" [min]="vitaliteMin()" [max]="card().vitaliteMax ?? undefined" [ariaLabel]="'Vitalité de ' + card().nom" [heart]="true" />
+          <span class="tas-tag">Vitalité /{{ card().vitaliteMax ?? '—' }}</span>
+        </div>
       </div>
       <span class="tas-label">Effets</span>
       <bol-effects-list [effets]="effets()" [cartes]="duelistes()" (retire)="removeEffect($event)" (ajoute)="effectAdded.emit($event)" />
@@ -164,6 +174,10 @@
               <span>{{ tile.label }}</span>
             </div>
           }
+          <div class="tas-vit">
+            <dw-value-stepper [formControl]="targetVitaliteControl" [min]="targetVitaliteMin()" [max]="t.vitaliteMax ?? undefined" [ariaLabel]="'Vitalité de ' + t.nom" [heart]="true" />
+            <span class="tas-tag">Vitalité /{{ t.vitaliteMax ?? '—' }}</span>
+          </div>
         </div>
         @if (targetBadges().length > 0) {
           <ul class="tas-pills" aria-label="Effets sur la cible">
@@ -197,23 +211,26 @@
         <div class="tas-targets" role="group" aria-label="Cible">
           @for (t of targets(); track t.key) {
             @let life = lifeOf(t);
-            <button type="button" class="tas-target" (click)="selectTarget(t)">
-              <span class="tas-med tas-med--small" aria-hidden="true">
-                @if (t.avatar) {
-                  <img [src]="t.avatar" alt="" />
-                } @else {
-                  {{ t.nom.charAt(0).toUpperCase() }}
+            <div class="tas-target-row">
+              <button type="button" class="tas-target" (click)="selectTarget(t)">
+                <span class="tas-med tas-med--small" aria-hidden="true">
+                  @if (t.avatar) {
+                    <img [src]="t.avatar" alt="" />
+                  } @else {
+                    {{ t.nom.charAt(0).toUpperCase() }}
+                  }
+                </span>
+                <b>{{ t.nom }}</b>
+                @if (odds()[t.key]; as chance) {
+                  <span class="tas-odds">{{ chance }}</span>
                 }
-              </span>
-              <b>{{ t.nom }}</b>
-              @if (odds()[t.key]; as chance) {
-                <span class="tas-odds">{{ chance }}</span>
-              }
-              <span class="tas-target-life">
-                <span class="tas-bar" [class.tas-bar--low]="life.low" aria-hidden="true"><i [style.width.%]="life.rest"></i></span>
-                <span class="tas-num">{{ t.vitaliteCourante ?? '—' }} / {{ t.vitaliteMax ?? '—' }}</span>
-              </span>
-            </button>
+                <span class="tas-target-life">
+                  <span class="tas-bar" [class.tas-bar--low]="life.low" aria-hidden="true"><i [style.width.%]="life.rest"></i></span>
+                  <span class="tas-num">{{ t.vitaliteCourante ?? '—' }} / {{ t.vitaliteMax ?? '—' }}</span>
+                </span>
+              </button>
+              <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + t.nom" (click)="sheetRequested.emit(t)">Fiche</button>
+            </div>
           } @empty {
             <span class="tas-note">Personne à viser.</span>
           }

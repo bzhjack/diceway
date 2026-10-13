@@ -60,6 +60,38 @@
   }
 }
 
+// La carte de l'attaquant dit d'un coup d'œil de quel côté il est : verte pour un héros ou un allié, rouge pour un adversaire — son
+// liseré, son médaillon, son nom et sa pastille en prennent la couleur.
+.tas-card--who {
+  --tas-side: var(--dw-color-reussite);
+  --tas-side-ink: #041a0d;
+  border-left: 4px solid var(--tas-side);
+  background: linear-gradient(100deg, color-mix(in srgb, var(--tas-side) 9%, var(--dw-surface-100)), var(--dw-surface-100) 55%);
+}
+
+.tas-card--foe {
+  --tas-side: var(--dw-color-echec-forte);
+  --tas-side-ink: #2a0505;
+}
+
+.tas-side {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.tas-side-chip {
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--tas-side);
+  color: var(--tas-side-ink);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
 .tas-me {
   display: flex;
   align-items: center;
@@ -104,10 +136,10 @@
   width: 3.6rem;
   height: 3.6rem;
   font-size: 1.6rem;
-  border-color: var(--bar-ember, #f08a3a);
+  border-color: var(--tas-side);
   box-shadow:
-    0 0 0 2px color-mix(in srgb, var(--bar-ember, #f08a3a) 35%, transparent),
-    0 0 14px color-mix(in srgb, var(--bar-ember, #f08a3a) 55%, transparent);
+    0 0 0 2px color-mix(in srgb, var(--tas-side) 35%, transparent),
+    0 0 14px color-mix(in srgb, var(--tas-side) 55%, transparent);
 }
 
 .tas-med--small {
@@ -125,7 +157,7 @@
 }
 
 .tas-name--active {
-  color: var(--dw-color-reussite);
+  color: var(--tas-side);
 }
 
 .tas-tag,
@@ -183,6 +215,15 @@
   gap: 0.3rem;
 }
 
+// La vitalité de l'attaquant ou de la cible, sur son cœur, au bout de ses tuiles.
+.tas-vit {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0.1rem;
+  margin-left: 0.4rem;
+}
+
 // Dans la carte de l'attaquant, les tuiles s'alignent à gauche comme le reste.
 .tas-tiles--start {
   justify-content: flex-start;
@@ -202,12 +243,6 @@
     white-space: nowrap;
     color: var(--dw-surface-900);
 
-    // Le cœur de la vitalité, dans une police qui a le glyphe.
-    span {
-      font: 400 1rem/1 'Muse Sans', sans-serif;
-      letter-spacing: 0;
-      color: inherit;
-    }
   }
 
   span {
@@ -749,7 +784,6 @@
   color: var(--dw-color-succes-legendaire);
   font-size: 0.74rem;
   font-weight: 700;
-  white-space: nowrap;
 }
 
 .tas-ph {
@@ -822,7 +856,6 @@
   align-items: center;
   gap: 0.2rem;
   padding-left: 0.3rem;
-  font-variant-numeric: tabular-nums;
 }
 
 // Un échec critique rapporte un point au lieu d'en coûter un : en vert.
@@ -866,12 +899,21 @@
   scrollbar-color: var(--dw-border) transparent;
 }
 
+// À droite de chaque adversaire, l'accès à sa fiche — avant même de le viser.
+.tas-target-row {
+  display: flex;
+  align-items: center;
+  flex: none;
+  gap: 0.35rem;
+}
+
 .tas-target {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.15rem 0.6rem;
-  flex: none;
+  flex: 1;
+  min-width: 0;
   padding: 0.3rem 0.6rem 0.3rem 0.4rem;
   border: 1px solid var(--dw-border);
   border-radius: 10px;

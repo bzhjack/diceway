@@ -1,4 +1,6 @@
 import {afterNextRender, ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, Injector, input, linkedSignal, output, signal, untracked, viewChild} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -34,9 +36,11 @@ import {
 } from '../../combat-resolution.util';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {AttackChoice} from '../../models/attack-options.model';
-import {AppliedHit, ResolvedCombatStats} from '../../models/combat-attack.model';
+import {AppliedHit, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
-import {TapisCard} from '../../models/tapis.model';
+import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
+import {ValueTracker} from '../../value-tracker';
+import {TapisCard, TapisKind} from '../../models/tapis.model';
 import {isLowVitalite, vitalitePercent} from './tapis.util';
 
 /** Délai maximal d'un lancer 3D avant de tirer les dés sans animation. */
@@ -53,6 +57,9 @@ const DIE_NOTES: Readonly<Record<DamageDie, string>> = {
   d6b: 'le meilleur de deux d6',
 };
 
+/** Ce qu'est une carte, en clair. */
+const KIND_LABELS: Readonly<Record<TapisKind, string>> = {hero: 'Héros', pnj: 'PNJ', creature: 'Créature', demon: 'Démon'};
+
 /** Où en est une des trois cases du coup : pas encore son tour, à jouer, ou faite. */
 type StationState = 'todo' | 'cur' | 'done';
 
@@ -62,10 +69,6 @@ interface StatTile {
   readonly value: string;
   /** La posture choisie améliore (`up`) ou dégrade (`down`) ce chiffre. */
   readonly tone?: 'up' | 'down';
-  /** Vitalité : un cœur précède le chiffre. */
-  readonly heart?: boolean;
-  /** Vitalité : le maximum suit le libellé (« Vitalité /10 »). */
-  readonly max?: string;
 }
 
 /** Un terme de l'addition d'un jet sur le plateau. */
@@ -111,7 +114,7 @@ function signedTerm(value: number): string {
  * Il ne parle à aucun service : il signale à la page ce qui doit être enregistré (dégâts, fin de tour, défense totale, héroïsme). */
 @Component({
   selector: 'bol-turn-assistant',
-  imports: [EffectsListComponent, MatButtonModule, MatIconModule, MatTooltipModule],
+  imports: [DwValueStepperComponent, EffectsListComponent, MatButtonModule, MatIconModule, MatTooltipModule, ReactiveFormsModule],
   templateUrl: './turn-assistant.html',
   styleUrl: './turn-assistant.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -152,6 +155,26 @@ export class TurnAssistantComponent {
   readonly endTurnRequested = output<void>();
   /** Points d'héroïsme dépensés (négatif) ou gagnés (positif) par l'attaquant sur ce jet. */
   readonly heroismeAdjusted = output<number>();
+  /** Vitalité de l'attaquant ou de la cible corrigée à la main sur son cœur. */
+  readonly vitaliteAdjusted = output<VitaliteChange>();
+
+  /** La vitalité de l'attaquant et celle de la cible, chacune sur son cœur : elles suivent la table, et chaque pas est signalé à la
+   * page. */
+  protected readonly vitaliteControl = new FormControl(0, {nonNullable: true});
+  protected readonly targetVitaliteControl = new FormControl(0, {nonNullable: true});
+  /** Un héros peut descendre sous 0 (mourant) ; les autres s'arrêtent à 0. */
+  protected readonly vitaliteMin = computed(() => (this.card().kind === 'hero' ? -20 : 0));
+  protected readonly targetVitaliteMin = computed(() => (this.target()?.kind === 'hero' ? -20 : 0));
+
+  /** De quel côté est la carte qui attaque, dit en gros sur sa carte : « Héros », « Allié » ou « Adversaire », puis ce qu'elle est
+   * (« PNJ · Coriace », « Créature · Rival »…) pour tout ce qui n'est pas un héros. */
+  protected readonly side = computed(() => {
+    const card = this.card();
+    const foe = card.camp !== 'heros';
+    const label = foe ? 'Adversaire' : card.kind === 'hero' ? 'Héros' : 'Allié';
+    const detail = card.kind === 'hero' ? (foe ? 'Héros' : '') : [KIND_LABELS[card.kind], card.rang].filter(Boolean).join(' · ');
+    return {foe, label, detail};
+  });
 
   protected readonly heroicOptions = HEROIC_OPTIONS;
   protected readonly isHero = computed(() => this.card().kind === 'hero');
@@ -312,20 +335,18 @@ export class TurnAssistantComponent {
   private readonly rolledDice = signal<readonly number[] | null>(null);
   protected readonly rolling = signal(false);
 
-  /** Les chiffres de l'attaquant, en tuiles : attaque, défense, vigueur et vitalité. La défense montre déjà ce que la posture
-   * choisie lui fera jusqu'à son prochain tour. */
+  /** Les chiffres de l'attaquant, en tuiles : attaque, défense et vigueur (sa vitalité est sur son cœur, à côté). La défense montre
+   * déjà ce que la posture choisie lui fera jusqu'à son prochain tour. */
   protected readonly attackerTiles = computed<readonly StatTile[]>(() => {
     const stats = this.attacker();
     if (!stats) {
       return [];
     }
-    const card = this.card();
     const posture = POSTURE_DEFENSE[this.effectiveOption()?.slug ?? ''] ?? 0;
     return [
       {label: 'Attaque', value: this.signed(attackBonus(stats, this.isTir()))},
       {label: 'Défense', value: String(stats.defense + posture), ...(posture !== 0 ? {tone: posture > 0 ? ('up' as const) : ('down' as const)} : {})},
       {label: 'Vigueur', value: this.signed(vigueurBonus(stats, this.isTir()))},
-      {label: 'Vitalité', value: String(card.vitaliteCourante ?? '—'), max: String(card.vitaliteMax ?? '—'), heart: true},
     ];
   });
 
@@ -802,6 +823,9 @@ export class TurnAssistantComponent {
   constructor() {
     effect(() => this.choiceChanged.emit(this.choice()));
 
+    this.bindVitalite(this.vitaliteControl, () => this.card());
+    this.bindVitalite(this.targetVitaliteControl, () => this.target());
+
     // Un autre attaquant, une autre cible, un autre choix ou un dé du MJ accordé ou retiré : le jet précédent ne vaut plus. Le choix est comparé par sa valeur : la table
     // rechargée (enregistrement de l'état du combat) en refait un objet identique, qui ne doit pas effacer le jet en cours.
     effect(() => {
@@ -818,6 +842,26 @@ export class TurnAssistantComponent {
       if (input && this.attackFocusWanted) {
         this.attackFocusWanted = false;
         input.nativeElement.focus();
+      }
+    });
+  }
+
+  /** Lie un cœur de vitalité à une carte : il reprend sa valeur à chaque rechargement de la table, et chaque correction faite dessus
+   * est signalée à la page, d'un pas à la fois (deux clics rapides valent deux pas de 1, pas 1 puis 2). */
+  private bindVitalite(control: FormControl<number>, card: () => TapisCard | null): void {
+    const tracker = new ValueTracker();
+    effect(() => {
+      const value = card()?.vitaliteCourante ?? 0;
+      tracker.reset(value);
+      if (value !== control.value) {
+        control.setValue(value, {emitEvent: false});
+      }
+    });
+    control.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => {
+      const current = untracked(card);
+      const delta = tracker.take(value);
+      if (current && delta !== 0) {
+        this.vitaliteAdjusted.emit({card: current, delta});
       }
     });
   }

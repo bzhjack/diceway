@@ -24,6 +24,12 @@ export interface ResolvedCombatStats {
   readonly heroisme: number | null;
 }
 
+/** La vitalité d'une carte corrigée à la main sur son cœur : ce qu'elle gagne (positif) ou perd (négatif). */
+export interface VitaliteChange {
+  readonly card: TapisCard;
+  readonly delta: number;
+}
+
 /** Un coup porté, une fois ses dégâts appliqués : de quoi l'écrire au journal. */
 export interface AppliedHit {
   readonly target: TapisCard;
