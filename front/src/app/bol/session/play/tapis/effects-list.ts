@@ -21,7 +21,7 @@ interface EffetAffiche {
   readonly retirable: boolean;
 }
 
-/** Les effets en cours sur les deux duellistes, chacun retirable, et le menu pour en ajouter un à la main. */
+/** Les effets en cours sur les deux duellistes, en pastilles sur une ligne, chacun retirable, et le menu pour en ajouter un à la main. */
 @Component({
   selector: 'bol-effects-list',
   imports: [MatButtonModule, MatIconModule, MatMenuModule],
@@ -29,7 +29,7 @@ interface EffetAffiche {
   template: `
     <section class="efl" aria-label="Effets en cours">
       <header class="efl-head">
-        <p class="efl-title">Effets en cours</p>
+        <p class="efl-title">Effets</p>
         <button type="button" mat-stroked-button size="small" [matMenuTriggerFor]="addMenu" [disabled]="cartes().length === 0">
           <mat-icon>add</mat-icon> Effet
         </button>
@@ -45,7 +45,7 @@ interface EffetAffiche {
           }
         </div>
       } @empty {
-        <p class="efl-empty">Aucun effet en cours.</p>
+        <p class="efl-empty">Aucun</p>
       }
 
       <mat-menu #addMenu="matMenu">
@@ -58,16 +58,18 @@ interface EffetAffiche {
     </section>
   `,
   styles: `
-    .efl { display: flex; flex-direction: column; gap: 0.35rem; }
-    .efl-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
-    .efl-title { margin: 0; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dw-color-legendary); }
-    .efl-row { display: flex; align-items: center; justify-content: space-between; gap: 0.4rem; padding: 0.2rem 0.4rem; border: 1px solid var(--dw-border); border-radius: 8px; background: var(--dw-surface-50); font-size: 0.78rem; color: var(--dw-surface-800); }
+    /* Sur une ligne, dans le bandeau de l'assistant : le titre, une pastille par effet, puis le bouton qui en ajoute un. */
+    .efl { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.5rem; }
+    .efl-head { display: contents; }
+    .efl-head button { order: 1; }
+    .efl-title { margin: 0; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dw-surface-500); }
+    .efl-row { display: flex; align-items: center; gap: 0.2rem; padding: 0.05rem 0.2rem 0.05rem 0.6rem; border: 1px solid var(--dw-border); border-radius: 999px; background: var(--dw-surface-50); font-size: 0.78rem; color: var(--dw-surface-800); }
     .efl-text i { color: var(--dw-surface-600); font-style: normal; }
-    .efl-remove { display: grid; place-items: center; width: 1.5rem; height: 1.5rem; padding: 0; border: 0; border-radius: 6px; background: transparent; color: var(--dw-surface-500); cursor: pointer; }
+    .efl-remove { display: grid; place-items: center; width: 1.4rem; height: 1.4rem; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--dw-surface-500); cursor: pointer; }
     .efl-remove:hover { color: var(--dw-color-echec); }
     .efl-remove:focus-visible { outline: 2px solid var(--dw-color-legendary); outline-offset: 1px; }
     .efl-remove .mat-icon { width: 1rem; height: 1rem; font-size: 1rem; }
-    .efl-empty { margin: 0; font-size: 0.78rem; color: var(--dw-surface-500); }
+    .efl-empty { margin: 0; font-size: 0.8rem; color: var(--dw-surface-500); }
   `,
 })
 export class EffectsListComponent {

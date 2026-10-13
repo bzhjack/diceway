@@ -44,6 +44,8 @@ export class TurnOrderComponent {
 
   /** Seuls les blocs qui ont au moins un combattant sont affichés. */
   protected readonly groups = computed(() => groupByTier(this.entries()).filter((group) => group.entries.length > 0));
+  /** Nombre de combattants dans la frise : avec le nombre de blocs, il règle la taille des médaillons pour que tout tienne sur une ligne. */
+  protected readonly total = computed(() => this.entries().length);
   /** Au round 1, un succès héroïque bloque coriaces et piétaille : la frise le dit. */
   protected readonly roundOneLock = computed(() => this.round() === 1 && this.entries().some((entry) => entry.locked));
 

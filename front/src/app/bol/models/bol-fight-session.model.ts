@@ -58,7 +58,7 @@ export interface BolFightSessionHerosModel {
   heros?: {
     id: string | null;
     origines: {nom: string | null; avatar: string | null; joueur: string | null};
-    /** Agilité du héros ; `agilite_effective` tient compte de l'armure portée. Elle départage les héros de même résultat de réaction. */
+    /** Agilité du héros ; `agilite_effective` tient compte de l'armure portée. L'agilité brute départage les héros de même résultat de réaction. */
     attributs?: {agilite: number; agilite_effective: number};
     ressources?: {vitalite: number; heroisme: number};
     /** Défense du héros ; `defense_effective` tient compte de l'équipement porté. */

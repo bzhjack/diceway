@@ -40,13 +40,6 @@ const DICE_TIMEOUT_MS = 12000;
 /** Les postures de l'échelle, de la plus prudente à la plus audacieuse ; les autres sont des options spéciales. */
 const SCALE_SLUGS: readonly string[] = ['defensive', 'none', 'offensive', 'intrepid'];
 
-/** Effet d'une posture qui ne se chiffre pas en bonus ou malus. */
-const POSTURE_EXTRA: Readonly<Record<string, string>> = {
-  intrepid: 'perd le bouclier',
-  'dual-strike': 'dégâts +1 catégorie',
-  'armor-chink': "ignore l'armure si touché",
-};
-
 /** Ce que rapporte chaque dé de dégâts, en clair, à côté de la case où on le saisit. */
 const DIE_NOTES: Readonly<Record<DamageDie, string>> = {
   d3: 'un d6 divisé par deux',
@@ -55,13 +48,10 @@ const DIE_NOTES: Readonly<Record<DamageDie, string>> = {
   d6b: 'le meilleur de deux d6',
 };
 
-/** Ce que la posture choisie change à ce tour, en pastille sous le curseur. */
-interface EffectPill {
-  readonly label: string;
-  readonly tone: 'plus' | 'minus' | 'neutral';
-}
+/** Où en est une des trois cases du coup : pas encore son tour, à jouer, ou faite. */
+type StationState = 'todo' | 'cur' | 'done';
 
-/** Une tuile de la fiche d'un combattant : un chiffre de combat et son libellé. */
+/** Un chiffre de combat et son libellé : dans la ligne de l'attaquant, ou en tuile sur la fiche de la cible. */
 interface StatTile {
   readonly label: string;
   readonly value: string;
@@ -104,11 +94,11 @@ function signedTerm(value: number): string {
   return `${value > 0 ? '+' : '−'}${Math.abs(value)}`;
 }
 
-/** L'assistant de tour, sous la frise en combat : un face-à-face. À gauche la fiche de la carte active, avec ce qui est à elle (son
- * arme, sa posture, ses options) ; à droite les adversaires à viser et la fiche de la cible, dont la vie montre ce que le coup va lui
- * retirer ; au centre le plateau, où tombent le jet d'attaque (2d6 + bonus − défense, 9+) puis le jet de dégâts. Il annonce ce qu'il
- * faut aux dés et les chances, et prend les totaux lancés à table. Il ne parle à aucun service : il signale à la page ce qui doit être
- * enregistré (dégâts, fin de tour, défense totale). */
+/** L'assistant de tour, sous la frise en combat : un coup en trois temps. Un bandeau de deux lignes porte les réglages de la carte
+ * active (son arme, sa posture, ses options, les effets en cours) ; dessous, trois cases en ligne — qui elle vise, son jet d'attaque
+ * (2d6 + bonus − défense, 9+), son jet de dégâts — dont celle où il faut agir s'allume, et une ligne qui dit quoi faire ensuite.
+ * Il annonce ce qu'il faut aux dés et les chances, prend les totaux lancés à table, et montre sur la vie de la cible ce que le coup va
+ * lui retirer. Il ne parle à aucun service : il signale à la page ce qui doit être enregistré (dégâts, fin de tour, défense totale). */
 @Component({
   selector: 'bol-turn-assistant',
   imports: [EffectsListComponent, MatButtonModule, MatIconModule, MatTooltipModule],
@@ -222,28 +212,6 @@ export class TurnAssistantComponent {
     this.selectOption(this.effectiveOption()?.slug === slug ? 'none' : slug);
   }
 
-  /** Ce que la posture choisie change à ce tour : attaque, défense et effets particuliers. */
-  protected readonly effectPills = computed<readonly EffectPill[]>(() => {
-    const option = this.effectiveOption();
-    if (!option || option.slug === 'none') {
-      return [{label: 'aucun modificateur', tone: 'neutral'}];
-    }
-    const pills: EffectPill[] = [];
-    const attack = this.postureModifier();
-    if (attack !== 0) {
-      pills.push({label: `attaque ${this.signed(attack)}`, tone: attack > 0 ? 'plus' : 'minus'});
-    }
-    const defense = POSTURE_DEFENSE[option.slug] ?? 0;
-    if (defense !== 0) {
-      pills.push({label: `défense ${this.signed(defense)}`, tone: defense > 0 ? 'plus' : 'minus'});
-    }
-    const extra = POSTURE_EXTRA[option.slug];
-    if (extra) {
-      pills.push({label: extra, tone: 'neutral'});
-    }
-    return pills;
-  });
-
   protected readonly isDualWieldSelected = computed(() => DUAL_WIELD_SLUGS.has(this.effectiveOption()?.slug ?? ''));
 
   protected readonly effectiveOffHand = computed(() => {
@@ -314,8 +282,8 @@ export class TurnAssistantComponent {
   protected readonly dice = signal<readonly [number, number] | null>(null);
   protected readonly rolling = signal(false);
 
-  /** Fiche de l'attaquant : attaque, défense, vigueur et vitalité. La défense montre déjà ce que la posture choisie lui fera jusqu'à
-   * son prochain tour. */
+  /** Les chiffres de l'attaquant, sur une ligne : attaque, défense, vigueur et vitalité. La défense montre déjà ce que la posture
+   * choisie lui fera jusqu'à son prochain tour. */
   protected readonly attackerTiles = computed<readonly StatTile[]>(() => {
     const stats = this.attacker();
     if (!stats) {
@@ -460,7 +428,6 @@ export class TurnAssistantComponent {
           .map((effet) => `${descriptionEffet(effet)} · ${libelleDuree(effet.duree)}`)
       : [];
   }
-  protected readonly attackerBadges = computed(() => this.badgesDe(this.card().key));
   protected readonly targetBadges = computed(() => this.badgesDe(this.target()?.key));
 
   /** L'addition du jet de dégâts : le dé de l'arme, la vigueur, le coup dévastateur, la protection de la cible (elle se clique pour la
@@ -672,6 +639,35 @@ export class TurnAssistantComponent {
     return {current, max: target?.vitaliteMax ?? null, after, loss: after === null ? 0 : damage, out: after !== null && after <= 0};
   });
 
+  /** Où en sont les trois cases — qui, l'attaque, les dégâts : celle où il faut agir s'allume. Après des dégâts appliqués, l'attaque
+   * se rallume (une nouvelle attaque est possible) et les dégâts gardent le rappel du coup. */
+  protected readonly stations = computed<readonly [StationState, StationState, StationState]>(() => {
+    const aimed = this.target() !== null;
+    const rolled = this.attackVerdict() !== null;
+    return [aimed ? 'done' : 'cur', !aimed ? 'todo' : rolled ? 'done' : 'cur', this.hasDamageStep() ? 'cur' : rolled || this.lastHit() ? 'done' : 'todo'];
+  });
+
+  /** Ce qu'il y a à faire maintenant, en une phrase ; `step` est le numéro de la case concernée, vide quand il ne reste qu'à conclure. */
+  protected readonly nextStep = computed<{readonly step: string; readonly text: string}>(() => {
+    const target = this.target();
+    if (!target) {
+      return {step: '1', text: `Choisis qui ${this.card().nom} attaque.`};
+    }
+    const verdict = this.attackVerdict();
+    if (!verdict) {
+      return this.lastHit()
+        ? {step: '', text: 'Dégâts appliqués. Il ne reste qu’à finir le tour, ou à lancer une nouvelle attaque.'}
+        : {step: '2', text: 'Tape le total des deux dés d’attaque, ou lance-les à l’écran.'};
+    }
+    if (!this.hasDamageStep()) {
+      return {step: '', text: `${verdict.tone === 'echec' ? 'Raté' : 'Désarmement'}. Il ne reste qu’à finir le tour.`};
+    }
+    const damage = this.damage();
+    return damage === null
+      ? {step: '3', text: `Tape le dé de dégâts (${this.dieNote()}), ou lance-le à l’écran.`}
+      : {step: '', text: `Entrée applique ${damage} ${damage > 1 ? 'dégâts' : 'dégât'} à ${target.nom}.`};
+  });
+
   // Les cases et boutons du plateau, pour passer la main de l'un à l'autre au fil de la saisie.
   private readonly attackInput = viewChild<ElementRef<HTMLInputElement>>('attackInput');
   private readonly damageInput = viewChild<ElementRef<HTMLInputElement>>('damageInput');
@@ -741,6 +737,7 @@ export class TurnAssistantComponent {
     this.markAttacked();
     const values = await this.throwDice('2d6', 2);
     this.dice.set([values[0], values[1]]);
+    this.focusAfterRender(() => (this.hasDamageStep() ? this.damageInput() : this.endButton()));
   }
 
   /** Retire les dés restés sur la table une fois le lancer terminé (un clic n'importe où sur l'écran de combat). */
@@ -883,6 +880,7 @@ export class TurnAssistantComponent {
     }
     const count = damageDiceCount(this.die());
     this.damageValues.set(await this.throwDice(`${count}d6`, count));
+    this.focusAfterRender(() => this.applyButton());
   }
 
   /** La barre de vie d'une carte. Celle de la cible choisie montre aussi ce que le coup en cours va lui retirer. */

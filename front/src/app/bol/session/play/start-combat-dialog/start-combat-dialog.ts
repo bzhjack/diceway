@@ -49,7 +49,7 @@ interface HeroRow {
   readonly resultat: InitiativeResultat | null;
   readonly esprit: number;
   readonly initiative: number;
-  /** Agilité (armure comprise) : elle n'entre pas dans le jet, elle départage les héros de même résultat. */
+  /** Agilité du héros, sans le malus de son armure : elle n'entre pas dans le jet, elle départage les héros de même résultat. */
   readonly agilite: number;
 }
 
@@ -286,7 +286,7 @@ export class StartCombatDialogComponent {
                   resultat: rolledHere.get(h.id) ?? null,
                   esprit: hero.attributs.esprit,
                   initiative: hero.combat.initiative_effective,
-                  agilite: hero.attributs.agilite_effective,
+                  agilite: hero.attributs.agilite,
                 };
               });
               // Par agilité décroissante : entre héros de même résultat, c'est l'ordre dans lequel ils agiront par défaut

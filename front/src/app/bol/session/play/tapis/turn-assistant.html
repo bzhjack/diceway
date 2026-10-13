@@ -1,7 +1,7 @@
 <div class="tas" role="group" [attr.aria-label]="'Tour de ' + card().nom">
-  <!-- L'attaquant, et ce qui est à lui : son arme, sa posture, ses options -->
-  <aside class="tas-card tas-card--me" aria-label="Attaquant">
-    <div class="tas-hero">
+  <!-- Les réglages du coup, en deux lignes. D'abord qui attaque et avec quoi. -->
+  <div class="tas-strip">
+    <div class="tas-me">
       <span class="tas-med tas-med--active" aria-hidden="true">
         @if (card().avatar) {
           <img [src]="card().avatar" alt="" />
@@ -9,30 +9,24 @@
           {{ card().nom.charAt(0).toUpperCase() }}
         }
       </span>
-      <strong class="tas-name tas-name--active">{{ card().nom }}</strong>
-      <span class="tas-tag">{{ card().rang ?? 'Héros' }} · attaquant</span>
-      <button type="button" class="tas-ghost tas-sheet" [attr.aria-label]="'Ouvrir la fiche de ' + card().nom" (click)="sheetRequested.emit(card())">Fiche</button>
+      <span class="tas-me-id">
+        <strong class="tas-name tas-name--active">{{ card().nom }}</strong>
+        <span class="tas-stats">
+          @for (tile of attackerTiles(); track tile.label) {
+            <span [class.tas-stat--up]="tile.tone === 'up'" [class.tas-stat--down]="tile.tone === 'down'">
+              {{ tile.label }} <b>{{ tile.value }}@if (tile.max) {/{{ tile.max }}}</b>
+            </span>
+          } @empty {
+            <span>{{ card().rang ?? 'Héros' }}</span>
+          }
+        </span>
+      </span>
+      <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + card().nom" (click)="sheetRequested.emit(card())">Fiche</button>
     </div>
-
-    <div class="tas-tiles">
-      @for (tile of attackerTiles(); track tile.label) {
-        <div class="tas-tile" [class.tas-tile--up]="tile.tone === 'up'" [class.tas-tile--down]="tile.tone === 'down'">
-          <b>{{ tile.value }}@if (tile.max) {<small>/{{ tile.max }}</small>}</b>
-          <span>{{ tile.label }}</span>
-        </div>
-      }
-    </div>
-    @if (attackerBadges().length > 0) {
-      <ul class="tas-pills" aria-label="Effets sur l’attaquant">
-        @for (badge of attackerBadges(); track $index) {
-          <li class="tas-pill">{{ badge }}</li>
-        }
-      </ul>
-    }
 
     @if (displayArmes().length > 0) {
       <div class="tas-group" role="group" aria-label="Arme">
-        <span class="tas-label">Son arme</span>
+        <span class="tas-label">Arme</span>
         <div class="tas-chips">
           @for (a of displayArmes(); track a.id) {
             <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveArme()?.id === a.id" (click)="selectArme(a.id)">
@@ -46,14 +40,14 @@
       </div>
     } @else {
       <div class="tas-group">
-        <span class="tas-label">Ses dégâts</span>
+        <span class="tas-label">Dégâts</span>
         <span class="tas-fixed">{{ card().degats }}</span>
       </div>
     }
 
     @if (isDualWieldSelected()) {
       <div class="tas-group" role="group" aria-label="Arme secondaire">
-        <span class="tas-label">Son arme secondaire</span>
+        <span class="tas-label">Arme secondaire</span>
         <div class="tas-chips">
           @for (a of eligibleOffHandArmes(); track a.id) {
             <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveOffHand()?.id === a.id" (click)="selectOffHand(a.id)">
@@ -78,25 +72,28 @@
       }
     }
 
+    <button type="button" class="tas-ghost tas-total-defense" matTooltip="+2 en défense, pas d'attaque ce round. Termine le tour." (click)="totalDefenseRequested.emit()">Défense totale</button>
+  </div>
+
+  <!-- Puis comment : la posture, les options spéciales, les effets en cours. -->
+  <div class="tas-strip">
     @if (visibleOptions().length > 1) {
       <div class="tas-group" role="group" aria-label="Posture">
-        <span class="tas-label">Sa posture : de la prudence à l’audace</span>
-        <!-- Un curseur à crans : un cran par posture, du plus prudent au plus audacieux -->
-        <div class="tas-slider" [style.--stops]="scalePostures().length">
+        <span class="tas-label">Posture</span>
+        <!-- De la plus prudente à la plus audacieuse : ce que chacune change à l'attaque et à la défense -->
+        <div class="tas-segm">
           @for (o of scalePostures(); track o.slug) {
-            <button type="button" [attr.aria-pressed]="effectiveOption()?.slug === o.slug" [matTooltip]="o.note" (click)="selectOption(o.slug)">{{ scaleName(o) }}</button>
-          }
-        </div>
-        <div class="tas-pills tas-pills--center">
-          @for (pill of effectPills(); track pill.label) {
-            <span class="tas-pill" [class.tas-pill--plus]="pill.tone === 'plus'" [class.tas-pill--minus]="pill.tone === 'minus'">{{ pill.label }}</span>
+            <button type="button" [class]="'tas-seg tas-seg--' + o.slug" [attr.aria-pressed]="effectiveOption()?.slug === o.slug" [matTooltip]="o.note" (click)="selectOption(o.slug)">
+              <b>{{ scaleName(o) }}</b>
+              <small>{{ scaleEffect(o) }}</small>
+            </button>
           }
         </div>
       </div>
 
       @if (specialPostures().length > 0) {
         <div class="tas-group" role="group" aria-label="Options spéciales">
-          <span class="tas-label">Options spéciales</span>
+          <span class="tas-label">Options</span>
           <div class="tas-chips">
             @for (o of specialPostures(); track o.slug) {
               <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveOption()?.slug === o.slug" [matTooltip]="o.note" (click)="toggleSpecial(o.slug)">{{ o.label }}</button>
@@ -106,17 +103,92 @@
       }
     }
 
-    <bol-effects-list [effets]="effets()" [cartes]="duelistes()" (retire)="removeEffect($event)" (ajoute)="effectAdded.emit($event)" />
+    <bol-effects-list class="tas-effects" [effets]="effets()" [cartes]="duelistes()" (retire)="removeEffect($event)" (ajoute)="effectAdded.emit($event)" />
+  </div>
 
-    <button type="button" class="tas-ghost tas-total-defense" matTooltip="+2 en défense, pas d'attaque ce round. Termine le tour." (click)="totalDefenseRequested.emit()">
-      Défense totale : +2 déf, pas d’attaque
-    </button>
-  </aside>
+  <!-- Le coup, en trois temps : qui, l'attaque, les dégâts. La case où il faut agir s'allume. -->
+  <div class="tas-track">
+    <section [class]="'tas-station tas-station--' + stations()[0]" aria-label="Cible">
+      <h3><span aria-hidden="true">1</span> Qui ?</h3>
+      @if (target(); as t) {
+        @let life = lifeOf(t);
+        <div class="tas-hero">
+          <span class="tas-med tas-med--target" aria-hidden="true">
+            @if (t.avatar) {
+              <img [src]="t.avatar" alt="" />
+            } @else {
+              {{ t.nom.charAt(0).toUpperCase() }}
+            }
+          </span>
+          <strong class="tas-name">{{ t.nom }}</strong>
+          <span class="tas-tag">{{ t.rang ?? 'Héros' }} · cible</span>
+        </div>
+        <div class="tas-tiles">
+          @for (tile of targetTiles(); track tile.label) {
+            <div class="tas-tile" [class.tas-tile--up]="tile.tone === 'up'" [class.tas-tile--long]="tile.value.length > 5">
+              <b>{{ tile.value }}</b>
+              <span>{{ tile.label }}</span>
+            </div>
+          }
+        </div>
+        @if (targetBadges().length > 0) {
+          <ul class="tas-pills" aria-label="Effets sur la cible">
+            @for (badge of targetBadges(); track $index) {
+              <li class="tas-pill">{{ badge }}</li>
+            }
+          </ul>
+        }
+        <!-- Sa vie montre ce que le coup en cours va lui retirer -->
+        <div class="tas-life" aria-live="polite">
+          <div class="tas-life-line">
+            <span class="tas-bar tas-bar--big" [class.tas-bar--low]="life.low" aria-hidden="true"><i [style.width.%]="life.rest"></i><u [style.left.%]="life.rest" [style.width.%]="life.loss"></u></span>
+            <b>
+              {{ targetLife().current ?? '—' }}
+              @if (targetLife().after !== null) {
+                <s>→ {{ targetLife().after }}</s>
+              }
+              / {{ targetLife().max ?? '—' }}
+            </b>
+          </div>
+          @if (targetLife().after !== null) {
+            <span>{{ targetLife().out ? 'Ce coup met ' + t.nom + ' hors de combat.' : 'Ce coup retire ' + targetLife().loss + ' à ' + t.nom + '.' }}</span>
+          }
+        </div>
+        <div class="tas-chips">
+          <button type="button" class="tas-ghost" (click)="selectTarget(t)">Changer de cible</button>
+          <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + t.nom" (click)="sheetRequested.emit(t)">Fiche</button>
+        </div>
+      } @else {
+        <!-- Chaque adversaire annonce ce qu'il faut pour le toucher -->
+        <div class="tas-targets" role="group" aria-label="Cible">
+          @for (t of targets(); track t.key) {
+            @let life = lifeOf(t);
+            <button type="button" class="tas-target" (click)="selectTarget(t)">
+              <span class="tas-med tas-med--small" aria-hidden="true">
+                @if (t.avatar) {
+                  <img [src]="t.avatar" alt="" />
+                } @else {
+                  {{ t.nom.charAt(0).toUpperCase() }}
+                }
+              </span>
+              <b>{{ t.nom }}</b>
+              @if (odds()[t.key]; as chance) {
+                <span class="tas-odds">{{ chance }}</span>
+              }
+              <span class="tas-target-life">
+                <span class="tas-bar" [class.tas-bar--low]="life.low" aria-hidden="true"><i [style.width.%]="life.rest"></i></span>
+                <span class="tas-num">{{ t.vitaliteCourante ?? '—' }} / {{ t.vitaliteMax ?? '—' }}</span>
+              </span>
+            </button>
+          } @empty {
+            <span class="tas-note">Personne à viser.</span>
+          }
+        </div>
+      }
+    </section>
 
-  <!-- Le plateau : le jet d'attaque, puis le jet de dégâts -->
-  <section class="tas-tray" aria-label="Les jets">
-    <div class="tas-stage">
-      <h3><span aria-hidden="true">1</span> Jet d’attaque</h3>
+    <section [class]="'tas-station tas-station--' + stations()[1]" aria-label="Jet d’attaque">
+      <h3><span aria-hidden="true">2</span> L’attaque</h3>
       @if (attackGoal(); as goal) {
         <div class="tas-goal">
           <div class="tas-need">
@@ -191,13 +263,12 @@
       } @else if (target()) {
         <span class="tas-wait">Calcul du jet…</span>
       } @else {
-        <b class="tas-prompt">Choisis une cible</b>
-        <span class="tas-wait">Le jet se calcule dès que tu sais qui est visé.</span>
+        <span class="tas-wait">Dès que tu sais qui est visé.</span>
       }
-    </div>
+    </section>
 
-    <div class="tas-stage" [class.tas-stage--idle]="!hasDamageStep()">
-      <h3><span aria-hidden="true">2</span> Jet de dégâts</h3>
+    <section [class]="'tas-station tas-station--' + stations()[2]" aria-label="Jet de dégâts">
+      <h3><span aria-hidden="true">3</span> Les dégâts</h3>
       @if (hasDamageStep()) {
         <div class="tas-entry">
           <input
@@ -218,8 +289,8 @@
           <button type="button" class="tas-dice-btn" [disabled]="rolling()" aria-label="Lancer le dé de dégâts à l’écran" matTooltip="Lancer le dé de dégâts à l’écran" (click)="rollDamage()">
             <mat-icon>casino</mat-icon>
           </button>
-          <small class="tas-die-note">{{ damageDetail() && !rolling() ? damageDetail() : dieNote() }}</small>
         </div>
+        <small class="tas-die-note">{{ damageDetail() && !rolling() ? damageDetail() : dieNote() }}</small>
 
         <div class="tas-sum" [class.tas-sum--pending]="damage() === null">
           @for (term of damageSum(); track $index) {
@@ -277,87 +348,15 @@
       } @else {
         <span class="tas-wait">Après un coup qui touche.</span>
       }
-    </div>
-  </section>
+    </section>
+  </div>
 
-  <!-- Les adversaires à viser, puis la fiche de la cible : sa vie montre ce que le coup va lui retirer -->
-  <aside class="tas-card" aria-label="Cible">
-    <span class="tas-label tas-label--gold">Les adversaires</span>
-    <div class="tas-picks" role="group" aria-label="Cible">
-      @for (t of targets(); track t.key) {
-        @let life = lifeOf(t);
-        <button type="button" class="tas-pick" [attr.aria-pressed]="target()?.key === t.key" (click)="selectTarget(t)">
-          <span class="tas-med tas-med--small" aria-hidden="true">
-            @if (t.avatar) {
-              <img [src]="t.avatar" alt="" />
-            } @else {
-              {{ t.nom.charAt(0).toUpperCase() }}
-            }
-          </span>
-          <span class="tas-pick-name">{{ t.nom }}</span>
-          <span class="tas-bar" [class.tas-bar--low]="life.low" aria-hidden="true"><i [style.width.%]="life.rest"></i><u [style.left.%]="life.rest" [style.width.%]="life.loss"></u></span>
-          <span class="tas-num">{{ t.vitaliteCourante ?? '—' }}/{{ t.vitaliteMax ?? '—' }}</span>
-          @if (odds()[t.key]; as chance) {
-            <span class="tas-odds">{{ chance }}</span>
-          }
-        </button>
-      } @empty {
-        <span class="tas-note">Personne à viser.</span>
-      }
-    </div>
-
-    @if (target(); as t) {
-      @let life = lifeOf(t);
-      <div class="tas-hero">
-        <span class="tas-med tas-med--target" aria-hidden="true">
-          @if (t.avatar) {
-            <img [src]="t.avatar" alt="" />
-          } @else {
-            {{ t.nom.charAt(0).toUpperCase() }}
-          }
-        </span>
-        <strong class="tas-name">{{ t.nom }}</strong>
-        <span class="tas-tag">{{ t.rang ?? 'Héros' }} · cible</span>
-        <button type="button" class="tas-ghost tas-sheet" [attr.aria-label]="'Ouvrir la fiche de ' + t.nom" (click)="sheetRequested.emit(t)">Fiche</button>
-      </div>
-      <div class="tas-tiles">
-        @for (tile of targetTiles(); track tile.label) {
-          <div class="tas-tile" [class.tas-tile--up]="tile.tone === 'up'" [class.tas-tile--long]="tile.value.length > 5">
-            <b>{{ tile.value }}</b>
-            <span>{{ tile.label }}</span>
-          </div>
-        }
-      </div>
-      @if (targetBadges().length > 0) {
-        <ul class="tas-pills tas-pills--center" aria-label="Effets sur la cible">
-          @for (badge of targetBadges(); track $index) {
-            <li class="tas-pill">{{ badge }}</li>
-          }
-        </ul>
-      }
-      <div class="tas-life" aria-live="polite">
-        <div class="tas-life-line">
-          <span class="tas-bar tas-bar--big" [class.tas-bar--low]="life.low" aria-hidden="true"><i [style.width.%]="life.rest"></i><u [style.left.%]="life.rest" [style.width.%]="life.loss"></u></span>
-          <b>
-            {{ targetLife().current ?? '—' }}
-            @if (targetLife().after !== null) {
-              <s>→ {{ targetLife().after }}</s>
-            }
-            / {{ targetLife().max ?? '—' }}
-          </b>
-        </div>
-        @if (targetLife().after !== null) {
-          <span>{{ targetLife().out ? 'Ce coup met ' + t.nom + ' hors de combat.' : 'Ce coup retire ' + targetLife().loss + ' à ' + t.nom + '.' }}</span>
-        } @else {
-          <span>Vitalité</span>
-        }
-      </div>
-    } @else {
-      <div class="tas-hero">
-        <span class="tas-med tas-med--target" aria-hidden="true">?</span>
-        <b class="tas-prompt">Qui vises-tu ?</b>
-        <span class="tas-wait">Un clic sur un jeton, ci-dessus.</span>
-      </div>
+  <!-- Ce qu'il y a à faire maintenant -->
+  <p class="tas-next" aria-live="polite">
+    <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+    @if (nextStep().step) {
+      <b>{{ nextStep().step }}</b>
     }
-  </aside>
+    {{ nextStep().text }}
+  </p>
 </div>
