@@ -55,4 +55,6 @@ export class CombatBoardComponent {
   readonly effectAdded = output<NewEffect>();
   readonly damageApplied = output<AppliedHit>();
   readonly totalDefenseRequested = output<void>();
+  /** Points d'héroïsme dépensés ou gagnés par la carte active sur son jet d'attaque. */
+  readonly heroismeAdjusted = output<number>();
 }

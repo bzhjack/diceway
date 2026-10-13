@@ -720,6 +720,114 @@
   gap: 0.35rem;
 }
 
+// ── L'héroïsme sur le jet d'attaque ──────────────────────────────────────────────────────────────
+// La gemme d'un point d'héroïsme, et le compteur de l'attaquant à droite de son nom.
+.tas-gem {
+  display: inline-block;
+  flex: none;
+  width: 0.6rem;
+  height: 0.8rem;
+  background: linear-gradient(160deg, #fde68a, var(--dw-color-legendary) 55%, #8a5a12);
+  clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
+}
+
+.tas-ph {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-left: auto;
+  font-size: 0.95rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--dw-color-legendary);
+}
+
+.tas-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+// Ce que le héros peut faire de son héroïsme sur ce jet : à gauche une flèche (relancer) ou une case (à cocher), à droite le prix.
+.tas-acts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.tas-act {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px dashed color-mix(in srgb, var(--dw-color-legendary) 60%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--dw-color-legendary) 8%, transparent);
+  color: var(--dw-color-legendary);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+
+  .mat-icon {
+    flex: none;
+    width: 1.05rem;
+    height: 1.05rem;
+    font-size: 1.05rem;
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--dw-color-legendary) 18%, transparent);
+  }
+
+  &[aria-pressed='true'] {
+    border-style: solid;
+    background: var(--dw-color-legendary);
+    color: #1c1200;
+
+    .tas-gem {
+      background: #1c1200;
+    }
+  }
+}
+
+.tas-cost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding-left: 0.3rem;
+  font-variant-numeric: tabular-nums;
+}
+
+// Un échec critique rapporte un point au lieu d'en coûter un : en vert.
+.tas-act--gain {
+  border-color: color-mix(in srgb, var(--dw-color-reussite) 60%, transparent);
+  background: color-mix(in srgb, var(--dw-color-reussite) 8%, transparent);
+  color: var(--dw-color-reussite);
+
+  .tas-gem {
+    background: linear-gradient(160deg, #bbf7d0, var(--dw-color-reussite) 55%, #14532d);
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--dw-color-reussite) 18%, transparent);
+  }
+
+  &[aria-pressed='true'] {
+    background: var(--dw-color-reussite);
+    color: #041a0d;
+
+    .tas-gem {
+      background: #041a0d;
+    }
+  }
+}
+
 .tas-apply {
   font-weight: 800;
 }

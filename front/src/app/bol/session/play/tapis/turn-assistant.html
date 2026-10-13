@@ -22,6 +22,10 @@
           <strong class="tas-name tas-name--active">{{ card().nom }}</strong>
           <span class="tas-tag">{{ card().rang ?? 'Héros' }} · attaquant</span>
         </span>
+        @if (heroisme() !== null) {
+          @let points = heroisme() ?? 0;
+          <span class="tas-ph" [matTooltip]="points + (points > 1 ? ' points d’héroïsme' : ' point d’héroïsme')"><span class="tas-gem" aria-hidden="true"></span> {{ points }}<span class="tas-sr"> {{ points > 1 ? 'points' : 'point' }} d’héroïsme</span></span>
+        }
       </div>
       <div class="tas-tiles tas-tiles--start">
         @for (tile of attackerTiles(); track tile.label) {
@@ -280,12 +284,44 @@
           }
         </div>
 
-        @if (isNatural12()) {
-          <div class="tas-heroic" role="group" aria-label="Option du succès héroïque">
-            <span class="tas-label tas-label--gold">Son coup héroïque</span>
+        <!-- L'héroïsme du héros sur ce jet : relancer un coup raté, accepter un échec critique, acheter un succès héroïque ou légendaire -->
+        @if (!rolling() && (canFavor() || canCritique() || canLegendary() || canUpgrade())) {
+          <div class="tas-acts">
+            @if (canFavor()) {
+              <button type="button" class="tas-act" matTooltipPosition="above" matTooltip="Relance tous les dés d’attaque et garde le second résultat" aria-label="Faveur divine : relancer les dés pour 1 point d’héroïsme" (click)="divineFavor()">
+                <mat-icon aria-hidden="true">replay</mat-icon> Faveur divine <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
+              </button>
+            }
+            @if (canCritique()) {
+              <button type="button" class="tas-act tas-act--gain" [attr.aria-pressed]="critique()" matTooltipPosition="above" matTooltip="Le joueur décrit une issue franchement défavorable" aria-label="Échec critique : gagner 1 point d’héroïsme" (click)="toggleCritique()">
+                <mat-icon aria-hidden="true">{{ critique() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Échec critique <span class="tas-cost">+1 <span class="tas-gem" aria-hidden="true"></span></span>
+              </button>
+            }
+            @if (canLegendary()) {
+              <button type="button" class="tas-act" [attr.aria-pressed]="legendary()" matTooltipPosition="above" matTooltip="Deux options de succès héroïque au lieu d’une" aria-label="Succès légendaire, pour 1 point d’héroïsme" (click)="toggleLegendary()">
+                <mat-icon aria-hidden="true">{{ legendary() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Succès légendaire <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
+              </button>
+            }
+            @if (canUpgrade()) {
+              <button type="button" class="tas-act" [attr.aria-pressed]="heroicUpgrade()" matTooltipPosition="above" matTooltip="Le coup devient un succès héroïque : une option au choix" aria-label="Convertir en succès héroïque, pour 1 point d’héroïsme" (click)="toggleHeroicUpgrade()">
+                <mat-icon aria-hidden="true">{{ heroicUpgrade() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Succès héroïque <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
+              </button>
+            }
+          </div>
+        }
+
+        @if (picksMax() > 0) {
+          <div class="tas-heroic" role="group" [attr.aria-label]="picksMax() > 1 ? 'Options du succès légendaire' : 'Option du succès héroïque'">
+            <span class="tas-label tas-label--gold">{{ picksMax() > 1 ? 'Son coup légendaire · deux options' : 'Son coup héroïque · une option' }}</span>
             <div class="tas-chips">
               @for (o of heroicOptions; track o.slug) {
-                <button type="button" class="tas-chip tas-chip--heroic" [attr.aria-pressed]="heroic() === o.slug" [matTooltip]="o.effect" (click)="setHeroic(o.slug)">{{ o.label }}</button>
+                @let count = pickCounts()[o.slug] ?? 0;
+                <button type="button" class="tas-chip tas-chip--heroic" [attr.aria-pressed]="count > 0" [matTooltip]="o.effect" (click)="pickHeroic(o.slug)">
+                  {{ o.label }}
+                  @if (count > 1) {
+                    <em>×{{ count }}</em>
+                  }
+                </button>
               }
             </div>
           </div>
@@ -367,14 +403,23 @@
         }
       } @else if (attackVerdict(); as v) {
         <!-- Coup raté, ou désarmement : rien à lancer, il ne reste qu'à finir le tour -->
-        <span class="tas-wait">{{ v.tone === 'echec' ? 'Pas de dégâts : le coup est raté.' : 'Désarmement : l’adversaire perd son arme, sans dégâts.' }}</span>
-        <button #endButton mat-flat-button type="button" class="tas-apply" (click)="endTurnRequested.emit()">Fin du tour</button>
+        @if (v.tone === 'echec') {
+          <span class="tas-wait">Pas de dégâts : le coup est raté.</span>
+          <button #endButton mat-flat-button type="button" class="tas-apply" (click)="endTurnRequested.emit()">Fin du tour</button>
+        } @else {
+          <span class="tas-wait">Désarmement : l’adversaire perd son arme, sans dégâts.</span>
+          <button #endButton mat-flat-button type="button" class="tas-apply" (click)="concludeWithoutDamage()">{{ carnagePicked() ? 'Nouvelle attaque (Carnage)' : 'Fin du tour' }}</button>
+        }
       } @else if (lastHit(); as hit) {
         <div class="tas-verdict" aria-live="polite">
           <b class="tas-verdict-title tas-verdict-title--echec">{{ hit.damage }} {{ hit.damage > 1 ? 'dégâts' : 'dégât' }}</b>
           <span>appliqués à {{ hit.target.nom }}.</span>
         </div>
-        <button #endButton mat-flat-button type="button" class="tas-apply" (click)="endTurnRequested.emit()">Fin du tour</button>
+        @if (carnageOwed() > 0) {
+          <span class="tas-wait">Carnage : une nouvelle attaque suit.</span>
+        } @else {
+          <button #endButton mat-flat-button type="button" class="tas-apply" (click)="endTurnRequested.emit()">Fin du tour</button>
+        }
       } @else {
         <span class="tas-wait">Après un coup qui touche.</span>
       }

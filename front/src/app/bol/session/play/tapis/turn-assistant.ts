@@ -6,7 +6,7 @@ import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {ActionDiceTargetLabel, ActionRollTone, RollSumTerm} from '../../models/action-roll.model';
 import {CombatEffect, ModifierTerm, NewEffect} from '../../models/combat-effect.model';
 import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, chanceRingDash, keepBestOrWorstTwo, parseDiceTotal} from '../../action-roll.util';
-import {descriptionEffet, doitUnDeDeMalus, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
+import {descriptionEffet, doitUnDeDeMalus, effetCoupPrecis, effetRenversement, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
 import {EffectsListComponent} from './effects-list';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, MAINS_NUES} from '../../attack-options.util';
@@ -20,14 +20,19 @@ import {
   damageDie,
   damageDieMax,
   damageRange,
+  devastatingBonus,
   finalDamage,
   HEROIC_OPTIONS,
+  heroicPicksAllowed,
+  HeroicSlug,
   rawDamage,
   resolvePostureAttackModifier,
   rollD6,
   suggestedAttackResult,
+  toggleHeroicPick,
   vigueurBonus,
 } from '../../combat-resolution.util';
+import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {AttackChoice} from '../../models/attack-options.model';
 import {AppliedHit, ResolvedCombatStats} from '../../models/combat-attack.model';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
@@ -101,7 +106,9 @@ function signedTerm(value: number): string {
  * sur la même grille, trois cases — qui elle vise, son jet d'attaque (2d6 + bonus − défense, 9+), son jet de dégâts — dont celle où
  * il faut agir s'allume, et une ligne qui dit quoi faire ensuite.
  * Il annonce ce qu'il faut aux dés et les chances, prend les totaux lancés à table, et montre sur la vie de la cible ce que le coup va
- * lui retirer. Il ne parle à aucun service : il signale à la page ce qui doit être enregistré (dégâts, fin de tour, défense totale). */
+ * lui retirer. Pour un héros, le jet d'attaque ouvre les usages de l'héroïsme : faveur divine après un coup raté, échec critique sur un
+ * double 1, succès héroïque acheté sur un coup qui touche, succès légendaire sur un double 6 — avec leurs options de combat.
+ * Il ne parle à aucun service : il signale à la page ce qui doit être enregistré (dégâts, fin de tour, défense totale, héroïsme). */
 @Component({
   selector: 'bol-turn-assistant',
   imports: [EffectsListComponent, MatButtonModule, MatIconModule, MatTooltipModule],
@@ -143,6 +150,8 @@ export class TurnAssistantComponent {
   readonly totalDefenseRequested = output<void>();
   /** « Fin du tour » depuis le plateau, après un coup raté ou des dégâts appliqués. */
   readonly endTurnRequested = output<void>();
+  /** Points d'héroïsme dépensés (négatif) ou gagnés (positif) par l'attaquant sur ce jet. */
+  readonly heroismeAdjusted = output<number>();
 
   protected readonly heroicOptions = HEROIC_OPTIONS;
   protected readonly isHero = computed(() => this.card().kind === 'hero');
@@ -334,7 +343,26 @@ export class TurnAssistantComponent {
   });
 
   protected readonly manualTotal = signal<number | null>(null);
-  protected readonly heroic = signal<string | null>(null);
+
+  // ── L'héroïsme sur le jet d'attaque (02-actions-combat.md) ──
+  /** Points d'héroïsme de l'attaquant ; `null` s'il n'en a pas (PNJ, créature, démon). */
+  protected readonly heroisme = computed(() => this.attacker()?.heroisme ?? null);
+  /** Échec critique accepté sur un double 1 : rapporte 1 point d'héroïsme. */
+  protected readonly critique = signal(false);
+  /** Succès légendaire acheté sur un double 6 : deux options au lieu d'une. */
+  protected readonly legendary = signal(false);
+  /** Coup qui touche transformé en succès héroïque pour 1 point d'héroïsme. */
+  protected readonly heroicUpgrade = signal(false);
+  /** Les options de succès héroïque choisies pour ce coup : une, ou deux pour un succès légendaire (la même deux fois si on veut). */
+  protected readonly picks = signal<readonly HeroicSlug[]>([]);
+  /** Faveur divine dépensée : les dés sont à relancer. */
+  private readonly favor = signal(false);
+  /** Attaques immédiates que la carte doit encore à un Carnage, ce tour-ci. */
+  protected readonly carnageOwed = linkedSignal<string, number>({source: () => this.cardKey(), computation: () => 0});
+  /** Un Carnage a été pris ce tour : les attaques qu'il donne se font sans dépenser d'héroïsme. */
+  private readonly carnageUsed = linkedSignal<string, boolean>({source: () => this.cardKey(), computation: () => false});
+  /** Il reste un point d'héroïsme à dépenser sur cette attaque. */
+  private readonly canSpend = computed(() => (this.heroisme() ?? 0) > 0 && !this.carnageUsed());
 
   protected readonly degats = computed(() => this.choice()?.degats ?? this.attacker()?.degats ?? this.card().degats);
   protected readonly postureModifier = computed(() =>
@@ -482,7 +510,7 @@ export class TurnAssistantComponent {
       }
     };
     add(this.vigueur(), 'vigueur');
-    add(this.devastating() ? 6 : 0, 'dévastateur');
+    add(devastatingBonus(this.devastating()), this.devastating() > 1 ? `dévastateur ×${this.devastating()}` : 'dévastateur');
     if (this.choice()?.posture?.slug === 'armor-chink') {
       terms.push({value: '0', caption: 'armure ignorée', tone: 'dice'});
     } else {
@@ -561,50 +589,91 @@ export class TurnAssistantComponent {
     return manual === 2 ? [1, 1] : manual === 12 ? [6, 6] : null;
   });
 
-  protected readonly isNatural12 = computed(() => {
+  private readonly isNatural2 = computed(() => {
     const d = this.naturalDice();
-    return this.heroicAllowed() && !!d && d[0] === 6 && d[1] === 6;
+    return !!d && d[0] === 1 && d[1] === 1;
   });
 
-  protected readonly verdict = computed(() => {
+  private readonly isNatural12 = computed(() => {
+    const d = this.naturalDice();
+    return !!d && d[0] === 6 && d[1] === 6;
+  });
+
+  /** Ce que disent les dés, avant tout choix d'héroïsme. Le succès héroïque du double 6 est celui des héros et de leurs alliés : pour
+   * leurs adversaires, le coup touche, sans plus. */
+  private readonly baseResult = computed<InitiativeResultat | null>(() => {
     const d = this.naturalDice() ?? (this.diceSum() === null ? null : ([0, this.diceSum() as number] as const));
     const t = this.total();
     if (t === null || d === null) {
       return null;
     }
     const result = suggestedAttackResult([d[0], d[1]], t, ATTACK_THRESHOLD);
+    return result === 'heroique' && !this.heroicAllowed() ? 'reussite' : result;
+  });
+
+  /** Le résultat retenu, une fois les choix d'héroïsme faits. */
+  protected readonly verdict = computed(() => {
+    const base = this.baseResult();
+    if (base === null) {
+      return null;
+    }
+    const result: InitiativeResultat =
+      base === 'echec' && this.critique() ? 'echec_critique' : base === 'heroique' && this.legendary() ? 'legendaire' : base === 'reussite' && this.heroicUpgrade() ? 'heroique' : base;
     return {result, hit: result === 'reussite' || result === 'heroique' || result === 'legendaire'};
   });
 
-  /** Ton du résultat : réussite, échec ou succès héroïque (réservé aux héros et alliés). */
-  protected readonly tone = computed<'reussite' | 'echec' | 'heroique' | null>(() => {
-    const v = this.verdict();
-    if (!v || this.total() === null) {
-      return null;
+  /** Faveur divine : 1 point d'héroïsme pour relancer un coup raté — plus une fois l'échec critique accepté. */
+  protected readonly canFavor = computed(() => this.verdict()?.result === 'echec' && this.canSpend());
+  /** Un héros qui sort un double 1 peut en faire un échec critique, qui lui rapporte 1 point d'héroïsme. */
+  protected readonly canCritique = computed(() => this.heroisme() !== null && this.isNatural2() && this.baseResult() === 'echec');
+  /** Seul le double 6 qui vaut succès héroïque se transforme en succès légendaire. */
+  protected readonly canLegendary = computed(() => this.heroisme() !== null && this.baseResult() === 'heroique' && (this.legendary() || this.canSpend()));
+  /** Un coup qui touche, sans plus, se transforme en succès héroïque. */
+  protected readonly canUpgrade = computed(() => this.heroisme() !== null && this.baseResult() === 'reussite' && (this.heroicUpgrade() || this.canSpend()));
+  /** Nombre d'options de succès héroïque à choisir pour ce coup. */
+  protected readonly picksMax = computed(() => heroicPicksAllowed(this.verdict()?.result ?? 'echec'));
+  /** Combien de fois chaque option est prise. */
+  protected readonly pickCounts = computed(() => {
+    const counts: Partial<Record<HeroicSlug, number>> = {};
+    for (const pick of this.picks()) {
+      counts[pick] = (counts[pick] ?? 0) + 1;
     }
-    if (!v.hit) {
-      return 'echec';
-    }
-    return this.heroicAllowed() && (v.result === 'heroique' || v.result === 'legendaire') ? 'heroique' : 'reussite';
+    return counts;
   });
+  /** Le coup se conclut sur un Carnage : une nouvelle attaque suit, le tour ne finit pas. */
+  protected readonly carnagePicked = computed(() => this.picks().includes('carnage'));
 
   /** Le verdict en clair : touché ou raté, et de combien. Un double 1 rate et un double 6 touche quel que soit le total. */
   protected readonly attackVerdict = computed<AttackVerdict | null>(() => {
-    const tone = this.tone();
+    const result = this.verdict()?.result;
     const total = this.total();
-    if (!tone || total === null) {
+    if (!result || total === null) {
       return null;
     }
-    const d = this.naturalDice();
-    if (tone === 'heroique') {
-      return {title: 'Succès héroïque', detail: 'Double 6 : le coup touche, avec une option au choix.', tone};
+    switch (result) {
+      case 'legendaire':
+        return {title: 'Succès légendaire', detail: 'Double 6 et 1 point d’héroïsme : deux options au choix.', tone: 'heroique'};
+      case 'heroique':
+        return {
+          title: 'Succès héroïque',
+          detail: this.isNatural12() ? 'Double 6 : le coup touche, avec une option au choix.' : 'Touché, transformé pour 1 point d’héroïsme : une option au choix.',
+          tone: 'heroique',
+        };
+      case 'echec_critique':
+        return {title: 'Échec critique', detail: 'Double 1 : une issue franchement défavorable, et 1 point d’héroïsme gagné.', tone: 'echec'};
+      case 'echec':
+        return {title: 'Raté', detail: this.isNatural2() ? 'Double 1 : échec automatique.' : `il manquait ${ATTACK_THRESHOLD - total}`, tone: 'echec'};
+      case 'reussite': {
+        const detail = !this.isNatural12()
+          ? total > ATTACK_THRESHOLD
+            ? `réussi de ${total - ATTACK_THRESHOLD}`
+            : 'tout juste'
+          : total > ATTACK_THRESHOLD
+            ? 'Double 6 : réussite automatique.'
+            : 'Double 6 : seul lui pouvait toucher, c’est une réussite normale.';
+        return {title: 'Touché', detail, tone: 'reussite'};
+      }
     }
-    if (tone === 'echec') {
-      const double1 = !!d && d[0] === 1 && d[1] === 1;
-      return {title: 'Raté', detail: double1 ? 'Double 1 : échec automatique.' : `il manquait ${ATTACK_THRESHOLD - total}`, tone};
-    }
-    const double6 = !!d && d[0] === 6 && d[1] === 6;
-    return {title: 'Touché', detail: double6 ? 'Double 6 : réussite automatique.' : total > ATTACK_THRESHOLD ? `réussi de ${total - ATTACK_THRESHOLD}` : 'tout juste', tone};
   });
 
   // ── Étape 4 : les dégâts ──
@@ -641,7 +710,8 @@ export class TurnAssistantComponent {
     const a = this.attacker();
     return a ? vigueurBonus(a, this.isTir()) : 0;
   });
-  protected readonly devastating = computed(() => this.heroic() === 'devastateur');
+  /** Nombre de coups dévastateurs pris : +6 dégâts chacun. */
+  protected readonly devastating = computed(() => this.pickCounts().devastateur ?? 0);
 
   protected readonly raw = computed(() => {
     const values = this.damageValues();
@@ -664,7 +734,7 @@ export class TurnAssistantComponent {
   });
   /** Ce que rapporte le dé de dégâts, à côté de sa case : « d6M : le moins bon de deux d6 ». */
   protected readonly dieNote = computed(() => `${this.degats()} : ${DIE_NOTES[this.die()]}`);
-  protected readonly hasDamageStep = computed(() => !!this.verdict()?.hit && this.heroic() !== 'desarmement');
+  protected readonly hasDamageStep = computed(() => !!this.verdict()?.hit && !this.picks().includes('desarmement'));
   /** Plus grand résultat que peut afficher le dé de dégâts : 3 pour un d3, 6 sinon. */
   protected readonly damageMax = computed(() => damageDieMax(this.die()));
 
@@ -695,15 +765,27 @@ export class TurnAssistantComponent {
       return {step: '1', text: `Choisis qui ${this.card().nom} attaque.`};
     }
     const verdict = this.attackVerdict();
+    if (!verdict && this.favor()) {
+      return {step: '2', text: 'Faveur divine : relance tous les dés d’attaque, puis tape le nouveau total — ou lance-les à l’écran.'};
+    }
+    if (!verdict && this.carnageOwed() > 0) {
+      return {step: '2', text: `Carnage : ${this.card().nom} attaque de nouveau tout de suite, sans dépenser d’héroïsme. Garde la cible ou changes-en, puis tape le total.`};
+    }
     if (!verdict) {
       return this.lastHit()
         ? {step: '', text: 'Dégâts appliqués. Il ne reste qu’à finir le tour, ou à lancer une nouvelle attaque.'}
         : {step: '2', text: this.gmDie() ? `Tape le total des deux dés gardés (les ${this.keptCaption()} de 3d6), ou lance-les à l’écran.` : 'Tape le total des deux dés d’attaque, ou lance-les à l’écran.'};
     }
     if (!this.hasDamageStep()) {
-      return {step: '', text: `${verdict.tone === 'echec' ? 'Raté' : 'Désarmement'}. Il ne reste qu’à finir le tour.`};
+      return verdict.tone !== 'echec' && this.carnagePicked()
+        ? {step: '', text: 'Désarmement. Valide-le pour enchaîner sur l’attaque du Carnage.'}
+        : {step: '', text: `${verdict.tone === 'echec' ? 'Raté' : 'Désarmement'}. Il ne reste qu’à finir le tour.`};
     }
     const damage = this.damage();
+    const toPick = this.picksMax() - this.picks().length;
+    if (damage === null && toPick > 0) {
+      return {step: '2', text: `Choisis ${toPick > 1 ? 'les deux options' : 'l’option'} du coup ${this.picksMax() > 1 ? 'légendaire' : 'héroïque'}, puis tape le dé de dégâts (${this.dieNote()}).`};
+    }
     return damage === null
       ? {step: '3', text: `Tape le dé de dégâts (${this.dieNote()}), ou lance-le à l’écran.`}
       : {step: '', text: `Entrée applique ${damage} ${damage > 1 ? 'dégâts' : 'dégât'} à ${target.nom}.`};
@@ -777,7 +859,7 @@ export class TurnAssistantComponent {
       return;
     }
     this.manualTotal.set(null);
-    this.heroic.set(null);
+    this.clearHeroism(true);
     this.damageValues.set(null);
     this.dice.set(null);
     this.lastHit.set(null);
@@ -826,7 +908,7 @@ export class TurnAssistantComponent {
       if (this.diceSum() !== null) {
         this.dice.set(null);
         this.manualTotal.set(null);
-        this.heroic.set(null);
+        this.clearHeroism(true);
         this.damageValues.set(null);
       }
       return;
@@ -837,7 +919,7 @@ export class TurnAssistantComponent {
     }
     this.dice.set(null);
     this.rolledDice.set(null);
-    this.heroic.set(null);
+    this.clearHeroism(true);
     this.damageValues.set(null);
     this.lastHit.set(null);
     this.manualTotal.set(total);
@@ -943,8 +1025,78 @@ export class TurnAssistantComponent {
     return {rest: rest - loss, loss, low: isLowVitalite(card.vitaliteCourante, card.vitaliteMax)};
   }
 
-  protected setHeroic(slug: string): void {
-    this.heroic.set(this.heroic() === slug ? null : slug);
+  /** Prend ou retire une option de succès héroïque (cf. `toggleHeroicPick`). */
+  protected pickHeroic(slug: HeroicSlug): void {
+    this.picks.update((picks) => toggleHeroicPick(picks, slug, this.picksMax()));
+  }
+
+  /** Faveur divine : 1 point d'héroïsme, et tous les dés du jet d'attaque se relancent — à table ou à l'écran. Le second jet est gardé. */
+  protected divineFavor(): void {
+    if (!this.canFavor()) {
+      return;
+    }
+    this.heroismeAdjusted.emit(-1);
+    this.favor.set(true);
+    this.dice.set(null);
+    this.rolledDice.set(null);
+    this.manualTotal.set(null);
+    this.damageValues.set(null);
+    this.focusAfterRender(() => this.attackInput());
+  }
+
+  /** Échec critique sur un double 1 : l'accepter rapporte 1 point d'héroïsme, y renoncer le reprend. */
+  protected toggleCritique(): void {
+    this.heroismeAdjusted.emit(this.critique() ? -1 : 1);
+    this.critique.update((chosen) => !chosen);
+  }
+
+  /** Succès légendaire sur un double 6 : 1 point d'héroïsme pour une seconde option ; y renoncer le rembourse. */
+  protected toggleLegendary(): void {
+    if (!this.legendary() && !this.canSpend()) {
+      return;
+    }
+    this.heroismeAdjusted.emit(this.legendary() ? 1 : -1);
+    this.legendary.update((chosen) => !chosen);
+    this.picks.update((picks) => picks.slice(0, this.picksMax()));
+  }
+
+  /** Succès héroïque acheté sur un coup qui touche : 1 point d'héroïsme pour une option ; y renoncer le rembourse. */
+  protected toggleHeroicUpgrade(): void {
+    if (!this.heroicUpgrade() && !this.canSpend()) {
+      return;
+    }
+    this.heroismeAdjusted.emit(this.heroicUpgrade() ? 1 : -1);
+    this.heroicUpgrade.update((chosen) => !chosen);
+    this.picks.update((picks) => picks.slice(0, this.picksMax()));
+  }
+
+  /** Oublie les choix d'héroïsme du jet. Quand le jet est refait (`refund`), ce qu'ils avaient coûté ou rapporté est rendu. */
+  private clearHeroism(refund: boolean): void {
+    const delta = (this.legendary() ? 1 : 0) + (this.heroicUpgrade() ? 1 : 0) - (this.critique() ? 1 : 0);
+    this.critique.set(false);
+    this.legendary.set(false);
+    this.heroicUpgrade.set(false);
+    this.picks.set([]);
+    if (refund && delta !== 0) {
+      this.heroismeAdjusted.emit(delta);
+    }
+  }
+
+  /** Le coup est conclu : ses options héroïques laissent leurs effets sur la cible (dé de malus du coup précis, du renversement), et
+   * un Carnage donne une attaque de plus. */
+  private conclude(target: TapisCard): void {
+    const picks = new Set(this.picks());
+    if (picks.has('precis')) {
+      this.effectAdded.emit(effetCoupPrecis(target.key));
+    }
+    if (picks.has('renversement')) {
+      this.effectAdded.emit(effetRenversement(target.key));
+    }
+    const carnages = this.pickCounts().carnage ?? 0;
+    this.carnageOwed.update((owed) => Math.max(0, owed - 1) + carnages);
+    if (carnages > 0) {
+      this.carnageUsed.set(true);
+    }
   }
 
   protected apply(): void {
@@ -953,10 +1105,26 @@ export class TurnAssistantComponent {
     if (!target || damage === null) {
       return;
     }
+    this.conclude(target);
     this.damageApplied.emit({target, damage});
     this.resetRoll();
     this.lastHit.set({target, damage});
-    this.focusAfterRender(() => this.endButton());
+    this.focusAfterRender(() => (this.carnageOwed() > 0 ? this.attackInput() : this.endButton()));
+  }
+
+  /** Désarmement : pas de dégâts à appliquer. Le coup se conclut, et le tour finit — sauf si un Carnage donne une nouvelle attaque. */
+  protected concludeWithoutDamage(): void {
+    const target = this.target();
+    if (!target) {
+      return;
+    }
+    this.conclude(target);
+    if (this.carnageOwed() > 0) {
+      this.resetRoll();
+      this.focusAfterRender(() => this.attackInput());
+    } else {
+      this.endTurnRequested.emit();
+    }
   }
 
   protected signed(value: number): string {
@@ -972,7 +1140,8 @@ export class TurnAssistantComponent {
     this.dice.set(null);
     this.rolledDice.set(null);
     this.manualTotal.set(null);
-    this.heroic.set(null);
+    this.favor.set(false);
+    this.clearHeroism(false);
     this.damageValues.set(null);
   }
 }

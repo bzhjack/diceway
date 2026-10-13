@@ -887,6 +887,24 @@ export class SessionPlayPageComponent {
     this.saveEtat((etat) => ({...etat, effets: [...appliquerEvenement(etat.effets, {type: 'ajout-manuel', effet}, idAleatoire)]}));
   }
 
+  /** Le héros actif dépense ou gagne des points d'héroïsme sur son jet d'attaque (faveur divine, échec critique, succès héroïque ou
+   * légendaire) : affiché tout de suite, enregistré, et repris si l'enregistrement échoue. */
+  protected onHeroismeAdjusted(delta: number): void {
+    const herosId = this.attackerStats()?.herosId;
+    if (!herosId) {
+      return;
+    }
+    const shift = (by: number): void =>
+      this.attackerStats.update((stats) => (stats?.herosId === herosId ? {...stats, heroisme: Math.max(0, (stats.heroisme ?? 0) + by)} : stats));
+    shift(delta);
+    this.herosService.adjustHeroisme(herosId, delta).subscribe({
+      error: (error: unknown) => {
+        shift(-delta);
+        this.tableError(error, "Impossible de mettre à jour l'héroïsme.");
+      },
+    });
+  }
+
   /** Dégâts calculés par l'assistant : enregistrés sur la cible. */
   protected onHitApplied(hit: AppliedHit): void {
     if (hit.damage !== 0) {

@@ -7,9 +7,12 @@ export type DamageDie = 'd3' | 'd6' | 'd6m' | 'd6b';
 /** Seuil de réussite d'un jet d'attaque BoL (02-actions-combat.md). */
 export const ATTACK_THRESHOLD = 9;
 
-/** Option de succès héroïque en combat (02-actions-combat.md). Seul « Coup dévastateur » change le calcul : +6 dégâts. */
+/** Option de succès héroïque en combat (02-actions-combat.md) : un succès héroïque en donne une, un succès légendaire deux — la même
+ * deux fois si on veut. */
+export type HeroicSlug = 'carnage' | 'devastateur' | 'precis' | 'desarmement' | 'pietaille' | 'renversement';
+
 export interface HeroicOption {
-  readonly slug: 'carnage' | 'devastateur' | 'precis' | 'desarmement' | 'pietaille' | 'renversement';
+  readonly slug: HeroicSlug;
   readonly label: string;
   readonly effect: string;
 }
@@ -17,11 +20,28 @@ export interface HeroicOption {
 export const HEROIC_OPTIONS: readonly HeroicOption[] = [
   {slug: 'carnage', label: 'Carnage', effect: 'Nouvelle attaque immédiate, sans dépenser de PH.'},
   {slug: 'devastateur', label: 'Coup dévastateur', effect: '+6 dégâts.'},
-  {slug: 'precis', label: 'Coup précis', effect: 'Dégâts normaux et un dé de malus imposé à la cible.'},
+  {slug: 'precis', label: 'Coup précis', effect: 'Dégâts normaux et un dé de malus imposé à la cible, jusqu’à la fin du combat.'},
   {slug: 'desarmement', label: 'Désarmement', effect: "L'adversaire perd son arme, au lieu de subir des dégâts."},
   {slug: 'pietaille', label: 'Massacrer la piétaille', effect: 'Les dégâts sont le nombre de piétaille mis hors combat.'},
-  {slug: 'renversement', label: 'Renversement', effect: "L'adversaire est jeté à terre."},
+  {slug: 'renversement', label: 'Renversement', effect: "L'adversaire est jeté à terre : un dé de malus à sa prochaine action."},
 ];
+
+/** Nombre d'options de succès héroïque que donne un résultat : une pour un succès héroïque, deux pour un succès légendaire. */
+export function heroicPicksAllowed(result: InitiativeResultat): number {
+  return result === 'legendaire' ? 2 : result === 'heroique' ? 1 : 0;
+}
+
+/** Un clic sur une option : elle s'ajoute tant qu'il reste un choix (la même peut être prise deux fois) ; tous les choix faits, un clic
+ * sur une option prise la retire, un clic sur une autre remplace le choix le plus ancien. */
+export function toggleHeroicPick(picks: readonly HeroicSlug[], slug: HeroicSlug, max: number): readonly HeroicSlug[] {
+  if (max <= 0) {
+    return [];
+  }
+  if (picks.length < max) {
+    return [...picks, slug];
+  }
+  return picks.includes(slug) ? picks.filter((pick) => pick !== slug) : [...picks.slice(1), slug];
+}
 
 /** Bonus de dégâts du coup dévastateur. */
 const DEVASTATING_BONUS = 6;
@@ -67,9 +87,14 @@ export function vigueurBonus(stats: ResolvedCombatStats, useTir: boolean): numbe
   return useTir && stats.attaque === null ? Math.floor(stats.vigueur / 2) : stats.vigueur;
 }
 
-/** Dégâts finaux : dégâts bruts + vigueur (+ coup dévastateur) − protection de la cible, jamais négatifs. */
-export function finalDamage(raw: number, vigueur: number, protection: number, devastating: boolean): number {
-  return Math.max(0, raw + vigueur + (devastating ? DEVASTATING_BONUS : 0) - protection);
+/** Ce qu'ajoutent aux dégâts `count` coups dévastateurs (deux pour un succès légendaire qui le prend deux fois). */
+export function devastatingBonus(count: number): number {
+  return count * DEVASTATING_BONUS;
+}
+
+/** Dégâts finaux : dégâts bruts + vigueur (+ 6 par coup dévastateur) − protection de la cible, jamais négatifs. */
+export function finalDamage(raw: number, vigueur: number, protection: number, devastating: number): number {
+  return Math.max(0, raw + vigueur + devastatingBonus(devastating) - protection);
 }
 
 /** Plus grande face que peut montrer le dé de dégâts : 3 pour un d3, 6 sinon. */
@@ -78,7 +103,7 @@ export function damageDieMax(die: DamageDie): number {
 }
 
 /** Fourchette des dégâts finaux, annoncée avant le jet : ce que donnent la plus petite et la plus grande face du dé. */
-export function damageRange(die: DamageDie, vigueur: number, protection: number, devastating: boolean): readonly [number, number] {
+export function damageRange(die: DamageDie, vigueur: number, protection: number, devastating: number): readonly [number, number] {
   return [finalDamage(1, vigueur, protection, devastating), finalDamage(damageDieMax(die), vigueur, protection, devastating)];
 }
 
@@ -111,7 +136,8 @@ export function computeAttackTotal(
 }
 
 /** Résultat suggéré d'un jet d'attaque : 2/12 naturels priment sur le seuil (même règle absolue que
- * pour tout jet d'action, 02-actions-combat.md) — `total` est déjà le résultat de `computeAttackTotal`. */
+ * pour tout jet d'action, 02-actions-combat.md) — `total` est déjà le résultat de `computeAttackTotal`. Le double 6 est un succès
+ * héroïque, sauf si lui seul pouvait toucher (son total ne dépasse pas le seuil) : le coup touche alors normalement (livre p. 56). */
 export function suggestedAttackResult(
   dice: readonly [number, number],
   total: number,
@@ -122,7 +148,7 @@ export function suggestedAttackResult(
     return 'echec';
   }
   if (a === 6 && b === 6) {
-    return 'heroique';
+    return total > threshold ? 'heroique' : 'reussite';
   }
   return total >= threshold ? 'reussite' : 'echec';
 }

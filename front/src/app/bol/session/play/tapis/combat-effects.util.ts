@@ -304,6 +304,17 @@ export function libelleDuree(duree: EffectDuration): string {
   }
 }
 
+/** Coup précis (option de succès héroïque) : la cible, estropiée, garde un dé de malus à ses jets jusqu'à la fin du combat — le MJ le
+ * retire s'il ne concernait pas ses attaques. */
+export function effetCoupPrecis(porteur: string): NewEffect {
+  return {origine: DE_MALUS, libelle: 'coup précis : dé de malus', porteur, stat: 'action', valeur: -1, quand: 'attaque', duree: {type: 'combat'}, manuel: true};
+}
+
+/** Renversement (option de succès héroïque) : la cible, jetée à terre, se relève avec un dé de malus à sa prochaine action. */
+export function effetRenversement(porteur: string): NewEffect {
+  return {origine: DE_MALUS, libelle: 'renversé : dé de malus', porteur, stat: 'action', valeur: -1, quand: 'attaque', duree: {type: 'action-porteur'}, manuel: true};
+}
+
 /** Les effets que le MJ ajoute à la main depuis le menu « + Effet ». */
 /** Vrai si la carte doit un dé de malus à sa prochaine action : son jet d'attaque se fera à 3d6, en gardant les deux moins bons. */
 export function doitUnDeDeMalus(effets: readonly CombatEffect[], carte: string): boolean {

@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {CombatEffect, RollContext} from '../../models/combat-effect.model';
-import {appliquerEvenement, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
+import {appliquerEvenement, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, effetCoupPrecis, effetRenversement, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
 
 function effet(over: Partial<CombatEffect> = {}): CombatEffect {
   return {id: 'e-1', origine: 'posture-defensive', porteur: 'hero-1', stat: 'defense', valeur: 1, quand: 'subie', duree: {type: 'debut-tour-porteur'}, manuel: false, ...over};
@@ -324,5 +324,21 @@ describe('sansTerme', () => {
 
   it('keeps everything for an unknown id, and never touches the shield of the sheet', () => {
     expect(sansTerme(termes, 'e-9')).toEqual(termes);
+  });
+});
+
+describe('effets des options héroïques', () => {
+  it('leaves a precise blow malus die on the target until the end of the fight', () => {
+    const effets = appliquerEvenement([], {type: 'ajout-manuel', effet: effetCoupPrecis('pnj-7')}, () => 'e-1');
+    expect(doitUnDeDeMalus(effets, 'pnj-7')).toBe(true);
+    const apresSonTour = appliquerEvenement(effets, {type: 'fin-tour', carte: 'pnj-7', crees: []});
+    expect(doitUnDeDeMalus(appliquerEvenement(apresSonTour, {type: 'nouveau-round'}), 'pnj-7')).toBe(true);
+    expect(sommeModificateurs(modificateursPour(effets, {jet: 'attaque', attaquant: 'pnj-7', cible: 'hero-1', bouclier: 0, bouclierToutes: 0}))).toBe(0);
+  });
+
+  it('gives a knocked-down target a malus die for its next action only', () => {
+    const effets = appliquerEvenement([], {type: 'ajout-manuel', effet: effetRenversement('pnj-7')}, () => 'e-1');
+    expect(doitUnDeDeMalus(effets, 'pnj-7')).toBe(true);
+    expect(doitUnDeDeMalus(appliquerEvenement(effets, {type: 'fin-tour', carte: 'pnj-7', crees: []}), 'pnj-7')).toBe(false);
   });
 });
