@@ -21,12 +21,17 @@
   gap: 0.6rem;
 }
 
+// Une hauteur fixe, celle d'un héros bien équipé : d'un tour à l'autre (héros, créature sans arme ni posture…) et d'un réglage à
+// l'autre, la rangée ne bouge pas et les trois cases du coup ne sautent pas. Un contenu plus long défile dans sa carte.
 .tas-card {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 0.5rem;
   min-width: 0;
+  height: 18rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
   padding: 0.65rem 0.9rem 0.75rem;
   border: 1px solid var(--dw-border);
   border-radius: 12px;
@@ -812,6 +817,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.35rem;
+  min-height: 1.9rem;
 }
 
 .tas-act {
@@ -1054,6 +1060,10 @@
   .tas-cards,
   .tas-track {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tas-card {
+    height: auto;
   }
 
   .tas-station {

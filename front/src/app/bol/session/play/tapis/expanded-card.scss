@@ -252,8 +252,9 @@
 .exc-icon-btn {
   --mat-icon-button-icon-color: var(--dw-surface-700);
   --mat-icon-button-state-layer-color: var(--dw-surface-900);
+  // Le bouton est un carré arrondi : son voile de survol et son onde prennent la même forme, au lieu du rond par défaut.
+  --mat-icon-button-container-shape: 8px;
   background: var(--dw-surface-200);
-  border-radius: 8px;
 
   &:hover {
     --mat-icon-button-icon-color: var(--dw-surface-900);

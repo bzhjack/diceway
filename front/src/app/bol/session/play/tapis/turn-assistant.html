@@ -306,9 +306,10 @@
           }
         </div>
 
-        <!-- L'héroïsme du héros sur ce jet : relancer un coup raté, accepter un échec critique, acheter un succès héroïque ou légendaire -->
-        @if (!rolling() && (canFavor() || canCritique() || canLegendary() || canUpgrade())) {
-          <div class="tas-acts">
+        <!-- L'héroïsme du héros sur ce jet : relancer un coup raté, accepter un échec critique, acheter un succès héroïque ou légendaire.
+             La rangée garde sa place même vide : le plateau ne bouge pas quand les boutons apparaissent. -->
+        <div class="tas-acts">
+          @if (!rolling()) {
             @if (canFavor()) {
               <button type="button" class="tas-act" matTooltipPosition="above" matTooltip="Relance tous les dés d’attaque et garde le second résultat" aria-label="Faveur divine : relancer les dés pour 1 point d’héroïsme" (click)="divineFavor()">
                 <mat-icon aria-hidden="true">replay</mat-icon> Faveur divine <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
@@ -329,8 +330,8 @@
                 <mat-icon aria-hidden="true">{{ heroicUpgrade() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Succès héroïque <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
               </button>
             }
-          </div>
-        }
+          }
+        </div>
 
         @if (picksMax() > 0) {
           <div class="tas-heroic" role="group" [attr.aria-label]="picksMax() > 1 ? 'Options du succès légendaire' : 'Option du succès héroïque'">
