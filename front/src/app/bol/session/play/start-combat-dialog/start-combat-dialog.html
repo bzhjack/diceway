@@ -146,20 +146,23 @@
                   }
                 </div>
 
-                <!-- Place réservée à l'option d'héroïsme d'un double 1 ou d'un double 6 : la hauteur de la carte ne bouge pas. -->
-                <div class="scd-opt">
-                  @if (card.option === 'critique') {
-                    <button type="button" class="scd-act scd-act--gain" [attr.aria-pressed]="card.optionChosen" aria-label="Échec critique : gagner 1 point d’héroïsme" (click)="toggleOption(card)">
-                      <mat-icon aria-hidden="true">{{ card.optionChosen ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Échec critique
-                      <span class="scd-cost">+1 <span class="scd-gem" aria-hidden="true"></span></span>
-                    </button>
-                  } @else if (card.option === 'legendaire') {
-                    <button type="button" class="scd-act" [attr.aria-pressed]="card.optionChosen" aria-label="Succès légendaire, pour 1 point d’héroïsme" (click)="toggleOption(card)">
-                      <mat-icon aria-hidden="true">{{ card.optionChosen ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Succès légendaire
-                      <span class="scd-cost">−1 <span class="scd-gem" aria-hidden="true"></span></span>
-                    </button>
-                  }
-                </div>
+                <!-- L'option d'héroïsme d'un double 1 ou d'un double 6. Dès qu'un héros en a une, toutes les cartes lui gardent la place :
+                     elles restent alignées. Sinon la place est rendue, pour que tout tienne sans défiler. -->
+                @if (anyOption()) {
+                  <div class="scd-opt">
+                    @if (card.option === 'critique') {
+                      <button type="button" class="scd-act scd-act--gain" [attr.aria-pressed]="card.optionChosen" aria-label="Échec critique : gagner 1 point d’héroïsme" (click)="toggleOption(card)">
+                        <mat-icon aria-hidden="true">{{ card.optionChosen ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Échec critique
+                        <span class="scd-cost">+1 <span class="scd-gem" aria-hidden="true"></span></span>
+                      </button>
+                    } @else if (card.option === 'legendaire') {
+                      <button type="button" class="scd-act" [attr.aria-pressed]="card.optionChosen" aria-label="Succès légendaire, pour 1 point d’héroïsme" (click)="toggleOption(card)">
+                        <mat-icon aria-hidden="true">{{ card.optionChosen ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Succès légendaire
+                        <span class="scd-cost">−1 <span class="scd-gem" aria-hidden="true"></span></span>
+                      </button>
+                    }
+                  </div>
+                }
               }
             </li>
           } @empty {

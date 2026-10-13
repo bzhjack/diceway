@@ -77,6 +77,12 @@ const AMBUSH_OPTIONS: readonly {readonly value: AmbushState; readonly label: str
   {value: 'heroes_ambushed', label: 'Héros surpris', bonus: '−1', modifier: -1},
 ];
 
+/** Largeur du dialogue jusqu'à quatre héros, et ce qu'ajoute chaque héros au-delà : cinq ou six cartes tiennent ainsi sur une rangée,
+ * sans défilement. L'écran borne le tout (`maxWidth` du dialogue). */
+const BASE_WIDTH_PX = 1240;
+const CARD_WIDTH_PX = 262;
+const MAX_CARDS_PER_ROW = 6;
+
 /**
  * Ajoute les adversaires (dialog existant, réutilisé) puis recueille le jet de réaction de chaque héros avant de démarrer le
  * combat. Chaque héros a sa carte, dans le langage de sa fiche : ce qu'il lui faut aux dés, ses chances, la case où taper le total
@@ -174,6 +180,9 @@ export class StartCombatDialogComponent {
       };
     }),
   );
+
+  /** Un héros en jeu a obtenu un double 1 ou un double 6 : chaque carte garde alors une place pour l'option d'héroïsme. */
+  protected readonly anyOption = computed(() => this.heroCards().some((card) => !card.excluded && card.option !== null));
 
   /** L'ordre d'action tel qu'il se dessine : les héros d'après leur jet, les autres d'après leur rang. */
   protected readonly lanes = computed(() =>
@@ -273,6 +282,7 @@ export class StartCombatDialogComponent {
                   };
                 }),
               );
+              this.fitWidth(heroEntries.length);
               for (const h of heroEntries) {
                 if (h.initiative_resultat !== null && !rolledHere.get(h.id)) {
                   this.enqueueSave(h.id, null, "Impossible d'effacer un jet de réaction précédent.");
@@ -296,6 +306,12 @@ export class StartCombatDialogComponent {
           });
         },
       });
+  }
+
+  /** Élargit le dialogue au-delà de quatre héros, pour garder leurs cartes sur une seule rangée. */
+  private fitWidth(heroCount: number): void {
+    const width = Math.max(BASE_WIDTH_PX, 40 + Math.min(heroCount, MAX_CARDS_PER_ROW) * CARD_WIDTH_PX);
+    this.ref.updateSize(`min(${width}px, 96vw)`);
   }
 
   /** Héroïsme courant d'un héros — signal dédié (créé à la demande) car `applyHeroismeDelta` le mute en place. */
