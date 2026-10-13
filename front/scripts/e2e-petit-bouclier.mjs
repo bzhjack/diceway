@@ -65,7 +65,7 @@ await roll(10);
 if (!(await attackTerms()).includes('−1 bouclier')) fail('le −1 du bouclier a disparu à la relance');
 
 // Nouvelle attaque (changement d'arme) contre la même cible, même round : plus de bouclier.
-const armes = page.locator('.tas-group[aria-label="Arme"] .tas-chip');
+const armes = page.locator('.tas-chips[aria-labelledby="tas-arme"] .tas-chip');
 if ((await armes.count()) > 1) {
   await armes.nth(1).click();
   await page.waitForTimeout(1000);

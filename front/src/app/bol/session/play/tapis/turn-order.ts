@@ -40,7 +40,6 @@ export class TurnOrderComponent {
   readonly addRequested = output<void>();
   readonly delayRequested = output<void>();
   readonly rerollRequested = output<void>();
-  readonly endTurnRequested = output<void>();
 
   /** Seuls les blocs qui ont au moins un combattant sont affichés. */
   protected readonly groups = computed(() => groupByTier(this.entries()).filter((group) => group.entries.length > 0));

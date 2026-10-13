@@ -94,9 +94,10 @@ function signedTerm(value: number): string {
   return `${value > 0 ? '+' : '−'}${Math.abs(value)}`;
 }
 
-/** L'assistant de tour, sous la frise en combat : un coup en trois temps. Un bandeau de deux lignes porte les réglages de la carte
- * active (son arme, sa posture, ses options, les effets en cours) ; dessous, trois cases en ligne — qui elle vise, son jet d'attaque
- * (2d6 + bonus − défense, 9+), son jet de dégâts — dont celle où il faut agir s'allume, et une ligne qui dit quoi faire ensuite.
+/** L'assistant de tour, sous la frise en combat : un coup en trois temps. Trois cartes portent les réglages de la carte active — qui
+ * attaque (ses chiffres, les effets en cours, la fin de son tour), avec quoi (arme, distance), comment (posture, options) ; dessous,
+ * sur la même grille, trois cases — qui elle vise, son jet d'attaque (2d6 + bonus − défense, 9+), son jet de dégâts — dont celle où
+ * il faut agir s'allume, et une ligne qui dit quoi faire ensuite.
  * Il annonce ce qu'il faut aux dés et les chances, prend les totaux lancés à table, et montre sur la vie de la cible ce que le coup va
  * lui retirer. Il ne parle à aucun service : il signale à la page ce qui doit être enregistré (dégâts, fin de tour, défense totale). */
 @Component({
@@ -282,7 +283,7 @@ export class TurnAssistantComponent {
   protected readonly dice = signal<readonly [number, number] | null>(null);
   protected readonly rolling = signal(false);
 
-  /** Les chiffres de l'attaquant, sur une ligne : attaque, défense, vigueur et vitalité. La défense montre déjà ce que la posture
+  /** Les chiffres de l'attaquant, en tuiles : attaque, défense, vigueur et vitalité. La défense montre déjà ce que la posture
    * choisie lui fera jusqu'à son prochain tour. */
   protected readonly attackerTiles = computed<readonly StatTile[]>(() => {
     const stats = this.attacker();

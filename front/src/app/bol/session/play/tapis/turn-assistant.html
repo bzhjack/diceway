@@ -1,33 +1,45 @@
 <div class="tas" role="group" [attr.aria-label]="'Tour de ' + card().nom">
-  <!-- Les réglages du coup, en deux lignes. D'abord qui attaque et avec quoi. -->
-  <div class="tas-strip">
-    <div class="tas-me">
-      <span class="tas-med tas-med--active" aria-hidden="true">
-        @if (card().avatar) {
-          <img [src]="card().avatar" alt="" />
-        } @else {
-          {{ card().nom.charAt(0).toUpperCase() }}
-        }
-      </span>
-      <span class="tas-me-id">
-        <strong class="tas-name tas-name--active">{{ card().nom }}</strong>
-        <span class="tas-stats">
-          @for (tile of attackerTiles(); track tile.label) {
-            <span [class.tas-stat--up]="tile.tone === 'up'" [class.tas-stat--down]="tile.tone === 'down'">
-              {{ tile.label }} <b>{{ tile.value }}@if (tile.max) {/{{ tile.max }}}</b>
-            </span>
-          } @empty {
-            <span>{{ card().rang ?? 'Héros' }}</span>
+  <!-- Les réglages, en trois cartes posées sur la même grille que les trois cases : qui attaque, avec quoi, comment -->
+  <div class="tas-cards">
+    <section class="tas-card" aria-labelledby="tas-qui">
+      <div class="tas-card-head">
+        <h3 id="tas-qui">Qui attaque</h3>
+        <div class="tas-card-actions">
+          <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + card().nom" (click)="sheetRequested.emit(card())">Fiche</button>
+          <button type="button" class="tas-ghost" matTooltip="+2 en défense, pas d'attaque ce round. Termine le tour." (click)="totalDefenseRequested.emit()">Défense totale</button>
+          <button mat-flat-button size="small" type="button" matTooltip="Raccourci : F" (click)="endTurnRequested.emit()">Fin du tour</button>
+        </div>
+      </div>
+      <div class="tas-me">
+        <span class="tas-med tas-med--active" aria-hidden="true">
+          @if (card().avatar) {
+            <img [src]="card().avatar" alt="" />
+          } @else {
+            {{ card().nom.charAt(0).toUpperCase() }}
           }
         </span>
-      </span>
-      <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + card().nom" (click)="sheetRequested.emit(card())">Fiche</button>
-    </div>
+        <span class="tas-me-id">
+          <strong class="tas-name tas-name--active">{{ card().nom }}</strong>
+          <span class="tas-tag">{{ card().rang ?? 'Héros' }} · attaquant</span>
+        </span>
+      </div>
+      <div class="tas-tiles tas-tiles--start">
+        @for (tile of attackerTiles(); track tile.label) {
+          <div class="tas-tile" [class.tas-tile--up]="tile.tone === 'up'" [class.tas-tile--down]="tile.tone === 'down'">
+            <b>{{ tile.value }}@if (tile.max) {<small>/{{ tile.max }}</small>}</b>
+            <span>{{ tile.label }}</span>
+          </div>
+        }
+      </div>
+      <span class="tas-label">Effets</span>
+      <bol-effects-list [effets]="effets()" [cartes]="duelistes()" (retire)="removeEffect($event)" (ajoute)="effectAdded.emit($event)" />
+    </section>
 
-    @if (displayArmes().length > 0) {
-      <div class="tas-group" role="group" aria-label="Arme">
-        <span class="tas-label">Arme</span>
-        <div class="tas-chips">
+    <section class="tas-card" aria-labelledby="tas-quoi">
+      <h3 id="tas-quoi">Avec quoi ?</h3>
+      @if (displayArmes().length > 0) {
+        <span class="tas-label" id="tas-arme">Arme</span>
+        <div class="tas-chips" role="group" aria-labelledby="tas-arme">
           @for (a of displayArmes(); track a.id) {
             <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveArme()?.id === a.id" (click)="selectArme(a.id)">
               {{ a.arme?.arme }}
@@ -37,18 +49,14 @@
             </button>
           }
         </div>
-      </div>
-    } @else {
-      <div class="tas-group">
+      } @else {
         <span class="tas-label">Dégâts</span>
         <span class="tas-fixed">{{ card().degats }}</span>
-      </div>
-    }
+      }
 
-    @if (isDualWieldSelected()) {
-      <div class="tas-group" role="group" aria-label="Arme secondaire">
-        <span class="tas-label">Arme secondaire</span>
-        <div class="tas-chips">
+      @if (isDualWieldSelected()) {
+        <span class="tas-label" id="tas-arme2">Arme secondaire</span>
+        <div class="tas-chips" role="group" aria-labelledby="tas-arme2">
           @for (a of eligibleOffHandArmes(); track a.id) {
             <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveOffHand()?.id === a.id" (click)="selectOffHand(a.id)">
               {{ a.arme?.arme }}
@@ -60,28 +68,25 @@
             <span class="tas-note">Aucune arme secondaire légère ou moyenne.</span>
           }
         </div>
-      </div>
-    }
-
-    @if (attacker(); as a) {
-      @if (a.attaque === null && distanceModes().length > 1) {
-        <div class="tas-chips" role="group" aria-label="Distance">
-          <button type="button" class="tas-chip" [attr.aria-pressed]="!useTir()" (click)="useTir.set(false)">Mêlée</button>
-          <button type="button" class="tas-chip" [attr.aria-pressed]="useTir()" (click)="useTir.set(true)">Tir</button>
-        </div>
       }
-    }
 
-    <button type="button" class="tas-ghost tas-total-defense" matTooltip="+2 en défense, pas d'attaque ce round. Termine le tour." (click)="totalDefenseRequested.emit()">Défense totale</button>
-  </div>
+      @if (attacker(); as a) {
+        @if (a.attaque === null && distanceModes().length > 1) {
+          <span class="tas-label" id="tas-distance">Distance</span>
+          <div class="tas-chips" role="group" aria-labelledby="tas-distance">
+            <button type="button" class="tas-chip" [attr.aria-pressed]="!useTir()" (click)="useTir.set(false)">Mêlée</button>
+            <button type="button" class="tas-chip" [attr.aria-pressed]="useTir()" (click)="useTir.set(true)">Tir</button>
+          </div>
+        }
+      }
+    </section>
 
-  <!-- Puis comment : la posture, les options spéciales, les effets en cours. -->
-  <div class="tas-strip">
-    @if (visibleOptions().length > 1) {
-      <div class="tas-group" role="group" aria-label="Posture">
-        <span class="tas-label">Posture</span>
+    <section class="tas-card" aria-labelledby="tas-comment">
+      <h3 id="tas-comment">Comment ?</h3>
+      @if (visibleOptions().length > 1) {
+        <span class="tas-label" id="tas-posture">Posture</span>
         <!-- De la plus prudente à la plus audacieuse : ce que chacune change à l'attaque et à la défense -->
-        <div class="tas-segm">
+        <div class="tas-segm" role="group" aria-labelledby="tas-posture">
           @for (o of scalePostures(); track o.slug) {
             <button type="button" [class]="'tas-seg tas-seg--' + o.slug" [attr.aria-pressed]="effectiveOption()?.slug === o.slug" [matTooltip]="o.note" (click)="selectOption(o.slug)">
               <b>{{ scaleName(o) }}</b>
@@ -89,21 +94,20 @@
             </button>
           }
         </div>
-      </div>
 
-      @if (specialPostures().length > 0) {
-        <div class="tas-group" role="group" aria-label="Options spéciales">
-          <span class="tas-label">Options</span>
-          <div class="tas-chips">
+        @if (specialPostures().length > 0) {
+          <span class="tas-label" id="tas-options">Options spéciales</span>
+          <div class="tas-chips" role="group" aria-labelledby="tas-options">
             @for (o of specialPostures(); track o.slug) {
               <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveOption()?.slug === o.slug" [matTooltip]="o.note" (click)="toggleSpecial(o.slug)">{{ o.label }}</button>
             }
           </div>
-        </div>
+        }
+      } @else {
+        <!-- Créatures et démons n'ont qu'une attaque : pas d'option de combat -->
+        <span class="tas-note">Pas d’option de combat pour cette carte.</span>
       }
-    }
-
-    <bol-effects-list class="tas-effects" [effets]="effets()" [cartes]="duelistes()" (retire)="removeEffect($event)" (ajoute)="effectAdded.emit($event)" />
+    </section>
   </div>
 
   <!-- Le coup, en trois temps : qui, l'attaque, les dégâts. La case où il faut agir s'allume. -->

@@ -28,13 +28,6 @@ interface EffetAffiche {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="efl" aria-label="Effets en cours">
-      <header class="efl-head">
-        <p class="efl-title">Effets</p>
-        <button type="button" mat-stroked-button size="small" [matMenuTriggerFor]="addMenu" [disabled]="cartes().length === 0">
-          <mat-icon>add</mat-icon> Effet
-        </button>
-      </header>
-
       @for (effet of affiches(); track effet.id) {
         <div class="efl-row">
           <span class="efl-text"><b>{{ effet.porteur }}</b> · {{ effet.texte }} <i>{{ effet.duree }}</i></span>
@@ -48,6 +41,10 @@ interface EffetAffiche {
         <p class="efl-empty">Aucun</p>
       }
 
+      <button type="button" mat-stroked-button size="small" [matMenuTriggerFor]="addMenu" [disabled]="cartes().length === 0">
+        <mat-icon>add</mat-icon> Effet
+      </button>
+
       <mat-menu #addMenu="matMenu">
         @for (carte of cartes(); track carte.key) {
           @for (modele of modeles; track modele.id) {
@@ -58,12 +55,9 @@ interface EffetAffiche {
     </section>
   `,
   styles: `
-    /* Sur une ligne, dans le bandeau de l'assistant : le titre, une pastille par effet, puis le bouton qui en ajoute un. */
+    /* Dans la carte de l'attaquant (qui porte le titre « Effets ») : une pastille par effet, puis le bouton qui en ajoute un. */
     .efl { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.5rem; }
-    .efl-head { display: contents; }
-    .efl-head button { order: 1; }
-    .efl-title { margin: 0; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dw-surface-500); }
-    .efl-row { display: flex; align-items: center; gap: 0.2rem; padding: 0.05rem 0.2rem 0.05rem 0.6rem; border: 1px solid var(--dw-border); border-radius: 999px; background: var(--dw-surface-50); font-size: 0.78rem; color: var(--dw-surface-800); }
+    .efl-row { display: flex; align-items: center; gap: 0.2rem; padding: 0.05rem 0.2rem 0.05rem 0.6rem; border: 1px solid var(--dw-border); border-radius: 14px; background: var(--dw-surface-50); font-size: 0.78rem; line-height: 1.3; color: var(--dw-surface-800); }
     .efl-text i { color: var(--dw-surface-600); font-style: normal; }
     .efl-remove { display: grid; place-items: center; width: 1.4rem; height: 1.4rem; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--dw-surface-500); cursor: pointer; }
     .efl-remove:hover { color: var(--dw-color-echec); }

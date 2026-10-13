@@ -66,10 +66,14 @@ export class ActionRollPanelComponent {
   protected readonly avantageTraits = computed(() => this.data().diceTraits.filter((t) => t.kind === 'avantage'));
   protected readonly desavantageTraits = computed(() => this.data().diceTraits.filter((t) => t.kind === 'desavantage'));
   protected readonly selectedDiceTraits = signal<ReadonlySet<string>>(new Set());
+  /** Dé de bonus ou de malus accordé par le MJ selon les circonstances (agir ivre, dans le noir, avec un outil de fortune…) : il compte
+   * comme un avantage ou un désavantage de plus. L'un exclut l'autre. */
+  protected readonly gmDie = signal<'bonus' | 'malus' | null>(null);
 
+  /** Avantages et désavantages retenus pour ce jet : les traits cochés du héros, plus le dé du MJ. */
   private readonly selectedDiceTraitCounts = computed(() => {
-    let avantages = 0;
-    let desavantages = 0;
+    let avantages = this.gmDie() === 'bonus' ? 1 : 0;
+    let desavantages = this.gmDie() === 'malus' ? 1 : 0;
     for (const trait of this.data().diceTraits) {
       if (!this.selectedDiceTraits().has(trait.label)) {
         continue;
@@ -244,6 +248,11 @@ export class ActionRollPanelComponent {
       }
       return next;
     });
+  }
+
+  /** Accorde le dé de bonus ou de malus du MJ ; un second clic sur le même le retire. */
+  protected toggleGmDie(kind: 'bonus' | 'malus'): void {
+    this.gmDie.update((current) => (current === kind ? null : kind));
   }
 
   protected incrementModifier(delta: number): void {
