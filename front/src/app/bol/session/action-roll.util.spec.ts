@@ -16,6 +16,7 @@ import {
   keptDiceDistribution,
   keptDiceIndexes,
   netDiceModifier,
+  parseDiceTotal,
   signedModifier,
   suggestedActionResult,
 } from './action-roll.util';
@@ -281,5 +282,27 @@ describe('actionVerdict', () => {
     expect(actionVerdict('heroique', [6, 6], 14, 9).detail).toBe('Double 6 : réussite automatique, avec un effet supérieur.');
     expect(actionVerdict('heroique', [5, 4], 11, 9).detail).toBe('Réussite transformée pour 1 point d’héroïsme.');
     expect(actionVerdict('legendaire', [6, 6], 14, 9).title).toBe('Succès légendaire');
+  });
+});
+
+describe('parseDiceTotal', () => {
+  it('reads a total of two dice, from 2 to 12', () => {
+    expect(parseDiceTotal('2')).toBe(2);
+    expect(parseDiceTotal('9')).toBe(9);
+    expect(parseDiceTotal('10')).toBe(10);
+    expect(parseDiceTotal(' 12 ')).toBe(12);
+  });
+
+  it('waits for the second digit after a 1', () => {
+    expect(parseDiceTotal('1')).toBeNull();
+  });
+
+  it('rejects anything else', () => {
+    expect(parseDiceTotal('')).toBeNull();
+    expect(parseDiceTotal('0')).toBeNull();
+    expect(parseDiceTotal('13')).toBeNull();
+    expect(parseDiceTotal('07')).toBeNull();
+    expect(parseDiceTotal('7.5')).toBeNull();
+    expect(parseDiceTotal('abc')).toBeNull();
   });
 });

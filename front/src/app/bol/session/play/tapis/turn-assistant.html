@@ -1,318 +1,363 @@
 <div class="tas" role="group" [attr.aria-label]="'Tour de ' + card().nom">
-  <!-- Options de l'attaque : action, arme, posture, distance, effet -->
-  <aside class="tas-options" aria-label="Options de l'attaque">
-    <div class="tas-opts">
-      <div class="tas-group" role="group" aria-label="Action">
-        <span class="tas-label">Action</span>
-        <div class="tas-chips">
-          <button type="button" class="tas-chip" aria-pressed="true">Attaque</button>
-          <button type="button" class="tas-chip" aria-pressed="false" matTooltip="+2 en défense, pas d'attaque ce round. Termine le tour." (click)="totalDefenseRequested.emit()">Défense totale</button>
-        </div>
-      </div>
-      @if (displayArmes().length > 0) {
-        <div class="tas-group" role="group" aria-label="Arme">
-          <span class="tas-label">Arme</span>
-          <div class="tas-chips">
-            @for (a of displayArmes(); track a.id) {
-              <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveArme()?.id === a.id" (click)="selectArme(a.id)">
-                {{ a.arme?.arme }}
-                @if (a.arme?.degats) {
-                  <em>{{ a.arme?.degats }}</em>
-                }
-              </button>
-            }
-          </div>
-        </div>
-      } @else {
-        <div class="tas-group">
-          <span class="tas-label">Dégâts</span>
-          <span class="tas-fixed">{{ card().degats }}</span>
-        </div>
-      }
-
-      @if (visibleOptions().length > 1) {
-        <div class="tas-group tas-group--wide" role="group" aria-label="Posture">
-          <span class="tas-label">Posture : de la prudence à l'audace</span>
-          <span class="tas-gauge" aria-hidden="true"></span>
-          <div class="tas-scale">
-            @for (o of scalePostures(); track o.slug) {
-              <button type="button" class="tas-step-btn" [attr.aria-pressed]="effectiveOption()?.slug === o.slug" [matTooltip]="o.note" (click)="selectOption(o.slug)">
-                <b>{{ scaleName(o) }}</b>
-                <i>{{ scaleEffect(o) }}</i>
-              </button>
-            }
-          </div>
-        </div>
-
-        @if (specialPostures().length > 0) {
-          <div class="tas-group tas-group--wide" role="group" aria-label="Options spéciales">
-            <span class="tas-label">Options spéciales</span>
-            <div class="tas-scale">
-              @for (o of specialPostures(); track o.slug) {
-                <button type="button" class="tas-step-btn" [attr.aria-pressed]="effectiveOption()?.slug === o.slug" (click)="toggleSpecial(o.slug)">
-                  <b>{{ o.label }}</b>
-                  <i>{{ o.note }}</i>
-                </button>
-              }
-            </div>
-          </div>
+  <!-- L'attaquant, et ce qui est à lui : son arme, sa posture, ses options -->
+  <aside class="tas-card tas-card--me" aria-label="Attaquant">
+    <div class="tas-hero">
+      <span class="tas-med tas-med--active" aria-hidden="true">
+        @if (card().avatar) {
+          <img [src]="card().avatar" alt="" />
+        } @else {
+          {{ card().nom.charAt(0).toUpperCase() }}
         }
-      }
+      </span>
+      <strong class="tas-name tas-name--active">{{ card().nom }}</strong>
+      <span class="tas-tag">{{ card().rang ?? 'Héros' }} · attaquant</span>
+      <button type="button" class="tas-ghost tas-sheet" [attr.aria-label]="'Ouvrir la fiche de ' + card().nom" (click)="sheetRequested.emit(card())">Fiche</button>
+    </div>
 
-      <!-- Arme secondaire (si la posture la demande) et distance : sur la même ligne -->
-      <div class="tas-inline">
-        @if (isDualWieldSelected()) {
-          <div class="tas-group" role="group" aria-label="Arme secondaire">
-            <span class="tas-label">Arme secondaire</span>
-            <div class="tas-chips">
-              @for (a of eligibleOffHandArmes(); track a.id) {
-                <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveOffHand()?.id === a.id" (click)="selectOffHand(a.id)">
-                  {{ a.arme?.arme }}
-                  @if (a.arme?.degats) {
-                    <em>{{ a.arme?.degats }}</em>
-                  }
-                </button>
-              } @empty {
-                <span class="tas-note">Aucune arme secondaire légère ou moyenne.</span>
-              }
-            </div>
-          </div>
-        }
-
-        @if (attacker(); as a) {
-          @if (a.attaque === null && distanceModes().length > 1) {
-            <div class="tas-group" role="group" aria-label="Distance">
-              <span class="tas-label">Distance</span>
-              <div class="tas-chips">
-                <button type="button" class="tas-chip" [attr.aria-pressed]="!useTir()" (click)="useTir.set(false)">Mêlée</button>
-                <button type="button" class="tas-chip" [attr.aria-pressed]="useTir()" (click)="useTir.set(true)">Tir</button>
-              </div>
-            </div>
-          }
-        }
-      </div>
-
-      <bol-effects-list [effets]="effets()" [cartes]="duelistes()" (retire)="removeEffect($event)" (ajoute)="effectAdded.emit($event)" />
-
-      @if (visibleOptions().length > 1) {
-        <div class="tas-recap">
-          <span class="tas-label">Ce jet</span>
-          <div class="tas-pills">
-            @for (pill of effectPills(); track pill.label) {
-              <span class="tas-pill" [class.tas-pill--plus]="pill.tone === 'plus'" [class.tas-pill--minus]="pill.tone === 'minus'">{{ pill.label }}</span>
-            }
-          </div>
+    <div class="tas-tiles">
+      @for (tile of attackerTiles(); track tile.label) {
+        <div class="tas-tile" [class.tas-tile--up]="tile.tone === 'up'" [class.tas-tile--down]="tile.tone === 'down'">
+          <b>{{ tile.value }}@if (tile.max) {<small>/{{ tile.max }}</small>}</b>
+          <span>{{ tile.label }}</span>
         </div>
       }
     </div>
-  </aside>
+    @if (attackerBadges().length > 0) {
+      <ul class="tas-pills" aria-label="Effets sur l’attaquant">
+        @for (badge of attackerBadges(); track $index) {
+          <li class="tas-pill">{{ badge }}</li>
+        }
+      </ul>
+    }
 
-  <div class="tas-main">
-    <!-- Duel : l'attaquant et la cible face à face -->
-    <div class="tas-vs">
-  <section class="tas-fighter" aria-label="Attaquant">
-      <div class="tas-head">
-        <span class="tas-med tas-med--active" aria-hidden="true">
-          @if (card().avatar) {
-            <img [src]="card().avatar" alt="" />
-          } @else {
-            {{ card().nom.charAt(0).toUpperCase() }}
-          }
-        </span>
-        <div class="tas-id">
-          <div class="tas-idline">
-            <strong class="tas-name tas-name--active">{{ card().nom }}</strong>
-            <span class="tas-tag">{{ card().rang ?? 'Héros' }} · attaquant</span>
-          </div>
-          <div class="tas-tiles">
-            @for (tile of attackerTiles(); track tile.label) {
-              <div class="tas-tile" [class.tas-tile--hot]="tile.hot" [class.tas-tile--hp]="tile.heart" [class.tas-tile--long]="tile.value.length > 5">
-                <b>{{ tile.value }}</b>
-                <span>{{ tile.label }}@if (tile.max) { /{{ tile.max }} }</span>
-              </div>
-            }
-          </div>
-          @if (attackerBadges().length > 0) {
-            <ul class="tas-pills tas-badges" aria-label="Effets sur l’attaquant">
-              @for (badge of attackerBadges(); track $index) {
-                <li class="tas-pill">{{ badge }}</li>
+    @if (displayArmes().length > 0) {
+      <div class="tas-group" role="group" aria-label="Arme">
+        <span class="tas-label">Son arme</span>
+        <div class="tas-chips">
+          @for (a of displayArmes(); track a.id) {
+            <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveArme()?.id === a.id" (click)="selectArme(a.id)">
+              {{ a.arme?.arme }}
+              @if (a.arme?.degats) {
+                <em>{{ a.arme?.degats }}</em>
               }
-            </ul>
+            </button>
           }
-        </div>
-        <div class="tas-actions">
-          <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + card().nom" (click)="sheetRequested.emit(card())">Fiche</button>
         </div>
       </div>
-  
-    </section>
-  <span class="tas-versus" aria-hidden="true">VS</span>
-  <section class="tas-fighter" aria-label="Cible">
-      @if (target(); as t) {
-        <div class="tas-head">
-          <span class="tas-med tas-med--target" aria-hidden="true">
+    } @else {
+      <div class="tas-group">
+        <span class="tas-label">Ses dégâts</span>
+        <span class="tas-fixed">{{ card().degats }}</span>
+      </div>
+    }
+
+    @if (isDualWieldSelected()) {
+      <div class="tas-group" role="group" aria-label="Arme secondaire">
+        <span class="tas-label">Son arme secondaire</span>
+        <div class="tas-chips">
+          @for (a of eligibleOffHandArmes(); track a.id) {
+            <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveOffHand()?.id === a.id" (click)="selectOffHand(a.id)">
+              {{ a.arme?.arme }}
+              @if (a.arme?.degats) {
+                <em>{{ a.arme?.degats }}</em>
+              }
+            </button>
+          } @empty {
+            <span class="tas-note">Aucune arme secondaire légère ou moyenne.</span>
+          }
+        </div>
+      </div>
+    }
+
+    @if (attacker(); as a) {
+      @if (a.attaque === null && distanceModes().length > 1) {
+        <div class="tas-chips" role="group" aria-label="Distance">
+          <button type="button" class="tas-chip" [attr.aria-pressed]="!useTir()" (click)="useTir.set(false)">Mêlée</button>
+          <button type="button" class="tas-chip" [attr.aria-pressed]="useTir()" (click)="useTir.set(true)">Tir</button>
+        </div>
+      }
+    }
+
+    @if (visibleOptions().length > 1) {
+      <div class="tas-group" role="group" aria-label="Posture">
+        <span class="tas-label">Sa posture : de la prudence à l’audace</span>
+        <!-- Un curseur à crans : un cran par posture, du plus prudent au plus audacieux -->
+        <div class="tas-slider" [style.--stops]="scalePostures().length">
+          @for (o of scalePostures(); track o.slug) {
+            <button type="button" [attr.aria-pressed]="effectiveOption()?.slug === o.slug" [matTooltip]="o.note" (click)="selectOption(o.slug)">{{ scaleName(o) }}</button>
+          }
+        </div>
+        <div class="tas-pills tas-pills--center">
+          @for (pill of effectPills(); track pill.label) {
+            <span class="tas-pill" [class.tas-pill--plus]="pill.tone === 'plus'" [class.tas-pill--minus]="pill.tone === 'minus'">{{ pill.label }}</span>
+          }
+        </div>
+      </div>
+
+      @if (specialPostures().length > 0) {
+        <div class="tas-group" role="group" aria-label="Options spéciales">
+          <span class="tas-label">Options spéciales</span>
+          <div class="tas-chips">
+            @for (o of specialPostures(); track o.slug) {
+              <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveOption()?.slug === o.slug" [matTooltip]="o.note" (click)="toggleSpecial(o.slug)">{{ o.label }}</button>
+            }
+          </div>
+        </div>
+      }
+    }
+
+    <bol-effects-list [effets]="effets()" [cartes]="duelistes()" (retire)="removeEffect($event)" (ajoute)="effectAdded.emit($event)" />
+
+    <button type="button" class="tas-ghost tas-total-defense" matTooltip="+2 en défense, pas d'attaque ce round. Termine le tour." (click)="totalDefenseRequested.emit()">
+      Défense totale : +2 déf, pas d’attaque
+    </button>
+  </aside>
+
+  <!-- Le plateau : le jet d'attaque, puis le jet de dégâts -->
+  <section class="tas-tray" aria-label="Les jets">
+    <div class="tas-stage">
+      <h3><span aria-hidden="true">1</span> Jet d’attaque</h3>
+      @if (attackGoal(); as goal) {
+        <div class="tas-goal">
+          <div class="tas-need">
+            <span>Il te faut</span>
+            <b>{{ goal.big }}</b>
+            <i>{{ goal.small }}</i>
+          </div>
+          <div class="tas-ring" role="img" [attr.aria-label]="goal.chance + ' % de chances de toucher'">
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+              <circle class="tas-ring-bg" cx="32" cy="32" r="27" />
+              <circle class="tas-ring-fg" cx="32" cy="32" r="27" [attr.stroke-dasharray]="goal.ringDash" />
+            </svg>
+            <b>{{ goal.chance }} %</b>
+          </div>
+        </div>
+
+        <!-- À table, le cas courant : on tape le total des deux dés. Le bouton les lance à l'écran. -->
+        <div class="tas-entry">
+          <input
+            #attackInput
+            class="tas-total"
+            type="text"
+            inputmode="numeric"
+            maxlength="2"
+            autocomplete="off"
+            placeholder="total"
+            aria-label="Total des deux dés d’attaque lancés à table"
+            [value]="diceSum() ?? ''"
+            [disabled]="rolling()"
+            (focus)="attackInput.select()"
+            (input)="onAttackInput(attackInput.value)"
+            (blur)="restoreInput(attackInput, diceSum())"
+          />
+          <button type="button" class="tas-dice-btn" [disabled]="rolling()" aria-label="Lancer 2d6 à l’écran" matTooltip="Lancer 2d6 à l’écran" (click)="roll()">
+            <mat-icon>casino</mat-icon>
+          </button>
+        </div>
+
+        <div class="tas-verdict" aria-live="polite">
+          @if (rolling()) {
+            <span class="tas-wait">Les dés roulent…</span>
+          } @else if (attackVerdict(); as v) {
+            <b [class]="'tas-verdict-title tas-verdict-title--' + v.tone">{{ v.title }}</b>
+            <span>{{ v.detail }}</span>
+          } @else {
+            <span class="tas-wait">Les dés attendent.</span>
+          }
+        </div>
+
+        <div class="tas-sum" [class.tas-sum--pending]="total() === null">
+          @for (term of attackSum(); track $index) {
+            <div class="tas-sum-term" [class.tas-sum-term--plus]="term.tone === 'plus'" [class.tas-sum-term--minus]="term.tone === 'minus'" [class.tas-sum-term--total]="term.tone === 'total'">
+              <b>{{ term.value }}</b>
+              <small>{{ term.caption }}</small>
+              @if (term.effetId; as id) {
+                <button type="button" class="tas-sum-x" [attr.aria-label]="'Retirer l’effet ' + term.caption" matTooltip="Retirer cet effet" (click)="removeEffect(id)">×</button>
+              }
+            </div>
+          }
+        </div>
+
+        @if (isNatural12()) {
+          <div class="tas-heroic" role="group" aria-label="Option du succès héroïque">
+            <span class="tas-label tas-label--gold">Son coup héroïque</span>
+            <div class="tas-chips">
+              @for (o of heroicOptions; track o.slug) {
+                <button type="button" class="tas-chip tas-chip--heroic" [attr.aria-pressed]="heroic() === o.slug" [matTooltip]="o.effect" (click)="setHeroic(o.slug)">{{ o.label }}</button>
+              }
+            </div>
+          </div>
+        }
+      } @else if (target()) {
+        <span class="tas-wait">Calcul du jet…</span>
+      } @else {
+        <b class="tas-prompt">Choisis une cible</b>
+        <span class="tas-wait">Le jet se calcule dès que tu sais qui est visé.</span>
+      }
+    </div>
+
+    <div class="tas-stage" [class.tas-stage--idle]="!hasDamageStep()">
+      <h3><span aria-hidden="true">2</span> Jet de dégâts</h3>
+      @if (hasDamageStep()) {
+        <div class="tas-entry">
+          <input
+            #damageInput
+            class="tas-total"
+            type="text"
+            inputmode="numeric"
+            maxlength="1"
+            autocomplete="off"
+            placeholder="dé"
+            [attr.aria-label]="'Dé de dégâts lancé à table, de 1 à ' + damageMax()"
+            [value]="raw() ?? ''"
+            [disabled]="rolling()"
+            (focus)="damageInput.select()"
+            (input)="onDamageInput(damageInput.value)"
+            (blur)="restoreInput(damageInput, raw())"
+          />
+          <button type="button" class="tas-dice-btn" [disabled]="rolling()" aria-label="Lancer le dé de dégâts à l’écran" matTooltip="Lancer le dé de dégâts à l’écran" (click)="rollDamage()">
+            <mat-icon>casino</mat-icon>
+          </button>
+          <small class="tas-die-note">{{ damageDetail() && !rolling() ? damageDetail() : dieNote() }}</small>
+        </div>
+
+        <div class="tas-sum" [class.tas-sum--pending]="damage() === null">
+          @for (term of damageSum(); track $index) {
+            <div class="tas-sum-term" [class.tas-sum-term--plus]="term.tone === 'plus'" [class.tas-sum-term--minus]="term.tone === 'minus'" [class.tas-sum-term--total]="term.tone === 'total'">
+              @if (term.editable && editingProtection()) {
+                <input
+                  #protectionInput
+                  class="tas-sum-input"
+                  type="number"
+                  min="0"
+                  step="1"
+                  aria-label="Protection de la cible, valeur numérique"
+                  [value]="protectionDraft()"
+                  (input)="protectionDraft.set(protectionInput.value)"
+                  (keydown.enter)="commitProtection()"
+                  (keydown.escape)="editingProtection.set(false)"
+                  (blur)="editingProtection.set(false)"
+                />
+              } @else if (term.editable) {
+                <button type="button" class="tas-sum-edit" matTooltip="Cliquer pour saisir la protection" aria-label="Modifier la protection de la cible" (click)="startEditProtection()">{{ term.value }}</button>
+              } @else {
+                <b>{{ term.value }}</b>
+              }
+              <small>{{ term.caption }}</small>
+              @if (term.effetId; as id) {
+                <button type="button" class="tas-sum-x" [attr.aria-label]="'Retirer l’effet ' + term.caption" matTooltip="Retirer cet effet" (click)="removeEffect(id)">×</button>
+              }
+            </div>
+          }
+          @if (protectionDie()) {
+            <button type="button" class="tas-mini" [disabled]="rolling()" matTooltip="Lancer le dé de protection au lieu de la valeur fixe" aria-label="Lancer le dé de protection de la cible" (click)="rollProtection()">
+              <mat-icon>casino</mat-icon>
+            </button>
+          }
+          @if (protectionFace() !== null || protectionManual() !== null) {
+            <button type="button" class="tas-mini" matTooltip="Revenir à la protection fixe" aria-label="Revenir à la protection fixe" (click)="resetProtection()">
+              <mat-icon>undo</mat-icon>
+            </button>
+          }
+        </div>
+
+        @if (damage() !== null) {
+          <button #applyButton mat-flat-button type="button" class="tas-apply" (click)="apply()">Appliquer {{ damage() }} à {{ target()?.nom }}</button>
+        }
+      } @else if (attackVerdict(); as v) {
+        <!-- Coup raté, ou désarmement : rien à lancer, il ne reste qu'à finir le tour -->
+        <span class="tas-wait">{{ v.tone === 'echec' ? 'Pas de dégâts : le coup est raté.' : 'Désarmement : l’adversaire perd son arme, sans dégâts.' }}</span>
+        <button #endButton mat-flat-button type="button" class="tas-apply" (click)="endTurnRequested.emit()">Fin du tour</button>
+      } @else if (lastHit(); as hit) {
+        <div class="tas-verdict" aria-live="polite">
+          <b class="tas-verdict-title tas-verdict-title--echec">{{ hit.damage }} {{ hit.damage > 1 ? 'dégâts' : 'dégât' }}</b>
+          <span>appliqués à {{ hit.target.nom }}.</span>
+        </div>
+        <button #endButton mat-flat-button type="button" class="tas-apply" (click)="endTurnRequested.emit()">Fin du tour</button>
+      } @else {
+        <span class="tas-wait">Après un coup qui touche.</span>
+      }
+    </div>
+  </section>
+
+  <!-- Les adversaires à viser, puis la fiche de la cible : sa vie montre ce que le coup va lui retirer -->
+  <aside class="tas-card" aria-label="Cible">
+    <span class="tas-label tas-label--gold">Les adversaires</span>
+    <div class="tas-picks" role="group" aria-label="Cible">
+      @for (t of targets(); track t.key) {
+        @let life = lifeOf(t);
+        <button type="button" class="tas-pick" [attr.aria-pressed]="target()?.key === t.key" (click)="selectTarget(t)">
+          <span class="tas-med tas-med--small" aria-hidden="true">
             @if (t.avatar) {
               <img [src]="t.avatar" alt="" />
             } @else {
               {{ t.nom.charAt(0).toUpperCase() }}
             }
           </span>
-          <div class="tas-id">
-            <div class="tas-idline">
-              <strong class="tas-name">{{ t.nom }}</strong>
-              <span class="tas-tag">{{ t.rang ?? 'Héros' }} · cible</span>
-            </div>
-            <div class="tas-tiles">
-              @for (tile of targetTiles(); track tile.label) {
-                <div class="tas-tile" [class.tas-tile--hot]="tile.hot" [class.tas-tile--hp]="tile.heart" [class.tas-tile--long]="tile.value.length > 5">
-                  <b>{{ tile.value }}</b>
-                  <span>{{ tile.label }}@if (tile.max) { /{{ tile.max }} }</span>
-                </div>
-              }
-            </div>
-            @if (targetBadges().length > 0) {
-              <ul class="tas-pills tas-badges" aria-label="Effets sur la cible">
-                @for (badge of targetBadges(); track $index) {
-                  <li class="tas-pill">{{ badge }}</li>
-                }
-              </ul>
-            }
-          </div>
-        <div class="tas-actions">
-          <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + t.nom" (click)="sheetRequested.emit(t)">Fiche</button>
-          <button type="button" class="tas-ghost" aria-label="Changer d'adversaire" matTooltip="Changer d'adversaire" (click)="targetSelected.emit(null)">↺</button>
-        </div>
-        </div>
-      } @else {
-        <span class="tas-kicker">Choisis une cible</span>
-        <div class="tas-targets" role="group" aria-label="Cible">
-          @for (t of targets(); track t.key) {
-            <button type="button" class="tas-target" (click)="targetSelected.emit(t)">
-              <b>{{ t.nom }}</b>
-              <span class="tas-bar" [class.tas-bar--low]="isLow(t)"><i [style.width.%]="percent(t)"></i></span>
-              <span class="tas-num">{{ t.vitaliteCourante ?? '—' }}/{{ t.vitaliteMax ?? '—' }}</span>
-            </button>
-          } @empty {
-            <span class="tas-note">Personne à viser.</span>
+          <span class="tas-pick-name">{{ t.nom }}</span>
+          <span class="tas-bar" [class.tas-bar--low]="life.low" aria-hidden="true"><i [style.width.%]="life.rest"></i><u [style.left.%]="life.rest" [style.width.%]="life.loss"></u></span>
+          <span class="tas-num">{{ t.vitaliteCourante ?? '—' }}/{{ t.vitaliteMax ?? '—' }}</span>
+          @if (odds()[t.key]; as chance) {
+            <span class="tas-odds">{{ chance }}</span>
           }
-        </div>
-        <p class="tas-note">La fiche de l'adversaire s'affiche ici dès que tu en choisis un.</p>
+        </button>
+      } @empty {
+        <span class="tas-note">Personne à viser.</span>
       }
-    </section>
-  </div>
-
-    <!-- Les deux jets côte à côte -->
-    <div class="tas-rolls">
-    <section class="tas-step tas-step--roll">
-      <h3><span aria-hidden="true">1</span> Jet d'attaque</h3>
-      @if (target() && attacker() && targetStats()) {
-        <div class="tas-terms">
-          @for (term of formulaTerms(); track $index) {
-            <span class="tas-term" [class.tas-term--dice]="term.tone === 'dice'" [class.tas-term--plus]="term.tone === 'plus'" [class.tas-term--minus]="term.tone === 'minus'">{{ term.label }}</span>
-            @if (term.effetId) {
-              <button type="button" class="tas-term-remove" [attr.aria-label]="'Retirer l’effet ' + term.label" matTooltip="Retirer cet effet" (click)="removeEffect(term.effetId)">×</button>
-            }
-          }
-          <span class="tas-eq">≥ {{ threshold }}</span>
-        </div>
-
-        <div class="tas-line">
-          <div class="tas-ticket" [class.tas-ticket--reussite]="tone() === 'reussite'" [class.tas-ticket--echec]="tone() === 'echec'" [class.tas-ticket--heroique]="tone() === 'heroique'" aria-live="polite">
-            <div class="tas-ticket-total">{{ rolling() ? '…' : (total() ?? '—') }}</div>
-            <p class="tas-ticket-label">{{ rolling() ? 'Les dés roulent' : verdictLabel() }}</p>
-          </div>
-          <div class="tas-ctl">
-          <button type="button" class="tas-rollbtn" [disabled]="rolling()" (click)="roll()">
-            <mat-icon>casino</mat-icon>
-            {{ dice() || manualTotal() ? 'Relancer' : 'Lancer 2d6' }}
-          </button>
-
-          <div class="tas-manual">
-            <span class="tas-manual-hint">table</span>
-            <input type="number" min="2" max="12" step="1" placeholder="2-12" aria-label="Total des deux dés lancés à table" [disabled]="rolling()" [value]="manualDraft()" (input)="manualDraft.set($any($event.target).value)" (keydown.enter)="submitManual()" />
-            <button type="button" class="tas-manual-confirm" aria-label="Valider le total saisi" [disabled]="!manualDraftValid() || rolling()" (click)="submitManual()">
-              <mat-icon>check</mat-icon>
-            </button>
-          </div>
-          </div>
-        </div>
-
-        @if (isNatural12()) {
-          <fieldset class="tas-heroic">
-            <legend>Succès héroïque : une option</legend>
-            @for (o of heroicOptions; track o.slug) {
-              <label class="tas-opt">
-                <input type="radio" name="heroic" [checked]="heroic() === o.slug" (click)="setHeroic(o.slug)" />
-                <span><b>{{ o.label }}</b> — {{ o.effect }}</span>
-              </label>
-            }
-          </fieldset>
-        }
-      } @else {
-        <p class="tas-note">Choisis une cible pour calculer le jet.</p>
-      }
-    </section>
-
-    <section class="tas-step">
-      <h3><span aria-hidden="true">2</span> Jet de dégâts</h3>
-      @if (hasDamageStep()) {
-        <div class="tas-terms">
-          @for (term of damageTerms(); track $index) {
-            @if (term.editable && editingProtection()) {
-              <input #protectionInput class="tas-term-input" type="number" min="0" step="1" aria-label="Protection de la cible, valeur numérique" [value]="protectionDraft()" (input)="protectionDraft.set($any($event.target).value)" (keydown.enter)="commitProtection()" (keydown.escape)="editingProtection.set(false)" (blur)="editingProtection.set(false)" />
-            } @else if (term.editable) {
-              <button type="button" class="tas-term tas-term--minus tas-term--edit" matTooltip="Cliquer pour saisir la protection" aria-label="Modifier la protection de la cible" (click)="startEditProtection()">{{ term.label }}</button>
-            } @else {
-              <span class="tas-term" [class.tas-term--dice]="term.tone === 'dice'" [class.tas-term--plus]="term.tone === 'plus'" [class.tas-term--minus]="term.tone === 'minus'">{{ term.label }}</span>
-              @if (term.effetId) {
-                <button type="button" class="tas-term-remove" [attr.aria-label]="'Retirer l’effet ' + term.label" matTooltip="Retirer cet effet" (click)="removeEffect(term.effetId)">×</button>
-              }
-            }
-          }
-          @if (protectionDie()) {
-            <button type="button" class="tas-die-btn" [disabled]="rolling()" matTooltip="Lancer le dé de protection au lieu de la valeur fixe" aria-label="Lancer le dé de protection de la cible" (click)="rollProtection()">
-              <mat-icon>casino</mat-icon>
-            </button>
-          }
-          @if (protectionFace() !== null || protectionManual() !== null) {
-            <button type="button" class="tas-die-btn" matTooltip="Revenir à la protection fixe" aria-label="Revenir à la protection fixe" (click)="resetProtection()">
-              <mat-icon>undo</mat-icon>
-            </button>
-          }
-        </div>
-        <div class="tas-line">
-          <div class="tas-ticket" [class.tas-ticket--echec]="damage() !== null" aria-live="polite">
-            <div class="tas-ticket-total">{{ rolling() ? '…' : (damage() ?? '—') }}</div>
-            <p class="tas-ticket-label">{{ rolling() ? 'Les dés roulent' : damage() !== null ? 'Dégâts' : 'En attente' }}</p>
-            @if (damageDetail() && !rolling()) {
-              <p class="tas-ticket-detail">{{ damageDetail() }}</p>
-            }
-          </div>
-          <div class="tas-ctl">
-          <button type="button" class="tas-rollbtn" [disabled]="rolling()" (click)="rollDamage()">
-            <mat-icon>casino</mat-icon>
-            {{ damage() !== null ? 'Relancer' : 'Lancer les dégâts' }}
-          </button>
-          <div class="tas-manual">
-            <span class="tas-manual-hint">table</span>
-            <input type="number" min="1" [max]="damageMax()" step="1" [placeholder]="'1-' + damageMax()" [attr.aria-label]="'Résultat du dé de dégâts lancé à table, de 1 à ' + damageMax()" [disabled]="rolling()" [value]="damageDraft()" (input)="damageDraft.set($any($event.target).value)" (keydown.enter)="submitManualDamage()" />
-            <button type="button" class="tas-manual-confirm" aria-label="Valider le dé de dégâts saisi" [disabled]="!damageDraftValid() || rolling()" (click)="submitManualDamage()">
-              <mat-icon>check</mat-icon>
-            </button>
-          </div>
-          </div>
-        </div>
-        @if (damage() !== null) {
-          <button mat-flat-button type="button" class="tas-apply" (click)="apply()">Appliquer {{ damage() }} à {{ target()?.nom }}</button>
-        }
-      } @else {
-        <div class="tas-ticket">
-          <div class="tas-ticket-total">—</div>
-          <p class="tas-ticket-label">En attente</p>
-        </div>
-        <p class="tas-note">Lance le jet d'attaque pour calculer les dégâts.</p>
-      }
-    </section>
     </div>
-  </div>
+
+    @if (target(); as t) {
+      @let life = lifeOf(t);
+      <div class="tas-hero">
+        <span class="tas-med tas-med--target" aria-hidden="true">
+          @if (t.avatar) {
+            <img [src]="t.avatar" alt="" />
+          } @else {
+            {{ t.nom.charAt(0).toUpperCase() }}
+          }
+        </span>
+        <strong class="tas-name">{{ t.nom }}</strong>
+        <span class="tas-tag">{{ t.rang ?? 'Héros' }} · cible</span>
+        <button type="button" class="tas-ghost tas-sheet" [attr.aria-label]="'Ouvrir la fiche de ' + t.nom" (click)="sheetRequested.emit(t)">Fiche</button>
+      </div>
+      <div class="tas-tiles">
+        @for (tile of targetTiles(); track tile.label) {
+          <div class="tas-tile" [class.tas-tile--up]="tile.tone === 'up'" [class.tas-tile--long]="tile.value.length > 5">
+            <b>{{ tile.value }}</b>
+            <span>{{ tile.label }}</span>
+          </div>
+        }
+      </div>
+      @if (targetBadges().length > 0) {
+        <ul class="tas-pills tas-pills--center" aria-label="Effets sur la cible">
+          @for (badge of targetBadges(); track $index) {
+            <li class="tas-pill">{{ badge }}</li>
+          }
+        </ul>
+      }
+      <div class="tas-life" aria-live="polite">
+        <div class="tas-life-line">
+          <span class="tas-bar tas-bar--big" [class.tas-bar--low]="life.low" aria-hidden="true"><i [style.width.%]="life.rest"></i><u [style.left.%]="life.rest" [style.width.%]="life.loss"></u></span>
+          <b>
+            {{ targetLife().current ?? '—' }}
+            @if (targetLife().after !== null) {
+              <s>→ {{ targetLife().after }}</s>
+            }
+            / {{ targetLife().max ?? '—' }}
+          </b>
+        </div>
+        @if (targetLife().after !== null) {
+          <span>{{ targetLife().out ? 'Ce coup met ' + t.nom + ' hors de combat.' : 'Ce coup retire ' + targetLife().loss + ' à ' + t.nom + '.' }}</span>
+        } @else {
+          <span>Vitalité</span>
+        }
+      </div>
+    } @else {
+      <div class="tas-hero">
+        <span class="tas-med tas-med--target" aria-hidden="true">?</span>
+        <b class="tas-prompt">Qui vises-tu ?</b>
+        <span class="tas-wait">Un clic sur un jeton, ci-dessus.</span>
+      </div>
+    }
+  </aside>
 </div>

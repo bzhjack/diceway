@@ -1,3 +1,5 @@
+import {TapisCard} from './tapis.model';
+
 /** Stats de combat entièrement résolues (héros récupéré en direct si besoin), prêtes à préremplir le dialog d'attaque. */
 export interface ResolvedCombatStats {
   readonly agilite: number;
@@ -20,4 +22,10 @@ export interface ResolvedCombatStats {
   /** null pour pnj/créature/démon — l'héroïsme (Faveur divine, options héroïques) n'existe que pour un héros. */
   readonly herosId: string | null;
   readonly heroisme: number | null;
+}
+
+/** Un coup porté, une fois ses dégâts appliqués : de quoi l'écrire au journal. */
+export interface AppliedHit {
+  readonly target: TapisCard;
+  readonly damage: number;
 }

@@ -82,13 +82,3 @@ export interface ActionVerdict {
 
 /** Couleur du résultat d'un jet : échec, réussite ou héroïque (héroïque et légendaire). */
 export type ActionRollTone = 'echec' | 'reussite' | 'heroique';
-
-/** Un terme d'un jet affiché en puce : les dés, un bonus (vert) ou un malus (rouge). */
-export interface RollTerm {
-  readonly label: string;
-  readonly tone: 'dice' | 'plus' | 'minus';
-  /** La puce se clique pour saisir la valeur à la main (protection de la cible). */
-  readonly editable?: boolean;
-  /** Effet du registre dont la puce vient : sa croix le retire. */
-  readonly effetId?: string;
-}

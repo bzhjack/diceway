@@ -30,6 +30,7 @@
           [target]="target()"
           [attacker]="attacker()"
           [targetStats]="targetStats()"
+          [targetsStats]="targetsStats()"
           [legendaryBonus]="legendaryBonus()"
           [effets]="effets()"
           [diceBox]="diceBox() ?? null"
@@ -41,6 +42,7 @@
           (effectAdded)="effectAdded.emit($event)"
           (damageApplied)="damageApplied.emit($event)"
           (totalDefenseRequested)="totalDefenseRequested.emit()"
+          (endTurnRequested)="endTurnRequested.emit()"
         />
       } @else {
         <p class="cb-nobody">Plus personne ne peut jouer.</p>

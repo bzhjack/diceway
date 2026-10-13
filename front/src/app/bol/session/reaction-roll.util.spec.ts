@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {ReactionAdversary, ReactionHero, ReactionParts} from './models/start-combat-dialog.model';
-import {parseDiceTotal, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from './reaction-roll.util';
+import {reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from './reaction-roll.util';
 
 const parts = (overrides: Partial<ReactionParts> = {}): ReactionParts => ({esprit: 0, initiative: 0, embuscade: 0, initiativeEnnemie: 0, ...overrides});
 
@@ -88,28 +88,6 @@ describe('reactionSumTerms', () => {
     expect(reactionSumTerms(null, parts({embuscade: 2}))[1]).toEqual({value: '+2', caption: 'embusc.', tone: 'plus'});
     expect(reactionSumTerms(null, parts({embuscade: -1}))[1]).toEqual({value: '−1', caption: 'surpris', tone: 'minus'});
     expect(reactionSumTerms(null, parts({esprit: -1}))[1]).toEqual({value: '−1', caption: 'esprit', tone: 'minus'});
-  });
-});
-
-describe('parseDiceTotal', () => {
-  it('reads a total of two dice, from 2 to 12', () => {
-    expect(parseDiceTotal('2')).toBe(2);
-    expect(parseDiceTotal('9')).toBe(9);
-    expect(parseDiceTotal('10')).toBe(10);
-    expect(parseDiceTotal(' 12 ')).toBe(12);
-  });
-
-  it('waits for the second digit after a 1', () => {
-    expect(parseDiceTotal('1')).toBeNull();
-  });
-
-  it('rejects anything else', () => {
-    expect(parseDiceTotal('')).toBeNull();
-    expect(parseDiceTotal('0')).toBeNull();
-    expect(parseDiceTotal('13')).toBeNull();
-    expect(parseDiceTotal('07')).toBeNull();
-    expect(parseDiceTotal('7.5')).toBeNull();
-    expect(parseDiceTotal('abc')).toBeNull();
   });
 });
 

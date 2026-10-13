@@ -26,12 +26,12 @@ import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {AmbushState} from '../../../models/combat-selection.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
-import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, chanceRingDash} from '../../action-roll.util';
+import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, chanceRingDash, parseDiceTotal} from '../../action-roll.util';
 import {applyHeroismeDelta} from '../../heroisme-spend.util';
 import {ActionDiceTargetLabel, RollSumTerm} from '../../models/action-roll.model';
 import {InitiativeKind} from '../../models/initiative.model';
 import {ReactionAdversary, ReactionParts, ReactionVerdict, StartCombatDialogData} from '../../models/start-combat-dialog.model';
-import {parseDiceTotal, REACTION_ROLL_THRESHOLD, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from '../../reaction-roll.util';
+import {REACTION_ROLL_THRESHOLD, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from '../../reaction-roll.util';
 import {AddCombatantDialogComponent} from '../add-combatant-dialog/add-combatant-dialog';
 
 /** Un PNJ, une créature ou un démon tel que le dialogue le charge : ce que l'ordre d'action en montre, plus son initiative. */

@@ -156,6 +156,13 @@ export function diceFromTotal(total: number): readonly [number, number] {
   return [a, total - a];
 }
 
+/** Total de deux dés saisi dans une case : un entier de 2 à 12, sinon `null`. Un « 1 » seul n'est pas un total — il attend son second
+ * chiffre (10, 11, 12) — alors que de 2 à 9 un chiffre suffit : la saisie peut être prise sans validation. */
+export function parseDiceTotal(raw: string): number | null {
+  const value = raw.trim();
+  return /^([2-9]|1[0-2])$/.test(value) ? Number(value) : null;
+}
+
 /** Solde net de dés de bonus/malus, plafonné à ±2 (02-actions-combat.md) : un avantage et un
  * désavantage contradictoires s'annulent. */
 export function netDiceModifier(avantages: number, desavantages: number): number {

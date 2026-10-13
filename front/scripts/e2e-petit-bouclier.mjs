@@ -37,8 +37,9 @@ const fail = (message) => {
   console.error('ÉCHEC :', message);
   process.exitCode = 1;
 };
-const attackTerms = async () => (await page.locator('.tas-rolls .tas-step').first().locator('.tas-terms').innerText()).replace(/\n/g, ' | ');
-const total = async () => page.locator('.tas-rolls .tas-step').first().locator('.tas-ticket-total').innerText();
+// L'addition du jet d'attaque, un terme après l'autre : « 2d6 dés | −1 bouclier | ≥ 9 seuil ».
+const attackTerms = async () => (await page.locator('.tas-stage').first().locator('.tas-sum-term').allInnerTexts()).map((term) => term.replace(/\s+/g, ' ').trim()).join(' | ');
+const total = async () => page.locator('.tas-stage').first().locator('.tas-sum-term--total b').innerText();
 
 await page.goto(`${base}/session/${id}/play`, {waitUntil: 'networkidle'});
 await page.getByRole('button', {name: /Démarrer un combat/}).click();
@@ -46,21 +47,21 @@ await page.waitForTimeout(1500);
 await page.locator('.scd-total').first().fill('10');
 await page.getByRole('button', {name: /Commencer le combat/}).click();
 await page.waitForTimeout(2500);
-await page.locator('.tas-fighter .tas-target').first().click();
+await page.locator('.tas-pick').first().click();
+await page.waitForSelector('.tas-total');
 await page.waitForTimeout(800);
 
 const roll = async (value) => {
-  await page.locator('.tas-step--roll .tas-manual input').fill(String(value));
-  await page.keyboard.press('Enter');
+  await page.locator('.tas-total').first().fill(String(value));
   await page.waitForTimeout(2000); // laisse l'état s'enregistrer et la session se recharger
 };
 
-if (!(await attackTerms()).includes('− 1 bouclier')) fail('le −1 du bouclier manque avant le premier jet');
+if (!(await attackTerms()).includes('−1 bouclier')) fail('le −1 du bouclier manque avant le premier jet');
 await roll(11);
-if (!(await attackTerms()).includes('− 1 bouclier')) fail('le −1 du bouclier a disparu après le premier jet (rechargement de la session ?)');
-if ((await total()).trim() === '—') fail('le jet a été effacé par le rechargement de la session');
+if (!(await attackTerms()).includes('−1 bouclier')) fail('le −1 du bouclier a disparu après le premier jet (rechargement de la session ?)');
+if ((await total()).trim().startsWith('≥')) fail('le jet a été effacé par le rechargement de la session');
 await roll(10);
-if (!(await attackTerms()).includes('− 1 bouclier')) fail('le −1 du bouclier a disparu à la relance');
+if (!(await attackTerms()).includes('−1 bouclier')) fail('le −1 du bouclier a disparu à la relance');
 
 // Nouvelle attaque (changement d'arme) contre la même cible, même round : plus de bouclier.
 const armes = page.locator('.tas-group[aria-label="Arme"] .tas-chip');

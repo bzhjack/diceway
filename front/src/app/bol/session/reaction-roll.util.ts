@@ -60,13 +60,6 @@ export function reactionSumTerms(dice: number | null, parts: ReactionParts): rea
   ];
 }
 
-/** Total des deux dés saisi dans la case d'un héros : un entier de 2 à 12, sinon `null`. Un « 1 » seul n'est pas un total — il attend
- * son second chiffre (10, 11, 12) — alors que de 2 à 9 un chiffre suffit : la saisie peut passer au héros suivant sans validation. */
-export function parseDiceTotal(raw: string): number | null {
-  const value = raw.trim();
-  return /^([2-9]|1[0-2])$/.test(value) ? Number(value) : null;
-}
-
 /** Bloc de l'ordre d'action où tombe chaque résultat de héros : les trois réussites partagent le premier. */
 const HERO_LANE: Record<InitiativeResultat, 'heros' | 'echec' | 'echec_critique'> = {
   legendaire: 'heros',

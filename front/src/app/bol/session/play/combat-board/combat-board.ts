@@ -2,12 +2,12 @@ import {ChangeDetectionStrategy, Component, input, output, viewChild} from '@ang
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {AttackChoice} from '../../models/attack-options.model';
-import {ResolvedCombatStats} from '../../models/combat-attack.model';
+import {AppliedHit, ResolvedCombatStats} from '../../models/combat-attack.model';
 import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
 import {TapisCard} from '../../models/tapis.model';
 import {TurnOrderEntry} from '../../models/turn-order.model';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
-import {AppliedHit, TurnAssistantComponent} from '../tapis/turn-assistant';
+import {TurnAssistantComponent} from '../tapis/turn-assistant';
 import {TurnOrderComponent} from '../tapis/turn-order';
 
 /** L'écran du mode combat : la barre et la frise d'initiative en haut, puis l'assistant de tour à gauche et les
@@ -38,6 +38,7 @@ export class CombatBoardComponent {
   readonly target = input<TapisCard | null>(null);
   readonly attacker = input<ResolvedCombatStats | null>(null);
   readonly targetStats = input<ResolvedCombatStats | null>(null);
+  readonly targetsStats = input<ReadonlyMap<string, ResolvedCombatStats>>(new Map());
   readonly legendaryBonus = input(false);
   readonly effets = input<readonly CombatEffect[]>([]);
 

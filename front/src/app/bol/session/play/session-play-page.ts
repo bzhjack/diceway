@@ -4,7 +4,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {concatMap, EMPTY, forkJoin, from, Observable, of, switchMap, take, tap, toArray} from 'rxjs';
+import {catchError, concatMap, EMPTY, forkJoin, from, Observable, of, switchMap, take, tap, toArray} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolFightSessionModel} from '../../models/bol-fight-session.model';
@@ -54,8 +54,7 @@ import {EtatSaver} from './etat-saver';
 import {appliquerEvenement, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from './tapis/combat-effects.util';
 import {EtatCombat} from '../models/combat-turn.model';
 import {CombatBoardComponent} from './combat-board/combat-board';
-import {AppliedHit} from './tapis/turn-assistant';
-import {ResolvedCombatStats} from '../models/combat-attack.model';
+import {AppliedHit, ResolvedCombatStats} from '../models/combat-attack.model';
 import {TurnOrderEntry} from '../models/turn-order.model';
 import {TapisComponent} from './tapis/tapis';
 import {buildTapisCards, findCard, heroDetails, heroHeaderStats, keepDetailsOrder, REMOVE_ACTION_LABEL} from './tapis/tapis.util';
@@ -231,6 +230,14 @@ export class SessionPlayPageComponent {
   protected readonly targetStats = signal<ResolvedCombatStats | null>(null);
   private statsRun = 0;
 
+  /** Statistiques de chaque carte que la carte active peut viser (clé de carte → statistiques) : son jeton, dans l'assistant, annonce
+   * ce qu'il faut pour la toucher. */
+  protected readonly targetsStats = signal<ReadonlyMap<string, ResolvedCombatStats>>(new Map());
+  private targetsStatsRun = 0;
+  // Des valeurs simples, pas les cartes : la table rechargée refait des cartes identiques, qui ne doivent pas relancer la lecture.
+  private readonly activeKey = computed(() => (this.mode() === 'combat' ? this.turn().activeKey : null));
+  private readonly targetKeys = computed(() => this.targets().map((card) => card.key).join(','));
+
   /** L'attaquant actif a obtenu un succès légendaire à la réaction : +1 à ses jets d'attaque. */
   protected readonly legendaryForActive = computed(() => {
     const active = this.activeCard();
@@ -306,6 +313,42 @@ export class SessionPlayPageComponent {
           this.attackerStats.set(attackerStats);
           this.targetStats.set(targetStats);
         });
+    });
+
+    // Statistiques de toutes les cartes à portée, pour leurs jetons dans l'assistant : relues quand la carte active ou la liste des
+    // cibles change. La cible choisie, elle, est relue à chaque changement de la table (ci-dessus) : son jet reste exact.
+    effect(() => {
+      const activeKey = this.activeKey();
+      this.targetKeys();
+      untracked(() => {
+        const run = ++this.targetsStatsRun;
+        const tokens = this.board()?.tokens ?? [];
+        const cards = activeKey ? this.targets() : [];
+        if (cards.length === 0) {
+          this.targetsStats.set(new Map());
+          return;
+        }
+        forkJoin(
+          cards.map((card) => {
+            const token = tokenForCard(tokens, card);
+            return token ? resolveAttackStats(token, this.herosService).pipe(catchError(() => of(null))) : of(null);
+          }),
+        )
+          .pipe(take(1))
+          .subscribe((stats) => {
+            if (run !== this.targetsStatsRun) {
+              return;
+            }
+            const byKey = new Map<string, ResolvedCombatStats>();
+            cards.forEach((card, index) => {
+              const resolved = stats[index];
+              if (resolved) {
+                byKey.set(card.key, resolved);
+              }
+            });
+            this.targetsStats.set(byKey);
+          });
+      });
     });
 
     // Armes du héros dont c'est le tour, pour l'assistant de tour.

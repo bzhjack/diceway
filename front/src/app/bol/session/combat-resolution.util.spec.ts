@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {attackBonus, damageDie, damageDiceCount, finalDamage, rawDamage, vigueurBonus, computeAttackTotal, resolvePostureAttackModifier, suggestedAttackResult, shouldPromptDefierLaMort} from './combat-resolution.util';
+import {attackBonus, damageDie, damageDiceCount, damageDieMax, damageRange, finalDamage, rawDamage, vigueurBonus, computeAttackTotal, resolvePostureAttackModifier, suggestedAttackResult, shouldPromptDefierLaMort} from './combat-resolution.util';
 import {ResolvedCombatStats} from './models/combat-attack.model';
 
 const STATS: ResolvedCombatStats = {
@@ -52,6 +52,28 @@ describe('finalDamage', () => {
 
   it('adds 6 for a devastating blow', () => {
     expect(finalDamage(4, 3, 1, true)).toBe(12);
+  });
+});
+
+describe('damageRange', () => {
+  it('knows the highest face of each damage die', () => {
+    expect(damageDieMax('d3')).toBe(3);
+    expect(damageDieMax('d6')).toBe(6);
+    expect(damageDieMax('d6m')).toBe(6);
+    expect(damageDieMax('d6b')).toBe(6);
+  });
+
+  it('goes from the lowest to the highest face, with vigueur and protection', () => {
+    expect(damageRange('d6', 3, 1, false)).toEqual([3, 8]);
+    expect(damageRange('d3', 0, 0, false)).toEqual([1, 3]);
+  });
+
+  it('never announces negative damage', () => {
+    expect(damageRange('d6', 0, 4, false)).toEqual([0, 2]);
+  });
+
+  it('adds the devastating blow', () => {
+    expect(damageRange('d6m', 3, 0, true)).toEqual([10, 15]);
   });
 });
 

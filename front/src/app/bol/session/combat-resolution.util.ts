@@ -72,6 +72,16 @@ export function finalDamage(raw: number, vigueur: number, protection: number, de
   return Math.max(0, raw + vigueur + (devastating ? DEVASTATING_BONUS : 0) - protection);
 }
 
+/** Plus grande face que peut montrer le dé de dégâts : 3 pour un d3, 6 sinon. */
+export function damageDieMax(die: DamageDie): number {
+  return die === 'd3' ? 3 : 6;
+}
+
+/** Fourchette des dégâts finaux, annoncée avant le jet : ce que donnent la plus petite et la plus grande face du dé. */
+export function damageRange(die: DamageDie, vigueur: number, protection: number, devastating: boolean): readonly [number, number] {
+  return [finalDamage(1, vigueur, protection, devastating), finalDamage(damageDieMax(die), vigueur, protection, devastating)];
+}
+
 /** Un d6 aléatoire. */
 export function rollD6(): number {
   return 1 + Math.floor(Math.random() * 6);

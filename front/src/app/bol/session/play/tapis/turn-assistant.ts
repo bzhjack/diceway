@@ -3,8 +3,9 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
-import {RollTerm} from '../../models/action-roll.model';
+import {ActionDiceTargetLabel, ActionRollTone, RollSumTerm} from '../../models/action-roll.model';
 import {CombatEffect, ModifierTerm, NewEffect} from '../../models/combat-effect.model';
+import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, chanceRingDash, parseDiceTotal} from '../../action-roll.util';
 import {descriptionEffet, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
 import {EffectsListComponent} from './effects-list';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
@@ -14,8 +15,11 @@ import {
   ATTACK_THRESHOLD,
   attackBonus,
   computeAttackTotal,
+  DamageDie,
   damageDiceCount,
   damageDie,
+  damageDieMax,
+  damageRange,
   finalDamage,
   HEROIC_OPTIONS,
   rawDamage,
@@ -25,7 +29,7 @@ import {
   vigueurBonus,
 } from '../../combat-resolution.util';
 import {AttackChoice} from '../../models/attack-options.model';
-import {ResolvedCombatStats} from '../../models/combat-attack.model';
+import {AppliedHit, ResolvedCombatStats} from '../../models/combat-attack.model';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {TapisCard} from '../../models/tapis.model';
 import {isLowVitalite, vitalitePercent} from './tapis.util';
@@ -43,7 +47,15 @@ const POSTURE_EXTRA: Readonly<Record<string, string>> = {
   'armor-chink': "ignore l'armure si touché",
 };
 
-/** Un effet affiché en pastille dans le récapitulatif du tour. */
+/** Ce que rapporte chaque dé de dégâts, en clair, à côté de la case où on le saisit. */
+const DIE_NOTES: Readonly<Record<DamageDie, string>> = {
+  d3: 'un d6 divisé par deux',
+  d6: 'un d6',
+  d6m: 'le moins bon de deux d6',
+  d6b: 'le meilleur de deux d6',
+};
+
+/** Ce que la posture choisie change à ce tour, en pastille sous le curseur. */
 interface EffectPill {
   readonly label: string;
   readonly tone: 'plus' | 'minus' | 'neutral';
@@ -53,22 +65,50 @@ interface EffectPill {
 interface StatTile {
   readonly label: string;
   readonly value: string;
-  readonly hot?: boolean;
-  /** Vitalité : le chiffre est posé dans un cœur, avec le maximum en petit. */
-  readonly heart?: boolean;
+  /** La posture choisie améliore (`up`) ou dégrade (`down`) ce chiffre. */
+  readonly tone?: 'up' | 'down';
+  /** Vitalité : le maximum suit en petit. */
   readonly max?: string;
 }
 
-/** Un coup porté, une fois ses dégâts appliqués : de quoi l'écrire au journal. */
-export interface AppliedHit {
-  readonly target: TapisCard;
-  readonly damage: number;
+/** Un terme de l'addition d'un jet sur le plateau. */
+interface TraySumTerm extends RollSumTerm {
+  /** Effet du registre dont le terme vient : sa croix le retire. */
+  readonly effetId?: string;
+  /** Le terme se clique pour saisir sa valeur à la main (protection de la cible). */
+  readonly editable?: boolean;
 }
 
-/** L'assistant de tour, sous la frise en combat : il suit le déroulé d'un tour de la carte active
- * en quatre étapes — action, cible, jet, dégâts. Il calcule le jet d'attaque (2d6 + bonus − défense, 9+), la
- * protection et les dégâts, et propose les options de succès héroïque. Il ne parle à aucun service : il
- * signale à la page ce qui doit être enregistré (dégâts, fin de tour, défense totale). */
+/** Ce qu'il faut aux dés pour toucher, et les chances d'y arriver. */
+interface AttackGoal extends ActionDiceTargetLabel {
+  readonly chance: number;
+  readonly ringDash: string;
+}
+
+/** Le verdict du jet d'attaque : son titre, l'écart au seuil, sa couleur. */
+interface AttackVerdict {
+  readonly title: string;
+  readonly detail: string;
+  readonly tone: ActionRollTone;
+}
+
+/** La barre de vie d'une carte, en pourcentages : ce qu'il lui reste, et ce que le coup en cours va lui retirer. */
+interface LifeBar {
+  readonly rest: number;
+  readonly loss: number;
+  readonly low: boolean;
+}
+
+/** Typographie d'un terme signé : « +2 », « −1 ». */
+function signedTerm(value: number): string {
+  return `${value > 0 ? '+' : '−'}${Math.abs(value)}`;
+}
+
+/** L'assistant de tour, sous la frise en combat : un face-à-face. À gauche la fiche de la carte active, avec ce qui est à elle (son
+ * arme, sa posture, ses options) ; à droite les adversaires à viser et la fiche de la cible, dont la vie montre ce que le coup va lui
+ * retirer ; au centre le plateau, où tombent le jet d'attaque (2d6 + bonus − défense, 9+) puis le jet de dégâts. Il annonce ce qu'il
+ * faut aux dés et les chances, et prend les totaux lancés à table. Il ne parle à aucun service : il signale à la page ce qui doit être
+ * enregistré (dégâts, fin de tour, défense totale). */
 @Component({
   selector: 'bol-turn-assistant',
   imports: [EffectsListComponent, MatButtonModule, MatIconModule, MatTooltipModule],
@@ -89,6 +129,8 @@ export class TurnAssistantComponent {
   /** Statistiques résolues de l'attaquant et de la cible (défense totale de la cible déjà ajoutée). */
   readonly attacker = input<ResolvedCombatStats | null>(null);
   readonly targetStats = input<ResolvedCombatStats | null>(null);
+  /** Statistiques de chaque carte visable (clé de carte → statistiques) : son jeton annonce ce qu'il faut pour la toucher. */
+  readonly targetsStats = input<ReadonlyMap<string, ResolvedCombatStats>>(new Map());
   /** Un héros a obtenu un succès légendaire : +1 aux jets d'attaque de l'attaquant s'il est du camp des héros. */
   readonly legendaryBonus = input(false);
   /** Les effets en cours (registre du combat) : leurs modificateurs entrent dans les jets. */
@@ -106,6 +148,8 @@ export class TurnAssistantComponent {
   readonly effectAdded = output<NewEffect>();
   readonly damageApplied = output<AppliedHit>();
   readonly totalDefenseRequested = output<void>();
+  /** « Fin du tour » depuis le plateau, après un coup raté ou des dégâts appliqués. */
+  readonly endTurnRequested = output<void>();
 
   protected readonly heroicOptions = HEROIC_OPTIONS;
   protected readonly isHero = computed(() => this.card().kind === 'hero');
@@ -115,9 +159,11 @@ export class TurnAssistantComponent {
   // ── Étape 1 : arme, posture, arme secondaire — repartent de zéro à chaque nouvelle carte active ──
   /** Un héros attaque avec ses armes équipées, les mains nues ou une arme improvisée ; un PNJ avec n'importe laquelle de ses armes. */
   protected readonly displayArmes = computed(() => (this.isHero() ? [...this.armes(), MAINS_NUES, ARME_IMPROVISEE] : this.armes()));
-  private readonly selectedArmeId = linkedSignal<string, number | null>({source: () => this.card().key, computation: () => null});
-  private readonly selectedOptionSlug = linkedSignal<string, string | null>({source: () => this.card().key, computation: () => null});
-  private readonly selectedOffHandId = linkedSignal<string, number | null>({source: () => this.card().key, computation: () => null});
+  // La source est la clé de la carte (`cardKey`), pas la carte : la table rechargée repasse une carte identique mais neuve, qui remettrait
+  // ces choix à zéro — et, avec eux, le jet en cours.
+  private readonly selectedArmeId = linkedSignal<string, number | null>({source: () => this.cardKey(), computation: () => null});
+  private readonly selectedOptionSlug = linkedSignal<string, string | null>({source: () => this.cardKey(), computation: () => null});
+  private readonly selectedOffHandId = linkedSignal<string, number | null>({source: () => this.cardKey(), computation: () => null});
 
   protected readonly effectiveArme = computed(() => {
     const list = this.displayArmes();
@@ -228,9 +274,16 @@ export class TurnAssistantComponent {
   });
 
   // ── Étape 3 : le jet d'attaque ──
-  protected readonly useTir = linkedSignal<ResolvedCombatStats | null, boolean>({
-    source: () => this.attacker(),
-    computation: (a) => !!a && a.attaque === null && a.tir > a.melee,
+  /** Un combattant meilleur au tir qu'en mêlée part à distance. */
+  private readonly prefersTir = computed(() => {
+    const a = this.attacker();
+    return !!a && a.attaque === null && a.tir > a.melee;
+  });
+  /** Mêlée ou tir, quand l'arme permet les deux : repart de la préférence du combattant à chaque nouvelle carte active, pas à chaque
+   * relecture de ses statistiques. */
+  protected readonly useTir = linkedSignal<{readonly key: string; readonly tir: boolean}, boolean>({
+    source: () => ({key: this.cardKey(), tir: this.prefersTir()}),
+    computation: (source) => source.tir,
   });
   /** Façons d'utiliser l'arme choisie : mêlée seulement (épée, mains nues), tir seulement (arc, javelot) ou les deux (arme qui se lance :
    * dague, hache, lance, arme improvisée) — la distance ne se choisit que dans ce dernier cas. */
@@ -261,36 +314,36 @@ export class TurnAssistantComponent {
   protected readonly dice = signal<readonly [number, number] | null>(null);
   protected readonly rolling = signal(false);
 
-  /** Fiche de l'attaquant : attaque, défense, dégâts (de l'arme choisie), protection, vigueur et vitalité. */
-  protected readonly attackerTiles = computed<readonly StatTile[]>(() =>
-    this.tilesOf(this.attacker(), this.card(), this.isTir(), this.degats()),
-  );
-
-  /** Fiche de la cible choisie, avec les mêmes tuiles. */
-  protected readonly targetTiles = computed<readonly StatTile[]>(() => {
-    const target = this.target();
-    return target ? this.tilesOf(this.targetStats(), target, false, target.degats) : [];
-  });
-
-  private tilesOf(stats: ResolvedCombatStats | null, card: TapisCard, useTir: boolean, degats: string): readonly StatTile[] {
+  /** Fiche de l'attaquant : attaque, défense, vigueur et vitalité. La défense montre déjà ce que la posture choisie lui fera jusqu'à
+   * son prochain tour. */
+  protected readonly attackerTiles = computed<readonly StatTile[]>(() => {
+    const stats = this.attacker();
     if (!stats) {
       return [];
     }
+    const card = this.card();
+    const posture = POSTURE_DEFENSE[this.effectiveOption()?.slug ?? ''] ?? 0;
     return [
-      {label: 'Attaque', value: this.signed(attackBonus(stats, useTir))},
-      {label: 'Défense', value: String(stats.defense)},
-      {label: 'Dégâts', value: degats, hot: true},
-      {label: 'Prot.', value: stats.protectionText ?? String(stats.protection)},
-      {label: 'Vigueur', value: this.signed(vigueurBonus(stats, useTir))},
-      {label: 'Vitalité', value: String(card.vitaliteCourante ?? '—'), max: String(card.vitaliteMax ?? '—'), heart: true},
+      {label: 'Attaque', value: this.signed(attackBonus(stats, this.isTir()))},
+      {label: 'Défense', value: String(stats.defense + posture), ...(posture !== 0 ? {tone: posture > 0 ? ('up' as const) : ('down' as const)} : {})},
+      {label: 'Vigueur', value: this.signed(vigueurBonus(stats, this.isTir()))},
+      {label: 'Vitalité', value: String(card.vitaliteCourante ?? '—'), max: String(card.vitaliteMax ?? '—')},
     ];
-  }
-  /** Total saisi à table, avant validation. */
-  protected readonly manualDraft = signal('');
-  protected readonly manualDraftValid = computed(() => {
-    const value = Number(this.manualDraft());
-    return Number.isInteger(value) && value >= 2 && value <= 12;
   });
+
+  /** Fiche de la cible choisie : ce qui s'oppose au coup, sa défense et sa protection. */
+  protected readonly targetTiles = computed<readonly StatTile[]>(() => {
+    const stats = this.targetStats();
+    if (!stats) {
+      return [];
+    }
+    const armorIgnored = this.choice()?.posture?.slug === 'armor-chink';
+    return [
+      {label: 'Défense', value: String(stats.defense)},
+      armorIgnored ? {label: 'Armure ignorée', value: '0', tone: 'up'} : {label: 'Protection', value: stats.protectionText ?? String(stats.protection)},
+    ];
+  });
+
   protected readonly manualTotal = signal<number | null>(null);
   protected readonly heroic = signal<string | null>(null);
 
@@ -299,19 +352,73 @@ export class TurnAssistantComponent {
     resolvePostureAttackModifier(this.choice()?.posture ?? null, this.targetStats()?.protection ?? 0),
   );
 
-  /** Les termes du jet d'attaque, un par puce : « 2d6 », « + 2 agi », « + 2 mêlée », « − 1 défense »… Les termes nuls sont omis ; le total des
-   * dés apparaît entre parenthèses une fois le jet fait. */
-  protected readonly formulaTerms = computed<readonly RollTerm[]>(() => {
+  /** Ce qui s'ajoute aux deux dés contre la cible choisie : bonus d'attaque − défense + posture + effets en cours. `null` sans cible. */
+  protected readonly attackModifier = computed(() => {
+    const a = this.attacker();
+    const t = this.targetStats();
+    if (!a || !t || !this.target()) {
+      return null;
+    }
+    return computeAttackTotal(0, attackBonus(a, this.isTir()), t.defense, sommeModificateurs(this.effectTerms()), this.legendaryBonus() ? 1 : 0, this.postureModifier());
+  });
+
+  /** Ce qu'il faut aux dés pour toucher la cible choisie, et les chances. */
+  protected readonly attackGoal = computed<AttackGoal | null>(() => {
+    const modifier = this.attackModifier();
+    return modifier === null ? null : this.goalFor(modifier);
+  });
+
+  private goalFor(modifier: number): AttackGoal {
+    const chance = Math.round(actionSuccessChance(0, modifier, ATTACK_THRESHOLD) * 100);
+    return {...actionDiceTargetLabel(actionDiceTarget(modifier, ATTACK_THRESHOLD)), chance, ringDash: chanceRingDash(chance)};
+  }
+
+  /** Sur le jeton de chaque carte visable, ce qu'il faut pour la toucher avec l'arme et la posture choisies : « 6+ · 72 % ». Absent tant
+   * que ses statistiques ne sont pas connues. */
+  protected readonly odds = computed<Readonly<Record<string, string>>>(() => {
+    const a = this.attacker();
+    const odds: Record<string, string> = {};
+    if (!a) {
+      return odds;
+    }
+    const selected = this.target()?.key;
+    for (const card of this.targets()) {
+      const stats = this.targetsStats().get(card.key);
+      // La cible choisie reprend le calcul du plateau, modificateurs figés compris.
+      const modifier =
+        card.key === selected
+          ? this.attackModifier()
+          : stats
+            ? computeAttackTotal(
+                0,
+                attackBonus(a, this.isTir()),
+                stats.defense,
+                sommeModificateurs(modificateursPour(this.effets(), {jet: 'attaque', attaquant: this.card().key, cible: card.key, bouclier: stats.bouclierMalusUneAttaque, bouclierToutes: stats.bouclierDefenseToutes})),
+                this.legendaryBonus() ? 1 : 0,
+                resolvePostureAttackModifier(this.choice()?.posture ?? null, stats.protection),
+              )
+            : null;
+      if (modifier !== null) {
+        const goal = this.goalFor(modifier);
+        odds[card.key] = `${goal.big} · ${goal.chance} %`;
+      }
+    }
+    return odds;
+  });
+
+  /** L'addition du jet d'attaque, sur une ligne : un nombre par terme, son nom dessous. Les termes nuls sont omis. Avant le jet elle
+   * s'ouvre sur « 2d6 » et se ferme sur le seuil ; après, sur le total des dés et le total du jet. */
+  protected readonly attackSum = computed<readonly TraySumTerm[]>(() => {
     const a = this.attacker();
     const t = this.targetStats();
     if (!a || !t) {
       return [];
     }
     const dice = this.diceSum();
-    const terms: RollTerm[] = [{label: `2d6${dice === null ? '' : ` (${dice})`}`, tone: 'dice'}];
-    const add = (value: number, name: string): void => {
+    const terms: TraySumTerm[] = [{value: dice === null ? '2d6' : `${dice}`, caption: 'dés', tone: 'dice'}];
+    const add = (value: number, caption: string): void => {
       if (value !== 0) {
-        terms.push({label: `${value > 0 ? '+' : '−'} ${Math.abs(value)} ${name}`, tone: value > 0 ? 'plus' : 'minus'});
+        terms.push({value: signedTerm(value), caption, tone: value > 0 ? 'plus' : 'minus'});
       }
     };
     if (a.attaque !== null) {
@@ -323,13 +430,16 @@ export class TurnAssistantComponent {
     add(-t.defense, 'défense');
     add(this.postureModifier(), 'posture');
     add(this.legendaryBonus() ? 1 : 0, 'légendaire');
-    for (const term of this.effectTerms()) {
-      terms.push({label: term.label, tone: term.tone, ...(term.effetId ? {effetId: term.effetId} : {})});
-    }
+    terms.push(...this.effectTerms().map((term) => this.sumTermOf(term)));
+    const total = this.total();
+    terms.push(total === null ? {value: `≥ ${ATTACK_THRESHOLD}`, caption: 'seuil', tone: 'total'} : {value: `= ${total}`, caption: `pour ${ATTACK_THRESHOLD}`, tone: 'total'});
     return terms;
   });
 
-  protected readonly threshold = ATTACK_THRESHOLD;
+  /** Un modificateur du registre (« − 1 bouclier (Krongar) ») en terme d'addition : sa valeur, puis son nom dessous. */
+  private sumTermOf(term: ModifierTerm): TraySumTerm {
+    return {value: signedTerm(term.valeur), caption: term.label.replace(/^[+−] \d+ /, ''), tone: term.tone, ...(term.effetId ? {effetId: term.effetId} : {})};
+  }
 
   /** Clé → nom des deux duellistes : une puce dit à qui est l'effet. */
   private readonly noms = computed<Readonly<Record<string, string>>>(() => {
@@ -353,22 +463,33 @@ export class TurnAssistantComponent {
   protected readonly attackerBadges = computed(() => this.badgesDe(this.card().key));
   protected readonly targetBadges = computed(() => this.badgesDe(this.target()?.key));
 
-  /** Les termes du jet de dégâts : le dé de l'arme, la vigueur, le coup dévastateur et la protection de la cible. */
-  protected readonly damageTerms = computed<readonly RollTerm[]>(() => {
-    const terms: RollTerm[] = [{label: this.degats(), tone: 'dice'}];
-    const add = (value: number, name: string): void => {
+  /** L'addition du jet de dégâts : le dé de l'arme, la vigueur, le coup dévastateur, la protection de la cible (elle se clique pour la
+   * saisir), les effets en cours, puis la fourchette des dégâts — et, le dé tombé, leur total. */
+  protected readonly damageSum = computed<readonly TraySumTerm[]>(() => {
+    const raw = this.raw();
+    const terms: TraySumTerm[] = [{value: raw === null ? this.degats() : `${raw}`, caption: 'dé', tone: 'dice'}];
+    const add = (value: number, caption: string): void => {
       if (value !== 0) {
-        terms.push({label: `${value > 0 ? '+' : '−'} ${Math.abs(value)} ${name}`, tone: value > 0 ? 'plus' : 'minus'});
+        terms.push({value: signedTerm(value), caption, tone: value > 0 ? 'plus' : 'minus'});
       }
     };
     add(this.vigueur(), 'vigueur');
     add(this.devastating() ? 6 : 0, 'dévastateur');
-    const protection = this.protection();
-    const source = this.protectionManual() !== null ? ' (saisie)' : this.protectionFace() !== null ? ` (dé ${this.protectionFace()})` : '';
-    // Toujours affichée, même à 0 : c'est elle qu'on clique pour saisir une valeur.
-    terms.push({label: `− ${protection} protection${source}`, tone: 'minus', editable: true});
-    for (const term of this.damageEffectTerms()) {
-      terms.push({label: term.label, tone: term.tone, ...(term.effetId ? {effetId: term.effetId} : {})});
+    if (this.choice()?.posture?.slug === 'armor-chink') {
+      terms.push({value: '0', caption: 'armure ignorée', tone: 'dice'});
+    } else {
+      const protection = this.protection();
+      const source = this.protectionManual() !== null ? ' (saisie)' : this.protectionFace() !== null ? ` (dé ${this.protectionFace()})` : '';
+      // Toujours affichée, même à 0 : c'est elle qu'on clique pour saisir une valeur.
+      terms.push({value: protection === 0 ? '0' : signedTerm(-protection), caption: `protection${source}`, tone: 'minus', editable: true});
+    }
+    terms.push(...this.damageEffectTerms().map((term) => this.sumTermOf(term)));
+    const damage = this.damage();
+    if (damage === null) {
+      const [min, max] = damageRange(this.die(), this.vigueur(), this.effectiveProtection(), this.devastating());
+      terms.push({value: min === max ? `${min}` : `${min} à ${max}`, caption: 'dégâts', tone: 'total'});
+    } else {
+      terms.push({value: `= ${damage}`, caption: 'dégâts', tone: 'total'});
     }
     return terms;
   });
@@ -459,17 +580,23 @@ export class TurnAssistantComponent {
     return this.heroicAllowed() && (v.result === 'heroique' || v.result === 'legendaire') ? 'heroique' : 'reussite';
   });
 
-  protected readonly verdictLabel = computed(() => {
-    switch (this.tone()) {
-      case 'heroique':
-        return 'Succès héroïque';
-      case 'reussite':
-        return 'Touché';
-      case 'echec':
-        return 'Raté';
-      default:
-        return 'En attente';
+  /** Le verdict en clair : touché ou raté, et de combien. Un double 1 rate et un double 6 touche quel que soit le total. */
+  protected readonly attackVerdict = computed<AttackVerdict | null>(() => {
+    const tone = this.tone();
+    const total = this.total();
+    if (!tone || total === null) {
+      return null;
     }
+    const d = this.naturalDice();
+    if (tone === 'heroique') {
+      return {title: 'Succès héroïque', detail: 'Double 6 : le coup touche, avec une option au choix.', tone};
+    }
+    if (tone === 'echec') {
+      const double1 = !!d && d[0] === 1 && d[1] === 1;
+      return {title: 'Raté', detail: double1 ? 'Double 1 : échec automatique.' : `il manquait ${ATTACK_THRESHOLD - total}`, tone};
+    }
+    const double6 = !!d && d[0] === 6 && d[1] === 6;
+    return {title: 'Touché', detail: double6 ? 'Double 6 : réussite automatique.' : total > ATTACK_THRESHOLD ? `réussi de ${total - ATTACK_THRESHOLD}` : 'tout juste', tone};
   });
 
   // ── Étape 4 : les dégâts ──
@@ -521,12 +648,37 @@ export class TurnAssistantComponent {
     }
     return `${values.join(' et ')} → ${this.raw()} retenu (${die === 'd6m' ? 'le moins bon' : 'le meilleur'})`;
   });
+  /** Ce qui se retranche vraiment des dégâts : un modificateur positif des effets ajoute aux dégâts, il se retranche de la protection. */
+  private readonly effectiveProtection = computed(() => this.protection() - sommeModificateurs(this.damageEffectTerms()));
   protected readonly damage = computed(() => {
     const raw = this.raw();
-    // Un modificateur positif des effets ajoute aux dégâts : il se retranche de la protection.
-    return raw === null ? null : finalDamage(raw, this.vigueur(), this.protection() - sommeModificateurs(this.damageEffectTerms()), this.devastating());
+    return raw === null ? null : finalDamage(raw, this.vigueur(), this.effectiveProtection(), this.devastating());
   });
+  /** Ce que rapporte le dé de dégâts, à côté de sa case : « d6M : le moins bon de deux d6 ». */
+  protected readonly dieNote = computed(() => `${this.degats()} : ${DIE_NOTES[this.die()]}`);
   protected readonly hasDamageStep = computed(() => !!this.verdict()?.hit && this.heroic() !== 'desarmement');
+  /** Plus grand résultat que peut afficher le dé de dégâts : 3 pour un d3, 6 sinon. */
+  protected readonly damageMax = computed(() => damageDieMax(this.die()));
+
+  /** Le dernier coup appliqué par cette carte : il reste affiché sur le plateau tant qu'un nouveau jet n'est pas fait. */
+  protected readonly lastHit = linkedSignal<string, AppliedHit | null>({source: () => this.cardKey(), computation: () => null});
+
+  /** La vie de la cible choisie, en chiffres : ce qu'il lui reste, et où le coup en cours la fait tomber (`after`, `null` sans dégâts). */
+  protected readonly targetLife = computed(() => {
+    const target = this.target();
+    const current = target?.vitaliteCourante ?? null;
+    const damage = this.damage();
+    const after = current !== null && damage !== null && damage > 0 ? current - damage : null;
+    return {current, max: target?.vitaliteMax ?? null, after, loss: after === null ? 0 : damage, out: after !== null && after <= 0};
+  });
+
+  // Les cases et boutons du plateau, pour passer la main de l'un à l'autre au fil de la saisie.
+  private readonly attackInput = viewChild<ElementRef<HTMLInputElement>>('attackInput');
+  private readonly damageInput = viewChild<ElementRef<HTMLInputElement>>('damageInput');
+  private readonly applyButton = viewChild('applyButton', {read: ElementRef<HTMLButtonElement>});
+  private readonly endButton = viewChild('endButton', {read: ElementRef<HTMLButtonElement>});
+  /** Une cible vient d'être choisie : la case du jet d'attaque prend la main dès qu'elle est à l'écran. */
+  private attackFocusWanted = false;
 
   constructor() {
     effect(() => this.choiceChanged.emit(this.choice()));
@@ -539,6 +691,27 @@ export class TurnAssistantComponent {
       this.choiceKey();
       untracked(() => this.resetRoll());
     });
+
+    // La case du jet d'attaque n'existe qu'une fois les statistiques de la cible lues : elle prend la main à ce moment-là.
+    effect(() => {
+      const input = this.attackInput();
+      if (input && this.attackFocusWanted) {
+        this.attackFocusWanted = false;
+        input.nativeElement.focus();
+      }
+    });
+  }
+
+  /** Vise une carte — ou, si c'est déjà la cible, y renonce. */
+  protected selectTarget(card: TapisCard): void {
+    const same = this.target()?.key === card.key;
+    this.attackFocusWanted = !same;
+    this.targetSelected.emit(same ? null : card);
+  }
+
+  /** Donne la main à un élément du plateau une fois l'écran à jour (il n'existe parfois qu'après le rendu). */
+  private focusAfterRender(element: () => ElementRef<HTMLElement> | undefined): void {
+    afterNextRender(() => element()?.nativeElement.focus(), {injector: this.injector});
   }
 
   protected selectArme(id: number | undefined): void {
@@ -564,6 +737,7 @@ export class TurnAssistantComponent {
     this.heroic.set(null);
     this.damageValues.set(null);
     this.dice.set(null);
+    this.lastHit.set(null);
     this.markAttacked();
     const values = await this.throwDice('2d6', 2);
     this.dice.set([values[0], values[1]]);
@@ -598,21 +772,34 @@ export class TurnAssistantComponent {
     }
   }
 
-  protected submitManual(): void {
-    if (this.manualDraftValid()) {
-      this.setManual(this.manualDraft());
+  /** Saisie du total des deux dés lancés à table. De 2 à 9 un chiffre suffit : le jet est pris tout de suite, et la main passe au dé de
+   * dégâts s'il touche, à « Fin du tour » sinon. Une case vidée efface le jet. */
+  protected onAttackInput(raw: string): void {
+    if (raw.trim() === '') {
+      if (this.diceSum() !== null) {
+        this.dice.set(null);
+        this.manualTotal.set(null);
+        this.heroic.set(null);
+        this.damageValues.set(null);
+      }
+      return;
     }
-  }
-
-  protected setManual(raw: string): void {
-    const value = Number(raw);
+    const total = parseDiceTotal(raw);
+    if (total === null) {
+      return;
+    }
     this.dice.set(null);
     this.heroic.set(null);
     this.damageValues.set(null);
-    this.manualTotal.set(Number.isInteger(value) && value >= 2 && value <= 12 ? value : null);
-    if (this.manualTotal() !== null) {
-      this.markAttacked();
-    }
+    this.lastHit.set(null);
+    this.manualTotal.set(total);
+    this.markAttacked();
+    this.focusAfterRender(() => (this.hasDamageStep() ? this.damageInput() : this.endButton()));
+  }
+
+  /** En quittant une case, une saisie laissée incomplète ou hors bornes cède la place à la valeur retenue. */
+  protected restoreInput(input: HTMLInputElement, value: number | null): void {
+    input.value = value === null ? '' : `${value}`;
   }
 
   /** Le MJ retire un effet : le registre l'oublie, et le jet déjà fait (modificateurs figés) perd sa puce et recalcule son total. */
@@ -633,25 +820,22 @@ export class TurnAssistantComponent {
     this.attackRolled.emit(target);
   }
 
-  /** Plus grand résultat que peut afficher le dé de dégâts : 3 pour un d3, 6 sinon. */
-  protected readonly damageMax = computed(() => (this.die() === 'd3' ? 3 : 6));
-  /** Résultat du dé de dégâts saisi à table, avant validation. */
-  protected readonly damageDraft = signal('');
-  protected readonly damageDraftValid = computed(() => {
-    const value = Number(this.damageDraft());
-    return this.damageDraft() !== '' && Number.isInteger(value) && value >= 1 && value <= this.damageMax();
-  });
-
-  /** Dégâts bruts lus sur le dé lancé à table : un d6 de malus ou de bonus garde le dé retenu (on saisit celui-là), un d3 se lit tel quel. */
-  protected submitManualDamage(): void {
-    if (!this.damageDraftValid()) {
+  /** Saisie du dé de dégâts lancé à table : un chiffre, pris tout de suite. Un d6 de malus ou de bonus garde le dé retenu (on saisit
+   * celui-là), un d3 se lit tel quel. La main passe ensuite au bouton qui applique. */
+  protected onDamageInput(raw: string): void {
+    const text = raw.trim();
+    if (text === '') {
+      this.damageValues.set(null);
       return;
     }
-    const value = Number(this.damageDraft());
-    const count = damageDiceCount(this.die());
+    const value = Number(text);
+    if (!/^[1-6]$/.test(text) || value > this.damageMax()) {
+      return;
+    }
     // `rawDamage` lit un d3 comme un d6 divisé par deux : 2n − 1 redonne n.
     const face = this.die() === 'd3' ? 2 * value - 1 : value;
-    this.damageValues.set(Array.from({length: count}, () => face));
+    this.damageValues.set(Array.from({length: damageDiceCount(this.die())}, () => face));
+    this.focusAfterRender(() => this.applyButton());
   }
 
   /** Ouvre la saisie de la protection : le champ remplace la puce, prérempli avec la valeur courante. */
@@ -701,12 +885,13 @@ export class TurnAssistantComponent {
     this.damageValues.set(await this.throwDice(`${count}d6`, count));
   }
 
-  protected percent(card: TapisCard): number {
-    return vitalitePercent(card.vitaliteCourante, card.vitaliteMax);
-  }
-
-  protected isLow(card: TapisCard): boolean {
-    return isLowVitalite(card.vitaliteCourante, card.vitaliteMax);
+  /** La barre de vie d'une carte. Celle de la cible choisie montre aussi ce que le coup en cours va lui retirer. */
+  protected lifeOf(card: TapisCard): LifeBar {
+    const rest = vitalitePercent(card.vitaliteCourante, card.vitaliteMax);
+    const max = card.vitaliteMax ?? 0;
+    const hit = card.key === this.target()?.key ? (this.damage() ?? 0) : 0;
+    const loss = max > 0 ? Math.min(rest, (hit / max) * 100) : 0;
+    return {rest: rest - loss, loss, low: isLowVitalite(card.vitaliteCourante, card.vitaliteMax)};
   }
 
   protected setHeroic(slug: string): void {
@@ -721,6 +906,8 @@ export class TurnAssistantComponent {
     }
     this.damageApplied.emit({target, damage});
     this.resetRoll();
+    this.lastHit.set({target, damage});
+    this.focusAfterRender(() => this.endButton());
   }
 
   protected signed(value: number): string {
@@ -728,8 +915,6 @@ export class TurnAssistantComponent {
   }
 
   private resetRoll(): void {
-    this.manualDraft.set('');
-    this.damageDraft.set('');
     this.protectionFace.set(null);
     this.protectionManual.set(null);
     this.editingProtection.set(false);
