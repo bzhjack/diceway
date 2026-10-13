@@ -407,6 +407,7 @@
 .bs-mark--minus {
   display: grid;
   place-items: center;
+  align-content: flex-end;
   font: 800 0.72rem/1 'Muse Sans', sans-serif;
 }
 

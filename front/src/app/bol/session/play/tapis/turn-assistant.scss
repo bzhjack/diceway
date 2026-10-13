@@ -677,14 +677,13 @@
 .tas-sum-edit {
   padding: 0 0.15rem;
   border: 0;
-  border-bottom: 1px dashed currentColor;
   background: none;
   cursor: pointer;
 }
 
 .tas-sum-input {
   width: 3rem;
-  padding: 0;
+  padding: 0.1rem;
   border: 1px solid var(--dw-color-legendary);
   border-radius: 6px;
   background: var(--dw-surface-0);
