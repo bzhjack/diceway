@@ -3,10 +3,12 @@ import {
   ACTION_DIFFICULTIES,
   DEFAULT_ACTION_DIFFICULTY,
   actionDiceTarget,
+  actionDiceTargetLabel,
   actionModifierSum,
   actionResultTone,
   actionSuccessChance,
   actionVerdict,
+  chanceRingDash,
   diceCountLabel,
   diceFromTotal,
   formatActionFormula,
@@ -14,6 +16,7 @@ import {
   keptDiceDistribution,
   keptDiceIndexes,
   netDiceModifier,
+  parseDiceTotal,
   signedModifier,
   suggestedActionResult,
 } from './action-roll.util';
@@ -23,8 +26,14 @@ describe('suggestedActionResult', () => {
     expect(suggestedActionResult([1, 1], 20, 6)).toBe('echec');
   });
 
-  it('returns heroique on a natural 12, regardless of total', () => {
-    expect(suggestedActionResult([6, 6], -20, 12)).toBe('heroique');
+  it('returns heroique on a natural 12 when lesser dice could have succeeded', () => {
+    expect(suggestedActionResult([6, 6], 0, 9)).toBe('heroique');
+    expect(suggestedActionResult([6, 6], -2, 9)).toBe('heroique');
+  });
+
+  it('returns a plain reussite on a natural 12 when only the double 6 could succeed', () => {
+    expect(suggestedActionResult([6, 6], -3, 9)).toBe('reussite');
+    expect(suggestedActionResult([6, 6], -8, 9)).toBe('reussite');
   });
 
   it('returns reussite when the total meets the threshold', () => {
@@ -146,7 +155,7 @@ describe('actionResultTone', () => {
     expect(actionResultTone('echec_critique')).toBe('echec');
     expect(actionResultTone('reussite')).toBe('reussite');
     expect(actionResultTone('heroique')).toBe('heroique');
-    expect(actionResultTone('legendaire')).toBe('heroique');
+    expect(actionResultTone('legendaire')).toBe('legendaire');
   });
 });
 
@@ -230,6 +239,22 @@ describe('actionDiceTarget', () => {
   });
 });
 
+describe('actionDiceTargetLabel', () => {
+  it('spells out what the dice must show', () => {
+    expect(actionDiceTargetLabel(actionDiceTarget(2, 9))).toEqual({big: '7+', small: 'aux dés'});
+    expect(actionDiceTargetLabel(actionDiceTarget(8, 9))).toEqual({big: 'Tout', small: 'sauf le double 1'});
+    expect(actionDiceTargetLabel(actionDiceTarget(-5, 9))).toEqual({big: '6·6', small: 'seul le double 6'});
+  });
+});
+
+describe('chanceRingDash', () => {
+  it('draws an arc proportional to the chance, over the whole ring', () => {
+    expect(chanceRingDash(0)).toBe('0.0 169.6');
+    expect(chanceRingDash(50)).toBe('84.8 169.6');
+    expect(chanceRingDash(100)).toBe('169.6 169.6');
+  });
+});
+
 describe('keptDiceIndexes', () => {
   it('keeps both dice of a plain roll', () => {
     expect(keptDiceIndexes([3, 5], 0)).toEqual([0, 1]);
@@ -263,5 +288,32 @@ describe('actionVerdict', () => {
     expect(actionVerdict('heroique', [6, 6], 14, 9).detail).toBe('Double 6 : réussite automatique, avec un effet supérieur.');
     expect(actionVerdict('heroique', [5, 4], 11, 9).detail).toBe('Réussite transformée pour 1 point d’héroïsme.');
     expect(actionVerdict('legendaire', [6, 6], 14, 9).title).toBe('Succès légendaire');
+  });
+
+  it('tells a double 6 that was the only way to succeed is a plain success', () => {
+    expect(actionVerdict('reussite', [6, 6], 6, 9)).toEqual({title: 'Réussite', detail: 'Double 6 : seul lui pouvait réussir, c’est une réussite normale.'});
+    expect(actionVerdict('heroique', [6, 6], 6, 9).detail).toBe('Réussite transformée pour 1 point d’héroïsme.');
+  });
+});
+
+describe('parseDiceTotal', () => {
+  it('reads a total of two dice, from 2 to 12', () => {
+    expect(parseDiceTotal('2')).toBe(2);
+    expect(parseDiceTotal('9')).toBe(9);
+    expect(parseDiceTotal('10')).toBe(10);
+    expect(parseDiceTotal(' 12 ')).toBe(12);
+  });
+
+  it('waits for the second digit after a 1', () => {
+    expect(parseDiceTotal('1')).toBeNull();
+  });
+
+  it('rejects anything else', () => {
+    expect(parseDiceTotal('')).toBeNull();
+    expect(parseDiceTotal('0')).toBeNull();
+    expect(parseDiceTotal('13')).toBeNull();
+    expect(parseDiceTotal('07')).toBeNull();
+    expect(parseDiceTotal('7.5')).toBeNull();
+    expect(parseDiceTotal('abc')).toBeNull();
   });
 });

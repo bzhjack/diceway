@@ -134,12 +134,22 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
     heroisme: null,
   };
 
-  // Un PNJ est une fiche de héros : l'armure qu'il porte n'est pas copiée à la table, on la lit sur sa fiche.
+  // Un PNJ est une fiche de héros : l'armure qu'il porte n'est pas copiée à la table, on la lit sur sa fiche. Il porte tout ce qu'il
+  // possède — les profils du livre donnent ses valeurs « avec armure » — donc son agilité et sa défense sont celles de sa fiche avec
+  // tout son équipement (une table posée avant ce principe garde encore ses valeurs sans armure), et toutes ses armures comptent.
   if (token.kind === 'pnj' && c.sourceId) {
     return herosService.heros(c.sourceId).pipe(
       map((pnj) => {
-        const protection = equippedProtection(pnj.armures);
-        return {...snapshot, protection: protection.value, protectionText: protection.text, bouclierMalusUneAttaque: shieldMalusOnOneAttack(pnj), bouclierDefenseToutes: pnj.equipement_effectif.bouclier_defense_toutes ?? 0};
+        const protection = equippedProtection(pnj.armures.map((armure) => (typeof armure === 'object' ? {...armure, equipee: true} : armure)));
+        return {
+          ...snapshot,
+          agilite: pnj.attributs.agilite_effective,
+          defense: pnj.combat.defense_effective,
+          protection: protection.value,
+          protectionText: protection.text,
+          bouclierMalusUneAttaque: shieldMalusOnOneAttack(pnj),
+          bouclierDefenseToutes: pnj.equipement_effectif.bouclier_defense_toutes ?? 0,
+        };
       }),
       catchError(() => of(snapshot)),
     );

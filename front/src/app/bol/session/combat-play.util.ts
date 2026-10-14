@@ -26,6 +26,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       avatar: h.heros?.origines.avatar || EMPTY_AVATAR,
       rang: null,
       resultat: h.initiative_resultat,
+      agilite: h.heros?.attributs?.agilite ?? null,
       camp: h.camp,
       vitaliteMax: h.heros?.ressources?.vitalite ?? null,
       vitaliteCourante: h.vitalite_courante ?? h.heros?.ressources?.vitalite ?? null,

@@ -4,7 +4,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {concatMap, EMPTY, forkJoin, from, Observable, of, switchMap, take, tap, toArray} from 'rxjs';
+import {catchError, concatMap, EMPTY, forkJoin, from, Observable, of, switchMap, take, tap, toArray} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolFightSessionModel} from '../../models/bol-fight-session.model';
@@ -48,14 +48,13 @@ import {ExpandedCardDialogComponent} from './tapis/expanded-card-dialog';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {equippedArmes} from '../../shared/arme/arme-equipee';
 import {AttackChoice} from '../models/attack-options.model';
-import {debutDeTour, effetsDerives, endTurn, giveBackTurn, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
+import {bloqueeCeRound, debutDeTour, effetsDerives, endTurn, giveBackTurn, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
 import {NewEffect} from '../models/combat-effect.model';
 import {EtatSaver} from './etat-saver';
 import {appliquerEvenement, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from './tapis/combat-effects.util';
 import {EtatCombat} from '../models/combat-turn.model';
 import {CombatBoardComponent} from './combat-board/combat-board';
-import {AppliedHit} from './tapis/turn-assistant';
-import {ResolvedCombatStats} from '../models/combat-attack.model';
+import {AppliedHit, ResolvedCombatStats, VitaliteChange} from '../models/combat-attack.model';
 import {TurnOrderEntry} from '../models/turn-order.model';
 import {TapisComponent} from './tapis/tapis';
 import {buildTapisCards, findCard, heroDetails, heroHeaderStats, keepDetailsOrder, REMOVE_ACTION_LABEL} from './tapis/tapis.util';
@@ -165,6 +164,7 @@ export class SessionPlayPageComponent {
 
   protected readonly turnEntries = computed<readonly TurnOrderEntry[]>(() => {
     const statuses = this.turn().statuses;
+    const round = this.etat().round;
     return this.orderedCards().map(({card, tier, lockedRound1}) => ({
       key: card.key,
       nom: card.nom,
@@ -172,7 +172,7 @@ export class SessionPlayPageComponent {
       avatar: card.avatar,
       status: statuses.get(card.key) ?? 'upcoming',
       tier: tier,
-      locked: lockedRound1,
+      locked: bloqueeCeRound(lockedRound1, round),
       ally: card.kind !== 'hero' && card.camp === 'heros',
       effets: this.etat()
         .effets.filter((e) => e.porteur === card.key && e.valeur !== 0)
@@ -195,22 +195,21 @@ export class SessionPlayPageComponent {
   /** Toutes les armes du héros actif, équipées ou non — pour l'arme secondaire du combat à deux armes. */
   protected readonly activeOwnedArmes = signal<readonly BolHerosArmeModel[]>([]);
 
-  /** Armes proposées à l'assistant : celles du héros actif ; pour un PNJ, toutes ses armes (l'équipée en premier), pour en changer en combat. */
+  /** Armes proposées à l'assistant : celles du héros actif ; pour un PNJ, toutes ses armes — il les a toutes en main. */
   protected readonly assistantArmes = computed<readonly BolHerosArmeModel[]>(() => {
     const active = this.activeCard();
     if (active?.kind !== 'pnj') {
       return this.activeArmes();
     }
     const armes = this.session()?.pnjs?.find((p) => p.id === active.pivotId)?.armes ?? [];
-    const models = armes
+    return armes
       .filter((a) => a.nom)
       .map((a, index) => ({
         id: 1000 + index,
         arme_id: 1000 + index,
-        equipee: a.equipee !== false,
+        equipee: true,
         arme: {id: null, arme: a.nom ?? '', type: a.type ?? 'M', degats: a.degats, portee: null, notes: null},
       }));
-    return [...models.filter((m) => m.equipee), ...models.filter((m) => !m.equipee)];
   });
 
   /** Arme et posture choisies dans la barre d'action — `null` si le choix n'est pas jouable. */
@@ -230,6 +229,14 @@ export class SessionPlayPageComponent {
   protected readonly attackerStats = signal<ResolvedCombatStats | null>(null);
   protected readonly targetStats = signal<ResolvedCombatStats | null>(null);
   private statsRun = 0;
+
+  /** Statistiques de chaque carte que la carte active peut viser (clé de carte → statistiques) : son jeton, dans l'assistant, annonce
+   * ce qu'il faut pour la toucher. */
+  protected readonly targetsStats = signal<ReadonlyMap<string, ResolvedCombatStats>>(new Map());
+  private targetsStatsRun = 0;
+  // Des valeurs simples, pas les cartes : la table rechargée refait des cartes identiques, qui ne doivent pas relancer la lecture.
+  private readonly activeKey = computed(() => (this.mode() === 'combat' ? this.turn().activeKey : null));
+  private readonly targetKeys = computed(() => this.targets().map((card) => card.key).join(','));
 
   /** L'attaquant actif a obtenu un succès légendaire à la réaction : +1 à ses jets d'attaque. */
   protected readonly legendaryForActive = computed(() => {
@@ -308,6 +315,42 @@ export class SessionPlayPageComponent {
         });
     });
 
+    // Statistiques de toutes les cartes à portée, pour leurs jetons dans l'assistant : relues quand la carte active ou la liste des
+    // cibles change. La cible choisie, elle, est relue à chaque changement de la table (ci-dessus) : son jet reste exact.
+    effect(() => {
+      const activeKey = this.activeKey();
+      this.targetKeys();
+      untracked(() => {
+        const run = ++this.targetsStatsRun;
+        const tokens = this.board()?.tokens ?? [];
+        const cards = activeKey ? this.targets() : [];
+        if (cards.length === 0) {
+          this.targetsStats.set(new Map());
+          return;
+        }
+        forkJoin(
+          cards.map((card) => {
+            const token = tokenForCard(tokens, card);
+            return token ? resolveAttackStats(token, this.herosService).pipe(catchError(() => of(null))) : of(null);
+          }),
+        )
+          .pipe(take(1))
+          .subscribe((stats) => {
+            if (run !== this.targetsStatsRun) {
+              return;
+            }
+            const byKey = new Map<string, ResolvedCombatStats>();
+            cards.forEach((card, index) => {
+              const resolved = stats[index];
+              if (resolved) {
+                byKey.set(card.key, resolved);
+              }
+            });
+            this.targetsStats.set(byKey);
+          });
+      });
+    });
+
     // Armes du héros dont c'est le tour, pour l'assistant de tour.
     effect(() => {
       const herosId = this.activeHeroId();
@@ -361,10 +404,13 @@ export class SessionPlayPageComponent {
 
     this.dialog
       .open(StartCombatDialogComponent, {
+        // Largeur de départ : le dialogue s'élargit lui-même au-delà de quatre héros.
         width: 'min(1240px, 96vw)',
         maxWidth: '96vw',
         maxHeight: '90vh',
         panelClass: 'scd-panel',
+        // Le dialogue donne lui-même la main à la case du premier héros une fois chargé : le focus initial reste sur le panneau.
+        autoFocus: 'dialog',
         data: {sessionId, reroll},
       })
       .afterClosed()
@@ -825,7 +871,10 @@ export class SessionPlayPageComponent {
     if (!attaquant) {
       return;
     }
-    this.saveEtat((etat) => ({...etat, effets: [...appliquerEvenement(etat.effets, {type: 'jet-attaque', attaquant, cible: target.key}, idAleatoire)]}));
+    // Le petit bouclier de la cible, s'il en porte un, est dépensé pour ce round.
+    const stats = this.selectedTarget()?.key === target.key ? this.targetStats() : (this.targetsStats().get(target.key) ?? null);
+    const petitBouclier = (stats?.bouclierMalusUneAttaque ?? 0) > 0;
+    this.saveEtat((etat) => ({...etat, effets: [...appliquerEvenement(etat.effets, {type: 'jet-attaque', attaquant, cible: target.key, petitBouclier}, idAleatoire)]}));
   }
 
   /** Le MJ retire un effet (croix d'une puce ou du bloc « Effets en cours »). */
@@ -836,6 +885,30 @@ export class SessionPlayPageComponent {
   /** Le MJ ajoute un effet depuis le menu « + Effet ». */
   protected onEffectAdded(effet: NewEffect): void {
     this.saveEtat((etat) => ({...etat, effets: [...appliquerEvenement(etat.effets, {type: 'ajout-manuel', effet}, idAleatoire)]}));
+  }
+
+  /** Le héros actif dépense ou gagne des points d'héroïsme sur son jet d'attaque (faveur divine, échec critique, succès héroïque ou
+   * légendaire) : affiché tout de suite, enregistré, et repris si l'enregistrement échoue. */
+  protected onHeroismeAdjusted(delta: number): void {
+    const herosId = this.attackerStats()?.herosId;
+    if (!herosId) {
+      return;
+    }
+    const shift = (by: number): void =>
+      this.attackerStats.update((stats) => (stats?.herosId === herosId ? {...stats, heroisme: Math.max(0, (stats.heroisme ?? 0) + by)} : stats));
+    shift(delta);
+    this.herosService.adjustHeroisme(herosId, delta).subscribe({
+      error: (error: unknown) => {
+        shift(-delta);
+        this.tableError(error, "Impossible de mettre à jour l'héroïsme.");
+      },
+    });
+  }
+
+  /** La vitalité de la carte active ou de sa cible corrigée à la main sur son cœur : enregistrée comme des dégâts (ou des soins). */
+  protected onVitaliteAdjusted(change: VitaliteChange): void {
+    const stats = change.card.key === this.activeCard()?.key ? this.attackerStats() : this.targetStats();
+    this.applyDamageTo(change.card, change.delta, stats);
   }
 
   /** Dégâts calculés par l'assistant : enregistrés sur la cible. */

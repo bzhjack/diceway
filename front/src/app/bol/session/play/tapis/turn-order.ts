@@ -26,7 +26,7 @@ const STATUS_LABELS: Record<TurnStatus, string> = {
 export class TurnOrderComponent {
   readonly entries = input.required<readonly TurnOrderEntry[]>();
   readonly round = input.required<number>();
-  /** Un héros a obtenu un succès légendaire : +1 à tous les jets d'attaque de la rencontre. */
+  /** Un héros a obtenu un succès légendaire : au round 1, la pastille du blocage le nomme à la place du succès héroïque. */
   readonly legendaryActive = input(false);
   /** Texte annoncé aux lecteurs d'écran à chaque changement de tour ou de round. */
   readonly announcement = input('');
@@ -40,10 +40,11 @@ export class TurnOrderComponent {
   readonly addRequested = output<void>();
   readonly delayRequested = output<void>();
   readonly rerollRequested = output<void>();
-  readonly endTurnRequested = output<void>();
 
   /** Seuls les blocs qui ont au moins un combattant sont affichés. */
   protected readonly groups = computed(() => groupByTier(this.entries()).filter((group) => group.entries.length > 0));
+  /** Nombre de combattants dans la frise : avec le nombre de blocs, il règle la taille des médaillons pour que tout tienne sur une ligne. */
+  protected readonly total = computed(() => this.entries().length);
   /** Au round 1, un succès héroïque bloque coriaces et piétaille : la frise le dit. */
   protected readonly roundOneLock = computed(() => this.round() === 1 && this.entries().some((entry) => entry.locked));
 

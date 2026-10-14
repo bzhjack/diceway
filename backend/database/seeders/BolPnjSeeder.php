@@ -513,12 +513,15 @@ class BolPnjSeeder extends Seeder
                 $carriere['heros_id'] = $hero->id;
                 BolHerosCarriere::create($carriere);
             }
+            // Un PNJ porte tout ce qu'il possède : armures sur le dos, armes en main.
             foreach ($armures as $armure) {
                 $armure['heros_id'] = $hero->id;
+                $armure['equipee'] = true;
                 BolHerosArmure::create($armure);
             }
             foreach ($armes as $arme) {
                 $arme['heros_id'] = $hero->id;
+                $arme['equipee'] = true;
                 BolHerosArme::create($arme);
             }
             foreach ($traits as $trait) {

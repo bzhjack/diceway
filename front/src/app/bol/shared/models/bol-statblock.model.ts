@@ -10,7 +10,8 @@ export interface BolStatblockChip {
   readonly variant: BolStatblockChipVariant;
 }
 
-/** Tuile de la bande vitale ou du rang de stats. `dice` réduit le corps pour les notations de dés. */
+/** Un chiffre du statbloc, affiché en tuile (ou, pour la vitalité et l'héroïsme, dans le bandeau d'identité). `dice` réduit le corps
+ * pour les notations de dés. */
 export interface BolStatblockTile {
   readonly label: string;
   readonly value: string | number;
@@ -18,13 +19,15 @@ export interface BolStatblockTile {
   readonly dice?: boolean;
 }
 
-/** Entrée de liste : avec `value` elle s'affiche en ligne label/valeur (carrières), sinon titre + détail. */
+/** Une ligne de liste : son nom, à droite sa valeur s'il y en a une (rang d'une carrière, dé d'une arme), et dessous son détail. */
 export interface BolStatblockEntry {
   readonly label: string;
   readonly value?: string | number;
   readonly detail?: string;
-  /** true : l'entrée est mise en évidence en vert (arme ou armure équipée ; `false` : atténuée). */
+  /** Arme ou armure : `true` portée ou en main (pastille verte), `false` dans le sac (estompée). Absent pour le reste. */
   readonly equipped?: boolean;
+  /** Trait : `plus` pour un avantage, `minus` pour un désavantage. */
+  readonly sign?: 'plus' | 'minus';
 }
 
 /** Une liste titrée du statbloc : carrières, traits, armes, armures… */
@@ -32,7 +35,7 @@ export interface BolStatblockSection {
   readonly title: string;
   readonly emptyText: string;
   readonly entries: readonly BolStatblockEntry[];
-  /** true : le détail passe en tooltip au survol du titre au lieu d'une ligne visible (équipement). */
+  /** Liste d'équipement : une ligne par élément — un nom trop long est coupé — et le détail passe en infobulle. */
   readonly compact?: boolean;
 }
 
@@ -44,9 +47,8 @@ export interface BolStatblockData {
   readonly comment: string | null;
   readonly chips: readonly BolStatblockChip[];
   readonly vitals: readonly BolStatblockTile[];
+  /** Attributs puis statistiques de combat, par moitiés : le statbloc en fait deux familles de tuiles. */
   readonly tiles: readonly BolStatblockTile[];
-  /** true = 8 tuiles sur une ligne (héros/PNJ), false = 6 (créature/démon). */
-  readonly wideTiles: boolean;
   readonly sections: readonly BolStatblockSection[];
   /** Route vers la fiche d'édition complète (même lien que le bouton "Modifier" des cartes de
    * bibliothèque) — `null` si l'entité n'a pas de fiche éditable dans ce contexte. */

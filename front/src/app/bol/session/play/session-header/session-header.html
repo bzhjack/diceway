@@ -1,4 +1,4 @@
-<header class="cp-header">
+<header class="cp-header" [class.cp-header--combat]="mode() === 'combat'">
   <div class="cp-header-title">
     <span class="cp-eyebrow">{{ mode() === 'combat' ? 'Combat' : 'Session' }}</span>
     <h1>{{ titre() || (mode() === 'combat' ? 'Combat en cours' : 'Session en cours') }}</h1>
@@ -29,10 +29,3 @@
     <bol-account-menu />
   </div>
 </header>
-
-@if (mode() === 'combat' && legendaryActive()) {
-  <div class="cp-banner">
-    <mat-icon>military_tech</mat-icon>
-    Succès légendaire obtenu — +1 à ses jets d'attaque pour toute la rencontre, coriaces et piétailles adverses bloqués au round 1.
-  </div>
-}

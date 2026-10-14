@@ -576,25 +576,29 @@ class BolFightSessionService
         ] + $this->pnjSnapshot($pnj));
     }
 
-    /** Statistiques et armes d'un PNJ telles qu'elles sont copiées à la table (tout sauf le camp, le surnom, le rang et la vitalité courante). */
+    /**
+     * Statistiques et armes d'un PNJ telles qu'elles sont copiées à la table (tout sauf le camp, le surnom, le rang et la vitalité courante).
+     * Un PNJ porte tout ce qu'il possède : son agilité, sa défense et son initiative sont celles « avec armure », et toutes ses armes
+     * sont en main.
+     */
     private function pnjSnapshot(BolHeros $pnj): array
     {
         $armes = collect($pnj->armes ?? [])->map(fn($ha) => [
             'nom'     => $ha->arme?->arme,
             'degats'  => $ha->arme?->degats,
             'type'    => $ha->arme?->type,
-            'equipee' => (bool) $ha->equipee,
+            'equipee' => true,
         ])->values()->toArray();
 
         return [
             'nom'          => $pnj->nom,
             'vigueur'      => $pnj->vigueur,
-            'agilite'      => $pnj->agilite,
+            'agilite'      => $pnj->agilite_effective,
             'esprit'       => $pnj->esprit,
             'aura'         => $pnj->aura,
             'melee'        => $pnj->melee,
             'tir'          => $pnj->tir,
-            'defense'      => $pnj->defense,
+            'defense'      => $pnj->defense_effective,
             'initiative'   => $pnj->initiative_effective,
             'vitalite_max' => $pnj->vitalite,
             'armes'        => $armes,

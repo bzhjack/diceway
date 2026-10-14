@@ -15,6 +15,18 @@
     url('/assets/bol/header-combat.png') center / cover no-repeat;
 }
 
+// En combat, l'image court d'un seul tenant sous l'en-tête et la frise (`turn-order.scss`) : chacun en montre sa tranche.
+// Elle est calée sur la fenêtre (`fixed`), assez grande pour couvrir les deux ; la page ne défile pas.
+// Un voile sombre descend sur elle d'un bout à l'autre : il part de rien en haut de l'en-tête et arrive ici à 45 %, là où la frise le
+// reprend — sans quoi la jointure se voit.
+.cp-header--combat {
+  border-bottom: none;
+  background:
+    linear-gradient(transparent, color-mix(in srgb, var(--dw-surface-0) 45%, transparent)),
+    linear-gradient(90deg, color-mix(in srgb, var(--dw-surface-0) 60%, transparent) 0%, color-mix(in srgb, var(--dw-surface-0) 22%, transparent) 45%, color-mix(in srgb, var(--dw-surface-0) 60%, transparent) 100%),
+    url('/assets/bol/header-combat.png') top center / max(100vw, 165rem) auto no-repeat fixed;
+}
+
 .cp-header-title {
   flex: 1;
   min-width: 0;
@@ -77,26 +89,6 @@
   text-transform: uppercase;
   color: var(--dw-color-legendary);
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
-}
-
-.cp-banner {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1.1rem;
-  background: color-mix(in srgb, var(--dw-color-legendary) 14%, transparent);
-  color: var(--dw-color-legendary);
-  font-size: 0.78rem;
-  font-weight: 700;
-  border-bottom: 1px solid color-mix(in srgb, var(--dw-color-legendary) 30%, transparent);
-
-  .mat-icon {
-    font-size: 1.1rem;
-    width: 1.1rem;
-    height: 1.1rem;
-    flex-shrink: 0;
-  }
 }
 
 .cp-header-search {

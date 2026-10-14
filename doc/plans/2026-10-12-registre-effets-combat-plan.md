@@ -2152,6 +2152,13 @@ Message de commit proposé : `feat(combat): dégâts issus du registre, bouclier
 
 À la fin de la dernière tâche, reporter dans `doc/plans/2026-10-12-registre-effets-combat-design.md` les cinq écarts listés plus haut (parade à usage unique avec `expireAuTour`, échec critique dérivé, feinte sans création automatique, `carte-retiree` sans appelant de page, effet libre reporté) et la décision de la file d'événements : actions de l'utilisateur ignorées pendant un enregistrement, mises à jour automatiques mises en file.
 
+## Suite du 2026-10-13 : héroïsme sur le jet d'attaque
+
+Fait hors des sept tâches, et décrit au § 9 du spec : faveur divine, échec critique, succès héroïque et légendaire sur le jet d'attaque, avec leurs options. Deux conséquences pour ce plan :
+
+- le renversement n'est plus seulement un modèle du menu « + Effet » (tâche 6) : `effetRenversement` et `effetCoupPrecis` (`combat-effects.util.ts`) sont posés par l'assistant quand l'option héroïque est prise ;
+- `finalDamage` et `damageRange` prennent un nombre de coups dévastateurs, plus un booléen.
+
 ## Auto-relecture du plan
 
 - **Couverture du spec** : registre (T1), validation backend et migration (T2, T3), événements (T1, T3, T4, T5, T7), file d'événements (T4), affichage (T6), tests (chaque tâche + scénario de T4), cinq étapes de livraison (T1 ; T2 + T3 ; T5 ; T6 ; T7, avec T4 comme étape de bascule du bouclier).

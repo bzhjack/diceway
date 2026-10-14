@@ -125,10 +125,11 @@
                       />
                     </div>
 
+                    <!-- Un PNJ a toutes ses armes en main : les cases restent cochées -->
                     <bol-arme-list
                       [armes]="selectedArmes()"
+                      [equipToggleEnabled]="false"
                       (removed)="removeArme($event)"
-                      (equippedToggled)="toggleArmeEquipped($event)"
                     />
                   </div>
 
@@ -150,10 +151,11 @@
                       />
                     </div>
 
+                    <!-- Un PNJ porte toutes ses armures : les cases restent cochées -->
                     <bol-armure-list
                       [armures]="selectedArmures()"
+                      [equipToggleEnabled]="false"
                       (removed)="removeArmure($event)"
-                      (equippedToggled)="toggleArmureEquipped($event)"
                     />
                   </div>
                 </div>

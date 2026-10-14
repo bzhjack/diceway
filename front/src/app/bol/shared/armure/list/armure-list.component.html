@@ -11,8 +11,8 @@
           class="al-row-checkbox"
           [checked]="armure.equipee"
           [disabled]="!equipToggleEnabled()"
-          [matTooltip]="armure.equipee ? 'Déséquiper' : 'Équiper'"
-          [attr.aria-label]="(armure.equipee ? 'Déséquiper ' : 'Équiper ') + armure.label"
+          [matTooltip]="equipToggleEnabled() ? (armure.equipee ? 'Déséquiper' : 'Équiper') : ''"
+          [aria-label]="equipToggleEnabled() ? (armure.equipee ? 'Déséquiper ' : 'Équiper ') + armure.label : armure.label + (armure.equipee ? ', porté' : ', non porté')"
           (click)="$event.stopPropagation()"
           (change)="equippedToggled.emit(index)"
         />

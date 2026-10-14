@@ -61,6 +61,19 @@ export interface ActionDiceTarget {
   readonly value: number;
 }
 
+/** Ce qu'il faut obtenir aux dés, tel qu'on l'affiche : le nombre en grand (« 7+ »), sa précision en petit (« aux dés »). */
+export interface ActionDiceTargetLabel {
+  readonly big: string;
+  readonly small: string;
+}
+
+/** Un terme de l'addition d'un jet, sur une ligne : sa valeur, son nom dessous, et sa teinte (dés, bonus, malus, total). */
+export interface RollSumTerm {
+  readonly value: string;
+  readonly caption: string;
+  readonly tone: 'dice' | 'plus' | 'minus' | 'total';
+}
+
 /** Le verdict d'un jet en clair : un titre, et une phrase qui dit de combien c'est réussi ou raté. */
 export interface ActionVerdict {
   readonly title: string;
@@ -68,14 +81,4 @@ export interface ActionVerdict {
 }
 
 /** Couleur du résultat d'un jet : échec, réussite ou héroïque (héroïque et légendaire). */
-export type ActionRollTone = 'echec' | 'reussite' | 'heroique';
-
-/** Un terme d'un jet affiché en puce : les dés, un bonus (vert) ou un malus (rouge). */
-export interface RollTerm {
-  readonly label: string;
-  readonly tone: 'dice' | 'plus' | 'minus';
-  /** La puce se clique pour saisir la valeur à la main (protection de la cible). */
-  readonly editable?: boolean;
-  /** Effet du registre dont la puce vient : sa croix le retire. */
-  readonly effetId?: string;
-}
+export type ActionRollTone = 'echec' | 'reussite' | 'heroique' | 'legendaire';

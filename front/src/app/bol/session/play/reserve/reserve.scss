@@ -186,6 +186,7 @@
 }
 
 // Portrait rond dans un anneau métallique.
+// L'avatar est un bouton : un clic ouvre le statbloc du personnage.
 .rsv-avatar {
   box-sizing: border-box;
   display: flex;
@@ -193,6 +194,8 @@
   justify-content: center;
   width: 2.4rem;
   height: 2.4rem;
+  padding: 0;
+  cursor: pointer;
   border: 3px solid transparent;
   border-radius: 50%;
   background:
@@ -202,6 +205,15 @@
   font-family: 'Muse Display Harmony', 'Muse Sans', serif;
   font-size: 1rem;
   overflow: hidden;
+}
+
+.rsv-avatar:hover {
+  filter: brightness(1.2);
+}
+
+.rsv-avatar:focus-visible {
+  outline: 2px solid var(--dw-color-legendary);
+  outline-offset: 2px;
 }
 
 .rsv-avatar-img {

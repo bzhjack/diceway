@@ -61,13 +61,14 @@
             (cdkDragMoved)="onDragMoved($event)"
             (cdkDragEnded)="onDragEnded($event, row)"
           >
-            <span class="rsv-avatar">
+            <!-- L'avatar ouvre le statbloc ; un double-clic pose le personnage, comme partout sur la ligne -->
+            <button type="button" class="rsv-avatar" [attr.aria-label]="'Voir la fiche de ' + row.entry.nom" matTooltip="Voir la fiche" (click)="openStatblock(row)">
               @if (hasAvatar(row.entry)) {
                 <img class="rsv-avatar-img" [src]="row.entry.avatar" alt="" draggable="false" (error)="onAvatarError(row.entry)" />
               } @else {
                 {{ initial(row.entry) }}
               }
-            </span>
+            </button>
             <span class="rsv-text">
               <b class="rsv-name">{{ row.entry.nom }}</b>
               <span class="rsv-meta">{{ kindLabel(row.entry) }} · Vit {{ row.entry.vitalite }}@if (row.onTable) { · à table }</span>

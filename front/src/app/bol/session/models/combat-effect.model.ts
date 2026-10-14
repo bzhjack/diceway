@@ -39,7 +39,8 @@ export type NewEffect = Omit<CombatEffect, 'id'>;
 export type EffectEvent =
   | {readonly type: 'debut-tour'; readonly carte: string}
   | {readonly type: 'fin-tour'; readonly carte: string; readonly crees: readonly NewEffect[]}
-  | {readonly type: 'jet-attaque'; readonly attaquant: string; readonly cible: string}
+  /** `petitBouclier` : la cible porte un petit bouclier, qui ne joue qu'une fois par round — ce jet le dépense. */
+  | {readonly type: 'jet-attaque'; readonly attaquant: string; readonly cible: string; readonly petitBouclier: boolean}
   | {readonly type: 'nouveau-round'}
   | {readonly type: 'ajout-manuel'; readonly effet: NewEffect}
   | {readonly type: 'retrait-manuel'; readonly id: string}

@@ -1,8 +1,11 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
   inject,
+  Injector,
   input,
   model,
   signal,
@@ -16,22 +19,12 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {BolHerosService} from '../../../services/bol-heros.service';
-import {ACTION_ATTRIBUTE_LABELS, ACTION_ATTRIBUTE_SHORT, ACTION_ATTRIBUTES, ACTION_DIFFICULTIES, ACTION_ROLL_THRESHOLD, actionDiceTarget, actionModifierSum, actionResultTone, actionSuccessChance, actionVerdict, DEFAULT_ACTION_DIFFICULTY, diceFromTotal, keptDiceIndexes, netDiceModifier, signedModifier, suggestedActionResult} from '../../action-roll.util';
-import {ActionAttribute, ActionDifficulty, ActionRollCarriere, ActionRollData, ActionRollParts} from '../../models/action-roll.model';
+import {ACTION_ATTRIBUTE_LABELS, ACTION_ATTRIBUTE_SHORT, ACTION_ATTRIBUTES, ACTION_DIFFICULTIES, ACTION_ROLL_THRESHOLD, actionDiceTarget, actionDiceTargetLabel, actionModifierSum, actionResultTone, actionSuccessChance, actionVerdict, chanceRingDash, DEFAULT_ACTION_DIFFICULTY, diceFromTotal, keptDiceIndexes, netDiceModifier, signedModifier, suggestedActionResult} from '../../action-roll.util';
+import {ActionAttribute, ActionDifficulty, ActionRollCarriere, ActionRollData, ActionRollParts, RollSumTerm} from '../../models/action-roll.model';
 import {applyHeroismeDelta} from '../../heroisme-spend.util';
 
 /** Icône de chaque attribut sur son médaillon. */
 const ATTRIBUTE_ICONS: Record<ActionAttribute, string> = {agilite: 'bolt', vigueur: 'fitness_center', esprit: 'visibility', aura: 'star'};
-
-/** Circonférence de l'anneau des chances (rayon 27 dans une vue de 64). */
-const RING_LENGTH = 2 * Math.PI * 27;
-
-/** Un terme de l'addition du plateau : sa valeur, son nom dessous, et sa teinte (dés, bonus, malus, total). */
-interface SumTerm {
-  readonly value: string;
-  readonly caption: string;
-  readonly tone: 'dice' | 'plus' | 'minus' | 'total';
-}
 
 /** Un dé lancé, tel qu'il s'affiche sur le plateau : sa face, et s'il est gardé (un dé de bonus ou de malus en écarte). */
 interface RolledDie {
@@ -60,6 +53,8 @@ export class ActionRollPanelComponent {
   private readonly herosService = inject(BolHerosService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly diceBox = viewChild.required(DiceBoxHostComponent);
+  private readonly manualInput = viewChild<ElementRef<HTMLInputElement>>('manualInput');
+  private readonly injector = inject(Injector);
 
   protected readonly attributes = ACTION_ATTRIBUTES;
   protected readonly attributeLabels = ACTION_ATTRIBUTE_LABELS;
@@ -76,10 +71,14 @@ export class ActionRollPanelComponent {
   protected readonly avantageTraits = computed(() => this.data().diceTraits.filter((t) => t.kind === 'avantage'));
   protected readonly desavantageTraits = computed(() => this.data().diceTraits.filter((t) => t.kind === 'desavantage'));
   protected readonly selectedDiceTraits = signal<ReadonlySet<string>>(new Set());
+  /** Dé de bonus ou de malus accordé par le MJ selon les circonstances (agir ivre, dans le noir, avec un outil de fortune…) : il compte
+   * comme un avantage ou un désavantage de plus. L'un exclut l'autre. */
+  protected readonly gmDie = signal<'bonus' | 'malus' | null>(null);
 
+  /** Avantages et désavantages retenus pour ce jet : les traits cochés du héros, plus le dé du MJ. */
   private readonly selectedDiceTraitCounts = computed(() => {
-    let avantages = 0;
-    let desavantages = 0;
+    let avantages = this.gmDie() === 'bonus' ? 1 : 0;
+    let desavantages = this.gmDie() === 'malus' ? 1 : 0;
     for (const trait of this.data().diceTraits) {
       if (!this.selectedDiceTraits().has(trait.label)) {
         continue;
@@ -123,6 +122,8 @@ export class ActionRollPanelComponent {
   /** true quand le résultat vient d'un total saisi à la main — les deux valeurs de `dice()` sont
    * alors reconstruites (`diceFromTotal`), pas les vraies faces lancées. */
   protected readonly manualEntry = signal(false);
+  /** Faveur divine dépensée sur des dés lancés à table : ils sont à relancer, et le nouveau total à saisir. */
+  protected readonly favorPending = signal(false);
 
   /** Malus d'équipement, appliqué automatiquement quand l'agilité est sélectionnée. */
   protected readonly equipmentModifier = computed(() =>
@@ -140,22 +141,16 @@ export class ActionRollPanelComponent {
   private readonly modifierSum = computed(() => actionModifierSum(this.parts()));
 
   /** Ce qu'il faut obtenir aux dés, en gros et en petit : « 7+ aux dés », « Tout sauf le double 1 », « 6·6 seul le double 6 ». */
-  protected readonly target = computed(() => {
-    const target = actionDiceTarget(this.modifierSum(), ACTION_ROLL_THRESHOLD);
-    if (target.kind === 'tout') {
-      return {big: 'Tout', small: 'sauf le double 1'};
-    }
-    return target.kind === 'double-six' ? {big: '6·6', small: 'seul le double 6'} : {big: `${target.value}+`, small: 'aux dés'};
-  });
+  protected readonly target = computed(() => actionDiceTargetLabel(actionDiceTarget(this.modifierSum(), ACTION_ROLL_THRESHOLD)));
 
   /** Chances de réussir, en pourcentage entier, avec les dés de bonus ou de malus retenus. */
   protected readonly chancePercent = computed(() => Math.round(actionSuccessChance(this.netDice(), this.modifierSum(), ACTION_ROLL_THRESHOLD) * 100));
   /** Longueur de l'arc doré de l'anneau des chances. */
-  protected readonly ringDash = computed(() => `${((this.chancePercent() / 100) * RING_LENGTH).toFixed(1)} ${RING_LENGTH.toFixed(1)}`);
+  protected readonly ringDash = computed(() => chanceRingDash(this.chancePercent()));
 
   /** L'addition du jet, sur une ligne : un nombre par terme, son nom dessous. Les termes nuls sont omis. Avant le jet, le premier terme
    * est le nombre de dés à lancer et le dernier le seuil ; après, le total des dés gardés et le total du jet. */
-  protected readonly sumTerms = computed<readonly SumTerm[]>(() => {
+  protected readonly sumTerms = computed<readonly RollSumTerm[]>(() => {
     const parts = this.parts();
     const net = this.netDice();
     const sum = this.diceSum();
@@ -167,7 +162,7 @@ export class ActionRollPanelComponent {
       modifier: 'modif.',
     };
     const kept = net > 0 ? '2 meilleurs' : net < 0 ? '2 moins bons' : 'dés';
-    const terms: SumTerm[] = [{value: sum === null ? `${this.diceCount()}d6` : `${sum}`, caption: kept, tone: 'dice'}];
+    const terms: RollSumTerm[] = [{value: sum === null ? `${this.diceCount()}d6` : `${sum}`, caption: kept, tone: 'dice'}];
     for (const key of ['attribute', 'carriere', 'equipment', 'difficulty', 'modifier'] as const) {
       const value = parts[key];
       if (value !== 0) {
@@ -195,15 +190,18 @@ export class ActionRollPanelComponent {
     return !!d && d[0] === 6 && d[1] === 6;
   });
 
-  /** Réussite normale (ni 2 ni 12 naturel) — seul ce cas peut être converti en succès héroïque
-   * par dépense de PH (02-actions-combat.md). */
-  protected readonly canUpgradeToHeroique = computed(() => {
+  /** Résultat des dés avant tout choix d'héroïsme. */
+  private readonly baseResult = computed(() => {
     const d = this.dice();
-    if (!d || this.isNatural2() || this.isNatural12()) {
-      return false;
-    }
-    return suggestedActionResult(d, this.modifierSum(), ACTION_ROLL_THRESHOLD) === 'reussite';
+    return d ? suggestedActionResult(d, this.modifierSum(), ACTION_ROLL_THRESHOLD) : null;
   });
+
+  /** Double 6 qui vaut succès héroïque — pas celui d'une action qui ne pouvait réussir qu'avec lui, simple réussite. Seul ce cas ouvre
+   * le succès légendaire. */
+  protected readonly isHeroic12 = computed(() => this.isNatural12() && this.baseResult() === 'heroique');
+
+  /** Réussite normale — seul ce cas peut être converti en succès héroïque par dépense de PH (02-actions-combat.md). */
+  protected readonly canUpgradeToHeroique = computed(() => this.baseResult() === 'reussite');
 
   /** Échec critique (2 naturel) — un choix volontaire qui OCTROIE 1 PH. */
   protected readonly critiqueChosen = signal(false);
@@ -213,25 +211,21 @@ export class ActionRollPanelComponent {
   protected readonly heroicUpgradeChosen = signal(false);
 
   protected readonly suggestedResult = computed<InitiativeResultat | null>(() => {
-    const d = this.dice();
-    if (!d) {
+    const base = this.baseResult();
+    if (base === null) {
       return null;
     }
     if (this.isNatural2()) {
       return this.critiqueChosen() ? 'echec_critique' : 'echec';
     }
-    if (this.isNatural12()) {
+    if (this.isHeroic12()) {
       return this.legendaryChosen() ? 'legendaire' : 'heroique';
     }
-    const base = suggestedActionResult(d, this.modifierSum(), ACTION_ROLL_THRESHOLD);
     return base === 'reussite' && this.heroicUpgradeChosen() ? 'heroique' : base;
   });
 
-  /** Faveur divine n'a de sens que pour retenter un échec. */
-  protected readonly isFailure = computed(() => {
-    const result = this.suggestedResult();
-    return result === 'echec' || result === 'echec_critique';
-  });
+  /** Faveur divine n'a de sens que pour retenter un échec — plus une fois l'échec critique accepté (son point d'héroïsme est gagné). */
+  protected readonly isFailure = computed(() => this.suggestedResult() === 'echec');
 
   /** Le verdict en clair : son titre et de combien c'est réussi ou raté. */
   protected readonly verdict = computed(() => {
@@ -262,6 +256,11 @@ export class ActionRollPanelComponent {
     });
   }
 
+  /** Accorde le dé de bonus ou de malus du MJ ; un second clic sur le même le retire. */
+  protected toggleGmDie(kind: 'bonus' | 'malus'): void {
+    this.gmDie.update((current) => (current === kind ? null : kind));
+  }
+
   protected incrementModifier(delta: number): void {
     this.modifier.update((m) => m + delta);
   }
@@ -276,6 +275,7 @@ export class ActionRollPanelComponent {
       const values = results.map((r) => r.value);
       const kept = keptDiceIndexes(values, net);
       this.resetTierChoices();
+      this.favorPending.set(false);
       this.manualEntry.set(false);
       this.manualTotal.set(null);
       this.rolled.set(values.map((value, index) => ({value, kept: kept.includes(index)})));
@@ -305,19 +305,29 @@ export class ActionRollPanelComponent {
       return;
     }
     this.resetTierChoices();
+    this.favorPending.set(false);
     this.manualEntry.set(true);
     this.rolled.set(null);
     this.dice.set(diceFromTotal(total));
   }
 
-  /** Faveur divine (02-actions-combat.md) : dépense 1 PH, relance tous les dés, conserve le second jet. */
+  /** Faveur divine (02-actions-combat.md) : dépense 1 PH, relance tous les dés, conserve le second jet. Des dés lancés à l'écran se
+   * relancent à l'écran ; un total saisi (dés lancés à table) s'efface, et la case attend le total du second jet. */
   protected async rollWithDivineFavor(): Promise<void> {
     if (this.heroisme() <= 0) {
       return;
     }
 
     applyHeroismeDelta(this.herosService, this.snackBar, this.data().herosId, this.heroisme, -1);
-    await this.roll();
+    if (!this.manualEntry()) {
+      await this.roll();
+      return;
+    }
+    this.resetTierChoices();
+    this.favorPending.set(true);
+    this.dice.set(null);
+    this.manualTotal.set(null);
+    afterNextRender(() => this.manualInput()?.nativeElement.focus(), {injector: this.injector});
   }
 
   private resetTierChoices(): void {

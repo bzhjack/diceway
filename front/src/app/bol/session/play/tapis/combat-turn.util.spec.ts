@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {bouclierPerduRound1, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
+import {bloqueeCeRound, bouclierPerduRound1, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
 import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model';
 import {TurnOrderEntry} from '../../models/turn-order.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
@@ -319,6 +319,19 @@ describe('turnAnnouncement', () => {
   });
 });
 
+describe('bloqueeCeRound', () => {
+  it('blocks a card locked by the reaction roll during round 1 only', () => {
+    expect(bloqueeCeRound(true, 1)).toBe(true);
+    expect(bloqueeCeRound(true, 2)).toBe(false);
+    expect(bloqueeCeRound(true, 5)).toBe(false);
+  });
+
+  it('never blocks a card that is not locked', () => {
+    expect(bloqueeCeRound(false, 1)).toBe(false);
+    expect(bloqueeCeRound(false, 2)).toBe(false);
+  });
+});
+
 describe('groupByTier', () => {
   const entry = (key: string, tier: TurnOrderEntry['tier'], locked = false): TurnOrderEntry => ({
     key, nom: key, kind: 'hero', avatar: '', status: 'upcoming', tier, locked, ally: false, effets: [],
@@ -393,7 +406,7 @@ describe('posture et parade sur un tour complet', () => {
   it('gives the parade for one attack only', () => {
     const apres = endTurn(order, etat(1), effetsDeTour('hero-1', {posture: 'dual-parry', defenseTotale: false}));
     expect(modificateursPour(apres.effets, contre).map((t) => t.valeur)).toEqual([-1]);
-    const apresAttaque = appliquerEvenement(apres.effets, {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1'});
+    const apresAttaque = appliquerEvenement(apres.effets, {type: 'jet-attaque', attaquant: 'pnj-7', cible: 'hero-1', petitBouclier: false});
     expect(modificateursPour(apresAttaque, contre)).toEqual([]);
   });
 

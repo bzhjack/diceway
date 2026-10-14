@@ -177,6 +177,13 @@ bol-action-roll-panel {
   }
 }
 
+// Dés de bonus et de malus (ceux du MJ, ceux des traits du héros) : plus petits que les puces de métier, ils peuvent être nombreux.
+.ard-chip--bonus,
+.ard-chip--malus {
+  padding: 0.15rem 0.6rem;
+  font-size: 0.8rem;
+}
+
 .ard-chip--bonus[aria-pressed='true'] {
   border-color: var(--dw-color-reussite);
   background: var(--dw-color-reussite);
@@ -259,7 +266,7 @@ bol-action-roll-panel {
 
   span {
     position: relative;
-    font-size: 0.64rem;
+    font-size: 0.50rem;
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -393,6 +400,10 @@ bol-action-roll-panel {
 
 .ard-verdict-title--heroique {
   color: var(--dw-color-legendary);
+}
+
+.ard-verdict-title--legendaire {
+  color: var(--dw-color-succes-legendaire);
 }
 
 .ard-verdict .ard-verdict-wait {

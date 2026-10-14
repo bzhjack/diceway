@@ -7,6 +7,8 @@ export const POSTURE_DEFENSE: Readonly<Record<string, number>> = {defensive: 1, 
 export const BOUCLIER_DEPENSE = 'bouclier-depense';
 /** Trace : la carte n'a pas le bénéfice de son bouclier (attaque intrépide, échec critique au round 1). */
 export const SANS_BOUCLIER = 'sans-bouclier';
+/** La carte lance un dé de malus à sa prochaine action (adversaire renversé qui se relève, coup précis…). */
+const DE_MALUS = 'de-malus';
 
 const POSTURE_ORIGINE: Readonly<Record<string, string>> = {
   defensive: 'posture-defensive',
@@ -91,11 +93,14 @@ export function modificateursPour(effets: readonly CombatEffect[], contexte: Rol
     termes.push({effetId: effet.id, label: puce(contribution, nom ? `${libelleEffet(effet)} (${nom})` : libelleEffet(effet)), valeur: contribution, tone: contribution > 0 ? 'plus' : 'minus'});
   }
 
-  const bouclierPerdu = effets.some((effet) => effet.porteur === cible && (effet.origine === BOUCLIER_DEPENSE || effet.origine === SANS_BOUCLIER));
-  if (jet === 'attaque' && contexte.bouclier > 0 && !bouclierPerdu) {
+  // Le petit bouclier ne joue qu'une fois par round ; le grand joue contre toutes les attaques. Les deux tombent quand la carte perd
+  // le bénéfice de son bouclier.
+  const sansBouclier = effets.some((effet) => effet.porteur === cible && effet.origine === SANS_BOUCLIER);
+  const depense = effets.some((effet) => effet.porteur === cible && effet.origine === BOUCLIER_DEPENSE);
+  if (jet === 'attaque' && contexte.bouclier > 0 && !sansBouclier && !depense) {
     termes.push({effetId: null, label: puce(-contexte.bouclier, 'bouclier'), valeur: -contexte.bouclier, tone: 'minus'});
   }
-  if (jet === 'attaque' && contexte.bouclierToutes > 0 && bouclierPerdu) {
+  if (jet === 'attaque' && contexte.bouclierToutes > 0 && sansBouclier) {
     termes.push({effetId: null, label: puce(contexte.bouclierToutes, 'grand bouclier perdu'), valeur: contexte.bouclierToutes, tone: 'plus'});
   }
   return termes;
@@ -140,8 +145,9 @@ export function appliquerEvenement(effets: readonly CombatEffect[], evenement: E
         }
         return effet.duree.restants > 1 ? [{...effet, duree: {...effet.duree, restants: effet.duree.restants - 1}}] : [];
       });
+      // Seule une cible qui porte un petit bouclier garde la trace de ce jet : c'est lui qui est dépensé pour le round.
       const dejaDepense = apresUsage.some((effet) => effet.porteur === evenement.cible && effet.origine === BOUCLIER_DEPENSE);
-      return dejaDepense
+      return dejaDepense || !evenement.petitBouclier
         ? apresUsage
         : ajouter(apresUsage, [{origine: BOUCLIER_DEPENSE, porteur: evenement.cible, stat: 'defense', valeur: 0, quand: 'subie', duree: {type: 'fin-round'}, manuel: false}], genererId);
     }
@@ -298,7 +304,23 @@ export function libelleDuree(duree: EffectDuration): string {
   }
 }
 
+/** Coup précis (option de succès héroïque) : la cible, estropiée, garde un dé de malus à ses jets jusqu'à la fin du combat — le MJ le
+ * retire s'il ne concernait pas ses attaques. */
+export function effetCoupPrecis(porteur: string): NewEffect {
+  return {origine: DE_MALUS, libelle: 'coup précis : dé de malus', porteur, stat: 'action', valeur: -1, quand: 'attaque', duree: {type: 'combat'}, manuel: true};
+}
+
+/** Renversement (option de succès héroïque) : la cible, jetée à terre, se relève avec un dé de malus à sa prochaine action. */
+export function effetRenversement(porteur: string): NewEffect {
+  return {origine: DE_MALUS, libelle: 'renversé : dé de malus', porteur, stat: 'action', valeur: -1, quand: 'attaque', duree: {type: 'action-porteur'}, manuel: true};
+}
+
 /** Les effets que le MJ ajoute à la main depuis le menu « + Effet ». */
+/** Vrai si la carte doit un dé de malus à sa prochaine action : son jet d'attaque se fera à 3d6, en gardant les deux moins bons. */
+export function doitUnDeDeMalus(effets: readonly CombatEffect[], carte: string): boolean {
+  return effets.some((effet) => effet.porteur === carte && effet.origine === DE_MALUS);
+}
+
 export const EFFETS_MODELES: readonly {readonly id: string; readonly libelle: string; readonly creer: (porteur: string) => NewEffect}[] = [
   {
     id: 'defense-round',
@@ -308,7 +330,7 @@ export const EFFETS_MODELES: readonly {readonly id: string; readonly libelle: st
   {
     id: 'de-malus-action',
     libelle: 'Dé de malus à sa prochaine action',
-    creer: (porteur) => ({origine: 'renversement', libelle: 'dé de malus à la prochaine action', porteur, stat: 'action', valeur: -1, quand: 'attaque', duree: {type: 'action-porteur'}, manuel: true}),
+    creer: (porteur) => ({origine: DE_MALUS, libelle: 'dé de malus', porteur, stat: 'action', valeur: -1, quand: 'attaque', duree: {type: 'action-porteur'}, manuel: true}),
   },
   {
     id: 'malus-attaque-round',

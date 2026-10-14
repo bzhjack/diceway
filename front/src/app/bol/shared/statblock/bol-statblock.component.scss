@@ -5,7 +5,7 @@
   --bs-metal-3: var(--bar-pnj-3, #3a4047);
   --bs-kind: var(--dw-color-pnj);
   display: block;
-  width: min(46rem, 94vw);
+  width: min(55rem, 94vw);
   border: 1px solid var(--bs-metal-2);
   border-radius: 8px;
   background: linear-gradient(var(--dw-surface-100), var(--dw-surface-50));
@@ -43,30 +43,20 @@
   box-shadow: none;
 }
 
+// La fiche mesure sa propre largeur : dans un conteneur étroit, les listes passent sur deux colonnes puis une seule.
 .bs {
-  display: grid;
-  grid-template-columns: 13rem minmax(0, 1fr);
-
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
-  }
+  container-type: inline-size;
 }
 
-// Colonne de gauche : le grand médaillon, le nom en entier, la vitalité et les pastilles de rang.
-.bs-side {
-  display: flex;
-  flex-direction: column;
+// ── Le bandeau d'identité ────────────────────────────────────────────────────────────────────────
+.bs-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 0.8rem;
-  padding: 1.1rem 0.9rem;
-  border-right: 1px solid var(--dw-border);
-  background: linear-gradient(var(--dw-surface-100), var(--dw-surface-50));
-  text-align: center;
-
-  @media (max-width: 640px) {
-    border-right: 0;
-    border-bottom: 1px solid var(--dw-border);
-  }
+  gap: 1rem;
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid var(--dw-border);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--bs-kind) 12%, var(--dw-surface-100)), transparent 70%);
 }
 
 .bs-portrait {
@@ -74,21 +64,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 9rem;
+  width: 4.9rem;
   aspect-ratio: 1 / 1;
-  border: 5px solid transparent;
+  border: 4px solid transparent;
   border-radius: 50%;
   background:
     radial-gradient(90% 80% at 50% 25%, color-mix(in srgb, var(--bs-kind) 40%, var(--dw-surface-200)), var(--dw-surface-0)) padding-box,
     conic-gradient(from 210deg, var(--bs-metal-1), var(--bs-metal-2), var(--bs-metal-3), var(--bs-metal-2), var(--bs-metal-1)) border-box;
-  box-shadow: 0 0 0 2px var(--dw-surface-0), 0 6px 10px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 0 0 2px var(--dw-surface-0), 0 4px 8px rgba(0, 0, 0, 0.55);
   color: var(--bs-kind);
   overflow: hidden;
 
   .mat-icon {
-    font-size: 3.4rem;
-    width: 3.4rem;
-    height: 3.4rem;
+    font-size: 2.2rem;
+    width: 2.2rem;
+    height: 2.2rem;
   }
 }
 
@@ -99,35 +89,59 @@
   object-fit: cover;
 }
 
+.bs-id {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
 .bs-name {
   margin: 0;
-  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 1.3rem;
-  font-weight: 400;
-  line-height: 1.15;
+  overflow: hidden;
+  font: 400 1.9rem/1.05 'Muse Display Harmony', 'Muse Sans', serif;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: var(--bs-kind);
   // Une capitale à l'initiale de chaque mot : « bogomit » → « Bogomit ».
   text-transform: capitalize;
 }
 
-.bs-sub {
-  margin: 0.2rem 0 0;
-  font-size: 0.95rem;
-  color: var(--dw-surface-700);
-}
-
-// Vitalité fixe : un cœur et son libellé.
-.bs-vit {
+// Ce qu'il est, sur une ligne : type, rang, joueur, région.
+.bs-meta {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.2rem;
+  flex-wrap: wrap;
+  gap: 0.1rem 0.5rem;
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--dw-surface-600);
+
+  span + span::before {
+    content: '·';
+    margin-right: 0.5rem;
+    color: var(--dw-surface-500);
+  }
 }
 
-.bs-vit-label {
+.bs-meta-strong {
+  font-weight: 700;
+  color: var(--dw-surface-900);
+}
+
+// La vie et l'héroïsme, côte à côte ; la carte d'un personnage sur la table y pose son stepper de vitalité.
+.bs-vitals {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 1.1rem;
+}
+
+.bs-vit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--dw-surface-500);
 }
@@ -137,14 +151,13 @@
   isolation: isolate;
   display: grid;
   place-items: center;
-  width: 4.8rem;
-  height: 4.4rem;
-  padding-bottom: 0.2rem;
-  font-family: 'Muse Display Harmony', 'Muse Sans', serif;
-  font-size: 1.9rem;
+  width: 2.6rem;
+  height: 2.35rem;
+  padding-bottom: 0.1rem;
+  font: 400 1.2rem 'Muse Display Harmony', 'Muse Sans', serif;
+  letter-spacing: 0;
   color: #fff;
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.6));
 
   &::before {
     content: '';
@@ -156,42 +169,30 @@
   }
 }
 
-.bs-chips {
+// Une gemme par point d'héroïsme, allumée s'il reste à dépenser.
+.bs-gems {
+  display: inline-flex;
+  gap: 0.2rem;
+
+  i {
+    width: 0.65rem;
+    height: 0.9rem;
+    background: var(--dw-surface-300);
+    clip-path: polygon(50% 0, 100% 38%, 50% 100%, 0 38%);
+  }
+
+  .bs-gem--on {
+    background: linear-gradient(160deg, #fde68a, var(--dw-color-legendary) 55%, #8a5a12);
+  }
+}
+
+.bs-actions {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.35rem;
-}
-
-.bs-chip {
-  padding: 0.2rem 0.65rem;
-  border: 1px solid var(--bs-metal-2);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--bs-metal-3) 35%, var(--dw-surface-0));
-  color: var(--dw-surface-800);
-  font-size: 0.74rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-// Colonne de droite : barre d'actions, puis des cartes.
-.bs-main {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  min-width: 0;
-  padding: 0.8rem 1.1rem 1.1rem;
-}
-
-.bs-bar {
-  display: flex;
   align-items: center;
+  align-self: start;
+  justify-content: flex-end;
   gap: 0.4rem;
-}
-
-.bs-spacer {
-  flex: 1;
 }
 
 .bs-edit {
@@ -199,109 +200,303 @@
 }
 
 .bs-icon-btn {
-  --mat-icon-button-icon-color: var(--dw-surface-700);
-  background: var(--dw-surface-200);
-  border-radius: 8px;
+  --mdc-icon-button-state-layer-size: 2.25rem;
+  padding: 0.35rem;
+  color: var(--dw-surface-600);
+}
+
+// ── Les chiffres, en tuiles ──────────────────────────────────────────────────────────────────────
+.bs-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.6rem;
+  padding: 0.75rem 1.1rem 0.9rem;
+  border-bottom: 1px solid var(--dw-border);
+}
+
+.bs-group {
+  display: grid;
+  gap: 0.35rem;
 }
 
 .bs-sec {
-  margin: 0 0 0.45rem;
-  padding-bottom: 0.3rem;
-  border-bottom: 1px solid var(--dw-border);
-  color: var(--dw-color-legendary);
-  font-size: 0.8rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.bs-cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.4rem;
-  align-items: start;
-
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.bs-leaders {
-  display: grid;
-  gap: 0.1rem;
   margin: 0;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dw-color-legendary);
+}
 
-  > div {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.5rem;
-    padding: 0.15rem 0;
-    font-size: 1rem;
-  }
+.bs-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0;
+}
 
-  dt {
-    order: 1;
-    color: var(--dw-surface-700);
-  }
-
-  // Les points de conduite entre le libellé et la valeur.
-  > div:not(.bs-leaders--note)::after {
-    content: '';
-    order: 2;
-    flex: 1;
-    min-width: 1rem;
-    border-bottom: 2px dotted color-mix(in srgb, var(--bar-bronze, var(--dw-border)) 75%, transparent);
-    transform: translateY(-0.25rem);
-  }
+// Le chiffre en grand, son nom dessous (dans le code : le nom puis la valeur, comme le veut une liste de définitions).
+.bs-tile {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 0.05rem;
+  min-width: 3.75rem;
+  padding: 0.3rem 0.6rem 0.35rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 9px;
+  background: var(--dw-surface-0);
 
   dd {
-    order: 3;
     margin: 0;
+    font: 400 1.5rem/1.05 'Muse Display Harmony', 'Muse Sans', serif;
+    white-space: nowrap;
     color: var(--dw-surface-900);
-    font-weight: 800;
-    font-size: 1.1rem;
-    font-variant-numeric: tabular-nums;
   }
-}
 
-// Entrée sans valeur (capacité, arme, armure) : titre, puis son détail sur toute la largeur.
-.bs-leaders--note {
-  display: block !important;
-
+  // Un long nom d'arme (« Dégâts · Épée / hache à 2 mains ») est coupé : la liste des armes le donne en entier.
   dt {
+    max-width: 9.5rem;
+    overflow: hidden;
+    font-size: 0.6rem;
     font-weight: 800;
-    color: var(--dw-surface-900);
-  }
-
-  .bs-leaders-detail {
-    display: block;
-    margin-top: 0.15rem;
-    font-size: 0.9rem;
-    font-weight: 400;
-    line-height: 1.4;
-    color: var(--dw-surface-700);
+    letter-spacing: 0.1em;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--dw-surface-500);
   }
 }
 
-// Dégâts en rouge.
-.bs-leaders--hot dd {
+// Une notation de dés (« d6-2(2) ») est plus longue qu'un chiffre : un corps plus petit, à la même hauteur.
+.bs-tile--dice dd {
+  font-size: 1.2rem;
+  line-height: 1.32;
+}
+
+.bs-tile--hot dd {
   color: var(--dw-color-echec);
 }
 
-// Arme ou armure équipée : mise en évidence en vert ; non équipée : atténuée.
-.bs-leaders--equipped dt {
+// ── Les listes, en colonnes ──────────────────────────────────────────────────────────────────────
+.bs-lists {
+  display: grid;
+  grid-template-columns: repeat(var(--bs-cols, 1), minmax(0, 1fr));
+}
+
+.bs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-width: 0;
+  padding: 0.75rem 1rem 0.9rem;
+
+  & + & {
+    border-left: 1px solid var(--dw-border);
+  }
+}
+
+.bs-rows {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// Une ligne : le nom (précédé de sa pastille ou de son signe), la valeur à droite, le détail dessous.
+.bs-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 0.5rem;
+}
+
+.bs-row-name {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+  color: var(--dw-surface-900);
+}
+
+.bs-row-value {
+  font: 400 1.1rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+  white-space: nowrap;
+  color: var(--dw-surface-900);
+}
+
+.bs-row-detail {
+  grid-column: 1 / -1;
+  font-size: 0.8rem;
+  line-height: 1.3;
+  color: var(--dw-surface-600);
+}
+
+// Équipement : chaque ligne tient sur une ligne. Un nom trop long est coupé, et le détail est dans l'infobulle — un soulignement
+// en pointillés dit qu'il y en a un.
+.bs-row--compact {
+  border-radius: 4px;
+
+  .bs-row-name {
+    min-width: 0;
+  }
+
+  .bs-row-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 2px;
+  }
+}
+
+.bs-row--more {
+  .bs-row-label {
+    text-decoration: underline dotted var(--dw-surface-500);
+    text-underline-offset: 0.2em;
+  }
+}
+
+// Sous une ligne à pastille, le détail s'aligne sur le nom.
+.bs-row--marked .bs-row-detail {
+  padding-left: 1.35rem;
+}
+
+// Dans le sac : estompé.
+.bs-row--idle {
+  .bs-row-name,
+  .bs-row-value {
+    font-weight: 500;
+    color: var(--dw-surface-500);
+  }
+
+  .bs-row-detail {
+    color: var(--dw-surface-500);
+  }
+}
+
+// Pastille d'équipement (pleine : porté, creuse : dans le sac) ou signe d'un trait (+ avantage, − désavantage).
+.bs-mark {
+  box-sizing: border-box;
+  flex: none;
+  align-self: center;
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+}
+
+.bs-mark--on {
+  border: 0.18rem solid transparent;
+  background: var(--dw-color-reussite) content-box;
+}
+
+.bs-mark--off {
+  border: 0.18rem solid transparent;
+  background: transparent;
+  box-shadow: inset 0 0 0 2px var(--dw-surface-500);
+  clip-path: circle(0.27rem);
+}
+
+.bs-mark--plus,
+.bs-mark--minus {
+  display: grid;
+  place-items: center;
+  align-content: flex-end;
+  font: 800 0.72rem/1 'Muse Sans', sans-serif;
+}
+
+.bs-mark--plus {
+  background: color-mix(in srgb, var(--dw-color-reussite) 20%, transparent);
   color: var(--dw-color-reussite);
 }
 
-.bs-leaders--idle {
-  opacity: 0.6;
+.bs-mark--minus {
+  background: color-mix(in srgb, var(--dw-color-echec) 20%, transparent);
+  color: var(--dw-color-echec);
 }
 
-.bs-empty,
+.bs-empty {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--dw-surface-500);
+}
+
 .bs-comment {
   margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.4;
+  padding: 0.6rem 1.1rem 0.7rem;
+  border-top: 1px solid var(--dw-border);
+  font-size: 0.88rem;
+  font-style: italic;
   color: var(--dw-surface-600);
+}
+
+// Ce que veulent dire les pastilles et les signes.
+.bs-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem 1.1rem;
+  margin: 0;
+  padding: 0.45rem 1.1rem 0.55rem;
+  border-top: 1px solid var(--dw-border);
+  font-size: 0.76rem;
+  color: var(--dw-surface-500);
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+}
+
+// Texte réservé aux lecteurs d'écran.
+.bs-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+// Conteneur moyen : les actions passent au-dessus de l'identité, les listes sur deux colonnes.
+@container (max-width: 44rem) {
+  .bs-head {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .bs-actions {
+    grid-row: 1;
+    grid-column: 1 / -1;
+  }
+
+  .bs-lists {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bs-list:nth-child(odd) {
+    border-left: 0;
+  }
+
+  .bs-list:nth-child(n + 3) {
+    border-top: 1px solid var(--dw-border);
+  }
+}
+
+// Conteneur étroit : une seule colonne.
+@container (max-width: 28rem) {
+  .bs-lists {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bs-list + .bs-list {
+    border-top: 1px solid var(--dw-border);
+    border-left: 0;
+  }
 }
