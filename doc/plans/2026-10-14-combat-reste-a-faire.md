@@ -1,10 +1,12 @@
-# Combat : ce qui reste à faire
+# Combat : erreurs à corriger et ce qui reste à faire
 
-Date : 2026-10-14. Étude des écarts entre les règles du livre et la gestion du combat dans l'application.
+Date : 2026-10-14. Deux études réunies :
+- **l'audit** des calculs qui existent déjà, confrontés aux règles et aux données en base (lot 0, points A1 à A10) ;
+- **ce qui manque** : les règles du livre que l'application ne gère pas encore (lots 1 à 4, points 1 à 17).
 
 Sources :
 - Règles : `doc/rules/02-actions-combat.md`, `04-pnj-creatures-demons.md`, `05-alchimie-foi-sorcellerie.md` (vérifiables dans `doc/pdf-text/`).
-- État de l'application : `doc/plans/2026-10-13-combat-etat-des-lieux.md`, et le code de `front/src/app/bol/session/`.
+- État de l'application : `doc/plans/2026-10-13-combat-etat-des-lieux.md`, le code de `front/src/app/bol/session/`, et les données en base (bestiaire, démons, armures, options de combat).
 
 Chaque point donne la règle, ce que fait l'application aujourd'hui, une proposition et un effort estimé : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs jours).
 
@@ -12,7 +14,17 @@ Chaque point donne la règle, ce que fait l'application aujourd'hui, une proposi
 
 | # | Sujet | Nature | Effort | Lot |
 | --- | --- | --- | --- | --- |
-| 1 | Dégâts à mains nues : vigueur/2 | Écart avec la règle — **fait le 2026-10-14** | S | 1 |
+| A1 | Multiplicateur des dégâts de créature (×2, ×3, ×4) ignoré | **Fait le 2026-10-14** | M | 0 |
+| A2 | Dégâts fixes de créature (« 0 », « 1 ») lus comme un d6 | **Fait le 2026-10-14** | avec A1 | 0 |
+| A3 | Modificateur des dégâts de créature (« d6-2 ») ignoré | **Fait le 2026-10-14** | avec A1 | 0 |
+| A4 | Dégâts « spécial » lus comme un d6 | **Fait le 2026-10-14** | avec A1 | 0 |
+| A5 | Protection des démons (Armure, Cuirasse) ignorée | **Fait le 2026-10-14** | S | 0 |
+| A6 | « Attaques dévastatrices » des démons sans effet | **Fait le 2026-10-14** (à la table) | S | 0 |
+| A7 | Héros à 0 de vitalité toujours en jeu | Erreur — voir le point 2 | M | 1 |
+| A8 | Double 6 « de justesse » au jet de réaction | **Fait le 2026-10-14** | S | 0 |
+| A9 | Bouclier gardé contre une attaque surprise | **Fait le 2026-10-14** | S | 0 |
+| A10 | PNJ sans arme : d3 au lieu de 1 | **Fait le 2026-10-14** | S | 0 |
+| 1 | Dégâts à mains nues : vigueur/2 | **Fait le 2026-10-14** | S | 1 |
 | 2 | Héros à 0 de vitalité : hors de combat | Écart avec la règle | M | 1 |
 | 3 | Mourant : −1 vitalité par round | Règle absente | S | 1 |
 | 4 | Arme lourde interdite sous 0 de vigueur | Règle absente | S | 1 |
@@ -29,10 +41,89 @@ Chaque point donne la règle, ce que fait l'application aujourd'hui, une proposi
 | 15 | Sorcellerie en combat | Règle absente | L | 4 |
 | 16 | Foi en combat | Règle absente | S | 4 |
 | 17 | Petites limites de l'assistant | Confort | S à M | au fil de l'eau |
+| — | Vigueur ajoutée aux dégâts des créatures | **Corrigé le 2026-10-14** | — | — |
 
-Les lots sont un ordre proposé : d'abord corriger ce qui donne un résultat faux, puis ce qui sert à chaque combat, puis le bestiaire, puis la magie.
+Les lots sont un ordre proposé : d'abord corriger les calculs faux (lot 0), puis compléter ce qui est faux par omission (lot 1), puis ce qui sert à chaque combat, puis le bestiaire, puis la magie.
 
-## Lot 1 : corriger ce qui est faux
+## Lot 0 : erreurs dans ce qui existe
+
+**Lot 0 fait le 2026-10-14** (sauf A7, qui est le point 2 du lot 1). Vérifié à l'écran sur Dinohyus (`d6x2`), Ganuc (`1`), Kyphus (`d6-2`), Xolth (`spécial`) et un démarrage avec « Héros surpris » ; les autres corrections sont couvertes par des tests unitaires.
+
+### A1. Multiplicateur des dégâts de créature ignoré
+
+- **Règle** (livre p. 108, bestiaire, `doc/pdf-text/04-bestiaire-pnj-p108-135.txt` l. 30) : « Si le dé de dégâts est suivi d'un x2, x3 ou x4, cela signifie que vous multipliez le résultat du dé par le chiffre indiqué. »
+- **En base** : `d6x2`, `d6Bx2`, `d6x3`, `d6Bx3`, `d6Bx4` (Dinohyus, Deodarg, Drakk, Elasmotherium, Eldaphon, Jemadar, Kalathorn, Ours des cavernes, Poad, Sardolith, Scorpion-araignée géant, Banth, Zathog, Béhémathon, Chark).
+- **Aujourd'hui** : `damageDie` ne lit que le type de dé (`d6`, `d6B`) ; le multiplicateur est perdu. Un Béhémathon (`d6Bx4`) fait 1 à 6 dégâts au lieu de 4 à 24.
+- **Correction** : lire la chaîne de dégâts en entier (dé, multiplicateur, modificateur, ou valeur fixe), multiplier le résultat du dé avant de retirer la protection, et l'afficher dans l'addition (« 5 ×2 »). La fourchette annoncée avant le jet doit suivre.
+- **Où** : `combat-resolution.util.ts` (`damageDie`, `rawDamage`, `damageRange`), `turn-assistant.ts` (addition des dégâts, saisie du dé).
+- **Fait** : `parseDamage` lit la chaîne entière (dé, multiplicateur, modificateur, valeur fixe, ou `null` pour « spécial ») et `scaleDamage` applique multiplicateur puis modificateur ; l'addition des dégâts montre « ×2 taille » et la fourchette suit. Testé sur tous les formats présents en base.
+
+### A2. Dégâts fixes lus comme un d6
+
+- **Règle** : la piétaille et les très petites créatures font des dégâts fixes (table des tailles : minuscule `1`) ; certaines créatures n'en font pas (`0`).
+- **En base** : Fangeux `0`, Ganuc `1`, Jit `1`, et une créature d'utilisateur à `1`.
+- **Aujourd'hui** : `damageDie` ne trouve ni `d3`, ni `m`, ni `b`, et renvoie `d6` : l'assistant demande un d6.
+- **Correction** : une valeur fixe n'a pas de jet ; la case des dégâts est préremplie (et la protection s'applique normalement).
+- **Fait** : pas de case de dé ; les dégâts (« 1 fixes ») sont connus dès que le coup touche, et le bouton « Appliquer » est prêt.
+
+### A3. Modificateur des dégâts de créature ignoré
+
+- **En base** : Kyphus `d6-2`.
+- **Aujourd'hui** : lu comme un `d6`, le −2 est perdu.
+- **Correction** : comprise dans la lecture de A1 (terme « −2 » dans l'addition).
+- **Fait** : terme « −2 profil » dans l'addition.
+
+### A4. Dégâts « spécial »
+
+- **En base** : Xolth `spécial` (attaque décrite dans son profil).
+- **Aujourd'hui** : lu comme un `d6`, sans avertissement.
+- **Correction** : pas de dé proposé ; un rappel « dégâts spéciaux : voir la fiche » et une saisie libre du total.
+- **Fait** : pas de bouton de dé ; « spécial : voir la fiche, et tape le total », et la case accepte un total jusqu'à 99.
+
+### A5. Protection des démons ignorée
+
+- **Règle** (`04-pnj-creatures-demons.md`, pouvoirs démoniaques) : Armure donne une protection `d6-2 (2)` ; Cuirasse, `d6 (4)`.
+- **En base** : desckard a le pouvoir Armure.
+- **Aujourd'hui** : la protection d'un démon à la table est toujours vide (`combat-play.util.ts`, `protection: null` pour les démons) ; ses pouvoirs ne sont pas lus. Un démon cuirassé encaisse tout.
+- **Correction** : déduire la protection des pouvoirs du démon (Cuirasse prime sur Armure), côté backend dans l'instantané de la table ou côté front à la résolution des statistiques.
+- **Fait** : `demonProtection` (`combat-play.util.ts`) déduit la protection des pouvoirs du démon à la table ; elle sert au jet de dégâts comme une armure (valeur fixe, ou dé de protection).
+
+### A6. « Attaques dévastatrices » des démons sans effet
+
+- **Règle** : les dégâts passent à la catégorie de taille supérieure.
+- **Aujourd'hui** : les dégâts d'un démon viennent de sa catégorie (formulaire du démon) et ne sont jamais montés d'un cran ; le pouvoir n'est lu nulle part. Vul'mazzanlu (`d6B`) est peut-être déjà ajusté à la main, desckard probablement pas.
+- **Correction** : soit monter les dégâts automatiquement quand le pouvoir est pris (dans le formulaire du démon, avec un rappel), soit à la table. À trancher : le formulaire est le plus simple, et le statbloc montre alors la bonne valeur. Les autres pouvoirs et avantages (dé de bonus, régénération…) sont au point 12.
+- **Fait, à la table** : `demonDegats` monte d'une catégorie les dégâts restés ceux de la catégorie du démon (mineur d6M → d6, inférieur d6 → d6B, majeur d6B → d6x2) ; des dégâts déjà relevés à la main ne sont pas montés deux fois. Le formulaire et le statbloc du démon montrent toujours les dégâts saisis.
+
+### A7. Héros à 0 de vitalité toujours en jeu
+
+- **Règle** (« Blessures, inconscience et mort ») : à 0, hors de combat, pour tout personnage.
+- **Aujourd'hui** : `isOut` ne sort un héros qu'en négatif (`combat-turn.util.ts`).
+- **Correction** : voir le point 2 (en attente de la question sur l'état « inconscient »).
+
+### A8. Double 6 « de justesse » au jet de réaction
+
+- **Règle** (p. 56, vaut pour tout jet d'action) : un double 6 n'est un succès héroïque que si l'action pouvait réussir sans lui.
+- **Aujourd'hui** : appliqué au jet d'action et au jet d'attaque, pas au jet de réaction (`reactionResult` : tout 12 est héroïque, ou légendaire).
+- **Cas réel** : un héros sans esprit ni initiative, surpris (−1) face à un rival d'initiative 3 (−3), ne touche 9 qu'avec 12 ; son 12 devrait être une simple réussite.
+- **Correction** : même règle que `suggestedActionResult`.
+- **Fait** : `reactionResult` donne une simple réussite, et le dialogue ne propose plus le succès légendaire dans ce cas.
+
+### A9. Bouclier contre une attaque surprise
+
+- **Règle** (`doc/resources/armures.md`) : un personnage ne bénéficie de son bouclier que s'il est conscient de l'attaque.
+- **Aujourd'hui** : le bouclier compte toujours, même pour des héros pris en embuscade au round 1.
+- **Correction** : quand « Héros surpris » est coché au démarrage, poser l'effet « sans bouclier » sur les héros pour le round 1 (le registre le sait déjà pour l'échec critique). Le MJ peut le retirer.
+- **Fait** : au démarrage avec « Héros surpris », chaque héros et allié du combat reçoit l'effet « surpris » (sans bouclier) jusqu'à la fin du round 1, retirable à la main. Pas pour un nouveau jet de réaction en cours de combat.
+
+### A10. PNJ sans arme
+
+- **Règle** (piétaille) : dégâts `1`, ou `d3` avec une arme ; à mains nues `1`.
+- **Aujourd'hui** : un PNJ sans arme reçoit `d3` par défaut (`combat-attack.util.ts`).
+- **Correction** : `1` pour une piétaille sans arme ; à voir pour les coriaces et rivaux (le livre leur donne des dégâts d'arme normaux, donc ils ont une arme).
+- **Fait** : une piétaille sans arme frappe pour `1`.
+
+## Lot 1 : compléter ce qui est faux par omission
 
 ### 1. Dégâts à mains nues : vigueur/2
 
@@ -142,7 +233,7 @@ Les lots sont un ordre proposé : d'abord corriger ce qui donne un résultat fau
   | Attaque féroce (créature), Armes améliorées (démon) | Dé de bonus à l'attaque |
   | Attaque timide | Dé de malus à l'attaque |
   | Attaques multiples | Plusieurs jets d'attaque distincts |
-  | Attaques dévastatrices (démon) | Dégâts d'une catégorie au-dessus |
+  | Attaques dévastatrices (démon) | Dégâts d'une catégorie au-dessus — voir A6 |
   | Régénération (démon) | +1 vitalité par round ; se débarrasse d'un coup précis au bout de 2 rounds |
   | Intangible (démon) | Blessé seulement par sorcellerie ou alchimie |
   | Poison (démon) | Jet de vigueur Difficile (−2) pour éviter la paralysie |
@@ -215,8 +306,27 @@ Reprises de l'état des lieux, § 8 :
 - **Fabrication alchimique** : hors combat ; l'usage d'une préparation en combat se traite comme un effet posé à la main.
 - **Journal complet des événements et annulation d'un coup** : déjà écartés dans le spec du registre d'effets.
 
+## Vérifié conforme
+
+Ces calculs ont été relus lors de l'audit et correspondent aux règles :
+
+- **Jet d'attaque** : `2d6 + agilité + mêlée (ou tir) − défense`, seuil 9 ; créature : attaque combinée, sans agilité ; double 1 et double 6, y compris le double 6 de justesse.
+- **Postures et options** (valeurs en base) : offensive +1/−1, défensive −1/+1, intrépide +2/−2 et bouclier perdu, parade à deux armes −1/+1 contre une attaque, double frappe −1 et dégâts montés d'une catégorie (deux légères → moyenne ; moyenne + légère ou deux moyennes → lourde), défaut de l'armure (malus = protection fixe, armure ignorée).
+- **Défense totale** : +2, cumulable avec le bouclier.
+- **Boucliers** : petit, −1 à une attaque subie par round ; grand, −1 à toutes (compté dans la défense).
+- **Dégâts** : d3 = d6 divisé par deux arrondi au supérieur ; d6M, d6B ; vigueur en mêlée, moitié au tir et à mains nues (arrondie à l'inférieur) ; aucune vigueur pour une créature ; dégâts jamais négatifs.
+- **Protection** : valeur fixe de l'armure, +1 avec un casque ; dé de protection au choix du MJ.
+- **Agilité et initiative effectives** : malus d'armure et de grand bouclier sur l'agilité, malus du casque sur l'initiative.
+- **Jet de réaction** : `2d6 + esprit + initiative`, embuscade +2 ou surpris −1, initiative ennemie la plus haute des coriaces et rivaux ; ordre d'action en huit rangs ; égalités par agilité.
+- **Effets du résultat de réaction** : blocage des coriaces et de la piétaille au round 1, +1 aux attaques du seul héros légendaire, échec critique dernier et sans bouclier au round 1.
+- **Héroïsme** : faveur divine, échec critique, succès héroïque acheté, légendaire seulement sur un vrai double 6, options héroïques.
+- **Défier la mort** : entre −1 et −5, retour à 0 ; sous −5, stabilisation.
+- **Récupération après le combat** : moitié des points perdus, arrondie au supérieur, pour les héros à 0 ou plus.
+- **Hors combat** : PNJ, créature et démon à 0 ou moins.
+
 ## Questions à trancher avant de commencer
 
 1. **Héros à 0** (point 2) : faut-il ajouter un état « inconscient » visible sur la carte, ou suffit-il de le sauter dans l'ordre d'action ?
 2. **Horde** (point 13) : grouper les piétailles dans la frise, ou seulement le temps de l'attaque ?
 3. **Sorcellerie** (point 15) : faut-il un catalogue de sorts, ou une saisie libre (cercle, difficulté, coût) au moment du jet ?
+4. ~~**Attaques dévastatrices** (A6)~~ : tranché, à la table (voir A6).

@@ -315,6 +315,12 @@ export function effetRenversement(porteur: string): NewEffect {
   return {origine: DE_MALUS, libelle: 'renversé : dé de malus', porteur, stat: 'action', valeur: -1, quand: 'attaque', duree: {type: 'action-porteur'}, manuel: true};
 }
 
+/** Héros surpris ou pris en embuscade : un personnage ne bénéficie de son bouclier que s'il est conscient de l'attaque
+ * (`doc/resources/armures.md`) ; au premier round, le camp des héros n'en a pas. Le MJ peut retirer l'effet. */
+export function effetSurpris(porteur: string): NewEffect {
+  return {origine: SANS_BOUCLIER, libelle: 'surpris', porteur, stat: 'defense', valeur: 0, quand: 'subie', duree: {type: 'fin-round'}, manuel: true};
+}
+
 /** Les effets que le MJ ajoute à la main depuis le menu « + Effet ». */
 /** Vrai si la carte doit un dé de malus à sa prochaine action : son jet d'attaque se fera à 3d6, en gardant les deux moins bons. */
 export function doitUnDeDeMalus(effets: readonly CombatEffect[], carte: string): boolean {

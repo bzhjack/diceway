@@ -1,18 +1,46 @@
 import {describe, expect, it} from 'vitest';
-import {attackBonus, damageDie, damageDiceCount, damageDieMax, damageRange, finalDamage, heroicPicksAllowed, rawDamage, toggleHeroicPick, vigueurBonus, computeAttackTotal, resolvePostureAttackModifier, suggestedAttackResult, shouldPromptDefierLaMort} from './combat-resolution.util';
+import {attackBonus, damageDiceCount, damageDieMax, damageRange, finalDamage, heroicPicksAllowed, parseDamage, rawDamage, scaleDamage, toggleHeroicPick, vigueurBonus, computeAttackTotal, resolvePostureAttackModifier, suggestedAttackResult, shouldPromptDefierLaMort} from './combat-resolution.util';
 import {ResolvedCombatStats} from './models/combat-attack.model';
 
 const STATS: ResolvedCombatStats = {
   agilite: 2, vigueur: 3, melee: 1, tir: 2, attaque: null, defense: 0, degats: 'd6', protection: 0, protectionText: null, bouclierMalusUneAttaque: 0, bouclierDefenseToutes: 0, herosId: null, heroisme: null,
 };
 
-describe('damageDie', () => {
+const D6 = {die: 'd6', multiplier: 1, modifier: 0, fixed: null} as const;
+
+describe('parseDamage', () => {
   it('reads the die of a weapon string', () => {
-    expect(damageDie('d3')).toBe('d3');
-    expect(damageDie('d6M')).toBe('d6m');
-    expect(damageDie('d6B')).toBe('d6b');
-    expect(damageDie('d6')).toBe('d6');
-    expect(damageDie(null)).toBe('d6');
+    expect(parseDamage('d3')).toEqual({...D6, die: 'd3'});
+    expect(parseDamage('d6M')).toEqual({...D6, die: 'd6m'});
+    expect(parseDamage('d6B')).toEqual({...D6, die: 'd6b'});
+    expect(parseDamage('d6')).toEqual(D6);
+    expect(parseDamage(null)).toEqual(D6);
+  });
+
+  it('reads the multiplier of big creatures, written either way', () => {
+    expect(parseDamage('d6x2')).toEqual({...D6, multiplier: 2});
+    expect(parseDamage('d6Bx4')).toEqual({...D6, die: 'd6b', multiplier: 4});
+    expect(parseDamage('d6B x 3')).toEqual({...D6, die: 'd6b', multiplier: 3});
+  });
+
+  it('reads a modifier', () => {
+    expect(parseDamage('d6-2')).toEqual({...D6, modifier: -2});
+    expect(parseDamage('d6 + 3')).toEqual({...D6, modifier: 3});
+  });
+
+  it('reads fixed damage, with no die to roll', () => {
+    expect(parseDamage('1')).toEqual({...D6, fixed: 1});
+    expect(parseDamage('0')).toEqual({...D6, fixed: 0});
+  });
+
+  it('gives up on what it cannot read', () => {
+    expect(parseDamage('spécial')).toBeNull();
+  });
+
+  it('reads every damage string of the bestiary, demons and weapons', () => {
+    for (const degats of ['d6B', 'd6', 'd6x2', 'd6Bx2', '0', 'd6M', '1', 'd6Bx3', 'd6-2', 'd6x3', 'd3', 'd6Bx4']) {
+      expect(parseDamage(degats)).not.toBeNull();
+    }
   });
 
   it('rolls two dice for a bonus or malus die', () => {
@@ -28,6 +56,12 @@ describe('rawDamage', () => {
     expect(rawDamage('d6b', [2, 5])).toBe(5);
     expect(rawDamage('d3', [5])).toBe(3);
     expect(rawDamage('d6', [4])).toBe(4);
+  });
+
+  it('multiplies the die of big creatures, then adds the modifier, or gives fixed damage', () => {
+    expect(scaleDamage({...D6, die: 'd6b', multiplier: 2}, 5)).toBe(10);
+    expect(scaleDamage({...D6, modifier: -2}, 5)).toBe(3);
+    expect(scaleDamage({...D6, fixed: 1}, 5)).toBe(1);
   });
 });
 
@@ -76,16 +110,21 @@ describe('damageRange', () => {
   });
 
   it('goes from the lowest to the highest face, with vigueur and protection', () => {
-    expect(damageRange('d6', 3, 1, 0)).toEqual([3, 8]);
-    expect(damageRange('d3', 0, 0, 0)).toEqual([1, 3]);
+    expect(damageRange(D6, 3, 1, 0)).toEqual([3, 8]);
+    expect(damageRange({...D6, die: 'd3'}, 0, 0, 0)).toEqual([1, 3]);
   });
 
   it('never announces negative damage', () => {
-    expect(damageRange('d6', 0, 4, 0)).toEqual([0, 2]);
+    expect(damageRange(D6, 0, 4, 0)).toEqual([0, 2]);
+  });
+
+  it('multiplies the faces of big creatures, and gives fixed damage as it is', () => {
+    expect(damageRange({...D6, die: 'd6b', multiplier: 4}, 0, 3, 0)).toEqual([1, 21]);
+    expect(damageRange({...D6, fixed: 1}, 0, 0, 0)).toEqual([1, 1]);
   });
 
   it('adds the devastating blow', () => {
-    expect(damageRange('d6m', 3, 0, 1)).toEqual([10, 15]);
+    expect(damageRange({...D6, die: 'd6m'}, 3, 0, 1)).toEqual([10, 15]);
   });
 });
 

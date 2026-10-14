@@ -42,9 +42,14 @@ describe('reactionResult', () => {
     expect(reactionResult(2, 20, true)).toBe('echec_critique');
   });
 
-  it('makes a double 6 a heroic success whatever the malus, legendary only if the hero pays for it', () => {
-    expect(reactionResult(12, -20)).toBe('heroique');
-    expect(reactionResult(12, -20, true)).toBe('legendaire');
+  it('makes a double 6 a heroic success, legendary only if the hero pays for it', () => {
+    expect(reactionResult(12, 0)).toBe('heroique');
+    expect(reactionResult(12, -2, true)).toBe('legendaire');
+  });
+
+  it('makes a double 6 a plain success when only the double 6 could succeed', () => {
+    expect(reactionResult(12, -3)).toBe('reussite');
+    expect(reactionResult(12, -20, true)).toBe('reussite');
   });
 
   it('ignores the heroism choice on any other roll', () => {

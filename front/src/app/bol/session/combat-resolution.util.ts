@@ -1,8 +1,5 @@
 import {InitiativeResultat} from '../models/bol-fight-session.model';
-import {ResolvedCombatStats} from './models/combat-attack.model';
-
-/** Dé de dégâts d'une arme ou d'une créature : d3, d6, d6 de malus (garder le moins bon de 2d6) ou de bonus. */
-export type DamageDie = 'd3' | 'd6' | 'd6m' | 'd6b';
+import {DamageDie, DamageSpec, ResolvedCombatStats} from './models/combat-attack.model';
 
 /** Seuil de réussite d'un jet d'attaque BoL (02-actions-combat.md). */
 export const ATTACK_THRESHOLD = 9;
@@ -46,19 +43,30 @@ export function toggleHeroicPick(picks: readonly HeroicSlug[], slug: HeroicSlug,
 /** Bonus de dégâts du coup dévastateur. */
 const DEVASTATING_BONUS = 6;
 
-/** Dé de dégâts d'une chaîne d'arme BoL (« d6M », « d6B », « d3 », « d6 »). */
-export function damageDie(degats: string | null | undefined): DamageDie {
-  const s = (degats ?? '').toLowerCase();
-  if (s.includes('d3')) {
-    return 'd3';
+const DICE: Readonly<Record<string, DamageDie>> = {d3: 'd3', d6: 'd6', d6m: 'd6m', d6b: 'd6b'};
+
+/** Lit des dégâts écrits comme dans le livre : un dé (« d3 », « d6 », « d6M », « d6B »), suivi d'un multiplicateur pour les grandes
+ * créatures (« d6Bx2 » : le résultat du dé multiplié par 2, livre p. 108) et d'un modificateur (« d6-2 », « d6 + 3 ») ; ou une valeur
+ * fixe (« 1 », « 0 »). Sans dégâts écrits, un d6. `null` pour ce qui ne se lit pas (« spécial ») : le profil les décrit, le MJ tape
+ * le total. */
+export function parseDamage(degats: string | null | undefined): DamageSpec | null {
+  const text = (degats ?? '').replace(/\s+/g, '').toLowerCase();
+  if (text === '') {
+    return {die: 'd6', multiplier: 1, modifier: 0, fixed: null};
   }
-  if (s.includes('m')) {
-    return 'd6m';
+  if (/^-?\d+$/.test(text)) {
+    return {die: 'd6', multiplier: 1, modifier: 0, fixed: Number(text)};
   }
-  if (s.includes('b')) {
-    return 'd6b';
+  const match = text.match(/^(d3|d6[mb]?)(?:[x×]([1-9]))?([+-]\d+)?$/);
+  if (!match) {
+    return null;
   }
-  return 'd6';
+  return {die: DICE[match[1]], multiplier: Number(match[2] ?? 1), modifier: Number(match[3] ?? 0), fixed: null};
+}
+
+/** Les dégâts bruts d'un jet, avant la vigueur et la protection : la valeur fixe, ou le dé multiplié puis modifié. */
+export function scaleDamage(spec: DamageSpec, face: number): number {
+  return spec.fixed ?? face * spec.multiplier + spec.modifier;
 }
 
 /** Nombre de d6 à lancer pour ce dé de dégâts : deux pour un dé de malus ou de bonus. */
@@ -66,7 +74,7 @@ export function damageDiceCount(die: DamageDie): number {
   return die === 'd6m' || die === 'd6b' ? 2 : 1;
 }
 
-/** Dégâts bruts d'un jet : le moins bon de deux dés (d6M), le meilleur (d6B), la moitié arrondie au supérieur (d3). */
+/** Ce que donne le dé de dégâts : le moins bon de deux dés (d6M), le meilleur (d6B), la moitié arrondie au supérieur (d3). */
 export function rawDamage(die: DamageDie, values: readonly number[]): number {
   if (die === 'd6m') {
     return Math.min(...values);
@@ -107,9 +115,13 @@ export function damageDieMax(die: DamageDie): number {
   return die === 'd3' ? 3 : 6;
 }
 
-/** Fourchette des dégâts finaux, annoncée avant le jet : ce que donnent la plus petite et la plus grande face du dé. */
-export function damageRange(die: DamageDie, vigueur: number, protection: number, devastating: number): readonly [number, number] {
-  return [finalDamage(1, vigueur, protection, devastating), finalDamage(damageDieMax(die), vigueur, protection, devastating)];
+/** Fourchette des dégâts finaux, annoncée avant le jet : ce que donnent la plus petite et la plus grande face du dé, multipliées et
+ * modifiées comme les dégâts l'indiquent. */
+export function damageRange(spec: DamageSpec, vigueur: number, protection: number, devastating: number): readonly [number, number] {
+  return [
+    finalDamage(scaleDamage(spec, 1), vigueur, protection, devastating),
+    finalDamage(scaleDamage(spec, damageDieMax(spec.die)), vigueur, protection, devastating),
+  ];
 }
 
 /** Un d6 aléatoire. */

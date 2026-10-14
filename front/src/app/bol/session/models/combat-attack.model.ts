@@ -1,5 +1,19 @@
 import {TapisCard} from './tapis.model';
 
+/** Dé de dégâts d'une arme ou d'une créature : d3, d6, d6 de malus (garder le moins bon de 2d6) ou de bonus. */
+export type DamageDie = 'd3' | 'd6' | 'd6m' | 'd6b';
+
+/** Des dégâts lus en entier : un dé, multiplié pour les grandes créatures (« d6Bx2 »), avec un modificateur (« d6-2 ») — ou une valeur
+ * fixe (« 1 »), sans jet. */
+export interface DamageSpec {
+  readonly die: DamageDie;
+  /** 1, ou 2 à 4 pour les grandes créatures : le résultat du dé est multiplié. */
+  readonly multiplier: number;
+  readonly modifier: number;
+  /** Dégâts fixes, sans jet de dé ; `null` quand il y a un dé à lancer. */
+  readonly fixed: number | null;
+}
+
 /** Stats de combat entièrement résolues (héros récupéré en direct si besoin), prêtes à préremplir le dialog d'attaque. */
 export interface ResolvedCombatStats {
   readonly agilite: number;

@@ -359,26 +359,31 @@
     <section [class]="'tas-station tas-station--' + stations()[2]" aria-label="Jet de dégâts">
       <h3><span aria-hidden="true">3</span> Les dégâts</h3>
       @if (hasDamageStep()) {
-        <div class="tas-entry">
-          <input
-            #damageInput
-            class="tas-total"
-            type="text"
-            inputmode="numeric"
-            maxlength="1"
-            autocomplete="off"
-            placeholder="dé"
-            [attr.aria-label]="'Dé de dégâts lancé à table, de 1 à ' + damageMax()"
-            [value]="raw() ?? ''"
-            [disabled]="rolling()"
-            (focus)="damageInput.select()"
-            (input)="onDamageInput(damageInput.value)"
-            (blur)="restoreInput(damageInput, raw())"
-          />
-          <button type="button" class="tas-dice-btn" [disabled]="rolling()" aria-label="Lancer le dé de dégâts à l’écran" matTooltip="Lancer le dé de dégâts à l’écran" (click)="rollDamage()">
-            <mat-icon>casino</mat-icon>
-          </button>
-        </div>
+        <!-- Des dégâts fixes n'ont pas de jet : la case n'apparaît que pour un dé, ou pour le total de dégâts spéciaux -->
+        @if (fixedDamage() === null) {
+          <div class="tas-entry">
+            <input
+              #damageInput
+              class="tas-total"
+              type="text"
+              inputmode="numeric"
+              autocomplete="off"
+              [attr.maxlength]="specialDamage() ? 2 : 1"
+              [attr.placeholder]="specialDamage() ? 'total' : 'dé'"
+              [attr.aria-label]="specialDamage() ? 'Total des dégâts spéciaux' : 'Dé de dégâts lancé à table, de 1 à ' + damageMax()"
+              [value]="(specialDamage() ? raw() : face()) ?? ''"
+              [disabled]="rolling()"
+              (focus)="damageInput.select()"
+              (input)="onDamageInput(damageInput.value)"
+              (blur)="restoreInput(damageInput, specialDamage() ? raw() : face())"
+            />
+            @if (!specialDamage()) {
+              <button type="button" class="tas-dice-btn" [disabled]="rolling()" aria-label="Lancer le dé de dégâts à l’écran" matTooltip="Lancer le dé de dégâts à l’écran" (click)="rollDamage()">
+                <mat-icon>casino</mat-icon>
+              </button>
+            }
+          </div>
+        }
         <small class="tas-die-note">{{ damageDetail() && !rolling() ? damageDetail() : dieNote() }}</small>
 
         <div class="tas-sum" [class.tas-sum--pending]="damage() === null">

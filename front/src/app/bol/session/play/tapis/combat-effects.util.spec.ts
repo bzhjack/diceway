@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {CombatEffect, RollContext} from '../../models/combat-effect.model';
-import {appliquerEvenement, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, effetCoupPrecis, effetRenversement, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
+import {appliquerEvenement, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, effetCoupPrecis, effetRenversement, effetSurpris, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
 
 function effet(over: Partial<CombatEffect> = {}): CombatEffect {
   return {id: 'e-1', origine: 'posture-defensive', porteur: 'hero-1', stat: 'defense', valeur: 1, quand: 'subie', duree: {type: 'debut-tour-porteur'}, manuel: false, ...over};
@@ -340,5 +340,15 @@ describe('effets des options héroïques', () => {
     const effets = appliquerEvenement([], {type: 'ajout-manuel', effet: effetRenversement('pnj-7')}, () => 'e-1');
     expect(doitUnDeDeMalus(effets, 'pnj-7')).toBe(true);
     expect(doitUnDeDeMalus(appliquerEvenement(effets, {type: 'fin-tour', carte: 'pnj-7', crees: []}), 'pnj-7')).toBe(false);
+  });
+});
+
+describe('effetSurpris', () => {
+  it('takes the shield away from a surprised hero until the end of the round', () => {
+    const effets = appliquerEvenement([], {type: 'ajout-manuel', effet: effetSurpris('hero-1')}, () => 'e-1');
+    const contexte = {jet: 'attaque', attaquant: 'pnj-7', cible: 'hero-1', bouclier: 1, bouclierToutes: 0} as const;
+    expect(sommeModificateurs(modificateursPour(effets, contexte))).toBe(0);
+    expect(sommeModificateurs(modificateursPour([], contexte))).toBe(-1);
+    expect(appliquerEvenement(effets, {type: 'nouveau-round'})).toEqual([]);
   });
 });

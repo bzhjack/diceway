@@ -5,6 +5,35 @@ import {PlayCombatStats, PlayToken, PlayBoard} from './models/combat-play.model'
 
 export const EMPTY_AVATAR = '/assets/bol/empty-avatar.jpg';
 
+/** Un pouvoir démoniaque, comparé sans tenir compte de la casse. */
+function hasPouvoir(pouvoirs: readonly (string | null)[], nom: string): boolean {
+  return pouvoirs.some((pouvoir) => pouvoir?.trim().toLowerCase() === nom);
+}
+
+/** Protection d'un démon d'après ses pouvoirs (04-pnj-creatures-demons.md) : Cuirasse `d6 (4)`, sinon Armure `d6-2 (2)`, sinon aucune. */
+export function demonProtection(pouvoirs: readonly (string | null)[]): string | null {
+  if (hasPouvoir(pouvoirs, 'cuirasse')) {
+    return 'd6 (4)';
+  }
+  return hasPouvoir(pouvoirs, 'armure') ? 'd6-2 (2)' : null;
+}
+
+/** Les catégories de dégâts, de la plus faible à la plus forte (table des tailles de créatures). */
+const DAMAGE_STEPS: readonly string[] = ['1', 'd3', 'd6m', 'd6', 'd6b', 'd6x2', 'd6bx2', 'd6x3', 'd6bx3', 'd6x4', 'd6bx4'];
+/** Dégâts de base d'un démon selon sa catégorie : mineur (piétaille) d6M, inférieur (coriace) d6, majeur (rival) d6B. */
+const DEMON_BASE_DAMAGE: Readonly<Record<'pietaille' | 'coriace' | 'rival', string>> = {pietaille: 'd6m', coriace: 'd6', rival: 'd6b'};
+
+/** Dégâts d'un démon à la table : le pouvoir « Attaques dévastatrices » les monte d'une catégorie. Seuls des dégâts restés ceux de sa
+ * catégorie sont montés — un démon dont les dégâts ont déjà été relevés à la main ne l'est pas deux fois. */
+export function demonDegats(degats: string | null, rang: 'pietaille' | 'coriace' | 'rival', pouvoirs: readonly (string | null)[]): string | null {
+  const normalized = (degats ?? '').replace(/\s+/g, '').toLowerCase();
+  if (!hasPouvoir(pouvoirs, 'attaques dévastatrices') || normalized !== DEMON_BASE_DAMAGE[rang]) {
+    return degats;
+  }
+  const next = DAMAGE_STEPS[DAMAGE_STEPS.indexOf(normalized) + 1];
+  return next.replace('m', 'M').replace('b', 'B');
+}
+
 interface PlaySource extends InitiativeSource {
   readonly camp: CombatCamp;
   readonly avatar: string;
@@ -65,7 +94,8 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
         tir: p.tir,
         attaque: null,
         defense: p.defense,
-        degats: p.armes?.[0]?.degats ?? null,
+        // Une piétaille sans arme frappe pour 1 (04-pnj-creatures-demons.md) ; les autres PNJ ont des armes.
+        degats: p.armes?.[0]?.degats ?? (p.rang === 'pietaille' ? '1' : null),
         protection: null,
       },
     });
@@ -98,6 +128,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
   }
 
   for (const d of session.demons ?? []) {
+    const pouvoirs = (d.pouvoirs ?? []).map((p) => p.pouvoir);
     sources.push({
       key: `demon-${d.id}`,
       kind: 'demon',
@@ -117,8 +148,8 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
         tir: d.tir,
         attaque: null,
         defense: d.defense,
-        degats: d.degats,
-        protection: null,
+        degats: demonDegats(d.degats, d.rang, pouvoirs),
+        protection: demonProtection(pouvoirs),
       },
     });
   }

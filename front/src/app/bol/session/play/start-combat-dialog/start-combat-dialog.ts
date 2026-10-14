@@ -19,17 +19,19 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angula
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {firstValueFrom, forkJoin, take} from 'rxjs';
+import {firstValueFrom, forkJoin, Observable, of, switchMap, take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
-import {InitiativeResultat} from '../../../models/bol-fight-session.model';
+import {BolFightSessionModel, InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {AmbushState} from '../../../models/combat-selection.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
 import {BolHerosService} from '../../../services/bol-heros.service';
 import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, chanceRingDash, parseDiceTotal} from '../../action-roll.util';
 import {applyHeroismeDelta} from '../../heroisme-spend.util';
 import {ActionDiceTargetLabel, RollSumTerm} from '../../models/action-roll.model';
+import {CombatEffect} from '../../models/combat-effect.model';
 import {InitiativeKind} from '../../models/initiative.model';
+import {appliquerEvenement, effetSurpris, idAleatoire} from '../tapis/combat-effects.util';
 import {ReactionAdversary, ReactionParts, ReactionToken, ReactionVerdict, StartCombatDialogData} from '../../models/start-combat-dialog.model';
 import {REACTION_ROLL_THRESHOLD, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from '../../reaction-roll.util';
 import {AddCombatantDialogComponent} from '../add-combatant-dialog/add-combatant-dialog';
@@ -166,7 +168,8 @@ export class StartCombatDialogComponent {
       const chance = Math.round(actionSuccessChance(0, modifier, REACTION_ROLL_THRESHOLD) * 100);
       const optionChosen = hero.resultat === 'echec_critique' || hero.resultat === 'legendaire';
       // Sans point d'héroïsme, le succès légendaire n'est pas proposé ; une fois choisi il reste affiché, pour pouvoir y renoncer.
-      const legendary = dice === 12 && (optionChosen || this.heroismeSignal(hero.pivotId)() > 0);
+      // Un double 6 qui était le seul moyen de réussir n'est qu'une réussite : pas de succès légendaire à acheter.
+      const legendary = dice === 12 && reactionResult(12, modifier) === 'heroique' && (optionChosen || this.heroismeSignal(hero.pivotId)() > 0);
       return {
         hero,
         avatar: this.usableAvatar(hero.avatar),
@@ -560,18 +563,38 @@ export class StartCombatDialogComponent {
       this.starting.set(false);
       return;
     }
-    this.fightSessionService.startCombat(this.data.sessionId, [...this.excluded()]).subscribe({
-      next: () => {
-        this.starting.set(false);
-        this.ref.close(true);
-      },
-      error: (error: unknown) => {
-        this.starting.set(false);
-        this.snackBar.open(extractApiErrorMessage(error, 'Impossible de démarrer le combat.'), 'Fermer', {
-          duration: 5000,
-        });
-      },
-    });
+    this.fightSessionService
+      .startCombat(this.data.sessionId, [...this.excluded()])
+      .pipe(switchMap((session) => this.markSurprised(session)))
+      .subscribe({
+        next: () => {
+          this.starting.set(false);
+          this.ref.close(true);
+        },
+        error: (error: unknown) => {
+          this.starting.set(false);
+          this.snackBar.open(extractApiErrorMessage(error, 'Impossible de démarrer le combat.'), 'Fermer', {
+            duration: 5000,
+          });
+        },
+      });
+  }
+
+  /** Héros surpris au premier round : le camp des héros ne bénéficie pas de son bouclier (effet « surpris », jusqu'à la fin du round). Rien
+   * à enregistrer sinon, ni pour un nouveau jet de réaction en cours de combat. */
+  private markSurprised(session: BolFightSessionModel): Observable<unknown> {
+    const etat = session.etat_combat;
+    if (this.ambushState() !== 'heroes_ambushed' || !etat || etat.round !== 1) {
+      return of(null);
+    }
+    const porteurs = [
+      ...this.activeHeroes().map((hero) => `hero-${hero.pivotId}`),
+      ...this.activeAdversaries()
+        .filter((adversary) => adversary.ally)
+        .map((ally) => `${ally.kind}-${ally.pivotId}`),
+    ];
+    const effets = porteurs.reduce<readonly CombatEffect[]>((liste, porteur) => appliquerEvenement(liste, {type: 'ajout-manuel', effet: effetSurpris(porteur)}, idAleatoire), []);
+    return this.fightSessionService.updateCombatState(this.data.sessionId, {round: etat.round, joues: [], effets: [...effets], exclus: [...(etat.exclus ?? [])]});
   }
 
   protected close(): void {

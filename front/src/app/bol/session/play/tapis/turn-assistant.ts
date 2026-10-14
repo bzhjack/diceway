@@ -17,9 +17,7 @@ import {
   ATTACK_THRESHOLD,
   attackBonus,
   computeAttackTotal,
-  DamageDie,
   damageDiceCount,
-  damageDie,
   damageDieMax,
   damageRange,
   devastatingBonus,
@@ -27,7 +25,9 @@ import {
   HEROIC_OPTIONS,
   heroicPicksAllowed,
   HeroicSlug,
+  parseDamage,
   rawDamage,
+  scaleDamage,
   resolvePostureAttackModifier,
   rollD6,
   suggestedAttackResult,
@@ -36,7 +36,7 @@ import {
 } from '../../combat-resolution.util';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {AttackChoice} from '../../models/attack-options.model';
-import {AppliedHit, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
+import {AppliedHit, DamageDie, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
 import {ValueTracker} from '../../value-tracker';
@@ -526,13 +526,26 @@ export class TurnAssistantComponent {
   /** L'addition du jet de dégâts : le dé de l'arme, la vigueur, le coup dévastateur, la protection de la cible (elle se clique pour la
    * saisir), les effets en cours, puis la fourchette des dégâts — et, le dé tombé, leur total. */
   protected readonly damageSum = computed<readonly TraySumTerm[]>(() => {
-    const raw = this.raw();
-    const terms: TraySumTerm[] = [{value: raw === null ? this.degats() : `${raw}`, caption: 'dé', tone: 'dice'}];
+    const spec = this.damageSpec();
+    const face = this.face();
     const add = (value: number, caption: string): void => {
       if (value !== 0) {
         terms.push({value: signedTerm(value), caption, tone: value > 0 ? 'plus' : 'minus'});
       }
     };
+    const terms: TraySumTerm[] = [];
+    if (spec === null) {
+      // Dégâts spéciaux : le total tapé, tel quel.
+      terms.push({value: this.raw() === null ? '?' : `${this.raw()}`, caption: 'spécial', tone: 'dice'});
+    } else if (spec.fixed !== null) {
+      terms.push({value: `${spec.fixed}`, caption: 'fixes', tone: 'dice'});
+    } else {
+      terms.push({value: face === null ? this.degats() : `${face}`, caption: 'dé', tone: 'dice'});
+      if (spec.multiplier > 1) {
+        terms.push({value: `×${spec.multiplier}`, caption: 'taille', tone: 'plus'});
+      }
+      add(spec.modifier, 'profil');
+    }
     add(this.vigueur(), 'vigueur');
     add(devastatingBonus(this.devastating()), this.devastating() > 1 ? `dévastateur ×${this.devastating()}` : 'dévastateur');
     if (this.choice()?.posture?.slug === 'armor-chink') {
@@ -545,8 +558,10 @@ export class TurnAssistantComponent {
     }
     terms.push(...this.damageEffectTerms().map((term) => this.sumTermOf(term)));
     const damage = this.damage();
-    if (damage === null) {
-      const [min, max] = damageRange(this.die(), this.vigueur(), this.effectiveProtection(), this.devastating());
+    if (damage === null && spec === null) {
+      terms.push({value: '?', caption: 'dégâts', tone: 'total'});
+    } else if (damage === null && spec !== null) {
+      const [min, max] = damageRange(spec, this.vigueur(), this.effectiveProtection(), this.devastating());
       terms.push({value: min === max ? `${min}` : `${min} à ${max}`, caption: 'dégâts', tone: 'total'});
     } else {
       terms.push({value: `= ${damage}`, caption: 'dégâts', tone: 'total'});
@@ -702,7 +717,14 @@ export class TurnAssistantComponent {
 
   // ── Étape 4 : les dégâts ──
   protected readonly damageValues = signal<readonly number[] | null>(null);
-  protected readonly die = computed(() => damageDie(this.degats()));
+  /** Les dégâts de l'arme ou du profil, lus en entier (dé, multiplicateur, modificateur, ou valeur fixe) ; `null` pour des dégâts
+   * spéciaux, dont le MJ tape le total. */
+  protected readonly damageSpec = computed(() => parseDamage(this.degats()));
+  protected readonly die = computed<DamageDie>(() => this.damageSpec()?.die ?? 'd6');
+  /** Dégâts spéciaux : pas de dé à proposer, le total se tape. */
+  protected readonly specialDamage = computed(() => this.damageSpec() === null);
+  /** Dégâts fixes : pas de jet, ils sont connus dès que le coup touche. */
+  protected readonly fixedDamage = computed(() => this.damageSpec()?.fixed ?? null);
   /** Le dé de protection de la cible, lu sur son armure (« d6-1(3) » → un d6 moins 1), avec le +1 d'un casque ; `null` sans dé. */
   protected readonly protectionDie = computed<{readonly malus: number; readonly bonus: number} | null>(() => {
     const text = this.targetStats()?.protectionText ?? '';
@@ -737,9 +759,23 @@ export class TurnAssistantComponent {
   /** Nombre de coups dévastateurs pris : +6 dégâts chacun. */
   protected readonly devastating = computed(() => this.pickCounts().devastateur ?? 0);
 
-  protected readonly raw = computed(() => {
+  /** Ce qu'a donné le dé de dégâts, avant multiplicateur et modificateur ; `null` avant le jet. */
+  protected readonly face = computed(() => {
     const values = this.damageValues();
-    return values ? rawDamage(this.die(), values) : null;
+    return values && this.damageSpec() !== null ? rawDamage(this.die(), values) : null;
+  });
+  /** Les dégâts bruts, avant la vigueur et la protection : la valeur fixe, le dé multiplié et modifié, ou le total tapé (dégâts
+   * spéciaux). */
+  protected readonly raw = computed(() => {
+    const spec = this.damageSpec();
+    if (spec === null) {
+      return this.damageValues()?.[0] ?? null;
+    }
+    if (spec.fixed !== null) {
+      return spec.fixed;
+    }
+    const face = this.face();
+    return face === null ? null : scaleDamage(spec, face);
   });
   /** Ce que les dés ont donné quand l'arme en lance deux : « 1 et 4 → 1 retenu (le moins bon) ». Vide pour un dé unique ou une saisie à table. */
   protected readonly damageDetail = computed(() => {
@@ -748,7 +784,7 @@ export class TurnAssistantComponent {
     if (!values || values.length < 2 || (die !== 'd6m' && die !== 'd6b')) {
       return '';
     }
-    return `${values.join(' et ')} → ${this.raw()} retenu (${die === 'd6m' ? 'le moins bon' : 'le meilleur'})`;
+    return `${values.join(' et ')} → ${this.face()} retenu (${die === 'd6m' ? 'le moins bon' : 'le meilleur'})`;
   });
   /** Ce qui se retranche vraiment des dégâts : un modificateur positif des effets ajoute aux dégâts, il se retranche de la protection. */
   private readonly effectiveProtection = computed(() => this.protection() - sommeModificateurs(this.damageEffectTerms()));
@@ -756,11 +792,23 @@ export class TurnAssistantComponent {
     const raw = this.raw();
     return raw === null ? null : finalDamage(raw, this.vigueur(), this.effectiveProtection(), this.devastating());
   });
-  /** Ce que rapporte le dé de dégâts, à côté de sa case : « d6M : le moins bon de deux d6 ». */
-  protected readonly dieNote = computed(() => `${this.degats()} : ${DIE_NOTES[this.die()]}`);
+  /** Ce que rapporte le dé de dégâts, à côté de sa case : « d6M : le moins bon de deux d6 », « d6Bx2 : le meilleur de deux d6, multiplié
+   * par 2 ». */
+  protected readonly dieNote = computed(() => {
+    const spec = this.damageSpec();
+    if (spec === null) {
+      return `${this.degats()} : voir la fiche, et tape le total`;
+    }
+    if (spec.fixed !== null) {
+      return `${this.degats()} : dégâts fixes, sans jet`;
+    }
+    const times = spec.multiplier > 1 ? `, multiplié par ${spec.multiplier}` : '';
+    const plus = spec.modifier !== 0 ? `, ${signedTerm(spec.modifier)}` : '';
+    return `${this.degats()} : ${DIE_NOTES[this.die()]}${times}${plus}`;
+  });
   protected readonly hasDamageStep = computed(() => !!this.verdict()?.hit && !this.picks().includes('desarmement'));
-  /** Plus grand résultat que peut afficher le dé de dégâts : 3 pour un d3, 6 sinon. */
-  protected readonly damageMax = computed(() => damageDieMax(this.die()));
+  /** Plus grand nombre à taper dans la case des dégâts : la face du dé (3 pour un d3, 6 sinon), ou le total de dégâts spéciaux. */
+  protected readonly damageMax = computed(() => (this.specialDamage() ? 99 : damageDieMax(this.die())));
 
   /** Le dernier coup appliqué par cette carte : il reste affiché sur le plateau tant qu'un nouveau jet n'est pas fait. */
   protected readonly lastHit = linkedSignal<string, AppliedHit | null>({source: () => this.cardKey(), computation: () => null});
@@ -916,7 +964,7 @@ export class TurnAssistantComponent {
     const values = await this.throwDice(`${count}d6`, count);
     this.rolledDice.set(count > 2 ? values : null);
     this.dice.set(keepBestOrWorstTwo(values, net));
-    this.focusAfterRender(() => (this.hasDamageStep() ? this.damageInput() : this.endButton()));
+    this.focusAfterRender(() => (this.hasDamageStep() ? (this.damageInput() ?? this.applyButton()) : this.endButton()));
   }
 
   /** Retire les dés restés sur la table une fois le lancer terminé (un clic n'importe où sur l'écran de combat). */
@@ -971,7 +1019,7 @@ export class TurnAssistantComponent {
     this.lastHit.set(null);
     this.manualTotal.set(total);
     this.markAttacked();
-    this.focusAfterRender(() => (this.hasDamageStep() ? this.damageInput() : this.endButton()));
+    this.focusAfterRender(() => (this.hasDamageStep() ? (this.damageInput() ?? this.applyButton()) : this.endButton()));
   }
 
   /** En quittant une case, une saisie laissée incomplète ou hors bornes cède la place à la valeur retenue. */
@@ -1006,6 +1054,13 @@ export class TurnAssistantComponent {
       return;
     }
     const value = Number(text);
+    if (this.specialDamage()) {
+      // Dégâts spéciaux : le total, tel que le profil le décrit.
+      if (/^\d{1,2}$/.test(text)) {
+        this.damageValues.set([value]);
+      }
+      return;
+    }
     if (!/^[1-6]$/.test(text) || value > this.damageMax()) {
       return;
     }

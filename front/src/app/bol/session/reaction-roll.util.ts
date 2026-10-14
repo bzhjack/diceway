@@ -1,5 +1,5 @@
 import {InitiativeResultat} from '../models/bol-fight-session.model';
-import {actionResultTone} from './action-roll.util';
+import {actionDiceTarget, actionResultTone} from './action-roll.util';
 import {RollSumTerm} from './models/action-roll.model';
 import {ReactionAdversary, ReactionHero, ReactionLane, ReactionParts, ReactionToken, ReactionVerdict} from './models/start-combat-dialog.model';
 
@@ -13,12 +13,16 @@ export function reactionModifier(parts: ReactionParts): number {
 
 /** Résultat d'un jet de réaction d'après le total des deux dés. Le double 1 et le double 6 priment sur le seuil ; `heroisme` dit si le
  * héros a retenu l'option d'héroïsme qu'ils ouvrent : l'échec critique (qui rapporte 1 point) sur un double 1, le succès légendaire
- * (qui en coûte 1) sur un double 6. */
+ * (qui en coûte 1) sur un double 6. Un double 6 qui était le seul moyen de réussir n'est qu'une réussite (livre p. 56) : ni héroïque,
+ * ni légendaire. */
 export function reactionResult(dice: number, modifier: number, heroisme = false): InitiativeResultat {
   if (dice === 2) {
     return heroisme ? 'echec_critique' : 'echec';
   }
   if (dice === 12) {
+    if (actionDiceTarget(modifier, REACTION_ROLL_THRESHOLD).kind === 'double-six') {
+      return 'reussite';
+    }
     return heroisme ? 'legendaire' : 'heroique';
   }
   return dice + modifier >= REACTION_ROLL_THRESHOLD ? 'reussite' : 'echec';
