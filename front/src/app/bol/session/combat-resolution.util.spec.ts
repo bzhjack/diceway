@@ -42,6 +42,17 @@ describe('attack and damage bonuses', () => {
     expect(vigueurBonus(STATS, false)).toBe(3);
     expect(vigueurBonus(STATS, true)).toBe(1);
   });
+
+  it('halves vigueur bare-handed, even in melee, rounding down', () => {
+    expect(vigueurBonus(STATS, false, true)).toBe(1);
+    expect(vigueurBonus({...STATS, vigueur: 4}, false, true)).toBe(2);
+    expect(vigueurBonus({...STATS, vigueur: -1}, false, true)).toBe(-1);
+  });
+
+  it('adds no vigueur for a creature: its damage already includes it', () => {
+    expect(vigueurBonus({...STATS, vigueur: 4, attaque: 2}, false)).toBe(0);
+    expect(vigueurBonus({...STATS, vigueur: 4, attaque: 2}, true)).toBe(0);
+  });
 });
 
 describe('finalDamage', () => {

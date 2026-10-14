@@ -45,7 +45,7 @@ Formule : `2d6 + bonus d'attaque − défense de la cible + posture + effets en 
 Formule : `dé de l'arme + vigueur − protection de la cible + effets en cours`, jamais négatif.
 
 - Dés : d3, d6, d6M (le moins bon de deux), d6B (le meilleur de deux).
-- À distance, la vigueur compte pour moitié.
+- À distance et à mains nues, la vigueur compte pour moitié (arrondie à l'inférieur).
 - La protection est la valeur fixe de l'armure ; le MJ peut lancer le dé de protection à la place, ou saisir une valeur.
 - « Appliquer » retire les dégâts à la cible. Un héros qui passe sous 0, ou sous −5, se voit proposer « Défier la mort ».
 

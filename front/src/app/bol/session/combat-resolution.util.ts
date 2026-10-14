@@ -82,9 +82,14 @@ export function attackBonus(stats: ResolvedCombatStats, useTir: boolean): number
   return stats.attaque ?? stats.agilite + (useTir ? stats.tir : stats.melee);
 }
 
-/** Bonus de vigueur aux dégâts : vigueur en mêlée, la moitié (arrondie à l'inférieur) à distance. */
-export function vigueurBonus(stats: ResolvedCombatStats, useTir: boolean): number {
-  return useTir && stats.attaque === null ? Math.floor(stats.vigueur / 2) : stats.vigueur;
+/** Bonus de vigueur aux dégâts : vigueur en mêlée, la moitié (arrondie à l'inférieur) à distance et à mains nues, même en mêlée
+ * (table des dégâts, 02-actions-combat.md). Une créature (attaque combinée) n'en a aucun : ses aptitudes de combat incorporent déjà
+ * tous ses modificateurs, on n'ajoute pas sa vigueur aux dégâts (04-pnj-creatures-demons.md, « Règles d'application »). */
+export function vigueurBonus(stats: ResolvedCombatStats, useTir: boolean, unarmed = false): number {
+  if (stats.attaque !== null) {
+    return 0;
+  }
+  return useTir || unarmed ? Math.floor(stats.vigueur / 2) : stats.vigueur;
 }
 
 /** Ce qu'ajoutent aux dégâts `count` coups dévastateurs (deux pour un succès légendaire qui le prend deux fois). */

@@ -194,6 +194,8 @@ export class TurnAssistantComponent {
     const list = this.displayArmes();
     return list.find((a) => a.id === this.selectedArmeId()) ?? list[0] ?? null;
   });
+  /** À mains nues, la vigueur ne compte que pour moitié dans les dégâts. */
+  private readonly unarmed = computed(() => this.effectiveArme()?.id === MAINS_NUES.id);
 
   /** L'arme secondaire d'un héros se prend parmi toutes ses armes légères ou moyennes, équipées ou non : « équipée » dit
    * seulement ce que le héros propose à l'attaque, pas ce qu'il a en main pour parer ou frapper à deux armes. */
@@ -346,7 +348,8 @@ export class TurnAssistantComponent {
     return [
       {label: 'Attaque', value: this.signed(attackBonus(stats, this.isTir()))},
       {label: 'Défense', value: String(stats.defense + posture), ...(posture !== 0 ? {tone: posture > 0 ? ('up' as const) : ('down' as const)} : {})},
-      {label: 'Vigueur', value: this.signed(vigueurBonus(stats, this.isTir()))},
+      // Une créature n'ajoute pas sa vigueur aux dégâts : pas de tuile, pour ne pas laisser croire le contraire.
+      ...(stats.attaque === null ? [{label: 'Vigueur', value: this.signed(vigueurBonus(stats, this.isTir(), this.unarmed()))}] : []),
     ];
   });
 
@@ -729,7 +732,7 @@ export class TurnAssistantComponent {
   });
   protected readonly vigueur = computed(() => {
     const a = this.attacker();
-    return a ? vigueurBonus(a, this.isTir()) : 0;
+    return a ? vigueurBonus(a, this.isTir(), this.unarmed()) : 0;
   });
   /** Nombre de coups dévastateurs pris : +6 dégâts chacun. */
   protected readonly devastating = computed(() => this.pickCounts().devastateur ?? 0);
