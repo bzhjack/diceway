@@ -14,6 +14,8 @@ interface AfterCombatWounded {
   readonly nom: string;
   readonly vitalite: number;
   readonly vitaliteMax: number;
+  /** Vitalité au début du combat : le repos ne rend que la moitié de ce qui a été perdu depuis. */
+  readonly vitaliteDepart: number;
   /** Dégâts encaissés à mains nues pendant le combat : ils reviennent en totalité au repos. */
   readonly mainsNues: number;
   /** Pourquoi il est hors combat (« mourant », « stabilisé »…), `null` s'il tient debout. */

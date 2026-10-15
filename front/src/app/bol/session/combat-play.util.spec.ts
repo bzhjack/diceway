@@ -25,6 +25,11 @@ describe('postCombatRecoveryAmount', () => {
     expect(postCombatRecoveryAmount(8, 10, 5)).toBe(2); // healed in between: never more than what is lost
   });
 
+  it('only gives back what was lost during this fight, not older wounds', () => {
+    expect(postCombatRecoveryAmount(11, 11)).toBe(0); // entered at 11 of 12, untouched
+    expect(postCombatRecoveryAmount(4, 8)).toBe(2); // entered at 8, lost 4 in the fight
+  });
+
   it('recovers nothing when vitality tracking is unknown (never damaged, or no vitality stat)', () => {
     expect(postCombatRecoveryAmount(null, 10)).toBe(0);
     expect(postCombatRecoveryAmount(5, null)).toBe(0);

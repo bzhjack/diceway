@@ -473,6 +473,7 @@ export class SessionPlayPageComponent {
         nom: card.nom,
         vitalite: card.vitaliteCourante!,
         vitaliteMax: card.vitaliteMax!,
+        vitaliteDepart: Math.min(card.vitaliteMax!, this.etat().depart[card.key] ?? card.vitaliteMax!),
         mainsNues: degatsMainsNues(effets, card.key),
         etat: horsCombat(card, effets),
       }));

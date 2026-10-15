@@ -23,14 +23,14 @@ class BolCombatStateTest extends TestCase
 
     public function test_a_missing_state_is_round_one_with_nobody_played(): void
     {
-        $this->assertSame(['round' => 1, 'joues' => [], 'effets' => [], 'exclus' => []], BolCombatState::normalize(null));
+        $this->assertSame(['round' => 1, 'joues' => [], 'effets' => [], 'exclus' => [], 'depart' => []], BolCombatState::normalize(null));
         $this->assertSame(BolCombatState::INITIAL, BolCombatState::normalize('n-importe-quoi'));
         $this->assertSame(BolCombatState::INITIAL, BolCombatState::normalize([]));
     }
 
     public function test_keeps_a_valid_state(): void
     {
-        $state = ['round' => 3, 'joues' => ['hero-1', 'pnj-7'], 'effets' => [$this->effet()], 'exclus' => ['creature-4']];
+        $state = ['round' => 3, 'joues' => ['hero-1', 'pnj-7'], 'effets' => [$this->effet()], 'exclus' => ['creature-4'], 'depart' => ['hero-1' => 11, 'pnj-7' => 8]];
 
         $this->assertSame($state, BolCombatState::normalize($state));
     }
@@ -57,7 +57,7 @@ class BolCombatStateTest extends TestCase
     {
         $state = BolCombatState::normalize(['round' => 2, 'joues' => [], 'effets' => [], 'autre' => true]);
 
-        $this->assertSame(['round', 'joues', 'effets', 'exclus'], array_keys($state));
+        $this->assertSame(['round', 'joues', 'effets', 'exclus', 'depart'], array_keys($state));
     }
 
     public function test_keeps_the_excluded_cards_and_drops_invalid_keys(): void
@@ -165,5 +165,20 @@ class BolCombatStateTest extends TestCase
         $this->assertSame(60, mb_strlen($kept['libelle']));
         $this->assertSame(['type' => 'usages', 'restants' => 2, 'expireAuTour' => true], $kept['duree']);
         $this->assertTrue($kept['manuel']);
+    }
+
+    public function test_keeps_only_well_formed_starting_vitalities(): void
+    {
+        $state = BolCombatState::normalize(['depart' => ['hero-1' => 11, 'pnj-2' => '8', '' => 3, 5 => 4, 'demon-3' => -2, 'creature-4' => 5000]]);
+
+        $this->assertSame(['hero-1' => 11, 'demon-3' => -2], $state['depart']);
+    }
+
+    public function test_the_front_cannot_change_the_starting_vitalities(): void
+    {
+        $existing = ['round' => 2, 'joues' => [], 'effets' => [], 'exclus' => [], 'depart' => ['hero-1' => 11]];
+
+        $this->assertSame(['hero-1' => 11], BolCombatState::merge(['round' => 2, 'joues' => [], 'depart' => ['hero-1' => 3]], $existing)['depart']);
+        $this->assertSame(['hero-1' => 11], BolCombatState::merge(['round' => 2, 'joues' => []], $existing)['depart']);
     }
 }

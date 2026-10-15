@@ -112,12 +112,34 @@ class BolFightSessionService
             return null;
         }
 
-        // Nouveau jet de réaction en plein combat : le round en cours est gardé, personne n'a encore joué.
-        $round = $session->statut === 'combat' ? BolCombatState::normalize($session->etat_combat)['round'] : 1;
+        // Nouveau jet de réaction en plein combat : le round en cours et la vitalité de départ sont gardés, personne n'a encore joué.
+        $enCours = $session->statut === 'combat' ? BolCombatState::normalize($session->etat_combat) : null;
+        $round = $enCours['round'] ?? 1;
+        $depart = $enCours['depart'] ?? $this->vitalitesDeDepart($session);
 
-        $session->update(['statut' => 'combat', 'etat_combat' => BolCombatState::normalize(['round' => $round, 'exclus' => $exclus])]);
+        $session->update(['statut' => 'combat', 'etat_combat' => BolCombatState::normalize(['round' => $round, 'exclus' => $exclus, 'depart' => $depart])]);
 
         return $this->getSessionWithRelations($sessionId);
+    }
+
+    /**
+     * La vitalité de chaque combattant au moment où le combat démarre, par clé de carte (`{kind}-{pivotId}`). Une vitalité jamais
+     * entamée (null) n'est pas notée : le combattant est entré au maximum.
+     *
+     * @return array<string, int>
+     */
+    private function vitalitesDeDepart(BolFightSession $session): array
+    {
+        $depart = [];
+        foreach (['hero' => $session->heros, 'pnj' => $session->pnjs, 'creature' => $session->creatures, 'demon' => $session->demons] as $kind => $lignes) {
+            foreach ($lignes as $ligne) {
+                if ($ligne->vitalite_courante !== null) {
+                    $depart["{$kind}-{$ligne->id}"] = (int) $ligne->vitalite_courante;
+                }
+            }
+        }
+
+        return $depart;
     }
 
     /** Termine le combat : la session redevient `libre`. Les PNJ, créatures et démons restent sur la

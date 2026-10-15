@@ -12,6 +12,9 @@ export interface EtatCombat {
   readonly effets: readonly CombatEffect[];
   /** Cartes restées sur la table mais exclues de ce combat : elles ne jouent pas et ne sont pas visables. */
   readonly exclus: readonly string[];
+  /** Vitalité de chaque carte au début du combat, notée par le serveur au démarrage : le repos d'après combat rend la moitié des
+   * points perdus pendant ce combat, pas des blessures plus anciennes. Une carte absente est entrée au maximum. */
+  readonly depart: Readonly<Record<string, number>>;
 }
 
 /** Où en est une carte dans le round : c'est à elle, elle a joué, elle est sautée (hors combat ou

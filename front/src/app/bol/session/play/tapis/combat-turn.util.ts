@@ -6,7 +6,7 @@ import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
 import {EtatCombat, TurnStatus, OrderedCard, TurnState, TurnToken} from '../../models/combat-turn.model';
 import {aAssomme, appliquerEvenement, aStabilise, EffectIdGenerator, effetsDeLAncienFormat, effetsDeTour, nextEffectId, normalizeEffets, SANS_BOUCLIER} from './combat-effects.util';
 
-export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], effets: [], exclus: []};
+export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], effets: [], exclus: [], depart: {}};
 
 function uniqueKeys(raw: unknown): string[] {
   if (!Array.isArray(raw)) {
@@ -29,7 +29,16 @@ export function normalizeEtat(raw: unknown): EtatCombat {
     joues: uniqueKeys(source['joues']),
     effets: 'effets' in source ? normalizeEffets(source['effets']) : effetsDeLAncienFormat(source),
     exclus: uniqueKeys(source['exclus']),
+    depart: departOf(source['depart']),
   };
+}
+
+/** Vitalités de départ bien formées (clé de carte → entier) ; un tableau vide (PHP) ou une valeur mal formée donne `{}`. */
+function departOf(raw: unknown): Readonly<Record<string, number>> {
+  if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) {
+    return {};
+  }
+  return Object.fromEntries(Object.entries(raw).filter((entry): entry is [string, number] => entry[0] !== '' && Number.isInteger(entry[1])));
 }
 
 function cardKeyOf(token: Pick<PlayToken, 'kind' | 'pivotId'>): string {

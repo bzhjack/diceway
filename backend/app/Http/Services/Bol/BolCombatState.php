@@ -4,16 +4,18 @@ namespace App\Http\Services\Bol;
 
 /**
  * État d'un combat en cours, gardé dans `bol_fight_session.etat_combat` : le round, les cartes qui ont joué ce round,
- * les effets en cours (bonus, malus et traces d'usage : posture, défense totale, petit bouclier dépensé…) et les cartes
+ * les effets en cours (bonus, malus et traces d'usage : posture, défense totale, petit bouclier dépensé…), les cartes
  * exclues de ce combat (restées sur la table, mais qui n'y participent pas : elles réintègrent la scène à la fin du
- * combat). Les clés de carte sont celles du front (`{kind}-{pivotId}`, ex. `creature-12`). Le backend valide la forme des
+ * combat) et la vitalité de chaque carte au début du combat (la récupération d'après combat rend la moitié des points perdus
+ * pendant ce combat, pas des blessures plus anciennes). Les clés de carte sont celles du front (`{kind}-{pivotId}`, ex. `creature-12`). Le backend valide la forme des
  * effets sans connaître les règles. Fonctions pures, sans base.
  */
 class BolCombatState
 {
-    public const INITIAL = ['round' => 1, 'joues' => [], 'effets' => [], 'exclus' => []];
+    public const INITIAL = ['round' => 1, 'joues' => [], 'effets' => [], 'exclus' => [], 'depart' => []];
 
     private const MAX_EFFETS = 200;
+    private const MAX_DEPART = 200;
     private const MAX_ID = 40;
     private const MAX_CARTE = 60;
     private const STATS = ['attaque', 'defense', 'degats', 'protection', 'action'];
@@ -25,7 +27,7 @@ class BolCombatState
      * (combat démarré avant que l'état n'existe) vaut le round 1, personne n'ayant joué. Un état de l'ancien format
      * (`defense_totale`, `attaquees`) est converti en effets.
      *
-     * @return array{round: int, joues: array<int, string>, effets: array<int, array<string, mixed>>, exclus: array<int, string>}
+     * @return array{round: int, joues: array<int, string>, effets: array<int, array<string, mixed>>, exclus: array<int, string>, depart: array<string, int>}
      */
     public static function normalize(mixed $raw): array
     {
@@ -38,21 +40,23 @@ class BolCombatState
             'joues'  => self::keys($raw['joues'] ?? null),
             'effets' => array_key_exists('effets', $raw) ? self::effets($raw['effets']) : self::effetsDeLAncienFormat($raw),
             'exclus' => self::keys($raw['exclus'] ?? null),
+            'depart' => self::depart($raw['depart'] ?? null),
         ];
     }
 
     /**
-     * Un état envoyé par le front, complété par ce qui est déjà gardé : les cartes exclues sont fixées au démarrage et les effets ne sont pas
-     * réécrits par un état envoyé sans eux.
+     * Un état envoyé par le front, complété par ce qui est déjà gardé : les cartes exclues sont fixées au démarrage, les effets ne sont pas
+     * réécrits par un état envoyé sans eux, et la vitalité de départ ne vient que du démarrage (le front ne peut pas la changer).
      *
      * @param array<string, mixed> $envoye
-     * @return array{round: int, joues: array<int, string>, effets: array<int, array<string, mixed>>, exclus: array<int, string>}
+     * @return array{round: int, joues: array<int, string>, effets: array<int, array<string, mixed>>, exclus: array<int, string>, depart: array<string, int>}
      */
     public static function merge(array $envoye, mixed $existant): array
     {
         $garde = self::normalize($existant);
         $envoye['exclus'] ??= $garde['exclus'];
         $envoye['effets'] ??= $garde['effets'];
+        $envoye['depart'] = $garde['depart'];
 
         return self::normalize($envoye);
     }
@@ -67,6 +71,27 @@ class BolCombatState
         $keys = array_filter($raw, fn ($key) => is_string($key) && $key !== '');
 
         return array_values(array_unique($keys));
+    }
+
+    /** @return array<string, int> clé de carte => vitalité au début du combat ; les entrées mal formées sont écartées */
+    private static function depart(mixed $raw): array
+    {
+        if (!is_array($raw)) {
+            return [];
+        }
+
+        $depart = [];
+        foreach ($raw as $key => $vitalite) {
+            if (!is_string($key) || $key === '' || mb_strlen($key) > self::MAX_CARTE || !is_int($vitalite) || $vitalite < -100 || $vitalite > 1000) {
+                continue;
+            }
+            $depart[$key] = $vitalite;
+            if (count($depart) >= self::MAX_DEPART) {
+                break;
+            }
+        }
+
+        return $depart;
     }
 
     /** @return array<int, array<string, mixed>> */

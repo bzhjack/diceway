@@ -34,7 +34,7 @@ function defended(key: string, id = 'e-1'): CombatEffect {
 }
 
 function etat(round: number, joues: string[] = [], effets: CombatEffect[] = []): EtatCombat {
-  return {round, joues, effets, exclus: []};
+  return {round, joues, effets, exclus: [], depart: {}};
 }
 
 const KALENA = card('hero', 1);
@@ -56,6 +56,11 @@ describe('normalizeEtat', () => {
   it('repairs a malformed state: bad round, duplicates, non-string keys', () => {
     expect(normalizeEtat({round: 0, joues: ['hero-1', 'hero-1', 4, null, ''], defense_totale: 'x'})).toEqual(etat(1, ['hero-1']));
     expect(normalizeEtat({round: 2.7})).toEqual(etat(2));
+  });
+
+  it('reads the starting vitalities, and an empty PHP array as none', () => {
+    expect(normalizeEtat({round: 1, depart: {'hero-1': 11, 'pnj-2': '8', 'pnj-3': 2.5}}).depart).toEqual({'hero-1': 11});
+    expect(normalizeEtat({round: 1, depart: []}).depart).toEqual({});
   });
 });
 
@@ -390,7 +395,7 @@ describe('groupByTier', () => {
 });
 
 describe('excluded cards', () => {
-  const excluding = (...keys: string[]): EtatCombat => ({round: 1, joues: [], effets: [], exclus: keys});
+  const excluding = (...keys: string[]): EtatCombat => ({round: 1, joues: [], effets: [], exclus: keys, depart: {}});
 
   it('skips an excluded card, which never becomes active', () => {
     const turn = turnState(ordered(KALENA, RORK), excluding('hero-1'));

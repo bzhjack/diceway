@@ -6,7 +6,7 @@
 <mat-dialog-content class="acd-content">
   <p class="acd-lead">
     Le combat se termine : la session repasse en mode libre, les personnages restent sur la table. Un court repos, une gorgée d'eau ou
-    de vin : chacun récupère la moitié des points perdus, et la totalité des dégâts reçus à mains nues. Sous 0, il faut d'abord être
+    de vin : chacun récupère la moitié des points perdus pendant ce combat, et la totalité des dégâts reçus à mains nues. Sous 0, il faut d’abord être
     secouru.
   </p>
 
@@ -28,7 +28,9 @@
         <li class="acd-row">
           <div class="acd-who">
             <b>{{ row.w.nom }}</b>
-            <small>{{ row.w.vitalite }} / {{ row.w.vitaliteMax }}{{ row.w.etat ? ' · ' + row.w.etat : '' }}</small>
+            <small>
+              {{ row.w.vitalite }} / {{ row.w.vitaliteMax }}{{ row.w.vitaliteDepart < row.w.vitaliteMax ? ' · entré à ' + row.w.vitaliteDepart : '' }}{{ row.w.etat ? ' · ' + row.w.etat : '' }}
+            </small>
           </div>
           <div class="acd-gains">
             @if (row.restable > 0) {
@@ -40,6 +42,8 @@
               </mat-checkbox>
             } @else if (row.w.vitalite < 0) {
               <span class="acd-none">Pas de repos sous 0</span>
+            } @else {
+              <span class="acd-none">Rien perdu pendant ce combat</span>
             }
             @if (healer()) {
               <mat-checkbox [checked]="cared().has(row.index)" (change)="toggleCare(row.index)">
