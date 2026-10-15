@@ -1,10 +1,10 @@
 import {describe, expect, it} from 'vitest';
-import {bloqueeCeRound, bouclierPerduRound1, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
+import {bloqueeCeRound, bouclierPerduRound1, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, herosMourants, horsCombat, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
 import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model';
 import {TurnOrderEntry} from '../../models/turn-order.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
 import {CombatEffect} from '../../models/combat-effect.model';
-import {appliquerEvenement, effetsDeTour, modificateursPour} from './combat-effects.util';
+import {appliquerEvenement, effetsDeTour, effetStabilise, modificateursPour} from './combat-effects.util';
 
 function card(kind: TapisKind, pivotId: number, extra: Partial<TapisCard> = {}): TapisCard {
   return {
@@ -104,9 +104,36 @@ describe('orderCards', () => {
 });
 
 describe('isOut', () => {
-  it('puts a hero out only below zero', () => {
-    expect(isOut(card('hero', 1, {vitaliteCourante: 0}))).toBe(false);
+  it('puts a hero out at zero or below, like everyone', () => {
+    expect(isOut(card('hero', 1, {vitaliteCourante: 1}))).toBe(false);
+    expect(isOut(card('hero', 1, {vitaliteCourante: 0}))).toBe(true);
     expect(isOut(card('hero', 1, {vitaliteCourante: -1}))).toBe(true);
+  });
+
+  it('tells why a card is out', () => {
+    expect(horsCombat(card('hero', 1, {vitaliteCourante: 1}))).toBeNull();
+    expect(horsCombat(card('hero', 1, {vitaliteCourante: 0}))).toBe('inconscient');
+    expect(horsCombat(card('hero', 1, {vitaliteCourante: -5}))).toBe('mourant');
+    expect(horsCombat(card('hero', 1, {vitaliteCourante: -6}))).toBe('mort');
+    expect(horsCombat(card('pnj', 7, {vitaliteCourante: 0}))).toBe('hors de combat');
+  });
+
+  it('says a hero below zero is stabilized once the effect is on him', () => {
+    const stabilise = appliquerEvenement([], {type: 'ajout-manuel', effet: effetStabilise('hero-1')}, () => 'e-1');
+    expect(horsCombat(card('hero', 1, {vitaliteCourante: -3}), stabilise)).toBe('stabilisé');
+    expect(horsCombat(card('hero', 1, {vitaliteCourante: -7}), stabilise)).toBe('stabilisé');
+    expect(horsCombat(card('hero', 1, {vitaliteCourante: 0}), stabilise)).toBe('inconscient');
+    expect(horsCombat(card('hero', 2, {vitaliteCourante: -3}), stabilise)).toBe('mourant');
+  });
+
+  it('lists the dying heroes who lose 1 vitality at the start of a round', () => {
+    const dying = card('hero', 1, {vitaliteCourante: -2});
+    const steady = card('hero', 2, {vitaliteCourante: -4});
+    const dead = card('hero', 3, {vitaliteCourante: -6});
+    const removed = card('hero', 4, {vitaliteCourante: -1});
+    const stabilise = appliquerEvenement([], {type: 'ajout-manuel', effet: effetStabilise(steady.key)}, () => 'e-1');
+    const cards = [dying, steady, dead, removed, card('hero', 5, {vitaliteCourante: 0}), card('pnj', 7, {vitaliteCourante: -2})];
+    expect(herosMourants(cards, {...etat(2, [], [...stabilise]), exclus: [removed.key]}).map((c) => c.key)).toEqual([dying.key]);
   });
 
   it('puts a non-hero out at zero', () => {
@@ -334,7 +361,7 @@ describe('bloqueeCeRound', () => {
 
 describe('groupByTier', () => {
   const entry = (key: string, tier: TurnOrderEntry['tier'], locked = false): TurnOrderEntry => ({
-    key, nom: key, kind: 'hero', avatar: '', status: 'upcoming', tier, locked, ally: false, effets: [],
+    key, nom: key, kind: 'hero', avatar: '', status: 'upcoming', tier, locked, ally: false, effets: [], horsCombat: null,
   });
 
   it('groups the combatants by reaction rank, in rulebook order', () => {

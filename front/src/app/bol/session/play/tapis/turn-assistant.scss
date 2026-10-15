@@ -183,16 +183,24 @@
   color: var(--dw-color-succes-legendaire);
 }
 
+// Les boutons maison de l'assistant prennent la police de la page.
+.tas-ghost,
+.tas-seg,
+.tas-chip,
+.tas-act,
+.tas-target {
+  font: inherit;
+  cursor: pointer;
+}
+
 .tas-ghost {
   padding: 0.3rem 0.65rem;
   border: 1px solid var(--dw-border);
   border-radius: 8px;
   background: var(--dw-surface-50);
   color: var(--dw-surface-700);
-  font: inherit;
   font-size: 0.8rem;
   font-weight: 700;
-  cursor: pointer;
 
   &:hover {
     border-color: var(--dw-surface-500);
@@ -296,11 +304,9 @@
   border-radius: 8px;
   background: var(--dw-surface-0);
   color: var(--dw-surface-900);
-  font: inherit;
   font-size: 0.82rem;
   font-weight: 700;
   white-space: nowrap;
-  cursor: pointer;
 
   em {
     margin-left: 0.3rem;
@@ -313,6 +319,11 @@
     border-color: var(--dw-color-legendary);
     background: linear-gradient(#e6b64e, #b8832a);
     color: #1a1203;
+  }
+
+  &[aria-disabled='true'] {
+    opacity: 0.45;
+    cursor: not-allowed;
   }
 }
 
@@ -377,9 +388,7 @@
   border-right: 1px solid var(--dw-border);
   border-bottom: 3px solid var(--dw-surface-500);
   background: none;
-  font: inherit;
   line-height: 1.2;
-  cursor: pointer;
 
   &:last-child {
     border-right: 0;
@@ -829,11 +838,9 @@
   border-radius: 8px;
   background: color-mix(in srgb, var(--dw-color-legendary) 8%, transparent);
   color: var(--dw-color-legendary);
-  font: inherit;
   font-size: 0.82rem;
   font-weight: 700;
   white-space: nowrap;
-  cursor: pointer;
 
   .mat-icon {
     flex: none;
@@ -916,9 +923,7 @@
   border-radius: 10px;
   background: var(--dw-surface-0);
   color: var(--dw-surface-900);
-  font: inherit;
   text-align: left;
-  cursor: pointer;
 
   &:hover {
     border-color: var(--dw-color-legendary);

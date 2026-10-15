@@ -4,7 +4,7 @@ import {InitiativeTierKey} from '../../models/initiative.model';
 import {TurnOrderEntry, TurnOrderGroup} from '../../models/turn-order.model';
 import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
 import {EtatCombat, TurnStatus, OrderedCard, TurnState, TurnToken} from '../../models/combat-turn.model';
-import {appliquerEvenement, EffectIdGenerator, effetsDeLAncienFormat, effetsDeTour, nextEffectId, normalizeEffets, SANS_BOUCLIER} from './combat-effects.util';
+import {appliquerEvenement, aStabilise, EffectIdGenerator, effetsDeLAncienFormat, effetsDeTour, nextEffectId, normalizeEffets, SANS_BOUCLIER} from './combat-effects.util';
 
 export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], effets: [], exclus: []};
 
@@ -77,16 +77,33 @@ export function orderCards(
   return result;
 }
 
-/** Hors combat : un héros en vitalité négative (mourant) ; un PNJ, une créature ou un démon à 0. Un personnage sans vitalité suivie (maximum nul ou inconnu)
- * n'est jamais hors combat. */
+/** Hors combat : tout personnage à 0 de vitalité ou moins (02-actions-combat.md, « Blessures, inconscience et mort »). Un héros à 0
+ * s'effondre, et au round suivant il sombre dans l'inconscience ou dépense 1 PH pour reprendre ses esprits ; en dessous, il est mourant.
+ * Un personnage sans vitalité suivie (maximum nul ou inconnu) n'est jamais hors combat. */
 export function isOut(card: TapisCard): boolean {
-  if (card.vitaliteMax === null || card.vitaliteMax <= 0) {
-    return false;
+  return horsCombat(card) !== null;
+}
+
+/** Pourquoi une carte est hors combat, en clair : un héros est inconscient à 0, mourant de −1 à −5, mort à −6 ou moins — stabilisé
+ * sous 0 s'il porte l'effet ; un PNJ, une créature ou un démon est hors de combat dès 0. `null` pour une carte qui joue. */
+export function horsCombat(card: TapisCard, effets: readonly CombatEffect[] = []): 'inconscient' | 'mourant' | 'stabilisé' | 'mort' | 'hors de combat' | null {
+  const vitalite = card.vitaliteCourante;
+  if (card.vitaliteMax === null || card.vitaliteMax <= 0 || vitalite === null || vitalite > 0) {
+    return null;
   }
-  if (card.vitaliteCourante === null) {
-    return false;
+  if (card.kind !== 'hero') {
+    return 'hors de combat';
   }
-  return card.kind === 'hero' ? card.vitaliteCourante < 0 : card.vitaliteCourante <= 0;
+  if (vitalite === 0) {
+    return 'inconscient';
+  }
+  return aStabilise(effets, card.key) ? 'stabilisé' : vitalite >= -5 ? 'mourant' : 'mort';
+}
+
+/** Les héros qui perdent 1 de vitalité au début d'un round (02-actions-combat.md, « Blessures, inconscience et mort ») : mourants
+ * (−1 à −5), ni stabilisés ni retirés du combat. */
+export function herosMourants(cards: readonly TapisCard[], etat: EtatCombat): readonly TapisCard[] {
+  return cards.filter((card) => !etat.exclus.includes(card.key) && horsCombat(card, etat.effets) === 'mourant');
 }
 
 /** La règle du premier round (coriaces et piétaille face à un succès héroïque, héros en échec critique) ne bloque qu'au round 1 :

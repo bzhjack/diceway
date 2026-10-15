@@ -204,6 +204,12 @@
   box-shadow: 0 0 0 3px var(--dw-color-echec-forte), 0 0 14px 3px rgba(208, 42, 42, 0.6);
 }
 
+// Une carte hors de combat (héros inconscient ou mourant, adversaire tombé) : médaillon éteint, liseré en pointillés.
+.tor-med--down {
+  border-style: dashed;
+  filter: grayscale(1) brightness(0.6);
+}
+
 // Une carte qui porte des effets : un point doré au coin haut du médaillon.
 .tor-med--effects {
   overflow: visible;

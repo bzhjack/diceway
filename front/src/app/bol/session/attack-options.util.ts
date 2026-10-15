@@ -43,6 +43,11 @@ export function isDualWieldWeapon(arme: BolHerosArmeModel): boolean {
   return isRealWeapon(arme) && isDualWieldEligible(arme.arme?.degats);
 }
 
+/** Une arme lourde (d6B) : qui a moins de 0 en vigueur ne peut pas la manier (02-actions-combat.md, « Dégâts »). */
+export function isHeavyWeapon(arme: BolHerosArmeModel): boolean {
+  return arme.arme?.degats?.trim().toLowerCase() === 'd6b';
+}
+
 /** Options toujours disponibles à un héros en plus de ses armes (table des dégâts de BoL). */
 export const MAINS_NUES: BolHerosArmeModel = {
   id: -1,

@@ -1,10 +1,10 @@
-import {ChangeDetectionStrategy, Component, computed, effect, inject, signal, untracked} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, effect, inject, signal, untracked, viewChild} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {catchError, concatMap, EMPTY, forkJoin, from, Observable, of, switchMap, take, tap, toArray} from 'rxjs';
+import {catchError, concatMap, EMPTY, forkJoin, from, map, Observable, of, switchMap, take, tap, toArray} from 'rxjs';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolFightSessionModel} from '../../models/bol-fight-session.model';
@@ -48,10 +48,10 @@ import {ExpandedCardDialogComponent} from './tapis/expanded-card-dialog';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {equippedArmes} from '../../shared/arme/arme-equipee';
 import {AttackChoice} from '../models/attack-options.model';
-import {bloqueeCeRound, debutDeTour, effetsDerives, endTurn, giveBackTurn, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
+import {bloqueeCeRound, debutDeTour, effetsDerives, endTurn, giveBackTurn, herosMourants, horsCombat, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
 import {NewEffect} from '../models/combat-effect.model';
 import {EtatSaver} from './etat-saver';
-import {appliquerEvenement, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from './tapis/combat-effects.util';
+import {aSombre, appliquerEvenement, effetInconscient, effetStabilise, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from './tapis/combat-effects.util';
 import {EtatCombat} from '../models/combat-turn.model';
 import {CombatBoardComponent} from './combat-board/combat-board';
 import {AppliedHit, ResolvedCombatStats, VitaliteChange} from '../models/combat-attack.model';
@@ -177,6 +177,7 @@ export class SessionPlayPageComponent {
       effets: this.etat()
         .effets.filter((e) => e.porteur === card.key && e.valeur !== 0)
         .map((e) => `${libelleEffet(e)} · ${libelleDuree(e.duree)}`),
+      horsCombat: horsCombat(card, this.etat().effets),
     }));
   });
 
@@ -229,6 +230,9 @@ export class SessionPlayPageComponent {
   protected readonly attackerStats = signal<ResolvedCombatStats | null>(null);
   protected readonly targetStats = signal<ResolvedCombatStats | null>(null);
   private statsRun = 0;
+  /** Le dernier round vu : un nouveau round propose aux héros restés à 0 de reprendre leurs esprits. `null` hors combat et au chargement. */
+  private lastRound: number | null = null;
+  private readonly combatBoard = viewChild(CombatBoardComponent);
 
   /** Statistiques de chaque carte que la carte active peut viser (clé de carte → statistiques) : son jeton, dans l'assistant, annonce
    * ce qu'il faut pour la toucher. */
@@ -267,6 +271,20 @@ export class SessionPlayPageComponent {
   }));
 
   constructor() {
+    // Un nouveau round commence : un héros resté à 0 de vitalité sombre dans l'inconscience, ou dépense 1 PH pour reprendre ses esprits ;
+    // un héros mourant perd 1 de vitalité.
+    effect(() => {
+      const round = this.mode() === 'combat' ? this.etat().round : null;
+      untracked(() => {
+        const previous = this.lastRound;
+        this.lastRound = round;
+        if (round !== null && previous !== null && round > previous) {
+          this.askUnconsciousHeroes();
+          this.bleedDyingHeroes();
+        }
+      });
+    });
+
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
       this.errorMessage.set('Session introuvable.');
@@ -824,6 +842,128 @@ export class SessionPlayPageComponent {
     return this.etatSaver.apply(update, options);
   }
 
+  /** Au début d'un round, chaque héros resté à 0 (02-actions-combat.md, « Blessures, inconscience et mort ») choisit, l'un après l'autre :
+   * dépenser 1 PH pour reprendre ses esprits — il remonte à la moitié de sa vitalité, arrondie au supérieur, et rejoue — ou sombrer
+   * dans l'inconscience jusqu'à la fin du combat (la récupération d'après combat le remonte alors à la même valeur). Sans point
+   * d'héroïsme, il sombre. */
+  private askUnconsciousHeroes(): void {
+    const sessionId = this.sessionId();
+    const etat = this.etat();
+    const heroes = this.cards().filter(
+      (card) => card.kind === 'hero' && horsCombat(card) === 'inconscient' && card.sourceId !== null && !etat.exclus.includes(card.key) && !aSombre(etat.effets, card.key),
+    );
+    if (!sessionId || heroes.length === 0) {
+      return;
+    }
+    from(heroes)
+      .pipe(
+        concatMap((card) =>
+          this.herosService.heros(card.sourceId!).pipe(
+            switchMap((hero) => {
+              const vitalite = Math.ceil(hero.ressources.vitalite / 2);
+              if (hero.ressources.heroisme <= 0) {
+                this.snackBar.open(`${card.nom} n'a plus de point d'héroïsme : il sombre dans l'inconscience jusqu'à la fin du combat.`, undefined, {duration: 4500});
+                return of({card, revive: false, vitalite});
+              }
+              return confirmDialog(
+                this.dialog,
+                {
+                  title: `${card.nom} est à 0`,
+                  message: `${card.nom} s'est effondré. Il sombre dans l'inconscience jusqu'à la fin du combat, ou dépense 1 point d'héroïsme pour reprendre ses esprits : il remonte à ${vitalite} de vitalité et rejoue dès ce round.`,
+                  confirmLabel: 'Reprendre ses esprits (−1 PH)',
+                  cancelLabel: 'Sombrer',
+                },
+                {width: '420px'},
+              ).pipe(switchMap((revive) => of({card, revive, vitalite})));
+            }),
+            catchError(() => EMPTY),
+          ),
+        ),
+      )
+      .subscribe(({card, revive, vitalite}) => {
+        if (!revive) {
+          this.saveEtat((current) => ({...current, effets: [...appliquerEvenement(current.effets, {type: 'ajout-manuel', effet: effetInconscient(card.key)}, idAleatoire)]}));
+          return;
+        }
+        forkJoin([this.herosService.adjustHeroisme(card.sourceId!, -1), this.fightSessionService.applyDamage(sessionId, 'hero', card.pivotId, vitalite)]).subscribe({
+          next: () => this.loadSession(sessionId),
+          error: (error: unknown) => this.tableError(error, 'Impossible de relever ce héros.'),
+        });
+      });
+  }
+
+  /** Au début d'un round, chaque héros mourant (−1 à −5, pas stabilisé) perd 1 de vitalité (02-actions-combat.md, « Blessures,
+   * inconscience et mort »). Un message l'annonce, avec « Stabilisé » pour le héros secouru à la table : le point revient et la perte
+   * s'arrête. Celui qui passe sous −5 se voit proposer « Défier la mort » pour se stabiliser. */
+  private bleedDyingHeroes(): void {
+    const sessionId = this.sessionId();
+    const heroes = herosMourants(this.cards(), this.etat());
+    if (!sessionId || heroes.length === 0) {
+      return;
+    }
+    forkJoin(heroes.map((card) => this.fightSessionService.applyDamage(sessionId, 'hero', card.pivotId, -1).pipe(map(() => card)))).subscribe({
+      next: (bled) => {
+        this.loadSession(sessionId);
+        from(bled)
+          .pipe(
+            concatMap((card) => {
+              const after = (card.vitaliteCourante ?? 0) - 1;
+              if (after < -5) {
+                this.promptDefierLaMort(card, after);
+                return EMPTY;
+              }
+              return this.snackBar
+                .open(`${card.nom} est mourant : il perd 1 de vitalité (${after}).`, 'Stabilisé', {duration: 6000})
+                .afterDismissed()
+                .pipe(map(({dismissedByAction}) => ({card, stabilise: dismissedByAction})));
+            }),
+          )
+          .subscribe(({card, stabilise}) => {
+            if (stabilise) {
+              this.stabilize(card, 1);
+            }
+          });
+      },
+      error: (error: unknown) => this.tableError(error, 'Impossible de retirer la vitalité des héros mourants.'),
+    });
+  }
+
+  /** Un héros mourant est stabilisé : il ne perd plus de vitalité pour le reste du combat. `refund` rend les points qu'il vient de
+   * perdre. */
+  private stabilize(card: TapisCard, refund = 0): void {
+    this.saveEtat((current) => ({...current, effets: [...appliquerEvenement(current.effets, {type: 'ajout-manuel', effet: effetStabilise(card.key)}, idAleatoire)]}));
+    const sessionId = this.sessionId();
+    if (sessionId && refund !== 0) {
+      this.fightSessionService.applyDamage(sessionId, 'hero', card.pivotId, refund).subscribe({
+        next: () => this.loadSession(sessionId),
+        error: (error: unknown) => this.tableError(error, 'Impossible de rendre la vitalité perdue.'),
+      });
+    }
+  }
+
+  /** « Défier la mort » pour un héros tombé sous 0 ou sous −5 : ses points d'héroïsme sont relus, puis le dialogue s'ouvre. */
+  private promptDefierLaMort(card: TapisCard, vitalite: number): void {
+    const sessionId = this.sessionId();
+    if (!sessionId || card.sourceId === null) {
+      return;
+    }
+    this.herosService.heros(card.sourceId).subscribe((hero) =>
+      maybePromptDefierLaMort({
+        dialog: this.dialog,
+        fightSessionService: this.fightSessionService,
+        herosService: this.herosService,
+        sessionId,
+        herosId: card.sourceId!,
+        pivotId: card.pivotId,
+        heroNom: card.nom,
+        vitaliteCourante: vitalite,
+        heroisme: hero.ressources.heroisme,
+        onApplied: () => this.loadSession(sessionId),
+        onStabilized: () => this.stabilize(card),
+      }),
+    );
+  }
+
   /** « Retarder » : la carte active joue en dernier ce round. */
   protected onDelay(): void {
     const active = this.activeCard();
@@ -835,12 +975,14 @@ export class SessionPlayPageComponent {
     this.delayed.update((d) => ({round, keys: [...(d.round === round ? d.keys : []).filter((k) => k !== active.key), active.key]}));
   }
 
-  protected onEndTurn(): void {
+  /** Fin du tour de la carte active. `afterHit` : elle suit un coup qu'on vient de conclure, dont les effets sont peut-être en cours
+   * d'enregistrement — elle passe alors après eux, au lieu d'être ignorée comme un double clic. */
+  protected onEndTurn(afterHit = false): void {
     const active = this.activeCard();
     // La posture choisie pour ce tour dure : son bonus ou malus de défense pèse sur les attaques suivantes contre cette carte.
     const crees = active ? effetsDeTour(active.key, {posture: this.attackChoice()?.posture?.slug ?? null, defenseTotale: false}) : [];
     // La cible ne se vide que si la fin de tour est prise en compte : pendant un enregistrement elle est ignorée, et le jet en cours reste.
-    if (this.saveEtat((etat) => endTurn(this.orderedCards(), etat, crees, idAleatoire), {ignoreIfBusy: true})) {
+    if (this.saveEtat((etat) => endTurn(this.orderedCards(), etat, crees, idAleatoire), {ignoreIfBusy: !afterHit})) {
       this.targetKey.set(null);
     }
   }
@@ -944,6 +1086,7 @@ export class SessionPlayPageComponent {
             vitaliteCourante: newVitalite,
             heroisme: targetStats.heroisme ?? 0,
             onApplied: () => this.loadSession(sessionId),
+            onStabilized: () => this.stabilize(target),
           });
         }
       },
@@ -969,7 +1112,12 @@ export class SessionPlayPageComponent {
       this.openPalette();
     } else if (this.mode() === 'combat' && isEndTurnShortcut(event, target)) {
       event.preventDefault();
-      this.onEndTurn();
+      const board = this.combatBoard();
+      if (board) {
+        board.requestEndTurn();
+      } else {
+        this.onEndTurn();
+      }
     }
   }
 

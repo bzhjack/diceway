@@ -46,7 +46,8 @@ export class CombatBoardComponent {
   readonly addRequested = output<void>();
   readonly delayRequested = output<void>();
   readonly rerollRequested = output<void>();
-  readonly endTurnRequested = output<void>();
+  /** `true` quand la fin du tour suit un coup qu'on vient de conclure (voir l'assistant). */
+  readonly endTurnRequested = output<boolean>();
   readonly choiceChanged = output<AttackChoice | null>();
   readonly targetSelected = output<TapisCard | null>();
   readonly sheetRequested = output<TapisCard>();
@@ -59,4 +60,14 @@ export class CombatBoardComponent {
   readonly heroismeAdjusted = output<number>();
   /** Vitalité de la carte active ou de sa cible corrigée à la main sur son cœur. */
   readonly vitaliteAdjusted = output<VitaliteChange>();
+
+  /** « Fin du tour » au clavier : l'assistant retient d'abord un coup qui a touché sans être appliqué. */
+  requestEndTurn(): void {
+    const assistant = this.assistant();
+    if (assistant) {
+      assistant.requestEndTurn();
+    } else {
+      this.endTurnRequested.emit(false);
+    }
+  }
 }

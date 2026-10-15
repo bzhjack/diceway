@@ -17,4 +17,6 @@ export interface DefierLaMortContext {
   readonly heroisme: number;
   /** Appelé une fois la dépense (et, le cas échéant, le rétablissement à 0) persistés. */
   readonly onApplied?: () => void;
+  /** Appelé quand un héros sous −5 se stabilise : il ne perd plus de vitalité d'un round à l'autre. */
+  readonly onStabilized?: () => void;
 }

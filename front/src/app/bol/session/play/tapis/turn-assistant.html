@@ -7,7 +7,7 @@
         <div class="tas-card-actions">
           <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + card().nom" (click)="sheetRequested.emit(card())">Fiche</button>
           <button type="button" class="tas-ghost" matTooltip="+2 en défense, pas d'attaque ce round. Termine le tour." (click)="totalDefenseRequested.emit()">Défense totale</button>
-          <button type="button" class="tas-ghost tas-ghost--primary" matTooltip="Raccourci : F" (click)="endTurnRequested.emit()">Fin du tour</button>
+          <button type="button" class="tas-ghost tas-ghost--primary" matTooltip="Raccourci : F" (click)="requestEndTurn()">Fin du tour</button>
         </div>
       </div>
       <div class="tas-me">
@@ -58,7 +58,14 @@
         <span class="tas-label" id="tas-arme">Arme</span>
         <div class="tas-chips" role="group" aria-labelledby="tas-arme">
           @for (a of displayArmes(); track a.id) {
-            <button type="button" class="tas-chip" [attr.aria-pressed]="effectiveArme()?.id === a.id" (click)="selectArme(a.id)">
+            <button
+              type="button"
+              class="tas-chip"
+              [attr.aria-pressed]="effectiveArme()?.id === a.id"
+              [attr.aria-disabled]="heavyForbidden().has(a.id) || null"
+              [matTooltip]="heavyForbidden().has(a.id) ? 'Arme lourde : impossible à manier avec moins de 0 en vigueur.' : ''"
+              (click)="selectArme(a.id)"
+            >
               {{ a.arme?.arme }}
               @if (a.arme?.degats) {
                 <em>{{ a.arme?.degats }}</em>
@@ -433,7 +440,7 @@
         <!-- Coup raté, ou désarmement : rien à lancer, il ne reste qu'à finir le tour -->
         @if (v.tone === 'echec') {
           <span class="tas-wait">Pas de dégâts : le coup est raté.</span>
-          <button #endButton mat-flat-button type="button" class="tas-apply" (click)="endTurnRequested.emit()">Fin du tour</button>
+          <button #endButton mat-flat-button type="button" class="tas-apply" (click)="requestEndTurn()">Fin du tour</button>
         } @else {
           <span class="tas-wait">Désarmement : l’adversaire perd son arme, sans dégâts.</span>
           <button #endButton mat-flat-button type="button" class="tas-apply" (click)="concludeWithoutDamage()">{{ carnagePicked() ? 'Nouvelle attaque (Carnage)' : 'Fin du tour' }}</button>
@@ -446,7 +453,7 @@
         @if (carnageOwed() > 0) {
           <span class="tas-wait">Carnage : une nouvelle attaque suit.</span>
         } @else {
-          <button #endButton mat-flat-button type="button" class="tas-apply" (click)="endTurnRequested.emit()">Fin du tour</button>
+          <button #endButton mat-flat-button type="button" class="tas-apply" (click)="requestEndTurn()">Fin du tour</button>
         }
       } @else {
         <span class="tas-wait">Après un coup qui touche.</span>

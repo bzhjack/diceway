@@ -20,15 +20,15 @@ Chaque point donne la règle, ce que fait l'application aujourd'hui, une proposi
 | A4 | Dégâts « spécial » lus comme un d6 | **Fait le 2026-10-14** | avec A1 | 0 |
 | A5 | Protection des démons (Armure, Cuirasse) ignorée | **Fait le 2026-10-14** | S | 0 |
 | A6 | « Attaques dévastatrices » des démons sans effet | **Fait le 2026-10-14** (à la table) | S | 0 |
-| A7 | Héros à 0 de vitalité toujours en jeu | Erreur — voir le point 2 | M | 1 |
+| A7 | Héros à 0 de vitalité toujours en jeu | **Fait le 2026-10-14** (point 2) | M | 1 |
 | A8 | Double 6 « de justesse » au jet de réaction | **Fait le 2026-10-14** | S | 0 |
 | A9 | Bouclier gardé contre une attaque surprise | **Fait le 2026-10-14** | S | 0 |
 | A10 | PNJ sans arme : d3 au lieu de 1 | **Fait le 2026-10-14** | S | 0 |
 | 1 | Dégâts à mains nues : vigueur/2 | **Fait le 2026-10-14** | S | 1 |
-| 2 | Héros à 0 de vitalité : hors de combat | Écart avec la règle | M | 1 |
-| 3 | Mourant : −1 vitalité par round | Règle absente | S | 1 |
-| 4 | Arme lourde interdite sous 0 de vigueur | Règle absente | S | 1 |
-| 5 | Fin du tour sans appliquer le coup | Limite connue | S | 1 |
+| 2 | Héros à 0 de vitalité : hors de combat | **Fait le 2026-10-14** | M | 1 |
+| 3 | Mourant : −1 vitalité par round | **Fait le 2026-10-15** | S | 1 |
+| 4 | Arme lourde interdite sous 0 de vigueur | **Fait le 2026-10-15** | S | 1 |
+| 5 | Fin du tour sans appliquer le coup | **Fait le 2026-10-15** | S | 1 |
 | 6 | Portée des armes à distance | Règle absente | M | 2 |
 | 7 | Modificateur libre, bonus de carrière, feinte | Règle absente | M | 2 |
 | 8 | Carrière utile au jet de réaction | Règle absente | S | 2 |
@@ -47,7 +47,7 @@ Les lots sont un ordre proposé : d'abord corriger les calculs faux (lot 0), pui
 
 ## Lot 0 : erreurs dans ce qui existe
 
-**Lot 0 fait le 2026-10-14** (sauf A7, qui est le point 2 du lot 1). Vérifié à l'écran sur Dinohyus (`d6x2`), Ganuc (`1`), Kyphus (`d6-2`), Xolth (`spécial`) et un démarrage avec « Héros surpris » ; les autres corrections sont couvertes par des tests unitaires.
+**Lot 0 fait le 2026-10-14** (A7 avec le point 2 du lot 1). Vérifié à l'écran sur Dinohyus (`d6x2`), Ganuc (`1`), Kyphus (`d6-2`), Xolth (`spécial`) et un démarrage avec « Héros surpris » ; les autres corrections sont couvertes par des tests unitaires.
 
 ### A1. Multiplicateur des dégâts de créature ignoré
 
@@ -142,6 +142,12 @@ Les lots sont un ordre proposé : d'abord corriger les calculs faux (lot 0), pui
   - au début du round suivant, un dialogue lui propose « Reprendre ses esprits (−1 PH) » : il revient à vitalité/2 et rejoue ;
   - sinon il reste inconscient jusqu'à la fin du combat, et la récupération post-combat le remonte à vitalité/2 (à vérifier contre la règle de récupération actuelle, qui rend la moitié des points perdus).
 - **Effort** : M.
+- **Fait le 2026-10-14** :
+  - tout personnage est hors de combat à 0 ou moins (`isOut`, `horsCombat` dans `combat-turn.util.ts`) ;
+  - la frise éteint son médaillon (grisé, liseré en pointillés) et dit pourquoi dans l'infobulle : « inconscient » à 0, « mourant » de −1 à −5, « mort » à −6 ou moins, « hors de combat » pour les autres ;
+  - à chaque nouveau round, un héros resté à 0 choisit entre « Reprendre ses esprits (−1 PH) », qui le remonte à vitalité/2 arrondie au supérieur et le fait rejouer, et « Sombrer », qui pose une trace « inconscient » pour tout le combat (plus de question ensuite) ; sans point d'héroïsme, il sombre d'office, avec un message ;
+  - la récupération d'après combat rend bien vitalité/2 à un héros resté à 0 (moitié des points perdus depuis 0).
+  - Limite : un héros qui a sombré, puis est soigné et retombe à 0 dans le même combat, n'a plus la question.
 
 ### 3. Mourant : −1 vitalité par round
 
@@ -149,6 +155,12 @@ Les lots sont un ordre proposé : d'abord corriger les calculs faux (lot 0), pui
 - **Aujourd'hui** : rien ne se passe d'un round à l'autre ; « Défier la mort » n'est proposé que quand un coup fait franchir un seuil.
 - **Proposition** : au passage au round suivant, chaque héros mourant non stabilisé perd 1 vitalité, avec une annonce dans la frise. S'il franchit −5, « Défier la mort » est proposé. Un effet « stabilisé » (durée : combat) arrête la perte ; il est posé par « Défier la mort » au-delà de −5, ou par les soins (point 10).
 - **Effort** : S, si le point 10 vient plus tard (l'effet se pose alors à la main).
+- **Fait le 2026-10-15** :
+  - à chaque nouveau round, un héros mourant (−1 à −5), ni stabilisé ni retiré du combat, perd 1 de vitalité (`herosMourants` dans `combat-turn.util.ts`) ;
+  - un message l'annonce (« … est mourant : il perd 1 de vitalité (−3) ») avec un bouton « Stabilisé » : pour un héros secouru à la table, le point revient et un effet « stabilisé » (durée : combat) arrête la perte ;
+  - celui qui passe de −5 à −6 se voit proposer « Défier la mort » ; « Se stabiliser (−1 PH) » pose le même effet. C'est aussi le cas quand un coup le fait passer sous −5 ;
+  - la frise dit « stabilisé » au lieu de « mourant » ou « mort ».
+  - Limite : un héros stabilisé, soigné, puis de nouveau mourant dans le même combat, ne perd plus de vitalité (l'effet reste jusqu'à la fin du combat).
 
 ### 4. Arme lourde interdite sous 0 de vigueur
 
@@ -156,12 +168,14 @@ Les lots sont un ordre proposé : d'abord corriger les calculs faux (lot 0), pui
 - **Aujourd'hui** : l'assistant propose toutes les armes équipées.
 - **Proposition** : griser les armes lourdes (`d6B`) dans « Avec quoi ? » pour un héros à vigueur négative, avec l'explication en infobulle.
 - **Effort** : S.
+- **Fait le 2026-10-15** : les armes `d6B` sont grisées (infobulle « Arme lourde : impossible à manier avec moins de 0 en vigueur ») et ne se choisissent pas, pour un héros comme pour un PNJ ; l'arme proposée par défaut est la première autorisée (`isHeavyWeapon` dans `attack-options.util.ts`).
 
 ### 5. Fin du tour sans appliquer le coup
 
 - **Constat** (état des lieux, § 8) : « Fin du tour » dans l'en-tête ou la touche F, alors qu'un coup qui touche n'est pas appliqué, perd ses dégâts et les effets de ses options héroïques.
 - **Proposition** : si un coup touché attend d'être appliqué, demander « Appliquer les dégâts avant de finir le tour ? » (Appliquer et finir / Finir sans appliquer / Annuler).
 - **Effort** : S.
+- **Fait le 2026-10-15** : « Fin du tour » (bouton de la carte « Qui attaque » ou touche F) ouvre « Le coup n'est pas appliqué » quand un coup a touché sans être conclu : « Appliquer N et finir » (ou « Conclure et finir » pour un désarmement), « Finir sans appliquer », « Annuler ». Sans dégâts saisis, seuls les deux derniers sont proposés. Au passage, une fin de tour qui suit un coup conclu attend l'enregistrement des effets du coup au lieu d'être ignorée.
 
 ## Lot 2 : ce qui sert à chaque combat
 
@@ -326,7 +340,7 @@ Ces calculs ont été relus lors de l'audit et correspondent aux règles :
 
 ## Questions à trancher avant de commencer
 
-1. **Héros à 0** (point 2) : faut-il ajouter un état « inconscient » visible sur la carte, ou suffit-il de le sauter dans l'ordre d'action ?
+1. ~~**Héros à 0** (point 2)~~ : tranché, état « inconscient » visible dans la frise.
 2. **Horde** (point 13) : grouper les piétailles dans la frise, ou seulement le temps de l'attaque ?
 3. **Sorcellerie** (point 15) : faut-il un catalogue de sorts, ou une saisie libre (cercle, difficulté, coût) au moment du jet ?
 4. ~~**Attaques dévastatrices** (A6)~~ : tranché, à la table (voir A6).

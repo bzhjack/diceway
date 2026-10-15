@@ -17,6 +17,8 @@ export interface TurnOrderEntry {
   readonly ally: boolean;
   /** Descriptions des effets en cours de cette carte, pour l'infobulle de la frise. */
   readonly effets: readonly string[];
+  /** Pourquoi la carte ne joue plus (« inconscient », « mourant », « mort », « hors de combat ») ; `null` si elle joue. */
+  readonly horsCombat: string | null;
 }
 
 /** Un bloc de la frise : un ou plusieurs rangs de réaction regroupés sous un titre. */

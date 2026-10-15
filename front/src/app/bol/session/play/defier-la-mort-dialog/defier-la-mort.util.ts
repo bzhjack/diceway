@@ -28,6 +28,7 @@ export function maybePromptDefierLaMort(ctx: DefierLaMortContext): void {
           next: () => ctx.onApplied?.(),
         });
       } else {
+        ctx.onStabilized?.();
         ctx.onApplied?.();
       }
     });

@@ -82,7 +82,7 @@
           (addRequested)="openAddCombatantDialog()"
           (delayRequested)="onDelay()"
           (rerollRequested)="openStartCombatDialog(true)"
-          (endTurnRequested)="onEndTurn()"
+          (endTurnRequested)="onEndTurn($event)"
           (choiceChanged)="attackChoice.set($event)"
           (targetSelected)="onAttackCard($event)"
           (sheetRequested)="onCardToggled($event)"

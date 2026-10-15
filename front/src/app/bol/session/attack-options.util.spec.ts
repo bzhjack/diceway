@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {BolCombatOptionModel} from '../models/bol-combat-reference.model';
-import {ARME_IMPROVISEE, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, MAINS_NUES} from './attack-options.util';
+import {ARME_IMPROVISEE, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, isHeavyWeapon, MAINS_NUES} from './attack-options.util';
 
 function option(slug: string, ordre: number): BolCombatOptionModel {
   return {id: ordre, label: slug, slug, modificateur: 0, modificateur_armor: false, note: '', ordre};
@@ -68,5 +68,21 @@ describe('isDualWieldWeapon', () => {
   it('refuses bare hands and the improvised weapon, which are not weapons of the hero', () => {
     expect(isDualWieldWeapon(MAINS_NUES)).toBe(false);
     expect(isDualWieldWeapon(ARME_IMPROVISEE)).toBe(false);
+  });
+});
+
+describe('isHeavyWeapon', () => {
+  const real = (degats: string | null) => ({id: 5, arme_id: 5, arme: {id: 5, arme: 'Hache', type: 'M' as const, degats, portee: null, notes: null}});
+
+  it('spots a d6B weapon, whatever its case', () => {
+    expect(isHeavyWeapon(real('d6B'))).toBe(true);
+    expect(isHeavyWeapon(real('d6b'))).toBe(true);
+  });
+
+  it('leaves light, medium and unknown weapons alone', () => {
+    expect(isHeavyWeapon(real('d6M'))).toBe(false);
+    expect(isHeavyWeapon(real('d6'))).toBe(false);
+    expect(isHeavyWeapon(real(null))).toBe(false);
+    expect(isHeavyWeapon(MAINS_NUES)).toBe(false);
   });
 });

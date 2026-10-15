@@ -7,6 +7,10 @@ export const POSTURE_DEFENSE: Readonly<Record<string, number>> = {defensive: 1, 
 export const BOUCLIER_DEPENSE = 'bouclier-depense';
 /** Trace : la carte n'a pas le bénéfice de son bouclier (attaque intrépide, échec critique au round 1). */
 export const SANS_BOUCLIER = 'sans-bouclier';
+/** Trace : le héros tombé à 0 a choisi de sombrer dans l'inconscience ; il ne se relève qu'à la fin du combat. */
+const INCONSCIENT = 'inconscient';
+/** Trace : le héros mourant est stabilisé (« Défier la mort » sous −5, ou secouru) ; il ne perd plus de vitalité d'un round à l'autre. */
+const STABILISE = 'stabilise';
 /** La carte lance un dé de malus à sa prochaine action (adversaire renversé qui se relève, coup précis…). */
 const DE_MALUS = 'de-malus';
 
@@ -315,18 +319,38 @@ export function effetRenversement(porteur: string): NewEffect {
   return {origine: DE_MALUS, libelle: 'renversé : dé de malus', porteur, stat: 'action', valeur: -1, quand: 'attaque', duree: {type: 'action-porteur'}, manuel: true};
 }
 
+/** Un héros tombé à 0 sombre dans l'inconscience jusqu'à la fin du combat : on ne lui propose plus de reprendre ses esprits. */
+export function effetInconscient(porteur: string): NewEffect {
+  return {origine: INCONSCIENT, libelle: 'inconscient', porteur, stat: 'action', valeur: 0, quand: 'attaque', duree: {type: 'combat'}, manuel: false};
+}
+
+/** Vrai si le héros a déjà choisi de sombrer dans l'inconscience pour ce combat. */
+export function aSombre(effets: readonly CombatEffect[], carte: string): boolean {
+  return effets.some((effet) => effet.porteur === carte && effet.origine === INCONSCIENT);
+}
+
+/** Un héros mourant stabilisé — par « Défier la mort » sous −5, ou secouru à la table — ne perd plus 1 de vitalité par round. */
+export function effetStabilise(porteur: string): NewEffect {
+  return {origine: STABILISE, libelle: 'stabilisé', porteur, stat: 'action', valeur: 0, quand: 'attaque', duree: {type: 'combat'}, manuel: false};
+}
+
+/** Vrai si le héros a été stabilisé pendant ce combat. */
+export function aStabilise(effets: readonly CombatEffect[], carte: string): boolean {
+  return effets.some((effet) => effet.porteur === carte && effet.origine === STABILISE);
+}
+
 /** Héros surpris ou pris en embuscade : un personnage ne bénéficie de son bouclier que s'il est conscient de l'attaque
  * (`doc/resources/armures.md`) ; au premier round, le camp des héros n'en a pas. Le MJ peut retirer l'effet. */
 export function effetSurpris(porteur: string): NewEffect {
   return {origine: SANS_BOUCLIER, libelle: 'surpris', porteur, stat: 'defense', valeur: 0, quand: 'subie', duree: {type: 'fin-round'}, manuel: true};
 }
 
-/** Les effets que le MJ ajoute à la main depuis le menu « + Effet ». */
 /** Vrai si la carte doit un dé de malus à sa prochaine action : son jet d'attaque se fera à 3d6, en gardant les deux moins bons. */
 export function doitUnDeDeMalus(effets: readonly CombatEffect[], carte: string): boolean {
   return effets.some((effet) => effet.porteur === carte && effet.origine === DE_MALUS);
 }
 
+/** Les effets que le MJ ajoute à la main depuis le menu « + Effet ». */
 export const EFFETS_MODELES: readonly {readonly id: string; readonly libelle: string; readonly creer: (porteur: string) => NewEffect}[] = [
   {
     id: 'defense-round',

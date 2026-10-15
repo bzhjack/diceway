@@ -2,6 +2,7 @@ import {afterNextRender, ChangeDetectionStrategy, Component, computed, effect, E
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
+import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
@@ -10,8 +11,10 @@ import {CombatEffect, ModifierTerm, NewEffect} from '../../models/combat-effect.
 import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, chanceRingDash, keepBestOrWorstTwo, parseDiceTotal} from '../../action-roll.util';
 import {descriptionEffet, doitUnDeDeMalus, effetCoupPrecis, effetRenversement, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
 import {EffectsListComponent} from './effects-list';
+import {EndTurnDialogComponent} from '../end-turn-dialog/end-turn-dialog';
+import {EndTurnChoice, EndTurnDialogData} from '../../models/end-turn-dialog.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
-import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, MAINS_NUES} from '../../attack-options.util';
+import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, isHeavyWeapon, MAINS_NUES} from '../../attack-options.util';
 import {dualStrikeDegats} from '../../combat-attack.util';
 import {
   ATTACK_THRESHOLD,
@@ -151,8 +154,9 @@ export class TurnAssistantComponent {
   readonly effectAdded = output<NewEffect>();
   readonly damageApplied = output<AppliedHit>();
   readonly totalDefenseRequested = output<void>();
-  /** « Fin du tour » depuis le plateau, après un coup raté ou des dégâts appliqués. */
-  readonly endTurnRequested = output<void>();
+  /** « Fin du tour ». `true` quand il suit un coup qu'on vient de conclure : la fin du tour attend alors l'enregistrement des effets
+   * du coup, au lieu d'être ignorée comme un double clic. */
+  readonly endTurnRequested = output<boolean>();
   /** Points d'héroïsme dépensés (négatif) ou gagnés (positif) par l'attaquant sur ce jet. */
   readonly heroismeAdjusted = output<number>();
   /** Vitalité de l'attaquant ou de la cible corrigée à la main sur son cœur. */
@@ -190,9 +194,15 @@ export class TurnAssistantComponent {
   private readonly selectedOptionSlug = linkedSignal<string, string | null>({source: () => this.cardKey(), computation: () => null});
   private readonly selectedOffHandId = linkedSignal<string, number | null>({source: () => this.cardKey(), computation: () => null});
 
+  /** Les armes lourdes que l'attaquant ne peut pas manier : toutes, s'il a moins de 0 en vigueur (02-actions-combat.md, « Dégâts »). */
+  protected readonly heavyForbidden = computed<ReadonlySet<number | undefined>>(() =>
+    (this.attacker()?.vigueur ?? 0) < 0 ? new Set(this.displayArmes().filter(isHeavyWeapon).map((a) => a.id)) : new Set(),
+  );
+
   protected readonly effectiveArme = computed(() => {
     const list = this.displayArmes();
-    return list.find((a) => a.id === this.selectedArmeId()) ?? list[0] ?? null;
+    const allowed = list.filter((a) => !this.heavyForbidden().has(a.id));
+    return allowed.find((a) => a.id === this.selectedArmeId()) ?? allowed[0] ?? list[0] ?? null;
   });
   /** À mains nues, la vigueur ne compte que pour moitié dans les dégâts. */
   private readonly unarmed = computed(() => this.effectiveArme()?.id === MAINS_NUES.id);
@@ -740,6 +750,7 @@ export class TurnAssistantComponent {
   protected readonly protectionDraft = signal('');
   private readonly protectionInput = viewChild<ElementRef<HTMLInputElement>>('protectionInput');
   private readonly injector = inject(Injector);
+  private readonly dialog = inject(MatDialog);
   protected readonly protection = computed(() => {
     if (this.choice()?.posture?.slug === 'armor-chink') {
       return 0;
@@ -935,6 +946,9 @@ export class TurnAssistantComponent {
   }
 
   protected selectArme(id: number | undefined): void {
+    if (id !== undefined && this.heavyForbidden().has(id)) {
+      return;
+    }
     this.selectedArmeId.set(id ?? null);
   }
 
@@ -1221,12 +1235,43 @@ export class TurnAssistantComponent {
       return;
     }
     this.conclude(target);
+    // Le jet s'efface tout de suite : le bouton disparaît, un second clic ne conclut pas deux fois.
+    this.resetRoll();
     if (this.carnageOwed() > 0) {
-      this.resetRoll();
       this.focusAfterRender(() => this.attackInput());
     } else {
-      this.endTurnRequested.emit();
+      this.endTurnRequested.emit(true);
     }
+  }
+
+  /** « Fin du tour » (bouton ou touche F). Un coup qui a touché sans être appliqué perdrait ses dégâts et les effets de ses options
+   * héroïques : le MJ choisit d'abord de l'appliquer et finir, de finir sans l'appliquer, ou de rester sur le tour. */
+  requestEndTurn(): void {
+    const target = this.target();
+    if (!target || !this.verdict()?.hit) {
+      this.endTurnRequested.emit(false);
+      return;
+    }
+    const damage = this.hasDamageStep() ? this.damage() : null;
+    this.dialog
+      .open<EndTurnDialogComponent, EndTurnDialogData, EndTurnChoice>(EndTurnDialogComponent, {
+        width: '440px',
+        data: {attackerNom: this.card().nom, targetNom: target.nom, damage, canApply: !this.hasDamageStep() || damage !== null},
+      })
+      .afterClosed()
+      .subscribe((choice) => {
+        if (choice === 'apply') {
+          if (this.hasDamageStep()) {
+            this.apply();
+          } else {
+            this.conclude(target);
+            this.resetRoll();
+          }
+        }
+        if (choice) {
+          this.endTurnRequested.emit(choice === 'apply');
+        }
+      });
   }
 
   protected signed(value: number): string {

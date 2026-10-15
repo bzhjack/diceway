@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {CombatEffect, RollContext} from '../../models/combat-effect.model';
-import {appliquerEvenement, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, effetCoupPrecis, effetRenversement, effetSurpris, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
+import {appliquerEvenement, aSombre, aStabilise, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, effetCoupPrecis, effetInconscient, effetRenversement, effetStabilise, effetSurpris, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
 
 function effet(over: Partial<CombatEffect> = {}): CombatEffect {
   return {id: 'e-1', origine: 'posture-defensive', porteur: 'hero-1', stat: 'defense', valeur: 1, quand: 'subie', duree: {type: 'debut-tour-porteur'}, manuel: false, ...over};
@@ -350,5 +350,25 @@ describe('effetSurpris', () => {
     expect(sommeModificateurs(modificateursPour(effets, contexte))).toBe(0);
     expect(sommeModificateurs(modificateursPour([], contexte))).toBe(-1);
     expect(appliquerEvenement(effets, {type: 'nouveau-round'})).toEqual([]);
+  });
+});
+
+describe('effetInconscient', () => {
+  it('remembers for the whole fight that a hero chose to pass out', () => {
+    const effets = appliquerEvenement([], {type: 'ajout-manuel', effet: effetInconscient('hero-1')}, () => 'e-1');
+    expect(aSombre(effets, 'hero-1')).toBe(true);
+    expect(aSombre(effets, 'hero-2')).toBe(false);
+    const plusTard = appliquerEvenement(appliquerEvenement(effets, {type: 'nouveau-round'}), {type: 'fin-tour', carte: 'hero-1', crees: []});
+    expect(aSombre(plusTard, 'hero-1')).toBe(true);
+  });
+});
+
+describe('effetStabilise', () => {
+  it('remembers for the whole fight that a dying hero was stabilized', () => {
+    const effets = appliquerEvenement([], {type: 'ajout-manuel', effet: effetStabilise('hero-1')}, () => 'e-1');
+    expect(aStabilise(effets, 'hero-1')).toBe(true);
+    expect(aStabilise(effets, 'hero-2')).toBe(false);
+    const plusTard = appliquerEvenement(appliquerEvenement(effets, {type: 'nouveau-round'}), {type: 'fin-tour', carte: 'hero-1', crees: []});
+    expect(aStabilise(plusTard, 'hero-1')).toBe(true);
   });
 });

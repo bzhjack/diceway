@@ -10,7 +10,10 @@ Principe : l'application assiste le MJ, elle ne le remplace pas. Elle calcule et
 
 1. **Démarrer le combat** : le dialogue recueille le jet de réaction de chaque héros et montre l'ordre d'action qui en découle.
 2. **Écran de combat** : la frise donne le round et l'ordre ; dessous, l'assistant de tour conduit le coup de la carte active en trois temps (qui, l'attaque, les dégâts).
-3. **Fin du tour** : la carte suivante devient active ; quand tout le monde a joué, un nouveau round commence.
+3. **Fin du tour** : la carte suivante devient active ; quand tout le monde a joué, un nouveau round commence. Si le coup qui a touché n'est pas appliqué, l'application demande d'abord : l'appliquer et finir, finir sans l'appliquer, ou rester sur le tour.
+4. **Hors de combat** : tout personnage à 0 de vitalité ou moins ne joue plus ; la frise l'éteint et dit pourquoi (inconscient, mourant, stabilisé, mort, hors de combat). Au début de chaque round :
+   - un héros resté à 0 choisit entre reprendre ses esprits pour 1 PH (il remonte à la moitié de sa vitalité) et sombrer jusqu'à la fin du combat ;
+   - un héros mourant perd 1 de vitalité, sauf s'il est stabilisé. Le message qui l'annonce porte un bouton « Stabilisé » pour le héros secouru à la table ; celui qui passe sous −5 se voit proposer « Défier la mort ».
 
 ## 2. Le jet de réaction
 
@@ -46,8 +49,9 @@ Formule : `dé de l'arme + vigueur − protection de la cible + effets en cours`
 
 - Dés : d3, d6, d6M (le moins bon de deux), d6B (le meilleur de deux).
 - À distance et à mains nues, la vigueur compte pour moitié (arrondie à l'inférieur).
+- Avec moins de 0 en vigueur, les armes lourdes (d6B) sont grisées : elles ne se manient pas.
 - La protection est la valeur fixe de l'armure ; le MJ peut lancer le dé de protection à la place, ou saisir une valeur.
-- « Appliquer » retire les dégâts à la cible. Un héros qui passe sous 0, ou sous −5, se voit proposer « Défier la mort ».
+- « Appliquer » retire les dégâts à la cible. Un héros qui passe sous 0, ou sous −5, se voit proposer « Défier la mort » ; sous −5, il se stabilise et ne perd plus de vitalité.
 
 ## 5. Le registre d'effets
 
@@ -122,7 +126,6 @@ Le livre ne tranche pas ces points ; l'application a choisi, et le MJ peut corri
 
 ## 8. Limites connues
 
-- Finir le tour par l'en-tête ou la touche F sans avoir appliqué le coup ne pose ni ses dégâts ni les effets de ses options héroïques.
 - Un Carnage pris deux fois doit deux attaques ; si la première rate, l'assistant ne rappelle pas la seconde.
 - La taille de l'adversaire (renversement) et l'arme tenue (désarmement) ne sont pas vérifiées.
 - La feinte n'existe pas comme option ; le MJ en garde la trace à la main.
@@ -149,7 +152,7 @@ Tout est sous `front/src/app/bol/session/`, sauf mention contraire.
 | Statistiques de combat d'une carte | `combat-attack.util.ts` |
 | Registre d'effets | `play/tapis/combat-effects.util.ts`, `models/combat-effect.model.ts` |
 | Tours et rounds | `play/tapis/combat-turn.util.ts`, `play/etat-saver.ts` |
-| Écran de combat | `play/combat-board/`, `play/tapis/turn-order.*`, `play/tapis/turn-assistant.*`, `play/tapis/effects-list.ts` |
+| Écran de combat | `play/combat-board/`, `play/tapis/turn-order.*`, `play/tapis/turn-assistant.*`, `play/tapis/effects-list.ts`, `play/end-turn-dialog/`, `play/defier-la-mort-dialog/` |
 | Page, enregistrements | `play/session-play-page.ts` |
 | Jet d'action du héros | `action-roll.util.ts`, `play/action-roll-panel/` |
 | Validation de l'état côté serveur | `backend/app/Http/Services/Bol/BolCombatState.php` |
