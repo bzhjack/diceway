@@ -41,7 +41,7 @@
       </div>
       <div class="tas-tiles tas-tiles--start">
         @for (tile of attackerTiles(); track tile.label) {
-          <div class="tas-tile" [class.tas-tile--up]="tile.tone === 'up'" [class.tas-tile--down]="tile.tone === 'down'">
+          <div class="tas-tile" [class.tas-tile--up]="tile.tone === 'up'" [class.tas-tile--down]="tile.tone === 'down'" [matTooltip]="tile.hint ?? ''">
             <b>{{ tile.value }}</b>
             <span>{{ tile.label }}</span>
           </div>
@@ -297,24 +297,21 @@
     </section>
 
     <section [class]="'tas-station tas-station--' + stations()[1]" aria-label="Jet d’attaque">
-      <h3><span aria-hidden="true">2</span> L’attaque</h3>
-      @if (attackGoal(); as goal) {
-        <div class="tas-goal">
-          <div class="tas-need">
-            <span>Il te faut</span>
+      <!-- L'objectif et les chances, en pastille sur la ligne du titre : la place libérée accueille les dés au-dessus de la case -->
+      <div class="tas-station-head">
+        <h3><span aria-hidden="true">2</span> L’attaque</h3>
+        @if (attackGoal(); as goal) {
+          <span class="tas-goal" matTooltip="Ce qu'il te faut aux dés, et tes chances de toucher">
             <b>{{ goal.big }}</b>
             <i>{{ goal.small }}</i>
-          </div>
-          <div class="tas-ring" role="img" [attr.aria-label]="goal.chance + ' % de chances de toucher'">
-            <svg viewBox="0 0 64 64" aria-hidden="true">
-              <circle class="tas-ring-bg" cx="32" cy="32" r="27" />
-              <circle class="tas-ring-fg" cx="32" cy="32" r="27" [attr.stroke-dasharray]="goal.ringDash" />
-            </svg>
-            <b>{{ goal.chance }} %</b>
-          </div>
-          <!-- Les dés, comme sur le jet d'action : sur la ligne de l'objectif, la case garde sa hauteur -->
-          <dw-dice-row [dice]="attackRowDice()" [total]="diceSum()" [slots]="diceCount()" />
-        </div>
+            <i aria-hidden="true">·</i>
+            <b class="tas-goal-pc">{{ goal.chance }} %</b>
+          </span>
+        }
+      </div>
+      @if (attackGoal()) {
+        <!-- Les dés, comme sur le jet d'action, centrés sur la case (décalés de la largeur du bouton de lancer et de son écart) -->
+        <dw-dice-row offset="3.6rem" size="2.3rem" [dice]="attackRowDice()" [total]="diceSum()" [slots]="diceCount()" />
 
         <!-- À table, le cas courant : on tape le total des deux dés. Le bouton les lance à l'écran. -->
         <div class="tas-entry">
@@ -416,7 +413,7 @@
       @if (hasDamageStep()) {
         <!-- Des dégâts fixes n'ont pas de jet : la case n'apparaît que pour un dé, ou pour le total de dégâts spéciaux -->
         @if (fixedDamage() === null) {
-          <dw-dice-row [offset]="specialDamage() ? '0' : '3.6rem'" [dice]="damageRowDice()" [total]="damageRowTotal()" [slots]="damageSlots()" />
+          <dw-dice-row size="2.3rem" [offset]="specialDamage() ? '0' : '3.6rem'" [dice]="damageRowDice()" [total]="damageRowTotal()" [slots]="damageSlots()" />
           <div class="tas-entry">
             <input
               #damageInput

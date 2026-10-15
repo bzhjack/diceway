@@ -13,7 +13,10 @@ export interface StartCombatDialogData {
  * modificateurs communs à toute la rencontre. */
 export interface ReactionParts {
   readonly esprit: number;
+  /** Initiative effective : malus de l'équipement compris. */
   readonly initiative: number;
+  /** Malus d'initiative de l'équipement (casque), déjà compris dans `initiative` : 0 ou négatif. Montré à part dans l'addition. */
+  readonly equipement?: number;
   /** +2 si les héros tendent l'embuscade, −1 s'ils sont surpris, 0 sinon. */
   readonly embuscade: number;
   /** Plus haute initiative des rivaux et coriaces ennemis : elle est retranchée au jet. */

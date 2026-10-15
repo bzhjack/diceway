@@ -101,6 +101,7 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
         const protection = equippedProtection(hero.armures);
         return {
         agilite: hero.attributs.agilite_effective,
+        equipementAgilite: hero.attributs.agilite_effective - hero.attributs.agilite,
         vigueur: hero.attributs.vigueur,
         melee: hero.combat.melee,
         tir: hero.combat.tir,
@@ -146,6 +147,7 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
         return {
           ...snapshot,
           agilite: pnj.attributs.agilite_effective,
+          equipementAgilite: pnj.attributs.agilite_effective - pnj.attributs.agilite,
           defense: pnj.combat.defense_effective,
           protection: protection.value,
           protectionText: protection.text,

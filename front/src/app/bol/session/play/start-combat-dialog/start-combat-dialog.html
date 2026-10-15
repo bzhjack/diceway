@@ -69,7 +69,7 @@
                   @if (card.excluded) {
                     <span>Hors de ce combat</span>
                   } @else {
-                    <span>Esprit {{ signed(card.hero.esprit) }} · Init. {{ signed(card.hero.initiative) }} · Agi. {{ signed(card.hero.agilite) }}</span>
+                    <span>Esprit {{ signed(card.hero.esprit) }} · Init. {{ signed(card.hero.initiative - card.hero.initiativeEquipement) }} · Agi. {{ signed(card.hero.agilite) }}</span>
                   }
                 </span>
                 <button

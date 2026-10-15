@@ -487,74 +487,39 @@
   opacity: 0.6;
 }
 
+.tas-station-head {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+// Ce qu'il faut aux dés et les chances, en pastille sur la ligne du titre de l'attaque.
 .tas-goal {
   display: flex;
   align-items: center;
-  gap: 1.4rem;
-}
-
-.tas-need {
-  display: grid;
-  justify-items: center;
-  line-height: 1;
-
-  span {
-    font-size: 0.66rem;
-    font-weight: 800;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--dw-surface-500);
-  }
+  gap: 0.4rem;
+  padding: 0.25rem 0.7rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 999px;
 
   b {
-    font: 400 3.2rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+    font: 400 1.35rem/1 'Muse Display Harmony', 'Muse Sans', serif;
     color: var(--dw-surface-900);
   }
 
   i {
     font-style: normal;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+    line-height: 1;
     color: var(--dw-surface-600);
   }
-}
 
-.tas-ring {
-  position: relative;
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 4.8rem;
-  height: 4.8rem;
-
-  svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    transform: rotate(-90deg);
+  // Les chances, en or comme sur la maquette : la règle `b` ci-dessus ne doit pas l'emporter.
+  .tas-goal-pc {
+    color: var(--dw-color-legendary);
   }
-
-  b {
-    position: relative;
-    font: 400 1.4rem/1 'Muse Display Harmony', 'Muse Sans', serif;
-    color: var(--dw-surface-900);
-  }
-}
-
-.tas-ring-bg,
-.tas-ring-fg {
-  fill: none;
-  stroke-width: 6;
-}
-
-.tas-ring-bg {
-  stroke: var(--dw-surface-300);
-}
-
-.tas-ring-fg {
-  stroke: var(--dw-color-legendary);
-  stroke-linecap: round;
-  transition: stroke-dasharray 0.25s;
 }
 
 // La case où taper les dés lancés à table, et le bouton qui les lance à l'écran.

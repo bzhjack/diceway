@@ -94,6 +94,11 @@ describe('reactionSumTerms', () => {
     expect(reactionSumTerms(null, parts({embuscade: -1}))[1]).toEqual({value: '−1', caption: 'surpris', tone: 'minus'});
     expect(reactionSumTerms(null, parts({esprit: -1}))[1]).toEqual({value: '−1', caption: 'esprit', tone: 'minus'});
   });
+
+  it('shows the helmet malus apart from the initiative it lowers', () => {
+    const terms = reactionSumTerms(null, parts({esprit: 0, initiative: 0, equipement: -1}));
+    expect(terms.map((term) => `${term.value} ${term.caption}`)).toEqual(['2d6 dés', '+1 init.', '−1 équipement', '≥ 9 seuil']);
+  });
 });
 
 describe('reactionLanes', () => {

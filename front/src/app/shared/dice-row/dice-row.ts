@@ -4,7 +4,7 @@ import {DwDieFaceComponent} from '../die-face/die-face';
 
 /** Une ligne de petits dés au-dessus d'une case de jet, de hauteur fixe pour que rien ne saute : les faces quand on les connaît (lancés à
  * l'écran), sinon le total tapé à table sur un seul dé, sinon des places vides, une par dé à lancer. Décorative : le total est dans la
- * case. La taille suit `--dw-die-size` ; `offset` (une longueur CSS) la décale vers la gauche pour la centrer sur une case suivie d'un
+ * case. La taille des dés vient de `size` ; `offset` (une longueur CSS) la décale vers la gauche pour la centrer sur une case suivie d'un
  * bouton : la largeur du bouton et de son écart. */
 @Component({
   selector: 'dw-dice-row',
@@ -23,7 +23,7 @@ import {DwDieFaceComponent} from '../die-face/die-face';
     }
   `,
   styleUrl: './dice-row.scss',
-  host: {'aria-hidden': 'true', '[style.padding-right]': 'offset()'},
+  host: {'aria-hidden': 'true', '[style.padding-right]': 'offset()', '[style.--dw-die-size]': 'size()'},
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DwDiceRowComponent {
@@ -31,6 +31,8 @@ export class DwDiceRowComponent {
   readonly total = input<number | null>(null);
   readonly slots = input(2);
   readonly offset = input('0');
+  /** Taille des dés (une longueur CSS) ; `null` garde celle par défaut (1.9rem). */
+  readonly size = input<string | null>(null);
 
   protected readonly slotList = computed(() => Array.from({length: this.slots()}, (_, index) => index));
 }

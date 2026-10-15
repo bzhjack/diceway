@@ -52,7 +52,10 @@ interface HeroRow {
   /** Résultat de son jet de réaction, `null` tant qu'il n'a pas lancé. Affiché tout de suite, puis envoyé au serveur. */
   readonly resultat: InitiativeResultat | null;
   readonly esprit: number;
+  /** Initiative effective, malus de l'équipement compris : c'est elle qui entre dans le jet. */
   readonly initiative: number;
+  /** Malus d'initiative de l'équipement (casque) : 0 ou négatif. */
+  readonly initiativeEquipement: number;
   /** Agilité du héros, sans le malus de son armure : elle n'entre pas dans le jet, elle départage les héros de même résultat. */
   readonly agilite: number;
 }
@@ -240,7 +243,7 @@ export class StartCombatDialogComponent {
   }
 
   private partsFor(hero: HeroRow): ReactionParts {
-    return {esprit: hero.esprit, initiative: hero.initiative, embuscade: this.ambushModifier(), initiativeEnnemie: this.adversaryInitiativeMalus()};
+    return {esprit: hero.esprit, initiative: hero.initiative, equipement: hero.initiativeEquipement, embuscade: this.ambushModifier(), initiativeEnnemie: this.adversaryInitiativeMalus()};
   }
 
   /** Recalcule le résultat des héros qui ont déjà lancé. Un double 1 ou un double 6 prime sur les modificateurs : leur résultat ne
@@ -296,6 +299,7 @@ export class StartCombatDialogComponent {
                   resultat: rolledHere.get(h.id) ?? null,
                   esprit: hero.attributs.esprit,
                   initiative: hero.combat.initiative_effective,
+                  initiativeEquipement: hero.combat.initiative_effective - hero.combat.initiative,
                   agilite: hero.attributs.agilite,
                 };
               });

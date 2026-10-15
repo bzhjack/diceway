@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
-  height: 2.2rem;
+  height: calc(var(--dw-die-size) + 0.3rem);
 }
 
 // Place vide avant le jet.

@@ -8,7 +8,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {ActionDiceTargetLabel, ActionRollCarriere, ActionRollTone, RollSumTerm} from '../../models/action-roll.model';
 import {CombatEffect, ModifierTerm, NewEffect} from '../../models/combat-effect.model';
-import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, chanceRingDash, keepBestOrWorstTwo, keptDiceIndexes, netDiceModifier, parseDiceTotal} from '../../action-roll.util';
+import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, keepBestOrWorstTwo, keptDiceIndexes, netDiceModifier, parseDiceTotal} from '../../action-roll.util';
 import {aDejaFeinte, descriptionEffet, doitUnDeDeMalus, effetFeinte, effetCoupPrecis, effetRenversement, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
 import {EffectsListComponent} from './effects-list';
 import {DwDiceRowComponent} from '../../../../shared/dice-row/dice-row';
@@ -74,6 +74,8 @@ interface StatTile {
   readonly value: string;
   /** La posture choisie améliore (`up`) ou dégrade (`down`) ce chiffre. */
   readonly tone?: 'up' | 'down';
+  /** D'où vient le chiffre, en infobulle. */
+  readonly hint?: string;
 }
 
 /** Un terme de l'addition d'un jet sur le plateau. */
@@ -87,7 +89,6 @@ interface TraySumTerm extends RollSumTerm {
 /** Ce qu'il faut aux dés pour toucher, et les chances d'y arriver. */
 interface AttackGoal extends ActionDiceTargetLabel {
   readonly chance: number;
-  readonly ringDash: string;
 }
 
 /** Le verdict du jet d'attaque : son titre, l'écart au seuil, sa couleur. */
@@ -425,7 +426,7 @@ export class TurnAssistantComponent {
     }
     const posture = POSTURE_DEFENSE[this.effectiveOption()?.slug ?? ''] ?? 0;
     return [
-      {label: 'Attaque', value: this.signed(attackBonus(stats, this.isTir(), this.brawl()))},
+      {label: 'Attaque', value: this.signed(attackBonus(stats, this.isTir(), this.brawl())), hint: this.attackHint(stats)},
       {label: 'Défense', value: String(stats.defense + posture), ...(posture !== 0 ? {tone: posture > 0 ? ('up' as const) : ('down' as const)} : {})},
       // Une créature n'ajoute pas sa vigueur aux dégâts : pas de tuile, pour ne pas laisser croire le contraire.
       ...(stats.attaque === null ? [{label: 'Vigueur', value: this.signed(vigueurBonus(stats, this.isTir(), this.unarmed()))}] : []),
@@ -494,13 +495,27 @@ export class TurnAssistantComponent {
     const label = actionDiceTargetLabel(actionDiceTarget(modifier, ATTACK_THRESHOLD));
     // Avec le dé du MJ, le total à atteindre se lit sur les deux dés gardés.
     const small = net !== 0 && label.small === 'aux dés' ? this.keptCaption() : label.small;
-    return {big: label.big, small, chance, ringDash: chanceRingDash(chance)};
+    return {big: label.big, small, chance};
   }
 
   /** Lesquels des trois dés comptent : « 2 meilleurs » ou « 2 moins bons » ; « dés » pour un jet à deux dés. */
   private keptCaption(): string {
     const net = this.netDice();
     return net > 0 ? '2 meilleurs' : net < 0 ? '2 moins bons' : 'dés';
+  }
+
+  /** De quoi est fait le bonus d'attaque, en infobulle sur sa tuile : « Agilité +2, équipement −3, mêlée +2 ». */
+  private attackHint(a: ResolvedCombatStats): string {
+    if (a.attaque !== null) {
+      return 'Attaque de la créature, tout compris';
+    }
+    const equipement = a.equipementAgilite ?? 0;
+    const term = (value: number): string => (value === 0 ? '0' : signedTerm(value));
+    const parts = this.brawl()
+      ? [`Vigueur ${term(a.vigueur)} (bagarre)`]
+      : [`Agilité ${term(a.agilite - equipement)}`, ...(equipement !== 0 ? [`équipement ${term(equipement)}`] : [])];
+    parts.push(this.isTir() ? `tir ${term(a.tir)}` : `mêlée ${term(a.melee)}`);
+    return parts.join(', ');
   }
 
   /** Les dés au-dessus de la case du jet d'attaque : ceux lancés à l'écran (les dés écartés par un dé de bonus ou de malus estompés), ou
@@ -570,7 +585,10 @@ export class TurnAssistantComponent {
       if (this.brawl()) {
         add(a.vigueur, 'vig');
       } else {
-        add(a.agilite, 'agi');
+        // L'agilité de la fiche, puis le malus de l'équipement, comme sur le jet d'action.
+        const equipement = a.equipementAgilite ?? 0;
+        add(a.agilite - equipement, 'agi');
+        add(equipement, 'équipement');
       }
       add(this.isTir() ? a.tir : a.melee, this.isTir() ? 'tir' : 'mêlée');
     }

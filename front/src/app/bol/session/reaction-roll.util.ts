@@ -49,7 +49,8 @@ export function reactionVerdict(result: InitiativeResultat, dice: number | null)
 export function reactionSumTerms(dice: number | null, parts: ReactionParts): readonly RollSumTerm[] {
   const named: readonly (readonly [value: number, caption: string])[] = [
     [parts.esprit, 'esprit'],
-    [parts.initiative, 'init.'],
+    [parts.initiative - (parts.equipement ?? 0), 'init.'],
+    [parts.equipement ?? 0, 'équipement'],
     [parts.embuscade, parts.embuscade > 0 ? 'embusc.' : 'surpris'],
     [-parts.initiativeEnnemie, 'ennemi'],
   ];

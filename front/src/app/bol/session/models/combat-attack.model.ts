@@ -16,7 +16,10 @@ export interface DamageSpec {
 
 /** Stats de combat entièrement résolues (héros récupéré en direct si besoin), prêtes à préremplir le dialog d'attaque. */
 export interface ResolvedCombatStats {
+  /** Agilité effective : équipement compris. */
   readonly agilite: number;
+  /** Malus d'agilité de l'équipement porté (armure, grand bouclier), déjà compris dans `agilite` : 0 ou négatif. */
+  readonly equipementAgilite?: number;
   readonly vigueur: number;
   readonly melee: number;
   readonly tir: number;
