@@ -177,14 +177,14 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
   return {tokens, legendaryActive: order.legendaryActive};
 }
 
-/** Récupération post-combat (02-actions-combat.md, "Récupération") : à `> 0` ou exactement `0` (on
- * suppose un repos de 10-15 min possible juste après le combat), la moitié des points de vitalité
- * perdus est récupérée, arrondie au supérieur. En dessous de 0 (mourant), aucune récupération
- * automatique — la stabilisation relève de "Secourir un mourant", pas de cette fonction. */
-export function postCombatRecoveryAmount(vitaliteCourante: number | null, vitaliteMax: number | null): number {
+/** Récupération après un court repos d'après combat (02-actions-combat.md, « Récupération », livre p. 65) : à `0` ou plus, la moitié
+ * des points de vitalité perdus, arrondie au supérieur — mais les dégâts reçus à mains nues (`mainsNues`) reviennent en totalité. En
+ * dessous de 0 (mourant), rien : la stabilisation relève de « Secourir un mourant ». */
+export function postCombatRecoveryAmount(vitaliteCourante: number | null, vitaliteMax: number | null, mainsNues = 0): number {
   if (vitaliteCourante === null || vitaliteMax === null || vitaliteCourante < 0) {
     return 0;
   }
-
-  return Math.ceil((vitaliteMax - vitaliteCourante) / 2);
+  const perdus = Math.max(0, vitaliteMax - vitaliteCourante);
+  const bagarre = Math.min(Math.max(0, mainsNues), perdus);
+  return bagarre + Math.ceil((perdus - bagarre) / 2);
 }

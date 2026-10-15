@@ -9,6 +9,8 @@ export const BOUCLIER_DEPENSE = 'bouclier-depense';
 export const SANS_BOUCLIER = 'sans-bouclier';
 /** Trace : le héros tombé à 0 a choisi de sombrer dans l'inconscience ; il ne se relève qu'à la fin du combat. */
 const INCONSCIENT = 'inconscient';
+/** Trace : des dégâts encaissés à mains nues, récupérés en totalité après le combat. */
+const MAINS_NUES = 'mains-nues';
 /** Trace : le héros mourant est stabilisé (« Défier la mort » sous −5, ou secouru) ; il ne perd plus de vitalité d'un round à l'autre. */
 const STABILISE = 'stabilise';
 /** La carte lance un dé de malus à sa prochaine action (adversaire renversé qui se relève, coup précis…). */
@@ -337,6 +339,18 @@ export function effetStabilise(porteur: string): NewEffect {
 /** Vrai si le héros a été stabilisé pendant ce combat. */
 export function aStabilise(effets: readonly CombatEffect[], carte: string): boolean {
   return effets.some((effet) => effet.porteur === carte && effet.origine === STABILISE);
+}
+
+/** Des dégâts encaissés à mains nues : ils se récupèrent en totalité après le combat (02-actions-combat.md, « Récupération »). Une
+ * trace par coup, pour tout le combat ; elle n'entre dans aucun jet. */
+export function effetDegatsMainsNues(porteur: string, degats: number): NewEffect {
+  const valeur = Math.min(20, degats);
+  return {origine: MAINS_NUES, libelle: `${valeur} ${valeur > 1 ? 'dégâts' : 'dégât'} à mains nues`, porteur, stat: 'action', valeur, quand: 'subie', duree: {type: 'combat'}, manuel: false};
+}
+
+/** Les dégâts encaissés à mains nues par la carte pendant ce combat. */
+export function degatsMainsNues(effets: readonly CombatEffect[], carte: string): number {
+  return effets.filter((effet) => effet.porteur === carte && effet.origine === MAINS_NUES).reduce((total, effet) => total + effet.valeur, 0);
 }
 
 /** Héros surpris ou pris en embuscade : un personnage ne bénéficie de son bouclier que s'il est conscient de l'attaque

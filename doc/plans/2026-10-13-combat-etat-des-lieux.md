@@ -15,7 +15,7 @@ Principe : l'application assiste le MJ, elle ne le remplace pas. Elle calcule et
    - un héros resté à 0 choisit entre reprendre ses esprits pour 1 PH (il remonte à la moitié de sa vitalité) et sombrer jusqu'à la fin du combat ;
    - un héros mourant perd 1 de vitalité, sauf s'il est stabilisé. Le message qui l'annonce porte un bouton « Stabilisé » pour le héros secouru à la table ; celui qui passe sous −5 se voit proposer « Défier la mort ».
 5. **Secourir** : à son tour, un héros peut tenter de stabiliser un allié mourant au lieu d'attaquer (bouton « Secourir » de la carte « Qui attaque ») : jet d'esprit + carrière de soins, difficulté Moyenne aggravée d'un niveau par point de vitalité négatif. Le tour se termine ensuite.
-6. **Terminer le combat** : chaque héros à 0 ou plus récupère la moitié des points perdus ; puis, si un héros a une carrière de soins (médecin, guérisseur, rebouteux), « Soins médicaux » rend son rang en vitalité aux blessés choisis.
+6. **Terminer le combat** : la boîte « Après combat » (livre p. 65-66) montre, pour chaque blessé du camp des héros, ce qu'il récupère. « Repos » : à 0 ou plus, la moitié des points perdus, et la totalité des dégâts reçus à mains nues (l'application les retient coup par coup). « Soins » : si un héros a une carrière de soins (médecin, guérisseur, rebouteux), son rang en vitalité. Le MJ décoche ce qui ne s'applique pas ; « Terminer le combat » enregistre tout et repasse en mode libre.
 
 ## 2. Le jet de réaction
 
@@ -157,7 +157,7 @@ Tout est sous `front/src/app/bol/session/`, sauf mention contraire.
 | Écran de combat | `play/combat-board/`, `play/tapis/turn-order.*`, `play/tapis/turn-assistant.*`, `play/tapis/effects-list.ts`, `play/end-turn-dialog/`, `play/defier-la-mort-dialog/` |
 | Page, enregistrements | `play/session-play-page.ts` |
 | Jet d'action du héros | `action-roll.util.ts`, `play/action-roll-panel/` |
-| Secours et soins | `rescue.util.ts`, `play/rescue-dialog/`, `play/medical-care-dialog/` |
+| Secours et soins | `rescue.util.ts`, `play/rescue-dialog/`, `play/after-combat-dialog/` |
 | Validation de l'état côté serveur | `backend/app/Http/Services/Bol/BolCombatState.php` |
 
 Chaque fichier `*.util.ts` a son `*.spec.ts` à côté.

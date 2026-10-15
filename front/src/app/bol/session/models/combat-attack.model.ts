@@ -48,4 +48,6 @@ export interface VitaliteChange {
 export interface AppliedHit {
   readonly target: TapisCard;
   readonly damage: number;
+  /** Porté à mains nues : ces dégâts se récupèrent en totalité après le combat. */
+  readonly unarmed: boolean;
 }

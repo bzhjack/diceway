@@ -27,7 +27,7 @@ import {
   pnjStatblockData,
 } from '../../shared/statblock/bol-statblock.builders';
 import {resolveAttackStats} from '../combat-attack.util';
-import {buildPlayBoard, postCombatRecoveryAmount} from '../combat-play.util';
+import {buildPlayBoard} from '../combat-play.util';
 import {ActionRollDiceTrait} from '../models/action-roll.model';
 import {SceneActionsService} from '../scene-actions.service';
 import {AddCombatantDialogComponent, resolveAddCombatantCamp} from './add-combatant-dialog/add-combatant-dialog';
@@ -51,12 +51,12 @@ import {AttackChoice} from '../models/attack-options.model';
 import {bloqueeCeRound, debutDeTour, effetsDerives, endTurn, giveBackTurn, herosMourants, horsCombat, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
 import {NewEffect} from '../models/combat-effect.model';
 import {EtatSaver} from './etat-saver';
-import {aSombre, appliquerEvenement, effetInconscient, effetStabilise, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from './tapis/combat-effects.util';
+import {aSombre, appliquerEvenement, degatsMainsNues, effetDegatsMainsNues, effetInconscient, effetStabilise, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from './tapis/combat-effects.util';
 import {EtatCombat} from '../models/combat-turn.model';
 import {CombatBoardComponent} from './combat-board/combat-board';
 import {RescueDialogComponent} from './rescue-dialog/rescue-dialog';
-import {MedicalCareDialogComponent} from './medical-care-dialog/medical-care-dialog';
-import {MedicalCare, MedicalCareDialogData, MedicalCareHealer} from '../models/medical-care-dialog.model';
+import {AfterCombatDialogComponent} from './after-combat-dialog/after-combat-dialog';
+import {AfterCombatDialogData, AfterCombatGain, AfterCombatHealer} from '../models/after-combat-dialog.model';
 import {bestHealingCareer} from '../rescue.util';
 import {RescueDialogData, RescueResult} from '../models/rescue-dialog.model';
 import {AppliedHit, ResolvedCombatStats, VitaliteChange} from '../models/combat-attack.model';
@@ -453,114 +453,74 @@ export class SessionPlayPageComponent {
       });
   }
 
+  /** « Terminer le combat » : la boîte « Après combat » montre ce que chaque blessé récupère (repos, dégâts à mains nues, soins
+   * médicaux) ; validée, elle l'enregistre et la session repasse en mode libre. Annulée, le combat continue. */
   protected askEndCombat(): void {
     const sessionId = this.session()?.id;
     if (!sessionId) {
       return;
     }
+    const effets = this.etat().effets;
+    const wounded = this.cards()
+      .filter((card) => card.camp === 'heros' && card.vitaliteMax !== null && card.vitaliteMax > 0 && card.vitaliteCourante !== null && card.vitaliteCourante < card.vitaliteMax)
+      .map((card) => ({
+        kind: card.kind,
+        pivotId: card.pivotId,
+        nom: card.nom,
+        vitalite: card.vitaliteCourante!,
+        vitaliteMax: card.vitaliteMax!,
+        mainsNues: degatsMainsNues(effets, card.key),
+        etat: horsCombat(card, effets),
+      }));
 
-    confirmDialog(
-      this.dialog,
-      {
-        title: 'Terminer le combat',
-        message: 'La session repassera en mode libre. Les personnages restent sur la table. Continuer ?',
-        confirmLabel: 'Terminer',
-      },
-      {width: '380px'},
-    ).subscribe((confirmed) => {
-      if (!confirmed) {
-        return;
-      }
-
-      // La récupération d'après combat, puis les soins médicaux, avant de quitter le combat.
-      const patients = this.medicalCarePatients();
-      this.applyPostCombatRecovery(sessionId)
-        .pipe(switchMap(() => this.askMedicalCare(sessionId, patients)))
-        .subscribe(() => {
-          this.fightSessionService.endCombat(sessionId).subscribe({
-            next: () => this.loadSession(sessionId),
-            error: (error: unknown) => {
-              this.snackBar.open(extractApiErrorMessage(error, 'Impossible de terminer le combat.'), 'Fermer', {
-                duration: 5000,
-              });
-            },
-          });
-        });
-    });
+    this.combatHealers()
+      .pipe(
+        switchMap((healers) =>
+          this.dialog
+            .open<AfterCombatDialogComponent, AfterCombatDialogData, readonly AfterCombatGain[]>(AfterCombatDialogComponent, {width: '600px', data: {wounded, healers}})
+            .afterClosed(),
+        ),
+        switchMap((gains) => {
+          if (!gains) {
+            return EMPTY;
+          }
+          const saved: Observable<unknown> = gains.length ? forkJoin(gains.map((gain) => this.fightSessionService.applyDamage(sessionId, gain.kind, gain.pivotId, gain.amount))) : of(null);
+          return saved.pipe(
+            tap(() => {
+              if (gains.length) {
+                this.snackBar.open(`Après combat — ${gains.map((gain) => `${gain.nom} +${gain.amount}`).join(', ')}`, undefined, {duration: 4500});
+              }
+            }),
+            switchMap(() => this.fightSessionService.endCombat(sessionId)),
+          );
+        }),
+      )
+      .subscribe({
+        next: () => this.loadSession(sessionId),
+        error: (error: unknown) => {
+          this.loadSession(sessionId);
+          this.snackBar.open(extractApiErrorMessage(error, 'Impossible de terminer le combat.'), 'Fermer', {duration: 5000});
+        },
+      });
   }
 
-  /** Récupération post-combat (02-actions-combat.md, "Récupération") : chaque héros à vitalité ≥ 0
-   * regagne la moitié des points perdus (arrondie au supérieur) avant que le combat ne se termine —
-   * en dessous de 0 (mourant), aucune récupération automatique (relève de "Secourir un mourant"). */
-  private applyPostCombatRecovery(sessionId: string): Observable<unknown> {
-    const recoveries = this.heroTokens()
-      .map((token) => ({token, amount: postCombatRecoveryAmount(token.vitaliteCourante, token.vitaliteMax)}))
-      .filter(({amount}) => amount > 0);
-
-    if (recoveries.length === 0) {
-      return of(null);
-    }
-
-    return forkJoin(
-      recoveries.map(({token, amount}) => this.fightSessionService.applyDamage(sessionId, token.kind, token.pivotId, amount)),
-    ).pipe(
-      tap(() => {
-        const summary = recoveries.map(({token, amount}) => `${token.nom} +${amount}`).join(', ');
-        this.snackBar.open(`Récupération post-combat — ${summary}`, undefined, {duration: 4500});
-      }),
-    );
-  }
-
-  /** Les blessés du camp des héros, avec leur vitalité une fois la récupération d'après combat faite : ceux que des soins médicaux
-   * peuvent encore remonter. À lire avant la récupération, que le rechargement de la table n'a pas encore suivie. */
-  private medicalCarePatients(): MedicalCareDialogData['patients'] {
-    return this.heroTokens()
-      .filter((token) => token.vitaliteMax !== null && token.vitaliteMax > 0 && token.vitaliteCourante !== null)
-      .map((token) => ({
-        kind: token.kind,
-        pivotId: token.pivotId,
-        nom: token.nom,
-        vitalite: token.vitaliteCourante! + postCombatRecoveryAmount(token.vitaliteCourante, token.vitaliteMax),
-        vitaliteMax: token.vitaliteMax!,
-      }))
-      .filter((patient) => patient.vitalite < patient.vitaliteMax);
-  }
-
-  /** Soins médicaux (02-actions-combat.md, « Récupération ») : si un héros a une carrière de soins, le MJ choisit qui il soigne ; chaque
-   * blessé soigné récupère tout de suite le rang du soigneur. Sans soigneur ni blessé, rien ne s'ouvre. */
-  private askMedicalCare(sessionId: string, patients: MedicalCareDialogData['patients']): Observable<unknown> {
+  /** Les héros de la table qui ont une carrière de soins (médecin, guérisseur, rebouteux), avec la mieux classée. Leurs fiches sont
+   * relues ; si elles ne se chargent pas, personne ne soigne. */
+  private combatHealers(): Observable<readonly AfterCombatHealer[]> {
     const heroes = this.cards().filter((card) => card.kind === 'hero' && card.camp === 'heros' && card.sourceId !== null);
-    if (patients.length === 0 || heroes.length === 0) {
-      return of(null);
+    if (heroes.length === 0) {
+      return of([]);
     }
     return forkJoin(heroes.map((card) => this.herosService.heros(card.sourceId!))).pipe(
-      switchMap((fiches) => {
-        const healers = fiches
-          .map((hero, i): MedicalCareHealer | null => {
+      map((fiches) =>
+        fiches
+          .map((hero, i): AfterCombatHealer | null => {
             const carriere = bestHealingCareer(heroDetails(hero).carrieres);
             return carriere ? {nom: heroes[i].nom, carriere} : null;
           })
-          .filter((healer): healer is MedicalCareHealer => healer !== null);
-        if (healers.length === 0) {
-          return of(null);
-        }
-        return this.dialog
-          .open<MedicalCareDialogComponent, MedicalCareDialogData, readonly MedicalCare[]>(MedicalCareDialogComponent, {width: '460px', data: {healers, patients}})
-          .afterClosed()
-          .pipe(
-            switchMap((cares) =>
-              cares?.length
-                ? forkJoin(cares.map((care) => this.fightSessionService.applyDamage(sessionId, care.kind, care.pivotId, care.amount))).pipe(
-                    tap(() => this.snackBar.open(`Soins médicaux — ${cares.map((care) => `${care.nom} +${care.amount}`).join(', ')}`, undefined, {duration: 4500})),
-                  )
-                : of(null),
-            ),
-          );
-      }),
-      catchError((error: unknown) => {
-        this.tableError(error, 'Impossible de faire les soins médicaux.');
-        return of(null);
-      }),
+          .filter((healer): healer is AfterCombatHealer => healer !== null),
+      ),
+      catchError(() => of([])),
     );
   }
 
@@ -1171,6 +1131,11 @@ export class SessionPlayPageComponent {
   protected onHitApplied(hit: AppliedHit): void {
     if (hit.damage !== 0) {
       this.applyDamageTo(hit.target, -hit.damage, this.targetStats());
+    }
+    // Les dégâts d'une bagarre se récupèrent en totalité après le combat : le registre les retient.
+    if (hit.unarmed && hit.damage > 0) {
+      const effet = effetDegatsMainsNues(hit.target.key, hit.damage);
+      this.saveEtat((etat) => ({...etat, effets: [...appliquerEvenement(etat.effets, {type: 'ajout-manuel', effet}, idAleatoire)]}));
     }
   }
 

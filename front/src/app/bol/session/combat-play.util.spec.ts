@@ -19,6 +19,12 @@ describe('postCombatRecoveryAmount', () => {
     expect(postCombatRecoveryAmount(-3, 10)).toBe(0);
   });
 
+  it('gives back bare-handed damage in full, and half of the rest', () => {
+    expect(postCombatRecoveryAmount(4, 10, 3)).toBe(5); // 6 lost: 3 bare-handed + half of 3, rounded up
+    expect(postCombatRecoveryAmount(7, 10, 3)).toBe(3); // all of it from a brawl
+    expect(postCombatRecoveryAmount(8, 10, 5)).toBe(2); // healed in between: never more than what is lost
+  });
+
   it('recovers nothing when vitality tracking is unknown (never damaged, or no vitality stat)', () => {
     expect(postCombatRecoveryAmount(null, 10)).toBe(0);
     expect(postCombatRecoveryAmount(5, null)).toBe(0);

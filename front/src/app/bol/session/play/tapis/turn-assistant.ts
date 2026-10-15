@@ -210,8 +210,12 @@ export class TurnAssistantComponent {
     const allowed = list.filter((a) => !this.heavyForbidden().has(a.id));
     return allowed.find((a) => a.id === this.selectedArmeId()) ?? allowed[0] ?? list[0] ?? null;
   });
-  /** À mains nues, la vigueur ne compte que pour moitié dans les dégâts. */
-  private readonly unarmed = computed(() => this.effectiveArme()?.id === MAINS_NUES.id);
+  /** À mains nues — celles d'un héros, ou une arme « Mains nues » d'un PNJ : la vigueur ne compte que pour moitié dans les dégâts, et
+   * ces dégâts se récupèrent en totalité après le combat. */
+  private readonly unarmed = computed(() => {
+    const arme = this.effectiveArme();
+    return arme?.id === MAINS_NUES.id || /mains nues/i.test(arme?.arme?.arme ?? '');
+  });
 
   /** L'arme secondaire d'un héros se prend parmi toutes ses armes légères ou moyennes, équipées ou non : « équipée » dit
    * seulement ce que le héros propose à l'attaque, pas ce qu'il a en main pour parer ou frapper à deux armes. */
@@ -1228,9 +1232,10 @@ export class TurnAssistantComponent {
       return;
     }
     this.conclude(target);
-    this.damageApplied.emit({target, damage});
+    const hit = {target, damage, unarmed: this.unarmed()};
+    this.damageApplied.emit(hit);
     this.resetRoll();
-    this.lastHit.set({target, damage});
+    this.lastHit.set(hit);
     this.focusAfterRender(() => (this.carnageOwed() > 0 ? this.attackInput() : this.endButton()));
   }
 

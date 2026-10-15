@@ -232,7 +232,7 @@ Les lots sont un ordre proposé : d'abord corriger les calculs faux (lot 0), pui
   - « Secourir » apparaît dans la carte « Qui attaque » quand c'est le tour d'un héros et qu'un autre héros est mourant (ni stabilisé, ni retiré). Il ouvre « Secourir un mourant » : le mourant (choix s'il y en a plusieurs), la carrière du secouriste (Médecin, guérisseur ou rebouteux proposé d'office, ou une autre, ou aucune), la formule `2d6 + esprit + carrière + difficulté` avec la difficulté tirée de la vitalité (`rescueDifficulty` dans `rescue.util.ts`), ce qu'il faut aux dés et les chances ;
   - le total se tape, ou les dés se lancent dans le dialogue ; sur un échec, « Faveur divine » relance pour 1 PH ;
   - « Valider et finir le tour » : réussi, le mourant reçoit l'effet « stabilisé » (point 3) ; dans tous les cas le tour du secouriste se termine ;
-  - en fin de combat, après la récupération, si un héros a une carrière de soins, « Soins médicaux » propose le soigneur (le mieux classé d'office) et les blessés du camp des héros (tous cochés) : chacun récupère le rang du soigneur, sans dépasser son maximum.
+  - en fin de combat, la boîte « Après combat » (voir ci-dessous) réunit la récupération et les soins médicaux.
   - Au passage : la récupération d'après combat soignait un PNJ allié avec le type « héros » (donc la mauvaise ligne) ; elle utilise maintenant le type de la carte.
   - Limites : seuls les héros secourent (pas les PNJ alliés) ; pas de dé de bonus ou de malus sur le jet de secours ; un soigneur soigne tous les blessés cochés, lui compris, sans limite de nombre ni jet quotidien de doublement.
 
@@ -242,6 +242,10 @@ Les lots sont un ordre proposé : d'abord corriger les calculs faux (lot 0), pui
 - **Aujourd'hui** : rien de cela.
 - **Proposition** : avec les mains nues, une case « Bagarre » qui prend la vigueur à la place de l'agilité, et marque les dégâts comme « de bagarre ». Une cible mise à 0 par la bagarre est seulement assommée : pas de « Défier la mort », et récupération totale après le combat.
 - **Effort** : M.
+- **En partie fait le 2026-10-15** : la récupération totale (livre p. 65).
+  - Chaque coup appliqué à mains nues (celles d'un héros, ou une arme « Mains nues » d'un PNJ) laisse une trace dans le registre (« 3 dégâts à mains nues », durée : combat, sans effet sur les jets) ; `degatsMainsNues` en fait la somme par carte.
+  - « Terminer le combat » ouvre la boîte « Après combat », qui remplace la confirmation et « Soins médicaux » : pour chaque blessé du camp des héros, « Repos » rend la moitié des points perdus et la totalité des dégâts à mains nues (rien sous 0), puis « Soins » rend le rang du soigneur choisi (« Personne » possible). Chaque case se décoche ; rien n'est enregistré avant « Terminer le combat », « Annuler » laisse le combat en cours.
+  - Reste à faire : la vigueur à la place de l'agilité, et la cible assommée à 0 (pas de coma ni de « Défier la mort »).
 
 ## Lot 3 : le bestiaire
 
