@@ -22,6 +22,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {firstValueFrom, forkJoin, Observable, of, switchMap, take} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
+import {DwDiceRowComponent} from '../../../../shared/dice-row/dice-row';
+import {DiceRowDie} from '../../../../shared/models/dice-row.model';
 import {BolFightSessionModel, InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {AmbushState} from '../../../models/combat-selection.model';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
@@ -66,6 +68,8 @@ interface HeroCard {
   readonly ringDash: string;
   /** Total de ses deux dés, `null` avant son jet. */
   readonly dice: number | null;
+  /** Les faces de ses deux dés, quand on les connaît : lancés à l'écran, ou un double 1 ou double 6 tapé ; `null` sinon. */
+  readonly faces: readonly DiceRowDie[] | null;
   readonly verdict: ReactionVerdict | null;
   readonly sum: readonly RollSumTerm[];
   /** Option d'héroïsme ouverte par son jet : l'échec critique sur un double 1 (+1 point), le succès légendaire sur un double 6 (−1). */
@@ -97,7 +101,7 @@ const MAX_CARDS_PER_ROW = 6;
  */
 @Component({
   selector: 'bol-start-combat-dialog',
-  imports: [MatButtonModule, MatDialogModule, MatIconModule, MatTooltipModule, DiceBoxHostComponent],
+  imports: [MatButtonModule, MatDialogModule, MatIconModule, MatTooltipModule, DiceBoxHostComponent, DwDiceRowComponent],
   templateUrl: './start-combat-dialog.html',
   styleUrl: './start-combat-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -128,6 +132,8 @@ export class StartCombatDialogComponent {
   /** Total des deux dés de chaque héros (clé pivotId), saisi ou lancé dans ce dialogue. Non persisté : le back ne stocke que le
    * résultat. */
   private readonly diceTotalByPivot = signal<ReadonlyMap<number, number>>(new Map());
+  /** Les faces des deux dés de chaque héros lancés à l'écran (clé pivotId) : elles s'affichent sous la case du total. */
+  private readonly facesByPivot = signal<ReadonlyMap<number, readonly [number, number]>>(new Map());
 
   /** Les enregistrements des jets partent un par un, dans l'ordre : deux changements rapprochés du même héros n'arrivent jamais
    * inversés au serveur, et le combat ne démarre qu'une fois le dernier passé. */
@@ -178,6 +184,7 @@ export class StartCombatDialogComponent {
         chance,
         ringDash: chanceRingDash(chance),
         dice,
+        faces: (this.facesByPivot().get(hero.pivotId) ?? (dice === 2 ? [1, 1] : dice === 12 ? [6, 6] : null))?.map((value) => ({value})) ?? null,
         verdict: hero.resultat ? reactionVerdict(hero.resultat, dice) : null,
         sum: reactionSumTerms(dice, parts),
         option: dice === 2 ? 'critique' : legendary ? 'legendaire' : null,
@@ -456,6 +463,7 @@ export class StartCombatDialogComponent {
       await box.clear();
       const results = await box.rollNotation('2d6');
       this.setRoll(hero.pivotId, results[0].value + results[1].value);
+      this.facesByPivot.update((map) => new Map(map).set(hero.pivotId, [results[0].value, results[1].value]));
     } finally {
       this.rolling.set(false);
     }
@@ -507,6 +515,12 @@ export class StartCombatDialogComponent {
   }
 
   private setDiceTotal(pivotId: number, dice: number | null): void {
+    // Un nouveau total (tapé, ou lancé : les faces suivent alors) efface les faces du jet précédent.
+    this.facesByPivot.update((map) => {
+      const next = new Map(map);
+      next.delete(pivotId);
+      return next;
+    });
     this.diceTotalByPivot.update((map) => {
       const next = new Map(map);
       if (dice === null) {

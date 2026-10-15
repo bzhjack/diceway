@@ -1,0 +1,30 @@
+:host {
+  --dw-die-size: 1.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  height: 2.2rem;
+}
+
+// Place vide avant le jet.
+.dr-slot {
+  width: var(--dw-die-size);
+  height: var(--dw-die-size);
+  border: 2px dashed var(--dw-border);
+  border-radius: 6px;
+}
+
+// Total tapé à table : les faces ne sont pas connues.
+.dr-total {
+  display: grid;
+  place-items: center;
+  min-width: var(--dw-die-size);
+  height: var(--dw-die-size);
+  padding: 0 0.3rem;
+  border-radius: 6px;
+  background: linear-gradient(145deg, #cc3b30, #8a1812);
+  box-shadow: 0 2px 0 #560d09;
+  color: #fff3e0;
+  font: 400 1.1rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+}

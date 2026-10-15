@@ -1,0 +1,52 @@
+:host {
+  --dw-die: var(--dw-die-size, 4rem);
+  flex: none;
+  display: grid;
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  width: var(--dw-die);
+  height: var(--dw-die);
+  // En longueur, pas en % : un padding en % se calcule sur la largeur du conteneur et écraserait la face.
+  padding: calc(var(--dw-die) * 0.16);
+  border-radius: calc(var(--dw-die) * 0.18);
+  background: linear-gradient(145deg, #cc3b30, #8a1812);
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.12),
+    0 calc(var(--dw-die) * 0.06) 0 #560d09,
+    0 calc(var(--dw-die) * 0.12) calc(var(--dw-die) * 0.2) rgba(0, 0, 0, 0.5);
+}
+
+i {
+  place-self: center;
+  width: 78%;
+  height: 78%;
+  border-radius: 50%;
+  background: #fff3e0;
+  opacity: 0;
+}
+
+:host([data-v='1']) i:nth-child(5),
+:host([data-v='2']) i:nth-child(1),
+:host([data-v='2']) i:nth-child(9),
+:host([data-v='3']) i:nth-child(1),
+:host([data-v='3']) i:nth-child(5),
+:host([data-v='3']) i:nth-child(9),
+:host([data-v='4']) i:nth-child(1),
+:host([data-v='4']) i:nth-child(3),
+:host([data-v='4']) i:nth-child(7),
+:host([data-v='4']) i:nth-child(9),
+:host([data-v='5']) i:nth-child(odd),
+:host([data-v='6']) i:nth-child(1),
+:host([data-v='6']) i:nth-child(3),
+:host([data-v='6']) i:nth-child(4),
+:host([data-v='6']) i:nth-child(6),
+:host([data-v='6']) i:nth-child(7),
+:host([data-v='6']) i:nth-child(9) {
+  opacity: 1;
+}
+
+// Dé écarté par un dé de bonus ou de malus.
+:host(.dw-die-face--drop) {
+  opacity: 0.32;
+  filter: grayscale(0.7);
+  transform: scale(0.82);
+}

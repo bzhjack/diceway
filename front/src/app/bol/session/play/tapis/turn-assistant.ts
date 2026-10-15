@@ -8,9 +8,11 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {ActionDiceTargetLabel, ActionRollCarriere, ActionRollTone, RollSumTerm} from '../../models/action-roll.model';
 import {CombatEffect, ModifierTerm, NewEffect} from '../../models/combat-effect.model';
-import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, chanceRingDash, keepBestOrWorstTwo, netDiceModifier, parseDiceTotal} from '../../action-roll.util';
+import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, chanceRingDash, keepBestOrWorstTwo, keptDiceIndexes, netDiceModifier, parseDiceTotal} from '../../action-roll.util';
 import {aDejaFeinte, descriptionEffet, doitUnDeDeMalus, effetFeinte, effetCoupPrecis, effetRenversement, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
 import {EffectsListComponent} from './effects-list';
+import {DwDiceRowComponent} from '../../../../shared/dice-row/dice-row';
+import {DiceRowDie} from '../../../../shared/models/dice-row.model';
 import {EndTurnDialogComponent} from '../end-turn-dialog/end-turn-dialog';
 import {EndTurnChoice, EndTurnDialogData} from '../../models/end-turn-dialog.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
@@ -122,7 +124,7 @@ function extraTerm(valeur: number, nom: string): ModifierTerm {
  * Il ne parle à aucun service : il signale à la page ce qui doit être enregistré (dégâts, fin de tour, défense totale, héroïsme). */
 @Component({
   selector: 'bol-turn-assistant',
-  imports: [DwValueStepperComponent, EffectsListComponent, MatButtonModule, MatIconModule, MatTooltipModule, ReactiveFormsModule],
+  imports: [DwDiceRowComponent, DwValueStepperComponent, EffectsListComponent, MatButtonModule, MatIconModule, MatTooltipModule, ReactiveFormsModule],
   templateUrl: './turn-assistant.html',
   styleUrl: './turn-assistant.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -501,14 +503,16 @@ export class TurnAssistantComponent {
     return net > 0 ? '2 meilleurs' : net < 0 ? '2 moins bons' : 'dés';
   }
 
-  /** Ce que les trois dés d'un lancer à l'écran ont donné : « 1, 5 et 2 → 5 et 2 gardés ». Vide pour deux dés ou une saisie à table. */
-  protected readonly attackDetail = computed(() => {
-    const values = this.rolledDice();
-    const kept = this.dice();
-    if (!values || values.length < 3 || !kept) {
-      return '';
+  /** Les dés au-dessus de la case du jet d'attaque : ceux lancés à l'écran (les dés écartés par un dé de bonus ou de malus estompés), ou
+   * un double 1 ou double 6 tapé ; `null` sinon (la ligne montre alors le total tapé, ou des places vides). */
+  protected readonly attackRowDice = computed<readonly DiceRowDie[] | null>(() => {
+    const all = this.rolledDice();
+    if (all) {
+      const kept = keptDiceIndexes(all, this.netDice());
+      return all.map((value, index) => ({value, dropped: !kept.includes(index)}));
     }
-    return `${values.slice(0, -1).join(', ')} et ${values[values.length - 1]} → ${kept[0]} et ${kept[1]} gardés`;
+    const pair = this.naturalDice();
+    return pair ? [{value: pair[0]}, {value: pair[1]}] : null;
   });
 
   /** Sur le jeton de chaque carte visable, ce qu'il faut pour la toucher avec l'arme et la posture choisies : « 6+ · 72 % ». Absent tant
@@ -799,6 +803,8 @@ export class TurnAssistantComponent {
 
   // ── Étape 4 : les dégâts ──
   protected readonly damageValues = signal<readonly number[] | null>(null);
+  /** Le dé de dégâts a été lancé à l'écran (ses faces sont connues), pas tapé à table. */
+  private readonly damageRolled = signal(false);
   /** Les dégâts de l'arme ou du profil, lus en entier (dé, multiplicateur, modificateur, ou valeur fixe) ; `null` pour des dégâts
    * spéciaux, dont le MJ tape le total. */
   protected readonly damageSpec = computed(() => parseDamage(this.degats()));
@@ -861,14 +867,22 @@ export class TurnAssistantComponent {
     return face === null ? null : scaleDamage(spec, face);
   });
   /** Ce que les dés ont donné quand l'arme en lance deux : « 1 et 4 → 1 retenu (le moins bon) ». Vide pour un dé unique ou une saisie à table. */
-  protected readonly damageDetail = computed(() => {
+  /** Les dés au-dessus de la case des dégâts : ceux lancés à l'écran (pour un d6M ou un d6B, celui qui n'est pas retenu estompé) ; `null`
+   * pour un dé tapé à table, montré par son total. */
+  protected readonly damageRowDice = computed<readonly DiceRowDie[] | null>(() => {
     const values = this.damageValues();
     const die = this.die();
-    if (!values || values.length < 2 || (die !== 'd6m' && die !== 'd6b')) {
-      return '';
+    if (!values || !this.damageRolled()) {
+      return null;
     }
-    return `${values.join(' et ')} → ${this.face()} retenu (${die === 'd6m' ? 'le moins bon' : 'le meilleur'})`;
+    if (values.length === 2 && (die === 'd6m' || die === 'd6b')) {
+      const kept = values.indexOf(die === 'd6m' ? Math.min(...values) : Math.max(...values));
+      return values.map((value, index) => ({value, dropped: index !== kept}));
+    }
+    return values.map((value) => ({value}));
   });
+  protected readonly damageRowTotal = computed(() => (this.damageRolled() ? null : this.specialDamage() ? this.raw() : this.face()));
+  protected readonly damageSlots = computed(() => damageDiceCount(this.die()));
   /** Ce qui se retranche vraiment des dégâts : un modificateur positif des effets ajoute aux dégâts, il se retranche de la protection. */
   private readonly effectiveProtection = computed(() => this.protection() - sommeModificateurs(this.damageEffectTerms()));
   protected readonly damage = computed(() => {
@@ -1156,6 +1170,7 @@ export class TurnAssistantComponent {
   /** Saisie du dé de dégâts lancé à table : un chiffre, pris tout de suite. Un d6 de malus ou de bonus garde le dé retenu (on saisit
    * celui-là), un d3 se lit tel quel. La main passe ensuite au bouton qui applique. */
   protected onDamageInput(raw: string): void {
+    this.damageRolled.set(false);
     const text = raw.trim();
     if (text === '') {
       this.damageValues.set(null);
@@ -1223,6 +1238,7 @@ export class TurnAssistantComponent {
     }
     const count = damageDiceCount(this.die());
     this.damageValues.set(await this.throwDice(`${count}d6`, count));
+    this.damageRolled.set(true);
     this.focusAfterRender(() => this.applyButton());
   }
 

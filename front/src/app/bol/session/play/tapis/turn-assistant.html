@@ -312,6 +312,8 @@
             </svg>
             <b>{{ goal.chance }} %</b>
           </div>
+          <!-- Les dés, comme sur le jet d'action : sur la ligne de l'objectif, la case garde sa hauteur -->
+          <dw-dice-row [dice]="attackRowDice()" [total]="diceSum()" [slots]="diceCount()" />
         </div>
 
         <!-- À table, le cas courant : on tape le total des deux dés. Le bouton les lance à l'écran. -->
@@ -335,9 +337,6 @@
             <mat-icon>casino</mat-icon>
           </button>
         </div>
-        @if (attackDetail() && !rolling()) {
-          <small class="tas-die-note">{{ attackDetail() }}</small>
-        }
 
         <div class="tas-verdict" aria-live="polite">
           @if (rolling()) {
@@ -417,6 +416,7 @@
       @if (hasDamageStep()) {
         <!-- Des dégâts fixes n'ont pas de jet : la case n'apparaît que pour un dé, ou pour le total de dégâts spéciaux -->
         @if (fixedDamage() === null) {
+          <dw-dice-row [offset]="specialDamage() ? '0' : '3.6rem'" [dice]="damageRowDice()" [total]="damageRowTotal()" [slots]="damageSlots()" />
           <div class="tas-entry">
             <input
               #damageInput
@@ -440,7 +440,7 @@
             }
           </div>
         }
-        <small class="tas-die-note">{{ damageDetail() && !rolling() ? damageDetail() : dieNote() }}</small>
+        <small class="tas-die-note">{{ dieNote() }}</small>
 
         <div class="tas-sum" [class.tas-sum--pending]="damage() === null">
           @for (term of damageSum(); track $index) {

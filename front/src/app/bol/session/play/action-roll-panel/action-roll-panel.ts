@@ -17,6 +17,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
+import {DwDieFaceComponent} from '../../../../shared/die-face/die-face';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {BolHerosService} from '../../../services/bol-heros.service';
 import {ACTION_ATTRIBUTE_LABELS, ACTION_ATTRIBUTE_SHORT, ACTION_ATTRIBUTES, ACTION_DIFFICULTIES, ACTION_ROLL_THRESHOLD, actionDiceTarget, actionDiceTargetLabel, actionModifierSum, actionResultTone, actionSuccessChance, actionVerdict, chanceRingDash, DEFAULT_ACTION_DIFFICULTY, diceFromTotal, keptDiceIndexes, netDiceModifier, signedModifier, suggestedActionResult} from '../../action-roll.util';
@@ -38,7 +39,7 @@ interface RolledDie {
  * `action-roll.util.ts`. */
 @Component({
   selector: 'bol-action-roll-panel',
-  imports: [MatIconModule, MatTooltipModule, DiceBoxHostComponent],
+  imports: [MatIconModule, MatTooltipModule, DiceBoxHostComponent, DwDieFaceComponent],
   templateUrl: './action-roll-panel.html',
   styleUrl: './action-roll-panel.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -101,8 +102,6 @@ export class ActionRollPanelComponent {
   protected readonly diceCount = computed(() => 2 + Math.abs(this.netDice()));
   /** Emplacements vides du plateau avant le lancer, un par dé. */
   protected readonly ghosts = computed(() => Array.from({length: this.diceCount()}, (_, index) => index));
-  /** Les neuf points possibles d'une face de dé. */
-  protected readonly pips = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   protected readonly rolling = signal(false);
   protected readonly dice = signal<readonly [number, number] | null>(null);

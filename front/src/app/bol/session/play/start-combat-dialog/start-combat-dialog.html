@@ -99,6 +99,9 @@
                   </div>
                 </div>
 
+                <!-- Les deux dés, comme sur le jet d'action, centrés sur la case (décalés de la largeur du bouton de lancer et de son écart) -->
+                <dw-dice-row offset="3.4rem" [dice]="card.faces" [total]="card.dice" />
+
                 <!-- À table, le cas courant : on tape le total des deux dés. Le bouton les lance à l'écran. -->
                 <div class="scd-entry">
                   <input

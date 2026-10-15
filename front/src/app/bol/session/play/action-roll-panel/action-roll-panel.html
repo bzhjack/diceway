@@ -49,11 +49,7 @@
       <div class="ard-dice" aria-hidden="true">
         @if (!rolling() && rolled(); as list) {
           @for (die of list; track $index) {
-            <span class="ard-die" [class.ard-die--drop]="!die.kept" [attr.data-v]="die.value">
-              @for (pip of pips; track pip) {
-                <i></i>
-              }
-            </span>
+            <dw-die-face [value]="die.value" [dropped]="!die.kept" />
           }
         } @else if (!rolling() && manualEntry() && diceSum() !== null) {
           <span class="ard-die ard-die--total">{{ diceSum() }}</span>
