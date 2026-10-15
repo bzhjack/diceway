@@ -411,7 +411,20 @@
                   (blur)="editingProtection.set(false)"
                 />
               } @else if (term.editable) {
-                <button type="button" class="tas-sum-edit" matTooltip="Cliquer pour saisir la protection" aria-label="Modifier la protection de la cible" (click)="startEditProtection()">{{ term.value }}</button>
+                <!-- La protection, et à côté d'elle son dé et le retour à la valeur fixe -->
+                <span class="tas-entry">
+                  <button type="button" class="tas-sum-edit" matTooltip="Cliquer pour saisir la protection" aria-label="Modifier la protection de la cible" (click)="startEditProtection()">{{ term.value }}</button>
+                  @if (protectionDie()) {
+                    <button type="button" class="tas-mini" [disabled]="rolling()" matTooltip="Lancer le dé de protection au lieu de la valeur fixe" aria-label="Lancer le dé de protection de la cible" (click)="rollProtection()">
+                      <mat-icon>casino</mat-icon>
+                    </button>
+                  }
+                  @if (protectionFace() !== null || protectionManual() !== null) {
+                    <button type="button" class="tas-mini" matTooltip="Revenir à la protection fixe" aria-label="Revenir à la protection fixe" (click)="resetProtection()">
+                      <mat-icon>undo</mat-icon>
+                    </button>
+                  }
+                </span>
               } @else {
                 <b>{{ term.value }}</b>
               }
@@ -420,16 +433,6 @@
                 <button type="button" class="tas-sum-x" [attr.aria-label]="'Retirer l’effet ' + term.caption" matTooltip="Retirer cet effet" (click)="removeEffect(id)">×</button>
               }
             </div>
-          }
-          @if (protectionDie()) {
-            <button type="button" class="tas-mini" [disabled]="rolling()" matTooltip="Lancer le dé de protection au lieu de la valeur fixe" aria-label="Lancer le dé de protection de la cible" (click)="rollProtection()">
-              <mat-icon>casino</mat-icon>
-            </button>
-          }
-          @if (protectionFace() !== null || protectionManual() !== null) {
-            <button type="button" class="tas-mini" matTooltip="Revenir à la protection fixe" aria-label="Revenir à la protection fixe" (click)="resetProtection()">
-              <mat-icon>undo</mat-icon>
-            </button>
           }
         </div>
 
