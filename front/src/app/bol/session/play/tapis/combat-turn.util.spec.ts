@@ -4,7 +4,7 @@ import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model
 import {TurnOrderEntry} from '../../models/turn-order.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
 import {CombatEffect} from '../../models/combat-effect.model';
-import {appliquerEvenement, effetsDeTour, effetStabilise, modificateursPour} from './combat-effects.util';
+import {appliquerEvenement, effetAssomme, effetsDeTour, effetStabilise, modificateursPour} from './combat-effects.util';
 
 function card(kind: TapisKind, pivotId: number, extra: Partial<TapisCard> = {}): TapisCard {
   return {
@@ -124,6 +124,12 @@ describe('isOut', () => {
     expect(horsCombat(card('hero', 1, {vitaliteCourante: -7}), stabilise)).toBe('stabilisé');
     expect(horsCombat(card('hero', 1, {vitaliteCourante: 0}), stabilise)).toBe('inconscient');
     expect(horsCombat(card('hero', 2, {vitaliteCourante: -3}), stabilise)).toBe('mourant');
+  });
+
+  it('says a hero knocked to zero in a brawl is only knocked out', () => {
+    const assomme = appliquerEvenement([], {type: 'ajout-manuel', effet: effetAssomme('hero-1')}, () => 'e-1');
+    expect(horsCombat(card('hero', 1, {vitaliteCourante: 0}), assomme)).toBe('assommé');
+    expect(horsCombat(card('hero', 2, {vitaliteCourante: 0}), assomme)).toBe('inconscient');
   });
 
   it('lists the dying heroes who lose 1 vitality at the start of a round', () => {

@@ -51,6 +51,7 @@ Formule : `dé de l'arme + vigueur − protection de la cible + effets en cours`
 
 - Dés : d3, d6, d6M (le moins bon de deux), d6B (le meilleur de deux).
 - À distance et à mains nues, la vigueur compte pour moitié (arrondie à l'inférieur).
+- Bagarre à mains nues : la case « Bagarre » fait jouer la vigueur à la place de l'agilité pour l'attaque. Un coup à mains nues ne fait pas passer sous 0 : la cible est assommée, sans coma ni « Défier la mort », et ses dégâts à mains nues reviennent en entier après le combat.
 - Avec moins de 0 en vigueur, les armes lourdes (d6B) sont grisées : elles ne se manient pas.
 - La protection est la valeur fixe de l'armure ; le MJ peut lancer le dé de protection à la place, ou saisir une valeur.
 - « Appliquer » retire les dégâts à la cible. Un héros qui passe sous 0, ou sous −5, se voit proposer « Défier la mort » ; sous −5, il se stabilise et ne perd plus de vitalité.

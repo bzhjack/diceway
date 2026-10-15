@@ -4,7 +4,7 @@ import {InitiativeTierKey} from '../../models/initiative.model';
 import {TurnOrderEntry, TurnOrderGroup} from '../../models/turn-order.model';
 import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
 import {EtatCombat, TurnStatus, OrderedCard, TurnState, TurnToken} from '../../models/combat-turn.model';
-import {appliquerEvenement, aStabilise, EffectIdGenerator, effetsDeLAncienFormat, effetsDeTour, nextEffectId, normalizeEffets, SANS_BOUCLIER} from './combat-effects.util';
+import {aAssomme, appliquerEvenement, aStabilise, EffectIdGenerator, effetsDeLAncienFormat, effetsDeTour, nextEffectId, normalizeEffets, SANS_BOUCLIER} from './combat-effects.util';
 
 export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], effets: [], exclus: []};
 
@@ -84,9 +84,9 @@ export function isOut(card: TapisCard): boolean {
   return horsCombat(card) !== null;
 }
 
-/** Pourquoi une carte est hors combat, en clair : un héros est inconscient à 0, mourant de −1 à −5, mort à −6 ou moins — stabilisé
- * sous 0 s'il porte l'effet ; un PNJ, une créature ou un démon est hors de combat dès 0. `null` pour une carte qui joue. */
-export function horsCombat(card: TapisCard, effets: readonly CombatEffect[] = []): 'inconscient' | 'mourant' | 'stabilisé' | 'mort' | 'hors de combat' | null {
+/** Pourquoi une carte est hors combat, en clair : un héros est inconscient à 0 (assommé, si c'est une bagarre), mourant de −1 à −5,
+ * mort à −6 ou moins — stabilisé sous 0 s'il porte l'effet ; un PNJ, une créature ou un démon est hors de combat dès 0. `null` pour une carte qui joue. */
+export function horsCombat(card: TapisCard, effets: readonly CombatEffect[] = []): 'inconscient' | 'assommé' | 'mourant' | 'stabilisé' | 'mort' | 'hors de combat' | null {
   const vitalite = card.vitaliteCourante;
   if (card.vitaliteMax === null || card.vitaliteMax <= 0 || vitalite === null || vitalite > 0) {
     return null;
@@ -95,7 +95,7 @@ export function horsCombat(card: TapisCard, effets: readonly CombatEffect[] = []
     return 'hors de combat';
   }
   if (vitalite === 0) {
-    return 'inconscient';
+    return aAssomme(effets, card.key) ? 'assommé' : 'inconscient';
   }
   return aStabilise(effets, card.key) ? 'stabilisé' : vitalite >= -5 ? 'mourant' : 'mort';
 }

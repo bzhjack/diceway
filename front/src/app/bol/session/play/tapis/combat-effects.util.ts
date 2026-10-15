@@ -11,6 +11,8 @@ export const SANS_BOUCLIER = 'sans-bouclier';
 const INCONSCIENT = 'inconscient';
 /** Trace : des dégâts encaissés à mains nues, récupérés en totalité après le combat. */
 const MAINS_NUES = 'mains-nues';
+/** Trace : le personnage a été mis à 0 dans une bagarre à mains nues ; il a seulement perdu connaissance. */
+const ASSOMME = 'assomme';
 /** Trace : le héros mourant est stabilisé (« Défier la mort » sous −5, ou secouru) ; il ne perd plus de vitalité d'un round à l'autre. */
 const STABILISE = 'stabilise';
 /** La carte lance un dé de malus à sa prochaine action (adversaire renversé qui se relève, coup précis…). */
@@ -346,6 +348,17 @@ export function aStabilise(effets: readonly CombatEffect[], carte: string): bool
 export function effetDegatsMainsNues(porteur: string, degats: number): NewEffect {
   const valeur = Math.min(20, degats);
   return {origine: MAINS_NUES, libelle: `${valeur} ${valeur > 1 ? 'dégâts' : 'dégât'} à mains nues`, porteur, stat: 'action', valeur, quand: 'subie', duree: {type: 'combat'}, manuel: false};
+}
+
+/** Mis à 0 par une bagarre à mains nues (livre p. 64) : le personnage perd simplement connaissance — ni coma, ni perte de vitalité, ni
+ * « Défier la mort » — et reprend ses esprits au bout d'un quart d'heure. */
+export function effetAssomme(porteur: string): NewEffect {
+  return {origine: ASSOMME, libelle: 'assommé', porteur, stat: 'action', valeur: 0, quand: 'subie', duree: {type: 'combat'}, manuel: false};
+}
+
+/** Vrai si la carte a été assommée dans une bagarre pendant ce combat. */
+export function aAssomme(effets: readonly CombatEffect[], carte: string): boolean {
+  return effets.some((effet) => effet.porteur === carte && effet.origine === ASSOMME);
 }
 
 /** Les dégâts encaissés à mains nues par la carte pendant ce combat. */

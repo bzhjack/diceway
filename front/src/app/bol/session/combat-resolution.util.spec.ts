@@ -72,6 +72,11 @@ describe('attack and damage bonuses', () => {
     expect(attackBonus({...STATS, attaque: 5}, false)).toBe(5);
   });
 
+  it('takes vigueur instead of agility in a brawl', () => {
+    expect(attackBonus(STATS, false, true)).toBe(4);
+    expect(attackBonus({...STATS, attaque: 5}, false, true)).toBe(5);
+  });
+
   it('halves vigueur at range, rounding down', () => {
     expect(vigueurBonus(STATS, false)).toBe(3);
     expect(vigueurBonus(STATS, true)).toBe(1);

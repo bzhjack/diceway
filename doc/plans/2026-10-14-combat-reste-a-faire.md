@@ -34,7 +34,7 @@ Chaque point donne la règle, ce que fait l'application aujourd'hui, une proposi
 | 8 | Carrière utile au jet de réaction | Règle absente | S | 2 |
 | 9 | Héroïsme du défenseur, interrompre | Règle absente | M | 2 |
 | 10 | Secourir un mourant, soins | **Fait le 2026-10-15** | M | 2 |
-| 11 | Bagarre à mains nues | Règle absente | M | 2 |
+| 11 | Bagarre à mains nues | **Fait le 2026-10-15** | M | 2 |
 | 12 | Avantages et pouvoirs des créatures et démons | Règle absente | L | 3 |
 | 13 | Horde de piétaille | Règle absente | M | 3 |
 | 14 | Points de vilenie des rivaux | Règle absente | M | 3 |
@@ -242,10 +242,12 @@ Les lots sont un ordre proposé : d'abord corriger les calculs faux (lot 0), pui
 - **Aujourd'hui** : rien de cela.
 - **Proposition** : avec les mains nues, une case « Bagarre » qui prend la vigueur à la place de l'agilité, et marque les dégâts comme « de bagarre ». Une cible mise à 0 par la bagarre est seulement assommée : pas de « Défier la mort », et récupération totale après le combat.
 - **Effort** : M.
-- **En partie fait le 2026-10-15** : la récupération totale (livre p. 65).
+- **Fait le 2026-10-15** :
   - Chaque coup appliqué à mains nues (celles d'un héros, ou une arme « Mains nues » d'un PNJ) laisse une trace dans le registre (« 3 dégâts à mains nues », durée : combat, sans effet sur les jets) ; `degatsMainsNues` en fait la somme par carte.
   - « Terminer le combat » ouvre la boîte « Après combat », qui remplace la confirmation et « Soins médicaux » : pour chaque blessé du camp des héros, « Repos » rend la moitié des points perdus et la totalité des dégâts à mains nues (rien sous 0), puis « Soins » rend le rang du soigneur choisi (« Personne » possible). Chaque case se décoche ; rien n'est enregistré avant « Terminer le combat », « Annuler » laisse le combat en cours.
-  - Reste à faire : la vigueur à la place de l'agilité, et la cible assommée à 0 (pas de coma ni de « Défier la mort »).
+  - Avec les mains nues, une case « Bagarre : vigueur au lieu d'agilité » (au choix du MJ, livre p. 62) : la vigueur remplace l'agilité dans le bonus d'attaque, la tuile Attaque et l'addition du jet (`attackBonus(stats, useTir, brawl)`). Elle se décoche à chaque nouvelle carte active, et la changer efface le jet en cours.
+  - Un coup à mains nues ne fait pas passer sous 0 (livre p. 64) : les dégâts s'arrêtent à 0, la cible reçoit la trace « assommé », la frise dit « assommé », et ni le coma ni « Défier la mort » ne s'enclenchent. L'aperçu de la vie de la cible s'arrête aussi à 0.
+  - Limites : un héros assommé se voit proposer, au round suivant, de reprendre ses esprits pour 1 PH, comme à 0 ; la trace « assommé » reste jusqu'à la fin du combat, même s'il est relevé puis remis à 0 par une arme.
 
 ## Lot 3 : le bestiaire
 

@@ -85,9 +85,10 @@ export function rawDamage(die: DamageDie, values: readonly number[]): number {
   return die === 'd3' ? Math.ceil(values[0] / 2) : values[0];
 }
 
-/** Bonus au jet d'attaque : celui d'une créature, sinon agilité + mêlée (ou tir). */
-export function attackBonus(stats: ResolvedCombatStats, useTir: boolean): number {
-  return stats.attaque ?? stats.agilite + (useTir ? stats.tir : stats.melee);
+/** Bonus au jet d'attaque : celui d'une créature, sinon agilité + mêlée (ou tir). En bagarre à mains nues, le MJ peut faire jouer la
+ * vigueur à la place de l'agilité (`brawl`, livre p. 62). */
+export function attackBonus(stats: ResolvedCombatStats, useTir: boolean, brawl = false): number {
+  return stats.attaque ?? (brawl ? stats.vigueur : stats.agilite) + (useTir ? stats.tir : stats.melee);
 }
 
 /** Bonus de vigueur aux dégâts : vigueur en mêlée, la moitié (arrondie à l'inférieur) à distance et à mains nues, même en mêlée

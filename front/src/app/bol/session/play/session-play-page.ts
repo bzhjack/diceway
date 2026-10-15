@@ -49,9 +49,9 @@ import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {equippedArmes} from '../../shared/arme/arme-equipee';
 import {AttackChoice} from '../models/attack-options.model';
 import {bloqueeCeRound, debutDeTour, effetsDerives, endTurn, giveBackTurn, herosMourants, horsCombat, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
-import {NewEffect} from '../models/combat-effect.model';
+import {CombatEffect, NewEffect} from '../models/combat-effect.model';
 import {EtatSaver} from './etat-saver';
-import {aSombre, appliquerEvenement, degatsMainsNues, effetDegatsMainsNues, effetInconscient, effetStabilise, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from './tapis/combat-effects.util';
+import {aSombre, appliquerEvenement, degatsMainsNues, effetAssomme, effetDegatsMainsNues, effetInconscient, effetStabilise, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from './tapis/combat-effects.util';
 import {EtatCombat} from '../models/combat-turn.model';
 import {CombatBoardComponent} from './combat-board/combat-board';
 import {RescueDialogComponent} from './rescue-dialog/rescue-dialog';
@@ -1129,13 +1129,20 @@ export class SessionPlayPageComponent {
 
   /** Dégâts calculés par l'assistant : enregistrés sur la cible. */
   protected onHitApplied(hit: AppliedHit): void {
-    if (hit.damage !== 0) {
-      this.applyDamageTo(hit.target, -hit.damage, this.targetStats());
+    // Une bagarre à mains nues ne fait pas passer sous 0 (livre p. 64) : la cible perd seulement connaissance, sans coma ni
+    // « Défier la mort ».
+    const before = hit.target.vitaliteCourante ?? 0;
+    const damage = hit.unarmed ? Math.min(hit.damage, Math.max(0, before)) : hit.damage;
+    if (damage !== 0) {
+      this.applyDamageTo(hit.target, -damage, this.targetStats());
     }
-    // Les dégâts d'une bagarre se récupèrent en totalité après le combat : le registre les retient.
-    if (hit.unarmed && hit.damage > 0) {
-      const effet = effetDegatsMainsNues(hit.target.key, hit.damage);
-      this.saveEtat((etat) => ({...etat, effets: [...appliquerEvenement(etat.effets, {type: 'ajout-manuel', effet}, idAleatoire)]}));
+    // Les dégâts d'une bagarre se récupèrent en totalité après le combat : le registre les retient, et la cible mise à 0 est assommée.
+    if (hit.unarmed && damage > 0) {
+      const nouveaux = [effetDegatsMainsNues(hit.target.key, damage), ...(before - damage === 0 ? [effetAssomme(hit.target.key)] : [])];
+      this.saveEtat((etat) => ({
+        ...etat,
+        effets: nouveaux.reduce<readonly CombatEffect[]>((effets, effet) => appliquerEvenement(effets, {type: 'ajout-manuel', effet}, idAleatoire), etat.effets),
+      }));
     }
   }
 

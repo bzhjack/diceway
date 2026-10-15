@@ -82,6 +82,20 @@
         <span class="tas-fixed">{{ card().degats }}</span>
       }
 
+      @if (canBrawl()) {
+        <div class="tas-chips">
+          <button
+            type="button"
+            class="tas-chip"
+            [attr.aria-pressed]="brawl()"
+            matTooltip="Au choix du MJ (livre p. 62) : la vigueur remplace l'agilité dans le bonus d'attaque."
+            (click)="toggleBrawl()"
+          >
+            Bagarre : vigueur au lieu d'agilité
+          </button>
+        </div>
+      }
+
       @if (isDualWieldSelected()) {
         <span class="tas-label" id="tas-arme2">Arme secondaire</span>
         <div class="tas-chips" role="group" aria-labelledby="tas-arme2">

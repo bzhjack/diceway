@@ -217,6 +217,11 @@ export class TurnAssistantComponent {
     return arme?.id === MAINS_NUES.id || /mains nues/i.test(arme?.arme?.arme ?? '');
   });
 
+  /** Bagarre à mains nues (livre p. 62, au choix du MJ) : la vigueur remplace l'agilité dans le bonus d'attaque. */
+  private readonly brawlChosen = linkedSignal<string, boolean>({source: () => this.cardKey(), computation: () => false});
+  protected readonly canBrawl = computed(() => this.unarmed() && this.attacker()?.attaque === null);
+  protected readonly brawl = computed(() => this.canBrawl() && this.brawlChosen());
+
   /** L'arme secondaire d'un héros se prend parmi toutes ses armes légères ou moyennes, équipées ou non : « équipée » dit
    * seulement ce que le héros propose à l'attaque, pas ce qu'il a en main pour parer ou frapper à deux armes. */
   protected readonly eligibleOffHandArmes = computed(() => {
@@ -366,7 +371,7 @@ export class TurnAssistantComponent {
     }
     const posture = POSTURE_DEFENSE[this.effectiveOption()?.slug ?? ''] ?? 0;
     return [
-      {label: 'Attaque', value: this.signed(attackBonus(stats, this.isTir()))},
+      {label: 'Attaque', value: this.signed(attackBonus(stats, this.isTir(), this.brawl()))},
       {label: 'Défense', value: String(stats.defense + posture), ...(posture !== 0 ? {tone: posture > 0 ? ('up' as const) : ('down' as const)} : {})},
       // Une créature n'ajoute pas sa vigueur aux dégâts : pas de tuile, pour ne pas laisser croire le contraire.
       ...(stats.attaque === null ? [{label: 'Vigueur', value: this.signed(vigueurBonus(stats, this.isTir(), this.unarmed()))}] : []),
@@ -420,7 +425,7 @@ export class TurnAssistantComponent {
     if (!a || !t || !this.target()) {
       return null;
     }
-    return computeAttackTotal(0, attackBonus(a, this.isTir()), t.defense, sommeModificateurs(this.effectTerms()), this.legendaryBonus() ? 1 : 0, this.postureModifier());
+    return computeAttackTotal(0, attackBonus(a, this.isTir(), this.brawl()), t.defense, sommeModificateurs(this.effectTerms()), this.legendaryBonus() ? 1 : 0, this.postureModifier());
   });
 
   /** Ce qu'il faut aux dés pour toucher la cible choisie, et les chances. */
@@ -472,7 +477,7 @@ export class TurnAssistantComponent {
           : stats
             ? computeAttackTotal(
                 0,
-                attackBonus(a, this.isTir()),
+                attackBonus(a, this.isTir(), this.brawl()),
                 stats.defense,
                 sommeModificateurs(modificateursPour(this.effets(), {jet: 'attaque', attaquant: this.card().key, cible: card.key, bouclier: stats.bouclierMalusUneAttaque, bouclierToutes: stats.bouclierDefenseToutes})),
                 this.legendaryBonus() ? 1 : 0,
@@ -505,7 +510,11 @@ export class TurnAssistantComponent {
     if (a.attaque !== null) {
       add(a.attaque, 'attaque');
     } else {
-      add(a.agilite, 'agi');
+      if (this.brawl()) {
+        add(a.vigueur, 'vig');
+      } else {
+        add(a.agilite, 'agi');
+      }
       add(this.isTir() ? a.tir : a.melee, this.isTir() ? 'tir' : 'mêlée');
     }
     add(-t.defense, 'défense');
@@ -630,7 +639,7 @@ export class TurnAssistantComponent {
     }
     return computeAttackTotal(
       sum,
-      attackBonus(a, this.isTir()),
+      attackBonus(a, this.isTir(), this.brawl()),
       t.defense,
       sommeModificateurs(this.effectTerms()),
       this.legendaryBonus() ? 1 : 0,
@@ -839,8 +848,9 @@ export class TurnAssistantComponent {
     const target = this.target();
     const current = target?.vitaliteCourante ?? null;
     const damage = this.damage();
-    const after = current !== null && damage !== null && damage > 0 ? current - damage : null;
-    return {current, max: target?.vitaliteMax ?? null, after, loss: after === null ? 0 : damage, out: after !== null && after <= 0};
+    // Une bagarre à mains nues ne fait pas passer sous 0 : la cible est assommée.
+    const after = current !== null && damage !== null && damage > 0 ? (this.unarmed() ? Math.min(current, Math.max(0, current - damage)) : current - damage) : null;
+    return {current, max: target?.vitaliteMax ?? null, after, loss: after === null || current === null ? 0 : current - after, out: after !== null && after <= 0};
   });
 
   /** Où en sont les trois cases — qui, l'attaque, les dégâts : celle où il faut agir s'allume. Après des dégâts appliqués, l'attaque
@@ -905,6 +915,7 @@ export class TurnAssistantComponent {
       this.targetKey();
       this.choiceKey();
       this.gmDie();
+      this.brawl();
       untracked(() => this.resetRoll());
     });
 
@@ -960,6 +971,10 @@ export class TurnAssistantComponent {
       return;
     }
     this.selectedArmeId.set(id ?? null);
+  }
+
+  protected toggleBrawl(): void {
+    this.brawlChosen.update((on) => !on);
   }
 
   protected selectOption(slug: string): void {
