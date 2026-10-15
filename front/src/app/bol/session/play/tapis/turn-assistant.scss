@@ -618,9 +618,8 @@
   height: 3.1rem;
 }
 
-// Dé de protection, retour à la valeur fixe : petits, au bout de l'addition.
+// Dé de protection, retour à la valeur fixe : petits, au bout de l'addition, sur la ligne des valeurs.
 .tas-mini {
-  align-self: center;
   width: 1.9rem;
   height: 1.9rem;
   border-radius: 7px;
@@ -687,7 +686,9 @@
 .tas-sum-term {
   position: relative;
   display: grid;
-  justify-items: center;
+  // Une ligne de valeurs de hauteur fixe : les légendes s'alignent, même sous le total écrit plus gros.
+  grid-template-rows: 1.9rem auto;
+  place-items: center;
   min-width: 1.7rem;
 
   b,
