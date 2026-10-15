@@ -1,0 +1,117 @@
+.acd-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.acd-content {
+  display: grid;
+  gap: 0.6rem;
+
+  p {
+    margin: 0;
+  }
+}
+
+.acd-lead {
+  font-size: 0.85rem;
+  color: var(--dw-surface-600);
+}
+
+.acd-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+}
+
+.acd-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.acd-chip {
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 8px;
+  background: var(--dw-surface-0);
+  color: var(--dw-surface-900);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  em {
+    margin-left: 0.3rem;
+    font-style: normal;
+    opacity: 0.7;
+  }
+
+  &[aria-pressed='true'] {
+    border-color: var(--dw-color-legendary);
+    background: linear-gradient(#e6b64e, #b8832a);
+    color: #1a1203;
+  }
+}
+
+.acd-rows {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.acd-row {
+  display: grid;
+  grid-template-columns: minmax(6rem, 1fr) 15rem 5.5rem;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0;
+  border-top: 1px solid var(--dw-border);
+}
+
+.acd-who {
+  display: grid;
+
+  small {
+    color: var(--dw-surface-500);
+  }
+}
+
+.acd-gains {
+  display: grid;
+  justify-items: start;
+
+  small {
+    margin-left: 0.4rem;
+    color: var(--dw-surface-500);
+  }
+}
+
+.acd-plus {
+  color: var(--dw-color-reussite);
+}
+
+.acd-none {
+  font-size: 0.85rem;
+  color: var(--dw-surface-500);
+}
+
+.acd-after {
+  text-align: right;
+  white-space: nowrap;
+}
+
+// Sur un écran étroit, les cases passent sous le nom.
+@media (max-width: 40rem) {
+  .acd-row {
+    grid-template-columns: 1fr auto;
+  }
+
+  .acd-gains {
+    grid-row: 2;
+    grid-column: 1 / -1;
+  }
+}

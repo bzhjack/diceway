@@ -1,0 +1,62 @@
+<h2 mat-dialog-title class="acd-title">
+  <mat-icon>local_bar</mat-icon>
+  Après combat
+</h2>
+
+<mat-dialog-content class="acd-content">
+  <p class="acd-lead">
+    Le combat se termine : la session repasse en mode libre, les personnages restent sur la table. Un court repos, une gorgée d'eau ou
+    de vin : chacun récupère la moitié des points perdus, et la totalité des dégâts reçus à mains nues. Sous 0, il faut d'abord être
+    secouru.
+  </p>
+
+  @if (data.healers.length > 0) {
+    <span class="acd-label" id="acd-healer">Soins médicaux : le soigneur rend son rang en vitalité</span>
+    <div class="acd-chips" role="group" aria-labelledby="acd-healer">
+      @for (h of data.healers; track $index) {
+        <button type="button" class="acd-chip" [attr.aria-pressed]="healerIndex() === $index" (click)="healerIndex.set($index)">
+          {{ h.nom }} <em>{{ h.carriere.label }} {{ h.carriere.value }}</em>
+        </button>
+      }
+      <button type="button" class="acd-chip" [attr.aria-pressed]="healerIndex() === null" (click)="healerIndex.set(null)">Personne</button>
+    </div>
+  }
+
+  @if (rows().length > 0) {
+    <ul class="acd-rows">
+      @for (row of rows(); track row.index) {
+        <li class="acd-row">
+          <div class="acd-who">
+            <b>{{ row.w.nom }}</b>
+            <small>{{ row.w.vitalite }} / {{ row.w.vitaliteMax }}{{ row.w.etat ? ' · ' + row.w.etat : '' }}</small>
+          </div>
+          <div class="acd-gains">
+            @if (row.restable > 0) {
+              <mat-checkbox [checked]="resting().has(row.index)" (change)="toggleRest(row.index)">
+                Repos <b class="acd-plus">+{{ row.restable }}</b>
+                @if (row.bagarre > 0) {
+                  <small>dont {{ row.bagarre }} à mains nues</small>
+                }
+              </mat-checkbox>
+            } @else if (row.w.vitalite < 0) {
+              <span class="acd-none">Pas de repos sous 0</span>
+            }
+            @if (healer()) {
+              <mat-checkbox [checked]="cared().has(row.index)" (change)="toggleCare(row.index)">
+                Soins <b class="acd-plus">+{{ row.careable }}</b>
+              </mat-checkbox>
+            }
+          </div>
+          <b class="acd-after" [attr.aria-label]="'Vitalité après : ' + row.after">→ {{ row.after }} / {{ row.w.vitaliteMax }}</b>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="acd-none">Personne n'est blessé.</p>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button type="button" mat-dialog-close>Annuler</button>
+  <button mat-flat-button type="button" cdkFocusInitial (click)="finish()">Terminer le combat</button>
+</mat-dialog-actions>
