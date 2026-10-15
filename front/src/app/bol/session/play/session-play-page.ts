@@ -216,7 +216,7 @@ export class SessionPlayPageComponent {
         id: 1000 + index,
         arme_id: 1000 + index,
         equipee: true,
-        arme: {id: null, arme: a.nom ?? '', type: a.type ?? 'M', degats: a.degats, portee: null, notes: null},
+        arme: {id: null, arme: a.nom ?? '', type: a.type ?? 'M', degats: a.degats, portee: a.portee ?? null, notes: null},
       }));
   });
 

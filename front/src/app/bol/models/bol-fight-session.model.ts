@@ -136,6 +136,8 @@ interface BolFightSessionArmeModel {
   nom: string | null;
   degats: string | null;
   type: 'M' | 'T' | null;
+  /** Portée de base de l'arme (« 3 m », « 9 m / 18 m ») — absente des lignes posées avant cette information. */
+  portee?: string | null;
   /** Équipée sur la fiche du PNJ à la pose — absent des lignes posées avant cette information. */
   equipee?: boolean;
 }

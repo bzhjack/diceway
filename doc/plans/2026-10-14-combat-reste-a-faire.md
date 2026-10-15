@@ -29,7 +29,7 @@ Chaque point donne la règle, ce que fait l'application aujourd'hui, une proposi
 | 3 | Mourant : −1 vitalité par round | **Fait le 2026-10-15** | S | 1 |
 | 4 | Arme lourde interdite sous 0 de vigueur | **Fait le 2026-10-15** | S | 1 |
 | 5 | Fin du tour sans appliquer le coup | **Fait le 2026-10-15** | S | 1 |
-| 6 | Portée des armes à distance | Règle absente | M | 2 |
+| 6 | Portée des armes à distance | **Fait le 2026-10-15** | M | 2 |
 | 7 | Modificateur libre, bonus de carrière, feinte | **Fait le 2026-10-15** | M | 2 |
 | 8 | Carrière utile au jet de réaction | Règle absente | S | 2 |
 | 9 | Héroïsme du défenseur, interrompre | Règle absente | M | 2 |
@@ -185,6 +185,10 @@ Les lots sont un ordre proposé : d'abord corriger les calculs faux (lot 0), pui
 - **Aujourd'hui** : on choisit mêlée ou tir, sans portée.
 - **Proposition** : en tir, une échelle de portée dans « Avec quoi ? », réglée par défaut sur « courte », avec la portée de base de l'arme rappelée (elle est déjà dans le catalogue). Le modificateur entre dans l'addition comme un terme « portée ».
 - **Effort** : M.
+- **Fait le 2026-10-15** :
+  - en tir, « Portée » dans « Avec quoi ? » : « ‹ Courte · jusqu'à 6 m 0 › », d'office sur courte, un cran à la fois de bout portant (+1) à maximale (−8). La distance vient de la portée de l'arme (livre p. 62 : la portée de l'arme est celle du bout portant, chaque multiple descend d'un cran) ; sans portée connue, seul le facteur s'affiche (`range.util.ts`).
+  - Le modificateur entre dans l'addition (« −1 portée moyenne »), ce qu'il faut aux dés et les chances sur chaque cible.
+  - Les armes des PNJ posés à la table gardent maintenant leur portée (copie côté serveur) ; un PNJ posé avant n'a que le facteur. Un PNJ qui tire mieux qu'il ne frappe part d'office sur son arme de tir (l'archer sur son arc).
 
 ### 7. Modificateur libre, bonus de carrière, feinte
 

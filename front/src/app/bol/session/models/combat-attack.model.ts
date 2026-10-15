@@ -57,3 +57,9 @@ export interface AppliedHit {
   /** Porté à mains nues : ces dégâts se récupèrent en totalité après le combat. */
   readonly unarmed: boolean;
 }
+
+/** Un facteur de portée d'une arme à distance (02-actions-combat.md, « Portée des armes à distance ») et son modificateur. */
+export interface RangeFactor {
+  readonly label: string;
+  readonly modifier: number;
+}

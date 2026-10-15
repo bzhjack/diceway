@@ -11,6 +11,7 @@ import {CombatEffect, ModifierTerm, NewEffect} from '../../models/combat-effect.
 import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, keepBestOrWorstTwo, keptDiceIndexes, netDiceModifier, parseDiceTotal} from '../../action-roll.util';
 import {aDejaFeinte, descriptionEffet, doitUnDeDeMalus, effetFeinte, effetCoupPrecis, effetRenversement, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
 import {EffectsListComponent} from './effects-list';
+import {baseRangeMeters, DEFAULT_RANGE_INDEX, formatMeters, RANGE_FACTORS, rangeReach} from '../../range.util';
 import {DwDiceRowComponent} from '../../../../shared/dice-row/dice-row';
 import {DiceRowDie} from '../../../../shared/models/dice-row.model';
 import {EndTurnDialogComponent} from '../end-turn-dialog/end-turn-dialog';
@@ -218,7 +219,9 @@ export class TurnAssistantComponent {
   protected readonly effectiveArme = computed(() => {
     const list = this.displayArmes();
     const allowed = list.filter((a) => !this.heavyForbidden().has(a.id));
-    return allowed.find((a) => a.id === this.selectedArmeId()) ?? allowed[0] ?? list[0] ?? null;
+    // Un tireur (son tir dépasse sa mêlée) part d'office sur son arme de tir : l'archer prend son arc, pas sa dague.
+    const preferred = this.prefersTir() ? allowed.find((a) => a.arme?.type === 'T') : undefined;
+    return allowed.find((a) => a.id === this.selectedArmeId()) ?? preferred ?? allowed[0] ?? list[0] ?? null;
   });
   /** À mains nues — celles d'un héros, ou une arme « Mains nues » d'un PNJ : la vigueur ne compte que pour moitié dans les dégâts, et
    * ces dégâts se récupèrent en totalité après le combat. */
@@ -250,10 +253,13 @@ export class TurnAssistantComponent {
     return this.career() !== null && target !== null && !this.feintNoted() && aDejaFeinte(this.effets(), target.key, this.card().key);
   });
 
-  /** Le modificateur libre et la carrière, en termes d'addition : ils entrent dans les jets comme les effets en cours. */
+  /** Le modificateur libre, la carrière et la portée d'un tir, en termes d'addition : ils entrent dans les jets comme les effets en
+   * cours. */
   private readonly extraAttackTerms = computed<readonly ModifierTerm[]>(() => {
     const career = this.career();
+    const range = this.range();
     return [
+      ...(range && range.modifier !== 0 ? [extraTerm(range.modifier, `portée ${range.label.toLowerCase()}`)] : []),
       ...(this.freeModifier() !== 0 ? [extraTerm(this.freeModifier(), 'modificateur')] : []),
       ...(career && this.careerOn() === 'attaque' ? [extraTerm(career.value, career.label)] : []),
     ];
@@ -376,6 +382,28 @@ export class TurnAssistantComponent {
     const portee = arme.arme?.portee?.trim();
     return portee && portee !== '-' ? ['melee', 'tir'] : ['melee'];
   });
+
+  /** Facteur de portée d'un tir (livre p. 62) : courte d'office, et il repart de là à chaque nouvelle carte active. */
+  protected readonly rangeIndex = linkedSignal<string, number>({source: () => this.cardKey(), computation: () => DEFAULT_RANGE_INDEX});
+  protected readonly rangeFactors = RANGE_FACTORS;
+  /** Le facteur de portée retenu, `null` pour une attaque en mêlée ou celle d'une créature. */
+  protected readonly range = computed(() => {
+    if (!this.isTir() || this.attacker()?.attaque !== null) {
+      return null;
+    }
+    const factor = RANGE_FACTORS[this.rangeIndex()];
+    const base = baseRangeMeters(this.effectiveArme()?.arme?.portee);
+    // Jusqu'où va ce facteur avec cette arme : « jusqu'à 12 m » ; rien pour une arme sans portée connue.
+    return {
+      ...factor,
+      text: factor.modifier === 0 ? '0' : signedTerm(factor.modifier),
+      reach: base === null ? null : formatMeters(rangeReach(base, this.rangeIndex())),
+    };
+  });
+
+  protected stepRange(delta: number): void {
+    this.rangeIndex.update((index) => Math.max(0, Math.min(RANGE_FACTORS.length - 1, index + delta)));
+  }
 
   /** L'attaque se fait à distance : imposée par l'arme quand elle n'a qu'un mode, sinon choisie dans l'assistant. */
   protected readonly isTir = computed(() => {

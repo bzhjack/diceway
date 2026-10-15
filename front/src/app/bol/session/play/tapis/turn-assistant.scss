@@ -321,7 +321,8 @@
     color: #1a1203;
   }
 
-  &[aria-disabled='true'] {
+  &[aria-disabled='true'],
+  &:disabled {
     opacity: 0.45;
     cursor: not-allowed;
   }

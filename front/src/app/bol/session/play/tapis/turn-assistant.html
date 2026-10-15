@@ -122,6 +122,26 @@
         }
       }
 
+      @if (range(); as r) {
+        <!-- Facteur de portée : la portée de l'arme est celle du bout portant, chaque multiple au-delà descend d'un cran (livre p. 62) -->
+        <span class="tas-label" id="tas-portee">Portée</span>
+        <div class="tas-chips" role="group" aria-labelledby="tas-portee">
+          <button type="button" class="tas-chip" aria-label="Plus près" [disabled]="rangeIndex() === 0" (click)="stepRange(-1)">
+            ‹
+          </button>
+          <span
+            class="tas-chip"
+            aria-live="polite"
+            matTooltip="La portée de l'arme est celle du bout portant ; chaque multiple au-delà descend d'un cran : courte, moyenne, longue…"
+          >
+            {{ r.label }}{{ r.reach ? ' · jusqu’à ' + r.reach : '' }} <em>{{ r.text }}</em>
+          </span>
+          <button type="button" class="tas-chip" aria-label="Plus loin" [disabled]="rangeIndex() === rangeFactors.length - 1" (click)="stepRange(1)">
+            ›
+          </button>
+        </div>
+      }
+
       @if (usefulCarrieres().length > 0) {
         <span class="tas-label" id="tas-carriere">Carrière : manœuvre ou feinte</span>
         <div class="tas-chips" role="group" aria-labelledby="tas-carriere">

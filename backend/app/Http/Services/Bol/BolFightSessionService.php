@@ -609,6 +609,8 @@ class BolFightSessionService
             'nom'     => $ha->arme?->arme,
             'degats'  => $ha->arme?->degats,
             'type'    => $ha->arme?->type,
+            // Portée de base (« 3 m », « 9 m / 18 m ») : le facteur de portée d'un tir en dépend.
+            'portee'  => $ha->arme?->portee,
             'equipee' => true,
         ])->values()->toArray();
 

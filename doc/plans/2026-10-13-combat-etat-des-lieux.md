@@ -44,6 +44,7 @@ Formule : `2d6 + bonus d'attaque − défense de la cible + posture + effets en 
 - **Capacités d'attaque** : « Attaque féroce » et « Armes améliorées » donnent d'office un dé de bonus, « Attaque timide » un dé de malus ; ils s'annulent avec le dé du MJ.
 - **Double 1** : raté, quel que soit le total. **Double 6** : touché, quel que soit le total.
 - **Postures** : défensive, offensive, intrépide, combat à deux armes, attaque au défaut de l'armure. Créatures et démons n'en ont pas.
+- **Portée** (tir) : de bout portant (+1) à maximale (−8), courte d'office ; la distance de chaque cran vient de la portée de l'arme.
 - **Modificateur du MJ** : de −6 à +6, à côté du dé du MJ.
 - **Carrière** (manœuvre ou feinte) : le rang d'une carrière du héros, à l'attaque ou aux dégâts. La feinte est notée sur la cible : retentée par le même attaquant, l'assistant le signale.
 - **PNJ** : considérés comme équipés de toutes leurs armes et armures.
