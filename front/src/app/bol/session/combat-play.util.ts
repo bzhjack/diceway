@@ -11,6 +11,17 @@ function hasPouvoir(pouvoirs: readonly (string | null)[], nom: string): boolean 
 }
 
 /** Protection d'un démon d'après ses pouvoirs (04-pnj-creatures-demons.md) : Cuirasse `d6 (4)`, sinon Armure `d6-2 (2)`, sinon aucune. */
+/** Les dés que les capacités d'une créature ou les pouvoirs d'un démon donnent à toutes ses attaques (04-pnj-creatures-demons.md) :
+ * « Attaque féroce » et « Armes améliorées » un dé de bonus, « Attaque timide » un dé de malus. Les autres dés de bonus (prédateur,
+ * camouflage) ne jouent pas à l'attaque ; les capacités sont reconnues par leur nom. */
+export function attackDiceAbilities(noms: readonly (string | null)[]): {readonly attaqueAvantages: readonly string[]; readonly attaqueDesavantages: readonly string[]} {
+  const named = noms.filter((nom): nom is string => !!nom);
+  return {
+    attaqueAvantages: named.filter((nom) => /attaque f[ée]roce|armes am[ée]lior[ée]es/i.test(nom)),
+    attaqueDesavantages: named.filter((nom) => /attaque timide/i.test(nom)),
+  };
+}
+
 export function demonProtection(pouvoirs: readonly (string | null)[]): string | null {
   if (hasPouvoir(pouvoirs, 'cuirasse')) {
     return 'd6 (4)';
@@ -123,6 +134,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
         defense: c.defense,
         degats: c.degats,
         protection: c.protection,
+        ...attackDiceAbilities((c.capacites ?? []).map((capacite) => capacite.capacite)),
       },
     });
   }
@@ -150,6 +162,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
         defense: d.defense,
         degats: demonDegats(d.degats, d.rang, pouvoirs),
         protection: demonProtection(pouvoirs),
+        ...attackDiceAbilities(pouvoirs),
       },
     });
   }

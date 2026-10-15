@@ -35,7 +35,7 @@ Chaque point donne la règle, ce que fait l'application aujourd'hui, une proposi
 | 9 | Héroïsme du défenseur, interrompre | Règle absente | M | 2 |
 | 10 | Secourir un mourant, soins | **Fait le 2026-10-15** | M | 2 |
 | 11 | Bagarre à mains nues | **Fait le 2026-10-15** | M | 2 |
-| 12 | Avantages et pouvoirs des créatures et démons | Règle absente | L | 3 |
+| 12 | Avantages et pouvoirs des créatures et démons | En partie : dés d'attaque faits le 2026-10-15 | L | 3 |
 | 13 | Horde de piétaille | Règle absente | M | 3 |
 | 14 | Points de vilenie des rivaux | Règle absente | M | 3 |
 | 15 | Sorcellerie en combat | Règle absente | L | 4 |
@@ -283,6 +283,7 @@ Les lots sont un ordre proposé : d'abord corriger les calculs faux (lot 0), pui
   - libellé « Force vitale » pour les morts-vivants.
 - **Prérequis** : vérifier comment ces capacités sont stockées en base pour les créatures et les démons (champs structurés ou texte libre).
 - **Effort** : L.
+- **En partie fait le 2026-10-15** (simulation de combat) : « Attaque féroce », « Attaque timide » et « Armes améliorées » donnent leur dé à chaque attaque (`attackDiceAbilities`), annoncé sous le dé du MJ. Reste : attaques multiples, venin et poison, intangible, régénération, et l'affichage des pouvoirs à signaler.
 
 ### 13. Horde de piétaille
 

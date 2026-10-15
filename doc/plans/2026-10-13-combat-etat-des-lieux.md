@@ -41,6 +41,7 @@ Formule : `2d6 + bonus d'attaque − défense de la cible + posture + effets en 
 - **Avant le jet** : l'assistant annonce ce qu'il faut aux dés et les chances de toucher, pour la cible choisie et sur le jeton de chaque adversaire.
 - **Saisie** : on tape le total des dés lancés à table, ou on les lance à l'écran.
 - **Dé du MJ** : un dé de bonus ou de malus (3d6, on garde les deux meilleurs ou les deux moins bons).
+- **Capacités d'attaque** : « Attaque féroce » et « Armes améliorées » donnent d'office un dé de bonus, « Attaque timide » un dé de malus ; ils s'annulent avec le dé du MJ.
 - **Double 1** : raté, quel que soit le total. **Double 6** : touché, quel que soit le total.
 - **Postures** : défensive, offensive, intrépide, combat à deux armes, attaque au défaut de l'armure. Créatures et démons n'en ont pas.
 - **Modificateur du MJ** : de −6 à +6, à côté du dé du MJ.

@@ -7,7 +7,7 @@ import {TurnOrderEntry} from '../../models/turn-order.model';
 import {groupByTier} from './combat-turn.util';
 
 const STATUS_LABELS: Record<TurnStatus, string> = {
-  active: 'à elle de jouer',
+  active: 'joue maintenant',
   played: 'a joué',
   skipped: 'ne joue pas ce round',
   upcoming: 'à venir',

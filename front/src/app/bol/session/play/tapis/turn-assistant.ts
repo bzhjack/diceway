@@ -8,7 +8,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {ActionDiceTargetLabel, ActionRollCarriere, ActionRollTone, RollSumTerm} from '../../models/action-roll.model';
 import {CombatEffect, ModifierTerm, NewEffect} from '../../models/combat-effect.model';
-import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, chanceRingDash, keepBestOrWorstTwo, parseDiceTotal} from '../../action-roll.util';
+import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, chanceRingDash, keepBestOrWorstTwo, netDiceModifier, parseDiceTotal} from '../../action-roll.util';
 import {aDejaFeinte, descriptionEffet, doitUnDeDeMalus, effetFeinte, effetCoupPrecis, effetRenversement, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
 import {EffectsListComponent} from './effects-list';
 import {EndTurnDialogComponent} from '../end-turn-dialog/end-turn-dialog';
@@ -345,7 +345,8 @@ export class TurnAssistantComponent {
   /** Un combattant meilleur au tir qu'en mêlée part à distance. */
   private readonly prefersTir = computed(() => {
     const a = this.attacker();
-    return !!a && a.attaque === null && a.tir > a.melee;
+    // Les attaques naturelles d'un démon (griffes, crocs) sont de la mêlée : le tir reste au choix.
+    return !!a && a.attaque === null && a.tir > a.melee && this.card().kind !== 'demon';
   });
   /** Mêlée ou tir, quand l'arme permet les deux : repart de la préférence du combattant à chaque nouvelle carte active, pas à chaque
    * relecture de ses statistiques. */
@@ -389,9 +390,22 @@ export class TurnAssistantComponent {
     source: () => ({key: this.cardKey(), malus: this.malusDieOwed()}),
     computation: (source) => (source.malus ? 'malus' : null),
   });
-  /** +1 avec un dé de bonus, −1 avec un dé de malus, 0 pour un jet à deux dés. */
-  private readonly netDice = computed(() => (this.gmDie() === 'bonus' ? 1 : this.gmDie() === 'malus' ? -1 : 0));
-  /** Nombre de dés du jet d'attaque : deux, ou trois avec le dé du MJ. */
+  /** Les capacités de l'attaquant qui lui donnent un dé à toutes ses attaques (« Attaque féroce », « Armes améliorées », « Attaque
+   * timide »), en clair sous le dé du MJ ; vide sinon. */
+  protected readonly abilityDice = computed(() => {
+    const a = this.attacker();
+    const bonus = a?.attaqueAvantages ?? [];
+    const malus = a?.attaqueDesavantages ?? [];
+    return [...bonus.map((nom) => `${nom} : dé de bonus`), ...malus.map((nom) => `${nom} : dé de malus`)].join(' · ');
+  });
+  /** Dés de bonus moins dés de malus (dé du MJ, capacités de l'attaquant) : ils s'annulent un pour un (02-actions-combat.md). */
+  private readonly netDice = computed(() => {
+    const a = this.attacker();
+    const avantages = (this.gmDie() === 'bonus' ? 1 : 0) + (a?.attaqueAvantages?.length ?? 0);
+    const desavantages = (this.gmDie() === 'malus' ? 1 : 0) + (a?.attaqueDesavantages?.length ?? 0);
+    return netDiceModifier(avantages, desavantages);
+  });
+  /** Nombre de dés du jet d'attaque : deux, plus un par dé de bonus ou de malus qui reste. */
   protected readonly diceCount = computed(() => 2 + Math.abs(this.netDice()));
 
   /** Les deux dés qui comptent : ceux du lancer, ou les deux gardés quand le MJ a accordé un dé. */
@@ -916,7 +930,7 @@ export class TurnAssistantComponent {
     if (!verdict) {
       return this.lastHit()
         ? {step: '', text: 'Dégâts appliqués. Il ne reste qu’à finir le tour, ou à lancer une nouvelle attaque.'}
-        : {step: '2', text: this.gmDie() ? `Tape le total des deux dés gardés (les ${this.keptCaption()} de 3d6), ou lance-les à l’écran.` : 'Tape le total des deux dés d’attaque, ou lance-les à l’écran.'};
+        : {step: '2', text: this.netDice() !== 0 ? `Tape le total des deux dés gardés (les ${this.keptCaption()} de ${this.diceCount()}d6), ou lance-les à l’écran.` : 'Tape le total des deux dés d’attaque, ou lance-les à l’écran.'};
     }
     if (!this.hasDamageStep()) {
       return verdict.tone !== 'echec' && this.carnagePicked()

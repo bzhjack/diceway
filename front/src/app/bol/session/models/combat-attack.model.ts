@@ -36,6 +36,9 @@ export interface ResolvedCombatStats {
   /** null pour pnj/créature/démon — l'héroïsme (Faveur divine, options héroïques) n'existe que pour un héros. */
   readonly herosId: string | null;
   readonly heroisme: number | null;
+  /** Capacités ou pouvoirs d'une créature ou d'un démon qui donnent un dé de bonus ou de malus à toutes ses attaques. */
+  readonly attaqueAvantages?: readonly string[];
+  readonly attaqueDesavantages?: readonly string[];
 }
 
 /** La vitalité d'une carte corrigée à la main sur son cœur : ce qu'elle gagne (positif) ou perd (négatif). */

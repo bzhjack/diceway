@@ -199,6 +199,9 @@
         </button>
         <dw-value-stepper [formControl]="modifierControl" [min]="-6" [max]="6" ariaLabel="Modificateur du MJ au jet d'attaque" />
       </div>
+      @if (abilityDice()) {
+        <span class="tas-note">{{ abilityDice() }}, à chaque attaque.</span>
+      }
 
     </section>
   </div>
@@ -321,7 +324,7 @@
             maxlength="2"
             autocomplete="off"
             placeholder="total"
-            [attr.aria-label]="gmDie() ? 'Total des deux dés d’attaque gardés, lancés à table' : 'Total des deux dés d’attaque lancés à table'"
+            [attr.aria-label]="diceCount() > 2 ? 'Total des deux dés d’attaque gardés, lancés à table' : 'Total des deux dés d’attaque lancés à table'"
             [value]="diceSum() ?? ''"
             [disabled]="rolling()"
             (focus)="attackInput.select()"

@@ -132,6 +132,8 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
     bouclierDefenseToutes: 0,
     herosId: null,
     heroisme: null,
+    attaqueAvantages: c.attaqueAvantages ?? [],
+    attaqueDesavantages: c.attaqueDesavantages ?? [],
   };
 
   // Un PNJ est une fiche de héros : l'armure qu'il porte n'est pas copiée à la table, on la lit sur sa fiche. Il porte tout ce qu'il

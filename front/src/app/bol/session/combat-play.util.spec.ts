@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {demonDegats, demonProtection, postCombatRecoveryAmount} from './combat-play.util';
+import {attackDiceAbilities, demonDegats, demonProtection, postCombatRecoveryAmount} from './combat-play.util';
 
 describe('postCombatRecoveryAmount', () => {
   it('recovers half the vitality lost, rounded up, when above 0 (02-actions-combat.md, "Récupération")', () => {
@@ -50,5 +50,13 @@ describe('demonDegats', () => {
   it('leaves damage already raised by hand, or without the power, as it is', () => {
     expect(demonDegats('d6B', 'coriace', ['Attaques dévastatrices'])).toBe('d6B');
     expect(demonDegats('d6', 'coriace', ['Armure'])).toBe('d6');
+  });
+});
+
+describe('attackDiceAbilities', () => {
+  it('keeps the abilities that give a die to every attack', () => {
+    expect(attackDiceAbilities(['Attaque féroce', 'Prédateur', 'Camouflage'])).toEqual({attaqueAvantages: ['Attaque féroce'], attaqueDesavantages: []});
+    expect(attackDiceAbilities(['Armes améliorées', 'Armure'])).toEqual({attaqueAvantages: ['Armes améliorées'], attaqueDesavantages: []});
+    expect(attackDiceAbilities(['Attaque timide', null, 'Déficience'])).toEqual({attaqueAvantages: [], attaqueDesavantages: ['Attaque timide']});
   });
 });

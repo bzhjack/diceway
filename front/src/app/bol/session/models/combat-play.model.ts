@@ -17,6 +17,10 @@ export interface PlayCombatStats {
   readonly defense: number | null;
   readonly degats: string | null;
   readonly protection: string | null;
+  /** Capacités ou pouvoirs qui donnent un dé de bonus (« Attaque féroce », « Armes améliorées ») ou de malus (« Attaque timide ») à
+   * toutes ses attaques. */
+  readonly attaqueAvantages?: readonly string[];
+  readonly attaqueDesavantages?: readonly string[];
 }
 
 /** Un combattant de la table, avec ce qu'il faut pour l'ordonner, l'afficher et le faire attaquer. */
