@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {CombatEffect, RollContext} from '../../models/combat-effect.model';
-import {appliquerEvenement, aSombre, aStabilise, degatsMainsNues, effetDegatsMainsNues, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, effetCoupPrecis, effetInconscient, effetRenversement, effetStabilise, effetSurpris, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
+import {aDejaFeinte, appliquerEvenement, aSombre, aStabilise, effetFeinte, degatsMainsNues, effetDegatsMainsNues, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, effetCoupPrecis, effetInconscient, effetRenversement, effetStabilise, effetSurpris, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
 
 function effet(over: Partial<CombatEffect> = {}): CombatEffect {
   return {id: 'e-1', origine: 'posture-defensive', porteur: 'hero-1', stat: 'defense', valeur: 1, quand: 'subie', duree: {type: 'debut-tour-porteur'}, manuel: false, ...over};
@@ -381,6 +381,17 @@ describe('effetDegatsMainsNues', () => {
     expect(degatsMainsNues(effets, 'hero-1')).toBe(5);
     expect(degatsMainsNues(effets, 'hero-2')).toBe(0);
     const contexte = {jet: 'degats' as const, attaquant: 'pnj-1', cible: 'hero-1', bouclier: 0, bouclierToutes: 0};
+    expect(modificateursPour(effets, contexte)).toEqual([]);
+  });
+});
+
+describe('effetFeinte', () => {
+  it('remembers a feint against one opponent, for that attacker only', () => {
+    const effets = appliquerEvenement([], {type: 'ajout-manuel', effet: effetFeinte('pnj-1', 'hero-1', 'Voleur')}, () => 'e-1');
+    expect(aDejaFeinte(effets, 'pnj-1', 'hero-1')).toBe(true);
+    expect(aDejaFeinte(effets, 'pnj-1', 'hero-2')).toBe(false);
+    expect(aDejaFeinte(effets, 'pnj-2', 'hero-1')).toBe(false);
+    const contexte = {jet: 'attaque' as const, attaquant: 'hero-1', cible: 'pnj-1', bouclier: 0, bouclierToutes: 0};
     expect(modificateursPour(effets, contexte)).toEqual([]);
   });
 });

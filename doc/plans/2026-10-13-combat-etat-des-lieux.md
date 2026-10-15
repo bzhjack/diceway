@@ -43,6 +43,8 @@ Formule : `2d6 + bonus d'attaque − défense de la cible + posture + effets en 
 - **Dé du MJ** : un dé de bonus ou de malus (3d6, on garde les deux meilleurs ou les deux moins bons).
 - **Double 1** : raté, quel que soit le total. **Double 6** : touché, quel que soit le total.
 - **Postures** : défensive, offensive, intrépide, combat à deux armes, attaque au défaut de l'armure. Créatures et démons n'en ont pas.
+- **Modificateur du MJ** : de −6 à +6, à côté du dé du MJ.
+- **Carrière** (manœuvre ou feinte) : le rang d'une carrière du héros, à l'attaque ou aux dégâts. La feinte est notée sur la cible : retentée par le même attaquant, l'assistant le signale.
 - **PNJ** : considérés comme équipés de toutes leurs armes et armures.
 
 ## 4. Le jet de dégâts
@@ -131,7 +133,6 @@ Le livre ne tranche pas ces points ; l'application a choisi, et le MJ peut corri
 
 - Un Carnage pris deux fois doit deux attaques ; si la première rate, l'assistant ne rappelle pas la seconde.
 - La taille de l'adversaire (renversement) et l'arme tenue (désarmement) ne sont pas vérifiées.
-- La feinte n'existe pas comme option ; le MJ en garde la trace à la main.
 - Retirer une carte ne se fait que hors combat.
 - Pas d'effet libre (valeur et durée au choix) dans le menu « + Effet ».
 - Pas d'annonce vocale des effets expirés.

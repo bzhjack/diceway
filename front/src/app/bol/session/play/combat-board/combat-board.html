@@ -42,6 +42,7 @@
           (delayRequested)="delayRequested.emit()"
           (rescueRequested)="rescueRequested.emit()"
           [canRescue]="canRescue()"
+          [carrieres]="carrieres()"
           (endTurnRequested)="endTurnRequested.emit($event)"
           (heroismeAdjusted)="heroismeAdjusted.emit($event)"
           (vitaliteAdjusted)="vitaliteAdjusted.emit($event)"

@@ -79,6 +79,7 @@
           [targetsStats]="targetsStats()"
           [legendaryBonus]="legendaryForActive()"
           [canRescue]="rescuePatients().length > 0"
+          [carrieres]="activeCarrieres()"
           (gaveBack)="onGiveBackTurn($event)"
           (addRequested)="openAddCombatantDialog()"
           (delayRequested)="onDelay()"

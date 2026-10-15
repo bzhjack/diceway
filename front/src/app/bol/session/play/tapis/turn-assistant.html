@@ -121,6 +121,32 @@
           </div>
         }
       }
+
+      @if (usefulCarrieres().length > 0) {
+        <span class="tas-label" id="tas-carriere">Carrière : manœuvre ou feinte</span>
+        <div class="tas-chips" role="group" aria-labelledby="tas-carriere">
+          @for (c of usefulCarrieres(); track c.label) {
+            <button
+              type="button"
+              class="tas-chip"
+              [attr.aria-pressed]="career()?.label === c.label"
+              matTooltip="Le joueur décrit sa manœuvre ou sa feinte : le MJ ajoute le rang de la carrière à l'attaque ou aux dégâts, jamais aux deux."
+              (click)="toggleCareer(c.label)"
+            >
+              {{ c.label }} <em>+{{ c.value }}</em>
+            </button>
+          }
+          @if (career()) {
+            <span class="tas-segm" role="group" aria-label="Le rang de la carrière s'ajoute">
+              <button type="button" class="tas-seg" [attr.aria-pressed]="careerOn() === 'attaque'" (click)="careerOn.set('attaque')"><b>Attaque</b></button>
+              <button type="button" class="tas-seg" [attr.aria-pressed]="careerOn() === 'degats'" (click)="careerOn.set('degats')"><b>Dégâts</b></button>
+            </span>
+          }
+        </div>
+        @if (feintRetry()) {
+          <span class="tas-note">Feinte déjà tentée contre {{ target()?.nom }} : la même ne marche pas deux fois.</span>
+        }
+      }
     </section>
 
     <section class="tas-card" aria-labelledby="tas-comment">
@@ -151,7 +177,7 @@
       }
 
       <!-- Le dé que le MJ accorde ou impose selon les circonstances : 3d6 à l'attaque, on garde les deux meilleurs ou les deux moins bons -->
-      <span class="tas-label" id="tas-de-mj">Dé du MJ</span>
+      <span class="tas-label" id="tas-de-mj">Dé et modificateur du MJ</span>
       <div class="tas-chips" role="group" aria-labelledby="tas-de-mj">
         <button
           type="button"
@@ -171,7 +197,9 @@
         >
           Dé malus MJ
         </button>
+        <dw-value-stepper [formControl]="modifierControl" [min]="-6" [max]="6" ariaLabel="Modificateur du MJ au jet d'attaque" />
       </div>
+
     </section>
   </div>
 

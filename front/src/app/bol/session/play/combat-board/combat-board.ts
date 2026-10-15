@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, input, output, viewChild} from '@angular/core';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
+import {ActionRollCarriere} from '../../models/action-roll.model';
 import {AttackChoice} from '../../models/attack-options.model';
 import {AppliedHit, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
 import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
@@ -41,6 +42,7 @@ export class CombatBoardComponent {
   readonly targetsStats = input<ReadonlyMap<string, ResolvedCombatStats>>(new Map());
   readonly legendaryBonus = input(false);
   readonly effets = input<readonly CombatEffect[]>([]);
+  readonly carrieres = input<readonly ActionRollCarriere[]>([]);
   /** Un héros mourant, du camp de la carte active, peut être secouru. */
   readonly canRescue = input(false);
 

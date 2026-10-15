@@ -28,7 +28,7 @@ import {
 } from '../../shared/statblock/bol-statblock.builders';
 import {resolveAttackStats} from '../combat-attack.util';
 import {buildPlayBoard} from '../combat-play.util';
-import {ActionRollDiceTrait} from '../models/action-roll.model';
+import {ActionRollCarriere, ActionRollDiceTrait} from '../models/action-roll.model';
 import {SceneActionsService} from '../scene-actions.service';
 import {AddCombatantDialogComponent, resolveAddCombatantCamp} from './add-combatant-dialog/add-combatant-dialog';
 import {openCommandPalette} from './command-palette/command-palette';
@@ -200,6 +200,8 @@ export class SessionPlayPageComponent {
   protected readonly activeArmes = signal<readonly BolHerosArmeModel[]>([]);
   /** Toutes les armes du héros actif, équipées ou non — pour l'arme secondaire du combat à deux armes. */
   protected readonly activeOwnedArmes = signal<readonly BolHerosArmeModel[]>([]);
+  /** Carrières du héros dont c'est le tour : le MJ peut en laisser une aider une manœuvre ou une feinte. */
+  protected readonly activeCarrieres = signal<readonly ActionRollCarriere[]>([]);
 
   /** Armes proposées à l'assistant : celles du héros actif ; pour un PNJ, toutes ses armes — il les a toutes en main. */
   protected readonly assistantArmes = computed<readonly BolHerosArmeModel[]>(() => {
@@ -388,6 +390,7 @@ export class SessionPlayPageComponent {
       const herosId = this.activeHeroId();
       this.activeArmes.set([]);
       this.activeOwnedArmes.set([]);
+      this.activeCarrieres.set([]);
       if (!herosId) {
         return;
       }
@@ -400,6 +403,7 @@ export class SessionPlayPageComponent {
           }
           this.activeArmes.set(equippedArmes(loadedArmes(hero)));
           this.activeOwnedArmes.set(loadedArmes(hero));
+          this.activeCarrieres.set(heroDetails(hero).carrieres);
         });
     });
   }
@@ -838,6 +842,7 @@ export class SessionPlayPageComponent {
             if (this.activeHeroId() === herosId) {
               this.activeArmes.set(equippedArmes(loadedArmes(hero)));
               this.activeOwnedArmes.set(loadedArmes(hero));
+              this.activeCarrieres.set(heroDetails(hero).carrieres);
             }
           });
         this.loadSession(sessionId);

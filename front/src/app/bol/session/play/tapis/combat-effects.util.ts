@@ -13,6 +13,8 @@ const INCONSCIENT = 'inconscient';
 const MAINS_NUES = 'mains-nues';
 /** Trace : le personnage a été mis à 0 dans une bagarre à mains nues ; il a seulement perdu connaissance. */
 const ASSOMME = 'assomme';
+/** Trace : une feinte ou une manœuvre (bonus de carrière) a déjà été tentée contre cette carte par cet adversaire. */
+const FEINTE = 'feinte';
 /** Trace : le héros mourant est stabilisé (« Défier la mort » sous −5, ou secouru) ; il ne perd plus de vitalité d'un round à l'autre. */
 const STABILISE = 'stabilise';
 /** La carte lance un dé de malus à sa prochaine action (adversaire renversé qui se relève, coup précis…). */
@@ -359,6 +361,17 @@ export function effetAssomme(porteur: string): NewEffect {
 /** Vrai si la carte a été assommée dans une bagarre pendant ce combat. */
 export function aAssomme(effets: readonly CombatEffect[], carte: string): boolean {
   return effets.some((effet) => effet.porteur === carte && effet.origine === ASSOMME);
+}
+
+/** Un bonus de carrière accordé pour une manœuvre ou une feinte (02-actions-combat.md, « Carrières et combat ») : une même feinte ne
+ * marche pas deux fois contre le même adversaire. La trace est portée par la cible, limitée à l'attaquant, pour tout le combat. */
+export function effetFeinte(cible: string, attaquant: string, carriere: string): NewEffect {
+  return {origine: FEINTE, libelle: `feinte (${carriere})`, porteur: cible, cible: attaquant, stat: 'action', valeur: 0, quand: 'subie', duree: {type: 'combat'}, manuel: false};
+}
+
+/** Vrai si l'attaquant a déjà tenté une feinte contre cette cible pendant ce combat. */
+export function aDejaFeinte(effets: readonly CombatEffect[], cible: string, attaquant: string): boolean {
+  return effets.some((effet) => effet.porteur === cible && effet.cible === attaquant && effet.origine === FEINTE);
 }
 
 /** Les dégâts encaissés à mains nues par la carte pendant ce combat. */

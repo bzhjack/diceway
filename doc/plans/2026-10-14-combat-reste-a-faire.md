@@ -30,7 +30,7 @@ Chaque point donne la règle, ce que fait l'application aujourd'hui, une proposi
 | 4 | Arme lourde interdite sous 0 de vigueur | **Fait le 2026-10-15** | S | 1 |
 | 5 | Fin du tour sans appliquer le coup | **Fait le 2026-10-15** | S | 1 |
 | 6 | Portée des armes à distance | Règle absente | M | 2 |
-| 7 | Modificateur libre, bonus de carrière, feinte | Règle absente | M | 2 |
+| 7 | Modificateur libre, bonus de carrière, feinte | **Fait le 2026-10-15** | M | 2 |
 | 8 | Carrière utile au jet de réaction | Règle absente | S | 2 |
 | 9 | Héroïsme du défenseur, interrompre | Règle absente | M | 2 |
 | 10 | Secourir un mourant, soins | **Fait le 2026-10-15** | M | 2 |
@@ -198,6 +198,12 @@ Les lots sont un ordre proposé : d'abord corriger les calculs faux (lot 0), pui
   - « Une carrière aide » : choix de la carrière (avec son rang) et de sa cible, attaque ou dégâts ;
   - quand ce bonus est utilisé, une trace « feinte déjà tentée » est posée sur la cible, limitée à cet attaquant (le registre sait déjà limiter un effet à un adversaire). La puce avertit si on retente.
 - **Effort** : M.
+- **Fait le 2026-10-15** :
+  - « Comment ? » : un modificateur du MJ (−6 à +6) sur la ligne du dé du MJ ; il entre dans l'addition (« +2 modificateur »), ce qu'il faut aux dés et les chances sur chaque cible. Il repart de 0 à chaque carte active.
+  - « Avec quoi ? » : « Carrière : manœuvre ou feinte » liste les carrières du héros actif de rang 1 ou plus. Une carrière choisie ajoute son rang à l'attaque **ou** aux dégâts (bascule Attaque / Dégâts), comme un terme de l'addition (« +2 Voleur »).
+  - Au premier jet avec une carrière, une trace « feinte (Voleur) » est posée sur la cible, limitée à l'attaquant, pour tout le combat (`effetFeinte`, `aDejaFeinte`). Une nouvelle tentative du même attaquant contre la même cible affiche « Feinte déjà tentée contre … : la même ne marche pas deux fois. » ; le MJ juge si c'est la même feinte.
+  - Les deux s'ajoutent comme des termes hors registre (`extraTerm`) : ils ne se figent pas au jet, et les changer après le jet corrige le total.
+  - Limite : carrières des héros seulement (pas celles des PNJ rivaux).
 
 ### 8. Carrière utile au jet de réaction
 

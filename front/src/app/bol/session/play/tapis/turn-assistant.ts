@@ -1,15 +1,15 @@
 import {afterNextRender, ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, Injector, input, linkedSignal, output, signal, untracked, viewChild} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
-import {ActionDiceTargetLabel, ActionRollTone, RollSumTerm} from '../../models/action-roll.model';
+import {ActionDiceTargetLabel, ActionRollCarriere, ActionRollTone, RollSumTerm} from '../../models/action-roll.model';
 import {CombatEffect, ModifierTerm, NewEffect} from '../../models/combat-effect.model';
 import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, chanceRingDash, keepBestOrWorstTwo, parseDiceTotal} from '../../action-roll.util';
-import {descriptionEffet, doitUnDeDeMalus, effetCoupPrecis, effetRenversement, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
+import {aDejaFeinte, descriptionEffet, doitUnDeDeMalus, effetFeinte, effetCoupPrecis, effetRenversement, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
 import {EffectsListComponent} from './effects-list';
 import {EndTurnDialogComponent} from '../end-turn-dialog/end-turn-dialog';
 import {EndTurnChoice, EndTurnDialogData} from '../../models/end-turn-dialog.model';
@@ -107,6 +107,11 @@ function signedTerm(value: number): string {
   return `${value > 0 ? '+' : '−'}${Math.abs(value)}`;
 }
 
+/** Un modificateur hors registre (modificateur libre, carrière) en terme d'addition : « + 2 Voleur ». */
+function extraTerm(valeur: number, nom: string): ModifierTerm {
+  return {effetId: null, label: `${valeur > 0 ? '+' : '−'} ${Math.abs(valeur)} ${nom}`, valeur, tone: valeur > 0 ? 'plus' : 'minus'};
+}
+
 /** L'assistant de tour, sous la frise en combat : un coup en trois temps. Trois cartes portent les réglages de la carte active — qui
  * attaque (ses chiffres, les effets en cours, la fin de son tour), avec quoi (arme, distance), comment (posture, options) ; dessous,
  * sur la même grille, trois cases — qui elle vise, son jet d'attaque (2d6 + bonus − défense, 9+), son jet de dégâts — dont celle où
@@ -143,6 +148,8 @@ export class TurnAssistantComponent {
   readonly effets = input<readonly CombatEffect[]>([]);
   /** Plateau de dés 3D de l'écran de combat : les dés roulent par-dessus tout l'écran. Sans lui, les dés sont tirés sans animation. */
   readonly diceBox = input<DiceBoxHostComponent | null>(null);
+  /** Carrières de l'attaquant (un héros) : le MJ peut en laisser une aider une manœuvre ou une feinte. */
+  readonly carrieres = input<readonly ActionRollCarriere[]>([]);
   /** Un héros mourant du camp de la carte active peut être secouru : « Secourir » s'affiche. */
   readonly canRescue = input(false);
 
@@ -221,6 +228,37 @@ export class TurnAssistantComponent {
   private readonly brawlChosen = linkedSignal<string, boolean>({source: () => this.cardKey(), computation: () => false});
   protected readonly canBrawl = computed(() => this.unarmed() && this.attacker()?.attaque === null);
   protected readonly brawl = computed(() => this.canBrawl() && this.brawlChosen());
+
+  /** Modificateur libre du MJ au jet d'attaque (circonstances), comme sur le jet d'action : il repart de 0 à chaque carte active. */
+  protected readonly modifierControl = new FormControl(0, {nonNullable: true});
+  private readonly freeModifier = toSignal(this.modifierControl.valueChanges, {initialValue: 0});
+
+  /** « Carrières et combat » (02-actions-combat.md) : pour une manœuvre ou une feinte décrite par le joueur, le MJ peut ajouter le rang
+   * d'une carrière au jet d'attaque ou aux dégâts, jamais aux deux. */
+  protected readonly usefulCarrieres = computed(() => this.carrieres().filter((c) => c.value > 0));
+  private readonly careerLabel = linkedSignal<string, string | null>({source: () => this.cardKey(), computation: () => null});
+  protected readonly careerOn = linkedSignal<string, 'attaque' | 'degats'>({source: () => this.cardKey(), computation: () => 'attaque'});
+  protected readonly career = computed(() => this.usefulCarrieres().find((c) => c.label === this.careerLabel()) ?? null);
+  /** La feinte de ce jet a été notée sur la cible : l'avertissement ne vaut que pour une nouvelle tentative. */
+  private readonly feintNoted = signal(false);
+  /** Cette feinte a déjà été tentée contre la cible par cet attaquant : elle ne marche pas deux fois. */
+  protected readonly feintRetry = computed(() => {
+    const target = this.target();
+    return this.career() !== null && target !== null && !this.feintNoted() && aDejaFeinte(this.effets(), target.key, this.card().key);
+  });
+
+  /** Le modificateur libre et la carrière, en termes d'addition : ils entrent dans les jets comme les effets en cours. */
+  private readonly extraAttackTerms = computed<readonly ModifierTerm[]>(() => {
+    const career = this.career();
+    return [
+      ...(this.freeModifier() !== 0 ? [extraTerm(this.freeModifier(), 'modificateur')] : []),
+      ...(career && this.careerOn() === 'attaque' ? [extraTerm(career.value, career.label)] : []),
+    ];
+  });
+  private readonly extraDamageTerms = computed<readonly ModifierTerm[]>(() => {
+    const career = this.career();
+    return career && this.careerOn() === 'degats' ? [extraTerm(career.value, career.label)] : [];
+  });
 
   /** L'arme secondaire d'un héros se prend parmi toutes ses armes légères ou moyennes, équipées ou non : « équipée » dit
    * seulement ce que le héros propose à l'attaque, pas ce qu'il a en main pour parer ou frapper à deux armes. */
@@ -479,7 +517,8 @@ export class TurnAssistantComponent {
                 0,
                 attackBonus(a, this.isTir(), this.brawl()),
                 stats.defense,
-                sommeModificateurs(modificateursPour(this.effets(), {jet: 'attaque', attaquant: this.card().key, cible: card.key, bouclier: stats.bouclierMalusUneAttaque, bouclierToutes: stats.bouclierDefenseToutes})),
+                sommeModificateurs(modificateursPour(this.effets(), {jet: 'attaque', attaquant: this.card().key, cible: card.key, bouclier: stats.bouclierMalusUneAttaque, bouclierToutes: stats.bouclierDefenseToutes})) +
+                  sommeModificateurs(this.extraAttackTerms()),
                 this.legendaryBonus() ? 1 : 0,
                 resolvePostureAttackModifier(this.choice()?.posture ?? null, stats.protection),
               )
@@ -619,7 +658,7 @@ export class TurnAssistantComponent {
   /** Modificateurs figés au premier jet de cette attaque : la cible est ensuite marquée « attaquée » (son bouclier tombe du registre), mais un
    * jet relancé garde les siens. */
   private readonly frozenTerms = signal<readonly ModifierTerm[] | null>(null);
-  protected readonly effectTerms = computed(() => this.frozenTerms() ?? this.liveTerms());
+  protected readonly effectTerms = computed(() => [...(this.frozenTerms() ?? this.liveTerms()), ...this.extraAttackTerms()]);
 
   /** Les modificateurs du registre pour le jet de dégâts (effets de dégâts de l'attaquant, protection de la cible), figés comme ceux de
    * l'attaque : un effet à usage limité consommé par le jet d'attaque compte encore pour ses dégâts. */
@@ -628,7 +667,7 @@ export class TurnAssistantComponent {
     return target ? modificateursPour(this.effets(), {jet: 'degats', attaquant: this.card().key, cible: target.key, bouclier: 0, bouclierToutes: 0, noms: this.noms()}) : [];
   });
   private readonly frozenDamageTerms = signal<readonly ModifierTerm[] | null>(null);
-  private readonly damageEffectTerms = computed(() => this.frozenDamageTerms() ?? this.liveDamageTerms());
+  private readonly damageEffectTerms = computed(() => [...(this.frozenDamageTerms() ?? this.liveDamageTerms()), ...this.extraDamageTerms()]);
 
   protected readonly total = computed(() => {
     const sum = this.diceSum();
@@ -919,6 +958,12 @@ export class TurnAssistantComponent {
       untracked(() => this.resetRoll());
     });
 
+    // Une nouvelle carte active : le modificateur libre repart de 0.
+    effect(() => {
+      this.cardKey();
+      untracked(() => this.modifierControl.setValue(0));
+    });
+
     // La case du jet d'attaque n'existe qu'une fois les statistiques de la cible lues : elle prend la main à ce moment-là.
     effect(() => {
       const input = this.attackInput();
@@ -971,6 +1016,10 @@ export class TurnAssistantComponent {
       return;
     }
     this.selectedArmeId.set(id ?? null);
+  }
+
+  protected toggleCareer(label: string): void {
+    this.careerLabel.update((current) => (current === label ? null : label));
   }
 
   protected toggleBrawl(): void {
@@ -1081,6 +1130,12 @@ export class TurnAssistantComponent {
     }
     this.frozenTerms.set(this.liveTerms());
     this.frozenDamageTerms.set(this.liveDamageTerms());
+    // Une feinte tentée se note sur la cible : retentée contre elle, elle sera signalée.
+    const career = this.career();
+    if (career && !aDejaFeinte(this.effets(), target.key, this.card().key)) {
+      this.feintNoted.set(true);
+      this.effectAdded.emit(effetFeinte(target.key, this.card().key, career.label));
+    }
     this.attackRolled.emit(target);
   }
 
@@ -1310,6 +1365,7 @@ export class TurnAssistantComponent {
     this.editingProtection.set(false);
     this.frozenTerms.set(null);
     this.frozenDamageTerms.set(null);
+    this.feintNoted.set(false);
     this.dice.set(null);
     this.rolledDice.set(null);
     this.manualTotal.set(null);
