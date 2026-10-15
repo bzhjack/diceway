@@ -41,6 +41,8 @@ export class CombatBoardComponent {
   readonly targetsStats = input<ReadonlyMap<string, ResolvedCombatStats>>(new Map());
   readonly legendaryBonus = input(false);
   readonly effets = input<readonly CombatEffect[]>([]);
+  /** Un héros mourant, du camp de la carte active, peut être secouru. */
+  readonly canRescue = input(false);
 
   readonly gaveBack = output<string>();
   readonly addRequested = output<void>();
@@ -56,6 +58,7 @@ export class CombatBoardComponent {
   readonly effectAdded = output<NewEffect>();
   readonly damageApplied = output<AppliedHit>();
   readonly totalDefenseRequested = output<void>();
+  readonly rescueRequested = output<void>();
   /** Points d'héroïsme dépensés ou gagnés par la carte active sur son jet d'attaque. */
   readonly heroismeAdjusted = output<number>();
   /** Vitalité de la carte active ou de sa cible corrigée à la main sur son cœur. */

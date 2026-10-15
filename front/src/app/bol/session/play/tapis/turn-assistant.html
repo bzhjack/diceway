@@ -6,7 +6,11 @@
         <h3 id="tas-qui">Qui attaque</h3>
         <div class="tas-card-actions">
           <button type="button" class="tas-ghost" [attr.aria-label]="'Ouvrir la fiche de ' + card().nom" (click)="sheetRequested.emit(card())">Fiche</button>
+          <button type="button" class="tas-ghost" matTooltip="Passe son tour en fin de round" (click)="delayRequested.emit()">Retarder</button>
           <button type="button" class="tas-ghost" matTooltip="+2 en défense, pas d'attaque ce round. Termine le tour." (click)="totalDefenseRequested.emit()">Défense totale</button>
+          @if (canRescue()) {
+            <button type="button" class="tas-ghost" matTooltip="Tenter de stabiliser un héros mourant, à la place de l'attaque. Termine le tour." (click)="rescueRequested.emit()">Secourir</button>
+          }
           <button type="button" class="tas-ghost tas-ghost--primary" matTooltip="Raccourci : F" (click)="requestEndTurn()">Fin du tour</button>
         </div>
       </div>

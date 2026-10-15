@@ -1,0 +1,114 @@
+.rsc-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rsc-content {
+  display: grid;
+  gap: 0.5rem;
+
+  p {
+    margin: 0;
+  }
+}
+
+.rsc-lead,
+.rsc-formula {
+  font-size: 0.85rem;
+  color: var(--dw-surface-600);
+}
+
+.rsc-patient {
+  font-weight: 700;
+}
+
+.rsc-label {
+  margin-top: 0.3rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dw-surface-500);
+}
+
+.rsc-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.rsc-chip {
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 8px;
+  background: var(--dw-surface-0);
+  color: var(--dw-surface-900);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  em {
+    margin-left: 0.3rem;
+    font-style: normal;
+    opacity: 0.7;
+  }
+
+  &[aria-pressed='true'] {
+    border-color: var(--dw-color-legendary);
+    background: linear-gradient(#e6b64e, #b8832a);
+    color: #1a1203;
+  }
+}
+
+.rsc-roll {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.4rem;
+}
+
+.rsc-need {
+  display: grid;
+  justify-items: center;
+
+  b {
+    font: 400 2rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+  }
+
+  small {
+    font-size: 0.7rem;
+    color: var(--dw-surface-500);
+  }
+}
+
+.rsc-total {
+  width: 4.5rem;
+  padding: 0.4rem;
+  border: 1px solid var(--dw-border);
+  border-radius: 10px;
+  background: var(--dw-surface-0);
+  color: var(--dw-surface-900);
+  font: 400 1.6rem 'Muse Display Harmony', 'Muse Sans', serif;
+  text-align: center;
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 1px;
+  }
+}
+
+.rsc-verdict {
+  text-align: center;
+  color: var(--dw-color-echec);
+
+  b {
+    margin-right: 0.4rem;
+  }
+}
+
+.rsc-verdict--ok {
+  color: var(--dw-color-reussite);
+}

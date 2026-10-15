@@ -78,6 +78,7 @@
           [targetStats]="targetStats()"
           [targetsStats]="targetsStats()"
           [legendaryBonus]="legendaryForActive()"
+          [canRescue]="rescuePatients().length > 0"
           (gaveBack)="onGiveBackTurn($event)"
           (addRequested)="openAddCombatantDialog()"
           (delayRequested)="onDelay()"
@@ -91,6 +92,7 @@
           (effectAdded)="onEffectAdded($event)"
           (damageApplied)="onHitApplied($event)"
           (totalDefenseRequested)="onTotalDefense()"
+          (rescueRequested)="onRescue()"
           (heroismeAdjusted)="onHeroismeAdjusted($event)"
           (vitaliteAdjusted)="onVitaliteAdjusted($event)"
         />

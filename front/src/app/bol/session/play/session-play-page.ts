@@ -54,6 +54,11 @@ import {EtatSaver} from './etat-saver';
 import {aSombre, appliquerEvenement, effetInconscient, effetStabilise, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from './tapis/combat-effects.util';
 import {EtatCombat} from '../models/combat-turn.model';
 import {CombatBoardComponent} from './combat-board/combat-board';
+import {RescueDialogComponent} from './rescue-dialog/rescue-dialog';
+import {MedicalCareDialogComponent} from './medical-care-dialog/medical-care-dialog';
+import {MedicalCare, MedicalCareDialogData, MedicalCareHealer} from '../models/medical-care-dialog.model';
+import {bestHealingCareer} from '../rescue.util';
+import {RescueDialogData, RescueResult} from '../models/rescue-dialog.model';
 import {AppliedHit, ResolvedCombatStats, VitaliteChange} from '../models/combat-attack.model';
 import {TurnOrderEntry} from '../models/turn-order.model';
 import {TapisComponent} from './tapis/tapis';
@@ -241,6 +246,15 @@ export class SessionPlayPageComponent {
   // Des valeurs simples, pas les cartes : la table rechargée refait des cartes identiques, qui ne doivent pas relancer la lecture.
   private readonly activeKey = computed(() => (this.mode() === 'combat' ? this.turn().activeKey : null));
   private readonly targetKeys = computed(() => this.targets().map((card) => card.key).join(','));
+
+  /** Les héros mourants (ni stabilisés, ni retirés du combat) qu'un héros actif peut tenter de secourir à son tour. */
+  protected readonly rescuePatients = computed(() => {
+    const active = this.activeCard();
+    if (active?.kind !== 'hero' || active.camp !== 'heros') {
+      return [];
+    }
+    return herosMourants(this.cards(), this.etat()).filter((card) => card.camp === 'heros' && card.key !== active.key);
+  });
 
   /** L'attaquant actif a obtenu un succès légendaire à la réaction : +1 à ses jets d'attaque. */
   protected readonly legendaryForActive = computed(() => {
@@ -458,16 +472,20 @@ export class SessionPlayPageComponent {
         return;
       }
 
-      this.applyPostCombatRecovery(sessionId).subscribe(() => {
-        this.fightSessionService.endCombat(sessionId).subscribe({
-          next: () => this.loadSession(sessionId),
-          error: (error: unknown) => {
-            this.snackBar.open(extractApiErrorMessage(error, 'Impossible de terminer le combat.'), 'Fermer', {
-              duration: 5000,
-            });
-          },
+      // La récupération d'après combat, puis les soins médicaux, avant de quitter le combat.
+      const patients = this.medicalCarePatients();
+      this.applyPostCombatRecovery(sessionId)
+        .pipe(switchMap(() => this.askMedicalCare(sessionId, patients)))
+        .subscribe(() => {
+          this.fightSessionService.endCombat(sessionId).subscribe({
+            next: () => this.loadSession(sessionId),
+            error: (error: unknown) => {
+              this.snackBar.open(extractApiErrorMessage(error, 'Impossible de terminer le combat.'), 'Fermer', {
+                duration: 5000,
+              });
+            },
+          });
         });
-      });
     });
   }
 
@@ -484,11 +502,64 @@ export class SessionPlayPageComponent {
     }
 
     return forkJoin(
-      recoveries.map(({token, amount}) => this.fightSessionService.applyDamage(sessionId, 'hero', token.pivotId, amount)),
+      recoveries.map(({token, amount}) => this.fightSessionService.applyDamage(sessionId, token.kind, token.pivotId, amount)),
     ).pipe(
       tap(() => {
         const summary = recoveries.map(({token, amount}) => `${token.nom} +${amount}`).join(', ');
         this.snackBar.open(`Récupération post-combat — ${summary}`, undefined, {duration: 4500});
+      }),
+    );
+  }
+
+  /** Les blessés du camp des héros, avec leur vitalité une fois la récupération d'après combat faite : ceux que des soins médicaux
+   * peuvent encore remonter. À lire avant la récupération, que le rechargement de la table n'a pas encore suivie. */
+  private medicalCarePatients(): MedicalCareDialogData['patients'] {
+    return this.heroTokens()
+      .filter((token) => token.vitaliteMax !== null && token.vitaliteMax > 0 && token.vitaliteCourante !== null)
+      .map((token) => ({
+        kind: token.kind,
+        pivotId: token.pivotId,
+        nom: token.nom,
+        vitalite: token.vitaliteCourante! + postCombatRecoveryAmount(token.vitaliteCourante, token.vitaliteMax),
+        vitaliteMax: token.vitaliteMax!,
+      }))
+      .filter((patient) => patient.vitalite < patient.vitaliteMax);
+  }
+
+  /** Soins médicaux (02-actions-combat.md, « Récupération ») : si un héros a une carrière de soins, le MJ choisit qui il soigne ; chaque
+   * blessé soigné récupère tout de suite le rang du soigneur. Sans soigneur ni blessé, rien ne s'ouvre. */
+  private askMedicalCare(sessionId: string, patients: MedicalCareDialogData['patients']): Observable<unknown> {
+    const heroes = this.cards().filter((card) => card.kind === 'hero' && card.camp === 'heros' && card.sourceId !== null);
+    if (patients.length === 0 || heroes.length === 0) {
+      return of(null);
+    }
+    return forkJoin(heroes.map((card) => this.herosService.heros(card.sourceId!))).pipe(
+      switchMap((fiches) => {
+        const healers = fiches
+          .map((hero, i): MedicalCareHealer | null => {
+            const carriere = bestHealingCareer(heroDetails(hero).carrieres);
+            return carriere ? {nom: heroes[i].nom, carriere} : null;
+          })
+          .filter((healer): healer is MedicalCareHealer => healer !== null);
+        if (healers.length === 0) {
+          return of(null);
+        }
+        return this.dialog
+          .open<MedicalCareDialogComponent, MedicalCareDialogData, readonly MedicalCare[]>(MedicalCareDialogComponent, {width: '460px', data: {healers, patients}})
+          .afterClosed()
+          .pipe(
+            switchMap((cares) =>
+              cares?.length
+                ? forkJoin(cares.map((care) => this.fightSessionService.applyDamage(sessionId, care.kind, care.pivotId, care.amount))).pipe(
+                    tap(() => this.snackBar.open(`Soins médicaux — ${cares.map((care) => `${care.nom} +${care.amount}`).join(', ')}`, undefined, {duration: 4500})),
+                  )
+                : of(null),
+            ),
+          );
+      }),
+      catchError((error: unknown) => {
+        this.tableError(error, 'Impossible de faire les soins médicaux.');
+        return of(null);
       }),
     );
   }
@@ -962,6 +1033,49 @@ export class SessionPlayPageComponent {
         onStabilized: () => this.stabilize(card),
       }),
     );
+  }
+
+  /** « Secourir » : le héros actif tente de stabiliser un allié mourant (02-actions-combat.md, « Secourir un mourant »), à la place de
+   * son attaque. Réussi, le mourant ne perd plus de vitalité ; dans tous les cas, le tour se termine. */
+  protected onRescue(): void {
+    const rescuer = this.activeCard();
+    const patients = this.rescuePatients();
+    if (!rescuer?.sourceId || patients.length === 0) {
+      return;
+    }
+    this.herosService
+      .heros(rescuer.sourceId)
+      .pipe(
+        switchMap((hero) =>
+          this.dialog
+            .open<RescueDialogComponent, RescueDialogData, RescueResult>(RescueDialogComponent, {
+              width: '480px',
+              data: {
+                rescuerNom: rescuer.nom,
+                herosId: rescuer.sourceId!,
+                esprit: hero.attributs.esprit,
+                heroisme: hero.ressources.heroisme,
+                carrieres: heroDetails(hero).carrieres,
+                patients: patients.map((card) => ({key: card.key, nom: card.nom, vitalite: card.vitaliteCourante ?? 0})),
+              },
+            })
+            .afterClosed(),
+        ),
+      )
+      .subscribe({
+        next: (result) => {
+          if (!result) {
+            return;
+          }
+          const patient = patients.find((card) => card.key === result.key);
+          if (result.success && patient) {
+            this.stabilize(patient);
+          }
+          this.snackBar.open(result.success ? `${patient?.nom} est stabilisé : il ne perd plus de vitalité.` : `Le secours échoue : ${patient?.nom} reste mourant.`, undefined, {duration: 4500});
+          this.onEndTurn(true);
+        },
+        error: (error: unknown) => this.tableError(error, 'Impossible de charger le secouriste.'),
+      });
   }
 
   /** « Retarder » : la carte active joue en dernier ce round. */

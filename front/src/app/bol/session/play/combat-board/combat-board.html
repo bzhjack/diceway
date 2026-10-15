@@ -7,13 +7,11 @@
   <bol-turn-order
     [entries]="entries()"
     [round]="round()"
-    [canAct]="activeCard() !== null"
     [targetKey]="target()?.key ?? null"
     [legendaryActive]="legendaryActive()"
     [announcement]="announcement()"
     (gaveBack)="gaveBack.emit($event)"
     (addRequested)="addRequested.emit()"
-    (delayRequested)="delayRequested.emit()"
     (rerollRequested)="rerollRequested.emit()"
   />
 
@@ -41,6 +39,9 @@
           (effectAdded)="effectAdded.emit($event)"
           (damageApplied)="damageApplied.emit($event)"
           (totalDefenseRequested)="totalDefenseRequested.emit()"
+          (delayRequested)="delayRequested.emit()"
+          (rescueRequested)="rescueRequested.emit()"
+          [canRescue]="canRescue()"
           (endTurnRequested)="endTurnRequested.emit($event)"
           (heroismeAdjusted)="heroismeAdjusted.emit($event)"
           (vitaliteAdjusted)="vitaliteAdjusted.emit($event)"

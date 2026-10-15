@@ -143,6 +143,8 @@ export class TurnAssistantComponent {
   readonly effets = input<readonly CombatEffect[]>([]);
   /** Plateau de dés 3D de l'écran de combat : les dés roulent par-dessus tout l'écran. Sans lui, les dés sont tirés sans animation. */
   readonly diceBox = input<DiceBoxHostComponent | null>(null);
+  /** Un héros mourant du camp de la carte active peut être secouru : « Secourir » s'affiche. */
+  readonly canRescue = input(false);
 
   readonly choiceChanged = output<AttackChoice | null>();
   /** La carte choisie comme cible, ou `null` pour « Changer d'adversaire ». */
@@ -154,6 +156,10 @@ export class TurnAssistantComponent {
   readonly effectAdded = output<NewEffect>();
   readonly damageApplied = output<AppliedHit>();
   readonly totalDefenseRequested = output<void>();
+  /** « Retarder » : la carte active joue en dernier ce round. */
+  readonly delayRequested = output<void>();
+  /** « Secourir » : la carte active tente de stabiliser un héros mourant, à la place de son attaque. */
+  readonly rescueRequested = output<void>();
   /** « Fin du tour ». `true` quand il suit un coup qu'on vient de conclure : la fin du tour attend alors l'enregistrement des effets
    * du coup, au lieu d'être ignorée comme un double clic. */
   readonly endTurnRequested = output<boolean>();

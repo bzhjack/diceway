@@ -33,7 +33,7 @@ Chaque point donne la règle, ce que fait l'application aujourd'hui, une proposi
 | 7 | Modificateur libre, bonus de carrière, feinte | Règle absente | M | 2 |
 | 8 | Carrière utile au jet de réaction | Règle absente | S | 2 |
 | 9 | Héroïsme du défenseur, interrompre | Règle absente | M | 2 |
-| 10 | Secourir un mourant, soins | Règle absente | M | 2 |
+| 10 | Secourir un mourant, soins | **Fait le 2026-10-15** | M | 2 |
 | 11 | Bagarre à mains nues | Règle absente | M | 2 |
 | 12 | Avantages et pouvoirs des créatures et démons | Règle absente | L | 3 |
 | 13 | Horde de piétaille | Règle absente | M | 3 |
@@ -228,6 +228,13 @@ Les lots sont un ordre proposé : d'abord corriger les calculs faux (lot 0), pui
   - sur la carte d'un héros mourant, « Secourir » ouvre le jet d'action du soigneur choisi, avec la difficulté préremplie ; une réussite pose l'effet « stabilisé » (point 3) ;
   - après le combat, « Soigner » rend le rang du soigneur.
 - **Effort** : M.
+- **Fait le 2026-10-15** :
+  - « Secourir » apparaît dans la carte « Qui attaque » quand c'est le tour d'un héros et qu'un autre héros est mourant (ni stabilisé, ni retiré). Il ouvre « Secourir un mourant » : le mourant (choix s'il y en a plusieurs), la carrière du secouriste (Médecin, guérisseur ou rebouteux proposé d'office, ou une autre, ou aucune), la formule `2d6 + esprit + carrière + difficulté` avec la difficulté tirée de la vitalité (`rescueDifficulty` dans `rescue.util.ts`), ce qu'il faut aux dés et les chances ;
+  - le total se tape, ou les dés se lancent dans le dialogue ; sur un échec, « Faveur divine » relance pour 1 PH ;
+  - « Valider et finir le tour » : réussi, le mourant reçoit l'effet « stabilisé » (point 3) ; dans tous les cas le tour du secouriste se termine ;
+  - en fin de combat, après la récupération, si un héros a une carrière de soins, « Soins médicaux » propose le soigneur (le mieux classé d'office) et les blessés du camp des héros (tous cochés) : chacun récupère le rang du soigneur, sans dépasser son maximum.
+  - Au passage : la récupération d'après combat soignait un PNJ allié avec le type « héros » (donc la mauvaise ligne) ; elle utilise maintenant le type de la carte.
+  - Limites : seuls les héros secourent (pas les PNJ alliés) ; pas de dé de bonus ou de malus sur le jet de secours ; un soigneur soigne tous les blessés cochés, lui compris, sans limite de nombre ni jet quotidien de doublement.
 
 ### 11. Bagarre à mains nues
 

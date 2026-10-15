@@ -9,11 +9,13 @@ Principe : l'application assiste le MJ, elle ne le remplace pas. Elle calcule et
 ## 1. Déroulement d'un combat
 
 1. **Démarrer le combat** : le dialogue recueille le jet de réaction de chaque héros et montre l'ordre d'action qui en découle.
-2. **Écran de combat** : la frise donne le round et l'ordre ; dessous, l'assistant de tour conduit le coup de la carte active en trois temps (qui, l'attaque, les dégâts).
+2. **Écran de combat** : la frise donne le round et l'ordre ; dessous, l'assistant de tour conduit le coup de la carte active en trois temps (qui, l'attaque, les dégâts). La carte « Qui attaque » porte les actions du tour : Fiche, Retarder, Défense totale, Secourir (s'il y a un mourant), Fin du tour.
 3. **Fin du tour** : la carte suivante devient active ; quand tout le monde a joué, un nouveau round commence. Si le coup qui a touché n'est pas appliqué, l'application demande d'abord : l'appliquer et finir, finir sans l'appliquer, ou rester sur le tour.
 4. **Hors de combat** : tout personnage à 0 de vitalité ou moins ne joue plus ; la frise l'éteint et dit pourquoi (inconscient, mourant, stabilisé, mort, hors de combat). Au début de chaque round :
    - un héros resté à 0 choisit entre reprendre ses esprits pour 1 PH (il remonte à la moitié de sa vitalité) et sombrer jusqu'à la fin du combat ;
    - un héros mourant perd 1 de vitalité, sauf s'il est stabilisé. Le message qui l'annonce porte un bouton « Stabilisé » pour le héros secouru à la table ; celui qui passe sous −5 se voit proposer « Défier la mort ».
+5. **Secourir** : à son tour, un héros peut tenter de stabiliser un allié mourant au lieu d'attaquer (bouton « Secourir » de la carte « Qui attaque ») : jet d'esprit + carrière de soins, difficulté Moyenne aggravée d'un niveau par point de vitalité négatif. Le tour se termine ensuite.
+6. **Terminer le combat** : chaque héros à 0 ou plus récupère la moitié des points perdus ; puis, si un héros a une carrière de soins (médecin, guérisseur, rebouteux), « Soins médicaux » rend son rang en vitalité aux blessés choisis.
 
 ## 2. Le jet de réaction
 
@@ -155,6 +157,7 @@ Tout est sous `front/src/app/bol/session/`, sauf mention contraire.
 | Écran de combat | `play/combat-board/`, `play/tapis/turn-order.*`, `play/tapis/turn-assistant.*`, `play/tapis/effects-list.ts`, `play/end-turn-dialog/`, `play/defier-la-mort-dialog/` |
 | Page, enregistrements | `play/session-play-page.ts` |
 | Jet d'action du héros | `action-roll.util.ts`, `play/action-roll-panel/` |
+| Secours et soins | `rescue.util.ts`, `play/rescue-dialog/`, `play/medical-care-dialog/` |
 | Validation de l'état côté serveur | `backend/app/Http/Services/Bol/BolCombatState.php` |
 
 Chaque fichier `*.util.ts` a son `*.spec.ts` à côté.

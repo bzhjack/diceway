@@ -1,0 +1,78 @@
+<h2 mat-dialog-title class="rsc-title">
+  <mat-icon>healing</mat-icon>
+  Secourir un mourant
+</h2>
+
+<mat-dialog-content class="rsc-content">
+  <p class="rsc-lead">{{ data.rescuerNom }} tente de stabiliser un allié, à la place de son attaque. Le tour se termine ensuite.</p>
+
+  @if (data.patients.length > 1) {
+    <span class="rsc-label" id="rsc-patient">Qui ?</span>
+    <div class="rsc-chips" role="group" aria-labelledby="rsc-patient">
+      @for (p of data.patients; track p.key) {
+        <button type="button" class="rsc-chip" [attr.aria-pressed]="patient().key === p.key" (click)="selectPatient(p.key)">
+          {{ p.nom }} <em>{{ p.vitalite }}</em>
+        </button>
+      }
+    </div>
+  } @else {
+    <p class="rsc-patient">{{ patient().nom }}, vitalité {{ patient().vitalite }}</p>
+  }
+
+  <span class="rsc-label" id="rsc-carriere">Carrière de soins</span>
+  <div class="rsc-chips" role="group" aria-labelledby="rsc-carriere">
+    @for (c of data.carrieres; track c.label) {
+      <button type="button" class="rsc-chip" [attr.aria-pressed]="carriere()?.label === c.label" (click)="selectCarriere(c)">
+        {{ c.label }} <em>{{ signed(c.value) }}</em>
+      </button>
+    }
+    <button type="button" class="rsc-chip" [attr.aria-pressed]="carriere() === null" (click)="selectCarriere(null)">Aucune</button>
+  </div>
+
+  <p class="rsc-formula">
+    2d6 {{ signed(data.esprit) }} (esprit)
+    @if (carriere(); as c) {
+      {{ signed(c.value) }} ({{ c.label }})
+    }
+    {{ signed(difficulty().modifier) }} ({{ difficulty().label }}) — 9 ou plus
+  </p>
+
+  <div class="rsc-roll">
+    <div class="rsc-need">
+      <b>{{ target().big }}</b>
+      <small>{{ target().small }} · {{ chance() }} %</small>
+    </div>
+    <input
+      #totalInput
+      class="rsc-total"
+      type="text"
+      inputmode="numeric"
+      maxlength="2"
+      autocomplete="off"
+      placeholder="2d6"
+      aria-label="Total des deux dés lancés à table"
+      [value]="typed()"
+      (input)="onTyped(totalInput.value)"
+      (keydown.enter)="validate()"
+    />
+    <button mat-icon-button type="button" aria-label="Lancer les dés à l'écran" (click)="roll()">
+      <mat-icon>casino</mat-icon>
+    </button>
+  </div>
+
+  @if (dice(); as d) {
+    <p class="rsc-verdict" [class.rsc-verdict--ok]="success()" aria-live="polite">
+      <b>{{ success() ? 'Stabilisé' : 'Échec' }}</b>
+      {{ d[0] }} et {{ d[1] }} :
+      {{ success() ? patient().nom + ' ne perd plus de vitalité.' : patient().nom + ' reste mourant.' }}
+    </p>
+    @if (success() === false && heroisme() > 0) {
+      <button mat-stroked-button type="button" (click)="divineFavor()">Faveur divine : relancer (−1 PH, {{ heroisme() }} restants)</button>
+    }
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button type="button" mat-dialog-close>Annuler</button>
+  <button mat-flat-button type="button" [disabled]="success() === null" (click)="validate()">Valider et finir le tour</button>
+</mat-dialog-actions>

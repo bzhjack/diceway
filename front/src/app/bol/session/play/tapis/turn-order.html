@@ -9,9 +9,6 @@
       <button mat-stroked-button size="small" type="button" (click)="addRequested.emit()">
         <mat-icon>add</mat-icon> Ajouter
       </button>
-      <button mat-stroked-button size="small" type="button" [disabled]="!canAct()" matTooltip="Passe son tour en fin de round" (click)="delayRequested.emit()">
-        Retarder
-      </button>
       <button mat-stroked-button size="small" type="button" matTooltip="Relancer la réaction des héros" (click)="rerollRequested.emit()">
         Nouveau jet de réaction
       </button>
