@@ -1,11 +1,13 @@
-<header class="cp-header" [class.cp-header--combat]="mode() === 'combat'">
-  <div class="cp-header-title">
-    <span class="cp-eyebrow">{{ mode() === 'combat' ? 'Combat' : 'Session' }}</span>
-    <h1>{{ titre() || (mode() === 'combat' ? 'Combat en cours' : 'Session en cours') }}</h1>
-  </div>
-
-  <!-- Contenu propre au mode, projeté par la page : la frise des actes en mode libre. -->
-  <div class="cp-header-center"><ng-content /></div>
+<header class="cp-header" [class.cp-header--combat]="mode() === 'combat'" [class.cp-header--theatre]="mode() === 'libre'">
+  @if (mode() === 'combat') {
+    <div class="cp-header-title">
+      <span class="cp-eyebrow">Combat</span>
+      <h1>{{ titre() || 'Combat en cours' }}</h1>
+    </div>
+  } @else {
+    <!-- Mode libre : le titre du scénario et la frise des actes, projetés par la page. -->
+    <div class="cp-header-center"><ng-content /></div>
+  }
 
   <div class="cp-header-actions">
     <button
@@ -19,20 +21,10 @@
       <mat-icon>search</mat-icon>
     </button>
     @if (mode() === 'libre') {
-      <button
-        type="button"
-        class="cp-header-action cp-header-action--plain"
-        aria-controls="spp-coulisses-panel"
-        [attr.aria-expanded]="coulissesOpen()"
-        (click)="coulissesToggled.emit()"
-      >
-        <mat-icon>theater_comedy</mat-icon>
-        Coulisses
+      <button mat-flat-button type="button" aria-controls="spp-coulisses-panel" [attr.aria-expanded]="coulissesOpen()" (click)="coulissesToggled.emit()">
+        <mat-icon>theater_comedy</mat-icon> Coulisses
       </button>
-      <button type="button" class="cp-header-action cp-header-action--gold" (click)="startCombat.emit()">
-        <mat-icon>shield</mat-icon>
-        Démarrer un combat
-      </button>
+      <button mat-flat-button type="button" (click)="startCombat.emit()"><mat-icon svgIcon="sword" /> Démarrer un combat</button>
     } @else {
       <button type="button" class="cp-header-action cp-header-action--gold" (click)="endCombat.emit()">
         <mat-icon>flag</mat-icon>

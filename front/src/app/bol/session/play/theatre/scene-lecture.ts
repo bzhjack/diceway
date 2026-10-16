@@ -6,7 +6,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
-import {BolSceneModel, BolScenePiste, SceneLoadMode} from '../../../models/bol-scene.model';
+import {BolSceneLoadResult, BolSceneModel, BolScenePiste, SceneLoadMode} from '../../../models/bol-scene.model';
 import {SceneActe} from '../../models/theatre.model';
 import {openSceneEditor} from './scene-editor-dialog/scene-editor-dialog';
 import {ScenePreviewComponent} from './scene-preview';
@@ -34,8 +34,8 @@ export class SceneLectureComponent {
 
   readonly scene = input.required<BolSceneModel>();
   readonly acts = input.required<readonly SceneActe[]>();
-  /** Une scène a été chargée depuis une piste : la page recharge la session. */
-  readonly sceneChanged = output<void>();
+  /** Une scène a été chargée depuis une piste, avec la session à jour : la page la pose. */
+  readonly sceneChanged = output<BolSceneLoadResult>();
 
   protected readonly secretVisible = linkedSignal(() => {
     this.scene().id;
@@ -60,19 +60,17 @@ export class SceneLectureComponent {
     this.store.load(scene, mode).subscribe({
       next: (result) => {
         if (result) {
-          this.sceneChanged.emit();
+          this.sceneChanged.emit(result);
         }
       },
       error: (error: unknown) => this.snackBar.open(extractApiErrorMessage(error, 'Impossible de charger la scène.'), 'Fermer', {duration: 5000}),
     });
   }
 
-  /** « Préparer la scène » : la scène affichée par défaut, ou celle d'une piste. */
+  /** « Préparer la scène » : la scène affichée par défaut, ou celle d'une piste. Ses pistes mènent aux scènes de son
+   * propre scénario, pas forcément celui de la frise. */
   protected edit(scene: BolSceneModel = this.scene()): void {
-    const siblings = this.acts()
-      .map((acte) => acte.scene)
-      .filter((s) => s.id !== scene.id);
-    openSceneEditor(this.dialog, {scene, siblings}).subscribe((updated) => {
+    openSceneEditor(this.dialog, {scene, siblings: this.store.siblingsOf(scene)}).subscribe((updated) => {
       if (updated) {
         this.store.replaceScene(updated);
       }

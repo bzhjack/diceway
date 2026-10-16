@@ -5,6 +5,7 @@ import {BolSceneModel} from '../../../models/bol-scene.model';
 import {CombatSelectionService} from '../../../services/combat-selection.service';
 import {REGION_MAP_COORDINATES} from '../../../shared/region/region-map-coordinates';
 import {ActeStatut} from '../../models/theatre.model';
+import {CarteRegionComponent} from './carte-region';
 import {SceneAmbianceComponent} from './scene-ambiance';
 import {distributionPortraits, lieuTexte, sceneDecor} from './theatre.util';
 
@@ -13,13 +14,13 @@ import {distributionPortraits, lieuTexte, sceneDecor} from './theatre.util';
  * pour rester atteignables au clavier. */
 @Component({
   selector: 'bol-scene-preview',
-  imports: [MatIconModule, MatTooltipModule, SceneAmbianceComponent],
+  imports: [MatIconModule, MatTooltipModule, CarteRegionComponent, SceneAmbianceComponent],
   template: `
     <div class="spv-vignette" aria-hidden="true">
       @if (vignetteImage(); as url) {
         <img class="spv-vignette-img" [src]="url" alt="" />
-      } @else if (vignetteCarte(); as position) {
-        <span class="spv-vignette-carte" [style.background-position]="position"></span>
+      } @else if (vignetteCarte(); as point) {
+        <bol-carte-region [x]="point.x" [y]="point.y" />
       }
     </div>
     <div class="spv-corps">
@@ -72,15 +73,6 @@ import {distributionPortraits, lieuTexte, sceneDecor} from './theatre.util';
       object-fit: cover;
       object-position: 50% 35%;
       filter: saturate(0.9) brightness(0.72);
-    }
-
-    .spv-vignette-carte {
-      position: absolute;
-      inset: 0;
-      background-image: url('/assets/bol/cartes/carte.jpg');
-      background-size: 300% auto;
-      filter: sepia(0.55) saturate(0.8) brightness(0.62) blur(1.5px);
-      transform: scale(1.04);
     }
 
     .spv-corps {
@@ -186,6 +178,6 @@ export class ScenePreviewComponent {
   });
   protected readonly vignetteCarte = computed(() => {
     const decor = this.decor();
-    return decor.kind === 'carte' ? `${decor.x}% ${decor.y}%` : null;
+    return decor.kind === 'carte' ? {x: decor.x, y: decor.y} : null;
   });
 }

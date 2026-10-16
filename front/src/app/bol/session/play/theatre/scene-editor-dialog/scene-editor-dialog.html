@@ -76,8 +76,8 @@
       <div class="sed-apercu" aria-hidden="true">
         @if (apercuImage(); as url) {
           <img class="sed-apercu-img" [src]="url" alt="" />
-        } @else if (apercuCarte(); as position) {
-          <span class="sed-apercu-carte" [style.background-position]="position"></span>
+        } @else if (apercuCarte(); as point) {
+          <bol-carte-region [x]="point.x" [y]="point.y" />
         }
       </div>
     </section>

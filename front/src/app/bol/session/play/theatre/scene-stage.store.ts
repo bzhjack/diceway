@@ -1,17 +1,20 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
-import {catchError, defer, finalize, forkJoin, map, Observable, of, timer} from 'rxjs';
+import {catchError, defer, finalize, forkJoin, map, Observable, of, Subscription, tap, timer} from 'rxjs';
 import {BolSceneLoadResult, BolSceneModel, BolSceneScenarioRef, SceneLoadMode} from '../../../models/bol-scene.model';
 import {BolCatalogService} from '../../../services/bol-catalog.service';
 import {BolScenarioService} from '../../../services/bol-scenario.service';
 import {BolSceneService} from '../../../services/bol-scene.service';
 import {RideauEtat, SceneActe} from '../../models/theatre.model';
 import {SceneActionsService} from '../../scene-actions.service';
+import {scenesOf} from '../scene-list/scene.util';
 import {sceneActs} from './theatre.util';
 
 /** Durée de fermeture du rideau avant que la scène ne change. */
 const RIDEAU_FERMETURE_MS = 750;
 /** Pause, rideau fermé, avant qu'il ne se rouvre sur la nouvelle scène. */
 const RIDEAU_PAUSE_MS = 250;
+/** Au plus, le temps d'attendre que la page montre la session chargée avant de rouvrir le rideau. */
+const RIDEAU_ATTENTE_MAX_MS = 3000;
 
 /** Durées du rideau : nulles quand l'utilisateur demande moins d'animations. */
 function rideauDurees(): {readonly fermeture: number; readonly pause: number} {
@@ -68,6 +71,9 @@ export class SceneStageStore {
   /** Le scénario de la frise a été choisi d'après la scène courante (au premier chargement seulement). */
   private placed = false;
   private regionsRequested = false;
+  /** Une scène est chargée, le rideau attend que la page montre la session à jour (prochain `sync`) : la pause avant
+   * de le rouvrir, et la garde qui le rouvre de toute façon au bout de `RIDEAU_ATTENTE_MAX_MS`. */
+  private attente: {readonly pause: number; readonly garde: Subscription} | null = null;
 
   /** Session chargée par la page : sa scène courante et ses scènes jouées. Les scènes sont rechargées au
    * premier appel, ou si la scène courante n'est pas connue (créée depuis la réserve ou la barre de commande). */
@@ -75,6 +81,13 @@ export class SceneStageStore {
     this.sessionId.set(sessionId);
     this.currentSceneId.set(currentSceneId);
     this.played.set(played);
+    if (this.attente) {
+      // La page montre la session chargée : le rideau peut se rouvrir sur la nouvelle scène.
+      const {pause, garde} = this.attente;
+      this.attente = null;
+      garde.unsubscribe();
+      this.rouvrir(pause);
+    }
     const unknown = currentSceneId !== null && !this.scenes().some((s) => s.id === currentSceneId);
     if (!this.requested || (unknown && !this.loading)) {
       this.reload();
@@ -116,13 +129,22 @@ export class SceneStageStore {
     this.scenarioIdState.set(id);
   }
 
+  /** Les autres scènes du scénario d'une scène (« Sans scénario » compris) — celles vers lesquelles ses pistes
+   * peuvent mener —, quel que soit le scénario affiché dans la frise. */
+  siblingsOf(scene: BolSceneModel): BolSceneModel[] {
+    const known = this.knownScenarioIds();
+    const scenarioId = scene.scenario_id && known.has(scene.scenario_id) ? scene.scenario_id : null;
+    return scenesOf(this.scenes(), scenarioId, known).filter((s) => s.id !== scene.id);
+  }
+
   /** Une scène a été modifiée (« Préparer la scène ») : elle remplace l'ancienne dans la liste. */
   replaceScene(updated: BolSceneModel): void {
     this.scenesState.update((list) => list.map((s) => (s.id === updated.id ? updated : s)));
   }
 
-  /** Charge une scène sur la table, rideau fermé : il se ferme, la scène se charge, il se rouvre après une
-   * pause — même en cas d'erreur. Émet `null` sans rien faire si un chargement est déjà en cours. */
+  /** Charge une scène sur la table, rideau fermé : il se ferme, la scène se charge, puis il se rouvre une fois la
+   * session chargée montrée par la page (son `sync` suivant, au plus `RIDEAU_ATTENTE_MAX_MS`) et après une pause.
+   * En cas d'erreur, il se rouvre après la pause. Émet `null` sans rien faire si un chargement est déjà en cours. */
   load(scene: BolSceneModel, mode: SceneLoadMode): Observable<BolSceneLoadResult | null> {
     return defer(() => {
       const sessionId = this.sessionId();
@@ -135,11 +157,26 @@ export class SceneStageStore {
       const durees = rideauDurees();
       return forkJoin([timer(durees.fermeture), this.sceneActions.loadAs(sessionId, scene, mode)]).pipe(
         map(([, result]) => result),
-        finalize(() => {
-          this.busyState.set(false);
-          timer(durees.pause).subscribe(() => this.rideauState.set('ouvert'));
+        tap({
+          // Avant que l'appelant ne reçoive le résultat : la page qui pose la session appellera `sync` ensuite.
+          next: () => this.attendreLaSession(durees.pause),
+          error: () => this.rouvrir(durees.pause),
         }),
+        finalize(() => this.busyState.set(false)),
       );
     });
+  }
+
+  private attendreLaSession(pause: number): void {
+    this.attente?.garde.unsubscribe();
+    const garde = timer(RIDEAU_ATTENTE_MAX_MS).subscribe(() => {
+      this.attente = null;
+      this.rouvrir(pause);
+    });
+    this.attente = {pause, garde};
+  }
+
+  private rouvrir(pause: number): void {
+    timer(pause).subscribe(() => this.rideauState.set('ouvert'));
   }
 }

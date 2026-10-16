@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, computed, input, linkedSignal} from '@angular/core';
 import {BolSceneModel} from '../../../models/bol-scene.model';
 import {REGION_MAP_COORDINATES} from '../../../shared/region/region-map-coordinates';
+import {CarteRegionComponent} from './carte-region';
 import {sceneDecor} from './theatre.util';
 
 /** Le fond du plateau : l'illustration de la scène, sinon la carte de Lémurie centrée sur sa région, sinon l'image
@@ -8,11 +9,12 @@ import {sceneDecor} from './theatre.util';
  * garde le texte lisible. Purement décoratif. */
 @Component({
   selector: 'bol-scene-decor',
+  imports: [CarteRegionComponent],
   template: `
     @if (image(); as url) {
       <img class="dcr-image" [src]="url" alt="" (error)="imageFailed.set(true)" />
-    } @else if (carte(); as position) {
-      <span class="dcr-carte" [style.background-position]="position"></span>
+    } @else if (carte(); as point) {
+      <bol-carte-region [x]="point.x" [y]="point.y" />
     }
   `,
   styles: `
@@ -41,14 +43,6 @@ import {sceneDecor} from './theatre.util';
       filter: saturate(0.9) brightness(0.72);
     }
 
-    .dcr-carte {
-      position: absolute;
-      inset: 0;
-      background-image: url('/assets/bol/cartes/carte.jpg');
-      background-size: 300% auto;
-      filter: sepia(0.55) saturate(0.8) brightness(0.62) blur(1.5px);
-      transform: scale(1.04);
-    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -73,9 +67,9 @@ export class SceneDecorComponent {
     const decor = this.decor();
     return decor.kind === 'image' ? decor.url : null;
   });
-  /** Position de la carte en `background-position` (« 26.4% 59% »). */
+  /** Le point de la région sur la carte, quand le décor est la carte. */
   protected readonly carte = computed(() => {
     const decor = this.decor();
-    return decor.kind === 'carte' ? `${decor.x}% ${decor.y}%` : null;
+    return decor.kind === 'carte' ? {x: decor.x, y: decor.y} : null;
   });
 }

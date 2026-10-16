@@ -17,6 +17,7 @@ import {BolSceneService} from '../../../../services/bol-scene.service';
 import {REGION_MAP_COORDINATES} from '../../../../shared/region/region-map-coordinates';
 import {SceneEditorDialogData, SceneEditorValue} from '../../../models/scene-editor-dialog.model';
 import {SCENE_TITLE_MAX} from '../../scene-list/scene.util';
+import {CarteRegionComponent} from '../carte-region';
 import {METEOS, MOMENTS, sceneDecor} from '../theatre.util';
 import {editorValue, sceneChanges} from './scene-editor.util';
 
@@ -47,6 +48,7 @@ function pisteGroup(piste: {texte: string; scene_id: string | null}): PisteGroup
     MatIconModule,
     MatInputModule,
     MatSelectModule,
+    CarteRegionComponent,
   ],
   templateUrl: './scene-editor-dialog.html',
   styleUrl: './scene-editor-dialog.scss',
@@ -105,10 +107,10 @@ class SceneEditorDialogComponent {
     const decor = this.decor();
     return decor.kind === 'image' ? decor.url : null;
   });
-  /** Position de la carte en `background-position` (« 26.4% 59% »). */
+  /** Le point de la région sur la carte, quand l'aperçu est la carte. */
   protected readonly apercuCarte = computed(() => {
     const decor = this.decor();
-    return decor.kind === 'carte' ? `${decor.x}% ${decor.y}%` : null;
+    return decor.kind === 'carte' ? {x: decor.x, y: decor.y} : null;
   });
   protected readonly busy = signal(false);
 

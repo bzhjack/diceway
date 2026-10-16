@@ -27,7 +27,8 @@ interface Plaque {
 }
 
 /** La compagnie, en pied du plateau : une plaque par héros (portrait, joueur, vitalité et héroïsme réglables
- * pas à pas, chaque pas enregistré tout de suite), puis les alliés en petites cartes. C'est la zone de dépôt
+ * pas à pas, chaque pas enregistré tout de suite), puis les alliés en petites cartes. Un pas impossible ou en cours
+ * marque son bouton `aria-disabled` sans le désactiver : le focus clavier reste dessus. C'est la zone de dépôt
  * `heros`. Signale à la page (`changed`) chaque valeur enregistrée, pour qu'elle recharge la session. */
 @Component({
   selector: 'bol-compagnie',
@@ -88,18 +89,23 @@ export class CompagnieComponent {
   }
 
   protected stepVitalite(card: TapisCard, delta: number): void {
-    this.save(card, this.fightSessionService.applyDamage(this.sessionId(), 'hero', card.pivotId, delta), 'Impossible de mettre à jour la vitalité.');
+    if (delta > 0 && card.vitaliteCourante !== null && card.vitaliteMax !== null && card.vitaliteCourante >= card.vitaliteMax) {
+      return;
+    }
+    this.save(card, () => this.fightSessionService.applyDamage(this.sessionId(), 'hero', card.pivotId, delta), 'Impossible de mettre à jour la vitalité.');
   }
 
   protected stepHeroisme(card: TapisCard, delta: number): void {
     if (!card.sourceId || (delta < 0 && (card.heroisme ?? 0) <= 0)) {
       return;
     }
-    this.save(card, this.herosService.adjustHeroisme(card.sourceId, delta), "Impossible de mettre à jour l'héroïsme.");
+    const herosId = card.sourceId;
+    this.save(card, () => this.herosService.adjustHeroisme(herosId, delta), "Impossible de mettre à jour l'héroïsme.");
   }
 
-  /** Enregistre un pas ; un autre pas sur le même héros est ignoré tant que celui-ci n'est pas revenu. */
-  private save(card: TapisCard, request: Observable<unknown>, errorMessage: string): void {
+  /** Enregistre un pas ; un autre pas sur le même héros est ignoré (sa requête n'est même pas construite) tant que
+   * celui-ci n'est pas revenu. */
+  private save(card: TapisCard, request: () => Observable<unknown>, errorMessage: string): void {
     if (this.pending().has(card.key)) {
       return;
     }
@@ -110,7 +116,7 @@ export class CompagnieComponent {
         next.delete(card.key);
         return next;
       });
-    request.subscribe({
+    request().subscribe({
       next: () => {
         done();
         this.changed.emit();

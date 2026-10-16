@@ -9,7 +9,7 @@ import {catchError, concatMap, EMPTY, forkJoin, from, map, Observable, of, switc
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {BolFightSessionModel} from '../../models/bol-fight-session.model';
-import {BolSceneModel} from '../../models/bol-scene.model';
+import {BolSceneLoadResult, BolSceneModel} from '../../models/bol-scene.model';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolFightSessionService} from '../../services/bol-fight-session.service';
 import {BolCombatReferenceService} from '../../services/bol-combat-reference.service';
@@ -625,6 +625,13 @@ export class SessionPlayPageComponent {
     this.foldCard();
     this.reloadSession();
     this.stage.reload();
+  }
+
+  /** Une scène vient d'être chargée depuis la frise ou une piste : la réponse porte déjà la session à jour, posée
+   * telle quelle (sans second aller-retour) pour que le rideau se rouvre sur la nouvelle scène. */
+  protected onSceneLoaded(result: BolSceneLoadResult): void {
+    this.foldCard();
+    this.session.set(result.session);
   }
 
   /** Clic sur la face d'une carte : ouvre sa carte en dialogue (une seule à la fois). */

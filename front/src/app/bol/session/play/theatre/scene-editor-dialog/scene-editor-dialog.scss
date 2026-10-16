@@ -73,15 +73,6 @@
   filter: saturate(0.9) brightness(0.72);
 }
 
-.sed-apercu-carte {
-  position: absolute;
-  inset: 0;
-  background-image: url('/assets/bol/cartes/carte.jpg');
-  background-size: 300% auto;
-  filter: sepia(0.55) saturate(0.8) brightness(0.62) blur(1.5px);
-  transform: scale(1.04);
-}
-
 .sed-pistes {
   display: flex;
   flex-direction: column;

@@ -7,7 +7,8 @@ import {TapisCard} from '../../models/tapis.model';
 import {ATTITUDES} from './theatre.util';
 
 /** L'attitude envers les héros d'un PNJ, d'une créature ou d'un démon en scène, dans sa carte dépliée : quatre
- * boutons bascule ; un nouveau clic sur l'attitude choisie l'efface. Enregistrée aussitôt. */
+ * boutons bascule ; un nouveau clic sur l'attitude choisie l'efface. Enregistrée aussitôt ; pendant l'enregistrement,
+ * les boutons sont `aria-disabled` (pas désactivés : le focus clavier reste en place). */
 @Component({
   selector: 'bol-attitude-picker',
   template: `
@@ -18,7 +19,7 @@ import {ATTITUDES} from './theatre.util';
           type="button"
           [class]="'atp-option atp-option--' + option.value"
           [attr.aria-pressed]="card().attitude === option.value"
-          [disabled]="busy()"
+          [attr.aria-disabled]="busy() ? 'true' : null"
           (click)="choose(option.value)"
         >
           {{ option.label }}
@@ -78,7 +79,7 @@ import {ATTITUDES} from './theatre.util';
         outline-offset: 2px;
       }
 
-      &:disabled {
+      &[aria-disabled='true'] {
         cursor: progress;
       }
     }

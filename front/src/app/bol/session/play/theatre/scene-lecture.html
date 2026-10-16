@@ -41,7 +41,7 @@
               size="small"
               type="button"
               [attr.aria-label]="'Aperçu de la scène ' + acte.numero + ', ' + acte.scene.titre"
-              [disabled]="store.busy()"
+              [attr.aria-disabled]="store.busy() ? 'true' : null"
               [matMenuTriggerFor]="apercu"
               [matMenuTriggerData]="{acte}"
             >

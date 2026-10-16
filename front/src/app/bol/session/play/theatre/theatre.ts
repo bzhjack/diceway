@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, Component, computed, inject, input, output} from '@angular/core';
+import {BolSceneLoadResult} from '../../../models/bol-scene.model';
 import {TapisCard} from '../../models/tapis.model';
 import {BraisesComponent} from './braises';
 import {CompagnieComponent} from './compagnie';
@@ -27,8 +28,8 @@ export class TheatreComponent {
   readonly cardToggled = output<TapisCard>();
   readonly selectToggled = output<TapisCard>();
   readonly campToggleRequested = output<TapisCard>();
-  /** Une scène a été chargée depuis une piste. */
-  readonly sceneChanged = output<void>();
+  /** Une scène a été chargée depuis une piste, avec la session à jour. */
+  readonly sceneChanged = output<BolSceneLoadResult>();
   /** Une vitalité ou un héroïsme a été enregistré. */
   readonly changed = output<void>();
   readonly coulissesRequested = output<void>();

@@ -18,7 +18,7 @@
       (coulissesToggled)="toggleReserve()"
     >
       @if (mode() === 'libre') {
-        <bol-scene-acts (sceneChanged)="onSceneChanged()" />
+        <bol-scene-acts [sessionTitre]="session()?.titre ?? null" (sceneChanged)="onSceneLoaded($event)" />
       }
     </bol-session-header>
 
@@ -62,7 +62,7 @@
               (cardToggled)="onCardToggled($event)"
               (selectToggled)="toggleSelected($event)"
               (campToggleRequested)="toggleCamp($event)"
-              (sceneChanged)="onSceneChanged()"
+              (sceneChanged)="onSceneLoaded($event)"
               (changed)="reloadSession()"
               (coulissesRequested)="setReserveOpen(true)"
             />

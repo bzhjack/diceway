@@ -141,7 +141,7 @@
   line-height: 1;
   cursor: pointer;
 
-  &:hover:not(:disabled) {
+  &:hover:not([aria-disabled='true']) {
     border-color: var(--dw-color-legendary);
     color: var(--dw-color-legendary);
   }
@@ -151,7 +151,7 @@
     outline-offset: 1px;
   }
 
-  &:disabled {
+  &[aria-disabled='true'] {
     opacity: 0.35;
     cursor: default;
   }

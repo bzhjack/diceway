@@ -87,9 +87,38 @@ describe('SceneStageStore', () => {
     expect(store.rideauTitre()).toBe(S2.titre);
     vi.advanceTimersByTime(750);
     expect(values).toEqual([RESULT]);
+    store.sync('sess', 's2', ['s1', 's2']);
     vi.advanceTimersByTime(250);
     expect(store.rideau()).toBe('ouvert');
     expect(store.busy()).toBe(false);
+  });
+
+  it('garde le rideau fermé jusqu’à ce que la page montre la session chargée', () => {
+    loadAs.mockReturnValue(of(RESULT));
+    store.sync('sess', 's1', []);
+    store.load(S2, 'replace').subscribe();
+    vi.advanceTimersByTime(1500);
+    expect(store.rideau()).toBe('ferme');
+    store.sync('sess', 's2', ['s1', 's2']);
+    vi.advanceTimersByTime(250);
+    expect(store.rideau()).toBe('ouvert');
+  });
+
+  it('rouvre le rideau au bout de 3 s si la page ne montre pas la session', () => {
+    loadAs.mockReturnValue(of(RESULT));
+    store.sync('sess', 's1', []);
+    store.load(S2, 'replace').subscribe();
+    vi.advanceTimersByTime(750 + 2900);
+    expect(store.rideau()).toBe('ferme');
+    vi.advanceTimersByTime(100 + 250);
+    expect(store.rideau()).toBe('ouvert');
+  });
+
+  it('donne les scènes sœurs du scénario de la scène, même si la frise en montre un autre', () => {
+    store.sync('sess', 's2', []);
+    store.selectScenario(null);
+    expect(store.siblingsOf(S2).map((s) => s.id)).toEqual(['s1', 's3']);
+    expect(store.siblingsOf(SCENES[3]).map((s) => s.id)).toEqual([]);
   });
 
   it('rouvre le rideau après une erreur', () => {
