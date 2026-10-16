@@ -38,3 +38,6 @@ export interface TurnState {
 
 /** Ce qu'il faut savoir d'un combattant pour l'ordonner dans le tour. */
 export type TurnToken = Pick<PlayToken, 'kind' | 'pivotId' | 'tier' | 'lockedRound1'>;
+
+/** L'issue d'un combat dont un camp n'a plus personne debout : les adversaires sont tombés, ou les héros et leurs alliés. */
+export type CombatOutcome = 'victoire' | 'defaite';

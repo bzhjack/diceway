@@ -3,7 +3,7 @@ import {TapisCard} from '../../models/tapis.model';
 import {InitiativeTierKey} from '../../models/initiative.model';
 import {TurnOrderEntry, TurnOrderGroup} from '../../models/turn-order.model';
 import {CombatEffect, NewEffect} from '../../models/combat-effect.model';
-import {EtatCombat, TurnStatus, OrderedCard, TurnState, TurnToken} from '../../models/combat-turn.model';
+import {CombatOutcome, EtatCombat, TurnStatus, OrderedCard, TurnState, TurnToken} from '../../models/combat-turn.model';
 import {aAssomme, appliquerEvenement, aStabilise, EffectIdGenerator, effetsDeLAncienFormat, effetsDeTour, nextEffectId, normalizeEffets, SANS_BOUCLIER} from './combat-effects.util';
 
 export const INITIAL_ETAT: EtatCombat = {round: 1, joues: [], effets: [], exclus: [], depart: {}};
@@ -95,7 +95,7 @@ export function isOut(card: TapisCard): boolean {
 
 /** L'issue du combat, dès qu'un camp n'a plus personne debout (hors de combat ou retiré du combat) : plus personne en face à viser.
  * `victoire` si ce sont les adversaires, `defaite` si ce sont les héros et leurs alliés ; `null` tant que les deux camps tiennent. */
-export function combatOutcome(cards: readonly TapisCard[], exclus: readonly string[]): 'victoire' | 'defaite' | null {
+export function combatOutcome(cards: readonly TapisCard[], exclus: readonly string[]): CombatOutcome | null {
   const standing = (camp: TapisCard['camp']): boolean => cards.some((card) => card.camp === camp && !exclus.includes(card.key) && !isOut(card));
   if (!standing('adversaires')) {
     return 'victoire';

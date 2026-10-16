@@ -82,8 +82,6 @@
           [carrieres]="activeCarrieres()"
           (gaveBack)="onGiveBackTurn($event)"
           [interrupters]="interrupters()"
-          [outcome]="combatOutcome()"
-          (endCombatRequested)="askEndCombat()"
           (interruptRequested)="onInterrupt($event)"
           (addRequested)="openAddCombatantDialog()"
           (delayRequested)="onDelay()"

@@ -1,5 +1,4 @@
 import {ChangeDetectionStrategy, Component, input, output, viewChild} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
 import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {ActionRollCarriere} from '../../models/action-roll.model';
@@ -16,7 +15,7 @@ import {TurnOrderComponent} from '../tapis/turn-order';
  * héros avec le journal à droite. Il ne porte aucun état : la page lui donne tout et reçoit chaque action. */
 @Component({
   selector: 'bol-combat-board',
-  imports: [MatButtonModule, TurnOrderComponent, TurnAssistantComponent, DiceBoxHostComponent],
+  imports: [TurnOrderComponent, TurnAssistantComponent, DiceBoxHostComponent],
   templateUrl: './combat-board.html',
   styleUrl: './combat-board.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,8 +31,6 @@ export class CombatBoardComponent {
   readonly legendaryActive = input(false);
   readonly announcement = input('');
   readonly interrupters = input<readonly TurnOrderInterrupter[]>([]);
-  /** Un camp n'a plus personne debout : le combat est gagné (`victoire`) ou perdu (`defaite`). */
-  readonly outcome = input<'victoire' | 'defaite' | null>(null);
   // Assistant de tour : `null` quand plus personne ne peut jouer
   readonly activeCard = input<TapisCard | null>(null);
   readonly armes = input<readonly BolHerosArmeModel[]>([]);
@@ -52,8 +49,6 @@ export class CombatBoardComponent {
 
   readonly gaveBack = output<string>();
   readonly interruptRequested = output<string>();
-  /** « Terminer le combat » depuis le bandeau de fin. */
-  readonly endCombatRequested = output<void>();
   readonly addRequested = output<void>();
   readonly delayRequested = output<void>();
   readonly rerollRequested = output<void>();
