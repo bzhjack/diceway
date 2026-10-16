@@ -3,9 +3,9 @@ import {BolSceneModel} from '../../../models/bol-scene.model';
 import {REGION_MAP_COORDINATES} from '../../../shared/region/region-map-coordinates';
 import {sceneDecor} from './theatre.util';
 
-/** Le fond du plateau : l'illustration de la scène, sinon la carte de Lémurie centrée sur sa région, sinon le
- * cuir de la table. Une illustration qui ne se charge pas retombe sur la carte. Un voile sombre garde le texte
- * lisible. Purement décoratif. */
+/** Le fond du plateau : l'illustration de la scène, sinon la carte de Lémurie centrée sur sa région, sinon l'image
+ * par défaut. Une illustration qui ne se charge pas retombe sur la carte (ou l'image par défaut). Un voile sombre
+ * garde le texte lisible. Purement décoratif. */
 @Component({
   selector: 'bol-scene-decor',
   template: `
@@ -37,6 +37,7 @@ import {sceneDecor} from './theatre.util';
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: 50% 35%;
       filter: saturate(0.9) brightness(0.72);
     }
 

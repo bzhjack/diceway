@@ -48,15 +48,19 @@ export function sceneActs(
   }));
 }
 
+/** Le décor d'une scène sans illustration ni région connue, et du plateau sans scène : l'image retenue pour la
+ * maquette du théâtre. */
+const DECOR_PAR_DEFAUT = '/assets/bol/dashboard-header.png';
+
 /** Le fond du plateau pour une scène : son illustration, sinon la carte centrée sur sa région (si sa
- * position est connue), sinon rien. */
+ * position est connue), sinon l'image par défaut. */
 export function sceneDecor(scene: BolSceneModel | null, coords: Readonly<Record<number, {x: number; y: number}>>): SceneDecor {
   const url = scene?.image?.trim();
   if (url) {
     return {kind: 'image', url};
   }
   const position = scene?.region_id != null ? coords[scene.region_id] : undefined;
-  return position ? {kind: 'carte', x: position.x, y: position.y} : {kind: 'aucun'};
+  return position ? {kind: 'carte', x: position.x, y: position.y} : {kind: 'image', url: DECOR_PAR_DEFAUT};
 }
 
 /** Les portraits de la distribution d'une scène, retrouvés dans le catalogue ; une entrée dont la fiche

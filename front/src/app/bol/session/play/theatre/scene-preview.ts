@@ -70,6 +70,7 @@ import {distributionPortraits, lieuTexte, sceneDecor} from './theatre.util';
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: 50% 35%;
       filter: saturate(0.9) brightness(0.72);
     }
 

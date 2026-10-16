@@ -53,9 +53,11 @@ describe('sceneDecor', () => {
     expect(sceneDecor(scene('s', 0, {image: '  ', region_id: 5}), coords)).toEqual({kind: 'carte', x: 26.4, y: 59});
   });
 
-  it('sans région connue ni illustration, rien', () => {
-    expect(sceneDecor(scene('s', 0, {region_id: 99}), coords)).toEqual({kind: 'aucun'});
-    expect(sceneDecor(null, coords)).toEqual({kind: 'aucun'});
+  it("sans région connue ni illustration, l'image par défaut de la maquette", () => {
+    const parDefaut = {kind: 'image', url: '/assets/bol/dashboard-header.png'};
+    expect(sceneDecor(scene('s', 0, {region_id: 99}), coords)).toEqual(parDefaut);
+    expect(sceneDecor(scene('s', 0), coords)).toEqual(parDefaut);
+    expect(sceneDecor(null, coords)).toEqual(parDefaut);
   });
 });
 
