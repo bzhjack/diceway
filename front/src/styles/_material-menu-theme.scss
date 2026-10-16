@@ -13,6 +13,17 @@ html {
   border: 1px solid var(--dw-border);
 }
 
+// Aperçu d'une scène (frise des actes, pistes) : la vignette touche les bords, le panneau est plus large
+// que les 280px d'un menu ordinaire.
+.mat-mdc-menu-panel.thr-apercu-menu {
+  width: 20rem;
+  max-width: calc(100vw - 2rem);
+
+  .mat-mdc-menu-content {
+    padding-top: 0;
+  }
+}
+
 // Dialog — fond sombre + texte lisible
 html {
   @include mat.dialog-overrides((

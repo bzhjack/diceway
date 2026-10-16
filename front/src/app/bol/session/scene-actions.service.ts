@@ -24,16 +24,15 @@ export class SceneActionsService {
   /** Charge une scène sur la table. Si la table porte autre chose que des héros, demande d'abord
    * « Remplacer ou Ajouter » ; sinon charge directement. */
   load(sessionId: string, scene: BolSceneModel, nonHeroCount: number): Observable<BolSceneLoadResult | null> {
-    return this.chooseMode(scene, nonHeroCount).pipe(
-      switchMap((mode) => {
-        if (!mode) {
-          return of(null);
-        }
-        return this.fightSessionService
-          .loadScene(sessionId, scene.id, mode)
-          .pipe(tap((result) => this.snackBar.open(loadMessage(scene.titre, result.ignored), undefined, {duration: 4000})));
-      }),
-    );
+    return this.chooseMode(scene, nonHeroCount).pipe(switchMap((mode) => (mode ? this.loadAs(sessionId, scene, mode) : of(null))));
+  }
+
+  /** Charge une scène sur la table dans le mode donné, sans rien demander (le plateau propose lui-même
+   * « Lever le rideau » ou « Ajouter ses personnages »), puis annonce le résultat. */
+  loadAs(sessionId: string, scene: BolSceneModel, mode: SceneLoadMode): Observable<BolSceneLoadResult> {
+    return this.fightSessionService
+      .loadScene(sessionId, scene.id, mode)
+      .pipe(tap((result) => this.snackBar.open(loadMessage(scene.titre, result.ignored), undefined, {duration: 4000})));
   }
 
   /** « Enregistrer la table comme scène » : demande un titre, puis crée la scène dans le scénario

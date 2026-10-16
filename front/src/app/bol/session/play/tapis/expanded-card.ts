@@ -25,6 +25,7 @@ import {heroIdentityLine, REMOVE_ACTION_LABEL} from './tapis.util';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
 import {HeroDetailsComponent} from './hero-details';
 import {ExpandedHeroData} from '../../models/expanded-card.model';
+import {AttitudePickerComponent} from '../theatre/attitude-picker';
 
 const KIND_LABELS: Record<TapisKind, string> = {
   hero: 'Héros',
@@ -48,6 +49,7 @@ const KIND_LABELS: Record<TapisKind, string> = {
     HeroResourcesComponent,
     CardVitaliteComponent,
     BolStatblockComponent,
+    AttitudePickerComponent,
   ],
   templateUrl: './expanded-card.html',
   styleUrl: './expanded-card.scss',
@@ -116,8 +118,8 @@ export class ExpandedCardComponent {
 
   constructor() {
     // À l'ouverture, le focus entre dans la carte : le clavier et les lecteurs d'écran suivent.
-    // `preventScroll` : le tapis ramène lui-même la carte dans la zone visible (cf. `TapisComponent`) ; le
-    // focus, lui, ferait défiler tous les parents, y compris la page dont le débordement est masqué.
+    // `preventScroll` : la carte est ouverte en dialogue, le focus ne doit pas faire défiler les parents, y compris
+    // la page dont le débordement est masqué.
     afterNextRender(() => this.root().nativeElement.focus({preventScroll: true}));
   }
 }

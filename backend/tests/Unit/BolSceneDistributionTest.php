@@ -134,4 +134,23 @@ class BolSceneDistributionTest extends TestCase
     {
         $this->assertSame('heros', BolSceneDistribution::entryCamp(['camp' => 'heros']));
     }
+
+    public function test_from_session_keeps_attitude(): void
+    {
+        $entries = BolSceneDistribution::fromSession(
+            [['id' => 7, 'pnj_id' => 'p', 'attitude' => 'mefiant'], ['id' => 8, 'pnj_id' => 'q']],
+            [['id' => 3, 'creature_id' => 'c', 'qty' => 1, 'attitude' => 'hostile']],
+            [],
+            [],
+        );
+
+        $this->assertSame(['mefiant', null, 'hostile'], array_column($entries, 'attitude'));
+    }
+
+    public function test_entry_attitude_rejects_unknown(): void
+    {
+        $this->assertNull(BolSceneDistribution::entryAttitude(['attitude' => 'furieux']));
+        $this->assertNull(BolSceneDistribution::entryAttitude([]));
+        $this->assertSame('amical', BolSceneDistribution::entryAttitude(['attitude' => 'amical']));
+    }
 }

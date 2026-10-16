@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Bol;
 use App\Exceptions\Bol\DuplicateCombatantException;
 use App\Http\Controllers\Controller;
 use App\Http\Services\Bol\BolFightSessionService;
+use App\Http\Services\Bol\BolSceneDistribution;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class BolFightSessionController extends Controller
 {
@@ -87,6 +89,19 @@ class BolFightSessionController extends Controller
         }
 
         $session = $this->fightSessionService->setCamp($id, Auth::id(), $kind, $pivotId, $data['camp']);
+
+        if (!$session) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        return response()->json($session);
+    }
+
+    public function setAttitude(Request $request, string $id, string $kind, int $pivotId)
+    {
+        $data = $request->validate(['attitude' => ['present', 'nullable', Rule::in(BolSceneDistribution::ATTITUDES)]]);
+
+        $session = $this->fightSessionService->setAttitude($id, Auth::id(), $kind, $pivotId, $data['attitude']);
 
         if (!$session) {
             return response()->json(['error' => 'Not found'], 404);

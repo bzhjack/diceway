@@ -4,7 +4,6 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
 import {MatSelectChange, MatSelectModule} from '@angular/material/select';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {forkJoin, Observable} from 'rxjs';
@@ -16,6 +15,7 @@ import {BolSceneModel, BolSceneScenarioRef} from '../../../models/bol-scene.mode
 import {BolScenarioService} from '../../../services/bol-scenario.service';
 import {BolSceneService} from '../../../services/bol-scene.service';
 import {SceneActionsService} from '../../scene-actions.service';
+import {openSceneEditor} from '../theatre/scene-editor-dialog/scene-editor-dialog';
 import {
   distributionSummary,
   moveScene,
@@ -35,7 +35,6 @@ import {
     MatButtonModule,
     MatFormFieldModule,
     MatIconModule,
-    MatInputModule,
     MatSelectModule,
     DwCollapsibleRowComponent,
   ],
@@ -200,15 +199,16 @@ export class SceneListComponent {
     });
   }
 
-  /** Notes enregistrées à la perte de focus, seulement si elles ont changé. */
-  protected saveNotes(scene: BolSceneModel, raw: string): void {
-    const notes = raw.trim() ? raw : null;
-    if (notes === (scene.notes ?? null)) {
-      return;
-    }
-    this.run(this.sceneService.update(scene.id, {notes}), "Impossible d'enregistrer les notes.", (updated) =>
-      this.replaceScene(updated),
-    );
+  /** « Préparer la scène » : décor, ambiance, texte à lire, secret et pistes, vers les autres scènes du même
+   * scénario. La table est rechargée ensuite, son plateau montrant la scène courante. */
+  protected prepare(scene: BolSceneModel): void {
+    const siblings = this.visibleScenes().filter((s) => s.id !== scene.id);
+    openSceneEditor(this.dialog, {scene, siblings}).subscribe((updated) => {
+      if (updated) {
+        this.replaceScene(updated);
+        this.changed.emit();
+      }
+    });
   }
 
   protected updateFromTable(scene: BolSceneModel): void {

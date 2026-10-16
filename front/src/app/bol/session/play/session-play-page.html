@@ -14,15 +14,37 @@
       (startCombat)="openStartCombatDialog()"
       (endCombat)="askEndCombat()"
       (search)="openPalette()"
-    />
+      [coulissesOpen]="reserveOpen()"
+      (coulissesToggled)="toggleReserve()"
+    >
+      @if (mode() === 'libre') {
+        <bol-scene-acts (sceneChanged)="onSceneChanged()" />
+      }
+    </bol-session-header>
 
     @if (sessionId(); as sid) {
       @if (mode() === 'libre') {
-        <!-- Mode libre : la réserve et le tapis. -->
-        <div class="spp-body">
-          @if (reserveOpen()) {
-            <aside id="spp-reserve" class="spp-reserve" aria-label="Réserve">
+        <!-- Mode libre : le théâtre, et les coulisses (la réserve) à droite. -->
+        <mat-sidenav-container class="spp-coulisses" [hasBackdrop]="false">
+          <mat-sidenav
+            id="spp-coulisses-panel"
+            class="spp-coulisses-panel"
+            position="end"
+            mode="side"
+            role="complementary"
+            aria-label="Coulisses"
+            [opened]="reserveOpen()"
+            (openedChange)="onCoulissesChange($event)"
+          >
+            <div class="spp-coulisses-inner">
+              <div class="spp-coulisses-tete">
+                <h2 class="spp-coulisses-titre">Coulisses</h2>
+                <button mat-icon-button type="button" aria-label="Fermer les coulisses" (click)="setReserveOpen(false)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
               <bol-reserve
+                [titre]="null"
                 [sessionId]="sid"
                 [existingHeroIds]="existingHeroIds()"
                 [currentSceneId]="session()?.scene_id ?? null"
@@ -30,36 +52,22 @@
                 (sceneChanged)="onSceneChanged()"
                 (placed)="reloadSession()"
               />
-            </aside>
-          }
-
-          <button
-            type="button"
-            class="spp-reserve-toggle"
-            aria-controls="spp-reserve"
-            [attr.aria-expanded]="reserveOpen()"
-            [attr.aria-label]="reserveOpen() ? 'Replier la réserve' : 'Déplier la réserve'"
-            [matTooltip]="reserveOpen() ? 'Replier la réserve' : 'Déplier la réserve'"
-            matTooltipPosition="right"
-            (click)="toggleReserve()"
-          >
-            <mat-icon>{{ reserveOpen() ? 'chevron_left' : 'chevron_right' }}</mat-icon>
-            @if (!reserveOpen()) {
-              <span class="spp-reserve-toggle-label">Réserve</span>
-            }
-          </button>
-
-          <div class="spp-main">
-            <bol-tapis
+            </div>
+          </mat-sidenav>
+          <mat-sidenav-content class="spp-scene">
+            <bol-theatre
               [cards]="cards()"
               [sessionId]="sid"
               [selectedKeys]="selectedKeys()"
-              (selectToggled)="toggleSelected($event)"
               (cardToggled)="onCardToggled($event)"
+              (selectToggled)="toggleSelected($event)"
               (campToggleRequested)="toggleCamp($event)"
+              (sceneChanged)="onSceneChanged()"
+              (changed)="reloadSession()"
+              (coulissesRequested)="setReserveOpen(true)"
             />
-          </div>
-        </div>
+          </mat-sidenav-content>
+        </mat-sidenav-container>
       } @else {
         <!-- Mode combat : l'écran de combat, sans réserve ni tapis. -->
         <bol-combat-board
@@ -102,6 +110,7 @@
         />
       }
     }
+    <bol-rideau [etat]="stage.rideau()" [titre]="stage.rideauTitre()" />
     </div>
   </div>
 }

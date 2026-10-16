@@ -17,6 +17,14 @@ function scene(id: string, titre: string, scenario: string | null = null): BolSc
     notes: null,
     distribution: [],
     scenario: scenario ? {id: 's1', titre: scenario} : null,
+    region_id: null,
+    lieu: null,
+    moment: null,
+    meteo: null,
+    danger: null,
+    lecture: null,
+    pistes: null,
+    image: null,
   };
 }
 
@@ -88,7 +96,7 @@ describe('buildResults', () => {
     expect(groups[0].results.map((r) => r.label).slice(0, 3)).toEqual([
       'Démarrer un combat',
       'Enregistrer la table comme scène',
-      'Replier la réserve',
+      'Fermer les coulisses',
     ]);
   });
 
@@ -162,8 +170,8 @@ describe('buildResults', () => {
   });
 
   it('names the reserve action after its current state', () => {
-    expect(labels('réserve').action).toEqual(['Replier la réserve']);
-    expect(labels('réserve', {reserveOpen: false}).action).toEqual(['Déplier la réserve']);
+    expect(labels('coulisses').action).toEqual(['Fermer les coulisses']);
+    expect(labels('coulisses', {reserveOpen: false}).action).toEqual(['Ouvrir les coulisses']);
   });
 
   it('caps each searchable group at 5 and the whole list at 12', () => {

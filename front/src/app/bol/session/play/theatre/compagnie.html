@@ -1,0 +1,102 @@
+<section class="cmp" data-drop-camp="heros" aria-label="La compagnie" [class.cmp--droppable]="droppable()" [class.cmp--hot]="hot()">
+  <ul class="cmp-plaques" role="list">
+    @for (plaque of plaques(); track plaque.card.key) {
+      <li class="cmp-plaque" [class.cmp-plaque--selected]="selectedKeys().has(plaque.card.key)">
+        <button
+          type="button"
+          class="cmp-portrait"
+          [attr.aria-label]="'Ouvrir la carte de ' + plaque.card.nom"
+          [attr.aria-pressed]="selectedKeys().has(plaque.card.key) ? 'true' : null"
+          (click)="onFaceClick(plaque.card, $event)"
+        >
+          @if (plaque.avatar) {
+            <img [src]="plaque.avatar" alt="" draggable="false" (error)="onAvatarError(plaque.card)" />
+          } @else {
+            <span class="cmp-initiale" aria-hidden="true">{{ plaque.card.nom.charAt(0) }}</span>
+          }
+        </button>
+
+        <div class="cmp-corps">
+          <p class="cmp-nom">
+            {{ plaque.card.nom }}
+            @if (plaque.card.joueur) {
+              <small>{{ plaque.card.joueur }}</small>
+            }
+          </p>
+
+          <div class="cmp-ligne">
+            <mat-icon class="cmp-coeur" aria-hidden="true">favorite</mat-icon>
+            <button
+              type="button"
+              class="cmp-step"
+              [attr.aria-label]="'Retirer 1 point de vitalité à ' + plaque.card.nom"
+              [disabled]="pending().has(plaque.card.key)"
+              (click)="stepVitalite(plaque.card, -1)"
+            >
+              −
+            </button>
+            <span class="cmp-barre" aria-hidden="true"><i [class.cmp-barre--bas]="plaque.low" [style.width.%]="plaque.percent"></i></span>
+            <span class="cmp-valeur">{{ plaque.vitalite }}</span>
+            <button
+              type="button"
+              class="cmp-step"
+              [attr.aria-label]="'Rendre 1 point de vitalité à ' + plaque.card.nom"
+              [disabled]="pending().has(plaque.card.key) || plaque.atMax"
+              (click)="stepVitalite(plaque.card, 1)"
+            >
+              +
+            </button>
+          </div>
+
+          <div class="cmp-ligne">
+            <button
+              type="button"
+              class="cmp-step"
+              [attr.aria-label]="'Retirer 1 point d’héroïsme à ' + plaque.card.nom"
+              [disabled]="pending().has(plaque.card.key) || plaque.heroisme <= 0"
+              (click)="stepHeroisme(plaque.card, -1)"
+            >
+              −
+            </button>
+            <span class="cmp-gemmes" role="img" [attr.aria-label]="plaque.heroisme + ' points d’héroïsme'">
+              @for (lit of plaque.gems; track $index) {
+                <i class="cmp-gemme" [class.cmp-gemme--on]="lit"></i>
+              }
+            </span>
+            <button
+              type="button"
+              class="cmp-step"
+              [attr.aria-label]="'Ajouter 1 point d’héroïsme à ' + plaque.card.nom"
+              [disabled]="pending().has(plaque.card.key)"
+              (click)="stepHeroisme(plaque.card, 1)"
+            >
+              +
+            </button>
+          </div>
+        </div>
+      </li>
+    } @empty {
+      <li class="cmp-vide">Aucun héros à table.</li>
+    }
+  </ul>
+
+  @if (allies().length) {
+    <ul class="cmp-allies" role="list" aria-label="Alliés" cdkDropList [cdkDropListSortingDisabled]="true" [cdkDropListEnterPredicate]="rejectDrop">
+      @for (allie of allies(); track allie.key) {
+        <li
+          cdkDrag
+          cdkDragPreviewContainer="parent"
+          (cdkDragStarted)="onDragStarted(allie)"
+          (cdkDragMoved)="onDragMoved($event)"
+          (cdkDragEnded)="onDragEnded($event, allie)"
+        >
+          <bol-acteur [card]="allie" taille="allie" [selected]="selectedKeys().has(allie.key)" (toggled)="onFaceClick(allie, $event)" />
+          <div *cdkDragPreview class="cmp-ghost">
+            <img class="cmp-ghost-art" [src]="allie.avatar" alt="" draggable="false" />
+            <span>{{ allie.nom }}</span>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</section>

@@ -1,0 +1,72 @@
+<button mat-icon-button type="button" class="lec-preparer" aria-label="Préparer la scène" matTooltip="Préparer la scène" (click)="edit()">
+  <mat-icon>edit_note</mat-icon>
+</button>
+
+<section class="lec-bloc" aria-labelledby="lec-lire-titre">
+  <h3 class="lec-titre" id="lec-lire-titre"><mat-icon aria-hidden="true">record_voice_over</mat-icon>À lire aux joueurs</h3>
+  @if (scene().lecture; as texte) {
+    <p class="lec-texte">{{ texte }}</p>
+  } @else {
+    <p class="lec-vide">Pas de texte à lire.</p>
+    <button mat-stroked-button size="small" type="button" class="lec-action" (click)="edit()">
+      <mat-icon>edit_note</mat-icon> Préparer la scène
+    </button>
+  }
+</section>
+
+@if (scene().notes; as secret) {
+  <section class="lec-bloc" aria-labelledby="lec-secret-titre">
+    <div class="lec-tete">
+      <h3 class="lec-titre lec-titre--secret" id="lec-secret-titre"><mat-icon aria-hidden="true">visibility_off</mat-icon>Secret du MJ</h3>
+      <button mat-button size="small" type="button" [attr.aria-pressed]="secretVisible()" (click)="toggleSecret()">
+        {{ secretVisible() ? 'Masquer le secret' : 'Afficher le secret' }}
+      </button>
+    </div>
+    <p class="lec-secret" [class.lec-secret--visible]="secretVisible()" [attr.aria-hidden]="secretVisible() ? null : 'true'" [inert]="!secretVisible()">
+      {{ secret }}
+    </p>
+  </section>
+}
+
+@if (pistes().length) {
+  <section class="lec-bloc" aria-labelledby="lec-pistes-titre">
+    <h3 class="lec-titre" id="lec-pistes-titre"><mat-icon aria-hidden="true">alt_route</mat-icon>Pistes</h3>
+    <ul class="lec-pistes">
+      @for (piste of pistes(); track $index) {
+        <li class="lec-piste">
+          <span>{{ piste.texte }}</span>
+          @if (piste.acte; as acte) {
+            <button
+              mat-stroked-button
+              size="small"
+              type="button"
+              [attr.aria-label]="'Aperçu de la scène ' + acte.numero + ', ' + acte.scene.titre"
+              [disabled]="store.busy()"
+              [matMenuTriggerFor]="apercu"
+              [matMenuTriggerData]="{acte}"
+            >
+              Scène {{ acte.numero }}
+            </button>
+          }
+        </li>
+      }
+    </ul>
+  </section>
+}
+
+<mat-menu #apercu="matMenu" class="thr-apercu-menu">
+  <ng-template matMenuContent let-acte="acte">
+    <bol-scene-preview [scene]="acte.scene" [statut]="acte.statut" [regionNom]="regionNom(acte.scene)" />
+    <button mat-menu-item type="button" (click)="load(acte.scene, 'replace')">
+      <mat-icon>theater_comedy</mat-icon> Lever le rideau
+    </button>
+    @if (acte.scene.distribution.length) {
+      <button mat-menu-item type="button" (click)="load(acte.scene, 'add')">
+        <mat-icon>group_add</mat-icon> Ajouter ses personnages
+      </button>
+    }
+    <button mat-menu-item type="button" (click)="edit(acte.scene)">
+      <mat-icon>edit_note</mat-icon> Préparer la scène
+    </button>
+  </ng-template>
+</mat-menu>

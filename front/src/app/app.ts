@@ -7,6 +7,7 @@ import {MatIconRegistry} from '@angular/material/icon';
 const CUSTOM_SVG_ICONS: Record<string, string> = {
   sword: '/assets/icons/sword.svg',
   d6: '/assets/icons/d6.svg',
+  skull: '/assets/icons/skull.svg',
 };
 
 @Component({

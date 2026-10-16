@@ -8,10 +8,11 @@ import {
   normalizeTitre,
   scenesOf,
   tableTitle,
+  headerTitle,
 } from './scene.util';
 
 function scene(id: string, scenarioId: string | null, ordre: number, titre = id): BolSceneModel {
-  return {id, scenario_id: scenarioId, titre, ordre, notes: null, distribution: []};
+  return {id, scenario_id: scenarioId, titre, ordre, notes: null, distribution: [], region_id: null, lieu: null, moment: null, meteo: null, danger: null, lecture: null, pistes: null, image: null};
 }
 
 function entry(kind: BolSceneEntry['kind'], qty: number): BolSceneEntry {
@@ -136,5 +137,18 @@ describe('loadMessage', () => {
     expect(loadMessage('Le temple', 2)).toBe(
       'Scène « Le temple » chargée. 2 personnages ont été ignorés (déjà sur la table ou supprimés de la bibliothèque).',
     );
+  });
+});
+
+describe('headerTitle', () => {
+  const scene = {id: 's2', titre: 'Embuscade', scenario: {id: 'sc1', titre: 'Le Sceau'}};
+
+  it('en mode libre, garde le titre de la session : la frise montre déjà le scénario et la scène', () => {
+    expect(headerTitle('libre', 'Session du jeudi', scene)).toBe('Session du jeudi');
+    expect(headerTitle('libre', null, scene)).toBeNull();
+  });
+
+  it('en combat, montre le scénario et la scène', () => {
+    expect(headerTitle('combat', 'Session du jeudi', scene)).toBe('Le Sceau · Embuscade');
   });
 });

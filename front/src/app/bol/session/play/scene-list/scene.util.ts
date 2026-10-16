@@ -67,6 +67,12 @@ export function tableTitle(sessionTitre: string | null, scene: BolSessionSceneRe
   return scene.scenario ? `${scene.scenario.titre} · ${scene.titre}` : scene.titre;
 }
 
+/** Titre de la barre du haut selon le mode : en mode libre, le titre de la session — la frise des actes montre
+ * déjà le scénario et la scène ; en combat, « Scénario · Scène » (cf. `tableTitle`). */
+export function headerTitle(mode: 'libre' | 'combat', sessionTitre: string | null, scene: BolSessionSceneRef | null | undefined): string | null {
+  return mode === 'libre' ? sessionTitre : tableTitle(sessionTitre, scene);
+}
+
 /** Titre saisi, rogné et borné à 120 caractères ; `null` s'il est vide. */
 export function normalizeTitre(raw: string | null | undefined): string | null {
   const trimmed = (raw ?? '').trim();

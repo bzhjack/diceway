@@ -4,6 +4,9 @@
     <h1>{{ titre() || (mode() === 'combat' ? 'Combat en cours' : 'Session en cours') }}</h1>
   </div>
 
+  <!-- Contenu propre au mode, projeté par la page : la frise des actes en mode libre. -->
+  <div class="cp-header-center"><ng-content /></div>
+
   <div class="cp-header-actions">
     <button
       mat-icon-button
@@ -16,6 +19,16 @@
       <mat-icon>search</mat-icon>
     </button>
     @if (mode() === 'libre') {
+      <button
+        type="button"
+        class="cp-header-action cp-header-action--plain"
+        aria-controls="spp-coulisses-panel"
+        [attr.aria-expanded]="coulissesOpen()"
+        (click)="coulissesToggled.emit()"
+      >
+        <mat-icon>theater_comedy</mat-icon>
+        Coulisses
+      </button>
       <button type="button" class="cp-header-action cp-header-action--gold" (click)="startCombat.emit()">
         <mat-icon>shield</mat-icon>
         Démarrer un combat

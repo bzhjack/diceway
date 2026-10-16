@@ -1,0 +1,36 @@
+<main class="thr-plateau" [class.thr-plateau--avec-lecture]="!!store.currentScene()">
+  <bol-scene-decor class="thr-decor" [scene]="store.currentScene()" />
+  <bol-braises class="thr-braises" />
+
+  <bol-scene-cartouche
+    class="thr-cartouche"
+    [scene]="store.currentScene()"
+    [regionNom]="regionNom()"
+    [acte]="store.currentActe()"
+    [total]="store.acts().length"
+  />
+
+  @if (store.currentScene(); as scene) {
+    <bol-scene-lecture class="thr-lecture" [scene]="scene" [acts]="store.acts()" (sceneChanged)="sceneChanged.emit()" />
+  }
+
+  <bol-troupe
+    class="thr-troupe"
+    [cards]="cards()"
+    [selectedKeys]="selectedKeys()"
+    (cardToggled)="cardToggled.emit($event)"
+    (selectToggled)="selectToggled.emit($event)"
+    (campToggleRequested)="campToggleRequested.emit($event)"
+    (coulissesRequested)="coulissesRequested.emit()"
+  />
+</main>
+
+<bol-compagnie
+  [cards]="cards()"
+  [sessionId]="sessionId()"
+  [selectedKeys]="selectedKeys()"
+  (cardToggled)="cardToggled.emit($event)"
+  (selectToggled)="selectToggled.emit($event)"
+  (campToggleRequested)="campToggleRequested.emit($event)"
+  (changed)="changed.emit()"
+/>

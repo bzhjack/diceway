@@ -45,7 +45,7 @@ function actions(reserveOpen: boolean): readonly PaletteAction[] {
     {id: 'startCombat', label: 'Démarrer un combat', modes: ['libre']},
     {id: 'endCombat', label: 'Terminer le combat', modes: ['combat']},
     {id: 'saveScene', label: 'Enregistrer la table comme scène', modes: ['libre']},
-    {id: 'toggleReserve', label: reserveOpen ? 'Replier la réserve' : 'Déplier la réserve', modes: ['libre']},
+    {id: 'toggleReserve', label: reserveOpen ? 'Fermer les coulisses' : 'Ouvrir les coulisses', modes: ['libre']},
     {id: 'createHero', label: 'Créer un héros', modes: BOTH},
     {id: 'createPnj', label: 'Créer un PNJ', modes: BOTH},
     {id: 'createCreature', label: 'Créer une créature', modes: BOTH},

@@ -41,15 +41,20 @@ class BolSceneService
                 'notes'        => null,
                 'distribution' => $this->distributionOf($session),
             ]);
-            $session->update(['scene_id' => $scene->id]);
+            $session->update([
+                'scene_id'      => $scene->id,
+                'scenes_jouees' => BolScenePreparation::played($session->scenes_jouees, $scene->id),
+            ]);
 
             return $scene->load('scenario:id,titre');
         });
     }
 
     /**
-     * Met à jour titre, notes et/ou scénario — seules les clés présentes dans `$data` sont touchées.
-     * Changer de scénario place la scène au dernier rang du scénario d'arrivée.
+     * Met à jour titre, notes, scénario et préparation (région, lieu, ambiance, texte à lire, pistes,
+     * illustration) — seules les clés présentes dans `$data` sont touchées. Changer de scénario place la
+     * scène au dernier rang du scénario d'arrivée. Une piste ne garde son lien que vers une autre scène
+     * de ce scénario.
      *
      * @param array<string, mixed> $data
      */
@@ -60,19 +65,22 @@ class BolSceneService
             return null;
         }
 
-        $changes = [];
-        if (array_key_exists('titre', $data)) {
-            $changes['titre'] = $data['titre'];
-        }
-        if (array_key_exists('notes', $data)) {
-            $changes['notes'] = $data['notes'];
-        }
+        $changes = array_intersect_key($data, array_flip(['titre', 'notes', 'region_id', 'lieu', 'moment', 'meteo', 'danger', 'lecture', 'image']));
         if (array_key_exists('scenario_id', $data) && $data['scenario_id'] !== $scene->scenario_id) {
             if (!$this->scenarioAllowed($data['scenario_id'], $userId)) {
                 return null;
             }
             $changes['scenario_id'] = $data['scenario_id'];
             $changes['ordre'] = $this->nextOrdre($userId, $data['scenario_id']);
+        }
+        if (array_key_exists('pistes', $data)) {
+            $siblingIds = BolScene::where('user_id', $userId)
+                ->where('scenario_id', $changes['scenario_id'] ?? $scene->scenario_id)
+                ->where('id', '!=', $scene->id)
+                ->pluck('id')
+                ->map(fn ($id) => (string) $id)
+                ->all();
+            $changes['pistes'] = BolScenePreparation::pistes($data['pistes'], $siblingIds);
         }
 
         $scene->update($changes);
@@ -123,7 +131,8 @@ class BolSceneService
 
     /**
      * Charge une scène sur la table, en une transaction. Mode `replace` : les PNJ, créatures et
-     * démons présents sont retirés d'abord. Les héros ne sont jamais touchés. Une entrée dont la
+     * démons présents sont retirés d'abord. Les héros ne sont jamais touchés. L'attitude enregistrée
+     * de chaque entrée est rendue aux lignes créées. Une entrée dont la
      * fiche source n'existe plus, ou un PNJ déjà présent (mode `add`), est ignorée et comptée.
      *
      * @return array{session: BolFightSession|null, ignored: int}|null null si scène ou session introuvable
@@ -170,6 +179,13 @@ class BolSceneService
                     continue;
                 }
 
+                $attitude = BolSceneDistribution::entryAttitude($entry);
+                if ($attitude !== null) {
+                    foreach ($rows as $row) {
+                        $row->update(['attitude' => $attitude]);
+                    }
+                }
+
                 // Une scène enregistre un exemplaire par position ; chaque exemplaire est maintenant sa propre ligne.
                 $stored = array_values(is_array($entry['positions'] ?? null) ? $entry['positions'] : []);
                 foreach (array_values($rows) as $i => $row) {
@@ -183,6 +199,7 @@ class BolSceneService
             $session->update([
                 'positions_jetons' => $positions === [] ? null : $positions,
                 'scene_id'         => $scene->id,
+                'scenes_jouees'    => BolScenePreparation::played($session->scenes_jouees, $scene->id),
             ]);
 
             return [
@@ -198,9 +215,9 @@ class BolSceneService
         $sessionId = $session->id;
 
         return BolSceneDistribution::fromSession(
-            BolFightSessionPnj::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'pnj_id', 'camp'])->toArray(),
-            BolFightSessionCreature::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'creature_id', 'camp'])->toArray(),
-            BolFightSessionDemon::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'demon_id', 'camp'])->toArray(),
+            BolFightSessionPnj::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'pnj_id', 'camp', 'attitude'])->toArray(),
+            BolFightSessionCreature::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'creature_id', 'camp', 'attitude'])->toArray(),
+            BolFightSessionDemon::where('fight_session_id', $sessionId)->orderBy('id')->get(['id', 'demon_id', 'camp', 'attitude'])->toArray(),
             $session->positions_jetons,
         );
     }

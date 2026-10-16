@@ -263,6 +263,33 @@ class BolFightSessionService
     }
 
     /**
+     * Attitude d'un PNJ, d'une créature ou d'un démon de la table envers les héros (`null` : aucune).
+     * Null si la session ou la ligne est introuvable.
+     */
+    public function setAttitude(string $sessionId, string $userId, string $kind, int $pivotId, ?string $attitude): ?BolFightSession
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        if (!$session) {
+            return null;
+        }
+
+        $model = match ($kind) {
+            'pnj'      => BolFightSessionPnj::class,
+            'creature' => BolFightSessionCreature::class,
+            'demon'    => BolFightSessionDemon::class,
+            default    => null,
+        };
+        $row = $model ? $model::where('id', $pivotId)->where('fight_session_id', $sessionId)->first() : null;
+        if (!$row) {
+            return null;
+        }
+
+        $row->update(['attitude' => BolSceneDistribution::entryAttitude(['attitude' => $attitude])]);
+
+        return $this->getSessionWithRelations($sessionId);
+    }
+
+    /**
      * Applique une variation de vitalité (négative pour des dégâts, positive pour un soin) à un
      * combattant, bornée entre 0 et son maximum. `$instanceIndex` est ignoré : il subsiste dans l'API
      * pour les clients qui l'envoient encore, mais chaque créature ou démon est sa propre ligne.

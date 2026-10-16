@@ -34,18 +34,10 @@
         <div row-body class="scl-body">
           <p class="scl-summary">{{ summary(scene) }}</p>
 
-          <mat-form-field subscriptSizing="dynamic" class="scl-notes">
-            <mat-label>Notes du MJ</mat-label>
-            <textarea
-              matInput
-              rows="4"
-              [id]="'scl-notes-' + scene.id"
-              [value]="scene.notes ?? ''"
-              (blur)="saveNotes(scene, $any($event.target).value)"
-            ></textarea>
-          </mat-form-field>
-
           <div class="scl-actions">
+            <button mat-stroked-button size="small" type="button" [disabled]="busy()" (click)="prepare(scene)">
+              <mat-icon>edit_note</mat-icon> Préparer la scène
+            </button>
             <button mat-flat-button size="small" type="button" [disabled]="busy()" (click)="load(scene)">
               <mat-icon>play_arrow</mat-icon> Charger
             </button>

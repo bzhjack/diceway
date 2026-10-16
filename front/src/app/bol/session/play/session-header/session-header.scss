@@ -28,8 +28,9 @@
 }
 
 .cp-header-title {
-  flex: 1;
+  flex: 0 1 auto;
   min-width: 0;
+  max-width: 24rem;
 
   h1 {
     margin: 0;
@@ -40,6 +41,28 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+}
+
+// La frise des actes (mode libre) prend la place libre ; sous 56rem, elle passe sur sa propre ligne.
+.cp-header-center {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 56rem) {
+  .cp-header {
+    flex-wrap: wrap;
+  }
+
+  .cp-header-title {
+    flex: 1;
+    max-width: none;
+  }
+
+  .cp-header-center {
+    order: 3;
+    flex-basis: 100%;
   }
 }
 
@@ -72,6 +95,12 @@
   &:hover {
     background: color-mix(in srgb, currentColor 16%, transparent);
   }
+}
+
+.cp-header-action--plain {
+  color: var(--dw-surface-800);
+  border-color: color-mix(in srgb, var(--dw-surface-800) 30%, transparent);
+  background: color-mix(in srgb, var(--dw-surface-0) 45%, transparent);
 }
 
 .cp-header-action--gold {

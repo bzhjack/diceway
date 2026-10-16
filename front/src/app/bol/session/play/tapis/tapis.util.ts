@@ -4,7 +4,7 @@ import {BolFightSessionModel, CombatCamp} from '../../../models/bol-fight-sessio
 import {BolHerosModel} from '../../../models/bol-heros.model';
 import {firstEquippedDegats, isArmeEquipee} from '../../../shared/arme/arme-equipee';
 import {EMPTY_AVATAR} from '../../combat-play.util';
-import {TapisKind, TapisCard, TapisRows, HeroHeaderStat, HeroDetailTrait, HeroDetailInfos, HeroDetails} from '../../models/tapis.model';
+import {TapisKind, TapisCard, HeroHeaderStat, HeroDetailTrait, HeroDetailInfos, HeroDetails} from '../../models/tapis.model';
 
 const NO_VALUE = '—';
 
@@ -20,8 +20,6 @@ const RANK_LABELS: Record<string, string> = {
   coriace: 'Coriace',
   pietaille: 'Piétaille',
 };
-
-const KIND_ORDER: Record<TapisKind, number> = {hero: 0, pnj: 1, creature: 2, demon: 3};
 
 function rankLabel(rang: string | null | undefined): string {
   return RANK_LABELS[rang ?? ''] ?? 'Coriace';
@@ -51,6 +49,9 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       defense: defense === undefined ? NO_VALUE : String(defense),
       vitaliteCourante: h.vitalite_courante ?? h.heros?.ressources?.vitalite ?? null,
       vitaliteMax: h.heros?.ressources?.vitalite ?? null,
+      joueur: h.heros?.origines.joueur ?? null,
+      heroisme: h.heros?.ressources?.heroisme ?? null,
+      attitude: null,
     });
   }
 
@@ -70,6 +71,9 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       defense: String(p.defense),
       vitaliteCourante: p.vitalite_courante,
       vitaliteMax: p.vitalite_max,
+      joueur: null,
+      heroisme: null,
+      attitude: p.attitude ?? null,
     });
   }
 
@@ -89,6 +93,9 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       defense: String(c.defense),
       vitaliteCourante: c.vitalite_courante,
       vitaliteMax: c.vitalite_max,
+      joueur: null,
+      heroisme: null,
+      attitude: c.attitude ?? null,
     });
   }
 
@@ -108,6 +115,9 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       defense: String(d.defense),
       vitaliteCourante: d.vitalite_courante,
       vitaliteMax: d.vitalite_max,
+      joueur: null,
+      heroisme: null,
+      attitude: d.attitude ?? null,
     });
   }
 
@@ -133,19 +143,6 @@ function numberDuplicates(cards: TapisCard[]): TapisCard[] {
     seen.set(groupOf(card), rank);
     return {...card, nom: `${card.nom} #${rank}`};
   });
-}
-
-function byKindThenArrival(left: TapisCard, right: TapisCard): number {
-  return KIND_ORDER[left.kind] - KIND_ORDER[right.kind] || left.pivotId - right.pivotId;
-}
-
-/** Répartit les cartes sur les deux rangs, dans l'ordre d'affichage : par type, puis par ordre
- * d'arrivée. Dans le rang du bas, les héros passent avant les alliés. */
-export function splitRows(cards: readonly TapisCard[]): TapisRows {
-  return {
-    presents: cards.filter((card) => card.camp === 'adversaires').sort(byKindThenArrival),
-    heros: cards.filter((card) => card.camp === 'heros').sort(byKindThenArrival),
-  };
 }
 
 /** Carte dépliée : celle dont la clé est donnée, ou `null` si elle n'est plus sur la table. */

@@ -1,6 +1,8 @@
 <div class="rsv-band">
   <div class="rsv-side">
-    <h2 class="rsv-title">Réserve</h2>
+    @if (titre(); as titre) {
+      <h2 class="rsv-title">{{ titre }}</h2>
+    }
     <mat-button-toggle-group
       class="rsv-tabs"
       aria-label="Contenu de la réserve"
@@ -112,7 +114,7 @@
       }
     </ul>
 
-    <p class="rsv-hint">Glisse un personnage sur le tapis, ou double-clique pour le poser.</p>
+    <p class="rsv-hint">Glisse un personnage sur la scène, ou double-clique pour le poser.</p>
 
     <div class="rsv-links">
       <a mat-flat-button size="small" [routerLink]="activeTab().createLink" [state]="navState()">

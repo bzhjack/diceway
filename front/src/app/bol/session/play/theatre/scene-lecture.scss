@@ -1,0 +1,149 @@
+// Colonne de droite du plateau : un pupitre de cuir sombre qui défile seul.
+:host {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  min-height: 0;
+  padding: 1rem 1.1rem 1.2rem;
+  overflow-y: auto;
+  border: 1px solid rgba(140, 106, 47, 0.55);
+  border-radius: 10px;
+  background: rgba(15, 10, 6, 0.78);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(217, 164, 65, 0.35) transparent;
+}
+
+.lec-preparer {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+}
+
+.lec-bloc {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  & + & {
+    padding-top: 1rem;
+    border-top: 1px solid rgba(156, 135, 99, 0.3);
+  }
+}
+
+.lec-tete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.lec-titre {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  padding-right: 2.2rem;
+  color: var(--dw-color-legendary);
+  font-size: 0.85rem;
+  font-weight: 700;
+
+  .mat-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    font-size: 1.1rem;
+  }
+}
+
+.lec-titre--secret {
+  padding-right: 0;
+  color: var(--dw-color-echec);
+}
+
+// Le texte à lire, avec sa lettrine.
+.lec-texte {
+  margin: 0;
+  color: var(--dw-color-text-bright);
+  font-size: 1.12rem;
+  line-height: 1.58;
+  white-space: pre-line;
+
+  &::first-letter {
+    float: left;
+    padding: 0.08em 0.1em 0 0;
+    color: var(--dw-color-legendary);
+    font-family: 'Muse Display Harmony', serif;
+    font-size: 3.35em;
+    line-height: 0.82;
+  }
+}
+
+.lec-vide {
+  margin: 0;
+  color: var(--dw-surface-600);
+  font-size: 0.9rem;
+}
+
+.lec-action {
+  align-self: flex-start;
+}
+
+// Le secret, flouté tant que le MJ ne l'affiche pas : un joueur qui regarde l'écran n'y lit rien.
+.lec-secret {
+  margin: 0;
+  color: var(--dw-surface-800);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  white-space: pre-line;
+  filter: blur(6px);
+  user-select: none;
+  transition: filter 0.2s ease-out;
+}
+
+.lec-secret--visible {
+  filter: none;
+  user-select: auto;
+}
+
+.lec-pistes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lec-piste {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  color: var(--dw-surface-800);
+  font-size: 0.92rem;
+
+  &::before {
+    content: '';
+    flex: none;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: var(--dw-color-legendary);
+  }
+
+  span {
+    flex: 1;
+    min-width: 0;
+  }
+
+  button {
+    flex: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lec-secret {
+    transition: none;
+  }
+}

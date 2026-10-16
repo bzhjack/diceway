@@ -9,6 +9,9 @@ namespace App\Http\Services\Bol;
  */
 class BolSceneDistribution
 {
+    /** Attitudes possibles d'un personnage en scène envers les héros. */
+    public const ATTITUDES = ['hostile', 'mefiant', 'neutre', 'amical'];
+
     /**
      * Distribution d'une session : une entrée par ligne PNJ, créature puis démon. Une ligne dont la
      * fiche source a été supprimée est ignorée. Les héros n'en font jamais partie.
@@ -17,7 +20,7 @@ class BolSceneDistribution
      * @param array<int, array<string, mixed>> $creatures lignes avec `id`, `creature_id`, `qty`
      * @param array<int, array<string, mixed>> $demons    lignes avec `id`, `demon_id`, `qty`
      * @param array<string, mixed>|null        $positions `positions_jetons` de la session
-     * @return array<int, array{kind: string, source_id: string, qty: int, camp: string, positions: array<int, array{x: float, y: float}|null>}>
+     * @return array<int, array{kind: string, source_id: string, qty: int, camp: string, attitude: string|null, positions: array<int, array{x: float, y: float}|null>}>
      */
     public static function fromSession(array $pnjs, array $creatures, array $demons, ?array $positions): array
     {
@@ -34,6 +37,7 @@ class BolSceneDistribution
                 'source_id' => $sourceId,
                 'qty'       => 1,
                 'camp'      => self::entryCamp($row),
+                'attitude'  => self::entryAttitude($row),
                 'positions' => [self::position($positions['pnj-' . $row['id']] ?? null)],
             ];
         }
@@ -54,6 +58,7 @@ class BolSceneDistribution
                     'source_id' => $sourceId,
                     'qty'       => $qty,
                     'camp'      => self::entryCamp($row),
+                    'attitude'  => self::entryAttitude($row),
                     'positions' => $instancePositions,
                 ];
             }
@@ -113,6 +118,19 @@ class BolSceneDistribution
     public static function entryCamp(array $entry): string
     {
         return ($entry['camp'] ?? null) === 'heros' ? 'heros' : 'adversaires';
+    }
+
+    /**
+     * Attitude d'une entrée de distribution (ou d'une ligne de session) envers les héros : une des
+     * `ATTITUDES`, sinon null (aucune, ou scène enregistrée avant que l'attitude n'existe).
+     *
+     * @param array<string, mixed> $entry
+     */
+    public static function entryAttitude(array $entry): ?string
+    {
+        $attitude = $entry['attitude'] ?? null;
+
+        return in_array($attitude, self::ATTITUDES, true) ? $attitude : null;
     }
 
     private static function sourceId(mixed $raw): ?string

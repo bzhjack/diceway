@@ -1,7 +1,8 @@
 import {ChangeDetectionStrategy, Component, computed, effect, inject, signal, untracked, viewChild} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {catchError, concatMap, EMPTY, forkJoin, from, map, Observable, of, switchMap, take, tap, toArray} from 'rxjs';
@@ -37,7 +38,7 @@ import {isEditable, isEndTurnShortcut, isPaletteShortcut} from './command-palett
 import {reserveTab} from './reserve/reserve.util';
 import {maybePromptDefierLaMort} from './defier-la-mort-dialog/defier-la-mort.util';
 import {shouldPromptDefierLaMort} from '../combat-resolution.util';
-import {tableTitle} from './scene-list/scene.util';
+import {headerTitle} from './scene-list/scene.util';
 import {SessionHeaderComponent} from './session-header/session-header';
 import {ReserveComponent} from './reserve/reserve';
 import {StartCombatDialogComponent} from './start-combat-dialog/start-combat-dialog';
@@ -63,9 +64,12 @@ import {bestHealingCareer} from '../rescue.util';
 import {RescueDialogData, RescueResult} from '../models/rescue-dialog.model';
 import {AppliedHit, HeroismeChange, ResolvedCombatStats, VitaliteChange} from '../models/combat-attack.model';
 import {TurnOrderEntry, TurnOrderInterrupter} from '../models/turn-order.model';
-import {TapisComponent} from './tapis/tapis';
 import {buildTapisCards, findCard, heroDetails, heroHeaderStats, keepDetailsOrder, REMOVE_ACTION_LABEL} from './tapis/tapis.util';
 import {TapisCard} from '../models/tapis.model';
+import {RideauComponent} from './theatre/rideau';
+import {SceneActsComponent} from './theatre/scene-acts';
+import {SceneStageStore} from './theatre/scene-stage.store';
+import {TheatreComponent} from './theatre/theatre';
 
 /** Les armes d'un héros dont le catalogue est chargé — vide si elles ne le sont pas (de simples ids). */
 function loadedArmes(hero: BolHerosModel): BolHerosArmeModel[] {
@@ -76,13 +80,15 @@ function loadedArmes(hero: BolHerosModel): BolHerosArmeModel[] {
 
 /**
  * La table : page d'accueil d'une session. Orchestre le chargement/la persistance de la session et
- * l'ouverture des dialogs. `bol-tapis` (cartes de personnage sur deux rangs) sert aux deux modes.
- * Mode libre : `bol-reserve` en bandeau. Mode combat : `bol-turn-order` (ordre de jeu) ; le tour est
- * calculé par `combat-turn.util.ts` à partir de l'état gardé dans la session.
+ * l'ouverture des dialogs. Mode libre : la frise des actes dans l'en-tête, la troupe en scène (`bol-troupe`), la
+ * compagnie des héros (`bol-compagnie`) et la réserve. Mode combat : `bol-combat-board` ; le tour est calculé par
+ * `combat-turn.util.ts` à partir de l'état gardé dans la session.
  */
 @Component({
   selector: 'bol-session-play-page',
-  imports: [RouterLink, MatIconModule, MatTooltipModule, SessionHeaderComponent, ReserveComponent, TapisComponent, CombatBoardComponent],
+  imports: [RouterLink, MatIconModule, SessionHeaderComponent, ReserveComponent, CombatBoardComponent, SceneActsComponent, RideauComponent, TheatreComponent, MatButtonModule, MatSidenavModule],
+  // Une instance par table : la frise de l'en-tête et le plateau partagent les scènes et le rideau.
+  providers: [SceneStageStore],
   templateUrl: './session-play-page.html',
   styleUrl: './session-play-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -105,6 +111,7 @@ export class SessionPlayPageComponent {
   private readonly sceneService = inject(BolSceneService);
   private readonly sceneActions = inject(SceneActionsService);
   private readonly combatReference = inject(BolCombatReferenceService);
+  protected readonly stage = inject(SceneStageStore);
 
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
@@ -132,9 +139,10 @@ export class SessionPlayPageComponent {
     () => new Set((this.session()?.heros ?? []).map((h) => String(h.heros_id))),
   );
 
-  protected readonly reserveOpen = signal(readPanelOpen(browserStorage(), RESERVE_PANEL_KEY, true));
+  /** Coulisses (la réserve) ouvertes à droite du théâtre — fermées par défaut : la scène d'abord. */
+  protected readonly reserveOpen = signal(readPanelOpen(browserStorage(), RESERVE_PANEL_KEY, false));
 
-  /** Cartes du tapis (mode libre), une par ligne de session. */
+  /** Cartes de la table, une par ligne de session. */
   protected readonly cards = computed(() => {
     const session = this.session();
     return session ? buildTapisCards(session) : [];
@@ -296,8 +304,8 @@ export class SessionPlayPageComponent {
   /** PNJ / créatures / démons sur la table — décide si charger une scène demande « Remplacer ou Ajouter ». */
   protected readonly nonHeroCount = computed(() => (this.board()?.tokens ?? []).filter((t) => t.kind !== 'hero').length);
 
-  /** Titre de la barre du haut : « Scénario · Scène » quand la session a une scène courante. */
-  protected readonly headerTitle = computed(() => tableTitle(this.session()?.titre ?? null, this.session()?.scene));
+  /** Titre de la barre du haut : celui de la session en mode libre, « Scénario · Scène » en combat. */
+  protected readonly headerTitle = computed(() => headerTitle(this.mode(), this.session()?.titre ?? null, this.session()?.scene));
 
   /** Scènes de l'utilisateur, chargées à chaque ouverture de la barre de commande. */
   private readonly paletteScenes = signal<readonly BolSceneModel[]>([]);
@@ -314,6 +322,14 @@ export class SessionPlayPageComponent {
   }));
 
   constructor() {
+    // Chaque session chargée donne au plateau sa scène courante et ses scènes jouées.
+    effect(() => {
+      const session = this.session();
+      if (session?.id) {
+        untracked(() => this.stage.sync(session.id!, session.scene_id ?? null, session.scenes_jouees ?? []));
+      }
+    });
+
     // Un nouveau round commence : un héros resté à 0 de vitalité sombre dans l'inconscience, ou dépense 1 PH pour reprendre ses esprits ;
     // un héros mourant perd 1 de vitalité.
     effect(() => {
@@ -569,9 +585,19 @@ export class SessionPlayPageComponent {
   }
 
   protected toggleReserve(): void {
-    const next = !this.reserveOpen();
-    this.reserveOpen.set(next);
-    writePanelOpen(browserStorage(), RESERVE_PANEL_KEY, next);
+    this.setReserveOpen(!this.reserveOpen());
+  }
+
+  /** Les coulisses se sont ouvertes ou fermées d'elles-mêmes (Échap) : l'état retenu suit. */
+  protected onCoulissesChange(open: boolean): void {
+    if (open !== this.reserveOpen()) {
+      this.setReserveOpen(open);
+    }
+  }
+
+  protected setReserveOpen(open: boolean): void {
+    this.reserveOpen.set(open);
+    writePanelOpen(browserStorage(), RESERVE_PANEL_KEY, open);
   }
 
   /** Échap replie la carte dépliée, sauf si un dialogue est ouvert, ou si un menu ou un popover vient de le
@@ -598,6 +624,7 @@ export class SessionPlayPageComponent {
   protected onSceneChanged(): void {
     this.foldCard();
     this.reloadSession();
+    this.stage.reload();
   }
 
   /** Clic sur la face d'une carte : ouvre sa carte en dialogue (une seule à la fois). */

@@ -1,7 +1,7 @@
 import {describe, expect, it} from 'vitest';
 import {BolFightSessionModel} from '../../../models/bol-fight-session.model';
 import {BolHerosModel} from '../../../models/bol-heros.model';
-import {buildTapisCards, cardAriaLabel, findCard, isLowVitalite, REMOVE_ACTION_LABEL, splitRows, vitalitePercent, vitaliteText, heroHeaderStats, heroDetails, heroIdentityLine, keepDetailsOrder} from './tapis.util';
+import {buildTapisCards, cardAriaLabel, findCard, isLowVitalite, REMOVE_ACTION_LABEL, vitalitePercent, vitaliteText, heroHeaderStats, heroDetails, heroIdentityLine, keepDetailsOrder} from './tapis.util';
 import {TapisCard} from '../../models/tapis.model';
 
 function hero(id: number, nom: string, extra: Record<string, unknown> = {}): NonNullable<BolFightSessionModel['heros']>[number] {
@@ -63,6 +63,19 @@ describe('buildTapisCards', () => {
     expect(buildTapisCards(session()).map((c) => c.key)).toEqual(['hero-1', 'pnj-7', 'creature-3', 'demon-9']);
   });
 
+  it("donne l'attitude des PNJ, créatures et démons", () => {
+    const s = session({pnjs: [{...PNJ, attitude: 'amical'}] as BolFightSessionModel['pnjs']});
+    expect(card('pnj-7', s).attitude).toBe('amical');
+    expect(card('creature-3', s).attitude).toBeNull();
+    expect(card('hero-1', s).attitude).toBeNull();
+  });
+
+  it("donne le joueur et l'héroïsme des héros", () => {
+    const s = session({heros: [hero(1, 'Kalena', {heros: {id: 'h1', origines: {nom: 'Kalena', avatar: null, joueur: 'Clara'}, ressources: {vitalite: 11, heroisme: 3}}})]});
+    expect(card('hero-1', s)).toMatchObject({joueur: 'Clara', heroisme: 3});
+    expect(card('pnj-7', s)).toMatchObject({joueur: null, heroisme: null});
+  });
+
   it('puts damage, effective defense and session vitality on a hero face', () => {
     expect(card('hero-1')).toMatchObject({
       nom: 'Kalena', degats: 'd6B', defense: '0', vitaliteCourante: 9, vitaliteMax: 11, badge: null, rang: null,
@@ -117,29 +130,6 @@ describe('buildTapisCards', () => {
 
   it('returns no card for an empty session', () => {
     expect(buildTapisCards({id: 's', titre: null, statut: 'libre'})).toEqual([]);
-  });
-});
-
-describe('splitRows', () => {
-  it('puts adversaries on top (PNJ, creatures, demons) and heroes below', () => {
-    const rows = splitRows(buildTapisCards(session()));
-    expect(rows.presents.map((c) => c.key)).toEqual(['pnj-7', 'creature-3', 'demon-9']);
-    expect(rows.heros.map((c) => c.key)).toEqual(['hero-1']);
-  });
-
-  it('puts allies after the heroes in the bottom row', () => {
-    const s = session({
-      heros: [hero(2, 'Rork'), hero(1, 'Kalena')],
-      pnjs: [{...PNJ, camp: 'heros'}] as BolFightSessionModel['pnjs'],
-    });
-    const rows = splitRows(buildTapisCards(s));
-    expect(rows.heros.map((c) => c.key)).toEqual(['hero-1', 'hero-2', 'pnj-7']);
-    expect(rows.presents.map((c) => c.key)).toEqual(['creature-3', 'demon-9']);
-  });
-
-  it('orders cards of the same kind by arrival', () => {
-    const s = session({pnjs: [{...PNJ, id: 12}, {...PNJ, id: 4}] as BolFightSessionModel['pnjs'], creatures: [], demons: []});
-    expect(splitRows(buildTapisCards(s)).presents.map((c) => c.key)).toEqual(['pnj-4', 'pnj-12']);
   });
 });
 

@@ -12,7 +12,7 @@ import {matchesTerm} from '../../../../shared/list.utils';
 import {DwTagComponent} from '../../../../shared/dw-tag/dw-tag';
 import {BolNomModel, BolRegionModel} from '../../../models/bol-region.model';
 import {BolHerosStateService} from '../../../services/bol-heros-state.service';
-import {REGION_MAP_COORDINATES} from './region-map-coordinates';
+import {REGION_MAP_COORDINATES} from '../../../shared/region/region-map-coordinates';
 import {HeroAdvancedTraitRowComponent} from './trait-row/trait-row.component';
 import {HeroAdvancedRegionDialogData, HeroAdvancedRegionDialogResult} from '../../models/hero-advanced-region.model';
 

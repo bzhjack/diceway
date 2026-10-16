@@ -11,7 +11,7 @@ class BolFightSessionPnj extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'fight_session_id', 'pnj_id', 'camp', 'surnom', 'rang', 'nom',
+        'fight_session_id', 'pnj_id', 'camp', 'attitude', 'surnom', 'rang', 'nom',
         'vigueur', 'agilite', 'esprit', 'aura',
         'melee', 'tir', 'defense', 'initiative',
         'vitalite_max', 'vitalite_courante',

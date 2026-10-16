@@ -1,4 +1,4 @@
-import {CombatCamp} from '../../models/bol-fight-session.model';
+import {CombatantAttitude, CombatCamp} from '../../models/bol-fight-session.model';
 
 /** Le type de personnage d'une carte du tapis. */
 export type TapisKind = 'hero' | 'pnj' | 'creature' | 'demon';
@@ -23,14 +23,12 @@ export interface TapisCard {
   readonly defense: string;
   readonly vitaliteCourante: number | null;
   readonly vitaliteMax: number | null;
-}
-
-/** Les cartes du tapis rangées en deux rangs : les présents du haut, les héros et alliés du bas. */
-export interface TapisRows {
-  /** Rang du haut, « Présents dans la scène ». */
-  readonly presents: TapisCard[];
-  /** Rang du bas, « Héros et alliés ». */
-  readonly heros: TapisCard[];
+  /** Joueur du héros — null pour les autres cartes. */
+  readonly joueur: string | null;
+  /** Points d'héroïsme du héros — null pour les autres cartes. */
+  readonly heroisme: number | null;
+  /** Attitude envers les héros d'un PNJ, d'une créature ou d'un démon — null pour un héros, ou sans attitude. */
+  readonly attitude: CombatantAttitude | null;
 }
 
 /** Une statistique de combat de l'en-tête de la carte d'un héros dépliée. */

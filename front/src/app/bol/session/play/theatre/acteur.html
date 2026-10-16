@@ -1,0 +1,39 @@
+<button
+  type="button"
+  [id]="'act-' + card().key"
+  [class]="'act act--' + taille() + ' act--' + card().kind"
+  [class.act--selected]="selected()"
+  [class.act--tombe]="tombe()"
+  [attr.aria-pressed]="selected() ? 'true' : null"
+  [attr.aria-label]="ariaLabel()"
+  (click)="toggled.emit($event)"
+>
+  <span class="act-art">
+    @if (hasAvatar()) {
+      <img class="act-portrait" [src]="card().avatar" alt="" draggable="false" (error)="onAvatarError()" />
+    } @else if (kindIconIsSvg()) {
+      <mat-icon class="act-repli" [svgIcon]="kindIcon()" />
+    } @else {
+      <mat-icon class="act-repli">{{ kindIcon() }}</mat-icon>
+    }
+  </span>
+
+  <span class="act-haut">
+    @if (etiquette(); as etiquette) {
+      <span class="act-rang">{{ etiquette }}</span>
+    }
+    @if (kindIconIsSvg()) {
+      <mat-icon class="act-type" [svgIcon]="kindIcon()" aria-hidden="true" />
+    } @else {
+      <mat-icon class="act-type" aria-hidden="true">{{ kindIcon() }}</mat-icon>
+    }
+  </span>
+
+  <span class="act-bas">
+    @if (attitude(); as attitude) {
+      <span [class]="'act-attitude act-attitude--' + attitude.value">{{ attitude.label }}</span>
+    }
+    <span class="act-nom">{{ card().nom }}</span>
+    <span class="act-vit" aria-hidden="true"><i [class.act-vit--bas]="low()" [style.width.%]="percent()"></i></span>
+  </span>
+</button>

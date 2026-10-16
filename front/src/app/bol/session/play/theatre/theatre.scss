@@ -1,0 +1,83 @@
+:host {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+// Le plateau : le décor et les braises en fond, puis le cartouche en haut à gauche, les notes de la scène à
+// droite et la troupe en bas, sur la rampe.
+.thr-plateau {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  // `1fr` (et non `minmax(0, 1fr)`) : la rangée de la troupe ne descend jamais sous la hauteur de ses cartes ; s'il
+  // manque de la place, le plateau défile plutôt que la troupe ne monte sur le cartouche.
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'cartouche'
+    'troupe';
+  gap: 1rem 1.5rem;
+  padding: 1.4rem 1.5rem 0.6rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  isolation: isolate;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(217, 164, 65, 0.35) transparent;
+}
+
+.thr-plateau--avec-lecture {
+  grid-template-columns: minmax(0, 1fr) 24rem;
+  grid-template-areas:
+    'cartouche lecture'
+    'troupe lecture';
+}
+
+.thr-decor {
+  z-index: -2;
+}
+
+.thr-braises {
+  z-index: -1;
+}
+
+.thr-cartouche {
+  grid-area: cartouche;
+}
+
+.thr-lecture {
+  grid-area: lecture;
+  align-self: start;
+  max-height: 100%;
+}
+
+.thr-troupe {
+  grid-area: troupe;
+  align-self: end;
+}
+
+// Écrans moyens : une seule colonne, les notes passent sous la troupe et le plateau défile.
+@media (max-width: 70rem) {
+  .thr-plateau,
+  .thr-plateau--avec-lecture {
+    grid-template-columns: minmax(0, 1fr);
+    // Chaque rangée prend la hauteur de son contenu ; le plateau défile.
+    grid-template-rows: max-content max-content max-content;
+    grid-template-areas:
+      'cartouche'
+      'troupe'
+      'lecture';
+  }
+
+  .thr-troupe {
+    min-height: 14rem;
+  }
+
+  .thr-lecture {
+    max-height: none;
+    overflow-y: visible;
+  }
+}

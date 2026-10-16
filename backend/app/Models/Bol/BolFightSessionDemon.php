@@ -11,7 +11,7 @@ class BolFightSessionDemon extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'fight_session_id', 'demon_id', 'camp', 'surnom', 'rang', 'nom',
+        'fight_session_id', 'demon_id', 'camp', 'attitude', 'surnom', 'rang', 'nom',
         'vigueur', 'agilite', 'esprit', 'aura',
         'melee', 'tir', 'defense',
         'vitalite_max', 'vitalite_courante',

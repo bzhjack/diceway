@@ -47,17 +47,6 @@
   // Place pour le cadre de fer de l'app (`body::before` dans `styles/_barbare.scss`).
   padding: 10px;
 
-  .spp-reserve {
-    border-right: 2px solid #6b4a16;
-    background: linear-gradient(90deg, #0f0a06, #1a120b);
-    box-shadow: inset -8px 0 14px -8px rgba(0, 0, 0, 0.8);
-  }
-
-  .spp-reserve-toggle {
-    border-right-color: #6b4a16;
-    background: #150e09;
-  }
-
   .cp-table {
     position: relative;
     overflow: hidden;
@@ -71,69 +60,48 @@
   }
 }
 
-// Sous l'en-tête : la réserve à gauche (mode libre seulement), sa languette de repli, puis la colonne
-// principale — l'ordre de jeu en combat et le tapis, qui s'étire.
-.spp-body {
+// Sous l'en-tête, en mode libre : le théâtre, et les coulisses (la réserve) qui s'ouvrent à droite en le
+// poussant — la scène reste entière visible pour y glisser un personnage.
+.spp-coulisses {
   flex: 1;
   min-height: 0;
-  display: flex;
+  background: transparent;
 }
 
-.spp-main {
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
+.spp-scene {
+  display: flex;
+  overflow: hidden;
+}
+
+.spp-coulisses-panel {
+  width: 21rem;
+  max-width: 85vw;
+  border-left: 2px solid #6b4a16;
+  background: linear-gradient(270deg, #0f0a06, #1a120b);
+  box-shadow: inset 8px 0 14px -8px rgba(0, 0, 0, 0.8);
+  color: inherit;
+}
+
+.spp-coulisses-inner {
+  height: 100%;
   display: flex;
   flex-direction: column;
-}
-
-.spp-reserve {
-  flex: 0 0 19rem;
   min-height: 0;
-  display: flex;
-  flex-direction: column;
-  border-right: 1px solid var(--dw-border);
-  background: var(--dw-surface-0);
 }
 
-// Languette verticale entre la réserve et le tapis : replie ou déplie la réserve.
-.spp-reserve-toggle {
+.spp-coulisses-tete {
   flex-shrink: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  width: 1.5rem;
-  padding: 0;
-  border: none;
-  border-right: 1px solid var(--dw-border);
-  background: var(--dw-surface-50);
-  color: var(--dw-surface-500);
-  font: inherit;
-  cursor: pointer;
-
-  .mat-icon {
-    font-size: 1.2rem;
-    width: 1.2rem;
-    height: 1.2rem;
-  }
-
-  &:hover {
-    color: var(--dw-surface-900);
-    background: var(--dw-surface-100);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--dw-color-legendary);
-    outline-offset: -2px;
-  }
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.5rem 0 1rem;
 }
 
-.spp-reserve-toggle-label {
-  writing-mode: vertical-rl;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+.spp-coulisses-titre {
+  margin: 0;
+  color: var(--dw-color-legendary);
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 1.3rem;
+  font-weight: 400;
 }

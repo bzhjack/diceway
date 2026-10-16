@@ -45,6 +45,8 @@ export class ReserveComponent {
   private readonly dialog = inject(MatDialog);
 
   readonly sessionId = input.required<string>();
+  /** Titre de la réserve ; `null` le masque, quand le conteneur porte déjà le sien (les coulisses). */
+  readonly titre = input<string | null>('Réserve');
   /** Ids source (heros_id / pnj_id) déjà présents dans la session. */
   readonly existingHeroIds = input.required<ReadonlySet<string>>();
   readonly placed = output<void>();

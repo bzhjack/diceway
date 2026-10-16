@@ -21,6 +21,9 @@ function card(kind: TapisKind, pivotId: number, extra: Partial<TapisCard> = {}):
     defense: '0',
     vitaliteCourante: 10,
     vitaliteMax: 10,
+    joueur: null,
+    heroisme: null,
+    attitude: null,
     ...extra,
   };
 }

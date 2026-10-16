@@ -1,0 +1,42 @@
+<section
+  class="trp"
+  data-drop-camp="adversaires"
+  aria-label="En scène"
+  [class.trp--droppable]="droppable()"
+  [class.trp--hot]="hot()"
+>
+  @if (acteurs().length) {
+    <dw-scroller class="trp-scroller" label="En scène">
+      <ul class="trp-liste" role="list" cdkDropList [cdkDropListSortingDisabled]="true" [cdkDropListEnterPredicate]="rejectDrop">
+        @for (acteur of acteurs(); track acteur.card.key) {
+          <li
+            [class]="'trp-slot trp-slot--' + acteur.taille"
+            cdkDrag
+            cdkDragPreviewContainer="parent"
+            (cdkDragStarted)="onDragStarted(acteur.card)"
+            (cdkDragMoved)="onDragMoved($event)"
+            (cdkDragEnded)="onDragEnded($event, acteur.card)"
+          >
+            <bol-acteur
+              [card]="acteur.card"
+              [taille]="acteur.taille"
+              [selected]="selectedKeys().has(acteur.card.key)"
+              (toggled)="onFaceClick(acteur.card, $event)"
+            />
+            <div *cdkDragPreview class="trp-ghost">
+              <img class="trp-ghost-art" [src]="acteur.card.avatar" alt="" draggable="false" />
+              <span class="trp-ghost-name">{{ acteur.card.nom }}</span>
+            </div>
+          </li>
+        }
+      </ul>
+    </dw-scroller>
+  } @else {
+    <div class="trp-vide">
+      <p>Personne en scène.</p>
+      <button mat-stroked-button type="button" (click)="coulissesRequested.emit()">
+        <mat-icon>theater_comedy</mat-icon> Ouvrir les coulisses
+      </button>
+    </div>
+  }
+</section>

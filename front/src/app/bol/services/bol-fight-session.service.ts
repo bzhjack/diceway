@@ -2,15 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {apiUrl} from '../../core/api-url';
-import {
-  BolFightSessionAddCombatantPayload,
-  BolFightSessionCreatePayload,
-  BolFightSessionHerosModel,
-  BolFightSessionModel,
-  CombatCamp,
-  EtatCombatDto,
-  InitiativeResultat,
-} from '../models/bol-fight-session.model';
+import {BolFightSessionAddCombatantPayload, BolFightSessionCreatePayload, BolFightSessionHerosModel, BolFightSessionModel, CombatantAttitude, CombatCamp, EtatCombatDto, InitiativeResultat} from '../models/bol-fight-session.model';
 import {BolSceneLoadResult, SceneLoadMode} from '../models/bol-scene.model';
 
 @Injectable({providedIn: 'root'})
@@ -56,7 +48,17 @@ export class BolFightSessionService {
     return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/${kind}/${pivotId}/camp`, {camp});
   }
 
-  updateOrder(sessionId: string, ordre: readonly string[]): Observable<BolFightSessionModel> {
+  /** Attitude d'un PNJ, d'une créature ou d'un démon envers les héros (`null` : aucune). */
+  setAttitude(
+    sessionId: string,
+    kind: 'pnj' | 'creature' | 'demon',
+    pivotId: number,
+    attitude: CombatantAttitude | null,
+  ): Observable<BolFightSessionModel> {
+    return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/${kind}/${pivotId}/attitude`, {attitude});
+  }
+
+    updateOrder(sessionId: string, ordre: readonly string[]): Observable<BolFightSessionModel> {
     return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/ordre`, {ordre});
   }
 

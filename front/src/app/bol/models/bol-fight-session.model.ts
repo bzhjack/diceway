@@ -1,6 +1,9 @@
 /** Camp d'un combattant à la table : les héros et leurs alliés (`heros`), ou les adversaires. */
 export type CombatCamp = 'heros' | 'adversaires';
 
+/** Attitude d'un PNJ, d'une créature ou d'un démon en scène envers les héros. */
+export type CombatantAttitude = 'hostile' | 'mefiant' | 'neutre' | 'amical';
+
 /** Résultat du jet de réaction BoL (2d6 + esprit + initiative, 9+) — seuls les héros le lancent. */
 export type InitiativeResultat = 'echec_critique' | 'echec' | 'reussite' | 'heroique' | 'legendaire';
 
@@ -38,6 +41,8 @@ export interface BolFightSessionModel {
   /** Dernière scène chargée ou enregistrée sur cette table — null si aucune. */
   scene_id?: string | null;
   scene?: BolSessionSceneRef | null;
+  /** Scènes qui ont été courantes sur cette table, dans l'ordre — la frise les marque « jouées ». */
+  scenes_jouees?: string[] | null;
   /** Round, cartes qui ont joué et cartes en défense totale — null hors combat. */
   etat_combat?: EtatCombatDto | null;
   heros?: BolFightSessionHerosModel[];
@@ -83,6 +88,8 @@ interface BolFightSessionCreatureModel {
   fight_session_id: string;
   creature_id: string | null;
   camp: CombatCamp;
+  /** Attitude envers les héros — null ou absente : aucune. */
+  attitude?: CombatantAttitude | null;
   surnom: string | null;
   rang: 'rival' | 'coriace' | 'pietaille';
   nom: string;
@@ -114,6 +121,8 @@ interface BolFightSessionDemonModel {
   fight_session_id: string;
   demon_id: string | null;
   camp: CombatCamp;
+  /** Attitude envers les héros — null ou absente : aucune. */
+  attitude?: CombatantAttitude | null;
   surnom: string | null;
   rang: 'rival' | 'coriace' | 'pietaille';
   nom: string;
@@ -148,6 +157,8 @@ interface BolFightSessionPnjModel {
   fight_session_id: string;
   pnj_id: string | null;
   camp: CombatCamp;
+  /** Attitude envers les héros — null ou absente : aucune. */
+  attitude?: CombatantAttitude | null;
   surnom: string | null;
   rang: 'rival' | 'coriace' | 'pietaille';
   nom: string;

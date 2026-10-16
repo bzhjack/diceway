@@ -1,0 +1,135 @@
+<h2 mat-dialog-title>Préparer la scène</h2>
+<form [formGroup]="form" (submit)="submit($event)">
+  <mat-dialog-content class="sed-content">
+    <section class="sed-col" aria-labelledby="sed-decor-title">
+      <h3 class="sed-col-title" id="sed-decor-title">Le décor</h3>
+
+      <mat-form-field subscriptSizing="dynamic">
+        <mat-label>Titre</mat-label>
+        <input id="sed-titre" matInput formControlName="titre" autocomplete="off" [attr.maxlength]="titreMax" />
+      </mat-form-field>
+
+      <div class="sed-pair">
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Région</mat-label>
+          <mat-select id="sed-region" formControlName="region_id">
+            <mat-option [value]="null">Aucune</mat-option>
+            @for (region of regions(); track region.id) {
+              <mat-option [value]="region.id">{{ region.region }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Lieu</mat-label>
+          <input id="sed-lieu" matInput formControlName="lieu" autocomplete="off" maxlength="120" placeholder="Gué du Tyr" />
+        </mat-form-field>
+      </div>
+
+      <div class="sed-field">
+        <span class="sed-label" id="sed-moment-label">Moment</span>
+        <mat-button-toggle-group
+          class="sed-toggles"
+          aria-labelledby="sed-moment-label"
+          [hideSingleSelectionIndicator]="true"
+          [value]="momentChoisi()"
+          (change)="setMoment($event)"
+        >
+          <mat-button-toggle [value]="aucun">Aucun</mat-button-toggle>
+          @for (moment of moments; track moment.value) {
+            <mat-button-toggle [value]="moment.value">
+              <mat-icon aria-hidden="true">{{ moment.icon }}</mat-icon>
+              {{ moment.label }}
+            </mat-button-toggle>
+          }
+        </mat-button-toggle-group>
+      </div>
+
+      <div class="sed-pair">
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Météo</mat-label>
+          <mat-select id="sed-meteo" formControlName="meteo">
+            <mat-option [value]="null">Aucune</mat-option>
+            @for (meteo of meteos; track meteo.value) {
+              <mat-option [value]="meteo.value">{{ meteo.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <div class="sed-field">
+          <span class="sed-label" id="sed-danger-label">Danger</span>
+          <mat-button-toggle-group class="sed-toggles" aria-labelledby="sed-danger-label" formControlName="danger" [hideSingleSelectionIndicator]="true">
+            <mat-button-toggle [value]="0">Aucun</mat-button-toggle>
+            @for (niveau of dangers; track niveau) {
+              <mat-button-toggle [value]="niveau" [attr.aria-label]="'Danger ' + niveau + ' sur 4'">{{ niveau }}</mat-button-toggle>
+            }
+          </mat-button-toggle-group>
+        </div>
+      </div>
+
+      <mat-form-field subscriptSizing="dynamic">
+        <mat-label>Illustration (adresse d'une image)</mat-label>
+        <input id="sed-image" matInput formControlName="image" autocomplete="off" maxlength="500" placeholder="https://…" />
+        @if (form.controls.image.hasError('pattern')) {
+          <mat-error>L'adresse commence par https:// ou /assets/.</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="sed-apercu" aria-hidden="true">
+        @if (apercuImage(); as url) {
+          <img class="sed-apercu-img" [src]="url" alt="" />
+        } @else if (apercuCarte(); as position) {
+          <span class="sed-apercu-carte" [style.background-position]="position"></span>
+        } @else {
+          <span class="sed-apercu-vide">Sans illustration ni région, la scène garde le fond de la table.</span>
+        }
+      </div>
+    </section>
+
+    <section class="sed-col" aria-labelledby="sed-texte-title">
+      <h3 class="sed-col-title" id="sed-texte-title">Le texte</h3>
+
+      <mat-form-field subscriptSizing="dynamic">
+        <mat-label>À lire aux joueurs</mat-label>
+        <textarea id="sed-lecture" matInput rows="8" formControlName="lecture" [attr.maxlength]="lectureMax"></textarea>
+        <mat-hint align="end">{{ lectureLength() }} / {{ lectureMax }}</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field subscriptSizing="dynamic">
+        <mat-label>Secret du MJ</mat-label>
+        <textarea id="sed-notes" matInput rows="5" formControlName="notes" maxlength="10000"></textarea>
+      </mat-form-field>
+
+      <div class="sed-field">
+        <span class="sed-label" id="sed-pistes-label">Pistes</span>
+        <ul class="sed-pistes" formArrayName="pistes" aria-labelledby="sed-pistes-label">
+          @for (piste of pistes.controls; track piste; let index = $index) {
+            <li class="sed-piste" [formGroupName]="index">
+              <mat-form-field subscriptSizing="dynamic" class="sed-piste-texte">
+                <mat-label>Piste {{ index + 1 }}</mat-label>
+                <input matInput formControlName="texte" autocomplete="off" maxlength="200" />
+              </mat-form-field>
+              <mat-form-field subscriptSizing="dynamic" class="sed-piste-scene">
+                <mat-label>Mène à</mat-label>
+                <mat-select formControlName="scene_id">
+                  <mat-option [value]="null">Aucune scène</mat-option>
+                  @for (sibling of data.siblings; track sibling.id) {
+                    <mat-option [value]="sibling.id">{{ sibling.titre }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              <button mat-icon-button type="button" [attr.aria-label]="'Retirer la piste ' + (index + 1)" (click)="removePiste(index)">
+                <mat-icon>close</mat-icon>
+              </button>
+            </li>
+          }
+        </ul>
+        <button mat-stroked-button size="small" type="button" class="sed-add" [disabled]="pisteCount() >= pistesMax" (click)="addPiste()">
+          <mat-icon>add</mat-icon> Ajouter une piste
+        </button>
+      </div>
+    </section>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-stroked-button type="button" mat-dialog-close>Annuler</button>
+    <button mat-flat-button type="submit" [disabled]="!valid() || busy()">Enregistrer</button>
+  </mat-dialog-actions>
+</form>

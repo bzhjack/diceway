@@ -1,0 +1,231 @@
+:host {
+  display: block;
+}
+
+// La carte : portrait en pied, encadré de la couleur de son type ; sa taille dit son rang.
+.act {
+  --w: 9rem;
+  --h: 12.6rem;
+  --act-kind: var(--dw-color-pnj);
+
+  position: relative;
+  display: block;
+  width: var(--w);
+  height: var(--h);
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid color-mix(in srgb, var(--act-kind) 70%, #1a120b);
+  border-radius: 10px;
+  background: #1a120b;
+  box-shadow:
+    0 14px 26px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(0, 0, 0, 0.6);
+  color: var(--dw-color-text-bright);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease-out,
+    box-shadow 0.15s ease-out;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 18px 30px rgba(0, 0, 0, 0.7),
+      0 0 18px color-mix(in srgb, var(--act-kind) 35%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 3px;
+  }
+}
+
+.act--rival {
+  --w: 10.8rem;
+  --h: 15.2rem;
+}
+
+.act--pietaille {
+  --w: 7.2rem;
+  --h: 10rem;
+}
+
+.act--allie {
+  --w: 6.4rem;
+  --h: 8.8rem;
+}
+
+.act--creature {
+  --act-kind: var(--dw-color-creature);
+}
+
+.act--demon {
+  --act-kind: var(--dw-color-demon);
+}
+
+.act--selected {
+  outline: 3px solid var(--dw-color-legendary);
+  outline-offset: 2px;
+}
+
+.act-art {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 50% 35%, #3a2a1c, #120c07);
+}
+
+.act-portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.act-repli {
+  width: 3rem;
+  height: 3rem;
+  font-size: 3rem;
+  color: color-mix(in srgb, var(--act-kind) 70%, transparent);
+}
+
+// Hors de combat : portrait éteint.
+.act--tombe .act-art {
+  filter: grayscale(1);
+  opacity: 0.7;
+}
+
+.act-haut {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+  left: 0.35rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.3rem;
+}
+
+.act-rang {
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(15, 10, 6, 0.82);
+  color: var(--dw-surface-800);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.act--rival .act-rang {
+  color: var(--dw-color-rival);
+}
+
+.act-type {
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0.2rem;
+  border-radius: 50%;
+  background: rgba(15, 10, 6, 0.82);
+  color: var(--act-kind);
+  font-size: 1.1rem;
+  line-height: 1.1rem;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.act-bas {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.6rem 0.5rem 0.5rem;
+  background: linear-gradient(transparent, rgba(10, 6, 3, 0.92) 55%);
+}
+
+// L'attitude envers les héros : une pastille de couleur et son libellé.
+.act-attitude {
+  --act-attitude: var(--dw-surface-500);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  align-self: flex-start;
+  padding: 0.05rem 0.45rem 0.05rem 0.35rem;
+  border-radius: 999px;
+  background: rgba(15, 10, 6, 0.82);
+  color: var(--dw-surface-800);
+  font-size: 0.68rem;
+  font-weight: 600;
+
+  &::before {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--act-attitude);
+  }
+}
+
+.act-attitude--hostile {
+  --act-attitude: var(--dw-color-echec);
+}
+
+.act-attitude--mefiant {
+  --act-attitude: var(--dw-color-warn);
+}
+
+.act-attitude--amical {
+  --act-attitude: var(--dw-color-reussite);
+}
+
+.act-nom {
+  overflow: hidden;
+  font-family: 'Muse Display Harmony', serif;
+  font-size: 0.95rem;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 4px #000;
+  white-space: nowrap;
+}
+
+.act--rival .act-nom {
+  font-size: 1.12rem;
+}
+
+.act--pietaille .act-nom,
+.act--allie .act-nom {
+  font-size: 0.8rem;
+}
+
+.act-vit {
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgba(241, 230, 208, 0.15);
+
+  i {
+    display: block;
+    height: 100%;
+    background: var(--dw-color-health);
+    transition: width 0.3s;
+  }
+
+  .act-vit--bas {
+    background: var(--dw-color-echec);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .act,
+  .act-vit i {
+    transition: none;
+  }
+
+  .act:hover {
+    transform: none;
+  }
+}

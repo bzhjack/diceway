@@ -4,8 +4,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {AccountMenuComponent} from '../../../shared/account-menu/account-menu';
 
-/** Barre du haut de la table : titre de la session, action de combat, menu compte — ce qui reste visible en permanence,
- * indépendamment du contenu du plateau. */
+/** Barre du haut de la table : titre de la session, contenu projeté par la page (la frise des actes en mode libre), coulisses,
+ * action de combat, menu compte — ce qui reste visible en permanence, indépendamment du contenu du plateau. */
 @Component({
   selector: 'bol-session-header',
   imports: [MatButtonModule, MatIconModule, MatTooltipModule, AccountMenuComponent],
@@ -16,9 +16,13 @@ import {AccountMenuComponent} from '../../../shared/account-menu/account-menu';
 export class SessionHeaderComponent {
   readonly mode = input.required<'libre' | 'combat'>();
   readonly titre = input<string | null>(null);
+  /** Les coulisses (la réserve) sont ouvertes — mode libre seulement. */
+  readonly coulissesOpen = input(false);
 
   readonly startCombat = output<void>();
   readonly endCombat = output<void>();
   /** Ouvre la barre de commande (même effet que les raccourcis `/` et `Ctrl+K`). */
   readonly search = output<void>();
+  /** Ouvre ou ferme les coulisses. */
+  readonly coulissesToggled = output<void>();
 }

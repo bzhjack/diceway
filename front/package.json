@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "screenshot": "node scripts/screenshot.mjs",
-    "e2e:petit-bouclier": "node scripts/e2e-petit-bouclier.mjs"
+    "e2e:petit-bouclier": "node scripts/e2e-petit-bouclier.mjs",
+    "e2e:theatre": "node scripts/e2e-theatre.mjs"
   },
   "prettier": {
     "printWidth": 100,
