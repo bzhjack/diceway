@@ -427,6 +427,36 @@
   gap: 0.5rem;
 }
 
+// La carrière accordée : un petit bouton sous le nom, en or quand une carrière est retenue.
+.scd-career {
+  display: flex;
+  justify-content: center;
+  min-height: 1.7rem;
+}
+
+.scd-career-btn {
+  padding: 0.2rem 0.6rem;
+  border: 1px dashed var(--dw-border);
+  border-radius: 999px;
+  background: none;
+  color: var(--dw-surface-600);
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--dw-color-legendary);
+    color: var(--dw-color-legendary);
+  }
+}
+
+.scd-career-btn--on {
+  border-style: solid;
+  border-color: var(--dw-color-legendary);
+  color: var(--dw-color-legendary);
+}
+
 .scd-total {
   width: 5.8rem;
   height: 2.9rem;

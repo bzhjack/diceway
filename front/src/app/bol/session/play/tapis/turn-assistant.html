@@ -505,6 +505,17 @@
         @if (damage() !== null) {
           <button #applyButton mat-flat-button type="button" class="tas-apply" (click)="apply()">Appliquer {{ damage() }} à {{ target()?.nom }}</button>
         }
+        @if (canParry()) {
+          <button
+            type="button"
+            class="tas-act"
+            matTooltip="1 point d'héroïsme de la cible : elle interpose son bouclier ou son arme, qui est brisé, et ne subit pas de dégâts"
+            [attr.aria-label]="'Parade in extremis de ' + target()?.nom + ', pour 1 point d’héroïsme'"
+            (click)="parry()"
+          >
+            <mat-icon aria-hidden="true">shield</mat-icon> Parade in extremis <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
+          </button>
+        }
       } @else if (attackVerdict(); as v) {
         <!-- Coup raté, ou désarmement : rien à lancer, il ne reste qu'à finir le tour -->
         @if (v.tone === 'echec') {
@@ -514,11 +525,26 @@
           <span class="tas-wait">Désarmement : l’adversaire perd son arme, sans dégâts.</span>
           <button #endButton mat-flat-button type="button" class="tas-apply" (click)="concludeWithoutDamage()">{{ carnagePicked() ? 'Nouvelle attaque (Carnage)' : 'Fin du tour' }}</button>
         }
-      } @else if (lastHit(); as hit) {
+      } @else if (hitSummary(); as hit) {
         <div class="tas-verdict" aria-live="polite">
-          <b class="tas-verdict-title tas-verdict-title--echec">{{ hit.damage }} {{ hit.damage > 1 ? 'dégâts' : 'dégât' }}</b>
-          <span>appliqués à {{ hit.target.nom }}.</span>
+          <b class="tas-verdict-title tas-verdict-title--echec">{{ hit.title }}</b>
+          <span>{{ hit.detail }}</span>
+          @if (hit.scratch) {
+            <span>{{ hit.scratch }}</span>
+          }
         </div>
+        @if (canScratch()) {
+          <button
+            type="button"
+            class="tas-act"
+            [disabled]="rolling()"
+            matTooltip="1 point d'héroïsme de la cible : 1d6 de vitalité rendu, sans dépasser les dégâts du coup, et elle perd sa prochaine action"
+            [attr.aria-label]="'Juste une égratignure pour ' + target()?.nom + ', pour 1 point d’héroïsme'"
+            (click)="scratch()"
+          >
+            <mat-icon aria-hidden="true">healing</mat-icon> Juste une égratignure <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
+          </button>
+        }
         @if (carnageOwed() > 0) {
           <span class="tas-wait">Carnage : une nouvelle attaque suit.</span>
         } @else {

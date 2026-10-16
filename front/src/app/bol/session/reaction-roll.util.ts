@@ -6,9 +6,9 @@ import {ReactionAdversary, ReactionHero, ReactionLane, ReactionParts, ReactionTo
 /** Seuil de réussite du jet de réaction BoL (02-actions-combat.md) — fixe, jamais modifié par les règles. */
 export const REACTION_ROLL_THRESHOLD = 9;
 
-/** Ce qui s'ajoute aux deux dés : esprit + initiative + embuscade − initiative ennemie. */
+/** Ce qui s'ajoute aux deux dés : esprit + initiative + embuscade − initiative ennemie + carrière utile. */
 export function reactionModifier(parts: ReactionParts): number {
-  return parts.esprit + parts.initiative + parts.embuscade - parts.initiativeEnnemie;
+  return parts.esprit + parts.initiative + parts.embuscade - parts.initiativeEnnemie + (parts.carriere?.value ?? 0);
 }
 
 /** Résultat d'un jet de réaction d'après le total des deux dés. Le double 1 et le double 6 priment sur le seuil ; `heroisme` dit si le
@@ -51,6 +51,7 @@ export function reactionSumTerms(dice: number | null, parts: ReactionParts): rea
     [parts.esprit, 'esprit'],
     [parts.initiative - (parts.equipement ?? 0), 'init.'],
     [parts.equipement ?? 0, 'équipement'],
+    [parts.carriere?.value ?? 0, parts.carriere?.label.toLowerCase() ?? ''],
     [parts.embuscade, parts.embuscade > 0 ? 'embusc.' : 'surpris'],
     [-parts.initiativeEnnemie, 'ennemi'],
   ];

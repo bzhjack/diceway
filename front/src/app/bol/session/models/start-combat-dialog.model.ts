@@ -21,6 +21,8 @@ export interface ReactionParts {
   readonly embuscade: number;
   /** Plus haute initiative des rivaux et coriaces ennemis : elle est retranchée au jet. */
   readonly initiativeEnnemie: number;
+  /** Une carrière utile accordée par le MJ : son rang s'ajoute au jet (02-actions-combat.md, « Modificateurs au jet de réaction »). */
+  readonly carriere?: {readonly label: string; readonly value: number} | null;
 }
 
 /** Le verdict d'un jet de réaction : son titre, ce qu'il change au combat, et sa couleur. */

@@ -3,7 +3,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {TurnStatus} from '../../models/combat-turn.model';
-import {TurnOrderEntry} from '../../models/turn-order.model';
+import {TurnOrderEntry, TurnOrderInterrupter} from '../../models/turn-order.model';
 import {groupByTier} from './combat-turn.util';
 
 const STATUS_LABELS: Record<TurnStatus, string> = {
@@ -34,7 +34,11 @@ export class TurnOrderComponent {
   /** Clé du combattant visé par le tour en cours : son médaillon est cerclé de rouge. */
   readonly targetKey = input<string | null>(null);
 
+  /** Les héros qui ont retardé leur action ce round : chacun peut l'interrompre pour agir tout de suite. */
+  readonly interrupters = input<readonly TurnOrderInterrupter[]>([]);
+
   readonly gaveBack = output<string>();
+  readonly interruptRequested = output<string>();
   readonly addRequested = output<void>();
   readonly rerollRequested = output<void>();
 

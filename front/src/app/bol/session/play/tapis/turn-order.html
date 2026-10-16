@@ -6,6 +6,17 @@
       <span class="tor-pill" [class.tor-pill--lock]="legendaryActive()">Succès {{ legendaryActive() ? 'légendaire' : 'héroïque' }} : coriaces et piétaille bloqués au round 1</span>
     }
     <div class="tor-actions">
+      @for (i of interrupters(); track i.key) {
+        <button
+          mat-flat-button
+          size="small"
+          type="button"
+          matTooltip="A retardé son action : 1 point d'héroïsme pour agir tout de suite, avant la carte active"
+          (click)="interruptRequested.emit(i.key)"
+        >
+          Interrompre : {{ i.nom }} (−1 PH)
+        </button>
+      }
       <button mat-stroked-button size="small" type="button" (click)="addRequested.emit()">
         <mat-icon>add</mat-icon> Ajouter
       </button>

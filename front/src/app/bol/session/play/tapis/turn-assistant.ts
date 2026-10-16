@@ -9,7 +9,7 @@ import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {ActionDiceTargetLabel, ActionRollCarriere, ActionRollTone, RollSumTerm} from '../../models/action-roll.model';
 import {CombatEffect, ModifierTerm, NewEffect} from '../../models/combat-effect.model';
 import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, keepBestOrWorstTwo, keptDiceIndexes, netDiceModifier, parseDiceTotal} from '../../action-roll.util';
-import {aDejaFeinte, descriptionEffet, doitUnDeDeMalus, effetFeinte, effetCoupPrecis, effetRenversement, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
+import {aDejaFeinte, descriptionEffet, doitUnDeDeMalus, effetActionPerdue, effetFeinte, effetParade, effetCoupPrecis, effetRenversement, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
 import {EffectsListComponent} from './effects-list';
 import {baseRangeMeters, DEFAULT_RANGE_INDEX, formatMeters, RANGE_FACTORS, rangeReach} from '../../range.util';
 import {DwDiceRowComponent} from '../../../../shared/dice-row/dice-row';
@@ -42,7 +42,7 @@ import {
 } from '../../combat-resolution.util';
 import {InitiativeResultat} from '../../../models/bol-fight-session.model';
 import {AttackChoice} from '../../models/attack-options.model';
-import {AppliedHit, DamageDie, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
+import {AppliedHit, DamageDie, HeroismeChange, ResolvedCombatStats, VitaliteChange} from '../../models/combat-attack.model';
 import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
 import {ValueTracker} from '../../value-tracker';
@@ -176,8 +176,10 @@ export class TurnAssistantComponent {
   readonly endTurnRequested = output<boolean>();
   /** Points d'héroïsme dépensés (négatif) ou gagnés (positif) par l'attaquant sur ce jet. */
   readonly heroismeAdjusted = output<number>();
-  /** Vitalité de l'attaquant ou de la cible corrigée à la main sur son cœur. */
+  /** Vitalité de l'attaquant ou de la cible corrigée à la main sur son cœur, ou rendue par « Juste une égratignure ». */
   readonly vitaliteAdjusted = output<VitaliteChange>();
+  /** Points d'héroïsme dépensés par la cible, un héros : parade in extremis, « Juste une égratignure ». */
+  readonly targetHeroismeAdjusted = output<HeroismeChange>();
 
   /** La vitalité de l'attaquant et celle de la cible, chacune sur son cœur : elles suivent la table, et chaque pas est signalé à la
    * page. */
@@ -989,7 +991,7 @@ export class TurnAssistantComponent {
     }
     if (!verdict) {
       return this.lastHit()
-        ? {step: '', text: 'Dégâts appliqués. Il ne reste qu’à finir le tour, ou à lancer une nouvelle attaque.'}
+        ? {step: '', text: `${this.lastHit()?.parried ? 'Coup paré' : 'Dégâts appliqués'}. Il ne reste qu’à finir le tour, ou à lancer une nouvelle attaque.`}
         : {step: '2', text: this.netDice() !== 0 ? `Tape le total des deux dés gardés (les ${this.keptCaption()} de ${this.diceCount()}d6), ou lance-les à l’écran.` : 'Tape le total des deux dés d’attaque, ou lance-les à l’écran.'};
     }
     if (!this.hasDamageStep()) {
@@ -1356,8 +1358,8 @@ export class TurnAssistantComponent {
 
   /** Le coup est conclu : ses options héroïques laissent leurs effets sur la cible (dé de malus du coup précis, du renversement), et
    * un Carnage donne une attaque de plus. */
-  private conclude(target: TapisCard): void {
-    const picks = new Set(this.picks());
+  private conclude(target: TapisCard, withEffects = true): void {
+    const picks = new Set(withEffects ? this.picks() : []);
     if (picks.has('precis')) {
       this.effectAdded.emit(effetCoupPrecis(target.key));
     }
@@ -1383,6 +1385,64 @@ export class TurnAssistantComponent {
     this.resetRoll();
     this.lastHit.set(hit);
     this.focusAfterRender(() => (this.carnageOwed() > 0 ? this.attackInput() : this.endButton()));
+  }
+
+  /** Points d'héroïsme de la cible, si c'est un héros : il peut s'en servir pour se défendre (0 sinon). */
+  private readonly targetHeroisme = computed(() => (this.target()?.kind === 'hero' ? (this.targetStats()?.heroisme ?? 0) : 0));
+  /** Parade in extremis (02-actions-combat.md, « Points d'héroïsme ») : un coup qui touche un héros, pas encore appliqué. */
+  protected readonly canParry = computed(() => this.hasDamageStep() && this.targetHeroisme() > 0);
+  /** « Juste une égratignure » : juste après des dégâts appliqués à un héros, une fois par coup. */
+  protected readonly canScratch = computed(() => {
+    const hit = this.lastHit();
+    return !!hit && hit.target.key === this.target()?.key && hit.target.kind === 'hero' && hit.damage > 0 && !hit.parried && !hit.scratch && this.targetHeroisme() > 0;
+  });
+
+  /** Ce que dit le rappel du dernier coup : les dégâts, ou la parade ; puis l'égratignure, s'il y en a eu une. */
+  protected readonly hitSummary = computed(() => {
+    const hit = this.lastHit();
+    if (!hit) {
+      return null;
+    }
+    const title = hit.parried ? 'Paré' : `${hit.damage} ${hit.damage > 1 ? 'dégâts' : 'dégât'}`;
+    const detail = hit.parried
+      ? `${hit.target.nom} interpose ${hit.parried === 'bouclier' ? 'son bouclier, qui est brisé' : 'son arme, qui est brisée'}.`
+      : `appliqués à ${hit.target.nom}.`;
+    const scratch = hit.scratch
+      ? `Juste une égratignure : ${hit.scratch.die} au dé, ${hit.scratch.healed} ${hit.scratch.healed > 1 ? 'points rendus' : 'point rendu'} ; ${hit.target.nom} perd sa prochaine action.`
+      : '';
+    return {title, detail, scratch};
+  });
+
+  /** Parade in extremis : la cible dépense 1 point d'héroïsme et interpose son bouclier (s'il en a un) ou son arme, qui est brisé ; le
+   * coup ne fait pas de dégâts, et ses options héroïques non plus. Un Carnage garde son attaque de plus. */
+  protected parry(): void {
+    const target = this.target();
+    if (!target || !this.canParry()) {
+      return;
+    }
+    const stats = this.targetStats();
+    const bouclier = (stats?.bouclierMalusUneAttaque ?? 0) > 0 || (stats?.bouclierDefenseToutes ?? 0) > 0;
+    this.targetHeroismeAdjusted.emit({card: target, delta: -1});
+    this.effectAdded.emit(effetParade(target.key, bouclier));
+    this.conclude(target, false);
+    this.resetRoll();
+    this.lastHit.set({target, damage: 0, unarmed: false, parried: bouclier ? 'bouclier' : 'arme'});
+    this.focusAfterRender(() => (this.carnageOwed() > 0 ? this.attackInput() : this.endButton()));
+  }
+
+  /** « Juste une égratignure » : la cible dépense 1 point d'héroïsme et lance 1d6 ; elle récupère autant de vitalité, sans dépasser les
+   * dégâts du coup, et perd sa prochaine action. */
+  protected async scratch(): Promise<void> {
+    const hit = this.lastHit();
+    if (!hit || !this.canScratch() || this.rolling()) {
+      return;
+    }
+    const [die] = await this.throwDice('1d6', 1);
+    const healed = Math.min(die, hit.damage);
+    this.targetHeroismeAdjusted.emit({card: hit.target, delta: -1});
+    this.vitaliteAdjusted.emit({card: hit.target, delta: healed});
+    this.effectAdded.emit(effetActionPerdue(hit.target.key));
+    this.lastHit.set({...hit, scratch: {die, healed}});
   }
 
   /** Désarmement : pas de dégâts à appliquer. Le coup se conclut, et le tour finit — sauf si un Carnage donne une nouvelle attaque. */

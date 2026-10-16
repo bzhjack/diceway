@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {CombatEffect, RollContext} from '../../models/combat-effect.model';
-import {aDejaFeinte, appliquerEvenement, aSombre, aStabilise, effetFeinte, degatsMainsNues, effetDegatsMainsNues, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, effetCoupPrecis, effetInconscient, effetRenversement, effetStabilise, effetSurpris, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
+import {aDejaFeinte, appliquerEvenement, effetParade, aSombre, aStabilise, effetFeinte, degatsMainsNues, effetDegatsMainsNues, BOUCLIER_DEPENSE, descriptionEffet, doitUnDeDeMalus, effetCoupPrecis, effetInconscient, effetRenversement, effetStabilise, effetSurpris, EFFETS_MODELES, effetsDeLAncienFormat, effetsDeTour, libelleDuree, modificateursPour, sansTerme, nextEffectId, normalizeEffets, SANS_BOUCLIER, sommeModificateurs} from './combat-effects.util';
 
 function effet(over: Partial<CombatEffect> = {}): CombatEffect {
   return {id: 'e-1', origine: 'posture-defensive', porteur: 'hero-1', stat: 'defense', valeur: 1, quand: 'subie', duree: {type: 'debut-tour-porteur'}, manuel: false, ...over};
@@ -393,5 +393,14 @@ describe('effetFeinte', () => {
     expect(aDejaFeinte(effets, 'pnj-2', 'hero-1')).toBe(false);
     const contexte = {jet: 'attaque' as const, attaquant: 'hero-1', cible: 'pnj-1', bouclier: 0, bouclierToutes: 0};
     expect(modificateursPour(effets, contexte)).toEqual([]);
+  });
+});
+
+describe('effetParade', () => {
+  it('breaks the shield for the whole fight, or leaves a broken-weapon trace', () => {
+    const bouclier = effetParade('hero-1', true);
+    expect([bouclier.origine, bouclier.libelle, bouclier.duree]).toEqual([SANS_BOUCLIER, 'bouclier brisé', {type: 'combat'}]);
+    const arme = effetParade('hero-1', false);
+    expect([arme.origine, arme.libelle, arme.valeur]).toEqual(['arme-brisee', 'arme brisée', 0]);
   });
 });

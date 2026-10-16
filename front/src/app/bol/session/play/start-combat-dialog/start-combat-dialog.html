@@ -84,6 +84,22 @@
               </div>
 
               @if (!card.excluded) {
+                <!-- Une carrière utile accordée par le MJ : son rang s'ajoute au jet. La ligne garde sa place, même sans carrière -->
+                <div class="scd-career">
+                  @if (card.hero.carrieres.length > 0) {
+                    <button
+                      type="button"
+                      class="scd-career-btn"
+                      [class.scd-career-btn--on]="card.career"
+                      [matMenuTriggerFor]="careerMenu"
+                      [matMenuTriggerData]="{hero: card.hero}"
+                      matTooltip="Carrière utile accordée par le MJ : son rang s'ajoute au jet"
+                    >
+                      {{ card.career ? card.career.label + ' +' + card.career.value : '+ Carrière' }}
+                    </button>
+                  }
+                </div>
+
                 <div class="scd-goal">
                   <div class="scd-need">
                     <span>Il te faut</span>
@@ -240,3 +256,13 @@
     </mat-dialog-actions>
   </div>
 </div>
+
+<!-- Les carrières du héros dont on a ouvert le menu, et « Aucune » pour retirer celle accordée -->
+<mat-menu #careerMenu="matMenu">
+  <ng-template matMenuContent let-hero="hero">
+    @for (c of hero.carrieres; track c.label) {
+      <button mat-menu-item type="button" (click)="setCareer(hero, c.label)">{{ c.label }} +{{ c.value }}</button>
+    }
+    <button mat-menu-item type="button" (click)="setCareer(hero, null)">Aucune</button>
+  </ng-template>
+</mat-menu>

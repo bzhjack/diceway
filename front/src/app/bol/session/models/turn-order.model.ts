@@ -28,3 +28,9 @@ export interface TurnOrderGroup {
   readonly entries: readonly TurnOrderEntry[];
   readonly blocked: boolean;
 }
+
+/** Un héros qui a retardé son action ce round et peut encore interrompre celle d'un autre (1 point d'héroïsme). */
+export interface TurnOrderInterrupter {
+  readonly key: string;
+  readonly nom: string;
+}

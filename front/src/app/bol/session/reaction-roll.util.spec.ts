@@ -95,6 +95,12 @@ describe('reactionSumTerms', () => {
     expect(reactionSumTerms(null, parts({esprit: -1}))[1]).toEqual({value: '−1', caption: 'esprit', tone: 'minus'});
   });
 
+  it('adds the rank of a useful career granted by the GM', () => {
+    const withCareer = parts({esprit: 1, initiative: 0, carriere: {label: 'Chasseur', value: 3}});
+    expect(reactionModifier(withCareer)).toBe(4);
+    expect(reactionSumTerms(null, withCareer).map((term) => `${term.value} ${term.caption}`)).toEqual(['2d6 dés', '+1 esprit', '+3 chasseur', '≥ 9 seuil']);
+  });
+
   it('shows the helmet malus apart from the initiative it lowers', () => {
     const terms = reactionSumTerms(null, parts({esprit: 0, initiative: 0, equipement: -1}));
     expect(terms.map((term) => `${term.value} ${term.caption}`)).toEqual(['2d6 dés', '+1 init.', '−1 équipement', '≥ 9 seuil']);

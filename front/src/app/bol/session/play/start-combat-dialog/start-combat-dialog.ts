@@ -17,6 +17,7 @@ import {
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {firstValueFrom, forkJoin, Observable, of, switchMap, take} from 'rxjs';
@@ -30,7 +31,8 @@ import {BolFightSessionService} from '../../../services/bol-fight-session.servic
 import {BolHerosService} from '../../../services/bol-heros.service';
 import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, chanceRingDash, parseDiceTotal} from '../../action-roll.util';
 import {applyHeroismeDelta} from '../../heroisme-spend.util';
-import {ActionDiceTargetLabel, RollSumTerm} from '../../models/action-roll.model';
+import {ActionDiceTargetLabel, ActionRollCarriere, RollSumTerm} from '../../models/action-roll.model';
+import {heroDetails} from '../tapis/tapis.util';
 import {CombatEffect} from '../../models/combat-effect.model';
 import {InitiativeKind} from '../../models/initiative.model';
 import {appliquerEvenement, effetSurpris, idAleatoire} from '../tapis/combat-effects.util';
@@ -58,6 +60,8 @@ interface HeroRow {
   readonly initiativeEquipement: number;
   /** Agilité du héros, sans le malus de son armure : elle n'entre pas dans le jet, elle départage les héros de même résultat. */
   readonly agilite: number;
+  /** Ses carrières de rang 1 ou plus : le MJ peut en accorder une, utile à la réaction. */
+  readonly carrieres: readonly ActionRollCarriere[];
 }
 
 /** La carte d'un héros, prête à afficher : ce qu'il lui faut aux dés, ses chances, son jet et son verdict. */
@@ -77,6 +81,8 @@ interface HeroCard {
   readonly sum: readonly RollSumTerm[];
   /** Option d'héroïsme ouverte par son jet : l'échec critique sur un double 1 (+1 point), le succès légendaire sur un double 6 (−1). */
   readonly option: 'critique' | 'legendaire' | null;
+  /** La carrière accordée pour ce jet, `null` sinon. */
+  readonly career: ActionRollCarriere | null;
   readonly optionChosen: boolean;
 }
 
@@ -104,7 +110,7 @@ const MAX_CARDS_PER_ROW = 6;
  */
 @Component({
   selector: 'bol-start-combat-dialog',
-  imports: [MatButtonModule, MatDialogModule, MatIconModule, MatTooltipModule, DiceBoxHostComponent, DwDiceRowComponent],
+  imports: [MatButtonModule, MatDialogModule, MatIconModule, MatMenuModule, MatTooltipModule, DiceBoxHostComponent, DwDiceRowComponent],
   templateUrl: './start-combat-dialog.html',
   styleUrl: './start-combat-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -137,6 +143,8 @@ export class StartCombatDialogComponent {
   private readonly diceTotalByPivot = signal<ReadonlyMap<number, number>>(new Map());
   /** Les faces des deux dés de chaque héros lancés à l'écran (clé pivotId) : elles s'affichent sous la case du total. */
   private readonly facesByPivot = signal<ReadonlyMap<number, readonly [number, number]>>(new Map());
+  /** La carrière utile que le MJ accorde à chaque héros pour ce jet (clé pivotId → nom de la carrière). */
+  private readonly careerByPivot = signal<ReadonlyMap<number, string>>(new Map());
 
   /** Les enregistrements des jets partent un par un, dans l'ordre : deux changements rapprochés du même héros n'arrivent jamais
    * inversés au serveur, et le combat ne démarre qu'une fois le dernier passé. */
@@ -192,6 +200,7 @@ export class StartCombatDialogComponent {
         sum: reactionSumTerms(dice, parts),
         option: dice === 2 ? 'critique' : legendary ? 'legendaire' : null,
         optionChosen,
+        career: parts.carriere ?? null,
       };
     }),
   );
@@ -235,15 +244,24 @@ export class StartCombatDialogComponent {
   constructor() {
     this.reload();
 
-    // Un modificateur de la rencontre (embuscade, initiative ennemie) change : les jets déjà faits sont recalculés avec leurs dés.
+    // Un modificateur change (embuscade, initiative ennemie, carrière accordée) : les jets déjà faits sont recalculés avec leurs dés.
     effect(() => {
       this.tableModifier();
+      this.careerByPivot();
       untracked(() => this.rescoreRolledHeroes());
     });
   }
 
   private partsFor(hero: HeroRow): ReactionParts {
-    return {esprit: hero.esprit, initiative: hero.initiative, equipement: hero.initiativeEquipement, embuscade: this.ambushModifier(), initiativeEnnemie: this.adversaryInitiativeMalus()};
+    const label = this.careerByPivot().get(hero.pivotId);
+    return {
+      esprit: hero.esprit,
+      initiative: hero.initiative,
+      equipement: hero.initiativeEquipement,
+      embuscade: this.ambushModifier(),
+      initiativeEnnemie: this.adversaryInitiativeMalus(),
+      carriere: hero.carrieres.find((c) => c.label === label) ?? null,
+    };
   }
 
   /** Recalcule le résultat des héros qui ont déjà lancé. Un double 1 ou un double 6 prime sur les modificateurs : leur résultat ne
@@ -300,6 +318,7 @@ export class StartCombatDialogComponent {
                   esprit: hero.attributs.esprit,
                   initiative: hero.combat.initiative_effective,
                   initiativeEquipement: hero.combat.initiative_effective - hero.combat.initiative,
+                  carrieres: heroDetails(hero).carrieres.filter((c) => c.value > 0),
                   agilite: hero.attributs.agilite,
                 };
               });
@@ -486,6 +505,19 @@ export class StartCombatDialogComponent {
     if (!this.rolling()) {
       void this.diceBox()?.clear();
     }
+  }
+
+  /** Le MJ accorde à un héros le rang d'une de ses carrières pour ce jet, ou le retire (`null`). */
+  protected setCareer(hero: HeroRow, label: string | null): void {
+    this.careerByPivot.update((map) => {
+      const next = new Map(map);
+      if (label === null) {
+        next.delete(hero.pivotId);
+      } else {
+        next.set(hero.pivotId, label);
+      }
+      return next;
+    });
   }
 
   /** Coche ou décoche l'option d'héroïsme d'un double 1 (échec critique : +1 point) ou d'un double 6 (succès légendaire : −1). */

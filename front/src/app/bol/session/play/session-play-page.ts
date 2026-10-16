@@ -59,8 +59,8 @@ import {AfterCombatDialogComponent} from './after-combat-dialog/after-combat-dia
 import {AfterCombatDialogData, AfterCombatGain, AfterCombatHealer} from '../models/after-combat-dialog.model';
 import {bestHealingCareer} from '../rescue.util';
 import {RescueDialogData, RescueResult} from '../models/rescue-dialog.model';
-import {AppliedHit, ResolvedCombatStats, VitaliteChange} from '../models/combat-attack.model';
-import {TurnOrderEntry} from '../models/turn-order.model';
+import {AppliedHit, HeroismeChange, ResolvedCombatStats, VitaliteChange} from '../models/combat-attack.model';
+import {TurnOrderEntry, TurnOrderInterrupter} from '../models/turn-order.model';
 import {TapisComponent} from './tapis/tapis';
 import {buildTapisCards, findCard, heroDetails, heroHeaderStats, keepDetailsOrder, REMOVE_ACTION_LABEL} from './tapis/tapis.util';
 import {TapisCard} from '../models/tapis.model';
@@ -156,10 +156,30 @@ export class SessionPlayPageComponent {
   /** Cartes retardées ce round : elles passent après tous les autres. Valable pour un seul round. */
   private readonly delayed = signal<{readonly round: number; readonly keys: readonly string[]}>({round: 0, keys: []});
 
+  /** Un héros qui a retardé son action l'interrompt (1 point d'héroïsme) : il passe devant tout le monde, ce round seulement. */
+  private readonly interrupting = signal<{readonly round: number; readonly key: string} | null>(null);
+
   private readonly orderedCards = computed(() => {
     const base = orderCards(this.cards(), this.board()?.tokens ?? [], null);
-    const delayedKeys = this.delayed().round === this.etat().round ? this.delayed().keys : [];
-    return [...base.filter((e) => !delayedKeys.includes(e.card.key)), ...delayedKeys.flatMap((k) => base.filter((e) => e.card.key === k))];
+    const round = this.etat().round;
+    const delayedKeys = this.delayed().round === round ? this.delayed().keys : [];
+    const ordered = [...base.filter((e) => !delayedKeys.includes(e.card.key)), ...delayedKeys.flatMap((k) => base.filter((e) => e.card.key === k))];
+    const first = this.interrupting()?.round === round ? this.interrupting()?.key : null;
+    // Ceux qui ont déjà joué restent « joués » : passer devant fait de lui la prochaine carte à jouer, avant la carte active.
+    return first ? [...ordered.filter((e) => e.card.key === first), ...ordered.filter((e) => e.card.key !== first)] : ordered;
+  });
+
+  /** Les héros qui ont retardé leur action ce round, n'ont pas encore joué et peuvent jouer : ils peuvent interrompre la carte active. */
+  protected readonly interrupters = computed<readonly TurnOrderInterrupter[]>(() => {
+    const round = this.etat().round;
+    if (this.mode() !== 'combat' || this.delayed().round !== round) {
+      return [];
+    }
+    const statuses = this.turn().statuses;
+    return this.delayed()
+      .keys.map((key) => this.cards().find((card) => card.key === key))
+      .filter((card): card is TapisCard => !!card && card.kind === 'hero' && statuses.get(card.key) === 'upcoming')
+      .map((card) => ({key: card.key, nom: card.nom}));
   });
 
   private readonly turn = computed(() => turnState(this.orderedCards(), this.etat()));
@@ -1044,6 +1064,37 @@ export class SessionPlayPageComponent {
       });
   }
 
+  /** « Interrompre une action » (02-actions-combat.md, « Retarder son action et interrompre ») : le héros qui a retardé la sienne dépense
+   * 1 point d'héroïsme et agit tout de suite, avant la carte active, qui reprendra la main après lui. */
+  protected onInterrupt(key: string): void {
+    const card = this.cards().find((c) => c.key === key);
+    const active = this.activeCard();
+    if (!card?.sourceId || !active) {
+      return;
+    }
+    this.herosService
+      .heros(card.sourceId)
+      .pipe(
+        switchMap((hero) => {
+          if (hero.ressources.heroisme <= 0) {
+            this.snackBar.open(`${card.nom} n'a plus de point d'héroïsme pour interrompre.`, undefined, {duration: 4000});
+            return EMPTY;
+          }
+          return this.herosService.adjustHeroisme(card.sourceId!, -1);
+        }),
+      )
+      .subscribe({
+        next: () => {
+          const round = this.etat().round;
+          this.interrupting.set({round, key});
+          this.delayed.update((d) => ({round: d.round, keys: d.keys.filter((k) => k !== key)}));
+          this.targetKey.set(null);
+          this.snackBar.open(`${card.nom} interrompt ${active.nom} et agit tout de suite (−1 PH).`, undefined, {duration: 4000});
+        },
+        error: (error: unknown) => this.tableError(error, "Impossible d'interrompre."),
+      });
+  }
+
   /** « Retarder » : la carte active joue en dernier ce round. */
   protected onDelay(): void {
     const active = this.activeCard();
@@ -1122,6 +1173,24 @@ export class SessionPlayPageComponent {
     this.herosService.adjustHeroisme(herosId, delta).subscribe({
       error: (error: unknown) => {
         shift(-delta);
+        this.tableError(error, "Impossible de mettre à jour l'héroïsme.");
+      },
+    });
+  }
+
+  /** La cible, un héros, dépense de l'héroïsme pour se défendre (parade in extremis, « Juste une égratignure ») : affiché tout de suite
+   * sur sa carte, enregistré, et repris si l'enregistrement échoue. */
+  protected onTargetHeroismeAdjusted(change: HeroismeChange): void {
+    const herosId = change.card.kind === 'hero' ? change.card.sourceId : null;
+    if (!herosId) {
+      return;
+    }
+    const shift = (by: number): void =>
+      this.targetStats.update((stats) => (stats?.herosId === herosId ? {...stats, heroisme: Math.max(0, (stats.heroisme ?? 0) + by)} : stats));
+    shift(change.delta);
+    this.herosService.adjustHeroisme(herosId, change.delta).subscribe({
+      error: (error: unknown) => {
+        shift(-change.delta);
         this.tableError(error, "Impossible de mettre à jour l'héroïsme.");
       },
     });

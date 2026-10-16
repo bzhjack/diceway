@@ -31,8 +31,8 @@ Chaque point donne la règle, ce que fait l'application aujourd'hui, une proposi
 | 5 | Fin du tour sans appliquer le coup | **Fait le 2026-10-15** | S | 1 |
 | 6 | Portée des armes à distance | **Fait le 2026-10-15** | M | 2 |
 | 7 | Modificateur libre, bonus de carrière, feinte | **Fait le 2026-10-15** | M | 2 |
-| 8 | Carrière utile au jet de réaction | Règle absente | S | 2 |
-| 9 | Héroïsme du défenseur, interrompre | Règle absente | M | 2 |
+| 8 | Carrière utile au jet de réaction | **Fait le 2026-10-16** | S | 2 |
+| 9 | Héroïsme du défenseur, interrompre | **Fait le 2026-10-16** | M | 2 |
 | 10 | Secourir un mourant, soins | **Fait le 2026-10-15** | M | 2 |
 | 11 | Bagarre à mains nues | **Fait le 2026-10-15** | M | 2 |
 | 12 | Avantages et pouvoirs des créatures et démons | En partie : dés d'attaque faits le 2026-10-15 | L | 3 |
@@ -215,6 +215,7 @@ Les lots sont un ordre proposé : d'abord corriger les calculs faux (lot 0), pui
 - **Aujourd'hui** : le dialogue « Démarrer le combat » gère l'embuscade et l'initiative ennemie, pas les carrières.
 - **Proposition** : sur la carte de chaque héros, un menu « + carrière » qui ajoute son rang au jet.
 - **Effort** : S.
+- **Fait le 2026-10-16** : sous le nom de chaque héros qui a une carrière de rang 1 ou plus, « + Carrière » ouvre la liste de ses carrières (et « Aucune ») ; celle retenue s'affiche en or (« Chasseur +3 ») et son rang entre dans le jet (« +3 chasseur »), ce qu'il faut aux dés et les chances. Un jet déjà fait est recalculé. La ligne garde sa place même sans carrière, pour que les cartes restent à la même hauteur.
 
 ### 9. Héroïsme du défenseur, interrompre
 
@@ -227,6 +228,12 @@ Les lots sont un ordre proposé : d'abord corriger les calculs faux (lot 0), pui
   - quand des dégâts sont sur le point d'être appliqués à un héros, deux boutons à côté de « Appliquer » : « Parade in extremis −1 » (dégâts à 0, arme ou bouclier marqué brisé) et « Juste une égratignure −1 » (1d6 rendu, plafonné, et l'effet « perd sa prochaine action » posé) ;
   - pour un héros qui a retardé, un bouton « Interrompre −1 » dans la frise, qui le rend actif tout de suite.
 - **Effort** : M.
+- **Fait le 2026-10-16** :
+  - « Parade in extremis −1 » à côté de « Appliquer », quand le coup touche un héros qui a encore de l'héroïsme : pas de dégâts ni d'effets d'options (un Carnage garde son attaque) ; la cible interpose son bouclier s'il en a un (effet « bouclier brisé », qui lui retire son bouclier pour tout le combat), sinon son arme (trace « arme brisée »).
+  - « Juste une égratignure −1 » après des dégâts appliqués à un héros : 1d6 lancé, la vitalité rendue plafonnée aux dégâts du coup, et l'effet « perd sa prochaine action » posé ; le rappel du coup le dit.
+  - « Interrompre : <héros> (−1 PH) » dans la barre de la frise, pour un héros qui a retardé et n'a pas encore joué : il passe devant et agit tout de suite ; la carte interrompue reprend la main après lui.
+  - Les PH dépensés par la cible sont ceux de son héros (affichés tout de suite, repris si l'enregistrement échoue).
+  - Limites : « perd sa prochaine action » est un rappel, le tour n'est pas sauté d'office ; la parade choisit le bouclier quand il y en a un (le MJ retire l'effet si le joueur sacrifie plutôt son arme).
 
 ### 10. Secourir un mourant, soins
 

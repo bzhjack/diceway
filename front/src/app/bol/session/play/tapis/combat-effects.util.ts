@@ -390,6 +390,19 @@ export function doitUnDeDeMalus(effets: readonly CombatEffect[], carte: string):
   return effets.some((effet) => effet.porteur === carte && effet.origine === DE_MALUS);
 }
 
+/** Parade in extremis (1 point d'héroïsme) : le bouclier ou l'arme interposé est brisé. Un bouclier brisé ne protège plus de tout le
+ * combat ; une arme brisée est une trace, que le MJ retire si besoin. */
+export function effetParade(porteur: string, bouclier: boolean): NewEffect {
+  return bouclier
+    ? {origine: SANS_BOUCLIER, libelle: 'bouclier brisé', porteur, stat: 'defense', valeur: 0, quand: 'subie', duree: {type: 'combat'}, manuel: true}
+    : {origine: 'arme-brisee', libelle: 'arme brisée', porteur, stat: 'action', valeur: 0, quand: 'subie', duree: {type: 'combat'}, manuel: true};
+}
+
+/** La carte perd sa prochaine action (« Juste une égratignure », ou posé à la main). */
+export function effetActionPerdue(porteur: string): NewEffect {
+  return {origine: 'egratignure', libelle: 'perd sa prochaine action', porteur, stat: 'action', valeur: -1, quand: 'attaque', duree: {type: 'action-porteur'}, manuel: true};
+}
+
 /** Les effets que le MJ ajoute à la main depuis le menu « + Effet ». */
 export const EFFETS_MODELES: readonly {readonly id: string; readonly libelle: string; readonly creer: (porteur: string) => NewEffect}[] = [
   {
@@ -410,6 +423,6 @@ export const EFFETS_MODELES: readonly {readonly id: string; readonly libelle: st
   {
     id: 'action-perdue',
     libelle: 'Perd sa prochaine action',
-    creer: (porteur) => ({origine: 'egratignure', libelle: 'perd sa prochaine action', porteur, stat: 'action', valeur: -1, quand: 'attaque', duree: {type: 'action-porteur'}, manuel: true}),
+    creer: effetActionPerdue,
   },
 ];

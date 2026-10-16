@@ -19,7 +19,7 @@ Principe : l'application assiste le MJ, elle ne le remplace pas. Elle calcule et
 
 ## 2. Le jet de réaction
 
-Formule : `2d6 + esprit + initiative`, réussite à 9 ou plus.
+Formule : `2d6 + esprit + initiative`, réussite à 9 ou plus. S'y ajoutent l'embuscade (+2, ou −1 si les héros sont surpris), l'initiative ennemie la plus haute (en malus) et, si le MJ l'accorde, le rang d'une carrière utile du héros (« + Carrière » sur sa carte).
 
 - Une carte par héros, triées par agilité brute décroissante. On tape le total des dés, ou « Lancer pour tous ».
 - Double 1 : case « échec critique » ; double 6 : case « légendaire » (−1 point d'héroïsme).
@@ -105,6 +105,8 @@ Les usages de l'héroïsme du jet d'action valent pour le jet d'attaque.
 | Touché | Succès héroïque −1 | Une option de succès héroïque. |
 | Double 6 | Succès légendaire −1 | Deux options au lieu d'une. |
 
+- **Côté défenseur** : un héros touché peut dépenser 1 PH pour une « Parade in extremis » (pas de dégâts ; son bouclier, ou son arme, est brisé), ou, une fois les dégâts appliqués, pour « Juste une égratignure » (1d6 rendu, sans dépasser les dégâts du coup, et il perd sa prochaine action).
+- **Interrompre** : un héros qui a retardé son action peut, pour 1 PH, agir tout de suite (bouton dans la barre de la frise).
 - **Double 6 de justesse** : si seul le double 6 pouvait toucher, le coup touche normalement, sans option gratuite ni légendaire. Il reste convertible en succès héroïque pour 1 point.
 - **Pas de légendaire depuis un succès héroïque acheté**, comme le veut le livre.
 - **Remboursement** : refaire le jet rend ce que les cases cochées avaient coûté ou rapporté. Changer de cible ou d'arme en cours de jet ne rend rien.
@@ -141,8 +143,6 @@ Le livre ne tranche pas ces points ; l'application a choisi, et le MJ peut corri
 
 ## 9. Pistes pour la suite
 
-- Côté défenseur : « Parade in extremis » (annuler les dégâts, bouclier ou arme brisé) et « Juste une égratignure » (1d6 de vitalité récupérée, prochaine action perdue).
-- « Interrompre une action » après avoir retardé la sienne.
 - Massacrer la piétaille : retirer les cartes depuis l'assistant.
 - Un script navigateur rejouable pour l'héroïsme en combat, à côté de `front/scripts/e2e-petit-bouclier.mjs`.
 - Hors périmètre à ce jour : journal complet des événements, annulation d'un coup, sorcellerie, guerre.

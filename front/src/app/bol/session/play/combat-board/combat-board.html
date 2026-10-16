@@ -11,6 +11,8 @@
     [legendaryActive]="legendaryActive()"
     [announcement]="announcement()"
     (gaveBack)="gaveBack.emit($event)"
+    [interrupters]="interrupters()"
+    (interruptRequested)="interruptRequested.emit($event)"
     (addRequested)="addRequested.emit()"
     (rerollRequested)="rerollRequested.emit()"
   />
@@ -46,6 +48,7 @@
           (endTurnRequested)="endTurnRequested.emit($event)"
           (heroismeAdjusted)="heroismeAdjusted.emit($event)"
           (vitaliteAdjusted)="vitaliteAdjusted.emit($event)"
+          (targetHeroismeAdjusted)="targetHeroismeAdjusted.emit($event)"
         />
       } @else {
         <p class="cb-nobody">Plus personne ne peut jouer.</p>

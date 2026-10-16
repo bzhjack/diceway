@@ -81,6 +81,8 @@
           [canRescue]="rescuePatients().length > 0"
           [carrieres]="activeCarrieres()"
           (gaveBack)="onGiveBackTurn($event)"
+          [interrupters]="interrupters()"
+          (interruptRequested)="onInterrupt($event)"
           (addRequested)="openAddCombatantDialog()"
           (delayRequested)="onDelay()"
           (rerollRequested)="openStartCombatDialog(true)"
@@ -96,6 +98,7 @@
           (rescueRequested)="onRescue()"
           (heroismeAdjusted)="onHeroismeAdjusted($event)"
           (vitaliteAdjusted)="onVitaliteAdjusted($event)"
+          (targetHeroismeAdjusted)="onTargetHeroismeAdjusted($event)"
         />
       }
     }

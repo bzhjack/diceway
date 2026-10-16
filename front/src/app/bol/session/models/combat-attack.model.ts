@@ -56,6 +56,16 @@ export interface AppliedHit {
   readonly damage: number;
   /** Porté à mains nues : ces dégâts se récupèrent en totalité après le combat. */
   readonly unarmed: boolean;
+  /** Paré in extremis par la cible (1 point d'héroïsme) : ce qu'elle a interposé, et qui est brisé. */
+  readonly parried?: 'bouclier' | 'arme';
+  /** « Juste une égratignure » (1 point d'héroïsme) : le d6 lancé, et la vitalité rendue (plafonnée aux dégâts du coup). */
+  readonly scratch?: {readonly die: number; readonly healed: number};
+}
+
+/** Des points d'héroïsme dépensés (négatif) ou gagnés par une carte qui n'est pas l'attaquant : la cible qui pare ou encaisse. */
+export interface HeroismeChange {
+  readonly card: TapisCard;
+  readonly delta: number;
 }
 
 /** Un facteur de portée d'une arme à distance (02-actions-combat.md, « Portée des armes à distance ») et son modificateur. */
