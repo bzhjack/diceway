@@ -228,7 +228,12 @@
 
   <!-- Le coup, en trois temps : qui, l'attaque, les dégâts. La case où il faut agir s'allume. -->
   <div class="tas-track">
-    <section [class]="'tas-station tas-station--' + stations()[0]" aria-label="Cible">
+    <!-- Une cible choisie : le liseré gauche prend la couleur de son camp, comme sur la carte « Qui attaque » -->
+    <section
+      [class]="'tas-station tas-station--' + stations()[0]"
+      [style.border-left]="targetSide() ? '4px solid ' + (targetSide()!.foe ? 'var(--dw-color-echec-forte)' : 'var(--dw-color-reussite)') : null"
+      aria-label="Cible"
+    >
       <!-- Comme sur la carte de l'attaquant, les actions sur la cible sont à droite du titre -->
       <div class="tas-card-head">
         <h3><span aria-hidden="true">1</span> Qui ?</h3>
@@ -250,7 +255,19 @@
             }
           </span>
           <strong class="tas-name">{{ t.nom }}</strong>
-          <span class="tas-tag">{{ t.rang ?? 'Héros' }} · cible</span>
+          @if (targetSide(); as s) {
+            <!-- De quel côté est la cible, comme sur la carte « Qui attaque » : vert pour un héros ou un allié, rouge pour un adversaire -->
+            <span
+              class="tas-side"
+              [style.--tas-side]="s.foe ? 'var(--dw-color-echec-forte)' : 'var(--dw-color-reussite)'"
+              [style.--tas-side-ink]="s.foe ? '#2a0505' : '#041a0d'"
+            >
+              <b class="tas-side-chip">{{ s.label }}</b>
+              @if (s.detail) {
+                <span class="tas-tag">{{ s.detail }}</span>
+              }
+            </span>
+          }
         </div>
         <div class="tas-tiles">
           @for (tile of targetTiles(); track tile.label) {

@@ -48,6 +48,45 @@
 }
 
 
+// Fin du combat : un camp n'a plus personne debout.
+.cb-outcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  padding: 0.8rem 1.1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--dw-color-reussite) 45%, transparent);
+  background: color-mix(in srgb, var(--dw-color-reussite) 12%, transparent);
+
+  div {
+    display: grid;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  b {
+    font: 400 1.6rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--dw-color-reussite);
+  }
+
+  span {
+    font-size: 0.88rem;
+    color: var(--dw-surface-700);
+  }
+}
+
+.cb-outcome--lost {
+  border-bottom-color: color-mix(in srgb, var(--dw-color-echec) 45%, transparent);
+  background: color-mix(in srgb, var(--dw-color-echec) 12%, transparent);
+
+  b {
+    color: var(--dw-color-echec);
+  }
+}
+
 .cb-nobody {
   margin: 0;
   padding: 1rem;

@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {bloqueeCeRound, bouclierPerduRound1, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, herosMourants, horsCombat, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
+import {bloqueeCeRound, bouclierPerduRound1, combatOutcome, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, herosMourants, horsCombat, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
 import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model';
 import {TurnOrderEntry} from '../../models/turn-order.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
@@ -493,5 +493,25 @@ describe('effetsDerives', () => {
 
   it('gives nothing after the first round', () => {
     expect(effetsDerives(order, 2)).toEqual([]);
+  });
+});
+
+describe('combatOutcome', () => {
+  const hero = card('hero', 1);
+  const pnj = card('pnj', 7, {vitaliteMax: 8, vitaliteCourante: 8});
+
+  it('goes on while both camps have someone standing', () => {
+    expect(combatOutcome([hero, pnj], [])).toBeNull();
+  });
+
+  it('is a victory once every opponent is out or removed from the fight', () => {
+    expect(combatOutcome([hero, card('pnj', 7, {vitaliteMax: 8, vitaliteCourante: 0})], [])).toBe('victoire');
+    expect(combatOutcome([hero, pnj], [pnj.key])).toBe('victoire');
+  });
+
+  it('is a defeat once every hero and ally is out', () => {
+    expect(combatOutcome([card('hero', 1, {vitaliteCourante: 0}), pnj], [])).toBe('defaite');
+    const ally = card('pnj', 9, {camp: 'heros', vitaliteMax: 6, vitaliteCourante: 6});
+    expect(combatOutcome([card('hero', 1, {vitaliteCourante: -2}), ally, pnj], [])).toBeNull();
   });
 });

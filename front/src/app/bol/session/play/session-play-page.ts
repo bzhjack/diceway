@@ -48,7 +48,7 @@ import {ExpandedCardDialogComponent} from './tapis/expanded-card-dialog';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {equippedArmes} from '../../shared/arme/arme-equipee';
 import {AttackChoice} from '../models/attack-options.model';
-import {bloqueeCeRound, debutDeTour, effetsDerives, endTurn, giveBackTurn, herosMourants, horsCombat, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
+import {bloqueeCeRound, combatOutcome, debutDeTour, effetsDerives, endTurn, giveBackTurn, herosMourants, horsCombat, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
 import {CombatEffect, NewEffect} from '../models/combat-effect.model';
 import {EtatSaver} from './etat-saver';
 import {aSombre, appliquerEvenement, degatsMainsNues, effetAssomme, effetDegatsMainsNues, effetInconscient, effetStabilise, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from './tapis/combat-effects.util';
@@ -168,6 +168,9 @@ export class SessionPlayPageComponent {
     // Ceux qui ont déjà joué restent « joués » : passer devant fait de lui la prochaine carte à jouer, avant la carte active.
     return first ? [...ordered.filter((e) => e.card.key === first), ...ordered.filter((e) => e.card.key !== first)] : ordered;
   });
+
+  /** Un camp n'a plus personne debout (hors de combat ou retiré du combat) : le combat est gagné ou perdu, le bandeau le dit. */
+  protected readonly combatOutcome = computed(() => (this.mode() === 'combat' ? combatOutcome(this.cards(), this.etat().exclus) : null));
 
   /** Les héros qui ont retardé leur action ce round, n'ont pas encore joué et peuvent jouer : ils peuvent interrompre la carte active. */
   protected readonly interrupters = computed<readonly TurnOrderInterrupter[]>(() => {

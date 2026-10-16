@@ -19,6 +19,16 @@
 
   <div class="cb-play">
     <section class="cb-assistant" aria-label="Assistant de tour">
+      @if (outcome(); as o) {
+        <!-- Un camp n'a plus personne debout : plus personne à viser en face, le combat est fini -->
+        <div class="cb-outcome" [class.cb-outcome--lost]="o === 'defaite'" role="status">
+          <div>
+            <b>{{ o === 'victoire' ? 'Victoire' : 'Défaite' }}</b>
+            <span>{{ o === 'victoire' ? 'Plus aucun adversaire ne tient debout.' : 'Plus aucun héros ni allié ne tient debout.' }} Il reste à secourir les mourants s'il y en a, puis à terminer le combat.</span>
+          </div>
+          <button mat-flat-button type="button" (click)="endCombatRequested.emit()">Terminer le combat</button>
+        </div>
+      }
       @if (activeCard(); as active) {
         <bol-turn-assistant
           [card]="active"

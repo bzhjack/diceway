@@ -474,9 +474,8 @@
     0 0 16px color-mix(in srgb, var(--dw-color-legendary) 25%, transparent);
 }
 
+// Une étape faite : seule sa pastille numérotée passe au vert, la bordure reste neutre.
 .tas-station--done {
-  border-color: color-mix(in srgb, var(--dw-color-reussite) 55%, #000);
-
   h3 span {
     background: var(--dw-color-reussite);
     color: #04210f;

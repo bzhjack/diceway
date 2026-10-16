@@ -111,6 +111,15 @@ function signedTerm(value: number): string {
   return `${value > 0 ? '+' : '−'}${Math.abs(value)}`;
 }
 
+/** De quel côté est une carte, en clair : « Héros », « Allié » ou « Adversaire », puis ce qu'elle est (« PNJ · Coriace ») pour tout ce
+ * qui n'est pas un héros. */
+function sideOf(card: TapisCard): {readonly foe: boolean; readonly label: string; readonly detail: string} {
+  const foe = card.camp !== 'heros';
+  const label = foe ? 'Adversaire' : card.kind === 'hero' ? 'Héros' : 'Allié';
+  const detail = card.kind === 'hero' ? (foe ? 'Héros' : '') : [KIND_LABELS[card.kind], card.rang].filter(Boolean).join(' · ');
+  return {foe, label, detail};
+}
+
 /** Un modificateur hors registre (modificateur libre, carrière) en terme d'addition : « + 2 Voleur ». */
 function extraTerm(valeur: number, nom: string): ModifierTerm {
   return {effetId: null, label: `${valeur > 0 ? '+' : '−'} ${Math.abs(valeur)} ${nom}`, valeur, tone: valeur > 0 ? 'plus' : 'minus'};
@@ -191,12 +200,11 @@ export class TurnAssistantComponent {
 
   /** De quel côté est la carte qui attaque, dit en gros sur sa carte : « Héros », « Allié » ou « Adversaire », puis ce qu'elle est
    * (« PNJ · Coriace », « Créature · Rival »…) pour tout ce qui n'est pas un héros. */
-  protected readonly side = computed(() => {
-    const card = this.card();
-    const foe = card.camp !== 'heros';
-    const label = foe ? 'Adversaire' : card.kind === 'hero' ? 'Héros' : 'Allié';
-    const detail = card.kind === 'hero' ? (foe ? 'Héros' : '') : [KIND_LABELS[card.kind], card.rang].filter(Boolean).join(' · ');
-    return {foe, label, detail};
+  protected readonly side = computed(() => sideOf(this.card()));
+  /** La même pastille pour la cible, sur la carte « Qui ? ». */
+  protected readonly targetSide = computed(() => {
+    const target = this.target();
+    return target ? sideOf(target) : null;
   });
 
   protected readonly heroicOptions = HEROIC_OPTIONS;
@@ -968,19 +976,27 @@ export class TurnAssistantComponent {
     return {current, max: target?.vitaliteMax ?? null, after, loss: after === null || current === null ? 0 : current - after, out: after !== null && after <= 0};
   });
 
-  /** Où en sont les trois cases — qui, l'attaque, les dégâts : celle où il faut agir s'allume. Après des dégâts appliqués, l'attaque
-   * se rallume (une nouvelle attaque est possible) et les dégâts gardent le rappel du coup. */
+  /** Où en sont les trois cases — qui, l'attaque, les dégâts : celle où il faut agir s'allume. Quand il ne reste qu'à finir le tour, c'est
+   * la case des dégâts, qui porte « Fin du tour » ; après des dégâts appliqués, une nouvelle attaque reste possible dans la case 2. */
   protected readonly stations = computed<readonly [StationState, StationState, StationState]>(() => {
     const aimed = this.target() !== null;
     const rolled = this.attackVerdict() !== null;
-    return [aimed ? 'done' : 'cur', !aimed ? 'todo' : rolled ? 'done' : 'cur', this.hasDamageStep() ? 'cur' : rolled || this.lastHit() ? 'done' : 'todo'];
+    // « Fin du tour » est dans la case des dégâts (coup raté, désarmement, dégâts appliqués sans Carnage à suivre) : elle reste allumée.
+    const endsHere = aimed && ((rolled && !this.hasDamageStep()) || (!rolled && this.lastHit() !== null && this.carnageOwed() === 0));
+    return [
+      aimed ? 'done' : 'cur',
+      !aimed ? 'todo' : rolled || endsHere ? 'done' : 'cur',
+      this.hasDamageStep() || endsHere ? 'cur' : rolled || this.lastHit() ? 'done' : 'todo',
+    ];
   });
 
   /** Ce qu'il y a à faire maintenant, en une phrase ; `step` est le numéro de la case concernée, vide quand il ne reste qu'à conclure. */
   protected readonly nextStep = computed<{readonly step: string; readonly text: string}>(() => {
     const target = this.target();
     if (!target) {
-      return {step: '1', text: `Choisis qui ${this.card().nom} attaque.`};
+      return this.targets().length === 0
+        ? {step: '', text: 'Plus personne à viser en face : le combat peut se terminer.'}
+        : {step: '1', text: `Choisis qui ${this.card().nom} attaque.`};
     }
     const verdict = this.attackVerdict();
     if (!verdict && this.favor()) {

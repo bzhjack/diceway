@@ -93,6 +93,16 @@ export function isOut(card: TapisCard): boolean {
   return horsCombat(card) !== null;
 }
 
+/** L'issue du combat, dès qu'un camp n'a plus personne debout (hors de combat ou retiré du combat) : plus personne en face à viser.
+ * `victoire` si ce sont les adversaires, `defaite` si ce sont les héros et leurs alliés ; `null` tant que les deux camps tiennent. */
+export function combatOutcome(cards: readonly TapisCard[], exclus: readonly string[]): 'victoire' | 'defaite' | null {
+  const standing = (camp: TapisCard['camp']): boolean => cards.some((card) => card.camp === camp && !exclus.includes(card.key) && !isOut(card));
+  if (!standing('adversaires')) {
+    return 'victoire';
+  }
+  return standing('heros') ? null : 'defaite';
+}
+
 /** Pourquoi une carte est hors combat, en clair : un héros est inconscient à 0 (assommé, si c'est une bagarre), mourant de −1 à −5,
  * mort à −6 ou moins — stabilisé sous 0 s'il porte l'effet ; un PNJ, une créature ou un démon est hors de combat dès 0. `null` pour une carte qui joue. */
 export function horsCombat(card: TapisCard, effets: readonly CombatEffect[] = []): 'inconscient' | 'assommé' | 'mourant' | 'stabilisé' | 'mort' | 'hors de combat' | null {
