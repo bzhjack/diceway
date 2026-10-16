@@ -981,11 +981,12 @@ export class TurnAssistantComponent {
   protected readonly stations = computed<readonly [StationState, StationState, StationState]>(() => {
     const aimed = this.target() !== null;
     const rolled = this.attackVerdict() !== null;
-    // « Fin du tour » est dans la case des dégâts (coup raté, désarmement, dégâts appliqués sans Carnage à suivre) : elle reste allumée.
-    const endsHere = aimed && ((rolled && !this.hasDamageStep()) || (!rolled && this.lastHit() !== null && this.carnageOwed() === 0));
+    // « Fin du tour » est dans la case des dégâts (coup raté, désarmement, dégâts appliqués sans Carnage à suivre) : elle reste allumée,
+    // même quand la cible, tombée sous le coup, n'est plus à viser.
+    const endsHere = (aimed && rolled && !this.hasDamageStep()) || (!rolled && this.lastHit() !== null && this.carnageOwed() === 0);
     return [
-      aimed ? 'done' : 'cur',
-      !aimed ? 'todo' : rolled || endsHere ? 'done' : 'cur',
+      aimed || endsHere ? 'done' : 'cur',
+      endsHere || (aimed && rolled) ? 'done' : aimed ? 'cur' : 'todo',
       this.hasDamageStep() || endsHere ? 'cur' : rolled || this.lastHit() ? 'done' : 'todo',
     ];
   });
@@ -993,6 +994,10 @@ export class TurnAssistantComponent {
   /** Ce qu'il y a à faire maintenant, en une phrase ; `step` est le numéro de la case concernée, vide quand il ne reste qu'à conclure. */
   protected readonly nextStep = computed<{readonly step: string; readonly text: string}>(() => {
     const target = this.target();
+    // Les dégâts sont appliqués et rien ne suit : il ne reste qu'à finir le tour, même si la cible est tombée.
+    if (!target && this.lastHit() && this.carnageOwed() === 0) {
+      return {step: '', text: `${this.lastHit()?.parried ? 'Coup paré' : 'Dégâts appliqués'}. Il ne reste qu’à finir le tour.`};
+    }
     if (!target) {
       return this.targets().length === 0
         ? {step: '', text: 'Plus personne à viser en face : le combat peut se terminer.'}
