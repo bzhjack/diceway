@@ -21,7 +21,7 @@
       <mat-icon>search</mat-icon>
     </button>
     @if (mode() === 'libre') {
-      <button mat-flat-button type="button" aria-controls="spp-coulisses-panel" [attr.aria-expanded]="coulissesOpen()" (click)="coulissesToggled.emit()">
+      <button matButton="outlined" type="button" aria-controls="spp-coulisses-panel" [attr.aria-expanded]="coulissesOpen()" (click)="coulissesToggled.emit()">
         <mat-icon>theater_comedy</mat-icon> Coulisses
       </button>
       <button mat-flat-button type="button" (click)="startCombat.emit()"><mat-icon svgIcon="sword" /> Démarrer un combat</button>
