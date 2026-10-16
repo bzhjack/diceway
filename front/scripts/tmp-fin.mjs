@@ -1,0 +1,56 @@
+import {chromium} from 'playwright';
+const base = 'http://localhost:4400';
+const shots = process.argv[2];
+const browser = await chromium.launch({args: ['--no-sandbox']});
+const page = await (await browser.newContext({viewport: {width: 1700, height: 1000}})).newPage();
+const clean = (t) => t.replace(/\s+/g, ' ').trim();
+const log = (...a) => console.log(...a);
+await page.goto(base + '/login', {waitUntil: 'domcontentloaded'});
+const ctx = await page.evaluate(async () => {
+  const json = (r) => r.json();
+  const login = await fetch('/api/auth/login', {method: 'POST', headers: {'Content-Type': 'application/json', Accept: 'application/json'}, body: JSON.stringify({email: 'claude-test@example.com', password: 'ClaudeTest123!'})}).then(json);
+  const token = login.token ?? login.access_token;
+  sessionStorage.setItem('diceway-session', JSON.stringify({token, user: login.user ?? login}));
+  const headers = {'Content-Type': 'application/json', Accept: 'application/json', Authorization: 'Bearer ' + token};
+  const session = await fetch('/api/bol/fight-session/create', {method: 'POST', headers, body: JSON.stringify({titre: 'TMP fin', heros: [{heroId: '992027bc-738b-471e-8170-f6536febe2e4', camp: 'heros'}]})}).then(json);
+  await fetch(`/api/bol/fight-session/${session.id}/combatant`, {method: 'POST', headers, body: JSON.stringify({kind: 'pnj', sourceId: '2', camp: 'adversaires', qty: 1})});
+  const full = await fetch(`/api/bol/fight-session/${session.id}`, {headers}).then(json);
+  await fetch(`/api/bol/fight-session/${session.id}/combatant/pnj/${full.pnjs[0].id}/damage`, {method: 'PATCH', headers, body: JSON.stringify({delta: -6})});
+  return {token, id: session.id};
+});
+const dialogs = () => page.locator('mat-dialog-container').count();
+try {
+  await page.goto(`${base}/session/${ctx.id}/play`, {waitUntil: 'networkidle'});
+  await page.getByRole('button', {name: /Démarrer un combat/}).click();
+  await page.waitForTimeout(1500);
+  await page.locator('.scd-total').first().fill('10');
+  await page.getByRole('button', {name: /Commencer le combat/}).click();
+  await page.waitForTimeout(2500);
+  log('boîtes avant le coup', await dialogs());
+  await page.locator('.tas-chip', {hasText: 'Épée'}).first().click();
+  await page.locator('.tas-target').first().click();
+  await page.waitForSelector('.tas-total');
+  await page.locator('.tas-total').first().fill('11');
+  await page.waitForTimeout(1200);
+  await page.getByLabel(/Dé de dégâts lancé à table/).fill('6');
+  await page.waitForTimeout(600);
+  await page.locator('.tas-apply', {hasText: 'Appliquer'}).click();
+  await page.waitForTimeout(2500);
+  log('boîte', clean(await page.locator('mat-dialog-container').innerText()));
+  await page.locator('mat-dialog-container').screenshot({path: `${shots}/victoire-boite.png`});
+  await page.locator('mat-dialog-container').getByRole('button', {name: 'Continuer'}).click();
+  await page.waitForTimeout(1000);
+  await page.locator('.tas-card--who .tas-ghost--primary').click();
+  await page.waitForTimeout(2500);
+  log('après Continuer et une fin de tour, boîtes ouvertes', await dialogs());
+  await page.reload({waitUntil: 'networkidle'});
+  await page.waitForTimeout(2500);
+  log('après rechargement', clean(await page.locator('mat-dialog-container h2').innerText()));
+  await page.locator('mat-dialog-container').getByRole('button', {name: 'Terminer le combat'}).click();
+  await page.waitForTimeout(1500);
+  log('ensuite', clean(await page.locator('mat-dialog-container h2').innerText()));
+  await page.keyboard.press('Escape');
+} finally {
+  await page.evaluate(async ({id, token}) => fetch(`/api/bol/fight-session/delete/${id}`, {method: 'DELETE', headers: {Accept: 'application/json', Authorization: 'Bearer ' + token}}), ctx);
+  await browser.close();
+}

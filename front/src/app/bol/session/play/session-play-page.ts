@@ -52,9 +52,11 @@ import {bloqueeCeRound, combatOutcome, debutDeTour, effetsDerives, endTurn, give
 import {CombatEffect, NewEffect} from '../models/combat-effect.model';
 import {EtatSaver} from './etat-saver';
 import {aSombre, appliquerEvenement, degatsMainsNues, effetAssomme, effetDegatsMainsNues, effetInconscient, effetStabilise, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from './tapis/combat-effects.util';
-import {EtatCombat} from '../models/combat-turn.model';
+import {CombatOutcome, EtatCombat} from '../models/combat-turn.model';
 import {CombatBoardComponent} from './combat-board/combat-board';
 import {RescueDialogComponent} from './rescue-dialog/rescue-dialog';
+import {CombatOutcomeDialogComponent} from './combat-outcome-dialog/combat-outcome-dialog';
+import {CombatOutcomeDialogData} from '../models/combat-outcome-dialog.model';
 import {AfterCombatDialogComponent} from './after-combat-dialog/after-combat-dialog';
 import {AfterCombatDialogData, AfterCombatGain, AfterCombatHealer} from '../models/after-combat-dialog.model';
 import {bestHealingCareer} from '../rescue.util';
@@ -169,8 +171,10 @@ export class SessionPlayPageComponent {
     return first ? [...ordered.filter((e) => e.card.key === first), ...ordered.filter((e) => e.card.key !== first)] : ordered;
   });
 
-  /** Un camp n'a plus personne debout (hors de combat ou retiré du combat) : le combat est gagné ou perdu, le bandeau le dit. */
-  protected readonly combatOutcome = computed(() => (this.mode() === 'combat' ? combatOutcome(this.cards(), this.etat().exclus) : null));
+  /** Un camp n'a plus personne debout (hors de combat ou retiré du combat) : le combat est gagné ou perdu, une boîte l'annonce. */
+  private readonly combatOutcome = computed(() => (this.mode() === 'combat' ? combatOutcome(this.cards(), this.etat().exclus) : null));
+  /** La dernière issue annoncée : la boîte ne revient que si l'issue change (un héros relevé, puis retombé…). */
+  private lastOutcome: CombatOutcome | null = null;
 
   /** Les héros qui ont retardé leur action ce round, n'ont pas encore joué et peuvent jouer : ils peuvent interrompre la carte active. */
   protected readonly interrupters = computed<readonly TurnOrderInterrupter[]>(() => {
@@ -320,6 +324,18 @@ export class SessionPlayPageComponent {
         if (round !== null && previous !== null && round > previous) {
           this.askUnconsciousHeroes();
           this.bleedDyingHeroes();
+        }
+      });
+    });
+
+    // Un camp vient de tomber : la boîte de fin de combat s'ouvre, une fois par issue.
+    effect(() => {
+      const outcome = this.combatOutcome();
+      untracked(() => {
+        const previous = this.lastOutcome;
+        this.lastOutcome = outcome;
+        if (outcome && outcome !== previous) {
+          this.announceOutcome(outcome);
         }
       });
     });
@@ -1096,6 +1112,33 @@ export class SessionPlayPageComponent {
         },
         error: (error: unknown) => this.tableError(error, "Impossible d'interrompre."),
       });
+  }
+
+  /** La boîte de fin de combat : « Terminer le combat » ouvre « Après combat », « Continuer » laisse le temps de secourir un mourant. Si
+   * une autre boîte est ouverte (« Défier la mort »…), elle attend qu'elle se ferme, et ne s'ouvre que si l'issue tient toujours. */
+  private announceOutcome(outcome: CombatOutcome): void {
+    const open = (): void => {
+      if (this.combatOutcome() !== outcome) {
+        return;
+      }
+      const effets = this.etat().effets;
+      const mourants = this.cards()
+        .filter((card) => card.camp === 'heros' && horsCombat(card, effets) === 'mourant')
+        .map((card) => card.nom);
+      this.dialog
+        .open<CombatOutcomeDialogComponent, CombatOutcomeDialogData, boolean>(CombatOutcomeDialogComponent, {width: '440px', data: {outcome, mourants}})
+        .afterClosed()
+        .subscribe((end) => {
+          if (end) {
+            this.askEndCombat();
+          }
+        });
+    };
+    if (this.dialog.openDialogs.length > 0) {
+      this.dialog.afterAllClosed.pipe(take(1)).subscribe(open);
+    } else {
+      open();
+    }
   }
 
   /** « Retarder » : la carte active joue en dernier ce round. */
