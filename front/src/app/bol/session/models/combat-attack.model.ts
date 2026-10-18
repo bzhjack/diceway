@@ -56,8 +56,11 @@ export interface AppliedHit {
   readonly damage: number;
   /** Porté à mains nues : ces dégâts se récupèrent en totalité après le combat. */
   readonly unarmed: boolean;
-  /** Paré in extremis par la cible (1 point d'héroïsme) : ce qu'elle a interposé, et qui est brisé. */
-  readonly parried?: 'bouclier' | 'arme';
+  /** Paré in extremis par la cible (1 point d'héroïsme ou de vilénie) : ce qu'elle a interposé, et qui est brisé ; `sbire` pour le
+   * « bouclier humain » d'un rival, dont le sbire encaisse le coup. */
+  readonly parried?: 'bouclier' | 'arme' | 'sbire';
+  /** Le sbire qui a servi de bouclier humain. */
+  readonly sbire?: string;
   /** « Juste une égratignure » (1 point d'héroïsme) : le d6 lancé, et la vitalité rendue (plafonnée aux dégâts du coup). */
   readonly scratch?: {readonly die: number; readonly healed: number};
 }

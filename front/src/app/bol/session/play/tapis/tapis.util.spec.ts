@@ -63,6 +63,13 @@ describe('buildTapisCards', () => {
     expect(buildTapisCards(session()).map((c) => c.key)).toEqual(['hero-1', 'pnj-7', 'creature-3', 'demon-9']);
   });
 
+  it('donne sa vilénie à la carte d’un PNJ rival, rien aux autres', () => {
+    const s = session({pnjs: [{...PNJ, rang: 'rival', vilenie_courante: 5}] as BolFightSessionModel['pnjs']});
+    expect(card('pnj-7', s).vilenie).toBe(5);
+    expect(card('creature-3', s).vilenie).toBeNull();
+    expect(card('hero-1', s).vilenie).toBeNull();
+  });
+
   it("donne l'attitude des PNJ, créatures et démons", () => {
     const s = session({pnjs: [{...PNJ, attitude: 'amical'}] as BolFightSessionModel['pnjs']});
     expect(card('pnj-7', s).attitude).toBe('amical');

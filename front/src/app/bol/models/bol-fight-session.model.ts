@@ -173,6 +173,8 @@ interface BolFightSessionPnjModel {
   initiative: number;
   vitalite_max: number;
   vitalite_courante: number;
+  /** Points de vilénie d'un rival (04-pnj-creatures-demons.md) — null pour un coriace ou une piétaille, absent des lignes posées avant. */
+  vilenie_courante?: number | null;
   armes: BolFightSessionArmeModel[] | null;
   pnj?: {origines: {avatar: string | null}};
 }

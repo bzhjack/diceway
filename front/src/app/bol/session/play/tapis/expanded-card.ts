@@ -20,6 +20,7 @@ import {EMPTY_AVATAR} from '../../combat-play.util';
 import {combatantKindIcon, combatantKindIconIsSvg} from '../../combat-statblock.util';
 import {ActionRollPanelComponent} from '../action-roll-panel/action-roll-panel';
 import {HeroResourcesComponent} from '../hero-resources/hero-resources';
+import {CardVilenieComponent} from './card-vilenie';
 import {CardVitaliteComponent} from './card-vitalite';
 import {heroIdentityLine, REMOVE_ACTION_LABEL} from './tapis.util';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
@@ -48,6 +49,7 @@ const KIND_LABELS: Record<TapisKind, string> = {
     ActionRollPanelComponent,
     HeroResourcesComponent,
     CardVitaliteComponent,
+    CardVilenieComponent,
     BolStatblockComponent,
     AttitudePickerComponent,
   ],

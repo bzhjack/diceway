@@ -36,7 +36,7 @@
         </span>
         @if (heroisme() !== null) {
           @let points = heroisme() ?? 0;
-          <span class="tas-ph" [matTooltip]="points + (points > 1 ? ' points d’héroïsme' : ' point d’héroïsme')"><span class="tas-gem" aria-hidden="true"></span> {{ points }}<span class="tas-sr"> {{ points > 1 ? 'points' : 'point' }} d’héroïsme</span></span>
+          <span class="tas-ph" [matTooltip]="pointsAttaquant()"><span class="tas-gem" aria-hidden="true"></span> {{ points }}<span class="tas-sr"> {{ pointsAttaquant() }}</span></span>
         }
       </div>
       <div class="tas-tiles tas-tiles--start">
@@ -400,7 +400,7 @@
         <div class="tas-acts">
           @if (!rolling()) {
             @if (canFavor()) {
-              <button type="button" class="tas-act" matTooltipPosition="above" matTooltip="Relance tous les dés d’attaque et garde le second résultat" aria-label="Faveur divine : relancer les dés pour 1 point d’héroïsme" (click)="divineFavor()">
+              <button type="button" class="tas-act" matTooltipPosition="above" matTooltip="Relance tous les dés d’attaque et garde le second résultat" [attr.aria-label]="'Faveur divine : relancer les dés pour ' + unPointAttaquant()" (click)="divineFavor()">
                 <mat-icon aria-hidden="true">replay</mat-icon> Faveur divine <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
               </button>
             }
@@ -410,12 +410,12 @@
               </button>
             }
             @if (canLegendary()) {
-              <button type="button" class="tas-act" [attr.aria-pressed]="legendary()" matTooltipPosition="above" matTooltip="Deux options de succès héroïque au lieu d’une" aria-label="Succès légendaire, pour 1 point d’héroïsme" (click)="toggleLegendary()">
+              <button type="button" class="tas-act" [attr.aria-pressed]="legendary()" matTooltipPosition="above" matTooltip="Deux options de succès héroïque au lieu d’une" [attr.aria-label]="'Succès légendaire, pour ' + unPointAttaquant()" (click)="toggleLegendary()">
                 <mat-icon aria-hidden="true">{{ legendary() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Succès légendaire <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
               </button>
             }
             @if (canUpgrade()) {
-              <button type="button" class="tas-act" [attr.aria-pressed]="heroicUpgrade()" matTooltipPosition="above" matTooltip="Le coup devient un succès héroïque : une option au choix" aria-label="Convertir en succès héroïque, pour 1 point d’héroïsme" (click)="toggleHeroicUpgrade()">
+              <button type="button" class="tas-act" [attr.aria-pressed]="heroicUpgrade()" matTooltipPosition="above" matTooltip="Le coup devient un succès héroïque : une option au choix" [attr.aria-label]="'Convertir en succès héroïque, pour ' + unPointAttaquant()" (click)="toggleHeroicUpgrade()">
                 <mat-icon aria-hidden="true">{{ heroicUpgrade() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Succès héroïque <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
               </button>
             }
@@ -526,11 +526,22 @@
           <button
             type="button"
             class="tas-act"
-            matTooltip="1 point d'héroïsme de la cible : elle interpose son bouclier ou son arme, qui est brisé, et ne subit pas de dégâts"
-            [attr.aria-label]="'Parade in extremis de ' + target()?.nom + ', pour 1 point d’héroïsme'"
+            [matTooltip]="unPointCible() + ' de la cible : elle interpose son bouclier ou son arme, qui est brisé, et ne subit pas de dégâts'"
+            [attr.aria-label]="'Parade in extremis de ' + target()?.nom + ', pour ' + unPointCible()"
             (click)="parry()"
           >
             <mat-icon aria-hidden="true">shield</mat-icon> Parade in extremis <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
+          </button>
+        }
+        @if (canHumanShield()) {
+          <button
+            type="button"
+            class="tas-act"
+            [matTooltip]="unPointCible() + ' : ' + sbire()?.nom + ' s’interpose et encaisse le coup à la place de ' + target()?.nom"
+            [attr.aria-label]="'Bouclier humain : ' + sbire()?.nom + ' encaisse le coup à la place de ' + target()?.nom + ', pour ' + unPointCible()"
+            (click)="humanShield()"
+          >
+            <mat-icon aria-hidden="true">groups</mat-icon> Bouclier humain <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>
           </button>
         }
       } @else if (attackVerdict(); as v) {
@@ -555,8 +566,8 @@
             type="button"
             class="tas-act"
             [disabled]="rolling()"
-            matTooltip="1 point d'héroïsme de la cible : 1d6 de vitalité rendu, sans dépasser les dégâts du coup, et elle perd sa prochaine action"
-            [attr.aria-label]="'Juste une égratignure pour ' + target()?.nom + ', pour 1 point d’héroïsme'"
+            [matTooltip]="unPointCible() + ' de la cible : 1d6 de vitalité rendu, sans dépasser les dégâts du coup, et elle perd sa prochaine action'"
+            [attr.aria-label]="'Juste une égratignure pour ' + target()?.nom + ', pour ' + unPointCible()"
             (click)="scratch()"
           >
             <mat-icon aria-hidden="true">healing</mat-icon> Juste une égratignure <span class="tas-cost">−1 <span class="tas-gem" aria-hidden="true"></span></span>

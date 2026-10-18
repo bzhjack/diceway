@@ -14,7 +14,7 @@ class BolFightSessionPnj extends Model
         'fight_session_id', 'pnj_id', 'camp', 'attitude', 'surnom', 'rang', 'nom',
         'vigueur', 'agilite', 'esprit', 'aura',
         'melee', 'tir', 'defense', 'initiative',
-        'vitalite_max', 'vitalite_courante',
+        'vitalite_max', 'vitalite_courante', 'vilenie_courante',
         'armes',
     ];
 
@@ -29,6 +29,7 @@ class BolFightSessionPnj extends Model
         'defense'           => 'integer',
         'vitalite_max'      => 'integer',
         'vitalite_courante' => 'integer',
+        'vilenie_courante'  => 'integer',
         'armes'             => 'array',
     ];
 

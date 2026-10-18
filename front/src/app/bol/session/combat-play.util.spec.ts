@@ -1,5 +1,6 @@
 import {describe, expect, it} from 'vitest';
-import {attackDiceAbilities, demonDegats, demonProtection, postCombatRecoveryAmount} from './combat-play.util';
+import {BolFightSessionModel} from '../models/bol-fight-session.model';
+import {attackDiceAbilities, buildPlayBoard, demonDegats, demonProtection, postCombatRecoveryAmount} from './combat-play.util';
 
 describe('postCombatRecoveryAmount', () => {
   it('recovers half the vitality lost, rounded up, when above 0 (02-actions-combat.md, "Récupération")', () => {
@@ -63,5 +64,17 @@ describe('attackDiceAbilities', () => {
     expect(attackDiceAbilities(['Attaque féroce', 'Prédateur', 'Camouflage'])).toEqual({attaqueAvantages: ['Attaque féroce'], attaqueDesavantages: []});
     expect(attackDiceAbilities(['Armes améliorées', 'Armure'])).toEqual({attaqueAvantages: ['Armes améliorées'], attaqueDesavantages: []});
     expect(attackDiceAbilities(['Attaque timide', null, 'Déficience'])).toEqual({attaqueAvantages: [], attaqueDesavantages: ['Attaque timide']});
+  });
+});
+
+describe('buildPlayBoard', () => {
+  it('donne sa vilénie au jeton d’un PNJ rival, rien à un coriace', () => {
+    const pnj = (id: number, rang: string, vilenie: number | null) => ({
+      id, fight_session_id: 's', pnj_id: String(id), camp: 'adversaires', surnom: null, rang, nom: `PNJ ${id}`, vigueur: 0, agilite: 0, esprit: 0,
+      aura: 0, melee: 0, tir: 0, defense: 0, initiative: 0, vitalite_max: 10, vitalite_courante: 10, vilenie_courante: vilenie, armes: [],
+    });
+    const board = buildPlayBoard({id: 's', titre: null, statut: 'combat', pnjs: [pnj(1, 'rival', 5), pnj(2, 'coriace', null)]} as unknown as BolFightSessionModel);
+    expect(board.tokens.find((t) => t.key === 'pnj-1')?.combat.vilenie).toBe(5);
+    expect(board.tokens.find((t) => t.key === 'pnj-2')?.combat.vilenie).toBeNull();
   });
 });

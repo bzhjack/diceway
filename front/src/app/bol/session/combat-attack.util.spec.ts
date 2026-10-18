@@ -2,7 +2,8 @@ import {describe, expect, it} from 'vitest';
 import {firstValueFrom, of} from 'rxjs';
 import {BolHerosModel} from '../models/bol-heros.model';
 import {BolHerosService} from '../services/bol-heros.service';
-import {dualStrikeDegats, equippedProtection, isDualWieldEligible, resolveAttackStats} from './combat-attack.util';
+import {dualStrikeDegats, equippedProtection, isDualWieldEligible, libellePoints, nomDesPoints, resolveAttackStats, sbireBouclier} from './combat-attack.util';
+import {TapisCard} from './models/tapis.model';
 import {PlayToken} from './models/combat-play.model';
 
 describe('isDualWieldEligible', () => {
@@ -98,10 +99,47 @@ describe('resolveAttackStats — un PNJ porte tout ce qu’il possède', () => {
     expect(stats.protectionText).toBe('d6-2(2)');
   });
 
+  it('se sert de sa vilénie de rival comme de points d’héroïsme', async () => {
+    const rival = {...token, combat: {...token.combat, vilenie: 5}} as unknown as PlayToken;
+    expect((await firstValueFrom(resolveAttackStats(rival, service))).heroisme).toBe(5);
+    expect((await firstValueFrom(resolveAttackStats(token, service))).heroisme).toBeNull();
+  });
+
   it('takes its agility and defence with all its equipment, and its shield', async () => {
     const stats = await firstValueFrom(resolveAttackStats(token, service));
     expect(stats.agilite).toBe(0);
     expect(stats.defense).toBe(1);
     expect(stats.bouclierMalusUneAttaque).toBe(1);
+  });
+});
+
+describe('nomDesPoints', () => {
+  it('dit héroïsme pour un héros, vilénie pour un rival', () => {
+    expect(nomDesPoints('hero')).toBe('héroïsme');
+    expect(nomDesPoints('pnj')).toBe('vilénie');
+  });
+});
+
+describe('libellePoints', () => {
+  it('accorde le nombre et le nom des points', () => {
+    expect(libellePoints('hero', 1)).toBe('1 point d’héroïsme');
+    expect(libellePoints('hero', 3)).toBe('3 points d’héroïsme');
+    expect(libellePoints('pnj', 1)).toBe('1 point de vilénie');
+    expect(libellePoints('pnj', 0)).toBe('0 point de vilénie');
+  });
+});
+
+describe('sbireBouclier', () => {
+  const carte = (key: string, rang: string | null, camp: 'heros' | 'adversaires' = 'adversaires', vitaliteCourante = 1): TapisCard =>
+    ({key, kind: key.split('-')[0], camp, rang, nom: key, vitaliteCourante, vitaliteMax: 1}) as unknown as TapisCard;
+  const rival = carte('pnj-1', 'Rival');
+
+  it('choisit une piétaille debout du camp du rival', () => {
+    const cartes = [rival, carte('pnj-2', 'Coriace'), carte('pnj-3', 'Piétaille', 'adversaires', 0), carte('pnj-4', 'Piétaille', 'heros'), carte('creature-5', 'Piétaille')];
+    expect(sbireBouclier(rival, cartes)?.key).toBe('creature-5');
+  });
+
+  it('ne trouve personne sans piétaille debout à ses côtés', () => {
+    expect(sbireBouclier(rival, [rival, carte('pnj-2', 'Coriace'), carte('pnj-3', 'Piétaille', 'adversaires', 0)])).toBeNull();
   });
 });

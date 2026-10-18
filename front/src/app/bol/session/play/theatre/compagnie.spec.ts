@@ -23,6 +23,7 @@ function hero(vitaliteCourante: number): TapisCard {
     joueur: 'Clara',
     heroisme: 2,
     attitude: null,
+    vilenie: null,
   };
 }
 

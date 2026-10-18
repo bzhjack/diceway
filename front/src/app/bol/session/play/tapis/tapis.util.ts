@@ -52,6 +52,7 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       joueur: h.heros?.origines.joueur ?? null,
       heroisme: h.heros?.ressources?.heroisme ?? null,
       attitude: null,
+      vilenie: null,
     });
   }
 
@@ -74,6 +75,7 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       joueur: null,
       heroisme: null,
       attitude: p.attitude ?? null,
+      vilenie: p.vilenie_courante ?? null,
     });
   }
 
@@ -96,6 +98,7 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       joueur: null,
       heroisme: null,
       attitude: c.attitude ?? null,
+      vilenie: null,
     });
   }
 
@@ -118,6 +121,7 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       joueur: null,
       heroisme: null,
       attitude: d.attitude ?? null,
+      vilenie: null,
     });
   }
 

@@ -108,6 +108,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
         // Une piétaille sans arme frappe pour 1 (04-pnj-creatures-demons.md) ; les autres PNJ ont des armes.
         degats: p.armes?.[0]?.degats ?? (p.rang === 'pietaille' ? '1' : null),
         protection: null,
+        vilenie: p.vilenie_courante ?? null,
       },
     });
   }

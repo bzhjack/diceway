@@ -67,6 +67,11 @@ export class BolFightSessionService {
     return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/${kind}/${pivotId}/attitude`, {attitude});
   }
 
+  /** Dépense (négatif) ou rend des points de vilénie à un PNJ rival de la table. */
+  adjustVilenie(sessionId: string, pivotId: number, delta: number): Observable<BolFightSessionModel> {
+    return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/pnj/${pivotId}/vilenie`, {delta});
+  }
+
   updateOrder(sessionId: string, ordre: readonly string[]): Observable<BolFightSessionModel> {
     return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/ordre`, {ordre});
   }

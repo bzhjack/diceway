@@ -24,6 +24,7 @@ function card(kind: TapisKind, pivotId: number, extra: Partial<TapisCard> = {}):
     joueur: null,
     heroisme: null,
     attitude: null,
+    vilenie: null,
     ...extra,
   };
 }

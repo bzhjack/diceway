@@ -1243,6 +1243,11 @@ export class SessionPlayPageComponent {
   /** Le héros actif dépense ou gagne des points d'héroïsme sur son jet d'attaque (faveur divine, échec critique, succès héroïque ou
    * légendaire) : affiché tout de suite, enregistré, et repris si l'enregistrement échoue. */
   protected onHeroismeAdjusted(delta: number): void {
+    const active = this.activeCard();
+    if (active?.kind === 'pnj') {
+      this.adjustVilenie(active, delta, (by) => this.attackerStats.update((stats) => (stats ? {...stats, heroisme: Math.max(0, (stats.heroisme ?? 0) + by)} : stats)));
+      return;
+    }
     const herosId = this.attackerStats()?.herosId;
     if (!herosId) {
       return;
@@ -1261,6 +1266,10 @@ export class SessionPlayPageComponent {
   /** La cible, un héros, dépense de l'héroïsme pour se défendre (parade in extremis, « Juste une égratignure ») : affiché tout de suite
    * sur sa carte, enregistré, et repris si l'enregistrement échoue. */
   protected onTargetHeroismeAdjusted(change: HeroismeChange): void {
+    if (change.card.kind === 'pnj') {
+      this.adjustVilenie(change.card, change.delta, (by) => this.targetStats.update((stats) => (stats ? {...stats, heroisme: Math.max(0, (stats.heroisme ?? 0) + by)} : stats)));
+      return;
+    }
     const herosId = change.card.kind === 'hero' ? change.card.sourceId : null;
     if (!herosId) {
       return;
@@ -1277,6 +1286,23 @@ export class SessionPlayPageComponent {
   }
 
   /** La vitalité de la carte active ou de sa cible corrigée à la main sur son cœur : enregistrée comme des dégâts (ou des soins). */
+  /** Vilénie d'un rival dépensée ou rendue pendant un jet : affichée tout de suite (`shift`), enregistrée sur sa ligne de session, puis
+   * la session à jour est posée ; en cas d'erreur, l'affichage revient en arrière. */
+  private adjustVilenie(card: TapisCard, delta: number, shift: (by: number) => void): void {
+    const sessionId = this.sessionId();
+    if (!sessionId) {
+      return;
+    }
+    shift(delta);
+    this.fightSessionService.adjustVilenie(sessionId, card.pivotId, delta).subscribe({
+      next: (session) => this.session.set(session),
+      error: (error: unknown) => {
+        shift(-delta);
+        this.tableError(error, 'Impossible de mettre à jour la vilénie.');
+      },
+    });
+  }
+
   protected onVitaliteAdjusted(change: VitaliteChange): void {
     const stats = change.card.key === this.activeCard()?.key ? this.attackerStats() : this.targetStats();
     this.applyDamageTo(change.card, change.delta, stats);

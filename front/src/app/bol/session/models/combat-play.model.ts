@@ -17,6 +17,8 @@ export interface PlayCombatStats {
   readonly defense: number | null;
   readonly degats: string | null;
   readonly protection: string | null;
+  /** Points de vilénie d'un PNJ rival : ils servent comme des points d'héroïsme. Absent (ou null) pour les autres. */
+  readonly vilenie?: number | null;
   /** Capacités ou pouvoirs qui donnent un dé de bonus (« Attaque féroce », « Armes améliorées ») ou de malus (« Attaque timide ») à
    * toutes ses attaques. */
   readonly attaqueAvantages?: readonly string[];

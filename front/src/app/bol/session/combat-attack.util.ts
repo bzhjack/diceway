@@ -4,6 +4,7 @@ import {BolHerosService} from '../services/bol-heros.service';
 import {firstEquippedDegats} from '../shared/arme/arme-equipee';
 import {PlayToken} from './models/combat-play.model';
 import {ResolvedCombatStats} from './models/combat-attack.model';
+import {TapisCard, TapisKind} from './models/tapis.model';
 
 /** Extrait le type de dé de dégâts d'une chaîne d'arme/créature BoL ("d6M", "d6B", "d3", "d6"). */
 function parseDegatsDice(degats: string | null | undefined): 'd3' | 'd6' | 'd6m' | 'd6b' {
@@ -132,7 +133,8 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
     bouclierMalusUneAttaque: 0,
     bouclierDefenseToutes: 0,
     herosId: null,
-    heroisme: null,
+    // La vilénie d'un rival sert comme des points d'héroïsme (04-pnj-creatures-demons.md, « Points de vilenie »).
+    heroisme: c.vilenie ?? null,
     attaqueAvantages: c.attaqueAvantages ?? [],
     attaqueDesavantages: c.attaqueDesavantages ?? [],
   };
@@ -160,4 +162,25 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
   }
 
   return of(snapshot);
+}
+
+/** Le nom des points qu'une carte dépense pour les options héroïques : l'héroïsme d'un héros, la vilénie d'un rival. */
+export function nomDesPoints(kind: TapisKind): 'héroïsme' | 'vilénie' {
+  return kind === 'hero' ? 'héroïsme' : 'vilénie';
+}
+
+/** « Bouclier humain » (04-pnj-creatures-demons.md, « Points de vilenie ») : la piétaille encore debout du camp du rival qui peut
+ * s'interposer à sa place — la première dans l'ordre des cartes ; `null` s'il n'y en a aucune. */
+export function sbireBouclier(rival: TapisCard, cartes: readonly TapisCard[]): TapisCard | null {
+  return (
+    cartes.find(
+      (carte) => carte.key !== rival.key && carte.camp === rival.camp && carte.rang === 'Piétaille' && (carte.vitaliteCourante === null || carte.vitaliteCourante > 0),
+    ) ?? null
+  );
+}
+
+/** « 1 point d'héroïsme », « 2 points de vilénie » : un nombre de points d'une carte, accordé. */
+export function libellePoints(kind: TapisKind, nombre: number): string {
+  const nom = nomDesPoints(kind);
+  return `${nombre} ${nombre > 1 ? 'points' : 'point'} ${nom === 'héroïsme' ? 'd’héroïsme' : 'de vilénie'}`;
 }

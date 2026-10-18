@@ -263,6 +263,37 @@ class BolFightSessionService
     }
 
     /**
+     * Points de vilénie d'un PNJ posé à la table : ceux de sa fiche pour un rival (04-pnj-creatures-demons.md, « Points de
+     * vilenie ») ; `null` pour un coriace ou une piétaille, qui n'en ont pas.
+     */
+    public static function vilenieInitiale(string $rang, ?int $vilenieFiche): ?int
+    {
+        return $rang === 'rival' ? max(0, (int) $vilenieFiche) : null;
+    }
+
+    /** Points de vilénie après une dépense (négatif) ou un gain : jamais sous zéro ; qui n'en a pas n'en gagne pas. */
+    public static function vilenieSuivante(?int $courante, int $delta): ?int
+    {
+        return $courante === null ? null : max(0, $courante + $delta);
+    }
+
+    /**
+     * Dépense ou rend des points de vilénie à un PNJ rival de la table. Null si la session ou la ligne est introuvable.
+     */
+    public function adjustVilenie(string $sessionId, string $userId, int $pivotId, int $delta): ?BolFightSession
+    {
+        $session = BolFightSession::where('id', $sessionId)->where('user_id', $userId)->first();
+        $row = $session ? BolFightSessionPnj::where('id', $pivotId)->where('fight_session_id', $sessionId)->first() : null;
+        if (!$row) {
+            return null;
+        }
+
+        $row->update(['vilenie_courante' => self::vilenieSuivante($row->vilenie_courante, $delta)]);
+
+        return $this->getSessionWithRelations($sessionId);
+    }
+
+    /**
      * Attitude d'un PNJ, d'une créature ou d'un démon de la table envers les héros (`null` : aucune).
      * Null si la session ou la ligne est introuvable.
      */
@@ -622,6 +653,7 @@ class BolFightSessionService
             'surnom'            => $surnom,
             'rang'              => $this->rangFromType($pnj->type),
             'vitalite_courante' => $pnj->vitalite,
+            'vilenie_courante'  => self::vilenieInitiale($this->rangFromType($pnj->type), $pnj->vilenie),
         ] + $this->pnjSnapshot($pnj));
     }
 

@@ -21,6 +21,7 @@ const PNJ: TapisCard = {
   joueur: null,
   heroisme: null,
   attitude: null,
+  vilenie: null,
 };
 
 describe('AttitudePickerComponent', () => {

@@ -18,7 +18,7 @@ import {EndTurnDialogComponent} from '../end-turn-dialog/end-turn-dialog';
 import {EndTurnChoice, EndTurnDialogData} from '../../models/end-turn-dialog.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, isHeavyWeapon, MAINS_NUES} from '../../attack-options.util';
-import {dualStrikeDegats} from '../../combat-attack.util';
+import {dualStrikeDegats, libellePoints, sbireBouclier} from '../../combat-attack.util';
 import {
   ATTACK_THRESHOLD,
   attackBonus,
@@ -489,6 +489,8 @@ export class TurnAssistantComponent {
   // ── L'héroïsme sur le jet d'attaque (02-actions-combat.md) ──
   /** Points d'héroïsme de l'attaquant ; `null` s'il n'en a pas (PNJ, créature, démon). */
   protected readonly heroisme = computed(() => this.attacker()?.heroisme ?? null);
+  /** « 3 points d'héroïsme » de l'attaquant, ou « 3 points de vilénie » d'un rival. */
+  protected readonly pointsAttaquant = computed(() => libellePoints(this.card().kind, this.heroisme() ?? 0));
   /** Échec critique accepté sur un double 1 : rapporte 1 point d'héroïsme. */
   protected readonly critique = signal(false);
   /** Succès légendaire acheté sur un double 6 : deux options au lieu d'une. */
@@ -806,7 +808,8 @@ export class TurnAssistantComponent {
   /** Faveur divine : 1 point d'héroïsme pour relancer un coup raté — plus une fois l'échec critique accepté. */
   protected readonly canFavor = computed(() => this.verdict()?.result === 'echec' && this.canSpend());
   /** Un héros qui sort un double 1 peut en faire un échec critique, qui lui rapporte 1 point d'héroïsme. */
-  protected readonly canCritique = computed(() => this.heroisme() !== null && this.isNatural2() && this.baseResult() === 'echec');
+  // Accepter un échec critique rapporte un point au joueur : un rival n'en gagne pas de vilénie.
+  protected readonly canCritique = computed(() => this.card().kind === 'hero' && this.heroisme() !== null && this.isNatural2() && this.baseResult() === 'echec');
   /** Seul le double 6 qui vaut succès héroïque se transforme en succès légendaire. */
   protected readonly canLegendary = computed(() => this.heroisme() !== null && this.baseResult() === 'heroique' && (this.legendary() || this.canSpend()));
   /** Un coup qui touche, sans plus, se transforme en succès héroïque. */
@@ -1408,15 +1411,26 @@ export class TurnAssistantComponent {
     this.focusAfterRender(() => (this.carnageOwed() > 0 ? this.attackInput() : this.endButton()));
   }
 
-  /** Points d'héroïsme de la cible, si c'est un héros : il peut s'en servir pour se défendre (0 sinon). */
-  private readonly targetHeroisme = computed(() => (this.target()?.kind === 'hero' ? (this.targetStats()?.heroisme ?? 0) : 0));
-  /** Parade in extremis (02-actions-combat.md, « Points d'héroïsme ») : un coup qui touche un héros, pas encore appliqué. */
+  /** Points de la cible pour se défendre : l'héroïsme d'un héros, la vilénie d'un rival (0 pour les autres). */
+  private readonly targetHeroisme = computed(() => this.targetStats()?.heroisme ?? 0);
+  /** « 1 point d'héroïsme » de l'attaquant, ou « 1 point de vilénie » d'un rival qui attaque. */
+  protected readonly unPointAttaquant = computed(() => libellePoints(this.card().kind, 1));
+  protected readonly unPointCible = computed(() => libellePoints(this.target()?.kind ?? 'hero', 1));
+  /** Parade in extremis (02-actions-combat.md, « Points d'héroïsme ») : un coup qui touche un héros ou un rival, pas encore appliqué. */
   protected readonly canParry = computed(() => this.hasDamageStep() && this.targetHeroisme() > 0);
-  /** « Juste une égratignure » : juste après des dégâts appliqués à un héros, une fois par coup. */
+  /** « Juste une égratignure » : juste après des dégâts appliqués à un héros ou à un rival, une fois par coup. */
   protected readonly canScratch = computed(() => {
     const hit = this.lastHit();
-    return !!hit && hit.target.key === this.target()?.key && hit.target.kind === 'hero' && hit.damage > 0 && !hit.parried && !hit.scratch && this.targetHeroisme() > 0;
+    return !!hit && hit.target.key === this.target()?.key && hit.damage > 0 && !hit.parried && !hit.scratch && this.targetHeroisme() > 0;
   });
+  /** Le sbire qui peut servir de bouclier humain au rival visé : une piétaille encore debout de son camp. */
+  protected readonly sbire = computed(() => {
+    const target = this.target();
+    return target?.kind === 'pnj' ? sbireBouclier(target, this.targets()) : null;
+  });
+  /** « Bouclier humain » (04-pnj-creatures-demons.md, « Points de vilenie ») : un coup qui touche un rival qui a de la vilénie et un
+   * sbire à ses côtés. */
+  protected readonly canHumanShield = computed(() => this.hasDamageStep() && this.targetHeroisme() > 0 && this.sbire() !== null);
 
   /** Ce que dit le rappel du dernier coup : les dégâts, ou la parade ; puis l'égratignure, s'il y en a eu une. */
   protected readonly hitSummary = computed(() => {
@@ -1424,17 +1438,20 @@ export class TurnAssistantComponent {
     if (!hit) {
       return null;
     }
-    const title = hit.parried ? 'Paré' : `${hit.damage} ${hit.damage > 1 ? 'dégâts' : 'dégât'}`;
-    const detail = hit.parried
-      ? `${hit.target.nom} interpose ${hit.parried === 'bouclier' ? 'son bouclier, qui est brisé' : 'son arme, qui est brisée'}.`
-      : `appliqués à ${hit.target.nom}.`;
+    const title = hit.parried === 'sbire' ? 'Bouclier humain' : hit.parried ? 'Paré' : `${hit.damage} ${hit.damage > 1 ? 'dégâts' : 'dégât'}`;
+    const detail =
+      hit.parried === 'sbire'
+        ? `${hit.sbire} s’interpose et encaisse le coup à la place de ${hit.target.nom}.`
+        : hit.parried
+          ? `${hit.target.nom} interpose ${hit.parried === 'bouclier' ? 'son bouclier, qui est brisé' : 'son arme, qui est brisée'}.`
+          : `appliqués à ${hit.target.nom}.`;
     const scratch = hit.scratch
       ? `Juste une égratignure : ${hit.scratch.die} au dé, ${hit.scratch.healed} ${hit.scratch.healed > 1 ? 'points rendus' : 'point rendu'} ; ${hit.target.nom} perd sa prochaine action.`
       : '';
     return {title, detail, scratch};
   });
 
-  /** Parade in extremis : la cible dépense 1 point d'héroïsme et interpose son bouclier (s'il en a un) ou son arme, qui est brisé ; le
+  /** Parade in extremis : la cible dépense 1 point d'héroïsme (ou de vilénie) et interpose son bouclier (s'il en a un) ou son arme, qui est brisé ; le
    * coup ne fait pas de dégâts, et ses options héroïques non plus. Un Carnage garde son attaque de plus. */
   protected parry(): void {
     const target = this.target();
@@ -1451,7 +1468,24 @@ export class TurnAssistantComponent {
     this.focusAfterRender(() => (this.carnageOwed() > 0 ? this.attackInput() : this.endButton()));
   }
 
-  /** « Juste une égratignure » : la cible dépense 1 point d'héroïsme et lance 1d6 ; elle récupère autant de vitalité, sans dépasser les
+  /** « Bouclier humain » : le rival dépense 1 point de vilénie et pousse un de ses sbires devant le coup. Le sbire encaisse le coup à
+   * sa place : une piétaille tombe au premier coup, il est mis hors de combat (toute sa vitalité restante, sans calcul contre une armure
+   * qui n'est pas la sienne). Le rival ne subit rien, et les options héroïques du coup tombent avec lui. */
+  protected humanShield(): void {
+    const target = this.target();
+    const sbire = this.sbire();
+    if (!target || !sbire || !this.canHumanShield()) {
+      return;
+    }
+    this.targetHeroismeAdjusted.emit({card: target, delta: -1});
+    this.damageApplied.emit({target: sbire, damage: Math.max(1, sbire.vitaliteCourante ?? 1), unarmed: this.unarmed()});
+    this.conclude(target, false);
+    this.resetRoll();
+    this.lastHit.set({target, damage: 0, unarmed: false, parried: 'sbire', sbire: sbire.nom});
+    this.focusAfterRender(() => (this.carnageOwed() > 0 ? this.attackInput() : this.endButton()));
+  }
+
+  /** « Juste une égratignure » : la cible dépense 1 point d'héroïsme (ou de vilénie) et lance 1d6 ; elle récupère autant de vitalité, sans dépasser les
    * dégâts du coup, et perd sa prochaine action. */
   protected async scratch(): Promise<void> {
     const hit = this.lastHit();

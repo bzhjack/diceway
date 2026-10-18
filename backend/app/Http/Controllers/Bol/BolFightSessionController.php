@@ -110,6 +110,19 @@ class BolFightSessionController extends Controller
         return response()->json($session);
     }
 
+    public function adjustVilenie(Request $request, string $id, int $pivotId)
+    {
+        $data = $request->validate(['delta' => 'required|integer|between:-10,10']);
+
+        $session = $this->fightSessionService->adjustVilenie($id, Auth::id(), $pivotId, $data['delta']);
+
+        if (!$session) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        return response()->json($session);
+    }
+
     public function applyDamage(Request $request, string $id, string $kind, int $pivotId)
     {
         $instanceIndex = $request->input('instanceIndex');

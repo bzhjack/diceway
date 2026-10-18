@@ -96,6 +96,9 @@
           [nom]="card().nom"
           (changed)="changed.emit()"
         />
+        @if (card().vilenie !== null) {
+          <bol-card-vilenie sheetSide class="exc-entry-vilenie" [sessionId]="sessionId()" [card]="card()" (changed)="changed.emit()" />
+        }
         @if (card().camp === 'adversaires') {
           <bol-attitude-picker sheetSide class="exc-entry-attitude" [sessionId]="sessionId()" [card]="card()" (changed)="changed.emit()" />
         }

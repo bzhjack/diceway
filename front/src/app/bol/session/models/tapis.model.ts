@@ -29,6 +29,8 @@ export interface TapisCard {
   readonly heroisme: number | null;
   /** Attitude envers les héros d'un PNJ, d'une créature ou d'un démon — null pour un héros, ou sans attitude. */
   readonly attitude: CombatantAttitude | null;
+  /** Points de vilénie d'un PNJ rival — null pour les autres cartes. */
+  readonly vilenie: number | null;
 }
 
 /** Une statistique de combat de l'en-tête de la carte d'un héros dépliée. */

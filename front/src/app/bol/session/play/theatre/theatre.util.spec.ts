@@ -115,6 +115,7 @@ function card(key: string, rang: string | null, camp: CombatCamp = 'adversaires'
     joueur: null,
     heroisme: null,
     attitude: null,
+    vilenie: null,
   };
 }
 
