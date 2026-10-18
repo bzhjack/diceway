@@ -34,12 +34,13 @@ const api = (method, path, body) =>
     {method, path, body},
   );
 
-/** Débordements mesurés là où ils peuvent se produire (la page elle-même masque tout débordement) : le plateau en
- * largeur et en hauteur, la piste de la troupe et la lecture, qui doivent défiler chacune dans sa zone. */
+/** Débordements mesurés là où ils peuvent se produire (la page elle-même masque tout débordement) : la scène du plateau
+ * (ce qui défile devant le décor) en largeur et en hauteur, la piste de la troupe et la lecture, qui doivent défiler
+ * chacune dans sa zone. */
 const debordements = () =>
   page.evaluate(() => {
     const el = (sel) => document.querySelector(sel);
-    const plateau = el('.thr-plateau');
+    const plateau = el('.thr-scene');
     const piste = el('bol-troupe .dws-track');
     const lecture = el('bol-scene-lecture');
     return {

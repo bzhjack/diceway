@@ -43,21 +43,15 @@ describe('sceneActs', () => {
 });
 
 describe('sceneDecor', () => {
-  const coords = {5: {x: 26.4, y: 59}};
-
   it("préfère l'illustration", () => {
-    expect(sceneDecor(scene('s', 0, {image: '/assets/bol/quest.jpg', region_id: 5}), coords)).toEqual({kind: 'image', url: '/assets/bol/quest.jpg'});
+    expect(sceneDecor(scene('s', 0, {image: '/assets/bol/quest.jpg', region_id: 5}))).toBe('/assets/bol/quest.jpg');
   });
 
-  it('retombe sur la carte de la région, même avec une adresse vide', () => {
-    expect(sceneDecor(scene('s', 0, {image: '  ', region_id: 5}), coords)).toEqual({kind: 'carte', x: 26.4, y: 59});
-  });
-
-  it("sans région connue ni illustration, l'image par défaut de la maquette", () => {
-    const parDefaut = {kind: 'image', url: '/assets/bol/dashboard-header.png'};
-    expect(sceneDecor(scene('s', 0, {region_id: 99}), coords)).toEqual(parDefaut);
-    expect(sceneDecor(scene('s', 0), coords)).toEqual(parDefaut);
-    expect(sceneDecor(null, coords)).toEqual(parDefaut);
+  it("sans illustration, l'image par défaut de la maquette, quelle que soit la région", () => {
+    const parDefaut = '/assets/bol/dashboard-header.png';
+    expect(sceneDecor(scene('s', 0, {image: '  ', region_id: 5}))).toBe(parDefaut);
+    expect(sceneDecor(scene('s', 0))).toBe(parDefaut);
+    expect(sceneDecor(null)).toBe(parDefaut);
   });
 });
 

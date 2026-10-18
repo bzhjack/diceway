@@ -11,9 +11,6 @@ export interface SceneActe {
   readonly statut: ActeStatut;
 }
 
-/** Le fond du plateau : une image (l'illustration de la scène, ou l'image par défaut), ou la carte de Lémurie
- * centrée sur la région de la scène (en % de la carte). */
-export type SceneDecor = {readonly kind: 'image'; readonly url: string} | {readonly kind: 'carte'; readonly x: number; readonly y: number};
 
 /** Une valeur d'ambiance (moment, météo, attitude…) avec son libellé et son icône Material. */
 export interface AmbianceOption<T> {

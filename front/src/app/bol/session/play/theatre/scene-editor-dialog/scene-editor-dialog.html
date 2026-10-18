@@ -74,11 +74,7 @@
       </mat-form-field>
 
       <div class="sed-apercu" aria-hidden="true">
-        @if (apercuImage(); as url) {
-          <img class="sed-apercu-img" [src]="url" alt="" />
-        } @else if (apercuCarte(); as point) {
-          <bol-carte-region [x]="point.x" [y]="point.y" />
-        }
+        <img class="sed-apercu-img" [src]="apercu()" alt="" />
       </div>
     </section>
 

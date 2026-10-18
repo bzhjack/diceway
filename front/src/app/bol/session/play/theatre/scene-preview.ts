@@ -3,9 +3,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BolSceneModel} from '../../../models/bol-scene.model';
 import {CombatSelectionService} from '../../../services/combat-selection.service';
-import {REGION_MAP_COORDINATES} from '../../../shared/region/region-map-coordinates';
 import {ActeStatut} from '../../models/theatre.model';
-import {CarteRegionComponent} from './carte-region';
 import {SceneAmbianceComponent} from './scene-ambiance';
 import {distributionPortraits, lieuTexte, sceneDecor} from './theatre.util';
 
@@ -14,14 +12,10 @@ import {distributionPortraits, lieuTexte, sceneDecor} from './theatre.util';
  * pour rester atteignables au clavier. */
 @Component({
   selector: 'bol-scene-preview',
-  imports: [MatIconModule, MatTooltipModule, CarteRegionComponent, SceneAmbianceComponent],
+  imports: [MatIconModule, MatTooltipModule, SceneAmbianceComponent],
   template: `
     <div class="spv-vignette" aria-hidden="true">
-      @if (vignetteImage(); as url) {
-        <img class="spv-vignette-img" [src]="url" alt="" />
-      } @else if (vignetteCarte(); as point) {
-        <bol-carte-region [x]="point.x" [y]="point.y" />
-      }
+      <img class="spv-vignette-img" [src]="vignette()" alt="" />
     </div>
     <div class="spv-corps">
       @if (lieu(); as lieu) {
@@ -171,13 +165,5 @@ export class ScenePreviewComponent {
 
   protected readonly lieu = computed(() => lieuTexte(this.scene().lieu, this.regionNom()));
   protected readonly portraits = computed(() => distributionPortraits(this.scene().distribution, this.selection.catalog()));
-  private readonly decor = computed(() => sceneDecor(this.scene(), REGION_MAP_COORDINATES));
-  protected readonly vignetteImage = computed(() => {
-    const decor = this.decor();
-    return decor.kind === 'image' ? decor.url : null;
-  });
-  protected readonly vignetteCarte = computed(() => {
-    const decor = this.decor();
-    return decor.kind === 'carte' ? {x: decor.x, y: decor.y} : null;
-  });
+  protected readonly vignette = computed(() => sceneDecor(this.scene()));
 }

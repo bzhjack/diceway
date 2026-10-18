@@ -1035,6 +1035,7 @@ export class TurnAssistantComponent {
 
   // Les cases et boutons du plateau, pour passer la main de l'un à l'autre au fil de la saisie.
   private readonly attackInput = viewChild<ElementRef<HTMLInputElement>>('attackInput');
+  private readonly scratchInput = viewChild<ElementRef<HTMLInputElement>>('scratchInput');
   private readonly damageInput = viewChild<ElementRef<HTMLInputElement>>('damageInput');
   private readonly applyButton = viewChild('applyButton', {read: ElementRef<HTMLButtonElement>});
   private readonly endButton = viewChild('endButton', {read: ElementRef<HTMLButtonElement>});
@@ -1485,14 +1486,48 @@ export class TurnAssistantComponent {
     this.focusAfterRender(() => (this.carnageOwed() > 0 ? this.attackInput() : this.endButton()));
   }
 
-  /** « Juste une égratignure » : la cible dépense 1 point d'héroïsme (ou de vilénie) et lance 1d6 ; elle récupère autant de vitalité, sans dépasser les
-   * dégâts du coup, et perd sa prochaine action. */
-  protected async scratch(): Promise<void> {
-    const hit = this.lastHit();
-    if (!hit || !this.canScratch() || this.rolling()) {
+  /** « Juste une égratignure » ouverte : son d6 attend, lancé à table (saisi) ou à l'écran. Refermée à chaque nouveau coup. */
+  protected readonly scratching = linkedSignal<AppliedHit | null, boolean>({source: () => this.lastHit(), computation: () => false});
+
+  /** Ouvre « Juste une égratignure » : la main passe au champ du dé. Le point n'est dépensé qu'une fois le dé connu. */
+  protected startScratch(): void {
+    if (!this.canScratch() || this.rolling()) {
+      return;
+    }
+    this.scratching.set(true);
+    this.focusAfterRender(() => this.scratchInput());
+  }
+
+  /** Échap ou « Annuler » : la saisie se referme sans rien dépenser (Échap ne va pas plus loin que ce champ). */
+  protected cancelScratch(event?: Event): void {
+    event?.preventDefault();
+    this.scratching.set(false);
+  }
+
+  /** Le d6 lancé à table : un chiffre de 1 à 6, pris tout de suite. */
+  protected onScratchInput(raw: string): void {
+    const text = raw.trim();
+    if (/^[1-6]$/.test(text)) {
+      this.applyScratch(Number(text));
+    }
+  }
+
+  /** Le d6 lancé à l'écran. */
+  protected async rollScratch(): Promise<void> {
+    if (!this.canScratch() || this.rolling()) {
       return;
     }
     const [die] = await this.throwDice('1d6', 1);
+    this.applyScratch(die);
+  }
+
+  /** « Juste une égratignure » : la cible dépense 1 point d'héroïsme (ou de vilénie) pour son d6 ; elle récupère autant de vitalité, sans
+   * dépasser les dégâts du coup, et perd sa prochaine action. */
+  private applyScratch(die: number): void {
+    const hit = this.lastHit();
+    if (!hit || !this.canScratch()) {
+      return;
+    }
     const healed = Math.min(die, hit.damage);
     this.targetHeroismeAdjusted.emit({card: hit.target, delta: -1});
     this.vitaliteAdjusted.emit({card: hit.target, delta: healed});

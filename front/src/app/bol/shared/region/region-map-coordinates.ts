@@ -25,3 +25,23 @@ export const REGION_MAP_COORDINATES: Record<number, {x: number; y: number}> = {
   19: {x: 26.8, y: 25.5}, // Valgard
   20: {x: 72.6, y: 73.1}, // Zalut
 };
+
+/**
+ * La carte HD (`skins/Carte-BoL-Lemurie-HD2.jpg`, 1248 × 1741 px) : la même illustration que `carte.jpg`, au pixel près, entourée de
+ * son cadre et de son titre. `carte.jpg` en est le recadrage à partir de (55, 109) px, sur 1137 × 1491 px (recalage par corrélation).
+ */
+export const CARTE_HD = {
+  url: '/assets/bol/skins/Carte-BoL-Lemurie-HD2.jpg',
+  largeur: 1248,
+  hauteur: 1741,
+  recadrage: {x: 55, y: 109, largeur: 1137, hauteur: 1491},
+} as const;
+
+/** Un point de `carte.jpg` (en %, comme `REGION_MAP_COORDINATES`), en % de la carte HD. */
+export function positionSurCarteHd(point: {x: number; y: number}): {x: number; y: number} {
+  const {largeur, hauteur, recadrage} = CARTE_HD;
+  return {
+    x: ((recadrage.x + (point.x / 100) * recadrage.largeur) / largeur) * 100,
+    y: ((recadrage.y + (point.y / 100) * recadrage.hauteur) / hauteur) * 100,
+  };
+}

@@ -2,7 +2,7 @@ import {CombatantAttitude} from '../../../models/bol-fight-session.model';
 import {BolSceneEntry, BolSceneModel, SceneMeteo, SceneMoment} from '../../../models/bol-scene.model';
 import {CombatCatalogEntry} from '../../../models/combat-selection.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
-import {ActeStatut, AmbianceOption, SceneActe, SceneDecor, ScenePortrait, TroupeCard, TroupeTaille} from '../../models/theatre.model';
+import {ActeStatut, AmbianceOption, SceneActe, ScenePortrait, TroupeCard, TroupeTaille} from '../../models/theatre.model';
 import {scenesOf} from '../scene-list/scene.util';
 
 /** Les moments de la journée, dans l'ordre, avec leur libellé et leur icône. */
@@ -52,15 +52,10 @@ export function sceneActs(
  * maquette du théâtre. */
 const DECOR_PAR_DEFAUT = '/assets/bol/dashboard-header.png';
 
-/** Le fond du plateau pour une scène : son illustration, sinon la carte centrée sur sa région (si sa
- * position est connue), sinon l'image par défaut. */
-export function sceneDecor(scene: BolSceneModel | null, coords: Readonly<Record<number, {x: number; y: number}>>): SceneDecor {
-  const url = scene?.image?.trim();
-  if (url) {
-    return {kind: 'image', url};
-  }
-  const position = scene?.region_id != null ? coords[scene.region_id] : undefined;
-  return position ? {kind: 'carte', x: position.x, y: position.y} : {kind: 'image', url: DECOR_PAR_DEFAUT};
+/** Le fond du plateau pour une scène : son illustration, sinon l'image par défaut. La région n'y change rien : la carte se
+ * consulte à part, depuis le lieu du cartouche. */
+export function sceneDecor(scene: BolSceneModel | null): string {
+  return scene?.image?.trim() || DECOR_PAR_DEFAUT;
 }
 
 /** Les portraits de la distribution d'une scène, retrouvés dans le catalogue ; une entrée dont la fiche

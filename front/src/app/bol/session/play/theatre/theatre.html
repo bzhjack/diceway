@@ -1,29 +1,32 @@
-<main class="thr-plateau" [class.thr-plateau--avec-lecture]="!!store.currentScene()">
+<!-- Le cadre du plateau reste en place : le décor et les braises derrière ; seule la scène, devant, défile. -->
+<div class="thr-plateau">
   <bol-scene-decor class="thr-decor" [scene]="store.currentScene()" />
   <bol-braises class="thr-braises" />
 
-  <bol-scene-cartouche
-    class="thr-cartouche"
-    [scene]="store.currentScene()"
-    [regionNom]="regionNom()"
-    [acte]="store.currentActe()"
-    [total]="store.acts().length"
-  />
+  <main class="thr-scene" [class.thr-scene--avec-lecture]="!!store.currentScene()">
+    <bol-scene-cartouche
+      class="thr-cartouche"
+      [scene]="store.currentScene()"
+      [regionNom]="regionNom()"
+      [acte]="store.currentActe()"
+      [total]="store.acts().length"
+    />
 
-  @if (store.currentScene(); as scene) {
-    <bol-scene-lecture class="thr-lecture" [scene]="scene" [acts]="store.acts()" (sceneChanged)="sceneChanged.emit($event)" />
-  }
+    @if (store.currentScene(); as scene) {
+      <bol-scene-lecture class="thr-lecture" [scene]="scene" [acts]="store.acts()" (sceneChanged)="sceneChanged.emit($event)" />
+    }
 
-  <bol-troupe
-    class="thr-troupe"
-    [cards]="cards()"
-    [selectedKeys]="selectedKeys()"
-    (cardToggled)="cardToggled.emit($event)"
-    (selectToggled)="selectToggled.emit($event)"
-    (campToggleRequested)="campToggleRequested.emit($event)"
-    (coulissesRequested)="coulissesRequested.emit()"
-  />
-</main>
+    <bol-troupe
+      class="thr-troupe"
+      [cards]="cards()"
+      [selectedKeys]="selectedKeys()"
+      (cardToggled)="cardToggled.emit($event)"
+      (selectToggled)="selectToggled.emit($event)"
+      (campToggleRequested)="campToggleRequested.emit($event)"
+      (coulissesRequested)="coulissesRequested.emit()"
+    />
+  </main>
+</div>
 
 <bol-compagnie
   [cards]="cards()"

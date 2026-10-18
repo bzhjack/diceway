@@ -1,22 +1,12 @@
 import {ChangeDetectionStrategy, Component, computed, input, linkedSignal} from '@angular/core';
 import {BolSceneModel} from '../../../models/bol-scene.model';
-import {REGION_MAP_COORDINATES} from '../../../shared/region/region-map-coordinates';
-import {CarteRegionComponent} from './carte-region';
 import {sceneDecor} from './theatre.util';
 
-/** Le fond du plateau : l'illustration de la scène, sinon la carte de Lémurie centrée sur sa région, sinon l'image
- * par défaut. Une illustration qui ne se charge pas retombe sur la carte (ou l'image par défaut). Un voile sombre
- * garde le texte lisible. Purement décoratif. */
+/** Le fond du plateau : l'illustration de la scène, sinon l'image par défaut. Une illustration qui ne se charge pas
+ * retombe sur l'image par défaut. Un voile sombre garde le texte lisible. Purement décoratif. */
 @Component({
   selector: 'bol-scene-decor',
-  imports: [CarteRegionComponent],
-  template: `
-    @if (image(); as url) {
-      <img class="dcr-image" [src]="url" alt="" (error)="imageFailed.set(true)" />
-    } @else if (carte(); as point) {
-      <bol-carte-region [x]="point.x" [y]="point.y" />
-    }
-  `,
+  template: `<img class="dcr-image" [src]="image()" alt="" (error)="imageFailed.set(true)" />`,
   styles: `
     :host {
       position: absolute;
@@ -42,13 +32,11 @@ import {sceneDecor} from './theatre.util';
       object-position: 50% 35%;
       filter: saturate(0.9) brightness(0.72);
     }
-
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'aria-hidden': 'true',
-    '[class.dcr--image]': "decor().kind === 'image'",
-    '[class.dcr--carte]': "decor().kind === 'carte'",
+    '[class.dcr--defaut]': 'defaut()',
   },
 })
 export class SceneDecorComponent {
@@ -59,17 +47,10 @@ export class SceneDecorComponent {
     this.scene()?.image;
     return false;
   });
-  protected readonly decor = computed(() => {
-    const scene = this.scene();
-    return sceneDecor(this.imageFailed() && scene ? {...scene, image: null} : scene, REGION_MAP_COORDINATES);
-  });
   protected readonly image = computed(() => {
-    const decor = this.decor();
-    return decor.kind === 'image' ? decor.url : null;
+    const scene = this.scene();
+    return sceneDecor(this.imageFailed() && scene ? {...scene, image: null} : scene);
   });
-  /** Le point de la région sur la carte, quand le décor est la carte. */
-  protected readonly carte = computed(() => {
-    const decor = this.decor();
-    return decor.kind === 'carte' ? {x: decor.x, y: decor.y} : null;
-  });
+  /** Le décor est l'image par défaut (pas d'illustration, ou une illustration qui n'a pas pu se charger). */
+  protected readonly defaut = computed(() => this.image() === sceneDecor(null));
 }
