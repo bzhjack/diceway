@@ -1,15 +1,11 @@
 import {ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, linkedSignal, output, untracked} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
-import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {extractApiErrorMessage} from '../../../../core/api-error.utils';
-import {BolSceneLoadResult, BolSceneModel, BolScenePiste, SceneLoadMode} from '../../../models/bol-scene.model';
+import {BolSceneLoadResult, BolSceneModel, BolScenePiste} from '../../../models/bol-scene.model';
 import {SceneActe} from '../../models/theatre.model';
-import {openSceneEditor} from './scene-editor-dialog/scene-editor-dialog';
-import {ScenePreviewComponent} from './scene-preview';
+import {SceneApercuMenuComponent} from './scene-apercu-menu';
 import {SceneStageStore} from './scene-stage.store';
 
 /** Une piste et l'acte de la frise vers lequel elle mène, s'il y est. */
@@ -22,7 +18,7 @@ interface PisteAffichee extends BolScenePiste {
  * pistes, qui ouvrent l'aperçu de la scène où elles mènent. */
 @Component({
   selector: 'bol-scene-lecture',
-  imports: [MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, ScenePreviewComponent],
+  imports: [MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, SceneApercuMenuComponent],
   templateUrl: './scene-lecture.html',
   styleUrl: './scene-lecture.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,8 +26,6 @@ interface PisteAffichee extends BolScenePiste {
 export class SceneLectureComponent {
   protected readonly store = inject(SceneStageStore);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
-  private readonly dialog = inject(MatDialog);
-  private readonly snackBar = inject(MatSnackBar);
 
   readonly scene = input.required<BolSceneModel>();
   readonly acts = input.required<readonly SceneActe[]>();
@@ -63,30 +57,5 @@ export class SceneLectureComponent {
 
   protected toggleSecret(): void {
     this.secretVisible.update((visible) => !visible);
-  }
-
-  protected regionNom(scene: BolSceneModel): string | null {
-    return scene.region_id != null ? (this.store.regionNoms().get(scene.region_id) ?? null) : null;
-  }
-
-  protected load(scene: BolSceneModel, mode: SceneLoadMode): void {
-    this.store.load(scene, mode).subscribe({
-      next: (result) => {
-        if (result) {
-          this.sceneChanged.emit(result);
-        }
-      },
-      error: (error: unknown) => this.snackBar.open(extractApiErrorMessage(error, 'Impossible de charger la scène.'), 'Fermer', {duration: 5000}),
-    });
-  }
-
-  /** « Préparer la scène » : la scène affichée par défaut, ou celle d'une piste. Ses pistes mènent aux scènes de son
-   * propre scénario, pas forcément celui de la frise. */
-  protected edit(scene: BolSceneModel = this.scene()): void {
-    openSceneEditor(this.dialog, {scene, siblings: this.store.siblingsOf(scene)}).subscribe((updated) => {
-      if (updated) {
-        this.store.replaceScene(updated);
-      }
-    });
   }
 }

@@ -1,4 +1,4 @@
-<button mat-icon-button type="button" class="lec-preparer" aria-label="Préparer la scène" matTooltip="Préparer la scène" (click)="edit()">
+<button mat-icon-button type="button" class="lec-preparer" aria-label="Préparer la scène" matTooltip="Préparer la scène" (click)="store.prepare(scene())">
   <mat-icon>edit_note</mat-icon>
 </button>
 
@@ -8,7 +8,7 @@
     <p class="lec-texte">{{ texte }}</p>
   } @else {
     <p class="lec-vide">Pas de texte à lire.</p>
-    <button mat-stroked-button size="small" type="button" class="lec-action" (click)="edit()">
+    <button mat-stroked-button size="small" type="button" class="lec-action" (click)="store.prepare(scene())">
       <mat-icon>edit_note</mat-icon> Préparer la scène
     </button>
   }
@@ -42,7 +42,7 @@
               type="button"
               [attr.aria-label]="'Aperçu de la scène ' + acte.numero + ', ' + acte.scene.titre"
               [attr.aria-disabled]="store.busy() ? 'true' : null"
-              [matMenuTriggerFor]="apercu"
+              [matMenuTriggerFor]="apercu.menu()"
               [matMenuTriggerData]="{acte}"
             >
               Scène {{ acte.numero }}
@@ -54,19 +54,4 @@
   </section>
 }
 
-<mat-menu #apercu="matMenu" class="thr-apercu-menu">
-  <ng-template matMenuContent let-acte="acte">
-    <bol-scene-preview [scene]="acte.scene" [statut]="acte.statut" [regionNom]="regionNom(acte.scene)" />
-    <button mat-menu-item type="button" (click)="load(acte.scene, 'replace')">
-      <mat-icon>theater_comedy</mat-icon> Lever le rideau
-    </button>
-    @if (acte.scene.distribution.length) {
-      <button mat-menu-item type="button" (click)="load(acte.scene, 'add')">
-        <mat-icon>group_add</mat-icon> Ajouter ses personnages
-      </button>
-    }
-    <button mat-menu-item type="button" (click)="edit(acte.scene)">
-      <mat-icon>edit_note</mat-icon> Préparer la scène
-    </button>
-  </ng-template>
-</mat-menu>
+<bol-scene-apercu-menu #apercu="apercuMenu" (sceneChanged)="sceneChanged.emit($event)" />

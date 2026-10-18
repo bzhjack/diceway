@@ -1,23 +1,19 @@
 import {ChangeDetectionStrategy, Component, computed, inject, input, output} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {extractApiErrorMessage} from '../../../../core/api-error.utils';
-import {BolSceneLoadResult, BolSceneModel, SceneLoadMode} from '../../../models/bol-scene.model';
+import {BolSceneLoadResult} from '../../../models/bol-scene.model';
 import {CombatSelectionService} from '../../../services/combat-selection.service';
 import {SceneActe} from '../../models/theatre.model';
-import {openSceneEditor} from './scene-editor-dialog/scene-editor-dialog';
-import {ScenePreviewComponent} from './scene-preview';
+import {SceneApercuMenuComponent} from './scene-apercu-menu';
 import {SceneStageStore} from './scene-stage.store';
 import {acteLabel} from './theatre.util';
 
 /** Le titre et la frise des actes, dans l'en-tête de la table : la session en sur-titre, le scénario affiché (son
- * titre ouvre le menu pour en changer) et ses scènes en pastilles numérotées reliées par un filet. Une pastille ouvre l'aperçu de la scène et ses actions : lever le rideau dessus,
- * ajouter ses personnages, la préparer. Signale à la page (`sceneChanged`) chaque scène chargée. */
+ * titre ouvre le menu pour en changer) et ses scènes en pastilles numérotées reliées par un filet. Une pastille ouvre
+ * le menu d'aperçu de la scène (`bol-scene-apercu-menu`). Signale à la page (`sceneChanged`) chaque scène chargée. */
 @Component({
   selector: 'bol-scene-acts',
-  imports: [MatIconModule, MatMenuModule, ScenePreviewComponent],
+  imports: [MatIconModule, MatMenuModule, SceneApercuMenuComponent],
   template: `
     <div class="sca-titre">
       <span class="sca-sur">{{ sessionTitre() || 'Session' }}</span>
@@ -47,7 +43,7 @@ import {acteLabel} from './theatre.util';
               [attr.aria-current]="acte.statut === 'en-cours' ? 'step' : null"
               [attr.aria-label]="label(acte)"
               [attr.aria-disabled]="store.busy() ? 'true' : null"
-              [matMenuTriggerFor]="apercu"
+              [matMenuTriggerFor]="apercu.menu()"
               [matMenuTriggerData]="{acte}"
             >
               <span class="sca-num" aria-hidden="true">
@@ -68,22 +64,7 @@ import {acteLabel} from './theatre.util';
       </ol>
     </nav>
 
-    <mat-menu #apercu="matMenu" class="thr-apercu-menu">
-      <ng-template matMenuContent let-acte="acte">
-        <bol-scene-preview [scene]="acte.scene" [statut]="acte.statut" [regionNom]="regionNom(acte.scene)" />
-        <button mat-menu-item type="button" (click)="load(acte.scene, 'replace')">
-          <mat-icon>theater_comedy</mat-icon> Lever le rideau
-        </button>
-        @if (acte.scene.distribution.length) {
-          <button mat-menu-item type="button" (click)="load(acte.scene, 'add')">
-            <mat-icon>group_add</mat-icon> Ajouter ses personnages
-          </button>
-        }
-        <button mat-menu-item type="button" (click)="edit(acte.scene)">
-          <mat-icon>edit_note</mat-icon> Préparer la scène
-        </button>
-      </ng-template>
-    </mat-menu>
+    <bol-scene-apercu-menu #apercu="apercuMenu" (sceneChanged)="sceneChanged.emit($event)" />
   `,
   styles: `
     // Comme la barre de la maquette : le titre du scénario à gauche, la frise des actes centrée.
@@ -296,8 +277,6 @@ import {acteLabel} from './theatre.util';
 })
 export class SceneActsComponent {
   protected readonly store = inject(SceneStageStore);
-  private readonly dialog = inject(MatDialog);
-  private readonly snackBar = inject(MatSnackBar);
 
   /** Titre de la session, en sur-titre au-dessus du scénario. */
   readonly sessionTitre = input<string | null>(null);
@@ -318,28 +297,5 @@ export class SceneActsComponent {
 
   protected label(acte: SceneActe): string {
     return acteLabel(acte);
-  }
-
-  protected regionNom(scene: BolSceneModel): string | null {
-    return scene.region_id != null ? (this.store.regionNoms().get(scene.region_id) ?? null) : null;
-  }
-
-  protected load(scene: BolSceneModel, mode: SceneLoadMode): void {
-    this.store.load(scene, mode).subscribe({
-      next: (result) => {
-        if (result) {
-          this.sceneChanged.emit(result);
-        }
-      },
-      error: (error: unknown) => this.snackBar.open(extractApiErrorMessage(error, 'Impossible de charger la scène.'), 'Fermer', {duration: 5000}),
-    });
-  }
-
-  protected edit(scene: BolSceneModel): void {
-    openSceneEditor(this.dialog, {scene, siblings: this.store.siblingsOf(scene)}).subscribe((updated) => {
-      if (updated) {
-        this.store.replaceScene(updated);
-      }
-    });
   }
 }

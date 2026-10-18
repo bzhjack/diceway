@@ -1,4 +1,5 @@
 import {TestBed} from '@angular/core/testing';
+import {MatDialog} from '@angular/material/dialog';
 import {firstValueFrom, of, throwError} from 'rxjs';
 import {BolSceneLoadResult, BolSceneModel} from '../../../models/bol-scene.model';
 import {BolCatalogService} from '../../../services/bol-catalog.service';
@@ -33,6 +34,7 @@ const RESULT = {session: {id: 'sess', titre: null, statut: 'libre'}, ignored: 0}
 describe('SceneStageStore', () => {
   let store: SceneStageStore;
   const loadAs = vi.fn();
+  const open = vi.fn();
 
   beforeEach(() => {
     vi.useFakeTimers();
@@ -44,6 +46,7 @@ describe('SceneStageStore', () => {
         {provide: BolScenarioService, useValue: {scenarios: () => of([{id: 'sc1', titre: 'Le Sceau d’Ambre'}])}},
         {provide: BolCatalogService, useValue: {regions: () => of([{id: 5, region: 'Jungle de Qo et jungle de Qush'}])}},
         {provide: SceneActionsService, useValue: {loadAs}},
+        {provide: MatDialog, useValue: {open}},
       ],
     });
     store = TestBed.inject(SceneStageStore);
@@ -121,7 +124,23 @@ describe('SceneStageStore', () => {
     expect(store.siblingsOf(SCENES[3]).map((s) => s.id)).toEqual([]);
   });
 
-  it('rouvre le rideau après une erreur', () => {
+  it('donne le nom de la région d’une scène', () => {
+    store.sync('sess', 's1', []);
+    expect(store.regionNom({...S2, region_id: 5})).toBe('Jungle de Qo et jungle de Qush');
+    expect(store.regionNom(S2)).toBeNull();
+    expect(store.regionNom(null)).toBeNull();
+  });
+
+  it('prépare une scène avec les scènes sœurs de son scénario, puis garde la scène enregistrée', () => {
+    const preparee = {...S2, lieu: 'Gué du Tyr'};
+    open.mockReturnValue({afterClosed: () => of(preparee)});
+    store.sync('sess', 's2', []);
+    store.prepare(S2);
+    expect(open.mock.calls[0][1].data.siblings.map((s: BolSceneModel) => s.id)).toEqual(['s1', 's3']);
+    expect(store.currentScene()?.lieu).toBe('Gué du Tyr');
+  });
+
+    it('rouvre le rideau après une erreur', () => {
     loadAs.mockReturnValue(throwError(() => new Error('409')));
     store.sync('sess', 's1', []);
     store.load(S2, 'replace').subscribe({error: () => undefined});

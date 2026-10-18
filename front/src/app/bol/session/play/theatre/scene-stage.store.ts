@@ -1,4 +1,5 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 import {catchError, defer, finalize, forkJoin, map, Observable, of, Subscription, tap, timer} from 'rxjs';
 import {BolSceneLoadResult, BolSceneModel, BolSceneScenarioRef, SceneLoadMode} from '../../../models/bol-scene.model';
 import {BolCatalogService} from '../../../services/bol-catalog.service';
@@ -7,6 +8,7 @@ import {BolSceneService} from '../../../services/bol-scene.service';
 import {RideauEtat, SceneActe} from '../../models/theatre.model';
 import {SceneActionsService} from '../../scene-actions.service';
 import {scenesOf} from '../scene-list/scene.util';
+import {openSceneEditor} from './scene-editor-dialog/scene-editor-dialog';
 import {sceneActs} from './theatre.util';
 
 /** Durée de fermeture du rideau avant que la scène ne change. */
@@ -34,6 +36,7 @@ export class SceneStageStore {
   private readonly scenarioService = inject(BolScenarioService);
   private readonly catalog = inject(BolCatalogService);
   private readonly sceneActions = inject(SceneActionsService);
+  private readonly dialog = inject(MatDialog);
 
   private readonly sessionId = signal<string | null>(null);
   private readonly currentSceneId = signal<string | null>(null);
@@ -135,6 +138,21 @@ export class SceneStageStore {
     const known = this.knownScenarioIds();
     const scenarioId = scene.scenario_id && known.has(scene.scenario_id) ? scene.scenario_id : null;
     return scenesOf(this.scenes(), scenarioId, known).filter((s) => s.id !== scene.id);
+  }
+
+  /** Nom de la région où se joue une scène — `null` sans région, ou tant que les régions ne sont pas chargées. */
+  regionNom(scene: BolSceneModel | null): string | null {
+    return scene?.region_id != null ? (this.regionNomsState().get(scene.region_id) ?? null) : null;
+  }
+
+  /** « Préparer la scène » : ouvre le dialogue d'édition (ses pistes mènent aux scènes de son propre scénario) et
+   * garde la scène enregistrée. */
+  prepare(scene: BolSceneModel): void {
+    openSceneEditor(this.dialog, {scene, siblings: this.siblingsOf(scene)}).subscribe((updated) => {
+      if (updated) {
+        this.replaceScene(updated);
+      }
+    });
   }
 
   /** Une scène a été modifiée (« Préparer la scène ») : elle remplace l'ancienne dans la liste. */
