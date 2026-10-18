@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, linkedSignal, output, untracked} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
@@ -29,6 +29,7 @@ interface PisteAffichee extends BolScenePiste {
 })
 export class SceneLectureComponent {
   protected readonly store = inject(SceneStageStore);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
 
@@ -37,8 +38,12 @@ export class SceneLectureComponent {
   /** Une scène a été chargée depuis une piste, avec la session à jour : la page la pose. */
   readonly sceneChanged = output<BolSceneLoadResult>();
 
+  /** L'id seul : une nouvelle copie de la même scène (rechargement, préparation) ne compte pas comme un changement. */
+  private readonly sceneId = computed(() => this.scene().id);
+
+  /** Le secret, flouté à chaque nouvelle scène ; une copie de la même scène (après « Préparer la scène ») le laisse tel quel. */
   protected readonly secretVisible = linkedSignal(() => {
-    this.scene().id;
+    this.sceneId();
     return false;
   });
   protected readonly pistes = computed<readonly PisteAffichee[]>(() =>
@@ -47,6 +52,14 @@ export class SceneLectureComponent {
       acte: piste.scene_id ? (this.acts().find((acte) => acte.scene.id === piste.scene_id) ?? null) : null,
     })),
   );
+
+  constructor() {
+    // Une nouvelle scène : la lecture repart du haut, le MJ lit son texte depuis le début.
+    effect(() => {
+      this.sceneId();
+      untracked(() => (this.host.nativeElement.scrollTop = 0));
+    });
+  }
 
   protected toggleSecret(): void {
     this.secretVisible.update((visible) => !visible);

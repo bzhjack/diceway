@@ -2,7 +2,16 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {apiUrl} from '../../core/api-url';
-import {BolFightSessionAddCombatantPayload, BolFightSessionCreatePayload, BolFightSessionHerosModel, BolFightSessionModel, CombatantAttitude, CombatCamp, EtatCombatDto, InitiativeResultat} from '../models/bol-fight-session.model';
+import {
+  BolFightSessionAddCombatantPayload,
+  BolFightSessionCreatePayload,
+  BolFightSessionHerosModel,
+  BolFightSessionModel,
+  CombatantAttitude,
+  CombatCamp,
+  EtatCombatDto,
+  InitiativeResultat,
+} from '../models/bol-fight-session.model';
 import {BolSceneLoadResult, SceneLoadMode} from '../models/bol-scene.model';
 
 @Injectable({providedIn: 'root'})
@@ -58,7 +67,7 @@ export class BolFightSessionService {
     return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/combatant/${kind}/${pivotId}/attitude`, {attitude});
   }
 
-    updateOrder(sessionId: string, ordre: readonly string[]): Observable<BolFightSessionModel> {
+  updateOrder(sessionId: string, ordre: readonly string[]): Observable<BolFightSessionModel> {
     return this.http.patch<BolFightSessionModel>(`${this.base}/${sessionId}/ordre`, {ordre});
   }
 

@@ -34,7 +34,21 @@ const api = (method, path, body) =>
     {method, path, body},
   );
 
-const overflow = () => page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+/** Débordements mesurés là où ils peuvent se produire (la page elle-même masque tout débordement) : le plateau en
+ * largeur et en hauteur, la piste de la troupe et la lecture, qui doivent défiler chacune dans sa zone. */
+const debordements = () =>
+  page.evaluate(() => {
+    const el = (sel) => document.querySelector(sel);
+    const plateau = el('.thr-plateau');
+    const piste = el('bol-troupe .dws-track');
+    const lecture = el('bol-scene-lecture');
+    return {
+      plateauLargeur: plateau.scrollWidth - plateau.clientWidth,
+      plateauHauteur: plateau.scrollHeight - plateau.clientHeight,
+      pisteTroupe: piste ? piste.scrollWidth - piste.clientWidth : 0,
+      lecture: lecture ? lecture.scrollHeight - lecture.clientHeight : 0,
+    };
+  });
 const troupeCount = () => page.locator('bol-troupe .trp-slot').count();
 
 await page.goto(base + '/login', {waitUntil: 'domcontentloaded'});
@@ -91,23 +105,37 @@ try {
   const pressed = await page.getByRole('button', {name: 'Masquer le secret'}).getAttribute('aria-pressed');
   if (pressed !== 'true') fail('le bouton du secret n’est pas pressé');
 
-  // 5. Un PNJ entre depuis les coulisses (double-clic).
+  // 5. Un PNJ glissé des coulisses sur la troupe entre en scène (zone de dépôt `adversaires`).
   const avant = await troupeCount();
   await page.getByRole('button', {name: 'Coulisses', exact: true}).click();
   await page.getByRole('radio', {name: 'PNJ'}).or(page.getByRole('button', {name: 'PNJ', exact: true})).first().click();
-  await page.locator('.rsv-row:not(.rsv-row--on-table)').first().dblclick();
+  await page.waitForTimeout(500);
+  const ligne = await page.locator('.rsv-row:not(.rsv-row--on-table)').first().boundingBox();
+  const rampe = await page.locator('bol-troupe .trp').boundingBox();
+  await page.mouse.move(ligne.x + 40, ligne.y + ligne.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(ligne.x + 30, ligne.y + ligne.height / 2 + 10, {steps: 3});
+  await page.mouse.move(rampe.x + rampe.width / 2, rampe.y + rampe.height / 2, {steps: 15});
+  await page.mouse.up();
   await page.waitForTimeout(1500);
   if ((await troupeCount()) !== avant + 1) fail('le PNJ glissé depuis les coulisses n’est pas entré en scène');
   await page.screenshot({path: `${shots}/theatre-2-coulisses.png`});
 
-  // 6. Scène bondée, texte à lire très long : pas de défilement horizontal de la page.
+  // 6. Scène bondée, texte à lire très long : le plateau ne déborde pas en largeur ; la troupe et la lecture défilent
+  // chacune dans leur zone (à 1440 × 900, le plateau tient sans défiler).
   await addCrowd();
+  // Les coulisses, ouvertes à l'étape 5, sont refermées : le plateau est mesuré dans toute sa largeur.
+  await page.getByRole('button', {name: 'Coulisses', exact: true}).click();
   for (const [width, height] of [[1440, 900], [1024, 768]]) {
     await page.setViewportSize({width, height});
     await page.reload({waitUntil: 'networkidle'});
     await page.waitForTimeout(800);
-    const delta = await overflow();
-    if (delta > 0) fail(`la page défile en largeur à ${width}px (${delta}px)`);
+    const d = await debordements();
+    console.log(`Débordements à ${width}px :`, JSON.stringify(d));
+    if (d.plateauLargeur > 1) fail(`le plateau déborde en largeur à ${width}px (${d.plateauLargeur}px)`);
+    if (d.pisteTroupe <= 0) fail(`la troupe bondée ne défile pas dans sa piste à ${width}px`);
+    if (width === 1440 && d.plateauHauteur > 1) fail(`le plateau défile en hauteur à 1440 × 900 (${d.plateauHauteur}px)`);
+    if (width === 1440 && d.lecture <= 0) fail('le long texte à lire ne défile pas dans sa colonne');
     await page.screenshot({path: `${shots}/theatre-3-bondee-${width}.png`});
   }
 

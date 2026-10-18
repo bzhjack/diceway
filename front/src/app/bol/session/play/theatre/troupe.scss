@@ -36,9 +36,11 @@
 }
 
 .trp-liste {
+  --trp-ecart: 1rem;
+
   display: flex;
   align-items: flex-end;
-  gap: 1rem;
+  gap: var(--trp-ecart);
   width: max-content;
   margin: 0 auto;
   padding: 0.6rem 0.5rem 0;
@@ -55,9 +57,9 @@
   }
 }
 
-// La piétaille se serre : deux cartes voisines se chevauchent.
+// La piétaille se serre : deux cartes voisines se chevauchent de 2,6rem (l'écart entre cartes est repris en plus).
 .trp-slot--pietaille + .trp-slot--pietaille {
-  margin-left: -2.6rem;
+  margin-left: calc(-2.6rem - var(--trp-ecart));
 }
 
 .trp-vide {
