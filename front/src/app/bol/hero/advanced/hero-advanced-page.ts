@@ -25,7 +25,7 @@ import {ArmureEntry} from '../../shared/models/armure-list.model';
 import {CarriereEntry} from '../../shared/models/carriere-list.model';
 import {BolEntityFormPageBase} from '../../shared/form/entity-form-page.base';
 import {EntityFormLabels} from '../../shared/models/entity-form-page.model';
-import {availableCatalog, selectedEntries, toggleEquipee} from '../../shared/form/form-selection';
+import {applyArmureEquipToggle, availableCatalog, selectedEntries, toggleEquipee} from '../../shared/form/form-selection';
 import {LangueEntry} from '../../shared/models/langue-list.model';
 import {StatGroup} from '../../shared/models/stats-grid.model';
 import {TraitAddEvent} from '../../shared/models/trait-add-menu.model';
@@ -1213,6 +1213,25 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       (heroId) => this.herosService.createArmure(heroId, {armure_id: id, equipee: false}),
       () => this.pushArmureEntry(id),
       "L'ajout de l'armure a échoué.",
+    );
+  }
+
+  /** Équiper une armure déséquipe les autres de sa catégorie : le backend le fait aussi en persistant. */
+  protected toggleArmureEquipped(index: number): void {
+    const entry = this.selectedArmures()[index];
+    if (!entry) {
+      return;
+    }
+
+    const catalog = this.armuresList() ?? [];
+    this.persistCreate(
+      (heroId) => this.herosService.equipArmure(heroId, entry.id),
+      () =>
+        this.model.update((current) => ({
+          ...current,
+          armures: applyArmureEquipToggle(current.armures, index, (id) => catalog.find((a) => a.id === id)?.categorie ?? null),
+        })),
+      "Le changement d'équipement a échoué.",
     );
   }
 
