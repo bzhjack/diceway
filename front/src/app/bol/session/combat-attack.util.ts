@@ -1,5 +1,7 @@
 import {catchError, map, Observable, of} from 'rxjs';
+import {AVANTAGE_ARME_FAVORITE_ID} from '../bol-rules.constants';
 import {BolHerosModel} from '../models/bol-heros.model';
+import {BolHerosTraitsModel} from '../models/bol-trait.model';
 import {BolHerosService} from '../services/bol-heros.service';
 import {firstEquippedDegats} from '../shared/arme/arme-equipee';
 import {PlayToken} from './models/combat-play.model';
@@ -71,6 +73,27 @@ function porteBouclier(armures: readonly (BolHerosArmureLike | number)[] | undef
   return (armures ?? []).some((a) => typeof a === 'object' && (toutCompte || a.equipee !== false) && a.armure?.categorie === 'bouclier');
 }
 
+/** L'arme favorite d'une fiche : la précision de son avantage « Arme favorite » ; `null` sans l'avantage ou sans arme nommée. */
+export function armeFavoriteDe(traits: readonly BolHerosTraitsModel[] | undefined): string | null {
+  const trait = (traits ?? []).find((t) => t.type === 'A' && Number(t.traitable_id) === AVANTAGE_ARME_FAVORITE_ID && !!t.detail?.trim());
+  return trait?.detail?.trim() ?? null;
+}
+
+/** Un nom d'arme sans casse, accents ni différence d'apostrophe. */
+function nomArme(nom: string): string {
+  return nom.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[’`]/g, "'").trim().toLowerCase();
+}
+
+/** L'arme en main est-elle l'arme favorite ? Même nom (casse, accents et apostrophes mis à part), ou l'un des noms d'une arme double
+ * du catalogue (« Javelot / fléchette ») — jamais un nom qui ne fait que commencer pareil (« Épée » n'est pas l'épée valgardienne). */
+export function estArmeFavorite(favorite: string | null, arme: string | null): boolean {
+  if (!favorite || !arme) {
+    return false;
+  }
+  const cherche = nomArme(favorite);
+  return nomArme(arme) === cherche || arme.split('/').some((nom) => nomArme(nom) === cherche);
+}
+
 /** Malus d'un petit bouclier porté : −1 à UNE attaque subie par round. Un grand bouclier (toutes les attaques) n'est pas concerné. */
 function shieldMalusOnOneAttack(hero: Pick<BolHerosModel, 'equipement_effectif'>): number {
   return hero.equipement_effectif.bouclier_malus_attaque_subie_portee === 'une' ? hero.equipement_effectif.bouclier_malus_attaque_subie : 0;
@@ -121,6 +144,7 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
         bouclierMalusUneAttaque: shieldMalusOnOneAttack(hero),
         bouclierDefenseToutes: hero.equipement_effectif.bouclier_defense_toutes ?? 0,
         bouclier: porteBouclier(hero.armures),
+        armeFavorite: armeFavoriteDe(hero.traits),
         herosId,
         heroisme: hero.ressources.heroisme,
         };
@@ -164,6 +188,7 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
           bouclierMalusUneAttaque: shieldMalusOnOneAttack(pnj),
           bouclierDefenseToutes: pnj.equipement_effectif.bouclier_defense_toutes ?? 0,
           bouclier: porteBouclier(pnj.armures, true),
+          armeFavorite: armeFavoriteDe(pnj.traits),
         };
       }),
       catchError(() => of(snapshot)),

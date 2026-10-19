@@ -18,7 +18,7 @@ import {EndTurnDialogComponent} from '../end-turn-dialog/end-turn-dialog';
 import {EndTurnChoice, EndTurnDialogData} from '../../models/end-turn-dialog.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, isHeavyWeapon, MAINS_NUES} from '../../attack-options.util';
-import {dualStrikeDegats, libellePoints, nomDesPoints, sbireBouclier} from '../../combat-attack.util';
+import {dualStrikeDegats, estArmeFavorite, libellePoints, nomDesPoints, sbireBouclier} from '../../combat-attack.util';
 import {egratignure} from '../../heroisme-spend.util';
 import {
   ATTACK_THRESHOLD,
@@ -462,6 +462,12 @@ export class TurnAssistantComponent {
     source: () => ({key: this.cardKey(), malus: this.malusDieOwed()}),
     computation: (source) => (source.malus ? 'malus' : null),
   });
+  /** Il attaque avec son arme favorite (avantage « Arme favorite », livre p. 40) : un dé de bonus, sans que le MJ ait à y penser. */
+  private readonly avecArmeFavorite = computed(() => estArmeFavorite(this.attacker()?.armeFavorite ?? null, this.effectiveArme()?.arme?.arme ?? null));
+  /** Ce que dit l'assistant du dé de l'arme favorite, sous le dé du MJ ; `null` avec une autre arme. */
+  protected readonly armeFavoriteNote = computed(() =>
+    this.avecArmeFavorite() ? `Arme favorite (${this.attacker()?.armeFavorite}) : dé de bonus avec cette arme.` : null,
+  );
   /** Les capacités de l'attaquant qui lui donnent un dé à toutes ses attaques (« Attaque féroce », « Armes améliorées », « Attaque
    * timide »), en clair sous le dé du MJ ; vide sinon. */
   protected readonly abilityDice = computed(() => {
@@ -473,7 +479,7 @@ export class TurnAssistantComponent {
   /** Dés de bonus moins dés de malus (dé du MJ, capacités de l'attaquant) : ils s'annulent un pour un (02-actions-combat.md). */
   private readonly netDice = computed(() => {
     const a = this.attacker();
-    const avantages = (this.gmDie() === 'bonus' ? 1 : 0) + (a?.attaqueAvantages?.length ?? 0);
+    const avantages = (this.gmDie() === 'bonus' ? 1 : 0) + (a?.attaqueAvantages?.length ?? 0) + (this.avecArmeFavorite() ? 1 : 0);
     const desavantages = (this.gmDie() === 'malus' ? 1 : 0) + (a?.attaqueDesavantages?.length ?? 0);
     return netDiceModifier(avantages, desavantages);
   });

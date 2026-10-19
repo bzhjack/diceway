@@ -19,6 +19,9 @@ export const DESAVANTAGE_NON_COMBATTANT_ID = 33;
 export const AVANTAGE_MAGIE_DES_ROIS_SORCIERS_ID = 30;
 export const AVANTAGE_POUVOIR_DU_NEANT_ID = 44;
 
+/** Arme favorite — dé de bonus avec l'arme nommée par sa précision (régionale : l'arme régionale). */
+export const AVANTAGE_ARME_FAVORITE_ID = 6;
+
 /** Mythic+ — Maître artisan : points de création comme un alchimiste, au rang de forgeron. */
 export const AVANTAGE_MAITRE_ARTISAN_ID = 60;
 const AVANTAGE_MAINS_GUERISSEUSES_ID = 31;

@@ -38,6 +38,8 @@ export interface ResolvedCombatStats {
   readonly bouclierDefenseToutes: number;
   /** Porte un bouclier (équipé pour un héros ; un PNJ porte tout ce qu'il possède) : l'autre main est prise. */
   readonly bouclier?: boolean;
+  /** L'arme nommée par son avantage « Arme favorite » (héros ou PNJ) : dé de bonus quand il attaque avec elle ; `null` sans. */
+  readonly armeFavorite?: string | null;
   /** null pour pnj/créature/démon — l'héroïsme (Faveur divine, options héroïques) n'existe que pour un héros. */
   readonly herosId: string | null;
   readonly heroisme: number | null;

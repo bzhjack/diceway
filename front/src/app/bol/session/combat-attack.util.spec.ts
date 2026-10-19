@@ -2,7 +2,7 @@ import {describe, expect, it} from 'vitest';
 import {firstValueFrom, of} from 'rxjs';
 import {BolHerosModel} from '../models/bol-heros.model';
 import {BolHerosService} from '../services/bol-heros.service';
-import {dualStrikeDegats, equippedProtection, isDualWieldEligible, libellePoints, nomDesPoints, resolveAttackStats, sbireBouclier} from './combat-attack.util';
+import {armeFavoriteDe, dualStrikeDegats, equippedProtection, estArmeFavorite, isDualWieldEligible, libellePoints, nomDesPoints, resolveAttackStats, sbireBouclier} from './combat-attack.util';
 import {TapisCard} from './models/tapis.model';
 import {PlayToken} from './models/combat-play.model';
 
@@ -108,6 +108,19 @@ describe('resolveAttackStats — un PNJ porte tout ce qu’il possède', () => {
     expect((await firstValueFrom(resolveAttackStats(token, service))).bouclier).toBe(true);
   });
 
+  it('un héros garde le nom de son arme favorite', async () => {
+    const heros = {
+      ...fiche,
+      attributs: {vigueur: 1, agilite: 1, agilite_effective: 1},
+      combat: {melee: 1, tir: 0, defense_effective: 1},
+      ressources: {heroisme: 5},
+      armes: [],
+      traits: [{traitable_id: 6, type: 'A', detail: 'Kriss', region_id: 3, carriere: false}],
+    } as unknown as BolHerosModel;
+    const hero = {kind: 'hero', combat: {sourceId: 'h1'}} as unknown as PlayToken;
+    expect((await firstValueFrom(resolveAttackStats(hero, {heros: () => of(heros)} as unknown as BolHerosService))).armeFavorite).toBe('Kriss');
+  });
+
   it('un héros ne porte que le bouclier équipé', async () => {
     const heros = (equipee: boolean) =>
       ({
@@ -165,5 +178,31 @@ describe('sbireBouclier', () => {
 
   it('ne trouve personne sans piétaille debout à ses côtés', () => {
     expect(sbireBouclier(rival, [rival, carte('pnj-2', 'Coriace'), carte('pnj-3', 'Piétaille', 'adversaires', 0)])).toBeNull();
+  });
+});
+
+describe('arme favorite (avantage : dé de bonus avec cette arme)', () => {
+  it('se lit dans la précision de l’avantage « Arme favorite » de la fiche', () => {
+    expect(armeFavoriteDe([{traitable_id: 6, type: 'A', detail: 'Kriss', region_id: 3, carriere: false}])).toBe('Kriss');
+    expect(armeFavoriteDe([{traitable_id: 6, type: 'A', detail: null, region_id: null, carriere: false}])).toBeNull();
+    expect(armeFavoriteDe([{traitable_id: 7, type: 'A', detail: 'Kriss', region_id: null, carriere: false}])).toBeNull();
+    expect(armeFavoriteDe(undefined)).toBeNull();
+  });
+
+  it('reconnaît l’arme en main, sans tenir compte de la casse, des accents ni des apostrophes', () => {
+    expect(estArmeFavorite('Kriss', 'Kriss')).toBe(true);
+    expect(estArmeFavorite('épée valgardienne', 'Épée valgardienne')).toBe(true);
+    expect(estArmeFavorite("Fronde de l'Axos", 'Fronde de l’Axos')).toBe(true);
+  });
+
+  it('reconnaît une arme double du catalogue par l’un de ses noms (« Javelot / fléchette »)', () => {
+    expect(estArmeFavorite('javelot', 'Javelot / fléchette')).toBe(true);
+  });
+
+  it('ne confond pas une arme avec une autre qui commence pareil', () => {
+    expect(estArmeFavorite('Épée', 'Épée valgardienne')).toBe(false);
+    expect(estArmeFavorite('Kriss', 'Dague')).toBe(false);
+    expect(estArmeFavorite(null, 'Kriss')).toBe(false);
+    expect(estArmeFavorite('Kriss', null)).toBe(false);
   });
 });

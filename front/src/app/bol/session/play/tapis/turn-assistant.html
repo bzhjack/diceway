@@ -237,6 +237,9 @@
         </button>
         <dw-value-stepper [formControl]="modifierControl" [min]="-6" [max]="6" ariaLabel="Modificateur du MJ au jet d'attaque" />
       </div>
+      @if (armeFavoriteNote(); as note) {
+        <span class="tas-note">{{ note }}</span>
+      }
       @if (abilityDice()) {
         <span class="tas-note">{{ abilityDice() }}, à chaque attaque.</span>
       }
