@@ -26,10 +26,8 @@
       </button>
       <button mat-flat-button type="button" (click)="startCombat.emit()"><mat-icon svgIcon="sword" /> Démarrer un combat</button>
     } @else {
-      <button type="button" class="cp-header-action cp-header-action--gold" (click)="endCombat.emit()">
-        <mat-icon>flag</mat-icon>
-        Terminer le combat
-      </button>
+      <!-- L'action principale de l'en-tête, en or plein comme « Démarrer un combat » -->
+      <button mat-flat-button type="button" (click)="endCombat.emit()"><mat-icon>flag</mat-icon> Terminer le combat</button>
     }
     <bol-account-menu />
   </div>

@@ -32,7 +32,10 @@ describe('CompagnieComponent', () => {
   const applyDamage = vi.fn(() => enCours);
   const adjustHeroisme = vi.fn(() => enCours);
 
+  const ouvertes: TapisCard[] = [];
+
   async function rendre(card: TapisCard): Promise<HTMLElement> {
+    ouvertes.length = 0;
     applyDamage.mockClear();
     adjustHeroisme.mockClear();
     TestBed.configureTestingModule({
@@ -44,6 +47,7 @@ describe('CompagnieComponent', () => {
     const fixture = TestBed.createComponent(CompagnieComponent);
     fixture.componentRef.setInput('cards', [card]);
     fixture.componentRef.setInput('sessionId', 'sess');
+    fixture.componentInstance.cardToggled.subscribe((ouverte) => ouvertes.push(ouverte));
     await fixture.whenStable();
     return fixture.nativeElement as HTMLElement;
   }
@@ -80,5 +84,12 @@ describe('CompagnieComponent', () => {
     expect(plus.getAttribute('aria-disabled')).toBe('true');
     plus.click();
     expect(applyDamage).not.toHaveBeenCalled();
+  });
+
+  it('le dé de la plaque ouvre la carte du héros, où se trouve son jet d’action', async () => {
+    const card = hero(8);
+    const element = await rendre(card);
+    bouton(element, 'Jet d’action de Grimar').click();
+    expect(ouvertes).toEqual([card]);
   });
 });

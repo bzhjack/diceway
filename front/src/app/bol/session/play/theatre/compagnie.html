@@ -16,6 +16,17 @@
           }
         </button>
 
+        <!-- Raccourci vers le jet d'action : il est sur la carte du héros, comme le clic sur le portrait -->
+        <button
+          type="button"
+          class="cmp-jet"
+          [attr.aria-label]="'Jet d’action de ' + plaque.card.nom"
+          matTooltip="Jet d’action"
+          (click)="cardToggled.emit(plaque.card)"
+        >
+          <mat-icon aria-hidden="true">casino</mat-icon>
+        </button>
+
         <div class="cmp-corps">
           <p class="cmp-nom">
             {{ plaque.card.nom }}

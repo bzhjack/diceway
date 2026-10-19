@@ -40,6 +40,7 @@
 }
 
 .cmp-plaque {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.7rem;
@@ -99,6 +100,8 @@
 
 .cmp-nom {
   margin: 0;
+  padding-right: 1.4rem; // la place du dé
+
   overflow: hidden;
   color: var(--dw-color-text-bright);
   font-family: 'Muse Display Harmony', serif;
@@ -111,6 +114,38 @@
     color: var(--dw-surface-600);
     font-family: 'Muse Sans', sans-serif;
     font-size: 0.75rem;
+  }
+}
+
+.cmp-jet {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 1px solid var(--dw-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--dw-surface-600);
+  cursor: pointer;
+
+  mat-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+    font-size: 1.1rem;
+  }
+
+  &:hover {
+    border-color: var(--dw-color-legendary);
+    color: var(--dw-color-legendary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 1px;
   }
 }
 

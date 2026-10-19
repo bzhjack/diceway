@@ -2,6 +2,7 @@ import {CdkDrag, CdkDragEnd, CdkDragMove, CdkDragPreview, CdkDropList} from '@an
 import {ChangeDetectionStrategy, Component, computed, inject, input, output, signal} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {Observable} from 'rxjs';
 import {extractApiErrorMessage} from '../../../../core/api-error.utils';
 import {BolFightSessionService} from '../../../services/bol-fight-session.service';
@@ -27,12 +28,12 @@ interface Plaque {
 }
 
 /** La compagnie, en pied du plateau : une plaque par héros (portrait, joueur, vitalité et héroïsme réglables
- * pas à pas, chaque pas enregistré tout de suite), puis les alliés en petites cartes. Un pas impossible ou en cours
+ * pas à pas, chaque pas enregistré tout de suite ; un dé en haut à droite ouvre sa carte et son jet d'action), puis les alliés en petites cartes. Un pas impossible ou en cours
  * marque son bouton `aria-disabled` sans le désactiver : le focus clavier reste dessus. C'est la zone de dépôt
  * `heros`. Signale à la page (`changed`) chaque valeur enregistrée, pour qu'elle recharge la session. */
 @Component({
   selector: 'bol-compagnie',
-  imports: [CdkDrag, CdkDragPreview, CdkDropList, MatIconModule, ActeurComponent],
+  imports: [CdkDrag, CdkDragPreview, CdkDropList, MatIconModule, MatTooltipModule, ActeurComponent],
   templateUrl: './compagnie.html',
   styleUrl: './compagnie.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
