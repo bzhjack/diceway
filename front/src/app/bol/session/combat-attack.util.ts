@@ -66,6 +66,11 @@ export function equippedProtection(armures: readonly (BolHerosArmureLike | numbe
   return {text: body === null ? String(bonus) : `${body}${helmet ? ' +1' : ''}`, value};
 }
 
+/** Porte un bouclier : une armure de catégorie « bouclier », équipée — ou toutes, pour un PNJ qui porte tout ce qu'il possède. */
+function porteBouclier(armures: readonly (BolHerosArmureLike | number)[] | undefined, toutCompte = false): boolean {
+  return (armures ?? []).some((a) => typeof a === 'object' && (toutCompte || a.equipee !== false) && a.armure?.categorie === 'bouclier');
+}
+
 /** Malus d'un petit bouclier porté : −1 à UNE attaque subie par round. Un grand bouclier (toutes les attaques) n'est pas concerné. */
 function shieldMalusOnOneAttack(hero: Pick<BolHerosModel, 'equipement_effectif'>): number {
   return hero.equipement_effectif.bouclier_malus_attaque_subie_portee === 'une' ? hero.equipement_effectif.bouclier_malus_attaque_subie : 0;
@@ -115,6 +120,7 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
         protectionText: protection.text,
         bouclierMalusUneAttaque: shieldMalusOnOneAttack(hero),
         bouclierDefenseToutes: hero.equipement_effectif.bouclier_defense_toutes ?? 0,
+        bouclier: porteBouclier(hero.armures),
         herosId,
         heroisme: hero.ressources.heroisme,
         };
@@ -157,6 +163,7 @@ export function resolveAttackStats(token: PlayToken, herosService: BolHerosServi
           protectionText: protection.text,
           bouclierMalusUneAttaque: shieldMalusOnOneAttack(pnj),
           bouclierDefenseToutes: pnj.equipement_effectif.bouclier_defense_toutes ?? 0,
+          bouclier: porteBouclier(pnj.armures, true),
         };
       }),
       catchError(() => of(snapshot)),

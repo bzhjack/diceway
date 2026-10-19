@@ -104,6 +104,25 @@ describe('resolveAttackStats — un PNJ porte tout ce qu’il possède', () => {
     expect(stats.protectionText).toBe('d6-2(2)');
   });
 
+  it('porte son bouclier, même rangé comme « non équipé »', async () => {
+    expect((await firstValueFrom(resolveAttackStats(token, service))).bouclier).toBe(true);
+  });
+
+  it('un héros ne porte que le bouclier équipé', async () => {
+    const heros = (equipee: boolean) =>
+      ({
+        ...fiche,
+        attributs: {vigueur: 1, agilite: 1, agilite_effective: 1},
+        combat: {melee: 1, tir: 0, defense_effective: 1},
+        ressources: {heroisme: 5},
+        armes: [],
+        armures: [{equipee, armure: {protection: 'Impose un malus de -1 à une attaque subie par round', categorie: 'bouclier'}}],
+      }) as unknown as BolHerosModel;
+    const hero = {kind: 'hero', combat: {sourceId: 'h1'}} as unknown as PlayToken;
+    expect((await firstValueFrom(resolveAttackStats(hero, {heros: () => of(heros(true))} as unknown as BolHerosService))).bouclier).toBe(true);
+    expect((await firstValueFrom(resolveAttackStats(hero, {heros: () => of(heros(false))} as unknown as BolHerosService))).bouclier).toBe(false);
+  });
+
   it('se sert de sa vilénie de rival comme de points d’héroïsme', async () => {
     const rival = {...token, combat: {...token.combat, vilenie: 5}} as unknown as PlayToken;
     expect((await firstValueFrom(resolveAttackStats(rival, service))).heroisme).toBe(5);

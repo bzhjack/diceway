@@ -36,6 +36,8 @@ export interface ResolvedCombatStats {
   readonly bouclierMalusUneAttaque: number;
   /** Ce qu'un grand bouclier ajoute déjà à `defense` : retranché quand la carte perd le bénéfice de son bouclier. */
   readonly bouclierDefenseToutes: number;
+  /** Porte un bouclier (équipé pour un héros ; un PNJ porte tout ce qu'il possède) : l'autre main est prise. */
+  readonly bouclier?: boolean;
   /** null pour pnj/créature/démon — l'héroïsme (Faveur divine, options héroïques) n'existe que pour un héros. */
   readonly herosId: string | null;
   readonly heroisme: number | null;

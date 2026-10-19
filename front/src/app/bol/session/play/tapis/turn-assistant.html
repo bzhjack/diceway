@@ -105,12 +105,8 @@
             type="button"
             class="tas-chip"
             [attr.aria-pressed]="deuxMains()"
-            [attr.aria-disabled]="deuxMainsInterdit() || null"
-            [matTooltip]="
-              deuxMainsInterdit()
-                ? 'À deux mains, c’est une arme lourde : impossible à manier avec moins de 0 en vigueur.'
-                : 'Arme maniée à une ou deux mains (Mythic+) : à deux mains, elle frappe avec son second dé.'
-            "
+            [attr.aria-disabled]="deuxMainsInterdit() !== null || null"
+            [matTooltip]="deuxMainsInterdit() ?? 'Arme maniée à une ou deux mains (Mythic+) : à deux mains, elle frappe avec son second dé.'"
             (click)="toggleDeuxMains()"
           >
             À deux mains <em>{{ degatsDeuxMains() }}</em>

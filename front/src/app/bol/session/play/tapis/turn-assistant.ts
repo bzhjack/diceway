@@ -258,12 +258,20 @@ export class TurnAssistantComponent {
   protected readonly canBrawl = computed(() => this.unarmed() && this.attacker()?.attaque === null);
   protected readonly brawl = computed(() => this.canBrawl() && this.brawlChosen());
 
-  /** Arme polyvalente (Mythic+, « d6 ou d6B ») : maniée à deux mains, sauf en combat à deux armes, elle frappe avec son second dé. */
-  private readonly deuxMainsChoisi = linkedSignal<string, boolean>({source: () => this.cardKey(), computation: () => false});
+  /** Arme polyvalente (Mythic+, « d6 ou d6B ») : maniée à deux mains — d'office, sauf en combat à deux armes —, elle frappe avec son
+   * second dé. */
+  private readonly deuxMainsChoisi = linkedSignal<string, boolean>({source: () => this.cardKey(), computation: () => true});
   protected readonly polyvalente = computed(() => estPolyvalente(this.effectiveArme()?.arme?.degats) && !this.isDualWieldSelected());
-  /** À deux mains, elle frappe comme une arme lourde (d6B) : impossible avec moins de 0 en vigueur, comme les armes lourdes. */
-  protected readonly deuxMainsInterdit = computed(() => (this.attacker()?.vigueur ?? 0) < 0);
-  protected readonly deuxMains = computed(() => this.polyvalente() && this.deuxMainsChoisi() && !this.deuxMainsInterdit());
+  /** Pourquoi elle ne peut pas se manier à deux mains : un bouclier occupe l'autre main, ou, à deux mains, ce serait une arme lourde
+   * (d6B), impossible avec moins de 0 en vigueur ; `null` si rien ne l'empêche. */
+  protected readonly deuxMainsInterdit = computed(() => {
+    const attacker = this.attacker();
+    if (attacker?.bouclier) {
+      return 'Son bouclier occupe l’autre main : l’arme se manie à une main.';
+    }
+    return (attacker?.vigueur ?? 0) < 0 ? 'À deux mains, c’est une arme lourde : impossible à manier avec moins de 0 en vigueur.' : null;
+  });
+  protected readonly deuxMains = computed(() => this.polyvalente() && this.deuxMainsChoisi() && this.deuxMainsInterdit() === null);
   protected readonly degatsDeuxMains = computed(() => degatsEnMain(this.effectiveArme()?.arme?.degats ?? null, true));
 
   /** Modificateur libre du MJ au jet d'attaque (circonstances), comme sur le jet d'action : il repart de 0 à chaque carte active. */
@@ -1156,7 +1164,7 @@ export class TurnAssistantComponent {
   }
 
   protected toggleDeuxMains(): void {
-    if (this.deuxMainsInterdit()) {
+    if (this.deuxMainsInterdit() !== null) {
       return;
     }
     this.deuxMainsChoisi.update((on) => !on);
