@@ -34,10 +34,6 @@
             <span class="tas-legend" matTooltip="Succès légendaire au jet de réaction : +1 à tous ses jets d’attaque pour toute la rencontre">Légendaire · +1 aux attaques</span>
           }
         </span>
-        @if (heroisme() !== null) {
-          @let points = heroisme() ?? 0;
-          <span class="tas-ph" [matTooltip]="pointsAttaquant()"><span class="tas-gem" aria-hidden="true"></span> {{ points }}<span class="tas-sr"> {{ pointsAttaquant() }}</span></span>
-        }
       </div>
       <div class="tas-tiles tas-tiles--start">
         @for (tile of attackerTiles(); track tile.label) {
@@ -51,6 +47,13 @@
           <dw-value-stepper [formControl]="vitaliteControl" [min]="vitaliteMin()" [max]="card().vitaliteMax ?? undefined" [ariaLabel]="'Vitalité de ' + card().nom" [heart]="true" />
           <span class="tas-tag">Vitalité /{{ card().vitaliteMax ?? '—' }}</span>
         </div>
+        <!-- Ses points d'héroïsme (ou de vilénie, pour un rival) : ils se corrigent ici, un point à la fois -->
+        @if (pointsAttaquant(); as p) {
+          <div class="tas-vit">
+            <bol-points-stepper [kind]="card().kind" [points]="p.points" [nom]="card().nom" (stepped)="heroismeAdjusted.emit($event)" />
+            <span class="tas-tag">{{ p.titre }}</span>
+          </div>
+        }
       </div>
       <span class="tas-label">Effets</span>
       <bol-effects-list [effets]="effets()" [cartes]="duelistes()" (retire)="removeEffect($event)" (ajoute)="effectAdded.emit($event)" />
@@ -299,6 +302,12 @@
             <dw-value-stepper [formControl]="targetVitaliteControl" [min]="targetVitaliteMin()" [max]="t.vitaliteMax ?? undefined" [ariaLabel]="'Vitalité de ' + t.nom" [heart]="true" />
             <span class="tas-tag">Vitalité /{{ t.vitaliteMax ?? '—' }}</span>
           </div>
+          @if (pointsCible(); as p) {
+            <div class="tas-vit">
+              <bol-points-stepper [kind]="t.kind" [points]="p.points" [nom]="t.nom" (stepped)="targetHeroismeAdjusted.emit({card: t, delta: $event})" />
+              <span class="tas-tag">{{ p.titre }}</span>
+            </div>
+          }
         </div>
         @if (targetBadges().length > 0) {
           <ul class="tas-pills" aria-label="Effets sur la cible">

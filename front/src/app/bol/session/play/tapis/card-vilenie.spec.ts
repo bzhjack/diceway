@@ -42,7 +42,7 @@ describe('CardVilenieComponent', () => {
 
   it('dépense un point ; pendant l’enregistrement, ignore un second pas sans faire pâlir le bouton', async () => {
     const element = await rendre(rival(2));
-    const moins = element.querySelector<HTMLButtonElement>('[aria-label="Dépenser 1 point de vilénie de Kalzatan"]')!;
+    const moins = element.querySelector<HTMLButtonElement>('[aria-label="Retirer 1 point de vilénie à Kalzatan"]')!;
     moins.click();
     TestBed.tick();
     expect(adjustVilenie).toHaveBeenCalledWith('sess', 7, -1);
@@ -54,7 +54,7 @@ describe('CardVilenieComponent', () => {
 
   it('ne dépense rien à 0 point', async () => {
     const element = await rendre(rival(0));
-    element.querySelector<HTMLButtonElement>('[aria-label="Dépenser 1 point de vilénie de Kalzatan"]')!.click();
+    element.querySelector<HTMLButtonElement>('[aria-label="Retirer 1 point de vilénie à Kalzatan"]')!.click();
     expect(adjustVilenie).not.toHaveBeenCalled();
     expect(element.querySelector('[role="img"]')?.getAttribute('aria-label')).toBe('0 point de vilénie');
   });

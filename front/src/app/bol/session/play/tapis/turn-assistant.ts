@@ -18,7 +18,7 @@ import {EndTurnDialogComponent} from '../end-turn-dialog/end-turn-dialog';
 import {EndTurnChoice, EndTurnDialogData} from '../../models/end-turn-dialog.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, isHeavyWeapon, MAINS_NUES} from '../../attack-options.util';
-import {dualStrikeDegats, libellePoints, sbireBouclier} from '../../combat-attack.util';
+import {dualStrikeDegats, libellePoints, nomDesPoints, sbireBouclier} from '../../combat-attack.util';
 import {egratignure} from '../../heroisme-spend.util';
 import {
   ATTACK_THRESHOLD,
@@ -50,6 +50,7 @@ import {DiceBoxHostComponent} from '../../../../shared/dice-3d/dice-box-host';
 import {DwValueStepperComponent} from '../../../../shared/value-stepper/value-stepper';
 import {ValueTracker} from '../../value-tracker';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
+import {PointsStepperComponent} from './points-stepper';
 import {isLowVitalite, vitalitePercent} from './tapis.util';
 
 /** Délai maximal d'un lancer 3D avant de tirer les dés sans animation. */
@@ -128,6 +129,15 @@ function extraTerm(valeur: number, nom: string): ModifierTerm {
   return {effetId: null, label: `${valeur > 0 ? '+' : '−'} ${Math.abs(valeur)} ${nom}`, valeur, tone: valeur > 0 ? 'plus' : 'minus'};
 }
 
+/** Des points à montrer sous le titre « Héroïsme » ou « Vilénie » ; `null` pour une carte qui n'en a pas. */
+function pointsAffiches(kind: TapisKind, points: number | null): {points: number; titre: string} | null {
+  if (points === null) {
+    return null;
+  }
+  const nom = nomDesPoints(kind);
+  return {points, titre: nom.charAt(0).toUpperCase() + nom.slice(1)};
+}
+
 /** L'assistant de tour, sous la frise en combat : un coup en trois temps. Trois cartes portent les réglages de la carte active — qui
  * attaque (ses chiffres, les effets en cours, la fin de son tour), avec quoi (arme, distance), comment (posture, options) ; dessous,
  * sur la même grille, trois cases — qui elle vise, son jet d'attaque (2d6 + bonus − défense, 9+), son jet de dégâts — dont celle où
@@ -138,7 +148,7 @@ function extraTerm(valeur: number, nom: string): ModifierTerm {
  * Il ne parle à aucun service : il signale à la page ce qui doit être enregistré (dégâts, fin de tour, défense totale, héroïsme). */
 @Component({
   selector: 'bol-turn-assistant',
-  imports: [DwDiceRowComponent, DwValueStepperComponent, EffectsListComponent, MatButtonModule, MatIconModule, MatTooltipModule, ReactiveFormsModule],
+  imports: [DwDiceRowComponent, DwValueStepperComponent, EffectsListComponent, MatButtonModule, MatIconModule, MatTooltipModule, PointsStepperComponent, ReactiveFormsModule],
   templateUrl: './turn-assistant.html',
   styleUrl: './turn-assistant.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -501,7 +511,10 @@ export class TurnAssistantComponent {
   /** Points d'héroïsme de l'attaquant ; `null` s'il n'en a pas (PNJ, créature, démon). */
   protected readonly heroisme = computed(() => this.attacker()?.heroisme ?? null);
   /** « 3 points d'héroïsme » de l'attaquant, ou « 3 points de vilénie » d'un rival. */
-  protected readonly pointsAttaquant = computed(() => libellePoints(this.card().kind, this.heroisme() ?? 0));
+  /** Les points d'héroïsme (héros) ou de vilénie (rival) de l'attaquant, avec leur titre ; `null` s'il n'en a pas. */
+  protected readonly pointsAttaquant = computed(() => pointsAffiches(this.card().kind, this.heroisme()));
+  /** Ceux de la cible, de même : un coriace, une piétaille, une créature ou un démon n'en ont pas. */
+  protected readonly pointsCible = computed(() => pointsAffiches(this.target()?.kind ?? 'hero', this.targetStats()?.heroisme ?? null));
   /** Échec critique accepté sur un double 1 : rapporte 1 point d'héroïsme. */
   protected readonly critique = signal(false);
   /** Succès légendaire acheté sur un double 6 : deux options au lieu d'une. */
