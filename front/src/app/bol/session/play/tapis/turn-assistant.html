@@ -96,6 +96,25 @@
         </div>
       }
 
+      @if (polyvalente()) {
+        <div class="tas-chips">
+          <button
+            type="button"
+            class="tas-chip"
+            [attr.aria-pressed]="deuxMains()"
+            [attr.aria-disabled]="deuxMainsInterdit() || null"
+            [matTooltip]="
+              deuxMainsInterdit()
+                ? 'À deux mains, c’est une arme lourde : impossible à manier avec moins de 0 en vigueur.'
+                : 'Arme maniée à une ou deux mains (Mythic+) : à deux mains, elle frappe avec son second dé.'
+            "
+            (click)="toggleDeuxMains()"
+          >
+            À deux mains <em>{{ degatsDeuxMains() }}</em>
+          </button>
+        </div>
+      }
+
       @if (isDualWieldSelected()) {
         <span class="tas-label" id="tas-arme2">Arme secondaire</span>
         <div class="tas-chips" role="group" aria-labelledby="tas-arme2">
@@ -563,7 +582,7 @@
         </div>
         @if (canScratch()) {
           @if (scratching()) {
-            <!-- Le d6 de l'égratignure, comme les autres dés : tapé s'il est lancé à table, ou lancé à l'écran. -->
+            <!-- Le d6B de l'égratignure, comme les autres dés : le dé gardé tapé s'il est lancé à table, ou lancé à l'écran. -->
             <div class="tas-entry">
               <input
                 #scratchInput
@@ -572,8 +591,8 @@
                 inputmode="numeric"
                 autocomplete="off"
                 maxlength="1"
-                placeholder="d6"
-                [attr.aria-label]="'Dé de l’égratignure lancé à table, de 1 à 6, pour ' + unPointCible() + ' de ' + target()?.nom"
+                placeholder="d6B"
+                [attr.aria-label]="'Dé gardé de l’égratignure lancée à table, le meilleur de deux d6, de 1 à 6, pour ' + unPointCible() + ' de ' + target()?.nom"
                 [disabled]="rolling()"
                 (input)="onScratchInput(scratchInput.value)"
                 (keydown.escape)="cancelScratch($event)"
@@ -582,14 +601,14 @@
                 <mat-icon>casino</mat-icon>
               </button>
             </div>
-            <small class="tas-die-note">Juste une égratignure : le d6 de vitalité rendue, lancé à table ou à l’écran</small>
+            <small class="tas-die-note">Juste une égratignure : d6B, le meilleur de deux d6, en vitalité rendue</small>
             <button type="button" class="tas-act" [disabled]="rolling()" (click)="cancelScratch()">Annuler l’égratignure</button>
           } @else {
             <button
               type="button"
               class="tas-act"
               [disabled]="rolling()"
-              [matTooltip]="unPointCible() + ' de la cible : 1d6 de vitalité rendu, sans dépasser les dégâts du coup, et elle perd sa prochaine action'"
+              [matTooltip]="unPointCible() + ' de la cible : d6B (le meilleur de deux d6) de vitalité rendu, sans dépasser les dégâts du coup, et elle perd sa prochaine action'"
               [attr.aria-label]="'Juste une égratignure pour ' + target()?.nom + ', pour ' + unPointCible()"
               (click)="startScratch()"
             >

@@ -16,7 +16,7 @@ describe('CarteDialogComponent', () => {
     const element = await rendre();
     const carte = element.querySelector<HTMLImageElement>('img.crt-image')!;
     expect(carte.getAttribute('src')).toContain('/assets/bol/cartes/carte-hd.jpg');
-    expect(carte.alt).toBe('Carte de Lémurie : la scène se joue à Gué du Tyr, Jungle de Qush, cerclée sur la carte');
+    expect(carte.alt).toBe('Carte de Lémurie, où un cercle marque le lieu de la scène : Gué du Tyr, Jungle de Qush');
     const repere = element.querySelector<HTMLElement>('.crt-repere')!;
     expect(parseFloat(repere.style.left)).toBeCloseTo(28.459, 2);
     expect(parseFloat(repere.style.top)).toBeCloseTo(56.789, 2);
@@ -24,13 +24,17 @@ describe('CarteDialogComponent', () => {
 
   it('s’agrandit et revient à la vue d’ensemble', async () => {
     const element = await rendre();
-    const zoom = element.querySelector<HTMLButtonElement>('button[aria-pressed]')!;
-    expect(zoom.getAttribute('aria-pressed')).toBe('false');
+    const zoom = element.querySelector<HTMLButtonElement>('button.crt-zoom')!;
+    expect(zoom.textContent).toContain('Agrandir');
 
     zoom.click();
     await fixture.whenStable();
-
-    expect(zoom.getAttribute('aria-pressed')).toBe('true');
+    expect(zoom.textContent).toContain('Vue d’ensemble');
     expect(element.querySelector('.crt-vue')?.classList).toContain('crt-vue--zoom');
+
+    zoom.click();
+    await fixture.whenStable();
+    expect(zoom.textContent).toContain('Agrandir');
+    expect(element.querySelector('.crt-vue')?.classList).not.toContain('crt-vue--zoom');
   });
 });

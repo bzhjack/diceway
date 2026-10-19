@@ -72,7 +72,7 @@ Usages en jeu :
 - **Coup de chance** : suggérer un élément favorable de scène, soumis à l'approbation du MJ. Ne peut pas apporter de changement majeur ni modifier un élément déjà établi.
 - **Défier la mort** : si la vitalité tombe entre `-1` et `-5`, dépenser `1 PH` pour la ramener immédiatement à `0` (vivant mais inconscient). Si la vitalité tombe en dessous de `-5`, dépenser `1 PH` pour se stabiliser (reste inconscient, se remet sur pied après quelques jours de repos).
 - **Faveur divine** : relancer tous les dés d'un jet d'action (y compris les dés de bonus), conserver le résultat du second jet ; utilisable même après un `2` naturel (échec automatique).
-- **Juste une égratignure** : perdre sa prochaine action et lancer `1d6` pour récupérer ce nombre de points de vitalité (sans dépasser le nombre de dégâts tout juste encaissés lors de cette attaque).
+- **Juste une égratignure** : perdre sa prochaine action et lancer `d6B` (le meilleur de deux d6 ; `1d6` avant la mise à jour Mythic+) pour récupérer ce nombre de points de vitalité (sans dépasser le nombre de dégâts tout juste encaissés lors de cette attaque).
 - **Parade in extremis** : annuler les dégâts d'une attaque en interposant bouclier ou arme ; ce bouclier/arme est brisé(e) et devient inutilisable.
 - **Négocier avec le MJ** : tout autre avantage ponctuel non couvert par les options ci-dessus, soumis à l'accord du MJ.
 - **Succès héroïque** : convertir une réussite normale en succès héroïque.

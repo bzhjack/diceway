@@ -2,6 +2,9 @@
 
 Pages source principales: p. 12-55, avec options raciales jouables p. 90-95
 
+Mise a jour Mythic+ (`doc/pdf-text/07-maj-mythic-plus.txt`): avantages `Maitre artisan`, `Prestance`, `Envoutant`, desavantage
+`Mefiance envers les inconnus`, armes regionales (marquees `Mythic+` ci-dessous).
+
 ## Sequence de creation
 
 1. Definir le concept.
@@ -174,7 +177,7 @@ Regles generales:
 | Ami des ceruleens | De de bonus dans les interactions avec les ceruleens. |
 | Amis dans la pegre | Contacts utiles dans le milieu criminel. |
 | Amis haut places | Contacts utiles dans les elites. |
-| Arme favorite | De de bonus avec l'arme choisie. |
+| Arme favorite | De de bonus avec l'arme choisie; une arme regionale (Mythic+) ne peut etre l'arme favorite que d'un heros de meme origine. |
 | Artiste | De de bonus pour creer, apprecier ou evaluer une oeuvre. |
 | Athlete | De de bonus sur les actions physiques sportives hors combat. |
 | Attirant | De de bonus quand l'apparence compte. |
@@ -189,6 +192,7 @@ Regles generales:
 | Discret | De de bonus en discretion et infiltration. |
 | Doigts de fee | De de bonus pour pickpocket, artisanat fin, jonglage, triche, etc. |
 | Dur a cuire | `+2 vitalite`. |
+| Envoutant (Mythic+) | 1 fois par jour: l'aide empressee de `aura + 1d6` pietailles; exige `tentatrice`. |
 | Erudit | De de bonus pour se rappeler des savoirs dans un domaine choisi. |
 | Fetard | De de bonus pour glaner des informations ou services en taverne; de bonus pour resister a l'alcool. |
 | Fils des plaines | De de bonus pour survivre, pister et chasser dans les plaines. |
@@ -200,6 +204,7 @@ Regles generales:
 | Laboratoire fourni | De de bonus pour alchimie et invention dans son propre laboratoire. |
 | Magie des Rois-Sorciers | De de bonus pour lancer des sorts; impose aussi un desavantage supplementaire a la creation. |
 | Mains guerisseuses | De de bonus pour aider la recuperation des blessures, poisons et etats; exige `medecin`. |
+| Maitre artisan (Mythic+) | Points de creation comme un alchimiste, mais seulement pour armes, armures et outils de qualite courante ou rare; peut ajouter ses points a ceux d'un alchimiste pour machines et instruments (pas les potions); exige `forgeron`. |
 | Maitre du deguisement | De de bonus pour se deguiser; depenser `1 point d'heroisme` permet d'avoir "deja ete la sous un deguisement". |
 | Marque par les dieux | `+1` point d'heroisme initial. |
 | Montagnard | De de bonus pour survivre, pister et chasser en montagne. |
@@ -213,6 +218,7 @@ Regles generales:
 | Pisteur des marais | De de bonus pour survivre, pister et chasser en marais. |
 | Poings d'acier | Les degats a mains nues ajoutent toute la `vigueur`. |
 | Pouvoir du Neant | `+2 points de pouvoir`; impose aussi un desavantage supplementaire a la creation. |
+| Prestance (Mythic+) | `+1 aura`; maximum `6`; maximum initial `4`. |
 | Recuperation rapide | `+1` vitalite supplementaire recuperee apres un combat; recupere aussi `1` point par jour meme en activite. |
 | Renard du desert | De de bonus pour survivre, pister et chasser dans le desert. |
 | Resistant a la magie | Sur un `6` sur 1d6, un sort subi n'a aucun effet. |
@@ -264,6 +270,7 @@ Regles generales:
 | Maudit | `-1 point d'heroisme` initial. |
 | Mauvaise reputation | 1 de malus pour faire bonne impression tant que la confiance n'est pas acquise. |
 | Mefiance envers la sorcellerie | 1 de malus lorsqu'il faut gerer sorciers ou alchimistes sans blocage emotif. |
+| Mefiance envers les inconnus (Mythic+) | A interpreter en jeu: surveille les inconnus, ne se confie pas devant eux, n'accede a leurs requetes qu'en maugreant. |
 | Muet | 1 de malus dans les interactions exigeant la parole. |
 | Non-combattant | Seulement `2` points d'aptitudes de combat a la creation, mais `6` points de carrieres; cout de progression des aptitudes de combat double. |
 | Obsession | 1 de malus pour ignorer l'objet de l'obsession. |
@@ -316,7 +323,7 @@ Note:
 
 | Arme | Categorie / particularite |
 | --- | --- |
-| Arme d'hast | `d6B` |
+| Arme d'hast | `d6B`, deux mains |
 | Baton | `d6` |
 | Dague | `d6M`, jet 3 m |
 | Epee | `d6` |
@@ -334,6 +341,18 @@ Note:
 | Arc | `d6`, 22 m |
 | Fronde / baton-fronde | `d6M`, 9 m / 18 m |
 | Javelot / flechette | `d6M`, 6 m |
+| Arc de guerre de Tyrus (Mythic+) | `d6B`, 38 m, deux mains; arme de Tyrus |
+| Epee valgardienne (Mythic+) | `d6` a une main ou `d6B` a deux mains; arme de Valgard |
+| Fronde de l'Axos (Mythic+) | `d6M`, 12 m; arme de l'Axos |
+| Hache d'abordage de Parsool (Mythic+) | `d6` a une main ou `d6B` a deux mains; arme de Parsool |
+| Khastok (Mythic+) | `d6B+1`, deux mains; lance de la Garde Jemadar de Malakut |
+| Kriss (Mythic+) | `d6M+1`, dissimulable; arme de Halakh |
+
+Armes regionales (Mythic+):
+
+- Elles se rencontrent rarement entre les mains d'un etranger (achetee a prix d'or, pillee...), ce qui lui vaut la reprobation des gens du cru.
+- Seul un heros de meme origine regionale peut en faire son arme favorite.
+- Le kriss et le khastok ne sont plus des variantes de la dague et de l'arme d'hast.
 
 ## Options raciales jouables
 

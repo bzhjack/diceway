@@ -79,6 +79,14 @@ describe('isHeavyWeapon', () => {
     expect(isHeavyWeapon(real('d6b'))).toBe(true);
   });
 
+  it('spots a heavy weapon with a modifier (khastok, d6B+1)', () => {
+    expect(isHeavyWeapon(real('d6B+1'))).toBe(true);
+  });
+
+  it('does not count a weapon wielded with one or two hands as heavy (d6 ou d6B)', () => {
+    expect(isHeavyWeapon(real('d6 ou d6B'))).toBe(false);
+  });
+
   it('leaves light, medium and unknown weapons alone', () => {
     expect(isHeavyWeapon(real('d6M'))).toBe(false);
     expect(isHeavyWeapon(real('d6'))).toBe(false);

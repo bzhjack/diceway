@@ -1,0 +1,127 @@
+ Mise à jour
+vers l'édition
+
+Mythic+
+
+
+
+
+    1
+                                                               Mise à jour vers l'édition
+
+MàJ vers Mythic+   Nouveaux avantages                                             Mythic+
+                     Maître artisan : vous êtes un artisan hors
+                   pair, capable de créer des objets d’une qualité
+                   exceptionnelle. Vous obtenez des points de
+                   création comme un alchimiste, mais uniquement
+                   pour produire des armes, armures et outils de
+                   qualité courante ou rare. Vous pouvez également
+                                                                              Armes de Lémurie
+                   aider un alchimiste à créer des machines ou
+                                                                                Certaines armes emblématiques de différents
+                   des instruments divers (mais pas des potions)
+                                                                              peuples de la Lémurie ont été modifiées pour
+                   en ajoutant vos points de création aux siens.
+                                                                              mieux refléter leurs spécificités. Elles sont
+                   Vous devez posséder la carrière de forgeron pour
+                                                                              indiquées par un astérisque dans le tableau des
+                   bénéficier de cet avantage.
+                                                                              armes, page suivante, et décrites ci-dessous.
+                     Prestance : ajoutez 1 à votre aura. Votre score
+                   maximum en aura passe à 6 au lieu de 5, et votre              Arc de guerre de Tyrus : les archers de Tyrus
+                   score de départ maximum en aura peut être de 4             s’entraînent dès leur plus jeune âge au maniement
+                   (au lieu de 3).                                            de ce grand arc. Ils s’amusent parfois aux dépens
+                                                                              d’autres guerriers en leur prêtant leur arc et en les
+                     Envoûtant : votre charme et votre magnétisme             regardant peiner à réussir à le bander, sans même
+                   sont tels que vous séduisez sans effort tous ceux          parler de décocher une flèche avec précision.
+                   susceptibles d’être attirés par vous. Une fois par
+                   jour, vous pouvez obtenir l’aide empressée d’un              Fronde de l’Axos : cette fronde n’est pas très
+                   nombre de piétailles égal à votre score d’aura + d6.       différente des autres frondes, mais les monta-
+                   Ceux-ci feront de leur mieux pour vous plaire,             gnards de l’Axos sont particulièrement habiles
+                   même si cela risque de les mettre en danger.               dans son maniement. Ils racontent toutefois que
+                   Vous devez posséder la carrière de tentatrice pour         sa portée accrue lui viendrait des fibres végétales
+                   bénéficier de cet avantage.                                particulières avec lesquelles ils ont coutume de
+                                                                              fabriquer ses lanières.
+
+
+                   Nouveau désavantage                                          Hache d’abordage de Parsool : une hache
+                                                                              utilisée par les marins de Parsool, qui peut être
+                                                                              maniée à une ou deux mains.
+                      Méfiance envers les inconnus : vous doutez
+                   systématiquement de l’honnêteté et de la                     Khastok : c’est la lance de combat de la Garde
+                   fiabilité des gens que vous ne connaissez pas. Ce          Jemadar de Malakut, au fer en forme de feuille de
+                   désavantage est essentiellement à interpréter en           laurier. Les gardes Jemadar chérissent leur arme
+                   jeu : vous surveillez de près les inconnus (au cas         et feront tout pour éviter que leur khastok tombe
+                   où ils tenteraient de vous piéger !), ne vous livrez       aux mains de l’ennemi.
+                   à aucune confidence en leur présence et n’accédez
+                   aux plus simples requêtes qu’en maugréant. Tout              Kriss : une dague allongée à la lame sinueuse.
+                   cela fera sans doute monter la tension dans                Arme typique de la région de Halakh, elle se
+                   certaines situations !                                     rencontre rarement ailleurs.
+
+
+
+
+                                                                          2
+            Arme                   Dégâts        Portée                               Notes
+Armes de mêlée
+Arme d’hast                           d6B                    arme à deux mains.
+
+
+
+
+                                                                                                                        MàJ vers Mythic+
+Bâton                                  d6                    arme à deux mains.
+Dague                                d6M            3m       dissimulable ; inclut poignard, coutelas...
+Épée                                   d6                    inclut cimeterre, glaive, sabre, tulwar...
+Épée / hache à 2 mains                d6B                    armes à deux mains.
+Fléau                                  d6                    ignore les boucliers.
+Gourdin                              d6M                     option : dégâts non létaux.
+Hache                                  d6           3m       peut être lancée.
+Hache d’abordage de Parsool*       d6 ou d6B                 peut être maniée à une ou deux mains.
+Khastok*                            d6B+1                    arme à deux mains.
+Kriss*                              d6M+1                    dissimulable.
+Épée valgardienne*                 d6 ou d6B                 peut être maniée à une ou deux mains.
+Lance                                  d6           6m       peut être lancée.
+Masse d’armes                          d6          1,5 m     peut être lancée.
+Massue                                 d6           3m       peut être lancée.
+Morgenstern                           d6B                    arme à deux mains.
+Rapière                              d6M                     très chic !
+Armes de tir
+Arbalète                               d6         30 m       arme à deux mains ; rechargement : 1 round de combat.
+Arbalète lourde                       d6B         45 m       arme à deux mains ; rechargement : 2 rounds de combat.
+Arc                                    d6         22 m       arme à deux mains.
+Arc de guerre de Tyrus*               d6B         38 m       arme à deux mains.
+Fronde/bâton-fronde                   d6M       9 m/18 m     arme à une main/arme à deux mains.
+Fronde de l'Axos*                     d6M         12 m
+Javelot/fléchette                     d6M          6m        arme de jet.
+
+
+  Épée valgardienne : cette épée mesure entre
+                                                           * Ces armes issues de cultures spécifiques se rencontrent
+1 et 1, 20 m de longueur et peut se manier à une
+                                                           rarement entre les mains d'un étranger, à moins que
+ou deux mains. Nombreux sont les forgerons
+                                                           celui-ci l'ait acquise à prix d'or, ou récupérée lors d'un
+ayant tenté de reproduire une telle lame, mais
+                                                           pillage, par exemple. En général, cela lui vaut d'ailleurs
+les artisans valgardiens protègent jalousement le
+                                                           la réprobation des gens du cru.
+secret de sa fabrication. On raconte que la solidité
+d’une lame valgardienne provient essentiellement           Seul un héros étant de même origine régionale que
+de la qualité du minerai de fer local entrant dans         l'arme peut la choisir pour arme favorite.
+la composition de son acier.
+
+
+
+Utiliser les points d’héroïsme                                   (page 58)
+
+Juste une égratignure (nouvelle version)
+  Quand un héros subit des dégâts, il peut prendre un petit moment (ce qui lui coûte sa prochaine action)
+pour se remettre du coup qu’il vient d’encaisser. En d’autres termes, sa blessure n’ est finalement pas aussi
+grave qu’elle paraissait. Vous lancez d6B (et non plus d6) et récupérez le nombre correspondant de points
+de vitalité (sans pouvoir dépasser le nombre de points de dégâts subis du fait de cette attaque).
+
+
+
+                                                       3
+

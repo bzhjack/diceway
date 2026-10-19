@@ -1,12 +1,16 @@
-import {ChangeDetectionStrategy, Component, computed, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, input} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {BolSceneModel} from '../../../models/bol-scene.model';
+import {REGION_MAP_COORDINATES} from '../../../shared/region/region-map-coordinates';
 import {SceneActe} from '../../models/theatre.model';
+import {openCarte} from './carte-dialog';
 import {SceneAmbianceComponent} from './scene-ambiance';
 import {lieuTexte} from './theatre.util';
 
 /** Le cartouche de la scène, en haut à gauche du plateau : où elle se joue, son titre en grand et son
- * ambiance. Annonce chaque nouvelle scène aux lecteurs d'écran (`aria-live`). */
+ * ambiance. Quand la région de la scène est placée sur la carte, un clic sur le lieu ouvre la carte de Lémurie,
+ * la région cerclée. Annonce chaque nouvelle scène aux lecteurs d'écran (`aria-live`). */
 @Component({
   selector: 'bol-scene-cartouche',
   imports: [MatIconModule, SceneAmbianceComponent],
@@ -15,8 +19,16 @@ import {lieuTexte} from './theatre.util';
       @if (lieu() || acte()) {
         <p class="ctc-lieu">
           @if (lieu(); as lieu) {
-            <mat-icon aria-hidden="true">place</mat-icon>
-            <span>{{ lieu }}</span>
+            @if (point()) {
+              <button type="button" class="ctc-lieu-carte" [attr.aria-label]="lieu + ' : voir sur la carte'" (click)="voirCarte()">
+                <mat-icon aria-hidden="true">place</mat-icon>
+                <span class="ctc-lieu-texte">{{ lieu }}</span>
+                <mat-icon class="ctc-lieu-icone" aria-hidden="true">map</mat-icon>
+              </button>
+            } @else {
+              <mat-icon aria-hidden="true">place</mat-icon>
+              <span>{{ lieu }}</span>
+            }
           }
           @if (acte(); as acte) {
             <span class="ctc-num">scène {{ acte.numero }} sur {{ total() }}</span>
@@ -55,6 +67,40 @@ import {lieuTexte} from './theatre.util';
       }
     }
 
+    // Le lieu, cliquable : il ouvre la carte.
+    .ctc-lieu-carte {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin: -0.15rem -0.4rem;
+      padding: 0.15rem 0.4rem;
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      text-shadow: inherit;
+      cursor: pointer;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.45);
+
+        .ctc-lieu-texte {
+          text-decoration: underline dotted;
+          text-underline-offset: 0.2em;
+        }
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--dw-color-legendary);
+        outline-offset: 1px;
+      }
+    }
+
+    .ctc-lieu-icone {
+      opacity: 0.75;
+    }
+
     .ctc-num {
       color: var(--dw-surface-700);
       font-weight: 400;
@@ -84,6 +130,8 @@ import {lieuTexte} from './theatre.util';
   host: {'aria-live': 'polite'},
 })
 export class SceneCartoucheComponent {
+  private readonly dialog = inject(MatDialog);
+
   readonly scene = input<BolSceneModel | null>(null);
   readonly regionNom = input<string | null>(null);
   /** L'acte en cours, s'il est dans la frise : « scène N sur M ». */
@@ -94,4 +142,17 @@ export class SceneCartoucheComponent {
     const scene = this.scene();
     return scene ? lieuTexte(scene.lieu, this.regionNom()) : null;
   });
+  /** Le point de la région de la scène sur la carte ; `null` sans région, ou pour une région non placée. */
+  protected readonly point = computed(() => {
+    const regionId = this.scene()?.region_id;
+    return regionId != null ? (REGION_MAP_COORDINATES[regionId] ?? null) : null;
+  });
+
+  protected voirCarte(): void {
+    const lieu = this.lieu();
+    const point = this.point();
+    if (lieu && point) {
+      openCarte(this.dialog, {lieu, point});
+    }
+  }
 }

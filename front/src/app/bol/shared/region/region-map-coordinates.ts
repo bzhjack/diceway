@@ -27,11 +27,11 @@ export const REGION_MAP_COORDINATES: Record<number, {x: number; y: number}> = {
 };
 
 /**
- * La carte HD (`skins/Carte-BoL-Lemurie-HD2.jpg`, 1248 × 1741 px) : la même illustration que `carte.jpg`, au pixel près, entourée de
- * son cadre et de son titre. `carte.jpg` en est le recadrage à partir de (55, 109) px, sur 1137 × 1491 px (recalage par corrélation).
+ * La carte HD (`cartes/carte-hd.jpg`, 1248 × 1741 px) : la même illustration que `carte.jpg`, au pixel près, entourée de son cadre
+ * et de son titre. `carte.jpg` en est le recadrage à partir de (55, 109) px, sur 1137 × 1491 px (recalage par corrélation).
  */
 export const CARTE_HD = {
-  url: '/assets/bol/skins/Carte-BoL-Lemurie-HD2.jpg',
+  url: '/assets/bol/cartes/carte-hd.jpg',
   largeur: 1248,
   hauteur: 1741,
   recadrage: {x: 55, y: 109, largeur: 1137, hauteur: 1491},

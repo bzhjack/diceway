@@ -20,4 +20,7 @@ Les noms de fichiers indiquent les pages **livre**.
 | `05-magie-p138-157.txt` | Alchimie, foi, sorcellerie | 138-157 |
 | `06-progression-p164-166.txt` | Progression et suivants | 164-166 |
 
+Mise à jour vers l'édition Mythic+ : `07-maj-mythic-plus.txt`, extrait de `doc/MaJ_Mythic.pdf` (3 pages, `pdftotext -layout`) —
+nouveaux avantages et désavantage, armes régionales, « Juste une égratignure » en d6B (livre p. 58).
+
 Usage : vérifier l'alignement de `doc/rules/*.md` avec le texte du livre sans relancer `pdftotext`.

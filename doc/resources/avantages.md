@@ -1,6 +1,7 @@
 # Avantages
 
-Catalogue de travail basé sur le PDF et le seeder `backend/database/seeders/BolAvantageSeeder.php`.
+Catalogue de travail basé sur le PDF, sa mise à jour Mythic+ (`doc/pdf-text/07-maj-mythic-plus.txt`) et le seeder
+`backend/database/seeders/BolAvantageSeeder.php`.
 
 ## Remarques
 
@@ -30,6 +31,7 @@ Catalogue de travail basé sur le PDF et le seeder `backend/database/seeders/Bol
 - Discret
 - Doigts de fée
 - Dur à cuire
+- Envoûtant (Mythic+)
 - Érudit
 - Fêtard
 - Fils des plaines
@@ -41,6 +43,7 @@ Catalogue de travail basé sur le PDF et le seeder `backend/database/seeders/Bol
 - Laboratoire fourni
 - Magie des Rois-Sorciers
 - Mains guérisseuses
+- Maître artisan (Mythic+)
 - Maître du déguisement
 - Marqué par les dieux
 - Montagnard
@@ -54,6 +57,7 @@ Catalogue de travail basé sur le PDF et le seeder `backend/database/seeders/Bol
 - Pisteur des marais
 - Poings d’acier
 - Pouvoir du Néant
+- Prestance (Mythic+)
 - Récupération rapide
 - Renard du désert
 - Résistant à la magie
@@ -75,3 +79,7 @@ Catalogue de travail basé sur le PDF et le seeder `backend/database/seeders/Bol
 - `Arme favorite` : lié à une arme précise.
 - `Baudrier de guerre` : traite un cas d'armure moyenne sans malus standard.
 - `Magie des Rois-Sorciers` et `Pouvoir du Néant` : structurants pour les lanceurs de sorts.
+- `Prestance` (Mythic+) : `+1 aura`, maximum 6, maximum de départ 4, comme `Savant` pour l'esprit.
+- `Maître artisan` (Mythic+) : exige la carrière forgeron ; points de création comme un alchimiste, mais seulement pour armes,
+  armures et outils de qualité courante ou rare.
+- `Envoûtant` (Mythic+) : exige la carrière tentatrice ; une fois par jour, l'aide de `aura + d6` piétailles.

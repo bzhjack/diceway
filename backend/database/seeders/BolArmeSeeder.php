@@ -13,14 +13,14 @@ class BolArmeSeeder extends Seeder
      */
     public function run(): void
     {
-        // Table des armes alignée sur les 18 catégories du livre BoL.
+        // Table des armes alignée sur les 18 catégories du livre BoL, puis les 6 armes régionales de Mythic+ (ids 19 à 24).
         $armes = [
             [
                 'id' => 1,
                 'arme' => 'Arme d’hast',
                 'type' => 'M',
                 'degats' => 'd6B',
-                'notes' => 'Inclut le khastok de Malakut.'
+                'notes' => 'Arme à deux mains.'
             ],
             [
                 'id' => 2,
@@ -35,7 +35,7 @@ class BolArmeSeeder extends Seeder
                 'type' => 'M',
                 'degats' => 'd6M',
                 'portee' => '3m',
-                'notes' => 'Dissimulable; inclut kriss, poignard, coutelas...'
+                'notes' => 'Dissimulable; inclut poignard, coutelas...'
             ],
             [
                 'id' => 4,
@@ -150,6 +150,50 @@ class BolArmeSeeder extends Seeder
                 'type' => 'M',
                 'degats' => 'd6B',
                 'notes' => 'Armes à deux mains.'
+            ],
+            [
+                'id' => 19,
+                'arme' => 'Arc de guerre de Tyrus',
+                'type' => 'T',
+                'degats' => 'd6B',
+                'portee' => '38m',
+                'notes' => 'Arme à deux mains. Arme de Tyrus : seul un héros de Tyrus peut en faire son arme favorite.'
+            ],
+            [
+                'id' => 20,
+                'arme' => 'Fronde de l’Axos',
+                'type' => 'T',
+                'degats' => 'd6M',
+                'portee' => '12m',
+                'notes' => 'Arme des montagnards de l’Axos : seul un héros de l’Axos peut en faire son arme favorite.'
+            ],
+            [
+                'id' => 21,
+                'arme' => 'Hache d’abordage de Parsool',
+                'type' => 'M',
+                'degats' => 'd6 ou d6B',
+                'notes' => 'Se manie à une ou deux mains. Arme des marins de Parsool : seul un héros de Parsool peut en faire son arme favorite.'
+            ],
+            [
+                'id' => 22,
+                'arme' => 'Khastok',
+                'type' => 'M',
+                'degats' => 'd6B+1',
+                'notes' => 'Arme à deux mains ; lance de la Garde Jemadar. Arme de Malakut : seul un héros de Malakut peut en faire son arme favorite.'
+            ],
+            [
+                'id' => 23,
+                'arme' => 'Kriss',
+                'type' => 'M',
+                'degats' => 'd6M+1',
+                'notes' => 'Dissimulable ; dague à lame sinueuse. Arme de Halakh : seul un héros de Halakh peut en faire son arme favorite.'
+            ],
+            [
+                'id' => 24,
+                'arme' => 'Épée valgardienne',
+                'type' => 'M',
+                'degats' => 'd6 ou d6B',
+                'notes' => 'Se manie à une ou deux mains. Arme de Valgard : seul un héros de Valgard peut en faire son arme favorite.'
             ],
         ];
         BolArme::truncate();

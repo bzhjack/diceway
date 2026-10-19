@@ -3,12 +3,14 @@ import {BolHerosModel} from '../models/bol-heros.model';
 import {BolHerosService} from '../services/bol-heros.service';
 import {firstEquippedDegats} from '../shared/arme/arme-equipee';
 import {PlayToken} from './models/combat-play.model';
+import {degatsEnMain} from './combat-resolution.util';
 import {ResolvedCombatStats} from './models/combat-attack.model';
 import {TapisCard, TapisKind} from './models/tapis.model';
 
-/** Extrait le type de dé de dégâts d'une chaîne d'arme/créature BoL ("d6M", "d6B", "d3", "d6"). */
+/** Extrait le type de dé de dégâts d'une chaîne d'arme/créature BoL ("d6M", "d6B", "d3", "d6") ; une arme polyvalente (« d6 ou d6B »)
+ * compte pour son dé à une main. */
 function parseDegatsDice(degats: string | null | undefined): 'd3' | 'd6' | 'd6m' | 'd6b' {
-  const s = (degats ?? '').toLowerCase();
+  const s = (degatsEnMain(degats ?? null, false) ?? '').toLowerCase();
   if (s.includes('d3')) {
     return 'd3';
   }

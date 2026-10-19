@@ -361,6 +361,24 @@ class BolAvantageSeeder extends Seeder
                 'de_bonus' => true,
                 'de_bonus_domaine' => 'Jet d’action sous esprit pour percevoir quelque chose grâce à votre vue',
             ],
+            // Mythic+ (mise à jour de l'édition Mythic).
+            [
+                'id'=> 60 ,
+                'avantage' => 'Maître artisan',
+                'description' => 'Vous obtenez des points de création comme un alchimiste, mais uniquement pour produire des armes, armures et outils de qualité courante ou rare. Vous pouvez aider un alchimiste à créer des machines ou des instruments (pas des potions) en ajoutant vos points aux siens. Vous devez posséder la carrière forgeron.'
+            ],
+            [
+                'id'=> 61 ,
+                'avantage' => 'Prestance',
+                'attribut' => 'aura',
+                'attribut_bonus' => "1",
+                'description' => 'Votre score maximum en aura passe à 6 au lieu de 5, et votre score de départ maximum à 4 (au lieu de 3).'
+            ],
+            [
+                'id'=> 62 ,
+                'avantage' => 'Envoûtant',
+                'description' => 'Une fois par jour, vous obtenez l’aide empressée d’un nombre de piétailles égal à votre aura + d6, qui feront de leur mieux pour vous plaire, même à leurs risques. Vous devez posséder la carrière tentatrice.'
+            ],
             // Ajoutez d'autres régions selon vos besoins
             /*
              [

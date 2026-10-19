@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {attackBonus, damageDiceCount, damageDieMax, damageRange, finalDamage, heroicPicksAllowed, parseDamage, rawDamage, scaleDamage, toggleHeroicPick, vigueurBonus, computeAttackTotal, resolvePostureAttackModifier, suggestedAttackResult, shouldPromptDefierLaMort} from './combat-resolution.util';
+import {attackBonus, damageDiceCount, degatsEnMain, estPolyvalente, damageDieMax, damageRange, finalDamage, heroicPicksAllowed, parseDamage, rawDamage, scaleDamage, toggleHeroicPick, vigueurBonus, computeAttackTotal, resolvePostureAttackModifier, suggestedAttackResult, shouldPromptDefierLaMort} from './combat-resolution.util';
 import {ResolvedCombatStats} from './models/combat-attack.model';
 
 const STATS: ResolvedCombatStats = {
@@ -242,5 +242,25 @@ describe('toggleHeroicPick', () => {
 
   it('picks nothing when no option is allowed', () => {
     expect(toggleHeroicPick(['carnage'], 'precis', 0)).toEqual([]);
+  });
+});
+
+describe('armes polyvalentes (Mythic+ : « d6 ou d6B », maniées à une ou deux mains)', () => {
+  it('donne le premier dé à une main, le second à deux mains', () => {
+    expect(degatsEnMain('d6 ou d6B', false)).toBe('d6');
+    expect(degatsEnMain('d6 ou d6B', true)).toBe('d6B');
+  });
+
+  it('laisse les autres dégâts tels quels, à une comme à deux mains', () => {
+    expect(degatsEnMain('d6B+1', false)).toBe('d6B+1');
+    expect(degatsEnMain('d6B+1', true)).toBe('d6B+1');
+    expect(degatsEnMain(null, true)).toBeNull();
+  });
+
+  it('reconnaît une arme polyvalente', () => {
+    expect(estPolyvalente('d6 ou d6B')).toBe(true);
+    expect(estPolyvalente('d6 OU d6b')).toBe(true);
+    expect(estPolyvalente('d6B')).toBe(false);
+    expect(estPolyvalente(null)).toBe(false);
   });
 });

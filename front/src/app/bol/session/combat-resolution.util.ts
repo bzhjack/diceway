@@ -64,6 +64,20 @@ export function parseDamage(degats: string | null | undefined): DamageSpec | nul
   return {die: DICE[match[1]], multiplier: Number(match[2] ?? 1), modifier: Number(match[3] ?? 0), fixed: null};
 }
 
+const POLYVALENTE = /^\s*(\S+)\s+ou\s+(\S+)\s*$/i;
+
+/** Arme maniée à une ou deux mains (Mythic+ : épée valgardienne, hache d'abordage de Parsool), aux dégâts écrits « d6 ou d6B ». */
+export function estPolyvalente(degats: string | null | undefined): boolean {
+  return POLYVALENTE.test(degats ?? '');
+}
+
+/** Les dégâts d'une arme dans la main : pour une arme polyvalente, le premier dé à une main, le second à deux mains ; les autres
+ * dégâts tels quels. */
+export function degatsEnMain(degats: string | null, deuxMains: boolean): string | null {
+  const match = (degats ?? '').match(POLYVALENTE);
+  return match ? match[deuxMains ? 2 : 1] : degats;
+}
+
 /** Les dégâts bruts d'un jet, avant la vigueur et la protection : la valeur fixe, ou le dé multiplié puis modifié. */
 export function scaleDamage(spec: DamageSpec, face: number): number {
   return spec.fixed ?? face * spec.multiplier + spec.modifier;

@@ -61,7 +61,7 @@ export interface AppliedHit {
   readonly parried?: 'bouclier' | 'arme' | 'sbire';
   /** Le sbire qui a servi de bouclier humain. */
   readonly sbire?: string;
-  /** « Juste une égratignure » (1 point d'héroïsme) : le d6 lancé, et la vitalité rendue (plafonnée aux dégâts du coup). */
+  /** « Juste une égratignure » (1 point d'héroïsme) : le dé gardé du d6B, et la vitalité rendue (plafonnée aux dégâts du coup). */
   readonly scratch?: {readonly die: number; readonly healed: number};
 }
 

@@ -1,6 +1,7 @@
 import {BolHerosArmeModel} from '../models/bol-arme.model';
 import {BolCombatOptionModel} from '../models/bol-combat-reference.model';
 import {isDualWieldEligible} from './combat-attack.util';
+import {degatsEnMain, parseDamage} from './combat-resolution.util';
 
 /** Postures proposées à l'attaquant (doc/rules/02-actions-combat.md, "Options de combat") — "Défense
  * totale" en est exclue : elle empêche d'attaquer, elle a son propre bouton dans la barre d'action. */
@@ -43,9 +44,11 @@ export function isDualWieldWeapon(arme: BolHerosArmeModel): boolean {
   return isRealWeapon(arme) && isDualWieldEligible(arme.arme?.degats);
 }
 
-/** Une arme lourde (d6B) : qui a moins de 0 en vigueur ne peut pas la manier (02-actions-combat.md, « Dégâts »). */
+/** Une arme lourde (d6B, même modifiée : khastok d6B+1) : qui a moins de 0 en vigueur ne peut pas la manier (02-actions-combat.md,
+ * « Dégâts »). Une arme polyvalente (« d6 ou d6B ») n'en est pas une : elle se manie à une main. */
 export function isHeavyWeapon(arme: BolHerosArmeModel): boolean {
-  return arme.arme?.degats?.trim().toLowerCase() === 'd6b';
+  const degats = arme.arme?.degats ?? null;
+  return !!degats && parseDamage(degatsEnMain(degats, false))?.die === 'd6b';
 }
 
 /** Options toujours disponibles à un héros en plus de ses armes (table des dégâts de BoL). */

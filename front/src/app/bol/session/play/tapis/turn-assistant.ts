@@ -19,6 +19,7 @@ import {EndTurnChoice, EndTurnDialogData} from '../../models/end-turn-dialog.mod
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, isHeavyWeapon, MAINS_NUES} from '../../attack-options.util';
 import {dualStrikeDegats, libellePoints, sbireBouclier} from '../../combat-attack.util';
+import {egratignure} from '../../heroisme-spend.util';
 import {
   ATTACK_THRESHOLD,
   attackBonus,
@@ -26,7 +27,9 @@ import {
   damageDiceCount,
   damageDieMax,
   damageRange,
+  degatsEnMain,
   devastatingBonus,
+  estPolyvalente,
   finalDamage,
   HEROIC_OPTIONS,
   heroicPicksAllowed,
@@ -245,6 +248,14 @@ export class TurnAssistantComponent {
   protected readonly canBrawl = computed(() => this.unarmed() && this.attacker()?.attaque === null);
   protected readonly brawl = computed(() => this.canBrawl() && this.brawlChosen());
 
+  /** Arme polyvalente (Mythic+, « d6 ou d6B ») : maniée à deux mains, sauf en combat à deux armes, elle frappe avec son second dé. */
+  private readonly deuxMainsChoisi = linkedSignal<string, boolean>({source: () => this.cardKey(), computation: () => false});
+  protected readonly polyvalente = computed(() => estPolyvalente(this.effectiveArme()?.arme?.degats) && !this.isDualWieldSelected());
+  /** À deux mains, elle frappe comme une arme lourde (d6B) : impossible avec moins de 0 en vigueur, comme les armes lourdes. */
+  protected readonly deuxMainsInterdit = computed(() => (this.attacker()?.vigueur ?? 0) < 0);
+  protected readonly deuxMains = computed(() => this.polyvalente() && this.deuxMainsChoisi() && !this.deuxMainsInterdit());
+  protected readonly degatsDeuxMains = computed(() => degatsEnMain(this.effectiveArme()?.arme?.degats ?? null, true));
+
   /** Modificateur libre du MJ au jet d'attaque (circonstances), comme sur le jet d'action : il repart de 0 à chaque carte active. */
   protected readonly modifierControl = new FormControl(0, {nonNullable: true});
   private readonly freeModifier = toSignal(this.modifierControl.valueChanges, {initialValue: 0});
@@ -345,7 +356,7 @@ export class TurnAssistantComponent {
     }
 
     const option = this.effectiveOption();
-    const mainDegats = this.effectiveArme()?.arme?.degats ?? null;
+    const mainDegats = degatsEnMain(this.effectiveArme()?.arme?.degats ?? null, this.deuxMains());
     const offHand = this.effectiveOffHand();
     const degats = option?.slug === 'dual-strike' && offHand ? dualStrikeDegats(mainDegats, offHand.arme?.degats) : mainDegats;
 
@@ -1127,6 +1138,13 @@ export class TurnAssistantComponent {
     this.brawlChosen.update((on) => !on);
   }
 
+  protected toggleDeuxMains(): void {
+    if (this.deuxMainsInterdit()) {
+      return;
+    }
+    this.deuxMainsChoisi.update((on) => !on);
+  }
+
   protected selectOption(slug: string): void {
     this.selectedOptionSlug.set(slug);
     if (!DUAL_WIELD_SLUGS.has(slug)) {
@@ -1447,7 +1465,7 @@ export class TurnAssistantComponent {
           ? `${hit.target.nom} interpose ${hit.parried === 'bouclier' ? 'son bouclier, qui est brisé' : 'son arme, qui est brisée'}.`
           : `appliqués à ${hit.target.nom}.`;
     const scratch = hit.scratch
-      ? `Juste une égratignure : ${hit.scratch.die} au dé, ${hit.scratch.healed} ${hit.scratch.healed > 1 ? 'points rendus' : 'point rendu'} ; ${hit.target.nom} perd sa prochaine action.`
+      ? `Juste une égratignure : ${hit.scratch.die} au d6B, ${hit.scratch.healed} ${hit.scratch.healed > 1 ? 'points rendus' : 'point rendu'} ; ${hit.target.nom} perd sa prochaine action.`
       : '';
     return {title, detail, scratch};
   });
@@ -1486,7 +1504,8 @@ export class TurnAssistantComponent {
     this.focusAfterRender(() => (this.carnageOwed() > 0 ? this.attackInput() : this.endButton()));
   }
 
-  /** « Juste une égratignure » ouverte : son d6 attend, lancé à table (saisi) ou à l'écran. Refermée à chaque nouveau coup. */
+  /** « Juste une égratignure » ouverte : son d6B attend, lancé à table (le dé gardé, saisi) ou à l'écran. Refermée à chaque nouveau
+   * coup. */
   protected readonly scratching = linkedSignal<AppliedHit | null, boolean>({source: () => this.lastHit(), computation: () => false});
 
   /** Ouvre « Juste une égratignure » : la main passe au champ du dé. Le point n'est dépensé qu'une fois le dé connu. */
@@ -1504,31 +1523,30 @@ export class TurnAssistantComponent {
     this.scratching.set(false);
   }
 
-  /** Le d6 lancé à table : un chiffre de 1 à 6, pris tout de suite. */
+  /** Le d6B lancé à table : le dé gardé, un chiffre de 1 à 6, pris tout de suite. */
   protected onScratchInput(raw: string): void {
     const text = raw.trim();
     if (/^[1-6]$/.test(text)) {
-      this.applyScratch(Number(text));
+      this.applyScratch([Number(text)]);
     }
   }
 
-  /** Le d6 lancé à l'écran. */
+  /** Le d6B lancé à l'écran : deux d6, le meilleur compte. */
   protected async rollScratch(): Promise<void> {
     if (!this.canScratch() || this.rolling()) {
       return;
     }
-    const [die] = await this.throwDice('1d6', 1);
-    this.applyScratch(die);
+    this.applyScratch(await this.throwDice('2d6', 2));
   }
 
-  /** « Juste une égratignure » : la cible dépense 1 point d'héroïsme (ou de vilénie) pour son d6 ; elle récupère autant de vitalité, sans
-   * dépasser les dégâts du coup, et perd sa prochaine action. */
-  private applyScratch(die: number): void {
+  /** « Juste une égratignure » : la cible dépense 1 point d'héroïsme (ou de vilénie) pour son d6B ; elle récupère autant de vitalité,
+   * sans dépasser les dégâts du coup, et perd sa prochaine action. */
+  private applyScratch(des: readonly number[]): void {
     const hit = this.lastHit();
     if (!hit || !this.canScratch()) {
       return;
     }
-    const healed = Math.min(die, hit.damage);
+    const {die, healed} = egratignure(des, hit.damage);
     this.targetHeroismeAdjusted.emit({card: hit.target, delta: -1});
     this.vitaliteAdjusted.emit({card: hit.target, delta: healed});
     this.effectAdded.emit(effetActionPerdue(hit.target.key));

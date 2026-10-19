@@ -268,6 +268,12 @@ class BolDesavantageSeeder extends Seeder
                 'desavantage' => 'Traqué',
                 'description' => 'Vous êtes recherché.Lancez un D6 à chaque fois que vous entrez dans une ville nouvelle. Sur un 1, vous êtes repéré.'
             ],
+            // Mythic+ (mise à jour de l'édition Mythic).
+            [
+                'id'=> 44 ,
+                'desavantage' => 'Méfiance envers les inconnus',
+                'description' => 'Vous doutez systématiquement de l’honnêteté et de la fiabilité des inconnus : vous les surveillez, ne vous confiez pas devant eux et n’accédez à leurs requêtes qu’en maugréant. À interpréter en jeu.'
+            ],
             // Ajoutez d'autres régions selon vos besoins
             /*
              [

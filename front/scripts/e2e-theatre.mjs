@@ -1,6 +1,6 @@
 // Scénario : le théâtre du mode libre. Une scène préparée se charge rideau fermé, son cartouche et son secret s'affichent, un
-// personnage entre depuis les coulisses ; une scène bondée ne fait pas défiler la page en largeur ; une illustration cassée
-// retombe sur la carte de la région.
+// personnage entre depuis les coulisses ; le lieu ouvre la carte, la région cerclée ; une scène bondée ne fait pas défiler la
+// page en largeur ; une illustration cassée retombe sur l'image par défaut.
 // Lancer son propre `npx ng serve --port 4400` d'abord ; ne jamais utiliser le port 4200 (serveur IntelliJ de Lionel).
 import {tmpdir} from 'node:os';
 import {chromium} from 'playwright';
@@ -98,6 +98,21 @@ try {
   if (titre !== 'TMP Gué') fail(`le cartouche montre « ${titre} » au lieu de « TMP Gué »`);
   await page.screenshot({path: `${shots}/theatre-1-scene.png`});
 
+  // 2 bis. Le lieu ouvre la carte de Lémurie, la région cerclée ; Échap la referme et rend le focus au lieu.
+  await page.getByRole('button', {name: 'Gué du Tyr, Jungle de Qo et jungle de Qush : voir sur la carte'}).click();
+  const carte = page.locator('bol-carte-dialog img.crt-image');
+  await carte.waitFor();
+  await page.waitForFunction(() => document.querySelector('bol-carte-dialog img.crt-image')?.complete);
+  const carteChargee = await carte.evaluate((img) => img.naturalWidth);
+  if (carteChargee !== 1248) fail(`la carte HD ne s’est pas chargée (largeur ${carteChargee})`);
+  if (!(await page.locator('bol-carte-dialog .crt-repere').isVisible())) fail('la région n’est pas cerclée sur la carte');
+  await page.waitForTimeout(400);
+  await page.screenshot({path: `${shots}/theatre-1-carte.png`});
+  await page.keyboard.press('Escape');
+  await page.locator('bol-carte-dialog').waitFor({state: 'detached'});
+  const focusLieu = await page.evaluate(() => document.activeElement?.classList.contains('ctc-lieu-carte'));
+  if (!focusLieu) fail('le focus ne revient pas au lieu après la carte');
+
   // 3. Le chargement en remplacement a retiré les dix créatures et ramené le PNJ.
   if ((await troupeCount()) !== 1) fail(`la troupe compte ${await troupeCount()} cartes au lieu d’une`);
 
@@ -140,12 +155,12 @@ try {
     await page.screenshot({path: `${shots}/theatre-3-bondee-${width}.png`});
   }
 
-  // 7. Une illustration qui ne se charge pas retombe sur la carte de la région.
+  // 7. Une illustration qui ne se charge pas retombe sur l'image par défaut (la région n'y change rien).
   await api('POST', 'bol/scene/update', {id: sceneId, image: '/assets/bol/nexiste-pas.jpg'});
   await page.reload({waitUntil: 'networkidle'});
   await page.waitForTimeout(800);
   const decor = (await page.locator('bol-scene-decor').getAttribute('class')) ?? '';
-  if (!decor.includes('dcr--carte')) fail(`le décor ne retombe pas sur la carte (classes : ${decor})`);
+  if (!decor.includes('dcr--defaut')) fail(`le décor ne retombe pas sur l’image par défaut (classes : ${decor})`);
 
   // 8. Aucune erreur dans la console, hormis l'illustration absente voulue.
   const unexpected = errors.filter((error) => !error.includes('404'));

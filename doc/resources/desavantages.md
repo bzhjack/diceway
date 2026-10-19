@@ -1,6 +1,7 @@
 # Désavantages
 
-Catalogue de travail basé sur le PDF et le seeder `backend/database/seeders/BolDesavantageSeeder.php`.
+Catalogue de travail basé sur le PDF, sa mise à jour Mythic+ (`doc/pdf-text/07-maj-mythic-plus.txt`) et le seeder
+`backend/database/seeders/BolDesavantageSeeder.php`.
 
 ## Remarques
 
@@ -41,6 +42,7 @@ Catalogue de travail basé sur le PDF et le seeder `backend/database/seeders/Bol
 - Maudit
 - Mauvaise réputation
 - Méfiance envers la sorcellerie
+- Méfiance envers les inconnus (Mythic+)
 - Muet
 - Non-combattant
 - Obsession
@@ -60,3 +62,4 @@ Catalogue de travail basé sur le PDF et le seeder `backend/database/seeders/Bol
 - `Non-combattant` influe sur la construction du personnage.
 - `Maudit` touche l'héroïsme.
 - `Traqué` et `Signe distinctif` se combinent particulièrement bien dans les scénarios.
+- `Méfiance envers les inconnus` (Mythic+) : à interpréter en jeu, sans dé de malus.

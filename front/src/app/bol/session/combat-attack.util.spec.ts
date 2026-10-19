@@ -19,6 +19,11 @@ describe('isDualWieldEligible', () => {
     expect(isDualWieldEligible('d3')).toBe(true);
   });
 
+  it('accepts a weapon wielded with one or two hands (d6 ou d6B), as a medium weapon in one hand', () => {
+    expect(isDualWieldEligible('d6 ou d6B')).toBe(true);
+    expect(dualStrikeDegats('d6 ou d6B', 'd6M')).toBe('d6B');
+  });
+
   it('rejects heavy weapons (d6B) — combat à deux armes uniquement armes légères/moyennes', () => {
     expect(isDualWieldEligible('d6B')).toBe(false);
   });

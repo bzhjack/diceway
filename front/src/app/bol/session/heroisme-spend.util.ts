@@ -39,3 +39,10 @@ export function heroismeGems(heroisme: number): readonly boolean[] {
   const points = Math.max(0, Math.floor(heroisme));
   return Array.from({length: Math.max(HEROISME_HABITUEL, points)}, (_, index) => index < points);
 }
+
+/** « Juste une égratignure », en Mythic+ : un d6B, le meilleur de deux d6 (un seul dé : le dé gardé, tapé après un jet à table). La
+ * cible récupère autant de vitalité, sans dépasser les dégâts du coup (02-actions-combat.md). */
+export function egratignure(des: readonly number[], degats: number): {die: number; healed: number} {
+  const die = Math.max(...des);
+  return {die, healed: Math.min(die, degats)};
+}
