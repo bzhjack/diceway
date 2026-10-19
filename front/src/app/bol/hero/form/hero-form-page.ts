@@ -7,6 +7,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {BolHerosArmureModel} from '../../models/bol-armure.model';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {isArmeEquipee} from '../../shared/arme/arme-equipee';
+import {etoilesArmeFavorite} from '../../shared/arme/arme-favorite.util';
+import {AVANTAGE_ARME_FAVORITE_ID} from '../../bol-rules.constants';
 import {BolHerosModel} from '../../models/bol-heros.model';
 import {BolRegionModel} from '../../models/bol-region.model';
 import {BolHerosStateService} from '../../services/bol-heros-state.service';
@@ -215,6 +217,12 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
   protected readonly selectedCarrieresDraft = computed(() => this.model().carrieres);
   protected readonly selectedLanguesDraft = computed(() => this.model().langues);
   protected readonly selectedTraitsDraft = computed(() => this.model().traits);
+  /** Les étoiles « arme favorite » de la liste d'armes : l'avantage « Arme favorite » du héros, s'il l'a, et sa région. */
+  protected readonly etoilesArmes = computed(() => {
+    const trait = this.model().traits.find((t) => t.type === 'A' && Number(t.id) === AVANTAGE_ARME_FAVORITE_ID);
+    const favorite = trait ? {arme: trait.detail ?? null, regionId: trait.region_id ?? null} : null;
+    return etoilesArmeFavorite(this.selectedArmes(), favorite, this.model().region_id ?? null);
+  });
 
   protected readonly filteredArmes = availableCatalog(this.armesList, this.selectedArmesDraft);
   protected readonly filteredArmures = availableCatalog(this.armuresList, this.selectedArmuresDraft);
@@ -332,6 +340,20 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
 
   protected removeArme(index: number): void {
     this.model.update((current) => ({...current, armes: current.armes.filter((_, i) => i !== index)}));
+  }
+
+  /** L'étoile d'une arme : elle devient l'arme favorite (ou ne l'est plus) ; enregistré avec la fiche. */
+  protected toggleArmeFavorite(index: number): void {
+    const entry = this.selectedArmes()[index];
+    const etoile = this.etoilesArmes()?.[index];
+    if (!entry || !etoile || etoile.raison) {
+      return;
+    }
+    const arme = etoile.active ? null : entry.label;
+    this.model.update((current) => ({
+      ...current,
+      traits: current.traits.map((t) => (t.type === 'A' && Number(t.id) === AVANTAGE_ARME_FAVORITE_ID ? {...t, detail: arme} : t)),
+    }));
   }
 
   protected toggleArmeEquipped(index: number): void {
@@ -463,6 +485,8 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
       traits: hero.traits.map((trait) => ({
         id: trait.traitable_id,
         type: trait.type,
+        detail: trait.detail ?? null,
+        region_id: trait.region_id ?? null,
       })),
     });
   }
@@ -506,12 +530,13 @@ export class HeroFormPageComponent extends BolEntityFormPageBase<BolHerosModel, 
       carriere_id: carriere.id,
       value: carriere.value,
     }));
+    // La précision et la région d'un trait (arme favorite, avantage régional) se gardent : la sauvegarde les remplaçait par null.
     const traits = rawValue.traits.map((trait) => ({
       id: trait.id,
       traitable_id: trait.id,
       type: trait.type,
-      detail: null,
-      region_id: null,
+      detail: trait.detail ?? null,
+      region_id: trait.region_id ?? null,
       carriere: false,
     }));
     const armes = rawValue.armes.map((arme) => ({

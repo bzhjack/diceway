@@ -2,7 +2,8 @@ import {describe, expect, it} from 'vitest';
 import {firstValueFrom, of} from 'rxjs';
 import {BolHerosModel} from '../models/bol-heros.model';
 import {BolHerosService} from '../services/bol-heros.service';
-import {armeFavoriteDe, dualStrikeDegats, equippedProtection, estArmeFavorite, isDualWieldEligible, libellePoints, nomDesPoints, resolveAttackStats, sbireBouclier} from './combat-attack.util';
+import {estArmeFavorite} from '../shared/arme/arme-favorite.util';
+import {armeFavoriteDe, dualStrikeDegats, equippedProtection, isDualWieldEligible, libellePoints, nomDesPoints, resolveAttackStats, sbireBouclier} from './combat-attack.util';
 import {TapisCard} from './models/tapis.model';
 import {PlayToken} from './models/combat-play.model';
 

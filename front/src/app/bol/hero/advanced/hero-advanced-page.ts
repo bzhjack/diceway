@@ -10,7 +10,7 @@ import {MatInputModule} from '@angular/material/input';
 import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {confirmDialog} from '../../../shared/dw-confirm-dialog/confirm-dialog.utils';
 import {PictureComponent} from '../../../shared/picture/picture';
-import {AVANTAGE_MAGIE_DES_ROIS_SORCIERS_ID, AVANTAGE_POUVOIR_DU_NEANT_ID} from '../../bol-rules.constants';
+import {AVANTAGE_ARME_FAVORITE_ID, AVANTAGE_MAGIE_DES_ROIS_SORCIERS_ID, AVANTAGE_POUVOIR_DU_NEANT_ID} from '../../bol-rules.constants';
 import {BolCarriereModel} from '../../models/bol-carriere.model';
 import {BolHerosAttributs, BolHerosCombat, BolHerosModel, BolHerosOrigines, BolHerosRessources} from '../../models/bol-heros.model';
 import {BolHerosTraitsModel} from '../../models/bol-trait.model';
@@ -19,6 +19,7 @@ import {BolHerosStateService} from '../../services/bol-heros-state.service';
 import {HeroCreationWarning} from '../../models/bol-heros-state.model';
 import {addMenuOptions} from '../../shared/add-menu/add-menu.component';
 import {isArmeEquipee} from '../../shared/arme/arme-equipee';
+import {etoilesArmeFavorite} from '../../shared/arme/arme-favorite.util';
 import {ArmeEntry} from '../../shared/models/arme-list.model';
 import {ArmureEntry} from '../../shared/models/armure-list.model';
 import {CarriereEntry} from '../../shared/models/carriere-list.model';
@@ -391,6 +392,12 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
       equipee: entry.equipee,
     }),
   );
+  /** Les étoiles « arme favorite » du panneau Armes : l'avantage « Arme favorite » du héros, s'il l'a, et sa région. */
+  protected readonly etoilesArmes = computed(() => {
+    const trait = this.model().traits.find((t) => t.type === 'A' && Number(t.traitable_id) === AVANTAGE_ARME_FAVORITE_ID);
+    const favorite = trait ? {arme: trait.detail ?? null, regionId: trait.region_id ?? null} : null;
+    return etoilesArmeFavorite(this.selectedArmes(), favorite, this.model().region_id ?? null);
+  });
   protected readonly selectedArmures = selectedEntries(
     this.selectedArmuresDraft,
     this.armuresList,
@@ -1158,6 +1165,25 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
   }
 
   /** Équipe ou déséquipe une arme : enregistré tout de suite, comme les autres sous-ressources de cette page. */
+  /** L'étoile d'une arme : elle devient l'arme favorite (ou ne l'est plus), enregistré aussitôt comme la case « équipée ». */
+  protected toggleArmeFavorite(index: number): void {
+    const entry = this.selectedArmes()[index];
+    const etoile = this.etoilesArmes()?.[index];
+    if (!entry || !etoile || etoile.raison) {
+      return;
+    }
+    const arme = etoile.active ? null : entry.label;
+    this.persistCreate(
+      (heroId) => this.herosService.setArmeFavorite(heroId, arme),
+      () =>
+        this.model.update((current) => ({
+          ...current,
+          traits: current.traits.map((t) => (t.type === 'A' && Number(t.traitable_id) === AVANTAGE_ARME_FAVORITE_ID ? {...t, detail: arme} : t)),
+        })),
+      "Le choix de l'arme favorite a échoué.",
+    );
+  }
+
   protected toggleArmeEquipped(index: number): void {
     const entry = this.selectedArmes()[index];
     if (!entry) {

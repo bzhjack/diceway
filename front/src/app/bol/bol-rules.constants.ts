@@ -22,6 +22,16 @@ export const AVANTAGE_POUVOIR_DU_NEANT_ID = 44;
 /** Arme favorite — dé de bonus avec l'arme nommée par sa précision (régionale : l'arme régionale). */
 export const AVANTAGE_ARME_FAVORITE_ID = 6;
 
+/** Armes régionales (Mythic+) : seul un héros de leur région peut en faire son arme favorite. Région = `bol_region.id`. */
+export const ARMES_REGIONALES: readonly {readonly arme: string; readonly regionId: number; readonly region: string}[] = [
+  {arme: 'Kriss', regionId: 3, region: 'Halakh'},
+  {arme: 'Khastok', regionId: 7, region: 'Malakut'},
+  {arme: 'Fronde de l’Axos', regionId: 10, region: 'Montagnes de l’Axos'},
+  {arme: 'Hache d’abordage de Parsool', regionId: 12, region: 'Parsool'},
+  {arme: 'Arc de guerre de Tyrus', regionId: 17, region: 'Tyrus'},
+  {arme: 'Épée valgardienne', regionId: 19, region: 'Valgard'},
+];
+
 /** Mythic+ — Maître artisan : points de création comme un alchimiste, au rang de forgeron. */
 export const AVANTAGE_MAITRE_ARTISAN_ID = 60;
 const AVANTAGE_MAINS_GUERISSEUSES_ID = 31;

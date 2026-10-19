@@ -130,6 +130,8 @@
                       [armes]="selectedArmes()"
                       [equipToggleEnabled]="false"
                       (removed)="removeArme($event)"
+                      [etoiles]="etoilesArmes()"
+                      (favoriteToggled)="toggleArmeFavorite($event)"
                     />
                   </div>
 

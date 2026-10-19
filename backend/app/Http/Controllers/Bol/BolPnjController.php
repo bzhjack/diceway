@@ -87,6 +87,7 @@ class BolPnjController extends Controller
             $newTrait['traitable_id'] = $trait['id'];
             $newTrait['type'] = $trait['type'];
             $newTrait['traitable_type'] = $trait['type'] == 'A' ? BolAvantage::class : BolDesavantage::class;
+            $newTrait['detail'] = $trait['detail'] ?? null;
             BolHerosTrait::create($newTrait);
         }
 
@@ -166,7 +167,9 @@ class BolPnjController extends Controller
                     'traitable_id' => $item['id'],
                     'type' => $item['type'],
                     'traitable_type' => $item['type'] == 'A' ? BolAvantage::class : BolDesavantage::class
-                ], []);
+                ],
+                // La précision (arme favorite…) ne change que si la requête l'envoie.
+                array_key_exists('detail', $item) ? ['detail' => $item['detail']] : []);
         }
         $pnj->update($updatedPnj);
         $updatedPnj = BolHeros::with('traits.traitable', 'carrieres.carriere', 'armures.armure', 'armes.arme', 'langues.langue', 'region')->where('user_id', Auth::id())->where('id', $pnjId)->get()->first();

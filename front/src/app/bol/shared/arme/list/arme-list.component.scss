@@ -5,3 +5,44 @@
 .al-row-checkbox {
   flex-shrink: 0;
 }
+
+// L'étoile « arme favorite » : un toggle, donc rectangulaire ; or uni une fois allumée.
+.al-etoile {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.9rem;
+  height: 1.9rem;
+  margin-left: auto;
+  padding: 0;
+  border: 1px solid var(--dw-border);
+  border-radius: var(--dw-radius-toggle);
+  background: var(--dw-surface-0);
+  color: var(--dw-surface-600);
+  cursor: pointer;
+
+  .mat-icon {
+    width: 1.15rem;
+    height: 1.15rem;
+    font-size: 1.15rem;
+  }
+
+  &[aria-pressed='true'] {
+    border-color: var(--dw-color-legendary);
+    background: var(--dw-color-legendary);
+    color: #1c1200;
+  }
+
+  &[aria-disabled='true'] {
+    cursor: not-allowed;
+  }
+
+  &[aria-disabled='true']:not([aria-pressed='true']) {
+    opacity: 0.4;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--dw-color-legendary);
+    outline-offset: 1px;
+  }
+}

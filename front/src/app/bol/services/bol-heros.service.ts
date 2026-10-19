@@ -108,4 +108,9 @@ export class BolHerosService {
   adjustHeroisme(id: string, delta: number): Observable<BolHerosModel> {
     return this.http.patch<BolHerosModel>(apiUrl(`bol/heros/${id}/heroisme`), {delta});
   }
+
+  /** Nomme l'arme favorite d'une fiche (héros ou PNJ) ; `null` la retire. Refusé (422) pour un avantage régional, qui l'impose. */
+  setArmeFavorite(id: string, arme: string | null): Observable<BolHerosModel> {
+    return this.http.patch<BolHerosModel>(apiUrl(`bol/heros/${id}/arme-favorite`), {arme});
+  }
 }

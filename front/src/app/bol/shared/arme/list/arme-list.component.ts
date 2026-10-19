@@ -4,6 +4,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {DwCollapsibleRowComponent} from '../../../../shared/dw-collapsible-row/dw-collapsible-row';
+import {EtoileArme} from '../../models/arme-favorite.model';
 import {ArmeEntry} from '../../models/arme-list.model';
 
 @Component({
@@ -17,11 +18,23 @@ export class ArmeListComponent {
   readonly armes = input.required<readonly ArmeEntry[]>();
   /** À false sur une page qui ne persiste pas l'état équipé : la case reste visible mais n'est pas modifiable. */
   readonly equipToggleEnabled = input(true);
+  /** Les étoiles « arme favorite », alignées sur `armes` ; `null` (la fiche n'a pas l'avantage) : pas d'étoile. */
+  readonly etoiles = input<readonly EtoileArme[] | null>(null);
   readonly removed = output<number>();
+  /** Un clic sur l'étoile d'une arme libre de la changer : son index dans la liste. */
+  readonly favoriteToggled = output<number>();
   /** Un clic sur la case d'une arme : son index dans la liste. */
   readonly equippedToggled = output<number>();
 
   protected readonly expandedIds = signal<ReadonlySet<number>>(new Set());
+
+  protected toggleFavorite(index: number, event: Event): void {
+    event.stopPropagation();
+    if (this.etoiles()?.[index]?.raison) {
+      return;
+    }
+    this.favoriteToggled.emit(index);
+  }
 
   protected isExpanded(entry: ArmeEntry): boolean {
     return this.expandedIds().has(entry.id);

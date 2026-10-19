@@ -221,6 +221,8 @@
                             (armeAdded)="addArmeEntry($event)"
                             (armeRemoved)="removeArmeAt($event)"
                             (armeEquippedToggled)="toggleArmeEquipped($event)"
+                            [etoiles]="etoilesArmes()"
+                            (favoriteToggled)="toggleArmeFavorite($event)"
                           />
                         </div>
                         <!-- ===== FIN ARMES ===== -->

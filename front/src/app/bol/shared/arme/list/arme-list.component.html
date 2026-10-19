@@ -17,6 +17,20 @@
           (change)="equippedToggled.emit(index)"
         />
         <span class="dw-entry-label">{{ arme.label }}</span>
+        @if (etoiles()?.[index]; as etoile) {
+          <!-- L'arme favorite (avantage « Arme favorite ») : un dé de bonus quand le héros attaque avec elle. -->
+          <button
+            type="button"
+            class="al-etoile"
+            [attr.aria-pressed]="etoile.active"
+            [attr.aria-disabled]="etoile.raison ? 'true' : null"
+            [attr.aria-label]="'Arme favorite : ' + arme.label"
+            [matTooltip]="etoile.raison ?? (etoile.active ? 'Arme favorite : dé de bonus avec elle' : 'En faire l’arme favorite')"
+            (click)="toggleFavorite(index, $event)"
+          >
+            <mat-icon>{{ etoile.active ? 'star' : 'star_border' }}</mat-icon>
+          </button>
+        }
       </ng-container>
 
       <ng-container row-body>

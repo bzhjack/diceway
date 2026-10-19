@@ -173,6 +173,22 @@ class BolHerosController extends Controller
         return response()->json($heros);
     }
 
+    /** Nomme (ou retire, avec une arme vide) l'arme favorite d'une fiche : l'étoile de la liste d'armes. */
+    public function armeFavorite(Request $request, string $id)
+    {
+        $request->validate(['arme' => 'nullable|string|max:120']);
+        $heros = $this->bolHerosService->designerArmeFavorite($id, Auth::id(), $request->input('arme'));
+
+        if ($heros === null) {
+            return response()->json(['message' => 'Fiche ou avantage « Arme favorite » introuvable.'], 404);
+        }
+        if ($heros === false) {
+            return response()->json(['message' => 'L’arme favorite de cet avantage régional est imposée par la région.'], 422);
+        }
+
+        return response()->json($heros);
+    }
+
     private function syncHeroRelations(string $herosId, Request $request, bool $creating): void
     {
         $extractRelationId = static function ($item, string $primaryKey, string $fallbackKey = 'id'): int {

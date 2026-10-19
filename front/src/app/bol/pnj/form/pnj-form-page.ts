@@ -12,6 +12,8 @@ import {BolPnjService} from '../../services/bol-pnj.service';
 import {DwTagComponent} from '../../../shared/dw-tag/dw-tag';
 import {AddMenuComponent, addMenuOptions} from '../../shared/add-menu/add-menu.component';
 import {ArmeListComponent} from '../../shared/arme/list/arme-list.component';
+import {etoilesArmeFavorite} from '../../shared/arme/arme-favorite.util';
+import {AVANTAGE_ARME_FAVORITE_ID} from '../../bol-rules.constants';
 import {ArmeEntry} from '../../shared/models/arme-list.model';
 import {ArmureListComponent} from '../../shared/armure/list/armure-list.component';
 import {ArmureEntry} from '../../shared/models/armure-list.model';
@@ -211,6 +213,25 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel, P
   protected readonly selectedCarrieresDraft = computed(() => this.model().carrieres);
   protected readonly selectedLanguesDraft = computed(() => this.model().langues);
   protected readonly selectedTraitsDraft = computed(() => this.model().traits);
+  /** Les étoiles « arme favorite » de la liste d'armes, si le PNJ a l'avantage. Un PNJ n'a pas de région : aucune arme interdite. */
+  protected readonly etoilesArmes = computed(() => {
+    const trait = this.model().traits.find((t) => t.type === 'A' && Number(t.id) === AVANTAGE_ARME_FAVORITE_ID);
+    return etoilesArmeFavorite(this.selectedArmes(), trait ? {arme: trait.detail ?? null, regionId: null} : null, null);
+  });
+
+  /** L'étoile d'une arme : elle devient l'arme favorite (ou ne l'est plus) ; enregistré avec la fiche. */
+  protected toggleArmeFavorite(index: number): void {
+    const entry = this.selectedArmes()[index];
+    const etoile = this.etoilesArmes()?.[index];
+    if (!entry || !etoile || etoile.raison) {
+      return;
+    }
+    const arme = etoile.active ? null : entry.label;
+    this.model.update((current) => ({
+      ...current,
+      traits: current.traits.map((t) => (t.type === 'A' && Number(t.id) === AVANTAGE_ARME_FAVORITE_ID ? {...t, detail: arme} : t)),
+    }));
+  }
 
   protected readonly filteredArmes = availableCatalog(this.armesList, this.selectedArmesDraft);
   protected readonly filteredArmures = availableCatalog(this.armuresList, this.selectedArmuresDraft);
@@ -389,6 +410,7 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel, P
       traits: pnj.traits.map((trait) => ({
         id: trait.traitable_id,
         type: trait.type,
+        detail: trait.detail ?? null,
       })),
     });
   }
@@ -426,6 +448,7 @@ export class PnjFormPageComponent extends BolEntityFormPageBase<BolHerosModel, P
       traits: rawValue.traits.map((trait) => ({
         id: trait.id,
         type: trait.type,
+        detail: trait.detail ?? null,
       })),
     };
   }

@@ -18,7 +18,8 @@ import {EndTurnDialogComponent} from '../end-turn-dialog/end-turn-dialog';
 import {EndTurnChoice, EndTurnDialogData} from '../../models/end-turn-dialog.model';
 import {BolCombatOptionModel} from '../../../models/bol-combat-reference.model';
 import {ARME_IMPROVISEE, DUAL_WIELD_SLUGS, filterAttackMenuCombatOptions, filterVisiblePostures, isDualWieldWeapon, isHeavyWeapon, MAINS_NUES} from '../../attack-options.util';
-import {dualStrikeDegats, estArmeFavorite, libellePoints, nomDesPoints, sbireBouclier} from '../../combat-attack.util';
+import {dualStrikeDegats, libellePoints, nomDesPoints, sbireBouclier} from '../../combat-attack.util';
+import {estArmeFavorite} from '../../../shared/arme/arme-favorite.util';
 import {egratignure} from '../../heroisme-spend.util';
 import {
   ATTACK_THRESHOLD,
