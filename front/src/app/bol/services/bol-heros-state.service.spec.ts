@@ -2,8 +2,10 @@ import {TestBed} from '@angular/core/testing';
 import {of} from 'rxjs';
 import {
   AVANTAGE_MAGIE_DES_ROIS_SORCIERS_ID,
+  AVANTAGE_MAITRE_ARTISAN_ID,
   AVANTAGE_POUVOIR_DU_NEANT_ID,
   CARRIERE_ALCHIMISTE_ID,
+  CARRIERE_FORGERON_ID,
   CARRIERE_PRETRE_ID,
   CARRIERE_SORCIER_ID,
   DESAVANTAGE_NON_COMBATTANT_ID,
@@ -293,6 +295,38 @@ describe('BolHerosStateService', () => {
       expect(modifiers).toContainEqual({attr: 'pouvoir', value: 12});
       expect(modifiers).toContainEqual({attr: 'creation', value: 1});
       expect(modifiers).toContainEqual({attr: 'foi', value: 3});
+    });
+
+    it('Maître artisan (Mythic+) : des points de création égaux au rang de forgeron', () => {
+      service.currentHeros.set(hero({traits: [trait(AVANTAGE_MAITRE_ARTISAN_ID, 'A')], carrieres: [{carriere_id: CARRIERE_FORGERON_ID, value: 2}]}));
+      expect(service.traitsModifiers()).toContainEqual({attr: 'creation', value: 2});
+    });
+
+    it('Maître artisan : rien sans la carrière forgeron, ni au rang 0 ; un forgeron sans l’avantage n’a rien non plus', () => {
+      const creation = () => service.traitsModifiers().filter((modifier) => modifier.attr === 'creation');
+      service.currentHeros.set(hero({traits: [trait(AVANTAGE_MAITRE_ARTISAN_ID, 'A')]}));
+      expect(creation()).toEqual([]);
+      service.currentHeros.set(hero({traits: [trait(AVANTAGE_MAITRE_ARTISAN_ID, 'A')], carrieres: [{carriere_id: CARRIERE_FORGERON_ID, value: 0}]}));
+      expect(creation()).toEqual([]);
+      service.currentHeros.set(hero({carrieres: [{carriere_id: CARRIERE_FORGERON_ID, value: 3}]}));
+      expect(creation()).toEqual([]);
+    });
+
+    it('un alchimiste maître artisan cumule les deux réserves de points de création', () => {
+      service.currentHeros.set(
+        hero({
+          traits: [trait(AVANTAGE_MAITRE_ARTISAN_ID, 'A')],
+          carrieres: [
+            {carriere_id: CARRIERE_ALCHIMISTE_ID, value: 1},
+            {carriere_id: CARRIERE_FORGERON_ID, value: 2},
+          ],
+        }),
+      );
+      const total = service
+        .traitsModifiers()
+        .filter((modifier) => modifier.attr === 'creation')
+        .reduce((sum, modifier) => sum + modifier.value, 0);
+      expect(total).toBe(3);
     });
 
     it('le sorcier donne ses points de pouvoir même au rang 0, pas l’alchimiste ni le prêtre', () => {

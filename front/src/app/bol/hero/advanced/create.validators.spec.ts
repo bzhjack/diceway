@@ -1,6 +1,7 @@
 import {
   attributRangeErrors,
   attributsBudgetErrors,
+  avantagesSansCarriere,
   carriereRangeErrors,
   carrieresBudgetErrors,
   combatBudgetErrors,
@@ -333,5 +334,29 @@ describe('R-LANG-3 — selectedLanguageTarget : nombre de langues = max(Esprit,0
     const r = region({langue_native_id: 2});
     const carrieres = [carriere(5, 3)];
     expect(selectedLanguageTarget(r, 0, carrieres, [lemurien, natif])).toBe(0);
+  });
+});
+
+describe('R-TRAIT-CARR — avantagesSansCarriere : un avantage qui exige une carrière', () => {
+  const MAINS_GUERISSEUSES = 31;
+  const MAITRE_ARTISAN = 60;
+  const ENVOUTANT = 62;
+  const FORGERON = 10;
+  const MEDECIN = 14;
+  const TENTATRICE = 25;
+
+  it('signale le maître artisan sans la carrière forgeron', () => {
+    expect(avantagesSansCarriere([MAITRE_ARTISAN], [])).toEqual([{avantageId: MAITRE_ARTISAN, carriereId: FORGERON}]);
+  });
+
+  it('accepte la carrière exigée, même au rang 0 : le héros la possède', () => {
+    expect(avantagesSansCarriere([MAITRE_ARTISAN, ENVOUTANT, MAINS_GUERISSEUSES], [FORGERON, TENTATRICE, MEDECIN])).toEqual([]);
+  });
+
+  it('signale chaque avantage auquel manque sa carrière, et ignore les autres', () => {
+    expect(avantagesSansCarriere([1, MAINS_GUERISSEUSES, ENVOUTANT], [FORGERON])).toEqual([
+      {avantageId: MAINS_GUERISSEUSES, carriereId: MEDECIN},
+      {avantageId: ENVOUTANT, carriereId: TENTATRICE},
+    ]);
   });
 });

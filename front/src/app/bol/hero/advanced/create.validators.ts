@@ -1,3 +1,4 @@
+import {CARRIERE_EXIGEE_PAR_AVANTAGE} from '../../bol-rules.constants';
 import {ValidationIssue, AttributsValues, CombatValues} from '../models/create-validators.model';
 
 
@@ -62,4 +63,13 @@ export function carrieresBudgetErrors(values: readonly number[], budget: number)
   return sum > budget
     ? [{kind: 'carrSumExceeded', message: `La somme des carrières ne doit pas dépasser ${budget}.`}]
     : [];
+}
+
+/** R-TRAIT-CARR : les avantages choisis sans la carrière qu'ils exigent (Mains guérisseuses, Maître artisan, Envoûtant) ; posséder la
+ * carrière, même au rang 0, suffit. */
+export function avantagesSansCarriere(avantageIds: readonly number[], carriereIds: readonly number[]): {avantageId: number; carriereId: number}[] {
+  return avantageIds.flatMap((avantageId) => {
+    const carriereId = CARRIERE_EXIGEE_PAR_AVANTAGE[avantageId];
+    return carriereId !== undefined && !carriereIds.includes(carriereId) ? [{avantageId, carriereId}] : [];
+  });
 }

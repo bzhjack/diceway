@@ -40,6 +40,7 @@ import {HeroAdvancedCreateTools} from './create.tools';
 import {
   attributRangeErrors,
   attributsBudgetErrors,
+  avantagesSansCarriere,
   carriereRangeErrors,
   carrieresBudgetErrors,
   combatBudgetErrors,
@@ -661,6 +662,15 @@ export class HeroAdvancedPageComponent extends BolEntityFormPageBase<BolHerosMod
         step: 'Traits',
         warn: `${specialNames.join(', ')} exige(nt) encore ${extraRequired - extraActual} désavantage(s) général(aux) supplémentaire(s).`,
       });
+    }
+
+    // R-TRAIT-CARR : Mains guérisseuses, Maître artisan et Envoûtant exigent une carrière (sans forgeron, le maître artisan n'a
+    // aucun point de création).
+    const carriereIds = this.carrieresForRules().map((carriere) => carriere.carriere_id);
+    for (const {avantageId, carriereId} of avantagesSansCarriere(avantageIds, carriereIds)) {
+      const avantage = this.mergedAvantages().find((item) => Number(item.id) === avantageId)?.avantage ?? `Avantage #${avantageId}`;
+      const carriere = (this.carrieresList() ?? []).find((item) => Number(item.id) === carriereId)?.carriere ?? `#${carriereId}`;
+      warnings.push({step: 'Traits', warn: `${avantage} exige la carrière ${carriere.toLowerCase()}.`});
     }
 
     return warnings;

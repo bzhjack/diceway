@@ -204,7 +204,7 @@ Regles generales:
 | Laboratoire fourni | De de bonus pour alchimie et invention dans son propre laboratoire. |
 | Magie des Rois-Sorciers | De de bonus pour lancer des sorts; impose aussi un desavantage supplementaire a la creation. |
 | Mains guerisseuses | De de bonus pour aider la recuperation des blessures, poisons et etats; exige `medecin`. |
-| Maitre artisan (Mythic+) | Points de creation comme un alchimiste, mais seulement pour armes, armures et outils de qualite courante ou rare; peut ajouter ses points a ceux d'un alchimiste pour machines et instruments (pas les potions); exige `forgeron`. |
+| Maitre artisan (Mythic+) | Points de creation comme un alchimiste (`= rang de forgeron`), mais seulement pour armes, armures et outils de qualite courante ou rare; peut ajouter ses points a ceux d'un alchimiste pour machines et instruments (pas les potions); exige `forgeron`. |
 | Maitre du deguisement | De de bonus pour se deguiser; depenser `1 point d'heroisme` permet d'avoir "deja ete la sous un deguisement". |
 | Marque par les dieux | `+1` point d'heroisme initial. |
 | Montagnard | De de bonus pour survivre, pister et chasser en montagne. |

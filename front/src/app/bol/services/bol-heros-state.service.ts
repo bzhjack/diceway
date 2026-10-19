@@ -4,8 +4,10 @@ import {BolArmeModel} from '../models/bol-arme.model';
 import {BolArmureModel} from '../models/bol-armure.model';
 import {
   AVANTAGE_MAGIE_DES_ROIS_SORCIERS_ID,
+  AVANTAGE_MAITRE_ARTISAN_ID,
   AVANTAGE_POUVOIR_DU_NEANT_ID,
   CARRIERE_ALCHIMISTE_ID,
+  CARRIERE_FORGERON_ID,
   CARRIERE_PRETRE_ID,
   CARRIERE_SORCIER_ID,
   DESAVANTAGE_NON_COMBATTANT_ID,
@@ -185,6 +187,12 @@ export class BolHerosStateService {
         modifiers.push({attr: 'foi', value: carriere.value});
       }
     });
+    // Maître artisan (Mythic+) : des points de création comme un alchimiste, au rang de forgeron — une réserve à part, pour les
+    // armes, armures et outils, qui s'ajoute à celle d'un alchimiste.
+    const forgeron = this.currentHerosCarrieres().find((carriere) => Number(carriere.carriere_id) === CARRIERE_FORGERON_ID)?.value ?? 0;
+    if (forgeron > 0 && this.currentHeroAvantages().some((trait) => Number(trait.traitable_id) === AVANTAGE_MAITRE_ARTISAN_ID)) {
+      modifiers.push({attr: 'creation', value: forgeron});
+    }
     return modifiers;
   });
 

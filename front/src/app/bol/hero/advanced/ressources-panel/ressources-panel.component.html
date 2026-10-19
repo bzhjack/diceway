@@ -30,7 +30,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (modifier of modifiers(); track modifier.attr) {
+        @for (modifier of modifiers(); track $index) {
           <tr>
             <td class="hap-table-attr">{{ modifier.attr }}</td>
             <td class="hap-table-value">{{ modifier.value }}</td>
