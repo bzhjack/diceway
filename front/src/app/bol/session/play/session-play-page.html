@@ -87,6 +87,8 @@
           [targetsStats]="targetsStats()"
           [legendaryBonus]="legendaryForActive()"
           [canRescue]="rescuePatients().length > 0"
+          [hordeMates]="hordeMates()"
+          (hordeChanged)="hordeKeys.set($event)"
           [carrieres]="activeCarrieres()"
           (gaveBack)="onGiveBackTurn($event)"
           [interrupters]="interrupters()"

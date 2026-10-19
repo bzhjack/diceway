@@ -11,7 +11,7 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 | # | Sujet | État | Effort | Lot |
 | --- | --- | --- | --- | --- |
 | 12 | Avantages et pouvoirs des créatures et démons | En partie : dés d'attaque faits | L | 3 |
-| 13 | Horde de piétaille | Règle absente | M | 3 |
+| 13 | Horde de piétaille | **Fait le 2026-10-19** (sauf piétaille contre piétaille) | M | 3 |
 | 14 | Points de vilenie des rivaux | Règle absente | M | 3 |
 | 15 | Sorcellerie en combat | Règle absente | L | 4 |
 | 16 | Foi en combat | Règle absente | S | 4 |
@@ -38,8 +38,8 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 ### 13. Horde de piétaille
 
 - **Règle** : la piétaille attaque en groupe, avec un seul jet, +1 par piétaille engagée ; si la horde touche, dégâts d6M. Piétaille contre piétaille : le groupe le plus nombreux inflige d6M pertes, le plus faible riposte à d3.
-- **Aujourd'hui** : chaque piétaille est une carte qui joue seule (une ligne = une carte, décision du 2026-10-07).
-- **Proposition** : quand plusieurs piétailles visent la même cible, l'assistant propose « Attaque de horde » : un seul jet, +1 par piétaille engagée (à cocher dans la frise), dégâts d6M, et toutes les cartes engagées passent leur tour.
+- **Fait le 2026-10-19**, le temps de l'attaque seulement (la frise ne groupe pas les piétailles) : quand c'est le tour d'une piétaille, « Horde » dans « Avec quoi ? » liste les piétailles de son camp qui n'ont pas encore joué ce round. Celles que le MJ coche se joignent à l'attaque : « +3 horde » dans l'addition, d6M de dégâts sans vigueur, et leur tour finit avec celui de la carte active (`hordeMates`, `endTurn` dans `combat-turn.util.ts`).
+- **Reste** : piétaille contre piétaille (le camp le plus nombreux tue d6M adversaires, qui lui infligent d3 pertes), sans jet d'attaque.
 
 ### 14. Points de vilenie des rivaux
 
@@ -87,8 +87,7 @@ Effort : **S** (quelques heures), **M** (une journée environ), **L** (plusieurs
 
 ## Questions à trancher
 
-1. **Horde** (point 13) : grouper les piétailles dans la frise, ou seulement le temps de l'attaque ?
-2. **Sorcellerie** (point 15) : faut-il un catalogue de sorts, ou une saisie libre (cercle, difficulté, coût) au moment du jet ?
+1. **Sorcellerie** (point 15) : faut-il un catalogue de sorts, ou une saisie libre (cercle, difficulté, coût) au moment du jet ?
 
 ## Hors périmètre
 

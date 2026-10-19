@@ -49,7 +49,7 @@ import {ExpandedCardDialogComponent} from './tapis/expanded-card-dialog';
 import {BolHerosArmeModel} from '../../models/bol-arme.model';
 import {equippedArmes} from '../../shared/arme/arme-equipee';
 import {AttackChoice} from '../models/attack-options.model';
-import {bloqueeCeRound, combatOutcome, debutDeTour, effetsDerives, endTurn, giveBackTurn, herosMourants, horsCombat, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
+import {bloqueeCeRound, combatOutcome, debutDeTour, effetsDerives, endTurn, giveBackTurn, herosMourants, hordeMates, horsCombat, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './tapis/combat-turn.util';
 import {CombatEffect, NewEffect} from '../models/combat-effect.model';
 import {EtatSaver} from './etat-saver';
 import {aSombre, appliquerEvenement, degatsMainsNues, effetAssomme, effetDegatsMainsNues, effetInconscient, effetStabilise, effetsDeTour, idAleatoire, libelleDuree, libelleEffet} from './tapis/combat-effects.util';
@@ -257,6 +257,11 @@ export class SessionPlayPageComponent {
 
   /** Arme et posture choisies dans la barre d'action — `null` si le choix n'est pas jouable. */
   protected readonly attackChoice = signal<AttackChoice | null>({degats: null, posture: null});
+
+  /** Les piétailles qui peuvent se joindre à l'attaque de la carte active, une piétaille, en horde. */
+  protected readonly hordeMates = computed(() => (this.mode() === 'combat' ? hordeMates(this.orderedCards(), this.etat()) : []));
+  /** Celles que le MJ a engagées dans la horde (choisies dans l'assistant) : leur tour finit avec celui de la carte active. */
+  protected readonly hordeKeys = signal<readonly string[]>([]);
 
   /** Cible visée par la carte active (choisie dans l'assistant ou d'un clic sur sa carte). */
   private readonly targetKey = signal<string | null>(null);
@@ -1193,7 +1198,7 @@ export class SessionPlayPageComponent {
     // La posture choisie pour ce tour dure : son bonus ou malus de défense pèse sur les attaques suivantes contre cette carte.
     const crees = active ? effetsDeTour(active.key, {posture: this.attackChoice()?.posture?.slug ?? null, defenseTotale: false}) : [];
     // La cible ne se vide que si la fin de tour est prise en compte : pendant un enregistrement elle est ignorée, et le jet en cours reste.
-    if (this.saveEtat((etat) => endTurn(this.orderedCards(), etat, crees, idAleatoire), {ignoreIfBusy: !afterHit})) {
+    if (this.saveEtat((etat) => endTurn(this.orderedCards(), etat, crees, idAleatoire, this.hordeKeys()), {ignoreIfBusy: !afterHit})) {
       this.targetKey.set(null);
     }
   }
