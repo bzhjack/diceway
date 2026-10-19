@@ -148,7 +148,7 @@
         <!-- Facteur de portée : la portée de l'arme est celle du bout portant, chaque multiple au-delà descend d'un cran (livre p. 62) -->
         <span class="tas-label" id="tas-portee">Portée</span>
         <div class="tas-chips" role="group" aria-labelledby="tas-portee">
-          <button type="button" class="tas-step" aria-label="Plus près" [disabled]="rangeIndex() === 0" (click)="stepRange(-1)">
+          <button type="button" class="tas-mini" aria-label="Plus près" [disabled]="rangeIndex() === 0" (click)="stepRange(-1)">
             ‹
           </button>
           <span
@@ -158,7 +158,7 @@
           >
             {{ r.label }}{{ r.reach ? ' · jusqu’à ' + r.reach : '' }} <em>{{ r.text }}</em>
           </span>
-          <button type="button" class="tas-step" aria-label="Plus loin" [disabled]="rangeIndex() === rangeFactors.length - 1" (click)="stepRange(1)">
+          <button type="button" class="tas-mini" aria-label="Plus loin" [disabled]="rangeIndex() === rangeFactors.length - 1" (click)="stepRange(1)">
             ›
           </button>
         </div>
@@ -268,30 +268,32 @@
       </div>
       @if (target(); as t) {
         @let life = lifeOf(t);
-        <div class="tas-hero">
-          <span class="tas-med tas-med--target" aria-hidden="true">
+        <!-- Comme la carte « Qui attaque » : le médaillon cerclé de la couleur de son camp, son nom et ce qu'elle est à côté -->
+        <div
+          class="tas-me tas-me--cible"
+          [style.--tas-side]="targetSide()?.foe ? 'var(--dw-color-echec-forte)' : 'var(--dw-color-reussite)'"
+          [style.--tas-side-ink]="targetSide()?.foe ? '#2a0505' : '#041a0d'"
+        >
+          <span class="tas-med tas-med--active" aria-hidden="true">
             @if (t.avatar) {
               <img [src]="t.avatar" alt="" />
             } @else {
               {{ t.nom.charAt(0).toUpperCase() }}
             }
           </span>
-          <strong class="tas-name">{{ t.nom }}</strong>
-          @if (targetSide(); as s) {
-            <!-- De quel côté est la cible, comme sur la carte « Qui attaque » : vert pour un héros ou un allié, rouge pour un adversaire -->
-            <span
-              class="tas-side"
-              [style.--tas-side]="s.foe ? 'var(--dw-color-echec-forte)' : 'var(--dw-color-reussite)'"
-              [style.--tas-side-ink]="s.foe ? '#2a0505' : '#041a0d'"
-            >
-              <b class="tas-side-chip">{{ s.label }}</b>
-              @if (s.detail) {
-                <span class="tas-tag">{{ s.detail }}</span>
-              }
-            </span>
-          }
+          <span class="tas-me-id">
+            <strong class="tas-name tas-name--active">{{ t.nom }}</strong>
+            @if (targetSide(); as s) {
+              <span class="tas-side">
+                <b class="tas-side-chip">{{ s.label }}</b>
+                @if (s.detail) {
+                  <span class="tas-tag">{{ s.detail }}</span>
+                }
+              </span>
+            }
+          </span>
         </div>
-        <div class="tas-tiles">
+        <div class="tas-tiles tas-tiles--start tas-tiles--cible">
           @for (tile of targetTiles(); track tile.label) {
             <div class="tas-tile" [class.tas-tile--up]="tile.tone === 'up'" [class.tas-tile--long]="tile.value.length > 5">
               <b>{{ tile.value }}</b>
@@ -310,7 +312,7 @@
           }
         </div>
         @if (targetBadges().length > 0) {
-          <ul class="tas-pills" aria-label="Effets sur la cible">
+          <ul class="tas-pills tas-pills--cible" aria-label="Effets sur la cible">
             @for (badge of targetBadges(); track $index) {
               <li class="tas-pill">{{ badge }}</li>
             }
@@ -337,7 +339,8 @@
         <div class="tas-targets" role="group" aria-label="Cible">
           @for (t of targets(); track t.key) {
             @let life = lifeOf(t);
-            <button type="button" class="tas-target" (click)="selectTarget(t)">
+            <!-- Le contour dit ce qu'est la cible (PNJ, créature, démon), le cercle du médaillon de quel camp elle est -->
+            <button type="button" class="tas-target" [attr.data-kind]="t.kind" [class.tas-target--foe]="t.camp !== 'heros'" (click)="selectTarget(t)">
               <span class="tas-med tas-med--small" aria-hidden="true">
                 @if (t.avatar) {
                   <img [src]="t.avatar" alt="" />
@@ -345,7 +348,12 @@
                   {{ t.nom.charAt(0).toUpperCase() }}
                 }
               </span>
-              <b>{{ t.nom }}</b>
+              <span class="tas-target-id">
+                <b>{{ t.nom }}</b>
+                @if (targetDetails()[t.key]; as detail) {
+                  <span class="tas-tag tas-target-kind">{{ detail }}</span>
+                }
+              </span>
               @if (odds()[t.key]; as chance) {
                 <span class="tas-odds">{{ chance }}</span>
               }

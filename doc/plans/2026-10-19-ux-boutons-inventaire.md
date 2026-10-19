@@ -114,10 +114,11 @@ Lionel a validé les trois points (médaillons hors règle, −/+ en cercle, tog
 - Rectangles : `ard-chip`, `scd-seg`, `atp-option`, `acd-camp-toggle`, `acd-tab`, `cpd-tab`, secret de la lecture (`lec-bascule`) ;
   `tas-chip`, `tas-segm`, `tas-act`/`ard-act` cochables (`&[aria-pressed]`), `ard-ladder`, `scd-act`, `rsc-chip`, `acd-chip`
   ramenés au jeton.
-- Cercles : `tas-dice-btn`, `tas-mini`, `scd-dice-btn`, `scd-icon-btn`, `ard-manual-btn`, nouvelle classe `tas-step` (‹ › de la
-  portée), `cmp-step`, `cvl-step`, `hrs-step`, `vs__btn` ; compteurs `ard-stepper` et `scd-stepper` passés de boîte segmentée à
+- Cercles : `tas-dice-btn`, `tas-mini`, `scd-dice-btn`, `scd-icon-btn`, `ard-manual-btn`, les ‹ › de la portée (sur `tas-mini`), `cmp-step`, `cvl-step`, `hrs-step`, `vs__btn` ; compteurs `ard-stepper` et `scd-stepper` passés de boîte segmentée à
   « valeur entre deux cercles » ; `exc-icon-btn` rendu à son cercle Material.
 - Accessibilité : `aria-pressed` et `role="group"` sur les onglets et le choix de camp des deux dialogues d'ajout ; l'état
   « allumé » du camp ne s'affichait pas (spécificité CSS), corrigé.
 - Laissés tels quels : `scs-chip` (lignes de la liste des scènes, pleine largeur), médaillons `ard-medal`.
 - Règle ajoutée à `CLAUDE.md` (« Button shapes »).
+
+- Toggles allumés en or uni (`tas-chip`, `rsc-chip`, `acd-chip`), sans dégradé, comme le bouton « Fin du tour ».

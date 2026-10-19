@@ -57,8 +57,9 @@
 
   &[aria-pressed='true'] {
     border-color: var(--dw-color-legendary);
-    background: linear-gradient(#e6b64e, #b8832a);
-    color: #1a1203;
+    // Or uni, comme le bouton « Fin du tour » : pas de dégradé.
+    background: var(--dw-color-legendary);
+    color: #1c1200;
   }
 }
 

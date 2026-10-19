@@ -1,6 +1,8 @@
 import {describe, expect, it} from 'vitest';
+import {BolCreatureModel} from '../../models/bol-creature.model';
+import {BolDemonModel} from '../../models/bol-demon.model';
 import {BolHerosModel} from '../../models/bol-heros.model';
-import {heroStatblockData, pnjStatblockData} from './bol-statblock.builders';
+import {creatureStatblockData, demonStatblockData, heroStatblockData, pnjStatblockData} from './bol-statblock.builders';
 
 const arme = (nom: string, degats: string, equipee: boolean, portee: string | null = '-', type: 'M' | 'T' = 'M') => ({arme_id: 1, equipee, arme: {id: 1, arme: nom, type, degats, portee, notes: null}});
 const armure = (nom: string, categorie: string, protection: string, malus: string | null, equipee: boolean) => ({armure_id: 1, equipee, armure: {id: 1, armure: nom, categorie, protection, malus}});
@@ -106,5 +108,41 @@ describe('pnjStatblockData — un PNJ porte tout ce qu’il possède', () => {
     const data = pnjStatblockData(pnj);
     expect(section(data, 'Armes')).toEqual([{label: 'Épée', value: 'd6', detail: undefined}]);
     expect(section(data, 'Armures et boucliers').every((entry) => !('equipped' in entry))).toBe(true);
+  });
+});
+
+describe('pouvoirs et capacités : la précision de la fiche s’ajoute au nom, la règle reste dessous', () => {
+  const ARMES_AMELIOREES = {pouvoir: 'Armes améliorées', description: 'Dé de bonus à toutes les attaques.'};
+
+  it('démon : « Armes améliorées (fléchettes démoniaques) », comme dans le livre', () => {
+    const demon = {
+      nom: 'Zullthegg',
+      user_id: null,
+      commentaire: null,
+      type: null,
+      categorie: {type: 'P', categorie: 'Mineur'},
+      pouvoirs: [
+        {pouvoir: ARMES_AMELIOREES, detail: 'fléchettes démoniaques'},
+        {pouvoir: {pouvoir: 'Intangible', description: 'Traverse les murs.'}, detail: null},
+      ],
+    } as unknown as BolDemonModel;
+    // Quatre attributs (l'aura comprise), puis mêlée et tir : la coupe en deux moitiés égales rangerait l'aura dans le combat.
+    expect(demonStatblockData({...demon, vigueur: 1, agilite: 2, esprit: -1, aura: 0, melee: 0, tir: 2} as BolDemonModel).attributs).toBe(4);
+    expect(demonStatblockData(demon).sections[0].entries).toEqual([
+      {label: 'Armes améliorées (fléchettes démoniaques)', detail: 'Dé de bonus à toutes les attaques.'},
+      {label: 'Intangible', detail: 'Traverse les murs.'},
+    ]);
+  });
+
+  it('créature : même règle pour ses capacités', () => {
+    const creature = {
+      nom: 'Ver des sables',
+      user_id: null,
+      commentaire: null,
+      rang: null,
+      taille: {type: 'R', taille: 'Énorme', deplacement: null},
+      capacites: [{capacite: {capacite: 'Venin', description: 'Empoisonne.'}, detail: 'mortel'}],
+    } as unknown as BolCreatureModel;
+    expect(creatureStatblockData(creature).sections[0].entries).toEqual([{label: 'Venin (mortel)', detail: 'Empoisonne.'}]);
   });
 });

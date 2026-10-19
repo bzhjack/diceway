@@ -33,9 +33,11 @@ html {
   ));
 
   // Button toggle : état non sélectionné lisible sur fond sombre
+  // Allumé, un toggle est en or uni à texte sombre, comme les toggles maison (`tas-chip`, `ard-chip`…) et le bouton « Fin du tour ».
   @include mat.button-toggle-overrides((
     text-color: var(--dw-surface-600),
-    selected-state-text-color: var(--mat-sys-on-primary),
+    selected-state-background-color: var(--dw-color-legendary),
+    selected-state-text-color: #1c1200,
     // Un groupe de bascules est un toggle : rectangle, pas pilule (la forme M3 par défaut).
     shape: var(--dw-radius-toggle),
   ));

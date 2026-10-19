@@ -32,7 +32,7 @@ class BolDemonSeeder extends Seeder
                 'id_categorie' => 1,  // Mineur
 
                 'pouvoirs' => [
-                    ['pouvoir_id' => '1'],
+                    ['pouvoir_id' => '1', 'detail' => 'fléchettes démoniaques'],
                 ],
             ],
             [

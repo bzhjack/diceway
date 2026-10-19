@@ -596,6 +596,10 @@ export class TurnAssistantComponent {
 
   /** Sur le jeton de chaque carte visable, ce qu'il faut pour la toucher avec l'arme et la posture choisies : « 6+ · 72 % ». Absent tant
    * que ses statistiques ne sont pas connues. */
+  /** Ce qu'est chaque cible à choisir, en clair (« PNJ · Rival », « Créature · Coriace ») ; vide pour un héros de la compagnie. */
+  protected readonly targetDetails = computed<Readonly<Record<string, string>>>(() =>
+    Object.fromEntries(this.targets().map((t) => [t.key, sideOf(t).detail])),
+  );
   protected readonly odds = computed<Readonly<Record<string, string>>>(() => {
     const a = this.attacker();
     const odds: Record<string, string> = {};

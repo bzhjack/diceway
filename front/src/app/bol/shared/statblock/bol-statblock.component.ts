@@ -129,7 +129,7 @@ export class BolStatblockComponent {
 
   private half(first: boolean): readonly BolStatblockTile[] {
     const tiles = this.data().tiles;
-    const cut = Math.ceil(tiles.length / 2);
+    const cut = this.data().attributs ?? Math.ceil(tiles.length / 2);
     return first ? tiles.slice(0, cut) : tiles.slice(cut);
   }
 }

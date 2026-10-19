@@ -20,6 +20,12 @@ function capitalize(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
+/** Un pouvoir ou une capacité tel que l'écrit le livre : la précision de la fiche entre parenthèses après le nom (« Armes améliorées
+ * (fléchettes démoniaques) »), la règle dessous. */
+function entreeAvecPrecision(nom: string, precision: string | null | undefined, regle: string | null | undefined): BolStatblockEntry {
+  return {label: precision ? `${nom} (${precision})` : nom, detail: regle || undefined};
+}
+
 export function creatureStatblockData(creature: BolCreatureModel): BolStatblockData {
   const rank = creature.rang
     ? capitalize(creature.rang)
@@ -54,10 +60,7 @@ export function creatureStatblockData(creature: BolCreatureModel): BolStatblockD
       {
         title: 'Capacités',
         emptyText: 'Aucune capacité spéciale renseignée.',
-        entries: creature.capacites.map((entry) => ({
-          label: entry.capacite.capacite,
-          detail: entry.detail || entry.capacite.description || undefined,
-        })),
+        entries: creature.capacites.map((entry) => entreeAvecPrecision(entry.capacite.capacite, entry.detail, entry.capacite.description)),
       },
     ],
   };
@@ -86,16 +89,15 @@ export function demonStatblockData(demon: BolDemonModel): BolStatblockData {
       {label: 'Mêlée', value: demon.melee},
       {label: 'Tir', value: demon.tir},
     ],
+    // Quatre attributs, puis deux aptitudes : des moitiés égales rangeraient l'aura dans le combat.
+    attributs: 4,
     editRoute: demon.user_id ? ['/create/demon', String(demon.id)] : null,
     advancedEditRoute: null,
     sections: [
       {
         title: 'Pouvoirs infernaux',
         emptyText: 'Aucun pouvoir infernal renseigné.',
-        entries: demon.pouvoirs.map((entry) => ({
-          label: entry.pouvoir.pouvoir,
-          detail: entry.detail || entry.pouvoir.description || undefined,
-        })),
+        entries: demon.pouvoirs.map((entry) => entreeAvecPrecision(entry.pouvoir.pouvoir, entry.detail, entry.pouvoir.description)),
       },
     ],
   };

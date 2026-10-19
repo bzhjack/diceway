@@ -47,8 +47,10 @@ export interface BolStatblockData {
   readonly comment: string | null;
   readonly chips: readonly BolStatblockChip[];
   readonly vitals: readonly BolStatblockTile[];
-  /** Attributs puis statistiques de combat, par moitiés : le statbloc en fait deux familles de tuiles. */
+  /** Attributs puis statistiques de combat : le statbloc en fait deux familles de tuiles. */
   readonly tiles: readonly BolStatblockTile[];
+  /** Combien des premières tuiles sont des attributs ; à défaut, la première moitié. */
+  readonly attributs?: number;
   readonly sections: readonly BolStatblockSection[];
   /** Route vers la fiche d'édition complète (même lien que le bouton "Modifier" des cartes de
    * bibliothèque) — `null` si l'entité n'a pas de fiche éditable dans ce contexte. */

@@ -54,31 +54,22 @@
   border-radius: 0;
   background: none;
 
+  // Chaque onglet est un toggle séparé, comme les puces de l'assistant de tour : rectangle cerclé, or uni une fois allumé (couleurs
+  // du thème des bascules, `_material-button-theme.scss`).
   ::ng-deep .mat-button-toggle {
     border: 1px solid var(--dw-border);
-    border-radius: 6px;
-    background: var(--dw-surface-100);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    transition: border-color 0.12s ease-out, background 0.12s ease-out;
+    border-radius: var(--dw-radius-toggle);
+    background: var(--dw-surface-0);
+    font-weight: 700;
   }
 
   ::ng-deep .mat-button-toggle + .mat-button-toggle {
     border-left: 1px solid var(--dw-border);
   }
 
-  ::ng-deep .mat-button-toggle:hover {
-    border-color: var(--bar-bronze, var(--dw-surface-500));
-  }
-
   ::ng-deep .mat-button-toggle-checked {
-    border-color: var(--bar-bronze, var(--dw-color-legendary));
-    background: linear-gradient(180deg, #5a3a1d, #2a1c12);
-    box-shadow: inset 0 0 0 1px rgba(232, 135, 58, 0.25), 0 0 10px rgba(232, 135, 58, 0.15);
-  }
-
-  ::ng-deep .mat-button-toggle-checked .mat-button-toggle-label-content {
-    color: var(--bar-ember, var(--dw-color-legendary));
-    font-weight: 800;
+    border-color: var(--dw-color-legendary);
+    background: var(--dw-color-legendary);
   }
 
   ::ng-deep .mat-button-toggle-label-content {
