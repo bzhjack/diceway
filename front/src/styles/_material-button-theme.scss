@@ -36,6 +36,8 @@ html {
   @include mat.button-toggle-overrides((
     text-color: var(--dw-surface-600),
     selected-state-text-color: var(--mat-sys-on-primary),
+    // Un groupe de bascules est un toggle : rectangle, pas pilule (la forme M3 par défaut).
+    shape: var(--dw-radius-toggle),
   ));
 }
 

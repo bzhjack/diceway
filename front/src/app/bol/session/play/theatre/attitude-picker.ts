@@ -53,7 +53,7 @@ import {ATTITUDES} from './theatre.util';
       gap: 0.3rem;
       padding: 0.2rem 0.55rem 0.2rem 0.4rem;
       border: 1px solid var(--dw-border);
-      border-radius: 999px;
+      border-radius: var(--dw-radius-toggle);
       background: transparent;
       color: var(--dw-surface-700);
       font: inherit;

@@ -146,10 +146,11 @@ bol-action-roll-panel {
   gap: 0.45rem;
 }
 
+// Des toggles : rectangulaires.
 .ard-chip {
   padding: 0.35rem 0.85rem;
   border: 1px solid var(--dw-border);
-  border-radius: 999px;
+  border-radius: var(--dw-radius-toggle);
   background: var(--dw-surface-0);
   color: var(--dw-surface-600);
   font: inherit;
@@ -379,7 +380,7 @@ bol-action-roll-panel {
 .ard-go {
   padding: 0.75rem 1.75rem;
   border: 1px solid var(--dw-color-legendary);
-  border-radius: 12px;
+  border-radius: var(--dw-radius-pill);
   background: linear-gradient(#e7b755, #c08a2a);
   box-shadow: 0 4px 0 #6b4a12;
   color: #1c1200;
@@ -471,7 +472,12 @@ bol-action-roll-panel {
   height: 2.4rem;
   padding: 0 0.9rem;
   border: 1px dashed color-mix(in srgb, var(--dw-color-legendary) 60%, transparent);
-  border-radius: 8px;
+  // Une action (Faveur divine) est une pilule ; les cases à cocher (`aria-pressed`) sont des toggles rectangulaires.
+  border-radius: var(--dw-radius-pill);
+
+  &[aria-pressed] {
+    border-radius: var(--dw-radius-toggle);
+  }
   background: color-mix(in srgb, var(--dw-color-legendary) 8%, transparent);
   color: var(--dw-color-legendary);
   font: inherit;
@@ -584,7 +590,7 @@ bol-action-roll-panel {
   height: 3.1rem;
   padding: 0;
   border: 1px solid var(--dw-surface-500);
-  border-radius: 9px;
+  border-radius: 50%;
   background: color-mix(in srgb, var(--dw-surface-0) 30%, transparent);
   color: var(--dw-surface-600);
   cursor: pointer;
@@ -631,7 +637,7 @@ bol-action-roll-panel {
     gap: 0.4rem;
     padding: 0.28rem 0.75rem;
     border: 1px solid var(--dw-border);
-    border-radius: 7px;
+    border-radius: var(--dw-radius-toggle);
     background: var(--dw-surface-0);
     color: var(--dw-surface-600);
     font: inherit;
@@ -674,27 +680,31 @@ bol-action-roll-panel {
   }
 
   .ard-stepper button {
-    width: 1.9rem;
+    width: 1.6rem;
+    height: 1.6rem;
   }
 
   .ard-stepper span {
-    min-width: 2.3rem;
+    min-width: 1.8rem;
   }
 }
 
+// Le modificateur du MJ : la valeur entre deux boutons ronds.
 .ard-stepper {
   display: flex;
-  align-items: stretch;
+  align-items: center;
   flex: none;
-  border: 1px solid var(--dw-border);
-  border-radius: 7px;
-  overflow: hidden;
-  background: var(--dw-surface-0);
+  gap: 0.3rem;
 
   button {
-    width: 2rem;
-    border: none;
-    background: transparent;
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0;
+    border: 1px solid var(--dw-border);
+    border-radius: 50%;
+    background: var(--dw-surface-0);
     color: var(--dw-color-legendary);
     font: inherit;
     font-size: 1rem;
@@ -709,8 +719,7 @@ bol-action-roll-panel {
   span {
     display: grid;
     place-items: center;
-    min-width: 2.4rem;
-    border-inline: 1px solid var(--dw-border);
+    min-width: 2rem;
     color: var(--dw-surface-900);
     font-size: 1rem;
     font-weight: 700;

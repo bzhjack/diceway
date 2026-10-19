@@ -81,7 +81,7 @@ import {TapisCard} from '../../models/tapis.model';
       height: 1.5rem;
       padding: 0;
       border: 1px solid var(--dw-border);
-      border-radius: 4px;
+      border-radius: 50%;
       background: transparent;
       color: var(--dw-surface-600);
       font: inherit;

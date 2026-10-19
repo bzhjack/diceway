@@ -2,11 +2,11 @@
 
 <mat-dialog-content>
   @if (!lockKind) {
-    <div class="acd-camp-toggle">
-      <button type="button" [class.acd-camp--active]="camp() === 'heros'" (click)="setCamp('heros')">
+    <div class="acd-camp-toggle" role="group" aria-label="Camp">
+      <button type="button" [class.acd-camp--active]="camp() === 'heros'" [attr.aria-pressed]="camp() === 'heros'" (click)="setCamp('heros')">
         Héros
       </button>
-      <button type="button" [class.acd-camp--active]="camp() === 'adversaires'" (click)="setCamp('adversaires')">
+      <button type="button" [class.acd-camp--active]="camp() === 'adversaires'" [attr.aria-pressed]="camp() === 'adversaires'" (click)="setCamp('adversaires')">
         Adversaires
       </button>
     </div>
@@ -14,20 +14,20 @@
 
   <div class="acd-filters">
     @if (!lockKind) {
-      <div class="acd-tabs">
-        <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'all'" (click)="setType('all')">
+      <div class="acd-tabs" role="group" aria-label="Type de combattant">
+        <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'all'" [attr.aria-pressed]="activeType() === 'all'" (click)="setType('all')">
           Tous
         </button>
-        <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'hero'" (click)="setType('hero')">
+        <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'hero'" [attr.aria-pressed]="activeType() === 'hero'" (click)="setType('hero')">
           Héros
         </button>
-        <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'pnj'" (click)="setType('pnj')">
+        <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'pnj'" [attr.aria-pressed]="activeType() === 'pnj'" (click)="setType('pnj')">
           PNJ
         </button>
-        <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'creature'" (click)="setType('creature')">
+        <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'creature'" [attr.aria-pressed]="activeType() === 'creature'" (click)="setType('creature')">
           Créatures
         </button>
-        <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'demon'" (click)="setType('demon')">
+        <button type="button" class="acd-tab" [class.acd-tab--active]="activeType() === 'demon'" [attr.aria-pressed]="activeType() === 'demon'" (click)="setType('demon')">
           Démons
         </button>
       </div>

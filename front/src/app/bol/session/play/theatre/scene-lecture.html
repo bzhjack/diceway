@@ -18,7 +18,7 @@
   <section class="lec-bloc" aria-labelledby="lec-secret-titre">
     <div class="lec-tete">
       <h3 class="lec-titre lec-titre--secret" id="lec-secret-titre"><mat-icon aria-hidden="true">visibility_off</mat-icon>Secret du MJ</h3>
-      <button mat-button size="small" type="button" [attr.aria-pressed]="secretVisible()" (click)="toggleSecret()">
+      <button mat-button size="small" type="button" class="lec-bascule" [attr.aria-pressed]="secretVisible()" (click)="toggleSecret()">
         {{ secretVisible() ? 'Masquer le secret' : 'Afficher le secret' }}
       </button>
     </div>

@@ -35,6 +35,12 @@
   --dw-border:        #4f3b27; // bordure sombre standard
   --dw-border-remove: #5b2a2a; // bordeaux — bouton suppression
 
+  // ── Formes des boutons ────────────────────────────────────────────────────
+  // Une action est une pilule (comme les boutons Material) ; un toggle (état allumé/éteint, choix dans un groupe) est un
+  // rectangle aux coins à peine arrondis ; un bouton-icône seul est un cercle.
+  --dw-radius-pill:   999px;
+  --dw-radius-toggle: 6px;
+
   color-scheme: light;
 
   // ── Tokens auth / UI chaud ────────────────────────────────────────────────

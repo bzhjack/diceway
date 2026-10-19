@@ -64,7 +64,7 @@ interface EffetAffiche {
     .efl-remove .mat-icon { width: 1rem; height: 1rem; font-size: 1rem; }
     .efl-empty { margin: 0; font-size: 0.8rem; color: var(--dw-surface-500); }
     /* Le bouton qui ajoute un effet : de la taille des boutons « Fiche » et « Défense totale » de l'assistant. */
-    .efl-add { display: inline-flex; align-items: center; gap: 0.2rem; padding: 0.3rem 0.65rem 0.3rem 0.45rem; border: 1px solid var(--dw-border); border-radius: 8px; background: var(--dw-surface-50); color: var(--dw-surface-700); font: inherit; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
+    .efl-add { display: inline-flex; align-items: center; gap: 0.2rem; padding: 0.3rem 0.65rem 0.3rem 0.45rem; border: 1px solid var(--dw-border); border-radius: var(--dw-radius-pill); background: var(--dw-surface-50); color: var(--dw-surface-700); font: inherit; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
     .efl-add:hover:not(:disabled) { border-color: var(--dw-surface-500); color: var(--dw-surface-900); }
     .efl-add:disabled { opacity: 0.45; cursor: default; }
     .efl-add:focus-visible { outline: 2px solid var(--dw-color-legendary); outline-offset: 2px; }

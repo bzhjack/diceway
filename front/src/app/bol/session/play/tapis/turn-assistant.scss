@@ -187,16 +187,18 @@
 .tas-ghost,
 .tas-seg,
 .tas-chip,
+.tas-step,
 .tas-act,
 .tas-target {
   font: inherit;
   cursor: pointer;
 }
 
+// Les actions de la carte active (Fiche, Retarder, Fin du tour…) : des pilules.
 .tas-ghost {
   padding: 0.3rem 0.65rem;
   border: 1px solid var(--dw-border);
-  border-radius: 8px;
+  border-radius: var(--dw-radius-pill);
   background: var(--dw-surface-50);
   color: var(--dw-surface-700);
   font-size: 0.8rem;
@@ -298,10 +300,11 @@
   justify-content: center;
 }
 
+// Les choix (arme, carrière, dé du MJ…) : des toggles rectangulaires.
 .tas-chip {
   padding: 0.3rem 0.65rem;
   border: 1px solid var(--dw-border);
-  border-radius: 8px;
+  border-radius: var(--dw-radius-toggle);
   background: var(--dw-surface-0);
   color: var(--dw-surface-900);
   font-size: 0.82rem;
@@ -376,7 +379,7 @@
 .tas-segm {
   display: flex;
   border: 1px solid var(--dw-border);
-  border-radius: 10px;
+  border-radius: var(--dw-radius-toggle);
   overflow: hidden;
   background: var(--dw-surface-0);
 }
@@ -555,14 +558,16 @@
   }
 }
 
+// Boutons-icônes (dés, protection) et pas de la portée : des cercles.
 .tas-dice-btn,
-.tas-mini {
+.tas-mini,
+.tas-step {
   display: grid;
   place-items: center;
   flex: none;
   padding: 0;
   border: 1px solid var(--dw-border);
-  border-radius: 10px;
+  border-radius: 50%;
   background: rgba(0, 0, 0, 0.3);
   color: var(--dw-surface-600);
   cursor: pointer;
@@ -583,11 +588,19 @@
   height: 3.1rem;
 }
 
+.tas-step {
+  width: 1.9rem;
+  height: 1.9rem;
+  background: var(--dw-surface-0);
+  color: var(--dw-surface-900);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
 // Dé de protection, retour à la valeur fixe : petits, à côté de la protection.
 .tas-mini {
   width: 1.9rem;
   height: 1.9rem;
-  border-radius: 7px;
 
   .mat-icon {
     width: 1.1rem;
@@ -795,13 +808,15 @@
   min-height: 1.9rem;
 }
 
+// Les dépenses d'héroïsme : des pilules pour les actions (Faveur divine, Parade…), des rectangles pour les cases à cocher
+// (Échec critique, Succès légendaire, Succès héroïque : `aria-pressed`).
 .tas-act {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
   padding: 0.3rem 0.65rem;
   border: 1px dashed color-mix(in srgb, var(--dw-color-legendary) 60%, transparent);
-  border-radius: 8px;
+  border-radius: var(--dw-radius-pill);
   background: color-mix(in srgb, var(--dw-color-legendary) 8%, transparent);
   color: var(--dw-color-legendary);
   font-size: 0.82rem;
@@ -817,6 +832,10 @@
 
   &:hover {
     background: color-mix(in srgb, var(--dw-color-legendary) 18%, transparent);
+  }
+
+  &[aria-pressed] {
+    border-radius: var(--dw-radius-toggle);
   }
 
   &[aria-pressed='true'] {

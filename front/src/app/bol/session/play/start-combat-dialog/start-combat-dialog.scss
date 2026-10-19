@@ -139,7 +139,7 @@
   button {
     padding: 0.3rem 0.8rem;
     border: 1px solid var(--dw-border);
-    border-radius: 999px;
+    border-radius: var(--dw-radius-toggle);
     background: var(--dw-surface-0);
     color: var(--dw-surface-700);
     font: inherit;
@@ -164,18 +164,21 @@
   }
 }
 
+// L'initiative ennemie : la valeur entre deux boutons ronds.
 .scd-stepper {
   display: flex;
-  align-items: stretch;
-  border: 1px solid var(--dw-border);
-  border-radius: 7px;
-  overflow: hidden;
-  background: var(--dw-surface-0);
+  align-items: center;
+  gap: 0.3rem;
 
   button {
-    width: 1.9rem;
-    border: none;
-    background: transparent;
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0;
+    border: 1px solid var(--dw-border);
+    border-radius: 50%;
+    background: var(--dw-surface-0);
     color: var(--dw-color-legendary);
     font: inherit;
     font-weight: 800;
@@ -194,9 +197,7 @@
   span {
     display: grid;
     place-items: center;
-    min-width: 2.2rem;
-    padding: 0.2rem 0;
-    border-inline: 1px solid var(--dw-border);
+    min-width: 1.8rem;
     color: var(--dw-surface-900);
     font-weight: 700;
     font-variant-numeric: tabular-nums;
@@ -335,7 +336,7 @@
 .scd-icon-btn {
   width: 2rem;
   height: 2rem;
-  border-radius: 8px;
+  border-radius: 50%;
 
   .mat-icon {
     width: 1.1rem;
@@ -489,7 +490,7 @@
 .scd-dice-btn {
   width: 2.9rem;
   height: 2.9rem;
-  border-radius: 10px;
+  border-radius: 50%;
 
   &:hover:not(:disabled) {
     border-color: var(--dw-color-legendary);
@@ -604,7 +605,7 @@
   height: 2.2rem;
   padding: 0 0.7rem;
   border: 1px dashed color-mix(in srgb, var(--dw-color-legendary) 60%, transparent);
-  border-radius: 8px;
+  border-radius: var(--dw-radius-toggle);
   background: color-mix(in srgb, var(--dw-color-legendary) 8%, transparent);
   color: var(--dw-color-legendary);
   font: inherit;

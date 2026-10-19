@@ -3,20 +3,20 @@
 <mat-dialog-content>
   <div class="cpd-filters">
     @if (!lockKind) {
-      <div class="cpd-tabs">
-        <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'all'" (click)="setType('all')">
+      <div class="cpd-tabs" role="group" aria-label="Type de combattant">
+        <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'all'" [attr.aria-pressed]="activeType() === 'all'" (click)="setType('all')">
           Tous
         </button>
-        <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'hero'" (click)="setType('hero')">
+        <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'hero'" [attr.aria-pressed]="activeType() === 'hero'" (click)="setType('hero')">
           Héros
         </button>
-        <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'pnj'" (click)="setType('pnj')">
+        <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'pnj'" [attr.aria-pressed]="activeType() === 'pnj'" (click)="setType('pnj')">
           PNJ
         </button>
-        <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'creature'" (click)="setType('creature')">
+        <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'creature'" [attr.aria-pressed]="activeType() === 'creature'" (click)="setType('creature')">
           Créatures
         </button>
-        <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'demon'" (click)="setType('demon')">
+        <button type="button" class="cpd-tab" [class.cpd-tab--active]="activeType() === 'demon'" [attr.aria-pressed]="activeType() === 'demon'" (click)="setType('demon')">
           Démons
         </button>
       </div>

@@ -5,7 +5,7 @@
 .acd-camp-toggle {
   display: inline-flex;
   border: 1px solid var(--dw-border);
-  border-radius: 999px;
+  border-radius: var(--dw-radius-toggle);
   overflow: hidden;
   margin-bottom: 0.9rem;
 
@@ -21,9 +21,10 @@
   }
 }
 
-.acd-camp--active {
-  color: var(--dw-surface-900);
-  background: color-mix(in srgb, var(--mat-sys-primary) 20%, transparent);
+// Sous `.acd-camp-toggle` : sinon `.acd-camp-toggle button`, plus spécifique, efface l'état allumé.
+.acd-camp-toggle .acd-camp--active {
+  color: var(--mat-sys-primary);
+  background: color-mix(in srgb, var(--mat-sys-primary) 16%, transparent);
 }
 
 .acd-filters {
@@ -49,7 +50,7 @@
   font-weight: 700;
   font-size: 0.78rem;
   padding: 0.4rem 0.9rem;
-  border-radius: 999px;
+  border-radius: var(--dw-radius-toggle);
   cursor: pointer;
 }
 

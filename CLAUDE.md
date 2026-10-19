@@ -70,6 +70,14 @@ When a task touches game rules, character creation, equipment, careers, language
 - An element with only Tailwind utility classes (no custom class) is fine as-is — this rule only applies once a custom class is already present.
 - Multiple custom classes together (e.g. BEM-style `hs-block hs-block--attr`) are not a violation — the rule targets mixing custom classes with Tailwind utilities, not custom classes with each other.
 
+### Button shapes
+- **Action** (does something: Ajouter, Fin du tour, Lancer, Parade…) → pill: Material buttons as-is, custom buttons `border-radius: var(--dw-radius-pill)`.
+- **Toggle** (on/off state or a choice in a group, carries `aria-pressed`: Dé bonus MJ, weapon/career chips, tabs, segmented choices, `mat-button-toggle`) → rectangle `border-radius: var(--dw-radius-toggle)` (6px). A Material button used as a toggle sets `--mat-button-*-container-shape` to that token.
+- **Icon-only button** (dice, ×, the −/+ of a counter, chevrons) → circle (`50%`, or `mat-icon-button` without shape override).
+- Out of scope: portraits, avatars, cards, tiles, list rows and links inside text.
+- Shape is never the only signal: a toggle keeps `aria-pressed` and a visible "on" state. A class used for both kinds styles the toggles with `&[aria-pressed]`.
+- Tokens live in `front/src/styles/_tokens.scss`; inventory and decisions: `doc/plans/2026-10-19-ux-boutons-inventaire.md`.
+
 ### State
 - Signals for local state; `computed()` for derived state.
 - Use `.update()` or `.set()` on signals — not `.mutate()`.

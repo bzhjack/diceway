@@ -147,3 +147,8 @@
     transition: none;
   }
 }
+
+// « Afficher le secret » est un toggle : rectangle, pas pilule.
+.lec-bascule {
+  --mat-button-text-container-shape: var(--dw-radius-toggle);
+}
