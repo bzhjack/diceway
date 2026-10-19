@@ -220,7 +220,29 @@ Notes de départ :
   de chacune.
 - La table des rencontres aléatoires (2d6) va dans le « En jeu » de la scène « Traverser le désert ».
 
-### Lot 5 — Chapitres 3 à 5 et annexe
+### Lot 5 — Chapitres 3 à 5 et annexe — fait le 2026-10-19
+
+- **Fiches de session** écrites en relisant le texte avec le PDF (`pdftotext -layout`) :
+  `chapter-three/`, `chapter-four/` (qui intègre l'annexe des saltimbanques de Kutas) et `chapter-five/`.
+  Toutes les stats perdues dans les Markdown bruts y sont rétablies.
+- **Fichiers** `app/ch3.json` (9 scènes), `app/ch4.json` (15 scènes, trois options de départ dans « En jeu »)
+  et `app/ch5.json` (9 scènes). Ils sont importés sur le compte de Lionel.
+- **Personnages repris des chapitres précédents par leur clé** :
+  - Surdral, Arjanek, Karstus, le prêtre de Shazzadion (ch. 1) ;
+  - les villageois nata urdu (ch. 2) ;
+  - le druide noir (ch. 4).
+- **Démons** : Ghashtalarann, limier et piqueur de Bazaal Dûl, idole d'Upok-N'Mee, Ilirk. Les pouvoirs hors
+  catalogue sont dans le commentaire.
+- **Écarts** :
+  - les carrières druide, érudit, astrologue et pêcheur sont absentes du catalogue (notées en commentaire) ;
+  - « pirate » devient Marin, « acrobate » Danseur, « courtisane » Tentatrice, « magicien » Sorcier ;
+  - Dazzandroth a une défense de 5, démons de l'éther compris ;
+  - les points d'héroïsme des PNJ sont portés en vilénie.
+- **Recette** : chaque chapitre a été chargé scène par scène sur le compte de test (aucune entrée ignorée,
+  aucune erreur console), avec des captures du Théâtre. Données de test supprimées ensuite.
+- **Bilan sur le compte de Lionel** : 5 scénarios, 57 scènes, 62 personnages référencés.
+
+Notes de départ :
 
 Pour chaque chapitre, dans l'ordre :
 
@@ -242,6 +264,4 @@ pirates, galère de Zalut) qui pourront avoir leurs propres scènes d'alliance.
 
 ## 4. Ordre conseillé
 
-1. Lot 1, puis lot 2, puis lot 3. Une fois le lot 3 fait, le chapitre 1 est jouable depuis l'app.
-2. Le lot 4 peut suivre : le PDF est disponible.
-3. Le lot 5 avance au rythme des séances.
+Tous les lots sont faits (2026-10-19) : la saga complète est jouable depuis l'app.

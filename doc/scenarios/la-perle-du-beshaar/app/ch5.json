@@ -1,0 +1,173 @@
+{
+  "saga": "perle-du-beshaar",
+  "scenario": {
+    "cle": "ch5",
+    "titre": "Perle du Beshaar — 5. Tolometh",
+    "pitch": "Chapitre 5 de La Perle du Beshaar (Chroniques lémuriennes 4, livre p. 125-141).\n\nUne île vient de surgir à l'entrée du golfe de Satarla, couronnée d'une conque cyclopéenne : le palais de Tolometh. Les noyés de toutes les mers s'y rassemblent, des épaves remontent des abysses. Parsool, les pirates de Gorthan le Manchot et une galère noire de Zalut observent. Les héros doivent choisir leurs alliés, débarquer, et affronter Dazzandroth Zant au pied du trône du prince-démon pour lui reprendre l'œil de Tolometh, avant que l'île ne retourne aux abysses.\n\nFin de la saga : 2 points d'expérience par héros."
+  },
+  "personnages": {
+    "dazzandroth": {
+      "kind": "pnj", "nom": "Dazzandroth Zant, Haut Mage déchu", "rang": "rival", "region": "Zalut",
+      "vigueur": -1, "agilite": -1, "esprit": 4, "aura": 3,
+      "initiative": 1, "melee": 0, "tir": 0, "defense": 5,
+      "vitalite": 9, "vilenie": 6, "foi": 3, "pouvoir": 17,
+      "carrieres": [{ "nom": "Noble", "rang": 1 }, { "nom": "Sorcier", "rang": 5 }],
+      "armes": ["Dague"],
+      "avantages": ["Intimidant", "Magie des Rois-Sorciers", { "nom": "Marqué par les dieux", "detail": "sombres" }, "Pouvoir du Néant"],
+      "desavantages": [
+        "Âgé", "Arrogant", "Dur d'oreille", "Inquiétant", "Non-combattant",
+        { "nom": "Signe distinctif", "detail": "trouble dans l'air autour de lui" },
+        { "nom": "Traqué", "detail": "Conseil des Magiciens de Zalut" }
+      ],
+      "commentaire": "Livre p. 138. Carrières magicien 5 (Sorcier ici), druide 3 et astrologue 2 (absentes du catalogue). Couteau sacrificiel d6M-1 dans le livre (avec sa Vigueur -1).\nDéfense 5 avec ses démons gardiens de l'éther (1 sans, ou contre le poignard de quartz) : +4 contre toute attaque, même imprévue ; ils interceptent un coup pour 1 point de vilénie.\nPoints de pouvoir au combat final : 6, ou 10 si les héros ont mis plus d'une lune.\nNuée démoniaque (1er cercle, Ardu -1, 3 points de pouvoir) : la victime résiste par Vigueur à -4, sinon elle est emportée dans les airs ; chaque round augmente les dégâts de chute (d6, d6B, d6x2…), qui ignorent l'armure. Il préfère les sorts qui dominent l'esprit.\nTout petit vieillard difforme, crâne allongé et bosselé, peau tavelée fine comme du papier, voix faible et éraillée, grands yeux sombres d'une vitalité surnaturelle. L'air tremble autour de lui."
+    },
+    "golem": {
+      "kind": "creature", "nom": "Golem de Tolometh", "taille": "Moyenne",
+      "vigueur": 2, "agilite": 0, "esprit": 0, "attaque": 0, "defense": 0,
+      "vitalite": 8, "degats": "d6", "protection": "d6 (4)",
+      "commentaire": "Livre p. 138 (Esprit : aucun). Un squelette entièrement couvert de berniques, de coques et de coraux, animé par la magie de Tolometh : lent, sans volonté, à grands pas dandinants. Le sceau de la mort des Trines ne le trompe pas. Il s'effondre quand l'œil est arraché."
+    },
+    "ilirk": {
+      "kind": "demon", "nom": "Ilirk, démon de l'éther", "categorie": "Inférieur",
+      "vigueur": 0, "agilite": 3, "esprit": 2, "aura": 1,
+      "melee": 3, "tir": 0, "defense": 3,
+      "vitalite": 20, "degats": "d6",
+      "pouvoirs": [
+        { "nom": "Faculté de parole", "detail": null },
+        { "nom": "Intangible", "detail": "démon de l'éther : blessé seulement par sorcellerie, alchimie ou poignard de quartz" }
+      ],
+      "commentaire": "Livre p. 139, démon familier de Dazzandroth, chargé de protéger l'œil. Gnome pansu à tête de mouche, ailes translucides, duvet de plumes bleutées, poignard cranté comme une patte d'insecte. Vif.\nDémon de l'éther : intangible et presque invisible s'il ne bouge pas (dé de malus pour le voir) ; sous cette forme, il ne peut que parler. Un round pour disparaître, retour instantané ; première attaque avec un dé de bonus s'il n'a pas été repéré. Il disparaît dans un cri rageur si son maître meurt."
+    },
+    "noye": {
+      "kind": "pnj", "nom": "Noyé", "rang": "pietaille", "region": "Satarla",
+      "vitalite": 2,
+      "carrieres": [{ "nom": "Marin", "rang": 1 }],
+      "armes": [{ "nom": "Coups de noyé", "degats": "1", "type": "M", "notes": "Poings et griffes des morts remontés des abysses." }],
+      "commentaire": "Livre p. 139 : Attaque +0, dégâts 1, marin 1, vitalité 2, règle de horde. Des centaines : squelettes rongés par les poissons, couverts de coquillages et d'algues, corps boursouflés de noyés récents. Ils s'effondrent quand Dazzandroth perd l'œil. Le sceau de la mort des Trines les rend aveugles aux héros."
+    }
+  },
+  "scenes": [
+    {
+      "cle": "depart",
+      "titre": "Vers le golfe de Satarla",
+      "region": "Marais de Kasht",
+      "lieu": "Le Palais des lianes, puis la route ou la mer",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Vous avez rattrapé Karstus, mais trop tard. L'œil de Tolometh vous échappe, et ce fameux « maître », le sorcier derrière tous ces massacres et toutes ces trahisons, est en mer. La carte trouvée sur Karstus marque un point au large, entre Parsool et Zalut, à l'entrée du golfe de Satarla. Quelque chose y remonte des profondeurs.",
+      "jeu": "Deux routes :\n• Par Parsool : revenir au caravansérail de Cingala, puis la route du nord (plus de vingt jours) ; ou longer la côte jusqu'à un village de pêcheurs et caboter en barque jusqu'à Parsool (une dizaine de jours). Puis trois jours de mer jusqu'à l'île.\n• Par la crique : convaincre (ou forcer) les pirates du Kalathorn améthyste de les emmener ; plus facile si Krum est devenu capitaine. Une dizaine de jours de mer, sans passer par Parsool.\nSi les héros arrivent plus d'une lune après le rituel (la route de terre), Dazzandroth aura 10 points de pouvoir au lieu de 6.",
+      "pistes": [
+        { "texte": "Rejoindre Parsool", "vers": "parsool" },
+        { "texte": "Embarquer avec les pirates de la crique", "vers": "ile" }
+      ]
+    },
+    {
+      "cle": "parsool",
+      "titre": "Parsool après la vague",
+      "region": "Parsool",
+      "lieu": "Le port de Parsool",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Il règne sur le port de Parsool une tension particulière. Les quais sont noirs de monde et bruissent de conversations inquiètes. Des débris flottent dans les eaux du port : tonneaux, caisses, planches, sacs de toile. Le sommet de mâts d'embarcations englouties dépasse de l'eau. Plusieurs façades du front de mer sont en réparation, et une barque de pêche est encore encastrée dans la fenêtre d'une auberge. À l'est, le port militaire est en pleine effervescence : trois galères de guerre embarquent leurs soldats.\n\nIl y a quelques semaines, racontent les badauds, une vague énorme a déferlé sur la côte. Elle a recouvert les quais, brisé des navires et remonté loin dans les ruelles. Il y a eu des morts. On n'avait jamais vu ça. Quelques jours plus tard, des pêcheurs ont vu un grand panache de fumée à l'horizon : une île nouvelle aurait surgi. Le roi envoie ses galères voir de quoi il retourne.",
+      "jeu": "Parsool : ChL3, p. 34-44. La vague est due au surgissement de l'île, le jour du rituel de Karstus et Zutesh.\nTrouver un navire :\n• une galère marchande, pour qui a gardé de l'argent ;\n• la marine : difficile sans contacts (bonnes idées, jets d'Aura). Jalak, rencontré dans les marais et rentré depuis peu, présente son beau-frère Darion, jeune et brillant officier dont la galère part justement. Persuadé, Darion prend les héros à bord.\nSi les héros prononcent le nom de Tolometh devant Darion, un homme en pagne, une conque en pendentif, se penche au bastingage : « Tu dois les écouter, capitaine. C'est le nom d'un vieil ennemi de Shazzadion et les vagues ont dit la colère du dieu. Prends-les à ton bord. » C'est Salmar, prêtre de l'ordre de la Conque (ChL3 p. 42) : il sent un événement grave qui courrouce le Père des flots.\nOptions 2 et 3 : si Arjanek a survécu et suit les héros, sa famille de riches négociants parsoolis les accueille, prête un navire ou les recommande à Darion, ami de la famille.",
+      "pistes": [{ "texte": "Trois jours de mer jusqu'à l'île", "vers": "ile" }]
+    },
+    {
+      "cle": "ile",
+      "titre": "L'île de Tolometh",
+      "region": "Satarla",
+      "lieu": "À l'entrée du golfe de Satarla, entre Parsool et Zalut",
+      "moment": "jour",
+      "meteo": "cendres",
+      "danger": 3,
+      "lecture": "Des panaches de fumée à l'horizon précèdent de plusieurs heures l'apparition de l'île. Enfin elle surgit : un affleurement de roche sombre et luisante d'une centaine de mètres, entouré d'une mer agitée d'où s'élèvent des fumerolles blanchâtres à l'odeur chaude et soufrée.\n\nUn édifice cyclopéen la couvre presque entièrement : une gigantesque conque marine, grande comme un palais, dresse ses spires à plusieurs dizaines de mètres, hérissées d'excroissances où pendent de longs bouquets d'algues. Elle repose de biais, à demi soulevée sur de hautes colonnes de pierre grise aux reflets verdâtres, au fût torsadé, entre lesquelles des escaliers taillés dans la roche montent en gradins vers l'ouverture béante de la coquille. La vision laisse un profond malaise : cette chose n'est pas faite pour les yeux des hommes.\n\nDes silhouettes nombreuses se déplacent sur l'île. Ce sont des squelettes et des cadavres boursouflés de noyés. D'autres émergent des flots sous vos yeux et grimpent maladroitement sur les rochers. Une galère surgit de derrière la conque : sa coque vermoulue est percée de trous, ses avirons brisés rament dans le vide, des marins squelettiques arpentent son pont. Elle fait le tour de l'île. Un cri d'alarme : à quelques centaines de mètres, une seconde épave couverte de vase et de berniques remonte à la surface, l'eau ruisselant de ses sabords, et rejoint lentement la ronde.",
+      "jeu": "La terreur gagne les marins. Les autres navires présents :\n• les trois galères de guerre de Parsool ;\n• une galère ancrée tout près de l'île, au sud-ouest, une longue barque tirée sur les rochers : le Dragon conquérant d'Aktourios, qui a déposé Dazzandroth et sa suite ;\n• une grande galère de guerre noire, en panne au nord-est, au sceau orange sur fond noir de Zalut : une amirale bien plus puissante que celles de Parsool ;\n• deux navires pirates bord à bord, au sud. Les marins de Parsool reconnaissent le Mulkandrar de Boros le Molosse (ChL3 p. 24), déserteur de leur marine et âme damnée de Gorthan le Manchot, le roi des pirates.\nLes vaisseaux fantômes ont les caractéristiques d'une galère de guerre (BoL p. 78), sans catapulte.\nAdapter la description si les héros arrivent sur un autre navire que la galère de Darion.",
+      "notes": "Dazzandroth a vu l'île surgir, a débarqué avec ses acolytes et a retrouvé Tolometh, toujours enchaîné à son trône par les entraves des Rois-Sorciers. Il lui a « rendu » son œil, puis s'est approprié son pouvoir par le rituel de soumission d'Arzurdranaal. Il appelle les noyés de toutes les mers ; les épaves se libèrent de la vase. Bientôt des milliers de morts et des dizaines de navires.\nPour simplifier, la situation est la même que les héros arrivent en une semaine ou en un mois (seuls les points de pouvoir de Dazzandroth changent).",
+      "pistes": [{ "texte": "Chercher des alliés", "vers": "allies" }],
+      "distribution": [{ "perso": "noye", "qty": 6, "attitude": "hostile" }]
+    },
+    {
+      "cle": "allies",
+      "titre": "Ennemis ou alliés ?",
+      "region": "Satarla",
+      "lieu": "Les navires autour de l'île",
+      "moment": "jour",
+      "meteo": "cendres",
+      "danger": 2,
+      "lecture": "Entre les vaisseaux fantômes qui interdisent l'approche et les centaines de morts qui errent sur l'île, vous n'atteindrez jamais seuls l'entrée de la conque. Autour de vous, des navires attendent, chacun à bonne distance : personne n'ose bouger le premier.",
+      "jeu": "Les options se combinent.\n• La marine de Parsool (si les héros sont à bord avec Darion) : il faut vaincre les deux vaisseaux fantômes, puis débarquer des soldats pour une percée. Marins et soldats ont peur ; les capitaines craignent que les pirates les prennent à revers.\n• Les pirates des îles du Crâne : Gorthan le Manchot est là en personne, en secret, à bord du Mulkandrar. Il s'interroge sur la longue absence des capitaines de la Fraternité de la Turale pourpre (Jarvik, Lothar, Aktourios) : les héros ont ses réponses. Sur un navire neutre, les pirates les interceptent ; depuis une galère de Parsool, approcher demande de la prudence et de convaincre les capitaines ; depuis le Kalathorn, Gorthan s'étonne de l'absence de Jarvik et l'équipage corrobore le récit (depuis le Kalathorn, c'est Parsool qu'il faut approcher avec prudence). Il faut convaincre : ils ont peur des morts, mais Gorthan ne veut pas d'une nouvelle puissance navale à l'entrée du golfe, et la Turale pourpre l'irrite. Argument superstitieux : « Voulez-vous revenir en squelette le jour où vous mourrez en mer ? » Boros et son alchimiste Dong Nôh proposent leur crache-feu pour ouvrir un chemin, en affrontant les vaisseaux fantômes.\n• Aktourios Langue-de-serpent hésite (Lothar Longues-jambes a fui). Si les héros sont avec Gorthan, il vient plaider qu'on l'a manipulé ; ce que savent les héros peut l'enfoncer, et Gorthan n'est pas clément. Sinon, son navire, ancré dans le périmètre des fantômes, est un objectif intermédiaire : attaqué, il se rend et dit tout ; à tout assaut sur l'île, il fuit.\n• La galère noire de Zalut : voir la scène suivante.\nGorthan, le Mulkandrar et les pirates : ChL3, p. 7-33.",
+      "pistes": [
+        { "texte": "Approcher la galère noire de Zalut", "vers": "zalut" },
+        { "texte": "Lancer l'assaut", "vers": "assaut" }
+      ]
+    },
+    {
+      "cle": "zalut",
+      "titre": "La galère noire de Zalut",
+      "region": "Zalut",
+      "lieu": "À bord de la galère amirale de Zalut",
+      "moment": "jour",
+      "danger": 1,
+      "lecture": "Le pont de bois noir est parfaitement briqué. Marins et soldats en uniforme noir s'affairent en silence, la mine sérieuse ; même la chiourme, dans l'entrepont, se tient étonnamment coite. On vous mène entre les deux mâts, sous une voile tendue contre le soleil, devant un étrange trio debout au centre d'un pentacle tracé à la craie, dont les motifs brouillent la vue de qui s'essaie à les détailler.\n\nTrois hommes d'âge mûr, grands et minces, la peau pâle, le crâne allongé et rasé de près, en robe de damas noir brodée d'orange qui leur cache les pieds. Ils se ressemblent : des frères, sans doute. Mais l'un a les lèvres cousues, l'autre les yeux, le troisième les oreilles. Le fil, qui semble d'or, est pris dans des chairs cicatrisées depuis longtemps. Et ils bougent avec une coordination fluide, comme une seule et même personne.\n\nL'aveugle vous souhaite la bienvenue : « Nous sommes Uz-Ul-Kaal, huissiers du Conseil des Magiciens de Zalut. »",
+      "jeu": "Les Trines écoutent, puis partagent :\n• « Il se nomme Dazzandroth Zant. C'était le Haut Mage du Conseil des Magiciens de Zalut, déchu en raison d'un profond désaccord d'ordre philosophique. Il a échappé à sa sentence de mort et cherche sa revanche. Des démons de l'éther l'entourent nuit et jour. Il a régné sur Zalut plus de cinquante ans. »\n• Tolometh régnait jadis sur les abysses et commandait aux noyés ; allié d'un Roi-Sorcier, il a ravagé les côtes jusqu'à la défaite au Gouffre d'Hyrdral.\n• La perle est l'œil de Tolometh, qui porte son pouvoir : le reprendre, c'est priver Dazzandroth de ce pouvoir.\n• Bientôt, une flotte d'épaves coulera tous les navires pour faire de nouveaux noyés, puis envahira Zalut, et le reste. Il faut frapper maintenant, tant qu'il est affaibli.\n• Le sourd parle avec la voix du muet : un serment ancien de fidélité au Haut Mage, que seule sa mort lève, leur interdit de l'attaquer. Mais rien ne les empêche d'une aide indirecte.\nLe sceau de la mort : « Les noyés de l'île ne vous sentiront pas passer. » Rituel : table pliante, brasero, encensoir tiré d'une boîte en forme de tombeau, sang du muet, résine verdâtre, fumée âcre et puanteur de putréfaction. 1d6 par héros : sur 1, il hérite du désavantage inquiétant (le noter, le révéler à la fin de la saga). Les golems de Tolometh ne sont pas trompés.\nLe poignard de quartz (même si les héros refusent le sceau) : « Les esprits de l'air qui protègent Dazzandroth le craindront. Frappez le sorcier au cœur. »\nRefus du sceau : la galère noire participe à l'assaut des alliés. Montrer les objets inconnus (corne de Bazaal Dûl, potions) : les Trines en expliquent les pouvoirs.",
+      "notes": "Mensonges et demi-vérités : les Trines pourraient agir, mais craignent Dazzandroth. Que les héros l'affaiblissent ; s'ils échouent, les Trines interviendront avec de meilleures chances. À Zalut, la prudence est une condition de survie.",
+      "pistes": [{ "texte": "Débarquer sur l'île", "vers": "assaut" }]
+    },
+    {
+      "cle": "assaut",
+      "titre": "À l'assaut du palais",
+      "region": "Satarla",
+      "lieu": "L'île de Tolometh",
+      "moment": "jour",
+      "meteo": "cendres",
+      "danger": 4,
+      "lecture": "Les pierres des catapultes s'abattent sur l'île et broient les noyés en projetant des débris tout autour. Des nappes de feu grégeois embrasent la roche nue dans une horrible odeur de varech et de chair brûlée. Les barques font la navette entre les rochers à fleur d'eau. Les soldats, hallucinés, affrontent des morts revenus à la vie : des squelettes rongés par les poissons, couverts de coquillages et d'algues, des corps boursouflés de noyés plus récents. Et, dominant ce cauchemar, la conque monumentale incrustée d'algues séchées, de coraux et de coquillages, dresse ses spires de calcaire au-dessus de la vaste ouverture aux parois de nacre.",
+      "jeu": "Avec Parsool et/ou les pirates : combat naval contre les deux vaisseaux fantômes (à jouer ou à décrire), puis débarquement en barques et percée jusqu'aux gradins entre les colonnes torsadées, usés et couverts d'algues.\nSi les héros n'ont pas contacté les Zalutis, la galère noire intervient quand même : elle attaque un vaisseau fantôme, puis appuie le débarquement à la catapulte et à l'arc.\nAvec le sceau des Trines : un canot manœuvré par des marins zalutis, calmes et silencieux. Les noyés agglutinés ne remarquent pas les héros, qui avancent parmi des centaines de morts errants. (Lire alors : « Pourvu que la protection de cette sorcellerie ne soit pas de trop courte durée… »)",
+      "pistes": [{ "texte": "Entrer dans la conque", "vers": "conque" }],
+      "distribution": [{ "perso": "noye", "qty": 10, "attitude": "hostile" }]
+    },
+    {
+      "cle": "conque",
+      "titre": "Dans la conque",
+      "region": "Satarla",
+      "lieu": "Le palais de Tolometh",
+      "moment": "jour",
+      "danger": 2,
+      "lecture": "L'ouverture, haute de plus de quinze mètres et large de dix, donne accès à l'intérieur de la conque. L'endroit suinte l'humidité et baigne dans une phosphorescence glauque. Le sol de nacre, légèrement incliné, est couvert d'une épaisse couche de vase fétide, d'algues, de coraux et de coquillages. Dans de grandes flaques d'eau salée scintillent de petits poissons ; d'autres, et des mollusques, gisent un peu partout, piégés par la remontée d'un pan entier du fond marin. Il fait étrangement froid, comme si la nacre rayonnait encore le froid des abysses.\n\nLe passage s'enroule vers la droite. À mesure que vous avancez, l'air se rafraîchit encore ; à l'odeur de vase se mêlent des relents musqués de décomposition. Une terreur atavique vous saisit, une envie de prendre vos jambes à votre cou. Il y a au bout de ce passage quelque chose d'infiniment périlleux, et vous sentez confusément ce que votre présence ici a de sacrilège.\n\nAu bout, une lueur jaunâtre, comme des torches, se reflète sur la paroi concave. Des murmures de voix humaines vous parviennent, comme un écho lointain.",
+      "jeu": "Le couloir fait cent mètres. Esprit + chasseur : dans la vase, les traces d'une dizaine de personnes.\nDifficile d'entrer dans la salle du trône sans être vu : la large entrée n'offre aucune cachette, et les druides noirs, qui sortent régulièrement guetter les navires, sont aux aguets. Dazzandroth sait que ses ennemis sont arrivés.",
+      "pistes": [{ "texte": "La salle du trône", "vers": "trone" }]
+    },
+    {
+      "cle": "trone",
+      "titre": "La salle du trône",
+      "region": "Satarla",
+      "lieu": "Le palais de Tolometh",
+      "moment": "jour",
+      "danger": 4,
+      "lecture": "Le passage débouche dans un immense espace creux à l'intérieur de la coquille : une salle ronde d'une quarantaine de mètres aux parois de nacre concaves. Une colonnade de fûts torsadés en fait le tour ; leurs sommets disparaissent dans l'ombre d'un plafond vertigineux. Au centre, un bassin déborde au rythme du ressac en grandes éclaboussures. Quelques torches éclairent timidement le cœur du lieu. Il règne un froid glacial ; l'eau suinte des parois. Des silhouettes en robes noires sont disséminées dans la salle.\n\nDerrière le bassin, sur une estrade de nacre, un siège haut comme trois hommes. Et dessus, un géant d'au moins huit mètres, assis dans une pose hiératique, le dos droit, les avant-bras sur les accoudoirs. Sa peau huileuse et irisée semble couverte de petites écailles. D'énormes chaînes enserrent ses bras et son torse. Son visage, à demi noyé d'ombre, a quelque chose de profondément obscène : une bouche aux lèvres pleines ourlée de longs barbillons, des oreilles en forme de nageoires, et au-dessus d'un nez presque inexistant, une orbite vide au milieu du front, d'où pend un nerf rougeâtre relié à des câbles et des filins de métal. Trois cornes d'or surmontent un double diadème d'argent.\n\nVous êtes en présence de Tolometh, prince-démon des abysses, un être des temps mythiques qui fut, dit la légende, l'égal d'un dieu.",
+      "jeu": "La terreur : chaque héros fait un jet d'Esprit Difficile (-2). Échec : tétanisé d3 rounds, puis dé de malus à toutes ses actions en présence de Tolometh, sans pouvoir dépasser le pied de l'estrade ; il retente un jet d'Esprit Moyen au début de chaque round.\nEsprit : dans le giron du géant, une petite sphère opalescente.\nAutour : un campement de fortune à gauche de l'entrée ; les golems de Tolometh alignés dans l'ombre contre la paroi ; derrière l'estrade, le trésor d'Arzurdranaal, corrodé (un coup de chance peut y trouver un artefact intact).\nDazzandroth parle d'abord, avec morgue : laquais de Zalut ? Qu'ils se soumettent et le servent ! Puis, en démonique : « Serviteurs de Tolometh, protégez votre dieu de l'intrusion de ces sacrilèges ! » et « Ilirk, empêche-les de prendre l'œil. » Affaibli (6 points de pouvoir, ou 10), il reste redoutable et trop arrogant pour fuir. Les druides, fanatiques, meurent pour lui. Ilirk est invisible (dans la distribution, mais intangible au départ).\nReprendre l'œil : grimper (Agilité Moyenne). L'œil est translucide, plein d'yeux bleus et verts qui tournoient : au premier regard, Esprit Moyen ou hypnotisé un round. L'arracher : Vigueur Difficile (-2), un cran de moins par round passé à dénouer ; ou trancher les torons (6 dégâts, protection d6 (4)) ; ou tirer sur les crochets plantés dans le nerf (Vigueur Ardu -1). Libéré, il redevient une perle dure et terne ; Tolometh a un spasme et un râle, les golems s'effondrent, la mer envahit la salle et l'île sombre. 10 rounds pour sortir de la salle du trône, sinon englouti (défier la mort ?).\nIssues : l'œil repris, Dazzandroth vivant, il perd tout pouvoir sur les morts, hurle et veut reprendre l'œil à tout prix ; s'il survit à la submersion, il pourra traquer les héros. Dazzandroth tué, l'œil encore relié : Tolometh reprend le contrôle, les noyés surgissent du bassin et remplissent le couloir (Vigueur ou Agilité de plus en plus dures pour remonter le flot), les golems font rempart ; au bout de 10 rounds l'île sombre de toute façon, et sans l'œil la menace de Tolometh plane sur la Lémurie.\nEn dernier recours : les Trines entrent et engagent un duel de sorciers avec Dazzandroth.\nPoignard de quartz : annule le bonus de défense des démons de l'éther (ils peuvent encore se sacrifier pour 1 point de vilénie) et blesse Ilirk intangible.",
+      "notes": "Le pacte d'Upok-N'Mee : l'Ébranleur maintient le palais à la surface tant que Tolometh ne lui ordonne pas autre chose. Abusé (Tolometh est asservi, pas libéré), il ronge son frein : dès que Tolometh perd son œil, il renvoie le palais au fond ; si Dazzandroth meurt, Tolometh le lui demandera, un peu plus tard.",
+      "pistes": [{ "texte": "Fuir avant que l'île ne sombre", "vers": "epilogue" }],
+      "distribution": [
+        { "perso": "dazzandroth", "attitude": "hostile" },
+        { "perso": "ilirk", "attitude": "hostile" },
+        { "perso": "golem", "qty": 5, "attitude": "hostile" },
+        { "perso": "druide-noir", "qty": 8, "attitude": "hostile" }
+      ]
+    },
+    {
+      "cle": "epilogue",
+      "titre": "Épilogue",
+      "region": "Satarla",
+      "lieu": "Le golfe de Satarla",
+      "moment": "crepuscule",
+      "meteo": "clair",
+      "lecture": "Dans la panique et le chaos, vous regagnez les canots. En quelques minutes, le gigantesque palais-conque disparaît sous la surface dans des grondements et des bouillonnements. Puis la mer redevient calme, comme si tout cela n'avait été qu'un mauvais rêve.\n\nL'œil de Tolometh a été arraché une nouvelle fois, et le prince-démon retourne à l'abîme, toujours enchaîné à son trône.",
+      "jeu": "Selon les alliés :\n• Parsool : les héros sont ramenés au port, récompensés par le roi et déclarés « amis de Parsool ». L'œil leur est laissé : Parsool ne veut pas se mêler de sorciers et de démons.\n• Les pirates : Gorthan grommelle de n'en tirer aucun profit, mais se satisfait d'avoir éliminé un concurrent et la Turale pourpre. S'il connaît le pouvoir de l'œil, il le réclame pour le Trésor des pirates au Port des Seigneurs des mers (ChL3 p. 16). Le convaincre de le rendre aux Nata Urdu : bons arguments, jet d'Aura, dons au Trésor. Sinon, une suite : voler l'œil dans le Trésor des pirates !\n• Les Trines : ils veulent le récit et la certitude de la mort de Dazzandroth, et proposent d'emporter l'œil à Zalut pour le détruire (disent-ils). Sur la galère noire, difficile de refuser ; ailleurs, ils ne forcent pas. Si Dazzandroth est mort et qu'on leur confie l'œil : une médaille d'argent (trois yeux en triangle, sceau de Zalut) qui donne l'avantage amis haut placés (Zalut). Des héros peu scrupuleux peuvent demander une récompense.\nAvec l'œil : le rapporter aux Nata Urdu, ou le confier à leurs envoyés (peut-être arrivés à Parsool). Dès qu'il retrouve le sanctuaire, l'eau recommence à couler de la conque. Certains héros pourraient finir leur vie dans la vallée.\nRévéler le désavantage inquiétant aux héros marqués par le sceau de la mort.\nFIN DE LA SAGA : 2 points d'expérience par héros.",
+      "notes": "Si Dazzandroth a survécu à la submersion, il pourrait poursuivre les héros d'une vengeance inextinguible.",
+      "pistes": [{ "texte": "Rendre l'œil aux Nata Urdu" }]
+    }
+  ]
+}

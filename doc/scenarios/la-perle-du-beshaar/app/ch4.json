@@ -1,0 +1,472 @@
+{
+  "saga": "perle-du-beshaar",
+  "scenario": {
+    "cle": "ch4",
+    "titre": "Perle du Beshaar — 4. Le réveil de l'Ébranleur",
+    "pitch": "Chapitre 4 de La Perle du Beshaar (Chroniques lémuriennes 4, livre p. 98-124, et l'annexe des saltimbanques de Kutas p. 142-144).\n\nDe retour à Malakut, les héros remettent la Perle (ou pas). Au banquet de Surdral, les saltimbanques de Kutas, engagés par Karstus, tentent de massacrer tous ceux qui savent. Karstus a disparu avec l'œil de Tolometh. L'enquête mène au caravansérail de Cingala, puis aux marais de Kasht, à travers une embuscade de chiens démoniaques, jusqu'au Palais des lianes : Karstus et Zutesh viennent d'évoquer Upok-N'Mee l'Ébranleur, au prix de vingt esclaves. L'œil n'est plus là ; quelque chose remonte du fond des mers.\n\nTrois départs possibles selon le chapitre 2 (option 1 : la Perle rapportée ; 2 : les héros sont restés chez les Nata Urdu ; 3 : revenus sans la Perle) : voir « En jeu » de chaque scène.\n\nFin d'épisode : les héros récupèrent leurs points d'héroïsme et gagnent chacun 1 point d'expérience."
+  },
+  "personnages": {
+    "lehene": {
+      "kind": "pnj", "nom": "Léhéné", "rang": "rival", "region": "Malakut",
+      "vigueur": 0, "agilite": 0, "esprit": 2, "aura": 4,
+      "initiative": 1, "melee": 0, "tir": 0, "defense": 3,
+      "vitalite": 10, "vilenie": 4,
+      "carrieres": [
+        { "nom": "Esclave", "rang": 2 },
+        { "nom": "Tentatrice", "rang": 1 },
+        { "nom": "Ménestrel", "rang": 1 },
+        { "nom": "Scribe", "rang": 0 }
+      ],
+      "avantages": ["Attirant", "Prestance", "Résistant à la magie"],
+      "desavantages": ["Maudit", "Méfiance envers la sorcellerie", "Signe distinctif"],
+      "commentaire": "Livre p. 101, rivale demi-démone. Ses 4 points d'héroïsme sont portés en vilénie. Carrière « courtisane » du livre = Tentatrice ici.\nMuse des héros (ChL 3 p. 173) : dépenser 1 point d'héroïsme pour en rendre 1 à un autre personnage.\nSuccube : d6+6 piétaille lui obéissent aveuglément, sans jet ; d6 coriaces, ou un héros, avec un jet d'Esprit à -4 (son aura).\nConnaissances innées : démons, sorcellerie, mystères anciens.\nVulnérabilité : le fer pur lui inflige des dégâts doublés.\nÉpouse de Surdral, fruit des expériences d'un démoniste. Voile léger, yeux verts pailletés d'or, voix hypnotique, parfum enivrant. Son secret doit être gardé."
+    },
+    "faux-garde": {
+      "kind": "pnj", "nom": "« Garde » d'Arjanek", "rang": "coriace", "region": "Malakut",
+      "vigueur": 1, "agilite": 2, "esprit": 0, "aura": -1,
+      "initiative": 0, "melee": 1, "tir": 0, "defense": 1,
+      "vitalite": 7,
+      "carrieres": [{ "nom": "Voleur", "rang": 1 }, { "nom": "Assassin", "rang": 1 }],
+      "armes": ["Gourdin", "Dague"],
+      "commentaire": "Livre p. 101. Gourdin d6M+1, dague d6M+1 dans le livre (avec leur Vigueur 1). Serviteurs placés par Karstus : au banquet, ils attaquent leur maître."
+    },
+    "mercenaire-temple": {
+      "kind": "pnj", "nom": "Mercenaire du temple de Shazzadion", "rang": "coriace", "region": "Satarla",
+      "vigueur": 2, "agilite": 1, "esprit": 0, "aura": -1,
+      "initiative": 0, "melee": 1, "tir": 1, "defense": 0,
+      "vitalite": 8,
+      "carrieres": [{ "nom": "Mercenaire", "rang": 2 }],
+      "armes": ["Épée", "Hache", "Arc"],
+      "armures": ["Armure légère"],
+      "commentaire": "Livre p. 105. Épée ou hache d6+2, arc d6+1 dans le livre. Soldats payés par le temple, un par héros, avec les prêtres venus de Satarla."
+    },
+    "oglar": {
+      "kind": "pnj", "nom": "Oglar", "rang": "rival", "region": "Malakut",
+      "vigueur": 2, "agilite": 0, "esprit": 2, "aura": 1,
+      "initiative": 1, "melee": 0, "tir": 0, "defense": 3,
+      "vitalite": 12, "foi": 2, "pouvoir": 11,
+      "carrieres": [
+        { "nom": "Fermier", "rang": 0 },
+        { "nom": "Médecin", "rang": 1 },
+        { "nom": "Sorcier", "rang": 1 }
+      ],
+      "armes": ["Dague"],
+      "avantages": ["Montagnard", "Vigueur céruléenne"],
+      "desavantages": ["Fanatique", "Pataud", "Repoussant"],
+      "commentaire": "Livre p. 110. Carrière druide 2 absente du catalogue. Dague d6M+2 dans le livre (avec sa Vigueur 2). Foi 2, dont 1 dépensé pour sonner la corne. Sorts du premier cercle seulement ; fuit avec Esprits voilés (BoL p. 154).\nLourde carrure, embonpoint, presque chauve, petits yeux ternes, la lèvre rongée par une plaie purulente (malédiction de la corne). Robe de bure crasseuse, la corne de Bazaal Dûl en bandoulière."
+    },
+    "druide-noir": {
+      "kind": "pnj", "nom": "Druide noir", "rang": "pietaille", "region": "Malakut",
+      "vitalite": 2,
+      "carrieres": [{ "nom": "Prêtre", "rang": 1 }],
+      "armes": [{ "nom": "Armes diverses (piétaille)", "degats": "d3", "type": "M", "notes": "Épées, javelots, lances, coutelas de la piétaille." }],
+      "commentaire": "Livre p. 110 et 122 : Attaque +0, dégâts d3 (poignard), druide 1 (Prêtre ici), règle de horde. Un sur six a 1 point de foi. Fanatiques au regard dément, robe noire, médaillon d'Hadron le Noir : ils se battent jusqu'à la mort."
+    },
+    "krum": {
+      "kind": "pnj", "nom": "Krum", "rang": "coriace", "region": "Îles du Crâne",
+      "vigueur": 2, "agilite": 1, "esprit": 0, "aura": -1,
+      "initiative": 0, "melee": 1, "tir": 0, "defense": 1,
+      "vitalite": 8,
+      "carrieres": [{ "nom": "Marin", "rang": 2 }],
+      "armes": [{ "nom": "Sabre", "degats": "d6", "type": "M" }],
+      "commentaire": "Livre p. 117. Carrière pirate 2 (Marin ici). Sabre d'abordage d6+2 dans le livre (avec sa Vigueur 2).\nOfficier du Kalathorn améthyste de Jarvik. Il rassure ses hommes sans y croire. À la mort de Jarvik, il devient capitaine."
+    },
+    "pirate-coriace": {
+      "kind": "pnj", "nom": "Pirate (coriace)", "rang": "coriace", "region": "Îles du Crâne",
+      "vigueur": 2, "agilite": 1, "esprit": 0, "aura": -1,
+      "initiative": 0, "melee": 1, "tir": 0, "defense": 1,
+      "vitalite": 8,
+      "carrieres": [{ "nom": "Marin", "rang": 2 }],
+      "armes": [{ "nom": "Sabre", "degats": "d6", "type": "M" }],
+      "commentaire": "Profil de Krum (livre p. 117), pour les coriaces de la crique."
+    },
+    "pirate": {
+      "kind": "pnj", "nom": "Pirate", "rang": "pietaille", "region": "Îles du Crâne",
+      "melee": 1,
+      "vitalite": 2,
+      "carrieres": [{ "nom": "Marin", "rang": 1 }],
+      "armes": [{ "nom": "Armes de marin", "degats": "d3", "type": "M", "notes": "Armes diverses des équipages (coutelas, gourdins…)." }],
+      "commentaire": "Livre p. 117 : Attaque +1, dégâts d3 (armes diverses), pirate 1 (Marin ici), règle de horde. Superstitieux ; ils fuient ou se rendent quand ils sont débordés."
+    },
+    "zutesh": {
+      "kind": "pnj", "nom": "Zutesh", "rang": "rival", "region": "Îles du Crâne",
+      "vigueur": 0, "agilite": 0, "esprit": 2, "aura": 1,
+      "initiative": 0, "melee": 1, "tir": 0, "defense": 3,
+      "vitalite": 10, "vilenie": 4, "foi": 2, "pouvoir": 12,
+      "carrieres": [
+        { "nom": "Sorcier", "rang": 2 },
+        { "nom": "Marin", "rang": 0 },
+        { "nom": "Voleur", "rang": 1 }
+      ],
+      "armes": ["Dague"],
+      "avantages": ["Amis dans la pègre", "Gamin des rues"],
+      "desavantages": ["Maudit", "Inadapté au froid", { "nom": "Traqué", "detail": "sorciers de Zalut" }],
+      "commentaire": "Livre p. 121. Carrière druide 2 absente du catalogue. Après le rituel : vilénie 3, foi 1, pouvoir 6 ; il a sacrifié 1 point d'Agilité au sort d'évocation (déjà compté).\nDisciple de Dazzandroth, allié des pirates de la Fraternité de la Turale pourpre. Maigre, long visage revêche, menton en galoche. Il fuit par la loggia si Karstus tombe : il saute et se change en grand oiseau de mer.\nPossessions : cierge noir d'Ozombal, clefs de La Sirène endormie (sa taverne du Port des Seigneurs des mers), médaillon des druides noirs, teinture de respiration aquatique (potion légendaire)."
+    },
+    "jarvik": {
+      "kind": "pnj", "nom": "Jarvik Barbe-de-feu", "rang": "rival", "region": "Îles du Crâne",
+      "vigueur": 3, "agilite": 1, "esprit": 0, "aura": 0,
+      "initiative": 1, "melee": 2, "tir": 1, "defense": 1,
+      "vitalite": 13,
+      "carrieres": [
+        { "nom": "Marin", "rang": 3 },
+        { "nom": "Mercenaire", "rang": 1 },
+        { "nom": "Ouvrier", "rang": 1 }
+      ],
+      "armes": ["Hache d'abordage de Parsool", { "nom": "Grand coutelas", "degats": "d6M", "type": "M" }],
+      "armures": ["Armure légère"],
+      "avantages": [{ "nom": "Arme favorite", "detail": "hache de Parsool" }, "Colosse", "Fêtard"],
+      "desavantages": ["Bouseux", "Malédiction de Morgazzon", { "nom": "Signe distinctif", "detail": "cicatrice sur le visage" }],
+      "commentaire": "Livre p. 122. Carrières pirate 3 (Marin ici), mercenaire 1, pêcheur 0, docker 1 (Ouvrier ici). Hache d'abordage d6B+3, grand coutelas d6M+3 dans le livre (avec sa Vigueur 3).\nCapitaine du Kalathorn améthyste, sous l'emprise de Zutesh depuis des années ; le rituel l'a fait basculer dans la folie. Colosse roux à la barbe tressée, balafre de l'oreille (mutilée) au nez, corset de cuir crasseux."
+    },
+    "kutas": {
+      "kind": "pnj", "nom": "Kutas, maître de la troupe", "rang": "rival",
+      "vigueur": 1, "agilite": 2, "esprit": 1, "aura": 1,
+      "initiative": 2, "melee": 2, "tir": 0, "defense": 1,
+      "vitalite": 11, "vilenie": 5,
+      "carrieres": [
+        { "nom": "Voleur", "rang": 2 },
+        { "nom": "Ménestrel", "rang": 1 },
+        { "nom": "Forgeron", "rang": 0 },
+        { "nom": "Assassin", "rang": 3 }
+      ],
+      "armes": ["Dague", { "nom": "Cordelette d'étrangleur", "degats": "spécial", "type": "M", "notes": "Attaque de dos réussie (dé de bonus de surprise) : Vigueur à -3 pour se dégager, toute autre action avec un dé de malus ; inconscient au 3e round, mort au 4e." }],
+      "avantages": ["Amis dans la pègre", "Beau parleur", "Discret", "Vigilant"],
+      "desavantages": ["Cupide", { "nom": "Traqué", "detail": "autorités de Lysor et d'Oomis" }],
+      "commentaire": "Annexe, livre p. 143. Dague d6M+1 dans le livre (avec sa Vigueur 1). Vigilant : dé de malus aux jets de réaction adverses en début de combat.\nGrand gaillard aux épaules larges, cheveux poivre et sel en courte queue de cheval, barbe taillée, visage de bonhomie : un tueur sans pitié. Ancien gamin des rues, chef d'une troupe de baladins qui couvre détrousseurs et assassins."
+    },
+    "pranma": {
+      "kind": "pnj", "nom": "Pranma, dresseur fantasque", "rang": "rival",
+      "vigueur": 0, "agilite": 1, "esprit": 2, "aura": 1,
+      "initiative": 1, "melee": 2, "tir": 0, "defense": 1,
+      "vitalite": 10,
+      "carrieres": [
+        { "nom": "Dresseur", "rang": 2 },
+        { "nom": "Assassin", "rang": 2 },
+        { "nom": "Fermier", "rang": 0 },
+        { "nom": "Esclave", "rang": 1 }
+      ],
+      "armes": ["Dague"],
+      "avantages": ["Ami des bêtes", "Fêtard"],
+      "desavantages": [{ "nom": "Addiction", "detail": "alcool" }],
+      "commentaire": "Annexe, livre p. 143. Long poignard d6M.\nCelba et Buzix, ses petits singes : sur son ordre, ils sautent au visage d'une victime, qui a un dé de malus à toutes ses actions tant qu'un singe est agrippé. S'en défaire : un round et une attaque réussie avec un dé de malus (vitalité 3 chacun).\nCheveux blancs clairsemés, strabisme, démarche d'ivrogne, tenue débraillée ; le plus vieux compagnon de Kutas."
+    },
+    "gerro": {
+      "kind": "pnj", "nom": "Gerro, flûtiste mortel", "rang": "coriace",
+      "vigueur": -1, "agilite": 2, "esprit": 0, "aura": 1,
+      "initiative": 0, "melee": 0, "tir": 2, "defense": 0,
+      "vitalite": 5,
+      "carrieres": [{ "nom": "Ménestrel", "rang": 1 }, { "nom": "Assassin", "rang": 1 }],
+      "armes": [{ "nom": "Flûte-sarbacane", "degats": "d3", "type": "T", "notes": "Trois fléchettes empoisonnées : Vigueur Ardu (-1) ou dé de malus à toutes les actions, puis nouveau jet après 5 rounds, sinon paralysie et mort dans l'heure." }, "Dague"],
+      "avantages": [{ "nom": "Arme favorite", "detail": "flûte-sarbacane" }],
+      "commentaire": "Annexe, livre p. 144. Dague d6M-1 dans le livre (avec sa Vigueur -1). Vieux musicien au visage ridé, à la mine austère."
+    },
+    "asyr": {
+      "kind": "pnj", "nom": "Asyr, danseuse vénéneuse", "rang": "coriace", "region": "Halakh",
+      "vigueur": 0, "agilite": 2, "esprit": -1, "aura": 1,
+      "initiative": 0, "melee": 1, "tir": 0, "defense": 1,
+      "vitalite": 6,
+      "carrieres": [{ "nom": "Danseur", "rang": 1 }, { "nom": "Assassin", "rang": 1 }],
+      "armes": ["Kriss"],
+      "avantages": [{ "nom": "Arme favorite", "detail": "kriss" }],
+      "commentaire": "Annexe, livre p. 144. Deux kriss d6M+1, combat à deux armes. Danseuse d'Halakh, belle et athlétique."
+    },
+    "nahuet": {
+      "kind": "pnj", "nom": "Nahuet, danseuse vénéneuse", "rang": "coriace", "region": "Halakh",
+      "vigueur": 0, "agilite": 2, "esprit": -1, "aura": 1,
+      "initiative": 0, "melee": 1, "tir": 0, "defense": 1,
+      "vitalite": 6,
+      "carrieres": [{ "nom": "Danseur", "rang": 1 }, { "nom": "Assassin", "rang": 1 }],
+      "armes": ["Kriss"],
+      "avantages": ["Attirant"],
+      "commentaire": "Annexe, livre p. 144. Deux kriss d6M+1, combat à deux armes. Danseuse d'Halakh, belle et athlétique."
+    },
+    "acrobate": {
+      "kind": "pnj", "nom": "Acrobate filou (Nîm ou Nâm)", "rang": "coriace",
+      "vigueur": 1, "agilite": 2, "esprit": -1, "aura": 0,
+      "initiative": 0, "melee": 1, "tir": 0, "defense": 1,
+      "vitalite": 7,
+      "carrieres": [{ "nom": "Danseur", "rang": 2 }],
+      "armes": ["Bâton"],
+      "avantages": ["Athlète"],
+      "commentaire": "Annexe, livre p. 144. Carrière acrobate 2 (Danseur ici). Bâton d6+1 dans le livre (avec sa Vigueur 1). Deux frères trapus aux cheveux noirs bouclés ; leurs grands bâtons de numéro fracassent les crânes."
+    },
+    "musicien": {
+      "kind": "pnj", "nom": "Musicien de la troupe", "rang": "pietaille",
+      "vitalite": 2,
+      "carrieres": [{ "nom": "Ménestrel", "rang": 1 }],
+      "armes": [{ "nom": "Armes diverses (piétaille)", "degats": "d3", "type": "M", "notes": "Épées, javelots, lances, coutelas de la piétaille." }],
+      "commentaire": "Annexe, livre p. 144 : musiciens et assistants, Attaque +0, dégâts d3 (dague), ménestrel ou acrobate 1, règle de horde. Chacun connaît son rôle, comme un numéro rodé."
+    },
+    "ghashtalarann": {
+      "kind": "demon", "nom": "Ghashtalarann", "categorie": "Inférieur",
+      "vigueur": 0, "agilite": 2, "esprit": 3, "aura": 1,
+      "melee": 3, "tir": 0, "defense": 3,
+      "vitalite": 20, "degats": "d6",
+      "pouvoirs": [{ "nom": "Chair malléable", "detail": "Maître du déguisement : prend l'apparence d'un objet inerte" }],
+      "commentaire": "Livre p. 107, démon de l'illusion et du faux-semblant. Corps courtaud, flasque et gélatineux, visage de cire fondue, quatre petits yeux, poings durs comme le roc.\nPiège illusoire : dans le lieu qu'il garde, jet d'Esprit à -3, sinon perdu dans un dédale illusoire, isolé des autres. Le premier coup reçu rompt l'illusion.\nMaître du déguisement : il se change en objet inerte quand personne ne le regarde et attaque avec un dé de bonus de surprise."
+    },
+    "limier": {
+      "kind": "demon", "nom": "Limier de Bazaal Dûl", "categorie": "Mineur",
+      "vigueur": 2, "agilite": 1, "esprit": 0, "aura": -1,
+      "melee": 2, "tir": 0, "defense": 0,
+      "vitalite": 12, "degats": "d6M+2",
+      "pouvoirs": [{ "nom": "Armes améliorées", "detail": "dé de bonus aux jets d'attaque" }],
+      "commentaire": "Livre p. 111. Lévrier efflanqué et écorché, chair rougeâtre et suintante, bouquets de petites cornes, yeux brasillants. Il disparaît dans un hurlement dès qu'il a abattu une proie."
+    },
+    "piqueur": {
+      "kind": "demon", "nom": "Piqueur de Bazaal Dûl", "categorie": "Inférieur",
+      "vigueur": 3, "agilite": 2, "esprit": 0, "aura": 1,
+      "melee": 3, "tir": 2, "defense": 0,
+      "vitalite": 23, "degats": "d6+3",
+      "pouvoirs": [{ "nom": "Armure", "detail": "cuir épais, protection d6-2 (2)" }],
+      "commentaire": "Livre p. 111. Initiative 1. Humanoïde trapu au cuir squameux d'automne, visage canin, deux cornes torsadées rouge sombre, nu, épieu de chasse de bois noir huileux (épieu, griffes ou cornes : d6+3).\nMaître de meute : une fois par combat, son action appelle d6B limiers, qui apparaissent au round suivant.\nIl surgit si l'on rate la corne de Bazaal Dûl (pour la reprendre) ou si on la brise."
+    },
+    "idole": {
+      "kind": "demon", "nom": "Idole brisée d'Upok-N'Mee", "categorie": "Mineur",
+      "vigueur": 1, "agilite": 1, "esprit": 0, "aura": 0,
+      "melee": 2, "tir": 0, "defense": 0,
+      "vitalite": 11, "degats": "d6M+1",
+      "commentaire": "Livre p. 122. Karstus l'anime pour 3 points de pouvoir (évocation d'un démon mineur, 1er cercle) : un petit être de glaise molle, étrangement organique. Attaques multiples ×3 : ses longs flagelles cinglent."
+    }
+  },
+  "scenes": [
+    {
+      "cle": "retour",
+      "titre": "Retour à Malakut",
+      "region": "Malakut",
+      "lieu": "La demeure de Surdral",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Après les longues journées de désert, Badhasar et l'hospitalité de Chamir, puis la traversée des Besharoon et la descente du fleuve, voici de nouveau les quais de Malakut.\n\nSurdral Prados vous accueille avec sa bonhomie habituelle et vous ouvre grandes les portes de sa demeure. Il fait aussitôt prévenir maître Arjanek, qui arrive toutes affaires cessantes, accompagné de son fidèle Karstus. Arjanek prend la Perle avec des gestes circonspects et révérencieux, s'inquiète de savoir si elle est fragile, et l'observe avec fascination. Sur un signe, Karstus sort de sa besace votre récompense : une véritable fortune !\n\nArjanek repart sans tarder, ses affaires le réclament, mais promet de revenir demain soir fêter dignement votre réussite. Surdral le raccompagne et revient en annonçant un banquet en votre honneur, demain soir, chez lui.",
+      "jeu": "Option 1 (la Perle rapportée) : comme lu ci-dessus. Si les héros disent la Perle maléfique ou maudite, Arjanek la repose, mi-intrigué mi-inquiet, et promet de la montrer à des sages « bien plus érudits que moi ».\nOption 2 (restés chez les Nata Urdu, Karstus a volé la Perle) : à Badhasar, Chamir a été assassiné il y a quatre mois. À Malakut, Surdral est alité : la veille du départ de Karstus et d'Arjanek, empoisonné, il a été sauvé in extremis par Léhéné et est resté une semaine dans le coma. Arjanek et Karstus ont disparu avec les chariots. Les soupçons se portent sur Arjanek. Passer à « Chez Arjanek » puis à la cave.\nOption 3 (revenus sans la Perle) : Arjanek, déçu, paie la somme convenue, interroge avidement les héros et les quitte sans rancune. Karstus va chercher l'œil lui-même (un azhdarkho l'emporte en quelques jours), revient par magie et prépare son départ. Ellipse possible, ou une aventure à Malakut. Puis Surdral invite les héros à un banquet offert par Arjanek.",
+      "notes": "Un espion de Karstus à Badhasar l'a prévenu du retour des héros par pigeon voyageur. Aussitôt la Perle remise, Karstus lance la dernière phase : il propose à Arjanek d'engager une troupe de saltimbanques pour le banquet, et quitte Malakut le soir même pour les marais de Kasht.\nQuelques jours après le départ des héros, des Nata Urdu se sont lancés à la poursuite des voleurs de la Perle.",
+      "pistes": [{ "texte": "Le lendemain soir, le banquet", "vers": "banquet" }],
+      "distribution": [
+        { "perso": "surdral", "camp": "heros", "attitude": "amical" },
+        { "perso": "arjanek", "attitude": "amical" },
+        { "perso": "karstus", "attitude": "neutre" }
+      ]
+    },
+    {
+      "cle": "banquet",
+      "titre": "Un spectacle mortel",
+      "region": "Malakut",
+      "lieu": "L'atrium de la demeure de Surdral",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 4,
+      "lecture": "Le soir venu, une grande table est dressée dans l'atrium. Des flambeaux brûlent aux colonnes de la galerie, des musiciens ont pris place sur des tapis. Surdral est splendide dans sa veste de soie verte brodée à la mode de Malakut, une perle à l'oreille. Il vous prie d'excuser son épouse : « Peut-être fera-t-elle une apparition plus tard. Espérons que la musique lui donnera envie de nous rejoindre. »\n\nMaître Arjanek arrive, tout sourire, en costume malakuti de fête, avec sa sœur Marika, une adorable jeune fille de seize ans aux longs cheveux blonds, tout intimidée. Deux serviteurs armés d'un gourdin les escortent. Karstus est resté veiller sur la Perle, explique-t-il : « Je préfère rester prudent. »\n\nMets délicats, vins fins. Un saltimbanque jongle avec deux petits singes facétieux ; deux frères acrobates font une démonstration d'adresse et de force ; deux ravissantes danseuses enchaînent des pirouettes lascives. Kutas, le maître de la troupe, se tient toujours deux pas derrière Surdral et veille au bon déroulement de la soirée. Surdral réclame telle chanson malakutie, rit aux facéties des singes, invite l'un de vous à rejoindre les danseuses.\n\nPuis, à la fin d'un morceau, tout bascule.",
+      "jeu": "L'attaque :\n• Kutas tire une cordelette de sa manche et étrangle Surdral contre le dossier de son siège.\n• Les deux « gardes » d'Arjanek se ruent sur leur maître.\n• Le flûtiste Gerro souffle un dard empoisonné sur un héros.\n• Un singe saute au visage d'un héros, aveuglé, pendant que Pranma sort un long poignard.\n• Les acrobates bondissent sur la table et font voler plats et assiettes.\n• Le héros entouré par les danseuses affronte deux furies armées de kriss.\n• Dehors, des saltimbanques ont bloqué les portes de la cour ; sur la galerie, deux d'entre eux massacrent une servante, puis glissent le long d'une colonne ou jettent un fauteuil sur un héros.\nSurdral et Arjanek échouent à se libérer : leur survie dépend des héros. Si on les joue, renforcer l'opposition. Surdral meurt étranglé en 4 rounds.\nEffectifs : Kutas et Pranma (rivaux), 7 coriaces (Gerro, Asyr, Nahuet, Nîm, Nâm, les deux faux gardes), et la piétaille voulue (musiciens, assistants). Ce sont des tueurs, mais ils sauvent leur peau si tout tourne mal.\nAprès : les tueurs entrés dans la maison sont morts, désarticulés ou empalés sur leur dague. Un prisonnier avoue : Karstus les a engagés pour tuer tout le monde ; la troupe donnait des spectacles en ville depuis des semaines. Arjanek confirme que l'idée venait de Karstus.\nOption 3 : Arjanek et Marika ne sont pas là ; Surdral lance en pleine soirée : « C'est un cadeau de maître Arjanek ! »",
+      "notes": "Léhéné a tué les assassins entrés dans la maison. Si le combat tourne au désastre, elle paraît sur la galerie et se révèle : la piétaille lui obéit sans jet, les coriaces et Kutas font un jet d'Esprit à -4. Elle retourne ses marionnettes contre leurs compagnons, fait parler les survivants, puis leur ordonne de se trancher la gorge. Surdral supplie ensuite les héros de garder le secret de sa nature.\nSi Surdral meurt : Léhéné, inconsolable, réclame vengeance (au besoin par sa séduction) ; un haut placé des Guenillards offre ses services aux héros.",
+      "pistes": [{ "texte": "Courir chez Arjanek", "vers": "chez-arjanek" }],
+      "distribution": [
+        { "perso": "kutas", "attitude": "hostile" },
+        { "perso": "pranma", "attitude": "hostile" },
+        { "perso": "gerro", "attitude": "hostile" },
+        { "perso": "asyr", "attitude": "hostile" },
+        { "perso": "nahuet", "attitude": "hostile" },
+        { "perso": "acrobate", "qty": 2, "attitude": "hostile" },
+        { "perso": "faux-garde", "qty": 2, "attitude": "hostile" },
+        { "perso": "musicien", "qty": 4, "attitude": "hostile" },
+        { "perso": "surdral", "camp": "heros", "attitude": "amical" },
+        { "perso": "arjanek", "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "chez-arjanek",
+      "titre": "Chez Arjanek",
+      "region": "Malakut",
+      "lieu": "La demeure d'Arjanek",
+      "moment": "nuit",
+      "danger": 1,
+      "lecture": "La belle demeure d'Arjanek est silencieuse. Dans la cave, vous trouvez les cadavres de plusieurs domestiques, jetés là il y a quelques heures à peine. D'autres serviteurs manquent à l'appel.\n\nLe coffret de la Perle aux yeux a disparu, avec quelques fragments de manuscrits anciens. La chambre de Karstus a été vidée ; il ne reste que quelques vêtements dans l'armoire. Sur un tabouret, une coulée de cire noire durcie, où brillent des paillettes dorées.",
+      "jeu": "Les domestiques disparus ont tous été recrutés récemment par Karstus (en interrogeant Arjanek avec soin).\nArjanek explique : Karstus est entré à son service il y a un an environ, ancien soldat très érudit, devenu son homme de confiance pour ses recherches comme pour ses affaires. Et c'est bien lui qui l'a lancé sur la Perle. Totalement dépassé et horrifié, Arjanek ne prend aucune initiative.\nSurdral, ulcéré d'avoir été abusé, offre son aide.\nOption 2 : la maison est fermée et déserte, les signes d'un départ précipité. Une odeur de putréfaction monte de la cave, dont la trappe est ouverte : sous un drap, le cadavre d'une femme atrocement torturée. Voir la scène suivante.",
+      "notes": "La cire noire pailletée d'or vient du cierge d'Ozombal par lequel Karstus parle à son maître.",
+      "pistes": [
+        { "texte": "Option 2 : descendre à la cave", "vers": "cave" },
+        { "texte": "Enquêter en ville", "vers": "enquete" }
+      ],
+      "distribution": [{ "perso": "arjanek", "camp": "heros", "attitude": "amical" }]
+    },
+    {
+      "cle": "cave",
+      "titre": "La cave d'Arjanek",
+      "region": "Malakut",
+      "lieu": "La cave de la demeure d'Arjanek",
+      "moment": "nuit",
+      "danger": 3,
+      "lecture": "Parmi les bouteilles, les bocaux et les sacs de grains, sous un drap jeté à même le sol, gît le corps pourrissant d'une femme. Elle a été atrocement torturée.\n\nLa lumière vacille. Derrière vous, l'escalier semble plus loin qu'il ne devrait.",
+      "jeu": "Option 2 seulement. Karstus a laissé un démon gardien, chargé de tuer quiconque descend dans la cave : Ghashtalarann.\nPiège illusoire : dès qu'il le déclenche, chaque héros fait un jet d'Esprit à -3, sinon il se perd dans un dédale illusoire de portes, d'escaliers et de couloirs (il tourne en rond dans la cave, incapable de rejoindre l'escalier), isolé des autres qu'il entend tout proches. Le premier coup reçu rompt l'enchantement.\nIl concentre ses attaques sur ceux qui ont résisté et laisse les autres s'épuiser.\nMaître du déguisement : il se change en objet inerte (pan de mur, commode, coffre) quand personne ne le regarde, puis attaque avec un dé de bonus de surprise.",
+      "notes": "La morte est la jeune domestique torturée sous les yeux d'Arjanek pour le briser, quand Karstus a enlevé Marika.",
+      "pistes": [{ "texte": "Enquêter en ville", "vers": "enquete" }],
+      "distribution": [{ "perso": "ghashtalarann", "attitude": "hostile" }]
+    },
+    {
+      "cle": "enquete",
+      "titre": "Enquête à Malakut",
+      "region": "Malakut",
+      "lieu": "Les quais et les marchés de Malakut",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Il faut panser ses blessures, puis trouver où est passé Karstus. Malakut bruisse de rumeurs ; le port, les marchés et les entrepôts savent beaucoup de choses, pour qui sait les demander.",
+      "jeu": "• Surdral, par ses contacts : une demi-douzaine d'hommes à dos de parvalus ont quitté la ville hier soir par la porte des Besharoon, juste avant la fermeture. Les « artistes » étaient arrivés en ville des semaines plus tôt, d'on ne sait où.\n• Piduk, gérant de l'entrepôt d'épices d'Arjanek : Karstus lui a fait louer un second entrepôt au bout des quais. Une vingtaine d'esclaves y ont été gardés, achetés un ou deux à la fois pendant des mois : hommes, femmes, vieux, enfants. Ils sont partis il y a deux semaines dans trois chariots, gardés par des étrangers armés et vigilants, qui les traitaient plutôt bien. Un gros homme au visage rongé par la lèpre se cachait parmi eux. Les charretiers étaient des Malakutis ; Piduk en connaissait un de vue. Il croyait Karstus mandaté par son maître.\n• Les marchands d'esclaves : Karstus achetait pour « maître Arjanek » des esclaves aux yeux clairs, bleus ou verts (« Les gens riches ont de ces fantaisies… »).\n• Le charron : les chariots ont été loués pour un voyage jusqu'au caravansérail de Cingala, au carrefour des routes de Parsool et des marais de Kasht, d'Halakh et de Malakut.\nSans Surdral ni Arjanek, les héros trouvent ces informations par eux-mêmes.",
+      "pistes": [
+        { "texte": "Des Beshaaris cherchent les héros", "vers": "nata-urdu" },
+        { "texte": "Des prêtres de Shazzadion en ville", "vers": "pretres" },
+        { "texte": "Léhéné demande à voir un héros", "vers": "lehene" },
+        { "texte": "Partir pour le caravansérail de Cingala", "vers": "cingala" }
+      ]
+    },
+    {
+      "cle": "nata-urdu",
+      "titre": "Les envoyés des Nata Urdu",
+      "region": "Malakut",
+      "lieu": "Une auberge modeste près de la porte des Besharoon",
+      "moment": "jour",
+      "danger": 2,
+      "lecture": "Surdral vous prévient : un groupe de Beshaaris arrivés récemment vous cherche et pose des questions partout. Ils logent dans une auberge modeste, près de la porte des Besharoon.\n\nVous les reconnaissez sans peine : six hommes et quatre femmes de la vallée des Nata Urdu, dans la force de l'âge, épuisés par le voyage. Ils vous ont suivis à travers tout le désert.",
+      "jeu": "Ils réclament la Perle : l'eau a cessé de couler de la conque, la vallée est condamnée à court terme. Et c'est un sacrilège ; leur devoir sacré est de la ramener.\nLa rencontre peut finir en combat, en réconciliation ou en alliance. Promis de récupérer la Perle (avec explications), ils attendent à Malakut ; certains peuvent accompagner les héros (un par héros).\nSi les héros ont voyagé avec Salishmè, les envoyés sont encore loin de Malakut.",
+      "pistes": [{ "texte": "Retour à l'enquête", "vers": "enquete" }],
+      "distribution": [{ "perso": "villageois", "qty": 10, "attitude": "mefiant" }]
+    },
+    {
+      "cle": "pretres",
+      "titre": "Les prêtres de Shazzadion",
+      "region": "Malakut",
+      "lieu": "Malakut",
+      "moment": "jour",
+      "danger": 3,
+      "lecture": "Des robes vert-bleu, une petite conque en pendentif, et des soldats en armes. Un groupe de prêtres de Shazzadion, arrivés de Satarla, vous a retrouvés. Leur doyen, un vieil homme sévère, s'avance : ils sont venus arrêter les sacrilèges du sanctuaire interdit, et surtout savoir pourquoi vous y êtes entrés.",
+      "jeu": "Marsus a livré le nom des héros aux autorités de Satarla. Désormais, les héros ont le désavantage traqué (autorités de Satarla et clergé de Shazzadion), jusqu'à réparation de leur crime.\nCombat : trois prêtres et un mercenaire par héros. Les prêtres ont aussi une dague (d6M).\nMais Rigus, le doyen, écoute et laisse une chance de se racheter : le plus important est que la Perle de Tolometh retourne à son sanctuaire. Il sait que Tolometh était un puissant démon marin vaincu par Shazzadion aux temps anciens. La carte du sanctuaire marque des lieux maudits ou légendaires que nul ne doit chercher sans la bénédiction du clergé.\nLes prêtres retrouvent les héros, par exemple s'ils ont posé des questions au temple de Shazzadion de Malakut ; ou Surdral les prévient.",
+      "notes": "Rigus ne connaît qu'une version tronquée de l'histoire de Tolometh.",
+      "pistes": [{ "texte": "Retour à l'enquête", "vers": "enquete" }],
+      "distribution": [
+        { "perso": "pretre", "qty": 3, "attitude": "mefiant" },
+        { "perso": "mercenaire-temple", "qty": 4, "attitude": "mefiant" }
+      ]
+    },
+    {
+      "cle": "lehene",
+      "titre": "Léhéné",
+      "region": "Malakut",
+      "lieu": "Les appartements de Léhéné, à l'étage",
+      "moment": "crepuscule",
+      "danger": 1,
+      "lecture": "On vous conduit à l'étage, dans des appartements luxueux. Léhéné vous reçoit, dans une tenue gracieuse aux teintes pastel. Un voile léger couvre le bas de son visage et laisse à peine deviner les courbes pleines de ses lèvres. Ses yeux, soulignés de khôl, sont verts, aux iris pailletés d'or. Sa voix est mélodieuse, hypnotique, et un parfum indéfinissable et enivrant flotte autour d'elle. Il y a en elle quelque chose de magnétique, qui charme et rend nerveux à la fois.\n\nElle vous remercie d'avoir sauvé son époux. Surdral lui a tout raconté. D'ordinaire, elle ne se mêle pas de ses affaires… mais elle a des choses à dire.",
+      "jeu": "Seulement pour un héros qui s'est intéressé à Léhéné (plus facile pour une héroïne).\nElle sait que Tolometh est le nom d'un ancien et puissant démon des océans. Elle ignore ce qu'est la « perle », mais qu'elle soit liée à ce nom est de mauvais augure. Elle pressent un bouleversement terrible de l'ordre du monde : Karstus doit être arrêté. Et payer pour avoir voulu tuer son époux ; elle compte sur les héros pour la venger.\nMuse des héros : chaque héros présent gagne un point d'héroïsme temporaire, à dépenser au cours de ce chapitre.",
+      "notes": "Léhéné est une demi-démone. Ne pas le révéler ici.",
+      "pistes": [{ "texte": "Retour à l'enquête", "vers": "enquete" }],
+      "distribution": [{ "perso": "lehene", "camp": "heros", "attitude": "amical" }]
+    },
+    {
+      "cle": "cingala",
+      "titre": "Le caravansérail de Cingala",
+      "region": "Parsool",
+      "lieu": "Le caravansérail de Cingala, au carrefour des routes",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 1,
+      "lecture": "Un peu plus de deux semaines à dos de parvalus : le pont sur le Malak, la route d'Halakh, puis plein est jusqu'à la route qui remonte vers Parsool depuis les marais de Kasht.\n\nÀ quelques heures du caravansérail, un petit attroupement près d'un bosquet : deux paysans et trois voyageurs contemplent, horrifiés, des corps à demi sortis de terre. Enterrés à la hâte dans une fosse peu profonde, ils ont été déterrés par des charognards. Six hommes, pauvrement vêtus, désarmés, aux mains calleuses d'ouvriers. Plusieurs ont été égorgés.\n\nLe caravansérail dessine un vaste quadrilatère : des galeries sur les côtés (entrepôts et écuries en bas, chambres à l'étage), une cour avec un enclos, un puits, des abreuvoirs, et l'auberge au fond. La porte fortifiée est gardée par des mercenaires. On entre, on sort, on attelle, on décharge ; dans l'auberge, une foule bigarrée mange à toute heure, dans une bonne odeur de soupe et de viande rôtie, de sueur et de crottin.",
+      "jeu": "Les corps : morts depuis quelques semaines au plus (médecin), des Malakutis tués à l'arme blanche. Un pisteur relève qu'une troupe importante avec des chariots a campé à côté. Un voyageur s'étonne qu'on s'arrête si près du caravansérail. Ce sont les charretiers, tués pour ne laisser aucun témoin.\nBalchar, le maître des lieux (petit, chauve, moustache tombante, toujours en mouvement) : Karstus ne lui dit rien. Trois chariots d'esclaves, oui (bons arguments et jet d'Aura) : il les a rachetés pour une bouchée de pain. Une vingtaine d'esclaves et une dizaine d'hommes sont partis à pied vers l'est, au matin. « Je pense qu'ils voulaient les revendre à des pirates. » Option 2 : un mercenaire blond menait le convoi.\nYarod, garçon d'écurie, rit des conducteurs incapables de mener un attelage. Il se souvient d'un gros homme au visage rongé par la maladie, resté la nuit dans un chariot.\nUne piste mène vers l'est, sud-est, à un village kashtien au bord des marais : une semaine de marche. Un chasseur repère des traces récentes d'un grand groupe à pied.",
+      "pistes": [{ "texte": "Suivre la piste vers les marais", "vers": "embuscade" }]
+    },
+    {
+      "cle": "embuscade",
+      "titre": "Embuscade démoniaque",
+      "region": "Marais de Kasht",
+      "lieu": "Les collines au nord des marais",
+      "moment": "crepuscule",
+      "meteo": "clair",
+      "danger": 4,
+      "lecture": "Les premiers jours, des collines douces semées de petits bois. Puis, du sommet d'une colline plus haute, l'étendue brumeuse des marécages se découvre au sud. Plus qu'un jour ou deux.\n\nAlors que vous redescendez, une silhouette se détache en haut de la colline suivante, à une centaine de mètres, dans les derniers rayons du soleil. Un homme en lourde cape, le capuchon remonté. Il s'immobilise en vous voyant et lève la main en geste de salut. Puis il porte à ses lèvres la longue corne qu'il a en bandoulière, qui luit d'un feu rougeâtre dans le soleil couchant.\n\nLe son est grave et profond. Il vous fige, vous donne la chair de poule : le grondement d'un prédateur, avec une note malfaisante. À mi-chemin, l'air se met à miroiter étrangement, et des silhouettes de gros chiens surgissent de nulle part et se ruent vers vous dans un concert d'aboiements lugubres.",
+      "jeu": "Oglar et des druides noirs sont embusqués dans les fourrés de la pente (jet d'Esprit Moyen pour les repérer si l'on observe les alentours). Ils surgissent quand les chiens arrivent au contact. Fanatiques, ils se battent jusqu'à la mort.\nEffectifs : 2 druides (piétaille) et 1 limier par héros. Ou bien au hasard : Oglar dépense 1 point de foi pour réussir à sonner, et 1 de vilénie pour relancer.\nOglar soutient ses alliés par ses sorts ; s'il perd, il fuit avec Esprits voilés (BoL p. 154) pour prévenir Karstus. Prisonnier, il se tait, ou ment pour perdre les héros dans les marais.\nLa corne de Bazaal Dûl (corne d'un démon majeur) : sonner, c'est un jet d'Aura (+ rang de sorcier). Succès : d6B limiers, chacun disparaît dès qu'il a abattu une proie, puis trois nuits avant de resonner. Échec : un piqueur de Bazaal Dûl vient reprendre la corne (et tuer, pour s'amuser). À chaque sonnerie, 1d6 : sur 1, une lèpre de la bouche (désavantage repoussant). La briser (masse, rocher) fait surgir un piqueur furieux ; la victoire rend 1 point d'héroïsme. Le piqueur est dans les coulisses.",
+      "notes": "Karstus a confié à Oglar de surveiller ses arrières. Les druides portent un médaillon noir en forme de silhouette humaine semé de quartz : Hadron le Noir, seigneur du Néant (carrière appropriée).",
+      "pistes": [{ "texte": "Entrer dans les marais", "vers": "marais" }],
+      "distribution": [
+        { "perso": "oglar", "attitude": "hostile" },
+        { "perso": "druide-noir", "qty": 8, "attitude": "hostile" },
+        { "perso": "limier", "qty": 4, "attitude": "hostile" }
+      ]
+    },
+    {
+      "cle": "marais",
+      "titre": "Bienvenue dans les marais",
+      "region": "Marais de Kasht",
+      "lieu": "Un hameau kashtien au bord d'un étang",
+      "moment": "jour",
+      "meteo": "brume",
+      "danger": 1,
+      "lecture": "L'air se charge d'humidité, le sol devient spongieux, un relent de végétaux pourris sature l'air, et des nuées de moucherons et de moustiques vous harcèlent. La piste se perd dans les tourbières ; des panaches de fumée vous guident jusqu'à un hameau au bord d'un étang : des maisons de bois, sur pilotis ou sur la berge, des poissons qui fument sur un feu de tourbe, des pêcheurs qui raccommodent leurs filets près de barques tirées sur la rive. Des enfants curieux sont vite chassés par un petit groupe d'adultes.\n\nLes Kashtiens sont petits et sveltes, à la peau pâle et aux cheveux noirs, vêtus simplement, armés pour la chasse. Ils vous accueillent sans un sourire. L'un d'eux, deux oiseaux des marais pendus à la ceinture, une longue sarbacane gravée à la main et une grosse dent pointue au cou, vous demande en lémurien ce que vous venez faire ici.",
+      "jeu": "Kalim, chasseur. Les Kashtiens se méfient des étrangers : il faut briser la glace (jet d'Aura). Il sait :\n• qu'un groupe important est passé il y a peu, sans venir au village, vers le levant (« Nous savons tout ce qui se passe par chez nous ») ;\n• que près de la côte, une forêt marécageuse monte jusqu'aux falaises : il y a des ruines, le Palais des lianes, que les Kashtiens évitent ;\n• que des hommes avec un gros lépreux cherchaient ce palais il y a des lunes ;\n• qu'un navire est à l'ancre dans une crique, à une demi-journée (deux autres sont repartis), des hommes sont partis vers le palais (une demi-journée de la crique) : des galères pirates, semble-t-il ;\n• que les ruines sont à une journée de marche, avec un guide.\nLa dent du grand crocator : le pendentif trouvé sur les Kashtiens du chapitre 2. Kalim reconnaît une dent du grand crocator, l'esprit sacré du marais, un talisman de chance et de fortune (la sienne est deux fois plus petite). L'offrir change tout : il accueille et nourrit les héros, répond à tout, les guide, et explique la pipe qui rêve.\nJalak de Parsool, grand, bedonnant, tignasse et barbe châtain, observe les héros : marchand de meush naïf et volubile, avec deux mercenaires. Il méprise son beau-frère, capitaine prometteur de la marine de Parsool (« ma sœur a épousé un crétin »). Il repart demain pour Parsool. Ses gardes se laissent soudoyer.",
+      "notes": "Jalak peut servir de contact à Parsool au chapitre 5.",
+      "pistes": [
+        { "texte": "Aller d'abord voir la crique des pirates", "vers": "crique" },
+        { "texte": "Partir pour le Palais des lianes", "vers": "palais" }
+      ]
+    },
+    {
+      "cle": "crique",
+      "titre": "La crique des pirates",
+      "region": "Marais de Kasht",
+      "lieu": "Une crique au pied des falaises",
+      "moment": "jour",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "Un sentier escarpé descend des falaises vers une petite anse. Une galère de guerre pirate y est à l'ancre. Sur la plage, près d'une longue barque tirée au sec, une vingtaine de pirates ont établi un campement : un feu crépite, certains cuisinent, d'autres pêchent les pieds dans l'eau, les derniers boivent et se prélassent. Quelques hommes de garde sont restés à bord.",
+      "jeu": "Facultatif : un peu moins de deux heures depuis les ruines ; une demi-journée de plus ensuite pour le palais (guide ou bons jets de pistage).\nDescendre sans être vu est difficile, même s'ils ne sont pas sur leurs gardes. Méfiants, ils croient à un piège et refusent de répondre ; le combat est probable.\nSur la plage : 15 piétaille et 3 coriaces. Les 5 gardes du bord ne peuvent rejoindre la plage qu'à la nage.\nIls fuient ou se rendent quand ils perdent, puis parlent : l'alliance de leur capitaine avec Zutesh, les promesses de richesse ; les retrouvailles avec Karstus et un « mystérieux petit vieillard tout rabougri, au regard glaçant » ; Zutesh, Arjanek et le capitaine Jarvik sont partis il y a trois jours, avec quelques hommes ; ordre d'attendre ici.\nOptions 2 et 3 : on libère Marika, gardée par les pirates. Elle a vu Karstus remettre la perle au vieillard, puis partir dans la jungle avec son frère et des pirates, pendant que deux des trois navires reprenaient la mer.",
+      "pistes": [{ "texte": "Monter au Palais des lianes", "vers": "palais" }],
+      "distribution": [
+        { "perso": "pirate-coriace", "qty": 3, "attitude": "mefiant" },
+        { "perso": "pirate", "qty": 8, "attitude": "mefiant" }
+      ]
+    },
+    {
+      "cle": "palais",
+      "titre": "Le Palais des lianes",
+      "region": "Marais de Kasht",
+      "lieu": "Les ruines du palais d'Arzurdranaal",
+      "moment": "crepuscule",
+      "meteo": "brume",
+      "danger": 2,
+      "lecture": "Une journée de marche à travers les terres marécageuses : une brume humide, des étangs, des arbres noueux et moussus, des champs de roseaux. L'après-midi, le terrain monte, la jungle se densifie. Près des ruines, Kalim s'arrête : les Kashtiens n'y vont pas. Puis les arbres se font trapus, couchés par le vent du large, et un parfum iodé se mêle aux odeurs du marais.\n\nDes vestiges rongés par la végétation : une route pavée disjointe, des pans de murs, les restes d'un vaste complexe. La piste mène à une enceinte de cinq mètres de haut. L'entrée monumentale est flanquée de deux tours trilobées ; celle de droite a cédé sous les racines d'un grand arbre. Un rideau de lianes, coupé pour ouvrir un passage, remplace les vantaux. Au fond de la cour, un petit édifice carré précédé d'un portique, peut-être un temple.\n\nPrès de la tour de gauche, six hommes à l'allure de pirates discutent autour d'un feu, nerveux.\n\n« Quand même, Krum, c'est pas normal tout ça. Ces lumières bizarres et ces cris et ces chants. Et cette voix d'outre-tombe à vous scier les os ? Plus d'une journée qu'ils sont pas sortis de là. Et tous ces pauvres bougres qu'ils ont fait descendre là-dedans, qu'est-ce qu'ils vont en faire ? »\n\n« Ferme-la donc un peu, Drogar. Le capitaine sait ce qu'il fait. T'aurais préféré embarquer ce vieux gnome aux yeux de démon et sa clique de robes noires sur notre navire ? Jarvik et les autres capitaines ont promis qu'on deviendrait les patrons de toute la racaille des îles du Crâne. »",
+      "jeu": "Un chasseur relève des traces récentes d'une troupe importante. Approcher pour écouter : grimper aux murs ou à la tour, se glisser derrière les lianes (jets d'Agilité ; risque de faire rouler des pierres). Esprit : Krum n'est pas si sûr de lui.\n• Attaquer : ils ne sont pas sur leurs gardes. Débordés, ils se rendent et disent tout pour la vie sauve.\n• Se glisser dans le temple : jet d'Agilité Moyen à travers la végétation.\n• Parler : jouer sur leur superstition (jet d'Aura). Convaincus, ils racontent : Zutesh, Karstus et Jarvik sont descendus sous le temple avec les robes noires et une troupe d'esclaves il y a trois jours. Depuis, des lumières, des chants, des hurlements, une voix de pierres frottées dans une langue inconnue ; au matin, le sol a tremblé. Ils peuvent attendre dehors puis mener les héros à leur navire ; à la mort de Jarvik, Krum devient capitaine et peut les prendre à bord. Si ça tourne mal, l'un court donner l'alerte.\nPendant le combat dans le temple, les pirates fuient vers leur navire ; Krum arrive en toute fin, prudemment, et ne se sacrifie pas : l'occasion d'un dialogue.",
+      "pistes": [{ "texte": "Descendre sous le temple", "vers": "rituel" }],
+      "distribution": [
+        { "perso": "krum", "attitude": "mefiant" },
+        { "perso": "pirate", "qty": 5, "attitude": "mefiant" }
+      ]
+    },
+    {
+      "cle": "rituel",
+      "titre": "La salle du rituel",
+      "region": "Marais de Kasht",
+      "lieu": "Sous le temple du Palais des lianes",
+      "moment": "crepuscule",
+      "danger": 4,
+      "lecture": "Le temple est simple : un grand couloir sous l'oculus de la coupole, deux salles effondrées, et un large escalier qui s'enfonce d'une dizaine de mètres. En bas tremble la lueur de bougies ; des voix étouffées montent, avec une odeur de cire brûlée et l'odeur fade et entêtante du sang.\n\nL'escalier débouche sur le flanc d'une vaste salle oblongue aux colonnes trapues. En face, une volée de marches mène à une loggia creusée dans la falaise : sa balustrade donne sur l'océan à perte de vue. Sur les marches et la terrasse gisent une vingtaine de cadavres, hommes et femmes, égorgés et mutilés : leurs yeux ont été arrachés. Au centre, dans une vasque creusée dans le sol, un monticule de globes oculaires sanguinolents entoure une statuette d'argile brisée. Des rigoles pleines de sang coagulé dessinent des arabesques sur la pierre.\n\nÀ droite, derrière un autel de pierre noire, Karstus, en robe de brocart noir, s'appuie des deux mains, blême, épuisé ; trois acolytes en robe noire l'entourent. Derrière eux, une lourde tenture noire pend contre le mur. À gauche, derrière un autre autel, un homme maigre au long visage revêche et au menton en galoche, tout aussi épuisé, avec trois autres robes noires ; l'un se balance à genoux, en transe.\n\nUne voix râpeuse, comme étouffée, s'élève derrière la tenture : « La mer bouillonne, ses profondeurs grondent. Il remonte à la surface. Tu as bien travaillé. »\n\n« Merci, maître », répond Karstus d'une voix fatiguée.",
+      "jeu": "Un coup d'œil discret depuis l'escalier permet de jauger la salle (jet d'action pour ne pas être repéré). Jarvik Barbe-de-feu est dans une petite alcôve à droite de l'escalier, invisible depuis les marches.\nKarstus et Zutesh viennent d'achever un sort du troisième cercle (coût partagé) : diminués, mais dangereux.\n• Karstus a ôté son armure, pas ses armes. Points actuels : vilénie 3, foi 0, pouvoir 10 (4 en options 2 et 3). Pour 3 points de pouvoir, il anime l'idole brisée (dans les coulisses).\n• Zutesh : vilénie 3, foi 1, pouvoir 6. Il fuit par la loggia si Karstus tombe (et s'il lui reste du pouvoir) : il saute et se change en grand oiseau de mer pour rejoindre la crique.\n• Les druides noirs sont des fanatiques. Jarvik, fou, se bat avec la même rage.\n• Options 2 et 3 : Arjanek est assis dans l'alcôve sous la garde de Jarvik. Il agit en dernier, mais aide les héros pour sauver sa sœur (dans les coulisses).\nAjouter des druides noirs selon la force du groupe.",
+      "notes": "Le rituel a évoqué Upok-N'Mee l'Ébranleur, au prix de vingt esclaves sacrifiés et énucléés en l'honneur de Tolometh. Dazzandroth Zant est en mer sur le Dragon conquérant, avec l'œil, pour guetter l'émergence du palais de Tolometh entre Parsool et Zalut. Karstus lui parle par le cierge noir, derrière la tenture : le cierge ne fonctionne que dans l'obscurité.",
+      "pistes": [{ "texte": "Fouiller la salle", "vers": "fin" }],
+      "distribution": [
+        { "perso": "karstus", "attitude": "hostile" },
+        { "perso": "zutesh", "attitude": "hostile" },
+        { "perso": "jarvik", "attitude": "hostile" },
+        { "perso": "druide-noir", "qty": 6, "attitude": "hostile" }
+      ]
+    },
+    {
+      "cle": "fin",
+      "titre": "Découvertes et déconvenue",
+      "region": "Marais de Kasht",
+      "lieu": "Sous le temple du Palais des lianes",
+      "moment": "nuit",
+      "danger": 1,
+      "lecture": "Le silence retombe sur la salle du rituel. Une déception vous attend : l'œil de Tolometh n'est pas là.\n\nSur l'autel de Karstus repose une tablette d'albâtre gravée de symboles occultes et d'une écriture cabalistique, autour du dessin d'une créature étrange. Sur l'autel de l'autre sorcier, une languette de plomb d'une dizaine de centimètres, gravée elle aussi, tachée d'argile rouge. L'idole brisée, au milieu des yeux arrachés, est une statuette d'argile rouge : un être difforme au corps adipeux, à tête de poisson contrefaite, aux pieds palmés, aux bras de longs flagelles comme les tentacules d'une anémone. Brisée en deux, elle montre un creux, de la taille de la languette. Tous les yeux du monticule ont des iris d'un blanc laiteux.\n\nSur Karstus, une carte maritime des côtes du golfe de Satarla : un point marqué en pleine mer, entre Parsool et Zalut, avec des calculs astrologiques griffonnés en marge.",
+      "jeu": "Démonique : la tablette et la languette sont un rituel d'évocation d'un puissant démon des profondeurs, Upok-N'Mee, l'Ébranleur.\nDerrière la tenture, l'alcôve est vide : un bout de cierge noir pailleté d'or sur un moellon, qui brûle d'une flamme fuligineuse et sent le suint. Qui franchit la tenture a un vertige : l'odeur des embruns, des cris d'oiseaux de mer, des grincements de cordages. Puis le cierge s'éteint, comme mouché par des doigts invisibles.\nCierge noir d'Ozombal : objet alchimique rare, toujours par paire, nominatif (le sang des deux correspondants). Allumé dans le noir, il permet de parler à l'autre cierge s'il est lui aussi allumé dans le noir.\nPrisonniers : Jarvik éructe insultes et menaces incohérentes. Karstus et Zutesh pavoisent : rien n'est empêché, il est trop tard, le pouvoir de Tolometh appartient à leur maître et sa fureur va s'abattre sur ses ennemis.\nOptions 2 et 3 : Arjanek supplie qu'on aille libérer sa sœur à la crique. Il raconte la rencontre avec le « maître » de Karstus, qui détient la Perle et est reparti avec deux navires pirates, et l'évocation d'un démon pour faire sortir des eaux le palais de Tolometh.\nPossessions : Karstus, une potion de résistance (d6 de protection pour une scène) et un médaillon des druides noirs ; Zutesh, les clefs de La Sirène endormie (sa taverne du Port des Seigneurs des mers), une teinture de respiration aquatique et un médaillon.\nFIN D'ÉPISODE : les héros récupèrent leurs points d'héroïsme et gagnent chacun 1 point d'expérience.",
+      "pistes": [{ "texte": "Vers le golfe de Satarla (chapitre 5)" }]
+    }
+  ]
+}
