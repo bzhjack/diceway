@@ -378,7 +378,10 @@
           </span>
         }
       </div>
-      @if (attackGoal()) {
+      @if (actionPerdue()) {
+        <!-- « Juste une égratignure » : se remettre du coup lui coûte cette action. Retirer l'effet (×, carte « Qui attaque ») rend le jet. -->
+        <p class="tas-note">{{ card().nom }} perd cette action : il se remet de son égratignure. Retire l’effet pour le laisser agir.</p>
+      } @else if (attackGoal()) {
         <!-- Les dés, comme sur le jet d'action, centrés sur la case (décalés de la largeur du bouton de lancer et de son écart) -->
         <dw-dice-row offset="3.6rem" size="2.3rem" [dice]="attackRowDice()" [total]="diceSum()" [slots]="diceCount()" />
 

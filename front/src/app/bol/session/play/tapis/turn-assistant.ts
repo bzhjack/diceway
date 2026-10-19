@@ -9,7 +9,7 @@ import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {ActionDiceTargetLabel, ActionRollCarriere, ActionRollTone, RollSumTerm} from '../../models/action-roll.model';
 import {CombatEffect, ModifierTerm, NewEffect} from '../../models/combat-effect.model';
 import {actionDiceTarget, actionDiceTargetLabel, actionSuccessChance, keepBestOrWorstTwo, keptDiceIndexes, netDiceModifier, parseDiceTotal} from '../../action-roll.util';
-import {aDejaFeinte, descriptionEffet, doitUnDeDeMalus, effetActionPerdue, effetFeinte, effetParade, effetCoupPrecis, effetRenversement, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
+import {aDejaFeinte, descriptionEffet, doitUnDeDeMalus, perdSonAction, effetActionPerdue, effetFeinte, effetParade, effetCoupPrecis, effetRenversement, libelleDuree, modificateursPour, POSTURE_DEFENSE, sansTerme, sommeModificateurs} from './combat-effects.util';
 import {EffectsListComponent} from './effects-list';
 import {baseRangeMeters, DEFAULT_RANGE_INDEX, formatMeters, RANGE_FACTORS, rangeReach} from '../../range.util';
 import {DwDiceRowComponent} from '../../../../shared/dice-row/dice-row';
@@ -450,6 +450,8 @@ export class TurnAssistantComponent {
     return modes.length === 1 ? modes[0] === 'tir' : this.useTir();
   });
 
+  /** « Juste une égratignure » lui a coûté cette action : il ne peut que finir son tour. Le MJ peut retirer l'effet pour le laisser agir. */
+  protected readonly actionPerdue = computed(() => perdSonAction(this.effets(), this.card().key));
   /** L'attaquant porte l'effet « dé de malus à sa prochaine action » (posé à la main après un renversement, un coup précis…). */
   private readonly malusDieOwed = computed(() => doitUnDeDeMalus(this.effets(), this.card().key));
   /** Dé de bonus ou de malus accordé par le MJ pour cette attaque, selon les circonstances (attaquant ivre, adversaire à terre, arme
@@ -1018,6 +1020,10 @@ export class TurnAssistantComponent {
   /** Où en sont les trois cases — qui, l'attaque, les dégâts : celle où il faut agir s'allume. Quand il ne reste qu'à finir le tour, c'est
    * la case des dégâts, qui porte « Fin du tour » ; après des dégâts appliqués, une nouvelle attaque reste possible dans la case 2. */
   protected readonly stations = computed<readonly [StationState, StationState, StationState]>(() => {
+    // Action perdue : seule la case d'attaque, qui le dit, est allumée.
+    if (this.actionPerdue()) {
+      return ['todo', 'cur', 'todo'];
+    }
     const aimed = this.target() !== null;
     const rolled = this.attackVerdict() !== null;
     // « Fin du tour » est dans la case des dégâts (coup raté, désarmement, dégâts appliqués sans Carnage à suivre) : elle reste allumée,
@@ -1032,6 +1038,9 @@ export class TurnAssistantComponent {
 
   /** Ce qu'il y a à faire maintenant, en une phrase ; `step` est le numéro de la case concernée, vide quand il ne reste qu'à conclure. */
   protected readonly nextStep = computed<{readonly step: string; readonly text: string}>(() => {
+    if (this.actionPerdue()) {
+      return {step: '', text: `Juste une égratignure : se remettre du coup coûte son action à ${this.card().nom}. Il ne reste qu’à finir son tour.`};
+    }
     const target = this.target();
     // Les dégâts sont appliqués et rien ne suit : il ne reste qu'à finir le tour, même si la cible est tombée.
     if (!target && this.lastHit() && this.carnageOwed() === 0) {

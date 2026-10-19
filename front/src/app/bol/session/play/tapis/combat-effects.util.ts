@@ -386,6 +386,12 @@ export function effetSurpris(porteur: string): NewEffect {
 }
 
 /** Vrai si la carte doit un dé de malus à sa prochaine action : son jet d'attaque se fera à 3d6, en gardant les deux moins bons. */
+/** La carte perd son action (« Juste une égratignure » : se remettre du coup lui coûte sa prochaine action) : elle ne fait que finir
+ * son tour, et l'effet tombe avec lui. */
+export function perdSonAction(effets: readonly CombatEffect[], carte: string): boolean {
+  return effets.some((effet) => effet.porteur === carte && effet.origine === ACTION_PERDUE);
+}
+
 export function doitUnDeDeMalus(effets: readonly CombatEffect[], carte: string): boolean {
   return effets.some((effet) => effet.porteur === carte && effet.origine === DE_MALUS);
 }
@@ -399,8 +405,11 @@ export function effetParade(porteur: string, bouclier: boolean): NewEffect {
 }
 
 /** La carte perd sa prochaine action (« Juste une égratignure », ou posé à la main). */
+/** Origine de l'effet « perd sa prochaine action » (« Juste une égratignure », ou posé à la main). */
+const ACTION_PERDUE = 'egratignure';
+
 export function effetActionPerdue(porteur: string): NewEffect {
-  return {origine: 'egratignure', libelle: 'perd sa prochaine action', porteur, stat: 'action', valeur: -1, quand: 'attaque', duree: {type: 'action-porteur'}, manuel: true};
+  return {origine: ACTION_PERDUE, libelle: 'perd sa prochaine action', porteur, stat: 'action', valeur: -1, quand: 'attaque', duree: {type: 'action-porteur'}, manuel: true};
 }
 
 /** Les effets que le MJ ajoute à la main depuis le menu « + Effet ». */
