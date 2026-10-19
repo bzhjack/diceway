@@ -51,8 +51,8 @@ class BolSceneService
     }
 
     /**
-     * Met à jour titre, notes, scénario et préparation (région, lieu, ambiance, texte à lire, pistes,
-     * illustration) — seules les clés présentes dans `$data` sont touchées. Changer de scénario place la
+     * Met à jour titre, notes, scénario et préparation (région, lieu, ambiance, texte à lire, règles du MJ,
+     * pistes, illustration) — seules les clés présentes dans `$data` sont touchées. Changer de scénario place la
      * scène au dernier rang du scénario d'arrivée. Une piste ne garde son lien que vers une autre scène
      * de ce scénario.
      *
@@ -65,7 +65,7 @@ class BolSceneService
             return null;
         }
 
-        $changes = array_intersect_key($data, array_flip(['titre', 'notes', 'region_id', 'lieu', 'moment', 'meteo', 'danger', 'lecture', 'image']));
+        $changes = array_intersect_key($data, array_flip(['titre', 'notes', 'region_id', 'lieu', 'moment', 'meteo', 'danger', 'lecture', 'jeu', 'image']));
         if (array_key_exists('scenario_id', $data) && $data['scenario_id'] !== $scene->scenario_id) {
             if (!$this->scenarioAllowed($data['scenario_id'], $userId)) {
                 return null;

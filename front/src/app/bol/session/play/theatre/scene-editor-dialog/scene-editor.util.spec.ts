@@ -14,6 +14,7 @@ const SCENE: BolSceneModel = {
   meteo: null,
   danger: null,
   lecture: null,
+  jeu: null,
   pistes: null,
   image: null,
 };
@@ -29,6 +30,7 @@ describe('sceneChanges', () => {
       danger: 0,
       image: ' ',
       lecture: '  Il pleut.  ',
+      jeu: ' ',
       notes: '',
       pistes: [
         {texte: ' Suivre ', scene_id: 's3'},
@@ -44,6 +46,7 @@ describe('sceneChanges', () => {
       danger: null,
       image: null,
       lecture: 'Il pleut.',
+      jeu: null,
       notes: null,
       pistes: [{texte: 'Suivre', scene_id: 's3'}],
     });
@@ -54,9 +57,9 @@ describe('sceneChanges', () => {
   });
 
   it('un aller-retour garde la préparation', () => {
-    const prepared = {...SCENE, lieu: 'Gué du Tyr', danger: 3, pistes: [{texte: 'Suivre', scene_id: null}]};
+    const prepared = {...SCENE, lieu: 'Gué du Tyr', danger: 3, jeu: 'Agilité Ardu (-1)', pistes: [{texte: 'Suivre', scene_id: null}]};
     expect(sceneChanges(editorValue(prepared))).toEqual(
-      expect.objectContaining({lieu: 'Gué du Tyr', danger: 3, pistes: [{texte: 'Suivre', scene_id: null}]}),
+      expect.objectContaining({lieu: 'Gué du Tyr', danger: 3, jeu: 'Agilité Ardu (-1)', pistes: [{texte: 'Suivre', scene_id: null}]}),
     );
   });
 });

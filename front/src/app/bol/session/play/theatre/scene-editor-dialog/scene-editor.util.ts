@@ -19,6 +19,7 @@ export function editorValue(scene: BolSceneModel): SceneEditorValue {
     danger: scene.danger ?? 0,
     image: scene.image ?? '',
     lecture: scene.lecture ?? '',
+    jeu: scene.jeu ?? '',
     notes: scene.notes ?? '',
     pistes: (scene.pistes ?? []).map((piste) => ({...piste})),
   };
@@ -39,6 +40,7 @@ export function sceneChanges(value: SceneEditorValue): BolSceneChanges {
     danger: value.danger > 0 ? value.danger : null,
     image: texte(value.image),
     lecture: texte(value.lecture),
+    jeu: texte(value.jeu),
     notes: texte(value.notes),
     pistes: pistes.length ? pistes : null,
   };

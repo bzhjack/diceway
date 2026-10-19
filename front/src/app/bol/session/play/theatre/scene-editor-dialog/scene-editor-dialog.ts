@@ -21,6 +21,7 @@ import {editorValue, sceneChanges} from './scene-editor.util';
 
 const PISTES_MAX = 8;
 const LECTURE_MAX = 5000;
+vas yconst JEU_MAX = 10000;
 /** Valeur du bouton « Aucun » du moment : un groupe de boutons ne sait pas sélectionner `null`. */
 const AUCUN = 'aucun';
 
@@ -34,7 +35,7 @@ function pisteGroup(piste: {texte: string; scene_id: string | null}): PisteGroup
 }
 
 /** « Préparer la scène » : son décor (région, lieu, ambiance, illustration), le texte à lire aux joueurs,
- * le secret du MJ et les pistes. Enregistre lui-même et se ferme avec la scène enregistrée. */
+ * les règles de la scène (« En jeu »), le secret du MJ et les pistes. Enregistre lui-même et se ferme avec la scène enregistrée. */
 @Component({
   selector: 'bol-scene-editor-dialog',
   imports: [
@@ -63,6 +64,7 @@ class SceneEditorDialogComponent {
   protected readonly dangers = [1, 2, 3, 4];
   protected readonly titreMax = SCENE_TITLE_MAX;
   protected readonly lectureMax = LECTURE_MAX;
+  protected readonly jeuMax = JEU_MAX;
   protected readonly pistesMax = PISTES_MAX;
 
   protected readonly regions = toSignal(
@@ -82,6 +84,7 @@ class SceneEditorDialogComponent {
     danger: new FormControl(this.initial.danger, {nonNullable: true}),
     image: new FormControl(this.initial.image, {nonNullable: true, validators: [Validators.maxLength(500), Validators.pattern(/^\s*(https:\/\/|\/assets\/).*|^\s*$/)]}),
     lecture: new FormControl(this.initial.lecture, {nonNullable: true, validators: [Validators.maxLength(LECTURE_MAX)]}),
+    jeu: new FormControl(this.initial.jeu, {nonNullable: true, validators: [Validators.maxLength(JEU_MAX)]}),
     notes: new FormControl(this.initial.notes, {nonNullable: true, validators: [Validators.maxLength(10000)]}),
     pistes: new FormArray<PisteGroup>(this.initial.pistes.map(pisteGroup)),
   });

@@ -18,6 +18,7 @@ function scene(id: string, ordre: number, extra: Partial<BolSceneModel> = {}): B
     meteo: null,
     danger: null,
     lecture: null,
+    jeu: null,
     pistes: null,
     image: null,
     ...extra,

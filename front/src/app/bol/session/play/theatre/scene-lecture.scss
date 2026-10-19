@@ -89,6 +89,15 @@
   align-self: flex-start;
 }
 
+// Les règles de la scène : jets, difficultés, tables d'effets, toujours lisibles.
+.lec-jeu {
+  margin: 0;
+  color: var(--dw-surface-800);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
 // Le secret, flouté tant que le MJ ne l'affiche pas : un joueur qui regarde l'écran n'y lit rien.
 .lec-secret {
   margin: 0;

@@ -4,7 +4,7 @@ import {BolSceneModel} from '../../../models/bol-scene.model';
 import {SceneLectureComponent} from './scene-lecture';
 import {SceneStageStore} from './scene-stage.store';
 
-function scene(id: string, notes: string): BolSceneModel {
+function scene(id: string, notes: string, jeu: string | null = null): BolSceneModel {
   return {
     id,
     scenario_id: null,
@@ -18,6 +18,7 @@ function scene(id: string, notes: string): BolSceneModel {
     meteo: null,
     danger: null,
     lecture: 'Il pleut.',
+    jeu,
     pistes: null,
     image: null,
   };
@@ -52,5 +53,14 @@ describe('SceneLectureComponent', () => {
     fixture.componentRef.setInput('scene', scene('s2', 'Jesharek ment.'));
     await fixture.whenStable();
     expect(bouton().getAttribute('aria-pressed')).toBe('false');
+  });
+
+  it("affiche « En jeu » seulement quand la scène a des règles", async () => {
+    const host = fixture.nativeElement as HTMLElement;
+    expect(host.querySelector('#lec-jeu-titre')).toBeNull();
+    fixture.componentRef.setInput('scene', scene('s1', 'Le sceau est dans la sacoche.', 'Vigueur Ardu (-1) pour se dégager.'));
+    await fixture.whenStable();
+    expect(host.querySelector('#lec-jeu-titre')?.textContent).toContain('En jeu');
+    expect(host.querySelector('.lec-jeu')?.textContent).toBe('Vigueur Ardu (-1) pour se dégager.');
   });
 });

@@ -13,8 +13,8 @@ interface PisteAffichee extends BolScenePiste {
   readonly acte: SceneActe | null;
 }
 
-/** Les notes de la scène courante, dans la colonne de droite du plateau : le texte à lire aux joueurs, le
- * secret du MJ (flouté tant qu'on ne l'affiche pas, flouté de nouveau à chaque changement de scène) et les
+/** Les notes de la scène courante, dans la colonne de droite du plateau : le texte à lire aux joueurs, les
+ * règles de la scène (« En jeu »), le secret du MJ (flouté tant qu'on ne l'affiche pas, flouté de nouveau à chaque changement de scène) et les
  * pistes, qui ouvrent l'aperçu de la scène où elles mènent. */
 @Component({
   selector: 'bol-scene-lecture',

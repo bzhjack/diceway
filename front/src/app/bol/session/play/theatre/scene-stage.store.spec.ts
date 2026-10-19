@@ -22,6 +22,7 @@ function scene(id: string, scenarioId: string | null, ordre: number): BolSceneMo
     meteo: null,
     danger: null,
     lecture: null,
+    jeu: null,
     pistes: null,
     image: null,
   };

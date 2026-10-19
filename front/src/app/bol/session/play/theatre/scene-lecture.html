@@ -14,6 +14,13 @@
   }
 </section>
 
+@if (scene().jeu; as jeu) {
+  <section class="lec-bloc" aria-labelledby="lec-jeu-titre">
+    <h3 class="lec-titre" id="lec-jeu-titre"><mat-icon aria-hidden="true">casino</mat-icon>En jeu</h3>
+    <p class="lec-jeu">{{ jeu }}</p>
+  </section>
+}
+
 @if (scene().notes; as secret) {
   <section class="lec-bloc" aria-labelledby="lec-secret-titre">
     <div class="lec-tete">

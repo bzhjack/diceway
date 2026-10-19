@@ -12,7 +12,7 @@ import {
 } from './scene.util';
 
 function scene(id: string, scenarioId: string | null, ordre: number, titre = id): BolSceneModel {
-  return {id, scenario_id: scenarioId, titre, ordre, notes: null, distribution: [], region_id: null, lieu: null, moment: null, meteo: null, danger: null, lecture: null, pistes: null, image: null};
+  return {id, scenario_id: scenarioId, titre, ordre, notes: null, distribution: [], region_id: null, lieu: null, moment: null, meteo: null, danger: null, lecture: null, jeu: null, pistes: null, image: null};
 }
 
 function entry(kind: BolSceneEntry['kind'], qty: number): BolSceneEntry {

@@ -50,6 +50,7 @@ class BolSceneController extends Controller
             'meteo'       => ['sometimes', 'nullable', Rule::in(BolScenePreparation::METEOS)],
             'danger'      => 'sometimes|nullable|integer|between:1,4',
             'lecture'     => 'sometimes|nullable|string|max:5000',
+            'jeu'         => 'sometimes|nullable|string|max:10000',
             'pistes'      => 'sometimes|nullable|array|max:' . BolScenePreparation::PISTES_MAX,
             // Une piste vide est retirée par le service (BolScenePreparation::pistes), pas refusée.
             'pistes.*.texte'    => 'nullable|string|max:' . BolScenePreparation::PISTE_TEXTE_MAX,
@@ -61,7 +62,7 @@ class BolSceneController extends Controller
             Auth::id(),
             $data['id'],
             array_intersect_key($data, array_flip([
-                'titre', 'notes', 'scenario_id', 'region_id', 'lieu', 'moment', 'meteo', 'danger', 'lecture', 'pistes', 'image',
+                'titre', 'notes', 'scenario_id', 'region_id', 'lieu', 'moment', 'meteo', 'danger', 'lecture', 'jeu', 'pistes', 'image',
             ])),
         );
 
