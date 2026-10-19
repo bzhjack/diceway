@@ -47,7 +47,7 @@ bol-action-roll-panel {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: 17rem minmax(0, 1fr) 17rem;
+  grid-template-columns: 19rem 19rem minmax(0, 1fr);
   gap: 0.75rem;
   align-items: stretch;
 }
@@ -90,8 +90,8 @@ bol-action-roll-panel {
 // ── Les médaillons d'attribut ────────────────────────────────────────────────────────────────────
 .ard-medals {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.6rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
 }
 
 .ard-medal {
@@ -99,8 +99,8 @@ bol-action-roll-panel {
   place-items: center;
   align-content: center;
   aspect-ratio: 1;
-  padding: 0.3rem;
-  border: 3px solid var(--dw-border);
+  padding: 0.2rem;
+  border: 2px solid var(--dw-border);
   border-radius: 50%;
   background: radial-gradient(circle at 35% 28%, var(--dw-surface-300), var(--dw-surface-50));
   color: var(--dw-surface-600);
@@ -108,20 +108,20 @@ bol-action-roll-panel {
   cursor: pointer;
 
   .mat-icon {
-    width: 1.4rem;
-    height: 1.4rem;
-    font-size: 1.4rem;
+    width: 0.95rem;
+    height: 0.95rem;
+    font-size: 0.95rem;
   }
 
   b {
-    font: 400 2.5rem/1 'Muse Display Harmony', 'Muse Sans', serif;
+    font: 400 1.5rem/1 'Muse Display Harmony', 'Muse Sans', serif;
     color: var(--dw-surface-900);
   }
 
   span {
-    font-size: 0.8rem;
+    font-size: 0.58rem;
     font-weight: 800;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
   }
 
@@ -210,6 +210,14 @@ bol-action-roll-panel {
   border-radius: 16px;
   background: radial-gradient(ellipse at 50% 35%, var(--dw-surface-300), var(--dw-surface-50) 72%);
   box-shadow: inset 0 0 44px rgba(0, 0, 0, 0.75);
+}
+
+.ard-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem 2.5rem;
 }
 
 .ard-goal {
@@ -611,37 +619,40 @@ bol-action-roll-panel {
 }
 
 // ── L'échelle de difficulté : du plus facile (vert) au plus dur (rouge) ──────────────────────────
+// Deux colonnes de quatre, lues de haut en bas : chaque niveau porte sa couleur sur son bord gauche.
 .ard-ladder {
-  position: relative;
   display: grid;
-  gap: 0.25rem;
-  padding-left: 0.8rem;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 2px;
-    bottom: 2px;
-    left: 0;
-    width: 5px;
-    border-radius: 2px;
-    background: linear-gradient(var(--dw-color-reussite), var(--dw-color-legendary) 45%, var(--dw-color-echec-forte));
-  }
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(4, auto);
+  grid-auto-flow: column;
+  gap: 0.3rem;
 
   button {
+    --ard-tone: var(--dw-color-legendary);
+
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 0.4rem;
-    padding: 0.28rem 0.75rem;
+    padding: 0.3rem 0.6rem;
     border: 1px solid var(--dw-border);
+    border-left: 4px solid var(--ard-tone);
     border-radius: var(--dw-radius-toggle);
     background: var(--dw-surface-0);
     color: var(--dw-surface-600);
     font: inherit;
-    font-size: 1rem;
+    font-size: 0.88rem;
     font-weight: 700;
+    white-space: nowrap;
     cursor: pointer;
+
+    &:nth-child(1) { --ard-tone: var(--dw-color-reussite); }
+    &:nth-child(2) { --ard-tone: color-mix(in srgb, var(--dw-color-reussite) 60%, var(--dw-color-legendary)); }
+    &:nth-child(4) { --ard-tone: color-mix(in srgb, var(--dw-color-legendary) 80%, var(--dw-color-echec-forte)); }
+    &:nth-child(5) { --ard-tone: color-mix(in srgb, var(--dw-color-legendary) 60%, var(--dw-color-echec-forte)); }
+    &:nth-child(6) { --ard-tone: color-mix(in srgb, var(--dw-color-legendary) 40%, var(--dw-color-echec-forte)); }
+    &:nth-child(7) { --ard-tone: color-mix(in srgb, var(--dw-color-legendary) 20%, var(--dw-color-echec-forte)); }
+    &:nth-child(8) { --ard-tone: var(--dw-color-echec-forte); }
 
     b {
       color: var(--dw-surface-900);
@@ -654,6 +665,7 @@ bol-action-roll-panel {
 
     &[aria-pressed='true'] {
       border-color: var(--dw-color-legendary);
+      border-left-color: var(--ard-tone);
       background: var(--dw-color-legendary);
       color: #1c1200;
 
@@ -726,7 +738,7 @@ bol-action-roll-panel {
 }
 
 // Conteneur étroit : les trois blocs s'empilent, le plateau d'abord. En fin de fichier, pour passer après les règles de base.
-@container (max-width: 56rem) {
+@container (max-width: 64rem) {
   .ard-fg {
     grid-template-columns: minmax(0, 1fr);
   }

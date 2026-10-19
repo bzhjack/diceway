@@ -11,7 +11,7 @@ import {ValueTracker} from '../../value-tracker';
 import {HeroResourcesData} from '../../models/hero-resources.model';
 
 /** Vitalité de session et héroïsme d'un héros, ajustables pas à pas et persistés à chaque pas : un cœur et sa jauge pour la vitalité,
- * une rangée de gemmes pour l'héroïsme. Utilisé dans la colonne de gauche de la carte dépliée d'un héros (`bol-expanded-card`).
+ * une rangée de gemmes pour l'héroïsme. Utilisé dans le bandeau de la carte dépliée d’un héros (`bol-expanded-card`).
  * L'héroïsme est un `model` : le parent le partage avec le jet d'action, qui en dépense. */
 @Component({
   selector: 'bol-hero-resources',

@@ -28,36 +28,105 @@
       }
     </section>
 
-    <!-- Le plateau : ce qu'il faut obtenir, les chances, les dés, le verdict -->
-    <section class="ard-tray" aria-label="Lancer les dés">
-      <div class="ard-goal">
-        <div class="ard-need">
-          <span>Il te faut</span>
-          <b>{{ target().big }}</b>
-          <i>{{ target().small }}</i>
-        </div>
-        <div class="ard-ring" role="img" [attr.aria-label]="chancePercent() + ' % de chances de réussir'">
-          <svg viewBox="0 0 64 64" aria-hidden="true">
-            <circle class="ard-ring-bg" cx="32" cy="32" r="27" />
-            <circle class="ard-ring-fg" cx="32" cy="32" r="27" [attr.stroke-dasharray]="ringDash()" />
-          </svg>
-          <b>{{ chancePercent() }} %</b>
-          <span>de chances</span>
-        </div>
+    <!-- La difficulté sur son échelle, puis les coups de pouce ; le plateau vient après, à droite -->
+    <section class="ard-pan" aria-labelledby="ard-diff-title">
+      <h4 class="ard-h" id="ard-diff-title"><span aria-hidden="true">2</span> C’est dur comment ?</h4>
+      <div class="ard-ladder" role="group" aria-labelledby="ard-diff-title">
+        @for (d of difficulties; track d.label) {
+          <button type="button" [attr.aria-pressed]="difficulty().label === d.label" (click)="difficulty.set(d)">
+            <span>{{ d.label }}</span>
+            <b>{{ signed(d.modifier) }}</b>
+          </button>
+        }
       </div>
 
-      <div class="ard-dice" aria-hidden="true">
-        @if (!rolling() && rolled(); as list) {
-          @for (die of list; track $index) {
-            <dw-die-face [value]="die.value" [dropped]="!die.kept" />
-          }
-        } @else if (!rolling() && manualEntry() && diceSum() !== null) {
-          <span class="ard-die ard-die--total">{{ diceSum() }}</span>
-        } @else {
-          @for (ghost of ghosts(); track ghost) {
-            <span class="ard-die ard-die--ghost"></span>
-          }
+      <!-- Coups de pouce : le modificateur libre du MJ à côté du titre, puis les dés de bonus et de malus — ceux que le MJ accorde selon
+           les circonstances, puis ceux des avantages et désavantages du héros -->
+      <div class="ard-hrow">
+        <h4 class="ard-h" id="ard-boost-title">Coups de pouce</h4>
+        <div class="ard-stepper" role="group" aria-label="Modificateur" matTooltip="Modificateur libre : un bonus ou un malus décidé par le MJ">
+          <button type="button" aria-label="Diminuer le modificateur" (click)="incrementModifier(-1)">−</button>
+          <span>{{ signed(modifier()) }}</span>
+          <button type="button" aria-label="Augmenter le modificateur" (click)="incrementModifier(1)">+</button>
+        </div>
+      </div>
+      <div class="ard-chips" role="group" aria-labelledby="ard-boost-title">
+        <button
+          type="button"
+          class="ard-chip ard-chip--bonus"
+          [attr.aria-pressed]="gmDie() === 'bonus'"
+          matTooltip="Accordé par le MJ quand les circonstances aident : un dé de plus, on garde les deux meilleurs"
+          (click)="toggleGmDie('bonus')"
+        >
+          Dé bonus MJ
+        </button>
+        <button
+          type="button"
+          class="ard-chip ard-chip--malus"
+          [attr.aria-pressed]="gmDie() === 'malus'"
+          matTooltip="Imposé par le MJ quand les circonstances gênent (ivresse, obscurité…) : un dé de plus, on garde les deux moins bons"
+          (click)="toggleGmDie('malus')"
+        >
+          Dé malus MJ
+        </button>
+        @for (t of avantageTraits(); track t.label) {
+          <button
+            type="button"
+            class="ard-chip ard-chip--bonus"
+            [attr.aria-pressed]="isTraitSelected(t.label)"
+            [matTooltip]="t.domaine ?? ''"
+            (click)="toggleDiceTrait(t.label)"
+          >
+            Dé bonus · {{ t.label }}
+          </button>
         }
+        @for (t of desavantageTraits(); track t.label) {
+          <button
+            type="button"
+            class="ard-chip ard-chip--malus"
+            [attr.aria-pressed]="isTraitSelected(t.label)"
+            [matTooltip]="t.domaine ?? ''"
+            (click)="toggleDiceTrait(t.label)"
+          >
+            Dé malus · {{ t.label }}
+          </button>
+        }
+      </div>
+    </section>
+
+    <!-- Le plateau : ce qu'il faut obtenir, les chances, les dés, le verdict -->
+    <section class="ard-tray" aria-label="Lancer les dés">
+      <!-- Ce qu'il faut obtenir et les dés sur une rangée : le plateau est large, sa hauteur est comptée. -->
+      <div class="ard-top">
+        <div class="ard-goal">
+          <div class="ard-need">
+            <span>Il te faut</span>
+            <b>{{ target().big }}</b>
+            <i>{{ target().small }}</i>
+          </div>
+          <div class="ard-ring" role="img" [attr.aria-label]="chancePercent() + ' % de chances de réussir'">
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+              <circle class="ard-ring-bg" cx="32" cy="32" r="27" />
+              <circle class="ard-ring-fg" cx="32" cy="32" r="27" [attr.stroke-dasharray]="ringDash()" />
+            </svg>
+            <b>{{ chancePercent() }} %</b>
+            <span>de chances</span>
+          </div>
+        </div>
+
+        <div class="ard-dice" aria-hidden="true">
+          @if (!rolling() && rolled(); as list) {
+            @for (die of list; track $index) {
+              <dw-die-face [value]="die.value" [dropped]="!die.kept" />
+            }
+          } @else if (!rolling() && manualEntry() && diceSum() !== null) {
+            <span class="ard-die ard-die--total">{{ diceSum() }}</span>
+          } @else {
+            @for (ghost of ghosts(); track ghost) {
+              <span class="ard-die ard-die--ghost"></span>
+            }
+          }
+        </div>
       </div>
 
       <div class="ard-verdict" aria-live="polite">
@@ -143,72 +212,6 @@
         <button type="button" class="ard-manual-btn" aria-label="Valider le total des dés lancés à table" [disabled]="!manualTotalValid()" (click)="submitManualTotal()">
           <mat-icon>check</mat-icon>
         </button>
-      </div>
-    </section>
-
-    <!-- La difficulté sur son échelle, puis les coups de pouce -->
-    <section class="ard-pan" aria-labelledby="ard-diff-title">
-      <h4 class="ard-h" id="ard-diff-title"><span aria-hidden="true">2</span> C’est dur comment ?</h4>
-      <div class="ard-ladder" role="group" aria-labelledby="ard-diff-title">
-        @for (d of difficulties; track d.label) {
-          <button type="button" [attr.aria-pressed]="difficulty().label === d.label" (click)="difficulty.set(d)">
-            <span>{{ d.label }}</span>
-            <b>{{ signed(d.modifier) }}</b>
-          </button>
-        }
-      </div>
-
-      <!-- Coups de pouce : le modificateur libre du MJ à côté du titre, puis les dés de bonus et de malus — ceux que le MJ accorde selon
-           les circonstances, puis ceux des avantages et désavantages du héros -->
-      <div class="ard-hrow">
-        <h4 class="ard-h" id="ard-boost-title">Coups de pouce</h4>
-        <div class="ard-stepper" role="group" aria-label="Modificateur" matTooltip="Modificateur libre : un bonus ou un malus décidé par le MJ">
-          <button type="button" aria-label="Diminuer le modificateur" (click)="incrementModifier(-1)">−</button>
-          <span>{{ signed(modifier()) }}</span>
-          <button type="button" aria-label="Augmenter le modificateur" (click)="incrementModifier(1)">+</button>
-        </div>
-      </div>
-      <div class="ard-chips" role="group" aria-labelledby="ard-boost-title">
-        <button
-          type="button"
-          class="ard-chip ard-chip--bonus"
-          [attr.aria-pressed]="gmDie() === 'bonus'"
-          matTooltip="Accordé par le MJ quand les circonstances aident : un dé de plus, on garde les deux meilleurs"
-          (click)="toggleGmDie('bonus')"
-        >
-          Dé bonus MJ
-        </button>
-        <button
-          type="button"
-          class="ard-chip ard-chip--malus"
-          [attr.aria-pressed]="gmDie() === 'malus'"
-          matTooltip="Imposé par le MJ quand les circonstances gênent (ivresse, obscurité…) : un dé de plus, on garde les deux moins bons"
-          (click)="toggleGmDie('malus')"
-        >
-          Dé malus MJ
-        </button>
-        @for (t of avantageTraits(); track t.label) {
-          <button
-            type="button"
-            class="ard-chip ard-chip--bonus"
-            [attr.aria-pressed]="isTraitSelected(t.label)"
-            [matTooltip]="t.domaine ?? ''"
-            (click)="toggleDiceTrait(t.label)"
-          >
-            Dé bonus · {{ t.label }}
-          </button>
-        }
-        @for (t of desavantageTraits(); track t.label) {
-          <button
-            type="button"
-            class="ard-chip ard-chip--malus"
-            [attr.aria-pressed]="isTraitSelected(t.label)"
-            [matTooltip]="t.domaine ?? ''"
-            (click)="toggleDiceTrait(t.label)"
-          >
-            Dé malus · {{ t.label }}
-          </button>
-        }
       </div>
     </section>
   </div>

@@ -10,8 +10,8 @@
 
   position: relative;
   display: block;
-  width: var(--w);
-  height: var(--h);
+  width: calc(var(--w) * var(--thr-k, 1));
+  height: calc(var(--h) * var(--thr-k, 1));
   padding: 0;
   overflow: hidden;
   border: 2px solid color-mix(in srgb, var(--act-kind) 70%, #1a120b);
@@ -185,7 +185,7 @@
 .act-nom {
   overflow: hidden;
   font-family: 'Muse Display Harmony', serif;
-  font-size: 0.95rem;
+  font-size: calc(0.95rem * var(--thr-k, 1));
   line-height: 1.15;
   text-overflow: ellipsis;
   text-shadow: 0 1px 4px #000;
@@ -193,12 +193,12 @@
 }
 
 .act--rival .act-nom {
-  font-size: 1.12rem;
+  font-size: calc(1.12rem * var(--thr-k, 1));
 }
 
 .act--pietaille .act-nom,
 .act--allie .act-nom {
-  font-size: 0.8rem;
+  font-size: calc(0.8rem * var(--thr-k, 1));
 }
 
 .act-vit {

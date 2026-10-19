@@ -25,12 +25,21 @@
 }
 
 .cp-page {
+  // Échelle des tailles fixes du théâtre (cartes, titre, portraits) : réduite quand la fenêtre est peu haute.
+  --thr-k: 1;
+
   position: relative;
   height: 100dvh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   background: linear-gradient(180deg, var(--dw-surface-0), var(--dw-surface-50) 45%, var(--dw-surface-0));
+}
+
+@media (max-height: 60rem) {
+  .cp-page {
+    --thr-k: 0.8;
+  }
 }
 
 .cp-table {

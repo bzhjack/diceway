@@ -58,8 +58,8 @@
 
 .cmp-portrait {
   flex: none;
-  width: 3.6rem;
-  height: 3.6rem;
+  width: calc(3.6rem * var(--thr-k, 1));
+  height: calc(3.6rem * var(--thr-k, 1));
   padding: 0;
   overflow: hidden;
   border: 2px solid #8c6a2f;
