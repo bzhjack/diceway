@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, inject, input, output} from '@angular/core';
+import {afterRenderEffect, ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, output, viewChild} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {BolSceneLoadResult} from '../../../models/bol-scene.model';
@@ -31,7 +31,7 @@ import {acteLabel} from './theatre.util';
       }
     </mat-menu>
 
-    <nav class="sca-nav" aria-label="Scènes du scénario">
+    <nav #nav class="sca-nav" aria-label="Scènes du scénario">
       <ol class="sca-actes">
         @for (acte of store.acts(); track acte.scene.id) {
           <li class="sca-li">
@@ -289,10 +289,28 @@ export class SceneActsComponent {
   protected readonly scenarioTitre = computed(
     () => this.store.scenarios().find((s) => s.id === this.store.scenarioId())?.titre ?? 'Sans scénario',
   );
+  private readonly nav = viewChild.required<ElementRef<HTMLElement>>('nav');
+  /** L'id seul : une copie de la même scène (préparation, rechargement) ne refait pas défiler la frise. */
+  private readonly acteEnCours = computed(() => this.store.acts().find((acte) => acte.statut === 'en-cours')?.scene.id ?? null);
 
   constructor() {
     // Les portraits de l'aperçu viennent du catalogue, chargé ici même si les coulisses restent fermées.
     inject(CombatSelectionService).loadCatalog();
+
+    // Une frise trop longue défile : l'acte en cours, seul à montrer son titre, revient au centre de la vue.
+    afterRenderEffect(() => {
+      if (!this.acteEnCours()) {
+        return;
+      }
+      const nav = this.nav().nativeElement;
+      const acte = nav.querySelector<HTMLElement>('.sca-acte--en-cours');
+      if (!acte || nav.scrollWidth <= nav.clientWidth) {
+        return;
+      }
+      const navRect = nav.getBoundingClientRect();
+      const acteRect = acte.getBoundingClientRect();
+      nav.scrollLeft += acteRect.left - navRect.left - (navRect.width - acteRect.width) / 2;
+    });
   }
 
   protected label(acte: SceneActe): string {

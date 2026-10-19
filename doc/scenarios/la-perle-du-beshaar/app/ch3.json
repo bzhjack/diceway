@@ -1,0 +1,206 @@
+{
+  "saga": "perle-du-beshaar",
+  "scenario": {
+    "cle": "ch3",
+    "titre": "Perle du Beshaar — 3. Le tombeau d'Urzûlzalinaar",
+    "pitch": "Chapitre 3 de La Perle du Beshaar (Chroniques lémuriennes 4, livre p. 84-97).\n\nSur le chemin du retour, l'oasis d'Aljanir est tenue par Salishmè, une slorth couronnée venue du sud avec ses guerriers issa. Elle a pris les enfants en otage et veut les trois œufs de slorth ensevelis avec le Roi-Sorcier Urzûlzalinaar. Affronter la slorth, ou explorer pour elle un tombeau piégé : galerie des statuettes, ver des sables, salle-sablier, slorth automate et fruits du savoir, puits gardé par un mort. En récompense, le trésor, et un voyage d'une nuit jusqu'à Badhasar, portés par le vent.\n\nFin d'épisode : les héros récupèrent leurs points d'héroïsme et gagnent chacun 1 point d'expérience."
+  },
+  "personnages": {
+    "salishme": {
+      "kind": "pnj", "nom": "Salishmè, slorth couronnée", "rang": "rival", "region": "Désert de Beshaar",
+      "vigueur": 2, "agilite": 1, "esprit": 3, "aura": 1,
+      "initiative": 1, "melee": 1, "tir": 0, "defense": 2,
+      "vitalite": 12, "vilenie": 4, "pouvoir": 13,
+      "carrieres": [
+        { "nom": "Scribe", "rang": 3 },
+        { "nom": "Sorcier", "rang": 3 },
+        { "nom": "Médecin", "rang": 1 },
+        { "nom": "Dresseur", "rang": 1 }
+      ],
+      "armes": [{ "nom": "Morsure de slorth", "degats": "d6M", "type": "M", "notes": "Venimeuse : si les dégâts passent l'armure, Vigueur Ardu (-1) ou sommeil comateux après d6M rounds, pendant 1 heure." }],
+      "avantages": ["Érudit", "Magie des Rois-Sorciers", "Sentir la magie", "Vision nocturne"],
+      "desavantages": ["Inadapté au froid", "Inquiétant", "Maudit", { "nom": "Obsession", "detail": "perpétuer l'espèce des slorth" }],
+      "commentaire": "Livre p. 97. Morsure d6M+2 dans le livre (avec sa Vigueur 2). Protection : peau épaisse d6-3 (1), sans armure dans l'app.\nMorsure venimeuse : réveillée (secouée ou blessée, nouveau jet), la victime subit -2 à toutes ses actions et à sa défense pendant l'heure.\nCréature d'un autre âge : pour dépenser un point d'héroïsme contre elle, un héros réussit d'abord un jet d'Esprit à -1 ; sinon il garde le point et peut réessayer. Un 12 naturel passe outre.\nMaîtresse des sables : dans le désert, un tourbillon de sable donne un dé de malus à ses adversaires.\nSorts : esprit (BoL p. 150, 154-155) ; constriction (1er cercle, Vigueur -3 ou d6M par round) ; portés par le vent (2e cercle : une semaine de voyage par rang de sorcier en une nuit, esprit + sorcier personnes, de nuit, en plein désert).\nHuit mètres de corps de serpent aux écailles blêmes, visage pâle d'une beauté froide, yeux mordorés, couronne de protubérances osseuses. Lémurien parfait, voix sifflante."
+    },
+    "isimba": {
+      "kind": "pnj", "nom": "Isimba", "rang": "rival", "region": "Désert de Beshaar",
+      "vigueur": 2, "agilite": 1, "esprit": 1, "aura": 0,
+      "initiative": 0, "melee": 2, "tir": 0, "defense": 2,
+      "vitalite": 12,
+      "carrieres": [
+        { "nom": "Soldat", "rang": 2 },
+        { "nom": "Chasseur", "rang": 1 },
+        { "nom": "Barbare", "rang": 1 },
+        { "nom": "Dresseur", "rang": 1 }
+      ],
+      "armes": ["Lance", "Dague"],
+      "avantages": ["Ami des bêtes", "Baudrier de guerre"],
+      "desavantages": ["Bouseux"],
+      "commentaire": "Livre p. 96. Lance d6+2, poignard d6M+2 dans le livre (avec sa Vigueur 2). Protection : baudrier de guerre d6-2 (2).\nCheffe des guerriers issa. Peau sombre, cheveux ras, longue balafre, bras scarifiés d'écailles. Une vipère rouge du désert (un cathgan apprivoisé) lovée autour du cou attaque qui menace sa maîtresse."
+    },
+    "guerrier-issa": {
+      "kind": "pnj", "nom": "Guerrier issa", "rang": "coriace", "region": "Désert de Beshaar",
+      "vigueur": 2, "agilite": 1, "esprit": 0, "aura": -1,
+      "initiative": 0, "melee": 1, "tir": 0, "defense": 1,
+      "vitalite": 8,
+      "carrieres": [{ "nom": "Barbare", "rang": 1 }, { "nom": "Chasseur", "rang": 1 }],
+      "armes": ["Lance", "Épée", "Javelot / fléchette"],
+      "armures": ["Petit bouclier"],
+      "commentaire": "Livre p. 96. Lance ou épée d6+2, javelot d6M+1 dans le livre (avec leur Vigueur 2).\nIssa Urdu, « le peuple des serpents », du désert du sud : hommes et femmes à la langue fourchue, scarifiés d'écailles. Ils se battent jusqu'à la mort pour Salishmè."
+    },
+    "villageois-aljanir": {
+      "kind": "pnj", "nom": "Villageois d'Aljanir", "rang": "pietaille", "region": "Désert de Beshaar",
+      "vitalite": 2,
+      "carrieres": [{ "nom": "Fermier", "rang": 1 }],
+      "armes": [{ "nom": "Armes diverses (piétaille)", "degats": "d3", "type": "M", "notes": "Épées, javelots, lances, coutelas de la piétaille." }],
+      "commentaire": "Livre p. 88 : Attaque +0, vitalité 2, dégâts d3, règle de horde. Ils aident les héros dès qu'ils peuvent ramasser des armes."
+    },
+    "ver-des-sables": {
+      "kind": "creature", "nom": "Ver des sables juvénile", "taille": "Très grande",
+      "vigueur": 6, "agilite": 1, "esprit": -1, "attaque": 3, "defense": 1,
+      "vitalite": 30, "degats": "d6B", "protection": "d6-2 (2)",
+      "capacites": [
+        { "nom": "Attaque spéciale", "detail": "Attaque-surprise : dé de malus au jet de réaction" },
+        { "nom": "Camouflage", "detail": "dé de bonus pour se cacher dans le sable" },
+        { "nom": "Déficience", "detail": "presque aveugle, sent les vibrations" }
+      ],
+      "commentaire": "Livre p. 96. Il se replie sous le sable dès qu'il a perdu la moitié de sa vitalité, et n'insiste pas face à des proies récalcitrantes. Trop gros pour le couloir au fond de la salle effondrée."
+    },
+    "slorth-automate": {
+      "kind": "creature", "nom": "Slorth automate", "taille": "Grande",
+      "vigueur": 5, "agilite": 2, "esprit": 0, "attaque": 3, "defense": 2,
+      "vitalite": 20, "degats": "d6", "protection": "d6 (4)",
+      "capacites": [{ "nom": "Attaque spéciale", "detail": "Regard hypnotique : Esprit ou -2 en défense, à chaque attaque" }],
+      "commentaire": "Livre p. 91. Esprit : aucun (0 ici).\nVenin métallique : morsure, Vigueur Difficile (-2) ou -2 en Agilité pour la scène (une seule fois par victime).\nMonstre de métal : insensible au feu, au froid, aux sorts affectant l'esprit, aux poisons, aux maladies.\nSlorth de bronze de trois mètres au visage d'or blanc, yeux d'émeraude. Détruite, elle se brise : deux émeraudes et un masque d'or pur à récupérer."
+    },
+    "cathgan": { "kind": "creature", "catalogue": "Cathgan" }
+  },
+  "scenes": [
+    {
+      "cle": "aljanir",
+      "titre": "L'oasis d'Aljanir",
+      "region": "Désert de Beshaar",
+      "lieu": "L'oasis d'Aljanir, au pied des Besharoon",
+      "moment": "crepuscule",
+      "meteo": "clair",
+      "danger": 2,
+      "lecture": "Un peu plus d'une lune après avoir quitté la vallée des Nata Urdu, vous arrivez à l'oasis d'Aljanir alors que les premières étoiles s'allument dans l'impossible clarté du ciel du désert. L'oasis s'adosse à une petite éminence rocailleuse, couronnée des fondations croulantes d'une tour. Une résurgence alimente une mare entourée de quelques arbres et de cultures. Vous y avez fait étape à l'aller.\n\nParmi les petites maisons de torchis, le changement saute aux yeux : un parti de guerriers occupe l'oasis. Des hommes armés convergent vers la place, méfiants. Les villageois que vous reconnaissez ont le visage grave et inquiet.\n\nCinq guerriers et guerrières entourent une femme qui semble leur cheffe ; d'autres vous encerclent, entre les maisons. Elle a la peau sombre, les cheveux ras, la joue marquée d'une longue balafre, une lance à la main et un long poignard au côté. Un serpent écarlate est lové autour de son cou, sa tête triangulaire posée sur son épaule. Elle lève la main pour saluer : ses bras sont scarifiés de petites écailles. Certains de ses guerriers vous tirent la langue, une langue fendue en deux comme celle d'un serpent.\n\n« Je suis Isimba. Soyez les bienvenus. Abreuvez vos montures. Mais il vous faudra rencontrer ma maîtresse, la noble et sage Salishmè, qui règne désormais sur cette oasis. C'est à elle d'accorder l'hospitalité. »\n\nUne femme du village se met à crier en se tordant les mains : « La femme-serpent nous a pris nos enfants ! »",
+      "jeu": "Esprit : on ne voit aucun enfant dans l'oasis. Un héros qui connaît le Beshaar remarque que tenues et accent viennent du sud. La langue fourchue est une intimidation (un Beshaari la comprend).\nEffectifs : 2 guerriers par héros, plus Isimba.\nSuivre Isimba : trois guerriers l'accompagnent, les autres font rentrer les villageois.\nSe montrer vindicatif : combat. Isimba envoie un messager prévenir Salishmè (2 guerriers par héros, moins le messager, plus Isimba). Vainqueurs, les héros apprennent des villageois que la femme-serpent est arrivée dans un grand panier d'osier, a tué ceux qui résistaient, cherchait une tombe dans la colline (un lieu tabou), et a emmené les enfants et des hommes pour creuser. Prévenue, Salishmè se cache dans l'entrée du tombeau et ses guerriers s'embusquent derrière les rochers avec des javelots ; elle tente quand même de négocier, en menaçant les enfants entre ses anneaux.\nSous un arbre, un panier d'osier de deux mètres, à porter par des perches, garni de sable, de coussins et de soieries, imprégné d'une odeur musquée de serpent.",
+      "notes": "Salishmè ne tuera jamais les enfants : elle est trop fascinée par le mystère de l'enfantement.\nVariante si les héros sont restés chez les Nata Urdu : l'oasis est à une semaine au sud de la vallée ; une dizaine de Nata Urdu partis commercer ne sont jamais revenus et Narkum envoie les héros. Salishmè les retient comme main-d'œuvre et pour garder sa présence secrète. Elle les libère, et partage le trésor, si les héros explorent le tombeau pour elle.",
+      "pistes": [{ "texte": "Suivre Isimba jusqu'à sa maîtresse", "vers": "salishme" }],
+      "distribution": [
+        { "perso": "isimba", "attitude": "mefiant" },
+        { "perso": "cathgan", "attitude": "mefiant" },
+        { "perso": "guerrier-issa", "qty": 5, "attitude": "mefiant" }
+      ]
+    },
+    {
+      "cle": "salishme",
+      "titre": "Rencontre avec Salishmè",
+      "region": "Désert de Beshaar",
+      "lieu": "L'entrée du tombeau, derrière l'oasis",
+      "moment": "nuit",
+      "meteo": "clair",
+      "danger": 3,
+      "lecture": "Vous traversez l'oasis et longez la colline sur quelques centaines de mètres. Passé un chaos rocheux, une petite dépression : deux murs de soutènement à demi effondrés encadrent une ouverture béante et noire. Un grand auvent de toile est dressé contre la paroi. Quatre guerriers attendent devant l'entrée ; six villageois patientent, assis sur leurs talons. Deux flambeaux éclairent l'obscurité qui vient.\n\nIsimba interpelle un homme, qui disparaît dans le tombeau et revient avec sa maîtresse.\n\nUne slorth. Son corps musculeux de serpent glisse sur le sable dans un crissement doux : huit mètres de long. Ses écailles blêmes s'ourlent de reflets orangés à la lueur des flambeaux. Son visage, tout aussi pâle, a une beauté froide et impérieuse, éclairée seulement par l'éclat mordoré de ses yeux. Sa langue bifide goûte l'air entre ses lèvres exsangues ; un cercle de protubérances osseuses dessine une couronne sur son crâne chauve. Une dizaine de jeunes enfants l'encadrent, les plus grands tenant la main des plus petits, perdus et effrayés.\n\nElle vous observe en plissant les yeux, puis vous interroge d'une voix sifflante, dans un lémurien parfait. Que faites-vous ici ? D'où venez-vous, et où allez-vous ?",
+      "jeu": "Salishmè explore le tombeau d'un « ancêtre », enseveli avec des œufs de slorth ; elle veut les récupérer et repartira vers le sud dès qu'elle les aura. Les gens de l'oasis lui importent peu.\nLe marché : il lui faut des éclaireurs pour ne pas perdre ses guerriers. Elle peut :\n• rendre les enfants et laisser l'oasis en paix contre les œufs ;\n• laisser aux héros tout le trésor du Roi-Sorcier (elle ne veut que les œufs, la tiare et peut-être sa « sœur » slorth ensevelie avec lui) ;\n• les ramener en une nuit à Badhasar : « la slorth connaît les chemins du sable et du vent ».\nCombat (mauvaise idée) : Salishmè, Isimba et sept guerriers, qui se battent jusqu'à la mort. Passé la surprise, cinq des six villageois aident les héros dès qu'ils ramassent des armes (piétaille).\nOutils de l'escorte disponibles : pioches, barre à mine.",
+      "notes": "Si les héros montrent la Perle aux yeux, Salishmè en sent la puissance et veut s'en emparer. Avant l'exploration : elle promet des révélations sur l'objet, et prévient Isimba d'attaquer dès que les œufs seront en sûreté. Après : elle demande à l'étudier et prépare un guet-apens.\nSi elle les suit dans le tombeau, elle reste prudemment en arrière, mais peut aider (traduction du démonique, maîtresse des sables).",
+      "pistes": [{ "texte": "Entrer dans le tombeau", "vers": "galerie" }],
+      "distribution": [
+        { "perso": "salishme", "attitude": "neutre" },
+        { "perso": "isimba", "attitude": "mefiant" },
+        { "perso": "guerrier-issa", "qty": 7, "attitude": "mefiant" },
+        { "perso": "villageois-aljanir", "qty": 6, "camp": "heros", "attitude": "amical" }
+      ]
+    },
+    {
+      "cle": "galerie",
+      "titre": "Le vestibule et la galerie des statuettes",
+      "region": "Désert de Beshaar",
+      "lieu": "Tombeau d'Urzûlzalinaar : entrée, vestibule, galerie",
+      "moment": "nuit",
+      "danger": 3,
+      "lecture": "La lourde dalle qui fermait l'entrée a été descellée et basculée. Sur le linteau, une inscription gravée en caractères inconnus a curieusement échappé à l'érosion des siècles.\n\nLe vestibule est une salle carrée de neuf mètres, nue. La moitié du plafond s'est effondrée : deux corps gisent sous les décombres, et d'énormes blocs encombrent le fond de la salle sans fermer le couloir.\n\nAu bout de ce couloir s'ouvre une longue et large galerie qui s'enfonce dans l'obscurité. Une fine couche de sable crisse sous vos pieds. De part et d'autre s'alignent des piédestaux portant de petites statues de terre cuite, hautes d'une soixantaine de centimètres : des guerriers diversement armés, dans des poses martiales, sous une épaisse couche de poussière.",
+      "jeu": "L'inscription est en démonique : mort et malédiction à qui profanera le tombeau du grand Urzûlzalinaar (Salishmè la traduit si elle est alliée).\nLe piège du vestibule est déjà déclenché : il a tué deux hommes de Salishmè.\nGalerie (20 m sur 6) : un long rectangle du pavement, au centre, est piégé. Les statuettes explosent en éclats tranchants, de façon erratique (le piège magique a vieilli).\n• Tout personnage dans la galerie : 2 × d6M dégâts.\n• Se ruer vers une sortie, ramper ou se jeter à terre avec un jet de réaction réussi : un seul d6M.\nPartout dans la tombe, un sable fin couvre le sol.",
+      "pistes": [{ "texte": "Continuer vers la salle effondrée", "vers": "salle-effondree" }]
+    },
+    {
+      "cle": "salle-effondree",
+      "titre": "La salle effondrée",
+      "region": "Désert de Beshaar",
+      "lieu": "Tombeau d'Urzûlzalinaar",
+      "moment": "nuit",
+      "danger": 3,
+      "lecture": "Des fresques à demi effacées glorifient Urzûlzalinaar dans des scènes de domination et de conquête. Une partie de la salle s'est effondrée, envahie par une coulée de sable. Au fond, un couloir étroit descend en pente douce.\n\nLe sable frémit. Quelque chose d'énorme remue dessous.",
+      "jeu": "Un ver des sables juvénile niche dans les profondeurs sableuses ; la lumière et l'agitation l'attirent. On peut aussi le faire surgir à la sortie des héros, affaiblis.\nAttaque-surprise : dé de malus au jet de réaction des héros quand il jaillit.\nFuir : le couloir du fond est trop étroit pour lui.\nIl se replie sous le sable dès qu'il a perdu la moitié de sa vitalité, et n'insiste pas face à des proies récalcitrantes.",
+      "pistes": [{ "texte": "Descendre le couloir en pente", "vers": "sablier" }],
+      "distribution": [{ "perso": "ver-des-sables", "attitude": "hostile" }]
+    },
+    {
+      "cle": "sablier",
+      "titre": "La salle-sablier",
+      "region": "Désert de Beshaar",
+      "lieu": "Tombeau d'Urzûlzalinaar",
+      "moment": "nuit",
+      "danger": 3,
+      "lecture": "De part et d'autre de la salle, deux renfoncements abritent chacun la statue d'un Roi-Sorcier en longues robes, les bras levés touchant le plafond, la bouche grande ouverte sur quelque imprécation funeste.\n\nAlors que vous gagnez le milieu de la pièce, les deux statues baissent soudain les bras. Au plafond, deux larges trappes s'ouvrent et déversent des torrents de sable, tandis que les portes de pierre se referment dans un grondement sinistre.",
+      "jeu": "Deux moyens d'en sortir :\n• Bloquer une porte (elles s'ouvrent vers l'intérieur) avant qu'elle se ferme : réaction Difficile (-2), et de quoi la caler.\n• La rouvrir avant que le sable la bloque, en 3 rounds : Vigueur Très difficile (-4) au 1er round, puis Impossible, puis Héroïque.\nLa salle est pleine en 6 rounds : qui reste dedans meurt étouffé.\nSi Salishmè suit les héros, sa maîtresse des sables peut les tirer de là.",
+      "pistes": [{ "texte": "Passer au cloître", "vers": "cloitre" }]
+    },
+    {
+      "cle": "cloitre",
+      "titre": "Le cloître",
+      "region": "Désert de Beshaar",
+      "lieu": "Tombeau d'Urzûlzalinaar",
+      "moment": "nuit",
+      "danger": 3,
+      "lecture": "Un cloître souterrain aux belles colonnes, dont les chapiteaux sont sculptés de feuillages. Un doux demi-jour baigne la salle ; la lumière semble tomber du plafond sans source visible.\n\nLa galerie fait le tour d'un petit jardin minéral de sable et de roche, où d'étranges sculptures de sable imitent plantes et arbustes. Une allée de galets mène au centre. Là, dans un cercle de muret, se dresse un arbre de trois mètres en bronze rutilant, à peine terni. Ses branches nues portent des fruits luisants, comme de petites oranges. Une slorth de bronze, plus petite et plus fine qu'une vraie, longue de trois mètres, s'enroule autour du tronc. Son visage est un masque d'or blanc aux traits purs et nobles, les yeux fermés. Une phrase est gravée sur le pourtour du muret.\n\nLa galerie est jonchée d'ossements : une vingtaine de squelettes humains, en petits groupes aux quatre coins, autour de cruchons d'argile.",
+      "jeu": "L'inscription (démonique) : « Voici les fruits du savoir d'Urzûlzalinaar, préservés pour les siècles des siècles. Un fruit pour le vainqueur, mais malheur à qui abuse de leurs bienfaits. »\nEnjamber le muret éveille la slorth automate. Détruite, elle se brise, et toutes les sculptures de sable s'effondrent. Butin : deux émeraudes, un masque d'or pur.\nUn fruit se cueille sans forcer et sent l'agrume. Celui qui le mange regagne d6B vitalité, puis lance 1d6 :\n• Premier fruit : 1 perd 1 Esprit ; 2 rien ; 3-4 gagne 1 rang dans une carrière (plutôt intellectuelle) ou une nouvelle carrière au rang 0 ; 5 gagne 1 Esprit ; 6 gagne 1 Esprit et, une fois dans la saga, change un échec en succès héroïque.\n• Fruits suivants (six en tout, pour n'importe qui) : 1-2 perd 1 Esprit ; 3-4 rien ; 5 perd 1 rang dans une carrière ; 6 perd 1 Esprit et maudit (une fois dans la saga, le MJ change un jet réussi en échec critique).\nSortie cachée : face à l'entrée, une cale de bois fossilisée et la trace d'un joint. Soulever la dalle : Vigueur Impossible (-6), deux crans de moins avec les outils de l'escorte et du temps ; la caler avec un rocher du jardin.",
+      "notes": "Les squelettes sont ceux des serviteurs du convoi funèbre, empoisonnés à la bière pour garder le secret et accompagner le Roi-Sorcier.\nSi personne ne prend de fruit, Salishmè va se servir. Elle peut mentir sur l'avertissement : « seule une slorth peut en manger sans danger ».",
+      "pistes": [{ "texte": "Soulever la dalle cachée", "vers": "puits" }],
+      "distribution": [{ "perso": "slorth-automate", "attitude": "hostile" }]
+    },
+    {
+      "cle": "puits",
+      "titre": "La salle du puits",
+      "region": "Désert de Beshaar",
+      "lieu": "Tombeau d'Urzûlzalinaar",
+      "moment": "nuit",
+      "danger": 2,
+      "lecture": "Une petite salle flanquée de colonnes, ornée de fresques antiques aux couleurs fanées mais préservées : la vie d'un roi, puis ses funérailles. Au centre du mur du fond, une lourde porte de pierre sculptée, gravée d'imprécations. À côté, une étrange serrure de métal est encastrée dans la paroi. Il règne ici une inexplicable fraîcheur, et l'air est humide.",
+      "jeu": "La porte est inamovible : des jours de marteau et de burin.\nFresques (à étudier) : après la mise au tombeau, un homme en robe noire, une clef dorée au cou, verrouille la chambre funéraire, puis est jeté dans une fosse au milieu d'une salle semblable, face à la porte.\nSous le sable : une trappe facile à soulever avec un outil. Un puits carré de 1,5 m ; l'eau brille deux ou trois mètres plus bas (la nappe de l'oasis). Profondeur : une dizaine de mètres, noir d'encre.\nPlonger en apnée : Vigueur Difficile (-2), sauf si l'on se leste. Au fond, à tâtons : des ossements, un crâne, une grosse clef. Au contact, la clef luit et le squelette s'anime et agrippe le plongeur.\n• Se dégager : Vigueur Très difficile (-4).\n• Le combattre (force vitale 10) : poings ou arme courte seulement, avec un dé de malus.\n• Chaque round : Vigueur, sinon d6M de noyade (récupérés comme des dégâts à mains nues).\nLa clef de bronze entre dans la serrure : la porte s'abaisse lentement comme un pont-levis, sur de lourdes chaînes.",
+      "notes": "Sans la clef, Salishmè se contente d'avoir été guidée jusqu'ici et tient parole : ses hommes viendront à bout de la porte. Si les héros trouvent la clef, elle explique que les Rois-Sorciers se faisaient ensevelir avec leurs serviteurs, devenus parfois les gardiens de leur repos.",
+      "pistes": [{ "texte": "Ouvrir la chambre funéraire", "vers": "chambre" }]
+    },
+    {
+      "cle": "chambre",
+      "titre": "La chambre funéraire",
+      "region": "Désert de Beshaar",
+      "lieu": "Tombeau d'Urzûlzalinaar",
+      "moment": "nuit",
+      "danger": 2,
+      "lecture": "Au centre de la pièce, sur une estrade, repose le sarcophage d'Urzûlzalinaar ; son couvercle porte un gisant à son image. Le squelette blanchi d'une slorth est lové autour, son crâne coiffé d'une tiare d'or sertie de cristaux. Tout autour s'entasse le mobilier funéraire : jarres d'offrandes en céramique, coffres délabrés pleins de pièces anciennes et de petits lingots d'or et d'argent, tapis précieux rongés par les ans où brillent encore des fils d'or, une vasque et son aiguière d'argent niellé.\n\nLes murs sont couverts de fresques d'un paysage verdoyant et luxuriant. Un au-delà heureux, ou le Beshaar avant qu'il ne devienne un désert ?\n\nDerrière le sarcophage, sur un mannequin de bois vermoulu, une lourde cuirasse de fer noirci, damasquinée d'argent, aux épaulières hérissées de petites pointes. Près de la tête du sarcophage, un panier d'osier rembourré de plumes contient trois œufs, gros comme des œufs de coursier mais très allongés, d'un blanc laiteux légèrement verdâtre.",
+      "jeu": "La cuirasse : armure moyenne, création alchimique rare (armure supérieure, BoL p. 142).\nDans le sarcophage, la momie (inerte, rien à craindre) porte bracelets et bagues d'or et serre une lance dont la hampe est pourrie, mais le fer intact : un fer de lance en janium, métal noir, doux au toucher, terriblement aiguisé (arme alchimique légendaire, BoL p. 143-144).\nSalishmè pose un instant la tête contre le front de la slorth défunte et murmure, puis hume et goûte les œufs, l'œil humide. Elle confie le panier et la tiare à Isimba et laisse le reste aux héros.\n• Elle s'oppose à la violation du sarcophage, mais cède si l'on insiste vraiment.\n• Elle se bat à mort si l'on touche aux œufs.",
+      "notes": "Si les héros ont montré la Perle aux yeux : dès que les œufs sont à l'abri, Isimba et ses guerriers passent à l'attaque pour s'en emparer.",
+      "pistes": [{ "texte": "Ressortir et quitter l'oasis", "vers": "vent" }],
+      "distribution": [
+        { "perso": "salishme", "attitude": "neutre" },
+        { "perso": "isimba", "attitude": "mefiant" },
+        { "perso": "guerrier-issa", "qty": 3, "attitude": "mefiant" }
+      ]
+    },
+    {
+      "cle": "vent",
+      "titre": "Portés par le vent",
+      "region": "Désert de Beshaar",
+      "lieu": "Le désert, de l'oasis d'Aljanir à Badhasar",
+      "moment": "nuit",
+      "meteo": "vent",
+      "danger": 1,
+      "lecture": "Après une heure de marche dans le désert, Salishmè fait halte, sort de son panier et vous désigne l'est.\n\n« Je vais chanter le sable dans le vent, et vous glisserez sur le désert aussi légers et rapides que le souffle de Karyzon. Surtout, ne vous retournez pas, gardez votre cap, et ne vous arrêtez que lorsque poindra l'aube et que le vent faiblira, sinon je ne réponds de rien. »\n\nDerrière vous s'élève un sifflement crissant, aux étranges modulations, qui vous glace l'échine. Une brise se lève dans votre dos, forcit, devient un vent violent. Des rafales vous poussent, un nuage de sable vous enveloppe et vous isole de tout. Par instants, la mélopée revient dans le vent. Vous avez la pénible impression de faire du surplace, comme si le sol se dérobait sous vos pas ; les coursiers, nerveux, vous obligent à mettre pied à terre.\n\nAprès une nuit harassante, le vent faiblit enfin. Devant vous, le ciel rosit. Hagards, épuisés, désorientés, vous distinguez au loin les remparts de Badhasar accrochés aux flancs des Besharoon, illuminés par les premiers rayons du soleil. Un petit mois de voyage, en une seule nuit.",
+      "jeu": "Si les héros n'ont pas affronté Salishmè : elle les remercie et rend les enfants. Ses hommes se servent dans le trésor après les héros. D'un sifflement, elle soulève le sable pour sceller à nouveau l'entrée du tombeau.\nSi le marché le prévoyait : attendre la nuit suivante (de quoi rendre certains joueurs paranoïaques). Après une journée de repos, Salishmè monte dans son « vaisseau d'osier » porté par ses guerriers et invite les héros à la suivre : le sort ne se lance qu'en plein désert, loin de toute habitation.\nFIN D'ÉPISODE : les héros récupèrent leurs points d'héroïsme et gagnent chacun 1 point d'expérience.",
+      "pistes": [{ "texte": "Rentrer à Malakut (chapitre 4)" }],
+      "distribution": [{ "perso": "salishme", "attitude": "amical" }]
+    }
+  ]
+}

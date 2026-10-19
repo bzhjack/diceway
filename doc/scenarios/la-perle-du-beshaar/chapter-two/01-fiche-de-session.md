@@ -9,16 +9,11 @@ désert) : [00-introduction.md](00-introduction.md). Texte intégral :
 > Moyenne (+0). Opposition calibrée pour 4-5 héros — ajuste à la
 > hausse/baisse selon ton groupe.
 
-> **Attention — qualité de la source.** Contrairement au chapitre 1,
-> le texte brut du chapitre 2 est issu d'une extraction PDF automatisée
-> non relue à la main (cf. `../README.md`). Plusieurs stat blocks ont
-> perdu leurs valeurs chiffrées d'attributs (Vigueur/Agilité/Esprit/
-> Défense/Protection) dans l'extraction — seuls les champs Attaque,
-> Dégâts, Vitalité, Carrières et capacités spéciales ont pu être
-> récupérés. Complète ces profils toi-même à la volée avec les
-> fourchettes génériques `coriaces`/`rivaux` de
-> `../../../rules/04-pnj-creatures-demons.md` si besoin de valeurs
-> exactes.
+> **Stats.** Les blocs de stats ci-dessous ont été repris du PDF
+> (`pdftotext -layout`, PDF p. 58-84) le 2026-10-19 : ils sont complets.
+> Le texte brut `../08-chapitre2-de-sable-et-deau.md` reste non relu à
+> la main et a perdu ces valeurs. Version jouable dans l'app :
+> `../app/ch2.json` (scénario « Perle du Beshaar — 2. De sable et d'eau »).
 
 ## Secrets à ne jamais lâcher ce soir
 
@@ -331,9 +326,9 @@ un démon de l'éther voler leurs souvenirs en rêve, confirmant que
 l'œil de Tolometh est bien dans le Beshaar. Il charge **Karstus**
 (le garde du corps d'Arjanek — **son secret de sorcier tombe ici**)
 d'aller le récupérer ; pour garder le contrôle d'Arjanek pendant son
-absence, Karstus fait enlever et torturer sous ses yeux la servante
-de sa jeune sœur Marika, brisant sa résistance, et installe le sorcier
-**Oglar** pour le surveiller.
+absence, Karstus fait enlever sa jeune sœur Marika et le force à
+assister à la torture d'une jeune domestique, brisant sa résistance,
+puis installe le sorcier **Oglar** pour le surveiller.
 
 Karstus recrute à Badhasar un garde du corps et un petit groupe de
 **mercenaires beshaaris**, puis traverse le désert. De nuit, en pleine
@@ -403,23 +398,30 @@ de « rester ».
 
 ### PNJ créés pour ce chapitre
 
-*Valeurs d'attributs (Vigueur/Agilité/Esprit/Défense/Protection non
-listées) perdues dans l'extraction PDF — seuls les champs ci-dessous
-sont fiables ; complète à la volée si besoin d'un jet précis.*
+Dégâts tels que dans le livre (Vigueur comprise). Prot. = protection.
 
-| Stat block | Type | Attaque | Dégâts | Vitalité | Carrières / Protection / Armes | Spécial |
+| Stat block | Type | Vig / Agi / Esp / Aura | Init / Mêlée / Tir / Déf | Vitalité | Carrières · protection · armes | Spécial |
 |---|---|---|---|---|---|---|
-| Pillards beshaaris | coriaces | — | épée d6+1, javelot d6M | 7 | barbare 2 ; aucune armure | — |
-| Guerriers beshaaris (Beckéram/Ilémah) | coriaces | — | épée d6, javelot d6M | 6 | barbare 1, soldat 1 ; petit bouclier (+1 défense/round) | — |
-| Guerriers beshaaris (Beckéram/Ilémah) | piétaille | +0 | d3 (épées, javelots, lances) | 2 | barbare 1 | Règle de horde |
-| Fossoyeurs de Jalad Nût | piétaille | — | — (non armés/mal armés) | — | villageois | Pas de bloc dédié dans le livre — utilise le profil piétaille générique (`../../../rules/04-pnj-creatures-demons.md`) |
-| Djaloum ut Beckéram | rival | — | cimeterre d6+1, javelot d6M | 11 | barbare, noble, chasseur, soldat ; aucune armure | PH 5 (3 restants) ; avantages : né en selle, renard du désert ; désavantage : bouseux |
-| Grand-mère Djidaâ | rivale | +2 | d6B | — | — | Poussière de cadavre (jet vigueur Ardu [-1] ou dé de malus tant qu'au contact, retentable chaque round) ; vulnérabilité au feu (dégâts doublés) |
-| Les « filles » de Djidaâ (x5) | coriaces | +1 | d6M | — | — | Fureur de l'outragée : dé de bonus aux jets d'attaque |
-| Villageois Nata Urdu | piétaille | +0 | d3 | 1 | paysan 1 | Règle de horde |
-| Crabe de sable (gardien) | — (taille très grande) | +3 | d6B | — (aucun score, cf. Gardien éternel) | — | Gardien éternel (indestructible sauf en détruisant les ossements des 3 slorth ; ne peut quitter le sanctuaire) ; Corps de sable (se reforme n'importe où dans le sanctuaire) ; Rapide comme le vent (dé de malus au jet de réaction adverse en début de combat, agit comme un rival dans l'ordre de réaction) |
-| Mercenaires beshaaris de Karstus (x5) | coriaces | — | épée d6+1, javelot d6M | 7 | barbare 1, mercenaire 1 ; petit bouclier (+1 défense/round) | — |
-| Shammaz | rival | — | épée d6+1, dague d6M+1 | 13 | soldat, mercenaire 2, chasseur, barbare ; armure légère d6-3 (1) | Points de vilenie 5 ; avantages : dur à cuire, intrépide ; désavantage : cupide ; bretteur redoutable (combat à deux armes, cf. BoL p. 65) |
+| Pillards beshaaris (p. 60) | coriaces | 1 / 1 / 0 / 0 | 0 / 1 / 1 / 0 | 7 | barbare 2 · aucune armure · épée d6+1, javelot d6M | — |
+| Guerriers beshaaris (p. 72) | coriaces | 0 / 1 / 0 / 1 | 0 / 1 / 1 / 0 | 6 | barbare 1, soldat 1 · petit bouclier (+1 déf. contre une attaque/round) · épée d6, javelot d6M | Valent pour Beckéram comme Ilémah |
+| Guerriers beshaaris (p. 72) | piétaille | — | Attaque +0 | 2 | barbare 1 · d3 (épées, javelots, lances) | Règle de horde |
+| Fossoyeurs de Jalad Nût | piétaille | — | — | — | Pas de profil dans le livre : prendre celui des villageois nata urdu | — |
+| Djaloum ut Beckéram (p. 73) | rival | 1 / 2 / 0 / 1 | 1 / 2 / 1 / 1 | 11 | barbare 0, noble 2, chasseur 1, soldat 1 · aucune armure · cimeterre d6+1, javelot d6M | PH 5 (3 restants) ; avantages : né en selle, renard du désert ; désavantage : bouseux |
+| Grand-mère Djidaâ (p. 71) | rivale | Vig 4, Agi 2, Esp 2 | Attaque +2, Déf 0 | Force vitale 20 | prot. 2 · dégâts d6B | Poussière de cadavre (au contact, Vigueur Ardu -1 ou dé de malus, à retenter chaque round) ; vulnérabilité au feu (dégâts doublés) |
+| Les « filles » de Djidaâ (p. 71, ×5) | coriaces | Vig 1, Agi 1, Esp 0 | Attaque +1, Déf 0 | Force vitale 10 | prot. 0 · dégâts d6M | Fureur de l'outragée : dé de bonus aux jets d'attaque |
+| Villageois nata urdu (p. 79) | piétaille | — | Attaque +0 | 1 | paysan 1 · d3 | Règle de horde |
+| Crabe de sable (p. 78, gardien) | taille très grande | Vig 4, Agi 3, Esp — | Attaque +3, Déf 0 | — | prot. 0 · dégâts d6B | Gardien éternel ; corps de sable ; rapide comme le vent ; magie des slorth (cf. scène 8) |
+| Mercenaires beshaaris (p. 81, ×5) | coriaces | 1 / 1 / 0 / 0 | 0 / 1 / 1 / 0 | 7 | barbare 1, mercenaire 1 · petit bouclier · épée d6+1, javelot d6M | — |
+| Shammaz (p. 81) | rival | 1 / 3 / 0 / 0 | 1 / 2 / 0 / 1 | 13 | soldat 1, mercenaire 2, chasseur 1, barbare 1 · armure légère d6-3 (1) · épée d6+1, dague d6M+1 | Vilenie 5 ; avantages : dur à cuire, intrépide ; désavantage : cupide ; bretteur redoutable (deux armes, BoL p. 65) |
+
+### Créatures du bestiaire du Beshaar (rencontres aléatoires)
+
+| Créature | Taille | Vig / Agi / Esp | Attaque · dégâts · déf. · prot. | Vitalité | Spécial |
+|---|---|---|---|---|---|
+| Hyène du Beshaar (p. 27) | petite | 0 / 1 / -1 | +0 · d6M · 1 · 0 | 5 | Meute : règle de horde (+1 à l'attaque par hyène engagée) |
+| Meneuse de meute (p. 27) | moyenne | 1 / 2 / -1 | +2 · d6 · 1 · 0 | 10 | — |
+| Chien de Zaggath (p. 24) | moyenne | 2 / 1 / 1 | +2 · d6 · 1 · d6-3 (1) | 12 | Suint protecteur (¼ des dégâts de feu, pas de malus de chaleur) |
+| Spicomallos (p. 29) | énorme | 7 / -3 / -2 | +1 (×2) · d6x2 · 0 · d6 (4) | 40 | Attaques multiples ; cuirasse hérissée (-1 aux attaques au contact) |
 
 ## Objets et récompenses
 

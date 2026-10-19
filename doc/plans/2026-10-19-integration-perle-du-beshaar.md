@@ -183,7 +183,34 @@ Les stats viennent de `04-chapitre1-…md`. Quand le livre n'en donne pas (Marsu
 2. lancer un combat à la scène 6 ;
 3. supprimer l'import de test.
 
-### Lot 4 — Chapitre 2
+### Lot 4 — Chapitre 2 — fait le 2026-10-19
+
+Fichier : `doc/scenarios/la-perle-du-beshaar/app/ch2.json`, importé sur le compte de Lionel.
+
+- **Scènes : 14.** Quatre scènes de prologue (route, dinohyus, Badhasar, traversée avec la table 2d6 dans
+  « En jeu »), puis les 10 scènes de la fiche de session. La branche « rester » est la scène 14.
+- **Personnages :** 10 PNJ et 7 créatures, plus 4 créatures du catalogue. Karstus est repris du ch. 1 par sa
+  clé.
+  - Ilémah et Beckéram ont des fiches distinctes, aux stats identiques, pour qu'on distingue les camps sur la
+    rampe.
+  - Les bêtes des rencontres aléatoires sont créées sans être distribuées : elles attendent dans les
+    coulisses.
+- **Écarts au livre :**
+  - Djidaâ prend la taille « Grande » pour avoir le rang de rivale ;
+  - le crabe de sable a 99 de vitalité (le livre : aucune) ;
+  - les 5 points d'héroïsme de Djaloum sont portés en vilénie ;
+  - les fossoyeurs prennent le profil des villageois nata urdu.
+- **Fiche de session corrigée.** Elle a les vraies stats, issues du PDF, et le bestiaire des rencontres.
+  Correction : Karstus enlève Marika et torture une domestique, il ne torture pas la servante de Marika.
+- **Recette** sur le compte de test (ch. 1 puis ch. 2) :
+  - 14 scènes chargées sans entrée ignorée ;
+  - Karstus résolu depuis le ch. 1 ; sans le ch. 1, l'import est refusé ;
+  - aucune erreur console ;
+  - données supprimées ensuite.
+- **Défaut relevé :** la frise ne fait pas défiler l'acte en cours dans la vue. À l'acte 14, son titre est
+  hors champ.
+
+Notes de départ :
 
 - `chapter-two/01-fiche-de-session.md` donne déjà 10 scènes et leurs embranchements.
 - Les attributs perdus se reprennent dans le PDF (`pdftotext -layout`, PDF p. 58-84) : pillards, guerriers

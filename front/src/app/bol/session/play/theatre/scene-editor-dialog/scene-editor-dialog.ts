@@ -21,7 +21,7 @@ import {editorValue, sceneChanges} from './scene-editor.util';
 
 const PISTES_MAX = 8;
 const LECTURE_MAX = 5000;
-vas yconst JEU_MAX = 10000;
+const JEU_MAX = 10000;
 /** Valeur du bouton « Aucun » du moment : un groupe de boutons ne sait pas sélectionner `null`. */
 const AUCUN = 'aucun';
 
