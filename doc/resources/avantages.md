@@ -76,7 +76,9 @@ Catalogue de travail basé sur le PDF, sa mise à jour Mythic+ (`doc/pdf-text/07
 
 ## Cas utiles à garder en tête
 
-- `Arme favorite` : lié à une arme précise.
+- `Arme favorite` : lié à une arme précise. Proposée par une région (`BolRegionAvantageSeeder`), c'est l'arme régionale du livre
+  (Mythic+) : kriss (Halakh), khastok (Malakut), fronde de l’Axos, hache d’abordage de Parsool, arc de guerre de Tyrus, épée
+  valgardienne (Valgard) ; javelot pour le Désert de Beshaar. Seul un héros de la région peut la prendre.
 - `Baudrier de guerre` : traite un cas d'armure moyenne sans malus standard.
 - `Magie des Rois-Sorciers` et `Pouvoir du Néant` : structurants pour les lanceurs de sorts.
 - `Prestance` (Mythic+) : `+1 aura`, maximum 6, maximum de départ 4, comme `Savant` pour l'esprit.
