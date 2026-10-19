@@ -1,6 +1,6 @@
 # Le combat en session : état des lieux
 
-Date : 2026-10-13. Ce document décrit le combat tel qu'il fonctionne dans l'application à cette date. Il remplace, pour la lecture, le spec et le plan du registre d'effets (`2026-10-12-registre-effets-combat-design.md` et `-plan.md`), qui gardent l'historique des décisions et le détail des tâches.
+Date : 2026-10-13. Ce document décrit le combat tel qu'il fonctionne dans l'application à cette date. Il remplace le spec et le plan du registre d'effets (`2026-10-12-registre-effets-combat-design.md` et `-plan.md`), supprimés depuis : l'historique des décisions et le détail des tâches restent dans git.
 
 Règles de référence : `doc/rules/02-actions-combat.md` (livre p. 56 à 66) et `doc/rules/exemples-de-jets.md`.
 

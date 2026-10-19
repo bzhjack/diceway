@@ -44,7 +44,7 @@ When a task touches game rules, character creation, equipment, careers, language
 2. Use `/doc/rules/` for additional context or mechanics not covered in `/doc/resources/`.
 3. To verify a rule against the original rulebook, grep `/doc/pdf-text/` — pre-extracted text of the rulebook PDF, one file per chapter (see its README; PDF page = book page + 2). Do not re-run `pdftotext` on the PDF.
 
-`/doc/rules/` was audited against the rulebook PDF on 2026-06-10 (see `doc/plans/plan-alignement-rules-pdf.md`): all numeric tables and formulas are accurate; the few known wording gaps are listed there.
+`/doc/rules/` was audited against the rulebook PDF on 2026-06-10: all numeric tables and formulas are accurate.
 
 ## Angular conventions (`front/`)
 

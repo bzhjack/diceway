@@ -2,7 +2,7 @@
 
 Source : `doc/scenarios/la-perle-du-beshaar/` (texte du livre *Chroniques lémuriennes 4* et fiches de
 session pour les chapitres 1 et 2). Cible : le modèle **Scénario → Scènes** et le mode Théâtre de la table
-(`doc/plans/2026-10-16-theatre-session-plan.md`).
+(`front/src/app/bol/session/play/theatre/`).
 
 ## 1. Verdict de compatibilité
 
