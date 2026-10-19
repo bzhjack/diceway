@@ -25,7 +25,7 @@ const PNJ: TapisCard = {
 };
 
 describe('AttitudePickerComponent', () => {
-  it('garde les boutons focalisables pendant un enregistrement, et n’envoie qu’un choix à la fois', async () => {
+  it('pendant un enregistrement, n’envoie qu’un choix à la fois, sans faire pâlir les autres options', async () => {
     const enCours = new Subject<unknown>();
     const setAttitude = vi.fn(() => enCours);
     TestBed.configureTestingModule({providers: [{provide: BolFightSessionService, useValue: {setAttitude}}]});
@@ -41,7 +41,7 @@ describe('AttitudePickerComponent', () => {
 
     expect(setAttitude).toHaveBeenCalledWith('sess', 'pnj', 7, 'hostile');
     expect(hostile.disabled).toBe(false);
-    expect(mefiant.getAttribute('aria-disabled')).toBe('true');
+    expect(mefiant.getAttribute('aria-disabled')).toBeNull();
     mefiant.click();
     expect(setAttitude).toHaveBeenCalledTimes(1);
   });

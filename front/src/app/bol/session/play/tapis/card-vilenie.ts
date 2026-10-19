@@ -8,7 +8,7 @@ import {TapisCard} from '../../models/tapis.model';
 
 /** Points de vilénie d'un PNJ rival, dans sa carte dépliée : une rangée de gemmes et − / +, enregistrés à chaque pas. Pour ce qui
  * se dépense hors d'un jet d'attaque : fuite opportune, coup de chance, défier la mort (04-pnj-creatures-demons.md). Pendant un
- * enregistrement, les boutons sont `aria-disabled` (pas désactivés : le focus clavier reste en place). */
+ * enregistrement, un second pas est ignoré sans faire pâlir les boutons ; seul − à 0 point est grisé (`aria-disabled`). */
 @Component({
   selector: 'bol-card-vilenie',
   template: `
@@ -18,7 +18,7 @@ import {TapisCard} from '../../models/tapis.model';
         type="button"
         class="cvl-step"
         [attr.aria-label]="'Dépenser 1 point de vilénie de ' + card().nom"
-        [attr.aria-disabled]="busy() || points() <= 0 ? 'true' : null"
+        [attr.aria-disabled]="points() <= 0 ? 'true' : null"
         (click)="step(-1)"
       >
         −
@@ -32,7 +32,6 @@ import {TapisCard} from '../../models/tapis.model';
         type="button"
         class="cvl-step"
         [attr.aria-label]="'Rendre 1 point de vilénie à ' + card().nom"
-        [attr.aria-disabled]="busy() ? 'true' : null"
         (click)="step(1)"
       >
         +
@@ -117,7 +116,7 @@ export class CardVilenieComponent {
   /** Un pas a été enregistré : le parent recharge la session. */
   readonly changed = output<void>();
 
-  protected readonly busy = signal(false);
+  private readonly busy = signal(false);
   protected readonly points = computed(() => this.card().vilenie ?? 0);
   protected readonly gemmes = computed(() => heroismeGems(this.points()));
   protected readonly libelle = computed(() => libellePoints('pnj', this.points()));

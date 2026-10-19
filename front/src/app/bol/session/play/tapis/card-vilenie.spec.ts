@@ -40,14 +40,14 @@ describe('CardVilenieComponent', () => {
     return fixture.nativeElement as HTMLElement;
   }
 
-  it('dépense un point, et garde le bouton focalisable pendant l’enregistrement', async () => {
+  it('dépense un point ; pendant l’enregistrement, ignore un second pas sans faire pâlir le bouton', async () => {
     const element = await rendre(rival(2));
     const moins = element.querySelector<HTMLButtonElement>('[aria-label="Dépenser 1 point de vilénie de Kalzatan"]')!;
     moins.click();
     TestBed.tick();
     expect(adjustVilenie).toHaveBeenCalledWith('sess', 7, -1);
     expect(moins.disabled).toBe(false);
-    expect(moins.getAttribute('aria-disabled')).toBe('true');
+    expect(moins.getAttribute('aria-disabled')).toBeNull();
     moins.click();
     expect(adjustVilenie).toHaveBeenCalledTimes(1);
   });

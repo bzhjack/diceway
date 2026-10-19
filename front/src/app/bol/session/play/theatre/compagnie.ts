@@ -54,8 +54,10 @@ export class CompagnieComponent {
 
   /** Portraits qui n'ont pas pu se charger : repli sur l'initiale. */
   private readonly brokenAvatars = signal<ReadonlySet<string>>(new Set());
-  /** Héros dont un pas est en cours d'enregistrement : le suivant attend son retour. */
-  protected readonly pending = signal<ReadonlySet<string>>(new Set());
+  /** Pas en cours d'enregistrement, par héros et par ressource (« hero-1:vitalite ») : un autre pas sur la même ressource est
+   * ignoré tant que celui-ci n'est pas revenu ; l'autre ressource reste libre. Le verrou ne se voit pas : seules les vraies
+   * limites (vitalité au maximum, héroïsme à 0) grisent un bouton — sinon chaque clic faisait scintiller toute la plaque. */
+  private readonly pending = signal<ReadonlySet<string>>(new Set());
 
   private readonly groupes = computed(() => compagnie(this.cards()));
   protected readonly allies = computed(() => this.groupes().allies);
@@ -92,7 +94,7 @@ export class CompagnieComponent {
     if (delta > 0 && card.vitaliteCourante !== null && card.vitaliteMax !== null && card.vitaliteCourante >= card.vitaliteMax) {
       return;
     }
-    this.save(card, () => this.fightSessionService.applyDamage(this.sessionId(), 'hero', card.pivotId, delta), 'Impossible de mettre à jour la vitalité.');
+    this.save(`${card.key}:vitalite`, () => this.fightSessionService.applyDamage(this.sessionId(), 'hero', card.pivotId, delta), 'Impossible de mettre à jour la vitalité.');
   }
 
   protected stepHeroisme(card: TapisCard, delta: number): void {
@@ -100,20 +102,20 @@ export class CompagnieComponent {
       return;
     }
     const herosId = card.sourceId;
-    this.save(card, () => this.herosService.adjustHeroisme(herosId, delta), "Impossible de mettre à jour l'héroïsme.");
+    this.save(`${card.key}:heroisme`, () => this.herosService.adjustHeroisme(herosId, delta), "Impossible de mettre à jour l'héroïsme.");
   }
 
-  /** Enregistre un pas ; un autre pas sur le même héros est ignoré (sa requête n'est même pas construite) tant que
+  /** Enregistre un pas ; un autre pas sur la même ressource est ignoré (sa requête n'est même pas construite) tant que
    * celui-ci n'est pas revenu. */
-  private save(card: TapisCard, request: () => Observable<unknown>, errorMessage: string): void {
-    if (this.pending().has(card.key)) {
+  private save(key: string, request: () => Observable<unknown>, errorMessage: string): void {
+    if (this.pending().has(key)) {
       return;
     }
-    this.pending.update((set) => new Set(set).add(card.key));
+    this.pending.update((set) => new Set(set).add(key));
     const done = (): void =>
       this.pending.update((set) => {
         const next = new Set(set);
-        next.delete(card.key);
+        next.delete(key);
         return next;
       });
     request().subscribe({

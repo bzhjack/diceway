@@ -7,8 +7,8 @@ import {TapisCard} from '../../models/tapis.model';
 import {ATTITUDES} from './theatre.util';
 
 /** L'attitude envers les héros d'un PNJ, d'une créature ou d'un démon en scène, dans sa carte dépliée : quatre
- * boutons bascule ; un nouveau clic sur l'attitude choisie l'efface. Enregistrée aussitôt ; pendant l'enregistrement,
- * les boutons sont `aria-disabled` (pas désactivés : le focus clavier reste en place). */
+ * boutons bascule ; un nouveau clic sur l'attitude choisie l'efface. Enregistrée aussitôt ; pendant l'enregistrement, un
+ * autre choix est ignoré, sans faire pâlir les boutons (ce scintillement à chaque clic laissait croire à une panne). */
 @Component({
   selector: 'bol-attitude-picker',
   template: `
@@ -19,7 +19,6 @@ import {ATTITUDES} from './theatre.util';
           type="button"
           [class]="'atp-option atp-option--' + option.value"
           [attr.aria-pressed]="card().attitude === option.value"
-          [attr.aria-disabled]="busy() ? 'true' : null"
           (click)="choose(option.value)"
         >
           {{ option.label }}
@@ -108,7 +107,7 @@ export class AttitudePickerComponent {
   readonly changed = output<void>();
 
   protected readonly options = ATTITUDES;
-  protected readonly busy = signal(false);
+  private readonly busy = signal(false);
 
   protected choose(value: CombatantAttitude): void {
     const card = this.card();

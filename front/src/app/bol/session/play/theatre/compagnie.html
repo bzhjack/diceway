@@ -30,7 +30,6 @@
               type="button"
               class="cmp-step"
               [attr.aria-label]="'Retirer 1 point de vitalité à ' + plaque.card.nom"
-              [attr.aria-disabled]="pending().has(plaque.card.key) ? 'true' : null"
               (click)="stepVitalite(plaque.card, -1)"
             >
               −
@@ -41,7 +40,7 @@
               type="button"
               class="cmp-step"
               [attr.aria-label]="'Rendre 1 point de vitalité à ' + plaque.card.nom"
-              [attr.aria-disabled]="pending().has(plaque.card.key) || plaque.atMax ? 'true' : null"
+              [attr.aria-disabled]="plaque.atMax ? 'true' : null"
               (click)="stepVitalite(plaque.card, 1)"
             >
               +
@@ -53,7 +52,7 @@
               type="button"
               class="cmp-step"
               [attr.aria-label]="'Retirer 1 point d’héroïsme à ' + plaque.card.nom"
-              [attr.aria-disabled]="pending().has(plaque.card.key) || plaque.heroisme <= 0 ? 'true' : null"
+              [attr.aria-disabled]="plaque.heroisme <= 0 ? 'true' : null"
               (click)="stepHeroisme(plaque.card, -1)"
             >
               −
@@ -67,7 +66,6 @@
               type="button"
               class="cmp-step"
               [attr.aria-label]="'Ajouter 1 point d’héroïsme à ' + plaque.card.nom"
-              [attr.aria-disabled]="pending().has(plaque.card.key) ? 'true' : null"
               (click)="stepHeroisme(plaque.card, 1)"
             >
               +

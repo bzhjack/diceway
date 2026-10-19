@@ -30,13 +30,15 @@ function hero(vitaliteCourante: number): TapisCard {
 describe('CompagnieComponent', () => {
   const enCours = new Subject<unknown>();
   const applyDamage = vi.fn(() => enCours);
+  const adjustHeroisme = vi.fn(() => enCours);
 
   async function rendre(card: TapisCard): Promise<HTMLElement> {
     applyDamage.mockClear();
+    adjustHeroisme.mockClear();
     TestBed.configureTestingModule({
       providers: [
         {provide: BolFightSessionService, useValue: {applyDamage}},
-        {provide: BolHerosService, useValue: {adjustHeroisme: () => enCours}},
+        {provide: BolHerosService, useValue: {adjustHeroisme}},
       ],
     });
     const fixture = TestBed.createComponent(CompagnieComponent);
@@ -46,15 +48,28 @@ describe('CompagnieComponent', () => {
     return fixture.nativeElement as HTMLElement;
   }
 
-  it('garde le bouton focalisable pendant un enregistrement', async () => {
+  const bouton = (element: HTMLElement, label: string): HTMLButtonElement => element.querySelector<HTMLButtonElement>(`[aria-label="${label}"]`)!;
+
+  it('pendant un enregistrement, ignore un second pas sans faire pâlir le bouton', async () => {
     const element = await rendre(hero(8));
-    const moins = element.querySelector<HTMLButtonElement>('[aria-label="Retirer 1 point de vitalité à Grimar"]')!;
+    const moins = bouton(element, 'Retirer 1 point de vitalité à Grimar');
     moins.click();
     TestBed.tick();
     expect(applyDamage).toHaveBeenCalledTimes(1);
     expect(moins.disabled).toBe(false);
-    expect(moins.getAttribute('aria-disabled')).toBe('true');
+    expect(moins.getAttribute('aria-disabled')).toBeNull();
     moins.click();
+    expect(applyDamage).toHaveBeenCalledTimes(1);
+  });
+
+  it('un pas d’héroïsme en cours ne touche pas aux boutons de vitalité, qui restent utilisables', async () => {
+    const element = await rendre(hero(8));
+    bouton(element, 'Ajouter 1 point d’héroïsme à Grimar').click();
+    TestBed.tick();
+    expect(adjustHeroisme).toHaveBeenCalledTimes(1);
+    expect(bouton(element, 'Retirer 1 point de vitalité à Grimar').getAttribute('aria-disabled')).toBeNull();
+    expect(bouton(element, 'Rendre 1 point de vitalité à Grimar').getAttribute('aria-disabled')).toBeNull();
+    bouton(element, 'Retirer 1 point de vitalité à Grimar').click();
     expect(applyDamage).toHaveBeenCalledTimes(1);
   });
 
