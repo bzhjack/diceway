@@ -7,6 +7,7 @@ services:
             - ./.env.local:/var/www/html/.env
             - ./storage/app:/var/www/html/storage/app
             - ./app:/var/www/html/app
+            - ./database:/var/www/html/database
         extra_hosts:
             - "host.docker.internal:host-gateway"
         ports:
