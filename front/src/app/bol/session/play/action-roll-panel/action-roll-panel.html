@@ -44,7 +44,7 @@
            les circonstances, puis ceux des avantages et désavantages du héros -->
       <div class="ard-hrow">
         <h4 class="ard-h" id="ard-boost-title">Coups de pouce</h4>
-        <div class="ard-stepper" role="group" aria-label="Modificateur" matTooltip="Modificateur libre : un bonus ou un malus décidé par le MJ">
+        <div class="ard-stepper" role="group" aria-label="Modificateur" matTooltipPosition="above" matTooltip="Modificateur libre : un bonus ou un malus décidé par le MJ">
           <button type="button" aria-label="Diminuer le modificateur" (click)="incrementModifier(-1)">−</button>
           <span>{{ signed(modifier()) }}</span>
           <button type="button" aria-label="Augmenter le modificateur" (click)="incrementModifier(1)">+</button>
@@ -56,6 +56,7 @@
           class="ard-chip ard-chip--bonus"
           [attr.aria-pressed]="gmDie() === 'bonus'"
           matTooltip="Accordé par le MJ quand les circonstances aident : un dé de plus, on garde les deux meilleurs"
+          matTooltipPosition="above"
           (click)="toggleGmDie('bonus')"
         >
           Dé bonus MJ
@@ -65,6 +66,7 @@
           class="ard-chip ard-chip--malus"
           [attr.aria-pressed]="gmDie() === 'malus'"
           matTooltip="Imposé par le MJ quand les circonstances gênent (ivresse, obscurité…) : un dé de plus, on garde les deux moins bons"
+          matTooltipPosition="above"
           (click)="toggleGmDie('malus')"
         >
           Dé malus MJ
@@ -75,6 +77,7 @@
             class="ard-chip ard-chip--bonus"
             [attr.aria-pressed]="isTraitSelected(t.label)"
             [matTooltip]="t.domaine ?? ''"
+            matTooltipPosition="above"
             (click)="toggleDiceTrait(t.label)"
           >
             Dé bonus · {{ t.label }}
@@ -86,6 +89,7 @@
             class="ard-chip ard-chip--malus"
             [attr.aria-pressed]="isTraitSelected(t.label)"
             [matTooltip]="t.domaine ?? ''"
+            matTooltipPosition="above"
             (click)="toggleDiceTrait(t.label)"
           >
             Dé malus · {{ t.label }}
