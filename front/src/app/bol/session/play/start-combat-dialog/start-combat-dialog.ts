@@ -39,6 +39,7 @@ import {appliquerEvenement, effetSurpris, idAleatoire} from '../tapis/combat-eff
 import {ReactionAdversary, ReactionParts, ReactionToken, ReactionVerdict, StartCombatDialogData} from '../../models/start-combat-dialog.model';
 import {REACTION_ROLL_THRESHOLD, reactionLanes, reactionModifier, reactionResult, reactionSumTerms, reactionVerdict} from '../../reaction-roll.util';
 import {AddCombatantDialogComponent} from '../add-combatant-dialog/add-combatant-dialog';
+import {pnjAvatar} from '../../combat-play.util';
 
 /** Un PNJ, une créature ou un démon tel que le dialogue le charge : ce que l'ordre d'action en montre, plus son initiative. */
 interface AdversaryRow extends Omit<ReactionAdversary, 'excluded'> {
@@ -288,7 +289,7 @@ export class StartCombatDialogComponent {
         next: (session) => {
           // Mêmes portraits que sur la table (`combat-play.util.ts`) : celui de la fiche, sinon l'image du catalogue.
           this.adversaries.set([
-            ...(session.pnjs ?? []).map((p) => ({pivotId: p.id, kind: 'pnj' as const, nom: p.surnom ?? p.nom, avatar: p.pnj?.origines.avatar || (p.pnj_id ? `/assets/bol/pnj/${p.pnj_id}.jpg` : null), rang: p.rang, initiative: p.initiative ?? 0, ally: p.camp === 'heros'})),
+            ...(session.pnjs ?? []).map((p) => ({pivotId: p.id, kind: 'pnj' as const, nom: p.surnom ?? p.nom, avatar: pnjAvatar(p), rang: p.rang, initiative: p.initiative ?? 0, ally: p.camp === 'heros'})),
             ...(session.creatures ?? []).map((c) => ({pivotId: c.id, kind: 'creature' as const, nom: c.surnom ?? c.nom, avatar: c.creature?.avatar || (c.creature_id ? `/assets/bol/bestiary/${c.creature_id}.jpg` : null), rang: c.rang, initiative: 0, ally: c.camp === 'heros'})),
             ...(session.demons ?? []).map((d) => ({pivotId: d.id, kind: 'demon' as const, nom: d.surnom ?? d.nom, avatar: d.demon?.avatar || (d.demon_id ? `/assets/bol/demon/${d.demon_id}.jpg` : null), rang: d.rang, initiative: 0, ally: d.camp === 'heros'})),
           ]);

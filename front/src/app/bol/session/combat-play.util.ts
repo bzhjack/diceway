@@ -5,6 +5,17 @@ import {PlayCombatStats, PlayToken, PlayBoard} from './models/combat-play.model'
 
 export const EMPTY_AVATAR = '/assets/bol/empty-avatar.jpg';
 
+/** Portrait d'un PNJ posé en session ou en combat : son avatar s'il en a un, sinon le portrait livré dans les assets —
+ * qui n'existe que pour les PNJ du catalogue (sans propriétaire, ids 1 à 15). Un PNJ d'utilisateur sans avatar n'en a
+ * pas : deviner son URL ne ferait qu'un 404. */
+export function pnjAvatar(p: {pnj_id: string | null; pnj?: {user_id?: string | null; origines?: {avatar: string | null} | null} | null}): string | null {
+  if (p.pnj?.origines?.avatar) {
+    return p.pnj.origines.avatar;
+  }
+
+  return p.pnj && !p.pnj.user_id && p.pnj_id ? `/assets/bol/pnj/${p.pnj_id}.jpg` : null;
+}
+
 /** Un pouvoir démoniaque, comparé sans tenir compte de la casse. */
 function hasPouvoir(pouvoirs: readonly (string | null)[], nom: string): boolean {
   return pouvoirs.some((pouvoir) => pouvoir?.trim().toLowerCase() === nom);
@@ -90,7 +101,7 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
       key: `pnj-${p.id}`,
       kind: 'pnj',
       nom: p.surnom ?? p.nom,
-      avatar: p.pnj?.origines.avatar || (p.pnj_id ? `/assets/bol/pnj/${p.pnj_id}.jpg` : null) || EMPTY_AVATAR,
+      avatar: pnjAvatar(p) ?? EMPTY_AVATAR,
       rang: p.rang,
       resultat: null,
       camp: p.camp,

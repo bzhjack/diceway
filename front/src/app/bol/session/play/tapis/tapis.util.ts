@@ -3,7 +3,7 @@ import {BolHerosArmeModel} from '../../../models/bol-arme.model';
 import {BolFightSessionModel, CombatCamp} from '../../../models/bol-fight-session.model';
 import {BolHerosModel} from '../../../models/bol-heros.model';
 import {firstEquippedDegats, isArmeEquipee} from '../../../shared/arme/arme-equipee';
-import {EMPTY_AVATAR} from '../../combat-play.util';
+import {EMPTY_AVATAR, pnjAvatar} from '../../combat-play.util';
 import {TapisKind, TapisCard, HeroHeaderStat, HeroDetailTrait, HeroDetailInfos, HeroDetails} from '../../models/tapis.model';
 
 const NO_VALUE = '—';
@@ -65,7 +65,7 @@ export function buildTapisCards(session: BolFightSessionModel): TapisCard[] {
       pivotId: p.id,
       sourceId: p.pnj_id,
       nom: p.surnom ?? p.nom,
-      avatar: p.pnj?.origines.avatar || (p.pnj_id ? `/assets/bol/pnj/${p.pnj_id}.jpg` : null) || EMPTY_AVATAR,
+      avatar: pnjAvatar(p) ?? EMPTY_AVATAR,
       badge: badgeFor(p.camp, rang),
       rang,
       degats: (p.armes?.find((a) => a.degats && a.equipee !== false) ?? p.armes?.find((a) => a.degats))?.degats ?? NO_VALUE,
