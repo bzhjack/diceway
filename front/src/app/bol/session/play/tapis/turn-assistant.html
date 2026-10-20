@@ -17,7 +17,7 @@
       <div class="tas-me">
         <span class="tas-med tas-med--active" aria-hidden="true">
           @if (card().avatar) {
-            <img [src]="card().avatar" alt="" />
+            <img dwAvatarFallback [src]="card().avatar" alt="" />
           } @else {
             {{ card().nom.charAt(0).toUpperCase() }}
           }
@@ -293,7 +293,7 @@
         >
           <span class="tas-med tas-med--active" aria-hidden="true">
             @if (t.avatar) {
-              <img [src]="t.avatar" alt="" />
+              <img dwAvatarFallback [src]="t.avatar" alt="" />
             } @else {
               {{ t.nom.charAt(0).toUpperCase() }}
             }
@@ -360,7 +360,7 @@
             <button type="button" class="tas-target" [attr.data-kind]="t.kind" [class.tas-target--foe]="t.camp !== 'heros'" (click)="selectTarget(t)">
               <span class="tas-med tas-med--small" aria-hidden="true">
                 @if (t.avatar) {
-                  <img [src]="t.avatar" alt="" />
+                  <img dwAvatarFallback [src]="t.avatar" alt="" />
                 } @else {
                   {{ t.nom.charAt(0).toUpperCase() }}
                 }

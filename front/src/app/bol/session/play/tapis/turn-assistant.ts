@@ -53,6 +53,7 @@ import {ValueTracker} from '../../value-tracker';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
 import {PointsStepperComponent} from './points-stepper';
 import {isLowVitalite, vitalitePercent} from './tapis.util';
+import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 
 /** Délai maximal d'un lancer 3D avant de tirer les dés sans animation. */
 const DICE_TIMEOUT_MS = 12000;
@@ -152,7 +153,7 @@ function pointsAffiches(kind: TapisKind, points: number | null): {points: number
  * Il ne parle à aucun service : il signale à la page ce qui doit être enregistré (dégâts, fin de tour, défense totale, héroïsme). */
 @Component({
   selector: 'bol-turn-assistant',
-  imports: [DwDiceRowComponent, DwValueStepperComponent, EffectsListComponent, MatButtonModule, MatIconModule, MatTooltipModule, PointsStepperComponent, ReactiveFormsModule],
+  imports: [AvatarFallbackDirective, DwDiceRowComponent, DwValueStepperComponent, EffectsListComponent, MatButtonModule, MatIconModule, MatTooltipModule, PointsStepperComponent, ReactiveFormsModule],
   templateUrl: './turn-assistant.html',
   styleUrl: './turn-assistant.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

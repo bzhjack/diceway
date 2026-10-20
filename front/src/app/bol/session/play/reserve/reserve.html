@@ -92,7 +92,7 @@
             <div *cdkDragPreview class="rsv-ghost">
               <span [class]="'rsv-ghost-art rsv-row--' + row.entry.kind">
                 @if (hasAvatar(row.entry)) {
-                  <img class="rsv-avatar-img" [src]="row.entry.avatar" alt="" draggable="false" />
+                  <img dwAvatarFallback class="rsv-avatar-img" [src]="row.entry.avatar" alt="" draggable="false" />
                 } @else {
                   {{ initial(row.entry) }}
                 }

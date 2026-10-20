@@ -9,12 +9,13 @@ import {extractApiErrorMessage} from '../../../core/api-error.utils';
 import {CombatSelectionService} from '../../services/combat-selection.service';
 import {AccountMenuComponent} from '../../shared/account-menu/account-menu';
 import {CombatantPickerDialogComponent} from './combatant-picker-dialog/combatant-picker-dialog';
+import {AvatarFallbackDirective} from '../../../shared/avatar-fallback/avatar-fallback.directive';
 
 /** Seuil : affiché sur `/` quand aucune session n'est ouverte, et sur `/session/new`. Le MJ choisit
  * les héros présents et ouvre la table (session en mode libre). */
 @Component({
   selector: 'bol-session-new-page',
-  imports: [RouterLink, MatButtonModule, MatIconModule, AccountMenuComponent],
+  imports: [AvatarFallbackDirective, RouterLink, MatButtonModule, MatIconModule, AccountMenuComponent],
   templateUrl: './session-new-page.html',
   styleUrl: './session-new-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

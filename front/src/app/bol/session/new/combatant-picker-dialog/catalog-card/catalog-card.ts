@@ -4,11 +4,12 @@ import {MatIconModule} from '@angular/material/icon';
 import {combatantKindIcon, combatantKindIconIsSvg, combatantRankLabel, openCombatantStatblock} from '../../../combat-statblock.util';
 import {CombatSelectionService} from '../../../../services/combat-selection.service';
 import {CombatCatalogEntry} from '../../../../models/combat-selection.model';
+import {AvatarFallbackDirective} from '../../../../../shared/avatar-fallback/avatar-fallback.directive';
 
 /** Carte d'une entrée de catalogue dans le dialog de sélection : l'avatar ouvre le statbloc, le bouton ajoute (ou incrémente). */
 @Component({
   selector: 'bol-catalog-card',
-  imports: [MatIconModule],
+  imports: [AvatarFallbackDirective, MatIconModule],
   templateUrl: './catalog-card.html',
   styleUrl: './catalog-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

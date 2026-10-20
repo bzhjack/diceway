@@ -32,7 +32,7 @@
           @for (combatant of selection.combatants(); track combatant.catalogId) {
             @if (selection.entryFor(combatant.catalogId); as entry) {
               <div class="snp-hero-chip">
-                <img [src]="entry.avatar" [alt]="entry.nom" />
+                <img dwAvatarFallback [src]="entry.avatar" [alt]="entry.nom" />
                 <span class="snp-hero-name">{{ entry.nom }}</span>
                 <button
                   type="button"

@@ -14,6 +14,7 @@ import {ReservePlacementService} from '../../reserve-placement.service';
 import {isLowVitalite, vitalitePercent, vitaliteText} from '../tapis/tapis.util';
 import {ActeurComponent} from './acteur';
 import {compagnie} from './theatre.util';
+import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 
 /** La plaque d'un héros, avec ses valeurs déjà calculées. */
 interface Plaque {
@@ -33,7 +34,7 @@ interface Plaque {
  * `heros`. Signale à la page (`changed`) chaque valeur enregistrée, pour qu'elle recharge la session. */
 @Component({
   selector: 'bol-compagnie',
-  imports: [CdkDrag, CdkDragPreview, CdkDropList, MatIconModule, MatTooltipModule, ActeurComponent],
+  imports: [AvatarFallbackDirective, CdkDrag, CdkDragPreview, CdkDropList, MatIconModule, MatTooltipModule, ActeurComponent],
   templateUrl: './compagnie.html',
   styleUrl: './compagnie.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

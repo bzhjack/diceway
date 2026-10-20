@@ -54,7 +54,7 @@
                 (click)="gaveBack.emit(entry.key)"
               >
                 @if (entry.avatar) {
-                  <img class="tor-img" [src]="entry.avatar" alt="" />
+                  <img dwAvatarFallback class="tor-img" [src]="entry.avatar" alt="" />
                 } @else {
                   {{ initial(entry) }}
                 }

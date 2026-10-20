@@ -5,6 +5,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {TurnStatus} from '../../models/combat-turn.model';
 import {TurnOrderEntry, TurnOrderInterrupter} from '../../models/turn-order.model';
 import {groupByTier} from './combat-turn.util';
+import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 
 const STATUS_LABELS: Record<TurnStatus, string> = {
   active: 'joue maintenant',
@@ -18,7 +19,7 @@ const STATUS_LABELS: Record<TurnStatus, string> = {
  * combattant actif est surélevé, ceux qui ont joué sont grisés. Un clic sur un médaillon « a joué » lui rend la main. */
 @Component({
   selector: 'bol-turn-order',
-  imports: [MatButtonModule, MatIconModule, MatTooltipModule],
+  imports: [AvatarFallbackDirective, MatButtonModule, MatIconModule, MatTooltipModule],
   templateUrl: './turn-order.html',
   styleUrl: './turn-order.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
