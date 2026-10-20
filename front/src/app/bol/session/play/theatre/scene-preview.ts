@@ -9,7 +9,7 @@ import {distributionPortraits, lieuTexte, sceneDecor} from './theatre.util';
 import {AvatarFallbackDirective} from '../../../../shared/avatar-fallback/avatar-fallback.directive';
 
 /** Aperçu d'une scène, en tête du menu d'un acte de la frise ou d'une piste : sa vignette, son lieu, son
- * ambiance et sa distribution. Les actions (« Lever le rideau »…) sont des `mat-menu-item` du menu lui-même,
+ * ambiance et sa distribution. Les actions (« Charger la scène »…) sont des `mat-menu-item` du menu lui-même,
  * pour rester atteignables au clavier. */
 @Component({
   selector: 'bol-scene-preview',

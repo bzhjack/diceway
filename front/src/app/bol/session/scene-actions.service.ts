@@ -28,15 +28,19 @@ export class SceneActionsService {
   }
 
   /** Charge une scène sur la table dans le mode donné, sans rien demander (le plateau propose lui-même
-   * « Lever le rideau » ou « Ajouter ses personnages »), puis annonce le résultat — sauf si `announce` est faux :
+   * « Charger la scène » ou « Ajouter ses personnages »), puis annonce le résultat — sauf si `announce` est faux :
    * le plateau l'annonce lui-même, une fois le rideau rouvert (`announceLoad`). */
   loadAs(sessionId: string, scene: BolSceneModel, mode: SceneLoadMode, announce = true): Observable<BolSceneLoadResult> {
     const load = this.fightSessionService.loadScene(sessionId, scene.id, mode);
     return announce ? load.pipe(tap((result) => this.announceLoad(scene.titre, result))) : load;
   }
 
-  /** Annonce le résultat d'un chargement de scène (et les personnages ignorés). */
+  /** Annonce les personnages ignorés par un chargement de scène ; une scène chargée sans accroc se voit sur le plateau,
+   * elle n'a pas besoin de message. */
   announceLoad(titre: string, result: BolSceneLoadResult): void {
+    if (result.ignored <= 0) {
+      return;
+    }
     this.snackBar.open(loadMessage(titre, result.ignored), undefined, {duration: 4000});
   }
 

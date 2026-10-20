@@ -22,13 +22,9 @@ export interface AmbianceOption<T> {
 /** Le rideau du plateau : ouvert, ou fermé pendant un changement de scène. */
 export type RideauEtat = 'ouvert' | 'ferme';
 
-/** Le carton du chroniqueur, montré rideau fermé : une phrase d'ambiance (moment et météo), le lieu, puis le titre. */
+/** Le carton du rideau, montré rideau fermé : le titre de la scène qui se charge. */
 export interface SceneCarton {
   readonly titre: string;
-  /** « Au crépuscule, sous la pluie… » — `null` sans moment ni météo. */
-  readonly narration: string | null;
-  /** « Gué du Tyr, Jungle de Qo et jungle de Qush » — `null` sans lieu ni région. */
-  readonly lieu: string | null;
 }
 
 /** Taille d'une carte sur le plateau : selon le rang dans la troupe, plus petite pour un allié. */
@@ -45,4 +41,24 @@ export interface ScenePortrait {
   readonly nom: string;
   readonly avatar: string | null;
   readonly qty: number;
+}
+
+/** La brûlure du rideau : le champ de bruit qui décide dans quel ordre la scène brûle, et les deux calques où on la peint
+ * (la flamme, puis sa lueur floue). */
+export interface RideauBrulure {
+  readonly champ: Float32Array;
+  readonly largeur: number;
+  readonly hauteur: number;
+  readonly image: ImageData;
+  readonly flamme: CanvasRenderingContext2D;
+  readonly lueur: CanvasRenderingContext2D;
+}
+
+/** Les braises qui montent devant la brûlure : `front` (0 en haut, 1 en bas) est la ligne de feu, `rate` le nombre de
+ * braises par seconde, `alpha` leur opacité. */
+export interface RideauBraises {
+  front: number;
+  rate: number;
+  alpha: number;
+  stop(): void;
 }

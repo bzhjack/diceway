@@ -90,12 +90,12 @@ describe('SceneStageStore', () => {
     const values: unknown[] = [];
     store.load(S2, 'replace').subscribe((v) => values.push(v));
     expect(store.rideau()).toBe('ferme');
-    expect(store.carton()).toEqual({titre: S2.titre, narration: null, lieu: null});
-    vi.advanceTimersByTime(900);
+    expect(store.carton()).toEqual({titre: S2.titre});
+    vi.advanceTimersByTime(1400);
     expect(values).toEqual([RESULT]);
     store.sync('sess', 's2', ['s1', 's2']);
-    // Sans phrase, le carton ne montre que le titre : 1,6 s après le fondu.
-    vi.advanceTimersByTime(1599);
+    // Le carton ne montre que le titre : 1,3 s après la brûlure.
+    vi.advanceTimersByTime(1299);
     expect(store.rideau()).toBe('ferme');
     expect(announceLoad).not.toHaveBeenCalled();
     vi.advanceTimersByTime(1);
@@ -104,20 +104,6 @@ describe('SceneStageStore', () => {
     // Le chargement est annoncé à la réouverture, pas par-dessus le carton.
     expect(loadAs).toHaveBeenCalledWith('sess', S2, 'replace', false);
     expect(announceLoad).toHaveBeenCalledWith(S2.titre, RESULT);
-  });
-
-  it('écrit le carton d’après le moment, la météo et le lieu de la scène, et le tient le temps de l’écrire', () => {
-    loadAs.mockReturnValue(of(RESULT));
-    store.sync('sess', 's1', []);
-    const preparee = {...S2, moment: 'crepuscule' as const, meteo: 'pluie' as const, lieu: 'Gué du Tyr', region_id: 5};
-    store.load(preparee, 'replace').subscribe();
-    expect(store.carton()).toEqual({titre: S2.titre, narration: 'Au crépuscule, sous la pluie…', lieu: 'Gué du Tyr, Jungle de Qo et jungle de Qush'});
-    vi.advanceTimersByTime(900);
-    store.sync('sess', 's2', ['s1', 's2']);
-    vi.advanceTimersByTime(2500);
-    expect(store.rideau()).toBe('ferme');
-    vi.advanceTimersByTime(1500);
-    expect(store.rideau()).toBe('ouvert');
   });
 
   it('garde le rideau fermé jusqu’à ce que la page montre la session chargée', () => {
@@ -135,7 +121,7 @@ describe('SceneStageStore', () => {
     loadAs.mockReturnValue(of(RESULT));
     store.sync('sess', 's1', []);
     store.load(S2, 'replace').subscribe();
-    vi.advanceTimersByTime(900 + 2900);
+    vi.advanceTimersByTime(1400 + 2900);
     expect(store.rideau()).toBe('ferme');
     vi.advanceTimersByTime(100 + 250);
     expect(store.rideau()).toBe('ouvert');

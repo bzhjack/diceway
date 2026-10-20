@@ -74,52 +74,13 @@ export function lieuTexte(lieu: string | null, region: string | null): string | 
   return parts.length ? parts.join(', ') : null;
 }
 
-const MOMENT_PHRASES: Record<SceneMoment, string> = {
-  aube: 'à l’aube',
-  jour: 'en plein jour',
-  crepuscule: 'au crépuscule',
-  nuit: 'à la nuit tombée',
-};
+/** Rythme du rideau en brasier, en millisecondes : la brûlure qui monte du bas de la scène, puis le titre seul. Avec
+ * moins d'animations, le noir tombe d'un coup et le titre reste `reduit` ms. */
+export const CARTON_RYTHME = {fondu: 1400, titre: 1300, reduit: 1400} as const;
 
-/** Ciel clair : rien à dire. */
-const METEO_PHRASES: Record<SceneMeteo, string | null> = {
-  clair: null,
-  couvert: 'sous un ciel de plomb',
-  pluie: 'sous la pluie',
-  brume: 'dans la brume',
-  vent: 'dans le grand vent',
-  orage: 'sous l’orage',
-  cendres: 'sous une pluie de cendres',
-};
-
-/** La phrase du chroniqueur qui ouvre une scène, d'après son moment et sa météo : « Au crépuscule, sous la pluie… » ;
- * `null` s'il n'y a rien à dire. */
-export function narration(moment: SceneMoment | null, meteo: SceneMeteo | null): string | null {
-  const parts = [moment ? MOMENT_PHRASES[moment] : null, meteo ? METEO_PHRASES[meteo] : null].filter((part): part is string => !!part);
-  if (!parts.length) {
-    return null;
-  }
-  const texte = parts.join(', ');
-  return texte.charAt(0).toUpperCase() + texte.slice(1) + '…';
-}
-
-/** Rythme du carton du chroniqueur, en millisecondes : le fondu au noir, une lettre de la phrase (une virgule marque
- * un temps), le silence avant le titre, puis le titre seul. Avec moins d'animations, tout s'affiche d'un coup et
- * reste `reduit` ms. */
-export const CARTON_RYTHME = {fondu: 900, lettre: 34, virgule: 220, avantTitre: 400, titre: 1600, reduit: 1400} as const;
-
-/** Délai d'une lettre de la phrase, une fois écrite : plus long après une virgule. */
-export function cartonDelai(lettre: string): number {
-  return lettre === ',' ? CARTON_RYTHME.virgule : CARTON_RYTHME.lettre;
-}
-
-/** Combien de temps le carton reste affiché une fois le fondu au noir terminé : la phrase qui s'écrit, puis le titre. */
-export function cartonTenue(phrase: string | null, reduit: boolean): number {
-  if (reduit) {
-    return CARTON_RYTHME.reduit;
-  }
-  const ecriture = phrase ? [...phrase].reduce((total, lettre) => total + cartonDelai(lettre), 0) + CARTON_RYTHME.avantTitre : 0;
-  return ecriture + CARTON_RYTHME.titre;
+/** Combien de temps le titre reste affiché une fois la scène brûlée. */
+export function cartonTenue(reduit: boolean): number {
+  return reduit ? CARTON_RYTHME.reduit : CARTON_RYTHME.titre;
 }
 
 const STATUT_LABELS: Record<ActeStatut, string | null> = {'en-cours': 'en cours', jouee: 'jouée', 'a-venir': null};

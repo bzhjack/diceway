@@ -9,7 +9,7 @@ import {RideauEtat, SceneActe, SceneCarton} from '../../models/theatre.model';
 import {SceneActionsService} from '../../scene-actions.service';
 import {scenesOf} from '../scene-list/scene.util';
 import {openSceneEditor} from './scene-editor-dialog/scene-editor-dialog';
-import {CARTON_RYTHME, cartonTenue, lieuTexte, narration, sceneActs} from './theatre.util';
+import {CARTON_RYTHME, cartonTenue, sceneActs} from './theatre.util';
 
 /** Pause, rideau fermé, avant qu'il ne se rouvre sur la nouvelle scène. */
 const RIDEAU_PAUSE_MS = 250;
@@ -190,13 +190,8 @@ export class SceneStageStore {
       this.busyState.set(true);
       const reduit = mouvementReduit();
       const durees = rideauDurees(reduit);
-      const carton: SceneCarton = {
-        titre: scene.titre,
-        narration: narration(scene.moment, scene.meteo),
-        lieu: lieuTexte(scene.lieu, this.regionNom(scene)),
-      };
-      this.cartonState.set(carton);
-      this.finCarton = Date.now() + durees.fermeture + cartonTenue(carton.narration, reduit);
+      this.cartonState.set({titre: scene.titre});
+      this.finCarton = Date.now() + durees.fermeture + cartonTenue(reduit);
       this.rideauState.set('ferme');
       return forkJoin([timer(durees.fermeture), this.sceneActions.loadAs(sessionId, scene, mode, false)]).pipe(
         map(([, result]) => result),

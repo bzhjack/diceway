@@ -1,25 +1,30 @@
-import {ChangeDetectionStrategy, Component, computed, effect, input, signal, untracked} from '@angular/core';
-import {RideauEtat, SceneCarton} from '../../models/theatre.model';
-import {CARTON_RYTHME, cartonDelai} from './theatre.util';
+import {ChangeDetectionStrategy, Component, DestroyRef, effect, ElementRef, inject, input, signal, untracked, viewChild} from '@angular/core';
+import {RideauBraises, RideauBrulure, RideauEtat, SceneCarton} from '../../models/theatre.model';
+import {animer, champDeBrulure, EASE, lancerBraises, peindreBrulure} from './rideau-brasier.util';
+import {CARTON_RYTHME} from './theatre.util';
 
-/** Le rideau du plateau, en carton de chroniqueur : pendant un changement de scène, un fondu au noir, puis une phrase
- * d'ambiance qui s'écrit lettre à lettre (« Au crépuscule, sous la pluie… »), le lieu et enfin le titre de la scène qui
- * arrive. Le store garde le rideau fermé jusqu'à la fin du carton (`cartonTenue`). Purement décoratif (`aria-hidden`) :
- * le cartouche annonce la nouvelle scène. */
+/** Largeur, en pixels, du calque de brûlure : peu, la flamme est étirée à l'écran et reste douce. */
+const BRULURE_LARGEUR = 520;
+/** Le titre s'efface un instant avant que la brûlure ne se lève. */
+const TITRE_EFFACE_MS = 300;
+/** La brûlure se lève, et la fumée avec elle, sur la nouvelle scène. */
+const OUVERTURE_MS = 1700;
+
+const attendre = (ms: number): Promise<void> => new Promise((fini) => setTimeout(fini, ms));
+
+/** Le rideau du plateau, en brasier : pendant un changement de scène, la scène brûle du bas vers le haut sous des
+ * braises, le titre de la scène qui arrive sort de la forge, puis la brûlure se lève dans la fumée sur la nouvelle
+ * scène. Le store garde le rideau fermé jusqu'à la fin du titre (`cartonTenue`). Purement décoratif (`aria-hidden`) : le
+ * cartouche annonce la nouvelle scène. */
 @Component({
   selector: 'bol-rideau',
   template: `
-    <span class="rdo-noir"></span>
+    <div #fumee class="rdo-fumee"></div>
+    <canvas #flamme class="rdo-flamme"></canvas>
+    <canvas #lueur class="rdo-lueur"></canvas>
+    <canvas #braises class="rdo-braises"></canvas>
     @if (carton(); as carton) {
-      <div class="rdo-carton">
-        @if (carton.narration) {
-          <p class="rdo-narration" [class.rdo-narration--ecrit]="ecrite()">{{ phrase() }}</p>
-        }
-        @if (carton.lieu) {
-          <p class="rdo-lieu" [class.rdo--visible]="ecrite()">{{ carton.lieu }}</p>
-        }
-        <p class="rdo-titre" [class.rdo--visible]="titreVisible()">{{ carton.titre }}</p>
-      </div>
+      <p class="rdo-titre" [class.rdo-titre--visible]="titreVisible()"><span>{{ carton.titre }}</span></p>
     }
   `,
   styles: `
@@ -37,111 +42,87 @@ import {CARTON_RYTHME, cartonDelai} from './theatre.util';
       pointer-events: auto;
     }
 
-    // Le noir : il descend lentement (fondu), et se lève un peu plus lentement encore sur la nouvelle scène.
-    .rdo-noir {
+    canvas,
+    .rdo-fumee {
       position: absolute;
       inset: 0;
-      background: radial-gradient(70% 60% at 50% 50%, #140c07, #030201);
-      opacity: 0;
-      transition: opacity 1.1s ease-out;
-    }
-
-    :host(.rdo--ferme) .rdo-noir {
-      opacity: 1;
-      transition: opacity 0.9s ease-in;
-    }
-
-    .rdo-carton {
-      position: relative;
-      display: grid;
-      justify-items: center;
-      gap: 0.9rem;
-      max-width: 52rem;
-      padding: 0 2rem;
-      text-align: center;
-      transition: opacity 0.35s;
-    }
-
-    :host(:not(.rdo--ferme)) .rdo-carton {
+      width: 100%;
+      height: 100%;
       opacity: 0;
     }
 
-    .rdo-narration {
-      margin: 0;
-      max-width: 34ch;
-      color: #d8c7a2;
-      font: italic 500 clamp(1.25rem, 2.6vw, 1.9rem) / 1.4 'Cormorant Garamond', Georgia, serif;
-
-      // Le curseur de la plume, tant que la phrase s'écrit.
-      &::after {
-        content: '';
-        display: inline-block;
-        width: 0.07em;
-        height: 1em;
-        margin-left: 0.08em;
-        vertical-align: -0.12em;
-        background: currentColor;
-        animation: rdo-curseur 0.9s steps(1) infinite;
-      }
+    .rdo-fumee {
+      z-index: 1;
+      inset: -15%;
+      width: auto;
+      height: auto;
+      background:
+        radial-gradient(40% 35% at 25% 75%, rgba(78, 66, 56, 0.95), transparent 70%),
+        radial-gradient(45% 40% at 70% 65%, rgba(64, 56, 50, 0.95), transparent 70%),
+        radial-gradient(50% 45% at 50% 35%, rgba(52, 46, 42, 0.9), transparent 70%),
+        radial-gradient(35% 30% at 85% 25%, rgba(70, 62, 56, 0.85), transparent 70%),
+        rgba(28, 24, 21, 0.85);
+      filter: blur(18px);
     }
 
-    .rdo-narration--ecrit::after {
-      content: none;
+    .rdo-flamme {
+      z-index: 2;
     }
 
-    @keyframes rdo-curseur {
-      50% {
-        opacity: 0;
-      }
+    .rdo-lueur {
+      z-index: 3;
+      filter: blur(10px) brightness(1.5);
+      mix-blend-mode: screen;
     }
 
-    .rdo-lieu {
-      margin: 0;
-      color: #9c8763;
-      font-size: clamp(0.72rem, 1.3vw, 0.85rem);
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      opacity: 0;
-      transition: opacity 0.8s ease;
+    .rdo-braises {
+      z-index: 5;
     }
 
-    // Le titre se resserre en apparaissant.
+    // Le titre sort de la forge : trop chaud et flou, il se pose en refroidissant.
     .rdo-titre {
+      position: relative;
+      z-index: 4;
       margin: 0;
-      color: var(--dw-color-legendary);
+      padding: 0 2rem;
+      max-width: 52rem;
       font-family: 'Muse Display Harmony', serif;
       font-size: clamp(2rem, 5vw, 3.8rem);
       line-height: 1.05;
-      letter-spacing: 0.4em;
+      text-align: center;
       text-wrap: balance;
-      text-shadow: 0 4px 20px #000;
-      opacity: 0;
-      transition:
-        opacity 1.1s ease,
-        letter-spacing 1.4s cubic-bezier(0.2, 0.7, 0.2, 1);
-    }
 
-    .rdo--visible {
-      opacity: 1;
-    }
-
-    .rdo-titre.rdo--visible {
-      letter-spacing: 0.02em;
-    }
-
-    // Moins d'animations : le noir tombe et se lève d'un coup, le carton s'affiche en entier.
-    @media (prefers-reduced-motion: reduce) {
-      .rdo-noir,
-      :host(.rdo--ferme) .rdo-noir,
-      .rdo-carton,
-      .rdo-lieu,
-      .rdo-titre {
-        transition: none;
+      span {
+        display: inline-block;
+        background: linear-gradient(180deg, #fff3c8 0%, #f2bb52 48%, #9a5412 100%);
+        background-clip: text;
+        color: transparent;
+        opacity: 0;
+        transform: scale(1.06);
+        filter: brightness(2.6) blur(5px) drop-shadow(0 0 18px rgba(255, 140, 40, 0.6));
+        transition:
+          opacity 0.7s ease,
+          transform 1s ease,
+          filter 1s ease;
       }
+    }
 
-      .rdo-narration::after {
-        content: none;
+    .rdo-titre--visible span {
+      opacity: 1;
+      transform: none;
+      filter: brightness(1) blur(0) drop-shadow(0 0 16px rgba(255, 120, 30, 0.45));
+    }
+
+    // Le titre s'éteint plus vite qu'il n'est apparu.
+    :host(:not(.rdo--ferme)) .rdo-titre span {
+      transition-duration: 0.35s;
+    }
+
+    // Moins d'animations : le noir tombe et se lève d'un coup, le titre s'affiche en entier.
+    @media (prefers-reduced-motion: reduce) {
+      .rdo-titre span,
+      :host(:not(.rdo--ferme)) .rdo-titre span {
+        transition: none;
       }
     }
   `,
@@ -155,42 +136,136 @@ export class RideauComponent {
   readonly etat = input.required<RideauEtat>();
   readonly carton = input<SceneCarton | null>(null);
 
-  /** Nombre de lettres de la phrase déjà écrites. */
-  private readonly lettres = signal(0);
+  private readonly hote = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly fumee = viewChild.required<ElementRef<HTMLElement>>('fumee');
+  private readonly flamme = viewChild.required<ElementRef<HTMLCanvasElement>>('flamme');
+  private readonly lueur = viewChild.required<ElementRef<HTMLCanvasElement>>('lueur');
+  private readonly braises = viewChild.required<ElementRef<HTMLCanvasElement>>('braises');
+
   protected readonly titreVisible = signal(false);
 
-  protected readonly phrase = computed(() => (this.carton()?.narration ?? '').slice(0, this.lettres()));
-  protected readonly ecrite = computed(() => this.lettres() >= (this.carton()?.narration ?? '').length);
+  private feu: RideauBraises | null = null;
+  /** Le rideau s'est fermé au moins une fois : seule sa réouverture a quelque chose à lever. */
+  private brule = false;
 
   constructor() {
-    // À chaque fermeture, le carton repart de zéro : la phrase s'écrit une fois le noir tombé, puis le titre paraît.
-    // À la réouverture, il reste tel quel le temps de s'effacer.
+    inject(DestroyRef).onDestroy(() => this.feu?.stop());
+    // Chaque changement d'état relance l'animation de zéro ; si l'état change en cours de route, `annule` arrête l'ancienne.
     effect((onCleanup) => {
-      if (this.etat() !== 'ferme') {
-        return;
-      }
-      const phrase = this.carton()?.narration ?? '';
-      const reduit = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const etat = this.etat();
+      let annule = false;
+      onCleanup(() => (annule = true));
       untracked(() => {
-        this.lettres.set(reduit ? phrase.length : 0);
-        this.titreVisible.set(reduit);
-      });
-      if (reduit) {
-        return;
-      }
-      let minuteur = setTimeout(ecrire, CARTON_RYTHME.fondu);
-      const lettres = this.lettres;
-      const titreVisible = this.titreVisible;
-      function ecrire(): void {
-        const n = lettres() + 1;
-        if (n > phrase.length) {
-          minuteur = setTimeout(() => titreVisible.set(true), phrase ? CARTON_RYTHME.avantTitre : 0);
-          return;
+        if (etat === 'ferme') {
+          void this.fermer(() => annule);
+        } else if (this.brule) {
+          void this.ouvrir(() => annule);
         }
-        lettres.set(n);
-        minuteur = setTimeout(ecrire, cartonDelai(phrase[n - 1]));
-      }
-      onCleanup(() => clearTimeout(minuteur));
+      });
     });
+  }
+
+  private reduit(): boolean {
+    return typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  /** La scène brûle de bas en haut (`CARTON_RYTHME.fondu`), puis le titre sort de la forge. */
+  private async fermer(annule: () => boolean): Promise<void> {
+    this.brule = true;
+    this.feu?.stop();
+    this.titreVisible.set(false);
+    const brulure = this.preparer();
+    const flamme = this.flamme().nativeElement;
+    const lueur = this.lueur().nativeElement;
+    this.fumee().nativeElement.style.opacity = '0';
+    flamme.style.opacity = '1';
+    lueur.style.opacity = '0.8';
+    if (!brulure || this.reduit()) {
+      if (brulure) {
+        peindreBrulure(brulure, 2);
+      }
+      this.titreVisible.set(true);
+      return;
+    }
+    const feu = lancerBraises(this.braises().nativeElement, this.hote.nativeElement.clientWidth, this.hote.nativeElement.clientHeight);
+    this.feu = feu;
+    this.braises().nativeElement.style.opacity = '1';
+    await animer(
+      CARTON_RYTHME.fondu,
+      (t) => {
+        const seuil = -0.08 + t * 1.2;
+        peindreBrulure(brulure, seuil);
+        feu.front = 1 - (seuil - 0.12) / 0.62;
+      },
+      EASE.lineaire,
+      annule,
+    );
+    if (annule()) {
+      return;
+    }
+    peindreBrulure(brulure, 2);
+    feu.front = 1;
+    feu.rate = 55;
+    await attendre(30);
+    if (!annule()) {
+      this.titreVisible.set(true);
+    }
+  }
+
+  /** Le titre s'éteint, puis la brûlure se lève dans la fumée sur la nouvelle scène. */
+  private async ouvrir(annule: () => boolean): Promise<void> {
+    this.brule = false;
+    const flamme = this.flamme().nativeElement;
+    const lueur = this.lueur().nativeElement;
+    const fumee = this.fumee().nativeElement;
+    const feu = this.feu;
+    this.titreVisible.set(false);
+    if (this.reduit() || !feu) {
+      flamme.style.opacity = lueur.style.opacity = '0';
+      feu?.stop();
+      return;
+    }
+    await attendre(TITRE_EFFACE_MS);
+    if (annule()) {
+      return;
+    }
+    fumee.style.opacity = '1';
+    await animer(
+      OUVERTURE_MS,
+      (t) => {
+        const k = 1 - Math.min(1, t * 1.7);
+        flamme.style.opacity = String(k);
+        lueur.style.opacity = String(0.8 * k);
+        fumee.style.opacity = String(1 - t);
+        fumee.style.transform = `translateY(${-12 * t}%) scale(${1 + 0.2 * t})`;
+        feu.alpha = 1 - t;
+        feu.rate = 55 * (1 - t);
+      },
+      EASE.sortie,
+      annule,
+    );
+    if (!annule()) {
+      feu.stop();
+      fumee.style.transform = '';
+    }
+  }
+
+  /** Dimensionne les calques sur l'écran et repart d'un champ de brûlure neuf, scène intacte. */
+  private preparer(): RideauBrulure | null {
+    const hote = this.hote.nativeElement;
+    const largeur = BRULURE_LARGEUR;
+    const hauteur = Math.max(40, Math.round((largeur * hote.clientHeight) / Math.max(1, hote.clientWidth)));
+    const flamme = this.flamme().nativeElement;
+    const lueur = this.lueur().nativeElement;
+    flamme.width = lueur.width = largeur;
+    flamme.height = lueur.height = hauteur;
+    const fc = flamme.getContext('2d');
+    const lc = lueur.getContext('2d');
+    if (!fc || !lc) {
+      return null;
+    }
+    const brulure = {champ: champDeBrulure(largeur, hauteur), largeur, hauteur, image: fc.createImageData(largeur, hauteur), flamme: fc, lueur: lc};
+    peindreBrulure(brulure, -1);
+    return brulure;
   }
 }
