@@ -92,6 +92,8 @@ export class SceneStageStore {
   private attente: {readonly pause: number; readonly garde: Subscription} | null = null;
   /** Quand le carton aura fini de s'afficher (`Date.now()`) : le rideau ne se rouvre pas avant. */
   private finCarton = 0;
+  /** L'annonce de la scène chargée, faite à la réouverture du rideau (pas par-dessus le carton). */
+  private annonce: (() => void) | null = null;
 
   /** Session chargée par la page : sa scène courante et ses scènes jouées. Les scènes sont rechargées au
    * premier appel, ou si la scène courante n'est pas connue (créée depuis la réserve ou la barre de commande). */
@@ -196,11 +198,14 @@ export class SceneStageStore {
       this.cartonState.set(carton);
       this.finCarton = Date.now() + durees.fermeture + cartonTenue(carton.narration, reduit);
       this.rideauState.set('ferme');
-      return forkJoin([timer(durees.fermeture), this.sceneActions.loadAs(sessionId, scene, mode)]).pipe(
+      return forkJoin([timer(durees.fermeture), this.sceneActions.loadAs(sessionId, scene, mode, false)]).pipe(
         map(([, result]) => result),
         tap({
           // Avant que l'appelant ne reçoive le résultat : la page qui pose la session appellera `sync` ensuite.
-          next: () => this.attendreLaSession(durees.pause),
+          next: (result) => {
+            this.annonce = () => this.sceneActions.announceLoad(scene.titre, result);
+            this.attendreLaSession(durees.pause);
+          },
           error: () => this.rouvrir(durees.pause, false),
         }),
         finalize(() => this.busyState.set(false)),
@@ -220,6 +225,10 @@ export class SceneStageStore {
   /** Rouvre le rideau après la pause, et, sauf erreur (`apresCarton` faux), pas avant la fin du carton. */
   private rouvrir(pause: number, apresCarton = true): void {
     const reste = apresCarton ? this.finCarton - Date.now() : 0;
-    timer(Math.max(pause, reste)).subscribe(() => this.rideauState.set('ouvert'));
+    timer(Math.max(pause, reste)).subscribe(() => {
+      this.rideauState.set('ouvert');
+      this.annonce?.();
+      this.annonce = null;
+    });
   }
 }

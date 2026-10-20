@@ -35,18 +35,20 @@ const RESULT = {session: {id: 'sess', titre: null, statut: 'libre'}, ignored: 0}
 describe('SceneStageStore', () => {
   let store: SceneStageStore;
   const loadAs = vi.fn();
+  const announceLoad = vi.fn();
   const open = vi.fn();
 
   beforeEach(() => {
     vi.useFakeTimers();
     loadAs.mockReset();
+    announceLoad.mockReset();
     TestBed.configureTestingModule({
       providers: [
         SceneStageStore,
         {provide: BolSceneService, useValue: {scenes: () => of(SCENES)}},
         {provide: BolScenarioService, useValue: {scenarios: () => of([{id: 'sc1', titre: 'Le Sceau d’Ambre'}])}},
         {provide: BolCatalogService, useValue: {regions: () => of([{id: 5, region: 'Jungle de Qo et jungle de Qush'}])}},
-        {provide: SceneActionsService, useValue: {loadAs}},
+        {provide: SceneActionsService, useValue: {loadAs, announceLoad}},
         {provide: MatDialog, useValue: {open}},
       ],
     });
@@ -95,9 +97,13 @@ describe('SceneStageStore', () => {
     // Sans phrase, le carton ne montre que le titre : 1,6 s après le fondu.
     vi.advanceTimersByTime(1599);
     expect(store.rideau()).toBe('ferme');
+    expect(announceLoad).not.toHaveBeenCalled();
     vi.advanceTimersByTime(1);
     expect(store.rideau()).toBe('ouvert');
     expect(store.busy()).toBe(false);
+    // Le chargement est annoncé à la réouverture, pas par-dessus le carton.
+    expect(loadAs).toHaveBeenCalledWith('sess', S2, 'replace', false);
+    expect(announceLoad).toHaveBeenCalledWith(S2.titre, RESULT);
   });
 
   it('écrit le carton d’après le moment, la météo et le lieu de la scène, et le tient le temps de l’écrire', () => {
@@ -180,6 +186,7 @@ describe('SceneStageStore', () => {
     store.load(S2, 'replace').subscribe({error: () => undefined});
     vi.advanceTimersByTime(1000);
     expect(store.rideau()).toBe('ouvert');
+    expect(announceLoad).not.toHaveBeenCalled();
     expect(store.busy()).toBe(false);
   });
 });
