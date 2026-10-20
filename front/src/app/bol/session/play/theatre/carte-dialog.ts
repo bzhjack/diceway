@@ -1,5 +1,5 @@
 import {NgOptimizedImage} from '@angular/common';
-import {afterNextRender, ChangeDetectionStrategy, Component, computed, ElementRef, inject, Injector, signal, viewChild} from '@angular/core';
+import {afterNextRender, ChangeDetectionStrategy, Component, ElementRef, inject, viewChild} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogModule} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
@@ -7,15 +7,14 @@ import {CARTE_HD, positionSurCarteHd} from '../../../shared/region/region-map-co
 import {CarteDialogData} from '../../models/carte-dialog.model';
 
 /** La carte de Lémurie (HD, avec son cadre), ouverte depuis le lieu du cartouche : la région de la scène y est cerclée, le reste un
- * peu assombri. D'abord en vue d'ensemble (toute la carte dans la fenêtre) ; « Agrandir » la montre en taille réelle, centrée sur la
- * région, à faire défiler. */
+ * peu assombri. Elle s'ouvre en taille réelle, centrée sur la région, à faire défiler. */
 @Component({
   selector: 'bol-carte-dialog',
   imports: [NgOptimizedImage, MatButtonModule, MatDialogModule, MatIconModule],
   template: `
     <h2 mat-dialog-title>Carte de Lémurie</h2>
     <mat-dialog-content class="crt-content">
-      <div #vue class="crt-vue" [class.crt-vue--zoom]="zoom()">
+      <div #vue class="crt-vue">
         <div class="crt-carte" [style.--crt-x]="position.x + '%'" [style.--crt-y]="position.y + '%'">
           <img class="crt-image" [ngSrc]="carte.url" [width]="carte.largeur" [height]="carte.hauteur" [alt]="alt" />
           <span class="crt-repere" aria-hidden="true" [style.left.%]="position.x" [style.top.%]="position.y">
@@ -26,10 +25,6 @@ import {CarteDialogData} from '../../models/carte-dialog.model';
     </mat-dialog-content>
     <mat-dialog-actions class="crt-actions">
       <p class="crt-lieu"><mat-icon aria-hidden="true">place</mat-icon>{{ data.lieu }}</p>
-      <button mat-stroked-button type="button" class="crt-zoom" (click)="basculerZoom()">
-        <mat-icon>{{ zoomIcone() }}</mat-icon>
-        {{ zoomLibelle() }}
-      </button>
       <button mat-flat-button type="button" mat-dialog-close>Fermer</button>
     </mat-dialog-actions>
   `,
@@ -48,34 +43,21 @@ import {CarteDialogData} from '../../models/carte-dialog.model';
       max-height: none;
     }
 
-    // Vue d'ensemble : toute la carte, aussi grande que la fenêtre le permet.
+    // La carte en taille réelle, à faire défiler.
     .crt-vue {
-      width: min(calc(var(--crt-hauteur) * 1248 / 1741), 1248px, calc(96vw - 3rem));
-      aspect-ratio: 1248 / 1741;
-      overflow: hidden;
-      border-radius: 4px;
-      background: #000;
-    }
-
-    // Agrandie : la carte en taille réelle, à faire défiler.
-    .crt-vue--zoom {
       width: min(1248px, calc(96vw - 3rem));
       height: min(1741px, var(--crt-hauteur));
-      aspect-ratio: auto;
       overflow: auto;
+      border-radius: 4px;
+      background: #000;
       scrollbar-width: thin;
       scrollbar-color: rgba(217, 164, 65, 0.35) transparent;
-
-      .crt-carte {
-        width: 1248px;
-        height: 1741px;
-      }
     }
 
     .crt-carte {
       position: relative;
-      width: 100%;
-      height: 100%;
+      width: 1248px;
+      height: 1741px;
 
       // Le reste de la carte un peu assombri : la région de la scène ressort.
       &::after {
@@ -152,32 +134,21 @@ import {CarteDialogData} from '../../models/carte-dialog.model';
 })
 export class CarteDialogComponent {
   protected readonly data = inject<CarteDialogData>(MAT_DIALOG_DATA);
-  private readonly injector = inject(Injector);
   private readonly vue = viewChild.required<ElementRef<HTMLElement>>('vue');
 
   protected readonly carte = CARTE_HD;
   protected readonly position = positionSurCarteHd(this.data.point);
   protected readonly alt = `Carte de Lémurie, où un cercle marque le lieu de la scène : ${this.data.lieu}`;
-  protected readonly zoom = signal(false);
-  protected readonly zoomIcone = computed(() => (this.zoom() ? 'zoom_out_map' : 'zoom_in'));
-  protected readonly zoomLibelle = computed(() => (this.zoom() ? 'Vue d’ensemble' : 'Agrandir'));
 
-  /** Agrandie, la carte défile d'emblée jusqu'à la région, au milieu de la vue. */
-  protected basculerZoom(): void {
-    this.zoom.update((zoom) => !zoom);
-    if (!this.zoom()) {
-      return;
-    }
-    afterNextRender(
-      {
-        write: () => {
-          const vue = this.vue().nativeElement;
-          vue.scrollLeft = (this.position.x / 100) * CARTE_HD.largeur - vue.clientWidth / 2;
-          vue.scrollTop = (this.position.y / 100) * CARTE_HD.hauteur - vue.clientHeight / 2;
-        },
+  constructor() {
+    // La carte défile d'emblée jusqu'à la région, au milieu de la vue.
+    afterNextRender({
+      write: () => {
+        const vue = this.vue().nativeElement;
+        vue.scrollLeft = (this.position.x / 100) * CARTE_HD.largeur - vue.clientWidth / 2;
+        vue.scrollTop = (this.position.y / 100) * CARTE_HD.hauteur - vue.clientHeight / 2;
       },
-      {injector: this.injector},
-    );
+    });
   }
 }
 

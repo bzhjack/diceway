@@ -22,19 +22,9 @@ describe('CarteDialogComponent', () => {
     expect(parseFloat(repere.style.top)).toBeCloseTo(56.789, 2);
   });
 
-  it('s’agrandit et revient à la vue d’ensemble', async () => {
+  it('s’ouvre en taille réelle, sans bouton pour agrandir', async () => {
     const element = await rendre();
-    const zoom = element.querySelector<HTMLButtonElement>('button.crt-zoom')!;
-    expect(zoom.textContent).toContain('Agrandir');
-
-    zoom.click();
-    await fixture.whenStable();
-    expect(zoom.textContent).toContain('Vue d’ensemble');
-    expect(element.querySelector('.crt-vue')?.classList).toContain('crt-vue--zoom');
-
-    zoom.click();
-    await fixture.whenStable();
-    expect(zoom.textContent).toContain('Agrandir');
-    expect(element.querySelector('.crt-vue')?.classList).not.toContain('crt-vue--zoom');
+    expect(element.querySelector('button.crt-zoom')).toBeNull();
+    expect(element.textContent).not.toContain('Agrandir');
   });
 });
