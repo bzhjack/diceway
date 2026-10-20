@@ -34,5 +34,5 @@ export class TheatreComponent {
   readonly changed = output<void>();
   readonly coulissesRequested = output<void>();
 
-  protected readonly regionNom = computed(() => this.store.regionNom(this.store.currentScene()));
+  protected readonly regionNom = computed(() => this.store.regionNom(this.store.displayedScene()));
 }

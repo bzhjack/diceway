@@ -118,6 +118,22 @@ describe('SceneStageStore', () => {
     expect(store.rideau()).toBe('ouvert');
   });
 
+  it('laisse le plateau vierge quand la frise montre un autre scénario que celui de la scène courante', () => {
+    store.sync('sess', 's2', []);
+    expect(store.displayedScene()?.id).toBe('s2');
+    store.selectScenario(null);
+    expect(store.displayedScene()).toBeNull();
+    expect(store.currentActe()).toBeNull();
+    store.selectScenario('sc1');
+    expect(store.displayedScene()?.id).toBe('s2');
+  });
+
+  it('montre une scène sans scénario dans la frise « Sans scénario »', () => {
+    store.sync('sess', 'libre', []);
+    expect(store.scenarioId()).toBeNull();
+    expect(store.displayedScene()?.id).toBe('libre');
+  });
+
   it('donne les scènes sœurs du scénario de la scène, même si la frise en montre un autre', () => {
     store.sync('sess', 's2', []);
     store.selectScenario(null);

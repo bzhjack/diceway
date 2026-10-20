@@ -4,6 +4,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {BolSceneLoadResult} from '../../../models/bol-scene.model';
 import {CombatSelectionService} from '../../../services/combat-selection.service';
 import {SceneActe} from '../../models/theatre.model';
+import {DwScrollerComponent} from '../../../../shared/dw-scroller/dw-scroller';
 import {SceneApercuMenuComponent} from './scene-apercu-menu';
 import {SceneStageStore} from './scene-stage.store';
 import {acteLabel} from './theatre.util';
@@ -13,7 +14,7 @@ import {acteLabel} from './theatre.util';
  * le menu d'aperçu de la scène (`bol-scene-apercu-menu`). Signale à la page (`sceneChanged`) chaque scène chargée. */
 @Component({
   selector: 'bol-scene-acts',
-  imports: [MatIconModule, MatMenuModule, SceneApercuMenuComponent],
+  imports: [DwScrollerComponent, MatIconModule, MatMenuModule, SceneApercuMenuComponent],
   template: `
     <div class="sca-titre">
       <span class="sca-sur">{{ sessionTitre() || 'Session' }}</span>
@@ -24,7 +25,7 @@ import {acteLabel} from './theatre.util';
         </button>
       </h1>
     </div>
-    <mat-menu #scenarios="matMenu">
+    <mat-menu #scenarios="matMenu" class="thr-scenarios-menu">
       <button mat-menu-item type="button" (click)="store.selectScenario(null)">Sans scénario</button>
       @for (scenario of sortedScenarios(); track scenario.id) {
         <button mat-menu-item type="button" (click)="store.selectScenario(scenario.id)">{{ scenario.titre }}</button>
@@ -32,36 +33,38 @@ import {acteLabel} from './theatre.util';
     </mat-menu>
 
     <nav #nav class="sca-nav" aria-label="Scènes du scénario">
-      <ol class="sca-actes">
-        @for (acte of store.acts(); track acte.scene.id) {
-          <li class="sca-li">
-            <button
-              type="button"
-              class="sca-acte"
-              [class.sca-acte--en-cours]="acte.statut === 'en-cours'"
-              [class.sca-acte--jouee]="acte.statut === 'jouee'"
-              [attr.aria-current]="acte.statut === 'en-cours' ? 'step' : null"
-              [attr.aria-label]="label(acte)"
-              [attr.aria-disabled]="store.busy() ? 'true' : null"
-              [matMenuTriggerFor]="apercu.menu()"
-              [matMenuTriggerData]="{acte}"
-            >
-              <span class="sca-num" aria-hidden="true">
-                @if (acte.statut === 'jouee') {
-                  <mat-icon>check</mat-icon>
-                } @else {
-                  {{ acte.numero }}
+      <dw-scroller class="sca-scroller" label="Scènes du scénario">
+        <ol class="sca-actes">
+          @for (acte of store.acts(); track acte.scene.id) {
+            <li class="sca-li">
+              <button
+                type="button"
+                class="sca-acte"
+                [class.sca-acte--en-cours]="acte.statut === 'en-cours'"
+                [class.sca-acte--jouee]="acte.statut === 'jouee'"
+                [attr.aria-current]="acte.statut === 'en-cours' ? 'step' : null"
+                [attr.aria-label]="label(acte)"
+                [attr.aria-disabled]="store.busy() ? 'true' : null"
+                [matMenuTriggerFor]="apercu.menu()"
+                [matMenuTriggerData]="{acte}"
+              >
+                <span class="sca-num" aria-hidden="true">
+                  @if (acte.statut === 'jouee') {
+                    <mat-icon>check</mat-icon>
+                  } @else {
+                    {{ acte.numero }}
+                  }
+                </span>
+                @if (acte.statut === 'en-cours') {
+                  <span class="sca-acte-titre" aria-hidden="true">{{ acte.scene.titre }}</span>
                 }
-              </span>
-              @if (acte.statut === 'en-cours') {
-                <span class="sca-acte-titre" aria-hidden="true">{{ acte.scene.titre }}</span>
-              }
-            </button>
-          </li>
-        } @empty {
-          <li class="sca-vide">Aucune scène dans ce scénario.</li>
-        }
-      </ol>
+              </button>
+            </li>
+          } @empty {
+            <li class="sca-vide">Aucune scène dans ce scénario.</li>
+          }
+        </ol>
+      </dw-scroller>
     </nav>
 
     <bol-scene-apercu-menu #apercu="apercuMenu" (sceneChanged)="sceneChanged.emit($event)" />
@@ -139,19 +142,23 @@ import {acteLabel} from './theatre.util';
       white-space: nowrap;
     }
 
-    // La frise : centrée, défile si elle déborde (les marges automatiques centrent sans rogner).
+    // La frise : centrée ; si elle déborde, elle défile avec un chevron de chaque côté (les marges automatiques
+    // centrent sans rogner).
     .sca-nav {
       flex: 1;
       min-width: 0;
       display: flex;
-      overflow-x: auto;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(217, 164, 65, 0.35) transparent;
+    }
+
+    .sca-scroller {
+      flex: 1;
+      min-width: 0;
     }
 
     .sca-actes {
       display: flex;
       align-items: center;
+      width: max-content;
       margin: 0 auto;
       padding: 0.2rem 0.1rem;
       list-style: none;
@@ -302,14 +309,15 @@ export class SceneActsComponent {
       if (!this.acteEnCours()) {
         return;
       }
-      const nav = this.nav().nativeElement;
-      const acte = nav.querySelector<HTMLElement>('.sca-acte--en-cours');
-      if (!acte || nav.scrollWidth <= nav.clientWidth) {
+      // La piste du défileur (`dw-scroller`) est l'élément qui défile.
+      const piste = this.nav().nativeElement.querySelector<HTMLElement>('.dws-track');
+      const acte = piste?.querySelector<HTMLElement>('.sca-acte--en-cours');
+      if (!piste || !acte || piste.scrollWidth <= piste.clientWidth) {
         return;
       }
-      const navRect = nav.getBoundingClientRect();
+      const pisteRect = piste.getBoundingClientRect();
       const acteRect = acte.getBoundingClientRect();
-      nav.scrollLeft += acteRect.left - navRect.left - (navRect.width - acteRect.width) / 2;
+      piste.scrollLeft += acteRect.left - pisteRect.left - (pisteRect.width - acteRect.width) / 2;
     });
   }
 

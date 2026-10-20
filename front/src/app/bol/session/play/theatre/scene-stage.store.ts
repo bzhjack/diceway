@@ -65,6 +65,17 @@ export class SceneStageStore {
     sceneActs(this.scenes(), this.scenarioId(), this.knownScenarioIds(), this.currentSceneId(), this.played()),
   );
   readonly currentScene = computed(() => this.scenes().find((s) => s.id === this.currentSceneId()) ?? null);
+  /** La scène montrée sur le plateau : la scène courante, si elle appartient au scénario affiché dans la frise. Après un
+   * changement de scénario, le plateau reste vierge tant qu'aucune de ses scènes n'est chargée ; revenir au scénario de
+   * la scène courante la remontre. */
+  readonly displayedScene = computed(() => {
+    const scene = this.currentScene();
+    if (!scene) {
+      return null;
+    }
+    const scenarioId = scene.scenario_id && this.knownScenarioIds().has(scene.scenario_id) ? scene.scenario_id : null;
+    return scenarioId === this.scenarioId() ? scene : null;
+  });
   /** L'acte en cours, s'il est dans la frise affichée. */
   readonly currentActe = computed(() => this.acts().find((a) => a.statut === 'en-cours') ?? null);
 
