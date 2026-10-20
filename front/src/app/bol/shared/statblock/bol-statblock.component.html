@@ -3,7 +3,9 @@
   <header class="bs-head">
     <div class="bs-portrait">
       @if (hasAvatar()) {
-        <img class="bs-portrait-img" [src]="imageSrc()" alt="" (error)="onAvatarError()" />
+        <button type="button" class="bs-portrait-zoom" [attr.aria-label]="'Voir le portrait de ' + displayName()" (click)="openPortrait()">
+          <img class="bs-portrait-img" [src]="imageSrc()" alt="" (error)="onAvatarError()" />
+        </button>
       } @else {
         <mat-icon>{{ kindIcon() }}</mat-icon>
       }

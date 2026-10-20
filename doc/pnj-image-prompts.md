@@ -55,7 +55,7 @@ leur univers (voir leur prompt) tout en gardant la même facture.
 
 ### 2 — Barbare tribal
 
-> Un barbare tribal massif, cheveux longs emmêlés, peintures de guerre sur le visage et la poitrine, cicatrices, fourrures et cuir sur les épaules, la lame d'une grande épée à deux mains dressée derrière la tête. Armure légère de cuir et d'os. Expression féroce, mâchoire serrée. Fond de jungle sombre et brume.
+> Un barbare tribal massif à la peau claire et hâlée de rousseur, cheveux longs roux-blond emmêlés et barbe tressée, yeux bleu clair, peintures de guerre bleues sur le visage et la poitrine, cicatrices, fourrures et cuir sur les épaules, la lame d'une grande épée à deux mains dressée derrière la tête. Armure légère de cuir et d'os. Expression féroce, mâchoire serrée. Fond de jungle sombre et brume.
 
 ### 3 — Assassin halakhi
 
@@ -63,11 +63,11 @@ leur univers (voir leur prompt) tout en gardant la même facture.
 
 ### 4 — Champion gladiateur
 
-> Un champion gladiateur de l'arène, athlétique et marqué de cicatrices de combats contre des hommes et des bêtes, casque ouvert, épée à la main et bouclier rond levé devant l'épaule. Armure moyenne de plates et de cuir, épaulière ouvragée. Sourire de défi, sable de l'arène et poussière dorée en arrière-plan, foule floue dans l'ombre.
+> Un champion gladiateur de l'arène, homme noir athlétique à la tête rasée et au visage lisse, marqué de cicatrices de combats contre des hommes et des bêtes, casque ouvert, épée à la main et bouclier rond levé devant l'épaule. Armure moyenne de plates et de cuir, épaulière ouvragée. Regard calme et dur, sans sourire, sable de l'arène et poussière dorée en arrière-plan, foule floue dans l'ombre.
 
 ### 5 — Chef de bande
 
-> Le chef d'une bande de voyous des ruelles : homme rusé au visage anguleux, sourire en coin et dent en or, balafre à la joue, un gourdin cloué sur l'épaule et une dague glissée à la ceinture. Aucune armure, veste de cuir usée et foulard. Ruelle étroite et sombre éclairée par une lanterne, ombres de complices en arrière-plan très flou.
+> Le chef d'une bande de voyous des ruelles : homme maigre au teint cireux, visage étroit et nez long, cheveux grisonnants plaqués en arrière, regard fuyant et rusé, dent en or, balafre à la joue, un gourdin cloué sur l'épaule et une dague glissée à la ceinture. Aucune armure, veste de cuir usée et foulard. Ruelle étroite et sombre éclairée par une lanterne, ombres de complices en arrière-plan très flou.
 
 ### 6 — Druide jaune d'Oomis
 
@@ -83,7 +83,7 @@ leur univers (voir leur prompt) tout en gardant la même facture.
 
 ### 9 — Matelot de Parsool
 
-> Un vétéran de la marine de Parsool, quadragénaire robuste, peau tannée par le sel et le soleil, foulard noué sur la tête, cicatrices, sabre à la main et dague à la ceinture. Aucune armure, chemise ouverte et gilet de cuir. Sourire de conteur de batailles. Pont de navire, cordages et voile en arrière-plan, lanterne de bord.
+> Un vétéran de la marine de Parsool, sexagénaire trapu, visage rond et large, crâne dégarni sous un foulard noué sur la tête, favoris et barbe blancs, rides profondes, peau tannée par le sel et le soleil, un œil plissé, sabre à la main et dague à la ceinture. Aucune armure, chemise ouverte et gilet de cuir. Air de vieux loup de mer bougon. Pont de navire, cordages et voile en arrière-plan, lanterne de bord.
 
 ### 10 — Pilote de nef volante de Satarla
 
@@ -130,24 +130,24 @@ carrées de 512×512, puis réduites à 400×400. 1024×1024 n'est pas un multip
 
 À coller en tête de chaque planche, à la place du bloc « Consignes communes » :
 
-> Planche de portraits illustrés : une image paysage 3:2 (1536×1024) découpée en une grille de 3 colonnes × 2 lignes de portraits carrés de taille identique, accolés sans marge, sans bordure, sans cadre ni séparateur visible (chaque portrait remplit sa case jusqu'au bord, et rien ne déborde sur la case voisine). Même style pour tous : pulp sword & sorcery peint et encré façon comics fantasy des années 1980 (Frank Frazetta, Boris Vallejo), contours d'encrage visibles, fort contraste, ombres profondes. Chaque portrait montre un seul personnage en buste (de la tête à la poitrine), visage lisible et centré dans sa case, tête entière dans le cadre, contre-plongée légère. Fonds sombres, flous et peu chargés, sans autre personnage. Dominante vert émeraude sombre / teal, contrastée par la lumière chaude et orangée d'une torche ou d'une lanterne sur un côté du visage. Aucun texte, légende, numéro, logo ni watermark.
+> Planche de portraits illustrés : une image paysage 3:2 (1536×1024) découpée en une grille de 3 colonnes × 2 lignes de portraits carrés de taille identique, accolés sans marge, sans bordure, sans cadre ni séparateur visible (chaque portrait remplit sa case jusqu'au bord, et rien ne déborde sur la case voisine). Même style pour tous : pulp sword & sorcery peint et encré façon comics fantasy des années 1980 (Frank Frazetta, Boris Vallejo), contours d'encrage visibles, fort contraste, ombres profondes. Chaque portrait montre un seul personnage en buste (de la tête à la poitrine), visage lisible et centré dans sa case, tête entière dans le cadre, contre-plongée légère. Fonds sombres, flous et peu chargés, sans autre personnage. Dominante vert émeraude sombre / teal, contrastée par la lumière chaude et orangée d'une torche ou d'une lanterne sur un côté du visage. Aucun texte, légende, numéro, logo ni watermark. Visages TRÈS différents d'un portrait à l'autre : chaque personnage a ses propres traits (forme du visage, nez, âge, carnation, couleur et coupe des cheveux, pilosité) et sa propre expression ; ne jamais répéter le même visage ni le même sourire, éviter le « beau gosse basané à barbe de trois jours » par défaut.
 >
 > Les six personnages, dans l'ordre (ligne du haut de gauche à droite, puis ligne du bas de gauche à droite) :
 
 ### Planche A — coriaces 1 à 6
 
 > 1. Archer de Tyrus : homme d'âge mûr, barbe courte, regard concentré, bandant un arc long orné vers le spectateur, carquois à l'épaule, armure légère de cuir clouté, manteau bleu de Tyrus.
-> 2. Barbare tribal : colosse aux longs cheveux emmêlés, peintures de guerre, cicatrices, fourrures et cuir, une grande épée à deux mains dressée derrière la tête, expression féroce.
+> 2. Barbare tribal : colosse à la peau claire, longs cheveux roux-blond emmêlés, barbe tressée, yeux bleu clair, peintures de guerre bleues, cicatrices, fourrures et cuir, une grande épée à deux mains dressée derrière la tête, expression féroce.
 > 3. Assassin halakhi : mince et silencieux, capuche et foulard sombres ne laissant voir que les yeux, un kriss à lame ondulée tenu bas, couteaux de lancer à la bandoulière, dans l'ombre.
-> 4. Champion gladiateur : athlétique, cicatrisé, casque ouvert, épée en main et bouclier rond levé, armure moyenne de plates et de cuir, sourire de défi, sable et poussière dorée derrière lui.
-> 5. Chef de bande : visage anguleux et rusé, sourire en coin avec une dent en or, balafre à la joue, gourdin cloué sur l'épaule, dague à la ceinture, veste de cuir usée, ruelle sombre.
+> 4. Champion gladiateur : homme noir athlétique à la tête rasée et au visage lisse, cicatrisé, casque ouvert, épée en main et bouclier rond levé, armure moyenne de plates et de cuir, regard calme et dur sans sourire, sable et poussière dorée derrière lui.
+> 5. Chef de bande : homme maigre au teint cireux, visage étroit, nez long, cheveux grisonnants plaqués en arrière, regard fuyant et rusé, dent en or, balafre à la joue, gourdin cloué sur l'épaule, dague à la ceinture, veste de cuir usée, ruelle sombre.
 > 6. Druide jaune d'Oomis : homme maigre aux yeux écarquillés, barbe emmêlée, robe jaune safran en lambeaux, feuillages et ossements dans les cheveux, coutelas de bronze, sourire dément, forêt brumeuse verdâtre.
 
 ### Planche B — coriaces 7 à 12
 
 > 1. Garde jemadar : guerrière gracieuse et fière de la garde de la reine de Malakut, tenant le khastok (longue lance au fer effilé), armure légère ornée de bijoux et de tissus colorés, palais de pierre sculptée derrière elle.
 > 2. Guetteur homme-oiseau : humanoïde élancé aux traits d'oiseau de proie (bec crochu, yeux ronds jaunes, plumes sombres), perché sur un rocher, brandissant une fronde, ciel d'orage.
-> 3. Matelot de Parsool : vétéran quadragénaire à la peau tannée par le sel, foulard noué sur la tête, cicatrices, sabre en main, gilet de cuir sur chemise ouverte, sourire de conteur, pont de navire et cordages.
+> 3. Matelot de Parsool : vétéran sexagénaire trapu au visage rond, crâne dégarni sous un foulard, favoris et barbe blancs, rides profondes, peau tannée par le sel, un œil plissé, sabre en main, gilet de cuir sur chemise ouverte, air bougon, pont de navire et cordages.
 > 4. Pilote de nef volante de Satarla : jeune noble élégant et un peu hautain, lunettes d'aviateur relevées sur le front, cape de qualité, armure légère de cuir ouvragé, épée au côté, coque d'une nef volante dans un ciel de nuit.
 > 5. Sergent du guet : guerrier d'âge mûr aux tempes grises et au visage fermé, casque de métal, moustache grise, armure moyenne de mailles et de cuir, bouclier au bras, porte de cité et torches du guet.
 > 6. Sentinelle kalukan : colosse impassible au visage figé et sans émotion, yeux vides, peau pâle d'automate, armure moyenne de plates sombres gravées de runes, épée lourde tenue droite, lueur rouge de braise et forteresse volcanique.
