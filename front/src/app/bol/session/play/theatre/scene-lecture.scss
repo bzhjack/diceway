@@ -26,6 +26,7 @@
   display: flex;
   flex: none;
   align-items: center;
+  justify-content: flex-end;
   gap: 0.2rem;
   height: var(--lec-tete-h);
   border-bottom: 1px solid rgba(156, 135, 99, 0.3);

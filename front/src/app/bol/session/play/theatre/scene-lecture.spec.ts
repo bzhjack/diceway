@@ -55,21 +55,22 @@ describe('SceneLectureComponent', () => {
     expect(host.querySelector('.lec-jeu')?.textContent).toBe('Vigueur Ardu (-1) pour se dégager.');
   });
 
-  it('propose d’agrandir la lecture, puis de la réduire quand elle est en grand', async () => {
+  it('propose d’agrandir la lecture, et en grand ne garde qu’une croix pour la fermer', async () => {
     const host = fixture.nativeElement as HTMLElement;
-    const agrandir = (): HTMLButtonElement => host.querySelector<HTMLButtonElement>('button.lec-agrandir')!;
     const demandes: unknown[] = [];
     fixture.componentInstance.grandToggled.subscribe(() => demandes.push(true));
 
-    expect(agrandir().getAttribute('aria-label')).toBe('Agrandir la lecture');
     expect(host.classList).not.toContain('lec--grand');
-    agrandir().click();
+    host.querySelector<HTMLButtonElement>('button.lec-agrandir')!.click();
     expect(demandes).toHaveLength(1);
 
     fixture.componentRef.setInput('grand', true);
     await fixture.whenStable();
-    expect(agrandir().getAttribute('aria-label')).toBe('Réduire la lecture');
     expect(host.classList).toContain('lec--grand');
+    expect(host.querySelector('button.lec-agrandir')).toBeNull();
+    expect(host.querySelector('button.lec-preparer')).toBeNull();
+    host.querySelector<HTMLButtonElement>('button.lec-fermer')!.click();
+    expect(demandes).toHaveLength(2);
   });
 
   it('replie une section d’un clic sur son titre, et la rouvre au clic suivant', async () => {

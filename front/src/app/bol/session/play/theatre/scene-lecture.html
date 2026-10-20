@@ -1,18 +1,17 @@
 <header class="lec-tete">
-  <span class="lec-tete-titre">Notes de la scène</span>
-  <button
-    mat-icon-button
-    type="button"
-    class="lec-agrandir"
-    [attr.aria-label]="grand() ? 'Réduire la lecture' : 'Agrandir la lecture'"
-    [matTooltip]="grand() ? 'Réduire' : 'Agrandir pour mieux lire'"
-    (click)="grandToggled.emit()"
-  >
-    <mat-icon>{{ grand() ? 'close_fullscreen' : 'open_in_full' }}</mat-icon>
-  </button>
-  <button mat-icon-button type="button" class="lec-preparer" aria-label="Préparer la scène" matTooltip="Préparer la scène" (click)="store.prepare(scene())">
-    <mat-icon>edit_note</mat-icon>
-  </button>
+  @if (grand()) {
+    <button mat-icon-button type="button" class="lec-fermer" aria-label="Fermer" matTooltip="Fermer" (click)="grandToggled.emit()">
+      <mat-icon>close</mat-icon>
+    </button>
+  } @else {
+    <span class="lec-tete-titre">Notes de la scène</span>
+    <button mat-icon-button type="button" class="lec-agrandir" aria-label="Agrandir la lecture" matTooltip="Agrandir pour mieux lire" (click)="grandToggled.emit()">
+      <mat-icon>open_in_full</mat-icon>
+    </button>
+    <button mat-icon-button type="button" class="lec-preparer" aria-label="Préparer la scène" matTooltip="Préparer la scène" (click)="store.prepare(scene())">
+      <mat-icon>edit_note</mat-icon>
+    </button>
+  }
 </header>
 
 <section class="lec-bloc" aria-labelledby="lec-lire-titre">

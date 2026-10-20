@@ -35,7 +35,7 @@ export class SceneLectureComponent {
   readonly acts = input.required<readonly SceneActe[]>();
   /** Les notes en grand, dans leur propre fenêtre : texte plus gros, pour lire à distance et sans fatigue. */
   readonly grand = input(false);
-  /** Le bouton « Agrandir » (ou « Réduire », en grand) : l'hôte ouvre ou ferme la fenêtre de lecture. */
+  /** Le bouton « Agrandir » (ou la croix, en grand) : l'hôte ouvre ou ferme la fenêtre de lecture. */
   readonly grandToggled = output<void>();
   /** Une scène a été chargée depuis une piste, avec la session à jour : la page la pose. */
   readonly sceneChanged = output<BolSceneLoadResult>();
