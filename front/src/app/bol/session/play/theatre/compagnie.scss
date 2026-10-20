@@ -105,17 +105,20 @@
 
   overflow: hidden;
   color: var(--dw-color-text-bright);
-  font-family: 'Muse Display Harmony', serif;
+  // Police de texte : la police d'affichage, étroite, se lit mal à cette taille (cf. `.act-nom`).
+  font-family: 'Muse Sans', sans-serif;
   font-size: 0.95rem;
+  font-weight: 700;
   line-height: 1.2;
+  letter-spacing: 0.01em;
   text-overflow: ellipsis;
   white-space: nowrap;
 
   small {
-    margin-left: 0.3rem;
-    color: var(--dw-surface-600);
-    font-family: 'Muse Sans', sans-serif;
-    font-size: 0.7rem;
+    margin-left: 0.35rem;
+    color: var(--dw-surface-700);
+    font-size: 0.75rem;
+    font-weight: 400;
   }
 }
 
