@@ -22,6 +22,15 @@ export interface AmbianceOption<T> {
 /** Le rideau du plateau : ouvert, ou fermé pendant un changement de scène. */
 export type RideauEtat = 'ouvert' | 'ferme';
 
+/** Le carton du chroniqueur, montré rideau fermé : une phrase d'ambiance (moment et météo), le lieu, puis le titre. */
+export interface SceneCarton {
+  readonly titre: string;
+  /** « Au crépuscule, sous la pluie… » — `null` sans moment ni météo. */
+  readonly narration: string | null;
+  /** « Gué du Tyr, Jungle de Qo et jungle de Qush » — `null` sans lieu ni région. */
+  readonly lieu: string | null;
+}
+
 /** Taille d'une carte sur le plateau : selon le rang dans la troupe, plus petite pour un allié. */
 export type TroupeTaille = 'rival' | 'coriace' | 'pietaille' | 'allie';
 

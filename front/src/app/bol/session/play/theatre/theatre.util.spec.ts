@@ -2,7 +2,7 @@ import {CombatCamp} from '../../../models/bol-fight-session.model';
 import {BolSceneModel} from '../../../models/bol-scene.model';
 import {CombatCatalogEntry} from '../../../models/combat-selection.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
-import {acteLabel, ATTITUDES, compagnie, distributionPortraits, lieuTexte, sceneActs, sceneDecor, troupe} from './theatre.util';
+import {acteLabel, ATTITUDES, cartonTenue, compagnie, distributionPortraits, lieuTexte, narration, sceneActs, sceneDecor, troupe} from './theatre.util';
 
 function scene(id: string, ordre: number, extra: Partial<BolSceneModel> = {}): BolSceneModel {
   return {
@@ -80,6 +80,31 @@ describe('lieuTexte', () => {
     expect(lieuTexte(null, 'Jungle de Qush')).toBe('Jungle de Qush');
     expect(lieuTexte('  Gué du Tyr ', null)).toBe('Gué du Tyr');
     expect(lieuTexte(' ', null)).toBeNull();
+  });
+});
+
+describe('narration', () => {
+  it('dit le moment puis la météo, avec une majuscule et des points de suspension', () => {
+    expect(narration('crepuscule', 'pluie')).toBe('Au crépuscule, sous la pluie…');
+    expect(narration('aube', null)).toBe('À l’aube…');
+    expect(narration(null, 'brume')).toBe('Dans la brume…');
+  });
+
+  it('ne dit rien d’un ciel clair, ni sans moment ni météo', () => {
+    expect(narration('nuit', 'clair')).toBe('À la nuit tombée…');
+    expect(narration(null, 'clair')).toBeNull();
+    expect(narration(null, null)).toBeNull();
+  });
+});
+
+describe('cartonTenue', () => {
+  it('compte chaque lettre, un temps plus long après une virgule, le silence avant le titre et le titre', () => {
+    expect(cartonTenue('Ab, c', false)).toBe(34 + 34 + 220 + 34 + 34 + 400 + 1600);
+  });
+
+  it('ne tient que le titre sans phrase, et une durée fixe avec moins d’animations', () => {
+    expect(cartonTenue(null, false)).toBe(1600);
+    expect(cartonTenue('Au crépuscule…', true)).toBe(1400);
   });
 });
 

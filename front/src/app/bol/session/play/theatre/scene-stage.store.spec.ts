@@ -82,26 +82,43 @@ describe('SceneStageStore', () => {
     expect(loadAs).toHaveBeenCalledTimes(1);
   });
 
-  it('ferme le rideau pendant le chargement et le rouvre après', () => {
+  it('ferme le rideau pendant le chargement et le rouvre à la fin du carton', () => {
     loadAs.mockReturnValue(of(RESULT));
     store.sync('sess', 's1', []);
     const values: unknown[] = [];
     store.load(S2, 'replace').subscribe((v) => values.push(v));
     expect(store.rideau()).toBe('ferme');
-    expect(store.rideauTitre()).toBe(S2.titre);
-    vi.advanceTimersByTime(750);
+    expect(store.carton()).toEqual({titre: S2.titre, narration: null, lieu: null});
+    vi.advanceTimersByTime(900);
     expect(values).toEqual([RESULT]);
     store.sync('sess', 's2', ['s1', 's2']);
-    vi.advanceTimersByTime(250);
+    // Sans phrase, le carton ne montre que le titre : 1,6 s après le fondu.
+    vi.advanceTimersByTime(1599);
+    expect(store.rideau()).toBe('ferme');
+    vi.advanceTimersByTime(1);
     expect(store.rideau()).toBe('ouvert');
     expect(store.busy()).toBe(false);
+  });
+
+  it('écrit le carton d’après le moment, la météo et le lieu de la scène, et le tient le temps de l’écrire', () => {
+    loadAs.mockReturnValue(of(RESULT));
+    store.sync('sess', 's1', []);
+    const preparee = {...S2, moment: 'crepuscule' as const, meteo: 'pluie' as const, lieu: 'Gué du Tyr', region_id: 5};
+    store.load(preparee, 'replace').subscribe();
+    expect(store.carton()).toEqual({titre: S2.titre, narration: 'Au crépuscule, sous la pluie…', lieu: 'Gué du Tyr, Jungle de Qo et jungle de Qush'});
+    vi.advanceTimersByTime(900);
+    store.sync('sess', 's2', ['s1', 's2']);
+    vi.advanceTimersByTime(2500);
+    expect(store.rideau()).toBe('ferme');
+    vi.advanceTimersByTime(1500);
+    expect(store.rideau()).toBe('ouvert');
   });
 
   it('garde le rideau fermé jusqu’à ce que la page montre la session chargée', () => {
     loadAs.mockReturnValue(of(RESULT));
     store.sync('sess', 's1', []);
     store.load(S2, 'replace').subscribe();
-    vi.advanceTimersByTime(1500);
+    vi.advanceTimersByTime(3000);
     expect(store.rideau()).toBe('ferme');
     store.sync('sess', 's2', ['s1', 's2']);
     vi.advanceTimersByTime(250);
@@ -112,7 +129,7 @@ describe('SceneStageStore', () => {
     loadAs.mockReturnValue(of(RESULT));
     store.sync('sess', 's1', []);
     store.load(S2, 'replace').subscribe();
-    vi.advanceTimersByTime(750 + 2900);
+    vi.advanceTimersByTime(900 + 2900);
     expect(store.rideau()).toBe('ferme');
     vi.advanceTimersByTime(100 + 250);
     expect(store.rideau()).toBe('ouvert');
