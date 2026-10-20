@@ -1,63 +1,97 @@
-<button mat-icon-button type="button" class="lec-preparer" aria-label="Préparer la scène" matTooltip="Préparer la scène" (click)="store.prepare(scene())">
-  <mat-icon>edit_note</mat-icon>
-</button>
+<header class="lec-tete">
+  <span class="lec-tete-titre">Notes de la scène</span>
+  <button
+    mat-icon-button
+    type="button"
+    class="lec-agrandir"
+    [attr.aria-label]="grand() ? 'Réduire la lecture' : 'Agrandir la lecture'"
+    [matTooltip]="grand() ? 'Réduire' : 'Agrandir pour mieux lire'"
+    (click)="grandToggled.emit()"
+  >
+    <mat-icon>{{ grand() ? 'close_fullscreen' : 'open_in_full' }}</mat-icon>
+  </button>
+  <button mat-icon-button type="button" class="lec-preparer" aria-label="Préparer la scène" matTooltip="Préparer la scène" (click)="store.prepare(scene())">
+    <mat-icon>edit_note</mat-icon>
+  </button>
+</header>
 
 <section class="lec-bloc" aria-labelledby="lec-lire-titre">
-  <h3 class="lec-titre" id="lec-lire-titre"><mat-icon aria-hidden="true">record_voice_over</mat-icon>À lire aux joueurs</h3>
-  @if (scene().lecture; as texte) {
-    <p class="lec-texte">{{ texte }}</p>
-  } @else {
-    <p class="lec-vide">Pas de texte à lire.</p>
-    <button mat-stroked-button size="small" type="button" class="lec-action" (click)="store.prepare(scene())">
-      <mat-icon>edit_note</mat-icon> Préparer la scène
-    </button>
+  <h3 class="lec-titre" id="lec-lire-titre">
+      <button type="button" class="lec-deplier" [attr.aria-expanded]="!fermee('lire')" (click)="basculer('lire')">
+        <mat-icon aria-hidden="true">record_voice_over</mat-icon>À lire aux joueurs
+        <mat-icon class="lec-chevron" [class.lec-chevron--ferme]="fermee('lire')" aria-hidden="true">expand_more</mat-icon>
+      </button>
+    </h3>
+  @if (!fermee('lire')) {
+    @if (scene().lecture; as texte) {
+      <p class="lec-texte">{{ texte }}</p>
+    } @else {
+      <p class="lec-vide">Pas de texte à lire.</p>
+      <button mat-stroked-button size="small" type="button" class="lec-action" (click)="store.prepare(scene())">
+        <mat-icon>edit_note</mat-icon> Préparer la scène
+      </button>
+    }
   }
 </section>
 
 @if (scene().jeu; as jeu) {
   <section class="lec-bloc" aria-labelledby="lec-jeu-titre">
-    <h3 class="lec-titre" id="lec-jeu-titre"><mat-icon aria-hidden="true">casino</mat-icon>En jeu</h3>
-    <p class="lec-jeu">{{ jeu }}</p>
+    <h3 class="lec-titre" id="lec-jeu-titre">
+      <button type="button" class="lec-deplier" [attr.aria-expanded]="!fermee('jeu')" (click)="basculer('jeu')">
+        <mat-icon aria-hidden="true">casino</mat-icon>En jeu
+        <mat-icon class="lec-chevron" [class.lec-chevron--ferme]="fermee('jeu')" aria-hidden="true">expand_more</mat-icon>
+      </button>
+    </h3>
+    @if (!fermee('jeu')) {
+      <p class="lec-jeu">{{ jeu }}</p>
+    }
   </section>
 }
 
 @if (scene().notes; as secret) {
   <section class="lec-bloc" aria-labelledby="lec-secret-titre">
-    <div class="lec-tete">
-      <h3 class="lec-titre lec-titre--secret" id="lec-secret-titre"><mat-icon aria-hidden="true">visibility_off</mat-icon>Secret du MJ</h3>
-      <button mat-button size="small" type="button" class="lec-bascule" [attr.aria-pressed]="secretVisible()" (click)="toggleSecret()">
-        {{ secretVisible() ? 'Masquer le secret' : 'Afficher le secret' }}
+    <h3 class="lec-titre lec-titre--secret" id="lec-secret-titre">
+      <button type="button" class="lec-deplier" [attr.aria-expanded]="!fermee('secret')" (click)="basculer('secret')">
+        <mat-icon aria-hidden="true">visibility_off</mat-icon>Secret du MJ
+        <mat-icon class="lec-chevron" [class.lec-chevron--ferme]="fermee('secret')" aria-hidden="true">expand_more</mat-icon>
       </button>
-    </div>
-    <p class="lec-secret" [class.lec-secret--visible]="secretVisible()" [attr.aria-hidden]="secretVisible() ? null : 'true'" [inert]="!secretVisible()">
-      {{ secret }}
-    </p>
+    </h3>
+    @if (!fermee('secret')) {
+      <p class="lec-secret">{{ secret }}</p>
+    }
   </section>
 }
 
 @if (pistes().length) {
   <section class="lec-bloc" aria-labelledby="lec-pistes-titre">
-    <h3 class="lec-titre" id="lec-pistes-titre"><mat-icon aria-hidden="true">alt_route</mat-icon>Pistes</h3>
-    <ul class="lec-pistes">
-      @for (piste of pistes(); track $index) {
-        <li class="lec-piste">
-          <span>{{ piste.texte }}</span>
-          @if (piste.acte; as acte) {
-            <button
-              mat-stroked-button
-              size="small"
-              type="button"
-              [attr.aria-label]="'Aperçu de la scène ' + acte.numero + ', ' + acte.scene.titre"
-              [attr.aria-disabled]="store.busy() ? 'true' : null"
-              [matMenuTriggerFor]="apercu.menu()"
-              [matMenuTriggerData]="{acte}"
-            >
-              Scène {{ acte.numero }}
-            </button>
-          }
-        </li>
-      }
-    </ul>
+    <h3 class="lec-titre" id="lec-pistes-titre">
+      <button type="button" class="lec-deplier" [attr.aria-expanded]="!fermee('pistes')" (click)="basculer('pistes')">
+        <mat-icon aria-hidden="true">alt_route</mat-icon>Pistes
+        <mat-icon class="lec-chevron" [class.lec-chevron--ferme]="fermee('pistes')" aria-hidden="true">expand_more</mat-icon>
+      </button>
+    </h3>
+    @if (!fermee('pistes')) {
+      <ul class="lec-pistes">
+        @for (piste of pistes(); track $index) {
+          <li class="lec-piste">
+            <span>{{ piste.texte }}</span>
+            @if (piste.acte; as acte) {
+              <button
+                mat-stroked-button
+                size="small"
+                type="button"
+                [attr.aria-label]="'Aperçu de la scène ' + acte.numero + ', ' + acte.scene.titre"
+                [attr.aria-disabled]="store.busy() ? 'true' : null"
+                [matMenuTriggerFor]="apercu.menu()"
+                [matMenuTriggerData]="{acte}"
+              >
+                Scène {{ acte.numero }}
+              </button>
+            }
+          </li>
+        }
+      </ul>
+    }
   </section>
 }
 

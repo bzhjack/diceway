@@ -13,7 +13,7 @@
     />
 
     @if (store.displayedScene(); as scene) {
-      <bol-scene-lecture class="thr-lecture" [scene]="scene" [acts]="store.acts()" (sceneChanged)="sceneChanged.emit($event)" />
+      <bol-scene-lecture class="thr-lecture" [scene]="scene" [acts]="store.acts()" (sceneChanged)="sceneChanged.emit($event)" (grandToggled)="agrandirLecture()" />
     }
 
     <bol-troupe

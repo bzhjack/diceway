@@ -86,6 +86,7 @@
   }
 
   .thr-lecture {
+    --lec-sticky: static;
     max-height: none;
     overflow-y: visible;
   }
