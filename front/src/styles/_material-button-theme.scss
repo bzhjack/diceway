@@ -9,6 +9,15 @@
   gap: 0.35rem;
 }
 
+// Bouton icône : l'icône est centrée par flex. En ligne, elle se posait sur la ligne de base du texte, dont la hauteur
+// (36px, héritée de la typo) dépasse la zone de contenu du bouton (24px) : l'icône descendait de 2px.
+// Double classe : le style du composant Material, chargé après, impose `display: block`.
+.mat-mdc-icon-button.mat-mdc-button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 html {
   @include mat.button-overrides((
     // Filled (mat-flat-button) : fond atténué mais coloré, texte lisible

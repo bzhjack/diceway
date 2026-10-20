@@ -71,6 +71,10 @@ créatures propres au scénario) appartiennent à **l'utilisateur** (`user_id` =
 catalogue** (`user_id` nul), qui est visible de tous les comptes. Le format d'import (lot 1) ne doit donc pas
 permettre d'écrire dans le catalogue.
 
+**Exception (2026-10-20, à la demande de Lionel) :** le bestiaire du Beshaar (p. 24-35, 13 créatures) est ajouté au
+catalogue par `BolCreatureSeeder` (ids 51 à 63, capacités 1001 à 1013). Le reste (scénarios, scènes, PNJ, créatures
+propres aux chapitres) reste sur le compte de l'utilisateur.
+
 ## 2. Décisions
 
 - **Un scénario par chapitre** : « Perle du Beshaar — Introduction & 1. Sacrilège à Satarla »,

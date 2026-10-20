@@ -57,6 +57,24 @@ Ce fichier sert de catalogue de travail pour le projet, en priorité à partir d
 - Nécropède
 - Nécrophage
 
+### Bestiaire du Beshaar (*La Perle du Beshaar*, p. 24-35)
+
+- Chien de Zaggath
+- Dyrhunga
+- Dragon de feu
+- Essaim de fourmis d'os (pas de profil dans le livre : vitalité 30 = les dégâts qui dispersent la nuée)
+- Hyène du Beshaar
+- Meneuse de meute (hyène du Beshaar)
+- Hyène géante
+- Qal'efr (pieuvre des sables) (dégâts `d6M+1` des tentacules ; la morsure `d6Bx2` est en commentaire)
+- Spicomallos
+- Ver des sables
+- Gardien de bronze
+- Momie noire d'humain
+- Momie noire de coursier des sables
+
+La slorth couronnée (Mélèshu, p. 35) est une rivale à carrières : elle relève des PNJ, pas de ce catalogue.
+
 ## Utilisation
 
 - Ce catalogue est une base rapide pour vérifier les noms disponibles côté projet.
