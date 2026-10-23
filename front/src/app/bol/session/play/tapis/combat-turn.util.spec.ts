@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {bloqueeCeRound, bouclierPerduRound1, combatOutcome, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, hordeMates, herosMourants, horsCombat, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
+import {bloqueeCeRound, bouclierPerduRound1, cibleAuHasard, combatOutcome, debutDeTour, effetsDerives, endTurn, groupByTier, giveBackTurn, hordeMates, herosMourants, horsCombat, INITIAL_ETAT, isOut, normalizeEtat, orderCards, targetableKeys, tokenForCard, totalDefense, turnAnnouncement, turnState} from './combat-turn.util';
 import {EtatCombat, OrderedCard, TurnToken} from '../../models/combat-turn.model';
 import {TurnOrderEntry} from '../../models/turn-order.model';
 import {TapisCard, TapisKind} from '../../models/tapis.model';
@@ -331,6 +331,29 @@ describe('targetableKeys', () => {
 
   it('offers nothing when nobody is active', () => {
     expect(targetableKeys(order, null).size).toBe(0);
+  });
+});
+
+describe('cibleAuHasard', () => {
+  const hero1 = card('hero', 1);
+  const hero2 = card('hero', 2);
+  const allie = card('pnj', 8, {camp: 'heros'});
+  const adversaire = card('pnj', 7);
+
+  it('picks a hero at random for an adversary, never an ally while a hero can be targeted', () => {
+    expect(cibleAuHasard(adversaire, [allie, hero1, hero2], () => 0)?.key).toBe('hero-1');
+    expect(cibleAuHasard(adversaire, [allie, hero1, hero2], () => 0.99)?.key).toBe('hero-2');
+  });
+
+  it('falls back on an ally of the heroes when no hero is left', () => {
+    expect(cibleAuHasard(adversaire, [allie], () => 0.5)?.key).toBe('pnj-8');
+  });
+
+  it('preselects nothing for a card of the heroes’ camp, nor without targets', () => {
+    expect(cibleAuHasard(hero1, [adversaire], () => 0)).toBeNull();
+    expect(cibleAuHasard(allie, [adversaire], () => 0)).toBeNull();
+    expect(cibleAuHasard(adversaire, [], () => 0)).toBeNull();
+    expect(cibleAuHasard(null, [hero1], () => 0)).toBeNull();
   });
 });
 

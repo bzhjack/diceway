@@ -39,9 +39,14 @@
                 @if (row.bagarre > 0) {
                   <small>dont {{ row.bagarre }} à mains nues</small>
                 }
+                @if (row.w.recuperationRapide) {
+                  <small>dont +1 de récupération rapide</small>
+                }
               </mat-checkbox>
             } @else if (row.w.vitalite < 0) {
               <span class="acd-none">Pas de repos sous 0</span>
+            } @else if (row.w.souffreteux && row.w.vitalite < row.w.vitaliteDepart) {
+              <span class="acd-none">Souffreteux : rien sans soins médicaux</span>
             } @else {
               <span class="acd-none">Rien perdu pendant ce combat</span>
             }

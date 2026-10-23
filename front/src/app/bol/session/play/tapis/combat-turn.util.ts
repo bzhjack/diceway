@@ -271,6 +271,18 @@ export function targetableKeys(
   );
 }
 
+/** La cible présélectionnée quand un adversaire prend la main : un héros au hasard parmi ceux qu'il peut viser, ou, s'il n'en reste
+ * aucun, un allié des héros. Une carte du camp des héros n'en reçoit pas (le joueur choisit sa cible). `random` rend un nombre de
+ * [0, 1[ (`Math.random`). */
+export function cibleAuHasard(active: TapisCard | null, cibles: readonly TapisCard[], random: () => number = Math.random): TapisCard | null {
+  if (!active || active.camp === 'heros' || cibles.length === 0) {
+    return null;
+  }
+  const heros = cibles.filter((card) => card.kind === 'hero');
+  const candidats = heros.length > 0 ? heros : cibles;
+  return candidats[Math.floor(random() * candidats.length)] ?? null;
+}
+
 /** Règle de réaction : un héros en échec critique ne bénéficie pas de son bouclier en défense pendant le premier round
  * (02-actions-combat.md). Dérivée du palier de réaction et du round, sans effet stocké : aucun événement n'existe au démarrage du combat. */
 export function bouclierPerduRound1(round: number, tier: InitiativeTierKey | null): boolean {

@@ -171,7 +171,9 @@ export class BolHerosStateService {
     if (this.heroismCost() > 0) {
       modifiers.push({attr: 'heroisme', value: -this.heroismCost()});
     }
-    const vigueur = this.currentHeros()?.attributs.vigueur ?? 0;
+    // Vitalité = 10 + vigueur : la vigueur avec ses bonus de traits (Vigueur céruléenne : +1 vigueur, donc +1 vitalité).
+    const bonusVigueur = modifiers.filter((modifier) => modifier.attr === 'vigueur').reduce((total, modifier) => total + Number(modifier.value), 0);
+    const vigueur = (this.currentHeros()?.attributs.vigueur ?? 0) + bonusVigueur;
     if (vigueur !== 0) {
       modifiers.push({attr: 'vitalite', value: vigueur});
     }

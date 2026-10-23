@@ -803,6 +803,24 @@
   color: var(--dw-surface-600);
 }
 
+// Aucun adversaire : ce qui empêche de commencer se voit, en couleur d'avertissement et avec son icône.
+.scd-note--alert {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--dw-color-warn);
+
+  .mat-icon {
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 1.25rem;
+  }
+}
+
 // Carte étroite (cinq ou six héros sur un écran moyen) : l'objectif, la case et l'addition se resserrent pour tenir sans déborder.
 @container (max-width: 14.5rem) {
   .scd-who {

@@ -941,12 +941,13 @@ export class TurnAssistantComponent {
   protected readonly specialDamage = computed(() => this.damageSpec() === null);
   /** Dégâts fixes : pas de jet, ils sont connus dès que le coup touche. */
   protected readonly fixedDamage = computed(() => this.damageSpec()?.fixed ?? null);
-  /** Le dé de protection de la cible, lu sur son armure (« d6-1(3) » → un d6 moins 1), avec le +1 d'un casque ; `null` sans dé. */
+  /** Le dé de protection de la cible, lu sur son armure (« d6-1(3) » → un d6 moins 1), avec le bonus d'un casque ou de Peau dure
+   * (« d6-1 (3) +2 ») ; `null` sans dé. */
   protected readonly protectionDie = computed<{readonly malus: number; readonly bonus: number} | null>(() => {
     const text = this.targetStats()?.protectionText ?? '';
     // « d6-1 (3) » : un d6 moins 1 ; « d6 (4) » : un d6 sans retrait (certaines créatures).
     const match = text.match(/d6\s*(?:-\s*(\d+))?/i);
-    return match ? {malus: Number(match[1] ?? 0), bonus: /\)\s*\+1/.test(text) ? 1 : 0} : null;
+    return match ? {malus: Number(match[1] ?? 0), bonus: Number(text.match(/\)\s*\+(\d+)/)?.[1] ?? 0)} : null;
   });
   /** Face du dé de protection lancé à la place de la valeur fixe (le livre laisse le choix au MJ) ; `null` : valeur fixe. */
   protected readonly protectionFace = signal<number | null>(null);

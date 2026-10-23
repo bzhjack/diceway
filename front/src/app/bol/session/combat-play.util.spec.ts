@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
 import {BolFightSessionModel} from '../models/bol-fight-session.model';
-import {attackDiceAbilities, buildPlayBoard, demonDegats, demonProtection, postCombatRecoveryAmount} from './combat-play.util';
+import {attackDiceAbilities, buildPlayBoard, demonDegats, demonProtection, postCombatRecoveryAmount, traitsDeRecuperation} from './combat-play.util';
 
 describe('postCombatRecoveryAmount', () => {
   it('recovers half the vitality lost, rounded up, when above 0 (02-actions-combat.md, "Récupération")', () => {
@@ -34,6 +34,26 @@ describe('postCombatRecoveryAmount', () => {
   it('recovers nothing when vitality tracking is unknown (never damaged, or no vitality stat)', () => {
     expect(postCombatRecoveryAmount(null, 10)).toBe(0);
     expect(postCombatRecoveryAmount(5, null)).toBe(0);
+  });
+
+  it('gives 1 more point with Récupération rapide, never more than what was lost', () => {
+    expect(postCombatRecoveryAmount(4, 10, 0, {recuperationRapide: true})).toBe(4); // 6 lost -> 3 + 1
+    expect(postCombatRecoveryAmount(9, 10, 0, {recuperationRapide: true})).toBe(1); // 1 lost -> 1, capped
+    expect(postCombatRecoveryAmount(10, 10, 0, {recuperationRapide: true})).toBe(0); // nothing lost
+  });
+
+  it('gives nothing to a Souffreteux, who only recovers through medical care', () => {
+    expect(postCombatRecoveryAmount(4, 10, 2, {souffreteux: true})).toBe(0);
+  });
+});
+
+describe('traitsDeRecuperation', () => {
+  const trait = (type: 'A' | 'D', traitable_id: number) => ({type, traitable_id, detail: null, region_id: null, carriere: null});
+
+  it('reads Récupération rapide (advantage 45) and Souffreteux (disadvantage 41) on a sheet', () => {
+    expect(traitsDeRecuperation([trait('A', 45), trait('D', 41)])).toEqual({recuperationRapide: true, souffreteux: true});
+    expect(traitsDeRecuperation([trait('D', 45), trait('A', 41)])).toEqual({recuperationRapide: false, souffreteux: false});
+    expect(traitsDeRecuperation(undefined)).toEqual({recuperationRapide: false, souffreteux: false});
   });
 });
 

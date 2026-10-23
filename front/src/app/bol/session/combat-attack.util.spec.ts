@@ -3,7 +3,7 @@ import {firstValueFrom, of} from 'rxjs';
 import {BolHerosModel} from '../models/bol-heros.model';
 import {BolHerosService} from '../services/bol-heros.service';
 import {estArmeFavorite} from '../shared/arme/arme-favorite.util';
-import {armeFavoriteDe, dualStrikeDegats, equippedProtection, isDualWieldEligible, libellePoints, nomDesPoints, resolveAttackStats, sbireBouclier} from './combat-attack.util';
+import {armeFavoriteDe, bonusPeauDure, dualStrikeDegats, equippedProtection, isDualWieldEligible, libellePoints, nomDesPoints, resolveAttackStats, sbireBouclier} from './combat-attack.util';
 import {TapisCard} from './models/tapis.model';
 import {PlayToken} from './models/combat-play.model';
 
@@ -54,6 +54,15 @@ describe('dualStrikeDegats', () => {
   });
 });
 
+describe('bonusPeauDure', () => {
+  it('gives +1 to a sheet with the Peau dure advantage, 0 otherwise', () => {
+    const trait = (type: 'A' | 'D', traitable_id: number) => ({type, traitable_id, detail: null, region_id: null, carriere: null});
+    expect(bonusPeauDure([trait('A', 6), trait('A', 39)])).toBe(1);
+    expect(bonusPeauDure([trait('D', 39)])).toBe(0);
+    expect(bonusPeauDure(undefined)).toBe(0);
+  });
+});
+
 describe('equippedProtection', () => {
   const light = {equipee: true, armure: {protection: 'd6-3 (1)', categorie: 'armure'}};
   const heavy = {equipee: true, armure: {protection: 'd6-1 (3)', categorie: 'armure'}};
@@ -73,6 +82,12 @@ describe('equippedProtection', () => {
 
   it('counts a helmet alone as 1', () => {
     expect(equippedProtection([helmet])).toEqual({text: '1', value: 1});
+  });
+
+  it('adds a bonus such as Peau dure, even without armour', () => {
+    expect(equippedProtection([heavy, helmet], 1)).toEqual({text: 'd6-1 (3) +2', value: 5});
+    expect(equippedProtection([light], 1)).toEqual({text: 'd6-3 (1) +1', value: 2});
+    expect(equippedProtection([], 1)).toEqual({text: '1', value: 1});
   });
 
   it('is nothing when the hero wears nothing, or when the catalogue is not loaded', () => {

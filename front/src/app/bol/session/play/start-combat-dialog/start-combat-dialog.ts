@@ -236,6 +236,8 @@ export class StartCombatDialogComponent {
   );
 
   protected readonly pendingHeroes = computed(() => this.activeHeroes().filter((h) => h.resultat === null));
+  /** Aucun adversaire (une fois la table chargée) : le combat ne peut pas commencer, ajouter un adversaire devient l'action principale. */
+  protected readonly noAdversary = computed(() => !this.loading() && this.activeAdversaries().length === 0);
   protected readonly canStart = computed(() => this.activeAdversaries().length > 0 && this.pendingHeroes().length === 0);
 
   /** Ce que la table doit savoir avant de commencer : ce qui manque, puis les égalités entre héros. L'ordre des cartes est déjà celui

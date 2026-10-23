@@ -1,6 +1,9 @@
+import {AVANTAGE_RECUPERATION_RAPIDE_ID, DESAVANTAGE_SOUFFRETEUX_ID} from '../bol-rules.constants';
 import {BolFightSessionModel, CombatCamp} from '../models/bol-fight-session.model';
+import {BolHerosTraitsModel} from '../models/bol-trait.model';
 import {buildInitiativeOrderFrom} from './initiative.util';
 import {InitiativeSource} from './models/initiative.model';
+import {RecoveryTraits} from './models/after-combat-dialog.model';
 import {PlayCombatStats, PlayToken, PlayBoard} from './models/combat-play.model';
 
 export const EMPTY_AVATAR = '/assets/bol/empty-avatar.jpg';
@@ -205,12 +208,20 @@ export function buildPlayBoard(session: BolFightSessionModel): PlayBoard {
 /** Récupération après un court repos d'après combat (02-actions-combat.md, « Récupération », livre p. 65) : à `0` ou plus, la moitié
  * des points de vitalité perdus pendant ce combat (depuis `vitaliteDepart`, la vitalité au début du combat), arrondie au supérieur —
  * mais les dégâts reçus à mains nues (`mainsNues`) reviennent en totalité. Les blessures d'avant le combat ne se récupèrent pas ici.
- * En dessous de 0 (mourant), rien : la stabilisation relève de « Secourir un mourant ». */
-export function postCombatRecoveryAmount(vitaliteCourante: number | null, vitaliteDepart: number | null, mainsNues = 0): number {
-  if (vitaliteCourante === null || vitaliteDepart === null || vitaliteCourante < 0) {
+ * En dessous de 0 (mourant), rien : la stabilisation relève de « Secourir un mourant ». Récupération rapide rend 1 point de plus (sans
+ * dépasser ce qui a été perdu) ; un Souffreteux ne récupère rien par le repos. */
+export function postCombatRecoveryAmount(vitaliteCourante: number | null, vitaliteDepart: number | null, mainsNues = 0, traits: RecoveryTraits = {}): number {
+  if (vitaliteCourante === null || vitaliteDepart === null || vitaliteCourante < 0 || traits.souffreteux) {
     return 0;
   }
   const perdus = Math.max(0, vitaliteDepart - vitaliteCourante);
   const bagarre = Math.min(Math.max(0, mainsNues), perdus);
-  return bagarre + Math.ceil((perdus - bagarre) / 2);
+  const repos = bagarre + Math.ceil((perdus - bagarre) / 2);
+  return traits.recuperationRapide && perdus > 0 ? Math.min(perdus, repos + 1) : repos;
+}
+
+/** Les traits d'une fiche qui changent sa récupération d'après combat. */
+export function traitsDeRecuperation(traits: readonly BolHerosTraitsModel[] | undefined): RecoveryTraits {
+  const possede = (type: 'A' | 'D', id: number): boolean => (traits ?? []).some((t) => t.type === type && Number(t.traitable_id) === id);
+  return {recuperationRapide: possede('A', AVANTAGE_RECUPERATION_RAPIDE_ID), souffreteux: possede('D', DESAVANTAGE_SOUFFRETEUX_ID)};
 }

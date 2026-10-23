@@ -262,17 +262,34 @@
 
     <mat-dialog-actions class="scd-actions">
       <button mat-stroked-button type="button" (click)="close()">Annuler</button>
-      <button mat-stroked-button type="button" [disabled]="loading()" (click)="openAddAdversary()"><mat-icon>add</mat-icon> Ajouter un adversaire</button>
-      <span class="scd-note" aria-live="polite">{{ note() }}</span>
+      <!-- Sans adversaire, le combat ne peut pas commencer : l'ajout devient l'action principale, et l'avertissement se voit. -->
+      @if (noAdversary()) {
+        <button mat-flat-button type="button" (click)="openAddAdversary()"><mat-icon>add</mat-icon> Ajouter un adversaire</button>
+      } @else {
+        <button mat-stroked-button type="button" [disabled]="loading()" (click)="openAddAdversary()"><mat-icon>add</mat-icon> Ajouter un adversaire</button>
+      }
+      <span class="scd-note" [class.scd-note--alert]="noAdversary()" aria-live="polite">
+        @if (noAdversary()) {
+          <mat-icon aria-hidden="true">warning</mat-icon>
+        }
+        {{ note() }}
+      </span>
       <!-- Proposé tant qu'un héros n'a pas lancé : une fois tous les jets faits, il n'a plus rien à lancer. -->
       @if (pendingHeroes().length > 0) {
         <button mat-stroked-button type="button" [disabled]="loading() || rolling()" (click)="rollAll()">
           <mat-icon>casino</mat-icon> Lancer pour tous
         </button>
       }
-      <button #startButton mat-flat-button type="button" [disabled]="!canStart() || starting()" (click)="start()">
-        <mat-icon>play_arrow</mat-icon> {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
-      </button>
+      <!-- Un seul bouton plein : sans adversaire, c'est « Ajouter un adversaire ». -->
+      @if (noAdversary()) {
+        <button #startButton mat-stroked-button type="button" disabled>
+          <mat-icon>play_arrow</mat-icon> {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
+        </button>
+      } @else {
+        <button #startButton mat-flat-button type="button" [disabled]="!canStart() || starting()" (click)="start()">
+          <mat-icon>play_arrow</mat-icon> {{ data.reroll ? 'Valider la réaction' : 'Commencer le combat' }}
+        </button>
+      }
     </mat-dialog-actions>
   </div>
 </div>
