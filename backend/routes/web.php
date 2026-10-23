@@ -1,6 +1,4 @@
 <?php
-use App\Http\Controllers\DicewayController;
-use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
