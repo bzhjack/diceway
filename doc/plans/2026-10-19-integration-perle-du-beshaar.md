@@ -244,7 +244,10 @@ Notes de départ :
   - les carrières druide, érudit, astrologue et pêcheur sont absentes du catalogue (notées en commentaire) ;
   - « pirate » devient Marin, « acrobate » Danseur, « courtisane » Tentatrice, « magicien » Sorcier ;
   - Dazzandroth a une défense de 5, démons de l'éther compris ;
-  - les points d'héroïsme des PNJ sont portés en vilénie.
+  - les points d'héroïsme des PNJ sont portés en vilénie ;
+  - 2026-10-23, consigne de Lionel : vilénie 3 pour les rivaux à qui le livre n'en donne pas (Isimba, Oglar, Jarvik,
+    Pranma). Fichiers mis à jour ; en base, seuls ce champ et le commentaire de ces quatre fiches ont été changés
+    (pas de réimport, qui aurait écrasé les modifications faites dans l'app).
 - **Recette** : chaque chapitre a été chargé scène par scène sur le compte de test (aucune entrée ignorée,
   aucune erreur console), avec des captures du Théâtre. Données de test supprimées ensuite.
 - **Bilan sur le compte de Lionel** : 5 scénarios, 57 scènes, 62 personnages référencés.
